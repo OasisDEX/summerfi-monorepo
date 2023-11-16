@@ -12,7 +12,8 @@
   "author": "Piter",
   "license": "ISC",
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.76"
+    "@types/aws-lambda": "^8.10.76",
+    "@types/node": "^20.9.0"
   },
   "dependencies": {
     "graphql": "^16.8.1",

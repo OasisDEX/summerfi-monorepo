@@ -5,15 +5,15 @@ on:
     branches:
       - dev
     paths:
-      - 'lambdas/**'
+      - 'apps/summerfi-api/**'
 
 defaults:
   run:
-    working-directory: ./lambdas
+    working-directory: ./apps/summerfi-api
 
 jobs:
   deploy_zip:
-    name: Deploy lambda function from zip
+    name: Deploy lambda functions from zip
     runs-on: ubuntu-latest
     environment: staging
 
@@ -28,30 +28,26 @@ jobs:
           aws-secret-access-key: ${{ secrets.STAGING_GW_AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.STAGING_AWS_REGION }}
 
-      - name: Install yarn
-        run: |
-              npm install yarn --global
-
       - name: Install dependencies
         run: |
-              yarn
+              npm install
 
       - name: Create bundle
         run: |
-              yarn build
+              npm run build
 
       - name: Deploy portfolio-assets
         uses: appleboy/lambda-action@v0.1.9
         with:
           function_name: summer-fi-portfolio-assets-staging
-          zip_file: ./lambdas/artifacts/portfolio-assets.zip
+          zip_file: ./apps/summerfi-api/artifacts/portfolio-assets.zip
           dry_run: false
 
       - name: Deploy portfolio-overview
         uses: appleboy/lambda-action@v0.1.9
         with:
           function_name: summer-fi-portfolio-overview-staging
-          zip_file: ./lambdas/artifacts/portfolio-overview.zip
+          zip_file: ./apps/summerfi-api/artifacts/portfolio-overview.zip
           dry_run: false
       
       - name: Create cache invalidation
