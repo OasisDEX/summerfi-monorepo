@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - dev
+      - TECH-2454-gha-changes
     paths:
       - 'apps/summerfi-api/**'
 
@@ -39,14 +40,14 @@ jobs:
       - name: Deploy portfolio-assets
         uses: appleboy/lambda-action@v0.1.9
         with:
-          function_name: summer-fi-portfolio-assets-staging
+          function_name: summer-fi-portfolio-assets-staging:current
           zip_file: ./apps/summerfi-api/artifacts/portfolio-assets.zip
           dry_run: false
 
       - name: Deploy portfolio-overview
         uses: appleboy/lambda-action@v0.1.9
         with:
-          function_name: summer-fi-portfolio-overview-staging
+          function_name: summer-fi-portfolio-overview-staging:current
           zip_file: ./apps/summerfi-api/artifacts/portfolio-overview.zip
           dry_run: false
       
