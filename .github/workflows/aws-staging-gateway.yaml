@@ -38,11 +38,24 @@ jobs:
         run: |
               npm run build
 
+      - name: Get portfolio-assets Lambda Revision ID
+        id: get_portfolio_assets_revision_id
+        run: |
+          portfolio_assets_revision_id=$(aws lambda get-function --function-name summer-fi-portfolio-assets-staging:current --query 'Configuration.RevisionId' --output text)
+          echo "PORTFOLIO_ASSETS_REVISION_ID=$portfolio_assets_revision_id" >> $GITHUB_ENV
+
+      - name: Get portfolio-overview Lambda Revision ID
+        id: get_portfolio_overview_revision_id
+        run: |
+          portfolio_overview_revision_id=$(aws lambda get-function --function-name summer-fi-portfolio-overview-staging:current --query 'Configuration.RevisionId' --output text)
+          echo "PORTFOLIO_OVERVIEW_REVISION_ID=$portfolio_overview_revision_id" >> $GITHUB_ENV
+
       - name: Deploy portfolio-assets
         uses: appleboy/lambda-action@v0.1.9
         with:
           function_name: summer-fi-portfolio-assets-staging:current
           zip_file: ./apps/summerfi-api/artifacts/portfolio-assets.zip
+          reversion_id: $PORTFOLIO_ASSETS_REVISION_ID
           dry_run: false
 
       - name: Deploy portfolio-overview
@@ -50,6 +63,7 @@ jobs:
         with:
           function_name: summer-fi-portfolio-overview-staging:current
           zip_file: ./apps/summerfi-api/artifacts/portfolio-overview.zip
+          reversion_id: $PORTFOLIO_OVERVIEW_REVISION_ID
           dry_run: false
       
       - name: Create cache invalidation
