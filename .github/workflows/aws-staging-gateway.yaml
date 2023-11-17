@@ -53,7 +53,7 @@ jobs:
       - name: Deploy portfolio-assets
         uses: appleboy/lambda-action@v0.1.9
         with:
-          function_name: summer-fi-portfolio-assets-staging:current
+          function_name: summer-fi-portfolio-assets-staging
           zip_file: ./apps/summerfi-api/artifacts/portfolio-assets.zip
           reversion_id: $PORTFOLIO_ASSETS_REVISION_ID
           dry_run: false
@@ -61,7 +61,7 @@ jobs:
       - name: Deploy portfolio-overview
         uses: appleboy/lambda-action@v0.1.9
         with:
-          function_name: summer-fi-portfolio-overview-staging:current
+          function_name: summer-fi-portfolio-overview-staging
           zip_file: ./apps/summerfi-api/artifacts/portfolio-overview.zip
           reversion_id: $PORTFOLIO_OVERVIEW_REVISION_ID
           dry_run: false
