@@ -18,9 +18,8 @@ jobs:
     name: Deploy lambda functions from zip
     runs-on: ubuntu-latest
     env:
-      ENVIRONMENT: staging
-      ASSETS_LAMBDA: summer-fi-portfolio-assets-${{ env.ENVIRONMENT }}
-      OVERVIEW_LAMBDA: summer-fi-portfolio-overview-${{ env.ENVIRONMENT }}
+      ASSETS_LAMBDA: summer-fi-portfolio-assets-staging
+      OVERVIEW_LAMBDA: summer-fi-portfolio-overview-staging
       ASSETS_LAMBDA_ZIP_PATH: ./apps/summerfi-api/artifacts/portfolio-assets.zip
       OVERVIEW_LAMBDA_ZIP_PATH: ./apps/summerfi-api/artifacts/portfolio-overview.zip
 
