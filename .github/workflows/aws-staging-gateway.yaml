@@ -17,6 +17,7 @@ jobs:
   deploy_zip:
     name: Deploy lambda functions from zip
     runs-on: ubuntu-latest
+    environment: staging
     env:
       ASSETS_LAMBDA: summer-fi-portfolio-assets-staging
       OVERVIEW_LAMBDA: summer-fi-portfolio-overview-staging
