@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - dev
-      - TECH-2454-gha-changes
     paths:
       - 'apps/summerfi-api/**'
       - '.github/workflows/aws-staging-gateway.yaml'
