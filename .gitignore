@@ -37,3 +37,7 @@ yarn-error.log*
 
 # JetBrains files
 .idea
+
+# all dist & artifacts folders
+dist
+artifacts
