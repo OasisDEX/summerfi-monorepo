@@ -1,12 +1,13 @@
 name: Update Gateway lambdas (staging)
 
-on:
-  push:
-    branches:
-      - dev
-    paths:
-      - 'apps/summerfi-api/**'
-      - '.github/workflows/aws-staging-gateway.yaml'
+# Disabled for now. We need to add a current version of the functions to enable this.
+# on:
+#  push:
+#    branches:
+#      - dev
+#    paths:
+#      - 'apps/summerfi-api/**'
+#      - '.github/workflows/aws-staging-gateway.yaml'
 
 defaults:
   run:
@@ -36,11 +37,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-              npm install
+              pnpm install
 
       - name: Create bundle
         run: |
-              npm run build
+              pnpm run build
 
       - name: Deploy portfolio-assets
         id: assets-deploy
