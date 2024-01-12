@@ -34,3 +34,10 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# JetBrains files
+.idea
+
+# all dist & artifacts folders
+dist
+artifacts

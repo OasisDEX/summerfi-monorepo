@@ -13,9 +13,5 @@
     "turbo": "latest"
   },
   "name": "summerfi-monorepo",
-  "packageManager": "npm@10.1.0",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ]
+  "packageManager": "pnpm@8.14.1"
 }
