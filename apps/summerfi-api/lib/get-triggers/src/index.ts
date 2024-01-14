@@ -1,3 +1,4 @@
+/* eslint-disable no-relative-import-paths/no-relative-import-paths */
 import { z } from 'zod'
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda'
 import { ResponseBadRequest, ResponseInternalServerError, ResponseOk } from 'shared/responses'
@@ -68,6 +69,11 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
   })
 
   const triggers = await automationSubgraphClient.getTriggers(params)
+
+  logger.info(`Got ${triggers.triggers.length} triggers`, {
+    triggers: triggers.triggers,
+    account: params.dpm,
+  })
 
   const aaveStopLossToCollateral: AaveStopLossToCollateral | undefined = triggers.triggers
     .filter((trigger) => trigger.triggerType == AaveStopLossToCollateralV2ID)
@@ -159,8 +165,14 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
           maxCoverage: trigger.decodedData[trigger.decodedDataNames.indexOf('maxCoverage')],
           debtToken: trigger.decodedData[trigger.decodedDataNames.indexOf('debtToken')],
           collateralToken: trigger.decodedData[trigger.decodedDataNames.indexOf('collateralToken')],
-          opHash: trigger.decodedData[trigger.decodedDataNames.indexOf('opHash')],
-          execLtv: trigger.decodedData[trigger.decodedDataNames.indexOf('execLtv')],
+          operationName: trigger.decodedData[trigger.decodedDataNames.indexOf('operationName')],
+          executionLtv:
+            trigger.decodedData[
+              Math.max(
+                trigger.decodedDataNames.indexOf('execLtv'),
+                trigger.decodedData.indexOf('executionLtv'),
+              )
+            ],
           targetLtv: trigger.decodedData[trigger.decodedDataNames.indexOf('targetLtv')],
           maxBuyPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('maxBuyPrice')],
           deviation: trigger.decodedData[trigger.decodedDataNames.indexOf('deviation')],
@@ -184,8 +196,14 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
           maxCoverage: trigger.decodedData[trigger.decodedDataNames.indexOf('maxCoverage')],
           debtToken: trigger.decodedData[trigger.decodedDataNames.indexOf('debtToken')],
           collateralToken: trigger.decodedData[trigger.decodedDataNames.indexOf('collateralToken')],
-          opHash: trigger.decodedData[trigger.decodedDataNames.indexOf('opHash')],
-          execLtv: trigger.decodedData[trigger.decodedDataNames.indexOf('execLtv')],
+          operationName: trigger.decodedData[trigger.decodedDataNames.indexOf('operationName')],
+          executionLtv:
+            trigger.decodedData[
+              Math.max(
+                trigger.decodedDataNames.indexOf('execLtv'),
+                trigger.decodedData.indexOf('executionLtv'),
+              )
+            ],
           targetLtv: trigger.decodedData[trigger.decodedDataNames.indexOf('targetLtv')],
           minSellPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('minSellPrice')],
           deviation: trigger.decodedData[trigger.decodedDataNames.indexOf('deviation')],
