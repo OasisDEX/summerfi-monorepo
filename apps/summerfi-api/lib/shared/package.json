@@ -1,18 +1,20 @@
 {
   "name": "shared",
   "version": "1.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "zod": "^3.22.4"
+  },
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
     "test": "jest",
     "build": "tsc -b -v"
   },
-  "files": [
-    "dist"
-  ],
-  "author": "Piter",
-  "license": "UNLICENSED",
-  "dependencies": {
-    "zod": "^3.22.4"
+  "exports": {
+    ".":  "./src/index.ts",
+    "./*": "./src/*.ts"
   }
 }

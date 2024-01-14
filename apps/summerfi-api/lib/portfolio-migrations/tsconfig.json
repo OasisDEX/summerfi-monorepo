@@ -4,15 +4,7 @@
     "rootDir": "src",
     "outDir": "dist",
     "baseUrl": "src",
-    "paths": {
-      "shared/*": ["../../shared/src/*"]
-    }
   },
-  "references": [
-    {
-      "path": "../shared"
-    }
-  ],
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

@@ -7,16 +7,17 @@
     "test": "jest",
     "build": "esbuild --bundle src/index.ts --platform=node --target=node20 --outfile=dist/index.js"
   },
-  "author": "Jacob",
-  "license": "UNLICENSED",
   "dependencies": {
     "@aws-lambda-powertools/logger": "^1.17.0",
     "@aws-lambda-powertools/metrics": "^1.17.0",
     "@aws-lambda-powertools/tracer": "^1.17.0",
     "graphql-request": "^6.1.0",
-    "shared": "*",
-    "automation-subgraph": "*",
-    "contracts": "*",
+    "shared": "workspace:*",
+    "automation-subgraph": "workspace:*",
+    "contracts": "workspace:*",
     "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "esbuild": "^0.19.11"
   }
 }

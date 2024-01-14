@@ -17,7 +17,8 @@
   "devDependencies": {
   },
   "dependencies": {
-    "shared": "*",
+    "node-fetch": "^3.3.2",
+    "shared": "workspace:*",
     "zod": "^3.22.4"
   }
 }

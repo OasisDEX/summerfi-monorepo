@@ -41,9 +41,9 @@ importers:
       '@graphql-typed-document-node/core':
         specifier: ^3.2.0
         version: 3.2.0(graphql@16.8.1)
-      '@tsconfig/node18':
-        specifier: ^18.2.2
-        version: 18.2.2
+      '@tsconfig/node20':
+        specifier: ^20.1.2
+        version: 20.1.2
       '@types/aws-lambda':
         specifier: ^8.10.126
         version: 8.10.131
@@ -84,7 +84,7 @@ importers:
         specifier: ^6.1.0
         version: 6.1.0(graphql@16.8.1)
       shared:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../shared
 
   apps/summerfi-api/lib/contracts: {}
@@ -101,25 +101,32 @@ importers:
         specifier: ^1.17.0
         version: 1.17.0
       automation-subgraph:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../automation-subgraph
       contracts:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../contracts
       graphql-request:
         specifier: ^6.1.0
         version: 6.1.0(graphql@16.8.1)
       shared:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../shared
       zod:
         specifier: ^3.22.4
         version: 3.22.4
+    devDependencies:
+      esbuild:
+        specifier: ^0.19.11
+        version: 0.19.11
 
   apps/summerfi-api/lib/portfolio-assets:
     dependencies:
+      node-fetch:
+        specifier: ^3.3.2
+        version: 3.3.2
       shared:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../shared
       zod:
         specifier: ^3.22.4
@@ -131,7 +138,7 @@ importers:
         specifier: ^0.1.14
         version: 0.1.30
       shared:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../shared
       viem:
         specifier: ^1.19.3
@@ -152,7 +159,7 @@ importers:
         specifier: ^3.3.2
         version: 3.3.2
       shared:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../shared
       zod:
         specifier: ^3.22.4
@@ -176,13 +183,13 @@ importers:
         specifier: 0.5.26-beta.2
         version: 0.5.26-beta.2
       contracts:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../contracts
       node-fetch:
         specifier: ^3.3.2
         version: 3.3.2
       shared:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../shared
       viem:
         specifier: ^1.19.11
@@ -190,6 +197,10 @@ importers:
       zod:
         specifier: ^3.22.4
         version: 3.22.4
+    devDependencies:
+      esbuild:
+        specifier: ^0.19.11
+        version: 0.19.11
 
   apps/summerfi-api/lib/shared:
     dependencies:
@@ -2532,8 +2543,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@tsconfig/node18@18.2.2:
-    resolution: {integrity: sha512-d6McJeGsuoRlwWZmVIeE8CUA27lu6jLjvv1JzqmpsytOYYbVi1tHZEnwCNVOXnj4pyLvneZlFlpXUK+X9wBWyw==}
+  /@tsconfig/node20@20.1.2:
+    resolution: {integrity: sha512-madaWq2k+LYMEhmcp0fs+OGaLFk0OenpHa4gmI4VEmCKX4PJntQ6fnnGADVFrVkBj0wIdAlQnK/MrlYTHsa1gQ==}
     dev: true
 
   /@types/aws-lambda@8.10.131:

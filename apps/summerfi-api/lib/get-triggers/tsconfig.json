@@ -4,17 +4,6 @@
     "rootDir": "src",
     "outDir": "dist"
   },
-  "references": [
-    {
-      "path": "../shared"
-    },
-    {
-      "path": "../automation-subgraph"
-    },
-    {
-      "path": "../contracts"
-    }
-  ],
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

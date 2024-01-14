@@ -16,7 +16,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@oasisdex/addresses": "^0.1.14",
-    "shared": "*",
+    "shared": "workspace:*",
     "viem": "^1.19.3",
     "zod": "^3.22.4"
   }
