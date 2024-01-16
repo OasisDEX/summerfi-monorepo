@@ -47,3 +47,6 @@ artifacts
 
 # geneated GraphQL types
 /**/types/graphql/*.ts
+
+# nx files
+.nx
