@@ -1,18 +1,17 @@
-/* eslint-disable no-relative-import-paths/no-relative-import-paths */
 import { z } from 'zod'
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda'
 
-import { getDefaultErrorMessage } from 'shared/src/helpers'
-import { ResponseBadRequest, ResponseInternalServerError, ResponseOk } from 'shared/src/responses'
+import { getDefaultErrorMessage } from 'shared/helpers'
+import { ResponseBadRequest, ResponseInternalServerError, ResponseOk } from 'shared/responses'
 import {
   DebankComplexProtocol,
   DebankPortfolioItemObject,
   DebankSimpleProtocol,
-} from 'shared/src/debank-types'
-import { PortfolioOverviewResponse } from 'shared/src/domain-types'
-import { DEBANK_SUPPORTED_CHAIN_IDS } from 'shared/src/debank-helpers'
+} from 'shared/debank-types'
+import { PortfolioOverviewResponse } from 'shared/domain-types'
+import { DEBANK_SUPPORTED_CHAIN_IDS } from 'shared/debank-helpers'
 import { getSupportedPositions } from './utils'
-import { addressSchema } from 'shared/src/validators'
+import { addressSchema } from 'shared/validators'
 import fetch from 'node-fetch'
 
 const paramsSchema = z.object({

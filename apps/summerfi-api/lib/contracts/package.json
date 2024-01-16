@@ -7,9 +7,14 @@
     "test": "jest",
     "build": "tsc -b -v"
   },
-  "files": [
-    "dist"
-  ],
-  "author": "Jacob",
-  "license": "UNLICENSED"
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./*": {
+        "import": "./dist/*.js",
+        "types": "./dist/*.d.ts"
+    }
+  }
 }

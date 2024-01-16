@@ -1,4 +1,3 @@
-/* eslint-disable no-relative-import-paths/no-relative-import-paths */
 import { z } from 'zod'
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda'
 
@@ -8,6 +7,7 @@ import { DebankToken } from 'shared/debank-types'
 import { NetworkNames, PortfolioWalletAsset, PortfolioAssetsResponse } from 'shared/domain-types'
 import { DebankNetworkNameToOurs, DebankNetworkNames } from 'shared/debank-helpers'
 import { addressSchema } from 'shared/validators'
+import fetch from 'node-fetch';
 
 const paramsSchema = z.object({
   address: addressSchema,

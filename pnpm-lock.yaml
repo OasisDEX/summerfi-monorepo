@@ -41,9 +41,9 @@ importers:
       '@graphql-typed-document-node/core':
         specifier: ^3.2.0
         version: 3.2.0(graphql@16.8.1)
-      '@tsconfig/node18':
-        specifier: ^18.2.2
-        version: 18.2.2
+      '@tsconfig/node20':
+        specifier: ^20.1.2
+        version: 20.1.2
       '@types/aws-lambda':
         specifier: ^8.10.126
         version: 8.10.131
@@ -84,7 +84,7 @@ importers:
         specifier: ^6.1.0
         version: 6.1.0(graphql@16.8.1)
       shared:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../shared
 
   apps/summerfi-api/lib/contracts: {}
@@ -101,25 +101,32 @@ importers:
         specifier: ^1.17.0
         version: 1.17.0
       automation-subgraph:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../automation-subgraph
       contracts:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../contracts
       graphql-request:
         specifier: ^6.1.0
         version: 6.1.0(graphql@16.8.1)
       shared:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../shared
       zod:
         specifier: ^3.22.4
         version: 3.22.4
+    devDependencies:
+      esbuild:
+        specifier: ^0.19.11
+        version: 0.19.11
 
   apps/summerfi-api/lib/portfolio-assets:
     dependencies:
+      node-fetch:
+        specifier: ^3.3.2
+        version: 3.3.2
       shared:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../shared
       zod:
         specifier: ^3.22.4
@@ -131,7 +138,7 @@ importers:
         specifier: ^0.1.14
         version: 0.1.30
       shared:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../shared
       viem:
         specifier: ^1.19.3
@@ -152,7 +159,7 @@ importers:
         specifier: ^3.3.2
         version: 3.3.2
       shared:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../shared
       zod:
         specifier: ^3.22.4
@@ -170,19 +177,19 @@ importers:
         specifier: ^1.17.0
         version: 1.17.0
       '@oasisdex/addresses':
-        specifier: ^0.1.18
-        version: 0.1.30
+        specifier: 0.1.16-dma-v2-workers.1
+        version: 0.1.16-dma-v2-workers.1
       '@oasisdex/dma-library':
-        specifier: 0.5.26-beta.2
-        version: 0.5.26-beta.2
+        specifier: 0.5.21-dma-v2-workers.2
+        version: 0.5.21-dma-v2-workers.2
       contracts:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../contracts
       node-fetch:
         specifier: ^3.3.2
         version: 3.3.2
       shared:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../shared
       viem:
         specifier: ^1.19.11
@@ -190,6 +197,10 @@ importers:
       zod:
         specifier: ^3.22.4
         version: 3.22.4
+    devDependencies:
+      esbuild:
+        specifier: ^0.19.11
+        version: 0.19.11
 
   apps/summerfi-api/lib/shared:
     dependencies:
@@ -2430,12 +2441,16 @@ packages:
       fastq: 1.16.0
     dev: true
 
+  /@oasisdex/addresses@0.1.16-dma-v2-workers.1:
+    resolution: {integrity: sha512-jQvtEOWCmA/O6kTpg3ATWJq90ipuEzgNDCfv5R+43gUc9mHXHIFKjwAHuhmKyCkXO92nQFkP7sk8MJbw9A0hRw==}
+    dev: false
+
   /@oasisdex/addresses@0.1.30:
     resolution: {integrity: sha512-Gl1ez3g9DL7NwzW+UZdOz6Wi+MWJ7XOp1cxIBs5H+UDULkCp20jsoSrrwaGD1/zxJLU5VGFhA3/68YvbKHdP0w==}
     dev: false
 
-  /@oasisdex/dma-library@0.5.26-beta.2:
-    resolution: {integrity: sha512-agzPk6W8LLbgGx3xXBFZtVsZfxRdeS5f9Y74Uvv3ZoaDqAeU2jpU01+bmss+Xrf2aie0zA2Ix2ltfY5ZAn0TsA==}
+  /@oasisdex/dma-library@0.5.21-dma-v2-workers.2:
+    resolution: {integrity: sha512-3ndvitCIs9JH5QjhgUV848cOkDJ613/wvQ1fVNy0bDV/FgPLXGdrEV0aLuupPxG3ajBWHUu+VDDH/xyLHtZtyw==}
     dependencies:
       bignumber.js: 9.0.1
       ethers: 5.6.2
@@ -2532,8 +2547,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@tsconfig/node18@18.2.2:
-    resolution: {integrity: sha512-d6McJeGsuoRlwWZmVIeE8CUA27lu6jLjvv1JzqmpsytOYYbVi1tHZEnwCNVOXnj4pyLvneZlFlpXUK+X9wBWyw==}
+  /@tsconfig/node20@20.1.2:
+    resolution: {integrity: sha512-madaWq2k+LYMEhmcp0fs+OGaLFk0OenpHa4gmI4VEmCKX4PJntQ6fnnGADVFrVkBj0wIdAlQnK/MrlYTHsa1gQ==}
     dev: true
 
   /@types/aws-lambda@8.10.131:

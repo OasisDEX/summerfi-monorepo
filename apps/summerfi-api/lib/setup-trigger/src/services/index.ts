@@ -31,6 +31,7 @@ import {
   AgainstPositionValidator,
   getAgainstPositionValidator,
 } from './against-position-validators'
+import fetch from "node-fetch";
 
 const rpcConfig = {
   skipCache: false,
@@ -135,21 +136,26 @@ export function buildServiceContainer<
         throw e
       }
 
-      if (isAaveAutoBuyTriggerData(triggerData)) {
-        return triggerEncoders[ProtocolId.AAVE3][SupportedTriggers.AutoBuy](
-          position,
-          triggerData,
-          currentTrigger,
-        )
+      try {
+        if (isAaveAutoBuyTriggerData(triggerData)) {
+          return triggerEncoders[ProtocolId.AAVE3][SupportedTriggers.AutoBuy](
+            position,
+            triggerData,
+            currentTrigger,
+          )
+        }
+        if (isAaveAutoSellTriggerData(triggerData)) {
+          return triggerEncoders[ProtocolId.AAVE3][SupportedTriggers.AutoSell](
+            position,
+            triggerData,
+            currentTrigger,
+          )
+        }
+        throw new Error('Unsupported trigger data')
+      } catch (e) {
+        logger?.error('Error creating triggers', { error: e, position })
+        throw e
       }
-      if (isAaveAutoSellTriggerData(triggerData)) {
-        return triggerEncoders[ProtocolId.AAVE3][SupportedTriggers.AutoSell](
-          position,
-          triggerData,
-          currentTrigger,
-        )
-      }
-      throw new Error('Unsupported trigger data')
     },
     encodeForDPM: (params: EncodeFunctionForDpmParams) => {
       return encodeFunctionForDpm(params, addresses)

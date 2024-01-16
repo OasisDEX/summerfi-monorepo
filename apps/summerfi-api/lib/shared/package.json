@@ -1,18 +1,24 @@
 {
   "name": "shared",
   "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "zod": "^3.22.4"
+  },
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
     "test": "jest",
     "build": "tsc -b -v"
   },
-  "files": [
-    "dist"
-  ],
-  "author": "Piter",
-  "license": "UNLICENSED",
-  "dependencies": {
-    "zod": "^3.22.4"
+  "exports": {
+    ".":  {
+      "import": "./dist/index.js",
+      "types":  "./dist/index.d.ts"
+    },
+    "./*": {
+      "import": "./dist/*.js",
+      "types": "./dist/*.d.ts"
+    }
   }
 }
