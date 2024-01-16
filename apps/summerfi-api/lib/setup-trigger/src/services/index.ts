@@ -31,7 +31,7 @@ import {
   AgainstPositionValidator,
   getAgainstPositionValidator,
 } from './against-position-validators'
-import fetch from "node-fetch";
+import fetch from 'node-fetch'
 
 const rpcConfig = {
   skipCache: false,
