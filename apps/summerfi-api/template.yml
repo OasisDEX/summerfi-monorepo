@@ -57,15 +57,15 @@ Resources:
             Method: post
       Environment:
         Variables:
-              RPC_GATEWAY: '' # Update with your environment variables
-              POWERTOOLS_LOG_LEVEL: DEBUG
-              GET_TRIGGERS_URL: '' # Update with your environment variables
+          RPC_GATEWAY: '' # Update with your environment variables
+          POWERTOOLS_LOG_LEVEL: DEBUG
+          GET_TRIGGERS_URL: '' # Update with your environment variables
   # Add more Lambda function definitions as needed
 
 Outputs:
   GetTriggers:
-    Description: "GetTriggers ARN"
+    Description: 'GetTriggers ARN'
     Value: !GetAtt GetTriggers.Arn
   SetupTrigger:
-    Description: "SetupTrigger ARN"
+    Description: 'SetupTrigger ARN'
     Value: !GetAtt SetupTrigger.Arn

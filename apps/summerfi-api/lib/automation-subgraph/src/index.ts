@@ -5,7 +5,7 @@ import {
   TriggerByTypeQuery,
   TriggerByTypeDocument,
 } from './types/graphql/generated'
-import { ChainId } from 'shared/domain-types'
+import { ChainId } from '@summerfi/serverless-shared/domain-types'
 import { Logger } from '@aws-lambda-powertools/logger'
 
 const chainIdSubgraphMap: Partial<Record<ChainId, string>> = {

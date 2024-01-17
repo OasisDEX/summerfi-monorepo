@@ -1,0 +1,35 @@
+{
+  "extends": "@tsconfig/node20/tsconfig.json",
+  "compilerOptions": {
+    "lib": ["es2022"],
+    "target": "es2022",
+    "module": "ES2022",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "incremental": true,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "strict": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "allowUnreachableCode": false,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"]
+  },
+  "include": [],
+  "exclude": ["node_modules"],
+  "references": [
+    {
+      "path": "../../apps/summerfi-api/lib/serverless-shared"
+    },
+    {
+      "path": "../../apps/summerfi-api/lib/automation-subgraph"
+    },
+    {
+      "path": "../../apps/summerfi-api/lib/serverless-contracts"
+    }
+  ]
+}
