@@ -37,11 +37,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-              pnpm install
+          pnpm install
 
       - name: Create bundle
         run: |
-              pnpm run build
+          pnpm run build
 
       - name: Deploy portfolio-assets
         id: assets-deploy
@@ -74,8 +74,7 @@ jobs:
       - name: Update portfolio-overview Lambda Alias
         run: |
           aws lambda update-alias --function-name ${{ env.OVERVIEW_LAMBDA }} --name current --function-version ${{ steps.lambda-latest-version.outputs.overview_latest_version }}
-      
+
       - name: Create cache invalidation
         run: |
-              aws apigateway flush-stage-cache --rest-api-id ${{ secrets.STAGING_API_GW_ID }} --stage-name staging
-
+          aws apigateway flush-stage-cache --rest-api-id ${{ secrets.STAGING_API_GW_ID }} --stage-name staging

@@ -8,8 +8,8 @@ generates:
     plugins:
       - add:
           content:
-            - "// @ts-nocheck"
-            - "// This file was automatically generated and should not be edited."
+            - '// @ts-nocheck'
+            - '// This file was automatically generated and should not be edited.'
       - typescript
       - typescript-operations:
           strictScalars: true

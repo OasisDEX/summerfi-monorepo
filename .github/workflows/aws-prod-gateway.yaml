@@ -31,11 +31,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-              pnpm install
+          pnpm install
 
       - name: Create bundle
         run: |
-              pnpm run build
+          pnpm run build
 
       - name: Deploy portfolio-assets
         uses: appleboy/lambda-action@v0.1.9
@@ -50,8 +50,7 @@ jobs:
           function_name: summer-fi-portfolio-overview-prod
           zip_file: ./apps/summerfi-api/artifacts/portfolio-overview.zip
           dry_run: false
-      
+
       - name: Create cache invalidation
         run: |
-              aws apigateway flush-stage-cache --rest-api-id ${{ secrets.PROD_API_GW_ID }} --stage-name prod
-
+          aws apigateway flush-stage-cache --rest-api-id ${{ secrets.PROD_API_GW_ID }} --stage-name prod

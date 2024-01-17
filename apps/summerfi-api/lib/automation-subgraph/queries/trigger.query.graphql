@@ -1,5 +1,5 @@
 query TriggerByType($dpm: Bytes!, $triggerType: BigInt!) {
-  triggers(where: { account: $dpm, triggerType: $triggerType  }) {
+  triggers(where: { account: $dpm, triggerType: $triggerType }) {
     account
     owner
     id
