@@ -1,0 +1,9 @@
+{
+    "name": "summer-sdk",
+    "version": "1.0.0",
+    "scripts": {},
+    "license": "UNLICENSED",
+    "dependencies": {
+        "viem": "^2.1.1"
+    }
+}
