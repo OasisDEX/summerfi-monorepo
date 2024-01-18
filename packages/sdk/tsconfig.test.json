@@ -3,11 +3,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "baseUrl": "src",
-    "paths": {
-      "~types": ["./src/types"],
-      "~abi": ["./src/abi"]
-    }
+    "baseUrl": "src"
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]

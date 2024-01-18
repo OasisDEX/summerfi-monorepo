@@ -1,3 +1,3 @@
 {
-  "extends": "@summerfi/typescript-config/tsconfig.base.json",
+  "extends": "@summerfi/typescript-config/tsconfig.base.json"
 }
