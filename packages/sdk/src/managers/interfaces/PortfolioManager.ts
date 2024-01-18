@@ -19,5 +19,9 @@ export interface PortfolioManager {
    *
    * @returns The list of positions for the given wallet and networks
    */
-  getPositions(params: { networks: NetworkId[]; wallet: Wallet; ids?: PositionId[] }): Position[]
+  getPositions(params: {
+    networks: NetworkId[]
+    wallet: Wallet
+    ids?: PositionId[]
+  }): Promise<Position[]>
 }

@@ -1,5 +1,5 @@
 import { Protocol } from '~sdk/protocols'
-import { ProtocolsNames } from './ProtocolName'
+import { ProtocolName } from './ProtocolName'
 
 /**
  * @class ProtocolsRegistry
@@ -7,7 +7,7 @@ import { ProtocolsNames } from './ProtocolName'
  */
 export class ProtocolsRegistry {
   /// Class Attributes
-  private static _protocols: Map<ProtocolsNames, Protocol>
+  private static _protocols: Map<ProtocolName, Protocol>
 
   /// Constructor
   private constructor() {}
@@ -20,7 +20,7 @@ export class ProtocolsRegistry {
    * @param name Protocol name
    * @param protocol Protocol instance
    */
-  public static registerProtocol(params: { name: ProtocolsNames; protocol: Protocol }): void {
+  public static registerProtocol(params: { name: ProtocolName; protocol: Protocol }): void {
     if (!this._protocols) {
       this._protocols = new Map()
     }
@@ -39,13 +39,20 @@ export class ProtocolsRegistry {
    *
    * @returns Protocol instance
    */
-  public static getProtocol<ProtocolType extends Protocol>(params: {
-    name: ProtocolsNames
-  }): ProtocolType {
-    const protocol = this._protocols.get(params.name)
+  public static getProtocol<ProtocolType extends Protocol>(name: ProtocolName): ProtocolType {
+    const protocol = this._protocols.get(name)
     if (!protocol) {
-      throw new Error(`Protocol ${params.name} not found`)
+      throw new Error(`Protocol ${name} not found`)
     }
     return protocol as ProtocolType
+  }
+
+  /**
+   * Returns the list of supported protocols
+   *
+   * @returns The list of supported protocols
+   */
+  public static getSupportedProtocols(): ProtocolName[] {
+    return Array.from(this._protocols.keys())
   }
 }

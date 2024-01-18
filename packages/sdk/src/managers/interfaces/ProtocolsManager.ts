@@ -12,7 +12,7 @@ export interface ProtocolsManager {
    *
    * @returns The list of supported protocols
    */
-  getSupportedProtocols(): Promise<ProtocolName[]>
+  getSupportedProtocols(): ProtocolName[]
 
   /**
    * @method getProtocol
