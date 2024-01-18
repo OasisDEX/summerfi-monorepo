@@ -1,5 +1,5 @@
 import { Protocol } from '~sdk/protocols'
-import { ProtocolsNames } from './ProtocolsNames'
+import { ProtocolsNames } from './ProtocolName'
 
 /**
  * @class ProtocolsRegistry

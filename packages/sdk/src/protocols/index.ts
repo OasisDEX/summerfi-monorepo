@@ -10,4 +10,4 @@ export type {
   StakingPool,
 } from './interface'
 export { PoolType } from './interface'
-export { ProtocolsNames, ProtocolsRegistry } from './adapters'
+export { ProtocolName, ProtocolsRegistry } from './adapters'

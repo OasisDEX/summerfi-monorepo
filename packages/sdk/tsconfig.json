@@ -4,7 +4,7 @@
     "rootDir": "src",
     "outDir": "dist",
     "paths": {
-      "~sdk": ["./src/index.ts"],
+      "~sdk": ["src/utils/index.ts"],
       "~sdk/*": ["./src/*"]
     }
   },

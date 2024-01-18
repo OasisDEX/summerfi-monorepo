@@ -1,2 +1,2 @@
-export { ProtocolsNames } from './ProtocolsNames'
+export { ProtocolName } from './ProtocolName'
 export { ProtocolsRegistry } from './ProtocolsRegistry'

@@ -1,2 +1,11 @@
-export * from "./interfaces";
-export * from "./types";
+export type {
+  Address,
+  Percentage,
+  Price,
+  Token,
+  Printable,
+  RiskRatio,
+  TokenAmount,
+  Wallet,
+} from './interfaces'
+export { AddressType, PercentageType } from './interfaces'
