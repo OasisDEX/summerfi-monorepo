@@ -1,0 +1,30 @@
+{
+  "name": "@summerfi/portfolio-migrations-function",
+  "version": "0.0.1",
+  "scripts": {
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "test": "jest --passWithNoTests",
+    "build": "tsc -b -v",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "docker:build": "tar chzf files.tar.gz Dockerfile node_modules dist && docker build --platform linux/amd64 -t portfolio-migrations - < files.tar.gz && rm files.tar.gz",
+    "docker:run": "docker run --rm -p 9000:8080 portfolio-migrations",
+    "dev": "npm run tsc && npm run docker:build && npm run docker:run",
+    "invoke": "curl http://localhost:9000/2015-03-31/functions/function/invocations -d '{\"queryStringParameters\": {\"address\": \"0x10649c79428d718621821Cf6299e91920284743F\"}}' | jq",
+    "aws:deploy": "deploy zip file"
+  },
+  "dependencies": {
+    "@oasisdex/addresses": "^0.1.14",
+    "@summerfi/serverless-shared": "workspace:*",
+    "viem": "^1.19.3",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "@types/jest": "^29.5.11"
+  }
+}

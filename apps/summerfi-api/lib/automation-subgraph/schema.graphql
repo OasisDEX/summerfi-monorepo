@@ -20,7 +20,13 @@ type CDP {
   ilk: Bytes!
   ilkName: String!
   owner: Bytes!
-  triggers(first: Int = 100, orderBy: Trigger_orderBy, orderDirection: OrderDirection, skip: Int = 0, where: Trigger_filter): [Trigger!]!
+  triggers(
+    first: Int = 100
+    orderBy: Trigger_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    where: Trigger_filter
+  ): [Trigger!]!
   urn: Urn!
 }
 
@@ -30,7 +36,13 @@ type Liquidation {
   id: ID!
   logIndex: BigInt!
   transactionHash: Bytes!
-  triggers(first: Int = 100, orderBy: TriggerLiquidation_orderBy, orderDirection: OrderDirection, skip: Int = 0, where: TriggerLiquidation_filter): [TriggerLiquidation!]!
+  triggers(
+    first: Int = 100
+    orderBy: TriggerLiquidation_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    where: TriggerLiquidation_filter
+  ): [TriggerLiquidation!]!
 }
 
 type Query {
@@ -38,128 +50,128 @@ type Query {
   _meta(block: Block_height): _Meta_
   cdp(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    id: ID!,
+    block: Block_height
+    id: ID!
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): CDP
   cdps(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    first: Int = 100,
-    orderBy: CDP_orderBy,
-    orderDirection: OrderDirection,
-    skip: Int = 0,
+    block: Block_height
+    first: Int = 100
+    orderBy: CDP_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
-    subgraphError: _SubgraphErrorPolicy_! = deny,
+    subgraphError: _SubgraphErrorPolicy_! = deny
     where: CDP_filter
   ): [CDP!]!
   liquidation(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    id: ID!,
+    block: Block_height
+    id: ID!
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): Liquidation
   liquidations(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    first: Int = 100,
-    orderBy: Liquidation_orderBy,
-    orderDirection: OrderDirection,
-    skip: Int = 0,
+    block: Block_height
+    first: Int = 100
+    orderBy: Liquidation_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
-    subgraphError: _SubgraphErrorPolicy_! = deny,
+    subgraphError: _SubgraphErrorPolicy_! = deny
     where: Liquidation_filter
   ): [Liquidation!]!
   token(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    id: ID!,
+    block: Block_height
+    id: ID!
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): Token
   tokens(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    first: Int = 100,
-    orderBy: Token_orderBy,
-    orderDirection: OrderDirection,
-    skip: Int = 0,
+    block: Block_height
+    first: Int = 100
+    orderBy: Token_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
-    subgraphError: _SubgraphErrorPolicy_! = deny,
+    subgraphError: _SubgraphErrorPolicy_! = deny
     where: Token_filter
   ): [Token!]!
   trigger(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    id: ID!,
+    block: Block_height
+    id: ID!
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): Trigger
   triggerEvent(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    id: ID!,
+    block: Block_height
+    id: ID!
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): TriggerEvent
   triggerEvents(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    first: Int = 100,
-    orderBy: TriggerEvent_orderBy,
-    orderDirection: OrderDirection,
-    skip: Int = 0,
+    block: Block_height
+    first: Int = 100
+    orderBy: TriggerEvent_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
-    subgraphError: _SubgraphErrorPolicy_! = deny,
+    subgraphError: _SubgraphErrorPolicy_! = deny
     where: TriggerEvent_filter
   ): [TriggerEvent!]!
   triggerLiquidation(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    id: ID!,
+    block: Block_height
+    id: ID!
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): TriggerLiquidation
   triggerLiquidations(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    first: Int = 100,
-    orderBy: TriggerLiquidation_orderBy,
-    orderDirection: OrderDirection,
-    skip: Int = 0,
+    block: Block_height
+    first: Int = 100
+    orderBy: TriggerLiquidation_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
-    subgraphError: _SubgraphErrorPolicy_! = deny,
+    subgraphError: _SubgraphErrorPolicy_! = deny
     where: TriggerLiquidation_filter
   ): [TriggerLiquidation!]!
   triggers(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    first: Int = 100,
-    orderBy: Trigger_orderBy,
-    orderDirection: OrderDirection,
-    skip: Int = 0,
+    block: Block_height
+    first: Int = 100
+    orderBy: Trigger_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
-    subgraphError: _SubgraphErrorPolicy_! = deny,
+    subgraphError: _SubgraphErrorPolicy_! = deny
     where: Trigger_filter
   ): [Trigger!]!
   urn(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    id: ID!,
+    block: Block_height
+    id: ID!
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): Urn
   urns(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    first: Int = 100,
-    orderBy: Urn_orderBy,
-    orderDirection: OrderDirection,
-    skip: Int = 0,
+    block: Block_height
+    first: Int = 100
+    orderBy: Urn_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
-    subgraphError: _SubgraphErrorPolicy_! = deny,
+    subgraphError: _SubgraphErrorPolicy_! = deny
     where: Urn_filter
   ): [Urn!]!
 }
@@ -169,128 +181,128 @@ type Subscription {
   _meta(block: Block_height): _Meta_
   cdp(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    id: ID!,
+    block: Block_height
+    id: ID!
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): CDP
   cdps(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    first: Int = 100,
-    orderBy: CDP_orderBy,
-    orderDirection: OrderDirection,
-    skip: Int = 0,
+    block: Block_height
+    first: Int = 100
+    orderBy: CDP_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
-    subgraphError: _SubgraphErrorPolicy_! = deny,
+    subgraphError: _SubgraphErrorPolicy_! = deny
     where: CDP_filter
   ): [CDP!]!
   liquidation(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    id: ID!,
+    block: Block_height
+    id: ID!
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): Liquidation
   liquidations(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    first: Int = 100,
-    orderBy: Liquidation_orderBy,
-    orderDirection: OrderDirection,
-    skip: Int = 0,
+    block: Block_height
+    first: Int = 100
+    orderBy: Liquidation_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
-    subgraphError: _SubgraphErrorPolicy_! = deny,
+    subgraphError: _SubgraphErrorPolicy_! = deny
     where: Liquidation_filter
   ): [Liquidation!]!
   token(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    id: ID!,
+    block: Block_height
+    id: ID!
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): Token
   tokens(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    first: Int = 100,
-    orderBy: Token_orderBy,
-    orderDirection: OrderDirection,
-    skip: Int = 0,
+    block: Block_height
+    first: Int = 100
+    orderBy: Token_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
-    subgraphError: _SubgraphErrorPolicy_! = deny,
+    subgraphError: _SubgraphErrorPolicy_! = deny
     where: Token_filter
   ): [Token!]!
   trigger(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    id: ID!,
+    block: Block_height
+    id: ID!
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): Trigger
   triggerEvent(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    id: ID!,
+    block: Block_height
+    id: ID!
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): TriggerEvent
   triggerEvents(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    first: Int = 100,
-    orderBy: TriggerEvent_orderBy,
-    orderDirection: OrderDirection,
-    skip: Int = 0,
+    block: Block_height
+    first: Int = 100
+    orderBy: TriggerEvent_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
-    subgraphError: _SubgraphErrorPolicy_! = deny,
+    subgraphError: _SubgraphErrorPolicy_! = deny
     where: TriggerEvent_filter
   ): [TriggerEvent!]!
   triggerLiquidation(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    id: ID!,
+    block: Block_height
+    id: ID!
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): TriggerLiquidation
   triggerLiquidations(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    first: Int = 100,
-    orderBy: TriggerLiquidation_orderBy,
-    orderDirection: OrderDirection,
-    skip: Int = 0,
+    block: Block_height
+    first: Int = 100
+    orderBy: TriggerLiquidation_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
-    subgraphError: _SubgraphErrorPolicy_! = deny,
+    subgraphError: _SubgraphErrorPolicy_! = deny
     where: TriggerLiquidation_filter
   ): [TriggerLiquidation!]!
   triggers(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    first: Int = 100,
-    orderBy: Trigger_orderBy,
-    orderDirection: OrderDirection,
-    skip: Int = 0,
+    block: Block_height
+    first: Int = 100
+    orderBy: Trigger_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
-    subgraphError: _SubgraphErrorPolicy_! = deny,
+    subgraphError: _SubgraphErrorPolicy_! = deny
     where: Trigger_filter
   ): [Trigger!]!
   urn(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    id: ID!,
+    block: Block_height
+    id: ID!
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): Urn
   urns(
     "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted."
-    block: Block_height,
-    first: Int = 100,
-    orderBy: Urn_orderBy,
-    orderDirection: OrderDirection,
-    skip: Int = 0,
+    block: Block_height
+    first: Int = 100
+    orderBy: Urn_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
     "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing."
-    subgraphError: _SubgraphErrorPolicy_! = deny,
+    subgraphError: _SubgraphErrorPolicy_! = deny
     where: Urn_filter
   ): [Urn!]!
 }
@@ -301,7 +313,13 @@ type Token {
   id: Bytes!
   precision: BigInt!
   symbol: String!
-  triggers(first: Int = 100, orderBy: Trigger_orderBy, orderDirection: OrderDirection, skip: Int = 0, where: Trigger_filter): [Trigger!]!
+  triggers(
+    first: Int = 100
+    orderBy: Trigger_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    where: Trigger_filter
+  ): [Trigger!]!
 }
 
 type Trigger {
@@ -322,14 +340,26 @@ type Trigger {
   executedTransaction: Bytes
   id: ID!
   kind: String!
-  liquidations(first: Int = 100, orderBy: TriggerLiquidation_orderBy, orderDirection: OrderDirection, skip: Int = 0, where: TriggerLiquidation_filter): [TriggerLiquidation!]!
+  liquidations(
+    first: Int = 100
+    orderBy: TriggerLiquidation_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    where: TriggerLiquidation_filter
+  ): [TriggerLiquidation!]!
   owner: Bytes
   protocol: String
   removedBlock: BigInt
   removedLogIndex: BigInt
   removedTimestamp: BigInt
   removedTransaction: Bytes
-  tokens(first: Int = 100, orderBy: Token_orderBy, orderDirection: OrderDirection, skip: Int = 0, where: Token_filter): [Token!]!
+  tokens(
+    first: Int = 100
+    orderBy: Token_orderBy
+    orderDirection: OrderDirection
+    skip: Int = 0
+    where: Token_filter
+  ): [Token!]!
   triggerData: Bytes!
   triggerType: BigInt!
   version: BigInt!
@@ -371,7 +401,6 @@ type _Block_ {
 "The type for the top-level _meta field"
 type _Meta_ {
   """
-
   Information about a specific subgraph block. The hash of the block
   will be null if the _meta field has a block constraint that asks for
   a block number. It will be filled if the _meta field has no block constraint
@@ -554,7 +583,6 @@ scalar BigInt
 scalar Bytes
 
 """
-
 8 bytes signed integer
 """
 scalar Int8

@@ -1,0 +1,11 @@
+{
+  "extends": "@summerfi/typescript-config/tsconfig.test.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "baseUrl": "src",
+    "types": ["node", "jest"]
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

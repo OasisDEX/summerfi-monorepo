@@ -4,15 +4,21 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "graph": "pnpm dlx nx graph"
+    "lint:fix": "turbo run lint:fix",
+    "graph": "pnpm dlx nx graph",
+    "format": "prettier --check \"./**/*.{ts,tsx,js,jsx,json}\"",
+    "format:fix": "prettier --write \"./**/*.{ts,tsx,js,jsx,json}\""
   },
   "devDependencies": {
-    "eslint": "^8.48.0",
-    "prettier": "^3.0.3",
-    "tsconfig": "*",
-    "turbo": "latest"
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "prettier": "^3.2.2",
+    "turbo": "latest",
+    "jest": "^29.7.0"
   },
   "name": "summerfi-monorepo",
-  "packageManager": "pnpm@8.14.1"
+  "packageManager": "pnpm@8.14.1",
+  "engines": {
+    "node": ">=18"
+  }
 }

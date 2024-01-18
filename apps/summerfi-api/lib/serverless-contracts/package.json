@@ -1,0 +1,26 @@
+{
+  "name": "@summerfi/serverless-contracts",
+  "version": "1.0.0",
+  "scripts": {
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "test": "jest --passWithNoTests",
+    "build": "tsc -b -v",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./*": {
+        "import": "./dist/*.js",
+        "types": "./dist/*.d.ts"
+    }
+  }
+}

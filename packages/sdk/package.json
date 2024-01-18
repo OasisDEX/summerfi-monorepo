@@ -1,0 +1,23 @@
+{
+    "name": "@summerfi/sdk",
+    "version": "0.0.1",
+    "type": "module",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+      "tsc": "tsc",
+      "watch": "tsc -w",
+      "test": "jest",
+      "build": "tsc -b -v",
+      "lint": "eslint .",
+      "lint:fix": "eslint . --fix"
+    },
+    "dependencies": {},
+    "devDependencies": {
+      "@summerfi/eslint-config": "workspace:*",
+      "@summerfi/typescript-config": "workspace:*",
+      "jest": "^29.7.0",
+        "@types/jest": "^29.5.11"
+    }
+  }
+  
