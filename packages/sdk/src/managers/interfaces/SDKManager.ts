@@ -4,11 +4,11 @@ import { UserManager } from './UserManager'
 import { PortfolioManager } from './PortfolioManager'
 
 /**
- * @interface SDK
- * @description The SDK is the main entry point to interact with the SDK. It contains all the managers that allow to interact
+ * @interface SDKManager
+ * @description The SDKManager is the main entry point to interact with the SDK. It contains all the managers that allow to interact
  *              with the different functionality of the SDK
  */
-export interface SDK {
+export interface SDKManager {
   simulator: SimulationManager
   networks: NetworkManager
   users: UserManager

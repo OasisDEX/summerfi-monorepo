@@ -8,11 +8,11 @@ import {
 import { Position } from '~sdk/user'
 
 /**
- * @class AutomationSimulationManagerClientImpl
+ * @class AutomationSimulationManagerMixin
  * @description Client implementation of the AutomationSimulationManager interface
  * @see AutomationSimulationManager
  */
-export abstract class AutomationSimulationManagerClientImpl implements AutomationSimulationManager {
+export abstract class AutomationSimulationManagerMixin implements AutomationSimulationManager {
   /// Instance Methods
 
   /**

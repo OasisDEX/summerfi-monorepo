@@ -1,10 +1,3 @@
-import {
-  RefinanceSimulationManager,
-  FinanceSimulationManager,
-  MigrationSimulationManager,
-  AutomationSimulationManager,
-} from './simulations'
-
 /**
  * @interface SimulationManager
  * @description Allows to request different types of simulations:
@@ -14,11 +7,6 @@ import {
  *              - Simulation of an Automation operation
  *              - Simulation of an Import operation
  */
-export interface SimulationManager
-  extends FinanceSimulationManager,
-    RefinanceSimulationManager,
-    MigrationSimulationManager,
-    AutomationSimulationManager,
-    MigrationSimulationManager {
+export interface SimulationManager {
   // Empty on purpose
 }

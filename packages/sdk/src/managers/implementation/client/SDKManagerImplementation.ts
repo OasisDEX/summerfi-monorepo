@@ -1,6 +1,10 @@
-import { NetworkManager, PortfolioManager, SimulationManager, UserManager } from '~sdk/managers'
-import { Network, NetworkId } from '~sdk/network'
-import { Maybe } from '~sdk/utils'
+import {
+  NetworkManager,
+  PortfolioManager,
+  SDKManager,
+  SimulationManager,
+  UserManager,
+} from '~sdk/managers'
 import { SimulationManagerClientImpl } from './SimulationManagerClientImpl'
 import { NetworkManagerClientImpl } from './NetworkManagerClientImpl'
 import { PortfolioManagerClientImpl } from './PortfolioManagerClientImpl'
@@ -10,7 +14,7 @@ import { UserManagerClientImpl } from './UserManagerClientImpl'
  * @class SDKManagerClientImpl
  * @see SDKManager
  */
-export class SDKManagerClientImpl implements NetworkManager {
+export class SDKManagerClientImpl implements SDKManager {
   /// Class Attributes
   private static _instance: SDKManagerClientImpl
 
@@ -25,35 +29,6 @@ export class SDKManagerClientImpl implements NetworkManager {
     this.networks = NetworkManagerClientImpl.getInstance()
     this.users = UserManagerClientImpl.getInstance()
     this.portfolio = PortfolioManagerClientImpl.getInstance()
-  }
-
-  /// Instance Methods
-
-  /**
-   * @method getSupportedNetworks
-   * @see NetworkManager#getSupportedNetworks
-   */
-  public async getSupportedNetworks(): Promise<NetworkId[]> {
-    // TODO: Implement
-    return [] as NetworkId[]
-  }
-
-  /**
-   * @method getNetworkByName
-   * @see NetworkManager#getNetworkByName
-   */
-  public async getNetworkByName(name: string): Promise<Maybe<Network>> {
-    // TODO: Implement
-    return undefined
-  }
-
-  /**
-   * @method getNetworkByChainId
-   * @see NetworkManager#getNetworkByChainId
-   */
-  public async getNetworkByChainId(chainId: number): Promise<Maybe<Network>> {
-    // TODO: Implement
-    return undefined
   }
 
   /// Static Methods

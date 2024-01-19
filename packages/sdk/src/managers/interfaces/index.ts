@@ -1,7 +1,7 @@
 export type { NetworkManager } from './NetworkManager'
 export type { PortfolioManager } from './PortfolioManager'
 export type { ProtocolsManager } from './ProtocolsManager'
-export type { SDK } from './SDKManager'
+export type { SDKManager } from './SDKManager'
 export type { SimulationManager } from './SimulationManager'
 export type { TokensManager } from './TokensManager'
 export type { UserManager } from './UserManager'

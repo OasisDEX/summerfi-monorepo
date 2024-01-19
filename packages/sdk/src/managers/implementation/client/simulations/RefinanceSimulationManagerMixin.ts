@@ -4,11 +4,11 @@ import { Pool } from '~sdk/protocols'
 import { Position } from '~sdk/user'
 
 /**
- * @class FinanceSimulationManagerClientImpl
+ * @class RefinanceSimulationManagerMixin
  * @description Client implementation of the AutomationSimulationManager interface
  * @see RefinanceSimulationManager
  */
-export abstract class RefinanceSimulationManagerClientImpl implements RefinanceSimulationManager {
+export abstract class RefinanceSimulationManagerMixin implements RefinanceSimulationManager {
   /// Instance Methods
 
   /**

@@ -2,11 +2,11 @@ import { ImportingSimulationManager, MigrationSimulationManager } from '~sdk/man
 import { ExternalPosition, ImportPositionSimulation } from '~sdk/orders'
 
 /**
- * @class FinanceSimulationManagerClientImpl
+ * @class ImportingSimulationManagerMixin
  * @description Client implementation of the AutomationSimulationManager interface
  * @see ImportingSimulationManager
  */
-export abstract class ImportingSimulationManagerClientImpl implements ImportingSimulationManager {
+export abstract class ImportingSimulationManagerMixin implements ImportingSimulationManager {
   /// Instance Methods
 
   /**

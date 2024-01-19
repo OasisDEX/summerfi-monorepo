@@ -3,11 +3,11 @@ import { MigratePositionParameters, MigratePositionSimulation } from '~sdk/order
 import { Position } from '~sdk/user'
 
 /**
- * @class FinanceSimulationManagerClientImpl
+ * @class MigrationSimulationManagerMixin
  * @description Client implementation of the AutomationSimulationManager interface
  * @see MigrationSimulationManager
  */
-export abstract class MigrationSimulationManagerClientImpl implements MigrationSimulationManager {
+export abstract class MigrationSimulationManagerMixin implements MigrationSimulationManager {
   /// Instance Methods
 
   /**
