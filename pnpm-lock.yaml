@@ -257,6 +257,9 @@ importers:
       bignumber.js:
         specifier: 9.0.1
         version: 9.0.1
+      just-memoize:
+        specifier: ^2.2.0
+        version: 2.2.0
       node-fetch:
         specifier: ^3.3.2
         version: 3.3.2
@@ -300,6 +303,9 @@ importers:
       eslint-config-turbo:
         specifier: ^1.11.3
         version: 1.11.3(eslint@8.56.0)
+      eslint-plugin-unused-imports:
+        specifier: ^3.0.0
+        version: 3.0.0(@typescript-eslint/eslint-plugin@6.18.1)(eslint@8.56.0)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -4512,6 +4518,26 @@ packages:
       strip-indent: 3.0.0
     dev: true
 
+  /eslint-plugin-unused-imports@3.0.0(@typescript-eslint/eslint-plugin@6.18.1)(eslint@8.56.0):
+    resolution: {integrity: sha512-sduiswLJfZHeeBJ+MQaG+xYzSWdRXoSw61DpU13mzWumCkR0ufD0HmO4kdNokjrkluMHpj/7PJeN35pgbhW3kw==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    peerDependencies:
+      '@typescript-eslint/eslint-plugin': ^6.0.0
+      eslint: ^8.0.0
+    peerDependenciesMeta:
+      '@typescript-eslint/eslint-plugin':
+        optional: true
+    dependencies:
+      '@typescript-eslint/eslint-plugin': 6.18.1(@typescript-eslint/parser@6.18.1)(eslint@8.56.0)(typescript@5.3.3)
+      eslint: 8.56.0
+      eslint-rule-composer: 0.3.0
+    dev: true
+
+  /eslint-rule-composer@0.3.0:
+    resolution: {integrity: sha512-bt+Sh8CtDmn2OajxvNO+BX7Wn4CIWMpTRm3MaiKPCQcnnlm0CS2mhui6QaoeQugs+3Kj2ESKEEGJUdVafwhiCg==}
+    engines: {node: '>=4.0.0'}
+    dev: true
+
   /eslint-scope@5.1.1:
     resolution: {integrity: sha512-2NxwbF/hZ0KpepYN0cNbo+FN6XoK7GaHlQhgx/hIZl6Va0bF45RQOOwhLIy8lQDbuCiadSLCBnH2CFYquit5bw==}
     engines: {node: '>=8.0.0'}
@@ -6184,6 +6210,10 @@ packages:
       object.assign: 4.1.5
       object.values: 1.1.7
     dev: true
+
+  /just-memoize@2.2.0:
+    resolution: {integrity: sha512-zriv+MY+61RXT0QsrO1ZJtL5umouqqSWmCGBkp2wJm35kniunBAA4qhUKx8Lvg/QcwrF9xuw9E6PkevKFf4boQ==}
+    dev: false
 
   /keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}

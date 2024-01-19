@@ -20,7 +20,8 @@
     "@summerfi/serverless-contracts": "workspace:*",
     "viem": "^1.19.11",
     "zod": "^3.22.4",
-    "bignumber.js": "9.0.1"
+    "bignumber.js": "9.0.1",
+    "just-memoize": "^2.2.0"
   },
   "devDependencies": {
     "esbuild": "^0.19.11",

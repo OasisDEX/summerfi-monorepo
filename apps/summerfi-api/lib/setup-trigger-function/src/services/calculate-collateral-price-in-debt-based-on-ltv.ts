@@ -1,6 +1,5 @@
-import { LTV, PERCENT_DECIMALS, PositionLike, Price, PRICE_DECIMALS } from '../types'
+import { PERCENT_DECIMALS, PositionLike, Price, PRICE_DECIMALS } from '../types'
 import { getTheLeastCommonMultiple, normalizeAmount } from './normalize-amount'
-import { z } from 'zod'
 
 export function calculateCollateralPriceInDebtBasedOnLtv(params: PositionLike): Price {
   const { collateral, debt, ltv } = params

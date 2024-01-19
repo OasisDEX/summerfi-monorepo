@@ -1,4 +1,4 @@
-import { adjustToTargetRiskRatio, RISK_RATIO_CTOR_TYPE, RiskRatio } from '@oasisdex/dma-library'
+import { adjustToTargetRiskRatio, RiskRatio } from '@oasisdex/dma-library'
 import BigNumber from 'bignumber.js'
 import {
   LTV,

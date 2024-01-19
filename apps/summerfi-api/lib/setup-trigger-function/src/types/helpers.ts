@@ -2,9 +2,11 @@ import {
   AaveAutoBuyTriggerData,
   AaveAutoSellTriggerData,
   TriggerData,
+  ValidationIssue,
   ValidationResults,
 } from './types'
-import { ZodIssueCode, SafeParseError } from 'zod'
+import { ZodIssueCode } from 'zod'
+import { ZodIssue } from 'zod'
 
 export const isAaveAutoBuyTriggerData = (
   triggerData: TriggerData,
@@ -18,16 +20,24 @@ export const isAaveAutoSellTriggerData = (
   return 'minSellPrice' in triggerData
 }
 
-export const mapZodResultToValidationResults = <TInput>(
-  zodReturn: SafeParseError<TInput>,
-): ValidationResults => {
+const zodIssueToIssue = (issue: ZodIssue): ValidationIssue => {
+  return {
+    message: issue.message,
+    code: issue.code === ZodIssueCode.custom ? issue.params?.code : issue.code,
+    path: issue.path,
+  }
+}
+
+export const mapZodResultToValidationResults = ({
+  errors,
+  warnings,
+}: {
+  errors?: ZodIssue[]
+  warnings?: ZodIssue[]
+}): ValidationResults => {
   return {
     success: false,
-    errors: zodReturn.error.errors.map((error) => ({
-      message: error.message,
-      code: error.code === ZodIssueCode.custom ? error.params?.code : error.code,
-      path: error.path,
-    })),
-    warnings: [],
+    errors: (errors ?? []).map(zodIssueToIssue),
+    warnings: (warnings ?? []).map(zodIssueToIssue),
   }
 }

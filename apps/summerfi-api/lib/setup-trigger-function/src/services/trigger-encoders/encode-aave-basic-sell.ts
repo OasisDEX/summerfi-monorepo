@@ -1,16 +1,15 @@
-import { AAVE_TRANSACTION_PRICE_DECIMALS, EncoderFunction } from './types'
+import { EncoderFunction } from './types'
 import {
   bytesToHex,
   encodeAbiParameters,
   encodeFunctionData,
-  keccak256,
   parseAbiParameters,
   stringToBytes,
 } from 'viem'
 import { OPERATION_NAMES } from '@oasisdex/dma-library'
 import { DEFAULT_DEVIATION, MAX_COVERAGE_BASE } from './defaults'
 import { automationBotAbi } from '~abi'
-import { AaveAutoSellTriggerData, PRICE_DECIMALS } from '~types'
+import { AaveAutoSellTriggerData } from '~types'
 
 export const encodeAaveBasicSell: EncoderFunction<AaveAutoSellTriggerData> = (
   position,

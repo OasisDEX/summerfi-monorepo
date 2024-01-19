@@ -1,24 +1,7 @@
-import {
-  PositionLike,
-  Price,
-  SupportedTriggers,
-  SupportedTriggersSchema,
-  ValidationResults,
-} from '~types'
-import { AutoBuyValidationParams, autoBuyValidator } from './auto-buy-validator'
-import { AutoSellTriggerParams, autoSellValidator } from './auto-sell-validator'
-import { z } from 'zod'
-
-export type AgainstPositionValidatorParams<Schema extends SupportedTriggersSchema> = {
-  position: PositionLike
-  executionPrice: Price
-  body: z.infer<Schema>
-}
-
-export type AgainstPositionValidator<
-  Trigger extends SupportedTriggers,
-  Schema extends SupportedTriggersSchema,
-> = (params: AgainstPositionValidatorParams<Schema>) => ValidationResults
+import { SupportedTriggers, TriggerData } from '~types'
+import { autoBuyValidator } from './auto-buy-validator'
+import { autoSellValidator } from './auto-sell-validator'
+import { AgainstPositionValidator } from './validators-types'
 
 const againstPositionValidators = {
   [SupportedTriggers.AutoBuy]: autoBuyValidator,
@@ -27,10 +10,9 @@ const againstPositionValidators = {
 
 export const getAgainstPositionValidator = <
   Trigger extends SupportedTriggers,
-  Schema extends SupportedTriggersSchema,
+  Data extends TriggerData,
 >(
   trigger: Trigger,
-  schema: Schema,
-): AgainstPositionValidator<Trigger, Schema> => {
-  return againstPositionValidators[trigger] as AgainstPositionValidator<Trigger, Schema>
+): AgainstPositionValidator<Data> => {
+  return againstPositionValidators[trigger] as AgainstPositionValidator<Data>
 }

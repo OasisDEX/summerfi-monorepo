@@ -41,7 +41,9 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
   const pathParamsResult = pathParamsSchema.safeParse(event.pathParameters || {})
 
   if (!pathParamsResult.success) {
-    const validationResults = mapZodResultToValidationResults(pathParamsResult)
+    const validationResults = mapZodResultToValidationResults({
+      errors: pathParamsResult.error.errors,
+    })
     logger.warn('Incorrect path params', {
       params: event.pathParameters,
       errors: validationResults.errors,
@@ -86,7 +88,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
 
   const parseResult = bodySchema.safeParse(body)
   if (!parseResult.success) {
-    const validationResults = mapZodResultToValidationResults(parseResult)
+    const validationResults = mapZodResultToValidationResults({ errors: parseResult.error.errors })
     logger.warn('Incorrect data', {
       params: body,
       errors: validationResults.errors,
@@ -127,20 +129,26 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
 
   const executionPrice = getExecutionPrice(position)
 
+  let validationWarnings: ValidationIssue[] = []
+
   if (!skipValidation) {
-    const validation = validate({
+    const validation = await validate({
       position,
       executionPrice,
-      body: params,
+      triggerData: params.triggerData,
     })
+
+    validationWarnings = validation.warnings
 
     if (!validation.success) {
       logger.warn('Validation Errors', {
         errors: validation.errors,
+        warnings: validation.warnings,
       })
       return ResponseBadRequest({
         message: 'Validation Errors',
         errors: validation.errors,
+        warnings: validation.warnings,
       })
     }
   } else {
@@ -168,6 +176,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       simulation,
       transaction,
       encodedTriggerData,
+      warnings: validationWarnings,
     },
   })
 }
