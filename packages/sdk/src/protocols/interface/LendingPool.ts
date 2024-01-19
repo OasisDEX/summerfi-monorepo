@@ -1,4 +1,4 @@
-import { Token } from '~sdk/common'
+import { Percentage, Token } from '~sdk/common'
 import { Pool } from './Pool'
 
 /**
@@ -7,6 +7,10 @@ import { Pool } from './Pool'
  *              and debt tokens
  */
 export interface LendingPool extends Pool {
-  collateralToken: Token
-  debtToken: Token
+  // List of collateral tokens to be used from the lending pool
+  collateralTokens: Token[]
+  // List of debt tokens to be used from the lending pool
+  debtTokens: Token[]
+  // Max LTV for the pool
+  maxLTV: Percentage
 }

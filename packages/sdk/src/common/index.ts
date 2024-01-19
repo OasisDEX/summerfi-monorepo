@@ -8,4 +8,5 @@ export type {
   TokenAmount,
   Wallet,
 } from './interfaces'
+export { Currency } from './interfaces'
 export { AddressType, PercentageType } from './interfaces'

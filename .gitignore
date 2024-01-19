@@ -50,3 +50,6 @@ artifacts
 
 # nx files
 .nx
+
+# editors configs
+.vscode

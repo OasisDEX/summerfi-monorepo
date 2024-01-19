@@ -1,5 +1,5 @@
-import { SDKManager } from '.'
-import { SDKManagerClientImpl } from './implementation/client/SDKManagerImplementation'
+import { SDKManager } from '~sdk/managers'
+import { SDKManagerClientImpl } from './SDKManagerImplementation'
 
 /**
  * @function makeSDK

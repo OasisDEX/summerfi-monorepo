@@ -1,5 +1,4 @@
-import { Address } from 'viem'
-import { Token } from '~sdk/common'
+import { Address, Token } from '~sdk/common'
 import { Maybe } from '~sdk/utils'
 
 /**

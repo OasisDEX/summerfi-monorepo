@@ -2,6 +2,14 @@ import { Printable } from './Printable'
 import { Token } from './Token'
 
 /**
+ * @enum Currency
+ * @description To be used for printing purposes only
+ */
+export enum Currency {
+  USD = 'USD',
+}
+
+/**
  * @interface Price
  * @description Represents a price of a token (baseToken) in a given currency (quoteToken)
  */

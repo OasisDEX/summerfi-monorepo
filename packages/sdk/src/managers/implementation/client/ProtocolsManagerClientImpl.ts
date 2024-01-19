@@ -33,7 +33,7 @@ export class ProtocolsManagerClientImpl implements ProtocolsManager {
 
   /// Static Methods
 
-  public static getInstance(): ProtocolsManager {
+  public static getInstance(): ProtocolsManagerClientImpl {
     if (!this._instance) {
       this._instance = new ProtocolsManagerClientImpl()
     }

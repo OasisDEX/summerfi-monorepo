@@ -1,4 +1,5 @@
 import { Price, Token } from '~sdk/common'
+import { Currency } from '~sdk/common'
 
 /**
  * @class Price
@@ -29,7 +30,7 @@ export class PriceBaseImpl implements Price {
    */
   public toString(): string {
     return `${this.value} ${this.baseToken.symbol}/${
-      this.quoteToken ? this.quoteToken.symbol : 'USD'
+      this.quoteToken ? this.quoteToken.symbol : Currency.USD
     }`
   }
 }

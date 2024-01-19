@@ -60,9 +60,7 @@ const BaseFamily: NetworkFamily = {
  * @description A map of network family names to network families. It can be used to
  *              retrieve the NetworkId of a network family + network combination
  */
-export const NetworkFamilies: {
-  [key in NetworkFamilyName]: NetworkFamily
-} = {
+export const NetworkFamilies: Record<NetworkFamilyName, NetworkFamily> = {
   [NetworkFamilyName.Ethereum]: EthereumFamily,
   [NetworkFamilyName.Arbitrum]: ArbitrumFamily,
   [NetworkFamilyName.Optimism]: OptimismFamily,

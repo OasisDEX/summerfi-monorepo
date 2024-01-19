@@ -1,30 +1,23 @@
+import { ProtocolsManager, TokensManager } from '~sdk/managers'
 import { Network, NetworkId } from '~sdk/network'
 
 /**
- * @class Network
- * @see INetwork
+ * @class NetworkBaseImpl
+ * @description Base implementation of the Network interface, it holds common functionality like attributes assignment
+ * @see Network
  */
-export class NetworkBaseImpl implements Network {
+export abstract class NetworkBaseImpl implements Network {
   /// Instance Attributes
   public readonly networkId: NetworkId
-  public readonly tokens: any
-  public readonly protocols: any
+  public readonly tokens: TokensManager
+  public readonly protocols: ProtocolsManager
 
   /// Constructor
 
-  private constructor(networkId: NetworkId) {
+  constructor(networkId: NetworkId, tokens: TokensManager, protocols: ProtocolsManager) {
     this.networkId = networkId
-  }
-
-  /// Static Methods
-
-  /**
-   *
-   * @param networkId
-   * @returns
-   */
-  public static getNetwork(networkId: NetworkId): Network {
-    return new NetworkBaseImpl(networkId)
+    this.tokens = tokens
+    this.protocols = protocols
   }
 
   /// Instance methods
