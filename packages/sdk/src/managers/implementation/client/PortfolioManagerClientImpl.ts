@@ -26,7 +26,6 @@ export class PortfolioManagerClientImpl implements PortfolioManager {
   public async getPositions(params: {
     networks: NetworkId[]
     wallet: Wallet
-    ids?: PositionId[]
   }): Promise<Position[]> {
     // TODO: Implement
     return [] as Position[]

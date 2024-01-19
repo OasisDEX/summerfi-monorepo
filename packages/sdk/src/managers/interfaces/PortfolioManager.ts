@@ -15,13 +15,8 @@ export interface PortfolioManager {
    *
    * @param networks The list of networks to retrieve the positions for
    * @param wallet The wallet to retrieve the positions for
-   * @param ids The list of IDs to filter the positions by (optional)
    *
    * @returns The list of positions for the given wallet and networks
    */
-  getPositions(params: {
-    networks: NetworkId[]
-    wallet: Wallet
-    ids?: PositionId[]
-  }): Promise<Position[]>
+  getPositions(params: { networks: NetworkId[]; wallet: Wallet }): Promise<Position[]>
 }
