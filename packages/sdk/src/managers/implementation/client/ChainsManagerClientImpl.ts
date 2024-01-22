@@ -1,8 +1,8 @@
-import { NetworkManager } from '~sdk/managers'
+import { ChainManager } from '~sdk/managers'
 import { Chain, ChainInfo } from '~sdk/chain'
 import { Maybe } from '~sdk/utils'
 
-export class NetworkManagerClientImpl implements NetworkManager {
+export class ChainsManagerClientImpl implements ChainManager {
   public async getSupportedChains(): Promise<ChainInfo[]> {
     // TODO: Implement
     return [] as ChainInfo[]

@@ -1,5 +1,5 @@
 import { SimulationManager } from './SimulationManager'
-import { ChainManager } from './NetworkManager'
+import { ChainManager } from './ChainManager'
 import { UserManager } from './UserManager'
 import { PortfolioManager } from './PortfolioManager'
 
@@ -10,7 +10,7 @@ import { PortfolioManager } from './PortfolioManager'
  */
 export interface SDKManager {
   simulator: SimulationManager
-  networks: ChainManager
+  chains: ChainManager
   users: UserManager
   portfolio: PortfolioManager
 }

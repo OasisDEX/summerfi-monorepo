@@ -1,21 +1,21 @@
 import { Printable } from './Printable'
 
 /**
- * @name PercentageType
- * @description Represents the type of a percentage
- */
-export enum PercentageType {
-  /** The percentage is a proportion, this is a number between 0 and 1 */
-  Proportion = 'Proportion',
-  /** The percentage is an absolute value, this is a number between 0 and 100 */
-  Percentage = 'Percentage',
-}
-
-/**
- * @interface Percentage
+ * @class Percentage
  * @description Represents a percentage
  */
-export interface Percentage extends Printable {
-  value: number
-  type: PercentageType
+export class Percentage implements Printable {
+  public readonly value: number
+
+  private constructor(params: { value: number }) {
+    this.value = params.value
+  }
+
+  static createFrom(percentage: number) {
+    return new Percentage({ value: percentage })
+  }
+
+  toString(): string {
+    return `${this.value}%`
+  }
 }

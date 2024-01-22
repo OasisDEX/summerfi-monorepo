@@ -1,5 +1,5 @@
 export { makeSDK } from './MakeSDK'
-export { NetworkManagerClientImpl } from './NetworkManagerClientImpl'
+export { NetworkManagerClientImpl } from './ChainsManagerClientImpl'
 export { PortfolioManagerClientImpl } from './PortfolioManagerClientImpl'
 export { ProtocolsManagerClientImpl } from './ProtocolsManagerClientImpl'
 export { SDKManagerClientImpl } from './SDKManagerImplementation'
