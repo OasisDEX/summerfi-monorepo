@@ -6,5 +6,5 @@ import { SDKManagerClientImpl } from './SDKManagerImplementation'
  * @returns The SDKManager singleton
  */
 export function makeSDK(): SDKManager {
-  return SDKManagerClientImpl.getInstance()
+  return new SDKManagerClientImpl()
 }

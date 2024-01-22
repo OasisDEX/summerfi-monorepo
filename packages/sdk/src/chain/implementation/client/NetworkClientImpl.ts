@@ -5,13 +5,13 @@ import {
   TokensManagerClientImpl,
 } from '~sdk/managers'
 import { Network, NetworkId } from '~sdk/network'
-import { NetworkBaseImpl } from '../base/NetworkBaseImpl'
+import { ChainBaseImpl } from '../base/ChainBaseImpl'
 
 /**
  * @class Network
  * @see INetwork
  */
-export class NetworkClientImpl extends NetworkBaseImpl implements Network {
+export class NetworkClientImpl extends ChainBaseImpl implements Network {
   /// Constructor
 
   private constructor(networkId: NetworkId) {

@@ -10,18 +10,7 @@ import {
 import { Pool } from '~sdk/protocols'
 import { Position } from '~sdk/user'
 
-/**
- * @class FinanceSimulationManagerMixin
- * @description Client implementation of the AutomationSimulationManager interface
- * @see FinanceSimulationManager
- */
-export abstract class FinanceSimulationManagerMixin implements FinanceSimulationManager {
-  /// Instance Methods
-
-  /**
-   * @method simulateCreatePosition
-   * @see FinanceSimulationManager#simulateCreatePosition
-   */
+export class FinanceSimulationManagerClientImpl implements FinanceSimulationManager {
   public async simulateCreatePosition(params: {
     pool: Pool
     parameters: CreatePositionParameters
@@ -30,10 +19,6 @@ export abstract class FinanceSimulationManagerMixin implements FinanceSimulation
     return {} as CreatePositionSimulation
   }
 
-  /**
-   * @method simulateAddCollateralPosition
-   * @see FinanceSimulationManager#simulateAddCollateralPosition
-   */
   public async simulateAddCollateralPosition(params: {
     position: Position
     parameters: AddCollateralParameters
@@ -42,10 +27,6 @@ export abstract class FinanceSimulationManagerMixin implements FinanceSimulation
     return {} as AddCollateralSimulation
   }
 
-  /**
-   * @method simulateClosePosition
-   * @see FinanceSimulationManager#simulateClosePosition
-   */
   public async simulateClosePosition(params: {
     position: Position
     parameters: ClosePositionParameters

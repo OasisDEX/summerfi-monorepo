@@ -1,58 +1,34 @@
 import { Wallet } from '~sdk/common'
 import { SimulationManager } from '~sdk/managers'
-import { NetworkId } from '~sdk/network'
+import { ChainInfo } from '~sdk/chain'
 import { Position, PositionId } from '~sdk/user'
-import { AutomationSimulationManagerMixin } from './simulations/AutomationSimulationManagerMixin'
-import { FinanceSimulationManagerMixin } from './simulations/FinanceSimulationManagerMixin'
-import { ImportingSimulationManagerMixin } from './simulations/ImportingSimulationManagerMixin'
-import { MigrationSimulationManagerMixin } from './simulations/MigrationSimulationManagerMixin'
-import { RefinanceSimulationManagerMixin } from './simulations/RefinanceSimulationManagerMixin'
-import { applyMixins } from '~sdk/utils/Mixin'
+import { AutomationSimulationManagerClientImpl } from './simulations/AutomationSimulationManagerClientImpl'
+import { FinanceSimulationManagerClientImpl } from './simulations/FinanceSimulationManagerClientImpl'
+import { ImportingSimulationManagerClientImpl } from './simulations/ImportingSimulationManagerClientImpl'
+import { MigrationSimulationManagerClientImpl } from './simulations/MigrationSimulationManagerClientImpl'
+import { RefinanceSimulationManagerClientImpl } from './simulations/RefinanceSimulationManagerClientImpl'
 
-/**
- * @class SimulationManagerClientImpl
- * @see SimulationManager
- */
 export class SimulationManagerClientImpl implements SimulationManager {
-  /// Class Attributes
-  private static _instance: SimulationManagerClientImpl
+  public readonly finance: FinanceSimulationManagerClientImpl
+  public readonly refinance: RefinanceSimulationManagerClientImpl
+  public readonly automation: AutomationSimulationManagerClientImpl
+  public readonly importing: ImportingSimulationManagerClientImpl
+  public readonly migration: MigrationSimulationManagerClientImpl
 
-  /// Constructor
-  private constructor() {
-    // Empty on purpose
+  public constructor() {
+    this.finance = new FinanceSimulationManagerClientImpl()
+    this.refinance = new RefinanceSimulationManagerClientImpl()
+    this.automation = new AutomationSimulationManagerClientImpl()
+    this.importing = new ImportingSimulationManagerClientImpl()
+    this.migration = new MigrationSimulationManagerClientImpl()
   }
 
-  /// Instance Methods
-
-  /**
-   * @method getPositions
-   * @see PortfolioManager#getPositions
-   */
   public async getPositions(params: {
-    networks: NetworkId[]
+    networks: ChainInfo[]
     wallet: Wallet
     ids?: PositionId[]
   }): Promise<Position[]> {
     // TODO: Implement
     return [] as Position[]
-  }
-
-  /// Static Methods
-
-  public static loadSimulationManagers(): void {
-    applyMixins(SimulationManagerClientImpl, [
-      AutomationSimulationManagerMixin,
-      FinanceSimulationManagerMixin,
-      ImportingSimulationManagerMixin,
-      MigrationSimulationManagerMixin,
-      RefinanceSimulationManagerMixin,
-    ])
-  }
-  public static getInstance(): SimulationManagerClientImpl {
-    if (!this._instance) {
-      this.loadSimulationManagers()
-      this._instance = new SimulationManagerClientImpl()
-    }
-    return this._instance
   }
 }

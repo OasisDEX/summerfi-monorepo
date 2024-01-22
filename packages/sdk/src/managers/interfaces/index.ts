@@ -1,4 +1,4 @@
-export type { NetworkManager } from './NetworkManager'
+export type { ChainManager as NetworkManager } from './NetworkManager'
 export type { PortfolioManager } from './PortfolioManager'
 export type { ProtocolsManager } from './ProtocolsManager'
 export type { SDKManager } from './SDKManager'

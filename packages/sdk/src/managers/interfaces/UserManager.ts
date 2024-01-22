@@ -1,5 +1,5 @@
 import { Wallet } from '~sdk/common'
-import { Network } from '~sdk/network'
+import { Chain } from '~sdk/chain'
 import { User } from '~sdk/user'
 
 /**
@@ -11,10 +11,10 @@ export interface UserManager {
    * @method getUser
    * @description Retrieves a user by their wallet and network
    *
-   * @param network The network to retrieve the user for
+   * @param chain The chain to retrieve the user for
    * @param wallet The wallet to retrieve the user for
    *
    * @returns The user for the given wallet and network
    */
-  getUser(params: { network: Network; wallet: Wallet }): Promise<User>
+  getUser(params: { chain: Chain; wallet: Wallet }): Promise<User>
 }

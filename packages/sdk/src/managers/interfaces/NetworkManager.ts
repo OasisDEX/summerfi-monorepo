@@ -1,18 +1,18 @@
 import { Maybe } from '~sdk/utils'
-import { Network, NetworkId } from '~sdk/network'
+import { Chain, ChainInfo } from '~sdk/chain'
 
 /**
- * @interface NetworkManager
+ * @interface ChainManager
  * @description Manages the list of networks supported by the SDK and allows to retrive a network by its name or chain ID
  */
-export interface NetworkManager {
+export interface ChainManager {
   /**
    * @method getSupportedNetworks
    * @description Retrieves the list of supported networks
    *
    * @returns The list of supported networks
    */
-  getSupportedNetworks(): Promise<NetworkId[]>
+  getSupportedChains(): Promise<ChainInfo[]>
 
   /**
    * @method getNetworkByName
@@ -22,7 +22,7 @@ export interface NetworkManager {
    *
    * @returns The network with the given name
    */
-  getNetworkByName(name: string): Promise<Maybe<Network>>
+  getChainByName(name: string): Promise<Maybe<Chain>>
 
   /**
    * @method getNetworkByChainId
@@ -32,5 +32,5 @@ export interface NetworkManager {
    *
    * @returns The network with the given chain ID
    */
-  getNetworkByChainId(chainId: number): Promise<Maybe<Network>>
+  getChainByChainId(chainId: number): Promise<Maybe<Chain>>
 }

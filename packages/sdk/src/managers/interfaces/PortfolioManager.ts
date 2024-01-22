@@ -1,6 +1,6 @@
 import { Wallet } from '~sdk/common'
-import { NetworkId } from '~sdk/network'
-import { Position, PositionId } from '~sdk/user'
+import { ChainInfo } from '~sdk/chain'
+import { Position } from '~sdk/user'
 
 /**
  * @interface PortfolioManager
@@ -18,5 +18,5 @@ export interface PortfolioManager {
    *
    * @returns The list of positions for the given wallet and networks
    */
-  getPositions(params: { networks: NetworkId[]; wallet: Wallet }): Promise<Position[]>
+  getPositions(params: { networks: ChainInfo[]; wallet: Wallet }): Promise<Position[]>
 }

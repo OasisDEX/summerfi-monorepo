@@ -7,18 +7,7 @@ import {
 } from '~sdk/orders'
 import { Position } from '~sdk/user'
 
-/**
- * @class AutomationSimulationManagerMixin
- * @description Client implementation of the AutomationSimulationManager interface
- * @see AutomationSimulationManager
- */
-export abstract class AutomationSimulationManagerMixin implements AutomationSimulationManager {
-  /// Instance Methods
-
-  /**
-   * @method simulateAddAutomation
-   * @see AutomationSimulationManager#simulateAddAutomation
-   */
+export class AutomationSimulationManagerClientImpl implements AutomationSimulationManager {
   public async simulateAddAutomation(params: {
     position: Position
     triggers: AddAutomationParameters
@@ -27,10 +16,6 @@ export abstract class AutomationSimulationManagerMixin implements AutomationSimu
     return {} as AddAutomationSimulation
   }
 
-  /**
-   * @method simulateRemoveAutomation
-   * @see AutomationSimulationManager#simulateRemoveAutomation
-   */
   public async simulateRemoveAutomation(params: {
     id: AutomationId
   }): Promise<RemoveAutomationSimulation> {

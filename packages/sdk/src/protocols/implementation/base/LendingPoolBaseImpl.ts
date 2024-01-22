@@ -1,27 +1,26 @@
-import { Address, Token } from '~sdk/common'
+import { Address, Percentage, Token } from '~sdk/common'
 import { PoolId, ProtocolId, PoolType, LendingPool } from '~sdk/protocols'
 import { PoolBaseImpl } from './PoolBaseImpl'
-/**
- * @class LendingPool
- * @see ILendingPool
- */
+
 export class LendingPoolImpl extends PoolBaseImpl implements LendingPool {
-  /// Instance Attributes
-  public readonly debtToken: Token
-  public readonly collateralToken: Token
+  public readonly collateralTokens: Token[]
+  public readonly debtTokens: Token[]
+  public readonly maxLTV: Percentage
 
   /// Constructor
   constructor(params: {
     poolId: PoolId
-    protocolid: ProtocolId
+    protocolId: ProtocolId
     address?: Address
     TVL?: number
-    debtToken: Token
-    collateralToken: Token
+    maxLTV: Percentage
+    debtTokens: Token[]
+    collateralTokens: Token[]
   }) {
     super({ ...params, type: PoolType.Lending })
 
-    this.debtToken = params.debtToken
-    this.collateralToken = params.collateralToken
+    this.collateralTokens = params.collateralTokens
+    this.debtTokens = params.debtTokens
+    this.maxLTV = params.maxLTV
   }
 }

@@ -3,14 +3,12 @@ import { Pool } from '~sdk/protocols'
 import { Position, PositionId } from '~sdk/user'
 
 export class PositionBaseImpl implements Position {
-  /// Instance Attributes
   public readonly positionId: PositionId
   public readonly debtAmount: TokenAmount
   public readonly collateralAmount: TokenAmount
   public readonly riskRatio: RiskRatio
   public readonly pool: Pool
 
-  /// Constructor
   constructor(params: {
     positionId: PositionId
     debtAmount: TokenAmount

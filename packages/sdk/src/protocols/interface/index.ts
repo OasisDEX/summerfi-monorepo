@@ -1,5 +1,7 @@
 export type { PoolId, ProtocolId } from './IDs'
 export type { LendingPool } from './LendingPool'
+export type { LendingPoolParameters } from './LendingPoolParameters'
+export type { StakingPoolParameters } from './StakingPoolParameters'
 export type { Pool } from './Pool'
 export { PoolType } from './Pool'
 export type { PoolParameters } from './PoolParameters'

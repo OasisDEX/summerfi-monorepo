@@ -3,18 +3,7 @@ import { RefinanceParameters, RefinanceSimulation } from '~sdk/orders'
 import { Pool } from '~sdk/protocols'
 import { Position } from '~sdk/user'
 
-/**
- * @class RefinanceSimulationManagerMixin
- * @description Client implementation of the AutomationSimulationManager interface
- * @see RefinanceSimulationManager
- */
-export abstract class RefinanceSimulationManagerMixin implements RefinanceSimulationManager {
-  /// Instance Methods
-
-  /**
-   * @method simulateRefinance
-   * @see RefinanceSimulationManager#simulateRefinance
-   */
+export class RefinanceSimulationManagerClientImpl implements RefinanceSimulationManager {
   public async simulateRefinance(params: {
     position: Position
     pool: Pool

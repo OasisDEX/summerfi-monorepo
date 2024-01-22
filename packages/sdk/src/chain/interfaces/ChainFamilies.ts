@@ -1,21 +1,21 @@
-import { NetworkId } from './Network'
+import { ChainInfo } from './Chain'
 
 /**
- * @type NetworkFamily
- * @param {NetworkId} [key: string] - The name of the network
- * @param {NetworkId} [value: NetworkId] - The chain id of the network
+ * @type ChainFamily
+ * @param {ChainInfo} [key: string] - The name of the network
+ * @param {ChainInfo} [value: NetworkId] - The chain id of the network
  *
  * @description A map of network names to network IDs
  */
-export type NetworkFamily = {
-  [key: string]: NetworkId
+export type ChainFamily = {
+  [key: string]: ChainInfo
 }
 
 /**
- * @enum NetworkFamilyName
+ * @enum ChainFamilyName
  * @description Indicates the name of the network
  */
-export enum NetworkFamilyName {
+export enum ChainFamilyName {
   Ethereum,
   Arbitrum,
   Optimism,
@@ -23,7 +23,7 @@ export enum NetworkFamilyName {
 }
 
 // Definition of the different network families
-const EthereumFamily: NetworkFamily = {
+const EthereumFamily: ChainFamily = {
   Mainnet: {
     chainId: 1,
     name: 'mainnet',
@@ -34,21 +34,21 @@ const EthereumFamily: NetworkFamily = {
   },
 }
 
-const ArbitrumFamily: NetworkFamily = {
+const ArbitrumFamily: ChainFamily = {
   ArbitrumOne: {
     chainId: 42161,
     name: 'arbitrum-one',
   },
 }
 
-const OptimismFamily: NetworkFamily = {
+const OptimismFamily: ChainFamily = {
   Optimism: {
     chainId: 10,
     name: 'optimism',
   },
 }
 
-const BaseFamily: NetworkFamily = {
+const BaseFamily: ChainFamily = {
   Mainnet: {
     chainId: 8453,
     name: 'mainnet',
@@ -60,9 +60,9 @@ const BaseFamily: NetworkFamily = {
  * @description A map of network family names to network families. It can be used to
  *              retrieve the NetworkId of a network family + network combination
  */
-export const NetworkFamilies: Record<NetworkFamilyName, NetworkFamily> = {
-  [NetworkFamilyName.Ethereum]: EthereumFamily,
-  [NetworkFamilyName.Arbitrum]: ArbitrumFamily,
-  [NetworkFamilyName.Optimism]: OptimismFamily,
-  [NetworkFamilyName.Base]: BaseFamily,
+export const ChainFamilies: Record<ChainFamilyName, ChainFamily> = {
+  [ChainFamilyName.Ethereum]: EthereumFamily,
+  [ChainFamilyName.Arbitrum]: ArbitrumFamily,
+  [ChainFamilyName.Optimism]: OptimismFamily,
+  [ChainFamilyName.Base]: BaseFamily,
 }

@@ -1,5 +1,5 @@
+import { ChainInfo } from '~sdk/chain'
 import { Address } from './Address'
-import { NetworkId } from '../../network/interfaces/Network'
 import { Printable } from './Printable'
 
 /**
@@ -12,7 +12,7 @@ import { Printable } from './Printable'
  *              - Decimals
  */
 export interface Token extends Printable {
-  networkId: NetworkId
+  networkId: ChainInfo
   address: Address
   symbol: string
   name: string
