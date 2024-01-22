@@ -6,7 +6,6 @@ export type {
   PoolParameters,
   Protocol,
   ProtocolParameters,
-  ProtocolsManager,
   StakingPool,
 } from './interface'
 export { PoolType } from './interface'

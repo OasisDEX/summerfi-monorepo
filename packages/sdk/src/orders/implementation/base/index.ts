@@ -1,1 +1,1 @@
-export { TransactionInfoBaseImpl } from './base/TransactionInfoBaseImpl'
+export { TransactionInfoBaseImpl } from './TransactionInfoBaseImpl'

@@ -1,6 +1,5 @@
 import { Printable } from '~sdk/common'
-import { TokensManager } from '~sdk/managers'
-import { ProtocolsManager } from '~sdk/protocols'
+import { TokensManager, ProtocolsManager } from '~sdk/managers'
 
 /**
  * @name ChainInfo

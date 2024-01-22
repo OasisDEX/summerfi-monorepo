@@ -1,7 +1,6 @@
 export type { Address } from './Address'
 export { AddressType } from './Address'
 export type { Percentage } from './Percentage'
-export { PercentageType } from './Percentage'
 export type { Price } from './Price'
 export { Currency } from './Price'
 export type { Token } from './Token'

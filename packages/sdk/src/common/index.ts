@@ -9,4 +9,4 @@ export type {
   Wallet,
 } from './interfaces'
 export { Currency } from './interfaces'
-export { AddressType, PercentageType } from './interfaces'
+export { AddressType } from './interfaces'
