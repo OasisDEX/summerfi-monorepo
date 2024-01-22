@@ -7,7 +7,6 @@ export class LendingPoolImpl extends PoolBaseImpl implements LendingPool {
   public readonly debtTokens: Token[]
   public readonly maxLTV: Percentage
 
-  /// Constructor
   constructor(params: {
     poolId: PoolId
     protocolId: ProtocolId

@@ -4,44 +4,23 @@ import {
   TokensManager,
   TokensManagerClientImpl,
 } from '~sdk/managers'
-import { Network, NetworkId } from '~sdk/network'
+import { Chain, ChainInfo } from '~sdk/chain'
 import { ChainBaseImpl } from '../base/ChainBaseImpl'
 
-/**
- * @class Network
- * @see INetwork
- */
-export class NetworkClientImpl extends ChainBaseImpl implements Network {
-  /// Constructor
-
-  private constructor(networkId: NetworkId) {
-    super(
-      networkId,
-      TokensManagerClientImpl.getInstance(),
-      ProtocolsManagerClientImpl.getInstance(),
-    )
+export class NetworkClientImpl extends ChainBaseImpl implements Chain {
+  constructor(chainInfo: ChainInfo) {
+    super(chainInfo, new TokensManagerClientImpl(), new ProtocolsManagerClientImpl())
   }
 
-  /// Instance methods
-
-  /**
-   * @see INetwork.getLatestBlock
-   */
   public getLatestBlock() {
     // TODO: Implement
   }
 
-  /**
-   * @see Inetwork.getBlock
-   */
   public getBlock() {
     // TODO: Implement
   }
 
-  /**
-   * @see Printable.toString
-   */
   public toString(): string {
-    return `${this.networkId.name} (ID: ${this.networkId.chainId})`
+    return `${this.chainInfo.name} (ID: ${this.chainInfo.chainId})`
   }
 }

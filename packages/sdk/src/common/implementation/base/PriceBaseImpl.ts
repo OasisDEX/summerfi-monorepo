@@ -1,36 +1,26 @@
 import { Price, Token } from '~sdk/common'
 import { Currency } from '~sdk/common'
+import { isToken } from '~sdk/utils/TypeCheckers'
 
-/**
- * @class Price
- * @see Price
- */
 export class PriceBaseImpl implements Price {
-  /// Instance Attributes
+  private static readonly DEFAULT_QUOTE_TOKEN = Currency.USD
+
   public readonly value: string
   public readonly baseToken: Token
-  public readonly quoteToken?: Token
+  public readonly quoteToken?: Token | Currency
 
-  /// Constructor
-  private constructor(params: { value: string; baseToken: Token; quoteToken?: Token }) {
+  constructor(params: { value: string; baseToken: Token; quoteToken?: Token | Currency }) {
     this.value = params.value
     this.baseToken = params.baseToken
-    this.quoteToken = params.quoteToken
+    this.quoteToken = params.quoteToken ? params.quoteToken : PriceBaseImpl.DEFAULT_QUOTE_TOKEN
   }
 
-  /// Static Methods
-  from(params: { value: string; baseToken: Token; quoteToken?: Token }): Price {
+  public static from(params: { value: string; baseToken: Token; quoteToken?: Token }): Price {
     return new PriceBaseImpl(params)
   }
 
-  /// Instance Methods
-
-  /**
-   * @see Printable.toString
-   */
   public toString(): string {
-    return `${this.value} ${this.baseToken.symbol}/${
-      this.quoteToken ? this.quoteToken.symbol : Currency.USD
-    }`
+    const quoteSymbol = isToken(this.quoteToken) ? this.quoteToken.symbol : this.quoteToken
+    return `${this.value} ${this.baseToken.symbol}/${quoteSymbol}`
   }
 }

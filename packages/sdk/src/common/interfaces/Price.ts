@@ -19,5 +19,5 @@ export interface Price extends Printable {
   /** The token that the price is for */
   baseToken: Token
   /** The token that the price is in */
-  quoteToken?: Token
+  quoteToken?: Token | Currency
 }

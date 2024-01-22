@@ -12,7 +12,7 @@ import { Printable } from './Printable'
  *              - Decimals
  */
 export interface Token extends Printable {
-  networkId: ChainInfo
+  chainInfo: ChainInfo
   address: Address
   symbol: string
   name: string
