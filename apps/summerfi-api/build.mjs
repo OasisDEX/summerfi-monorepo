@@ -6,11 +6,11 @@ import { exit } from 'process'
 // Constants
 
 const LAMBDA_NAMES = [
-  'portfolio-assets',
-  'portfolio-migrations',
-  'portfolio-overview',
-  'get-triggers',
-  'setup-trigger',
+  'portfolio-assets-function',
+  'portfolio-migrations-function',
+  'portfolio-overview-function',
+  'get-triggers-function',
+  'setup-trigger-function',
 ]
 
 // Main
@@ -41,18 +41,19 @@ async function buildLambda(lambdaName) {
     cd(`lib/${lambdaName}`)
     const pkPath = path.join('package.json')
     const { name, version } = fs.readJSONSync(pkPath)
+    const functionName = name.replace('@summerfi/', '')
     echo(`\n--- ${name}-${version} ---`)
     echo(`Build dist...`)
     await $`pnpm run build`
-    if (lambdaName === 'setup-trigger' || lambdaName === 'get-triggers') {
+    if (functionName === 'setup-trigger-function' || functionName === 'get-triggers-function') {
       echo(`ZIP dist...`)
       cd('dist')
-      await $`zip -rq ../../../artifacts/${name}-${version}.zip index.js`
+      await $`zip -rq ../../../artifacts/${functionName}-${version}.zip index.js`
     } else {
       echo(`Package node_modules & dist...`)
-      await $`zip -rq ../../artifacts/${name}-${version}.zip node_modules`
+      await $`zip -rq ../../artifacts/${functionName}-${version}.zip node_modules`
       cd(`dist`)
-      await $`zip -rq ../../../artifacts/${name}-${version}.zip *`
+      await $`zip -rq ../../../artifacts/${functionName}-${version}.zip *`
     }
   })
 }

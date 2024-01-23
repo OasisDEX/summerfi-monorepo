@@ -4,13 +4,12 @@ import {
   encodeFunctionData,
   parseAbiParameters,
   stringToBytes,
-  toHex,
 } from 'viem'
 import { automationBotAbi } from '~abi'
-import { EventBody, PositionLike, AaveAutoBuyTriggerData, PRICE_DECIMALS } from '~types'
-import { OPERATION_NAMES, OperationNames } from '@oasisdex/dma-library'
+import { AaveAutoBuyTriggerData } from '~types'
+import { OPERATION_NAMES } from '@oasisdex/dma-library'
 import { DEFAULT_DEVIATION, MAX_COVERAGE_BASE } from './defaults'
-import { AAVE_TRANSACTION_PRICE_DECIMALS, EncoderFunction } from './types'
+import { EncoderFunction } from './types'
 
 export const encodeAaveAutoBuy: EncoderFunction<AaveAutoBuyTriggerData> = (
   position,
@@ -24,7 +23,7 @@ export const encodeAaveAutoBuy: EncoderFunction<AaveAutoBuyTriggerData> = (
   )
 
   const operationName = OPERATION_NAMES.aave.v3.ADJUST_RISK_UP
-  let operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
+  const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
 
   const encodedTriggerData = encodeAbiParameters(abiParameters, [
     position.address,

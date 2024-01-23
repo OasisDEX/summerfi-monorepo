@@ -1,22 +1,26 @@
-import { ChainId, NetworkByChainID, ProtocolId } from '@summerfi/serverless-shared/domain-types'
-import { Addresses, getAddresses } from './get-addresses'
-import { Chain as ViemChain, createPublicClient, http, HttpTransport, PublicClient } from 'viem'
+import {
+  Address,
+  ChainId,
+  NetworkByChainID,
+  ProtocolId,
+} from '@summerfi/serverless-shared/domain-types'
+import { getAddresses } from './get-addresses'
+import { Chain as ViemChain, createPublicClient, http, PublicClient } from 'viem'
 import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { getPosition, GetPositionParams } from './get-position'
 import { SimulatedPosition, simulatePosition, SimulatePositionParams } from './simulate-position'
 import { triggerEncoders } from './trigger-encoders'
 import {
-  EventBody,
-  PositionLike,
-  SupportedTriggers,
-  AaveAutoBuyTriggerData,
-  TriggerData,
   isAaveAutoBuyTriggerData,
   isAaveAutoSellTriggerData,
+  PositionLike,
   Price,
-  isBigInt,
+  safeParseBigInt,
+  SupportedTriggers,
   SupportedTriggersSchema,
+  TriggerData,
+  ValidationResults,
 } from '~types'
 import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
 import {
@@ -24,14 +28,11 @@ import {
   EncodeFunctionForDpmParams,
   TransactionFragment,
 } from './encode-function-for-dpm'
-import { autoBuyValidator } from './against-position-validators/auto-buy-validator'
 import { CurrentTriggerLike, EncodedFunction } from './trigger-encoders/types'
 import type { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
-import {
-  AgainstPositionValidator,
-  getAgainstPositionValidator,
-} from './against-position-validators'
 import fetch from 'node-fetch'
+import memoize from 'just-memoize'
+import { getAgainstPositionValidator } from './against-position-validators'
 
 const rpcConfig = {
   skipCache: false,
@@ -61,16 +62,15 @@ const domainChainIdToViemChain: Record<ChainId, ViemChain> = {
   [ChainId.SEPOLIA]: sepolia,
 }
 
-export interface ServiceContainer<
-  Trigger extends SupportedTriggers,
-  Schema extends SupportedTriggersSchema,
-  Protocol extends ProtocolId,
-  Chain extends ChainId,
-> {
+export interface ServiceContainer {
   getPosition: (params: GetPositionParams) => Promise<PositionLike>
   simulatePosition: (params: SimulatePositionParams) => SimulatedPosition
   getExecutionPrice: (params: PositionLike) => Price
-  validate: AgainstPositionValidator<Trigger, Schema>
+  validate: (params: {
+    position: PositionLike
+    executionPrice: Price
+    triggerData: TriggerData
+  }) => Promise<ValidationResults>
   encodeTrigger: (position: PositionLike, triggerData: TriggerData) => Promise<EncodedFunction>
   encodeForDPM: (params: EncodeFunctionForDpmParams) => TransactionFragment
 }
@@ -89,7 +89,7 @@ export function buildServiceContainer<
   getTriggersUrl: string,
   forkRpc?: string,
   logger?: Logger,
-): ServiceContainer<Trigger, Schema, Protocol, Chain> {
+): ServiceContainer {
   const rpc = forkRpc ?? getRpcGatewayEndpoint(chainId, rpcGateway)
   const transport = http(rpc, {
     batch: false,
@@ -107,6 +107,16 @@ export function buildServiceContainer<
 
   const addresses = getAddresses(chainId)
 
+  const getTriggers = memoize(async (dpm: Address) => {
+    try {
+      const triggers = await fetch(`${getTriggersUrl}?chainId=${chainId}&dpm=${dpm}`)
+      return (await triggers.json()) as GetTriggersResponse
+    } catch (e) {
+      logger?.error('Error fetching triggers', { error: e })
+      throw e
+    }
+  })
+
   return {
     getPosition: (params: Parameters<typeof getPosition>[0]) => {
       return getPosition(params, publicClient, addresses, logger)
@@ -117,27 +127,30 @@ export function buildServiceContainer<
     getExecutionPrice: (params: Parameters<typeof calculateCollateralPriceInDebtBasedOnLtv>[0]) => {
       return calculateCollateralPriceInDebtBasedOnLtv(params)
     },
-    validate: getAgainstPositionValidator(trigger, schema),
-    encodeTrigger: async (position: PositionLike, triggerData: TriggerData) => {
-      let currentTrigger: CurrentTriggerLike | undefined = undefined
-      try {
-        const triggers = await fetch(`${getTriggersUrl}?chainId=${chainId}&dpm=${position.address}`)
-        const triggersJson = (await triggers.json()) as GetTriggersResponse
-        const autoBuy = triggersJson.triggers.aaveBasicBuy
-        // TODO: For now, let's asume we want just auto-buy
-        if (autoBuy) {
-          currentTrigger = {
-            triggerData: autoBuy.triggerData as `0x${string}`,
-            id: isBigInt(autoBuy.triggerId) ? BigInt(autoBuy.triggerId) : 0n,
-          }
-        }
-      } catch (e) {
-        logger?.error('Error fetching triggers', { error: e, position })
-        throw e
+    validate: async (params) => {
+      const triggers = await getTriggers(params.position.address)
+      const validator = getAgainstPositionValidator<Trigger, TriggerData>(trigger)
+      const validatorParams = {
+        position: params.position,
+        executionPrice: params.executionPrice,
+        triggerData: params.triggerData,
+        triggers,
       }
+      logger?.info('Validating', { validatorParams })
+      return validator(validatorParams)
+    },
+    encodeTrigger: async (position: PositionLike, triggerData: TriggerData) => {
+      const triggers = await getTriggers(position.address)
 
       try {
         if (isAaveAutoBuyTriggerData(triggerData)) {
+          const currentAutoBuy = triggers.triggers.aaveBasicBuy
+          const currentTrigger: CurrentTriggerLike | undefined = currentAutoBuy
+            ? {
+                triggerData: currentAutoBuy.triggerData as `0x${string}`,
+                id: safeParseBigInt(currentAutoBuy.triggerId) ?? 0n,
+              }
+            : undefined
           return triggerEncoders[ProtocolId.AAVE3][SupportedTriggers.AutoBuy](
             position,
             triggerData,
@@ -145,6 +158,13 @@ export function buildServiceContainer<
           )
         }
         if (isAaveAutoSellTriggerData(triggerData)) {
+          const currentAutoSell = triggers.triggers.aaveBasicSell
+          const currentTrigger: CurrentTriggerLike | undefined = currentAutoSell
+            ? {
+                triggerData: currentAutoSell.triggerData as `0x${string}`,
+                id: safeParseBigInt(currentAutoSell.triggerId) ?? 0n,
+              }
+            : undefined
           return triggerEncoders[ProtocolId.AAVE3][SupportedTriggers.AutoSell](
             position,
             triggerData,

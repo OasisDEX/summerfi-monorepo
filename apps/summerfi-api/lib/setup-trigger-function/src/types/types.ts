@@ -22,34 +22,40 @@ export type AaveAutoBuyTriggerData = z.infer<typeof aaveBasicBuyTriggerDataSchem
 export type AaveAutoSellTriggerData = z.infer<typeof aaveBasicSellTriggerDataSchema>
 export type TriggerData = AaveAutoBuyTriggerData | AaveAutoSellTriggerData
 
-export enum CustomErrorCodes {
-  MinSellPriceIsNotSet = 'min-sell-price-is-not-set',
-  MaxBuyPriceIsNotSet = 'max-buy-price-is-not-set',
-  ExecutionPriceBiggerThanMaxBuyPrice = 'execution-price-bigger-than-max-buy-price',
-  ExecutionPriceSmallerThanMinSellPrice = 'execution-price-smaller-than-min-sell-price',
-  ExecutionLTVSmallerThanTargetLTV = 'execution-ltv-smaller-than-target-ltv',
-  ExecutionLTVBiggerThanTargetLTV = 'execution-ltv-bigger-than-target-ltv',
-  ExecutionLTVBiggerThanCurrentLTV = 'execution-ltv-bigger-than-current-ltv',
-  ExecutionLTVSmallerThanCurrentLTV = 'execution-ltv-smaller-than-current-ltv',
-  ExecutionLTVIsNearToTheAutoSellTrigger = 'execution-ltv-is-near-to-the-auto-sell-trigger',
-  AutoSellTriggerHigherThanAutoBuyTarget = 'auto-sell-trigger-higher-than-auto-buy-target',
-  AutoBuyTriggerLowerThanAutoSellTarget = 'auto-buy-trigger-lower-than-auto-sell-target',
-  AutoSellCannotBeDefinedWithCurrentStopLoss = 'auto-sell-cannot-be-defined-with-current-stop-loss',
-  AutoSellNotAvailableDueToCurrentLTV = 'auto-sell-not-available-due-to-current-ltv',
-  AutoBuyCannotBeDefinedWithCurrentStopLoss = 'auto-buy-cannot-be-defined-with-current-stop-loss',
-  AutoBuyNotAvailableDueToCurrentLTV = 'auto-buy-not-available-due-to-current-ltv',
+export enum CommonErrorCodes {
+  InsufficientEthFundsForTx = 'insufficient-eth-funds-for-tx',
 }
 
-export enum CustomWarningCodes {
-  NoMinSellPriceWhenStopLoss = 'no-min-sell-price-when-stop-loss-enabled',
-  AutoBuyWithNoMaxPriceThreshold = 'auto-buy-with-no-max-price-threshold',
-  AutoSellTriggerCloseToStopLossTrigger = 'auto-sell-trigger-close-to-stop-loss-trigger',
-  AutoSellTargetCloseToAutoBuyTrigger = 'auto-sell-target-close-to-auto-buy-trigger',
-  StopLossTriggerCloseToAutoSellTrigger = 'stop-loss-trigger-close-to-auto-sell-trigger',
-  AutoBuyTargetCloseToStopLossTrigger = 'auto-buy-target-close-to-stop-loss-trigger',
-  AutoBuyTargetCloseToAutoSellTrigger = 'auto-buy-target-close-to-auto-sell-trigger',
+export enum AutoBuyTriggerCustomErrorCodes {
+  TooLowLtvToSetupAutoBuy = 'too-low-ltv-to-setup-auto-buy',
+  ExecutionPriceBiggerThanMaxBuyPrice = 'execution-price-bigger-than-max-buy-price',
+  ExecutionLTVSmallerThanTargetLTV = 'execution-ltv-smaller-than-target-ltv',
+  ExecutionLTVBiggerThanCurrentLTV = 'execution-ltv-bigger-than-current-ltv',
+  AutoBuyTriggerLowerThanAutoSellTarget = 'auto-buy-trigger-lower-than-auto-sell-target',
+  MaxBuyPriceIsNotSet = 'max-buy-price-is-not-set',
+}
+
+export enum AutoBuyTriggerCustomWarningCodes {
   AutoBuyTriggeredImmediately = 'auto-buy-triggered-immediately',
+  AutoBuyTargetCloseToAutoSellTrigger = 'auto-buy-target-close-to-auto-sell-trigger',
+  AutoBuyTriggerCloseToStopLossTrigger = 'auto-buy-trigger-close-to-stop-loss-trigger',
+  AutoBuyWithNoMaxPriceThreshold = 'auto-buy-with-no-max-price-threshold',
+}
+
+export enum AutoSellTriggerCustomErrorCodes {
+  TooLowLtvToSetupAutoSell = 'too-low-ltv-to-setup-auto-sell',
+  ExecutionPriceSmallerThanMinSellPrice = 'execution-price-smaller-than-min-sell-price',
+  ExecutionLTVBiggerThanTargetLTV = 'execution-ltv-bigger-than-target-ltv',
+  AutoSellTriggerHigherThanAutoBuyTarget = 'auto-sell-trigger-higher-than-auto-buy-target',
+  AutoSellNotAvailableDueToTooHighStopLoss = 'auto-sell-not-available-due-to-too-high-stop-loss',
+  MinSellPriceIsNotSet = 'min-sell-price-is-not-set',
+}
+
+export enum AutoSellTriggerCustomWarningCodes {
   AutoSellTriggeredImmediately = 'auto-sell-triggered-immediately',
+  AutoSellTargetCloseToAutoBuyTrigger = 'auto-sell-target-close-to-auto-buy-trigger',
+  AutoSellTriggerCloseToStopLossTrigger = 'auto-sell-trigger-close-to-stop-loss-trigger',
+  NoMinSellPriceWhenStopLoss = 'no-min-sell-price-when-stop-loss-enabled',
 }
 
 export type ValidationIssue = { message: string; code: string; path: (string | number)[] }

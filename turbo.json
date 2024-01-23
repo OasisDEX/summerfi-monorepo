@@ -1,8 +1,18 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
-  "globalEnv": ["SUBGRAPH_BASE", "DEBANK_API_KEY", "DEBANK_API_URL", "RPC_GATEWAY", "GET_TRIGGERS_URL", "SKIP_VALIDATION"],
+  "globalEnv": [
+    "SUBGRAPH_BASE",
+    "DEBANK_API_KEY",
+    "DEBANK_API_URL",
+    "RPC_GATEWAY",
+    "GET_TRIGGERS_URL",
+    "SKIP_VALIDATION",
+    "AWS_REGION",
+    "AWS_PROFILE"
+  ],
   "pipeline": {
+    "prebuild": {},
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**"]

@@ -1,5 +1,10 @@
 import { ADDRESSES, AaveLikeProtocol, Common } from '@oasisdex/addresses'
-import { Address, ChainId, NetworkByChainID, ProtocolId } from 'shared/domain-types'
+import {
+  Address,
+  ChainId,
+  NetworkByChainID,
+  ProtocolId,
+} from '@summerfi/serverless-shared/domain-types'
 
 export const createAddressService = (chainId: ChainId) => {
   const network = NetworkByChainID[chainId]

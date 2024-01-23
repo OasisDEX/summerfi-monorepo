@@ -5,12 +5,8 @@
     "outDir": "dist",
     "baseUrl": "src",
     "paths": {
-      "~types": [
-        "./src/types"
-      ],
-      "~abi": [
-        "./src/abi"
-      ],
+      "~types": ["./src/types"],
+      "~abi": ["./src/abi"]
     }
   },
   "include": ["src/**/*.ts"],
