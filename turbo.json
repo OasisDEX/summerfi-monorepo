@@ -12,6 +12,7 @@
     "AWS_PROFILE"
   ],
   "pipeline": {
+    "prebuild": {},
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**"]
