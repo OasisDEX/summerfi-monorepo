@@ -238,6 +238,9 @@ importers:
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../../../../packages/typescript-config
+      '@types/node':
+        specifier: ^20.11.5
+        version: 20.11.5
 
   apps/summerfi-api/lib/serverless-shared:
     dependencies:
@@ -251,6 +254,9 @@ importers:
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../../../../packages/typescript-config
+      '@types/node':
+        specifier: ^20.11.5
+        version: 20.11.5
 
   apps/summerfi-api/lib/setup-trigger-function:
     dependencies:
