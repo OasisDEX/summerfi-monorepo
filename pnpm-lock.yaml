@@ -24,7 +24,7 @@ importers:
         specifier: ^3.2.2
         version: 3.2.2
       turbo:
-        specifier: latest
+        specifier: ^1.11.3
         version: 1.11.3
       typescript:
         specifier: ^5.3.3
@@ -384,6 +384,9 @@ importers:
 
   packages/sdk:
     dependencies:
+      '@types/node':
+        specifier: ^20.11.5
+        version: 20.11.5
       viem:
         specifier: ^2.2.0
         version: 2.2.0(typescript@5.3.3)
