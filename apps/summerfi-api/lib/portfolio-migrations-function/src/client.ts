@@ -120,7 +120,7 @@ async function getAssets(
   ])
 
   // coll assets tokens meta
-  const assetsTokens = assetsAddresses.map((address, index) => {
+  const assetsTokens = assetsAddresses.map((address) => {
     const token = tokenService.getTokenByAddress(address)
     return token
   })
