@@ -14,6 +14,9 @@ export const sstConfig: SSTConfig = {
     }
   },
   stacks(app) {
+    if (app.stage !== 'production' && app.stage !== 'staging') {
+      app.setDefaultRemovalPolicy('destroy')
+    }
     app.stack(API)
   },
 }
