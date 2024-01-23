@@ -1,5 +1,5 @@
 {
-  "name": "setup-trigger",
+  "name": "@summerfi/sdk-example-function",
   "version": "0.0.1",
   "scripts": {
     "tsc": "tsc",
