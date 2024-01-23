@@ -18,18 +18,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "types": ["node"]
-  },
-  "include": [],
-  "exclude": ["node_modules"],
-  "references": [
-    {
-      "path": "../../apps/summerfi-api/lib/serverless-shared"
-    },
-    {
-      "path": "../../apps/summerfi-api/lib/automation-subgraph"
-    },
-    {
-      "path": "../../apps/summerfi-api/lib/serverless-contracts"
-    }
-  ]
+  }
+  // don't share includes and excludes in base
+  // as paths are resolved relative to base
 }

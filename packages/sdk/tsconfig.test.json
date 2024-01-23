@@ -3,7 +3,11 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "paths": {
+      "~sdk": ["./index.ts"],
+      "~sdk/*": ["./*"]
+    }
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]

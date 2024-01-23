@@ -3,9 +3,10 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
+    "baseUrl": "src",
     "paths": {
-      "~sdk": ["./src/index.ts"],
-      "~sdk/*": ["./src/*"]
+      "~sdk": ["./index.ts"],
+      "~sdk/*": ["./*"]
     }
   },
   "include": ["src/**/*.ts"],

@@ -5,8 +5,8 @@ const { pathsToModuleNameMapper } = require('ts-jest')
 module.exports = {
   preset: 'ts-jest',
   extensionsToTreatAsEsm: ['.ts'],
-  roots: ['<rootDir>/test'],
-  testMatch: ['**/test/**/*.+(ts|tsx|js)', '**/?(*.)+(spec|test).+(ts|tsx|js)'],
+  roots: ['<rootDir>/src', '<rootDir>/tests'],
+  testMatch: ['**/tests/**/*.+(ts|tsx|js)', '**/?(*.)+(spec|test).+(ts|tsx|js)'],
   silent: true,
   maxWorkers: 1,
   testTimeout: 10000,
@@ -14,8 +14,8 @@ module.exports = {
   testPathIgnorePatterns: ['dist', 'node_modules'],
   modulePaths: ['src'],
   moduleNameMapper: pathsToModuleNameMapper({
-    '~sdk': ['./src/index.ts'],
-    '~sdk/*': ['./src/*'],
+    '~sdk': ['<rootDir>/src/index.ts'],
+    '~sdk/*': ['<rootDir>/src/*'],
   }),
   transform: {
     '^.+\\.(ts|tsx)$': [
