@@ -14,7 +14,7 @@
     "build:portfolio-migrations": "zx build.mjs portfolio-migrations",
     "build:get-triggers": "zx build.mjs get-triggers",
     "build:setup-trigger": "zx build.mjs setup-trigger",
-    "build": "zx build.mjs",
+    "build:zip": "zx build.mjs",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
