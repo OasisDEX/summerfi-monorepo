@@ -5,9 +5,15 @@ import { aavePoolContract } from './abi/aavePoolContract'
 import { decodeBitmapToAssetsAddresses } from './decodeBitmapToAssetsAddresses'
 import { aavePoolDataProviderContract } from './abi/aavePoolDataProviderContract'
 import { aaveOracleContract } from './abi/aaveOracleContract'
-import { USD_DECIMALS } from 'shared/constants'
+import { USD_DECIMALS } from '@summerfi/serverless-shared/constants'
 import { ProtocolMigrationAssets } from './types'
-import { Address, ChainId, Network, PortfolioMigrationAsset, ProtocolId } from 'shared/domain-types'
+import {
+  Address,
+  ChainId,
+  Network,
+  PortfolioMigrationAsset,
+  ProtocolId,
+} from '@summerfi/serverless-shared/domain-types'
 import { createtokenService } from './tokenService'
 import { createAddressService } from './addressService'
 
@@ -27,7 +33,7 @@ export function createClient(
     address: Address,
   ): Promise<ProtocolMigrationAssets[]> => {
     // for each supported chain
-    let promises: Promise<ProtocolMigrationAssets>[] = []
+    const promises: Promise<ProtocolMigrationAssets>[] = []
 
     supportedChainsIds.forEach((chainId) => {
       supportedProtocolsIds.forEach((protocolId) => {
@@ -114,7 +120,7 @@ async function getAssets(
   ])
 
   // coll assets tokens meta
-  const assetsTokens = assetsAddresses.map((address, index) => {
+  const assetsTokens = assetsAddresses.map((address) => {
     const token = tokenService.getTokenByAddress(address)
     return token
   })

@@ -13,7 +13,7 @@ export function getDominantCollAsset(collAssets: PortfolioMigrationAsset[]) {
 
   let result: undefined | PortfolioMigrationAsset = dominantCollAsset
   // check if any other collAssets has usdValue value greater than dust 1% of dominantCollAsset
-  for (let asset of sortedAssets) {
+  for (const asset of sortedAssets) {
     if (asset.usdValue > dominantCollAsset.usdValue * DOMINANT_THRESHOLD) {
       result = undefined
     }

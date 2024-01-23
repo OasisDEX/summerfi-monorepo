@@ -1,11 +1,16 @@
 import { z } from 'zod'
 import { addressSchema, urlOptionalSchema } from '@summerfi/serverless-shared/validators'
 import { ChainId, ProtocolId } from '@summerfi/serverless-shared/domain-types'
-import { CustomErrorCodes } from './types'
+import {
+  AutoBuyTriggerCustomErrorCodes,
+  AutoSellTriggerCustomErrorCodes,
+} from './types'
 
 export const PRICE_DECIMALS = 8n
 export const PERCENT_DECIMALS = 4n
 export const ONE_PERCENT = 100n
+
+export const MINIMUM_LTV_TO_SETUP_TRIGGER = 100n // 1%
 
 export const MULTIPLY_DECIMALS = 2n
 
@@ -38,6 +43,13 @@ export const isBigInt = (value: string) => {
   }
 }
 
+export const safeParseBigInt = (value: string) => {
+  if (isBigInt(value)) {
+    return BigInt(value)
+  }
+  return undefined
+}
+
 export const ltvSchema = bigIntSchema.refine((ltv) => ltv > 0n && ltv < 10_000n, {
   params: {
     code: 'ltv-out-of-range',
@@ -63,7 +75,7 @@ export const aaveBasicBuyTriggerDataSchema = z
     },
     {
       params: {
-        code: CustomErrorCodes.MaxBuyPriceIsNotSet,
+        code: AutoBuyTriggerCustomErrorCodes.MaxBuyPriceIsNotSet,
       },
       message:
         'Max buy price is not set. Please set max buy price or explicitly disable it in trigger data',
@@ -89,7 +101,7 @@ export const aaveBasicSellTriggerDataSchema = z
     },
     {
       params: {
-        code: CustomErrorCodes.MinSellPriceIsNotSet,
+        code: AutoSellTriggerCustomErrorCodes.MinSellPriceIsNotSet,
       },
       message:
         'Min sell price is not set. Please set min sell price or explicitly disable it in trigger data',

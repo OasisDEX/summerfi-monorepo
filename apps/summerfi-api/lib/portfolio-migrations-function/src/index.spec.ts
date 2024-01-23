@@ -19,7 +19,11 @@ describe('handler', () => {
       },
     }
 
-    const result: any = await handler(ev as APIGatewayProxyEventV2)
+    const result = (await handler(ev as APIGatewayProxyEventV2)) as unknown as {
+      headers: Record<string, string>
+      statusCode: number
+      body: string
+    }
 
     const expected = {
       headers: { 'Access-Control-Allow-Origin': '*' },
@@ -61,7 +65,11 @@ describe('handler', () => {
       },
     }
 
-    const result: any = await handler(ev as APIGatewayProxyEventV2)
+    const result = (await handler(ev as APIGatewayProxyEventV2)) as unknown as {
+      headers: Record<string, string>
+      statusCode: number
+      body: string
+    }
 
     const expected = {
       headers: { 'Access-Control-Allow-Origin': '*' },
@@ -84,7 +92,11 @@ describe('handler', () => {
       },
     }
 
-    const result: any = await handler(ev as APIGatewayProxyEventV2)
+    const result = (await handler(ev as APIGatewayProxyEventV2)) as unknown as {
+      headers: Record<string, string>
+      statusCode: number
+      body: string
+    }
 
     const expected = {
       headers: { 'Access-Control-Allow-Origin': '*' },

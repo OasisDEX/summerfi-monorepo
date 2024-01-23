@@ -1,5 +1,5 @@
 import { encodeAaveAutoBuy } from './encode-aave-auto-buy'
-import { SupportedTriggers, AaveAutoBuyTriggerData, AaveAutoSellTriggerData } from '~types'
+import { SupportedTriggers } from '~types'
 import { ProtocolId } from '@summerfi/serverless-shared/domain-types'
 import { TriggerEncoders } from './types'
 import { encodeAaveBasicSell } from './encode-aave-basic-sell'

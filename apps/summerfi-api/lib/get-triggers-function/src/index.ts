@@ -8,7 +8,6 @@ import {
 import {
   addressSchema,
   chainIdsSchema,
-  protocolIdsSchema,
   urlOptionalSchema,
 } from '@summerfi/serverless-shared/validators'
 
@@ -51,6 +50,8 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     logger.error('SUBGRAPH_BASE is not set')
     return ResponseInternalServerError('SUBGRAPH_BASE is not set')
   }
+
+  logger.info(`Query params`, { params: event.queryStringParameters })
 
   const parseResult = paramsSchema.safeParse(event.queryStringParameters)
   if (!parseResult.success) {

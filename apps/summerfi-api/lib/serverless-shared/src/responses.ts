@@ -17,6 +17,7 @@ export function createHeaders(): Record<string, string | number | boolean> {
   }
 }
 
+// eslint-disable-next-line
 export function ResponseOk<T extends Record<string, any>>({
   body,
 }: {

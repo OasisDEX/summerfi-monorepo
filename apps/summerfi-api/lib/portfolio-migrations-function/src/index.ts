@@ -68,7 +68,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
 
     const client = createClient(rpcUrlWithFallback, supportedChainsIds, supportedProtocolsIds)
 
-    let eligibleMigrations: PortfolioMigration[] = []
+    const eligibleMigrations: PortfolioMigration[] = []
     const protocolAssetsToMigrate = await client.getProtocolAssetsToMigrate(address)
 
     protocolAssetsToMigrate.forEach((protocolAssets) => {

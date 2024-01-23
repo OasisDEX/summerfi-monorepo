@@ -51,5 +51,15 @@ artifacts
 # nx files
 .nx
 
+# sst
+.sst
+.build
+
+# opennext
+.open-next
+
+# local env files
+.env*.local
+
 # editors configs
 .vscode

@@ -1,5 +1,5 @@
 import { PositionLike, PRICE_DECIMALS, TokenBalance } from '~types'
-import { Address, ChainId } from 'shared/domain-types'
+import { Address } from '@summerfi/serverless-shared/domain-types'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
 import { aavePoolDataProviderAbi, aaveOracleAbi, erc20Abi } from '~abi'

@@ -14,7 +14,7 @@ describe('getDominantCollAsset', () => {
   })
 
   it('should not find dominant asset', () => {
-    const assets: PortfolioMigrationAsset[] = [] as any
+    const assets: PortfolioMigrationAsset[] = []
     const result = getDominantCollAsset(assets)
     expect(result).toBe(undefined)
   })
