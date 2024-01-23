@@ -1,4 +1,9 @@
-import { ChainId, NetworkByChainID, ProtocolId } from '@summerfi/serverless-shared/domain-types'
+import {
+  Address,
+  ChainId,
+  NetworkByChainID,
+  ProtocolId,
+} from '@summerfi/serverless-shared/domain-types'
 import { getAddresses } from './get-addresses'
 import { Chain as ViemChain, createPublicClient, http, PublicClient } from 'viem'
 import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
@@ -102,9 +107,9 @@ export function buildServiceContainer<
 
   const addresses = getAddresses(chainId)
 
-  const getTriggers = memoize(async () => {
+  const getTriggers = memoize(async (dpm: Address) => {
     try {
-      const triggers = await fetch(`${getTriggersUrl}?chainId=${chainId}`)
+      const triggers = await fetch(`${getTriggersUrl}?chainId=${chainId}&dpm=${dpm}`)
       return (await triggers.json()) as GetTriggersResponse
     } catch (e) {
       logger?.error('Error fetching triggers', { error: e })
@@ -123,17 +128,19 @@ export function buildServiceContainer<
       return calculateCollateralPriceInDebtBasedOnLtv(params)
     },
     validate: async (params) => {
-      const triggers = await getTriggers()
+      const triggers = await getTriggers(params.position.address)
       const validator = getAgainstPositionValidator<Trigger, TriggerData>(trigger)
-      return validator({
+      const validatorParams = {
         position: params.position,
         executionPrice: params.executionPrice,
-        body: params.triggerData,
+        triggerData: params.triggerData,
         triggers,
-      })
+      }
+      logger?.info('Validating', { validatorParams })
+      return validator(validatorParams)
     },
     encodeTrigger: async (position: PositionLike, triggerData: TriggerData) => {
-      const triggers = await getTriggers()
+      const triggers = await getTriggers(position.address)
 
       try {
         if (isAaveAutoBuyTriggerData(triggerData)) {

@@ -1,7 +1,13 @@
 {
-  "name": "workflow",
+  "name": "@summerfi/summer-api",
   "version": "1.0.0",
   "scripts": {
+    "dev": "sst dev --stage dev",
+    "build:sst": "sst build",
+    "deploy:staging": "sst deploy --stage staging",
+    "deploy:prod": "sst deploy --stage production",
+    "remove": "sst remove --stage dev",
+    "console": "sst console --stage dev",
     "test": "jest",
     "build:portfolio-assets": "zx build.mjs portfolio-assets",
     "build:portfolio-overview": "zx build.mjs portfolio-overview",
@@ -9,12 +15,9 @@
     "build:get-triggers": "zx build.mjs get-triggers",
     "build:setup-trigger": "zx build.mjs setup-trigger",
     "build": "zx build.mjs",
-    "prepare-env": "cp env.json.template env.json",
-    "sam:local": "sam local start-api --env-vars env.json --host 0.0.0.0 -p 3002",
-    "sam:docker": "sam local start-api --env-vars env.json --host 0.0.0.0 -p 3000"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
-  "author": "Piter",
-  "license": "UNLICENSED",
   "devDependencies": {
     "@graphql-codegen/add": "^5.0.0",
     "@graphql-codegen/cli": "^5.0.0",
@@ -31,7 +34,13 @@
     "jest-extended": "^4.0.2",
     "ts-jest": "^29.1.1",
     "tsc-alias": "^1.8.8",
-    "typescript": "^5.2.2",
-    "zx": "^7.2.3"
+    "typescript": "^5.3.3",
+    "zx": "^7.2.3",
+    "sst": "^2.39.7",
+    "aws-cdk-lib": "2.110.1",
+    "constructs": "10.3.0",
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "eslint": "^8.56.0"
   }
 }

@@ -1,8 +1,8 @@
 import {
   AaveAutoSellTriggerData,
+  aaveBasicSellTriggerDataSchema,
   AutoSellTriggerCustomErrorCodes,
   AutoSellTriggerCustomWarningCodes,
-  eventBodyAaveBasicSellSchema,
   mapZodResultToValidationResults,
   MINIMUM_LTV_TO_SETUP_TRIGGER,
   positionSchema,
@@ -17,7 +17,7 @@ import { AgainstPositionValidator } from './validators-types'
 const paramsSchema = z.object({
   position: positionSchema,
   executionPrice: priceSchema,
-  body: eventBodyAaveBasicSellSchema,
+  triggerData: aaveBasicSellTriggerDataSchema,
   triggers: z.custom<GetTriggersResponse>(),
 })
 
@@ -34,8 +34,8 @@ const errorsValidation = paramsSchema
     },
   )
   .refine(
-    ({ executionPrice, body }) => {
-      return !body.triggerData.useMinSellPrice || body.triggerData.minSellPrice < executionPrice
+    ({ executionPrice, triggerData }) => {
+      return !triggerData.useMinSellPrice || triggerData.minSellPrice < executionPrice
     },
     {
       message: 'Execution price is smaller than min sell price',
@@ -46,8 +46,8 @@ const errorsValidation = paramsSchema
     },
   )
   .refine(
-    ({ body }) => {
-      return body.triggerData.targetLTV < body.triggerData.executionLTV
+    ({ triggerData }) => {
+      return triggerData.targetLTV < triggerData.executionLTV
     },
     {
       message: 'Execution LTV is bigger than target LTV',
@@ -57,7 +57,7 @@ const errorsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggers, body }) => {
+    ({ triggers, triggerData }) => {
       const autoBuyTrigger = triggers.triggers.aaveBasicBuy
       if (!autoBuyTrigger) {
         return true
@@ -65,7 +65,7 @@ const errorsValidation = paramsSchema
 
       const autoBuyTargetLTV = safeParseBigInt(autoBuyTrigger.decodedParams.targetLtv) ?? 0n
 
-      return body.triggerData.executionLTV < autoBuyTargetLTV
+      return triggerData.executionLTV < autoBuyTargetLTV
     },
     {
       message: 'Auto sell trigger cannot be higher than auto buy target',
@@ -76,7 +76,7 @@ const errorsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggers, body }) => {
+    ({ triggers, triggerData }) => {
       const stopLossTrigger = triggers.triggers.aaveStopLossToCollateral
       if (!stopLossTrigger) {
         return true
@@ -84,7 +84,7 @@ const errorsValidation = paramsSchema
 
       const stopLossTriggerLTV = safeParseBigInt(stopLossTrigger.decodedParams.ltv) ?? 0n
 
-      return body.triggerData.executionLTV < stopLossTriggerLTV
+      return triggerData.executionLTV < stopLossTriggerLTV
     },
     {
       message: 'Auto sell cannot be defined with current stop loss',
@@ -95,8 +95,8 @@ const errorsValidation = paramsSchema
     },
   )
   .refine(
-    ({ body }) => {
-      return body.triggerData.useMinSellPrice ? body.triggerData.minSellPrice !== 0n : true
+    ({ triggerData }) => {
+      return triggerData.useMinSellPrice ? triggerData.minSellPrice !== 0n : true
     },
     {
       message: 'Min sell price is not set',
@@ -109,8 +109,8 @@ const errorsValidation = paramsSchema
 
 const warningsValidation = paramsSchema
   .refine(
-    ({ body, position }) => {
-      return position.ltv < body.triggerData.executionLTV
+    ({ triggerData, position }) => {
+      return position.ltv < triggerData.executionLTV
     },
     {
       message: 'Auto sell triggered immediately',
@@ -121,7 +121,7 @@ const warningsValidation = paramsSchema
     },
   )
   .refine(
-    ({ body, triggers }) => {
+    ({ triggerData, triggers }) => {
       const autoBuyTrigger = triggers.triggers.aaveBasicBuy
       if (!autoBuyTrigger) {
         return true
@@ -129,7 +129,7 @@ const warningsValidation = paramsSchema
 
       const autoBuyTriggerLTV = safeParseBigInt(autoBuyTrigger.decodedParams.executionLtv) ?? 0n
 
-      return autoBuyTriggerLTV < body.triggerData.executionLTV
+      return autoBuyTriggerLTV < triggerData.executionLTV
     },
     {
       message: 'Auto sell target close to auto buy trigger',
@@ -140,7 +140,7 @@ const warningsValidation = paramsSchema
     },
   )
   .refine(
-    ({ body, triggers }) => {
+    ({ triggerData, triggers }) => {
       const stopLossTrigger = triggers.triggers.aaveStopLossToCollateral
       if (!stopLossTrigger) {
         return true
@@ -148,7 +148,7 @@ const warningsValidation = paramsSchema
 
       const stopLossTriggerLTV = safeParseBigInt(stopLossTrigger.decodedParams.ltv) ?? 0n
 
-      return stopLossTriggerLTV < body.triggerData.executionLTV
+      return stopLossTriggerLTV < triggerData.executionLTV
     },
     {
       message: 'Auto sell trigger close to stop loss trigger',
@@ -159,7 +159,7 @@ const warningsValidation = paramsSchema
     },
   )
   .refine(
-    ({ body, triggers }) => {
+    ({ triggerData, triggers }) => {
       const stopLossTrigger = triggers.triggers.aaveStopLossToDebt
       if (!stopLossTrigger) {
         return true
@@ -167,7 +167,7 @@ const warningsValidation = paramsSchema
 
       const stopLossTriggerLTV = safeParseBigInt(stopLossTrigger.decodedParams.ltv) ?? 0n
 
-      return stopLossTriggerLTV < body.triggerData.executionLTV
+      return stopLossTriggerLTV < triggerData.executionLTV
     },
     {
       message: 'Auto sell trigger close to stop loss trigger',
@@ -178,8 +178,8 @@ const warningsValidation = paramsSchema
     },
   )
   .refine(
-    ({ body }) => {
-      return body.triggerData.minSellPrice !== 0n
+    ({ triggerData }) => {
+      return triggerData.minSellPrice !== 0n
     },
     {
       message: 'No min sell price when stop loss enabled',

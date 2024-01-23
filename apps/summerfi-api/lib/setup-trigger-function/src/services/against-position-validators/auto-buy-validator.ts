@@ -4,11 +4,11 @@ import {
   priceSchema,
   mapZodResultToValidationResults,
   AutoBuyTriggerCustomErrorCodes,
-  eventBodyAaveBasicBuySchema,
   safeParseBigInt,
   AutoBuyTriggerCustomWarningCodes,
   MINIMUM_LTV_TO_SETUP_TRIGGER,
   AaveAutoBuyTriggerData,
+  aaveBasicBuyTriggerDataSchema,
 } from '~types'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { z } from 'zod'
@@ -17,7 +17,7 @@ import { AgainstPositionValidator } from './validators-types'
 const paramsSchema = z.object({
   position: positionSchema,
   executionPrice: priceSchema,
-  body: eventBodyAaveBasicBuySchema,
+  triggerData: aaveBasicBuyTriggerDataSchema,
   triggers: z.custom<GetTriggersResponse>(),
 })
 
@@ -34,9 +34,9 @@ const errorsValidation = paramsSchema
     },
   )
   .refine(
-    ({ body }) => {
-      if (body.triggerData.useMaxBuyPrice) {
-        return body.triggerData.maxBuyPrice !== undefined
+    ({ triggerData }) => {
+      if (triggerData.useMaxBuyPrice) {
+        return triggerData.maxBuyPrice !== undefined
       }
       return true
     },
@@ -48,8 +48,8 @@ const errorsValidation = paramsSchema
     },
   )
   .refine(
-    ({ executionPrice, body }) => {
-      return body.triggerData.maxBuyPrice && body.triggerData.maxBuyPrice > executionPrice
+    ({ executionPrice, triggerData }) => {
+      return triggerData.maxBuyPrice && triggerData.maxBuyPrice > executionPrice
     },
     {
       message: 'Execution price is bigger than max buy price',
@@ -60,8 +60,8 @@ const errorsValidation = paramsSchema
     },
   )
   .refine(
-    ({ body }) => {
-      return body.triggerData.executionLTV < body.triggerData.targetLTV
+    ({ triggerData }) => {
+      return triggerData.executionLTV < triggerData.targetLTV
     },
     {
       message: 'Execution LTV is smaller than target LTV',
@@ -71,8 +71,8 @@ const errorsValidation = paramsSchema
     },
   )
   .refine(
-    ({ position, body }) => {
-      return body.triggerData.executionLTV <= position.ltv - ONE_PERCENT
+    ({ position, triggerData }) => {
+      return triggerData.executionLTV <= position.ltv - ONE_PERCENT
     },
     {
       message: 'Execution LTV is bigger than current LTV',
@@ -82,7 +82,7 @@ const errorsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggers, body }) => {
+    ({ triggers, triggerData }) => {
       const autoSellTrigger = triggers.triggers.aaveBasicSell
       if (!autoSellTrigger) {
         return true
@@ -90,7 +90,7 @@ const errorsValidation = paramsSchema
 
       const autoSellTargetLTV = safeParseBigInt(autoSellTrigger.decodedParams.targetLtv) ?? 0n
 
-      return autoSellTargetLTV < body.triggerData.executionLTV
+      return autoSellTargetLTV < triggerData.executionLTV
     },
     {
       message: 'Auto buy trigger lower than auto sell target',
@@ -102,8 +102,8 @@ const errorsValidation = paramsSchema
 
 const warningsValidation = paramsSchema
   .refine(
-    ({ body, position }) => {
-      return position.ltv > body.triggerData.executionLTV
+    ({ triggerData, position }) => {
+      return position.ltv > triggerData.executionLTV
     },
     {
       message: 'Auto buy triggered immediately',
@@ -113,7 +113,7 @@ const warningsValidation = paramsSchema
     },
   )
   .refine(
-    ({ body, triggers }) => {
+    ({ triggerData, triggers }) => {
       const autoSellTrigger = triggers.triggers.aaveBasicSell
       if (!autoSellTrigger) {
         return true
@@ -121,7 +121,7 @@ const warningsValidation = paramsSchema
 
       const autoSellTriggerLTV = safeParseBigInt(autoSellTrigger.decodedParams.executionLtv) ?? 0n
 
-      return autoSellTriggerLTV > body.triggerData.executionLTV
+      return autoSellTriggerLTV > triggerData.executionLTV
     },
     {
       message: 'Auto buy target close to auto sell trigger',
@@ -131,7 +131,7 @@ const warningsValidation = paramsSchema
     },
   )
   .refine(
-    ({ body, triggers }) => {
+    ({ triggerData, triggers }) => {
       const stopLossTrigger = triggers.triggers.aaveStopLossToCollateral
       if (!stopLossTrigger) {
         return true
@@ -139,7 +139,7 @@ const warningsValidation = paramsSchema
 
       const stopLossTriggerLTV = safeParseBigInt(stopLossTrigger.decodedParams.ltv) ?? 0n
 
-      return stopLossTriggerLTV > body.triggerData.executionLTV
+      return stopLossTriggerLTV > triggerData.executionLTV
     },
     {
       message: 'Auto buy target close to stop loss trigger',
@@ -149,7 +149,7 @@ const warningsValidation = paramsSchema
     },
   )
   .refine(
-    ({ body, triggers }) => {
+    ({ triggerData, triggers }) => {
       const stopLossTrigger = triggers.triggers.aaveStopLossToDebt
       if (!stopLossTrigger) {
         return true
@@ -157,7 +157,7 @@ const warningsValidation = paramsSchema
 
       const stopLossTriggerLTV = safeParseBigInt(stopLossTrigger.decodedParams.ltv) ?? 0n
 
-      return stopLossTriggerLTV > body.triggerData.executionLTV
+      return stopLossTriggerLTV > triggerData.executionLTV
     },
     {
       message: 'Auto buy target close to stop loss trigger',
@@ -167,8 +167,8 @@ const warningsValidation = paramsSchema
     },
   )
   .refine(
-    ({ body }) => {
-      return body.triggerData.maxBuyPrice !== undefined
+    ({ triggerData }) => {
+      return triggerData.maxBuyPrice !== undefined
     },
     {
       message: 'Auto buy with no max price threshold',

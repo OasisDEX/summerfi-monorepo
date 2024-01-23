@@ -7,7 +7,9 @@
     "DEBANK_API_URL",
     "RPC_GATEWAY",
     "GET_TRIGGERS_URL",
-    "SKIP_VALIDATION"
+    "SKIP_VALIDATION",
+    "AWS_REGION",
+    "AWS_PROFILE"
   ],
   "pipeline": {
     "build": {

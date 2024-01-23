@@ -56,8 +56,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
 
   if (
     pathParamsResult.data.chainId !== ChainId.MAINNET &&
-    pathParamsResult.data.protocol !== ProtocolId.AAVE3 &&
-    pathParamsResult.data.trigger !== 'auto-buy'
+    pathParamsResult.data.protocol !== ProtocolId.AAVE3
   ) {
     const errors: ValidationIssue[] = [
       {
@@ -83,6 +82,8 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
   }
 
   const body = JSON.parse(event.body ?? '{}')
+
+  logger.info('Got body', { body })
 
   const bodySchema = getBodySchema(pathParamsResult.data.trigger)
 

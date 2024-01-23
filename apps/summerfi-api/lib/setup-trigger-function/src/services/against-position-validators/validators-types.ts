@@ -4,7 +4,7 @@ import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers
 export type AgainstPositionValidatorParams<Trigger extends TriggerData> = {
   position: PositionLike
   executionPrice: Price
-  body: Trigger
+  triggerData: Trigger
   triggers: GetTriggersResponse
 }
 
