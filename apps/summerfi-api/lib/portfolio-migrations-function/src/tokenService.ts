@@ -1,4 +1,4 @@
-import { Network, Token } from 'shared/domain-types'
+import { Network, Token } from '@summerfi/serverless-shared/domain-types'
 import { Address } from 'viem'
 
 const tokenByAddress: Record<Address, Token> = {

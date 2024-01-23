@@ -1,4 +1,8 @@
-import { ChainId, PortfolioMigrationAsset, ProtocolId } from 'shared/domain-types'
+import {
+  ChainId,
+  PortfolioMigrationAsset,
+  ProtocolId,
+} from '@summerfi/serverless-shared/domain-types'
 
 export type ProtocolMigrationAssets = {
   debtAssets: PortfolioMigrationAsset[]
