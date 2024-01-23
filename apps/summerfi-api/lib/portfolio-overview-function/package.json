@@ -16,7 +16,8 @@
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
-    "@summerfi/typescript-config": "workspace:*"
+    "@summerfi/typescript-config": "workspace:*",
+    "@types/node": "^20.11.5"
   },
   "dependencies": {
     "graphql": "^16.8.1",
