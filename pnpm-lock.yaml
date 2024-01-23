@@ -260,6 +260,40 @@ importers:
         specifier: ^8.56.0
         version: 8.56.0
 
+  apps/summerfi-api/lib/sdk-example-function:
+    dependencies:
+      '@aws-lambda-powertools/logger':
+        specifier: ^1.17.0
+        version: 1.17.0
+      '@aws-lambda-powertools/metrics':
+        specifier: ^1.17.0
+        version: 1.17.0
+      '@aws-lambda-powertools/tracer':
+        specifier: ^1.17.0
+        version: 1.17.0
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../../../packages/eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../../../packages/typescript-config
+      '@types/jest':
+        specifier: ^29.5.11
+        version: 29.5.11
+      '@types/node':
+        specifier: ^20.11.5
+        version: 20.11.5
+      esbuild:
+        specifier: ^0.19.11
+        version: 0.19.11
+      eslint:
+        specifier: ^8.56.0
+        version: 8.56.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.11.5)
+
   apps/summerfi-api/lib/serverless-contracts:
     devDependencies:
       '@summerfi/eslint-config':
