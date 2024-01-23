@@ -18,7 +18,16 @@ module.exports = {
     node: true,
     browser: true,
   },
-  plugins: ['only-warn'],
+  plugins: ['only-warn', 'unused-imports'],
+  rules: {
+    'no-unused-vars': 'off',
+    'unused-imports/no-unused-imports': 'error',
+    'unused-imports/no-unused-vars': [
+      'warn',
+      { vars: 'all', varsIgnorePattern: '^_', args: 'after-used', argsIgnorePattern: '^_' },
+    ],
+    '@typescript-eslint/no-explicit-any': 'error',
+  },
   settings: {
     'import/resolver': {
       typescript: {
