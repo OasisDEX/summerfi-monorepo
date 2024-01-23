@@ -23,7 +23,7 @@ export const encodeAaveAutoBuy: EncoderFunction<AaveAutoBuyTriggerData> = (
   )
 
   const operationName = OPERATION_NAMES.aave.v3.ADJUST_RISK_UP
-  let operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
+  const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
 
   const encodedTriggerData = encodeAbiParameters(abiParameters, [
     position.address,

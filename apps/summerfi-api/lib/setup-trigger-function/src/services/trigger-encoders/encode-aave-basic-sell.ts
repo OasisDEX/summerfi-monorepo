@@ -31,7 +31,7 @@ export const encodeAaveBasicSell: EncoderFunction<AaveAutoSellTriggerData> = (
   )
 
   const operationName = OPERATION_NAMES.aave.v3.ADJUST_RISK_DOWN
-  let operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
+  const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
 
   const encodedTriggerData = encodeAbiParameters(abiParameters, [
     position.address,
