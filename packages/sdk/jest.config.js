@@ -1,17 +1,22 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { pathsToModuleNameMapper } = require('ts-jest')
 
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   preset: 'ts-jest',
-  roots: ['<rootDir>/src'],
-  testMatch: ['**/__tests__/**/*.+(ts|tsx|js)', '**/?(*.)+(spec|test).+(ts|tsx|js)'],
+  extensionsToTreatAsEsm: ['.ts'],
+  roots: ['<rootDir>/test'],
+  testMatch: ['**/test/**/*.+(ts|tsx|js)', '**/?(*.)+(spec|test).+(ts|tsx|js)'],
   silent: true,
   maxWorkers: 1,
   testTimeout: 10000,
   testEnvironment: 'node',
   testPathIgnorePatterns: ['dist', 'node_modules'],
   modulePaths: ['src'],
-  moduleNameMapper: pathsToModuleNameMapper(),
+  moduleNameMapper: pathsToModuleNameMapper({
+    '~sdk': ['./src/index.ts'],
+    '~sdk/*': ['./src/*'],
+  }),
   transform: {
     '^.+\\.(ts|tsx)$': [
       'ts-jest',
