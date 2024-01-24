@@ -1,66 +1,92 @@
 import { ChainInfo } from './Chain'
 
+export enum ChainFamilyName {
+  Ethereum = 'Ethereum',
+  Arbitrum = 'Arbitrum',
+  Optimism = 'Optimism',
+  Base = 'Base',
+}
+
+export enum EthereumChainNames {
+  Mainnet = 'Mainnet',
+  Goerli = 'Goerli',
+}
+
+export enum ArbitrumChainNames {
+  ArbitrumOne = 'ArbitrumOne',
+}
+
+export enum OptimismChainNames {
+  Optimism = 'Optimism',
+}
+
+export enum BaseChainNames {
+  Mainnet = 'Mainnet',
+}
+
+export type ChainNames =
+  | EthereumChainNames
+  | ArbitrumChainNames
+  | OptimismChainNames
+  | BaseChainNames
+
 /**
- * @type ChainFamily
- * @param {ChainInfo} [key: string] - The name of the network
- * @param {ChainInfo} [value: NetworkId] - The chain id of the network
- *
- * @description A map of network names to network IDs
+ * Chain definition per family
+ */
+const EthereumFamily: Record<EthereumChainNames, ChainInfo> = {
+  [EthereumChainNames.Mainnet]: {
+    chainId: 1,
+    name: EthereumChainNames.Mainnet,
+  },
+  [EthereumChainNames.Goerli]: {
+    chainId: 5,
+    name: EthereumChainNames.Goerli,
+  },
+}
+
+const ArbitrumFamily: Record<ArbitrumChainNames, ChainInfo> = {
+  [ArbitrumChainNames.ArbitrumOne]: {
+    chainId: 42161,
+    name: ArbitrumChainNames.ArbitrumOne,
+  },
+}
+
+const OptimismFamily: Record<OptimismChainNames, ChainInfo> = {
+  [OptimismChainNames.Optimism]: {
+    chainId: 10,
+    name: OptimismChainNames.Optimism,
+  },
+}
+
+const BaseFamily: Record<BaseChainNames, ChainInfo> = {
+  [BaseChainNames.Mainnet]: {
+    chainId: 8453,
+    name: BaseChainNames.Mainnet,
+  },
+}
+
+/**
+ * Complex type to allow Typescript to figure out the type of the value when
+ * using a ChainFamilyName as a key
  */
 export type ChainFamily = {
-  [key: string]: ChainInfo
+  [key in ChainFamilyName]: key extends ChainFamilyName.Ethereum
+    ? typeof EthereumFamily
+    : key extends ChainFamilyName.Arbitrum
+      ? typeof ArbitrumFamily
+      : key extends ChainFamilyName.Optimism
+        ? typeof OptimismFamily
+        : key extends ChainFamilyName.Base
+          ? typeof BaseFamily
+          : never
 }
 
 /**
- * @enum ChainFamilyName
- * @description Indicates the name of the network
+ * @type ChainFamiliesMap
+ * @description A map of chain family names to chain families. It can be used to
+ *              retrieve the ChainId of a chain family + chain combination
  */
-export enum ChainFamilyName {
-  Ethereum,
-  Arbitrum,
-  Optimism,
-  Base,
-}
-
-// Definition of the different network families
-const EthereumFamily: ChainFamily = {
-  Mainnet: {
-    chainId: 1,
-    name: 'mainnet',
-  },
-  Goerli: {
-    chainId: 5,
-    name: 'goerli',
-  },
-}
-
-const ArbitrumFamily: ChainFamily = {
-  ArbitrumOne: {
-    chainId: 42161,
-    name: 'arbitrum-one',
-  },
-}
-
-const OptimismFamily: ChainFamily = {
-  Optimism: {
-    chainId: 10,
-    name: 'optimism',
-  },
-}
-
-const BaseFamily: ChainFamily = {
-  Mainnet: {
-    chainId: 8453,
-    name: 'mainnet',
-  },
-}
-
-/**
- * @type NetworkFamilies
- * @description A map of network family names to network families. It can be used to
- *              retrieve the NetworkId of a network family + network combination
- */
-export const ChainFamilies: Record<ChainFamilyName, ChainFamily> = {
+export const ChainFamiliesMap: ChainFamily = {
   [ChainFamilyName.Ethereum]: EthereumFamily,
   [ChainFamilyName.Arbitrum]: ArbitrumFamily,
   [ChainFamilyName.Optimism]: OptimismFamily,

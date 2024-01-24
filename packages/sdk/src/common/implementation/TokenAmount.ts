@@ -16,8 +16,8 @@ export class TokenAmount implements Printable {
     this.amount = amount
   }
 
-  public static create(token: Token, amount: string): TokenAmount {
-    return new TokenAmount(token, amount)
+  public static createFrom(params: { token: Token; amount: string }): TokenAmount {
+    return new TokenAmount(params.token, params.amount)
   }
 
   public toString(): string {

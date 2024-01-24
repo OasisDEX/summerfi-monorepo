@@ -29,7 +29,7 @@ export interface FinanceSimulationManager {
   }): Promise<CreatePositionSimulation>
 
   /**
-   * @function simulateAddCollateralPosition
+   * @function simulateAddCollateralToPosition
    * @description Simulates the addition of collateral to a position
    *
    * @param position Position to add collateral to
@@ -37,7 +37,7 @@ export interface FinanceSimulationManager {
    *
    * @returns Simulation data for the addition of collateral to a position
    */
-  simulateAddCollateralPosition(params: {
+  simulateAddCollateralToPosition(params: {
     position: Position
     parameters: AddCollateralParameters
   }): Promise<AddCollateralSimulation>

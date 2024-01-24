@@ -21,7 +21,7 @@ export class FinanceSimulationManagerClientImpl implements FinanceSimulationMana
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async simulateAddCollateralPosition(params: {
+  public async simulateAddCollateralToPosition(params: {
     position: Position
     parameters: AddCollateralParameters
   }): Promise<AddCollateralSimulation> {

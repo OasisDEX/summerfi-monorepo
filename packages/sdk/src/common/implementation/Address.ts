@@ -14,22 +14,22 @@ export enum AddressType {
  * @description Represents a blockchain address, including its type
  */
 export class Address implements Printable {
-  public readonly address: string
+  public readonly hexValue: string
   public readonly type: AddressType
 
-  private constructor(address: string, type: AddressType) {
-    this.address = address
-    this.type = type
+  private constructor(params: { hexValue: string; type: AddressType }) {
+    this.hexValue = params.hexValue
+    this.type = params.type
   }
 
-  public static createFrom(address: string): Address {
-    if (this.isValid(address) === false) {
+  public static createFrom(params: { hexValue: string }): Address {
+    if (this.isValid(params.hexValue) === false) {
       throw new Error('Address type is unknown')
     }
 
-    const type = this.getType(address)
+    const type = this.getType(params.hexValue)
 
-    return new Address(address, type)
+    return new Address({ ...params, type: type })
   }
 
   public static isValid(address: string): boolean {
@@ -45,6 +45,6 @@ export class Address implements Printable {
   }
 
   public toString(): string {
-    return `${this.address} (${this.type})`
+    return `${this.hexValue} (${this.type})`
   }
 }

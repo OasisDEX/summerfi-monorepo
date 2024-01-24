@@ -7,6 +7,6 @@ export type {
   RiskRatio,
   TokenAmount,
   Wallet,
-} from './interfaces'
-export { Currency } from './interfaces'
-export { AddressType } from './interfaces'
+} from './implementation'
+export { Currency } from './implementation'
+export { AddressType } from './implementation'

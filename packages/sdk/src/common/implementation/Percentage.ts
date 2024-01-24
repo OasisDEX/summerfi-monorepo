@@ -7,12 +7,12 @@ import { Printable } from './Printable'
 export class Percentage implements Printable {
   public readonly value: number
 
-  private constructor(params: { value: number }) {
-    this.value = params.value
+  private constructor(params: { percentage: number }) {
+    this.value = params.percentage
   }
 
-  static createFrom(percentage: number) {
-    return new Percentage({ value: percentage })
+  static createFrom(params: { percentage: number }) {
+    return new Percentage(params)
   }
 
   toString(): string {

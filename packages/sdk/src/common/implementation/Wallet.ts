@@ -8,11 +8,11 @@ import { Printable } from './Printable'
 export class Wallet implements Printable {
   public readonly address: Address
 
-  constructor(params: { address: string }) {
-    this.address = Address.createFrom(params.address)
+  constructor(params: { hexValue: string }) {
+    this.address = Address.createFrom(params)
   }
 
-  public static createFrom(params: { address: string }): Wallet {
+  public static createFrom(params: { hexValue: string }): Wallet {
     return new Wallet(params)
   }
 
