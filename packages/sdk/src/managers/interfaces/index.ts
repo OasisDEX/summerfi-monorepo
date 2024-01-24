@@ -1,8 +1,0 @@
-export type { ChainManager } from './ChainManager'
-export type { PortfolioManager } from './PortfolioManager'
-export type { ProtocolsManager } from './ProtocolsManager'
-export type { SDKManager } from './SDKManager'
-export type { SimulationManager } from './SimulationManager'
-export type { TokensManager } from './TokensManager'
-export type { UserManager } from './UserManager'
-export type * from './simulations'

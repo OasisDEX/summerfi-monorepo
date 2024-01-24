@@ -1,4 +1,4 @@
-import { ChainInfo } from '~sdk/chain'
+import { ChainInfo } from '~sdk/chains'
 import { Address } from './Address'
 import { Printable } from './Printable'
 
