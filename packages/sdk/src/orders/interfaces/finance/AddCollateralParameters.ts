@@ -1,4 +1,4 @@
-import { Percentage, RiskRatio, TokenAmount } from '~sdk/common'
+import { Percentage, TokenAmount } from '~sdk/common'
 
 /**
  * @interface AddCollateralParameters

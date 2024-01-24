@@ -3,6 +3,7 @@ import { MigratePositionParameters, MigratePositionSimulation } from '~sdk/order
 import { Position } from '~sdk/user'
 
 export class MigrationSimulationManagerClientImpl implements MigrationSimulationManager {
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public async simulateMigratePosition(params: {
     position: Position
     parameters?: MigratePositionParameters

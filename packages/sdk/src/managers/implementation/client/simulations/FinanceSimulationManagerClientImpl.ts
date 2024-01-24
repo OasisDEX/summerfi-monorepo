@@ -11,6 +11,7 @@ import { Pool } from '~sdk/protocols'
 import { Position } from '~sdk/user'
 
 export class FinanceSimulationManagerClientImpl implements FinanceSimulationManager {
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public async simulateCreatePosition(params: {
     pool: Pool
     parameters: CreatePositionParameters
@@ -19,6 +20,7 @@ export class FinanceSimulationManagerClientImpl implements FinanceSimulationMana
     return {} as CreatePositionSimulation
   }
 
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public async simulateAddCollateralPosition(params: {
     position: Position
     parameters: AddCollateralParameters
@@ -27,6 +29,7 @@ export class FinanceSimulationManagerClientImpl implements FinanceSimulationMana
     return {} as AddCollateralSimulation
   }
 
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public async simulateClosePosition(params: {
     position: Position
     parameters: ClosePositionParameters

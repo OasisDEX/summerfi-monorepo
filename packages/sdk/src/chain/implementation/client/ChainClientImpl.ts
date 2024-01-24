@@ -1,13 +1,8 @@
-import {
-  ProtocolsManager,
-  ProtocolsManagerClientImpl,
-  TokensManager,
-  TokensManagerClientImpl,
-} from '~sdk/managers'
+import { ProtocolsManagerClientImpl, TokensManagerClientImpl } from '~sdk/managers'
 import { Chain, ChainInfo } from '~sdk/chain'
 import { ChainBaseImpl } from '../base/ChainBaseImpl'
 
-export class NetworkClientImpl extends ChainBaseImpl implements Chain {
+export class ChainClientImpl extends ChainBaseImpl implements Chain {
   constructor(chainInfo: ChainInfo) {
     super(chainInfo, new TokensManagerClientImpl(), new ProtocolsManagerClientImpl())
   }

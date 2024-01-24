@@ -8,15 +8,19 @@ export class TokensManagerClientImpl implements TokensManager {
     return [] as Token[]
   }
 
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public async getTokenBySymbol(symbol: string): Promise<Maybe<Token>> {
     // TODO: Implement
     return undefined
   }
 
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public async getTokenByAddress(address: Address): Promise<Maybe<Token>> {
     // TODO: Implement
     return undefined
   }
+
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public async getTokenByName(name: string): Promise<Maybe<Token>> {
     // TODO: Implement
     return undefined

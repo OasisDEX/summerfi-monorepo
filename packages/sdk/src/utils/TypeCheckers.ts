@@ -1,6 +1,6 @@
 import { Currency, Token } from '~sdk/common'
 
-export function isToken(maybeToken: any): maybeToken is Token {
+export function isToken(maybeToken: Token | Currency): maybeToken is Token {
   return (
     typeof maybeToken === 'object' &&
     maybeToken !== null &&
@@ -12,6 +12,6 @@ export function isToken(maybeToken: any): maybeToken is Token {
   )
 }
 
-export function isCurrency(maybeCurrency: any): maybeCurrency is Currency {
+export function isCurrency(maybeCurrency: Token | Currency): maybeCurrency is Currency {
   return Object.values(Currency).includes(maybeCurrency as Currency)
 }

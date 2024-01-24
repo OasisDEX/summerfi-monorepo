@@ -1,1 +1,1 @@
-export { NetworkClientImpl } from './NetworkClientImpl'
+export { ChainClientImpl } from './ChainClientImpl'

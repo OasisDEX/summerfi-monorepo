@@ -23,6 +23,7 @@ export class SimulationManagerClientImpl implements SimulationManager {
     this.migration = new MigrationSimulationManagerClientImpl()
   }
 
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public async getPositions(params: {
     networks: ChainInfo[]
     wallet: Wallet

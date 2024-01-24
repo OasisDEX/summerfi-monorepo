@@ -8,6 +8,7 @@ import {
 import { Position } from '~sdk/user'
 
 export class AutomationSimulationManagerClientImpl implements AutomationSimulationManager {
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public async simulateAddAutomation(params: {
     position: Position
     triggers: AddAutomationParameters
@@ -16,6 +17,7 @@ export class AutomationSimulationManagerClientImpl implements AutomationSimulati
     return {} as AddAutomationSimulation
   }
 
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public async simulateRemoveAutomation(params: {
     id: AutomationId
   }): Promise<RemoveAutomationSimulation> {

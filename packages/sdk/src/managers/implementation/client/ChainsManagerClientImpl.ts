@@ -8,11 +8,13 @@ export class ChainsManagerClientImpl implements ChainManager {
     return [] as ChainInfo[]
   }
 
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public async getChainByName(name: string): Promise<Maybe<Chain>> {
     // TODO: Implement
     return undefined
   }
 
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public async getChainByChainId(chainId: number): Promise<Maybe<Chain>> {
     // TODO: Implement
     return undefined
