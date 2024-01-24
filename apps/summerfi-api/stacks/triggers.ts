@@ -1,6 +1,6 @@
-import { StackContext, Api, Function } from 'sst/constructs'
+import { Api, Function, StackContext } from 'sst/constructs'
 
-export function API({ stack }: StackContext) {
+export function addTriggersConfig({ stack, api }: StackContext & { api: Api }) {
   const getTriggersFunction = new Function(stack, 'get-triggers-function', {
     handler: 'lib/get-triggers-function/src/index.handler',
     runtime: 'nodejs20.x',
@@ -18,21 +18,12 @@ export function API({ stack }: StackContext) {
     },
   })
 
-  const api = new Api(stack, 'api', {
-    defaults: {
-      function: {},
-    },
-    routes: {
-      'GET /api/triggers': getTriggersFunction,
-      'POST /api/triggers/{chainId}/{protocol}/{trigger}': setupTriggerFunction,
-    },
+  api.addRoutes(stack, {
+    'GET /api/triggers': getTriggersFunction,
+    'POST /api/triggers/{chainId}/{protocol}/{trigger}': setupTriggerFunction,
   })
 
   const apiUrl = api.url
 
   setupTriggerFunction.addEnvironment('GET_TRIGGERS_URL', `${apiUrl}/api/triggers`)
-
-  stack.addOutputs({
-    ApiEndpoint: api.url,
-  })
 }
