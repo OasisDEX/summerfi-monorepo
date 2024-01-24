@@ -1,6 +1,6 @@
 import { Currency, Token } from '~sdk/common'
 
-export function isToken(maybeToken: Token | Currency): maybeToken is Token {
+export function isToken(maybeToken: Token | Currency | undefined): maybeToken is Token {
   return (
     typeof maybeToken === 'object' &&
     maybeToken !== null &&
