@@ -20,6 +20,7 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
   - The pipelines should check the `turbo cache` and deploy only if there are changes
 - [ ] Protect the `main` branch. Add some workflow to marge to `main` only from PRs with two approvals.
 - [ ] Add turbo command to run tests from all packages. Right now, there are some issues with `jest` configs.
+- [ ] Add turbo CLI command to add new package, app or function
 ## Useful Links
 
 Learn more about the power of Turborepo:
