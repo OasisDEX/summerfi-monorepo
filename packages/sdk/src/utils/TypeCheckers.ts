@@ -1,6 +1,7 @@
 import { Currency, Token } from '~sdk/common'
+import { Maybe } from './Maybe'
 
-export function isToken(maybeToken: Token | Currency | undefined): maybeToken is Token {
+export function isToken(maybeToken: Maybe<Token | Currency>): maybeToken is Token {
   return (
     typeof maybeToken === 'object' &&
     maybeToken !== null &&
@@ -12,6 +13,6 @@ export function isToken(maybeToken: Token | Currency | undefined): maybeToken is
   )
 }
 
-export function isCurrency(maybeCurrency: Token | Currency): maybeCurrency is Currency {
+export function isCurrency(maybeCurrency: Maybe<Token | Currency>): maybeCurrency is Currency {
   return Object.values(Currency).includes(maybeCurrency as Currency)
 }
