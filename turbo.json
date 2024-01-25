@@ -14,8 +14,8 @@
   ],
   "pipeline": {
     "prebuild": {
-        "dependsOn": ["^prebuild"],
-        "outputs": ["src/types/graphql/generated.ts"]
+      "dependsOn": ["^prebuild"],
+      "outputs": ["src/types/graphql/generated.ts"]
     },
     "build": {
       "dependsOn": ["^build", "prebuild"],
