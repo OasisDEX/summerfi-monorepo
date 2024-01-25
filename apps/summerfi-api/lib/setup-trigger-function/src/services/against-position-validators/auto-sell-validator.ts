@@ -179,7 +179,7 @@ const warningsValidation = paramsSchema
   )
   .refine(
     ({ triggerData }) => {
-      return triggerData.minSellPrice !== 0n
+      return triggerData.useMinSellPrice !== false
     },
     {
       message: 'No min sell price when stop loss enabled',

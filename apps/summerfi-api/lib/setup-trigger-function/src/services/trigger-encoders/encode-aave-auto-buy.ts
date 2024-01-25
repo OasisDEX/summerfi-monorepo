@@ -7,7 +7,6 @@ import {
 } from 'viem'
 import { automationBotAbi } from '~abi'
 import { AaveAutoBuyTriggerData } from '~types'
-import { OPERATION_NAMES } from '@oasisdex/dma-library'
 import { DEFAULT_DEVIATION, MAX_COVERAGE_BASE } from './defaults'
 import { EncoderFunction } from './types'
 
@@ -22,7 +21,7 @@ export const encodeAaveAutoBuy: EncoderFunction<AaveAutoBuyTriggerData> = (
       'uint256 maxBuyPrice, uint64 deviation, uint32 maxBaseFeeInGwei',
   )
 
-  const operationName = OPERATION_NAMES.aave.v3.ADJUST_RISK_UP
+  const operationName = 'AdjustRiskUpAAVEV3Position_2'
   const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
 
   const encodedTriggerData = encodeAbiParameters(abiParameters, [

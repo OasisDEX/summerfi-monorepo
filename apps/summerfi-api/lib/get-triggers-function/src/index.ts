@@ -39,12 +39,7 @@ const paramsSchema = z.object({
 })
 
 export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
-  //set envs
-  const { SUBGRAPH_BASE } = (event.stageVariables as Record<string, string>) || {
-    SUBGRAPH_BASE: process.env.SUBGRAPH_BASE,
-  }
-
-  logger.info('Subgraph base', { SUBGRAPH_BASE })
+  const SUBGRAPH_BASE = process.env.SUBGRAPH_BASE
 
   if (!SUBGRAPH_BASE) {
     logger.error('SUBGRAPH_BASE is not set')

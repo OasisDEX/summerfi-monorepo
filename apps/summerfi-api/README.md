@@ -17,17 +17,5 @@ function.
 - Create a new folder in `lambdas/lib` folder
 -
 
-## Local development
-
-To test your function you can use
-[SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html)
-To install SAM go to the
-[link](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html)
-and follow the instructions. If you are using MacOS, you can install it using
-`brew install aws-sam-cli`.
-
-1. Build your functions using `npm run build`
-2. Copy the `env.json.template` to `env.json` using: `npm run prepare-env`
-3. Start SAM using `npm run sam`
-
-You can also use Docker Compose to run the API, but for now, it's kind of slow.
+## Deploying using SST
+We currently have three stages: dev, staging and production.

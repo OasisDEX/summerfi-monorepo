@@ -9,7 +9,8 @@
     "GET_TRIGGERS_URL",
     "SKIP_VALIDATION",
     "AWS_REGION",
-    "AWS_PROFILE"
+    "AWS_PROFILE",
+    "POWERTOOLS_LOG_LEVEL"
   ],
   "pipeline": {
     "prebuild": {},

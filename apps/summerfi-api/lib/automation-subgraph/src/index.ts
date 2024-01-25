@@ -10,6 +10,9 @@ import { Logger } from '@aws-lambda-powertools/logger'
 
 const chainIdSubgraphMap: Partial<Record<ChainId, string>> = {
   [ChainId.MAINNET]: 'summer-automation',
+  [ChainId.BASE]: 'summer-automation-base',
+  [ChainId.OPTIMISM]: 'summer-automation-optimism',
+  [ChainId.ARBITRUM]: 'summer-automation-arbitrum',
 }
 
 const getEndpoint = (chainId: ChainId, baseUrl: string) => {
