@@ -17,7 +17,7 @@
     "allowUnreachableCode": false,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node"]
+    "types": ["node", "jest"]
   },
   "include": [],
   "exclude": ["node_modules"],
