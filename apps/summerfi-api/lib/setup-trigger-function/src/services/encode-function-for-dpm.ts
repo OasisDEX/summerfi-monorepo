@@ -1,6 +1,6 @@
 import { encodeFunctionData } from 'viem'
 import { accountImplementationAbi } from '~abi'
-import { Address } from 'shared/domain-types'
+import { Address } from '@summerfi/serverless-shared/domain-types'
 import { Addresses } from './get-addresses'
 
 export interface EncodeFunctionForDpmParams {

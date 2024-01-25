@@ -12,19 +12,14 @@ import {
 } from '~types'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { buildServiceContainer } from './services'
-import { ChainId, ProtocolId } from '@summerfi/serverless-shared/domain-types'
+import { ProtocolId } from '@summerfi/serverless-shared/domain-types'
 
 const logger = new Logger({ serviceName: 'setupTriggerFunction' })
 
 export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
-  const { RPC_GATEWAY, GET_TRIGGERS_URL, SKIP_VALIDATION } = (event.stageVariables as Record<
-    string,
-    string
-  >) || {
-    RPC_GATEWAY: process.env.RPC_GATEWAY,
-    GET_TRIGGERS_URL: process.env.GET_TRIGGERS_URL,
-    SKIP_VALIDATION: process.env.SKIP_VALIDATION,
-  }
+  const RPC_GATEWAY = process.env.RPC_GATEWAY
+  const GET_TRIGGERS_URL = process.env.GET_TRIGGERS_URL
+  const SKIP_VALIDATION = process.env.SKIP_VALIDATION
 
   const skipValidation = SKIP_VALIDATION === 'true'
 
@@ -54,25 +49,12 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     })
   }
 
-  if (
-    pathParamsResult.data.chainId !== ChainId.MAINNET &&
-    pathParamsResult.data.protocol !== ProtocolId.AAVE3
-  ) {
+  if (pathParamsResult.data.protocol !== ProtocolId.AAVE3) {
     const errors: ValidationIssue[] = [
-      {
-        code: 'not-supported-chain',
-        message: 'Only Mainnet is supported',
-        path: ['chainId'],
-      },
       {
         code: 'not-supported-protocol',
         message: 'Only AAVE3 protocol is supported',
         path: ['protocol'],
-      },
-      {
-        code: 'not-supported-trigger',
-        message: 'Only auto-buy trigger is supported',
-        path: ['trigger'],
       },
     ]
     return ResponseBadRequest({

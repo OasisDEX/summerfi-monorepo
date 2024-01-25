@@ -168,7 +168,7 @@ const warningsValidation = paramsSchema
   )
   .refine(
     ({ triggerData }) => {
-      return triggerData.maxBuyPrice !== undefined
+      return triggerData.useMaxBuyPrice
     },
     {
       message: 'Auto buy with no max price threshold',

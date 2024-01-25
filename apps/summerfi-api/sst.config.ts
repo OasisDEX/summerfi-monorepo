@@ -1,13 +1,13 @@
 import { SSTConfig } from 'sst'
-import { API } from './stacks/triggers-stack'
+import { API } from './stacks/summer-stack'
 
 export const sstConfig: SSTConfig = {
   config(_input) {
-    // if (!['dev', 'staging', 'production'].includes(_input.stage ?? '')) {
-    //   throw new Error('Invalid stage')
-    // }
+    if (!['dev', 'feature', 'staging', 'production'].includes(_input.stage ?? '')) {
+      throw new Error('Invalid stage')
+    }
     return {
-      name: 'summerfi-api',
+      name: 'summerfi-stack',
       region: `${process.env.AWS_REGION}`,
       profile: `${process.env.AWS_PROFILE}`,
       stage: `${_input.stage}`,
