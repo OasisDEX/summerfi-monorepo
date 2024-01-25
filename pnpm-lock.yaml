@@ -127,6 +127,43 @@ importers:
         specifier: ^8.56.0
         version: 8.56.0
 
+  apps/summerfi-api/lib/get-migrations-function:
+    dependencies:
+      '@oasisdex/addresses':
+        specifier: ^0.1.36
+        version: 0.1.36
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../serverless-shared
+      viem:
+        specifier: ^1.19.3
+        version: 1.21.4(typescript@5.3.3)(zod@3.22.4)
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../../../packages/eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../../../packages/typescript-config
+      '@types/jest':
+        specifier: ^29.5.11
+        version: 29.5.11
+      '@types/node':
+        specifier: ^20.11.5
+        version: 20.11.5
+      eslint:
+        specifier: ^8.56.0
+        version: 8.56.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.11.5)
+      ts-jest:
+        specifier: ^29.1.1
+        version: 29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
+
   apps/summerfi-api/lib/get-triggers-function:
     dependencies:
       '@aws-lambda-powertools/logger':
@@ -194,43 +231,6 @@ importers:
       eslint:
         specifier: ^8.56.0
         version: 8.56.0
-
-  apps/summerfi-api/lib/get-migrations-function:
-    dependencies:
-      '@oasisdex/addresses':
-        specifier: ^0.1.14
-        version: 0.1.30
-      '@summerfi/serverless-shared':
-        specifier: workspace:*
-        version: link:../serverless-shared
-      viem:
-        specifier: ^1.19.3
-        version: 1.21.4(typescript@5.3.3)(zod@3.22.4)
-      zod:
-        specifier: ^3.22.4
-        version: 3.22.4
-    devDependencies:
-      '@summerfi/eslint-config':
-        specifier: workspace:*
-        version: link:../../../../packages/eslint-config
-      '@summerfi/typescript-config':
-        specifier: workspace:*
-        version: link:../../../../packages/typescript-config
-      '@types/jest':
-        specifier: ^29.5.11
-        version: 29.5.11
-      '@types/node':
-        specifier: ^20.11.5
-        version: 20.11.5
-      eslint:
-        specifier: ^8.56.0
-        version: 8.56.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.5)
-      ts-jest:
-        specifier: ^29.1.1
-        version: 29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
 
   apps/summerfi-api/lib/portfolio-overview-function:
     dependencies:
@@ -4281,8 +4281,8 @@ packages:
     resolution: {integrity: sha512-jQvtEOWCmA/O6kTpg3ATWJq90ipuEzgNDCfv5R+43gUc9mHXHIFKjwAHuhmKyCkXO92nQFkP7sk8MJbw9A0hRw==}
     dev: false
 
-  /@oasisdex/addresses@0.1.30:
-    resolution: {integrity: sha512-Gl1ez3g9DL7NwzW+UZdOz6Wi+MWJ7XOp1cxIBs5H+UDULkCp20jsoSrrwaGD1/zxJLU5VGFhA3/68YvbKHdP0w==}
+  /@oasisdex/addresses@0.1.36:
+    resolution: {integrity: sha512-HRTjoOdOcWslSFycgifqOvmhwgvHhTPJxnkQZRkB2qFMWstMYX10598iv+lZmFJ1XJz8Z7wyUL2oaLWl7cek2A==}
     dev: false
 
   /@oasisdex/dma-library@0.5.21-dma-v2-workers.2:

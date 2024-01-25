@@ -9,19 +9,16 @@ import { USD_DECIMALS } from '@summerfi/serverless-shared/constants'
 import { ProtocolMigrationAssets } from './types'
 import {
   Address,
-  ChainId,
   Network,
   PortfolioMigrationAsset,
   ProtocolId,
+  isChainId,
 } from '@summerfi/serverless-shared/domain-types'
 import { createtokenService } from './tokenService'
 import { createAddressService } from './addressService'
+import { IMigrationConfig } from './migrations-config'
 
-export function createClient(
-  rpcUrl: string,
-  supportedChainsIds: ChainId[],
-  supportedProtocolsIds: ProtocolId[],
-) {
+export function createClient(rpcUrl: string, migrationConfig: IMigrationConfig) {
   const transport = http(rpcUrl, {
     batch: false,
     fetchOptions: {
@@ -35,7 +32,11 @@ export function createClient(
     // for each supported chain
     const promises: Promise<ProtocolMigrationAssets>[] = []
 
-    supportedChainsIds.forEach((chainId) => {
+    Object.entries(migrationConfig).forEach(([chainIdString, supportedProtocolsIds]) => {
+      const chainId = Number(chainIdString)
+      if (!isChainId(chainId)) {
+        throw new Error(`Invalid chainId: ${chainId}`)
+      }
       supportedProtocolsIds.forEach((protocolId) => {
         const promise = async (): Promise<ProtocolMigrationAssets> => {
           const chain = extractChain({
