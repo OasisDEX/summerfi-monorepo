@@ -1,6 +1,6 @@
 import { Api, Function, StackContext } from 'sst/constructs'
 
-export function addMigrationssConfig({ stack, api }: StackContext & { api: Api }) {
+export function addMigrationsConfig({ stack, api }: StackContext & { api: Api }) {
   const getMigrationsFunction = new Function(stack, 'get-migrations-function', {
     handler: 'lib/get-migrations-function/src/index.handler',
     runtime: 'nodejs20.x',
