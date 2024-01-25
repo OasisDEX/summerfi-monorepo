@@ -9,13 +9,17 @@
     "GET_TRIGGERS_URL",
     "SKIP_VALIDATION",
     "AWS_REGION",
-    "AWS_PROFILE"
+    "AWS_PROFILE",
+    "POWERTOOLS_LOG_LEVEL"
   ],
   "pipeline": {
-    "prebuild": {},
+    "prebuild": {
+      "dependsOn": ["^prebuild"],
+      "outputs": ["src/types/graphql/generated.ts"]
+    },
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "dependsOn": ["^build", "prebuild"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", "artifacts/**", ".sst/**"]
     },
     "lint": {},
     "dev": {

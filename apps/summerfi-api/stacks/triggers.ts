@@ -6,6 +6,7 @@ export function addTriggersConfig({ stack, api }: StackContext & { api: Api }) {
     runtime: 'nodejs20.x',
     environment: {
       SUBGRAPH_BASE: process.env.SUBGRAPH_BASE || '',
+      POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
     },
   })
 
@@ -15,6 +16,7 @@ export function addTriggersConfig({ stack, api }: StackContext & { api: Api }) {
     environment: {
       RPC_GATEWAY: process.env.RPC_GATEWAY || '',
       SKIP_VALIDATION: process.env.SKIP_VALIDATION || 'false',
+      POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
     },
   })
 

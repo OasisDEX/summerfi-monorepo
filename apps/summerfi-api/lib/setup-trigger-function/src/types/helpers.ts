@@ -36,7 +36,7 @@ export const mapZodResultToValidationResults = ({
   warnings?: ZodIssue[]
 }): ValidationResults => {
   return {
-    success: false,
+    success: (errors ?? []).length === 0,
     errors: (errors ?? []).map(zodIssueToIssue),
     warnings: (warnings ?? []).map(zodIssueToIssue),
   }
