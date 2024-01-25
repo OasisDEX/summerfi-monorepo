@@ -7,8 +7,8 @@ import { exit } from 'process'
 
 const LAMBDA_NAMES = [
   'portfolio-assets-function',
-  'portfolio-migrations-function',
   'portfolio-overview-function',
+  'get-migrations-function',
   'get-triggers-function',
   'setup-trigger-function',
 ]
