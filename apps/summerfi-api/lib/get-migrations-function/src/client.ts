@@ -17,15 +17,24 @@ import {
 import { createtokenService } from './tokenService'
 import { createAddressService } from './addressService'
 import { IMigrationConfig } from './migrations-config'
+import {
+  IRpcConfig,
+  getRpcGatewayEndpoint,
+} from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
 
-export function createClient(rpcUrl: string, migrationConfig: IMigrationConfig) {
-  const transport = http(rpcUrl, {
-    batch: false,
-    fetchOptions: {
-      method: 'POST',
-    },
-  })
+export const rpcConfig: IRpcConfig = {
+  skipCache: false,
+  skipMulticall: false,
+  skipGraph: true,
+  stage: 'prod',
+  source: 'borrow-prod',
+}
 
+export function createMigrationsClient(
+  rpcGatewayUrl: string,
+  customRpcUrl: string | undefined,
+  migrationConfig: IMigrationConfig,
+) {
   const getProtocolAssetsToMigrate = async (
     address: Address,
   ): Promise<ProtocolMigrationAssets[]> => {
@@ -42,6 +51,14 @@ export function createClient(rpcUrl: string, migrationConfig: IMigrationConfig) 
           const chain = extractChain({
             chains: [mainnet, base, optimism, arbitrum, sepolia],
             id: chainId,
+          })
+
+          const rpcUrl = customRpcUrl ?? getRpcGatewayEndpoint(rpcGatewayUrl, chainId, rpcConfig)
+          const transport = http(rpcUrl, {
+            batch: false,
+            fetchOptions: {
+              method: 'POST',
+            },
           })
 
           const { collAssets, debtAssets } = await getAssets(transport, chain, protocolId, address)
