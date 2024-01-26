@@ -14,7 +14,8 @@ module.exports = {
   testPathIgnorePatterns: ['dist', 'node_modules'],
   modulePaths: ['src'],
     moduleNameMapper: pathsToModuleNameMapper({
-    '@summerfi/serverless-shared/*': ['<rootDir>/../serverless-shared/src/*'],
+    '@summerfi/serverless-shared': ['<rootDir>/../../../../packages/serverless-shared/src/index.ts'],
+    '@summerfi/serverless-shared/*': ['<rootDir>/../../../../packages/serverless-shared/src/*'],
   }),
   transform: {
     '^.+\\.(ts|tsx)$': [

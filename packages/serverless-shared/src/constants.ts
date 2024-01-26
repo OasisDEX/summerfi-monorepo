@@ -3,7 +3,7 @@ import { ChainId, ProtocolId } from './domain-types'
 // share constants here
 export const USD_DECIMALS = 8n
 
-export const MIGRATION_SUPPORTED_CHAIN_IDS = [
+export const SUPPORTED_CHAIN_IDS = [
   ChainId.MAINNET,
   ChainId.ARBITRUM,
   ChainId.OPTIMISM,
@@ -11,4 +11,4 @@ export const MIGRATION_SUPPORTED_CHAIN_IDS = [
   ChainId.SEPOLIA,
 ]
 
-export const MIGRATION_SUPPORTED_PROTOCOL_IDS = [ProtocolId.AAVE3, ProtocolId.SPARK]
+export const SUPPORTED_PROTOCOL_IDS = [ProtocolId.AAVE3, ProtocolId.SPARK]

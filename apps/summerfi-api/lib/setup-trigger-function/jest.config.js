@@ -13,8 +13,10 @@ module.exports = {
   testPathIgnorePatterns: ['dist', 'node_modules'],
   modulePaths: ['src'],
   moduleNameMapper: pathsToModuleNameMapper({
-    '~types': ['./src/types'],
-    '~abi': ['./src/abi'],
+    '@summerfi/serverless-shared': ['<rootDir>/../../../../packages/serverless-shared/src/index.ts'],
+    '@summerfi/serverless-shared/*': ['<rootDir>/../../../../packages/serverless-shared/src/*'],
+    '~types': ['<rootDir>/src/types/index.ts'],
+    '~abi': ['<rootDir>/src/abi/index.ts'],
   }),
   transform: {
     '^.+\\.(ts|tsx)$': [

@@ -6,30 +6,19 @@ import {
   ResponseInternalServerError,
   ResponseOk,
 } from '@summerfi/serverless-shared/responses'
-import {
-  chainIdsSchema,
-  protocolIdsSchema,
-  addressSchema,
-} from '@summerfi/serverless-shared/validators'
+import { addressSchema } from '@summerfi/serverless-shared/validators'
 import {
   Address,
-  ChainId,
   PortfolioMigration,
   PortfolioMigrationsResponse,
-  ProtocolId,
 } from '@summerfi/serverless-shared/domain-types'
-import { createClient } from './client'
+import { createMigrationsClient } from './client'
 import { parseEligibleMigration } from './parseEligibleMigration'
-import {
-  MIGRATION_SUPPORTED_CHAIN_IDS,
-  MIGRATION_SUPPORTED_PROTOCOL_IDS,
-} from '@summerfi/serverless-shared/constants'
+import { MigrationConfig } from 'migrations-config'
 
 const paramsSchema = z.object({
   address: addressSchema,
-  chainIds: chainIdsSchema.optional(),
-  protocolIds: protocolIdsSchema.optional(),
-  rpcUrl: z.string().optional(),
+  customRpcUrl: z.string().optional(),
 })
 
 export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
@@ -40,17 +29,13 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
 
   // params
   let address: Address | undefined
-  let chainIds: ChainId[] | undefined
-  let protocolIds: ProtocolId[] | undefined
-  let rpcUrl: string | undefined
+  let customRpcUrl: string | undefined
 
   // validation
   try {
     const params = paramsSchema.parse(event.queryStringParameters)
     address = params.address
-    chainIds = params.chainIds
-    protocolIds = params.protocolIds
-    rpcUrl = params.rpcUrl
+    customRpcUrl = params.customRpcUrl
   } catch (error) {
     console.log(error)
     const message = getDefaultErrorMessage(error)
@@ -61,15 +46,11 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     if (!RPC_GATEWAY) {
       throw new Error('RPC_GATEWAY env variable is not set')
     }
-    const rpcUrlWithFallback = rpcUrl ?? RPC_GATEWAY
 
-    const supportedChainsIds = chainIds ?? MIGRATION_SUPPORTED_CHAIN_IDS
-    const supportedProtocolsIds = protocolIds ?? MIGRATION_SUPPORTED_PROTOCOL_IDS
-
-    const client = createClient(rpcUrlWithFallback, supportedChainsIds, supportedProtocolsIds)
+    const migrationsClient = createMigrationsClient(RPC_GATEWAY, customRpcUrl, MigrationConfig)
 
     const eligibleMigrations: PortfolioMigration[] = []
-    const protocolAssetsToMigrate = await client.getProtocolAssetsToMigrate(address)
+    const protocolAssetsToMigrate = await migrationsClient.getProtocolAssetsToMigrate(address)
 
     protocolAssetsToMigrate.forEach((protocolAssets) => {
       const eligibleMigration = parseEligibleMigration(protocolAssets)
