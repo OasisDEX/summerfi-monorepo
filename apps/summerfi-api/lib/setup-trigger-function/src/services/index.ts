@@ -119,19 +119,15 @@ export function buildServiceContainer<
 
   return {
     getPosition: (params: Parameters<typeof getPosition>[0]) => {
-      logger?.info('Getting position', { params })
       return getPosition(params, publicClient, addresses, logger)
     },
     simulatePosition: (params: Parameters<typeof simulatePosition>[0]) => {
-      logger?.info('Simulating position', { params })
       return simulatePosition(params, logger)
     },
     getExecutionPrice: (params: Parameters<typeof calculateCollateralPriceInDebtBasedOnLtv>[0]) => {
-      logger?.info('Calculating execution price', { params })
       return calculateCollateralPriceInDebtBasedOnLtv(params)
     },
     validate: async (params) => {
-      logger?.info(`Validating trigger ${trigger}`, { params })
       const triggers = await getTriggers(params.position.address)
       const validator = getAgainstPositionValidator<Trigger, TriggerData>(trigger)
       const validatorParams = {
@@ -140,11 +136,9 @@ export function buildServiceContainer<
         triggerData: params.triggerData,
         triggers,
       }
-      logger?.info('Validating', { validatorParams })
       return validator(validatorParams)
     },
     encodeTrigger: async (position: PositionLike, triggerData: TriggerData) => {
-      logger?.info('Encoding trigger', { position, triggerData })
       const triggers = await getTriggers(position.address)
 
       try {
