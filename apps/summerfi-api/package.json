@@ -2,7 +2,7 @@
   "name": "@summerfi/summer-api",
   "version": "1.0.0",
   "scripts": {
-    "dev": "sst dev --stage dev",
+    "dev": "sst dev",
     "build:sst": "sst build",
     "deploy:staging": "sst deploy --stage staging",
     "deploy:prod": "sst deploy --stage production",
