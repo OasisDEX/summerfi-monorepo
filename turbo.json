@@ -26,8 +26,13 @@
       "outputs": [".next/**", "!.next/cache/**", "dist/**", "artifacts/**", ".sst/**"]
     },
     "test": {
-      "dependsOn": ["prebuild", "^build", "^test"]
+      "dependsOn": ["prebuild", "build", "^test"]
     },
-    "lint": {}
+    "lint": {
+      "dependsOn": ["prebuild", "build", "^lint"]
+    },
+    "cicheck": {
+      "dependsOn": ["prebuild", "build", "test", "lint"]
+    }
   }
 }
