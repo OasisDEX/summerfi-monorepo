@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@oasisdex/addresses": "0.1.16-dma-v2-workers.3",
-    "@oasisdex/dma-library": "0.5.21-dma-v2-workers.5",
+    "@oasisdex/dma-library": "0.5.21-dma-v2-workers.6",
     "@aws-lambda-powertools/logger": "^1.17.0",
     "@aws-lambda-powertools/metrics": "^1.17.0",
     "@aws-lambda-powertools/tracer": "^1.17.0",

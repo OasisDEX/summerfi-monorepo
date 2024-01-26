@@ -136,7 +136,6 @@ export function buildServiceContainer<
         triggerData: params.triggerData,
         triggers,
       }
-      logger?.info('Validating', { validatorParams })
       return validator(validatorParams)
     },
     encodeTrigger: async (position: PositionLike, triggerData: TriggerData) => {
