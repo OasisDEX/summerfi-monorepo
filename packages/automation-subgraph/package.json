@@ -7,7 +7,7 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "build": "tsc -b -v",
     "prebuild": "pnpm run generate-ts-types",
     "generate-ts-types": "graphql-codegen --config graphql.config.yml",

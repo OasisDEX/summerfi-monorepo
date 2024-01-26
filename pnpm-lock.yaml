@@ -90,31 +90,6 @@ importers:
 
   apps/summerfi-api: {}
 
-  apps/summerfi-api/lib/automation-subgraph:
-    dependencies:
-      '@aws-lambda-powertools/logger':
-        specifier: ^1.17.0
-        version: 1.17.0
-      '@summerfi/serverless-shared':
-        specifier: workspace:*
-        version: link:../../../../packages/serverless-shared
-      graphql-request:
-        specifier: ^6.1.0
-        version: 6.1.0(graphql@16.8.1)
-    devDependencies:
-      '@summerfi/eslint-config':
-        specifier: workspace:*
-        version: link:../../../../packages/eslint-config
-      '@summerfi/typescript-config':
-        specifier: workspace:*
-        version: link:../../../../packages/typescript-config
-      '@types/node':
-        specifier: ^20.11.5
-        version: 20.11.5
-      eslint:
-        specifier: ^8.56.0
-        version: 8.56.0
-
   apps/summerfi-api/lib/get-migrations-function:
     dependencies:
       '@oasisdex/addresses':
@@ -165,7 +140,7 @@ importers:
         version: 1.17.0
       '@summerfi/automation-subgraph':
         specifier: workspace:*
-        version: link:../automation-subgraph
+        version: link:../../../../packages/automation-subgraph
       '@summerfi/serverless-contracts':
         specifier: workspace:*
         version: link:../../../../packages/serverless-contracts
@@ -345,6 +320,31 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.11.5)
+
+  packages/automation-subgraph:
+    dependencies:
+      '@aws-lambda-powertools/logger':
+        specifier: ^1.17.0
+        version: 1.17.0
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../serverless-shared
+      graphql-request:
+        specifier: ^6.1.0
+        version: 6.1.0(graphql@16.8.1)
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^20.11.5
+        version: 20.11.5
+      eslint:
+        specifier: ^8.56.0
+        version: 8.56.0
 
   packages/eslint-config:
     devDependencies:

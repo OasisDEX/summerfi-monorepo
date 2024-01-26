@@ -1,10 +1,11 @@
 {
   "private": true,
   "scripts": {
-    "prebuild": "turbo run prebuild  --cache-dir=.turbo",
+    "prebuild": "turbo run prebuild --cache-dir=.turbo",
     "build": "turbo run build --cache-dir=.turbo",
     "lint": "turbo run lint --cache-dir=.turbo",
     "lint:fix": "turbo run lint:fix",
+    "test": "turbo run test --cache-dir=.turbo",
     "graph": "pnpm dlx nx graph",
     "format": "prettier --check \"./**/*.{ts,tsx,js,jsx,json}\"",
     "format:fix": "prettier --write \"./**/*.{ts,tsx,js,jsx,json}\""
