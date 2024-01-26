@@ -346,8 +346,8 @@ importers:
         specifier: 0.1.16-dma-v2-workers.3
         version: 0.1.16-dma-v2-workers.3
       '@oasisdex/dma-library':
-        specifier: 0.5.21-dma-v2-workers.5
-        version: 0.5.21-dma-v2-workers.5
+        specifier: 0.5.21-dma-v2-workers.6
+        version: 0.5.21-dma-v2-workers.6
       '@summerfi/serverless-contracts':
         specifier: workspace:*
         version: link:../serverless-contracts
@@ -4285,8 +4285,8 @@ packages:
     resolution: {integrity: sha512-Gl1ez3g9DL7NwzW+UZdOz6Wi+MWJ7XOp1cxIBs5H+UDULkCp20jsoSrrwaGD1/zxJLU5VGFhA3/68YvbKHdP0w==}
     dev: false
 
-  /@oasisdex/dma-library@0.5.21-dma-v2-workers.5:
-    resolution: {integrity: sha512-EYiYq2eULO+wMj7iKZg4WdmZON86fSTmo/HNOVYBLuQwoUzoHJfsj9DUYpNqMbt/QokZS6zWnR7IHsCBo7a9Gg==}
+  /@oasisdex/dma-library@0.5.21-dma-v2-workers.6:
+    resolution: {integrity: sha512-Xxk4N+RtxJGbQANnoHxr5C3+aQKn/ro7xrSIbZ2FeOIu+u3/Y2HyPUUMyKlvOAYNdly5EV5dZ4YtzS5iQavr5A==}
     dependencies:
       bignumber.js: 9.0.1
       ethers: 5.6.2
