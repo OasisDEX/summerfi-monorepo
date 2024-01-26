@@ -7,7 +7,7 @@ export const sstConfig: SSTConfig = {
       throw new Error('Invalid stage')
     }
     return {
-      name: 'summerfi-stack-piter',
+      name: 'summerfi-stack',
       region: `${process.env.AWS_REGION}`,
       profile: `${process.env.AWS_PROFILE}`,
       stage: `${_input.stage}`,
