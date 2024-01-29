@@ -23,13 +23,13 @@
   "exclude": ["node_modules"],
   "references": [
     {
-      "path": "../../apps/summerfi-api/lib/serverless-shared"
+      "path": "../serverless-shared"
     },
     {
-      "path": "../../apps/summerfi-api/lib/automation-subgraph"
+      "path": "../automation-subgraph"
     },
     {
-      "path": "../../apps/summerfi-api/lib/serverless-contracts"
+      "path": "../serverless-contracts"
     }
   ]
 }
