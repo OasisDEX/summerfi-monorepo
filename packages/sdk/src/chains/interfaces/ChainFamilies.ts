@@ -82,11 +82,11 @@ export type ChainFamily = {
 }
 
 /**
- * @type ChainFamiliesMap
+ * @type ChainFamilyMap
  * @description A map of chain family names to chain families. It can be used to
  *              retrieve the ChainId of a chain family + chain combination
  */
-export const ChainFamiliesMap: ChainFamily = {
+export const ChainFamilyMap: ChainFamily = {
   [ChainFamilyName.Ethereum]: EthereumFamily,
   [ChainFamilyName.Arbitrum]: ArbitrumFamily,
   [ChainFamilyName.Optimism]: OptimismFamily,

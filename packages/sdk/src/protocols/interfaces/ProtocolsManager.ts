@@ -1,5 +1,5 @@
 import { Protocol } from './Protocol'
-import { ProtocolName } from '~sdk/protocols'
+import { ProtocolName } from './ProtocolName'
 
 /**
  * @interface ProtocolsManager
