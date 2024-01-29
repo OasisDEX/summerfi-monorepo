@@ -1,9 +1,4 @@
-import {
-  Address,
-  ChainId,
-  NetworkByChainID,
-  ProtocolId,
-} from '@summerfi/serverless-shared/domain-types'
+import { Address, ChainId, ProtocolId } from '@summerfi/serverless-shared/domain-types'
 import { getAddresses } from './get-addresses'
 import { Chain as ViemChain, createPublicClient, http, PublicClient } from 'viem'
 import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
@@ -33,25 +28,17 @@ import type { GetTriggersResponse } from '@summerfi/serverless-contracts/get-tri
 import fetch from 'node-fetch'
 import memoize from 'just-memoize'
 import { getAgainstPositionValidator } from './against-position-validators'
+import {
+  getRpcGatewayEndpoint,
+  IRpcConfig,
+} from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
 
-const rpcConfig = {
+export const rpcConfig: IRpcConfig = {
   skipCache: false,
   skipMulticall: false,
   skipGraph: true,
   stage: 'prod',
   source: 'borrow-prod',
-}
-
-function getRpcGatewayEndpoint(chainId: ChainId, rpcGateway: string) {
-  const network = NetworkByChainID[chainId]
-  return (
-    `${rpcGateway}/?` +
-    `network=${network}&` +
-    `skipCache=${rpcConfig.skipCache}&` +
-    `skipMulticall=${rpcConfig.skipMulticall}&` +
-    `skipGraph=${rpcConfig.skipGraph}&` +
-    `source=${rpcConfig.source}`
-  )
 }
 
 const domainChainIdToViemChain: Record<ChainId, ViemChain> = {
@@ -90,7 +77,7 @@ export function buildServiceContainer<
   forkRpc?: string,
   logger?: Logger,
 ): ServiceContainer {
-  const rpc = forkRpc ?? getRpcGatewayEndpoint(chainId, rpcGateway)
+  const rpc = forkRpc ?? getRpcGatewayEndpoint(rpcGateway, chainId, rpcConfig)
   const transport = http(rpc, {
     batch: false,
     fetchOptions: {
@@ -136,7 +123,6 @@ export function buildServiceContainer<
         triggerData: params.triggerData,
         triggers,
       }
-      logger?.info('Validating', { validatorParams })
       return validator(validatorParams)
     },
     encodeTrigger: async (position: PositionLike, triggerData: TriggerData) => {

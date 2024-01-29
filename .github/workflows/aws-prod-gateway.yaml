@@ -1,12 +1,11 @@
 name: Update Gateway lambdas (prod)
 
-# Disabled for now. We need to add a current version of the functions to enable this.
-#on:
-#  push:
-#    branches:
-#      - main
-#    paths:
-#      - 'apps/summerfi-api/**'
+on:
+ push:
+   branches:
+     - main
+   paths:
+     - 'apps/summerfi-api/**'
 
 defaults:
   run:
@@ -14,6 +13,9 @@ defaults:
 
 jobs:
   deploy_zip:
+    # Disabled for now. We need to add a current version of the functions to enable this.
+    if: false
+
     name: Deploy lambda functions from zip
     runs-on: ubuntu-latest
     environment: prod

@@ -36,10 +36,10 @@ export const createAddressService = (chainId: ChainId) => {
           break
 
         default:
-          throw Error(`Unknown Protocol on Network: ${protocol} on ${network}`)
+          throw Error(`Unknown protocol - (${protocol}) on (${network})`)
       }
       if (val === undefined) {
-        throw Error(`Protocol ${protocol} contract ${contract} addresses is null`)
+        throw Error(`Addresses is null - ${protocol} contract ${contract} on ${network}`)
       }
       return val
     } catch (error) {

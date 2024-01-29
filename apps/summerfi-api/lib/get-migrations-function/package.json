@@ -15,7 +15,7 @@
     "aws:deploy": "deploy zip file"
   },
   "dependencies": {
-    "@oasisdex/addresses": "^0.1.14",
+    "@oasisdex/addresses": "^0.1.36",
     "@summerfi/serverless-shared": "workspace:*",
     "viem": "^1.19.3",
     "zod": "^3.22.4"

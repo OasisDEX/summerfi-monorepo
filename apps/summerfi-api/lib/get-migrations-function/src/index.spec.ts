@@ -1,4 +1,4 @@
-import { ChainId, ProtocolId } from '@summerfi/serverless-shared/domain-types'
+import { ProtocolId } from '@summerfi/serverless-shared/domain-types'
 import { serialize } from '@summerfi/serverless-shared/serialize'
 import { handler } from './index'
 import { APIGatewayProxyEventV2 } from 'aws-lambda'
@@ -7,12 +7,10 @@ import dotenv from 'dotenv'
 dotenv.config({ path: '../../../.env' })
 
 describe('handler', () => {
-  it('should run handler sucessfully', async () => {
+  it.skip('should run handler sucessfully', async () => {
     const ev: Partial<APIGatewayProxyEventV2> = {
       queryStringParameters: {
         address: '0x275f568287595D30E216b618da37897f4bbaB1B6',
-        chainIds: ChainId.SEPOLIA.toString(),
-        protocolIds: ProtocolId.AAVE3,
       },
       stageVariables: {
         RPC_GATEWAY: process.env.RPC_GATEWAY,

@@ -13,26 +13,26 @@
     "POWERTOOLS_LOG_LEVEL"
   ],
   "pipeline": {
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
     "prebuild": {
       "dependsOn": ["^prebuild"],
       "outputs": ["src/types/graphql/generated.ts"]
     },
     "build": {
-      "dependsOn": ["^build", "prebuild"],
+      "dependsOn": ["prebuild", "^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**", "artifacts/**", ".sst/**"]
     },
-    "dev": {
-      "cache": false,
-      "persistent": true
+    "test": {
+      "dependsOn": ["prebuild", "build", "^test"]
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": ["prebuild", "build", "^lint"]
     },
-    "test": {
-      "dependsOn": ["^test"]
-    },
-    "tsc": {
-      "dependsOn": ["^tsc"]
+    "cicheck": {
+      "dependsOn": ["prebuild", "build", "test", "lint"]
     }
   }
 }

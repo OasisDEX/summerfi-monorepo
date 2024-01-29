@@ -9,38 +9,56 @@ import { USD_DECIMALS } from '@summerfi/serverless-shared/constants'
 import { ProtocolMigrationAssets } from './types'
 import {
   Address,
-  ChainId,
   Network,
   PortfolioMigrationAsset,
   ProtocolId,
+  isChainId,
 } from '@summerfi/serverless-shared/domain-types'
 import { createtokenService } from './tokenService'
 import { createAddressService } from './addressService'
+import { IMigrationConfig } from './migrations-config'
+import {
+  IRpcConfig,
+  getRpcGatewayEndpoint,
+} from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
 
-export function createClient(
-  rpcUrl: string,
-  supportedChainsIds: ChainId[],
-  supportedProtocolsIds: ProtocolId[],
+export const rpcConfig: IRpcConfig = {
+  skipCache: false,
+  skipMulticall: false,
+  skipGraph: true,
+  stage: 'prod',
+  source: 'borrow-prod',
+}
+
+export function createMigrationsClient(
+  rpcGatewayUrl: string,
+  customRpcUrl: string | undefined,
+  migrationConfig: IMigrationConfig,
 ) {
-  const transport = http(rpcUrl, {
-    batch: false,
-    fetchOptions: {
-      method: 'POST',
-    },
-  })
-
   const getProtocolAssetsToMigrate = async (
     address: Address,
   ): Promise<ProtocolMigrationAssets[]> => {
     // for each supported chain
     const promises: Promise<ProtocolMigrationAssets>[] = []
 
-    supportedChainsIds.forEach((chainId) => {
+    Object.entries(migrationConfig).forEach(([chainIdString, supportedProtocolsIds]) => {
+      const chainId = Number(chainIdString)
+      if (!isChainId(chainId)) {
+        throw new Error(`Invalid chainId: ${chainId}`)
+      }
       supportedProtocolsIds.forEach((protocolId) => {
         const promise = async (): Promise<ProtocolMigrationAssets> => {
           const chain = extractChain({
             chains: [mainnet, base, optimism, arbitrum, sepolia],
             id: chainId,
+          })
+
+          const rpcUrl = customRpcUrl ?? getRpcGatewayEndpoint(rpcGatewayUrl, chainId, rpcConfig)
+          const transport = http(rpcUrl, {
+            batch: false,
+            fetchOptions: {
+              method: 'POST',
+            },
           })
 
           const { collAssets, debtAssets } = await getAssets(transport, chain, protocolId, address)

@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { isValidAddress } from './guards'
 import { Address, ChainId, ProtocolId } from './domain-types'
-import { MIGRATION_SUPPORTED_CHAIN_IDS, MIGRATION_SUPPORTED_PROTOCOL_IDS } from './constants'
+import { SUPPORTED_CHAIN_IDS, SUPPORTED_PROTOCOL_IDS } from './constants'
 
 export const addressSchema = z.custom<Address>((val: unknown) => {
   return isValidAddress(val)
@@ -16,7 +16,7 @@ export const chainIdsSchema = z
   })
   .refine(
     (val) => {
-      return val.every((protocolId) => MIGRATION_SUPPORTED_CHAIN_IDS.includes(protocolId))
+      return val.every((protocolId) => SUPPORTED_CHAIN_IDS.includes(protocolId))
     },
     { message: 'Unsupported chain id' },
   )
@@ -30,7 +30,7 @@ export const protocolIdsSchema = z
   .refine(
     (val) => {
       // foreach val in val, check if it is a valid protocol id
-      return val.every((protocolId) => MIGRATION_SUPPORTED_PROTOCOL_IDS.includes(protocolId))
+      return val.every((protocolId) => SUPPORTED_PROTOCOL_IDS.includes(protocolId))
     },
     { message: 'Unsupported protocol id' },
   )
