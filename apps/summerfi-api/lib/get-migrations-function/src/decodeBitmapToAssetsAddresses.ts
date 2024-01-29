@@ -13,7 +13,6 @@ export function decodeBitmapToAssetsAddresses(
     const pair = `${binaryString[i - 1] ?? 0}${binaryString[i] ?? 0}`
     binaryPairs.push(pair)
   }
-  console.log({ binaryString, binaryPairs })
   // Initialize an empty array to hold the indices
   const collateralIndices = []
   const debtIndices = []
@@ -22,7 +21,6 @@ export function decodeBitmapToAssetsAddresses(
   for (let i = 0; i < binaryPairs.length; i++) {
     // Check bits of each pair
     const [isCollateral, isDebt] = binaryPairs[i]
-    console.log(i, [isCollateral, isDebt])
     if (Number(isCollateral)) {
       collateralIndices.push(i)
     }

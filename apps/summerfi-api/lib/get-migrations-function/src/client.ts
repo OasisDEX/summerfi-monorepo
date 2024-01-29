@@ -121,7 +121,6 @@ async function getAssets(
     userConfig.data,
     reservesList,
   )
-  console.log({ collAssetsAddresses, debtAssetsAddresses })
   const assetsAddresses = [...collAssetsAddresses, ...debtAssetsAddresses]
 
   // read getUserReserveData from aavePoolDataProvider, and coll assets prices from aaveOracle
@@ -144,16 +143,14 @@ async function getAssets(
     ),
   ])
 
-const assetsTokens = assetsTokensMeta.map((tokenMeta) => {
-  console.log('tokenMeta', tokenMeta)
-
-  const token: Token = {
-    decimals: BigInt(tokenMeta.decimals),
-    symbol: tokenMeta.symbol,
-    address: tokenMeta.address,
-  }
-  return token
-})
+  const assetsTokens = assetsTokensMeta.map((tokenMeta) => {
+    const token: Token = {
+      decimals: BigInt(tokenMeta.decimals),
+      symbol: tokenMeta.symbol,
+      address: tokenMeta.address,
+    }
+    return token
+  })
 
   const createPortfolioMigrationAsset =
     ({ debt }: { debt?: boolean }) =>
