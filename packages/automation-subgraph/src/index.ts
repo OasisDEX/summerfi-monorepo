@@ -42,7 +42,7 @@ export type GetTriggers = (params: GetTriggersParams) => Promise<TriggersQuery>
 export type GetOneTrigger = (params: GetOneTriggerParams) => Promise<TriggerByTypeQuery>
 
 async function getTriggers(params: GetTriggersParams, config: SubgraphClientConfig) {
-  const url = getEndpoint(ChainId.MAINNET, config.urlBase)
+  const url = getEndpoint(config.chainId, config.urlBase)
   const triggers = await request(url, TriggersDocument, {
     dpm: params.dpm,
   })

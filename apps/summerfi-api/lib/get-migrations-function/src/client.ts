@@ -9,18 +9,18 @@ import { USD_DECIMALS } from '@summerfi/serverless-shared/constants'
 import { ProtocolMigrationAssets } from './types'
 import {
   Address,
-  Network,
   PortfolioMigrationAsset,
   ProtocolId,
+  Token,
   isChainId,
 } from '@summerfi/serverless-shared/domain-types'
-import { createtokenService } from './tokenService'
 import { createAddressService } from './addressService'
 import { IMigrationConfig } from './migrations-config'
 import {
   IRpcConfig,
   getRpcGatewayEndpoint,
 } from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
+import { publicActionReverseMirage } from 'reverse-mirage'
 
 export const rpcConfig: IRpcConfig = {
   skipCache: false,
@@ -90,7 +90,7 @@ async function getAssets(
   const publicClient = createPublicClient({
     chain,
     transport,
-  })
+  }).extend(publicActionReverseMirage)
 
   const addressService = createAddressService(chain.id)
 
@@ -110,9 +110,6 @@ async function getAssets(
     publicClient,
   })
 
-  // instantiate address service
-  const tokenService = createtokenService(Network.MAINNET)
-
   // read getReservesList
   const reservesList = await aavePool.read.getReservesList()
 
@@ -124,22 +121,34 @@ async function getAssets(
     userConfig.data,
     reservesList,
   )
-
   const assetsAddresses = [...collAssetsAddresses, ...debtAssetsAddresses]
 
   // read getUserReserveData from aavePoolDataProvider, and coll assets prices from aaveOracle
-  const [assetsReserveData, assetsPrices] = await Promise.all([
+  const [assetsReserveData, assetsPrices, assetsTokensMeta] = await Promise.all([
     Promise.all(
       assetsAddresses.map((address) =>
         aavePoolDataProvider.read.getUserReserveData([address, user]),
       ),
     ),
     aaveOracle.read.getAssetsPrices([assetsAddresses]),
+    Promise.all(
+      assetsAddresses.map((address) =>
+        publicClient.getERC20({
+          erc20: {
+            address,
+            chainID: chain.id,
+          },
+        }),
+      ),
+    ),
   ])
 
-  // coll assets tokens meta
-  const assetsTokens = assetsAddresses.map((address) => {
-    const token = tokenService.getTokenByAddress(address)
+  const assetsTokens = assetsTokensMeta.map((tokenMeta) => {
+    const token: Token = {
+      decimals: BigInt(tokenMeta.decimals),
+      symbol: tokenMeta.symbol,
+      address: tokenMeta.address,
+    }
     return token
   })
 
