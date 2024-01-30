@@ -17,19 +17,8 @@
     "allowUnreachableCode": false,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node", "jest"]
-  },
-  "include": [],
-  "exclude": ["node_modules"],
-  "references": [
-    {
-      "path": "../serverless-shared"
-    },
-    {
-      "path": "../automation-subgraph"
-    },
-    {
-      "path": "../serverless-contracts"
-    }
-  ]
+    "types": ["node"]
+  }
+  // don't share includes and excludes in base
+  // as paths are resolved relative to base
 }

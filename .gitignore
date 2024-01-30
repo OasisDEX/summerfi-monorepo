@@ -60,3 +60,6 @@ artifacts
 
 # local env files
 .env*.local
+
+# editors configs
+.vscode
