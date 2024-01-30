@@ -8,6 +8,8 @@ import {
   positionSchema,
   priceSchema,
   safeParseBigInt,
+  SupportedActions,
+  supportedActionsSchema,
   ValidationResults,
 } from '~types'
 import { z } from 'zod'
@@ -19,9 +21,10 @@ const paramsSchema = z.object({
   executionPrice: priceSchema,
   triggerData: aaveBasicSellTriggerDataSchema,
   triggers: z.custom<GetTriggersResponse>(),
+  action: supportedActionsSchema,
 })
 
-const errorsValidation = paramsSchema
+const upsertErrorsValidation = paramsSchema
   .refine(
     ({ position }) => {
       return position.ltv > MINIMUM_LTV_TO_SETUP_TRIGGER
@@ -106,6 +109,46 @@ const errorsValidation = paramsSchema
       path: ['triggerData', 'minSellPrice'],
     },
   )
+  .refine(
+    ({ triggers, action }) => {
+      if (action === SupportedActions.Add) {
+        return triggers.triggers.aaveBasicSell === undefined
+      }
+      return true
+    },
+    {
+      message: 'Auto sell trigger already exists',
+      params: {
+        code: AutoSellTriggerCustomErrorCodes.AutoSellTriggerAlreadyExists,
+      },
+    },
+  )
+  .refine(
+    ({ triggers, action }) => {
+      if (action === SupportedActions.Remove || action === SupportedActions.Update)
+        return triggers.triggers.aaveBasicSell !== undefined
+      return true
+    },
+    {
+      message: 'Auto sell trigger does not exist',
+      params: {
+        code: AutoSellTriggerCustomErrorCodes.AutoSellTriggerDoesNotExist,
+      },
+    },
+  )
+
+const deleteErrorsValidation = paramsSchema.refine(
+  ({ triggers, action }) => {
+    if (action === SupportedActions.Remove) return triggers.triggers.aaveBasicSell !== undefined
+    return true
+  },
+  {
+    message: 'Auto sell trigger does not exist',
+    params: {
+      code: AutoSellTriggerCustomErrorCodes.AutoSellTriggerDoesNotExist,
+    },
+  },
+)
 
 const warningsValidation = paramsSchema
   .refine(
@@ -193,18 +236,24 @@ const warningsValidation = paramsSchema
 export const autoSellValidator: AgainstPositionValidator<AaveAutoSellTriggerData> = (
   params,
 ): ValidationResults => {
+  const errorsValidation =
+    params.action === SupportedActions.Remove ? deleteErrorsValidation : upsertErrorsValidation
   const errorResult = errorsValidation.safeParse(params)
 
   if (errorResult.success) {
-    const warningResult = warningsValidation.safeParse(params)
-    if (warningResult.success) {
+    const skipWarningsCheck = params.action === SupportedActions.Remove
+
+    const warningValidation = skipWarningsCheck
+      ? { success: true, error: { errors: [] } }
+      : warningsValidation.safeParse(params)
+    if (warningValidation.success) {
       return {
         success: true,
         errors: [],
         warnings: [],
       }
     }
-    return mapZodResultToValidationResults({ warnings: warningResult.error.errors })
+    return mapZodResultToValidationResults({ warnings: warningValidation.error.errors })
   }
 
   return mapZodResultToValidationResults({ errors: errorResult.error.errors })

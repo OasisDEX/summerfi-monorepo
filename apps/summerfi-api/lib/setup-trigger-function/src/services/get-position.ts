@@ -66,21 +66,25 @@ export async function getPosition(
         functionName: 'symbol',
       },
     ],
-    allowFailure: false,
+    allowFailure: true,
   })
 
-  const collateralAmount = collateralData[0]
-  const debtAmount = debtData[1] + debtData[2]
+  const collateralAmount = collateralData.status === 'success' ? collateralData.result[0] : 0n
+  const debtAmount = debtData.status === 'success' ? debtData.result[1] + debtData.result[2] : 0n
 
-  const [collateralPrice, debtPrice] = oraclePrices
+  const [collateralPrice, debtPrice] =
+    oraclePrices.status === 'success' ? oraclePrices.result : [0n, 0n]
 
-  const collateralPriceInDebt = (collateralPrice * 10n ** PRICE_DECIMALS) / debtPrice
+  const collateralPriceInDebt =
+    collateralPrice == 0n || debtPrice === 0n
+      ? 0n
+      : (collateralPrice * 10n ** PRICE_DECIMALS) / debtPrice
 
   const collateralResult: TokenBalance = {
     balance: collateralAmount,
     token: {
-      decimals: collateralDecimals,
-      symbol: collateralSymbol,
+      decimals: collateralDecimals.status === 'success' ? collateralDecimals.result : 18,
+      symbol: collateralSymbol.status === 'success' ? collateralSymbol.result : '',
       address: collateral,
     },
   }
@@ -88,8 +92,8 @@ export async function getPosition(
   const debtResult: TokenBalance = {
     balance: debtAmount,
     token: {
-      decimals: debtDecimals,
-      symbol: debtSymbol,
+      decimals: debtDecimals.status === 'success' ? debtDecimals.result : 18,
+      symbol: debtSymbol.status === 'success' ? debtSymbol.result : '',
       address: debt,
     },
   }

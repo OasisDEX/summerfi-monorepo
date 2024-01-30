@@ -52,8 +52,17 @@ export const encodeAaveAutoBuy: EncoderFunction<AaveAutoBuyTriggerData> = (
     ],
   })
 
+  const removeTrigger = currentTrigger
+    ? encodeFunctionData({
+        abi: automationBotAbi,
+        functionName: 'removeTriggers',
+        args: [[currentTrigger.id], [currentTrigger.triggerData], true],
+      })
+    : undefined
+
   return {
     encodedTriggerData,
-    encodedTrigger,
+    upsertTrigger: encodedTrigger,
+    removeTrigger,
   }
 }

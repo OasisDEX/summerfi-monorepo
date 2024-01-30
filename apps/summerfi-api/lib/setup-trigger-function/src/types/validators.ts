@@ -1,10 +1,7 @@
 import { z } from 'zod'
 import { addressSchema, urlOptionalSchema } from '@summerfi/serverless-shared/validators'
 import { ChainId, ProtocolId } from '@summerfi/serverless-shared/domain-types'
-import {
-  AutoBuyTriggerCustomErrorCodes,
-  AutoSellTriggerCustomErrorCodes,
-} from './types'
+import { AutoBuyTriggerCustomErrorCodes, AutoSellTriggerCustomErrorCodes } from './types'
 
 export const PRICE_DECIMALS = 8n
 export const PERCENT_DECIMALS = 4n
@@ -56,6 +53,17 @@ export const ltvSchema = bigIntSchema.refine((ltv) => ltv > 0n && ltv < 10_000n,
   },
   message: 'LTV must be between 0 and 10_000',
 })
+
+export enum SupportedActions {
+  Add = 'add',
+  Remove = 'remove',
+  Update = 'update',
+}
+
+export const supportedActionsSchema = z
+  .nativeEnum(SupportedActions)
+  .optional()
+  .default(SupportedActions.Add)
 
 export const aaveBasicBuyTriggerDataSchema = z
   .object({
@@ -137,6 +145,7 @@ export const eventBodyAaveBasicBuySchema = z.object({
   triggerData: aaveBasicBuyTriggerDataSchema,
   position: positionAddressesSchema,
   rpc: urlOptionalSchema,
+  action: supportedActionsSchema,
 })
 
 export const eventBodyAaveBasicSellSchema = z.object({
@@ -144,6 +153,7 @@ export const eventBodyAaveBasicSellSchema = z.object({
   triggerData: aaveBasicSellTriggerDataSchema,
   position: positionAddressesSchema,
   rpc: urlOptionalSchema,
+  action: supportedActionsSchema,
 })
 
 export enum SupportedTriggers {
