@@ -169,7 +169,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
             trigger.decodedData[
               Math.max(
                 trigger.decodedDataNames.indexOf('execLtv'),
-                trigger.decodedData.indexOf('executionLtv'),
+                trigger.decodedDataNames.indexOf('executionLtv'),
               )
             ],
           targetLtv: trigger.decodedData[trigger.decodedDataNames.indexOf('targetLtv')],
@@ -200,7 +200,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
             trigger.decodedData[
               Math.max(
                 trigger.decodedDataNames.indexOf('execLtv'),
-                trigger.decodedData.indexOf('executionLtv'),
+                trigger.decodedDataNames.indexOf('executionLtv'),
               )
             ],
           targetLtv: trigger.decodedData[trigger.decodedDataNames.indexOf('targetLtv')],
