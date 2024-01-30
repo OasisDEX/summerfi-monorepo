@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      reverse-mirage:
-        specifier: ^1.0.3
-        version: 1.0.3(viem@1.21.4)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -101,6 +98,9 @@ importers:
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../../../packages/serverless-shared
+      reverse-mirage:
+        specifier: ^1.0.3
+        version: 1.0.3(viem@1.21.4)
       viem:
         specifier: ^1.19.3
         version: 1.21.4(typescript@5.3.3)(zod@3.22.4)
