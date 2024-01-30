@@ -33,6 +33,8 @@ export enum AutoBuyTriggerCustomErrorCodes {
   ExecutionLTVBiggerThanCurrentLTV = 'execution-ltv-bigger-than-current-ltv',
   AutoBuyTriggerLowerThanAutoSellTarget = 'auto-buy-trigger-lower-than-auto-sell-target',
   MaxBuyPriceIsNotSet = 'max-buy-price-is-not-set',
+  AutoBuyTriggerAlreadyExists = 'auto-buy-trigger-already-exists',
+  AutoBuyTriggerDoesNotExist = 'auto-buy-trigger-does-not-exist',
 }
 
 export enum AutoBuyTriggerCustomWarningCodes {
@@ -49,6 +51,8 @@ export enum AutoSellTriggerCustomErrorCodes {
   AutoSellTriggerHigherThanAutoBuyTarget = 'auto-sell-trigger-higher-than-auto-buy-target',
   AutoSellNotAvailableDueToTooHighStopLoss = 'auto-sell-not-available-due-to-too-high-stop-loss',
   MinSellPriceIsNotSet = 'min-sell-price-is-not-set',
+  AutoSellTriggerAlreadyExists = 'auto-sell-trigger-already-exists',
+  AutoSellTriggerDoesNotExist = 'auto-sell-trigger-does-not-exist',
 }
 
 export enum AutoSellTriggerCustomWarningCodes {

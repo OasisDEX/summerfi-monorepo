@@ -114,4 +114,5 @@ export type GetTriggersResponse = {
     aaveBasicBuy?: AaveBasicBuy
     aaveBasicSell?: AaveBasicSell
   }
+  additionalData?: Record<string, unknown>
 }

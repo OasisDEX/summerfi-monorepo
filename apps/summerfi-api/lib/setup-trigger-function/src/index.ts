@@ -90,7 +90,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     getPosition,
     getExecutionPrice,
     simulatePosition,
-    encodeTrigger,
+    getTriggerTxData,
     encodeForDPM,
     validate,
   } = buildServiceContainer(
@@ -119,6 +119,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       position,
       executionPrice,
       triggerData: params.triggerData,
+      action: params.action,
     })
 
     validationWarnings = validation.warnings
@@ -138,9 +139,13 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     logger.warn('Skipping validation')
   }
 
-  const { encodedTrigger, encodedTriggerData } = await encodeTrigger(position, params.triggerData)
+  const { txData, encodedTriggerData } = await getTriggerTxData({
+    position,
+    triggerData: params.triggerData,
+    action: params.action,
+  })
 
-  logger.debug('Encoded trigger', { encodedTrigger, encodedTriggerData })
+  logger.debug('Encoded trigger', { txData, encodedTriggerData, action: params.action })
 
   const simulation = simulatePosition({
     position: position,
@@ -151,7 +156,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
 
   const transaction = encodeForDPM({
     dpm: params.dpm,
-    encodedTrigger,
+    triggerTxData: txData,
   })
 
   return ResponseOk({
