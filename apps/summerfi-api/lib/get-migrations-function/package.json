@@ -7,16 +7,16 @@
     "test": "jest --passWithNoTests",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-        "build": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap",
+    "build": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap",
     "docker:build": "tar chzf files.tar.gz Dockerfile node_modules dist && docker build --platform linux/amd64 -t get-migrations - < files.tar.gz && rm files.tar.gz",
     "docker:run": "docker run --rm -p 9000:8080 get-migrations",
-    "dev": "npm run tsc && npm run docker:build && npm run docker:run",
     "invoke": "curl http://localhost:9000/2015-03-31/functions/function/invocations -d '{\"queryStringParameters\": {\"address\": \"0x10649c79428d718621821Cf6299e91920284743F\"}}' | jq",
     "aws:deploy": "deploy zip file"
   },
   "dependencies": {
     "@oasisdex/addresses": "^0.1.36",
     "@summerfi/serverless-shared": "workspace:*",
+    "reverse-mirage": "^1.0.3",
     "viem": "^1.19.3",
     "zod": "^3.22.4"
   },
