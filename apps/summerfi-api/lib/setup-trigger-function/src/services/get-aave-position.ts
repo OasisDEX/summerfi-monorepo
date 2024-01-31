@@ -7,12 +7,12 @@ import { calculateLtv } from './calculate-ltv'
 import { Logger } from '@aws-lambda-powertools/logger'
 
 export interface GetPositionParams {
-  dpm: Address
+  address: Address
   collateral: Address
   debt: Address
 }
-export async function getPosition(
-  { dpm, collateral, debt }: GetPositionParams,
+export async function getAavePosition(
+  { address, collateral, debt }: GetPositionParams,
   publicClient: PublicClient,
   addresses: Addresses,
   logger?: Logger,
@@ -29,19 +29,19 @@ export async function getPosition(
     contracts: [
       {
         abi: aavePoolDataProviderAbi,
-        address: addresses.AaveDataPoolProvider,
+        address: addresses.AaveV3.AaveDataPoolProvider,
         functionName: 'getUserReserveData',
-        args: [collateral, dpm],
+        args: [collateral, address],
       },
       {
         abi: aavePoolDataProviderAbi,
-        address: addresses.AaveDataPoolProvider,
+        address: addresses.AaveV3.AaveDataPoolProvider,
         functionName: 'getUserReserveData',
-        args: [debt, dpm],
+        args: [debt, address],
       },
       {
         abi: aaveOracleAbi,
-        address: addresses.AaveOracle,
+        address: addresses.AaveV3.AaveOracle,
         functionName: 'getAssetsPrices',
         args: [[collateral, debt]],
       },
@@ -115,7 +115,7 @@ export async function getPosition(
     ltv,
     collateral: collateralResult,
     debt: debtResult,
-    address: dpm,
+    address: address,
     prices: {
       collateralPrice,
       debtPrice,

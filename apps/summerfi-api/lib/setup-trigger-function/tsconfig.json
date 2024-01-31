@@ -5,6 +5,7 @@
     "outDir": "dist",
     "paths": {
       "~types": ["./src/types"],
+      "~helpers": ["./src/helpers"],
       "~abi": ["./src/abi"]
     }
   },

@@ -14,6 +14,7 @@ import { AaveAutoSellTriggerData } from '~types'
 export const encodeAaveStopLoss: EncoderFunction<AaveAutoSellTriggerData> = (
   position,
   triggerData,
+  debtPriceInUSD,
   currentTrigger,
 ) => {
   const abiParameters = parseAbiParameters(

@@ -11,7 +11,7 @@ import { DEFAULT_DEVIATION, MAX_COVERAGE_BASE } from './defaults'
 import { automationBotAbi } from '~abi'
 import { AaveAutoSellTriggerData, PRICE_DECIMALS } from '~types'
 
-export const encodeAaveBasicSell: EncoderFunction<AaveAutoSellTriggerData> = (
+export const encodeAaveAutoSell: EncoderFunction<AaveAutoSellTriggerData> = (
   position,
   triggerData,
   debtPriceInUSD,

@@ -12,7 +12,6 @@ import {
 } from '~types'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { buildServiceContainer } from './services'
-import { ProtocolId } from '@summerfi/serverless-shared/domain-types'
 
 const logger = new Logger({ serviceName: 'setupTriggerFunction' })
 
@@ -48,23 +47,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     })
   }
 
-  if (pathParamsResult.data.protocol !== ProtocolId.AAVE3) {
-    const errors: ValidationIssue[] = [
-      {
-        code: 'not-supported-protocol',
-        message: 'Only AAVE3 protocol is supported',
-        path: ['protocol'],
-      },
-    ]
-    return ResponseBadRequest({
-      message: 'Not Supported yet',
-      errors,
-    })
-  }
-
   const body = JSON.parse(event.body ?? '{}')
-
-  logger.info('Got body', { body })
 
   const bodySchema = getBodySchema(pathParamsResult.data.trigger)
 
@@ -83,45 +66,22 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     })
   }
 
-  const params = parseResult.data
+  const triggerBody = parseResult.data
 
-  const {
-    getPosition,
-    getExecutionPrice,
-    simulatePosition,
-    getTriggerTxData,
-    encodeForDPM,
-    validate,
-  } = buildServiceContainer(
+  const { simulatePosition, getTransaction, validate } = buildServiceContainer(
     pathParamsResult.data.chainId,
     pathParamsResult.data.protocol,
-    pathParamsResult.data.trigger,
-    bodySchema,
+    triggerBody,
     RPC_GATEWAY,
     GET_TRIGGERS_URL,
-    params.rpc,
     logger,
   )
-
-  const position = await getPosition({
-    dpm: params.dpm,
-    collateral: params.position.collateral,
-    debt: params.position.debt,
-  })
-
-  const executionPrice = getExecutionPrice({
-    ...position,
-    ltv: params.triggerData.executionLTV,
-  })
 
   let validationWarnings: ValidationIssue[] = []
 
   if (!skipValidation) {
     const validation = await validate({
-      position,
-      executionPrice,
-      triggerData: params.triggerData,
-      action: params.action,
+      trigger: triggerBody,
     })
 
     validationWarnings = validation.warnings
@@ -141,29 +101,17 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     logger.warn('Skipping validation')
   }
 
-  const { txData, encodedTriggerData } = await getTriggerTxData({
-    position,
-    triggerData: params.triggerData,
-    action: params.action,
+  const { transaction, encodedTriggerData } = await getTransaction({
+    trigger: triggerBody,
   })
-
-  logger.debug('Encoded trigger', { txData, encodedTriggerData, action: params.action })
 
   const simulation = simulatePosition({
-    position: position,
-    executionLTV: params.triggerData.executionLTV,
-    executionPrice: executionPrice,
-    targetLTV: params.triggerData.targetLTV,
-  })
-
-  const transaction = encodeForDPM({
-    dpm: params.dpm,
-    triggerTxData: txData,
+    trigger: triggerBody,
   })
 
   return ResponseOk({
     body: {
-      simulation,
+      simulation: simulation,
       transaction,
       encodedTriggerData,
       warnings: validationWarnings,

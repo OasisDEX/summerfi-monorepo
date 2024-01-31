@@ -2,8 +2,10 @@ import { z } from 'zod'
 import {
   aaveBasicBuyTriggerDataSchema,
   aaveBasicSellTriggerDataSchema,
-  aaveStopLossTriggerDataSchema,
+  dmaStopLossTriggerDataSchema,
   eventBodyAaveBasicBuySchema,
+  eventBodyAaveBasicSellSchema,
+  eventBodyDmaStopLossSchema,
   ltvSchema,
   pathParamsSchema,
   positionSchema,
@@ -12,7 +14,10 @@ import {
   tokenSchema,
 } from './validators'
 
-export type EventBody = z.infer<typeof eventBodyAaveBasicBuySchema>
+export type AutoBuyEventBody = z.infer<typeof eventBodyAaveBasicBuySchema>
+export type AutoSellEventBody = z.infer<typeof eventBodyAaveBasicSellSchema>
+export type StopLossEventBody = z.infer<typeof eventBodyDmaStopLossSchema>
+export type SetupTriggerEventBody = AutoBuyEventBody | AutoSellEventBody | StopLossEventBody
 export type PathParams = z.infer<typeof pathParamsSchema>
 export type PositionLike = z.infer<typeof positionSchema>
 export type Token = z.infer<typeof tokenSchema>
@@ -21,8 +26,8 @@ export type Price = z.infer<typeof priceSchema>
 export type LTV = z.infer<typeof ltvSchema>
 export type AaveAutoBuyTriggerData = z.infer<typeof aaveBasicBuyTriggerDataSchema>
 export type AaveAutoSellTriggerData = z.infer<typeof aaveBasicSellTriggerDataSchema>
-export type AaveStopLossTriggerData = z.infer<typeof aaveStopLossTriggerDataSchema>
-export type TriggerData = AaveAutoBuyTriggerData | AaveAutoSellTriggerData | AaveStopLossTriggerData
+export type DmaStopLossTriggerData = z.infer<typeof dmaStopLossTriggerDataSchema>
+export type TriggerData = AaveAutoBuyTriggerData | AaveAutoSellTriggerData | DmaStopLossTriggerData
 
 export enum CommonErrorCodes {
   InsufficientEthFundsForTx = 'insufficient-eth-funds-for-tx',

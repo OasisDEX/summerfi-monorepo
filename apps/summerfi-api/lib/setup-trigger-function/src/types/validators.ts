@@ -92,33 +92,7 @@ export const aaveBasicBuyTriggerDataSchema = z
     },
   )
 
-  export const aaveBasicSellTriggerDataSchema = z
-  .object({
-    type: z
-      .any()
-      .optional()
-      .transform(() => 120n),
-    executionLTV: ltvSchema,
-    targetLTV: ltvSchema,
-    minSellPrice: priceSchema.optional().default(0n),
-    useMinSellPrice: z.boolean().optional().default(true),
-    maxBaseFee: maxGasFeeSchema,
-  })
-  .refine(
-    ({ minSellPrice, useMinSellPrice }) => {
-      return useMinSellPrice ? minSellPrice !== 0n : true
-    },
-    {
-      params: {
-        code: AutoSellTriggerCustomErrorCodes.MinSellPriceIsNotSet,
-      },
-      message:
-        'Min sell price is not set. Please set min sell price or explicitly disable it in trigger data',
-      path: ['triggerData', 'minSellPrice'],
-    },
-  )
-
-  export const aaveStopLossTriggerDataSchema = z
+export const aaveBasicSellTriggerDataSchema = z
   .object({
     type: z
       .any()
@@ -143,6 +117,15 @@ export const aaveBasicBuyTriggerDataSchema = z
       path: ['triggerData', 'minSellPrice'],
     },
   )
+
+export const dmaStopLossTriggerDataSchema = z.object({
+  type: z
+    .any()
+    .optional()
+    .transform(() => 120n),
+  executionLTV: ltvSchema,
+  token: addressSchema,
+})
 
 export const tokenSchema = z.object({
   address: addressSchema,
@@ -189,9 +172,9 @@ export const eventBodyAaveBasicSellSchema = z.object({
   action: supportedActionsSchema,
 })
 
-export const eventBodyAaveStopLossSchema = z.object({
+export const eventBodyDmaStopLossSchema = z.object({
   dpm: addressSchema,
-  triggerData: aaveStopLossTriggerDataSchema,
+  triggerData: dmaStopLossTriggerDataSchema,
   position: positionAddressesSchema,
   rpc: urlOptionalSchema,
   action: supportedActionsSchema,
@@ -200,31 +183,31 @@ export const eventBodyAaveStopLossSchema = z.object({
 export enum SupportedTriggers {
   AutoBuy = 'auto-buy',
   AutoSell = 'auto-sell',
-  StopLoss = 'stop-loss',
+  DmaStopLoss = 'dma-stop-loss',
 }
 
 export type SupportedTriggersSchema =
   | typeof eventBodyAaveBasicBuySchema
   | typeof eventBodyAaveBasicSellSchema
-  | typeof eventBodyAaveStopLossSchema
+  | typeof eventBodyDmaStopLossSchema
 
 export const getBodySchema = <
   Trigger extends SupportedTriggers,
-  Schema extends SupportedTriggersSchema, >
-  (
-    trigger: Trigger,
-  ): Schema => {
-    switch (trigger) {
-      case SupportedTriggers.AutoBuy:
-        return eventBodyAaveBasicBuySchema as Schema
-      case SupportedTriggers.AutoSell:
-        return eventBodyAaveBasicSellSchema as Schema
-      case SupportedTriggers.StopLoss:
-        return eventBodyAaveStopLossSchema as Schema
-      default:
-        throw new Error("getBodySchema - Unsupported trigger");
-    }
+  Schema extends SupportedTriggersSchema,
+>(
+  trigger: Trigger,
+): Schema => {
+  if (trigger === SupportedTriggers.AutoBuy) {
+    return eventBodyAaveBasicBuySchema as Schema
   }
+  if (trigger === SupportedTriggers.AutoSell) {
+    return eventBodyAaveBasicSellSchema as Schema
+  }
+  if (trigger === SupportedTriggers.DmaStopLoss) {
+    return eventBodyDmaStopLossSchema as Schema
+  }
+  throw new Error(`Unsupported trigger: ${trigger}`)
+}
 
 const supportedTriggersSchema = z.nativeEnum(SupportedTriggers)
 const supportedChainsSchema = z
