@@ -245,7 +245,7 @@ const warningsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      return triggerData.useMinSellPrice && triggers.triggers.aaveStopLossToDebt === undefined
+      return !triggerData.useMinSellPrice && triggers.triggers.aaveStopLossToDebt === undefined
     },
     {
       message: 'No min sell price when stop loss enabled',
