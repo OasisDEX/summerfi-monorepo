@@ -91,9 +91,9 @@ const upsertErrorsValidation = paramsSchema
         return true
       }
 
-      const autoSellTargetLTV = safeParseBigInt(autoSellTrigger.decodedParams.targetLtv) ?? 0n
+      const autoSellTargetLTV = safeParseBigInt(autoSellTrigger.decodedParams.targetLtv) ?? 99n
 
-      return autoSellTargetLTV < triggerData.executionLTV
+      return triggerData.executionLTV < autoSellTargetLTV
     },
     {
       message: 'Auto buy trigger lower than auto sell target',

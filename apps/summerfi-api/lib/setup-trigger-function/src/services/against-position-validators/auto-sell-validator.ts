@@ -49,6 +49,17 @@ const upsertErrorsValidation = paramsSchema
     },
   )
   .refine(
+    ({ position, triggerData }) => {
+      return position.ltv < triggerData.executionLTV
+    },
+    {
+      message: 'Execution LTV is bigger than current LTV',
+      params: {
+        code: AutoSellTriggerCustomErrorCodes.ExecutionLTVLowerThanCurrentLTV,
+      },
+    },
+  )
+  .refine(
     ({ triggerData }) => {
       return triggerData.targetLTV < triggerData.executionLTV
     },
@@ -68,7 +79,7 @@ const upsertErrorsValidation = paramsSchema
 
       const autoBuyTargetLTV = safeParseBigInt(autoBuyTrigger.decodedParams.targetLtv) ?? 0n
 
-      return triggerData.executionLTV < autoBuyTargetLTV
+      return triggerData.executionLTV > autoBuyTargetLTV
     },
     {
       message: 'Auto sell trigger cannot be higher than auto buy target',
@@ -223,6 +234,18 @@ const warningsValidation = paramsSchema
   .refine(
     ({ triggerData }) => {
       return triggerData.useMinSellPrice
+    },
+    {
+      message: 'No min sell price',
+      params: {
+        code: AutoSellTriggerCustomWarningCodes.AutoSellWithNoMinPriceThreshold,
+      },
+      path: ['triggerData', 'minSellPrice'],
+    },
+  )
+  .refine(
+    ({ triggerData, triggers }) => {
+      return triggerData.useMinSellPrice && triggers.triggers.aaveStopLossToDebt === undefined
     },
     {
       message: 'No min sell price when stop loss enabled',
