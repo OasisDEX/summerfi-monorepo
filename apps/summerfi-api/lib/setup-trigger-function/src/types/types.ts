@@ -48,6 +48,7 @@ export enum AutoSellTriggerCustomErrorCodes {
   TooLowLtvToSetupAutoSell = 'too-low-ltv-to-setup-auto-sell',
   ExecutionPriceSmallerThanMinSellPrice = 'execution-price-smaller-than-min-sell-price',
   ExecutionLTVBiggerThanTargetLTV = 'execution-ltv-bigger-than-target-ltv',
+  ExecutionLTVLowerThanCurrentLTV = 'execution-ltv-lower-than-current-ltv',
   AutoSellTriggerHigherThanAutoBuyTarget = 'auto-sell-trigger-higher-than-auto-buy-target',
   AutoSellNotAvailableDueToTooHighStopLoss = 'auto-sell-not-available-due-to-too-high-stop-loss',
   MinSellPriceIsNotSet = 'min-sell-price-is-not-set',
@@ -59,6 +60,7 @@ export enum AutoSellTriggerCustomWarningCodes {
   AutoSellTriggeredImmediately = 'auto-sell-triggered-immediately',
   AutoSellTargetCloseToAutoBuyTrigger = 'auto-sell-target-close-to-auto-buy-trigger',
   AutoSellTriggerCloseToStopLossTrigger = 'auto-sell-trigger-close-to-stop-loss-trigger',
+  AutoSellWithNoMinPriceThreshold = 'auto-sell-with-no-min-price-threshold',
   NoMinSellPriceWhenStopLoss = 'no-min-sell-price-when-stop-loss-enabled',
 }
 
