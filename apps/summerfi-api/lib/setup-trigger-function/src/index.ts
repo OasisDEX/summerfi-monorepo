@@ -110,7 +110,10 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     debt: params.position.debt,
   })
 
-  const executionPrice = getExecutionPrice(position)
+  const executionPrice = getExecutionPrice({
+    ...position,
+    ltv: params.triggerData.executionLTV,
+  })
 
   let validationWarnings: ValidationIssue[] = []
 
