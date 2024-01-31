@@ -1,4 +1,4 @@
-import '@nomicfoundation/hardhat-toolbox-viem'
+import '@nomicfoundation/hardhat-toolbox'
 import 'hardhat-abi-exporter'
 import 'solidity-docgen'
 

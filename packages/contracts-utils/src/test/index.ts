@@ -1,0 +1,1 @@
+export { showConsoleLogs } from './console'

@@ -1,19 +1,12 @@
-import type {
-  GetContractReturnType,
-  PublicClient,
-  WalletClient,
-  Abi,
-  Address,
-  TransactionReceipt,
-} from 'viem'
-
+import type { Contract, ContractTransactionReceipt } from 'ethers'
 import type { NetworksType } from '@summerfi/hardhat-utils'
 import { Networks } from '@summerfi/hardhat-utils'
-
-export type Contract = GetContractReturnType<Abi, PublicClient, Address>
+import type { FactoryOptions } from '@nomicfoundation/hardhat-ethers/types'
+import type { MockContract } from '@defi-wonderland/smock'
 
 export enum ProviderTypes {
   Internal = 'internal',
+  Ganache = 'ganache',
   Hardhat = 'hardhat',
   Remote = 'remote',
 }
@@ -40,12 +33,10 @@ export interface DeploymentExportPair {
   name: string
   value: string
 }
-
 export interface ImportPair {
   name: string
   path: string
 }
-
 export interface DeploymentInitParams {
   type: DeploymentType
   options: DeploymentOptions
@@ -84,16 +75,17 @@ export interface DeploymentObject {
 
 export type LegacyDeploymentObject = { [key: string]: string } | undefined
 
-export interface DeploymentParams {
+export interface DeploymentParams extends FactoryOptions {
   options?: DeploymentOptions
   alias?: string // The deployed contract will be exported in the JSON file with this alias
   contract?: string // Path and name of the contract to be verified i.e.: contracts/Example.sol:ExampleContract
 }
 
 export interface Deployment {
-  contract: Contract
+  contract: Contract | MockContract<Contract>
+  address: string
   name: string
-  receipt?: TransactionReceipt
+  receipt?: ContractTransactionReceipt
 }
 
 export type DeploymentOptions = DeploymentFlags

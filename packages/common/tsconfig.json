@@ -5,8 +5,8 @@
     "outDir": "dist",
     "baseUrl": "src",
     "paths": {
-      "~contracts-utils": ["./index.ts"],
-      "~contracts-utils/*": ["./*"]
+      "~common": ["./index.ts"],
+      "~common/*": ["./*"]
     }
   },
   "include": ["src/**/*.ts"],
