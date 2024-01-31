@@ -22,7 +22,6 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
   const SKIP_VALIDATION = process.env.SKIP_VALIDATION
 
   const skipValidation = SKIP_VALIDATION === 'true'
-
   if (!RPC_GATEWAY) {
     logger.error('RPC_GATEWAY is not set')
     return ResponseInternalServerError('RPC_GATEWAY is not set')

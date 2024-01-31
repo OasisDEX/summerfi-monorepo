@@ -20,6 +20,12 @@ export const isAaveAutoSellTriggerData = (
   return 'minSellPrice' in triggerData
 }
 
+export const isAaveStopLossTriggerData = (
+  triggerData: TriggerData,
+): triggerData is AaveAutoSellTriggerData => {
+  return 'minSellPrice' in triggerData
+}
+
 const zodIssueToIssue = (issue: ZodIssue): ValidationIssue => {
   return {
     message: issue.message,

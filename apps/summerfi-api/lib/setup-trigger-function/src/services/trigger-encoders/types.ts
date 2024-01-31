@@ -37,5 +37,6 @@ export type TriggerEncoders = {
   [ProtocolId.AAVE3]: {
     [SupportedTriggers.AutoBuy]: EncoderFunction<AaveAutoBuyTriggerData>
     [SupportedTriggers.AutoSell]: EncoderFunction<AaveAutoSellTriggerData>
+    [SupportedTriggers.StopLoss]: EncoderFunction<AaveAutoSellTriggerData>
   }
 }
