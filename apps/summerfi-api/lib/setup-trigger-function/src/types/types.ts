@@ -2,6 +2,7 @@ import { z } from 'zod'
 import {
   aaveBasicBuyTriggerDataSchema,
   aaveBasicSellTriggerDataSchema,
+  aaveStopLossTriggerDataSchema,
   eventBodyAaveBasicBuySchema,
   ltvSchema,
   pathParamsSchema,
@@ -20,7 +21,8 @@ export type Price = z.infer<typeof priceSchema>
 export type LTV = z.infer<typeof ltvSchema>
 export type AaveAutoBuyTriggerData = z.infer<typeof aaveBasicBuyTriggerDataSchema>
 export type AaveAutoSellTriggerData = z.infer<typeof aaveBasicSellTriggerDataSchema>
-export type TriggerData = AaveAutoBuyTriggerData | AaveAutoSellTriggerData
+export type AaveStopLossTriggerData = z.infer<typeof aaveStopLossTriggerDataSchema>
+export type TriggerData = AaveAutoBuyTriggerData | AaveAutoSellTriggerData | AaveStopLossTriggerData
 
 export enum CommonErrorCodes {
   InsufficientEthFundsForTx = 'insufficient-eth-funds-for-tx',
