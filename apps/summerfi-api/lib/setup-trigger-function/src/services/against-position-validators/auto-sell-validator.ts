@@ -5,6 +5,7 @@ import {
   AutoSellTriggerCustomWarningCodes,
   mapZodResultToValidationResults,
   MINIMUM_LTV_TO_SETUP_TRIGGER,
+  ONE_PERCENT,
   positionSchema,
   priceSchema,
   safeParseBigInt,
@@ -50,7 +51,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ position, triggerData }) => {
-      return position.ltv < triggerData.executionLTV
+      return position.ltv + ONE_PERCENT < triggerData.executionLTV
     },
     {
       message: 'Execution LTV is bigger than current LTV',
