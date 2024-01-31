@@ -5,9 +5,12 @@ import {
   AutoSellTriggerCustomWarningCodes,
   mapZodResultToValidationResults,
   MINIMUM_LTV_TO_SETUP_TRIGGER,
+  ONE_PERCENT,
   positionSchema,
   priceSchema,
   safeParseBigInt,
+  SupportedActions,
+  supportedActionsSchema,
   ValidationResults,
 } from '~types'
 import { z } from 'zod'
@@ -19,9 +22,10 @@ const paramsSchema = z.object({
   executionPrice: priceSchema,
   triggerData: aaveBasicSellTriggerDataSchema,
   triggers: z.custom<GetTriggersResponse>(),
+  action: supportedActionsSchema,
 })
 
-const errorsValidation = paramsSchema
+const upsertErrorsValidation = paramsSchema
   .refine(
     ({ position }) => {
       return position.ltv > MINIMUM_LTV_TO_SETUP_TRIGGER
@@ -46,6 +50,17 @@ const errorsValidation = paramsSchema
     },
   )
   .refine(
+    ({ position, triggerData }) => {
+      return position.ltv + ONE_PERCENT < triggerData.executionLTV
+    },
+    {
+      message: 'Execution LTV is bigger than current LTV',
+      params: {
+        code: AutoSellTriggerCustomErrorCodes.ExecutionLTVLowerThanCurrentLTV,
+      },
+    },
+  )
+  .refine(
     ({ triggerData }) => {
       return triggerData.targetLTV < triggerData.executionLTV
     },
@@ -65,7 +80,7 @@ const errorsValidation = paramsSchema
 
       const autoBuyTargetLTV = safeParseBigInt(autoBuyTrigger.decodedParams.targetLtv) ?? 0n
 
-      return triggerData.executionLTV < autoBuyTargetLTV
+      return triggerData.executionLTV > autoBuyTargetLTV
     },
     {
       message: 'Auto sell trigger cannot be higher than auto buy target',
@@ -106,6 +121,46 @@ const errorsValidation = paramsSchema
       path: ['triggerData', 'minSellPrice'],
     },
   )
+  .refine(
+    ({ triggers, action }) => {
+      if (action === SupportedActions.Add) {
+        return triggers.triggers.aaveBasicSell === undefined
+      }
+      return true
+    },
+    {
+      message: 'Auto sell trigger already exists',
+      params: {
+        code: AutoSellTriggerCustomErrorCodes.AutoSellTriggerAlreadyExists,
+      },
+    },
+  )
+  .refine(
+    ({ triggers, action }) => {
+      if (action === SupportedActions.Remove || action === SupportedActions.Update)
+        return triggers.triggers.aaveBasicSell !== undefined
+      return true
+    },
+    {
+      message: 'Auto sell trigger does not exist',
+      params: {
+        code: AutoSellTriggerCustomErrorCodes.AutoSellTriggerDoesNotExist,
+      },
+    },
+  )
+
+const deleteErrorsValidation = paramsSchema.refine(
+  ({ triggers, action }) => {
+    if (action === SupportedActions.Remove) return triggers.triggers.aaveBasicSell !== undefined
+    return true
+  },
+  {
+    message: 'Auto sell trigger does not exist',
+    params: {
+      code: AutoSellTriggerCustomErrorCodes.AutoSellTriggerDoesNotExist,
+    },
+  },
+)
 
 const warningsValidation = paramsSchema
   .refine(
@@ -182,6 +237,18 @@ const warningsValidation = paramsSchema
       return triggerData.useMinSellPrice
     },
     {
+      message: 'No min sell price',
+      params: {
+        code: AutoSellTriggerCustomWarningCodes.AutoSellWithNoMinPriceThreshold,
+      },
+      path: ['triggerData', 'minSellPrice'],
+    },
+  )
+  .refine(
+    ({ triggerData, triggers }) => {
+      return !triggerData.useMinSellPrice && triggers.triggers.aaveStopLossToDebt === undefined
+    },
+    {
       message: 'No min sell price when stop loss enabled',
       params: {
         code: AutoSellTriggerCustomWarningCodes.NoMinSellPriceWhenStopLoss,
@@ -193,18 +260,24 @@ const warningsValidation = paramsSchema
 export const autoSellValidator: AgainstPositionValidator<AaveAutoSellTriggerData> = (
   params,
 ): ValidationResults => {
+  const errorsValidation =
+    params.action === SupportedActions.Remove ? deleteErrorsValidation : upsertErrorsValidation
   const errorResult = errorsValidation.safeParse(params)
 
   if (errorResult.success) {
-    const warningResult = warningsValidation.safeParse(params)
-    if (warningResult.success) {
+    const skipWarningsCheck = params.action === SupportedActions.Remove
+
+    const warningValidation = skipWarningsCheck
+      ? { success: true, error: { errors: [] } }
+      : warningsValidation.safeParse(params)
+    if (warningValidation.success) {
       return {
         success: true,
         errors: [],
         warnings: [],
       }
     }
-    return mapZodResultToValidationResults({ warnings: warningResult.error.errors })
+    return mapZodResultToValidationResults({ warnings: warningValidation.error.errors })
   }
 
   return mapZodResultToValidationResults({ errors: errorResult.error.errors })

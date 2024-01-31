@@ -9,6 +9,8 @@ import {
   MINIMUM_LTV_TO_SETUP_TRIGGER,
   AaveAutoBuyTriggerData,
   aaveBasicBuyTriggerDataSchema,
+  supportedActionsSchema,
+  SupportedActions,
 } from '~types'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { z } from 'zod'
@@ -19,9 +21,10 @@ const paramsSchema = z.object({
   executionPrice: priceSchema,
   triggerData: aaveBasicBuyTriggerDataSchema,
   triggers: z.custom<GetTriggersResponse>(),
+  action: supportedActionsSchema,
 })
 
-const errorsValidation = paramsSchema
+const upsertErrorsValidation = paramsSchema
   .refine(
     ({ position }) => {
       return position.ltv >= MINIMUM_LTV_TO_SETUP_TRIGGER
@@ -88,9 +91,9 @@ const errorsValidation = paramsSchema
         return true
       }
 
-      const autoSellTargetLTV = safeParseBigInt(autoSellTrigger.decodedParams.targetLtv) ?? 0n
+      const autoSellTargetLTV = safeParseBigInt(autoSellTrigger.decodedParams.targetLtv) ?? 99n
 
-      return autoSellTargetLTV < triggerData.executionLTV
+      return triggerData.executionLTV < autoSellTargetLTV
     },
     {
       message: 'Auto buy trigger lower than auto sell target',
@@ -99,6 +102,45 @@ const errorsValidation = paramsSchema
       },
     },
   )
+  .refine(
+    ({ triggers, action }) => {
+      if (action === SupportedActions.Add) {
+        return triggers.triggers.aaveBasicBuy === undefined
+      }
+      return true
+    },
+    {
+      message: 'Auto buy trigger already exists',
+      params: {
+        code: AutoBuyTriggerCustomErrorCodes.AutoBuyTriggerAlreadyExists,
+      },
+    },
+  )
+  .refine(
+    ({ triggers, action }) => {
+      if (action === SupportedActions.Update) return triggers.triggers.aaveBasicBuy !== undefined
+      return true
+    },
+    {
+      message: 'Auto buy trigger does not exist',
+      params: {
+        code: AutoBuyTriggerCustomErrorCodes.AutoBuyTriggerDoesNotExist,
+      },
+    },
+  )
+
+const deleteErrorsValidation = paramsSchema.refine(
+  ({ triggers, action }) => {
+    if (action === SupportedActions.Remove) return triggers.triggers.aaveBasicBuy !== undefined
+    return true
+  },
+  {
+    message: 'Auto buy trigger does not exist',
+    params: {
+      code: AutoBuyTriggerCustomErrorCodes.AutoBuyTriggerDoesNotExist,
+    },
+  },
+)
 
 const warningsValidation = paramsSchema
   .refine(
@@ -179,10 +221,15 @@ const warningsValidation = paramsSchema
   )
 
 export const autoBuyValidator: AgainstPositionValidator<AaveAutoBuyTriggerData> = (params) => {
+  const errorsValidation =
+    params.action === SupportedActions.Remove ? deleteErrorsValidation : upsertErrorsValidation
   const errorValidation = errorsValidation.safeParse(params)
 
   if (errorValidation.success) {
-    const warningValidation = warningsValidation.safeParse(params)
+    const skipWarningsCheck = params.action === SupportedActions.Remove
+    const warningValidation = skipWarningsCheck
+      ? { success: true, error: { errors: [] } }
+      : warningsValidation.safeParse(params)
     if (warningValidation.success) {
       return {
         success: true,

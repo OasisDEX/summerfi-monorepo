@@ -5,7 +5,7 @@ import { Addresses } from './get-addresses'
 
 export interface EncodeFunctionForDpmParams {
   dpm: Address
-  encodedTrigger: `0x${string}`
+  triggerTxData: `0x${string}`
 }
 
 export interface TransactionFragment {
@@ -14,13 +14,13 @@ export interface TransactionFragment {
 }
 
 export function encodeFunctionForDpm(
-  { dpm, encodedTrigger }: EncodeFunctionForDpmParams,
+  { dpm, triggerTxData }: EncodeFunctionForDpmParams,
   addresses: Addresses,
 ): TransactionFragment {
   const dpmData = encodeFunctionData({
     abi: accountImplementationAbi,
     functionName: 'execute',
-    args: [addresses.AutomationBot, encodedTrigger],
+    args: [addresses.AutomationBot, triggerTxData],
   })
 
   return {

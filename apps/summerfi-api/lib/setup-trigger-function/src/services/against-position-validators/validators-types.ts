@@ -1,4 +1,4 @@
-import { PositionLike, Price, TriggerData, ValidationResults } from '~types'
+import { PositionLike, Price, SupportedActions, TriggerData, ValidationResults } from '~types'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 
 export type AgainstPositionValidatorParams<Trigger extends TriggerData> = {
@@ -6,6 +6,7 @@ export type AgainstPositionValidatorParams<Trigger extends TriggerData> = {
   executionPrice: Price
   triggerData: Trigger
   triggers: GetTriggersResponse
+  action: SupportedActions
 }
 
 export type AgainstPositionValidator<Trigger extends TriggerData> = (

@@ -15,14 +15,14 @@ import { getAutomationSubgraphClient } from '@summerfi/automation-subgraph'
 
 import { Logger } from '@aws-lambda-powertools/logger'
 import {
-  AaveBasicBuy,
-  AaveBasicBuyV2ID,
-  AaveBasicSell,
-  AaveBasicSellV2ID,
   AaveStopLossToCollateral,
   AaveStopLossToCollateralV2ID,
   AaveStopLossToDebt,
   AaveStopLossToDebtV2ID,
+  DmaAaveBasicBuy,
+  DmaAaveBasicBuyV2,
+  DmaAaveBasicSell,
+  DmaAaveBasicSellV2,
   GetTriggersResponse,
   SparkStopLossToCollateral,
   SparkStopLossToCollateralV2ID,
@@ -150,12 +150,12 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       }
     })[0]
 
-  const aaveBasicBuy: AaveBasicBuy | undefined = triggers.triggers
-    .filter((trigger) => trigger.triggerType == AaveBasicBuyV2ID)
+  const aaveBasicBuy: DmaAaveBasicBuy | undefined = triggers.triggers
+    .filter((trigger) => trigger.triggerType == DmaAaveBasicBuyV2)
     .map((trigger) => {
       return {
-        triggerTypeName: 'AaveBasicBuyV2' as const,
-        triggerType: AaveBasicBuyV2ID,
+        triggerTypeName: 'DmaAaveBasicBuyV2' as const,
+        triggerType: DmaAaveBasicBuyV2,
         triggerId: trigger.id,
         triggerData: trigger.triggerData,
         decodedParams: {
@@ -169,7 +169,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
             trigger.decodedData[
               Math.max(
                 trigger.decodedDataNames.indexOf('execLtv'),
-                trigger.decodedData.indexOf('executionLtv'),
+                trigger.decodedDataNames.indexOf('executionLtv'),
               )
             ],
           targetLtv: trigger.decodedData[trigger.decodedDataNames.indexOf('targetLtv')],
@@ -181,12 +181,12 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       }
     })[0]
 
-  const aaveBasicSell: AaveBasicSell | undefined = triggers.triggers
-    .filter((trigger) => trigger.triggerType == AaveBasicSellV2ID)
+  const aaveBasicSell: DmaAaveBasicSell | undefined = triggers.triggers
+    .filter((trigger) => trigger.triggerType == DmaAaveBasicSellV2)
     .map((trigger) => {
       return {
-        triggerTypeName: 'AaveBasicSellV2' as const,
-        triggerType: AaveBasicSellV2ID,
+        triggerTypeName: 'DmaAaveBasicSellV2' as const,
+        triggerType: DmaAaveBasicSellV2,
         triggerId: trigger.id,
         triggerData: trigger.triggerData,
         decodedParams: {
@@ -200,7 +200,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
             trigger.decodedData[
               Math.max(
                 trigger.decodedDataNames.indexOf('execLtv'),
-                trigger.decodedData.indexOf('executionLtv'),
+                trigger.decodedDataNames.indexOf('executionLtv'),
               )
             ],
           targetLtv: trigger.decodedData[trigger.decodedDataNames.indexOf('targetLtv')],
@@ -220,6 +220,11 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       sparkStopLossToDebt,
       aaveBasicBuy,
       aaveBasicSell,
+    },
+    additionalData: {
+      params: {
+        ...params,
+      },
     },
   }
 

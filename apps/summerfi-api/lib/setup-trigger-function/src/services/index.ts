@@ -5,13 +5,11 @@ import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { getPosition, GetPositionParams } from './get-position'
 import { SimulatedPosition, simulatePosition, SimulatePositionParams } from './simulate-position'
-import { triggerEncoders } from './trigger-encoders'
+import { getTriggerEncoder } from './trigger-encoders'
 import {
-  isAaveAutoBuyTriggerData,
-  isAaveAutoSellTriggerData,
   PositionLike,
   Price,
-  safeParseBigInt,
+  SupportedActions,
   SupportedTriggers,
   SupportedTriggersSchema,
   TriggerData,
@@ -23,7 +21,7 @@ import {
   EncodeFunctionForDpmParams,
   TransactionFragment,
 } from './encode-function-for-dpm'
-import { CurrentTriggerLike, EncodedFunction } from './trigger-encoders/types'
+import { EncodedFunction } from './trigger-encoders/types'
 import type { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import fetch from 'node-fetch'
 import memoize from 'just-memoize'
@@ -57,8 +55,13 @@ export interface ServiceContainer {
     position: PositionLike
     executionPrice: Price
     triggerData: TriggerData
+    action: SupportedActions
   }) => Promise<ValidationResults>
-  encodeTrigger: (position: PositionLike, triggerData: TriggerData) => Promise<EncodedFunction>
+  getTriggerTxData: (params: {
+    position: PositionLike
+    triggerData: TriggerData
+    action: SupportedActions
+  }) => Promise<EncodedFunction>
   encodeForDPM: (params: EncodeFunctionForDpmParams) => TransactionFragment
 }
 
@@ -121,47 +124,36 @@ export function buildServiceContainer<
         position: params.position,
         executionPrice: params.executionPrice,
         triggerData: params.triggerData,
+        action: params.action,
         triggers,
       }
       return validator(validatorParams)
     },
-    encodeTrigger: async (position: PositionLike, triggerData: TriggerData) => {
+    getTriggerTxData: async ({ position, triggerData, action }) => {
       const triggers = await getTriggers(position.address)
 
-      try {
-        if (isAaveAutoBuyTriggerData(triggerData)) {
-          const currentAutoBuy = triggers.triggers.aaveBasicBuy
-          const currentTrigger: CurrentTriggerLike | undefined = currentAutoBuy
-            ? {
-                triggerData: currentAutoBuy.triggerData as `0x${string}`,
-                id: safeParseBigInt(currentAutoBuy.triggerId) ?? 0n,
-              }
-            : undefined
-          return triggerEncoders[ProtocolId.AAVE3][SupportedTriggers.AutoBuy](
-            position,
-            triggerData,
-            currentTrigger,
-          )
+      const encodedFunction = getTriggerEncoder({
+        position,
+        triggers,
+        triggerData,
+        protocol: ProtocolId.AAVE3,
+      })
+
+      if (action === SupportedActions.Add || action === SupportedActions.Update) {
+        return {
+          encodedTriggerData: encodedFunction.encodedTriggerData,
+          txData: encodedFunction.upsertTrigger,
         }
-        if (isAaveAutoSellTriggerData(triggerData)) {
-          const currentAutoSell = triggers.triggers.aaveBasicSell
-          const currentTrigger: CurrentTriggerLike | undefined = currentAutoSell
-            ? {
-                triggerData: currentAutoSell.triggerData as `0x${string}`,
-                id: safeParseBigInt(currentAutoSell.triggerId) ?? 0n,
-              }
-            : undefined
-          return triggerEncoders[ProtocolId.AAVE3][SupportedTriggers.AutoSell](
-            position,
-            triggerData,
-            currentTrigger,
-          )
-        }
-        throw new Error('Unsupported trigger data')
-      } catch (e) {
-        logger?.error('Error creating triggers', { error: e, position })
-        throw e
       }
+
+      if (action === SupportedActions.Remove && encodedFunction.removeTrigger) {
+        return {
+          encodedTriggerData: encodedFunction.encodedTriggerData,
+          txData: encodedFunction.removeTrigger,
+        }
+      }
+
+      throw new Error(`Can't find txData for action ${action}`)
     },
     encodeForDPM: (params: EncodeFunctionForDpmParams) => {
       return encodeFunctionForDpm(params, addresses)
