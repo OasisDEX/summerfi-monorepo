@@ -29,6 +29,10 @@ describe('simulatePosition', () => {
           },
         },
         ltv: 5_000n,
+        prices: {
+          collateralPrice: 1n * 10n ** PRICE_DECIMALS,
+          debtPrice: 1n * 10n ** PRICE_DECIMALS,
+        },
         address: '0x2',
       },
       targetLTV: 7_500n,
