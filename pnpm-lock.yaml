@@ -178,7 +178,7 @@ importers:
         version: 8.56.0
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.5)
+        version: 29.7.0(@types/node@20.11.5)(ts-node@10.9.2)
 
   apps/summerfi-api/lib/portfolio-assets-function:
     dependencies:
