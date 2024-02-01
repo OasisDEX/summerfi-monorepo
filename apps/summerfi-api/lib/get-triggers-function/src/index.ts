@@ -52,32 +52,35 @@ const mapTriggerCommonParams = (trigger: TriggersQuery['triggers'][number]) => (
   triggerData: trigger.triggerData,
 })
 
-const mapStopLossParams = (trigger: TriggersQuery['triggers'][number]) => ({
-  positionAddress: trigger.decodedData[trigger.decodedDataNames.indexOf('positionAddress')],
-  triggerType: trigger.decodedData[trigger.decodedDataNames.indexOf('triggerType')],
-  maxCoverage: trigger.decodedData[trigger.decodedDataNames.indexOf('maxCoverage')],
-  debtToken: trigger.decodedData[trigger.decodedDataNames.indexOf('debtToken')],
-  collateralToken: trigger.decodedData[trigger.decodedDataNames.indexOf('collateralToken')],
-  ltv: trigger.decodedData[trigger.decodedDataNames.indexOf('ltv')],
+const mapStopLossParams = ({
+  decodedData,
+  decodedDataNames,
+}: TriggersQuery['triggers'][number]) => ({
+  positionAddress: decodedData[decodedDataNames.indexOf('positionAddress')],
+  triggerType: decodedData[decodedDataNames.indexOf('triggerType')],
+  maxCoverage: decodedData[decodedDataNames.indexOf('maxCoverage')],
+  debtToken: decodedData[decodedDataNames.indexOf('debtToken')],
+  collateralToken: decodedData[decodedDataNames.indexOf('collateralToken')],
+  ltv: decodedData[decodedDataNames.indexOf('ltv')],
 })
 
-const mapBuySellCommonParams = (trigger: TriggersQuery['triggers'][number]) => ({
-  positionAddress: trigger.decodedData[trigger.decodedDataNames.indexOf('positionAddress')],
-  triggerType: trigger.decodedData[trigger.decodedDataNames.indexOf('triggerType')],
-  maxCoverage: trigger.decodedData[trigger.decodedDataNames.indexOf('maxCoverage')],
-  debtToken: trigger.decodedData[trigger.decodedDataNames.indexOf('debtToken')],
-  collateralToken: trigger.decodedData[trigger.decodedDataNames.indexOf('collateralToken')],
-  operationName: trigger.decodedData[trigger.decodedDataNames.indexOf('operationName')],
+const mapBuySellCommonParams = ({
+  decodedData,
+  decodedDataNames,
+}: TriggersQuery['triggers'][number]) => ({
+  positionAddress: decodedData[decodedDataNames.indexOf('positionAddress')],
+  triggerType: decodedData[decodedDataNames.indexOf('triggerType')],
+  maxCoverage: decodedData[decodedDataNames.indexOf('maxCoverage')],
+  debtToken: decodedData[decodedDataNames.indexOf('debtToken')],
+  collateralToken: decodedData[decodedDataNames.indexOf('collateralToken')],
+  operationName: decodedData[decodedDataNames.indexOf('operationName')],
   executionLtv:
-    trigger.decodedData[
-      Math.max(
-        trigger.decodedDataNames.indexOf('execLtv'),
-        trigger.decodedDataNames.indexOf('executionLtv'),
-      )
+    decodedData[
+      Math.max(decodedDataNames.indexOf('execLtv'), decodedDataNames.indexOf('executionLtv'))
     ],
-  targetLtv: trigger.decodedData[trigger.decodedDataNames.indexOf('targetLtv')],
-  deviation: trigger.decodedData[trigger.decodedDataNames.indexOf('deviation')],
-  maxBaseFeeInGwei: trigger.decodedData[trigger.decodedDataNames.indexOf('maxBaseFeeInGwei')],
+  targetLtv: decodedData[decodedDataNames.indexOf('targetLtv')],
+  deviation: decodedData[decodedDataNames.indexOf('deviation')],
+  maxBaseFeeInGwei: decodedData[decodedDataNames.indexOf('maxBaseFeeInGwei')],
 })
 
 export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
