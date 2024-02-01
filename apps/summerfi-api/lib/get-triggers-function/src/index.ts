@@ -16,19 +16,28 @@ import { getAutomationSubgraphClient } from '@summerfi/automation-subgraph'
 import { Logger } from '@aws-lambda-powertools/logger'
 import {
   AaveStopLossToCollateral,
+  AaveStopLossToCollateralDMA,
   AaveStopLossToCollateralV2ID,
   AaveStopLossToDebt,
+  AaveStopLossToDebtDMA,
   AaveStopLossToDebtV2ID,
   DmaAaveBasicBuy,
   DmaAaveBasicBuyV2,
   DmaAaveBasicSell,
   DmaAaveBasicSellV2,
+  DmaAaveStopLossToCollateralV2,
+  DmaAaveStopLossToDebtV2,
+  DmaSparkStopLossToCollateralV2,
+  DmaSparkStopLossToDebtV2,
   GetTriggersResponse,
   SparkStopLossToCollateral,
+  SparkStopLossToCollateralDMA,
   SparkStopLossToCollateralV2ID,
   SparkStopLossToDebt,
+  SparkStopLossToDebtDMA,
   SparkStopLossToDebtV2ID,
 } from '@summerfi/serverless-contracts/get-triggers-response'
+import { TriggersQuery } from '@summerfi/automation-subgraph/dist/types/graphql/generated'
 
 const logger = new Logger({ serviceName: 'getTriggersFunction' })
 
@@ -36,6 +45,39 @@ const paramsSchema = z.object({
   dpm: addressSchema,
   chainId: chainIdsSchema,
   rpc: urlOptionalSchema,
+})
+
+const mapTriggerCommonParams = (trigger: TriggersQuery['triggers'][number]) => ({
+  triggerId: trigger.id,
+  triggerData: trigger.triggerData,
+})
+
+const mapStopLossParams = (trigger: TriggersQuery['triggers'][number]) => ({
+  positionAddress: trigger.decodedData[trigger.decodedDataNames.indexOf('positionAddress')],
+  triggerType: trigger.decodedData[trigger.decodedDataNames.indexOf('triggerType')],
+  maxCoverage: trigger.decodedData[trigger.decodedDataNames.indexOf('maxCoverage')],
+  debtToken: trigger.decodedData[trigger.decodedDataNames.indexOf('debtToken')],
+  collateralToken: trigger.decodedData[trigger.decodedDataNames.indexOf('collateralToken')],
+  ltv: trigger.decodedData[trigger.decodedDataNames.indexOf('ltv')],
+})
+
+const mapBuySellCommonParams = (trigger: TriggersQuery['triggers'][number]) => ({
+  positionAddress: trigger.decodedData[trigger.decodedDataNames.indexOf('positionAddress')],
+  triggerType: trigger.decodedData[trigger.decodedDataNames.indexOf('triggerType')],
+  maxCoverage: trigger.decodedData[trigger.decodedDataNames.indexOf('maxCoverage')],
+  debtToken: trigger.decodedData[trigger.decodedDataNames.indexOf('debtToken')],
+  collateralToken: trigger.decodedData[trigger.decodedDataNames.indexOf('collateralToken')],
+  operationName: trigger.decodedData[trigger.decodedDataNames.indexOf('operationName')],
+  executionLtv:
+    trigger.decodedData[
+      Math.max(
+        trigger.decodedDataNames.indexOf('execLtv'),
+        trigger.decodedDataNames.indexOf('executionLtv'),
+      )
+    ],
+  targetLtv: trigger.decodedData[trigger.decodedDataNames.indexOf('targetLtv')],
+  deviation: trigger.decodedData[trigger.decodedDataNames.indexOf('deviation')],
+  maxBaseFeeInGwei: trigger.decodedData[trigger.decodedDataNames.indexOf('maxBaseFeeInGwei')],
 })
 
 export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
@@ -74,22 +116,25 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     account: params.dpm,
   })
 
+  const aaveStopLossToCollateralDMA: AaveStopLossToCollateralDMA | undefined = triggers.triggers
+    .filter((trigger) => trigger.triggerType == DmaAaveStopLossToCollateralV2)
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'DmaAaveStopLossToCollateralV2' as const,
+        triggerType: DmaAaveStopLossToCollateralV2,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapStopLossParams(trigger),
+      }
+    })[0]
+
   const aaveStopLossToCollateral: AaveStopLossToCollateral | undefined = triggers.triggers
     .filter((trigger) => trigger.triggerType == AaveStopLossToCollateralV2ID)
     .map((trigger) => {
       return {
         triggerTypeName: 'AaveStopLossToCollateralV2' as const,
         triggerType: AaveStopLossToCollateralV2ID,
-        triggerId: trigger.id,
-        triggerData: trigger.triggerData,
-        decodedParams: {
-          positionAddress: trigger.decodedData[trigger.decodedDataNames.indexOf('positionAddress')],
-          triggerType: trigger.decodedData[trigger.decodedDataNames.indexOf('triggerType')],
-          maxCoverage: trigger.decodedData[trigger.decodedDataNames.indexOf('maxCoverage')],
-          debtToken: trigger.decodedData[trigger.decodedDataNames.indexOf('debtToken')],
-          collateralToken: trigger.decodedData[trigger.decodedDataNames.indexOf('collateralToken')],
-          ltv: trigger.decodedData[trigger.decodedDataNames.indexOf('ltv')],
-        },
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapStopLossParams(trigger),
       }
     })[0]
 
@@ -99,16 +144,19 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       return {
         triggerTypeName: 'AaveStopLossToDebtV2' as const,
         triggerType: AaveStopLossToDebtV2ID,
-        triggerId: trigger.id,
-        triggerData: trigger.triggerData,
-        decodedParams: {
-          positionAddress: trigger.decodedData[trigger.decodedDataNames.indexOf('positionAddress')],
-          triggerType: trigger.decodedData[trigger.decodedDataNames.indexOf('triggerType')],
-          maxCoverage: trigger.decodedData[trigger.decodedDataNames.indexOf('maxCoverage')],
-          debtToken: trigger.decodedData[trigger.decodedDataNames.indexOf('debtToken')],
-          collateralToken: trigger.decodedData[trigger.decodedDataNames.indexOf('collateralToken')],
-          ltv: trigger.decodedData[trigger.decodedDataNames.indexOf('ltv')],
-        },
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapStopLossParams(trigger),
+      }
+    })[0]
+
+  const aaveStopLossToDebtDMA: AaveStopLossToDebtDMA | undefined = triggers.triggers
+    .filter((trigger) => trigger.triggerType == DmaAaveStopLossToDebtV2)
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'DmaAaveStopLossToDebtV2' as const,
+        triggerType: DmaAaveStopLossToDebtV2,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapStopLossParams(trigger),
       }
     })[0]
 
@@ -118,16 +166,19 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       return {
         triggerTypeName: 'SparkStopLossToCollateralV2' as const,
         triggerType: SparkStopLossToCollateralV2ID,
-        triggerId: trigger.id,
-        triggerData: trigger.triggerData,
-        decodedParams: {
-          positionAddress: trigger.decodedData[trigger.decodedDataNames.indexOf('positionAddress')],
-          triggerType: trigger.decodedData[trigger.decodedDataNames.indexOf('triggerType')],
-          maxCoverage: trigger.decodedData[trigger.decodedDataNames.indexOf('maxCoverage')],
-          debtToken: trigger.decodedData[trigger.decodedDataNames.indexOf('debtToken')],
-          collateralToken: trigger.decodedData[trigger.decodedDataNames.indexOf('collateralToken')],
-          ltv: trigger.decodedData[trigger.decodedDataNames.indexOf('ltv')],
-        },
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapStopLossParams(trigger),
+      }
+    })[0]
+
+  const sparkStopLossToCollateralDMA: SparkStopLossToCollateralDMA | undefined = triggers.triggers
+    .filter((trigger) => trigger.triggerType == DmaSparkStopLossToCollateralV2)
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'DmaSparkStopLossToCollateralV2' as const,
+        triggerType: DmaSparkStopLossToCollateralV2,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapStopLossParams(trigger),
       }
     })[0]
 
@@ -137,16 +188,19 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       return {
         triggerTypeName: 'SparkStopLossToDebtV2' as const,
         triggerType: SparkStopLossToDebtV2ID,
-        triggerId: trigger.id,
-        triggerData: trigger.triggerData,
-        decodedParams: {
-          positionAddress: trigger.decodedData[trigger.decodedDataNames.indexOf('positionAddress')],
-          triggerType: trigger.decodedData[trigger.decodedDataNames.indexOf('triggerType')],
-          maxCoverage: trigger.decodedData[trigger.decodedDataNames.indexOf('maxCoverage')],
-          debtToken: trigger.decodedData[trigger.decodedDataNames.indexOf('debtToken')],
-          collateralToken: trigger.decodedData[trigger.decodedDataNames.indexOf('collateralToken')],
-          ltv: trigger.decodedData[trigger.decodedDataNames.indexOf('ltv')],
-        },
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapStopLossParams(trigger),
+      }
+    })[0]
+
+  const sparkStopLossToDebtDMA: SparkStopLossToDebtDMA | undefined = triggers.triggers
+    .filter((trigger) => trigger.triggerType == DmaSparkStopLossToDebtV2)
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'DmaSparkStopLossToDebtV2' as const,
+        triggerType: DmaSparkStopLossToDebtV2,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapStopLossParams(trigger),
       }
     })[0]
 
@@ -156,27 +210,10 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       return {
         triggerTypeName: 'DmaAaveBasicBuyV2' as const,
         triggerType: DmaAaveBasicBuyV2,
-        triggerId: trigger.id,
-        triggerData: trigger.triggerData,
+        ...mapTriggerCommonParams(trigger),
         decodedParams: {
-          positionAddress: trigger.decodedData[trigger.decodedDataNames.indexOf('positionAddress')],
-          triggerType: trigger.decodedData[trigger.decodedDataNames.indexOf('triggerType')],
-          maxCoverage: trigger.decodedData[trigger.decodedDataNames.indexOf('maxCoverage')],
-          debtToken: trigger.decodedData[trigger.decodedDataNames.indexOf('debtToken')],
-          collateralToken: trigger.decodedData[trigger.decodedDataNames.indexOf('collateralToken')],
-          operationName: trigger.decodedData[trigger.decodedDataNames.indexOf('operationName')],
-          executionLtv:
-            trigger.decodedData[
-              Math.max(
-                trigger.decodedDataNames.indexOf('execLtv'),
-                trigger.decodedDataNames.indexOf('executionLtv'),
-              )
-            ],
-          targetLtv: trigger.decodedData[trigger.decodedDataNames.indexOf('targetLtv')],
           maxBuyPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('maxBuyPrice')],
-          deviation: trigger.decodedData[trigger.decodedDataNames.indexOf('deviation')],
-          maxBaseFeeInGwei:
-            trigger.decodedData[trigger.decodedDataNames.indexOf('maxBaseFeeInGwei')],
+          ...mapBuySellCommonParams(trigger),
         },
       }
     })[0]
@@ -187,27 +224,10 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       return {
         triggerTypeName: 'DmaAaveBasicSellV2' as const,
         triggerType: DmaAaveBasicSellV2,
-        triggerId: trigger.id,
-        triggerData: trigger.triggerData,
+        ...mapTriggerCommonParams(trigger),
         decodedParams: {
-          positionAddress: trigger.decodedData[trigger.decodedDataNames.indexOf('positionAddress')],
-          triggerType: trigger.decodedData[trigger.decodedDataNames.indexOf('triggerType')],
-          maxCoverage: trigger.decodedData[trigger.decodedDataNames.indexOf('maxCoverage')],
-          debtToken: trigger.decodedData[trigger.decodedDataNames.indexOf('debtToken')],
-          collateralToken: trigger.decodedData[trigger.decodedDataNames.indexOf('collateralToken')],
-          operationName: trigger.decodedData[trigger.decodedDataNames.indexOf('operationName')],
-          executionLtv:
-            trigger.decodedData[
-              Math.max(
-                trigger.decodedDataNames.indexOf('execLtv'),
-                trigger.decodedDataNames.indexOf('executionLtv'),
-              )
-            ],
-          targetLtv: trigger.decodedData[trigger.decodedDataNames.indexOf('targetLtv')],
           minSellPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('minSellPrice')],
-          deviation: trigger.decodedData[trigger.decodedDataNames.indexOf('deviation')],
-          maxBaseFeeInGwei:
-            trigger.decodedData[trigger.decodedDataNames.indexOf('maxBaseFeeInGwei')],
+          ...mapBuySellCommonParams(trigger),
         },
       }
     })[0]
@@ -215,9 +235,13 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
   const response: GetTriggersResponse = {
     triggers: {
       aaveStopLossToCollateral,
+      aaveStopLossToCollateralDMA,
       aaveStopLossToDebt,
+      aaveStopLossToDebtDMA,
       sparkStopLossToCollateral,
+      sparkStopLossToCollateralDMA,
       sparkStopLossToDebt,
+      sparkStopLossToDebtDMA,
       aaveBasicBuy,
       aaveBasicSell,
     },
