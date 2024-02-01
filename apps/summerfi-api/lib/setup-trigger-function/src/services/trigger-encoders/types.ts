@@ -4,6 +4,7 @@ import {
   AaveAutoSellTriggerData,
   TriggerData,
   SupportedTriggers,
+  Price,
 } from '~types'
 import { ProtocolId } from '@summerfi/serverless-shared/domain-types'
 
@@ -28,6 +29,7 @@ export type CurrentTriggerLike = {
 export type EncoderFunction<TTriggerData extends TriggerData> = (
   position: PositionLike,
   triggerData: TTriggerData,
+  debtPriceInUSD: Price,
   currentTrigger: CurrentTriggerLike | undefined,
 ) => TriggerTransactions
 
