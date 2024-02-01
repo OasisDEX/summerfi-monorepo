@@ -123,34 +123,34 @@ export type NetworksType = keyof typeof ChainIds
 
 // Ensure that we have all the environment variables we need.
 
-if (!process.env.DEPLOYER_MNEMONIC) {
-  throw new Error('Please set your DEPLOYER_MNEMONIC in a .env file')
+if (!process.env.CONTRACTS_DEPLOYER_MNEMONIC) {
+  throw new Error('Please set your CONTRACTS_DEPLOYER_MNEMONIC in a .env file')
 }
-export const walletSeed: string = process.env.DEPLOYER_MNEMONIC
+export const walletSeed: string = process.env.CONTRACTS_DEPLOYER_MNEMONIC
 
 const endpointProvider: string =
-  process.env.VITE_ENDPOINT_PROVIDER != null ? process.env.VITE_ENDPOINT_PROVIDER : ''
+  process.env.RPC_ENDPOINT_PROVIDER != null ? process.env.RPC_ENDPOINT_PROVIDER : ''
 if (endpointProvider !== 'infura' && endpointProvider !== 'alchemy') {
-  throw new Error('Please set your VITE_ENDPOINT_PROVIDER to a valid value in a .env file')
+  throw new Error('Please set your RPC_ENDPOINT_PROVIDER to a valid value in a .env file')
 }
 
 let endpointApiKey: string
 if (endpointProvider === 'infura') {
-  if (!process.env.VITE_INFURA_KEY) {
-    throw new Error('Please set your VITE_INFURA_KEY in a .env file')
+  if (!process.env.INFURA_ENDPOINT_API_KEY) {
+    throw new Error('Please set your INFURA_ENDPOINT_API_KEY in a .env file')
   }
-  endpointApiKey = process.env.VITE_INFURA_KEY
+  endpointApiKey = process.env.INFURA_ENDPOINT_API_KEY
 }
 
 if (endpointProvider === 'alchemy') {
-  if (!process.env.VITE_ALCHEMY_KEY) {
+  if (!process.env.ALCHEMY_ENDPOINT_API_KEY) {
     throw new Error('Please set your VITE_ALCHEMY_KEY in a .env file')
   }
-  endpointApiKey = process.env.VITE_ALCHEMY_KEY
+  endpointApiKey = process.env.ALCHEMY_ENDPOINT_API_KEY
 }
 
-const configMaxGas: number | undefined = Number(process.env.MAX_GAS)
-const configGasPrice: number | undefined = Number(process.env.DEPLOYMENT_GAS_PRICE)
+const configMaxGas: number | undefined = Number(process.env.CONTRACTS_DEPLOYMENT_MAX_GAS)
+const configGasPrice: number | undefined = Number(process.env.CONTRACTS_DEPLOYMENT_GAS_PRICE)
 
 export function getHardhatChainConfig(): HardhatNetworkUserConfig {
   return {

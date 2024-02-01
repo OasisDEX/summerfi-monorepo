@@ -1,12 +1,9 @@
-import type { Contract, ContractTransactionReceipt } from 'ethers'
 import type { NetworksType } from '@summerfi/hardhat-utils'
 import { Networks } from '@summerfi/hardhat-utils'
-import type { FactoryOptions } from '@nomicfoundation/hardhat-ethers/types'
-import type { MockContract } from '@defi-wonderland/smock'
+import { Contract, TransactionReceipt } from './viem-types'
 
 export enum ProviderTypes {
   Internal = 'internal',
-  Ganache = 'ganache',
   Hardhat = 'hardhat',
   Remote = 'remote',
 }
@@ -19,8 +16,6 @@ export enum DeploymentFlags {
   None = 0,
   Export = 1 << 1,
   Verify = 1 << 2,
-  Upgradeable = 1 << 3,
-  Mock = 1 << 4,
 }
 
 export enum DirectoryFilterType {
@@ -44,17 +39,6 @@ export interface DeploymentInitParams {
   indexDir?: string
 }
 
-export interface DeploymentObjectLegacy {
-  timestamp: number
-  network: Network
-  contracts: {
-    [contractName: string]: {
-      address: string
-      blockNumber: number
-    }
-  }
-}
-
 export interface DeploymentObject {
   timestamp: number
   provider: Provider
@@ -63,7 +47,7 @@ export interface DeploymentObject {
   contracts: {
     [contractName: string]: {
       address: string
-      blockNumber: number
+      blockNumber: bigint
     }
   }
   dependencies: {
@@ -73,19 +57,16 @@ export interface DeploymentObject {
   }
 }
 
-export type LegacyDeploymentObject = { [key: string]: string } | undefined
-
-export interface DeploymentParams extends FactoryOptions {
+export interface DeploymentParams {
   options?: DeploymentOptions
   alias?: string // The deployed contract will be exported in the JSON file with this alias
   contract?: string // Path and name of the contract to be verified i.e.: contracts/Example.sol:ExampleContract
 }
 
 export interface Deployment {
-  contract: Contract | MockContract<Contract>
-  address: string
+  contract: Contract
   name: string
-  receipt?: ContractTransactionReceipt
+  receipt?: TransactionReceipt
 }
 
 export type DeploymentOptions = DeploymentFlags

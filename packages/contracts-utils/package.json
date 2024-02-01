@@ -12,15 +12,11 @@
     "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
-    "@defi-wonderland/smock": "^2.3.5",
-    "@nomicfoundation/hardhat-ethers": "^3.0.5",
-    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
-    "@openzeppelin/hardhat-upgrades": "^3.0.2",
-    "@openzeppelin/upgrades-core": "^1.32.4",
+    "@nomicfoundation/hardhat-toolbox-viem": "^2.0.0",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/hardhat-utils": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
-    "ethers": "^6.10.0",
-    "hardhat": "^2.19.5"
+    "hardhat": "^2.19.5",
+    "viem": "^2.7.1"
   }
 }

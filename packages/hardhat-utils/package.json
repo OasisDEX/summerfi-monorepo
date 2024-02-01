@@ -12,7 +12,7 @@
     "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@nomicfoundation/hardhat-toolbox-viem": "^2.0.0",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
     "dotenv": "^16.3.1",

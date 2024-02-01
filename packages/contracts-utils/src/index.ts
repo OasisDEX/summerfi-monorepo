@@ -1,6 +1,3 @@
-export { Deployments } from './deployment'
-export { getDeploymentType, parseDeploymentName } from './config'
-export type { Provider, Network, ConfigName, DeploymentType, DeploymentOptions } from './types'
-export { ProviderTypes, DeploymentFlags, DeploymentNetwork, isProvider, isNetwork } from './types'
+export * from './deployment'
 export * from './test'
 export * from './utils'

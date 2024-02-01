@@ -1,4 +1,4 @@
-import '@nomicfoundation/hardhat-toolbox'
+import '@nomicfoundation/hardhat-toolbox-viem'
 import 'hardhat-abi-exporter'
 import 'solidity-docgen'
 
@@ -16,10 +16,10 @@ export const DefaultHardhatConfig: HardhatUserConfig = {
   gasReporter: {
     currency: 'USD',
     coinmarketcap: `${process.env.COINMARKETCAP_API_KEY}`,
-    enabled: process.env.ENABLE_GAS_REPORT === 'true',
+    enabled: process.env.CONTRACTS_ENABLE_GAS_REPORT === 'true',
     excludeContracts: [],
     src: './contracts',
-    outputFile: process.env.GAS_REPORT_FILE,
+    outputFile: process.env.CONTRACTS_GAS_REPORT_FILE,
   },
   paths: {
     artifacts: './artifacts',
@@ -28,16 +28,7 @@ export const DefaultHardhatConfig: HardhatUserConfig = {
     tests: './test',
   },
   solidity: {
-    compilers: [
-      {
-        version: '0.8.17',
-        settings: {
-          optimizer: {
-            enabled: true,
-          },
-        },
-      },
-    ],
+    compilers: [],
   },
   networks: {
     localhost: getLocalhostChainConfig(),

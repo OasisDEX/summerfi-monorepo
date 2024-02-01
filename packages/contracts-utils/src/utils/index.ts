@@ -7,4 +7,3 @@ export {
   setNextBlockTimestamp,
 } from './blockchain'
 export { toCamelCase } from './camelCase'
-export { verify } from './hardhat'

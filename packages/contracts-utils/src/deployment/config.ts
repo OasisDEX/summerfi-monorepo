@@ -20,7 +20,7 @@ export function parseDeploymentName(deploymentName: string): DeploymentType {
 }
 
 export function getDeploymentType(): DeploymentType {
-  const deploymentName = process.env.DEPLOYMENT_TYPE
+  const deploymentName = process.env.CONTRACTS_DEPLOYMENT_TYPE
 
   if (!deploymentName) {
     throw new Error('DEPLOYMENT_TYPE environment variable is not set')
