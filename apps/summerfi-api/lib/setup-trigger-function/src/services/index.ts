@@ -30,6 +30,7 @@ import {
   getRpcGatewayEndpoint,
   IRpcConfig,
 } from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
+import { getUsdOraclePrice } from './get-usd-oracle-price'
 
 export const rpcConfig: IRpcConfig = {
   skipCache: false,
@@ -132,10 +133,13 @@ export function buildServiceContainer<
     getTriggerTxData: async ({ position, triggerData, action }) => {
       const triggers = await getTriggers(position.address)
 
+      const debtPriceInUSD = await getUsdOraclePrice(position.debt.token, addresses, publicClient)
+
       const encodedFunction = getTriggerEncoder({
         position,
         triggers,
         triggerData,
+        debtPriceInUSD,
         protocol: ProtocolId.AAVE3,
       })
 
