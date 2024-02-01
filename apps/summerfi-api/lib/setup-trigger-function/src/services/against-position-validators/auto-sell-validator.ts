@@ -164,7 +164,7 @@ const deleteErrorsValidation = paramsSchema.refine(
 const warningsValidation = paramsSchema
   .refine(
     ({ triggerData, position }) => {
-      return position.ltv >= triggerData.executionLTV
+      return position.ltv <= triggerData.executionLTV
     },
     {
       message: 'Auto sell triggered immediately',
