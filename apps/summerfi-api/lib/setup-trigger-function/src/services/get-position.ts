@@ -116,5 +116,9 @@ export async function getPosition(
     collateral: collateralResult,
     debt: debtResult,
     address: dpm,
+    prices: {
+      collateralPrice,
+      debtPrice,
+    },
   }
 }

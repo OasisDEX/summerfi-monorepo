@@ -1,5 +1,4 @@
 import {
-  ONE_PERCENT,
   positionSchema,
   priceSchema,
   mapZodResultToValidationResults,
@@ -73,17 +72,17 @@ const upsertErrorsValidation = paramsSchema
       },
     },
   )
-  .refine(
-    ({ position, triggerData }) => {
-      return triggerData.executionLTV <= position.ltv - ONE_PERCENT
-    },
-    {
-      message: 'Execution LTV is bigger than current LTV',
-      params: {
-        code: AutoBuyTriggerCustomErrorCodes.ExecutionLTVBiggerThanCurrentLTV,
-      },
-    },
-  )
+  // .refine(
+  //   ({ position, triggerData }) => {
+  //     return triggerData.executionLTV <= position.ltv - ONE_PERCENT
+  //   },
+  //   {
+  //     message: 'Execution LTV is bigger than current LTV',
+  //     params: {
+  //       code: AutoBuyTriggerCustomErrorCodes.ExecutionLTVBiggerThanCurrentLTV,
+  //     },
+  //   },
+  // )
   .refine(
     ({ triggers, triggerData }) => {
       const autoSellTrigger = triggers.triggers.aaveBasicSell
@@ -91,12 +90,13 @@ const upsertErrorsValidation = paramsSchema
         return true
       }
 
-      const autoSellTargetLTV = safeParseBigInt(autoSellTrigger.decodedParams.targetLtv) ?? 99n
+      const autoSellExecutionLTV =
+        safeParseBigInt(autoSellTrigger.decodedParams.executionLtv) ?? 99n
 
-      return triggerData.executionLTV < autoSellTargetLTV
+      return triggerData.targetLTV < autoSellExecutionLTV
     },
     {
-      message: 'Auto buy trigger lower than auto sell target',
+      message: 'Auto buy target higher than auto sell trigger',
       params: {
         code: AutoBuyTriggerCustomErrorCodes.AutoBuyTriggerLowerThanAutoSellTarget,
       },
@@ -145,7 +145,7 @@ const deleteErrorsValidation = paramsSchema.refine(
 const warningsValidation = paramsSchema
   .refine(
     ({ triggerData, position }) => {
-      return position.ltv > triggerData.executionLTV
+      return position.ltv <= triggerData.executionLTV
     },
     {
       message: 'Auto buy triggered immediately',

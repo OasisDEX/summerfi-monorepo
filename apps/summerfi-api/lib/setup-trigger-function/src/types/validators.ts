@@ -134,11 +134,17 @@ export const positionAddressesSchema = z.object({
   debt: addressSchema,
 })
 
+export const positionTokensPricesSchema = z.object({
+  collateralPrice: priceSchema,
+  debtPrice: priceSchema,
+})
+
 export const positionSchema = z.object({
   collateral: tokenBalanceSchema,
   debt: tokenBalanceSchema,
   ltv: ltvSchema,
   address: addressSchema,
+  prices: positionTokensPricesSchema,
 })
 
 export const eventBodyAaveBasicBuySchema = z.object({
