@@ -52,7 +52,7 @@ export const encodeAaveBasicSell: EncoderFunction<AaveAutoSellTriggerData> = (
     functionName: 'addTriggers',
     args: [
       65535,
-      [false],
+      [true],
       [currentTrigger?.id ?? 0n],
       [encodedTriggerData],
       [currentTrigger?.triggerData ?? '0x0'],
