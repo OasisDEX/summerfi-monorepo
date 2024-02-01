@@ -9,9 +9,9 @@ import {
 import { OPERATION_NAMES } from '@oasisdex/dma-library'
 import { DEFAULT_DEVIATION, MAX_COVERAGE_BASE } from './defaults'
 import { automationBotAbi } from '~abi'
-import { AaveAutoSellTriggerData } from '~types'
+import { AaveStopLossTriggerData } from '~types'
 
-export const encodeAaveStopLoss: EncoderFunction<AaveAutoSellTriggerData> = (
+export const encodeAaveStopLoss: EncoderFunction<AaveStopLossTriggerData> = (
   position,
   triggerData,
   currentTrigger,
@@ -42,9 +42,7 @@ export const encodeAaveStopLoss: EncoderFunction<AaveAutoSellTriggerData> = (
     operationNameInBytes,
     triggerData.executionLTV,
     triggerData.targetLTV,
-    triggerData.minSellPrice,
     DEFAULT_DEVIATION, // 100 -> 1%
-    triggerData.maxBaseFee,
   ])
 
   const encodedTrigger = encodeFunctionData({

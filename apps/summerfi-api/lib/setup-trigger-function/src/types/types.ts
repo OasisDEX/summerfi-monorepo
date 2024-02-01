@@ -66,6 +66,10 @@ export enum AutoSellTriggerCustomWarningCodes {
   NoMinSellPriceWhenStopLoss = 'no-min-sell-price-when-stop-loss-enabled',
 }
 
+export enum StopLossTriggerCustomErrorCodes {
+  StopLossTriggeredImmediately = 'too-low-ltv-to-setup-stop-loss',
+}
+
 export type ValidationIssue = { message: string; code: string; path: (string | number)[] }
 
 export type ValidationResults = {

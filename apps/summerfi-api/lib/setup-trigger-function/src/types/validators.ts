@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { addressSchema, urlOptionalSchema } from '@summerfi/serverless-shared/validators'
 import { ChainId, ProtocolId } from '@summerfi/serverless-shared/domain-types'
-import { AutoBuyTriggerCustomErrorCodes, AutoSellTriggerCustomErrorCodes } from './types'
+import { AutoBuyTriggerCustomErrorCodes, AutoSellTriggerCustomErrorCodes, StopLossTriggerCustomErrorCodes } from './types'
 import { TriggerType } from '@oasisdex/automation'
 
 export const PRICE_DECIMALS = 8n
@@ -126,21 +126,19 @@ export const aaveBasicBuyTriggerDataSchema = z
       .transform(() => BigInt(TriggerType.DmaAaveBasicSellV2)),
     executionLTV: ltvSchema,
     targetLTV: ltvSchema,
-    minSellPrice: priceSchema.optional().default(0n),
-    useMinSellPrice: z.boolean().optional().default(true),
-    maxBaseFee: maxGasFeeSchema,
+    executionToken: addressSchema,
   })
   .refine(
-    ({ minSellPrice, useMinSellPrice }) => {
-      return useMinSellPrice ? minSellPrice !== 0n : true
+    ({ executionLTV, targetLTV }) => {
+      return executionLTV > targetLTV
     },
     {
       params: {
-        code: AutoSellTriggerCustomErrorCodes.MinSellPriceIsNotSet,
+        code: StopLossTriggerCustomErrorCodes.StopLossTriggeredImmediately,
       },
       message:
-        'Min sell price is not set. Please set min sell price or explicitly disable it in trigger data',
-      path: ['triggerData', 'minSellPrice'],
+        'Setting your Stop Loss at this ratio would result in it being executed immediately',
+      path: ['executionLTV'],
     },
   )
 
