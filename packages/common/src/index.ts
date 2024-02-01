@@ -6,3 +6,4 @@ export {
   YEAR_IN_SECONDS,
   LEAP_YEAR_IN_SECONDS,
 } from './time'
+export type { RecursivePartial } from './recursive-partial'

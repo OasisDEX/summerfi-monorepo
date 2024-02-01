@@ -2,19 +2,12 @@
   "extends": "@summerfi/typescript-config/tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "scripts",
-    "outDir": "dist",
     "baseUrl": "scripts",
     "paths": {
       "~core-contracts": ["./index.ts"],
       "~core-contracts/*": ["./*"]
     }
   },
-  "include": [
-    "scripts/**/*.ts",
-    "../deployment-config/src/automation.ts",
-    "../deployment-config/src/config-entry.ts",
-    "../deployment-config/src/core.ts",
-    "../deployment-config/src/system-config.ts"
-  ],
+  "include": ["scripts/**/*.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

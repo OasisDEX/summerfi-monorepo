@@ -365,35 +365,14 @@ importers:
         specifier: workspace:*
         version: link:../typescript-config
 
-  packages/contracts-utils:
-    devDependencies:
-      '@nomicfoundation/hardhat-toolbox-viem':
-        specifier: ^2.0.0
-        version: 2.0.0(@nomicfoundation/hardhat-network-helpers@1.0.10)(@nomicfoundation/hardhat-verify@2.0.4)(@nomicfoundation/hardhat-viem@1.0.3)(@types/chai-as-promised@7.1.8)(@types/chai@4.3.11)(@types/mocha@10.0.6)(@types/node@20.11.5)(chai@4.4.1)(hardhat-gas-reporter@1.0.10)(hardhat@2.19.5)(solidity-coverage@0.8.6)(ts-node@10.9.2)(typescript@5.0.4)(viem@2.7.1)
-      '@summerfi/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@summerfi/hardhat-utils':
-        specifier: workspace:*
-        version: link:../hardhat-utils
-      '@summerfi/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      hardhat:
-        specifier: ^2.19.5
-        version: 2.19.5(ts-node@10.9.2)(typescript@5.0.4)
-      viem:
-        specifier: ^2.7.1
-        version: 2.7.1(typescript@5.0.4)
-
   packages/core-contracts:
     devDependencies:
       '@nomicfoundation/hardhat-toolbox-viem':
         specifier: ^2.0.0
         version: 2.0.0(@nomicfoundation/hardhat-network-helpers@1.0.10)(@nomicfoundation/hardhat-verify@2.0.4)(@nomicfoundation/hardhat-viem@1.0.3)(@types/chai-as-promised@7.1.8)(@types/chai@4.3.11)(@types/mocha@10.0.6)(@types/node@20.11.5)(chai@4.4.1)(hardhat-gas-reporter@1.0.10)(hardhat@2.19.5)(solidity-coverage@0.8.6)(ts-node@10.9.2)(typescript@5.0.4)(viem@2.7.1)
-      '@summerfi/contracts-utils':
+      '@summerfi/deployment-utils':
         specifier: workspace:*
-        version: link:../contracts-utils
+        version: link:../deployment-utils
       '@summerfi/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
@@ -416,7 +395,16 @@ importers:
         specifier: ^2.7.1
         version: 2.7.1(typescript@5.0.4)
 
-  packages/deployment-config:
+  packages/deployment-configs:
+    devDependencies:
+      '@summerfi/common':
+        specifier: workspace:*
+        version: link:../common
+      '@summerfi/deployment-types':
+        specifier: workspace:*
+        version: link:../deployment-types
+
+  packages/deployment-types:
     dependencies:
       viem:
         specifier: ^2.2.0
@@ -434,6 +422,27 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.11.5)(ts-node@10.9.2)
+
+  packages/deployment-utils:
+    devDependencies:
+      '@nomicfoundation/hardhat-toolbox-viem':
+        specifier: ^2.0.0
+        version: 2.0.0(@nomicfoundation/hardhat-network-helpers@1.0.10)(@nomicfoundation/hardhat-verify@2.0.4)(@nomicfoundation/hardhat-viem@1.0.3)(@types/chai-as-promised@7.1.8)(@types/chai@4.3.11)(@types/mocha@10.0.6)(@types/node@20.11.5)(chai@4.4.1)(hardhat-gas-reporter@1.0.10)(hardhat@2.19.5)(solidity-coverage@0.8.6)(ts-node@10.9.2)(typescript@5.0.4)(viem@2.7.1)
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@summerfi/hardhat-utils':
+        specifier: workspace:*
+        version: link:../hardhat-utils
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      hardhat:
+        specifier: ^2.19.5
+        version: 2.19.5(ts-node@10.9.2)(typescript@5.0.4)
+      viem:
+        specifier: ^2.7.1
+        version: 2.7.1(typescript@5.0.4)
 
   packages/eslint-config:
     devDependencies:
