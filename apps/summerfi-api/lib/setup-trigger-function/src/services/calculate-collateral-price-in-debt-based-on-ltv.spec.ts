@@ -22,6 +22,10 @@ describe('calculateExecutionPrice', () => {
       },
       ltv: 5000n,
       address: '0x2',
+      prices: {
+        collateralPrice: 1n * 10n ** PRICE_DECIMALS,
+        debtPrice: 1n * 10n ** PRICE_DECIMALS,
+      },
     })
     expect(result).toBe(2_800n * 10n ** PRICE_DECIMALS)
   })

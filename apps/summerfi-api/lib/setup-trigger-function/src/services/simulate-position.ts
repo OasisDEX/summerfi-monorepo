@@ -18,6 +18,8 @@ export interface SimulatedPosition {
   targetLTVWithDeviation: [LTV, LTV]
   collateralAmountAfterExecution: bigint
   debtAmountAfterExecution: bigint
+  executionPrice: Price
+  position: PositionLike
 }
 
 export interface SimulatePositionParams {
@@ -111,5 +113,7 @@ export function simulatePosition(
         .integerValue()
         .toString(),
     ),
+    executionPrice,
+    position,
   }
 }

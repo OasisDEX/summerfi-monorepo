@@ -6,7 +6,7 @@ import {
   stringToBytes,
 } from 'viem'
 import { automationBotAbi } from '~abi'
-import { AaveAutoBuyTriggerData } from '~types'
+import { AaveAutoBuyTriggerData, PRICE_DECIMALS } from '~types'
 import { DEFAULT_DEVIATION, MAX_COVERAGE_BASE } from './defaults'
 import { EncoderFunction } from './types'
 import { OPERATION_NAMES } from '@oasisdex/dma-library'
@@ -14,6 +14,7 @@ import { OPERATION_NAMES } from '@oasisdex/dma-library'
 export const encodeAaveAutoBuy: EncoderFunction<AaveAutoBuyTriggerData> = (
   position,
   triggerData,
+  debtPriceInUSD,
   currentTrigger,
 ) => {
   const abiParameters = parseAbiParameters(
@@ -25,10 +26,19 @@ export const encodeAaveAutoBuy: EncoderFunction<AaveAutoBuyTriggerData> = (
   const operationName = OPERATION_NAMES.aave.v3.ADJUST_RISK_UP
   const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
 
+  const maxCoverageInPriceDecimals = MAX_COVERAGE_BASE * debtPriceInUSD
+
+  const coverageShift = BigInt(position.debt.token.decimals) - PRICE_DECIMALS
+
+  const maxCoverage =
+    coverageShift >= 0n
+      ? maxCoverageInPriceDecimals * 10n ** coverageShift
+      : maxCoverageInPriceDecimals / 10n ** -coverageShift
+
   const encodedTriggerData = encodeAbiParameters(abiParameters, [
     position.address,
     triggerData.type,
-    MAX_COVERAGE_BASE * 10n ** BigInt(position.debt.token.decimals),
+    maxCoverage,
     position.debt.token.address,
     position.collateral.token.address,
     operationNameInBytes,
@@ -44,7 +54,7 @@ export const encodeAaveAutoBuy: EncoderFunction<AaveAutoBuyTriggerData> = (
     functionName: 'addTriggers',
     args: [
       65535,
-      [false],
+      [true],
       [currentTrigger?.id ?? 0n],
       [encodedTriggerData],
       [currentTrigger?.triggerData ?? '0x0'],

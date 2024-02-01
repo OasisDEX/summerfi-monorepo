@@ -3,6 +3,7 @@ import {
   isAaveAutoBuyTriggerData,
   isAaveAutoSellTriggerData,
   PositionLike,
+  Price,
   safeParseBigInt,
   SupportedTriggers,
   TriggerData,
@@ -23,9 +24,10 @@ export const getTriggerEncoder = (params: {
   position: PositionLike
   protocol: ProtocolId
   triggers: GetTriggersResponse
+  debtPriceInUSD: Price
   triggerData: TriggerData
 }): TriggerTransactions => {
-  const { position, triggers, triggerData } = params
+  const { position, triggers, triggerData, debtPriceInUSD } = params
   if (isAaveAutoBuyTriggerData(triggerData)) {
     const currentAutoBuy = triggers.triggers.aaveBasicBuy
     const currentTrigger: CurrentTriggerLike | undefined = currentAutoBuy
@@ -37,6 +39,7 @@ export const getTriggerEncoder = (params: {
     return triggerEncoders[ProtocolId.AAVE3][SupportedTriggers.AutoBuy](
       position,
       triggerData,
+      debtPriceInUSD,
       currentTrigger,
     )
   }
@@ -52,6 +55,7 @@ export const getTriggerEncoder = (params: {
     return triggerEncoders[ProtocolId.AAVE3][SupportedTriggers.AutoSell](
       position,
       triggerData,
+      debtPriceInUSD,
       currentTrigger,
     )
   }

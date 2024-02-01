@@ -1,5 +1,5 @@
 query Triggers($dpm: Bytes!) {
-  triggers(where: { account: $dpm, executedBlock: null, removedBlock: null }) {
+  triggers(where: { account: $dpm, removedBlock: null }) {
     account
     owner
     id
