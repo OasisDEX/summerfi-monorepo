@@ -10,6 +10,7 @@ import {
   aaveBasicBuyTriggerDataSchema,
   supportedActionsSchema,
   SupportedActions,
+  ONE_PERCENT,
 } from '~types'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { z } from 'zod'
@@ -72,17 +73,17 @@ const upsertErrorsValidation = paramsSchema
       },
     },
   )
-  // .refine(
-  //   ({ position, triggerData }) => {
-  //     return triggerData.executionLTV <= position.ltv - ONE_PERCENT
-  //   },
-  //   {
-  //     message: 'Execution LTV is bigger than current LTV',
-  //     params: {
-  //       code: AutoBuyTriggerCustomErrorCodes.ExecutionLTVBiggerThanCurrentLTV,
-  //     },
-  //   },
-  // )
+  .refine(
+    ({ position, triggerData }) => {
+      return triggerData.executionLTV <= position.ltv - ONE_PERCENT
+    },
+    {
+      message: 'Execution LTV is bigger than current LTV',
+      params: {
+        code: AutoBuyTriggerCustomErrorCodes.ExecutionLTVBiggerThanCurrentLTV,
+      },
+    },
+  )
   .refine(
     ({ triggers, triggerData }) => {
       const autoSellTrigger = triggers.triggers.aaveBasicSell
@@ -90,13 +91,12 @@ const upsertErrorsValidation = paramsSchema
         return true
       }
 
-      const autoSellExecutionLTV =
-        safeParseBigInt(autoSellTrigger.decodedParams.executionLtv) ?? 99n
+      const autosellTargetLTV = safeParseBigInt(autoSellTrigger.decodedParams.targetLtv) ?? 0n
 
-      return triggerData.targetLTV < autoSellExecutionLTV
+      return triggerData.executionLTV > autosellTargetLTV
     },
     {
-      message: 'Auto buy target higher than auto sell trigger',
+      message: 'Auto buy trigger lower than auto sell target',
       params: {
         code: AutoBuyTriggerCustomErrorCodes.AutoBuyTriggerLowerThanAutoSellTarget,
       },
@@ -209,8 +209,8 @@ const warningsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggerData }) => {
-      return triggerData.useMaxBuyPrice
+    ({ triggerData, position }) => {
+      return position.hasStablecoinDebt ? triggerData.useMaxBuyPrice : true
     },
     {
       message: 'Auto buy with no max price threshold',

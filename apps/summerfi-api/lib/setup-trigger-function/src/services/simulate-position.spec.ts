@@ -12,6 +12,7 @@ describe('simulatePosition', () => {
   it('should return consistent values', () => {
     const params: SimulatePositionParams = {
       position: {
+        hasStablecoinDebt: true,
         collateral: {
           balance: 10n * 10n ** 18n,
           token: {

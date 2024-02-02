@@ -4,6 +4,7 @@ import { PRICE_DECIMALS } from '../types'
 describe('calculateExecutionPrice', () => {
   it('should return value greater than 0', () => {
     const result = calculateCollateralPriceInDebtBasedOnLtv({
+      hasStablecoinDebt: true,
       collateral: {
         balance: 10n * 10n ** 18n,
         token: {
