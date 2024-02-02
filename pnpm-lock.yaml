@@ -285,8 +285,8 @@ importers:
         specifier: 0.1.16-dma-v2-workers.5
         version: 0.1.16-dma-v2-workers.5
       '@oasisdex/automation':
-        specifier: ^1.6.0-alpha.7
-        version: 1.6.0-alpha.7
+        specifier: ^1.6.0-alpha.8
+        version: 1.6.0-alpha.8
       '@oasisdex/dma-library':
         specifier: 0.5.21-dma-v2-workers.10
         version: 0.5.21-dma-v2-workers.10
@@ -4306,8 +4306,8 @@ packages:
     resolution: {integrity: sha512-HRTjoOdOcWslSFycgifqOvmhwgvHhTPJxnkQZRkB2qFMWstMYX10598iv+lZmFJ1XJz8Z7wyUL2oaLWl7cek2A==}
     dev: false
 
-  /@oasisdex/automation@1.6.0-alpha.7:
-    resolution: {integrity: sha512-/tKIzy/pKL78+4JB88Ez5Rbc0e3TlSmZcDbjrG/JZbN38GdIqXmVLEA+iuaQ+kbmD9yHlFkMaHGU86ryALcI3Q==}
+  /@oasisdex/automation@1.6.0-alpha.8:
+    resolution: {integrity: sha512-axplqDSz0eeQ9BRnGUKlzwr0k5rhIZ1EuMJEStRQjzSO2nN7Z77ojA5P7gZnC6LPNLPqlQc7Lt5M4lz4rFEXWQ==}
     dependencies:
       ethers: 5.6.2
     transitivePeerDependencies:
