@@ -3,7 +3,12 @@ import { getAddresses } from './get-addresses'
 import { Chain as ViemChain, createPublicClient, http, PublicClient } from 'viem'
 import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
 import { Logger } from '@aws-lambda-powertools/logger'
-import { AutoBuyEventBody, AutoSellEventBody, SetupTriggerEventBody } from '~types'
+import {
+  AutoBuyEventBody,
+  AutoSellEventBody,
+  SetupTriggerEventBody,
+  StopLossEventBody,
+} from '~types'
 import type { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import fetch from 'node-fetch'
 import memoize from 'just-memoize'
@@ -15,6 +20,7 @@ import { ServiceContainer } from './service-container'
 import { TriggerType } from '@oasisdex/automation'
 import { getAaveAutoBuyServiceContainer } from './get-aave-auto-buy-service-container'
 import { getAaveAutoSellServiceContainer } from './get-aave-auto-sell-service-container'
+import { getAaveStopLossServiceContainer } from './get-aave-stop-loss-service-container'
 
 export const rpcConfig: IRpcConfig = {
   skipCache: false,
@@ -38,6 +44,13 @@ function isAaveAutoBuy(trigger: SetupTriggerEventBody): trigger is AutoBuyEventB
 
 function isAaveAutoSell(trigger: SetupTriggerEventBody): trigger is AutoSellEventBody {
   return trigger.triggerData?.type === BigInt(TriggerType.DmaAaveBasicSellV2)
+}
+
+function isAaveStopLoss(trigger: SetupTriggerEventBody): trigger is StopLossEventBody {
+  return [
+    BigInt(TriggerType.DmaAaveStopLossToCollateralV2),
+    BigInt(TriggerType.DmaAaveStopLossToDebtV2),
+  ].includes(trigger.triggerData?.type)
 }
 
 export function buildServiceContainer<
@@ -95,6 +108,14 @@ export function buildServiceContainer<
       logger,
     }) as ServiceContainer<Trigger>
   }
-
+  if (isAaveStopLoss(trigger)) {
+    return getAaveStopLossServiceContainer({
+      rpc: publicClient,
+      addresses,
+      getTriggers,
+      logger,
+    }) as ServiceContainer<Trigger>
+  }
+  // @ts-ignore
   throw new Error(`Unsupported trigger type: ${trigger.triggerData?.type}`)
 }

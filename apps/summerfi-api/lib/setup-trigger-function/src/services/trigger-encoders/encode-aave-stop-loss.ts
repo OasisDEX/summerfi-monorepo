@@ -7,11 +7,11 @@ import {
   stringToBytes,
 } from 'viem'
 import { OPERATION_NAMES } from '@oasisdex/dma-library'
-import { DEFAULT_DEVIATION, MAX_COVERAGE_BASE } from './defaults'
+import { MAX_COVERAGE_BASE } from './defaults'
 import { automationBotAbi } from '~abi'
-import { AaveAutoSellTriggerData } from '~types'
+import { DmaStopLossTriggerData } from '~types'
 
-export const encodeAaveStopLoss: EncoderFunction<AaveAutoSellTriggerData> = (
+export const encodeAaveStopLoss: EncoderFunction<DmaStopLossTriggerData> = (
   position,
   triggerData,
   debtPriceInUSD,
@@ -24,14 +24,10 @@ export const encodeAaveStopLoss: EncoderFunction<AaveAutoSellTriggerData> = (
       'address debtToken, ' +
       'address collateralToken, ' +
       'bytes32 operationName, ' +
-      'uint256 executionLtv, ' +
-      'uint256 targetLTV, ' +
-      'uint256 minSellPrice, ' +
-      'uint64 deviation, ' +
-      'uint32 maxBaseFeeInGwei',
+      'uint256 executionLtv',
   )
 
-  const operationName = OPERATION_NAMES.aave.v3.ADJUST_RISK_DOWN
+  const operationName = OPERATION_NAMES.aave.v3.ADJUST_RISK_DOWN // TODO: is this valid?
   const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
 
   const encodedTriggerData = encodeAbiParameters(abiParameters, [
@@ -42,10 +38,6 @@ export const encodeAaveStopLoss: EncoderFunction<AaveAutoSellTriggerData> = (
     position.collateral.token.address,
     operationNameInBytes,
     triggerData.executionLTV,
-    triggerData.targetLTV,
-    triggerData.minSellPrice,
-    DEFAULT_DEVIATION, // 100 -> 1%
-    triggerData.maxBaseFee,
   ])
 
   const encodedTrigger = encodeFunctionData({

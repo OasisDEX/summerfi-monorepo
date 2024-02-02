@@ -48,7 +48,7 @@ export const safeParseBigInt = (value: string) => {
   return undefined
 }
 
-export const ltvSchema = bigIntSchema.refine((ltv) => ltv > 0n && ltv < 10_000n, {
+export const ltvSchema = bigIntSchema.refine((ltv) => ltv >= 0n && ltv < 10_000n, {
   params: {
     code: 'ltv-out-of-range',
   },
@@ -119,10 +119,22 @@ export const aaveBasicSellTriggerDataSchema = z
   )
 
 export const dmaStopLossTriggerDataSchema = z.object({
-  type: z
-    .any()
-    .optional()
-    .transform(() => 120n),
+  type: z.custom<bigint>((value) => {
+    // this check is run twice - once directly from the request with a string
+    // and then after the string is transformed to a bigint
+    // so we need to check both types
+    const allowedTypesStrings = [
+      TriggerType.DmaAaveStopLossToCollateralV2.toString(),
+      TriggerType.DmaAaveStopLossToDebtV2.toString(),
+    ]
+    if (typeof value === 'bigint') {
+      if (allowedTypesStrings.includes(value.toString())) return value
+    }
+    if (typeof value === 'string') {
+      if (allowedTypesStrings.includes(value)) return value
+    }
+    throw new Error(`Unsupported DMA StopLoss trigger type: ${value}`)
+  }).transform((value) => BigInt(value)),
   executionLTV: ltvSchema,
   token: addressSchema,
 })
