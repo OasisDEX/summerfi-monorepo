@@ -7,4 +7,9 @@ export type ContractAndDeploymentTransaction = Awaited<
 >
 export type DeploymentTransaction = ContractAndDeploymentTransaction['deploymentTransaction']
 export type PublicClient = Awaited<ReturnType<typeof viem.getPublicClient>>
+export type TestClient = Awaited<ReturnType<typeof viem.getTestClient>>
 export type TransactionReceipt = Awaited<ReturnType<PublicClient['getTransactionReceipt']>>
+
+export type CurrentBlock = Awaited<ReturnType<PublicClient['getBlock']>>
+export type BlockNumber = Awaited<ReturnType<PublicClient['getBlockNumber']>>
+export type Quantity = Awaited<ReturnType<TestClient['increaseTime']>>

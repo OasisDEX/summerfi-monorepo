@@ -368,11 +368,41 @@ importers:
         specifier: workspace:*
         version: link:../typescript-config
 
+  packages/contracts-utils:
+    devDependencies:
+      '@ethersproject/keccak256':
+        specifier: ^5.7.0
+        version: 5.7.0
+      '@nomicfoundation/hardhat-toolbox-viem':
+        specifier: ^2.0.0
+        version: 2.0.0(@nomicfoundation/hardhat-network-helpers@1.0.10)(@nomicfoundation/hardhat-verify@2.0.4)(@nomicfoundation/hardhat-viem@1.0.3)(@types/chai-as-promised@7.1.8)(@types/chai@4.3.11)(@types/mocha@10.0.6)(@types/node@20.11.5)(chai@4.4.1)(hardhat-gas-reporter@1.0.10)(hardhat@2.19.5)(solidity-coverage@0.8.6)(ts-node@10.9.2)(typescript@5.0.4)(viem@1.21.4)
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@summerfi/hardhat-utils':
+        specifier: workspace:*
+        version: link:../hardhat-utils
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      hardhat:
+        specifier: ^2.19.5
+        version: 2.19.5(ts-node@10.9.2)(typescript@5.0.4)
+
   packages/core-contracts:
     devDependencies:
       '@nomicfoundation/hardhat-toolbox-viem':
         specifier: ^2.0.0
         version: 2.0.0(@nomicfoundation/hardhat-network-helpers@1.0.10)(@nomicfoundation/hardhat-verify@2.0.4)(@nomicfoundation/hardhat-viem@1.0.3)(@types/chai-as-promised@7.1.8)(@types/chai@4.3.11)(@types/mocha@10.0.6)(@types/node@20.11.5)(chai@4.4.1)(hardhat-gas-reporter@1.0.10)(hardhat@2.19.5)(solidity-coverage@0.8.6)(ts-node@10.9.2)(typescript@5.0.4)(viem@2.7.1)
+      '@openzeppelin/contracts':
+        specifier: 4.9.3
+        version: 4.9.3
+      '@prb/math':
+        specifier: 2.5.0
+        version: 2.5.0(@ethersproject/bignumber@5.7.0)(evm-bn@1.1.2)(mathjs@10.6.4)
+      '@summerfi/contracts-utils':
+        specifier: workspace:*
+        version: link:../contracts-utils
       '@summerfi/deployment-utils':
         specifier: workspace:*
         version: link:../deployment-utils
@@ -388,6 +418,9 @@ importers:
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.11
+      dotenv:
+        specifier: ^16.3.1
+        version: 16.3.1
       hardhat:
         specifier: ^2.19.5
         version: 2.19.5(ts-node@10.9.2)(typescript@5.0.4)
@@ -430,7 +463,13 @@ importers:
     devDependencies:
       '@nomicfoundation/hardhat-toolbox-viem':
         specifier: ^2.0.0
-        version: 2.0.0(@nomicfoundation/hardhat-network-helpers@1.0.10)(@nomicfoundation/hardhat-verify@2.0.4)(@nomicfoundation/hardhat-viem@1.0.3)(@types/chai-as-promised@7.1.8)(@types/chai@4.3.11)(@types/mocha@10.0.6)(@types/node@20.11.5)(chai@4.4.1)(hardhat-gas-reporter@1.0.10)(hardhat@2.19.5)(solidity-coverage@0.8.6)(ts-node@10.9.2)(typescript@5.0.4)(viem@2.7.1)
+        version: 2.0.0(@nomicfoundation/hardhat-network-helpers@1.0.10)(@nomicfoundation/hardhat-verify@2.0.4)(@nomicfoundation/hardhat-viem@1.0.3)(@types/chai-as-promised@7.1.8)(@types/chai@4.3.11)(@types/mocha@10.0.6)(@types/node@20.11.5)(chai@4.4.1)(hardhat-gas-reporter@1.0.10)(hardhat@2.19.5)(solidity-coverage@0.8.6)(ts-node@10.9.2)(typescript@5.0.4)(viem@1.21.4)
+      '@summerfi/common':
+        specifier: workspace:*
+        version: link:../common
+      '@summerfi/contracts-utils':
+        specifier: workspace:*
+        version: link:../contracts-utils
       '@summerfi/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
@@ -443,9 +482,6 @@ importers:
       hardhat:
         specifier: ^2.19.5
         version: 2.19.5(ts-node@10.9.2)(typescript@5.0.4)
-      viem:
-        specifier: ^2.7.1
-        version: 2.7.1(typescript@5.0.4)
 
   packages/eslint-config:
     devDependencies:
@@ -5207,6 +5243,10 @@ packages:
       - utf-8-validate
     dev: false
 
+  /@openzeppelin/contracts@4.9.3:
+    resolution: {integrity: sha512-He3LieZ1pP2TNt5JbkPA4PNT9WC3gOTOlDcFGJW4Le4QKqwmiNJCRt44APfxMxvq7OugU/cqYuPcSBzOw38DAg==}
+    dev: true
+
   /@peculiar/asn1-schema@2.3.8:
     resolution: {integrity: sha512-ULB1XqHKx1WBU/tTFIA+uARuRoBVZ4pNdOA878RDrRbBfBGcSzi5HBkdScC6ZbHn8z7L8gmKCgPC1LHRrP46tA==}
     dependencies:
@@ -5243,6 +5283,19 @@ packages:
   /@pkgr/core@0.1.0:
     resolution: {integrity: sha512-Zwq5OCzuwJC2jwqmpEQt7Ds1DTi6BWSwoGkbb1n9pO3hzb35BoJELx7c0T23iDkBGkh2e7tvOtjF3tr3OaQHDQ==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
+    dev: true
+
+  /@prb/math@2.5.0(@ethersproject/bignumber@5.7.0)(evm-bn@1.1.2)(mathjs@10.6.4):
+    resolution: {integrity: sha512-iSNQd4L3HaYuAIhJliLVa7WGsyjFiQHGpomrFgdj7FhYGHT6Yo8bBwbmwAPF1bHD3LN8gdg+ssKrRUPNaNPEVw==}
+    peerDependencies:
+      '@ethersproject/bignumber': 5.x
+      evm-bn: 1.x
+      mathjs: 10.x
+    dependencies:
+      '@ethersproject/bignumber': 5.7.0
+      decimal.js: 10.4.3
+      evm-bn: 1.1.2(@ethersproject/bignumber@5.7.0)
+      mathjs: 10.6.4
     dev: true
 
   /@repeaterjs/repeater@3.0.4:
@@ -7989,6 +8042,10 @@ packages:
     engines: {node: '>=4.0.0'}
     dev: true
 
+  /complex.js@2.1.1:
+    resolution: {integrity: sha512-8njCHOTtFFLtegk6zQo0kkVX1rngygb/KQI6z1qZxlFI3scluC+LVTCFbrkWjBv4vvLlbQ9t88IPMC6k95VTTg==}
+    dev: true
+
   /compress-commons@4.1.2:
     resolution: {integrity: sha512-D3uMHtGc/fcO1Gt1/L7i1e33VOvD4A9hfQLP+6ewd+BvG/gQ84Yh4oftEhAdjSMgBgwGL+jsppT7JYNpo6MHHg==}
     engines: {node: '>= 10'}
@@ -8266,6 +8323,10 @@ packages:
   /decamelize@4.0.0:
     resolution: {integrity: sha512-9iE1PgSik9HeIIw2JO94IidnE3eBoQrFJ3w7sFuzSX4DpmZ3v5sZpUiV5Swcf6mQEF+Y0ru8Neo+p+nyh2J+hQ==}
     engines: {node: '>=10'}
+    dev: true
+
+  /decimal.js@10.4.3:
+    resolution: {integrity: sha512-VBBaLc1MgL5XpzgIP7ny5Z6Nx3UrRkIViUkPUdtl9aya5amy3De1gsUUSB1g3+3sExYNjCAsAznmukyxCb1GRA==}
     dev: true
 
   /dedent@1.5.1:
@@ -8732,6 +8793,10 @@ packages:
 
   /escape-html@1.0.3:
     resolution: {integrity: sha512-NiSupZ4OeuGwr68lGIeym/ksIZMJodUGOSCZ/FSnTxcrekbvqrgdUxlJOMpijaKZVjAJrWrGs/6Jy8OMuyj9ow==}
+    dev: true
+
+  /escape-latex@1.2.0:
+    resolution: {integrity: sha512-nV5aVWW1K0wEiUIEdZ4erkGGH8mDxGyxSeqPzRNtWP7ataw+/olFObw7hujFWlVjNsaDFw5VZ5NzVSIqRgfTiw==}
     dev: true
 
   /escape-string-regexp@1.0.5:
@@ -9409,6 +9474,15 @@ packages:
     engines: {node: '>=0.4.x'}
     dev: true
 
+  /evm-bn@1.1.2(@ethersproject/bignumber@5.7.0):
+    resolution: {integrity: sha512-Lq8CT1EAjSeN+Yk0h1hpSwnZyMA4Xir6fQD4vlStljAuW2xr7qLOEGDLGsTa9sU2e40EYIumA4wYhMC/e+lyKw==}
+    peerDependencies:
+      '@ethersproject/bignumber': 5.x
+    dependencies:
+      '@ethersproject/bignumber': 5.7.0
+      from-exponential: 1.1.1
+    dev: true
+
   /evp_bytestokey@1.0.3:
     resolution: {integrity: sha512-/f2Go4TognH/KvCISP7OUsHn85hT9nUkxxA9BEWxFn+Oj9o8ZNLm/40hdlgSLyuOimsrTKLUMEorQexp/aPQeA==}
     dependencies:
@@ -9736,9 +9810,17 @@ packages:
     resolution: {integrity: sha512-H5KQDspykdHuztLTg+ajGN0Z2qUjcEf3Ybxc6hLt0k7/zPkn29XnKnxlBPyW2XIddWrGaJBzBl4VLYOtk39yZg==}
     dev: true
 
+  /fraction.js@4.3.7:
+    resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
+    dev: true
+
   /fresh@0.5.2:
     resolution: {integrity: sha512-zJ2mQYM18rEFOudeV4GShTGIQ7RbzA7ozbU9I/XBpm7kqgMywgmylMwXHxZJmkVoYkna9d2pVXVXPdYTP9ej8Q==}
     engines: {node: '>= 0.6'}
+    dev: true
+
+  /from-exponential@1.1.1:
+    resolution: {integrity: sha512-VBE7f5OVnYwdgB3LHa+Qo29h8qVpxhVO9Trlc+AWm+/XNAgks1tAwMFHb33mjeiof77GglsJzeYF7OqXrROP/A==}
     dev: true
 
   /from@0.1.7:
@@ -11027,6 +11109,10 @@ packages:
       '@pkgjs/parseargs': 0.11.0
     dev: true
 
+  /javascript-natural-sort@0.7.1:
+    resolution: {integrity: sha512-nO6jcEfZWQXDhOiBtG2KvKyEptz7RVbpGP4vTD2hLBdmNQSsCiicO2Ioinv6UI4y9ukqnBpy+XZ9H6uLNgJTlw==}
+    dev: true
+
   /jest-changed-files@29.7.0:
     resolution: {integrity: sha512-fEArFiwf1BpQ+4bXSprcDc3/x4HSzL4al2tozwVpDFpsxALjLYdyiIK4e5Vz66GQJIbXJ82+35PtysofptNX2w==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -11947,6 +12033,22 @@ packages:
 
   /markdown-table@1.1.3:
     resolution: {integrity: sha512-1RUZVgQlpJSPWYbFSpmudq5nHY1doEIv89gBtF0s4gW1GF2XorxcA/70M5vq7rLv0a6mhOUccRsqkwhwLCIQ2Q==}
+    dev: true
+
+  /mathjs@10.6.4:
+    resolution: {integrity: sha512-omQyvRE1jIy+3k2qsqkWASOcd45aZguXZDckr3HtnTYyXk5+2xpVfC3kATgbO2Srjxlqww3TVdhD0oUdZ/hiFA==}
+    engines: {node: '>= 14'}
+    hasBin: true
+    dependencies:
+      '@babel/runtime': 7.23.8
+      complex.js: 2.1.1
+      decimal.js: 10.4.3
+      escape-latex: 1.2.0
+      fraction.js: 4.3.7
+      javascript-natural-sort: 0.7.1
+      seedrandom: 3.0.5
+      tiny-emitter: 2.1.0
+      typed-function: 2.1.0
     dev: true
 
   /mcl-wasm@0.7.9:
@@ -13432,6 +13534,10 @@ packages:
       node-gyp-build: 4.8.0
     dev: true
 
+  /seedrandom@3.0.5:
+    resolution: {integrity: sha512-8OwmbklUNzwezjGInmZ+2clQmExQPvomqjL7LFqOYqtmuxRgQYqOD3mHaU+MvZn5FLUeVxVfQjwLZW/n/JFuqg==}
+    dev: true
+
   /semver@5.7.2:
     resolution: {integrity: sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g==}
     hasBin: true
@@ -14215,6 +14321,10 @@ packages:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
     dev: true
 
+  /tiny-emitter@2.1.0:
+    resolution: {integrity: sha512-NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q==}
+    dev: true
+
   /tiny-invariant@1.3.1:
     resolution: {integrity: sha512-AD5ih2NlSssTCwsMznbvwMZpJ1cbhkGd2uueNxzv2jDlEeZdU04JQfRnggJQ8DrcVBGjAsCKwFBbDlVNtEMlzw==}
     dev: false
@@ -14552,6 +14662,11 @@ packages:
       call-bind: 1.0.5
       for-each: 0.3.3
       is-typed-array: 1.1.12
+    dev: true
+
+  /typed-function@2.1.0:
+    resolution: {integrity: sha512-bctQIOqx2iVbWGDGPWwIm18QScpu2XRmkC19D8rQGFsjKSgteq/o1hTZvIG/wuDq8fanpBDrLkLq+aEN/6y5XQ==}
+    engines: {node: '>= 10'}
     dev: true
 
   /typedarray@0.0.6:

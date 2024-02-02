@@ -1,26 +1,26 @@
 import hre from 'hardhat'
-import { GetBlockReturnType, Chain, Quantity, GetBlockNumberReturnType } from 'viem'
+import { BlockNumber, CurrentBlock, Quantity } from '~deployment-utils'
 
 export async function fastForwardChain(seconds: number): Promise<Quantity> {
   const testClient = await hre.viem.getTestClient()
   return testClient.increaseTime({ seconds })
 }
 
-export async function getCurrentBlock(): Promise<GetBlockReturnType<Chain, false, 'latest'>> {
+export async function getCurrentBlock(): Promise<CurrentBlock> {
   const publicClient = await hre.viem.getPublicClient()
   return publicClient.getBlock()
 }
 
-export async function getCurrentTimestamp(): Promise<GetBlockNumberReturnType> {
+export async function getCurrentTimestamp(): Promise<BlockNumber> {
   const publicClient = await hre.viem.getPublicClient()
   return publicClient.getBlockNumber()
 }
 
-export async function getNextTimestamp(): Promise<GetBlockNumberReturnType> {
+export async function getNextTimestamp(): Promise<BlockNumber> {
   return (await getCurrentTimestamp()) + 1n
 }
 
-export async function getLastTimestamp(): Promise<GetBlockNumberReturnType> {
+export async function getLastTimestamp(): Promise<BlockNumber> {
   return (await getCurrentTimestamp()) - 1n
 }
 

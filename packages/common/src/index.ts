@@ -7,3 +7,4 @@ export {
   LEAP_YEAR_IN_SECONDS,
 } from './time'
 export type { RecursivePartial } from './recursive-partial'
+export type { Address } from './address'

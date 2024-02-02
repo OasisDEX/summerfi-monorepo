@@ -36,4 +36,9 @@ export type {
   PublicClient,
   TransactionReceipt,
   WalletClient,
+  TestClient,
+  BlockNumber,
+  CurrentBlock,
+  Quantity,
 } from './viem-types'
+export { verifyContract } from './verify-contract'

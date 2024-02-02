@@ -1,9 +1,4 @@
-import { resolve } from 'path'
-
-import { config as dotenvConfig } from 'dotenv'
 import type { HardhatNetworkUserConfig, NetworkUserConfig } from 'hardhat/types'
-
-dotenvConfig({ path: resolve(__dirname, './.env') })
 
 export type AutoOptions = {
   goerli: 'auto' | number
@@ -144,7 +139,7 @@ if (endpointProvider === 'infura') {
 
 if (endpointProvider === 'alchemy') {
   if (!process.env.ALCHEMY_ENDPOINT_API_KEY) {
-    throw new Error('Please set your VITE_ALCHEMY_KEY in a .env file')
+    throw new Error('Please set your ALCHEMY_ENDPOINT_API_KEY in a .env file')
   }
   endpointApiKey = process.env.ALCHEMY_ENDPOINT_API_KEY
 }

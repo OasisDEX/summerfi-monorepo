@@ -17,8 +17,8 @@ import {
   ProviderTypes,
   DirectoryFilterType,
 } from './types'
-import { verify } from '@summerfi/hardhat-utils'
-import { toCamelCase } from '~contracts-utils'
+import { verifyContract } from './verify-contract'
+import { toCamelCase } from '~deployment-utils'
 import { viem } from 'hardhat'
 import { Contract, DeploymentTransaction, TransactionReceipt, WalletClient } from './viem-types'
 import {
@@ -33,7 +33,7 @@ import {
   isDeploymentParams,
   isWalletClient,
 } from './utils'
-import { Address } from 'viem'
+import { Address } from '@summerfi/common'
 
 export class Deployments {
   public readonly deploymentType: DeploymentType
@@ -291,7 +291,7 @@ export class Deployments {
     const parameters: unknown[] = args
 
     try {
-      await verify(address, parameters)
+      await verifyContract(address, parameters)
     } catch (error) {
       console.log('Error verifying contract: ' + error)
     }
