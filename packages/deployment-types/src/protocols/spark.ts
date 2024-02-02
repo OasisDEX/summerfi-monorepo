@@ -1,4 +1,4 @@
-import { MiscDependencyConfigEntry, SystemConfigEntry } from '~deployment-config'
+import { ProtocolConfigActionEntry, ProtocolConfigDependencyEntry } from './protocols'
 
 export type SparkContractNames = 'PoolDataProvider' | 'LendingPool' | 'Oracle'
 export type SparkActionNames =
@@ -8,8 +8,8 @@ export type SparkActionNames =
   | `SparkPayback`
   | `SparkSetEMode`
 
-export type SparkProtocolConfig = Record<SparkContractNames, MiscDependencyConfigEntry>
-export type SparkActionsConfig = Record<SparkActionNames, SystemConfigEntry>
+export type SparkProtocolConfig = Record<SparkContractNames, ProtocolConfigDependencyEntry>
+export type SparkActionsConfig = Record<SparkActionNames, ProtocolConfigActionEntry>
 
 export type SparkConfig = {
   protocol: SparkProtocolConfig

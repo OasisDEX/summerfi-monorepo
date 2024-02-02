@@ -1,6 +1,6 @@
-import { SystemCoreConfigType } from '@summerfi/deployment-types'
+import { SystemCoreConfig } from '@summerfi/deployment-types'
 
-export const CoreConfig: SystemCoreConfigType = {
+export const CoreConfiguration: SystemCoreConfig = {
   ServiceRegistry: {
     name: 'ServiceRegistry',
     addToRegistry: true,

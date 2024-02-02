@@ -1,10 +1,10 @@
-import { MiscDependencyConfigEntry, SystemConfigEntry } from '~deployment-config'
+import { ProtocolConfigActionEntry, ProtocolConfigDependencyEntry } from './protocols'
 
 export type AaveV2ContractNames = 'PoolDataProvider' | 'LendingPool' | 'Oracle' | 'WETHGateway'
 export type AaveV2ActionNames = 'AaveBorrow' | 'AaveDeposit' | 'AaveWithdraw' | `AavePayback`
 
-export type AaveV2ProtocolConfig = Record<AaveV2ContractNames, MiscDependencyConfigEntry>
-export type AaaveV2ActionsConfig = Record<AaveV2ActionNames, SystemConfigEntry>
+export type AaveV2ProtocolConfig = Record<AaveV2ContractNames, ProtocolConfigDependencyEntry>
+export type AaaveV2ActionsConfig = Record<AaveV2ActionNames, ProtocolConfigActionEntry>
 
 export type AaveV2Config = {
   protocol: AaveV2ProtocolConfig

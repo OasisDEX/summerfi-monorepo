@@ -1,6 +1,6 @@
-import { SystemActionConfigType } from '@summerfi/deployment-types'
+import { SystemActionConfig } from '@summerfi/deployment-types'
 
-export const ActionsConfig: SystemActionConfigType = {
+export const ActionsConfiguration: SystemActionConfig = {
   PositionCreated: {
     name: 'PositionCreated',
     addToRegistry: true,

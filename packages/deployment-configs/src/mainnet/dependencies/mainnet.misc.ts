@@ -1,6 +1,6 @@
-import { MiscDependencyConfigType } from '@summerfi/deployment-types'
+import { MiscDependencyConfig } from '@summerfi/deployment-types'
 
-export const MiscDependenciesConfig: MiscDependencyConfigType = {
+export const MiscDependenciesConfiguration: MiscDependencyConfig = {
   GnosisSafe: {
     name: 'GnosisSafe',
     address: '0x85f9b7408afE6CEb5E46223451f5d4b832B522dc',

@@ -1,9 +1,9 @@
-import { DependencyConfigType } from '~deployment-config'
-import { ProtocolsConfigType } from '~deployment-config'
-import { SystemConfigType } from './system/system'
+import { DependencyConfig } from '~deployment-config'
+import { ProtocolsConfig } from '~deployment-config'
+import { SystemConfig } from './system/system'
 
 export type Config = {
-  system: SystemConfigType
-  dependencies: DependencyConfigType
-  protocols: ProtocolsConfigType
+  system: SystemConfig
+  dependencies: DependencyConfig
+  protocols: ProtocolsConfig
 }

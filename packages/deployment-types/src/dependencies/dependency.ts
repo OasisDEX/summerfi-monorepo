@@ -14,10 +14,10 @@ export type TokenDependencyConfigEntry = {
   addToRegistry?: boolean
 }
 
-export type MiscDependencyConfigType = Record<MiscDependencyNames, MiscDependencyConfigEntry>
-export type TokenDependencyConfigType = Record<TokenDependencyNames, TokenDependencyConfigEntry>
+export type MiscDependencyConfig = Record<MiscDependencyNames, MiscDependencyConfigEntry>
+export type TokenDependencyConfig = Record<TokenDependencyNames, TokenDependencyConfigEntry>
 
-export type DependencyConfigType = {
-  misc: MiscDependencyConfigType
-  tokens: TokenDependencyConfigType
+export type DependencyConfig = {
+  misc: MiscDependencyConfig
+  tokens: TokenDependencyConfig
 }

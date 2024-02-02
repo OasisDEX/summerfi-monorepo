@@ -1,6 +1,6 @@
-import { SystemAutomationConfigType } from '@summerfi/deployment-types'
+import { SystemAutomationConfig } from '@summerfi/deployment-types'
 
-export const AutomationConfig: SystemAutomationConfigType = {
+export const AutomationConfiguration: SystemAutomationConfig = {
   AutomationBot: {
     name: 'AutomationBot',
     addToRegistry: true,

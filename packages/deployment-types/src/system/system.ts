@@ -10,12 +10,12 @@ export type SystemConfigEntry = {
   constructorArgs?: Array<number | string>
 }
 
-export type SystemCoreConfigType = Record<SystemCoreNames, SystemConfigEntry>
-export type SystemActionConfigType = Record<SystemActionNames, SystemConfigEntry>
-export type SystemAutomationConfigType = Record<SystemAutomationNames, SystemConfigEntry>
+export type SystemCoreConfig = Record<SystemCoreNames, SystemConfigEntry>
+export type SystemActionConfig = Record<SystemActionNames, SystemConfigEntry>
+export type SystemAutomationConfig = Record<SystemAutomationNames, SystemConfigEntry>
 
-export type SystemConfigType = {
-  core: SystemCoreConfigType
-  actions: SystemActionConfigType
-  automation: SystemAutomationConfigType
+export type SystemConfig = {
+  core: SystemCoreConfig
+  actions: SystemActionConfig
+  automation: SystemAutomationConfig
 }

@@ -1,10 +1,10 @@
-import { SystemConfigType } from '@summerfi/deployment-types'
-import { CoreConfig } from './core.conf'
-import { ActionsConfig } from './actions.conf'
-import { AutomationConfig } from './automation.conf'
+import { SystemConfig } from '@summerfi/deployment-types'
+import { CoreConfiguration } from './core.conf'
+import { ActionsConfiguration } from './actions.conf'
+import { AutomationConfiguration } from './automation.conf'
 
-export const SystemConfig: SystemConfigType = {
-  core: CoreConfig,
-  actions: ActionsConfig,
-  automation: AutomationConfig,
+export const SystemConfiguration: SystemConfig = {
+  core: CoreConfiguration,
+  actions: ActionsConfiguration,
+  automation: AutomationConfiguration,
 }

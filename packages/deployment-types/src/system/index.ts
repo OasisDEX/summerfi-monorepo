@@ -3,9 +3,9 @@ export type { SystemAutomationNames } from './automation'
 export type { SystemCoreNames } from './core'
 export type {
   SystemConfigEntry,
-  SystemConfigType,
+  SystemConfig,
   SystemNames,
-  SystemActionConfigType,
-  SystemAutomationConfigType,
-  SystemCoreConfigType,
+  SystemActionConfig,
+  SystemAutomationConfig,
+  SystemCoreConfig,
 } from './system'

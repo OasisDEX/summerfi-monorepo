@@ -1,4 +1,4 @@
-import { MiscDependencyConfigEntry, SystemConfigEntry } from '~deployment-config'
+import { ProtocolConfigActionEntry, ProtocolConfigDependencyEntry } from './protocols'
 
 export type AjnaActionNames = 'AjnaDepositBorrow' | 'AjnaRepayWithdraw'
 
@@ -44,8 +44,8 @@ export type AjnaContractNames =
   | 'AjnaBonusRewardsReedemer'
   | 'ERC20PoolFactory'
 
-export type AjnaProtocolConfig = Record<AjnaContractNames, MiscDependencyConfigEntry>
-export type AjnaActionsConfig = Record<AjnaActionNames, SystemConfigEntry>
+export type AjnaProtocolConfig = Record<AjnaContractNames, ProtocolConfigDependencyEntry>
+export type AjnaActionsConfig = Record<AjnaActionNames, ProtocolConfigActionEntry>
 
 export type AjnaConfig = {
   protocol: AjnaProtocolConfig

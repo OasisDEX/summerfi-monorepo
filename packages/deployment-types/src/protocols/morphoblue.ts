@@ -1,4 +1,4 @@
-import { MiscDependencyConfigEntry, SystemConfigEntry } from '~deployment-config'
+import { ProtocolConfigActionEntry, ProtocolConfigDependencyEntry } from './protocols'
 
 export type MorphoBlueContractNames = 'MorphoBlue' | 'AdaptiveCurveIrm'
 
@@ -8,8 +8,11 @@ export type MorphoBlueActionNames =
   | `MorphoBlueWithdraw`
   | `MorphoBluePayback`
 
-export type MorphoBlueProtocolConfig = Record<MorphoBlueContractNames, MiscDependencyConfigEntry>
-export type MorphoBlueActionsConfig = Record<MorphoBlueActionNames, SystemConfigEntry>
+export type MorphoBlueProtocolConfig = Record<
+  MorphoBlueContractNames,
+  ProtocolConfigDependencyEntry
+>
+export type MorphoBlueActionsConfig = Record<MorphoBlueActionNames, ProtocolConfigActionEntry>
 
 export type MorphoBlueConfig = {
   protocol: MorphoBlueProtocolConfig
