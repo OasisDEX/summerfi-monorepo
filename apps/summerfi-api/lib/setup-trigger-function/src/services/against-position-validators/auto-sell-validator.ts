@@ -232,8 +232,8 @@ const warningsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggerData }) => {
-      return triggerData.useMinSellPrice
+    ({ triggerData, position }) => {
+      return position.hasStablecoinDebt ? triggerData.useMinSellPrice : true
     },
     {
       message: 'No min sell price',
@@ -244,8 +244,10 @@ const warningsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggerData, triggers }) => {
-      return !triggerData.useMinSellPrice && triggers.triggers.aaveStopLossToDebt === undefined
+    ({ triggerData, triggers, position }) => {
+      return position.hasStablecoinDebt
+        ? !triggerData.useMinSellPrice && triggers.triggers.aaveStopLossToDebt === undefined
+        : true
     },
     {
       message: 'No min sell price when stop loss enabled',
