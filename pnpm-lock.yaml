@@ -279,11 +279,11 @@ importers:
         specifier: ^1.17.0
         version: 1.17.0
       '@oasisdex/addresses':
-        specifier: 0.1.16-dma-v2-workers.3
-        version: 0.1.16-dma-v2-workers.3
+        specifier: 0.1.16-dma-v2-workers.5
+        version: 0.1.16-dma-v2-workers.5
       '@oasisdex/dma-library':
-        specifier: 0.5.21-dma-v2-workers.8
-        version: 0.5.21-dma-v2-workers.8
+        specifier: 0.5.21-dma-v2-workers.10
+        version: 0.5.21-dma-v2-workers.10
       '@summerfi/serverless-contracts':
         specifier: workspace:*
         version: link:../../../../packages/serverless-contracts
@@ -4292,16 +4292,16 @@ packages:
       fastq: 1.16.0
     dev: true
 
-  /@oasisdex/addresses@0.1.16-dma-v2-workers.3:
-    resolution: {integrity: sha512-p9K7QI+H3U+Cs+YbnkBiEP/tbFPTyWmQkz6G1FSxZzpOSzlaRumZ2Mmz+0MXFWr/k/TMQsV1XIw+ty1l5rXVkQ==}
+  /@oasisdex/addresses@0.1.16-dma-v2-workers.5:
+    resolution: {integrity: sha512-4vSrvelvpi4YrCnaC978aW6Ubg3cf1DZ/fsSxV0ZaEVbRyxMtIC0wVoe7SaoqPj+TIOrNFcyXwQhDanZcUnAPA==}
     dev: false
 
   /@oasisdex/addresses@0.1.36:
     resolution: {integrity: sha512-HRTjoOdOcWslSFycgifqOvmhwgvHhTPJxnkQZRkB2qFMWstMYX10598iv+lZmFJ1XJz8Z7wyUL2oaLWl7cek2A==}
     dev: false
 
-  /@oasisdex/dma-library@0.5.21-dma-v2-workers.8:
-    resolution: {integrity: sha512-omRfe3TAG5oB/MXU5q/DGRTL0zi9kbg/ueOtTSLmjMG/0MZhfD+qW5PX1CgbjEnbbYRjI1AKwGAsBvmEyo7jUw==}
+  /@oasisdex/dma-library@0.5.21-dma-v2-workers.10:
+    resolution: {integrity: sha512-zVI5n3ixjBaPzQOA6SKwvflPWwEYdrFAi+z9LLRmr+ShKTVISFmdhDqi9jN3yWgYzGMcKYhQH0aZXf2bIErNEw==}
     dependencies:
       bignumber.js: 9.0.1
       ethers: 5.6.2
