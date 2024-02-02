@@ -48,6 +48,17 @@ const upsertErrorsValidation = paramsSchema
       path: ['triggerData', 'minSellPrice'],
     },
   )
+  // .refine(
+  //   ({ position, triggerData }) => {
+  //     return position.ltv + ONE_PERCENT < triggerData.executionLTV
+  //   },
+  //   {
+  //     message: 'Execution LTV is bigger than current LTV',
+  //     params: {
+  //       code: AutoSellTriggerCustomErrorCodes.ExecutionLTVLowerThanCurrentLTV,
+  //     },
+  //   },
+  //)
   .refine(
     ({ triggerData }) => {
       return triggerData.targetLTV < triggerData.executionLTV
@@ -66,12 +77,12 @@ const upsertErrorsValidation = paramsSchema
         return true
       }
 
-      const autoBuyTargetLTV = safeParseBigInt(autoBuyTrigger.decodedParams.targetLtv) ?? 0n
+      const autoBuyExecutionLTV = safeParseBigInt(autoBuyTrigger.decodedParams.executionLtv) ?? 0n
 
-      return triggerData.executionLTV < autoBuyTargetLTV
+      return triggerData.targetLTV > autoBuyExecutionLTV
     },
     {
-      message: 'Auto sell trigger cannot be higher than auto buy target',
+      message: 'Auto sell target cannot be lower than auto buy trigger',
       params: {
         code: AutoSellTriggerCustomErrorCodes.AutoSellTriggerHigherThanAutoBuyTarget,
       },
@@ -153,7 +164,7 @@ const deleteErrorsValidation = paramsSchema.refine(
 const warningsValidation = paramsSchema
   .refine(
     ({ triggerData, position }) => {
-      return position.ltv < triggerData.executionLTV
+      return position.ltv <= triggerData.executionLTV
     },
     {
       message: 'Auto sell triggered immediately',
@@ -223,6 +234,18 @@ const warningsValidation = paramsSchema
   .refine(
     ({ triggerData }) => {
       return triggerData.useMinSellPrice
+    },
+    {
+      message: 'No min sell price',
+      params: {
+        code: AutoSellTriggerCustomWarningCodes.AutoSellWithNoMinPriceThreshold,
+      },
+      path: ['triggerData', 'minSellPrice'],
+    },
+  )
+  .refine(
+    ({ triggerData, triggers }) => {
+      return !triggerData.useMinSellPrice && triggers.triggers.aaveStopLossToDebt === undefined
     },
     {
       message: 'No min sell price when stop loss enabled',

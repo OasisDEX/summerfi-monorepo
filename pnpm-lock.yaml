@@ -176,6 +176,9 @@ importers:
       eslint:
         specifier: ^8.56.0
         version: 8.56.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.11.5)
 
   apps/summerfi-api/lib/portfolio-assets-function:
     dependencies:
@@ -281,6 +284,9 @@ importers:
       '@oasisdex/addresses':
         specifier: 0.1.16-dma-v2-workers.5
         version: 0.1.16-dma-v2-workers.5
+      '@oasisdex/automation':
+        specifier: ^1.6.0-alpha.6
+        version: 1.6.0-alpha.6
       '@oasisdex/dma-library':
         specifier: 0.5.21-dma-v2-workers.10
         version: 0.5.21-dma-v2-workers.10
@@ -4298,6 +4304,15 @@ packages:
 
   /@oasisdex/addresses@0.1.36:
     resolution: {integrity: sha512-HRTjoOdOcWslSFycgifqOvmhwgvHhTPJxnkQZRkB2qFMWstMYX10598iv+lZmFJ1XJz8Z7wyUL2oaLWl7cek2A==}
+    dev: false
+
+  /@oasisdex/automation@1.6.0-alpha.6:
+    resolution: {integrity: sha512-kf4n05GUSLpcEmkGVae9SgdUI3X9Z+CtnufoAMKm4OdELfyKqtkgIUjfdHTw2w5YgUWevrYJh7GM5asLc22+0w==}
+    dependencies:
+      ethers: 5.6.2
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
     dev: false
 
   /@oasisdex/dma-library@0.5.21-dma-v2-workers.10:

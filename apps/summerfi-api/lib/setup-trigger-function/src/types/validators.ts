@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { addressSchema, urlOptionalSchema } from '@summerfi/serverless-shared/validators'
 import { ChainId, ProtocolId } from '@summerfi/serverless-shared/domain-types'
 import { AutoBuyTriggerCustomErrorCodes, AutoSellTriggerCustomErrorCodes } from './types'
+import { TriggerType } from '@oasisdex/automation'
 
 export const PRICE_DECIMALS = 8n
 export const PERCENT_DECIMALS = 4n
@@ -70,7 +71,7 @@ export const aaveBasicBuyTriggerDataSchema = z
     type: z
       .any()
       .optional()
-      .transform(() => 119n),
+      .transform(() => BigInt(TriggerType.DmaAaveBasicBuyV2)),
     executionLTV: ltvSchema,
     targetLTV: ltvSchema,
     maxBuyPrice: priceSchema.optional().default(maxUnit256),
@@ -96,7 +97,7 @@ export const aaveBasicSellTriggerDataSchema = z
     type: z
       .any()
       .optional()
-      .transform(() => 120n),
+      .transform(() => BigInt(TriggerType.DmaAaveBasicSellV2)),
     executionLTV: ltvSchema,
     targetLTV: ltvSchema,
     minSellPrice: priceSchema.optional().default(0n),
@@ -133,11 +134,17 @@ export const positionAddressesSchema = z.object({
   debt: addressSchema,
 })
 
+export const positionTokensPricesSchema = z.object({
+  collateralPrice: priceSchema,
+  debtPrice: priceSchema,
+})
+
 export const positionSchema = z.object({
   collateral: tokenBalanceSchema,
   debt: tokenBalanceSchema,
   ltv: ltvSchema,
   address: addressSchema,
+  prices: positionTokensPricesSchema,
 })
 
 export const eventBodyAaveBasicBuySchema = z.object({

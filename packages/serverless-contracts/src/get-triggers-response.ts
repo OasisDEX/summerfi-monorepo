@@ -2,8 +2,12 @@ export const AaveStopLossToCollateralV2ID = 111n as const
 export const AaveStopLossToDebtV2ID = 112n as const
 export const SparkStopLossToCollateralV2ID = 117n as const
 export const SparkStopLossToDebtV2ID = 118n as const
-export const AaveBasicBuyV2ID = 119n as const
-export const AaveBasicSellV2ID = 120n as const
+export const DmaAaveBasicBuyV2 = 121n as const
+export const DmaAaveBasicSellV2 = 122n as const
+export const DmaAaveStopLossToCollateralV2 = 123n as const
+export const DmaAaveStopLossToDebtV2 = 124n as const
+export const DmaSparkStopLossToCollateralV2 = 125n as const
+export const DmaSparkStopLossToDebtV2 = 126n as const
 
 export type AaveStopLossToCollateral = {
   triggerTypeName: 'AaveStopLossToCollateralV2'
@@ -65,9 +69,9 @@ export type SparkStopLossToDebt = {
   }
 }
 
-export type AaveBasicBuy = {
-  triggerTypeName: 'AaveBasicBuyV2'
-  triggerType: typeof AaveBasicBuyV2ID
+export type DmaAaveBasicBuy = {
+  triggerTypeName: 'DmaAaveBasicBuyV2'
+  triggerType: typeof DmaAaveBasicBuyV2
   triggerId: string
   triggerData: string
   decodedParams: {
@@ -85,9 +89,9 @@ export type AaveBasicBuy = {
   }
 }
 
-export type AaveBasicSell = {
-  triggerTypeName: 'AaveBasicSellV2'
-  triggerType: typeof AaveBasicSellV2ID
+export type DmaAaveBasicSell = {
+  triggerTypeName: 'DmaAaveBasicSellV2'
+  triggerType: typeof DmaAaveBasicSellV2
   triggerId: string
   triggerData: string
   decodedParams: {
@@ -111,8 +115,8 @@ export type GetTriggersResponse = {
     aaveStopLossToDebt?: AaveStopLossToDebt
     sparkStopLossToCollateral?: SparkStopLossToCollateral
     sparkStopLossToDebt?: SparkStopLossToDebt
-    aaveBasicBuy?: AaveBasicBuy
-    aaveBasicSell?: AaveBasicSell
+    aaveBasicBuy?: DmaAaveBasicBuy
+    aaveBasicSell?: DmaAaveBasicSell
   }
   additionalData?: Record<string, unknown>
 }
