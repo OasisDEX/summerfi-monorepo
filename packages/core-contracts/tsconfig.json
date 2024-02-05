@@ -9,6 +9,6 @@
       "~core-contracts/*": ["./*"]
     }
   },
-  "include": ["scripts/**/*.ts", "../hardhat.config.ts"],
+  "include": ["scripts/**/*.ts", "../hardhat.config.ts", "utils.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }
