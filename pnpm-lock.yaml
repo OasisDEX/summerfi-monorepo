@@ -403,6 +403,12 @@ importers:
       '@summerfi/contracts-utils':
         specifier: workspace:*
         version: link:../contracts-utils
+      '@summerfi/deployment-configs':
+        specifier: workspace:*
+        version: link:../deployment-configs
+      '@summerfi/deployment-types':
+        specifier: workspace:*
+        version: link:../deployment-types
       '@summerfi/deployment-utils':
         specifier: workspace:*
         version: link:../deployment-utils
@@ -439,6 +445,9 @@ importers:
       '@summerfi/deployment-types':
         specifier: workspace:*
         version: link:../deployment-types
+      '@summerfi/hardhat-utils':
+        specifier: workspace:*
+        version: link:../hardhat-utils
 
   packages/deployment-types:
     dependencies:

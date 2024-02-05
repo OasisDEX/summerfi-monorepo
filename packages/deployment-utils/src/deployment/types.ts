@@ -1,5 +1,6 @@
 import type { NetworksType } from '@summerfi/hardhat-utils'
 import { Contract, TransactionReceipt } from './viem-types'
+import { Address } from '@summerfi/common'
 
 export enum ProviderTypes {
   Internal = 'internal',
@@ -65,7 +66,13 @@ export type DeploymentParams = {
 export type Deployment = {
   contract: Contract
   name: string
-  receipt?: TransactionReceipt
+  receipt: TransactionReceipt
+}
+
+export type Dependency = {
+  name: string
+  address: Address
+  contract?: Contract
 }
 
 export type DeploymentOptions = DeploymentFlags

@@ -1,7 +1,7 @@
 import { MakerConfig } from '@summerfi/deployment-types'
 
 export const MakerConfiguration: MakerConfig = {
-  common: {
+  dependencies: {
     FlashMintModule: {
       name: 'FlashMintModule',
       address: '0x60744434d6339a6B27d73d9Eda62b6F66a0a04FA',
@@ -47,8 +47,6 @@ export const MakerConfiguration: MakerConfig = {
       name: 'McdGov',
       address: '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2',
     },
-  },
-  joins: {
     MCD_JOIN_DAI: {
       name: 'MCD_JOIN_DAI',
       address: '0x9759A6Ac90977b93B58547b4A71c78317f391A28',
@@ -261,8 +259,6 @@ export const MakerConfiguration: MakerConfig = {
       name: 'MCD_JOIN_GNO_A',
       address: '0x7bD3f01e24E0f0838788bC8f573CEA43A80CaBB5',
     },
-  },
-  pips: {
     PIP_ETH: {
       name: 'PIP_ETH',
       address: '0x81FE72B5A8d1A857d176C3E7d5Bd2679A9B85763',

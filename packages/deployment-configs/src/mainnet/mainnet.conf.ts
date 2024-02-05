@@ -1,9 +1,9 @@
 import { Config } from '@summerfi/deployment-types'
-import { SystemConfiguration } from '~contracts-utils'
+import { SystemConfiguration } from '../system'
 import { DependenciesConfiguration } from './dependencies/dependencies'
 import { ProtocolsConfiguration } from './protocols/protocols'
 
-export const Configuration: Config = {
+export const MainnetConfig: Config = {
   system: SystemConfiguration,
   dependencies: DependenciesConfiguration,
   protocols: ProtocolsConfiguration,

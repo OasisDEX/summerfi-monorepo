@@ -48,6 +48,6 @@ export type AjnaProtocolConfig = Record<AjnaContractNames, ProtocolConfigDepende
 export type AjnaActionsConfig = Record<AjnaActionNames, ProtocolConfigActionEntry>
 
 export type AjnaConfig = {
-  protocol: AjnaProtocolConfig
+  dependencies: AjnaProtocolConfig
   actions: AjnaActionsConfig
 }

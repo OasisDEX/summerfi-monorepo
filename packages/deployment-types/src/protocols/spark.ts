@@ -12,6 +12,6 @@ export type SparkProtocolConfig = Record<SparkContractNames, ProtocolConfigDepen
 export type SparkActionsConfig = Record<SparkActionNames, ProtocolConfigActionEntry>
 
 export type SparkConfig = {
-  protocol: SparkProtocolConfig
+  dependencies: SparkProtocolConfig
   actions: SparkActionsConfig
 }

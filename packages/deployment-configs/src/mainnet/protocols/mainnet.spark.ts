@@ -1,7 +1,7 @@
 import { SparkConfig } from '@summerfi/deployment-types'
 
 export const SparkConfiguration: SparkConfig = {
-  protocol: {
+  dependencies: {
     Oracle: {
       name: 'Oracle',
       address: '0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9',

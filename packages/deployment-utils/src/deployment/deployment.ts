@@ -9,6 +9,7 @@ import type {
   DeploymentType,
   ImportPair,
   DeploymentExportPair,
+  Dependency,
 } from './types'
 import {
   DeploymentFlags,
@@ -40,7 +41,8 @@ export class Deployments {
   public readonly options: DeploymentOptions
   public readonly deploymentsDir?: string
   public readonly indexDir?: string
-  public readonly deployments: Deployment[] = []
+  public readonly deployments: Record<string, Deployment> = {}
+  public readonly dependencies: Record<string, Dependency> = {}
 
   private static readonly DefaultParams: DeploymentInitParams = {
     type: {
@@ -76,6 +78,14 @@ export class Deployments {
     }
   }
 
+  public getAddress(contractName: string): Address | undefined {
+    return (
+      this.deployments[contractName]?.contract.address ??
+      this.dependencies[contractName]?.address ??
+      undefined
+    )
+  }
+
   public async deploy(
     contractName: string,
     args: unknown[] = [],
@@ -94,7 +104,7 @@ export class Deployments {
 
     const deployment: Deployment = await this._deploy(contractName, args, alias, walletClient)
 
-    this.deployments.push(deployment)
+    this.deployments[contractName] = deployment
 
     if (this._hasVerifyOption(options) && this._isDevelopNetwork() == false) {
       await this._verify(deployment, args)
@@ -111,12 +121,21 @@ export class Deployments {
     const contract = await viem.getContractAt(contractName, contractAddress)
 
     // Push without receipt to indicate that this is an attached contract
-    this.deployments.push({
+    this.dependencies[contractName] = {
       contract,
+      address: contractAddress,
       name: alias || contractName,
-    })
+    }
 
     return contract
+  }
+
+  public addDependency(contractName: string, contractAddress: Address) {
+    // Push without receipt to indicate that this is an attached contract
+    this.dependencies[contractName] = {
+      address: contractAddress,
+      name: contractName,
+    }
   }
 
   public persist(): void {
@@ -135,20 +154,18 @@ export class Deployments {
 
     const deployments = this._getDeploymentObjectTemplate()
 
-    this.deployments.forEach((deployedContract) => {
-      // If there is a receipt then the contract was deployed, otherwise
-      // it was attached and it is considered as a dependency
-      if (deployedContract.receipt) {
-        deployments.contracts[deployedContract.name] = {
-          address: deployedContract.contract.address,
-          blockNumber: deployedContract.receipt.blockNumber,
-        }
-      } else {
-        deployments.dependencies[deployedContract.name] = {
-          address: deployedContract.contract.address,
-        }
+    for (const deployedContract of Object.values(this.deployments)) {
+      deployments.contracts[deployedContract.name] = {
+        address: deployedContract.contract.address,
+        blockNumber: deployedContract.receipt.blockNumber,
       }
-    })
+    }
+
+    for (const dependency of Object.values(this.dependencies)) {
+      deployments.dependencies[dependency.name] = {
+        address: dependency.address,
+      }
+    }
 
     const deploymentFile = this.getDeploymentsPath()
     const dirName = path.dirname(deploymentFile)

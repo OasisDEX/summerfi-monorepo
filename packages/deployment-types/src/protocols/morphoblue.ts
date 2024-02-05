@@ -15,6 +15,6 @@ export type MorphoBlueProtocolConfig = Record<
 export type MorphoBlueActionsConfig = Record<MorphoBlueActionNames, ProtocolConfigActionEntry>
 
 export type MorphoBlueConfig = {
-  protocol: MorphoBlueProtocolConfig
+  dependencies: MorphoBlueProtocolConfig
   actions: MorphoBlueActionsConfig
 }

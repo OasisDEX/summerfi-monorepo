@@ -1,7 +1,7 @@
 import { AaveV2Config } from '@summerfi/deployment-types'
 
 export const AAVEV2Configuration: AaveV2Config = {
-  protocol: {
+  dependencies: {
     Oracle: {
       name: 'Oracle',
       address: '0xa50ba011c48153de246e5192c8f9258a2ba79ca9',

@@ -7,6 +7,6 @@ export type AaveV2ProtocolConfig = Record<AaveV2ContractNames, ProtocolConfigDep
 export type AaaveV2ActionsConfig = Record<AaveV2ActionNames, ProtocolConfigActionEntry>
 
 export type AaveV2Config = {
-  protocol: AaveV2ProtocolConfig
+  dependencies: AaveV2ProtocolConfig
   actions: AaaveV2ActionsConfig
 }

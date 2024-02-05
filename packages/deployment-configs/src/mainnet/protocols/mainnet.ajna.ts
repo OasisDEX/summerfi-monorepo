@@ -1,7 +1,7 @@
 import { AjnaConfig } from '@summerfi/deployment-types'
 
 export const AjnaConfiguration: AjnaConfig = {
-  protocol: {
+  dependencies: {
     AjnaPoolInfo: {
       name: 'AjnaPoolInfo',
       address: '0x30c5eF2997d6a882DE52c4ec01B6D0a5e5B4fAAE',

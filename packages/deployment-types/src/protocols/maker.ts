@@ -119,8 +119,11 @@ export type MakerProtocolCommonConfig = Record<MakerContractNames, MiscDependenc
 export type MakerProtocolJoinConfig = Record<MakerProtocolJoins, MiscDependencyConfigEntry>
 export type MakerProtocolPipConfig = Record<MakerProtocolPips, MiscDependencyConfigEntry>
 
+export type MakerProtocolConfig = MakerProtocolCommonConfig &
+  MakerProtocolJoinConfig &
+  MakerProtocolPipConfig
+
 export type MakerConfig = {
-  common: MakerProtocolCommonConfig
-  joins: MakerProtocolJoinConfig
-  pips: MakerProtocolPipConfig
+  dependencies: MakerProtocolConfig
+  actions?: unknown
 }

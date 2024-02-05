@@ -1,7 +1,7 @@
 import { MorphoBlueConfig } from '@summerfi/deployment-types'
 
 export const MorphoBlueConfiguration: MorphoBlueConfig = {
-  protocol: {
+  dependencies: {
     MorphoBlue: {
       name: 'MorphoBlue',
       address: '0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb',

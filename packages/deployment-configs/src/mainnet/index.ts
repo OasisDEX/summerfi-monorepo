@@ -1,1 +1,1 @@
-export { Configuration } from './mainnet.conf'
+export { MainnetConfig } from './mainnet.conf'
