@@ -282,14 +282,14 @@ importers:
         specifier: ^1.17.0
         version: 1.17.0
       '@oasisdex/addresses':
-        specifier: 0.1.16-dma-v2-workers.4
-        version: 0.1.16-dma-v2-workers.4
+        specifier: 0.1.16-dma-v2-workers.6
+        version: 0.1.16-dma-v2-workers.6
       '@oasisdex/automation':
-        specifier: ^1.6.0-alpha.6
-        version: 1.6.0-alpha.6
+        specifier: ^1.6.0-alpha.8
+        version: 1.6.0-alpha.8
       '@oasisdex/dma-library':
-        specifier: 0.5.21-dma-v2-workers.9
-        version: 0.5.21-dma-v2-workers.9
+        specifier: 0.5.21-dma-v2-workers.12
+        version: 0.5.21-dma-v2-workers.12
       '@summerfi/serverless-contracts':
         specifier: workspace:*
         version: link:../../../../packages/serverless-contracts
@@ -4298,16 +4298,16 @@ packages:
       fastq: 1.16.0
     dev: true
 
-  /@oasisdex/addresses@0.1.16-dma-v2-workers.4:
-    resolution: {integrity: sha512-MXLtgmO7i/LQhMwhoZPG4Z637RfXpcl7biIKG1u7tov/KfAf7zxFxRDXAvJ/J8bz6aivnfETRsHArAO29lhOww==}
+  /@oasisdex/addresses@0.1.16-dma-v2-workers.6:
+    resolution: {integrity: sha512-IHDHFlzeLnLAwjoFDhMLSvf3tBmSK5HZIpIiJKjM1KitTor0sb7+SCepxl//92FNbn40g0VTf/harvoPAU2XkA==}
     dev: false
 
   /@oasisdex/addresses@0.1.36:
     resolution: {integrity: sha512-HRTjoOdOcWslSFycgifqOvmhwgvHhTPJxnkQZRkB2qFMWstMYX10598iv+lZmFJ1XJz8Z7wyUL2oaLWl7cek2A==}
     dev: false
 
-  /@oasisdex/automation@1.6.0-alpha.6:
-    resolution: {integrity: sha512-kf4n05GUSLpcEmkGVae9SgdUI3X9Z+CtnufoAMKm4OdELfyKqtkgIUjfdHTw2w5YgUWevrYJh7GM5asLc22+0w==}
+  /@oasisdex/automation@1.6.0-alpha.8:
+    resolution: {integrity: sha512-axplqDSz0eeQ9BRnGUKlzwr0k5rhIZ1EuMJEStRQjzSO2nN7Z77ojA5P7gZnC6LPNLPqlQc7Lt5M4lz4rFEXWQ==}
     dependencies:
       ethers: 5.6.2
     transitivePeerDependencies:
@@ -4315,8 +4315,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@oasisdex/dma-library@0.5.21-dma-v2-workers.9:
-    resolution: {integrity: sha512-U3eXKbzBnJrl0R9Sd1NOpZRpubQ4WwWO/EO2K25uBf/yaRbZFFMqHfRHFC2LoDE7xVleb2Ejn0wAhSTb7o+2OQ==}
+  /@oasisdex/dma-library@0.5.21-dma-v2-workers.12:
+    resolution: {integrity: sha512-AJau+9JZCQ332NCJClGw8lqDoV8NkXpI6Hqd4Cb19Ys2ukZC92iVgruNH4Bo0qLbEVUXQPyTzmD8lj90ZIzlYA==}
     dependencies:
       bignumber.js: 9.0.1
       ethers: 5.6.2
