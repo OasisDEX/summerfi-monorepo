@@ -11,6 +11,7 @@ export interface EncodeFunctionForDpmParams {
 export interface TransactionFragment {
   to: `0x${string}`
   data: `0x${string}`
+  triggerTxData: `0x${string}`
 }
 
 export function encodeFunctionForDpm(
@@ -26,5 +27,6 @@ export function encodeFunctionForDpm(
   return {
     to: dpm,
     data: dpmData,
+    triggerTxData,
   }
 }
