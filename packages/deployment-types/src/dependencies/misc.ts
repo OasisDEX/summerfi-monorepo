@@ -1,5 +1,5 @@
 export type MiscDependencyNames =
-  | 'UniswapRouterV3'
+  | 'UniswapRouter'
   | 'BalancerVault'
   | 'OneInchAggregator'
   | 'AuthorizedCaller'

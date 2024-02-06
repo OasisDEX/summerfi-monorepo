@@ -5,8 +5,8 @@ export const MiscDependenciesConfiguration: MiscDependencyConfig = {
     name: 'GnosisSafe',
     address: '0x85f9b7408afE6CEb5E46223451f5d4b832B522dc',
   },
-  UniswapRouterV3: {
-    name: 'UniswapRouterV3',
+  UniswapRouter: {
+    name: 'UniswapRouter',
     address: '0xe592427a0aece92de3edee1f18e0157c05861564',
     addToRegistry: true,
   },

@@ -6,8 +6,8 @@ export const SparkConfiguration: SparkConfig = {
       name: 'Oracle',
       address: '0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9',
     },
-    LendingPool: {
-      name: 'LendingPool',
+    SparkLendingPool: {
+      name: 'SparkLendingPool',
       address: '0xC13e21B648A5Ee794902342038FF3aDAB66BE987',
       addToRegistry: true,
     },

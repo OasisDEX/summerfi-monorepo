@@ -1,6 +1,10 @@
 import { ProtocolConfigActionEntry, ProtocolConfigDependencyEntry } from './protocols'
 
-export type AaveV2ContractNames = 'PoolDataProvider' | 'LendingPool' | 'Oracle' | 'WETHGateway'
+export type AaveV2ContractNames =
+  | 'PoolDataProvider'
+  | 'AaveLendingPool'
+  | 'Oracle'
+  | 'AaveWethGateway'
 export type AaveV2ActionNames = 'AaveBorrow' | 'AaveDeposit' | 'AaveWithdraw' | `AavePayback`
 
 export type AaveV2ProtocolConfig = Record<AaveV2ContractNames, ProtocolConfigDependencyEntry>

@@ -3,7 +3,7 @@ import { SystemCoreConfig } from '@summerfi/deployment-types'
 export const CoreConfiguration: SystemCoreConfig = {
   ServiceRegistry: {
     name: 'ServiceRegistry',
-    addToRegistry: true,
+    addToRegistry: false,
     constructorArgs: [0],
   },
   OperationExecutor: {

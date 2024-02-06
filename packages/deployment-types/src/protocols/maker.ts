@@ -5,7 +5,7 @@ export type MakerContractNames =
   | 'Chainlog'
   | 'CdpManager'
   | 'GetCdps'
-  | 'Jug'
+  | 'McdJug'
   | 'Pot'
   | 'End'
   | 'Spot'

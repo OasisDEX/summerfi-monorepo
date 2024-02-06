@@ -17,7 +17,7 @@ export type TokenDependencyConfigEntry = {
 export type MiscDependencyConfig = Record<MiscDependencyNames, MiscDependencyConfigEntry>
 export type TokenDependencyConfig = Record<TokenDependencyNames, TokenDependencyConfigEntry>
 
-export type DependencyConfig = {
+export type DependenciesConfig = {
   misc: MiscDependencyConfig
   tokens: TokenDependencyConfig
 }

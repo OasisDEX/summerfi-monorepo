@@ -1,6 +1,6 @@
 import { ProtocolConfigActionEntry, ProtocolConfigDependencyEntry } from './protocols'
 
-export type SparkContractNames = 'PoolDataProvider' | 'LendingPool' | 'Oracle'
+export type SparkContractNames = 'PoolDataProvider' | 'SparkLendingPool' | 'Oracle'
 export type SparkActionNames =
   | `SparkBorrow`
   | `SparkDeposit`

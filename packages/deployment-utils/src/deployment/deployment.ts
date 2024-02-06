@@ -86,6 +86,10 @@ export class Deployments {
     )
   }
 
+  public getContract(contractName: string): Contract | undefined {
+    return this.deployments[contractName]?.contract ?? this.dependencies[contractName]?.contract
+  }
+
   public async deploy(
     contractName: string,
     args: unknown[] = [],

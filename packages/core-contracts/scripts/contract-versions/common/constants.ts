@@ -1,5 +1,5 @@
 export const ContractsVersionsDefaultName = 'contracts-versions'
-export const SnapshotDirectory = 'versions'
+export const SnapshotDirectory = 'src/versions'
 export const SnapshotTrailingTag = 'snapshot'
 export const SnapshotTagDelimiter = '.'
 export const SnapshotNameExtension = 'json'

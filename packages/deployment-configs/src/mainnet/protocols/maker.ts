@@ -19,8 +19,8 @@ export const MakerConfiguration: MakerConfig = {
       name: 'GetCdps',
       address: '0x36a724Bd100c39f0Ea4D3A20F7097eE01A8Ff573',
     },
-    Jug: {
-      name: 'Jug',
+    McdJug: {
+      name: 'McdJug',
       address: '0x19c0976f590D67707E62397C87829d896Dc0f1F1',
     },
     Pot: {
