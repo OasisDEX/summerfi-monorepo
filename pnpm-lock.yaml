@@ -282,8 +282,8 @@ importers:
         specifier: ^1.17.0
         version: 1.17.0
       '@oasisdex/addresses':
-        specifier: 0.1.16-dma-v2-workers.6
-        version: 0.1.16-dma-v2-workers.6
+        specifier: 0.1.16-dma-v2-workers.7
+        version: 0.1.16-dma-v2-workers.7
       '@oasisdex/automation':
         specifier: ^1.6.0-alpha.9
         version: 1.6.0-alpha.9
@@ -4298,8 +4298,8 @@ packages:
       fastq: 1.16.0
     dev: true
 
-  /@oasisdex/addresses@0.1.16-dma-v2-workers.6:
-    resolution: {integrity: sha512-IHDHFlzeLnLAwjoFDhMLSvf3tBmSK5HZIpIiJKjM1KitTor0sb7+SCepxl//92FNbn40g0VTf/harvoPAU2XkA==}
+  /@oasisdex/addresses@0.1.16-dma-v2-workers.7:
+    resolution: {integrity: sha512-0+BF4FVFWHzkTjjF8KwXjveuDRXQu+5N5fwOPXl/I+Ahs0XyPvfUr13XUwvVD5Euzkx9Y/eOYQ2iSWKE1mFEyw==}
     dev: false
 
   /@oasisdex/addresses@0.1.36:
