@@ -403,6 +403,9 @@ importers:
       '@prb/math':
         specifier: 2.5.0
         version: 2.5.0(@ethersproject/bignumber@5.7.0)(evm-bn@1.1.2)(mathjs@10.6.4)
+      '@summerfi/common':
+        specifier: workspace:*
+        version: link:../common
       '@summerfi/contracts-utils':
         specifier: workspace:*
         version: link:../contracts-utils
@@ -461,6 +464,9 @@ importers:
         specifier: ^2.2.0
         version: 2.7.1(typescript@5.3.3)
     devDependencies:
+      '@summerfi/common':
+        specifier: workspace:*
+        version: link:../common
       '@summerfi/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config

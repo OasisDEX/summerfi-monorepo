@@ -5,8 +5,8 @@
     "outDir": "dist",
     "baseUrl": "src",
     "paths": {
-      "~deployment-config": ["./index.ts"],
-      "~deployment-config/*": ["./*"]
+      "~deployment-types": ["./index.ts"],
+      "~deployment-types/*": ["./*"]
     }
   },
   "include": ["src/**/*.ts"],

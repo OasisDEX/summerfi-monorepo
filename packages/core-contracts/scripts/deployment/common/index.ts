@@ -1,1 +1,2 @@
-export { deploy } from './deployment'
+export { deployAll } from './deployment'
+export { configureAll } from './configuration'

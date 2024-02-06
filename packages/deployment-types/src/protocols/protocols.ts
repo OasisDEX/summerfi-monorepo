@@ -4,6 +4,7 @@ import { AjnaActionNames, AjnaConfig } from './ajna'
 import { MakerConfig } from './maker'
 import { MorphoBlueActionNames, MorphoBlueConfig } from './morphoblue'
 import { SparkActionNames, SparkConfig } from './spark'
+import { ConfigEntry } from '../types'
 
 export type ProtocolActionsNames =
   | AaveV2ActionNames
@@ -12,17 +13,8 @@ export type ProtocolActionsNames =
   | MorphoBlueActionNames
   | SparkActionNames
 
-export type ProtocolConfigDependencyEntry = {
-  name: string
-  address: string
-  addToRegistry?: boolean
-}
-
-export type ProtocolConfigActionEntry = {
-  name: string
-  addToRegistry?: boolean
-  constructorArgs?: string[]
-}
+export type ProtocolConfigDependencyEntry = ConfigEntry
+export type ProtocolConfigActionEntry = ConfigEntry
 
 export type ProtocolsConfig = {
   maker: MakerConfig

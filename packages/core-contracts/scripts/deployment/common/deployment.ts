@@ -1,10 +1,6 @@
-import {
-  Config,
-  DependenciesConfig,
-  ProtocolsConfig,
-  SystemConfig,
-} from '@summerfi/deployment-types'
+import { Config, ConfigEntry } from '@summerfi/deployment-types'
 import { Deployments } from '@summerfi/deployment-utils'
+import { recurseConfig } from './utils'
 
 function resolveConstructorArgs(
   ds: Deployments,
@@ -30,58 +26,37 @@ function resolveConstructorArgs(
   })
 }
 
-async function deploySystem(ds: Deployments, system: SystemConfig) {
-  console.log('[System]')
-  for (const [subsystemName, subsystem] of Object.entries(system)) {
-    if (subsystemName === 'automation') {
-      continue
-    }
+async function processDeploymentEntry(
+  ds: Deployments,
+  configName: string,
+  configEntry_: object,
+  spacer: string,
+): Promise<boolean> {
+  if (configName === 'automation') {
+    return true
+  }
 
-    console.log(`  [${subsystemName}]`)
+  const configEntry = configEntry_ as ConfigEntry
 
-    for (const contractInfo of Object.values(subsystem)) {
-      console.log(`  - Deploying ${contractInfo.name}...`)
-      const constructorArgs = resolveConstructorArgs(ds, contractInfo.constructorArgs)
-      await ds.deploy(contractInfo.name, constructorArgs)
+  if (configEntry.address !== undefined) {
+    console.log(`${spacer}  - Add dependency ${configName}...`)
+    ds.addDependency(configEntry.name, configEntry.address)
+  } else {
+    console.log(`${spacer}  - Deploying ${configName}...`)
+    const constructorArgs = resolveConstructorArgs(ds, configEntry.constructorArgs)
+
+    try {
+      await ds.deploy(configEntry.name, constructorArgs)
+    } catch (e) {
+      console.log('Error deploying', configName, e)
+      return false
     }
   }
+
+  return true
 }
 
-async function deployProtocols(ds: Deployments, protocols: ProtocolsConfig) {
-  console.log('[Protocols]')
-  for (const [protocolName, protocol] of Object.entries(protocols)) {
-    console.log(`  [${protocolName}]`)
-    if (protocol.actions) {
-      console.log('    [actions]')
-      for (const actionInfo of Object.values(protocol.actions)) {
-        console.log(`      - Deploying ${actionInfo.name}...`)
-        const constructorArgs = resolveConstructorArgs(ds, actionInfo.constructorArgs)
-        await ds.deploy(actionInfo.name, constructorArgs)
-      }
-    }
-
-    console.log('    [dependencies]')
-    for (const dependencyInfo of Object.values(protocol.dependencies)) {
-      console.log(`      - Add dependency ${dependencyInfo.name}...`)
-      await ds.addDependency(dependencyInfo.name, dependencyInfo.address)
-    }
-  }
-}
-
-function deployDependencies(ds: Deployments, dependencies: DependenciesConfig) {
-  console.log('[Dependencies]')
-  for (const [dependencyGroupName, dependencyGroup] of Object.entries(dependencies)) {
-    console.log(`  [${dependencyGroupName}]`)
-    for (const contractInfo of Object.values(dependencyGroup)) {
-      console.log(`    - Add dependency ${contractInfo.name}...`)
-      ds.addDependency(contractInfo.name, contractInfo.address)
-    }
-  }
-}
-
-export async function deploy(ds: Deployments, config: Config) {
-  console.log('Deploying contracts...')
-  await deploySystem(ds, config.system)
-  await deployProtocols(ds, config.protocols)
-  deployDependencies(ds, config.dependencies)
+export async function deployAll(ds: Deployments, config: Config) {
+  console.log('[DEPLOYMENT]')
+  return recurseConfig(ds, 'config', config, processDeploymentEntry, ['automation'])
 }

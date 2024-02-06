@@ -1,17 +1,5 @@
-import {
-  MiscDependencyConfigEntry,
-  TokenDependencyConfigEntry,
-  SystemConfigEntry,
-} from '~deployment-config'
+import { ConfigEntry } from '~deployment-types'
 
-export function isDependencyConfigEntry(
-  entry: unknown,
-): entry is MiscDependencyConfigEntry | TokenDependencyConfigEntry {
-  return typeof entry === 'object' && entry !== null && 'name' in entry && 'address' in entry
-}
-
-export function isSystemConfigEntry(entry: unknown): entry is SystemConfigEntry {
-  return (
-    typeof entry === 'object' && entry !== null && 'name' in entry && 'serviceRegistryName' in entry
-  )
+export function isConfigEntry(entry: unknown): entry is ConfigEntry {
+  return typeof entry === 'object' && entry !== null && 'name' in entry
 }

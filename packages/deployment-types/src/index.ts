@@ -1,5 +1,6 @@
-export type { Address } from './types'
 export * from './dependencies'
 export * from './protocols'
 export * from './system'
+export * from './utils'
 export type { Config } from './config'
+export type { ConfigEntry } from './types'

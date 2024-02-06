@@ -1,4 +1,5 @@
-import { Address } from '~deployment-config'
+import { Address } from '@summerfi/common'
+import { ConfigEntry } from '~deployment-types'
 import { MiscDependencyNames } from './misc'
 import { TokenDependencyNames } from './tokens'
 
@@ -8,7 +9,7 @@ export type MiscDependencyConfigEntry = {
   addToRegistry?: boolean
 }
 
-export type TokenDependencyConfigEntry = {
+export type TokenDependencyConfigEntry = ConfigEntry & {
   name: TokenDependencyNames
   address: Address
   addToRegistry?: boolean

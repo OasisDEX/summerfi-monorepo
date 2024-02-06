@@ -1,4 +1,4 @@
-import { MiscDependencyConfigEntry } from '~deployment-config'
+import { MiscDependencyConfigEntry } from '~deployment-types'
 
 export type MakerContractNames =
   | 'FlashMintModule'

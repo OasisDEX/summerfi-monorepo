@@ -1,10 +1,11 @@
+import { ConfigEntry } from '~deployment-types'
 import { SystemActionNames } from './actions'
 import { SystemAutomationNames } from './automation'
 import { SystemCoreNames } from './core'
 
 export type SystemNames = SystemCoreNames | SystemActionNames | SystemAutomationNames
 
-export type SystemConfigEntry = {
+export type SystemConfigEntry = ConfigEntry & {
   name: SystemNames
   addToRegistry: boolean
   constructorArgs?: Array<number | string>

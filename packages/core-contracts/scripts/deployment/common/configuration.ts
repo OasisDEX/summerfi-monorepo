@@ -1,25 +1,17 @@
-import {
-  Address,
-  Config,
-  DependenciesConfig,
-  ProtocolsConfig,
-  SystemConfig,
-} from '@summerfi/deployment-types'
+import { Config, ConfigEntry } from '@summerfi/deployment-types'
 import { Contract, Deployments } from '@summerfi/deployment-utils'
-import { keccak256 } from '@ethersproject/keccak256'
+import { Address } from '@summerfi/common'
 import { ContractsVersionsSnapshot } from '../../contract-versions/common'
 import ContractVersions from '../../../src/versions/contracts-versions.snapshot.json'
+import { getContractLabel, getLabelHash, recurseConfig } from './utils'
 
-function getContractLabel(
-  contractName: string,
-  versions: ContractsVersionsSnapshot,
-): string | undefined {
-  const contractVersion = versions.contracts[contractName]?.latestVersion
-  if (!contractVersion) {
-    return contractName
-  }
-
-  return `${contractName}_v${contractVersion}`
+async function addEntryToRegistry(
+  serviceRegistry: Contract,
+  label: string,
+  address: Address,
+): Promise<void> {
+  const entryHash = getLabelHash(label)
+  await serviceRegistry.write.addNamedService([entryHash, address])
 }
 
 async function updateRegistry(
@@ -27,6 +19,7 @@ async function updateRegistry(
   serviceRegistry: Contract,
   contractName: string,
   contractVersions: ContractsVersionsSnapshot,
+  spacer: string = '',
 ): Promise<boolean> {
   const contractAddress = ds.getAddress(contractName)
   if (!contractAddress) {
@@ -40,136 +33,32 @@ async function updateRegistry(
     return false
   }
 
-  console.log(`  - Adding ${contractName} to registry as '${contractLabel}'...`)
+  console.log(`${spacer}  - Adding ${contractName} to registry as '${contractLabel}'...`)
   await addEntryToRegistry(serviceRegistry, contractLabel, contractAddress)
 
   return true
 }
 
-async function addEntryToRegistry(
-  serviceRegistry: Contract,
-  label: string,
-  address: Address,
-): Promise<void> {
-  const encoder = new TextEncoder()
-  const encodedLabel = encoder.encode(label)
-  const entryHash = keccak256(encodedLabel)
-  await serviceRegistry.write.addNamedService([entryHash, address])
-}
-
-async function configureSystem(
+async function processConfigurationEntry(
   ds: Deployments,
-  system: SystemConfig,
-  serviceRegistry: Contract,
+  configName: string,
+  configEntry_: object,
+  spacer: string,
 ): Promise<boolean> {
-  console.log('[System]')
-  for (const [subsystemName, subsystem] of Object.entries(system)) {
-    if (subsystemName === 'automation') {
-      continue
-    }
-
-    console.log(`  [${subsystemName}]`)
-
-    for (const contractInfo of Object.values(subsystem)) {
-      if (contractInfo.addToRegistry) {
-        const isUpdated = await updateRegistry(
-          ds,
-          serviceRegistry,
-          contractInfo.name,
-          ContractVersions,
-        )
-        if (!isUpdated) {
-          return false
-        }
-      }
-    }
-  }
-
-  return true
-}
-
-async function configureProtocols(
-  ds: Deployments,
-  protocols: ProtocolsConfig,
-  serviceRegistry: Contract,
-): Promise<boolean> {
-  console.log('[Protocols]')
-  for (const [protocolName, protocol] of Object.entries(protocols)) {
-    console.log(`  [${protocolName}]`)
-
-    if (!protocol.actions) {
-      continue
-    }
-
-    for (const contractInfo of Object.values(protocol.actions)) {
-      if (contractInfo.addToRegistry) {
-        const isUpdated = await updateRegistry(
-          ds,
-          serviceRegistry,
-          contractInfo.name,
-          ContractVersions,
-        )
-        if (!isUpdated) {
-          return false
-        }
-      }
-    }
-
-    for (const contractInfo of Object.values(protocol.dependencies)) {
-      if (contractInfo.addToRegistry) {
-        const isUpdated = await updateRegistry(
-          ds,
-          serviceRegistry,
-          contractInfo.name,
-          ContractVersions,
-        )
-        if (!isUpdated) {
-          return false
-        }
-      }
-    }
-  }
-
-  return true
-}
-
-async function configureDependencies(
-  ds: Deployments,
-  dependencies: DependenciesConfig,
-  serviceRegistry: Contract,
-): Promise<boolean> {
-  console.log('[Dependencies]')
-  for (const [dependencyGroupName, dependencyGroup] of Object.entries(dependencies)) {
-    console.log(`  [${dependencyGroupName}]`)
-    for (const contractInfo of Object.values(dependencyGroup)) {
-      if (contractInfo.addToRegistry) {
-        const isUpdated = await updateRegistry(
-          ds,
-          serviceRegistry,
-          contractInfo.name,
-          ContractVersions,
-        )
-        if (!isUpdated) {
-          return false
-        }
-      }
-    }
-  }
-
-  return true
-}
-
-export async function configureDeployment(ds: Deployments, config: Config): Promise<boolean> {
+  const configEntry = configEntry_ as ConfigEntry
   const serviceRegistry = ds.getContract('ServiceRegistry')
   if (!serviceRegistry) {
-    console.error('ServiceRegistry contract not found')
-    return false
+    throw new Error('ServiceRegistry not found')
   }
 
-  console.log('Configuring deployment...')
-  await configureSystem(ds, config.system, serviceRegistry)
-  await configureProtocols(ds, config.protocols, serviceRegistry)
-  await configureDependencies(ds, config.dependencies, serviceRegistry)
+  if (configEntry.addToRegistry === undefined) {
+    return true
+  }
 
-  return true
+  return await updateRegistry(ds, serviceRegistry, configEntry.name, ContractVersions, spacer)
+}
+
+export async function configureAll(ds: Deployments, config: Config) {
+  console.log('[CONFIGURATION]')
+  return recurseConfig(ds, 'config', config, processConfigurationEntry, ['automation'])
 }

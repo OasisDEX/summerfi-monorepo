@@ -2,8 +2,8 @@ import { loadDeploymentConfig } from '@summerfi/deployment-configs'
 import { DeploymentFlags, Deployments, ProviderTypes } from '@summerfi/deployment-utils'
 import { NetworksType } from '@summerfi/hardhat-utils'
 import hre from 'hardhat'
-import { deploy } from './common'
-import { configureDeployment } from './common/configuration'
+import { deployAll, configureAll } from './common'
+import { verifyAll } from './common/verification'
 
 async function main() {
   const network = hre.network.name as NetworksType
@@ -25,8 +25,9 @@ async function main() {
     indexDir: 'src/',
   })
 
-  await deploy(ds, config)
-  await configureDeployment(ds, config)
+  await deployAll(ds, config)
+  await configureAll(ds, config)
+  await verifyAll(ds, config)
 
   ds.persist()
 

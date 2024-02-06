@@ -23,6 +23,7 @@
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/hardhat-utils": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
+    "@summerfi/common": "workspace:*",
     "@types/jest": "^29.5.11",
     "dotenv": "^16.3.1",
     "hardhat": "^2.19.5",
