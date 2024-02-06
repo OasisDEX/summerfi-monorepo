@@ -1,14 +1,14 @@
 {
   "extends": "@summerfi/typescript-config/tsconfig.hardhat.json",
   "compilerOptions": {
-    "rootDir": "scripts",
+    "rootDir": "src",
     "outDir": "dist",
-    "baseUrl": "scripts",
+    "baseUrl": "src",
     "paths": {
       "~core-contracts": ["./index.ts"],
       "~core-contracts/*": ["./*"]
     }
   },
-  "include": ["scripts/**/*.ts", "../hardhat.config.ts", "utils.ts"],
+  "include": ["src/**/*.ts", "src/**/*.json", "../scripts/**/*.ts", "../hardhat.config.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

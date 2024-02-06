@@ -54,6 +54,11 @@ export const CoreConfiguration: SystemCoreConfig = {
   Swap: {
     name: 'Swap',
     addToRegistry: true,
-    constructorArgs: [],
+    constructorArgs: [
+      '0x4De3CA09e803969408f83F453416b3e2D70C12Fe',
+      '0x85f9b7408afE6CEb5E46223451f5d4b832B522dc',
+      20,
+      'address:ServiceRegistry',
+    ],
   },
 }

@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@summerfi/deployment-types": "workspace:*",
+    "@summerfi/deployment-utils": "workspace:*",
     "@summerfi/hardhat-utils": "workspace:*",
     "@summerfi/common": "workspace:*"
   }

@@ -1,5 +1,5 @@
 import hre from 'hardhat'
-import { BlockNumber, CurrentBlock, Quantity } from '~deployment-utils'
+import { BlockNumber, CurrentBlock, Quantity } from '../deployment'
 
 export async function fastForwardChain(seconds: number): Promise<Quantity> {
   const testClient = await hre.viem.getTestClient()

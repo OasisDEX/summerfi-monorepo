@@ -445,6 +445,9 @@ importers:
       '@summerfi/deployment-types':
         specifier: workspace:*
         version: link:../deployment-types
+      '@summerfi/deployment-utils':
+        specifier: workspace:*
+        version: link:../deployment-utils
       '@summerfi/hardhat-utils':
         specifier: workspace:*
         version: link:../hardhat-utils

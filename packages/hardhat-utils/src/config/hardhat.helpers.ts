@@ -2,6 +2,7 @@ import type { HardhatNetworkUserConfig, NetworkUserConfig } from 'hardhat/types'
 
 export type AutoOptions = {
   goerli: 'auto' | number
+  localhost: 'auto' | number
   hardhat: 'auto' | number
   mainnet: 'auto' | number
   sepolia: 'auto' | number
@@ -23,6 +24,7 @@ export enum EndpointProvider {
 export type EndpointsConfig = {
   [key in EndpointProvider]: {
     goerli: string
+    localhost: string
     hardhat: string
     mainnet: string
     sepolia: string
@@ -39,6 +41,7 @@ export type EndpointsConfig = {
 
 export const ChainIds = {
   goerli: 5,
+  localhost: 31337,
   hardhat: 31337,
   mainnet: 1,
   sepolia: 11155111,
@@ -54,6 +57,7 @@ export const ChainIds = {
 
 export const GasPrice: AutoOptions = {
   goerli: 'auto',
+  localhost: 'auto',
   hardhat: 'auto',
   mainnet: 'auto',
   sepolia: 'auto',
@@ -69,6 +73,7 @@ export const GasPrice: AutoOptions = {
 
 export const Gas: AutoOptions = {
   goerli: 'auto',
+  localhost: 'auto',
   hardhat: 'auto',
   mainnet: 'auto',
   sepolia: 'auto',
@@ -85,6 +90,7 @@ export const Gas: AutoOptions = {
 export const EndpointURLs: EndpointsConfig = {
   infura: {
     goerli: 'https://goerli.infura.io/v3/',
+    localhost: 'http://127.0.0.1:8545',
     hardhat: 'https://mainnet.infura.io/v3/',
     mainnet: 'https://mainnet.infura.io/v3/',
     sepolia: 'https://sepolia.infura.io/v3/',
@@ -99,6 +105,7 @@ export const EndpointURLs: EndpointsConfig = {
   },
   alchemy: {
     goerli: 'https://eth-goerli.g.alchemy.com/v2/',
+    localhost: 'http://127.0.0.1:8545',
     hardhat: 'https://eth-mainnet.g.alchemy.com/v2/',
     mainnet: 'https://eth-mainnet.g.alchemy.com/v2/',
     sepolia: 'https://eth-sepolia.g.alchemy.com/v2/',
@@ -118,10 +125,18 @@ export type NetworksType = keyof typeof ChainIds
 
 // Ensure that we have all the environment variables we need.
 
-if (!process.env.CONTRACTS_DEPLOYER_MNEMONIC) {
-  throw new Error('Please set your CONTRACTS_DEPLOYER_MNEMONIC in a .env file')
+if (process.env.DEPLOYER_MNEMONIC === undefined && process.env.DEPLOYER_PRIVATE_KEY === undefined) {
+  throw new Error('Please set your DEPLOYER_MNEMONIC or DEPLOYER_PRIVATE_KEY in a .env file')
 }
-export const walletSeed: string = process.env.CONTRACTS_DEPLOYER_MNEMONIC
+
+export const accounts = process.env.DEPLOYER_MNEMONIC
+  ? {
+      mnemonic: process.env.DEPLOYER_MNEMONIC,
+      path: "m/44'/60'/0'/0/",
+      initialIndex: 0,
+      count: 20,
+    }
+  : [process.env.DEPLOYER_PRIVATE_KEY as string]
 
 const endpointProvider: string =
   process.env.RPC_ENDPOINT_PROVIDER != null ? process.env.RPC_ENDPOINT_PROVIDER : ''
@@ -162,12 +177,7 @@ export function getHardhatChainConfig(): HardhatNetworkUserConfig {
 export function getLocalhostChainConfig(): NetworkUserConfig {
   return {
     url: 'http://127.0.0.1:8545',
-    accounts: {
-      mnemonic: walletSeed,
-      path: "m/44'/60'/0'/0/",
-      initialIndex: 0,
-      count: 20,
-    },
+    accounts: accounts,
   }
 }
 
@@ -175,11 +185,7 @@ export function getChainConfig(network: NetworksType): NetworkUserConfig {
   const provider: EndpointProvider = <EndpointProvider>endpointProvider
   const url: string = EndpointURLs[provider][network] + endpointApiKey
   return {
-    accounts: {
-      count: 20,
-      mnemonic: walletSeed,
-      path: "m/44'/60'/0'/0",
-    },
+    accounts: accounts,
     chainId: ChainIds[network],
     gas: configMaxGas || Gas[network] || 'auto',
     gasPrice: configGasPrice || GasPrice[network] || 'auto',

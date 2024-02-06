@@ -40,6 +40,7 @@ export type DeploymentInitParams = {
 }
 
 export type DeploymentObject = {
+  date: string
   timestamp: number
   provider: Provider
   network: Network
@@ -47,7 +48,7 @@ export type DeploymentObject = {
   contracts: {
     [contractName: string]: {
       address: string
-      blockNumber: bigint
+      blockNumber: string
     }
   }
   dependencies: {

@@ -19,7 +19,7 @@ import {
   DirectoryFilterType,
 } from './types'
 import { verifyContract } from './verify-contract'
-import { toCamelCase } from '~deployment-utils'
+import { toCamelCase } from '../utils'
 import { viem } from 'hardhat'
 import { Contract, DeploymentTransaction, TransactionReceipt, WalletClient } from './viem-types'
 import {
@@ -157,7 +157,7 @@ export class Deployments {
     for (const deployedContract of Object.values(this.deployments)) {
       deployments.contracts[deployedContract.name] = {
         address: deployedContract.contract.address,
-        blockNumber: deployedContract.receipt.blockNumber,
+        blockNumber: deployedContract.receipt.blockNumber.toString(),
       }
     }
 
@@ -380,9 +380,11 @@ export class Deployments {
             '_',
           )
 
+          const importPath = path.relative(indexDir, deploymentFilePath)
+
           indexImports.push({
             name: importName,
-            path: path.relative(indexDir, deploymentFilePath),
+            path: importPath.startsWith('.') ? importPath : `./${importPath}`,
           })
 
           deploymentsIndex.push({
@@ -398,6 +400,7 @@ export class Deployments {
 
   private _getDeploymentObjectTemplate(): DeploymentObject {
     return {
+      date: new Date().toISOString(),
       timestamp: this._getNowTimestamp(),
       provider: this.deploymentType.provider,
       network: this.deploymentType.network,
