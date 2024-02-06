@@ -8,7 +8,6 @@ import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
 import { getAavePosition } from './get-aave-position'
 import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
-import { simulatePosition } from './simulate-position'
 import { stopLossValidator } from './against-position-validators'
 import { getUsdAaveOraclePrice } from './get-usd-aave-oracle-price'
 import { CurrentTriggerLike, encodeAaveStopLoss } from './trigger-encoders'
@@ -29,23 +28,8 @@ export const getAaveStopLossServiceContainer: (
   })
 
   return {
-    simulatePosition: async ({ trigger }) => {
-      const position = await getPosition({
-        address: trigger.dpm,
-        collateral: trigger.position.collateral,
-        debt: trigger.position.debt,
-      })
-
-      const executionPrice = calculateCollateralPriceInDebtBasedOnLtv({
-        ...position,
-        ltv: trigger.triggerData.executionLTV,
-      })
-      return simulatePosition({
-        position: position,
-        targetLTV: position.ltv,
-        executionLTV: trigger.triggerData.executionLTV,
-        executionPrice: executionPrice,
-      })
+    simulatePosition: () => {
+      return Promise.resolve({})
     },
     validate: async ({ trigger }) => {
       const position = await getPosition({

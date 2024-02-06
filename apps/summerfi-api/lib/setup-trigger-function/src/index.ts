@@ -105,13 +105,13 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     trigger: triggerBody,
   })
 
-  const simulation = simulatePosition({
+  const simulation = await simulatePosition({
     trigger: triggerBody,
   })
 
   return ResponseOk({
     body: {
-      simulation: simulation,
+      simulation,
       transaction,
       encodedTriggerData,
       warnings: validationWarnings,
