@@ -111,11 +111,16 @@ export async function getAavePosition(
     collateralPriceInDebt,
   })
 
+  const netValue =
+    (collateralAmount * collateralPrice) / 10n ** BigInt(collateralResult.token.decimals) -
+    (debtAmount * debtPrice) / 10n ** BigInt(debtResult.token.decimals)
+
   logger?.debug('Position data', {
     debt: debtResult,
     collateral: collateralResult,
     collateralPriceInDebt,
     ltv,
+    netValue,
   })
 
   return {
@@ -128,5 +133,6 @@ export async function getAavePosition(
       collateralPrice,
       debtPrice,
     },
+    netValueUSD: netValue,
   }
 }

@@ -5,7 +5,7 @@
     "tsc": "tsc",
     "watch": "tsc -w",
     "test": "jest --passWithNoTests",
-    "build": "esbuild --bundle src/index.ts --platform=node --target=node20 --outfile=dist/index.js",
+    "build": "tsc -b -v",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
@@ -20,7 +20,6 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "esbuild": "^0.19.11",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
     "@types/node": "^20.11.5",

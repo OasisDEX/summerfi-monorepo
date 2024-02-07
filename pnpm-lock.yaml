@@ -170,9 +170,6 @@ importers:
       '@types/node':
         specifier: ^20.11.5
         version: 20.11.5
-      esbuild:
-        specifier: ^0.19.11
-        version: 0.19.11
       eslint:
         specifier: ^8.56.0
         version: 8.56.0
@@ -282,14 +279,14 @@ importers:
         specifier: ^1.17.0
         version: 1.17.0
       '@oasisdex/addresses':
-        specifier: 0.1.16-dma-v2-workers.6
-        version: 0.1.16-dma-v2-workers.6
+        specifier: 0.1.16-dma-v2-workers.7
+        version: 0.1.16-dma-v2-workers.7
       '@oasisdex/automation':
-        specifier: ^1.6.0-alpha.8
-        version: 1.6.0-alpha.8
+        specifier: ^1.6.0-alpha.9
+        version: 1.6.0-alpha.9
       '@oasisdex/dma-library':
-        specifier: 0.5.21-dma-v2-workers.12
-        version: 0.5.21-dma-v2-workers.12
+        specifier: 0.5.21-dma-v2-workers.14
+        version: 0.5.21-dma-v2-workers.14
       '@summerfi/serverless-contracts':
         specifier: workspace:*
         version: link:../../../../packages/serverless-contracts
@@ -324,9 +321,6 @@ importers:
       '@types/node':
         specifier: ^20.11.5
         version: 20.11.5
-      esbuild:
-        specifier: ^0.19.11
-        version: 0.19.11
       eslint:
         specifier: ^8.56.0
         version: 8.56.0
@@ -4298,16 +4292,16 @@ packages:
       fastq: 1.16.0
     dev: true
 
-  /@oasisdex/addresses@0.1.16-dma-v2-workers.6:
-    resolution: {integrity: sha512-IHDHFlzeLnLAwjoFDhMLSvf3tBmSK5HZIpIiJKjM1KitTor0sb7+SCepxl//92FNbn40g0VTf/harvoPAU2XkA==}
+  /@oasisdex/addresses@0.1.16-dma-v2-workers.7:
+    resolution: {integrity: sha512-0+BF4FVFWHzkTjjF8KwXjveuDRXQu+5N5fwOPXl/I+Ahs0XyPvfUr13XUwvVD5Euzkx9Y/eOYQ2iSWKE1mFEyw==}
     dev: false
 
   /@oasisdex/addresses@0.1.36:
     resolution: {integrity: sha512-HRTjoOdOcWslSFycgifqOvmhwgvHhTPJxnkQZRkB2qFMWstMYX10598iv+lZmFJ1XJz8Z7wyUL2oaLWl7cek2A==}
     dev: false
 
-  /@oasisdex/automation@1.6.0-alpha.8:
-    resolution: {integrity: sha512-axplqDSz0eeQ9BRnGUKlzwr0k5rhIZ1EuMJEStRQjzSO2nN7Z77ojA5P7gZnC6LPNLPqlQc7Lt5M4lz4rFEXWQ==}
+  /@oasisdex/automation@1.6.0-alpha.9:
+    resolution: {integrity: sha512-dTW4m8pkqKy9IfxG/wTxHRzy1S4qnb7ww2WZV+AybApmJLOmCgtNUBU0xuauihvPYt0HqeVOBCanGicpU+xurw==}
     dependencies:
       ethers: 5.6.2
     transitivePeerDependencies:
@@ -4315,8 +4309,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@oasisdex/dma-library@0.5.21-dma-v2-workers.12:
-    resolution: {integrity: sha512-AJau+9JZCQ332NCJClGw8lqDoV8NkXpI6Hqd4Cb19Ys2ukZC92iVgruNH4Bo0qLbEVUXQPyTzmD8lj90ZIzlYA==}
+  /@oasisdex/dma-library@0.5.21-dma-v2-workers.14:
+    resolution: {integrity: sha512-XBT9uwmpLM9R5E6Sbx+xr/s9uO00yPkofGLTDkDzzBYC6u5T3MRYJk2WorrrAfLFmFpMc80bmkvMg8+ZNFQSRw==}
     dependencies:
       bignumber.js: 9.0.1
       ethers: 5.6.2

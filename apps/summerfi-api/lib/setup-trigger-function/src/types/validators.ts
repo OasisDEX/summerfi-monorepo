@@ -170,6 +170,7 @@ export const positionSchema = z.object({
   ltv: ltvSchema,
   address: addressSchema,
   prices: positionTokensPricesSchema,
+  netValueUSD: priceSchema,
   hasStablecoinDebt: z.boolean().optional().default(true),
 })
 
