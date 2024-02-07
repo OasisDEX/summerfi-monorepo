@@ -22,13 +22,13 @@ import {
   AaveStopLossToDebtDMA,
   AaveStopLossToDebtV2ID,
   DmaAaveBasicBuy,
-  DmaAaveBasicBuyV2,
+  DmaAaveBasicBuyV2ID,
   DmaAaveBasicSell,
-  DmaAaveBasicSellV2,
-  DmaAaveStopLossToCollateralV2,
-  DmaAaveStopLossToDebtV2,
-  DmaSparkStopLossToCollateralV2,
-  DmaSparkStopLossToDebtV2,
+  DmaAaveBasicSellV2ID,
+  DmaAaveStopLossToCollateralV2ID,
+  DmaAaveStopLossToDebtV2ID,
+  DmaSparkStopLossToCollateralV2ID,
+  DmaSparkStopLossToDebtV2ID,
   GetTriggersResponse,
   SparkStopLossToCollateral,
   SparkStopLossToCollateralDMA,
@@ -98,11 +98,11 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     })[0]
 
   const aaveStopLossToCollateralDMA: AaveStopLossToCollateralDMA | undefined = triggers.triggers
-    .filter((trigger) => trigger.triggerType == DmaAaveStopLossToCollateralV2)
+    .filter((trigger) => trigger.triggerType == DmaAaveStopLossToCollateralV2ID)
     .map((trigger) => {
       return {
         triggerTypeName: 'DmaAaveStopLossToCollateralV2' as const,
-        triggerType: DmaAaveStopLossToCollateralV2,
+        triggerType: DmaAaveStopLossToCollateralV2ID,
         ...mapTriggerCommonParams(trigger),
         decodedParams: mapStopLossParams(trigger),
       }
@@ -120,12 +120,12 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     })[0]
 
   const aaveStopLossToDebtDMA: AaveStopLossToDebtDMA | undefined = triggers.triggers
-    .filter((trigger) => trigger.triggerType == DmaAaveStopLossToDebtV2)
+    .filter((trigger) => trigger.triggerType == DmaAaveStopLossToDebtV2ID)
     .map((trigger) => {
       console.log('trigger', trigger)
       return {
         triggerTypeName: 'DmaAaveStopLossToDebtV2' as const,
-        triggerType: DmaAaveStopLossToDebtV2,
+        triggerType: DmaAaveStopLossToDebtV2ID,
         ...mapTriggerCommonParams(trigger),
         decodedParams: mapStopLossParams(trigger),
       }
@@ -143,11 +143,11 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     })[0]
 
   const sparkStopLossToCollateralDMA: SparkStopLossToCollateralDMA | undefined = triggers.triggers
-    .filter((trigger) => trigger.triggerType == DmaSparkStopLossToCollateralV2)
+    .filter((trigger) => trigger.triggerType == DmaSparkStopLossToCollateralV2ID)
     .map((trigger) => {
       return {
         triggerTypeName: 'DmaSparkStopLossToCollateralV2' as const,
-        triggerType: DmaSparkStopLossToCollateralV2,
+        triggerType: DmaSparkStopLossToCollateralV2ID,
         ...mapTriggerCommonParams(trigger),
         decodedParams: mapStopLossParams(trigger),
       }
@@ -165,22 +165,22 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     })[0]
 
   const sparkStopLossToDebtDMA: SparkStopLossToDebtDMA | undefined = triggers.triggers
-    .filter((trigger) => trigger.triggerType == DmaSparkStopLossToDebtV2)
+    .filter((trigger) => trigger.triggerType == DmaSparkStopLossToDebtV2ID)
     .map((trigger) => {
       return {
         triggerTypeName: 'DmaSparkStopLossToDebtV2' as const,
-        triggerType: DmaSparkStopLossToDebtV2,
+        triggerType: DmaSparkStopLossToDebtV2ID,
         ...mapTriggerCommonParams(trigger),
         decodedParams: mapStopLossParams(trigger),
       }
     })[0]
 
   const aaveBasicBuy: DmaAaveBasicBuy | undefined = triggers.triggers
-    .filter((trigger) => trigger.triggerType == DmaAaveBasicBuyV2)
+    .filter((trigger) => trigger.triggerType == DmaAaveBasicBuyV2ID)
     .map((trigger) => {
       return {
         triggerTypeName: 'DmaAaveBasicBuyV2' as const,
-        triggerType: DmaAaveBasicBuyV2,
+        triggerType: DmaAaveBasicBuyV2ID,
         ...mapTriggerCommonParams(trigger),
         decodedParams: {
           maxBuyPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('maxBuyPrice')],
@@ -190,11 +190,11 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     })[0]
 
   const aaveBasicSell: DmaAaveBasicSell | undefined = triggers.triggers
-    .filter((trigger) => trigger.triggerType == DmaAaveBasicSellV2)
+    .filter((trigger) => trigger.triggerType == DmaAaveBasicSellV2ID)
     .map((trigger) => {
       return {
         triggerTypeName: 'DmaAaveBasicSellV2' as const,
-        triggerType: DmaAaveBasicSellV2,
+        triggerType: DmaAaveBasicSellV2ID,
         ...mapTriggerCommonParams(trigger),
         decodedParams: {
           minSellPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('minSellPrice')],
