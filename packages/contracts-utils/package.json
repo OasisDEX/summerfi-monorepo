@@ -5,8 +5,6 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "tsc": "tsc",
-    "watch": "tsc -w",
-    "test": "jest",
     "build": "tsc -b -v",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"

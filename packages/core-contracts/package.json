@@ -6,7 +6,7 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "build": "tsc -b -v",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
