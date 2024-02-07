@@ -170,9 +170,6 @@ importers:
       '@types/node':
         specifier: ^20.11.5
         version: 20.11.5
-      esbuild:
-        specifier: ^0.19.11
-        version: 0.19.11
       eslint:
         specifier: ^8.56.0
         version: 8.56.0
@@ -324,9 +321,6 @@ importers:
       '@types/node':
         specifier: ^20.11.5
         version: 20.11.5
-      esbuild:
-        specifier: ^0.19.11
-        version: 0.19.11
       eslint:
         specifier: ^8.56.0
         version: 8.56.0
