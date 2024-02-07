@@ -35,6 +35,7 @@ export enum AutoBuyTriggerCustomErrorCodes {
   MaxBuyPriceIsNotSet = 'max-buy-price-is-not-set',
   AutoBuyTriggerAlreadyExists = 'auto-buy-trigger-already-exists',
   AutoBuyTriggerDoesNotExist = 'auto-buy-trigger-does-not-exist',
+  NetValueTooLowToSetupAutoBuy = 'net-value-too-low-to-setup-auto-buy',
 }
 
 export enum AutoBuyTriggerCustomWarningCodes {
@@ -54,6 +55,7 @@ export enum AutoSellTriggerCustomErrorCodes {
   MinSellPriceIsNotSet = 'min-sell-price-is-not-set',
   AutoSellTriggerAlreadyExists = 'auto-sell-trigger-already-exists',
   AutoSellTriggerDoesNotExist = 'auto-sell-trigger-does-not-exist',
+  NetValueTooLowToSetupAutoSell = 'net-value-too-low-to-setup-auto-sell',
 }
 
 export enum AutoSellTriggerCustomWarningCodes {
