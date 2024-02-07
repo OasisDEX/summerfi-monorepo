@@ -2,7 +2,7 @@ import { ServiceContainer } from './service-container'
 import { StopLossEventBody, safeParseBigInt, SupportedActions } from '~types'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
-import { Address } from '@summerfi/serverless-shared'
+import { Address, ChainId } from '@summerfi/serverless-shared'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
@@ -18,11 +18,12 @@ export interface GetAaveStopLossServiceContainerProps {
   addresses: Addresses
   getTriggers: (address: Address) => Promise<GetTriggersResponse>
   logger?: Logger
+  chainId: ChainId
 }
 
 export const getAaveStopLossServiceContainer: (
   props: GetAaveStopLossServiceContainerProps,
-) => ServiceContainer<StopLossEventBody> = ({ rpc, addresses, logger, getTriggers }) => {
+) => ServiceContainer<StopLossEventBody> = ({ rpc, addresses, logger, getTriggers, chainId }) => {
   const getPosition = memoize(async (params: Parameters<typeof getAavePosition>[0]) => {
     return await getAavePosition(params, rpc, addresses, logger)
   })
@@ -50,6 +51,7 @@ export const getAaveStopLossServiceContainer: (
         triggerData: trigger.triggerData,
         action: trigger.action,
         triggers,
+        chainId,
       })
     },
     getTransaction: async ({ trigger }) => {

@@ -197,7 +197,7 @@ const warningsValidation = paramsSchema
         return true
       }
 
-      const stopLossTriggerLTV = safeParseBigInt(stopLossTrigger.decodedParams.ltv) ?? 0n
+      const stopLossTriggerLTV = safeParseBigInt(stopLossTrigger.decodedParams.executionLtv) ?? 0n
 
       return stopLossTriggerLTV > triggerData.executionLTV
     },
@@ -215,7 +215,7 @@ const warningsValidation = paramsSchema
         return true
       }
 
-      const stopLossTriggerLTV = safeParseBigInt(stopLossTrigger.decodedParams.ltv) ?? 0n
+      const stopLossTriggerLTV = safeParseBigInt(stopLossTrigger.decodedParams.executionLtv) ?? 0n
 
       return stopLossTriggerLTV > triggerData.executionLTV
     },

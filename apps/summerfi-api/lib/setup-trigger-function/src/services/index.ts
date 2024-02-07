@@ -98,6 +98,7 @@ export function buildServiceContainer<
       addresses,
       getTriggers,
       logger,
+      chainId,
     }) as ServiceContainer<Trigger>
   }
   if (isAaveAutoSell(trigger)) {
@@ -106,6 +107,7 @@ export function buildServiceContainer<
       addresses,
       getTriggers,
       logger,
+      chainId,
     }) as ServiceContainer<Trigger>
   }
   if (isAaveStopLoss(trigger)) {
@@ -114,6 +116,7 @@ export function buildServiceContainer<
       addresses,
       getTriggers,
       logger,
+      chainId,
     }) as ServiceContainer<Trigger>
   }
   // @ts-ignore
