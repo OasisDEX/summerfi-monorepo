@@ -282,14 +282,14 @@ importers:
         specifier: ^1.17.0
         version: 1.17.0
       '@oasisdex/addresses':
-        specifier: 0.1.16-dma-v2-workers.6
-        version: 0.1.16-dma-v2-workers.6
+        specifier: 0.1.16-dma-v2-workers.7
+        version: 0.1.16-dma-v2-workers.7
       '@oasisdex/automation':
         specifier: ^1.6.0-alpha.9
         version: 1.6.0-alpha.9
       '@oasisdex/dma-library':
-        specifier: 0.5.21-dma-v2-workers.13
-        version: 0.5.21-dma-v2-workers.13
+        specifier: 0.5.21-dma-v2-workers.14
+        version: 0.5.21-dma-v2-workers.14
       '@summerfi/serverless-contracts':
         specifier: workspace:*
         version: link:../../../../packages/serverless-contracts
@@ -5237,8 +5237,8 @@ packages:
       '@nomicfoundation/solidity-analyzer-win32-x64-msvc': 0.1.1
     dev: true
 
-  /@oasisdex/addresses@0.1.16-dma-v2-workers.6:
-    resolution: {integrity: sha512-IHDHFlzeLnLAwjoFDhMLSvf3tBmSK5HZIpIiJKjM1KitTor0sb7+SCepxl//92FNbn40g0VTf/harvoPAU2XkA==}
+  /@oasisdex/addresses@0.1.16-dma-v2-workers.7:
+    resolution: {integrity: sha512-0+BF4FVFWHzkTjjF8KwXjveuDRXQu+5N5fwOPXl/I+Ahs0XyPvfUr13XUwvVD5Euzkx9Y/eOYQ2iSWKE1mFEyw==}
     dev: false
 
   /@oasisdex/addresses@0.1.36:
@@ -5254,8 +5254,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@oasisdex/dma-library@0.5.21-dma-v2-workers.13:
-    resolution: {integrity: sha512-gPz06NdPnAR8wg47fyGSMEhBk3SgsuKfUOpGMddKnunb19bZi8TmxyH7l6ibW7I+XWGv23OF15wKNNZ84AgZrg==}
+  /@oasisdex/dma-library@0.5.21-dma-v2-workers.14:
+    resolution: {integrity: sha512-XBT9uwmpLM9R5E6Sbx+xr/s9uO00yPkofGLTDkDzzBYC6u5T3MRYJk2WorrrAfLFmFpMc80bmkvMg8+ZNFQSRw==}
     dependencies:
       bignumber.js: 9.0.1
       ethers: 5.6.2
