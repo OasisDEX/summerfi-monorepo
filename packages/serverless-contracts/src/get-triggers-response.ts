@@ -24,9 +24,39 @@ export type AaveStopLossToCollateral = {
   }
 }
 
+export type AaveStopLossToCollateralDMA = {
+  triggerTypeName: 'DmaAaveStopLossToCollateralV2'
+  triggerType: typeof DmaAaveStopLossToCollateralV2
+  triggerId: string
+  triggerData: string
+  decodedParams: {
+    positionAddress: string
+    triggerType: string
+    maxCoverage: string
+    debtToken: string
+    collateralToken: string
+    ltv: string
+  }
+}
+
 export type AaveStopLossToDebt = {
   triggerTypeName: 'AaveStopLossToDebtV2'
   triggerType: typeof AaveStopLossToDebtV2ID
+  triggerId: string
+  triggerData: string
+  decodedParams: {
+    positionAddress: string
+    triggerType: string
+    maxCoverage: string
+    debtToken: string
+    collateralToken: string
+    ltv: string
+  }
+}
+
+export type AaveStopLossToDebtDMA = {
+  triggerTypeName: 'DmaAaveStopLossToDebtV2'
+  triggerType: typeof DmaAaveStopLossToDebtV2
   triggerId: string
   triggerData: string
   decodedParams: {
@@ -54,9 +84,39 @@ export type SparkStopLossToCollateral = {
   }
 }
 
+export type SparkStopLossToCollateralDMA = {
+  triggerTypeName: 'DmaSparkStopLossToCollateralV2'
+  triggerType: typeof DmaSparkStopLossToCollateralV2
+  triggerId: string
+  triggerData: string
+  decodedParams: {
+    positionAddress: string
+    triggerType: string
+    maxCoverage: string
+    debtToken: string
+    collateralToken: string
+    ltv: string
+  }
+}
+
 export type SparkStopLossToDebt = {
   triggerTypeName: 'SparkStopLossToDebtV2'
   triggerType: typeof SparkStopLossToDebtV2ID
+  triggerId: string
+  triggerData: string
+  decodedParams: {
+    positionAddress: string
+    triggerType: string
+    maxCoverage: string
+    debtToken: string
+    collateralToken: string
+    ltv: string
+  }
+}
+
+export type SparkStopLossToDebtDMA = {
+  triggerTypeName: 'DmaSparkStopLossToDebtV2'
+  triggerType: typeof DmaSparkStopLossToDebtV2
   triggerId: string
   triggerData: string
   decodedParams: {
@@ -112,9 +172,13 @@ export type DmaAaveBasicSell = {
 export type GetTriggersResponse = {
   triggers: {
     aaveStopLossToCollateral?: AaveStopLossToCollateral
+    aaveStopLossToCollateralDMA?: AaveStopLossToCollateralDMA
     aaveStopLossToDebt?: AaveStopLossToDebt
+    aaveStopLossToDebtDMA?: AaveStopLossToDebtDMA
     sparkStopLossToCollateral?: SparkStopLossToCollateral
+    sparkStopLossToCollateralDMA?: SparkStopLossToCollateralDMA
     sparkStopLossToDebt?: SparkStopLossToDebt
+    sparkStopLossToDebtDMA?: SparkStopLossToDebtDMA
     aaveBasicBuy?: DmaAaveBasicBuy
     aaveBasicSell?: DmaAaveBasicSell
   }
