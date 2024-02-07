@@ -12,6 +12,7 @@ import { stopLossValidator } from './against-position-validators'
 import { getUsdAaveOraclePrice } from './get-usd-aave-oracle-price'
 import { CurrentTriggerLike, encodeAaveStopLoss } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
+import { TriggerType } from '@oasisdex/automation'
 
 export interface GetAaveStopLossServiceContainerProps {
   rpc: PublicClient
@@ -19,6 +20,23 @@ export interface GetAaveStopLossServiceContainerProps {
   getTriggers: (address: Address) => Promise<GetTriggersResponse>
   logger?: Logger
   chainId: ChainId
+}
+
+function getCurrentStopLoss(
+  trigger: StopLossEventBody,
+  triggers: GetTriggersResponse,
+): CurrentTriggerLike | undefined {
+  const currentStopLoss =
+    trigger.triggerData.type === BigInt(TriggerType.DmaAaveStopLossToCollateralV2)
+      ? triggers.triggers.aaveStopLossToCollateral ?? triggers.triggers.aaveStopLossToCollateralDMA
+      : triggers.triggers.aaveStopLossToDebt ?? triggers.triggers.aaveStopLossToDebtDMA
+
+  return currentStopLoss
+    ? {
+        triggerData: currentStopLoss.triggerData as `0x${string}`,
+        id: safeParseBigInt(currentStopLoss.triggerId) ?? 0n,
+      }
+    : undefined
 }
 
 export const getAaveStopLossServiceContainer: (
@@ -65,14 +83,7 @@ export const getAaveStopLossServiceContainer: (
 
       const debtPriceInUSD = await getUsdAaveOraclePrice(trigger.position.debt, addresses, rpc)
 
-      const currentStopLoss =
-        triggers.triggers.aaveStopLossToCollateral ?? triggers.triggers.aaveStopLossToCollateral
-      const currentTrigger: CurrentTriggerLike | undefined = currentStopLoss
-        ? {
-            triggerData: currentStopLoss.triggerData as `0x${string}`,
-            id: safeParseBigInt(currentStopLoss.triggerId) ?? 0n,
-          }
-        : undefined
+      const currentTrigger: CurrentTriggerLike | undefined = getCurrentStopLoss(trigger, triggers)
 
       const encodedData = encodeAaveStopLoss(
         position,
