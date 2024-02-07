@@ -122,26 +122,27 @@ export const aaveBasicSellTriggerDataSchema = z
     },
   )
 
-export const dmaStopLossTriggerDataSchema = z.object({
-  type: z.custom<bigint>((value) => {
-    // this check is run twice - once directly from the request with a string
-    // and then after the string is transformed to a bigint
-    // so we need to check both types
-    const allowedTypesStrings = [
-      TriggerType.DmaAaveStopLossToCollateralV2.toString(),
-      TriggerType.DmaAaveStopLossToDebtV2.toString(),
-    ]
-    if (typeof value === 'bigint') {
-      if (allowedTypesStrings.includes(value.toString())) return value
-    }
-    if (typeof value === 'string') {
-      if (allowedTypesStrings.includes(value)) return value
-    }
-    throw new Error(`Unsupported DMA StopLoss trigger type: ${value}`)
-  }).transform((value) => BigInt(value)),
+export const dmaStopLossToCollateralTriggerDataSchema = z.object({
+  type: z
+    .any()
+    .optional()
+    .transform(() => BigInt(TriggerType.DmaAaveStopLossToCollateralV2)),
   executionLTV: ltvSchema,
   token: addressSchema,
 })
+
+export const dmaStopLossToDebtTriggerDataSchema = z.object({
+  type: z
+    .any()
+    .optional()
+    .transform(() => BigInt(TriggerType.DmaAaveStopLossToDebtV2)),
+  executionLTV: ltvSchema,
+  token: addressSchema,
+})
+
+export const dmaStopLossTriggerDataSchema = dmaStopLossToCollateralTriggerDataSchema.or(
+  dmaStopLossToDebtTriggerDataSchema,
+)
 
 export const tokenSchema = z.object({
   address: addressSchema,
@@ -190,13 +191,38 @@ export const eventBodyAaveBasicSellSchema = z.object({
   action: supportedActionsSchema,
 })
 
-export const eventBodyDmaStopLossSchema = z.object({
-  dpm: addressSchema,
-  triggerData: dmaStopLossTriggerDataSchema,
-  position: positionAddressesSchema,
-  rpc: urlOptionalSchema,
-  action: supportedActionsSchema,
-})
+export const eventBodyDmaStopLossSchema = z
+  .object({
+    dpm: addressSchema,
+    triggerData: dmaStopLossTriggerDataSchema,
+    position: positionAddressesSchema,
+    rpc: urlOptionalSchema,
+    action: supportedActionsSchema,
+  })
+  .refine(
+    (data) => {
+      const closeToken = data.triggerData.token
+      return [data.position.debt, data.position.collateral].includes(closeToken)
+    },
+    {
+      message: 'Close token must be either collateral or debt',
+      path: ['triggerData', 'token'],
+    },
+  )
+  .transform((data) => {
+    const closeToken = data.triggerData.token
+    const triggerType =
+      closeToken === data.position.debt
+        ? TriggerType.DmaAaveStopLossToDebtV2
+        : TriggerType.DmaAaveStopLossToCollateralV2
+    return {
+      ...data,
+      triggerData: {
+        ...data.triggerData,
+        type: BigInt(triggerType),
+      },
+    }
+  })
 
 export enum SupportedTriggers {
   AutoBuy = 'auto-buy',

@@ -8,6 +8,7 @@
     "test": "turbo run test --cache-dir=.turbo",
     "cicheck": "turbo run cicheck --cache-dir=.turbo",
     "deploy:staging": "turbo run deploy:staging --cache-dir=.turbo",
+    "deploy:prod": "turbo run deploy:prod --cache-dir=.turbo",
     "graph": "pnpm dlx nx graph",
     "format": "prettier --check \"./**/*.{ts,tsx,js,jsx,json}\"",
     "format:fix": "prettier --write \"./**/*.{ts,tsx,js,jsx,json}\""
