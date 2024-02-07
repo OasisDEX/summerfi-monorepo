@@ -27,7 +27,7 @@ export const encodeAaveStopLoss: EncoderFunction<DmaStopLossTriggerData> = (
       'uint256 executionLtv',
   )
 
-  const operationName = OPERATION_NAMES.aave.v3.ADJUST_RISK_DOWN // TODO: is this valid?
+  const operationName = OPERATION_NAMES.aave.v3.CLOSE_POSITION
   const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
 
   const encodedTriggerData = encodeAbiParameters(abiParameters, [
