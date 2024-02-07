@@ -15,8 +15,7 @@ import {
 import { z } from 'zod'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { AgainstPositionValidator } from './validators-types'
-import { minNetValueMap } from './min-net-value-map'
-import { chainIdSchema, ProtocolId } from '@summerfi/serverless-shared'
+import { chainIdSchema } from '@summerfi/serverless-shared'
 
 const paramsSchema = z.object({
   position: positionSchema,
@@ -150,21 +149,21 @@ const upsertErrorsValidation = paramsSchema
       },
     },
   )
-  .refine(
-    ({ position, chainId, action }) => {
-      if (action == SupportedActions.Update) {
-        return true
-      }
-      const minNetValue = minNetValueMap[chainId][ProtocolId.AAVE3]
-      return position.netValueUSD >= minNetValue
-    },
-    {
-      message: 'Net value is too low to setup auto sell',
-      params: {
-        code: AutoSellTriggerCustomErrorCodes.NetValueTooLowToSetupAutoSell,
-      },
-    },
-  )
+// .refine(
+//   ({ position, chainId, action }) => {
+//     if (action == SupportedActions.Update) {
+//       return true
+//     }
+//     const minNetValue = minNetValueMap[chainId][ProtocolId.AAVE3]
+//     return position.netValueUSD >= minNetValue
+//   },
+//   {
+//     message: 'Net value is too low to setup auto sell',
+//     params: {
+//       code: AutoSellTriggerCustomErrorCodes.NetValueTooLowToSetupAutoSell,
+//     },
+//   },
+// )
 
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
