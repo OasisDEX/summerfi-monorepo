@@ -8,6 +8,10 @@ export function addTriggersConfig({ stack, api }: StackContext & { api: Api }) {
       SUBGRAPH_BASE: process.env.SUBGRAPH_BASE || '',
       POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
     },
+    tracing: 'active',
+    disableCloudWatchLogs: false,
+    applicationLogLevel: 'INFO',
+    systemLogLevel: 'INFO',
   })
 
   const setupTriggerFunction = new Function(stack, 'setup-trigger-function', {
@@ -18,6 +22,10 @@ export function addTriggersConfig({ stack, api }: StackContext & { api: Api }) {
       SKIP_VALIDATION: process.env.SKIP_VALIDATION || 'false',
       POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
     },
+    tracing: 'active',
+    disableCloudWatchLogs: false,
+    applicationLogLevel: 'INFO',
+    systemLogLevel: 'INFO',
   })
 
   api.addRoutes(stack, {

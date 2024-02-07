@@ -121,12 +121,13 @@ export function buildServiceContainer<
     validate: async (params) => {
       const triggers = await getTriggers(params.position.address)
       const validator = getAgainstPositionValidator<Trigger, TriggerData>(trigger)
-      const validatorParams = {
+      const validatorParams: Parameters<typeof validator>[0] = {
         position: params.position,
         executionPrice: params.executionPrice,
         triggerData: params.triggerData,
         action: params.action,
         triggers,
+        chainId,
       }
       return validator(validatorParams)
     },
