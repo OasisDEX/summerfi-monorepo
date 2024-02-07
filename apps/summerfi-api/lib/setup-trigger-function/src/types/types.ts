@@ -75,6 +75,8 @@ export enum AutoSellTriggerCustomWarningCodes {
 
 export enum StopLossErrorCodes {
   StopLossTriggeredImmediately = 'stop-loss-triggered-immediately',
+  StopLossTriggerAlreadyExists = 'stop-loss-trigger-already-exists',
+  StopLossTriggerDoesNotExist = 'stop-loss-trigger-does-not-exist',
 }
 
 export type ValidationIssue = { message: string; code: string; path: (string | number)[] }
