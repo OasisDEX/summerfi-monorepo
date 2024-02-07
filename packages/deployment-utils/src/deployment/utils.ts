@@ -4,22 +4,22 @@ import {
   ProviderTypes,
   DeploymentType,
   Provider,
-  Network,
+  Chain,
   ConfigName,
   DeploymentParams,
-  DeploymentNetwork,
+  DeploymentChain,
 } from './types'
 import { WalletClient } from './viem-types'
 
 export function getDeploymentNameFromType(type: DeploymentType): string {
-  return `${type.provider}${DeploymentTypeSeparator}${type.network}${DeploymentTypeSeparator}${type.config}`
+  return `${type.provider}${DeploymentTypeSeparator}${type.chain}${DeploymentTypeSeparator}${type.config}`
 }
 
 export function getLegacyDeploymentNameFromType(type: DeploymentType): string {
   let deploymentName = ''
 
   if (type.provider === ProviderTypes.Remote) {
-    deploymentName = type.network + DeploymentTypeSeparator + type.config
+    deploymentName = type.chain + DeploymentTypeSeparator + type.config
   } else if (type.provider === ProviderTypes.Internal) {
     deploymentName = 'hardhat'
   } else {
@@ -54,7 +54,7 @@ export function getDeploymentTypeFromName(name: string): DeploymentType {
 
   return {
     provider: provider as Provider,
-    network: network as Network,
+    chain: network as Chain,
     config: config as ConfigName,
   }
 }
@@ -79,9 +79,9 @@ export function isProvider(value: string): value is Provider {
   return Object.values<string>(ProviderTypes).includes(value)
 }
 
-export function isNetwork(value: string): value is Network {
+export function isNetwork(value: string): value is Chain {
   return (
-    Object.values<string>(DeploymentNetwork).includes(value) ||
+    Object.values<string>(DeploymentChain).includes(value) ||
     Object.values<string>(Networks).includes(value)
   )
 }

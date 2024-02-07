@@ -17,10 +17,10 @@ export type {
   DeploymentParams,
   DeploymentType,
   ImportPair,
-  Network,
+  Chain as Network,
   Provider,
 } from './types'
-export { DeploymentFlags, DirectoryFilterType, ProviderTypes, DeploymentNetwork } from './types'
+export { DeploymentFlags, DirectoryFilterType, ProviderTypes, DeploymentChain } from './types'
 export {
   getDeploymentNameFromType,
   getDeploymentTypeFromName,

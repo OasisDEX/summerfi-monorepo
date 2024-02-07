@@ -13,7 +13,7 @@ export function parseDeploymentName(deploymentName: string): DeploymentType {
 
   return {
     provider,
-    network,
+    chain: network,
     config,
   }
 }

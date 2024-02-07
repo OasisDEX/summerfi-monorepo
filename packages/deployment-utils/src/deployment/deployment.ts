@@ -14,7 +14,7 @@ import type {
 import {
   DeploymentFlags,
   DeploymentOptions,
-  DeploymentNetwork,
+  DeploymentChain,
   ProviderTypes,
   DirectoryFilterType,
 } from './types'
@@ -47,7 +47,7 @@ export class Deployments {
   private static readonly DefaultParams: DeploymentInitParams = {
     type: {
       provider: ProviderTypes.Internal,
-      network: DeploymentNetwork.Develop,
+      chain: DeploymentChain.Develop,
       config: 'test',
     },
     options: DeploymentFlags.None,
@@ -67,13 +67,13 @@ export class Deployments {
 
   public validateParams(params: DeploymentInitParams): void {
     if (
-      (params.type.network === DeploymentNetwork.Develop &&
+      (params.type.chain === DeploymentChain.Develop &&
         params.type.provider === ProviderTypes.Remote) ||
       (params.type.provider === ProviderTypes.Internal &&
-        params.type.network !== DeploymentNetwork.Develop)
+        params.type.chain !== DeploymentChain.Develop)
     ) {
       throw new Error(
-        `Provider ${params.type.provider} is not supported for network ${params.type.network}`,
+        `Provider ${params.type.provider} is not supported for network ${params.type.chain}`,
       )
     }
   }
@@ -392,7 +392,7 @@ export class Deployments {
           })
 
           deploymentsIndex.push({
-            name: `${deployment.network}${DeploymentTypeSeparator}${deployment.config}`,
+            name: `${deployment.chain}${DeploymentTypeSeparator}${deployment.config}`,
             value: importName,
           })
         }
@@ -407,7 +407,7 @@ export class Deployments {
       date: new Date().toISOString(),
       timestamp: this._getNowTimestamp(),
       provider: this.deploymentType.provider,
-      network: this.deploymentType.network,
+      chain: this.deploymentType.chain,
       config: this.deploymentType.config,
       contracts: {},
       dependencies: {},
@@ -423,7 +423,7 @@ export class Deployments {
   }
 
   private _isDevelopNetwork(): boolean {
-    return this.deploymentType.network === DeploymentNetwork.Develop
+    return this.deploymentType.chain === DeploymentChain.Develop
   }
 
   private _isInternalProvider(): boolean {

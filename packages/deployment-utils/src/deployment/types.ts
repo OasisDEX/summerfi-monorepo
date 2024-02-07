@@ -1,4 +1,4 @@
-import type { NetworksType } from '@summerfi/hardhat-utils'
+import type { ChainsType } from '@summerfi/hardhat-utils'
 import { Contract, TransactionReceipt } from './viem-types'
 import { Address } from '@summerfi/common'
 
@@ -8,7 +8,7 @@ export enum ProviderTypes {
   Remote = 'remote',
 }
 
-export enum DeploymentNetwork {
+export enum DeploymentChain {
   Develop = 'develop',
 }
 
@@ -43,7 +43,7 @@ export type DeploymentObject = {
   date: string
   timestamp: number
   provider: Provider
-  network: Network
+  chain: Chain
   config: ConfigName
   contracts: {
     [contractName: string]: {
@@ -79,10 +79,10 @@ export type Dependency = {
 export type DeploymentOptions = DeploymentFlags
 
 export type Provider = ProviderTypes
-export type Network = NetworksType | DeploymentNetwork
+export type Chain = ChainsType | DeploymentChain
 export type ConfigName = string
 export type DeploymentType = {
   provider: Provider
-  network: Network
+  chain: Chain
   config: ConfigName
 }

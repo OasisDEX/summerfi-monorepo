@@ -32,16 +32,9 @@ async function processDeploymentEntry(
   configEntry_: object,
   spacer: string,
 ): Promise<boolean> {
-  if (configName === 'automation') {
-    return true
-  }
-
   const configEntry = configEntry_ as ConfigEntry
 
-  if (configEntry.address !== undefined) {
-    console.log(`${spacer}  - Add dependency ${configName}...`)
-    ds.addDependency(configEntry.name, configEntry.address)
-  } else {
+  if (configEntry.address === undefined) {
     console.log(`${spacer}  - Deploying ${configName}...`)
     const constructorArgs = resolveConstructorArgs(ds, configEntry.constructorArgs)
 

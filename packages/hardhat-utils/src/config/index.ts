@@ -1,10 +1,5 @@
 export { DefaultHardhatConfig, getHardhatConfig } from './hardhat.default'
-export type {
-  AutoOptions,
-  EndpointProvider,
-  EndpointsConfig,
-  NetworksType,
-} from './hardhat.helpers'
+export type { AutoOptions, EndpointProvider, EndpointsConfig, ChainsType } from './hardhat.helpers'
 export {
   ChainIds,
   Gas,

@@ -1,10 +1,10 @@
 import { Config } from '@summerfi/deployment-types'
-import { NetworksType } from '@summerfi/hardhat-utils'
-import { DeploymentNetwork } from '@summerfi/deployment-utils'
+import { ChainsType } from '@summerfi/hardhat-utils'
+import { DeploymentChain } from '@summerfi/deployment-utils'
 import { MainnetConfig } from './mainnet'
 import { LocalhostConfig } from './localhost'
 
-export type ConfigMap = Partial<Record<NetworksType | DeploymentNetwork, Config>>
+export type ConfigMap = Partial<Record<ChainsType | DeploymentChain, Config>>
 
 export const DeploymentConfig: ConfigMap = {
   localhost: LocalhostConfig,

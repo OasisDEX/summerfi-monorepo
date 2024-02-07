@@ -121,7 +121,7 @@ export const EndpointURLs: EndpointsConfig = {
 }
 
 export const Networks = Object.keys(ChainIds)
-export type NetworksType = keyof typeof ChainIds
+export type ChainsType = keyof typeof ChainIds
 
 // Ensure that we have all the environment variables we need.
 
@@ -181,7 +181,7 @@ export function getLocalhostChainConfig(): NetworkUserConfig {
   }
 }
 
-export function getChainConfig(network: NetworksType): NetworkUserConfig {
+export function getChainConfig(network: ChainsType): NetworkUserConfig {
   const provider: EndpointProvider = <EndpointProvider>endpointProvider
   const url: string = EndpointURLs[provider][network] + endpointApiKey
   return {

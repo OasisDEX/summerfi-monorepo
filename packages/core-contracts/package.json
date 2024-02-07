@@ -9,7 +9,9 @@
     "test": "jest",
     "build": "tsc -b -v",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "gen-versions": "hardhat run scripts/contract-versions/generate-versions.ts",
+    "view-versions": "hardhat run scripts/contract-versions/view-versions.ts"
   },
   "devDependencies": {
     "@ethersproject/keccak256": "^5.7.0",
