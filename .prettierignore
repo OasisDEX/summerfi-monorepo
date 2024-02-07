@@ -15,4 +15,6 @@ jest.config.js
 setup.js
 lambdas
 cache
+abis
+artifacts
 **/core-contracts/src/
