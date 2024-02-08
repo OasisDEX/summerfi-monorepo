@@ -122,7 +122,6 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
   const aaveStopLossToDebtDMA: AaveStopLossToDebtDMA | undefined = triggers.triggers
     .filter((trigger) => trigger.triggerType == DmaAaveStopLossToDebtV2ID)
     .map((trigger) => {
-      console.log('trigger', trigger)
       return {
         triggerTypeName: 'DmaAaveStopLossToDebtV2' as const,
         triggerType: DmaAaveStopLossToDebtV2ID,
