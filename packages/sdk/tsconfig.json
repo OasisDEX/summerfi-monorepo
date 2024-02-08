@@ -4,11 +4,12 @@
     "rootDir": "src",
     "outDir": "dist",
     "baseUrl": "src",
+    "types": ["jest", "node"],
     "paths": {
       "~sdk": ["./index.ts"],
       "~sdk/*": ["./*"]
     }
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

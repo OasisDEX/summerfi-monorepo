@@ -1,5 +1,7 @@
 import { Protocol } from '~sdk/protocols'
 import { Position, PositionId } from './Position'
+import { Order, Simulation } from '~sdk/orders'
+import { Maybe } from '~sdk/utils'
 
 /**
  * @name UserId
@@ -34,5 +36,10 @@ export interface User {
    * @method getPosition
    * @description Retrieves a position of the user by its ID
    */
-  getPosition(id: PositionId): Promise<Position>
+  getPosition(id: PositionId): Promise<Maybe<Position>>
+
+  /**
+   *
+   */
+  newOrder(simulation: Simulation): Promise<Order>
 }

@@ -5,7 +5,7 @@ import { Position } from '~sdk/users'
 
 export class RefinanceSimulationManagerClientImpl implements RefinanceSimulationManager {
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async simulateRefinance(params: {
+  public async simulateRefinancePosition(params: {
     position: Position
     pool: Pool
     parameters: RefinanceParameters

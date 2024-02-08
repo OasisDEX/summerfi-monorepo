@@ -3,34 +3,44 @@ import { Chain, ChainInfo } from '~sdk/chains'
 
 /**
  * @interface ChainsManager
- * @description Manages the list of networks supported by the SDK and allows to retrive a network by its name or chain ID
+ * @description Manages the list of chains supported by the SDK and allows to retrive a chains by its name or chain ID
  */
 export interface ChainsManager {
   /**
-   * @method getSupportedNetworks
-   * @description Retrieves the list of supported networks
+   * @method getSupportedChains
+   * @description Retrieves the list of supported chains
    *
-   * @returns The list of supported networks
+   * @returns The list of supported chains
    */
   getSupportedChains(): Promise<ChainInfo[]>
 
   /**
-   * @method getNetworkByName
-   * @description Retrieves a network by its name
+   * @method getChain
+   * @description Retrieves a chain by its chain info
    *
-   * @param name The name of the network to retrieve
+   * @param chainInfo The info associated with the chain to retrieve
    *
-   * @returns The network with the given name
+   * @returns The chain for the given chain info
    */
-  getChainByName(name: string): Promise<Maybe<Chain>>
+  getChain(params: { chainInfo: ChainInfo }): Promise<Maybe<Chain>>
 
   /**
-   * @method getNetworkByChainId
+   * @method getChainByName
+   * @description Retrieves a chain by its name
+   *
+   * @param name The name of the chain to retrieve
+   *
+   * @returns The chain with the given name
+   */
+  getChainByName(params: { name: string }): Promise<Maybe<Chain>>
+
+  /**
+   * @method getChainById
    * @description Retrieves a network by its chain ID
    *
    * @param chainId The chain ID of the network to retrieve
    *
    * @returns The network with the given chain ID
    */
-  getChainByChainId(chainId: number): Promise<Maybe<Chain>>
+  getChainById(params: { chainId: number }): Promise<Maybe<Chain>>
 }

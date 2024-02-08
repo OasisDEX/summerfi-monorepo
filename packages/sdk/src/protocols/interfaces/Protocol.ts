@@ -1,3 +1,4 @@
+import { Maybe } from '~sdk/utils'
 import { ProtocolId } from './IDs'
 import { Pool } from './Pool'
 import { PoolParameters } from './PoolParameters'
@@ -13,6 +14,6 @@ export interface Protocol {
   getPool(params: {
     poolParameters: PoolParameters
     protocolParameters?: ProtocolParameters
-  }): Promise<Pool>
+  }): Promise<Maybe<Pool>>
   getAllPools(params: { protocolParameters?: ProtocolParameters }): Promise<Pool[]>
 }

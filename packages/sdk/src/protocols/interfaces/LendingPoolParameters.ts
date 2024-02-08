@@ -6,6 +6,6 @@ import { PoolParameters } from '~sdk/protocols'
  * @description Represents the parameters of a lending pool
  */
 export type LendingPoolParameters = PoolParameters & {
-  debtToken: Token
-  collateralToken: Token
+  debtToken: Token | Token[]
+  collateralToken: Token | Token[]
 }
