@@ -3,14 +3,14 @@ import { API } from './stacks/summer-stack'
 
 export const sstConfig: SSTConfig = {
   config(_input) {
-    if (!['dev', 'feature', 'staging', 'production'].includes(_input.stage ?? '')) {
+    if (_input.stage && !['dev', 'feature', 'staging', 'production'].includes(_input.stage)) {
       throw new Error('Invalid stage')
     }
     return {
-      name: 'summerfi-stack',
+      name: `${process.env.SST_APP_NAME}`,
       region: `${process.env.AWS_REGION}`,
       profile: `${process.env.AWS_PROFILE}`,
-      stage: `${_input.stage}`,
+      stage: `${_input.stage || 'dev'}`,
     }
   },
   stacks(app) {
