@@ -1,10 +1,17 @@
-import { PositionLike, PRICE_DECIMALS, TokenBalance } from '~types'
+import { ONE_DOLLAR, PositionLike, Price, PRICE_DECIMALS, TEN_CENTS, TokenBalance } from '~types'
 import { Address } from '@summerfi/serverless-shared/domain-types'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
 import { aavePoolDataProviderAbi, aaveOracleAbi, erc20Abi } from '~abi'
 import { calculateLtv } from './calculate-ltv'
 import { Logger } from '@aws-lambda-powertools/logger'
+
+function isStablecoin(tokenPrice: Price) {
+  const difference = tokenPrice - ONE_DOLLAR
+  const abs = difference < 0 ? -difference : difference
+
+  return abs < TEN_CENTS
+}
 
 export interface GetPositionParams {
   dpm: Address
@@ -104,14 +111,20 @@ export async function getPosition(
     collateralPriceInDebt,
   })
 
+  const netValue =
+    (collateralAmount * collateralPrice) / 10n ** BigInt(collateralResult.token.decimals) -
+    (debtAmount * debtPrice) / 10n ** BigInt(debtResult.token.decimals)
+
   logger?.debug('Position data', {
     debt: debtResult,
     collateral: collateralResult,
     collateralPriceInDebt,
     ltv,
+    netValue,
   })
 
   return {
+    hasStablecoinDebt: isStablecoin(debtPrice),
     ltv,
     collateral: collateralResult,
     debt: debtResult,
@@ -120,5 +133,6 @@ export async function getPosition(
       collateralPrice,
       debtPrice,
     },
+    netValueUSD: netValue,
   }
 }

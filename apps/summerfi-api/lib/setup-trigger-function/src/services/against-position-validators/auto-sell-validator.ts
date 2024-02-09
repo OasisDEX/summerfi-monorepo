@@ -15,6 +15,7 @@ import {
 import { z } from 'zod'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { AgainstPositionValidator } from './validators-types'
+import { chainIdSchema } from '@summerfi/serverless-shared'
 
 const paramsSchema = z.object({
   position: positionSchema,
@@ -22,6 +23,7 @@ const paramsSchema = z.object({
   triggerData: aaveBasicSellTriggerDataSchema,
   triggers: z.custom<GetTriggersResponse>(),
   action: supportedActionsSchema,
+  chainId: chainIdSchema,
 })
 
 const upsertErrorsValidation = paramsSchema
@@ -147,6 +149,21 @@ const upsertErrorsValidation = paramsSchema
       },
     },
   )
+// .refine(
+//   ({ position, chainId, action }) => {
+//     if (action == SupportedActions.Update) {
+//       return true
+//     }
+//     const minNetValue = minNetValueMap[chainId][ProtocolId.AAVE3]
+//     return position.netValueUSD >= minNetValue
+//   },
+//   {
+//     message: 'Net value is too low to setup auto sell',
+//     params: {
+//       code: AutoSellTriggerCustomErrorCodes.NetValueTooLowToSetupAutoSell,
+//     },
+//   },
+// )
 
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
@@ -232,8 +249,8 @@ const warningsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggerData }) => {
-      return triggerData.useMinSellPrice
+    ({ triggerData, position }) => {
+      return position.hasStablecoinDebt ? triggerData.useMinSellPrice : true
     },
     {
       message: 'No min sell price',
@@ -244,8 +261,10 @@ const warningsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggerData, triggers }) => {
-      return !triggerData.useMinSellPrice && triggers.triggers.aaveStopLossToDebt === undefined
+    ({ triggerData, triggers, position }) => {
+      return position.hasStablecoinDebt
+        ? !triggerData.useMinSellPrice && triggers.triggers.aaveStopLossToDebt === undefined
+        : true
     },
     {
       message: 'No min sell price when stop loss enabled',

@@ -10,10 +10,12 @@ import {
   aaveBasicBuyTriggerDataSchema,
   supportedActionsSchema,
   SupportedActions,
+  ONE_PERCENT,
 } from '~types'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { z } from 'zod'
 import { AgainstPositionValidator } from './validators-types'
+import { chainIdSchema } from '@summerfi/serverless-shared'
 
 const paramsSchema = z.object({
   position: positionSchema,
@@ -21,6 +23,7 @@ const paramsSchema = z.object({
   triggerData: aaveBasicBuyTriggerDataSchema,
   triggers: z.custom<GetTriggersResponse>(),
   action: supportedActionsSchema,
+  chainId: chainIdSchema,
 })
 
 const upsertErrorsValidation = paramsSchema
@@ -72,17 +75,17 @@ const upsertErrorsValidation = paramsSchema
       },
     },
   )
-  // .refine(
-  //   ({ position, triggerData }) => {
-  //     return triggerData.executionLTV <= position.ltv - ONE_PERCENT
-  //   },
-  //   {
-  //     message: 'Execution LTV is bigger than current LTV',
-  //     params: {
-  //       code: AutoBuyTriggerCustomErrorCodes.ExecutionLTVBiggerThanCurrentLTV,
-  //     },
-  //   },
-  // )
+  .refine(
+    ({ position, triggerData }) => {
+      return triggerData.executionLTV <= position.ltv - ONE_PERCENT
+    },
+    {
+      message: 'Execution LTV is bigger than current LTV',
+      params: {
+        code: AutoBuyTriggerCustomErrorCodes.ExecutionLTVBiggerThanCurrentLTV,
+      },
+    },
+  )
   .refine(
     ({ triggers, triggerData }) => {
       const autoSellTrigger = triggers.triggers.aaveBasicSell
@@ -96,7 +99,7 @@ const upsertErrorsValidation = paramsSchema
       return triggerData.targetLTV < autoSellExecutionLTV
     },
     {
-      message: 'Auto buy target higher than auto sell trigger',
+      message: 'Auto buy trigger lower than auto sell target',
       params: {
         code: AutoBuyTriggerCustomErrorCodes.AutoBuyTriggerLowerThanAutoSellTarget,
       },
@@ -128,6 +131,21 @@ const upsertErrorsValidation = paramsSchema
       },
     },
   )
+// .refine(
+//   ({ position, chainId, action }) => {
+//     if (action === SupportedActions.Update) {
+//       return true
+//     }
+//     const minNetValue = minNetValueMap[chainId][ProtocolId.AAVE3]
+//     return position.netValueUSD >= minNetValue
+//   },
+//   {
+//     message: 'Net value is too low to setup auto buy',
+//     params: {
+//       code: AutoBuyTriggerCustomErrorCodes.NetValueTooLowToSetupAutoBuy,
+//     },
+//   },
+// )
 
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
@@ -209,8 +227,8 @@ const warningsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggerData }) => {
-      return triggerData.useMaxBuyPrice
+    ({ triggerData, position }) => {
+      return position.hasStablecoinDebt ? triggerData.useMaxBuyPrice : true
     },
     {
       message: 'Auto buy with no max price threshold',
