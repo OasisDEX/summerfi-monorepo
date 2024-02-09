@@ -1,25 +1,19 @@
-import { ONE_DOLLAR, PositionLike, Price, PRICE_DECIMALS, TEN_CENTS, TokenBalance } from '~types'
+import { PositionLike, PRICE_DECIMALS, TokenBalance } from '~types'
 import { Address } from '@summerfi/serverless-shared/domain-types'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
-import { aavePoolDataProviderAbi, aaveOracleAbi, erc20Abi } from '~abi'
+import { aaveOracleAbi, aavePoolDataProviderAbi, erc20Abi } from '~abi'
 import { calculateLtv } from './calculate-ltv'
 import { Logger } from '@aws-lambda-powertools/logger'
-
-function isStablecoin(tokenPrice: Price) {
-  const difference = tokenPrice - ONE_DOLLAR
-  const abs = difference < 0 ? -difference : difference
-
-  return abs < TEN_CENTS
-}
+import { isStablecoin } from './is-stablecoin'
 
 export interface GetPositionParams {
-  dpm: Address
+  address: Address
   collateral: Address
   debt: Address
 }
-export async function getPosition(
-  { dpm, collateral, debt }: GetPositionParams,
+export async function getSparkPosition(
+  { address, collateral, debt }: GetPositionParams,
   publicClient: PublicClient,
   addresses: Addresses,
   logger?: Logger,
@@ -36,19 +30,19 @@ export async function getPosition(
     contracts: [
       {
         abi: aavePoolDataProviderAbi,
-        address: addresses.AaveDataPoolProvider,
+        address: addresses.Spark.SparkDataPoolProvider,
         functionName: 'getUserReserveData',
-        args: [collateral, dpm],
+        args: [collateral, address],
       },
       {
         abi: aavePoolDataProviderAbi,
-        address: addresses.AaveDataPoolProvider,
+        address: addresses.Spark.SparkDataPoolProvider,
         functionName: 'getUserReserveData',
-        args: [debt, dpm],
+        args: [debt, address],
       },
       {
         abi: aaveOracleAbi,
-        address: addresses.AaveOracle,
+        address: addresses.Spark.SparkOracle,
         functionName: 'getAssetsPrices',
         args: [[collateral, debt]],
       },
@@ -128,7 +122,7 @@ export async function getPosition(
     ltv,
     collateral: collateralResult,
     debt: debtResult,
-    address: dpm,
+    address: address,
     prices: {
       collateralPrice,
       debtPrice,

@@ -1,4 +1,4 @@
-import { PERCENT_DECIMALS, PositionLike, Price, PRICE_DECIMALS } from '../types'
+import { PERCENT_DECIMALS, PositionLike, Price, PRICE_DECIMALS } from '~types'
 import { getTheLeastCommonMultiple, normalizeAmount } from './normalize-amount'
 
 export function calculateCollateralPriceInDebtBasedOnLtv(params: PositionLike): Price {

@@ -3,34 +3,26 @@ import { getAddresses } from './get-addresses'
 import { Chain as ViemChain, createPublicClient, http, PublicClient } from 'viem'
 import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
 import { Logger } from '@aws-lambda-powertools/logger'
-import { getPosition, GetPositionParams } from './get-position'
-import { SimulatedPosition, simulatePosition, SimulatePositionParams } from './simulate-position'
-import { getTriggerEncoder } from './trigger-encoders'
 import {
-  PositionLike,
-  Price,
-  SupportedActions,
-  SupportedTriggers,
-  SupportedTriggersSchema,
-  TriggerData,
-  ValidationResults,
+  AaveAutoBuyEventBody,
+  AaveAutoSellEventBody,
+  SetupTriggerEventBody,
+  AaveStopLossEventBody,
+  SparkStopLossEventBody,
 } from '~types'
-import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
-import {
-  encodeFunctionForDpm,
-  EncodeFunctionForDpmParams,
-  TransactionFragment,
-} from './encode-function-for-dpm'
-import { EncodedFunction } from './trigger-encoders/types'
 import type { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import fetch from 'node-fetch'
 import memoize from 'just-memoize'
-import { getAgainstPositionValidator } from './against-position-validators'
 import {
   getRpcGatewayEndpoint,
   IRpcConfig,
 } from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
-import { getUsdOraclePrice } from './get-usd-oracle-price'
+import { ServiceContainer } from './service-container'
+import { TriggerType } from '@oasisdex/automation'
+import { getAaveAutoBuyServiceContainer } from './get-aave-auto-buy-service-container'
+import { getAaveAutoSellServiceContainer } from './get-aave-auto-sell-service-container'
+import { getAaveStopLossServiceContainer } from './get-aave-stop-loss-service-container'
+import { getSparkStopLossServiceContainer } from './get-spark-stop-loss-service-container'
 
 export const rpcConfig: IRpcConfig = {
   skipCache: false,
@@ -48,40 +40,37 @@ const domainChainIdToViemChain: Record<ChainId, ViemChain> = {
   [ChainId.SEPOLIA]: sepolia,
 }
 
-export interface ServiceContainer {
-  getPosition: (params: GetPositionParams) => Promise<PositionLike>
-  simulatePosition: (params: SimulatePositionParams) => SimulatedPosition
-  getExecutionPrice: (params: PositionLike) => Price
-  validate: (params: {
-    position: PositionLike
-    executionPrice: Price
-    triggerData: TriggerData
-    action: SupportedActions
-  }) => Promise<ValidationResults>
-  getTriggerTxData: (params: {
-    position: PositionLike
-    triggerData: TriggerData
-    action: SupportedActions
-  }) => Promise<EncodedFunction>
-  encodeForDPM: (params: EncodeFunctionForDpmParams) => TransactionFragment
+function isAaveAutoBuy(trigger: SetupTriggerEventBody): trigger is AaveAutoBuyEventBody {
+  return trigger.triggerData?.type === BigInt(TriggerType.DmaAaveBasicBuyV2)
 }
 
-export function buildServiceContainer<
-  Trigger extends SupportedTriggers,
-  Schema extends SupportedTriggersSchema,
-  Protocol extends ProtocolId,
-  Chain extends ChainId,
->(
-  chainId: Chain,
-  protocol: Protocol,
+function isAaveAutoSell(trigger: SetupTriggerEventBody): trigger is AaveAutoSellEventBody {
+  return trigger.triggerData?.type === BigInt(TriggerType.DmaAaveBasicSellV2)
+}
+
+function isAaveStopLoss(trigger: SetupTriggerEventBody): trigger is AaveStopLossEventBody {
+  return [
+    BigInt(TriggerType.DmaAaveStopLossToCollateralV2),
+    BigInt(TriggerType.DmaAaveStopLossToDebtV2),
+  ].includes(trigger.triggerData?.type)
+}
+
+function isSparkStopLoss(trigger: SetupTriggerEventBody): trigger is SparkStopLossEventBody {
+  return [
+    BigInt(TriggerType.DmaSparkStopLossToCollateralV2),
+    BigInt(TriggerType.DmaSparkStopLossToDebtV2),
+  ].includes(trigger.triggerData?.type)
+}
+
+export function buildServiceContainer<Trigger extends SetupTriggerEventBody>(
+  chainId: ChainId,
+  protocol: ProtocolId,
   trigger: Trigger,
-  schema: Schema,
   rpcGateway: string,
   getTriggersUrl: string,
-  forkRpc?: string,
   logger?: Logger,
-): ServiceContainer {
-  const rpc = forkRpc ?? getRpcGatewayEndpoint(rpcGateway, chainId, rpcConfig)
+): ServiceContainer<Trigger> {
+  const rpc = trigger.rpc ?? getRpcGatewayEndpoint(rpcGateway, chainId, rpcConfig)
   const transport = http(rpc, {
     batch: false,
     fetchOptions: {
@@ -98,9 +87,9 @@ export function buildServiceContainer<
 
   const addresses = getAddresses(chainId)
 
-  const getTriggers = memoize(async (dpm: Address) => {
+  const getTriggers = memoize(async (address: Address) => {
     try {
-      const triggers = await fetch(`${getTriggersUrl}?chainId=${chainId}&dpm=${dpm}`)
+      const triggers = await fetch(`${getTriggersUrl}?chainId=${chainId}&dpm=${address}`)
       return (await triggers.json()) as GetTriggersResponse
     } catch (e) {
       logger?.error('Error fetching triggers', { error: e })
@@ -108,60 +97,42 @@ export function buildServiceContainer<
     }
   })
 
-  return {
-    getPosition: (params: Parameters<typeof getPosition>[0]) => {
-      return getPosition(params, publicClient, addresses, logger)
-    },
-    simulatePosition: (params: Parameters<typeof simulatePosition>[0]) => {
-      return simulatePosition(params, logger)
-    },
-    getExecutionPrice: (params: Parameters<typeof calculateCollateralPriceInDebtBasedOnLtv>[0]) => {
-      return calculateCollateralPriceInDebtBasedOnLtv(params)
-    },
-    validate: async (params) => {
-      const triggers = await getTriggers(params.position.address)
-      const validator = getAgainstPositionValidator<Trigger, TriggerData>(trigger)
-      const validatorParams: Parameters<typeof validator>[0] = {
-        position: params.position,
-        executionPrice: params.executionPrice,
-        triggerData: params.triggerData,
-        action: params.action,
-        triggers,
-        chainId,
-      }
-      return validator(validatorParams)
-    },
-    getTriggerTxData: async ({ position, triggerData, action }) => {
-      const triggers = await getTriggers(position.address)
-
-      const debtPriceInUSD = await getUsdOraclePrice(position.debt.token, addresses, publicClient)
-
-      const encodedFunction = getTriggerEncoder({
-        position,
-        triggers,
-        triggerData,
-        debtPriceInUSD,
-        protocol: ProtocolId.AAVE3,
-      })
-
-      if (action === SupportedActions.Add || action === SupportedActions.Update) {
-        return {
-          encodedTriggerData: encodedFunction.encodedTriggerData,
-          txData: encodedFunction.upsertTrigger,
-        }
-      }
-
-      if (action === SupportedActions.Remove && encodedFunction.removeTrigger) {
-        return {
-          encodedTriggerData: encodedFunction.encodedTriggerData,
-          txData: encodedFunction.removeTrigger,
-        }
-      }
-
-      throw new Error(`Can't find txData for action ${action}`)
-    },
-    encodeForDPM: (params: EncodeFunctionForDpmParams) => {
-      return encodeFunctionForDpm(params, addresses)
-    },
+  if (isAaveAutoBuy(trigger)) {
+    return getAaveAutoBuyServiceContainer({
+      rpc: publicClient,
+      addresses,
+      getTriggers,
+      logger,
+      chainId,
+    }) as ServiceContainer<Trigger>
   }
+  if (isAaveAutoSell(trigger)) {
+    return getAaveAutoSellServiceContainer({
+      rpc: publicClient,
+      addresses,
+      getTriggers,
+      logger,
+      chainId,
+    }) as ServiceContainer<Trigger>
+  }
+  if (isAaveStopLoss(trigger)) {
+    return getAaveStopLossServiceContainer({
+      rpc: publicClient,
+      addresses,
+      getTriggers,
+      logger,
+      chainId,
+    }) as ServiceContainer<Trigger>
+  }
+  if (isSparkStopLoss(trigger)) {
+    return getSparkStopLossServiceContainer({
+      rpc: publicClient,
+      addresses,
+      getTriggers,
+      logger,
+      chainId,
+    }) as ServiceContainer<Trigger>
+  }
+
+  throw new Error(`Unsupported trigger`, trigger)
 }

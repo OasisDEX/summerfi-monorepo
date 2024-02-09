@@ -19,6 +19,7 @@ module.exports = {
     '@summerfi/serverless-shared/*': ['<rootDir>/../../../../packages/serverless-shared/src/*'],
     '~types': ['<rootDir>/src/types/index.ts'],
     '~abi': ['<rootDir>/src/abi/index.ts'],
+    '~helpers': ['<rootDir>/src/helpers/index.ts'],
   }),
   transform: {
     '^.+\\.(ts|tsx)$': [

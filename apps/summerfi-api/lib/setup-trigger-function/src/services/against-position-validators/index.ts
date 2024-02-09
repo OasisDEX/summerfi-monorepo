@@ -1,18 +1,5 @@
-import { SupportedTriggers, TriggerData } from '~types'
-import { autoBuyValidator } from './auto-buy-validator'
-import { autoSellValidator } from './auto-sell-validator'
-import { AgainstPositionValidator } from './validators-types'
-
-const againstPositionValidators = {
-  [SupportedTriggers.AutoBuy]: autoBuyValidator,
-  [SupportedTriggers.AutoSell]: autoSellValidator,
-}
-
-export const getAgainstPositionValidator = <
-  Trigger extends SupportedTriggers,
-  Data extends TriggerData,
->(
-  trigger: Trigger,
-): AgainstPositionValidator<Data> => {
-  return againstPositionValidators[trigger] as AgainstPositionValidator<Data>
-}
+export * from './auto-buy-validator'
+export * from './auto-sell-validator'
+export * from './dma-aave-stop-loss-validator'
+export * from './dma-spark-stop-loss-validator'
+export * from './validators-types'
