@@ -18,6 +18,7 @@ export interface Position {
   positionId: PositionId
   debtAmount: TokenAmount
   collateralAmount: TokenAmount
-  riskRatio: RiskRatio
+  // riskRatio: RiskRatio // Damian: RiskRatio should be derived from debtAmount and collateralAmount, Position.utils.riskRatio(position)
+  // in order to calculate it, it should get prices from the pool.
   pool: Pool
 }

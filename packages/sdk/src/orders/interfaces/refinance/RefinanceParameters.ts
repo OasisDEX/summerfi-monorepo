@@ -1,9 +1,10 @@
-import { CreatePositionParameters } from '../finance/CreatePositionParameters'
+import { Pool, Position } from "~sdk";
 
 /**
  * @interface RefinanceParameters
  * @description Parameters used to refinance a position
  */
-export interface RefinanceParameters extends CreatePositionParameters {
-  // Empty on purpose
+export interface RefinanceParameters {
+  sourcePosition: Position
+  targetPool: Pool
 }
