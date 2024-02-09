@@ -1,3 +1,4 @@
+/* eslint-disable turbo/no-undeclared-env-vars */
 import { createTRPCClient, httpBatchLink } from '@trpc/client'
 import { Protocols, type Position, type PositionId, type Protocol } from '../src/sdk-mocks'
 import type { AppRouter } from '../src/server'
@@ -16,14 +17,14 @@ export const sdkClient = createTRPCClient<AppRouter>({
   ],
 })
 
-describe('portfolio-overview utils', () => {
-  it('should parse and return supported positions only - eth', async () => {
+describe('refinance client', () => {
+  it('should get position by Id', async () => {
     const positionId: PositionId = '1'
     const position: Position = await sdkClient.getPosition.query({ positionId })
-    expect(position).toStrictEqual({ positionId: '1' })
+    expect(position).toEqual({ positionId: '1' })
+  })
+  it('should get aaveV3 protocol by enum', async () => {
     const aaveV3: Protocol = await sdkClient.getProtocol.query({ protocolEnum: Protocols.AAVEv3 })
-    expect(aaveV3).toStrictEqual({ protocolEnum: Protocols.AAVEv3 })
-
-    // await sdkClient.getPool(aaveV3, poolparameters)
+    expect(aaveV3).toEqual({ protocolEnum: Protocols.AAVEv3 })
   })
 })
