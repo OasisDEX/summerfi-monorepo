@@ -118,9 +118,6 @@ importers:
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../../../../packages/typescript-config
-      eslint:
-        specifier: ^8.56.0
-        version: 8.56.0
 
   apps/summerfi-api/lib/get-migrations-function:
     dependencies:
