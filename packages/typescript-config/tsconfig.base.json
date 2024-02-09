@@ -17,8 +17,8 @@
     "allowUnreachableCode": false,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node"]
+    "types": ["node", "jest", "jest-extended"]
   }
   // don't share includes and excludes in base
-  // as paths are resolved relative to base
+  // as paths are resolved relative to config file
 }

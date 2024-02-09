@@ -94,6 +94,34 @@ importers:
         specifier: ^2.39.7
         version: 2.39.7
 
+  apps/summerfi-api/lib/__template-function__:
+    dependencies:
+      '@aws-lambda-powertools/logger':
+        specifier: ^1.17.0
+        version: 1.17.0
+      '@aws-lambda-powertools/metrics':
+        specifier: ^1.17.0
+        version: 1.17.0
+      '@aws-lambda-powertools/tracer':
+        specifier: ^1.17.0
+        version: 1.17.0
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../../../../packages/serverless-shared
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../../../packages/typescript-config
+      eslint:
+        specifier: ^8.56.0
+        version: 8.56.0
+
   apps/summerfi-api/lib/get-migrations-function:
     dependencies:
       '@oasisdex/addresses':
@@ -223,49 +251,15 @@ importers:
       '@summerfi/eslint-config':
         specifier: workspace:*
         version: link:../../../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../../../packages/jest-config
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../../../../packages/typescript-config
-      '@types/node':
-        specifier: ^20.11.5
-        version: 20.11.5
       eslint:
         specifier: ^8.56.0
         version: 8.56.0
-
-  apps/summerfi-api/lib/sdk-example-function:
-    dependencies:
-      '@aws-lambda-powertools/logger':
-        specifier: ^1.17.0
-        version: 1.17.0
-      '@aws-lambda-powertools/metrics':
-        specifier: ^1.17.0
-        version: 1.17.0
-      '@aws-lambda-powertools/tracer':
-        specifier: ^1.17.0
-        version: 1.17.0
-    devDependencies:
-      '@summerfi/eslint-config':
-        specifier: workspace:*
-        version: link:../../../../packages/eslint-config
-      '@summerfi/typescript-config':
-        specifier: workspace:*
-        version: link:../../../../packages/typescript-config
-      '@types/jest':
-        specifier: ^29.5.11
-        version: 29.5.11
-      '@types/node':
-        specifier: ^20.11.5
-        version: 20.11.5
-      esbuild:
-        specifier: ^0.19.11
-        version: 0.19.11
-      eslint:
-        specifier: ^8.56.0
-        version: 8.56.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.5)
 
   apps/summerfi-api/lib/setup-trigger-function:
     dependencies:
@@ -376,6 +370,21 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+
+  packages/jest-config:
+    devDependencies:
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/jest':
+        specifier: ^29.5.10
+        version: 29.5.12
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.11.5)
+      ts-jest:
+        specifier: ^29.1.1
+        version: 29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
 
   packages/sdk:
     dependencies:
@@ -1765,21 +1774,12 @@ packages:
       - aws-crt
     dev: true
 
-  /@aws-sdk/types@3.489.0:
-    resolution: {integrity: sha512-kcDtLfKog/p0tC4gAeqJqWxAiEzfe2LRPnKamvSG2Mjbthx4R/alE2dxyIq/wW+nvRv0fqR3OD5kD1+eVfdr/w==}
-    engines: {node: '>=14.0.0'}
-    dependencies:
-      '@smithy/types': 2.8.0
-      tslib: 2.6.2
-    dev: false
-
   /@aws-sdk/types@3.496.0:
     resolution: {integrity: sha512-umkGadK4QuNQaMoDICMm7NKRI/mYSXiyPjcn3d53BhsuArYU/52CebGQKdt4At7SwwsiVJZw9RNBHyN5Mm0HVw==}
     engines: {node: '>=14.0.0'}
     dependencies:
       '@smithy/types': 2.9.1
       tslib: 2.6.2
-    dev: true
 
   /@aws-sdk/util-arn-parser@3.495.0:
     resolution: {integrity: sha512-hwdA3XAippSEUxs7jpznwD63YYFR+LtQvlEcebPTgWR9oQgG9TfS+39PUfbnEeje1ICuOrN3lrFqFbmP9uzbMg==}
@@ -4760,19 +4760,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dev: true
 
-  /@smithy/service-error-classification@2.0.9:
-    resolution: {integrity: sha512-0K+8GvtwI7VkGmmInPydM2XZyBfIqLIbfR7mDQ+oPiz8mIinuHbV6sxOLdvX1Jv/myk7XTK9orgt3tuEpBu/zg==}
-    engines: {node: '>=14.0.0'}
-    dependencies:
-      '@smithy/types': 2.8.0
-    dev: false
-
   /@smithy/service-error-classification@2.1.1:
     resolution: {integrity: sha512-txEdZxPUgM1PwGvDvHzqhXisrc5LlRWYCf2yyHfvITWioAKat7srQvpjMAvgzf0t6t7j8yHrryXU9xt7RZqFpw==}
     engines: {node: '>=14.0.0'}
     dependencies:
       '@smithy/types': 2.9.1
-    dev: true
 
   /@smithy/shared-ini-file-loader@2.3.1:
     resolution: {integrity: sha512-2E2kh24igmIznHLB6H05Na4OgIEilRu0oQpYXo3LCNRrawHAcfDKq9004zJs+sAMt2X5AbY87CUCJ7IpqpSgdw==}
@@ -4825,19 +4817,11 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /@smithy/types@2.8.0:
-    resolution: {integrity: sha512-h9sz24cFgt/W1Re22OlhQKmUZkNh244ApgRsUDYinqF8R+QgcsBIX344u2j61TPshsTz3CvL6HYU1DnQdsSrHA==}
-    engines: {node: '>=14.0.0'}
-    dependencies:
-      tslib: 2.6.2
-    dev: false
-
   /@smithy/types@2.9.1:
     resolution: {integrity: sha512-vjXlKNXyprDYDuJ7UW5iobdmyDm6g8dDG+BFUncAg/3XJaN45Gy5RWWWUVgrzIK7S4R1KWgIX5LeJcfvSI24bw==}
     engines: {node: '>=14.0.0'}
     dependencies:
       tslib: 2.6.2
-    dev: true
 
   /@smithy/url-parser@2.1.1:
     resolution: {integrity: sha512-qC9Bv8f/vvFIEkHsiNrUKYNl8uKQnn4BdhXl7VzQRP774AwIjiSMMwkbT+L7Fk8W8rzYVifzJNYxv1HwvfBo3Q==}
@@ -5132,6 +5116,13 @@ packages:
 
   /@types/jest@29.5.11:
     resolution: {integrity: sha512-S2mHmYIVe13vrm6q4kN6fLYYAka15ALQki/vgDC3mIukEOx8WJlv0kQPM+d4w8Gp6u0uSdKND04IlTXBv0rwnQ==}
+    dependencies:
+      expect: 29.7.0
+      pretty-format: 29.7.0
+    dev: true
+
+  /@types/jest@29.5.12:
+    resolution: {integrity: sha512-eDC8bTvT/QhYdxJAulQikueigY5AsdBRH2yDKW3yveW7svY3+DzN84/2NUgkw10RTiJbWqZrTtoGVdYlvFJdLw==}
     dependencies:
       expect: 29.7.0
       pretty-format: 29.7.0
@@ -5978,8 +5969,8 @@ packages:
     resolution: {integrity: sha512-FxDRVvIHqf3bzj76M+LSyh/1V5cYuhn+YLRS+u6Xs6WindPMDn9j03v2PNskPgvUi7pMqU40aVhQphRX/YWTfQ==}
     engines: {node: '>= 14.x'}
     dependencies:
-      '@aws-sdk/types': 3.489.0
-      '@smithy/service-error-classification': 2.0.9
+      '@aws-sdk/types': 3.496.0
+      '@smithy/service-error-classification': 2.1.1
       '@types/cls-hooked': 4.3.8
       atomic-batcher: 1.0.2
       cls-hooked: 4.2.2

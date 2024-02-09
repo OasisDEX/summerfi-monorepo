@@ -5,20 +5,10 @@
     "tsc": "tsc",
     "watch": "tsc -w",
     "test": "jest --passWithNoTests",
-    "build": "tsc -b -v",
+    "testw": "jest --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "docker:build": "tar chzf files.tar.gz Dockerfile node_modules dist && docker build --platform linux/amd64 -t portfolio-overview - < files.tar.gz && rm files.tar.gz",
-    "docker:run": "docker run --rm -p 9000:8080 portfolio-overview",
-    "dev": "npm run tsc && npm run docker:build && npm run docker:run",
-    "invoke": "curl http://localhost:9000/2015-03-31/functions/function/invocations -d '{\"queryStringParameters\": {\"address\": \"0x10649c79428d718621821Cf6299e91920284743F\"}}' | jq",
-    "aws:deploy": "deploy zip file"
-  },
-  "devDependencies": {
-    "@summerfi/eslint-config": "workspace:*",
-    "@summerfi/typescript-config": "workspace:*",
-    "@types/node": "^20.11.5",
-    "eslint": "^8.56.0"
+    "build": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap"
   },
   "dependencies": {
     "graphql": "^16.8.1",
@@ -26,5 +16,11 @@
     "@summerfi/serverless-shared": "workspace:*",
     "zod": "^3.22.4",
     "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "@summerfi/jest-config": "workspace:*",
+    "eslint": "^8.56.0"
   }
 }
