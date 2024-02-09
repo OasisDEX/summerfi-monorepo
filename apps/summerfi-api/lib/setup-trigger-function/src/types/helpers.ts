@@ -13,8 +13,8 @@ import {
   eventBodyDmaAaveStopLossSchema,
   eventBodyDmaSparkStopLossSchema,
 } from './validators'
-import { ChainId, ProtocolId } from '@summerfi/serverless-shared/'
 import { SupportedTriggers } from './validators'
+import { ChainId, ProtocolId } from '@summerfi/serverless-shared'
 
 export const isAaveAutoBuyTriggerData = (
   triggerData: TriggerData,
