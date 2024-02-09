@@ -13,7 +13,7 @@ export function API(stackContext: StackContext) {
   })
 
   addTriggersConfig({ ...stackContext, api })
-  // addSdkConfig({ ...stackContext, api })
+  addSdkConfig({ ...stackContext, api })
   addMigrationsConfig({ ...stackContext, api })
 
   stack.addOutputs({
