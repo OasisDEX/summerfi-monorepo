@@ -14,7 +14,7 @@
     "watch": "tsc -w",
     "test": "jest",
     "testw": "jest --watch",
-    "build": "tsc -b -v",
+    "build": "tsc -b -v tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

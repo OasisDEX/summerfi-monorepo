@@ -1,4 +1,5 @@
-import { Maybe, makeSDK } from '~sdk'
+import { makeSDK } from '~sdk/entrypoint'
+import { Maybe } from '~sdk/utils'
 import { ChainFamilyMap, Chain } from '~sdk/chains'
 import { Position, PositionId, User } from '~sdk/users'
 import { Percentage, RiskRatio, Token, TokenAmount, Wallet } from '~sdk/common'
