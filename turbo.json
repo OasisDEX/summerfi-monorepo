@@ -11,8 +11,7 @@
     "AWS_REGION",
     "AWS_PROFILE",
     "POWERTOOLS_LOG_LEVEL",
-    "SDK_API_URL",
-    "SST_APP_NAME"
+    "SST_USER"
   ],
   "pipeline": {
     "dev": {
