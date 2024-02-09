@@ -11,13 +11,13 @@ import {
 import { Maybe } from '~sdk/utils'
 import { mockPool } from '.'
 
-class mockProtocolMaker implements Protocol {
+class mockProtocolSpark implements Protocol {
   public readonly protocolId: ProtocolId
   private readonly chainInfo: ChainInfo
 
   public constructor(params: { chainInfo: ChainInfo }) {
     this.chainInfo = params.chainInfo
-    this.protocolId = { id: 'maker' }
+    this.protocolId = { id: 'spark' }
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
@@ -39,7 +39,7 @@ export async function registerMockProtocols() {
 
   ProtocolsRegistry.registerProtocol({
     chainInfo: chainInfo,
-    name: ProtocolName.Maker,
-    protocol: new mockProtocolMaker({ chainInfo }),
+    name: ProtocolName.Spark,
+    protocol: new mockProtocolSpark({ chainInfo }),
   })
 }

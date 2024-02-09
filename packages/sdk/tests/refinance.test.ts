@@ -48,6 +48,7 @@ describe('Refinance | SDK', () => {
       assert.fail('DAI not found')
     }
 
+    // Previous position
     const positionId: PositionId = { id: '1234567890' }
 
     const prevPosition: Maybe<Position> = await user.getPosition({ id: positionId })
@@ -69,21 +70,22 @@ describe('Refinance | SDK', () => {
     expect(prevPosition.pool.protocolId.id).toEqual('testprotocol')
     expect(prevPosition.pool.type).toEqual(PoolType.Lending)
 
-    const maker: Maybe<Protocol> = await chain.protocols.getProtocolByName({
-      name: ProtocolName.Maker,
+    // Target protocol
+    const spark: Maybe<Protocol> = await chain.protocols.getProtocolByName({
+      name: ProtocolName.Spark,
     })
-    if (!maker) {
-      assert.fail('Maker not found')
+    if (!spark) {
+      assert.fail('Spark not found')
     }
 
-    expect(maker.protocolId.id).toEqual('maker')
+    expect(spark.protocolId.id).toEqual('spark')
 
     const poolPair: LendingPoolParameters = {
       collateralTokens: [WETH],
       debtTokens: [DAI],
     }
 
-    const newPool: Maybe<Pool> = await maker.getPool({
+    const newPool: Maybe<Pool> = await spark.getPool({
       poolParameters: poolPair,
     })
     if (!newPool) {
@@ -91,7 +93,7 @@ describe('Refinance | SDK', () => {
     }
 
     expect(newPool.poolId.id).toEqual('mock')
-    expect(newPool.protocolId.id).toEqual('maker')
+    expect(newPool.protocolId.id).toEqual('spark')
     expect(newPool.type).toEqual(PoolType.Lending)
 
     const newLendingPool = newPool as LendingPool
