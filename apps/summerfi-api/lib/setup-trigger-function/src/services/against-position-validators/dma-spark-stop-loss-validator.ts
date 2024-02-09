@@ -1,6 +1,6 @@
 import {
-  DmaStopLossTriggerData,
-  dmaStopLossTriggerDataSchema,
+  dmaSparkStopLossTriggerDataSchema,
+  DmaSparkStopLossTriggerData,
   mapZodResultToValidationResults,
   positionSchema,
   priceSchema,
@@ -16,7 +16,7 @@ import { AgainstPositionValidator } from './validators-types'
 const paramsSchema = z.object({
   position: positionSchema,
   executionPrice: priceSchema,
-  triggerData: dmaStopLossTriggerDataSchema,
+  triggerData: dmaSparkStopLossTriggerDataSchema,
   triggers: z.custom<GetTriggersResponse>(),
   action: supportedActionsSchema,
 })
@@ -26,10 +26,10 @@ const upsertErrorsValidation = paramsSchema
     ({ triggers, action }) => {
       if (action === SupportedActions.Add) {
         const currentTrigger =
-          triggers.triggers.aaveStopLossToCollateral ??
-          triggers.triggers.aaveStopLossToDebt ??
-          triggers.triggers.aaveStopLossToCollateralDMA ??
-          triggers.triggers.aaveStopLossToDebtDMA
+          triggers.triggers.sparkStopLossToCollateral ??
+          triggers.triggers.sparkStopLossToCollateralDMA ??
+          triggers.triggers.sparkStopLossToDebt ??
+          triggers.triggers.sparkStopLossToDebtDMA
         return currentTrigger === undefined
       }
       return true
@@ -45,10 +45,10 @@ const upsertErrorsValidation = paramsSchema
     ({ triggers, action }) => {
       if (action === SupportedActions.Update) {
         const currentTrigger =
-          triggers.triggers.aaveStopLossToCollateral ??
-          triggers.triggers.aaveStopLossToDebt ??
-          triggers.triggers.aaveStopLossToCollateralDMA ??
-          triggers.triggers.aaveStopLossToDebtDMA
+          triggers.triggers.sparkStopLossToCollateral ??
+          triggers.triggers.sparkStopLossToCollateralDMA ??
+          triggers.triggers.sparkStopLossToDebt ??
+          triggers.triggers.sparkStopLossToDebtDMA
 
         return currentTrigger !== undefined
       }
@@ -66,10 +66,10 @@ const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
     if (action === SupportedActions.Remove) {
       const currentTrigger =
-        triggers.triggers.aaveStopLossToCollateral ??
-        triggers.triggers.aaveStopLossToDebt ??
-        triggers.triggers.aaveStopLossToCollateralDMA ??
-        triggers.triggers.aaveStopLossToDebtDMA
+        triggers.triggers.sparkStopLossToCollateral ??
+        triggers.triggers.sparkStopLossToCollateralDMA ??
+        triggers.triggers.sparkStopLossToDebt ??
+        triggers.triggers.sparkStopLossToDebtDMA
 
       return currentTrigger !== undefined
     }
@@ -95,7 +95,7 @@ const warningsValidation = paramsSchema.refine(
   },
 )
 
-export const stopLossValidator: AgainstPositionValidator<DmaStopLossTriggerData> = (
+export const dmaSparkStopLossValidator: AgainstPositionValidator<DmaSparkStopLossTriggerData> = (
   params,
 ): ValidationResults => {
   const errorsValidation =

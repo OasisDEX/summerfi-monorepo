@@ -1,5 +1,5 @@
 import { ServiceContainer } from './service-container'
-import { StopLossEventBody, safeParseBigInt, SupportedActions } from '~types'
+import { AaveStopLossEventBody, safeParseBigInt, SupportedActions } from '~types'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
 import { Address, ChainId } from '@summerfi/serverless-shared'
@@ -8,7 +8,7 @@ import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
 import { getAavePosition } from './get-aave-position'
 import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
-import { stopLossValidator } from './against-position-validators'
+import { dmaAaveStopLossValidator } from './against-position-validators'
 import { getUsdAaveOraclePrice } from './get-usd-aave-oracle-price'
 import { CurrentTriggerLike, encodeAaveStopLoss } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
@@ -38,7 +38,13 @@ function getCurrentStopLoss(triggers: GetTriggersResponse): CurrentTriggerLike |
 
 export const getAaveStopLossServiceContainer: (
   props: GetAaveStopLossServiceContainerProps,
-) => ServiceContainer<StopLossEventBody> = ({ rpc, addresses, logger, getTriggers, chainId }) => {
+) => ServiceContainer<AaveStopLossEventBody> = ({
+  rpc,
+  addresses,
+  logger,
+  getTriggers,
+  chainId,
+}) => {
   const getPosition = memoize(async (params: Parameters<typeof getAavePosition>[0]) => {
     return await getAavePosition(params, rpc, addresses, logger)
   })
@@ -60,7 +66,7 @@ export const getAaveStopLossServiceContainer: (
       })
 
       const triggers = await getTriggers(trigger.dpm)
-      return stopLossValidator({
+      return dmaAaveStopLossValidator({
         position,
         executionPrice,
         triggerData: trigger.triggerData,
@@ -116,5 +122,5 @@ export const getAaveStopLossServiceContainer: (
         transaction,
       }
     },
-  } as ServiceContainer<StopLossEventBody>
+  } as ServiceContainer<AaveStopLossEventBody>
 }

@@ -4,10 +4,11 @@ import { Chain as ViemChain, createPublicClient, http, PublicClient } from 'viem
 import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
 import { Logger } from '@aws-lambda-powertools/logger'
 import {
-  AutoBuyEventBody,
-  AutoSellEventBody,
+  AaveAutoBuyEventBody,
+  AaveAutoSellEventBody,
   SetupTriggerEventBody,
-  StopLossEventBody,
+  AaveStopLossEventBody,
+  SparkStopLossEventBody,
 } from '~types'
 import type { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import fetch from 'node-fetch'
@@ -21,6 +22,7 @@ import { TriggerType } from '@oasisdex/automation'
 import { getAaveAutoBuyServiceContainer } from './get-aave-auto-buy-service-container'
 import { getAaveAutoSellServiceContainer } from './get-aave-auto-sell-service-container'
 import { getAaveStopLossServiceContainer } from './get-aave-stop-loss-service-container'
+import { getSparkStopLossServiceContainer } from './get-spark-stop-loss-service-container'
 
 export const rpcConfig: IRpcConfig = {
   skipCache: false,
@@ -38,28 +40,31 @@ const domainChainIdToViemChain: Record<ChainId, ViemChain> = {
   [ChainId.SEPOLIA]: sepolia,
 }
 
-function isAaveAutoBuy(trigger: SetupTriggerEventBody): trigger is AutoBuyEventBody {
+function isAaveAutoBuy(trigger: SetupTriggerEventBody): trigger is AaveAutoBuyEventBody {
   return trigger.triggerData?.type === BigInt(TriggerType.DmaAaveBasicBuyV2)
 }
 
-function isAaveAutoSell(trigger: SetupTriggerEventBody): trigger is AutoSellEventBody {
+function isAaveAutoSell(trigger: SetupTriggerEventBody): trigger is AaveAutoSellEventBody {
   return trigger.triggerData?.type === BigInt(TriggerType.DmaAaveBasicSellV2)
 }
 
-function isAaveStopLoss(trigger: SetupTriggerEventBody): trigger is StopLossEventBody {
+function isAaveStopLoss(trigger: SetupTriggerEventBody): trigger is AaveStopLossEventBody {
   return [
     BigInt(TriggerType.DmaAaveStopLossToCollateralV2),
     BigInt(TriggerType.DmaAaveStopLossToDebtV2),
   ].includes(trigger.triggerData?.type)
 }
 
-export function buildServiceContainer<
-  Trigger extends SetupTriggerEventBody,
-  Protocol extends ProtocolId,
-  Chain extends ChainId,
->(
-  chainId: Chain,
-  protocol: Protocol,
+function isSparkStopLoss(trigger: SetupTriggerEventBody): trigger is SparkStopLossEventBody {
+  return [
+    BigInt(TriggerType.DmaSparkStopLossToCollateralV2),
+    BigInt(TriggerType.DmaSparkStopLossToDebtV2),
+  ].includes(trigger.triggerData?.type)
+}
+
+export function buildServiceContainer<Trigger extends SetupTriggerEventBody>(
+  chainId: ChainId,
+  protocol: ProtocolId,
   trigger: Trigger,
   rpcGateway: string,
   getTriggersUrl: string,
@@ -119,6 +124,15 @@ export function buildServiceContainer<
       chainId,
     }) as ServiceContainer<Trigger>
   }
-  // @ts-ignore
-  throw new Error(`Unsupported trigger type: ${trigger.triggerData?.type}`)
+  if (isSparkStopLoss(trigger)) {
+    return getSparkStopLossServiceContainer({
+      rpc: publicClient,
+      addresses,
+      getTriggers,
+      logger,
+      chainId,
+    }) as ServiceContainer<Trigger>
+  }
+
+  throw new Error(`Unsupported trigger`, trigger)
 }

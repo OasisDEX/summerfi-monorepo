@@ -49,7 +49,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
 
   const body = JSON.parse(event.body ?? '{}')
 
-  const bodySchema = getBodySchema(pathParamsResult.data.trigger)
+  const bodySchema = getBodySchema(pathParamsResult.data)
 
   const parseResult = bodySchema.safeParse(body)
   if (!parseResult.success) {

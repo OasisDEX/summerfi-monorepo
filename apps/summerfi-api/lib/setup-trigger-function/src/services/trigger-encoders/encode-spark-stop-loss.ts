@@ -11,7 +11,7 @@ import { MAX_COVERAGE_BASE } from './defaults'
 import { automationBotAbi } from '~abi'
 import { DmaAaveStopLossTriggerData } from '~types'
 
-export const encodeAaveStopLoss: EncoderFunction<DmaAaveStopLossTriggerData> = (
+export const encodeSparkStopLoss: EncoderFunction<DmaAaveStopLossTriggerData> = (
   position,
   triggerData,
   debtPriceInUSD,
@@ -27,7 +27,7 @@ export const encodeAaveStopLoss: EncoderFunction<DmaAaveStopLossTriggerData> = (
       'uint256 executionLtv',
   )
 
-  const operationName = OPERATION_NAMES.aave.v3.CLOSE_POSITION
+  const operationName = OPERATION_NAMES.spark.CLOSE_POSITION
   const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
 
   const encodedTriggerData = encodeAbiParameters(abiParameters, [

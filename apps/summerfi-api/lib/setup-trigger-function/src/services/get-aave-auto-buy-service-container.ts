@@ -1,5 +1,5 @@
 import { ServiceContainer } from './service-container'
-import { AutoBuyEventBody, safeParseBigInt, SupportedActions } from '~types'
+import { AaveAutoBuyEventBody, safeParseBigInt, SupportedActions } from '~types'
 import { simulatePosition } from './simulate-position'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
@@ -24,7 +24,13 @@ export interface GetAaveAutoBuyServiceContainerProps {
 
 export const getAaveAutoBuyServiceContainer: (
   params: GetAaveAutoBuyServiceContainerProps,
-) => ServiceContainer<AutoBuyEventBody> = ({ rpc, addresses, getTriggers, logger, chainId }) => {
+) => ServiceContainer<AaveAutoBuyEventBody> = ({
+  rpc,
+  addresses,
+  getTriggers,
+  logger,
+  chainId,
+}) => {
   const getPosition = memoize(async (params: Parameters<typeof getAavePosition>[0]) => {
     return await getAavePosition(params, rpc, addresses, logger)
   })
@@ -124,5 +130,5 @@ export const getAaveAutoBuyServiceContainer: (
         transaction,
       }
     },
-  } as ServiceContainer<AutoBuyEventBody>
+  } as ServiceContainer<AaveAutoBuyEventBody>
 }

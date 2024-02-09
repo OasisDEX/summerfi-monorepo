@@ -1,4 +1,5 @@
 export * from './auto-buy-validator'
 export * from './auto-sell-validator'
-export * from './stop-loss-validator'
+export * from './dma-aave-stop-loss-validator'
+export * from './dma-spark-stop-loss-validator'
 export * from './validators-types'

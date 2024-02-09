@@ -2,10 +2,12 @@ import { z } from 'zod'
 import {
   aaveBasicBuyTriggerDataSchema,
   aaveBasicSellTriggerDataSchema,
-  dmaStopLossTriggerDataSchema,
+  dmaAaveStopLossTriggerDataSchema,
+  dmaSparkStopLossTriggerDataSchema,
   eventBodyAaveBasicBuySchema,
   eventBodyAaveBasicSellSchema,
-  eventBodyDmaStopLossSchema,
+  eventBodyDmaAaveStopLossSchema,
+  eventBodyDmaSparkStopLossSchema,
   ltvSchema,
   pathParamsSchema,
   positionSchema,
@@ -14,10 +16,15 @@ import {
   tokenSchema,
 } from './validators'
 
-export type AutoBuyEventBody = z.infer<typeof eventBodyAaveBasicBuySchema>
-export type AutoSellEventBody = z.infer<typeof eventBodyAaveBasicSellSchema>
-export type StopLossEventBody = z.infer<typeof eventBodyDmaStopLossSchema>
-export type SetupTriggerEventBody = AutoBuyEventBody | AutoSellEventBody | StopLossEventBody
+export type AaveAutoBuyEventBody = z.infer<typeof eventBodyAaveBasicBuySchema>
+export type AaveAutoSellEventBody = z.infer<typeof eventBodyAaveBasicSellSchema>
+export type AaveStopLossEventBody = z.infer<typeof eventBodyDmaAaveStopLossSchema>
+export type SparkStopLossEventBody = z.infer<typeof eventBodyDmaSparkStopLossSchema>
+export type SetupTriggerEventBody =
+  | AaveAutoBuyEventBody
+  | AaveAutoSellEventBody
+  | AaveStopLossEventBody
+  | SparkStopLossEventBody
 export type PathParams = z.infer<typeof pathParamsSchema>
 export type PositionLike = z.infer<typeof positionSchema>
 export type Token = z.infer<typeof tokenSchema>
@@ -26,8 +33,13 @@ export type Price = z.infer<typeof priceSchema>
 export type LTV = z.infer<typeof ltvSchema>
 export type AaveAutoBuyTriggerData = z.infer<typeof aaveBasicBuyTriggerDataSchema>
 export type AaveAutoSellTriggerData = z.infer<typeof aaveBasicSellTriggerDataSchema>
-export type DmaStopLossTriggerData = z.infer<typeof dmaStopLossTriggerDataSchema>
-export type TriggerData = AaveAutoBuyTriggerData | AaveAutoSellTriggerData | DmaStopLossTriggerData
+export type DmaAaveStopLossTriggerData = z.infer<typeof dmaAaveStopLossTriggerDataSchema>
+export type DmaSparkStopLossTriggerData = z.infer<typeof dmaSparkStopLossTriggerDataSchema>
+export type TriggerData =
+  | AaveAutoBuyTriggerData
+  | AaveAutoSellTriggerData
+  | DmaAaveStopLossTriggerData
+  | DmaSparkStopLossTriggerData
 
 export enum CommonErrorCodes {
   InsufficientEthFundsForTx = 'insufficient-eth-funds-for-tx',
