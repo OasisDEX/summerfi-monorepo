@@ -118,9 +118,6 @@ importers:
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../../../../packages/typescript-config
-      eslint:
-        specifier: ^8.56.0
-        version: 8.56.0
 
   apps/summerfi-api/lib/get-migrations-function:
     dependencies:
@@ -260,6 +257,40 @@ importers:
       eslint:
         specifier: ^8.56.0
         version: 8.56.0
+
+  apps/summerfi-api/lib/sdk-router-function:
+    dependencies:
+      '@aws-lambda-powertools/logger':
+        specifier: ^1.17.0
+        version: 1.17.0
+      '@aws-lambda-powertools/metrics':
+        specifier: ^1.17.0
+        version: 1.17.0
+      '@aws-lambda-powertools/tracer':
+        specifier: ^1.17.0
+        version: 1.17.0
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../../../../packages/serverless-shared
+      '@trpc/server':
+        specifier: 11.0.0-next-beta.264
+        version: 11.0.0-next-beta.264
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../../../packages/typescript-config
+      '@trpc/client':
+        specifier: 11.0.0-next-beta.264
+        version: 11.0.0-next-beta.264(@trpc/server@11.0.0-next-beta.264)
 
   apps/summerfi-api/lib/setup-trigger-function:
     dependencies:
@@ -5032,6 +5063,17 @@ packages:
       '@smithy/types': 2.9.1
       tslib: 2.6.2
     dev: true
+
+  /@trpc/client@11.0.0-next-beta.264(@trpc/server@11.0.0-next-beta.264):
+    resolution: {integrity: sha512-He/kE++/rDq/yZr7xCkQmOC+1S3auulLVjBuo6LvuYuFQL+Slf2ObRftbNVWa92GVd/llxV+eNlbzR9mTVPCPg==}
+    peerDependencies:
+      '@trpc/server': 11.0.0-next-beta.264+f5f08f35d
+    dependencies:
+      '@trpc/server': 11.0.0-next-beta.264
+    dev: true
+
+  /@trpc/server@11.0.0-next-beta.264:
+    resolution: {integrity: sha512-h6RJX+C+VgFQusxGVtw3n1PZPLt27ZG70U8cPR5pwmsnE2E3vREijOgEo5MRKoiUhVrjbw8e6gnGVeKzl7uZXg==}
 
   /@trpc/server@9.16.0:
     resolution: {integrity: sha512-IENsJs41ZR4oeFUJhsNNTSgEOtuRN0m9u7ec4u3eG/qOc7bIoo1nDoYtx4bl6OJJSQYEytG9tlcVz9G8OAaHbg==}
