@@ -1,5 +1,4 @@
 import { Simulation } from '~sdk/orders'
-import { CreatePositionSimulation } from './CreatePositionSimulation'
 
 /**
  * @interface CreatePositionSimulation

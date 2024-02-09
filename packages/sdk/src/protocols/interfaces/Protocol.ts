@@ -15,5 +15,6 @@ export interface Protocol {
     poolParameters: PoolParameters
     protocolParameters?: ProtocolParameters
   }): Promise<Maybe<Pool>>
+
   getAllPools(params: { protocolParameters?: ProtocolParameters }): Promise<Pool[]>
 }
