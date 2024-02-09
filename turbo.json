@@ -10,7 +10,8 @@
     "SKIP_VALIDATION",
     "AWS_REGION",
     "AWS_PROFILE",
-    "POWERTOOLS_LOG_LEVEL"
+    "POWERTOOLS_LOG_LEVEL",
+    "SST_USER"
   ],
   "pipeline": {
     "dev": {
