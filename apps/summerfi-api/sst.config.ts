@@ -13,7 +13,7 @@ export const sstConfig: SSTConfig = {
     }
     const stage = _input.stage ?? `dev-${process.env.SST_USER}`
     return {
-      name: 'summerfi-stack',
+      name: `${process.env.SST_APP_NAME}`,
       region: `${process.env.AWS_REGION}`,
       profile: `${process.env.AWS_PROFILE}`,
       stage: stage,
