@@ -1,4 +1,4 @@
-import { Order, Simulation } from '~sdk'
+import { Order, Simulation } from '~sdk/orders'
 import { Chain } from '~sdk/chains'
 import { Wallet } from '~sdk/common'
 

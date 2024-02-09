@@ -1,4 +1,4 @@
-import { ChainInfo } from '~sdk'
+import { ChainInfo } from '~sdk/chains'
 import { Address, Token } from '~sdk/common'
 import { getMockTokenBySymbol } from '~sdk/mocks'
 import { TokensManager } from '~sdk/tokens'

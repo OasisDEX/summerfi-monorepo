@@ -1,4 +1,4 @@
-import { Percentage } from '~sdk'
+import { Percentage } from '~sdk/common'
 import {
   LendingPoolImpl,
   Pool,
