@@ -1,4 +1,4 @@
-import { handler } from '../src'
+import { handler } from '~src/index'
 
 describe('template', () => {
   it('template', async () => {

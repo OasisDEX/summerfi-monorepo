@@ -8,7 +8,8 @@
     "testw": "jest --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap"
+    "build": "tsc -b -v tsconfig.build.json",
+    "bundle": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap"
   },
   "dependencies": {
     "@aws-lambda-powertools/logger": "^1.17.0",
