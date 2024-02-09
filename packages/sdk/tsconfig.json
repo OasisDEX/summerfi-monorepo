@@ -3,13 +3,12 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "baseUrl": "src",
-    "types": ["jest", "node"],
+    "baseUrl": ".",
     "paths": {
-      "~sdk": ["./index.ts"],
-      "~sdk/*": ["./*"]
+      "~sdk": ["./src/index.ts"],
+      "~sdk/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.ts", "../tests/**/*.ts"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
 }

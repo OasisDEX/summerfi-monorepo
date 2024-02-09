@@ -395,15 +395,12 @@ importers:
       '@summerfi/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../jest-config
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
-      '@types/jest':
-        specifier: ^29.5.11
-        version: 29.5.11
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.5)
 
   packages/serverless-contracts:
     devDependencies:
