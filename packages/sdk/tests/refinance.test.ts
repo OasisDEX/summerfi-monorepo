@@ -1,7 +1,7 @@
-import { Maybe, makeSDK } from '../src'
-import { ChainFamilyMap, Chain } from '../src/chains'
-import { Position, PositionId, User } from '../src/users'
-import { Percentage, RiskRatio, Token, TokenAmount, Wallet } from '../src/common'
+import { Maybe, makeSDK } from '~sdk'
+import { ChainFamilyMap, Chain } from '~sdk/chains'
+import { Position, PositionId, User } from '~sdk/users'
+import { Percentage, RiskRatio, Token, TokenAmount, Wallet } from '~sdk/common'
 import {
   LendingPool,
   LendingPoolParameters,
@@ -9,8 +9,8 @@ import {
   PoolType,
   Protocol,
   ProtocolName,
-} from '../src/protocols'
-import { RefinanceParameters, RefinanceSimulation, Order } from '../src/orders'
+} from '~sdk/protocols'
+import { RefinanceParameters, RefinanceSimulation, Order } from '~sdk/orders'
 import assert from 'assert'
 
 describe('Refinance | SDK', () => {
