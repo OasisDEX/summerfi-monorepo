@@ -6,7 +6,7 @@
     "lint": "turbo run lint --cache-dir=.turbo",
     "lint:fix": "turbo run lint:fix",
     "test": "turbo run test --cache-dir=.turbo",
-    "cicheck": "turbo run cicheck --cache-dir=.turbo",
+    "cicheck": "turbo run cicheck --cache-dir=.turbo && pnpm format",
     "graph": "pnpm dlx nx graph",
     "format": "prettier --check \"./**/*.{ts,tsx,js,jsx,json}\"",
     "format:fix": "prettier --write \"./**/*.{ts,tsx,js,jsx,json}\""
