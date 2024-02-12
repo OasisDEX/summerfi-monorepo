@@ -1,3 +1,3 @@
 export enum SimulationType {
-  Refinance = 'Refinance'
+  Refinance = 'Refinance',
 }

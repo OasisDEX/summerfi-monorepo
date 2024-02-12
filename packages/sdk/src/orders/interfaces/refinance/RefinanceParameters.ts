@@ -1,4 +1,4 @@
-import { Pool, Position } from "~sdk";
+import { Pool, Position } from '~sdk'
 
 /**
  * @interface RefinanceParameters
