@@ -2,7 +2,12 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "noEmit": true,
-    "types": ["node", "jest", "jest-extended"]
+    "types": ["node", "jest", "jest-extended"],
+    "baseUrl": ".",
+    "paths": {
+      "@summerfi/serverless-shared": ["../serverless-shared/src/index.ts"],
+      "@summerfi/serverless-shared/*": ["../serverless-shared/src/*"]
+    }
   },
   "ts-node": {
     "compilerOptions": {

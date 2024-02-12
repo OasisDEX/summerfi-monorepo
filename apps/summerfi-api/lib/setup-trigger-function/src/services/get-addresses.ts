@@ -3,8 +3,14 @@ import { ChainId, NetworkByChainID, Address } from '@summerfi/serverless-shared/
 
 export interface Addresses {
   AutomationBot: Address
-  AaveDataPoolProvider: Address
-  AaveOracle: Address
+  AaveV3: {
+    AaveDataPoolProvider: Address
+    AaveOracle: Address
+  }
+  Spark: {
+    SparkDataPoolProvider: Address
+    SparkOracle: Address
+  }
 }
 
 export function getAddresses(chainId: ChainId): Addresses {
@@ -13,7 +19,13 @@ export function getAddresses(chainId: ChainId): Addresses {
 
   return {
     AutomationBot: addresses['automation']['AutomationBotV2'] as Address,
-    AaveDataPoolProvider: addresses['aave']['v3'].PoolDataProvider as Address,
-    AaveOracle: addresses['aave']['v3'].Oracle as Address,
+    AaveV3: {
+      AaveDataPoolProvider: addresses['aave']['v3'].PoolDataProvider as Address,
+      AaveOracle: addresses['aave']['v3'].Oracle as Address,
+    },
+    Spark: {
+      SparkDataPoolProvider: addresses['spark'].PoolDataProvider as Address,
+      SparkOracle: addresses['spark'].Oracle as Address,
+    },
   }
 }
