@@ -10,3 +10,8 @@ coverage
 .swc
 .vercel
 setup.js
+lambdas
+cache
+abis
+artifacts
+**/core-contracts/src/
