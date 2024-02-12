@@ -1,14 +1,18 @@
 import { TokenAmount } from '~sdk/common'
-import { SimulationData, SimulatedStrategy } from '~sdk/orders'
+import { Simulation, SimulationType } from '~sdk/orders'
 import { Swap } from '~sdk/exchange'
+import { Position } from '~sdk'
+
+interface RefinanceSimulationData {
+  sourcePosition: Position
+  targetPosition: Position
+  flashLoan: TokenAmount
+  debtSwap?: Swap
+  collateralSwap?: Swap
+}
 
 /**
  * @interface RefinanceSimulation
  * @description Simulation data for refinancing a position.
  */
-export interface RefinanceSimulation extends SimulationData {
-  simulatedStrategy: SimulatedStrategy.Refinance
-  flashLoan: TokenAmount
-  debtSwap?: Swap
-  collateralSwap?: Swap
-}
+export type RefinanceSimulation = Simulation<SimulationType.Refinance, RefinanceSimulationData>
