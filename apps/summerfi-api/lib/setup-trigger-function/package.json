@@ -14,7 +14,7 @@
     "@aws-lambda-powertools/metrics": "^1.17.0",
     "@aws-lambda-powertools/tracer": "^1.17.0",
     "@oasisdex/addresses": "0.1.16-dma-v2-workers.7",
-    "@oasisdex/dma-library": "0.5.21-dma-v2-workers.14",
+    "@oasisdex/dma-library": "0.5.21-dma-v2-workers.16",
     "@oasisdex/automation": "^1.6.0-alpha.9",
     "@summerfi/serverless-contracts": "workspace:*",
     "@summerfi/serverless-shared": "workspace:*",
