@@ -1,5 +1,5 @@
 import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
-import { PRICE_DECIMALS } from '../types'
+import { PRICE_DECIMALS } from '~types'
 
 describe('calculateExecutionPrice', () => {
   it('should return value greater than 0', () => {

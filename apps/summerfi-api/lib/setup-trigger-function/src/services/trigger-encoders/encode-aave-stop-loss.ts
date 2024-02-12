@@ -7,11 +7,11 @@ import {
   stringToBytes,
 } from 'viem'
 import { OPERATION_NAMES } from '@oasisdex/dma-library'
-import { DEFAULT_DEVIATION, MAX_COVERAGE_BASE } from './defaults'
+import { MAX_COVERAGE_BASE } from './defaults'
 import { automationBotAbi } from '~abi'
-import { AaveAutoSellTriggerData, PRICE_DECIMALS } from '~types'
+import { DmaAaveStopLossTriggerData } from '~types'
 
-export const encodeAaveBasicSell: EncoderFunction<AaveAutoSellTriggerData> = (
+export const encodeAaveStopLoss: EncoderFunction<DmaAaveStopLossTriggerData> = (
   position,
   triggerData,
   debtPriceInUSD,
@@ -24,37 +24,20 @@ export const encodeAaveBasicSell: EncoderFunction<AaveAutoSellTriggerData> = (
       'address debtToken, ' +
       'address collateralToken, ' +
       'bytes32 operationName, ' +
-      'uint256 executionLtv, ' +
-      'uint256 targetLTV, ' +
-      'uint256 minSellPrice, ' +
-      'uint64 deviation, ' +
-      'uint32 maxBaseFeeInGwei',
+      'uint256 executionLtv',
   )
 
-  const operationName = OPERATION_NAMES.aave.v3.ADJUST_RISK_DOWN
+  const operationName = OPERATION_NAMES.aave.v3.CLOSE_POSITION
   const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
-
-  const maxCoverageInPriceDecimals = MAX_COVERAGE_BASE * debtPriceInUSD
-
-  const coverageShift = BigInt(position.debt.token.decimals) - PRICE_DECIMALS
-
-  const maxCoverage =
-    coverageShift >= 0n
-      ? maxCoverageInPriceDecimals * 10n ** coverageShift
-      : maxCoverageInPriceDecimals / 10n ** -coverageShift
 
   const encodedTriggerData = encodeAbiParameters(abiParameters, [
     position.address,
     triggerData.type,
-    maxCoverage,
+    MAX_COVERAGE_BASE * 10n ** BigInt(position.debt.token.decimals),
     position.debt.token.address,
     position.collateral.token.address,
     operationNameInBytes,
     triggerData.executionLTV,
-    triggerData.targetLTV,
-    triggerData.minSellPrice,
-    DEFAULT_DEVIATION, // 100 -> 1%
-    triggerData.maxBaseFee,
   ])
 
   const encodedTrigger = encodeFunctionData({
@@ -62,7 +45,7 @@ export const encodeAaveBasicSell: EncoderFunction<AaveAutoSellTriggerData> = (
     functionName: 'addTriggers',
     args: [
       65535,
-      [true],
+      [false],
       [currentTrigger?.id ?? 0n],
       [encodedTriggerData],
       [currentTrigger?.triggerData ?? '0x0'],
