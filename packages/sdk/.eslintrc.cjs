@@ -1,6 +1,7 @@
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
   root: true,
-  extends: ['@summerfi/eslint-config/library.cjs'],
+  ignorePatterns: ['jest.config.js'],
+  extends: ['@summerfi/eslint-config/function.cjs'],
   parser: '@typescript-eslint/parser',
 }

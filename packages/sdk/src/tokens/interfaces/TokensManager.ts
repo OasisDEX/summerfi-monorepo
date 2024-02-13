@@ -23,7 +23,7 @@ export interface TokensManager {
    *
    * @returns The token with the given symbol
    */
-  getTokenBySymbol(symbol: string): Promise<Maybe<Token>>
+  getTokenBySymbol(params: { symbol: string }): Promise<Maybe<Token>>
 
   /**
    * @method getTokenByAddress
@@ -33,7 +33,7 @@ export interface TokensManager {
    *
    * @returns The token with the given address
    */
-  getTokenByAddress(address: Address): Promise<Maybe<Token>>
+  getTokenByAddress(params: { address: Address }): Promise<Maybe<Token>>
 
   /**
    * @method getTokenByName
@@ -43,5 +43,5 @@ export interface TokensManager {
    *
    * @returns The token with the given name
    */
-  getTokenByName(name: string): Promise<Maybe<Token>>
+  getTokenByName(params: { name: string }): Promise<Maybe<Token>>
 }

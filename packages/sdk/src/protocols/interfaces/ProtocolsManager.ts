@@ -1,3 +1,4 @@
+import { Maybe } from '~sdk/utils'
 import { Protocol } from './Protocol'
 import { ProtocolName } from './ProtocolName'
 
@@ -22,5 +23,7 @@ export interface ProtocolsManager {
    *
    * @returns The protocol with the given name
    */
-  getProtocolByName<ProtocolType extends Protocol>(name: ProtocolName): ProtocolType
+  getProtocolByName<ProtocolType extends Protocol>(params: {
+    name: ProtocolName
+  }): Promise<Maybe<ProtocolType>>
 }

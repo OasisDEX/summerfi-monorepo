@@ -1,11 +1,11 @@
 import { RiskRatio } from '~sdk/common'
-import { SimulationData } from '~sdk/orders'
+import { Simulation } from '~sdk/orders'
 
 /**
- * @interface CreatePositionSimulationData
+ * @interface CreatePositionSimulation
  * @description Simulation data for a position. The position can be either a new position or an existing one.*
  */
-export interface CreatePositionSimulationData extends SimulationData {
+export interface CreatePositionSimulation extends Simulation {
   // TODO: review and adjust accordingly
   riskRatio: RiskRatio
   healthFactor: string
