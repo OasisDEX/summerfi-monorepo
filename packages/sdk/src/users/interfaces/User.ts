@@ -42,5 +42,5 @@ export interface User {
    *
    * @returns The new order created for the user
    */
-  newOrder(params: { simulation: Simulation<SimulationType, {}> }): Promise<Order>
+  newOrder(params: { simulation: Simulation<SimulationType, unknown> }): Promise<Order>
 }

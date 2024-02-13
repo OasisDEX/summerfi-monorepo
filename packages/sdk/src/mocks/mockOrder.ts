@@ -5,7 +5,7 @@ import { Wallet } from '~sdk/common'
 export async function getMockOrder(params: {
   chain: Chain
   wallet: Wallet
-  simulation: Simulation<SimulationType, {}>
+  simulation: Simulation<SimulationType, unknown>
 }): Promise<Order> {
   return {
     simulation: params.simulation,

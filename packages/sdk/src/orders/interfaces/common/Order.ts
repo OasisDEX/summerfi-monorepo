@@ -7,7 +7,7 @@ import { TransactionInfo } from './TransactionInfo'
  */
 export interface Order {
   /** @description Simulation */
-  simulation: Simulation<SimulationType, {}>
+  simulation: Simulation<SimulationType, unknown>
   /** @description Transaction info */
   transactions: TransactionInfo[]
 }
