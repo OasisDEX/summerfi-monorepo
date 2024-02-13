@@ -1,4 +1,3 @@
-import { initTRPC } from '@trpc/server'
 import { z } from 'zod'
 import {
   isPositionId,
@@ -8,21 +7,13 @@ import {
   type PositionId,
   type ProtocolEnum,
 } from './sdk-mocks'
+import { publicProcedure, tRouter } from '~src/trpc'
 
 /**
  * Server
  */
 
-const t = initTRPC.create()
-export const router = t.router
-export const publicProcedure = t.procedure
-export const createCallerFactory = t.createCallerFactory
-
-export const appRouter = router({
-  getUser: t.procedure.input(z.string()).query((opts) => {
-    opts.input // string
-    return { id: opts.input, name: 'Bilbo' }
-  }),
+export const appRouter = tRouter({
   getPosition: publicProcedure
     .input(z.object({ positionId: z.custom<PositionId>(isPositionId) }))
     .query(async (opts) => {
