@@ -1,9 +1,12 @@
-import { Simulation } from '~sdk/orders'
+import { Simulation, SimulationType } from '~sdk/orders'
+
+interface AddAutomationSimulationData {}
 
 /**
  * @interface AddAutomationSimulation
  * @description Simulation data for adding automation to a position.
  */
-export interface AddAutomationSimulation extends Simulation {
+export interface AddAutomationSimulation
+  extends Simulation<SimulationType.AddAutomation, AddAutomationSimulationData> {
   // TODO: review and adjust accordingly
 }
