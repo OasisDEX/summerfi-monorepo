@@ -1,7 +1,7 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 import { createTRPCClient, httpBatchLink } from '@trpc/client'
-import { Protocols, type Position, type PositionId, type Protocol } from '../src/sdk-mocks'
-import type { AppRouter } from '../src/app-router'
+import { Protocols, type Position, type PositionId, type Protocol } from '~src/sdk-mocks'
+import type { AppRouter } from '~src/app-router'
 
 /**
  * Client
