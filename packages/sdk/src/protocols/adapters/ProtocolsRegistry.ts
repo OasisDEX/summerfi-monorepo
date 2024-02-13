@@ -1,4 +1,8 @@
+import { ChainInfo } from '~sdk/chains'
 import { Protocol, ProtocolName } from '~sdk/protocols'
+import { HashedProtocolKey, ProtocolInfo, ProtocolKey } from './types'
+import { hashProtocolKey } from './utils'
+import { Maybe } from '~sdk/utils'
 
 /**
  * @class ProtocolsRegistry
@@ -7,32 +11,77 @@ import { Protocol, ProtocolName } from '~sdk/protocols'
  * @dev This class offers runtime storage of protocols and it is used to easy the registration and retrieval of protocols
  */
 export class ProtocolsRegistry {
-  private static _protocols: Map<ProtocolName, Protocol>
+  private static _protocols: Map<HashedProtocolKey, ProtocolInfo>
 
   // Private because this class should not be instantiated
   private constructor() {}
 
-  public static registerProtocol(params: { name: ProtocolName; protocol: Protocol }): void {
+  public static registerProtocol(params: {
+    chainInfo: ChainInfo
+    name: ProtocolName
+    protocol: Protocol
+  }): void {
     if (!this._protocols) {
       this._protocols = new Map()
     }
 
-    if (this._protocols.has(params.name)) {
-      throw new Error(`Protocol ${params.name} already registered`)
+    if (this.getProtocol({ chainInfo: params.chainInfo, name: params.name }) !== undefined) {
+      throw new Error(
+        `Protocol ${params.name} already registered on chain ${params.chainInfo.name}`,
+      )
     }
 
-    this._protocols.set(params.name, params.protocol)
+    this._addProtocol(params)
   }
 
-  public static getProtocol<ProtocolType extends Protocol>(name: ProtocolName): ProtocolType {
-    const protocol = this._protocols.get(name)
-    if (!protocol) {
-      throw new Error(`Protocol ${name} not found`)
+  public static getProtocol<ProtocolType extends Protocol>(params: {
+    chainInfo: ChainInfo
+    name: ProtocolName
+  }): Maybe<ProtocolType> {
+    if (!this._protocols) {
+      return undefined
     }
-    return protocol as ProtocolType
+
+    const key: ProtocolKey = {
+      chainInfo: params.chainInfo,
+      name: params.name,
+    }
+
+    const hashedKey = hashProtocolKey({ key })
+
+    const protocolInfo = this._protocols.get(hashedKey)
+    if (!protocolInfo) {
+      return undefined
+    }
+
+    return protocolInfo.protocol as Maybe<ProtocolType>
   }
 
-  public static getSupportedProtocols(): ProtocolName[] {
-    return Array.from(this._protocols.keys())
+  public static getSupportedProtocols(params: { chainInfo: ChainInfo }): ProtocolName[] {
+    return Array.from(this._protocols.values()).reduce((acc, value) => {
+      if (value.chainInfo.chainId === params.chainInfo.chainId) {
+        acc.push(value.name)
+      }
+      return acc
+    }, [] as ProtocolName[])
+  }
+
+  private static _addProtocol(params: {
+    chainInfo: ChainInfo
+    name: ProtocolName
+    protocol: Protocol
+  }): void {
+    const key: ProtocolKey = {
+      chainInfo: params.chainInfo,
+      name: params.name,
+    }
+
+    const hashedKey = hashProtocolKey({ key })
+
+    this._protocols.set(hashedKey, {
+      chainInfo: params.chainInfo,
+      name: params.name,
+      protocol: params.protocol,
+    })
   }
 }

@@ -8,7 +8,7 @@ import { Position } from '~sdk/users'
  */
 export interface RefinanceSimulationManager {
   /**
-   * @function simulateRefinance
+   * @function simulateRefinancePosition
    * @description Simulates a refinance operation
    *
    * @param position Position to refinance
@@ -16,7 +16,7 @@ export interface RefinanceSimulationManager {
    *
    * @returns Simulation data for a refinance operation
    */
-  simulateRefinance(params: {
+  simulateRefinancePosition(params: {
     position: Position
     pool: Pool
     parameters: RefinanceParameters
