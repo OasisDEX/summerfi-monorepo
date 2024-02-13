@@ -46,6 +46,9 @@
     },
     "cicheck": {
       "dependsOn": ["prebuild", "build", "test", "lint"]
+    },
+    "deploy:staging": {
+      "dependsOn": ["cicheck", "^deploy:staging"]
     }
   }
 }

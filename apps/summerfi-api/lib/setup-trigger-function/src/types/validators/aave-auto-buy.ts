@@ -24,7 +24,7 @@ export const aaveBasicBuyTriggerDataSchema = z
   })
   .refine(
     ({ maxBuyPrice, useMaxBuyPrice }) => {
-      return useMaxBuyPrice ? maxBuyPrice !== maxUnit256 : true
+      return useMaxBuyPrice ? maxBuyPrice !== maxUnit256 && maxBuyPrice !== undefined : true
     },
     {
       params: {

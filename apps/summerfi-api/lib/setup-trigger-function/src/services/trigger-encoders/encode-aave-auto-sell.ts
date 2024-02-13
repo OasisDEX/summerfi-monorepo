@@ -52,7 +52,7 @@ export const encodeAaveAutoSell: EncoderFunction<AaveAutoSellTriggerData> = (
     operationNameInBytes,
     triggerData.executionLTV,
     triggerData.targetLTV,
-    triggerData.minSellPrice,
+    triggerData.minSellPrice ?? 0n,
     DEFAULT_DEVIATION, // 100 -> 1%
     triggerData.maxBaseFee,
   ])

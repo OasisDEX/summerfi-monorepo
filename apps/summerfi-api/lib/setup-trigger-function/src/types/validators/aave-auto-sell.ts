@@ -24,7 +24,7 @@ export const aaveBasicSellTriggerDataSchema = z
   })
   .refine(
     ({ minSellPrice, useMinSellPrice }) => {
-      return useMinSellPrice ? minSellPrice !== 0n : true
+      return useMinSellPrice ? minSellPrice !== 0n && minSellPrice !== undefined : true
     },
     {
       params: {
