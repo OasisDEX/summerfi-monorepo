@@ -1,9 +1,7 @@
-import { Simulation } from '~sdk/orders'
+import { Simulation, SimulationType } from '~sdk/orders'
 
 /**
  * @interface ImportPositionSimulation
  * @description Simulation data for importing a position from another service
  */
-export interface ImportPositionSimulation extends Simulation {
-  // TODO: review and adjust accordingly
-}
+export type ImportPositionSimulation = Simulation<SimulationType.ImportPosition, {}>

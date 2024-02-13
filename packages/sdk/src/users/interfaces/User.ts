@@ -1,6 +1,6 @@
 import { Protocol } from '~sdk/protocols'
 import { Position, PositionId } from './Position'
-import { Order, Simulation } from '~sdk/orders'
+import { Order, Simulation, SimulationType } from '~sdk/orders'
 import { Maybe } from '~sdk/utils'
 import { Wallet } from '~sdk/common'
 import { Chain } from '~sdk/chains'
@@ -42,5 +42,5 @@ export interface User {
    *
    * @returns The new order created for the user
    */
-  newOrder(params: { simulation: Simulation }): Promise<Order>
+  newOrder(params: { simulation: Simulation<SimulationType, {}> }): Promise<Order>
 }

@@ -1,11 +1,8 @@
 import { RiskRatio } from '~sdk/common'
 import { Simulation } from '~sdk/orders'
+import { SimulationType } from '../common/SimulationType'
 
-/**
- * @interface CreatePositionSimulation
- * @description Simulation data for a position. The position can be either a new position or an existing one.*
- */
-export interface CreatePositionSimulation extends Simulation {
+interface CreatePositionSimulationData {
   // TODO: review and adjust accordingly
   riskRatio: RiskRatio
   healthFactor: string
@@ -17,3 +14,9 @@ export interface CreatePositionSimulation extends Simulation {
   debtToPaybackAll: string
   oraclePriceForCollateralDebtExchangeRate: string
 }
+
+/**
+ * @interface CreatePositionSimulation
+ * @description Simulation data for a position. The position can be either a new position or an existing one.*
+ */
+export type CreatePositionSimulation = Simulation<SimulationType.CreatePosition, CreatePositionSimulationData >

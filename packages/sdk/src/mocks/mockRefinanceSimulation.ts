@@ -1,4 +1,5 @@
-import { RefinanceParameters, RefinanceSimulation } from '~sdk/orders'
+import { TokenAmount } from '~sdk/common'
+import { RefinanceParameters, RefinanceSimulation, SimulationType } from '~sdk/orders'
 import { Pool } from '~sdk/protocols'
 import { Position } from '~sdk/users'
 
@@ -8,8 +9,11 @@ export function mockRefinanceSimulation(params: {
   parameters: RefinanceParameters
 }): RefinanceSimulation {
   return {
-    position: params.position,
-    pool: params.pool,
-    parameters: params.parameters,
+    simulationType: SimulationType.Refinance,
+    simulationData: {
+      sourcePosition: params.position,
+      targetPosition: params.position,
+      flashLoan: TokenAmount.createFrom({ token: params.position.debtAmount.token , amount: '0' }),
+    }
   }
 }

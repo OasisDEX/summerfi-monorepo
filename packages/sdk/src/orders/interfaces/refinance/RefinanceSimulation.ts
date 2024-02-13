@@ -1,7 +1,7 @@
 import { TokenAmount } from '~sdk/common'
 import { Simulation, SimulationType } from '~sdk/orders'
 import { Swap } from '~sdk/exchange'
-import { Position } from '~sdk'
+import { Position } from '~sdk/users'
 
 interface RefinanceSimulationData {
   sourcePosition: Position

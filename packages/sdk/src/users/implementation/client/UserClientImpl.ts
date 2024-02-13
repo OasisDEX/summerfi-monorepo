@@ -3,7 +3,7 @@ import { User, Position, PositionId } from '~sdk/users'
 import { Chain } from '~sdk/chains'
 import { Protocol } from '~sdk/protocols'
 import { Maybe } from '~sdk/utils'
-import { Order, Simulation } from '~sdk/orders'
+import { Order, Simulation, SimulationType } from '~sdk/orders'
 import { getMockOrder, getMockPosition } from '~sdk/mocks'
 
 export class UsersClientImpl implements User {
@@ -31,7 +31,7 @@ export class UsersClientImpl implements User {
     return getMockPosition({ chain: this.chain, wallet: this.wallet, id: params.id })
   }
 
-  public async newOrder(params: { simulation: Simulation }): Promise<Order> {
+  public async newOrder(params: { simulation: Simulation<SimulationType, {}> }): Promise<Order> {
     return getMockOrder({ chain: this.chain, wallet: this.wallet, simulation: params.simulation })
   }
 }
