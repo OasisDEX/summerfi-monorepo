@@ -6,7 +6,7 @@ import { ExternalPosition, ImportPositionSimulation } from '~sdk/orders'
  */
 export interface ImportingSimulationManager {
   /**
-   * @function simulateImportPosition
+   * @function simulate
    * @description Simulates the import of a position
    *
    * @param externalPosition Position to import

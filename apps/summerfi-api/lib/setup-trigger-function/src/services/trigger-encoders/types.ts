@@ -1,12 +1,4 @@
-import {
-  PositionLike,
-  AaveAutoBuyTriggerData,
-  AaveAutoSellTriggerData,
-  TriggerData,
-  SupportedTriggers,
-  Price,
-} from '~types'
-import { ProtocolId } from '@summerfi/serverless-shared/domain-types'
+import { PositionLike, TriggerData, Price } from '~types'
 
 export const AAVE_TRANSACTION_PRICE_DECIMALS = 8n
 
@@ -32,10 +24,3 @@ export type EncoderFunction<TTriggerData extends TriggerData> = (
   debtPriceInUSD: Price,
   currentTrigger: CurrentTriggerLike | undefined,
 ) => TriggerTransactions
-
-export type TriggerEncoders = {
-  [ProtocolId.AAVE3]: {
-    [SupportedTriggers.AutoBuy]: EncoderFunction<AaveAutoBuyTriggerData>
-    [SupportedTriggers.AutoSell]: EncoderFunction<AaveAutoSellTriggerData>
-  }
-}

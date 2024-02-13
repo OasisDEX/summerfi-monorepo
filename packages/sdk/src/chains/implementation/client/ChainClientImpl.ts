@@ -4,8 +4,12 @@ import { Chain, ChainInfo } from '~sdk/chains'
 import { ChainBaseImpl } from '../base/ChainBaseImpl'
 
 export class ChainClientImpl extends ChainBaseImpl implements Chain {
-  constructor(chainInfo: ChainInfo) {
-    super(chainInfo, new TokensManagerClientImpl(), new ProtocolsManagerClientImpl())
+  constructor(params: { chainInfo: ChainInfo }) {
+    super({
+      chainInfo: params.chainInfo,
+      tokensManager: new TokensManagerClientImpl({ chainInfo: params.chainInfo }),
+      protocolsManager: new ProtocolsManagerClientImpl({ chainInfo: params.chainInfo }),
+    })
   }
 
   public getLatestBlock() {

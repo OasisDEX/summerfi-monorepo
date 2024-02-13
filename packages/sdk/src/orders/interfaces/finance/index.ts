@@ -4,5 +4,4 @@ export type { ClosePositionParameters, ClosePositionType } from './ClosePosition
 export type { ClosePositionSimulation } from './ClosePositionSimulation'
 export type { CreatePositionParameters } from './CreatePositionParameters'
 export type { CreatePositionSimulation } from './CreatePositionSimulation'
-export type { CreatePositionSimulationData } from './CreatePositionSimulationData'
-export type { DeltaSimulationData } from './DeltaSimulationData'
+export type { DeltaSimulation } from './DeltaSimulationData'

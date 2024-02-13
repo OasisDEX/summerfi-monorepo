@@ -1,9 +1,7 @@
 node_modules
 .vscode
-package.json
 **/dist/**
 .next/
-types
 i18next.d.ts
 .yalc
 coverage
@@ -11,6 +9,9 @@ coverage
 .run
 .swc
 .vercel
-jest.config.js
 setup.js
 lambdas
+cache
+abis
+artifacts
+**/core-contracts/src/

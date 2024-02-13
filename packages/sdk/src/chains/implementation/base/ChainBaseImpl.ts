@@ -7,10 +7,14 @@ export abstract class ChainBaseImpl implements Chain {
   public readonly tokens: TokensManager
   public readonly protocols: ProtocolsManager
 
-  constructor(chainInfo: ChainInfo, tokens: TokensManager, protocols: ProtocolsManager) {
-    this.chainInfo = chainInfo
-    this.tokens = tokens
-    this.protocols = protocols
+  constructor(params: {
+    chainInfo: ChainInfo
+    tokensManager: TokensManager
+    protocolsManager: ProtocolsManager
+  }) {
+    this.chainInfo = params.chainInfo
+    this.tokens = params.tokensManager
+    this.protocols = params.protocolsManager
   }
 
   public getLatestBlock() {
