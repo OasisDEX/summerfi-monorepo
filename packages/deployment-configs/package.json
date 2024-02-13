@@ -1,0 +1,19 @@
+{
+  "name": "@summerfi/deployment-configs",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "build": "tsc -b -v",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "devDependencies": {
+    "@summerfi/deployment-types": "workspace:*",
+    "@summerfi/deployment-utils": "workspace:*",
+    "@summerfi/hardhat-utils": "workspace:*",
+    "@summerfi/common": "workspace:*"
+  }
+}

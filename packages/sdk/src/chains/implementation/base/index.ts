@@ -1,1 +1,1 @@
-export { ChainBaseImpl as NetworkBaseImpl } from './ChainBaseImpl'
+export { ChainBaseImpl } from './ChainBaseImpl'

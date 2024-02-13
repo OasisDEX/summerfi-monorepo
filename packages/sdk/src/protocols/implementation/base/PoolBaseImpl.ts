@@ -3,7 +3,7 @@ import { Pool, PoolId, ProtocolId, PoolType } from '~sdk/protocols'
 
 export class PoolBaseImpl implements Pool {
   public readonly poolId: PoolId
-  public readonly protocolid: ProtocolId
+  public readonly protocolId: ProtocolId
   public readonly type: PoolType
   public readonly address?: Address
   public readonly TVL?: number
@@ -16,7 +16,7 @@ export class PoolBaseImpl implements Pool {
     TVL?: number
   }) {
     this.poolId = params.poolId
-    this.protocolid = params.protocolId
+    this.protocolId = params.protocolId
     this.type = params.type
     this.address = params.address
     this.TVL = params.TVL

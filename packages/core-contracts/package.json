@@ -1,0 +1,35 @@
+{
+  "name": "@summerfi/core-contracts",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "test": "jest --passWithNoTests",
+    "build": "tsc -b -v",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "gen-versions": "hardhat run scripts/contract-versions/generate-versions.ts",
+    "view-versions": "hardhat run scripts/contract-versions/view-versions.ts"
+  },
+  "devDependencies": {
+    "@ethersproject/keccak256": "^5.7.0",
+    "@nomicfoundation/hardhat-toolbox-viem": "^2.0.0",
+    "@openzeppelin/contracts": "4.9.3",
+    "@prb/math": "2.5.0",
+    "@summerfi/contracts-utils": "workspace:*",
+    "@summerfi/deployment-configs": "workspace:*",
+    "@summerfi/deployment-types": "workspace:*",
+    "@summerfi/deployment-utils": "workspace:*",
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/hardhat-utils": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "@summerfi/common": "workspace:*",
+    "@types/jest": "^29.5.11",
+    "dotenv": "^16.3.1",
+    "hardhat": "^2.19.5",
+    "jest": "^29.7.0",
+    "viem": "^2.7.1"
+  }
+}

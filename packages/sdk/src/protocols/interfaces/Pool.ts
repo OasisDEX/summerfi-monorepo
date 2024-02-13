@@ -18,7 +18,7 @@ export enum PoolType {
  */
 export interface Pool {
   poolId: PoolId
-  protocolid: ProtocolId
+  protocolId: ProtocolId
   type: PoolType
   address?: Address
   TVL?: number
