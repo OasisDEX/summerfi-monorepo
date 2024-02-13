@@ -1,5 +1,6 @@
 import { Position } from '~sdk/users'
 import { Pool } from '~sdk/protocols'
+import { Percentage } from '~sdk/common'
 
 /**
  * @interface RefinanceParameters
@@ -8,4 +9,5 @@ import { Pool } from '~sdk/protocols'
 export interface RefinanceParameters {
   sourcePosition: Position
   targetPool: Pool
+  slippage: Percentage
 }

@@ -12,7 +12,7 @@ export function mockRefinanceSimulation(params: {
     simulationType: SimulationType.Refinance,
     simulationData: {
       sourcePosition: params.position,
-      targetPosition: params.position,
+      targetPosition: {...params.position, pool: params.pool},
       flashLoan: TokenAmount.createFrom({ token: params.position.debtAmount.token , amount: '0' }),
     }
   }
