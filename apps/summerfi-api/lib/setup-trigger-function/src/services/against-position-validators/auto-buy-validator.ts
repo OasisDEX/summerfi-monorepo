@@ -54,7 +54,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ executionPrice, triggerData }) => {
-      return triggerData.maxBuyPrice && triggerData.maxBuyPrice > executionPrice
+      return !triggerData.useMaxBuyPrice || triggerData.maxBuyPrice > executionPrice
     },
     {
       message: 'Execution price is bigger than max buy price',
