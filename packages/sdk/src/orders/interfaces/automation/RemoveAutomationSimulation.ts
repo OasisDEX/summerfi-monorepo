@@ -6,4 +6,7 @@ interface RemoveAutomationSimulationData {}
  * @interface RemoveAutomationSimulation
  * @description Simulation data for adding automation to a position.
  */
-export type RemoveAutomationSimulation = Simulation<SimulationType.RemoveAutomation, RemoveAutomationSimulationData>
+export type RemoveAutomationSimulation = Simulation<
+  SimulationType.RemoveAutomation,
+  RemoveAutomationSimulationData
+>
