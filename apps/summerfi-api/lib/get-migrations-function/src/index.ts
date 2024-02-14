@@ -26,21 +26,18 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
   const { RPC_GATEWAY } = (event.stageVariables as Record<string, string>) || {
     RPC_GATEWAY: process.env.RPC_GATEWAY,
   }
-
   // params
   let address: Address | undefined
   let customRpcUrl: string | undefined
 
-  // validation
-  try {
-    const params = paramsSchema.parse(event.queryStringParameters)
-    address = params.address
-    customRpcUrl = params.customRpcUrl
-  } catch (error) {
-    console.log(error)
-    const message = getDefaultErrorMessage(error)
+  const params = paramsSchema.safeParse(event.queryStringParameters)
+  if (!params.success) {
+    console.log(params.error)
+    const message = getDefaultErrorMessage(params.error)
     return ResponseBadRequest(message)
   }
+  address = params.data.address
+  customRpcUrl = params.data.customRpcUrl
 
   try {
     if (!RPC_GATEWAY) {
