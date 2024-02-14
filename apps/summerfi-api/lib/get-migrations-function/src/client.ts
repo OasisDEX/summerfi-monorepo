@@ -66,21 +66,6 @@ export function createMigrationsClient(
             },
           })
 
-          const publicClient = createPublicClient({
-            chain,
-            transport,
-          })
-
-          const chainIdFromChain = await publicClient.getChainId()
-          if (chainIdFromChain !== chainId) {
-            return {
-              debtAssets: [],
-              collAssets: [],
-              chainId,
-              protocolId,
-            }
-          }
-
           const { collAssets, debtAssets } = await getAssets(transport, chain, protocolId, address)
           return {
             debtAssets,
