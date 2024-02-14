@@ -1,26 +1,27 @@
 {
-  "name": "@summerfi/sdk",
+  "name": "@summerfi/swap-manager",
   "version": "0.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
-    "./*": {
-      "import": "./dist/*/index.js",
-      "types": "./dist/*/index.d.ts"
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     }
   },
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest",
+    "test": "jest --setupFiles dotenv/config --silent=false",
     "testw": "jest --watch",
     "build": "tsc -b -v tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "bignumber.js": "9.0.1",
-    "viem": "^2.2.0"
+    "@summerfi/sdk": "workspace:*",
+    "axios": "^1.6.7",
+    "viem": "^2.7.9"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

@@ -45,6 +45,6 @@ export class Address implements Printable {
   }
 
   public toString(): string {
-    return `${this.hexValue} (${this.type})`
+    return `${this.hexValue}`
   }
 }
