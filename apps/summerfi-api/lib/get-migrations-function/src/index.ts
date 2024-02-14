@@ -8,7 +8,6 @@ import {
 } from '@summerfi/serverless-shared/responses'
 import { addressSchema } from '@summerfi/serverless-shared/validators'
 import {
-  Address,
   PortfolioMigration,
   PortfolioMigrationsResponse,
 } from '@summerfi/serverless-shared/domain-types'
@@ -26,9 +25,6 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
   const { RPC_GATEWAY } = (event.stageVariables as Record<string, string>) || {
     RPC_GATEWAY: process.env.RPC_GATEWAY,
   }
-  // params
-  let address: Address | undefined
-  let customRpcUrl: string | undefined
 
   const params = paramsSchema.safeParse(event.queryStringParameters)
   if (!params.success) {
@@ -36,8 +32,8 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     const message = getDefaultErrorMessage(params.error)
     return ResponseBadRequest(message)
   }
-  address = params.data.address
-  customRpcUrl = params.data.customRpcUrl
+  const address = params.data.address
+  const customRpcUrl = params.data.customRpcUrl
 
   try {
     if (!RPC_GATEWAY) {
