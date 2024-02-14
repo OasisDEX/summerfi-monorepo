@@ -18,6 +18,7 @@ import { MigrationConfig } from 'migrations-config'
 const paramsSchema = z.object({
   address: addressSchema,
   customRpcUrl: z.string().optional(),
+  forkChainId: z.number().optional(),
 })
 
 export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
@@ -34,13 +35,19 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
   }
   const address = params.data.address
   const customRpcUrl = params.data.customRpcUrl
+  const forkChainId = params.data.forkChainId
 
   try {
     if (!RPC_GATEWAY) {
       throw new Error('RPC_GATEWAY env variable is not set')
     }
 
-    const migrationsClient = createMigrationsClient(RPC_GATEWAY, customRpcUrl, MigrationConfig)
+    const migrationsClient = createMigrationsClient(
+      RPC_GATEWAY,
+      customRpcUrl,
+      MigrationConfig,
+      forkChainId,
+    )
 
     const eligibleMigrations: PortfolioMigration[] = []
     const protocolAssetsToMigrate = await migrationsClient.getProtocolAssetsToMigrate(address)
