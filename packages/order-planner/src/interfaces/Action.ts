@@ -56,9 +56,9 @@ export interface ActionParameters {
  *              a simulation.
  */
 export type ActionCallBuilder = (
+  contractNameWithVersion: string,
   parameters: ActionParameters,
-  storageMapping: StorageMapping,
-  currentStorageIndex: number,
+  paramsMapping: number[],
 ) => ActionCall
 
 /**

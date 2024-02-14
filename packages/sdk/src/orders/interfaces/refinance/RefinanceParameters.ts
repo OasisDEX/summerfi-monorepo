@@ -12,3 +12,7 @@ export interface RefinanceParameters {
   /** Maximum slippage allowed when opening a position */
   slippage: Percentage
 }
+
+export function isRefinanceParameters(parameters: unknown): parameters is RefinanceParameters {
+  return typeof parameters === 'object' && parameters !== null && 'slippage' in parameters
+}

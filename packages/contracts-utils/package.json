@@ -10,11 +10,11 @@
     "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
-    "@ethersproject/keccak256": "^5.7.0",
     "@nomicfoundation/hardhat-toolbox-viem": "^2.0.0",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/hardhat-utils": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
-    "hardhat": "^2.19.5"
+    "hardhat": "^2.19.5",
+    "viem": "^2.7.8"
   }
 }

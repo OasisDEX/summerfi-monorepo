@@ -32,18 +32,10 @@ export enum StrategyName {
 export type StrategyStep = StrategySingleStep | PartialStrategy
 
 /** Definition of a strategy based on steps or partial strategies */
-export type StrategyDefinition = {
+export type StrategyDefinitions = {
   name: StrategyName
-  steps: StrategyStep[]
-}
-
-/**
- * @name VersionedStrategyDefinition
- * @description Represents a strategy with its version
- */
-export type VersionedStrategyDefinition = {
   version: Version
-  strategy: StrategyDefinition
+  steps: StrategyStep[]
 }
 
 /**

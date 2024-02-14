@@ -5,6 +5,7 @@ export type ContractVersion = number
 export type ContractVersionHash = {
   version: ContractVersion
   hash: ContractHash
+  abi?: string
 }
 
 export type ContractVersionInfo = {
@@ -12,6 +13,7 @@ export type ContractVersionInfo = {
   path: ContractPath
   latestVersion: ContractVersion
   latestHash: ContractHash
+  latestAbi?: string
   history?: ContractVersionHash[]
 }
 

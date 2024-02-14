@@ -1,6 +1,6 @@
 import hre from 'hardhat'
 import { ContractInfo, ContractsHashMap } from './types'
-import { keccak256 } from '@ethersproject/keccak256'
+import { keccak256, toBytes } from 'viem'
 
 export async function getContractsHashes(
   params: {
@@ -21,7 +21,7 @@ export async function getContractsHashes(
     const contractInfo: ContractInfo = {
       name: name,
       path: artifact.sourceName,
-      hash: keccak256(artifact.bytecode),
+      hash: keccak256(toBytes(artifact.bytecode)),
     }
 
     return {

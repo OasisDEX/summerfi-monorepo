@@ -1,4 +1,4 @@
-import { ContractsHashMap, getContractsHashes } from '@summerfi/contracts-utils'
+import { ContractsInfoMap, getContractsInfo } from '@summerfi/contracts-utils'
 import { ContractsVersionsMap, ContractsVersionsSnapshot } from './types'
 import fs from 'fs'
 import path from 'path'
@@ -60,9 +60,9 @@ export function loadVersionsSnapshot(
 }
 
 function generateCurrentSnapshot(params: {
-  contractsHashesInfo: ContractsHashMap
+  contractsInfo: ContractsInfoMap
 }): ContractsVersionsSnapshot {
-  const contracts = Object.entries(params.contractsHashesInfo).reduce(
+  const contracts = Object.entries(params.contractsInfo).reduce(
     (contractsVersions, [contractName, contractInfo]) => {
       return {
         ...contractsVersions,
@@ -71,6 +71,7 @@ function generateCurrentSnapshot(params: {
           path: contractInfo.path,
           latestVersion: 0,
           latestHash: contractInfo.hash,
+          latestAbi: contractInfo.executeAbi,
         },
       }
     },
@@ -109,6 +110,7 @@ function updateVersionsSnapshot(params: {
         {
           version: latestVersion,
           hash: currentVersionInfo.latestHash,
+          abi: currentVersionInfo.latestAbi,
         },
         ...versionHistory,
       ],
@@ -157,12 +159,12 @@ export async function updateContractVersions(
   const snapshotsDir = params.snapshotsDir ?? SnapshotDirectory
   const snapshotName = params.snapshotName ?? ContractsVersionsDefaultName
 
-  const contractsHashesInfo = await getContractsHashes({
+  const contractsInfo = await getContractsInfo({
     exclusions: ['interfaces', '@openzeppelin', '@prb', 'test', 'hardhat'],
   })
 
   const currentVersionsSnapshot = generateCurrentSnapshot({
-    contractsHashesInfo,
+    contractsInfo,
   })
 
   const previousVersionsSnapshot = loadVersionsSnapshot({

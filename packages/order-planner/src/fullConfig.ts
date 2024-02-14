@@ -1,12 +1,12 @@
 import { PullTokenWithCollateral, PullTokenWithDebt } from '~orderplanner/fetchers'
 import {
-  StrategyShortDefinitions,
+  VersionedStrategyDefinition,
   StrategyName,
   ActionType,
   Optionals,
 } from '~orderplanner/interfaces'
 
-export const Strategies: StrategyShortDefinitions = {
+export const Strategies: VersionedStrategyDefinition = {
   /* Action Type, Parameter Fetchers, Storage Keys, Is Optional, Optional Exclusion */
   [StrategyName.DepositBorrow]: {
     steps: [
