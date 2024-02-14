@@ -7,13 +7,13 @@ import {
   type PositionId,
   type ProtocolEnum,
 } from './sdk-mocks'
-import { publicProcedure, tRouter } from '~src/trpc'
+import { publicProcedure, router } from '~src/trpc'
 
 /**
  * Server
  */
 
-export const appRouter = tRouter({
+export const appRouter = router({
   getPosition: publicProcedure
     .input(z.object({ positionId: z.custom<PositionId>(isPositionId) }))
     .query(async (opts) => {

@@ -13,7 +13,7 @@ module.exports = (pkgCompilerOptions = {}) => {
   })
   const mappings = { ...monoMappings, ...pkgMappings }
   return {
-    roots: ['<rootDir>/src', '<rootDir>/tests'],
+    roots: ['<rootDir>/src', '<rootDir>/tests', '<rootDir>/e2e'],
     preset: 'ts-jest',
     extensionsToTreatAsEsm: ['.ts'],
     silent: true,

@@ -4,7 +4,8 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest --passWithNoTests",
+    "test": "jest",
+    "e2e": "jest ./e2e/refinance-e2e.spec.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "build": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap"
