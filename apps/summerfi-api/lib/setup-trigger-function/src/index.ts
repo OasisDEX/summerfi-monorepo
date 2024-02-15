@@ -19,6 +19,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
   const RPC_GATEWAY = process.env.RPC_GATEWAY
   const GET_TRIGGERS_URL = process.env.GET_TRIGGERS_URL
   const SKIP_VALIDATION = process.env.SKIP_VALIDATION
+  const SUBGRAPH_BASE = process.env.SUBGRAPH_BASE
 
   const skipValidation = SKIP_VALIDATION === 'true'
   if (!RPC_GATEWAY) {
@@ -29,6 +30,11 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
   if (!GET_TRIGGERS_URL) {
     logger.error('GET_TRIGGERS_URL is not set')
     return ResponseInternalServerError('GET_TRIGGERS_URL is not set')
+  }
+
+  if (!SUBGRAPH_BASE) {
+    logger.error('SUBGRAPH_BASE is not set')
+    return ResponseInternalServerError('SUBGRAPH_BASE is not set')
   }
 
   const pathParamsResult = pathParamsSchema.safeParse(event.pathParameters || {})
@@ -73,6 +79,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     pathParamsResult.data.protocol,
     triggerBody,
     RPC_GATEWAY,
+    SUBGRAPH_BASE,
     GET_TRIGGERS_URL,
     logger,
   )

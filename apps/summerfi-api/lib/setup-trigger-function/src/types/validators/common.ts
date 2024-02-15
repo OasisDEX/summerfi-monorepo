@@ -70,6 +70,7 @@ export enum SupportedTriggers {
   AutoBuy = 'auto-buy',
   AutoSell = 'auto-sell',
   DmaStopLoss = 'dma-stop-loss',
+  DmaTrailingStopLoss = 'dma-trailing-stop-loss',
 }
 
 const supportedTriggersSchema = z.nativeEnum(SupportedTriggers)
