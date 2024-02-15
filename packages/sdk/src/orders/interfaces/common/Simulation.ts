@@ -1,4 +1,4 @@
-import { TokenAmount } from '~sdk/common'
+import { Token, TokenAmount } from '~sdk/common'
 import { SimulationType } from './SimulationType'
 import { Position } from '~sdk/users'
 
@@ -8,6 +8,8 @@ export enum SimulationSteps {
   PaybackWithdraw = 'PaybackWithdraw',
   Swap = 'Swap',
   PullToken = 'PullToken',
+  ReturnFunds = 'ReturnFunds',
+  RepayFlashloan = 'RepayFlashloan',
 }
 
 export enum FlashloanProvider {
@@ -16,7 +18,9 @@ export enum FlashloanProvider {
 }
 
 interface Step<T extends SimulationSteps> {
-  type: T
+  type: T,
+  inputs: {},
+  outputs: {},
 }
 
 interface FlashloanStep extends Step<SimulationSteps.Flashloan> {
@@ -47,6 +51,12 @@ interface SwapStep extends Step<SimulationSteps.Swap> {
   slippage: number
   fee: number
 }
+
+interface ReturnFunds extends Step<SimulationSteps.ReturnFunds> {
+  token: Token
+}
+
+interface RepayFlashloan extends Step<SimulationSteps.RepayFlashloan> {}
 
 export type Steps =
   | FlashloanStep

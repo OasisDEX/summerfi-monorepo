@@ -45,6 +45,35 @@ class Simulator {
   }
 }
 
+const refinanceSchema = [
+  {
+    name: 'flashloan',
+    step: SimulationSteps.Flashloan,
+  },
+  {
+    name: 'paybackWithdrawSourceProtocol',
+    step: SimulationSteps.PaybackWithdraw,
+  },
+  {
+    name: 'collateralSwap',
+    step: SimulationSteps.Swap,
+    optional: true,
+  }
+] as const
+
+
+
+
+
+new Simulation(refinanceSchema).run(
+  {
+    DepositBorrow: (ctx) => {
+      depositAmount: ctx.storgeRef('collateralSwap', 'returnAmount', srcPosition.collateralAmount),
+      provider: FlashloanProvider.Maker
+    }
+  }
+)
+
 
 export class RefinanceSimulationManagerClientImpl implements RefinanceSimulationManager {
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
@@ -61,46 +90,46 @@ export class RefinanceSimulationManagerClientImpl implements RefinanceSimulation
     const areCollateralTokensEqual = position.collateralAmount.token.address === pool.collateralToken.address
 
 
-    new Simulator(
-      {
-        defaultContext: {
-          positions: {
-            'sourcePosition': position,
-          }
-        }
-        meta: {}
-      }
-    )
-      .next(
-        () => ({
-          storageKey: 'Flashloan',
-          type: SimulationSteps.Flashloan,
-          amount: position.debtAmount,
-          provider: FlashloanProvider.Maker
-        })
-      )
-      .next(
-        ({ fromStorage }) => ({
-          type: SimulationSteps.Repay,
-          amount: fromStorage('flashloan'),
-        })
-      ).conditionalNext(
-        ({ctx}) => ({
-          storageKey: 'collateralSwap',
-          type: SimulationSteps.Swap,
-          fromTokenAmount: TokenAmount,
-          toTokenAmount: TokenAmount,
-          slippage: number,
-          fee: number,
-        }), 
-        (ctx) => false /* */),
-        defaultOutput:  {}
-      ).next(
-        (ctx) => ({
-          type: SimulationSteps.DepositBorrow,
-          depositAmount: TokenAmount.createFrom({ amount: ctx.getStorage('collateralSwap') || someAmount, token: pool.collateralToken }),
-        })
-      )
+    // new Simulator(
+    //   {
+    //     defaultContext: {
+    //       positions: {
+    //         'sourcePosition': position,
+    //       }
+    //     }
+    //     meta: {}
+    //   }
+    // )
+    //   .next(
+    //     () => ({
+    //       storageKey: 'Flashloan',
+    //       type: SimulationSteps.Flashloan,
+    //       amount: position.debtAmount,
+    //       provider: FlashloanProvider.Maker
+    //     })
+    //   )
+    //   .next(
+    //     ({ fromStorage }) => ({
+    //       type: SimulationSteps.Repay,
+    //       amount: fromStorage('flashloan'),
+    //     })
+    //   ).conditionalNext(
+    //     ({ctx}) => ({
+    //       storageKey: 'collateralSwap',
+    //       type: SimulationSteps.Swap,
+    //       fromTokenAmount: TokenAmount,
+    //       toTokenAmount: TokenAmount,
+    //       slippage: number,
+    //       fee: number,
+    //     }), 
+    //     (ctx) => false /* */),
+    //     defaultOutput:  {}
+    //   ).next(
+    //     (ctx) => ({
+    //       type: SimulationSteps.DepositBorrow,
+    //       depositAmount: TokenAmount.createFrom({ amount: ctx.getStorage('collateralSwap') || someAmount, token: pool.collateralToken }),
+    //     })
+    //   )
 
 
 
