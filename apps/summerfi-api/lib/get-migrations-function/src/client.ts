@@ -32,10 +32,10 @@ export const rpcConfig: IRpcConfig = {
 }
 
 export function createMigrationsClient(
+  migrationConfig: IMigrationConfig,
   rpcGatewayUrl: string,
   customRpcUrl: string | undefined,
-  migrationConfig: IMigrationConfig,
-  forkChainId?: ChainId,
+  customChainId?: ChainId,
 ) {
   const getProtocolAssetsToMigrate = async (
     address: Address,
@@ -48,7 +48,7 @@ export function createMigrationsClient(
       if (!isChainId(chainId)) {
         throw new Error(`Invalid chainId: ${chainId}`)
       }
-      if (forkChainId !== chainId) {
+      if (customChainId !== chainId) {
         return
       }
       supportedProtocolsIds.forEach((protocolId) => {

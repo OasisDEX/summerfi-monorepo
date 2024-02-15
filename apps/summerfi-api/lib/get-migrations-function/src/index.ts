@@ -15,11 +15,22 @@ import { createMigrationsClient } from './client'
 import { parseEligibleMigration } from './parseEligibleMigration'
 import { MigrationConfig } from 'migrations-config'
 
-const paramsSchema = z.object({
-  address: addressSchema,
-  customRpcUrl: z.string().optional(),
-  forkChainId: z.number().optional(),
-})
+const paramsSchema = z
+  .object({
+    address: addressSchema,
+    customRpcUrl: z.string().optional(),
+    chainId: z.number().optional(),
+  })
+  .refine(
+    (params) => {
+      if (params.customRpcUrl) {
+        return params.chainId !== undefined
+      }
+    },
+    {
+      message: 'customRpcUrl and chainId must be provided together',
+    },
+  )
 
 export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
   //set envs
@@ -35,7 +46,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
   }
   const address = params.data.address
   const customRpcUrl = params.data.customRpcUrl
-  const forkChainId = params.data.forkChainId
+  const chainId = params.data.chainId
 
   try {
     if (!RPC_GATEWAY) {
@@ -43,10 +54,10 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     }
 
     const migrationsClient = createMigrationsClient(
+      MigrationConfig,
       RPC_GATEWAY,
       customRpcUrl,
-      MigrationConfig,
-      forkChainId,
+      chainId,
     )
 
     const eligibleMigrations: PortfolioMigration[] = []
