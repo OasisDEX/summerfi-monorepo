@@ -1,4 +1,4 @@
-import { Address } from '~sdk/common'
+import { Address, Token } from '~sdk/common'
 import { PoolId, ProtocolId } from './IDs'
 
 /**
@@ -22,4 +22,6 @@ export interface Pool {
   type: PoolType
   address?: Address
   TVL?: number
+  debtToken: Token
+  collateralToken: Token
 }

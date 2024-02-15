@@ -18,6 +18,5 @@ export interface Position {
   positionId: PositionId
   debtAmount: TokenAmount
   collateralAmount: TokenAmount
-  riskRatio: RiskRatio
   pool: Pool
 }
