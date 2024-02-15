@@ -15,10 +15,22 @@ import { createMigrationsClient } from './client'
 import { parseEligibleMigration } from './parseEligibleMigration'
 import { MigrationConfig } from 'migrations-config'
 
-const paramsSchema = z.object({
-  address: addressSchema,
-  customRpcUrl: z.string().optional(),
-})
+const paramsSchema = z
+  .object({
+    address: addressSchema,
+    customRpcUrl: z.string().optional(),
+    chainId: z.number().optional(),
+  })
+  .refine(
+    (params) => {
+      if (params.customRpcUrl) {
+        return params.chainId !== undefined
+      }
+    },
+    {
+      message: 'customRpcUrl and chainId must be provided together',
+    },
+  )
 
 export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
   //set envs
@@ -34,13 +46,19 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
   }
   const address = params.data.address
   const customRpcUrl = params.data.customRpcUrl
+  const chainId = params.data.chainId
 
   try {
     if (!RPC_GATEWAY) {
       throw new Error('RPC_GATEWAY env variable is not set')
     }
 
-    const migrationsClient = createMigrationsClient(RPC_GATEWAY, customRpcUrl, MigrationConfig)
+    const migrationsClient = createMigrationsClient(
+      MigrationConfig,
+      RPC_GATEWAY,
+      customRpcUrl,
+      chainId,
+    )
 
     const eligibleMigrations: PortfolioMigration[] = []
     const protocolAssetsToMigrate = await migrationsClient.getProtocolAssetsToMigrate(address)
