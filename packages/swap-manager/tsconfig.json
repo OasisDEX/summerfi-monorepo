@@ -6,9 +6,7 @@
     "baseUrl": ".",
     "paths": {
       "~swap-manager": ["./src/index.ts"],
-      "~swap-manager/*": ["./src/*"],
-      "@summerfi/sdk/*": ["../sdk/src/*"],
-      "~sdk/*": ["../sdk/src/*"]
+      "~swap-manager/*": ["./src/*"]
     }
   },
   "include": ["src/**/*.ts", "tests/**/*.ts"],
