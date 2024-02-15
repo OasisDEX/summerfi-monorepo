@@ -7,7 +7,7 @@
     "paths": {
       "@summerfi/serverless-shared": ["../serverless-shared/src/index.ts"],
       "@summerfi/serverless-shared/*": ["../serverless-shared/src/*"],
-      "@summerfi/sdk/*": ["../sdk/src/*"],
+      "@summerfi/sdk-common/*": ["../sdk/src/*"],
       "~sdk/*": ["../sdk/src/*"]
     }
   },
