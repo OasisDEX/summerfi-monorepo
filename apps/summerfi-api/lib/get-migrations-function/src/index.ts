@@ -19,13 +19,20 @@ const paramsSchema = z
   .object({
     address: addressSchema,
     customRpcUrl: z.string().optional(),
-    chainId: z.number().optional(),
+    chainId: z
+      .string()
+      .optional()
+      .transform((val) => parseInt(val ?? '-1', 10)),
   })
   .refine(
     (params) => {
       if (params.customRpcUrl) {
-        return params.chainId !== undefined
+        return params.chainId !== undefined && params.chainId !== -1
       }
+      if (params.chainId !== undefined && params.chainId !== -1) {
+        return params.customRpcUrl !== undefined
+      }
+      return true
     },
     {
       message: 'customRpcUrl and chainId must be provided together',
