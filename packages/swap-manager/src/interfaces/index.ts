@@ -1,2 +1,2 @@
-export type { SwapManager, SwapData } from './SwapManager'
-export { SwapProvider } from './SwapManager'
+export type { ISwapManager, ISwapProvider, SwapData } from './ISwapManager'
+export { SwapProviderType } from './ISwapManager'

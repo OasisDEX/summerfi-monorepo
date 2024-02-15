@@ -3,12 +3,18 @@ import { TokensManager } from '~sdk/tokens'
 import { ProtocolsManager } from '~sdk/protocols'
 
 /**
+ * @name chainId
+ * @description Represents the chain ID of a blockchain network
+ */
+export type ChainId = number
+
+/**
  * @name ChainInfo
  * @description Provides information of a blockchain network
  */
 export type ChainInfo = {
   /** The chain ID of the network */
-  chainId: number
+  chainId: ChainId
   /** The name of the network */
   name: string
 }

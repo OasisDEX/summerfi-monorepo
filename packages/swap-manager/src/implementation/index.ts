@@ -1,1 +1,2 @@
-export { SwapManagerImpl } from './SwapManagerImpl'
+export { SwapManager } from './SwapManager'
+export * from './oneinch'

@@ -1,11 +1,11 @@
 import { ChainFamilyMap, ChainInfo } from '@summerfi/sdk/chains'
 import { Address, Percentage, Token, TokenAmount } from '@summerfi/sdk/common'
-import { SwapManagerImpl, SwapData, SwapProvider } from '~swap-manager'
+import { getSwapManager, SwapData, SwapProviderType } from '~swap-manager'
 
-describe('OneInch | SwapManager', () => {
+describe('OneInch | SwapManager | Integration', () => {
   it('should provide swap data', async () => {
     // SwapManager
-    const swapManager = new SwapManagerImpl()
+    const swapManager = getSwapManager()
 
     // ChainInfo
     const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -52,10 +52,11 @@ describe('OneInch | SwapManager', () => {
       toMinimumAmount,
       recipient,
       slippage,
+      forceUseProvider: SwapProviderType.OneInch,
     })
 
     expect(swapData).toBeDefined()
-    expect(swapData.provider).toEqual(SwapProvider.OneInch)
+    expect(swapData.provider).toEqual(SwapProviderType.OneInch)
     expect(swapData.fromTokenAmount).toEqual(fromAmount)
     expect(swapData.toTokenAmount).toEqual(toMinimumAmount)
     expect(swapData.calldata).toBeDefined()
