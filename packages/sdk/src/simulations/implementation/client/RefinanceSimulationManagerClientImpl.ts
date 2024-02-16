@@ -45,25 +45,6 @@ class Simulator {
   }
 }
 
-const refinanceSchema = [
-  {
-    name: 'flashloan',
-    step: SimulationSteps.Flashloan,
-  },
-  {
-    name: 'paybackWithdrawSourceProtocol',
-    step: SimulationSteps.PaybackWithdraw,
-  },
-  {
-    name: 'collateralSwap',
-    step: SimulationSteps.Swap,
-    optional: true,
-  }
-] as const
-
-
-
-
 
 new Simulation(refinanceSchema).run(
   {
