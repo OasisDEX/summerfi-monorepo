@@ -31,7 +31,7 @@ export interface GetLatestPriceParams {
 export type LatestPrice = Required<
   Pick<
     PricesQuery['derivedPrices'][0],
-    'denomination' | 'token' | 'tokenRoundId' | 'denominationRoundId'
+    'denomination' | 'token' | 'tokenRoundId' | 'denominationRoundId' | 'derivedPrice'
   >
 >
 export type GetLatestPrice = (params: GetLatestPriceParams) => Promise<LatestPrice | undefined>

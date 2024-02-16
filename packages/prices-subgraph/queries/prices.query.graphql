@@ -19,5 +19,6 @@ query Prices($token: String!, $denomination: String!) {
         address
       }
     }
+    derivedPrice
   }
 }

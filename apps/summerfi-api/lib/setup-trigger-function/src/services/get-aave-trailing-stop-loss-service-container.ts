@@ -1,5 +1,10 @@
 import { ServiceContainer } from './service-container'
-import { AaveTrailingStopLossEventBody, safeParseBigInt, SupportedActions } from '~types'
+import {
+  AaveTrailingStopLossEventBody,
+  maxUnit256,
+  safeParseBigInt,
+  SupportedActions,
+} from '~types'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
 import { Address, ChainId } from '@summerfi/serverless-shared'
@@ -11,7 +16,9 @@ import { encodeFunctionForDpm } from './encode-function-for-dpm'
 import { encodeAaveTrailingStopLoss } from './trigger-encoders/encode-aave-trailing-stop-loss'
 import { LatestPrice } from '@summerfi/prices-subgraph'
 import { CurrentTriggerLike } from './trigger-encoders'
-import { dmaAavTrailingStopLossValidator } from './against-position-validators'
+import { dmaAaveTrailingStopLossValidator } from './against-position-validators'
+import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
+import { calculateLtv } from './calculate-ltv'
 
 export interface GetAaveTrailingStopLossServiceContainerProps {
   rpc: PublicClient
@@ -54,6 +61,8 @@ export const getAaveTrailingStopLossServiceContainer: (
       }
     },
     validate: async ({ trigger }) => {
+      const latestPrice = await getLatestPrice(trigger.position.collateral, trigger.position.debt)
+
       const position = await getPosition({
         address: trigger.dpm,
         collateral: trigger.position.collateral,
@@ -62,9 +71,22 @@ export const getAaveTrailingStopLossServiceContainer: (
 
       const triggers = await getTriggers(trigger.dpm)
 
-      const latestPrice = await getLatestPrice(trigger.position.collateral, trigger.position.debt)
-      return dmaAavTrailingStopLossValidator({
+      const dynamicExecutionLTV = calculateLtv({
+        collateral: position.collateral,
+        debt: position.debt,
+        collateralPriceInDebt:
+          (latestPrice?.derivedPrice ?? maxUnit256) - trigger.triggerData.trailingDistance, // if latestPrice is undefined, it won't pass later validation
+      })
+
+      const executionPrice = calculateCollateralPriceInDebtBasedOnLtv({
+        ...position,
+        ltv: dynamicExecutionLTV,
+      })
+
+      return dmaAaveTrailingStopLossValidator({
         position: position,
+        executionPrice: executionPrice,
+        dynamicExecutionLTV: dynamicExecutionLTV,
         triggerData: trigger.triggerData,
         triggers: triggers,
         latestPrice: latestPrice,
