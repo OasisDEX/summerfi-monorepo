@@ -21,16 +21,16 @@
   },
   "references": [
     {
-      "path": "../serverless-contracts/tsconfig.json",
+      "path": "../serverless-contracts/tsconfig.json"
     },
     {
-      "path": "../serverless-shared/tsconfig.json",
+      "path": "../serverless-shared/tsconfig.json"
     },
     {
-      "path": "../prices-subgraph/tsconfig.json",
+      "path": "../prices-subgraph/tsconfig.json"
     },
     {
-      "path": "../automation-subgraph/tsconfig.json",
+      "path": "../automation-subgraph/tsconfig.json"
     }
   ]
 }

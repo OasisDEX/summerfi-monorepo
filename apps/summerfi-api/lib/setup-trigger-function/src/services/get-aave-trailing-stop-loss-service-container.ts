@@ -11,6 +11,7 @@ import { encodeFunctionForDpm } from './encode-function-for-dpm'
 import { encodeAaveTrailingStopLoss } from './trigger-encoders/encode-aave-trailing-stop-loss'
 import { LatestPrice } from '@summerfi/prices-subgraph'
 import { CurrentTriggerLike } from './trigger-encoders'
+import { dmaAavTrailingStopLossValidator } from './against-position-validators'
 
 export interface GetAaveTrailingStopLossServiceContainerProps {
   rpc: PublicClient
@@ -48,22 +49,26 @@ export const getAaveTrailingStopLossServiceContainer: (
   return {
     simulatePosition: async ({ trigger }) => {
       const latestPrice = await getLatestPrice(trigger.position.collateral, trigger.position.debt)
-      if (latestPrice === undefined) {
-        throw new Error('latestPrice is undefined')
+      return {
+        latestPrice,
       }
-      return latestPrice
     },
-    validate: () => {
-      return Promise.resolve({
-        success: true,
-        errors: [],
-        warnings: [
-          {
-            message: 'VALIDATIONS ARE NOT IMPLEMENTED YET',
-            code: 'warning-code',
-            path: ['path'],
-          },
-        ],
+    validate: async ({ trigger }) => {
+      const position = await getPosition({
+        address: trigger.dpm,
+        collateral: trigger.position.collateral,
+        debt: trigger.position.debt,
+      })
+
+      const triggers = await getTriggers(trigger.dpm)
+
+      const latestPrice = await getLatestPrice(trigger.position.collateral, trigger.position.debt)
+      return dmaAavTrailingStopLossValidator({
+        position: position,
+        triggerData: trigger.triggerData,
+        triggers: triggers,
+        latestPrice: latestPrice,
+        action: trigger.action,
       })
     },
     getTransaction: async ({ trigger }) => {

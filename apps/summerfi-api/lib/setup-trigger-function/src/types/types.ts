@@ -100,6 +100,10 @@ export enum StopLossErrorCodes {
   StopLossTriggerDoesNotExist = 'stop-loss-trigger-does-not-exist',
 }
 
+export enum TrailingStopLossErrorCodes {
+  CantObtainLatestPrice = 'cant-obtain-latest-price',
+}
+
 export type ValidationIssue = { message: string; code: string; path: (string | number)[] }
 
 export type ValidationResults = {
