@@ -1,15 +1,14 @@
-import { ActionCall, ActionType } from '~orderplanner'
+import { ActionNames } from '@summerfi/deployment-types'
+import { ActionCall } from '~orderplanner'
 import { Version } from '~orderplanner/interfaces/Types'
 
 export abstract class BaseAction {
-  public type: ActionType
-  public contractName: string
+  public name: ActionNames
   public version: Version
   public parametersAbi: string
 
-  constructor(type: ActionType, contractName: string, version: Version, parametersAbi: string) {
-    this.type = type
-    this.contractName = contractName
+  constructor(name: ActionNames, version: Version, parametersAbi: string) {
+    this.name = name
     this.version = version
     this.parametersAbi = parametersAbi
   }

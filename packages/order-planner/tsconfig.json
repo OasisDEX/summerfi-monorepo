@@ -9,10 +9,6 @@
       "~orderplanner/*": ["./src/*"]
     }
   },
-  "include": [
-    "src/**/*.ts",
-    "../sdk/src/orders/interfaces/common/Simulation.ts",
-    "../sdk/src/orders/interfaces/common/SimulationType.ts"
-  ],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
 }

@@ -16,7 +16,9 @@
     "@aws-lambda-powertools/tracer": "^1.17.0",
     "@summerfi/sdk": "workspace:*",
     "@summerfi/serverless-shared": "workspace:*",
-    "@summerfi/core-contracts": "workspace:*"
+    "@summerfi/core-contracts": "workspace:*",
+    "@summerfi/deployment-utils": "workspace:*",
+    "@summerfi/deployment-types": "workspace:*"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

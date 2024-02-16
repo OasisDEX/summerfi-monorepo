@@ -1,3 +1,5 @@
+import { Address } from '~sdk/common'
+import { zeroAddress } from 'viem'
 import { TokenAmount } from '~sdk/common'
 import { RefinanceParameters, RefinanceSimulation, SimulationType } from '~sdk/orders'
 import { Pool } from '~sdk/protocols'
@@ -16,5 +18,6 @@ export function mockRefinanceSimulation(params: {
       flashLoan: TokenAmount.createFrom({ token: params.position.debtAmount.token, amount: '0' }),
     },
     steps: [],
+    positionsManager: Address.createFrom({ hexValue: zeroAddress }),
   }
 }

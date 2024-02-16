@@ -603,6 +603,12 @@ importers:
       '@summerfi/core-contracts':
         specifier: workspace:*
         version: link:../core-contracts
+      '@summerfi/deployment-types':
+        specifier: workspace:*
+        version: link:../deployment-types
+      '@summerfi/deployment-utils':
+        specifier: workspace:*
+        version: link:../deployment-utils
       '@summerfi/sdk':
         specifier: workspace:*
         version: link:../sdk

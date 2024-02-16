@@ -1,5 +1,5 @@
 import { SimulationType } from './SimulationType'
-import { Token, TokenAmount } from '@summerfi/sdk/common'
+import { Address, Token, TokenAmount } from '@summerfi/sdk/common'
 import { Position } from '@summerfi/sdk/users'
 
 export enum SimulationSteps {
@@ -76,4 +76,5 @@ export interface Simulation<T extends SimulationType, Data> {
   /** @description Simulation data */
   simulationData: Data
   steps: Step<SimulationSteps>[]
+  positionsManager: Address
 }
