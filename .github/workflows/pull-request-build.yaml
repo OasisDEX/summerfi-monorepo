@@ -48,7 +48,7 @@ jobs:
           ONE_INCH_API_VERSION: ${{ secrets.ONE_INCH_API_VERSION }}
           ONE_INCH_API_URL: ${{ secrets.ONE_INCH_API_URL }}
           ONE_INCH_ALLOWED_SWAP_PROTOCOLS: ${{ secrets.ONE_INCH_ALLOWED_SWAP_PROTOCOLS }}
-          ONE_INCH_SWAP_CHAIN_IDS: ${{ secrets.ONE_INCH_ALLOWED_SWAP_PROTOCOLS }}
+          ONE_INCH_SWAP_CHAIN_IDS: ${{ secrets.ONE_INCH_SWAP_CHAIN_IDS }}
       - name: Lint
         run: pnpm lint
 
