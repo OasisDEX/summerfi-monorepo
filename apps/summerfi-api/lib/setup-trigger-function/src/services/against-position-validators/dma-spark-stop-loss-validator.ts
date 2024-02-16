@@ -25,12 +25,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Add) {
-        const currentTrigger =
-          triggers.triggers.sparkStopLossToCollateral ??
-          triggers.triggers.sparkStopLossToCollateralDMA ??
-          triggers.triggers.sparkStopLossToDebt ??
-          triggers.triggers.sparkStopLossToDebtDMA
-        return currentTrigger === undefined
+        return !triggers.flags.isSparkStopLossEnabled
       }
       return true
     },
@@ -44,13 +39,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Update) {
-        const currentTrigger =
-          triggers.triggers.sparkStopLossToCollateral ??
-          triggers.triggers.sparkStopLossToCollateralDMA ??
-          triggers.triggers.sparkStopLossToDebt ??
-          triggers.triggers.sparkStopLossToDebtDMA
-
-        return currentTrigger !== undefined
+        return triggers.flags.isSparkStopLossEnabled
       }
       return true
     },
@@ -65,13 +54,7 @@ const upsertErrorsValidation = paramsSchema
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
     if (action === SupportedActions.Remove) {
-      const currentTrigger =
-        triggers.triggers.sparkStopLossToCollateral ??
-        triggers.triggers.sparkStopLossToCollateralDMA ??
-        triggers.triggers.sparkStopLossToDebt ??
-        triggers.triggers.sparkStopLossToDebtDMA
-
-      return currentTrigger !== undefined
+      return triggers.flags.isSparkStopLossEnabled
     }
     return true
   },

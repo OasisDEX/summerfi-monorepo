@@ -18,7 +18,19 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "types": ["node", "jest", "jest-extended"]
-  }
-  // don't share includes and excludes in base
-  // as paths are resolved relative to config file
+  },
+  "references": [
+    {
+      "path": "../serverless-contracts/tsconfig.json",
+    },
+    {
+      "path": "../serverless-shared/tsconfig.json",
+    },
+    {
+      "path": "../prices-subgraph/tsconfig.json",
+    },
+    {
+      "path": "../automation-subgraph/tsconfig.json",
+    }
+  ]
 }
