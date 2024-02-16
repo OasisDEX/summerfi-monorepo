@@ -11,7 +11,7 @@ import {
 import { Maybe } from '~sdk/utils'
 import { mockPool } from '.'
 
-class mockProtocolSpark implements Protocol {
+export class mockProtocolSpark implements Protocol {
   public readonly protocolId: ProtocolId
   private readonly chainInfo: ChainInfo
 

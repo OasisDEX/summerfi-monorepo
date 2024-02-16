@@ -1,7 +1,10 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 import { createTRPCClient, httpBatchLink } from '@trpc/client'
-import { Protocols, type Position, type PositionId, type Protocol } from '~src/sdk-mocks'
 import type { AppRouter } from '~src/app-router'
+
+import { AAVEv3, LendingPoolParameters } from '@summerfi/sdk/protocols'
+import { RefinanceOrder } from '@summerfi/sdk/orders'
+import { TokenAmount, Percentage } from '@summerfi/sdk/types'
 
 /**
  * Client
@@ -17,13 +20,14 @@ export const sdkClient = createTRPCClient<AppRouter>({
   ],
 })
 
-describe('refinance e2e', () => {
-  it('should get position by Id', async () => {
-    const positionId: PositionId = '1'
+describe('Refinance flow e2e', () => {
+  it('should get position and protocol', async () => {
+    const positionId = '1'
+    // const prevPosition: Position = user.getPosition(positionId)
+
     const position: Position = await sdkClient.getPosition.query({ positionId })
     expect(position).toEqual({ positionId: '1' })
-  })
-  it('should get aaveV3 protocol by enum', async () => {
+
     const aaveV3: Protocol = await sdkClient.getProtocol.query({ protocolEnum: Protocols.AAVEv3 })
     expect(aaveV3).toEqual({ protocolEnum: Protocols.AAVEv3 })
   })

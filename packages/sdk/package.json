@@ -5,8 +5,8 @@
   "types": "dist/index.d.ts",
   "exports": {
     "./*": {
-      "import": "./dist/*.js",
-      "types": "./dist/*.d.ts"
+      "import": "./dist/*/index.js",
+      "types": "./dist/*/index.d.ts"
     }
   },
   "scripts": {
@@ -19,11 +19,12 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "viem": "^2.2.0"
+    "viem": "^2.2.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
-    "@summerfi/typescript-config": "workspace:*",
-    "@summerfi/jest-config": "workspace:*"
+    "@summerfi/jest-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*"
   }
 }

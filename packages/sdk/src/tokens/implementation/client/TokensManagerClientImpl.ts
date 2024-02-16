@@ -1,7 +1,7 @@
 import { ChainInfo } from '~sdk/chains'
 import { Address, Token } from '~sdk/common'
 import { getMockTokenBySymbol } from '~sdk/mocks'
-import { TokensManager } from '~sdk/tokens'
+import { TokensManager, type TokenSymbol } from '~sdk/tokens'
 import { Maybe } from '~sdk/utils'
 
 export class TokensManagerClientImpl implements TokensManager {
@@ -19,7 +19,7 @@ export class TokensManagerClientImpl implements TokensManager {
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async getTokenBySymbol(params: { symbol: string }): Promise<Maybe<Token>> {
+  public async getTokenBySymbol(params: { symbol: TokenSymbol }): Promise<Maybe<Token>> {
     // TODO: Implement
     return getMockTokenBySymbol({ chainInfo: this.chainInfo, symbol: params.symbol })
   }
