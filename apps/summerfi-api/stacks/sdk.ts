@@ -7,6 +7,6 @@ export function addSdkConfig({ stack, api }: StackContext & { api: Api }) {
   })
 
   api.addRoutes(stack, {
-    'GET /api/sdk': sdkRouterFunction,
+    'ANY /api/sdk/{proxy+}': sdkRouterFunction,
   })
 }

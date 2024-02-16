@@ -11,9 +11,10 @@ import {
   eventBodyAaveBasicBuySchema,
   eventBodyAaveBasicSellSchema,
   eventBodyDmaAaveStopLossSchema,
+  eventBodyDmaAaveTrailingStopLossSchema,
   eventBodyDmaSparkStopLossSchema,
+  SupportedTriggers,
 } from './validators'
-import { SupportedTriggers } from './validators'
 import { ChainId, ProtocolId } from '@summerfi/serverless-shared'
 
 export const isAaveAutoBuyTriggerData = (
@@ -80,6 +81,7 @@ export type SupportedTriggersSchema =
   | typeof eventBodyAaveBasicSellSchema
   | typeof eventBodyDmaAaveStopLossSchema
   | typeof eventBodyDmaSparkStopLossSchema
+  | typeof eventBodyDmaAaveTrailingStopLossSchema
 
 export const getBodySchema = (pathParams: PathParams): SupportedTriggersSchema => {
   const { trigger, chainId, protocol } = pathParams
@@ -92,6 +94,9 @@ export const getBodySchema = (pathParams: PathParams): SupportedTriggersSchema =
     }
     if (trigger === SupportedTriggers.DmaStopLoss) {
       return eventBodyDmaAaveStopLossSchema
+    }
+    if (trigger == SupportedTriggers.DmaTrailingStopLoss) {
+      return eventBodyDmaAaveTrailingStopLossSchema
     }
   }
   if (protocol === ProtocolId.SPARK && chainId === ChainId.MAINNET) {

@@ -1,6 +1,6 @@
 import { StackContext, Api } from 'sst/constructs'
 import { addTriggersConfig } from './triggers'
-// import { addSdkConfig } from './sdk'
+import { addSdkConfig } from './sdk'
 import { addMigrationsConfig } from './migrations'
 
 export function API(stackContext: StackContext) {
@@ -13,7 +13,7 @@ export function API(stackContext: StackContext) {
   })
 
   addTriggersConfig({ ...stackContext, api })
-  // addSdkConfig({ ...stackContext, api })
+  addSdkConfig({ ...stackContext, api })
   addMigrationsConfig({ ...stackContext, api })
 
   stack.addOutputs({

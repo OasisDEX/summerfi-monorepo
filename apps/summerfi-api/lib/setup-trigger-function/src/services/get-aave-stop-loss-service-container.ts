@@ -22,11 +22,7 @@ export interface GetAaveStopLossServiceContainerProps {
 }
 
 function getCurrentStopLoss(triggers: GetTriggersResponse): CurrentTriggerLike | undefined {
-  const currentStopLoss =
-    triggers.triggers.aaveStopLossToCollateral ??
-    triggers.triggers.aaveStopLossToCollateralDMA ??
-    triggers.triggers.aaveStopLossToDebt ??
-    triggers.triggers.aaveStopLossToDebtDMA
+  const currentStopLoss = triggers.triggerGroup.aaveStopLoss
 
   return currentStopLoss
     ? {

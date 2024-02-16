@@ -88,11 +88,11 @@ export const getAaveAutoSellServiceContainer: (
 
       const debtPriceInUSD = await getUsdAaveOraclePrice(trigger.position.debt, addresses, rpc)
 
-      const currentAutoBuy = triggers.triggers.aaveBasicBuy
-      const currentTrigger: CurrentTriggerLike | undefined = currentAutoBuy
+      const currentAutoSell = triggers.triggers.aaveBasicSell
+      const currentTrigger: CurrentTriggerLike | undefined = currentAutoSell
         ? {
-            triggerData: currentAutoBuy.triggerData as `0x${string}`,
-            id: safeParseBigInt(currentAutoBuy.triggerId) ?? 0n,
+            triggerData: currentAutoSell.triggerData as `0x${string}`,
+            id: safeParseBigInt(currentAutoSell.triggerId) ?? 0n,
           }
         : undefined
 

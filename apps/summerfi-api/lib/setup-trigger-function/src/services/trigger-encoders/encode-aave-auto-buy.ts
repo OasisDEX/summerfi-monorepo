@@ -6,7 +6,7 @@ import {
   stringToBytes,
 } from 'viem'
 import { automationBotAbi } from '~abi'
-import { AaveAutoBuyTriggerData, PRICE_DECIMALS } from '~types'
+import { AaveAutoBuyTriggerData, maxUnit256, PRICE_DECIMALS } from '~types'
 import { DEFAULT_DEVIATION, MAX_COVERAGE_BASE } from './defaults'
 import { EncoderFunction } from './types'
 import { OPERATION_NAMES } from '@oasisdex/dma-library'
@@ -44,7 +44,7 @@ export const encodeAaveAutoBuy: EncoderFunction<AaveAutoBuyTriggerData> = (
     operationNameInBytes,
     triggerData.executionLTV,
     triggerData.targetLTV,
-    triggerData.maxBuyPrice,
+    triggerData.maxBuyPrice ?? maxUnit256,
     DEFAULT_DEVIATION, // 100 -> 1%
     triggerData.maxBaseFee,
   ])

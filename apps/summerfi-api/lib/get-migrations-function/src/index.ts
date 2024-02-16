@@ -8,7 +8,6 @@ import {
 } from '@summerfi/serverless-shared/responses'
 import { addressSchema } from '@summerfi/serverless-shared/validators'
 import {
-  Address,
   PortfolioMigration,
   PortfolioMigrationsResponse,
 } from '@summerfi/serverless-shared/domain-types'
@@ -16,10 +15,29 @@ import { createMigrationsClient } from './client'
 import { parseEligibleMigration } from './parseEligibleMigration'
 import { MigrationConfig } from 'migrations-config'
 
-const paramsSchema = z.object({
-  address: addressSchema,
-  customRpcUrl: z.string().optional(),
-})
+const paramsSchema = z
+  .object({
+    address: addressSchema,
+    customRpcUrl: z.string().optional(),
+    chainId: z
+      .string()
+      .optional()
+      .transform((val) => parseInt(val ?? '-1', 10)),
+  })
+  .refine(
+    (params) => {
+      if (params.customRpcUrl) {
+        return params.chainId !== undefined && params.chainId !== -1
+      }
+      if (params.chainId !== undefined && params.chainId !== -1) {
+        return params.customRpcUrl !== undefined
+      }
+      return true
+    },
+    {
+      message: 'customRpcUrl and chainId must be provided together',
+    },
+  )
 
 export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
   //set envs
@@ -27,27 +45,27 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     RPC_GATEWAY: process.env.RPC_GATEWAY,
   }
 
-  // params
-  let address: Address | undefined
-  let customRpcUrl: string | undefined
-
-  // validation
-  try {
-    const params = paramsSchema.parse(event.queryStringParameters)
-    address = params.address
-    customRpcUrl = params.customRpcUrl
-  } catch (error) {
-    console.log(error)
-    const message = getDefaultErrorMessage(error)
+  const params = paramsSchema.safeParse(event.queryStringParameters)
+  if (!params.success) {
+    console.log(params.error)
+    const message = getDefaultErrorMessage(params.error)
     return ResponseBadRequest(message)
   }
+  const address = params.data.address
+  const customRpcUrl = params.data.customRpcUrl
+  const chainId = params.data.chainId
 
   try {
     if (!RPC_GATEWAY) {
       throw new Error('RPC_GATEWAY env variable is not set')
     }
 
-    const migrationsClient = createMigrationsClient(RPC_GATEWAY, customRpcUrl, MigrationConfig)
+    const migrationsClient = createMigrationsClient(
+      MigrationConfig,
+      RPC_GATEWAY,
+      customRpcUrl,
+      chainId,
+    )
 
     const eligibleMigrations: PortfolioMigration[] = []
     const protocolAssetsToMigrate = await migrationsClient.getProtocolAssetsToMigrate(address)

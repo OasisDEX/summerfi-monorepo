@@ -104,6 +104,8 @@ describe('Refinance | SDK', () => {
     expect(newLendingPool.collateralTokens).toEqual(poolPair.collateralTokens)
 
     const refinanceParameters: RefinanceParameters = {
+      sourcePosition: prevPosition,
+      targetPool: newPool,
       slippage: Percentage.createFrom({ percentage: 20.5 }),
     }
 
@@ -115,9 +117,8 @@ describe('Refinance | SDK', () => {
       })
 
     expect(refinanceSimulation).toBeDefined()
-    expect(refinanceSimulation.position).toEqual(prevPosition)
-    expect(refinanceSimulation.pool).toEqual(newPool)
-    expect(refinanceSimulation.parameters).toEqual(refinanceParameters)
+    expect(refinanceSimulation.simulationData.sourcePosition).toEqual(prevPosition)
+    expect(refinanceSimulation.simulationData.targetPosition.pool).toEqual(newPool)
 
     const refinanceOrder: Order = await user.newOrder({
       simulation: refinanceSimulation,

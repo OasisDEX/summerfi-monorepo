@@ -3,10 +3,12 @@ import {
   aaveBasicBuyTriggerDataSchema,
   aaveBasicSellTriggerDataSchema,
   dmaAaveStopLossTriggerDataSchema,
+  dmaAaveTrailingStopLossTriggerDataSchema,
   dmaSparkStopLossTriggerDataSchema,
   eventBodyAaveBasicBuySchema,
   eventBodyAaveBasicSellSchema,
   eventBodyDmaAaveStopLossSchema,
+  eventBodyDmaAaveTrailingStopLossSchema,
   eventBodyDmaSparkStopLossSchema,
   ltvSchema,
   pathParamsSchema,
@@ -20,11 +22,14 @@ export type AaveAutoBuyEventBody = z.infer<typeof eventBodyAaveBasicBuySchema>
 export type AaveAutoSellEventBody = z.infer<typeof eventBodyAaveBasicSellSchema>
 export type AaveStopLossEventBody = z.infer<typeof eventBodyDmaAaveStopLossSchema>
 export type SparkStopLossEventBody = z.infer<typeof eventBodyDmaSparkStopLossSchema>
+export type AaveTrailingStopLossEventBody = z.infer<typeof eventBodyDmaAaveTrailingStopLossSchema>
 export type SetupTriggerEventBody =
   | AaveAutoBuyEventBody
   | AaveAutoSellEventBody
   | AaveStopLossEventBody
   | SparkStopLossEventBody
+  | AaveTrailingStopLossEventBody
+
 export type PathParams = z.infer<typeof pathParamsSchema>
 export type PositionLike = z.infer<typeof positionSchema>
 export type Token = z.infer<typeof tokenSchema>
@@ -35,11 +40,15 @@ export type AaveAutoBuyTriggerData = z.infer<typeof aaveBasicBuyTriggerDataSchem
 export type AaveAutoSellTriggerData = z.infer<typeof aaveBasicSellTriggerDataSchema>
 export type DmaAaveStopLossTriggerData = z.infer<typeof dmaAaveStopLossTriggerDataSchema>
 export type DmaSparkStopLossTriggerData = z.infer<typeof dmaSparkStopLossTriggerDataSchema>
+export type DmaAaveTrailingStopLossTriggerData = z.infer<
+  typeof dmaAaveTrailingStopLossTriggerDataSchema
+>
 export type TriggerData =
   | AaveAutoBuyTriggerData
   | AaveAutoSellTriggerData
   | DmaAaveStopLossTriggerData
   | DmaSparkStopLossTriggerData
+  | DmaAaveTrailingStopLossTriggerData
 
 export enum CommonErrorCodes {
   InsufficientEthFundsForTx = 'insufficient-eth-funds-for-tx',
@@ -86,9 +95,21 @@ export enum AutoSellTriggerCustomWarningCodes {
 }
 
 export enum StopLossErrorCodes {
-  StopLossTriggeredImmediately = 'stop-loss-triggered-immediately',
   StopLossTriggerAlreadyExists = 'stop-loss-trigger-already-exists',
   StopLossTriggerDoesNotExist = 'stop-loss-trigger-does-not-exist',
+  DebtTooHighToSetupStopLoss = 'debt-too-high-to-setup-stop-loss',
+  StopLossTriggeredByAutoBuy = 'stop-loss-triggered-by-auto-buy',
+  StopLossNeverTriggeredWithNoAutoSellMinSellPrice = 'stop-loss-never-triggered-with-no-auto-sell-min-sell-price',
+  StopLossNeverTriggeredWithLowerAutoSellMinSellPrice = 'stop-loss-never-triggered-with-lower-auto-sell-min-sell-price',
+}
+
+export enum StopLossWarningCodes {
+  StopLossTriggeredImmediately = 'stop-loss-triggered-immediately',
+  StopLossMakesAutoSellNotTrigger = 'stop-loss-makes-auto-sell-not-trigger',
+}
+
+export enum TrailingStopLossErrorCodes {
+  CantObtainLatestPrice = 'cant-obtain-latest-price',
 }
 
 export type ValidationIssue = { message: string; code: string; path: (string | number)[] }
