@@ -7,7 +7,7 @@ import { StepBuilder } from '~orderplanner/interfaces/Types'
 export class OrderPlanner implements IOrderPlanner {
   private readonly _stepBuildersMap: StepBuildersMap
 
-  constructor(stepBuildersMap: StepBuildersMap) {
+  constructor(deployment: Deployment, stepBuildersMap: StepBuildersMap) {
     this._stepBuildersMap = stepBuildersMap
   }
 

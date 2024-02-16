@@ -41,7 +41,7 @@ export class Deployments {
   public readonly options: DeploymentOptions
   public readonly deploymentsDir?: string
   public readonly indexDir?: string
-  public readonly deployments: Record<string, Deployment> = {}
+  public readonly deployments: Record<string, DeploymentObject> = {}
   public readonly dependencies: Record<string, Dependency> = {}
 
   private static readonly DefaultParams: DeploymentInitParams = {
@@ -106,7 +106,7 @@ export class Deployments {
       walletClient = overrides
     }
 
-    const deployment: Deployment = await this._deploy(contractName, args, alias, walletClient)
+    const deployment: DeploymentObject = await this._deploy(contractName, args, alias, walletClient)
 
     this.deployments[contractName] = deployment
 
@@ -156,7 +156,7 @@ export class Deployments {
       this._cycleDeploymentFile()
     }
 
-    const deployments = this._getDeploymentObjectTemplate()
+    const deployments = this._getDeploymentTemplate()
 
     for (const deployedContract of Object.values(this.deployments)) {
       deployments.contracts[deployedContract.name] = {
@@ -281,7 +281,7 @@ export class Deployments {
     args: unknown[] = [],
     alias?: string,
     walletClient?: WalletClient,
-  ): Promise<Deployment> {
+  ): Promise<DeploymentObject> {
     let contract: Contract
     let deploymentTransaction: DeploymentTransaction
     let receipt: TransactionReceipt
@@ -307,7 +307,7 @@ export class Deployments {
     }
   }
 
-  private async _verify(deployment: Deployment, args: unknown[]) {
+  private async _verify(deployment: DeploymentObject, args: unknown[]) {
     const address: string = await deployment.contract.address
     const parameters: unknown[] = args
 
@@ -341,7 +341,7 @@ export class Deployments {
     indexFileName: string,
     directoriesList: string[],
     filterType: DirectoryFilterType,
-    canInclude?: (deployment: DeploymentObject) => boolean,
+    canInclude?: (deployment: Deployment) => boolean,
   ): void {
     const indexImports: ImportPair[] = []
     const deploymentsIndex: DeploymentExportPair[] = []
@@ -374,7 +374,7 @@ export class Deployments {
       deploymentFiles.forEach((deploymentFile) => {
         const deploymentFilePath = resolve(deploymentDirPath, deploymentFile)
         const deploymentJSON = fs.readFileSync(deploymentFilePath, 'utf8')
-        const deployment: DeploymentObject = JSON.parse(deploymentJSON)
+        const deployment: Deployment = JSON.parse(deploymentJSON)
 
         const deploymentTypeName = getDeploymentNameFromType(deployment)
 
@@ -402,7 +402,7 @@ export class Deployments {
     this._writeIndex(indexDir, indexFileName, indexImports, deploymentsIndex)
   }
 
-  private _getDeploymentObjectTemplate(): DeploymentObject {
+  private _getDeploymentTemplate(): Deployment {
     return {
       date: new Date().toISOString(),
       timestamp: this._getNowTimestamp(),
