@@ -15,5 +15,6 @@ export function mockRefinanceSimulation(params: {
       targetPosition: { ...params.position, pool: params.pool },
       flashLoan: TokenAmount.createFrom({ token: params.position.debtAmount.token, amount: '0' }),
     },
+    steps: [],
   }
 }

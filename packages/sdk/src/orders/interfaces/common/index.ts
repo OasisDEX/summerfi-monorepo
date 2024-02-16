@@ -1,4 +1,5 @@
-export type { Simulation } from './Simulation'
+export type { Simulation, Step, PullTokenStep } from './Simulation'
+export { SimulationSteps } from './Simulation'
+export { SimulationType } from './SimulationType'
 export type { Order } from './Order'
 export type { TransactionInfo } from './TransactionInfo'
-export { SimulationType } from './SimulationType'

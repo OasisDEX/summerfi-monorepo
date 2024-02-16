@@ -1,4 +1,15 @@
-import { Transaction } from 'viem'
+import { Hex } from 'viem'
+import { Address } from '~sdk/common'
+
+/**
+ * @interface Transaction
+ * @description Low level transaction that can be sent to the blockchain
+ */
+export type Transaction = {
+  target: Address
+  calldata: Hex
+  value: string
+}
 
 /**
  * @interface TransactionInfo

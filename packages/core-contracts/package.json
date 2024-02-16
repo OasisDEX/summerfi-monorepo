@@ -10,8 +10,9 @@
     "build": "tsc -b -v",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "gen-versions": "hardhat run scripts/contract-versions/generate-versions.ts",
-    "view-versions": "hardhat run scripts/contract-versions/view-versions.ts"
+    "gen-versions": "hardhat run scripts/generate-versions.ts",
+    "view-versions": "hardhat run scripts/view-versions.ts",
+    "deploy-contracts": "hardhat run scripts/deploy.ts"
   },
   "devDependencies": {
     "@ethersproject/keccak256": "^5.7.0",
