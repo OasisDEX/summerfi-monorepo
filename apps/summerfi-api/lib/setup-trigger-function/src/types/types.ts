@@ -95,9 +95,21 @@ export enum AutoSellTriggerCustomWarningCodes {
 }
 
 export enum StopLossErrorCodes {
-  StopLossTriggeredImmediately = 'stop-loss-triggered-immediately',
   StopLossTriggerAlreadyExists = 'stop-loss-trigger-already-exists',
   StopLossTriggerDoesNotExist = 'stop-loss-trigger-does-not-exist',
+  DebtTooHighToSetupStopLoss = 'debt-too-high-to-setup-stop-loss',
+  StopLossTriggeredByAutoBuy = 'stop-loss-triggered-by-auto-buy',
+  StopLossNeverTriggeredWithNoAutoSellMinSellPrice = 'stop-loss-never-triggered-with-no-auto-sell-min-sell-price',
+  StopLossNeverTriggeredWithLowerAutoSellMinSellPrice = 'stop-loss-never-triggered-with-lower-auto-sell-min-sell-price',
+}
+
+export enum StopLossWarningCodes {
+  StopLossTriggeredImmediately = 'stop-loss-triggered-immediately',
+  StopLossMakesAutoSellNotTrigger = 'stop-loss-makes-auto-sell-not-trigger',
+}
+
+export enum TrailingStopLossErrorCodes {
+  CantObtainLatestPrice = 'cant-obtain-latest-price',
 }
 
 export type ValidationIssue = { message: string; code: string; path: (string | number)[] }

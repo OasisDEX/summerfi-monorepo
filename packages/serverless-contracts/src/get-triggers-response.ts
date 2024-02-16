@@ -13,11 +13,15 @@ export const DmaAaveBasicSellV2ID = 122n as const
 
 export const DmaAaveTrailingStopLoss = 10005n as const
 
-export type AaveStopLossToCollateral = {
+export type Trigger = {
+  triggerId: string
+  triggerData: string
+  triggerType: bigint
+}
+
+export type AaveStopLossToCollateral = Trigger & {
   triggerTypeName: 'AaveStopLossToCollateralV2'
   triggerType: typeof AaveStopLossToCollateralV2ID
-  triggerId: string
-  triggerData: string
   decodedParams: {
     positionAddress: string
     triggerType: string
@@ -27,11 +31,9 @@ export type AaveStopLossToCollateral = {
     executionLtv: string
   }
 }
-export type AaveStopLossToDebt = {
+export type AaveStopLossToDebt = Trigger & {
   triggerTypeName: 'AaveStopLossToDebtV2'
   triggerType: typeof AaveStopLossToDebtV2ID
-  triggerId: string
-  triggerData: string
   decodedParams: {
     positionAddress: string
     triggerType: string
@@ -41,11 +43,9 @@ export type AaveStopLossToDebt = {
     executionLtv: string
   }
 }
-export type SparkStopLossToCollateral = {
+export type SparkStopLossToCollateral = Trigger & {
   triggerTypeName: 'SparkStopLossToCollateralV2'
   triggerType: typeof SparkStopLossToCollateralV2ID
-  triggerId: string
-  triggerData: string
   decodedParams: {
     positionAddress: string
     triggerType: string
@@ -55,11 +55,9 @@ export type SparkStopLossToCollateral = {
     executionLtv: string
   }
 }
-export type SparkStopLossToDebt = {
+export type SparkStopLossToDebt = Trigger & {
   triggerTypeName: 'SparkStopLossToDebtV2'
   triggerType: typeof SparkStopLossToDebtV2ID
-  triggerId: string
-  triggerData: string
   decodedParams: {
     positionAddress: string
     triggerType: string
@@ -69,11 +67,9 @@ export type SparkStopLossToDebt = {
     executionLtv: string
   }
 }
-export type AaveStopLossToCollateralDMA = {
+export type AaveStopLossToCollateralDMA = Trigger & {
   triggerTypeName: 'DmaAaveStopLossToCollateralV2'
   triggerType: typeof DmaAaveStopLossToCollateralV2ID
-  triggerId: string
-  triggerData: string
   decodedParams: {
     positionAddress: string
     triggerType: string
@@ -84,11 +80,9 @@ export type AaveStopLossToCollateralDMA = {
   }
 }
 
-export type AaveStopLossToDebtDMA = {
+export type AaveStopLossToDebtDMA = Trigger & {
   triggerTypeName: 'DmaAaveStopLossToDebtV2'
   triggerType: typeof DmaAaveStopLossToDebtV2ID
-  triggerId: string
-  triggerData: string
   decodedParams: {
     positionAddress: string
     triggerType: string
@@ -98,11 +92,9 @@ export type AaveStopLossToDebtDMA = {
     executionLtv: string
   }
 }
-export type SparkStopLossToCollateralDMA = {
+export type SparkStopLossToCollateralDMA = Trigger & {
   triggerTypeName: 'DmaSparkStopLossToCollateralV2'
   triggerType: typeof DmaSparkStopLossToCollateralV2ID
-  triggerId: string
-  triggerData: string
   decodedParams: {
     positionAddress: string
     triggerType: string
@@ -112,11 +104,9 @@ export type SparkStopLossToCollateralDMA = {
     executionLtv: string
   }
 }
-export type SparkStopLossToDebtDMA = {
+export type SparkStopLossToDebtDMA = Trigger & {
   triggerTypeName: 'DmaSparkStopLossToDebtV2'
   triggerType: typeof DmaSparkStopLossToDebtV2ID
-  triggerId: string
-  triggerData: string
   decodedParams: {
     positionAddress: string
     triggerType: string
@@ -127,11 +117,9 @@ export type SparkStopLossToDebtDMA = {
   }
 }
 
-export type DmaAaveBasicBuy = {
+export type DmaAaveBasicBuy = Trigger & {
   triggerTypeName: 'DmaAaveBasicBuyV2'
   triggerType: typeof DmaAaveBasicBuyV2ID
-  triggerId: string
-  triggerData: string
   decodedParams: {
     positionAddress: string
     triggerType: string
@@ -146,11 +134,9 @@ export type DmaAaveBasicBuy = {
     maxBaseFeeInGwei: string
   }
 }
-export type DmaAaveBasicSell = {
+export type DmaAaveBasicSell = Trigger & {
   triggerTypeName: 'DmaAaveBasicSellV2'
   triggerType: typeof DmaAaveBasicSellV2ID
-  triggerId: string
-  triggerData: string
   decodedParams: {
     positionAddress: string
     triggerType: string
@@ -166,11 +152,9 @@ export type DmaAaveBasicSell = {
   }
 }
 
-export type DmaAaveTrailingStopLoss = {
+export type DmaAaveTrailingStopLoss = Trigger & {
   triggerTypeName: 'DmaAaveTrailingStopLoss'
   triggerType: typeof DmaAaveTrailingStopLoss
-  triggerId: string
-  triggerData: string
   decodedParams: {
     positionAddress: string
     triggerType: string
@@ -200,6 +184,18 @@ export type GetTriggersResponse = {
     aaveBasicBuy?: DmaAaveBasicBuy
     aaveBasicSell?: DmaAaveBasicSell
     aaveTrailingStopLossDMA?: DmaAaveTrailingStopLoss
+  }
+  flags: {
+    isAaveStopLossEnabled: boolean
+    isSparkStopLossEnabled: boolean
+    isAaveBasicBuyEnabled: boolean
+    isAaveBasicSellEnabled: boolean
+  }
+  triggerGroup: {
+    aaveStopLoss?: Trigger
+    sparkStopLoss?: Trigger
+    aaveBasicBuy?: Trigger
+    aaveBasicSell?: Trigger
   }
   additionalData?: Record<string, unknown>
 }

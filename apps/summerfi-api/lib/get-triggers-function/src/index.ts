@@ -39,10 +39,12 @@ import {
   SparkStopLossToDebtV2ID,
 } from '@summerfi/serverless-contracts/get-triggers-response'
 import {
+  mapBuySellCommonParams,
   mapStopLossParams,
   mapTriggerCommonParams,
-  mapBuySellCommonParams,
-} from './helpers/mappers'
+  hasAnyDefined,
+  getCurrentTrigger,
+} from './helpers'
 
 const logger = new Logger({ serviceName: 'getTriggersFunction' })
 
@@ -245,6 +247,40 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       aaveBasicBuy,
       aaveBasicSell,
       aaveTrailingStopLossDMA,
+    },
+    flags: {
+      isAaveStopLossEnabled: hasAnyDefined(
+        aaveStopLossToCollateral,
+        aaveStopLossToCollateralDMA,
+        aaveStopLossToDebt,
+        aaveStopLossToDebtDMA,
+        aaveTrailingStopLossDMA,
+      ),
+      isSparkStopLossEnabled: hasAnyDefined(
+        sparkStopLossToCollateral,
+        sparkStopLossToCollateralDMA,
+        sparkStopLossToDebt,
+        sparkStopLossToDebtDMA,
+      ),
+      isAaveBasicBuyEnabled: hasAnyDefined(aaveBasicBuy),
+      isAaveBasicSellEnabled: hasAnyDefined(aaveBasicSell),
+    },
+    triggerGroup: {
+      aaveStopLoss: getCurrentTrigger(
+        aaveStopLossToCollateral,
+        aaveStopLossToCollateralDMA,
+        aaveStopLossToDebt,
+        aaveStopLossToDebtDMA,
+        aaveTrailingStopLossDMA,
+      ),
+      sparkStopLoss: getCurrentTrigger(
+        sparkStopLossToCollateral,
+        sparkStopLossToCollateralDMA,
+        sparkStopLossToDebt,
+        sparkStopLossToDebtDMA,
+      ),
+      aaveBasicBuy: getCurrentTrigger(aaveBasicBuy),
+      aaveBasicSell: getCurrentTrigger(aaveBasicSell),
     },
     additionalData: {
       params: {

@@ -1,5 +1,10 @@
 import { ServiceContainer } from './service-container'
-import { AaveTrailingStopLossEventBody, safeParseBigInt, SupportedActions } from '~types'
+import {
+  AaveTrailingStopLossEventBody,
+  maxUnit256,
+  safeParseBigInt,
+  SupportedActions,
+} from '~types'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
 import { Address, ChainId } from '@summerfi/serverless-shared'
@@ -11,6 +16,9 @@ import { encodeFunctionForDpm } from './encode-function-for-dpm'
 import { encodeAaveTrailingStopLoss } from './trigger-encoders/encode-aave-trailing-stop-loss'
 import { LatestPrice } from '@summerfi/prices-subgraph'
 import { CurrentTriggerLike } from './trigger-encoders'
+import { dmaAaveTrailingStopLossValidator } from './against-position-validators'
+import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
+import { calculateLtv } from './calculate-ltv'
 
 export interface GetAaveTrailingStopLossServiceContainerProps {
   rpc: PublicClient
@@ -45,25 +53,75 @@ export const getAaveTrailingStopLossServiceContainer: (
     return await getAavePosition(params, rpc, addresses, logger)
   })
 
+  const getExecutionParams = memoize(
+    async ({ trigger }: { trigger: AaveTrailingStopLossEventBody }) => {
+      const latestPrice = await getLatestPrice(trigger.position.collateral, trigger.position.debt)
+
+      const position = await getPosition({
+        address: trigger.dpm,
+        collateral: trigger.position.collateral,
+        debt: trigger.position.debt,
+      })
+
+      const derivedPrice = BigInt(latestPrice?.derivedPrice ?? maxUnit256) // if latestPrice is undefined, it won't pass later validation
+
+      const dynamicCollateralPrice = derivedPrice - trigger.triggerData.trailingDistance
+
+      const dynamicExecutionLTV = calculateLtv({
+        collateral: position.collateral,
+        debt: position.debt,
+        collateralPriceInDebt: dynamicCollateralPrice,
+      })
+
+      const executionPrice = calculateCollateralPriceInDebtBasedOnLtv({
+        ...position,
+        ltv: dynamicExecutionLTV,
+      })
+
+      return {
+        executionPrice,
+        dynamicExecutionLTV,
+      }
+    },
+    (params) => `${params.trigger.dpm}-${params.trigger.triggerData.type}`,
+  )
+
   return {
     simulatePosition: async ({ trigger }) => {
       const latestPrice = await getLatestPrice(trigger.position.collateral, trigger.position.debt)
-      if (latestPrice === undefined) {
-        throw new Error('latestPrice is undefined')
+      const position = await getPosition({
+        address: trigger.dpm,
+        collateral: trigger.position.collateral,
+        debt: trigger.position.debt,
+      })
+      const executionParams = await getExecutionParams({ trigger })
+      return {
+        latestPrice,
+        position,
+        executionParams,
       }
-      return latestPrice
     },
-    validate: () => {
-      return Promise.resolve({
-        success: true,
-        errors: [],
-        warnings: [
-          {
-            message: 'VALIDATIONS ARE NOT IMPLEMENTED YET',
-            code: 'warning-code',
-            path: ['path'],
-          },
-        ],
+    validate: async ({ trigger }) => {
+      const latestPrice = await getLatestPrice(trigger.position.collateral, trigger.position.debt)
+
+      const position = await getPosition({
+        address: trigger.dpm,
+        collateral: trigger.position.collateral,
+        debt: trigger.position.debt,
+      })
+
+      const triggers = await getTriggers(trigger.dpm)
+
+      const { executionPrice, dynamicExecutionLTV } = await getExecutionParams({ trigger })
+
+      return dmaAaveTrailingStopLossValidator({
+        position: position,
+        executionPrice: executionPrice,
+        dynamicExecutionLTV: dynamicExecutionLTV,
+        triggerData: trigger.triggerData,
+        triggers: triggers,
+        latestPrice: latestPrice,
+        action: trigger.action,
       })
     },
     getTransaction: async ({ trigger }) => {

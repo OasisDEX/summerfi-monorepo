@@ -77,3 +77,4 @@ export function getAutomationSubgraphClient(
     getOneTrigger: (params: GetOneTriggerParams) => getOneTrigger(params, config),
   }
 }
+export type { TriggersQuery } from './types/graphql/generated'

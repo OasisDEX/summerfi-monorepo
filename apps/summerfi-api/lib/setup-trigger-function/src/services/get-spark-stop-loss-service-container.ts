@@ -28,11 +28,7 @@ export interface GetSparkStopLossServiceContainerProps {
 }
 
 function getCurrentStopLoss(triggers: GetTriggersResponse): CurrentTriggerLike | undefined {
-  const currentStopLoss =
-    triggers.triggers.sparkStopLossToCollateral ??
-    triggers.triggers.sparkStopLossToCollateralDMA ??
-    triggers.triggers.sparkStopLossToDebt ??
-    triggers.triggers.sparkStopLossToDebtDMA
+  const currentStopLoss = triggers.triggerGroup.sparkStopLoss
 
   return currentStopLoss
     ? {
