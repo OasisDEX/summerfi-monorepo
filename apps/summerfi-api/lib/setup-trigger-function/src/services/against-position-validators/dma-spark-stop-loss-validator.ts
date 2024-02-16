@@ -8,6 +8,8 @@ import {
   SupportedActions,
   supportedActionsSchema,
   ValidationResults,
+  TWENTY_MILLIONS_DOllARS,
+  StopLossWarningCodes,
 } from '~types'
 import { z } from 'zod'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
@@ -50,6 +52,17 @@ const upsertErrorsValidation = paramsSchema
       },
     },
   )
+  .refine(
+    ({ position }) => {
+      return position.debtValueUSD <= TWENTY_MILLIONS_DOllARS
+    },
+    {
+      message: 'Debt value is too high',
+      params: {
+        code: StopLossErrorCodes.DebtTooHighToSetupStopLoss,
+      },
+    },
+  )
 
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
@@ -73,7 +86,7 @@ const warningsValidation = paramsSchema.refine(
   {
     message: 'Stop loss triggered immediately',
     params: {
-      code: StopLossErrorCodes.StopLossTriggeredImmediately,
+      code: StopLossWarningCodes.StopLossTriggeredImmediately,
     },
   },
 )
