@@ -1,5 +1,6 @@
 import { ChainFamilyMap, ChainInfo } from '@summerfi/sdk-common/chains'
 import { Address, Percentage, Token, TokenAmount } from '@summerfi/sdk-common/common'
+import { subtractPercentage } from '@summerfi/sdk-common/utils'
 import { getSwapManager, SwapData, SwapProviderType } from '~swap-service'
 
 describe('OneInch | SwapManager | Integration', () => {
@@ -33,11 +34,6 @@ describe('OneInch | SwapManager | Integration', () => {
       amount: '34.5',
     })
 
-    const toMinimumAmount: TokenAmount = TokenAmount.createFrom({
-      token: DAI,
-      amount: '1000.0',
-    })
-
     // Address
     const recipient: Address = Address.createFrom({
       hexValue: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
@@ -49,16 +45,20 @@ describe('OneInch | SwapManager | Integration', () => {
     const swapData: SwapData = await swapManager.getSwapData({
       chainInfo,
       fromAmount,
-      toMinimumAmount,
+      toToken: DAI,
       recipient,
       slippage,
       forceUseProvider: SwapProviderType.OneInch,
     })
 
+    const minimumOutputAmount = subtractPercentage(fromAmount, slippage)
+
     expect(swapData).toBeDefined()
     expect(swapData.provider).toEqual(SwapProviderType.OneInch)
     expect(swapData.fromTokenAmount).toEqual(fromAmount)
-    expect(swapData.toTokenAmount).toEqual(toMinimumAmount)
+    expect(BigInt(swapData.toTokenAmount.toBaseUnit())).toBeGreaterThanOrEqual(
+      BigInt(minimumOutputAmount.toBaseUnit()),
+    )
     expect(swapData.calldata).toBeDefined()
     expect(swapData.targetContract).toBeDefined()
     expect(swapData.value).toBeDefined()

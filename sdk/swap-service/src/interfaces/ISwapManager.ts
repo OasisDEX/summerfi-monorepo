@@ -1,4 +1,4 @@
-import { Address, Percentage, TokenAmount } from '@summerfi/sdk-common/common'
+import { Address, Percentage, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { ChainInfo } from '@summerfi/sdk-common/chains'
 import { Hex } from 'viem'
 
@@ -36,14 +36,13 @@ export interface ISwapProvider {
    * @description Returns the data needed to perform a swap between two tokens
    * @param chainInfo The chain information
    * @param fromAmount The amount of tokens to swap
-   * @param toMinimumAmount The minimum amount of tokens to receive
    * @param recipient The address that will receive the tokens
    * @param slippage The maximum slippage allowed
    */
   getSwapData(params: {
     chainInfo: ChainInfo
     fromAmount: TokenAmount
-    toMinimumAmount: TokenAmount
+    toToken: Token
     recipient: Address
     slippage: Percentage
   }): Promise<SwapData>
@@ -60,14 +59,13 @@ export interface ISwapManager {
    * @description Returns the data needed to perform a swap between two tokens
    * @param chainInfo The chain information
    * @param fromAmount The amount of tokens to swap
-   * @param toMinimumAmount The minimum amount of tokens to receive
    * @param recipient The address that will receive the tokens
    * @param slippage The maximum slippage allowed
    */
   getSwapData(params: {
     chainInfo: ChainInfo
     fromAmount: TokenAmount
-    toMinimumAmount: TokenAmount
+    toToken: Token
     recipient: Address
     slippage: Percentage
   }): Promise<SwapData>

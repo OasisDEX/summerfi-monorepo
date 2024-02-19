@@ -18,4 +18,8 @@ export class Percentage implements Printable {
   toString(): string {
     return `${this.value}`
   }
+
+  add(percentage: Percentage): Percentage {
+    return Percentage.createFrom({ percentage: this.value + percentage.value })
+  }
 }

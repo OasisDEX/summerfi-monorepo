@@ -1,4 +1,4 @@
-import { Address, Percentage, TokenAmount } from '@summerfi/sdk-common/common'
+import { Address, Percentage, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { SwapData, ISwapProvider, SwapProviderType } from '~swap-service/interfaces'
 import { ChainInfo } from '@summerfi/sdk-common/chains'
 import {
@@ -28,14 +28,14 @@ export class OneInchSwapProvider implements ISwapProvider {
   public async getSwapData(params: {
     chainInfo: ChainInfo
     fromAmount: TokenAmount
-    toMinimumAmount: TokenAmount
+    toToken: Token
     recipient: Address
     slippage: Percentage
   }): Promise<SwapData> {
     const swapUrl = this._formatOneInchSwapUrl({
       chainInfo: params.chainInfo,
       fromTokenAmount: params.fromAmount,
-      toMinimumAmount: params.toMinimumAmount,
+      toToken: params.toToken,
       recipient: params.recipient,
       slippage: params.slippage,
     })
@@ -55,7 +55,10 @@ export class OneInchSwapProvider implements ISwapProvider {
     return {
       provider: SwapProviderType.OneInch,
       fromTokenAmount: params.fromAmount,
-      toTokenAmount: params.toMinimumAmount,
+      toTokenAmount: TokenAmount.createFrom({
+        token: params.toToken,
+        amount: responseData.toTokenAmount,
+      }),
       calldata: responseData.tx.data as Hex,
       targetContract: Address.createFrom({ hexValue: responseData.tx.to }),
       value: responseData.tx.value,
@@ -70,7 +73,7 @@ export class OneInchSwapProvider implements ISwapProvider {
   private _formatOneInchSwapUrl(params: {
     chainInfo: ChainInfo
     fromTokenAmount: TokenAmount
-    toMinimumAmount: TokenAmount
+    toToken: Token
     recipient: Address
     slippage: Percentage
     disableEstimate?: boolean
@@ -78,8 +81,8 @@ export class OneInchSwapProvider implements ISwapProvider {
   }): string {
     const chainId = params.chainInfo.chainId
     const fromTokenAddress = params.fromTokenAmount.token.address.toString().toLowerCase()
-    const toTokenAddress = params.toMinimumAmount.token.address.toString().toLowerCase()
-    const fromAmount = params.fromTokenAmount.toWei()
+    const toTokenAddress = params.toToken.address.toString().toLowerCase()
+    const fromAmount = params.fromTokenAmount.toBaseUnit()
     const recipient = params.recipient.toString()
     const disableEstimate = params.disableEstimate ? params.disableEstimate : true
     const allowPartialFill = params.allowPartialFill ? params.allowPartialFill : false

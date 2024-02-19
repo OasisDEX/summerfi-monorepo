@@ -1,5 +1,5 @@
 import { ChainInfo, ChainId } from '@summerfi/sdk-common/chains'
-import { Address, Percentage, TokenAmount } from '@summerfi/sdk-common/common'
+import { Address, Percentage, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { Maybe } from '@summerfi/sdk-common/utils'
 import { ISwapProvider, ISwapManager, SwapData, SwapProviderType } from '~swap-service/interfaces'
 
@@ -24,7 +24,7 @@ export class SwapManager implements ISwapManager {
   public async getSwapData(params: {
     chainInfo: ChainInfo
     fromAmount: TokenAmount
-    toMinimumAmount: TokenAmount
+    toToken: Token
     recipient: Address
     slippage: Percentage
     forceUseProvider?: SwapProviderType
@@ -50,7 +50,7 @@ export class SwapManager implements ISwapManager {
   private _getBestProvider(params: {
     chainInfo: ChainInfo
     fromAmount: TokenAmount
-    toMinimumAmount: TokenAmount
+    toToken: Token
     recipient: Address
     slippage: Percentage
     forceUseProvider?: SwapProviderType

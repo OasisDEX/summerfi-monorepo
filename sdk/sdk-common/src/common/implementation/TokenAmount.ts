@@ -11,12 +11,12 @@ import { BigNumber } from 'bignumber.js'
 export class TokenAmount implements Printable {
   public readonly token: Token
   public readonly amount: string
-  private readonly _weiFactor: BigNumber
+  private readonly _baseUnitFactor: BigNumber
 
   constructor(token: Token, amount: string) {
     this.token = token
     this.amount = amount
-    this._weiFactor = new BigNumber(10).pow(new BigNumber(token.decimals))
+    this._baseUnitFactor = new BigNumber(10).pow(new BigNumber(token.decimals))
   }
 
   public static createFrom(params: { token: Token; amount: string }): TokenAmount {
@@ -27,7 +27,11 @@ export class TokenAmount implements Printable {
     return `${this.amount} ${this.token.symbol}`
   }
 
-  public toWei(): string {
-    return new BigNumber(this.amount).times(this._weiFactor).toFixed(0)
+  public toBaseUnit(): string {
+    return new BigNumber(this.amount).times(this._baseUnitFactor).toFixed(0)
+  }
+
+  public toBN(): BigNumber {
+    return new BigNumber(this.amount)
   }
 }
