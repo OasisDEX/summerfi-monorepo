@@ -117,8 +117,8 @@ describe('Refinance | SDK', () => {
       })
 
     expect(refinanceSimulation).toBeDefined()
-    expect(refinanceSimulation.simulationData.sourcePosition).toEqual(prevPosition)
-    expect(refinanceSimulation.simulationData.targetPosition.pool).toEqual(newPool)
+    expect(refinanceSimulation.sourcePosition).toEqual(prevPosition)
+    expect(refinanceSimulation.targetPosition.pool).toEqual(newPool)
 
     const refinanceOrder: Order = await user.newOrder({
       simulation: refinanceSimulation,

@@ -1,6 +1,6 @@
-import { Address, Token, TokenAmount } from '~sdk/common'
+import { Address, Token, TokenAmount } from '~sdk-common/common'
 import { SimulationType } from './SimulationType'
-import { Position } from '~sdk/users'
+import { Position } from '~sdk-common/users'
 
 export enum SimulationSteps {
   Flashloan = 'Flashloan',

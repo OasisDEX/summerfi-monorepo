@@ -1,5 +1,5 @@
 import { Hex } from 'viem'
-import { Address } from '~sdk/common'
+import { Address } from '~sdk-common/common'
 
 /**
  * @interface Transaction
