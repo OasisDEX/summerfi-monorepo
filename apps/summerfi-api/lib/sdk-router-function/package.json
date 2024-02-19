@@ -16,7 +16,7 @@
     "@aws-lambda-powertools/tracer": "^1.17.0",
     "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/common": "workspace:*",
-    "@summerfi/sdk": "workspace:*",
+    "@summerfi/sdk-common": "workspace:*",
     "@trpc/server": "11.0.0-next-beta.264",
     "zod": "^3.22.4"
   },

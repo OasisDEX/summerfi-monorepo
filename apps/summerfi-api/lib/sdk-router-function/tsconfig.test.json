@@ -1,13 +1,12 @@
 {
-  // by using a separate tsconfig for build, we can set main tsconfig to
-  // include tests and use module paths in tests but build without tests
   "extends": "@summerfi/typescript-config/tsconfig.test.json",
   "compilerOptions": {
-    "rootDir": "src",
+    "rootDir": ".",
+    "baseUrl": ".",
     "paths": {
       "~src/*": ["./src/*"]
     }
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }

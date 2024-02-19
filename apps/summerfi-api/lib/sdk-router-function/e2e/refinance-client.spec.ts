@@ -1,9 +1,9 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 import { zeroAddress } from '@summerfi/common'
-import { ChainFamilyMap } from '@summerfi/sdk/chains'
-import { Wallet } from '@summerfi/sdk/common'
-import { makeSDK } from '@summerfi/sdk/entrypoint'
-import type { PositionId } from '@summerfi/sdk/users'
+import { ChainFamilyMap } from '@summerfi/sdk-common/chains'
+import { Wallet } from '@summerfi/sdk-common/common'
+import { makeSDK } from '@summerfi/sdk-common/entrypoint'
+import type { PositionId } from '@summerfi/sdk-common/users'
 import { createTRPCClient, httpBatchLink } from '@trpc/client'
 import type { AppRouter } from '~src/app-router'
 

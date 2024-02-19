@@ -1,9 +1,9 @@
 import { z } from 'zod'
 import { publicProcedure } from '~src/trpc'
-import { mockRefinanceSimulation } from '@summerfi/sdk/mocks'
-import type { RefinanceParameters } from '@summerfi/sdk/orders'
-import type { Pool } from '@summerfi/sdk/protocols'
-import type { Position } from '@summerfi/sdk/users'
+import { mockRefinanceSimulation } from '@summerfi/sdk-common/mocks'
+import type { RefinanceParameters } from '@summerfi/sdk-common/orders'
+import type { Pool } from '@summerfi/sdk-common/protocols'
+import type { Position } from '@summerfi/sdk-common/users'
 
 type SimulationParams = Parameters<typeof mockRefinanceSimulation>[0]
 

@@ -1,8 +1,8 @@
 import { z } from 'zod'
 import { publicProcedure } from '~src/trpc'
-import { mockPool } from '@summerfi/sdk/mocks'
-import type { Wallet } from '@summerfi/sdk/common'
-import type { PoolParameters, Protocol } from '@summerfi/sdk/protocols'
+import { mockPool } from '@summerfi/sdk-common/mocks'
+import type { Wallet } from '@summerfi/sdk-common/common'
+import type { PoolParameters, Protocol } from '@summerfi/sdk-common/protocols'
 
 type PoolParams = Parameters<typeof mockPool>[0]
 
