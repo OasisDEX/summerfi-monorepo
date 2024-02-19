@@ -64,6 +64,7 @@ export enum AutoBuyTriggerCustomErrorCodes {
   AutoBuyTriggerAlreadyExists = 'auto-buy-trigger-already-exists',
   AutoBuyTriggerDoesNotExist = 'auto-buy-trigger-does-not-exist',
   NetValueTooLowToSetupAutoBuy = 'net-value-too-low-to-setup-auto-buy',
+  StopLossTriggerLowerThanAutoBuy = 'stop-loss-trigger-ltv-lower-than-auto-buy',
 }
 
 export enum AutoBuyTriggerCustomWarningCodes {
