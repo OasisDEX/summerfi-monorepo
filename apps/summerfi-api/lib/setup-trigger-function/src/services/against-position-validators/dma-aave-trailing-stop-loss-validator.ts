@@ -161,6 +161,7 @@ const warningsValidation = paramsSchema
         const executionLTV = safeParseBigInt(autoSell.decodedParams.executionLtv) ?? 0n
         return dynamicExecutionLTV > executionLTV
       }
+      return true
     },
     {
       message: 'Your stop loss will make the auto-sell not trigger',
