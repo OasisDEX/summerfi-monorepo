@@ -5,15 +5,17 @@ const configRootDir = __dirname
 
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = (pkgCompilerOptions = {}) => {
-  const pkgMappings = pathsToModuleNameMapper(pkgCompilerOptions.paths, {
+  const sharedMappings = pathsToModuleNameMapper(compilerOptions.paths || {}, {
     prefix: '<rootDir>/',
   })
-  const monoMappings = pathsToModuleNameMapper(compilerOptions.paths, {
-    prefix: configRootDir + '/',
+  const pkgMappings = pathsToModuleNameMapper(pkgCompilerOptions.paths || {}, {
+    prefix: '<rootDir>/',
   })
-  const mappings = { ...monoMappings, ...pkgMappings }
+
+  const mappings = { ...sharedMappings, ...pkgMappings }
+  console.log(mappings)
   return {
-    roots: ['<rootDir>/src', '<rootDir>/tests', '<rootDir>/e2e'],
+    roots: ['<rootDir>/src', '<rootDir>/tests', '<rootDir>/node_modules'],
     preset: 'ts-jest',
     extensionsToTreatAsEsm: ['.ts'],
     silent: true,

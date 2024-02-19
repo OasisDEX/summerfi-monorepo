@@ -14,16 +14,16 @@
     "@aws-lambda-powertools/logger": "^1.17.0",
     "@aws-lambda-powertools/metrics": "^1.17.0",
     "@aws-lambda-powertools/tracer": "^1.17.0",
-    "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/common": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
+    "@summerfi/serverless-shared": "workspace:*",
     "@trpc/server": "11.0.0-next-beta.264",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
-    "@summerfi/typescript-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
     "@trpc/client": "11.0.0-next-beta.264"
   }
 }
