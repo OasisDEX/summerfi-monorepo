@@ -27,6 +27,7 @@ import {
   DmaAaveBasicSellV2ID,
   DmaAaveStopLossToCollateralV2ID,
   DmaAaveStopLossToDebtV2ID,
+  DmaAaveTrailingStopLoss,
   DmaSparkStopLossToCollateralV2ID,
   DmaSparkStopLossToDebtV2ID,
   GetTriggersResponse,
@@ -38,10 +39,12 @@ import {
   SparkStopLossToDebtV2ID,
 } from '@summerfi/serverless-contracts/get-triggers-response'
 import {
+  mapBuySellCommonParams,
   mapStopLossParams,
   mapTriggerCommonParams,
-  mapBuySellCommonParams,
-} from './helpers/mappers'
+  hasAnyDefined,
+  getCurrentTrigger,
+} from './helpers'
 
 const logger = new Logger({ serviceName: 'getTriggersFunction' })
 
@@ -202,6 +205,35 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       }
     })[0]
 
+  const aaveTrailingStopLossDMA: DmaAaveTrailingStopLoss | undefined = triggers.triggers
+    .filter((trigger) => trigger.triggerType == DmaAaveTrailingStopLoss)
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'DmaAaveTrailingStopLoss' as const,
+        triggerType: DmaAaveTrailingStopLoss,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: {
+          triggerType: trigger.decodedData[trigger.decodedDataNames.indexOf('triggerType')],
+          positionAddress: trigger.decodedData[trigger.decodedDataNames.indexOf('positionAddress')],
+          maxCoverage: trigger.decodedData[trigger.decodedDataNames.indexOf('maxCoverage')],
+          debtToken: trigger.decodedData[trigger.decodedDataNames.indexOf('debtToken')],
+          collateralToken: trigger.decodedData[trigger.decodedDataNames.indexOf('collateralToken')],
+          operationName: trigger.decodedData[trigger.decodedDataNames.indexOf('operationName')],
+          collateralOracle:
+            trigger.decodedData[trigger.decodedDataNames.indexOf('collateralOracle')],
+          collateralAddedRoundId:
+            trigger.decodedData[trigger.decodedDataNames.indexOf('collateralAddedRoundId')],
+          debtOracle: trigger.decodedData[trigger.decodedDataNames.indexOf('debtOracle')],
+          debtAddedRoundId:
+            trigger.decodedData[trigger.decodedDataNames.indexOf('debtAddedRoundId')],
+          trailingDistance:
+            trigger.decodedData[trigger.decodedDataNames.indexOf('trailingDistance')],
+          closeToCollateral:
+            trigger.decodedData[trigger.decodedDataNames.indexOf('closeToCollateral')],
+        },
+      }
+    })[0]
+
   const response: GetTriggersResponse = {
     triggers: {
       aaveStopLossToCollateral,
@@ -214,6 +246,41 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       sparkStopLossToDebtDMA,
       aaveBasicBuy,
       aaveBasicSell,
+      aaveTrailingStopLossDMA,
+    },
+    flags: {
+      isAaveStopLossEnabled: hasAnyDefined(
+        aaveStopLossToCollateral,
+        aaveStopLossToCollateralDMA,
+        aaveStopLossToDebt,
+        aaveStopLossToDebtDMA,
+        aaveTrailingStopLossDMA,
+      ),
+      isSparkStopLossEnabled: hasAnyDefined(
+        sparkStopLossToCollateral,
+        sparkStopLossToCollateralDMA,
+        sparkStopLossToDebt,
+        sparkStopLossToDebtDMA,
+      ),
+      isAaveBasicBuyEnabled: hasAnyDefined(aaveBasicBuy),
+      isAaveBasicSellEnabled: hasAnyDefined(aaveBasicSell),
+    },
+    triggerGroup: {
+      aaveStopLoss: getCurrentTrigger(
+        aaveStopLossToCollateral,
+        aaveStopLossToCollateralDMA,
+        aaveStopLossToDebt,
+        aaveStopLossToDebtDMA,
+        aaveTrailingStopLossDMA,
+      ),
+      sparkStopLoss: getCurrentTrigger(
+        sparkStopLossToCollateral,
+        sparkStopLossToCollateralDMA,
+        sparkStopLossToDebt,
+        sparkStopLossToDebtDMA,
+      ),
+      aaveBasicBuy: getCurrentTrigger(aaveBasicBuy),
+      aaveBasicSell: getCurrentTrigger(aaveBasicSell),
     },
     additionalData: {
       params: {

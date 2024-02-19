@@ -1,6 +1,6 @@
 import {
-  DmaAaveStopLossTriggerData,
-  dmaAaveStopLossTriggerDataSchema,
+  dmaAaveTrailingStopLossTriggerDataSchema,
+  ltvSchema,
   mapZodResultToValidationResults,
   positionSchema,
   priceSchema,
@@ -9,21 +9,23 @@ import {
   StopLossWarningCodes,
   SupportedActions,
   supportedActionsSchema,
+  TrailingStopLossErrorCodes,
   TWENTY_MILLIONS_DOllARS,
   ValidationResults,
 } from '~types'
 import { z } from 'zod'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
-import { AgainstPositionValidator } from './validators-types'
+import { LatestPrice } from '@summerfi/prices-subgraph'
 
 const paramsSchema = z.object({
   position: positionSchema,
   executionPrice: priceSchema,
-  triggerData: dmaAaveStopLossTriggerDataSchema,
+  dynamicExecutionLTV: ltvSchema,
+  triggerData: dmaAaveTrailingStopLossTriggerDataSchema,
   triggers: z.custom<GetTriggersResponse>(),
+  latestPrice: z.custom<LatestPrice | undefined>(),
   action: supportedActionsSchema,
 })
-
 const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
@@ -65,11 +67,11 @@ const upsertErrorsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggerData, triggers }) => {
+    ({ dynamicExecutionLTV, triggers }) => {
       const currentAutoBuy = triggers.triggers.aaveBasicBuy
       if (currentAutoBuy) {
         const currentAutoBuyTarget = safeParseBigInt(currentAutoBuy.decodedParams.targetLtv) ?? 0n
-        return triggerData.executionLTV > currentAutoBuyTarget
+        return dynamicExecutionLTV > currentAutoBuyTarget
       }
       return true
     },
@@ -113,6 +115,17 @@ const upsertErrorsValidation = paramsSchema
       },
     },
   )
+  .refine(
+    ({ latestPrice }) => {
+      return latestPrice !== undefined
+    },
+    {
+      message: 'Latest price is undefined',
+      params: {
+        code: TrailingStopLossErrorCodes.CantObtainLatestPrice,
+      },
+    },
+  )
 
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
@@ -131,8 +144,8 @@ const deleteErrorsValidation = paramsSchema.refine(
 
 const warningsValidation = paramsSchema
   .refine(
-    ({ triggerData, position }) => {
-      return position.ltv < triggerData.executionLTV
+    ({ position, dynamicExecutionLTV }) => {
+      return position.ltv < dynamicExecutionLTV
     },
     {
       message: 'Stop loss triggered immediately',
@@ -142,11 +155,11 @@ const warningsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggerData, triggers }) => {
+    ({ dynamicExecutionLTV, triggers }) => {
       const autoSell = triggers.triggers.aaveBasicSell
       if (autoSell) {
         const executionLTV = safeParseBigInt(autoSell.decodedParams.executionLtv) ?? 0n
-        return triggerData.executionLTV > executionLTV
+        return dynamicExecutionLTV > executionLTV
       }
     },
     {
@@ -157,8 +170,8 @@ const warningsValidation = paramsSchema
     },
   )
 
-export const dmaAaveStopLossValidator: AgainstPositionValidator<DmaAaveStopLossTriggerData> = (
-  params,
+export const dmaAaveTrailingStopLossValidator = (
+  params: z.infer<typeof paramsSchema>,
 ): ValidationResults => {
   const errorsValidation =
     params.action === SupportedActions.Remove ? deleteErrorsValidation : upsertErrorsValidation

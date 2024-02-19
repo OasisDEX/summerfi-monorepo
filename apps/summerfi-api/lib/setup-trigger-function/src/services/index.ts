@@ -9,6 +9,7 @@ import {
   SetupTriggerEventBody,
   AaveStopLossEventBody,
   SparkStopLossEventBody,
+  AaveTrailingStopLossEventBody,
 } from '~types'
 import type { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import fetch from 'node-fetch'
@@ -23,6 +24,8 @@ import { getAaveAutoBuyServiceContainer } from './get-aave-auto-buy-service-cont
 import { getAaveAutoSellServiceContainer } from './get-aave-auto-sell-service-container'
 import { getAaveStopLossServiceContainer } from './get-aave-stop-loss-service-container'
 import { getSparkStopLossServiceContainer } from './get-spark-stop-loss-service-container'
+import { getAaveTrailingStopLossServiceContainer } from './get-aave-trailing-stop-loss-service-container'
+import { getPricesSubgraphClient } from '@summerfi/prices-subgraph'
 
 export const rpcConfig: IRpcConfig = {
   skipCache: false,
@@ -55,6 +58,12 @@ function isAaveStopLoss(trigger: SetupTriggerEventBody): trigger is AaveStopLoss
   ].includes(trigger.triggerData?.type)
 }
 
+function isAaveTrailingStopLoss(
+  trigger: SetupTriggerEventBody,
+): trigger is AaveTrailingStopLossEventBody {
+  return trigger.triggerData?.type === BigInt(TriggerType.DmaAaveTrailingStopLossV2)
+}
+
 function isSparkStopLoss(trigger: SetupTriggerEventBody): trigger is SparkStopLossEventBody {
   return [
     BigInt(TriggerType.DmaSparkStopLossToCollateralV2),
@@ -67,6 +76,7 @@ export function buildServiceContainer<Trigger extends SetupTriggerEventBody>(
   protocol: ProtocolId,
   trigger: Trigger,
   rpcGateway: string,
+  subgraphBase: string,
   getTriggersUrl: string,
   logger?: Logger,
 ): ServiceContainer<Trigger> {
@@ -93,6 +103,21 @@ export function buildServiceContainer<Trigger extends SetupTriggerEventBody>(
       return (await triggers.json()) as GetTriggersResponse
     } catch (e) {
       logger?.error('Error fetching triggers', { error: e })
+      throw e
+    }
+  })
+
+  const pricesClient = getPricesSubgraphClient({
+    chainId,
+    urlBase: subgraphBase,
+    logger,
+  })
+
+  const getLatestPrice = memoize(async (token: Address, denomination: Address) => {
+    try {
+      return await pricesClient.getLatestPrice({ token, denomination })
+    } catch (e) {
+      logger?.error('Error fetching latest price', { error: e })
       throw e
     }
   })
@@ -131,6 +156,17 @@ export function buildServiceContainer<Trigger extends SetupTriggerEventBody>(
       getTriggers,
       logger,
       chainId,
+    }) as ServiceContainer<Trigger>
+  }
+
+  if (isAaveTrailingStopLoss(trigger)) {
+    return getAaveTrailingStopLossServiceContainer({
+      rpc: publicClient,
+      addresses,
+      getTriggers,
+      getLatestPrice,
+      chainId,
+      logger,
     }) as ServiceContainer<Trigger>
   }
 

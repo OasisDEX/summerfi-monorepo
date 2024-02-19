@@ -5,6 +5,8 @@ describe('calculateExecutionPrice', () => {
   it('should return value greater than 0', () => {
     const result = calculateCollateralPriceInDebtBasedOnLtv({
       netValueUSD: 0n,
+      collateralValueUSD: 0n,
+      debtValueUSD: 0n,
       hasStablecoinDebt: true,
       collateral: {
         balance: 10n * 10n ** 18n,
