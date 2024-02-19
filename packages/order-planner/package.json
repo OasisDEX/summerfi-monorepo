@@ -14,7 +14,7 @@
     "@aws-lambda-powertools/logger": "^1.17.0",
     "@aws-lambda-powertools/metrics": "^1.17.0",
     "@aws-lambda-powertools/tracer": "^1.17.0",
-    "@summerfi/sdk": "workspace:*",
+    "@summerfi/sdk-common": "workspace:*",
     "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/core-contracts": "workspace:*",
     "@summerfi/deployment-utils": "workspace:*",
