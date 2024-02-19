@@ -8,4 +8,4 @@ export type {
 } from './Strategy'
 export type { ActionCall } from './Action'
 export { StrategyName } from './Strategy'
-export type { StepBuildersMap, Version } from './Types'
+export type { StepBuildersMap, StepBuilder, Version } from './Types'

@@ -31,9 +31,7 @@ export class UsersClientImpl implements User {
     return getMockPosition({ chain: this.chain, wallet: this.wallet, id: params.id })
   }
 
-  public async newOrder(params: {
-    simulation: Simulation<SimulationType, unknown>
-  }): Promise<Order> {
+  public async newOrder(params: { simulation: Simulation<SimulationType> }): Promise<Order> {
     return getMockOrder({ chain: this.chain, wallet: this.wallet, simulation: params.simulation })
   }
 }

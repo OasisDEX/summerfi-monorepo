@@ -12,7 +12,7 @@ export class PullToken extends BaseAction {
     return encodeAction(`${this.name}_v${this.version}`, this.parametersAbi, [
       params.pullAmount.token.address,
       params.pullTo.hexValue,
-      0, // TODO: params.pullAmount.toWei(),
+      0, // TODO: params.pullAmount.toBaseUnit(),
     ])
   }
 }
