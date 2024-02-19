@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { appRouter } from './appRouter'
+import { appRouter } from './app-router'
 
 import type { Context, ContextOptions } from '~src/context'
 import { createCallerFactory } from '~src/trpc'

@@ -269,6 +269,9 @@ importers:
       '@aws-lambda-powertools/tracer':
         specifier: ^1.17.0
         version: 1.17.0
+      '@summerfi/common':
+        specifier: workspace:*
+        version: link:../../../../packages/common
       '@summerfi/sdk':
         specifier: workspace:*
         version: link:../../../../packages/sdk

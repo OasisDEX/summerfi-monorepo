@@ -1,6 +1,8 @@
 import { router } from '~src/trpc'
-import { getProtocol } from './procedures/getProtocol'
 import { getPosition } from './procedures/getPosition'
+import { getPool } from '~src/procedures/getPool'
+import { getSimulation } from '~src/procedures/getSimulation'
+import { getOrder } from '~src/procedures/getOrder'
 
 /**
  * Server
@@ -8,7 +10,9 @@ import { getPosition } from './procedures/getPosition'
 
 export const appRouter = router({
   getPosition: getPosition,
-  getProtocol: getProtocol,
+  getPool: getPool,
+  getSimulation: getSimulation,
+  getOrder: getOrder,
 })
 
 export type AppRouter = typeof appRouter

@@ -12,7 +12,6 @@ import {
   ProtocolName,
 } from '~sdk/protocols'
 import { RefinanceParameters, RefinanceSimulation, Order } from '~sdk/orders'
-import assert from 'assert'
 
 describe('Refinance | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
@@ -24,7 +23,7 @@ describe('Refinance | SDK', () => {
       chainInfo: ChainFamilyMap.Ethereum.Mainnet,
     })
     if (!chain) {
-      assert.fail('Chain not found')
+      fail('Chain is not defined')
     }
 
     // Wallet
@@ -41,12 +40,12 @@ describe('Refinance | SDK', () => {
     // Tokens
     const WETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: 'WETH' })
     if (!WETH) {
-      assert.fail('WETH not found')
+      fail('WETH not found')
     }
 
     const DAI: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: 'DAI' })
     if (!DAI) {
-      assert.fail('DAI not found')
+      fail('DAI not found')
     }
 
     // Previous position
@@ -54,7 +53,7 @@ describe('Refinance | SDK', () => {
 
     const prevPosition: Maybe<Position> = await user.getPosition({ id: positionId })
     if (!prevPosition) {
-      assert.fail('Position not found')
+      fail('Position not found')
     }
 
     expect(prevPosition.positionId).toEqual(positionId)
@@ -76,7 +75,7 @@ describe('Refinance | SDK', () => {
       name: ProtocolName.Spark,
     })
     if (!spark) {
-      assert.fail('Spark not found')
+      fail('Spark not found')
     }
 
     expect(spark.protocolId.id).toEqual('spark')
@@ -90,7 +89,7 @@ describe('Refinance | SDK', () => {
       poolParameters: poolPair,
     })
     if (!newPool) {
-      assert.fail('Pool not found')
+      fail('Pool not found')
     }
 
     expect(newPool.poolId.id).toEqual('mock')

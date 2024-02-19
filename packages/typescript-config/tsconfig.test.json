@@ -6,7 +6,8 @@
     "baseUrl": ".",
     "paths": {
       "@summerfi/serverless-shared": ["../serverless-shared/src/index.ts"],
-      "@summerfi/serverless-shared/*": ["../serverless-shared/src/*"]
+      "@summerfi/serverless-shared/*": ["../serverless-shared/src/*"],
+      "@summerfi/sdk/*": ["../sdk/src/*"]
     }
   },
   "ts-node": {

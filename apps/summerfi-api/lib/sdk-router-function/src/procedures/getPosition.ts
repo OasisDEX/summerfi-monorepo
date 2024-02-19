@@ -16,7 +16,6 @@ export const getPosition = publicProcedure
     }),
   )
   .query(async (opts) => {
-    // get position from chain / graph
     const params: PositionParams = opts.input
     return await getMockPosition(params)
   })

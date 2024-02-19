@@ -4,8 +4,8 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest",
-    "e2e": "jest ./e2e/refinance-e2e.spec.ts",
+    "test": "jest ./tests",
+    "e2e": "jest ./e2e",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "build": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap"
@@ -15,6 +15,7 @@
     "@aws-lambda-powertools/metrics": "^1.17.0",
     "@aws-lambda-powertools/tracer": "^1.17.0",
     "@summerfi/serverless-shared": "workspace:*",
+    "@summerfi/common": "workspace:*",
     "@summerfi/sdk": "workspace:*",
     "@trpc/server": "11.0.0-next-beta.264",
     "zod": "^3.22.4"

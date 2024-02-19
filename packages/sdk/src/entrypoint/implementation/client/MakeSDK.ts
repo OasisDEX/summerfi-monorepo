@@ -1,6 +1,6 @@
 import { SDKManager } from '~sdk/entrypoint'
 import { SDKManagerClientImpl } from './SDKManagerImplementation'
-import { registerMockProtocols } from '~sdk/mocks/mockProtocol'
+import { registerMockProtocols } from '~sdk/mocks'
 
 /**
  * @function makeSDK

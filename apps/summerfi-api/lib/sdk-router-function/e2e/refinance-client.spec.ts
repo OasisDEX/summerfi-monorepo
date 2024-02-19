@@ -1,10 +1,11 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
+import { zeroAddress } from '@summerfi/common'
+import { ChainFamilyMap } from '@summerfi/sdk/chains'
+import { Wallet } from '@summerfi/sdk/common'
+import { makeSDK } from '@summerfi/sdk/entrypoint'
+import type { PositionId } from '@summerfi/sdk/users'
 import { createTRPCClient, httpBatchLink } from '@trpc/client'
 import type { AppRouter } from '~src/app-router'
-
-import { AAVEv3, LendingPoolParameters } from '@summerfi/sdk/protocols'
-import { RefinanceOrder } from '@summerfi/sdk/orders'
-import { TokenAmount, Percentage } from '@summerfi/sdk/types'
 
 /**
  * Client
@@ -20,15 +21,24 @@ export const sdkClient = createTRPCClient<AppRouter>({
   ],
 })
 
-describe('Refinance flow e2e', () => {
-  it('should get position and protocol', async () => {
-    const positionId = '1'
-    // const prevPosition: Position = user.getPosition(positionId)
+describe('Refinance Client-Server Communication', () => {
+  const wallet = Wallet.createFrom({ hexValue: zeroAddress })
 
-    const position: Position = await sdkClient.getPosition.query({ positionId })
-    expect(position).toEqual({ positionId: '1' })
+  it('Refinance flow', async () => {
+    const sdk = makeSDK()
 
-    const aaveV3: Protocol = await sdkClient.getProtocol.query({ protocolEnum: Protocols.AAVEv3 })
-    expect(aaveV3).toEqual({ protocolEnum: Protocols.AAVEv3 })
+    const positionId: PositionId = {
+      id: '1',
+    }
+    const chain = await sdk.chains.getChain({
+      chainInfo: ChainFamilyMap.Ethereum.Mainnet,
+    })
+    const position = await sdkClient.getPosition.query({
+      id: positionId,
+      chain,
+      wallet,
+    })
+    position?.positionId
+    // todo
   })
 })
