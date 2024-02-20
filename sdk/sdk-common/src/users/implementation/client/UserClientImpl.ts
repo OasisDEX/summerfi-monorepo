@@ -27,7 +27,12 @@ export class UsersClientImpl implements User {
     return []
   }
 
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public async getPosition(params: { id: PositionId }): Promise<Maybe<Position>> {
+    // TODO: Implement
+    // for client impl we'll use communication layer client
+    // to get the position from the network
+    // but for server we'll use a communication layer caller
     return getMockPosition({ chain: this.chain, wallet: this.wallet, id: params.id })
   }
 

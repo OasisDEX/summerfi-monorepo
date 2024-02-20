@@ -3,12 +3,9 @@ const { compilerOptions } = require('@summerfi/typescript-config/tsconfig.test')
 
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = (pkgCompilerOptions = {}) => {
-  const mappings = pathsToModuleNameMapper(
-    { ...compilerOptions.paths, ...pkgCompilerOptions.paths } || {},
-    {
-      prefix: '<rootDir>/',
-    },
-  )
+  const mappings = pathsToModuleNameMapper({ ...pkgCompilerOptions.paths } || {}, {
+    prefix: '<rootDir>/',
+  })
   return {
     roots: ['<rootDir>/src', '<rootDir>/tests', '<rootDir>/node_modules'],
     preset: 'ts-jest',

@@ -2,7 +2,13 @@
   "extends": "@summerfi/typescript-config/tsconfig.test.json",
   "compilerOptions": {
     "rootDir": ".",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "~swap-service": ["./src/index.ts"],
+      "~swap-service/*": ["./src/*"],
+      "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
+      "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"]
+    }
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]

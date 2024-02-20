@@ -3,7 +3,7 @@ import { publicProcedure } from '~src/trpc'
 import { getMockOrder } from '@summerfi/sdk-common/mocks'
 import type { Chain } from '@summerfi/sdk-common/chains'
 import type { Wallet } from '@summerfi/sdk-common/common'
-import type { Simulation, SimulationType } from '@summerfi/sdk-common/orders'
+import type { Order, Simulation, SimulationType } from '@summerfi/sdk-common/orders'
 
 type OrderParams = Parameters<typeof getMockOrder>[0]
 
@@ -17,7 +17,7 @@ export const getOrder = publicProcedure
       ),
     }),
   )
-  .query(async (opts) => {
+  .query(async (opts): Promise<Order> => {
     const params: OrderParams = opts.input
     return await getMockOrder(params)
   })

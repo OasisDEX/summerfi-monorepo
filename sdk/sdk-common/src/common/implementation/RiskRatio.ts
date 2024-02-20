@@ -1,5 +1,9 @@
 import { Printable } from '.'
-import { Percentage } from './Percentage'
+import { Percentage, type PercentageSerialized } from './Percentage'
+
+export type RiskRatioSerialized = {
+  ratio: PercentageSerialized
+}
 
 /**
  * @class RiskRatio
@@ -16,7 +20,19 @@ export class RiskRatio implements Printable {
     return new RiskRatio(params)
   }
 
+  public static deserialize(params: RiskRatioSerialized): RiskRatio {
+    return new RiskRatio({
+      ratio: Percentage.deserialize(params.ratio),
+    })
+  }
+
   toString(): string {
     return `${this.ratio.toString()}`
+  }
+
+  serialize(): RiskRatioSerialized {
+    return {
+      ratio: this.ratio.serialize(),
+    }
   }
 }

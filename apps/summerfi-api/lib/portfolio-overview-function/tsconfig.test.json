@@ -4,7 +4,8 @@
     "rootDir": ".",
     "baseUrl": ".",
     "paths": {
-      "~src/*": ["./src/*"]
+      "~src/*": ["./src/*"],
+      "@summerfi/serverless-shared/*": ["node_modules/@summerfi/serverless-shared/src/*.ts"]
     }
   },
   "include": ["src/**/*.ts"],

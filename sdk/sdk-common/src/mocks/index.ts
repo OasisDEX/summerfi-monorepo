@@ -1,4 +1,4 @@
-export { getMockPosition } from './mockPosition'
+export * from './mockPosition'
 export { getMockOrder } from './mockOrder'
 export { getMockTokenBySymbol } from './mockToken'
 export { mockPool } from './mockPool'

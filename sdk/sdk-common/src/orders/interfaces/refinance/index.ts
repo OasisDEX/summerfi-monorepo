@@ -1,2 +1,2 @@
 export type { RefinanceParameters } from './RefinanceParameters'
-export type { RefinanceSimulation } from './RefinanceSimulation'
+export type { RefinanceSimulation, RefinanceSimulationData } from './RefinanceSimulation'

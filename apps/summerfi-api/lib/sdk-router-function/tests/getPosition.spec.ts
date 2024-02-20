@@ -6,7 +6,7 @@ import { makeSDK } from '@summerfi/sdk-common/entrypoint'
 import type { PositionId } from '@summerfi/sdk-common/users'
 import { testAppRouter } from '~src/test-utils'
 
-describe('refinance client', () => {
+describe('getPosition', () => {
   const sdk = makeSDK()
 
   const wallet = Wallet.createFrom({ hexValue: zeroAddress })
@@ -24,7 +24,7 @@ describe('refinance client', () => {
     }
     const position = await testAppRouter.getPosition({
       id: positionId,
-      chain,
+      chainInfo: chain.chainInfo,
       wallet,
     })
     expect(position?.positionId).toEqual(positionId)

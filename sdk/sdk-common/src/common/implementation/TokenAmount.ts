@@ -2,6 +2,11 @@ import { Printable } from './Printable'
 import { Token } from './Token'
 import { BigNumber } from 'bignumber.js'
 
+export type TokenAmountSerialized = {
+  token: Token
+  amount: string
+}
+
 /**
  * @class TokenAmount
  * @description Represents an amount of a certain token. The amount is represented as a string to avoid
@@ -23,6 +28,10 @@ export class TokenAmount implements Printable {
     return new TokenAmount(params.token, params.amount)
   }
 
+  public static deserialize(params: TokenAmountSerialized): TokenAmount {
+    return new TokenAmount(params.token, params.amount)
+  }
+
   public toString(): string {
     return `${this.amount} ${this.token.symbol}`
   }
@@ -33,5 +42,9 @@ export class TokenAmount implements Printable {
 
   public toBN(): BigNumber {
     return new BigNumber(this.amount)
+  }
+
+  serialize(): TokenAmountSerialized {
+    return { token: this.token, amount: this.amount }
   }
 }

@@ -2,6 +2,15 @@ import { ChainInfo } from '~sdk-common/chains'
 import { Address } from './Address'
 import { Printable } from './Printable'
 
+// create serialized type
+export interface TokenSerialized {
+  chainInfo: ChainInfo
+  address: Address
+  symbol: string
+  name: string
+  decimals: number
+}
+
 /**
  * @name Token
  * @description Represents a token on a blockchain and provides information on the following info:
@@ -32,7 +41,7 @@ export class Token implements Printable {
     this.decimals = params.decimals
   }
 
-  public static createFrom(params: {
+  static createFrom(params: {
     chainInfo: ChainInfo
     address: Address
     symbol: string
@@ -42,7 +51,27 @@ export class Token implements Printable {
     return new Token(params)
   }
 
-  public toString(): string {
+  deserialize(params: TokenSerialized): Token {
+    return new Token({
+      chainInfo: params.chainInfo,
+      address: params.address,
+      symbol: params.symbol,
+      name: params.name,
+      decimals: params.decimals,
+    })
+  }
+
+  toString(): string {
     return `${this.symbol} (${this.name})`
+  }
+
+  serialize(): TokenSerialized {
+    return {
+      chainInfo: this.chainInfo,
+      address: this.address,
+      symbol: this.symbol,
+      name: this.name,
+      decimals: this.decimals,
+    }
   }
 }

@@ -2,20 +2,23 @@ import { z } from 'zod'
 import { publicProcedure } from '~src/trpc'
 import { mockPool } from '@summerfi/sdk-common/mocks'
 import type { Wallet } from '@summerfi/sdk-common/common'
-import type { PoolParameters, Protocol } from '@summerfi/sdk-common/protocols'
+import type { Pool, PoolParameters, Protocol } from '@summerfi/sdk-common/protocols'
+import type { Maybe } from '@summerfi/sdk-common/utils'
 
 type PoolParams = Parameters<typeof mockPool>[0]
 
 export const getPool = publicProcedure
   .input(
     z.object({
-      protocol: z.custom<Protocol>((id) => id !== undefined),
-      poolParameters: z.custom<PoolParameters>((chain) => chain !== undefined),
-      protocolParameters: z.custom<Wallet>((wallet) => wallet !== undefined).optional(),
+      protocol: z.custom<Protocol>((protocol) => protocol !== undefined),
+      poolParameters: z.custom<PoolParameters>((poolParameter) => poolParameter !== undefined),
+      protocolParameters: z
+        .custom<Wallet>((protocolParameters) => protocolParameters !== undefined)
+        .optional(),
     }),
   )
-  .query(async (opts) => {
-    // get position from chain / graph
+  .query(async (opts): Promise<Maybe<Pool>> => {
+    // get position from poolParameter / graph
     const params: PoolParams = opts.input
     return await mockPool(params)
   })
