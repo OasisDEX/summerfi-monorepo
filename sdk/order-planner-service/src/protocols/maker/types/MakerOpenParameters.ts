@@ -1,4 +1,4 @@
-import { Address } from '@summerfi/sdk/common/index'
+import { Address } from '@summerfi/sdk-common/common/index'
 
 export type MakerOpenParameters = {
   joinAddress: Address

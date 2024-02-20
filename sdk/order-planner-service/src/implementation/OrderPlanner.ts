@@ -1,7 +1,7 @@
-import { Order, Simulation, SimulationSteps, SimulationType, Step } from '@summerfi/sdk/orders'
-import { Maybe } from '@summerfi/sdk/utils'
+import { Order, Simulation, SimulationType } from '@summerfi/sdk-common/orders'
+import { Maybe } from '@summerfi/sdk-common/utils'
 import { IOrderPlanner } from '~orderplanner/interfaces/IOrderPlanner'
-import { ActionCall, StepBuildersMap } from '~orderplanner/interfaces'
+import { ActionCall, OrderPlannerContext, StepBuildersMap } from '~orderplanner/interfaces'
 import { Deployment } from '@summerfi/deployment-utils'
 import { encodeStrategy, getStrategyName } from '~orderplanner/utils'
 
@@ -16,26 +16,27 @@ export class OrderPlanner implements IOrderPlanner {
     this._stepBuildersMap = stepBuildersMap
   }
 
-  buildOrder(simulation: Simulation<SimulationType, unknown>): Maybe<Order> {
-    const simulationCalls = simulation.steps.reduce(
-      (actions: ActionCall[], step: Step<SimulationSteps>) => {
-        const stepBuilder = this._stepBuildersMap[step.type]
-        if (!stepBuilder) {
-          throw new Error(`No step builder found for step type ${step.type}`)
-        }
+  buildOrder(simulation: Simulation<SimulationType>): Maybe<Order> {
+    const context: OrderPlannerContext = {
+      calls: [],
+    }
 
-        const actionCalls = stepBuilder({ simulation, step })
+    const simulationCalls = simulation.steps.reduce((actions, step) => {
+      const stepBuilder = this._stepBuildersMap[step.type]
+      if (!stepBuilder) {
+        throw new Error(`No step builder found for step type ${step.type}`)
+      }
 
-        return [...actions, ...actionCalls]
-      },
-      [] as ActionCall[],
-    )
+      const actionCalls = stepBuilder({ context, simulation, step })
+
+      return [...actions, ...actionCalls]
+    }, [] as ActionCall[])
 
     return this._generateOrder(simulation, simulationCalls)
   }
 
   private _generateOrder(
-    simulation: Simulation<SimulationType, unknown>,
+    simulation: Simulation<SimulationType>,
     simulationCalls: ActionCall[],
   ): Order {
     const executorInfo = this._deployment.contracts[this.ExecutorContractName]

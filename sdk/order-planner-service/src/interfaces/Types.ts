@@ -1,5 +1,6 @@
-import { Simulation, SimulationSteps, SimulationType, Step, Steps } from '@summerfi/sdk/orders'
+import { Simulation, SimulationSteps, SimulationType, Steps } from '@summerfi/sdk-common/orders'
 import { ActionCall } from './Action'
+import { OrderPlannerContext } from './OrderPlannerContext'
 
 export type Version = number
 
@@ -7,15 +8,12 @@ export type FilterStep<T extends SimulationSteps, S extends Steps> = S extends {
   ? S
   : never
 
-export type StepBuilder<S extends Step<SimulationSteps, unknown, unknown>> = (params: {
+export type StepBuilder<S extends Steps> = (params: {
+  context: OrderPlannerContext
   simulation: Simulation<SimulationType>
   step: S
 }) => ActionCall[]
 
 export type StepBuildersMap = { [T in Steps['type']]: StepBuilder<FilterStep<T, Steps>> }
 
-/* This values are coming from TakeFlashloan contract data types */
-export enum FlashloanProvider {
-  DssFlash = 0,
-  Balancer = 1,
-}
+export type Test = FilterStep<SimulationSteps.Flashloan, Steps>

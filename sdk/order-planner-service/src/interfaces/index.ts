@@ -9,3 +9,4 @@ export type {
 export type { ActionCall } from './Action'
 export { StrategyName } from './Strategy'
 export type { StepBuildersMap, StepBuilder, Version } from './Types'
+export type { OrderPlannerContext } from './OrderPlannerContext'

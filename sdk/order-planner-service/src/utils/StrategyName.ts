@@ -1,5 +1,5 @@
-import { Simulation, SimulationType } from '@summerfi/sdk/orders'
-import { Maybe } from '@summerfi/sdk/utils'
+import { Simulation, SimulationType } from '@summerfi/sdk-common/orders'
+import { Maybe } from '@summerfi/sdk-common/utils'
 
 // TODO: implement this properly
 export function getStrategyName(simulation: Simulation<SimulationType, unknown>): Maybe<string> {

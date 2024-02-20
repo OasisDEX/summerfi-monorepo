@@ -1,4 +1,4 @@
-import { Address, TokenAmount } from '@summerfi/sdk/common/index'
+import { Address, TokenAmount } from '@summerfi/sdk-common/common/index'
 import { ActionParameters } from '~orderplanner'
 
 export interface PullTokenParameters extends ActionParameters {

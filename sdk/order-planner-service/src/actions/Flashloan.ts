@@ -1,8 +1,7 @@
 import { ActionCall } from '~orderplanner/interfaces/Action'
 import { BaseAction } from './BaseAction'
-import { TokenAmount } from '@summerfi/sdk/common'
+import { TokenAmount } from '@summerfi/sdk-common/common'
 import { encodeAction } from '~orderplanner/utils/EncodeAction'
-import { FlashloanProvider } from '~orderplanner/interfaces/Types'
 
 type OptionalActionCall = ActionCall & {
   skipped: boolean
@@ -19,7 +18,7 @@ export class Flashloan extends BaseAction {
 
   public encode(params: {
     amount: TokenAmount
-    provider: FlashloanProvider
+    provider: number
     calls: ActionCall[]
   }): ActionCall {
     const calls: OptionalActionCall[] = params.calls.map((call) => {

@@ -10,6 +10,7 @@ export type {
   SwapStep,
   ReturnFunds,
 } from './Simulation'
+export { FlashloanProvider } from './Simulation'
 export { SimulationSteps } from './Simulation'
 export { SimulationType } from './SimulationType'
 export type { Order } from './Order'

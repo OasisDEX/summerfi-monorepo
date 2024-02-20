@@ -1,6 +1,6 @@
 import { ActionCall } from '~orderplanner/interfaces/Action'
 import { BaseAction } from './BaseAction'
-import { Address, TokenAmount } from '@summerfi/sdk/common'
+import { Address, TokenAmount } from '@summerfi/sdk-common/common'
 import { encodeAction } from '~orderplanner/utils/EncodeAction'
 
 export class PullToken extends BaseAction {

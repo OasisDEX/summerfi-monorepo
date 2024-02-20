@@ -1,4 +1,4 @@
-import { Maybe } from '@summerfi/sdk/utils'
+import { Maybe } from '@summerfi/sdk-common/utils'
 
 export type VarNameType = string
 export type StepNameType = string
