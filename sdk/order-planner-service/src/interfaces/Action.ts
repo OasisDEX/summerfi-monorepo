@@ -6,3 +6,5 @@ export type ActionCall = {
   targetHash: string
   callData: string
 }
+
+export type ActionCallBatch = ActionCall[]

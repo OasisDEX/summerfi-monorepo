@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js'
 import { Printable } from './Printable'
 
 /**
@@ -21,5 +22,10 @@ export class Percentage implements Printable {
 
   add(percentage: Percentage): Percentage {
     return Percentage.createFrom({ percentage: this.value + percentage.value })
+  }
+
+  toBaseUnit(params: { decimals: number }): string {
+    const factor = new BigNumber(10).pow(params.decimals)
+    return new BigNumber(this.value).multipliedBy(factor).toFixed(0).toString()
   }
 }

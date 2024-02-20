@@ -12,9 +12,13 @@ export enum SimulationSteps {
   PaybackFlashloan = 'PaybackFlashloan',
 }
 
-interface ValueReference<T> {
+export interface ValueReference<T> {
   estimatedValue: T
   path: [string, string]
+}
+
+export function isValueReference<T>(value: T | ValueReference<T>): value is ValueReference<T> {
+  return (value as ValueReference<T>).estimatedValue !== undefined
 }
 
 export enum FlashloanProvider {
@@ -24,6 +28,7 @@ export enum FlashloanProvider {
 
 export interface Step<T extends SimulationSteps, I, O> {
   type: T
+  name: string
   inputs: I
   outputs: O
 }

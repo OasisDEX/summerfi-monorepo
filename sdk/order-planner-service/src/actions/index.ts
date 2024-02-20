@@ -1,3 +1,4 @@
 export { BaseAction } from './BaseAction'
-export { PullToken } from './PullToken'
-export { Flashloan } from './Flashloan'
+export { PullTokenAction } from './PullTokenAction'
+export { FlashloanAction } from './FlashloanAction'
+export { SwapAction } from './SwapAction'

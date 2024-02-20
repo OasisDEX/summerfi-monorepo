@@ -1,6 +1,5 @@
 import { Simulation, SimulationSteps, SimulationType, Steps } from '@summerfi/sdk-common/orders'
-import { ActionCall } from './Action'
-import { OrderPlannerContext } from './OrderPlannerContext'
+import { OrderPlannerContext } from '../context/OrderPlannerContext'
 
 export type Version = number
 
@@ -12,7 +11,7 @@ export type StepBuilder<S extends Steps> = (params: {
   context: OrderPlannerContext
   simulation: Simulation<SimulationType>
   step: S
-}) => ActionCall[]
+}) => void
 
 export type StepBuildersMap = { [T in Steps['type']]: StepBuilder<FilterStep<T, Steps>> }
 

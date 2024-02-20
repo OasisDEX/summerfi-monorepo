@@ -6,7 +6,7 @@ export type {
   StrategySingleStep,
   StrategyStep,
 } from './Strategy'
-export type { ActionCall } from './Action'
+export type { ActionCall, ActionCallBatch } from './Action'
 export { StrategyName } from './Strategy'
 export type { StepBuildersMap, StepBuilder, Version } from './Types'
-export type { OrderPlannerContext } from './OrderPlannerContext'
+export { OrderPlannerContext } from '../context/OrderPlannerContext'

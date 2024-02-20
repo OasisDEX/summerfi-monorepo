@@ -1,7 +1,12 @@
-import { Order, Simulation, SimulationType } from '@summerfi/sdk-common/orders'
+import { Order, Simulation, SimulationType, Steps } from '@summerfi/sdk-common/orders'
 import { Maybe } from '@summerfi/sdk-common/utils'
 import { IOrderPlanner } from '~orderplanner/interfaces/IOrderPlanner'
-import { ActionCall, OrderPlannerContext, StepBuildersMap } from '~orderplanner/interfaces'
+import {
+  ActionCall,
+  OrderPlannerContext,
+  StepBuilder,
+  StepBuildersMap,
+} from '~orderplanner/interfaces'
 import { Deployment } from '@summerfi/deployment-utils'
 import { encodeStrategy, getStrategyName } from '~orderplanner/utils'
 
@@ -17,22 +22,30 @@ export class OrderPlanner implements IOrderPlanner {
   }
 
   buildOrder(simulation: Simulation<SimulationType>): Maybe<Order> {
-    const context: OrderPlannerContext = {
-      calls: [],
-    }
+    const context: OrderPlannerContext = new OrderPlannerContext()
 
-    const simulationCalls = simulation.steps.reduce((actions, step) => {
-      const stepBuilder = this._stepBuildersMap[step.type]
+    context.startSubContext()
+
+    for (const step of simulation.steps) {
+      const stepBuilder = this.getStepBuilder(step)
       if (!stepBuilder) {
         throw new Error(`No step builder found for step type ${step.type}`)
       }
 
-      const actionCalls = stepBuilder({ context, simulation, step })
+      stepBuilder({ context, simulation, step })
+    }
 
-      return [...actions, ...actionCalls]
-    }, [] as ActionCall[])
+    const { callsBatch } = context.endSubContext()
 
-    return this._generateOrder(simulation, simulationCalls)
+    if (context.subContextLevels !== 0) {
+      throw new Error('Mismatched nested calls levels, probably a missing endSubContext call')
+    }
+
+    return this._generateOrder(simulation, callsBatch)
+  }
+
+  private getStepBuilder<T extends Steps>(step: T): Maybe<StepBuilder<T>> {
+    return this._stepBuildersMap[step.type] as StepBuilder<T>
   }
 
   private _generateOrder(
