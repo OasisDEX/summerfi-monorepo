@@ -3,10 +3,15 @@ export const AaveStopLossToDebtV2ID = 112n as const
 export const SparkStopLossToCollateralV2ID = 117n as const
 export const SparkStopLossToDebtV2ID = 118n as const
 
-export const DmaAaveStopLossToCollateralV2ID = 123n as const
-export const DmaAaveStopLossToDebtV2ID = 124n as const
-export const DmaSparkStopLossToCollateralV2ID = 125n as const
-export const DmaSparkStopLossToDebtV2ID = 126n as const
+export const LegacyDmaAaveStopLossToCollateralV2ID = 123n as const
+export const LegacyDmaAaveStopLossToDebtV2ID = 124n as const
+export const LegacyDmaSparkStopLossToCollateralV2ID = 125n as const
+export const LegacyDmaSparkStopLossToDebtV2ID = 126n as const
+
+export const DmaAaveStopLossToCollateralV2ID = 127n as const
+export const DmaAaveStopLossToDebtV2ID = 128n as const
+export const DmaSparkStopLossToCollateralV2ID = 129n as const
+export const DmaSparkStopLossToDebtV2ID = 130n as const
 
 export const DmaAaveBasicBuyV2ID = 121n as const
 export const DmaAaveBasicSellV2ID = 122n as const
