@@ -5,7 +5,7 @@ import { Maybe } from '~sdk-common/utils'
 
 export async function getMockTokenBySymbol(params: {
   chainInfo: ChainInfo
-  symbol: TokenSymbol
+  symbol: TokenSymbol | string
 }): Promise<Maybe<Token>> {
   switch (params.symbol) {
     case TokenSymbol.DAI:

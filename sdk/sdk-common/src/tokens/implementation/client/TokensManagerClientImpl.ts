@@ -19,7 +19,7 @@ export class TokensManagerClientImpl implements TokensManager {
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async getTokenBySymbol(params: { symbol: TokenSymbol }): Promise<Maybe<Token>> {
+  public async getTokenBySymbol(params: { symbol: TokenSymbol | string }): Promise<Maybe<Token>> {
     // TODO: Implement
     return getMockTokenBySymbol({ chainInfo: this.chainInfo, symbol: params.symbol })
   }

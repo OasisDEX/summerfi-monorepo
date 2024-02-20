@@ -131,21 +131,27 @@ const upsertErrorsValidation = paramsSchema
       },
     },
   )
-// .refine(
-//   ({ position, chainId, action }) => {
-//     if (action === SupportedActions.Update) {
-//       return true
-//     }
-//     const minNetValue = minNetValueMap[chainId][ProtocolId.AAVE3]
-//     return position.netValueUSD >= minNetValue
-//   },
-//   {
-//     message: 'Net value is too low to setup auto buy',
-//     params: {
-//       code: AutoBuyTriggerCustomErrorCodes.NetValueTooLowToSetupAutoBuy,
-//     },
-//   },
-// )
+  .refine(
+    ({ position, triggers, triggerData }) => {
+      const currentSLTriggerParams = (
+        triggers.triggers.aaveStopLossToCollateral ??
+        triggers.triggers.aaveStopLossToDebt ??
+        triggers.triggers.aaveStopLossToCollateralDMA ??
+        triggers.triggers.aaveStopLossToDebtDMA
+      )?.decodedParams
+      if (triggers.flags.isAaveStopLossEnabled && currentSLTriggerParams?.executionLtv) {
+        const isPositionLtvLowerAutoBuyTargetLTV = position.ltv > triggerData.targetLTV
+        return isPositionLtvLowerAutoBuyTargetLTV
+      }
+      return true
+    },
+    {
+      message: 'Your Auto-Buy will trigger your Stop-Loss',
+      params: {
+        code: AutoBuyTriggerCustomErrorCodes.StopLossTriggerLowerThanAutoBuy,
+      },
+    },
+  )
 
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
