@@ -69,7 +69,11 @@ export const isBigInt = (value: string) => {
   }
 }
 
-export const safeParseBigInt = (value: string) => {
+export const safeParseBigInt = (value: string | undefined) => {
+  if (value === undefined) {
+    return undefined
+  }
+
   if (isBigInt(value)) {
     return BigInt(value)
   }

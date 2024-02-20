@@ -17,6 +17,7 @@ export type Trigger = {
   triggerId: string
   triggerData: string
   triggerType: bigint
+  decodedParams: unknown
 }
 
 export type AaveStopLossToCollateral = Trigger & {
@@ -198,4 +199,26 @@ export type GetTriggersResponse = {
     aaveBasicSell?: Trigger
   }
   additionalData?: Record<string, unknown>
+}
+
+export type AllDecodedParamsKeys =
+  | keyof AaveStopLossToCollateral['decodedParams']
+  | keyof AaveStopLossToDebt['decodedParams']
+  | keyof SparkStopLossToCollateral['decodedParams']
+  | keyof SparkStopLossToDebt['decodedParams']
+  | keyof DmaAaveBasicBuy['decodedParams']
+  | keyof DmaAaveBasicSell['decodedParams']
+  | keyof DmaAaveTrailingStopLoss['decodedParams']
+
+export const getPropertyFromDecodedParams = (
+  decodedParams: unknown,
+  property: AllDecodedParamsKeys,
+): string | undefined => {
+  if (typeof decodedParams !== 'object' || decodedParams === null) {
+    return undefined
+  }
+  if (property in decodedParams) {
+    return (decodedParams as Record<string, string>)[property]
+  }
+  return undefined
 }
