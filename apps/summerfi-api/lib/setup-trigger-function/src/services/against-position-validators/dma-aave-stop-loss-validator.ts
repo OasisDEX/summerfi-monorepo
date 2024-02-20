@@ -81,38 +81,6 @@ const upsertErrorsValidation = paramsSchema
       },
     },
   )
-  .refine(
-    ({ triggers }) => {
-      const currentAutoSell = triggers.triggers.aaveBasicSell
-      if (currentAutoSell) {
-        const minSellPrice = safeParseBigInt(currentAutoSell.decodedParams.minSellPrice) ?? 0n
-        return minSellPrice > 0n
-      }
-      return true
-    },
-    {
-      message: 'Your Auto-Sell will make your stop loss not trigger.',
-      params: {
-        code: StopLossErrorCodes.StopLossNeverTriggeredWithNoAutoSellMinSellPrice,
-      },
-    },
-  )
-  .refine(
-    ({ triggers, executionPrice }) => {
-      const currentAutoSell = triggers.triggers.aaveBasicSell
-      if (currentAutoSell) {
-        const minSellPrice = safeParseBigInt(currentAutoSell.decodedParams.minSellPrice) ?? 0n
-        return minSellPrice > executionPrice
-      }
-      return true
-    },
-    {
-      message: 'Your Auto-Sell will make your stop loss not trigger.',
-      params: {
-        code: StopLossErrorCodes.StopLossNeverTriggeredWithLowerAutoSellMinSellPrice,
-      },
-    },
-  )
 
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {

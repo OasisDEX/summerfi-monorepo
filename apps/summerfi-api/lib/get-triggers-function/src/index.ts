@@ -31,6 +31,10 @@ import {
   DmaSparkStopLossToCollateralV2ID,
   DmaSparkStopLossToDebtV2ID,
   GetTriggersResponse,
+  LegacyDmaAaveStopLossToCollateralV2ID,
+  LegacyDmaAaveStopLossToDebtV2ID,
+  LegacyDmaSparkStopLossToCollateralV2ID,
+  LegacyDmaSparkStopLossToDebtV2ID,
   SparkStopLossToCollateral,
   SparkStopLossToCollateralDMA,
   SparkStopLossToCollateralV2ID,
@@ -101,7 +105,11 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     })[0]
 
   const aaveStopLossToCollateralDMA: AaveStopLossToCollateralDMA | undefined = triggers.triggers
-    .filter((trigger) => trigger.triggerType == DmaAaveStopLossToCollateralV2ID)
+    .filter(
+      (trigger) =>
+        trigger.triggerType == DmaAaveStopLossToCollateralV2ID ||
+        trigger.triggerType == LegacyDmaAaveStopLossToCollateralV2ID,
+    )
     .map((trigger) => {
       return {
         triggerTypeName: 'DmaAaveStopLossToCollateralV2' as const,
@@ -123,7 +131,11 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     })[0]
 
   const aaveStopLossToDebtDMA: AaveStopLossToDebtDMA | undefined = triggers.triggers
-    .filter((trigger) => trigger.triggerType == DmaAaveStopLossToDebtV2ID)
+    .filter(
+      (trigger) =>
+        trigger.triggerType == DmaAaveStopLossToDebtV2ID ||
+        trigger.triggerType == LegacyDmaAaveStopLossToDebtV2ID,
+    )
     .map((trigger) => {
       return {
         triggerTypeName: 'DmaAaveStopLossToDebtV2' as const,
@@ -145,7 +157,11 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     })[0]
 
   const sparkStopLossToCollateralDMA: SparkStopLossToCollateralDMA | undefined = triggers.triggers
-    .filter((trigger) => trigger.triggerType == DmaSparkStopLossToCollateralV2ID)
+    .filter(
+      (trigger) =>
+        trigger.triggerType == DmaSparkStopLossToCollateralV2ID ||
+        trigger.triggerType == LegacyDmaSparkStopLossToCollateralV2ID,
+    )
     .map((trigger) => {
       return {
         triggerTypeName: 'DmaSparkStopLossToCollateralV2' as const,
@@ -167,7 +183,11 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     })[0]
 
   const sparkStopLossToDebtDMA: SparkStopLossToDebtDMA | undefined = triggers.triggers
-    .filter((trigger) => trigger.triggerType == DmaSparkStopLossToDebtV2ID)
+    .filter(
+      (trigger) =>
+        trigger.triggerType == DmaSparkStopLossToDebtV2ID ||
+        trigger.triggerType == LegacyDmaSparkStopLossToDebtV2ID,
+    )
     .map((trigger) => {
       return {
         triggerTypeName: 'DmaSparkStopLossToDebtV2' as const,
