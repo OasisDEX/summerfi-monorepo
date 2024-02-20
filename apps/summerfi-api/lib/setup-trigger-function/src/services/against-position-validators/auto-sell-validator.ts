@@ -19,7 +19,6 @@ import {
 } from '@summerfi/serverless-contracts/get-triggers-response'
 import { AgainstPositionValidator } from './validators-types'
 import { chainIdSchema } from '@summerfi/serverless-shared'
-import { calculateCollateralPriceInDebtBasedOnLtv } from '../calculate-collateral-price-in-debt-based-on-ltv'
 
 const paramsSchema = z.object({
   position: positionSchema,
@@ -82,50 +81,6 @@ const upsertErrorsValidation = paramsSchema
         code: AutoSellTriggerCustomErrorCodes.AutoSellTriggerHigherThanAutoBuyTarget,
       },
       path: ['triggerData', 'executionLTV'],
-    },
-  )
-  .refine(
-    ({ triggers, triggerData, position }) => {
-      const stopLossTrigger = triggers.triggerGroup.aaveStopLoss
-      if (!stopLossTrigger) {
-        return true
-      }
-
-      const executionLtv = getPropertyFromDecodedParams(
-        stopLossTrigger.decodedParams,
-        'executionLtv',
-      )
-
-      const stopLossExecutionPrice = calculateCollateralPriceInDebtBasedOnLtv({
-        ...position,
-        ltv: safeParseBigInt(executionLtv) ?? 0n,
-      })
-
-      return triggerData.minSellPrice > stopLossExecutionPrice
-    },
-    {
-      message: 'Your auto-Sell will make your stop loss not trigger.',
-      params: {
-        code: AutoSellTriggerCustomErrorCodes.StopLossNeverTriggeredWithLowerAutoSellMinSellPrice,
-      },
-      path: ['triggerData', 'executionLTV'],
-    },
-  )
-  .refine(
-    ({ triggers, triggerData }) => {
-      const stopLossTrigger = triggers.triggerGroup.aaveStopLoss
-      if (!stopLossTrigger) {
-        return true
-      }
-
-      return triggerData.useMinSellPrice
-    },
-    {
-      message: 'Auto sell cannot be defined with current stop loss',
-      params: {
-        code: AutoSellTriggerCustomErrorCodes.StopLossNeverTriggeredWithNoAutoSellMinSellPrice,
-      },
-      path: ['triggerData', 'minSellPrice'],
     },
   )
   .refine(
