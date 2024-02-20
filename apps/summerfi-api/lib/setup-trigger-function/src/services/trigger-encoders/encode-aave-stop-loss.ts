@@ -6,10 +6,10 @@ import {
   parseAbiParameters,
   stringToBytes,
 } from 'viem'
-import { OPERATION_NAMES } from '@oasisdex/dma-library'
 import { MAX_COVERAGE_BASE } from './defaults'
 import { automationBotAbi } from '~abi'
 import { DmaAaveStopLossTriggerData } from '~types'
+import { TriggerType } from '@oasisdex/automation'
 
 export const encodeAaveStopLoss: EncoderFunction<DmaAaveStopLossTriggerData> = (
   position,
@@ -27,7 +27,17 @@ export const encodeAaveStopLoss: EncoderFunction<DmaAaveStopLossTriggerData> = (
       'uint256 executionLtv',
   )
 
-  const operationName = OPERATION_NAMES.aave.v3.CLOSE_POSITION
+  const operationName =
+    triggerData.type == BigInt(TriggerType.DmaAaveStopLossToCollateralV2)
+      ? 'CloseAndRemainAAVEV3Position'
+      : triggerData.type == BigInt(TriggerType.DmaAaveStopLossToDebtV2)
+        ? 'CloseAAVEV3Position_4'
+        : undefined
+
+  if (operationName === undefined) {
+    throw new Error('Invalid trigger type')
+  }
+
   const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
 
   const encodedTriggerData = encodeAbiParameters(abiParameters, [

@@ -6,7 +6,6 @@ import {
   parseAbiParameters,
   stringToBytes,
 } from 'viem'
-import { OPERATION_NAMES } from '@oasisdex/dma-library'
 import { MAX_COVERAGE_BASE } from './defaults'
 import { automationBotAbi } from '~abi'
 import { DmaAaveTrailingStopLossTriggerData, PositionLike } from '~types'
@@ -33,7 +32,11 @@ export const encodeAaveTrailingStopLoss = (
       'bool closeToCollateral',
   )
 
-  const operationName = OPERATION_NAMES.aave.v3.CLOSE_POSITION
+  const operationName =
+    triggerData.token === position.collateral.token.address
+      ? 'CloseAndRemainAAVEV3Position'
+      : 'CloseAAVEV3Position_4'
+
   const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
 
   const encodedTriggerData = encodeAbiParameters(abiParameters, [

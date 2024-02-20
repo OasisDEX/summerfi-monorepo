@@ -304,14 +304,14 @@ importers:
         specifier: ^1.17.0
         version: 1.17.0
       '@oasisdex/addresses':
-        specifier: 0.1.16-dma-v2-workers.7
-        version: 0.1.16-dma-v2-workers.7
+        specifier: 0.1.16-dma-v2-workers.11
+        version: 0.1.16-dma-v2-workers.11
       '@oasisdex/automation':
-        specifier: ^1.6.0-alpha.14
-        version: 1.6.0-alpha.14
+        specifier: ^1.6.0-alpha.16
+        version: 1.6.0-alpha.16
       '@oasisdex/dma-library':
-        specifier: 0.5.21-dma-v2-workers.18
-        version: 0.5.21-dma-v2-workers.18
+        specifier: 0.5.21-dma-v2-workers.19-test.3
+        version: 0.5.21-dma-v2-workers.19-test.3
       '@summerfi/prices-subgraph':
         specifier: workspace:*
         version: link:../../../../packages/prices-subgraph
@@ -5310,16 +5310,16 @@ packages:
       '@nomicfoundation/solidity-analyzer-win32-x64-msvc': 0.1.1
     dev: true
 
-  /@oasisdex/addresses@0.1.16-dma-v2-workers.7:
-    resolution: {integrity: sha512-0+BF4FVFWHzkTjjF8KwXjveuDRXQu+5N5fwOPXl/I+Ahs0XyPvfUr13XUwvVD5Euzkx9Y/eOYQ2iSWKE1mFEyw==}
+  /@oasisdex/addresses@0.1.16-dma-v2-workers.11:
+    resolution: {integrity: sha512-eeILfQbJAKX+v0ArlWKEpF7MWMpcyl4U7v2Xu1pDEeZhOkZZbS1XyT9Vhvdyy95x04npGa8Dn1zAZSap0NYtkQ==}
     dev: false
 
   /@oasisdex/addresses@0.1.36:
     resolution: {integrity: sha512-HRTjoOdOcWslSFycgifqOvmhwgvHhTPJxnkQZRkB2qFMWstMYX10598iv+lZmFJ1XJz8Z7wyUL2oaLWl7cek2A==}
     dev: false
 
-  /@oasisdex/automation@1.6.0-alpha.14:
-    resolution: {integrity: sha512-ne4GmS+Ju1drIiKvS6FuxDJaBIsp0YYPxmuVG7646V1RYYRUNdrISNCaTPEKMeAmjN3feB8GtC79u0v6iW4Uwg==}
+  /@oasisdex/automation@1.6.0-alpha.16:
+    resolution: {integrity: sha512-VTPo+IHCrgJCm35IMRisjVrD6vAeHo+DsFm/epDjrGO6qyPKSjWvux10V53h8TDgpVjio8lUZmEmQfHbzOWY1A==}
     dependencies:
       ethers: 5.7.2
     transitivePeerDependencies:
@@ -5327,8 +5327,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@oasisdex/dma-library@0.5.21-dma-v2-workers.18:
-    resolution: {integrity: sha512-ECz8dZTnjHts1MZVourCnDTXb8WZa6uQmLI0WFn1c3lpUCcNT4d9rUzpl2Z001mRp6X01/N3dCosJBC6kt3v1w==}
+  /@oasisdex/dma-library@0.5.21-dma-v2-workers.19-test.3:
+    resolution: {integrity: sha512-umc3XoFrS66or2o1QRontXM3L0TwOuAVhwLA6StZZQmhx8p1EvhoARNv6j9zhtyjqPrmC/YsSpbcY3h/ocCzgQ==}
     dependencies:
       bignumber.js: 9.0.1
       ethers: 5.6.2
@@ -9564,6 +9564,7 @@ packages:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
     dev: true
+    bundledDependencies: false
 
   /event-stream@3.3.4:
     resolution: {integrity: sha512-QHpkERcGsR0T7Qm3HNJSyXKEEj8AHNxkY3PK8TS2KJvQ7NiSHe3DDpwVKKtoYprL/AreyzFBeIkBIWChAqn60g==}
