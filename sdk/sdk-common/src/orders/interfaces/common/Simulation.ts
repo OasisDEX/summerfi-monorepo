@@ -95,7 +95,7 @@ export interface SwapStep
 
 export interface ReturnFunds extends Step<SimulationSteps.ReturnFunds, { token: Token }, never> {}
 
-export interface RepayFlashloan extends Step<SimulationSteps.PaybackFlashloan, never, never> {}
+export interface PaybackFlashloan extends Step<SimulationSteps.PaybackFlashloan, never, never> {}
 
 export type Steps =
   | FlashloanStep
@@ -104,7 +104,7 @@ export type Steps =
   | PaybackWithdrawStep
   | SwapStep
   | ReturnFunds
-  | RepayFlashloan
+  | PaybackFlashloan
 
 /**
  * @interface Simulation

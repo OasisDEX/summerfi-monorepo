@@ -4,7 +4,7 @@ export type {
   Steps,
   PullTokenStep,
   FlashloanStep,
-  RepayFlashloan,
+  PaybackFlashloan,
   DepositBorrowStep,
   PaybackWithdrawStep,
   SwapStep,

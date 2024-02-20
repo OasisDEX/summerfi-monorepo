@@ -1,10 +1,7 @@
 import { Simulation, SimulationType, SwapStep } from '@summerfi/sdk-common/orders'
 import { StepBuilder, OrderPlannerContext } from '~orderplanner/interfaces'
-import { ActionNames } from '@summerfi/deployment-types'
 import { SwapAction } from '~orderplanner/actions'
 import { Percentage } from '@summerfi/sdk-common/common'
-
-export const PullTokenActionList: ActionNames[] = ['PullToken']
 
 export const SwapBuilder: StepBuilder<SwapStep> = (params: {
   context: OrderPlannerContext
