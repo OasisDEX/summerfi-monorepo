@@ -12,7 +12,8 @@
       "@summerfi/common": ["node_modules/@summerfi/common/src/index.ts"],
       "~swap-service": ["src/index.ts"],
       "~swap-service/*": ["src/*"],
-      "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"]
+      "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
+      "~src/*": ["src/*"]
     }
   },
   "ts-node": {

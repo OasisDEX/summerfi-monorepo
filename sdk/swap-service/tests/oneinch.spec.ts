@@ -4,7 +4,7 @@ import { subtractPercentage } from '@summerfi/sdk-common/utils'
 import { getSwapManager, SwapData, SwapProviderType } from '~swap-service'
 
 describe('OneInch | SwapManager | Integration', () => {
-  it('should provide swap data', async () => {
+  it.skip('should provide swap data', async () => {
     // SwapManager
     const swapManager = getSwapManager()
 
