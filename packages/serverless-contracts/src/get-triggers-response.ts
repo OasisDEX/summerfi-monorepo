@@ -16,7 +16,7 @@ export const DmaSparkStopLossToDebtV2ID = 130n as const
 export const DmaAaveBasicBuyV2ID = 121n as const
 export const DmaAaveBasicSellV2ID = 122n as const
 
-export const DmaAaveTrailingStopLoss = 10005n as const
+export const DmaAaveTrailingStopLoss = 10006n as const
 
 export type Trigger = {
   triggerId: string
