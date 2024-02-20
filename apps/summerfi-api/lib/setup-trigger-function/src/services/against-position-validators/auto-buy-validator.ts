@@ -12,7 +12,10 @@ import {
   SupportedActions,
   ONE_PERCENT,
 } from '~types'
-import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
+import {
+  getPropertyFromDecodedParams,
+  GetTriggersResponse,
+} from '@summerfi/serverless-contracts/get-triggers-response'
 import { z } from 'zod'
 import { AgainstPositionValidator } from './validators-types'
 import { chainIdSchema } from '@summerfi/serverless-shared'
@@ -131,21 +134,28 @@ const upsertErrorsValidation = paramsSchema
       },
     },
   )
-// .refine(
-//   ({ position, chainId, action }) => {
-//     if (action === SupportedActions.Update) {
-//       return true
-//     }
-//     const minNetValue = minNetValueMap[chainId][ProtocolId.AAVE3]
-//     return position.netValueUSD >= minNetValue
-//   },
-//   {
-//     message: 'Net value is too low to setup auto buy',
-//     params: {
-//       code: AutoBuyTriggerCustomErrorCodes.NetValueTooLowToSetupAutoBuy,
-//     },
-//   },
-// )
+  .refine(
+    ({ triggers, triggerData }) => {
+      const currentStopLoss = triggers.triggerGroup.aaveStopLoss
+      if (!currentStopLoss) {
+        return true
+      }
+      const executionLtv = getPropertyFromDecodedParams(
+        currentStopLoss.decodedParams,
+        'executionLtv',
+      )
+
+      const stopLossTriggerLTV = safeParseBigInt(executionLtv) ?? 0n
+
+      return stopLossTriggerLTV > triggerData.targetLTV
+    },
+    {
+      message: 'Your Auto-Buy will trigger your Stop-Loss',
+      params: {
+        code: AutoBuyTriggerCustomErrorCodes.StopLossTriggerLowerThanAutoBuy,
+      },
+    },
+  )
 
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {

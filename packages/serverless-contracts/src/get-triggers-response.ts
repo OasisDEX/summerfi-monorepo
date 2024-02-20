@@ -3,20 +3,26 @@ export const AaveStopLossToDebtV2ID = 112n as const
 export const SparkStopLossToCollateralV2ID = 117n as const
 export const SparkStopLossToDebtV2ID = 118n as const
 
-export const DmaAaveStopLossToCollateralV2ID = 123n as const
-export const DmaAaveStopLossToDebtV2ID = 124n as const
-export const DmaSparkStopLossToCollateralV2ID = 125n as const
-export const DmaSparkStopLossToDebtV2ID = 126n as const
+export const LegacyDmaAaveStopLossToCollateralV2ID = 123n as const
+export const LegacyDmaAaveStopLossToDebtV2ID = 124n as const
+export const LegacyDmaSparkStopLossToCollateralV2ID = 125n as const
+export const LegacyDmaSparkStopLossToDebtV2ID = 126n as const
+
+export const DmaAaveStopLossToCollateralV2ID = 127n as const
+export const DmaAaveStopLossToDebtV2ID = 128n as const
+export const DmaSparkStopLossToCollateralV2ID = 129n as const
+export const DmaSparkStopLossToDebtV2ID = 130n as const
 
 export const DmaAaveBasicBuyV2ID = 121n as const
 export const DmaAaveBasicSellV2ID = 122n as const
 
-export const DmaAaveTrailingStopLoss = 10005n as const
+export const DmaAaveTrailingStopLoss = 10006n as const
 
 export type Trigger = {
   triggerId: string
   triggerData: string
   triggerType: bigint
+  decodedParams: unknown
 }
 
 export type AaveStopLossToCollateral = Trigger & {
@@ -198,4 +204,26 @@ export type GetTriggersResponse = {
     aaveBasicSell?: Trigger
   }
   additionalData?: Record<string, unknown>
+}
+
+export type AllDecodedParamsKeys =
+  | keyof AaveStopLossToCollateral['decodedParams']
+  | keyof AaveStopLossToDebt['decodedParams']
+  | keyof SparkStopLossToCollateral['decodedParams']
+  | keyof SparkStopLossToDebt['decodedParams']
+  | keyof DmaAaveBasicBuy['decodedParams']
+  | keyof DmaAaveBasicSell['decodedParams']
+  | keyof DmaAaveTrailingStopLoss['decodedParams']
+
+export const getPropertyFromDecodedParams = (
+  decodedParams: unknown,
+  property: AllDecodedParamsKeys,
+): string | undefined => {
+  if (typeof decodedParams !== 'object' || decodedParams === null) {
+    return undefined
+  }
+  if (property in decodedParams) {
+    return (decodedParams as Record<string, string>)[property]
+  }
+  return undefined
 }

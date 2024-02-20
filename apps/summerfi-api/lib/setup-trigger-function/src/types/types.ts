@@ -64,6 +64,7 @@ export enum AutoBuyTriggerCustomErrorCodes {
   AutoBuyTriggerAlreadyExists = 'auto-buy-trigger-already-exists',
   AutoBuyTriggerDoesNotExist = 'auto-buy-trigger-does-not-exist',
   NetValueTooLowToSetupAutoBuy = 'net-value-too-low-to-setup-auto-buy',
+  StopLossTriggerLowerThanAutoBuy = 'stop-loss-trigger-ltv-lower-than-auto-buy',
 }
 
 export enum AutoBuyTriggerCustomWarningCodes {
@@ -84,12 +85,15 @@ export enum AutoSellTriggerCustomErrorCodes {
   AutoSellTriggerAlreadyExists = 'auto-sell-trigger-already-exists',
   AutoSellTriggerDoesNotExist = 'auto-sell-trigger-does-not-exist',
   NetValueTooLowToSetupAutoSell = 'net-value-too-low-to-setup-auto-sell',
+  StopLossNeverTriggeredWithNoAutoSellMinSellPrice = 'stop-loss-never-triggered-with-no-auto-sell-min-sell-price',
+  StopLossNeverTriggeredWithLowerAutoSellMinSellPrice = 'stop-loss-never-triggered-with-lower-auto-sell-min-sell-price',
 }
 
 export enum AutoSellTriggerCustomWarningCodes {
   AutoSellTriggeredImmediately = 'auto-sell-triggered-immediately',
   AutoSellTargetCloseToAutoBuyTrigger = 'auto-sell-target-close-to-auto-buy-trigger',
   AutoSellTriggerCloseToStopLossTrigger = 'auto-sell-trigger-close-to-stop-loss-trigger',
+  AutoSellNeverTriggeredWithCurrentStopLoss = 'auto-sell-never-triggered-with-current-stop-loss',
   AutoSellWithNoMinPriceThreshold = 'auto-sell-with-no-min-price-threshold',
   NoMinSellPriceWhenStopLoss = 'no-min-sell-price-when-stop-loss-enabled',
 }
