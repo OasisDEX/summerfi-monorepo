@@ -10,8 +10,9 @@
       "@summerfi/serverless-shared/*": ["node_modules/@summerfi/serverless-shared/src/*"],
       "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
       "@summerfi/common": ["node_modules/@summerfi/common/src/index.ts"],
-      "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
-      "~src/*": ["src/*"]
+      "~swap-service": ["src/index.ts"],
+      "~swap-service/*": ["src/*"],
+      "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"]
     }
   },
   "ts-node": {
