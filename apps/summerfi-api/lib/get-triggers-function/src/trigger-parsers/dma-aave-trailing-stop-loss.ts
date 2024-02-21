@@ -23,9 +23,15 @@ export const getDmaAaveTrailingStopLoss = async ({
   const token = trigger.decodedData[
     trigger.decodedDataNames.indexOf('collateralToken')
   ] as `0x${string}`
+  const tokenRoundId =
+    safeParseBigInt(
+      trigger.decodedData[trigger.decodedDataNames.indexOf('collateralAddedRoundId')],
+    ) ?? 0n
   const denomination = trigger.decodedData[
     trigger.decodedDataNames.indexOf('debtToken')
   ] as `0x${string}`
+  const denominationRoundId =
+    safeParseBigInt(trigger.decodedData[trigger.decodedDataNames.indexOf('debtAddedRoundId')]) ?? 0n
   const creationTimestamp = trigger.addedTimestamp
 
   const maxPriceResponse = await pricesSubgraphClient.getMaxPrice({
@@ -34,16 +40,32 @@ export const getDmaAaveTrailingStopLoss = async ({
     from: creationTimestamp,
   })
 
+  const originalPriceResponse = await pricesSubgraphClient.getPriceByRoundIds({
+    tokenRoundId,
+    denominationRoundId,
+  })
+
   const trailingDistance =
     safeParseBigInt(trigger.decodedData[trigger.decodedDataNames.indexOf('trailingDistance')]) ?? 0n
-  const maxPrice = safeParseBigInt(maxPriceResponse?.derivedPrice.toString()) ?? 0n
+  const maxPrice = safeParseBigInt(maxPriceResponse?.derivedPrice.toString())
+  const originalPrice = safeParseBigInt(originalPriceResponse?.derivedPrice.toString())
 
   if (!maxPrice) {
     logger.warn('Max price not found for', { token, denomination, creationTimestamp })
   }
 
+  if (!originalPrice) {
+    logger.warn('Original price not found for', {
+      token,
+      denomination,
+      tokenRoundId,
+      denominationRoundId,
+    })
+  }
+
   const dynamicParams = {
-    executionPrice: maxPrice - trailingDistance,
+    executionPrice: maxPrice ? maxPrice - trailingDistance : undefined,
+    originalPrice: originalPrice ? originalPrice - trailingDistance : undefined,
   }
 
   return {
@@ -67,6 +89,7 @@ export const getDmaAaveTrailingStopLoss = async ({
     },
     dynamicParams: {
       executionPrice: dynamicParams.executionPrice?.toString(),
+      originalExecutionPrice: dynamicParams.originalPrice?.toString(),
     },
   }
 }

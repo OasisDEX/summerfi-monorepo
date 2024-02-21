@@ -178,6 +178,7 @@ export type DmaAaveTrailingStopLoss = Trigger & {
   }
   dynamicParams: {
     executionPrice?: string
+    originalExecutionPrice?: string
   }
 }
 
