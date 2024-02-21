@@ -23,6 +23,7 @@ export type Trigger = {
   triggerData: string
   triggerType: bigint
   decodedParams: unknown
+  dynamicParams?: unknown
 }
 
 export type AaveStopLossToCollateral = Trigger & {
@@ -175,6 +176,10 @@ export type DmaAaveTrailingStopLoss = Trigger & {
     trailingDistance: string
     closeToCollateral: string
   }
+  dynamicParams: {
+    executionPrice?: string
+    originalExecutionPrice?: string
+  }
 }
 
 export type GetTriggersResponse = {
@@ -214,16 +219,27 @@ export type AllDecodedParamsKeys =
   | keyof DmaAaveBasicBuy['decodedParams']
   | keyof DmaAaveBasicSell['decodedParams']
   | keyof DmaAaveTrailingStopLoss['decodedParams']
+  | keyof DmaAaveTrailingStopLoss['dynamicParams']
 
-export const getPropertyFromDecodedParams = (
-  decodedParams: unknown,
-  property: AllDecodedParamsKeys,
-): string | undefined => {
+export const getPropertyFromTriggerParams = ({
+  trigger,
+  property,
+}: {
+  trigger: Trigger
+  property: AllDecodedParamsKeys
+}): string | undefined => {
+  const { decodedParams, dynamicParams } = trigger
   if (typeof decodedParams !== 'object' || decodedParams === null) {
     return undefined
   }
   if (property in decodedParams) {
     return (decodedParams as Record<string, string>)[property]
+  }
+  if (typeof dynamicParams !== 'object' || dynamicParams === null) {
+    return undefined
+  }
+  if (property in dynamicParams) {
+    return (dynamicParams as Record<string, string>)[property]
   }
   return undefined
 }

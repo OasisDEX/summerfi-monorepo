@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import { isBigInt, PRICE_DECIMALS } from '~types'
-import { addressSchema, ChainId, ProtocolId } from '@summerfi/serverless-shared'
+import { PRICE_DECIMALS } from '~types'
+import { addressSchema, ChainId, isBigInt, ProtocolId } from '@summerfi/serverless-shared'
 
 export const bigIntSchema = z
   .string()

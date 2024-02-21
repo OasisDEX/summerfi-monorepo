@@ -1,10 +1,5 @@
 import { ServiceContainer } from './service-container'
-import {
-  AaveTrailingStopLossEventBody,
-  maxUnit256,
-  safeParseBigInt,
-  SupportedActions,
-} from '~types'
+import { AaveTrailingStopLossEventBody, maxUnit256, SupportedActions } from '~types'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
 import { Address, ChainId } from '@summerfi/serverless-shared'
@@ -14,30 +9,20 @@ import memoize from 'just-memoize'
 import { getAavePosition } from './get-aave-position'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
 import { encodeAaveTrailingStopLoss } from './trigger-encoders/encode-aave-trailing-stop-loss'
-import { LatestPrice } from '@summerfi/prices-subgraph'
+import { DerivedPrices } from '@summerfi/prices-subgraph'
 import { CurrentTriggerLike } from './trigger-encoders'
 import { dmaAaveTrailingStopLossValidator } from './against-position-validators'
 import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
 import { calculateLtv } from './calculate-ltv'
+import { getCurrentStopLoss } from './get-current-stop-loss'
 
 export interface GetAaveTrailingStopLossServiceContainerProps {
   rpc: PublicClient
   addresses: Addresses
   getTriggers: (address: Address) => Promise<GetTriggersResponse>
-  getLatestPrice: (token: Address, denomination: Address) => Promise<LatestPrice | undefined>
+  getLatestPrice: (token: Address, denomination: Address) => Promise<DerivedPrices | undefined>
   logger?: Logger
   chainId: ChainId
-}
-
-function getCurrentTrailingStopLoss(triggers: GetTriggersResponse): CurrentTriggerLike | undefined {
-  const currentStopLoss = triggers.triggerGroup.aaveStopLoss
-
-  return currentStopLoss
-    ? {
-        triggerData: currentStopLoss.triggerData as `0x${string}`,
-        id: safeParseBigInt(currentStopLoss.triggerId) ?? 0n,
-      }
-    : undefined
 }
 
 export const getAaveTrailingStopLossServiceContainer: (
@@ -132,7 +117,11 @@ export const getAaveTrailingStopLossServiceContainer: (
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })
-      const currentTrigger: CurrentTriggerLike | undefined = getCurrentTrailingStopLoss(triggers)
+      const currentTrigger: CurrentTriggerLike | undefined = getCurrentStopLoss(
+        triggers,
+        position,
+        logger,
+      )
 
       const latestPrice = await getLatestPrice(trigger.position.collateral, trigger.position.debt)
 

@@ -7,7 +7,7 @@ import {
 } from '@summerfi/serverless-shared/responses'
 import {
   addressSchema,
-  chainIdsSchema,
+  chainIdSchema,
   urlOptionalSchema,
 } from '@summerfi/serverless-shared/validators'
 
@@ -27,7 +27,6 @@ import {
   DmaAaveBasicSellV2ID,
   DmaAaveStopLossToCollateralV2ID,
   DmaAaveStopLossToDebtV2ID,
-  DmaAaveTrailingStopLoss,
   DmaSparkStopLossToCollateralV2ID,
   DmaSparkStopLossToDebtV2ID,
   GetTriggersResponse,
@@ -49,12 +48,14 @@ import {
   hasAnyDefined,
   getCurrentTrigger,
 } from './helpers'
+import { getPricesSubgraphClient } from '@summerfi/prices-subgraph'
+import { getDmaAaveTrailingStopLoss } from './trigger-parsers/dma-aave-trailing-stop-loss'
 
 const logger = new Logger({ serviceName: 'getTriggersFunction' })
 
 const paramsSchema = z.object({
   dpm: addressSchema,
-  chainId: chainIdsSchema,
+  chainId: chainIdSchema,
   rpc: urlOptionalSchema,
 })
 
@@ -82,7 +83,13 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
   const params = parseResult.data
   const automationSubgraphClient = getAutomationSubgraphClient({
     urlBase: SUBGRAPH_BASE,
-    chainId: params.chainId[0],
+    chainId: params.chainId,
+    logger,
+  })
+
+  const pricesSubgraphClient = getPricesSubgraphClient({
+    urlBase: SUBGRAPH_BASE,
+    chainId: params.chainId,
     logger,
   })
 
@@ -225,34 +232,11 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       }
     })[0]
 
-  const aaveTrailingStopLossDMA: DmaAaveTrailingStopLoss | undefined = triggers.triggers
-    .filter((trigger) => trigger.triggerType == DmaAaveTrailingStopLoss)
-    .map((trigger) => {
-      return {
-        triggerTypeName: 'DmaAaveTrailingStopLoss' as const,
-        triggerType: DmaAaveTrailingStopLoss,
-        ...mapTriggerCommonParams(trigger),
-        decodedParams: {
-          triggerType: trigger.decodedData[trigger.decodedDataNames.indexOf('triggerType')],
-          positionAddress: trigger.decodedData[trigger.decodedDataNames.indexOf('positionAddress')],
-          maxCoverage: trigger.decodedData[trigger.decodedDataNames.indexOf('maxCoverage')],
-          debtToken: trigger.decodedData[trigger.decodedDataNames.indexOf('debtToken')],
-          collateralToken: trigger.decodedData[trigger.decodedDataNames.indexOf('collateralToken')],
-          operationName: trigger.decodedData[trigger.decodedDataNames.indexOf('operationName')],
-          collateralOracle:
-            trigger.decodedData[trigger.decodedDataNames.indexOf('collateralOracle')],
-          collateralAddedRoundId:
-            trigger.decodedData[trigger.decodedDataNames.indexOf('collateralAddedRoundId')],
-          debtOracle: trigger.decodedData[trigger.decodedDataNames.indexOf('debtOracle')],
-          debtAddedRoundId:
-            trigger.decodedData[trigger.decodedDataNames.indexOf('debtAddedRoundId')],
-          trailingDistance:
-            trigger.decodedData[trigger.decodedDataNames.indexOf('trailingDistance')],
-          closeToCollateral:
-            trigger.decodedData[trigger.decodedDataNames.indexOf('closeToCollateral')],
-        },
-      }
-    })[0]
+  const aaveTrailingStopLossDMA = await getDmaAaveTrailingStopLoss({
+    triggers,
+    pricesSubgraphClient,
+    logger,
+  })
 
   const response: GetTriggersResponse = {
     triggers: {

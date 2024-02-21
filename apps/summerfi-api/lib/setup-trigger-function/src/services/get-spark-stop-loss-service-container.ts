@@ -1,13 +1,8 @@
 import { ServiceContainer } from './service-container'
-import {
-  AaveStopLossEventBody,
-  safeParseBigInt,
-  SparkStopLossEventBody,
-  SupportedActions,
-} from '~types'
+import { AaveStopLossEventBody, SparkStopLossEventBody, SupportedActions } from '~types'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
-import { Address, ChainId } from '@summerfi/serverless-shared'
+import { Address, ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
@@ -40,13 +35,7 @@ function getCurrentStopLoss(triggers: GetTriggersResponse): CurrentTriggerLike |
 
 export const getSparkStopLossServiceContainer: (
   props: GetSparkStopLossServiceContainerProps,
-) => ServiceContainer<SparkStopLossEventBody> = ({
-  rpc,
-  addresses,
-  logger,
-  getTriggers,
-  chainId,
-}) => {
+) => ServiceContainer<SparkStopLossEventBody> = ({ rpc, addresses, logger, getTriggers }) => {
   const getPosition = memoize(async (params: Parameters<typeof getAavePosition>[0]) => {
     return await getSparkPosition(params, rpc, addresses, logger)
   })
@@ -74,7 +63,6 @@ export const getSparkStopLossServiceContainer: (
         triggerData: trigger.triggerData,
         action: trigger.action,
         triggers,
-        chainId,
       })
     },
     getTransaction: async ({ trigger }) => {

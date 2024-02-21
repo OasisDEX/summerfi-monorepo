@@ -9,12 +9,12 @@ import {
 import { MAX_COVERAGE_BASE } from './defaults'
 import { automationBotAbi } from '~abi'
 import { DmaAaveTrailingStopLossTriggerData, PositionLike } from '~types'
-import { LatestPrice } from '@summerfi/prices-subgraph'
+import { DerivedPrices } from '@summerfi/prices-subgraph'
 
 export const encodeAaveTrailingStopLoss = (
   position: PositionLike,
   triggerData: DmaAaveTrailingStopLossTriggerData,
-  latestPrice: LatestPrice,
+  latestPrice: DerivedPrices,
   currentTrigger: CurrentTriggerLike | undefined,
 ): TriggerTransactions => {
   const abiParameters = parseAbiParameters(

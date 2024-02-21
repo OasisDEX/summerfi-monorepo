@@ -8,7 +8,12 @@ export const addressSchema = z.custom<Address>((val: unknown) => {
   return isValidAddress(val)
 }, 'Invalid address format')
 
-export const chainIdSchema = z.nativeEnum(ChainId)
+export const chainIdSchema = z
+  .nativeEnum(ChainId)
+  .or(z.string().transform((val) => Number(val)))
+  .transform((val) => {
+    return z.nativeEnum(ChainId).parse(val)
+  })
 
 export const chainIdsSchema = z
   .string()
