@@ -1,8 +1,17 @@
 query Prices($token: String!, $denomination: String!) {
   derivedPrices(where: {
-    token: $token,
-    denomination: $denomination
-  }, orderBy: tokenTimestamp, orderDirection: desc, first: 1) {
+    and: [
+      { token: $token },
+      { or: [
+        { denomination: $denomination },
+        { denomination_: {
+          relatedTokens_contains_nocase: [$denomination]
+        }}
+      ]}
+    ]}
+    orderBy: tokenTimestamp
+    orderDirection: desc
+    first: 1) {
     tokenRoundId
     denominationRoundId
     token {
