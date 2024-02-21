@@ -30,7 +30,7 @@ export interface GetAaveTrailingStopLossServiceContainerProps {
 }
 
 function getCurrentTrailingStopLoss(triggers: GetTriggersResponse): CurrentTriggerLike | undefined {
-  const currentStopLoss = triggers.triggers.aaveTrailingStopLossDMA
+  const currentStopLoss = triggers.triggerGroup.aaveStopLoss
 
   return currentStopLoss
     ? {
