@@ -1,5 +1,5 @@
 import { ServiceContainer } from './service-container'
-import { AaveStopLossEventBody, safeParseBigInt, SupportedActions } from '~types'
+import { AaveStopLossEventBody, SupportedActions } from '~types'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
 import { Address, ChainId } from '@summerfi/serverless-shared'
@@ -12,6 +12,7 @@ import { dmaAaveStopLossValidator } from './against-position-validators'
 import { getUsdAaveOraclePrice } from './get-usd-aave-oracle-price'
 import { CurrentTriggerLike, encodeAaveStopLoss } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
+import { getCurrentStopLoss } from './get-current-stop-loss'
 
 export interface GetAaveStopLossServiceContainerProps {
   rpc: PublicClient
@@ -21,26 +22,9 @@ export interface GetAaveStopLossServiceContainerProps {
   chainId: ChainId
 }
 
-function getCurrentStopLoss(triggers: GetTriggersResponse): CurrentTriggerLike | undefined {
-  const currentStopLoss = triggers.triggerGroup.aaveStopLoss
-
-  return currentStopLoss
-    ? {
-        triggerData: currentStopLoss.triggerData as `0x${string}`,
-        id: safeParseBigInt(currentStopLoss.triggerId) ?? 0n,
-      }
-    : undefined
-}
-
 export const getAaveStopLossServiceContainer: (
   props: GetAaveStopLossServiceContainerProps,
-) => ServiceContainer<AaveStopLossEventBody> = ({
-  rpc,
-  addresses,
-  logger,
-  getTriggers,
-  chainId,
-}) => {
+) => ServiceContainer<AaveStopLossEventBody> = ({ rpc, addresses, logger, getTriggers }) => {
   const getPosition = memoize(async (params: Parameters<typeof getAavePosition>[0]) => {
     return await getAavePosition(params, rpc, addresses, logger)
   })
@@ -68,7 +52,6 @@ export const getAaveStopLossServiceContainer: (
         triggerData: trigger.triggerData,
         action: trigger.action,
         triggers,
-        chainId,
       })
     },
     getTransaction: async ({ trigger }) => {
@@ -82,7 +65,11 @@ export const getAaveStopLossServiceContainer: (
 
       const debtPriceInUSD = await getUsdAaveOraclePrice(trigger.position.debt, addresses, rpc)
 
-      const currentTrigger: CurrentTriggerLike | undefined = getCurrentStopLoss(triggers)
+      const currentTrigger: CurrentTriggerLike | undefined = getCurrentStopLoss(
+        triggers,
+        position,
+        logger,
+      )
 
       const encodedData = encodeAaveStopLoss(
         position,

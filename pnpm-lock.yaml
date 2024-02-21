@@ -173,6 +173,9 @@ importers:
       '@summerfi/automation-subgraph':
         specifier: workspace:*
         version: link:../../../../packages/automation-subgraph
+      '@summerfi/prices-subgraph':
+        specifier: workspace:*
+        version: link:../../../../packages/prices-subgraph
       '@summerfi/serverless-contracts':
         specifier: workspace:*
         version: link:../../../../packages/serverless-contracts

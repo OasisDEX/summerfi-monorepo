@@ -1,0 +1,36 @@
+query MaxPriceFrom($token: String!, $denomination: String!, $from: BigInt!) {
+  derivedPrices(
+    where: {
+      and: [
+        { token: $token },
+        { or: [
+          { denomination: $denomination },
+          { denomination_: {
+            relatedTokens_contains_nocase: [$denomination]
+          }}
+        ]},
+        { tokenTimestamp_gt: $from }
+      ]}
+    orderBy: derivedPrice
+    orderDirection: desc
+    first: 1
+  ) {
+    tokenRoundId
+    denominationRoundId
+    token {
+      id
+      symbol
+      oraclesToken {
+        address
+      }
+    }
+    denomination {
+      id
+      symbol
+      oraclesToken {
+        address
+      }
+    }
+    derivedPrice
+  }
+}

@@ -4,7 +4,6 @@ import {
   mapZodResultToValidationResults,
   positionSchema,
   priceSchema,
-  safeParseBigInt,
   StopLossErrorCodes,
   StopLossWarningCodes,
   SupportedActions,
@@ -15,7 +14,8 @@ import {
 } from '~types'
 import { z } from 'zod'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
-import { LatestPrice } from '@summerfi/prices-subgraph'
+import { DerivedPrices } from '@summerfi/prices-subgraph'
+import { safeParseBigInt } from '@summerfi/serverless-shared'
 
 const paramsSchema = z.object({
   position: positionSchema,
@@ -23,7 +23,7 @@ const paramsSchema = z.object({
   dynamicExecutionLTV: ltvSchema,
   triggerData: dmaAaveTrailingStopLossTriggerDataSchema,
   triggers: z.custom<GetTriggersResponse>(),
-  latestPrice: z.custom<LatestPrice | undefined>(),
+  latestPrice: z.custom<DerivedPrices | undefined>(),
   action: supportedActionsSchema,
 })
 const upsertErrorsValidation = paramsSchema

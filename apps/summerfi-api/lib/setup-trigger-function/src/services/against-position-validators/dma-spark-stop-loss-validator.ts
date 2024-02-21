@@ -1,6 +1,5 @@
 import {
   dmaSparkStopLossTriggerDataSchema,
-  DmaSparkStopLossTriggerData,
   mapZodResultToValidationResults,
   positionSchema,
   priceSchema,
@@ -13,7 +12,6 @@ import {
 } from '~types'
 import { z } from 'zod'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
-import { AgainstPositionValidator } from './validators-types'
 
 const paramsSchema = z.object({
   position: positionSchema,
@@ -91,8 +89,8 @@ const warningsValidation = paramsSchema.refine(
   },
 )
 
-export const dmaSparkStopLossValidator: AgainstPositionValidator<DmaSparkStopLossTriggerData> = (
-  params,
+export const dmaSparkStopLossValidator = (
+  params: z.infer<typeof paramsSchema>,
 ): ValidationResults => {
   const errorsValidation =
     params.action === SupportedActions.Remove ? deleteErrorsValidation : upsertErrorsValidation

@@ -1,10 +1,8 @@
 import {
-  DmaAaveStopLossTriggerData,
   dmaAaveStopLossTriggerDataSchema,
   mapZodResultToValidationResults,
   positionSchema,
   priceSchema,
-  safeParseBigInt,
   StopLossErrorCodes,
   StopLossWarningCodes,
   SupportedActions,
@@ -14,7 +12,7 @@ import {
 } from '~types'
 import { z } from 'zod'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
-import { AgainstPositionValidator } from './validators-types'
+import { safeParseBigInt } from '@summerfi/serverless-shared'
 
 const paramsSchema = z.object({
   position: positionSchema,
@@ -126,8 +124,8 @@ const warningsValidation = paramsSchema
     },
   )
 
-export const dmaAaveStopLossValidator: AgainstPositionValidator<DmaAaveStopLossTriggerData> = (
-  params,
+export const dmaAaveStopLossValidator = (
+  params: z.infer<typeof paramsSchema>,
 ): ValidationResults => {
   const errorsValidation =
     params.action === SupportedActions.Remove ? deleteErrorsValidation : upsertErrorsValidation

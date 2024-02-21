@@ -3,28 +3,25 @@ import {
   priceSchema,
   mapZodResultToValidationResults,
   AutoBuyTriggerCustomErrorCodes,
-  safeParseBigInt,
   AutoBuyTriggerCustomWarningCodes,
   MINIMUM_LTV_TO_SETUP_TRIGGER,
-  AaveAutoBuyTriggerData,
   aaveBasicBuyTriggerDataSchema,
   supportedActionsSchema,
   SupportedActions,
   ONE_PERCENT,
+  ValidationResults,
 } from '~types'
-import {
-  getPropertyFromDecodedParams,
-  GetTriggersResponse,
-} from '@summerfi/serverless-contracts/get-triggers-response'
+import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { z } from 'zod'
-import { AgainstPositionValidator } from './validators-types'
-import { chainIdSchema } from '@summerfi/serverless-shared'
+import { chainIdSchema, safeParseBigInt } from '@summerfi/serverless-shared'
+import { CurrentStopLoss } from '../types/current-stop-loss'
 
 const paramsSchema = z.object({
   position: positionSchema,
   executionPrice: priceSchema,
   triggerData: aaveBasicBuyTriggerDataSchema,
   triggers: z.custom<GetTriggersResponse>(),
+  currentStopLoss: z.custom<CurrentStopLoss | undefined>(),
   action: supportedActionsSchema,
   chainId: chainIdSchema,
 })
@@ -135,19 +132,12 @@ const upsertErrorsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggers, triggerData }) => {
-      const currentStopLoss = triggers.triggerGroup.aaveStopLoss
+    ({ triggerData, currentStopLoss }) => {
       if (!currentStopLoss) {
         return true
       }
-      const executionLtv = getPropertyFromDecodedParams(
-        currentStopLoss.decodedParams,
-        'executionLtv',
-      )
 
-      const stopLossTriggerLTV = safeParseBigInt(executionLtv) ?? 0n
-
-      return stopLossTriggerLTV > triggerData.targetLTV
+      return currentStopLoss.executionLTV > triggerData.targetLTV
     },
     {
       message: 'Your Auto-Buy will trigger your Stop-Loss',
@@ -201,15 +191,12 @@ const warningsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggerData, triggers }) => {
-      const stopLossTrigger = triggers.triggers.aaveStopLossToCollateral
-      if (!stopLossTrigger) {
+    ({ triggerData, currentStopLoss }) => {
+      if (!currentStopLoss) {
         return true
       }
 
-      const stopLossTriggerLTV = safeParseBigInt(stopLossTrigger.decodedParams.executionLtv) ?? 0n
-
-      return stopLossTriggerLTV > triggerData.executionLTV
+      return currentStopLoss.executionLTV > triggerData.executionLTV
     },
     {
       message: 'Auto buy target close to stop loss trigger',
@@ -219,15 +206,11 @@ const warningsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggerData, triggers }) => {
-      const stopLossTrigger = triggers.triggers.aaveStopLossToDebt
-      if (!stopLossTrigger) {
+    ({ triggerData, currentStopLoss }) => {
+      if (!currentStopLoss) {
         return true
       }
-
-      const stopLossTriggerLTV = safeParseBigInt(stopLossTrigger.decodedParams.executionLtv) ?? 0n
-
-      return stopLossTriggerLTV > triggerData.executionLTV
+      return currentStopLoss.executionLTV > triggerData.executionLTV
     },
     {
       message: 'Auto buy target close to stop loss trigger',
@@ -248,7 +231,7 @@ const warningsValidation = paramsSchema
     },
   )
 
-export const autoBuyValidator: AgainstPositionValidator<AaveAutoBuyTriggerData> = (params) => {
+export const autoBuyValidator = (params: z.infer<typeof paramsSchema>): ValidationResults => {
   const errorsValidation =
     params.action === SupportedActions.Remove ? deleteErrorsValidation : upsertErrorsValidation
   const errorValidation = errorsValidation.safeParse(params)

@@ -1,8 +1,8 @@
 import { ServiceContainer } from './service-container'
-import { AaveAutoSellEventBody, safeParseBigInt, SupportedActions } from '~types'
+import { AaveAutoSellEventBody, SupportedActions } from '~types'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
-import { Address, ChainId } from '@summerfi/serverless-shared'
+import { Address, ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
@@ -13,6 +13,7 @@ import { autoSellValidator } from './against-position-validators'
 import { getUsdAaveOraclePrice } from './get-usd-aave-oracle-price'
 import { CurrentTriggerLike, encodeAaveAutoSell } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
+import { getCurrentStopLoss } from './get-current-stop-loss'
 
 export interface GetAaveAutoSellServiceContainerProps {
   rpc: PublicClient
@@ -68,12 +69,15 @@ export const getAaveAutoSellServiceContainer: (
 
       const triggers = await getTriggers(trigger.dpm)
 
+      const currentStopLoss = getCurrentStopLoss(triggers, position, logger)
+
       return autoSellValidator({
         position,
         executionPrice,
         triggerData: trigger.triggerData,
         action: trigger.action,
         triggers,
+        currentStopLoss,
         chainId,
       })
     },

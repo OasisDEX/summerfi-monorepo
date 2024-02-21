@@ -9,6 +9,7 @@ export const getCurrentTrigger = (...args: (Trigger | undefined)[]): Trigger | u
         triggerId: arg.triggerId,
         triggerData: arg.triggerData,
         decodedParams: arg.decodedParams,
+        dynamicParams: arg.dynamicParams,
       }
     })[0]
 }
