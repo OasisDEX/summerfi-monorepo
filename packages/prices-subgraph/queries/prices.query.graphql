@@ -1,7 +1,12 @@
 query Prices($token: String!, $denomination: String!) {
   derivedPrices(where: {
     and: [
-      { token: $token },
+      { or: [
+        { token: $token },
+        { token_: {
+          relatedTokens_contains_nocase: [$token]
+        }}
+      ]}
       { or: [
         { denomination: $denomination },
         { denomination_: {
