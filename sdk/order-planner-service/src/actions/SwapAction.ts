@@ -4,14 +4,13 @@ import { Percentage, TokenAmount } from '@summerfi/sdk-common/common'
 import { Hex } from 'viem'
 
 export class SwapAction extends BaseAction {
-  constructor() {
-    super({
-      name: 'SwapAction',
-      version: 1,
-      parametersAbi: 'address, address, uint256, uint256, uint256, bytes, bool',
-      storedValuesNames: ['received'],
-    })
-  }
+  public readonly config = {
+    name: 'SwapAction',
+    version: 1,
+    parametersAbi: 'address, address, uint256, uint256, uint256, bytes, bool',
+    storageInputs: [],
+    storageOutputs: ['received'],
+  } as const
 
   public encodeCall(params: {
     fromAmount: TokenAmount

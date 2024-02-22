@@ -1,11 +1,8 @@
+import { Steps } from '@summerfi/sdk-common/orders'
 import { Maybe } from '@summerfi/sdk-common/utils'
-
-export type Slot = number
-export type ActionOutputName = string
-
-export type ActionStorageList = ActionOutputName[]
-
-export type StorageAliasMap = Record<string, ActionOutputName>
+import { BaseAction } from '~orderplanner/actions'
+import { StorageOutputsMapType } from './Types'
+import assert from 'assert'
 
 export class ExecutionStorageManager {
   private slotsMap: Map<string, number> = new Map()
@@ -13,18 +10,27 @@ export class ExecutionStorageManager {
   // Slot number starts from 1 because the contract will subtract 1 from the slot number
   private currentSlot: number = 1
 
-  public addStorageMap(params: {
-    stepName: string
-    storedValuesNames: ActionStorageList
-    storageAliasMap?: StorageAliasMap
+  public addStorageMap<Step extends Steps, Action extends BaseAction>(params: {
+    step: Step
+    action: Action
+    connectedOutputs: StorageOutputsMapType<Step, Action>
   }): void {
-    for (const actionOutputName of params.storedValuesNames) {
-      if (params.storageAliasMap !== undefined) {
-        const alias = params.storageAliasMap[actionOutputName]
-        if (alias !== undefined) {
-          const slotKey = this._getSlotKey({ stepName: params.stepName, referenceName: alias })
-          this.slotsMap.set(slotKey, this.currentSlot)
-        }
+    const baseSlot = this.currentSlot
+
+    for (const stepOutputName of Object.keys(params.step.outputs)) {
+      if (params.connectedOutputs !== undefined) {
+        const actionOutputName =
+          params.connectedOutputs[stepOutputName as keyof StorageOutputsMapType<Step, Action>]
+
+        const slotKey = this._getSlotKey({
+          stepName: params.step.name,
+          referenceName: stepOutputName,
+        })
+
+        const slotOffset = params.action.config.storageOutputs.indexOf(actionOutputName)
+        assert(slotOffset !== -1, 'Output not found in action storage outputs')
+
+        this.slotsMap.set(slotKey, baseSlot + slotOffset)
       }
 
       this.currentSlot++
@@ -35,7 +41,10 @@ export class ExecutionStorageManager {
     return this.slotsMap.get(params.key)
   }
 
-  private _getSlotKey(params: { stepName: string; referenceName: string }): string {
-    return `${params.stepName}-${params.referenceName}`
+  private _getSlotKey(params: {
+    stepName: string
+    referenceName: string | number | symbol
+  }): string {
+    return `${params.stepName}-${String(params.referenceName)}`
   }
 }

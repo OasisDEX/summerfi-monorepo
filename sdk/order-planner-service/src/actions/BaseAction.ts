@@ -1,5 +1,3 @@
-import { ActionNames } from '@summerfi/deployment-types'
-import { Version } from '~orderplanner/interfaces/Types'
 import { ActionCall } from '~orderplanner/interfaces'
 import {
   parseAbi,
@@ -9,36 +7,21 @@ import {
   keccak256,
   toBytes,
 } from 'viem'
-import { ActionStorageList } from '~orderplanner/context'
+import { ActionConfig } from './Types'
 
 /**
  * @class Base class for all actions. It provides the basic functionality to encode the call to the action and provide
  *              the versioned name of the action.
  */
 export abstract class BaseAction {
-  public name: ActionNames
-  public version: Version
-  public parametersAbi: string
-  public storedValuesNames: ActionStorageList
-
-  constructor(params: {
-    name: ActionNames
-    version: Version
-    parametersAbi: string
-    storedValuesNames?: ActionStorageList
-  }) {
-    this.name = params.name
-    this.version = params.version
-    this.parametersAbi = params.parametersAbi
-    this.storedValuesNames = params.storedValuesNames || []
-  }
+  public abstract readonly config: ActionConfig
 
   /**
    * @description Returns the versioned name of the action
    * @returns The versioned name of the action
    */
   public getVersionedName(): string {
-    return `${this.name}_v${this.version}`
+    return `${this.config.name}_v${this.config.version}`
   }
 
   /**
@@ -64,7 +47,7 @@ export abstract class BaseAction {
       'function execute(bytes calldata data, uint8[] paramsMap) external payable returns (bytes calldata)',
     ])
 
-    const encodedArgs = encodeAbiParameters(parseAbiParameters(this.parametersAbi), params)
+    const encodedArgs = encodeAbiParameters(parseAbiParameters(this.config.parametersAbi), params)
 
     const calldata = encodeFunctionData({
       abi,

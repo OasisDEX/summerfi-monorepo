@@ -8,5 +8,5 @@ export type {
 } from './Strategy'
 export type { ActionCall, ActionCallBatch } from './Action'
 export { StrategyName } from './Strategy'
-export type { StepBuildersMap, StepBuilder, Version } from './Types'
+export type { StepBuildersMap, ActionBuilder, Version } from './Types'
 export { OrderPlannerContext } from '../context/OrderPlannerContext'

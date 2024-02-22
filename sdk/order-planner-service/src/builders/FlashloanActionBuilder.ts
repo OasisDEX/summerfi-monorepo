@@ -1,8 +1,7 @@
 import { FlashloanStep, Simulation, SimulationType } from '@summerfi/sdk-common/orders'
-import { OrderPlannerContext } from '~orderplanner/interfaces'
-import { StepBuilder } from '~orderplanner/interfaces/Types'
+import { OrderPlannerContext, ActionBuilder } from '~orderplanner/interfaces'
 
-export const FlashloanBuilder: StepBuilder<FlashloanStep> = (params: {
+export const FlashloanActionBuilder: ActionBuilder<FlashloanStep> = (params: {
   context: OrderPlannerContext
   simulation: Simulation<SimulationType>
   step: FlashloanStep
