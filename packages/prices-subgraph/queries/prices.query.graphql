@@ -14,7 +14,7 @@ query Prices($token: String!, $denomination: String!) {
         }}
       ]}
     ]}
-    orderBy: tokenTimestamp
+    orderBy: derivedPriceTimestamp
     orderDirection: desc
     first: 1) {
     tokenRoundId

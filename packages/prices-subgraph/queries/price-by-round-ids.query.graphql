@@ -4,7 +4,7 @@ query PriceByRoundIds($tokenRoundId: BigInt!, $denominationRoundId: BigInt!) {
       tokenRoundId: $tokenRoundId,
       denominationRoundId: $denominationRoundId
     }
-    orderBy: tokenTimestamp
+    orderBy: derivedPriceTimestamp
     orderDirection: desc
     first: 1
   ) {
