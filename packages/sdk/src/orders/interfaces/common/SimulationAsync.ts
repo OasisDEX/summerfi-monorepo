@@ -121,13 +121,9 @@ export interface SchemaStep {
   optional: boolean
 }
 
-export type SimulationSchema = readonly SchemaStep[]
+type SimulationSchema = readonly SchemaStep[]
 
-function makeSchema<T extends SimulationSchema>(schema: T): T {
-  return schema
-}
-
-const refinanceSchema = makeSchema([
+const refinanceSchema = [
   {
     step: SimulationSteps.Flashloan,
     optional: false,
@@ -158,18 +154,24 @@ const refinanceSchema = makeSchema([
     step: SimulationSteps.ReturnFunds,
     optional: true,
   }
-])
+] as const
 
 type Tail<T extends readonly any[]> = ((...t: T) => void) extends ((h: any, ...r: infer R) => void) ? R : never
+// type Tail<T extends readonly any[]> = T extends [any, ...infer R] ? R : never
 type Head<T extends readonly any[]> = T extends [infer H, ...any] ? H : never
 type EmptyArray = readonly []
 type Where<T, U> = T extends U ? T : never
+type Unpack<T> = T extends Promise<infer U> 
+  ? U 
+  : T extends Array<infer Y>
+    ? Y
+    : never
 
 interface SimulationState {
   // mapping between token address and token amount
   balances: Record<string, TokenAmount>
   positions: Record<string, Position>
-  storage: Record<string, Steps['outputs']>
+  steps: Steps[]
 }
 
 function isReference<T>(value: ReferencableField<T>): value is ValueReference<T> {
@@ -268,39 +270,54 @@ function processStep(step: Steps, state: SimulationState): SimulationState {
   }
 }
 
-type NextFunction<T extends SimulationSchema, Ctx> = (ctx: Ctx) => Promise<T extends EmptyArray ? never : Where<Steps, { type: T[0]['step'] }>>
+type NextFunction<T extends SimulationSchema, N extends string> = T extends EmptyArray ? never : (ctx: SimulationState) => Promise<Omit<Where<Steps, { type: T[0]['step'], name: N }>, 'outputs'>>;
+type RegisteredStepsTypesFromNextArray<NextArray extends NextFunction<SimulationSchema, string>[]> = Unpack<ReturnType<Unpack<NextArray>>>['type']
+type RegisteredStepsNamesFromNextArray<NextArray extends NextFunction<SimulationSchema, string>[]> = Unpack<ReturnType<Unpack<NextArray>>>['name']
+type RegisteredStepsFromNextArray<S extends NextFunction<SimulationSchema>[]> = {[key in RegisteredStepsNamesFromNextArray<S>]: key }
 
-class Simulator<S extends SimulationSchema, T extends Array<Steps>> {
+function tail<T extends readonly any[]>(arr: T): Tail<T> {
+  const [_, ...rest] = arr
+
+  return rest as any as Tail<T>
+}
+
+class Simulator<Shema extends SimulationSchema, NextArray extends NextFunction<SimulationSchema>[] = []> {
   private state: SimulationState
-  private steps: T = []
+  private nextArray = [] as unknown as NextArray
 
-  private constructor(public schema: S, steps: T = [], state: SimulationState = { balances: {}, positions: {}, storage: {} }) {
+  private constructor(public schema: Shema, state: SimulationState = { balances: {}, positions: {}, steps: [] }) {
     this.state = state
-    this.steps = steps
   }
 
   static create<S extends SimulationSchema>(schema: S) {
     return new Simulator(schema)
   }
 
-  public async next(next: NextFunction<S, SimulationState>): Promise<Simulator<Tail<S>, [...T, Head<S>]>> {
+  public test(t: NextArray) {
+    return t
+  }
+
+  public next<N extends string>(next: NextFunction<Shema, N>): Simulator<Tail<Shema>, [...NextArray, NextFunction<Shema, N>]> {
     const [currentSchemaStep, ...rest] = this.schema
-    const proccesedStep = await next(this.state)
+    const _tail = tail(this.schema)
+    this.nextArray.push(next)
 
-    if (currentSchemaStep.step !== proccesedStep.type) {
-      throw new Error(`Invalid step, extected ${currentSchemaStep.step} but got ${proccesedStep.type}`)
-    }
+    // const proccesedStep = await next(this.state)
 
-    if (!currentSchemaStep.optional && proccesedStep.skip) {
-      throw new Error(`Step ${proccesedStep.name} is not optional`)
-    }
+    // if (currentSchemaStep.step !== proccesedStep.type) {
+    //   throw new Error(`Invalid step, extected ${currentSchemaStep.step} but got ${proccesedStep.type}`)
+    // }
 
-    const nextState = processStep(proccesedStep, this.state)
+    // if (!currentSchemaStep.optional && proccesedStep.skip) {
+    //   throw new Error(`Step ${proccesedStep.name} is not optional`)
+    // }
 
-    this.steps.push(proccesedStep)
-    this.state = nextState
+    // const nextState = processStep(proccesedStep, this.state)
 
-    return new Simulator<Tail<S>, [...T, Head<S>]>(rest as Tail<S>, this.steps, this.state)
+    // this.steps.push(proccesedStep)
+    // this.state = nextState
+
+    return new Simulator<Tail<Shema>, [...NextArray, NextFunction<Shema, N>]>(_tail, this.state)
   }
 }
 
@@ -311,21 +328,8 @@ declare const collateralToken: Token
 declare const markerPosition: Position
 declare const sparkPosition: Position
 
-// function flashloanStepBulder<T extends string>(name: string, inputs: FlashloanStep['inputs']) {
-//   return (ctx: SimulationState) => ({
-//     name,
-//     type: SimulationSteps.Flashloan,
-//     inputs: {
-//       amount: TokenAmount.createFrom({ amount: '0', token: debtToken }),
-//       provider: FlashloanProvider.Maker
-//     },
-//     outputs: undefined
-//   })
-// }
 
-// flashloanStepBulder('Flashloan', { amount: TokenAmount.createFrom({ amount: '0', token: debtToken }), provider: FlashloanProvider.Maker})
-
-const x =(await simulator
+const x = simulator
   .next(async (ctx) => ({
     name: 'Flashloan',
     type: SimulationSteps.Flashloan,
@@ -333,70 +337,15 @@ const x =(await simulator
       amount: TokenAmount.createFrom({ amount: '0', token: debtToken }),
       provider: FlashloanProvider.Maker
     },
-    outputs: undefined
-  })))
-  .next(async () => ({
+  }))
+  .next(async (ctx) => ({
     name: 'PaybackWithdraw',
     type: SimulationSteps.PaybackWithdraw,
     inputs: {
-      paybackAmount: {
-        estimatedValue: TokenAmount.createFrom({ amount: '0', token: debtToken }),
-        path: ['Flashloan', '']
-      },
-      }
+      paybackAmount: TokenAmount.createFrom({ amount: '0', token: debtToken }),
       withdrawAmount: TokenAmount.createFrom({ amount: '0', token: collateralToken }),
-      position: markerPosition,
+      position: markerPosition
     },
-    outputs: {
-      paybackAmount: TokenAmount.createFrom({ amount: '85', token: debtToken }),
-      withdrawAmount: TokenAmount.createFrom({ amount: '0', token: collateralToken })
-    }
   }))
-  .next((ctx) => ({
-    name: 'SwapCollateralToken',
-    type: SimulationSteps.Swap,
-    inputs: {
-      fromTokenAmount: TokenAmount.createFrom({ amount: '0', token: collateralToken }),
-      toTokenAmount: TokenAmount.createFrom({ amount: '0', token: debtToken }),
-      slippage: 0.5,
-      fee: 0.1
-    },
-    outputs: {
-      recievedAmount: TokenAmount.createFrom({ amount: '0', token: debtToken })
-    }
-  }))
-  .next(() => ({
-    name: 'DepositBorrow',
-    type: SimulationSteps.DepositBorrow,
-    inputs: {
-      depositAmount: TokenAmount.createFrom({ amount: '0', token: collateralToken }),
-      borrowAmount: TokenAmount.createFrom({ amount: '0', token: debtToken),
-      position: sparkPosition
-    },
-    outputs: {
-      depositAmount: TokenAmount.createFrom({ amount: '0', token: collateralToken }),
-      borrowAmount: TokenAmount.createFrom({ amount: '0', token: debtToken })
-    }
-  }))
-  .next(() => ({
-    name: 'SwapDebtToken',
-    type: SimulationSteps.Swap,
-    inputs: {
-      fromTokenAmount: TokenAmount.createFrom({ amount: '0', token: collateralToken }),
-      toTokenAmount: TokenAmount.createFrom({ amount: '0', token: debtToken }),
-      slippage: 0.5,
-      fee: 0.1
-    },
-    outputs: {
-      recievedAmount: TokenAmount.createFrom({ amount: '0', token: debtToken })
-    }
-  }))
-  .next(() => ({
-    name: "PaybackFlashloan",
-    type: SimulationSteps.PaybackFlashloan,
-    inputs: {
-      amount: TokenAmount.createFrom({ amount: '0', token: debtToken })
-    },
-    outputs: undefined
-  }
-))
+  .test('Flashloan')
+  
