@@ -6,10 +6,10 @@ import {
   parseAbiParameters,
   stringToBytes,
 } from 'viem'
-import { MAX_COVERAGE_BASE } from './defaults'
 import { automationBotAbi } from '~abi'
 import { DmaAaveStopLossTriggerData } from '~types'
 import { TriggerType } from '@oasisdex/automation'
+import { getMaxCoverage } from './get-max-coverage'
 
 export const encodeSparkStopLoss: EncoderFunction<DmaAaveStopLossTriggerData> = (
   position,
@@ -40,7 +40,7 @@ export const encodeSparkStopLoss: EncoderFunction<DmaAaveStopLossTriggerData> = 
 
   const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
 
-  const maxCoverage = MAX_COVERAGE_BASE * position.prices.debtPrice
+  const maxCoverage = getMaxCoverage(position)
 
   const encodedTriggerData = encodeAbiParameters(abiParameters, [
     position.address,
