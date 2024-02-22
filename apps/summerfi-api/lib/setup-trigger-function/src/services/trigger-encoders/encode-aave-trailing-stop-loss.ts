@@ -39,10 +39,12 @@ export const encodeAaveTrailingStopLoss = (
 
   const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
 
+  const maxCoverage = MAX_COVERAGE_BASE * position.prices.debtPrice
+
   const encodedTriggerData = encodeAbiParameters(abiParameters, [
     position.address,
     triggerData.type,
-    MAX_COVERAGE_BASE * 10n ** BigInt(position.debt.token.decimals),
+    maxCoverage,
     position.debt.token.address,
     position.collateral.token.address,
     operationNameInBytes,
