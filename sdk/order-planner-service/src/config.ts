@@ -4,11 +4,11 @@ import {
   PaybackFlashloanActionBuilder,
   SwapActionBuilder,
   FlashloanActionBuilder,
-  StepBuildersMap,
+  ActionBuildersMap,
 } from './builders'
 
 // TODO: remove the Partial when all the builders are implemented
-export const StepBuilders: Partial<StepBuildersMap> = {
+export const StepBuilders: Partial<ActionBuildersMap> = {
   [SimulationSteps.PullToken]: PullTokenActionBuilder,
   [SimulationSteps.Flashloan]: FlashloanActionBuilder,
   [SimulationSteps.Swap]: SwapActionBuilder,
