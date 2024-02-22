@@ -34,8 +34,8 @@ export function getCurrentStopLoss(
     }),
   )
 
-  if (executionLtv === undefined || executionPrice === undefined) {
-    logger?.warn('Execution LTV or price is not set on the trigger')
+  if (executionLtv === undefined && executionPrice === undefined) {
+    logger?.warn('Stop loss trigger has no executionLtv or executionPrice')
     return undefined
   }
 
@@ -43,7 +43,7 @@ export function getCurrentStopLoss(
     executionLtv ??
     calculateLtv({
       ...position,
-      collateralPriceInDebt: executionPrice,
+      collateralPriceInDebt: executionPrice!,
     })
 
   const stopLossExecutionPrice =
