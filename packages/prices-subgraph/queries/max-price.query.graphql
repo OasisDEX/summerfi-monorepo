@@ -16,7 +16,7 @@ query MaxPriceFrom($token: String!, $denomination: String!, $from: BigInt!) {
         ]}
         { tokenTimestamp_gt: $from }
       ]}
-    orderBy: derivedPrice
+    orderBy: derivedPriceTimestamp
     orderDirection: desc
     first: 1
   ) {

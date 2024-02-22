@@ -356,6 +356,7 @@ type DerivedPrice {
   denominationRoundId: BigInt!
   denominationPrice: BigInt!
   derivedPrice: BigInt!
+  derivedPriceTimestamp: BigInt!
   oracle: DerivedOracle!
   oracleType: String!
   token: Token!
@@ -454,6 +455,14 @@ input DerivedPrice_filter {
   derivedPrice_lte: BigInt
   derivedPrice_in: [BigInt!]
   derivedPrice_not_in: [BigInt!]
+  derivedPriceTimestamp: BigInt
+  derivedPriceTimestamp_not: BigInt
+  derivedPriceTimestamp_gt: BigInt
+  derivedPriceTimestamp_lt: BigInt
+  derivedPriceTimestamp_gte: BigInt
+  derivedPriceTimestamp_lte: BigInt
+  derivedPriceTimestamp_in: [BigInt!]
+  derivedPriceTimestamp_not_in: [BigInt!]
   oracle: String
   oracle_not: String
   oracle_gt: String
@@ -588,6 +597,7 @@ enum DerivedPrice_orderBy {
   denominationRoundId
   denominationPrice
   derivedPrice
+  derivedPriceTimestamp
   oracle
   oracle__id
   oracle__description
