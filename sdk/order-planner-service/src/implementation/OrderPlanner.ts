@@ -1,24 +1,21 @@
 import { Order, Simulation, SimulationType, Steps } from '@summerfi/sdk-common/orders'
 import { Maybe } from '@summerfi/sdk-common/utils'
 import { IOrderPlanner } from '~orderplanner/interfaces/IOrderPlanner'
-import {
-  ActionCall,
-  OrderPlannerContext,
-  StepBuilder,
-  StepBuildersMap,
-} from '~orderplanner/interfaces'
 import { Deployment } from '@summerfi/deployment-utils'
-import { encodeStrategy, getStrategyName } from '~orderplanner/utils'
+import { encodeStrategy } from '~orderplanner/utils'
+import { OrderPlannerContext } from '~orderplanner/context'
+import { ActionBuilder, ActionBuildersMap } from '~orderplanner/builders'
+import { ActionCall } from '~orderplanner/actions'
 
 export class OrderPlanner implements IOrderPlanner {
   private readonly ExecutorContractName = 'OperationExecutor'
 
-  private readonly _stepBuildersMap: StepBuildersMap
+  private readonly _actionBuildersMap: ActionBuildersMap
   private readonly _deployment: Deployment
 
-  constructor(deployment: Deployment, stepBuildersMap: StepBuildersMap) {
+  constructor(deployment: Deployment, actionBuildersMap: ActionBuildersMap) {
     this._deployment = deployment
-    this._stepBuildersMap = stepBuildersMap
+    this._actionBuildersMap = actionBuildersMap
   }
 
   buildOrder(simulation: Simulation<SimulationType>): Maybe<Order> {
@@ -44,8 +41,8 @@ export class OrderPlanner implements IOrderPlanner {
     return this._generateOrder(simulation, callsBatch)
   }
 
-  private getStepBuilder<T extends Steps>(step: T): Maybe<StepBuilder<T>> {
-    return this._stepBuildersMap[step.type] as StepBuilder<T>
+  private getStepBuilder<T extends Steps>(step: T): Maybe<ActionBuilder<T>> {
+    return this._actionBuildersMap[step.type] as ActionBuilder<T>
   }
 
   private _generateOrder(
@@ -57,12 +54,7 @@ export class OrderPlanner implements IOrderPlanner {
       throw new Error(`Executor contract ${this.ExecutorContractName} not found in deployment`)
     }
 
-    const strategyName = getStrategyName(simulation)
-    if (!strategyName) {
-      throw new Error('No strategy name found for simulation')
-    }
-
-    const calldata = encodeStrategy(strategyName, simulationCalls)
+    const calldata = encodeStrategy(simulation.simulationType, simulationCalls)
 
     return {
       simulation: simulation,

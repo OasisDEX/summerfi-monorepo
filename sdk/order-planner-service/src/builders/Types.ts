@@ -1,8 +1,6 @@
 import { Simulation, SimulationSteps, SimulationType, Steps } from '@summerfi/sdk-common/orders'
 import { OrderPlannerContext } from '../context/OrderPlannerContext'
 
-export type Version = number
-
 export type FilterStep<T extends SimulationSteps, S extends Steps> = S extends { type: T }
   ? S
   : never
@@ -13,6 +11,4 @@ export type ActionBuilder<S extends Steps> = (params: {
   step: S
 }) => void
 
-export type StepBuildersMap = { [T in Steps['type']]: ActionBuilder<FilterStep<T, Steps>> }
-
-export type Test = FilterStep<SimulationSteps.Flashloan, Steps>
+export type ActionBuildersMap = { [T in Steps['type']]: ActionBuilder<FilterStep<T, Steps>> }

@@ -1,11 +1,23 @@
 import { ActionNames } from '@summerfi/deployment-types'
-import { Version } from '~orderplanner/interfaces'
 import { ActionInputStorageNames, ActionOutputStorageNames } from '~orderplanner/context/Types'
+
+export type ActionVersion = number
 
 export type ActionConfig = Readonly<{
   name: ActionNames
-  version: Version
+  version: ActionVersion
   parametersAbi: string
   storageInputs: ActionInputStorageNames
   storageOutputs: ActionOutputStorageNames
 }>
+
+/**
+ * @name ActionCall
+ * @description Represents a call to a smart contract method
+ */
+export type ActionCall = {
+  targetHash: string
+  callData: string
+}
+
+export type ActionCallBatch = ActionCall[]
