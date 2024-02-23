@@ -1,5 +1,5 @@
+import type { Position } from '~sdk-common/common'
 import { MigratePositionParameters, MigratePositionSimulation } from '~sdk-common/orders'
-import { Position } from '~sdk-common/users'
 
 /**
  * @interface MigrationSimulationManager

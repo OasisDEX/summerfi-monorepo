@@ -1,15 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable turbo/no-undeclared-env-vars */
 import { zeroAddress } from '@summerfi/common'
 import { ChainFamilyMap } from '@summerfi/sdk-common/chains'
 import { Wallet, Percentage } from '@summerfi/sdk-common/common'
-import { makeSDK } from '@summerfi/sdk-common/entrypoint'
+import { makeSDK } from '@summerfi/sdk-common/entrypoint/implementation'
 import type { RefinanceParameters } from '@summerfi/sdk-common/orders'
 import { ProtocolName, type LendingPoolParameters } from '@summerfi/sdk-common/protocols'
-import {
-  type PositionSerialized,
-  type PositionId,
-  PositionClientImpl,
-} from '@summerfi/sdk-common/users'
+import { IPositionId } from '@summerfi/sdk-common/client'
 import { createTRPCClient, httpBatchLink } from '@trpc/client'
 import type { AppRouter } from '~src/app-router'
 
@@ -33,7 +30,7 @@ describe('Refinance Client-Server Communication', () => {
   it('Refinance flow', async () => {
     const sdk = makeSDK()
 
-    const positionId: PositionId = {
+    const positionId: IPositionId = {
       id: '13242',
     }
     const chain = await sdk.chains.getChain({
@@ -43,15 +40,14 @@ describe('Refinance Client-Server Communication', () => {
       fail('Chain not found')
     }
 
-    const serializedPosition = (await sdkClient.getPosition.query({
+    const sourcePosition = await sdkClient.getPosition.query({
       id: positionId,
-      chainInfo: chain.chainInfo,
+      chain: chain,
       wallet,
-    })) as PositionSerialized | undefined
-    if (!serializedPosition) {
+    })
+    if (!sourcePosition) {
       fail('Position not found')
     }
-    const sourcePosition = PositionClientImpl.deserialize(serializedPosition)
 
     const WETH = await chain.tokens.getTokenBySymbol({ symbol: 'WETH' })
     if (!WETH) {
@@ -90,7 +86,7 @@ describe('Refinance Client-Server Communication', () => {
       slippage: Percentage.createFrom({ percentage: 20.5 }),
     }
 
-    const simulation = await sdkClient.getSimulation.query({
+    const simulation = await sdkClient.simulation.refinance.query({
       pool: pool,
       parameters: refinanceParameters,
       position: sourcePosition,

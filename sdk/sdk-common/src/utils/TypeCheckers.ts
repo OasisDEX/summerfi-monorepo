@@ -1,4 +1,4 @@
-import { Currency, Token } from '~sdk-common/common'
+import { CurrencySymbol, Token } from '~sdk-common/common'
 
 export function isToken(maybeToken: unknown): maybeToken is Token {
   return (
@@ -12,6 +12,6 @@ export function isToken(maybeToken: unknown): maybeToken is Token {
   )
 }
 
-export function isCurrency(maybeCurrency: unknown): maybeCurrency is Currency {
-  return Object.values(Currency).includes(maybeCurrency as Currency)
+export function isCurrency(maybeCurrency: unknown): maybeCurrency is CurrencySymbol {
+  return Object.values(CurrencySymbol).includes(maybeCurrency as CurrencySymbol)
 }

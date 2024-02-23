@@ -3,6 +3,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "baseUrl": ".",
+    "allowJs": true,
     "paths": {
       "~src/*": ["src/*"],
       "@summerfi/common": ["node_modules/@summerfi/common/src/index.ts"],

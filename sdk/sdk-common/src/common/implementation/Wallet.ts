@@ -1,22 +1,27 @@
-import { Address } from './Address'
-import { Printable } from './Printable'
+import { SerializationManager, Address } from '~sdk-common/common'
+
+interface IWalletSerialized {
+  address: Address
+}
 
 /**
  * @interface Wallet
  * @description Represents a wallet on a blockchain
  */
-export class Wallet implements Printable {
-  public readonly address: Address
+export class Wallet implements IWalletSerialized {
+  readonly address: Address
 
-  constructor(params: { hexValue: string }) {
-    this.address = Address.createFrom(params)
+  private constructor(params: IWalletSerialized) {
+    this.address = params.address
   }
 
-  public static createFrom(params: { hexValue: string }): Wallet {
-    return new Wallet(params)
+  static createFrom({ hexValue }: { hexValue: string }): Wallet {
+    return new Wallet({ address: Address.createFrom({ hexValue }) })
   }
 
-  public toString(): string {
+  toString(): string {
     return `Wallet: ${this.address.toString()}`
   }
 }
+
+SerializationManager.registerClass(Wallet)

@@ -1,11 +1,9 @@
-import { ChainInfo } from '~sdk-common/chains'
-import { Address, Token } from '~sdk-common/common'
-import { TokenSymbol } from '~sdk-common/tokens'
+import { Address, Token, type ChainInfo, TokenSymbol } from '~sdk-common/common'
 import { Maybe } from '~sdk-common/utils'
 
 export async function getMockTokenBySymbol(params: {
   chainInfo: ChainInfo
-  symbol: TokenSymbol | string
+  symbol: TokenSymbol
 }): Promise<Maybe<Token>> {
   switch (params.symbol) {
     case TokenSymbol.DAI:

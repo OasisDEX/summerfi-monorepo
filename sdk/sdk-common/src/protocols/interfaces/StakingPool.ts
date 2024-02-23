@@ -1,10 +1,10 @@
 import { Token } from '~sdk-common/common'
-import { Pool } from './Pool'
+import { IPool } from './IPool'
 
 /**
  * @interface StakingPool
  * @description Represents a staking pool. Provides information about the staking token
  */
-export interface StakingPool extends Pool {
+export interface StakingPool extends IPool {
   stakingToken: Token
 }

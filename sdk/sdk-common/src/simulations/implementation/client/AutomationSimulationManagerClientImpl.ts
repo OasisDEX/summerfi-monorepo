@@ -5,7 +5,7 @@ import {
   AutomationId,
   RemoveAutomationSimulation,
 } from '~sdk-common/orders'
-import { Position } from '~sdk-common/users'
+import type { Position } from '~sdk-common/common'
 
 export class AutomationSimulationManagerClientImpl implements AutomationSimulationManager {
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */

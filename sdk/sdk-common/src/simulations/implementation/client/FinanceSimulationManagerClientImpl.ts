@@ -8,7 +8,7 @@ import {
   CreatePositionSimulation,
 } from '~sdk-common/orders'
 import { Pool } from '~sdk-common/protocols'
-import { Position } from '~sdk-common/users'
+import type { Position } from '~sdk-common/common'
 
 export class FinanceSimulationManagerClientImpl implements FinanceSimulationManager {
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */

@@ -2,8 +2,8 @@
 import { ChainFamilyMap } from '@summerfi/sdk-common/chains'
 import { Wallet } from '@summerfi/sdk-common/common'
 import { zeroAddress } from '@summerfi/common'
-import { makeSDK } from '@summerfi/sdk-common/entrypoint'
-import type { PositionId } from '@summerfi/sdk-common/users'
+import { makeSDK } from '@summerfi/sdk-common/entrypoint/implementation'
+import type { PositionId } from '@summerfi/sdk-common/client'
 import { testAppRouter } from '~src/test-utils'
 
 describe('getPosition', () => {

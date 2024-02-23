@@ -1,9 +1,9 @@
 import { router } from '~src/trpc'
-import { getPosition } from './procedures/getPosition'
-import { getPool } from '~src/procedures/getPool'
-import { getSimulation } from '~src/procedures/getSimulation'
-import { getOrder } from '~src/procedures/getOrder'
-import { getToken } from '~src/procedures/getToken'
+import { getPosition } from './handlers/getPosition'
+import { getPool } from '~src/handlers/getPool'
+import { getRefinanceSimulation } from '~src/handlers/getRefinanceSimulation'
+import { getOrder } from '~src/handlers/getOrder'
+import { getToken } from '~src/handlers/getToken'
 
 /**
  * Server
@@ -12,7 +12,7 @@ import { getToken } from '~src/procedures/getToken'
 export const appRouter = router({
   getPosition: getPosition,
   getPool: getPool,
-  getSimulation: getSimulation,
+  simulation: { refinance: getRefinanceSimulation },
   getOrder: getOrder,
   getToken: getToken,
 })
