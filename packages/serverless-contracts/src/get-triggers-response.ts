@@ -36,6 +36,7 @@ export type AaveStopLossToCollateral = Trigger & {
     debtToken: string
     collateralToken: string
     executionLtv: string
+    ltv: string
   }
 }
 export type AaveStopLossToDebt = Trigger & {
@@ -48,6 +49,7 @@ export type AaveStopLossToDebt = Trigger & {
     debtToken: string
     collateralToken: string
     executionLtv: string
+    ltv: string
   }
 }
 export type SparkStopLossToCollateral = Trigger & {
@@ -60,6 +62,7 @@ export type SparkStopLossToCollateral = Trigger & {
     debtToken: string
     collateralToken: string
     executionLtv: string
+    ltv: string
   }
 }
 export type SparkStopLossToDebt = Trigger & {
@@ -72,6 +75,7 @@ export type SparkStopLossToDebt = Trigger & {
     debtToken: string
     collateralToken: string
     executionLtv: string
+    ltv: string
   }
 }
 export type AaveStopLossToCollateralDMA = Trigger & {
