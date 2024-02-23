@@ -27,6 +27,13 @@ export function getCurrentStopLoss(
     }),
   )
 
+  const ltv = safeParseBigInt(
+    getPropertyFromTriggerParams({
+      trigger: currentStopLoss,
+      property: 'ltv',
+    }),
+  )
+
   const executionPrice = safeParseBigInt(
     getPropertyFromTriggerParams({
       trigger: currentStopLoss,
@@ -34,13 +41,14 @@ export function getCurrentStopLoss(
     }),
   )
 
-  if (executionLtv === undefined && executionPrice === undefined) {
+  if (executionLtv === undefined && ltv === undefined && executionPrice === undefined) {
     logger?.warn('Stop loss trigger has no executionLtv or executionPrice')
     return undefined
   }
 
   const stopLossExecutionLtv =
     executionLtv ??
+    ltv ??
     calculateLtv({
       ...position,
       collateralPriceInDebt: executionPrice!,
