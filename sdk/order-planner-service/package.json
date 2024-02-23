@@ -8,15 +8,10 @@
     "testw": "jest --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap"
+    "build": "tsc -b -v tsconfig.build.json"
   },
   "dependencies": {
-    "@aws-lambda-powertools/logger": "^1.17.0",
-    "@aws-lambda-powertools/metrics": "^1.17.0",
-    "@aws-lambda-powertools/tracer": "^1.17.0",
     "@summerfi/sdk-common": "workspace:*",
-    "@summerfi/serverless-shared": "workspace:*",
-    "@summerfi/core-contracts": "workspace:*",
     "@summerfi/deployment-utils": "workspace:*",
     "@summerfi/deployment-types": "workspace:*"
   },

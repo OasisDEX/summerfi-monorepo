@@ -1,5 +1,5 @@
 import { Maybe } from '@summerfi/sdk-common/utils'
-import { ActionCall, ActionCallBatch } from '~orderplanner/interfaces'
+import { ActionCall, ActionCallBatch } from '~orderplanner/actions'
 
 export class ActionCallsStack {
   private callsStack: ActionCallBatch[]

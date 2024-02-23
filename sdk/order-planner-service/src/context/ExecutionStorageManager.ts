@@ -1,7 +1,7 @@
 import { Steps } from '@summerfi/sdk-common/orders'
 import { Maybe } from '@summerfi/sdk-common/utils'
 import { BaseAction } from '~orderplanner/actions'
-import { StorageOutputsMapType } from './Types'
+import { StorageInputsMapType, StorageOutputsMapType } from './Types'
 import assert from 'assert'
 
 export class ExecutionStorageManager {
@@ -13,6 +13,7 @@ export class ExecutionStorageManager {
   public addStorageMap<Step extends Steps, Action extends BaseAction>(params: {
     step: Step
     action: Action
+    connectedInputs: Partial<StorageInputsMapType<Step, Action>>
     connectedOutputs: StorageOutputsMapType<Step, Action>
   }): void {
     const baseSlot = this.currentSlot

@@ -9,6 +9,8 @@ export type {
   PaybackWithdrawStep,
   SwapStep,
   ReturnFunds,
+  ReferenceableField,
+  ValueReference,
 } from './Simulation'
 export { FlashloanProvider } from './Simulation'
 export { SimulationSteps } from './Simulation'

@@ -1,10 +1,9 @@
-import { BaseAction } from '~orderplanner/actions'
+import { BaseAction, ActionCallBatch } from '~orderplanner/actions'
 import { ActionCallsStack } from './ActionCallsStack'
 import { ExecutionStorageManager } from './ExecutionStorageManager'
 import { Steps } from '@summerfi/sdk-common/orders'
-import { ActionCallBatch } from '~orderplanner'
 import { Maybe } from '@summerfi/sdk-common/utils'
-import { StorageOutputsMapType } from './Types'
+import { StorageInputsMapType, StorageOutputsMapType } from './Types'
 
 export class OrderPlannerContext {
   private _calls: ActionCallsStack = new ActionCallsStack()
@@ -14,6 +13,7 @@ export class OrderPlannerContext {
     step: Step
     action: Action
     arguments: Parameters<Action['encodeCall']>[0]
+    connectedInputs: Partial<StorageInputsMapType<Step, Action>>
     connectedOutputs: StorageOutputsMapType<Step, Action>
   }) {
     const call = params.action.encodeCall(params.arguments)
@@ -21,6 +21,7 @@ export class OrderPlannerContext {
     this._storage.addStorageMap({
       step: params.step,
       action: params.action,
+      connectedInputs: params.connectedInputs,
       connectedOutputs: params.connectedOutputs,
     })
   }

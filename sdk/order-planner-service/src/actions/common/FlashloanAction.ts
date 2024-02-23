@@ -1,7 +1,5 @@
-import { ActionCall } from '~orderplanner/interfaces/Action'
-import { BaseAction } from './BaseAction'
+import { ActionCall, ActionConfig, BaseAction } from '~orderplanner/actions'
 import { TokenAmount } from '@summerfi/sdk-common/common'
-import { ActionConfig } from './Types'
 
 // Local type as optional actions are not supported anymore in the new executor
 type OptionalActionCall = ActionCall & {
@@ -17,7 +15,7 @@ export class FlashloanAction extends BaseAction {
 
     storageInputs: [],
     storageOutputs: [],
-  }
+  } as const
 
   public encodeCall(params: {
     amount: TokenAmount

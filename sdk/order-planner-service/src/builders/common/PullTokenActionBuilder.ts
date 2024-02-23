@@ -1,5 +1,6 @@
 import { PullTokenStep, Simulation, SimulationType } from '@summerfi/sdk-common/orders'
-import { ActionBuilder, OrderPlannerContext } from '~orderplanner/interfaces'
+import { ActionBuilder } from '~orderplanner/builders'
+import { OrderPlannerContext } from '~orderplanner/context'
 import { ActionNames } from '@summerfi/deployment-types'
 import { PullTokenAction } from '~orderplanner/actions'
 
@@ -17,6 +18,7 @@ export const PullTokenActionBuilder: ActionBuilder<PullTokenStep> = (params: {
       pullAmount: params.step.inputs.amount,
       pullTo: params.simulation.positionsManagerAddress,
     },
+    connectedInputs: {},
     connectedOutputs: {},
   })
 }

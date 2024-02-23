@@ -1,7 +1,5 @@
-import { ActionCall } from '~orderplanner/interfaces/Action'
-import { BaseAction } from './BaseAction'
+import { ActionCall, ActionConfig, BaseAction } from '~orderplanner/actions'
 import { Address, TokenAmount } from '@summerfi/sdk-common/common'
-import { ActionConfig } from './Types'
 
 export class PullTokenAction extends BaseAction {
   public readonly config: ActionConfig = {
@@ -10,7 +8,7 @@ export class PullTokenAction extends BaseAction {
     parametersAbi: 'address, address, uint256',
     storageInputs: [],
     storageOutputs: [],
-  }
+  } as const
 
   public encodeCall(params: { pullAmount: TokenAmount; pullTo: Address }): ActionCall {
     return this._encodeCall([

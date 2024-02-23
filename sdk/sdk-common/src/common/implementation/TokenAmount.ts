@@ -1,4 +1,3 @@
-import { Printable } from './Printable'
 import { Token } from './Token'
 import { BigNumber } from 'bignumber.js'
 
@@ -8,7 +7,7 @@ import { BigNumber } from 'bignumber.js'
  *              issues with big number representation. The token gives enough information to parse it into
  *              a big number.
  */
-export class TokenAmount implements Printable {
+export class TokenAmount {
   public readonly token: Token
   public readonly amount: string
   private readonly _baseUnitFactor: BigNumber
@@ -21,10 +20,6 @@ export class TokenAmount implements Printable {
 
   public static createFrom(params: { token: Token; amount: string }): TokenAmount {
     return new TokenAmount(params.token, params.amount)
-  }
-
-  public toString(): string {
-    return `${this.amount} ${this.token.symbol}`
   }
 
   public toBaseUnit(): string {

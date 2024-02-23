@@ -1,5 +1,1 @@
-export { encodeAction } from './EncodeAction'
 export { encodeStrategy } from './EncodeStrategy'
-export type { SlotNumber, StepNameType, StrategyStorage, VarNameType } from './StrategyStorage'
-export { StepStorage } from './StrategyStorage'
-export { getStrategyName } from './StrategyName'

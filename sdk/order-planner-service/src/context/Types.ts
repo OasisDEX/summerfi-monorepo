@@ -16,10 +16,19 @@ export type StorageInputsType<Action extends BaseAction> = Action['config']['sto
 export type StorageOutputsType<Action extends BaseAction> =
   Action['config']['storageOutputs'][number]
 
+export type StepKeysMatching<Step extends Steps, V> = {
+  [K in keyof Step['inputs']]-?: Step['inputs'][K] extends V ? K : never
+}[keyof Step['inputs']]
+
+// TODO: The StepInputsType should be using the StepKeysMatching type to extract only the names that are of
+// type ValueReference, but for some reason the resolution of the type does not work when using an object
+// imported from another package, like the SwapStep from the sdk-common package. For now all the keys in the
+// object are used as the type for the StepInputsType.
+export type StepInputsType<T extends Steps> = keyof T['inputs']
 export type StepOutputsType<T extends Steps> = keyof T['outputs']
 
 export type StorageInputsMapType<Step extends Steps, Action extends BaseAction> = StorageAliasMap<
-  StepOutputsType<Step>,
+  StepInputsType<Step>,
   StorageInputsType<Action>
 >
 

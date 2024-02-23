@@ -5,7 +5,7 @@ import {
   SwapActionBuilder,
   FlashloanActionBuilder,
   ActionBuildersMap,
-} from './builders'
+} from '~orderplanner/builders'
 
 // TODO: remove the Partial when all the builders are implemented
 export const StepBuilders: Partial<ActionBuildersMap> = {

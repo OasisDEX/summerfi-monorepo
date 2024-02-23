@@ -17,6 +17,8 @@ export interface ValueReference<T> {
   path: [string, string]
 }
 
+export type ReferenceableField<T> = T | ValueReference<T>
+
 export function isValueReference<T>(value: T | ValueReference<T>): value is ValueReference<T> {
   return (value as ValueReference<T>).estimatedValue !== undefined
 }

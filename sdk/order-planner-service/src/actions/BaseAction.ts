@@ -1,4 +1,4 @@
-import { ActionCall } from '~orderplanner/interfaces'
+import { ActionCall } from '~orderplanner/actions'
 import {
   parseAbi,
   encodeFunctionData,

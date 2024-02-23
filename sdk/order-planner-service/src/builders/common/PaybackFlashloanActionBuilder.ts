@@ -5,8 +5,12 @@ import {
   Simulation,
   SimulationType,
 } from '@summerfi/sdk-common/orders'
-import { OrderPlannerContext, ActionBuilder } from '~orderplanner/interfaces'
+import { ActionBuilder } from '~orderplanner/builders'
+import { OrderPlannerContext } from '~orderplanner/context'
 import { FlashloanAction } from '~orderplanner/actions'
+import { ActionNames } from '@summerfi/deployment-types'
+
+export const PaybackFlashloanActionList: ActionNames[] = []
 
 /* This values are coming from TakeFlashloan contract data types */
 export const FlashloanProviderMap: Record<FlashloanProvider, number> = {
@@ -33,6 +37,7 @@ export const PaybackFlashloanActionBuilder: ActionBuilder<PaybackFlashloan> = (p
       provider: FlashloanProviderMap[customData.provider],
       calls: callsBatch,
     },
+    connectedInputs: {},
     connectedOutputs: {},
   })
 }
