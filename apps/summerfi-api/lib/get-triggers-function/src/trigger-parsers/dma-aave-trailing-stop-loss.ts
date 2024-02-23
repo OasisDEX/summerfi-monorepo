@@ -88,7 +88,7 @@ export const getDmaAaveTrailingStopLoss = async ({
       closeToCollateral: trigger.decodedData[trigger.decodedDataNames.indexOf('closeToCollateral')],
     },
     dynamicParams: {
-      executionPrice: dynamicParams.executionPrice?.toString(),
+      executionPrice: (dynamicParams.executionPrice ?? dynamicParams.originalPrice)?.toString(),
       originalExecutionPrice: dynamicParams.originalPrice?.toString(),
     },
   }
