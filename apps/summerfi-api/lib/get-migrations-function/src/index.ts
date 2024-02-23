@@ -22,7 +22,12 @@ const paramsSchema = z
     chainId: z
       .string()
       .optional()
-      .transform((val) => parseInt(val ?? '-1', 10)),
+      .transform((val) => {
+        if (val === undefined) {
+          return undefined
+        }
+        return parseInt(val, 10)
+      }),
   })
   .refine(
     (params) => {
