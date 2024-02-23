@@ -33,6 +33,8 @@ interface Step<T extends SimulationSteps, I, O = undefined, N extends string = s
   skip?: boolean
 }
 
+type StepOutputProcessor<T extends Steps> = (step: Omit<T, 'outputs'>) => Promise<T>
+
 interface FlashloanStep extends Step<
   SimulationSteps.Flashloan,
   {
@@ -41,10 +43,24 @@ interface FlashloanStep extends Step<
   }
 > { }
 
+const flashloanOutputProcessor: StepOutputProcessor<FlashloanStep> = async (step) => {
+  return {
+    ...step,
+    outputs: undefined
+  }
+}
+
 interface PullTokenStep extends Step<
   SimulationSteps.PullToken,
   { amount: ReferencableField<TokenAmount> }
 > { }
+
+const pullTokenOutputProcessor: StepOutputProcessor<PullTokenStep> = async (step) => {
+  return {
+    ...step,
+    outputs: undefined
+  }
+}
 
 interface DepositBorrowStep extends Step<SimulationSteps.DepositBorrow,
   {
@@ -59,6 +75,20 @@ interface DepositBorrowStep extends Step<SimulationSteps.DepositBorrow,
   }
 > { }
 
+const depositBorrowOutputProcessor: StepOutputProcessor<DepositBorrowStep> = async (step) => {
+  const depositAmount = step.inputs.additionalDeposit
+    ? getReferencedValue(step.inputs.additionalDeposit).add(getReferencedValue(step.inputs.depositAmount)) 
+    : getReferencedValue(step.inputs.depositAmount)
+
+  return {
+    ...step,
+    outputs: {
+      depositAmount: depositAmount,
+      borrowAmount: getReferencedValue(step.inputs.borrowAmount)
+    }
+  }
+}
+
 interface PaybackWithdrawStep extends Step<
   SimulationSteps.PaybackWithdraw,
   {
@@ -71,6 +101,24 @@ interface PaybackWithdrawStep extends Step<
     withdrawAmount: TokenAmount
   }
 > { }
+
+const paybackWithdrawOutputProcessor: StepOutputProcessor<PaybackWithdrawStep> = async (step) => {
+  const paybackAmount = getReferencedValue(step.inputs.paybackAmount).amount > step.inputs.position.debtAmount.amount 
+    ? step.inputs.position.debtAmount 
+    : getReferencedValue(step.inputs.paybackAmount)
+
+  const withdrawAmount = getReferencedValue(step.inputs.withdrawAmount).amount > step.inputs.position.collateralAmount.amount
+    ? step.inputs.position.collateralAmount
+    : getReferencedValue(step.inputs.withdrawAmount)
+
+  return {
+    ...step,
+    outputs: {
+      paybackAmount: paybackAmount,
+      withdrawAmount: withdrawAmount
+    }
+  }
+}
 
 interface SwapStep extends Step<
   SimulationSteps.Swap,
@@ -85,15 +133,38 @@ interface SwapStep extends Step<
   }
 > { }
 
+const swapOutputProcessor: StepOutputProcessor<SwapStep> = async (step) => {
+  return {
+    ...step,
+    outputs: {
+      recievedAmount: step.inputs.toTokenAmount
+    }
+  }
+}
+
 interface ReturnFunds extends Step<
   SimulationSteps.ReturnFunds,
   { token: Token }
 > { }
 
+const returnFundsOutputProcessor: StepOutputProcessor<ReturnFunds> = async (step) => {
+  return {
+    ...step,
+    outputs: undefined
+  }
+}
+
 interface RepayFlashloan extends Step<
   SimulationSteps.PaybackFlashloan,
   { amount: TokenAmount }
 > { }
+
+const repayFlashloanOutputProcessor: StepOutputProcessor<RepayFlashloan> = async (step) => {
+  return {
+    ...step,
+    outputs: undefined
+  }
+}
 
 export type Steps =
   | FlashloanStep
@@ -104,13 +175,25 @@ export type Steps =
   | ReturnFunds
   | RepayFlashloan
 
+type StepOutputProcessors = {[Type in Steps['type']]: StepOutputProcessor<Where<Steps, {type: Type}>>}
+
+const stepOutputProcessors: StepOutputProcessors = {
+  [SimulationSteps.Flashloan]: flashloanOutputProcessor,
+  [SimulationSteps.DepositBorrow]: depositBorrowOutputProcessor,
+  [SimulationSteps.PaybackWithdraw]: paybackWithdrawOutputProcessor,
+  [SimulationSteps.Swap]: swapOutputProcessor,
+  [SimulationSteps.ReturnFunds]: returnFundsOutputProcessor,
+  [SimulationSteps.PaybackFlashloan]: repayFlashloanOutputProcessor,
+  [SimulationSteps.PullToken]: pullTokenOutputProcessor,
+}
+
 /**
  * @interface Simulation
  * @description Simulation of a position. Specialized into the different types of simulations needed
  */
 export interface Simulation<T extends SimulationType> {
   simulationType: T
-  sourcePosition: Position // TODO figure what do to when opening position (empty position or optional)
+  sourcePosition?: Position // TODO figure what do to when opening position (empty position or optional)
   targetPosition: Position
   steps: Steps[]
   // OPEN QUESTION: where errors and warnings and info messages?
@@ -171,7 +254,7 @@ interface SimulationState {
   // mapping between token address and token amount
   balances: Record<string, TokenAmount>
   positions: Record<string, Position>
-  steps: Steps[]
+  steps: Record<string /* step name */, Steps>
 }
 
 function isReference<T>(value: ReferencableField<T>): value is ValueReference<T> {
@@ -207,11 +290,20 @@ function switchCheck(_a: never): never {
   throw new Error('Run out of cases')
 }
 
-function processStep(step: Steps, state: SimulationState): SimulationState {
+type StepsWithouOutputs = Omit<Steps, 'outputs'>
+async function processStepOutput(step: StepsWithouOutputs): Promise<Steps> {
+  const processor = stepOutputProcessors[step.type] as StepOutputProcessor<Steps>
+  return processor(step)
+}
+
+function processState(step: Steps, state: SimulationState): SimulationState {
   switch (step.type) {
     case SimulationSteps.Flashloan: {
       return {
         ...state,
+        steps: {
+          [step.name]: step
+        },
         balances: addBalance(step.inputs.amount, state.balances)
       }
     }
@@ -224,8 +316,11 @@ function processStep(step: Steps, state: SimulationState): SimulationState {
       // const updatedPosition = deposit(state.positions[step.inputs.position.positionId] || step.inputs.position, amount): Position
       return {
         ...state,
-        positions: {
-          [step.inputs.position.positionId.id]: updatedPosition
+        // positions: {
+        //   [step.inputs.position.positionId.id]: updatedPosition
+        // },
+        steps: {
+          [step.name]: step
         },
         balances: afterBorrow
       }
@@ -235,6 +330,9 @@ function processStep(step: Steps, state: SimulationState): SimulationState {
       const afterWithdraw = subtractBalance(getReferencedValue(step.inputs.withdrawAmount), afterPayback)
       return {
         ...state,
+        steps: {
+          [step.name]: step
+        },
         balances: afterWithdraw
       }
     }
@@ -243,24 +341,36 @@ function processStep(step: Steps, state: SimulationState): SimulationState {
       const balanceWithToToken = addBalance(step.outputs.recievedAmount, balanceWithoutFromToken)
       return {
         ...state,
+        steps: {
+          [step.name]: step
+        },
         balances: balanceWithToToken
       }
     }
     case SimulationSteps.ReturnFunds: {
       return {
         ...state,
+        steps: {
+          [step.name]: step
+        },
         balances: subtractBalance(getTokenBalance(step.inputs.token, state.balances), state.balances)
       }
     }
     case SimulationSteps.PaybackFlashloan: {
       return {
         ...state,
+        steps: {
+          [step.name]: step
+        },
         balances: subtractBalance(step.inputs.amount, state.balances)
       }
     }
     case SimulationSteps.PullToken: {
       return {
         ...state,
+        steps: {
+          [step.name]: step
+        },
         balances: addBalance(getReferencedValue(step.inputs.amount), state.balances)
       }
     }
@@ -270,10 +380,9 @@ function processStep(step: Steps, state: SimulationState): SimulationState {
   }
 }
 
-type NextFunction<T extends SimulationSchema, N extends string> = T extends EmptyArray ? never : (ctx: SimulationState) => Promise<Omit<Where<Steps, { type: T[0]['step'], name: N }>, 'outputs'>>;
-type RegisteredStepsTypesFromNextArray<NextArray extends NextFunction<SimulationSchema, string>[]> = Unpack<ReturnType<Unpack<NextArray>>>['type']
-type RegisteredStepsNamesFromNextArray<NextArray extends NextFunction<SimulationSchema, string>[]> = Unpack<ReturnType<Unpack<NextArray>>>['name']
-type RegisteredStepsFromNextArray<S extends NextFunction<SimulationSchema>[]> = {[key in RegisteredStepsNamesFromNextArray<S>]: key }
+type NextFunction<Schema extends SimulationSchema, Name extends string = string> = Schema extends EmptyArray 
+  ? never 
+  : (ctx: {state: SimulationState, getReference: (path: [string, string]) => ValueReference<any>}) => Promise<Omit<Where<Steps, { type: Schema[0]['step'], name: Name }>, 'outputs'>>;
 
 function tail<T extends readonly any[]>(arr: T): Tail<T> {
   const [_, ...rest] = arr
@@ -281,43 +390,47 @@ function tail<T extends readonly any[]>(arr: T): Tail<T> {
   return rest as any as Tail<T>
 }
 
-class Simulator<Shema extends SimulationSchema, NextArray extends NextFunction<SimulationSchema>[] = []> {
+class Simulator<Shema extends SimulationSchema, NextArray extends NextFunction<SimulationSchema, string>[] = []> {
   private state: SimulationState
-  private nextArray = [] as unknown as NextArray
+  private readonly nextArray: NextArray
 
-  private constructor(public schema: Shema, state: SimulationState = { balances: {}, positions: {}, steps: [] }) {
+  private constructor(public schema: Shema, state: SimulationState = { balances: {}, positions: {}, steps: {} }, nextArray: Readonly<NextArray> = [] as unknown as NextArray) {
     this.state = state
+    this.nextArray = nextArray
   }
 
   static create<S extends SimulationSchema>(schema: S) {
     return new Simulator(schema)
   }
 
-  public test(t: NextArray) {
-    return t
+  public async run(simulationType: Shema extends EmptyArray ? SimulationType : never): Promise<Shema extends EmptyArray ? Simulation<SimulationType> : never> {
+    const getReference = (path: [string, string]) => {
+      const [step, name] = path
+      return {
+        estimatedValue: (this.state.steps[step] as any).outputs[name as any], // TODO: fix this types
+        path
+      }
+    }
+
+    for (const next of this.nextArray) {
+      const nextStep = await next({state: this.state, getReference })
+      const fullStep = await processStepOutput(nextStep)
+      this.state = processState(fullStep, this.state)
+    }
+
+    return {
+      simulationType: simulationType,
+      sourcePosition: this.state.positions['sourcePosition'],
+      targetPosition: this.state.positions['targetPosition'],
+      steps: this.state.steps
+    } as any
   }
 
   public next<N extends string>(next: NextFunction<Shema, N>): Simulator<Tail<Shema>, [...NextArray, NextFunction<Shema, N>]> {
-    const [currentSchemaStep, ...rest] = this.schema
     const _tail = tail(this.schema)
-    this.nextArray.push(next)
+    const nextArray = [...this.nextArray, next] as const
 
-    // const proccesedStep = await next(this.state)
-
-    // if (currentSchemaStep.step !== proccesedStep.type) {
-    //   throw new Error(`Invalid step, extected ${currentSchemaStep.step} but got ${proccesedStep.type}`)
-    // }
-
-    // if (!currentSchemaStep.optional && proccesedStep.skip) {
-    //   throw new Error(`Step ${proccesedStep.name} is not optional`)
-    // }
-
-    // const nextState = processStep(proccesedStep, this.state)
-
-    // this.steps.push(proccesedStep)
-    // this.state = nextState
-
-    return new Simulator<Tail<Shema>, [...NextArray, NextFunction<Shema, N>]>(_tail, this.state)
+    return new Simulator<Tail<Shema>, [...NextArray, NextFunction<Shema, N>]>(_tail, this.state, nextArray)
   }
 }
 
@@ -343,9 +456,18 @@ const x = simulator
     type: SimulationSteps.PaybackWithdraw,
     inputs: {
       paybackAmount: TokenAmount.createFrom({ amount: '0', token: debtToken }),
-      withdrawAmount: TokenAmount.createFrom({ amount: '0', token: collateralToken }),
+      withdrawAmount: ctx.getReference(['Flashloan', 'recievedAmount']),
       position: markerPosition
     },
+  })).next(async (ctx) => ({
+    name: 'Swap',
+    type: SimulationSteps.Swap,
+    inputs: {
+      fromTokenAmount: TokenAmount.createFrom({ amount: '0', token: collateralToken }),
+      toTokenAmount: TokenAmount.createFrom({ amount: '0', token: collateralToken }),
+      slippage: 0.05,
+      fee: 0.03
+    },
   }))
-  .test('Flashloan')
+
   

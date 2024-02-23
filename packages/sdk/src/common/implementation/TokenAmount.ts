@@ -20,7 +20,7 @@ export class TokenAmount implements Printable {
   public static createFrom(params: { token: Token; amount: string }): TokenAmount {
     return new TokenAmount(params.token, params.amount)
   }
-
+// amount in base unit (1eth = 1000000000000000000, 1btc = 100000000 etc)
   public static createFromBaseUnit(parmas: {token: Token, amount: string}): TokenAmount {
     return new TokenAmount(parmas.token, (parseFloat(parmas.amount) / Math.pow(10, parmas.token.decimals)).toString())
   }
