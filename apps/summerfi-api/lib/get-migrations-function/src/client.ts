@@ -48,7 +48,7 @@ export function createMigrationsClient(
       if (!isChainId(chainId)) {
         throw new Error(`Invalid chainId: ${chainId}`)
       }
-      if (customChainId !== chainId) {
+      if (customChainId && customChainId !== chainId) {
         return
       }
       supportedProtocolsIds.forEach((protocolId) => {
