@@ -1,6 +1,7 @@
 import { Address, Token, TokenAmount } from '~sdk/common'
 import { SimulationType } from './SimulationType'
 import { Position } from '~sdk/users'
+import { Pool } from '~sdk/protocols'
 
 export enum SimulationSteps {
   Flashloan = 'Flashloan',
@@ -199,14 +200,14 @@ export interface Simulation<T extends SimulationType> {
   // OPEN QUESTION: where errors and warnings and info messages?
 }
 
-export interface SchemaStep {
+export interface StrategyStep {
   step: SimulationSteps
   optional: boolean
 }
 
-type SimulationSchema = readonly SchemaStep[]
+type SimulationStrategy = readonly StrategyStep[]
 
-const refinanceSchema = [
+const refinanceStrategy = [
   {
     step: SimulationSteps.Flashloan,
     optional: false,
@@ -380,7 +381,7 @@ function processState(step: Steps, state: SimulationState): SimulationState {
   }
 }
 
-type NextFunction<Schema extends SimulationSchema, Name extends string = string> = Schema extends EmptyArray 
+type NextFunction<Schema extends SimulationStrategy, Name extends string = string> = Schema extends EmptyArray 
   ? never 
   : (ctx: {state: SimulationState, getReference: (path: [string, string]) => ValueReference<any>}) => Promise<Omit<Where<Steps, { type: Schema[0]['step'], name: Name }>, 'outputs'>>;
 
@@ -390,20 +391,20 @@ function tail<T extends readonly any[]>(arr: T): Tail<T> {
   return rest as any as Tail<T>
 }
 
-class Simulator<Shema extends SimulationSchema, NextArray extends NextFunction<SimulationSchema, string>[] = []> {
+class Simulator<Strategy extends SimulationStrategy, NextArray extends NextFunction<SimulationStrategy, string>[] = []> {
   private state: SimulationState
   private readonly nextArray: NextArray
 
-  private constructor(public schema: Shema, state: SimulationState = { balances: {}, positions: {}, steps: {} }, nextArray: Readonly<NextArray> = [] as unknown as NextArray) {
+  private constructor(public schema: Strategy, state: SimulationState = { balances: {}, positions: {}, steps: {} }, nextArray: Readonly<NextArray> = [] as unknown as NextArray) {
     this.state = state
     this.nextArray = nextArray
   }
 
-  static create<S extends SimulationSchema>(schema: S) {
+  static create<S extends SimulationStrategy>(schema: S) {
     return new Simulator(schema)
   }
 
-  public async run(simulationType: Shema extends EmptyArray ? SimulationType : never): Promise<Shema extends EmptyArray ? Simulation<SimulationType> : never> {
+  public async run(): Promise<Strategy extends EmptyArray ? SimulationState : never> {
     const getReference = (path: [string, string]) => {
       const [step, name] = path
       return {
@@ -418,31 +419,40 @@ class Simulator<Shema extends SimulationSchema, NextArray extends NextFunction<S
       this.state = processState(fullStep, this.state)
     }
 
-    return {
-      simulationType: simulationType,
-      sourcePosition: this.state.positions['sourcePosition'],
-      targetPosition: this.state.positions['targetPosition'],
-      steps: this.state.steps
-    } as any
+    return this.state
   }
 
-  public next<N extends string>(next: NextFunction<Shema, N>): Simulator<Tail<Shema>, [...NextArray, NextFunction<Shema, N>]> {
+  public next<N extends string>(next: NextFunction<Strategy, N>): Simulator<Tail<Strategy>, [...NextArray, NextFunction<Strategy, N>]> {
     const _tail = tail(this.schema)
     const nextArray = [...this.nextArray, next] as const
 
-    return new Simulator<Tail<Shema>, [...NextArray, NextFunction<Shema, N>]>(_tail, this.state, nextArray)
+    return new Simulator<Tail<Strategy>, [...NextArray, NextFunction<Strategy, N>]>(_tail, this.state, nextArray)
   }
 }
 
-const simulator = Simulator.create(refinanceSchema)
+
 
 declare const debtToken: Token
 declare const collateralToken: Token
 declare const markerPosition: Position
+declare const markerPosition2: Position
 declare const sparkPosition: Position
 
 
-const x = simulator
+function refinace(
+  args: {
+    position: Position,
+    targetPool: Pool,
+    slippage: number,
+  },
+  dependecies: {
+    getSwap: () => {}
+    feeResolver: () => {}
+  }
+) {
+  const simulator = Simulator.create(refinanceStrategy)
+
+  const x = simulator
   .next(async (ctx) => ({
     name: 'Flashloan',
     type: SimulationSteps.Flashloan,
@@ -468,6 +478,10 @@ const x = simulator
       slippage: 0.05,
       fee: 0.03
     },
-  }))
+    skip: true,
+  })).run()
+
+}
+
 
   
