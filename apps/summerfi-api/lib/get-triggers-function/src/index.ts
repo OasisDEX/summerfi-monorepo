@@ -7,7 +7,7 @@ import {
 } from '@summerfi/serverless-shared/responses'
 import {
   addressSchema,
-  chainIdsSchema,
+  chainIdSchema,
   urlOptionalSchema,
 } from '@summerfi/serverless-shared/validators'
 
@@ -30,6 +30,10 @@ import {
   DmaSparkStopLossToCollateralV2ID,
   DmaSparkStopLossToDebtV2ID,
   GetTriggersResponse,
+  LegacyDmaAaveStopLossToCollateralV2ID,
+  LegacyDmaAaveStopLossToDebtV2ID,
+  LegacyDmaSparkStopLossToCollateralV2ID,
+  LegacyDmaSparkStopLossToDebtV2ID,
   SparkStopLossToCollateral,
   SparkStopLossToCollateralDMA,
   SparkStopLossToCollateralV2ID,
@@ -38,16 +42,20 @@ import {
   SparkStopLossToDebtV2ID,
 } from '@summerfi/serverless-contracts/get-triggers-response'
 import {
+  mapBuySellCommonParams,
   mapStopLossParams,
   mapTriggerCommonParams,
-  mapBuySellCommonParams,
-} from './helpers/mappers'
+  hasAnyDefined,
+  getCurrentTrigger,
+} from './helpers'
+import { getPricesSubgraphClient } from '@summerfi/prices-subgraph'
+import { getDmaAaveTrailingStopLoss } from './trigger-parsers/dma-aave-trailing-stop-loss'
 
 const logger = new Logger({ serviceName: 'getTriggersFunction' })
 
 const paramsSchema = z.object({
   dpm: addressSchema,
-  chainId: chainIdsSchema,
+  chainId: chainIdSchema,
   rpc: urlOptionalSchema,
 })
 
@@ -75,7 +83,13 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
   const params = parseResult.data
   const automationSubgraphClient = getAutomationSubgraphClient({
     urlBase: SUBGRAPH_BASE,
-    chainId: params.chainId[0],
+    chainId: params.chainId,
+    logger,
+  })
+
+  const pricesSubgraphClient = getPricesSubgraphClient({
+    urlBase: SUBGRAPH_BASE,
+    chainId: params.chainId,
     logger,
   })
 
@@ -98,7 +112,11 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     })[0]
 
   const aaveStopLossToCollateralDMA: AaveStopLossToCollateralDMA | undefined = triggers.triggers
-    .filter((trigger) => trigger.triggerType == DmaAaveStopLossToCollateralV2ID)
+    .filter(
+      (trigger) =>
+        trigger.triggerType == DmaAaveStopLossToCollateralV2ID ||
+        trigger.triggerType == LegacyDmaAaveStopLossToCollateralV2ID,
+    )
     .map((trigger) => {
       return {
         triggerTypeName: 'DmaAaveStopLossToCollateralV2' as const,
@@ -120,7 +138,11 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     })[0]
 
   const aaveStopLossToDebtDMA: AaveStopLossToDebtDMA | undefined = triggers.triggers
-    .filter((trigger) => trigger.triggerType == DmaAaveStopLossToDebtV2ID)
+    .filter(
+      (trigger) =>
+        trigger.triggerType == DmaAaveStopLossToDebtV2ID ||
+        trigger.triggerType == LegacyDmaAaveStopLossToDebtV2ID,
+    )
     .map((trigger) => {
       return {
         triggerTypeName: 'DmaAaveStopLossToDebtV2' as const,
@@ -142,7 +164,11 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     })[0]
 
   const sparkStopLossToCollateralDMA: SparkStopLossToCollateralDMA | undefined = triggers.triggers
-    .filter((trigger) => trigger.triggerType == DmaSparkStopLossToCollateralV2ID)
+    .filter(
+      (trigger) =>
+        trigger.triggerType == DmaSparkStopLossToCollateralV2ID ||
+        trigger.triggerType == LegacyDmaSparkStopLossToCollateralV2ID,
+    )
     .map((trigger) => {
       return {
         triggerTypeName: 'DmaSparkStopLossToCollateralV2' as const,
@@ -164,7 +190,11 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     })[0]
 
   const sparkStopLossToDebtDMA: SparkStopLossToDebtDMA | undefined = triggers.triggers
-    .filter((trigger) => trigger.triggerType == DmaSparkStopLossToDebtV2ID)
+    .filter(
+      (trigger) =>
+        trigger.triggerType == DmaSparkStopLossToDebtV2ID ||
+        trigger.triggerType == LegacyDmaSparkStopLossToDebtV2ID,
+    )
     .map((trigger) => {
       return {
         triggerTypeName: 'DmaSparkStopLossToDebtV2' as const,
@@ -202,6 +232,12 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       }
     })[0]
 
+  const aaveTrailingStopLossDMA = await getDmaAaveTrailingStopLoss({
+    triggers,
+    pricesSubgraphClient,
+    logger,
+  })
+
   const response: GetTriggersResponse = {
     triggers: {
       aaveStopLossToCollateral,
@@ -214,6 +250,41 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       sparkStopLossToDebtDMA,
       aaveBasicBuy,
       aaveBasicSell,
+      aaveTrailingStopLossDMA,
+    },
+    flags: {
+      isAaveStopLossEnabled: hasAnyDefined(
+        aaveStopLossToCollateral,
+        aaveStopLossToCollateralDMA,
+        aaveStopLossToDebt,
+        aaveStopLossToDebtDMA,
+        aaveTrailingStopLossDMA,
+      ),
+      isSparkStopLossEnabled: hasAnyDefined(
+        sparkStopLossToCollateral,
+        sparkStopLossToCollateralDMA,
+        sparkStopLossToDebt,
+        sparkStopLossToDebtDMA,
+      ),
+      isAaveBasicBuyEnabled: hasAnyDefined(aaveBasicBuy),
+      isAaveBasicSellEnabled: hasAnyDefined(aaveBasicSell),
+    },
+    triggerGroup: {
+      aaveStopLoss: getCurrentTrigger(
+        aaveStopLossToCollateral,
+        aaveStopLossToCollateralDMA,
+        aaveStopLossToDebt,
+        aaveStopLossToDebtDMA,
+        aaveTrailingStopLossDMA,
+      ),
+      sparkStopLoss: getCurrentTrigger(
+        sparkStopLossToCollateral,
+        sparkStopLossToCollateralDMA,
+        sparkStopLossToDebt,
+        sparkStopLossToDebtDMA,
+      ),
+      aaveBasicBuy: getCurrentTrigger(aaveBasicBuy),
+      aaveBasicSell: getCurrentTrigger(aaveBasicSell),
     },
     additionalData: {
       params: {

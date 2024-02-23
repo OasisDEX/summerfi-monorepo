@@ -1,4 +1,4 @@
-import type { TriggersQuery } from '@summerfi/automation-subgraph/dist/types/graphql/generated'
+import type { TriggersQuery } from '@summerfi/automation-subgraph'
 
 export const mapTriggerCommonParams = (trigger: TriggersQuery['triggers'][number]) => ({
   triggerId: trigger.id,

@@ -21,6 +21,7 @@ export function addTriggersConfig({ stack, api }: StackContext & { api: Api }) {
       RPC_GATEWAY: process.env.RPC_GATEWAY || '',
       SKIP_VALIDATION: process.env.SKIP_VALIDATION || 'false',
       POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
+      SUBGRAPH_BASE: process.env.SUBGRAPH_BASE || '',
     },
     tracing: 'active',
     disableCloudWatchLogs: false,

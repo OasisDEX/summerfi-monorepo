@@ -1,0 +1,29 @@
+query PriceByRoundIds($tokenRoundId: BigInt!, $denominationRoundId: BigInt!) {
+  derivedPrices(
+    where: {
+      tokenRoundId: $tokenRoundId,
+      denominationRoundId: $denominationRoundId
+    }
+    orderBy: derivedPriceTimestamp
+    orderDirection: desc
+    first: 1
+  ) {
+    tokenRoundId
+    denominationRoundId
+    token {
+      id
+      symbol
+      oraclesToken {
+        address
+      }
+    }
+    denomination {
+      id
+      symbol
+      oraclesToken {
+        address
+      }
+    }
+    derivedPrice
+  }
+}

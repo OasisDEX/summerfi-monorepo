@@ -4,6 +4,8 @@ export const ONE_PERCENT = 100n
 
 export const ONE_DOLLAR = 10n ** PRICE_DECIMALS
 
+export const TWENTY_MILLIONS_DOllARS = 20_000_000n * ONE_DOLLAR
+
 export const TEN_CENTS = 10n ** (PRICE_DECIMALS - 1n)
 
 export const MINIMUM_LTV_TO_SETUP_TRIGGER = 100n // 1%

@@ -6,10 +6,10 @@ import {
   parseAbiParameters,
   stringToBytes,
 } from 'viem'
-import { OPERATION_NAMES } from '@oasisdex/dma-library'
-import { MAX_COVERAGE_BASE } from './defaults'
 import { automationBotAbi } from '~abi'
 import { DmaAaveStopLossTriggerData } from '~types'
+import { TriggerType } from '@oasisdex/automation'
+import { getMaxCoverage } from './get-max-coverage'
 
 export const encodeSparkStopLoss: EncoderFunction<DmaAaveStopLossTriggerData> = (
   position,
@@ -27,13 +27,25 @@ export const encodeSparkStopLoss: EncoderFunction<DmaAaveStopLossTriggerData> = 
       'uint256 executionLtv',
   )
 
-  const operationName = OPERATION_NAMES.spark.CLOSE_POSITION
+  const operationName =
+    triggerData.type == BigInt(TriggerType.DmaSparkStopLossToCollateralV2)
+      ? 'CloseAndRemainSparkPosition'
+      : triggerData.type == BigInt(TriggerType.DmaSparkStopLossToDebtV2)
+        ? 'SparkClosePosition'
+        : undefined
+
+  if (operationName === undefined) {
+    throw new Error('Invalid trigger type')
+  }
+
   const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
+
+  const maxCoverage = getMaxCoverage(position)
 
   const encodedTriggerData = encodeAbiParameters(abiParameters, [
     position.address,
     triggerData.type,
-    MAX_COVERAGE_BASE * 10n ** BigInt(position.debt.token.decimals),
+    maxCoverage,
     position.debt.token.address,
     position.collateral.token.address,
     operationNameInBytes,

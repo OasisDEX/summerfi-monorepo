@@ -11,9 +11,10 @@ import {
   eventBodyAaveBasicBuySchema,
   eventBodyAaveBasicSellSchema,
   eventBodyDmaAaveStopLossSchema,
+  eventBodyDmaAaveTrailingStopLossSchema,
   eventBodyDmaSparkStopLossSchema,
+  SupportedTriggers,
 } from './validators'
-import { SupportedTriggers } from './validators'
 import { ChainId, ProtocolId } from '@summerfi/serverless-shared'
 
 export const isAaveAutoBuyTriggerData = (
@@ -56,30 +57,12 @@ export const mapZodResultToValidationResults = ({
   }
 }
 
-export const isBigInt = (value: string) => {
-  try {
-    BigInt(value)
-    return true
-  } catch (error) {
-    if (error instanceof SyntaxError) {
-      return false
-    }
-    throw error
-  }
-}
-
-export const safeParseBigInt = (value: string) => {
-  if (isBigInt(value)) {
-    return BigInt(value)
-  }
-  return undefined
-}
-
 export type SupportedTriggersSchema =
   | typeof eventBodyAaveBasicBuySchema
   | typeof eventBodyAaveBasicSellSchema
   | typeof eventBodyDmaAaveStopLossSchema
   | typeof eventBodyDmaSparkStopLossSchema
+  | typeof eventBodyDmaAaveTrailingStopLossSchema
 
 export const getBodySchema = (pathParams: PathParams): SupportedTriggersSchema => {
   const { trigger, chainId, protocol } = pathParams
@@ -92,6 +75,9 @@ export const getBodySchema = (pathParams: PathParams): SupportedTriggersSchema =
     }
     if (trigger === SupportedTriggers.DmaStopLoss) {
       return eventBodyDmaAaveStopLossSchema
+    }
+    if (trigger == SupportedTriggers.DmaTrailingStopLoss) {
+      return eventBodyDmaAaveTrailingStopLossSchema
     }
   }
   if (protocol === ProtocolId.SPARK && chainId === ChainId.MAINNET) {

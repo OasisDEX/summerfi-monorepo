@@ -1,0 +1,38 @@
+query Prices($token: String!, $denomination: String!) {
+  derivedPrices(where: {
+    and: [
+      { or: [
+        { token: $token },
+        { token_: {
+          relatedTokens_contains_nocase: [$token]
+        }}
+      ]}
+      { or: [
+        { denomination: $denomination },
+        { denomination_: {
+          relatedTokens_contains_nocase: [$denomination]
+        }}
+      ]}
+    ]}
+    orderBy: derivedPriceTimestamp
+    orderDirection: desc
+    first: 1) {
+    tokenRoundId
+    denominationRoundId
+    token {
+      id
+      symbol
+      oraclesToken {
+        address
+      }
+    }
+    denomination {
+      id
+      symbol
+      oraclesToken {
+        address
+      }
+    }
+    derivedPrice
+  }
+}

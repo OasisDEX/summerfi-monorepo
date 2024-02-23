@@ -1,17 +1,18 @@
 import {
-  DmaAaveStopLossTriggerData,
   dmaAaveStopLossTriggerDataSchema,
   mapZodResultToValidationResults,
   positionSchema,
   priceSchema,
   StopLossErrorCodes,
+  StopLossWarningCodes,
   SupportedActions,
   supportedActionsSchema,
+  TWENTY_MILLIONS_DOllARS,
   ValidationResults,
 } from '~types'
 import { z } from 'zod'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
-import { AgainstPositionValidator } from './validators-types'
+import { safeParseBigInt } from '@summerfi/serverless-shared'
 
 const paramsSchema = z.object({
   position: positionSchema,
@@ -25,12 +26,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Add) {
-        const currentTrigger =
-          triggers.triggers.aaveStopLossToCollateral ??
-          triggers.triggers.aaveStopLossToDebt ??
-          triggers.triggers.aaveStopLossToCollateralDMA ??
-          triggers.triggers.aaveStopLossToDebtDMA
-        return currentTrigger === undefined
+        return !triggers.flags.isAaveStopLossEnabled
       }
       return true
     },
@@ -44,13 +40,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Update) {
-        const currentTrigger =
-          triggers.triggers.aaveStopLossToCollateral ??
-          triggers.triggers.aaveStopLossToDebt ??
-          triggers.triggers.aaveStopLossToCollateralDMA ??
-          triggers.triggers.aaveStopLossToDebtDMA
-
-        return currentTrigger !== undefined
+        return triggers.flags.isAaveStopLossEnabled
       }
       return true
     },
@@ -61,17 +51,39 @@ const upsertErrorsValidation = paramsSchema
       },
     },
   )
+  .refine(
+    ({ position }) => {
+      return position.debtValueUSD <= TWENTY_MILLIONS_DOllARS
+    },
+    {
+      message: 'Debt value is too high',
+      params: {
+        code: StopLossErrorCodes.DebtTooHighToSetupStopLoss,
+      },
+    },
+  )
+  .refine(
+    ({ triggerData, triggers }) => {
+      const currentAutoBuy = triggers.triggers.aaveBasicBuy
+      if (currentAutoBuy) {
+        const currentAutoBuyTarget = safeParseBigInt(currentAutoBuy.decodedParams.targetLtv) ?? 0n
+        return triggerData.executionLTV > currentAutoBuyTarget
+      }
+      return true
+    },
+    {
+      message:
+        'Setting your an Stop-Loss trigger at this level could result in it being executed by your Auto-Buy',
+      params: {
+        code: StopLossErrorCodes.StopLossTriggeredByAutoBuy,
+      },
+    },
+  )
 
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
     if (action === SupportedActions.Remove) {
-      const currentTrigger =
-        triggers.triggers.aaveStopLossToCollateral ??
-        triggers.triggers.aaveStopLossToDebt ??
-        triggers.triggers.aaveStopLossToCollateralDMA ??
-        triggers.triggers.aaveStopLossToDebtDMA
-
-      return currentTrigger !== undefined
+      return triggers.flags.isAaveStopLossEnabled
     }
     return true
   },
@@ -83,20 +95,37 @@ const deleteErrorsValidation = paramsSchema.refine(
   },
 )
 
-const warningsValidation = paramsSchema.refine(
-  ({ triggerData, position }) => {
-    return position.ltv < triggerData.executionLTV
-  },
-  {
-    message: 'Stop loss triggered immediately',
-    params: {
-      code: StopLossErrorCodes.StopLossTriggeredImmediately,
+const warningsValidation = paramsSchema
+  .refine(
+    ({ triggerData, position }) => {
+      return position.ltv < triggerData.executionLTV
     },
-  },
-)
+    {
+      message: 'Stop loss triggered immediately',
+      params: {
+        code: StopLossWarningCodes.StopLossTriggeredImmediately,
+      },
+    },
+  )
+  .refine(
+    ({ triggerData, triggers }) => {
+      const autoSell = triggers.triggers.aaveBasicSell
+      if (autoSell) {
+        const executionLTV = safeParseBigInt(autoSell.decodedParams.executionLtv) ?? 0n
+        return triggerData.executionLTV > executionLTV
+      }
+      return true
+    },
+    {
+      message: 'Your stop loss will make the auto-sell not trigger',
+      params: {
+        code: StopLossWarningCodes.StopLossMakesAutoSellNotTrigger,
+      },
+    },
+  )
 
-export const dmaAaveStopLossValidator: AgainstPositionValidator<DmaAaveStopLossTriggerData> = (
-  params,
+export const dmaAaveStopLossValidator = (
+  params: z.infer<typeof paramsSchema>,
 ): ValidationResults => {
   const errorsValidation =
     params.action === SupportedActions.Remove ? deleteErrorsValidation : upsertErrorsValidation

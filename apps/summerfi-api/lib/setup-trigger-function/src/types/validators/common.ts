@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import { isBigInt, PRICE_DECIMALS } from '~types'
-import { addressSchema, ChainId, ProtocolId } from '@summerfi/serverless-shared'
+import { PRICE_DECIMALS } from '~types'
+import { addressSchema, ChainId, isBigInt, ProtocolId } from '@summerfi/serverless-shared'
 
 export const bigIntSchema = z
   .string()
@@ -63,6 +63,8 @@ export const positionSchema = z.object({
   address: addressSchema,
   prices: positionTokensPricesSchema,
   netValueUSD: priceSchema,
+  debtValueUSD: priceSchema,
+  collateralValueUSD: priceSchema,
   hasStablecoinDebt: z.boolean().optional().default(true),
 })
 
@@ -70,6 +72,7 @@ export enum SupportedTriggers {
   AutoBuy = 'auto-buy',
   AutoSell = 'auto-sell',
   DmaStopLoss = 'dma-stop-loss',
+  DmaTrailingStopLoss = 'dma-trailing-stop-loss',
 }
 
 const supportedTriggersSchema = z.nativeEnum(SupportedTriggers)

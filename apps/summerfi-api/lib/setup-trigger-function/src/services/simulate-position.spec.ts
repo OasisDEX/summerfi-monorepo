@@ -1,6 +1,6 @@
 import { simulatePosition, SimulatePositionParams } from './simulate-position'
 import { Logger } from '@aws-lambda-powertools/logger'
-import { PRICE_DECIMALS } from '../types'
+import { PRICE_DECIMALS } from '~types'
 
 const logger = new Logger({
   serviceName: 'simulate-position-tests',
@@ -13,6 +13,8 @@ describe('simulatePosition', () => {
     const params: SimulatePositionParams = {
       position: {
         netValueUSD: 0n,
+        collateralValueUSD: 0n,
+        debtValueUSD: 0n,
         hasStablecoinDebt: true,
         collateral: {
           balance: 10n * 10n ** 18n,

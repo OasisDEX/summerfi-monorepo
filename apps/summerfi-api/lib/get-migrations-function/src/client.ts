@@ -13,6 +13,7 @@ import {
   ProtocolId,
   Token,
   isChainId,
+  type ChainId,
 } from '@summerfi/serverless-shared/domain-types'
 import { createAddressService } from './addressService'
 import { IMigrationConfig } from './migrations-config'
@@ -31,9 +32,10 @@ export const rpcConfig: IRpcConfig = {
 }
 
 export function createMigrationsClient(
+  migrationConfig: IMigrationConfig,
   rpcGatewayUrl: string,
   customRpcUrl: string | undefined,
-  migrationConfig: IMigrationConfig,
+  customChainId?: ChainId,
 ) {
   const getProtocolAssetsToMigrate = async (
     address: Address,
@@ -45,6 +47,9 @@ export function createMigrationsClient(
       const chainId = Number(chainIdString)
       if (!isChainId(chainId)) {
         throw new Error(`Invalid chainId: ${chainId}`)
+      }
+      if (customChainId && customChainId !== chainId) {
+        return
       }
       supportedProtocolsIds.forEach((protocolId) => {
         const promise = async (): Promise<ProtocolMigrationAssets> => {

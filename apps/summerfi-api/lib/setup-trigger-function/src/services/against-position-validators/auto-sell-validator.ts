@@ -1,5 +1,4 @@
 import {
-  AaveAutoSellTriggerData,
   aaveBasicSellTriggerDataSchema,
   AutoSellTriggerCustomErrorCodes,
   AutoSellTriggerCustomWarningCodes,
@@ -7,21 +6,21 @@ import {
   MINIMUM_LTV_TO_SETUP_TRIGGER,
   positionSchema,
   priceSchema,
-  safeParseBigInt,
   SupportedActions,
   supportedActionsSchema,
   ValidationResults,
 } from '~types'
 import { z } from 'zod'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
-import { AgainstPositionValidator } from './validators-types'
-import { chainIdSchema } from '@summerfi/serverless-shared'
+import { chainIdSchema, safeParseBigInt } from '@summerfi/serverless-shared'
+import { CurrentStopLoss } from '../types/current-stop-loss'
 
 const paramsSchema = z.object({
   position: positionSchema,
   executionPrice: priceSchema,
   triggerData: aaveBasicSellTriggerDataSchema,
   triggers: z.custom<GetTriggersResponse>(),
+  currentStopLoss: z.custom<CurrentStopLoss | undefined>(),
   action: supportedActionsSchema,
   chainId: chainIdSchema,
 })
@@ -50,17 +49,6 @@ const upsertErrorsValidation = paramsSchema
       path: ['triggerData', 'minSellPrice'],
     },
   )
-  // .refine(
-  //   ({ position, triggerData }) => {
-  //     return position.ltv + ONE_PERCENT < triggerData.executionLTV
-  //   },
-  //   {
-  //     message: 'Execution LTV is bigger than current LTV',
-  //     params: {
-  //       code: AutoSellTriggerCustomErrorCodes.ExecutionLTVLowerThanCurrentLTV,
-  //     },
-  //   },
-  //)
   .refine(
     ({ triggerData }) => {
       return triggerData.targetLTV < triggerData.executionLTV
@@ -87,25 +75,6 @@ const upsertErrorsValidation = paramsSchema
       message: 'Auto sell target cannot be lower than auto buy trigger',
       params: {
         code: AutoSellTriggerCustomErrorCodes.AutoSellTriggerHigherThanAutoBuyTarget,
-      },
-      path: ['triggerData', 'executionLTV'],
-    },
-  )
-  .refine(
-    ({ triggers, triggerData }) => {
-      const stopLossTrigger = triggers.triggers.aaveStopLossToCollateral
-      if (!stopLossTrigger) {
-        return true
-      }
-
-      const stopLossTriggerLTV = safeParseBigInt(stopLossTrigger.decodedParams.executionLtv) ?? 0n
-
-      return triggerData.executionLTV < stopLossTriggerLTV
-    },
-    {
-      message: 'Auto sell cannot be defined with current stop loss',
-      params: {
-        code: AutoSellTriggerCustomErrorCodes.AutoSellNotAvailableDueToTooHighStopLoss,
       },
       path: ['triggerData', 'executionLTV'],
     },
@@ -149,21 +118,6 @@ const upsertErrorsValidation = paramsSchema
       },
     },
   )
-// .refine(
-//   ({ position, chainId, action }) => {
-//     if (action == SupportedActions.Update) {
-//       return true
-//     }
-//     const minNetValue = minNetValueMap[chainId][ProtocolId.AAVE3]
-//     return position.netValueUSD >= minNetValue
-//   },
-//   {
-//     message: 'Net value is too low to setup auto sell',
-//     params: {
-//       code: AutoSellTriggerCustomErrorCodes.NetValueTooLowToSetupAutoSell,
-//     },
-//   },
-// )
 
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
@@ -211,34 +165,28 @@ const warningsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggerData, triggers }) => {
-      const stopLossTrigger = triggers.triggers.aaveStopLossToCollateral
-      if (!stopLossTrigger) {
+    ({ triggerData, currentStopLoss }) => {
+      if (!currentStopLoss) {
         return true
       }
 
-      const stopLossTriggerLTV = safeParseBigInt(stopLossTrigger.decodedParams.executionLtv) ?? 0n
-
-      return stopLossTriggerLTV < triggerData.executionLTV
+      return currentStopLoss.executionLTV > triggerData.executionLTV
     },
     {
-      message: 'Auto sell trigger close to stop loss trigger',
+      message: 'Auto sell never triggered with current stop loss',
       params: {
-        code: AutoSellTriggerCustomWarningCodes.AutoSellTriggerCloseToStopLossTrigger,
+        code: AutoSellTriggerCustomWarningCodes.AutoSellNeverTriggeredWithCurrentStopLoss,
       },
       path: ['triggerData', 'executionLTV'],
     },
   )
   .refine(
-    ({ triggerData, triggers }) => {
-      const stopLossTrigger = triggers.triggers.aaveStopLossToDebt
-      if (!stopLossTrigger) {
+    ({ triggerData, currentStopLoss }) => {
+      if (!currentStopLoss) {
         return true
       }
 
-      const stopLossTriggerLTV = safeParseBigInt(stopLossTrigger.decodedParams.executionLtv) ?? 0n
-
-      return stopLossTriggerLTV < triggerData.executionLTV
+      return currentStopLoss.executionLTV < triggerData.executionLTV
     },
     {
       message: 'Auto sell trigger close to stop loss trigger',
@@ -260,24 +208,8 @@ const warningsValidation = paramsSchema
       path: ['triggerData', 'minSellPrice'],
     },
   )
-  .refine(
-    ({ triggerData, triggers, position }) => {
-      return position.hasStablecoinDebt
-        ? !triggerData.useMinSellPrice && triggers.triggers.aaveStopLossToDebt === undefined
-        : true
-    },
-    {
-      message: 'No min sell price when stop loss enabled',
-      params: {
-        code: AutoSellTriggerCustomWarningCodes.NoMinSellPriceWhenStopLoss,
-      },
-      path: ['triggerData', 'minSellPrice'],
-    },
-  )
 
-export const autoSellValidator: AgainstPositionValidator<AaveAutoSellTriggerData> = (
-  params,
-): ValidationResults => {
+export const autoSellValidator = (params: z.infer<typeof paramsSchema>): ValidationResults => {
   const errorsValidation =
     params.action === SupportedActions.Remove ? deleteErrorsValidation : upsertErrorsValidation
   const errorResult = errorsValidation.safeParse(params)
