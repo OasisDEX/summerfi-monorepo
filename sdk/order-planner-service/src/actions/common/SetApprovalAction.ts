@@ -1,8 +1,8 @@
-import { ActionCall, ActionConfig, BaseAction } from '~orderplanner/actions'
+import { ActionCall, BaseAction } from '~orderplanner/actions'
 import { Address, TokenAmount } from '@summerfi/sdk-common/common'
 
 export class SetApprovalAction extends BaseAction {
-  public readonly config: ActionConfig = {
+  public readonly config = {
     name: 'SetApproval',
     version: 1,
     parametersAbi: 'address asset, address delegate, uint256 amount, bool sumAmounts',

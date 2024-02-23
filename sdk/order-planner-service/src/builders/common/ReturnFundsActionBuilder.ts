@@ -1,18 +1,15 @@
-import { ReturnFunds, Simulation, SimulationType } from '@summerfi/sdk-common/orders'
+import { ReturnFunds } from '@summerfi/sdk-common/orders'
 import { ActionBuilder } from '~orderplanner/builders'
-import { OrderPlannerContext } from '~orderplanner/context'
 import { ReturnFundsAction } from '~orderplanner/actions'
 
-export const ReturnFundsActionBuilder: ActionBuilder<ReturnFunds> = (params: {
-  context: OrderPlannerContext
-  simulation: Simulation<SimulationType>
-  step: ReturnFunds
-}): void => {
-  params.context.addActionCall({
-    step: params.step,
+export const ReturnFundsActionBuilder: ActionBuilder<ReturnFunds> = (params): void => {
+  const { context, step } = params
+
+  context.addActionCall({
+    step: step,
     action: new ReturnFundsAction(),
     arguments: {
-      asset: params.step.inputs.token,
+      asset: step.inputs.token,
     },
     connectedInputs: {},
     connectedOutputs: {},

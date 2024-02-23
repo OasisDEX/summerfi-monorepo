@@ -1,8 +1,8 @@
-import { ActionCall, ActionConfig, BaseAction } from '~orderplanner/actions'
+import { ActionCall, BaseAction } from '~orderplanner/actions'
 import { Address, TokenAmount } from '@summerfi/sdk-common/common'
 
 export class PullTokenAction extends BaseAction {
-  public readonly config: ActionConfig = {
+  public readonly config = {
     name: 'PullToken',
     version: 1,
     parametersAbi: 'address, address, uint256',

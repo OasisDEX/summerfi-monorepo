@@ -3,13 +3,13 @@ import { ActionInputStorageNames, ActionOutputStorageNames } from '~orderplanner
 
 export type ActionVersion = number
 
-export type ActionConfig = Readonly<{
-  name: ActionNames
-  version: ActionVersion
-  parametersAbi: string
-  storageInputs: ActionInputStorageNames
-  storageOutputs: ActionOutputStorageNames
-}>
+export type ActionConfig = {
+  readonly name: ActionNames
+  readonly version: ActionVersion
+  readonly parametersAbi: string
+  readonly storageInputs: ActionInputStorageNames
+  readonly storageOutputs: ActionOutputStorageNames
+}
 
 /**
  * @name ActionCall

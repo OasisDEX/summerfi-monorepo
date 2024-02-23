@@ -14,7 +14,7 @@ export class OrderPlannerContext {
     action: Action
     arguments: Parameters<Action['encodeCall']>[0]
     connectedInputs: Partial<StorageInputsMapType<Step, Action>>
-    connectedOutputs: StorageOutputsMapType<Step, Action>
+    connectedOutputs: Partial<StorageOutputsMapType<Step, Action>>
   }) {
     const call = params.action.encodeCall(params.arguments)
     this._calls.addCall({ call })

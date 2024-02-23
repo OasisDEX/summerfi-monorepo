@@ -14,7 +14,7 @@ export class ExecutionStorageManager {
     step: Step
     action: Action
     connectedInputs: Partial<StorageInputsMapType<Step, Action>>
-    connectedOutputs: StorageOutputsMapType<Step, Action>
+    connectedOutputs: Partial<StorageOutputsMapType<Step, Action>>
   }): void {
     const baseSlot = this.currentSlot
 
@@ -22,6 +22,10 @@ export class ExecutionStorageManager {
       if (params.connectedOutputs !== undefined) {
         const actionOutputName =
           params.connectedOutputs[stepOutputName as keyof StorageOutputsMapType<Step, Action>]
+
+        if (actionOutputName === undefined) {
+          continue
+        }
 
         const slotKey = this._getSlotKey({
           stepName: params.step.name,

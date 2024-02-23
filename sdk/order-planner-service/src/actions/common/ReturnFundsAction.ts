@@ -1,8 +1,8 @@
-import { ActionCall, ActionConfig, BaseAction } from '~orderplanner/actions'
+import { ActionCall, BaseAction } from '~orderplanner/actions'
 import { Token } from '@summerfi/sdk-common/common'
 
 export class ReturnFundsAction extends BaseAction {
-  public readonly config: ActionConfig = {
+  public readonly config = {
     name: 'ReturnFunds',
     version: 1,
     parametersAbi: 'address asset',

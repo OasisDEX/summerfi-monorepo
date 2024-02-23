@@ -1,5 +1,13 @@
 import { MiscDependencyConfigEntry } from '~deployment-types'
 
+export type MakerActionNames =
+  | 'MakerDeposit'
+  | 'MakerWithdraw'
+  | 'MakerPayback'
+  | 'MakerGenerate'
+  | 'MakerGive'
+  | 'MakerOpenVault'
+
 export type MakerContractNames =
   | 'FlashMintModule'
   | 'Chainlog'

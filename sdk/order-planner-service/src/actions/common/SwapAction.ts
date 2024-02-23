@@ -1,9 +1,9 @@
-import { ActionCall, ActionConfig, BaseAction } from '~orderplanner/actions'
+import { ActionCall, BaseAction } from '~orderplanner/actions'
 import { Percentage, TokenAmount } from '@summerfi/sdk-common/common'
 import { Hex } from 'viem'
 
 export class SwapAction extends BaseAction {
-  public readonly config: ActionConfig = {
+  public readonly config = {
     name: 'SwapAction',
     version: 1,
     parametersAbi: 'address, address, uint256, uint256, uint256, bytes, bool',

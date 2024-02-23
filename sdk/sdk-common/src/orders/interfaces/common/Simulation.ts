@@ -1,4 +1,4 @@
-import { Address, Token, TokenAmount } from '~sdk-common/common'
+import { Token, TokenAmount } from '~sdk-common/common'
 import { SimulationType } from './SimulationType'
 import { Position } from '~sdk-common/users'
 
@@ -117,7 +117,6 @@ export interface Simulation<T extends SimulationType> {
   sourcePosition: Position // TODO figure what do to when opening position (empty position or optional)
   targetPosition: Position
   steps: Steps[]
-  positionsManagerAddress: Address
   // OPEN QUESTION: where errors and warnings and info messages?
 }
 

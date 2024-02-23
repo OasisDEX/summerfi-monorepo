@@ -1,4 +1,4 @@
-import { ActionCall, ActionConfig, BaseAction } from '~orderplanner/actions'
+import { ActionCall, BaseAction } from '~orderplanner/actions'
 import { TokenAmount } from '@summerfi/sdk-common/common'
 
 // Local type as optional actions are not supported anymore in the new executor
@@ -7,7 +7,7 @@ type OptionalActionCall = ActionCall & {
 }
 
 export class FlashloanAction extends BaseAction {
-  public readonly config: ActionConfig = {
+  public readonly config = {
     name: 'TakeFlashloan',
     version: 1,
     parametersAbi:

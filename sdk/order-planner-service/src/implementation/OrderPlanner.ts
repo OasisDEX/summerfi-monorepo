@@ -6,6 +6,7 @@ import { encodeStrategy } from '~orderplanner/utils'
 import { OrderPlannerContext } from '~orderplanner/context'
 import { ActionBuilder, ActionBuildersMap } from '~orderplanner/builders'
 import { ActionCall } from '~orderplanner/actions'
+import { PositionsManager, User } from '@summerfi/sdk-common/users'
 
 export class OrderPlanner implements IOrderPlanner {
   private readonly ExecutorContractName = 'OperationExecutor'
@@ -18,7 +19,11 @@ export class OrderPlanner implements IOrderPlanner {
     this._actionBuildersMap = actionBuildersMap
   }
 
-  buildOrder(simulation: Simulation<SimulationType>): Maybe<Order> {
+  buildOrder(
+    user: User,
+    positionsManager: PositionsManager,
+    simulation: Simulation<SimulationType>,
+  ): Maybe<Order> {
     const context: OrderPlannerContext = new OrderPlannerContext()
 
     context.startSubContext()
@@ -29,7 +34,7 @@ export class OrderPlanner implements IOrderPlanner {
         throw new Error(`No step builder found for step type ${step.type}`)
       }
 
-      stepBuilder({ context, simulation, step })
+      stepBuilder({ context, user, positionsManager, simulation, step })
     }
 
     const { callsBatch } = context.endSubContext()

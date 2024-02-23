@@ -1,12 +1,5 @@
-import {
-  FlashloanProvider,
-  FlashloanStep,
-  PaybackFlashloan,
-  Simulation,
-  SimulationType,
-} from '@summerfi/sdk-common/orders'
+import { FlashloanProvider, FlashloanStep, PaybackFlashloan } from '@summerfi/sdk-common/orders'
 import { ActionBuilder } from '~orderplanner/builders'
-import { OrderPlannerContext } from '~orderplanner/context'
 import { FlashloanAction } from '~orderplanner/actions'
 import { ActionNames } from '@summerfi/deployment-types'
 
@@ -18,11 +11,7 @@ export const FlashloanProviderMap: Record<FlashloanProvider, number> = {
   [FlashloanProvider.Balancer]: 1,
 }
 
-export const PaybackFlashloanActionBuilder: ActionBuilder<PaybackFlashloan> = (params: {
-  context: OrderPlannerContext
-  simulation: Simulation<SimulationType>
-  step: PaybackFlashloan
-}): void => {
+export const PaybackFlashloanActionBuilder: ActionBuilder<PaybackFlashloan> = (params): void => {
   // End the current subcontext and pass the subcontext calls to the flashloan action
   const { callsBatch, customData } = params.context.endSubContext<FlashloanStep['inputs']>()
   if (!customData) {

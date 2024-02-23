@@ -1,8 +1,8 @@
-import { ActionCall, ActionConfig, BaseAction } from '~orderplanner/actions'
+import { ActionCall, BaseAction } from '~orderplanner/actions'
 import { TokenAmount } from '@summerfi/sdk-common/common'
 
 export class SparkDepositAction extends BaseAction {
-  public readonly config: ActionConfig = {
+  public readonly config = {
     name: 'SparkDeposit',
     version: 1,
     parametersAbi: 'address asset, uint256 amount, bool sumAmounts, bool setAsCollateral',

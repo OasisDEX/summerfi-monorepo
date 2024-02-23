@@ -1,21 +1,18 @@
-import { Simulation, SimulationType, SwapStep } from '@summerfi/sdk-common/orders'
 import { ActionBuilder } from '~orderplanner/builders'
-import { OrderPlannerContext } from '~orderplanner/context'
 import { SwapAction } from '~orderplanner/actions'
 import { Percentage } from '@summerfi/sdk-common/common'
+import { SwapStep } from '@summerfi/sdk-common/orders'
 
-export const SwapActionBuilder: ActionBuilder<SwapStep> = (params: {
-  context: OrderPlannerContext
-  simulation: Simulation<SimulationType>
-  step: SwapStep
-}): void => {
-  params.context.addActionCall({
-    step: params.step,
+export const SwapActionBuilder: ActionBuilder<SwapStep> = (params): void => {
+  const { context, step } = params
+
+  context.addActionCall({
+    step: step,
     action: new SwapAction(),
     arguments: {
-      fromAmount: params.step.inputs.fromTokenAmount,
-      toMinimumAmount: params.step.inputs.toTokenAmount,
-      fee: Percentage.createFrom({ percentage: params.step.inputs.fee }),
+      fromAmount: step.inputs.fromTokenAmount,
+      toMinimumAmount: step.inputs.toTokenAmount,
+      fee: Percentage.createFrom({ percentage: step.inputs.fee }),
       withData: '0x',
       collectFeeInFromToken: true,
     },
