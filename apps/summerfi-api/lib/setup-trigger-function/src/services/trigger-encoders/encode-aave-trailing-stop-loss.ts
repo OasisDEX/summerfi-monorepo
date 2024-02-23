@@ -6,10 +6,10 @@ import {
   parseAbiParameters,
   stringToBytes,
 } from 'viem'
-import { MAX_COVERAGE_BASE } from './defaults'
 import { automationBotAbi } from '~abi'
 import { DmaAaveTrailingStopLossTriggerData, PositionLike } from '~types'
 import { DerivedPrices } from '@summerfi/prices-subgraph'
+import { getMaxCoverage } from './get-max-coverage'
 
 export const encodeAaveTrailingStopLoss = (
   position: PositionLike,
@@ -39,10 +39,12 @@ export const encodeAaveTrailingStopLoss = (
 
   const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
 
+  const maxCoverage = getMaxCoverage(position)
+
   const encodedTriggerData = encodeAbiParameters(abiParameters, [
     position.address,
     triggerData.type,
-    MAX_COVERAGE_BASE * 10n ** BigInt(position.debt.token.decimals),
+    maxCoverage,
     position.debt.token.address,
     position.collateral.token.address,
     operationNameInBytes,
