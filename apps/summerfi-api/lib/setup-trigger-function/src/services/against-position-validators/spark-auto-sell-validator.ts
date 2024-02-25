@@ -1,11 +1,11 @@
 import {
-  aaveBasicSellTriggerDataSchema,
   AutoSellTriggerCustomErrorCodes,
   AutoSellTriggerCustomWarningCodes,
   mapZodResultToValidationResults,
   MINIMUM_LTV_TO_SETUP_TRIGGER,
   positionSchema,
   priceSchema,
+  sparkBasicSellTriggerDataSchema,
   SupportedActions,
   supportedActionsSchema,
   ValidationResults,
@@ -18,7 +18,7 @@ import { CurrentStopLoss } from '../types/current-stop-loss'
 const paramsSchema = z.object({
   position: positionSchema,
   executionPrice: priceSchema,
-  triggerData: aaveBasicSellTriggerDataSchema,
+  triggerData: sparkBasicSellTriggerDataSchema,
   triggers: z.custom<GetTriggersResponse>(),
   currentStopLoss: z.custom<CurrentStopLoss | undefined>(),
   action: supportedActionsSchema,
@@ -62,7 +62,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggers, triggerData }) => {
-      const autoBuyTrigger = triggers.triggers.aaveBasicBuy
+      const autoBuyTrigger = triggers.triggers.sparkBasicBuy
       if (!autoBuyTrigger) {
         return true
       }
@@ -94,7 +94,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Add) {
-        return triggers.triggers.aaveBasicSell === undefined
+        return triggers.triggers.sparkBasicSell === undefined
       }
       return true
     },
@@ -108,7 +108,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Remove || action === SupportedActions.Update)
-        return triggers.triggers.aaveBasicSell !== undefined
+        return triggers.triggers.sparkBasicBuy !== undefined
       return true
     },
     {
@@ -121,7 +121,7 @@ const upsertErrorsValidation = paramsSchema
 
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
-    if (action === SupportedActions.Remove) return triggers.triggers.aaveBasicSell !== undefined
+    if (action === SupportedActions.Remove) return triggers.triggers.sparkBasicSell !== undefined
     return true
   },
   {
@@ -147,7 +147,7 @@ const warningsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoBuyTrigger = triggers.triggers.aaveBasicBuy
+      const autoBuyTrigger = triggers.triggers.sparkBasicBuy
       if (!autoBuyTrigger) {
         return true
       }
@@ -209,7 +209,7 @@ const warningsValidation = paramsSchema
     },
   )
 
-export const autoSellValidator = (params: z.infer<typeof paramsSchema>): ValidationResults => {
+export const sparkAutoSellValidator = (params: z.infer<typeof paramsSchema>): ValidationResults => {
   const errorsValidation =
     params.action === SupportedActions.Remove ? deleteErrorsValidation : upsertErrorsValidation
   const errorResult = errorsValidation.safeParse(params)

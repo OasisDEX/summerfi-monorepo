@@ -1,22 +1,22 @@
 import { ServiceContainer } from './service-container'
-import { AaveTrailingStopLossEventBody, maxUnit256, SupportedActions } from '~types'
+import { maxUnit256, SparkTrailingStopLossEventBody, SupportedActions } from '~types'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
 import { Address, ChainId } from '@summerfi/serverless-shared'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
-import { getAavePosition } from './get-aave-position'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
-import { encodeAaveTrailingStopLoss } from './trigger-encoders/encode-aave-trailing-stop-loss'
 import { DerivedPrices } from '@summerfi/prices-subgraph'
 import { CurrentTriggerLike } from './trigger-encoders'
-import { dmaAaveTrailingStopLossValidator } from './against-position-validators'
 import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
 import { calculateLtv } from './calculate-ltv'
-import { getCurrentAaveStopLoss } from './get-current-aave-stop-loss'
+import { getSparkPosition } from './get-spark-position'
+import { dmaSparkTrailingStopLossValidator } from './against-position-validators/dma-spark-trailing-stop-loss-validator'
+import { getCurrentSparkStopLoss } from './get-current-spark-stop-loss'
+import { encodeSparkTrailingStopLoss } from './trigger-encoders/encode-spark-trailing-stop-loss'
 
-export interface GetAaveTrailingStopLossServiceContainerProps {
+export interface GetSparkTrailingStopLossServiceContainerProps {
   rpc: PublicClient
   addresses: Addresses
   getTriggers: (address: Address) => Promise<GetTriggersResponse>
@@ -25,21 +25,21 @@ export interface GetAaveTrailingStopLossServiceContainerProps {
   chainId: ChainId
 }
 
-export const getAaveTrailingStopLossServiceContainer: (
-  props: GetAaveTrailingStopLossServiceContainerProps,
-) => ServiceContainer<AaveTrailingStopLossEventBody> = ({
+export const getSparkTrailingStopLossServiceContainer: (
+  props: GetSparkTrailingStopLossServiceContainerProps,
+) => ServiceContainer<SparkTrailingStopLossEventBody> = ({
   rpc,
   addresses,
   logger,
   getTriggers,
   getLatestPrice,
 }) => {
-  const getPosition = memoize(async (params: Parameters<typeof getAavePosition>[0]) => {
-    return await getAavePosition(params, rpc, addresses, logger)
+  const getPosition = memoize(async (params: Parameters<typeof getSparkPosition>[0]) => {
+    return await getSparkPosition(params, rpc, addresses, logger)
   })
 
   const getExecutionParams = memoize(
-    async ({ trigger }: { trigger: AaveTrailingStopLossEventBody }) => {
+    async ({ trigger }: { trigger: SparkTrailingStopLossEventBody }) => {
       const latestPrice = await getLatestPrice(trigger.position.collateral, trigger.position.debt)
 
       const position = await getPosition({
@@ -99,7 +99,7 @@ export const getAaveTrailingStopLossServiceContainer: (
 
       const { executionPrice, dynamicExecutionLTV } = await getExecutionParams({ trigger })
 
-      return dmaAaveTrailingStopLossValidator({
+      return dmaSparkTrailingStopLossValidator({
         position: position,
         executionPrice: executionPrice,
         dynamicExecutionLTV: dynamicExecutionLTV,
@@ -117,7 +117,7 @@ export const getAaveTrailingStopLossServiceContainer: (
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })
-      const currentTrigger: CurrentTriggerLike | undefined = getCurrentAaveStopLoss(
+      const currentTrigger: CurrentTriggerLike | undefined = getCurrentSparkStopLoss(
         triggers,
         position,
         logger,
@@ -129,7 +129,7 @@ export const getAaveTrailingStopLossServiceContainer: (
         throw new Error('latestPrice is undefined')
       }
 
-      const encodedData = encodeAaveTrailingStopLoss(
+      const encodedData = encodeSparkTrailingStopLoss(
         position,
         trigger.triggerData,
         latestPrice,
@@ -163,5 +163,5 @@ export const getAaveTrailingStopLossServiceContainer: (
         transaction,
       }
     },
-  } as ServiceContainer<AaveTrailingStopLossEventBody>
+  } as ServiceContainer<SparkTrailingStopLossEventBody>
 }

@@ -1,4 +1,3 @@
-import { CurrentTriggerLike, TriggerTransactions } from './types'
 import {
   bytesToHex,
   encodeAbiParameters,
@@ -6,32 +5,25 @@ import {
   parseAbiParameters,
   stringToBytes,
 } from 'viem'
-import { OPERATION_NAMES } from '@oasisdex/dma-library'
-import { DEFAULT_DEVIATION } from './defaults'
 import { automationBotAbi } from '~abi'
-import { AaveAutoSellTriggerData, PositionLike } from '~types'
+import { maxUnit256, PositionLike, SparkAutoBuyTriggerData } from '~types'
+import { DEFAULT_DEVIATION } from './defaults'
+import { CurrentTriggerLike, TriggerTransactions } from './types'
+import { OPERATION_NAMES } from '@oasisdex/dma-library'
 import { getMaxCoverage } from './get-max-coverage'
 
-export const encodeAaveAutoSell = (
+export const encodeSparkAutoBuy = (
   position: PositionLike,
-  triggerData: AaveAutoSellTriggerData,
+  triggerData: SparkAutoBuyTriggerData,
   currentTrigger: CurrentTriggerLike | undefined,
 ): TriggerTransactions => {
   const abiParameters = parseAbiParameters(
-    'address positionAddress, ' +
-      'uint16 triggerType, ' +
-      'uint256 maxCoverage, ' +
-      'address debtToken, ' +
-      'address collateralToken, ' +
-      'bytes32 operationName, ' +
-      'uint256 executionLtv, ' +
-      'uint256 targetLTV, ' +
-      'uint256 minSellPrice, ' +
-      'uint64 deviation, ' +
-      'uint32 maxBaseFeeInGwei',
+    'address positionAddress, uint16 triggerType, uint256 maxCoverage, address debtToken, ' +
+      'address collateralToken, bytes32 operationName, uint256 executionLtv, uint256 targetLTV, ' +
+      'uint256 maxBuyPrice, uint64 deviation, uint32 maxBaseFeeInGwei',
   )
 
-  const operationName = OPERATION_NAMES.aave.v3.ADJUST_RISK_DOWN
+  const operationName = OPERATION_NAMES.spark.ADJUST_RISK_UP
   const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
 
   const maxCoverage = getMaxCoverage(position)
@@ -45,7 +37,7 @@ export const encodeAaveAutoSell = (
     operationNameInBytes,
     triggerData.executionLTV,
     triggerData.targetLTV,
-    triggerData.minSellPrice ?? 0n,
+    triggerData.maxBuyPrice ?? maxUnit256,
     DEFAULT_DEVIATION, // 100 -> 1%
     triggerData.maxBaseFee,
   ])
