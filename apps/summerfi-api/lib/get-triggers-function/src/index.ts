@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda'
+import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'aws-lambda'
 import {
   ResponseBadRequest,
   ResponseInternalServerError,
@@ -64,8 +64,13 @@ const paramsSchema = z.object({
   rpc: urlOptionalSchema,
 })
 
-export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
+export const handler = async (
+  event: APIGatewayProxyEventV2,
+  context: Context,
+): Promise<APIGatewayProxyResultV2> => {
   const SUBGRAPH_BASE = process.env.SUBGRAPH_BASE
+
+  logger.addContext(context)
 
   if (!SUBGRAPH_BASE) {
     logger.error('SUBGRAPH_BASE is not set')
@@ -86,6 +91,11 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     })
   }
   const params = parseResult.data
+
+  logger.appendKeys({
+    chainId: params.chainId,
+  })
+
   const automationSubgraphClient = getAutomationSubgraphClient({
     urlBase: SUBGRAPH_BASE,
     chainId: params.chainId,
