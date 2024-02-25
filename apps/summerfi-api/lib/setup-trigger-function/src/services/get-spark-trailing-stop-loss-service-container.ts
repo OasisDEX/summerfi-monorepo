@@ -12,7 +12,7 @@ import { CurrentTriggerLike } from './trigger-encoders'
 import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
 import { calculateLtv } from './calculate-ltv'
 import { getSparkPosition } from './get-spark-position'
-import { dmaSparkTrailingStopLossValidator } from './against-position-validators/dma-spark-trailing-stop-loss-validator'
+import { dmaSparkTrailingStopLossValidator } from './against-position-validators'
 import { getCurrentSparkStopLoss } from './get-current-spark-stop-loss'
 import { encodeSparkTrailingStopLoss } from './trigger-encoders/encode-spark-trailing-stop-loss'
 
