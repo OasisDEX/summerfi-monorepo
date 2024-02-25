@@ -61,7 +61,7 @@ export type SupportedTriggersSchema =
   | typeof eventBodyDmaSparkStopLossSchema
   | typeof eventBodyDmaAaveTrailingStopLossSchema
 
-export const getBodySchema = (pathParams: PathParams): SupportedTriggersSchema => {
+export const getBodySchema = (pathParams: PathParams): SupportedTriggersSchema | undefined => {
   const { trigger, chainId, protocol } = pathParams
   if (protocol === ProtocolId.AAVE3) {
     if (trigger === SupportedTriggers.AutoBuy) {
@@ -92,5 +92,5 @@ export const getBodySchema = (pathParams: PathParams): SupportedTriggersSchema =
     }
   }
 
-  throw new Error(`Unsupported trigger: ${trigger} on protocol: ${protocol} and chain: ${chainId}`)
+  return undefined
 }

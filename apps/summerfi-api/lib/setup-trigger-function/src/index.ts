@@ -67,6 +67,17 @@ export const handler = async (
 
   const bodySchema = getBodySchema(pathParamsResult.data)
 
+  if (!bodySchema) {
+    logger.warn('Unsupported trigger', {
+      trigger: pathParamsResult.data.trigger,
+      protocol: pathParamsResult.data.protocol,
+      chainId: pathParamsResult.data.chainId,
+    })
+    return ResponseBadRequest({
+      message: `Unsupported trigger: ${pathParamsResult.data.trigger} on protocol: ${pathParamsResult.data.protocol} and chain: ${pathParamsResult.data.chainId}`,
+    })
+  }
+
   const parseResult = bodySchema.safeParse(body)
   if (!parseResult.success) {
     const validationResults = mapZodResultToValidationResults({ errors: parseResult.error.errors })
