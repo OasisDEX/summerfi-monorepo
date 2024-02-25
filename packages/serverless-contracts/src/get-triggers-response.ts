@@ -16,7 +16,11 @@ export const DmaSparkStopLossToDebtV2ID = 130n as const
 export const DmaAaveBasicBuyV2ID = 121n as const
 export const DmaAaveBasicSellV2ID = 122n as const
 
+export const DmaSparkBasicBuyV2 = 131n as const
+export const DmaSparkBasicSellV2 = 132n as const
+
 export const DmaAaveTrailingStopLoss = 10006n as const
+export const DmaSparkTrailingStopLoss = 10007n as const
 
 export type Trigger = {
   triggerId: string
@@ -163,9 +167,67 @@ export type DmaAaveBasicSell = Trigger & {
   }
 }
 
+export type DmaSparkBasicBuy = Trigger & {
+  triggerTypeName: 'DmaSparkBasicBuyV2'
+  triggerType: typeof DmaSparkBasicBuyV2
+  decodedParams: {
+    positionAddress: string
+    triggerType: string
+    maxCoverage: string
+    debtToken: string
+    collateralToken: string
+    operationName: string
+    executionLtv: string
+    targetLtv: string
+    maxBuyPrice: string
+    deviation: string
+    maxBaseFeeInGwei: string
+  }
+}
+export type DmaSparkBasicSell = Trigger & {
+  triggerTypeName: 'DmaSparkBasicSellV2'
+  triggerType: typeof DmaSparkBasicSellV2
+  decodedParams: {
+    positionAddress: string
+    triggerType: string
+    maxCoverage: string
+    debtToken: string
+    collateralToken: string
+    operationName: string
+    executionLtv: string
+    targetLtv: string
+    minSellPrice: string
+    deviation: string
+    maxBaseFeeInGwei: string
+  }
+}
+
 export type DmaAaveTrailingStopLoss = Trigger & {
   triggerTypeName: 'DmaAaveTrailingStopLoss'
   triggerType: typeof DmaAaveTrailingStopLoss
+  decodedParams: {
+    positionAddress: string
+    triggerType: string
+    maxCoverage: string
+    debtToken: string
+    collateralToken: string
+    operationName: string
+    collateralOracle: string
+    collateralAddedRoundId: string
+    debtOracle: string
+    debtAddedRoundId: string
+    trailingDistance: string
+    closeToCollateral: string
+  }
+  dynamicParams: {
+    executionPrice?: string
+    originalExecutionPrice?: string
+  }
+}
+
+export type DmaSparkTrailingStopLoss = Trigger & {
+  triggerTypeName: 'DmaSparkTrailingStopLoss'
+  triggerType: typeof DmaSparkTrailingStopLoss
   decodedParams: {
     positionAddress: string
     triggerType: string
@@ -198,19 +260,26 @@ export type GetTriggersResponse = {
     sparkStopLossToDebtDMA?: SparkStopLossToDebtDMA
     aaveBasicBuy?: DmaAaveBasicBuy
     aaveBasicSell?: DmaAaveBasicSell
+    sparkBasicBuy?: DmaSparkBasicBuy
+    sparkBasicSell?: DmaSparkBasicSell
     aaveTrailingStopLossDMA?: DmaAaveTrailingStopLoss
+    sparkTrailingStopLossDMA?: DmaSparkTrailingStopLoss
   }
   flags: {
     isAaveStopLossEnabled: boolean
     isSparkStopLossEnabled: boolean
     isAaveBasicBuyEnabled: boolean
     isAaveBasicSellEnabled: boolean
+    isSparkBasicBuyEnabled: boolean
+    isSparkBasicSellEnabled: boolean
   }
   triggerGroup: {
     aaveStopLoss?: Trigger
     sparkStopLoss?: Trigger
     aaveBasicBuy?: Trigger
     aaveBasicSell?: Trigger
+    sparkBasicBuy?: Trigger
+    sparkBasicSell?: Trigger
   }
   additionalData?: Record<string, unknown>
 }
