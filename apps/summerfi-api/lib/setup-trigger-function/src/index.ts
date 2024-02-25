@@ -1,4 +1,4 @@
-import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda'
+import type { APIGatewayProxyEventV2, Context, APIGatewayProxyResultV2 } from 'aws-lambda'
 import {
   ResponseBadRequest,
   ResponseInternalServerError,
@@ -15,12 +15,16 @@ import { buildServiceContainer } from './services'
 
 const logger = new Logger({ serviceName: 'setupTriggerFunction' })
 
-export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
+export const handler = async (
+  event: APIGatewayProxyEventV2,
+  context: Context,
+): Promise<APIGatewayProxyResultV2> => {
   const RPC_GATEWAY = process.env.RPC_GATEWAY
   const GET_TRIGGERS_URL = process.env.GET_TRIGGERS_URL
   const SKIP_VALIDATION = process.env.SKIP_VALIDATION
   const SUBGRAPH_BASE = process.env.SUBGRAPH_BASE
 
+  logger.addContext(context)
   const skipValidation = SKIP_VALIDATION === 'true'
   if (!RPC_GATEWAY) {
     logger.error('RPC_GATEWAY is not set')
@@ -52,6 +56,12 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       errors: validationResults.errors,
     })
   }
+
+  logger.appendKeys({
+    chainId: pathParamsResult.data.chainId,
+    protocol: pathParamsResult.data.protocol,
+    trigger: pathParamsResult.data.trigger,
+  })
 
   const body = JSON.parse(event.body ?? '{}')
 
