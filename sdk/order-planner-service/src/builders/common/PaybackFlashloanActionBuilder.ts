@@ -1,6 +1,6 @@
 import { FlashloanProvider, FlashloanStep, PaybackFlashloan } from '@summerfi/sdk-common/orders'
-import { ActionBuilder } from '~orderplanner/builders'
-import { FlashloanAction } from '~orderplanner/actions'
+import { ActionBuilder, ActionBuilderParams } from '@summerfi/order-planner-common/builders'
+import { FlashloanAction } from '~orderplannerservice/actions'
 import { ActionNames } from '@summerfi/deployment-types'
 
 export const PaybackFlashloanActionList: ActionNames[] = []
@@ -11,7 +11,9 @@ export const FlashloanProviderMap: Record<FlashloanProvider, number> = {
   [FlashloanProvider.Balancer]: 1,
 }
 
-export const PaybackFlashloanActionBuilder: ActionBuilder<PaybackFlashloan> = (params): void => {
+export const PaybackFlashloanActionBuilder: ActionBuilder<PaybackFlashloan> = (
+  params: ActionBuilderParams<PaybackFlashloan>,
+) => {
   // End the current subcontext and pass the subcontext calls to the flashloan action
   const { callsBatch, customData } = params.context.endSubContext<FlashloanStep['inputs']>()
   if (!customData) {
@@ -23,7 +25,8 @@ export const PaybackFlashloanActionBuilder: ActionBuilder<PaybackFlashloan> = (p
     action: new FlashloanAction(),
     arguments: {
       amount: customData.amount,
-      provider: FlashloanProviderMap[customData.provider],
+      // TODO: Need the hard cast because the typing system is not working correctly
+      provider: FlashloanProviderMap[customData.provider as FlashloanProvider],
       calls: callsBatch,
     },
     connectedInputs: {},

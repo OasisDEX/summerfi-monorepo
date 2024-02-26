@@ -1,5 +1,5 @@
-import { ActionBuilder } from '~orderplanner/builders'
-import { SwapAction } from '~orderplanner/actions'
+import { ActionBuilder } from '@summerfi/order-planner-common/builders'
+import { SwapAction } from '~orderplannerservice/actions'
 import { Percentage } from '@summerfi/sdk-common/common'
 import { SwapStep } from '@summerfi/sdk-common/orders'
 

@@ -1,6 +1,6 @@
 import { ReturnFunds } from '@summerfi/sdk-common/orders'
-import { ActionBuilder } from '~orderplanner/builders'
-import { ReturnFundsAction } from '~orderplanner/actions'
+import { ActionBuilder } from '@summerfi/order-planner-common/builders'
+import { ReturnFundsAction } from '~orderplannerservice/actions'
 
 export const ReturnFundsActionBuilder: ActionBuilder<ReturnFunds> = (params): void => {
   const { context, step } = params

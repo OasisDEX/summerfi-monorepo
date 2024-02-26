@@ -1,0 +1,16 @@
+{
+  // by using a separate tsconfig for build, we can set main tsconfig to
+  // include tests and use module paths in tests but build without tests
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "paths": {
+      "~protocolplugins": ["src/index.ts"],
+      "~protocolplugins/*": ["./src/*"],
+      "~orderplannercommon": ["../order-planner-common/src/index.ts"],
+      "~orderplannercommon/*": ["../order-planner-common/src/*"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

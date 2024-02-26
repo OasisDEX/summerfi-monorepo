@@ -657,20 +657,8 @@ importers:
         specifier: ^20.1.2
         version: 20.1.2
 
-  sdk/order-planner-service:
+  sdk/order-planner-common:
     dependencies:
-      '@aws-lambda-powertools/logger':
-        specifier: ^1.17.0
-        version: 1.17.0
-      '@aws-lambda-powertools/metrics':
-        specifier: ^1.17.0
-        version: 1.17.0
-      '@aws-lambda-powertools/tracer':
-        specifier: ^1.17.0
-        version: 1.17.0
-      '@summerfi/core-contracts':
-        specifier: workspace:*
-        version: link:../../packages/core-contracts
       '@summerfi/deployment-types':
         specifier: workspace:*
         version: link:../../packages/deployment-types
@@ -680,9 +668,62 @@ importers:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
-      '@summerfi/serverless-shared':
+    devDependencies:
+      '@summerfi/eslint-config':
         specifier: workspace:*
-        version: link:../../packages/serverless-shared
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      viem:
+        specifier: ^2.7.8
+        version: 2.7.9(typescript@5.3.3)
+
+  sdk/order-planner-service:
+    dependencies:
+      '@summerfi/deployment-types':
+        specifier: workspace:*
+        version: link:../../packages/deployment-types
+      '@summerfi/deployment-utils':
+        specifier: workspace:*
+        version: link:../../packages/deployment-utils
+      '@summerfi/order-planner-common':
+        specifier: workspace:*
+        version: link:../order-planner-common
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../sdk-common
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      viem:
+        specifier: ^2.7.8
+        version: 2.7.9(typescript@5.3.3)
+
+  sdk/protocol-plugins:
+    dependencies:
+      '@summerfi/deployment-types':
+        specifier: workspace:*
+        version: link:../../packages/deployment-types
+      '@summerfi/deployment-utils':
+        specifier: workspace:*
+        version: link:../../packages/deployment-utils
+      '@summerfi/order-planner-common':
+        specifier: workspace:*
+        version: link:../order-planner-common
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../sdk-common
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*

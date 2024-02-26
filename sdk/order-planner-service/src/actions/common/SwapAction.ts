@@ -1,4 +1,4 @@
-import { ActionCall, BaseAction } from '~orderplanner/actions'
+import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
 import { Percentage, TokenAmount } from '@summerfi/sdk-common/common'
 import { Hex } from 'viem'
 

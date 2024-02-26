@@ -1,7 +1,7 @@
 import { PullTokenStep } from '@summerfi/sdk-common/orders'
-import { ActionBuilder } from '~orderplanner/builders'
+import { ActionBuilder } from '@summerfi/order-planner-common/builders'
 import { ActionNames } from '@summerfi/deployment-types'
-import { PullTokenAction } from '~orderplanner/actions'
+import { PullTokenAction } from '~orderplannerservice/actions'
 
 export const PullTokenActionList: ActionNames[] = ['PullToken']
 

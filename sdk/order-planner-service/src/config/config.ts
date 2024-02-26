@@ -1,11 +1,11 @@
 import { SimulationSteps } from '@summerfi/sdk-common/orders'
+import { ActionBuildersMap } from '@summerfi/order-planner-common/builders'
 import {
   PullTokenActionBuilder,
   PaybackFlashloanActionBuilder,
   SwapActionBuilder,
   FlashloanActionBuilder,
-  ActionBuildersMap,
-} from '~orderplanner/builders'
+} from '~orderplannerservice/builders'
 
 // TODO: remove the Partial when all the builders are implemented
 export const StepBuilders: Partial<ActionBuildersMap> = {

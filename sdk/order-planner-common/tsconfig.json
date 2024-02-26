@@ -1,0 +1,14 @@
+{
+  "extends": "@summerfi/typescript-config/tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "~orderplannercommon": ["src/index.ts"],
+      "~orderplannercommon/*": ["./src/*"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

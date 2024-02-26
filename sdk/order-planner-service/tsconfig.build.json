@@ -3,7 +3,13 @@
   // include tests and use module paths in tests but build without tests
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "rootDir": "src"
+    "rootDir": "src",
+    "paths": {
+      "~orderplannerservice": ["src/index.ts"],
+      "~orderplannerservice/*": ["./src/*"],
+      "~orderplannercommon": ["../order-planner-common/src/index.ts"],
+      "~orderplannercommon/*": ["../order-planner-common/src/*"]
+    }
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]

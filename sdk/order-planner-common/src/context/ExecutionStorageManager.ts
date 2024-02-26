@@ -1,0 +1,55 @@
+import { Steps } from '@summerfi/sdk-common/orders'
+import { Maybe } from '@summerfi/sdk-common/utils'
+import { BaseAction } from '~orderplannercommon/actions'
+import { StorageInputsMapType, StorageOutputsMapType } from './Types'
+import assert from 'assert'
+
+export class ExecutionStorageManager {
+  private slotsMap: Map<string, number> = new Map()
+
+  // Slot number starts from 1 because the contract will subtract 1 from the slot number
+  private currentSlot: number = 1
+
+  public addStorageMap<Step extends Steps, Action extends BaseAction>(params: {
+    step: Step
+    action: Action
+    connectedInputs: Partial<StorageInputsMapType<Step, Action>>
+    connectedOutputs: Partial<StorageOutputsMapType<Step, Action>>
+  }): void {
+    const baseSlot = this.currentSlot
+
+    for (const stepOutputName of Object.keys(params.step.outputs)) {
+      if (params.connectedOutputs !== undefined) {
+        const actionOutputName =
+          params.connectedOutputs[stepOutputName as keyof StorageOutputsMapType<Step, Action>]
+
+        if (actionOutputName === undefined) {
+          continue
+        }
+
+        const slotKey = this._getSlotKey({
+          stepName: params.step.name,
+          referenceName: stepOutputName,
+        })
+
+        const slotOffset = params.action.config.storageOutputs.indexOf(actionOutputName)
+        assert(slotOffset !== -1, 'Output not found in action storage outputs')
+
+        this.slotsMap.set(slotKey, baseSlot + slotOffset)
+      }
+
+      this.currentSlot++
+    }
+  }
+
+  public getSlot(params: { key: string }): Maybe<number> {
+    return this.slotsMap.get(params.key)
+  }
+
+  private _getSlotKey(params: {
+    stepName: string
+    referenceName: string | number | symbol
+  }): string {
+    return `${params.stepName}-${String(params.referenceName)}`
+  }
+}

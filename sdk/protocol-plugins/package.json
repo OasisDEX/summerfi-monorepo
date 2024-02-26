@@ -1,0 +1,25 @@
+{
+  "name": "@summerfi/protocol-plugins",
+  "version": "0.0.1",
+  "scripts": {
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "test": "jest --passWithNoTests",
+    "testw": "jest --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "build": "tsc -b -v tsconfig.build.json"
+  },
+  "dependencies": {
+    "@summerfi/sdk-common": "workspace:*",
+    "@summerfi/order-planner-common": "workspace:*",
+    "@summerfi/deployment-utils": "workspace:*",
+    "@summerfi/deployment-types": "workspace:*"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/jest-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "viem": "^2.7.8"
+  }
+}
