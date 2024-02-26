@@ -1,5 +1,5 @@
 import { type Percentage } from '~sdk-common/common/implementation'
-import { SerializationManager } from '~sdk-common/common/managers'
+import { SerializationService } from '~sdk-common/common/services'
 
 interface IRiskRatioSerialized {
   ratio: Percentage
@@ -25,4 +25,4 @@ export class RiskRatio implements IRiskRatioSerialized {
   }
 }
 
-SerializationManager.registerClass(RiskRatio)
+SerializationService.registerClass(RiskRatio)

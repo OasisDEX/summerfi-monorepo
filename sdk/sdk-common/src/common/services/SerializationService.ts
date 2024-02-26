@@ -5,7 +5,7 @@ import type { JSONValue } from 'superjson/dist/types'
 
 export type Class = object
 
-export class SerializationManager {
+export class SerializationService {
   static registerClass(v: Class, options?: string | RegisterOptions | undefined): void {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     superjson.registerClass(v as any, options)
@@ -28,4 +28,4 @@ export class SerializationManager {
   }
 }
 
-console.log(SerializationManager.name)
+console.log(SerializationService.name)

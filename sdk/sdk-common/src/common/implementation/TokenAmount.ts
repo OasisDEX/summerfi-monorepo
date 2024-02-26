@@ -1,6 +1,6 @@
 import { type Token } from '~sdk-common/common/implementation'
 import { BigNumber } from 'bignumber.js'
-import { SerializationManager } from '~sdk-common/common/managers'
+import { SerializationService } from '~sdk-common/common/services'
 
 interface ITokenAmountSerialized {
   token: Token
@@ -42,4 +42,4 @@ export class TokenAmount implements ITokenAmountSerialized {
   }
 }
 
-SerializationManager.registerClass(TokenAmount)
+SerializationService.registerClass(TokenAmount)

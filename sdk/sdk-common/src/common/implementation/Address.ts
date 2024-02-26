@@ -1,5 +1,5 @@
 import { AddressType } from '~sdk-common/common/enums'
-import { SerializationManager } from '~sdk-common/common/managers'
+import { SerializationService } from '~sdk-common/common/services'
 
 interface IAddressSerialized {
   hexValue: string
@@ -46,4 +46,4 @@ export class Address implements IAddressSerialized {
   }
 }
 
-SerializationManager.registerClass(Address)
+SerializationService.registerClass(Address)

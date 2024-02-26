@@ -1,5 +1,5 @@
 import { type ChainId } from '~sdk-common/common/aliases'
-import { SerializationManager } from '~sdk-common/common/managers'
+import { SerializationService } from '~sdk-common/common/services'
 
 export type IChainInfoSerialized = {
   /** The chain ID of the network */
@@ -30,4 +30,4 @@ export class ChainInfo implements IChainInfoSerialized {
   }
 }
 
-SerializationManager.registerClass(ChainInfo)
+SerializationService.registerClass(ChainInfo)

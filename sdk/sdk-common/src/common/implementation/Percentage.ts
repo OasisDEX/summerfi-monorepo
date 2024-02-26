@@ -1,4 +1,4 @@
-import { SerializationManager } from '~sdk-common/common/managers'
+import { SerializationService } from '~sdk-common/common/services'
 
 interface IPercentageSerialized {
   value: number
@@ -28,4 +28,4 @@ export class Percentage implements IPercentageSerialized {
   }
 }
 
-SerializationManager.registerClass(Percentage)
+SerializationService.registerClass(Percentage)

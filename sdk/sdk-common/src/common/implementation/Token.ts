@@ -1,5 +1,5 @@
 import { type ChainInfo, type Address } from '~sdk-common/common/implementation'
-import { SerializationManager } from '~sdk-common/common/managers'
+import { SerializationService } from '~sdk-common/common/services'
 
 interface ITokenSerialized {
   chainInfo: ChainInfo
@@ -43,4 +43,4 @@ export class Token implements ITokenSerialized {
   }
 }
 
-SerializationManager.registerClass(Token)
+SerializationService.registerClass(Token)

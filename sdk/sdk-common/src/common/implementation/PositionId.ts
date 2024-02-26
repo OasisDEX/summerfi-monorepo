@@ -1,4 +1,4 @@
-import { SerializationManager } from '~sdk-common/common/managers'
+import { SerializationService } from '~sdk-common/common/services'
 
 interface IPositionIdSerialized {
   readonly id: string
@@ -20,4 +20,4 @@ export class PositionId implements IPositionIdSerialized {
   }
 }
 
-SerializationManager.registerClass(PositionId)
+SerializationService.registerClass(PositionId)
