@@ -9,11 +9,10 @@ import memoize from 'just-memoize'
 import { getAavePosition } from './get-aave-position'
 import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
 import { simulatePosition } from './simulate-position'
-import { autoSellValidator } from './against-position-validators'
-import { getUsdAaveOraclePrice } from './get-usd-aave-oracle-price'
+import { aaveAutoSellValidator } from './against-position-validators'
 import { CurrentTriggerLike, encodeAaveAutoSell } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
-import { getCurrentStopLoss } from './get-current-stop-loss'
+import { getCurrentAaveStopLoss } from './get-current-aave-stop-loss'
 
 export interface GetAaveAutoSellServiceContainerProps {
   rpc: PublicClient
@@ -69,9 +68,9 @@ export const getAaveAutoSellServiceContainer: (
 
       const triggers = await getTriggers(trigger.dpm)
 
-      const currentStopLoss = getCurrentStopLoss(triggers, position, logger)
+      const currentStopLoss = getCurrentAaveStopLoss(triggers, position, logger)
 
-      return autoSellValidator({
+      return aaveAutoSellValidator({
         position,
         executionPrice,
         triggerData: trigger.triggerData,
@@ -90,8 +89,6 @@ export const getAaveAutoSellServiceContainer: (
         debt: trigger.position.debt,
       })
 
-      const debtPriceInUSD = await getUsdAaveOraclePrice(trigger.position.debt, addresses, rpc)
-
       const currentAutoSell = triggers.triggers.aaveBasicSell
       const currentTrigger: CurrentTriggerLike | undefined = currentAutoSell
         ? {
@@ -100,12 +97,7 @@ export const getAaveAutoSellServiceContainer: (
           }
         : undefined
 
-      const encodedData = encodeAaveAutoSell(
-        position,
-        trigger.triggerData,
-        debtPriceInUSD,
-        currentTrigger,
-      )
+      const encodedData = encodeAaveAutoSell(position, trigger.triggerData, currentTrigger)
 
       const triggerData =
         action === SupportedActions.Remove

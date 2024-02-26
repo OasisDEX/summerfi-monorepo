@@ -1,19 +1,21 @@
 import { ServiceContainer } from './service-container'
-import { AaveStopLossEventBody, SupportedActions } from '~types'
+import { SparkAutoSellEventBody, SupportedActions } from '~types'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
-import { Address, ChainId } from '@summerfi/serverless-shared'
+import { Address, ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
-import { getAavePosition } from './get-aave-position'
 import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
-import { dmaAaveStopLossValidator } from './against-position-validators'
-import { CurrentTriggerLike, encodeAaveStopLoss } from './trigger-encoders'
+import { simulatePosition } from './simulate-position'
+import { sparkAutoSellValidator } from './against-position-validators'
+import { CurrentTriggerLike } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
-import { getCurrentAaveStopLoss } from './get-current-aave-stop-loss'
+import { getSparkPosition } from './get-spark-position'
+import { getCurrentSparkStopLoss } from './get-current-spark-stop-loss'
+import { encodeSparkAutoSell } from './trigger-encoders/encode-spark-auto-sell'
 
-export interface GetAaveStopLossServiceContainerProps {
+export interface GetSparkAutoSellServiceContainerProps {
   rpc: PublicClient
   addresses: Addresses
   getTriggers: (address: Address) => Promise<GetTriggersResponse>
@@ -21,16 +23,37 @@ export interface GetAaveStopLossServiceContainerProps {
   chainId: ChainId
 }
 
-export const getAaveStopLossServiceContainer: (
-  props: GetAaveStopLossServiceContainerProps,
-) => ServiceContainer<AaveStopLossEventBody> = ({ rpc, addresses, logger, getTriggers }) => {
-  const getPosition = memoize(async (params: Parameters<typeof getAavePosition>[0]) => {
-    return await getAavePosition(params, rpc, addresses, logger)
+export const getSparkAutoSellServiceContainer: (
+  props: GetSparkAutoSellServiceContainerProps,
+) => ServiceContainer<SparkAutoSellEventBody> = ({
+  rpc,
+  addresses,
+  logger,
+  getTriggers,
+  chainId,
+}) => {
+  const getPosition = memoize(async (params: Parameters<typeof getSparkPosition>[0]) => {
+    return await getSparkPosition(params, rpc, addresses, logger)
   })
 
   return {
-    simulatePosition: () => {
-      return Promise.resolve({})
+    simulatePosition: async ({ trigger }) => {
+      const position = await getPosition({
+        address: trigger.dpm,
+        collateral: trigger.position.collateral,
+        debt: trigger.position.debt,
+      })
+
+      const executionPrice = calculateCollateralPriceInDebtBasedOnLtv({
+        ...position,
+        ltv: trigger.triggerData.executionLTV,
+      })
+      return simulatePosition({
+        position: position,
+        targetLTV: trigger.triggerData.targetLTV,
+        executionLTV: trigger.triggerData.executionLTV,
+        executionPrice: executionPrice,
+      })
     },
     validate: async ({ trigger }) => {
       const position = await getPosition({
@@ -45,12 +68,17 @@ export const getAaveStopLossServiceContainer: (
       })
 
       const triggers = await getTriggers(trigger.dpm)
-      return dmaAaveStopLossValidator({
+
+      const currentStopLoss = getCurrentSparkStopLoss(triggers, position, logger)
+
+      return sparkAutoSellValidator({
         position,
         executionPrice,
         triggerData: trigger.triggerData,
         action: trigger.action,
         triggers,
+        currentStopLoss,
+        chainId,
       })
     },
     getTransaction: async ({ trigger }) => {
@@ -62,13 +90,15 @@ export const getAaveStopLossServiceContainer: (
         debt: trigger.position.debt,
       })
 
-      const currentTrigger: CurrentTriggerLike | undefined = getCurrentAaveStopLoss(
-        triggers,
-        position,
-        logger,
-      )
+      const currentAutoSell = triggers.triggers.sparkBasicSell
+      const currentTrigger: CurrentTriggerLike | undefined = currentAutoSell
+        ? {
+            triggerData: currentAutoSell.triggerData as `0x${string}`,
+            id: safeParseBigInt(currentAutoSell.triggerId) ?? 0n,
+          }
+        : undefined
 
-      const encodedData = encodeAaveStopLoss(position, trigger.triggerData, currentTrigger)
+      const encodedData = encodeSparkAutoSell(position, trigger.triggerData, currentTrigger)
 
       const triggerData =
         action === SupportedActions.Remove
@@ -97,5 +127,5 @@ export const getAaveStopLossServiceContainer: (
         transaction,
       }
     },
-  } as ServiceContainer<AaveStopLossEventBody>
+  } as ServiceContainer<SparkAutoSellEventBody>
 }

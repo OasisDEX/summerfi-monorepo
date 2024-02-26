@@ -13,6 +13,9 @@ import {
   eventBodyDmaAaveStopLossSchema,
   eventBodyDmaAaveTrailingStopLossSchema,
   eventBodyDmaSparkStopLossSchema,
+  eventBodyDmaSparkTrailingStopLossSchema,
+  eventBodySparkBasicBuySchema,
+  eventBodySparkBasicSellSchema,
   SupportedTriggers,
 } from './validators'
 import { ChainId, ProtocolId } from '@summerfi/serverless-shared'
@@ -24,12 +27,6 @@ export const isAaveAutoBuyTriggerData = (
 }
 
 export const isAaveAutoSellTriggerData = (
-  triggerData: TriggerData,
-): triggerData is AaveAutoSellTriggerData => {
-  return 'minSellPrice' in triggerData
-}
-
-export const isAaveStopLossTriggerData = (
   triggerData: TriggerData,
 ): triggerData is AaveAutoSellTriggerData => {
   return 'minSellPrice' in triggerData
@@ -64,7 +61,7 @@ export type SupportedTriggersSchema =
   | typeof eventBodyDmaSparkStopLossSchema
   | typeof eventBodyDmaAaveTrailingStopLossSchema
 
-export const getBodySchema = (pathParams: PathParams): SupportedTriggersSchema => {
+export const getBodySchema = (pathParams: PathParams): SupportedTriggersSchema | undefined => {
   const { trigger, chainId, protocol } = pathParams
   if (protocol === ProtocolId.AAVE3) {
     if (trigger === SupportedTriggers.AutoBuy) {
@@ -84,7 +81,16 @@ export const getBodySchema = (pathParams: PathParams): SupportedTriggersSchema =
     if (trigger === SupportedTriggers.DmaStopLoss) {
       return eventBodyDmaSparkStopLossSchema
     }
+    if (trigger === SupportedTriggers.DmaTrailingStopLoss) {
+      return eventBodyDmaSparkTrailingStopLossSchema
+    }
+    if (trigger === SupportedTriggers.AutoBuy) {
+      return eventBodySparkBasicBuySchema
+    }
+    if (trigger === SupportedTriggers.AutoSell) {
+      return eventBodySparkBasicSellSchema
+    }
   }
 
-  throw new Error(`Unsupported trigger: ${trigger} on protocol: ${protocol} and chain: ${chainId}`)
+  return undefined
 }

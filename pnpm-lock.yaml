@@ -310,11 +310,11 @@ importers:
         specifier: 0.1.16-dma-v2-workers.11
         version: 0.1.16-dma-v2-workers.11
       '@oasisdex/automation':
-        specifier: ^1.6.0-alpha.16
-        version: 1.6.0-alpha.16
+        specifier: ^1.6.0-alpha.17
+        version: 1.6.1
       '@oasisdex/dma-library':
-        specifier: 0.5.21-dma-v2-workers.19-test.3
-        version: 0.5.21-dma-v2-workers.19-test.3
+        specifier: 0.5.21-dma-v2-workers.19-test.16
+        version: 0.5.21-dma-v2-workers.19-test.16
       '@summerfi/prices-subgraph':
         specifier: workspace:*
         version: link:../../../../packages/prices-subgraph
@@ -5321,8 +5321,8 @@ packages:
     resolution: {integrity: sha512-HRTjoOdOcWslSFycgifqOvmhwgvHhTPJxnkQZRkB2qFMWstMYX10598iv+lZmFJ1XJz8Z7wyUL2oaLWl7cek2A==}
     dev: false
 
-  /@oasisdex/automation@1.6.0-alpha.16:
-    resolution: {integrity: sha512-VTPo+IHCrgJCm35IMRisjVrD6vAeHo+DsFm/epDjrGO6qyPKSjWvux10V53h8TDgpVjio8lUZmEmQfHbzOWY1A==}
+  /@oasisdex/automation@1.6.1:
+    resolution: {integrity: sha512-pmhM2cJ2LrCeugcw/c3vqpsXA9Ygls8oh83IsQHHjdTTw5eUBEHUihtmJHPs10R9EeShIOZzhBPnRMGKpyfvKw==}
     dependencies:
       ethers: 5.7.2
     transitivePeerDependencies:
@@ -5330,8 +5330,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@oasisdex/dma-library@0.5.21-dma-v2-workers.19-test.3:
-    resolution: {integrity: sha512-umc3XoFrS66or2o1QRontXM3L0TwOuAVhwLA6StZZQmhx8p1EvhoARNv6j9zhtyjqPrmC/YsSpbcY3h/ocCzgQ==}
+  /@oasisdex/dma-library@0.5.21-dma-v2-workers.19-test.16:
+    resolution: {integrity: sha512-PjyzNaUQQBVdzbZZ0BvNtr3LJZ+4K+spoLEOHpVax7S0JX+UtwUGb0uebLdAADcsRhfHzpJE40SK4nX+HwOFyQ==}
     dependencies:
       bignumber.js: 9.0.1
       ethers: 5.6.2

@@ -9,7 +9,7 @@ import { Logger } from '@aws-lambda-powertools/logger'
 import { calculateLtv } from './calculate-ltv'
 import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
 
-export function getCurrentStopLoss(
+export function getCurrentAaveStopLoss(
   triggers: GetTriggersResponse,
   position: PositionLike,
   logger?: Logger,

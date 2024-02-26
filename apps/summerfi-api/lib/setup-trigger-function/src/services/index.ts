@@ -10,6 +10,9 @@ import {
   AaveStopLossEventBody,
   SparkStopLossEventBody,
   AaveTrailingStopLossEventBody,
+  SparkAutoBuyEventBody,
+  SparkAutoSellEventBody,
+  SparkTrailingStopLossEventBody,
 } from '~types'
 import type { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import fetch from 'node-fetch'
@@ -26,6 +29,9 @@ import { getAaveStopLossServiceContainer } from './get-aave-stop-loss-service-co
 import { getSparkStopLossServiceContainer } from './get-spark-stop-loss-service-container'
 import { getAaveTrailingStopLossServiceContainer } from './get-aave-trailing-stop-loss-service-container'
 import { getPricesSubgraphClient } from '@summerfi/prices-subgraph'
+import { getSparkAutoBuyServiceContainer } from './get-spark-auto-buy-service-container'
+import { getSparkAutoSellServiceContainer } from './get-spark-auto-sell-service-container'
+import { getSparkTrailingStopLossServiceContainer } from './get-spark-trailing-stop-loss-service-container'
 
 export const rpcConfig: IRpcConfig = {
   skipCache: false,
@@ -69,6 +75,20 @@ function isSparkStopLoss(trigger: SetupTriggerEventBody): trigger is SparkStopLo
     BigInt(TriggerType.DmaSparkStopLossToCollateralV2),
     BigInt(TriggerType.DmaSparkStopLossToDebtV2),
   ].includes(trigger.triggerData?.type)
+}
+
+function isSparkAutoBuy(trigger: SetupTriggerEventBody): trigger is SparkAutoBuyEventBody {
+  return trigger.triggerData?.type === BigInt(TriggerType.DmaSparkBasicBuyV2)
+}
+
+function isSparkAutoSell(trigger: SetupTriggerEventBody): trigger is SparkAutoSellEventBody {
+  return trigger.triggerData?.type === BigInt(TriggerType.DmaSparkBasicSellV2)
+}
+
+function isSparkTrailingStopLoss(
+  trigger: SetupTriggerEventBody,
+): trigger is SparkTrailingStopLossEventBody {
+  return trigger.triggerData?.type === BigInt(TriggerType.DmaSparkTrailingStopLossV2)
 }
 
 export function buildServiceContainer<Trigger extends SetupTriggerEventBody>(
@@ -161,6 +181,37 @@ export function buildServiceContainer<Trigger extends SetupTriggerEventBody>(
 
   if (isAaveTrailingStopLoss(trigger)) {
     return getAaveTrailingStopLossServiceContainer({
+      rpc: publicClient,
+      addresses,
+      getTriggers,
+      getLatestPrice,
+      chainId,
+      logger,
+    }) as ServiceContainer<Trigger>
+  }
+
+  if (isSparkAutoBuy(trigger)) {
+    return getSparkAutoBuyServiceContainer({
+      rpc: publicClient,
+      addresses,
+      getTriggers,
+      logger,
+      chainId,
+    }) as ServiceContainer<Trigger>
+  }
+
+  if (isSparkAutoSell(trigger)) {
+    return getSparkAutoSellServiceContainer({
+      rpc: publicClient,
+      addresses,
+      getTriggers,
+      logger,
+      chainId,
+    }) as ServiceContainer<Trigger>
+  }
+
+  if (isSparkTrailingStopLoss(trigger)) {
+    return getSparkTrailingStopLossServiceContainer({
       rpc: publicClient,
       addresses,
       getTriggers,
