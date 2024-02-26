@@ -13,10 +13,8 @@ export class ChainsManager implements IChainsManager {
   public async getChain(params: { chainInfo: ChainInfo }): Promise<Maybe<Chain>> {
     return new Chain({
       chainInfo: params.chainInfo,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      tokensManager: undefined as any,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      protocolsManager: undefined as any,
+      tokensManager: new TokensManager({ chainInfo: params.chainInfo }),
+      protocolsManager: new ProtocolsManager({ chainInfo: params.chainInfo }),
     })
   }
 
