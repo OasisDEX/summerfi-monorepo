@@ -4,7 +4,7 @@ import { IProtocolPlugin } from '~protocolplugins/interfaces'
 import { SparkDepositBorrowActionBuilder } from './builders'
 import { Maybe } from '@summerfi/sdk-common/utils'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import { ProtocolPluginRegistry } from '~protocolplugins/implementation'
+import { ProtocolPluginsRegistry } from '~protocolplugins/implementation'
 
 export class SparkProtocolPlugin implements IProtocolPlugin {
   readonly protocol = ProtocolName.Spark
@@ -18,4 +18,4 @@ export class SparkProtocolPlugin implements IProtocolPlugin {
   }
 }
 
-ProtocolPluginRegistry.registerProtocolPlugin(ProtocolName.Spark, SparkProtocolPlugin)
+ProtocolPluginsRegistry.registerProtocolPlugin(ProtocolName.Spark, SparkProtocolPlugin)

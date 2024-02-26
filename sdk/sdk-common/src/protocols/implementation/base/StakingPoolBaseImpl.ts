@@ -1,5 +1,5 @@
 import { Address, Token } from '~sdk-common/common'
-import { PoolId, ProtocolId, PoolType, StakingPool } from '~sdk-common/protocols'
+import { PoolId, PoolType, StakingPool, ProtocolName } from '~sdk-common/protocols'
 import { PoolBaseImpl } from './PoolBaseImpl'
 
 export class StakingPoolImpl extends PoolBaseImpl implements StakingPool {
@@ -7,7 +7,7 @@ export class StakingPoolImpl extends PoolBaseImpl implements StakingPool {
 
   constructor(params: {
     poolId: PoolId
-    protocolId: ProtocolId
+    protocol: ProtocolName
     address?: Address
     TVL?: number
     stakingToken: Token

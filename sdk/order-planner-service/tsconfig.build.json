@@ -8,7 +8,9 @@
       "~orderplannerservice": ["src/index.ts"],
       "~orderplannerservice/*": ["./src/*"],
       "~orderplannercommon": ["../order-planner-common/src/index.ts"],
-      "~orderplannercommon/*": ["../order-planner-common/src/*"]
+      "~orderplannercommon/*": ["../order-planner-common/src/*"],
+      "~protocolplugins": ["../protocol-plugins/src/index.ts"],
+      "~protocolplugins/*": ["../protocol-plugins/src/*"]
     }
   },
   "include": ["src/**/*.ts"],

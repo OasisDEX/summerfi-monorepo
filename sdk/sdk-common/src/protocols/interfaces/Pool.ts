@@ -1,5 +1,6 @@
 import { Address } from '~sdk-common/common'
-import { PoolId, ProtocolId } from './IDs'
+import { PoolId } from './IDs'
+import { ProtocolName } from './ProtocolName'
 
 /**
  * @enum PoolType
@@ -18,7 +19,7 @@ export enum PoolType {
  */
 export interface Pool {
   poolId: PoolId
-  protocolId: ProtocolId
+  protocol: ProtocolName
   type: PoolType
   address?: Address
   TVL?: number

@@ -1,6 +1,6 @@
 import { Chain } from '~sdk-common/chains'
 import { Percentage, RiskRatio, TokenAmount, Wallet } from '~sdk-common/common'
-import { PoolType } from '~sdk-common/protocols'
+import { PoolType, ProtocolName } from '~sdk-common/protocols'
 import { Position, PositionId } from '~sdk-common/users'
 import { Maybe } from '~sdk-common/utils'
 
@@ -26,7 +26,7 @@ export async function getMockPosition(params: {
     riskRatio: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: 20.3 }) }),
     pool: {
       poolId: { id: 'testpool' },
-      protocolId: { id: 'testprotocol' },
+      protocol: ProtocolName.AAVEv3,
       type: PoolType.Lending,
     },
   }

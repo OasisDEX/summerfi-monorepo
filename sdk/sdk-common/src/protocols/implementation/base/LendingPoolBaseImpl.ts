@@ -1,5 +1,5 @@
 import { Address, Percentage, Token } from '~sdk-common/common'
-import { PoolId, ProtocolId, PoolType, LendingPool } from '~sdk-common/protocols'
+import { PoolId, PoolType, LendingPool, ProtocolName } from '~sdk-common/protocols'
 import { PoolBaseImpl } from './PoolBaseImpl'
 
 export class LendingPoolImpl extends PoolBaseImpl implements LendingPool {
@@ -9,7 +9,7 @@ export class LendingPoolImpl extends PoolBaseImpl implements LendingPool {
 
   constructor(params: {
     poolId: PoolId
-    protocolId: ProtocolId
+    protocol: ProtocolName
     address?: Address
     TVL?: number
     maxLTV: Percentage

@@ -3,7 +3,6 @@ import {
   Pool,
   PoolParameters,
   Protocol,
-  ProtocolId,
   ProtocolName,
   ProtocolParameters,
   ProtocolsRegistry,
@@ -12,12 +11,12 @@ import { Maybe } from '~sdk-common/utils'
 import { mockPool } from '.'
 
 class mockProtocolSpark implements Protocol {
-  public readonly protocolId: ProtocolId
+  public readonly name: ProtocolName
   private readonly chainInfo: ChainInfo
 
   public constructor(params: { chainInfo: ChainInfo }) {
     this.chainInfo = params.chainInfo
-    this.protocolId = { id: 'spark' }
+    this.name = ProtocolName.Spark
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */

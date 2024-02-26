@@ -3,7 +3,7 @@ import { SimulationSteps, Steps } from '@summerfi/sdk-common/orders'
 import { IProtocolPlugin } from '~protocolplugins/interfaces'
 import { MakerPaybackWithdrawActionBuilder } from './builders'
 import { Maybe } from '@summerfi/sdk-common/utils'
-import { ProtocolPluginRegistry } from '~protocolplugins/implementation'
+import { ProtocolPluginsRegistry } from '~protocolplugins/implementation'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 
 export class MakerProtocolPlugin implements IProtocolPlugin {
@@ -16,4 +16,4 @@ export class MakerProtocolPlugin implements IProtocolPlugin {
   }
 }
 
-ProtocolPluginRegistry.registerProtocolPlugin(ProtocolName.Maker, MakerProtocolPlugin)
+ProtocolPluginsRegistry.registerProtocolPlugin(ProtocolName.Maker, MakerProtocolPlugin)

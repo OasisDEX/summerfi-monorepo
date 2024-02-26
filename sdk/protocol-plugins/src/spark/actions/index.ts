@@ -1,2 +1,2 @@
-export { SparkBorrowAction } from './SparkBorrowAction';
-export { SparkDepositAction } from './SparkDepositAction';
+export { SparkBorrowAction } from './SparkBorrowAction'
+export { SparkDepositAction } from './SparkDepositAction'

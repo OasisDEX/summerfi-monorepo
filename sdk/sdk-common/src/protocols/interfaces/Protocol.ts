@@ -1,15 +1,15 @@
 import { Maybe } from '~sdk-common/utils'
-import { ProtocolId } from './IDs'
 import { Pool } from './Pool'
 import { PoolParameters } from './PoolParameters'
 import { ProtocolParameters } from './ProtocolParameters'
+import { ProtocolName } from './ProtocolName'
 
 /**
  * @interface Protocol
  * @description Represents a protocol. Provides methods for getting pools
  */
 export interface Protocol {
-  protocolId: ProtocolId
+  name: ProtocolName
 
   getPool(params: {
     poolParameters: PoolParameters

@@ -693,6 +693,9 @@ importers:
       '@summerfi/order-planner-common':
         specifier: workspace:*
         version: link:../order-planner-common
+      '@summerfi/protocol-plugins':
+        specifier: workspace:*
+        version: link:../protocol-plugins
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
