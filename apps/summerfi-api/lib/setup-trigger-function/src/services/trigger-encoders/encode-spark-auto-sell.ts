@@ -9,12 +9,12 @@ import {
 import { OPERATION_NAMES } from '@oasisdex/dma-library'
 import { DEFAULT_DEVIATION } from './defaults'
 import { automationBotAbi } from '~abi'
-import { AaveAutoSellTriggerData, PositionLike } from '~types'
+import { PositionLike, SparkAutoSellTriggerData } from '~types'
 import { getMaxCoverage } from './get-max-coverage'
 
-export const encodeAaveAutoSell = (
+export const encodeSparkAutoSell = (
   position: PositionLike,
-  triggerData: AaveAutoSellTriggerData,
+  triggerData: SparkAutoSellTriggerData,
   currentTrigger: CurrentTriggerLike | undefined,
 ): TriggerTransactions => {
   const abiParameters = parseAbiParameters(
@@ -31,7 +31,7 @@ export const encodeAaveAutoSell = (
       'uint32 maxBaseFeeInGwei',
   )
 
-  const operationName = OPERATION_NAMES.aave.v3.ADJUST_RISK_DOWN
+  const operationName = OPERATION_NAMES.spark.ADJUST_RISK_DOWN
   const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
 
   const maxCoverage = getMaxCoverage(position)

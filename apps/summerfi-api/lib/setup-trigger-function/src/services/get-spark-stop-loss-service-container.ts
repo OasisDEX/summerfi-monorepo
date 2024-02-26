@@ -1,15 +1,13 @@
 import { ServiceContainer } from './service-container'
-import { AaveStopLossEventBody, SparkStopLossEventBody, SupportedActions } from '~types'
+import { SparkStopLossEventBody, SupportedActions } from '~types'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
 import { Address, ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
-import { getAavePosition } from './get-aave-position'
 import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
 import { dmaSparkStopLossValidator } from './against-position-validators'
-import { getUsdAaveOraclePrice } from './get-usd-aave-oracle-price'
 import { CurrentTriggerLike, encodeSparkStopLoss } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
 import { getSparkPosition } from './get-spark-position'
@@ -36,7 +34,7 @@ function getCurrentStopLoss(triggers: GetTriggersResponse): CurrentTriggerLike |
 export const getSparkStopLossServiceContainer: (
   props: GetSparkStopLossServiceContainerProps,
 ) => ServiceContainer<SparkStopLossEventBody> = ({ rpc, addresses, logger, getTriggers }) => {
-  const getPosition = memoize(async (params: Parameters<typeof getAavePosition>[0]) => {
+  const getPosition = memoize(async (params: Parameters<typeof getSparkPosition>[0]) => {
     return await getSparkPosition(params, rpc, addresses, logger)
   })
 
@@ -74,16 +72,9 @@ export const getSparkStopLossServiceContainer: (
         debt: trigger.position.debt,
       })
 
-      const debtPriceInUSD = await getUsdAaveOraclePrice(trigger.position.debt, addresses, rpc)
-
       const currentTrigger: CurrentTriggerLike | undefined = getCurrentStopLoss(triggers)
 
-      const encodedData = encodeSparkStopLoss(
-        position,
-        trigger.triggerData,
-        debtPriceInUSD,
-        currentTrigger,
-      )
+      const encodedData = encodeSparkStopLoss(position, trigger.triggerData, currentTrigger)
 
       const triggerData =
         action === SupportedActions.Remove
@@ -112,5 +103,5 @@ export const getSparkStopLossServiceContainer: (
         transaction,
       }
     },
-  } as ServiceContainer<AaveStopLossEventBody>
+  } as ServiceContainer<SparkStopLossEventBody>
 }

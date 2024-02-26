@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda'
+import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'aws-lambda'
 import {
   ResponseBadRequest,
   ResponseInternalServerError,
@@ -27,6 +27,10 @@ import {
   DmaAaveBasicSellV2ID,
   DmaAaveStopLossToCollateralV2ID,
   DmaAaveStopLossToDebtV2ID,
+  DmaSparkBasicBuy,
+  DmaSparkBasicBuyV2,
+  DmaSparkBasicSell,
+  DmaSparkBasicSellV2,
   DmaSparkStopLossToCollateralV2ID,
   DmaSparkStopLossToDebtV2ID,
   GetTriggersResponse,
@@ -50,6 +54,7 @@ import {
 } from './helpers'
 import { getPricesSubgraphClient } from '@summerfi/prices-subgraph'
 import { getDmaAaveTrailingStopLoss } from './trigger-parsers/dma-aave-trailing-stop-loss'
+import { getDmaSparkTrailingStopLoss } from './trigger-parsers/dma-spark-trailing-stop-loss'
 
 const logger = new Logger({ serviceName: 'getTriggersFunction' })
 
@@ -59,8 +64,13 @@ const paramsSchema = z.object({
   rpc: urlOptionalSchema,
 })
 
-export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
+export const handler = async (
+  event: APIGatewayProxyEventV2,
+  context: Context,
+): Promise<APIGatewayProxyResultV2> => {
   const SUBGRAPH_BASE = process.env.SUBGRAPH_BASE
+
+  logger.addContext(context)
 
   if (!SUBGRAPH_BASE) {
     logger.error('SUBGRAPH_BASE is not set')
@@ -81,6 +91,11 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     })
   }
   const params = parseResult.data
+
+  logger.appendKeys({
+    chainId: params.chainId,
+  })
+
   const automationSubgraphClient = getAutomationSubgraphClient({
     urlBase: SUBGRAPH_BASE,
     chainId: params.chainId,
@@ -232,7 +247,41 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       }
     })[0]
 
+  const sparkBasicBuy: DmaSparkBasicBuy | undefined = triggers.triggers
+    .filter((trigger) => trigger.triggerType == DmaSparkBasicBuyV2)
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'DmaSparkBasicBuyV2' as const,
+        triggerType: DmaSparkBasicBuyV2,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: {
+          maxBuyPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('maxBuyPrice')],
+          ...mapBuySellCommonParams(trigger),
+        },
+      }
+    })[0]
+
+  const sparkBasicSell: DmaSparkBasicSell | undefined = triggers.triggers
+    .filter((trigger) => trigger.triggerType == DmaSparkBasicSellV2)
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'DmaSparkBasicSellV2' as const,
+        triggerType: DmaSparkBasicSellV2,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: {
+          minSellPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('minSellPrice')],
+          ...mapBuySellCommonParams(trigger),
+        },
+      }
+    })[0]
+
   const aaveTrailingStopLossDMA = await getDmaAaveTrailingStopLoss({
+    triggers,
+    pricesSubgraphClient,
+    logger,
+  })
+
+  const sparkTrailingStopLossDMA = await getDmaSparkTrailingStopLoss({
     triggers,
     pricesSubgraphClient,
     logger,
@@ -251,6 +300,9 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       aaveBasicBuy,
       aaveBasicSell,
       aaveTrailingStopLossDMA,
+      sparkBasicSell,
+      sparkBasicBuy,
+      sparkTrailingStopLossDMA,
     },
     flags: {
       isAaveStopLossEnabled: hasAnyDefined(
@@ -265,9 +317,12 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
         sparkStopLossToCollateralDMA,
         sparkStopLossToDebt,
         sparkStopLossToDebtDMA,
+        sparkTrailingStopLossDMA,
       ),
       isAaveBasicBuyEnabled: hasAnyDefined(aaveBasicBuy),
       isAaveBasicSellEnabled: hasAnyDefined(aaveBasicSell),
+      isSparkBasicBuyEnabled: hasAnyDefined(sparkBasicBuy),
+      isSparkBasicSellEnabled: hasAnyDefined(sparkBasicSell),
     },
     triggerGroup: {
       aaveStopLoss: getCurrentTrigger(
@@ -282,9 +337,12 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
         sparkStopLossToCollateralDMA,
         sparkStopLossToDebt,
         sparkStopLossToDebtDMA,
+        sparkTrailingStopLossDMA,
       ),
       aaveBasicBuy: getCurrentTrigger(aaveBasicBuy),
       aaveBasicSell: getCurrentTrigger(aaveBasicSell),
+      sparkBasicBuy: getCurrentTrigger(sparkBasicBuy),
+      sparkBasicSell: getCurrentTrigger(sparkBasicSell),
     },
     additionalData: {
       params: {

@@ -1,4 +1,4 @@
-import { EncoderFunction } from './types'
+import { CurrentTriggerLike, TriggerTransactions } from './types'
 import {
   bytesToHex,
   encodeAbiParameters,
@@ -7,16 +7,16 @@ import {
   stringToBytes,
 } from 'viem'
 import { automationBotAbi } from '~abi'
-import { DmaAaveStopLossTriggerData } from '~types'
+import { DmaSparkStopLossTriggerData, PositionLike } from '~types'
 import { TriggerType } from '@oasisdex/automation'
 import { getMaxCoverage } from './get-max-coverage'
+import { OPERATION_NAMES } from '@oasisdex/dma-library'
 
-export const encodeSparkStopLoss: EncoderFunction<DmaAaveStopLossTriggerData> = (
-  position,
-  triggerData,
-  debtPriceInUSD,
-  currentTrigger,
-) => {
+export const encodeSparkStopLoss = (
+  position: PositionLike,
+  triggerData: DmaSparkStopLossTriggerData,
+  currentTrigger: CurrentTriggerLike | undefined,
+): TriggerTransactions => {
   const abiParameters = parseAbiParameters(
     'address positionAddress, ' +
       'uint16 triggerType, ' +
@@ -29,9 +29,9 @@ export const encodeSparkStopLoss: EncoderFunction<DmaAaveStopLossTriggerData> = 
 
   const operationName =
     triggerData.type == BigInt(TriggerType.DmaSparkStopLossToCollateralV2)
-      ? 'CloseAndRemainSparkPosition'
+      ? OPERATION_NAMES.spark.CLOSE_AND_REMAIN
       : triggerData.type == BigInt(TriggerType.DmaSparkStopLossToDebtV2)
-        ? 'SparkClosePosition'
+        ? OPERATION_NAMES.spark.CLOSE_AND_EXIT
         : undefined
 
   if (operationName === undefined) {

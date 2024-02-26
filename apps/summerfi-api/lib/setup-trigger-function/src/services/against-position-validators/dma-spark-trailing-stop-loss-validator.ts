@@ -1,5 +1,6 @@
 import {
-  dmaSparkStopLossTriggerDataSchema,
+  dmaSparkTrailingStopLossTriggerDataSchema,
+  ltvSchema,
   mapZodResultToValidationResults,
   positionSchema,
   priceSchema,
@@ -7,21 +8,24 @@ import {
   StopLossWarningCodes,
   SupportedActions,
   supportedActionsSchema,
+  TrailingStopLossErrorCodes,
   TWENTY_MILLIONS_DOllARS,
   ValidationResults,
 } from '~types'
 import { z } from 'zod'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
+import { DerivedPrices } from '@summerfi/prices-subgraph'
 import { safeParseBigInt } from '@summerfi/serverless-shared'
 
 const paramsSchema = z.object({
   position: positionSchema,
   executionPrice: priceSchema,
-  triggerData: dmaSparkStopLossTriggerDataSchema,
+  dynamicExecutionLTV: ltvSchema,
+  triggerData: dmaSparkTrailingStopLossTriggerDataSchema,
   triggers: z.custom<GetTriggersResponse>(),
+  latestPrice: z.custom<DerivedPrices | undefined>(),
   action: supportedActionsSchema,
 })
-
 const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
@@ -63,11 +67,11 @@ const upsertErrorsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggerData, triggers }) => {
+    ({ dynamicExecutionLTV, triggers }) => {
       const currentAutoBuy = triggers.triggers.sparkBasicBuy
       if (currentAutoBuy) {
         const currentAutoBuyTarget = safeParseBigInt(currentAutoBuy.decodedParams.targetLtv) ?? 0n
-        return triggerData.executionLTV > currentAutoBuyTarget
+        return dynamicExecutionLTV > currentAutoBuyTarget
       }
       return true
     },
@@ -76,6 +80,17 @@ const upsertErrorsValidation = paramsSchema
         'Setting your an Stop-Loss trigger at this level could result in it being executed by your Auto-Buy',
       params: {
         code: StopLossErrorCodes.StopLossTriggeredByAutoBuy,
+      },
+    },
+  )
+  .refine(
+    ({ latestPrice }) => {
+      return latestPrice !== undefined
+    },
+    {
+      message: 'Latest price is undefined',
+      params: {
+        code: TrailingStopLossErrorCodes.CantObtainLatestPrice,
       },
     },
   )
@@ -97,8 +112,8 @@ const deleteErrorsValidation = paramsSchema.refine(
 
 const warningsValidation = paramsSchema
   .refine(
-    ({ triggerData, position }) => {
-      return position.ltv < triggerData.executionLTV
+    ({ position, dynamicExecutionLTV }) => {
+      return position.ltv < dynamicExecutionLTV
     },
     {
       message: 'Stop loss triggered immediately',
@@ -108,11 +123,11 @@ const warningsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggerData, triggers }) => {
+    ({ dynamicExecutionLTV, triggers }) => {
       const autoSell = triggers.triggers.sparkBasicSell
       if (autoSell) {
         const executionLTV = safeParseBigInt(autoSell.decodedParams.executionLtv) ?? 0n
-        return triggerData.executionLTV > executionLTV
+        return dynamicExecutionLTV > executionLTV
       }
       return true
     },
@@ -124,7 +139,7 @@ const warningsValidation = paramsSchema
     },
   )
 
-export const dmaSparkStopLossValidator = (
+export const dmaSparkTrailingStopLossValidator = (
   params: z.infer<typeof paramsSchema>,
 ): ValidationResults => {
   const errorsValidation =

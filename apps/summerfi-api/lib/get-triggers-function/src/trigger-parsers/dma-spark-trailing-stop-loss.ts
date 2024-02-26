@@ -1,11 +1,11 @@
-import { DmaAaveTrailingStopLoss } from '@summerfi/serverless-contracts/get-triggers-response'
+import { DmaSparkTrailingStopLoss } from '@summerfi/serverless-contracts/get-triggers-response'
 import { PricesSubgraphClient } from '@summerfi/prices-subgraph'
 import { TriggersQuery } from '@summerfi/automation-subgraph'
 import { safeParseBigInt } from '@summerfi/serverless-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { mapTriggerCommonParams } from '../helpers'
 
-export const getDmaAaveTrailingStopLoss = async ({
+export const getDmaSparkTrailingStopLoss = async ({
   triggers,
   pricesSubgraphClient,
   logger,
@@ -13,9 +13,9 @@ export const getDmaAaveTrailingStopLoss = async ({
   triggers: TriggersQuery
   pricesSubgraphClient: PricesSubgraphClient
   logger: Logger
-}): Promise<DmaAaveTrailingStopLoss | undefined> => {
+}): Promise<DmaSparkTrailingStopLoss | undefined> => {
   const trigger = triggers.triggers.find(
-    (trigger) => trigger.triggerType == DmaAaveTrailingStopLoss,
+    (trigger) => trigger.triggerType == DmaSparkTrailingStopLoss,
   )
   if (!trigger) {
     return undefined
@@ -83,8 +83,8 @@ export const getDmaAaveTrailingStopLoss = async ({
   }
 
   return {
-    triggerTypeName: 'DmaAaveTrailingStopLoss' as const,
-    triggerType: DmaAaveTrailingStopLoss,
+    triggerTypeName: 'DmaSparkTrailingStopLoss' as const,
+    triggerType: DmaSparkTrailingStopLoss,
     ...mapTriggerCommonParams(trigger),
     decodedParams: {
       triggerType: trigger.decodedData[trigger.decodedDataNames.indexOf('triggerType')],
