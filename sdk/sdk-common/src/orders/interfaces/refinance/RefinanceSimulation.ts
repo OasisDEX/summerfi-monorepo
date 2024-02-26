@@ -1,4 +1,4 @@
-import { TokenAmount, type Position } from '~sdk-common/common'
+import { TokenAmount, type Position } from '~sdk-common/common/implementation'
 import { Simulation, SimulationType } from '~sdk-common/orders'
 import { Swap } from '~sdk-common/exchange'
 

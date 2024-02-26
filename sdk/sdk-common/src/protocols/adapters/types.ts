@@ -1,4 +1,4 @@
-import type { ChainInfo } from '~sdk-common/common'
+import type { ChainInfo } from '~sdk-common/common/implementation'
 import { Protocol, ProtocolName } from '~sdk-common/protocols'
 
 export type ProtocolKey = {

@@ -1,4 +1,4 @@
-import { Wallet } from '~sdk-common/common'
+import { Wallet } from '~sdk-common/common/implementation'
 import { User, type Chain } from '~sdk-common/client'
 
 /**

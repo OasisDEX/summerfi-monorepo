@@ -1,7 +1,7 @@
 import { Protocol } from '~sdk-common/protocols'
 import { Order, Simulation, SimulationType } from '~sdk-common/orders'
 import { Maybe } from '~sdk-common/utils'
-import { Wallet, type PositionId, type Position } from '~sdk-common/common'
+import { Wallet, type PositionId, type Position } from '~sdk-common/common/implementation'
 import type { Chain } from '~sdk-common/client'
 
 /**

@@ -1,4 +1,4 @@
-import type { ISDKManager } from '~sdk-common/client/interfaces/ISDKManager'
+import type { ISDKManager } from '../interfaces/ISDKManager'
 import { SDKManager } from './SDKManager'
 import { registerMockProtocols } from '~sdk-common/mocks/mockProtocol'
 

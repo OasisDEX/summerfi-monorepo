@@ -1,5 +1,5 @@
 import { Pool } from '~sdk-common/protocols'
-import { Percentage, type Position } from '~sdk-common/common'
+import { Percentage, type Position } from '~sdk-common/common/implementation'
 
 /**
  * @interface RefinanceParameters

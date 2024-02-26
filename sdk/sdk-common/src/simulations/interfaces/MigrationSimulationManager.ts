@@ -1,4 +1,4 @@
-import type { Position } from '~sdk-common/common'
+import type { Position } from '~sdk-common/common/implementation'
 import { MigratePositionParameters, MigratePositionSimulation } from '~sdk-common/orders'
 
 /**

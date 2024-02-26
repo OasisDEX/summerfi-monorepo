@@ -1,4 +1,4 @@
-import type { Position } from '~sdk-common/common'
+import type { Position } from '~sdk-common/common/implementation'
 import { RefinanceParameters, RefinanceSimulation } from '~sdk-common/orders'
 import { Pool } from '~sdk-common/protocols'
 

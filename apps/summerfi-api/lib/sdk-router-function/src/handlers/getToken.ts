@@ -1,8 +1,8 @@
 import { z } from 'zod'
 import { publicProcedure } from '~src/trpc'
 import { getMockTokenBySymbol } from '@summerfi/sdk-common/mocks'
-import { TokenSymbol } from '@summerfi/sdk-common/tokens'
-import type { ChainInfo } from '@summerfi/sdk-common/chains'
+import { type ChainInfo } from '@summerfi/sdk-common/common/implementation'
+import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
 
 export const getToken = publicProcedure
   .input(

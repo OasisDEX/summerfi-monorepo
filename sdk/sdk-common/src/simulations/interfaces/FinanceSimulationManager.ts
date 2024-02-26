@@ -1,4 +1,4 @@
-import type { Position } from '~sdk-common/common'
+import type { Position } from '~sdk-common/common/implementation'
 import {
   AddCollateralParameters,
   AddCollateralSimulation,

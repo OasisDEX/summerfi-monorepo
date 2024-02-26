@@ -1,5 +1,5 @@
 import type { Chain } from '~sdk-common/client'
-import type { ChainInfo } from '~sdk-common/common'
+import type { ChainInfo } from '~sdk-common/common/implementation'
 import { Maybe } from '~sdk-common/utils'
 
 /**
