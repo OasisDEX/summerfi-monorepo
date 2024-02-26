@@ -7,8 +7,8 @@ import {
   TokenAmount,
   Wallet,
   type Position,
-  TokenSymbol,
-} from '~sdk-common/common'
+} from '~sdk-common/common/implementation'
+
 import {
   LendingPool,
   LendingPoolParameters,
@@ -18,7 +18,8 @@ import {
   ProtocolName,
 } from '~sdk-common/protocols'
 import { RefinanceParameters, RefinanceSimulation, Order } from '~sdk-common/orders'
-import { makeSDK, type Chain, type User, ChainFamilyMap } from '~sdk-common/client'
+import { makeSDK, type Chain, type User, ChainFamilyMap } from '~sdk-common/client/implementation'
+import { TokenSymbol } from '~sdk-common/common/enums'
 
 describe('Refinance | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {

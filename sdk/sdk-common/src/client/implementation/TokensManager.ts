@@ -1,5 +1,6 @@
 import type { ITokensManager } from '~sdk-common/client/interfaces/ITokensManager'
-import { Address, Token, type ChainInfo, type TokenSymbol } from '~sdk-common/common'
+import type { TokenSymbol } from '~sdk-common/common/enums'
+import { Address, Token, type ChainInfo } from '~sdk-common/common/implementation'
 import { getMockTokenBySymbol } from '~sdk-common/mocks'
 import { Maybe } from '~sdk-common/utils'
 

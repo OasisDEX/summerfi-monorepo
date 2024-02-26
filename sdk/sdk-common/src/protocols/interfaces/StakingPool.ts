@@ -1,4 +1,4 @@
-import { Token } from '~sdk-common/common'
+import { Token } from '~sdk-common/common/implementation'
 import { IPool } from './IPool'
 
 /**

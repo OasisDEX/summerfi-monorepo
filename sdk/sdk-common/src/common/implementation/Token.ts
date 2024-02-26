@@ -1,4 +1,5 @@
-import { SerializationManager, type ChainInfo, type Address } from '~sdk-common/common'
+import { type ChainInfo, type Address } from '~sdk-common/common/implementation'
+import { SerializationManager } from '~sdk-common/common/managers'
 
 interface ITokenSerialized {
   chainInfo: ChainInfo

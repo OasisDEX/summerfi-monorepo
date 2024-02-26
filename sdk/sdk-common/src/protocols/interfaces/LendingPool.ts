@@ -1,4 +1,4 @@
-import { Percentage, Token } from '~sdk-common/common'
+import { Percentage, Token } from '~sdk-common/common/implementation'
 import { IPool } from './IPool'
 
 /**

@@ -1,4 +1,4 @@
-import { AddressType } from '~sdk-common/common'
+import { AddressType } from '~sdk-common/common/enums'
 import { SerializationManager } from '~sdk-common/common/managers'
 
 interface IAddressSerialized {

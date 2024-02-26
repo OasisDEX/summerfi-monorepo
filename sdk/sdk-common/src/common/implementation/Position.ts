@@ -1,5 +1,6 @@
-import { TokenAmount, RiskRatio, PositionId, SerializationManager } from '~sdk-common/common'
+import { TokenAmount, RiskRatio, PositionId } from '~sdk-common/common/implementation'
 import { Pool } from '~sdk-common/protocols'
+import { SerializationManager } from '~sdk-common/common/managers'
 
 interface IPositionSerialized {
   readonly positionId: PositionId

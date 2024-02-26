@@ -1,4 +1,4 @@
-import { Address } from '~sdk-common/common'
+import { Address } from '~sdk-common/common/implementation'
 import { PoolId, IProtocolId } from './IDs'
 
 /**

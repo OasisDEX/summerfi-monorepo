@@ -1,4 +1,4 @@
-import { Wallet, type Position, type ChainInfo } from '~sdk-common/common'
+import { Wallet, type Position, type ChainInfo } from '~sdk-common/common/implementation'
 import type { IPortfolioManager } from '~sdk-common/client/interfaces/IPortfolioManager'
 
 export class PortfolioManager implements IPortfolioManager {

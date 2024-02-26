@@ -1,4 +1,4 @@
-import { SerializationManager } from '~sdk-common/common'
+import { SerializationManager } from '~sdk-common/common/managers'
 
 interface IPositionIdSerialized {
   readonly id: string

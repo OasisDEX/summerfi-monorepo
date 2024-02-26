@@ -1,4 +1,4 @@
-import { Address, Token } from '~sdk-common/common'
+import { Address, Token } from '~sdk-common/common/implementation'
 import { Maybe } from '~sdk-common/utils'
 
 /**

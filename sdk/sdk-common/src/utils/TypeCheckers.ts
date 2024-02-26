@@ -1,4 +1,5 @@
-import { CurrencySymbol, Token } from '~sdk-common/common'
+import { CurrencySymbol } from '~sdk-common/common/enums'
+import type { Token } from '~sdk-common/common/implementation'
 
 export function isToken(maybeToken: unknown): maybeToken is Token {
   return (

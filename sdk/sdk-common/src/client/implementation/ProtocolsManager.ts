@@ -1,7 +1,7 @@
 import { Maybe } from '~sdk-common/utils'
 import { Protocol, ProtocolName, ProtocolsRegistry } from '~sdk-common/protocols'
-import type { IProtocolsManager } from '~sdk-common/client'
-import type { ChainInfo } from '~sdk-common/common'
+import type { IProtocolsManager } from '~sdk-common/client/interfaces'
+import type { ChainInfo } from '~sdk-common/common/implementation'
 
 export class ProtocolsManager implements IProtocolsManager {
   private readonly _chainInfo: ChainInfo

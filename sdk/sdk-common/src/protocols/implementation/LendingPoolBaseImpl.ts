@@ -1,4 +1,4 @@
-import { Address, Percentage, Token } from '~sdk-common/common'
+import { Address, Percentage, Token } from '~sdk-common/common/implementation'
 import { PoolId, ProtocolId, PoolType, LendingPool } from '~sdk-common/protocols'
 import { PoolBaseImpl } from './PoolBaseImpl'
 

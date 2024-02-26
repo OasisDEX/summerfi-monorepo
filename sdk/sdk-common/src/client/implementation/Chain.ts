@@ -1,5 +1,7 @@
-import type { IChain, ProtocolsManager, TokensManager } from '~sdk-common/client'
-import type { ChainInfo } from '~sdk-common/common'
+import type { TokensManager } from '~sdk-common/client/implementation/TokensManager'
+import type { ProtocolsManager } from '~sdk-common/client/implementation/ProtocolsManager'
+import type { IChain } from '~sdk-common/client/interfaces/IChain'
+import type { ChainInfo } from '~sdk-common/common/implementation/ChainInfo'
 
 export class Chain implements IChain {
   readonly chainInfo: ChainInfo

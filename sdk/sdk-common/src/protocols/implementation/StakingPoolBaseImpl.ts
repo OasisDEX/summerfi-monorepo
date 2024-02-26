@@ -1,4 +1,4 @@
-import { Address, Token } from '~sdk-common/common'
+import { Address, Token } from '~sdk-common/common/implementation'
 import { PoolId, ProtocolId, PoolType, StakingPool } from '~sdk-common/protocols'
 import { PoolBaseImpl } from './PoolBaseImpl'
 

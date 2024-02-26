@@ -1,4 +1,5 @@
-import { SerializationManager, type ChainId } from '~sdk-common/common'
+import { type ChainId } from '~sdk-common/common/aliases'
+import { SerializationManager } from '~sdk-common/common/managers'
 
 export type IChainInfoSerialized = {
   /** The chain ID of the network */

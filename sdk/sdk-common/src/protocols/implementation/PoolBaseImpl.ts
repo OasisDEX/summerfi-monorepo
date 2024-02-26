@@ -1,4 +1,4 @@
-import { Address } from '~sdk-common/common'
+import { Address } from '~sdk-common/common/implementation'
 import { Pool, PoolId, ProtocolId, PoolType } from '~sdk-common/protocols'
 
 export class PoolBaseImpl implements Pool {

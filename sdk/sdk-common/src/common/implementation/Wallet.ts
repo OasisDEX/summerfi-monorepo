@@ -1,4 +1,5 @@
-import { SerializationManager, Address } from '~sdk-common/common'
+import { Address } from '~sdk-common/common/implementation'
+import { SerializationManager } from '~sdk-common/common/managers'
 
 interface IWalletSerialized {
   address: Address

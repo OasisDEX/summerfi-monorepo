@@ -9,7 +9,7 @@ import {
 } from '~sdk-common/protocols'
 import { Maybe } from '~sdk-common/utils'
 import { mockPool } from '.'
-import type { ChainInfo } from '~sdk-common/common'
+import type { ChainInfo } from '~sdk-common/common/implementation'
 
 export class mockProtocolSpark implements Protocol {
   public readonly protocolId: ProtocolId

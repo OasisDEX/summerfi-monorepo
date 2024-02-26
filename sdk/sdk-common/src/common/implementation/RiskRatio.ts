@@ -1,4 +1,5 @@
-import { SerializationManager, type Percentage } from '~sdk-common/common'
+import { type Percentage } from '~sdk-common/common/implementation'
+import { SerializationManager } from '~sdk-common/common/managers'
 
 interface IRiskRatioSerialized {
   ratio: Percentage

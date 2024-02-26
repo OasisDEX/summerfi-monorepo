@@ -1,4 +1,4 @@
-import { Percentage } from '~sdk-common/common'
+import { Percentage } from '~sdk-common/common/implementation'
 import {
   Pool,
   PoolParameters,

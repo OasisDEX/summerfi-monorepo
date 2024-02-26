@@ -1,6 +1,6 @@
-import { Chain } from '~sdk-common/client'
+import { Chain } from '~sdk-common/client/implementation'
 import type { IChainsManager } from '~sdk-common/client/interfaces/IChainsManager'
-import type { ChainInfo } from '~sdk-common/common'
+import type { ChainInfo } from '~sdk-common/common/implementation'
 import { Maybe } from '~sdk-common/utils'
 
 export class ChainsManager implements IChainsManager {

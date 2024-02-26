@@ -4,8 +4,8 @@ import {
   OptimismChainNames,
   BaseChainNames,
   ChainFamilyName,
-  ChainInfo,
-} from '~sdk-common/common'
+} from '~sdk-common/common/enums'
+import type { ChainInfo } from '~sdk-common/common/implementation'
 
 /**
  * Chain definition per family

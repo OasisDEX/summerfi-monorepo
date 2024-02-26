@@ -1,5 +1,6 @@
-import { SerializationManager, type Token } from '~sdk-common/common'
+import { type Token } from '~sdk-common/common/implementation'
 import { BigNumber } from 'bignumber.js'
+import { SerializationManager } from '~sdk-common/common/managers'
 
 interface ITokenAmountSerialized {
   token: Token

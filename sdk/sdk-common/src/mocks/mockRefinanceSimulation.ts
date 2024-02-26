@@ -1,4 +1,4 @@
-import { TokenAmount, Position } from '~sdk-common/common'
+import { TokenAmount, Position } from '~sdk-common/common/implementation'
 import { RefinanceParameters, RefinanceSimulation, SimulationType } from '~sdk-common/orders'
 import { Pool } from '~sdk-common/protocols'
 
