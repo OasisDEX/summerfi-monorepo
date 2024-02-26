@@ -1,4 +1,4 @@
-import { Simulation, SimulationType } from '.'
+import { SimulationType } from '.'
 import { TransactionInfo } from './TransactionInfo'
 
 /**
@@ -7,7 +7,7 @@ import { TransactionInfo } from './TransactionInfo'
  */
 export interface Order {
   /** @description Simulation */
-  simulation: Simulation<SimulationType, unknown>
+  simulation: any // TODO: fix it
   /** @description Transaction info */
   transactions: TransactionInfo[]
 }

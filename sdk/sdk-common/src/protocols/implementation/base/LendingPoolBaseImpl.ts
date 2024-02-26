@@ -16,7 +16,8 @@ export class LendingPoolImpl extends PoolBaseImpl implements LendingPool {
     debtTokens: Token[]
     collateralTokens: Token[]
   }) {
-    super({ ...params, type: PoolType.Lending })
+    // TODO: resolve multicollateral issue
+    super({ ...params, type: PoolType.Lending, debtToken: params.debtTokens[0], collateralToken: params.collateralTokens[0] })
 
     this.collateralTokens = params.collateralTokens
     this.debtTokens = params.debtTokens

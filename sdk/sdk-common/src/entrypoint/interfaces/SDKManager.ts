@@ -1,4 +1,3 @@
-import { SimulationsManager } from '~sdk-common/simulations'
 import { ChainsManager } from '~sdk-common/chains'
 import { UsersManager } from '~sdk-common/users'
 import { PortfolioManager } from '../../portfolio/interfaces/PortfolioManager'
@@ -9,7 +8,7 @@ import { PortfolioManager } from '../../portfolio/interfaces/PortfolioManager'
  *              with the different functionality of the SDK
  */
 export interface SDKManager {
-  simulator: SimulationsManager
+  simulator: any // SimulatorManager TODO: fix it
   chains: ChainsManager
   users: UsersManager
   portfolio: PortfolioManager

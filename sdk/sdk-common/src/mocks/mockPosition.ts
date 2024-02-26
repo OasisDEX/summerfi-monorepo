@@ -23,11 +23,12 @@ export async function getMockPosition(params: {
       token: collateralToken,
       amount: '105.98',
     }),
-    riskRatio: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: 20.3 }) }),
     pool: {
       poolId: { id: 'testpool' },
       protocolId: { id: 'testprotocol' },
       type: PoolType.Lending,
+      collateralToken: collateralToken,
+      debtToken: debtToken,
     },
   }
 }
