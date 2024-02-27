@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "prebuild": "turbo run prebuild --cache-dir=.turbo",
-    "build": "turbo run build --cache-dir=.turboa",
+    "build": "turbo run build --cache-dir=.turbo",
     "lint": "turbo run lint --cache-dir=.turbo",
     "lint:fix": "turbo run lint:fix",
     "test": "turbo run test --cache-dir=.turbo",
