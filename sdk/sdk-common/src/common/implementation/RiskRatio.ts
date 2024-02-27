@@ -1,38 +1,28 @@
-import { Printable } from '.'
-import { Percentage, type PercentageSerialized } from './Percentage'
+import { type Percentage } from '~sdk-common/common/implementation'
+import { SerializationService } from '~sdk-common/common/services'
 
-export type RiskRatioSerialized = {
-  ratio: PercentageSerialized
+interface IRiskRatioSerialized {
+  ratio: Percentage
 }
 
 /**
  * @class RiskRatio
  * @description Risk ratio representing the risk of position, typically the LTV
  */
-export class RiskRatio implements Printable {
-  public readonly ratio: Percentage
+export class RiskRatio implements IRiskRatioSerialized {
+  readonly ratio: Percentage
 
-  private constructor(params: { ratio: Percentage }) {
+  private constructor(params: IRiskRatioSerialized) {
     this.ratio = params.ratio
   }
 
-  public static createFrom(params: { ratio: Percentage }): RiskRatio {
+  static createFrom(params: { ratio: Percentage }): RiskRatio {
     return new RiskRatio(params)
-  }
-
-  public static deserialize(params: RiskRatioSerialized): RiskRatio {
-    return new RiskRatio({
-      ratio: Percentage.deserialize(params.ratio),
-    })
   }
 
   toString(): string {
     return `${this.ratio.toString()}`
   }
-
-  serialize(): RiskRatioSerialized {
-    return {
-      ratio: this.ratio.serialize(),
-    }
-  }
 }
+
+SerializationService.registerClass(RiskRatio)

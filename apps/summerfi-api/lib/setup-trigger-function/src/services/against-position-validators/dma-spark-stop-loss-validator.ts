@@ -1,19 +1,18 @@
 import {
   dmaSparkStopLossTriggerDataSchema,
-  DmaSparkStopLossTriggerData,
   mapZodResultToValidationResults,
   positionSchema,
   priceSchema,
   StopLossErrorCodes,
+  StopLossWarningCodes,
   SupportedActions,
   supportedActionsSchema,
-  ValidationResults,
   TWENTY_MILLIONS_DOllARS,
-  StopLossWarningCodes,
+  ValidationResults,
 } from '~types'
 import { z } from 'zod'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
-import { AgainstPositionValidator } from './validators-types'
+import { safeParseBigInt } from '@summerfi/serverless-shared'
 
 const paramsSchema = z.object({
   position: positionSchema,
@@ -63,6 +62,23 @@ const upsertErrorsValidation = paramsSchema
       },
     },
   )
+  .refine(
+    ({ triggerData, triggers }) => {
+      const currentAutoBuy = triggers.triggers.sparkBasicBuy
+      if (currentAutoBuy) {
+        const currentAutoBuyTarget = safeParseBigInt(currentAutoBuy.decodedParams.targetLtv) ?? 0n
+        return triggerData.executionLTV > currentAutoBuyTarget
+      }
+      return true
+    },
+    {
+      message:
+        'Setting your an Stop-Loss trigger at this level could result in it being executed by your Auto-Buy',
+      params: {
+        code: StopLossErrorCodes.StopLossTriggeredByAutoBuy,
+      },
+    },
+  )
 
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
@@ -79,20 +95,37 @@ const deleteErrorsValidation = paramsSchema.refine(
   },
 )
 
-const warningsValidation = paramsSchema.refine(
-  ({ triggerData, position }) => {
-    return position.ltv < triggerData.executionLTV
-  },
-  {
-    message: 'Stop loss triggered immediately',
-    params: {
-      code: StopLossWarningCodes.StopLossTriggeredImmediately,
+const warningsValidation = paramsSchema
+  .refine(
+    ({ triggerData, position }) => {
+      return position.ltv < triggerData.executionLTV
     },
-  },
-)
+    {
+      message: 'Stop loss triggered immediately',
+      params: {
+        code: StopLossWarningCodes.StopLossTriggeredImmediately,
+      },
+    },
+  )
+  .refine(
+    ({ triggerData, triggers }) => {
+      const autoSell = triggers.triggers.sparkBasicSell
+      if (autoSell) {
+        const executionLTV = safeParseBigInt(autoSell.decodedParams.executionLtv) ?? 0n
+        return triggerData.executionLTV > executionLTV
+      }
+      return true
+    },
+    {
+      message: 'Your stop loss will make the auto-sell not trigger',
+      params: {
+        code: StopLossWarningCodes.StopLossMakesAutoSellNotTrigger,
+      },
+    },
+  )
 
-export const dmaSparkStopLossValidator: AgainstPositionValidator<DmaSparkStopLossTriggerData> = (
-  params,
+export const dmaSparkStopLossValidator = (
+  params: z.infer<typeof paramsSchema>,
 ): ValidationResults => {
   const errorsValidation =
     params.action === SupportedActions.Remove ? deleteErrorsValidation : upsertErrorsValidation

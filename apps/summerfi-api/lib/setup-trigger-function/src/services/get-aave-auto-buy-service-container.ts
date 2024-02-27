@@ -1,18 +1,18 @@
 import { ServiceContainer } from './service-container'
-import { AaveAutoBuyEventBody, safeParseBigInt, SupportedActions } from '~types'
+import { AaveAutoBuyEventBody, SupportedActions } from '~types'
 import { simulatePosition } from './simulate-position'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
-import { Address, ChainId } from '@summerfi/serverless-shared'
+import { Address, ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
 import { getAavePosition } from './get-aave-position'
 import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
-import { autoBuyValidator } from './against-position-validators'
-import { getUsdAaveOraclePrice } from './get-usd-aave-oracle-price'
+import { aaveAutoBuyValidator } from './against-position-validators'
 import { CurrentTriggerLike, encodeAaveAutoBuy } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
+import { getCurrentAaveStopLoss } from './get-current-aave-stop-loss'
 
 export interface GetAaveAutoBuyServiceContainerProps {
   rpc: PublicClient
@@ -68,12 +68,15 @@ export const getAaveAutoBuyServiceContainer: (
 
       const triggers = await getTriggers(trigger.dpm)
 
-      return autoBuyValidator({
+      const currentStopLoss = getCurrentAaveStopLoss(triggers, position, logger)
+
+      return aaveAutoBuyValidator({
         position,
         executionPrice,
         triggerData: trigger.triggerData,
         action: trigger.action,
         triggers,
+        currentStopLoss,
         chainId,
       })
     },
@@ -86,8 +89,6 @@ export const getAaveAutoBuyServiceContainer: (
         debt: trigger.position.debt,
       })
 
-      const debtPriceInUSD = await getUsdAaveOraclePrice(trigger.position.debt, addresses, rpc)
-
       const currentAutoBuy = triggers.triggers.aaveBasicBuy
       const currentTrigger: CurrentTriggerLike | undefined = currentAutoBuy
         ? {
@@ -96,12 +97,7 @@ export const getAaveAutoBuyServiceContainer: (
           }
         : undefined
 
-      const encodedData = encodeAaveAutoBuy(
-        position,
-        trigger.triggerData,
-        debtPriceInUSD,
-        currentTrigger,
-      )
+      const encodedData = encodeAaveAutoBuy(position, trigger.triggerData, currentTrigger)
 
       const triggerData =
         action === SupportedActions.Remove

@@ -1,38 +1,39 @@
 import { isToken } from '~sdk-common/utils'
-import { Printable } from './Printable'
-import { Token } from './Token'
+import { type Token } from '~sdk-common/common/implementation'
+import { SerializationService } from '~sdk-common/common/services'
+import { CurrencySymbol } from '~sdk-common/common/enums'
 
-/**
- * @enum Currency
- * @description To be used for printing purposes only
- */
-export enum Currency {
-  USD = 'USD',
+interface IPriceSerialized {
+  value: string
+  baseToken: Token
+  quoteToken?: Token | CurrencySymbol
 }
 
 /**
  * @class Price
  * @description Represents a price of a token (baseToken) in a given currency (quoteToken)
  */
-export class Price implements Printable {
-  private static readonly DEFAULT_QUOTE_TOKEN = Currency.USD
+export class Price implements IPriceSerialized {
+  private static readonly DEFAULT_QUOTE_TOKEN = CurrencySymbol.USD
 
-  public readonly value: string
-  public readonly baseToken: Token
-  public readonly quoteToken?: Token | Currency
+  readonly value: string
+  readonly baseToken: Token
+  readonly quoteToken?: Token | CurrencySymbol
 
-  private constructor(params: { value: string; baseToken: Token; quoteToken?: Token | Currency }) {
+  private constructor(params: IPriceSerialized) {
     this.value = params.value
     this.baseToken = params.baseToken
     this.quoteToken = params.quoteToken ? params.quoteToken : Price.DEFAULT_QUOTE_TOKEN
   }
 
-  public static createFrom(params: { value: string; baseToken: Token; quoteToken?: Token }): Price {
+  static createFrom(params: { value: string; baseToken: Token; quoteToken?: Token }): Price {
     return new Price(params)
   }
 
-  public toString(): string {
+  toString(): string {
     const quoteSymbol = isToken(this.quoteToken) ? this.quoteToken.symbol : this.quoteToken
     return `${this.value} ${this.baseToken.symbol}/${quoteSymbol}`
   }
 }
+
+SerializationService.registerClass(Price)

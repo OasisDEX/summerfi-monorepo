@@ -16,11 +16,13 @@ module.exports = (pkgCompilerOptions = {}) => {
     testEnvironment: 'node',
     moduleNameMapper: mappings,
     transform: {
-      '^.+\\.(ts|tsx)$': [
+      '^.+\\.(js|ts|tsx)$': [
         'ts-jest',
         {
-          useESM: true,
           tsconfig: '<rootDir>/tsconfig.test.json',
+          compilerOptions: {
+            allowJs: true,
+          },
         },
       ],
     },

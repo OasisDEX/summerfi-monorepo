@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "exports": {
     "./*": {
-      "import": "./dist/*/index.js",
-      "types": "./dist/*/index.d.ts"
+      "import": "./src/*/index.js",
+      "types": "./src/*/index.d.ts"
     }
   },
   "scripts": {
@@ -14,10 +14,12 @@
     "testw": "jest --watch",
     "build": "tsc -b -v tsconfig.build.json",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "check-circular": "madge --circular --extensions ts ./src"
   },
   "dependencies": {
     "bignumber.js": "9.0.1",
+    "superjson": "^1.13.3",
     "viem": "^2.2.0"
   },
   "devDependencies": {

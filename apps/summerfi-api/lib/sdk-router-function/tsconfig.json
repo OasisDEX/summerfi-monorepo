@@ -5,7 +5,10 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "~src/*": ["./src/*"]
+      "~src/*": ["./src/*"],
+      "@summerfi/common": ["node_modules/@summerfi/common/src/index.ts"],
+      "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
+      "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"]
     }
   },
   "include": ["src/**/*.ts", "tests/**/*.ts", "e2e/**/*.ts"],

@@ -1,3 +1,4 @@
+import type { Position } from '~sdk-common/common/implementation'
 import {
   AddCollateralParameters,
   AddCollateralSimulation,
@@ -7,7 +8,6 @@ import {
   CreatePositionSimulation,
 } from '~sdk-common/orders'
 import { Pool } from '~sdk-common/protocols'
-import { Position } from '~sdk-common/users'
 
 /**
  * @interface FinanceSimulationManager

@@ -1,1 +1,0 @@
-export { makeSDK } from './MakeSDK'

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda'
+import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'aws-lambda'
 import {
   ResponseBadRequest,
   ResponseInternalServerError,
@@ -7,7 +7,7 @@ import {
 } from '@summerfi/serverless-shared/responses'
 import {
   addressSchema,
-  chainIdsSchema,
+  chainIdSchema,
   urlOptionalSchema,
 } from '@summerfi/serverless-shared/validators'
 
@@ -27,7 +27,10 @@ import {
   DmaAaveBasicSellV2ID,
   DmaAaveStopLossToCollateralV2ID,
   DmaAaveStopLossToDebtV2ID,
-  DmaAaveTrailingStopLoss,
+  DmaSparkBasicBuy,
+  DmaSparkBasicBuyV2,
+  DmaSparkBasicSell,
+  DmaSparkBasicSellV2,
   DmaSparkStopLossToCollateralV2ID,
   DmaSparkStopLossToDebtV2ID,
   GetTriggersResponse,
@@ -49,17 +52,25 @@ import {
   hasAnyDefined,
   getCurrentTrigger,
 } from './helpers'
+import { getPricesSubgraphClient } from '@summerfi/prices-subgraph'
+import { getDmaAaveTrailingStopLoss } from './trigger-parsers/dma-aave-trailing-stop-loss'
+import { getDmaSparkTrailingStopLoss } from './trigger-parsers/dma-spark-trailing-stop-loss'
 
 const logger = new Logger({ serviceName: 'getTriggersFunction' })
 
 const paramsSchema = z.object({
   dpm: addressSchema,
-  chainId: chainIdsSchema,
+  chainId: chainIdSchema,
   rpc: urlOptionalSchema,
 })
 
-export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
+export const handler = async (
+  event: APIGatewayProxyEventV2,
+  context: Context,
+): Promise<APIGatewayProxyResultV2> => {
   const SUBGRAPH_BASE = process.env.SUBGRAPH_BASE
+
+  logger.addContext(context)
 
   if (!SUBGRAPH_BASE) {
     logger.error('SUBGRAPH_BASE is not set')
@@ -80,9 +91,20 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     })
   }
   const params = parseResult.data
+
+  logger.appendKeys({
+    chainId: params.chainId,
+  })
+
   const automationSubgraphClient = getAutomationSubgraphClient({
     urlBase: SUBGRAPH_BASE,
-    chainId: params.chainId[0],
+    chainId: params.chainId,
+    logger,
+  })
+
+  const pricesSubgraphClient = getPricesSubgraphClient({
+    urlBase: SUBGRAPH_BASE,
+    chainId: params.chainId,
     logger,
   })
 
@@ -225,34 +247,45 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       }
     })[0]
 
-  const aaveTrailingStopLossDMA: DmaAaveTrailingStopLoss | undefined = triggers.triggers
-    .filter((trigger) => trigger.triggerType == DmaAaveTrailingStopLoss)
+  const sparkBasicBuy: DmaSparkBasicBuy | undefined = triggers.triggers
+    .filter((trigger) => trigger.triggerType == DmaSparkBasicBuyV2)
     .map((trigger) => {
       return {
-        triggerTypeName: 'DmaAaveTrailingStopLoss' as const,
-        triggerType: DmaAaveTrailingStopLoss,
+        triggerTypeName: 'DmaSparkBasicBuyV2' as const,
+        triggerType: DmaSparkBasicBuyV2,
         ...mapTriggerCommonParams(trigger),
         decodedParams: {
-          triggerType: trigger.decodedData[trigger.decodedDataNames.indexOf('triggerType')],
-          positionAddress: trigger.decodedData[trigger.decodedDataNames.indexOf('positionAddress')],
-          maxCoverage: trigger.decodedData[trigger.decodedDataNames.indexOf('maxCoverage')],
-          debtToken: trigger.decodedData[trigger.decodedDataNames.indexOf('debtToken')],
-          collateralToken: trigger.decodedData[trigger.decodedDataNames.indexOf('collateralToken')],
-          operationName: trigger.decodedData[trigger.decodedDataNames.indexOf('operationName')],
-          collateralOracle:
-            trigger.decodedData[trigger.decodedDataNames.indexOf('collateralOracle')],
-          collateralAddedRoundId:
-            trigger.decodedData[trigger.decodedDataNames.indexOf('collateralAddedRoundId')],
-          debtOracle: trigger.decodedData[trigger.decodedDataNames.indexOf('debtOracle')],
-          debtAddedRoundId:
-            trigger.decodedData[trigger.decodedDataNames.indexOf('debtAddedRoundId')],
-          trailingDistance:
-            trigger.decodedData[trigger.decodedDataNames.indexOf('trailingDistance')],
-          closeToCollateral:
-            trigger.decodedData[trigger.decodedDataNames.indexOf('closeToCollateral')],
+          maxBuyPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('maxBuyPrice')],
+          ...mapBuySellCommonParams(trigger),
         },
       }
     })[0]
+
+  const sparkBasicSell: DmaSparkBasicSell | undefined = triggers.triggers
+    .filter((trigger) => trigger.triggerType == DmaSparkBasicSellV2)
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'DmaSparkBasicSellV2' as const,
+        triggerType: DmaSparkBasicSellV2,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: {
+          minSellPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('minSellPrice')],
+          ...mapBuySellCommonParams(trigger),
+        },
+      }
+    })[0]
+
+  const aaveTrailingStopLossDMA = await getDmaAaveTrailingStopLoss({
+    triggers,
+    pricesSubgraphClient,
+    logger,
+  })
+
+  const sparkTrailingStopLossDMA = await getDmaSparkTrailingStopLoss({
+    triggers,
+    pricesSubgraphClient,
+    logger,
+  })
 
   const response: GetTriggersResponse = {
     triggers: {
@@ -267,6 +300,9 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       aaveBasicBuy,
       aaveBasicSell,
       aaveTrailingStopLossDMA,
+      sparkBasicSell,
+      sparkBasicBuy,
+      sparkTrailingStopLossDMA,
     },
     flags: {
       isAaveStopLossEnabled: hasAnyDefined(
@@ -281,9 +317,12 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
         sparkStopLossToCollateralDMA,
         sparkStopLossToDebt,
         sparkStopLossToDebtDMA,
+        sparkTrailingStopLossDMA,
       ),
       isAaveBasicBuyEnabled: hasAnyDefined(aaveBasicBuy),
       isAaveBasicSellEnabled: hasAnyDefined(aaveBasicSell),
+      isSparkBasicBuyEnabled: hasAnyDefined(sparkBasicBuy),
+      isSparkBasicSellEnabled: hasAnyDefined(sparkBasicSell),
     },
     triggerGroup: {
       aaveStopLoss: getCurrentTrigger(
@@ -298,9 +337,12 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
         sparkStopLossToCollateralDMA,
         sparkStopLossToDebt,
         sparkStopLossToDebtDMA,
+        sparkTrailingStopLossDMA,
       ),
       aaveBasicBuy: getCurrentTrigger(aaveBasicBuy),
       aaveBasicSell: getCurrentTrigger(aaveBasicSell),
+      sparkBasicBuy: getCurrentTrigger(sparkBasicBuy),
+      sparkBasicSell: getCurrentTrigger(sparkBasicSell),
     },
     additionalData: {
       params: {

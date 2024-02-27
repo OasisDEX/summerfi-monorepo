@@ -1,50 +1,52 @@
-import { Printable } from './Printable'
+import { AddressType } from '~sdk-common/common/enums'
+import { ChainInfo } from './ChainInfo'
+import { SerializationService } from '~sdk-common/common/services'
 
-/**
- * @enum AddressType
- * @description Represents the type of a blockchain address
- */
-export enum AddressType {
-  Unknown = 'Unknown',
-  Ethereum = 'Ethereum',
+export const chainInfo: ChainInfo = ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' })
+
+interface IAddressSerialized {
+  hexValue: string
+  type: AddressType
 }
 
 /**
  * @class Address
  * @description Represents a blockchain address, including its type
  */
-export class Address implements Printable {
-  public readonly hexValue: string
-  public readonly type: AddressType
+export class Address implements IAddressSerialized {
+  readonly hexValue: string
+  readonly type: AddressType
 
-  private constructor(params: { hexValue: string; type: AddressType }) {
+  private constructor(params: IAddressSerialized) {
     this.hexValue = params.hexValue
     this.type = params.type
   }
 
-  public static createFrom(params: { hexValue: string }): Address {
-    if (this.isValid(params.hexValue) === false) {
-      throw new Error('Address type is unknown')
+  static createFrom({ hexValue }: { hexValue: string }): Address {
+    if (this.isValid(hexValue) === false) {
+      throw new Error('hexValue is invalid')
     }
 
-    const type = this.getType(params.hexValue)
+    const type = this.getType(hexValue)
 
-    return new Address({ ...params, type: type })
+    return new Address({ hexValue, type })
   }
 
-  public static isValid(address: string): boolean {
+  static isValid(address: string): boolean {
     const type = this.getType(address)
     return type !== AddressType.Unknown
   }
 
-  public static getType(address: string): AddressType {
+  static getType(address: string): AddressType {
     if (/^0x[a-fA-F0-9]{40}$/.test(address)) {
       return AddressType.Ethereum
     }
     return AddressType.Unknown
   }
 
-  public toString(): string {
-    return `${this.hexValue}`
+  toString(): string {
+    return `${this.hexValue} (${this.type})`
   }
 }
+
+SerializationService.registerClass(Address)

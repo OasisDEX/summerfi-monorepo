@@ -1,15 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable turbo/no-undeclared-env-vars */
 import { zeroAddress } from '@summerfi/common'
-import { ChainFamilyMap } from '@summerfi/sdk-common/chains'
-import { Wallet, Percentage } from '@summerfi/sdk-common/common'
-import { makeSDK } from '@summerfi/sdk-common/entrypoint'
+import { ChainFamilyMap } from '@summerfi/sdk-common/client'
+import { makeSDK } from '@summerfi/sdk-common/client/implementation'
+import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
+import {
+  Wallet,
+  Percentage,
+  PositionId,
+  type Position,
+} from '@summerfi/sdk-common/common/implementation'
 import type { RefinanceParameters } from '@summerfi/sdk-common/orders'
 import { ProtocolName, type LendingPoolParameters } from '@summerfi/sdk-common/protocols'
-import {
-  type PositionSerialized,
-  type PositionId,
-  PositionClientImpl,
-} from '@summerfi/sdk-common/users'
 import { createTRPCClient, httpBatchLink } from '@trpc/client'
 import type { AppRouter } from '~src/app-router'
 
@@ -33,9 +35,9 @@ describe('Refinance Client-Server Communication', () => {
   it('Refinance flow', async () => {
     const sdk = makeSDK()
 
-    const positionId: PositionId = {
+    const positionId = PositionId.createFrom({
       id: '13242',
-    }
+    })
     const chain = await sdk.chains.getChain({
       chainInfo: ChainFamilyMap.Ethereum.Mainnet,
     })
@@ -43,22 +45,21 @@ describe('Refinance Client-Server Communication', () => {
       fail('Chain not found')
     }
 
-    const serializedPosition = (await sdkClient.getPosition.query({
+    const sourcePosition = (await sdkClient.getPosition.query({
       id: positionId,
-      chainInfo: chain.chainInfo,
+      chain: chain,
       wallet,
-    })) as PositionSerialized | undefined
-    if (!serializedPosition) {
+    })) as Position
+    if (!sourcePosition) {
       fail('Position not found')
     }
-    const sourcePosition = PositionClientImpl.deserialize(serializedPosition)
 
-    const WETH = await chain.tokens.getTokenBySymbol({ symbol: 'WETH' })
+    const WETH = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.WETH })
     if (!WETH) {
       fail('WETH not found')
     }
 
-    const DAI = await chain.tokens.getTokenBySymbol({ symbol: 'DAI' })
+    const DAI = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.DAI })
     if (!DAI) {
       fail('DAI not found')
     }
@@ -90,7 +91,7 @@ describe('Refinance Client-Server Communication', () => {
       slippage: Percentage.createFrom({ percentage: 20.5 }),
     }
 
-    const simulation = await sdkClient.getSimulation.query({
+    const simulation = await sdkClient.simulation.refinance.query({
       pool: pool,
       parameters: refinanceParameters,
       position: sourcePosition,

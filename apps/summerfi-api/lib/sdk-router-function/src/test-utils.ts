@@ -7,7 +7,9 @@ import { createCallerFactory } from '~src/trpc'
 
 // context for each request
 export const createTestContext = (opts: ContextOptions): Context => {
-  return {}
+  return {
+    provider: undefined,
+  }
 }
 
 const ctx = createTestContext({} as any)

@@ -1,9 +1,7 @@
-import { ChainInfo } from '~sdk-common/chains'
-import { Address } from './Address'
-import { Printable } from './Printable'
+import { type ChainInfo, type Address } from '~sdk-common/common/implementation'
+import { SerializationService } from '~sdk-common/common/services'
 
-// create serialized type
-export interface TokenSerialized {
+interface ITokenSerialized {
   chainInfo: ChainInfo
   address: Address
   symbol: string
@@ -13,27 +11,16 @@ export interface TokenSerialized {
 
 /**
  * @name Token
- * @description Represents a token on a blockchain and provides information on the following info:
- *              - ChainInfo
- *              - Address
- *              - Symbol
- *              - Name
- *              - Decimals
+ * @description Represents a token on a blockchain and provides it's details
  */
-export class Token implements Printable {
-  public readonly chainInfo: ChainInfo
-  public readonly address: Address
-  public readonly symbol: string
-  public readonly name: string
-  public readonly decimals: number
+export class Token implements ITokenSerialized {
+  readonly chainInfo: ChainInfo
+  readonly address: Address
+  readonly symbol: string
+  readonly name: string
+  readonly decimals: number
 
-  private constructor(params: {
-    chainInfo: ChainInfo
-    address: Address
-    symbol: string
-    name: string
-    decimals: number
-  }) {
+  private constructor(params: ITokenSerialized) {
     this.chainInfo = params.chainInfo
     this.address = params.address
     this.symbol = params.symbol
@@ -51,27 +38,9 @@ export class Token implements Printable {
     return new Token(params)
   }
 
-  deserialize(params: TokenSerialized): Token {
-    return new Token({
-      chainInfo: params.chainInfo,
-      address: params.address,
-      symbol: params.symbol,
-      name: params.name,
-      decimals: params.decimals,
-    })
-  }
-
   toString(): string {
     return `${this.symbol} (${this.name})`
   }
-
-  serialize(): TokenSerialized {
-    return {
-      chainInfo: this.chainInfo,
-      address: this.address,
-      symbol: this.symbol,
-      name: this.name,
-      decimals: this.decimals,
-    }
-  }
 }
+
+SerializationService.registerClass(Token)
