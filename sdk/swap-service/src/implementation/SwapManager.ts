@@ -4,9 +4,9 @@ import type {
   TokenAmount,
   Token,
   Percentage,
+  Address,
 } from '@summerfi/sdk-common/common/implementation'
 import { Maybe } from '@summerfi/sdk-common/utils'
-import type { Address } from 'viem'
 import { ISwapProvider, ISwapManager, SwapData, SwapProviderType } from '~swap-service/interfaces'
 
 export type SwapManagerProviderConfig = {

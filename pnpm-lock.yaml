@@ -265,6 +265,9 @@ importers:
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../../../packages/serverless-shared
+      '@summerfi/swap-service':
+        specifier: workspace:*
+        version: link:../../../../sdk/swap-service
       '@trpc/server':
         specifier: 11.0.0-next-beta.264
         version: 11.0.0-next-beta.264

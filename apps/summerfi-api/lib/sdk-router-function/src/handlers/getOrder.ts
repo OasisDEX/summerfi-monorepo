@@ -22,7 +22,6 @@ export const getOrder = publicProcedure
     }
 
     const orderPlannerService = new OrderPlannerService({ deployments: opts.ctx.deployments })
-    opts.input
 
     return await orderPlannerService.buildOrder({
       user: opts.input.user,

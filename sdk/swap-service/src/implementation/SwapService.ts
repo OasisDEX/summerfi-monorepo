@@ -1,0 +1,73 @@
+import type { ChainId } from '@summerfi/sdk-common/common/aliases'
+import {
+  Address,
+  ChainInfo,
+  Percentage,
+  Token,
+  TokenAmount,
+} from '@summerfi/sdk-common/common/implementation'
+import {
+  OneInchSwapProvider,
+  OneInchSwapProviderConfig,
+  SwapManager,
+} from '~swap-service/implementation'
+import { SwapData } from '~swap-service/interfaces'
+import { ISwapService } from '~swap-service/interfaces/ISwapManagerService'
+
+export class SwapService implements ISwapService {
+  private readonly swapManager: SwapManager
+
+  constructor() {
+    const { config: oneInchConfig, chainIds: oneInchChainIds } = this._getOneInchConfig()
+
+    const oneInchSwapProvider = new OneInchSwapProvider(oneInchConfig)
+
+    this.swapManager = new SwapManager([
+      {
+        provider: oneInchSwapProvider,
+        chainIds: oneInchChainIds,
+      },
+    ])
+  }
+
+  getSwapData(params: {
+    chainInfo: ChainInfo
+    fromAmount: TokenAmount
+    toToken: Token
+    recipient: Address
+    slippage: Percentage
+  }): Promise<SwapData> {
+    return this.swapManager.getSwapData(params)
+  }
+
+  private _getOneInchConfig(): {
+    config: OneInchSwapProviderConfig
+    chainIds: ChainId[]
+  } {
+    if (!process.env.ONE_INCH_API_KEY) {
+      throw new Error('ONE_INCH_API_KEY env variable is required')
+    }
+    if (!process.env.ONE_INCH_API_VERSION) {
+      throw new Error('ONE_INCH_API_VERSION env variable is required')
+    }
+    if (!process.env.ONE_INCH_API_URL) {
+      throw new Error('ONE_INCH_API_URL env variable is required')
+    }
+    if (!process.env.ONE_INCH_ALLOWED_SWAP_PROTOCOLS) {
+      throw new Error('ONE_INCH_ALLOWED_SWAP_PROTOCOLS env variable is required')
+    }
+    if (!process.env.ONE_INCH_SWAP_CHAIN_IDS) {
+      throw new Error('ONE_INCH_SWAP_CHAIN_IDS env variable is required')
+    }
+
+    return {
+      config: {
+        apiUrl: process.env.ONE_INCH_API_URL,
+        version: process.env.ONE_INCH_API_VERSION,
+        allowedSwapProtocols: process.env.ONE_INCH_ALLOWED_SWAP_PROTOCOLS.split(','),
+        apiKey: process.env.ONE_INCH_API_KEY,
+      },
+      chainIds: process.env.ONE_INCH_SWAP_CHAIN_IDS.split(',').map((id) => parseInt(id)),
+    }
+  }
+}

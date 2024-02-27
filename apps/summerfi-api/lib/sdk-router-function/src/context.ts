@@ -12,9 +12,9 @@ export type Context = {
 }
 
 // context for each request
-export const createContext = (opts: ContextOptions) => {
+export const createContext = (opts: ContextOptions): Context => {
   return {
     provider: undefined,
-    deployments: Deployments,
+    deployments: Deployments as DeploymentIndex,
   }
 }

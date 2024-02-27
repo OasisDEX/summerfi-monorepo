@@ -5,13 +5,14 @@ import {
   OneInchSwapProviderConfig,
   OneInchSwapResponse,
 } from './types'
-import { Address, Hex } from 'viem'
+import { Hex } from 'viem'
 import fetch from 'node-fetch'
 import {
   type ChainInfo,
   TokenAmount,
   type Percentage,
   type Token,
+  Address,
 } from '@summerfi/sdk-common/common/implementation'
 
 export class OneInchSwapProvider implements ISwapProvider {
@@ -64,7 +65,7 @@ export class OneInchSwapProvider implements ISwapProvider {
         amount: responseData.toTokenAmount,
       }),
       calldata: responseData.tx.data as Hex,
-      targetContract: responseData.tx.to as Address,
+      targetContract: Address.createFrom({ value: responseData.tx.to as Hex }),
       value: responseData.tx.value,
       gasPrice: responseData.tx.gasPrice,
     }

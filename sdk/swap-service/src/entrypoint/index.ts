@@ -1,1 +1,0 @@
-export { getSwapManager } from './Entrypoint'
