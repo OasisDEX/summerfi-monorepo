@@ -14,7 +14,8 @@
     "testw": "jest --watch",
     "build": "tsc -b -v tsconfig.build.json",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "check-circular": "madge --circular --extensions ts ./src"
   },
   "dependencies": {
     "bignumber.js": "9.0.1",
