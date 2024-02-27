@@ -1,26 +1,32 @@
 import { OrderPlanner } from '@summerfi/order-planner-common/implementation'
-import { Deployments } from '@summerfi/core-contracts'
 import { IOrderPlannerService } from '~orderplannerservice/interfaces'
-import { PositionsManager, User } from '@summerfi/sdk-common/users'
+import { IPositionsManager, User } from '@summerfi/sdk-common/client'
 import { Order, Simulation, SimulationType } from '@summerfi/sdk-common/orders'
 import { Maybe } from '@summerfi/sdk-common/utils'
 import { ActionBuildersConfig } from '~orderplannerservice/config'
-import { Chain } from '@summerfi/sdk-common/chains'
+import { Chain } from '@summerfi/sdk-common/client'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
 
 export class OrderPlannerService implements IOrderPlannerService {
   readonly orderPlanner: OrderPlanner
   readonly deploymentConfigTag: string
-  readonly deployments = Deployments as DeploymentIndex
+  readonly deployments: DeploymentIndex
 
-  constructor(deploymentConfigTag = 'standard') {
+  constructor({
+    deployments,
+    deploymentConfigTag = 'standard',
+  }: {
+    deployments: DeploymentIndex
+    deploymentConfigTag?: string
+  }) {
     this.orderPlanner = new OrderPlanner()
     this.deploymentConfigTag = deploymentConfigTag
+    this.deployments = deployments
   }
 
   buildOrder(params: {
     user: User
-    positionsManager: PositionsManager
+    positionsManager: IPositionsManager
     simulation: Simulation<SimulationType>
   }): Maybe<Order> {
     const deploymentKey = this._getDeploymentKey(params.user.chain)

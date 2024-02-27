@@ -5,15 +5,17 @@ import { encodeStrategy } from '~orderplannercommon/utils'
 import { OrderPlannerContext } from '~orderplannercommon/context'
 import { ActionBuilder, ActionBuildersMap } from '~orderplannercommon/builders'
 import { ActionCall } from '~orderplannercommon/actions'
-import { PositionsManager, User } from '@summerfi/sdk-common/users'
+import { IPositionsManager, User } from '@summerfi/sdk-common/client'
 import { Deployment } from '@summerfi/deployment-utils'
+import { Address } from '@summerfi/sdk-common/common/implementation'
+import { Hex } from 'viem'
 
 export class OrderPlanner implements IOrderPlanner {
   private readonly ExecutorContractName = 'OperationExecutor'
 
   buildOrder(params: {
     user: User
-    positionsManager: PositionsManager
+    positionsManager: IPositionsManager
     simulation: Simulation<SimulationType>
     actionBuildersMap: ActionBuildersMap
     deployment: Deployment
@@ -66,7 +68,7 @@ export class OrderPlanner implements IOrderPlanner {
       transactions: [
         {
           transaction: {
-            target: executorInfo.address,
+            target: Address.createFrom({ value: executorInfo.address as Hex }),
             calldata: calldata,
             value: '0',
           },

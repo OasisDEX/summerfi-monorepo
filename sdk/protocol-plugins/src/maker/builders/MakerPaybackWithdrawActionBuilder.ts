@@ -2,7 +2,6 @@ import { PaybackWithdrawStep } from '@summerfi/sdk-common/orders'
 import { ActionBuilder } from '@summerfi/order-planner-common/builders'
 import { ActionNames } from '@summerfi/deployment-types'
 import { MakerPaybackAction, MakerWithdrawAction } from '~protocolplugins/maker'
-import { TokenAmount } from '@summerfi/sdk-common/common'
 
 export const MakerPaybackWithdrawActionList: ActionNames[] = ['MakerPayback', 'MakerWithdraw']
 
@@ -11,9 +10,9 @@ export const MakerPaybackWithdrawActionBuilder: ActionBuilder<PaybackWithdrawSte
 ): void => {
   const { context, user, step } = params
 
-  const debtAmount: TokenAmount = step.inputs.position.debtAmount.toBN()
-  const paybackAmount: TokenAmount = step.inputs.paybackAmount.toBN()
-  const paybackAll: boolean = paybackAmount.toBN().gte(debtAmount.toBN())
+  const debtAmountBN = step.inputs.position.debtAmount.toBN()
+  const paybackAmountBN = step.inputs.paybackAmount.toBN()
+  const paybackAll: boolean = paybackAmountBN.gte(debtAmountBN)
 
   context.addActionCall({
     step: params.step,
@@ -21,7 +20,7 @@ export const MakerPaybackWithdrawActionBuilder: ActionBuilder<PaybackWithdrawSte
     arguments: {
       pool: step.inputs.position.pool,
       userAddress: user.wallet.address,
-      amount: paybackAmount,
+      amount: step.inputs.paybackAmount,
       paybackAll: paybackAll,
     },
     connectedInputs: {},

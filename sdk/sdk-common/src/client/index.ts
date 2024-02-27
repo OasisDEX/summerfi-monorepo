@@ -14,6 +14,7 @@ export type {
   ISDKManager,
   IUsersManager,
   IPortfolioManager,
+  IPositionsManager,
   IProtocolsManager,
   ITokensManager,
   IChainsManager,

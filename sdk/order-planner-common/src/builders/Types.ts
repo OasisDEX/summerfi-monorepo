@@ -1,6 +1,6 @@
 import { Simulation, SimulationSteps, SimulationType, Steps } from '@summerfi/sdk-common/orders'
 import { OrderPlannerContext } from '~orderplannercommon/context'
-import { PositionsManager, User } from '@summerfi/sdk-common/users'
+import { User, IPositionsManager } from '@summerfi/sdk-common/client'
 
 export type FilterStep<T extends SimulationSteps, S extends Steps> = S extends { type: T }
   ? S
@@ -9,7 +9,7 @@ export type FilterStep<T extends SimulationSteps, S extends Steps> = S extends {
 export type ActionBuilderParams<S extends Steps> = {
   context: OrderPlannerContext
   user: User
-  positionsManager: PositionsManager
+  positionsManager: IPositionsManager
   simulation: Simulation<SimulationType>
   step: S
 }

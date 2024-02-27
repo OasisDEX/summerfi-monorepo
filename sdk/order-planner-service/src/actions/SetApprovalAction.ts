@@ -1,5 +1,5 @@
 import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
-import { Address, TokenAmount } from '@summerfi/sdk-common/common'
+import { Address, TokenAmount } from '@summerfi/sdk-common/common/implementation'
 
 export class SetApprovalAction extends BaseAction {
   public readonly config = {
@@ -16,8 +16,8 @@ export class SetApprovalAction extends BaseAction {
     sumAmounts: boolean
   }): ActionCall {
     return this._encodeCall([
-      params.approvalAmount.token.address.hexValue,
-      params.delegate.hexValue,
+      params.approvalAmount.token.address.value,
+      params.delegate.value,
       params.approvalAmount.toBaseUnit(),
       params.sumAmounts,
     ])

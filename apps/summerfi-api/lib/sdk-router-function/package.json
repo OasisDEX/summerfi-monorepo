@@ -17,7 +17,9 @@
     "@summerfi/common": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/core-contracts": "workspace:*",
+    "@summerfi/deployment-utils": "workspace:*",
     "@summerfi/serverless-shared": "workspace:*",
+    "@summerfi/order-planner-service": "workspace:*",
     "@trpc/server": "11.0.0-next-beta.264",
     "superjson": "^1.13.3",
     "zod": "^3.22.4"

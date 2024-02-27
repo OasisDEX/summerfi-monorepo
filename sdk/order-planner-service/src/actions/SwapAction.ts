@@ -1,5 +1,5 @@
 import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
-import { Percentage, TokenAmount } from '@summerfi/sdk-common/common'
+import { Percentage, TokenAmount } from '@summerfi/sdk-common/common/implementation'
 import { Hex } from 'viem'
 
 export class SwapAction extends BaseAction {
@@ -19,8 +19,8 @@ export class SwapAction extends BaseAction {
     collectFeeInFromToken: boolean
   }): ActionCall {
     return this._encodeCall([
-      params.fromAmount.token.address.hexValue,
-      params.toMinimumAmount.token.address.hexValue,
+      params.fromAmount.token.address.value,
+      params.toMinimumAmount.token.address.value,
       params.fromAmount.toBaseUnit(),
       params.toMinimumAmount.toBaseUnit(),
       params.fee.toBaseUnit({ decimals: 8 }),

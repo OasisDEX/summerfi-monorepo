@@ -1,8 +1,9 @@
 import { AddressType } from '~sdk-common/common/enums'
+import { AddressValue } from '~sdk-common/common/aliases'
 import { SerializationService } from '~sdk-common/common/services'
 
 interface IAddressSerialized {
-  hexValue: string
+  value: AddressValue
   type: AddressType
 }
 
@@ -11,22 +12,22 @@ interface IAddressSerialized {
  * @description Represents a blockchain address, including its type
  */
 export class Address implements IAddressSerialized {
-  readonly hexValue: string
+  readonly value: AddressValue
   readonly type: AddressType
 
   private constructor(params: IAddressSerialized) {
-    this.hexValue = params.hexValue
+    this.value = params.value
     this.type = params.type
   }
 
-  static createFrom({ hexValue }: { hexValue: string }): Address {
-    if (this.isValid(hexValue) === false) {
-      throw new Error('hexValue is invalid')
+  static createFrom({ value }: { value: AddressValue }): Address {
+    if (this.isValid(value) === false) {
+      throw new Error('value is invalid')
     }
 
-    const type = this.getType(hexValue)
+    const type = this.getType(value)
 
-    return new Address({ hexValue, type })
+    return new Address({ value, type })
   }
 
   static isValid(address: string): boolean {
@@ -42,7 +43,7 @@ export class Address implements IAddressSerialized {
   }
 
   toString(): string {
-    return `${this.hexValue} (${this.type})`
+    return `${this.value} (${this.type})`
   }
 }
 

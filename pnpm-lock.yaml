@@ -253,6 +253,12 @@ importers:
       '@summerfi/core-contracts':
         specifier: workspace:*
         version: link:../../../../packages/core-contracts
+      '@summerfi/deployment-utils':
+        specifier: workspace:*
+        version: link:../../../../packages/deployment-utils
+      '@summerfi/order-planner-service':
+        specifier: workspace:*
+        version: link:../../../../sdk/order-planner-service
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../../../../sdk/sdk-common

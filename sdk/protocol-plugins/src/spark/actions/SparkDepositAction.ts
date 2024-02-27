@@ -1,5 +1,5 @@
 import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
-import { TokenAmount } from '@summerfi/sdk-common/common'
+import { TokenAmount } from '@summerfi/sdk-common/common/implementation'
 
 export class SparkDepositAction extends BaseAction {
   public readonly config = {

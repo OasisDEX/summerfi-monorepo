@@ -1,10 +1,16 @@
-import { type Wallet, type Position, type PositionId } from '~sdk-common/common/implementation'
+import {
+  type Wallet,
+  type Position,
+  type PositionId,
+  Address,
+} from '~sdk-common/common/implementation'
 import { Protocol } from '~sdk-common/protocols'
 import { Maybe } from '~sdk-common/utils'
 import { Order, Simulation, SimulationType } from '~sdk-common/orders'
 import { getMockOrder, getMockPosition } from '~sdk-common/mocks'
 import type { Chain } from '~sdk-common/client/implementation'
 import type { IUser } from '~sdk-common/client/interfaces'
+import { zeroAddress } from 'viem'
 
 export class User implements IUser {
   public readonly wallet: Wallet
@@ -37,6 +43,10 @@ export class User implements IUser {
   }
 
   public async newOrder(params: { simulation: Simulation<SimulationType> }): Promise<Order> {
-    return getMockOrder({ chain: this.chain, wallet: this.wallet, simulation: params.simulation })
+    return getMockOrder({
+      user: this,
+      positionsManager: { address: Address.createFrom({ value: zeroAddress }) },
+      simulation: params.simulation,
+    })
   }
 }

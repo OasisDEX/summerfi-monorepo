@@ -1,10 +1,10 @@
 import { Order, Simulation, SimulationType } from '~sdk-common/orders'
-import { Wallet } from '~sdk-common/common/implementation'
-import type { Chain } from '~sdk-common/client/implementation'
+import { type User } from '~sdk-common/client/implementation'
+import { IPositionsManager } from '~sdk-common/client/interfaces'
 
 export async function getMockOrder(params: {
-  chain: Chain
-  wallet: Wallet
+  user: User
+  positionsManager: IPositionsManager
   simulation: Simulation<SimulationType>
 }): Promise<Order> {
   return {

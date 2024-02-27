@@ -1,6 +1,5 @@
 import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
-import { TokenAmount } from '@summerfi/sdk-common/common'
-import { Address } from 'viem'
+import { Address, TokenAmount } from '@summerfi/sdk-common/common/implementation'
 
 export class SparkBorrowAction extends BaseAction {
   public readonly config = {

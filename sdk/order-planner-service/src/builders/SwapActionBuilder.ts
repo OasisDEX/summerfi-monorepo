@@ -1,6 +1,6 @@
 import { ActionBuilder } from '@summerfi/order-planner-common/builders'
 import { SwapAction } from '~orderplannerservice/actions'
-import { Percentage } from '@summerfi/sdk-common/common'
+import { Percentage } from '@summerfi/sdk-common/common/implementation'
 import { SwapStep } from '@summerfi/sdk-common/orders'
 
 export const SwapActionBuilder: ActionBuilder<SwapStep> = (params): void => {

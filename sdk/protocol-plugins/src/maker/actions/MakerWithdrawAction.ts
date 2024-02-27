@@ -1,5 +1,5 @@
 import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
-import { Address, TokenAmount } from '@summerfi/sdk-common/common'
+import { Address, TokenAmount } from '@summerfi/sdk-common/common/implementation'
 import { Pool } from '@summerfi/sdk-common/protocols'
 
 export class MakerWithdrawAction extends BaseAction {

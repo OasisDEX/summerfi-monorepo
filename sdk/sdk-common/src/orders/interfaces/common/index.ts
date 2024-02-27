@@ -12,7 +12,7 @@ export type {
   ReferenceableField,
   ValueReference,
 } from './Simulation'
-export { isValueReference } from './Simulation'
+export { isValueReference, getValueFromReference } from './Simulation'
 export { FlashloanProvider } from './Simulation'
 export { SimulationSteps } from './Simulation'
 export { SimulationType } from './SimulationType'

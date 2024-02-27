@@ -1,5 +1,5 @@
 import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
-import { Address, TokenAmount } from '@summerfi/sdk-common/common'
+import { Address, TokenAmount } from '@summerfi/sdk-common/common/implementation'
 
 export class PullTokenAction extends BaseAction {
   public readonly config = {
@@ -13,7 +13,7 @@ export class PullTokenAction extends BaseAction {
   public encodeCall(params: { pullAmount: TokenAmount; pullTo: Address }): ActionCall {
     return this._encodeCall([
       params.pullAmount.token.address,
-      params.pullTo.hexValue,
+      params.pullTo.value,
       params.pullAmount.toBaseUnit(),
     ])
   }

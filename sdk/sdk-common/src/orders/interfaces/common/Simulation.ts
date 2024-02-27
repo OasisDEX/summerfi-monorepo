@@ -1,6 +1,5 @@
-import { Token, TokenAmount } from '~sdk-common/common'
+import { Token, TokenAmount, Position } from '~sdk-common/common/implementation'
 import { SimulationType } from './SimulationType'
-import { Position } from '~sdk-common/users'
 
 export enum SimulationSteps {
   Flashloan = 'Flashloan',
@@ -21,6 +20,10 @@ export type ReferenceableField<T> = T | ValueReference<T>
 
 export function isValueReference<T>(value: T | ValueReference<T>): value is ValueReference<T> {
   return (value as ValueReference<T>).estimatedValue !== undefined
+}
+
+export function getValueFromReference<T>(value: T | ValueReference<T>): T {
+  return isValueReference(value) ? value.estimatedValue : value
 }
 
 export enum FlashloanProvider {
