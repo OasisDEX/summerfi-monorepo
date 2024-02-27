@@ -1,6 +1,7 @@
 export { UsersManager } from './UsersManager'
 export { User } from './User'
 export { PortfolioManager } from './PortfolioManager'
+export { SDKManager } from './SDKManager'
 export { makeSDK } from './MakeSDK'
 export { ProtocolsManager } from './ProtocolsManager'
 export { TokensManager } from './TokensManager'

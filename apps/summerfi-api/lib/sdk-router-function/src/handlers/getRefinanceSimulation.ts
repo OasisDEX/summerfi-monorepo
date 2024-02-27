@@ -1,7 +1,8 @@
 import { z } from 'zod'
 import type { RefinanceParameters, RefinanceSimulation } from '@summerfi/sdk-common/orders'
-import type { Position } from '@summerfi/sdk-common/client'
 import { providerProcedure } from '~src/procedures/providerProcedure'
+import type { Position } from '@summerfi/sdk-common/common/implementation'
+import type { Pool } from '@summerfi/sdk-common/protocols'
 
 const inputSchema = z.object({
   position: z.custom<Position>((position) => position !== undefined),
@@ -15,7 +16,6 @@ export const getRefinanceSimulation = providerProcedure
   .input(inputSchema)
   .query(async (opts): Promise<RefinanceSimulation> => {
     const params: SimulationParams = opts.input
-
-    opts.ctx.provider()
+    params
     throw new Error('Not implemented')
   })
