@@ -1,1 +1,0 @@
-export { UsersManagerClientImpl } from './UsersManagerClientImpl'

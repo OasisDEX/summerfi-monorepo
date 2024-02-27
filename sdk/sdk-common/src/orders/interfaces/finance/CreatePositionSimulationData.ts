@@ -1,4 +1,4 @@
-import { RiskRatio } from '~sdk-common/common'
+import { RiskRatio } from '~sdk-common/common/implementation'
 import { Simulation } from '~sdk-common/orders'
 import { SimulationType } from '../common/SimulationType'
 

@@ -1,6 +1,11 @@
-import { Printable } from './Printable'
-import { Token } from './Token'
+import { type Token } from '~sdk-common/common/implementation'
 import { BigNumber } from 'bignumber.js'
+import { SerializationService } from '~sdk-common/common/services'
+
+interface ITokenAmountSerialized {
+  token: Token
+  amount: string
+}
 
 /**
  * @class TokenAmount
@@ -8,30 +13,33 @@ import { BigNumber } from 'bignumber.js'
  *              issues with big number representation. The token gives enough information to parse it into
  *              a big number.
  */
-export class TokenAmount implements Printable {
-  public readonly token: Token
-  public readonly amount: string
+export class TokenAmount implements ITokenAmountSerialized {
   private readonly _baseUnitFactor: BigNumber
 
-  constructor(token: Token, amount: string) {
-    this.token = token
-    this.amount = amount
-    this._baseUnitFactor = new BigNumber(10).pow(new BigNumber(token.decimals))
+  readonly token: Token
+  readonly amount: string
+
+  private constructor(params: ITokenAmountSerialized) {
+    this.token = params.token
+    this.amount = params.amount
+    this._baseUnitFactor = new BigNumber(10).pow(new BigNumber(params.token.decimals))
   }
 
-  public static createFrom(params: { token: Token; amount: string }): TokenAmount {
-    return new TokenAmount(params.token, params.amount)
+  static createFrom(params: { token: Token; amount: string }): TokenAmount {
+    return new TokenAmount(params)
   }
 
-  public toString(): string {
+  toString(): string {
     return `${this.amount} ${this.token.symbol}`
   }
 
-  public toBaseUnit(): string {
+  toBaseUnit(): string {
     return new BigNumber(this.amount).times(this._baseUnitFactor).toFixed(0)
   }
 
-  public toBN(): BigNumber {
+  toBN(): BigNumber {
     return new BigNumber(this.amount)
   }
 }
+
+SerializationService.registerClass(TokenAmount)

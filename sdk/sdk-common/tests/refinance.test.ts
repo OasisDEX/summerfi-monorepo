@@ -1,8 +1,14 @@
-import { makeSDK } from '~sdk-common/entrypoint'
 import { Maybe } from '~sdk-common/utils'
-import { ChainFamilyMap, Chain } from '~sdk-common/chains'
-import { Position, PositionId, User } from '~sdk-common/users'
-import { Percentage, RiskRatio, Token, TokenAmount, Wallet } from '~sdk-common/common'
+import {
+  Percentage,
+  PositionId,
+  RiskRatio,
+  Token,
+  TokenAmount,
+  Wallet,
+  type Position,
+} from '~sdk-common/common/implementation'
+
 import {
   LendingPool,
   LendingPoolParameters,
@@ -12,7 +18,8 @@ import {
   ProtocolName,
 } from '~sdk-common/protocols'
 import { RefinanceParameters, RefinanceSimulation, Order } from '~sdk-common/orders'
-import assert from 'assert'
+import { makeSDK, type Chain, type User, ChainFamilyMap } from '~sdk-common/client/implementation'
+import { TokenSymbol } from '~sdk-common/common/enums'
 
 describe('Refinance | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
@@ -24,7 +31,7 @@ describe('Refinance | SDK', () => {
       chainInfo: ChainFamilyMap.Ethereum.Mainnet,
     })
     if (!chain) {
-      assert.fail('Chain not found')
+      fail('Chain is not defined')
     }
 
     // Wallet
@@ -39,22 +46,22 @@ describe('Refinance | SDK', () => {
     expect(user.chain).toEqual(chain)
 
     // Tokens
-    const WETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: 'WETH' })
+    const WETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.WETH })
     if (!WETH) {
-      assert.fail('WETH not found')
+      fail('WETH not found')
     }
 
-    const DAI: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: 'DAI' })
+    const DAI: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.DAI })
     if (!DAI) {
-      assert.fail('DAI not found')
+      fail('DAI not found')
     }
 
     // Previous position
-    const positionId: PositionId = { id: '1234567890' }
+    const positionId = PositionId.createFrom({ id: '1234567890' })
 
     const prevPosition: Maybe<Position> = await user.getPosition({ id: positionId })
     if (!prevPosition) {
-      assert.fail('Position not found')
+      fail('Position not found')
     }
 
     expect(prevPosition.positionId).toEqual(positionId)
@@ -76,7 +83,7 @@ describe('Refinance | SDK', () => {
       name: ProtocolName.Spark,
     })
     if (!spark) {
-      assert.fail('Spark not found')
+      fail('Spark not found')
     }
 
     expect(spark.protocolId.id).toEqual('spark')
@@ -90,7 +97,7 @@ describe('Refinance | SDK', () => {
       poolParameters: poolPair,
     })
     if (!newPool) {
-      assert.fail('Pool not found')
+      fail('Pool not found')
     }
 
     expect(newPool.poolId.id).toEqual('mock')

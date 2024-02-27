@@ -1,0 +1,34 @@
+{
+  "name": "@summerfi/template-function",
+  "version": "0.0.1",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "test": "jest --passWithNoTests",
+    "testw": "jest --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "build": "tsc -b -v tsconfig.build.json",
+    "bundle": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap"
+  },
+  "dependencies": {
+    "@aws-lambda-powertools/logger": "^1.17.0",
+    "@aws-lambda-powertools/metrics": "^1.17.0",
+    "@aws-lambda-powertools/tracer": "^1.17.0",
+    "@summerfi/serverless-shared": "workspace:*",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/jest-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*"
+  }
+}

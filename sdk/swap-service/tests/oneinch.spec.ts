@@ -1,10 +1,16 @@
-import { ChainFamilyMap, ChainInfo } from '@summerfi/sdk-common/chains'
-import { Address, Percentage, Token, TokenAmount } from '@summerfi/sdk-common/common'
+import { ChainFamilyMap } from '@summerfi/sdk-common/client'
+import {
+  Address,
+  Percentage,
+  Token,
+  TokenAmount,
+  type ChainInfo,
+} from '@summerfi/sdk-common/common/implementation'
 import { subtractPercentage } from '@summerfi/sdk-common/utils'
 import { getSwapManager, SwapData, SwapProviderType } from '~swap-service'
 
-describe.skip('OneInch | SwapManager | Integration', () => {
-  it('should provide swap data', async () => {
+describe('OneInch | SwapManager | Integration', () => {
+  it.skip('should provide swap data', async () => {
     // SwapManager
     const swapManager = getSwapManager()
 

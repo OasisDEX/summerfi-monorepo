@@ -1,8 +1,8 @@
 /**
- * @name ProtocolId
+ * @name IProtocolId
  * @description Represents a protocol's ID. This will be specialized for each protocol
  */
-export type ProtocolId = {
+export type IProtocolId = {
   id: string
 }
 

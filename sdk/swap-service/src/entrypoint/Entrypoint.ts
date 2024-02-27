@@ -1,4 +1,4 @@
-import { ChainId } from '@summerfi/sdk-common/chains'
+import type { ChainId } from '@summerfi/sdk-common/common/aliases'
 import {
   OneInchSwapProvider,
   OneInchSwapProviderConfig,

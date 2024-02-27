@@ -1,4 +1,4 @@
-import { Percentage, RiskRatio, TokenAmount } from '~sdk-common/common'
+import { Percentage, RiskRatio, TokenAmount } from '~sdk-common/common/implementation'
 
 /**
  * @interface CreatePositionParameters

@@ -1,4 +1,3 @@
-import { ChainInfo } from '~sdk-common/chains'
 import {
   Pool,
   PoolParameters,
@@ -10,8 +9,9 @@ import {
 } from '~sdk-common/protocols'
 import { Maybe } from '~sdk-common/utils'
 import { mockPool } from '.'
+import type { ChainInfo } from '~sdk-common/common/implementation'
 
-class mockProtocolSpark implements Protocol {
+export class mockProtocolSpark implements Protocol {
   public readonly protocolId: ProtocolId
   private readonly chainInfo: ChainInfo
 
