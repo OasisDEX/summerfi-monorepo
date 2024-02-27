@@ -17,11 +17,14 @@ export class FlashloanAction extends BaseAction {
     storageOutputs: [],
   } as const
 
-  public encodeCall(params: {
-    amount: TokenAmount
-    provider: number
-    calls: ActionCall[]
-  }): ActionCall {
+  public encodeCall(
+    params: {
+      amount: TokenAmount
+      provider: number
+      calls: ActionCall[]
+    },
+    paramsMapping?: number[],
+  ): ActionCall {
     const calls: OptionalActionCall[] = params.calls.map((call) => {
       return {
         targetHash: call.targetHash,
@@ -30,12 +33,9 @@ export class FlashloanAction extends BaseAction {
       }
     })
 
-    return this._encodeCall([
-      params.amount.toString(),
-      params.amount.token.address.hexValue,
-      true,
-      true,
-      calls,
-    ])
+    return this._encodeCall(
+      [params.amount.toString(), params.amount.token.address.hexValue, true, true, calls],
+      paramsMapping,
+    )
   }
 }

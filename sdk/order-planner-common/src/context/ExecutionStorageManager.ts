@@ -42,8 +42,12 @@ export class ExecutionStorageManager {
     }
   }
 
-  public getSlot(params: { key: string }): Maybe<number> {
-    return this.slotsMap.get(params.key)
+  public getSlot(params: {
+    stepName: string
+    referenceName: string | number | symbol
+  }): Maybe<number> {
+    const key = this._getSlotKey(params)
+    return this.slotsMap.get(key)
   }
 
   private _getSlotKey(params: {
