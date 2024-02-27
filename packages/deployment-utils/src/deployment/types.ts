@@ -58,6 +58,8 @@ export type Deployment = {
   }
 }
 
+export type DeploymentIndex = Record<string, Deployment>
+
 export type DeploymentParams = {
   options?: DeploymentOptions
   alias?: string // The deployed contract will be exported in the JSON file with this alias

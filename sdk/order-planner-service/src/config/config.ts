@@ -6,11 +6,16 @@ import {
   SwapActionBuilder,
   FlashloanActionBuilder,
 } from '~orderplannerservice/builders'
+import { DepositBorrowActionBuilder } from '~orderplannerservice/builders/DepositBorrowActionBuilder'
+import { PaybackWithdrawActionBuilder } from '~orderplannerservice/builders/PaybackWithdrawActionBuilder'
+import { ReturnFundsActionBuilder } from '~orderplannerservice/builders/ReturnFundsActionBuilder'
 
-// TODO: remove the Partial when all the builders are implemented
-export const StepBuilders: Partial<ActionBuildersMap> = {
+export const ActionBuildersConfig: ActionBuildersMap = {
   [SimulationSteps.PullToken]: PullTokenActionBuilder,
   [SimulationSteps.Flashloan]: FlashloanActionBuilder,
   [SimulationSteps.Swap]: SwapActionBuilder,
   [SimulationSteps.PaybackFlashloan]: PaybackFlashloanActionBuilder,
+  [SimulationSteps.DepositBorrow]: DepositBorrowActionBuilder,
+  [SimulationSteps.PaybackWithdraw]: PaybackWithdrawActionBuilder,
+  [SimulationSteps.ReturnFunds]: ReturnFundsActionBuilder,
 }

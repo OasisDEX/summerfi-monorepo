@@ -1,15 +1,11 @@
-import { Deployment } from '@summerfi/deployment-utils'
 import { Order, Simulation, SimulationType } from '@summerfi/sdk-common/orders'
 import { PositionsManager, User } from '@summerfi/sdk-common/users'
 import { Maybe } from '@summerfi/sdk-common/utils'
-import { ActionBuildersMap } from '~orderplannercommon/builders'
 
-export interface IOrderPlanner {
+export interface IOrderPlannerService {
   buildOrder<T extends SimulationType>(params: {
     user: User
     positionsManager: PositionsManager
     simulation: Simulation<T>
-    actionBuildersMap: ActionBuildersMap
-    deployment: Deployment
   }): Maybe<Order>
 }

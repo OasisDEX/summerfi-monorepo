@@ -1,35 +1,31 @@
 import { Order, Simulation, SimulationType, Steps } from '@summerfi/sdk-common/orders'
 import { Maybe } from '@summerfi/sdk-common/utils'
 import { IOrderPlanner } from '~orderplannercommon/interfaces/IOrderPlanner'
-import { Deployment } from '@summerfi/deployment-utils'
 import { encodeStrategy } from '~orderplannercommon/utils'
 import { OrderPlannerContext } from '~orderplannercommon/context'
 import { ActionBuilder, ActionBuildersMap } from '~orderplannercommon/builders'
 import { ActionCall } from '~orderplannercommon/actions'
 import { PositionsManager, User } from '@summerfi/sdk-common/users'
+import { Deployment } from '@summerfi/deployment-utils'
 
 export class OrderPlanner implements IOrderPlanner {
   private readonly ExecutorContractName = 'OperationExecutor'
 
-  private readonly _actionBuildersMap: ActionBuildersMap
-  private readonly _deployment: Deployment
+  buildOrder(params: {
+    user: User
+    positionsManager: PositionsManager
+    simulation: Simulation<SimulationType>
+    actionBuildersMap: ActionBuildersMap
+    deployment: Deployment
+  }): Maybe<Order> {
+    const { user, positionsManager, simulation, actionBuildersMap, deployment } = params
 
-  constructor(deployment: Deployment, actionBuildersMap: ActionBuildersMap) {
-    this._deployment = deployment
-    this._actionBuildersMap = actionBuildersMap
-  }
-
-  buildOrder(
-    user: User,
-    positionsManager: PositionsManager,
-    simulation: Simulation<SimulationType>,
-  ): Maybe<Order> {
     const context: OrderPlannerContext = new OrderPlannerContext()
 
     context.startSubContext()
 
     for (const step of simulation.steps) {
-      const stepBuilder = this.getActionBuilder(step)
+      const stepBuilder = this.getActionBuilder(actionBuildersMap, step)
       if (!stepBuilder) {
         throw new Error(`No step builder found for step type ${step.type}`)
       }
@@ -43,18 +39,22 @@ export class OrderPlanner implements IOrderPlanner {
       throw new Error('Mismatched nested calls levels, probably a missing endSubContext call')
     }
 
-    return this._generateOrder(simulation, callsBatch)
+    return this._generateOrder(simulation, callsBatch, deployment)
   }
 
-  private getActionBuilder<T extends Steps>(step: T): Maybe<ActionBuilder<T>> {
-    return this._actionBuildersMap[step.type] as ActionBuilder<T>
+  private getActionBuilder<T extends Steps>(
+    actionBuildersMap: ActionBuildersMap,
+    step: T,
+  ): Maybe<ActionBuilder<T>> {
+    return actionBuildersMap[step.type] as ActionBuilder<T>
   }
 
   private _generateOrder(
     simulation: Simulation<SimulationType>,
     simulationCalls: ActionCall[],
+    deployment: Deployment,
   ): Order {
-    const executorInfo = this._deployment.contracts[this.ExecutorContractName]
+    const executorInfo = deployment.contracts[this.ExecutorContractName]
     if (!executorInfo) {
       throw new Error(`Executor contract ${this.ExecutorContractName} not found in deployment`)
     }

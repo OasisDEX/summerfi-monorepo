@@ -14,6 +14,7 @@
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/order-planner-common": "workspace:*",
     "@summerfi/protocol-plugins": "workspace:*",
+    "@summerfi/core-contracts": "workspace:*",
     "@summerfi/deployment-utils": "workspace:*",
     "@summerfi/deployment-types": "workspace:*"
   },

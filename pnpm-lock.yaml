@@ -684,6 +684,9 @@ importers:
 
   sdk/order-planner-service:
     dependencies:
+      '@summerfi/core-contracts':
+        specifier: workspace:*
+        version: link:../../packages/core-contracts
       '@summerfi/deployment-types':
         specifier: workspace:*
         version: link:../../packages/deployment-types
