@@ -1,6 +1,10 @@
-import { Address, Percentage, Token, TokenAmount } from '@summerfi/sdk-common/common'
-import { ChainInfo } from '@summerfi/sdk-common/chains'
-import { Hex } from 'viem'
+import type {
+  TokenAmount,
+  ChainInfo,
+  Percentage,
+  Token,
+} from '@summerfi/sdk-common/common/implementation'
+import { Hex, type Address } from 'viem'
 
 /**
  * @name SwapProviderType

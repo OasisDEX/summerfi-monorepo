@@ -1,6 +1,6 @@
+import { Position } from '~sdk-common/common/implementation'
 import { RefinanceParameters, RefinanceSimulation, SimulationType } from '~sdk-common/orders'
 import { Pool } from '~sdk-common/protocols'
-import { Position } from '~sdk-common/users'
 
 export function mockRefinanceSimulation(params: {
   position: Position
@@ -10,7 +10,7 @@ export function mockRefinanceSimulation(params: {
   return {
     simulationType: SimulationType.Refinance,
     sourcePosition: params.position,
-    targetPosition: { ...params.position, pool: params.pool },
+    targetPosition: Position.createFrom({ ...params.position, pool: params.pool }),
     steps: [],
   }
 }

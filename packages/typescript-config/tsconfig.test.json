@@ -3,13 +3,8 @@
   "compilerOptions": {
     "noEmit": true,
     "types": ["node", "jest", "jest-extended"],
-    "baseUrl": ".",
-    "paths": {
-      "@summerfi/serverless-shared": ["../serverless-shared/src/index.ts"],
-      "@summerfi/serverless-shared/*": ["../serverless-shared/src/*"],
-      "@summerfi/sdk-common/*": ["../sdk/src/*"],
-      "~sdk/*": ["../sdk/src/*"]
-    }
+    "rootDir": ".",
+    "baseUrl": "."
   },
   "ts-node": {
     "compilerOptions": {

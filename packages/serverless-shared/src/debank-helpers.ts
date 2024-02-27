@@ -10,6 +10,7 @@ export const DEBANK_SUPPORTED_PROTOCOL_IDS = [
   'ajna',
   'makerdao',
   'spark',
+  'morphoblue',
 ]
 export const DEBANK_SUPPORTED_PROXY_IDS = ['summer', 'makerdao']
 

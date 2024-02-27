@@ -1,7 +1,10 @@
-import { Wallet } from '~sdk-common/common'
+import {
+  Wallet,
+  type ChainInfo,
+  type PositionId,
+  type Position,
+} from '~sdk-common/common/implementation'
 import { SimulationsManager } from '~sdk-common/simulations'
-import { ChainInfo } from '~sdk-common/chains'
-import { Position, PositionId } from '~sdk-common/users'
 import { AutomationSimulationManagerClientImpl } from './AutomationSimulationManagerClientImpl'
 import { FinanceSimulationManagerClientImpl } from './FinanceSimulationManagerClientImpl'
 import { ImportingSimulationManagerClientImpl } from './ImportingSimulationManagerClientImpl'

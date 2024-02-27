@@ -4,23 +4,28 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest --passWithNoTests",
+    "test": "jest ./tests",
+    "e2e": "jest ./e2e --silent=false",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap"
+    "build": "tsc && esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap"
   },
   "dependencies": {
     "@aws-lambda-powertools/logger": "^1.17.0",
     "@aws-lambda-powertools/metrics": "^1.17.0",
     "@aws-lambda-powertools/tracer": "^1.17.0",
+    "@summerfi/common": "workspace:*",
+    "@summerfi/sdk-common": "workspace:*",
+    "@summerfi/core-contracts": "workspace:*",
     "@summerfi/serverless-shared": "workspace:*",
     "@trpc/server": "11.0.0-next-beta.264",
+    "superjson": "^1.13.3",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
-    "@summerfi/typescript-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
     "@trpc/client": "11.0.0-next-beta.264"
   }
 }

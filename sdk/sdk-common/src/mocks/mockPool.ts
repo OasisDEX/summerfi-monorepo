@@ -1,12 +1,12 @@
-import { Percentage } from '~sdk-common/common'
+import { Percentage } from '~sdk-common/common/implementation'
 import {
-  LendingPoolImpl,
   Pool,
   PoolParameters,
   Protocol,
   ProtocolParameters,
   isLendingPoolParameters,
 } from '~sdk-common/protocols'
+import { LendingPoolImpl } from '~sdk-common/protocols/implementation'
 import { Maybe } from '~sdk-common/utils'
 
 export async function mockPool(params: {

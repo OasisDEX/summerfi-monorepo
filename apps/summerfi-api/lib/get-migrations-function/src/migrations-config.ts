@@ -7,8 +7,8 @@ export type IMigrationConfig = Record<ChainId, ProtocolId[]>
  */
 export const MigrationConfig: IMigrationConfig = {
   [ChainId.MAINNET]: [ProtocolId.AAVE3, ProtocolId.SPARK],
-  [ChainId.ARBITRUM]: [ProtocolId.AAVE3],
-  [ChainId.OPTIMISM]: [ProtocolId.AAVE3],
-  [ChainId.BASE]: [ProtocolId.AAVE3],
+  [ChainId.ARBITRUM]: [],
+  [ChainId.OPTIMISM]: [],
+  [ChainId.BASE]: [],
   [ChainId.SEPOLIA]: [],
 }
