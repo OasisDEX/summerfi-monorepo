@@ -3,7 +3,12 @@
   // include tests and use module paths in tests but build without tests
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "rootDir": "src"
+    "rootDir": "src",
+    "paths": {
+      "~swap-service": ["./src/index.ts"],
+      "~swap-service/*": ["./src/*"],
+      "~sdk-common/*": ["../sdk-common/src/*"]
+    }
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
