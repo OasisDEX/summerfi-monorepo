@@ -5,7 +5,9 @@ import { PullTokenAction } from '~orderplannerservice/actions'
 
 export const PullTokenActionList: ActionNames[] = ['PullToken']
 
-export const PullTokenActionBuilder: ActionBuilder<PullTokenStep> = (params): void => {
+export const PullTokenActionBuilder: ActionBuilder<PullTokenStep> = async (
+  params,
+): Promise<void> => {
   const { context, positionsManager, step } = params
 
   context.addActionCall({

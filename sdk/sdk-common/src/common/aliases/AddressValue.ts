@@ -1,3 +1,3 @@
-import { Hex } from 'viem'
+import { HexData } from '@summerfi/sdk-common/common/aliases'
 
-export type AddressValue = Hex
+export type AddressValue = HexData

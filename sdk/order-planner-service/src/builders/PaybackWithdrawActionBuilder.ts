@@ -2,7 +2,9 @@ import { PaybackWithdrawStep } from '@summerfi/sdk-common/orders'
 import { ActionBuilder } from '@summerfi/order-planner-common/builders'
 import { ProtocolPluginsRegistry } from '@summerfi/protocol-plugins'
 
-export const PaybackWithdrawActionBuilder: ActionBuilder<PaybackWithdrawStep> = (params): void => {
+export const PaybackWithdrawActionBuilder: ActionBuilder<PaybackWithdrawStep> = async (
+  params,
+): Promise<void> => {
   const protocol = params.step.inputs.position.pool.protocol
 
   const plugin = ProtocolPluginsRegistry.getProtocolPlugin(protocol)

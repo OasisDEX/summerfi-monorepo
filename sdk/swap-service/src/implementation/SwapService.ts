@@ -11,8 +11,8 @@ import {
   OneInchSwapProviderConfig,
   SwapManager,
 } from '~swap-service/implementation'
-import { SwapData } from '~swap-service/interfaces'
-import { ISwapService } from '~swap-service/interfaces/ISwapManagerService'
+import { ISwapService } from '@summerfi/swap-common/interfaces'
+import { SwapData } from '@summerfi/swap-common/types'
 
 export class SwapService implements ISwapService {
   private readonly swapManager: SwapManager

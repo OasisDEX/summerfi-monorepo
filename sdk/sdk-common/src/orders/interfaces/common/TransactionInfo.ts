@@ -1,4 +1,4 @@
-import { Hex } from 'viem'
+import { HexData } from '@summerfi/sdk-common/common/aliases'
 import { Address } from '~sdk-common/common/implementation'
 
 /**
@@ -7,7 +7,7 @@ import { Address } from '~sdk-common/common/implementation'
  */
 export type Transaction = {
   target: Address
-  calldata: Hex
+  calldata: HexData
   value: string
 }
 

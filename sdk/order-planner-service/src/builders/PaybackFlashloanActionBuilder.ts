@@ -11,9 +11,9 @@ export const FlashloanProviderMap: Record<FlashloanProvider, number> = {
   [FlashloanProvider.Balancer]: 1,
 }
 
-export const PaybackFlashloanActionBuilder: ActionBuilder<PaybackFlashloan> = (
+export const PaybackFlashloanActionBuilder: ActionBuilder<PaybackFlashloan> = async (
   params: ActionBuilderParams<PaybackFlashloan>,
-) => {
+): Promise<void> => {
   // End the current subcontext and pass the subcontext calls to the flashloan action
   const { callsBatch, customData } = params.context.endSubContext<FlashloanStep['inputs']>()
   if (!customData) {

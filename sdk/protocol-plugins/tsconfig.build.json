@@ -9,7 +9,8 @@
       "~protocolplugins/*": ["./src/*"],
       "~orderplannercommon": ["../order-planner-common/src/index.ts"],
       "~orderplannercommon/*": ["../order-planner-common/src/*"],
-      "~sdk-common/*": ["../sdk-common/src/*"]
+      "~sdk-common/*": ["../sdk-common/src/*"],
+      "~swap-common/*": ["../swap-common/src/*"]
     }
   },
   "include": ["src/**/*.ts"],

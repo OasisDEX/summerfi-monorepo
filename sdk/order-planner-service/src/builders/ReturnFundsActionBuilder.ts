@@ -2,7 +2,9 @@ import { ReturnFunds } from '@summerfi/sdk-common/orders'
 import { ActionBuilder } from '@summerfi/order-planner-common/builders'
 import { ReturnFundsAction } from '~orderplannerservice/actions'
 
-export const ReturnFundsActionBuilder: ActionBuilder<ReturnFunds> = (params): void => {
+export const ReturnFundsActionBuilder: ActionBuilder<ReturnFunds> = async (
+  params,
+): Promise<void> => {
   const { context, step } = params
 
   context.addActionCall({

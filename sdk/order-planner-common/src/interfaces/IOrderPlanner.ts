@@ -3,6 +3,7 @@ import { Order, Simulation, SimulationType } from '@summerfi/sdk-common/orders'
 import { IPositionsManager, User } from '@summerfi/sdk-common/client'
 import { Maybe } from '@summerfi/sdk-common/utils'
 import { ActionBuildersMap } from '~orderplannercommon/builders'
+import { ISwapService } from '@summerfi/swap-common/interfaces'
 
 export interface IOrderPlanner {
   buildOrder<T extends SimulationType>(params: {
@@ -11,5 +12,6 @@ export interface IOrderPlanner {
     simulation: Simulation<T>
     actionBuildersMap: ActionBuildersMap
     deployment: Deployment
-  }): Maybe<Order>
+    swapService: ISwapService
+  }): Promise<Maybe<Order>>
 }

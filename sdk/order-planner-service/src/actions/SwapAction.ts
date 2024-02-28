@@ -1,6 +1,6 @@
 import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
 import { Percentage, TokenAmount } from '@summerfi/sdk-common/common/implementation'
-import { Hex } from 'viem'
+import { HexData } from '@summerfi/sdk-common/common/aliases'
 
 export class SwapAction extends BaseAction {
   public readonly config = {
@@ -15,7 +15,7 @@ export class SwapAction extends BaseAction {
     fromAmount: TokenAmount
     toMinimumAmount: TokenAmount
     fee: Percentage
-    withData: Hex
+    withData: HexData
     collectFeeInFromToken: boolean
   }): ActionCall {
     return this._encodeCall([

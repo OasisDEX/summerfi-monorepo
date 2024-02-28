@@ -7,7 +7,9 @@ import type {
   Address,
 } from '@summerfi/sdk-common/common/implementation'
 import { Maybe } from '@summerfi/sdk-common/utils'
-import { ISwapProvider, ISwapManager, SwapData, SwapProviderType } from '~swap-service/interfaces'
+import { ISwapProvider, ISwapManager } from '@summerfi/swap-common/interfaces'
+import { SwapData } from '@summerfi/swap-common/types'
+import { SwapProviderType } from '@summerfi/swap-common/enums'
 
 export type SwapManagerProviderConfig = {
   provider: ISwapProvider

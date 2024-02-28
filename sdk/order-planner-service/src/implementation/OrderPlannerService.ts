@@ -6,6 +6,7 @@ import { Maybe } from '@summerfi/sdk-common/utils'
 import { ActionBuildersConfig } from '~orderplannerservice/config'
 import { Chain } from '@summerfi/sdk-common/client'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
+import { ISwapService } from '@summerfi/swap-common/interfaces'
 
 export class OrderPlannerService implements IOrderPlannerService {
   readonly orderPlanner: OrderPlanner
@@ -24,11 +25,12 @@ export class OrderPlannerService implements IOrderPlannerService {
     this.deployments = deployments
   }
 
-  buildOrder(params: {
+  async buildOrder(params: {
     user: User
     positionsManager: IPositionsManager
     simulation: Simulation<SimulationType>
-  }): Maybe<Order> {
+    swapService: ISwapService
+  }): Promise<Maybe<Order>> {
     const deploymentKey = this._getDeploymentKey(params.user.chain)
     const deployment = this.deployments[deploymentKey]
     if (!deployment) {
@@ -41,6 +43,7 @@ export class OrderPlannerService implements IOrderPlannerService {
       simulation: params.simulation,
       actionBuildersMap: ActionBuildersConfig,
       deployment,
+      swapService: params.swapService,
     })
   }
 

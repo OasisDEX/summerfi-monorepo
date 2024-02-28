@@ -2,7 +2,9 @@ import { DepositBorrowStep } from '@summerfi/sdk-common/orders'
 import { ActionBuilder } from '@summerfi/order-planner-common/builders'
 import { ProtocolPluginsRegistry } from '@summerfi/protocol-plugins'
 
-export const DepositBorrowActionBuilder: ActionBuilder<DepositBorrowStep> = (params): void => {
+export const DepositBorrowActionBuilder: ActionBuilder<DepositBorrowStep> = async (
+  params,
+): Promise<void> => {
   const protocol = params.step.inputs.position.pool.protocol
 
   const plugin = ProtocolPluginsRegistry.getProtocolPlugin(protocol)

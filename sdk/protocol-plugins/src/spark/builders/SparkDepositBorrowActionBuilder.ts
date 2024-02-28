@@ -6,7 +6,9 @@ import { ActionBuilder } from '@summerfi/order-planner-common/builders'
 
 export const SparkDepositBorrowActionList: ActionNames[] = ['SparkDeposit', 'SparkBorrow']
 
-export const SparkDepositBorrowActionBuilder: ActionBuilder<DepositBorrowStep> = (params): void => {
+export const SparkDepositBorrowActionBuilder: ActionBuilder<DepositBorrowStep> = async (
+  params,
+): Promise<void> => {
   const { context, positionsManager, step } = params
 
   context.addActionCall({

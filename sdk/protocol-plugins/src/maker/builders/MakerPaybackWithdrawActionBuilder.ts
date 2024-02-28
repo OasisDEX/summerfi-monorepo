@@ -5,9 +5,9 @@ import { MakerPaybackAction, MakerWithdrawAction } from '~protocolplugins/maker'
 
 export const MakerPaybackWithdrawActionList: ActionNames[] = ['MakerPayback', 'MakerWithdraw']
 
-export const MakerPaybackWithdrawActionBuilder: ActionBuilder<PaybackWithdrawStep> = (
+export const MakerPaybackWithdrawActionBuilder: ActionBuilder<PaybackWithdrawStep> = async (
   params,
-): void => {
+): Promise<void> => {
   const { context, user, step } = params
 
   const debtAmountBN = step.inputs.position.debtAmount.toBN()

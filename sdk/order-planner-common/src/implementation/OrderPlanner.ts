@@ -8,19 +8,22 @@ import { ActionCall } from '~orderplannercommon/actions'
 import { IPositionsManager, User } from '@summerfi/sdk-common/client'
 import { Deployment } from '@summerfi/deployment-utils'
 import { Address } from '@summerfi/sdk-common/common/implementation'
-import { Hex } from 'viem'
+import { HexData } from '@summerfi/sdk-common/common/aliases'
+import { ISwapService } from '@summerfi/swap-common/interfaces'
 
 export class OrderPlanner implements IOrderPlanner {
   private readonly ExecutorContractName = 'OperationExecutor'
 
-  buildOrder(params: {
+  async buildOrder(params: {
     user: User
     positionsManager: IPositionsManager
     simulation: Simulation<SimulationType>
     actionBuildersMap: ActionBuildersMap
     deployment: Deployment
-  }): Maybe<Order> {
-    const { user, positionsManager, simulation, actionBuildersMap, deployment } = params
+    swapService: ISwapService
+  }): Promise<Maybe<Order>> {
+    const { user, positionsManager, simulation, actionBuildersMap, deployment, swapService } =
+      params
 
     const context: OrderPlannerContext = new OrderPlannerContext()
 
@@ -32,7 +35,15 @@ export class OrderPlanner implements IOrderPlanner {
         throw new Error(`No step builder found for step type ${step.type}`)
       }
 
-      stepBuilder({ context, user, positionsManager, simulation, step })
+      await stepBuilder({
+        context,
+        user,
+        positionsManager,
+        simulation,
+        swapService,
+        deployment,
+        step,
+      })
     }
 
     const { callsBatch } = context.endSubContext()
@@ -68,7 +79,7 @@ export class OrderPlanner implements IOrderPlanner {
       transactions: [
         {
           transaction: {
-            target: Address.createFrom({ value: executorInfo.address as Hex }),
+            target: Address.createFrom({ value: executorInfo.address as HexData }),
             calldata: calldata,
             value: '0',
           },

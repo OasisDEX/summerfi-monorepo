@@ -5,9 +5,14 @@ import type {
   Token,
   Address,
 } from '@summerfi/sdk-common/common/implementation'
-import { SwapData } from './ISwapManager'
+import { SwapData } from '~swap-common/types'
 
-export interface ISwapService {
+/**
+ * @name ISwapManager
+ * @description Provides information about how to swap between two tokens and has access
+ *              to different swap providers
+ */
+export interface ISwapManager {
   /**
    * @name getSwapData
    * @description Returns the data needed to perform a swap between two tokens

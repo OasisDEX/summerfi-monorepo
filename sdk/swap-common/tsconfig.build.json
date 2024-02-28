@@ -6,10 +6,10 @@
     "rootDir": "src",
     "paths": {
       "~sdk-common/*": ["../sdk-common/src/*"],
-      "~orderplannercommon/*": ["src/*"],
-      "~swap-common/*": ["../swap-common/src/*"]
+      "~swap-common/*": ["src/*"]
     }
   },
+
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
 }

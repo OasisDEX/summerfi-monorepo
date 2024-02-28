@@ -14,10 +14,11 @@
     "testw": "jest --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "tsc -b -v tsconfig.build.json"
+    "build": "tsc -b tsconfig.build.json"
   },
   "dependencies": {
     "@summerfi/sdk-common": "workspace:*",
+    "@summerfi/swap-common": "workspace:*",
     "@summerfi/deployment-utils": "workspace:*",
     "@summerfi/deployment-types": "workspace:*"
   },

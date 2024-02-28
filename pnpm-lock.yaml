@@ -265,6 +265,9 @@ importers:
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../../../packages/serverless-shared
+      '@summerfi/swap-common':
+        specifier: workspace:*
+        version: link:../../../../sdk/swap-common
       '@summerfi/swap-service':
         specifier: workspace:*
         version: link:../../../../sdk/swap-service
@@ -668,6 +671,9 @@ importers:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
+      '@summerfi/swap-common':
+        specifier: workspace:*
+        version: link:../swap-common
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -702,6 +708,9 @@ importers:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
+      '@summerfi/swap-common':
+        specifier: workspace:*
+        version: link:../swap-common
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -766,11 +775,39 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
+  sdk/swap-common:
+    dependencies:
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../sdk-common
+      '@types/node-fetch':
+        specifier: ^2.6.11
+        version: 2.6.11
+      node-fetch:
+        specifier: ^2.6.7
+        version: 2.7.0
+      viem:
+        specifier: ^2.7.9
+        version: 2.7.9(typescript@5.3.3)
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+
   sdk/swap-service:
     dependencies:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
+      '@summerfi/swap-common':
+        specifier: workspace:*
+        version: link:../swap-common
       '@types/node-fetch':
         specifier: ^2.6.11
         version: 2.6.11

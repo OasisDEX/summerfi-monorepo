@@ -1,10 +1,22 @@
 import { ActionBuilder } from '@summerfi/order-planner-common/builders'
 import { SwapAction } from '~orderplannerservice/actions'
-import { Percentage } from '@summerfi/sdk-common/common/implementation'
+import { Address, Percentage } from '@summerfi/sdk-common/common/implementation'
 import { SwapStep } from '@summerfi/sdk-common/orders'
+import { HexData } from '@summerfi/sdk-common/common/aliases'
 
-export const SwapActionBuilder: ActionBuilder<SwapStep> = (params): void => {
-  const { context, step } = params
+export const SwapActionBuilder: ActionBuilder<SwapStep> = async (params): Promise<void> => {
+  const { context, swapService, deployment, step } = params
+
+  const swapContractInfo = deployment.contracts['Swap']
+
+  const swapData = await swapService.getSwapData({
+    chainInfo: params.user.chain.chainInfo,
+    fromAmount: step.inputs.fromTokenAmount,
+    toToken: step.inputs.toTokenAmount.token,
+    recipient: Address.createFrom({ value: swapContractInfo.address as HexData }),
+    // TODO: change slippage in Simulator to a Percentage type
+    slippage: Percentage.createFrom({ percentage: step.inputs.slippage }),
+  })
 
   context.addActionCall({
     step: step,
@@ -13,7 +25,7 @@ export const SwapActionBuilder: ActionBuilder<SwapStep> = (params): void => {
       fromAmount: step.inputs.fromTokenAmount,
       toMinimumAmount: step.inputs.toTokenAmount,
       fee: Percentage.createFrom({ percentage: step.inputs.fee }),
-      withData: '0x',
+      withData: swapData.calldata,
       collectFeeInFromToken: true,
     },
     connectedInputs: {},

@@ -9,6 +9,9 @@ import { createCallerFactory } from '~src/trpc'
 export const createTestContext = (opts: ContextOptions): Context => {
   return {
     provider: undefined,
+    deployments: undefined,
+    orderPlannerService: {} as any,
+    swapService: {} as any,
   }
 }
 

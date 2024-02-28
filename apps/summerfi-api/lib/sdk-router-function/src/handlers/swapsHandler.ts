@@ -1,7 +1,5 @@
 import { z } from 'zod'
 import { publicProcedure } from '~src/trpc'
-import { type Order } from '@summerfi/sdk-common/orders'
-import { Maybe } from '@summerfi/sdk-common/utils'
 import {
   ChainInfo,
   Token,
@@ -10,8 +8,9 @@ import {
   Percentage,
 } from '@summerfi/sdk-common/common/implementation'
 import { SwapService } from '@summerfi/swap-service'
+import { SwapData } from '@summerfi/swap-common/types'
 
-export const getSwap = publicProcedure
+export const swapsHandler = publicProcedure
   .input(
     z.object({
       chainInfo: z.custom<ChainInfo>((chainInfo) => chainInfo !== undefined),
@@ -21,7 +20,7 @@ export const getSwap = publicProcedure
       slippage: z.custom<Percentage>((slippage) => slippage !== undefined),
     }),
   )
-  .query(async (opts): Promise<Maybe<Order>> => {
+  .query(async (opts): Promise<SwapData> => {
     if (!opts.ctx.deployments) {
       throw new Error('Deployments dependency not resolved correctly')
     }
