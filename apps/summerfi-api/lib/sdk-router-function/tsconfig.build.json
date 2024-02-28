@@ -15,7 +15,9 @@
       "~orderplannercommon/*": ["../../../../sdk/order-planner-common/src/*"],
       "~protocolplugins/*": ["../../../../sdk/protocol-plugins/src/*"],
       "~swap-common/*": ["../../../../sdk/swap-common/src/*"],
-      "~swap-service/*": ["../../../../sdk/swap-service/src/*"]
+      "~swap-service/*": ["../../../../sdk/swap-service/src/*"],
+      "~deployment-types": ["../../../../packages/deployment-types/src/index.ts"],
+      "~deployment-types/*": ["../../../../packages/deployment-types/src/*"]
     }
   },
   "include": ["src/**/*.ts"],
