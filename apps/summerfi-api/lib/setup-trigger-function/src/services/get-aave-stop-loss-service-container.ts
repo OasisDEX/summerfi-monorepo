@@ -9,10 +9,9 @@ import memoize from 'just-memoize'
 import { getAavePosition } from './get-aave-position'
 import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
 import { dmaAaveStopLossValidator } from './against-position-validators'
-import { getUsdAaveOraclePrice } from './get-usd-aave-oracle-price'
 import { CurrentTriggerLike, encodeAaveStopLoss } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
-import { getCurrentStopLoss } from './get-current-stop-loss'
+import { getCurrentAaveStopLoss } from './get-current-aave-stop-loss'
 
 export interface GetAaveStopLossServiceContainerProps {
   rpc: PublicClient
@@ -63,20 +62,13 @@ export const getAaveStopLossServiceContainer: (
         debt: trigger.position.debt,
       })
 
-      const debtPriceInUSD = await getUsdAaveOraclePrice(trigger.position.debt, addresses, rpc)
-
-      const currentTrigger: CurrentTriggerLike | undefined = getCurrentStopLoss(
+      const currentTrigger: CurrentTriggerLike | undefined = getCurrentAaveStopLoss(
         triggers,
         position,
         logger,
       )
 
-      const encodedData = encodeAaveStopLoss(
-        position,
-        trigger.triggerData,
-        debtPriceInUSD,
-        currentTrigger,
-      )
+      const encodedData = encodeAaveStopLoss(position, trigger.triggerData, currentTrigger)
 
       const triggerData =
         action === SupportedActions.Remove

@@ -1,4 +1,3 @@
-import { SimulationType } from '~sdk-common/orders'
 
 /**
  * @interface ImportPositionSimulation

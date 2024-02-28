@@ -1,6 +1,6 @@
-import { Position } from "~sdk-common/users"
-import { SimulationType } from "./enums"
-import { Steps } from "./steps"
+import type { Position } from "~sdk-common/users"
+import type { SimulationType } from "./enums"
+import type { Steps } from "./steps"
 
 /**
 * @interface Simulation

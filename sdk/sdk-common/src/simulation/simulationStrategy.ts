@@ -1,4 +1,4 @@
-import { SimulationSteps } from "./enums"
+import type { SimulationSteps } from "./enums"
 
 export interface StrategyStep {
     step: SimulationSteps

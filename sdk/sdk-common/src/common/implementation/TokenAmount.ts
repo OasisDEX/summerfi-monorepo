@@ -1,6 +1,11 @@
-import { Printable } from './Printable'
-import { Token } from './Token'
+import { type Token } from '~sdk-common/common/implementation'
 import { BigNumber } from 'bignumber.js'
+import { SerializationService } from '~sdk-common/common/services'
+
+interface ITokenAmountSerialized {
+  token: Token
+  amount: string
+}
 
 /**
  * @class TokenAmount
@@ -8,25 +13,29 @@ import { BigNumber } from 'bignumber.js'
  *              issues with big number representation. The token gives enough information to parse it into
  *              a big number.
  */
-export class TokenAmount implements Printable {
-  public readonly token: Token
-  public readonly amount: BigNumber
+export class TokenAmount implements ITokenAmountSerialized {
   private readonly _baseUnitFactor: BigNumber
 
-  constructor(token: Token, amount: string) {
-    this.token = token
-    this.amount = new BigNumber(amount)
-    this._baseUnitFactor = new BigNumber(10).pow(new BigNumber(token.decimals))
+  readonly token: Token
+  readonly amount: string
+
+  private constructor(params: ITokenAmountSerialized) {
+    this.token = params.token
+    this.amount = params.amount
+    this._baseUnitFactor = new BigNumber(10).pow(new BigNumber(params.token.decimals))
   }
 
-// amount human readable (1eth = 1, 1btc = 1 etc)
-  public static createFrom(params: { token: Token; amount: string }): TokenAmount {
-    return new TokenAmount(params.token, params.amount)
+  private get amountBN(): BigNumber {
+    return this.toBN()
+  }
+
+  static createFrom(params: { token: Token; amount: string }): TokenAmount {
+    return new TokenAmount(params)
   }
 // amount in base unit (1eth = 1000000000000000000, 1btc = 100000000 etc)
   public static createFromBaseUnit(parmas: {token: Token, amount: string}): TokenAmount {
     const amount = new BigNumber(parmas.amount).div(new BigNumber(10).pow(new BigNumber(parmas.token.decimals))).toString()
-    return new TokenAmount(parmas.token, amount)
+    return new TokenAmount({token: parmas.token, amount: amount})
   }
 
   public add(tokenToAdd: TokenAmount): TokenAmount {
@@ -34,26 +43,28 @@ export class TokenAmount implements Printable {
       throw new Error('Token symbols do not match')
     }
 
-    return new TokenAmount(this.token, this.amount.plus(tokenToAdd.amount).toString())
+    return new TokenAmount({token: this.token, amount: this.amountBN.plus(tokenToAdd.amountBN).toString()})
   }
 
-  public substrac(tokenToSubstract: TokenAmount): TokenAmount {
+  public subtract(tokenToSubstract: TokenAmount): TokenAmount {
     if (tokenToSubstract.token.symbol !== this.token.symbol) {
       throw new Error('Token symbols do not match')
     }
 
-    return new TokenAmount(this.token, this.amount.minus(tokenToSubstract.amount).toString())
+    return new TokenAmount({token: this.token, amount: this.amountBN.minus(tokenToSubstract.amountBN).toString()})
   }
 
-  public toString(): string {
+  toString(): string {
     return `${this.amount} ${this.token.symbol}`
   }
 
-  public toBaseUnit(): string {
+  toBaseUnit(): string {
     return new BigNumber(this.amount).times(this._baseUnitFactor).toFixed(0)
   }
 
-  public toBN(): BigNumber {
+  toBN(): BigNumber {
     return new BigNumber(this.amount)
   }
 }
+
+SerializationService.registerClass(TokenAmount)

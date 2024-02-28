@@ -14,7 +14,7 @@ import { CurrentTriggerLike } from './trigger-encoders'
 import { dmaAaveTrailingStopLossValidator } from './against-position-validators'
 import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
 import { calculateLtv } from './calculate-ltv'
-import { getCurrentStopLoss } from './get-current-stop-loss'
+import { getCurrentAaveStopLoss } from './get-current-aave-stop-loss'
 
 export interface GetAaveTrailingStopLossServiceContainerProps {
   rpc: PublicClient
@@ -117,7 +117,7 @@ export const getAaveTrailingStopLossServiceContainer: (
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })
-      const currentTrigger: CurrentTriggerLike | undefined = getCurrentStopLoss(
+      const currentTrigger: CurrentTriggerLike | undefined = getCurrentAaveStopLoss(
         triggers,
         position,
         logger,

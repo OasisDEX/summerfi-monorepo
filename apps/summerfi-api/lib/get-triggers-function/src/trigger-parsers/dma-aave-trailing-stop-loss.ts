@@ -47,8 +47,8 @@ export const getDmaAaveTrailingStopLoss = async ({
 
   const trailingDistance =
     safeParseBigInt(trigger.decodedData[trigger.decodedDataNames.indexOf('trailingDistance')]) ?? 0n
-  const maxPrice = safeParseBigInt(maxPriceResponse?.derivedPrice.toString())
-  const originalPrice = safeParseBigInt(originalPriceResponse?.derivedPrice.toString())
+  let maxPrice = safeParseBigInt(maxPriceResponse?.derivedPrice.toString())
+  let originalPrice = safeParseBigInt(originalPriceResponse?.derivedPrice.toString())
 
   if (!maxPrice) {
     logger.warn('Max price not found for', { token, denomination, creationTimestamp })
@@ -63,9 +63,23 @@ export const getDmaAaveTrailingStopLoss = async ({
     })
   }
 
+  originalPrice = originalPrice ?? 0n
+
+  if (!maxPrice) {
+    maxPrice = originalPrice
+  }
+
+  if (maxPrice < originalPrice) {
+    logger.warn('Max price is less than original price, using original price as execution price', {
+      maxPrice,
+      originalPrice,
+    })
+    maxPrice = originalPrice
+  }
+
   const dynamicParams = {
-    executionPrice: maxPrice ? maxPrice - trailingDistance : undefined,
-    originalPrice: originalPrice ? originalPrice - trailingDistance : undefined,
+    executionPrice: maxPrice - trailingDistance,
+    originalPrice: originalPrice - trailingDistance,
   }
 
   return {
@@ -88,7 +102,7 @@ export const getDmaAaveTrailingStopLoss = async ({
       closeToCollateral: trigger.decodedData[trigger.decodedDataNames.indexOf('closeToCollateral')],
     },
     dynamicParams: {
-      executionPrice: dynamicParams.executionPrice?.toString(),
+      executionPrice: (dynamicParams.executionPrice ?? dynamicParams.originalPrice)?.toString(),
       originalExecutionPrice: dynamicParams.originalPrice?.toString(),
     },
   }

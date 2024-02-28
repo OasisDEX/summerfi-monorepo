@@ -1,7 +1,14 @@
-import { Chain } from '~sdk-common/chains'
-import { Percentage, RiskRatio, TokenAmount, Wallet } from '~sdk-common/common'
+import type { Chain } from '~sdk-common/client/implementation'
+import {
+  Percentage,
+  RiskRatio,
+  TokenAmount,
+  Wallet,
+  PositionId,
+  Position,
+} from '~sdk-common/common/implementation'
+import { TokenSymbol } from '~sdk-common/common/enums'
 import { PoolType } from '~sdk-common/protocols'
-import { Position, PositionId } from '~sdk-common/users'
 import { Maybe } from '~sdk-common/utils'
 
 export async function getMockPosition(params: {
@@ -9,8 +16,8 @@ export async function getMockPosition(params: {
   wallet: Wallet
   id: PositionId
 }): Promise<Maybe<Position>> {
-  const debtToken = await params.chain.tokens.getTokenBySymbol({ symbol: 'DAI' })
-  const collateralToken = await params.chain.tokens.getTokenBySymbol({ symbol: 'WETH' })
+  const debtToken = await params.chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.DAI })
+  const collateralToken = await params.chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.WETH })
 
   if (!debtToken || !collateralToken) {
     return undefined
@@ -22,6 +29,9 @@ export async function getMockPosition(params: {
     collateralAmount: TokenAmount.createFrom({
       token: collateralToken,
       amount: '105.98',
+    }),
+    riskRatio: RiskRatio.createFrom({
+      ratio: Percentage.createFrom({ percentage: 20.3 }),
     }),
     pool: {
       poolId: { id: 'testpool' },

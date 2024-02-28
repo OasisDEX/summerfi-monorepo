@@ -9,11 +9,10 @@ import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
 import { getAavePosition } from './get-aave-position'
 import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
-import { autoBuyValidator } from './against-position-validators'
-import { getUsdAaveOraclePrice } from './get-usd-aave-oracle-price'
+import { aaveAutoBuyValidator } from './against-position-validators'
 import { CurrentTriggerLike, encodeAaveAutoBuy } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
-import { getCurrentStopLoss } from './get-current-stop-loss'
+import { getCurrentAaveStopLoss } from './get-current-aave-stop-loss'
 
 export interface GetAaveAutoBuyServiceContainerProps {
   rpc: PublicClient
@@ -69,9 +68,9 @@ export const getAaveAutoBuyServiceContainer: (
 
       const triggers = await getTriggers(trigger.dpm)
 
-      const currentStopLoss = getCurrentStopLoss(triggers, position, logger)
+      const currentStopLoss = getCurrentAaveStopLoss(triggers, position, logger)
 
-      return autoBuyValidator({
+      return aaveAutoBuyValidator({
         position,
         executionPrice,
         triggerData: trigger.triggerData,
@@ -90,8 +89,6 @@ export const getAaveAutoBuyServiceContainer: (
         debt: trigger.position.debt,
       })
 
-      const debtPriceInUSD = await getUsdAaveOraclePrice(trigger.position.debt, addresses, rpc)
-
       const currentAutoBuy = triggers.triggers.aaveBasicBuy
       const currentTrigger: CurrentTriggerLike | undefined = currentAutoBuy
         ? {
@@ -100,12 +97,7 @@ export const getAaveAutoBuyServiceContainer: (
           }
         : undefined
 
-      const encodedData = encodeAaveAutoBuy(
-        position,
-        trigger.triggerData,
-        debtPriceInUSD,
-        currentTrigger,
-      )
+      const encodedData = encodeAaveAutoBuy(position, trigger.triggerData, currentTrigger)
 
       const triggerData =
         action === SupportedActions.Remove

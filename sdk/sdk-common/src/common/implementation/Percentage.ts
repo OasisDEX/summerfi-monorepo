@@ -1,18 +1,22 @@
-import { Printable } from './Printable'
+import { SerializationService } from '~sdk-common/common/services'
+
+interface IPercentageSerialized {
+  value: number
+}
 
 /**
  * @class Percentage
  * @description Represents a percentage
  */
-export class Percentage implements Printable {
-  public readonly value: number
+export class Percentage implements IPercentageSerialized {
+  readonly value: number
 
-  private constructor(params: { percentage: number }) {
-    this.value = params.percentage
+  private constructor(params: IPercentageSerialized) {
+    this.value = params.value
   }
 
-  static createFrom(params: { percentage: number }) {
-    return new Percentage(params)
+  static createFrom({ percentage }: { percentage: number }) {
+    return new Percentage({ value: percentage })
   }
 
   toString(): string {
@@ -23,3 +27,5 @@ export class Percentage implements Printable {
     return Percentage.createFrom({ percentage: this.value + percentage.value })
   }
 }
+
+SerializationService.registerClass(Percentage)

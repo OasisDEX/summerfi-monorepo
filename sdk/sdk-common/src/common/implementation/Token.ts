@@ -1,30 +1,26 @@
-import { ChainInfo } from '~sdk-common/chains'
-import { Address } from './Address'
-import { Printable } from './Printable'
+import { type ChainInfo, type Address } from '~sdk-common/common/implementation'
+import { SerializationService } from '~sdk-common/common/services'
+
+interface ITokenSerialized {
+  chainInfo: ChainInfo
+  address: Address
+  symbol: string
+  name: string
+  decimals: number
+}
 
 /**
  * @name Token
- * @description Represents a token on a blockchain and provides information on the following info:
- *              - ChainInfo
- *              - Address
- *              - Symbol
- *              - Name
- *              - Decimals
+ * @description Represents a token on a blockchain and provides it's details
  */
-export class Token implements Printable {
-  public readonly chainInfo: ChainInfo
-  public readonly address: Address
-  public readonly symbol: string
-  public readonly name: string
-  public readonly decimals: number
+export class Token implements ITokenSerialized {
+  readonly chainInfo: ChainInfo
+  readonly address: Address
+  readonly symbol: string
+  readonly name: string
+  readonly decimals: number
 
-  private constructor(params: {
-    chainInfo: ChainInfo
-    address: Address
-    symbol: string
-    name: string
-    decimals: number
-  }) {
+  private constructor(params: ITokenSerialized) {
     this.chainInfo = params.chainInfo
     this.address = params.address
     this.symbol = params.symbol
@@ -32,7 +28,7 @@ export class Token implements Printable {
     this.decimals = params.decimals
   }
 
-  public static createFrom(params: {
+  static createFrom(params: {
     chainInfo: ChainInfo
     address: Address
     symbol: string
@@ -42,7 +38,9 @@ export class Token implements Printable {
     return new Token(params)
   }
 
-  public toString(): string {
+  toString(): string {
     return `${this.symbol} (${this.name})`
   }
 }
+
+SerializationService.registerClass(Token)
