@@ -29,7 +29,7 @@ export class mockProtocolSpark implements Protocol {
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async getAllPools(params: { protocolParameters?: ProtocolParameters }): Promise<Pool[]> {
+  public async getAllPools(_params: { protocolParameters?: ProtocolParameters }): Promise<Pool[]> {
     return []
   }
 }

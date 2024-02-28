@@ -5,6 +5,7 @@ import { Order } from '~sdk-common/orders'
 import { getMockOrder, getMockPosition } from '~sdk-common/mocks'
 import type { Chain } from '~sdk-common/client/implementation'
 import type { IUser } from '~sdk-common/client/interfaces'
+import { Simulation, SimulationType } from '~sdk-common/simulation'
 
 export class User implements IUser {
   public readonly wallet: Wallet
@@ -16,13 +17,13 @@ export class User implements IUser {
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async getPositionsByProtocol(params: { protocol: Protocol }): Promise<Position[]> {
+  public async getPositionsByProtocol(_params: { protocol: Protocol }): Promise<Position[]> {
     // TODO: Implement
     return []
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async getPositionsByIds(params: { positionIds: PositionId[] }): Promise<Position[]> {
+  public async getPositionsByIds(_params: { positionIds: PositionId[] }): Promise<Position[]> {
     // TODO: Implement
     return []
   }
@@ -37,7 +38,7 @@ export class User implements IUser {
   }
 
   public async newOrder(params: {
-    simulation: any // TODO: fix it
+    simulation: Simulation<SimulationType>
   }): Promise<Order> {
     return getMockOrder({ chain: this.chain, wallet: this.wallet, simulation: params.simulation })
   }

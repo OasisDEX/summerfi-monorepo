@@ -55,7 +55,7 @@ export function switchCheck(_a: never): never {
 }
 
 export function tail<T extends readonly any[]>(arr: T): Tail<T> {
-  const [_, ...rest] = arr
+  const [, ...rest] = arr
 
   return rest as any as Tail<T>
 }
