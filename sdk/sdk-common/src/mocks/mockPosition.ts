@@ -37,8 +37,6 @@ export async function getMockPosition(params: {
       poolId: { id: 'testpool' },
       protocolId: { id: 'testprotocol' },
       type: PoolType.Lending,
-      collateralToken: collateralToken,
-      debtToken: debtToken,
     },
   }
 }

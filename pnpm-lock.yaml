@@ -667,7 +667,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
-  sdk/swap-service:
+  sdk/simulator-service:
     dependencies:
       '@summerfi/sdk-common':
         specifier: workspace:*
@@ -692,7 +692,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
-  sdk/symulator-service:
+  sdk/swap-service:
     dependencies:
       '@summerfi/sdk-common':
         specifier: workspace:*

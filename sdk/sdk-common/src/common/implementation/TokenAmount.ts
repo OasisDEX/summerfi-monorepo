@@ -54,6 +54,14 @@ export class TokenAmount implements ITokenAmountSerialized {
     return new TokenAmount({token: this.token, amount: this.amountBN.minus(tokenToSubstract.amountBN).toString()})
   }
 
+  public multiply(multiplier: string | number): TokenAmount {
+    return new TokenAmount({token: this.token, amount: this.amountBN.times(multiplier).toString()})
+  }
+
+  public divide(divisor: string | number): TokenAmount {
+    return new TokenAmount({token: this.token, amount: this.amountBN.div(divisor).toString()})
+  }
+
   toString(): string {
     return `${this.amount} ${this.token.symbol}`
   }

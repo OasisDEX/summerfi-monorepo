@@ -2,7 +2,7 @@ import { Address, Token } from '~sdk-common/common/implementation'
 import { PoolId, ProtocolId, PoolType, StakingPool } from '~sdk-common/protocols'
 import { PoolBaseImpl } from './PoolBaseImpl'
 
-export class StakingPoolImpl extends PoolBaseImpl implements StakingPool {
+export class StakingPoolImpl extends PoolBaseImpl<PoolType.Staking> implements StakingPool {
   public readonly stakingToken: Token
 
   constructor(params: {

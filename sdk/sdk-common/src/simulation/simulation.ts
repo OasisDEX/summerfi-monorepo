@@ -1,4 +1,4 @@
-import type { Position } from "~sdk-common/users"
+import { Position } from "~sdk-common/common/implementation"
 import type { SimulationType } from "./enums"
 import type { Steps } from "./steps"
 

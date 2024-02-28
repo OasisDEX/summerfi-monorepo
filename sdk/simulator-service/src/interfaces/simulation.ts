@@ -1,6 +1,5 @@
-import type { TokenAmount } from "@summerfi/sdk-common/common"
 import type { steps } from "@summerfi/sdk-common/simulation"
-import type { Position } from "@summerfi/sdk-common/users"
+import type { TokenAmount, Position} from '@summerfi/sdk-common/common/implementation'
 
 export interface SimulationState {
     balances: Record<string, TokenAmount>

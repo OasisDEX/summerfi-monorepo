@@ -1,5 +1,4 @@
-import { TokenAmount } from "@summerfi/sdk-common/common";
-import type { Token } from "@summerfi/sdk-common/common";
+import { TokenAmount, type Token } from "@summerfi/sdk-common/common/implementation";
 import type { ReferencableField, SimulationStrategy, ValueReference } from "@summerfi/sdk-common/simulation";
 import type { Tail } from "~swap-service/interfaces/helperTypes";
 
@@ -32,7 +31,7 @@ export function addBalance(amount: TokenAmount, balance: Record<string, TokenAmo
 export function subtractBalance(amount: TokenAmount, balance: Record<string, TokenAmount>): Record<string, TokenAmount> {
     return {
         ...balance,
-        [amount.token.address.hexValue]: balance[amount.token.address.hexValue].substrac(amount)
+        [amount.token.address.hexValue]: balance[amount.token.address.hexValue].subtract(amount)
     }
 }
 
