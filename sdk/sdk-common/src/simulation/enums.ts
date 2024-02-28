@@ -1,13 +1,13 @@
 export enum SimulationType {
-    ImportPosition = 'ImportPosition',
-    ColosePosition = 'ColosePosition',
-    AddCollateral = 'AddCollateral',
-    RemoveAutomation = 'RemoveAutomation',
-    AddAutomation = 'AddAutomation',
-    Migrate = 'Migrate',
-    CreatePosition = 'CreatePosition',
-    Refinance = 'Refinance',
-  }
+  ImportPosition = 'ImportPosition',
+  ColosePosition = 'ColosePosition',
+  AddCollateral = 'AddCollateral',
+  RemoveAutomation = 'RemoveAutomation',
+  AddAutomation = 'AddAutomation',
+  Migrate = 'Migrate',
+  CreatePosition = 'CreatePosition',
+  Refinance = 'Refinance',
+}
 
 export enum SimulationSteps {
   Flashloan = 'Flashloan',
@@ -20,6 +20,6 @@ export enum SimulationSteps {
 }
 
 export enum FlashloanProvider {
-    Maker = 'Maker',
-    Balancer = 'Balancer',
+  Maker = 'Maker',
+  Balancer = 'Balancer',
 }

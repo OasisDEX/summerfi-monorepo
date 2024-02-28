@@ -15,5 +15,3 @@ export interface LendingPool extends IPool {
   // Max LTV for the pool
   maxLTV: Percentage
 }
-
-

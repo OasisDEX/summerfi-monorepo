@@ -1,8 +1,8 @@
-import type { SimulationSteps } from "./enums"
+import type { SimulationSteps } from './enums'
 
 export interface StrategyStep {
-    step: SimulationSteps
-    optional: boolean
-  }
-  
+  step: SimulationSteps
+  optional: boolean
+}
+
 export type SimulationStrategy = readonly StrategyStep[]

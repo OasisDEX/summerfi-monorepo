@@ -12,8 +12,13 @@ export class StakingPoolImpl extends PoolBaseImpl<PoolType.Staking> implements S
     TVL?: number
     stakingToken: Token
   }) {
-  // TODO: I DON"T KNOW WHAT TO DO WITH THIS, what is the collateral token for stakiing pool?
-    super({ ...params, type: PoolType.Staking, debtToken: params.stakingToken, collateralToken: params.stakingToken})
+    // TODO: I DON"T KNOW WHAT TO DO WITH THIS, what is the collateral token for stakiing pool?
+    super({
+      ...params,
+      type: PoolType.Staking,
+      debtToken: params.stakingToken,
+      collateralToken: params.stakingToken,
+    })
 
     this.stakingToken = params.stakingToken
   }

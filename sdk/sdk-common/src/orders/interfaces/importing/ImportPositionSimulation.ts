@@ -1,4 +1,3 @@
-
 /**
  * @interface ImportPositionSimulation
  * @description Simulation data for importing a position from another service
