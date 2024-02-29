@@ -1,6 +1,6 @@
 import { type Wallet, type Position, type PositionId } from '~sdk-common/common/implementation'
 import { Protocol } from '~sdk-common/protocols'
-import { Maybe } from '~sdk-common/utils'
+import type { Maybe } from '~sdk-common/common/aliases'
 import { Order, Simulation, SimulationType } from '~sdk-common/orders'
 import { getMockOrder, getMockPosition } from '~sdk-common/mocks'
 import type { Chain } from '~sdk-common/client/implementation'

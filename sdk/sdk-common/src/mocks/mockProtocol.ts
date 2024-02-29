@@ -7,8 +7,8 @@ import {
   ProtocolParameters,
   ProtocolsRegistry,
 } from '~sdk-common/protocols'
-import { Maybe } from '~sdk-common/utils'
-import { mockPool } from '.'
+import type { Maybe } from '~sdk-common/common/aliases'
+import { mockPool } from './mockPool'
 import type { ChainInfo } from '~sdk-common/common/implementation'
 
 export class mockProtocolSpark implements Protocol {

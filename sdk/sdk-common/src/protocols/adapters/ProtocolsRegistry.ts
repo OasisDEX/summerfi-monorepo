@@ -1,7 +1,7 @@
 import { Protocol, ProtocolName } from '~sdk-common/protocols'
 import { HashedProtocolKey, ProtocolInfo, ProtocolKey } from './types'
 import { hashProtocolKey } from './utils'
-import { Maybe } from '~sdk-common/utils'
+import type { Maybe } from '~sdk-common/common/aliases'
 import type { ChainInfo } from '~sdk-common/common/implementation'
 
 /**

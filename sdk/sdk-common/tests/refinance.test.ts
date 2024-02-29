@@ -1,4 +1,3 @@
-import { Maybe } from '~sdk-common/utils'
 import {
   Percentage,
   PositionId,
@@ -20,6 +19,7 @@ import {
 import { RefinanceParameters, RefinanceSimulation, Order } from '~sdk-common/orders'
 import { makeSDK, type Chain, type User, ChainFamilyMap } from '~sdk-common/client/implementation'
 import { TokenSymbol } from '~sdk-common/common/enums'
+import type { Maybe } from '~sdk-common/common/aliases'
 
 describe('Refinance | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {

@@ -2,7 +2,7 @@ import type { ITokensManager } from '~sdk-common/client/interfaces/ITokensManage
 import type { TokenSymbol } from '~sdk-common/common/enums'
 import { Address, Token, type ChainInfo } from '~sdk-common/common/implementation'
 import { getMockTokenBySymbol } from '~sdk-common/mocks'
-import { Maybe } from '~sdk-common/utils'
+import type { Maybe } from '~sdk-common/common/aliases'
 
 export class TokensManager implements ITokensManager {
   private readonly chainInfo: ChainInfo

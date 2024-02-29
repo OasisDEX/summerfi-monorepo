@@ -9,7 +9,7 @@ import {
 } from '~sdk-common/common/implementation'
 import { TokenSymbol } from '~sdk-common/common/enums'
 import { PoolType } from '~sdk-common/protocols'
-import { Maybe } from '~sdk-common/utils'
+import type { Maybe } from '~sdk-common/common/aliases'
 
 export async function getMockPosition(params: {
   chain: Chain

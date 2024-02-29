@@ -1,22 +1,29 @@
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
   parser: '@typescript-eslint/parser',
+  plugins: ['unused-imports', 'import'],
   extends: [
     'eslint:recommended',
     'prettier',
     'eslint-config-turbo',
     'plugin:@typescript-eslint/recommended',
     'plugin:import/recommended',
+    'plugin:import/typescript',
   ],
+  settings: {
+    'import/resolver': {
+      typescript: true,
+      node: true,
+    },
+  },
   env: {
     node: true,
     jest: true,
   },
-  plugins: ['unused-imports', 'import'],
   rules: {
-    // 'path/no-absolute-imports': 'error',
     'import/no-cycle': 'error',
     'import/no-absolute-path': 'error',
+    'import/no-unresolved': 'off',
     'no-unused-vars': 'off',
     'unused-imports/no-unused-imports': 'error',
     'unused-imports/no-unused-vars': [

@@ -1,7 +1,7 @@
 import { Chain, ProtocolsManager, TokensManager } from '~sdk-common/client/implementation'
 import type { IChainsManager } from '~sdk-common/client/interfaces/IChainsManager'
 import type { ChainInfo } from '~sdk-common/common/implementation'
-import { Maybe } from '~sdk-common/utils'
+import type { Maybe } from '~sdk-common/common/aliases'
 
 export class ChainsManager implements IChainsManager {
   public async getSupportedChains(): Promise<ChainInfo[]> {

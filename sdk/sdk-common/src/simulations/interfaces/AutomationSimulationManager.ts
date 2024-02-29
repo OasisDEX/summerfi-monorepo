@@ -1,10 +1,10 @@
 import type { Position } from '~sdk-common/common/implementation'
 import {
+  AddAutomationParameters,
   AddAutomationSimulation,
   AutomationId,
   RemoveAutomationSimulation,
 } from '~sdk-common/orders'
-import { AddAutomationParameters } from '~sdk-common/orders'
 
 /**
  * @interface AutomationSimulationManager

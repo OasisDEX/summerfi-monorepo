@@ -7,7 +7,7 @@ import {
   isLendingPoolParameters,
 } from '~sdk-common/protocols'
 import { LendingPoolImpl } from '~sdk-common/protocols/implementation'
-import { Maybe } from '~sdk-common/utils'
+import type { Maybe } from '~sdk-common/common/aliases'
 
 export async function mockPool(params: {
   protocol: Protocol

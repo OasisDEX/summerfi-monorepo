@@ -1,7 +1,7 @@
-import { isToken } from '~sdk-common/utils'
 import { type Token } from '~sdk-common/common/implementation'
 import { SerializationService } from '~sdk-common/common/services'
 import { CurrencySymbol } from '~sdk-common/common/enums'
+import { isToken } from '~sdk-common/utils/TypeCheckers'
 
 interface IPriceSerialized {
   value: string
