@@ -14,7 +14,7 @@ import {
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { z } from 'zod'
 import { chainIdSchema, safeParseBigInt } from '@summerfi/serverless-shared'
-import { CurrentStopLoss } from '../types/current-stop-loss'
+import { CurrentStopLoss } from '../trigger-encoders'
 
 const paramsSchema = z.object({
   position: positionSchema,

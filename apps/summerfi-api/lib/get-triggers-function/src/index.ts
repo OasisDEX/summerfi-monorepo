@@ -28,9 +28,9 @@ import {
   DmaAaveStopLossToCollateralV2ID,
   DmaAaveStopLossToDebtV2ID,
   DmaSparkBasicBuy,
-  DmaSparkBasicBuyV2,
+  DmaSparkBasicBuyV2ID,
   DmaSparkBasicSell,
-  DmaSparkBasicSellV2,
+  DmaSparkBasicSellV2ID,
   DmaSparkStopLossToCollateralV2ID,
   DmaSparkStopLossToDebtV2ID,
   GetTriggersResponse,
@@ -53,8 +53,12 @@ import {
   getCurrentTrigger,
 } from './helpers'
 import { getPricesSubgraphClient } from '@summerfi/prices-subgraph'
-import { getDmaAaveTrailingStopLoss } from './trigger-parsers/dma-aave-trailing-stop-loss'
-import { getDmaSparkTrailingStopLoss } from './trigger-parsers/dma-spark-trailing-stop-loss'
+import {
+  getDmaAavePartialTakeProfit,
+  getDmaSparkPartialTakeProfit,
+  getDmaAaveTrailingStopLoss,
+  getDmaSparkTrailingStopLoss,
+} from './trigger-parsers'
 
 const logger = new Logger({ serviceName: 'getTriggersFunction' })
 
@@ -248,11 +252,11 @@ export const handler = async (
     })[0]
 
   const sparkBasicBuy: DmaSparkBasicBuy | undefined = triggers.triggers
-    .filter((trigger) => trigger.triggerType == DmaSparkBasicBuyV2)
+    .filter((trigger) => trigger.triggerType == DmaSparkBasicBuyV2ID)
     .map((trigger) => {
       return {
         triggerTypeName: 'DmaSparkBasicBuyV2' as const,
-        triggerType: DmaSparkBasicBuyV2,
+        triggerType: DmaSparkBasicBuyV2ID,
         ...mapTriggerCommonParams(trigger),
         decodedParams: {
           maxBuyPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('maxBuyPrice')],
@@ -262,11 +266,11 @@ export const handler = async (
     })[0]
 
   const sparkBasicSell: DmaSparkBasicSell | undefined = triggers.triggers
-    .filter((trigger) => trigger.triggerType == DmaSparkBasicSellV2)
+    .filter((trigger) => trigger.triggerType == DmaSparkBasicSellV2ID)
     .map((trigger) => {
       return {
         triggerTypeName: 'DmaSparkBasicSellV2' as const,
-        triggerType: DmaSparkBasicSellV2,
+        triggerType: DmaSparkBasicSellV2ID,
         ...mapTriggerCommonParams(trigger),
         decodedParams: {
           minSellPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('minSellPrice')],
@@ -287,6 +291,9 @@ export const handler = async (
     logger,
   })
 
+  const aavePartialTakeProfit = await getDmaAavePartialTakeProfit({ triggers, logger })
+  const sparkPartialTakeProfit = await getDmaSparkPartialTakeProfit({ triggers, logger })
+
   const response: GetTriggersResponse = {
     triggers: {
       aaveStopLossToCollateral,
@@ -303,6 +310,8 @@ export const handler = async (
       sparkBasicSell,
       sparkBasicBuy,
       sparkTrailingStopLossDMA,
+      aavePartialTakeProfit,
+      sparkPartialTakeProfit,
     },
     flags: {
       isAaveStopLossEnabled: hasAnyDefined(
@@ -323,7 +332,10 @@ export const handler = async (
       isAaveBasicSellEnabled: hasAnyDefined(aaveBasicSell),
       isSparkBasicBuyEnabled: hasAnyDefined(sparkBasicBuy),
       isSparkBasicSellEnabled: hasAnyDefined(sparkBasicSell),
+      isAavePartialTakeProfitEnabled: hasAnyDefined(aavePartialTakeProfit),
+      isSparkPartialTakeProfitEnabled: hasAnyDefined(sparkPartialTakeProfit),
     },
+    triggersCount: triggers.triggers.length,
     triggerGroup: {
       aaveStopLoss: getCurrentTrigger(
         aaveStopLossToCollateral,
@@ -343,6 +355,8 @@ export const handler = async (
       aaveBasicSell: getCurrentTrigger(aaveBasicSell),
       sparkBasicBuy: getCurrentTrigger(sparkBasicBuy),
       sparkBasicSell: getCurrentTrigger(sparkBasicSell),
+      aavePartialTakeProfit: getCurrentTrigger(aavePartialTakeProfit),
+      sparkPartialTakeProfit: getCurrentTrigger(sparkPartialTakeProfit),
     },
     additionalData: {
       params: {
