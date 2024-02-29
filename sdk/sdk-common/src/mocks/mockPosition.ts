@@ -35,7 +35,7 @@ export async function getMockPosition(params: {
     }),
     pool: {
       poolId: { id: 'testpool' },
-      protocol: ProtocolName.AAVEv3,
+      protocol: ProtocolName.Maker,
       type: PoolType.Lending,
     },
   }

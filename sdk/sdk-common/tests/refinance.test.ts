@@ -36,7 +36,7 @@ describe('Refinance | SDK', () => {
 
     // Wallet
     const wallet: Wallet = Wallet.createFrom({
-      hexValue: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
     })
 
     // User
@@ -75,7 +75,7 @@ describe('Refinance | SDK', () => {
       }),
     )
     expect(prevPosition.pool.poolId.id).toEqual('testpool')
-    expect(prevPosition.pool.protocolId.id).toEqual('testprotocol')
+    expect(prevPosition.pool.protocol).toEqual(ProtocolName.Maker)
     expect(prevPosition.pool.type).toEqual(PoolType.Lending)
 
     // Target protocol
@@ -86,7 +86,7 @@ describe('Refinance | SDK', () => {
       fail('Spark not found')
     }
 
-    expect(spark.protocolId.id).toEqual('spark')
+    expect(spark.name).toEqual(ProtocolName.Spark)
 
     const poolPair: LendingPoolParameters = {
       collateralTokens: [WETH],
@@ -101,7 +101,7 @@ describe('Refinance | SDK', () => {
     }
 
     expect(newPool.poolId.id).toEqual('mock')
-    expect(newPool.protocolId.id).toEqual('spark')
+    expect(newPool.protocol).toEqual(ProtocolName.Spark)
     expect(newPool.type).toEqual(PoolType.Lending)
 
     const newLendingPool = newPool as LendingPool
