@@ -12,8 +12,6 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest --setupFiles dotenv/config --silent=false",
-    "testw": "jest --watch",
     "build": "tsc -b -v tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
