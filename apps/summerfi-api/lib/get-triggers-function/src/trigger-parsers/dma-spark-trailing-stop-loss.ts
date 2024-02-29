@@ -1,4 +1,7 @@
-import { DmaSparkTrailingStopLoss } from '@summerfi/serverless-contracts/get-triggers-response'
+import {
+  DmaSparkTrailingStopLossID,
+  DmaSparkTrailingStopLoss,
+} from '@summerfi/serverless-contracts/get-triggers-response'
 import { PricesSubgraphClient } from '@summerfi/prices-subgraph'
 import { TriggersQuery } from '@summerfi/automation-subgraph'
 import { safeParseBigInt } from '@summerfi/serverless-shared'
@@ -15,7 +18,7 @@ export const getDmaSparkTrailingStopLoss = async ({
   logger: Logger
 }): Promise<DmaSparkTrailingStopLoss | undefined> => {
   const trigger = triggers.triggers.find(
-    (trigger) => trigger.triggerType == DmaSparkTrailingStopLoss,
+    (trigger) => trigger.triggerType == DmaSparkTrailingStopLossID,
   )
   if (!trigger) {
     return undefined
@@ -84,7 +87,7 @@ export const getDmaSparkTrailingStopLoss = async ({
 
   return {
     triggerTypeName: 'DmaSparkTrailingStopLoss' as const,
-    triggerType: DmaSparkTrailingStopLoss,
+    triggerType: DmaSparkTrailingStopLossID,
     ...mapTriggerCommonParams(trigger),
     decodedParams: {
       triggerType: trigger.decodedData[trigger.decodedDataNames.indexOf('triggerType')],
