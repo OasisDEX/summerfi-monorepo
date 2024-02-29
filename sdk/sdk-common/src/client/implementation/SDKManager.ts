@@ -1,15 +1,14 @@
 import { PortfolioManager, UsersManager, ChainsManager } from '~sdk-common/client/implementation'
-import { ISDKManager } from '~sdk-common/client/interfaces'
-import { SimulationsManager, SimulationManagerClientImpl } from '~sdk-common/simulations'
+import { SimulationManager } from './simulations/SimulationManager'
 
-export class SDKManager implements ISDKManager {
-  public readonly simulator: SimulationsManager
+export class SDKManager {
+  public readonly simulator: SimulationManager
   public readonly chains: ChainsManager
   public readonly users: UsersManager
   public readonly portfolio: PortfolioManager
 
   public constructor() {
-    this.simulator = new SimulationManagerClientImpl()
+    this.simulator = new SimulationManager()
     this.chains = new ChainsManager()
     this.users = new UsersManager()
     this.portfolio = new PortfolioManager()

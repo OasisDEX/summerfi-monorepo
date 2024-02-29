@@ -25,13 +25,13 @@ export class TokensManager implements ITokensManager {
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async getTokenByAddress(params: { address: Address }): Promise<Maybe<Token>> {
+  public async getTokenByAddress(_params: { address: Address }): Promise<Maybe<Token>> {
     // TODO: Implement
     return undefined
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async getTokenByName(params: { name: string }): Promise<Maybe<Token>> {
+  public async getTokenByName(_params: { name: string }): Promise<Maybe<Token>> {
     // TODO: Implement
     return undefined
   }

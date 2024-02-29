@@ -25,8 +25,52 @@ export class TokenAmount implements ITokenAmountSerialized {
     this._baseUnitFactor = new BigNumber(10).pow(new BigNumber(params.token.decimals))
   }
 
+  private get amountBN(): BigNumber {
+    return this.toBN()
+  }
+
   static createFrom(params: { token: Token; amount: string }): TokenAmount {
     return new TokenAmount(params)
+  }
+  // amount in base unit (1eth = 1000000000000000000, 1btc = 100000000 etc)
+  public static createFromBaseUnit(parmas: { token: Token; amount: string }): TokenAmount {
+    const amount = new BigNumber(parmas.amount)
+      .div(new BigNumber(10).pow(new BigNumber(parmas.token.decimals)))
+      .toString()
+    return new TokenAmount({ token: parmas.token, amount: amount })
+  }
+
+  public add(tokenToAdd: TokenAmount): TokenAmount {
+    if (tokenToAdd.token.symbol !== this.token.symbol) {
+      throw new Error('Token symbols do not match')
+    }
+
+    return new TokenAmount({
+      token: this.token,
+      amount: this.amountBN.plus(tokenToAdd.amountBN).toString(),
+    })
+  }
+
+  public subtract(tokenToSubstract: TokenAmount): TokenAmount {
+    if (tokenToSubstract.token.symbol !== this.token.symbol) {
+      throw new Error('Token symbols do not match')
+    }
+
+    return new TokenAmount({
+      token: this.token,
+      amount: this.amountBN.minus(tokenToSubstract.amountBN).toString(),
+    })
+  }
+
+  public multiply(multiplier: string | number): TokenAmount {
+    return new TokenAmount({
+      token: this.token,
+      amount: this.amountBN.times(multiplier).toString(),
+    })
+  }
+
+  public divide(divisor: string | number): TokenAmount {
+    return new TokenAmount({ token: this.token, amount: this.amountBN.div(divisor).toString() })
   }
 
   toString(): string {

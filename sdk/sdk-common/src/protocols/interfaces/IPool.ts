@@ -17,9 +17,9 @@ export enum PoolType {
  *              and the underlying assets
  */
 export interface IPool {
+  type: PoolType
   poolId: PoolId
   protocolId: IProtocolId
-  type: PoolType
   address?: Address
   TVL?: number
 }

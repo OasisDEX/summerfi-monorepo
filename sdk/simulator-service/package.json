@@ -1,0 +1,32 @@
+{
+  "name": "@summerfi/simulator-service",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "test": "jest --setupFiles dotenv/config --silent=false",
+    "testw": "jest --watch",
+    "build": "tsc -b -v tsconfig.build.json",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@summerfi/sdk-common": "workspace:*",
+    "@types/node-fetch": "^2.6.11",
+    "node-fetch": "^2.6.7",
+    "viem": "^2.7.9"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/jest-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*"
+  }
+}

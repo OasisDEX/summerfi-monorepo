@@ -1,7 +1,5 @@
-import { Simulation, SimulationType } from '~sdk-common/orders'
-
 /**
  * @interface ImportPositionSimulation
  * @description Simulation data for importing a position from another service
  */
-export type ImportPositionSimulation = Simulation<SimulationType.ImportPosition, unknown>
+export type ImportPositionSimulation = unknown // Simulation<SimulationType.ImportPosition> TODO: fix it

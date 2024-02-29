@@ -1,5 +1,3 @@
 export type { AddAutomationParameters } from './AddAutomationParameters'
-export type { AddAutomationSimulation } from './AddAutomationSimulation'
 export type { AutomationId } from './AutomationId'
 export type { RemoveAutomationParameters } from './RemoveAutomationParameters'
-export type { RemoveAutomationSimulation } from './RemoveAutomationSimulation'

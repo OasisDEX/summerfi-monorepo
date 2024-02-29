@@ -11,7 +11,6 @@ export {
   type ChainFamily,
 } from './implementation'
 export type {
-  ISDKManager,
   IUsersManager,
   IPortfolioManager,
   IProtocolsManager,
