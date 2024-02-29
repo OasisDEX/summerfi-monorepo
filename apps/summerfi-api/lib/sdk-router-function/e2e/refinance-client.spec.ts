@@ -12,6 +12,8 @@ import {
 } from '@summerfi/sdk-common/common/implementation'
 import type { RefinanceParameters } from '@summerfi/sdk-common/orders'
 import { ProtocolName, type LendingPoolParameters } from '@summerfi/sdk-common/protocols'
+import { isLandinPool } from '@summerfi/sdk-common/protocols/interfaces/LendingPool'
+import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { createTRPCClient, httpBatchLink } from '@trpc/client'
 import type { AppRouter } from '~src/app-router'
 
@@ -85,6 +87,10 @@ describe('Refinance Client-Server Communication', () => {
       fail('Pool not found')
     }
 
+    if (!isLandinPool(pool)) {
+      fail('Pool is not a landing pool')
+    }
+
     const refinanceParameters: RefinanceParameters = {
       sourcePosition: sourcePosition,
       targetPool: pool,
@@ -95,7 +101,7 @@ describe('Refinance Client-Server Communication', () => {
       pool: pool,
       parameters: refinanceParameters,
       position: sourcePosition,
-    })
+    }) as Simulation<SimulationType>
     if (!simulation) {
       fail('Simulation not found')
     }

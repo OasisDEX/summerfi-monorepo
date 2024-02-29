@@ -1,13 +1,17 @@
-import { Address, Token } from '~sdk-common/common/implementation'
-import { PoolId, ProtocolId, PoolType, StakingPool } from '~sdk-common/protocols'
+import { Address } from '../../common/implementation/Address'
+import { Token } from '../../common/implementation/Token'
+import { StakingPool } from '../interfaces/StakingPool'
+import { PoolId, IProtocolId } from '../interfaces/IDs'
+
 import { PoolBaseImpl } from './PoolBaseImpl'
+import { PoolType } from '../interfaces/IPool'
 
 export class StakingPoolImpl extends PoolBaseImpl<PoolType.Staking> implements StakingPool {
   public readonly stakingToken: Token
 
   constructor(params: {
     poolId: PoolId
-    protocolId: ProtocolId
+    protocolId: IProtocolId
     address?: Address
     TVL?: number
     stakingToken: Token
