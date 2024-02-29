@@ -8,8 +8,5 @@
       "~sdk-common/*": ["../sdk-common/src/*"],
       "~swap-common/*": ["src/*"]
     }
-  },
-
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+  }
 }

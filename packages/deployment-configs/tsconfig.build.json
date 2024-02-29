@@ -5,11 +5,9 @@
   "compilerOptions": {
     "rootDir": "src",
     "paths": {
-      "~sdk-common/*": ["../sdk-common/src/*"],
-      "~swap-service/*": ["src/*"],
-      "~swap-common/*": ["../swap-common/src/*"]
+      "~deployment-configs": ["./src/index.ts"],
+      "~deployment-configs/*": ["./src/*"],
+      "~deployment-types": ["../deployment-types/src/index.ts"]
     }
-  },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+  }
 }

@@ -5,7 +5,7 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "~orderplannerservice": ["src/index.ts"],
+      "~orderplannerservice": ["./src/index.ts"],
       "~orderplannerservice/*": ["./src/*"]
     }
   },

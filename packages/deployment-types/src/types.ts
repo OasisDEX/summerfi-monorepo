@@ -6,7 +6,7 @@ export interface ConfigEntry {
   name: string
   address?: Address
   addToRegistry?: boolean
-  constructorArgs?: string[]
+  constructorArgs?: Array<string | number>
 }
 
 export type ActionNames = SystemActionNames | ProtocolActionNames

@@ -7,9 +7,8 @@
     "paths": {
       "~sdk-common/*": ["../sdk-common/src/*"],
       "~orderplannercommon/*": ["src/*"],
-      "~swap-common/*": ["../swap-common/src/*"]
+      "~swap-common/*": ["../swap-common/src/*"],
+      "~deployment-types": ["../../packages/deployment-types/src/index.ts"]
     }
-  },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+  }
 }

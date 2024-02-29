@@ -13,9 +13,8 @@
       "~protocolplugins/*": ["../protocol-plugins/src/*"],
       "~sdk-common": ["../sdk-common/src/index.ts"],
       "~sdk-common/*": ["../sdk-common/src/*"],
-      "~swap-common/*": ["../swap-common/src/*"]
+      "~swap-common/*": ["../swap-common/src/*"],
+      "~deployment-types": ["../../packages/deployment-types/src/index.ts"]
     }
-  },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+  }
 }
