@@ -1,4 +1,4 @@
-import { CurrentTriggerLike, TriggerTransactions } from './types'
+import { CurrentTriggerLike, EncodedTriggers, TriggerTransactions } from './types'
 import {
   bytesToHex,
   encodeAbiParameters,
@@ -11,13 +11,14 @@ import { DmaSparkTrailingStopLossTriggerData, PositionLike } from '~types'
 import { DerivedPrices } from '@summerfi/prices-subgraph'
 import { getMaxCoverage } from './get-max-coverage'
 import { OPERATION_NAMES } from '@oasisdex/dma-library'
+import { AddableTrigger, RemovableTrigger } from './automation-bot-helper'
 
 export const encodeSparkTrailingStopLoss = (
   position: PositionLike,
   triggerData: DmaSparkTrailingStopLossTriggerData,
   latestPrice: DerivedPrices,
   currentTrigger: CurrentTriggerLike | undefined,
-): TriggerTransactions => {
+): TriggerTransactions & EncodedTriggers => {
   const abiParameters = parseAbiParameters(
     'address positionAddress, ' +
       'uint16 triggerType, ' +
@@ -82,9 +83,26 @@ export const encodeSparkTrailingStopLoss = (
       })
     : undefined
 
+  const addableTrigger: AddableTrigger = {
+    continuous: true,
+    currentId: currentTrigger?.id ?? 0n,
+    encodedTriggerData: encodedTriggerData,
+    currentTriggerData: currentTrigger?.triggerData ?? '0x0',
+    triggerType: triggerData.type,
+  }
+
+  const removableTrigger: RemovableTrigger | undefined = currentTrigger
+    ? {
+        currentId: currentTrigger.id,
+        currentData: currentTrigger.triggerData,
+      }
+    : undefined
+
   return {
     encodedTriggerData,
     upsertTrigger: encodedTrigger,
     removeTrigger,
+    addableTrigger,
+    removableTrigger,
   }
 }

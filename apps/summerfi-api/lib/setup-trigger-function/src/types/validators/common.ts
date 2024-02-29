@@ -24,6 +24,16 @@ export const ltvSchema = bigIntSchema.refine((ltv) => ltv >= 0n && ltv < 10_000n
   message: 'LTV must be between 0 and 10_000',
 })
 
+export const percentageSchema = bigIntSchema.refine(
+  (percentage) => percentage >= 0n && percentage <= 10_000n,
+  {
+    params: {
+      code: 'percentage-out-of-range',
+    },
+    message: 'Percentage must be between 0 and 100_000',
+  },
+)
+
 export enum SupportedActions {
   Add = 'add',
   Remove = 'remove',
@@ -73,6 +83,7 @@ export enum SupportedTriggers {
   AutoSell = 'auto-sell',
   DmaStopLoss = 'dma-stop-loss',
   DmaTrailingStopLoss = 'dma-trailing-stop-loss',
+  DmaPartialTakeProfit = 'dma-partial-take-profit',
 }
 
 const supportedTriggersSchema = z.nativeEnum(SupportedTriggers)
