@@ -4,10 +4,10 @@ import {
 } from '@summerfi/serverless-contracts/get-triggers-response'
 import { safeParseBigInt } from '@summerfi/serverless-shared'
 import { PositionLike } from '~types'
-import { CurrentStopLoss } from './types/current-stop-loss'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { calculateLtv } from './calculate-ltv'
 import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
+import { CurrentStopLoss } from './trigger-encoders'
 
 export function getCurrentSparkStopLoss(
   triggers: GetTriggersResponse,
@@ -66,5 +66,6 @@ export function getCurrentSparkStopLoss(
     id: safeParseBigInt(currentStopLoss.triggerId) ?? 0n,
     executionLTV: stopLossExecutionLtv,
     executionPrice: stopLossExecutionPrice,
+    triggersOnAccount: triggers.triggersCount,
   }
 }

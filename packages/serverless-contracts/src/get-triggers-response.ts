@@ -281,6 +281,7 @@ export type GetTriggersResponse = {
     sparkBasicBuy?: Trigger
     sparkBasicSell?: Trigger
   }
+  triggersCount: number
   additionalData?: Record<string, unknown>
 }
 
