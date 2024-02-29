@@ -324,6 +324,7 @@ export const handler = async (
       isSparkBasicBuyEnabled: hasAnyDefined(sparkBasicBuy),
       isSparkBasicSellEnabled: hasAnyDefined(sparkBasicSell),
     },
+    triggersCount: triggers.triggers.length,
     triggerGroup: {
       aaveStopLoss: getCurrentTrigger(
         aaveStopLossToCollateral,

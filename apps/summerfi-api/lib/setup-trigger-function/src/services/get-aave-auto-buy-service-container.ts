@@ -94,6 +94,7 @@ export const getAaveAutoBuyServiceContainer: (
         ? {
             triggerData: currentAutoBuy.triggerData as `0x${string}`,
             id: safeParseBigInt(currentAutoBuy.triggerId) ?? 0n,
+            triggersOnAccount: triggers.triggersCount,
           }
         : undefined
 

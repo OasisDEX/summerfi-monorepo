@@ -95,6 +95,7 @@ export const getSparkAutoSellServiceContainer: (
         ? {
             triggerData: currentAutoSell.triggerData as `0x${string}`,
             id: safeParseBigInt(currentAutoSell.triggerId) ?? 0n,
+            triggersOnAccount: triggers.triggersCount,
           }
         : undefined
 
