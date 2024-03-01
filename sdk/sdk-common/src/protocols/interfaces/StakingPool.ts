@@ -1,5 +1,6 @@
-import { Token } from '~sdk-common/common/implementation'
-import { IPool, PoolType } from './IPool'
+import { Token } from '~sdk-common/common/implementation/Token'
+import { IPool } from './IPool'
+import { PoolType } from './PoolType'
 
 /**
  * @interface StakingPool

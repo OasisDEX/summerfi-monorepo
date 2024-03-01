@@ -1,14 +1,7 @@
-import { Address } from '~sdk-common/common/implementation'
-import { PoolId, IProtocolId } from './IDs'
-
-/**
- * @enum PoolType
- * @description Indicates the type of pool (staking or lending)
- */
-export enum PoolType {
-  Staking = 'Staking',
-  Lending = 'Lending',
-}
+import { Address } from '~sdk-common/common/implementation/Address'
+import { IPoolId } from './IPoolId'
+import { IProtocolId } from './IProtocolId'
+import { PoolType } from './PoolType'
 
 /**
  * @interface IPool
@@ -18,7 +11,7 @@ export enum PoolType {
  */
 export interface IPool {
   type: PoolType
-  poolId: PoolId
+  poolId: IPoolId
   protocolId: IProtocolId
   address?: Address
   TVL?: number

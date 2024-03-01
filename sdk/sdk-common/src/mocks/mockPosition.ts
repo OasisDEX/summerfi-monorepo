@@ -1,15 +1,14 @@
-import type { Chain } from '~sdk-common/client/implementation'
-import {
-  Percentage,
-  RiskRatio,
-  TokenAmount,
-  Wallet,
-  PositionId,
-  Position,
-} from '~sdk-common/common/implementation'
+import type { Chain } from '~sdk-common/client/implementation/Chain'
+
 import { TokenSymbol } from '~sdk-common/common/enums'
-import { PoolType } from '~sdk-common/protocols'
 import type { Maybe } from '~sdk-common/common/aliases'
+import { Percentage } from '~sdk-common/common/implementation/Percentage'
+import type { Position } from '~sdk-common/common/implementation/Position'
+import type { PositionId } from '~sdk-common/common/implementation/PositionId'
+import { RiskRatio } from '~sdk-common/common/implementation/RiskRatio'
+import { TokenAmount } from '~sdk-common/common/implementation/TokenAmount'
+import type { Wallet } from '~sdk-common/common/implementation/Wallet'
+import { PoolType } from '~sdk-common/protocols/interfaces/PoolType'
 
 export async function getMockPosition(params: {
   chain: Chain

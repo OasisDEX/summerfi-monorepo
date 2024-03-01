@@ -1,5 +1,5 @@
 import type { Maybe } from '~sdk-common/common/aliases'
-import { IProtocolId } from './IDs'
+import { IProtocolId } from './IProtocolId'
 import { IPool } from './IPool'
 import { PoolParameters } from './PoolParameters'
 import { ProtocolParameters } from './ProtocolParameters'

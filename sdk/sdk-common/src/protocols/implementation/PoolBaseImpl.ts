@@ -1,9 +1,13 @@
-import { Address, Token } from '~sdk-common/common/implementation'
-import { Pool, PoolId, ProtocolId, PoolType } from '~sdk-common/protocols'
+import type { Address } from '~sdk-common/common/implementation/Address'
+import type { Token } from '~sdk-common/common/implementation/Token'
+import type { IPool } from '~sdk-common/protocols/interfaces/IPool'
+import type { PoolType } from '../interfaces/PoolType'
+import type { IProtocolId } from '~sdk-common/protocols/interfaces/IProtocolId'
+import type { IPoolId } from '~sdk-common/protocols/interfaces/IPoolId'
 
-export class PoolBaseImpl<T extends PoolType> implements Pool {
-  public readonly poolId: PoolId
-  public readonly protocolId: ProtocolId
+export class PoolBaseImpl<T extends PoolType> implements IPool {
+  public readonly poolId: IPoolId
+  public readonly protocolId: IProtocolId
   public readonly type: T
   public readonly address?: Address
   public readonly TVL?: number
@@ -11,8 +15,8 @@ export class PoolBaseImpl<T extends PoolType> implements Pool {
   public readonly collateralToken: Token
 
   constructor(params: {
-    poolId: PoolId
-    protocolId: ProtocolId
+    poolId: IPoolId
+    protocolId: IProtocolId
     type: T
     debtToken: Token
     collateralToken: Token

@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { publicProcedure } from '~src/trpc'
 import { getMockPosition } from '@summerfi/sdk-common/mocks'
-import type { Position, PositionId, Wallet } from '@summerfi/sdk-common/common/implementation'
+import type { Position, PositionId, Wallet } from '@summerfi/sdk-common/common'
 import type { Chain } from '@summerfi/sdk-common/client'
 
 type PositionParams = Parameters<typeof getMockPosition>[0]

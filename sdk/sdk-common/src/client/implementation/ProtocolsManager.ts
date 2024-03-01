@@ -1,7 +1,9 @@
 import type { Maybe } from '~sdk-common/common/aliases'
-import { Protocol, ProtocolName, ProtocolsRegistry } from '~sdk-common/protocols'
-import type { IProtocolsManager } from '~sdk-common/client/interfaces'
-import type { ChainInfo } from '~sdk-common/common/implementation'
+import type { IProtocolsManager } from '~sdk-common/client/interfaces/IProtocolsManager'
+import type { ChainInfo } from '~sdk-common/common/implementation/ChainInfo'
+import { ProtocolsRegistry } from '~sdk-common/protocols/adapters'
+import type { Protocol } from '~sdk-common/protocols/interfaces/Protocol'
+import type { ProtocolName } from '~sdk-common/protocols/interfaces/ProtocolName'
 
 export class ProtocolsManager implements IProtocolsManager {
   private readonly _chainInfo: ChainInfo

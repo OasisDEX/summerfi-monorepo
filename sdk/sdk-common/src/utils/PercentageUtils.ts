@@ -1,4 +1,5 @@
-import { Percentage, TokenAmount } from '~sdk-common/common/implementation'
+import type { Percentage } from '~sdk-common/common/implementation/Percentage'
+import { TokenAmount } from '~sdk-common/common/implementation/TokenAmount'
 
 export function applyPercentage(tokenAmount: TokenAmount, percentage: Percentage): TokenAmount {
   const amountBN = tokenAmount.toBN()

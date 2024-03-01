@@ -1,5 +1,5 @@
-import { Token } from '~sdk-common/common/implementation'
-import { PoolParameters } from '~sdk-common/protocols'
+import type { Token } from '~sdk-common/common/implementation/Token'
+import type { PoolParameters } from '~sdk-common/protocols/interfaces/PoolParameters'
 
 /**
  * @name LendingPoolParameters

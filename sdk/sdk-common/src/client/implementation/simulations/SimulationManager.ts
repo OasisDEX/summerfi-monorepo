@@ -1,10 +1,7 @@
-import {
-  Wallet,
-  type ChainInfo,
-  type PositionId,
-  type Position,
-} from '~sdk-common/common/implementation'
-
+import type { ChainInfo } from '~sdk-common/common/implementation/ChainInfo'
+import type { Position } from '~sdk-common/common/implementation/Position'
+import type { PositionId } from '~sdk-common/common/implementation/PositionId'
+import type { Wallet } from '~sdk-common/common/implementation/Wallet'
 import { RefinanceSimulationManager } from './RefinanceSimulationManager'
 
 export class SimulationManager {

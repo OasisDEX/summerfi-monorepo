@@ -1,11 +1,13 @@
-import { type Wallet, type Position, type PositionId } from '~sdk-common/common/implementation'
-import { Protocol } from '~sdk-common/protocols'
 import { Maybe } from '~sdk-common/utils'
 import { Order } from '~sdk-common/orders'
 import { getMockOrder, getMockPosition } from '~sdk-common/mocks'
-import type { Chain } from '~sdk-common/client/implementation'
-import type { IUser } from '~sdk-common/client/interfaces'
+import type { Chain } from '~sdk-common/client/implementation/Chain'
+import type { IUser } from '~sdk-common/client/interfaces/IUser'
 import { Simulation, SimulationType } from '~sdk-common/simulation'
+import type { Position } from '~sdk-common/common/implementation/Position'
+import type { PositionId } from '~sdk-common/common/implementation/PositionId'
+import type { Wallet } from '~sdk-common/common/implementation/Wallet'
+import type { Protocol } from '~sdk-common/protocols/interfaces/Protocol'
 
 export class User implements IUser {
   public readonly wallet: Wallet

@@ -1,5 +1,7 @@
-import { Percentage, Token } from '~sdk-common/common/implementation'
-import { IPool, PoolType } from './IPool'
+import type { Token } from '~sdk-common/common/implementation/Token'
+import { IPool } from './IPool'
+import { PoolType } from './PoolType'
+import type { Percentage } from '~sdk-common/common/implementation/Percentage'
 
 /**
  * @interface LendingPool
