@@ -30,6 +30,7 @@ export class Simulator<
     const getReference = (path: [string, string]) => {
       const [step, name] = path
       return {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         estimatedValue: (this.state.steps[step] as any).outputs[name as any], // TODO: fix this types
         path,
       }
@@ -41,6 +42,7 @@ export class Simulator<
       this.state = stateReducer(fullStep, this.state)
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this.state as any
   }
 

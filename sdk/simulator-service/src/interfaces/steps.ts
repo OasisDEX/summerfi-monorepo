@@ -22,5 +22,6 @@ export type NextFunction<
   ? never
   : (ctx: {
       state: SimulationState
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       getReference: (path: [string, string]) => ValueReference<any>
     }) => Promise<Omit<Where<steps.Steps, { type: Schema[0]['step']; name: Name }>, 'outputs'>>

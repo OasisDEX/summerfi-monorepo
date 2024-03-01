@@ -7,7 +7,7 @@
     "tsc": "tsc",
     "watch": "tsc -w",
     "build_broken": "tsc -b -v tsconfig.json",
-    "lint": "eslint .",
+    "lint_broken": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {

@@ -1,4 +1,4 @@
-import { TokenAmount, type Token } from '@summerfi/sdk-common/common/implementation'
+import { TokenAmount, type Token } from '@summerfi/sdk-common/common'
 import type {
   ReferencableField,
   SimulationStrategy,
@@ -50,12 +50,12 @@ export function subtractBalance(
   }
 }
 
-export function switchCheck(_a: never): never {
+export function switchCheck(): never {
   throw new Error('Run out of cases')
 }
 
-export function tail<T extends readonly any[]>(arr: T): Tail<T> {
+export function tail<T extends readonly unknown[]>(arr: T): Tail<T> {
   const [, ...rest] = arr
 
-  return rest as any as Tail<T>
+  return rest as unknown as Tail<T>
 }

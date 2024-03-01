@@ -2,7 +2,7 @@ import { FlashloanProvider, Simulation, SimulationSteps } from '@summerfi/sdk-co
 import { getReferencedValue, makeStrategy } from '~swap-service/implementation/helpers'
 import { LendingPool } from '@summerfi/sdk-common/protocols'
 import { Simulator } from '~swap-service/implementation/simulator-engine'
-import { Token, TokenAmount, Position } from '@summerfi/sdk-common/common/implementation'
+import { Token, TokenAmount, Position } from '@summerfi/sdk-common/common'
 import { SimulationType } from '@summerfi/sdk-common/orders'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 
@@ -51,6 +51,7 @@ interface GetQuote {
 }
 
 export interface RefinanceParameters {
+  // should be lending position, because we need to have lending pool not IPool
   position: Position
   targetPool: LendingPool
   slippage: number
@@ -87,14 +88,14 @@ export async function refinace(
     args.position.collateralAmount.token.address === args.targetPool.collateralTokens[0].address
   const isDebtSwapSkipped =
     args.position.debtAmount.token.address !== args.targetPool.debtTokens[0].address
-  let debtSwapQuote: Quote | undefined
+  // let debtSwapQuote: Quote | undefined
   if (!isDebtSwapSkipped) {
-    debtSwapQuote = await dependecies.getQuote({
-      from: args.targetPool.debtTokens[0],
-      to: args.position.debtAmount,
-      slippage: args.slippage,
-      fee: 0,
-    })
+    // debtSwapQuote = await dependecies.getQuote({
+    //   from: args.targetPool.debtTokens[0],
+    //   to: args.position.debtAmount,
+    //   slippage: args.slippage,
+    //   fee: 0,
+    // })
   }
 
   // TODO: read debt amount from chain (special step: ReadDebtAmount)
@@ -109,21 +110,21 @@ export async function refinace(
         provider: FlashloanProvider.Maker,
       },
     }))
-    .next(async () => ({
-      name: 'PaybackWithdraw',
-      type: SimulationSteps.PaybackWithdraw,
-      inputs: {
-        paybackAmount: TokenAmount.createFrom({
-          amount: Number.MAX_SAFE_INTEGER.toString(),
-          token: args.position.pool.debtToken,
-        }),
-        withdrawAmount: TokenAmount.createFrom({
-          amount: Number.MAX_SAFE_INTEGER.toString(),
-          token: args.position.pool.collateralToken,
-        }),
-        position: args.position,
-      },
-    }))
+    // .next(async () => ({
+    //   name: 'PaybackWithdraw',
+    //   type: SimulationSteps.PaybackWithdraw,
+    //   inputs: {
+    //     paybackAmount: TokenAmount.createFrom({
+    //       amount: Number.MAX_SAFE_INTEGER.toString(),
+    //       token: args.position.pool.debtToken,
+    //     }),
+    //     withdrawAmount: TokenAmount.createFrom({
+    //       amount: Number.MAX_SAFE_INTEGER.toString(),
+    //       token: args.position.pool.collateralToken,
+    //     }),
+    //     position: args.position,
+    //   },
+    // }))
     .next(async () => ({
       name: 'CollateralSwap',
       type: SimulationSteps.Swap,
@@ -176,12 +177,18 @@ export async function refinace(
     }))
     .run()
 
+  const targetPosition = Object.values(simulation.positions).find(
+    (p) => p.pool.protocolId.id === args.targetPool.protocolId.id,
+  )
+
+  if (!targetPosition) {
+    throw new Error('Target position not found')
+  }
+
   return {
     simulationType: SimulationType.Refinance,
     sourcePosition: args.position,
-    targetPosition: Object.values(simulation.positions).find(
-      (p) => p.pool.protocolId.id === args.targetPool.protocolId.id,
-    ),
+    targetPosition,
     steps: Object.values(simulation.steps),
   }
 }
