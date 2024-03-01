@@ -1,10 +1,5 @@
 import type { ChainId } from '@summerfi/sdk-common/common/aliases'
-import type {
-  ChainInfo,
-  TokenAmount,
-  Token,
-  Percentage,
-} from '@summerfi/sdk-common/common/implementation'
+import type { ChainInfo, TokenAmount, Token, Percentage } from '@summerfi/sdk-common/common'
 import { Maybe } from '@summerfi/sdk-common/utils'
 import type { Address } from 'viem'
 import { ISwapProvider, ISwapManager, SwapData, SwapProviderType } from '~swap-service/interfaces'

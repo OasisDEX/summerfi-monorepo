@@ -5,7 +5,7 @@ import {
   Token,
   TokenAmount,
   type ChainInfo,
-} from '@summerfi/sdk-common/common/implementation'
+} from '@summerfi/sdk-common/common'
 import { subtractPercentage } from '@summerfi/sdk-common/utils'
 import { getSwapManager, SwapData, SwapProviderType } from '~swap-service'
 
