@@ -9,5 +9,6 @@
       "~core-contracts/*": ["./src/*"],
       "~deployment-types": ["../deployment-types/src/index.ts"]
     }
-  }
+  },
+  "include": ["src/**/*.ts", "src/**/*.json"]
 }

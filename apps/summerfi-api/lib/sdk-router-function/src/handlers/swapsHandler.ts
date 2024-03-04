@@ -21,10 +21,6 @@ export const swapsHandler = publicProcedure
     }),
   )
   .query(async (opts): Promise<SwapData> => {
-    if (!opts.ctx.deployments) {
-      throw new Error('Deployments dependency not resolved correctly')
-    }
-
     const swapService = new SwapService()
 
     return await swapService.getSwapData({

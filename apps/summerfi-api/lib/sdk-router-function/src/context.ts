@@ -10,7 +10,7 @@ export type ContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV
 
 export type Context = {
   provider: undefined | string
-  deployments: DeploymentIndex | undefined
+  deployments: DeploymentIndex
   orderPlannerService: OrderPlannerService
   swapService: SwapService
 }
