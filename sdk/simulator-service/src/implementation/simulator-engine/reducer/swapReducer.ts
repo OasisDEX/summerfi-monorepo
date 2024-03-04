@@ -4,7 +4,7 @@ import { SimulationState } from '~swap-service/interfaces/simulation'
 
 export function swapReducer(step: steps.SwapStep, state: SimulationState): SimulationState {
   const balanceWithoutFromToken = subtractBalance(step.inputs.fromTokenAmount, state.balances)
-  const balanceWithToToken = addBalance(step.outputs.recievedAmount, balanceWithoutFromToken)
+  const balanceWithToToken = addBalance(step.outputs.receivedAmount, balanceWithoutFromToken)
   return {
     ...state,
     steps: {
