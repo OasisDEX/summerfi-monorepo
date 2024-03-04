@@ -294,11 +294,11 @@ importers:
         specifier: 0.1.16-dma-v2-workers.11
         version: 0.1.16-dma-v2-workers.11
       '@oasisdex/automation':
-        specifier: ^1.6.0-alpha.17
-        version: 1.6.1
+        specifier: 1.6.4-alpha.1
+        version: 1.6.4-alpha.1
       '@oasisdex/dma-library':
-        specifier: 0.5.21-dma-v2-workers.19-test.17
-        version: 0.5.21-dma-v2-workers.19-test.17
+        specifier: 0.5.21-dma-v2-workers.27-auto-withdraw-to-ltv
+        version: 0.5.21-dma-v2-workers.27-auto-withdraw-to-ltv
       '@summerfi/prices-subgraph':
         specifier: workspace:*
         version: link:../../../../packages/prices-subgraph
@@ -5550,8 +5550,8 @@ packages:
     resolution: {integrity: sha512-HRTjoOdOcWslSFycgifqOvmhwgvHhTPJxnkQZRkB2qFMWstMYX10598iv+lZmFJ1XJz8Z7wyUL2oaLWl7cek2A==}
     dev: false
 
-  /@oasisdex/automation@1.6.1:
-    resolution: {integrity: sha512-pmhM2cJ2LrCeugcw/c3vqpsXA9Ygls8oh83IsQHHjdTTw5eUBEHUihtmJHPs10R9EeShIOZzhBPnRMGKpyfvKw==}
+  /@oasisdex/automation@1.6.4-alpha.1:
+    resolution: {integrity: sha512-ecjaiNRXYf18LInzFHZmdC4X/b/D90Cig3H1KlfXai7yZGRlFx8vQozENbF67wofbrxxWSIyCWd0Zo4jm+i4FQ==}
     dependencies:
       ethers: 5.7.2
     transitivePeerDependencies:
@@ -5559,8 +5559,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@oasisdex/dma-library@0.5.21-dma-v2-workers.19-test.17:
-    resolution: {integrity: sha512-oSJvn8eaE+FxBUYgSeE0Bh8W6qwwLGLzdXTBV7SQ2xCtyesKcuFOwgAgE/g4hopfr6Yj/GYXwmvKu1mBYEc/NQ==}
+  /@oasisdex/dma-library@0.5.21-dma-v2-workers.27-auto-withdraw-to-ltv:
+    resolution: {integrity: sha512-xzUfa8pTcJL0nXdXsQcvd4+RDWdULSF5Zym2Xpsm9L5rw/LsazfYbDD0x7PpdkCBmk89DRx9IaT/+/fqdI4mZA==}
     dependencies:
       bignumber.js: 9.0.1
       ethers: 5.6.2
@@ -10069,7 +10069,6 @@ packages:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
     dev: true
-    bundledDependencies: false
 
   /event-stream@3.3.4:
     resolution: {integrity: sha512-QHpkERcGsR0T7Qm3HNJSyXKEEj8AHNxkY3PK8TS2KJvQ7NiSHe3DDpwVKKtoYprL/AreyzFBeIkBIWChAqn60g==}

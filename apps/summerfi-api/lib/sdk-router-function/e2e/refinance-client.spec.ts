@@ -6,7 +6,7 @@ import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
 import { Wallet, Percentage, PositionId } from '@summerfi/sdk-common/common'
 import type { RefinanceParameters } from '@summerfi/sdk-common/orders'
 import { ProtocolName, type LendingPoolParameters } from '@summerfi/sdk-common/protocols'
-import { isLendinPool } from '@summerfi/sdk-common/protocols/interfaces/LendingPool'
+import { isLendingPool } from '@summerfi/sdk-common/protocols/interfaces/LendingPool'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { createTRPCClient, httpBatchLink } from '@trpc/client'
 import type { AppRouter } from '~src/app-router'
@@ -83,7 +83,7 @@ describe('Refinance Client-Server Communication', () => {
       fail('Pool not found')
     }
 
-    if (!isLendinPool(pool)) {
+    if (!isLendingPool(pool)) {
       fail('Pool is not a lending pool')
     }
 

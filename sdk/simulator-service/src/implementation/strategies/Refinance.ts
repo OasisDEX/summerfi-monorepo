@@ -53,7 +53,6 @@ interface GetQuote {
 // STOP TODO
 
 export interface RefinanceParameters {
-  // should be lending position, because we need to have lending pool not IPool
   position: Position
   targetPool: LendingPool
   slippage: number
@@ -131,7 +130,7 @@ export async function refinace(
         depositAmount: ctx.getReference(
           isCollateralSwapSkipped
             ? ['PaybackWithdraw', 'withdrawAmount']
-            : ['CollateralSwap', 'recievedAmount'],
+            : ['CollateralSwap', 'receivedAmount'],
         ),
         borrowAmount: args.position.debtAmount, // TODO figure the debt amount
         position: newEmptyPositionFromPool(args.targetPool),

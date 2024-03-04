@@ -10,12 +10,14 @@ import { ZodIssue, ZodIssueCode } from 'zod'
 import {
   eventBodyAaveBasicBuySchema,
   eventBodyAaveBasicSellSchema,
+  eventBodyAavePartialTakeProfitSchema,
   eventBodyDmaAaveStopLossSchema,
   eventBodyDmaAaveTrailingStopLossSchema,
   eventBodyDmaSparkStopLossSchema,
   eventBodyDmaSparkTrailingStopLossSchema,
   eventBodySparkBasicBuySchema,
   eventBodySparkBasicSellSchema,
+  eventBodySparkPartialTakeProfitSchema,
   SupportedTriggers,
 } from './validators'
 import { ChainId, ProtocolId } from '@summerfi/serverless-shared'
@@ -57,9 +59,14 @@ export const mapZodResultToValidationResults = ({
 export type SupportedTriggersSchema =
   | typeof eventBodyAaveBasicBuySchema
   | typeof eventBodyAaveBasicSellSchema
+  | typeof eventBodySparkBasicBuySchema
+  | typeof eventBodySparkBasicSellSchema
   | typeof eventBodyDmaAaveStopLossSchema
   | typeof eventBodyDmaSparkStopLossSchema
   | typeof eventBodyDmaAaveTrailingStopLossSchema
+  | typeof eventBodyDmaSparkTrailingStopLossSchema
+  | typeof eventBodyAavePartialTakeProfitSchema
+  | typeof eventBodySparkPartialTakeProfitSchema
 
 export const getBodySchema = (pathParams: PathParams): SupportedTriggersSchema | undefined => {
   const { trigger, chainId, protocol } = pathParams
@@ -73,8 +80,11 @@ export const getBodySchema = (pathParams: PathParams): SupportedTriggersSchema |
     if (trigger === SupportedTriggers.DmaStopLoss) {
       return eventBodyDmaAaveStopLossSchema
     }
-    if (trigger == SupportedTriggers.DmaTrailingStopLoss) {
+    if (trigger === SupportedTriggers.DmaTrailingStopLoss) {
       return eventBodyDmaAaveTrailingStopLossSchema
+    }
+    if (trigger === SupportedTriggers.DmaPartialTakeProfit) {
+      return eventBodyAavePartialTakeProfitSchema
     }
   }
   if (protocol === ProtocolId.SPARK && chainId === ChainId.MAINNET) {
@@ -89,6 +99,9 @@ export const getBodySchema = (pathParams: PathParams): SupportedTriggersSchema |
     }
     if (trigger === SupportedTriggers.AutoSell) {
       return eventBodySparkBasicSellSchema
+    }
+    if (trigger === SupportedTriggers.DmaPartialTakeProfit) {
+      return eventBodySparkPartialTakeProfitSchema
     }
   }
 

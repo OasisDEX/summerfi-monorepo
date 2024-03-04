@@ -1,4 +1,4 @@
-import { CurrentTriggerLike, TriggerTransactions } from './types'
+import { CurrentTriggerLike, EncodedTriggers, TriggerTransactions } from './types'
 import {
   bytesToHex,
   encodeAbiParameters,
@@ -10,13 +10,14 @@ import { automationBotAbi } from '~abi'
 import { DmaAaveTrailingStopLossTriggerData, PositionLike } from '~types'
 import { DerivedPrices } from '@summerfi/prices-subgraph'
 import { getMaxCoverage } from './get-max-coverage'
+import { AddableTrigger, RemovableTrigger } from './automation-bot-helper'
 
 export const encodeAaveTrailingStopLoss = (
   position: PositionLike,
   triggerData: DmaAaveTrailingStopLossTriggerData,
   latestPrice: DerivedPrices,
   currentTrigger: CurrentTriggerLike | undefined,
-): TriggerTransactions => {
+): TriggerTransactions & EncodedTriggers => {
   const abiParameters = parseAbiParameters(
     'address positionAddress, ' +
       'uint16 triggerType, ' +
@@ -81,9 +82,26 @@ export const encodeAaveTrailingStopLoss = (
       })
     : undefined
 
+  const addableTrigger: AddableTrigger = {
+    continuous: true,
+    currentId: currentTrigger?.id ?? 0n,
+    encodedTriggerData: encodedTriggerData,
+    currentTriggerData: currentTrigger?.triggerData ?? '0x0',
+    triggerType: triggerData.type,
+  }
+
+  const removableTrigger: RemovableTrigger | undefined = currentTrigger
+    ? {
+        currentId: currentTrigger.id,
+        currentData: currentTrigger.triggerData,
+      }
+    : undefined
+
   return {
     encodedTriggerData,
     upsertTrigger: encodedTrigger,
     removeTrigger,
+    addableTrigger,
+    removableTrigger,
   }
 }

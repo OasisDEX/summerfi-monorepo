@@ -6,7 +6,8 @@
     "paths": {
       "~swap-service": ["./src/index.ts"],
       "~swap-service/*": ["./src/*"],
-      "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"]
+      "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
+      "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"]
     }
   },
   "include": ["src/**/*.ts"],
