@@ -1,4 +1,5 @@
-import { Simulation, SimulationType } from '../../../simulation'
+import { Simulation } from '~sdk-common/simulation/simulation'
+import { SimulationType } from '~sdk-common/simulation/enums'
 import { TransactionInfo } from './TransactionInfo'
 
 /**

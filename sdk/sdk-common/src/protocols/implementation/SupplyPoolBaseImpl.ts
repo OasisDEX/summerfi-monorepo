@@ -1,10 +1,10 @@
-import { Address } from '../../common/implementation/Address'
-import { Token } from '../../common/implementation/Token'
-import { SupplyPool } from '../interfaces/SupplyPool'
-import { PoolId, IProtocolId } from '../interfaces/IDs'
-
 import { PoolBaseImpl } from './PoolBaseImpl'
-import { PoolType } from '../interfaces/IPool'
+import { Address } from '~sdk-common/common/implementation/Address'
+import { Token } from '~sdk-common/common/implementation/Token'
+import { IProtocolId, PoolId } from "~sdk-common/protocols/interfaces/IDs"
+import { SupplyPool } from "~sdk-common/protocols/interfaces/SupplyPool"
+import { PoolType } from "~sdk-common/protocols/interfaces/IPool"
+
 
 export class SupplyPoolImpl extends PoolBaseImpl<PoolType.Supply> implements SupplyPool {
   public readonly supplyToken: Token
