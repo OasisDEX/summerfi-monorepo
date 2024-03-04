@@ -7,12 +7,14 @@ import {
   type ChainInfo,
 } from '@summerfi/sdk-common/common'
 import { subtractPercentage } from '@summerfi/sdk-common/utils'
-import { getSwapManager, SwapData, SwapProviderType } from '~swap-service'
+import { SwapProviderType } from '@summerfi/swap-common/enums'
+import { SwapData } from '@summerfi/swap-common/types'
+import { SwapService } from '~swap-service'
 
 describe('OneInch | SwapManager | Integration', () => {
   it.skip('should provide swap data', async () => {
     // SwapManager
-    const swapManager = getSwapManager()
+    const swapService = new SwapService()
 
     // ChainInfo
     const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -20,7 +22,7 @@ describe('OneInch | SwapManager | Integration', () => {
     // Tokens
     const WETH = await Token.createFrom({
       chainInfo,
-      address: Address.createFrom({ hexValue: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
+      address: Address.createFrom({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
       symbol: 'WETH',
       name: 'Wrapped Ether',
       decimals: 18,
@@ -28,7 +30,7 @@ describe('OneInch | SwapManager | Integration', () => {
 
     const DAI = await Token.createFrom({
       chainInfo,
-      address: Address.createFrom({ hexValue: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
+      address: Address.createFrom({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
       symbol: 'DAI',
       name: 'Dai Stablecoin',
       decimals: 18,
@@ -41,18 +43,17 @@ describe('OneInch | SwapManager | Integration', () => {
     })
 
     // Address
-    const recipient = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
+    const recipient = Address.createFrom({ value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266' })
 
     // Percentage
     const slippage: Percentage = Percentage.createFrom({ percentage: 2.0 })
 
-    const swapData: SwapData = await swapManager.getSwapData({
+    const swapData: SwapData = await swapService.getSwapData({
       chainInfo,
       fromAmount,
       toToken: DAI,
       recipient: recipient,
       slippage,
-      forceUseProvider: SwapProviderType.OneInch,
     })
 
     const minimumOutputAmount = subtractPercentage(fromAmount, slippage)

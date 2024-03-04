@@ -1,0 +1,1 @@
+export { encodeStrategy } from './EncodeStrategy'

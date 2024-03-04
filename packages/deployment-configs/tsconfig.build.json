@@ -1,0 +1,13 @@
+{
+  // by using a separate tsconfig for build, we can set main tsconfig to
+  // include tests and use module paths in tests but build without tests
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "paths": {
+      "~deployment-configs": ["./src/index.ts"],
+      "~deployment-configs/*": ["./src/*"],
+      "~deployment-types/*": ["node_modules/@summerfi/deployment-types/src/*"]
+    }
+  }
+}

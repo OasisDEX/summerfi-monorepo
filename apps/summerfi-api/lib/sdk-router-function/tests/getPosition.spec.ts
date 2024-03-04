@@ -8,7 +8,7 @@ import { testAppRouter } from '~src/test-utils'
 describe('getPosition', () => {
   const sdk = makeSDK()
 
-  const wallet = Wallet.createFrom({ hexValue: zeroAddress })
+  const wallet = Wallet.createFrom({ value: zeroAddress })
   it('should get position by Id', async () => {
     const chain = await sdk.chains.getChain({
       chainInfo: ChainFamilyMap.Ethereum.Mainnet,

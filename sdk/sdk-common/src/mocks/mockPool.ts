@@ -16,7 +16,7 @@ export async function mockPool(params: {
   if (isLendingPoolParameters(params.poolParameters)) {
     return new LendingPoolImpl({
       poolId: { id: 'mock' },
-      protocolId: params.protocol.protocolId,
+      protocol: params.protocol.name,
       maxLTV: Percentage.createFrom({ percentage: 50.3 }),
       debtTokens: params.poolParameters.debtTokens,
       collateralTokens: params.poolParameters.collateralTokens,

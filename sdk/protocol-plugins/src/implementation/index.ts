@@ -1,0 +1,1 @@
+export { ProtocolPluginsRegistry } from './ProtocolPluginsRegistry'

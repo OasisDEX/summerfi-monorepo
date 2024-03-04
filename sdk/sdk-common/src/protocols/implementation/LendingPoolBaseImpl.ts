@@ -2,10 +2,10 @@ import { Token } from '~sdk-common/common/implementation/Token'
 import { PoolBaseImpl } from './PoolBaseImpl'
 import type { Percentage } from '~sdk-common/common/implementation/Percentage'
 import type { Address } from '~sdk-common/common/implementation/Address'
-import type { IProtocolId } from '~sdk-common/protocols/interfaces/IProtocolId'
 import type { LendingPool } from '~sdk-common/protocols/interfaces/LendingPool'
 import type { IPoolId } from '~sdk-common/protocols/interfaces/IPoolId'
 import { PoolType } from '~sdk-common/protocols/interfaces/PoolType'
+import { ProtocolName } from '~sdk-common/protocols/interfaces/ProtocolName'
 
 export class LendingPoolImpl extends PoolBaseImpl<PoolType.Lending> implements LendingPool {
   public readonly collateralTokens: Token[]
@@ -14,7 +14,7 @@ export class LendingPoolImpl extends PoolBaseImpl<PoolType.Lending> implements L
 
   constructor(params: {
     poolId: IPoolId
-    protocolId: IProtocolId
+    protocol: ProtocolName
     address?: Address
     TVL?: number
     maxLTV: Percentage
@@ -25,8 +25,6 @@ export class LendingPoolImpl extends PoolBaseImpl<PoolType.Lending> implements L
     super({
       ...params,
       type: PoolType.Lending,
-      debtToken: params.debtTokens[0],
-      collateralToken: params.collateralTokens[0],
     })
 
     this.collateralTokens = params.collateralTokens

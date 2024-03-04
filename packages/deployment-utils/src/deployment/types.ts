@@ -39,7 +39,7 @@ export type DeploymentInitParams = {
   indexDir?: string
 }
 
-export type DeploymentObject = {
+export type Deployment = {
   date: string
   timestamp: number
   provider: Provider
@@ -58,13 +58,15 @@ export type DeploymentObject = {
   }
 }
 
+export type DeploymentIndex = Record<string, Deployment>
+
 export type DeploymentParams = {
   options?: DeploymentOptions
   alias?: string // The deployed contract will be exported in the JSON file with this alias
   contract?: string // Path and name of the contract to be verified i.e.: contracts/Example.sol:ExampleContract
 }
 
-export type Deployment = {
+export type DeploymentObject = {
   contract: Contract
   name: string
   receipt: TransactionReceipt

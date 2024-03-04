@@ -8,7 +8,7 @@
     "e2e": "jest ./e2e --silent=false",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "tsc && esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap"
+    "build": "tsc -p tsconfig.build.json --noEmit && esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap"
   },
   "dependencies": {
     "@aws-lambda-powertools/logger": "^1.17.0",
@@ -16,8 +16,13 @@
     "@aws-lambda-powertools/tracer": "^1.17.0",
     "@summerfi/common": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
+    "@summerfi/core-contracts": "workspace:*",
+    "@summerfi/deployment-utils": "workspace:*",
     "@summerfi/serverless-shared": "workspace:*",
     "@trpc/server": "11.0.0-next-beta.264",
+    "@summerfi/order-planner-service": "workspace:*",
+    "@summerfi/swap-service": "workspace:*",
+    "@summerfi/swap-common": "workspace:*",
     "superjson": "^1.13.3",
     "zod": "^3.22.4"
   },

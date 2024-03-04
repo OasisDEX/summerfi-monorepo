@@ -1,9 +1,13 @@
-import { FlashloanProvider, Simulation, SimulationSteps } from '@summerfi/sdk-common/simulation'
+import {
+  FlashloanProvider,
+  Simulation,
+  SimulationSteps,
+  SimulationType,
+} from '@summerfi/sdk-common/simulation'
 import { getReferencedValue, makeStrategy } from '~swap-service/implementation/helpers'
 import { LendingPool } from '@summerfi/sdk-common/protocols'
 import { Simulator } from '~swap-service/implementation/simulator-engine'
 import { Token, TokenAmount, Position } from '@summerfi/sdk-common/common'
-import { SimulationType } from '@summerfi/sdk-common/orders'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 
 export const refinanceStrategy = makeStrategy([
@@ -165,7 +169,7 @@ export async function refinace(
     .run()
 
   const targetPosition = Object.values(simulation.positions).find(
-    (p) => p.pool.protocolId.id === args.targetPool.protocolId.id,
+    (p) => p.pool.protocol === args.targetPool.protocol,
   )
 
   if (!targetPosition) {

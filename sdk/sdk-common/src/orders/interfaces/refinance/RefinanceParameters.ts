@@ -11,3 +11,7 @@ export interface RefinanceParameters {
   targetPool: LendingPool
   slippage: Percentage
 }
+
+export function isRefinanceParameters(parameters: unknown): parameters is RefinanceParameters {
+  return typeof parameters === 'object' && parameters !== null && 'slippage' in parameters
+}

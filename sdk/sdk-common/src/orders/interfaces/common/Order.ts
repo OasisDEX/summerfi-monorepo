@@ -1,5 +1,4 @@
-import type { SimulationType } from '~sdk-common/orders'
-import type { Simulation } from '~sdk-common/simulation'
+import type { Simulation, SimulationType } from '~sdk-common/simulation'
 import { TransactionInfo } from './TransactionInfo'
 
 /**

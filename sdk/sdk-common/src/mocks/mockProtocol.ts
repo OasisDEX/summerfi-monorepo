@@ -3,19 +3,18 @@ import { mockPool } from './mockPool'
 import type { ChainInfo } from '~sdk-common/common/implementation/ChainInfo'
 import { ProtocolsRegistry } from '~sdk-common/protocols/adapters'
 import type { IPool } from '~sdk-common/protocols/interfaces/IPool'
-import type { IProtocolId } from '~sdk-common/protocols/interfaces/IProtocolId'
 import type { PoolParameters } from '~sdk-common/protocols/interfaces/PoolParameters'
 import type { Protocol } from '~sdk-common/protocols/interfaces/Protocol'
 import { ProtocolName } from '~sdk-common/protocols/interfaces/ProtocolName'
 import type { ProtocolParameters } from '~sdk-common/protocols/interfaces/ProtocolParameters'
 
 export class mockProtocolSpark implements Protocol {
-  public readonly protocolId: IProtocolId
+  public readonly name: ProtocolName
   private readonly chainInfo: ChainInfo
 
   public constructor(params: { chainInfo: ChainInfo }) {
     this.chainInfo = params.chainInfo
-    this.protocolId = { id: 'spark' }
+    this.name = ProtocolName.Spark
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */

@@ -9,6 +9,7 @@ import { RiskRatio } from '~sdk-common/common/implementation/RiskRatio'
 import { TokenAmount } from '~sdk-common/common/implementation/TokenAmount'
 import type { Wallet } from '~sdk-common/common/implementation/Wallet'
 import { PoolType } from '~sdk-common/protocols/interfaces/PoolType'
+import { ProtocolName } from '~sdk-common/protocols/interfaces/ProtocolName'
 
 export async function getMockPosition(params: {
   chain: Chain
@@ -34,7 +35,7 @@ export async function getMockPosition(params: {
     }),
     pool: {
       poolId: { id: 'testpool' },
-      protocolId: { id: 'testprotocol' },
+      protocol: ProtocolName.Maker,
       type: PoolType.Lending,
     },
   }

@@ -1,4 +1,15 @@
-import { Transaction } from 'viem'
+import { HexData } from '@summerfi/sdk-common/common/aliases'
+import { Address } from '~sdk-common/common/implementation/Address'
+
+/**
+ * @interface Transaction
+ * @description Low level transaction that can be sent to the blockchain
+ */
+export type Transaction = {
+  target: Address
+  calldata: HexData
+  value: string
+}
 
 /**
  * @interface TransactionInfo

@@ -1,5 +1,4 @@
-import { Transaction } from 'viem'
-import { TransactionInfo } from '~sdk-common/orders'
+import { Transaction, TransactionInfo } from '~sdk-common/orders'
 
 export class TransactionInfoBaseImpl implements TransactionInfo {
   public readonly transaction: Transaction

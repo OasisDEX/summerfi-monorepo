@@ -19,6 +19,7 @@ export type {
   ImportPair,
   Chain as Network,
   Provider,
+  DeploymentIndex,
 } from './types'
 export { DeploymentFlags, DirectoryFilterType, ProviderTypes, DeploymentChain } from './types'
 export {

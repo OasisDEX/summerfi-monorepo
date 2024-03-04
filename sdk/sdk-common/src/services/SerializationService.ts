@@ -27,5 +27,3 @@ export class SerializationService {
     return parse(v)
   }
 }
-
-console.log(SerializationService.name)

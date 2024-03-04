@@ -1,3 +1,4 @@
+import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '~sdk-common/services/SerializationService'
 
 interface IPercentageSerialized {
@@ -25,6 +26,11 @@ export class Percentage implements IPercentageSerialized {
 
   add(percentage: Percentage): Percentage {
     return Percentage.createFrom({ percentage: this.value + percentage.value })
+  }
+
+  toBaseUnit(params: { decimals: number }): string {
+    const factor = new BigNumber(10).pow(params.decimals)
+    return new BigNumber(this.value).multipliedBy(factor).toFixed(0).toString()
   }
 }
 

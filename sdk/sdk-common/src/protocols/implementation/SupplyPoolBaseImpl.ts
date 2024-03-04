@@ -2,16 +2,16 @@ import { PoolBaseImpl } from './PoolBaseImpl'
 import { Address } from '~sdk-common/common/implementation/Address'
 import { Token } from '~sdk-common/common/implementation/Token'
 import type { IPoolId } from '~sdk-common/protocols/interfaces/IPoolId'
-import type { IProtocolId } from '~sdk-common/protocols/interfaces/IProtocolId'
 import { PoolType } from '~sdk-common/protocols/interfaces/PoolType'
 import { SupplyPool } from '~sdk-common/protocols/interfaces/SupplyPool'
+import { ProtocolName } from '~sdk-common/protocols/interfaces/ProtocolName'
 
 export class SupplyPoolImpl extends PoolBaseImpl<PoolType.Supply> implements SupplyPool {
   public readonly supplyToken: Token
 
   constructor(params: {
     poolId: IPoolId
-    protocolId: IProtocolId
+    protocol: ProtocolName
     address?: Address
     TVL?: number
     supplyToken: Token
@@ -20,8 +20,6 @@ export class SupplyPoolImpl extends PoolBaseImpl<PoolType.Supply> implements Sup
     super({
       ...params,
       type: PoolType.Supply,
-      debtToken: params.supplyToken,
-      collateralToken: params.supplyToken,
     })
 
     this.supplyToken = params.supplyToken

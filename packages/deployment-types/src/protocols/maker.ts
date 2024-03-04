@@ -1,4 +1,12 @@
-import { MiscDependencyConfigEntry } from '~deployment-types'
+import { MiscDependencyConfigEntry } from '~deployment-types/dependencies/dependency'
+
+export type MakerActionNames =
+  | 'MakerDeposit'
+  | 'MakerWithdraw'
+  | 'MakerPayback'
+  | 'MakerGenerate'
+  | 'MakerGive'
+  | 'MakerOpenVault'
 
 export type MakerContractNames =
   | 'FlashMintModule'
@@ -115,13 +123,10 @@ export type MakerProtocolPips =
   | 'PIP_RETH'
   | 'PIP_GNO'
 
-export type MakerProtocolCommonConfig = Record<MakerContractNames, MiscDependencyConfigEntry>
-export type MakerProtocolJoinConfig = Record<MakerProtocolJoins, MiscDependencyConfigEntry>
-export type MakerProtocolPipConfig = Record<MakerProtocolPips, MiscDependencyConfigEntry>
-
-export type MakerProtocolConfig = MakerProtocolCommonConfig &
-  MakerProtocolJoinConfig &
-  MakerProtocolPipConfig
+export type MakerProtocolConfig = Record<
+  MakerContractNames & MakerProtocolJoins & MakerProtocolPips,
+  MiscDependencyConfigEntry
+>
 
 export type MakerConfig = {
   dependencies: MakerProtocolConfig

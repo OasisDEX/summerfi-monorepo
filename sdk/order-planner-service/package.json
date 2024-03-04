@@ -1,0 +1,34 @@
+{
+  "name": "@summerfi/order-planner-service",
+  "version": "0.0.1",
+  "exports": {
+    "./*": {
+      "import": "./src/*/index.ts",
+      "types": "./src/*/index.d.ts"
+    }
+  },
+  "scripts": {
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "test": "jest --passWithNoTests",
+    "testw": "jest --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "build": "tsc -b tsconfig.build.json"
+  },
+  "dependencies": {
+    "@summerfi/sdk-common": "workspace:*",
+    "@summerfi/order-planner-common": "workspace:*",
+    "@summerfi/swap-common": "workspace:*",
+    "@summerfi/protocol-plugins": "workspace:*",
+    "@summerfi/core-contracts": "workspace:*",
+    "@summerfi/deployment-utils": "workspace:*",
+    "@summerfi/deployment-types": "workspace:*"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/jest-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "viem": "^2.7.8"
+  }
+}

@@ -5,8 +5,8 @@
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": "./src/index.ts",
+      "types": "./src/index.d.ts"
     }
   },
   "scripts": {
@@ -14,12 +14,14 @@
     "watch": "tsc -w",
     "test": "jest --setupFiles dotenv/config --silent=false",
     "testw": "jest --watch",
-    "build_broken": "tsc -b -v tsconfig.build.json",
+    "build": "tsc -b tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@summerfi/sdk-common": "workspace:*",
+    "@summerfi/swap-common": "workspace:*",
+    "@summerfi/common": "workspace:*",
     "@types/node-fetch": "^2.6.11",
     "node-fetch": "^2.6.7",
     "viem": "^2.7.9"
