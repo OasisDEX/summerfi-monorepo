@@ -7,7 +7,7 @@
     "paths": {
       "~core-contracts": ["./src/index.ts"],
       "~core-contracts/*": ["./src/*"],
-      "~deployment-types": ["../deployment-types/src/index.ts"]
+      "~deployment-types/*": ["node_modules/@summerfi/deployment-types/src/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.json"]

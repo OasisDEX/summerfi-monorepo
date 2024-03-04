@@ -1,4 +1,4 @@
-import { MiscDependencyConfigEntry } from '~deployment-types'
+import { MiscDependencyConfigEntry } from '~deployment-types/dependencies/dependency'
 
 export type MakerActionNames =
   | 'MakerDeposit'

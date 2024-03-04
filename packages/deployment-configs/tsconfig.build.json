@@ -7,7 +7,7 @@
     "paths": {
       "~deployment-configs": ["./src/index.ts"],
       "~deployment-configs/*": ["./src/*"],
-      "~deployment-types": ["../deployment-types/src/index.ts"]
+      "~deployment-types/*": ["node_modules/@summerfi/deployment-types/src/*"]
     }
   }
 }

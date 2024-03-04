@@ -6,8 +6,8 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "build_broken": "tsc -b tsconfig.json",
-    "lint_broken": "eslint .",
+    "build": "tsc -b tsconfig.json",
+    "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "devDependencies": {

@@ -14,7 +14,7 @@
       "~sdk-common": ["node_modules/@summerfi/sdk-common/src/index.ts"],
       "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
       "~swap-common/*": ["node_modules/@summerfi/swap-common/src/*"],
-      "~deployment-types": ["node_modules/@summerfi/deployment-types/src/index.ts"]
+      "~deployment-types/*": ["node_modules/@summerfi/deployment-types/src/*"]
     }
   }
 }

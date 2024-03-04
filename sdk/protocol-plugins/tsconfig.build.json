@@ -7,11 +7,11 @@
     "paths": {
       "~protocolplugins": ["src/index.ts"],
       "~protocolplugins/*": ["./src/*"],
-      "~orderplannercommon": ["../order-planner-common/src/index.ts"],
-      "~orderplannercommon/*": ["../order-planner-common/src/*"],
-      "~sdk-common/*": ["../sdk-common/src/*"],
-      "~swap-common/*": ["../swap-common/src/*"],
-      "~deployment-types": ["../../packages/deployment-types/src/index.ts"]
+      "~orderplannercommon": ["node_modules/@summerfi/order-planner-common/src/index.ts"],
+      "~orderplannercommon/*": ["node_modules/@summerfi/order-planner-common/src/*"],
+      "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
+      "~deployment-types/*": ["node_modules/@summerfi/deployment-types/src/*"],
+      "~swap-common/*": ["../swap-common/src/*"]
     }
   }
 }

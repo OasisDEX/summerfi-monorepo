@@ -19,7 +19,7 @@ import {
   DirectoryFilterType,
 } from './types'
 import { verifyContract } from './verify-contract'
-import { toCamelCase } from '../utils'
+import { toCamelCase } from '~deployment-utils/utils/camelCase'
 import { viem } from 'hardhat'
 import { Contract, DeploymentTransaction, TransactionReceipt, WalletClient } from './viem-types'
 import {

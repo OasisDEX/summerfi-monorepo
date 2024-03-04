@@ -1,4 +1,4 @@
-import { ProtocolConfigActionEntry, ProtocolConfigDependencyEntry } from './protocols'
+import { ProtocolConfigActionEntry, ProtocolConfigDependencyEntry } from './entries'
 
 export type AaveV3ContractNames = 'PoolDataProvider' | 'AavePool' | 'Oracle' | 'AaveL2Encoder'
 

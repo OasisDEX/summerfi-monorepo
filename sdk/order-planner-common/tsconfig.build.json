@@ -8,7 +8,7 @@
       "~sdk-common/*": ["../sdk-common/src/*"],
       "~orderplannercommon/*": ["src/*"],
       "~swap-common/*": ["../swap-common/src/*"],
-      "~deployment-types": ["../../packages/deployment-types/src/index.ts"]
+      "~deployment-types/*": ["node_modules/@summerfi/deployment-types/src/*"]
     }
   }
 }
