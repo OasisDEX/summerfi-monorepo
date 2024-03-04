@@ -49,9 +49,9 @@ export function subtractBalance(
     [amount.token.address.hexValue]: balance[amount.token.address.hexValue].subtract(amount),
   }
 }
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function tail<T extends readonly any[]>(arr: T): Tail<T> {
   const [, ...rest] = arr
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   return rest as any as Tail<T>
 }
