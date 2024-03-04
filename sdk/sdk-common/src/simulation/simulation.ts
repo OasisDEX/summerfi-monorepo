@@ -11,6 +11,6 @@ export interface Simulation<T extends SimulationType> {
   sourcePosition?: Position // TODO figure what do to when opening position (empty position or optional)
   targetPosition: Position
   steps: Steps[]
-  // TODO: 
+  // TODO:
   // OPEN QUESTION: where errors and warnings and info messages?
 }
