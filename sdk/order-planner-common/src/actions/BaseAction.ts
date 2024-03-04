@@ -1,4 +1,3 @@
-import { ActionCall } from '~orderplannercommon/actions'
 import {
   parseAbi,
   encodeFunctionData,
@@ -7,7 +6,7 @@ import {
   keccak256,
   toBytes,
 } from 'viem'
-import { ActionConfig } from './Types'
+import { ActionConfig, ActionCall } from './Types'
 
 /**
  * @class Base class for all actions. It provides the basic functionality to encode the call to the action and provide

@@ -25,7 +25,7 @@ export function getReferencedValue<T>(referencableValue: ReferenceableField<T>):
 }
 
 export function getTokenBalance(token: Token, balances: Record<string, TokenAmount>): TokenAmount {
-  return balances[token.address.hexValue] || TokenAmount.createFrom({ amount: '0', token })
+  return balances[token.address.value] || TokenAmount.createFrom({ amount: '0', token })
 }
 
 export function addBalance(
@@ -34,8 +34,8 @@ export function addBalance(
 ): Record<string, TokenAmount> {
   return {
     ...balance,
-    [amount.token.address.hexValue]: balance[amount.token.address.hexValue]
-      ? balance[amount.token.address.hexValue].add(amount)
+    [amount.token.address.value]: balance[amount.token.address.value]
+      ? balance[amount.token.address.value].add(amount)
       : amount,
   }
 }
@@ -46,7 +46,7 @@ export function subtractBalance(
 ): Record<string, TokenAmount> {
   return {
     ...balance,
-    [amount.token.address.hexValue]: balance[amount.token.address.hexValue].subtract(amount),
+    [amount.token.address.value]: balance[amount.token.address.value].subtract(amount),
   }
 }
 

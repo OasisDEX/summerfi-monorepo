@@ -1,6 +1,6 @@
 import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
-import { Address, TokenAmount } from '@summerfi/sdk-common/common/implementation'
-import { Pool } from '@summerfi/sdk-common/protocols'
+import { Address, TokenAmount } from '@summerfi/sdk-common/common'
+import { IPool } from '@summerfi/sdk-common/protocols'
 
 export class MakerPaybackAction extends BaseAction {
   public readonly config = {
@@ -12,7 +12,7 @@ export class MakerPaybackAction extends BaseAction {
   } as const
 
   public encodeCall(params: {
-    pool: Pool
+    pool: IPool
     userAddress: Address
     amount: TokenAmount
     paybackAll: boolean

@@ -1,5 +1,9 @@
 import { ActionNames } from '@summerfi/deployment-types'
-import { ActionInputStorageNames, ActionOutputStorageNames } from '~orderplannercommon/context'
+
+export type ActionStorageName = string
+
+export type ActionInputStorageNames = ReadonlyArray<ActionStorageName>
+export type ActionOutputStorageNames = ReadonlyArray<ActionStorageName>
 
 export type ActionVersion = number
 

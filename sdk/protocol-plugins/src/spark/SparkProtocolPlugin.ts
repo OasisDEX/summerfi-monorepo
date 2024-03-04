@@ -1,5 +1,5 @@
 import { ActionBuilder, ActionBuildersMap } from '@summerfi/order-planner-common/builders'
-import { SimulationSteps, Steps } from '@summerfi/sdk-common/orders'
+import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { IProtocolPlugin } from '~protocolplugins/interfaces'
 import { SparkDepositBorrowActionBuilder } from './builders'
 import { Maybe } from '@summerfi/sdk-common/utils'
@@ -13,7 +13,7 @@ export class SparkProtocolPlugin implements IProtocolPlugin {
     [SimulationSteps.DepositBorrow]: SparkDepositBorrowActionBuilder,
   }
 
-  getActionBuilder<T extends Steps>(step: T): Maybe<ActionBuilder<T>> {
+  getActionBuilder<T extends steps.Steps>(step: T): Maybe<ActionBuilder<T>> {
     return this.StepBuilders[step.type] as ActionBuilder<T>
   }
 }

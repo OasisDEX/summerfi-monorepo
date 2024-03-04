@@ -1,4 +1,4 @@
-import { FlashloanProvider, FlashloanStep, PaybackFlashloan } from '@summerfi/sdk-common/orders'
+import { FlashloanProvider, steps } from '@summerfi/sdk-common/simulation'
 import { ActionBuilder, ActionBuilderParams } from '@summerfi/order-planner-common/builders'
 import { FlashloanAction } from '~orderplannerservice/actions'
 import { ActionNames } from '@summerfi/deployment-types'
@@ -11,11 +11,11 @@ export const FlashloanProviderMap: Record<FlashloanProvider, number> = {
   [FlashloanProvider.Balancer]: 1,
 }
 
-export const PaybackFlashloanActionBuilder: ActionBuilder<PaybackFlashloan> = async (
-  params: ActionBuilderParams<PaybackFlashloan>,
+export const PaybackFlashloanActionBuilder: ActionBuilder<steps.RepayFlashloan> = async (
+  params: ActionBuilderParams<steps.RepayFlashloan>,
 ): Promise<void> => {
   // End the current subcontext and pass the subcontext calls to the flashloan action
-  const { callsBatch, customData } = params.context.endSubContext<FlashloanStep['inputs']>()
+  const { callsBatch, customData } = params.context.endSubContext<steps.FlashloanStep['inputs']>()
   if (!customData) {
     throw new Error('RepayFlashloanBuilder: customData is undefined')
   }

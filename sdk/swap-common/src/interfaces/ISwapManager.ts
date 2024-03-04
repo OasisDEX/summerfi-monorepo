@@ -4,7 +4,7 @@ import type {
   Percentage,
   Token,
   Address,
-} from '@summerfi/sdk-common/common/implementation'
+} from '@summerfi/sdk-common/common'
 import { SwapData } from '~swap-common/types'
 
 /**

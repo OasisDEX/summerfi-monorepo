@@ -1,4 +1,4 @@
-import { Steps } from '@summerfi/sdk-common/orders'
+import { steps } from '@summerfi/sdk-common/simulation'
 import { Maybe } from '@summerfi/sdk-common/utils'
 import { BaseAction } from '~orderplannercommon/actions'
 import { StorageInputsMapType, StorageOutputsMapType } from './Types'
@@ -10,7 +10,7 @@ export class ExecutionStorageManager {
   // Slot number starts from 1 because the contract will subtract 1 from the slot number
   private currentSlot: number = 1
 
-  public addStorageMap<Step extends Steps, Action extends BaseAction>(params: {
+  public addStorageMap<Step extends steps.Steps, Action extends BaseAction>(params: {
     step: Step
     action: Action
     connectedInputs: Partial<StorageInputsMapType<Step, Action>>
@@ -18,7 +18,8 @@ export class ExecutionStorageManager {
   }): void {
     const baseSlot = this.currentSlot
 
-    for (const stepOutputName of Object.keys(params.step.outputs)) {
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    for (const stepOutputName of Object.keys(params.step.outputs as any)) {
       if (params.connectedOutputs !== undefined) {
         const actionOutputName =
           params.connectedOutputs[stepOutputName as keyof StorageOutputsMapType<Step, Action>]

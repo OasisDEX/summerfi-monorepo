@@ -1,4 +1,5 @@
-import { Order, Simulation, SimulationType, Steps } from '@summerfi/sdk-common/orders'
+import { Order } from '@summerfi/sdk-common/orders'
+import { Simulation, SimulationType, steps } from '@summerfi/sdk-common/simulation'
 import { Maybe } from '@summerfi/sdk-common/utils'
 import { IOrderPlanner } from '~orderplannercommon/interfaces/IOrderPlanner'
 import { encodeStrategy } from '~orderplannercommon/utils'
@@ -7,7 +8,7 @@ import { ActionBuilder, ActionBuildersMap } from '~orderplannercommon/builders'
 import { ActionCall } from '~orderplannercommon/actions'
 import { IPositionsManager, User } from '@summerfi/sdk-common/client'
 import { Deployment } from '@summerfi/deployment-utils'
-import { Address } from '@summerfi/sdk-common/common/implementation'
+import { Address } from '@summerfi/sdk-common/common'
 import { HexData } from '@summerfi/sdk-common/common/aliases'
 import { ISwapService } from '@summerfi/swap-common/interfaces'
 
@@ -55,7 +56,7 @@ export class OrderPlanner implements IOrderPlanner {
     return this._generateOrder(simulation, callsBatch, deployment)
   }
 
-  private getActionBuilder<T extends Steps>(
+  private getActionBuilder<T extends steps.Steps>(
     actionBuildersMap: ActionBuildersMap,
     step: T,
   ): Maybe<ActionBuilder<T>> {

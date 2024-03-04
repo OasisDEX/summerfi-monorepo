@@ -1,8 +1,8 @@
 import { z } from 'zod'
 import { publicProcedure } from '~src/trpc'
-import type { Order, Simulation, SimulationType } from '@summerfi/sdk-common/orders'
-import type { User } from '@summerfi/sdk-common/client'
-import type { IPositionsManager } from '@summerfi/sdk-common/client'
+import type { Order } from '@summerfi/sdk-common/orders'
+import type { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import type { User, IPositionsManager } from '@summerfi/sdk-common/client'
 import { Maybe } from '@summerfi/sdk-common/utils'
 
 export const ordersHandler = publicProcedure

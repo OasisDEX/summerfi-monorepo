@@ -1,12 +1,6 @@
 import { z } from 'zod'
 import { publicProcedure } from '~src/trpc'
-import {
-  ChainInfo,
-  Token,
-  TokenAmount,
-  Address,
-  Percentage,
-} from '@summerfi/sdk-common/common/implementation'
+import { ChainInfo, Token, TokenAmount, Address, Percentage } from '@summerfi/sdk-common/common'
 import { SwapService } from '@summerfi/swap-service'
 import { SwapData } from '@summerfi/swap-common/types'
 

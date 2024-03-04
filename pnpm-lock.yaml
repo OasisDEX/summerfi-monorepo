@@ -761,6 +761,9 @@ importers:
 
   sdk/sdk-common:
     dependencies:
+      '@summerfi/common':
+        specifier: workspace:*
+        version: link:../../packages/common
       bignumber.js:
         specifier: 9.0.1
         version: 9.0.1
@@ -771,9 +774,6 @@ importers:
         specifier: ^2.2.0
         version: 2.7.9(typescript@5.3.3)
     devDependencies:
-      '@summerfi/common':
-        specifier: workspace:*
-        version: link:../../packages/common
       '@summerfi/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
@@ -836,6 +836,9 @@ importers:
 
   sdk/swap-service:
     dependencies:
+      '@summerfi/common':
+        specifier: workspace:*
+        version: link:../../packages/common
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common

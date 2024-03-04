@@ -1,15 +1,18 @@
-import { Maybe } from '~sdk-common/utils'
-import { Order } from '~sdk-common/orders'
-import { getMockOrder, getMockPosition } from '~sdk-common/mocks'
+import { Maybe } from '~sdk-common/utils/Maybe'
+import { Order } from '~sdk-common/orders/interfaces/common/Order'
+import { getMockOrder } from '~sdk-common/mocks/mockOrder'
+import { getMockPosition } from '~sdk-common/mocks/mockPosition'
 import type { Chain } from '~sdk-common/client/implementation/Chain'
 import type { IUser } from '~sdk-common/client/interfaces/IUser'
-import { Simulation, SimulationType } from '~sdk-common/simulation'
+import { Simulation } from '~sdk-common/simulation/simulation'
+import { SimulationType } from '~sdk-common/simulation/enums'
 import type { Position } from '~sdk-common/common/implementation/Position'
 import type { PositionId } from '~sdk-common/common/implementation/PositionId'
 import type { Wallet } from '~sdk-common/common/implementation/Wallet'
 import type { Protocol } from '~sdk-common/protocols/interfaces/Protocol'
 import { Address } from '~sdk-common/common/implementation/Address'
 import { zeroAddress } from '@summerfi/common'
+
 export class User implements IUser {
   public readonly wallet: Wallet
   public readonly chain: Chain

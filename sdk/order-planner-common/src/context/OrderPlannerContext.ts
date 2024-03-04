@@ -1,7 +1,7 @@
 import { BaseAction, ActionCallBatch } from '~orderplannercommon/actions'
 import { ActionCallsStack } from './ActionCallsStack'
 import { ExecutionStorageManager } from './ExecutionStorageManager'
-import { Steps, isValueReference } from '@summerfi/sdk-common/orders'
+import { isValueReference, steps } from '@summerfi/sdk-common/simulation'
 import { Maybe } from '@summerfi/sdk-common/utils'
 import { StorageInputsMapType, StorageOutputsMapType } from './Types'
 
@@ -9,7 +9,7 @@ export class OrderPlannerContext {
   private _calls: ActionCallsStack = new ActionCallsStack()
   private _storage: ExecutionStorageManager = new ExecutionStorageManager()
 
-  public addActionCall<Step extends Steps, Action extends BaseAction>(params: {
+  public addActionCall<Step extends steps.Steps, Action extends BaseAction>(params: {
     step: Step
     action: Action
     arguments: Parameters<Action['encodeCall']>[0]
@@ -46,7 +46,7 @@ export class OrderPlannerContext {
     return this._calls.levels
   }
 
-  private _resolveParamsMapping<Step extends Steps, Action extends BaseAction>(params: {
+  private _resolveParamsMapping<Step extends steps.Steps, Action extends BaseAction>(params: {
     action: Action
     step: Step
     connectedInputs: Partial<StorageInputsMapType<Step, Action>>

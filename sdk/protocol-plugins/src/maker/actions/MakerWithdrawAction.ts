@@ -1,6 +1,6 @@
 import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
-import { Address, TokenAmount } from '@summerfi/sdk-common/common/implementation'
-import { Pool } from '@summerfi/sdk-common/protocols'
+import { Address, TokenAmount } from '@summerfi/sdk-common/common'
+import { IPool } from '@summerfi/sdk-common/protocols'
 
 export class MakerWithdrawAction extends BaseAction {
   public readonly config = {
@@ -11,7 +11,11 @@ export class MakerWithdrawAction extends BaseAction {
     storageOutputs: ['amountWithdrawn'],
   } as const
 
-  public encodeCall(params: { pool: Pool; userAddress: Address; amount: TokenAmount }): ActionCall {
+  public encodeCall(params: {
+    pool: IPool
+    userAddress: Address
+    amount: TokenAmount
+  }): ActionCall {
     // TODO: get the join address from the protocol
 
     return this._encodeCall([

@@ -1,5 +1,6 @@
 export type * as steps from './steps'
 export * from './enums'
-export type * from './valueReference'
+export type { ValueReference, ReferenceableField } from './valueReference'
+export { isValueReference, getValueFromReference } from './valueReference'
 export type * from './simulation'
 export type * from './simulationStrategy'

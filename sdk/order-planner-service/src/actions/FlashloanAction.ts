@@ -1,5 +1,5 @@
 import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
-import { TokenAmount } from '@summerfi/sdk-common/common/implementation'
+import { TokenAmount } from '@summerfi/sdk-common/common'
 
 // Local type as optional actions are not supported anymore in the new executor
 type OptionalActionCall = ActionCall & {

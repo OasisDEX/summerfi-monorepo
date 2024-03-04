@@ -1,18 +1,15 @@
-import { PaybackWithdrawStep } from '@summerfi/sdk-common/orders'
+import { getValueFromReference, steps } from '@summerfi/sdk-common/simulation'
 import { ActionBuilder } from '@summerfi/order-planner-common/builders'
 import { ActionNames } from '@summerfi/deployment-types'
-import { MakerPaybackAction, MakerWithdrawAction } from '~protocolplugins/maker'
+import { MakerPaybackAction } from '~protocolplugins/maker/actions/MakerPaybackAction'
+import { MakerWithdrawAction } from '~protocolplugins/maker/actions/MakerWithdrawAction'
 
 export const MakerPaybackWithdrawActionList: ActionNames[] = ['MakerPayback', 'MakerWithdraw']
 
-export const MakerPaybackWithdrawActionBuilder: ActionBuilder<PaybackWithdrawStep> = async (
+export const MakerPaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWithdrawStep> = async (
   params,
 ): Promise<void> => {
   const { context, user, step } = params
-
-  const debtAmountBN = step.inputs.position.debtAmount.toBN()
-  const paybackAmountBN = step.inputs.paybackAmount.toBN()
-  const paybackAll: boolean = paybackAmountBN.gte(debtAmountBN)
 
   context.addActionCall({
     step: params.step,
@@ -20,8 +17,8 @@ export const MakerPaybackWithdrawActionBuilder: ActionBuilder<PaybackWithdrawSte
     arguments: {
       pool: step.inputs.position.pool,
       userAddress: user.wallet.address,
-      amount: step.inputs.paybackAmount,
-      paybackAll: paybackAll,
+      amount: getValueFromReference(step.inputs.paybackAmount),
+      paybackAll: true, // TODO: we cannot always calculate this value because debtAmount and paybackAmount are references
     },
     connectedInputs: {},
     connectedOutputs: {
@@ -35,7 +32,7 @@ export const MakerPaybackWithdrawActionBuilder: ActionBuilder<PaybackWithdrawSte
     arguments: {
       pool: step.inputs.position.pool,
       userAddress: user.wallet.address,
-      amount: step.inputs.withdrawAmount,
+      amount: getValueFromReference(step.inputs.withdrawAmount),
     },
     connectedInputs: {},
     connectedOutputs: {

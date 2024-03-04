@@ -1,5 +1,5 @@
 import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
-import { Percentage, TokenAmount } from '@summerfi/sdk-common/common/implementation'
+import { Percentage, TokenAmount } from '@summerfi/sdk-common/common'
 import { HexData } from '@summerfi/sdk-common/common/aliases'
 
 export class SwapAction extends BaseAction {

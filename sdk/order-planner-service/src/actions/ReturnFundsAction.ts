@@ -1,5 +1,5 @@
 import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
-import { Token } from '@summerfi/sdk-common/common/implementation'
+import { Token } from '@summerfi/sdk-common/common'
 
 export class ReturnFundsAction extends BaseAction {
   public readonly config = {

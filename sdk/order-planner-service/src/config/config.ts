@@ -1,4 +1,4 @@
-import { SimulationSteps } from '@summerfi/sdk-common/orders'
+import { SimulationSteps } from '@summerfi/sdk-common/simulation'
 import { ActionBuildersMap } from '@summerfi/order-planner-common/builders'
 import {
   PullTokenActionBuilder,

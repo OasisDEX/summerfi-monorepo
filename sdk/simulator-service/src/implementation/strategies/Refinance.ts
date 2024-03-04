@@ -165,7 +165,7 @@ export async function refinace(
     .run()
 
   const targetPosition = Object.values(simulation.positions).find(
-    (p) => p.pool.protocolId.id === args.targetPool.protocolId.id,
+    (p) => p.pool.protocol === args.targetPool.protocol,
   )
 
   if (!targetPosition) {
