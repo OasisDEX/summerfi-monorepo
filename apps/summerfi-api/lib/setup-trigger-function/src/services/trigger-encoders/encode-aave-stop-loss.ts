@@ -1,4 +1,4 @@
-import { CurrentTriggerLike, TriggerTransactions } from './types'
+import { CurrentTriggerLike, EncodedTriggers, TriggerTransactions } from './types'
 import {
   bytesToHex,
   encodeAbiParameters,
@@ -11,12 +11,13 @@ import { DmaAaveStopLossTriggerData, PositionLike } from '~types'
 import { TriggerType } from '@oasisdex/automation'
 import { getMaxCoverage } from './get-max-coverage'
 import { OPERATION_NAMES } from '@oasisdex/dma-library'
+import { AddableTrigger, RemovableTrigger } from './automation-bot-helper'
 
 export const encodeAaveStopLoss = (
   position: PositionLike,
   triggerData: DmaAaveStopLossTriggerData,
   currentTrigger: CurrentTriggerLike | undefined,
-): TriggerTransactions => {
+): TriggerTransactions & EncodedTriggers => {
   const abiParameters = parseAbiParameters(
     'address positionAddress, ' +
       'uint16 triggerType, ' +
@@ -77,9 +78,26 @@ export const encodeAaveStopLoss = (
       })
     : undefined
 
+  const addableTrigger: AddableTrigger = {
+    continuous: true,
+    currentId: currentTrigger?.id ?? 0n,
+    encodedTriggerData: encodedTriggerData,
+    currentTriggerData: currentTrigger?.triggerData ?? '0x0',
+    triggerType: triggerData.type,
+  }
+
+  const removableTrigger: RemovableTrigger | undefined = currentTrigger
+    ? {
+        currentId: currentTrigger.id,
+        currentData: currentTrigger.triggerData,
+      }
+    : undefined
+
   return {
     encodedTriggerData,
     upsertTrigger: encodedTrigger,
     removeTrigger,
+    addableTrigger,
+    removableTrigger,
   }
 }
