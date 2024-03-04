@@ -1,6 +1,6 @@
 import { Position, Token, TokenAmount } from '~sdk-common/common/implementation'
 import type { FlashloanProvider, SimulationSteps } from './enums'
-import type { ReferencableField, ValueReference } from './valueReference'
+import type { ReferenceableField, ValueReference } from './valueReference'
 
 export interface Step<T extends SimulationSteps, I, O = undefined, N extends string = string> {
   type: T
@@ -20,14 +20,14 @@ export interface FlashloanStep
   > {}
 
 export interface PullTokenStep
-  extends Step<SimulationSteps.PullToken, { amount: ReferencableField<TokenAmount> }> {}
+  extends Step<SimulationSteps.PullToken, { amount: ReferenceableField<TokenAmount> }> {}
 
 export interface DepositBorrowStep
   extends Step<
     SimulationSteps.DepositBorrow,
     {
-      depositAmount: ReferencableField<TokenAmount>
-      borrowAmount: ReferencableField<TokenAmount>
+      depositAmount: ReferenceableField<TokenAmount>
+      borrowAmount: ReferenceableField<TokenAmount>
       position: Position
       additionalDeposit?: ValueReference<TokenAmount>
     },
@@ -41,8 +41,8 @@ export interface PaybackWithdrawStep
   extends Step<
     SimulationSteps.PaybackWithdraw,
     {
-      paybackAmount: ReferencableField<TokenAmount>
-      withdrawAmount: ReferencableField<TokenAmount>
+      paybackAmount: ReferenceableField<TokenAmount>
+      withdrawAmount: ReferenceableField<TokenAmount>
       position: Position
     },
     {

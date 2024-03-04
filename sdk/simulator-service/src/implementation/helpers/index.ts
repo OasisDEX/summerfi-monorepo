@@ -1,6 +1,6 @@
 import { TokenAmount, type Token } from '@summerfi/sdk-common/common/implementation'
 import type {
-  ReferencableField,
+  ReferenceableField,
   SimulationStrategy,
   ValueReference,
 } from '@summerfi/sdk-common/simulation'
@@ -10,15 +10,15 @@ export function makeStrategy<T extends SimulationStrategy>(strategy: T): T {
   return strategy
 }
 
-export function isReference<T>(value: ReferencableField<T>): value is ValueReference<T> {
+export function isValueReference<T>(value: ReferenceableField<T>): value is ValueReference<T> {
   return (
     (value as ValueReference<T>).path !== undefined &&
     (value as ValueReference<T>).estimatedValue !== undefined
   )
 }
 
-export function getReferencedValue<T>(referencableValue: ReferencableField<T>): T {
-  if (isReference(referencableValue)) {
+export function getReferencedValue<T>(referencableValue: ReferenceableField<T>): T {
+  if (isValueReference(referencableValue)) {
     return referencableValue.estimatedValue
   }
   return referencableValue
@@ -48,10 +48,6 @@ export function subtractBalance(
     ...balance,
     [amount.token.address.hexValue]: balance[amount.token.address.hexValue].subtract(amount),
   }
-}
-
-export function switchCheck(_a: never): never {
-  throw new Error('Run out of cases')
 }
 
 export function tail<T extends readonly any[]>(arr: T): Tail<T> {
