@@ -39,6 +39,7 @@ export const refinanceStrategy = makeStrategy([
     },
 ])
 
+// TODO move those interfaces to more appropriate place
 interface Quote {
     fromTokenAmount: TokenAmount
     toTokenAmount: TokenAmount
@@ -49,6 +50,7 @@ interface Quote {
 interface GetQuote {
     (args: { from: TokenAmount; to: Token; slippage: number; fee: number }): Promise<Quote>
 }
+// STOP TODO
 
 export interface RefinanceParameters {
     position: Position
