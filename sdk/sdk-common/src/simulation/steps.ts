@@ -1,6 +1,8 @@
-import { Position, Token, TokenAmount } from '~sdk-common/common/implementation'
+import type { Position } from '~sdk-common/common/implementation/Position'
+import type { TokenAmount } from '~sdk-common/common/implementation/TokenAmount'
 import type { FlashloanProvider, SimulationSteps } from './enums'
 import type { ReferenceableField, ValueReference } from './valueReference'
+import type { Token } from '~sdk-common/common/implementation/Token'
 
 export interface Step<T extends SimulationSteps, I, O = undefined, N extends string = string> {
   type: T

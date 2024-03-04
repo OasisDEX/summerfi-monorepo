@@ -1,8 +1,8 @@
 import { zeroAddress } from '@summerfi/common'
-import { ChainFamilyMap, type IChainsManager } from '@summerfi/sdk-common/client'
-import { makeSDK, type Chain } from '@summerfi/sdk-common/client/implementation'
-import { Wallet, type PositionId } from '@summerfi/sdk-common/common/implementation'
-import type { Maybe } from '@summerfi/sdk-common/utils'
+import { ChainFamilyMap, makeSDK } from '@summerfi/sdk-common/client'
+import type { PositionId } from '@summerfi/sdk-common/common/implementation/PositionId'
+import { Wallet } from '@summerfi/sdk-common/common/implementation/Wallet'
+
 import { testAppRouter } from '~src/test-utils'
 
 describe('getPosition', () => {
@@ -10,7 +10,7 @@ describe('getPosition', () => {
 
   const wallet = Wallet.createFrom({ hexValue: zeroAddress })
   it('should get position by Id', async () => {
-    const chain: Maybe<Chain> = await (sdk.chains as IChainsManager).getChain({
+    const chain = await sdk.chains.getChain({
       chainInfo: ChainFamilyMap.Ethereum.Mainnet,
     })
     expect(chain).toBeDefined()

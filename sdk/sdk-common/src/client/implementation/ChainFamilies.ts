@@ -5,7 +5,7 @@ import {
   BaseChainNames,
   ChainFamilyName,
 } from '~sdk-common/common/enums'
-import type { ChainInfo } from '~sdk-common/common/implementation'
+import type { ChainInfo } from '~sdk-common/common/implementation/ChainInfo'
 
 /**
  * Chain definition per family

@@ -1,5 +1,5 @@
-import { type Percentage } from '~sdk-common/common/implementation'
-import { SerializationService } from '~sdk-common/common/services'
+import { type Percentage } from '~sdk-common/common/implementation/Percentage'
+import { SerializationService } from '~sdk-common/services/SerializationService'
 
 interface IRiskRatioSerialized {
   ratio: Percentage

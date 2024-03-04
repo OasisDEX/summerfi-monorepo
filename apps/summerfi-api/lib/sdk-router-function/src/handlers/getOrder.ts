@@ -1,10 +1,10 @@
 import { z } from 'zod'
 import { publicProcedure } from '~src/trpc'
 import { getMockOrder } from '@summerfi/sdk-common/mocks'
-import type { Order, SimulationType } from '@summerfi/sdk-common/orders'
+import type { Order } from '@summerfi/sdk-common/orders'
 import type { Chain } from '@summerfi/sdk-common/client'
-import type { Wallet } from '@summerfi/sdk-common/common/implementation'
-import { Simulation } from '@summerfi/sdk-common/simulation'
+import type { Wallet } from '@summerfi/sdk-common/common'
+import type { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 
 type OrderParams = Parameters<typeof getMockOrder>[0]
 

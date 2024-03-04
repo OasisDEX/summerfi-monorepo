@@ -1,6 +1,6 @@
-import { Maybe } from '~sdk-common/utils'
-import { Protocol } from '../../protocols/interfaces/Protocol'
-import { ProtocolName } from '../../protocols/interfaces/ProtocolName'
+import type { Maybe } from '~sdk-common/common/aliases'
+import type { Protocol } from '~sdk-common/protocols/interfaces/Protocol'
+import type { ProtocolName } from '~sdk-common/protocols/interfaces/ProtocolName'
 
 /**
  * @interface IProtocolsManager

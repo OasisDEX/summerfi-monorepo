@@ -1,4 +1,4 @@
-import { SerializationService } from '~sdk-common/common/services'
+import { SerializationService } from '~sdk-common/services/SerializationService'
 
 interface IPercentageSerialized {
   value: number

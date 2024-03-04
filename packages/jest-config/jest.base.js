@@ -7,7 +7,7 @@ module.exports = (pkgCompilerOptions = {}) => {
     prefix: '<rootDir>/',
   })
   return {
-    roots: ['<rootDir>/src', '<rootDir>/tests', '<rootDir>/node_modules'],
+    roots: ['<rootDir>/src', '<rootDir>/tests'],
     preset: 'ts-jest',
     extensionsToTreatAsEsm: ['.ts'],
     silent: true,
@@ -15,14 +15,13 @@ module.exports = (pkgCompilerOptions = {}) => {
     testTimeout: 10000,
     testEnvironment: 'node',
     moduleNameMapper: mappings,
+    transformIgnorePatterns: ['<rootDir>/node_modules', 'node_modules'],
     transform: {
-      '^.+\\.(js|ts|tsx)$': [
+      '^.+\\.(ts|tsx)$': [
         'ts-jest',
         {
           tsconfig: '<rootDir>/tsconfig.test.json',
-          compilerOptions: {
-            allowJs: true,
-          },
+          compilerOptions: {},
         },
       ],
     },

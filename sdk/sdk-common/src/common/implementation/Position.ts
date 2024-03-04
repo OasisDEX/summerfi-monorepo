@@ -1,19 +1,21 @@
-import { TokenAmount, RiskRatio, PositionId } from '~sdk-common/common/implementation'
-import { Pool } from '~sdk-common/protocols'
-import { SerializationService } from '~sdk-common/common/services'
+import { SerializationService } from '~sdk-common/services/SerializationService'
+import type { PositionId } from '~sdk-common/common/implementation/PositionId'
+import type { RiskRatio } from '~sdk-common/common/implementation/RiskRatio'
+import type { TokenAmount } from '~sdk-common/common/implementation/TokenAmount'
+import type { IPool } from '~sdk-common/protocols/interfaces/IPool'
 
 interface IPositionSerialized {
   readonly positionId: PositionId
   readonly debtAmount: TokenAmount
   readonly collateralAmount: TokenAmount
-  readonly pool: Pool
+  readonly pool: IPool
 }
 
 export class Position implements IPositionSerialized {
   readonly positionId: PositionId
   readonly debtAmount: TokenAmount
   readonly collateralAmount: TokenAmount
-  readonly pool: Pool
+  readonly pool: IPool
 
   constructor(params: IPositionSerialized) {
     this.positionId = params.positionId
