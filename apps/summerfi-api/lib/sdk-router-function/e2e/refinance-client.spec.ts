@@ -97,11 +97,11 @@ describe('Refinance Client-Server Communication', () => {
       slippage: Percentage.createFrom({ percentage: 20.5 }),
     }
 
-    const simulation = await sdkClient.simulation.refinance.query({
+    const simulation = (await sdkClient.simulation.refinance.query({
       pool: pool,
       parameters: refinanceParameters,
       position: sourcePosition,
-    }) as Simulation<SimulationType>
+    })) as Simulation<SimulationType>
     if (!simulation) {
       fail('Simulation not found')
     }

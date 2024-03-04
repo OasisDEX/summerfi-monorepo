@@ -13,9 +13,7 @@ export const getOrder = publicProcedure
     z.object({
       chain: z.custom<Chain>((chain) => chain !== undefined),
       wallet: z.custom<Wallet>((wallet) => wallet !== undefined),
-      simulation: z.custom<Simulation<SimulationType>>(
-        (simulation) => simulation !== undefined,
-      ),
+      simulation: z.custom<Simulation<SimulationType>>((simulation) => simulation !== undefined),
     }),
   )
   .query(async (opts): Promise<Order> => {

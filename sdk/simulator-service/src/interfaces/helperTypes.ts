@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Tail<T extends readonly any[]> = ((...t: T) => void) extends (
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   h: any,
   ...r: infer R
 ) => void
