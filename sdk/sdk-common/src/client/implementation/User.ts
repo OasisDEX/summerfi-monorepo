@@ -1,17 +1,15 @@
-import {
-  type Wallet,
-  type Position,
-  type PositionId,
-  Address,
-} from '~sdk-common/common/implementation'
-import { Protocol } from '~sdk-common/protocols'
 import { Maybe } from '~sdk-common/utils'
-import { Order, Simulation, SimulationType } from '~sdk-common/orders'
+import { Order } from '~sdk-common/orders'
 import { getMockOrder, getMockPosition } from '~sdk-common/mocks'
-import type { Chain } from '~sdk-common/client/implementation'
-import type { IUser } from '~sdk-common/client/interfaces'
-import { zeroAddress } from 'viem'
-
+import type { Chain } from '~sdk-common/client/implementation/Chain'
+import type { IUser } from '~sdk-common/client/interfaces/IUser'
+import { Simulation, SimulationType } from '~sdk-common/simulation'
+import type { Position } from '~sdk-common/common/implementation/Position'
+import type { PositionId } from '~sdk-common/common/implementation/PositionId'
+import type { Wallet } from '~sdk-common/common/implementation/Wallet'
+import type { Protocol } from '~sdk-common/protocols/interfaces/Protocol'
+import { Address } from '~sdk-common/common/implementation/Address'
+import { zeroAddress } from '@summerfi/common'
 export class User implements IUser {
   public readonly wallet: Wallet
   public readonly chain: Chain
@@ -22,13 +20,13 @@ export class User implements IUser {
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async getPositionsByProtocol(params: { protocol: Protocol }): Promise<Position[]> {
+  public async getPositionsByProtocol(_params: { protocol: Protocol }): Promise<Position[]> {
     // TODO: Implement
     return []
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async getPositionsByIds(params: { positionIds: PositionId[] }): Promise<Position[]> {
+  public async getPositionsByIds(_params: { positionIds: PositionId[] }): Promise<Position[]> {
     // TODO: Implement
     return []
   }

@@ -1,5 +1,5 @@
-import BigNumber from 'bignumber.js'
-import { SerializationService } from '~sdk-common/common/services'
+import { BigNumber } from 'bignumber.js'
+import { SerializationService } from '~sdk-common/services/SerializationService'
 
 interface IPercentageSerialized {
   value: number

@@ -1,4 +1,3 @@
-import type { ISDKManager } from '../interfaces/ISDKManager'
 import { SDKManager } from './SDKManager'
 import { registerMockProtocols } from '~sdk-common/mocks/mockProtocol'
 
@@ -6,7 +5,7 @@ import { registerMockProtocols } from '~sdk-common/mocks/mockProtocol'
  * @function makeSDK
  * @returns The SDKManager singleton
  */
-export function makeSDK(): ISDKManager {
+export function makeSDK() {
   // TODO: remove this mock call
   registerMockProtocols()
 

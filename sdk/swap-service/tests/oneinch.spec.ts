@@ -5,7 +5,7 @@ import {
   Token,
   TokenAmount,
   type ChainInfo,
-} from '@summerfi/sdk-common/common/implementation'
+} from '@summerfi/sdk-common/common'
 import { subtractPercentage } from '@summerfi/sdk-common/utils'
 import { SwapProviderType } from '@summerfi/swap-common/enums'
 import { SwapData } from '@summerfi/swap-common/types'

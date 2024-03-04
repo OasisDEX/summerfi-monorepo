@@ -1,4 +1,5 @@
-import { TokensManager, ProtocolsManager } from '~sdk-common/client'
+import type { ProtocolsManager } from '~sdk-common/client/implementation/ProtocolsManager'
+import type { TokensManager } from '~sdk-common/client/implementation/TokensManager'
 import type { IChainInfoSerialized } from '~sdk-common/common/implementation/ChainInfo'
 
 /**

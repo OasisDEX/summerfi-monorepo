@@ -1,8 +1,11 @@
-import { Protocol } from '~sdk-common/protocols'
-import { Order, Simulation, SimulationType } from '~sdk-common/orders'
 import { Maybe } from '~sdk-common/utils'
-import { Wallet, type PositionId, type Position } from '~sdk-common/common/implementation'
-import type { Chain } from '~sdk-common/client'
+import { Order } from '~sdk-common/orders'
+import { Simulation, SimulationType } from '~sdk-common/simulation'
+import type { Position } from '~sdk-common/common/implementation/Position'
+import type { PositionId } from '~sdk-common/common/implementation/PositionId'
+import type { Wallet } from '~sdk-common/common/implementation/Wallet'
+import type { Chain } from '~sdk-common/client/implementation/Chain'
+import type { Protocol } from '~sdk-common/protocols/interfaces/Protocol'
 
 /**
  * @interface IUser

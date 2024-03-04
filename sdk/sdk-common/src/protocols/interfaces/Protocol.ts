@@ -1,4 +1,4 @@
-import { Maybe } from '~sdk-common/utils'
+import type { Maybe } from '~sdk-common/common/aliases'
 import { PoolParameters } from './PoolParameters'
 import { ProtocolParameters } from './ProtocolParameters'
 import { ProtocolName } from './ProtocolName'

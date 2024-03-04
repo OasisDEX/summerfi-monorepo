@@ -1,7 +1,9 @@
 import { TokenSymbol } from '~sdk-common/common/enums'
-import { Address, Token, type ChainInfo } from '~sdk-common/common/implementation'
 
-import { Maybe } from '~sdk-common/utils'
+import type { Maybe } from '~sdk-common/common/aliases'
+import type { ChainInfo } from '~sdk-common/common/implementation/ChainInfo'
+import { Token } from '~sdk-common/common/implementation/Token'
+import { Address } from '~sdk-common/common/implementation/Address'
 
 export async function getMockTokenBySymbol(params: {
   chainInfo: ChainInfo

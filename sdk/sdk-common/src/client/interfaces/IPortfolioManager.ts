@@ -1,4 +1,6 @@
-import { Wallet, type Position, type ChainInfo } from '~sdk-common/common/implementation'
+import type { ChainInfo } from '~sdk-common/common/implementation/ChainInfo'
+import type { Position } from '~sdk-common/common/implementation/Position'
+import type { Wallet } from '~sdk-common/common/implementation/Wallet'
 
 /**
  * @interface IPortfolioManager

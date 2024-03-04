@@ -1,7 +1,9 @@
-import { Chain, ProtocolsManager, TokensManager } from '~sdk-common/client/implementation'
 import type { IChainsManager } from '~sdk-common/client/interfaces/IChainsManager'
-import type { ChainInfo } from '~sdk-common/common/implementation'
-import { Maybe } from '~sdk-common/utils'
+import type { ChainInfo } from '~sdk-common/common/implementation/ChainInfo'
+import type { Maybe } from '~sdk-common/common/aliases'
+import { ProtocolsManager } from '~sdk-common/client/implementation/ProtocolsManager'
+import { TokensManager } from '~sdk-common/client/implementation/TokensManager'
+import { Chain } from '~sdk-common/client/implementation/Chain'
 
 export class ChainsManager implements IChainsManager {
   public async getSupportedChains(): Promise<ChainInfo[]> {
@@ -19,13 +21,13 @@ export class ChainsManager implements IChainsManager {
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async getChainByName(params: { name: string }): Promise<Maybe<Chain>> {
+  public async getChainByName(_params: { name: string }): Promise<Maybe<Chain>> {
     // TODO: Implement
     return undefined
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async getChainById(params: { chainId: number }): Promise<Maybe<Chain>> {
+  public async getChainById(_params: { chainId: number }): Promise<Maybe<Chain>> {
     // TODO: Implement
     return undefined
   }

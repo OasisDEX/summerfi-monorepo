@@ -1,6 +1,6 @@
 import { AddressType } from '~sdk-common/common/enums'
 import { AddressValue } from '~sdk-common/common/aliases'
-import { SerializationService } from '~sdk-common/common/services'
+import { SerializationService } from '~sdk-common/services/SerializationService'
 
 interface IAddressSerialized {
   value: AddressValue

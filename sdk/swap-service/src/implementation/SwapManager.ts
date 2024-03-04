@@ -5,7 +5,7 @@ import type {
   Token,
   Percentage,
   Address,
-} from '@summerfi/sdk-common/common/implementation'
+} from '@summerfi/sdk-common/common'
 import { Maybe } from '@summerfi/sdk-common/utils'
 import { ISwapProvider, ISwapManager } from '@summerfi/swap-common/interfaces'
 import { SwapData } from '@summerfi/swap-common/types'

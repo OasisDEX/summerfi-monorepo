@@ -1,8 +1,10 @@
 import type { ITokensManager } from '~sdk-common/client/interfaces/ITokensManager'
 import type { TokenSymbol } from '~sdk-common/common/enums'
-import { Address, Token, type ChainInfo } from '~sdk-common/common/implementation'
 import { getMockTokenBySymbol } from '~sdk-common/mocks'
-import { Maybe } from '~sdk-common/utils'
+import type { Maybe } from '~sdk-common/common/aliases'
+import type { ChainInfo } from '~sdk-common/common/implementation/ChainInfo'
+import type { Token } from '~sdk-common/common/implementation/Token'
+import type { Address } from '~sdk-common/common/implementation/Address'
 
 export class TokensManager implements ITokensManager {
   private readonly chainInfo: ChainInfo
@@ -25,13 +27,13 @@ export class TokensManager implements ITokensManager {
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async getTokenByAddress(params: { address: Address }): Promise<Maybe<Token>> {
+  public async getTokenByAddress(_params: { address: Address }): Promise<Maybe<Token>> {
     // TODO: Implement
     return undefined
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async getTokenByName(params: { name: string }): Promise<Maybe<Token>> {
+  public async getTokenByName(_params: { name: string }): Promise<Maybe<Token>> {
     // TODO: Implement
     return undefined
   }

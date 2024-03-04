@@ -1,6 +1,7 @@
-import { Order, Simulation, SimulationType } from '~sdk-common/orders'
-import { type User } from '~sdk-common/client/implementation'
-import { IPositionsManager } from '~sdk-common/client/interfaces'
+import { User } from '~sdk-common/client/implementation/User'
+import { IPositionsManager } from '~sdk-common/client/interfaces/IPositionsManager'
+import type { Order } from '~sdk-common/orders'
+import type { Simulation, SimulationType } from '~sdk-common/simulation'
 
 export async function getMockOrder(params: {
   user: User

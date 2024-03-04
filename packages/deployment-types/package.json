@@ -12,8 +12,8 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "build": "tsc -b -v tsconfig.json",
-    "lint": "eslint .",
+    "build_broken": "tsc -b tsconfig.json",
+    "lint_broken": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {

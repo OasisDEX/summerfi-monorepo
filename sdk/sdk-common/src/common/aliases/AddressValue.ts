@@ -1,3 +1,3 @@
-import { HexData } from '@summerfi/sdk-common/common/aliases'
+import { HexData } from './HexData'
 
 export type AddressValue = HexData

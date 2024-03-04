@@ -13,6 +13,8 @@ import {
   SparkAutoBuyEventBody,
   SparkAutoSellEventBody,
   SparkTrailingStopLossEventBody,
+  AavePartialTakeProfitEventBody,
+  SparkPartialTakeProfitEventBody,
 } from '~types'
 import type { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import fetch from 'node-fetch'
@@ -32,6 +34,8 @@ import { getPricesSubgraphClient } from '@summerfi/prices-subgraph'
 import { getSparkAutoBuyServiceContainer } from './get-spark-auto-buy-service-container'
 import { getSparkAutoSellServiceContainer } from './get-spark-auto-sell-service-container'
 import { getSparkTrailingStopLossServiceContainer } from './get-spark-trailing-stop-loss-service-container'
+import { getAavePartialTakeProfitServiceContainer } from './get-aave-partial-take-profit-service-container'
+import { getSparkPartialTakeProfitServiceContainer } from './get-spark-partial-take-profit-service-container'
 
 export const rpcConfig: IRpcConfig = {
   skipCache: false,
@@ -89,6 +93,18 @@ function isSparkTrailingStopLoss(
   trigger: SetupTriggerEventBody,
 ): trigger is SparkTrailingStopLossEventBody {
   return trigger.triggerData?.type === BigInt(TriggerType.DmaSparkTrailingStopLossV2)
+}
+
+function isAavePartialTakeProfit(
+  trigger: SetupTriggerEventBody,
+): trigger is AavePartialTakeProfitEventBody {
+  return trigger.triggerData?.type === BigInt(TriggerType.DmaAavePartialTakeProfitV2)
+}
+
+function isSparkPartialTakeProfit(
+  trigger: SetupTriggerEventBody,
+): trigger is SparkPartialTakeProfitEventBody {
+  return trigger.triggerData?.type === BigInt(TriggerType.DmaSparkPartialTakeProfitV2)
 }
 
 export function buildServiceContainer<Trigger extends SetupTriggerEventBody>(
@@ -218,6 +234,28 @@ export function buildServiceContainer<Trigger extends SetupTriggerEventBody>(
       getLatestPrice,
       chainId,
       logger,
+    }) as ServiceContainer<Trigger>
+  }
+
+  if (isAavePartialTakeProfit(trigger)) {
+    return getAavePartialTakeProfitServiceContainer({
+      rpc: publicClient,
+      addresses,
+      getTriggers,
+      logger,
+      chainId,
+      getLatestPrice,
+    }) as ServiceContainer<Trigger>
+  }
+
+  if (isSparkPartialTakeProfit(trigger)) {
+    return getSparkPartialTakeProfitServiceContainer({
+      rpc: publicClient,
+      addresses,
+      getTriggers,
+      logger,
+      chainId,
+      getLatestPrice,
     }) as ServiceContainer<Trigger>
   }
 

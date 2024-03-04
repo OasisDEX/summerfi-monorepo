@@ -15,7 +15,7 @@ import {
   type Percentage,
   type Token,
   Address,
-} from '@summerfi/sdk-common/common/implementation'
+} from '@summerfi/sdk-common/common'
 
 export class OneInchSwapProvider implements ISwapProvider {
   public type: SwapProviderType = SwapProviderType.OneInch

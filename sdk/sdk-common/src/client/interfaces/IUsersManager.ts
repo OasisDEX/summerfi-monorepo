@@ -1,5 +1,6 @@
-import { Wallet } from '~sdk-common/common/implementation'
-import { User, type Chain } from '~sdk-common/client'
+import type { Chain } from '~sdk-common/client/implementation/Chain'
+import type { User } from '~sdk-common/client/implementation/User'
+import { Wallet } from '~sdk-common/common/implementation/Wallet'
 
 /**
  * @interface IUsersManager

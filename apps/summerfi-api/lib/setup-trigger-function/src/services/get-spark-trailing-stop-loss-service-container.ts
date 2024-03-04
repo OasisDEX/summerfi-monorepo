@@ -14,7 +14,7 @@ import { calculateLtv } from './calculate-ltv'
 import { getSparkPosition } from './get-spark-position'
 import { dmaSparkTrailingStopLossValidator } from './against-position-validators'
 import { getCurrentSparkStopLoss } from './get-current-spark-stop-loss'
-import { encodeSparkTrailingStopLoss } from './trigger-encoders/encode-spark-trailing-stop-loss'
+import { encodeSparkTrailingStopLoss } from './trigger-encoders'
 
 export interface GetSparkTrailingStopLossServiceContainerProps {
   rpc: PublicClient

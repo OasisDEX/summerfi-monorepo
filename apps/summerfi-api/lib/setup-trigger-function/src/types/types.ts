@@ -13,16 +13,20 @@ import {
   eventBodySparkBasicBuySchema,
   eventBodySparkBasicSellSchema,
   eventBodyDmaSparkTrailingStopLossSchema,
+  eventBodySparkPartialTakeProfitSchema,
+  eventBodyAavePartialTakeProfitSchema,
   ltvSchema,
   pathParamsSchema,
   positionSchema,
   priceSchema,
   tokenBalanceSchema,
   tokenSchema,
+  dmaSparkTrailingStopLossTriggerDataSchema,
+  sparkBasicBuyTriggerDataSchema,
+  sparkBasicSellTriggerDataSchema,
+  aavePartialTakeProfitTriggerDataSchema,
+  sparkPartialTakeProfitTriggerDataSchema,
 } from './validators'
-import { dmaSparkTrailingStopLossTriggerDataSchema } from './validators'
-import { sparkBasicBuyTriggerDataSchema } from './validators'
-import { sparkBasicSellTriggerDataSchema } from './validators'
 
 export type AaveAutoBuyEventBody = z.infer<typeof eventBodyAaveBasicBuySchema>
 export type AaveAutoSellEventBody = z.infer<typeof eventBodyAaveBasicSellSchema>
@@ -32,6 +36,8 @@ export type SparkAutoSellEventBody = z.infer<typeof eventBodySparkBasicSellSchem
 export type SparkStopLossEventBody = z.infer<typeof eventBodyDmaSparkStopLossSchema>
 export type AaveTrailingStopLossEventBody = z.infer<typeof eventBodyDmaAaveTrailingStopLossSchema>
 export type SparkTrailingStopLossEventBody = z.infer<typeof eventBodyDmaSparkTrailingStopLossSchema>
+export type AavePartialTakeProfitEventBody = z.infer<typeof eventBodyAavePartialTakeProfitSchema>
+export type SparkPartialTakeProfitEventBody = z.infer<typeof eventBodySparkPartialTakeProfitSchema>
 export type SetupTriggerEventBody =
   | AaveAutoBuyEventBody
   | AaveAutoSellEventBody
@@ -41,6 +47,8 @@ export type SetupTriggerEventBody =
   | SparkStopLossEventBody
   | AaveTrailingStopLossEventBody
   | SparkTrailingStopLossEventBody
+  | AavePartialTakeProfitEventBody
+  | SparkPartialTakeProfitEventBody
 
 export type PathParams = z.infer<typeof pathParamsSchema>
 export type PositionLike = z.infer<typeof positionSchema>
@@ -62,6 +70,13 @@ export type DmaSparkTrailingStopLossTriggerData = z.infer<
 export type SparkAutoBuyTriggerData = z.infer<typeof sparkBasicBuyTriggerDataSchema>
 export type SparkAutoSellTriggerData = z.infer<typeof sparkBasicSellTriggerDataSchema>
 
+export type AavePartialTakeProfitTriggerData = z.infer<
+  typeof aavePartialTakeProfitTriggerDataSchema
+>
+export type SparkPartialTakeProfitTriggerData = z.infer<
+  typeof sparkPartialTakeProfitTriggerDataSchema
+>
+
 export type TriggerData =
   | AaveAutoBuyTriggerData
   | AaveAutoSellTriggerData
@@ -71,9 +86,13 @@ export type TriggerData =
   | DmaSparkTrailingStopLossTriggerData
   | SparkAutoBuyTriggerData
   | SparkAutoSellTriggerData
+  | AavePartialTakeProfitTriggerData
+  | SparkPartialTakeProfitTriggerData
 
 export enum CommonErrorCodes {
   InsufficientEthFundsForTx = 'insufficient-eth-funds-for-tx',
+  TriggerDoesNotExist = 'trigger-does-not-exist',
+  TriggerAlreadyExists = 'trigger-already-exists',
 }
 
 export enum AutoBuyTriggerCustomErrorCodes {
@@ -133,6 +152,10 @@ export enum StopLossWarningCodes {
   StopLossTriggeredImmediately = 'stop-loss-triggered-immediately',
   StopLossMakesAutoSellNotTrigger = 'stop-loss-makes-auto-sell-not-trigger',
 }
+
+export enum PartialTakeProfitErrorCodes {}
+
+export enum PartialTakeProfitWarningCodes {}
 
 export enum TrailingStopLossErrorCodes {
   CantObtainLatestPrice = 'cant-obtain-latest-price',
