@@ -16,6 +16,7 @@ export const mapStopLossParams = ({
   debtToken: decodedData[decodedDataNames.indexOf('debtToken')],
   collateralToken: decodedData[decodedDataNames.indexOf('collateralToken')],
   ltv: decodedData[decodedDataNames.indexOf('ltv')],
+  operationName: decodedData[decodedDataNames.indexOf('operationName')],
 })
 
 export const mapBuySellCommonParams = ({

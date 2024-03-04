@@ -74,7 +74,11 @@ export const encodeSparkTrailingStopLoss = (
     ? encodeFunctionData({
         abi: automationBotAbi,
         functionName: 'removeTriggers',
-        args: [[currentTrigger.id], [currentTrigger.triggerData], true],
+        args: [
+          [currentTrigger.id],
+          [currentTrigger.triggerData],
+          currentTrigger.triggersOnAccount === 1, // remove allowance only if it's the last trigger
+        ],
       })
     : undefined
 

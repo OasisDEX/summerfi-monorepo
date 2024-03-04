@@ -2,7 +2,7 @@ import { ServiceContainer } from './service-container'
 import { SparkStopLossEventBody, SupportedActions } from '~types'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
-import { Address, ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
+import { Address, ChainId } from '@summerfi/serverless-shared'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
@@ -11,6 +11,7 @@ import { dmaSparkStopLossValidator } from './against-position-validators'
 import { CurrentTriggerLike, encodeSparkStopLoss } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
 import { getSparkPosition } from './get-spark-position'
+import { getCurrentSparkStopLoss } from './get-current-spark-stop-loss'
 
 export interface GetSparkStopLossServiceContainerProps {
   rpc: PublicClient
@@ -18,17 +19,6 @@ export interface GetSparkStopLossServiceContainerProps {
   getTriggers: (address: Address) => Promise<GetTriggersResponse>
   logger?: Logger
   chainId: ChainId
-}
-
-function getCurrentStopLoss(triggers: GetTriggersResponse): CurrentTriggerLike | undefined {
-  const currentStopLoss = triggers.triggerGroup.sparkStopLoss
-
-  return currentStopLoss
-    ? {
-        triggerData: currentStopLoss.triggerData as `0x${string}`,
-        id: safeParseBigInt(currentStopLoss.triggerId) ?? 0n,
-      }
-    : undefined
 }
 
 export const getSparkStopLossServiceContainer: (
@@ -72,7 +62,11 @@ export const getSparkStopLossServiceContainer: (
         debt: trigger.position.debt,
       })
 
-      const currentTrigger: CurrentTriggerLike | undefined = getCurrentStopLoss(triggers)
+      const currentTrigger: CurrentTriggerLike | undefined = getCurrentSparkStopLoss(
+        triggers,
+        position,
+        logger,
+      )
 
       const encodedData = encodeSparkStopLoss(position, trigger.triggerData, currentTrigger)
 
