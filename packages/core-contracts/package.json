@@ -16,7 +16,7 @@
   "devDependencies": {
     "@ethersproject/keccak256": "^5.7.0",
     "@nomicfoundation/hardhat-toolbox-viem": "^2.0.0",
-    "@openzeppelin/contracts": "4.9.3",
+    "@openzeppelin/contracts": "4.9.6",
     "@prb/math": "2.5.0",
     "@summerfi/contracts-utils": "workspace:*",
     "@summerfi/deployment-configs": "workspace:*",
