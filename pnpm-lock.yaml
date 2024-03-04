@@ -160,9 +160,6 @@ importers:
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../../../packages/serverless-shared
-      graphql-request:
-        specifier: ^6.1.0
-        version: 6.1.0(graphql@16.8.1)
       zod:
         specifier: ^3.22.4
         version: 3.22.4

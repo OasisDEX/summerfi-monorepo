@@ -39,6 +39,7 @@ export const refinanceStrategy = makeStrategy([
   },
 ])
 
+// TODO move those interfaces to more appropriate place
 interface Quote {
   fromTokenAmount: TokenAmount
   toTokenAmount: TokenAmount
@@ -49,6 +50,7 @@ interface Quote {
 interface GetQuote {
   (args: { from: TokenAmount; to: Token; slippage: number; fee: number }): Promise<Quote>
 }
+// STOP TODO
 
 export interface RefinanceParameters {
   // should be lending position, because we need to have lending pool not IPool
@@ -60,21 +62,6 @@ export interface RefinanceParameters {
 export interface RefinanceDependencies {
   getQuote: GetQuote
 }
-
-// function estimateFromAmount(
-//     getQuote: GetQuote,
-//     fromToken: Token,
-//     to: Token,
-//     slippage: number,
-//     fee: number
-// ): Promise<TokenAmount> {
-//     return getQuote({
-//         from: to,
-//         to: from.token,
-//         slippage,
-//         fee
-//     }).then(quote => quote.fromTokenAmount)
-// }
 
 export async function refinace(
   args: RefinanceParameters,
@@ -89,14 +76,15 @@ export async function refinace(
   const isDebtSwapSkipped =
     args.position.debtAmount.token.address !== args.targetPool.debtTokens[0].address
   // let debtSwapQuote: Quote | undefined
-  if (!isDebtSwapSkipped) {
-    // debtSwapQuote = await dependecies.getQuote({
-    //   from: args.targetPool.debtTokens[0],
-    //   to: args.position.debtAmount,
-    //   slippage: args.slippage,
-    //   fee: 0,
-    // })
-  }
+  // TODO: implement case with swaps
+  // if (!isDebtSwapSkipped) {
+  //     debtSwapQuote = await dependecies.getQuote({
+  //         from: args.targetPool.debtTokens[0],
+  //         to: args.position.debtAmount.token,
+  //         slippage: args.slippage,
+  //         fee: 0,
+  //     })
+  // }
 
   // TODO: read debt amount from chain (special step: ReadDebtAmount)
   // TODO: the swap quote should also include the summer fee, in this case we need to know when we are taking the fee,
@@ -110,21 +98,21 @@ export async function refinace(
         provider: FlashloanProvider.Maker,
       },
     }))
-    // .next(async () => ({
-    //   name: 'PaybackWithdraw',
-    //   type: SimulationSteps.PaybackWithdraw,
-    //   inputs: {
-    //     paybackAmount: TokenAmount.createFrom({
-    //       amount: Number.MAX_SAFE_INTEGER.toString(),
-    //       token: args.position.pool.debtToken,
-    //     }),
-    //     withdrawAmount: TokenAmount.createFrom({
-    //       amount: Number.MAX_SAFE_INTEGER.toString(),
-    //       token: args.position.pool.collateralToken,
-    //     }),
-    //     position: args.position,
-    //   },
-    // }))
+    .next(async () => ({
+      name: 'PaybackWithdraw',
+      type: SimulationSteps.PaybackWithdraw,
+      inputs: {
+        paybackAmount: TokenAmount.createFrom({
+          amount: Number.MAX_SAFE_INTEGER.toString(),
+          token: args.position.debtAmount.token,
+        }),
+        withdrawAmount: TokenAmount.createFrom({
+          amount: Number.MAX_SAFE_INTEGER.toString(),
+          token: args.position.collateralAmount.token,
+        }),
+        position: args.position,
+      },
+    }))
     .next(async () => ({
       name: 'CollateralSwap',
       type: SimulationSteps.Swap,

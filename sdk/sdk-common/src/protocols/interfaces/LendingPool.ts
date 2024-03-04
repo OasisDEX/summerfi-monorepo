@@ -17,3 +17,7 @@ export interface LendingPool extends IPool {
   // Max LTV for the pool
   maxLTV: Percentage
 }
+
+export function isLendinPool(pool: IPool): pool is LendingPool {
+  return pool.type === PoolType.Lending
+}

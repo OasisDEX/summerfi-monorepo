@@ -1,6 +1,6 @@
 import { TokenAmount, type Token } from '@summerfi/sdk-common/common'
 import type {
-  ReferencableField,
+  ReferenceableField,
   SimulationStrategy,
   ValueReference,
 } from '@summerfi/sdk-common/simulation'
@@ -10,15 +10,15 @@ export function makeStrategy<T extends SimulationStrategy>(strategy: T): T {
   return strategy
 }
 
-export function isReference<T>(value: ReferencableField<T>): value is ValueReference<T> {
+export function isValueReference<T>(value: ReferenceableField<T>): value is ValueReference<T> {
   return (
     (value as ValueReference<T>).path !== undefined &&
     (value as ValueReference<T>).estimatedValue !== undefined
   )
 }
 
-export function getReferencedValue<T>(referencableValue: ReferencableField<T>): T {
-  if (isReference(referencableValue)) {
+export function getReferencedValue<T>(referencableValue: ReferenceableField<T>): T {
+  if (isValueReference(referencableValue)) {
     return referencableValue.estimatedValue
   }
   return referencableValue
@@ -50,12 +50,9 @@ export function subtractBalance(
   }
 }
 
-export function switchCheck(): never {
-  throw new Error('Run out of cases')
-}
-
-export function tail<T extends readonly unknown[]>(arr: T): Tail<T> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function tail<T extends readonly any[]>(arr: T): Tail<T> {
   const [, ...rest] = arr
-
-  return rest as unknown as Tail<T>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return rest as any as Tail<T>
 }

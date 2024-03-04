@@ -3,4 +3,4 @@ export interface ValueReference<T> {
   path: [string, string]
 }
 
-export type ReferencableField<T> = T | ValueReference<T>
+export type ReferenceableField<T> = T | ValueReference<T>

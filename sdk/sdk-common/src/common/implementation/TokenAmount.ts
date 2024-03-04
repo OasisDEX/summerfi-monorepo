@@ -73,15 +73,15 @@ export class TokenAmount implements ITokenAmountSerialized {
     return new TokenAmount({ token: this.token, amount: this.amountBN.div(divisor).toString() })
   }
 
-  toString(): string {
+  public toString(): string {
     return `${this.amount} ${this.token.symbol}`
   }
 
-  toBaseUnit(): string {
+  public toBaseUnit(): string {
     return new BigNumber(this.amount).times(this._baseUnitFactor).toFixed(0)
   }
 
-  toBN(): BigNumber {
+  public toBN(): BigNumber {
     return new BigNumber(this.amount)
   }
 }

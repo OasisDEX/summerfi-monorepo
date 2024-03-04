@@ -1,9 +1,9 @@
 /**
  * @enum PoolType
- * @description Indicates the type of pool (staking or lending)
+ * @description Indicates the type of pool (supply or lending)
  */
 
 export enum PoolType {
-  Staking = 'Staking',
+  Supply = 'Supply',
   Lending = 'Lending',
 }
