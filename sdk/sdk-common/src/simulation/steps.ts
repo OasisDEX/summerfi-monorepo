@@ -63,7 +63,7 @@ export interface SwapStep
       fee: number
     },
     {
-      recievedAmount: TokenAmount
+      receivedAmount: TokenAmount
     }
   > {}
 
