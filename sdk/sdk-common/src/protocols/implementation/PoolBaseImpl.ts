@@ -1,17 +1,21 @@
-import { Address } from '~sdk-common/common/implementation'
+import { Address, Token } from '~sdk-common/common/implementation'
 import { Pool, PoolId, ProtocolId, PoolType } from '~sdk-common/protocols'
 
-export class PoolBaseImpl implements Pool {
+export class PoolBaseImpl<T extends PoolType> implements Pool {
   public readonly poolId: PoolId
   public readonly protocolId: ProtocolId
-  public readonly type: PoolType
+  public readonly type: T
   public readonly address?: Address
   public readonly TVL?: number
+  public readonly debtToken: Token
+  public readonly collateralToken: Token
 
   constructor(params: {
     poolId: PoolId
     protocolId: ProtocolId
-    type: PoolType
+    type: T
+    debtToken: Token
+    collateralToken: Token
     address?: Address
     TVL?: number
   }) {
@@ -20,5 +24,7 @@ export class PoolBaseImpl implements Pool {
     this.type = params.type
     this.address = params.address
     this.TVL = params.TVL
+    this.debtToken = params.debtToken
+    this.collateralToken = params.collateralToken
   }
 }

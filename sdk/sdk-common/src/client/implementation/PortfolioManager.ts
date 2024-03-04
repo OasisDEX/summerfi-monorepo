@@ -3,7 +3,7 @@ import type { IPortfolioManager } from '~sdk-common/client/interfaces/IPortfolio
 
 export class PortfolioManager implements IPortfolioManager {
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async getPositions(params: {
+  public async getPositions(_params: {
     networks: ChainInfo[]
     wallet: Wallet
   }): Promise<Position[]> {

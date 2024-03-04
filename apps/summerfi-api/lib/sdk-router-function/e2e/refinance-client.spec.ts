@@ -12,6 +12,8 @@ import {
 } from '@summerfi/sdk-common/common/implementation'
 import type { RefinanceParameters } from '@summerfi/sdk-common/orders'
 import { ProtocolName, type LendingPoolParameters } from '@summerfi/sdk-common/protocols'
+import { isLendingPool } from '@summerfi/sdk-common/protocols/interfaces/LendingPool'
+import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { createTRPCClient, httpBatchLink } from '@trpc/client'
 import type { AppRouter } from '~src/app-router'
 
@@ -85,17 +87,21 @@ describe('Refinance Client-Server Communication', () => {
       fail('Pool not found')
     }
 
+    if (!isLendingPool(pool)) {
+      fail('Pool is not a lending pool')
+    }
+
     const refinanceParameters: RefinanceParameters = {
       sourcePosition: sourcePosition,
       targetPool: pool,
       slippage: Percentage.createFrom({ percentage: 20.5 }),
     }
 
-    const simulation = await sdkClient.simulation.refinance.query({
+    const simulation = (await sdkClient.simulation.refinance.query({
       pool: pool,
       parameters: refinanceParameters,
       position: sourcePosition,
-    })
+    })) as Simulation<SimulationType>
     if (!simulation) {
       fail('Simulation not found')
     }

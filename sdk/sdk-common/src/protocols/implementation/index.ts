@@ -1,3 +1,3 @@
 export { LendingPoolImpl } from './LendingPoolBaseImpl'
 export { PoolBaseImpl } from './PoolBaseImpl'
-export { StakingPoolImpl } from './StakingPoolBaseImpl'
+export { SupplyPoolImpl as StakingPoolImpl } from './SupplyPoolBaseImpl'

@@ -1,4 +1,5 @@
-import { Simulation, SimulationType } from '.'
+import { Simulation } from '~sdk-common/simulation/simulation'
+import { SimulationType } from '~sdk-common/simulation/enums'
 import { TransactionInfo } from './TransactionInfo'
 
 /**
@@ -7,7 +8,7 @@ import { TransactionInfo } from './TransactionInfo'
  */
 export interface Order {
   /** @description Simulation */
-  simulation: Simulation<SimulationType, unknown>
+  simulation: Simulation<SimulationType>
   /** @description Transaction info */
   transactions: TransactionInfo[]
 }

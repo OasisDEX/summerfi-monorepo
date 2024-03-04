@@ -1,5 +1,5 @@
 import { Percentage, Token } from '~sdk-common/common/implementation'
-import { IPool } from './IPool'
+import { IPool, PoolType } from './IPool'
 
 /**
  * @interface LendingPool
@@ -7,10 +7,15 @@ import { IPool } from './IPool'
  *              and debt tokens
  */
 export interface LendingPool extends IPool {
+  type: PoolType.Lending
   // List of collateral tokens to be used from the lending pool
   collateralTokens: Token[]
   // List of debt tokens to be used from the lending pool
   debtTokens: Token[]
   // Max LTV for the pool
   maxLTV: Percentage
+}
+
+export function isLendingPool(pool: IPool): pool is LendingPool {
+  return pool.type === PoolType.Lending
 }

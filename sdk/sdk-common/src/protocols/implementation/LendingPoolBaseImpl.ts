@@ -2,7 +2,7 @@ import { Address, Percentage, Token } from '~sdk-common/common/implementation'
 import { PoolId, ProtocolId, PoolType, LendingPool } from '~sdk-common/protocols'
 import { PoolBaseImpl } from './PoolBaseImpl'
 
-export class LendingPoolImpl extends PoolBaseImpl implements LendingPool {
+export class LendingPoolImpl extends PoolBaseImpl<PoolType.Lending> implements LendingPool {
   public readonly collateralTokens: Token[]
   public readonly debtTokens: Token[]
   public readonly maxLTV: Percentage
@@ -16,7 +16,13 @@ export class LendingPoolImpl extends PoolBaseImpl implements LendingPool {
     debtTokens: Token[]
     collateralTokens: Token[]
   }) {
-    super({ ...params, type: PoolType.Lending })
+    // TODO: resolve multicollateral issue
+    super({
+      ...params,
+      type: PoolType.Lending,
+      debtToken: params.debtTokens[0],
+      collateralToken: params.collateralTokens[0],
+    })
 
     this.collateralTokens = params.collateralTokens
     this.debtTokens = params.debtTokens

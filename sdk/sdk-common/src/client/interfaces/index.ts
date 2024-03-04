@@ -1,7 +1,6 @@
 export type { IUser } from './IUser'
 export type { IUsersManager } from './IUsersManager'
 export type { IPortfolioManager } from './IPortfolioManager'
-export type { ISDKManager } from './ISDKManager'
 export type { IProtocolsManager } from './IProtocolsManager'
 export type { IChain } from './IChain'
 export type { IChainsManager } from './IChainsManager'
