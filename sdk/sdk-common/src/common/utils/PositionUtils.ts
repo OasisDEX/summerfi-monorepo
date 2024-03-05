@@ -7,8 +7,8 @@ export function newEmptyPositionFromPool(pool: LendingPool): Position {
     positionId: {
       id: 'newEmptyPositionFromPool',
     },
-    debtAmount: TokenAmount.createFrom({ token: pool.debtTokens[0], amount: '0' }),
-    collateralAmount: TokenAmount.createFrom({ token: pool.collateralTokens[0], amount: '0' }),
+    debtAmount: TokenAmount.createFrom({ token: pool.debts[0].token, amount: '0' }),
+    collateralAmount: TokenAmount.createFrom({ token: pool.collaterals[0].token, amount: '0' }),
     pool,
   })
 }

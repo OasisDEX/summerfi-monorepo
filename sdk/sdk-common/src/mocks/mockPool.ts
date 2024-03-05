@@ -18,8 +18,8 @@ export async function mockPool(params: {
       poolId: { id: 'mock' },
       protocol: params.protocol.name,
       maxLTV: Percentage.createFrom({ percentage: 50.3 }),
-      debtTokens: params.poolParameters.debtTokens,
-      collateralTokens: params.poolParameters.collateralTokens,
+      debts: [],
+      collaterals: [],
     })
   }
 

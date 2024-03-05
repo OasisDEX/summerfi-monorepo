@@ -6,7 +6,7 @@ import { isToken } from '~sdk-common/utils/isToken'
 interface IPriceSerialized {
   value: string
   baseToken: Token
-  quoteToken?: Token | CurrencySymbol
+  quoteToken: Token | CurrencySymbol
 }
 
 /**
@@ -18,16 +18,16 @@ export class Price implements IPriceSerialized {
 
   readonly value: string
   readonly baseToken: Token
-  readonly quoteToken?: Token | CurrencySymbol
+  readonly quoteToken: Token | CurrencySymbol
 
   private constructor(params: IPriceSerialized) {
     this.value = params.value
     this.baseToken = params.baseToken
-    this.quoteToken = params.quoteToken ? params.quoteToken : Price.DEFAULT_QUOTE_TOKEN
+    this.quoteToken = params.quoteToken
   }
 
   static createFrom(params: { value: string; baseToken: Token; quoteToken?: Token }): Price {
-    return new Price(params)
+    return new Price({value: params.value, baseToken: params.baseToken, quoteToken: params.quoteToken || Price.DEFAULT_QUOTE_TOKEN})
   }
 
   toString(): string {

@@ -75,9 +75,9 @@ export async function refinace(
   const simulator = Simulator.create(refinanceStrategy)
 
   const isCollateralSwapSkipped =
-    args.position.collateralAmount.token.address === args.targetPool.collateralTokens[0].address
+    args.position.collateralAmount.token.address === args.targetPool.collaterals[0].token.address
   const isDebtSwapSkipped =
-    args.position.debtAmount.token.address !== args.targetPool.debtTokens[0].address
+    args.position.debtAmount.token.address !== args.targetPool.debts[0].token.address
   // let debtSwapQuote: Quote | undefined
   // TODO: implement case with swaps
   // if (!isDebtSwapSkipped) {
@@ -121,7 +121,7 @@ export async function refinace(
       type: SimulationSteps.Swap,
       inputs: await dependecies.getQuote({
         from: args.position.collateralAmount,
-        to: args.targetPool.collateralTokens[0],
+        to: args.targetPool.collaterals[0].token,
         slippage: args.slippage,
         fee: 0,
       }),
@@ -145,7 +145,7 @@ export async function refinace(
       type: SimulationSteps.Swap,
       inputs: await dependecies.getQuote({
         from: getReferencedValue(ctx.getReference(['DepositBorrow', 'borrowAmount'])),
-        to: args.targetPool.collateralTokens[0],
+        to: args.targetPool.collaterals[0].token,
         slippage: args.slippage,
         fee: 0,
       }),
@@ -162,7 +162,7 @@ export async function refinace(
       name: 'ReturnFunds',
       type: SimulationSteps.ReturnFunds,
       inputs: {
-        token: args.targetPool.collateralTokens[0],
+        token: args.targetPool.collaterals[0].token,
       },
       skip: isDebtSwapSkipped,
     }))
