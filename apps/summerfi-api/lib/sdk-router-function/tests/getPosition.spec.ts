@@ -1,5 +1,5 @@
 import { zeroAddress } from '@summerfi/common'
-import { ChainFamilyMap, makeSDK } from '@summerfi/sdk-common/client'
+import { ChainFamilyMap, makeSDK } from '@summerfi/sdk-client'
 import type { PositionId } from '@summerfi/sdk-common/common/implementation/PositionId'
 import { Wallet } from '@summerfi/sdk-common/common/implementation/Wallet'
 

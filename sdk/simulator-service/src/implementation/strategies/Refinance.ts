@@ -4,11 +4,11 @@ import {
   SimulationSteps,
   SimulationType,
 } from '@summerfi/sdk-common/simulation'
-import { getReferencedValue, makeStrategy } from '~swap-service/implementation/helpers'
-import { LendingPool } from '@summerfi/sdk-common/protocols'
-import { Simulator } from '~swap-service/implementation/simulator-engine'
-import { Token, TokenAmount, Position } from '@summerfi/sdk-common/common'
+import { getReferencedValue, makeStrategy } from '~simulator-service/implementation/helpers'
+import { Simulator } from '~simulator-service/implementation/simulator-engine'
+import { Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
+import { RefinanceParameters } from '@summerfi/sdk-common/orders'
 
 export const refinanceStrategy = makeStrategy([
   {
@@ -51,16 +51,15 @@ interface Quote {
   fee: number
 }
 
-interface GetQuote {
-  (args: { from: TokenAmount; to: Token; slippage: number; fee: number }): Promise<Quote>
+export interface GetQuote {
+  (args: {
+    fromTokenAmount: TokenAmount
+    toToken: Token
+    slippage: number
+    fee: number
+  }): Promise<Quote>
 }
 // STOP TODO
-
-export interface RefinanceParameters {
-  position: Position
-  targetPool: LendingPool
-  slippage: number
-}
 
 export interface RefinanceDependencies {
   getQuote: GetQuote
@@ -120,8 +119,8 @@ export async function refinace(
       name: 'CollateralSwap',
       type: SimulationSteps.Swap,
       inputs: await dependecies.getQuote({
-        from: args.position.collateralAmount,
-        to: args.targetPool.collateralTokens[0],
+        fromTokenAmount: args.position.collateralAmount,
+        toToken: args.targetPool.collateralTokens[0],
         slippage: args.slippage,
         fee: 0,
       }),
@@ -144,8 +143,8 @@ export async function refinace(
       name: 'DebtSwap',
       type: SimulationSteps.Swap,
       inputs: await dependecies.getQuote({
-        from: getReferencedValue(ctx.getReference(['DepositBorrow', 'borrowAmount'])),
-        to: args.targetPool.collateralTokens[0],
+        fromTokenAmount: getReferencedValue(ctx.getReference(['DepositBorrow', 'borrowAmount'])),
+        toToken: args.targetPool.collateralTokens[0],
         slippage: args.slippage,
         fee: 0,
       }),

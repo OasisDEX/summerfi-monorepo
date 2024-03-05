@@ -1,4 +1,4 @@
-import { ChainFamilyMap } from '@summerfi/sdk-common/client'
+import { ChainFamilyMap } from '@summerfi/sdk-client'
 import {
   Address,
   Percentage,

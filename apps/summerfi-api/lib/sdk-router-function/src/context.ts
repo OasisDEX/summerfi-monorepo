@@ -5,11 +5,12 @@ import { DeploymentIndex } from '@summerfi/deployment-utils'
 import { Deployments } from '@summerfi/core-contracts'
 import { OrderPlannerService } from '@summerfi/order-planner-service/implementation'
 import { SwapService } from '@summerfi/swap-service'
+import type { GetQuote } from '@summerfi/simulator-service'
 
 export type ContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
 export type Context = {
-  provider: undefined | string
+  getQuote: undefined | GetQuote
   deployments: DeploymentIndex
   orderPlannerService: OrderPlannerService
   swapService: SwapService
@@ -22,7 +23,7 @@ export const createContext = (opts: ContextOptions): Context => {
   const swapService = new SwapService()
 
   return {
-    provider: undefined,
+    getQuote: undefined,
     deployments,
     orderPlannerService,
     swapService,

@@ -1,4 +1,3 @@
-import type { Percentage } from '~sdk-common/common/implementation/Percentage'
 import type { Position } from '~sdk-common/common/implementation/Position'
 import type { LendingPool } from '~sdk-common/protocols/interfaces/LendingPool'
 
@@ -7,9 +6,9 @@ import type { LendingPool } from '~sdk-common/protocols/interfaces/LendingPool'
  * @description Parameters used to refinance a position
  */
 export interface RefinanceParameters {
-  sourcePosition: Position
+  position: Position
   targetPool: LendingPool
-  slippage: Percentage
+  slippage: number // TODO: to percentage
 }
 
 export function isRefinanceParameters(parameters: unknown): parameters is RefinanceParameters {

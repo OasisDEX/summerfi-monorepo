@@ -1,10 +1,7 @@
 import { z } from 'zod'
 import { publicProcedure } from '~src/trpc'
-import { getMockPosition } from '@summerfi/sdk-common/mocks'
 import type { Position, PositionId, Wallet } from '@summerfi/sdk-common/common'
-import type { Chain } from '@summerfi/sdk-common/client'
-
-type PositionParams = Parameters<typeof getMockPosition>[0]
+import type { Chain } from '@summerfi/sdk-client'
 
 export const getPosition = publicProcedure
   .input(
@@ -14,8 +11,6 @@ export const getPosition = publicProcedure
       wallet: z.custom<Wallet>((wallet) => wallet !== undefined),
     }),
   )
-  .query(async (opts): Promise<Position | undefined> => {
-    const params: PositionParams = opts.input
-    const position = await getMockPosition(params)
-    return position as Position
+  .query(async (): Promise<Position | undefined> => {
+    throw new Error('Not implemented')
   })

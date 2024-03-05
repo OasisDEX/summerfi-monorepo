@@ -4,7 +4,7 @@ import { Order } from '@summerfi/sdk-common/orders'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { Maybe } from '@summerfi/sdk-common/utils'
 import { ActionBuildersConfig } from '~orderplannerservice/config'
-import { Chain, IPositionsManager, User } from '@summerfi/sdk-common/client'
+import { Chain, IPositionsManager, User } from '@summerfi/sdk-client'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
 import { ISwapService } from '@summerfi/swap-common/interfaces'
 

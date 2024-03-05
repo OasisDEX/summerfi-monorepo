@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable turbo/no-undeclared-env-vars */
 import { zeroAddress } from '@summerfi/common'
-import { ChainFamilyMap, User, makeSDK } from '@summerfi/sdk-common/client'
+import { ChainFamilyMap, User, makeSDK } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
-import { Wallet, Percentage, PositionId, Address } from '@summerfi/sdk-common/common'
-import type { RefinanceParameters } from '@summerfi/sdk-common/orders'
+import { Wallet, PositionId, Address } from '@summerfi/sdk-common/common'
 import { ProtocolName, type LendingPoolParameters } from '@summerfi/sdk-common/protocols'
 import { isLendingPool } from '@summerfi/sdk-common/protocols/interfaces/LendingPool'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { createTRPCClient, httpBatchLink } from '@trpc/client'
 import type { AppRouter } from '~src/app-router'
 import superjson from 'superjson'
+import type { RefinanceParameters } from '@summerfi/sdk-common/orders'
 
 /**
  * Client
@@ -88,9 +88,9 @@ describe('Refinance Client-Server Communication', () => {
     }
 
     const refinanceParameters: RefinanceParameters = {
-      sourcePosition: sourcePosition,
+      position: sourcePosition,
       targetPool: pool,
-      slippage: Percentage.createFrom({ percentage: 20.5 }),
+      slippage: 0.1,
     }
 
     const simulation = (await sdkClient.simulation.refinance.query({

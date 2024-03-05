@@ -1,6 +1,6 @@
 import { Simulation, SimulationSteps, SimulationType, steps } from '@summerfi/sdk-common/simulation'
 import { OrderPlannerContext } from '~orderplannercommon/context'
-import { User, IPositionsManager } from '@summerfi/sdk-common/client'
+import { User, IPositionsManager } from '@summerfi/sdk-client'
 import { ISwapService } from '@summerfi/swap-common/interfaces'
 import { Deployment } from '@summerfi/deployment-utils'
 

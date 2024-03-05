@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@summerfi/sdk-common": "workspace:*",
+    "@summerfi/sdk-client": "workspace:*",
     "@summerfi/order-planner-common": "workspace:*",
     "@summerfi/swap-common": "workspace:*",
     "@summerfi/protocol-plugins": "workspace:*",
