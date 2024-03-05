@@ -1,0 +1,32 @@
+{
+  "name": "@summerfi/template-function",
+  "version": "0.0.1",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.d.ts"
+    }
+  },
+  "scripts": {
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "test": "jest --passWithNoTests",
+    "testw": "jest --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "build": "tsc -b -v tsconfig.build.json",
+    "bundle": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap"
+  },
+  "dependencies": {
+    "@summerfi/sdk-common": "workspace:*",
+    "bignumber.js": "9.0.1",
+    "viem": "^2.7.19"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/jest-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*"
+  }
+}
