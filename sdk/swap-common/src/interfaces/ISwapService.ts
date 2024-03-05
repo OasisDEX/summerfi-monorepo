@@ -5,7 +5,8 @@ import type {
   Token,
   Address,
 } from '@summerfi/sdk-common/common'
-import { SwapData } from '~swap-common/types'
+import { SwapData } from '~swap-common/types/SwapData'
+import { QuoteData } from '~swap-common/types/QuoteData'
 
 export interface ISwapService {
   /**
@@ -23,4 +24,18 @@ export interface ISwapService {
     recipient: Address
     slippage: Percentage
   }): Promise<SwapData>
+
+  /**
+   * @name getSwapQuote
+   * @description Returns a quote for the given swap parameters. It does not return
+   *              the data needed to perform the swap, only the quote
+   * @param chainInfo The chain information
+   * @param fromAmount The amount of tokens to swap
+   * @param toToken The token to swap to
+   */
+  getSwapQuote(params: {
+    chainInfo: ChainInfo
+    fromAmount: TokenAmount
+    toToken: Token
+  }): Promise<QuoteData>
 }

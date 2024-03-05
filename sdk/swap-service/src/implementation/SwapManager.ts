@@ -8,7 +8,7 @@ import type {
 } from '@summerfi/sdk-common/common'
 import { Maybe } from '@summerfi/sdk-common/utils'
 import { ISwapProvider, ISwapManager } from '@summerfi/swap-common/interfaces'
-import { SwapData } from '@summerfi/swap-common/types'
+import { QuoteData, SwapData } from '@summerfi/swap-common/types'
 import { SwapProviderType } from '@summerfi/swap-common/enums'
 
 export type SwapManagerProviderConfig = {
@@ -29,7 +29,7 @@ export class SwapManager implements ISwapManager {
     }
   }
 
-  public async getSwapData(params: {
+  async getSwapData(params: {
     chainInfo: ChainInfo
     fromAmount: TokenAmount
     toToken: Token
@@ -45,6 +45,20 @@ export class SwapManager implements ISwapManager {
     return provider.getSwapData(params)
   }
 
+  async getSwapQuote(params: {
+    chainInfo: ChainInfo
+    fromAmount: TokenAmount
+    toToken: Token
+    forceUseProvider?: SwapProviderType
+  }): Promise<QuoteData> {
+    const provider: Maybe<ISwapProvider> = this._getBestProvider(params)
+    if (!provider) {
+      throw new Error('No swap provider available')
+    }
+
+    return provider.getSwapQuote(params)
+  }
+
   private _registerProvider(provider: ISwapProvider, forChainIds: number[]): void {
     for (const chainId of forChainIds) {
       const providers = this._providersByChainId.get(chainId) || []
@@ -57,10 +71,6 @@ export class SwapManager implements ISwapManager {
 
   private _getBestProvider(params: {
     chainInfo: ChainInfo
-    fromAmount: TokenAmount
-    toToken: Token
-    recipient: Address
-    slippage: Percentage
     forceUseProvider?: SwapProviderType
   }): Maybe<ISwapProvider> {
     if (params.forceUseProvider) {

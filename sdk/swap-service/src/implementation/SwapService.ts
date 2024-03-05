@@ -2,7 +2,7 @@ import type { ChainId } from '@summerfi/sdk-common/common/aliases'
 import { Address, ChainInfo, Percentage, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { SwapManager } from '~swap-service/implementation/SwapManager'
 import { ISwapService } from '@summerfi/swap-common/interfaces'
-import { SwapData } from '@summerfi/swap-common/types'
+import { SwapData, QuoteData } from '@summerfi/swap-common/types'
 import { OneInchSwapProvider } from './oneinch/OneInchSwapProvider'
 import { OneInchSwapProviderConfig } from './oneinch/types'
 
@@ -30,6 +30,14 @@ export class SwapService implements ISwapService {
     slippage: Percentage
   }): Promise<SwapData> {
     return this.swapManager.getSwapData(params)
+  }
+
+  getSwapQuote(params: {
+    chainInfo: ChainInfo
+    fromAmount: TokenAmount
+    toToken: Token
+  }): Promise<QuoteData> {
+    return this.swapManager.getSwapQuote(params)
   }
 
   private _getOneInchConfig(): {

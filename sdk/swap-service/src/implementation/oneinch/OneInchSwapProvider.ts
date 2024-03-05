@@ -1,9 +1,10 @@
 import { ISwapProvider } from '@summerfi/swap-common/interfaces'
 import { SwapProviderType } from '@summerfi/swap-common/enums'
-import { SwapData } from '@summerfi/swap-common/types'
+import { SwapData, QuoteData } from '@summerfi/swap-common/types'
 import {
   OneInchAuthHeader,
   OneInchAuthHeaderKey,
+  OneInchQuoteResponse,
   OneInchSwapProviderConfig,
   OneInchSwapResponse,
 } from './types'
@@ -32,7 +33,7 @@ export class OneInchSwapProvider implements ISwapProvider {
     this._allowedSwapProtocols = params.allowedSwapProtocols
   }
 
-  public async getSwapData(params: {
+  async getSwapData(params: {
     chainInfo: ChainInfo
     fromAmount: TokenAmount
     toToken: Token
@@ -54,7 +55,7 @@ export class OneInchSwapProvider implements ISwapProvider {
     })
 
     if (!(response.status === 200 && response.statusText === 'OK')) {
-      throw new Error(`Error performing 1inch swap request ${swapUrl}: ${await response.body}`)
+      throw new Error(`Error performing 1inch swap data request ${swapUrl}: ${await response.body}`)
     }
 
     const responseData = (await response.json()) as OneInchSwapResponse
@@ -73,6 +74,44 @@ export class OneInchSwapProvider implements ISwapProvider {
     }
   }
 
+  async getSwapQuote(params: {
+    chainInfo: ChainInfo
+    fromAmount: TokenAmount
+    toToken: Token
+    recipient: Address
+    slippage: Percentage
+  }): Promise<QuoteData> {
+    const swapUrl = this._formatOneInchQuoteUrl({
+      chainInfo: params.chainInfo,
+      fromTokenAmount: params.fromAmount,
+      toToken: params.toToken,
+    })
+
+    const authHeader = this._getOneInchAuthHeader()
+
+    const response = await fetch(swapUrl, {
+      headers: authHeader,
+    })
+
+    if (!(response.status === 200 && response.statusText === 'OK')) {
+      throw new Error(
+        `Error performing 1inch swap quote request ${swapUrl}: ${await response.body}`,
+      )
+    }
+
+    const responseData = (await response.json()) as OneInchQuoteResponse
+
+    return {
+      provider: SwapProviderType.OneInch,
+      fromTokenAmount: params.fromAmount,
+      toTokenAmount: TokenAmount.createFrom({
+        token: params.toToken,
+        amount: responseData.toTokenAmount,
+      }),
+      estimatedGas: responseData.estimatedGas,
+    }
+  }
+
   private _getOneInchAuthHeader(): OneInchAuthHeader {
     return { [OneInchAuthHeaderKey]: this._apiKey }
   }
@@ -87,10 +126,10 @@ export class OneInchSwapProvider implements ISwapProvider {
     allowPartialFill?: boolean
   }): string {
     const chainId = params.chainInfo.chainId
-    const fromTokenAddress = params.fromTokenAmount.token.address.toString().toLowerCase()
-    const toTokenAddress = params.toToken.address.toString().toLowerCase()
+    const fromTokenAddress = params.fromTokenAmount.token.address.value.toLowerCase()
+    const toTokenAddress = params.toToken.address.value.toLowerCase()
     const fromAmount = params.fromTokenAmount.toBaseUnit()
-    const recipient = params.recipient.toString()
+    const recipient = params.recipient.value.toLowerCase()
     const disableEstimate = params.disableEstimate ? params.disableEstimate : true
     const allowPartialFill = params.allowPartialFill ? params.allowPartialFill : false
     const protocolsParam = this._allowedSwapProtocols.length
@@ -98,5 +137,21 @@ export class OneInchSwapProvider implements ISwapProvider {
       : ''
 
     return `${this._apiUrl}/${this._version}/${chainId}/swap?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&fromAddress=${recipient}&slippage=${params.slippage.toString()}&protocols=${protocolsParam}&disableEstimate=${disableEstimate}&allowPartialFill=${allowPartialFill}`
+  }
+
+  private _formatOneInchQuoteUrl(params: {
+    chainInfo: ChainInfo
+    fromTokenAmount: TokenAmount
+    toToken: Token
+  }): string {
+    const chainId = params.chainInfo.chainId
+    const fromTokenAddress = params.fromTokenAmount.token.address.value.toLowerCase()
+    const toTokenAddress = params.toToken.address.value.toLowerCase()
+    const fromAmount = params.fromTokenAmount.toBaseUnit()
+    const protocolsParam = this._allowedSwapProtocols.length
+      ? this._allowedSwapProtocols.join(',')
+      : ''
+
+    return `${this._apiUrl}/${this._version}/${chainId}/quote?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&protocols=${protocolsParam}`
   }
 }
