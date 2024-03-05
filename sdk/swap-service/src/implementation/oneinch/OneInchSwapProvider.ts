@@ -78,8 +78,6 @@ export class OneInchSwapProvider implements ISwapProvider {
     chainInfo: ChainInfo
     fromAmount: TokenAmount
     toToken: Token
-    recipient: Address
-    slippage: Percentage
   }): Promise<QuoteData> {
     const swapUrl = this._formatOneInchQuoteUrl({
       chainInfo: params.chainInfo,
