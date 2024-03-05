@@ -47,7 +47,7 @@ describe.skip('OneInch | SwapManager | Integration', () => {
     // SwapManager
     const swapService = new SwapService()
 
-    const swapData: SwapData = await swapService.getSwapData({
+    const swapData: SwapData = await swapService.getSwapDataExactInput({
       chainInfo,
       fromAmount,
       toToken: DAI,
@@ -73,7 +73,7 @@ describe.skip('OneInch | SwapManager | Integration', () => {
     // SwapManager
     const swapService = new SwapService()
 
-    const quoteData: QuoteData = await swapService.getSwapQuote({
+    const quoteData: QuoteData = await swapService.getSwapQuoteExactInput({
       chainInfo,
       fromAmount,
       toToken: DAI,
