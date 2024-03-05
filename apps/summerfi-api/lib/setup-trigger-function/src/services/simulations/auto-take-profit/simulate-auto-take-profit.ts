@@ -11,7 +11,7 @@ export const simulateAutoTakeProfit = ({
   position,
   currentStopLoss,
   minimalTriggerData,
-  iterations = 10,
+  iterations = 15,
 }: SimulateAutoTakeProfitParams): AutoTakeProfitSimulation => {
   const emptyProfit = getEmptyProfit(position)
   const result = new Array(iterations).fill(0).reduce(
