@@ -7,7 +7,7 @@ import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
 import { getAavePosition } from './get-aave-position'
-import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
+import { calculateCollateralPriceInDebtBasedOnLtv } from '~helpers'
 import { dmaAaveStopLossValidator } from './against-position-validators'
 import { CurrentTriggerLike, encodeAaveStopLoss } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'

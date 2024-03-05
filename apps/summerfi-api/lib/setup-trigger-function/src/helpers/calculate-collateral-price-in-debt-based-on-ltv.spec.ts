@@ -1,13 +1,9 @@
-import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
+import { calculateCollateralPriceInDebtBasedOnLtv } from '../helpers/calculate-collateral-price-in-debt-based-on-ltv'
 import { PRICE_DECIMALS } from '~types'
 
 describe('calculateExecutionPrice', () => {
   it('should return value greater than 0', () => {
     const result = calculateCollateralPriceInDebtBasedOnLtv({
-      netValueUSD: 0n,
-      collateralValueUSD: 0n,
-      debtValueUSD: 0n,
-      hasStablecoinDebt: true,
       collateral: {
         balance: 10n * 10n ** 18n,
         token: {
@@ -25,11 +21,6 @@ describe('calculateExecutionPrice', () => {
         },
       },
       ltv: 5000n,
-      address: '0x2',
-      prices: {
-        collateralPrice: 1n * 10n ** PRICE_DECIMALS,
-        debtPrice: 1n * 10n ** PRICE_DECIMALS,
-      },
     })
     expect(result).toBe(2_800n * 10n ** PRICE_DECIMALS)
   })

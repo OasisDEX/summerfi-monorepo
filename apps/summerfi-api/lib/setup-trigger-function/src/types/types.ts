@@ -26,6 +26,7 @@ import {
   sparkBasicSellTriggerDataSchema,
   aavePartialTakeProfitTriggerDataSchema,
   sparkPartialTakeProfitTriggerDataSchema,
+  percentageSchema,
 } from './validators'
 
 export type AaveAutoBuyEventBody = z.infer<typeof eventBodyAaveBasicBuySchema>
@@ -56,6 +57,7 @@ export type Token = z.infer<typeof tokenSchema>
 export type TokenBalance = z.infer<typeof tokenBalanceSchema>
 export type Price = z.infer<typeof priceSchema>
 export type LTV = z.infer<typeof ltvSchema>
+export type Percentage = z.infer<typeof percentageSchema>
 export type AaveAutoBuyTriggerData = z.infer<typeof aaveBasicBuyTriggerDataSchema>
 export type AaveAutoSellTriggerData = z.infer<typeof aaveBasicSellTriggerDataSchema>
 export type DmaAaveStopLossTriggerData = z.infer<typeof dmaAaveStopLossTriggerDataSchema>

@@ -33,11 +33,12 @@ describe('simulatePosition', () => {
           },
         },
         ltv: 5_000n,
-        prices: {
+        oraclePrices: {
           collateralPrice: 1n * 10n ** PRICE_DECIMALS,
           debtPrice: 1n * 10n ** PRICE_DECIMALS,
         },
         address: '0x2',
+        collateralPriceInDebt: 2800n * 10n ** PRICE_DECIMALS,
       },
       targetLTV: 7_500n,
       executionLTV: 5_000n,

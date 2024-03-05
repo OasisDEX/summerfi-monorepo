@@ -3,9 +3,8 @@ import { Address } from '@summerfi/serverless-shared/domain-types'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
 import { aavePoolDataProviderAbi, aaveOracleAbi, erc20Abi } from '~abi'
-import { calculateLtv } from './calculate-ltv'
+import { calculateLtv, isStablecoin } from '~helpers'
 import { Logger } from '@aws-lambda-powertools/logger'
-import { isStablecoin } from './is-stablecoin'
 
 export interface GetPositionParams {
   address: Address
@@ -126,10 +125,11 @@ export async function getAavePosition(
     collateral: collateralResult,
     debt: debtResult,
     address: address,
-    prices: {
+    oraclePrices: {
       collateralPrice,
       debtPrice,
     },
+    collateralPriceInDebt,
     netValueUSD: netValue,
     debtValueUSD,
     collateralValueUSD,
