@@ -29,7 +29,7 @@ export class SwapManager implements ISwapManager {
     }
   }
 
-  async getSwapData(params: {
+  async getSwapDataExactInput(params: {
     chainInfo: ChainInfo
     fromAmount: TokenAmount
     toToken: Token
@@ -42,10 +42,10 @@ export class SwapManager implements ISwapManager {
       throw new Error('No swap provider available')
     }
 
-    return provider.getSwapData(params)
+    return provider.getSwapDataExactInput(params)
   }
 
-  async getSwapQuote(params: {
+  async getSwapQuoteExactInput(params: {
     chainInfo: ChainInfo
     fromAmount: TokenAmount
     toToken: Token
@@ -56,7 +56,7 @@ export class SwapManager implements ISwapManager {
       throw new Error('No swap provider available')
     }
 
-    return provider.getSwapQuote(params)
+    return provider.getSwapQuoteExactInput(params)
   }
 
   private _registerProvider(provider: ISwapProvider, forChainIds: number[]): void {

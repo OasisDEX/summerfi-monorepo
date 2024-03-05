@@ -4,13 +4,12 @@ import { getPool } from './handlers/getPool'
 import { getRefinanceSimulation } from './handlers/getRefinanceSimulation'
 import { buildOrder } from './handlers/buildOrder'
 import { getToken } from './handlers/getToken'
-import { getSwapData } from './handlers/getSwapData'
-import { getSwapQuote } from './handlers/getSwapQuote'
+import { getSwapDataExactInput } from './handlers/getSwapData'
+import { getSwapQuoteExactInput } from './handlers/getSwapQuote'
 
 /**
  * Server
  */
-
 export const appRouter = router({
   getPosition: getPosition,
   getPool: getPool,
@@ -19,10 +18,9 @@ export const appRouter = router({
   orders: {
     buildOrder: buildOrder,
   },
-
   swaps: {
-    getSwapData: getSwapData,
-    getSwapQuote: getSwapQuote,
+    getSwapDataExactInput: getSwapDataExactInput,
+    getSwapQuoteExactInput: getSwapQuoteExactInput,
   },
 })
 

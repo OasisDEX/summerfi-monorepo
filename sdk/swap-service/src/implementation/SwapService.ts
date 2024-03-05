@@ -22,22 +22,22 @@ export class SwapService implements ISwapService {
     ])
   }
 
-  getSwapData(params: {
+  getSwapDataExactInput(params: {
     chainInfo: ChainInfo
     fromAmount: TokenAmount
     toToken: Token
     recipient: Address
     slippage: Percentage
   }): Promise<SwapData> {
-    return this.swapManager.getSwapData(params)
+    return this.swapManager.getSwapDataExactInput(params)
   }
 
-  getSwapQuote(params: {
+  getSwapQuoteExactInput(params: {
     chainInfo: ChainInfo
     fromAmount: TokenAmount
     toToken: Token
   }): Promise<QuoteData> {
-    return this.swapManager.getSwapQuote(params)
+    return this.swapManager.getSwapQuoteExactInput(params)
   }
 
   private _getOneInchConfig(): {

@@ -33,7 +33,7 @@ export class OneInchSwapProvider implements ISwapProvider {
     this._allowedSwapProtocols = params.allowedSwapProtocols
   }
 
-  async getSwapData(params: {
+  async getSwapDataExactInput(params: {
     chainInfo: ChainInfo
     fromAmount: TokenAmount
     toToken: Token
@@ -74,7 +74,7 @@ export class OneInchSwapProvider implements ISwapProvider {
     }
   }
 
-  async getSwapQuote(params: {
+  async getSwapQuoteExactInput(params: {
     chainInfo: ChainInfo
     fromAmount: TokenAmount
     toToken: Token
