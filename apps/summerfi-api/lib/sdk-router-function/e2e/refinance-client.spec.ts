@@ -102,7 +102,7 @@ describe('Refinance Client-Server Communication', () => {
       fail('Simulation not found')
     }
 
-    const order = await sdkClient.orders.query({
+    const order = await sdkClient.orders.buildOrder.query({
       user: new User({ chain, wallet }),
       positionsManager: { address: Address.createFrom({ value: zeroAddress }) },
       simulation: simulation as any,

@@ -1,10 +1,9 @@
 import { z } from 'zod'
 import { publicProcedure } from '~src/trpc'
 import { ChainInfo, Token, TokenAmount, Address, Percentage } from '@summerfi/sdk-common/common'
-import { SwapService } from '@summerfi/swap-service'
 import { SwapData } from '@summerfi/swap-common/types'
 
-export const swapsHandler = publicProcedure
+export const getSwapData = publicProcedure
   .input(
     z.object({
       chainInfo: z.custom<ChainInfo>((chainInfo) => chainInfo !== undefined),
@@ -15,9 +14,7 @@ export const swapsHandler = publicProcedure
     }),
   )
   .query(async (opts): Promise<SwapData> => {
-    const swapService = new SwapService()
-
-    return await swapService.getSwapData({
+    return await opts.ctx.swapService.getSwapData({
       chainInfo: opts.input.chainInfo,
       fromAmount: opts.input.fromAmount,
       toToken: opts.input.toToken,
