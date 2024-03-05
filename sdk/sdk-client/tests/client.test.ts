@@ -1,4 +1,4 @@
-import { makeSDK } from '~sdk-client'
+import { makeSDK } from '~sdk-client/implementation/MakeSDK'
 
 describe('SDK Client', () => {
   it('should create SDK client', () => {

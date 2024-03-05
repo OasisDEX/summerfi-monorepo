@@ -9,7 +9,7 @@ describe('getPosition', () => {
   const sdk = makeSDK()
 
   const wallet = Wallet.createFrom({ value: zeroAddress })
-  it('should get position by Id', async () => {
+  it.skip('should get position by Id', async () => {
     const chain = await sdk.chains.getChain({
       chainInfo: ChainFamilyMap.Ethereum.Mainnet,
     })

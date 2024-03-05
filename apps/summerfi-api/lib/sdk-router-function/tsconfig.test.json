@@ -8,11 +8,17 @@
       "~src/*": ["src/*"],
       "@summerfi/common": ["node_modules/@summerfi/common/src/index.ts"],
       "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
+      "@summerfi/sdk-client": ["node_modules/@summerfi/sdk-client/src"],
+
       "@summerfi/swap-service": ["node_modules/@summerfi/swap-service/src/index.ts"],
       "@summerfi/swap-common/*": ["node_modules/@summerfi/swap-common/src/*"],
+      "@summerfi/simulator-service": ["node_modules/@summerfi/simulator-service/src"],
+
       "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
       "~swap-service/*": ["node_modules/@summerfi/swap-service/src/*"],
-      "~swap-common/*": ["node_modules/@summerfi/swap-common/src/*"]
+      "~swap-common/*": ["node_modules/@summerfi/swap-common/src/*"],
+      "~sdk-client/*": ["node_modules/@summerfi/sdk-client/src/*"],
+      "~simulator-service/*": ["node_modules/@summerfi/simulator-service/src/*"]
     }
   },
   "include": ["src/**/*.ts"],
