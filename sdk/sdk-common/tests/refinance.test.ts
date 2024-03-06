@@ -1,4 +1,3 @@
-import { Maybe } from '~sdk-common/utils'
 import {
   Percentage,
   PositionId,
@@ -7,6 +6,8 @@ import {
   TokenAmount,
   Wallet,
   type Position,
+  Maybe,
+  Address,
 } from '~sdk-common/common'
 
 import {
@@ -38,7 +39,7 @@ describe.skip('Refinance | SDK', () => {
 
     // Wallet
     const wallet: Wallet = Wallet.createFrom({
-      value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      address: Address.createFrom({ value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266' }),
     })
 
     // User
@@ -81,8 +82,11 @@ describe.skip('Refinance | SDK', () => {
     expect(prevPosition.pool.type).toEqual(PoolType.Lending)
 
     // Target protocol
-    const spark: Maybe<Protocol> = await chain.protocols.getProtocolByName({
-      name: ProtocolName.Spark,
+    const spark: Maybe<Protocol> = await chain.protocols.getProtocol({
+      protocol: {
+        name: ProtocolName.Spark,
+        chainInfo: chain.chainInfo,
+      },
     })
     if (!spark) {
       fail('Spark not found')

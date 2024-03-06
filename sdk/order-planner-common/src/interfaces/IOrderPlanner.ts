@@ -2,7 +2,7 @@ import { Deployment } from '@summerfi/deployment-utils'
 import { Order } from '@summerfi/sdk-common/orders'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { IPositionsManager, User } from '@summerfi/sdk-common/client'
-import { Maybe } from '@summerfi/sdk-common/utils'
+import { Maybe } from '@summerfi/sdk-common/common'
 import { ActionBuildersMap } from '~orderplannercommon/builders'
 import { ISwapService } from '@summerfi/swap-common/interfaces'
 

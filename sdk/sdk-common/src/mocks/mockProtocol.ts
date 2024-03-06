@@ -1,20 +1,20 @@
-import type { Maybe } from '~sdk-common/common/aliases'
+import { Maybe } from '../common/aliases/Maybe'
+import { ChainInfo } from '../common/implementation/ChainInfo'
+import { ProtocolsRegistry } from '../protocols/adapters/ProtocolsRegistry'
+import { ProtocolName } from '../protocols/enums/ProtocolName'
+import { Protocol } from '../protocols/implementation/Protocol'
+import { IPool } from '../protocols/interfaces/IPool'
+import { PoolParameters } from '../protocols/interfaces/PoolParameters'
+import { ProtocolParameters } from '../protocols/interfaces/ProtocolParameters'
 import { mockPool } from './mockPool'
-import type { ChainInfo } from '~sdk-common/common/implementation/ChainInfo'
-import { ProtocolsRegistry } from '~sdk-common/protocols/adapters'
-import type { IPool } from '~sdk-common/protocols/interfaces/IPool'
-import type { PoolParameters } from '~sdk-common/protocols/interfaces/PoolParameters'
-import type { Protocol } from '~sdk-common/protocols/interfaces/Protocol'
-import { ProtocolName } from '~sdk-common/protocols/interfaces/ProtocolName'
-import type { ProtocolParameters } from '~sdk-common/protocols/interfaces/ProtocolParameters'
 
 export class mockProtocolSpark implements Protocol {
   public readonly name: ProtocolName
-  private readonly chainInfo: ChainInfo
+  public readonly chainInfo: ChainInfo
 
   public constructor(params: { chainInfo: ChainInfo }) {
-    this.chainInfo = params.chainInfo
     this.name = ProtocolName.Spark
+    this.chainInfo = params.chainInfo
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
@@ -33,10 +33,9 @@ export class mockProtocolSpark implements Protocol {
 
 export async function registerMockProtocols() {
   const chainInfo = { chainId: 1, name: 'Mainnet' }
+  const sparkMainnet = new mockProtocolSpark({ chainInfo })
 
   ProtocolsRegistry.registerProtocol({
-    chainInfo: chainInfo,
-    name: ProtocolName.Spark,
-    protocol: new mockProtocolSpark({ chainInfo }),
+    protocol: sparkMainnet,
   })
 }
