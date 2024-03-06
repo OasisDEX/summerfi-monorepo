@@ -9,7 +9,7 @@ export const SwapActionBuilder: ActionBuilder<steps.SwapStep> = async (params): 
 
   const swapContractInfo = deployment.contracts['Swap']
 
-  const swapData = await swapService.getSwapData({
+  const swapData = await swapService.getSwapDataExactInput({
     chainInfo: params.user.chain.chainInfo,
     fromAmount: step.inputs.fromTokenAmount,
     toToken: step.inputs.toTokenAmount.token,

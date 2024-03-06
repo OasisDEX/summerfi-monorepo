@@ -5,7 +5,7 @@ import type { Simulation, SimulationType } from '@summerfi/sdk-common/simulation
 import type { User, IPositionsManager } from '@summerfi/sdk-client'
 import { Maybe } from '@summerfi/sdk-common/utils'
 
-export const ordersHandler = publicProcedure
+export const buildOrder = publicProcedure
   .input(
     z.object({
       user: z.custom<User>((user) => user !== undefined),
