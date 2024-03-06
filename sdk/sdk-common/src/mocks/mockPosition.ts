@@ -10,6 +10,7 @@ import { TokenAmount } from '~sdk-common/common/implementation/TokenAmount'
 import type { Wallet } from '~sdk-common/common/implementation/Wallet'
 import { PoolType } from '~sdk-common/protocols/interfaces/PoolType'
 import { ProtocolName } from '~sdk-common/protocols/interfaces/ProtocolName'
+import { MakerPoolId } from '../protocols'
 
 export async function getMockPosition(params: {
   chain: Chain
@@ -34,7 +35,7 @@ export async function getMockPosition(params: {
       ratio: Percentage.createFrom({ percentage: 20.3 }),
     }),
     pool: {
-      poolId: { id: 'testpool' },
+      poolId: { protocol: ProtocolName.Maker, id: 'testpool' } as MakerPoolId,
       protocol: ProtocolName.Maker,
       type: PoolType.Lending,
     },

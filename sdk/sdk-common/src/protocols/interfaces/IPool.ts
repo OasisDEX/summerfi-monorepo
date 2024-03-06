@@ -1,4 +1,3 @@
-import { Address } from '~sdk-common/common/implementation/Address'
 import { IPoolId } from './IPoolId'
 import { ProtocolName } from './ProtocolName'
 import { PoolType } from './PoolType'
@@ -13,6 +12,4 @@ export interface IPool {
   type: PoolType
   poolId: IPoolId
   protocol: ProtocolName
-  address?: Address
-  TVL?: number
 }
