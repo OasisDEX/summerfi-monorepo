@@ -12,8 +12,8 @@ export type OneInchSwapProviderConfig = {
 }
 
 export interface OneInchBaseResponse {
-  toTokenAmount: string
   fromTokenAmount: string
+  toTokenAmount: string
 }
 
 export interface OneInchSwapResponse extends OneInchBaseResponse {
@@ -25,4 +25,11 @@ export interface OneInchSwapResponse extends OneInchBaseResponse {
     value: string
     gasPrice: string
   }
+}
+
+export interface OneInchQuoteResponse extends OneInchBaseResponse {
+  protocols: unknown
+  fromTokenAmount: string
+  toTokenAmount: string
+  estimatedGas: string
 }
