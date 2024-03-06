@@ -4,22 +4,30 @@ import { PoolType } from './PoolType'
 import type { Percentage } from '~sdk-common/common/implementation/Percentage'
 import { TokenAmount } from '~sdk-common/common/implementation/TokenAmount'
 import { Price } from '~sdk-common/common/implementation/Price'
-import { RiskRatio } from '~sdk-common/common'
+import { CurrencySymbol, RiskRatio } from '~sdk-common/common'
 import { ProtocolName } from './ProtocolName'
 
 export interface CollateralConfig {
+  protocol: ProtocolName
   token: Token
   price: Price
-  nextPrice: Price // only maker has this
   priceUSD: Price
   liquidationTreshold: RiskRatio
+  maxLtv: RiskRatio
   tokensLocked: TokenAmount
-  maxSupply: TokenAmount
   liquidationPenalty: Percentage
+}
+
+interface MakerPoolCollateralConfig extends CollateralConfig {
+  nextPrice: Price // only maker has this TODO add to protocol specific config
+}
+
+interface AavePoolCollateralConfig extends CollateralConfig {
   apy: Percentage 
 }
 
 export interface DebtConfig {
+  protocol: ProtocolName
   token: Token
   price: Price
   priceUSD: Price
@@ -40,6 +48,7 @@ export interface DebtConfig {
 export interface LendingPool extends IPool {
   type: PoolType.Lending
   protocol: ProtocolName
+  protocolBaseCurrency: Token | CurrencySymbol
   collaterals: CollateralConfig[]
   debts: DebtConfig[]
 }
