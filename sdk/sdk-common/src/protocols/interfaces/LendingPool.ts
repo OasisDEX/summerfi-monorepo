@@ -47,7 +47,6 @@ export interface DebtConfig {
  */
 export interface LendingPool extends IPool {
   type: PoolType.Lending
-  protocol: ProtocolName
   protocolBaseCurrency: Token | CurrencySymbol
   collaterals: CollateralConfig[]
   debts: DebtConfig[]
