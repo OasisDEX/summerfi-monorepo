@@ -6,10 +6,6 @@ import { IProtocol } from '../interfaces/IProtocol'
 import { Maybe } from '../../common/aliases/Maybe'
 import { ChainInfo } from '../../common/implementation/ChainInfo'
 
-export interface IProtocolSerialized extends IProtocol {
-  // empty on purpose
-}
-
 /**
  * @interface Protocol
  * @description Represents a protocol. Provides methods for getting pools
