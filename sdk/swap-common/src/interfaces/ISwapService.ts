@@ -5,9 +5,14 @@ import type {
   Token,
   Address,
 } from '@summerfi/sdk-common/common'
-import { SwapData } from '~swap-common/types/SwapData'
-import { QuoteData } from '~swap-common/types/QuoteData'
+import type { SwapData } from '../types/SwapData'
+import type { QuoteData } from '../types/QuoteData'
 
+// TODO: we should remove this and use just a funcition to instantiate the swap manager
+/**
+ * @name ISwapService
+ * @deprecated
+ */
 export interface ISwapService {
   /**
    * @name getSwapDataExactInput

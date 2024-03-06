@@ -1,5 +1,4 @@
 const { pathsToModuleNameMapper } = require('ts-jest')
-const { compilerOptions } = require('@summerfi/typescript-config/tsconfig.test')
 
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = (pkgCompilerOptions = {}) => {
@@ -10,7 +9,7 @@ module.exports = (pkgCompilerOptions = {}) => {
     roots: ['<rootDir>/src', '<rootDir>/tests'],
     preset: 'ts-jest',
     extensionsToTreatAsEsm: ['.ts'],
-    silent: true,
+    silent: false,
     maxWorkers: 1,
     testTimeout: 10000,
     testEnvironment: 'node',

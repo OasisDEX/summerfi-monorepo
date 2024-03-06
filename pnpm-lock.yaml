@@ -839,6 +839,9 @@ importers:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
+      '@summerfi/swap-common':
+        specifier: workspace:*
+        version: link:../swap-common
       '@types/node-fetch':
         specifier: ^2.6.11
         version: 2.6.11

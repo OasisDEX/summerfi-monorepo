@@ -4,7 +4,7 @@ import type { PoolType } from '~sdk-common/protocols/interfaces/PoolType'
 import type { IPoolId } from '~sdk-common/protocols/interfaces/IPoolId'
 import { ProtocolName } from '~sdk-common/protocols/interfaces/ProtocolName'
 
-export class PoolBaseImpl<T extends PoolType> implements IPool {
+export abstract class PoolBaseImpl<T extends PoolType> implements IPool {
   public readonly poolId: IPoolId
   public readonly protocol: ProtocolName
   public readonly type: T

@@ -29,6 +29,7 @@ describe.skip('Refinance | SDK', () => {
     const sdk = makeSDK()
 
     // Chain
+    // TODO: chain should not be used on the server, it should be only used on the client only
     const chain: Maybe<Chain> = await sdk.chains.getChain({
       chainInfo: ChainFamilyMap.Ethereum.Mainnet,
     })
@@ -37,11 +38,12 @@ describe.skip('Refinance | SDK', () => {
     }
 
     // Wallet
+    // TODO: Do we really need a wallet instance? We only pass it to the user as the parameter so we might just pass an address instead.
     const wallet: Wallet = Wallet.createFrom({
       value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
     })
 
-    // User
+    // TODO: User should also be oniy on the client
     const user: User = await sdk.users.getUser({ chain: chain, wallet })
     expect(user).toBeDefined()
     expect(user.wallet).toEqual(wallet)
@@ -81,6 +83,7 @@ describe.skip('Refinance | SDK', () => {
     expect(prevPosition.pool.type).toEqual(PoolType.Lending)
 
     // Target protocol
+    // TODO: this should have spark protocol type so we don't need to cast, derive it from the protocol name
     const spark: Maybe<Protocol> = await chain.protocols.getProtocolByName({
       name: ProtocolName.Spark,
     })
@@ -95,7 +98,7 @@ describe.skip('Refinance | SDK', () => {
       debtTokens: [DAI],
     }
 
-    const newPool: Maybe<IPool> = await spark.getPool({
+    const newPool = await spark.getPool({
       poolParameters: poolPair,
     })
     if (!newPool) {
@@ -109,16 +112,17 @@ describe.skip('Refinance | SDK', () => {
       fail('Pool type is not lending')
     }
 
-    const newLendingPool = newPool as LendingPool
+    // TODO: this should have spark protocol type so we don't need to cast, derive it from the protocol name
+    // const newLendingPool = newPool as LendingPool
 
-    expect(newLendingPool.maxLTV).toEqual(Percentage.createFrom({ percentage: 50.3 }))
-    expect(newLendingPool.debtTokens).toEqual(poolPair.debtTokens)
-    expect(newLendingPool.collateralTokens).toEqual(poolPair.collateralTokens)
+    // expect(newLendingPool.maxLTV).toEqual(Percentage.createFrom({ percentage: 50.3 }))
+    // expect(newLendingPool.debtTokens).toEqual(poolPair.debtTokens)
+    // expect(newLendingPool.collateralTokens).toEqual(poolPair.collateralTokens)
 
     const refinanceParameters: RefinanceParameters = {
       position: prevPosition,
       targetPool: newPool,
-      slippage: 0.1,
+      slippage: Percentage.createFrom({ percentage: 0.5 }),
     }
 
     const refinanceSimulation: Simulation<SimulationType.Refinance> =

@@ -6,6 +6,7 @@ import { SwapData, QuoteData } from '@summerfi/swap-common/types'
 import { OneInchSwapProvider } from './oneinch/OneInchSwapProvider'
 import { OneInchSwapProviderConfig } from './oneinch/types'
 
+// TODO: we should remove this and use just a funcition to instantiate the swap manager probably using a configuration provider to get 1inch config
 export class SwapService implements ISwapService {
   private readonly swapManager: SwapManager
 
@@ -22,6 +23,7 @@ export class SwapService implements ISwapService {
     ])
   }
 
+  // TODO: clean it up
   getSwapDataExactInput(params: {
     chainInfo: ChainInfo
     fromAmount: TokenAmount
@@ -32,6 +34,7 @@ export class SwapService implements ISwapService {
     return this.swapManager.getSwapDataExactInput(params)
   }
 
+  // TODO: clean it up
   getSwapQuoteExactInput(params: {
     chainInfo: ChainInfo
     fromAmount: TokenAmount

@@ -6,9 +6,10 @@ import {
 } from '@summerfi/sdk-common/simulation'
 import { getReferencedValue, makeStrategy } from '~simulator-service/implementation/helpers'
 import { Simulator } from '~simulator-service/implementation/simulator-engine'
-import { Token, TokenAmount } from '@summerfi/sdk-common/common'
+import { TokenAmount } from '@summerfi/sdk-common/common'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { RefinanceParameters } from '@summerfi/sdk-common/orders'
+import { type ISwapManager } from '@summerfi/swap-common/interfaces'
 
 export const refinanceStrategy = makeStrategy([
   {
@@ -44,28 +45,13 @@ export const refinanceStrategy = makeStrategy([
 ])
 
 // TODO move those interfaces to more appropriate place
-interface Quote {
-  fromTokenAmount: TokenAmount
-  toTokenAmount: TokenAmount
-  slippage: number
-  fee: number
-}
-
-export interface GetQuote {
-  (args: {
-    fromTokenAmount: TokenAmount
-    toToken: Token
-    slippage: number
-    fee: number
-  }): Promise<Quote>
-}
-// STOP TODO
 
 export interface RefinanceDependencies {
-  getQuote: GetQuote
+  swapService: ISwapManager
+  getSummerFee: () => number
 }
 
-export async function refinace(
+export async function refinaceLendingToLending(
   args: RefinanceParameters,
   dependecies: RefinanceDependencies,
 ): Promise<Simulation<SimulationType.Refinance>> {
@@ -118,12 +104,15 @@ export async function refinace(
     .next(async () => ({
       name: 'CollateralSwap',
       type: SimulationSteps.Swap,
-      inputs: await dependecies.getQuote({
-        fromTokenAmount: args.position.collateralAmount,
-        toToken: args.targetPool.collateralTokens[0],
+      inputs: {
+        ...(await dependecies.swapService.getSwapQuoteExactInput({
+          chainInfo: args.position.pool.protocol.chainInfo,
+          fromAmount: args.position.collateralAmount,
+          toToken: args.targetPool.collateralTokens[0],
+        })),
         slippage: args.slippage,
-        fee: 0,
-      }),
+        fee: dependecies.getSummerFee(),
+      },
       skip: isCollateralSwapSkipped,
     }))
     .next(async (ctx) => ({
@@ -142,12 +131,15 @@ export async function refinace(
     .next(async (ctx) => ({
       name: 'DebtSwap',
       type: SimulationSteps.Swap,
-      inputs: await dependecies.getQuote({
-        fromTokenAmount: getReferencedValue(ctx.getReference(['DepositBorrow', 'borrowAmount'])),
-        toToken: args.targetPool.collateralTokens[0],
+      inputs: {
+        ...(await dependecies.swapService.getSwapQuoteExactInput({
+          chainInfo: args.position.pool.protocol.chainInfo,
+          fromAmount: getReferencedValue(ctx.getReference(['DepositBorrow', 'borrowAmount'])),
+          toToken: args.targetPool.debtTokens[0],
+        })),
         slippage: args.slippage,
-        fee: 0,
-      }),
+        fee: dependecies.getSummerFee(),
+      },
       skip: isDebtSwapSkipped,
     }))
     .next(async () => ({
