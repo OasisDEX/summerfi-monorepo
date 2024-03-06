@@ -1,3 +1,4 @@
+import { ConfigurationProvider } from '@summerfi/configuration-provider'
 import { ChainFamilyMap } from '@summerfi/sdk-common/client'
 import {
   Address,
@@ -9,9 +10,9 @@ import {
 import { subtractPercentage } from '@summerfi/sdk-common/utils'
 import { SwapProviderType } from '@summerfi/swap-common/enums'
 import { QuoteData, SwapData } from '@summerfi/swap-common/types'
-import { SwapService } from '~swap-service'
+import { SwapManagerFactory } from '~swap-service'
 
-describe.skip('OneInch | SwapManager | Integration', () => {
+describe('OneInch | SwapManager | Integration', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
 
   // Tokens
@@ -45,9 +46,10 @@ describe.skip('OneInch | SwapManager | Integration', () => {
 
   it('should provide swap data', async () => {
     // SwapManager
-    const swapService = new SwapService()
+    const configProvider = new ConfigurationProvider()
+    const swapManager = SwapManagerFactory.newSwapManager({ configProvider })
 
-    const swapData: SwapData = await swapService.getSwapDataExactInput({
+    const swapData: SwapData = await swapManager.getSwapDataExactInput({
       chainInfo,
       fromAmount,
       toToken: DAI,
@@ -71,9 +73,10 @@ describe.skip('OneInch | SwapManager | Integration', () => {
 
   it('should provide quote data', async () => {
     // SwapManager
-    const swapService = new SwapService()
+    const configProvider = new ConfigurationProvider()
+    const swapManager = SwapManagerFactory.newSwapManager({ configProvider })
 
-    const quoteData: QuoteData = await swapService.getSwapQuoteExactInput({
+    const quoteData: QuoteData = await swapManager.getSwapQuoteExactInput({
       chainInfo,
       fromAmount,
       toToken: DAI,

@@ -1,3 +1,3 @@
 export { SwapManager } from './SwapManager'
-export { SwapService } from './SwapService'
+export { SwapManagerFactory } from './SwapManagerFactory'
 export * from './oneinch'

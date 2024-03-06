@@ -11,7 +11,8 @@ export const createTestContext = (opts: ContextOptions): Context => {
     provider: undefined,
     deployments: {} as any,
     orderPlannerService: {} as any,
-    swapService: {} as any,
+    swapManager: {} as any,
+    configProvider: {} as any,
   }
 }
 

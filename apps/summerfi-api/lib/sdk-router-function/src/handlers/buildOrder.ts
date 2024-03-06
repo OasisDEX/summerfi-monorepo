@@ -20,6 +20,6 @@ export const buildOrder = publicProcedure
       user: opts.input.user,
       positionsManager: opts.input.positionsManager,
       simulation: opts.input.simulation,
-      swapService: opts.ctx.swapService,
+      swapManager: opts.ctx.swapManager,
     })
   })
