@@ -12,8 +12,7 @@ import { encodeAaveTrailingStopLoss } from './trigger-encoders'
 import { DerivedPrices } from '@summerfi/prices-subgraph'
 import { CurrentTriggerLike } from './trigger-encoders'
 import { dmaAaveTrailingStopLossValidator } from './against-position-validators'
-import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
-import { calculateLtv } from './calculate-ltv'
+import { calculateCollateralPriceInDebtBasedOnLtv, calculateLtv } from '~helpers'
 import { getCurrentAaveStopLoss } from './get-current-aave-stop-loss'
 
 export interface GetAaveTrailingStopLossServiceContainerProps {

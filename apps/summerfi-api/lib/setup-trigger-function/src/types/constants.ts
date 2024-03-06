@@ -1,5 +1,8 @@
 export const PRICE_DECIMALS = 8n
 export const PERCENT_DECIMALS = 4n
+export const PRICE_DECIMALS_NUMBER = 8
+export const PERCENT_DECIMALS_NUMBER = 4
+
 export const ONE_PERCENT = 100n
 
 export const ONE_DOLLAR = 10n ** PRICE_DECIMALS
