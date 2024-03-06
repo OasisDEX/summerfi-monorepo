@@ -1,5 +1,5 @@
 {
-  "name": "@summerfi/template-function",
+  "name": "@summerfi/protocol-manager-poc",
   "version": "0.0.1",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

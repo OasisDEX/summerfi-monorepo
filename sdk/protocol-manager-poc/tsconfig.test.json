@@ -4,7 +4,6 @@
     "rootDir": ".",
     "baseUrl": ".",
     "paths": {
-      "~src/*": ["./src/*"],
       "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
       "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"]
     }

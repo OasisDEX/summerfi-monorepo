@@ -5,6 +5,7 @@ import type { Percentage } from '~sdk-common/common/implementation/Percentage'
 import { TokenAmount } from '~sdk-common/common/implementation/TokenAmount'
 import { Price } from '~sdk-common/common/implementation/Price'
 import { RiskRatio } from '~sdk-common/common'
+import { ProtocolName } from './ProtocolName'
 
 export interface CollateralConfig {
   token: Token
@@ -38,6 +39,7 @@ export interface DebtConfig {
  */
 export interface LendingPool extends IPool {
   type: PoolType.Lending
+  protocol: ProtocolName
   collaterals: CollateralConfig[]
   debts: DebtConfig[]
 }
