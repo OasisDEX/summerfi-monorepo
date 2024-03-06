@@ -7,13 +7,12 @@ import { Address, ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
-import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
-import { CurrentTriggerLike } from './trigger-encoders'
+import { calculateCollateralPriceInDebtBasedOnLtv } from '~helpers'
+import { CurrentTriggerLike, encodeSparkAutoBuy } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
 import { getSparkPosition } from './get-spark-position'
 import { getCurrentSparkStopLoss } from './get-current-spark-stop-loss'
 import { sparkAutoBuyValidator } from './against-position-validators'
-import { encodeSparkAutoBuy } from './trigger-encoders/encode-spark-auto-buy'
 
 export interface GetSparkAutoBuyServiceContainerProps {
   rpc: PublicClient

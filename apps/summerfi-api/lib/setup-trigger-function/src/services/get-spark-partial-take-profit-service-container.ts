@@ -19,6 +19,7 @@ import { encodeFunctionForDpm } from './encode-function-for-dpm'
 import { getSparkPosition } from './get-spark-position'
 import { DerivedPrices } from '@summerfi/prices-subgraph'
 import { getCurrentSparkStopLoss } from './get-current-spark-stop-loss'
+import { simulateAutoTakeProfit } from './simulations'
 
 export interface GetSparkPartialTakeProfitServiceContainerProps {
   rpc: PublicClient
@@ -105,8 +106,20 @@ export const getSparkPartialTakeProfitServiceContainer: (
   })
 
   return {
-    simulatePosition: async () => {
-      return {}
+    simulatePosition: async ({ trigger }) => {
+      const position = await getPosition({
+        address: trigger.dpm,
+        collateral: trigger.position.collateral,
+        debt: trigger.position.debt,
+      })
+      const triggers = await getTriggers(trigger.dpm)
+
+      const currentStopLoss = getCurrentSparkStopLoss(triggers, position, logger)
+      return simulateAutoTakeProfit({
+        position,
+        currentStopLoss,
+        minimalTriggerData: trigger.triggerData,
+      })
     },
     validate: async ({ trigger }) => {
       const position = await getPosition({

@@ -1,5 +1,6 @@
-import { normalizeAmount, getTheLeastCommonMultiple } from './normalize-amount'
-import { PERCENT_DECIMALS, PRICE_DECIMALS, Price, TokenBalance, LTV } from '~types'
+import { LTV, PERCENT_DECIMALS, Price, PRICE_DECIMALS, TokenBalance } from '~types'
+import { getTheLeastCommonMultiple, normalizeBalance } from './normalize-balance'
+
 export function calculateLtv({
   collateral,
   debt,
@@ -10,8 +11,8 @@ export function calculateLtv({
   collateralPriceInDebt: Price
 }): LTV {
   const commonPrecision = getTheLeastCommonMultiple(collateral.token.decimals, debt.token.decimals)
-  const collateralNormalized = normalizeAmount(collateral, commonPrecision)
-  const debtNormalized = normalizeAmount(debt, commonPrecision)
+  const collateralNormalized = normalizeBalance(collateral, commonPrecision)
+  const debtNormalized = normalizeBalance(debt, commonPrecision)
 
   if (collateralNormalized === 0n || debtNormalized === 0n || collateralPriceInDebt === 0n) {
     return 0n
