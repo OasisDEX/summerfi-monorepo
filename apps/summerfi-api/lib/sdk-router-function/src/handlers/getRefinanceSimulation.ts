@@ -21,7 +21,8 @@ export const getRefinanceSimulation = publicProcedure
     const args: RefinanceParameters = params.parameters
 
     const dependencies: RefinanceDependencies = {
-      getQuote: opts.ctx.swapService.getSwapQuoteExactInput,
+      swapManager: opts.ctx.swapManager,
+      getSummerFee: () => 0.01,
     }
 
     const simulation = await refinaceLendingToLending(args, dependencies)

@@ -7,15 +7,15 @@ import {
   ProtocolsRegistry,
   type LendingPoolParameters,
 } from '@summerfi/sdk-common/protocols'
-import { mockPool } from '~sdk-client/mocks/mockPool'
+import { mockPool } from './mockPool'
 
 export class mockProtocolSpark implements Protocol {
   public readonly name: ProtocolName
-  private readonly chainInfo: ChainInfo
+  public readonly chainInfo: ChainInfo
 
   public constructor(params: { chainInfo: ChainInfo }) {
-    this.chainInfo = params.chainInfo
     this.name = ProtocolName.Spark
+    this.chainInfo = params.chainInfo
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
@@ -34,10 +34,9 @@ export class mockProtocolSpark implements Protocol {
 
 export async function registerMockProtocols() {
   const chainInfo = { chainId: 1, name: 'Mainnet' }
+  const sparkMainnet = new mockProtocolSpark({ chainInfo })
 
   ProtocolsRegistry.registerProtocol({
-    chainInfo: chainInfo,
-    name: ProtocolName.Spark,
-    protocol: new mockProtocolSpark({ chainInfo }),
+    protocol: sparkMainnet,
   })
 }

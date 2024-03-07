@@ -8,10 +8,11 @@ import {
 import type { Order } from '@summerfi/sdk-common/orders'
 import type { Protocol } from '@summerfi/sdk-common/protocols'
 import type { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import type { Chain } from '~sdk-client/implementation/Chain'
-import type { IUser } from '~sdk-client/interfaces/IUser'
-import { getMockOrder } from '~sdk-client/mocks/mockOrder'
-import { getMockPosition } from '~sdk-client/mocks/mockPosition'
+
+import { Chain } from './Chain'
+import type { IUser } from '../interfaces/IUser'
+import { getMockOrder } from '../mocks/mockOrder'
+import { getMockPosition } from '../mocks/mockPosition'
 
 export class User implements IUser {
   public readonly wallet: Wallet
@@ -46,9 +47,7 @@ export class User implements IUser {
   public async newOrder(params: { simulation: Simulation<SimulationType> }): Promise<Order> {
     return getMockOrder({
       user: this,
-      positionsManager: {
-        address: Address.createFrom({ value: '0x0000000000000000000000000000000000000000' }),
-      },
+      positionsManager: { address: Address.ZeroAddressEthereum },
       simulation: params.simulation,
     })
   }

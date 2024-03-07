@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable turbo/no-undeclared-env-vars */
-import { zeroAddress } from '@summerfi/common'
 import { ChainFamilyMap, User, makeSDK } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
-import { Wallet, PositionId, Address } from '@summerfi/sdk-common/common'
+import { Wallet, PositionId, Address, Percentage } from '@summerfi/sdk-common/common'
 import { ProtocolName, type LendingPoolParameters } from '@summerfi/sdk-common/protocols'
 import { isLendingPool } from '@summerfi/sdk-common/protocols/interfaces/LendingPool'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
@@ -28,7 +27,7 @@ export const sdkClient = createTRPCClient<AppRouter>({
 })
 
 describe('Refinance Client-Server Communication', () => {
-  const wallet = Wallet.createFrom({ value: zeroAddress })
+  const wallet = Wallet.createFrom({ address: Address.ZeroAddressEthereum })
 
   it('Refinance flow', async () => {
     const sdk = makeSDK()
@@ -90,7 +89,7 @@ describe('Refinance Client-Server Communication', () => {
     const refinanceParameters: RefinanceParameters = {
       position: sourcePosition,
       targetPool: pool,
-      slippage: 0.1,
+      slippage: Percentage.createFrom({ percentage: 0.5 }),
     }
 
     const simulation = (await sdkClient.simulation.refinance.query({
@@ -104,7 +103,7 @@ describe('Refinance Client-Server Communication', () => {
 
     const order = await sdkClient.orders.buildOrder.query({
       user: new User({ chain, wallet }),
-      positionsManager: { address: Address.createFrom({ value: zeroAddress }) },
+      positionsManager: { address: Address.ZeroAddressEthereum },
       simulation: simulation as any,
     })
     if (!order) {

@@ -5,17 +5,16 @@ import { steps } from '@summerfi/sdk-common/simulation'
 import { HexData } from '@summerfi/sdk-common/common/aliases'
 
 export const SwapActionBuilder: ActionBuilder<steps.SwapStep> = async (params): Promise<void> => {
-  const { context, swapService, deployment, step } = params
+  const { context, swapManager, deployment, step } = params
 
   const swapContractInfo = deployment.contracts['Swap']
 
-  const swapData = await swapService.getSwapDataExactInput({
+  const swapData = await swapManager.getSwapDataExactInput({
     chainInfo: params.user.chain.chainInfo,
     fromAmount: step.inputs.fromTokenAmount,
     toToken: step.inputs.toTokenAmount.token,
     recipient: Address.createFrom({ value: swapContractInfo.address as HexData }),
-    // TODO: change slippage in Simulator to a Percentage type
-    slippage: Percentage.createFrom({ percentage: step.inputs.slippage }),
+    slippage: step.inputs.slippage,
   })
 
   context.addActionCall({

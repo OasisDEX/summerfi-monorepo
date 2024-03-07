@@ -1,5 +1,5 @@
 import type { ChainInfo, Maybe } from '@summerfi/sdk-common/common'
-import { type ProtocolName, ProtocolsRegistry, type Protocol } from '@summerfi/sdk-common/protocols'
+import { ProtocolsRegistry, type Protocol, type IProtocol } from '@summerfi/sdk-common/protocols'
 import type { IProtocolsManager } from '~sdk-client/interfaces/IProtocolsManager'
 
 export class ProtocolsManager implements IProtocolsManager {
@@ -9,16 +9,13 @@ export class ProtocolsManager implements IProtocolsManager {
     this._chainInfo = params.chainInfo
   }
 
-  public getSupportedProtocols(): ProtocolName[] {
+  public getSupportedProtocols(): IProtocol[] {
     return ProtocolsRegistry.getSupportedProtocols({ chainInfo: this._chainInfo })
   }
 
-  public async getProtocolByName<ProtocolType extends Protocol>(params: {
-    name: ProtocolName
-  }): Promise<Maybe<ProtocolType>> {
-    return ProtocolsRegistry.getProtocol<ProtocolType>({
-      chainInfo: this._chainInfo,
-      name: params.name,
+  public async getProtocol(params: { protocol: IProtocol }): Promise<Maybe<Protocol>> {
+    return ProtocolsRegistry.getProtocol({
+      protocol: params.protocol,
     })
   }
 }

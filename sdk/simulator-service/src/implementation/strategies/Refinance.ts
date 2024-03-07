@@ -47,7 +47,7 @@ export const refinanceStrategy = makeStrategy([
 // TODO move those interfaces to more appropriate place
 
 export interface RefinanceDependencies {
-  swapService: ISwapManager
+  swapManager: ISwapManager
   getSummerFee: () => number
 }
 
@@ -105,7 +105,7 @@ export async function refinaceLendingToLending(
       name: 'CollateralSwap',
       type: SimulationSteps.Swap,
       inputs: {
-        ...(await dependecies.swapService.getSwapQuoteExactInput({
+        ...(await dependecies.swapManager.getSwapQuoteExactInput({
           chainInfo: args.position.pool.protocol.chainInfo,
           fromAmount: args.position.collateralAmount,
           toToken: args.targetPool.collateralTokens[0],
@@ -132,7 +132,7 @@ export async function refinaceLendingToLending(
       name: 'DebtSwap',
       type: SimulationSteps.Swap,
       inputs: {
-        ...(await dependecies.swapService.getSwapQuoteExactInput({
+        ...(await dependecies.swapManager.getSwapQuoteExactInput({
           chainInfo: args.position.pool.protocol.chainInfo,
           fromAmount: getReferencedValue(ctx.getReference(['DepositBorrow', 'borrowAmount'])),
           toToken: args.targetPool.debtTokens[0],

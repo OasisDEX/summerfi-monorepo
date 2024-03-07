@@ -1,5 +1,5 @@
 import type { Maybe } from '@summerfi/sdk-common/common'
-import type { ProtocolName, Protocol } from '@summerfi/sdk-common/protocols'
+import type { IProtocol, Protocol } from '@summerfi/sdk-common/protocols'
 
 /**
  * @interface IProtocolsManager
@@ -12,7 +12,7 @@ export interface IProtocolsManager {
    *
    * @returns The list of supported protocols
    */
-  getSupportedProtocols(): ProtocolName[]
+  getSupportedProtocols(): IProtocol[]
 
   /**
    * @method getProtocol
@@ -22,7 +22,5 @@ export interface IProtocolsManager {
    *
    * @returns The protocol with the given name
    */
-  getProtocolByName<ProtocolType extends Protocol>(params: {
-    name: ProtocolName
-  }): Promise<Maybe<ProtocolType>>
+  getProtocol(params: { protocol: IProtocol }): Promise<Maybe<Protocol>>
 }

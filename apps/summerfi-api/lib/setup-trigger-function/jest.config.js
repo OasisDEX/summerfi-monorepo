@@ -11,6 +11,7 @@ module.exports = {
   testTimeout: 10000,
   testEnvironment: 'node',
   testPathIgnorePatterns: ['dist', 'node_modules'],
+  setupFilesAfterEnv: ['jest-expect-message'],
   modulePaths: ['src'],
   moduleNameMapper: pathsToModuleNameMapper({
     '@summerfi/serverless-shared': [

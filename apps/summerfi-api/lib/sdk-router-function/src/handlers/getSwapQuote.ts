@@ -12,7 +12,7 @@ export const getSwapQuoteExactInput = publicProcedure
     }),
   )
   .query(async (opts): Promise<QuoteData> => {
-    return await opts.ctx.swapService.getSwapQuoteExactInput({
+    return await opts.ctx.swapManager.getSwapQuoteExactInput({
       chainInfo: opts.input.chainInfo,
       fromAmount: opts.input.fromAmount,
       toToken: opts.input.toToken,

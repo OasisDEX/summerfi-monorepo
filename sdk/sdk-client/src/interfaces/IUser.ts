@@ -2,7 +2,7 @@ import type { Wallet, Position, PositionId, Maybe } from '@summerfi/sdk-common/c
 import type { Order } from '@summerfi/sdk-common/orders'
 import type { Protocol } from '@summerfi/sdk-common/protocols'
 import type { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import type { Chain } from '~sdk-client/implementation/Chain'
+import type { Chain } from '../implementation/Chain'
 
 /**
  * @interface IUser

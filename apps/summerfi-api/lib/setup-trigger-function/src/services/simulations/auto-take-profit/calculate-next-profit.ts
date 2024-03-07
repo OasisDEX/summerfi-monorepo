@@ -1,4 +1,3 @@
-import { CurrentStopLoss } from '../../trigger-encoders'
 import {
   calculateBalance,
   calculateCollateral,
@@ -11,8 +10,11 @@ import {
   FEE,
   MinimalAutoTakeProfitTriggerData,
   MinimalPositionLike,
+  MinimalStopLossInformation,
   SLIPPAGE,
 } from './types'
+
+const getMax = (a: bigint, b: bigint) => (a > b ? a : b)
 
 export const calculateNextProfit = ({
   lastProfit,
@@ -23,14 +25,17 @@ export const calculateNextProfit = ({
   lastProfit: AutoTakeProfitRealized
   currentPosition: MinimalPositionLike
   triggerData: MinimalAutoTakeProfitTriggerData
-  currentStopLoss: CurrentStopLoss | undefined
+  currentStopLoss: MinimalStopLossInformation | undefined
 }): { profit: AutoTakeProfitRealized; nextPosition: MinimalPositionLike } => {
   const executionLTV = triggerData.executionLTV
-  const executionPrice = calculateCollateralPriceInDebtBasedOnLtv({
-    collateral: currentPosition.collateral,
-    debt: currentPosition.debt,
-    ltv: executionLTV,
-  })
+  const executionPrice = getMax(
+    calculateCollateralPriceInDebtBasedOnLtv({
+      collateral: currentPosition.collateral,
+      debt: currentPosition.debt,
+      ltv: executionLTV,
+    }),
+    triggerData.executionPrice,
+  )
 
   const collateralAfterWithdraw = calculateCollateral({
     position: {
@@ -67,7 +72,7 @@ export const calculateNextProfit = ({
 
     const stopLossExecutionPrice = currentStopLoss?.executionLTV
       ? calculateCollateralPriceInDebtBasedOnLtv({
-          ltv: executionLTV,
+          ltv: currentStopLoss?.executionLTV,
           collateral: collateralAfterWithdraw,
           debt: currentPosition.debt,
         })

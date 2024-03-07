@@ -1,4 +1,3 @@
-import { Maybe } from '@summerfi/sdk-common/utils'
 import {
   Percentage,
   PositionId,
@@ -7,6 +6,8 @@ import {
   TokenAmount,
   Wallet,
   type Position,
+  Address,
+  type Maybe,
 } from '@summerfi/sdk-common/common'
 
 import {
@@ -40,7 +41,7 @@ describe.skip('Refinance | SDK', () => {
     // Wallet
     // TODO: Do we really need a wallet instance? We only pass it to the user as the parameter so we might just pass an address instead.
     const wallet: Wallet = Wallet.createFrom({
-      value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      address: Address.createFrom({ value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266' }),
     })
 
     // TODO: User should also be oniy on the client
@@ -84,8 +85,11 @@ describe.skip('Refinance | SDK', () => {
 
     // Target protocol
     // TODO: this should have spark protocol type so we don't need to cast, derive it from the protocol name
-    const spark: Maybe<Protocol> = await chain.protocols.getProtocolByName({
-      name: ProtocolName.Spark,
+    const spark: Maybe<Protocol> = await chain.protocols.getProtocol({
+      protocol: {
+        name: ProtocolName.Spark,
+        chainInfo: chain.chainInfo,
+      },
     })
     if (!spark) {
       fail('Spark not found')

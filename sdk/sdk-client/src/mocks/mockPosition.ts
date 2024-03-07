@@ -1,4 +1,3 @@
-import type { Chain } from '~sdk-client/implementation/Chain'
 import {
   Percentage,
   RiskRatio,
@@ -10,6 +9,7 @@ import {
   type Wallet,
 } from '@summerfi/sdk-common/common'
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import type { Chain } from '../implementation/Chain'
 
 export async function getMockPosition(params: {
   chain: Chain
@@ -35,7 +35,10 @@ export async function getMockPosition(params: {
     }),
     pool: {
       poolId: { id: 'testpool' },
-      protocol: ProtocolName.Maker,
+      protocol: {
+        name: ProtocolName.Maker,
+        chainInfo: params.chain.chainInfo,
+      },
       type: PoolType.Lending,
     },
   }

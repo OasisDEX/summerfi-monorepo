@@ -14,7 +14,7 @@ export const getSwapDataExactInput = publicProcedure
     }),
   )
   .query(async (opts): Promise<SwapData> => {
-    return await opts.ctx.swapService.getSwapDataExactInput({
+    return await opts.ctx.swapManager.getSwapDataExactInput({
       chainInfo: opts.input.chainInfo,
       fromAmount: opts.input.fromAmount,
       toToken: opts.input.toToken,
