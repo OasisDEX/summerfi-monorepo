@@ -1,6 +1,6 @@
-import type { Maybe } from '~sdk-common/common/aliases'
-import type { Protocol } from '~sdk-common/protocols/interfaces/Protocol'
-import type { ProtocolName } from '~sdk-common/protocols/interfaces/ProtocolName'
+import { Maybe } from '../../common/aliases/Maybe'
+import { Protocol } from '../../protocols/implementation/Protocol'
+import { IProtocol } from '../../protocols/interfaces/IProtocol'
 
 /**
  * @interface IProtocolsManager
@@ -13,7 +13,7 @@ export interface IProtocolsManager {
    *
    * @returns The list of supported protocols
    */
-  getSupportedProtocols(): ProtocolName[]
+  getSupportedProtocols(): IProtocol[]
 
   /**
    * @method getProtocol
@@ -23,7 +23,5 @@ export interface IProtocolsManager {
    *
    * @returns The protocol with the given name
    */
-  getProtocolByName<ProtocolType extends Protocol>(params: {
-    name: ProtocolName
-  }): Promise<Maybe<ProtocolType>>
+  getProtocol(params: { protocol: IProtocol }): Promise<Maybe<Protocol>>
 }

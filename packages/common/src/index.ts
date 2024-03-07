@@ -8,4 +8,3 @@ export {
 } from './time'
 export type { RecursivePartial } from './recursive-partial'
 export type { Address } from './address'
-export { zeroAddress } from './zero-address'

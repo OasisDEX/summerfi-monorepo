@@ -1,8 +1,9 @@
 import { steps } from '@summerfi/sdk-common/simulation'
-import { Maybe } from '@summerfi/sdk-common/utils'
+
 import { BaseAction } from '~orderplannercommon/actions'
 import { StorageInputsMapType, StorageOutputsMapType } from './Types'
 import assert from 'assert'
+import { Maybe } from '@summerfi/sdk-common/common'
 
 export class ExecutionStorageManager {
   private slotsMap: Map<string, number> = new Map()

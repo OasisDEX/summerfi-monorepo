@@ -1,6 +1,6 @@
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { ActionBuilder, FilterStep } from '@summerfi/order-planner-common/builders'
-import { Maybe } from '@summerfi/sdk-common/utils'
+import { Maybe } from '@summerfi/sdk-common/common'
 
 export interface IProtocolPlugin {
   getActionBuilder<StepType extends steps.Steps>(

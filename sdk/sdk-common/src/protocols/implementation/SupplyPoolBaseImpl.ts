@@ -1,17 +1,17 @@
+import { Address } from '../../common/implementation/Address'
+import { Token } from '../../common/implementation/Token'
+import { IPoolId } from '../interfaces/IPoolId'
+import { IProtocol } from '../interfaces/IProtocol'
+import { PoolType } from '../interfaces/PoolType'
+import { SupplyPool } from '../interfaces/SupplyPool'
 import { PoolBaseImpl } from './PoolBaseImpl'
-import { Address } from '~sdk-common/common/implementation/Address'
-import { Token } from '~sdk-common/common/implementation/Token'
-import type { IPoolId } from '~sdk-common/protocols/interfaces/IPoolId'
-import { PoolType } from '~sdk-common/protocols/interfaces/PoolType'
-import { SupplyPool } from '~sdk-common/protocols/interfaces/SupplyPool'
-import { ProtocolName } from '~sdk-common/protocols/interfaces/ProtocolName'
 
 export class SupplyPoolImpl extends PoolBaseImpl<PoolType.Supply> implements SupplyPool {
   public readonly supplyToken: Token
 
   constructor(params: {
     poolId: IPoolId
-    protocol: ProtocolName
+    protocol: IProtocol
     address?: Address
     TVL?: number
     supplyToken: Token
