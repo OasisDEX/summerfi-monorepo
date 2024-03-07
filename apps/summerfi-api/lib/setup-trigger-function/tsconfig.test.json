@@ -7,7 +7,7 @@
     "paths": {
       "~types": ["./types"],
       "~abi": ["./abi"],
-      "~helpers": ["./helpers"],
+      "~helpers": ["./helpers"]
     }
   },
   "files": ["node_modules/jest-expect-message/types/index.d.ts"],
