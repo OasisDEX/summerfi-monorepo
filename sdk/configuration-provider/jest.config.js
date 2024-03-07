@@ -1,5 +1,6 @@
 const { compilerOptions } = require('./tsconfig.test')
 const sharedConfig = require('@summerfi/jest-config/jest.base')
+require('dotenv').config({ path: '../.env' })
 
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {

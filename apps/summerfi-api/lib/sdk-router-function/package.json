@@ -4,8 +4,9 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest ./tests",
-    "e2e": "jest ./e2e --silent=false",
+    "test": "jest tests/",
+    "testw": "jest --watch",
+    "e2e": "jest e2e/",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "build": "tsc -p tsconfig.build.json --noEmit && esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap"

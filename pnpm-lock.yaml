@@ -94,6 +94,37 @@ importers:
         specifier: ^7.2.3
         version: 7.2.3
 
+  __template-package__:
+    dependencies:
+      '@aws-lambda-powertools/logger':
+        specifier: ^1.17.0
+        version: 1.17.0
+      '@aws-lambda-powertools/metrics':
+        specifier: ^1.17.0
+        version: 1.17.0
+      '@aws-lambda-powertools/tracer':
+        specifier: ^1.17.0
+        version: 1.17.0
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../packages/serverless-shared
+      '@summerfi/template-function':
+        specifier: 'link:'
+        version: 'link:'
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../packages/typescript-config
+
   apps/summerfi-api:
     devDependencies:
       sst:

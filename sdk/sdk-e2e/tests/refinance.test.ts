@@ -11,9 +11,9 @@ import {
 } from '@summerfi/sdk-common/common'
 
 import {
-  LendingPool,
+  // LendingPool,
   LendingPoolParameters,
-  IPool,
+  // IPool,
   PoolType,
   Protocol,
   ProtocolName,
