@@ -3,9 +3,9 @@ import { publicProcedure } from '~src/trpc'
 import type { Order } from '@summerfi/sdk-common/orders'
 import type { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import type { User, IPositionsManager } from '@summerfi/sdk-common/client'
-import { Maybe } from '@summerfi/sdk-common/utils'
+import { Maybe } from '@summerfi/sdk-common/common'
 
-export const ordersHandler = publicProcedure
+export const buildOrder = publicProcedure
   .input(
     z.object({
       user: z.custom<User>((user) => user !== undefined),
@@ -20,6 +20,6 @@ export const ordersHandler = publicProcedure
       user: opts.input.user,
       positionsManager: opts.input.positionsManager,
       simulation: opts.input.simulation,
-      swapService: opts.ctx.swapService,
+      swapManager: opts.ctx.swapManager,
     })
   })

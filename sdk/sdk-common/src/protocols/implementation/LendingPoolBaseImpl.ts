@@ -1,10 +1,11 @@
-import {CurrencySymbol, Token} from "~sdk-common/common";
+import {CurrencySymbol} from "~sdk-common/common";
+import { Address } from '../../common/implementation/Address'
+import { Token } from '../../common/implementation/Token'
+import { IPoolId } from '../interfaces/IPoolId'
+import { IProtocol } from '../interfaces/IProtocol'
+import { CollateralConfig, DebtConfig, LendingPool } from '../interfaces/LendingPool'
+import { PoolType } from '../interfaces/PoolType'
 import { PoolBaseImpl } from './PoolBaseImpl'
-import type { Address } from '~sdk-common/common/implementation/Address'
-import type { CollateralConfig, DebtConfig, LendingPool } from '~sdk-common/protocols/interfaces/LendingPool'
-import type { IPoolId } from '~sdk-common/protocols/interfaces/IPoolId'
-import { PoolType } from '~sdk-common/protocols/interfaces/PoolType'
-import { ProtocolName } from '~sdk-common/protocols/interfaces/ProtocolName'
 
 export class LendingPoolImpl extends PoolBaseImpl<PoolType.Lending> implements LendingPool {
   public readonly poolBaseCurrency: Token | CurrencySymbol
@@ -13,7 +14,7 @@ export class LendingPoolImpl extends PoolBaseImpl<PoolType.Lending> implements L
 
   constructor(params: {
     poolId: IPoolId
-    protocol: ProtocolName
+    protocol: IProtocol
     address?: Address
     TVL?: number
     poolBaseCurrency: Token | CurrencySymbol
@@ -26,8 +27,8 @@ export class LendingPoolImpl extends PoolBaseImpl<PoolType.Lending> implements L
       type: PoolType.Lending,
     })
 
-    this.debts = params.debts
-    this.collaterals = params.collaterals
+    this.collateralTokens = params.collateralTokens
+    this.debtTokens = params.debtTokens
     this.poolBaseCurrency = params.poolBaseCurrency
   }
 }

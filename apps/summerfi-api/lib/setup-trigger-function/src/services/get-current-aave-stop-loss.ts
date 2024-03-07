@@ -5,8 +5,7 @@ import {
 import { safeParseBigInt } from '@summerfi/serverless-shared'
 import { PositionLike } from '~types'
 import { Logger } from '@aws-lambda-powertools/logger'
-import { calculateLtv } from './calculate-ltv'
-import { calculateCollateralPriceInDebtBasedOnLtv } from './calculate-collateral-price-in-debt-based-on-ltv'
+import { calculateLtv, calculateCollateralPriceInDebtBasedOnLtv } from '~helpers'
 import { CurrentStopLoss } from './trigger-encoders'
 
 export function getCurrentAaveStopLoss(

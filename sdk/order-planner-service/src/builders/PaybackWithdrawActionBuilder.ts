@@ -7,14 +7,14 @@ export const PaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWithdrawSt
 ): Promise<void> => {
   const protocol = params.step.inputs.position.pool.protocol
 
-  const plugin = ProtocolPluginsRegistry.getProtocolPlugin(protocol)
+  const plugin = ProtocolPluginsRegistry.getProtocolPlugin(protocol.name)
   if (!plugin) {
-    throw new Error(`No protocol plugin found for protocol ${protocol}`)
+    throw new Error(`No protocol plugin found for protocol ${protocol.name}`)
   }
 
   const builder = plugin.getActionBuilder(params.step)
   if (!builder) {
-    throw new Error(`No action builder found for protocol ${protocol}`)
+    throw new Error(`No action builder found for protocol ${protocol.name}`)
   }
 
   builder(params)

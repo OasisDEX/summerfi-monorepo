@@ -19,6 +19,7 @@ import {
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
 import { getCurrentAaveStopLoss } from './get-current-aave-stop-loss'
 import { DerivedPrices } from '@summerfi/prices-subgraph'
+import { simulateAutoTakeProfit } from './simulations'
 
 export interface GetAavePartialTakeProfitServiceContainerProps {
   rpc: PublicClient
@@ -108,8 +109,20 @@ export const getAavePartialTakeProfitServiceContainer: (
   })
 
   return {
-    simulatePosition: async () => {
-      return {}
+    simulatePosition: async ({ trigger }) => {
+      const position = await getPosition({
+        address: trigger.dpm,
+        collateral: trigger.position.collateral,
+        debt: trigger.position.debt,
+      })
+      const triggers = await getTriggers(trigger.dpm)
+
+      const currentStopLoss = getCurrentAaveStopLoss(triggers, position, logger)
+      return simulateAutoTakeProfit({
+        position,
+        currentStopLoss,
+        minimalTriggerData: trigger.triggerData,
+      })
     },
     validate: async ({ trigger }) => {
       const position = await getPosition({

@@ -2,7 +2,7 @@ import { ActionBuilder, ActionBuildersMap } from '@summerfi/order-planner-common
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { IProtocolPlugin } from '~protocolplugins/interfaces'
 import { SparkDepositBorrowActionBuilder } from './builders'
-import { Maybe } from '@summerfi/sdk-common/utils'
+import { Maybe } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { ProtocolPluginsRegistry } from '~protocolplugins/implementation'
 

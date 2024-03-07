@@ -11,7 +11,7 @@ describe('get-max-coverage', () => {
           decimals: 6,
         },
       },
-      prices: {
+      oraclePrices: {
         debtPrice: 1n * 10n ** PRICE_DECIMALS,
       },
     } as unknown as PositionLike
@@ -27,7 +27,7 @@ describe('get-max-coverage', () => {
           decimals: 18,
         },
       },
-      prices: {
+      oraclePrices: {
         debtPrice: 3000n * 10n ** PRICE_DECIMALS,
       },
     } as unknown as PositionLike

@@ -12,6 +12,11 @@ interface IAddressSerialized {
  * @description Represents a blockchain address, including its type
  */
 export class Address implements IAddressSerialized {
+  public static ZeroAddressEthereum: Address = new Address({
+    value: '0x0000000000000000000000000000000000000000',
+    type: AddressType.Ethereum,
+  })
+
   readonly value: AddressValue
   readonly type: AddressType
 

@@ -3,7 +3,8 @@ import { MAX_COVERAGE_BASE } from './defaults'
 
 export const getMaxCoverage = (position: PositionLike) => {
   const maxCoverageInPriceDecimals =
-    (MAX_COVERAGE_BASE * 10n ** PRICE_DECIMALS * 10n ** PRICE_DECIMALS) / position.prices.debtPrice
+    (MAX_COVERAGE_BASE * 10n ** PRICE_DECIMALS * 10n ** PRICE_DECIMALS) /
+    position.oraclePrices.debtPrice
 
   const exponent = BigInt(position.debt.token.decimals) - PRICE_DECIMALS
 
