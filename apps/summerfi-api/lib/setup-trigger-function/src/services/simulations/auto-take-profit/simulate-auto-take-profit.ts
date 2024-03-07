@@ -10,6 +10,7 @@ import { getEmptyProfit } from './get-empty-profit'
 export const simulateAutoTakeProfit = ({
   position,
   currentStopLoss,
+  newStopLoss,
   minimalTriggerData,
   iterations = 15,
 }: SimulateAutoTakeProfitParams): AutoTakeProfitSimulation => {
@@ -20,7 +21,7 @@ export const simulateAutoTakeProfit = ({
         lastProfit: current,
         currentPosition: _nextPosition,
         triggerData: minimalTriggerData,
-        currentStopLoss,
+        stopLossLtv: currentStopLoss?.executionLTV || newStopLoss?.triggerData.executionLTV,
       })
 
       return {

@@ -30,6 +30,7 @@ export type MinimalAutoTakeProfitTriggerData = Pick<
 export interface SimulateAutoTakeProfitParams {
   position: PositionLike
   currentStopLoss: CurrentStopLoss | undefined
+  newStopLoss: (AavePartialTakeProfitTriggerData | SparkPartialTakeProfitTriggerData)['stopLoss']
   minimalTriggerData: MinimalAutoTakeProfitTriggerData
   iterations?: number
 }

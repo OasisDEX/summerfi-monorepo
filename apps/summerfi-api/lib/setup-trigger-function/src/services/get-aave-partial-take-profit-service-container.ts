@@ -118,9 +118,11 @@ export const getAavePartialTakeProfitServiceContainer: (
       const triggers = await getTriggers(trigger.dpm)
 
       const currentStopLoss = getCurrentAaveStopLoss(triggers, position, logger)
+      const newStopLoss = trigger.triggerData.stopLoss
       return simulateAutoTakeProfit({
         position,
         currentStopLoss,
+        newStopLoss,
         minimalTriggerData: trigger.triggerData,
       })
     },

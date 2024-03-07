@@ -1,4 +1,3 @@
-import { CurrentStopLoss } from '../../trigger-encoders'
 import {
   calculateBalance,
   calculateCollateral,
@@ -18,12 +17,12 @@ export const calculateNextProfit = ({
   lastProfit,
   currentPosition,
   triggerData,
-  currentStopLoss,
+  stopLossLtv,
 }: {
   lastProfit: AutoTakeProfitRealized
   currentPosition: MinimalPositionLike
   triggerData: MinimalAutoTakeProfitTriggerData
-  currentStopLoss: CurrentStopLoss | undefined
+  stopLossLtv: bigint | undefined
 }): { profit: AutoTakeProfitRealized; nextPosition: MinimalPositionLike } => {
   const executionLTV = triggerData.executionLTV
   const executionPrice = calculateCollateralPriceInDebtBasedOnLtv({
@@ -65,9 +64,9 @@ export const calculateNextProfit = ({
       balance: lastProfit.totalProfitInDebt.balance + realizedProfitInDebt.balance,
     }
 
-    const stopLossExecutionPrice = currentStopLoss?.executionLTV
+    const stopLossExecutionPrice = stopLossLtv
       ? calculateCollateralPriceInDebtBasedOnLtv({
-          ltv: currentStopLoss?.executionLTV,
+          ltv: stopLossLtv,
           collateral: collateralAfterWithdraw,
           debt: currentPosition.debt,
         })
@@ -131,7 +130,7 @@ export const calculateNextProfit = ({
       balance: lastProfit.totalProfitInDebt.balance + realizedProfitInDebt.balance,
     }
 
-    const stopLossExecutionPrice = currentStopLoss?.executionLTV
+    const stopLossExecutionPrice = stopLossLtv
       ? calculateCollateralPriceInDebtBasedOnLtv({
           ltv: executionLTV,
           collateral: collateralAfterWithdraw,
