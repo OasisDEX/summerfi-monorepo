@@ -1,4 +1,3 @@
-import { CurrentStopLoss } from '../../trigger-encoders'
 import {
   calculateBalance,
   calculateCollateral,
@@ -11,6 +10,7 @@ import {
   FEE,
   MinimalAutoTakeProfitTriggerData,
   MinimalPositionLike,
+  MinimalStopLossInformation,
   SLIPPAGE,
 } from './types'
 
@@ -25,7 +25,7 @@ export const calculateNextProfit = ({
   lastProfit: AutoTakeProfitRealized
   currentPosition: MinimalPositionLike
   triggerData: MinimalAutoTakeProfitTriggerData
-  currentStopLoss: CurrentStopLoss | undefined
+  currentStopLoss: MinimalStopLossInformation | undefined
 }): { profit: AutoTakeProfitRealized; nextPosition: MinimalPositionLike } => {
   const executionLTV = triggerData.executionLTV
   const executionPrice = getMax(
