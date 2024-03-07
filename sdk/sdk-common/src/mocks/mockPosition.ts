@@ -1,16 +1,15 @@
-import type { Chain } from '~sdk-common/client/implementation/Chain'
-
-import { TokenSymbol } from '~sdk-common/common/enums'
-import type { Maybe } from '~sdk-common/common/aliases'
-import { Percentage } from '~sdk-common/common/implementation/Percentage'
-import type { Position } from '~sdk-common/common/implementation/Position'
-import type { PositionId } from '~sdk-common/common/implementation/PositionId'
-import { RiskRatio } from '~sdk-common/common/implementation/RiskRatio'
-import { TokenAmount } from '~sdk-common/common/implementation/TokenAmount'
-import type { Wallet } from '~sdk-common/common/implementation/Wallet'
-import { PoolType } from '~sdk-common/protocols/interfaces/PoolType'
-import { ProtocolName } from '~sdk-common/protocols/interfaces/ProtocolName'
-import { MakerPoolId } from '../protocols'
+import { Chain } from '../client/implementation/Chain'
+import { Maybe } from '../common/aliases/Maybe'
+import { TokenSymbol } from '../common/enums/TokenSymbol'
+import { Percentage } from '../common/implementation/Percentage'
+import { Position } from '../common/implementation/Position'
+import { PositionId } from '../common/implementation/PositionId'
+import { RiskRatio } from '../common/implementation/RiskRatio'
+import { TokenAmount } from '../common/implementation/TokenAmount'
+import { Wallet } from '../common/implementation/Wallet'
+import { ILKType, MakerPoolId } from '../protocols/interfaces/MakerPoolId'
+import { PoolType } from '../protocols/interfaces/PoolType'
+import { ProtocolName } from '../protocols/interfaces/ProtocolName'
 
 export async function getMockPosition(params: {
   chain: Chain
@@ -35,7 +34,11 @@ export async function getMockPosition(params: {
       ratio: Percentage.createFrom({ percentage: 20.3 }),
     }),
     pool: {
-      poolId: { protocol: ProtocolName.Maker, id: 'testpool' } as MakerPoolId,
+      poolId: {
+        protocol: ProtocolName.Maker,
+        ilkType: ILKType.ETH_A,
+        vaultId: 'testvault',
+      } as MakerPoolId,
       protocol: ProtocolName.Maker,
       type: PoolType.Lending,
     },

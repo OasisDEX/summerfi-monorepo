@@ -1,12 +1,12 @@
-import { Percentage } from '~sdk-common/common/implementation/Percentage'
-
-import type { Maybe } from '~sdk-common/common/aliases'
-import { isLendingPoolParameters } from '~sdk-common/protocols/interfaces/LendingPoolParameters'
-import type { PoolParameters } from '~sdk-common/protocols/interfaces/PoolParameters'
-import type { Protocol } from '~sdk-common/protocols/interfaces/Protocol'
-import type { ProtocolParameters } from '~sdk-common/protocols/interfaces/ProtocolParameters'
-import { LendingPool } from '~sdk-common/protocols/implementation/LendingPool'
-import { ProtocolName, SparkPoolId } from '~sdk-common/protocols'
+import { Maybe } from '../common/aliases/Maybe'
+import { Percentage } from '../common/implementation/Percentage'
+import { LendingPool } from '../protocols/implementation/LendingPool'
+import { isLendingPoolParameters } from '../protocols/interfaces/LendingPoolParameters'
+import { PoolParameters } from '../protocols/interfaces/PoolParameters'
+import { Protocol } from '../protocols/interfaces/Protocol'
+import { ProtocolName } from '../protocols/interfaces/ProtocolName'
+import { ProtocolParameters } from '../protocols/interfaces/ProtocolParameters'
+import { EmodeType, SparkPoolId } from '../protocols/interfaces/SparkPoolId'
 
 export async function mockPool(params: {
   protocol: Protocol
@@ -15,7 +15,10 @@ export async function mockPool(params: {
 }): Promise<Maybe<LendingPool>> {
   if (isLendingPoolParameters(params.poolParameters)) {
     return new LendingPool({
-      poolId: { protocol: ProtocolName.Spark, id: 'mock' } as SparkPoolId,
+      poolId: {
+        protocol: ProtocolName.Spark,
+        emodeType: EmodeType.None,
+      } as SparkPoolId,
       protocol: params.protocol.name,
       maxLTV: Percentage.createFrom({ percentage: 50.3 }),
       debtTokens: params.poolParameters.debtTokens,

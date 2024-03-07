@@ -19,6 +19,8 @@ import {
   isLendingPool,
   isMakerPoolId,
   isSparkPoolId,
+  ILKType,
+  EmodeType,
 } from '~sdk-common/protocols'
 import { RefinanceParameters } from '~sdk-common/orders'
 import { Simulation, SimulationType } from '~sdk-common/simulation'
@@ -83,7 +85,8 @@ describe('Refinance | SDK', () => {
       fail('Pool ID is not a Maker one')
     }
 
-    expect(prevPosition.pool.poolId.id).toEqual('testpool')
+    expect(prevPosition.pool.poolId.ilkType).toEqual(ILKType.ETH_A)
+    expect(prevPosition.pool.poolId.vaultId).toEqual('testvault')
     expect(prevPosition.pool.protocol).toEqual(ProtocolName.Maker)
     expect(prevPosition.pool.type).toEqual(PoolType.Lending)
 
@@ -113,7 +116,7 @@ describe('Refinance | SDK', () => {
       fail('Pool ID is not a Maker one')
     }
 
-    expect(newPool.poolId.id).toEqual('mock')
+    expect(newPool.poolId.emodeType).toEqual(EmodeType.None)
     expect(newPool.protocol).toEqual(ProtocolName.Spark)
 
     if (!isLendingPool(newPool)) {
