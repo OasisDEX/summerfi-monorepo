@@ -6,7 +6,8 @@
     "baseUrl": "src",
     "paths": {
       "~types": ["./types"],
-      "~abi": ["./abi"]
+      "~abi": ["./abi"],
+      "~helpers": ["./helpers"],
     }
   },
   "include": ["src/**/*.ts"],

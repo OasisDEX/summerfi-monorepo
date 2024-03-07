@@ -67,7 +67,7 @@ export const calculateNextProfit = ({
 
     const stopLossExecutionPrice = currentStopLoss?.executionLTV
       ? calculateCollateralPriceInDebtBasedOnLtv({
-          ltv: executionLTV,
+          ltv: currentStopLoss?.executionLTV,
           collateral: collateralAfterWithdraw,
           debt: currentPosition.debt,
         })
