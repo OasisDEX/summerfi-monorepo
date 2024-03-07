@@ -12,7 +12,7 @@ export class OrderPlannerContext {
   public addActionCall<Step extends steps.Steps, Action extends BaseAction>(params: {
     step: Step
     action: Action
-    arguments: Parameters<Action['encodeCall']>[0]
+    arguments: Parameters<Action['encodeCall']>[0]['arguments']
     connectedInputs: Partial<StorageInputsMapType<Step, Action>>
     connectedOutputs: Partial<StorageOutputsMapType<Step, Action>>
   }) {
@@ -21,7 +21,7 @@ export class OrderPlannerContext {
       step: params.step,
       connectedInputs: params.connectedInputs,
     })
-    const call = params.action.encodeCall({ arguments: params.arguments, paramsMapping })
+    const call = params.action.encodeCall({ arguments: params.arguments, mapping: paramsMapping })
     this._calls.addCall({ call })
     this._storage.addStorageMap({
       step: params.step,
