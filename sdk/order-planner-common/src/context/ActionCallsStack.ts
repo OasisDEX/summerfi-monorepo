@@ -1,5 +1,5 @@
 import { Maybe } from '@summerfi/sdk-common/utils'
-import { ActionCall, ActionCallBatch } from '~orderplannercommon/actions'
+import { ActionCall, ActionCallBatch } from '../actions/Types'
 
 export class ActionCallsStack {
   private callsStack: ActionCallBatch[]
@@ -15,7 +15,7 @@ export class ActionCallsStack {
     currentBatch.push(params.call)
   }
 
-  public startSubContext(params: { customData?: unknown }): void {
+  public startSubContext(params: { customData?: unknown } = {}): void {
     this.callsStack.push([])
     this.customData.push(params.customData)
   }
