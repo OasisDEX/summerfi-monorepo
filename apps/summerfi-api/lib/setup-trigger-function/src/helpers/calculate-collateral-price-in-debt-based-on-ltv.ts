@@ -1,5 +1,5 @@
 import { PERCENT_DECIMALS, PositionLike, Price, PRICE_DECIMALS } from '~types'
-import { getTheLeastCommonMultiple, normalizeBalance } from '../helpers/normalize-balance'
+import { getTheLeastCommonMultiple, normalizeBalance } from './normalize-balance'
 
 export function calculateCollateralPriceInDebtBasedOnLtv(
   params: Pick<PositionLike, 'debt' | 'collateral' | 'ltv'>,
