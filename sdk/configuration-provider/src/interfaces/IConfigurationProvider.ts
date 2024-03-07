@@ -1,4 +1,4 @@
-import { Maybe } from '@summerfi/sdk-common/utils'
+import { Maybe } from '@summerfi/sdk-common/common'
 import { ConfigItem } from '../types/ConfigItem'
 import { ConfigKey } from '../types/ConfigKey'
 
