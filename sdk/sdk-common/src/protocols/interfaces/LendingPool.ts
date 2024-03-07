@@ -4,7 +4,7 @@ import { PoolType } from './PoolType'
 import type { Percentage } from '~sdk-common/common/implementation/Percentage'
 import { TokenAmount } from '~sdk-common/common/implementation/TokenAmount'
 import { Price } from '~sdk-common/common/implementation/Price'
-import { CurrencySymbol, RiskRatio } from '~sdk-common/common'
+import {AddressValue, CurrencySymbol, RiskRatio} from '~sdk-common/common'
 import { ProtocolName } from './ProtocolName'
 
 export interface CollateralConfig {
@@ -48,8 +48,8 @@ export interface DebtConfig {
 export interface LendingPool extends IPool {
   type: PoolType.Lending
   poolBaseCurrency: Token | CurrencySymbol
-  collaterals: CollateralConfig[]
-  debts: DebtConfig[]
+  collaterals: Record<AddressValue, CollateralConfig>
+  debts: Record<AddressValue, DebtConfig>
 }
 
 export function isLendingPool(pool: IPool): pool is LendingPool {

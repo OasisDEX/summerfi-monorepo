@@ -206,8 +206,9 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                     id: poolId as string
                 },
                 protocol: ProtocolName.Maker,
-                collaterals: [
-                    {
+                poolBaseCurrency: poolBaseCurrencyToken,
+                collaterals: {
+                    [collateralToken.address.value]: {
                         protocol: ProtocolName.Maker,
                         token: collateralToken,
 
@@ -226,14 +227,14 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                         liquidationPenalty: Percentage.createFrom({ percentage: dogRes.liquidationPenalty.toNumber() }),
                         // apy: Percentage.createFrom({ percentage: 0 }),
                     }
-                ], 
-                debts: [
-                    {
+                },
+                debts: {
+                    [quoteToken.address.value]: {
                         protocol: ProtocolName.Maker,
                         token: quoteToken,
                         price: await ctx.priceService.getPrice({baseToken: quoteToken, quoteToken: collateralToken }),
                         priceUSD: await ctx.priceService.getPriceUSD(quoteToken),
-                        rate: Percentage.createFrom({ percentage: stabilityFee.toNumber() }), 
+                        rate: Percentage.createFrom({ percentage: stabilityFee.toNumber() }),
                         totalBorrowed: tokenAmountFromBaseUnit({token: quoteToken, amount: vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor).toString()}),
                         debtCeiling: tokenAmountFromBaseUnit({token: quoteToken, amount: vatRes.debtCeiling.toString()}),
                         debtAvailable: tokenAmountFromBaseUnit({token: quoteToken, amount:  vatRes.debtCeiling.minus(vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor)).toString()}),
@@ -241,40 +242,7 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                         originationFee: Percentage.createFrom({ percentage: 0 }),
                         variableRate: false,
                     }
-                ],
-                poolBaseCurrency: poolBaseCurrencyToken
-                
-                /*
-                {
-                    collaterals: {
-                        [collateralTokenAddress]: {
-                            lockedAmount: TokenAmount
-                            price: Price
-                            nextPrice: Price // only maker has this
-                            priceUSD: Price
-                            liquidationTreshold: Percentage
-                            tokensLocked: TokenAmount
-                            maxSupply: TokenAmount
-                            liquidationPenalty: Percentage
-                            apy: Percentage
-                        }
-                    }
-                    debts: {
-                        [debtTokenAddress]: {
-                            borrowedAmount: TokenAmount
-                            price: Price
-                            priceUSD: Price
-                            rate: Percentage
-                            totalBorrowed: TokenAmount
-                            debtCeiling: TokenAmount
-                            debtAvailable: TokenAmount
-                            dustLimit: TokenAmount
-                            originationFee: Percentage
-                            variableRate: boolean
-                        }
-                    }
                 }
-                */
             }
         },
         getPositionId: (positionId: string): IPositionId => {
