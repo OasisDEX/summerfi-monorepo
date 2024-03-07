@@ -5,10 +5,9 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "~orderplannercommon": ["src/index.ts"],
-      "~orderplannercommon/*": ["./src/*"]
+      "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"]
     }
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
   "exclude": ["node_modules"]
 }

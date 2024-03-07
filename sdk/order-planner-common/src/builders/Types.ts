@@ -1,8 +1,8 @@
 import { Simulation, SimulationSteps, SimulationType, steps } from '@summerfi/sdk-common/simulation'
-import { OrderPlannerContext } from '~orderplannercommon/context'
 import { User, IPositionsManager } from '@summerfi/sdk-common/client'
 import { ISwapService } from '@summerfi/swap-common/interfaces'
 import { Deployment } from '@summerfi/deployment-utils'
+import { OrderPlannerContext } from '../context/OrderPlannerContext'
 
 export type FilterStep<T extends SimulationSteps, S extends steps.Steps> = S extends { type: T }
   ? S

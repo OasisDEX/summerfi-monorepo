@@ -1,13 +1,14 @@
-import { BaseAction, ActionCallBatch } from '~orderplannercommon/actions'
 import { ActionCallsStack } from './ActionCallsStack'
-import { ExecutionStorageManager } from './ExecutionStorageManager'
+import { ExecutionStorageMapper } from './ExecutionStorageMapper'
 import { isValueReference, steps } from '@summerfi/sdk-common/simulation'
 import { Maybe } from '@summerfi/sdk-common/utils'
 import { StorageInputsMapType, StorageOutputsMapType } from './Types'
+import { BaseAction } from '../actions/BaseAction'
+import { ActionCallBatch } from '../actions/Types'
 
 export class OrderPlannerContext {
   private _calls: ActionCallsStack = new ActionCallsStack()
-  private _storage: ExecutionStorageManager = new ExecutionStorageManager()
+  private _storage: ExecutionStorageMapper = new ExecutionStorageMapper()
 
   public addActionCall<Step extends steps.Steps, Action extends BaseAction>(params: {
     step: Step

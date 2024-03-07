@@ -1,10 +1,10 @@
 import { steps } from '@summerfi/sdk-common/simulation'
-import { Maybe } from '@summerfi/sdk-common/utils'
-import { BaseAction } from '~orderplannercommon/actions'
+import { Maybe } from '@summerfi/sdk-common/common'
 import { StorageInputsMapType, StorageOutputsMapType } from './Types'
 import assert from 'assert'
+import { BaseAction } from '../actions/BaseAction'
 
-export class ExecutionStorageManager {
+export class ExecutionStorageMapper {
   private slotsMap: Map<string, number> = new Map()
 
   // Slot number starts from 1 because the contract will subtract 1 from the slot number

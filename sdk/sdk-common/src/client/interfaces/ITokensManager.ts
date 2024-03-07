@@ -1,6 +1,6 @@
-import type { Maybe } from '~sdk-common/common/aliases'
-import type { Address } from '~sdk-common/common/implementation/Address'
-import type { Token } from '~sdk-common/common/implementation/Token'
+import { Maybe } from '../../common/aliases/Maybe'
+import { Address } from '../../common/implementation/Address'
+import { Token } from '../../common/implementation/Token'
 
 /**
  * @interface ITokensManager

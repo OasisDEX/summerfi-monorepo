@@ -1,6 +1,6 @@
-import { type Address } from '~sdk-common/common/implementation/Address'
-import type { ChainInfo } from '~sdk-common/common/implementation/ChainInfo'
-import { SerializationService } from '~sdk-common/services/SerializationService'
+import { SerializationService } from '../../services/SerializationService'
+import { Address } from './Address'
+import { ChainInfo } from './ChainInfo'
 
 interface ITokenSerialized {
   chainInfo: ChainInfo

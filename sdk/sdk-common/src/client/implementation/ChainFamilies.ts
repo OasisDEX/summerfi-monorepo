@@ -1,11 +1,11 @@
 import {
-  EthereumChainNames,
   ArbitrumChainNames,
-  OptimismChainNames,
   BaseChainNames,
   ChainFamilyName,
-} from '~sdk-common/common/enums'
-import type { ChainInfo } from '~sdk-common/common/implementation/ChainInfo'
+  EthereumChainNames,
+  OptimismChainNames,
+} from '../../common/enums/ChainNames'
+import { ChainInfo } from '../../common/implementation/ChainInfo'
 
 /**
  * Chain definition per family

@@ -6,7 +6,6 @@
     "rootDir": "src",
     "paths": {
       "~sdk-common/*": ["../sdk-common/src/*"],
-      "~orderplannercommon/*": ["src/*"],
       "~swap-common/*": ["../swap-common/src/*"],
       "~deployment-types/*": ["node_modules/@summerfi/deployment-types/src/*"]
     }

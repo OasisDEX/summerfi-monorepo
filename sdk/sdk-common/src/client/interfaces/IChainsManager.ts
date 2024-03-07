@@ -1,6 +1,6 @@
-import type { Chain } from '~sdk-common/client/implementation/Chain'
-import type { ChainInfo } from '~sdk-common/common/implementation/ChainInfo'
-import type { Maybe } from '~sdk-common/common/aliases'
+import { Maybe } from '../../common/aliases/Maybe'
+import { ChainInfo } from '../../common/implementation/ChainInfo'
+import { Chain } from '../implementation/Chain'
 
 /**
  * @interface IChainsManager

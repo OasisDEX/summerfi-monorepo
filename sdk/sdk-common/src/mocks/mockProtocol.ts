@@ -1,12 +1,12 @@
-import type { Maybe } from '~sdk-common/common/aliases'
+import { Maybe } from '../common/aliases/Maybe'
+import { ChainInfo } from '../common/implementation/ChainInfo'
+import { ProtocolsRegistry } from '../protocols/adapters/ProtocolsRegistry'
+import { IPool } from '../protocols/interfaces/IPool'
+import { PoolParameters } from '../protocols/interfaces/PoolParameters'
+import { Protocol } from '../protocols/interfaces/Protocol'
+import { ProtocolName } from '../protocols/interfaces/ProtocolName'
+import { ProtocolParameters } from '../protocols/interfaces/ProtocolParameters'
 import { mockPool } from './mockPool'
-import type { ChainInfo } from '~sdk-common/common/implementation/ChainInfo'
-import { ProtocolsRegistry } from '~sdk-common/protocols/adapters'
-import type { IPool } from '~sdk-common/protocols/interfaces/IPool'
-import type { PoolParameters } from '~sdk-common/protocols/interfaces/PoolParameters'
-import type { Protocol } from '~sdk-common/protocols/interfaces/Protocol'
-import { ProtocolName } from '~sdk-common/protocols/interfaces/ProtocolName'
-import type { ProtocolParameters } from '~sdk-common/protocols/interfaces/ProtocolParameters'
 
 export class mockProtocolSpark implements Protocol {
   public readonly name: ProtocolName

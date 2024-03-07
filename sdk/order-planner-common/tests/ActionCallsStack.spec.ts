@@ -16,7 +16,7 @@ class DerivedAction extends BaseAction {
   }
 }
 
-describe.only('Action Calls Stack', () => {
+describe('Action Calls Stack', () => {
   const derivedAction = new DerivedAction()
 
   const actionCall = derivedAction.encodeCall({

@@ -1,5 +1,5 @@
 import { steps } from '@summerfi/sdk-common/simulation'
-import { BaseAction } from '~orderplannercommon/actions/BaseAction'
+import { BaseAction } from '../actions/BaseAction'
 
 export type Slot = number
 

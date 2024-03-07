@@ -3,8 +3,8 @@ import { Order } from '@summerfi/sdk-common/orders'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { IPositionsManager, User } from '@summerfi/sdk-common/client'
 import { Maybe } from '@summerfi/sdk-common/utils'
-import { ActionBuildersMap } from '~orderplannercommon/builders'
 import { ISwapService } from '@summerfi/swap-common/interfaces'
+import { ActionBuildersMap } from '../builders/Types'
 
 export interface IOrderPlanner {
   buildOrder<T extends SimulationType>(params: {

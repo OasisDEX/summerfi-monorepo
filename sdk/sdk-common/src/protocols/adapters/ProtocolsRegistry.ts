@@ -1,9 +1,9 @@
-import type { Protocol } from '~sdk-common/protocols/interfaces/Protocol'
-import type { ProtocolName } from '~sdk-common/protocols/interfaces/ProtocolName'
+import { Maybe } from '../../common/aliases/Maybe'
+import { ChainInfo } from '../../common/implementation/ChainInfo'
+import { Protocol } from '../interfaces/Protocol'
+import { ProtocolName } from '../interfaces/ProtocolName'
 import { HashedProtocolKey, ProtocolInfo, ProtocolKey } from './types'
 import { hashProtocolKey } from './utils'
-import type { Maybe } from '~sdk-common/common/aliases'
-import type { ChainInfo } from '~sdk-common/common/implementation/ChainInfo'
 
 /**
  * @class ProtocolsRegistry

@@ -1,6 +1,6 @@
-import { ChainsManager } from '~sdk-common/client/implementation/ChainsManager'
-import { PortfolioManager } from '~sdk-common/client/implementation/PortfolioManager'
-import { UsersManager } from '~sdk-common/client/implementation/UsersManager'
+import { ChainsManager } from './ChainsManager'
+import { PortfolioManager } from './PortfolioManager'
+import { UsersManager } from './UsersManager'
 import { SimulationManager } from './simulations/SimulationManager'
 
 export class SDKManager {

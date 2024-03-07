@@ -1,5 +1,6 @@
-import { RefinanceParameters } from '~sdk-common/orders'
-import { Simulation, SimulationType } from '~sdk-common/simulation'
+import { RefinanceParameters } from '../../../orders/interfaces/refinance/RefinanceParameters'
+import { SimulationType } from '../../../simulation/enums'
+import { Simulation } from '../../../simulation/simulation'
 
 export class RefinanceSimulationManager {
   public async simulateRefinancePosition(

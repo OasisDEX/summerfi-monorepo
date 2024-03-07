@@ -1,12 +1,11 @@
-import { Percentage } from '~sdk-common/common/implementation/Percentage'
-
-import { LendingPoolImpl } from '~sdk-common/protocols/implementation'
-import type { Maybe } from '~sdk-common/common/aliases'
-import { isLendingPoolParameters } from '~sdk-common/protocols/interfaces/LendingPoolParameters'
-import type { PoolParameters } from '~sdk-common/protocols/interfaces/PoolParameters'
-import type { Protocol } from '~sdk-common/protocols/interfaces/Protocol'
-import type { ProtocolParameters } from '~sdk-common/protocols/interfaces/ProtocolParameters'
-import type { LendingPool } from '~sdk-common/protocols/interfaces/LendingPool'
+import { Maybe } from '../common/aliases/Maybe'
+import { Percentage } from '../common/implementation/Percentage'
+import { LendingPoolImpl } from '../protocols/implementation/LendingPoolBaseImpl'
+import { LendingPool } from '../protocols/interfaces/LendingPool'
+import { isLendingPoolParameters } from '../protocols/interfaces/LendingPoolParameters'
+import { PoolParameters } from '../protocols/interfaces/PoolParameters'
+import { Protocol } from '../protocols/interfaces/Protocol'
+import { ProtocolParameters } from '../protocols/interfaces/ProtocolParameters'
 
 export async function mockPool(params: {
   protocol: Protocol

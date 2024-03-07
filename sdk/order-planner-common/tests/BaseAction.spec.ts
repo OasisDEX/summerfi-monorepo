@@ -16,7 +16,7 @@ class DerivedAction extends BaseAction {
   }
 }
 
-describe('Base Action', () => {
+describe('Execution Storage Manager', () => {
   const derivedAction = new DerivedAction()
   const contractNameWithVersion = 'PullToken_v8'
   const functionSelector = '85e92d98'

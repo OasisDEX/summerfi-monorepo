@@ -1,6 +1,6 @@
-import type { Chain } from '~sdk-common/client/implementation/Chain'
-import type { User } from '~sdk-common/client/implementation/User'
-import { Wallet } from '~sdk-common/common/implementation/Wallet'
+import { Address } from '../../common/implementation/Address'
+import { Chain } from '../implementation/Chain'
+import { User } from '../implementation/User'
 
 /**
  * @interface IUsersManager
@@ -16,5 +16,5 @@ export interface IUsersManager {
    *
    * @returns The user for the given wallet and network
    */
-  getUser(params: { chain: Chain; wallet: Wallet }): Promise<User>
+  getUser(params: { chain: Chain; walletAddress: Address }): Promise<User>
 }

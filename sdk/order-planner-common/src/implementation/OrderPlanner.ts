@@ -1,22 +1,22 @@
 import { Order } from '@summerfi/sdk-common/orders'
 import { Simulation, SimulationType, steps } from '@summerfi/sdk-common/simulation'
 import { Maybe } from '@summerfi/sdk-common/utils'
-import { IOrderPlanner } from '~orderplannercommon/interfaces/IOrderPlanner'
-import { encodeStrategy } from '~orderplannercommon/utils'
-import { OrderPlannerContext } from '~orderplannercommon/context'
-import { ActionBuilder, ActionBuildersMap } from '~orderplannercommon/builders'
-import { ActionCall } from '~orderplannercommon/actions'
-import { IPositionsManager, User } from '@summerfi/sdk-common/client'
+import { IPositionsManager, IUser } from '@summerfi/sdk-common/client'
 import { Deployment } from '@summerfi/deployment-utils'
 import { Address } from '@summerfi/sdk-common/common'
 import { HexData } from '@summerfi/sdk-common/common/aliases'
 import { ISwapService } from '@summerfi/swap-common/interfaces'
+import { IOrderPlanner } from '../interfaces/IOrderPlanner'
+import { ActionBuilder, ActionBuildersMap } from '../builders/Types'
+import { OrderPlannerContext } from '../context/OrderPlannerContext'
+import { ActionCall } from '../actions/Types'
+import { encodeStrategy } from '../utils/EncodeStrategy'
 
 export class OrderPlanner implements IOrderPlanner {
   private readonly ExecutorContractName = 'OperationExecutor'
 
   async buildOrder(params: {
-    user: User
+    user: IUser
     positionsManager: IPositionsManager
     simulation: Simulation<SimulationType>
     actionBuildersMap: ActionBuildersMap
