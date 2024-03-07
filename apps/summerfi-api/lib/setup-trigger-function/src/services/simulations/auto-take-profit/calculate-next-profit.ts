@@ -14,6 +14,8 @@ import {
   SLIPPAGE,
 } from './types'
 
+const getMax = (a: bigint, b: bigint) => (a > b ? a : b)
+
 export const calculateNextProfit = ({
   lastProfit,
   currentPosition,
@@ -26,11 +28,14 @@ export const calculateNextProfit = ({
   currentStopLoss: CurrentStopLoss | undefined
 }): { profit: AutoTakeProfitRealized; nextPosition: MinimalPositionLike } => {
   const executionLTV = triggerData.executionLTV
-  const executionPrice = calculateCollateralPriceInDebtBasedOnLtv({
-    collateral: currentPosition.collateral,
-    debt: currentPosition.debt,
-    ltv: executionLTV,
-  })
+  const executionPrice = getMax(
+    calculateCollateralPriceInDebtBasedOnLtv({
+      collateral: currentPosition.collateral,
+      debt: currentPosition.debt,
+      ltv: executionLTV,
+    }),
+    triggerData.executionPrice,
+  )
 
   const collateralAfterWithdraw = calculateCollateral({
     position: {
