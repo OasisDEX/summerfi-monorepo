@@ -9,7 +9,7 @@ import { IPositionsManager, User } from '@summerfi/sdk-common/client'
 import { Deployment } from '@summerfi/deployment-utils'
 import { Address, Maybe } from '@summerfi/sdk-common/common'
 import { HexData } from '@summerfi/sdk-common/common/aliases'
-import { ISwapService } from '@summerfi/swap-common/interfaces'
+import { ISwapManager } from '@summerfi/swap-common/interfaces'
 
 export class OrderPlanner implements IOrderPlanner {
   private readonly ExecutorContractName = 'OperationExecutor'
@@ -20,9 +20,9 @@ export class OrderPlanner implements IOrderPlanner {
     simulation: Simulation<SimulationType>
     actionBuildersMap: ActionBuildersMap
     deployment: Deployment
-    swapService: ISwapService
+    swapManager: ISwapManager
   }): Promise<Maybe<Order>> {
-    const { user, positionsManager, simulation, actionBuildersMap, deployment, swapService } =
+    const { user, positionsManager, simulation, actionBuildersMap, deployment, swapManager } =
       params
 
     const context: OrderPlannerContext = new OrderPlannerContext()
@@ -40,7 +40,7 @@ export class OrderPlanner implements IOrderPlanner {
         user,
         positionsManager,
         simulation,
-        swapService,
+        swapManager,
         deployment,
         step,
       })

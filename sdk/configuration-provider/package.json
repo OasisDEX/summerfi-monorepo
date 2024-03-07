@@ -1,18 +1,20 @@
 {
-  "name": "@summerfi/swap-common",
+  "name": "@summerfi/configuration-provider",
   "version": "0.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
-    "./*": {
-      "import": "./src/*/index.ts",
-      "types": "./src/*/index.d.ts"
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.d.ts"
     }
   },
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "build": "tsc -b tsconfig.build.json",
+    "build": "tsc -b",
+    "test": "jest --setupFiles dotenv/config",
+    "testw": "jest --setupFiles dotenv/config --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

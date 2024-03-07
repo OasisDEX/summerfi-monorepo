@@ -250,6 +250,9 @@ importers:
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../../../packages/common
+      '@summerfi/configuration-provider':
+        specifier: workspace:*
+        version: link:../../../../sdk/configuration-provider
       '@summerfi/core-contracts':
         specifier: workspace:*
         version: link:../../../../packages/core-contracts
@@ -666,6 +669,31 @@ importers:
         specifier: ^20.1.2
         version: 20.1.2
 
+  sdk/configuration-provider:
+    dependencies:
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../sdk-common
+      '@types/node-fetch':
+        specifier: ^2.6.11
+        version: 2.6.11
+      node-fetch:
+        specifier: ^2.6.7
+        version: 2.7.0
+      viem:
+        specifier: ^2.7.9
+        version: 2.7.9(typescript@5.3.3)
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+
   sdk/order-planner-common:
     dependencies:
       '@summerfi/deployment-types':
@@ -839,6 +867,9 @@ importers:
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
+      '@summerfi/configuration-provider':
+        specifier: workspace:*
+        version: link:../configuration-provider
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -10261,7 +10292,6 @@ packages:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
     dev: true
-    bundledDependencies: false
 
   /event-stream@3.3.4:
     resolution: {integrity: sha512-QHpkERcGsR0T7Qm3HNJSyXKEEj8AHNxkY3PK8TS2KJvQ7NiSHe3DDpwVKKtoYprL/AreyzFBeIkBIWChAqn60g==}
