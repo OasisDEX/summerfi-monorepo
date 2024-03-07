@@ -204,7 +204,7 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                 poolId: {
                     id: poolId as string
                 },
-                // TODO: Get by proper means
+                // TODO: Get protocol by proper means
                 protocol: {
                     name: ProtocolName.Maker,
                     chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
@@ -212,7 +212,6 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                 poolBaseCurrency: poolBaseCurrencyToken,
                 collaterals: {
                     [collateralToken.address.value]: {
-                        // TODO: Get by proper means
                         token: collateralToken,
                         // TODO: quote the OSM, we need to trick the contract that is SPOT that is doing the query (from in tx is SPOT)
                         price: await ctx.priceService.getPrice({baseToken: collateralToken, quoteToken }),
@@ -225,7 +224,7 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                         maxLtv: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: spotRes.liquidationRatio.times(100).toNumber() }), type: RiskRatio.type.CollateralizationRatio }),
 
                         tokensLocked: tokenAmountFromBaseUnit({token: collateralToken, amount: '0'}), // TODO chack the gem balance of join adapter
-                        // maxSupply: tokenAmountFromBaseUnit({token: collateralToken, amount: Number.MAX_SAFE_INTEGER.toString()}), // TODO in case of maker it is infinite
+                        maxSupply: tokenAmountFromBaseUnit({token: collateralToken, amount: Number.MAX_SAFE_INTEGER.toString()}),
                         liquidationPenalty: Percentage.createFrom({ percentage: dogRes.liquidationPenalty.toNumber() }),
                         // apy: Percentage.createFrom({ percentage: 0 }),
                     }
@@ -240,8 +239,7 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                         debtCeiling: tokenAmountFromBaseUnit({token: quoteToken, amount: vatRes.debtCeiling.toString()}),
                         debtAvailable: tokenAmountFromBaseUnit({token: quoteToken, amount:  vatRes.debtCeiling.minus(vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor)).toString()}),
                         dustLimit: tokenAmountFromBaseUnit({token: quoteToken, amount: vatRes.debtFloor.toString()}),
-                        originationFee: Percentage.createFrom({ percentage: 0 }),
-                        variableRate: false,
+                        originationFee: Percentage.createFrom({ percentage: 0 })
                     }
                 }
             }

@@ -13,6 +13,7 @@ export interface CollateralConfig {
   priceUSD: Price
   liquidationThreshold: RiskRatio
   maxLtv: RiskRatio
+  maxSupply: TokenAmount
   tokensLocked: TokenAmount
   liquidationPenalty: Percentage
 }
@@ -35,7 +36,6 @@ export interface DebtConfig {
   debtAvailable: TokenAmount
   dustLimit: TokenAmount
   originationFee: Percentage
-  variableRate: boolean
 }
 
 /**
