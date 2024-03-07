@@ -6,10 +6,14 @@ import {
   ValidationResults,
   aavePartialTakeProfitTriggerDataSchema,
   CommonErrorCodes,
+  PartialTakeProfitErrorCodes,
 } from '~types'
-import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
+import {
+  getPropertyFromTriggerParams,
+  GetTriggersResponse,
+} from '@summerfi/serverless-contracts/get-triggers-response'
 import { z } from 'zod'
-import { chainIdSchema } from '@summerfi/serverless-shared'
+import { chainIdSchema, safeParseBigInt } from '@summerfi/serverless-shared'
 
 const paramsSchema = z.object({
   position: positionSchema,
@@ -44,6 +48,76 @@ const upsertErrorsValidation = paramsSchema
       message: 'Trigger does not exist',
       params: {
         code: CommonErrorCodes.TriggerDoesNotExist,
+      },
+    },
+  )
+  .refine(
+    ({ triggerData, triggers }) => {
+      const autoSell = triggers.triggers.aaveBasicSell
+      if (!autoSell) return true
+
+      const autoSellTargetLtv = safeParseBigInt(autoSell.decodedParams.targetLtv) ?? 99n
+
+      return triggerData.executionLTV < autoSellTargetLtv
+    },
+    {
+      message: 'LTV is higher than the LTV of the auto sell trigger',
+      params: {
+        code: PartialTakeProfitErrorCodes.PartialTakeProfitTriggerHigherThanAutoSellTarget,
+      },
+    },
+  )
+  .refine(
+    ({ triggerData, triggers }) => {
+      const autoSell = triggers.triggers.aaveBasicSell
+      if (!autoSell) return true
+
+      const autoSellExecutionLtv = safeParseBigInt(autoSell.decodedParams.executionLtv) ?? 99n
+
+      return triggerData.executionLTV < autoSellExecutionLtv
+    },
+    {
+      message: 'LTV is higher than the execution LTV of the auto sell trigger',
+      params: {
+        code: PartialTakeProfitErrorCodes.PartialTakeProfitTargetHigherThanAutoSellTrigger,
+      },
+    },
+  )
+  .refine(
+    ({ triggerData, triggers }) => {
+      const stopLoss = triggers.triggerGroup.aaveStopLoss
+      if (!stopLoss) return true
+
+      const getStopLossLtv =
+        safeParseBigInt(
+          getPropertyFromTriggerParams({
+            trigger: stopLoss,
+            property: 'executionLtv',
+          }),
+        ) ?? 99n
+
+      return triggerData.executionLTV + triggerData.withdrawStep < getStopLossLtv
+    },
+    {
+      message: 'LTV is higher than the stop loss LTV',
+      params: {
+        code: PartialTakeProfitErrorCodes.PartialTakeProfitTargetHigherThanStopLoss,
+      },
+    },
+  )
+  .refine(
+    ({ triggerData, triggers }) => {
+      const autoBuy = triggers.triggers.aaveBasicBuy
+      if (!autoBuy) return true
+
+      const autoBuyMaxPrice = safeParseBigInt(autoBuy.decodedParams.maxBuyPrice) ?? 0n
+
+      return triggerData.executionPrice > autoBuyMaxPrice
+    },
+    {
+      message: 'Min price is lower than the max price of the auto buy trigger',
+      params: {
+        code: PartialTakeProfitErrorCodes.PartialTakeProfitMinPriceLowerThanAutoBuyMaxPrice,
       },
     },
   )
