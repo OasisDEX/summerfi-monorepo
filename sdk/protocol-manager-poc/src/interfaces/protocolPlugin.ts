@@ -1,5 +1,5 @@
 import { Percentage, TokenAmount, TokenSymbol, Price, CurrencySymbol, RiskRatio } from "@summerfi/sdk-common/common"
-import { IPool, LendingPool, PoolType, ProtocolName, /* IPoolId */ } from "@summerfi/sdk-common/protocols"
+import { IPool, LendingPool, MakerLendingPool, PoolType, ProtocolName, /* IPoolId */ } from "@summerfi/sdk-common/protocols"
 import { /* PositionId, */ Address, ChainInfo, Position, Token } from "@summerfi/sdk-common/common"
 import { PublicClient, stringToHex } from "viem"
 import { BigNumber } from 'bignumber.js'
@@ -94,7 +94,7 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
         getPoolId: (poolId: string): IPoolId => {
             return poolId as IPoolId
         },
-        getPool: async (poolId: IPoolId): Promise<LendingPool> => {
+        getPool: async (poolId: IPoolId): Promise<MakerLendingPool> => {
             const ilkInHex = stringToHex(poolId, { size: 32 })
             const chainId = ctx.provider.chain?.id
             if (!chainId) throw new Error('ctx.provider.chain.id undefined')
@@ -199,24 +199,13 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
             BigNumber.config({ POW_PRECISION: 100 })
             const stabilityFee = jugRes.rawFee.pow(SECONDS_PER_YEAR).minus(1)
 
-            return {
-                type: PoolType.Lending,
-                poolId: {
-                    id: poolId as string
-                },
-                // TODO: Get protocol by proper means
-                protocol: {
-                    name: ProtocolName.Maker,
-                    chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
-                },
-                poolBaseCurrency: poolBaseCurrencyToken,
-                collaterals: {
+            const collaterals =  {
                     [collateralToken.address.value]: {
                         token: collateralToken,
                         // TODO: quote the OSM, we need to trick the contract that is SPOT that is doing the query (from in tx is SPOT)
                         price: await ctx.priceService.getPrice({baseToken: collateralToken, quoteToken }),
                         // TODO: Move nextPrice to Maker only section
-                        // nextPrice: Price.createFrom({ value: spotRes.liquidationRatio.toString(), baseToken: collateralToken, quoteToken: debtToken }), // TODO
+                        nextPrice: Price.createFrom({ value: spotRes.liquidationRatio.toString(), baseToken: collateralToken, quoteToken: quoteToken }), // TODO
                         priceUSD: await ctx.priceService.getPriceUSD(collateralToken),
 
                         // For Maker these fields are the same
@@ -228,20 +217,37 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                         liquidationPenalty: Percentage.createFrom({ percentage: dogRes.liquidationPenalty.toNumber() }),
                         // apy: Percentage.createFrom({ percentage: 0 }),
                     }
-                },
-                debts: {
-                    [quoteToken.address.value]: {
-                        token: quoteToken,
-                        price: await ctx.priceService.getPrice({baseToken: quoteToken, quoteToken: collateralToken }),
-                        priceUSD: await ctx.priceService.getPriceUSD(quoteToken),
-                        rate: Percentage.createFrom({ percentage: stabilityFee.toNumber() }),
-                        totalBorrowed: tokenAmountFromBaseUnit({token: quoteToken, amount: vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor).toString()}),
-                        debtCeiling: tokenAmountFromBaseUnit({token: quoteToken, amount: vatRes.debtCeiling.toString()}),
-                        debtAvailable: tokenAmountFromBaseUnit({token: quoteToken, amount:  vatRes.debtCeiling.minus(vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor)).toString()}),
-                        dustLimit: tokenAmountFromBaseUnit({token: quoteToken, amount: vatRes.debtFloor.toString()}),
-                        originationFee: Percentage.createFrom({ percentage: 0 })
-                    }
                 }
+            const debts = {
+                [quoteToken.address.value]: {
+                    token: quoteToken,
+                    price: await ctx.priceService.getPrice({baseToken: quoteToken, quoteToken: collateralToken }),
+                    priceUSD: await ctx.priceService.getPriceUSD(quoteToken),
+                    rate: Percentage.createFrom({ percentage: stabilityFee.toNumber() }),
+                    totalBorrowed: tokenAmountFromBaseUnit({token: quoteToken, amount: vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor).toString()}),
+                    debtCeiling: tokenAmountFromBaseUnit({token: quoteToken, amount: vatRes.debtCeiling.toString()}),
+                    debtAvailable: tokenAmountFromBaseUnit({token: quoteToken, amount:  vatRes.debtCeiling.minus(vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor)).toString()}),
+                    dustLimit: tokenAmountFromBaseUnit({token: quoteToken, amount: vatRes.debtFloor.toString()}),
+                    originationFee: Percentage.createFrom({ percentage: 0 })
+                }
+            }
+
+            const poolMaxLtv = collaterals[collateralToken.address.value].maxLtv.ltv
+
+            return {
+                type: PoolType.Lending,
+                poolId: {
+                    id: poolId as string
+                },
+                // TODO: Get protocol by proper means
+                protocol: {
+                    name: ProtocolName.Maker,
+                    chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
+                },
+                maxLTV: poolMaxLtv,
+                baseCurrency: poolBaseCurrencyToken,
+                collaterals,
+                debts
             }
         },
         getPositionId: (positionId: string): IPositionId => {

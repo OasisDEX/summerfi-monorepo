@@ -1,5 +1,4 @@
 import type { Token } from '~sdk-common/common/implementation/Token'
-import {ProtocolName} from "~sdk-common/protocols";
 import { IPool } from './IPool'
 import { PoolType } from './PoolType'
 import type { Percentage } from '~sdk-common/common/implementation/Percentage'
@@ -12,7 +11,6 @@ export interface CollateralConfig {
   price: Price
   priceUSD: Price
   liquidationThreshold: RiskRatio
-  maxLtv: RiskRatio
   maxSupply: TokenAmount
   tokensLocked: TokenAmount
   liquidationPenalty: Percentage
@@ -20,6 +18,7 @@ export interface CollateralConfig {
 
 interface MakerPoolCollateralConfig extends CollateralConfig {
   nextPrice: Price // only maker has this TODO add to protocol specific config
+  maxLtv: RiskRatio
 }
 
 interface AavePoolCollateralConfig extends CollateralConfig {
@@ -38,18 +37,25 @@ export interface DebtConfig {
   originationFee: Percentage
 }
 
+interface AavePoolDebtConfig extends DebtConfig {
+  maxLtv: RiskRatio
+}
+
 /**
  * @interface LendingPool
  * @description Represents a lending pool. Provides information about the collateral
  *              and debt tokens
  */
-export interface LendingPool extends IPool {
+export interface LendingPool<GenericCollateralConfig extends CollateralConfig = CollateralConfig, GenericDebtConfig extends DebtConfig = DebtConfig> extends IPool {
   type: PoolType.Lending
-  poolBaseCurrency: Token | CurrencySymbol
-  collaterals: Record<AddressValue, CollateralConfig>
-  debts: Record<AddressValue, DebtConfig>
+  baseCurrency: Token | CurrencySymbol
+  maxLTV: Percentage;
+  collaterals: Record<AddressValue, GenericCollateralConfig>
+  debts: Record<AddressValue, GenericDebtConfig>
 }
 
 export function isLendingPool(pool: IPool): pool is LendingPool {
   return pool.type === PoolType.Lending
 }
+
+export type MakerLendingPool = LendingPool<MakerPoolCollateralConfig>
