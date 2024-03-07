@@ -27,9 +27,11 @@ export type MinimalAutoTakeProfitTriggerData = Pick<
   'executionPrice' | 'executionLTV' | 'withdrawStep' | 'withdrawToken'
 >
 
+export type MinimalStopLossInformation = Pick<CurrentStopLoss, 'executionLTV'>
+
 export interface SimulateAutoTakeProfitParams {
   position: PositionLike
-  currentStopLoss: CurrentStopLoss | undefined
+  currentStopLoss: MinimalStopLossInformation | undefined
   minimalTriggerData: MinimalAutoTakeProfitTriggerData
   iterations?: number
 }

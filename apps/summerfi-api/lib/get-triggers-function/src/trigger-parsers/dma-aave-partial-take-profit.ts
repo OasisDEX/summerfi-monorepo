@@ -33,7 +33,7 @@ export const getDmaAavePartialTakeProfit = async ({
       debtToken: trigger.decodedData[trigger.decodedDataNames.indexOf('debtToken')],
       collateralToken: trigger.decodedData[trigger.decodedDataNames.indexOf('collateralToken')],
       operationName: trigger.decodedData[trigger.decodedDataNames.indexOf('operationName')],
-      closeToCollateral: trigger.decodedData[trigger.decodedDataNames.indexOf('closeToCollateral')],
+      withdrawToDebt: trigger.decodedData[trigger.decodedDataNames.indexOf('withdrawToDebt')],
       executionLtv: trigger.decodedData[trigger.decodedDataNames.indexOf('executionLtv')],
       targetLtv: trigger.decodedData[trigger.decodedDataNames.indexOf('targetLtv')],
       deviation: trigger.decodedData[trigger.decodedDataNames.indexOf('deviation')],
