@@ -1,4 +1,5 @@
-import {CurrencySymbol} from "~sdk-common/common";
+import {AddressValue} from "~sdk-common/common";
+import { CurrencySymbol } from "../../common/enums/CurrencySymbol";
 import { Address } from '../../common/implementation/Address'
 import { Token } from '../../common/implementation/Token'
 import { IPoolId } from '../interfaces/IPoolId'
@@ -9,8 +10,8 @@ import { PoolBaseImpl } from './PoolBaseImpl'
 
 export class LendingPoolImpl extends PoolBaseImpl<PoolType.Lending> implements LendingPool {
   public readonly poolBaseCurrency: Token | CurrencySymbol
-  public readonly collaterals: CollateralConfig[]
-  public readonly debts: DebtConfig[]
+  public readonly collaterals: Record<AddressValue, CollateralConfig>
+  public readonly debts: Record<AddressValue, DebtConfig>
 
   constructor(params: {
     poolId: IPoolId
@@ -18,8 +19,8 @@ export class LendingPoolImpl extends PoolBaseImpl<PoolType.Lending> implements L
     address?: Address
     TVL?: number
     poolBaseCurrency: Token | CurrencySymbol
-    debts: DebtConfig[]
-    collaterals: CollateralConfig[]
+    debts: Record<AddressValue, DebtConfig>
+    collaterals: Record<AddressValue, CollateralConfig>
   }) {
     // TODO: resolve multicollateral issue
     super({
@@ -27,8 +28,8 @@ export class LendingPoolImpl extends PoolBaseImpl<PoolType.Lending> implements L
       type: PoolType.Lending,
     })
 
-    this.collateralTokens = params.collateralTokens
-    this.debtTokens = params.debtTokens
+    this.collaterals = params.collaterals
+    this.debts = params.debts
     this.poolBaseCurrency = params.poolBaseCurrency
   }
 }

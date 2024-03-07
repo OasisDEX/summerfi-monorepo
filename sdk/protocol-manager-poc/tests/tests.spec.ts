@@ -128,7 +128,5 @@ describe('playground', () => {
   it('template', async () => {
     const result = await makerPlugin.getPool(makerPlugin.getPoolId("ETH-A"))
     console.log(result)
-
-    console.log('hello')
   })
 })

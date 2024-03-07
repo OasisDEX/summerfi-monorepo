@@ -1,14 +1,13 @@
 import type { Token } from '~sdk-common/common/implementation/Token'
+import {ProtocolName} from "~sdk-common/protocols";
 import { IPool } from './IPool'
 import { PoolType } from './PoolType'
 import type { Percentage } from '~sdk-common/common/implementation/Percentage'
 import { TokenAmount } from '~sdk-common/common/implementation/TokenAmount'
 import { Price } from '~sdk-common/common/implementation/Price'
 import {AddressValue, CurrencySymbol, RiskRatio} from '~sdk-common/common'
-import { ProtocolName } from './ProtocolName'
 
 export interface CollateralConfig {
-  protocol: ProtocolName
   token: Token
   price: Price
   priceUSD: Price
@@ -27,7 +26,6 @@ interface AavePoolCollateralConfig extends CollateralConfig {
 }
 
 export interface DebtConfig {
-  protocol: ProtocolName
   token: Token
   price: Price
   priceUSD: Price

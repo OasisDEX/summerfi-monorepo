@@ -26,6 +26,7 @@ export interface ProtocolManagerContext {
     provider: PublicClient,
     tokenService: ITokenService,
     priceService: IPriceService
+
 }
 
 export interface CreateProtocolPlugin {
@@ -192,8 +193,6 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
 
             const collateralToken = await ctx.tokenService.getTokenByAddress(Address.createFrom({ value: gem }))
             const quoteToken = await ctx.tokenService.getTokenBySymbol(TokenSymbol.DAI)
-            console.log("collateralToken", collateralToken)
-            console.log("quoteToken", quoteToken)
             const poolBaseCurrencyToken = await ctx.tokenService.getTokenBySymbol(TokenSymbol.DAI)
 
             const SECONDS_PER_YEAR = 60 * 60 * 24 * 365
@@ -205,13 +204,16 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                 poolId: {
                     id: poolId as string
                 },
-                protocol: ProtocolName.Maker,
+                // TODO: Get by proper means
+                protocol: {
+                    name: ProtocolName.Maker,
+                    chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
+                },
                 poolBaseCurrency: poolBaseCurrencyToken,
                 collaterals: {
                     [collateralToken.address.value]: {
-                        protocol: ProtocolName.Maker,
+                        // TODO: Get by proper means
                         token: collateralToken,
-
                         // TODO: quote the OSM, we need to trick the contract that is SPOT that is doing the query (from in tx is SPOT)
                         price: await ctx.priceService.getPrice({baseToken: collateralToken, quoteToken }),
                         // TODO: Move nextPrice to Maker only section
@@ -230,7 +232,6 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                 },
                 debts: {
                     [quoteToken.address.value]: {
-                        protocol: ProtocolName.Maker,
                         token: quoteToken,
                         price: await ctx.priceService.getPrice({baseToken: quoteToken, quoteToken: collateralToken }),
                         priceUSD: await ctx.priceService.getPriceUSD(quoteToken),
