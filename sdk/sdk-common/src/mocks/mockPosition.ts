@@ -7,9 +7,9 @@ import { PositionId } from '../common/implementation/PositionId'
 import { RiskRatio } from '../common/implementation/RiskRatio'
 import { TokenAmount } from '../common/implementation/TokenAmount'
 import { Wallet } from '../common/implementation/Wallet'
+import { ProtocolName } from '../protocols/enums/ProtocolName'
 import { ILKType, MakerPoolId } from '../protocols/interfaces/MakerPoolId'
 import { PoolType } from '../protocols/interfaces/PoolType'
-import { ProtocolName } from '../protocols/interfaces/ProtocolName'
 
 export async function getMockPosition(params: {
   chain: Chain
@@ -39,7 +39,10 @@ export async function getMockPosition(params: {
         ilkType: ILKType.ETH_A,
         vaultId: 'testvault',
       } as MakerPoolId,
-      protocol: ProtocolName.Maker,
+      protocol: {
+        name: ProtocolName.Maker,
+        chainInfo: params.chain.chainInfo,
+      },
       type: PoolType.Lending,
     },
   }

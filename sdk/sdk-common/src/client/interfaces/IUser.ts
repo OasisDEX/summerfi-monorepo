@@ -1,11 +1,12 @@
-import { Maybe } from '~sdk-common/utils'
-import { Order } from '~sdk-common/orders'
-import { Simulation, SimulationType } from '~sdk-common/simulation'
-import type { Position } from '~sdk-common/common/implementation/Position'
-import type { PositionId } from '~sdk-common/common/implementation/PositionId'
-import type { Wallet } from '~sdk-common/common/implementation/Wallet'
-import type { Chain } from '~sdk-common/client/implementation/Chain'
-import type { Protocol } from '~sdk-common/protocols/interfaces/Protocol'
+import { Maybe } from '../../common/aliases/Maybe'
+import { Position } from '../../common/implementation/Position'
+import { PositionId } from '../../common/implementation/PositionId'
+import { Wallet } from '../../common/implementation/Wallet'
+import { Order } from '../../orders/interfaces/common/Order'
+import { Protocol } from '../../protocols/implementation/Protocol'
+import { SimulationType } from '../../simulation/enums'
+import { Simulation } from '../../simulation/simulation'
+import { Chain } from '../implementation/Chain'
 
 /**
  * @interface IUser

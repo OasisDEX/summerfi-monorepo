@@ -1,7 +1,9 @@
 import { PositionLike } from '~types'
 import { AutoTakeProfitRealized } from './types'
 
-export const getEmptyProfit = (position: PositionLike): AutoTakeProfitRealized => {
+export const getEmptyProfit = (
+  position: Pick<PositionLike, 'collateral' | 'debt'>,
+): AutoTakeProfitRealized => {
   return {
     triggerPrice: 0n,
     realizedProfitInCollateral: { balance: 0n, token: position.collateral.token },

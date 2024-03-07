@@ -1,4 +1,4 @@
-import { ProtocolName } from './ProtocolName'
+import { ProtocolName } from '../enums/ProtocolName'
 import { IPoolId } from './IPoolId'
 
 // TODO: this will probably need to be moved to the protocol plugins package

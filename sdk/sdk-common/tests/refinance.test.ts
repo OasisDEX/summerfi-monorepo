@@ -1,4 +1,3 @@
-import { Maybe } from '~sdk-common/utils'
 import {
   Percentage,
   PositionId,
@@ -7,6 +6,8 @@ import {
   TokenAmount,
   Wallet,
   type Position,
+  Maybe,
+  Address,
 } from '~sdk-common/common'
 
 import {
@@ -42,7 +43,7 @@ describe('Refinance | SDK', () => {
 
     // Wallet
     const wallet: Wallet = Wallet.createFrom({
-      value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      address: Address.createFrom({ value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266' }),
     })
 
     // User
@@ -87,12 +88,18 @@ describe('Refinance | SDK', () => {
 
     expect(prevPosition.pool.poolId.ilkType).toEqual(ILKType.ETH_A)
     expect(prevPosition.pool.poolId.vaultId).toEqual('testvault')
-    expect(prevPosition.pool.protocol).toEqual(ProtocolName.Maker)
+    expect(prevPosition.pool.protocol).toEqual({
+      name: ProtocolName.Maker,
+      chainInfo: chain.chainInfo,
+    })
     expect(prevPosition.pool.type).toEqual(PoolType.Lending)
 
     // Target protocol
-    const spark: Maybe<Protocol> = await chain.protocols.getProtocolByName({
-      name: ProtocolName.Spark,
+    const spark: Maybe<Protocol> = await chain.protocols.getProtocol({
+      protocol: {
+        name: ProtocolName.Spark,
+        chainInfo: chain.chainInfo,
+      },
     })
     if (!spark) {
       fail('Spark not found')
@@ -117,7 +124,10 @@ describe('Refinance | SDK', () => {
     }
 
     expect(newPool.poolId.emodeType).toEqual(EmodeType.None)
-    expect(newPool.protocol).toEqual(ProtocolName.Spark)
+    expect(newPool.protocol).toEqual({
+      name: ProtocolName.Spark,
+      chainInfo: chain.chainInfo,
+    })
 
     if (!isLendingPool(newPool)) {
       fail('Pool type is not lending')

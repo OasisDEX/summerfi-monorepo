@@ -1,4 +1,4 @@
-import { ProtocolName } from '../interfaces/ProtocolName'
+import { ProtocolName } from '../enums/ProtocolName'
 
 /**
  * @name IPoolId

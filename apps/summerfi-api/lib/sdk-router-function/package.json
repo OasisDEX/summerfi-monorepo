@@ -23,6 +23,7 @@
     "@summerfi/order-planner-service": "workspace:*",
     "@summerfi/swap-service": "workspace:*",
     "@summerfi/swap-common": "workspace:*",
+    "@summerfi/configuration-provider": "workspace:*",
     "superjson": "^1.13.3",
     "zod": "^3.22.4"
   },

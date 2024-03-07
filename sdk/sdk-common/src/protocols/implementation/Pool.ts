@@ -1,7 +1,7 @@
 import { IPool } from '../interfaces/IPool'
 import { IPoolId } from '../interfaces/IPoolId'
+import { IProtocol } from '../interfaces/IProtocol'
 import { PoolType } from '../interfaces/PoolType'
-import { ProtocolName } from '../interfaces/ProtocolName'
 
 /**
  * @see IPool
@@ -9,7 +9,7 @@ import { ProtocolName } from '../interfaces/ProtocolName'
 export abstract class Pool implements IPool {
   public readonly type: PoolType
   public readonly poolId: IPoolId
-  public readonly protocol: ProtocolName
+  public readonly protocol: IProtocol
 
   constructor(params: IPool) {
     this.type = params.type

@@ -1,17 +1,16 @@
-import { Maybe } from '~sdk-common/utils/Maybe'
-import { Order } from '~sdk-common/orders/interfaces/common/Order'
-import { getMockOrder } from '~sdk-common/mocks/mockOrder'
-import { getMockPosition } from '~sdk-common/mocks/mockPosition'
-import type { Chain } from '~sdk-common/client/implementation/Chain'
-import type { IUser } from '~sdk-common/client/interfaces/IUser'
-import { Simulation } from '~sdk-common/simulation/simulation'
-import { SimulationType } from '~sdk-common/simulation/enums'
-import type { Position } from '~sdk-common/common/implementation/Position'
-import type { PositionId } from '~sdk-common/common/implementation/PositionId'
-import type { Wallet } from '~sdk-common/common/implementation/Wallet'
-import type { Protocol } from '~sdk-common/protocols/interfaces/Protocol'
-import { Address } from '~sdk-common/common/implementation/Address'
-import { zeroAddress } from '@summerfi/common'
+import { Address } from '../../common'
+import { Maybe } from '../../common/aliases/Maybe'
+import { Position } from '../../common/implementation/Position'
+import { PositionId } from '../../common/implementation/PositionId'
+import { Wallet } from '../../common/implementation/Wallet'
+import { getMockOrder } from '../../mocks/mockOrder'
+import { getMockPosition } from '../../mocks/mockPosition'
+import { Order } from '../../orders/interfaces/common/Order'
+import { Protocol } from '../../protocols/implementation/Protocol'
+import { SimulationType } from '../../simulation/enums'
+import { Simulation } from '../../simulation/simulation'
+import { IUser } from '../interfaces/IUser'
+import { Chain } from './Chain'
 
 export class User implements IUser {
   public readonly wallet: Wallet
@@ -46,7 +45,7 @@ export class User implements IUser {
   public async newOrder(params: { simulation: Simulation<SimulationType> }): Promise<Order> {
     return getMockOrder({
       user: this,
-      positionsManager: { address: Address.createFrom({ value: zeroAddress }) },
+      positionsManager: { address: Address.ZeroAddressEthereum },
       simulation: params.simulation,
     })
   }

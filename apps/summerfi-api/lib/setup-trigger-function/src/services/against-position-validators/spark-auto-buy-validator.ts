@@ -146,6 +146,28 @@ const upsertErrorsValidation = paramsSchema
       },
     },
   )
+  .refine(
+    ({ triggerData, triggers }) => {
+      const partialTakeProfit = triggers.triggers.sparkPartialTakeProfit
+      if (!partialTakeProfit) {
+        return true
+      }
+      if (!triggerData.useMaxBuyPrice) {
+        return true
+      }
+
+      const partialTakeProfitMinExecutionPrice =
+        safeParseBigInt(partialTakeProfit.decodedParams.executionPrice) ?? 0n
+
+      return triggerData.maxBuyPrice > partialTakeProfitMinExecutionPrice
+    },
+    {
+      message: 'Max buy price is lower than partial take profit execution price',
+      params: {
+        code: AutoBuyTriggerCustomErrorCodes.PartialTakeProfitMinPriceLowerThanAutoBuyMaxPrice,
+      },
+    },
+  )
 
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {

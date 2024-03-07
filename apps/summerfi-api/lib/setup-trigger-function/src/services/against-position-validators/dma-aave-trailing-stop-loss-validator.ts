@@ -94,6 +94,24 @@ const upsertErrorsValidation = paramsSchema
       },
     },
   )
+  .refine(
+    ({ dynamicExecutionLTV, triggers }) => {
+      const currentPartialTakeProfit = triggers.triggers.aavePartialTakeProfit
+      if (currentPartialTakeProfit) {
+        const currentPartialTakeProfitTarget =
+          safeParseBigInt(currentPartialTakeProfit.decodedParams.targetLtv) ?? 0n
+        return dynamicExecutionLTV > currentPartialTakeProfitTarget
+      }
+      return true
+    },
+    {
+      message:
+        'Setting your an Stop-Loss trigger at this level could result in it being executed by your Partial Take Profit',
+      params: {
+        code: StopLossErrorCodes.PartialTakeProfitTargetHigherThanStopLoss,
+      },
+    },
+  )
 
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {

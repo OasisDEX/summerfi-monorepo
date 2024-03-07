@@ -1,5 +1,6 @@
-import { HashedProtocolKey, ProtocolKey } from './types'
+import { IProtocol } from '../interfaces/IProtocol'
+import { HashedProtocolKey } from './types'
 
-export function hashProtocolKey(params: { key: ProtocolKey }): HashedProtocolKey {
-  return JSON.stringify(params.key)
+export function hashProtocolKey(params: { protocol: IProtocol }): HashedProtocolKey {
+  return JSON.stringify(params.protocol)
 }

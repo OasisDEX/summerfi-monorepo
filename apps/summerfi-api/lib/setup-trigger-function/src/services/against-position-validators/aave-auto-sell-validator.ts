@@ -118,6 +118,44 @@ const upsertErrorsValidation = paramsSchema
       },
     },
   )
+  .refine(
+    ({ triggerData, triggers }) => {
+      const partialTakeProfit = triggers.triggers.aavePartialTakeProfit
+      if (!partialTakeProfit) {
+        return true
+      }
+      const partialTakeProfitExecutionLtv =
+        safeParseBigInt(partialTakeProfit.decodedParams.executionLtv) ?? 0n
+
+      return triggerData.targetLTV > partialTakeProfitExecutionLtv
+    },
+    {
+      message: 'Auto sell target cannot be lower than partial take profit trigger',
+      params: {
+        code: AutoSellTriggerCustomErrorCodes.PartialTakeProfitTriggerHigherThanAutoSellTarget,
+      },
+      path: ['triggerData', 'targetLTV'],
+    },
+  )
+  .refine(
+    ({ triggerData, triggers }) => {
+      const partialTakeProfit = triggers.triggers.aavePartialTakeProfit
+      if (!partialTakeProfit) {
+        return true
+      }
+      const partialTakeProfitTargetLtv =
+        safeParseBigInt(partialTakeProfit.decodedParams.targetLtv) ?? 0n
+
+      return triggerData.executionLTV > partialTakeProfitTargetLtv
+    },
+    {
+      message: 'Auto sell trigger LTV cannot be lower than partial take profit target',
+      params: {
+        code: AutoSellTriggerCustomErrorCodes.PartialTakeProfitTargetHigherThanAutoSellTrigger,
+      },
+      path: ['triggerData', 'executionLTV'],
+    },
+  )
 
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {

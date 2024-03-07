@@ -1,10 +1,10 @@
 import { Maybe } from '../common/aliases/Maybe'
 import { Percentage } from '../common/implementation/Percentage'
+import { ProtocolName } from '../protocols/enums/ProtocolName'
 import { LendingPool } from '../protocols/implementation/LendingPool'
+import { Protocol } from '../protocols/implementation/Protocol'
 import { isLendingPoolParameters } from '../protocols/interfaces/LendingPoolParameters'
 import { PoolParameters } from '../protocols/interfaces/PoolParameters'
-import { Protocol } from '../protocols/interfaces/Protocol'
-import { ProtocolName } from '../protocols/interfaces/ProtocolName'
 import { ProtocolParameters } from '../protocols/interfaces/ProtocolParameters'
 import { EmodeType, SparkPoolId } from '../protocols/interfaces/SparkPoolId'
 
@@ -19,7 +19,7 @@ export async function mockPool(params: {
         protocol: ProtocolName.Spark,
         emodeType: EmodeType.None,
       } as SparkPoolId,
-      protocol: params.protocol.name,
+      protocol: params.protocol,
       maxLTV: Percentage.createFrom({ percentage: 50.3 }),
       debtTokens: params.poolParameters.debtTokens,
       collateralTokens: params.poolParameters.collateralTokens,

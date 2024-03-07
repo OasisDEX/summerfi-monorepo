@@ -2,7 +2,7 @@ import { BaseAction, ActionCallBatch } from '~orderplannercommon/actions'
 import { ActionCallsStack } from './ActionCallsStack'
 import { ExecutionStorageManager } from './ExecutionStorageManager'
 import { isValueReference, steps } from '@summerfi/sdk-common/simulation'
-import { Maybe } from '@summerfi/sdk-common/utils'
+import { Maybe } from '@summerfi/sdk-common/common'
 import { StorageInputsMapType, StorageOutputsMapType } from './Types'
 
 export class OrderPlannerContext {
