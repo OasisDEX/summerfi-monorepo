@@ -10,6 +10,7 @@ import { TokenAmount } from '@summerfi/sdk-common/common'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { RefinanceParameters } from '@summerfi/sdk-common/orders'
 import { type ISwapManager } from '@summerfi/swap-common/interfaces'
+import { isLendingPool } from '~sdk-common/protocols/interfaces/LendingPool'
 
 export const refinanceStrategy = makeStrategy([
   {
@@ -55,6 +56,11 @@ export async function refinaceLendingToLending(
   args: RefinanceParameters,
   dependecies: RefinanceDependencies,
 ): Promise<Simulation<SimulationType.Refinance>> {
+  // args validation
+  if (!isLendingPool(args.targetPool)) {
+    throw new Error('Target pool is not a lending pool')
+  }
+
   const FLASHLOAN_MARGIN = 0.001
   const flashloanAmount = args.position.debtAmount.multiply(FLASHLOAN_MARGIN)
   const simulator = Simulator.create(refinanceStrategy)
@@ -159,6 +165,7 @@ export async function refinaceLendingToLending(
     }))
     .run()
 
+  // TODO: I think simulation should return the simulation position as a preperty targetPosition for easy discoverability
   const targetPosition = Object.values(simulation.positions).find(
     (p) => p.pool.protocol === args.targetPool.protocol,
   )
