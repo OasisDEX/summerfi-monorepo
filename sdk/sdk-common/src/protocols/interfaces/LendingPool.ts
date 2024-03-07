@@ -12,7 +12,7 @@ export interface CollateralConfig {
   token: Token
   price: Price
   priceUSD: Price
-  liquidationTreshold: RiskRatio
+  liquidationThreshold: RiskRatio
   maxLtv: RiskRatio
   tokensLocked: TokenAmount
   liquidationPenalty: Percentage
@@ -47,7 +47,7 @@ export interface DebtConfig {
  */
 export interface LendingPool extends IPool {
   type: PoolType.Lending
-  protocolBaseCurrency: Token | CurrencySymbol
+  poolBaseCurrency: Token | CurrencySymbol
   collaterals: CollateralConfig[]
   debts: DebtConfig[]
 }

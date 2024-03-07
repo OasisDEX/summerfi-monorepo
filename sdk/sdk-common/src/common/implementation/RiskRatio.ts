@@ -28,9 +28,10 @@ export class RiskRatio implements IRiskRatioSerialized {
     switch (params.type) {
       case RiskRatioType.LTV:
         return new RiskRatio({ ltv: params.ratio })
-      case RiskRatioType.CollateralizationRatio:
+      case RiskRatioType.CollateralizationRatio: {
         const ltv = Percentage.createFrom({ percentage: 1 / params.ratio.value })
         return new RiskRatio({ ltv })
+      }
       case RiskRatioType.Multiple:
         throw new Error('Multiple not implemented')
         // return new RiskRatio(params)
