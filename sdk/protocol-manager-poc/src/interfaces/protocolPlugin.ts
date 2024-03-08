@@ -2,7 +2,7 @@ import { AddressValue, HexData, Percentage, TokenAmount, TokenSymbol, Price, Cur
 import type {CollateralConfig, DebtConfig} from "@summerfi/sdk-common/protocols";
 import { IPool, SparkLendingPool, MakerLendingPool, PoolType, ProtocolName, /* IPoolId */ } from "@summerfi/sdk-common/protocols"
 import { /* PositionId, */ Address, ChainInfo, Position, Token } from "@summerfi/sdk-common/common"
-import { PublicClient, stringToHex } from "viem"
+import {hexToNumber, PublicClient, stringToHex} from "viem"
 import { BigNumber } from 'bignumber.js'
 import {
     VAT_ABI,
@@ -284,7 +284,7 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
             return poolId as IPoolId
         },
         getPool: async (poolId: IPoolId): Promise<SparkLendingPool> => {
-            const emodeInHex = stringToHex(poolId, { size: 32 })
+            const emode = BigInt(poolId)
             const chainId = ctx.provider.chain?.id
             if (!chainId) throw new Error('ctx.provider.chain.id undefined')
 
@@ -326,14 +326,14 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                 reservesTokenList.push(token)
             }
 
+            const eModeFilteredTokenList = await filterReserveTokensByEMode(ctx, reservesTokenList, emode)
             // TODO: We need to constrain the available tokens based on emodeCategory
 
-            console.log("reservesTokenList", reservesTokenList)
             // Both USDC & DAI use fixed price oracles that keep both stable at 1 USD
             const poolBaseCurrencyToken = CurrencySymbol.USD
 
             const collaterals: Record<AddressValue, CollateralConfig> = {}
-            for (const collateralToken of reservesTokenList) {
+            for (const collateralToken of eModeFilteredTokenList) {
                 // TODO: Remove Try/Catch once PriceService updated to use protocol oracle
                 try {
                     collaterals[collateralToken.address.value] = {
@@ -351,8 +351,9 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                 }
             }
 
+            // Add maxLTV to debts for Spark
             const debts: Record<AddressValue, DebtConfig> = {}
-            for (const quoteToken of reservesTokenList) {
+            for (const quoteToken of eModeFilteredTokenList) {
                 // TODO: Remove Try/Catch once PriceService updated to use protocol oracle
                 if (quoteToken.symbol === TokenSymbol.WETH) {
                     // WETH can be used as collateral on Spark but not borrowed.
@@ -425,15 +426,32 @@ function validateTokenAddressList(tokenAddressList: unknown): asserts tokenAddre
     }
 }
 
-// async function createReservesTokenList(ctx: ProtocolManagerContext, rawReservesTokenList: {tokenAddress: HexData}[]) {
-//     const reservesTokenList: Token[] = []
-//     for (const reserveTokenData of rawReservesTokenList) {
-//         const token = await ctx.tokenService.getTokenByAddress(Address.createFrom({ value: reserveTokenData.tokenAddress}))
-//         reservesTokenList.push(token)
-//     }
-//
-//     return reservesTokenList
-// }
+async function filterReserveTokensByEMode(ctx: ProtocolManagerContext, reservesTokenList: Token[], eMode: bigint) {
+    const contractCalls = []
+    for (const token of reservesTokenList) {
+        contractCalls.push({
+            abi: POOL_DATA_PROVIDER,
+            address: SparkContracts.POOL_DATA_PROVIDER,
+            functionName: "getReserveEModeCategory",
+            args: [token.address.value]
+        })
+    }
+
+    const emodeCategories = await ctx.provider.multicall({
+        contracts: contractCalls as never[],
+        allowFailure: false
+    })
+
+    // All reserves allowed for category 0n
+    if (eMode === 0n) {
+        return reservesTokenList
+    }
+
+    return reservesTokenList.filter((token, idx) => {
+        const emodeForToken = emodeCategories[idx];
+        return emodeForToken === eMode
+    })
+}
 
 
 

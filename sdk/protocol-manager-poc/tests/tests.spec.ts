@@ -189,7 +189,7 @@ describe('playground', () => {
   })
 
   it.only('template/spark', async () => {
-    const result = await sparkPlugin.getPool(sparkPlugin.getPoolId("0"))
+    const result = await sparkPlugin.getPool(sparkPlugin.getPoolId("2"))
     console.log(result)
   })
 })
