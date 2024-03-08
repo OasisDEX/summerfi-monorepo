@@ -326,7 +326,7 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
 
             const debts: Record<AddressValue, SparkPoolDebtConfig> = {}
             for (const asset of reservesAssetsList) {
-                const { token: quoteToken, config: { borrowingEnabled }, caps: { borrowCap } } = asset;
+                const { token: quoteToken, config: { borrowingEnabled }, caps: { borrowCap }, data: { totalVariableDebt, totalStableDebt } } = asset;
                 // TODO: Remove Try/Catch once PriceService updated to use protocol oracle
                 if (quoteToken.symbol === TokenSymbol.WETH) {
                     // WETH can be used as collateral on Spark but not borrowed.
@@ -334,14 +334,15 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                 }
 
                 try {
+                    const totalBorrowed = totalVariableDebt - totalStableDebt
                     debts[quoteToken.address.value] = {
                         token: quoteToken,
                         price: await ctx.priceService.getPrice({baseToken: quoteToken, quoteToken: poolBaseCurrencyToken }),
                         priceUSD: await ctx.priceService.getPriceUSD(quoteToken),
                         rate: Percentage.createFrom({ percentage: 0 }),
-                        totalBorrowed: tokenAmountFromBaseUnit({token: quoteToken, amount: '0' }),
+                        totalBorrowed: tokenAmountFromBaseUnit({token: quoteToken, amount: totalBorrowed.toString() }),
                         debtCeiling: TokenAmount.createFrom({token: quoteToken, amount: borrowCap === 0n ? UNCAPPED_SUPPLY : borrowCap.toString() }),
-                        debtAvailable: tokenAmountFromBaseUnit({token: quoteToken, amount: '0' }),
+                        debtAvailable: tokenAmountFromBaseUnit({token: quoteToken, amount: borrowCap === 0n ? UNCAPPED_SUPPLY : (borrowCap - totalBorrowed).toString() }),
                         dustLimit: tokenAmountFromBaseUnit({token: quoteToken, amount: '0' }),
                         originationFee: Percentage.createFrom({ percentage: 0 }),
                         borrowingEnabled
@@ -783,7 +784,7 @@ function validateAssetReservesData(rawAssetsReservesData: unknown): asserts rawA
         variableBorrowIndex,
         lastUpdateTimestamp
     ] = rawAssetsReservesData;
-    const areNumericValuesCorrect = [
+    const areBigIntValuesCorrect = [
         unbacked,
         accruedToTreasuryScaled,
         totalAToken,
@@ -794,10 +795,11 @@ function validateAssetReservesData(rawAssetsReservesData: unknown): asserts rawA
         stableBorrowRate,
         averageStableBorrowRate,
         liquidityIndex,
-        variableBorrowIndex,
-        lastUpdateTimestamp].every(item => typeof item === 'bigint');
+        variableBorrowIndex].every(item => typeof item === 'bigint');
 
-    if(!(areNumericValuesCorrect)) {
+    const areNumericValuesCorrect = [lastUpdateTimestamp].every(item => typeof item === 'number')
+
+    if(!(areBigIntValuesCorrect && areNumericValuesCorrect)) {
         throw new Error("Reserves data invalid")
     };
 }
