@@ -79,7 +79,7 @@ export const encodeAaveStopLoss = (
     : undefined
 
   const addableTrigger: AddableTrigger = {
-    continuous: true,
+    continuous: false,
     currentId: currentTrigger?.id ?? 0n,
     encodedTriggerData: encodedTriggerData,
     currentTriggerData: currentTrigger?.triggerData ?? '0x0',
