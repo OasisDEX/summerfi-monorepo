@@ -176,6 +176,7 @@ export enum PartialTakeProfitErrorCodes {
   PartialTakeProfitTargetHigherThanStopLoss = 'partial-take-profit-target-higher-than-stop-loss',
   // Error: Your Partial Take Profit min price is lower than the max price of your Auto-Buy. Increase your Partial Take Profit min price, or update your Auto-Buy
   PartialTakeProfitMinPriceLowerThanAutoBuyMaxPrice = 'partial-take-profit-min-price-lower-than-auto-buy-max-price',
+  ExecutionLTVBiggerThanCurrentLTV = 'execution-ltv-bigger-than-current-ltv',
 }
 
 export enum PartialTakeProfitWarningCodes {}

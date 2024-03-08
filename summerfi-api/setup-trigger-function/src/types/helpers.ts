@@ -56,6 +56,14 @@ export const mapZodResultToValidationResults = ({
   }
 }
 
+export const mergeValidationResults = (results: ValidationResults[]): ValidationResults => {
+  return {
+    success: results.every((result) => result.success),
+    errors: results.flatMap((result) => result.errors),
+    warnings: results.flatMap((result) => result.warnings),
+  }
+}
+
 export type SupportedTriggersSchema =
   | typeof eventBodyAaveBasicBuySchema
   | typeof eventBodyAaveBasicSellSchema
