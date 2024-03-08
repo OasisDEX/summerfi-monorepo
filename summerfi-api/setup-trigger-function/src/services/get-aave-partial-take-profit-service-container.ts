@@ -1,5 +1,11 @@
 import { ServiceContainer } from './service-container'
-import { AavePartialTakeProfitEventBody, PositionLike, SupportedActions } from '~types'
+import {
+  AavePartialTakeProfitEventBody,
+  mergeValidationResults,
+  PositionLike,
+  SupportedActions,
+  ValidationResults,
+} from '~types'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
 import { Address, ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
@@ -7,20 +13,23 @@ import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
 import { getAavePosition } from './get-aave-position'
-import { aavePartialTakeProfitValidator } from './against-position-validators'
+import {
+  aavePartialTakeProfitValidator,
+  dmaAaveStopLossValidator,
+} from './against-position-validators'
 import {
   AddableTrigger,
   automationBotHelper,
   CurrentTriggerLike,
   encodeAavePartialTakeProfit,
   encodeAaveStopLoss,
-  encodeAaveTrailingStopLoss,
 } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
 import { getCurrentAaveStopLoss } from './get-current-aave-stop-loss'
 import { DerivedPrices } from '@summerfi/prices-subgraph'
 import { simulateAutoTakeProfit } from './simulations'
 import { MinimalStopLossInformation } from './simulations/auto-take-profit/types'
+import { calculateCollateralPriceInDebtBasedOnLtv } from '~helpers'
 
 export interface GetAavePartialTakeProfitServiceContainerProps {
   rpc: PublicClient
@@ -35,13 +44,11 @@ const getIfThereIsAStopLossToChange = async ({
   trigger,
   triggers,
   position,
-  getLatestPrice,
   logger,
 }: {
   trigger: AavePartialTakeProfitEventBody
   triggers: GetTriggersResponse
   position: PositionLike
-  getLatestPrice: (token: Address, denomination: Address) => Promise<DerivedPrices | undefined>
   logger?: Logger
 }): Promise<{ result: false } | { result: true; addableStopLoss: AddableTrigger }> => {
   if (trigger.triggerData.stopLoss) {
@@ -61,35 +68,6 @@ const getIfThereIsAStopLossToChange = async ({
     }
   }
 
-  if (trigger.triggerData.trailingStopLoss) {
-    const currentStopLoss = getCurrentAaveStopLoss(triggers, position, logger)
-
-    const latestPrice = await getLatestPrice(trigger.position.collateral, trigger.position.debt)
-
-    if (latestPrice === undefined) {
-      throw new Error('latestPrice is undefined')
-    }
-
-    const { addableTrigger: addableStopLoss } = encodeAaveTrailingStopLoss(
-      position,
-      trigger.triggerData.trailingStopLoss.triggerData,
-      latestPrice,
-      currentStopLoss,
-    )
-
-    const isTheSameTriggerData =
-      trigger.triggerData.trailingStopLoss.triggerData.trailingDistance ===
-      safeParseBigInt(triggers.triggers.aaveTrailingStopLossDMA?.decodedParams.trailingDistance)
-
-    if (isTheSameTriggerData) {
-      return { result: false }
-    }
-    return {
-      result: true,
-      addableStopLoss,
-    }
-  }
-
   return {
     result: false,
   }
@@ -102,7 +80,6 @@ export const getAavePartialTakeProfitServiceContainer: (
   addresses,
   getTriggers,
   logger,
-  getLatestPrice,
   chainId,
 }) => {
   const getPosition = memoize(async (params: Parameters<typeof getAavePosition>[0]) => {
@@ -139,13 +116,34 @@ export const getAavePartialTakeProfitServiceContainer: (
 
       const triggers = await getTriggers(trigger.dpm)
 
-      return aavePartialTakeProfitValidator({
-        position,
-        triggerData: trigger.triggerData,
-        action: trigger.action,
-        triggers,
-        chainId,
-      })
+      const validationResults: ValidationResults[] = []
+
+      if (trigger.triggerData.stopLoss) {
+        const executionPrice = calculateCollateralPriceInDebtBasedOnLtv({
+          ...position,
+          ltv: trigger.triggerData.stopLoss.triggerData.executionLTV,
+        })
+        validationResults.push(
+          dmaAaveStopLossValidator({
+            position,
+            executionPrice,
+            triggerData: trigger.triggerData.stopLoss.triggerData,
+            action: trigger.action,
+            triggers,
+          }),
+        )
+      }
+
+      validationResults.push(
+        aavePartialTakeProfitValidator({
+          position,
+          triggerData: trigger.triggerData,
+          action: trigger.action,
+          triggers,
+          chainId,
+        }),
+      )
+      return mergeValidationResults(validationResults)
     },
     getTransaction: async ({ trigger }) => {
       const action = trigger.action
@@ -175,7 +173,6 @@ export const getAavePartialTakeProfitServiceContainer: (
         trigger,
         triggers,
         position,
-        getLatestPrice,
         logger,
       })
 

@@ -85,16 +85,20 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const stopLoss = triggers.triggerGroup.aaveStopLoss
-      if (!stopLoss) return true
+      const updatedStopLossData = triggerData.stopLoss?.triggerData.executionLTV
+      const currentStopLoss = triggers.triggerGroup.aaveStopLoss
+      if (!currentStopLoss && !updatedStopLossData) return true
 
-      const getStopLossLtv =
-        safeParseBigInt(
-          getPropertyFromTriggerParams({
-            trigger: stopLoss,
-            property: 'executionLtv',
-          }),
-        ) ?? 99n
+      const getStopLossLtv = updatedStopLossData
+        ? updatedStopLossData
+        : currentStopLoss
+          ? safeParseBigInt(
+              getPropertyFromTriggerParams({
+                trigger: currentStopLoss,
+                property: 'executionLtv',
+              }),
+            ) ?? 99n
+          : 99n
 
       return triggerData.executionLTV + triggerData.withdrawStep < getStopLossLtv
     },
@@ -118,6 +122,18 @@ const upsertErrorsValidation = paramsSchema
       message: 'Min price is lower than the max price of the auto buy trigger',
       params: {
         code: PartialTakeProfitErrorCodes.PartialTakeProfitMinPriceLowerThanAutoBuyMaxPrice,
+      },
+    },
+  )
+  .refine(
+    ({ triggerData, position }) => {
+      const currentLtv = position.ltv
+      return triggerData.executionLTV < currentLtv
+    },
+    {
+      message: 'LTV is higher than the current LTV',
+      params: {
+        code: PartialTakeProfitErrorCodes.ExecutionLTVBiggerThanCurrentLTV,
       },
     },
   )

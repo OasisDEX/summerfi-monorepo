@@ -85,16 +85,20 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const stopLoss = triggers.triggerGroup.sparkStopLoss
-      if (!stopLoss) return true
+      const updatedStopLossData = triggerData.stopLoss?.triggerData.executionLTV
+      const currentStopLoss = triggers.triggerGroup.sparkStopLoss
+      if (!currentStopLoss && !updatedStopLossData) return true
 
-      const getStopLossLtv =
-        safeParseBigInt(
-          getPropertyFromTriggerParams({
-            trigger: stopLoss,
-            property: 'executionLtv',
-          }),
-        ) ?? 99n
+      const getStopLossLtv = updatedStopLossData
+        ? updatedStopLossData
+        : currentStopLoss
+          ? safeParseBigInt(
+              getPropertyFromTriggerParams({
+                trigger: currentStopLoss,
+                property: 'executionLtv',
+              }),
+            ) ?? 99n
+          : 99n
 
       return triggerData.executionLTV + triggerData.withdrawStep < getStopLossLtv
     },
@@ -121,6 +125,19 @@ const upsertErrorsValidation = paramsSchema
       },
     },
   )
+  .refine(
+    ({ triggerData, position }) => {
+      const currentLtv = position.ltv
+      return triggerData.executionLTV < currentLtv
+    },
+    {
+      message: 'LTV is higher than the current LTV',
+      params: {
+        code: PartialTakeProfitErrorCodes.ExecutionLTVBiggerThanCurrentLTV,
+      },
+    },
+  )
+
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
     if (action === SupportedActions.Remove)

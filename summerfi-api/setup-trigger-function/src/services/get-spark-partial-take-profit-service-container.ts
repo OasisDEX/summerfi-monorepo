@@ -1,25 +1,34 @@
 import { ServiceContainer } from './service-container'
-import { PositionLike, SparkPartialTakeProfitEventBody, SupportedActions } from '~types'
+import {
+  mergeValidationResults,
+  PositionLike,
+  SparkPartialTakeProfitEventBody,
+  SupportedActions,
+  ValidationResults,
+} from '~types'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
 import { Address, ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
-import { sparkPartialTakeProfitValidator } from './against-position-validators'
+import {
+  dmaSparkStopLossValidator,
+  sparkPartialTakeProfitValidator,
+} from './against-position-validators'
 import {
   AddableTrigger,
   automationBotHelper,
   CurrentTriggerLike,
   encodeSparkPartialTakeProfit,
   encodeSparkStopLoss,
-  encodeSparkTrailingStopLoss,
 } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
 import { getSparkPosition } from './get-spark-position'
 import { DerivedPrices } from '@summerfi/prices-subgraph'
 import { getCurrentSparkStopLoss } from './get-current-spark-stop-loss'
 import { simulateAutoTakeProfit } from './simulations'
+import { calculateCollateralPriceInDebtBasedOnLtv } from '~helpers'
 
 export interface GetSparkPartialTakeProfitServiceContainerProps {
   rpc: PublicClient
@@ -34,13 +43,11 @@ const getIfThereIsAStopLossToChange = async ({
   trigger,
   triggers,
   position,
-  getLatestPrice,
   logger,
 }: {
   trigger: SparkPartialTakeProfitEventBody
   triggers: GetTriggersResponse
   position: PositionLike
-  getLatestPrice: (token: Address, denomination: Address) => Promise<DerivedPrices | undefined>
   logger?: Logger
 }): Promise<{ result: false } | { result: true; addableStopLoss: AddableTrigger }> => {
   const currentStopLoss = getCurrentSparkStopLoss(triggers, position, logger)
@@ -59,33 +66,6 @@ const getIfThereIsAStopLossToChange = async ({
     }
   }
 
-  if (trigger.triggerData.trailingStopLoss) {
-    const latestPrice = await getLatestPrice(trigger.position.collateral, trigger.position.debt)
-
-    if (latestPrice === undefined) {
-      throw new Error('latestPrice is undefined')
-    }
-
-    const { addableTrigger: addableStopLoss } = encodeSparkTrailingStopLoss(
-      position,
-      trigger.triggerData.trailingStopLoss.triggerData,
-      latestPrice,
-      currentStopLoss,
-    )
-
-    const isTheSameTriggerData =
-      trigger.triggerData.trailingStopLoss.triggerData.trailingDistance ===
-      safeParseBigInt(triggers.triggers.sparkTrailingStopLossDMA?.decodedParams.trailingDistance)
-
-    if (isTheSameTriggerData) {
-      return { result: false }
-    }
-    return {
-      result: true,
-      addableStopLoss,
-    }
-  }
-
   return {
     result: false,
   }
@@ -98,7 +78,6 @@ export const getSparkPartialTakeProfitServiceContainer: (
   addresses,
   getTriggers,
   logger,
-  getLatestPrice,
   chainId,
 }) => {
   const getPosition = memoize(async (params: Parameters<typeof getSparkPosition>[0]) => {
@@ -130,13 +109,34 @@ export const getSparkPartialTakeProfitServiceContainer: (
 
       const triggers = await getTriggers(trigger.dpm)
 
-      return sparkPartialTakeProfitValidator({
-        position,
-        triggerData: trigger.triggerData,
-        action: trigger.action,
-        triggers,
-        chainId,
-      })
+      const validationResults: ValidationResults[] = []
+
+      if (trigger.triggerData.stopLoss) {
+        const executionPrice = calculateCollateralPriceInDebtBasedOnLtv({
+          ...position,
+          ltv: trigger.triggerData.stopLoss.triggerData.executionLTV,
+        })
+        validationResults.push(
+          dmaSparkStopLossValidator({
+            position,
+            executionPrice,
+            triggerData: trigger.triggerData.stopLoss.triggerData,
+            action: trigger.action,
+            triggers,
+          }),
+        )
+      }
+
+      validationResults.push(
+        sparkPartialTakeProfitValidator({
+          position,
+          triggerData: trigger.triggerData,
+          action: trigger.action,
+          triggers,
+          chainId,
+        }),
+      )
+      return mergeValidationResults(validationResults)
     },
     getTransaction: async ({ trigger }) => {
       const action = trigger.action
@@ -166,7 +166,6 @@ export const getSparkPartialTakeProfitServiceContainer: (
         trigger,
         triggers,
         position,
-        getLatestPrice,
         logger,
       })
 
