@@ -9,7 +9,7 @@ export function addTriggersConfig({ stack, api }: StackContext & { api: Api }) {
     throw new Error('RPC_GATEWAY is required to deploy the triggers functions')
   }
   const getTriggersFunction = new Function(stack, 'get-triggers-function', {
-    handler: 'lib/get-triggers-function/src/index.handler',
+    handler: 'summerfi-api/get-triggers-function/src/index.handler',
     runtime: 'nodejs20.x',
     environment: {
       SUBGRAPH_BASE: SUBGRAPH_BASE,
@@ -22,7 +22,7 @@ export function addTriggersConfig({ stack, api }: StackContext & { api: Api }) {
   })
 
   const setupTriggerFunction = new Function(stack, 'setup-trigger-function', {
-    handler: 'lib/setup-trigger-function/src/index.handler',
+    handler: 'summerfi-api/setup-trigger-function/src/index.handler',
     runtime: 'nodejs20.x',
     environment: {
       RPC_GATEWAY: RPC_GATEWAY,
