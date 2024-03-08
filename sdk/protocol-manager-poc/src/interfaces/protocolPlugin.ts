@@ -237,6 +237,9 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                         // apy: Percentage.createFrom({ percentage: 0 }),
                     }
                 }
+            console.log("stabilityFee", stabilityFee)
+            console.log("stabilityFee.toNumber()", stabilityFee.toNumber())
+
             const debts = {
                 [quoteToken.address.value]: {
                     token: quoteToken,
@@ -261,7 +264,6 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                     name: ProtocolName.Maker,
                     chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
                 },
-                // maxLTV: poolMaxLtv,
                 baseCurrency: poolBaseCurrencyToken,
                 collaterals,
                 debts
@@ -326,7 +328,7 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
 
             const debts: Record<AddressValue, SparkPoolDebtConfig> = {}
             for (const asset of reservesAssetsList) {
-                const { token: quoteToken, config: { borrowingEnabled }, caps: { borrowCap }, data: { totalVariableDebt, totalStableDebt } } = asset;
+                const { token: quoteToken, config: { borrowingEnabled }, caps: { borrowCap }, data: { totalVariableDebt, totalStableDebt, variableBorrowRate } } = asset;
                 // TODO: Remove Try/Catch once PriceService updated to use protocol oracle
                 if (quoteToken.symbol === TokenSymbol.WETH) {
                     // WETH can be used as collateral on Spark but not borrowed.
@@ -334,12 +336,13 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                 }
 
                 try {
+                    const rate = Number(((variableBorrowRate * 1000000n) / PRESISION_BI.RAY).toString()) / 10000
                     const totalBorrowed = totalVariableDebt - totalStableDebt
                     debts[quoteToken.address.value] = {
                         token: quoteToken,
                         price: await ctx.priceService.getPrice({baseToken: quoteToken, quoteToken: poolBaseCurrencyToken }),
                         priceUSD: await ctx.priceService.getPriceUSD(quoteToken),
-                        rate: Percentage.createFrom({ percentage: 0 }),
+                        rate: Percentage.createFrom({ percentage: rate }),
                         totalBorrowed: tokenAmountFromBaseUnit({token: quoteToken, amount: totalBorrowed.toString() }),
                         debtCeiling: TokenAmount.createFrom({token: quoteToken, amount: borrowCap === 0n ? UNCAPPED_SUPPLY : borrowCap.toString() }),
                         debtAvailable: tokenAmountFromBaseUnit({token: quoteToken, amount: borrowCap === 0n ? UNCAPPED_SUPPLY : (borrowCap - totalBorrowed).toString() }),
