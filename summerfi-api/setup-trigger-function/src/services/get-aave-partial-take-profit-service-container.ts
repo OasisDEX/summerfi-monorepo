@@ -63,7 +63,7 @@ const getIfThereIsAStopLossToChange = async ({
     const isTheSameTriggerData = addableStopLoss.encodedTriggerData === currentStopLoss?.triggerData
 
     return {
-      result: isTheSameTriggerData,
+      result: !isTheSameTriggerData,
       addableStopLoss,
     }
   }
