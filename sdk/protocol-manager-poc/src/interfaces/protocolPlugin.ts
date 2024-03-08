@@ -2,7 +2,7 @@ import { AddressValue, HexData, Percentage, TokenAmount, TokenSymbol, Price, Cur
 import type {SparkPoolCollateralConfig, SparkPoolDebtConfig} from "@summerfi/sdk-common/protocols";
 import { IPool, SparkLendingPool, MakerLendingPool, PoolType, ProtocolName, /* IPoolId */ } from "@summerfi/sdk-common/protocols"
 import { /* PositionId, */ Address, ChainInfo, Position, Token } from "@summerfi/sdk-common/common"
-import {hexToNumber, PublicClient, stringToHex} from "viem"
+import {PublicClient, stringToHex} from "viem"
 import { BigNumber } from 'bignumber.js'
 import {
     VAT_ABI,
@@ -304,12 +304,10 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
             const tokensListWithConfigData = await addConfigurationDataToTokens(ctx, tokensList)
             const emodeCategories = await getEmodeCategoriesForReserves(ctx, tokensListWithConfigData)
             const filteredTokens = await filterTokensListByEMode(emodeCategories, tokensListWithConfigData, emode)
-            // const filteredTokens = removeFrozenAndInactiveReserves(filteredByEModeTokens)
 
             // Both USDC & DAI use fixed price oracles that keep both stable at 1 USD
             const poolBaseCurrencyToken = CurrencySymbol.USD
 
-            // const tokensAllowedAsCollateral = filterTokensListByAllowedAsCollateral(filteredTokens)
             const collaterals: Record<AddressValue, SparkPoolCollateralConfig> = {}
             for (const entry of filteredTokens) {
                 const { token: collateralToken, usageAsCollateralEnabled, ltv } = entry;
@@ -331,11 +329,11 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                         usageAsCollateralEnabled,
                     }
                 } catch (e) {
+                    console.log("error in collateral loop", e)
                     continue;
                 }
             }
 
-            // const tokensWithBorrowingEnabled = removeTokensWithBorrowingDisabled(filteredTokens)
             const debts: Record<AddressValue, SparkPoolDebtConfig> = {}
             for (const entry of filteredTokens) {
                 const { token: quoteToken, borrowingEnabled } = entry;
@@ -359,11 +357,11 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                         borrowingEnabled
                     }
                 } catch (e) {
+                    console.log("error in debt loop", e)
                     continue;
                 }
             }
 
-            // const poolMaxLtv = collaterals[collateralToken.address.value].maxLtv.ltv
             // TODO: Resolve in a proper manner
             const chainInfo = ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' })
 
@@ -377,11 +375,10 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                     name: ProtocolName.Maker,
                     chainInfo,
                 },
-                maxLTV: Percentage.createFrom({ percentage: 0 }),
                 baseCurrency: CurrencySymbol.USD,
                 collaterals,
                 debts
-            } as SparkLendingPool
+            }
         },
         getPositionId: (positionId: string): IPositionId => {
             return positionId as IPositionId
@@ -514,15 +511,6 @@ async function filterTokensListByEMode(emodeCategories: bigint[], tokensList: To
         return emodeForToken === eMode
     })
 }
-// function filterTokensListByAllowedAsCollateral(tokensList: TokenWithConfigurationData[]) {
-//     return tokensList.filter(token => token.usageAsCollateralEnabled);
-// }
-// function removeTokensWithBorrowingDisabled(tokensList: TokenWithConfigurationData[]) {
-//     return tokensList.filter(token => token.borrowingEnabled);
-// }
-// function removeFrozenAndInactiveReserves(tokensList: TokenWithConfigurationData[]) {
-//     return tokensList.filter(token => !token.isFrozen && token.isActive)
-// }
 
 // GUARDS
 function validateReservesTokens(tokenAddressList: unknown): asserts tokenAddressList is { tokenAddress: HexData }[] {
