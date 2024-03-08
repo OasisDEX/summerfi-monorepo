@@ -1,5 +1,5 @@
 import { TokenAmount } from '@summerfi/sdk-common/common'
-import { SwapProviderType } from '~swap-common/enums'
+import type { SwapProviderType } from '../enums/SwapProviderType'
 
 /**
  * @name QuoteData

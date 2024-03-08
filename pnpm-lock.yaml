@@ -435,6 +435,9 @@ importers:
       '@summerfi/deployment-utils':
         specifier: workspace:*
         version: link:../../packages/deployment-utils
+      '@summerfi/sdk-client':
+        specifier: workspace:*
+        version: link:../sdk-client
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -472,6 +475,9 @@ importers:
       '@summerfi/protocol-plugins':
         specifier: workspace:*
         version: link:../protocol-plugins
+      '@summerfi/sdk-client':
+        specifier: workspace:*
+        version: link:../sdk-client
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -520,6 +526,25 @@ importers:
         specifier: ^2.7.8
         version: 2.7.9(typescript@5.3.3)
 
+  sdk/sdk-client:
+    dependencies:
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../sdk-common
+      viem:
+        specifier: ^2.7.9
+        version: 2.7.9(typescript@5.3.3)
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+
   sdk/sdk-common:
     dependencies:
       '@summerfi/common':
@@ -545,11 +570,33 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
+  sdk/sdk-e2e:
+    dependencies:
+      '@summerfi/sdk-client':
+        specifier: workspace:*
+        version: link:../sdk-client
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../sdk-common
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+
   sdk/simulator-service:
     dependencies:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
+      '@summerfi/swap-common':
+        specifier: workspace:*
+        version: link:../swap-common
       '@types/node-fetch':
         specifier: ^2.6.11
         version: 2.6.11
@@ -794,12 +841,18 @@ importers:
       '@summerfi/order-planner-service':
         specifier: workspace:*
         version: link:../../sdk/order-planner-service
+      '@summerfi/sdk-client':
+        specifier: workspace:*
+        version: link:../../sdk/sdk-client
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../../sdk/sdk-common
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared
+      '@summerfi/simulator-service':
+        specifier: workspace:^
+        version: link:../../sdk/simulator-service
       '@summerfi/swap-common':
         specifier: workspace:*
         version: link:../../sdk/swap-common

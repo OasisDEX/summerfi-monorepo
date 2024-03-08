@@ -6,7 +6,8 @@
     "baseUrl": ".",
     "paths": {
       "~orderplannercommon": ["src/index.ts"],
-      "~orderplannercommon/*": ["./src/*"]
+      "~orderplannercommon/*": ["./src/*"],
+      "~sdk-client/*": ["node_modules/@summerfi/sdk-client/src/*"]
     }
   },
   "include": ["src/**/*.ts"],

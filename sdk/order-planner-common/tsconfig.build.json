@@ -5,7 +5,8 @@
   "compilerOptions": {
     "rootDir": "src",
     "paths": {
-      "~sdk-common/*": ["../sdk-common/src/*"],
+      "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
+      "~sdk-client/*": ["node_modules/@summerfi/sdk-client/src/*"],
       "~orderplannercommon/*": ["src/*"],
       "~swap-common/*": ["../swap-common/src/*"],
       "~deployment-types/*": ["node_modules/@summerfi/deployment-types/src/*"]

@@ -11,7 +11,6 @@ import { ISwapManager } from '@summerfi/swap-common/interfaces'
 export type ContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
 export type Context = {
-  provider: undefined | string
   deployments: DeploymentIndex
   orderPlannerService: OrderPlannerService
   swapManager: ISwapManager
@@ -26,7 +25,6 @@ export const createContext = (opts: ContextOptions): Context => {
   const swapManager = SwapManagerFactory.newSwapManager({ configProvider })
 
   return {
-    provider: undefined,
     deployments,
     orderPlannerService,
     swapManager,

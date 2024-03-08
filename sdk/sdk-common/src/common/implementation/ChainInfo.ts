@@ -1,7 +1,7 @@
 import { type ChainId } from '~sdk-common/common/aliases'
 import { SerializationService } from '~sdk-common/services/SerializationService'
 
-export type IChainInfoSerialized = {
+type IChainInfoSerialized = {
   /** The chain ID of the network */
   chainId: ChainId
   /** The name of the network */

@@ -12,8 +12,9 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest --passWithNoTests",
+    "test": "jest tests/",
     "testw": "jest --watch",
+    "e2e": "jest e2e/",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "build": "tsc -b -v tsconfig.build.json",
@@ -24,6 +25,7 @@
     "@aws-lambda-powertools/metrics": "^1.17.0",
     "@aws-lambda-powertools/tracer": "^1.17.0",
     "@summerfi/serverless-shared": "workspace:*",
+    "@summerfi/template-function": "link:",
     "typescript": "^5.3.3"
   },
   "devDependencies": {

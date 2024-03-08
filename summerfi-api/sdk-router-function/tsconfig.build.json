@@ -17,7 +17,10 @@
       "~swap-common/*": ["../../sdk/swap-common/src/*"],
       "~swap-service/*": ["../../sdk/swap-service/src/*"],
       "~deployment-types": ["../../../packages/deployment-types/src/index.ts"],
-      "~deployment-types/*": ["../../packages/deployment-types/src/*"]
+      "~deployment-types/*": ["../../packages/deployment-types/src/*"],
+      "~sdk-client/*": ["node_modules/@summerfi/sdk-client/src/*"],
+      "~sdk-client": ["node_modules/@summerfi/sdk-client/src"],
+      "~simulator-service/*": ["node_modules/@summerfi/simulator-service/src/*"]
     }
   },
   "include": ["src/**/*.ts"]

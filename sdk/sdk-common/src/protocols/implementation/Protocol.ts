@@ -1,10 +1,10 @@
 import { PoolParameters } from '../interfaces/PoolParameters'
 import { ProtocolParameters } from '../interfaces/ProtocolParameters'
-import { ProtocolName } from '../enums/ProtocolName'
 import { IPool } from '../interfaces/IPool'
-import { IProtocol } from '../interfaces/IProtocol'
 import { Maybe } from '../../common/aliases/Maybe'
 import { ChainInfo } from '../../common/implementation/ChainInfo'
+import type { ProtocolName } from '../enums/ProtocolName'
+import type { IProtocol } from '../interfaces/IProtocol'
 
 /**
  * @interface Protocol

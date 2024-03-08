@@ -4,8 +4,8 @@ import {
   addBalance,
   getReferencedValue,
   subtractBalance,
-} from '~swap-service/implementation/helpers'
-import { SimulationState } from '~swap-service/interfaces/simulation'
+} from '~simulator-service/implementation/helpers'
+import { SimulationState } from '~simulator-service/interfaces/simulation'
 
 export function depositBorrowReducer(
   step: steps.DepositBorrowStep,

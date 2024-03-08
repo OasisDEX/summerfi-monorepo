@@ -4,11 +4,13 @@ import {
   SimulationSteps,
   SimulationType,
 } from '@summerfi/sdk-common/simulation'
-import { getReferencedValue, makeStrategy } from '~swap-service/implementation/helpers'
-import { LendingPool } from '@summerfi/sdk-common/protocols'
-import { Simulator } from '~swap-service/implementation/simulator-engine'
-import { Token, TokenAmount, Position } from '@summerfi/sdk-common/common'
+import { getReferencedValue, makeStrategy } from '~simulator-service/implementation/helpers'
+import { Simulator } from '~simulator-service/implementation/simulator-engine'
+import { TokenAmount } from '@summerfi/sdk-common/common'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
+import { RefinanceParameters } from '@summerfi/sdk-common/orders'
+import { type ISwapManager } from '@summerfi/swap-common/interfaces'
+import { isLendingPool } from '~sdk-common/protocols/interfaces/LendingPool'
 
 export const refinanceStrategy = makeStrategy([
   {
@@ -44,32 +46,21 @@ export const refinanceStrategy = makeStrategy([
 ])
 
 // TODO move those interfaces to more appropriate place
-interface Quote {
-  fromTokenAmount: TokenAmount
-  toTokenAmount: TokenAmount
-  slippage: number
-  fee: number
-}
-
-interface GetQuote {
-  (args: { from: TokenAmount; to: Token; slippage: number; fee: number }): Promise<Quote>
-}
-// STOP TODO
-
-export interface RefinanceParameters {
-  position: Position
-  targetPool: LendingPool
-  slippage: number
-}
 
 export interface RefinanceDependencies {
-  getQuote: GetQuote
+  swapManager: ISwapManager
+  getSummerFee: () => number
 }
 
-export async function refinace(
+export async function refinaceLendingToLending(
   args: RefinanceParameters,
   dependecies: RefinanceDependencies,
 ): Promise<Simulation<SimulationType.Refinance>> {
+  // args validation
+  if (!isLendingPool(args.targetPool)) {
+    throw new Error('Target pool is not a lending pool')
+  }
+
   const FLASHLOAN_MARGIN = 0.001
   const flashloanAmount = args.position.debtAmount.multiply(FLASHLOAN_MARGIN)
   const simulator = Simulator.create(refinanceStrategy)
@@ -119,12 +110,15 @@ export async function refinace(
     .next(async () => ({
       name: 'CollateralSwap',
       type: SimulationSteps.Swap,
-      inputs: await dependecies.getQuote({
-        from: args.position.collateralAmount,
-        to: args.targetPool.collateralTokens[0],
+      inputs: {
+        ...(await dependecies.swapManager.getSwapQuoteExactInput({
+          chainInfo: args.position.pool.protocol.chainInfo,
+          fromAmount: args.position.collateralAmount,
+          toToken: args.targetPool.collateralTokens[0],
+        })),
         slippage: args.slippage,
-        fee: 0,
-      }),
+        fee: dependecies.getSummerFee(),
+      },
       skip: isCollateralSwapSkipped,
     }))
     .next(async (ctx) => ({
@@ -143,12 +137,15 @@ export async function refinace(
     .next(async (ctx) => ({
       name: 'DebtSwap',
       type: SimulationSteps.Swap,
-      inputs: await dependecies.getQuote({
-        from: getReferencedValue(ctx.getReference(['DepositBorrow', 'borrowAmount'])),
-        to: args.targetPool.collateralTokens[0],
+      inputs: {
+        ...(await dependecies.swapManager.getSwapQuoteExactInput({
+          chainInfo: args.position.pool.protocol.chainInfo,
+          fromAmount: getReferencedValue(ctx.getReference(['DepositBorrow', 'borrowAmount'])),
+          toToken: args.targetPool.debtTokens[0],
+        })),
         slippage: args.slippage,
-        fee: 0,
-      }),
+        fee: dependecies.getSummerFee(),
+      },
       skip: isDebtSwapSkipped,
     }))
     .next(async () => ({
@@ -168,6 +165,7 @@ export async function refinace(
     }))
     .run()
 
+  // TODO: I think simulation should return the simulation position as a preperty targetPosition for easy discoverability
   const targetPosition = Object.values(simulation.positions).find(
     (p) => p.pool.protocol === args.targetPool.protocol,
   )

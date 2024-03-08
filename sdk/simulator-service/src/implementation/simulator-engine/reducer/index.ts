@@ -1,6 +1,6 @@
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { SimulationState } from '~swap-service/interfaces/simulation'
-import type { StateReducer, StateReducers } from '~swap-service/interfaces/steps'
+import { SimulationState } from '~simulator-service/interfaces/simulation'
+import type { StateReducer, StateReducers } from '~simulator-service/interfaces/steps'
 import { flashloanReducer } from './flashloanReducer'
 import { depositBorrowReducer } from './depositBorrowReducer'
 import { paybackWithdrawReducer } from './paybackWithdrawReducer'

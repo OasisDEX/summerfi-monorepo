@@ -4,7 +4,7 @@ import { IPoolId } from '../interfaces/IPoolId'
 import { IProtocol } from '../interfaces/IProtocol'
 import { PoolType } from '../interfaces/PoolType'
 
-export class PoolBaseImpl<T extends PoolType> implements IPool {
+export abstract class PoolBaseImpl<T extends PoolType> implements IPool {
   public readonly poolId: IPoolId
   public readonly protocol: IProtocol
   public readonly type: T
