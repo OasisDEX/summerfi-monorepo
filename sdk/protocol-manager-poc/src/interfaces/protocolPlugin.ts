@@ -1,9 +1,19 @@
-import { Percentage, TokenAmount, TokenSymbol, Price, CurrencySymbol, RiskRatio } from "@summerfi/sdk-common/common"
-import { IPool, LendingPool, MakerLendingPool, PoolType, ProtocolName, /* IPoolId */ } from "@summerfi/sdk-common/protocols"
+import { AddressValue, HexData, Percentage, TokenAmount, TokenSymbol, Price, CurrencySymbol, RiskRatio } from "@summerfi/sdk-common/common"
+import type {CollateralConfig, DebtConfig} from "@summerfi/sdk-common/protocols";
+import { IPool, SparkLendingPool, MakerLendingPool, PoolType, ProtocolName, /* IPoolId */ } from "@summerfi/sdk-common/protocols"
 import { /* PositionId, */ Address, ChainInfo, Position, Token } from "@summerfi/sdk-common/common"
 import { PublicClient, stringToHex } from "viem"
 import { BigNumber } from 'bignumber.js'
-import { VAT_ABI, SPOT_ABI, JUG_ABI, DOG_ABI, ILK_REGISTRY } from "./abis"
+import {
+    VAT_ABI,
+    SPOT_ABI,
+    JUG_ABI,
+    DOG_ABI,
+    ILK_REGISTRY,
+    ORACLE_ABI,
+    LENDING_POOL_ABI,
+    POOL_DATA_PROVIDER
+} from "./abis"
 
 export type IPoolId = string & { __poolId: never }
 export type IPositionId = string & { __positionID: never }
@@ -62,6 +72,12 @@ export const MakerContracts = {
     JUG: "0x19c0976f590d67707e62397c87829d896dc0f1f1",
     DOG: "0x135954d155898d42c90d2a57824c690e0c7bef1b",
     ILK_REGISTRY: "0x5a464C28D19848f44199D003BeF5ecc87d090F87",
+} as const
+
+export const SparkContracts = {
+    ORACLE: "0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9",
+    LENDING_POOL: "0xC13e21B648A5Ee794902342038FF3aDAB66BE987",
+    POOL_DATA_PROVIDER: "0xFc21d6d146E6086B8359705C8b28512a983db0cb",
 } as const
 
 const PRESISION = {
@@ -204,7 +220,7 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                         token: collateralToken,
                         // TODO: quote the OSM, we need to trick the contract that is SPOT that is doing the query (from in tx is SPOT)
                         price: await ctx.priceService.getPrice({baseToken: collateralToken, quoteToken }),
-                        // TODO: Move nextPrice to Maker only section
+                        // TODO
                         nextPrice: Price.createFrom({ value: spotRes.liquidationRatio.toString(), baseToken: collateralToken, quoteToken: quoteToken }), // TODO
                         priceUSD: await ctx.priceService.getPriceUSD(collateralToken),
 
@@ -212,7 +228,7 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                         liquidationThreshold: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: spotRes.liquidationRatio.times(100).toNumber() }), type: RiskRatio.type.CollateralizationRatio }),
                         maxLtv: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: spotRes.liquidationRatio.times(100).toNumber() }), type: RiskRatio.type.CollateralizationRatio }),
 
-                        tokensLocked: tokenAmountFromBaseUnit({token: collateralToken, amount: '0'}), // TODO chack the gem balance of join adapter
+                        tokensLocked: tokenAmountFromBaseUnit({token: collateralToken, amount: '0'}), // TODO check the gem balance of join adapter
                         maxSupply: tokenAmountFromBaseUnit({token: collateralToken, amount: Number.MAX_SAFE_INTEGER.toString()}),
                         liquidationPenalty: Percentage.createFrom({ percentage: dogRes.liquidationPenalty.toNumber() }),
                         // apy: Percentage.createFrom({ percentage: 0 }),
@@ -261,190 +277,162 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
     return plugin
 }
 
-// export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerContext): ProtocolPlugin => {
-//     return {
-//         supportedChains: [ChainId.Mainnet],
-//         getPoolId: (poolId: string): IPoolId => {
-//             return poolId as IPoolId
-//         },
-//         getPool: async (poolId: IPoolId): Promise<LendingPool> => {
-//             const ilkInHex = stringToHex(poolId, { size: 32 })
-//
-//             const [
-//                 {   0: art,         // Total Normalised Debt     [wad] needs to be multiplied by rate to get actual debt
-//                     // https://docs.makerdao.com/smart-contract-modules/rates-module
-//                     1: rate,        // Accumulated Rates         [ray]
-//                     2: spot,        // Price with Safety Margin  [ray]
-//                     3: line,        // Debt Ceiling              [rad] - max total debt
-//                     4: dust         // Urn Debt Floor            [rad] - minimum debt
-//                 },
-//                 {   0: _,           // Price feed address
-//                     1: mat          // Liquidation ratio [ray]
-//                 },
-//                 {   0: rawFee,      // Collateral-specific, per-second stability fee contribution [ray]
-//                     1: feeLastLevied// Time of last drip [unix epoch time]
-//                 },
-//                 {   0: clip,        // Liquidator
-//                     1: chop,        // Liquidation Penalty
-//                     2: hole,        // Max DAI needed to cover debt+fees of active auctions per ilk [rad]
-//                     3: dirt         // Total DAI needed to cover debt+fees of active auctions [rad]
-//                 },
-//                 {   0: pos,         // Index in ilks array
-//                     1: join,        // DSS GemJoin adapter
-//                     2: gem,         // The collateral token contract
-//                     3: dec,         // Collateral token decimals
-//                     4: _class,      // Classification code (1 - clip, 2 - flip, 3+ - other)
-//                     5: pip,         // Token price oracle address
-//                     6: xlip,        // Auction contract
-//                     7: name,        // Token name
-//                     8: symbol       // Token symbol
-//                 }
-//             ] = await ctx.provider.multicall({
-//                 contracts: [
-//                     {
-//                         abi: VAT_ABI,
-//                         address: MakerContracts.VAT,
-//                         functionName: "ilks",
-//                         args: [ilkInHex]
-//                     },
-//                     {
-//                         abi: SPOT_ABI,
-//                         address: MakerContracts.SPOT,
-//                         functionName: "ilks",
-//                         args: [ilkInHex]
-//                     },
-//                     {
-//                         abi: JUG_ABI,
-//                         address: MakerContracts.JUG,
-//                         functionName: "ilks",
-//                         args: [ilkInHex]
-//                     },
-//                     {
-//                         abi: DOG_ABI,
-//                         address: MakerContracts.DOG,
-//                         functionName: "ilks",
-//                         args: [ilkInHex]
-//                     },
-//                     {
-//                         abi: ILK_REGISTRY,
-//                         address: MakerContracts.ILK_REGISTRY,
-//                         functionName: "ilkData",
-//                         args: [ilkInHex]
-//                     }
-//                 ],
-//                 allowFailure: false
-//             })
-//
-//             const vatRes = {
-//                 normalizedIlkDebt: amountFromWei(art),
-//                 debtScalingFactor: amountFromRay(rate),
-//                 maxDebtPerUnitCollateral: amountFromRay(spot),
-//                 debtCeiling: amountFromRad(line),
-//                 debtFloor: amountFromRad(dust),
-//             }
-//
-//             const spotRes = {
-//                 priceFeedAddress: Address.createFrom({ value: pip }),
-//                 liquidationRatio: amountFromRay(mat),
-//             }
-//
-//             const jugRes = {
-//                 rawFee: amountFromRay(rawFee),
-//                 feeLastLevied: new BigNumber(feeLastLevied.toString()).times(1000),
-//             }
-//
-//             const dogRes = {
-//                 clipperAddress: Address.createFrom({ value: clip }),
-//                 liquidationPenalty: amountFromWei(chop - PRESISION_BI.WAD),
-//             }
-//
-//             const collateralToken = await ctx.tokenService.getTokenByAddress(Address.createFrom({ value: gem }))
-//             const debtToken = await ctx.tokenService.getTokenBySymbol(TokenSymbol.DAI)
-//
-//             const SECONDS_PER_YEAR = 60 * 60 * 24 * 365
-//             BigNumber.config({ POW_PRECISION: 100 })
-//             const stabilityFee = jugRes.rawFee.pow(SECONDS_PER_YEAR).minus(1)
-//
-//             return {
-//                 type: PoolType.Lending,
-//                 poolId: {
-//                     id: poolId as string
-//                 },
-//                 protocol: ProtocolName.Maker,
-//                 collaterals: [
-//                     {
-//                         token: collateralToken,
-//
-//                         price: Price.createFrom({ value: '0', baseToken: collateralToken, quoteToken: debtToken }), // TODO quote the OSM, we need to trick the contract that is is SPOT that is doing the query (from in tx is SPOT)
-//                         // nextPrice: Price.createFrom({ value: spotRes.liquidationRatio.toString(), baseToken: collateralToken, quoteToken: debtToken }), // TODO
-//                         priceUSD: await ctx.priceService.getPriceUSD(collateralToken),
-//
-//                         liquidationTreshold: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: 0 }), type: RiskRatio.type.CollateralizationRatio }),
-//                         tokensLocked: tokenAmountFromBaseUnit({token: collateralToken, amount: '0'}), // TODO chack the gem balance of join adapter
-//                         // maxSupply: tokenAmountFromBaseUnit({token: collateralToken, amount: Number.MAX_SAFE_INTEGER.toString()}), // TODO in case of maker it is infinite
-//                         liquidationPenalty: Percentage.createFrom({ percentage: dogRes.liquidationPenalty.toNumber() }),
-//                         apy: Percentage.createFrom({ percentage: 0 }),
-//                     }
-//                 ],
-//                 debts: [
-//                     {
-//                         token: debtToken,
-//
-//                         price: Price.createFrom({ value: '0', baseToken: debtToken, quoteToken: collateralToken }), // TODO
-//                         priceUSD: await ctx.priceService.getPriceUSD(debtToken),
-//                         rate: Percentage.createFrom({ percentage: stabilityFee.toNumber() }),
-//                         totalBorrowed: tokenAmountFromBaseUnit({token: debtToken, amount: vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor).toString()}),
-//                         debtCeiling: tokenAmountFromBaseUnit({token: debtToken, amount: vatRes.debtCeiling.toString()}),
-//                         debtAvailable: tokenAmountFromBaseUnit({token: debtToken, amount:  vatRes.debtCeiling.minus(vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor)).toString()}),
-//                         dustLimit: tokenAmountFromBaseUnit({token: debtToken, amount: vatRes.debtFloor.toString()}),
-//                         originationFee: Percentage.createFrom({ percentage: 0 }),
-//                         variableRate: false,
-//                     }
-//                 ],
-//
-//                 /*
-//                 poolBaseCurrency: Currency [ETH, USD, DAI etc] DAI for Maker
-//                 {
-//                     collaterals: {
-//                         [collateralTokenAddress]: {
-//                             lockedAmount: TokenAmount
-//                             price: Price
-//                             nextPrice: Price // only maker has this
-//                             priceUSD: Price
-//                             liquidationTreshold: Percentage
-//                             tokensLocked: TokenAmount
-//                             maxSupply: TokenAmount
-//                             liquidationPenalty: Percentage
-//                             apy: Percentage
-//                         }
-//                     }
-//                     debts: {
-//                         [debtTokenAddress]: {
-//                             borrowedAmount: TokenAmount
-//                             price: Price
-//                             priceUSD: Price
-//                             rate: Percentage
-//                             totalBorrowed: TokenAmount
-//                             debtCeiling: TokenAmount
-//                             debtAvailable: TokenAmount
-//                             dustLimit: TokenAmount
-//                             originationFee: Percentage
-//                             variableRate: boolean
-//                         }
-//                     }
-//                 }
-//                 */
-//             }
-//         },
-//         getPositionId: (positionId: string): IPositionId => {
-//             return positionId as IPositionId
-//         },
-//         getPosition: async (positionId: IPositionId): Promise<Position> => {
-//             throw new Error("Not implemented")
-//         }
+export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerContext): ProtocolPlugin => {
+    const plugin = {
+        supportedChains: [ChainId.Mainnet],
+        getPoolId: (poolId: string): IPoolId => {
+            return poolId as IPoolId
+        },
+        getPool: async (poolId: IPoolId): Promise<SparkLendingPool> => {
+            const emodeInHex = stringToHex(poolId, { size: 32 })
+            const chainId = ctx.provider.chain?.id
+            if (!chainId) throw new Error('ctx.provider.chain.id undefined')
+
+            if (!plugin.supportedChains.includes(chainId)) {
+                throw new Error(`Chain ID ${chainId} is not supported`);
+            }
+
+            const [
+                rawReservesTokenList
+            ] = await ctx.provider.multicall({
+                contracts: [
+                    // TODO: move to PriceService
+                    // {
+                    //     abi: ORACLE_ABI,
+                    //     address: SparkContracts.ORACLE,
+                    //     functionName: "ilks",
+                    //     args: [ilkInHex]
+                    // },
+                    // {
+                    //     abi: LENDING_POOL_ABI,
+                    //     address: SparkContracts.LENDING_POOL,
+                    //     functionName: "ilks",
+                    //     args: [ilkInHex]
+                    // },
+                    {
+                        abi: POOL_DATA_PROVIDER,
+                        address: SparkContracts.POOL_DATA_PROVIDER,
+                        functionName: "getAllReservesTokens",
+                        args: []
+                    },
+                ],
+                allowFailure: false
+            })
+
+            validateTokenAddressList(rawReservesTokenList)
+            const reservesTokenList: Token[] = []
+            for (const reservesToken of rawReservesTokenList) {
+                const token = await ctx.tokenService.getTokenByAddress(Address.createFrom({ value: reservesToken.tokenAddress}))
+                reservesTokenList.push(token)
+            }
+
+            console.log("reservesTokenList", reservesTokenList)
+            const poolBaseCurrencyToken = await ctx.tokenService.getTokenBySymbol(TokenSymbol.DAI)
+
+            const collaterals: Record<AddressValue, CollateralConfig> = {}
+            for (const collateralToken of reservesTokenList) {
+                // TODO: Remove Try/Catch once PriceService updated to use protocol oracle
+                try {
+                    collaterals[collateralToken.address.value] = {
+                        token: collateralToken,
+                        // TODO: need to update price service to use protocol oracle
+                        price: await ctx.priceService.getPrice({baseToken: collateralToken, quoteToken: poolBaseCurrencyToken }),
+                        priceUSD: await ctx.priceService.getPriceUSD(collateralToken),
+                        liquidationThreshold: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: 0 }), type: RiskRatio.type.LTV }),
+                        tokensLocked: tokenAmountFromBaseUnit({token: collateralToken, amount: '0'}),
+                        maxSupply: tokenAmountFromBaseUnit({token: collateralToken, amount: '0' }),
+                        liquidationPenalty: Percentage.createFrom({ percentage: 0 }),
+                    }
+                } catch (e) {
+                    continue;
+                }
+            }
+
+            const debts: Record<AddressValue, DebtConfig> = {}
+            for (const quoteToken of reservesTokenList) {
+                // TODO: Remove Try/Catch once PriceService updated to use protocol oracle
+                if (quoteToken.symbol === TokenSymbol.WETH) {
+                    // WETH can be used as collateral on Spark but not borrowed.
+                    continue;
+                }
+
+                try {
+                    debts[quoteToken.address.value] = {
+                        token: quoteToken,
+                        // How can we know this?
+                        price: await ctx.priceService.getPrice({baseToken: quoteToken, quoteToken: poolBaseCurrencyToken }),
+                        priceUSD: await ctx.priceService.getPriceUSD(quoteToken),
+                        rate: Percentage.createFrom({ percentage: 0 }),
+                        totalBorrowed: tokenAmountFromBaseUnit({token: quoteToken, amount: '0' }),
+                        debtCeiling: tokenAmountFromBaseUnit({token: quoteToken, amount: '0' }),
+                        debtAvailable: tokenAmountFromBaseUnit({token: quoteToken, amount: '0' }),
+                        dustLimit: tokenAmountFromBaseUnit({token: quoteToken, amount: '0' }),
+                        originationFee: Percentage.createFrom({ percentage: 0 })
+                    }
+                } catch (e) {
+                    continue;
+                }
+            }
+
+            // const poolMaxLtv = collaterals[collateralToken.address.value].maxLtv.ltv
+            // TODO: Resolve in a proper manner
+            const chainInfo = ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' })
+
+            return {
+                type: PoolType.Lending,
+                poolId: {
+                    id: poolId as string
+                },
+                // TODO: Get protocol by proper means
+                protocol: {
+                    name: ProtocolName.Maker,
+                    chainInfo,
+                },
+                maxLTV: Percentage.createFrom({ percentage: 0 }),
+                baseCurrency: poolBaseCurrencyToken,
+                collaterals,
+                debts
+            } as SparkLendingPool
+        },
+        getPositionId: (positionId: string): IPositionId => {
+            return positionId as IPositionId
+        },
+        getPosition: async (positionId: IPositionId): Promise<Position> => {
+            throw new Error("Not implemented")
+        }
+    }
+
+    return plugin
+}
+
+function validateTokenAddressList(tokenAddressList: unknown): asserts tokenAddressList is { tokenAddress: HexData }[] {
+    if (!Array.isArray(tokenAddressList)) {
+        throw new Error("Invalid token address list")
+    }
+
+    for (const tokenItem of tokenAddressList) {
+        // Check if tokenItem is an object and has a tokenAddress property of type string
+        if (typeof tokenItem !== 'object' || tokenItem === null || typeof (tokenItem as any).tokenAddress !== 'string') {
+            throw new Error(`Invalid token item or tokenAddress not found: ${JSON.stringify(tokenItem)}`);
+        }
+
+        if (!Address.isValid(tokenItem.tokenAddress)) {
+            throw new Error("TokenAddress is not valid address")
+        }
+    }
+}
+
+// async function createReservesTokenList(ctx: ProtocolManagerContext, rawReservesTokenList: {tokenAddress: HexData}[]) {
+//     const reservesTokenList: Token[] = []
+//     for (const reserveTokenData of rawReservesTokenList) {
+//         const token = await ctx.tokenService.getTokenByAddress(Address.createFrom({ value: reserveTokenData.tokenAddress}))
+//         reservesTokenList.push(token)
 //     }
-// }
 //
+//     return reservesTokenList
+// }
+
+
 
 /*
 In order to get pool from protocol we need to know:

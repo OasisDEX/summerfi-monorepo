@@ -1,4 +1,11 @@
-import { createMakerPlugin, ProtocolPlugin, ProtocolManagerContext, ITokenService, IPriceService  } from '../src/index'
+import {
+  createMakerPlugin,
+  ProtocolPlugin,
+  ProtocolManagerContext,
+  ITokenService,
+  IPriceService,
+  createSparkPlugin
+} from '../src/index'
 import { createPublicClient, http, PublicClient, getContract } from 'viem'
 import { mainnet } from 'viem/chains'
 import { Address, ChainInfo, CurrencySymbol, Price, Token, TokenSymbol } from '@summerfi/sdk-common/common'
@@ -87,12 +94,61 @@ class TokenServiceMock implements ITokenService {
       name: 'Wrapped Ether',
       decimals: 18,
     }),
+    'SDAI': Token.createFrom({
+      chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
+      address: Address.createFrom({value: '0x83F20F44975D03b1b09e64809B757c47f942BEeA'}),
+      symbol: 'SDAI',
+      name: 'Savings DAI',
+      decimals: 18,
+    }),
+    'USDC': Token.createFrom({
+      chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
+      address: Address.createFrom({value: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'}),
+      symbol: 'USDC',
+      name: 'Circle USD Stablecoin',
+      decimals: 6,
+    }),
+    'WSTETH': Token.createFrom({
+      chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
+      address: Address.createFrom({value: '0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0'}),
+      symbol: 'WSTETH',
+      name: 'Wrapped staked ETH',
+      decimals: 18,
+    }),
+    'WBTC': Token.createFrom({
+      chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
+      address: Address.createFrom({value: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599'}),
+      symbol: 'WBTC',
+      name: 'Wrapped BTC',
+      decimals: 8,
+    }),
+    'GNO': Token.createFrom({
+      chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
+      address: Address.createFrom({value: '0x6810e776880C02933D47DB1b9fc05908e5386b96'}),
+      symbol: 'GNO',
+      name: 'Gnosis Token',
+      decimals: 18,
+    }),
+    'RETH': Token.createFrom({
+      chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
+      address: Address.createFrom({value: '0xae78736Cd615f374D3085123A210448E74Fc6393'}),
+      symbol: 'RETH',
+      name: 'Rocket ETH',
+      decimals: 18,
+    }),
+    'USDT': Token.createFrom({
+      chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
+      address: Address.createFrom({value: '0xdAC17F958D2ee523a2206206994597C13D831ec7'}),
+      symbol: 'USDT',
+      name: 'Tether USD Stablecoin',
+      decimals: 6,
+    }),
     }
 
   async getTokenByAddress(address: Address): Promise<Token> {
     const token = Object.values(this.tokens).find(token => token.address.equals(address))
     if (!token) {
-      throw new Error('Token not found')
+      throw new Error(`Token not found for ${address}`)
     }
     return token
   }
@@ -120,13 +176,20 @@ async function createProtocolManagerContext (): Promise<ProtocolManagerContext> 
 describe('playground', () => {
   let ctx: ProtocolManagerContext
   let makerPlugin: ProtocolPlugin
+  let sparkPlugin: ProtocolPlugin
   beforeAll(async () => {
     ctx = await createProtocolManagerContext()
     makerPlugin = createMakerPlugin(ctx)
+    sparkPlugin = createSparkPlugin(ctx)
   })
 
-  it('template', async () => {
+  it('template/maker', async () => {
     const result = await makerPlugin.getPool(makerPlugin.getPoolId("ETH-A"))
+    console.log(result)
+  })
+
+  it.only('template/spark', async () => {
+    const result = await sparkPlugin.getPool(sparkPlugin.getPoolId("0"))
     console.log(result)
   })
 })

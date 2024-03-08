@@ -59,3 +59,5 @@ export function isLendingPool(pool: IPool): pool is LendingPool {
 }
 
 export type MakerLendingPool = LendingPool<MakerPoolCollateralConfig>
+
+export type SparkLendingPool = LendingPool
