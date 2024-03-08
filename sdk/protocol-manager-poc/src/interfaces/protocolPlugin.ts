@@ -92,6 +92,8 @@ const PRESISION_BI = {
     RAD: 10n ** 45n,
 }
 
+const UNCAPPED_SUPPLY = Number.MAX_SAFE_INTEGER.toString()
+
 function amountFromWei(amount: bigint): BigNumber {
     return new BigNumber(amount.toString()).div(new BigNumber(10).pow(PRESISION.WAD))
 }
@@ -204,6 +206,7 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
 
             const dogRes = {
                 clipperAddress: Address.createFrom({ value: clip }),
+                // EG 1.13 not 0.13
                 liquidationPenalty: amountFromWei(chop - PRESISION_BI.WAD),
             }
 
@@ -248,8 +251,6 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                 }
             }
 
-            // const poolMaxLtv = collaterals[collateralToken.address.value].maxLtv.ltv
-
             return {
                 type: PoolType.Lending,
                 poolId: {
@@ -292,25 +293,14 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                 throw new Error(`Chain ID ${chainId} is not supported`);
             }
 
-            const rawTokens = await fetchReservesTokens(ctx)
-            validateReservesTokens(rawTokens)
-
-            const tokensList: Token[] = []
-            for (const reservesToken of rawTokens) {
-                const token = await ctx.tokenService.getTokenByAddress(Address.createFrom({ value: reservesToken.tokenAddress}))
-                tokensList.push(token)
-            }
-
-            const tokensListWithConfigData = await addConfigurationDataToTokens(ctx, tokensList)
-            const emodeCategories = await getEmodeCategoriesForReserves(ctx, tokensListWithConfigData)
-            const filteredTokens = await filterTokensListByEMode(emodeCategories, tokensListWithConfigData, emode)
+            const reservesAssetsList = await gatherReservesAssetList(ctx, emode)
 
             // Both USDC & DAI use fixed price oracles that keep both stable at 1 USD
             const poolBaseCurrencyToken = CurrencySymbol.USD
 
             const collaterals: Record<AddressValue, SparkPoolCollateralConfig> = {}
-            for (const entry of filteredTokens) {
-                const { token: collateralToken, usageAsCollateralEnabled, ltv } = entry;
+            for (const asset of reservesAssetsList) {
+                const { token: collateralToken, config: { usageAsCollateralEnabled, ltv, liquidationThreshold, liquidationBonus }, caps: { supplyCap }, data: { totalAToken } } = asset;
                 // TODO: Remove Try/Catch once PriceService updated to use protocol oracle
 
                 const LTV_TO_PERCENTAGE_DIVISOR = 100n
@@ -322,10 +312,10 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                         maxLtv: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: Number((ltv / LTV_TO_PERCENTAGE_DIVISOR).toString()) }), type: RiskRatio.type.LTV }),
                         price: await ctx.priceService.getPrice({baseToken: collateralToken, quoteToken: poolBaseCurrencyToken }),
                         priceUSD: await ctx.priceService.getPriceUSD(collateralToken),
-                        liquidationThreshold: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: 0 }), type: RiskRatio.type.LTV }),
-                        tokensLocked: tokenAmountFromBaseUnit({token: collateralToken, amount: '0'}),
-                        maxSupply: tokenAmountFromBaseUnit({token: collateralToken, amount: '0' }),
-                        liquidationPenalty: Percentage.createFrom({ percentage: 0 }),
+                        liquidationThreshold: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: Number((liquidationThreshold / LTV_TO_PERCENTAGE_DIVISOR).toString()) }), type: RiskRatio.type.LTV }),
+                        tokensLocked: tokenAmountFromBaseUnit({token: collateralToken, amount: totalAToken.toString()}),
+                        maxSupply: TokenAmount.createFrom({token: collateralToken, amount: supplyCap === 0n ? UNCAPPED_SUPPLY : supplyCap.toString() }),
+                        liquidationPenalty: Percentage.createFrom({ percentage: Number((liquidationBonus / LTV_TO_PERCENTAGE_DIVISOR).toString()) }),
                         usageAsCollateralEnabled,
                     }
                 } catch (e) {
@@ -335,8 +325,8 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
             }
 
             const debts: Record<AddressValue, SparkPoolDebtConfig> = {}
-            for (const entry of filteredTokens) {
-                const { token: quoteToken, borrowingEnabled } = entry;
+            for (const asset of reservesAssetsList) {
+                const { token: quoteToken, config: { borrowingEnabled }, caps: { borrowCap } } = asset;
                 // TODO: Remove Try/Catch once PriceService updated to use protocol oracle
                 if (quoteToken.symbol === TokenSymbol.WETH) {
                     // WETH can be used as collateral on Spark but not borrowed.
@@ -350,7 +340,7 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                         priceUSD: await ctx.priceService.getPriceUSD(quoteToken),
                         rate: Percentage.createFrom({ percentage: 0 }),
                         totalBorrowed: tokenAmountFromBaseUnit({token: quoteToken, amount: '0' }),
-                        debtCeiling: tokenAmountFromBaseUnit({token: quoteToken, amount: '0' }),
+                        debtCeiling: TokenAmount.createFrom({token: quoteToken, amount: borrowCap === 0n ? UNCAPPED_SUPPLY : borrowCap.toString() }),
                         debtAvailable: tokenAmountFromBaseUnit({token: quoteToken, amount: '0' }),
                         dustLimit: tokenAmountFromBaseUnit({token: quoteToken, amount: '0' }),
                         originationFee: Percentage.createFrom({ percentage: 0 }),
@@ -391,8 +381,71 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
     return plugin
 }
 
+/**
+ * Processes tokens for Spark Protocol given a specific eMode. This involves fetching reserves tokens,
+ * enriching them with additional data like configuration and borrow/supply caps, and finally filtering
+ * them based on eMode categories. If any step fails, the function will catch the error,
+ * log it, and re-throw a more descriptive error.
+ *
+ * @param ctx The context containing services and other information needed to process tokens.
+ * @param emode The eMode identifier used to filter the tokens list accordingly.
+ * @returns A promise that resolves to the final list of processed tokens.
+ */
+async function gatherReservesAssetList(ctx: ProtocolManagerContext, emode: bigint) {
+    try {
+        // Fetch and process the initial list of reserves tokens.
+        // This involves validating the raw reserves tokens and converting them into a more usable form.
+        const tokensList = await fetchAndProcessReservesTokens(ctx);
 
-// FETCHERS
+        // Enrich the tokens list with additional data such as reserve configuration details and caps.
+        // This step adds more information to each token, making them ready for final processing.
+        const enrichedAssetsList = await enrichAssetsList(ctx, tokensList);
+
+        // Finalise the tokens list by filtering each based on eMode categories.
+        const finalTokensList = await finaliseReservesList(ctx, enrichedAssetsList, emode);
+
+        console.log('Processed Tokens:', finalTokensList);
+        return finalTokensList;
+    } catch (error) {
+        console.error('An error occurred during token processing:', error);
+        throw new Error(`An error occurred during token processing: ${JSON.stringify(error)}`)
+    }
+}
+
+// PROCESSING STEPS
+async function fetchAndProcessReservesTokens(ctx: ProtocolManagerContext) {
+    const rawTokens = await fetchReservesTokens(ctx);
+    validateReservesTokens(rawTokens);
+
+    const tokensList = await Promise.all(rawTokens.map(async reservesToken => {
+        const token = await ctx.tokenService.getTokenByAddress(Address.createFrom({ value: reservesToken.tokenAddress}));
+        return token;
+    }));
+    return tokensList;
+}
+async function enrichAssetsList(ctx: ProtocolManagerContext, tokensList: Token[]): Promise<{token: Token, config: ReservesConfigData, caps: ReservesCap, data: ReservesData}[]> {
+    const reservesConfigData = await fetchAssetConfigurationData(ctx, tokensList);
+    validateReservesConfigData(reservesConfigData);
+
+    const tokensListWithConfig = addConfigDataToList(reservesConfigData, tokensList);
+
+    const reservesCaps = await fetchReservesCap(ctx, tokensList);
+    validateReservesCaps(reservesCaps);
+
+    const assetsListWithCaps = addReservesCapsToList(reservesCaps, tokensListWithConfig);
+
+    const reservesData = await fetchAssetReserveData(ctx, tokensList)
+    validateReservesData(reservesData);
+
+    const assetsListWithReservesData = addReservesDataToList(reservesData, assetsListWithCaps);
+    return assetsListWithReservesData;
+}
+async function finaliseReservesList(ctx: ProtocolManagerContext, assetsList: {token: Token, config: ReservesConfigData, caps: ReservesCap, data: ReservesData}[], emode: bigint): Promise<{token: Token, config: ReservesConfigData, caps: ReservesCap, data: ReservesData}[]> {
+    const emodeCategories = await fetchEmodeCategoriesForReserves(ctx, assetsList);
+    return filterAssetsListByEMode(emodeCategories, assetsList, emode);
+}
+
+// EXTRACTORS
 async function fetchReservesTokens(ctx: ProtocolManagerContext) {
     const [
         rawReservesTokenList
@@ -402,12 +455,6 @@ async function fetchReservesTokens(ctx: ProtocolManagerContext) {
             // {
             //     abi: ORACLE_ABI,
             //     address: SparkContracts.ORACLE,
-            //     functionName: "ilks",
-            //     args: [ilkInHex]
-            // },
-            // {
-            //     abi: LENDING_POOL_ABI,
-            //     address: SparkContracts.LENDING_POOL,
             //     functionName: "ilks",
             //     args: [ilkInHex]
             // },
@@ -423,7 +470,7 @@ async function fetchReservesTokens(ctx: ProtocolManagerContext) {
 
     return rawReservesTokenList
 }
-async function getEmodeCategoriesForReserves(ctx: ProtocolManagerContext, reservesTokenList: TokenWithConfigurationData[]) {
+async function fetchEmodeCategoriesForReserves(ctx: ProtocolManagerContext, reservesTokenList: {token: Token, config: ReservesConfigData, caps: ReservesCap}[]) {
     const contractCalls = []
     for (const {token} of reservesTokenList) {
         contractCalls.push({
@@ -439,22 +486,9 @@ async function getEmodeCategoriesForReserves(ctx: ProtocolManagerContext, reserv
         allowFailure: false
     })
 }
-
-// TRANSFORMERS
-type TokenWithConfigurationData = {
-    token: Token
-    decimals: bigint
-    ltv: bigint
-    liquidationThreshold: bigint
-    reserveFactor: bigint
-    usageAsCollateralEnabled: boolean
-    borrowingEnabled: boolean
-    isActive: boolean
-    isFrozen: boolean
-}
-async function addConfigurationDataToTokens(ctx: ProtocolManagerContext, reservesTokenList: Token[]): Promise<TokenWithConfigurationData[]> {
+async function fetchAssetConfigurationData(ctx: ProtocolManagerContext, tokensList: Token[]): Promise<unknown[]> {
     const contractCalls = []
-    for (const token of reservesTokenList) {
+    for (const token of tokensList) {
         contractCalls.push({
             abi: POOL_DATA_PROVIDER,
             address: SparkContracts.POOL_DATA_PROVIDER,
@@ -463,74 +497,184 @@ async function addConfigurationDataToTokens(ctx: ProtocolManagerContext, reserve
         })
     }
 
-    const reservesTokenConfigurationData = await ctx.provider.multicall({
+    return await ctx.provider.multicall({
         contracts: contractCalls as never[],
         allowFailure: false
     }) as unknown[]
+}
+async function fetchReservesCap(ctx: ProtocolManagerContext, tokensList: Token[]): Promise<unknown[]> {
+    const contractCalls = []
+    for (const token of tokensList) {
+        contractCalls.push({
+            abi: POOL_DATA_PROVIDER,
+            address: SparkContracts.POOL_DATA_PROVIDER,
+            functionName: "getReserveCaps",
+            args: [token.address.value]
+        })
+    }
 
-    if (reservesTokenConfigurationData.length !== reservesTokenList.length) {
+    return await ctx.provider.multicall({
+        contracts: contractCalls as never[],
+        allowFailure: false
+    }) as unknown[]
+}
+async function fetchAssetReserveData(ctx: ProtocolManagerContext, tokensList: Token[]): Promise<unknown[]> {
+    const contractCalls = []
+    for (const token of tokensList) {
+        contractCalls.push({
+            abi: POOL_DATA_PROVIDER,
+            address: SparkContracts.POOL_DATA_PROVIDER,
+            functionName: "getReserveData",
+            args: [token.address.value]
+        })
+    }
+
+    return await ctx.provider.multicall({
+        contracts: contractCalls as never[],
+        allowFailure: false
+    }) as unknown[]
+}
+
+// TRANSFORMERS
+type ReservesConfigData = {
+    decimals: bigint
+    ltv: bigint
+    liquidationThreshold: bigint
+    liquidationBonus: bigint
+    reserveFactor: bigint
+    usageAsCollateralEnabled: boolean
+    borrowingEnabled: boolean
+    isActive: boolean
+    isFrozen: boolean
+}
+type ReservesCap = {
+    borrowCap: bigint
+    supplyCap: bigint
+}
+type ReservesData = {
+    unbacked: bigint
+    accruedToTreasuryScaled: bigint
+    totalAToken: bigint
+    totalStableDebt: bigint
+    totalVariableDebt: bigint
+    liquidityRate: bigint
+    variableBorrowRate: bigint
+    stableBorrowRate: bigint
+    averageStableBorrowRate: bigint
+    liquidityIndex: bigint
+    variableBorrowIndex: bigint
+    lastUpdateTimestamp: bigint
+}
+function addConfigDataToList(reservesConfigData: RawReservesConfigData[], tokensList: Token[]): { token: Token, config: ReservesConfigData}[] {
+    if (reservesConfigData.length !== tokensList.length) {
         // Order is assumed to be preserved
         throw new Error("Arrays must be of identical length")
     }
 
-    const tokenListWithConfigurationData: TokenWithConfigurationData[] = []
-    for (const [index, token] of reservesTokenList.entries()) {
-        const configDataForToken = reservesTokenConfigurationData[index]
-        validateConfigData(configDataForToken)
-
-        const [decimals, ltv, liquidationThreshold, /*liquidationBonus*/, reserveFactor, usageAsCollateralEnabled, borrowingEnabled, /*stableBorrowRateEnabled*/, isActive, isFrozen]: [bigint, bigint, bigint, bigint, bigint, boolean, boolean, boolean, boolean, boolean] = configDataForToken
-        const tokenWithConfigurationData = {
+    const assetListWithConfigurationData: { token: Token, config: ReservesConfigData }[] = []
+    for (const [index, token] of tokensList.entries()) {
+        const configDataForAsset = reservesConfigData[index]
+        const [decimals, ltv, liquidationThreshold, liquidationBonus, reserveFactor, usageAsCollateralEnabled, borrowingEnabled, /*stableBorrowRateEnabled*/, isActive, isFrozen] = configDataForAsset
+        const assetWithConfigurationData = {
             token: token,
-            decimals,
-            ltv,
-            liquidationThreshold,
-            reserveFactor,
-            usageAsCollateralEnabled,
-            borrowingEnabled,
-            isActive,
-            isFrozen
+            config: {
+                decimals,
+                ltv,
+                liquidationThreshold,
+                liquidationBonus,
+                reserveFactor,
+                usageAsCollateralEnabled,
+                borrowingEnabled,
+                isActive,
+                isFrozen
+            }
         }
-
-        tokenListWithConfigurationData.push(tokenWithConfigurationData)
+        assetListWithConfigurationData.push(assetWithConfigurationData)
     }
 
-    return tokenListWithConfigurationData;
+    return assetListWithConfigurationData;
 }
-async function filterTokensListByEMode(emodeCategories: bigint[], tokensList: TokenWithConfigurationData[], eMode: bigint): Promise<TokenWithConfigurationData[]> {
-    if (emodeCategories.length !== tokensList.length) {
+function addReservesCapsToList(ReservesCap: RawAssetCaps[], assetsList: {token: Token, config: ReservesConfigData }[]): { token: Token, config: ReservesConfigData, caps: ReservesCap}[] {
+    if (ReservesCap.length !== assetsList.length) {
+        // Order is assumed to be preserved
+        throw new Error("Arrays must be of identical length")
+    }
+    const assetsListWithReserveCaps: { token: Token, config: ReservesConfigData, caps: ReservesCap }[] = []
+    for (const [index, asset] of assetsList.entries()) {
+        const reservesCapForToken = ReservesCap[index]
+        const [borrowCap, supplyCap] = reservesCapForToken
+        const assetWithReserveCaps = {
+            ...asset,
+            caps: {
+                borrowCap,
+                supplyCap
+            }
+        }
+        assetsListWithReserveCaps.push(assetWithReserveCaps)
+    }
+
+    return assetsListWithReserveCaps;
+}
+function addReservesDataToList(reservesData: RawReservesData[], assetsList: {token: Token, config: ReservesConfigData, caps: ReservesCap}[]): { token: Token, config: ReservesConfigData, caps: ReservesCap, data: ReservesData}[] {
+    if (reservesData.length !== assetsList.length) {
+        // Order is assumed to be preserved
+        throw new Error("Arrays must be of identical length")
+    }
+    const assetsListWithReservesData: { token: Token, config: ReservesConfigData, caps: ReservesCap, data: ReservesData }[] = []
+    for (const [index, asset] of assetsList.entries()) {
+        const reservesDataForAsset = reservesData[index]
+        const [unbacked,
+            accruedToTreasuryScaled,
+            totalAToken,
+            totalStableDebt,
+            totalVariableDebt,
+            liquidityRate,
+            variableBorrowRate,
+            stableBorrowRate,
+            averageStableBorrowRate,
+            liquidityIndex,
+            variableBorrowIndex,
+            lastUpdateTimestamp] = reservesDataForAsset
+        const assetWithReservesData = {
+            ...asset,
+            data: {
+                unbacked,
+                accruedToTreasuryScaled,
+                totalAToken,
+                totalStableDebt,
+                totalVariableDebt,
+                liquidityRate,
+                variableBorrowRate,
+                stableBorrowRate,
+                averageStableBorrowRate,
+                liquidityIndex,
+                variableBorrowIndex,
+                lastUpdateTimestamp
+            }
+        }
+        assetsListWithReservesData.push(assetWithReservesData)
+    }
+
+    return assetsListWithReservesData;
+}
+function filterAssetsListByEMode(emodeCategories: bigint[], assetsList: {token: Token, config: ReservesConfigData, caps: ReservesCap, data: ReservesData}[], emode: bigint): { token: Token, config: ReservesConfigData, caps: ReservesCap, data: ReservesData }[] {
+    if (emodeCategories.length !== assetsList.length) {
         throw new Error("Cannot filter by eMode with two arrays of different length")
     }
 
     // All reserves allowed for category 0n
-    if (eMode === 0n) {
-        return tokensList
+    if (emode === 0n) {
+        return assetsList
     }
 
-    return tokensList.filter((token, idx) => {
-        const emodeForToken = emodeCategories[idx];
-        return emodeForToken === eMode
+    return assetsList.filter((asset, idx) => {
+        const emodeForAsset = emodeCategories[idx];
+        return emodeForAsset === emode
     })
 }
 
 // GUARDS
-function validateReservesTokens(tokenAddressList: unknown): asserts tokenAddressList is { tokenAddress: HexData }[] {
-    if (!Array.isArray(tokenAddressList)) {
-        throw new Error("Invalid token address list")
-    }
-
-    for (const tokenItem of tokenAddressList) {
-        // Check if tokenItem is an object and has a tokenAddress property of type string
-        if (typeof tokenItem !== 'object' || tokenItem === null || typeof (tokenItem as any).tokenAddress !== 'string') {
-            throw new Error(`Invalid token item or tokenAddress not found: ${JSON.stringify(tokenItem)}`);
-        }
-
-        if (!Address.isValid(tokenItem.tokenAddress)) {
-            throw new Error("TokenAddress is not valid address")
-        }
-    }
-}
-
-type ReserveConfigData = [
+type RawReservesConfigData = [
     bigint, // decimals
     bigint, // ltv
     bigint, // liquidationThreshold
@@ -542,7 +686,46 @@ type ReserveConfigData = [
     boolean, // isActive
     boolean // isFrozen
 ];
-function validateConfigData(reserveConfigData: unknown): asserts reserveConfigData is ReserveConfigData {
+type RawAssetCaps = [
+    bigint, // borrowCap
+    bigint, // supplyCap
+]
+type RawReservesData = [
+    bigint, // unbacked
+    bigint, // accruedToTreasuryScaled
+    bigint, // totalAToken
+    bigint, // totalStableDebt
+    bigint, // totalVariableDebt
+    bigint, // liquidityRate
+    bigint, // variableBorrowRate
+    bigint, // stableBorrowRate
+    bigint, // averageStableBorrowRate
+    bigint, // liquidityIndex
+    bigint, // variableBorrowIndex
+    bigint, // lastUpdateTimestamp
+]
+function validateReservesTokens(tokenAddressList: unknown): asserts tokenAddressList is { tokenAddress: HexData }[] {
+    if (!Array.isArray(tokenAddressList)) {
+        throw new Error("Invalid token address list")
+    }
+
+    for (const tokenItem of tokenAddressList) {
+        // Check if tokenItem is an object and has a tokenAddress property of type string
+        if (typeof tokenItem !== 'object' || tokenItem === null || typeof (tokenItem as { tokenAddress: string }).tokenAddress !== 'string') {
+            throw new Error(`Invalid token item or tokenAddress not found: ${JSON.stringify(tokenItem)}`);
+        }
+
+        if (!Address.isValid(tokenItem.tokenAddress)) {
+            throw new Error("TokenAddress is not valid address")
+        }
+    }
+}
+function validateReservesConfigData(rawReservesConfigData: unknown[]): asserts rawReservesConfigData is RawReservesConfigData[] {
+    for (const configData of rawReservesConfigData) {
+        validateConfigData(configData)
+    }
+}
+function validateConfigData(reserveConfigData: unknown): asserts reserveConfigData is RawReservesConfigData {
     if (!Array.isArray(reserveConfigData) || reserveConfigData.length !== 10) {
         throw new Error("Reserves data invalid")
     }
@@ -559,7 +742,65 @@ function validateConfigData(reserveConfigData: unknown): asserts reserveConfigDa
         throw new Error("Reserves data invalid")
     };
 }
+function validateReservesCaps(rawReservesCaps: unknown[]): asserts rawReservesCaps is RawAssetCaps[] {
+    for (const assetCaps of rawReservesCaps) {
+        validateAssetCaps(assetCaps)
+    }
+}
+function validateAssetCaps(assetCaps: unknown): asserts assetCaps is RawAssetCaps {
+    if (!Array.isArray(assetCaps) || assetCaps.length !== 2) {
+        throw new Error("Reserves assets caps data invalid")
+    }
 
+    const [borrowCap, supplyCap] = assetCaps;
+    const areNumericValuesCorrect = [borrowCap, supplyCap].every(item => typeof item === 'bigint');
+
+    if(!(areNumericValuesCorrect)) {
+        throw new Error("Reserves assets caps data invalid")
+    };
+}
+function validateReservesData(rawReservesData: unknown[]): asserts rawReservesData is RawReservesData[] {
+    for (const assetReservesData of rawReservesData) {
+        validateAssetReservesData(assetReservesData)
+    }
+}
+function validateAssetReservesData(rawAssetsReservesData: unknown): asserts rawAssetsReservesData is RawReservesData {
+    if (!Array.isArray(rawAssetsReservesData) || rawAssetsReservesData.length !== 12) {
+        throw new Error("Reserves data invalid")
+    }
+
+    const [
+        unbacked,
+        accruedToTreasuryScaled,
+        totalAToken,
+        totalStableDebt,
+        totalVariableDebt,
+        liquidityRate,
+        variableBorrowRate,
+        stableBorrowRate,
+        averageStableBorrowRate,
+        liquidityIndex,
+        variableBorrowIndex,
+        lastUpdateTimestamp
+    ] = rawAssetsReservesData;
+    const areNumericValuesCorrect = [
+        unbacked,
+        accruedToTreasuryScaled,
+        totalAToken,
+        totalStableDebt,
+        totalVariableDebt,
+        liquidityRate,
+        variableBorrowRate,
+        stableBorrowRate,
+        averageStableBorrowRate,
+        liquidityIndex,
+        variableBorrowIndex,
+        lastUpdateTimestamp].every(item => typeof item === 'bigint');
+
+    if(!(areNumericValuesCorrect)) {
+        throw new Error("Reserves data invalid")
+    };
+}
 
 /*
 In order to get pool from protocol we need to know:
