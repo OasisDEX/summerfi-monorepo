@@ -1,5 +1,5 @@
 import { AddressValue, HexData, Percentage, TokenAmount, TokenSymbol, Price, CurrencySymbol, RiskRatio } from "@summerfi/sdk-common/common"
-import type {CollateralConfig, DebtConfig} from "@summerfi/sdk-common/protocols";
+import type {SparkPoolCollateralConfig, SparkPoolDebtConfig} from "@summerfi/sdk-common/protocols";
 import { IPool, SparkLendingPool, MakerLendingPool, PoolType, ProtocolName, /* IPoolId */ } from "@summerfi/sdk-common/protocols"
 import { /* PositionId, */ Address, ChainInfo, Position, Token } from "@summerfi/sdk-common/common"
 import {hexToNumber, PublicClient, stringToHex} from "viem"
@@ -248,7 +248,7 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                 }
             }
 
-            const poolMaxLtv = collaterals[collateralToken.address.value].maxLtv.ltv
+            // const poolMaxLtv = collaterals[collateralToken.address.value].maxLtv.ltv
 
             return {
                 type: PoolType.Lending,
@@ -260,7 +260,7 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                     name: ProtocolName.Maker,
                     chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
                 },
-                maxLTV: poolMaxLtv,
+                // maxLTV: poolMaxLtv,
                 baseCurrency: poolBaseCurrencyToken,
                 collaterals,
                 debts
@@ -292,68 +292,53 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                 throw new Error(`Chain ID ${chainId} is not supported`);
             }
 
-            const [
-                rawReservesTokenList
-            ] = await ctx.provider.multicall({
-                contracts: [
-                    // TODO: move to PriceService
-                    // {
-                    //     abi: ORACLE_ABI,
-                    //     address: SparkContracts.ORACLE,
-                    //     functionName: "ilks",
-                    //     args: [ilkInHex]
-                    // },
-                    // {
-                    //     abi: LENDING_POOL_ABI,
-                    //     address: SparkContracts.LENDING_POOL,
-                    //     functionName: "ilks",
-                    //     args: [ilkInHex]
-                    // },
-                    {
-                        abi: POOL_DATA_PROVIDER,
-                        address: SparkContracts.POOL_DATA_PROVIDER,
-                        functionName: "getAllReservesTokens",
-                        args: []
-                    },
-                ],
-                allowFailure: false
-            })
+            const rawTokens = await fetchReservesTokens(ctx)
+            validateReservesTokens(rawTokens)
 
-            validateTokenAddressList(rawReservesTokenList)
-            const reservesTokenList: Token[] = []
-            for (const reservesToken of rawReservesTokenList) {
+            const tokensList: Token[] = []
+            for (const reservesToken of rawTokens) {
                 const token = await ctx.tokenService.getTokenByAddress(Address.createFrom({ value: reservesToken.tokenAddress}))
-                reservesTokenList.push(token)
+                tokensList.push(token)
             }
 
-            const eModeFilteredTokenList = await filterReserveTokensByEMode(ctx, reservesTokenList, emode)
-            // TODO: We need to constrain the available tokens based on emodeCategory
+            const tokensListWithConfigData = await addConfigurationDataToTokens(ctx, tokensList)
+            const emodeCategories = await getEmodeCategoriesForReserves(ctx, tokensListWithConfigData)
+            const filteredTokens = await filterTokensListByEMode(emodeCategories, tokensListWithConfigData, emode)
+            // const filteredTokens = removeFrozenAndInactiveReserves(filteredByEModeTokens)
 
             // Both USDC & DAI use fixed price oracles that keep both stable at 1 USD
             const poolBaseCurrencyToken = CurrencySymbol.USD
 
-            const collaterals: Record<AddressValue, CollateralConfig> = {}
-            for (const collateralToken of eModeFilteredTokenList) {
+            // const tokensAllowedAsCollateral = filterTokensListByAllowedAsCollateral(filteredTokens)
+            const collaterals: Record<AddressValue, SparkPoolCollateralConfig> = {}
+            for (const entry of filteredTokens) {
+                const { token: collateralToken, usageAsCollateralEnabled, ltv } = entry;
                 // TODO: Remove Try/Catch once PriceService updated to use protocol oracle
+
+                const LTV_TO_PERCENTAGE_DIVISOR = 100n
+
                 try {
                     collaterals[collateralToken.address.value] = {
                         token: collateralToken,
                         // TODO: need to update price service to use protocol oracle
+                        maxLtv: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: Number((ltv / LTV_TO_PERCENTAGE_DIVISOR).toString()) }), type: RiskRatio.type.LTV }),
                         price: await ctx.priceService.getPrice({baseToken: collateralToken, quoteToken: poolBaseCurrencyToken }),
                         priceUSD: await ctx.priceService.getPriceUSD(collateralToken),
                         liquidationThreshold: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: 0 }), type: RiskRatio.type.LTV }),
                         tokensLocked: tokenAmountFromBaseUnit({token: collateralToken, amount: '0'}),
                         maxSupply: tokenAmountFromBaseUnit({token: collateralToken, amount: '0' }),
                         liquidationPenalty: Percentage.createFrom({ percentage: 0 }),
+                        usageAsCollateralEnabled,
                     }
                 } catch (e) {
                     continue;
                 }
             }
 
-            // Add maxLTV to debts for Spark
-            const debts: Record<AddressValue, DebtConfig> = {}
-            for (const quoteToken of eModeFilteredTokenList) {
+            // const tokensWithBorrowingEnabled = removeTokensWithBorrowingDisabled(filteredTokens)
+            const debts: Record<AddressValue, SparkPoolDebtConfig> = {}
+            for (const entry of filteredTokens) {
+                const { token: quoteToken, borrowingEnabled } = entry;
                 // TODO: Remove Try/Catch once PriceService updated to use protocol oracle
                 if (quoteToken.symbol === TokenSymbol.WETH) {
                     // WETH can be used as collateral on Spark but not borrowed.
@@ -363,7 +348,6 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                 try {
                     debts[quoteToken.address.value] = {
                         token: quoteToken,
-                        // How can we know this?
                         price: await ctx.priceService.getPrice({baseToken: quoteToken, quoteToken: poolBaseCurrencyToken }),
                         priceUSD: await ctx.priceService.getPriceUSD(quoteToken),
                         rate: Percentage.createFrom({ percentage: 0 }),
@@ -371,7 +355,8 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                         debtCeiling: tokenAmountFromBaseUnit({token: quoteToken, amount: '0' }),
                         debtAvailable: tokenAmountFromBaseUnit({token: quoteToken, amount: '0' }),
                         dustLimit: tokenAmountFromBaseUnit({token: quoteToken, amount: '0' }),
-                        originationFee: Percentage.createFrom({ percentage: 0 })
+                        originationFee: Percentage.createFrom({ percentage: 0 }),
+                        borrowingEnabled
                     }
                 } catch (e) {
                     continue;
@@ -409,7 +394,138 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
     return plugin
 }
 
-function validateTokenAddressList(tokenAddressList: unknown): asserts tokenAddressList is { tokenAddress: HexData }[] {
+
+// FETCHERS
+async function fetchReservesTokens(ctx: ProtocolManagerContext) {
+    const [
+        rawReservesTokenList
+    ] = await ctx.provider.multicall({
+        contracts: [
+            // TODO: move to PriceService
+            // {
+            //     abi: ORACLE_ABI,
+            //     address: SparkContracts.ORACLE,
+            //     functionName: "ilks",
+            //     args: [ilkInHex]
+            // },
+            // {
+            //     abi: LENDING_POOL_ABI,
+            //     address: SparkContracts.LENDING_POOL,
+            //     functionName: "ilks",
+            //     args: [ilkInHex]
+            // },
+            {
+                abi: POOL_DATA_PROVIDER,
+                address: SparkContracts.POOL_DATA_PROVIDER,
+                functionName: "getAllReservesTokens",
+                args: []
+            },
+        ],
+        allowFailure: false
+    })
+
+    return rawReservesTokenList
+}
+async function getEmodeCategoriesForReserves(ctx: ProtocolManagerContext, reservesTokenList: TokenWithConfigurationData[]) {
+    const contractCalls = []
+    for (const {token} of reservesTokenList) {
+        contractCalls.push({
+            abi: POOL_DATA_PROVIDER,
+            address: SparkContracts.POOL_DATA_PROVIDER,
+            functionName: "getReserveEModeCategory",
+            args: [token.address.value]
+        })
+    }
+
+    return await ctx.provider.multicall({
+        contracts: contractCalls as never[],
+        allowFailure: false
+    })
+}
+
+// TRANSFORMERS
+type TokenWithConfigurationData = {
+    token: Token
+    decimals: bigint
+    ltv: bigint
+    liquidationThreshold: bigint
+    reserveFactor: bigint
+    usageAsCollateralEnabled: boolean
+    borrowingEnabled: boolean
+    isActive: boolean
+    isFrozen: boolean
+}
+async function addConfigurationDataToTokens(ctx: ProtocolManagerContext, reservesTokenList: Token[]): Promise<TokenWithConfigurationData[]> {
+    const contractCalls = []
+    for (const token of reservesTokenList) {
+        contractCalls.push({
+            abi: POOL_DATA_PROVIDER,
+            address: SparkContracts.POOL_DATA_PROVIDER,
+            functionName: "getReserveConfigurationData",
+            args: [token.address.value]
+        })
+    }
+
+    const reservesTokenConfigurationData = await ctx.provider.multicall({
+        contracts: contractCalls as never[],
+        allowFailure: false
+    }) as unknown[]
+
+    if (reservesTokenConfigurationData.length !== reservesTokenList.length) {
+        // Order is assumed to be preserved
+        throw new Error("Arrays must be of identical length")
+    }
+
+    const tokenListWithConfigurationData: TokenWithConfigurationData[] = []
+    for (const [index, token] of reservesTokenList.entries()) {
+        const configDataForToken = reservesTokenConfigurationData[index]
+        validateConfigData(configDataForToken)
+
+        const [decimals, ltv, liquidationThreshold, /*liquidationBonus*/, reserveFactor, usageAsCollateralEnabled, borrowingEnabled, /*stableBorrowRateEnabled*/, isActive, isFrozen]: [bigint, bigint, bigint, bigint, bigint, boolean, boolean, boolean, boolean, boolean] = configDataForToken
+        const tokenWithConfigurationData = {
+            token: token,
+            decimals,
+            ltv,
+            liquidationThreshold,
+            reserveFactor,
+            usageAsCollateralEnabled,
+            borrowingEnabled,
+            isActive,
+            isFrozen
+        }
+
+        tokenListWithConfigurationData.push(tokenWithConfigurationData)
+    }
+
+    return tokenListWithConfigurationData;
+}
+async function filterTokensListByEMode(emodeCategories: bigint[], tokensList: TokenWithConfigurationData[], eMode: bigint): Promise<TokenWithConfigurationData[]> {
+    if (emodeCategories.length !== tokensList.length) {
+        throw new Error("Cannot filter by eMode with two arrays of different length")
+    }
+
+    // All reserves allowed for category 0n
+    if (eMode === 0n) {
+        return tokensList
+    }
+
+    return tokensList.filter((token, idx) => {
+        const emodeForToken = emodeCategories[idx];
+        return emodeForToken === eMode
+    })
+}
+// function filterTokensListByAllowedAsCollateral(tokensList: TokenWithConfigurationData[]) {
+//     return tokensList.filter(token => token.usageAsCollateralEnabled);
+// }
+// function removeTokensWithBorrowingDisabled(tokensList: TokenWithConfigurationData[]) {
+//     return tokensList.filter(token => token.borrowingEnabled);
+// }
+// function removeFrozenAndInactiveReserves(tokensList: TokenWithConfigurationData[]) {
+//     return tokensList.filter(token => !token.isFrozen && token.isActive)
+// }
+
+// GUARDS
+function validateReservesTokens(tokenAddressList: unknown): asserts tokenAddressList is { tokenAddress: HexData }[] {
     if (!Array.isArray(tokenAddressList)) {
         throw new Error("Invalid token address list")
     }
@@ -426,33 +542,35 @@ function validateTokenAddressList(tokenAddressList: unknown): asserts tokenAddre
     }
 }
 
-async function filterReserveTokensByEMode(ctx: ProtocolManagerContext, reservesTokenList: Token[], eMode: bigint) {
-    const contractCalls = []
-    for (const token of reservesTokenList) {
-        contractCalls.push({
-            abi: POOL_DATA_PROVIDER,
-            address: SparkContracts.POOL_DATA_PROVIDER,
-            functionName: "getReserveEModeCategory",
-            args: [token.address.value]
-        })
+type ReserveConfigData = [
+    bigint, // decimals
+    bigint, // ltv
+    bigint, // liquidationThreshold
+    bigint, // liquidationBonus
+    bigint, // reserveFactor
+    boolean, // usageAsCollateralEnabled
+    boolean, // borrowingEnabled
+    boolean, // stableBorrowRateEnabled
+    boolean, // isActive
+    boolean // isFrozen
+];
+function validateConfigData(reserveConfigData: unknown): asserts reserveConfigData is ReserveConfigData {
+    if (!Array.isArray(reserveConfigData) || reserveConfigData.length !== 10) {
+        throw new Error("Reserves data invalid")
     }
 
-    const emodeCategories = await ctx.provider.multicall({
-        contracts: contractCalls as never[],
-        allowFailure: false
-    })
+    const [decimals, ltv, liquidationThreshold, liquidationBonus, reserveFactor, usageAsCollateralEnabled, borrowingEnabled, stableBorrowRateEnabled, isActive, isFrozen] = reserveConfigData;
 
-    // All reserves allowed for category 0n
-    if (eMode === 0n) {
-        return reservesTokenList
-    }
+    // Check if all numerical values are of type bigint
+    const areNumericValuesCorrect = [decimals, ltv, liquidationThreshold, liquidationBonus, reserveFactor].every(item => typeof item === 'bigint');
 
-    return reservesTokenList.filter((token, idx) => {
-        const emodeForToken = emodeCategories[idx];
-        return emodeForToken === eMode
-    })
+    // Check if all boolean values are of type boolean
+    const areBooleanValuesCorrect = [usageAsCollateralEnabled, borrowingEnabled, stableBorrowRateEnabled, isActive, isFrozen].every(item => typeof item === 'boolean');
+
+    if(!(areNumericValuesCorrect && areBooleanValuesCorrect)) {
+        throw new Error("Reserves data invalid")
+    };
 }
-
 
 
 /*

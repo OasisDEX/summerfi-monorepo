@@ -21,6 +21,11 @@ interface MakerPoolCollateralConfig extends CollateralConfig {
   maxLtv: RiskRatio
 }
 
+export interface SparkPoolCollateralConfig extends CollateralConfig {
+  maxLtv: RiskRatio
+  usageAsCollateralEnabled: boolean
+}
+
 interface AavePoolCollateralConfig extends CollateralConfig {
   apy: Percentage 
 }
@@ -41,6 +46,10 @@ interface AavePoolDebtConfig extends DebtConfig {
   maxLtv: RiskRatio
 }
 
+export interface SparkPoolDebtConfig extends DebtConfig {
+  borrowingEnabled: boolean;
+}
+
 /**
  * @interface LendingPool
  * @description Represents a lending pool. Provides information about the collateral
@@ -49,7 +58,7 @@ interface AavePoolDebtConfig extends DebtConfig {
 export interface LendingPool<GenericCollateralConfig extends CollateralConfig = CollateralConfig, GenericDebtConfig extends DebtConfig = DebtConfig> extends IPool {
   type: PoolType.Lending
   baseCurrency: Token | CurrencySymbol
-  maxLTV: Percentage;
+  // maxLTV: Percentage;
   collaterals: Record<AddressValue, GenericCollateralConfig>
   debts: Record<AddressValue, GenericDebtConfig>
 }
@@ -60,4 +69,4 @@ export function isLendingPool(pool: IPool): pool is LendingPool {
 
 export type MakerLendingPool = LendingPool<MakerPoolCollateralConfig>
 
-export type SparkLendingPool = LendingPool
+export type SparkLendingPool = LendingPool<SparkPoolCollateralConfig, SparkPoolDebtConfig>
