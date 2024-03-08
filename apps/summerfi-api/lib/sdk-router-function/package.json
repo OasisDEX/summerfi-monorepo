@@ -4,7 +4,7 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest tests/",
+    "test": "jest tests/ --passWithNoTests",
     "testw": "jest --watch",
     "e2e": "jest e2e/",
     "lint": "eslint .",
