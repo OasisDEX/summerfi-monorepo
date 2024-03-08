@@ -14,10 +14,8 @@ module.exports = {
   setupFilesAfterEnv: ['jest-expect-message'],
   modulePaths: ['src'],
   moduleNameMapper: pathsToModuleNameMapper({
-    '@summerfi/serverless-shared': [
-      '<rootDir>/../../../../packages/serverless-shared/src/index.ts',
-    ],
-    '@summerfi/serverless-shared/*': ['<rootDir>/../../../../packages/serverless-shared/src/*'],
+    '@summerfi/serverless-shared': ['<rootDir>/../../packages/serverless-shared/src/index.ts'],
+    '@summerfi/serverless-shared/*': ['<rootDir>/../../packages/serverless-shared/src/*'],
     '~types': ['<rootDir>/src/types/index.ts'],
     '~abi': ['<rootDir>/src/abi/index.ts'],
     '~helpers': ['<rootDir>/src/helpers/index.ts'],

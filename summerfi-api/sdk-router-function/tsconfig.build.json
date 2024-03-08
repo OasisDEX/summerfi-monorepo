@@ -11,13 +11,13 @@
       "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
       "~orderplannerservice": ["node_modules/@summerfi/order-planner-service/src/index.ts"],
       "~orderplannerservice/*": ["node_modules/@summerfi/order-planner-service/src/*"],
-      "~orderplannercommon": ["../../../../sdk/order-planner-common/src/index.ts"],
-      "~orderplannercommon/*": ["../../../../sdk/order-planner-common/src/*"],
-      "~protocolplugins/*": ["../../../../sdk/protocol-plugins/src/*"],
-      "~swap-common/*": ["../../../../sdk/swap-common/src/*"],
-      "~swap-service/*": ["../../../../sdk/swap-service/src/*"],
-      "~deployment-types": ["../../../../packages/deployment-types/src/index.ts"],
-      "~deployment-types/*": ["../../../../packages/deployment-types/src/*"]
+      "~orderplannercommon": ["../../sdk/order-planner-common/src/index.ts"],
+      "~orderplannercommon/*": ["../../sdk/order-planner-common/src/*"],
+      "~protocolplugins/*": ["../../sdk/protocol-plugins/src/*"],
+      "~swap-common/*": ["../../sdk/swap-common/src/*"],
+      "~swap-service/*": ["../../sdk/swap-service/src/*"],
+      "~deployment-types": ["../../../packages/deployment-types/src/index.ts"],
+      "~deployment-types/*": ["../../packages/deployment-types/src/*"]
     }
   },
   "include": ["src/**/*.ts"]

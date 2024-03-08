@@ -12,7 +12,7 @@ export function addPortfolioConfig({ stack, api }: StackContext & { api: Api }) 
   }
 
   const getPortfolioAssetsFunction = new Function(stack, 'get-portfolio-assets-function', {
-    handler: 'lib/portfolio-assets-function/src/index.handler',
+    handler: 'summerfi-api/portfolio-assets-function/src/index.handler',
     runtime: 'nodejs20.x',
     environment: {
       POWERTOOLS_LOG_LEVEL: POWERTOOLS_LOG_LEVEL || 'INFO',
@@ -22,7 +22,7 @@ export function addPortfolioConfig({ stack, api }: StackContext & { api: Api }) 
   })
 
   const getPortfolioOverviewFunction = new Function(stack, 'get-portfolio-overview-function', {
-    handler: 'lib/portfolio-overview-function/src/index.handler',
+    handler: 'summerfi-api/portfolio-overview-function/src/index.handler',
     runtime: 'nodejs20.x',
     environment: {
       POWERTOOLS_LOG_LEVEL: POWERTOOLS_LOG_LEVEL || 'INFO',

@@ -7,7 +7,7 @@ export function addMigrationsConfig({ stack, api }: StackContext & { api: Api })
   }
 
   const getMigrationsFunction = new Function(stack, 'get-migrations-function', {
-    handler: 'lib/get-migrations-function/src/index.handler',
+    handler: 'summerfi-api/get-migrations-function/src/index.handler',
     runtime: 'nodejs20.x',
     environment: {
       RPC_GATEWAY: RPC_GATEWAY,
