@@ -1,9 +1,17 @@
-import { Address, ChainInfo, Percentage, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { BaseAction } from '../src/actions/BaseAction'
 import { ActionCall } from '../src/actions/Types'
 import { ExecutionStorageMapper } from '../src/context/ExecutionStorageMapper'
 import { ChainFamilyMap } from '@summerfi/sdk-client'
+import {
+  Address,
+  ChainInfo,
+  Position,
+  PositionId,
+  Token,
+  TokenAmount,
+} from '@summerfi/sdk-common/common'
+import { MakerPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 
 class DerivedAction extends BaseAction {
   public readonly config = {
@@ -41,33 +49,44 @@ describe.only('Execution Storage Mapper', () => {
 
   const derivedAction = new DerivedAction()
 
-  const derivedStep: steps.SwapStep = {
-    type: SimulationSteps.Swap,
-    name: 'SwapStep',
-    inputs: {
-      fromTokenAmount: TokenAmount.createFrom({
-        token: WETH,
-        amount: '134.5',
-      }),
-      toTokenAmount: TokenAmount.createFrom({
-        token: DAI,
-        amount: '1000',
-      }),
-      slippage: Percentage.createFrom({ percentage: 0.01 }),
-      fee: 0.003,
-    },
-    outputs: {
-      receivedAmount: TokenAmount.createFrom({
-        token: DAI,
-        amount: '900',
-      }),
-    },
+  const depositAmount = TokenAmount.createFrom({
+    token: WETH,
+    amount: '134.5',
+  })
+
+  const borrowAmount = TokenAmount.createFrom({
+    token: DAI,
+    amount: '1000',
+  })
+
+  const protocol = {
+    name: ProtocolName.Maker,
+    chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   }
+
+  const poolId = {
+    protocol: ProtocolName.Maker,
+    ilkType: 'ETH-A',
+    vaultId: 'somevault',
+  } as MakerPoolId
+
+  const pool = {
+    type: PoolType.Lending,
+    protocol,
+    poolId,
+  }
+
+  const position = new Position({
+    positionId: PositionId.createFrom({ id: 'someposition' }),
+    debtAmount: borrowAmount,
+    collateralAmount: depositAmount,
+    pool: pool,
+  })
 
   it('should return undefined if mapping does not exist', () => {
     const executionStorageMapper = new ExecutionStorageMapper()
 
-    const slot = executionStorageMapper.getSlot({
+    const slot = executionStorageMapper.getOutputSlot({
       stepName: 'SwapStep',
       referenceName: 'fromTokenAmount',
     })
@@ -75,53 +94,164 @@ describe.only('Execution Storage Mapper', () => {
     expect(slot).toBeUndefined()
   })
 
-  it('should add and retrieve storage slots', () => {
+  it('should add and retrieve storage slots, no reference values', () => {
+    const derivedStep: steps.DepositBorrowStep = {
+      type: SimulationSteps.DepositBorrow,
+      name: 'DepositBorrowStep',
+      inputs: {
+        depositAmount: depositAmount,
+        borrowAmount: borrowAmount,
+        position: position,
+      },
+      outputs: {
+        depositAmount: depositAmount,
+        borrowAmount: borrowAmount,
+      },
+    }
+
     const executionStorageMapper = new ExecutionStorageMapper()
 
-    executionStorageMapper.addStorageMap({
+    const inputSlotsMapping = executionStorageMapper.addStorageMap({
       step: derivedStep,
       action: derivedAction,
       connectedInputs: {
-        fromTokenAmount: 'someInput1',
-        toTokenAmount: 'someInput2',
-        fee: 'otherInput',
+        depositAmount: 'someInput1',
+        borrowAmount: 'otherInput',
       },
       connectedOutputs: {
-        receivedAmount: 'otherOutput',
+        depositAmount: 'otherOutput',
+        borrowAmount: 'someOutput2',
       },
     })
 
+    expect(inputSlotsMapping).toEqual([0, 0, 0, 0])
+
     {
-      const slot = executionStorageMapper.getSlot({
-        stepName: 'SwapStep',
-        referenceName: 'receivedAmount',
+      const slot = executionStorageMapper.getOutputSlot({
+        stepName: 'DepositBorrowStep',
+        referenceName: 'depositAmount',
       })
 
-      expect(slot).toBe(3)
+      const actionSlot =
+        1 + derivedAction.config.storageOutputs.findIndex((input) => input === 'otherOutput')
+      expect(slot).toBe(actionSlot)
     }
     {
-      const slot = executionStorageMapper.getSlot({
-        stepName: 'SwapStep',
-        referenceName: 'fromTokenAmount',
+      const slot = executionStorageMapper.getOutputSlot({
+        stepName: 'DepositBorrowStep',
+        referenceName: 'borrowAmount',
       })
 
-      expect(slot).toBeUndefined()
+      const actionSlot =
+        1 + derivedAction.config.storageOutputs.findIndex((input) => input === 'someOutput2')
+      expect(slot).toBe(actionSlot)
+    }
+  })
+
+  it('should add and retrieve storage slots, reference values', () => {
+    const previousStep: steps.DepositBorrowStep = {
+      type: SimulationSteps.DepositBorrow,
+      name: 'PreviousDepositBorrowStep',
+      inputs: {
+        depositAmount: depositAmount,
+        borrowAmount: borrowAmount,
+        position: position,
+      },
+      outputs: {
+        depositAmount: depositAmount,
+        borrowAmount: borrowAmount,
+      },
+    }
+
+    const derivedStep: steps.DepositBorrowStep = {
+      type: SimulationSteps.DepositBorrow,
+      name: 'DepositBorrowStep',
+      inputs: {
+        depositAmount: {
+          estimatedValue: depositAmount,
+          path: ['PreviousDepositBorrowStep', 'depositAmount'],
+        },
+        borrowAmount: {
+          estimatedValue: borrowAmount,
+          path: ['PreviousDepositBorrowStep', 'borrowAmount'],
+        },
+        position: position,
+      },
+      outputs: {
+        depositAmount: depositAmount,
+        borrowAmount: borrowAmount,
+      },
+    }
+
+    const executionStorageMapper = new ExecutionStorageMapper()
+
+    executionStorageMapper.addStorageMap({
+      step: previousStep,
+      action: derivedAction,
+      connectedInputs: {
+        depositAmount: 'someInput1',
+        borrowAmount: 'otherInput',
+      },
+      connectedOutputs: {
+        depositAmount: 'otherOutput',
+        borrowAmount: 'someOutput2',
+      },
+    })
+
+    const inputSlotsMapping = executionStorageMapper.addStorageMap({
+      step: derivedStep,
+      action: derivedAction,
+      connectedInputs: {
+        depositAmount: 'someInput1',
+        borrowAmount: 'otherInput',
+      },
+      connectedOutputs: {
+        depositAmount: 'otherOutput',
+        borrowAmount: 'someOutput2',
+      },
+    })
+
+    expect(inputSlotsMapping).toEqual([3, 0, 2, 0])
+
+    {
+      const slot = executionStorageMapper.getOutputSlot({
+        stepName: 'PreviousDepositBorrowStep',
+        referenceName: 'depositAmount',
+      })
+
+      const actionSlot =
+        1 + derivedAction.config.storageOutputs.findIndex((input) => input === 'otherOutput')
+      expect(slot).toBe(actionSlot)
     }
     {
-      const slot = executionStorageMapper.getSlot({
-        stepName: 'SwapStep',
-        referenceName: 'fee',
+      const slot = executionStorageMapper.getOutputSlot({
+        stepName: 'PreviousDepositBorrowStep',
+        referenceName: 'borrowAmount',
       })
 
-      expect(slot).toBeUndefined()
+      const actionSlot =
+        1 + derivedAction.config.storageOutputs.findIndex((input) => input === 'someOutput2')
+      expect(slot).toBe(actionSlot)
     }
     {
-      const slot = executionStorageMapper.getSlot({
-        stepName: 'SwapStep',
-        referenceName: 'toTokenAmount',
+      const slot = executionStorageMapper.getOutputSlot({
+        stepName: 'DepositBorrowStep',
+        referenceName: 'depositAmount',
       })
 
-      expect(slot).toBeUndefined()
+      const actionSlot =
+        3 + derivedAction.config.storageOutputs.findIndex((input) => input === 'otherOutput')
+      expect(slot).toBe(actionSlot)
+    }
+    {
+      const slot = executionStorageMapper.getOutputSlot({
+        stepName: 'DepositBorrowStep',
+        referenceName: 'borrowAmount',
+      })
+
+      const actionSlot =
+        3 + derivedAction.config.storageOutputs.findIndex((input) => input === 'someOutput2')
+      expect(slot).toBe(actionSlot)
     }
   })
 })

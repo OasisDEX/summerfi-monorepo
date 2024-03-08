@@ -10,7 +10,7 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest",
+    "test": "jest --coverage=true",
     "testw": "jest --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

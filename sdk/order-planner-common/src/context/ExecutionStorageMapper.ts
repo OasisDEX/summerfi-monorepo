@@ -1,6 +1,10 @@
-import { steps } from '@summerfi/sdk-common/simulation'
+import { isValueReference, steps } from '@summerfi/sdk-common/simulation'
 import { Maybe } from '@summerfi/sdk-common/common'
-import { StorageInputsMapType, StorageOutputsMapType } from './Types'
+import {
+  ParamsMapping as InputSlotsMapping,
+  StorageInputsMapType,
+  StorageOutputsMapType,
+} from './Types'
 import assert from 'assert'
 import { BaseAction } from '../actions/BaseAction'
 
@@ -15,7 +19,7 @@ export class ExecutionStorageMapper {
     action: Action
     connectedInputs: Partial<StorageInputsMapType<Step, Action>>
     connectedOutputs: Partial<StorageOutputsMapType<Step, Action>>
-  }): void {
+  }): InputSlotsMapping {
     const baseSlot = this.currentSlot
 
     /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -41,9 +45,11 @@ export class ExecutionStorageMapper {
 
       this.currentSlot++
     }
+
+    return this._resolveParamsMapping(params)
   }
 
-  public getSlot(params: {
+  public getOutputSlot(params: {
     stepName: string
     referenceName: string | number | symbol
   }): Maybe<number> {
@@ -56,5 +62,42 @@ export class ExecutionStorageMapper {
     referenceName: string | number | symbol
   }): string {
     return `${params.stepName}-${String(params.referenceName)}`
+  }
+
+  private _resolveParamsMapping<Step extends steps.Steps, Action extends BaseAction>(params: {
+    action: Action
+    step: Step
+    connectedInputs: Partial<StorageInputsMapType<Step, Action>>
+  }): InputSlotsMapping {
+    const paramsMapping: InputSlotsMapping = [0, 0, 0, 0]
+
+    for (const [key, value] of Object.entries(params.step.inputs)) {
+      if (!isValueReference(value)) {
+        continue
+      }
+
+      const actionStorageName = params.connectedInputs[key as keyof Step['inputs']]
+      if (actionStorageName === undefined) {
+        continue
+      }
+
+      const [stepName, referenceName] = value.path
+
+      const paramSlotValue = this.getOutputSlot({ stepName, referenceName })
+      if (!paramSlotValue) {
+        throw new Error(`Reference not found in storage: ${stepName}-${referenceName}`)
+      }
+
+      const paramSlotIndex = params.action.config.storageInputs.findIndex(
+        (storageInputName) => storageInputName === actionStorageName,
+      )
+      if (paramSlotIndex === -1) {
+        throw new Error(`Input not found in action storage inputs: ${actionStorageName}`)
+      }
+
+      paramsMapping[paramSlotIndex] = paramSlotValue
+    }
+
+    return paramsMapping
   }
 }
