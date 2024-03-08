@@ -11,30 +11,33 @@ class DerivedAction extends BaseAction {
     storageOutputs: ['someOutput1', 'someOutput2', 'otherOutput'],
   }
 
-  public encodeCall(params: { arguments: unknown[]; mapping?: number[] }): ActionCall {
-    return this._encodeCall(params)
+  public encodeCall(
+    params: { test1: string; test2: string; test3: number },
+    paramsMapping?: number[],
+  ): ActionCall {
+    return this._encodeCall({
+      arguments: [params.test1, params.test2, params.test3],
+      mapping: paramsMapping,
+    })
   }
 }
 
 describe('Action Calls Stack', () => {
   const derivedAction = new DerivedAction()
 
-  const actionCall = derivedAction.encodeCall({
-    arguments: [
-      '0x0000000000000000000000000000000000000123',
-      '0x0000000000000000000000000000000000000456',
-      100,
-    ],
-    mapping: [6, 7, 8, 9],
-  })
+  const actionCall = derivedAction.encodeCall(
+    {
+      test1: '0x0000000000000000000000000000000000000123',
+      test2: '0x0000000000000000000000000000000000000456',
+      test3: 100,
+    },
+    [6, 7, 8, 9],
+  )
 
   const otherActionCall = derivedAction.encodeCall({
-    arguments: [
-      '0x0000000000000000000000000000000000000999',
-      '0x0000000000000000000000000000000000000888',
-      200,
-    ],
-    mapping: [1, 2, 3, 4],
+    test1: '0x0000000000000000000000000000000000000999',
+    test2: '0x0000000000000000000000000000000000000888',
+    test3: 200,
   })
 
   it('should allow to start/end subcontext once with empty data', () => {
@@ -110,5 +113,27 @@ describe('Action Calls Stack', () => {
 
     expect(callsBatch2).toEqual([actionCall, otherActionCall])
     expect(customData2).toBe('level1')
+  })
+
+  it('should return the correct number of levels', async () => {
+    const actionCallsStack = new ActionCallsStack()
+
+    actionCallsStack.startSubContext({ customData: 'level1' })
+    actionCallsStack.startSubContext({ customData: 'level2' })
+    actionCallsStack.startSubContext({ customData: 'level3' })
+
+    expect(actionCallsStack.levels).toBe(3)
+
+    actionCallsStack.endSubContext()
+
+    expect(actionCallsStack.levels).toBe(2)
+
+    actionCallsStack.endSubContext()
+
+    expect(actionCallsStack.levels).toBe(1)
+
+    actionCallsStack.endSubContext()
+
+    expect(actionCallsStack.levels).toBe(0)
   })
 })
