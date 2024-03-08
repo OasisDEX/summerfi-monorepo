@@ -112,18 +112,14 @@ export const calculateNextProfit = ({
       token: currentPosition.collateral.token,
     }
 
-    const afterSwap = calculateBalance(
-      toSwap,
-      currentPosition.debt.token,
-      currentPosition.collateralPriceInDebt,
-    )
+    const afterSwap = calculateBalance(toSwap, currentPosition.debt.token, executionPrice)
 
     const realizedProfitInDebt = subtractPercentage(afterSwap, SLIPPAGE)
 
     const realizedProfitInCollateral = calculateBalance(
       realizedProfitInDebt,
       currentPosition.collateral.token,
-      reversePrice(currentPosition.collateralPriceInDebt),
+      reversePrice(executionPrice),
     )
 
     const totalProfitInCollateral = {
