@@ -328,7 +328,7 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
 
             const debts: Record<AddressValue, SparkPoolDebtConfig> = {}
             for (const asset of reservesAssetsList) {
-                const { token: quoteToken, config: { borrowingEnabled }, caps: { borrowCap }, data: { totalVariableDebt, totalStableDebt, variableBorrowRate } } = asset;
+                const { token: quoteToken, config: { borrowingEnabled, reserveFactor }, caps: { borrowCap }, data: { totalVariableDebt, totalStableDebt, variableBorrowRate } } = asset;
                 // TODO: Remove Try/Catch once PriceService updated to use protocol oracle
                 if (quoteToken.symbol === TokenSymbol.WETH) {
                     // WETH can be used as collateral on Spark but not borrowed.
@@ -336,7 +336,11 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                 }
 
                 try {
-                    const rate = Number(((variableBorrowRate * 1000000n) / PRESISION_BI.RAY).toString()) / 10000
+                    const RESERVE_FACTOR_TO_PERCENTAGE_DIVISOR = 10000n
+
+                    const PRECISION_PRESERVING_OFFSET = 1000000n
+                    const RATE_DIVISOR_TO_GET_PERCENTAGE = Number((PRECISION_PRESERVING_OFFSET - 100n).toString())
+                    const rate = Number(((variableBorrowRate * PRECISION_PRESERVING_OFFSET) / PRESISION_BI.RAY).toString()) / RATE_DIVISOR_TO_GET_PERCENTAGE
                     const totalBorrowed = totalVariableDebt - totalStableDebt
                     debts[quoteToken.address.value] = {
                         token: quoteToken,
@@ -347,7 +351,7 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                         debtCeiling: TokenAmount.createFrom({token: quoteToken, amount: borrowCap === 0n ? UNCAPPED_SUPPLY : borrowCap.toString() }),
                         debtAvailable: tokenAmountFromBaseUnit({token: quoteToken, amount: borrowCap === 0n ? UNCAPPED_SUPPLY : (borrowCap - totalBorrowed).toString() }),
                         dustLimit: tokenAmountFromBaseUnit({token: quoteToken, amount: '0' }),
-                        originationFee: Percentage.createFrom({ percentage: 0 }),
+                        originationFee: Percentage.createFrom({ percentage: Number((reserveFactor / RESERVE_FACTOR_TO_PERCENTAGE_DIVISOR).toString()) }),
                         borrowingEnabled
                     }
                 } catch (e) {
