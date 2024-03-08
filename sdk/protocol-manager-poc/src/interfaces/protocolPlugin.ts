@@ -326,8 +326,11 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                 reservesTokenList.push(token)
             }
 
+            // TODO: We need to constrain the available tokens based on emodeCategory
+
             console.log("reservesTokenList", reservesTokenList)
-            const poolBaseCurrencyToken = await ctx.tokenService.getTokenBySymbol(TokenSymbol.DAI)
+            // Both USDC & DAI use fixed price oracles that keep both stable at 1 USD
+            const poolBaseCurrencyToken = CurrencySymbol.USD
 
             const collaterals: Record<AddressValue, CollateralConfig> = {}
             for (const collateralToken of reservesTokenList) {
@@ -389,7 +392,7 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                     chainInfo,
                 },
                 maxLTV: Percentage.createFrom({ percentage: 0 }),
-                baseCurrency: poolBaseCurrencyToken,
+                baseCurrency: CurrencySymbol.USD,
                 collaterals,
                 debts
             } as SparkLendingPool
