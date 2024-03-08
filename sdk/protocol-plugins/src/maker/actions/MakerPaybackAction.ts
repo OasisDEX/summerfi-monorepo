@@ -1,6 +1,7 @@
 import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
 import { Address, TokenAmount } from '@summerfi/sdk-common/common'
 import { IPool } from '@summerfi/sdk-common/protocols'
+import { isMakerPoolId } from '@summerfi/sdk-common/protocols/'
 
 export class MakerPaybackAction extends BaseAction {
   public readonly config = {
@@ -20,9 +21,13 @@ export class MakerPaybackAction extends BaseAction {
     },
     paramsMapping?: number[],
   ): ActionCall {
+    if (!isMakerPoolId(params.pool.poolId)) {
+      throw new Error('Pool ID is not a Maker one')
+    }
+
     return this._encodeCall({
       arguments: [
-        params.pool.poolId.id,
+        params.pool.poolId.vaultId,
         params.userAddress.toString(),
         params.amount.toBaseUnit(),
         params.paybackAll,

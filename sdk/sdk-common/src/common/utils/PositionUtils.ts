@@ -1,4 +1,4 @@
-import { LendingPool } from '../../protocols/interfaces/LendingPool'
+import { LendingPool } from '../../protocols/implementation/LendingPool'
 import { TokenAmount } from '../implementation/TokenAmount'
 import { Position } from '../implementation/Position'
 

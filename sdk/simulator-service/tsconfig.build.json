@@ -3,7 +3,12 @@
   // include tests and use module paths in tests but build without tests
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "rootDir": "src"
+    "rootDir": "src",
+    "paths": {
+      "~simulator-service": ["./src/index.ts"],
+      "~simulator-service/*": ["./src/*"],
+      "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"]
+    }
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]

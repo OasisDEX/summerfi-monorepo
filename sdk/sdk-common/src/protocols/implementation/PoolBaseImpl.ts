@@ -1,19 +1,19 @@
-import type { Address } from '~sdk-common/common/implementation/Address'
-import type { IPool } from '~sdk-common/protocols/interfaces/IPool'
-import type { PoolType } from '~sdk-common/protocols/interfaces/PoolType'
-import type { IPoolId } from '~sdk-common/protocols/interfaces/IPoolId'
-import { ProtocolName } from '~sdk-common/protocols/interfaces/ProtocolName'
+import { Address } from '../../common/implementation/Address'
+import { IPool } from '../interfaces/IPool'
+import { IPoolId } from '../interfaces/IPoolId'
+import { IProtocol } from '../interfaces/IProtocol'
+import { PoolType } from '../interfaces/PoolType'
 
-export class PoolBaseImpl<T extends PoolType> implements IPool {
+export abstract class PoolBaseImpl<T extends PoolType> implements IPool {
   public readonly poolId: IPoolId
-  public readonly protocol: ProtocolName
+  public readonly protocol: IProtocol
   public readonly type: T
   public readonly address?: Address
   public readonly TVL?: number
 
   constructor(params: {
     poolId: IPoolId
-    protocol: ProtocolName
+    protocol: IProtocol
     type: T
     address?: Address
     TVL?: number

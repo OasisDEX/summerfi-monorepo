@@ -1,7 +1,8 @@
 import { Simulation, SimulationSteps, SimulationType, steps } from '@summerfi/sdk-common/simulation'
-import { User, IPositionsManager } from '@summerfi/sdk-common/client'
-import { ISwapService } from '@summerfi/swap-common/interfaces'
+import { User } from '@summerfi/sdk-client'
+import { ISwapManager } from '@summerfi/swap-common/interfaces'
 import { Deployment } from '@summerfi/deployment-utils'
+import type { IPositionsManager } from '@summerfi/sdk-common/orders'
 import { OrderPlannerContext } from '../context/OrderPlannerContext'
 
 export type FilterStep<T extends SimulationSteps, S extends steps.Steps> = S extends { type: T }
@@ -13,7 +14,7 @@ export type ActionBuilderParams<S extends steps.Steps> = {
   user: User
   positionsManager: IPositionsManager
   simulation: Simulation<SimulationType>
-  swapService: ISwapService
+  swapManager: ISwapManager
   deployment: Deployment
   step: S
 }

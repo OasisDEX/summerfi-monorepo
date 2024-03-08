@@ -11,6 +11,7 @@ interface IPositionSerialized {
   readonly pool: IPool
 }
 
+// we should add assests prop instead of the amounts
 export class Position implements IPositionSerialized {
   readonly positionId: PositionId
   readonly debtAmount: TokenAmount

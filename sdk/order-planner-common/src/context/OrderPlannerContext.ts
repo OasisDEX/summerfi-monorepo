@@ -1,7 +1,7 @@
 import { ActionCallsStack } from './ActionCallsStack'
 import { ExecutionStorageMapper } from './ExecutionStorageMapper'
 import { isValueReference, steps } from '@summerfi/sdk-common/simulation'
-import { Maybe } from '@summerfi/sdk-common/utils'
+import { Maybe } from '@summerfi/sdk-common/common'
 import { StorageInputsMapType, StorageOutputsMapType } from './Types'
 import { BaseAction } from '../actions/BaseAction'
 import { ActionCallBatch } from '../actions/Types'

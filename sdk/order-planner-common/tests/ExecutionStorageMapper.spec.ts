@@ -1,9 +1,9 @@
-import { Address, ChainInfo, Token, TokenAmount } from '@summerfi/sdk-common/common'
-import { ChainFamilyMap } from '@summerfi/sdk-common/client'
+import { Address, ChainInfo, Percentage, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { BaseAction } from '../src/actions/BaseAction'
 import { ActionCall } from '../src/actions/Types'
 import { ExecutionStorageMapper } from '../src/context/ExecutionStorageMapper'
+import { ChainFamilyMap } from '@summerfi/sdk-client'
 
 class DerivedAction extends BaseAction {
   public readonly config = {
@@ -53,7 +53,7 @@ describe.only('Execution Storage Mapper', () => {
         token: DAI,
         amount: '1000',
       }),
-      slippage: 0.01,
+      slippage: Percentage.createFrom({ percentage: 0.01 }),
       fee: 0.003,
     },
     outputs: {

@@ -1,5 +1,4 @@
 import { SerializationService } from '../../services/SerializationService'
-import { AddressValue } from '../aliases/AddressValue'
 import { Address } from './Address'
 
 interface IWalletSerialized {
@@ -17,8 +16,8 @@ export class Wallet implements IWalletSerialized {
     this.address = params.address
   }
 
-  static createFrom({ value }: { value: AddressValue }): Wallet {
-    return new Wallet({ address: Address.createFrom({ value }) })
+  static createFrom(params: { address: Address }): Wallet {
+    return new Wallet({ address: params.address })
   }
 
   toString(): string {
