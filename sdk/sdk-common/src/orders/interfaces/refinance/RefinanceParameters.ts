@@ -1,13 +1,13 @@
-import { Percentage } from '../../../common/implementation/Percentage'
-import { Position } from '../../../common/implementation/Position'
-import { LendingPool } from '../../../protocols/implementation/LendingPool'
+import type { Percentage } from '../../../common/implementation/Percentage'
+import type { Position } from '../../../common/implementation/Position'
+import type { LendingPool } from '../../../protocols/implementation/LendingPool'
 
 /**
  * @interface RefinanceParameters
  * @description Parameters used to refinance a position
  */
 export interface RefinanceParameters {
-  sourcePosition: Position
+  position: Position
   targetPool: LendingPool
   slippage: Percentage
 }

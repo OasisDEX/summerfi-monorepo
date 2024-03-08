@@ -1,6 +1,6 @@
 import { steps } from '@summerfi/sdk-common/simulation'
-import { subtractBalance } from '~swap-service/implementation/helpers'
-import { SimulationState } from '~swap-service/interfaces/simulation'
+import { subtractBalance } from '~simulator-service/implementation/helpers'
+import { SimulationState } from '~simulator-service/interfaces/simulation'
 
 export function repayFlashloanReducer(
   step: steps.RepayFlashloan,

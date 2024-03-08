@@ -10,7 +10,7 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest --silent=false",
+    "test": "jest --passWithNoTests",
     "testw": "jest --watch",
     "build": "tsc -b -v tsconfig.build.json",
     "lint": "eslint .",

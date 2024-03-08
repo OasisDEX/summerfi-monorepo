@@ -1,6 +1,6 @@
-import { Order } from '@summerfi/sdk-common/orders'
+import { Order, type IPositionsManager } from '@summerfi/sdk-common/orders'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import { IPositionsManager, User } from '@summerfi/sdk-common/client'
+import { User } from '@summerfi/sdk-client'
 import { Maybe } from '@summerfi/sdk-common/common'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
 

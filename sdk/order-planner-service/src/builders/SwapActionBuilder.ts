@@ -14,8 +14,7 @@ export const SwapActionBuilder: ActionBuilder<steps.SwapStep> = async (params): 
     fromAmount: step.inputs.fromTokenAmount,
     toToken: step.inputs.toTokenAmount.token,
     recipient: Address.createFrom({ value: swapContractInfo.address as HexData }),
-    // TODO: change slippage in Simulator to a Percentage type
-    slippage: Percentage.createFrom({ percentage: step.inputs.slippage }),
+    slippage: step.inputs.slippage,
   })
 
   context.addActionCall({

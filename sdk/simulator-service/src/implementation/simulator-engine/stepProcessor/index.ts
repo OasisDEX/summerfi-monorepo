@@ -3,7 +3,7 @@ import type {
   StepOutputProcessor,
   StepOutputProcessors,
   StepsWithouOutputs,
-} from '~swap-service/interfaces/steps'
+} from '~simulator-service/interfaces/steps'
 import { flashloanOutputProcessor } from './flashloanOutputProcessor'
 import { pullTokenOutputProcessor } from './pullTokenOutputProcessor'
 import { depositBorrowOutputProcessor } from './depositBorrowOutputProcessor'
