@@ -33,9 +33,9 @@ export class FlashloanAction extends BaseAction {
       }
     })
 
-    return this._encodeCall(
-      [params.amount.toString(), params.amount.token.address.value, true, true, calls],
-      paramsMapping,
-    )
+    return this._encodeCall({
+      arguments: [params.amount.toString(), params.amount.token.address.value, true, true, calls],
+      mapping: paramsMapping,
+    })
   }
 }

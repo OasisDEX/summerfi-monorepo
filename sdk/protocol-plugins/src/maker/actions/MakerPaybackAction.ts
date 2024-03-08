@@ -11,17 +11,23 @@ export class MakerPaybackAction extends BaseAction {
     storageOutputs: ['amountPaidBack'],
   } as const
 
-  public encodeCall(params: {
-    pool: IPool
-    userAddress: Address
-    amount: TokenAmount
-    paybackAll: boolean
-  }): ActionCall {
-    return this._encodeCall([
-      params.pool.poolId.id,
-      params.userAddress.toString(),
-      params.amount.toBaseUnit(),
-      params.paybackAll,
-    ])
+  public encodeCall(
+    params: {
+      pool: IPool
+      userAddress: Address
+      amount: TokenAmount
+      paybackAll: boolean
+    },
+    paramsMapping?: number[],
+  ): ActionCall {
+    return this._encodeCall({
+      arguments: [
+        params.pool.poolId.id,
+        params.userAddress.toString(),
+        params.amount.toBaseUnit(),
+        params.paybackAll,
+      ],
+      mapping: paramsMapping,
+    })
   }
 }

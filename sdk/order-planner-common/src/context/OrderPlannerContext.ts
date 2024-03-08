@@ -13,7 +13,7 @@ export class OrderPlannerContext {
   public addActionCall<Step extends steps.Steps, Action extends BaseAction>(params: {
     step: Step
     action: Action
-    arguments: Parameters<Action['encodeCall']>[0]['arguments']
+    arguments: Parameters<Action['encodeCall']>[0]
     connectedInputs: Partial<StorageInputsMapType<Step, Action>>
     connectedOutputs: Partial<StorageOutputsMapType<Step, Action>>
   }) {

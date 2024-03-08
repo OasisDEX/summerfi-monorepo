@@ -10,7 +10,10 @@ export class ReturnFundsAction extends BaseAction {
     storageOutputs: [],
   } as const
 
-  public encodeCall(params: { asset: Token }): ActionCall {
-    return this._encodeCall([params.asset.address.toString()])
+  public encodeCall(params: { asset: Token }, paramsMapping?: number[]): ActionCall {
+    return this._encodeCall({
+      arguments: [params.asset.address.toString()],
+      mapping: paramsMapping,
+    })
   }
 }

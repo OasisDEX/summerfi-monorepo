@@ -9,5 +9,6 @@
       "~swap-common/*": ["../swap-common/src/*"],
       "~deployment-types/*": ["node_modules/@summerfi/deployment-types/src/*"]
     }
-  }
+  },
+  "include": ["src/**/*.ts"]
 }

@@ -30,7 +30,7 @@ export abstract class BaseAction {
    * @param paramsMapping The mapping of the parameters to the execution storage
    * @returns The encoded call to the action
    */
-  public abstract encodeCall(params: { arguments: unknown[]; mapping?: number[] }): ActionCall
+  public abstract encodeCall(params: unknown, paramsMapping?: number[]): ActionCall
 
   /**
    * @description Encodes the call to the action

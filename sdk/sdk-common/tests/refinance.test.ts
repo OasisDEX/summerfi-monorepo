@@ -5,8 +5,8 @@ import {
   RiskRatio,
   Token,
   TokenAmount,
-  Wallet,
   type Position,
+  Address,
 } from '~sdk-common/common'
 
 import {
@@ -36,15 +36,16 @@ describe.skip('Refinance | SDK', () => {
       fail('Chain is not defined')
     }
 
-    // Wallet
-    const wallet: Wallet = Wallet.createFrom({
+    // User
+    const walletAddress = Address.createFrom({
       value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
     })
-
-    // User
-    const user: User = await sdk.users.getUser({ chain: chain, wallet })
+    const user: User = await sdk.users.getUser({
+      chain: chain,
+      walletAddress: walletAddress,
+    })
     expect(user).toBeDefined()
-    expect(user.wallet).toEqual(wallet)
+    expect(user.wallet.address).toEqual(walletAddress)
     expect(user.chain).toEqual(chain)
 
     // Tokens
