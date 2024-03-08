@@ -410,10 +410,10 @@ async function gatherReservesAssetList(ctx: ProtocolManagerContext, emode: bigin
         const enrichedAssetsList = await enrichAssetsList(ctx, tokensList);
 
         // Finalise the tokens list by filtering each based on eMode categories.
-        const finalTokensList = await finaliseReservesList(ctx, enrichedAssetsList, emode);
+        const finalAssetsList = await finaliseReservesList(ctx, enrichedAssetsList, emode);
 
-        console.log('Processed Tokens:', finalTokensList);
-        return finalTokensList;
+        console.log('Processed assets:', finalAssetsList);
+        return finalAssetsList;
     } catch (error) {
         console.error('An error occurred during token processing:', error);
         throw new Error(`An error occurred during token processing: ${JSON.stringify(error)}`)
