@@ -128,7 +128,7 @@ export const getAavePartialTakeProfitServiceContainer: (
             position,
             executionPrice,
             triggerData: trigger.triggerData.stopLoss.triggerData,
-            action: trigger.action,
+            action: trigger.triggerData.stopLoss.action,
             triggers,
           }),
         )
