@@ -1,0 +1,11 @@
+query CollateralLocked($collateralAddresses: [Bytes!]!, $block: Int!) {
+  positions(where: { collateralAddress_in: $collateralAddresses, account_not: null, collateral_gt: 0 }, block: { number: $block }) {
+    collateralAddress
+    collateral
+    proxy {
+      owner
+      isDPM
+    }
+    protocol
+  }
+}

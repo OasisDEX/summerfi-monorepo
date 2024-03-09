@@ -3,5 +3,6 @@ packages:
   - 'apps/**'
   - 'sdk/**'
   - 'summerfi-api/**'
+  - 'external-api/**'
   - '!**/test/**'
   - '!**/.sst/**'

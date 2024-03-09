@@ -1,5 +1,6 @@
 import { SSTConfig } from 'sst'
 import { API } from './stacks/summer-stack'
+import { ExternalAPI } from './stacks/partners-stack'
 
 const availableStage = ['dev', 'feature', 'staging', 'production']
 
@@ -28,6 +29,7 @@ export const sstConfig: SSTConfig = {
       app.setDefaultRemovalPolicy('destroy')
     }
     app.stack(API)
+    app.stack(ExternalAPI)
   },
 }
 
