@@ -1,6 +1,6 @@
 import type { Percentage } from '../../../common/implementation/Percentage'
 import type { Position } from '../../../common/implementation/Position'
-import type { LendingPool } from '../../../protocols/interfaces/LendingPool'
+import type { LendingPool } from '../../../protocols/implementation/LendingPool'
 
 /**
  * @interface RefinanceParameters

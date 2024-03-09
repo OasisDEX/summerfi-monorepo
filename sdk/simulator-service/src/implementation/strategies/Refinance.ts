@@ -10,7 +10,7 @@ import { TokenAmount } from '@summerfi/sdk-common/common'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { RefinanceParameters } from '@summerfi/sdk-common/orders'
 import { type ISwapManager } from '@summerfi/swap-common/interfaces'
-import { isLendingPool } from '~sdk-common/protocols/interfaces/LendingPool'
+import { isLendingPool } from '@summerfi/sdk-common/protocols'
 
 export const refinanceStrategy = makeStrategy([
   {

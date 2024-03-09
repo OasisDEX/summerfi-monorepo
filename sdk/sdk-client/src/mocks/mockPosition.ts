@@ -8,7 +8,7 @@ import {
   type PositionId,
   type Wallet,
 } from '@summerfi/sdk-common/common'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { ILKType, MakerPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import type { Chain } from '../implementation/Chain'
 
 export async function getMockPosition(params: {
@@ -34,7 +34,11 @@ export async function getMockPosition(params: {
       ratio: Percentage.createFrom({ percentage: 20.3 }),
     }),
     pool: {
-      poolId: { id: 'testpool' },
+      poolId: {
+        protocol: ProtocolName.Maker,
+        ilkType: ILKType.ETH_A,
+        vaultId: 'testvault',
+      } as MakerPoolId,
       protocol: {
         name: ProtocolName.Maker,
         chainInfo: params.chain.chainInfo,

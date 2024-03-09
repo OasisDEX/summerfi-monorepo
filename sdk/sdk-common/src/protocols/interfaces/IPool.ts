@@ -1,7 +1,7 @@
-import { Address } from '~sdk-common/common/implementation/Address'
 import { IPoolId } from './IPoolId'
 import { PoolType } from './PoolType'
 import { IProtocol } from './IProtocol'
+import { Address } from '../../common/implementation/Address'
 
 /**
  * @interface IPool

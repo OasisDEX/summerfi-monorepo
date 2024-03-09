@@ -19,8 +19,12 @@ import {
   ProtocolName,
   isLendingPool,
   type LendingPool,
+  isMakerPoolId,
+  ILKType,
+  isSparkPoolId,
+  EmodeType,
 } from '@summerfi/sdk-common/protocols'
-import { Order, type RefinanceParameters } from '@summerfi/sdk-common/orders'
+import { type RefinanceParameters } from '@summerfi/sdk-common/orders'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { makeSDK, type Chain, type User, ChainFamilyMap } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
@@ -80,10 +84,16 @@ describe('Refinance | SDK', () => {
         ratio: Percentage.createFrom({ percentage: 20.3 }),
       }),
     )
-    expect(prevPosition.pool.poolId.id).toEqual('testpool')
+
+    if (!isMakerPoolId(prevPosition.pool.poolId)) {
+      fail('Pool ID is not a Maker one')
+    }
+
+    expect(prevPosition.pool.poolId.ilkType).toEqual(ILKType.ETH_A)
+    expect(prevPosition.pool.poolId.vaultId).toEqual('testvault')
     expect(prevPosition.pool.protocol).toEqual({
-      chainInfo: { chainId: 1, name: 'Mainnet' },
-      name: 'Maker',
+      name: ProtocolName.Maker,
+      chainInfo: chain.chainInfo,
     })
     expect(prevPosition.pool.type).toEqual(PoolType.Lending)
 
@@ -113,8 +123,15 @@ describe('Refinance | SDK', () => {
       fail('Pool not found')
     }
 
-    expect(newPool.poolId.id).toEqual('mock')
-    expect(newPool.protocol).toEqual({ chainInfo: { chainId: 1, name: 'Mainnet' }, name: 'Spark' })
+    if (!isSparkPoolId(newPool.poolId)) {
+      fail('Pool ID is not a Maker one')
+    }
+
+    expect(newPool.poolId.emodeType).toEqual(EmodeType.None)
+    expect(newPool.protocol).toEqual({
+      name: ProtocolName.Spark,
+      chainInfo: chain.chainInfo,
+    })
 
     if (!isLendingPool(newPool)) {
       fail('Pool type is not lending')
@@ -140,11 +157,16 @@ describe('Refinance | SDK', () => {
     // expect(refinanceSimulation.sourcePosition).toEqual(prevPosition)
     // expect(refinanceSimulation.targetPosition.pool).toEqual(newPool)
 
-    const refinanceOrder: Order = await user.newOrder({
-      simulation: refinanceSimulation,
-    })
+    // TODO: uncomment this when the simulator is connected
+    // expect(refinanceSimulation).toBeDefined()
+    // expect(refinanceSimulation.sourcePosition).toEqual(prevPosition)
+    // expect(refinanceSimulation.targetPosition.pool).toEqual(newPool)
 
-    expect(refinanceOrder.simulation).toEqual(refinanceSimulation)
-    expect(refinanceOrder.transactions).toEqual([])
+    // const refinanceOrder: Order = await user.newOrder({
+    //   simulation: refinanceSimulation,
+    // })
+
+    // expect(refinanceOrder.simulation).toEqual(refinanceSimulation)
+    // expect(refinanceOrder.transactions).toEqual([])
   })
 })
