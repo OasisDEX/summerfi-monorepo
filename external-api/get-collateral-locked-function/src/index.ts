@@ -5,7 +5,7 @@ import {
   ResponseInternalServerError,
   ResponseOk,
 } from '@summerfi/serverless-shared/responses'
-import { addressSchema, chainIdSchema } from '@summerfi/serverless-shared/validators'
+import { chainIdSchema } from '@summerfi/serverless-shared/validators'
 
 import { Logger } from '@aws-lambda-powertools/logger'
 import {
@@ -13,15 +13,26 @@ import {
   CollateralLockedResult,
   getAaveSparkSubgraphClient,
 } from '@summerfi/aave-spark-subgraph'
-import { Address, ChainId } from '@summerfi/serverless-shared'
+import { Address, ChainId, isValidAddress } from '@summerfi/serverless-shared'
 import { getAjnaSubgraphClient } from '@summerfi/ajna-subgraph'
 import { getMorphoBlueSubgraphClient } from '@summerfi/morpho-blue-subgraph'
 import { BigNumber } from 'bignumber.js'
 
 const logger = new Logger({ serviceName: 'get-collateral-locked-function' })
 
+export const addressesSchema = z
+  .string()
+  .transform((val) => val.split(','))
+  .refine(
+    (val) => {
+      return val.every((address) => isValidAddress(address))
+    },
+    { message: 'Invalid format of addresses' },
+  )
+  .transform((val) => val.map((address) => address as Address))
+
 const paramsSchema = z.object({
-  address: z.array(addressSchema).optional().default([]),
+  address: addressesSchema.optional(),
   blockNumber: z
     .number()
     .positive()
@@ -49,6 +60,7 @@ export interface ResponseBodyItem {
 }
 export interface ResponseBody {
   Result: ResponseBodyItem[]
+  TVL: number
 }
 
 export const handler = async (
@@ -209,8 +221,16 @@ export const handler = async (
       }
     })
 
+  const tvl = values.map((v) => v.effective_balance).reduce((acc, second) => acc + second, 0)
+
+  const filteredValues =
+    params.address && params.address.length > 0
+      ? values.filter((v) => params.address?.includes(v.address))
+      : values
+
   const response: ResponseBody = {
-    Result: values,
+    Result: filteredValues,
+    TVL: tvl,
   }
 
   return ResponseOk({
