@@ -105,6 +105,7 @@ export const getAavePartialTakeProfitServiceContainer: (
         position,
         currentStopLoss: minimalStopLossInformation,
         minimalTriggerData: trigger.triggerData,
+        logger,
       })
     },
     validate: async ({ trigger }) => {

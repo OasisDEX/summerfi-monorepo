@@ -13,6 +13,7 @@ import {
   MinimalStopLossInformation,
   SLIPPAGE,
 } from './types'
+import { Logger } from '@aws-lambda-powertools/logger'
 
 const getMax = (a: bigint, b: bigint) => (a > b ? a : b)
 
@@ -21,11 +22,13 @@ export const calculateNextProfit = ({
   currentPosition,
   triggerData,
   currentStopLoss,
+  logger,
 }: {
   lastProfit: AutoTakeProfitRealized
   currentPosition: MinimalPositionLike
   triggerData: MinimalAutoTakeProfitTriggerData
   currentStopLoss: MinimalStopLossInformation | undefined
+  logger?: Logger
 }): { profit: AutoTakeProfitRealized; nextPosition: MinimalPositionLike } => {
   const executionLTV = triggerData.executionLTV
   const executionPrice = getMax(
@@ -51,6 +54,14 @@ export const calculateNextProfit = ({
     balance: currentPosition.collateral.balance - collateralAfterWithdraw.balance,
   }
 
+  const stopLossExecutionPrice = currentStopLoss?.executionLTV
+    ? calculateCollateralPriceInDebtBasedOnLtv({
+        ltv: currentStopLoss?.executionLTV,
+        collateral: collateralAfterWithdraw,
+        debt: currentPosition.debt,
+      })
+    : undefined
+
   if (triggerData.withdrawToken === currentPosition.collateral.token.address) {
     const realizedProfitInCollateral = realizedProfit
 
@@ -69,14 +80,6 @@ export const calculateNextProfit = ({
       ...lastProfit.totalProfitInDebt,
       balance: lastProfit.totalProfitInDebt.balance + realizedProfitInDebt.balance,
     }
-
-    const stopLossExecutionPrice = currentStopLoss?.executionLTV
-      ? calculateCollateralPriceInDebtBasedOnLtv({
-          ltv: currentStopLoss?.executionLTV,
-          collateral: collateralAfterWithdraw,
-          debt: currentPosition.debt,
-        })
-      : undefined
 
     const totalFee = {
       ...lastProfit.totalFee,
@@ -122,6 +125,15 @@ export const calculateNextProfit = ({
       reversePrice(executionPrice),
     )
 
+    logger?.debug('Calculated Realized Profit In Debt', {
+      base: realizedProfit.balance,
+      price: executionPrice,
+      toSwap: toSwap.balance,
+      afterSwap: afterSwap.balance,
+      inDebt: realizedProfitInDebt.balance,
+      inCollateral: realizedProfitInCollateral.balance,
+    })
+
     const totalProfitInCollateral = {
       ...lastProfit.totalProfitInCollateral,
       balance: lastProfit.totalProfitInCollateral.balance + realizedProfitInCollateral.balance,
@@ -131,14 +143,6 @@ export const calculateNextProfit = ({
       ...lastProfit.totalProfitInDebt,
       balance: lastProfit.totalProfitInDebt.balance + realizedProfitInDebt.balance,
     }
-
-    const stopLossExecutionPrice = currentStopLoss?.executionLTV
-      ? calculateCollateralPriceInDebtBasedOnLtv({
-          ltv: executionLTV,
-          collateral: collateralAfterWithdraw,
-          debt: currentPosition.debt,
-        })
-      : undefined
 
     const totalFee = {
       ...lastProfit.totalFee,

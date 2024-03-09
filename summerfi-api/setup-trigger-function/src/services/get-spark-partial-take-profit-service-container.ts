@@ -98,6 +98,7 @@ export const getSparkPartialTakeProfitServiceContainer: (
         position,
         currentStopLoss,
         minimalTriggerData: trigger.triggerData,
+        logger,
       })
     },
     validate: async ({ trigger }) => {
