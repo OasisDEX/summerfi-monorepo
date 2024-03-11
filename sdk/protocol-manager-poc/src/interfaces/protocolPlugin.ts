@@ -1,6 +1,6 @@
 import { AddressValue, HexData, Percentage, TokenAmount, TokenSymbol, Price, CurrencySymbol, RiskRatio } from "@summerfi/sdk-common/common"
-import type {SparkPoolCollateralConfig, SparkPoolDebtConfig} from "@summerfi/sdk-common/protocols";
-import { IPool, SparkLendingPool, MakerLendingPool, PoolType, ProtocolName, /* IPoolId */ } from "@summerfi/sdk-common/protocols"
+import type {LendingPool, SparkPoolCollateralConfig, SparkPoolDebtConfig} from "@summerfi/sdk-common/protocols";
+import { SparkLendingPool, MakerLendingPool, PoolType, ProtocolName, /* IPoolId */ } from "@summerfi/sdk-common/protocols"
 import { /* PositionId, */ Address, ChainInfo, Position, Token } from "@summerfi/sdk-common/common"
 import {PublicClient, stringToHex} from "viem"
 import { BigNumber } from 'bignumber.js'
@@ -14,6 +14,7 @@ import {
     LENDING_POOL_ABI,
     POOL_DATA_PROVIDER
 } from "./abis"
+import { SupplyPool } from "node_modules/@summerfi/sdk-common/src/protocols/interfaces/SupplyPool";
 
 export type IPoolId = string & { __poolId: never }
 export type IPositionId = string & { __positionID: never }
@@ -53,7 +54,7 @@ export enum ChainId {
 export interface ProtocolPlugin {
     supportedChains: ChainId[]
     getPoolId: (poolId: string) => IPoolId
-    getPool: (poolId: IPoolId) => Promise<IPool>
+    getPool: (poolId: IPoolId) => Promise<LendingPool | SupplyPool>
     getPositionId: (positionId: string) => IPositionId
     getPosition: (positionId: IPositionId) => Promise<Position>
 }
@@ -194,6 +195,8 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                 debtFloor: amountFromRad(dust),
             }
 
+            console.log('dust', vatRes.debtFloor.toString())
+
             const spotRes = {
                 priceFeedAddress: Address.createFrom({ value: pip }),
                 liquidationRatio: amountFromRay(mat),
@@ -231,25 +234,23 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                         liquidationThreshold: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: spotRes.liquidationRatio.times(100).toNumber() }), type: RiskRatio.type.CollateralizationRatio }),
                         maxLtv: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: spotRes.liquidationRatio.times(100).toNumber() }), type: RiskRatio.type.CollateralizationRatio }),
 
-                        tokensLocked: tokenAmountFromBaseUnit({token: collateralToken, amount: '0'}), // TODO check the gem balance of join adapter
-                        maxSupply: tokenAmountFromBaseUnit({token: collateralToken, amount: Number.MAX_SAFE_INTEGER.toString()}),
+                        tokensLocked: TokenAmount.createFrom({token: collateralToken, amount: '0'}), // TODO check the gem balance of join adapter
+                        maxSupply: TokenAmount.createFrom({token: collateralToken, amount: Number.MAX_SAFE_INTEGER.toString()}),
                         liquidationPenalty: Percentage.createFrom({ percentage: dogRes.liquidationPenalty.toNumber() }),
                         // apy: Percentage.createFrom({ percentage: 0 }),
                     }
                 }
-            console.log("stabilityFee", stabilityFee)
-            console.log("stabilityFee.toNumber()", stabilityFee.toNumber())
 
             const debts = {
                 [quoteToken.address.value]: {
                     token: quoteToken,
                     price: await ctx.priceService.getPrice({baseToken: quoteToken, quoteToken: collateralToken }),
                     priceUSD: await ctx.priceService.getPriceUSD(quoteToken),
-                    rate: Percentage.createFrom({ percentage: stabilityFee.toNumber() }),
-                    totalBorrowed: tokenAmountFromBaseUnit({token: quoteToken, amount: vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor).toString()}),
-                    debtCeiling: tokenAmountFromBaseUnit({token: quoteToken, amount: vatRes.debtCeiling.toString()}),
-                    debtAvailable: tokenAmountFromBaseUnit({token: quoteToken, amount:  vatRes.debtCeiling.minus(vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor)).toString()}),
-                    dustLimit: tokenAmountFromBaseUnit({token: quoteToken, amount: vatRes.debtFloor.toString()}),
+                    rate: Percentage.createFrom({ percentage: stabilityFee.times(100).toNumber() }),
+                    totalBorrowed: TokenAmount.createFrom({token: quoteToken, amount: vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor).toString()}),
+                    debtCeiling: TokenAmount.createFrom({token: quoteToken, amount: vatRes.debtCeiling.toString()}),
+                    debtAvailable: TokenAmount.createFrom({token: quoteToken, amount:  vatRes.debtCeiling.minus(vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor)).toString()}),
+                    dustLimit: TokenAmount.createFrom({token: quoteToken, amount: vatRes.debtFloor.toString()}),
                     originationFee: Percentage.createFrom({ percentage: 0 })
                 }
             }
