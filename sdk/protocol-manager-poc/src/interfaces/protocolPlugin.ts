@@ -15,6 +15,7 @@ import {
     filterAssetsListByEMode,
     SparkPluginBuilder
 } from "./sparkPluginBuilder";
+import { SupplyPool } from "node_modules/@summerfi/sdk-common/src/protocols/interfaces/SupplyPool";
 
 export type IPositionId = string & { __positionID: never }
 
@@ -198,6 +199,8 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
                 debtFloor: amountFromRad(dust),
             }
 
+            console.log('dust', vatRes.debtFloor.toString())
+
             const spotRes = {
                 priceFeedAddress: Address.createFrom({ value: pip }),
                 liquidationRatio: amountFromRay(mat),
@@ -235,8 +238,8 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
                         liquidationThreshold: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: spotRes.liquidationRatio.times(100).toNumber() }), type: RiskRatio.type.CollateralizationRatio }),
                         maxLtv: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: spotRes.liquidationRatio.times(100).toNumber() }), type: RiskRatio.type.CollateralizationRatio }),
 
-                        tokensLocked: tokenAmountFromBaseUnit({token: collateralToken, amount: '0'}), // TODO check the gem balance of join adapter
-                        maxSupply: tokenAmountFromBaseUnit({token: collateralToken, amount: Number.MAX_SAFE_INTEGER.toString()}),
+                        tokensLocked: TokenAmount.createFrom({token: collateralToken, amount: '0'}), // TODO check the gem balance of join adapter
+                        maxSupply: TokenAmount.createFrom({token: collateralToken, amount: Number.MAX_SAFE_INTEGER.toString()}),
                         liquidationPenalty: Percentage.createFrom({ percentage: dogRes.liquidationPenalty.toNumber() }),
                         // apy: Percentage.createFrom({ percentage: 0 }),
                     }
@@ -247,11 +250,11 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
                     token: quoteToken,
                     price: await ctx.priceService.getPrice({baseToken: quoteToken, quoteToken: collateralToken }),
                     priceUSD: await ctx.priceService.getPriceUSD(quoteToken),
-                    rate: Percentage.createFrom({ percentage: stabilityFee.toNumber() }),
-                    totalBorrowed: tokenAmountFromBaseUnit({token: quoteToken, amount: vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor).toString()}),
-                    debtCeiling: tokenAmountFromBaseUnit({token: quoteToken, amount: vatRes.debtCeiling.toString()}),
-                    debtAvailable: tokenAmountFromBaseUnit({token: quoteToken, amount:  vatRes.debtCeiling.minus(vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor)).toString()}),
-                    dustLimit: tokenAmountFromBaseUnit({token: quoteToken, amount: vatRes.debtFloor.toString()}),
+                    rate: Percentage.createFrom({ percentage: stabilityFee.times(100).toNumber() }),
+                    totalBorrowed: TokenAmount.createFrom({token: quoteToken, amount: vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor).toString()}),
+                    debtCeiling: TokenAmount.createFrom({token: quoteToken, amount: vatRes.debtCeiling.toString()}),
+                    debtAvailable: TokenAmount.createFrom({token: quoteToken, amount:  vatRes.debtCeiling.minus(vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor)).toString()}),
+                    dustLimit: TokenAmount.createFrom({token: quoteToken, amount: vatRes.debtFloor.toString()}),
                     originationFee: Percentage.createFrom({ percentage: 0 })
                 }
             }
@@ -267,7 +270,6 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
                 baseCurrency: poolBaseCurrencyToken,
                 collaterals,
                 debts
-
             }
         },
         getPositionId: (positionId: string): IPositionId => {
