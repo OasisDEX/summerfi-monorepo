@@ -1,0 +1,43 @@
+import {
+  DmaAavePartialTakeProfit,
+  DmaAavePartialTakeProfitID,
+} from '@summerfi/serverless-contracts/get-triggers-response'
+import { TriggersQuery } from '@summerfi/automation-subgraph'
+import { Logger } from '@aws-lambda-powertools/logger'
+import { mapTriggerCommonParams } from '../helpers'
+
+export const getDmaAavePartialTakeProfit = async ({
+  triggers,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  logger,
+}: {
+  triggers: TriggersQuery
+  logger: Logger
+}): Promise<DmaAavePartialTakeProfit | undefined> => {
+  const trigger = triggers.triggers.find(
+    (trigger) => trigger.triggerType == DmaAavePartialTakeProfitID,
+  )
+
+  if (!trigger) {
+    return undefined
+  }
+
+  return {
+    triggerTypeName: 'DmaAavePartialTakeProfit' as const,
+    triggerType: DmaAavePartialTakeProfitID,
+    ...mapTriggerCommonParams(trigger),
+    decodedParams: {
+      triggerType: trigger.decodedData[trigger.decodedDataNames.indexOf('triggerType')],
+      positionAddress: trigger.decodedData[trigger.decodedDataNames.indexOf('positionAddress')],
+      maxCoverage: trigger.decodedData[trigger.decodedDataNames.indexOf('maxCoverage')],
+      debtToken: trigger.decodedData[trigger.decodedDataNames.indexOf('debtToken')],
+      collateralToken: trigger.decodedData[trigger.decodedDataNames.indexOf('collateralToken')],
+      operationName: trigger.decodedData[trigger.decodedDataNames.indexOf('operationName')],
+      withdrawToDebt: trigger.decodedData[trigger.decodedDataNames.indexOf('withdrawToDebt')],
+      executionLtv: trigger.decodedData[trigger.decodedDataNames.indexOf('executionLtv')],
+      targetLtv: trigger.decodedData[trigger.decodedDataNames.indexOf('targetLtv')],
+      deviation: trigger.decodedData[trigger.decodedDataNames.indexOf('deviation')],
+      executionPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('executionPrice')],
+    },
+  }
+}

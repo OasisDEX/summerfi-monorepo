@@ -15,3 +15,5 @@ cache
 abis
 artifacts
 **/core-contracts/src/
+**/.sst/**
+**/.turbo/**

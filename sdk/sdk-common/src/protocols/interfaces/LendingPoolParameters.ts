@@ -1,13 +1,15 @@
+import {AddressValue} from "~sdk-common/common";
 import type { Token } from '~sdk-common/common/implementation/Token'
+import {CollateralConfig, DebtConfig} from "~sdk-common/protocols";
 import type { PoolParameters } from '~sdk-common/protocols/interfaces/PoolParameters'
 
 /**
  * @name LendingPoolParameters
  * @description Represents the parameters of a lending pool
  */
-export type LendingPoolParameters = PoolParameters & {
-  debtTokens: Token[]
-  collateralTokens: Token[]
+export type LendingPoolParameters<GenericCollateralConfig extends CollateralConfig = CollateralConfig, GenericDebtConfig extends DebtConfig = DebtConfig> = PoolParameters & {
+  debts: Record<AddressValue, GenericDebtConfig>
+  collaterals: Record<AddressValue, GenericCollateralConfig>
 }
 
 /**
@@ -24,7 +26,7 @@ export function isLendingPoolParameters(
   return (
     typeof poolParameters === 'object' &&
     poolParameters !== null &&
-    'debtTokens' in poolParameters &&
-    'collateralTokens' in poolParameters
+    'debts' in poolParameters &&
+    'collaterals' in poolParameters
   )
 }

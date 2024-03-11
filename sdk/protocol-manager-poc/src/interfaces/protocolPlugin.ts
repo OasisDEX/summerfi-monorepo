@@ -1,6 +1,6 @@
 import { AddressValue, Percentage, TokenAmount, TokenSymbol, Price, CurrencySymbol, RiskRatio } from "@summerfi/sdk-common/common"
-import type {SparkPoolCollateralConfig, SparkPoolDebtConfig} from "@summerfi/sdk-common/protocols";
-import { IPool, SparkLendingPool, MakerLendingPool, PoolType, ProtocolName, /* IPoolId */ } from "@summerfi/sdk-common/protocols"
+import type { SparkLendingPool, SparkPoolDebtConfig, SparkPoolCollateralConfig, MakerLendingPool, SparkPoolId, MakerPoolId } from "@summerfi/sdk-common/protocols"
+import { IPool, PoolType, ProtocolName, IPoolId, EmodeType } from "@summerfi/sdk-common/protocols"
 import { /* PositionId, */ Address, ChainInfo, Position, Token } from "@summerfi/sdk-common/common"
 import {PublicClient, stringToHex} from "viem"
 import { BigNumber } from 'bignumber.js'
@@ -13,12 +13,9 @@ import {
 } from "./abis"
 import {
     filterAssetsListByEMode,
-    gatherReservesAssetList,
-    simpleFilterAssetsListByEMode,
     SparkPluginBuilder
 } from "./sparkPluginBuilder";
 
-export type IPoolId = string & { __poolId: never }
 export type IPositionId = string & { __positionID: never }
 
 export interface ITokenService {
@@ -42,8 +39,8 @@ export interface ProtocolManagerContext {
 
 }
 
-export interface CreateProtocolPlugin {
-    (ctx: ProtocolManagerContext): ProtocolPlugin
+export interface CreateProtocolPlugin<GenericPoolId extends IPoolId> {
+    (ctx: ProtocolManagerContext): ProtocolPlugin<GenericPoolId>
 }
 
 export enum ChainId {
@@ -53,10 +50,10 @@ export enum ChainId {
     Sepolia = 31337,
 }
 
-export interface ProtocolPlugin {
+export interface ProtocolPlugin<GenericPoolId extends IPoolId> {
     supportedChains: ChainId[]
-    getPoolId: (poolId: string) => IPoolId
-    getPool: (poolId: IPoolId) => Promise<IPool>
+    getPoolId: (poolId: string) => GenericPoolId
+    getPool: (poolId: GenericPoolId) => Promise<IPool>
     getPositionId: (positionId: string) => IPositionId
     getPosition: (positionId: IPositionId) => Promise<Position>
 }
@@ -109,14 +106,18 @@ function amountFromRad(amount: bigint): BigNumber {
     return new BigNumber(amount.toString()).div(new BigNumber(10).pow(PRESISION.RAD))
 }
 
-export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerContext): ProtocolPlugin => {
+export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: ProtocolManagerContext): ProtocolPlugin<MakerPoolId> => {
     const plugin = {
         supportedChains: [ChainId.Mainnet],
-        getPoolId: (poolId: string): IPoolId => {
-            return poolId as IPoolId
+        getPoolId: (poolId: string): MakerPoolId => {
+            // TODO: sort later
+            return poolId as unknown as MakerPoolId
         },
-        getPool: async (poolId: IPoolId): Promise<MakerLendingPool> => {
-            const ilkInHex = stringToHex(poolId, { size: 32 })
+        getPool: async (poolId: MakerPoolId): Promise<MakerLendingPool> => {
+            const ilk = poolId.ilkType
+            if (!ilk) throw new Error('emode on poolId not recognised undefined')
+            const ilkInHex = stringToHex(ilk, { size: 32 })
+
             const chainId = ctx.provider.chain?.id
             if (!chainId) throw new Error('ctx.provider.chain.id undefined')
 
@@ -240,8 +241,6 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                         // apy: Percentage.createFrom({ percentage: 0 }),
                     }
                 }
-            console.log("stabilityFee", stabilityFee)
-            console.log("stabilityFee.toNumber()", stabilityFee.toNumber())
 
             const debts = {
                 [quoteToken.address.value]: {
@@ -259,9 +258,7 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
 
             return {
                 type: PoolType.Lending,
-                poolId: {
-                    id: poolId as string
-                },
+                poolId,
                 // TODO: Get protocol by proper means
                 protocol: {
                     name: ProtocolName.Maker,
@@ -270,6 +267,7 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                 baseCurrency: poolBaseCurrencyToken,
                 collaterals,
                 debts
+
             }
         },
         getPositionId: (positionId: string): IPositionId => {
@@ -283,14 +281,17 @@ export const createMakerPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
     return plugin
 }
 
-export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerContext): ProtocolPlugin => {
+export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: ProtocolManagerContext): ProtocolPlugin<SparkPoolId> => {
     const plugin = {
         supportedChains: [ChainId.Mainnet],
-        getPoolId: (poolId: string): IPoolId => {
-            return poolId as IPoolId
+        getPoolId: (poolId: string): SparkPoolId => {
+            // TODO: sort later
+            return poolId as unknown as SparkPoolId
         },
-        getPool: async (poolId: IPoolId): Promise<SparkLendingPool> => {
-            const emode = BigInt(poolId)
+        getPool: async (poolId: SparkPoolId): Promise<SparkLendingPool> => {
+            const emode = sparkEmodeCategoryMap[poolId.emodeType]
+            if (!emode) throw new Error('emode on poolId not recognised undefined')
+
             const chainId = ctx.provider.chain?.id
             if (!chainId) throw new Error('ctx.provider.chain.id undefined')
 
@@ -299,14 +300,14 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
             }
 
             const builder = await (new SparkPluginBuilder(ctx)).init();
-            const __reservesAssetsList = await builder
+            const _reservesAssetsList = await builder
                 .addReservesCaps()
                 .addReservesConfigData()
                 .addReservesData()
                 .addEmodeCategories()
                 .build()
 
-            const reservesAssetsList = filterAssetsListByEMode(__reservesAssetsList, emode)
+            const reservesAssetsList = filterAssetsListByEMode(_reservesAssetsList, emode)
 
             // Both USDC & DAI use fixed price oracles that keep both stable at 1 USD
             const poolBaseCurrencyToken = CurrencySymbol.USD
@@ -376,9 +377,7 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
 
             return {
                 type: PoolType.Lending,
-                poolId: {
-                    id: poolId as string
-                },
+                poolId,
                 // TODO: Get protocol by proper means
                 protocol: {
                     name: ProtocolName.Maker,
@@ -400,6 +399,12 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
     return plugin
 }
 
+const sparkEmodeCategoryMap: Record<EmodeType, bigint> = {
+    [EmodeType.None]: 0n,
+    [EmodeType.ETHCorrelated]: 1n,
+    [EmodeType.Stablecoins]: 2n,
+}
+
 /*
 In order to get pool from protocol we need to know:
 
@@ -407,7 +412,7 @@ In order to get pool from protocol we need to know:
     ilk (ETH-A, WBTC-A, etc)
 
     Aave | Spark:
-    eMode (0 - none, 1 - eth corelated, 2 - usd corelated) 
+    eMode (0 - none, 1 - eth correlated, 2 - usd correlated)
 
     in aave in general we have just one big pool, however we came to the conculsion
     that enabling eMode changes bahavior of a pool siginificantly, (avaialble assets, max ltvs are different)

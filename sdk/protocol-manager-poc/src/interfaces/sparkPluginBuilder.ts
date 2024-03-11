@@ -202,7 +202,6 @@ export class SparkPluginBuilder<T>  {
     async build(): Promise<T[]> {
         try {
             for (const op of this.operations) {
-                console.log("this.reservesAssetsList", this.reservesAssetsList)
                 await op.operation();
             }
             return this.reservesAssetsList

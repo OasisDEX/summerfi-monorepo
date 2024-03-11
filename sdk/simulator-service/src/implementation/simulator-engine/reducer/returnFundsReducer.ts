@@ -1,6 +1,6 @@
 import { steps } from '@summerfi/sdk-common/simulation'
-import { getTokenBalance, subtractBalance } from '~swap-service/implementation/helpers'
-import { SimulationState } from '~swap-service/interfaces/simulation'
+import { getTokenBalance, subtractBalance } from '~simulator-service/implementation/helpers'
+import { SimulationState } from '~simulator-service/interfaces/simulation'
 
 export function returnFundsReducer(
   step: steps.ReturnFunds,

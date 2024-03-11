@@ -1,5 +1,5 @@
-import {AddressValue} from "~sdk-common/common";
-import { LendingPool } from '../../protocols/interfaces/LendingPool'
+import { LendingPool } from '../../protocols/implementation/LendingPool'
+import { AddressValue } from "~sdk-common/common";
 import { TokenAmount } from '../implementation/TokenAmount'
 import { Position } from '../implementation/Position'
 

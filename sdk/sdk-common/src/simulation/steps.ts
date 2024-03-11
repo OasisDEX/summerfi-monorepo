@@ -3,6 +3,7 @@ import type { TokenAmount } from '~sdk-common/common/implementation/TokenAmount'
 import type { FlashloanProvider, SimulationSteps } from './enums'
 import type { ReferenceableField, ValueReference } from './valueReference'
 import type { Token } from '~sdk-common/common/implementation/Token'
+import type { Percentage } from '../common'
 
 export interface Step<T extends SimulationSteps, I, O = undefined, N extends string = string> {
   type: T
@@ -59,7 +60,8 @@ export interface SwapStep
     {
       fromTokenAmount: TokenAmount
       toTokenAmount: TokenAmount
-      slippage: number
+      slippage: Percentage
+      // TODO: this needs to be checked if thats a percentage or a an enum
       fee: number
     },
     {
