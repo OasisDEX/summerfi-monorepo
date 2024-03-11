@@ -183,12 +183,12 @@ describe('playground', () => {
     sparkPlugin = createSparkPlugin(ctx)
   })
 
-  it.only('template/maker', async () => {
+  it('template/maker', async () => {
     const result = await makerPlugin.getPool(makerPlugin.getPoolId("ETH-A"))
     console.log(result)
   })
 
-  it('template/spark', async () => {
+  it.only('template/spark', async () => {
     const result = await sparkPlugin.getPool(sparkPlugin.getPoolId("0"))
     console.log(result)
   })
