@@ -116,6 +116,8 @@ export const getSparkPartialTakeProfitServiceContainer: (
 
       const triggers = await getTriggers(trigger.dpm)
 
+      const currentStopLoss = getCurrentSparkStopLoss(triggers, position, logger)
+
       const validationResults: ValidationResults[] = []
 
       if (trigger.triggerData.stopLoss) {
@@ -139,6 +141,7 @@ export const getSparkPartialTakeProfitServiceContainer: (
           position,
           triggerData: trigger.triggerData,
           action: trigger.action,
+          currentStopLoss,
           triggers,
           chainId,
         }),
