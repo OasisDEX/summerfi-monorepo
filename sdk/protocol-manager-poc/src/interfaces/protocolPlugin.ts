@@ -11,7 +11,12 @@ import {
     DOG_ABI,
     ILK_REGISTRY,
 } from "./abis"
-import {gatherReservesAssetList, simpleFilterAssetsListByEMode, SparkPluginBuilder} from "./sparkPluginBuilder";
+import {
+    filterAssetsListByEMode,
+    gatherReservesAssetList,
+    simpleFilterAssetsListByEMode,
+    SparkPluginBuilder
+} from "./sparkPluginBuilder";
 
 export type IPoolId = string & { __poolId: never }
 export type IPositionId = string & { __positionID: never }
@@ -293,9 +298,6 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                 throw new Error(`Chain ID ${chainId} is not supported`);
             }
 
-            const _reservesAssetsList = await gatherReservesAssetList(ctx, emode)
-            // console.log("old reserves assets list", _reservesAssetsList)
-
             const builder = await (new SparkPluginBuilder(ctx)).init();
             const __reservesAssetsList = await builder
                 .addReservesCaps()
@@ -304,8 +306,7 @@ export const createSparkPlugin: CreateProtocolPlugin = (ctx: ProtocolManagerCont
                 .addEmodeCategories()
                 .build()
 
-            const reservesAssetsList = simpleFilterAssetsListByEMode(__reservesAssetsList, emode)
-            // console.log("new reserves asset list", reservesAssetsList)
+            const reservesAssetsList = filterAssetsListByEMode(__reservesAssetsList, emode)
 
             // Both USDC & DAI use fixed price oracles that keep both stable at 1 USD
             const poolBaseCurrencyToken = CurrencySymbol.USD

@@ -237,69 +237,6 @@ export class SparkPluginBuilder<T>  {
     }
 }
 
-/**
- * Processes tokens for Spark Protocol given a specific eMode. This involves fetching reserves tokens,
- * enriching them with additional data like configuration and borrow/supply caps, and finally filtering
- * them based on eMode categories. If any step fails, the function will catch the error,
- * log it, and re-throw a more descriptive error.
- *
- * @param ctx The context containing services and other information needed to process tokens.
- * @param emode The eMode identifier used to filter the tokens list accordingly.
- * @returns A promise that resolves to the final list of processed tokens.
- */
-export async function gatherReservesAssetList(ctx: ProtocolManagerContext, emode: bigint) {
-    try {
-        // Fetch and process the initial list of reserves tokens.
-        // This involves validating the raw reserves tokens and converting them into a more usable form.
-        const tokensList = await fetchAndProcessReservesTokens(ctx);
-
-        // Enrich the tokens list with additional data such as reserve configuration details and caps.
-        // This step adds more information to each token, making them ready for final processing.
-        const enrichedAssetsList = await enrichAssetsList(ctx, tokensList);
-
-        // Finalise the tokens list by filtering each based on eMode categories.
-        const finalAssetsList = await finaliseReservesList(ctx, enrichedAssetsList, emode);
-
-        return finalAssetsList;
-    } catch (error) {
-        console.error('An error occurred during token processing:', error);
-        throw new Error(`An error occurred during token processing: ${JSON.stringify(error)}`)
-    }
-}
-
-// PROCESSING STEPS
-async function fetchAndProcessReservesTokens(ctx: ProtocolManagerContext) {
-    const rawTokens = await fetchReservesTokens(ctx);
-    validateReservesTokens(rawTokens);
-
-    const tokensList = await Promise.all(rawTokens.map(async reservesToken => {
-        const token = await ctx.tokenService.getTokenByAddress(Address.createFrom({ value: reservesToken.tokenAddress}));
-        return token;
-    }));
-    return tokensList;
-}
-async function enrichAssetsList(ctx: ProtocolManagerContext, tokensList: Token[]): Promise<{token: Token, config: ReservesConfigData, caps: ReservesCap, data: ReservesData}[]> {
-    const reservesConfigData = await fetchAssetConfigurationData(ctx, tokensList);
-    validateReservesConfigData(reservesConfigData);
-
-    const tokensListWithConfig = addConfigDataToList(reservesConfigData, tokensList);
-
-    const reservesCaps = await fetchReservesCap(ctx, tokensList);
-    validateReservesCaps(reservesCaps);
-
-    const assetsListWithCaps = addReservesCapsToList(reservesCaps, tokensListWithConfig);
-
-    const reservesData = await fetchAssetReserveData(ctx, tokensList)
-    validateReservesData(reservesData);
-
-    const assetsListWithReservesData = addReservesDataToList(reservesData, assetsListWithCaps);
-    return assetsListWithReservesData;
-}
-export async function finaliseReservesList(ctx: ProtocolManagerContext, assetsList: {token: Token, config: ReservesConfigData, caps: ReservesCap, data: ReservesData}[], emode: bigint): Promise<{token: Token, config: ReservesConfigData, caps: ReservesCap, data: ReservesData}[]> {
-    const emodeCategories = await fetchEmodeCategoriesForReserves(ctx, assetsList.map(a => a.token));
-    return filterAssetsListByEMode(emodeCategories, assetsList, emode);
-}
-
 // EXTRACTORS
 async function fetchReservesTokens(ctx: ProtocolManagerContext) {
     const [
@@ -390,114 +327,8 @@ async function fetchAssetReserveData(ctx: ProtocolManagerContext, tokensList: To
     }) as unknown[]
 }
 
-// TRANSFORMERS
-function addConfigDataToList(reservesConfigData: RawReservesConfigData[], tokensList: Token[]): { token: Token, config: ReservesConfigData}[] {
-    if (reservesConfigData.length !== tokensList.length) {
-        // Order is assumed to be preserved
-        throw new Error("Arrays must be of identical length")
-    }
-
-    const assetListWithConfigurationData: { token: Token, config: ReservesConfigData }[] = []
-    for (const [index, token] of tokensList.entries()) {
-        const configDataForAsset = reservesConfigData[index]
-        const [decimals, ltv, liquidationThreshold, liquidationBonus, reserveFactor, usageAsCollateralEnabled, borrowingEnabled, /*stableBorrowRateEnabled*/, isActive, isFrozen] = configDataForAsset
-        const assetWithConfigurationData = {
-            token: token,
-            config: {
-                decimals,
-                ltv,
-                liquidationThreshold,
-                liquidationBonus,
-                reserveFactor,
-                usageAsCollateralEnabled,
-                borrowingEnabled,
-                isActive,
-                isFrozen
-            }
-        }
-        assetListWithConfigurationData.push(assetWithConfigurationData)
-    }
-
-    return assetListWithConfigurationData;
-}
-function addReservesCapsToList(reservesCaps: RawAssetCaps[], assetsList: {token: Token, config: ReservesConfigData }[]): { token: Token, config: ReservesConfigData, caps: ReservesCap}[] {
-    if (reservesCaps.length !== assetsList.length) {
-        throw new Error("Arrays must be of identical length")
-    }
-    const assetsListWithReserveCaps: { token: Token, config: ReservesConfigData, caps: ReservesCap }[] = []
-    for (const [index, asset] of assetsList.entries()) {
-        const reservesCapForToken = reservesCaps[index]
-        const [borrowCap, supplyCap] = reservesCapForToken
-        const assetWithReserveCaps = {
-            ...asset,
-            caps: {
-                borrowCap,
-                supplyCap
-            }
-        }
-        assetsListWithReserveCaps.push(assetWithReserveCaps)
-    }
-    return assetsListWithReserveCaps;
-}
-function addReservesDataToList(reservesData: RawReservesData[], assetsList: {token: Token, config: ReservesConfigData, caps: ReservesCap}[]): { token: Token, config: ReservesConfigData, caps: ReservesCap, data: ReservesData}[] {
-    if (reservesData.length !== assetsList.length) {
-        // Order is assumed to be preserved
-        throw new Error("Arrays must be of identical length")
-    }
-    const assetsListWithReservesData: { token: Token, config: ReservesConfigData, caps: ReservesCap, data: ReservesData }[] = []
-    for (const [index, asset] of assetsList.entries()) {
-        const reservesDataForAsset = reservesData[index]
-        const [unbacked,
-            accruedToTreasuryScaled,
-            totalAToken,
-            totalStableDebt,
-            totalVariableDebt,
-            liquidityRate,
-            variableBorrowRate,
-            stableBorrowRate,
-            averageStableBorrowRate,
-            liquidityIndex,
-            variableBorrowIndex,
-            lastUpdateTimestamp] = reservesDataForAsset
-        const assetWithReservesData = {
-            ...asset,
-            data: {
-                unbacked,
-                accruedToTreasuryScaled,
-                totalAToken,
-                totalStableDebt,
-                totalVariableDebt,
-                liquidityRate,
-                variableBorrowRate,
-                stableBorrowRate,
-                averageStableBorrowRate,
-                liquidityIndex,
-                variableBorrowIndex,
-                lastUpdateTimestamp
-            }
-        }
-        assetsListWithReservesData.push(assetWithReservesData)
-    }
-
-    return assetsListWithReservesData;
-}
-function filterAssetsListByEMode(emodeCategories: bigint[], assetsList: {token: Token, config: ReservesConfigData, caps: ReservesCap, data: ReservesData}[], emode: bigint): { token: Token, config: ReservesConfigData, caps: ReservesCap, data: ReservesData }[] {
-    if (emodeCategories.length !== assetsList.length) {
-        throw new Error("Cannot filter by eMode with two arrays of different length")
-    }
-
-    // All reserves allowed for category 0n
-    if (emode === 0n) {
-        return assetsList
-    }
-
-    return assetsList.filter((asset, idx) => {
-        const emodeForAsset = emodeCategories[idx];
-        return emodeForAsset === emode
-    })
-}
-
-export function simpleFilterAssetsListByEMode<T extends { emode: EmodeCategory }>(assetsList: T[], emode: bigint): T[] {
+// FILTERS
+export function filterAssetsListByEMode<T extends { emode: EmodeCategory }>(assetsList: T[], emode: bigint): T[] {
     // All reserves allowed for category 0n
     if (emode === 0n) {
         return assetsList
@@ -537,22 +368,6 @@ type RawReservesData = [
     bigint, // variableBorrowIndex
     bigint, // lastUpdateTimestamp
 ]
-function validateReservesTokens(tokenAddressList: unknown): asserts tokenAddressList is { tokenAddress: HexData }[] {
-    if (!Array.isArray(tokenAddressList)) {
-        throw new Error("Invalid token address list")
-    }
-
-    for (const tokenItem of tokenAddressList) {
-        // Check if tokenItem is an object and has a tokenAddress property of type string
-        if (typeof tokenItem !== 'object' || tokenItem === null || typeof (tokenItem as { tokenAddress: string }).tokenAddress !== 'string') {
-            throw new Error(`Invalid token item or tokenAddress not found: ${JSON.stringify(tokenItem)}`);
-        }
-
-        if (!Address.isValid(tokenItem.tokenAddress)) {
-            throw new Error("TokenAddress is not valid address")
-        }
-    }
-}
 function validateReservesConfigData(rawReservesConfigData: unknown[]): asserts rawReservesConfigData is RawReservesConfigData[] {
     for (const configData of rawReservesConfigData) {
         validateConfigData(configData)
