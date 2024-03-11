@@ -15,7 +15,6 @@ import {
     filterAssetsListByEMode,
     SparkPluginBuilder
 } from "./sparkPluginBuilder";
-import { SupplyPool } from "node_modules/@summerfi/sdk-common/src/protocols/interfaces/SupplyPool";
 
 export type IPositionId = string & { __positionID: never }
 
