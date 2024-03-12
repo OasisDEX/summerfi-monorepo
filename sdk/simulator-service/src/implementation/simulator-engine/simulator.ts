@@ -1,7 +1,7 @@
 import type { SimulationState } from '~simulator-service/interfaces/simulation'
 import type { Tail } from '~simulator-service/interfaces/helperTypes'
 import type { NextFunction } from '../../interfaces'
-import { tail } from '~simulator-service/implementation/helpers'
+import { head, tail } from '~simulator-service/implementation/helpers'
 import { processStepOutput } from './stepProcessor'
 import { stateReducer } from './reducer'
 import type { SimulationStrategy } from '@summerfi/sdk-common/simulation'
@@ -49,8 +49,13 @@ export class Simulator<
   public next<N extends string>(
     next: NextFunction<Strategy, N>,
   ): Simulator<Tail<Strategy>, [...NextArray, NextFunction<Strategy, N>]> {
+    const schemaHead = head(this.schema)
     const schemaTail = tail(this.schema)
     const nextArray = [...this.nextArray, next] as const
+
+    if (!schemaHead) {
+      throw new Error('No more steps to process')
+    }
 
     return new Simulator<Tail<Strategy>, [...NextArray, NextFunction<Strategy, N>]>(
       schemaTail,
