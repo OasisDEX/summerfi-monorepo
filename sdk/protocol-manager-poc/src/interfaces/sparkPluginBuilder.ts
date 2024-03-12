@@ -205,7 +205,6 @@ export class SparkPluginBuilder<T>  {
             operation: async () => {
                 this._assertIsInitialised(this.tokensUsedAsReserves);
                 const [assetPrices] = await fetchAssetPrices(this.ctx, this.tokensUsedAsReserves)
-                validateAssetPrices(assetPrices);
                 this._assertMatchingArrayLengths(assetPrices, this.reservesAssetsList)
                 const nextReservesList = []
                 for (const [index, asset] of this.reservesAssetsList.entries()) {
@@ -254,7 +253,7 @@ export class SparkPluginBuilder<T>  {
         }
     }
 
-    private _assertMatchingArrayLengths(dataArray1: unknown[], dataArray2: unknown[]) {
+    private _assertMatchingArrayLengths(dataArray1: readonly unknown[], dataArray2: readonly unknown[]) {
         if (dataArray1.length !== dataArray2.length) {
             throw new Error("Arrays must be of identical length")
         }
@@ -350,7 +349,7 @@ async function fetchAssetReserveData(ctx: ProtocolManagerContext, tokensList: To
         allowFailure: false
     }) as unknown[]
 }
-async function fetchAssetPrices(ctx: ProtocolManagerContext, tokensList: Token[]): Promise<[unknown[]][]> {
+async function fetchAssetPrices(ctx: ProtocolManagerContext, tokensList: Token[]) {
     const contractCalls = [
         {
             abi: ORACLE_ABI,
@@ -358,12 +357,12 @@ async function fetchAssetPrices(ctx: ProtocolManagerContext, tokensList: Token[]
             functionName: "getAssetsPrices",
             args: [tokensList.map(token => token.address.value)]
         }
-    ]
+    ] as const
 
-    return await ctx.provider.multicall({
-        contracts: contractCalls as never[],
+    return ctx.provider.multicall({
+        contracts: contractCalls,
         allowFailure: false
-    }) as [unknown[]][]
+    })
 }
 
 // FILTERS
