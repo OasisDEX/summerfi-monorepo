@@ -12,7 +12,7 @@ export class ReturnFundsAction extends BaseAction {
 
   public encodeCall(params: { asset: Token }, paramsMapping?: number[]): ActionCall {
     return this._encodeCall({
-      arguments: [params.asset.address.toString()],
+      arguments: [params.asset.address.value],
       mapping: paramsMapping,
     })
   }

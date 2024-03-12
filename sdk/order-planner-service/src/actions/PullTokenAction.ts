@@ -16,7 +16,7 @@ export class PullTokenAction extends BaseAction {
   ): ActionCall {
     return this._encodeCall({
       arguments: [
-        params.pullAmount.token.address,
+        params.pullAmount.token.address.value,
         params.pullTo.value,
         params.pullAmount.toBaseUnit(),
       ],

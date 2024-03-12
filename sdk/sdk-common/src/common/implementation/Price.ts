@@ -18,7 +18,7 @@ export class Price implements IPriceSerialized {
 
   readonly value: string
   readonly baseToken: Token
-  readonly quoteToken?: Token | CurrencySymbol
+  readonly quoteToken: Token | CurrencySymbol
 
   private constructor(params: IPriceSerialized) {
     this.value = params.value
@@ -31,8 +31,12 @@ export class Price implements IPriceSerialized {
   }
 
   toString(): string {
-    const quoteSymbol = isToken(this.quoteToken) ? this.quoteToken.symbol : this.quoteToken
-    return `${this.value} ${this.baseToken.symbol}/${quoteSymbol}`
+    // if (isToken(this.quoteToken)) {
+    //   return `${this.value} ${this.baseToken.symbol}/${this.quoteToken.symbol}`
+    // } else {
+    //   return `${this.value} ${this.baseToken.symbol}/${this.quoteToken}`
+    // }
+    return ''
   }
 }
 

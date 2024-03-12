@@ -20,6 +20,6 @@ export enum SimulationSteps {
 }
 
 export enum FlashloanProvider {
-  Maker = 'Maker',
-  Balancer = 'Balancer',
+  Maker = 0,
+  Balancer = 1,
 }

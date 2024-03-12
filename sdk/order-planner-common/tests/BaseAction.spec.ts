@@ -11,8 +11,14 @@ class DerivedAction extends BaseAction {
     storageOutputs: ['someOutput1', 'someOutput2', 'otherOutput'],
   }
 
-  public encodeCall(params: { arguments: unknown[]; mapping?: number[] }): ActionCall {
-    return this._encodeCall(params)
+  public encodeCall(
+    params: { first: string; second: string; third: number },
+    paramsMapping?: number[],
+  ): ActionCall {
+    return this._encodeCall({
+      arguments: [params.first, params.second, params.third],
+      mapping: paramsMapping,
+    })
   }
 }
 
@@ -28,14 +34,14 @@ describe('Execution Storage Manager', () => {
   })
 
   it('should add calls', async () => {
-    const call = derivedAction.encodeCall({
-      arguments: [
-        '0x0000000000000000000000000000000000000123',
-        '0x0000000000000000000000000000000000000456',
-        100,
-      ],
-      mapping: [6, 7, 8, 9],
-    })
+    const call = derivedAction.encodeCall(
+      {
+        first: '0x0000000000000000000000000000000000000123',
+        second: '0x0000000000000000000000000000000000000456',
+        third: 100,
+      },
+      [6, 7, 8, 9],
+    )
 
     // execute(bytes data, uint8[] paramsMap)
     const dataParamOffset = '0000000000000000000000000000000000000000000000000000000000000040'

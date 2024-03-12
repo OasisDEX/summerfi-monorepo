@@ -84,7 +84,7 @@ export class ExecutionStorageMapper {
       const [stepName, referenceName] = value.path
 
       const paramSlotValue = this.getOutputSlot({ stepName, referenceName })
-      if (!paramSlotValue) {
+      if (paramSlotValue === undefined) {
         throw new Error(`Reference not found in storage: ${stepName}-${referenceName}`)
       }
 

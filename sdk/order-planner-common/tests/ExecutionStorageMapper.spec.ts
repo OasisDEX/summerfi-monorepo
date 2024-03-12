@@ -27,7 +27,7 @@ class DerivedAction extends BaseAction {
   }
 }
 
-describe.only('Execution Storage Mapper', () => {
+describe('Execution Storage Mapper', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
 
   // Tokens
@@ -253,5 +253,155 @@ describe.only('Execution Storage Mapper', () => {
         3 + derivedAction.config.storageOutputs.findIndex((input) => input === 'someOutput2')
       expect(slot).toBe(actionSlot)
     }
+  })
+
+  it('should accept empty inputs and outputs', () => {
+    const derivedStep: steps.DepositBorrowStep = {
+      type: SimulationSteps.DepositBorrow,
+      name: 'DepositBorrowStep',
+      inputs: {
+        depositAmount: {
+          estimatedValue: depositAmount,
+          path: ['PreviousDepositBorrowStep', 'depositAmount'],
+        },
+        borrowAmount: borrowAmount,
+        position: position,
+      },
+      outputs: {
+        depositAmount: depositAmount,
+        borrowAmount: borrowAmount,
+      },
+    }
+
+    const executionStorageMapper = new ExecutionStorageMapper()
+
+    const inputSlotsMapping = executionStorageMapper.addStorageMap({
+      step: derivedStep,
+      action: derivedAction,
+      connectedInputs: {},
+      connectedOutputs: {},
+    })
+
+    expect(inputSlotsMapping).toEqual([0, 0, 0, 0])
+
+    {
+      const slot = executionStorageMapper.getOutputSlot({
+        stepName: 'DepositBorrowStep',
+        referenceName: 'depositAmount',
+      })
+
+      expect(slot).toBeUndefined()
+    }
+    {
+      const slot = executionStorageMapper.getOutputSlot({
+        stepName: 'DepositBorrowStep',
+        referenceName: 'borrowAmount',
+      })
+
+      expect(slot).toBeUndefined()
+    }
+  })
+
+  it('should throw when receiving an invalid value reference', () => {
+    const derivedStep: steps.DepositBorrowStep = {
+      type: SimulationSteps.DepositBorrow,
+      name: 'DepositBorrowStep',
+      inputs: {
+        depositAmount: {
+          estimatedValue: depositAmount,
+          path: ['PreviousDepositBorrowStep', 'depositAmount'],
+        },
+        borrowAmount: {
+          estimatedValue: borrowAmount,
+          path: ['PreviousDepositBorrowStep', 'borrowAmount'],
+        },
+        position: position,
+      },
+      outputs: {
+        depositAmount: depositAmount,
+        borrowAmount: borrowAmount,
+      },
+    }
+
+    const executionStorageMapper = new ExecutionStorageMapper()
+
+    // Mocha needs a function to check throw errors
+    expect(() =>
+      executionStorageMapper.addStorageMap({
+        step: derivedStep,
+        action: derivedAction,
+        connectedInputs: {
+          depositAmount: 'someInput1',
+          borrowAmount: 'otherInput',
+        },
+        connectedOutputs: {
+          depositAmount: 'otherOutput',
+          borrowAmount: 'someOutput2',
+        },
+      }),
+    ).toThrow('Reference not found in storage: PreviousDepositBorrowStep-depositAmount')
+  })
+
+  it('should throw when receiving an invalid input names', () => {
+    const previousStep: steps.DepositBorrowStep = {
+      type: SimulationSteps.DepositBorrow,
+      name: 'PreviousDepositBorrowStep',
+      inputs: {
+        depositAmount: depositAmount,
+        borrowAmount: borrowAmount,
+        position: position,
+      },
+      outputs: {
+        depositAmount: depositAmount,
+        borrowAmount: borrowAmount,
+      },
+    }
+
+    const derivedStep: steps.DepositBorrowStep = {
+      type: SimulationSteps.DepositBorrow,
+      name: 'DepositBorrowStep',
+      inputs: {
+        depositAmount: {
+          estimatedValue: depositAmount,
+          path: ['PreviousDepositBorrowStep', 'depositAmount'],
+        },
+        borrowAmount: {
+          estimatedValue: borrowAmount,
+          path: ['PreviousDepositBorrowStep', 'borrowAmount'],
+        },
+        position: position,
+      },
+      outputs: {
+        depositAmount: depositAmount,
+        borrowAmount: borrowAmount,
+      },
+    }
+
+    const executionStorageMapper = new ExecutionStorageMapper()
+
+    executionStorageMapper.addStorageMap({
+      step: previousStep,
+      action: derivedAction,
+      connectedInputs: {
+        depositAmount: 'someInput1',
+        borrowAmount: 'otherInput',
+      },
+      connectedOutputs: {
+        depositAmount: 'otherOutput',
+        borrowAmount: 'someOutput2',
+      },
+    })
+
+    // Mocha needs a function to check throw errors
+    expect(() =>
+      executionStorageMapper.addStorageMap({
+        step: derivedStep,
+        action: derivedAction,
+        connectedInputs: {
+          depositAmount: 'inputDoesNotExist',
+        },
+        connectedOutputs: {},
+      }),
+    ).toThrow('Input not found in action storage inputs: inputDoesNotExist')
   })
 })
