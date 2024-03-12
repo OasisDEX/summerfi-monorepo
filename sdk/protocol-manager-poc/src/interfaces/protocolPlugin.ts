@@ -282,7 +282,7 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
                     throw new Error("Protocol is not Maker");
                 }
 
-                if (typeof ilkType !== 'string' || !assertStringIsIlkType(ilkType)) {
+                if (typeof ilkType !== 'string' || !isIlkType(ilkType)) {
                     throw new Error("IlkType is invalid");
                 }
             } else {
@@ -295,7 +295,7 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
 }
 
 
-function assertStringIsIlkType(maybeIlk: string): boolean {
+function isIlkType(maybeIlk: string): boolean {
     return Object.values(ILKType).includes(maybeIlk as ILKType)
 }
 
@@ -435,7 +435,7 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
                     throw new Error("Protocol is not Spark");
                 }
 
-                if (typeof emodeType !== 'string' || !assertStringIsEmodeType(emodeType)) {
+                if (typeof emodeType !== 'string' || !isEModeType(emodeType)) {
                     throw new Error("emodeType is invalid");
                 }
             } else {
@@ -448,7 +448,7 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
 }
 
 
-function assertStringIsEmodeType(emodeType: string): boolean {
+function isEModeType(emodeType: string): boolean {
     return Object.values(EmodeType).includes(emodeType as EmodeType)
 }
 
