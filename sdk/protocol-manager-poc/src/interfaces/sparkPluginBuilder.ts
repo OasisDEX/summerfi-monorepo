@@ -205,7 +205,6 @@ export class SparkPluginBuilder<T>  {
             operation: async () => {
                 this._assertIsInitialised(this.tokensUsedAsReserves);
                 const [assetPrices] = await fetchAssetPrices(this.ctx, this.tokensUsedAsReserves)
-                console.log("assetPrices", assetPrices)
                 validateAssetPrices(assetPrices);
                 this._assertMatchingArrayLengths(assetPrices, this.reservesAssetsList)
                 const nextReservesList = []

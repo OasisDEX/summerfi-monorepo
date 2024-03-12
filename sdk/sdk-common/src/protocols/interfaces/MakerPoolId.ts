@@ -1,3 +1,4 @@
+import {ChainInfo} from "~sdk-common/common";
 import { ProtocolName } from '../enums/ProtocolName'
 import { IPoolId } from './IPoolId'
 
@@ -20,10 +21,13 @@ export enum ILKType {
 
 // TODO: temporary interface so FE can create this data types without talking to a service
 export interface MakerPoolId extends IPoolId {
-  protocol: ProtocolName.Maker
+  protocol: {
+    name: ProtocolName.Maker,
+    chainInfo: ChainInfo
+  }
   ilkType: ILKType
 }
 
 export function isMakerPoolId(poolId: IPoolId): poolId is MakerPoolId {
-  return poolId.protocol === ProtocolName.Maker
+  return poolId.protocol.name === ProtocolName.Maker
 }

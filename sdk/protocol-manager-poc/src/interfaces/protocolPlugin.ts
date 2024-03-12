@@ -1,9 +1,13 @@
 import { AddressValue, Percentage, TokenAmount, TokenSymbol, Price, CurrencySymbol, RiskRatio } from "@summerfi/sdk-common/common"
 import type { SparkLendingPool, SparkPoolDebtConfig, SparkPoolCollateralConfig, MakerLendingPool, SparkPoolId, MakerPoolId } from "@summerfi/sdk-common/protocols"
 import { IPool, PoolType, ProtocolName, IPoolId, EmodeType, ILKType } from "@summerfi/sdk-common/protocols"
-import { /* PositionId, */ Address, ChainInfo, Position, Token } from "@summerfi/sdk-common/common"
+import { /* PositionId, */ Address, Position, Token } from "@summerfi/sdk-common/common"
 import {PublicClient, stringToHex} from "viem"
 import { BigNumber } from 'bignumber.js'
+import {
+    filterAssetsListByEMode,
+    SparkPluginBuilder
+} from "./sparkPluginBuilder";
 import {
     VAT_ABI,
     SPOT_ABI,
@@ -11,10 +15,6 @@ import {
     DOG_ABI,
     ILK_REGISTRY,
 } from "./abis"
-import {
-    filterAssetsListByEMode,
-    SparkPluginBuilder
-} from "./sparkPluginBuilder";
 
 export type IPositionId = string & { __positionID: never }
 
@@ -36,7 +36,6 @@ export interface ProtocolManagerContext {
     provider: PublicClient,
     tokenService: ITokenService,
     priceService: IPriceService
-
 }
 
 export interface CreateProtocolPlugin<GenericPoolId extends IPoolId> {
@@ -52,10 +51,10 @@ export enum ChainId {
 
 export interface ProtocolPlugin<GenericPoolId extends IPoolId> {
     supportedChains: ChainId[]
-    getPoolId: (poolId: string) => GenericPoolId
     getPool: (poolId: GenericPoolId) => Promise<IPool>
     getPositionId: (positionId: string) => IPositionId
     getPosition: (positionId: IPositionId) => Promise<Position>
+    _validate: (candidate: unknown) => asserts candidate is GenericPoolId
 }
 
 /*
@@ -107,22 +106,11 @@ function amountFromRad(amount: bigint): BigNumber {
 }
 
 export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: ProtocolManagerContext): ProtocolPlugin<MakerPoolId> => {
-    const plugin = {
+    const plugin: ProtocolPlugin<MakerPoolId> = {
         supportedChains: [ChainId.Mainnet],
-        getPoolId: (poolId: string): MakerPoolId => {
-            const poolIlk = makerStringToIlkTypeMap[poolId]
-
-            if (!poolIlk) {
-                throw new Error("poolId string not valid ILK typ")
-            }
-
-            return {
-                protocol: ProtocolName.Maker,
-                ilkType: poolIlk
-            }
-        },
-        getPool: async (poolId: MakerPoolId): Promise<MakerLendingPool> => {
-            const ilk = poolId.ilkType
+        getPool: async (makerPoolId: unknown): Promise<MakerLendingPool> => {
+            plugin._validate(makerPoolId)
+            const ilk = makerPoolId.ilkType
             if (!ilk) throw new Error('emode on poolId not recognised undefined')
             const ilkInHex = stringToHex(ilk, { size: 32 })
 
@@ -206,8 +194,6 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
                 debtFloor: amountFromRad(dust),
             }
 
-            console.log('dust', vatRes.debtFloor.toString())
-
             const spotRes = {
                 priceFeedAddress: Address.createFrom({ value: pip }),
                 liquidationRatio: amountFromRay(mat),
@@ -267,12 +253,8 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
 
             return {
                 type: PoolType.Lending,
-                poolId,
-                // TODO: Get protocol by proper means
-                protocol: {
-                    name: ProtocolName.Maker,
-                    chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
-                },
+                poolId: makerPoolId,
+                protocol: makerPoolId.protocol,
                 baseCurrency: poolBaseCurrencyToken,
                 collaterals,
                 debts
@@ -283,34 +265,46 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
         },
         getPosition: async (positionId: IPositionId): Promise<Position> => {
             throw new Error("Not implemented")
+        },
+        _validate: function (candidate: unknown): asserts candidate is MakerPoolId {
+            if (typeof candidate !== 'object' || candidate === null) {
+                throw new Error("Candidate is not an object");
+            }
+
+            if ('protocol' in candidate && 'ilkType' in candidate) {
+                const { protocol, ilkType } = candidate as { protocol: unknown, ilkType: unknown };
+
+                if (typeof protocol !== 'object' || protocol === null) {
+                    throw new Error("Protocol is not an object");
+                }
+
+                if ('name' in protocol && protocol.name !== ProtocolName.Maker) {
+                    throw new Error("Protocol is not Maker");
+                }
+
+                if (typeof ilkType !== 'string' || !assertStringIsIlkType(ilkType)) {
+                    throw new Error("IlkType is invalid");
+                }
+            } else {
+                throw new Error("Candidate does not have the required properties");
+            }
         }
     }
 
     return plugin
 }
 
-const makerStringToIlkTypeMap: Record<string, ILKType> = Object.keys(ILKType).reduce<Record<string, ILKType>>((accumulator, key, index) => {
-    accumulator[index.toString()] = ILKType[key as keyof typeof ILKType];
-    return accumulator;
-}, {} as Record<string, ILKType>);
+
+function assertStringIsIlkType(maybeIlk: string): boolean {
+    return Object.values(ILKType).includes(maybeIlk as ILKType)
+}
 
 export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: ProtocolManagerContext): ProtocolPlugin<SparkPoolId> => {
-    const plugin = {
+    const plugin: ProtocolPlugin<SparkPoolId> = {
         supportedChains: [ChainId.Mainnet],
-        getPoolId: (poolId: string): SparkPoolId => {
-            const emode = sparkStringToEmodeMap[poolId]
-
-            if (!emode) {
-                throw new Error("poolId string not valid emodeCategory")
-            }
-
-            return {
-                protocol: ProtocolName.Spark,
-                emodeType: emode
-            }
-        },
-        getPool: async (poolId: SparkPoolId): Promise<SparkLendingPool> => {
-            const emode = sparkEmodeCategoryMap[poolId.emodeType]
+        getPool: async (sparkPoolId: unknown): Promise<SparkLendingPool> => {
+            plugin._validate(sparkPoolId)
+            const emode = sparkEmodeCategoryMap[sparkPoolId.emodeType]
             if (!emode && emode !== 0n) throw new Error('emode on poolId not recognised undefined')
 
             const chainId = ctx.provider.chain?.id
@@ -344,7 +338,6 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
                 try {
                     collaterals[collateralToken.address.value] = {
                         token: collateralToken,
-                        maxLtv: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: Number((ltv / LTV_TO_PERCENTAGE_DIVISOR).toString()) }), type: RiskRatio.type.LTV }),
                         price: Price.createFrom({
                             baseToken: collateralToken,
                             quoteToken: poolBaseCurrencyToken,
@@ -359,6 +352,7 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
                         tokensLocked: tokenAmountFromBaseUnit({token: collateralToken, amount: totalAToken.toString()}),
                         maxSupply: TokenAmount.createFrom({token: collateralToken, amount: supplyCap === 0n ? UNCAPPED_SUPPLY : supplyCap.toString() }),
                         liquidationPenalty: Percentage.createFrom({ percentage: Number((liquidationBonus / LTV_TO_PERCENTAGE_DIVISOR).toString()) }),
+                        apy: Percentage.createFrom({ percentage: 0 }),
                         usageAsCollateralEnabled,
                     }
                 } catch (e) {
@@ -410,17 +404,10 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
                 }
             }
 
-            // TODO: Resolve in a proper manner
-            const chainInfo = ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' })
-
             return {
                 type: PoolType.Lending,
-                poolId,
-                // TODO: Get protocol by proper means
-                protocol: {
-                    name: ProtocolName.Maker,
-                    chainInfo,
-                },
+                poolId: sparkPoolId,
+                protocol: sparkPoolId.protocol,
                 baseCurrency: CurrencySymbol.USD,
                 collaterals,
                 debts
@@ -431,6 +418,29 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
         },
         getPosition: async (positionId: IPositionId): Promise<Position> => {
             throw new Error("Not implemented")
+        },
+        _validate: function (candidate: unknown): asserts candidate is SparkPoolId {
+            if (typeof candidate !== 'object' || candidate === null) {
+                throw new Error("Candidate is not an object");
+            }
+
+            if ('protocol' in candidate && 'emodeType' in candidate) {
+                const { protocol, emodeType } = candidate as { protocol: unknown, emodeType: unknown };
+
+                if (typeof protocol !== 'object' || protocol === null) {
+                    throw new Error("Protocol is not an object");
+                }
+
+                if ('name' in protocol && protocol.name !== ProtocolName.Spark) {
+                    throw new Error("Protocol is not Spark");
+                }
+
+                if (typeof emodeType !== 'string' || !assertStringIsEmodeType(emodeType)) {
+                    throw new Error("emodeType is invalid");
+                }
+            } else {
+                throw new Error("Candidate does not have the required properties 'protocol' and 'emodeType'");
+            }
         }
     }
 
@@ -438,10 +448,9 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
 }
 
 
-const sparkStringToEmodeMap: Record<string, EmodeType> = Object.keys(EmodeType).reduce<Record<string, EmodeType>>((accumulator, key, index) => {
-    accumulator[index.toString()] = EmodeType[key as keyof typeof EmodeType];
-    return accumulator;
-}, {} as Record<string, EmodeType>);
+function assertStringIsEmodeType(emodeType: string): boolean {
+    return Object.values(EmodeType).includes(emodeType as EmodeType)
+}
 
 const sparkEmodeCategoryMap: Record<EmodeType, bigint> = Object.keys(EmodeType).reduce<Record<EmodeType, bigint>>((accumulator, key, index) => {
     accumulator[EmodeType[key as keyof typeof EmodeType]] = BigInt(index);

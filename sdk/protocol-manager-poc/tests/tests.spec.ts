@@ -10,7 +10,9 @@ import { createPublicClient, http, PublicClient, getContract } from 'viem'
 import { mainnet } from 'viem/chains'
 import { Address, ChainInfo, CurrencySymbol, Price, Token, TokenSymbol } from '@summerfi/sdk-common/common'
 import { BigNumber } from 'bignumber.js'
-import type { SparkLendingPool, MakerLendingPool, SparkPoolId, MakerPoolId } from "@summerfi/sdk-common/protocols"
+import type { SparkPoolId, MakerPoolId } from "@summerfi/sdk-common/protocols"
+import { ProtocolName, EmodeType, ILKType } from "@summerfi/sdk-common/protocols"
+
 
 import { priceFeedABI } from './priceFeedABI'
 
@@ -184,12 +186,26 @@ describe('playground', () => {
   })
 
   it('template/maker', async () => {
-    const result = await makerPlugin.getPool(makerPlugin.getPoolId("ETH-A"))
+    // const result = await makerPlugin.getPool(makerPlugin.getPoolId("ETH-A"))
+    const result = await makerPlugin.getPool({
+        protocol: {
+          name: ProtocolName.Maker,
+          chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' })
+        },
+        ilkType: ILKType.ETH_A
+    })
     console.log(result)
   })
 
-  it.only('template/spark', async () => {
-    const result = await sparkPlugin.getPool(sparkPlugin.getPoolId("0"))
+  it('template/spark', async () => {
+    // const result = await sparkPlugin.getPool(sparkPlugin.getPoolId("0"))
+    const result = await sparkPlugin.getPool({
+      protocol: {
+        name: ProtocolName.Spark,
+        chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' })
+      },
+      emodeType: EmodeType.None
+    })
     console.log(result)
   })
 })
