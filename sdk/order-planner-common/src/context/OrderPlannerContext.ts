@@ -24,7 +24,7 @@ export class OrderPlannerContext {
       connectedOutputs: params.connectedOutputs,
     })
 
-    const call = params.action.encodeCall({ arguments: params.arguments, mapping: paramsMapping })
+    const call = params.action.encodeCall(params.arguments, paramsMapping)
     this._calls.addCall({ call })
   }
 

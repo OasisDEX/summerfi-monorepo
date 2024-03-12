@@ -23,7 +23,7 @@ describe('PullToken Action', () => {
     expect(action.getVersionedName()).toBe(contractNameWithVersion)
   })
 
-  it('should add calls', async () => {
+  it('should encode calls', async () => {
     const tokenAmount = TokenAmount.createFrom({ token: DAI, amount: '578' })
     const call = action.encodeCall(
       {

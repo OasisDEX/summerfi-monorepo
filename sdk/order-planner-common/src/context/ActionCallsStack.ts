@@ -11,6 +11,10 @@ export class ActionCallsStack {
   }
 
   public addCall(params: { call: ActionCall }): void {
+    if (this.callsStack.length === 0) {
+      throw new Error('Cannot add a call outside of a subcontext')
+    }
+
     const currentBatch = this.callsStack[this.callsStack.length - 1]
     currentBatch.push(params.call)
   }

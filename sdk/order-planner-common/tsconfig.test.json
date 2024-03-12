@@ -7,6 +7,7 @@
       "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
       "@summerfi/common": ["../../packages/common/src/index.ts"],
       "@summerfi/sdk-client": ["./node_modules/@summerfi/sdk-client/src/index.ts"],
+      "@summerfi/deployment-types": ["./node_modules/@summerfi/deployment-types/src/index.ts"],
       "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*.ts"],
       "~sdk-client/*": ["./node_modules/@summerfi/sdk-client/src/*.ts"]
     }

@@ -21,7 +21,7 @@ describe('ReturnFunds Action', () => {
     expect(action.getVersionedName()).toBe(contractNameWithVersion)
   })
 
-  it('should add calls', async () => {
+  it('should encode calls', async () => {
     const call = action.encodeCall(
       {
         asset: DAI,

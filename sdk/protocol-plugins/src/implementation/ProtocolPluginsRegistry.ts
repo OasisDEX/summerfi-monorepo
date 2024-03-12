@@ -1,19 +1,13 @@
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { IProtocolPlugin } from '~protocolplugins/interfaces'
 
-type ProtocolPluginConstructor = new () => IProtocolPlugin
+import { MakerProtocolPlugin } from '../maker/MakerProtocolPlugin'
+import { SparkProtocolPlugin } from '../spark/SparkProtocolPlugin'
 
-export class ProtocolPluginsRegistry {
-  private static readonly Plugins: Partial<Record<ProtocolName, IProtocolPlugin>> = {}
+export type ProtocolPluginConstructor = new () => IProtocolPlugin
+export type ProtocolPluginRegistryType = Partial<Record<ProtocolName, ProtocolPluginConstructor>>
 
-  static registerProtocolPlugin(
-    protocol: ProtocolName,
-    pluginClass: ProtocolPluginConstructor,
-  ): void {
-    ProtocolPluginsRegistry.Plugins[protocol] = new pluginClass()
-  }
-
-  static getProtocolPlugin(protocol: ProtocolName): IProtocolPlugin | undefined {
-    return ProtocolPluginsRegistry.Plugins[protocol]
-  }
+export const ProtocolPluginsRegistry: ProtocolPluginRegistryType = {
+  [ProtocolName.Maker]: MakerProtocolPlugin,
+  [ProtocolName.Spark]: SparkProtocolPlugin,
 }
