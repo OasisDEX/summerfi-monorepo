@@ -2,6 +2,7 @@ import {ProtocolManagerContext, SparkContracts} from "./protocolPlugin";
 import { HexData } from "@summerfi/sdk-common/common"
 import { Address, Token } from "@summerfi/sdk-common/common"
 import {
+    ORACLE_ABI,
     POOL_DATA_PROVIDER
 } from "./abis"
 
@@ -35,6 +36,7 @@ type ReservesData = {
     lastUpdateTimestamp: bigint
 }
 type EmodeCategory = bigint
+type OraclePrice = bigint
 
 interface QueuedOperation<T> {
     operation: () => Promise<T>;
@@ -191,12 +193,36 @@ export class SparkPluginBuilder<T>  {
                     }
                     nextReservesList.push(assetWithEmode)
                 }
-                console.log("emode nextReservesList", nextReservesList)
                 this.reservesAssetsList = nextReservesList
             },
         };
         this.operations.push(operation);
         return this as SparkPluginBuilder<T & { emode: EmodeCategory }>;
+    }
+
+    addPrices(): SparkPluginBuilder<T & { price: OraclePrice }> {
+        const operation: QueuedOperation<void> = {
+            operation: async () => {
+                this._assertIsInitialised(this.tokensUsedAsReserves);
+                const [assetPrices] = await fetchAssetPrices(this.ctx, this.tokensUsedAsReserves)
+                console.log("assetPrices", assetPrices)
+                validateAssetPrices(assetPrices);
+                this._assertMatchingArrayLengths(assetPrices, this.reservesAssetsList)
+                const nextReservesList = []
+                for (const [index, asset] of this.reservesAssetsList.entries()) {
+                    const oraclePriceForAsset = assetPrices[index]
+                    const assetWithPrice = {
+                        ...asset,
+                        price: oraclePriceForAsset
+                    }
+                    nextReservesList.push(assetWithPrice)
+                }
+
+                this.reservesAssetsList = nextReservesList
+            },
+        };
+        this.operations.push(operation);
+        return this as SparkPluginBuilder<T & { price: OraclePrice }>;
     }
 
     async build(): Promise<T[]> {
@@ -325,6 +351,21 @@ async function fetchAssetReserveData(ctx: ProtocolManagerContext, tokensList: To
         allowFailure: false
     }) as unknown[]
 }
+async function fetchAssetPrices(ctx: ProtocolManagerContext, tokensList: Token[]): Promise<[unknown[]][]> {
+    const contractCalls = [
+        {
+            abi: ORACLE_ABI,
+            address: SparkContracts.ORACLE,
+            functionName: "getAssetsPrices",
+            args: [tokensList.map(token => token.address.value)]
+        }
+    ]
+
+    return await ctx.provider.multicall({
+        contracts: contractCalls as never[],
+        allowFailure: false
+    }) as [unknown[]][]
+}
 
 // FILTERS
 export function filterAssetsListByEMode<T extends { emode: EmodeCategory }>(assetsList: T[], emode: bigint): T[] {
@@ -451,6 +492,13 @@ function validateAssetReservesData(rawAssetsReservesData: unknown): asserts rawA
 }
 function validateEmodeCategories(maybeCategories: unknown[]): asserts maybeCategories is bigint[]  {
     const areBigIntValuesCorrect = maybeCategories.every(item => typeof item === 'bigint');
+
+    if(!areBigIntValuesCorrect) {
+        throw new Error("Invalid emode categories")
+    }
+}
+function validateAssetPrices(maybePrices: unknown[]): asserts maybePrices is bigint[] {
+    const areBigIntValuesCorrect = maybePrices.every(item => typeof item === 'bigint');
 
     if(!areBigIntValuesCorrect) {
         throw new Error("Invalid emode categories")

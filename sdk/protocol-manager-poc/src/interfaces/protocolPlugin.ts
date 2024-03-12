@@ -1,6 +1,6 @@
 import { AddressValue, Percentage, TokenAmount, TokenSymbol, Price, CurrencySymbol, RiskRatio } from "@summerfi/sdk-common/common"
 import type { SparkLendingPool, SparkPoolDebtConfig, SparkPoolCollateralConfig, MakerLendingPool, SparkPoolId, MakerPoolId } from "@summerfi/sdk-common/protocols"
-import { IPool, PoolType, ProtocolName, IPoolId, EmodeType } from "@summerfi/sdk-common/protocols"
+import { IPool, PoolType, ProtocolName, IPoolId, EmodeType, ILKType } from "@summerfi/sdk-common/protocols"
 import { /* PositionId, */ Address, ChainInfo, Position, Token } from "@summerfi/sdk-common/common"
 import {PublicClient, stringToHex} from "viem"
 import { BigNumber } from 'bignumber.js'
@@ -110,8 +110,16 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
     const plugin = {
         supportedChains: [ChainId.Mainnet],
         getPoolId: (poolId: string): MakerPoolId => {
-            // TODO: sort later
-            return poolId as unknown as MakerPoolId
+            const poolIlk = makerStringToIlkTypeMap[poolId]
+
+            if (!poolIlk) {
+                throw new Error("poolId string not valid ILK typ")
+            }
+
+            return {
+                protocol: ProtocolName.Maker,
+                ilkType: poolIlk
+            }
         },
         getPool: async (poolId: MakerPoolId): Promise<MakerLendingPool> => {
             const ilk = poolId.ilkType
@@ -229,7 +237,6 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
                         token: collateralToken,
                         // TODO: quote the OSM, we need to trick the contract that is SPOT that is doing the query (from in tx is SPOT)
                         price: await ctx.priceService.getPrice({baseToken: collateralToken, quoteToken }),
-                        // TODO
                         nextPrice: Price.createFrom({ value: spotRes.liquidationRatio.toString(), baseToken: collateralToken, quoteToken: quoteToken }), // TODO
                         priceUSD: await ctx.priceService.getPriceUSD(collateralToken),
 
@@ -282,16 +289,29 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
     return plugin
 }
 
+const makerStringToIlkTypeMap: Record<string, ILKType> = Object.keys(ILKType).reduce<Record<string, ILKType>>((accumulator, key, index) => {
+    accumulator[index.toString()] = ILKType[key as keyof typeof ILKType];
+    return accumulator;
+}, {} as Record<string, ILKType>);
+
 export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: ProtocolManagerContext): ProtocolPlugin<SparkPoolId> => {
     const plugin = {
         supportedChains: [ChainId.Mainnet],
         getPoolId: (poolId: string): SparkPoolId => {
-            // TODO: sort later
-            return poolId as unknown as SparkPoolId
+            const emode = sparkStringToEmodeMap[poolId]
+
+            if (!emode) {
+                throw new Error("poolId string not valid emodeCategory")
+            }
+
+            return {
+                protocol: ProtocolName.Spark,
+                emodeType: emode
+            }
         },
         getPool: async (poolId: SparkPoolId): Promise<SparkLendingPool> => {
             const emode = sparkEmodeCategoryMap[poolId.emodeType]
-            if (!emode) throw new Error('emode on poolId not recognised undefined')
+            if (!emode && emode !== 0n) throw new Error('emode on poolId not recognised undefined')
 
             const chainId = ctx.provider.chain?.id
             if (!chainId) throw new Error('ctx.provider.chain.id undefined')
@@ -302,6 +322,7 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
 
             const builder = await (new SparkPluginBuilder(ctx)).init();
             const reservesAssetsList = await builder
+                .addPrices()
                 .addReservesCaps()
                 .addReservesConfigData()
                 .addReservesData()
@@ -323,10 +344,17 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
                 try {
                     collaterals[collateralToken.address.value] = {
                         token: collateralToken,
-                        // TODO: need to update price service to use protocol oracle
                         maxLtv: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: Number((ltv / LTV_TO_PERCENTAGE_DIVISOR).toString()) }), type: RiskRatio.type.LTV }),
-                        price: await ctx.priceService.getPrice({baseToken: collateralToken, quoteToken: poolBaseCurrencyToken }),
-                        priceUSD: await ctx.priceService.getPriceUSD(collateralToken),
+                        price: Price.createFrom({
+                            baseToken: collateralToken,
+                            quoteToken: poolBaseCurrencyToken,
+                            value: new BigNumber(asset.price.toString()).toString(),
+                        }),
+                        priceUSD: Price.createFrom({
+                            baseToken: collateralToken,
+                            quoteToken: CurrencySymbol.USD,
+                            value: new BigNumber(asset.price.toString()).toString(),
+                        }),
                         liquidationThreshold: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: Number((liquidationThreshold / LTV_TO_PERCENTAGE_DIVISOR).toString()) }), type: RiskRatio.type.LTV }),
                         tokensLocked: tokenAmountFromBaseUnit({token: collateralToken, amount: totalAToken.toString()}),
                         maxSupply: TokenAmount.createFrom({token: collateralToken, amount: supplyCap === 0n ? UNCAPPED_SUPPLY : supplyCap.toString() }),
@@ -350,15 +378,24 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
 
                 try {
                     const RESERVE_FACTOR_TO_PERCENTAGE_DIVISOR = 10000n
-
                     const PRECISION_PRESERVING_OFFSET = 1000000n
                     const RATE_DIVISOR_TO_GET_PERCENTAGE = Number((PRECISION_PRESERVING_OFFSET - 100n).toString())
+
                     const rate = Number(((variableBorrowRate * PRECISION_PRESERVING_OFFSET) / PRESISION_BI.RAY).toString()) / RATE_DIVISOR_TO_GET_PERCENTAGE
                     const totalBorrowed = totalVariableDebt - totalStableDebt
                     debts[quoteToken.address.value] = {
                         token: quoteToken,
-                        price: await ctx.priceService.getPrice({baseToken: quoteToken, quoteToken: poolBaseCurrencyToken }),
-                        priceUSD: await ctx.priceService.getPriceUSD(quoteToken),
+                        // TODO: If we further restricted pools we could have token pair prices
+                        price: Price.createFrom({
+                            baseToken: quoteToken,
+                            quoteToken: poolBaseCurrencyToken,
+                            value: new BigNumber(asset.price.toString()).toString(),
+                        }),
+                        priceUSD: Price.createFrom({
+                            baseToken: quoteToken,
+                            quoteToken: CurrencySymbol.USD,
+                            value: new BigNumber(asset.price.toString()).toString(),
+                        }),
                         rate: Percentage.createFrom({ percentage: rate }),
                         totalBorrowed: tokenAmountFromBaseUnit({token: quoteToken, amount: totalBorrowed.toString() }),
                         debtCeiling: TokenAmount.createFrom({token: quoteToken, amount: borrowCap === 0n ? UNCAPPED_SUPPLY : borrowCap.toString() }),
@@ -400,11 +437,16 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
     return plugin
 }
 
-const sparkEmodeCategoryMap: Record<EmodeType, bigint> = {
-    [EmodeType.None]: 0n,
-    [EmodeType.ETHCorrelated]: 1n,
-    [EmodeType.Stablecoins]: 2n,
-}
+
+const sparkStringToEmodeMap: Record<string, EmodeType> = Object.keys(EmodeType).reduce<Record<string, EmodeType>>((accumulator, key, index) => {
+    accumulator[index.toString()] = EmodeType[key as keyof typeof EmodeType];
+    return accumulator;
+}, {} as Record<string, EmodeType>);
+
+const sparkEmodeCategoryMap: Record<EmodeType, bigint> = Object.keys(EmodeType).reduce<Record<EmodeType, bigint>>((accumulator, key, index) => {
+    accumulator[EmodeType[key as keyof typeof EmodeType]] = BigInt(index);
+    return accumulator;
+}, {} as Record<EmodeType, bigint>);
 
 /*
 In order to get pool from protocol we need to know:

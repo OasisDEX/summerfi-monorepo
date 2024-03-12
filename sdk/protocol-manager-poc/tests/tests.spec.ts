@@ -10,6 +10,7 @@ import { createPublicClient, http, PublicClient, getContract } from 'viem'
 import { mainnet } from 'viem/chains'
 import { Address, ChainInfo, CurrencySymbol, Price, Token, TokenSymbol } from '@summerfi/sdk-common/common'
 import { BigNumber } from 'bignumber.js'
+import type { SparkLendingPool, MakerLendingPool, SparkPoolId, MakerPoolId } from "@summerfi/sdk-common/protocols"
 
 import { priceFeedABI } from './priceFeedABI'
 
@@ -64,7 +65,6 @@ class PriceServiceMock implements IPriceService {
       // This path assumes that for these common base or quote tokens, a direct contract call is more efficient or accurate.
       res = await this.getContract().read.latestAnswer([baseToken, quoteToken]);
     }
-
 
     return Price.createFrom({
       baseToken: args.baseToken,
@@ -175,8 +175,8 @@ async function createProtocolManagerContext (): Promise<ProtocolManagerContext> 
 
 describe('playground', () => {
   let ctx: ProtocolManagerContext
-  let makerPlugin: ProtocolPlugin
-  let sparkPlugin: ProtocolPlugin
+  let makerPlugin: ProtocolPlugin<MakerPoolId>
+  let sparkPlugin: ProtocolPlugin<SparkPoolId>
   beforeAll(async () => {
     ctx = await createProtocolManagerContext()
     makerPlugin = createMakerPlugin(ctx)

@@ -22,7 +22,6 @@ export enum ILKType {
 export interface MakerPoolId extends IPoolId {
   protocol: ProtocolName.Maker
   ilkType: ILKType
-  vaultId: string
 }
 
 export function isMakerPoolId(poolId: IPoolId): poolId is MakerPoolId {
