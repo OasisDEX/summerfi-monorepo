@@ -111,7 +111,7 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
         getPool: async (makerPoolId: unknown): Promise<MakerLendingPool> => {
             plugin._validate(makerPoolId)
             const ilk = makerPoolId.ilkType
-            if (!ilk) throw new Error('emode on poolId not recognised undefined')
+            if (!ilk) throw new Error('ilk type on poolId not recognised')
             const ilkInHex = stringToHex(ilk, { size: 32 })
 
             const chainId = ctx.provider.chain?.id
@@ -293,8 +293,6 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
 
     return plugin
 }
-
-
 function isIlkType(maybeIlk: string): boolean {
     return Object.values(ILKType).includes(maybeIlk as ILKType)
 }
@@ -305,7 +303,7 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
         getPool: async (sparkPoolId: unknown): Promise<SparkLendingPool> => {
             plugin._validate(sparkPoolId)
             const emode = sparkEmodeCategoryMap[sparkPoolId.emodeType]
-            if (!emode && emode !== 0n) throw new Error('emode on poolId not recognised undefined')
+            if (!emode && emode !== 0n) throw new Error('emode on poolId not recognised')
 
             const chainId = ctx.provider.chain?.id
             if (!chainId) throw new Error('ctx.provider.chain.id undefined')
@@ -446,12 +444,9 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
 
     return plugin
 }
-
-
 function isEModeType(emodeType: string): boolean {
     return Object.values(EmodeType).includes(emodeType as EmodeType)
 }
-
 const sparkEmodeCategoryMap: Record<EmodeType, bigint> = Object.keys(EmodeType).reduce<Record<EmodeType, bigint>>((accumulator, key, index) => {
     accumulator[EmodeType[key as keyof typeof EmodeType]] = BigInt(index);
     return accumulator;
