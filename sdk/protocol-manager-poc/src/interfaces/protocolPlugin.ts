@@ -301,20 +301,20 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
             }
 
             const builder = await (new SparkPluginBuilder(ctx)).init();
-            const _reservesAssetsList = await builder
+            const reservesAssetsList = await builder
                 .addReservesCaps()
                 .addReservesConfigData()
                 .addReservesData()
                 .addEmodeCategories()
                 .build()
 
-            const reservesAssetsList = filterAssetsListByEMode(_reservesAssetsList, emode)
+            const filteredAssetsList = filterAssetsListByEMode(reservesAssetsList, emode)
 
             // Both USDC & DAI use fixed price oracles that keep both stable at 1 USD
             const poolBaseCurrencyToken = CurrencySymbol.USD
 
             const collaterals: Record<AddressValue, SparkPoolCollateralConfig> = {}
-            for (const asset of reservesAssetsList) {
+            for (const asset of filteredAssetsList) {
                 const { token: collateralToken, config: { usageAsCollateralEnabled, ltv, liquidationThreshold, liquidationBonus }, caps: { supplyCap }, data: { totalAToken } } = asset;
                 // TODO: Remove Try/Catch once PriceService updated to use protocol oracle
 
@@ -340,7 +340,7 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
             }
 
             const debts: Record<AddressValue, SparkPoolDebtConfig> = {}
-            for (const asset of reservesAssetsList) {
+            for (const asset of filteredAssetsList) {
                 const { token: quoteToken, config: { borrowingEnabled, reserveFactor }, caps: { borrowCap }, data: { totalVariableDebt, totalStableDebt, variableBorrowRate } } = asset;
                 // TODO: Remove Try/Catch once PriceService updated to use protocol oracle
                 if (quoteToken.symbol === TokenSymbol.WETH) {
