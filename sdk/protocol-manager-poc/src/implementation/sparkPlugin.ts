@@ -5,25 +5,13 @@ import { Position, Token } from "@summerfi/sdk-common/common"
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
 import { ChainId, CreateProtocolPlugin, IPositionId, ProtocolManagerContext, ProtocolPlugin } from "../interfaces";
-import { filterAssetsListByEMode, SparkPluginBuilder } from "./sparkPluginBuilder";
+import { AaveV3LikePluginBuilder, filterAssetsListByEMode } from "./aaveV3LikeBuilder";
 import { UNCAPPED_SUPPLY, PRESISION_BI } from "./constants";
+
 
 function tokenAmountFromBaseUnit({amount, token}: {amount: string, token: Token}): TokenAmount {
     return TokenAmount.createFromBaseUnit({token, amount})
 }
-
-/*
-    We need some kind of address provider or contract provider that will
-    return the address of the contract together with abi
-
-    contractProvider.getContract(MakerContracts.VAT)
-
-*/
-export const SparkContracts = {
-    ORACLE: "0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9",
-    LENDING_POOL: "0xC13e21B648A5Ee794902342038FF3aDAB66BE987",
-    POOL_DATA_PROVIDER: "0xFc21d6d146E6086B8359705C8b28512a983db0cb",
-} as const
 
 export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: ProtocolManagerContext): ProtocolPlugin<SparkPoolId> => {
     const plugin: ProtocolPlugin<SparkPoolId> = {
@@ -40,7 +28,7 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
                 throw new Error(`Chain ID ${chainId} is not supported`);
             }
 
-            const builder = await (new SparkPluginBuilder(ctx)).init();
+            const builder = await (new AaveV3LikePluginBuilder(ctx, sparkPoolId.protocol.name)).init();
             const reservesAssetsList = await builder
                 .addPrices()
                 .addReservesCaps()
@@ -143,7 +131,7 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
             return positionId as IPositionId
         },
         getPosition: async (positionId: IPositionId): Promise<Position> => {
-            throw new Error("Not implemented")
+            throw new Error(`Not implemented ${positionId}`)
         },
         _validate: function (candidate: unknown): asserts candidate is SparkPoolId {
             const ProtocolNameEnum = z.nativeEnum(ProtocolName);

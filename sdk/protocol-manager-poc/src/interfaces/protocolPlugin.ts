@@ -1,9 +1,161 @@
 import { TokenSymbol, Price, CurrencySymbol } from "@summerfi/sdk-common/common"
-import { IPool, IPoolId } from "@summerfi/sdk-common/protocols"
+import { IPool, IPoolId, ProtocolName, IProtocol } from "@summerfi/sdk-common/protocols"
 import { Address, Position, Token } from "@summerfi/sdk-common/common"
-import {PublicClient} from "viem"
+import { PublicClient} from "viem"
+import { AddressValue } from "@summerfi/sdk-common/common"
+
+import {
+    VAT_ABI,
+    SPOT_ABI,
+    JUG_ABI,
+    DOG_ABI,
+    ILK_REGISTRY,
+    ORACLE_ABI,
+    POOL_DATA_PROVIDER, LENDING_POOL_ABI
+} from "./abis"
 
 export type IPositionId = string & { __positionID: never }
+
+enum MakerContracts {
+    VAT = 'VAT',
+    SPOT = 'SPOT',
+    JUG = 'JUG',
+    DOG = 'DOG',
+    ILK_REGISTRY = 'ILK_REGISTRY'
+}
+
+export enum AaveV3LikeContracts {
+    ORACLE = "ORACLE",
+    LENDING_POOL = "LENDING_POOL",
+    POOL_DATA_PROVIDER = "POOL_DATA_PROVIDER"
+}
+
+// export enum AaveV3Contracts {
+//     AAVEV3_ORACLE = "ORACLE",
+//     AAVEV3_LENDING_POOL = "LENDING_POOL",
+//     AAVEV3_POOL_DATA_PROVIDER = "POOL_DATA_PROVIDER"
+// }
+//
+// export enum SparkContracts {
+//     SPARK_ORACLE = "ORACLE",
+//     SPARK_LENDING_POOL = "LENDING_POOL",
+//     SPARK_POOL_DATA_PROVIDER = "POOL_DATA_PROVIDER"
+// }
+
+type MakerAddressAbiMap = {
+    [MakerContracts.DOG]: {
+        address: AddressValue
+        abi: typeof DOG_ABI
+    }
+    [MakerContracts.VAT]: {
+        address: AddressValue
+        abi: typeof VAT_ABI
+    }
+    [MakerContracts.JUG]: {
+        address: AddressValue
+        abi: typeof JUG_ABI
+    }
+    [MakerContracts.SPOT]: {
+        address: AddressValue
+        abi: typeof SPOT_ABI
+    }
+    [MakerContracts.ILK_REGISTRY]: {
+        address: AddressValue
+        abi: typeof ILK_REGISTRY
+    }
+}
+
+type SparkAddressAbiMap = {
+    [AaveV3LikeContracts.ORACLE]: {
+        address: AddressValue,
+        abi: typeof ORACLE_ABI
+    }
+    [AaveV3LikeContracts.POOL_DATA_PROVIDER]: {
+        address: AddressValue,
+        abi: typeof POOL_DATA_PROVIDER
+    }
+    [AaveV3LikeContracts.LENDING_POOL]: {
+        address: AddressValue,
+        abi: typeof LENDING_POOL_ABI
+    }
+}
+
+type AaveV3AddressAbiMap = {
+    [AaveV3LikeContracts.ORACLE]: {
+        address: AddressValue,
+        abi: typeof ORACLE_ABI
+    }
+    [AaveV3LikeContracts.POOL_DATA_PROVIDER]: {
+        address: AddressValue,
+        abi: typeof POOL_DATA_PROVIDER
+    }
+    [AaveV3LikeContracts.LENDING_POOL]: {
+        address: AddressValue,
+        abi: typeof LENDING_POOL_ABI
+    }
+}
+
+type AaveV2AddressAbiMap = {}
+type AjnaAddressAbiMap = {}
+type MorphoBlueAbiMap = {}
+
+type AddressAbiMapsByProtocol = {
+    [ProtocolName.Spark]: SparkAddressAbiMap
+    [ProtocolName.AAVEv3]: AaveV3AddressAbiMap
+    [ProtocolName.AAVEv2]: AaveV2AddressAbiMap
+    [ProtocolName.Maker]: MakerAddressAbiMap
+    [ProtocolName.Ajna]: AjnaAddressAbiMap
+    [ProtocolName.MorphoBlue]: MorphoBlueAbiMap
+}
+
+export interface IContractProvider {
+    getContractDef: <P extends IProtocol['name']>(
+        contractKey: keyof AddressAbiMapsByProtocol[P],
+        protocol: P
+    ) => AddressAbiMapsByProtocol[P][keyof AddressAbiMapsByProtocol[P]];
+}
+
+// Implement the IContractProvider interface
+// class ContractProvider implements IContractProvider {
+//     getContract<K extends MakerContracts | AaveV3LikeContracts>(contractKey: K): CombinedAddressAbiMap[K] {
+//         const map: CombinedAddressAbiMap = {
+//             [MakerContracts.DOG]: {
+//                 address: '0x...',
+//                 abi: DOG_ABI,
+//             },
+//             [MakerContracts.VAT]: {
+//                 address: '0x...',
+//                 abi: ORACLE_ABI,
+//             },
+//             [MakerContracts.JUG]: {
+//                 address: '0x...',
+//                 abi: ORACLE_ABI,
+//             },
+//             [MakerContracts.SPOT]: {
+//                 address: '0x...',
+//                 abi: ORACLE_ABI,
+//             },
+//             [MakerContracts.ILK_REGISTRY]: {
+//                 address: '0x...',
+//                 abi: ORACLE_ABI,
+//             },
+//             [AaveV3LikeContracts.ORACLE]: {
+//                 address: '0x...',
+//                 abi: ORACLE_ABI,
+//             },
+//             [AaveV3LikeContracts.POOL_DATA_PROVIDER]: {
+//                 address: '0x...',
+//                 abi: POOL_DATA_PROVIDER,
+//             },
+//         };
+//         return map[contractKey];
+//     }
+// }
+//
+// // Usage
+// const provider = new ContractProvider();
+// const dogContract = provider.getContract(MakerContracts.DOG);
+// const oracleContract = provider.getContract(AaveV3LikeContracts.ORACLE);
 
 export interface ITokenService {
     getTokenByAddress: (address: Address) => Promise<Token>
@@ -17,6 +169,7 @@ export interface IPriceService {
 
 export interface ProtocolManagerContext {
     provider: PublicClient,
+    contractProvider: IContractProvider
     tokenService: ITokenService,
     priceService: IPriceService
 }
