@@ -1,7 +1,7 @@
 import {
     AaveV3LikeContracts,
     ProtocolManagerContext,
-} from '../interfaces/protocolPlugin'
+} from '../interfaces'
 import { HexData } from "@summerfi/sdk-common/common"
 import { Address, Token } from "@summerfi/sdk-common/common"
 import { ProtocolName } from "@summerfi/sdk-common/protocols"
@@ -133,7 +133,7 @@ export class AaveV3LikePluginBuilder<AssetListType>  {
             operation: async () => {
                 this._assertIsInitialised(this.tokensUsedAsReserves);
                 const reservesDataPerAsset = await fetchAssetReserveData(this.ctx, this.tokensUsedAsReserves, this.protocolName)
-                validateReservesData(reservesDataPerAsset)
+                // validateReservesData(reservesDataPerAsset)
                 this._assertMatchingArrayLengths(reservesDataPerAsset, this.reservesAssetsList)
                 const nextReservesList = []
                 for (const [index, asset] of this.reservesAssetsList.entries()) {
@@ -358,64 +358,4 @@ export function filterAssetsListByEMode<T extends { emode: EmodeCategory }>(asse
     }
 
     return assetsList.filter(asset => asset.emode === emode)
-}
-
-type RawReservesData = [
-    bigint, // unbacked
-    bigint, // accruedToTreasuryScaled
-    bigint, // totalAToken
-    bigint, // totalStableDebt
-    bigint, // totalVariableDebt
-    bigint, // liquidityRate
-    bigint, // variableBorrowRate
-    bigint, // stableBorrowRate
-    bigint, // averageStableBorrowRate
-    bigint, // liquidityIndex
-    bigint, // variableBorrowIndex
-    number, // lastUpdateTimestamp
-]
-
-// GUARDS
-function validateReservesData(rawReservesData: unknown[]): asserts rawReservesData is RawReservesData[] {
-    for (const assetReservesData of rawReservesData) {
-        validateAssetReservesData(assetReservesData)
-    }
-}
-function validateAssetReservesData(rawAssetsReservesData: unknown): asserts rawAssetsReservesData is RawReservesData {
-    if (!Array.isArray(rawAssetsReservesData) || rawAssetsReservesData.length !== 12) {
-        throw new Error("Reserves data invalid")
-    }
-
-    const [
-        unbacked,
-        accruedToTreasuryScaled,
-        totalAToken,
-        totalStableDebt,
-        totalVariableDebt,
-        liquidityRate,
-        variableBorrowRate,
-        stableBorrowRate,
-        averageStableBorrowRate,
-        liquidityIndex,
-        variableBorrowIndex,
-        lastUpdateTimestamp
-    ] = rawAssetsReservesData;
-    const areBigIntValuesCorrect = [
-        unbacked,
-        accruedToTreasuryScaled,
-        totalAToken,
-        totalStableDebt,
-        totalVariableDebt,
-        liquidityRate,
-        variableBorrowRate,
-        stableBorrowRate,
-        averageStableBorrowRate,
-        liquidityIndex,
-        variableBorrowIndex].every(item => typeof item === 'bigint');
-
-    const areNumericValuesCorrect = [lastUpdateTimestamp].every(item => typeof item === 'number')
-
-    if(!(areBigIntValuesCorrect && areNumericValuesCorrect)) {
-        throw new Error("Reserves data invalid")
-    };
 }

@@ -1,5 +1,5 @@
 import { AddressValue, Percentage, TokenAmount, TokenSymbol, Price, CurrencySymbol, RiskRatio } from "@summerfi/sdk-common/common"
-import type { SparkLendingPool, SparkPoolDebtConfig, SparkPoolCollateralConfig, SparkPoolId } from "@summerfi/sdk-common/protocols"
+import type { AaveV3LendingPool, AaveV3PoolDebtConfig, AaveV3PoolCollateralConfig, AaveV3PoolId } from "@summerfi/sdk-common/protocols"
 import { PoolType, ProtocolName, EmodeType } from "@summerfi/sdk-common/protocols"
 import { Position, Token } from "@summerfi/sdk-common/common"
 import { BigNumber } from 'bignumber.js'
@@ -13,12 +13,12 @@ function tokenAmountFromBaseUnit({amount, token}: {amount: string, token: Token}
     return TokenAmount.createFromBaseUnit({token, amount})
 }
 
-export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: ProtocolManagerContext): ProtocolPlugin<SparkPoolId> => {
-    const plugin: ProtocolPlugin<SparkPoolId> = {
+export const createAaveV3Plugin: CreateProtocolPlugin<AaveV3PoolId> = (ctx: ProtocolManagerContext): ProtocolPlugin<AaveV3PoolId> => {
+    const plugin: ProtocolPlugin<AaveV3PoolId> = {
         supportedChains: [ChainId.Mainnet],
-        getPool: async (sparkPoolId: unknown): Promise<SparkLendingPool> => {
-            plugin._validate(sparkPoolId)
-            const emode = sparkEmodeCategoryMap[sparkPoolId.emodeType]
+        getPool: async (aaveV3PoolId: unknown): Promise<AaveV3LendingPool> => {
+            plugin._validate(aaveV3PoolId)
+            const emode = aaveV3EmodeCategoryMap[aaveV3PoolId.emodeType]
             if (!emode && emode !== 0n) throw new Error('emode on poolId not recognised')
 
             const chainId = ctx.provider.chain?.id
@@ -28,7 +28,7 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
                 throw new Error(`Chain ID ${chainId} is not supported`);
             }
 
-            const builder = await (new AaveV3LikePluginBuilder(ctx, sparkPoolId.protocol.name)).init();
+            const builder = await (new AaveV3LikePluginBuilder(ctx, aaveV3PoolId.protocol.name)).init();
             const reservesAssetsList = await builder
                 .addPrices()
                 .addReservesCaps()
@@ -42,7 +42,7 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
             // Both USDC & DAI use fixed price oracles that keep both stable at 1 USD
             const poolBaseCurrencyToken = CurrencySymbol.USD
 
-            const collaterals: Record<AddressValue, SparkPoolCollateralConfig> = {}
+            const collaterals: Record<AddressValue, AaveV3PoolCollateralConfig> = {}
             for (const asset of filteredAssetsList) {
                 const { token: collateralToken, config: { usageAsCollateralEnabled, ltv, liquidationThreshold, liquidationBonus }, caps: { supplyCap }, data: { totalAToken } } = asset;
                 // TODO: Remove Try/Catch once PriceService updated to use protocol oracle
@@ -76,7 +76,7 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
                 }
             }
 
-            const debts: Record<AddressValue, SparkPoolDebtConfig> = {}
+            const debts: Record<AddressValue, AaveV3PoolDebtConfig> = {}
             for (const asset of filteredAssetsList) {
                 const { token: quoteToken, config: { borrowingEnabled, reserveFactor }, caps: { borrowCap }, data: { totalVariableDebt, totalStableDebt, variableBorrowRate } } = asset;
                 // TODO: Remove Try/Catch once PriceService updated to use protocol oracle
@@ -121,8 +121,8 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
 
             return {
                 type: PoolType.Lending,
-                poolId: sparkPoolId,
-                protocol: sparkPoolId.protocol,
+                poolId: aaveV3PoolId,
+                protocol: aaveV3PoolId.protocol,
                 baseCurrency: CurrencySymbol.USD,
                 collaterals,
                 debts
@@ -134,7 +134,7 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
         getPosition: async (positionId: IPositionId): Promise<Position> => {
             throw new Error(`Not implemented ${positionId}`)
         },
-        _validate: function (candidate: unknown): asserts candidate is SparkPoolId {
+        _validate: function (candidate: unknown): asserts candidate is AaveV3PoolId {
             const ProtocolNameEnum = z.nativeEnum(ProtocolName);
             const EmodeTypeEnum = z.nativeEnum(EmodeType);
             const ChainInfoType = z.object({
@@ -142,7 +142,7 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
                 chainId: z.number()
             })
 
-            const SparkPoolIdSchema = z.object({
+            const AaveV3PoolIdSchema = z.object({
                 protocol: z.object({
                     name: ProtocolNameEnum,
                     chainInfo: ChainInfoType
@@ -150,7 +150,7 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
                 emodeType: EmodeTypeEnum
             });
 
-            const parseResult = SparkPoolIdSchema.safeParse(candidate);
+            const parseResult = AaveV3PoolIdSchema.safeParse(candidate);
             if (!parseResult.success) {
                 const errorDetails = parseResult.error.errors.map(error => `${error.path.join('.')} - ${error.message}`).join(', ');
                 throw new Error(`Candidate is not the correct shape: ${errorDetails}`);
@@ -161,7 +161,7 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
     return plugin
 }
 
-const sparkEmodeCategoryMap: Record<EmodeType, bigint> = Object.keys(EmodeType).reduce<Record<EmodeType, bigint>>((accumulator, key, index) => {
+const aaveV3EmodeCategoryMap: Record<EmodeType, bigint> = Object.keys(EmodeType).reduce<Record<EmodeType, bigint>>((accumulator, key, index) => {
     accumulator[EmodeType[key as keyof typeof EmodeType]] = BigInt(index);
     return accumulator;
 }, {} as Record<EmodeType, bigint>);

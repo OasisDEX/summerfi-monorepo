@@ -1,17 +1,32 @@
+import {createAaveV3Plugin} from "../src/implementation/aaveV3Plugin";
 import {
   createMakerPlugin,
   ProtocolPlugin,
   ProtocolManagerContext,
   ITokenService,
   IPriceService,
-  createSparkPlugin
+  AddressAbiMapsByProtocol,
+  createSparkPlugin,
+  IContractProvider,
+  MakerContracts,
+  AaveV3LikeContracts,
 } from '../src/index'
 import { createPublicClient, http, PublicClient, getContract } from 'viem'
 import { mainnet } from 'viem/chains'
 import { Address, ChainInfo, CurrencySymbol, Price, Token, TokenSymbol } from '@summerfi/sdk-common/common'
 import { BigNumber } from 'bignumber.js'
-import type { SparkPoolId, MakerPoolId } from "@summerfi/sdk-common/protocols"
+import type { SparkPoolId, MakerPoolId, IProtocol, AaveV3PoolId } from "@summerfi/sdk-common/protocols"
 import { ProtocolName, EmodeType, ILKType } from "@summerfi/sdk-common/protocols"
+import {
+  DOG_ABI,
+  VAT_ABI,
+  SPOT_ABI,
+  JUG_ABI,
+  ILK_REGISTRY,
+  POOL_DATA_PROVIDER,
+  ORACLE_ABI,
+  LENDING_POOL_ABI
+} from "../src/interfaces/abis";
 
 
 import { priceFeedABI } from './priceFeedABI'
@@ -159,6 +174,70 @@ class TokenServiceMock implements ITokenService {
   }
 }
 
+class ContractProviderMock implements IContractProvider {
+  getContractDef<P extends IProtocol['name'], K extends keyof AddressAbiMapsByProtocol[P]>(
+      contractKey: K,
+      protocol: P
+  ): AddressAbiMapsByProtocol[P][K] {
+        const map: AddressAbiMapsByProtocol = {
+            [ProtocolName.Spark]: {
+              [AaveV3LikeContracts.ORACLE]: {
+                address: '0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9',
+                abi: ORACLE_ABI,
+              },
+              [AaveV3LikeContracts.POOL_DATA_PROVIDER]: {
+                address: '0xFc21d6d146E6086B8359705C8b28512a983db0cb',
+                abi: POOL_DATA_PROVIDER,
+              },
+              [AaveV3LikeContracts.LENDING_POOL]: {
+                address: '0xC13e21B648A5Ee794902342038FF3aDAB66BE987',
+                abi: LENDING_POOL_ABI,
+              },
+            },
+            [ProtocolName.Maker]: {
+              [MakerContracts.DOG]: {
+                  address: '0x135954d155898d42c90d2a57824c690e0c7bef1b',
+                  abi: DOG_ABI,
+              },
+              [MakerContracts.VAT]: {
+                  address: '0x35d1b3f3d7966a1dfe207aa4514c12a259a0492b',
+                  abi: VAT_ABI,
+              },
+              [MakerContracts.JUG]: {
+                  address: '0x19c0976f590d67707e62397c87829d896dc0f1f1',
+                  abi: JUG_ABI,
+              },
+              [MakerContracts.SPOT]: {
+                  address: '0x65c79fcb50ca1594b025960e539ed7a9a6d434a3',
+                  abi: SPOT_ABI,
+              },
+              [MakerContracts.ILK_REGISTRY]: {
+                  address: '0x5a464C28D19848f44199D003BeF5ecc87d090F87',
+                  abi: ILK_REGISTRY,
+              },
+            },
+            [ProtocolName.AAVEv3]: {
+              [AaveV3LikeContracts.ORACLE]: {
+                address: '0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9',
+                abi: ORACLE_ABI,
+              },
+              [AaveV3LikeContracts.POOL_DATA_PROVIDER]: {
+                address: '0xFc21d6d146E6086B8359705C8b28512a983db0cb',
+                abi: POOL_DATA_PROVIDER,
+              },
+              [AaveV3LikeContracts.LENDING_POOL]: {
+                address: '0xC13e21B648A5Ee794902342038FF3aDAB66BE987',
+                abi: LENDING_POOL_ABI,
+              },
+            },
+            [ProtocolName.Ajna]: {},
+            [ProtocolName.MorphoBlue]: {},
+            [ProtocolName.AAVEv2]: {},
+        };
+        return map[protocol][contractKey];
+    }
+}
+
 async function createProtocolManagerContext (): Promise<ProtocolManagerContext> {
   const provider = createPublicClient({
     batch: {
@@ -170,6 +249,7 @@ async function createProtocolManagerContext (): Promise<ProtocolManagerContext> 
 
   return {
     provider,
+    contractProvider: new ContractProviderMock(),
     tokenService: new TokenServiceMock(),
     priceService: new PriceServiceMock(provider),
   }
@@ -179,10 +259,12 @@ describe('playground', () => {
   let ctx: ProtocolManagerContext
   let makerPlugin: ProtocolPlugin<MakerPoolId>
   let sparkPlugin: ProtocolPlugin<SparkPoolId>
+  let aaveV3Plugin: ProtocolPlugin<AaveV3PoolId>
   beforeAll(async () => {
     ctx = await createProtocolManagerContext()
     makerPlugin = createMakerPlugin(ctx)
     sparkPlugin = createSparkPlugin(ctx)
+    aaveV3Plugin = createAaveV3Plugin(ctx)
   })
 
   it('template/maker', async () => {
@@ -200,6 +282,17 @@ describe('playground', () => {
     const result = await sparkPlugin.getPool({
       protocol: {
         name: ProtocolName.Spark,
+        chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' })
+      },
+      emodeType: EmodeType.None
+    })
+    console.log(result)
+  })
+
+  it('template/aave-v3', async () => {
+    const result = await aaveV3Plugin.getPool({
+      protocol: {
+        name: ProtocolName.AAVEv3,
         chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' })
       },
       emodeType: EmodeType.None

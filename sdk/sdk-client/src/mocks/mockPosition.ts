@@ -3,6 +3,7 @@ import {
   RiskRatio,
   TokenAmount,
   TokenSymbol,
+  ChainInfo,
   type Maybe,
   type Position,
   type PositionId,
@@ -36,9 +37,8 @@ export async function getMockPosition(params: {
     }),
     pool: {
       poolId: {
-        protocol: ProtocolName.Maker,
+        protocol: { name: ProtocolName.Maker, chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }) } ,
         ilkType: ILKType.ETH_A,
-        vaultId: 'testvault',
       } as MakerPoolId,
       protocol: {
         name: ProtocolName.Maker,
