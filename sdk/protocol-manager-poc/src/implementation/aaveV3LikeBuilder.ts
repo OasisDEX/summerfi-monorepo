@@ -133,7 +133,6 @@ export class AaveV3LikePluginBuilder<AssetListType>  {
             operation: async () => {
                 this._assertIsInitialised(this.tokensUsedAsReserves);
                 const reservesDataPerAsset = await fetchAssetReserveData(this.ctx, this.tokensUsedAsReserves, this.protocolName)
-                // validateReservesData(reservesDataPerAsset)
                 this._assertMatchingArrayLengths(reservesDataPerAsset, this.reservesAssetsList)
                 const nextReservesList = []
                 for (const [index, asset] of this.reservesAssetsList.entries()) {
