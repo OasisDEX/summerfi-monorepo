@@ -29,7 +29,7 @@ describe('Pull TokenAction Builder', () => {
     builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })
   })
 
-  it('should fail if no protocol plugin exists', async () => {
+  it('should encode the action calldata correctly', async () => {
     const builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })
 
     const derivedStep: steps.PullTokenStep = {
