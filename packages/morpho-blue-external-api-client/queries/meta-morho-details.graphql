@@ -2,6 +2,9 @@ query metaMorphoDetails($metaMorphoAddresses: [String!]) {
     vaults (where: { address_in: $metaMorphoAddresses }) {
         items {
             name
+            monthlyApy
+            weeklyApy
+            dailyApy
             symbol
             address
             asset {
@@ -42,6 +45,7 @@ query metaMorphoDetails($metaMorphoAddresses: [String!]) {
                 decimals
 
             }
+            lltv
             loanAsset {
                 id
                 address

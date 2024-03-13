@@ -23,6 +23,7 @@ export interface MorphoAsset {
 export interface MorphoMarket {
   marketId: `0x${string}`
   collateral: MorphoAsset
+  liquidationLtv: number
   loan: MorphoAsset
 }
 
@@ -33,6 +34,12 @@ export interface MetaMorphoVaultAllocation {
 
 export interface MetaMorphoVault {
   address: Address
+  weeklyApy: number
+  monthlyApy: number
+  dailyApy: number
+  apy: number
+  fee: number
+  totalAssets: bigint
   asset: {
     address: Address
     symbol: string
@@ -72,6 +79,12 @@ const getVaultAllocations = async (
       return {
         vault: {
           address: vault.address as Address,
+          dailyApy: vault.dailyApy ?? 0,
+          weeklyApy: vault.weeklyApy ?? 0,
+          monthlyApy: vault.monthlyApy ?? 0,
+          apy: vault.state?.apy ?? 0,
+          fee: vault.state?.fee ?? 0,
+          totalAssets: vault.state?.totalAssets ?? 0n,
           asset: {
             address: vault.asset.address as Address,
             symbol: vault.asset.symbol,
@@ -101,6 +114,7 @@ const getVaultAllocations = async (
 
                 const resultMarket: MorphoMarket = {
                   marketId: market.uniqueKey as `0x${string}`,
+                  liquidationLtv: Number(market.lltv) / 10 ** market.collateralAsset.decimals,
                   collateral: {
                     address: market.collateralAsset.address as Address,
                     symbol: market.collateralAsset.symbol,

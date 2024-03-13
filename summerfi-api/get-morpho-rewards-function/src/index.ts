@@ -56,6 +56,13 @@ export interface RewardToken {
 export interface RewardsByMarket {
   market: {
     marketId: `0x${string}`
+    collateral: {
+      address: Address
+      symbol: string
+      decimals: number
+      priceUsd: number | undefined
+    }
+    liquidationLtv: number
   }
   tokens: RewardToken[]
 }
@@ -63,6 +70,12 @@ export interface RewardsByMarket {
 export interface GetRewardsResponse {
   metaMorpho: {
     address: Address
+    weeklyApy: number
+    monthlyApy: number
+    dailyApy: number
+    apy: number
+    fee: number
+    totalAssets: bigint
   }
   rewardsByMarket: RewardsByMarket[]
   rewardsByToken: RewardToken[]
@@ -71,6 +84,12 @@ export interface GetRewardsResponse {
 const emptyResponse = (metaMorpho: Address): GetRewardsResponse => ({
   metaMorpho: {
     address: metaMorpho,
+    weeklyApy: 0,
+    monthlyApy: 0,
+    dailyApy: 0,
+    apy: 0,
+    fee: 0,
+    totalAssets: 0n,
   },
   rewardsByMarket: [],
   rewardsByToken: [],
@@ -195,13 +214,20 @@ export const handler = async (
           decimals: r.token.decimals,
           amountWei: BigInt(userRewards.integerValue().toString()),
           humanReadable,
-          apy: apy, // TODO: calculate APY
+          apy: apy,
         }
       })
 
       return {
         market: {
           marketId: a.market.marketId,
+          liquidationLtv: a.market.liquidationLtv,
+          collateral: {
+            address: a.market.collateral.address,
+            symbol: a.market.collateral.symbol,
+            decimals: a.market.collateral.decimals,
+            priceUsd: a.market.collateral.priceUsd,
+          },
         },
         tokens: tokens.filter((t) => t.amountWei > 0n),
       }
@@ -226,6 +252,12 @@ export const handler = async (
   const response: GetRewardsResponse = {
     metaMorpho: {
       address: params.metaMorpho,
+      weeklyApy: metaMorphoVault.weeklyApy,
+      monthlyApy: metaMorphoVault.monthlyApy,
+      dailyApy: metaMorphoVault.dailyApy,
+      apy: metaMorphoVault.apy,
+      fee: metaMorphoVault.fee,
+      totalAssets: metaMorphoVault.totalAssets,
     },
     rewardsByMarket,
     rewardsByToken,
