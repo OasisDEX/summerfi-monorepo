@@ -8,6 +8,7 @@ import {
     filterAssetsListByEMode,
     SparkPluginBuilder
 } from "./sparkPluginBuilder";
+import { z } from 'zod'
 import {
     VAT_ABI,
     SPOT_ABI,
@@ -111,7 +112,7 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
         getPool: async (makerPoolId: unknown): Promise<MakerLendingPool> => {
             plugin._validate(makerPoolId)
             const ilk = makerPoolId.ilkType
-            if (!ilk) throw new Error('ilk type on poolId not recognised')
+            if (!ilk) throw new Error('Ilk type on poolId not recognised')
             const ilkInHex = stringToHex(ilk, { size: 32 })
 
             const chainId = ctx.provider.chain?.id
@@ -267,34 +268,30 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
             throw new Error("Not implemented")
         },
         _validate: function (candidate: unknown): asserts candidate is MakerPoolId {
-            if (typeof candidate !== 'object' || candidate === null) {
-                throw new Error("Candidate is not an object");
-            }
+            const ProtocolNameEnum = z.nativeEnum(ProtocolName);
+            const IlkTypeEnum = z.nativeEnum(ILKType);
+            const ChainInfoType = z.object({
+                name: z.string(),
+                chainId: z.number()
+            })
 
-            if ('protocol' in candidate && 'ilkType' in candidate) {
-                const { protocol, ilkType } = candidate as { protocol: unknown, ilkType: unknown };
+            const SparkPoolIdSchema = z.object({
+                protocol: z.object({
+                    name: ProtocolNameEnum,
+                    chainInfo: ChainInfoType
+                }),
+                ilkType: IlkTypeEnum
+            });
 
-                if (typeof protocol !== 'object' || protocol === null) {
-                    throw new Error("Protocol is not an object");
-                }
-
-                if ('name' in protocol && protocol.name !== ProtocolName.Maker) {
-                    throw new Error("Protocol is not Maker");
-                }
-
-                if (typeof ilkType !== 'string' || !isIlkType(ilkType)) {
-                    throw new Error("IlkType is invalid");
-                }
-            } else {
-                throw new Error("Candidate does not have the required properties");
+            const parseResult = SparkPoolIdSchema.safeParse(candidate);
+            if (!parseResult.success) {
+                const errorDetails = parseResult.error.errors.map(error => `${error.path.join('.')} - ${error.message}`).join(', ');
+                throw new Error(`Candidate is not the correct shape: ${errorDetails}`);
             }
         }
     }
 
     return plugin
-}
-function isIlkType(maybeIlk: string): boolean {
-    return Object.values(ILKType).includes(maybeIlk as ILKType)
 }
 
 export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: ProtocolManagerContext): ProtocolPlugin<SparkPoolId> => {
@@ -374,7 +371,7 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
                     const RATE_DIVISOR_TO_GET_PERCENTAGE = Number((PRECISION_PRESERVING_OFFSET - 100n).toString())
 
                     const rate = Number(((variableBorrowRate * PRECISION_PRESERVING_OFFSET) / PRESISION_BI.RAY).toString()) / RATE_DIVISOR_TO_GET_PERCENTAGE
-                    const totalBorrowed = totalVariableDebt - totalStableDebt
+                    const totalBorrowed = totalVariableDebt + totalStableDebt
                     debts[quoteToken.address.value] = {
                         token: quoteToken,
                         // TODO: If we further restricted pools we could have token pair prices
@@ -418,35 +415,32 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
             throw new Error("Not implemented")
         },
         _validate: function (candidate: unknown): asserts candidate is SparkPoolId {
-            if (typeof candidate !== 'object' || candidate === null) {
-                throw new Error("Candidate is not an object");
-            }
+            const ProtocolNameEnum = z.nativeEnum(ProtocolName);
+            const EmodeTypeEnum = z.nativeEnum(EmodeType);
+            const ChainInfoType = z.object({
+                name: z.string(),
+                chainId: z.number()
+            })
 
-            if ('protocol' in candidate && 'emodeType' in candidate) {
-                const { protocol, emodeType } = candidate as { protocol: unknown, emodeType: unknown };
+            const SparkPoolIdSchema = z.object({
+                protocol: z.object({
+                    name: ProtocolNameEnum,
+                    chainInfo: ChainInfoType
+                }),
+                emodeType: EmodeTypeEnum
+            });
 
-                if (typeof protocol !== 'object' || protocol === null) {
-                    throw new Error("Protocol is not an object");
-                }
-
-                if ('name' in protocol && protocol.name !== ProtocolName.Spark) {
-                    throw new Error("Protocol is not Spark");
-                }
-
-                if (typeof emodeType !== 'string' || !isEModeType(emodeType)) {
-                    throw new Error("emodeType is invalid");
-                }
-            } else {
-                throw new Error("Candidate does not have the required properties 'protocol' and 'emodeType'");
+            const parseResult = SparkPoolIdSchema.safeParse(candidate);
+            if (!parseResult.success) {
+                const errorDetails = parseResult.error.errors.map(error => `${error.path.join('.')} - ${error.message}`).join(', ');
+                throw new Error(`Candidate is not the correct shape: ${errorDetails}`);
             }
         }
     }
 
     return plugin
 }
-function isEModeType(emodeType: string): boolean {
-    return Object.values(EmodeType).includes(emodeType as EmodeType)
-}
+
 const sparkEmodeCategoryMap: Record<EmodeType, bigint> = Object.keys(EmodeType).reduce<Record<EmodeType, bigint>>((accumulator, key, index) => {
     accumulator[EmodeType[key as keyof typeof EmodeType]] = BigInt(index);
     return accumulator;
