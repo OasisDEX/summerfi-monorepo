@@ -30,18 +30,6 @@ export enum AaveV3LikeContracts {
     POOL_DATA_PROVIDER = "POOL_DATA_PROVIDER"
 }
 
-// export enum AaveV3Contracts {
-//     AAVEV3_ORACLE = "ORACLE",
-//     AAVEV3_LENDING_POOL = "LENDING_POOL",
-//     AAVEV3_POOL_DATA_PROVIDER = "POOL_DATA_PROVIDER"
-// }
-//
-// export enum SparkContracts {
-//     SPARK_ORACLE = "ORACLE",
-//     SPARK_LENDING_POOL = "LENDING_POOL",
-//     SPARK_POOL_DATA_PROVIDER = "POOL_DATA_PROVIDER"
-// }
-
 type MakerAddressAbiMap = {
     [MakerContracts.DOG]: {
         address: AddressValue

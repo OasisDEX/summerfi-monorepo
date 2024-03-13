@@ -197,7 +197,6 @@ describe('playground', () => {
   })
 
   it('template/spark', async () => {
-    // const result = await sparkPlugin.getPool(sparkPlugin.getPoolId("0"))
     const result = await sparkPlugin.getPool({
       protocol: {
         name: ProtocolName.Spark,
