@@ -1,12 +1,10 @@
 import { ActionBuilder, ActionBuildersMap } from '@summerfi/order-planner-common/builders'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { IProtocolPlugin } from '~protocolplugins/interfaces/IProtocolPlugin'
 import { MakerPaybackWithdrawActionBuilder } from './builders'
 import { Maybe } from '@summerfi/sdk-common/common'
-import { ProtocolPluginsRegistry } from '~protocolplugins/implementation/ProtocolPluginsRegistry'
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
+import { IProtocolActionBuilder } from '@summerfi/order-planner-common/interfaces'
 
-export class MakerProtocolPlugin implements IProtocolPlugin {
+export class MakerProtocolPlugin implements IProtocolActionBuilder {
   readonly StepBuilders: Partial<ActionBuildersMap> = {
     [SimulationSteps.PaybackWithdraw]: MakerPaybackWithdrawActionBuilder,
   }
@@ -15,5 +13,3 @@ export class MakerProtocolPlugin implements IProtocolPlugin {
     return this.StepBuilders[step.type] as ActionBuilder<T>
   }
 }
-
-ProtocolPluginsRegistry.registerProtocolPlugin(ProtocolName.Maker, MakerProtocolPlugin)

@@ -1,4 +1,4 @@
-import type { Token } from '~sdk-common/common/implementation/Token'
+import { Token } from '../common/implementation/Token'
 
 export function isToken(maybeToken: unknown): maybeToken is Token {
   return (

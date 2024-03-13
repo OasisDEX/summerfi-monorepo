@@ -4,7 +4,7 @@ import {
   ParamsMapping as InputSlotsMapping,
   StorageInputsMapType,
   StorageOutputsMapType,
-} from './Types'
+} from '../interfaces/Types'
 import assert from 'assert'
 import { BaseAction } from '../actions/BaseAction'
 
@@ -21,9 +21,9 @@ export class ExecutionStorageMapper {
     connectedOutputs: Partial<StorageOutputsMapType<Step, Action>>
   }): InputSlotsMapping {
     const baseSlot = this.currentSlot
+    const stepOutpus = (params.step.outputs as unknown) ?? {}
 
-    /* eslint-disable @typescript-eslint/no-explicit-any */
-    for (const stepOutputName of Object.keys(params.step.outputs as any)) {
+    for (const stepOutputName of Object.keys(stepOutpus)) {
       if (params.connectedOutputs !== undefined) {
         const actionOutputName =
           params.connectedOutputs[stepOutputName as keyof StorageOutputsMapType<Step, Action>]

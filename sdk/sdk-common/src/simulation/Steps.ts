@@ -1,9 +1,9 @@
-import type { Position } from '~sdk-common/common/implementation/Position'
-import type { TokenAmount } from '~sdk-common/common/implementation/TokenAmount'
-import type { FlashloanProvider, SimulationSteps } from './enums'
-import type { ReferenceableField, ValueReference } from './valueReference'
-import type { Token } from '~sdk-common/common/implementation/Token'
-import type { Percentage } from '../common'
+import { Percentage } from '../common/implementation/Percentage'
+import { Position } from '../common/implementation/Position'
+import { Token } from '../common/implementation/Token'
+import { TokenAmount } from '../common/implementation/TokenAmount'
+import { FlashloanProvider, SimulationSteps } from './Enums'
+import { ReferenceableField, ValueReference } from './ValueReference'
 
 export interface Step<T extends SimulationSteps, I, O = undefined, N extends string = string> {
   type: T
@@ -61,8 +61,7 @@ export interface SwapStep
       fromTokenAmount: TokenAmount
       toTokenAmount: TokenAmount
       slippage: Percentage
-      // TODO: this needs to be checked if thats a percentage or a an enum
-      fee: number
+      fee: Percentage
     },
     {
       receivedAmount: TokenAmount
@@ -73,7 +72,7 @@ export interface ReturnFunds extends Step<SimulationSteps.ReturnFunds, { token: 
 
 export interface RepayFlashloan
   extends Step<
-    SimulationSteps.PaybackFlashloan,
+    SimulationSteps.RepayFlashloan,
     {
       amount: TokenAmount
     }

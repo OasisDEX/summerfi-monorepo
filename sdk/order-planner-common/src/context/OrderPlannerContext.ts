@@ -1,12 +1,13 @@
 import { ActionCallsStack } from './ActionCallsStack'
 import { ExecutionStorageMapper } from './ExecutionStorageMapper'
-import { StorageInputsMapType, StorageOutputsMapType } from './Types'
+import { StorageInputsMapType, StorageOutputsMapType } from '../interfaces/Types'
 import { BaseAction } from '../actions/BaseAction'
 import { ActionCallBatch } from '../actions/Types'
 import { steps } from '@summerfi/sdk-common/simulation'
 import { Maybe } from '@summerfi/sdk-common/common'
+import { IOrderPlannerContext } from '../interfaces/IOrderPlannerContext'
 
-export class OrderPlannerContext {
+export class OrderPlannerContext implements IOrderPlannerContext {
   private _calls: ActionCallsStack = new ActionCallsStack()
   private _storage: ExecutionStorageMapper = new ExecutionStorageMapper()
 

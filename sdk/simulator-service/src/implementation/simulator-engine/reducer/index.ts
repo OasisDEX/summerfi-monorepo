@@ -15,7 +15,7 @@ const stateReducers: StateReducers = {
   [SimulationSteps.PaybackWithdraw]: paybackWithdrawReducer,
   [SimulationSteps.Swap]: swapReducer,
   [SimulationSteps.ReturnFunds]: returnFundsReducer,
-  [SimulationSteps.PaybackFlashloan]: repayFlashloanReducer,
+  [SimulationSteps.RepayFlashloan]: repayFlashloanReducer,
   [SimulationSteps.PullToken]: pullTokenReducer,
 }
 

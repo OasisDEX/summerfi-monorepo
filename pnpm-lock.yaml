@@ -838,9 +838,15 @@ importers:
       '@summerfi/deployment-utils':
         specifier: workspace:*
         version: link:../../packages/deployment-utils
+      '@summerfi/order-planner-common':
+        specifier: workspace:*
+        version: link:../../sdk/order-planner-common
       '@summerfi/order-planner-service':
         specifier: workspace:*
         version: link:../../sdk/order-planner-service
+      '@summerfi/protocol-plugins':
+        specifier: workspace:*
+        version: link:../../sdk/protocol-plugins
       '@summerfi/sdk-client':
         specifier: workspace:*
         version: link:../../sdk/sdk-client
@@ -10258,7 +10264,6 @@ packages:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
     dev: true
-    bundledDependencies: false
 
   /event-stream@3.3.4:
     resolution: {integrity: sha512-QHpkERcGsR0T7Qm3HNJSyXKEEj8AHNxkY3PK8TS2KJvQ7NiSHe3DDpwVKKtoYprL/AreyzFBeIkBIWChAqn60g==}

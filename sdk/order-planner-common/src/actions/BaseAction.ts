@@ -13,6 +13,7 @@ import { ActionConfig, ActionCall } from './Types'
  *              the versioned name of the action.
  */
 export abstract class BaseAction {
+  private DefaultParamsMapping: number[] = [0, 0, 0, 0]
   public abstract readonly config: ActionConfig
 
   /**
@@ -54,7 +55,7 @@ export abstract class BaseAction {
     const calldata = encodeFunctionData({
       abi,
       functionName: 'execute',
-      args: [encodedArgs, params.mapping ?? []],
+      args: [encodedArgs, params.mapping ?? this.DefaultParamsMapping],
     })
 
     return {

@@ -10,6 +10,7 @@ import { ActionCall } from '../actions/Types'
 import { encodeStrategy } from '../utils/EncodeStrategy'
 import { IUser } from '@summerfi/sdk-client'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
+import { ProtocolBuilderRegistryType } from '../interfaces/Types'
 
 export class OrderPlanner implements IOrderPlanner {
   private readonly ExecutorContractName = 'OperationExecutor'
@@ -21,9 +22,17 @@ export class OrderPlanner implements IOrderPlanner {
     actionBuildersMap: ActionBuildersMap
     deployment: Deployment
     swapManager: ISwapManager
+    protocolsRegistry: ProtocolBuilderRegistryType
   }): Promise<Maybe<Order>> {
-    const { user, positionsManager, simulation, actionBuildersMap, deployment, swapManager } =
-      params
+    const {
+      user,
+      positionsManager,
+      simulation,
+      actionBuildersMap,
+      deployment,
+      swapManager,
+      protocolsRegistry,
+    } = params
 
     const context: OrderPlannerContext = new OrderPlannerContext()
 
@@ -39,10 +48,10 @@ export class OrderPlanner implements IOrderPlanner {
         context,
         user,
         positionsManager,
-        simulation,
         swapManager,
         deployment,
         step,
+        protocolsRegistry,
       })
     }
 

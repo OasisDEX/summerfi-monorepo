@@ -7,21 +7,32 @@ import {
   type Position,
   type PositionId,
   type Wallet,
+  ChainInfo,
+  Token,
+  Address,
 } from '@summerfi/sdk-common/common'
 import { ILKType, MakerPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
-import type { Chain } from '../implementation/Chain'
 
 export async function getMockPosition(params: {
-  chain: Chain
+  chainInfo: ChainInfo
   wallet: Wallet
   id: PositionId
 }): Promise<Maybe<Position>> {
-  const debtToken = await params.chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.DAI })
-  const collateralToken = await params.chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.WETH })
+  const debtToken = Token.createFrom({
+    symbol: TokenSymbol.DAI,
+    address: Address.createFrom({ value: '0x6b175474e89094c44da98b954eedeac495271d0f' }),
+    decimals: 18,
+    name: 'Dai Stablecoin',
+    chainInfo: params.chainInfo,
+  })
 
-  if (!debtToken || !collateralToken) {
-    return undefined
-  }
+  const collateralToken = Token.createFrom({
+    symbol: TokenSymbol.WETH,
+    address: Address.createFrom({ value: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2' }),
+    decimals: 18,
+    name: 'Wrapped Ether',
+    chainInfo: params.chainInfo,
+  })
 
   return {
     positionId: params.id,
@@ -41,7 +52,7 @@ export async function getMockPosition(params: {
       } as MakerPoolId,
       protocol: {
         name: ProtocolName.Maker,
-        chainInfo: params.chain.chainInfo,
+        chainInfo: params.chainInfo,
       },
       type: PoolType.Lending,
     },

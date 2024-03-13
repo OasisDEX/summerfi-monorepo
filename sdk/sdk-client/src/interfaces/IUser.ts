@@ -1,5 +1,4 @@
-import { Maybe, Position, PositionId, Wallet } from '@summerfi/sdk-common/common'
-import { Chain } from '../implementation/Chain'
+import { ChainInfo, Maybe, Position, PositionId, Wallet } from '@summerfi/sdk-common/common'
 import { Protocol } from '@summerfi/sdk-common/protocols'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { Order } from '@summerfi/sdk-common/orders'
@@ -13,7 +12,7 @@ import { Order } from '@summerfi/sdk-common/orders'
  */
 export interface IUser {
   wallet: Wallet
-  chain: Chain
+  chainInfo: ChainInfo
 
   /**
    * @method getPositionsByProtocol

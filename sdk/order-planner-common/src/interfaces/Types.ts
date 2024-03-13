@@ -1,5 +1,10 @@
 import { steps } from '@summerfi/sdk-common/simulation'
+import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { BaseAction } from '../actions/BaseAction'
+import { IProtocolActionBuilder } from './IProtocolActionBuilder'
+
+export type ProtocolBuilderConstructor = new () => IProtocolActionBuilder
+export type ProtocolBuilderRegistryType = Partial<Record<ProtocolName, ProtocolBuilderConstructor>>
 
 export type Slot = number
 

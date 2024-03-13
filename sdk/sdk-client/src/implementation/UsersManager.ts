@@ -7,6 +7,6 @@ import type { IUsersManager } from '~sdk-client/interfaces/IUsersManager'
 export class UsersManager implements IUsersManager {
   public async getUser(params: { chain: Chain; walletAddress: Address }): Promise<IUser> {
     // TODO: Implement
-    return new User({ chain: params.chain, walletAddress: params.walletAddress })
+    return new User({ chainInfo: params.chain.chainInfo, walletAddress: params.walletAddress })
   }
 }
