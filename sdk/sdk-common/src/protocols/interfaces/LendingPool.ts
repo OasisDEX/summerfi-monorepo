@@ -16,17 +16,19 @@ export interface CollateralConfig {
 }
 
 export interface MakerPoolCollateralConfig extends CollateralConfig {
-  nextPrice: Price // only maker has this TODO add to protocol specific config
-  maxLtv: RiskRatio
+  nextPrice: Price
 }
 
 export interface SparkPoolCollateralConfig extends CollateralConfig {
-  maxLtv: RiskRatio
   usageAsCollateralEnabled: boolean
+  apy: Percentage
+  maxLtv: RiskRatio
 }
 
 export interface AavePoolCollateralConfig extends CollateralConfig {
+  usageAsCollateralEnabled: boolean
   apy: Percentage 
+  maxLtv: RiskRatio
 }
 
 export interface DebtConfig {
@@ -44,7 +46,7 @@ export interface DebtConfig {
 export interface MakerPoolDebtConfig extends DebtConfig {}
 
 export interface AavePoolDebtConfig extends DebtConfig {
-  maxLtv: RiskRatio
+  borrowingEnabled: boolean;
 }
 
 export interface SparkPoolDebtConfig extends DebtConfig {

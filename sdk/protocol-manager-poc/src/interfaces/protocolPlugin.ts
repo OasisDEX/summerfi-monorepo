@@ -1,9 +1,14 @@
 import { AddressValue, Percentage, TokenAmount, TokenSymbol, Price, CurrencySymbol, RiskRatio } from "@summerfi/sdk-common/common"
 import type { SparkLendingPool, SparkPoolDebtConfig, SparkPoolCollateralConfig, MakerLendingPool, SparkPoolId, MakerPoolId } from "@summerfi/sdk-common/protocols"
-import { IPool, PoolType, ProtocolName, IPoolId, EmodeType } from "@summerfi/sdk-common/protocols"
-import { /* PositionId, */ Address, ChainInfo, Position, Token } from "@summerfi/sdk-common/common"
+import { IPool, PoolType, ProtocolName, IPoolId, EmodeType, ILKType } from "@summerfi/sdk-common/protocols"
+import { /* PositionId, */ Address, Position, Token } from "@summerfi/sdk-common/common"
 import {PublicClient, stringToHex} from "viem"
 import { BigNumber } from 'bignumber.js'
+import {
+    filterAssetsListByEMode,
+    SparkPluginBuilder
+} from "./sparkPluginBuilder";
+import { z } from 'zod'
 import {
     VAT_ABI,
     SPOT_ABI,
@@ -11,10 +16,6 @@ import {
     DOG_ABI,
     ILK_REGISTRY,
 } from "./abis"
-import {
-    filterAssetsListByEMode,
-    SparkPluginBuilder
-} from "./sparkPluginBuilder";
 
 export type IPositionId = string & { __positionID: never }
 
@@ -36,7 +37,6 @@ export interface ProtocolManagerContext {
     provider: PublicClient,
     tokenService: ITokenService,
     priceService: IPriceService
-
 }
 
 export interface CreateProtocolPlugin<GenericPoolId extends IPoolId> {
@@ -52,10 +52,10 @@ export enum ChainId {
 
 export interface ProtocolPlugin<GenericPoolId extends IPoolId> {
     supportedChains: ChainId[]
-    getPoolId: (poolId: string) => GenericPoolId
     getPool: (poolId: GenericPoolId) => Promise<IPool>
     getPositionId: (positionId: string) => IPositionId
     getPosition: (positionId: IPositionId) => Promise<Position>
+    _validate: (candidate: unknown) => asserts candidate is GenericPoolId
 }
 
 /*
@@ -107,15 +107,12 @@ function amountFromRad(amount: bigint): BigNumber {
 }
 
 export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: ProtocolManagerContext): ProtocolPlugin<MakerPoolId> => {
-    const plugin = {
+    const plugin: ProtocolPlugin<MakerPoolId> = {
         supportedChains: [ChainId.Mainnet],
-        getPoolId: (poolId: string): MakerPoolId => {
-            // TODO: sort later
-            return poolId as unknown as MakerPoolId
-        },
-        getPool: async (poolId: MakerPoolId): Promise<MakerLendingPool> => {
-            const ilk = poolId.ilkType
-            if (!ilk) throw new Error('emode on poolId not recognised undefined')
+        getPool: async (makerPoolId: unknown): Promise<MakerLendingPool> => {
+            plugin._validate(makerPoolId)
+            const ilk = makerPoolId.ilkType
+            if (!ilk) throw new Error('Ilk type on poolId not recognised')
             const ilkInHex = stringToHex(ilk, { size: 32 })
 
             const chainId = ctx.provider.chain?.id
@@ -198,8 +195,6 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
                 debtFloor: amountFromRad(dust),
             }
 
-            console.log('dust', vatRes.debtFloor.toString())
-
             const spotRes = {
                 priceFeedAddress: Address.createFrom({ value: pip }),
                 liquidationRatio: amountFromRay(mat),
@@ -229,7 +224,6 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
                         token: collateralToken,
                         // TODO: quote the OSM, we need to trick the contract that is SPOT that is doing the query (from in tx is SPOT)
                         price: await ctx.priceService.getPrice({baseToken: collateralToken, quoteToken }),
-                        // TODO
                         nextPrice: Price.createFrom({ value: spotRes.liquidationRatio.toString(), baseToken: collateralToken, quoteToken: quoteToken }), // TODO
                         priceUSD: await ctx.priceService.getPriceUSD(collateralToken),
 
@@ -260,12 +254,8 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
 
             return {
                 type: PoolType.Lending,
-                poolId,
-                // TODO: Get protocol by proper means
-                protocol: {
-                    name: ProtocolName.Maker,
-                    chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
-                },
+                poolId: makerPoolId,
+                protocol: makerPoolId.protocol,
                 baseCurrency: poolBaseCurrencyToken,
                 collaterals,
                 debts
@@ -276,22 +266,40 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
         },
         getPosition: async (positionId: IPositionId): Promise<Position> => {
             throw new Error("Not implemented")
+        },
+        _validate: function (candidate: unknown): asserts candidate is MakerPoolId {
+            const ProtocolNameEnum = z.nativeEnum(ProtocolName);
+            const IlkTypeEnum = z.nativeEnum(ILKType);
+            const ChainInfoType = z.object({
+                name: z.string(),
+                chainId: z.number()
+            })
+
+            const SparkPoolIdSchema = z.object({
+                protocol: z.object({
+                    name: ProtocolNameEnum,
+                    chainInfo: ChainInfoType
+                }),
+                ilkType: IlkTypeEnum
+            });
+
+            const parseResult = SparkPoolIdSchema.safeParse(candidate);
+            if (!parseResult.success) {
+                const errorDetails = parseResult.error.errors.map(error => `${error.path.join('.')} - ${error.message}`).join(', ');
+                throw new Error(`Candidate is not the correct shape: ${errorDetails}`);
+            }
         }
     }
 
     return plugin
 }
-
 export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: ProtocolManagerContext): ProtocolPlugin<SparkPoolId> => {
-    const plugin = {
+    const plugin: ProtocolPlugin<SparkPoolId> = {
         supportedChains: [ChainId.Mainnet],
-        getPoolId: (poolId: string): SparkPoolId => {
-            // TODO: sort later
-            return poolId as unknown as SparkPoolId
-        },
-        getPool: async (poolId: SparkPoolId): Promise<SparkLendingPool> => {
-            const emode = sparkEmodeCategoryMap[poolId.emodeType]
-            if (!emode) throw new Error('emode on poolId not recognised undefined')
+        getPool: async (sparkPoolId: unknown): Promise<SparkLendingPool> => {
+            plugin._validate(sparkPoolId)
+            const emode = sparkEmodeCategoryMap[sparkPoolId.emodeType]
+            if (!emode && emode !== 0n) throw new Error('emode on poolId not recognised')
 
             const chainId = ctx.provider.chain?.id
             if (!chainId) throw new Error('ctx.provider.chain.id undefined')
@@ -301,20 +309,21 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
             }
 
             const builder = await (new SparkPluginBuilder(ctx)).init();
-            const _reservesAssetsList = await builder
+            const reservesAssetsList = await builder
+                .addPrices()
                 .addReservesCaps()
                 .addReservesConfigData()
                 .addReservesData()
                 .addEmodeCategories()
                 .build()
 
-            const reservesAssetsList = filterAssetsListByEMode(_reservesAssetsList, emode)
+            const filteredAssetsList = filterAssetsListByEMode(reservesAssetsList, emode)
 
             // Both USDC & DAI use fixed price oracles that keep both stable at 1 USD
             const poolBaseCurrencyToken = CurrencySymbol.USD
 
             const collaterals: Record<AddressValue, SparkPoolCollateralConfig> = {}
-            for (const asset of reservesAssetsList) {
+            for (const asset of filteredAssetsList) {
                 const { token: collateralToken, config: { usageAsCollateralEnabled, ltv, liquidationThreshold, liquidationBonus }, caps: { supplyCap }, data: { totalAToken } } = asset;
                 // TODO: Remove Try/Catch once PriceService updated to use protocol oracle
 
@@ -323,14 +332,22 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
                 try {
                     collaterals[collateralToken.address.value] = {
                         token: collateralToken,
-                        // TODO: need to update price service to use protocol oracle
+                        price: Price.createFrom({
+                            baseToken: collateralToken,
+                            quoteToken: poolBaseCurrencyToken,
+                            value: asset.price.toString(),
+                        }),
+                        priceUSD: Price.createFrom({
+                            baseToken: collateralToken,
+                            quoteToken: CurrencySymbol.USD,
+                            value: asset.price.toString(),
+                        }),
                         maxLtv: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: Number((ltv / LTV_TO_PERCENTAGE_DIVISOR).toString()) }), type: RiskRatio.type.LTV }),
-                        price: await ctx.priceService.getPrice({baseToken: collateralToken, quoteToken: poolBaseCurrencyToken }),
-                        priceUSD: await ctx.priceService.getPriceUSD(collateralToken),
                         liquidationThreshold: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: Number((liquidationThreshold / LTV_TO_PERCENTAGE_DIVISOR).toString()) }), type: RiskRatio.type.LTV }),
                         tokensLocked: tokenAmountFromBaseUnit({token: collateralToken, amount: totalAToken.toString()}),
                         maxSupply: TokenAmount.createFrom({token: collateralToken, amount: supplyCap === 0n ? UNCAPPED_SUPPLY : supplyCap.toString() }),
                         liquidationPenalty: Percentage.createFrom({ percentage: Number((liquidationBonus / LTV_TO_PERCENTAGE_DIVISOR).toString()) }),
+                        apy: Percentage.createFrom({ percentage: 0 }),
                         usageAsCollateralEnabled,
                     }
                 } catch (e) {
@@ -340,7 +357,7 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
             }
 
             const debts: Record<AddressValue, SparkPoolDebtConfig> = {}
-            for (const asset of reservesAssetsList) {
+            for (const asset of filteredAssetsList) {
                 const { token: quoteToken, config: { borrowingEnabled, reserveFactor }, caps: { borrowCap }, data: { totalVariableDebt, totalStableDebt, variableBorrowRate } } = asset;
                 // TODO: Remove Try/Catch once PriceService updated to use protocol oracle
                 if (quoteToken.symbol === TokenSymbol.WETH) {
@@ -350,15 +367,24 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
 
                 try {
                     const RESERVE_FACTOR_TO_PERCENTAGE_DIVISOR = 10000n
-
                     const PRECISION_PRESERVING_OFFSET = 1000000n
                     const RATE_DIVISOR_TO_GET_PERCENTAGE = Number((PRECISION_PRESERVING_OFFSET - 100n).toString())
+
                     const rate = Number(((variableBorrowRate * PRECISION_PRESERVING_OFFSET) / PRESISION_BI.RAY).toString()) / RATE_DIVISOR_TO_GET_PERCENTAGE
-                    const totalBorrowed = totalVariableDebt - totalStableDebt
+                    const totalBorrowed = totalVariableDebt + totalStableDebt
                     debts[quoteToken.address.value] = {
                         token: quoteToken,
-                        price: await ctx.priceService.getPrice({baseToken: quoteToken, quoteToken: poolBaseCurrencyToken }),
-                        priceUSD: await ctx.priceService.getPriceUSD(quoteToken),
+                        // TODO: If we further restricted pools we could have token pair prices
+                        price: Price.createFrom({
+                            baseToken: quoteToken,
+                            quoteToken: poolBaseCurrencyToken,
+                            value: new BigNumber(asset.price.toString()).toString(),
+                        }),
+                        priceUSD: Price.createFrom({
+                            baseToken: quoteToken,
+                            quoteToken: CurrencySymbol.USD,
+                            value: new BigNumber(asset.price.toString()).toString(),
+                        }),
                         rate: Percentage.createFrom({ percentage: rate }),
                         totalBorrowed: tokenAmountFromBaseUnit({token: quoteToken, amount: totalBorrowed.toString() }),
                         debtCeiling: TokenAmount.createFrom({token: quoteToken, amount: borrowCap === 0n ? UNCAPPED_SUPPLY : borrowCap.toString() }),
@@ -373,17 +399,10 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
                 }
             }
 
-            // TODO: Resolve in a proper manner
-            const chainInfo = ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' })
-
             return {
                 type: PoolType.Lending,
-                poolId,
-                // TODO: Get protocol by proper means
-                protocol: {
-                    name: ProtocolName.Maker,
-                    chainInfo,
-                },
+                poolId: sparkPoolId,
+                protocol: sparkPoolId.protocol,
                 baseCurrency: CurrencySymbol.USD,
                 collaterals,
                 debts
@@ -394,17 +413,38 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
         },
         getPosition: async (positionId: IPositionId): Promise<Position> => {
             throw new Error("Not implemented")
+        },
+        _validate: function (candidate: unknown): asserts candidate is SparkPoolId {
+            const ProtocolNameEnum = z.nativeEnum(ProtocolName);
+            const EmodeTypeEnum = z.nativeEnum(EmodeType);
+            const ChainInfoType = z.object({
+                name: z.string(),
+                chainId: z.number()
+            })
+
+            const SparkPoolIdSchema = z.object({
+                protocol: z.object({
+                    name: ProtocolNameEnum,
+                    chainInfo: ChainInfoType
+                }),
+                emodeType: EmodeTypeEnum
+            });
+
+            const parseResult = SparkPoolIdSchema.safeParse(candidate);
+            if (!parseResult.success) {
+                const errorDetails = parseResult.error.errors.map(error => `${error.path.join('.')} - ${error.message}`).join(', ');
+                throw new Error(`Candidate is not the correct shape: ${errorDetails}`);
+            }
         }
     }
 
     return plugin
 }
 
-const sparkEmodeCategoryMap: Record<EmodeType, bigint> = {
-    [EmodeType.None]: 0n,
-    [EmodeType.ETHCorrelated]: 1n,
-    [EmodeType.Stablecoins]: 2n,
-}
+const sparkEmodeCategoryMap: Record<EmodeType, bigint> = Object.keys(EmodeType).reduce<Record<EmodeType, bigint>>((accumulator, key, index) => {
+    accumulator[EmodeType[key as keyof typeof EmodeType]] = BigInt(index);
+    return accumulator;
+}, {} as Record<EmodeType, bigint>);
 
 /*
 In order to get pool from protocol we need to know:
