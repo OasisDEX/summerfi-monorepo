@@ -9,14 +9,11 @@ import { mainnet } from 'viem/chains'
 export const getPool = publicProcedure
   .input(
     z.object({
-      protocol: z.custom<Protocol>((protocol) => protocol !== undefined),
       poolParameters: z.custom<PoolParameters>((poolParameter) => poolParameter !== undefined),
-      protocolParameters: z
-        .custom<Wallet>((protocolParameters) => protocolParameters !== undefined)
-        .optional(),
     }),
   )
   .query(async (params) => {
+    // TODO create client manager to set chain 
     const client = createPublicClient({
       batch: {
         multicall: true,
