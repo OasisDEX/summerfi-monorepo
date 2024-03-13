@@ -1,4 +1,4 @@
-import { Deployment } from '@summerfi/deployment-utils'
+import { Deployment, DeploymentIndex } from '@summerfi/deployment-utils'
 import { ProtocolBuilderRegistryType } from '@summerfi/order-planner-common/interfaces'
 import { IUser } from '@summerfi/sdk-client'
 import { IPositionsManager } from '@summerfi/sdk-common/orders'
@@ -17,12 +17,15 @@ export type SetupBuilderReturnType = {
   swapManager: SwapManagerMock
   deployment: Deployment
   protocolsRegistry: ProtocolBuilderRegistryType
+  deploymentIndex: DeploymentIndex
 }
 
 export function setupBuilderParams(params: {
   chainInfo: ChainInfo
   deploymentKey?: string
 }): SetupBuilderReturnType {
+  const deploymentIndex = SetupDeployments()
+
   return {
     context: new OrderPlannerContextMock(),
     user: new UserMock({
@@ -33,10 +36,11 @@ export function setupBuilderParams(params: {
       address: Address.ZeroAddressEthereum,
     },
     swapManager: new SwapManagerMock(),
-    deployment: SetupDeployments(),
+    deployment: deploymentIndex[params.deploymentKey ?? 'mainnet.standard'],
     protocolsRegistry: {
       [ProtocolName.Maker]: ProtocolBuilderMock,
       [ProtocolName.Spark]: ProtocolBuilderMock,
     },
+    deploymentIndex: deploymentIndex,
   }
 }
