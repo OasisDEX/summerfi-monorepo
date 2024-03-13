@@ -81,7 +81,7 @@ export const createAaveV3Plugin: CreateProtocolPlugin<AaveV3PoolId> = (ctx: Prot
                 const { token: quoteToken, config: { borrowingEnabled, reserveFactor }, caps: { borrowCap }, data: { totalVariableDebt, totalStableDebt, variableBorrowRate } } = asset;
                 // TODO: Remove Try/Catch once PriceService updated to use protocol oracle
                 if (quoteToken.symbol === TokenSymbol.WETH) {
-                    // WETH can be used as collateral on Spark but not borrowed.
+                    // WETH can be used as collateral on AaveV3 but not borrowed.
                     continue;
                 }
 

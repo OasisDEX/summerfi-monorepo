@@ -1,4 +1,3 @@
-import {createAaveV3Plugin} from "../src/implementation/aaveV3Plugin";
 import {
   createMakerPlugin,
   ProtocolPlugin,
@@ -7,6 +6,7 @@ import {
   IPriceService,
   AddressAbiMapsByProtocol,
   createSparkPlugin,
+  createAaveV3Plugin,
   IContractProvider,
   MakerContracts,
   AaveV3LikeContracts,
