@@ -1,5 +1,4 @@
 import {
-  createMakerPlugin,
   ProtocolPlugin,
   ProtocolManagerContext,
   ITokenService,
@@ -12,6 +11,7 @@ import { Address, ChainInfo, CurrencySymbol, Price, Token, TokenSymbol } from '@
 import { BigNumber } from 'bignumber.js'
 import type { SparkPoolId, MakerPoolId } from "@summerfi/sdk-common/protocols"
 import { ProtocolName, EmodeType, ILKType } from "@summerfi/sdk-common/protocols"
+import { createMakerPlugin } from '../src/interfaces/createMakerPlugin'
 
 
 import { priceFeedABI } from './priceFeedABI'
@@ -185,7 +185,7 @@ describe('playground', () => {
     sparkPlugin = createSparkPlugin(ctx)
   })
 
-  it('template/maker', async () => {
+  it.only('template/maker', async () => {
     // const result = await makerPlugin.getPool(makerPlugin.getPoolId("ETH-A"))
     const result = await makerPlugin.getPool({
         protocol: {
@@ -194,10 +194,20 @@ describe('playground', () => {
         },
         ilkType: ILKType.ETH_A
     })
-    console.log(result)
+    console.log(`
+    MAKER POOL
+    ----------------
+    Protocol: ${result.protocol.name}
+    Chain: ${result.protocol.chainInfo.name}
+    IlkType: ${JSON.stringify(result.poolId)}
+    ${result.baseCurrency.toString()}}
+    ${JSON.stringify(result.collaterals,null,4)}
+    
+    
+    `)
   })
 
-  it.only('template/spark', async () => {
+  it('template/spark', async () => {
     // const result = await sparkPlugin.getPool(sparkPlugin.getPoolId("0"))
     const result = await sparkPlugin.getPool({
       protocol: {
@@ -206,6 +216,6 @@ describe('playground', () => {
       },
       emodeType: EmodeType.None
     })
-    console.log(result)
+    // console.log(result)
   })
 })
