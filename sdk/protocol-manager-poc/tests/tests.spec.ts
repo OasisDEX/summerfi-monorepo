@@ -186,7 +186,6 @@ describe('playground', () => {
   })
 
   it('template/maker', async () => {
-    // const result = await makerPlugin.getPool(makerPlugin.getPoolId("ETH-A"))
     const result = await makerPlugin.getPool({
         protocol: {
           name: ProtocolName.Maker,
@@ -197,7 +196,7 @@ describe('playground', () => {
     console.log(result)
   })
 
-  it.only('template/spark', async () => {
+  it('template/spark', async () => {
     // const result = await sparkPlugin.getPool(sparkPlugin.getPoolId("0"))
     const result = await sparkPlugin.getPool({
       protocol: {

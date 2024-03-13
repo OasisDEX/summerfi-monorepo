@@ -1,10 +1,11 @@
-import {ProtocolManagerContext, SparkContracts} from "./protocolPlugin";
+import { ProtocolManagerContext } from '../interfaces/protocolPlugin'
+import { SparkContracts } from "./sparkPlugin";
 import { HexData } from "@summerfi/sdk-common/common"
 import { Address, Token } from "@summerfi/sdk-common/common"
 import {
     ORACLE_ABI,
     POOL_DATA_PROVIDER
-} from "./abis"
+} from "../interfaces/abis"
 
 type ReservesConfigData = {
     decimals: bigint
