@@ -341,12 +341,12 @@ export const createSparkPlugin: CreateProtocolPlugin<SparkPoolId> = (ctx: Protoc
                         price: Price.createFrom({
                             baseToken: collateralToken,
                             quoteToken: poolBaseCurrencyToken,
-                            value: new BigNumber(asset.price.toString()).toString(),
+                            value: asset.price.toString(),
                         }),
                         priceUSD: Price.createFrom({
                             baseToken: collateralToken,
                             quoteToken: CurrencySymbol.USD,
-                            value: new BigNumber(asset.price.toString()).toString(),
+                            value: asset.price.toString(),
                         }),
                         liquidationThreshold: RiskRatio.createFrom({ ratio: Percentage.createFrom({ percentage: Number((liquidationThreshold / LTV_TO_PERCENTAGE_DIVISOR).toString()) }), type: RiskRatio.type.LTV }),
                         tokensLocked: tokenAmountFromBaseUnit({token: collateralToken, amount: totalAToken.toString()}),
