@@ -1,5 +1,5 @@
 {
-  "name": "@summerfi/get-morpho-rewards-function",
+  "name": "@summerfi/get-meta-morpho-details-function",
   "version": "0.0.1",
   "scripts": {
     "tsc": "tsc",

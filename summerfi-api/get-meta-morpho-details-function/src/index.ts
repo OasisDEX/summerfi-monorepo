@@ -32,7 +32,7 @@ const tokenPriceSchema = z
   .describe('Price of the token in USD to calculate the APY')
 
 const paramsSchema = z.object({
-  metaMorpho: addressSchema,
+  address: addressSchema,
   chainId: chainIdSchema.optional().default(ChainId.MAINNET),
   rpc: urlOptionalSchema,
   amount: bigIntSchema
@@ -146,17 +146,17 @@ export const handler = async (
 
   const client = getMorphoBlueApiClient({ logger })
 
-  const result = await client.allocations({ metaMorphoAddresses: [params.metaMorpho] })
+  const result = await client.allocations({ metaMorphoAddresses: [params.address] })
   if (result.length === 0) {
-    return ResponseOk({ body: emptyResponse(params.metaMorpho) })
+    return ResponseOk({ body: emptyResponse(params.address) })
   }
 
   // we can assume that the array should have only one element because we are querying only one address
   const allocations = result.flatMap((r) => r.allocations)
   const metaMorphoVault = result[0].vault
-  if (metaMorphoVault.address !== params.metaMorpho) {
+  if (metaMorphoVault.address !== params.address) {
     logger.error('Vault address does not match the requested address', { metaMorphoVault, params })
-    return ResponseOk({ body: emptyResponse(params.metaMorpho) })
+    return ResponseOk({ body: emptyResponse(params.address) })
   }
   const markets = allocations.map(
     (a): Pick<MorphoMarket, 'marketId'> => ({
@@ -251,7 +251,7 @@ export const handler = async (
 
   const response: GetRewardsResponse = {
     metaMorpho: {
-      address: params.metaMorpho,
+      address: params.address,
       weeklyApy: metaMorphoVault.weeklyApy,
       monthlyApy: metaMorphoVault.monthlyApy,
       dailyApy: metaMorphoVault.dailyApy,
