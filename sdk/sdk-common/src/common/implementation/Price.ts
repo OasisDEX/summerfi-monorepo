@@ -1,5 +1,4 @@
 import { SerializationService } from '../../services/SerializationService'
-import { isToken } from '../../utils/isToken'
 import { CurrencySymbol } from '../enums/CurrencySymbol'
 import { Token } from './Token'
 

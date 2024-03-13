@@ -52,7 +52,7 @@ describe('Refinance | SDK', () => {
     })
     expect(user).toBeDefined()
     expect(user.wallet.address).toEqual(walletAddress)
-    expect(user.chain).toEqual(chain)
+    expect(user.chainInfo).toEqual(chain.chainInfo)
 
     // Tokens
     const WETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.WETH })
