@@ -1,1 +1,1 @@
-export { protocolManager, type PoolIds } from './ProtocolManager'
+export { protocolManager, type PoolIds } from './ProtocolManager_'
