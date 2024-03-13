@@ -22,11 +22,13 @@ export interface MakerPoolCollateralConfig extends CollateralConfig {
 export interface SparkPoolCollateralConfig extends CollateralConfig {
   usageAsCollateralEnabled: boolean
   apy: Percentage
+  maxLtv: RiskRatio
 }
 
 export interface AavePoolCollateralConfig extends CollateralConfig {
   usageAsCollateralEnabled: boolean
   apy: Percentage 
+  maxLtv: RiskRatio
 }
 
 export interface DebtConfig {
