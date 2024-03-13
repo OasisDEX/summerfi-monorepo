@@ -11,7 +11,7 @@ import { Address, ChainInfo, CurrencySymbol, Price, Token, TokenSymbol } from '@
 import { BigNumber } from 'bignumber.js'
 import type { SparkPoolId, MakerPoolId } from "@summerfi/sdk-common/protocols"
 import { ProtocolName, EmodeType, ILKType } from "@summerfi/sdk-common/protocols"
-import { createMakerPlugin } from '../src/interfaces/createMakerPlugin'
+import { createMakerPlugin } from '../src/implementation/MakerPlugin'
 
 
 import { priceFeedABI } from './priceFeedABI'

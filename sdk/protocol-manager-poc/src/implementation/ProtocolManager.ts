@@ -1,0 +1,47 @@
+import { Position } from "@summerfi/sdk-common/common";
+import { ProtocolManagerContext, ProtocolPlugin } from "../interfaces/protocolPlugin";
+import { makerPlugin } from "src/implementation/MakerPlugin";
+import { IPoolId } from "@summerfi/sdk-common/protocols";
+import { sparkPlugin } from "./SparkPlugin";
+
+type GetPoolIds<ProtocolPlugins extends ProtocolPlugin<any>[]> = { [K in keyof ProtocolPlugins]: ProtocolPlugins[K] extends ProtocolPlugin<infer T> ? T : never }[number]
+type UnPackPromise<T> = T extends Promise<infer U> ? U : T
+type MatchProtocol<ProtocolPlugins extends ProtocolPlugin<any>[], PoolId extends IPoolId> = ProtocolPlugins extends [infer First, ...infer Rest] 
+    ? First extends ProtocolPlugin<PoolId> 
+        ? First 
+        : Rest extends ProtocolPlugin<any>[] 
+            ? MatchProtocol<Rest, PoolId> 
+            : never
+    : never
+type ReturnPool<ProtocolPlugins extends ProtocolPlugin<any>[], PoolId extends IPoolId> = UnPackPromise<ReturnType<MatchProtocol<ProtocolPlugins, PoolId>['getPool']>>
+type ExtractPoolIds<P extends ProtocolManager<any>> = P extends ProtocolManager<infer T> ? GetPoolIds<T> : never
+
+export class ProtocolManager<ProtocolPlugins extends ProtocolPlugin<any>[]> {
+    constructor(private readonly pluginsCreators: ProtocolPlugins) {}
+
+    public async getPool<PoolId extends  GetPoolIds<ProtocolPlugins>>(poolId: PoolId, ctx: ProtocolManagerContext): Promise<ReturnPool<ProtocolPlugins, PoolId>> {
+        const plugin: ProtocolPlugin<PoolId> | undefined = this.pluginsCreators.find((plugin) => plugin.protocol === poolId.protocol)
+
+        if (!plugin) {
+            throw new Error(`No plugin found for protocol: ${poolId.protocol}`)
+        }
+        const chainId = await ctx.provider.getChainId()
+
+        if (!plugin.supportedChains.includes(chainId)) {
+            throw new Error(`Chain ${chainId} is not supported by plugin ${plugin.protocol}`)
+        }
+
+        return plugin.getPool(poolId, ctx) as ReturnPool<ProtocolPlugins, PoolId>
+    }
+
+    public getPosition(ctx: ProtocolManagerContext): Position {
+        throw new Error('Not implemented')
+    }
+}
+
+export const protocolManager = new ProtocolManager([
+    makerPlugin, 
+    sparkPlugin,
+] as const)
+
+export type PoolIds = ExtractPoolIds<typeof protocolManager>

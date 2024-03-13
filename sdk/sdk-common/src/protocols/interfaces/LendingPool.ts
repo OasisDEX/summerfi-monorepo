@@ -17,6 +17,8 @@ export interface CollateralConfig {
 
 export interface MakerPoolCollateralConfig extends CollateralConfig {
   nextPrice: Price
+  lastPriceUpdate: Date
+  nextPriceUpdate: Date
 }
 
 export interface SparkPoolCollateralConfig extends CollateralConfig {
