@@ -1,0 +1,10 @@
+### Get Morpho Rewards for Steakhouse USDC
+# Query Parameters:
+# `metaMorpho` - required, an adress of `Meta Morpho` vault (in this example it's `steakhoseUSDC`).
+# `amount` - optional, amount of USDC deposited (default is 10_000 USDC in USDC precistion so `10_000 * 10**6`).
+# `rpc` optional, you can pass your fork or any other rpc endpoint.
+# `wsEthPrice` - optional, price of ETH in USD (without the price the APY is not calculated).
+# `morphoPrice` - optional, price of MORPHO in USD (without the price the APY is not calculated).
+# `swisePrice` - optional, price of SWISE in USD (without the price the APY is not calculated).
+# `usdcPrice` - optional, price of USDC in USD (without the price the APY is not calculated).
+GET {{url}}/api/morpho-rewards?metaMorpho={{steakhouse-usdc-address}}&wsEthPrice=4604.81

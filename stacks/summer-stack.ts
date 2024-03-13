@@ -3,6 +3,7 @@ import { addTriggersConfig } from './triggers'
 import { addSdkConfig } from './sdk'
 import { addMigrationsConfig } from './migrations'
 import { addPortfolioConfig } from './portfolio'
+import { addMorphoRewards } from './morpho-rewards'
 
 export function API(stackContext: StackContext) {
   const { stack } = stackContext
@@ -17,6 +18,7 @@ export function API(stackContext: StackContext) {
   addSdkConfig({ ...stackContext, api })
   addMigrationsConfig({ ...stackContext, api })
   addPortfolioConfig({ ...stackContext, api })
+  addMorphoRewards({ ...stackContext, api })
 
   stack.addOutputs({
     ApiEndpoint: api.url,

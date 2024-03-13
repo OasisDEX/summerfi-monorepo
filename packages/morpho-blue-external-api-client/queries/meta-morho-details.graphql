@@ -1,0 +1,54 @@
+query metaMorphoDetails($metaMorphoAddresses: [String!]) {
+    vaults (where: { address_in: $metaMorphoAddresses }) {
+        items {
+            name
+            symbol
+            address
+            asset {
+                address
+                symbol
+                decimals
+                priceUsd
+            }
+            chain {
+                id
+                network
+            }
+            state {
+                totalAssets
+                totalAssetsUsd
+                apy
+                fee
+                allocation {
+                    id
+                    market {
+                        uniqueKey
+                        id
+                    }
+                    supplyAssets
+                }
+            }
+        }
+    }
+    markets {
+        items {
+            id
+            uniqueKey
+            collateralAsset {
+                id
+                address
+                symbol
+                priceUsd
+                decimals
+
+            }
+            loanAsset {
+                id
+                address
+                symbol
+                priceUsd
+                decimals
+            }
+        }
+    }
+}
