@@ -1,7 +1,7 @@
 import { AddressValue, Percentage, TokenAmount, TokenSymbol, Price, CurrencySymbol, RiskRatio } from "@summerfi/sdk-common/common"
 import type { AaveV3LendingPool, AaveV3PoolDebtConfig, AaveV3PoolCollateralConfig, AaveV3PoolId } from "@summerfi/sdk-common/protocols"
 import { PoolType, ProtocolName, EmodeType } from "@summerfi/sdk-common/protocols"
-import { Position } from "@summerfi/sdk-common/common"
+import { Position, ChainInfo } from "@summerfi/sdk-common/common"
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
 import { ChainId, IPositionId, ProtocolManagerContext, ProtocolPlugin } from "../interfaces";
@@ -129,13 +129,14 @@ export class AaveV3Plugin implements ProtocolPlugin<AaveV3PoolId> {
         throw new Error(`getPosition not implemented ${positionId}`)
     }
 
-    // @ts-ignore -- need to resolve this fully
     schema: z.Schema<AaveV3PoolId> = z.object({
         protocol: z.object({
             name: z.literal(ProtocolName.AAVEv3),
             chainInfo: z.object({
                 name: z.string(),
                 chainId: z.custom((value) => this.supportedChains.includes(value as ChainId), "Chain ID not supported")
+            }).refine((data) => data instanceof ChainInfo, {
+                message: "Invalid ChainInfo",
             })
         }),
         emodeType: z.nativeEnum(EmodeType)
