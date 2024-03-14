@@ -14,6 +14,7 @@ export function createErrorBody(message: string): string | undefined {
 export function createHeaders(): Record<string, string | number | boolean> {
   return {
     'Access-Control-Allow-Origin': '*',
+    'content-type': 'application/json',
   }
 }
 
@@ -35,6 +36,13 @@ export function ResponseBadRequest(message: string | object): APIGatewayProxyRes
     statusCode: 400,
     headers: createHeaders(),
     body: typeof message === 'object' ? serialize(message) : createErrorBody(message),
+  }
+}
+
+export function ResponseNotFound(): APIGatewayProxyResultV2 {
+  return {
+    statusCode: 404,
+    headers: createHeaders(),
   }
 }
 

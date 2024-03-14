@@ -6,8 +6,10 @@ import {
   parseAbiParameters,
   stringToBytes,
 } from 'viem'
-import { automationBotAbi } from '~abi'
-import { DmaSparkStopLossTriggerData, PositionLike } from '~types'
+import { automationBotAbi } from '@summerfi/abis'
+import { DmaSparkStopLossTriggerData } from '~types'
+import { PositionLike } from '@summerfi/triggers-shared'
+
 import { TriggerType } from '@oasisdex/automation'
 import { getMaxCoverage } from './get-max-coverage'
 import { OPERATION_NAMES } from '@oasisdex/dma-library'

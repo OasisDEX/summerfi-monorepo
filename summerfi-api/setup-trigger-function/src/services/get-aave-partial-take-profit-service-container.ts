@@ -1,18 +1,11 @@
 import { ServiceContainer } from './service-container'
-import {
-  AavePartialTakeProfitEventBody,
-  mergeValidationResults,
-  PositionLike,
-  SupportedActions,
-  ValidationResults,
-} from '~types'
+import { AavePartialTakeProfitEventBody, mergeValidationResults, ValidationResults } from '~types'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
 import { Address, ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
-import { getAavePosition } from './get-aave-position'
 import {
   aavePartialTakeProfitValidator,
   dmaAaveStopLossValidator,
@@ -27,9 +20,12 @@ import {
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
 import { getCurrentAaveStopLoss } from './get-current-aave-stop-loss'
 import { DerivedPrices } from '@summerfi/prices-subgraph'
-import { simulateAutoTakeProfit } from './simulations'
-import { MinimalStopLossInformation } from './simulations/auto-take-profit/types'
-import { calculateCollateralPriceInDebtBasedOnLtv } from '~helpers'
+import { PositionLike, SupportedActions } from '@summerfi/triggers-shared'
+import {
+  calculateCollateralPriceInDebtBasedOnLtv,
+  getAavePosition,
+  simulateAutoTakeProfit,
+} from '@summerfi/triggers-calculations'
 
 export interface GetAavePartialTakeProfitServiceContainerProps {
   rpc: PublicClient
@@ -83,9 +79,16 @@ export const getAavePartialTakeProfitServiceContainer: (
   chainId,
 }) => {
   const getPosition = memoize(async (params: Parameters<typeof getAavePosition>[0]) => {
-    return await getAavePosition(params, rpc, addresses, logger)
+    return await getAavePosition(
+      params,
+      rpc,
+      {
+        poolDataProvider: addresses.AaveV3.AaveDataPoolProvider,
+        oracle: addresses.AaveV3.AaveOracle,
+      },
+      logger,
+    )
   })
-
   return {
     simulatePosition: async ({ trigger }) => {
       const position = await getPosition({
@@ -97,10 +100,9 @@ export const getAavePartialTakeProfitServiceContainer: (
 
       const currentStopLoss = getCurrentAaveStopLoss(triggers, position, logger)
       const choosenStopLossExecutionLtv = trigger.triggerData.stopLoss?.triggerData.executionLTV
-      const minimalStopLossInformation: MinimalStopLossInformation | undefined =
-        choosenStopLossExecutionLtv
-          ? { executionLTV: choosenStopLossExecutionLtv }
-          : currentStopLoss
+      const minimalStopLossInformation = choosenStopLossExecutionLtv
+        ? { executionLTV: choosenStopLossExecutionLtv }
+        : currentStopLoss
       return simulateAutoTakeProfit({
         position,
         currentStopLoss: minimalStopLossInformation,

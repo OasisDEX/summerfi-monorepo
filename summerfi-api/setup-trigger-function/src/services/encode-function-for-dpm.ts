@@ -1,5 +1,5 @@
 import { encodeFunctionData } from 'viem'
-import { accountImplementationAbi } from '~abi'
+import { accountImplementationAbi } from '@summerfi/abis'
 import { Address } from '@summerfi/serverless-shared/domain-types'
 import { Addresses } from './get-addresses'
 

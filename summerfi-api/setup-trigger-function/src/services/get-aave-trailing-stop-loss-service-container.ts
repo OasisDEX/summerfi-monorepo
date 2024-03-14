@@ -1,19 +1,23 @@
 import { ServiceContainer } from './service-container'
-import { AaveTrailingStopLossEventBody, maxUnit256, SupportedActions } from '~types'
+import { AaveTrailingStopLossEventBody } from '~types'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
 import { Address, ChainId } from '@summerfi/serverless-shared'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
-import { getAavePosition } from './get-aave-position'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
 import { encodeAaveTrailingStopLoss } from './trigger-encoders'
 import { DerivedPrices } from '@summerfi/prices-subgraph'
 import { CurrentTriggerLike } from './trigger-encoders'
 import { dmaAaveTrailingStopLossValidator } from './against-position-validators'
-import { calculateCollateralPriceInDebtBasedOnLtv, calculateLtv } from '~helpers'
 import { getCurrentAaveStopLoss } from './get-current-aave-stop-loss'
+import {
+  calculateCollateralPriceInDebtBasedOnLtv,
+  calculateLtv,
+  getAavePosition,
+} from '@summerfi/triggers-calculations'
+import { maxUnit256, SupportedActions } from '@summerfi/triggers-shared'
 
 export interface GetAaveTrailingStopLossServiceContainerProps {
   rpc: PublicClient
@@ -34,7 +38,15 @@ export const getAaveTrailingStopLossServiceContainer: (
   getLatestPrice,
 }) => {
   const getPosition = memoize(async (params: Parameters<typeof getAavePosition>[0]) => {
-    return await getAavePosition(params, rpc, addresses, logger)
+    return await getAavePosition(
+      params,
+      rpc,
+      {
+        poolDataProvider: addresses.AaveV3.AaveDataPoolProvider,
+        oracle: addresses.AaveV3.AaveOracle,
+      },
+      logger,
+    )
   })
 
   const getExecutionParams = memoize(

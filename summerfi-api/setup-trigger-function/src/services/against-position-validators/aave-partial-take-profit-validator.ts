@@ -1,13 +1,11 @@
 import {
-  positionSchema,
   mapZodResultToValidationResults,
-  supportedActionsSchema,
-  SupportedActions,
   ValidationResults,
   aavePartialTakeProfitTriggerDataSchema,
   CommonErrorCodes,
   PartialTakeProfitErrorCodes,
 } from '~types'
+import { positionSchema, supportedActionsSchema, SupportedActions } from '@summerfi/triggers-shared'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { z } from 'zod'
 import { chainIdSchema, safeParseBigInt } from '@summerfi/serverless-shared'

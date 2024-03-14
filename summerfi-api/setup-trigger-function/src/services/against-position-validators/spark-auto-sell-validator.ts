@@ -2,14 +2,16 @@ import {
   AutoSellTriggerCustomErrorCodes,
   AutoSellTriggerCustomWarningCodes,
   mapZodResultToValidationResults,
-  MINIMUM_LTV_TO_SETUP_TRIGGER,
-  positionSchema,
-  priceSchema,
   sparkBasicSellTriggerDataSchema,
-  SupportedActions,
-  supportedActionsSchema,
   ValidationResults,
 } from '~types'
+import {
+  positionSchema,
+  priceSchema,
+  MINIMUM_LTV_TO_SETUP_TRIGGER,
+  supportedActionsSchema,
+  SupportedActions,
+} from '@summerfi/triggers-shared'
 import { z } from 'zod'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { chainIdSchema, safeParseBigInt } from '@summerfi/serverless-shared'

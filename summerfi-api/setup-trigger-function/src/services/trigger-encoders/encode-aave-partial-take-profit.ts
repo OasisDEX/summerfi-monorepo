@@ -1,5 +1,7 @@
 import { bytesToHex, encodeAbiParameters, parseAbiParameters, stringToBytes } from 'viem'
-import { AavePartialTakeProfitTriggerData, PositionLike } from '~types'
+import { AavePartialTakeProfitTriggerData } from '~types'
+import { PositionLike } from '@summerfi/triggers-shared'
+
 import { DEFAULT_DEVIATION } from './defaults'
 import { CurrentTriggerLike, EncodedTriggers } from './types'
 import { OPERATION_NAMES } from '@oasisdex/dma-library'

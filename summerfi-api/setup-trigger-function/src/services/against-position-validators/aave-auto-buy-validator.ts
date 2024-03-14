@@ -1,16 +1,18 @@
 import {
-  positionSchema,
-  priceSchema,
   mapZodResultToValidationResults,
   AutoBuyTriggerCustomErrorCodes,
   AutoBuyTriggerCustomWarningCodes,
-  MINIMUM_LTV_TO_SETUP_TRIGGER,
   aaveBasicBuyTriggerDataSchema,
+  ValidationResults,
+} from '~types'
+import {
+  positionSchema,
+  priceSchema,
+  MINIMUM_LTV_TO_SETUP_TRIGGER,
   supportedActionsSchema,
   SupportedActions,
   ONE_PERCENT,
-  ValidationResults,
-} from '~types'
+} from '@summerfi/triggers-shared'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { z } from 'zod'
 import { chainIdSchema, safeParseBigInt } from '@summerfi/serverless-shared'

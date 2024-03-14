@@ -1,17 +1,19 @@
 import {
   dmaSparkTrailingStopLossTriggerDataSchema,
-  ltvSchema,
   mapZodResultToValidationResults,
-  positionSchema,
-  priceSchema,
   StopLossErrorCodes,
   StopLossWarningCodes,
-  SupportedActions,
-  supportedActionsSchema,
   TrailingStopLossErrorCodes,
-  TWENTY_MILLIONS_DOllARS,
   ValidationResults,
 } from '~types'
+import {
+  positionSchema,
+  priceSchema,
+  supportedActionsSchema,
+  SupportedActions,
+  TWENTY_MILLIONS_DOllARS,
+  ltvSchema,
+} from '@summerfi/triggers-shared'
 import { z } from 'zod'
 import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { DerivedPrices } from '@summerfi/prices-subgraph'

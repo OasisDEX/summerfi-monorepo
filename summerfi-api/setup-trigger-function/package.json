@@ -10,19 +10,22 @@
     "build": "tsc -b -v"
   },
   "dependencies": {
-    "@aws-lambda-powertools/logger": "^1.17.0",
-    "@aws-lambda-powertools/metrics": "^1.17.0",
-    "@aws-lambda-powertools/tracer": "^1.17.0",
+    "@aws-lambda-powertools/logger": "^2.0.2",
+    "@aws-lambda-powertools/metrics": "^2.0.2",
+    "@aws-lambda-powertools/tracer": "^2.0.2",
     "@oasisdex/addresses": "0.1.16-dma-v2-workers.11",
     "@oasisdex/dma-library": "0.5.21-dma-v2-workers.31-auto-withdraw-to-ltv",
     "@oasisdex/automation": "1.6.4-alpha.1",
+    "@summerfi/abis": "workspace:*",
     "@summerfi/serverless-contracts": "workspace:*",
     "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/prices-subgraph": "workspace:*",
-    "bignumber.js": "9.0.1",
+    "@summerfi/triggers-shared": "workspace:*",
+    "@summerfi/triggers-calculations": "workspace:*",
+    "bignumber.js": "^9.1.2",
     "just-memoize": "^2.2.0",
     "node-fetch": "^3.3.2",
-    "viem": "^1.19.11",
+    "viem": "^2.8.6",
     "zod": "^3.22.4"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 import { ServiceContainer } from './service-container'
-import { maxUnit256, SparkTrailingStopLossEventBody, SupportedActions } from '~types'
+import { SparkTrailingStopLossEventBody } from '~types'
 import { PublicClient } from 'viem'
 import { Addresses } from './get-addresses'
 import { Address, ChainId } from '@summerfi/serverless-shared'
@@ -9,11 +9,15 @@ import memoize from 'just-memoize'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
 import { DerivedPrices } from '@summerfi/prices-subgraph'
 import { CurrentTriggerLike } from './trigger-encoders'
-import { calculateCollateralPriceInDebtBasedOnLtv, calculateLtv } from '~helpers'
-import { getSparkPosition } from './get-spark-position'
 import { dmaSparkTrailingStopLossValidator } from './against-position-validators'
 import { getCurrentSparkStopLoss } from './get-current-spark-stop-loss'
 import { encodeSparkTrailingStopLoss } from './trigger-encoders'
+import {
+  calculateCollateralPriceInDebtBasedOnLtv,
+  calculateLtv,
+  getSparkPosition,
+} from '@summerfi/triggers-calculations'
+import { maxUnit256, SupportedActions } from '@summerfi/triggers-shared'
 
 export interface GetSparkTrailingStopLossServiceContainerProps {
   rpc: PublicClient
@@ -34,7 +38,15 @@ export const getSparkTrailingStopLossServiceContainer: (
   getLatestPrice,
 }) => {
   const getPosition = memoize(async (params: Parameters<typeof getSparkPosition>[0]) => {
-    return await getSparkPosition(params, rpc, addresses, logger)
+    return await getSparkPosition(
+      params,
+      rpc,
+      {
+        poolDataProvider: addresses.Spark.SparkDataPoolProvider,
+        oracle: addresses.Spark.SparkOracle,
+      },
+      logger,
+    )
   })
 
   const getExecutionParams = memoize(

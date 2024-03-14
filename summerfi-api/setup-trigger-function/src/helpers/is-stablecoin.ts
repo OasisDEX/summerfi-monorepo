@@ -1,8 +1,0 @@
-import { ONE_DOLLAR, Price, TEN_CENTS } from '~types'
-
-export function isStablecoin(tokenPrice: Price) {
-  const difference = tokenPrice - ONE_DOLLAR
-  const abs = difference < 0 ? -difference : difference
-
-  return abs < TEN_CENTS
-}

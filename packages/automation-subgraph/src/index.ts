@@ -1,9 +1,9 @@
 import { request } from 'graphql-request'
 import {
+  OneTriggerDocument,
+  OneTriggerQuery,
   TriggersDocument,
   TriggersQuery,
-  TriggerByTypeQuery,
-  TriggerByTypeDocument,
 } from './types/graphql/generated'
 import { ChainId } from '@summerfi/serverless-shared/domain-types'
 import { Logger } from '@aws-lambda-powertools/logger'
@@ -33,13 +33,14 @@ export interface GetTriggersParams {
 }
 
 export interface GetOneTriggerParams {
-  dpm: string
-  triggerType: bigint
+  triggerId: string
 }
+
+export type OneTrigger = Required<OneTriggerQuery['trigger']>
 
 export type GetTriggers = (params: GetTriggersParams) => Promise<TriggersQuery>
 
-export type GetOneTrigger = (params: GetOneTriggerParams) => Promise<TriggerByTypeQuery>
+export type GetOneTrigger = (params: GetOneTriggerParams) => Promise<OneTrigger | null>
 
 async function getTriggers(params: GetTriggersParams, config: SubgraphClientConfig) {
   const url = getEndpoint(config.chainId, config.urlBase)
@@ -54,14 +55,11 @@ async function getTriggers(params: GetTriggersParams, config: SubgraphClientConf
 
 async function getOneTrigger(params: GetOneTriggerParams, config: SubgraphClientConfig) {
   const url = getEndpoint(config.chainId, config.urlBase)
-  const trigger = await request(url, TriggerByTypeDocument, {
-    dpm: params.dpm,
-    triggerType: params.triggerType.toString(),
+  const result = await request(url, OneTriggerDocument, {
+    triggerId: params.triggerId,
   })
 
-  config.logger?.debug('Received trigger for account', { account: params.dpm, trigger })
-
-  return trigger
+  return result.trigger
 }
 
 export interface AutomationSubgraphClient {

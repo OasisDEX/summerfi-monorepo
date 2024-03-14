@@ -43,6 +43,12 @@
     },
     {
       "path": "../morpho-blue-external-api-client/tsconfig.json"
+    },
+    {
+      "path": "../triggers-calculations/tsconfig.json",
+    },
+    {
+      "path": "../triggers-shared/tsconfig.json"
     }
   ]
 }

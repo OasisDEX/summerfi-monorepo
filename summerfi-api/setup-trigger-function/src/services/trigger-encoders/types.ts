@@ -1,4 +1,4 @@
-import { LTV, Price } from '~types'
+import { LTV, Price } from '@summerfi/triggers-shared'
 import { AddableTrigger, RemovableTrigger } from './automation-bot-helper'
 
 export type TriggerTransactions = {
