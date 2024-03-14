@@ -404,4 +404,26 @@ describe('Execution Storage Mapper', () => {
       }),
     ).toThrow('Input not found in action storage inputs: inputDoesNotExist')
   })
+
+  it('should use default value if step has no outputs defined', () => {
+    const derivedStep: steps.ReturnFunds = {
+      type: SimulationSteps.ReturnFunds,
+      name: 'ReturnFunds',
+      inputs: {
+        token: DAI,
+      },
+      outputs: undefined,
+    }
+
+    const executionStorageMapper = new ExecutionStorageMapper()
+
+    const inputParamsMapping = executionStorageMapper.addStorageMap({
+      step: derivedStep,
+      action: derivedAction,
+      connectedInputs: {},
+      connectedOutputs: {},
+    })
+
+    expect(inputParamsMapping).toEqual([0, 0, 0, 0])
+  })
 })

@@ -54,8 +54,6 @@ describe('Swap Action Builder', () => {
   })
 
   it('should encode the action calldata correctly', async () => {
-    const builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })
-
     const derivedStep: steps.SwapStep = {
       type: SimulationSteps.Swap,
       name: 'SwapStep',
