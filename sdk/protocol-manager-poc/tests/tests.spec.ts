@@ -1,15 +1,13 @@
 import {
-  createMakerPlugin,
   ProtocolPlugin,
   ProtocolManagerContext,
   ITokenService,
   IPriceService,
   AddressAbiMapsByProtocol,
-  createSparkPlugin,
-  createAaveV3Plugin,
   IContractProvider,
-  MakerContracts,
-  AaveV3LikeContracts,
+  MakerPlugin,
+  SparkPlugin,
+  AaveV3Plugin,
 } from '../src/index'
 import { createPublicClient, http, PublicClient, getContract } from 'viem'
 import { mainnet } from 'viem/chains'
@@ -181,54 +179,87 @@ class ContractProviderMock implements IContractProvider {
   ): AddressAbiMapsByProtocol[P][K] {
         const map: AddressAbiMapsByProtocol = {
             [ProtocolName.Spark]: {
-              [AaveV3LikeContracts.ORACLE]: {
+              Oracle: {
                 address: '0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9',
                 abi: ORACLE_ABI,
               },
-              [AaveV3LikeContracts.POOL_DATA_PROVIDER]: {
+              PoolDataProvider: {
                 address: '0xFc21d6d146E6086B8359705C8b28512a983db0cb',
                 abi: POOL_DATA_PROVIDER,
               },
-              [AaveV3LikeContracts.LENDING_POOL]: {
+              SparkLendingPool: {
                 address: '0xC13e21B648A5Ee794902342038FF3aDAB66BE987',
                 abi: LENDING_POOL_ABI,
               },
             },
             [ProtocolName.Maker]: {
-              [MakerContracts.DOG]: {
+              Dog: {
                   address: '0x135954d155898d42c90d2a57824c690e0c7bef1b',
                   abi: DOG_ABI,
               },
-              [MakerContracts.VAT]: {
+              Vat: {
                   address: '0x35d1b3f3d7966a1dfe207aa4514c12a259a0492b',
                   abi: VAT_ABI,
               },
-              [MakerContracts.JUG]: {
+              McdJug: {
                   address: '0x19c0976f590d67707e62397c87829d896dc0f1f1',
                   abi: JUG_ABI,
               },
-              [MakerContracts.SPOT]: {
+              Spot: {
                   address: '0x65c79fcb50ca1594b025960e539ed7a9a6d434a3',
                   abi: SPOT_ABI,
               },
-              [MakerContracts.ILK_REGISTRY]: {
+              IlkRegistry: {
                   address: '0x5a464C28D19848f44199D003BeF5ecc87d090F87',
                   abi: ILK_REGISTRY,
               },
+              Chainlog: {
+                address: '0x',
+                abi: null
+              },
+              CdpManager: {
+                address: '0x',
+                abi: null
+              },
+              GetCdps: {
+                address: '0x',
+                abi: null
+              },
+              Pot: {
+                address: '0x',
+                abi: null
+              },
+              End: {
+                address: '0x',
+                abi: null
+              },
+              McdGov: {
+                address: '0x',
+                abi: null
+              },
+              FlashMintModule: {
+                address: '0x',
+                abi: null
+              }
+
             },
             [ProtocolName.AAVEv3]: {
-              [AaveV3LikeContracts.ORACLE]: {
+              Oracle: {
                 address: '0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9',
                 abi: ORACLE_ABI,
               },
-              [AaveV3LikeContracts.POOL_DATA_PROVIDER]: {
+              PoolDataProvider: {
                 address: '0xFc21d6d146E6086B8359705C8b28512a983db0cb',
                 abi: POOL_DATA_PROVIDER,
               },
-              [AaveV3LikeContracts.LENDING_POOL]: {
+              AavePool: {
                 address: '0xC13e21B648A5Ee794902342038FF3aDAB66BE987',
                 abi: LENDING_POOL_ABI,
               },
+              AaveL2Encoder: {
+                address: '0x',
+                abi: null
+              }
             },
             [ProtocolName.Ajna]: {},
             [ProtocolName.MorphoBlue]: {},
@@ -262,9 +293,9 @@ describe('playground', () => {
   let aaveV3Plugin: ProtocolPlugin<AaveV3PoolId>
   beforeAll(async () => {
     ctx = await createProtocolManagerContext()
-    makerPlugin = createMakerPlugin(ctx)
-    sparkPlugin = createSparkPlugin(ctx)
-    aaveV3Plugin = createAaveV3Plugin(ctx)
+    makerPlugin = new MakerPlugin(ctx)
+    sparkPlugin = new SparkPlugin(ctx)
+    aaveV3Plugin = new AaveV3Plugin(ctx)
   })
 
   it('template/maker', async () => {

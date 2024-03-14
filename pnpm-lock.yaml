@@ -637,6 +637,9 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
+      '@summerfi/deployment-types':
+        specifier: workspace:*
+        version: link:../../packages/deployment-types
       '@summerfi/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config

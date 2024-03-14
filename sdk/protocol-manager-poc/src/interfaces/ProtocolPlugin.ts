@@ -10,75 +10,59 @@ import {
     ORACLE_ABI,
     POOL_DATA_PROVIDER, LENDING_POOL_ABI
 } from "./abis"
+import {AaveV3ContractNames, SparkContractNames, MakerContractNames} from '@summerfi/deployment-types'
 
 export type IPositionId = string & { __positionID: never }
 
-export enum MakerContracts {
-    VAT = 'VAT',
-    SPOT = 'SPOT',
-    JUG = 'JUG',
-    DOG = 'DOG',
-    ILK_REGISTRY = 'ILK_REGISTRY'
-}
-
-export enum AaveV3LikeContracts {
-    ORACLE = "ORACLE",
-    LENDING_POOL = "LENDING_POOL",
-    POOL_DATA_PROVIDER = "POOL_DATA_PROVIDER"
+type ExtendedMakerContractNames = MakerContractNames | 'IlkRegistry'
+type MakerAbiMap = {
+    Dog: typeof DOG_ABI
+    Vat: typeof VAT_ABI
+    McdJug: typeof JUG_ABI
+    Spot: typeof SPOT_ABI
+    IlkRegistry: typeof ILK_REGISTRY
+    Chainlog: null
+    CdpManager: null
+    GetCdps: null
+    Pot: null
+    End: null
+    McdGov: null
+    FlashMintModule: null
 }
 
 type MakerAddressAbiMap = {
-    [MakerContracts.DOG]: {
-        address: AddressValue
-        abi: typeof DOG_ABI
-    }
-    [MakerContracts.VAT]: {
-        address: AddressValue
-        abi: typeof VAT_ABI
-    }
-    [MakerContracts.JUG]: {
-        address: AddressValue
-        abi: typeof JUG_ABI
-    }
-    [MakerContracts.SPOT]: {
-        address: AddressValue
-        abi: typeof SPOT_ABI
-    }
-    [MakerContracts.ILK_REGISTRY]: {
-        address: AddressValue
-        abi: typeof ILK_REGISTRY
-    }
-}
+    [K in ExtendedMakerContractNames]: {
+        address: AddressValue;
+        abi: MakerAbiMap[K];
+    };
+};
+
+type SparkAbiMap = {
+    Oracle: typeof ORACLE_ABI
+    PoolDataProvider: typeof POOL_DATA_PROVIDER
+    SparkLendingPool:  typeof LENDING_POOL_ABI
+};
 
 type SparkAddressAbiMap = {
-    [AaveV3LikeContracts.ORACLE]: {
-        address: AddressValue,
-        abi: typeof ORACLE_ABI
-    }
-    [AaveV3LikeContracts.POOL_DATA_PROVIDER]: {
-        address: AddressValue,
-        abi: typeof POOL_DATA_PROVIDER
-    }
-    [AaveV3LikeContracts.LENDING_POOL]: {
-        address: AddressValue,
-        abi: typeof LENDING_POOL_ABI
-    }
-}
+    [K in SparkContractNames]: {
+        address: AddressValue;
+        abi: SparkAbiMap[K];
+    };
+};
+
+type AaveV3AbiMap = {
+    Oracle: typeof ORACLE_ABI
+    PoolDataProvider: typeof POOL_DATA_PROVIDER
+    AavePool:  typeof LENDING_POOL_ABI
+    AaveL2Encoder: null
+};
 
 type AaveV3AddressAbiMap = {
-    [AaveV3LikeContracts.ORACLE]: {
-        address: AddressValue,
-        abi: typeof ORACLE_ABI
-    }
-    [AaveV3LikeContracts.POOL_DATA_PROVIDER]: {
-        address: AddressValue,
-        abi: typeof POOL_DATA_PROVIDER
-    }
-    [AaveV3LikeContracts.LENDING_POOL]: {
-        address: AddressValue,
-        abi: typeof LENDING_POOL_ABI
-    }
-}
+    [K in AaveV3ContractNames]: {
+        address: AddressValue;
+        abi: AaveV3AbiMap[K];
+    };
+};
 
 type AaveV2AddressAbiMap = Record<string, never>
 type AjnaAddressAbiMap = Record<string, never>
@@ -117,10 +101,6 @@ export interface ProtocolManagerContext {
     priceService: IPriceService
 }
 
-export interface CreateProtocolPlugin<GenericPoolId extends IPoolId> {
-    (ctx: ProtocolManagerContext): ProtocolPlugin<GenericPoolId>
-}
-
 export enum ChainId {
     Mainnet = 1,
     Optimism = 10,
@@ -133,7 +113,6 @@ export interface ProtocolPlugin<GenericPoolId extends IPoolId> {
     getPool: (poolId: GenericPoolId) => Promise<IPool>
     getPositionId: (positionId: string) => IPositionId
     getPosition: (positionId: IPositionId) => Promise<Position>
-    _validate: (candidate: unknown) => asserts candidate is GenericPoolId
 }
 
 

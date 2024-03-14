@@ -1,10 +1,10 @@
-export const PRESISION = {
+export const PRECISION = {
     WAD: 18,
     RAY: 27,
     RAD: 45,
 }
 
-export const PRESISION_BI = {
+export const PRECISION_BI = {
     WAD: 10n ** 18n,
     RAY: 10n ** 27n,
     RAD: 10n ** 45n,
