@@ -18,6 +18,8 @@ export interface CollateralConfig {
 // TODO: Move all to plugins directory when integrating everything
 export interface MakerPoolCollateralConfig extends CollateralConfig {
   nextPrice: Price
+  lastPriceUpdate: Date
+  nextPriceUpdate: Date
 }
 
 export interface SparkPoolCollateralConfig extends CollateralConfig {

@@ -1,24 +1,19 @@
 import { AddressValue, Percentage, TokenAmount, TokenSymbol, Price, CurrencySymbol, RiskRatio } from "@summerfi/sdk-common/common"
-import type { SparkLendingPool, SparkPoolDebtConfig, SparkPoolCollateralConfig, SparkPoolId } from "@summerfi/sdk-common/protocols"
+import type { AaveV3LendingPool, AaveV3PoolDebtConfig, AaveV3PoolCollateralConfig, AaveV3PoolId } from "@summerfi/sdk-common/protocols"
 import { PoolType, ProtocolName, EmodeType } from "@summerfi/sdk-common/protocols"
-import { Position, Token } from "@summerfi/sdk-common/common"
+import { Position } from "@summerfi/sdk-common/common"
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
 import { ChainId, IPositionId, ProtocolManagerContext, ProtocolPlugin } from "../interfaces";
 import { AaveV3LikePluginBuilder, filterAssetsListByEMode } from "./AAVEv3LikeBuilder";
 import { UNCAPPED_SUPPLY, PRECISION_BI } from "./constants";
 
-export class SparkPlugin implements ProtocolPlugin<SparkPoolId> {
-    supportedChains: [ChainId.Mainnet] = [ChainId.Mainnet]
-    private readonly ctx: ProtocolManagerContext
-
-    constructor(ctx: ProtocolManagerContext) {
-        this.ctx = ctx;
-    }
-    async getPool(sparkPoolId: unknown): Promise<SparkLendingPool> {
-        const ctx = this.ctx
-        this._validatePoolId(sparkPoolId)
-        const emode = sparkEmodeCategoryMap[sparkPoolId.emodeType]
+export class AaveV3Plugin implements ProtocolPlugin<AaveV3PoolId> {
+    public readonly protocol = ProtocolName.AAVEv3;
+    supportedChains: [ChainId.Mainnet, ChainId.Arbitrum, ChainId.Optimism /* ChainId.Base */] = [ChainId.Mainnet, ChainId.Arbitrum, ChainId.Optimism]
+    async getPool(aaveV3PoolId: unknown, ctx: ProtocolManagerContext): Promise<AaveV3LendingPool> {
+        this.isPoolId(aaveV3PoolId)
+        const emode = aaveV3EmodeCategoryMap[aaveV3PoolId.emodeType]
 
         const chainId = ctx.provider.chain?.id
         if (!chainId) throw new Error('ctx.provider.chain.id undefined')
@@ -27,7 +22,7 @@ export class SparkPlugin implements ProtocolPlugin<SparkPoolId> {
             throw new Error(`Chain ID ${chainId} is not supported`);
         }
 
-        const builder = await (new AaveV3LikePluginBuilder(ctx, sparkPoolId.protocol.name)).init();
+        const builder = await (new AaveV3LikePluginBuilder(ctx, aaveV3PoolId.protocol.name)).init();
         const reservesAssetsList = await builder
             .addPrices()
             .addReservesCaps()
@@ -41,9 +36,10 @@ export class SparkPlugin implements ProtocolPlugin<SparkPoolId> {
         // Both USDC & DAI use fixed price oracles that keep both stable at 1 USD
         const poolBaseCurrencyToken = CurrencySymbol.USD
 
-        const collaterals: Record<AddressValue, SparkPoolCollateralConfig> = {}
+        const collaterals: Record<AddressValue, AaveV3PoolCollateralConfig> = {}
         for (const asset of filteredAssetsList) {
             const { token: collateralToken, config: { usageAsCollateralEnabled, ltv, liquidationThreshold, liquidationBonus }, caps: { supplyCap }, data: { totalAToken } } = asset;
+
             const LTV_TO_PERCENTAGE_DIVISOR = 100n
 
             try {
@@ -73,7 +69,7 @@ export class SparkPlugin implements ProtocolPlugin<SparkPoolId> {
             }
         }
 
-        const debts: Record<AddressValue, SparkPoolDebtConfig> = {}
+        const debts: Record<AddressValue, AaveV3PoolDebtConfig> = {}
         for (const asset of filteredAssetsList) {
             const { token: quoteToken, config: { borrowingEnabled, reserveFactor }, caps: { borrowCap }, data: { totalVariableDebt, totalStableDebt, variableBorrowRate } } = asset;
             if (quoteToken.symbol === TokenSymbol.WETH) {
@@ -117,8 +113,8 @@ export class SparkPlugin implements ProtocolPlugin<SparkPoolId> {
 
         return {
             type: PoolType.Lending,
-            poolId: sparkPoolId,
-            protocol: sparkPoolId.protocol,
+            poolId: aaveV3PoolId,
+            protocol: aaveV3PoolId.protocol,
             baseCurrency: CurrencySymbol.USD,
             collaterals,
             debts
@@ -133,8 +129,8 @@ export class SparkPlugin implements ProtocolPlugin<SparkPoolId> {
         throw new Error(`getPosition not implemented ${positionId}`)
     }
 
-    private _validatePoolId(candidate: unknown): asserts candidate is SparkPoolId {
-        const ProtocolNameEnum = z.nativeEnum(ProtocolName);
+    isPoolId(candidate: unknown): asserts candidate is AaveV3PoolId {
+        const ProtocolNameEnum = z.literal(ProtocolName.AAVEv3);
         const EmodeTypeEnum = z.nativeEnum(EmodeType);
         const ChainInfoType = z.object({
             name: z.string(),
@@ -157,7 +153,9 @@ export class SparkPlugin implements ProtocolPlugin<SparkPoolId> {
     }
 }
 
-const sparkEmodeCategoryMap: Record<EmodeType, bigint> = Object.keys(EmodeType).reduce<Record<EmodeType, bigint>>((accumulator, key, index) => {
+const aaveV3EmodeCategoryMap: Record<EmodeType, bigint> = Object.keys(EmodeType).reduce<Record<EmodeType, bigint>>((accumulator, key, index) => {
     accumulator[EmodeType[key as keyof typeof EmodeType]] = BigInt(index);
     return accumulator;
 }, {} as Record<EmodeType, bigint>);
+
+export const aaveV3Plugin = new AaveV3Plugin();

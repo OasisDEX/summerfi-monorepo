@@ -1,5 +1,6 @@
 import { Percentage } from '~sdk-common/common/implementation/Percentage'
 import { SerializationService } from '~sdk-common/services/SerializationService'
+import { percentageAsFraction } from '../utils/PercentageUtils'
 
 interface IRiskRatioSerialized {
   ltv: Percentage
@@ -29,12 +30,12 @@ export class RiskRatio implements IRiskRatioSerialized {
       case RiskRatioType.LTV:
         return new RiskRatio({ ltv: params.ratio })
       case RiskRatioType.CollateralizationRatio: {
-        const ltv = Percentage.createFrom({ percentage: 1 / params.ratio.value })
+        const ltv = Percentage.createFrom({ percentage: (1 / percentageAsFraction(params.ratio)) * 100 })
         return new RiskRatio({ ltv })
       }
       case RiskRatioType.Multiple:
-        throw new Error('Multiple not implemented')
-        // return new RiskRatio(params)
+        const ltv = Percentage.createFrom({percentage: 1 / (1 + ( 1 / (params.ratio.value - 1) )) * 100})
+        return new RiskRatio({ ltv })
       default:
         throw new Error('Invalid RiskRatio type')
     }
@@ -42,6 +43,19 @@ export class RiskRatio implements IRiskRatioSerialized {
 
   toString(): string {
     return `${this.ltv.toString()}`
+  }
+
+  toType(type: RiskRatioType): string {
+    switch (type) {
+      case RiskRatioType.LTV:
+        return this.ltv.toString()
+      case RiskRatioType.CollateralizationRatio:
+        return Percentage.createFrom({ percentage: 1 / percentageAsFraction(this.ltv) * 100 }).toString()
+      case RiskRatioType.Multiple:
+        return Percentage.createFrom({ percentage: 1 / (1 / percentageAsFraction(this.ltv) - 1) + 1 }).toString()
+      default:
+        throw new Error('Invalid RiskRatio type')
+    }
   }
 }
 
