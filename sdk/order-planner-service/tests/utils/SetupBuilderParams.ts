@@ -36,7 +36,7 @@ export function setupBuilderParams(params: {
       address: Address.ZeroAddressEthereum,
     },
     swapManager: new SwapManagerMock(),
-    deployment: deploymentIndex[params.deploymentKey ?? 'mainnet.standard'],
+    deployment: deploymentIndex[params.deploymentKey ?? 'Mainnet.standard'],
     protocolsRegistry: {
       [ProtocolName.Maker]: ProtocolBuilderMock,
       [ProtocolName.Spark]: ProtocolBuilderMock,

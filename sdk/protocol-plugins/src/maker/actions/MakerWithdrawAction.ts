@@ -16,6 +16,7 @@ export class MakerWithdrawAction extends BaseAction {
       pool: IPool
       userAddress: Address
       amount: TokenAmount
+      joinAddress: Address
     },
     paramsMapping?: number[],
   ): ActionCall {
@@ -27,8 +28,8 @@ export class MakerWithdrawAction extends BaseAction {
     return this._encodeCall({
       arguments: [
         params.pool.poolId.vaultId,
-        params.userAddress.toString(),
-        // joinAddr,
+        params.userAddress.value,
+        params.joinAddress.value,
         params.amount.toBaseUnit(),
       ],
       mapping: paramsMapping,

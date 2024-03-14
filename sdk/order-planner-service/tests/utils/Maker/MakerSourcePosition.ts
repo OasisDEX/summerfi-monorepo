@@ -9,7 +9,7 @@ import {
 } from '@summerfi/sdk-common/common'
 import { MakerPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 
-export function getRefinanceSimSourcePosition(): Position {
+export function getMakerPosition(): Position {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
 
   const WETH = Token.createFrom({
@@ -46,7 +46,7 @@ export function getRefinanceSimSourcePosition(): Position {
   const poolId = {
     protocol: ProtocolName.Maker,
     ilkType: 'ETH-A',
-    vaultId: 'somevault',
+    vaultId: '34',
   } as MakerPoolId
 
   const pool = {
@@ -56,7 +56,7 @@ export function getRefinanceSimSourcePosition(): Position {
   }
 
   const position = new Position({
-    positionId: PositionId.createFrom({ id: 'markerPosition' }),
+    positionId: PositionId.createFrom({ id: 'makerPosition' }),
     debtAmount,
     collateralAmount,
     pool,

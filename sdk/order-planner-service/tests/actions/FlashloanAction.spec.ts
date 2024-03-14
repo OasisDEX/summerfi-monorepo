@@ -44,7 +44,10 @@ describe('Flashloan Action', () => {
 
     expect(call.targetHash).toBe(getTargetHash(action))
 
-    const actionDecodedArgs = decodeActionCalldata(action, call.callData)
+    const actionDecodedArgs = decodeActionCalldata({
+      action,
+      calldata: call.callData,
+    })
 
     expect(actionDecodedArgs).toBeDefined()
     expect(actionDecodedArgs?.args).toEqual([

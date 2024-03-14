@@ -20,7 +20,7 @@ export class SparkDepositAction extends BaseAction {
   ): ActionCall {
     return this._encodeCall({
       arguments: [
-        params.depositAmount.token.address.toString(),
+        params.depositAmount.token.address.value,
         params.depositAmount.toBaseUnit(),
         params.sumAmounts,
         params.setAsCollateral,

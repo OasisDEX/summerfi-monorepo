@@ -12,7 +12,7 @@ export class FlashloanAction extends BaseAction {
     name: 'TakeFlashloan',
     version: 1,
     parametersAbi:
-      'uint256, address, bool, bool, uint8, (bytes32 targetHash, bytes callData, bool skipped)[]',
+      'uint256 amount, address asset, bool isProxyFlashloan, bool isDPMProxy, uint8 provider, (bytes32 targetHash, bytes callData, bool skipped)[] calls',
 
     storageInputs: [],
     storageOutputs: [],

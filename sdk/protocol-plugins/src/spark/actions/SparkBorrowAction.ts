@@ -16,9 +16,9 @@ export class SparkBorrowAction extends BaseAction {
   ): ActionCall {
     return this._encodeCall({
       arguments: [
-        params.borrowAmount.token.address.toString(),
+        params.borrowAmount.token.address.value,
         params.borrowAmount.toBaseUnit(),
-        params.borrowTo.toString(),
+        params.borrowTo.value,
       ],
       mapping: paramsMapping,
     })

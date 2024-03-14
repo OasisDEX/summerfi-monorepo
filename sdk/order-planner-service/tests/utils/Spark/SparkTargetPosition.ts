@@ -9,7 +9,7 @@ import {
 } from '@summerfi/sdk-common/common'
 import { EmodeType, PoolType, ProtocolName, SparkPoolId } from '@summerfi/sdk-common/protocols'
 
-export function getRefinanceSimTargetPosition(): Position {
+export function getSparkPosition(): Position {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
 
   const WETH = Token.createFrom({
