@@ -160,7 +160,6 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
                     tokensLocked: TokenAmount.createFrom({token: collateralToken, amount: '0'}), // TODO check the gem balance of join adapter
                     maxSupply: TokenAmount.createFrom({token: collateralToken, amount: Number.MAX_SAFE_INTEGER.toString()}),
                     liquidationPenalty: Percentage.createFrom({ percentage: dogRes.liquidationPenalty.toNumber() }),
-                    // apy: Percentage.createFrom({ percentage: 0 }),
                 }
             }
 
@@ -201,7 +200,7 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
                 chainId: z.number()
             })
 
-            const SparkPoolIdSchema = z.object({
+            const MakerPoolIdSchema = z.object({
                 protocol: z.object({
                     name: ProtocolNameEnum,
                     chainInfo: ChainInfoType
@@ -209,7 +208,7 @@ export const createMakerPlugin: CreateProtocolPlugin<MakerPoolId> = (ctx: Protoc
                 ilkType: IlkTypeEnum
             });
 
-            const parseResult = SparkPoolIdSchema.safeParse(candidate);
+            const parseResult = MakerPoolIdSchema.safeParse(candidate);
             if (!parseResult.success) {
                 const errorDetails = parseResult.error.errors.map(error => `${error.path.join('.')} - ${error.message}`).join(', ');
                 throw new Error(`Candidate is not the correct shape: ${errorDetails}`);

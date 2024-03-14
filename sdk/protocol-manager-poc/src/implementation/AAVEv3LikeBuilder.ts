@@ -39,23 +39,28 @@ type EmodeCategory = bigint
 type OraclePrice = bigint
 
 type AllowedProtocolNames = ProtocolName.Spark | ProtocolName.AAVEv3
+type WithToken<T> = T & { token: Token }
+type WithReservesCaps<T> = T & { caps: ReservesCap }
+type WithReservesConfig<T> = T & { config: ReservesConfigData }
+type WithReservesData<T> =  T & { data: ReservesData }
+type WithEmode<T> = T & { emode: EmodeCategory }
+type WithPrice<T> = T & { price: OraclePrice }
 
 interface QueuedOperation<T> {
     operation: () => Promise<T>;
-    typeMarker?: T;
 }
 
-export class AaveV3LikePluginBuilder<AssetListType>  {
+export class AaveV3LikePluginBuilder<AssetListItemType>  {
     private readonly ctx: ProtocolManagerContext;
     private operations: QueuedOperation<void>[] = [];
     private tokensUsedAsReserves: Token[] | undefined
-    private reservesAssetsList: Array<AssetListType & { token: Token}> = []
+    private reservesAssetsList: Array<WithToken<AssetListItemType>> = []
 
     constructor(ctx: ProtocolManagerContext, private readonly protocolName: AllowedProtocolNames) {
         this.ctx = ctx;
     }
 
-    async init(): Promise<AaveV3LikePluginBuilder<AssetListType & { token: Token }>> {
+    async init(): Promise<AaveV3LikePluginBuilder<WithToken<AssetListItemType>>> {
         const rawTokens = await fetchReservesTokens(this.ctx, this.protocolName);
         this._validateReservesTokens(rawTokens);
 
@@ -63,13 +68,13 @@ export class AaveV3LikePluginBuilder<AssetListType>  {
             return await this.ctx.tokenService.getTokenByAddress(Address.createFrom({ value: reservesToken.tokenAddress }));
         }));
 
-        return Object.assign(new AaveV3LikePluginBuilder<AssetListType & { token: Token }>(this.ctx, this.protocolName), this, {
+        return Object.assign(new AaveV3LikePluginBuilder<WithToken<AssetListItemType>>(this.ctx, this.protocolName), this, {
             tokensUsedAsReserves,
-            reservesAssetsList: tokensUsedAsReserves.map(token => ({token})),
+            reservesAssetsList: tokensUsedAsReserves.map(token => ({ token })),
         });
     }
 
-    addReservesCaps(): AaveV3LikePluginBuilder<AssetListType & { caps: ReservesCap }> {
+    addReservesCaps(): AaveV3LikePluginBuilder<WithReservesCaps<AssetListItemType>> {
         const operation: QueuedOperation<void> = {
             operation: async () => {
                 this._assertIsInitialised(this.tokensUsedAsReserves);
@@ -92,10 +97,10 @@ export class AaveV3LikePluginBuilder<AssetListType>  {
             },
         };
         this.operations.push(operation);
-        return this as AaveV3LikePluginBuilder<AssetListType & { caps: ReservesCap }>;
+        return this as AaveV3LikePluginBuilder<WithReservesCaps<AssetListItemType>>;
     }
 
-    addReservesConfigData(): AaveV3LikePluginBuilder<AssetListType & { config: ReservesConfigData }> {
+    addReservesConfigData(): AaveV3LikePluginBuilder<WithReservesConfig<AssetListItemType>> {
         const operation: QueuedOperation<void> = {
             operation: async () => {
                 this._assertIsInitialised(this.tokensUsedAsReserves);
@@ -125,10 +130,10 @@ export class AaveV3LikePluginBuilder<AssetListType>  {
             },
         };
         this.operations.push(operation);
-        return this as AaveV3LikePluginBuilder<AssetListType & { config: ReservesConfigData }>;
+        return this as AaveV3LikePluginBuilder<WithReservesConfig<AssetListItemType>>;
     }
 
-    addReservesData(): AaveV3LikePluginBuilder<AssetListType & { data: ReservesData }> {
+    addReservesData(): AaveV3LikePluginBuilder<WithReservesData<AssetListItemType>> {
         const operation: QueuedOperation<void> = {
             operation: async () => {
                 this._assertIsInitialised(this.tokensUsedAsReserves);
@@ -172,10 +177,10 @@ export class AaveV3LikePluginBuilder<AssetListType>  {
             },
         };
         this.operations.push(operation);
-        return this as AaveV3LikePluginBuilder<AssetListType & { data: ReservesData }>;
+        return this as AaveV3LikePluginBuilder<WithReservesData<AssetListItemType>>;
     }
 
-    addEmodeCategories(): AaveV3LikePluginBuilder<AssetListType & { emode: EmodeCategory }> {
+    addEmodeCategories(): AaveV3LikePluginBuilder<WithEmode<AssetListItemType>> {
         const operation: QueuedOperation<void> = {
             operation: async () => {
                 this._assertIsInitialised(this.tokensUsedAsReserves);
@@ -194,10 +199,10 @@ export class AaveV3LikePluginBuilder<AssetListType>  {
             },
         };
         this.operations.push(operation);
-        return this as AaveV3LikePluginBuilder<AssetListType & { emode: EmodeCategory }>;
+        return this as AaveV3LikePluginBuilder<WithEmode<AssetListItemType>>;
     }
 
-    addPrices(): AaveV3LikePluginBuilder<AssetListType & { price: OraclePrice }> {
+    addPrices(): AaveV3LikePluginBuilder<WithPrice<AssetListItemType>> {
         const operation: QueuedOperation<void> = {
             operation: async () => {
                 this._assertIsInitialised(this.tokensUsedAsReserves);
@@ -217,10 +222,10 @@ export class AaveV3LikePluginBuilder<AssetListType>  {
             },
         };
         this.operations.push(operation);
-        return this as AaveV3LikePluginBuilder<AssetListType & { price: OraclePrice }>;
+        return this as AaveV3LikePluginBuilder<WithPrice<AssetListItemType>>;
     }
 
-    async build(): Promise<AssetListType[]> {
+    async build(): Promise<AssetListItemType[]> {
         try {
             for (const op of this.operations) {
                 await op.operation();
