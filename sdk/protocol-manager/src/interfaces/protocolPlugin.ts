@@ -1,9 +1,10 @@
 import { TokenAmount, TokenSymbol, Price, CurrencySymbol } from "@summerfi/sdk-common/common"
 import type { LendingPool } from "@summerfi/sdk-common/protocols"
-import { IPool, IPoolId, EmodeType } from "@summerfi/sdk-common/protocols"
+import { IPoolId, EmodeType } from "@summerfi/sdk-common/protocols"
 import { /* PositionId, */ Address, Position, Token } from "@summerfi/sdk-common/common"
 import {PublicClient} from "viem"
 import { BigNumber } from 'bignumber.js'
+import { z } from "zod"
 
 export type IPositionId = string & { __positionID: never }
 
@@ -45,6 +46,7 @@ export interface ProtocolPlugin<GenericPoolId extends IPoolId> {
     getPositionId: (positionId: string) => IPositionId
     getPosition: (positionId: IPositionId, ctx: ProtocolManagerContext) => Promise<Position>
     isPoolId: (candidate: unknown) => asserts candidate is GenericPoolId
+    shcema: z.ZodSchema<GenericPoolId>
 }
 
 /*

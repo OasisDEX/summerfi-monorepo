@@ -133,23 +133,19 @@ class SparkPlugin implements ProtocolPlugin<SparkPoolId> {
         throw new Error("Not implemented");
     }
 
+    shcema: z.Schema<SparkPoolId> = z.object({
+        protocol: z.object({
+            name: z.literal(ProtocolName.Spark),
+            chainInfo: z.object({
+                name: z.string(),
+                chainId: z.custom((value) => this.supportedChains.includes(value as ChainId))
+            })
+        }),
+        emodeType: z.nativeEnum(EmodeType)
+    })
+
     isPoolId(candidate: unknown): asserts candidate is SparkPoolId {
-        const ProtocolNameEnum = z.literal(ProtocolName.Spark);
-        const EmodeTypeEnum = z.nativeEnum(EmodeType);
-        const ChainInfoType = z.object({
-            name: z.string(),
-            chainId: z.number()
-        });
-
-        const SparkPoolIdSchema = z.object({
-            protocol: z.object({
-                name: ProtocolNameEnum,
-                chainInfo: ChainInfoType
-            }),
-            emodeType: EmodeTypeEnum
-        });
-
-        const parseResult = SparkPoolIdSchema.safeParse(candidate);
+        const parseResult = this.shcema.safeParse(candidate);
         if (!parseResult.success) {
             const errorDetails = parseResult.error.errors.map(error => `${error.path.join('.')} - ${error.message}`).join(', ');
             throw new Error(`Candidate is not the correct shape: ${errorDetails}`);

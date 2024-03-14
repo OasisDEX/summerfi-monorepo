@@ -1,8 +1,9 @@
 import { Position } from "@summerfi/sdk-common/common";
 import { ProtocolManagerContext, ProtocolPlugin } from "../interfaces/protocolPlugin";
-import { makerPlugin } from "src/implementation/MakerPlugin";
+import { makerPlugin } from "./MakerPlugin";
 import { IPoolId } from "@summerfi/sdk-common/protocols";
 import { sparkPlugin } from "./SparkPlugin";
+import { z } from "zod";
 
 type GetPoolIds<ProtocolPlugins extends ProtocolPlugin<any>[]> = { [K in keyof ProtocolPlugins]: ProtocolPlugins[K] extends ProtocolPlugin<infer T> ? T : never }[number]
 type UnPackPromise<T> = T extends Promise<infer U> ? U : T
@@ -17,10 +18,16 @@ type ReturnPool<ProtocolPlugins extends ProtocolPlugin<any>[], PoolId extends IP
 type ExtractPoolIds<P extends ProtocolManager<any>> = P extends ProtocolManager<infer T> ? GetPoolIds<T> : never
 
 export class ProtocolManager<ProtocolPlugins extends ProtocolPlugin<any>[]> {
-    constructor(private readonly pluginsCreators: ProtocolPlugins) {}
+    constructor(private readonly plugins: ProtocolPlugins) {}
+
+    public get poolIdSchema(): z.ZodSchema<ExtractPoolIds<typeof this>> {
+        const allSchemas: z.ZodSchema<ExtractPoolIds<typeof this>>[] = this.plugins.map((plugin) => plugin.shcema)
+
+        return z.union(allSchemas as any as readonly [z.ZodTypeAny, z.ZodTypeAny, ...z.ZodTypeAny[]])
+    } 
 
     public async getPool<PoolId extends  GetPoolIds<ProtocolPlugins>>(poolId: PoolId, ctx: ProtocolManagerContext): Promise<ReturnPool<ProtocolPlugins, PoolId>> {
-        const plugin: ProtocolPlugin<PoolId> | undefined = this.pluginsCreators.find((plugin) => plugin.protocol === poolId.protocol)
+        const plugin: ProtocolPlugin<PoolId> | undefined = this.plugins.find((plugin) => plugin.protocol === poolId.protocol)
 
         if (!plugin) {
             throw new Error(`No plugin found for protocol: ${poolId.protocol}`)

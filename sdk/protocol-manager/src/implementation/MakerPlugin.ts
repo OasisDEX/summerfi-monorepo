@@ -202,23 +202,19 @@ class MakerPlugin implements ProtocolPlugin<MakerPoolId> {
         throw new Error("Not implemented");
     }
 
+    shcema: z.Schema<MakerPoolId> = z.object({
+        protocol: z.object({
+            name: z.literal(ProtocolName.Maker),
+            chainInfo: z.object({
+                name: z.string(),
+                chainId: z.custom((value) => this.supportedChains.includes(value as ChainId), "Chain ID not supported")
+            })
+        }),
+        ilkType: z.nativeEnum(ILKType)
+    })
+
     isPoolId(candidate: unknown): asserts candidate is MakerPoolId {
-        const makerProtocol = z.literal(ProtocolName.Maker);
-        const IlkTypeEnum = z.nativeEnum(ILKType);
-        const ChainInfoType = z.object({
-            name: z.string(),
-            chainId: z.number()
-        });
-
-        const SparkPoolIdSchema = z.object({
-            protocol: z.object({
-                name: makerProtocol,
-                chainInfo: ChainInfoType
-            }),
-            ilkType: IlkTypeEnum
-        });
-
-        const parseResult = SparkPoolIdSchema.safeParse(candidate);
+        const parseResult = this.shcema.safeParse(candidate);
         if (!parseResult.success) {
             const errorDetails = parseResult.error.errors.map(error => `${error.path.join('.')} - ${error.message}`).join(', ');
             throw new Error(`Candidate is not the correct shape: ${errorDetails}`);
