@@ -1,4 +1,4 @@
-import {IProtocol} from "~sdk-common/protocols";
+import { IProtocol } from "../../protocols/interfaces/IProtocol";
 
 /**
  * @name IPoolId

@@ -129,6 +129,7 @@ export class AaveV3Plugin implements ProtocolPlugin<AaveV3PoolId> {
         throw new Error(`getPosition not implemented ${positionId}`)
     }
 
+    // @ts-ignore -- need to resolve this fully
     schema: z.Schema<AaveV3PoolId> = z.object({
         protocol: z.object({
             name: z.literal(ProtocolName.AAVEv3),

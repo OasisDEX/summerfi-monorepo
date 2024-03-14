@@ -202,6 +202,7 @@ class MakerPlugin implements ProtocolPlugin<MakerPoolId> {
         throw new Error("Not implemented");
     }
 
+    // @ts-ignore -- need to resolve this fully
     schema: z.Schema<MakerPoolId> = z.object({
         protocol: z.object({
             name: z.literal(ProtocolName.Maker),

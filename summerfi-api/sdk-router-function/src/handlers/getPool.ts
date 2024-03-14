@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { publicProcedure } from '~src/trpc'
-import { PriceService, TokenService, protocolManager } from '@summerfi/protocol-manager'
+import { PriceService, TokenService, protocolManager, MockContractProvider } from '@summerfi/protocol-manager'
 import { createPublicClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
 
@@ -23,10 +23,12 @@ export const getPool = publicProcedure
     })
     const tokenService = new TokenService()
     const priceService = new PriceService(client)
+    const contractProvider = new MockContractProvider()
 
     return protocolManager.getPool(poolParameters, {
       provider: client,
       tokenService,
       priceService,
+      contractProvider
     })
   })

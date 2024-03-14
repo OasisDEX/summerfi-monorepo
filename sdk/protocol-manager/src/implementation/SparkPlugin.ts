@@ -128,6 +128,7 @@ class SparkPlugin implements ProtocolPlugin<SparkPoolId> {
         throw new Error(`Not implemented ${positionId}`)
     }
 
+    // @ts-ignore -- need to resolve this fully
     schema: z.Schema<SparkPoolId> = z.object({
         protocol: z.object({
             name: z.literal(ProtocolName.Spark),

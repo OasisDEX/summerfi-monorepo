@@ -1,4 +1,4 @@
-import { TokenAmount, TokenSymbol, Price, CurrencySymbol } from "@summerfi/sdk-common/common"
+import { TokenSymbol, Price, CurrencySymbol } from "@summerfi/sdk-common/common"
 import type { LendingPool } from "@summerfi/sdk-common/protocols"
 import { IPoolId, ProtocolName, IProtocol } from "@summerfi/sdk-common/protocols"
 import { Address, Position, Token, AddressValue } from "@summerfi/sdk-common/common"
