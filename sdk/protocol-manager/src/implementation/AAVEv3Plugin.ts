@@ -10,7 +10,7 @@ import { UNCAPPED_SUPPLY, PRECISION_BI } from "./constants";
 
 export class AaveV3Plugin implements ProtocolPlugin<AaveV3PoolId> {
     public readonly protocol = ProtocolName.AAVEv3;
-    supportedChains: [ChainId.Mainnet, ChainId.Arbitrum, ChainId.Optimism /* ChainId.Base */] = [ChainId.Mainnet, ChainId.Arbitrum, ChainId.Optimism]
+    supportedChains = [ChainId.Mainnet, ChainId.Arbitrum, ChainId.Optimism]
     async getPool(aaveV3PoolId: unknown, ctx: ProtocolManagerContext): Promise<AaveV3LendingPool> {
         this.isPoolId(aaveV3PoolId)
         const emode = aaveV3EmodeCategoryMap[aaveV3PoolId.emodeType]
@@ -129,23 +129,19 @@ export class AaveV3Plugin implements ProtocolPlugin<AaveV3PoolId> {
         throw new Error(`getPosition not implemented ${positionId}`)
     }
 
+    schema: z.Schema<AaveV3PoolId> = z.object({
+        protocol: z.object({
+            name: z.literal(ProtocolName.AAVEv3),
+            chainInfo: z.object({
+                name: z.string(),
+                chainId: z.custom((value) => this.supportedChains.includes(value as ChainId), "Chain ID not supported")
+            })
+        }),
+        emodeType: z.nativeEnum(EmodeType)
+    })
+
     isPoolId(candidate: unknown): asserts candidate is AaveV3PoolId {
-        const ProtocolNameEnum = z.literal(ProtocolName.AAVEv3);
-        const EmodeTypeEnum = z.nativeEnum(EmodeType);
-        const ChainInfoType = z.object({
-            name: z.string(),
-            chainId: z.number()
-        })
-
-        const AaveV3PoolIdSchema = z.object({
-            protocol: z.object({
-                name: ProtocolNameEnum,
-                chainInfo: ChainInfoType
-            }),
-            emodeType: EmodeTypeEnum
-        });
-
-        const parseResult = AaveV3PoolIdSchema.safeParse(candidate);
+        const parseResult = this.schema.safeParse(candidate);
         if (!parseResult.success) {
             const errorDetails = parseResult.error.errors.map(error => `${error.path.join('.')} - ${error.message}`).join(', ');
             throw new Error(`Candidate is not correct AaveV3PoolId: ${errorDetails}`);

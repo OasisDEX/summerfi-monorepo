@@ -21,11 +21,9 @@ export const handler = async (
 ): Promise<APIGatewayProxyResultV2> => {
   const RPC_GATEWAY = process.env.RPC_GATEWAY
   const GET_TRIGGERS_URL = process.env.GET_TRIGGERS_URL
-  const SKIP_VALIDATION = process.env.SKIP_VALIDATION
   const SUBGRAPH_BASE = process.env.SUBGRAPH_BASE
 
   logger.addContext(context)
-  const skipValidation = SKIP_VALIDATION === 'true'
   if (!RPC_GATEWAY) {
     logger.error('RPC_GATEWAY is not set')
     return ResponseInternalServerError('RPC_GATEWAY is not set')
@@ -106,6 +104,8 @@ export const handler = async (
   )
 
   let validationWarnings: ValidationIssue[] = []
+
+  const skipValidation = event.headers['x-summer-skip-validation'] === '1'
 
   if (!skipValidation) {
     const validation = await validate({

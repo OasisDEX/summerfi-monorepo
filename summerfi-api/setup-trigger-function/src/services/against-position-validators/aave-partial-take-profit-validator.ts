@@ -8,18 +8,17 @@ import {
   CommonErrorCodes,
   PartialTakeProfitErrorCodes,
 } from '~types'
-import {
-  getPropertyFromTriggerParams,
-  GetTriggersResponse,
-} from '@summerfi/serverless-contracts/get-triggers-response'
+import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
 import { z } from 'zod'
 import { chainIdSchema, safeParseBigInt } from '@summerfi/serverless-shared'
+import { CurrentStopLoss } from '../trigger-encoders'
 
 const paramsSchema = z.object({
   position: positionSchema,
   triggerData: aavePartialTakeProfitTriggerDataSchema,
   triggers: z.custom<GetTriggersResponse>(),
   action: supportedActionsSchema,
+  currentStopLoss: z.custom<CurrentStopLoss | undefined>(),
   chainId: chainIdSchema,
 })
 
@@ -84,21 +83,12 @@ const upsertErrorsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggerData, triggers }) => {
+    ({ triggerData, currentStopLoss }) => {
       const updatedStopLossData = triggerData.stopLoss?.triggerData.executionLTV
-      const currentStopLoss = triggers.triggerGroup.aaveStopLoss
-      if (!currentStopLoss && !updatedStopLossData) return true
 
       const getStopLossLtv = updatedStopLossData
         ? updatedStopLossData
-        : currentStopLoss
-          ? safeParseBigInt(
-              getPropertyFromTriggerParams({
-                trigger: currentStopLoss,
-                property: 'executionLtv',
-              }),
-            ) ?? 99n
-          : 99n
+        : currentStopLoss?.executionLTV ?? 99_00n
 
       return triggerData.executionLTV + triggerData.withdrawStep < getStopLossLtv
     },

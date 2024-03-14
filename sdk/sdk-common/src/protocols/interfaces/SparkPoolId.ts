@@ -1,4 +1,4 @@
-import {ChainInfo} from "~sdk-common/common";
+import { ChainInfo } from "../../common/implementation/ChainInfo";
 import { ProtocolName } from '../enums/ProtocolName'
 import { IPoolId } from './IPoolId'
 import { EmodeType } from '../enums/EmodeType'

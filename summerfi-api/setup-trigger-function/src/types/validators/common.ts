@@ -1,17 +1,6 @@
 import { z } from 'zod'
 import { PRICE_DECIMALS } from '~types'
-import { addressSchema, ChainId, isBigInt, ProtocolId } from '@summerfi/serverless-shared'
-
-export const bigIntSchema = z
-  .string()
-  .refine((value) => isBigInt(value), {
-    params: {
-      code: 'not-bigint',
-    },
-    message: 'Must be a BigInt without decimals',
-  })
-  .transform((value) => BigInt(value))
-  .or(z.bigint())
+import { addressSchema, bigIntSchema, ChainId, ProtocolId } from '@summerfi/serverless-shared'
 
 export const priceSchema = bigIntSchema.describe(`Price with ${PRICE_DECIMALS} decimals`)
 
