@@ -10,6 +10,8 @@ import {
   chainIdSchema,
   urlOptionalSchema,
 } from '@summerfi/serverless-shared/validators'
+import { Chain as ViemChain, createPublicClient, http, PublicClient } from 'viem'
+import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
 
 import { getAutomationSubgraphClient } from '@summerfi/automation-subgraph'
 
@@ -59,13 +61,31 @@ import {
   getDmaAaveTrailingStopLoss,
   getDmaSparkTrailingStopLoss,
 } from './trigger-parsers'
+import { ChainId, getRpcGatewayEndpoint, IRpcConfig } from '@summerfi/serverless-shared'
 
 const logger = new Logger({ serviceName: 'getTriggersFunction' })
+
+export const rpcConfig: IRpcConfig = {
+  skipCache: false,
+  skipMulticall: false,
+  skipGraph: true,
+  stage: 'prod',
+  source: 'borrow-prod',
+}
+
+const domainChainIdToViemChain: Record<ChainId, ViemChain> = {
+  [ChainId.MAINNET]: mainnet,
+  [ChainId.ARBITRUM]: arbitrum,
+  [ChainId.OPTIMISM]: optimism,
+  [ChainId.BASE]: base,
+  [ChainId.SEPOLIA]: sepolia,
+}
 
 const paramsSchema = z.object({
   dpm: addressSchema,
   chainId: chainIdSchema,
   rpc: urlOptionalSchema,
+  getDetails: z.boolean().optional().default(false),
 })
 
 export const handler = async (
@@ -73,12 +93,18 @@ export const handler = async (
   context: Context,
 ): Promise<APIGatewayProxyResultV2> => {
   const SUBGRAPH_BASE = process.env.SUBGRAPH_BASE
+  const RPC_GATEWAY = process.env.RPC_GATEWAY
 
   logger.addContext(context)
 
   if (!SUBGRAPH_BASE) {
     logger.error('SUBGRAPH_BASE is not set')
     return ResponseInternalServerError('SUBGRAPH_BASE is not set')
+  }
+
+  if (!RPC_GATEWAY) {
+    logger.error('RPC_GATEWAY is not set')
+    return ResponseInternalServerError('RPC_GATEWAY is not set')
   }
 
   logger.info(`Query params`, { params: event.queryStringParameters })
@@ -98,6 +124,21 @@ export const handler = async (
 
   logger.appendKeys({
     chainId: params.chainId,
+  })
+
+  const rpc = params.rpc ?? getRpcGatewayEndpoint(RPC_GATEWAY, params.chainId, rpcConfig)
+  const transport = http(rpc, {
+    batch: false,
+    fetchOptions: {
+      method: 'POST',
+    },
+  })
+
+  const viemChain: ViemChain = domainChainIdToViemChain[params.chainId]
+
+  const publicClient: PublicClient = createPublicClient({
+    transport,
+    chain: viemChain,
   })
 
   const automationSubgraphClient = getAutomationSubgraphClient({
@@ -291,8 +332,18 @@ export const handler = async (
     logger,
   })
 
-  const aavePartialTakeProfit = await getDmaAavePartialTakeProfit({ triggers, logger })
-  const sparkPartialTakeProfit = await getDmaSparkPartialTakeProfit({ triggers, logger })
+  const aavePartialTakeProfit = await getDmaAavePartialTakeProfit({
+    triggers,
+    logger,
+    publicClient,
+    getDetails: params.getDetails,
+  })
+  const sparkPartialTakeProfit = await getDmaSparkPartialTakeProfit({
+    triggers,
+    logger,
+    publicClient,
+    getDetails: params.getDetails,
+  })
 
   const response: GetTriggersResponse = {
     triggers: {

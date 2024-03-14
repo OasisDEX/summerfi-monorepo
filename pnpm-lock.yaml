@@ -982,7 +982,7 @@ importers:
         specifier: ^29.1.1
         version: 29.1.1(@babel/core@7.24.0)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
 
-  summerfi-api/get-trigger-details-function:
+  summerfi-api/get-triggers-function:
     dependencies:
       '@aws-lambda-powertools/logger':
         specifier: ^2.0.2
@@ -1008,49 +1008,12 @@ importers:
       '@summerfi/triggers-calculations':
         specifier: workspace:*
         version: link:../../packages/triggers-calculations
-      zod:
-        specifier: ^3.22.4
-        version: 3.22.4
-    devDependencies:
-      '@summerfi/eslint-config':
+      '@summerfi/triggers-shared':
         specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@summerfi/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
-      '@types/node':
-        specifier: ^20.11.5
-        version: 20.11.5
-      eslint:
-        specifier: ^8.56.0
-        version: 8.56.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.5)(ts-node@10.9.2)
-
-  summerfi-api/get-triggers-function:
-    dependencies:
-      '@aws-lambda-powertools/logger':
-        specifier: ^2.0.2
-        version: 2.0.2
-      '@aws-lambda-powertools/metrics':
-        specifier: ^2.0.2
-        version: 2.0.2
-      '@aws-lambda-powertools/tracer':
-        specifier: ^2.0.2
-        version: 2.0.2
-      '@summerfi/automation-subgraph':
-        specifier: workspace:*
-        version: link:../../packages/automation-subgraph
-      '@summerfi/prices-subgraph':
-        specifier: workspace:*
-        version: link:../../packages/prices-subgraph
-      '@summerfi/serverless-contracts':
-        specifier: workspace:*
-        version: link:../../packages/serverless-contracts
-      '@summerfi/serverless-shared':
-        specifier: workspace:*
-        version: link:../../packages/serverless-shared
+        version: link:../../packages/triggers-shared
+      viem:
+        specifier: ^2.8.6
+        version: 2.8.6(typescript@5.3.3)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4

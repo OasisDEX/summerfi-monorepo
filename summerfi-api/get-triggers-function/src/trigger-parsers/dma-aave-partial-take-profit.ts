@@ -5,14 +5,20 @@ import {
 import { TriggersQuery } from '@summerfi/automation-subgraph'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { mapTriggerCommonParams } from '../helpers'
+import { PublicClient } from 'viem'
+import { getAavePosition, simulateAutoTakeProfit } from '@summerfi/triggers-calculations'
+import { Address } from '@summerfi/serverless-shared'
 
 export const getDmaAavePartialTakeProfit = async ({
   triggers,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logger,
+  publicClient,
+  getDetails,
 }: {
   triggers: TriggersQuery
   logger: Logger
+  publicClient: PublicClient
+  getDetails: boolean
 }): Promise<DmaAavePartialTakeProfit | undefined> => {
   const trigger = triggers.triggers.find(
     (trigger) => trigger.triggerType == DmaAavePartialTakeProfitID,
@@ -22,7 +28,7 @@ export const getDmaAavePartialTakeProfit = async ({
     return undefined
   }
 
-  return {
+  const parsedTrigger = {
     triggerTypeName: 'DmaAavePartialTakeProfit' as const,
     triggerType: DmaAavePartialTakeProfitID,
     ...mapTriggerCommonParams(trigger),
@@ -40,4 +46,34 @@ export const getDmaAavePartialTakeProfit = async ({
       executionPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('executionPrice')],
     },
   }
+
+  if (getDetails) {
+    const position = await getAavePosition(
+      {
+        address: parsedTrigger.decodedParams.positionAddress as Address,
+        collateral: parsedTrigger.decodedParams.collateralToken as Address,
+        debt: parsedTrigger.decodedParams.debtToken as Address,
+      },
+      publicClient,
+      { poolDataProvider: '', oracle: '' },
+      logger,
+    )
+
+    const simulation = simulateAutoTakeProfit({
+      position,
+      minimalTriggerData: {
+        executionPrice: parsedTrigger.decodedParams.executionPrice,
+        executionLTV: parsedTrigger.decodedParams.executionLtv,
+        withdrawStep: parsedTrigger.decodedParams.withdrawToDebt,
+        withdrawToken: parsedTrigger.decodedParams.debtToken,
+      },
+      logger: logger,
+      iterations: 1,
+      currentStopLoss: {
+        executionLTV: 0n,
+      },
+    })
+  }
+
+  return parsedTrigger
 }
