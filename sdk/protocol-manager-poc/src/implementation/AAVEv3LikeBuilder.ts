@@ -55,9 +55,11 @@ export class AaveV3LikePluginBuilder<AssetListItemType>  {
     private operations: QueuedOperation<void>[] = [];
     private tokensUsedAsReserves: Token[] | undefined
     private reservesAssetsList: Array<WithToken<AssetListItemType>> = []
+    private readonly protocolName: AllowedProtocolNames
 
-    constructor(ctx: ProtocolManagerContext, private readonly protocolName: AllowedProtocolNames) {
+    constructor(ctx: ProtocolManagerContext, protocolName: AllowedProtocolNames) {
         this.ctx = ctx;
+        this.protocolName = protocolName
     }
 
     async init(): Promise<AaveV3LikePluginBuilder<WithToken<AssetListItemType>>> {
