@@ -6,6 +6,7 @@
     "rootDir": "src",
     "paths": {
       "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
+      "~deployment-types/*": ["node_modules/@summerfi/deployment-types/src/*"],
       "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"]
     }
   },

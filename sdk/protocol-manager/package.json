@@ -20,6 +20,7 @@
     "bundle": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap"
   },
   "dependencies": {
+    "@summerfi/deployment-types": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "bignumber.js": "9.0.1",
     "zod": "^3.22.4"
@@ -27,7 +28,6 @@
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
-    "@summerfi/typescript-config": "workspace:*",
-    "@summerfi/deployment-types": "workspace:*"
+    "@summerfi/typescript-config": "workspace:*"
   }
 }

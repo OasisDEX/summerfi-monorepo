@@ -2,8 +2,8 @@ import { TokenAmount, TokenSymbol, Price, CurrencySymbol } from "@summerfi/sdk-c
 import type { LendingPool } from "@summerfi/sdk-common/protocols"
 import { IPoolId, ProtocolName, IProtocol } from "@summerfi/sdk-common/protocols"
 import { Address, Position, Token, AddressValue } from "@summerfi/sdk-common/common"
-import {PublicClient} from "viem"
-import {AaveV3ContractNames, SparkContractNames, MakerContractNames} from '@summerfi/deployment-types'
+import { PublicClient } from "viem"
+import { AaveV3ContractNames, SparkContractNames, MakerContractNames } from '@summerfi/deployment-types'
 import {
     VAT_ABI,
     SPOT_ABI,
