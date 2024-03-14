@@ -1,0 +1,1436 @@
+"""Exposes a URL that specifies the behavior of this scalar."""
+directive @specifiedBy(
+  """The URL that specifies the behavior of this scalar."""
+  url: String!
+) on SCALAR
+
+"""Asset"""
+type Asset {
+  id: ID!
+
+  """ERC-20 token contract address"""
+  address: String!
+  chain: Chain!
+  decimals: Float!
+  name: String!
+  symbol: String!
+
+  """ERC-20 token total supply"""
+  totalSupply: BigInt!
+
+  """Current price in USD, for display purpose."""
+  priceUsd: Float
+
+  """Historical price in USD, for display purpose"""
+  historicalPriceUsd(options: TimeseriesOptions!): [FloatDataPoint!]
+
+  """Current spot price in ETH."""
+  spotPriceEth: Float
+
+  """Historical spot price in ETH"""
+  historicalSpotPriceEth(options: TimeseriesOptions!): [FloatDataPoint!]
+}
+
+input AssetsFilters {
+  search: String
+
+  """Filter by asset id"""
+  id_in: [String!]
+
+  """Filter by token symbol"""
+  symbol_in: [String!]
+
+  """Filter by token contract address. Case insensitive."""
+  address_in: [String!]
+
+  """Filter by chain id"""
+  chainId_in: [Int!]
+}
+
+"""
+The `BigInt` scalar type represents non-fractional signed whole numeric values.
+"""
+scalar BigInt
+
+type BigIntDataPoint {
+  x: Int!
+  y: BigInt
+}
+
+"""Chain"""
+type Chain {
+  id: Int!
+  network: String!
+  currency: String!
+}
+
+"""Chain synchronization state"""
+type ChainSynchronizationState {
+  id: ID!
+  key: String!
+  blockNumber: BigInt!
+  chain: Chain!
+}
+
+"""
+Amount of collateral at risk of liquidation at collateralPriceRatio * oracle price
+"""
+type CollateralAtRiskDataPoint {
+  collateralPriceRatio: Float!
+  collateralAssets: BigInt!
+  collateralUsd: Float!
+}
+
+type FloatDataPoint {
+  x: Int!
+  y: Float
+}
+
+type IntDataPoint {
+  x: Int!
+  y: Int
+}
+
+"""Morpho Blue market"""
+type Market {
+  id: ID!
+  uniqueKey: String!
+  lltv: BigInt!
+  oracleAddress: String!
+  irmAddress: String!
+  creationBlockNumber: Int!
+  creationTimestamp: BigInt
+  creatorAddress: String
+
+  """
+  Amount of collateral to borrow 1 loan asset scaled to both asset decimals
+  """
+  collateralPrice: BigInt
+  loanAsset: Asset!
+  collateralAsset: Asset
+  morphoBlue: MorphoBlue!
+
+  """Current state"""
+  state: MarketState
+
+  """State history"""
+  historicalState: MarketHistory
+
+  """Feeds used by the oracle if provided by the contract"""
+  oracleFeed: MarketOracleFeed
+
+  """Market concentrations"""
+  concentration: MarketConcentration
+
+  """Market bad debt values"""
+  badDebt: MarketBadDebt
+
+  """Daily market APYs"""
+  dailyApys: MarketApyAggregates
+
+  """Weekly market APYs"""
+  weeklyApys: MarketApyAggregates
+
+  """Monthly market APYs"""
+  monthlyApys: MarketApyAggregates
+}
+
+"""Market APY aggregates"""
+type MarketApyAggregates {
+  """Average market supply APY"""
+  supplyApy: Float
+
+  """Average market borrow APY"""
+  borrowApy: Float
+}
+
+"""Bad debt realized in the market"""
+type MarketBadDebt {
+  """Amount of bad debt realized in the market in underlying units."""
+  underlying: BigInt
+
+  """Amount of bad debt realized in the market in USD."""
+  usd: Float
+}
+
+"""Market collateral at risk of liquidation"""
+type MarketCollateralAtRisk {
+  market: Market!
+
+  """Total collateral at risk of liquidation at certain prices thresholds."""
+  collateralAtRisk: [CollateralAtRiskDataPoint!]
+}
+
+"""Market collateral transfer transaction data"""
+type MarketCollateralTransferTransactionData {
+  assets: BigInt!
+  assetsUsd: Float
+  market: Market!
+}
+
+"""Morpho Blue supply and borrow side concentrations"""
+type MarketConcentration {
+  """Borrowers Herfindahl-Hirschman Index"""
+  supplyHhi: Float
+
+  """Borrowers Herfindahl-Hirschman Index"""
+  borrowHhi: Float
+}
+
+"""
+Filtering options for markets. AND operator is used for multiple filters, while
+OR operator is used for multiple values in the same filter.
+"""
+input MarketFilters {
+  search: String
+
+  """Filter by market id"""
+  id_in: [String!]
+
+  """Filter by market unique key"""
+  uniqueKey_in: [String!]
+
+  """Filter by market oracle address. Case insensitive."""
+  oracleAddress_in: [String!]
+
+  """Filter by market irm address"""
+  irmAddress_in: [String!]
+
+  """Filter by chain id"""
+  chainId_in: [Int!]
+
+  """Filter by collateral asset address. Case insensitive."""
+  collateralAssetAddress_in: [String!]
+
+  """Filter by collateral asset id"""
+  collateralAssetId_in: [String!]
+
+  """Filter by loan asset address. Case insensitive."""
+  loanAssetAddress_in: [String!]
+
+  """Filter by loan asset id"""
+  loanAssetId_in: [String!]
+
+  """Filter by greater than or equal to given lltv"""
+  lltv_gte: BigInt
+
+  """Filter by lower than or equal to given lltv"""
+  lltv_lte: BigInt
+
+  """
+  Filter by greater than or equal to given borrow asset amount, in underlying token units.
+  """
+  borrowAssets_gte: BigInt
+
+  """
+  Filter by lower than or equal to given borrow asset amount, in underlying token units.
+  """
+  borrowAssets_lte: BigInt
+
+  """Filter by greater than or equal to given borrow asset amount, in USD."""
+  borrowAssetsUsd_gte: Float
+
+  """Filter by lower than or equal to given borrow asset amount, in USD."""
+  borrowAssetsUsd_lte: Float
+
+  """
+  Filter by greater than or equal to given supply asset amount, in underlying token units.
+  """
+  supplyAssets_gte: BigInt
+
+  """
+  Filter by lower than or equal to given supply asset amount, in underlying token units.
+  """
+  supplyAssets_lte: BigInt
+
+  """Filter by greater than or equal to given supply asset amount, in USD."""
+  supplyAssetsUsd_gte: Float
+
+  """Filter by lower than or equal to given supply asset amount, in USD."""
+  supplyAssetsUsd_lte: Float
+
+  """Filter by greater than or equal to given borrow shares amount"""
+  borrowShares_gte: BigInt
+
+  """Filter by lower than or equal to given borrow shares amount"""
+  borrowShares_lte: BigInt
+
+  """Filter by greater than or equal to given supply shares amount"""
+  supplyShares_gte: BigInt
+
+  """Filter by lower than or equal to given borrow shares amount"""
+  supplyShares_lte: BigInt
+
+  """Filter by greater than or equal to given utilization rate"""
+  utilization_gte: Float
+
+  """Filter by lower than or equal to given utilization rate"""
+  utilization_lte: Float
+
+  """Filter by greater than or equal to given rate at target utilization"""
+  rateAtUTarget_gte: Float
+
+  """Filter by lower than or equal to given rate at target utilization"""
+  rateAtUTarget_lte: Float
+
+  """Filter by greater than or equal to given supply APY"""
+  supplyApy_gte: Float
+
+  """Filter by lower than or equal to given supply APY"""
+  supplyApy_lte: Float
+
+  """Filter by greater than or equal to given borrow APY"""
+  borrowApy_gte: Float
+
+  """Filter by lower than or equal to given borrow APY"""
+  borrowApy_lte: Float
+
+  """Filter by greater than or equal to given fee rate"""
+  fee_gte: Float
+
+  """Filter by lower than or equal to given fee rate"""
+  fee_lte: Float
+}
+
+"""Market state history"""
+type MarketHistory {
+  """
+  Amount borrowed on the market, in underlying units. Amount increases as interests accrue.
+  """
+  borrowAssets(options: TimeseriesOptions): [BigIntDataPoint!]
+
+  """
+  Amount supplied on the market, in underlying units. Amount increases as interests accrue.
+  """
+  supplyAssets(options: TimeseriesOptions): [BigIntDataPoint!]
+
+  """Amount borrowed on the market, in USD for display purpose"""
+  borrowAssetsUsd(options: TimeseriesOptions): [FloatDataPoint!]
+
+  """Amount supplied on the market, in USD for display purpose"""
+  supplyAssetsUsd(options: TimeseriesOptions): [FloatDataPoint!]
+
+  """
+  Amount borrowed on the market, in market share units. Amount does not increase as interest accrue.
+  """
+  borrowShares(options: TimeseriesOptions): [BigIntDataPoint!]
+
+  """
+  Amount supplied on the market, in market share units. Amount does not increase as interest accrue.
+  """
+  supplyShares(options: TimeseriesOptions): [BigIntDataPoint!]
+
+  """Amount available to borrow on the market, in underlying units"""
+  liquidityAssets(options: TimeseriesOptions): [BigIntDataPoint!]
+
+  """Amount available to borrow on the market, in USD for display purpose"""
+  liquidityAssetsUsd(options: TimeseriesOptions): [FloatDataPoint!]
+
+  """Amount of collateral in the market, in underlying units"""
+  collateralAssets(options: TimeseriesOptions): [BigIntDataPoint!]
+
+  """Amount of collateral in the market, in USD for display purpose"""
+  collateralAssetsUsd(options: TimeseriesOptions): [FloatDataPoint!]
+
+  """Utilization rate"""
+  utilization(options: TimeseriesOptions): [FloatDataPoint!]
+
+  """Rate at utilization target"""
+  rateAtUTarget(options: TimeseriesOptions): [FloatDataPoint!]
+
+  """Supply APY"""
+  supplyApy(options: TimeseriesOptions): [FloatDataPoint!]
+
+  """Borrow APY"""
+  borrowApy(options: TimeseriesOptions): [FloatDataPoint!]
+
+  """Fee rate"""
+  fee(options: TimeseriesOptions): [FloatDataPoint!]
+}
+
+"""Market liquidation transaction data"""
+type MarketLiquidationTransactionData {
+  repaidAssets: BigInt!
+  repaidAssetsUsd: Float
+  repaidShares: BigInt!
+  seizedAssets: BigInt!
+  seizedAssetsUsd: Float
+  badDebtShares: BigInt!
+  badDebtAssets: BigInt!
+  badDebtAssetsUsd: Float
+  liquidator: String!
+  market: Market!
+}
+
+"""Market oracle accuracy versus spot price"""
+type MarketOracleAccuracy {
+  market: Market!
+
+  """Average oracle/spot prices deviation"""
+  averagePercentDifference: Float
+
+  """Maximum oracle/spot prices deviation"""
+  maxPercentDifference: Float
+}
+
+"""Market oracle feeds"""
+type MarketOracleFeed {
+  baseFeedOneAddress: String!
+  baseFeedOneDescription: String
+  baseFeedTwoAddress: String!
+  baseFeedTwoDescription: String
+  quoteFeedOneAddress: String!
+  quoteFeedOneDescription: String
+  quoteFeedTwoAddress: String!
+  quoteFeedTwoDescription: String
+  scaleFactor: BigInt!
+  vault: String!
+  vaultConversionSample: BigInt!
+}
+
+enum MarketOrderBy {
+  UniqueKey
+  Lltv
+  BorrowAssets
+  BorrowAssetsUsd
+  SupplyAssets
+  SupplyAssetsUsd
+  BorrowShares
+  SupplyShares
+  Utilization
+  RateAtUTarget
+  SupplyApy
+  BorrowApy
+  Fee
+}
+
+"""Market position"""
+type MarketPosition {
+  id: ID!
+
+  """Amount of loan asset supplied, in market shares."""
+  supplyShares: BigInt!
+
+  """Amount of loan asset supplied, in underlying token units."""
+  supplyAssets: BigInt!
+
+  """Amount of loan asset supplied, in USD for display purpose."""
+  supplyAssetsUsd: Float
+
+  """Amount of loan asset borrowed, in market shares."""
+  borrowShares: BigInt!
+
+  """Amount of loan asset borrowed, in underlying token units."""
+  borrowAssets: BigInt!
+
+  """Amount of loan asset borrowed, in USD for display purpose."""
+  borrowAssetsUsd: Float
+
+  """
+  Amount of collateral asset deposited on the market, in underlying token units.
+  """
+  collateral: BigInt!
+
+  """
+  Amount of collateral asset deposited on the market, in USD for display purpose.
+  """
+  collateralUsd: Float
+
+  """
+  Health factor of the position, computed as collateral value divided by borrow value.
+  """
+  healthFactor: Float
+  user: User!
+  market: Market!
+}
+
+"""
+Filtering options for market positions. AND operator is used for multiple
+filters, while OR operator is used for multiple values in the same filter.
+"""
+input MarketPositionFilters {
+  search: String
+
+  """Filter by market id"""
+  marketId_in: [String!]
+
+  """Filter by market unique key"""
+  marketUniqueKey_in: [String!]
+
+  """Filter by user id"""
+  userId_in: [String!]
+
+  """Filter by user address. Case insensitive."""
+  userAddress_in: [String!]
+
+  """Filter by chain id"""
+  chainId_in: [Int!]
+
+  """Filter by greater than or equal to given health factor"""
+  healthFactor_gte: Float
+
+  """Filter by lower than or equal to given health factor"""
+  healthFactor_lte: Float
+
+  """Filter by greater than or equal to given supply shares"""
+  supplyShares_gte: BigInt
+
+  """Filter by lower than or equal to given supply shares"""
+  supplyShares_lte: BigInt
+
+  """Filter by greater than or equal to given borrow shares"""
+  borrowShares_gte: BigInt
+
+  """Filter by lower than or equal to given borrow shares"""
+  borrowShares_lte: BigInt
+
+  """
+  Filter by greater than or equal to given collateral amount, in underlying token units.
+  """
+  collateral_gte: BigInt
+
+  """
+  Filter by lower than or equal to given collateral amount, in underlying token units.
+  """
+  collateral_lte: BigInt
+}
+
+enum MarketPositionOrderBy {
+  SupplyShares
+  BorrowShares
+  Collateral
+  HealthFactor
+}
+
+"""Morpho Blue market state"""
+type MarketState {
+  """
+  Amount borrowed on the market, in underlying units. Amount increases as interests accrue.
+  """
+  borrowAssets: BigInt!
+
+  """
+  Amount supplied on the market, in underlying units. Amount increases as interests accrue.
+  """
+  supplyAssets: BigInt!
+
+  """Amount borrowed on the market, in USD for display purpose"""
+  borrowAssetsUsd: Float
+
+  """Amount supplied on the market, in USD for display purpose"""
+  supplyAssetsUsd: Float
+
+  """
+  Amount borrowed on the market, in market share units. Amount does not increase as interest accrue.
+  """
+  borrowShares: BigInt!
+
+  """
+  Amount supplied on the market, in market share units. Amount does not increase as interest accrue.
+  """
+  supplyShares: BigInt!
+
+  """Amount available to borrow on the market, in underlying units"""
+  liquidityAssets: BigInt!
+
+  """Amount available to borrow on the market, in USD for display purpose"""
+  liquidityAssetsUsd: Float
+
+  """Amount of collateral in the market, in underlying units"""
+  collateralAssets: BigInt
+
+  """Amount of collateral in the market, in USD for display purpose"""
+  collateralAssetsUsd: Float
+
+  """Utilization rate"""
+  utilization: Float!
+
+  """Borrow rate at target utilization"""
+  rateAtUTarget: Float!
+
+  """Supply APY"""
+  supplyApy: Float!
+
+  """Borrow APY"""
+  borrowApy: Float!
+
+  """Fee rate"""
+  fee: Float!
+
+  """Last update timestamp."""
+  timestamp: BigInt!
+}
+
+"""Market transfer transaction data"""
+type MarketTransferTransactionData {
+  shares: BigInt!
+  assets: BigInt!
+  assetsUsd: Float
+  market: Market!
+}
+
+"""Morpho Blue deployment"""
+type MorphoBlue {
+  id: ID!
+  address: String!
+  creationBlockNumber: Int!
+  chain: Chain!
+
+  """Current state"""
+  state: MorphoBlueState
+
+  """State history"""
+  historicalState: MorphoBlueStateHistory
+}
+
+"""Filtering options for morpho blue deployments."""
+input MorphoBlueFilters {
+  """Filter by morpho blue id"""
+  id_in: [String!]
+
+  """Filter by deployment address. Case insensitive."""
+  address_in: [String!]
+
+  """Filter by chain id"""
+  chainId_in: [Int!]
+}
+
+enum MorphoBlueOrderBy {
+  Address
+}
+
+"""Morpho Blue global state"""
+type MorphoBlueState {
+  id: ID!
+
+  """Last update timestamp."""
+  timestamp: BigInt!
+
+  """Amount of collateral in all markets, in USD for display purpose"""
+  totalCollateralUsd: Float!
+
+  """Amount supplied in all markets, in USD for display purpose"""
+  totalSupplyUsd: Float!
+
+  """Amount deposited in all markets, in USD for display purpose"""
+  totalDepositUsd: Float!
+
+  """Amount borrowed in all markets, in USD for display purpose"""
+  totalBorrowUsd: Float!
+
+  """TVL (collateral + supply - borrows), in USD for display purpose"""
+  tvlUsd: Float!
+
+  """Number of unique users that have interacted with the protocol"""
+  userCount: Int!
+
+  """Number of markets in the protocol"""
+  marketCount: Int!
+
+  """Number of meta morpho vaults in the protocol"""
+  vaultCount: Int!
+}
+
+"""Morpho Blue state history"""
+type MorphoBlueStateHistory {
+  """Amount of collateral in all markets, in USD for display purpose."""
+  totalCollateralUsd(options: TimeseriesOptions): [FloatDataPoint!]
+
+  """Amount supplied in all markets, in USD for display purpose"""
+  totalSupplyUsd(options: TimeseriesOptions): [FloatDataPoint!]
+
+  """Amount deposited in all markets, in USD for display purpose"""
+  totalDepositUsd(options: TimeseriesOptions): [FloatDataPoint!]
+
+  """Amount borrowed in all markets, in USD for display purpose"""
+  totalBorrowUsd(options: TimeseriesOptions): [FloatDataPoint!]
+
+  """TVL (collateral + supply - borrows), in USD for display purpose"""
+  tvlUsd(options: TimeseriesOptions): [FloatDataPoint!]
+
+  """Number of unique users that have interacted with the protocol"""
+  userCount(options: TimeseriesOptions): [IntDataPoint!]
+
+  """Number of markets in the protocol"""
+  marketCount(options: TimeseriesOptions): [IntDataPoint!]
+
+  """Number of meta morpho vaults in the protocol"""
+  vaultCount(options: TimeseriesOptions): [IntDataPoint!]
+}
+
+enum OrderDirection {
+  Asc
+  Desc
+}
+
+type PageInfo {
+  """Total number of items"""
+  countTotal: Int!
+
+  """Number of items as scoped by pagination."""
+  count: Int!
+
+  """Number of items requested."""
+  limit: Int!
+
+  """Number of items skipped."""
+  skip: Int!
+}
+
+type PaginatedAssets {
+  items: [Asset!]
+  pageInfo: PageInfo
+}
+
+type PaginatedMarketPositions {
+  items: [MarketPosition!]
+  pageInfo: PageInfo
+}
+
+type PaginatedMarkets {
+  items: [Market!]
+  pageInfo: PageInfo
+}
+
+type PaginatedMetaMorphoPositions {
+  items: [VaultPosition!]
+  pageInfo: PageInfo
+}
+
+type PaginatedMetaMorphos {
+  items: [Vault!]
+  pageInfo: PageInfo
+}
+
+type PaginatedMorphoBlue {
+  items: [MorphoBlue!]
+  pageInfo: PageInfo
+}
+
+type PaginatedTransactions {
+  items: [Transaction!]
+  pageInfo: PageInfo
+}
+
+type PaginatedUsers {
+  items: [User!]
+  pageInfo: PageInfo
+}
+
+type PaginatedVaultReallocates {
+  items: [VaultReallocate!]
+  pageInfo: PageInfo
+}
+
+type Query {
+  chainSynchronizationStates: [ChainSynchronizationState!]!
+  chainSynchronizationState(key: String!, chainId: Int! = 1): ChainSynchronizationState!
+  chain(id: Int!): Chain!
+  chains: [Chain!]!
+  asset(id: String!): Asset!
+  assetByAddress(address: String!, chainId: Int = 1): Asset!
+  assets(
+    """Number of items requested"""
+    first: Int = 100
+
+    """Number of items skipped"""
+    skip: Int = 0
+    where: AssetsFilters
+  ): PaginatedAssets!
+  transaction(id: String!): Transaction!
+  transactionByHash(hash: String!, chainId: Int = 1): Transaction!
+  transactions(
+    """Number of items requested"""
+    first: Int = 100
+
+    """Number of items skipped"""
+    skip: Int = 0
+    orderBy: TransactionsOrderBy = Timestamp
+    orderDirection: OrderDirection
+    where: TransactionFilters
+  ): PaginatedTransactions!
+  user(id: String!): User!
+  userByAddress(address: String!, chainId: Int = 1): User!
+  users(
+    """Number of items requested"""
+    first: Int = 100
+
+    """Number of items skipped"""
+    skip: Int = 0
+    orderBy: UsersOrderBy = Address
+    orderDirection: OrderDirection
+    where: UsersFilters
+  ): PaginatedUsers!
+  marketCollateralAtRisk(uniqueKey: String!, chainId: Int = 1, numberOfPoints: Float = 100): MarketCollateralAtRisk!
+  market(id: String!): Market!
+  marketByUniqueKey(uniqueKey: String!): Market!
+  markets(
+    """Number of items requested"""
+    first: Int = 100
+
+    """Number of items skipped"""
+    skip: Int = 0
+    orderBy: MarketOrderBy = UniqueKey
+    orderDirection: OrderDirection
+    where: MarketFilters
+  ): PaginatedMarkets!
+  marketOracleAccuracy(marketId: String!, options: TimeseriesOptions): MarketOracleAccuracy!
+  morphoBlue(id: String!): MorphoBlue!
+  morphoBlueByAddress(address: String!, chainId: Int = 1): MorphoBlue!
+  morphoBlues(
+    """Number of items requested"""
+    first: Int = 100
+
+    """Number of items skipped"""
+    skip: Int = 0
+    orderBy: MorphoBlueOrderBy = Address
+    orderDirection: OrderDirection
+    where: MorphoBlueFilters
+  ): PaginatedMorphoBlue!
+  marketPosition(userAddress: String!, marketUniqueKey: String!, chainId: Int = 1): MarketPosition!
+  marketPositions(
+    """Number of items requested"""
+    first: Int = 100
+
+    """Number of items skipped"""
+    skip: Int = 0
+    orderBy: MarketPositionOrderBy = SupplyShares
+    orderDirection: OrderDirection
+    where: MarketPositionFilters
+  ): PaginatedMarketPositions!
+  vault(id: String!): Vault!
+  vaultByAddress(address: String!, chainId: Int = 1): Vault!
+  vaults(
+    """Number of items requested"""
+    first: Int = 100
+
+    """Number of items skipped"""
+    skip: Int = 0
+    orderBy: VaultOrderBy = Address
+    orderDirection: OrderDirection
+    where: VaultFilters
+  ): PaginatedMetaMorphos!
+  vaultPosition(userAddress: String!, vaultAddress: String!, chainId: Int = 1): VaultPosition!
+  vaultPositions(
+    """Number of items requested"""
+    first: Int = 100
+
+    """Number of items skipped"""
+    skip: Int = 0
+    orderBy: VaultPositionOrderBy = Shares
+    orderDirection: OrderDirection
+    where: VaultPositionFilters
+  ): PaginatedMetaMorphoPositions!
+  vaultReallocates(
+    """Number of items requested"""
+    first: Int = 100
+
+    """Number of items skipped"""
+    skip: Int = 0
+    orderBy: VaultReallocateOrderBy = Timestamp
+    orderDirection: OrderDirection
+    where: VaultReallocateFilters
+  ): PaginatedVaultReallocates!
+}
+
+enum TimeseriesInterval {
+  MINUTE
+  FIVE_MINUTES
+  FIFTEEN_MINUTES
+  HALF_HOUR
+  HOUR
+  DAY
+  WEEK
+  MONTH
+  QUARTER
+  YEAR
+  ALL
+}
+
+input TimeseriesOptions {
+  """Unix timestamp (Inclusive)"""
+  startTimestamp: Int
+
+  """Unix timestamp (Inclusive)"""
+  endTimestamp: Int
+  interval: TimeseriesInterval = HOUR
+}
+
+"""Transaction"""
+type Transaction {
+  id: ID!
+  timestamp: BigInt!
+  hash: String!
+  logIndex: Int!
+  blockNumber: BigInt!
+  type: TransactionType!
+  data: TransactionData!
+  chain: Chain!
+  user: User!
+}
+
+union TransactionData = VaultTransactionData | MarketCollateralTransferTransactionData | MarketTransferTransactionData | MarketLiquidationTransactionData
+
+"""
+Filtering options for transactions. AND operator is used for multiple filters,
+while OR operator is used for multiple values in the same filter.
+"""
+input TransactionFilters {
+  search: String
+
+  """Filter by asset id"""
+  assetId_in: [String!]
+
+  """Filter by token symbol."""
+  assetSymbol_in: [String!]
+
+  """Filter by token contract address. Case insensitive."""
+  assetAddress_in: [String!]
+
+  """Filter by MetaMorpho vault id"""
+  vaultId_in: [String!]
+
+  """Filter by MetaMorpho vault address"""
+  vaultAddress_in: [String!]
+
+  """Filter by market id"""
+  marketId_in: [String!]
+
+  """Filter by market unique key"""
+  marketUniqueKey_in: [String!]
+
+  """Filter by user address. Case insensitive."""
+  userAddress_in: [String!]
+
+  """Filter by user id"""
+  userId_in: [String!]
+
+  """Filter by transaction type"""
+  type_in: [TransactionType!]
+
+  """Filter by transaction hash"""
+  hash: String
+
+  """Filter by greater than or equal to given timestamp"""
+  timestamp_gte: Int
+
+  """Filter by lower than or equal to given timestamp"""
+  timestamp_lte: Int
+
+  """Filter by chain id"""
+  chainId_in: [Int!]
+
+  """
+  Filter by greater than or equal to given amount of MetaMorpho vault shares
+  """
+  shares_gte: BigInt
+
+  """
+  Filter by lower than or equal to given amount of MetaMorpho vault shares
+  """
+  shares_lte: BigInt
+
+  """
+  Filter by greater than or equal to given amount of market assets, in underlying token units
+  """
+  assets_gte: BigInt
+
+  """
+  Filter by lower than or equal to given amount of market assets, in underlying token units
+  """
+  assets_lte: BigInt
+
+  """
+  Filter by greater than or equal to given amount of market assets, in USD
+  """
+  assetsUsd_gte: Float
+
+  """Filter by lower than or equal to given amount of market assets, in USD"""
+  assetsUsd_lte: Float
+
+  """
+  Filter by greater than or equal to given amount of repaid shares. Applies exclusively to MarketLiquidation transactions.
+  """
+  repaidAssets_gte: BigInt
+
+  """
+  Filter by lower than or equal to given amount of repaid shares. Applies exclusively to MarketLiquidation transactions.
+  """
+  repaidAssets_lte: BigInt
+
+  """
+  Filter by greater than or equal to given amount of repaid shares, in USD.
+  Applies exclusively to MarketLiquidation transactions.
+  """
+  repaidAssetsUsd_gte: Float
+
+  """
+  Filter by lower than or equal to given amount of repaid shares, in USD.
+  Applies exclusively to MarketLiquidation transactions.
+  """
+  repaidAssetsUsd_lte: Float
+
+  """
+  Filter by greater than or equal to given amount of repaid shares. Applies exclusively to MarketLiquidation transactions.
+  """
+  repaidShares_gte: BigInt
+
+  """
+  Filter by lower than or equal to given amount of repaid shares. Applies exclusively to MarketLiquidation transactions.
+  """
+  repaidShares_lte: BigInt
+
+  """
+  Filter by greater than or equal to given amount of seized shares. Applies exclusively to MarketLiquidation transactions.
+  """
+  seizedAssets_gte: BigInt
+
+  """
+  Filter by lower than or equal to given amount of seized shares. Applies exclusively to MarketLiquidation transactions.
+  """
+  seizedAssets_lte: BigInt
+
+  """
+  Filter by greater than or equal to given amount of seized shares, in USD.
+  Applies exclusively to MarketLiquidation transactions.
+  """
+  seizedAssetsUsd_gte: Float
+
+  """
+  Filter by lower than or equal to given amount of seized shares, in USD.
+  Applies exclusively to MarketLiquidation transactions.
+  """
+  seizedAssetsUsd_lte: Float
+
+  """
+  Filter by greater than or equal to given amount of bad debt shares. Applies exclusively to MarketLiquidation transactions.
+  """
+  badDebtShares_gte: BigInt
+
+  """
+  Filter by lower than or equal to given amount of bad debt shares. Applies exclusively to MarketLiquidation transactions.
+  """
+  badDebtShares_lte: BigInt
+
+  """
+  Filter by greater than or equal to given amount of bad debt assets. Applies exclusively to MarketLiquidation transactions.
+  """
+  badDebtAssets_gte: BigInt
+
+  """
+  Filter by lower than or equal to given amount of bad debt assets. Applies exclusively to MarketLiquidation transactions.
+  """
+  badDebtAssets_lte: BigInt
+
+  """
+  Filter by greater than or equal to given amount of bad debt assets, in USD.
+  Applies exclusively to MarketLiquidation transactions.
+  """
+  badDebtAssetsUsd_gte: Float
+
+  """
+  Filter by lower than or equal to given amount of bad debt assets, in USD.
+  Applies exclusively to MarketLiquidation transactions.
+  """
+  badDebtAssetsUsd_lte: Float
+
+  """
+  Filter by liquidator address. Applies exclusively to MarketLiquidation transactions.
+  """
+  liquidator_in: [String!]
+}
+
+enum TransactionsOrderBy {
+  Timestamp
+  Shares
+  Assets
+  AssetsUsd
+  RepaidShares
+  RepaidAssets
+  RepaidAssetsUsd
+  SeizedAssets
+  SeizedAssetsUsd
+  BadDebtShares
+  BadDebtAssets
+  BadDebtAssetsUsd
+}
+
+enum TransactionType {
+  MetaMorphoDeposit
+  MetaMorphoWithdraw
+  MetaMorphoFee
+  MarketBorrow
+  MarketLiquidation
+  MarketRepay
+  MarketSupply
+  MarketSupplyCollateral
+  MarketWithdraw
+  MarketWithdrawCollateral
+}
+
+"""User"""
+type User {
+  id: ID!
+  address: String!
+  tag: String
+  chain: Chain!
+  marketPositions: [MarketPosition!]!
+  vaultPositions: [VaultPosition!]!
+  transactions: [Transaction!]!
+}
+
+"""
+Filtering options for users. AND operator is used for multiple filters, while OR
+operator is used for multiple values in the same filter.
+"""
+input UsersFilters {
+  search: String
+
+  """Filter by user address. Case insensitive."""
+  address_in: [String!]
+
+  """Filter by user id"""
+  id_in: [String!]
+
+  """Filter by asset id"""
+  assetId_in: [String!]
+
+  """Filter by token symbol"""
+  assetSymbol_in: [String!]
+
+  """Filter by token contract address. Case insensitive."""
+  assetAddress_in: [String!]
+
+  """Filter by MetaMorpho vault id."""
+  vaultId_in: [String!]
+
+  """Filter by MetaMorpho vault address. Case insensitive."""
+  vaultAddress_in: [String!]
+
+  """Filter by market id"""
+  marketId_in: [String!]
+
+  """Filter by market unique key"""
+  marketUniqueKey_in: [String!]
+
+  """Filter by chain id"""
+  chainId_in: [Int!]
+}
+
+enum UsersOrderBy {
+  Address
+}
+
+"""MetaMorpho Vaults"""
+type Vault {
+  id: ID!
+  address: String!
+  symbol: String!
+  name: String!
+  creationBlockNumber: Int!
+  creationTimestamp: BigInt
+  creatorAddress: String
+  asset: Asset!
+  chain: Chain!
+  state: VaultState
+
+  """Daily vault APY"""
+  dailyApy: Float
+
+  """Monthly vault APY"""
+  monthlyApy: Float
+
+  """Weekly vault APY"""
+  weeklyApy: Float
+  historicalState: VaultHistory!
+}
+
+"""MetaMorpho vault allocation"""
+type VaultAllocation {
+  id: ID!
+
+  """Amount of asset supplied on market, in market underlying token units"""
+  supplyAssets: BigInt!
+
+  """Amount of asset supplied on market, in USD for display purpose."""
+  supplyAssetsUsd: Float!
+
+  """
+  Maximum amount of asset that can be supplied on market by the vault, in market underlying token units
+  """
+  supplyCap: BigInt!
+
+  """
+  Maximum amount of asset that can be supplied on market by the vault, in USD for display purpose.
+  """
+  supplyCapUsd: Float!
+  market: Market!
+}
+
+"""MetaMorpho vault allocation history"""
+type VaultAllocationHistory {
+  market: Market!
+
+  """Amount of asset supplied on market, in market underlying token units"""
+  supplyAssets(options: TimeseriesOptions): [BigIntDataPoint!]!
+
+  """Amount of asset supplied on market, in USD for display purpose."""
+  supplyAssetsUsd(options: TimeseriesOptions): [FloatDataPoint!]
+
+  """
+  Maximum amount of asset that can be supplied on market by the vault, in market underlying token units
+  """
+  supplyCap(options: TimeseriesOptions): [BigIntDataPoint!]!
+
+  """
+  Maximum amount of asset that can be supplied on market by the vault, in USD for display purpose.
+  """
+  supplyCapUsd(options: TimeseriesOptions): [FloatDataPoint!]
+}
+
+input VaultFilters {
+  search: String
+
+  """Filter by MetaMorpho vault id"""
+  id_in: [String!]
+
+  """Filter by MetaMorpho vault address"""
+  address_in: [String!]
+
+  """Filter by MetaMorpho vault symbol"""
+  symbol_in: [String!]
+
+  """Filter by chain id"""
+  chainId_in: [Int!]
+
+  """Filter by asset id"""
+  assetId_in: [String!]
+
+  """Filter by asset contract address"""
+  assetAddress_in: [String!]
+
+  """Filter by asset symbol"""
+  assetSymbol_in: [String!]
+
+  """Filter by markets in which the vault has positions."""
+  marketUniqueKey_in: [String!]
+
+  """Filter by greater than or equal to given APY."""
+  apy_gte: Float
+
+  """Filter by lower than or equal to given APY."""
+  apy_lte: Float
+
+  """Filter by greater than or equal to given fee rate."""
+  fee_gte: Float
+
+  """Filter by lower than or equal to given fee rate."""
+  fee_lte: Float
+
+  """
+  Filter by greater than or equal to given amount of total assets, in underlying token units.
+  """
+  totalAssets_gte: BigInt
+
+  """
+  Filter by lower than or equal to given amount of total assets, in underlying token units.
+  """
+  totalAssets_lte: BigInt
+
+  """
+  Filter by greater than or equal to given amount of total assets, in USD.
+  """
+  totalAssetsUsd_gte: Float
+
+  """Filter by lower than or equal to given amount of total assets, in USD."""
+  totalAssetsUsd_lte: Float
+
+  """
+  Filter by greater than or equal to given amount of shares total supply.
+  """
+  totalSupply_gte: BigInt
+
+  """Filter by lower than or equal to given amount of shares total supply."""
+  totalSupply_lte: BigInt
+}
+
+"""Meta-Morpho vault history"""
+type VaultHistory {
+  """Total value of vault holdings, in underlying token units."""
+  totalAssets(options: TimeseriesOptions): [BigIntDataPoint!]
+
+  """Total value of vault holdings, in USD for display purpose."""
+  totalAssetsUsd(options: TimeseriesOptions): [FloatDataPoint!]
+
+  """Vault shares total supply."""
+  totalSupply(options: TimeseriesOptions): [BigIntDataPoint!]
+
+  """Vault performance fee."""
+  fee(options: TimeseriesOptions): [FloatDataPoint!]
+
+  """Vault APY."""
+  apy(options: TimeseriesOptions): [FloatDataPoint!]
+
+  """Vault allocation on Morpho Blue markets."""
+  allocation: [VaultAllocationHistory!]
+}
+
+enum VaultOrderBy {
+  Address
+  TotalAssets
+  TotalAssetsUsd
+  TotalSupply
+  Fee
+  Apy
+}
+
+"""MetaMorpho vault position"""
+type VaultPosition {
+  id: ID!
+
+  """Amount of vault shares"""
+  shares: BigInt!
+
+  """Value of vault shares held, in underlying token units."""
+  assets: BigInt!
+
+  """Value of vault shares held, in USD for display purpose."""
+  assetsUsd: Float
+  user: User!
+  vault: Vault!
+}
+
+"""
+Filtering options for vault positions. AND operator is used for multiple
+filters, while OR operator is used for multiple values in the same filter.
+"""
+input VaultPositionFilters {
+  search: String
+
+  """Filter by MetaMorpho vault id"""
+  vaultId_in: [String!]
+
+  """Filter by MetaMorpho vault address"""
+  vaultAddress_in: [String!]
+
+  """Filter by user address"""
+  userAddress_in: [String!]
+
+  """Filter by user id"""
+  userId_in: [String!]
+
+  """Filter by chain id"""
+  chainId_in: [Int!]
+
+  """Filter by greater than or equal to given amount of vault shares."""
+  shares_gte: BigInt
+
+  """Filter by lower than or equal to given amount of vault shares."""
+  shares_lte: BigInt
+}
+
+enum VaultPositionOrderBy {
+  Shares
+}
+
+"""Vault reallocate"""
+type VaultReallocate {
+  id: ID!
+  timestamp: BigInt!
+  hash: String!
+  logIndex: Int!
+  blockNumber: BigInt!
+  caller: String!
+  shares: BigInt!
+  assets: BigInt!
+  type: VaultReallocateType!
+  market: Market!
+  vault: Vault!
+}
+
+"""
+Filtering options for vault reallocates. AND operator is used for multiple
+filters, while OR operator is used for multiple values in the same filter.
+"""
+input VaultReallocateFilters {
+  """Filter by MetaMorpho vault id"""
+  vaultId_in: [String!]
+
+  """Filter by MetaMorpho vault address"""
+  vaultAddress_in: [String!]
+
+  """Filter by market id"""
+  marketId_in: [String!]
+
+  """Filter by market unique key"""
+  marketUniqueKey_in: [String!]
+
+  """Filter by reallocate type"""
+  type_in: [VaultReallocateType!]
+
+  """Filter by greater than or equal to given timestamp"""
+  timestamp_gte: Int
+
+  """Filter by lower than or equal to given timestamp"""
+  timestamp_lte: Int
+
+  """Filter by greater than or equal to given amount of market shares"""
+  shares_gte: BigInt
+
+  """Filter by lower than or equal to given amount of market shares"""
+  shares_lte: BigInt
+
+  """
+  Filter by greater than or equal to given amount of market assets, in underlying token units
+  """
+  assets_gte: BigInt
+
+  """
+  Filter by lower than or equal to given amount of market assets, in underlying token units
+  """
+  assets_lte: BigInt
+}
+
+enum VaultReallocateOrderBy {
+  Timestamp
+  Shares
+  Assets
+}
+
+enum VaultReallocateType {
+  ReallocateSupply
+  ReallocateWithdraw
+}
+
+"""MetaMorpho vault state"""
+type VaultState {
+  """Total value of vault holdings, in underlying token units."""
+  totalAssets: BigInt
+
+  """Total value of vault holdings, in USD for display purpose."""
+  totalAssetsUsd: Float
+
+  """Vault shares total supply."""
+  totalSupply: BigInt
+
+  """Vault performance fee."""
+  fee: Float
+
+  """Vault APY."""
+  apy: Float
+
+  """Last update timestamp."""
+  timestamp: BigInt
+
+  """Vault allocation on Morpho Blue markets."""
+  allocation: [VaultAllocation!]
+}
+
+"""Meta Morpho vault transfer transaction data"""
+type VaultTransactionData {
+  shares: BigInt!
+  assets: BigInt!
+  assetsUsd: Float
+  vault: Vault!
+}
+
