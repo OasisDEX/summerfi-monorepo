@@ -1,4 +1,5 @@
 import { SerializationService } from '../../services/SerializationService'
+import { isToken } from '../../utils/isToken'
 import { CurrencySymbol } from '../enums/CurrencySymbol'
 import { Token } from './Token'
 
@@ -30,12 +31,11 @@ export class Price implements IPriceSerialized {
   }
 
   toString(): string {
-    // if (isToken(this.quoteToken)) {
-    //   return `${this.value} ${this.baseToken.symbol}/${this.quoteToken.symbol}`
-    // } else {
-    //   return `${this.value} ${this.baseToken.symbol}/${this.quoteToken}`
-    // }
-    return ''
+    if (isToken(this.quoteToken)) {
+      return `${this.value} ${this.baseToken.symbol}/${this.quoteToken.symbol}`
+    } else {
+      return `${this.value} ${this.baseToken.symbol}/${this.quoteToken}`
+    }
   }
 }
 
