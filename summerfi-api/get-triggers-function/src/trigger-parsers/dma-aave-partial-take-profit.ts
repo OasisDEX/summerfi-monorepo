@@ -1,18 +1,34 @@
 import {
   DmaAavePartialTakeProfit,
   DmaAavePartialTakeProfitID,
-} from '@summerfi/serverless-contracts/get-triggers-response'
+  Trigger,
+} from '@summerfi/triggers-shared/contracts'
 import { TriggersQuery } from '@summerfi/automation-subgraph'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { mapTriggerCommonParams } from '../helpers'
+import { PublicClient } from 'viem'
+import {
+  getAavePosition,
+  getCurrentAaveStopLoss,
+  simulateAutoTakeProfit,
+} from '@summerfi/triggers-calculations'
+import { Address, safeParseBigInt } from '@summerfi/serverless-shared'
+import { Addresses } from '@summerfi/triggers-shared'
 
 export const getDmaAavePartialTakeProfit = async ({
   triggers,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logger,
+  publicClient,
+  getDetails,
+  addresses,
+  stopLoss,
 }: {
   triggers: TriggersQuery
   logger: Logger
+  publicClient: PublicClient
+  getDetails: boolean
+  addresses: Addresses
+  stopLoss?: Trigger
 }): Promise<DmaAavePartialTakeProfit | undefined> => {
   const trigger = triggers.triggers.find(
     (trigger) => trigger.triggerType == DmaAavePartialTakeProfitID,
@@ -22,7 +38,7 @@ export const getDmaAavePartialTakeProfit = async ({
     return undefined
   }
 
-  return {
+  const parsedTrigger = {
     triggerTypeName: 'DmaAavePartialTakeProfit' as const,
     triggerType: DmaAavePartialTakeProfitID,
     ...mapTriggerCommonParams(trigger),
@@ -40,4 +56,56 @@ export const getDmaAavePartialTakeProfit = async ({
       executionPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('executionPrice')],
     },
   }
+
+  if (getDetails) {
+    const position = await getAavePosition(
+      {
+        address: parsedTrigger.decodedParams.positionAddress as Address,
+        collateral: parsedTrigger.decodedParams.collateralToken as Address,
+        debt: parsedTrigger.decodedParams.debtToken as Address,
+      },
+      publicClient,
+      {
+        poolDataProvider: addresses.AaveV3.AaveDataPoolProvider,
+        oracle: addresses.AaveV3.AaveOracle,
+      },
+      logger,
+    )
+
+    const executionLTV = safeParseBigInt(parsedTrigger.decodedParams.executionLtv) ?? 0n
+    const targetLTV = safeParseBigInt(parsedTrigger.decodedParams.targetLtv) ?? 0n
+    const step = targetLTV - executionLTV
+    const withdrawToken =
+      parsedTrigger.decodedParams.withdrawToDebt === 'true'
+        ? parsedTrigger.decodedParams.debtToken
+        : parsedTrigger.decodedParams.collateralToken
+
+    const currentStopLoss = getCurrentAaveStopLoss(
+      { triggerGroup: { aaveStopLoss: stopLoss }, triggersCount: 0 },
+      position,
+      logger,
+    )
+
+    const simulation = simulateAutoTakeProfit({
+      position,
+      minimalTriggerData: {
+        executionPrice: safeParseBigInt(parsedTrigger.decodedParams.executionPrice) ?? 0n,
+        executionLTV: safeParseBigInt(parsedTrigger.decodedParams.executionLtv) ?? 0n,
+        withdrawStep: step,
+        withdrawToken: withdrawToken as Address,
+      },
+      logger: logger,
+      iterations: 1,
+      currentStopLoss: currentStopLoss,
+    })
+
+    return {
+      ...parsedTrigger,
+      dynamicParams: {
+        nextProfit: simulation.profits[0],
+      },
+    }
+  }
+
+  return parsedTrigger
 }

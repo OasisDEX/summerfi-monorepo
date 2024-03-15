@@ -1,4 +1,4 @@
-import { CurrentTriggerLike, TriggerTransactions } from './types'
+import { TriggerTransactions } from './types'
 import {
   bytesToHex,
   encodeAbiParameters,
@@ -8,8 +8,10 @@ import {
 } from 'viem'
 import { OPERATION_NAMES } from '@oasisdex/dma-library'
 import { DEFAULT_DEVIATION } from './defaults'
-import { automationBotAbi } from '~abi'
-import { PositionLike, SparkAutoSellTriggerData } from '~types'
+import { automationBotAbi } from '@summerfi/abis'
+import { SparkAutoSellTriggerData } from '~types'
+import { PositionLike, CurrentTriggerLike } from '@summerfi/triggers-shared'
+
 import { getMaxCoverage } from './get-max-coverage'
 
 export const encodeSparkAutoSell = (

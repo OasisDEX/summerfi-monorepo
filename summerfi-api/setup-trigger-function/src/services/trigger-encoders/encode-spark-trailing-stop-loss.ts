@@ -1,4 +1,4 @@
-import { CurrentTriggerLike, EncodedTriggers, TriggerTransactions } from './types'
+import { EncodedTriggers, TriggerTransactions } from './types'
 import {
   bytesToHex,
   encodeAbiParameters,
@@ -6,8 +6,10 @@ import {
   parseAbiParameters,
   stringToBytes,
 } from 'viem'
-import { automationBotAbi } from '~abi'
-import { DmaSparkTrailingStopLossTriggerData, PositionLike } from '~types'
+import { automationBotAbi } from '@summerfi/abis'
+import { DmaSparkTrailingStopLossTriggerData } from '~types'
+import { PositionLike, CurrentTriggerLike } from '@summerfi/triggers-shared'
+
 import { DerivedPrices } from '@summerfi/prices-subgraph'
 import { getMaxCoverage } from './get-max-coverage'
 import { OPERATION_NAMES } from '@oasisdex/dma-library'
