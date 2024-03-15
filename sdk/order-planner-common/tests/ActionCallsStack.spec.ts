@@ -122,18 +122,18 @@ describe('Action Calls Stack', () => {
     actionCallsStack.startSubContext({ customData: 'level2' })
     actionCallsStack.startSubContext({ customData: 'level3' })
 
-    expect(actionCallsStack.levels).toBe(3)
+    expect(actionCallsStack.subContextLevels).toBe(3)
 
     actionCallsStack.endSubContext()
 
-    expect(actionCallsStack.levels).toBe(2)
+    expect(actionCallsStack.subContextLevels).toBe(2)
 
     actionCallsStack.endSubContext()
 
-    expect(actionCallsStack.levels).toBe(1)
+    expect(actionCallsStack.subContextLevels).toBe(1)
 
     actionCallsStack.endSubContext()
 
-    expect(actionCallsStack.levels).toBe(0)
+    expect(actionCallsStack.subContextLevels).toBe(0)
   })
 })

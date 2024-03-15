@@ -13,7 +13,7 @@ import { ActionConfig, ActionCall } from './Types'
  *              the versioned name of the action.
  */
 export abstract class BaseAction {
-  private DefaultParamsMapping: number[] = [0, 0, 0, 0]
+  private readonly DefaultParamsMapping: number[] = [0, 0, 0, 0]
   public abstract readonly config: ActionConfig
 
   /**

@@ -41,6 +41,6 @@ export class OrderPlannerContext implements IOrderPlannerContext {
   }
 
   public get subContextLevels(): number {
-    return this._calls.levels
+    return this._calls.subContextLevels
   }
 }

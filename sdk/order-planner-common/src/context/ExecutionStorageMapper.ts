@@ -21,9 +21,9 @@ export class ExecutionStorageMapper {
     connectedOutputs: Partial<StorageOutputsMapType<Step, Action>>
   }): InputSlotsMapping {
     const baseSlot = this.currentSlot
-    const stepOutpus = (params.step.outputs as unknown) ?? {}
+    const stepOutputs = (params.step.outputs as unknown) ?? {}
 
-    for (const stepOutputName of Object.keys(stepOutpus)) {
+    for (const stepOutputName of Object.keys(stepOutputs)) {
       if (params.connectedOutputs !== undefined) {
         const actionOutputName =
           params.connectedOutputs[stepOutputName as keyof StorageOutputsMapType<Step, Action>]
