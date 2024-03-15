@@ -1,10 +1,11 @@
-import type { SimulationState } from '~simulator-service/interfaces/simulation'
-import type { Tail } from '~simulator-service/interfaces/helperTypes'
+import type { SimulationState } from '../../interfaces/simulation'
+import type { Tail } from '../../interfaces/helperTypes'
 import type { NextFunction } from '../../interfaces'
-import { head, tail } from '~simulator-service/implementation/helpers'
-import { processStepOutput } from './stepProcessor'
-import { stateReducer } from './reducer'
+import { head, tail } from '../helpers'
+import { processStepOutput } from './stepProcessor/stepOutputProcessors'
+import { stateReducer } from './reducer/stateReducers'
 import type { SimulationStrategy } from '@summerfi/sdk-common/simulation'
+import { Steps } from 'node_modules/@summerfi/sdk-common/src/simulation/steps'
 
 export class Simulator<
   Strategy extends SimulationStrategy,
@@ -15,6 +16,7 @@ export class Simulator<
 
   private constructor(
     public schema: Strategy,
+    public originalSchema: SimulationStrategy,
     state: SimulationState = { balances: {}, positions: {}, steps: {} },
     nextArray: Readonly<NextArray> = [] as unknown as NextArray,
   ) {
@@ -23,23 +25,49 @@ export class Simulator<
   }
 
   static create<S extends SimulationStrategy>(schema: S) {
-    return new Simulator(schema)
+    return new Simulator(schema, schema)
   }
 
   public async run(): Promise<SimulationState> {
-    const getReference = (path: [string, string]) => {
-      const [step, name] = path
-      return {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        estimatedValue: (this.state.steps[step] as any).outputs[name as any], // TODO: fix this types
-        path,
-      }
-    }
+    for (let i = 0; i < this.nextArray.length; i++) {
+      const proccesesedStepSchema = this.originalSchema[i]
+      const getReference = (path: [string, string]) => {
+        const [stepName, output] = path
+        const step: Steps | undefined = this.state.steps[stepName]
 
-    for (const next of this.nextArray) {
-      const nextStep = await next({ state: this.state, getReference })
-      const fullStep = await processStepOutput(nextStep)
-      this.state = stateReducer(fullStep, this.state)
+        if (!step) {
+          throw new Error(`Step not found: ${stepName} in ${this.originalSchema[i].step}`)
+        }
+
+        const outputs = step.outputs
+
+        if (!outputs) {
+          throw new Error(`Step has no outputs: ${stepName} in ${this.originalSchema[i].step}`)
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const value = (outputs as any)[output]
+        // validation if path exists
+        if (!value) {
+          throw new Error(`Output not found: ${stepName}.outputs.${output} in ${this.originalSchema[i].step}`)
+        }
+
+        return {
+          estimatedValue: value,
+          path,
+        }
+      }
+      
+      const nextStep = await this.nextArray[i]({ state: this.state, getReference })
+      
+      if (nextStep.skip === false || nextStep.skip === undefined) {
+        const fullStep = await processStepOutput(nextStep)
+        this.state = stateReducer(fullStep, this.state)
+      }
+
+      if (nextStep.skip === true && proccesesedStepSchema.optional === false) {
+        throw new Error(`Step is required: ${nextStep.type}`)
+      }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -59,6 +87,7 @@ export class Simulator<
 
     return new Simulator<Tail<Strategy>, [...NextArray, NextFunction<Strategy, N>]>(
       schemaTail,
+      this.originalSchema,
       this.state,
       nextArray,
     )

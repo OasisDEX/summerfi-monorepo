@@ -4,8 +4,8 @@ import {
   SimulationSteps,
   SimulationType,
 } from '@summerfi/sdk-common/simulation'
-import { getReferencedValue, makeStrategy } from '~simulator-service/implementation/helpers'
-import { Simulator } from '~simulator-service/implementation/simulator-engine'
+import { getReferencedValue, makeStrategy } from '../helpers'
+import { Simulator } from '../simulator-engine'
 import { TokenAmount } from '@summerfi/sdk-common/common'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { RefinanceParameters } from '@summerfi/sdk-common/orders'
@@ -93,7 +93,7 @@ export async function refinaceLendingToLending(
       },
     }))
     .next(async () => ({
-      name: 'PaybackWithdraw',
+      name: 'PaybackWithdrawFromSource',
       type: SimulationSteps.PaybackWithdraw,
       inputs: {
         paybackAmount: TokenAmount.createFrom({
@@ -122,12 +122,12 @@ export async function refinaceLendingToLending(
       skip: isCollateralSwapSkipped,
     }))
     .next(async (ctx) => ({
-      name: 'DepositBorrow',
+      name: 'DepositBorrowToTarget',
       type: SimulationSteps.DepositBorrow,
       inputs: {
         depositAmount: ctx.getReference(
           isCollateralSwapSkipped
-            ? ['PaybackWithdraw', 'withdrawAmount']
+            ? ['PaybackWithdrawFromSource', 'withdrawAmount']
             : ['CollateralSwap', 'receivedAmount'],
         ),
         borrowAmount: args.position.debtAmount, // TODO figure the debt amount
@@ -140,7 +140,7 @@ export async function refinaceLendingToLending(
       inputs: {
         ...(await dependecies.swapManager.getSwapQuoteExactInput({
           chainInfo: args.position.pool.protocol.chainInfo,
-          fromAmount: getReferencedValue(ctx.getReference(['DepositBorrow', 'borrowAmount'])),
+          fromAmount: getReferencedValue(ctx.getReference(['DepositBorrowToTarget', 'borrowAmount'])),
           toToken: args.targetPool.debtTokens[0],
         })),
         slippage: args.slippage,

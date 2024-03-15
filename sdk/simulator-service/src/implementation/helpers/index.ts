@@ -46,7 +46,9 @@ export function subtractBalance(
 ): Record<string, TokenAmount> {
   return {
     ...balance,
-    [amount.token.address.value]: balance[amount.token.address.value].subtract(amount),
+    [amount.token.address.value]: balance[amount.token.address.value] 
+      ? balance[amount.token.address.value].subtract(amount)
+      : TokenAmount.createFrom({ amount: amount.toBN().negated().toString(), token: amount.token })
   }
 }
 
@@ -55,4 +57,9 @@ export function tail<T extends readonly any[]>(arr: T): Tail<T> {
   const [, ...rest] = arr
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return rest as any as Tail<T>
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function head<T extends readonly any[]>(arr: T): T[0] {
+  return arr[0]
 }

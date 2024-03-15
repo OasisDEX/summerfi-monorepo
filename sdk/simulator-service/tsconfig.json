@@ -4,10 +4,6 @@
     "rootDir": ".",
     "outDir": "dist",
     "baseUrl": ".",
-    "paths": {
-      "~simulator-service": ["./src/index.ts"],
-      "~simulator-service/*": ["./src/*"]
-    }
   },
   "include": ["src/**/*.ts", "tests/**/*.ts"],
   "exclude": ["node_modules"]

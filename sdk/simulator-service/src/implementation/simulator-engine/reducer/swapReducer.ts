@@ -1,6 +1,6 @@
 import { steps } from '@summerfi/sdk-common/simulation'
-import { addBalance, subtractBalance } from '~simulator-service/implementation/helpers'
-import { SimulationState } from '~simulator-service/interfaces/simulation'
+import { addBalance, subtractBalance } from '../../helpers'
+import { SimulationState } from '../../../interfaces/simulation'
 
 export function swapReducer(step: steps.SwapStep, state: SimulationState): SimulationState {
   const balanceWithoutFromToken = subtractBalance(step.inputs.fromTokenAmount, state.balances)
@@ -8,6 +8,7 @@ export function swapReducer(step: steps.SwapStep, state: SimulationState): Simul
   return {
     ...state,
     steps: {
+      ...state.steps,
       [step.name]: step,
     },
     balances: balanceWithToToken,

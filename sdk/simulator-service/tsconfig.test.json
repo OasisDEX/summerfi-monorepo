@@ -7,7 +7,8 @@
       "~simulator-service": ["./src/index.ts"],
       "~simulator-service/*": ["./src/*"],
       "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
-      "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"]
+      "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
+      "@summerfi/swap-common/*": ["node_modules/@summerfi/swap-common/src/*"]
     }
   },
   "include": ["src/**/*.ts"],

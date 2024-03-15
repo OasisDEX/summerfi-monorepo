@@ -1,21 +1,11 @@
-import { Address, ChainInfo, Percentage, Token, TokenAmount, newEmptyPositionFromPool } from '@summerfi/sdk-common/common'
+import { Address, ChainInfo, Percentage, Token, TokenAmount, borrowFromPosition, depositToPosition, newEmptyPositionFromPool } from '@summerfi/sdk-common/common'
 import { LendingPool, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { SimulationSteps } from '@summerfi/sdk-common/simulation'
-import { makeStrategy } from '~simulator-service/implementation/helpers'
-import { Simulator } from '~simulator-service/implementation/simulator-engine'
+import { ISwapManager } from '@summerfi/swap-common/interfaces'
+import { SwapProviderType } from '@summerfi/swap-common/enums'
+import { refinaceLendingToLending } from '../src/implementation/strategies'
+import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 
-const testStrategy = makeStrategy([
-    {
-        step: SimulationSteps.PullToken,
-        optional: false,
-    },
-    {
-        step: SimulationSteps.DepositBorrow,
-        optional: false,
-    }
-])
-
-const testChain = ChainInfo.createFrom({chainId: 1, name: 'test'})
+const testChain = ChainInfo.createFrom({ chainId: 1, name: 'test' })
 
 const testCollateral = Token.createFrom({
     chainInfo: testChain,
@@ -33,7 +23,7 @@ const testDebt = Token.createFrom({
     symbol: "DBT",
 })
 
-const testLendingPool = new LendingPool({
+const testSourceLendingPool = new LendingPool({
     collateralTokens: [testCollateral],
     debtTokens: [testDebt],
     maxLTV: Percentage.createFrom({ percentage: 80 }),
@@ -46,24 +36,87 @@ const testLendingPool = new LendingPool({
     },
 })
 
+const testSourcePosition =
+    borrowFromPosition(
+        depositToPosition(
+            newEmptyPositionFromPool(testSourceLendingPool), TokenAmount.createFrom({ token: testCollateral, amount: '100' })
+        ),
+        TokenAmount.createFrom({ token: testDebt, amount: '50' })
+    )
 
+const testTargetLendingPool = new LendingPool({
+    collateralTokens: [testCollateral],
+    debtTokens: [testDebt],
+    maxLTV: Percentage.createFrom({ percentage: 80 }),
+    poolId: {
+        protocol: ProtocolName.Spark,
+    },
+    protocol: {
+        chainInfo: testChain,
+        name: ProtocolName.Spark,
+    },
+})
 
-describe('Simulator', () => {
-    it('should create SDK client', async () => {
-      const simulator = Simulator.create(testStrategy)
-
-      const simulation = await simulator.next(async (ctx) => ({
-        name: 'DepositBorrow',
-        type: SimulationSteps.DepositBorrow,
-        inputs: {
-            depositAmount: TokenAmount.createFrom({token: testCollateral, amount: "10"}),
-            borrowAmount: TokenAmount.createFrom({token: testDebt, amount: '1'}),
-            position: newEmptyPositionFromPool(testLendingPool),
+const swapManagerMock: ISwapManager = {
+    getSwapDataExactInput: async (
+        params: {
+            chainInfo: ChainInfo
+            fromAmount: TokenAmount
+            toToken: Token
+            recipient: Address
+            slippage: Percentage
         }
-      })).run()
+    ) => {
+        return {
+            provider: SwapProviderType.OneInch,
+            fromTokenAmount: params.fromAmount,
+            toTokenAmount: TokenAmount.createFrom({ token: params.toToken, amount: '10' }),
+            calldata: '0x000',
+            targetContract: Address.ZeroAddressEthereum,
+            value: '0',
+            gasPrice: '0',
+        }
+    },
+    getSwapQuoteExactInput: async (params: {
+        chainInfo: ChainInfo
+        fromAmount: TokenAmount
+        toToken: Token
+    }) => {
+        return {
+            provider: SwapProviderType.OneInch,
+            fromTokenAmount: params.fromAmount,
+            toTokenAmount: TokenAmount.createFrom({ token: params.toToken, amount: '10' }),
+            estimatedGas: '0'
+        }
+    }
+}
 
-      console.log(JSON.stringify(simulation,null,4))
+function mockGetFee() {
+    return 0
+}
+
+
+
+describe('Refinance', () => {
+    describe('to the position with the same collateral and debt (no swaps)', () => {
+        let simulation: Simulation<SimulationType.Refinance>
+        beforeAll(async () => {
+            simulation = await refinaceLendingToLending({
+                position: testSourcePosition,
+                targetPool: testTargetLendingPool,
+                slippage: Percentage.createFrom({ percentage: 1 }),
+            }, {
+                swapManager: swapManagerMock,
+                getSummerFee: mockGetFee,
+            })
+            // console.log(JSON.stringify(simulation, null, 4))
+        })
+
+        it('should not include swap steps', async () => {
+            expect(simulation.steps.filter(step => step.skip).map(step => step.type)).toBeDefined()
+        })
+
+
     })
-  })
+})
 
-  
