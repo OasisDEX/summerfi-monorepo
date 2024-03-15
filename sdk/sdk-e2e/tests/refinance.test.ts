@@ -7,6 +7,7 @@ import {
   type Position,
   Address,
   type Maybe,
+  ChainFamilyMap,
 } from '@summerfi/sdk-common/common'
 
 import {
@@ -25,7 +26,7 @@ import {
 } from '@summerfi/sdk-common/protocols'
 import { type RefinanceParameters } from '@summerfi/sdk-common/orders'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import { makeSDK, type Chain, type User, ChainFamilyMap } from '@summerfi/sdk-client'
+import { makeSDK, type Chain, type User } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
 
 describe('Refinance | SDK', () => {

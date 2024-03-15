@@ -12,7 +12,7 @@ import { ProtocolBuilderRegistryType } from '@summerfi/order-planner-common/inte
 
 export type ContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
-export type Context = {
+export type SDKAppContext = {
   deployments: DeploymentIndex
   orderPlannerService: OrderPlannerService
   swapManager: ISwapManager
@@ -21,7 +21,7 @@ export type Context = {
 }
 
 // context for each request
-export const createContext = (opts: ContextOptions): Context => {
+export const createSDKContext = (opts: ContextOptions): SDKAppContext => {
   const deployments = Deployments as DeploymentIndex
   const configProvider = new ConfigurationProvider()
   const orderPlannerService = new OrderPlannerService({ deployments })

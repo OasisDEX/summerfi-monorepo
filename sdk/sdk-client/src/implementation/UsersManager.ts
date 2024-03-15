@@ -1,12 +1,14 @@
 import type { Address } from '@summerfi/sdk-common/common'
-import type { Chain } from '~sdk-client/implementation/Chain'
-import { User } from '~sdk-client/implementation/User'
-import type { IUser } from '~sdk-client/interfaces/IUser'
-import type { IUsersManager } from '~sdk-client/interfaces/IUsersManager'
+import { IUsersManager } from '../interfaces/IUsersManager'
+import { Chain } from './Chain'
+import { User } from './User'
 
 export class UsersManager implements IUsersManager {
-  public async getUser(params: { chain: Chain; walletAddress: Address }): Promise<IUser> {
+  public async getUser(params: { chain: Chain; walletAddress: Address }): Promise<User> {
     // TODO: Implement
-    return new User({ chainInfo: params.chain.chainInfo, walletAddress: params.walletAddress })
+    return new User({
+      chainInfo: params.chain.chainInfo,
+      walletAddress: params.walletAddress,
+    })
   }
 }

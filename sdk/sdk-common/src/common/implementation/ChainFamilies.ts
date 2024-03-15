@@ -1,11 +1,11 @@
 import {
-  EthereumChainNames,
-  type ChainInfo,
   ArbitrumChainNames,
   BaseChainNames,
   ChainFamilyName,
+  EthereumChainNames,
   OptimismChainNames,
-} from '@summerfi/sdk-common/common'
+} from '../enums/ChainNames'
+import { ChainInfo } from './ChainInfo'
 
 /**
  * Chain definition per family

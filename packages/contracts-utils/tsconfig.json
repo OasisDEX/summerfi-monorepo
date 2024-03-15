@@ -3,11 +3,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "baseUrl": "src",
-    "paths": {
-      "~contracts-utils": ["./index.ts"],
-      "~contracts-utils/*": ["./*"]
-    }
+    "baseUrl": "src"
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]

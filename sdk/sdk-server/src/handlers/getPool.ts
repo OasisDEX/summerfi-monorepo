@@ -1,7 +1,7 @@
 import { z } from 'zod'
-import { publicProcedure } from '~src/trpc'
 import type { PoolParameters, Protocol } from '@summerfi/sdk-common/protocols'
 import type { Wallet } from '@summerfi/sdk-common/common'
+import { publicProcedure } from '../TRPC'
 
 export const getPool = publicProcedure
   .input(

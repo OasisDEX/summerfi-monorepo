@@ -1,4 +1,3 @@
-import { Chain, IUser } from '@summerfi/sdk-client'
 import {
   Address,
   ChainInfo,
@@ -10,6 +9,7 @@ import {
 import { Order } from '@summerfi/sdk-common/orders'
 import { Protocol } from '@summerfi/sdk-common/protocols'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { IUser } from '@summerfi/sdk-common/user'
 
 export class UserMock implements IUser {
   wallet: Wallet

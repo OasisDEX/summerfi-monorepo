@@ -1,19 +1,17 @@
-import { ChainInfo, Maybe, Position, PositionId, Wallet } from '@summerfi/sdk-common/common'
+import { Maybe, Position, PositionId } from '@summerfi/sdk-common/common'
 import { Protocol } from '@summerfi/sdk-common/protocols'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { IUser } from '@summerfi/sdk-common/user'
 import { Order } from '@summerfi/sdk-common/orders'
 
 /**
- * @interface IUser
+ * @interface IUserClient
  * @description Represents a user and allows to access their positions and to create new orders
  *
  * @dev This interface must be used to get positions for a user that will be used to create orders. To retrieve
  *      positions for portfolio please @see PortfolioManager
  */
-export interface IUser {
-  wallet: Wallet
-  chainInfo: ChainInfo
-
+export interface IUserClient extends IUser {
   /**
    * @method getPositionsByProtocol
    * @description Retrieves the list of positions of the user for a given protocol

@@ -1,0 +1,46 @@
+{
+  "name": "@summerfi/sdk-server",
+  "version": "0.0.1",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.d.ts"
+    }
+  },
+  "scripts": {
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "build": "tsc -b -v tsconfig.build.json",
+    "test": "jest tests/ --passWithNoTests",
+    "testw": "jest --watch",
+    "e2e": "jest e2e/",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@aws-lambda-powertools/logger": "^1.17.0",
+    "@aws-lambda-powertools/metrics": "^1.17.0",
+    "@aws-lambda-powertools/tracer": "^1.17.0",
+    "@summerfi/common": "workspace:*",
+    "@summerfi/core-contracts": "workspace:*",
+    "@summerfi/deployment-utils": "workspace:*",
+    "@summerfi/order-planner-common": "workspace:*",
+    "@summerfi/order-planner-service": "workspace:*",
+    "@summerfi/protocol-plugins": "workspace:*",
+    "@summerfi/sdk-common": "workspace:*",
+    "@summerfi/serverless-shared": "workspace:*",
+    "@summerfi/simulator-service": "workspace:^",
+    "@summerfi/swap-common": "workspace:*",
+    "@summerfi/swap-service": "workspace:*",
+    "@trpc/server": "11.0.0-next-beta.264",
+    "@summerfi/configuration-provider": "workspace:*",
+    "superjson": "^1.13.3",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/jest-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "@trpc/client": "11.0.0-next-beta.264"
+  }
+}

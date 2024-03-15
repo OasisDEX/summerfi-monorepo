@@ -1,4 +1,4 @@
-import { ConfigEntry } from '~deployment-types/common/configEntry'
+import { ConfigEntry } from '../common/configEntry'
 import { SystemActionNames } from './actions'
 import { SystemAutomationNames } from './automation'
 import { SystemCoreNames } from './core'

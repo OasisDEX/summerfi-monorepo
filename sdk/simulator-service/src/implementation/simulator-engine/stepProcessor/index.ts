@@ -1,9 +1,5 @@
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import type {
-  StepOutputProcessor,
-  StepOutputProcessors,
-  StepsWithouOutputs,
-} from '~simulator-service/interfaces/steps'
+
 import { flashloanOutputProcessor } from './flashloanOutputProcessor'
 import { pullTokenOutputProcessor } from './pullTokenOutputProcessor'
 import { depositBorrowOutputProcessor } from './depositBorrowOutputProcessor'
@@ -11,6 +7,11 @@ import { paybackWithdrawOutputProcessor } from './paybackWithdrawOutputProcessor
 import { swapOutputProcessor } from './swapOutputProcessor'
 import { returnFundsOutputProcessor } from './returnFundsOutputProcessor'
 import { repayFlashloanOutputProcessor } from './repayFlashloanOutputProcessor'
+import {
+  StepOutputProcessor,
+  StepOutputProcessors,
+  StepsWithouOutputs,
+} from '../../../interfaces/steps'
 
 const stepOutputProcessors: StepOutputProcessors = {
   [SimulationSteps.Flashloan]: flashloanOutputProcessor,

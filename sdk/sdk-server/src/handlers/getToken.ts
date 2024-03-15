@@ -1,7 +1,7 @@
 import { z } from 'zod'
-import { publicProcedure } from '~src/trpc'
 import { type ChainInfo } from '@summerfi/sdk-common/common'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
+import { publicProcedure } from '../TRPC'
 
 export const getToken = publicProcedure
   .input(

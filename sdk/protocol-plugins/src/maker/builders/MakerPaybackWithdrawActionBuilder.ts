@@ -1,8 +1,8 @@
 import { getValueFromReference, steps } from '@summerfi/sdk-common/simulation'
 import { ActionBuilder } from '@summerfi/order-planner-common/builders'
 import { ActionNames } from '@summerfi/deployment-types'
-import { MakerPaybackAction } from '~protocolplugins/maker/actions/MakerPaybackAction'
-import { MakerWithdrawAction } from '~protocolplugins/maker/actions/MakerWithdrawAction'
+import { MakerPaybackAction } from '../actions/MakerPaybackAction'
+import { MakerWithdrawAction } from '../actions/MakerWithdrawAction'
 
 export const MakerPaybackWithdrawActionList: ActionNames[] = ['MakerPayback', 'MakerWithdraw']
 

@@ -1,10 +1,11 @@
 import { BaseAction } from '../src/actions/BaseAction'
 import { ActionCall } from '../src/actions'
 import { keccak256, toBytes } from 'viem'
+import { ActionNames } from '@summerfi/deployment-types'
 
 class DerivedAction extends BaseAction {
   public readonly config = {
-    name: 'PullToken',
+    name: 'PullToken' as ActionNames,
     version: 8,
     parametersAbi: 'address, address, uint256',
     storageInputs: ['someInput1', 'someInput2', 'otherInput'],

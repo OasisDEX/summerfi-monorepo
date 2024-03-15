@@ -1,6 +1,5 @@
 import { Deployment } from '@summerfi/deployment-utils'
 import { ProtocolBuilderRegistryType } from '@summerfi/order-planner-common/interfaces'
-import { IUser } from '@summerfi/sdk-client'
 import { IPositionsManager } from '@summerfi/sdk-common/orders'
 import { Address, ChainInfo } from '@summerfi/sdk-common/common'
 import { SwapManagerMock } from '../mocks/SwapManagerMock'
@@ -9,6 +8,7 @@ import { ProtocolBuilderMock } from '../mocks/ProtocolBuilderMock'
 import { OrderPlannerContextMock } from '../mocks/OrderPlannerContextMock'
 import { SetupDeployments } from './SetupDeployments'
 import { UserMock } from '../mocks/UserMock'
+import { IUser } from '@summerfi/sdk-common/user'
 
 export type SetupBuilderReturnType = {
   context: OrderPlannerContextMock

@@ -1,7 +1,6 @@
-import { Address, ChainInfo, Token } from '@summerfi/sdk-common/common'
+import { Address, ChainFamilyMap, ChainInfo, Token } from '@summerfi/sdk-common/common'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { SetupBuilderReturnType, setupBuilderParams } from '../utils/SetupBuilderParams'
-import { ChainFamilyMap } from '@summerfi/sdk-client'
 
 import { ReturnFundsActionBuilder } from '../../src/builders/ReturnFundsActionBuilder'
 import { ReturnFundsAction } from '../../src/actions'

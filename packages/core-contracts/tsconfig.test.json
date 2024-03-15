@@ -3,11 +3,7 @@
   "compilerOptions": {
     "rootDir": "scripts",
     "outDir": "dist",
-    "baseUrl": "scripts",
-    "paths": {
-      "~core-contracts": ["./index.ts"],
-      "~core-contracts/*": ["./*"]
-    }
+    "baseUrl": "scripts"
   },
   "include": ["scripts/**/*.ts", "./hardhat.config.ts", "tasks/**/*.ts"],
   "exclude": ["node_modules"]

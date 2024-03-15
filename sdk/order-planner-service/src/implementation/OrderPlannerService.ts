@@ -1,13 +1,13 @@
 import { OrderPlanner } from '@summerfi/order-planner-common/implementation'
-import { IOrderPlannerService } from '~orderplannerservice/interfaces'
 import { Order, type IPositionsManager } from '@summerfi/sdk-common/orders'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { IUser } from '@summerfi/sdk-common/user'
 import { ChainInfo, Maybe } from '@summerfi/sdk-common/common'
-import { ActionBuildersConfig } from '~orderplannerservice/config'
-import { IUser } from '@summerfi/sdk-client'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
 import { ProtocolBuilderRegistryType } from '@summerfi/order-planner-common/interfaces'
+import { IOrderPlannerService } from '../interfaces/IOrderPlannerService'
+import { ActionBuildersConfig } from '../config/Config'
 
 export class OrderPlannerService implements IOrderPlannerService {
   readonly orderPlanner: OrderPlanner

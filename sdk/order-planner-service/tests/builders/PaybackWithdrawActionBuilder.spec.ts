@@ -1,5 +1,6 @@
 import {
   Address,
+  ChainFamilyMap,
   ChainInfo,
   Position,
   PositionId,
@@ -8,7 +9,6 @@ import {
 } from '@summerfi/sdk-common/common'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { SetupBuilderReturnType, setupBuilderParams } from '../utils/SetupBuilderParams'
-import { ChainFamilyMap } from '@summerfi/sdk-client'
 import { MakerPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { getErrorMessage } from '../utils/ErrorMessage'
 import assert from 'assert'

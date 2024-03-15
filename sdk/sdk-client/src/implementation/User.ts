@@ -11,9 +11,9 @@ import { getMockPosition } from '../mocks/mockPosition'
 import { getMockOrder } from '../mocks/mockOrder'
 import { Order } from '@summerfi/sdk-common/orders'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import { IUser } from '../interfaces/IUser'
+import { IUserClient } from '../interfaces/IUserClient'
 
-export class User implements IUser {
+export class User implements IUserClient {
   public readonly wallet: Wallet
   public readonly chainInfo: ChainInfo
 

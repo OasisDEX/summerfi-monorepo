@@ -3,12 +3,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "~deployment-configs": ["./src/index.ts"],
-      "~deployment-configs/*": ["./src/*"],
-      "~deployment-types": ["../deployment-types/src/index.ts"]
-    }
+    "baseUrl": "."
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]

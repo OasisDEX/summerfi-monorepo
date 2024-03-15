@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { appRouter } from './app-router'
-
-import type { Context, ContextOptions } from '~src/context'
-import { createCallerFactory } from '~src/trpc'
+import { SDKAppRouter } from '../../src/SDKAppRouter'
+import { SDKAppContext, ContextOptions } from '../../src/Context'
+import { createCallerFactory } from '../../src/TRPC'
 
 // context for each request
-export const createTestContext = (opts: ContextOptions): Context => {
+export const createTestContext = (opts: ContextOptions): SDKAppContext => {
   return {
     deployments: {} as any,
     orderPlannerService: {} as any,
@@ -17,6 +16,6 @@ export const createTestContext = (opts: ContextOptions): Context => {
 }
 
 const ctx = createTestContext({} as any)
-const createCaller = createCallerFactory(appRouter)
+const createCaller = createCallerFactory(SDKAppRouter)
 
 export const testAppRouter = createCaller(ctx)

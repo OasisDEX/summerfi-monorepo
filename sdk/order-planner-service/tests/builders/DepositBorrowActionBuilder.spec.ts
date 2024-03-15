@@ -1,5 +1,6 @@
 import {
   Address,
+  ChainFamilyMap,
   ChainInfo,
   Position,
   PositionId,
@@ -8,7 +9,6 @@ import {
 } from '@summerfi/sdk-common/common'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { SetupBuilderReturnType, setupBuilderParams } from '../utils/SetupBuilderParams'
-import { ChainFamilyMap } from '@summerfi/sdk-client'
 import { DepositBorrowActionBuilder } from '../../src/builders/DepositBorrowActionBuilder'
 import { MakerPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { getErrorMessage } from '../utils/ErrorMessage'
@@ -76,8 +76,6 @@ describe('Deposit Borrow Action Builder', () => {
   })
 
   it('should fail if no protocol plugin exists', async () => {
-    const builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })
-
     const derivedStep: steps.DepositBorrowStep = {
       type: SimulationSteps.DepositBorrow,
       name: 'DepositBorrowStep',

@@ -2,9 +2,9 @@ import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { BaseAction } from '../src/actions/BaseAction'
 import { ActionCall } from '../src/actions/Types'
 import { ExecutionStorageMapper } from '../src/context/ExecutionStorageMapper'
-import { ChainFamilyMap } from '@summerfi/sdk-client'
 import {
   Address,
+  ChainFamilyMap,
   ChainInfo,
   Position,
   PositionId,
@@ -12,10 +12,11 @@ import {
   TokenAmount,
 } from '@summerfi/sdk-common/common'
 import { MakerPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { ActionNames } from '@summerfi/deployment-types'
 
 class DerivedAction extends BaseAction {
   public readonly config = {
-    name: 'PullToken',
+    name: 'PullToken' as ActionNames,
     version: 8,
     parametersAbi: 'address, address, uint256',
     storageInputs: ['someInput1', 'someInput2', 'otherInput'],

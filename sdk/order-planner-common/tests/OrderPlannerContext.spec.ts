@@ -9,13 +9,14 @@ import {
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
-import { ChainFamilyMap } from '@summerfi/sdk-client'
 import { MakerPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
+import { ActionNames } from '@summerfi/deployment-types'
+import { ChainFamilyMap } from '@summerfi/sdk-common/common'
 
 class DerivedAction extends BaseAction {
   public readonly config = {
-    name: 'PullToken',
+    name: 'PullToken' as ActionNames,
     version: 8,
     parametersAbi: 'address, address, uint256',
     storageInputs: ['someInput1', 'someInput2', 'otherInput'],
@@ -33,7 +34,7 @@ class DerivedAction extends BaseAction {
   }
 }
 
-describe.only('Order Planner Context', () => {
+describe('Order Planner Context', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
 
   // Tokens

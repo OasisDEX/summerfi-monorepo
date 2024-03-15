@@ -1,4 +1,3 @@
-import { router } from '~src/trpc'
 import { getPosition } from './handlers/getPosition'
 import { getPool } from './handlers/getPool'
 import { getRefinanceSimulation } from './handlers/getRefinanceSimulation'
@@ -6,11 +5,12 @@ import { buildOrder } from './handlers/buildOrder'
 import { getToken } from './handlers/getToken'
 import { getSwapDataExactInput } from './handlers/getSwapData'
 import { getSwapQuoteExactInput } from './handlers/getSwapQuote'
+import { router } from './TRPC'
 
 /**
  * Server
  */
-export const appRouter = router({
+export const SDKAppRouter = router({
   getPosition: getPosition,
   getPool: getPool,
   getToken: getToken,
@@ -24,4 +24,4 @@ export const appRouter = router({
   },
 })
 
-export type AppRouter = typeof appRouter
+export type AppRouter = typeof SDKAppRouter

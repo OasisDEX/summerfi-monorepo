@@ -1,6 +1,6 @@
 import type { ChainInfo, Maybe } from '@summerfi/sdk-common/common'
 import { ProtocolsRegistry, type Protocol, type IProtocol } from '@summerfi/sdk-common/protocols'
-import type { IProtocolsManager } from '~sdk-client/interfaces/IProtocolsManager'
+import { IProtocolsManager } from '../interfaces/IProtocolsManager'
 
 export class ProtocolsManager implements IProtocolsManager {
   private readonly _chainInfo: ChainInfo
