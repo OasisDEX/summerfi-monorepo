@@ -47,6 +47,10 @@ export class Address implements IAddressSerialized {
     return AddressType.Unknown
   }
 
+  equals(address: Address): boolean {
+    return this.value === address.value
+  }
+
   toString(): string {
     return `${this.value} (${this.type})`
   }

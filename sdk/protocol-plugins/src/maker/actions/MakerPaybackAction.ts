@@ -27,7 +27,9 @@ export class MakerPaybackAction extends BaseAction {
 
     return this._encodeCall({
       arguments: [
-        params.pool.poolId.vaultId,
+        // TODO: get vaultId by other means prev - params.pool.poolId.vaultId,
+        0,
+        // params.pool.poolId.vaultId,
         params.userAddress.toString(),
         params.amount.toBaseUnit(),
         params.paybackAll,

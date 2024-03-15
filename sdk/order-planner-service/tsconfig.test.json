@@ -11,6 +11,7 @@
       "@summerfi/swap-common/*": ["node_modules/@summerfi/swap-common/src/*"],
       "@summerfi/deployment-utils": ["node_modules/@summerfi/deployment-utils/src/index.ts"],
       "~sdk-client/*": ["node_modules/@summerfi/sdk-client/src/*"],
+      "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*.ts"],
       "~orderplannerservice/*": ["../order-planner-service/src/*"]
     }
   },
