@@ -7,11 +7,11 @@ import { CollateralConfig, DebtConfig } from '../../protocols/interfaces/Lending
  * @description Represents the parameters of a lending pool
  */
 export type LendingPoolParameters<
-  GenericCollateralConfig extends CollateralConfig = CollateralConfig,
-  GenericDebtConfig extends DebtConfig = DebtConfig,
+  CollateralConfigType extends CollateralConfig = CollateralConfig,
+  DebtConfigType extends DebtConfig = DebtConfig,
 > = PoolParameters & {
-  debts: Record<AddressValue, GenericDebtConfig>
-  collaterals: Record<AddressValue, GenericCollateralConfig>
+  debts: Record<AddressValue, DebtConfigType>
+  collaterals: Record<AddressValue, CollateralConfigType>
 }
 
 /**
