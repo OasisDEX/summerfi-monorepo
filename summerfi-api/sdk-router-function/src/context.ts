@@ -7,6 +7,8 @@ import { OrderPlannerService } from '@summerfi/order-planner-service/implementat
 import { SwapManagerFactory } from '@summerfi/swap-service'
 import { ConfigurationProvider, IConfigurationProvider } from '@summerfi/configuration-provider'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
+import { ProtocolPluginsRegistry } from '@summerfi/protocol-plugins'
+import { ProtocolBuilderRegistryType } from '@summerfi/order-planner-common/interfaces'
 
 export type ContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
@@ -15,6 +17,7 @@ export type Context = {
   orderPlannerService: OrderPlannerService
   swapManager: ISwapManager
   configProvider: IConfigurationProvider
+  protocolsRegistry: ProtocolBuilderRegistryType
 }
 
 // context for each request
@@ -23,12 +26,14 @@ export const createContext = (opts: ContextOptions): Context => {
   const configProvider = new ConfigurationProvider()
   const orderPlannerService = new OrderPlannerService({ deployments })
   const swapManager = SwapManagerFactory.newSwapManager({ configProvider })
+  const protocolsRegistry = ProtocolPluginsRegistry
 
   return {
     deployments,
     orderPlannerService,
     swapManager,
     configProvider,
+    protocolsRegistry,
   }
 }
 

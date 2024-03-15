@@ -4,7 +4,6 @@ import {
   RiskRatio,
   Token,
   TokenAmount,
-  Wallet,
   type Position,
   Address,
   type Maybe,
@@ -43,17 +42,17 @@ describe('Refinance | SDK', () => {
       fail('Chain is not defined')
     }
 
-    // Wallet
-    // TODO: Move this to the user instance
-    const wallet: Wallet = Wallet.createFrom({
-      address: Address.createFrom({ value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266' }),
+    // User
+    const walletAddress = Address.createFrom({
+      value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
     })
-
-    // INFO: User should also be oniy on the client
-    const user: User = await sdk.users.getUser({ chain: chain, wallet })
+    const user: User = await sdk.users.getUser({
+      chain: chain,
+      walletAddress: walletAddress,
+    })
     expect(user).toBeDefined()
-    expect(user.wallet).toEqual(wallet)
-    expect(user.chain).toEqual(chain)
+    expect(user.wallet.address).toEqual(walletAddress)
+    expect(user.chainInfo).toEqual(chain.chainInfo)
 
     // Tokens
     const WETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.WETH })

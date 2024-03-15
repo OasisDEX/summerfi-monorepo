@@ -1,18 +1,21 @@
 import { ServiceContainer } from './service-container'
-import { AaveAutoBuyEventBody, SupportedActions } from '~types'
+import { AaveAutoBuyEventBody } from '~types'
+import { SupportedActions } from '@summerfi/triggers-shared'
 import { simulatePosition } from './simulate-position'
 import { PublicClient } from 'viem'
-import { Addresses } from './get-addresses'
+import { Addresses, CurrentTriggerLike } from '@summerfi/triggers-shared'
 import { Address, ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
-import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
+import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
-import { getAavePosition } from './get-aave-position'
-import { calculateCollateralPriceInDebtBasedOnLtv } from '~helpers'
+import {
+  getAavePosition,
+  calculateCollateralPriceInDebtBasedOnLtv,
+} from '@summerfi/triggers-calculations'
 import { aaveAutoBuyValidator } from './against-position-validators'
-import { CurrentTriggerLike, encodeAaveAutoBuy } from './trigger-encoders'
+import { encodeAaveAutoBuy } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
-import { getCurrentAaveStopLoss } from './get-current-aave-stop-loss'
+import { getCurrentAaveStopLoss } from '@summerfi/triggers-calculations'
 
 export interface GetAaveAutoBuyServiceContainerProps {
   rpc: PublicClient
@@ -32,7 +35,15 @@ export const getAaveAutoBuyServiceContainer: (
   chainId,
 }) => {
   const getPosition = memoize(async (params: Parameters<typeof getAavePosition>[0]) => {
-    return await getAavePosition(params, rpc, addresses, logger)
+    return await getAavePosition(
+      params,
+      rpc,
+      {
+        poolDataProvider: addresses.AaveV3.AaveDataPoolProvider,
+        oracle: addresses.AaveV3.AaveOracle,
+      },
+      logger,
+    )
   })
 
   return {

@@ -1,7 +1,6 @@
-import { type Token } from '~sdk-common/common/implementation/Token'
-import { SerializationService } from '~sdk-common/services/SerializationService'
-import { CurrencySymbol } from '~sdk-common/common/enums'
-import { isToken } from '~sdk-common/utils/isToken'
+import { SerializationService } from '../../services/SerializationService'
+import { CurrencySymbol } from '../enums/CurrencySymbol'
+import { Token } from './Token'
 
 interface IPriceSerialized {
   value: string
@@ -31,8 +30,12 @@ export class Price implements IPriceSerialized {
   }
 
   toString(): string {
-    const quoteSymbol = isToken(this.quoteToken) ? this.quoteToken.symbol : this.quoteToken
-    return `${this.value} ${this.baseToken.symbol}/${quoteSymbol}`
+    // if (isToken(this.quoteToken)) {
+    //   return `${this.value} ${this.baseToken.symbol}/${this.quoteToken.symbol}`
+    // } else {
+    //   return `${this.value} ${this.baseToken.symbol}/${this.quoteToken}`
+    // }
+    return ''
   }
 }
 

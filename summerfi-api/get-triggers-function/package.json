@@ -10,14 +10,16 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@aws-lambda-powertools/logger": "^1.17.0",
-    "@aws-lambda-powertools/metrics": "^1.17.0",
-    "@aws-lambda-powertools/tracer": "^1.17.0",
+    "@aws-lambda-powertools/logger": "^2.0.2",
+    "@aws-lambda-powertools/metrics": "^2.0.2",
+    "@aws-lambda-powertools/tracer": "^2.0.2",
     "@summerfi/serverless-shared": "workspace:*",
+    "@summerfi/triggers-calculations": "workspace:*",
+    "@summerfi/triggers-shared": "workspace:*",
     "@summerfi/automation-subgraph": "workspace:*",
     "@summerfi/prices-subgraph": "workspace:*",
-    "@summerfi/serverless-contracts": "workspace:*",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "viem": "^2.8.6"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

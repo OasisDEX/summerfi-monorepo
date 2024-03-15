@@ -1,11 +1,4 @@
-import {
-  AaveAutoBuyTriggerData,
-  AaveAutoSellTriggerData,
-  PathParams,
-  TriggerData,
-  ValidationIssue,
-  ValidationResults,
-} from './types'
+import { PathParams, ValidationIssue, ValidationResults } from './types'
 import { ZodIssue, ZodIssueCode } from 'zod'
 import {
   eventBodyAaveBasicBuySchema,
@@ -18,21 +11,9 @@ import {
   eventBodySparkBasicBuySchema,
   eventBodySparkBasicSellSchema,
   eventBodySparkPartialTakeProfitSchema,
-  SupportedTriggers,
 } from './validators'
+import { SupportedTriggers } from '@summerfi/triggers-shared'
 import { ChainId, ProtocolId } from '@summerfi/serverless-shared'
-
-export const isAaveAutoBuyTriggerData = (
-  triggerData: TriggerData,
-): triggerData is AaveAutoBuyTriggerData => {
-  return 'maxBuyPrice' in triggerData
-}
-
-export const isAaveAutoSellTriggerData = (
-  triggerData: TriggerData,
-): triggerData is AaveAutoSellTriggerData => {
-  return 'minSellPrice' in triggerData
-}
 
 const zodIssueToIssue = (issue: ZodIssue): ValidationIssue => {
   return {

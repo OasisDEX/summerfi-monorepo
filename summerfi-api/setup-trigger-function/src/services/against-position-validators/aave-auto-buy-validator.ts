@@ -1,20 +1,22 @@
 import {
-  positionSchema,
-  priceSchema,
   mapZodResultToValidationResults,
   AutoBuyTriggerCustomErrorCodes,
   AutoBuyTriggerCustomWarningCodes,
-  MINIMUM_LTV_TO_SETUP_TRIGGER,
   aaveBasicBuyTriggerDataSchema,
+  ValidationResults,
+} from '~types'
+import {
+  positionSchema,
+  priceSchema,
+  MINIMUM_LTV_TO_SETUP_TRIGGER,
   supportedActionsSchema,
   SupportedActions,
   ONE_PERCENT,
-  ValidationResults,
-} from '~types'
-import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
+  CurrentStopLoss,
+} from '@summerfi/triggers-shared'
+import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import { z } from 'zod'
 import { chainIdSchema, safeParseBigInt } from '@summerfi/serverless-shared'
-import { CurrentStopLoss } from '../trigger-encoders'
 
 const paramsSchema = z.object({
   position: positionSchema,

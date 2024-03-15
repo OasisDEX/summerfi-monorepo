@@ -10,16 +10,22 @@ export class SetApprovalAction extends BaseAction {
     storageOutputs: ['received'],
   } as const
 
-  public encodeCall(params: {
-    approvalAmount: TokenAmount
-    delegate: Address
-    sumAmounts: boolean
-  }): ActionCall {
-    return this._encodeCall([
-      params.approvalAmount.token.address.value,
-      params.delegate.value,
-      params.approvalAmount.toBaseUnit(),
-      params.sumAmounts,
-    ])
+  public encodeCall(
+    params: {
+      approvalAmount: TokenAmount
+      delegate: Address
+      sumAmounts: boolean
+    },
+    paramsMapping?: number[],
+  ): ActionCall {
+    return this._encodeCall({
+      arguments: [
+        params.approvalAmount.token.address.value,
+        params.delegate.value,
+        params.approvalAmount.toBaseUnit(),
+        params.sumAmounts,
+      ],
+      mapping: paramsMapping,
+    })
   }
 }

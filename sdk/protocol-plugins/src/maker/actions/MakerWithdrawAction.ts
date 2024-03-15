@@ -11,23 +11,28 @@ export class MakerWithdrawAction extends BaseAction {
     storageOutputs: ['amountWithdrawn'],
   } as const
 
-  public encodeCall(params: {
-    pool: IPool
-    userAddress: Address
-    amount: TokenAmount
-  }): ActionCall {
-    // TODO: get the join address from the protocol
-
+  public encodeCall(
+    params: {
+      pool: IPool
+      userAddress: Address
+      amount: TokenAmount
+    },
+    paramsMapping?: number[],
+  ): ActionCall {
     if (!isMakerPoolId(params.pool.poolId)) {
       throw new Error('Pool ID is not a Maker one')
     }
 
-    return this._encodeCall([
-      // TODO: get vaultId by other means prev - params.pool.poolId.vaultId,
-      0,
-      params.userAddress.toString(),
-      // joinAddr,
-      params.amount.toBaseUnit(),
-    ])
+    // TODO: get the join address from the protocol
+    return this._encodeCall({
+      arguments: [
+        // TODO: get vaultId by other means prev - params.pool.poolId.vaultId,
+        0,
+        params.userAddress.toString(),
+        // joinAddr,
+        params.amount.toBaseUnit(),
+      ],
+      mapping: paramsMapping,
+    })
   }
 }

@@ -1,5 +1,6 @@
 import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
 import { TokenAmount } from '@summerfi/sdk-common/common'
+import { FlashloanProvider } from '@summerfi/sdk-common/simulation'
 
 // Local type as optional actions are not supported anymore in the new executor
 type OptionalActionCall = ActionCall & {
@@ -20,7 +21,7 @@ export class FlashloanAction extends BaseAction {
   public encodeCall(
     params: {
       amount: TokenAmount
-      provider: number
+      provider: FlashloanProvider
       calls: ActionCall[]
     },
     paramsMapping?: number[],
@@ -33,9 +34,16 @@ export class FlashloanAction extends BaseAction {
       }
     })
 
-    return this._encodeCall(
-      [params.amount.toString(), params.amount.token.address.value, true, true, calls],
-      paramsMapping,
-    )
+    return this._encodeCall({
+      arguments: [
+        params.amount.toBaseUnit(),
+        params.amount.token.address.value,
+        true,
+        true,
+        params.provider,
+        calls,
+      ],
+      mapping: paramsMapping,
+    })
   }
 }

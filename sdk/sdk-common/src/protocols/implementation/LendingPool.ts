@@ -1,5 +1,6 @@
-import {AddressValue, CurrencySymbol, Token} from "~sdk-common/common";
-import { CollateralConfig, DebtConfig } from "~sdk-common/protocols";
+import { AddressValue, CurrencySymbol } from "../../common";
+import { CollateralConfig, DebtConfig } from "../../protocols";
+import { Token } from '../../common/implementation/Token'
 import { IPool } from '../interfaces/IPool'
 import { PoolType } from '../interfaces/PoolType'
 import { Pool } from './Pool'

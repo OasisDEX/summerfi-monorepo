@@ -1,6 +1,6 @@
-import {AddressValue} from "~sdk-common/common";
-import {CollateralConfig, DebtConfig} from "~sdk-common/protocols";
-import type { PoolParameters } from '~sdk-common/protocols/interfaces/PoolParameters'
+import { PoolParameters } from './PoolParameters'
+import { AddressValue } from "~sdk-common/common";
+import { CollateralConfig, DebtConfig } from "../../protocols";
 
 /**
  * @name LendingPoolParameters

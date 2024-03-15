@@ -10,6 +10,6 @@
     }
   },
   "references": [{ "path": "../order-planner-common" }],
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "tests/builders/DepositBorrowActionBuilder.spec.ts"],
   "exclude": ["node_modules"]
 }

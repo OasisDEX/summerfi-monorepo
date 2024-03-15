@@ -1,6 +1,6 @@
 import { ActionBuilder } from '@summerfi/order-planner-common/builders'
 import { SwapAction } from '~orderplannerservice/actions'
-import { Address, Percentage } from '@summerfi/sdk-common/common'
+import { Address } from '@summerfi/sdk-common/common'
 import { steps } from '@summerfi/sdk-common/simulation'
 import { HexData } from '@summerfi/sdk-common/common/aliases'
 
@@ -10,7 +10,7 @@ export const SwapActionBuilder: ActionBuilder<steps.SwapStep> = async (params): 
   const swapContractInfo = deployment.contracts['Swap']
 
   const swapData = await swapManager.getSwapDataExactInput({
-    chainInfo: params.user.chain.chainInfo,
+    chainInfo: params.user.chainInfo,
     fromAmount: step.inputs.fromTokenAmount,
     toToken: step.inputs.toTokenAmount.token,
     recipient: Address.createFrom({ value: swapContractInfo.address as HexData }),
@@ -23,7 +23,7 @@ export const SwapActionBuilder: ActionBuilder<steps.SwapStep> = async (params): 
     arguments: {
       fromAmount: step.inputs.fromTokenAmount,
       toMinimumAmount: step.inputs.toTokenAmount,
-      fee: Percentage.createFrom({ percentage: step.inputs.fee }),
+      fee: step.inputs.fee,
       withData: swapData.calldata,
       collectFeeInFromToken: true,
     },

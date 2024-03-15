@@ -8,7 +8,7 @@ import {
   PositionLike,
   Price,
   PRICE_DECIMALS,
-} from '~types'
+} from '@summerfi/triggers-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
 
 export interface SimulatedPosition {

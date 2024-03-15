@@ -1,0 +1,19 @@
+{
+  "extends": "@summerfi/typescript-config/tsconfig.test.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "@summerfi/order-planner-common/*": ["node_modules/@summerfi/order-planner-common/src/*"],
+      "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
+      "@summerfi/sdk-client": ["node_modules/@summerfi/sdk-client/src/index.ts"],
+      "@summerfi/core-contracts": ["node_modules/@summerfi/core-contracts/src/index.ts"],
+      "@summerfi/swap-common/*": ["node_modules/@summerfi/swap-common/src/*"],
+      "@summerfi/deployment-utils": ["node_modules/@summerfi/deployment-utils/src/index.ts"],
+      "~sdk-client/*": ["node_modules/@summerfi/sdk-client/src/*"],
+      "~orderplannerservice/*": ["../order-planner-service/src/*"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

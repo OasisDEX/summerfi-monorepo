@@ -1,5 +1,5 @@
-import { Percentage } from '~sdk-common/common/implementation/Percentage'
-import { SerializationService } from '~sdk-common/services/SerializationService'
+import { SerializationService } from '../../services/SerializationService'
+import { Percentage } from './Percentage'
 import { percentageAsFraction } from '../utils/PercentageUtils'
 
 interface IRiskRatioSerialized {
@@ -14,7 +14,7 @@ enum RiskRatioType {
 
 /**
  * @class RiskRatio
- * @description Risk ratio representing the risk of position, 
+ * @description Risk ratio representing the risk of position,
  */
 export class RiskRatio implements IRiskRatioSerialized {
   readonly ltv: Percentage
