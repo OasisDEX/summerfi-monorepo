@@ -998,14 +998,14 @@ importers:
   summerfi-api/get-morpho-claims-function:
     dependencies:
       '@aws-lambda-powertools/logger':
-        specifier: ^1.17.0
-        version: 1.17.0
+        specifier: ^2.0.2
+        version: 2.0.2
       '@aws-lambda-powertools/metrics':
-        specifier: ^1.17.0
-        version: 1.18.1
+        specifier: ^2.0.2
+        version: 2.0.2
       '@aws-lambda-powertools/tracer':
-        specifier: ^1.17.0
-        version: 1.18.1
+        specifier: ^2.0.2
+        version: 2.0.2
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared
