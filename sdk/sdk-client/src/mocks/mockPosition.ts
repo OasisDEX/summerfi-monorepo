@@ -3,7 +3,6 @@ import {
   RiskRatio,
   TokenAmount,
   TokenSymbol,
-  ChainInfo,
   type Maybe,
   type Position,
   type PositionId,
