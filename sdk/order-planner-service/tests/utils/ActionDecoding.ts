@@ -1,9 +1,6 @@
 import { BaseAction } from '@summerfi/order-planner-common/actions'
 import { HexData } from '@summerfi/sdk-common/common'
 import {
-  AbiParameter,
-  DecodeAbiParametersReturnType,
-  ParseAbiParameters,
   decodeAbiParameters,
   decodeFunctionData,
   keccak256,
@@ -25,7 +22,6 @@ export function decodeActionCalldata<Action extends BaseAction>(params: {
       mapping: number[]
     }
   | undefined {
-  //DecodeAbiParametersReturnType<ReturnType<typeof decodeAbiParameters<ReturnType<typeof parseAbiParameters<Action['config']['parametersAbi']>>>>
   const { action, calldata } = params
 
   const opExecutorAbiSpec = [

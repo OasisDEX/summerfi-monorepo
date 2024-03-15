@@ -105,6 +105,7 @@ export const getAavePartialTakeProfitServiceContainer: (
         position,
         currentStopLoss: minimalStopLossInformation,
         minimalTriggerData: trigger.triggerData,
+        logger,
       })
     },
     validate: async ({ trigger }) => {
@@ -115,6 +116,8 @@ export const getAavePartialTakeProfitServiceContainer: (
       })
 
       const triggers = await getTriggers(trigger.dpm)
+
+      const currentStopLoss = getCurrentAaveStopLoss(triggers, position, logger)
 
       const validationResults: ValidationResults[] = []
 
@@ -140,6 +143,7 @@ export const getAavePartialTakeProfitServiceContainer: (
           triggerData: trigger.triggerData,
           action: trigger.action,
           triggers,
+          currentStopLoss: currentStopLoss,
           chainId,
         }),
       )

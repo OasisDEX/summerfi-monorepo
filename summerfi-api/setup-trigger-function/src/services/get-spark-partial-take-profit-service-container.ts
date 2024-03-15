@@ -29,6 +29,7 @@ import { DerivedPrices } from '@summerfi/prices-subgraph'
 import { getCurrentSparkStopLoss } from './get-current-spark-stop-loss'
 import { simulateAutoTakeProfit } from './simulations'
 import { calculateCollateralPriceInDebtBasedOnLtv } from '~helpers'
+import { MinimalStopLossInformation } from './simulations/auto-take-profit/types'
 
 export interface GetSparkPartialTakeProfitServiceContainerProps {
   rpc: PublicClient
@@ -94,10 +95,16 @@ export const getSparkPartialTakeProfitServiceContainer: (
       const triggers = await getTriggers(trigger.dpm)
 
       const currentStopLoss = getCurrentSparkStopLoss(triggers, position, logger)
+      const choosenStopLossExecutionLtv = trigger.triggerData.stopLoss?.triggerData.executionLTV
+      const minimalStopLossInformation: MinimalStopLossInformation | undefined =
+        choosenStopLossExecutionLtv
+          ? { executionLTV: choosenStopLossExecutionLtv }
+          : currentStopLoss
       return simulateAutoTakeProfit({
         position,
-        currentStopLoss,
+        currentStopLoss: minimalStopLossInformation,
         minimalTriggerData: trigger.triggerData,
+        logger,
       })
     },
     validate: async ({ trigger }) => {
@@ -108,6 +115,8 @@ export const getSparkPartialTakeProfitServiceContainer: (
       })
 
       const triggers = await getTriggers(trigger.dpm)
+
+      const currentStopLoss = getCurrentSparkStopLoss(triggers, position, logger)
 
       const validationResults: ValidationResults[] = []
 
@@ -132,6 +141,7 @@ export const getSparkPartialTakeProfitServiceContainer: (
           position,
           triggerData: trigger.triggerData,
           action: trigger.action,
+          currentStopLoss,
           triggers,
           chainId,
         }),

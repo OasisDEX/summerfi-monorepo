@@ -1,0 +1,28 @@
+{
+  "name": "@summerfi/morpho-blue-subgraph",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "test": "jest --passWithNoTests",
+    "build": "tsc -b -v",
+    "prebuild": "pnpm run generate-ts-types",
+    "generate-ts-types": "graphql-codegen --config graphql.config.yml",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@aws-lambda-powertools/logger": "^1.17.0",
+    "graphql-request": "^6.1.0",
+    "@summerfi/serverless-shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "@types/node": "^20.11.5",
+    "eslint": "^8.56.0"
+  }
+}

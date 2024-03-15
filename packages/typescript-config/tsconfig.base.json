@@ -31,6 +31,18 @@
     },
     {
       "path": "../automation-subgraph/tsconfig.json"
+    },
+    {
+      "path": "../aave-spark-subgraph/tsconfig.json"
+    },
+    {
+      "path": "../ajna-subgraph/tsconfig.json"
+    },
+    {
+      "path": "../morpho-blue-subgraph/tsconfig.json"
+    },
+    {
+      "path": "../morpho-blue-external-api-client/tsconfig.json"
     }
   ]
 }
