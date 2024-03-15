@@ -1,7 +1,7 @@
 import {
   DmaSparkTrailingStopLossID,
   DmaSparkTrailingStopLoss,
-} from '@summerfi/serverless-contracts/get-triggers-response'
+} from '@summerfi/triggers-shared/contracts'
 import { PricesSubgraphClient } from '@summerfi/prices-subgraph'
 import { TriggersQuery } from '@summerfi/automation-subgraph'
 import { safeParseBigInt } from '@summerfi/serverless-shared'

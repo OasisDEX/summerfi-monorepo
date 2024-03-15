@@ -15,7 +15,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@aws-lambda-powertools/logger": "^1.17.0",
+    "@aws-lambda-powertools/logger": "^2.0.2",
     "graphql-request": "^6.1.0",
     "@summerfi/serverless-shared": "workspace:*"
   },

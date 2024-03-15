@@ -1,15 +1,9 @@
 import { ServiceContainer } from './service-container'
-import {
-  mergeValidationResults,
-  PositionLike,
-  SparkPartialTakeProfitEventBody,
-  SupportedActions,
-  ValidationResults,
-} from '~types'
+import { mergeValidationResults, SparkPartialTakeProfitEventBody, ValidationResults } from '~types'
 import { PublicClient } from 'viem'
-import { Addresses } from './get-addresses'
+import { Addresses, CurrentTriggerLike } from '@summerfi/triggers-shared'
 import { Address, ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
-import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
+import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
 import {
@@ -19,17 +13,18 @@ import {
 import {
   AddableTrigger,
   automationBotHelper,
-  CurrentTriggerLike,
   encodeSparkPartialTakeProfit,
   encodeSparkStopLoss,
 } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
-import { getSparkPosition } from './get-spark-position'
 import { DerivedPrices } from '@summerfi/prices-subgraph'
-import { getCurrentSparkStopLoss } from './get-current-spark-stop-loss'
-import { simulateAutoTakeProfit } from './simulations'
-import { calculateCollateralPriceInDebtBasedOnLtv } from '~helpers'
-import { MinimalStopLossInformation } from './simulations/auto-take-profit/types'
+import { getCurrentSparkStopLoss } from '@summerfi/triggers-calculations'
+import {
+  calculateCollateralPriceInDebtBasedOnLtv,
+  getSparkPosition,
+  simulateAutoTakeProfit,
+} from '@summerfi/triggers-calculations'
+import { PositionLike, SupportedActions } from '@summerfi/triggers-shared'
 
 export interface GetSparkPartialTakeProfitServiceContainerProps {
   rpc: PublicClient
@@ -82,9 +77,16 @@ export const getSparkPartialTakeProfitServiceContainer: (
   chainId,
 }) => {
   const getPosition = memoize(async (params: Parameters<typeof getSparkPosition>[0]) => {
-    return await getSparkPosition(params, rpc, addresses, logger)
+    return await getSparkPosition(
+      params,
+      rpc,
+      {
+        poolDataProvider: addresses.Spark.SparkDataPoolProvider,
+        oracle: addresses.Spark.SparkOracle,
+      },
+      logger,
+    )
   })
-
   return {
     simulatePosition: async ({ trigger }) => {
       const position = await getPosition({
@@ -96,10 +98,9 @@ export const getSparkPartialTakeProfitServiceContainer: (
 
       const currentStopLoss = getCurrentSparkStopLoss(triggers, position, logger)
       const choosenStopLossExecutionLtv = trigger.triggerData.stopLoss?.triggerData.executionLTV
-      const minimalStopLossInformation: MinimalStopLossInformation | undefined =
-        choosenStopLossExecutionLtv
-          ? { executionLTV: choosenStopLossExecutionLtv }
-          : currentStopLoss
+      const minimalStopLossInformation = choosenStopLossExecutionLtv
+        ? { executionLTV: choosenStopLossExecutionLtv }
+        : currentStopLoss
       return simulateAutoTakeProfit({
         position,
         currentStopLoss: minimalStopLossInformation,

@@ -1,13 +1,14 @@
 import { z } from 'zod'
 import { TriggerType } from '@oasisdex/automation'
-import { AutoBuyTriggerCustomErrorCodes, maxUnit256 } from '~types'
+import { AutoBuyTriggerCustomErrorCodes } from '~types'
 import {
   ltvSchema,
   maxGasFeeSchema,
+  maxUnit256,
   positionAddressesSchema,
   priceSchema,
   supportedActionsSchema,
-} from './common'
+} from '@summerfi/triggers-shared'
 import { addressSchema, urlOptionalSchema } from '@summerfi/serverless-shared'
 
 export const aaveBasicBuyTriggerDataSchema = z

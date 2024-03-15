@@ -97,14 +97,14 @@ importers:
   external-api/get-collateral-locked-function:
     dependencies:
       '@aws-lambda-powertools/logger':
-        specifier: ^1.17.0
-        version: 1.17.0
+        specifier: ^2.0.2
+        version: 2.0.2
       '@aws-lambda-powertools/metrics':
-        specifier: ^1.17.0
-        version: 1.18.1
+        specifier: ^2.0.2
+        version: 2.0.2
       '@aws-lambda-powertools/tracer':
-        specifier: ^1.17.0
-        version: 1.18.1
+        specifier: ^2.0.2
+        version: 2.0.2
       '@summerfi/aave-spark-subgraph':
         specifier: workspace:*
         version: link:../../packages/aave-spark-subgraph
@@ -114,9 +114,6 @@ importers:
       '@summerfi/morpho-blue-subgraph':
         specifier: workspace:*
         version: link:../../packages/morpho-blue-subgraph
-      '@summerfi/serverless-contracts':
-        specifier: workspace:*
-        version: link:../../packages/serverless-contracts
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared
@@ -146,8 +143,8 @@ importers:
   packages/aave-spark-subgraph:
     dependencies:
       '@aws-lambda-powertools/logger':
-        specifier: ^1.17.0
-        version: 1.17.0
+        specifier: ^2.0.2
+        version: 2.0.2
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../serverless-shared
@@ -168,11 +165,23 @@ importers:
         specifier: ^8.56.0
         version: 8.56.0
 
+  packages/abis:
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      eslint:
+        specifier: ^8.56.0
+        version: 8.56.0
+
   packages/ajna-subgraph:
     dependencies:
       '@aws-lambda-powertools/logger':
-        specifier: ^1.17.0
-        version: 1.17.0
+        specifier: ^2.0.2
+        version: 2.0.2
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../serverless-shared
@@ -196,8 +205,8 @@ importers:
   packages/automation-subgraph:
     dependencies:
       '@aws-lambda-powertools/logger':
-        specifier: ^1.17.0
-        version: 1.17.0
+        specifier: ^2.0.2
+        version: 2.0.2
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../serverless-shared
@@ -439,8 +448,8 @@ importers:
   packages/morpho-blue-external-api-client:
     dependencies:
       '@aws-lambda-powertools/logger':
-        specifier: ^1.17.0
-        version: 1.17.0
+        specifier: ^2.0.2
+        version: 2.0.2
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../serverless-shared
@@ -464,8 +473,8 @@ importers:
   packages/morpho-blue-subgraph:
     dependencies:
       '@aws-lambda-powertools/logger':
-        specifier: ^1.17.0
-        version: 1.17.0
+        specifier: ^2.0.2
+        version: 2.0.2
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../serverless-shared
@@ -489,8 +498,8 @@ importers:
   packages/prices-subgraph:
     dependencies:
       '@aws-lambda-powertools/logger':
-        specifier: ^1.17.0
-        version: 1.17.0
+        specifier: ^2.0.2
+        version: 2.0.2
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../serverless-shared
@@ -511,7 +520,11 @@ importers:
         specifier: ^8.56.0
         version: 8.56.0
 
-  packages/serverless-contracts:
+  packages/serverless-shared:
+    dependencies:
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -526,8 +539,51 @@ importers:
         specifier: ^8.56.0
         version: 8.56.0
 
-  packages/serverless-shared:
+  packages/triggers-calculations:
     dependencies:
+      '@aws-lambda-powertools/logger':
+        specifier: ^2.0.2
+        version: 2.0.2
+      '@summerfi/abis':
+        specifier: workspace:*
+        version: link:../abis
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../serverless-shared
+      '@summerfi/triggers-shared':
+        specifier: workspace:*
+        version: link:../triggers-shared
+      viem:
+        specifier: ^2.8.6
+        version: 2.8.6(typescript@5.3.3)(zod@3.22.4)
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^20.11.5
+        version: 20.11.5
+      eslint:
+        specifier: ^8.56.0
+        version: 8.56.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.11.5)(ts-node@10.9.2)
+      jest-expect-message:
+        specifier: ^1.0.4
+        version: 1.1.3
+
+  packages/triggers-shared:
+    dependencies:
+      '@oasisdex/addresses':
+        specifier: 0.1.16-dma-v2-workers.11
+        version: 0.1.16-dma-v2-workers.11
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../serverless-shared
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -828,14 +884,14 @@ importers:
   summerfi-api/get-meta-morpho-details-function:
     dependencies:
       '@aws-lambda-powertools/logger':
-        specifier: ^1.17.0
-        version: 1.17.0
+        specifier: ^2.0.2
+        version: 2.0.2
       '@aws-lambda-powertools/metrics':
-        specifier: ^1.17.0
-        version: 1.18.1
+        specifier: ^2.0.2
+        version: 2.0.2
       '@aws-lambda-powertools/tracer':
-        specifier: ^1.17.0
-        version: 1.18.1
+        specifier: ^2.0.2
+        version: 2.0.2
       '@summerfi/morpho-blue-external-api-client':
         specifier: workspace:*
         version: link:../../packages/morpho-blue-external-api-client
@@ -914,26 +970,32 @@ importers:
   summerfi-api/get-triggers-function:
     dependencies:
       '@aws-lambda-powertools/logger':
-        specifier: ^1.17.0
-        version: 1.17.0
+        specifier: ^2.0.2
+        version: 2.0.2
       '@aws-lambda-powertools/metrics':
-        specifier: ^1.17.0
-        version: 1.18.1
+        specifier: ^2.0.2
+        version: 2.0.2
       '@aws-lambda-powertools/tracer':
-        specifier: ^1.17.0
-        version: 1.18.1
+        specifier: ^2.0.2
+        version: 2.0.2
       '@summerfi/automation-subgraph':
         specifier: workspace:*
         version: link:../../packages/automation-subgraph
       '@summerfi/prices-subgraph':
         specifier: workspace:*
         version: link:../../packages/prices-subgraph
-      '@summerfi/serverless-contracts':
-        specifier: workspace:*
-        version: link:../../packages/serverless-contracts
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared
+      '@summerfi/triggers-calculations':
+        specifier: workspace:*
+        version: link:../../packages/triggers-calculations
+      '@summerfi/triggers-shared':
+        specifier: workspace:*
+        version: link:../../packages/triggers-shared
+      viem:
+        specifier: ^2.8.6
+        version: 2.8.6(typescript@5.3.3)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1086,35 +1148,38 @@ importers:
   summerfi-api/setup-trigger-function:
     dependencies:
       '@aws-lambda-powertools/logger':
-        specifier: ^1.17.0
-        version: 1.17.0
+        specifier: ^2.0.2
+        version: 2.0.2
       '@aws-lambda-powertools/metrics':
-        specifier: ^1.17.0
-        version: 1.18.1
+        specifier: ^2.0.2
+        version: 2.0.2
       '@aws-lambda-powertools/tracer':
-        specifier: ^1.17.0
-        version: 1.18.1
-      '@oasisdex/addresses':
-        specifier: 0.1.16-dma-v2-workers.11
-        version: 0.1.16-dma-v2-workers.11
+        specifier: ^2.0.2
+        version: 2.0.2
       '@oasisdex/automation':
         specifier: 1.6.4-alpha.1
         version: 1.6.4-alpha.1
       '@oasisdex/dma-library':
         specifier: 0.5.21-dma-v2-workers.31-auto-withdraw-to-ltv
         version: 0.5.21-dma-v2-workers.31-auto-withdraw-to-ltv
+      '@summerfi/abis':
+        specifier: workspace:*
+        version: link:../../packages/abis
       '@summerfi/prices-subgraph':
         specifier: workspace:*
         version: link:../../packages/prices-subgraph
-      '@summerfi/serverless-contracts':
-        specifier: workspace:*
-        version: link:../../packages/serverless-contracts
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared
+      '@summerfi/triggers-calculations':
+        specifier: workspace:*
+        version: link:../../packages/triggers-calculations
+      '@summerfi/triggers-shared':
+        specifier: workspace:*
+        version: link:../../packages/triggers-shared
       bignumber.js:
-        specifier: 9.0.1
-        version: 9.0.1
+        specifier: ^9.1.2
+        version: 9.1.2
       just-memoize:
         specifier: ^2.2.0
         version: 2.2.0
@@ -1122,8 +1187,8 @@ importers:
         specifier: ^3.3.2
         version: 3.3.2
       viem:
-        specifier: ^1.19.11
-        version: 1.21.4(typescript@5.3.3)(zod@3.22.4)
+        specifier: ^2.8.6
+        version: 2.8.6(typescript@5.3.3)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1401,6 +1466,10 @@ packages:
     resolution: {integrity: sha512-gFRgQ2GJDghKvf+fXvT0kQVftgOT05W+hCa7RkfZj6HSjVAO+9DZZeJL3JK1HcsLAjWRj7W9ra0/MqB3Abf+PQ==}
     dev: false
 
+  /@aws-lambda-powertools/commons@2.0.2:
+    resolution: {integrity: sha512-5fHXZwol2LVb+UGwNPHVIZfeAgztyLaAABNvVlDqzrkpwlbfEAEBRxQN9I/vgm4NNJC7+hZHqk0ca+R4JHZBGQ==}
+    dev: false
+
   /@aws-lambda-powertools/logger@1.17.0:
     resolution: {integrity: sha512-HdesKvINDebLsxEyLzjEvn4ZiO3lYnl9Ol7GuRGgSTsB4byEeRbhAghCGCPZb0CA/NaDVQleaLTTjjsJjm6I7A==}
     peerDependencies:
@@ -1410,6 +1479,18 @@ packages:
         optional: true
     dependencies:
       '@aws-lambda-powertools/commons': 1.18.1
+      lodash.merge: 4.6.2
+    dev: false
+
+  /@aws-lambda-powertools/logger@2.0.2:
+    resolution: {integrity: sha512-VzwVI2N8HVy7T8xAAKwoZjV/iKHYauFpFPCsM5rRaQ9s6j4dNrwGNmCcv+iLLopRCsXJHoSzBUQ+nBBI/eZ4sA==}
+    peerDependencies:
+      '@middy/core': '>=3.x'
+    peerDependenciesMeta:
+      '@middy/core':
+        optional: true
+    dependencies:
+      '@aws-lambda-powertools/commons': 2.0.2
       lodash.merge: 4.6.2
     dev: false
 
@@ -1424,6 +1505,17 @@ packages:
       '@aws-lambda-powertools/commons': 1.18.1
     dev: false
 
+  /@aws-lambda-powertools/metrics@2.0.2:
+    resolution: {integrity: sha512-MEFbUzlA7NPJ72T3NJZD1cK/nqwQKZkdTZQT1bEu5/LOatAgSYUWjo1SP1lNe7WAe1n2pEKqCTeCsQd3FG46Mg==}
+    peerDependencies:
+      '@middy/core': '>=3.x'
+    peerDependenciesMeta:
+      '@middy/core':
+        optional: true
+    dependencies:
+      '@aws-lambda-powertools/commons': 2.0.2
+    dev: false
+
   /@aws-lambda-powertools/tracer@1.18.1:
     resolution: {integrity: sha512-bMLBtdEFNmLUR9RJvBULR6XJD0XopUhhS1mlpeQlm2BCPIN3gLbqAlJK8dMXyAw8GCpLpHaziCo2+7a/AIh7lA==}
     peerDependencies:
@@ -1433,6 +1525,18 @@ packages:
         optional: true
     dependencies:
       '@aws-lambda-powertools/commons': 1.18.1
+      aws-xray-sdk-core: 3.5.4
+    dev: false
+
+  /@aws-lambda-powertools/tracer@2.0.2:
+    resolution: {integrity: sha512-qLUXsMK/KJ7ctUx62hr8irargqvF5o4TY9IkUNFTTC9DTP5905ulgogxtH9fJP6hvvX7KCFzoJmvibROXAxFOw==}
+    peerDependencies:
+      '@middy/core': '>=3.x'
+    peerDependenciesMeta:
+      '@middy/core':
+        optional: true
+    dependencies:
+      '@aws-lambda-powertools/commons': 2.0.2
       aws-xray-sdk-core: 3.5.4
     dev: false
 
@@ -7503,7 +7607,7 @@ packages:
       typescript: 5.0.4
     dev: true
 
-  /abitype@1.0.0(typescript@5.3.3):
+  /abitype@1.0.0(typescript@5.3.3)(zod@3.22.4):
     resolution: {integrity: sha512-NMeMah//6bJ56H5XRj8QCV4AwuW6hB6zqz2LnhhLdcWVQOsXki6/Pn3APeqxCma62nXIcmZWdu1DlHWS74umVQ==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -7515,6 +7619,7 @@ packages:
         optional: true
     dependencies:
       typescript: 5.3.3
+      zod: 3.22.4
 
   /abitype@1.0.1(typescript@5.3.3)(zod@3.22.4):
     resolution: {integrity: sha512-HyHCfBwNYvHPGWsdv5PiKj8b1LnZUCuALyUWg5iP/wbK8FpdmTI4Qk9CYzjNgmsWwRw5j/DCruOltrnUGQdBeQ==}
@@ -16285,7 +16390,7 @@ packages:
       '@noble/hashes': 1.3.2
       '@scure/bip32': 1.3.2
       '@scure/bip39': 1.2.1
-      abitype: 1.0.0(typescript@5.3.3)
+      abitype: 1.0.0(typescript@5.3.3)(zod@3.22.4)
       isows: 1.0.3(ws@8.13.0)
       typescript: 5.3.3
       ws: 8.13.0
@@ -16331,7 +16436,7 @@ packages:
       '@noble/hashes': 1.3.2
       '@scure/bip32': 1.3.2
       '@scure/bip39': 1.2.1
-      abitype: 1.0.0(typescript@5.3.3)
+      abitype: 1.0.0(typescript@5.3.3)(zod@3.22.4)
       isows: 1.0.3(ws@8.13.0)
       typescript: 5.3.3
       ws: 8.13.0
@@ -16339,6 +16444,29 @@ packages:
       - bufferutil
       - utf-8-validate
       - zod
+
+  /viem@2.8.6(typescript@5.3.3)(zod@3.22.4):
+    resolution: {integrity: sha512-LqxLOSFtXfbC3tsiZ8Km8jKR4ktTOLfigL2dR9IN28He2+QrNhYvvwGPz3P4hbfU12Wvuxo6mWGZ2L1lpNtvrA==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@adraffy/ens-normalize': 1.10.0
+      '@noble/curves': 1.2.0
+      '@noble/hashes': 1.3.2
+      '@scure/bip32': 1.3.2
+      '@scure/bip39': 1.2.1
+      abitype: 1.0.0(typescript@5.3.3)(zod@3.22.4)
+      isows: 1.0.3(ws@8.13.0)
+      typescript: 5.3.3
+      ws: 8.13.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+      - zod
+    dev: false
 
   /walkdir@0.4.1:
     resolution: {integrity: sha512-3eBwRyEln6E1MSzcxcVpQIhRG8Q1jLvEqRmCZqS3dsfXEDR/AhOF4d+jHg1qvDCpYaVRZjENPQyrVxAkQqxPgQ==}

@@ -24,7 +24,7 @@ describe('handler', () => {
     }
 
     const expected = {
-      headers: { 'Access-Control-Allow-Origin': '*' },
+      headers: { 'Access-Control-Allow-Origin': '*', 'content-type': 'application/json' },
       statusCode: 200,
       body: serialize({
         migrations: [
@@ -70,7 +70,7 @@ describe('handler', () => {
     }
 
     const expected = {
-      headers: { 'Access-Control-Allow-Origin': '*' },
+      headers: { 'Access-Control-Allow-Origin': '*', 'content-type': 'application/json' },
       statusCode: 400,
       body: serialize({}),
     }
@@ -97,7 +97,7 @@ describe('handler', () => {
     }
 
     const expected = {
-      headers: { 'Access-Control-Allow-Origin': '*' },
+      headers: { 'Access-Control-Allow-Origin': '*', 'content-type': 'application/json' },
       statusCode: 400,
       body: serialize({}),
     }

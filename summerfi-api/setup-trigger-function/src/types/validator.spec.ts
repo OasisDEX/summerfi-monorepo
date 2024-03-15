@@ -29,7 +29,7 @@ describe('Trigger Data Validator', () => {
       executionLTV: 10_001n,
     })
 
-    const errors = result.success === false ? result.error.errors : []
+    const errors = !result.success ? result.error.errors : []
 
     expect(result.success).toBeFalsy()
     expect(errors).toIncludeAllPartialMembers([

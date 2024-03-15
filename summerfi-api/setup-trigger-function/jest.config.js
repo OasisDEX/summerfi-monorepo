@@ -16,6 +16,7 @@ module.exports = {
   moduleNameMapper: pathsToModuleNameMapper({
     '@summerfi/serverless-shared': ['<rootDir>/../../packages/serverless-shared/src/index.ts'],
     '@summerfi/serverless-shared/*': ['<rootDir>/../../packages/serverless-shared/src/*'],
+    '@summerfi/triggers-shared': ['<rootDir>/../../packages/triggers-shared/src/index.ts'],
     '~types': ['<rootDir>/src/types/index.ts'],
     '~abi': ['<rootDir>/src/abi/index.ts'],
     '~helpers': ['<rootDir>/src/helpers/index.ts'],

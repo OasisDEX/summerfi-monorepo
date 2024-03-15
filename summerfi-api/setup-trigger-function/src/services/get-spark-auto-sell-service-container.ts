@@ -1,18 +1,21 @@
 import { ServiceContainer } from './service-container'
-import { SparkAutoSellEventBody, SupportedActions } from '~types'
+import { SparkAutoSellEventBody } from '~types'
 import { PublicClient } from 'viem'
-import { Addresses } from './get-addresses'
+import { Addresses, CurrentTriggerLike } from '@summerfi/triggers-shared'
 import { Address, ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
-import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
+import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
-import { calculateCollateralPriceInDebtBasedOnLtv } from '~helpers'
 import { simulatePosition } from './simulate-position'
 import { sparkAutoSellValidator } from './against-position-validators'
-import { CurrentTriggerLike, encodeSparkAutoSell } from './trigger-encoders'
+import { encodeSparkAutoSell } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
-import { getSparkPosition } from './get-spark-position'
-import { getCurrentSparkStopLoss } from './get-current-spark-stop-loss'
+import { getCurrentSparkStopLoss } from '@summerfi/triggers-calculations'
+import {
+  calculateCollateralPriceInDebtBasedOnLtv,
+  getSparkPosition,
+} from '@summerfi/triggers-calculations'
+import { SupportedActions } from '@summerfi/triggers-shared'
 
 export interface GetSparkAutoSellServiceContainerProps {
   rpc: PublicClient
@@ -32,9 +35,16 @@ export const getSparkAutoSellServiceContainer: (
   chainId,
 }) => {
   const getPosition = memoize(async (params: Parameters<typeof getSparkPosition>[0]) => {
-    return await getSparkPosition(params, rpc, addresses, logger)
+    return await getSparkPosition(
+      params,
+      rpc,
+      {
+        poolDataProvider: addresses.Spark.SparkDataPoolProvider,
+        oracle: addresses.Spark.SparkOracle,
+      },
+      logger,
+    )
   })
-
   return {
     simulatePosition: async ({ trigger }) => {
       const position = await getPosition({
