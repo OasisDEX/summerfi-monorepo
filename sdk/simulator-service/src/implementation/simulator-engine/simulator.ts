@@ -26,6 +26,9 @@ export class Simulator<
   }
 
   static create<S extends SimulationStrategy>(schema: S) {
+    // second argument is the same as from the first schema we will substract steps 
+    // with each next step added
+    // and we also need to keep the original schema for future reference
     return new Simulator(schema, schema)
   }
 
