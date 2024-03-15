@@ -6,6 +6,7 @@ import { processStepOutput } from './stepProcessor/stepOutputProcessors'
 import { stateReducer } from './reducer/stateReducers'
 import type { SimulationStrategy } from '@summerfi/sdk-common/simulation'
 import { steps } from '@summerfi/sdk-common/simulation'
+import { Maybe } from '@summerfi/sdk-common/common'
 
 export class Simulator<
   Strategy extends SimulationStrategy,
@@ -33,7 +34,7 @@ export class Simulator<
       const proccesesedStepSchema = this.originalSchema[i]
       const getReference = (path: [string, string]) => {
         const [stepName, output] = path
-        const step: steps.Steps | undefined = this.state.steps[stepName]
+        const step: Maybe<steps.Steps> = this.state.steps[stepName]
 
         if (!step) {
           throw new Error(`Step not found: ${stepName} in ${this.originalSchema[i].step}`)

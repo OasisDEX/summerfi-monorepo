@@ -141,7 +141,7 @@ export async function refinaceLendingToLending(
         ...(await dependecies.swapManager.getSwapQuoteExactInput({
           chainInfo: args.position.pool.protocol.chainInfo,
           fromAmount: getReferencedValue(ctx.getReference(['DepositBorrowToTarget', 'borrowAmount'])),
-          toToken: args.targetPool.debtTokens[0],
+          toToken: flashloanAmount.token,
         })),
         slippage: args.slippage,
         fee: dependecies.getSummerFee(),

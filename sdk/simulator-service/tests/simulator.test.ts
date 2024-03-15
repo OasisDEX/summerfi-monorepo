@@ -1,101 +1,9 @@
-import { Address, ChainInfo, Percentage, Token, TokenAmount, borrowFromPosition, depositToPosition, newEmptyPositionFromPool } from '@summerfi/sdk-common/common'
-import { LendingPool, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import { SwapProviderType } from '@summerfi/swap-common/enums'
+import { Percentage } from '@summerfi/sdk-common/common'
 import { refinaceLendingToLending } from '../src/implementation/strategies'
 import { Simulation, SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
-
-const testChain = ChainInfo.createFrom({ chainId: 1, name: 'test' })
-
-const testCollateral = Token.createFrom({
-    chainInfo: testChain,
-    address: Address.createFrom({ value: '0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5' }),
-    decimals: 18,
-    name: "Collateral",
-    symbol: "COL",
-})
-
-const testDebt = Token.createFrom({
-    chainInfo: testChain,
-    address: Address.createFrom({ value: '0x814FaE9f487206471B6B0D713cD51a2D35980000' }),
-    decimals: 18,
-    name: "Debt",
-    symbol: "DBT",
-})
-
-const testSourceLendingPool = new LendingPool({
-    collateralTokens: [testCollateral],
-    debtTokens: [testDebt],
-    maxLTV: Percentage.createFrom({ percentage: 80 }),
-    poolId: {
-        protocol: ProtocolName.Maker,
-    },
-    protocol: {
-        chainInfo: testChain,
-        name: ProtocolName.Maker,
-    },
-})
-
-const testSourcePosition =
-    borrowFromPosition(
-        depositToPosition(
-            newEmptyPositionFromPool(testSourceLendingPool), TokenAmount.createFrom({ token: testCollateral, amount: '100' })
-        ),
-        TokenAmount.createFrom({ token: testDebt, amount: '50' })
-    )
-
-const testTargetLendingPool = new LendingPool({
-    collateralTokens: [testCollateral],
-    debtTokens: [testDebt],
-    maxLTV: Percentage.createFrom({ percentage: 80 }),
-    poolId: {
-        protocol: ProtocolName.Spark,
-    },
-    protocol: {
-        chainInfo: testChain,
-        name: ProtocolName.Spark,
-    },
-})
-
-const swapManagerMock: ISwapManager = {
-    getSwapDataExactInput: async (
-        params: {
-            chainInfo: ChainInfo
-            fromAmount: TokenAmount
-            toToken: Token
-            recipient: Address
-            slippage: Percentage
-        }
-    ) => {
-        return {
-            provider: SwapProviderType.OneInch,
-            fromTokenAmount: params.fromAmount,
-            toTokenAmount: TokenAmount.createFrom({ token: params.toToken, amount: '10' }),
-            calldata: '0x000',
-            targetContract: Address.ZeroAddressEthereum,
-            value: '0',
-            gasPrice: '0',
-        }
-    },
-    getSwapQuoteExactInput: async (params: {
-        chainInfo: ChainInfo
-        fromAmount: TokenAmount
-        toToken: Token
-    }) => {
-        return {
-            provider: SwapProviderType.OneInch,
-            fromTokenAmount: params.fromAmount,
-            toTokenAmount: TokenAmount.createFrom({ token: params.toToken, amount: '10' }),
-            estimatedGas: '0'
-        }
-    }
-}
-
-function mockGetFee() {
-    return 0
-}
-
-
+import { otherTestCollateral, otherTestDebt, testSourcePosition, testTargetLendingPool, testTargetLendingPoolRequiredSwaps } from './mocks/testSourcePosition'
+import { mockRefinanceContext } from './mocks/contextMock'
+import exp from 'constants'
 
 describe('Refinance', () => {
     describe('to the position with the same collateral and debt (no swaps)', () => {
@@ -105,10 +13,7 @@ describe('Refinance', () => {
                 position: testSourcePosition,
                 targetPool: testTargetLendingPool,
                 slippage: Percentage.createFrom({ percentage: 1 }),
-            }, {
-                swapManager: swapManagerMock,
-                getSummerFee: mockGetFee,
-            })
+            }, mockRefinanceContext)
         })
 
         it('should not include swap steps', async () => {
@@ -133,6 +38,61 @@ describe('Refinance', () => {
             const targetPosition = simulation.targetPosition
 
             expect(targetPosition.pool).toEqual(testTargetLendingPool)
+        })
+
+        it('should open position with id', async () => {
+            const targetPosition = simulation.targetPosition
+
+            expect(targetPosition.positionId).toBeDefined()
+        })
+    })
+
+    describe('to the position with the different collateral and debt (with swaps)', () => {
+        let simulation: Simulation<SimulationType.Refinance>
+        beforeAll(async () => {
+            simulation = await refinaceLendingToLending({
+                position: testSourcePosition,
+                targetPool: testTargetLendingPoolRequiredSwaps,
+                slippage: Percentage.createFrom({ percentage: 1 }),
+            }, mockRefinanceContext)
+        })
+
+        it('should include two swap steps', async () => {
+            const steps = simulation.steps.filter(step => !step.skip).map(step => step.type)
+
+            expect(steps.length).toBe(2)
+        })
+
+        it('should open position with other collater', async () => {
+            const targetPosition = simulation.targetPosition
+
+            expect(targetPosition.collateralAmount.token).toEqual(otherTestCollateral)
+        })
+
+        it('should open position with other debt', async () => {
+            const targetPosition = simulation.targetPosition
+
+            expect(targetPosition.debtAmount).toEqual(otherTestDebt)
+        })
+
+        it('should open position as required target pool', async () => {
+            const targetPosition = simulation.targetPosition
+
+            expect(targetPosition.pool).toEqual(testTargetLendingPoolRequiredSwaps)
+        })
+
+        it('should open position with id', async () => {
+            const targetPosition = simulation.targetPosition
+
+            expect(targetPosition.positionId).toBeDefined()
+        })
+
+        it('should open position with the same collateral amount', async () => {
+            expect(mockRefinanceContext.swapManager.getSwapQuoteExactInput.mock.calls.length).toBe(2)
+        })
+
+        it('should exchange all collateral from source position ', async () => {
+            expect(mockRefinanceContext.swapManager.getSwapQuoteExactInput.mock.calls[0][0].fromAmount).toEqual(testSourcePosition.collateralAmount)
         })
     })
 })
