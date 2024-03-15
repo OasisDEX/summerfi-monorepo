@@ -1,24 +1,34 @@
 import {
   DmaAavePartialTakeProfit,
   DmaAavePartialTakeProfitID,
-} from '@summerfi/serverless-contracts/get-triggers-response'
+  Trigger,
+} from '@summerfi/triggers-shared/contracts'
 import { TriggersQuery } from '@summerfi/automation-subgraph'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { mapTriggerCommonParams } from '../helpers'
 import { PublicClient } from 'viem'
-import { getAavePosition, simulateAutoTakeProfit } from '@summerfi/triggers-calculations'
-import { Address } from '@summerfi/serverless-shared'
+import {
+  getAavePosition,
+  getCurrentAaveStopLoss,
+  simulateAutoTakeProfit,
+} from '@summerfi/triggers-calculations'
+import { Address, safeParseBigInt } from '@summerfi/serverless-shared'
+import { Addresses } from '@summerfi/triggers-shared'
 
 export const getDmaAavePartialTakeProfit = async ({
   triggers,
   logger,
   publicClient,
   getDetails,
+  addresses,
+  stopLoss,
 }: {
   triggers: TriggersQuery
   logger: Logger
   publicClient: PublicClient
   getDetails: boolean
+  addresses: Addresses
+  stopLoss?: Trigger
 }): Promise<DmaAavePartialTakeProfit | undefined> => {
   const trigger = triggers.triggers.find(
     (trigger) => trigger.triggerType == DmaAavePartialTakeProfitID,
@@ -55,24 +65,46 @@ export const getDmaAavePartialTakeProfit = async ({
         debt: parsedTrigger.decodedParams.debtToken as Address,
       },
       publicClient,
-      { poolDataProvider: '', oracle: '' },
+      {
+        poolDataProvider: addresses.AaveV3.AaveDataPoolProvider,
+        oracle: addresses.AaveV3.AaveOracle,
+      },
+      logger,
+    )
+
+    const executionLTV = safeParseBigInt(parsedTrigger.decodedParams.executionLtv) ?? 0n
+    const targetLTV = safeParseBigInt(parsedTrigger.decodedParams.targetLtv) ?? 0n
+    const step = targetLTV - executionLTV
+    const withdrawToken =
+      parsedTrigger.decodedParams.withdrawToDebt === 'true'
+        ? parsedTrigger.decodedParams.debtToken
+        : parsedTrigger.decodedParams.collateralToken
+
+    const currentStopLoss = getCurrentAaveStopLoss(
+      { triggerGroup: { aaveStopLoss: stopLoss }, triggersCount: 0 },
+      position,
       logger,
     )
 
     const simulation = simulateAutoTakeProfit({
       position,
       minimalTriggerData: {
-        executionPrice: parsedTrigger.decodedParams.executionPrice,
-        executionLTV: parsedTrigger.decodedParams.executionLtv,
-        withdrawStep: parsedTrigger.decodedParams.withdrawToDebt,
-        withdrawToken: parsedTrigger.decodedParams.debtToken,
+        executionPrice: safeParseBigInt(parsedTrigger.decodedParams.executionPrice) ?? 0n,
+        executionLTV: safeParseBigInt(parsedTrigger.decodedParams.executionLtv) ?? 0n,
+        withdrawStep: step,
+        withdrawToken: withdrawToken as Address,
       },
       logger: logger,
       iterations: 1,
-      currentStopLoss: {
-        executionLTV: 0n,
-      },
+      currentStopLoss: currentStopLoss,
     })
+
+    return {
+      ...parsedTrigger,
+      dynamicParams: {
+        nextProfit: simulation.profits[0],
+      },
+    }
   }
 
   return parsedTrigger

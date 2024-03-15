@@ -7,10 +7,10 @@ import {
 } from 'viem'
 import { automationBotAbi } from '@summerfi/abis'
 import { SparkAutoBuyTriggerData } from '~types'
-import { maxUnit256, PositionLike } from '@summerfi/triggers-shared'
+import { maxUnit256, PositionLike, CurrentTriggerLike } from '@summerfi/triggers-shared'
 
 import { DEFAULT_DEVIATION } from './defaults'
-import { CurrentTriggerLike, TriggerTransactions } from './types'
+import { TriggerTransactions } from './types'
 import { OPERATION_NAMES } from '@oasisdex/dma-library'
 import { getMaxCoverage } from './get-max-coverage'
 

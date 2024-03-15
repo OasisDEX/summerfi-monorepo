@@ -97,14 +97,14 @@ importers:
   external-api/get-collateral-locked-function:
     dependencies:
       '@aws-lambda-powertools/logger':
-        specifier: ^1.17.0
-        version: 1.17.0
+        specifier: ^2.0.2
+        version: 2.0.2
       '@aws-lambda-powertools/metrics':
-        specifier: ^1.17.0
-        version: 1.18.1
+        specifier: ^2.0.2
+        version: 2.0.2
       '@aws-lambda-powertools/tracer':
-        specifier: ^1.17.0
-        version: 1.18.1
+        specifier: ^2.0.2
+        version: 2.0.2
       '@summerfi/aave-spark-subgraph':
         specifier: workspace:*
         version: link:../../packages/aave-spark-subgraph
@@ -114,9 +114,6 @@ importers:
       '@summerfi/morpho-blue-subgraph':
         specifier: workspace:*
         version: link:../../packages/morpho-blue-subgraph
-      '@summerfi/serverless-contracts':
-        specifier: workspace:*
-        version: link:../../packages/serverless-contracts
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared
@@ -146,8 +143,8 @@ importers:
   packages/aave-spark-subgraph:
     dependencies:
       '@aws-lambda-powertools/logger':
-        specifier: ^1.17.0
-        version: 1.17.0
+        specifier: ^2.0.2
+        version: 2.0.2
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../serverless-shared
@@ -183,8 +180,8 @@ importers:
   packages/ajna-subgraph:
     dependencies:
       '@aws-lambda-powertools/logger':
-        specifier: ^1.17.0
-        version: 1.17.0
+        specifier: ^2.0.2
+        version: 2.0.2
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../serverless-shared
@@ -523,21 +520,6 @@ importers:
         specifier: ^8.56.0
         version: 8.56.0
 
-  packages/serverless-contracts:
-    devDependencies:
-      '@summerfi/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@summerfi/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      '@types/node':
-        specifier: ^20.11.5
-        version: 20.11.5
-      eslint:
-        specifier: ^8.56.0
-        version: 8.56.0
-
   packages/serverless-shared:
     dependencies:
       zod:
@@ -596,6 +578,12 @@ importers:
 
   packages/triggers-shared:
     dependencies:
+      '@oasisdex/addresses':
+        specifier: 0.1.16-dma-v2-workers.11
+        version: 0.1.16-dma-v2-workers.11
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../serverless-shared
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -603,9 +591,6 @@ importers:
       '@summerfi/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@summerfi/serverless-shared':
-        specifier: workspace:*
-        version: link:../serverless-shared
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
@@ -899,14 +884,14 @@ importers:
   summerfi-api/get-meta-morpho-details-function:
     dependencies:
       '@aws-lambda-powertools/logger':
-        specifier: ^1.17.0
-        version: 1.17.0
+        specifier: ^2.0.2
+        version: 2.0.2
       '@aws-lambda-powertools/metrics':
-        specifier: ^1.17.0
-        version: 1.18.1
+        specifier: ^2.0.2
+        version: 2.0.2
       '@aws-lambda-powertools/tracer':
-        specifier: ^1.17.0
-        version: 1.18.1
+        specifier: ^2.0.2
+        version: 2.0.2
       '@summerfi/morpho-blue-external-api-client':
         specifier: workspace:*
         version: link:../../packages/morpho-blue-external-api-client
@@ -999,9 +984,6 @@ importers:
       '@summerfi/prices-subgraph':
         specifier: workspace:*
         version: link:../../packages/prices-subgraph
-      '@summerfi/serverless-contracts':
-        specifier: workspace:*
-        version: link:../../packages/serverless-contracts
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared
@@ -1168,9 +1150,6 @@ importers:
       '@aws-lambda-powertools/tracer':
         specifier: ^2.0.2
         version: 2.0.2
-      '@oasisdex/addresses':
-        specifier: 0.1.16-dma-v2-workers.11
-        version: 0.1.16-dma-v2-workers.11
       '@oasisdex/automation':
         specifier: 1.6.4-alpha.1
         version: 1.6.4-alpha.1
@@ -1183,9 +1162,6 @@ importers:
       '@summerfi/prices-subgraph':
         specifier: workspace:*
         version: link:../../packages/prices-subgraph
-      '@summerfi/serverless-contracts':
-        specifier: workspace:*
-        version: link:../../packages/serverless-contracts
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared

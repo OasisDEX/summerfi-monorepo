@@ -18,7 +18,6 @@
     "@summerfi/triggers-shared": "workspace:*",
     "@summerfi/automation-subgraph": "workspace:*",
     "@summerfi/prices-subgraph": "workspace:*",
-    "@summerfi/serverless-contracts": "workspace:*",
     "zod": "^3.22.4",
     "viem": "^2.8.6"
   },

@@ -1,4 +1,3 @@
-import { CurrentTriggerLike, TriggerTransactions } from './types'
 import {
   bytesToHex,
   encodeAbiParameters,
@@ -10,9 +9,10 @@ import { OPERATION_NAMES } from '@oasisdex/dma-library'
 import { DEFAULT_DEVIATION } from './defaults'
 import { automationBotAbi } from '@summerfi/abis'
 import { AaveAutoSellTriggerData } from '~types'
-import { PositionLike } from '@summerfi/triggers-shared'
+import { PositionLike, CurrentTriggerLike } from '@summerfi/triggers-shared'
 
 import { getMaxCoverage } from './get-max-coverage'
+import { TriggerTransactions } from './types'
 
 export const encodeAaveAutoSell = (
   position: PositionLike,

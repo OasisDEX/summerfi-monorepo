@@ -1,10 +1,5 @@
 import { request } from 'graphql-request'
-import {
-  OneTriggerDocument,
-  OneTriggerQuery,
-  TriggersDocument,
-  TriggersQuery,
-} from './types/graphql/generated'
+import { OneTriggerQuery, TriggersDocument, TriggersQuery } from './types/graphql/generated'
 import { ChainId } from '@summerfi/serverless-shared/domain-types'
 import { Logger } from '@aws-lambda-powertools/logger'
 
@@ -53,18 +48,8 @@ async function getTriggers(params: GetTriggersParams, config: SubgraphClientConf
   return triggers
 }
 
-async function getOneTrigger(params: GetOneTriggerParams, config: SubgraphClientConfig) {
-  const url = getEndpoint(config.chainId, config.urlBase)
-  const result = await request(url, OneTriggerDocument, {
-    triggerId: params.triggerId,
-  })
-
-  return result.trigger
-}
-
 export interface AutomationSubgraphClient {
   getTriggers: GetTriggers
-  getOneTrigger: GetOneTrigger
 }
 
 export function getAutomationSubgraphClient(
@@ -72,7 +57,6 @@ export function getAutomationSubgraphClient(
 ): AutomationSubgraphClient {
   return {
     getTriggers: (params: GetTriggersParams) => getTriggers(params, config),
-    getOneTrigger: (params: GetOneTriggerParams) => getOneTrigger(params, config),
   }
 }
 export type { TriggersQuery } from './types/graphql/generated'

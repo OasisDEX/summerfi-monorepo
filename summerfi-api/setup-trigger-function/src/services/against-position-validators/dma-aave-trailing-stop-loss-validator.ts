@@ -15,7 +15,7 @@ import {
   TWENTY_MILLIONS_DOllARS,
 } from '@summerfi/triggers-shared'
 import { z } from 'zod'
-import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
+import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import { DerivedPrices } from '@summerfi/prices-subgraph'
 import { safeParseBigInt } from '@summerfi/serverless-shared'
 

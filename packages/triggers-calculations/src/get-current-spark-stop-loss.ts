@@ -1,22 +1,18 @@
-import {
-  getPropertyFromTriggerParams,
-  GetTriggersResponse,
-} from '@summerfi/serverless-contracts/get-triggers-response'
+import { getPropertyFromTriggerParams, Trigger } from '@summerfi/triggers-shared/contracts'
 import { safeParseBigInt } from '@summerfi/serverless-shared'
+import { PositionLike, CurrentStopLoss } from '@summerfi/triggers-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
 import {
   calculateLtv,
   calculateCollateralPriceInDebtBasedOnLtv,
 } from '@summerfi/triggers-calculations'
-import { CurrentStopLoss } from './trigger-encoders'
-import { PositionLike } from '@summerfi/triggers-shared'
 
-export function getCurrentAaveStopLoss(
-  triggers: GetTriggersResponse,
+export function getCurrentSparkStopLoss(
+  triggers: { triggerGroup: { sparkStopLoss?: Trigger }; triggersCount: number },
   position: PositionLike,
   logger?: Logger,
 ): CurrentStopLoss | undefined {
-  const currentStopLoss = triggers.triggerGroup.aaveStopLoss
+  const currentStopLoss = triggers.triggerGroup.sparkStopLoss
 
   if (!currentStopLoss) {
     return undefined

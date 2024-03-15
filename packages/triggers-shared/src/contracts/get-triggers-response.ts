@@ -1,3 +1,5 @@
+import { Price, TokenBalance } from '../types'
+
 export const AaveStopLossToCollateralV2ID = 111n as const
 export const AaveStopLossToDebtV2ID = 112n as const
 export const SparkStopLossToCollateralV2ID = 117n as const
@@ -271,6 +273,18 @@ export type DmaAavePartialTakeProfit = Trigger & {
     deviation: string
     withdrawToDebt: string
   }
+  dynamicParams?: {
+    nextProfit: {
+      triggerPrice: Price
+      realizedProfitInCollateral: TokenBalance
+      realizedProfitInDebt: TokenBalance
+      totalProfitInCollateral: TokenBalance
+      totalProfitInDebt: TokenBalance
+      stopLossDynamicPrice?: Price
+      fee: TokenBalance
+      totalFee: TokenBalance
+    }
+  }
 }
 
 export type DmaSparkPartialTakeProfit = Trigger & {
@@ -288,6 +302,18 @@ export type DmaSparkPartialTakeProfit = Trigger & {
     executionPrice: string
     deviation: string
     withdrawToDebt: string
+  }
+  dynamicParams?: {
+    nextProfit: {
+      triggerPrice: Price
+      realizedProfitInCollateral: TokenBalance
+      realizedProfitInDebt: TokenBalance
+      totalProfitInCollateral: TokenBalance
+      totalProfitInDebt: TokenBalance
+      stopLossDynamicPrice?: Price
+      fee: TokenBalance
+      totalFee: TokenBalance
+    }
   }
 }
 

@@ -1,4 +1,4 @@
-import { CurrentTriggerLike, EncodedTriggers, TriggerTransactions } from './types'
+import { EncodedTriggers, TriggerTransactions } from './types'
 import {
   bytesToHex,
   encodeAbiParameters,
@@ -8,7 +8,7 @@ import {
 } from 'viem'
 import { automationBotAbi } from '@summerfi/abis'
 import { DmaAaveStopLossTriggerData } from '~types'
-import { PositionLike } from '@summerfi/triggers-shared'
+import { PositionLike, CurrentTriggerLike } from '@summerfi/triggers-shared'
 
 import { TriggerType } from '@oasisdex/automation'
 import { getMaxCoverage } from './get-max-coverage'

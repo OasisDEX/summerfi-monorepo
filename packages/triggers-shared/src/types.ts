@@ -90,3 +90,14 @@ export type TokenBalance = z.infer<typeof tokenBalanceSchema>
 export type Price = z.infer<typeof priceSchema>
 export type LTV = z.infer<typeof ltvSchema>
 export type Percentage = z.infer<typeof percentageSchema>
+
+export type CurrentTriggerLike = {
+  id: bigint
+  triggerData: `0x${string}`
+  triggersOnAccount: number
+}
+
+export interface CurrentStopLoss extends CurrentTriggerLike {
+  executionPrice: Price
+  executionLTV: LTV
+}

@@ -1,16 +1,16 @@
 import { ServiceContainer } from './service-container'
 import { SparkAutoSellEventBody } from '~types'
 import { PublicClient } from 'viem'
-import { Addresses } from './get-addresses'
+import { Addresses, CurrentTriggerLike } from '@summerfi/triggers-shared'
 import { Address, ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
-import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
+import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
 import { simulatePosition } from './simulate-position'
 import { sparkAutoSellValidator } from './against-position-validators'
-import { CurrentTriggerLike, encodeSparkAutoSell } from './trigger-encoders'
+import { encodeSparkAutoSell } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
-import { getCurrentSparkStopLoss } from './get-current-spark-stop-loss'
+import { getCurrentSparkStopLoss } from '@summerfi/triggers-calculations'
 import {
   calculateCollateralPriceInDebtBasedOnLtv,
   getSparkPosition,

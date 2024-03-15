@@ -1,24 +1,34 @@
 import {
   DmaSparkPartialTakeProfit,
   DmaSparkPartialTakeProfitID,
-} from '@summerfi/serverless-contracts/get-triggers-response'
+  Trigger,
+} from '@summerfi/triggers-shared/contracts'
 import { TriggersQuery } from '@summerfi/automation-subgraph'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { mapTriggerCommonParams } from '../helpers'
-import { getSparkPosition, simulateAutoTakeProfit } from '@summerfi/triggers-calculations'
-import { Address } from '@summerfi/serverless-shared'
+import {
+  getSparkPosition,
+  simulateAutoTakeProfit,
+  getCurrentSparkStopLoss,
+} from '@summerfi/triggers-calculations'
+import { Address, safeParseBigInt } from '@summerfi/serverless-shared'
 import { PublicClient } from 'viem'
+import { Addresses } from '@summerfi/triggers-shared'
 
 export const getDmaSparkPartialTakeProfit = async ({
   triggers,
   logger,
   publicClient,
   getDetails,
+  addresses,
+  stopLoss,
 }: {
   triggers: TriggersQuery
   logger: Logger
   publicClient: PublicClient
   getDetails: boolean
+  addresses: Addresses
+  stopLoss?: Trigger
 }): Promise<DmaSparkPartialTakeProfit | undefined> => {
   const trigger = triggers.triggers.find(
     (trigger) => trigger.triggerType == DmaSparkPartialTakeProfitID,
@@ -55,24 +65,46 @@ export const getDmaSparkPartialTakeProfit = async ({
         debt: parsedTrigger.decodedParams.debtToken as Address,
       },
       publicClient,
-      { poolDataProvider: '', oracle: '' },
+      {
+        poolDataProvider: addresses.Spark.SparkDataPoolProvider,
+        oracle: addresses.Spark.SparkOracle,
+      },
+      logger,
+    )
+
+    const executionLTV = safeParseBigInt(parsedTrigger.decodedParams.executionLtv) ?? 0n
+    const targetLTV = safeParseBigInt(parsedTrigger.decodedParams.targetLtv) ?? 0n
+    const step = targetLTV - executionLTV
+    const withdrawToken =
+      parsedTrigger.decodedParams.withdrawToDebt === 'true'
+        ? parsedTrigger.decodedParams.debtToken
+        : parsedTrigger.decodedParams.collateralToken
+
+    const currentStopLoss = getCurrentSparkStopLoss(
+      { triggerGroup: { sparkStopLoss: stopLoss }, triggersCount: 0 },
+      position,
       logger,
     )
 
     const simulation = simulateAutoTakeProfit({
       position,
       minimalTriggerData: {
-        executionPrice: parsedTrigger.decodedParams.executionPrice,
-        executionLTV: parsedTrigger.decodedParams.executionLtv,
-        withdrawStep: parsedTrigger.decodedParams.withdrawToDebt,
-        withdrawToken: parsedTrigger.decodedParams.debtToken,
+        executionPrice: safeParseBigInt(parsedTrigger.decodedParams.executionPrice) ?? 0n,
+        executionLTV: safeParseBigInt(parsedTrigger.decodedParams.executionLtv) ?? 0n,
+        withdrawStep: step,
+        withdrawToken: withdrawToken as Address,
       },
       logger: logger,
       iterations: 1,
-      currentStopLoss: {
-        executionLTV: 0n,
-      },
+      currentStopLoss: currentStopLoss,
     })
+
+    return {
+      ...parsedTrigger,
+      dynamicParams: {
+        nextProfit: simulation.profits[0],
+      },
+    }
   }
 
   return parsedTrigger

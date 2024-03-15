@@ -11,11 +11,11 @@ import {
   MINIMUM_LTV_TO_SETUP_TRIGGER,
   supportedActionsSchema,
   SupportedActions,
+  CurrentStopLoss,
 } from '@summerfi/triggers-shared'
 import { z } from 'zod'
-import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
+import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import { chainIdSchema, safeParseBigInt } from '@summerfi/serverless-shared'
-import { CurrentStopLoss } from '../trigger-encoders'
 
 const paramsSchema = z.object({
   position: positionSchema,

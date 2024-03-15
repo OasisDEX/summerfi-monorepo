@@ -1,9 +1,9 @@
 import { ServiceContainer } from './service-container'
 import { mergeValidationResults, SparkPartialTakeProfitEventBody, ValidationResults } from '~types'
 import { PublicClient } from 'viem'
-import { Addresses } from './get-addresses'
+import { Addresses, CurrentTriggerLike } from '@summerfi/triggers-shared'
 import { Address, ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
-import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
+import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
 import {
@@ -13,13 +13,12 @@ import {
 import {
   AddableTrigger,
   automationBotHelper,
-  CurrentTriggerLike,
   encodeSparkPartialTakeProfit,
   encodeSparkStopLoss,
 } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
 import { DerivedPrices } from '@summerfi/prices-subgraph'
-import { getCurrentSparkStopLoss } from './get-current-spark-stop-loss'
+import { getCurrentSparkStopLoss } from '@summerfi/triggers-calculations'
 import {
   calculateCollateralPriceInDebtBasedOnLtv,
   getSparkPosition,

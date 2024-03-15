@@ -5,11 +5,15 @@ import {
   CommonErrorCodes,
   PartialTakeProfitErrorCodes,
 } from '~types'
-import { positionSchema, supportedActionsSchema, SupportedActions } from '@summerfi/triggers-shared'
-import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
+import {
+  positionSchema,
+  supportedActionsSchema,
+  SupportedActions,
+  CurrentStopLoss,
+} from '@summerfi/triggers-shared'
+import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import { z } from 'zod'
 import { chainIdSchema, safeParseBigInt } from '@summerfi/serverless-shared'
-import { CurrentStopLoss } from '../trigger-encoders'
 
 const paramsSchema = z.object({
   position: positionSchema,

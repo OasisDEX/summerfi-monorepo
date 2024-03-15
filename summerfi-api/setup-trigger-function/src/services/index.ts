@@ -1,5 +1,5 @@
 import { Address, ChainId, ProtocolId } from '@summerfi/serverless-shared/domain-types'
-import { getAddresses } from './get-addresses'
+import { getAddresses } from '@summerfi/triggers-shared'
 import { Chain as ViemChain, createPublicClient, http, PublicClient } from 'viem'
 import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
 import { Logger } from '@aws-lambda-powertools/logger'
@@ -16,7 +16,7 @@ import {
   AavePartialTakeProfitEventBody,
   SparkPartialTakeProfitEventBody,
 } from '~types'
-import type { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
+import type { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import fetch from 'node-fetch'
 import memoize from 'just-memoize'
 import {

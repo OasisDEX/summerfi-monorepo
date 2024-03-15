@@ -46,7 +46,7 @@ import {
   SparkStopLossToDebt,
   SparkStopLossToDebtDMA,
   SparkStopLossToDebtV2ID,
-} from '@summerfi/serverless-contracts/get-triggers-response'
+} from '@summerfi/triggers-shared/contracts'
 import {
   mapBuySellCommonParams,
   mapStopLossParams,
@@ -62,6 +62,7 @@ import {
   getDmaSparkTrailingStopLoss,
 } from './trigger-parsers'
 import { ChainId, getRpcGatewayEndpoint, IRpcConfig } from '@summerfi/serverless-shared'
+import { getAddresses } from '@summerfi/triggers-shared'
 
 const logger = new Logger({ serviceName: 'getTriggersFunction' })
 
@@ -140,6 +141,8 @@ export const handler = async (
     transport,
     chain: viemChain,
   })
+
+  const addresses = getAddresses(params.chainId)
 
   const automationSubgraphClient = getAutomationSubgraphClient({
     urlBase: SUBGRAPH_BASE,
@@ -332,17 +335,36 @@ export const handler = async (
     logger,
   })
 
+  const aaveStopLoss = getCurrentTrigger(
+    aaveStopLossToCollateral,
+    aaveStopLossToCollateralDMA,
+    aaveStopLossToDebt,
+    aaveStopLossToDebtDMA,
+    aaveTrailingStopLossDMA,
+  )
+  const sparkStopLoss = getCurrentTrigger(
+    sparkStopLossToCollateral,
+    sparkStopLossToCollateralDMA,
+    sparkStopLossToDebt,
+    sparkStopLossToDebtDMA,
+    sparkTrailingStopLossDMA,
+  )
+
   const aavePartialTakeProfit = await getDmaAavePartialTakeProfit({
     triggers,
     logger,
     publicClient,
     getDetails: params.getDetails,
+    addresses,
+    stopLoss: aaveStopLoss,
   })
   const sparkPartialTakeProfit = await getDmaSparkPartialTakeProfit({
     triggers,
     logger,
     publicClient,
     getDetails: params.getDetails,
+    addresses,
+    stopLoss: sparkStopLoss,
   })
 
   const response: GetTriggersResponse = {
@@ -388,20 +410,8 @@ export const handler = async (
     },
     triggersCount: triggers.triggers.length,
     triggerGroup: {
-      aaveStopLoss: getCurrentTrigger(
-        aaveStopLossToCollateral,
-        aaveStopLossToCollateralDMA,
-        aaveStopLossToDebt,
-        aaveStopLossToDebtDMA,
-        aaveTrailingStopLossDMA,
-      ),
-      sparkStopLoss: getCurrentTrigger(
-        sparkStopLossToCollateral,
-        sparkStopLossToCollateralDMA,
-        sparkStopLossToDebt,
-        sparkStopLossToDebtDMA,
-        sparkTrailingStopLossDMA,
-      ),
+      aaveStopLoss,
+      sparkStopLoss,
       aaveBasicBuy: getCurrentTrigger(aaveBasicBuy),
       aaveBasicSell: getCurrentTrigger(aaveBasicSell),
       sparkBasicBuy: getCurrentTrigger(sparkBasicBuy),
