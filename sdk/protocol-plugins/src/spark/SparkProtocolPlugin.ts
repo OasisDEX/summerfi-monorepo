@@ -1,12 +1,11 @@
 import { ActionBuilder, ActionBuildersMap } from '@summerfi/order-planner-common/builders'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { IProtocolPlugin } from '~protocolplugins/interfaces'
 import { SparkDepositBorrowActionBuilder } from './builders'
 import { Maybe } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import { ProtocolPluginsRegistry } from '~protocolplugins/implementation'
+import { IProtocolActionBuilder } from '@summerfi/order-planner-common/interfaces'
 
-export class SparkProtocolPlugin implements IProtocolPlugin {
+export class SparkProtocolPlugin implements IProtocolActionBuilder {
   readonly protocol = ProtocolName.Spark
 
   readonly StepBuilders: Partial<ActionBuildersMap> = {
@@ -17,5 +16,3 @@ export class SparkProtocolPlugin implements IProtocolPlugin {
     return this.StepBuilders[step.type] as ActionBuilder<T>
   }
 }
-
-ProtocolPluginsRegistry.registerProtocolPlugin(ProtocolName.Spark, SparkProtocolPlugin)

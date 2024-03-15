@@ -2,11 +2,12 @@ import { OrderPlanner } from '@summerfi/order-planner-common/implementation'
 import { IOrderPlannerService } from '~orderplannerservice/interfaces'
 import { Order, type IPositionsManager } from '@summerfi/sdk-common/orders'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import { Maybe } from '@summerfi/sdk-common/common'
+import { ChainInfo, Maybe } from '@summerfi/sdk-common/common'
 import { ActionBuildersConfig } from '~orderplannerservice/config'
-import { Chain, User } from '@summerfi/sdk-client'
+import { IUser } from '@summerfi/sdk-client'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
+import { ProtocolBuilderRegistryType } from '@summerfi/order-planner-common/interfaces'
 
 export class OrderPlannerService implements IOrderPlannerService {
   readonly orderPlanner: OrderPlanner
@@ -26,15 +27,16 @@ export class OrderPlannerService implements IOrderPlannerService {
   }
 
   async buildOrder(params: {
-    user: User
+    user: IUser
     positionsManager: IPositionsManager
     simulation: Simulation<SimulationType>
     swapManager: ISwapManager
+    protocolsRegistry: ProtocolBuilderRegistryType
   }): Promise<Maybe<Order>> {
-    const deploymentKey = this._getDeploymentKey(params.user.chain)
+    const deploymentKey = this._getDeploymentKey(params.user.chainInfo)
     const deployment = this.deployments[deploymentKey]
     if (!deployment) {
-      throw new Error(`No deployment found for chain ${params.user.chain.chainInfo.name}`)
+      throw new Error(`No deployment found for chain ${params.user.chainInfo.name}`)
     }
 
     return this.orderPlanner.buildOrder({
@@ -44,10 +46,11 @@ export class OrderPlannerService implements IOrderPlannerService {
       actionBuildersMap: ActionBuildersConfig,
       deployment,
       swapManager: params.swapManager,
+      protocolsRegistry: params.protocolsRegistry,
     })
   }
 
-  private _getDeploymentKey(chain: Chain): string {
-    return `${chain.chainInfo.name}.${this.deploymentConfigTag}`
+  private _getDeploymentKey(chainInfo: ChainInfo): string {
+    return `${chainInfo.name}.${this.deploymentConfigTag}`
   }
 }

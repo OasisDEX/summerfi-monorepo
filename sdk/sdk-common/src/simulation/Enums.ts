@@ -16,10 +16,10 @@ export enum SimulationSteps {
   Swap = 'Swap',
   PullToken = 'PullToken',
   ReturnFunds = 'ReturnFunds',
-  PaybackFlashloan = 'PaybackFlashloan',
+  RepayFlashloan = 'RepayFlashloan',
 }
 
 export enum FlashloanProvider {
-  Maker = 'Maker',
-  Balancer = 'Balancer',
+  Maker = 0,
+  Balancer = 1,
 }

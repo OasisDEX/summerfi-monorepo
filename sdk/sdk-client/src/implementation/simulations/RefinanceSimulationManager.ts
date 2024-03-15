@@ -1,5 +1,5 @@
-import type { RefinanceParameters } from '~sdk-common/orders/interfaces/refinance/RefinanceParameters'
-import { Simulation, SimulationType } from '~sdk-common/simulation'
+import { RefinanceParameters } from '@summerfi/sdk-common/orders'
+import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 
 export class RefinanceSimulationManager {
   public async simulateRefinancePosition(

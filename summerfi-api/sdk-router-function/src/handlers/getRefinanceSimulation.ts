@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { Position } from '@summerfi/sdk-common/common'
+import { Percentage, type Position } from '@summerfi/sdk-common/common'
 import type { IPool } from '@summerfi/sdk-common/protocols'
 import type { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { refinaceLendingToLending, type RefinanceDependencies } from '@summerfi/simulator-service'
@@ -23,7 +23,7 @@ export const getRefinanceSimulation = publicProcedure
     const dependencies: RefinanceDependencies = {
       swapManager: opts.ctx.swapManager,
       // TODO: get summer fee from the config provider
-      getSummerFee: () => 0,
+      getSummerFee: () => Percentage.createFrom({ percentage: 0 }),
     }
 
     const simulation = await refinaceLendingToLending(args, dependencies)

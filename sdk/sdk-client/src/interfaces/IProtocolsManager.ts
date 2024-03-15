@@ -1,5 +1,5 @@
-import type { Maybe } from '@summerfi/sdk-common/common'
-import type { IProtocol, Protocol } from '@summerfi/sdk-common/protocols'
+import { Maybe } from '@summerfi/sdk-common/common'
+import { IProtocol, Protocol } from '@summerfi/sdk-common/protocols'
 
 /**
  * @interface IProtocolsManager

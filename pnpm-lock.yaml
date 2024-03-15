@@ -1033,9 +1033,15 @@ importers:
       '@summerfi/deployment-utils':
         specifier: workspace:*
         version: link:../../packages/deployment-utils
+      '@summerfi/order-planner-common':
+        specifier: workspace:*
+        version: link:../../sdk/order-planner-common
       '@summerfi/order-planner-service':
         specifier: workspace:*
         version: link:../../sdk/order-planner-service
+      '@summerfi/protocol-plugins':
+        specifier: workspace:*
+        version: link:../../sdk/protocol-plugins
       '@summerfi/sdk-client':
         specifier: workspace:*
         version: link:../../sdk/sdk-client

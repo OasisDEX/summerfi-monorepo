@@ -1,10 +1,4 @@
-import {
-  type ChainInfo,
-  TokenSymbol,
-  type Maybe,
-  Token,
-  Address,
-} from '@summerfi/sdk-common/common'
+import { Address, ChainInfo, Maybe, Token, TokenSymbol } from '@summerfi/sdk-common/common'
 
 export async function getMockTokenBySymbol(params: {
   chainInfo: ChainInfo

@@ -1,8 +1,8 @@
-import type { ChainInfo, Maybe } from '@summerfi/sdk-common/common'
-import { Chain } from '~sdk-client/implementation/Chain'
-import { ProtocolsManager } from '~sdk-client/implementation/ProtocolsManager'
-import { TokensManager } from '~sdk-client/implementation/TokensManager'
-import type { IChainsManager } from '~sdk-client/interfaces/IChainsManager'
+import { ChainInfo, Maybe } from '@summerfi/sdk-common/common'
+import { IChainsManager } from '../interfaces/IChainsManager'
+import { Chain } from './Chain'
+import { TokensManager } from './TokensManager'
+import { ProtocolsManager } from './ProtocolsManager'
 
 export class ChainsManager implements IChainsManager {
   public async getSupportedChains(): Promise<ChainInfo[]> {

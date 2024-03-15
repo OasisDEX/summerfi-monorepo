@@ -10,11 +10,17 @@ export class PullTokenAction extends BaseAction {
     storageOutputs: [],
   } as const
 
-  public encodeCall(params: { pullAmount: TokenAmount; pullTo: Address }): ActionCall {
-    return this._encodeCall([
-      params.pullAmount.token.address,
-      params.pullTo.value,
-      params.pullAmount.toBaseUnit(),
-    ])
+  public encodeCall(
+    params: { pullAmount: TokenAmount; pullTo: Address },
+    paramsMapping?: number[],
+  ): ActionCall {
+    return this._encodeCall({
+      arguments: [
+        params.pullAmount.token.address.value,
+        params.pullTo.value,
+        params.pullAmount.toBaseUnit(),
+      ],
+      mapping: paramsMapping,
+    })
   }
 }

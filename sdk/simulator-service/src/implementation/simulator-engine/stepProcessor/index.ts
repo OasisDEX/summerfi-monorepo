@@ -18,7 +18,7 @@ const stepOutputProcessors: StepOutputProcessors = {
   [SimulationSteps.PaybackWithdraw]: paybackWithdrawOutputProcessor,
   [SimulationSteps.Swap]: swapOutputProcessor,
   [SimulationSteps.ReturnFunds]: returnFundsOutputProcessor,
-  [SimulationSteps.PaybackFlashloan]: repayFlashloanOutputProcessor,
+  [SimulationSteps.RepayFlashloan]: repayFlashloanOutputProcessor,
   [SimulationSteps.PullToken]: pullTokenOutputProcessor,
 }
 

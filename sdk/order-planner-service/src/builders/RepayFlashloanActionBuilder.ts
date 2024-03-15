@@ -11,7 +11,7 @@ export const FlashloanProviderMap: Record<FlashloanProvider, number> = {
   [FlashloanProvider.Balancer]: 1,
 }
 
-export const PaybackFlashloanActionBuilder: ActionBuilder<steps.RepayFlashloan> = async (
+export const RepayFlashloanActionBuilder: ActionBuilder<steps.RepayFlashloan> = async (
   params: ActionBuilderParams<steps.RepayFlashloan>,
 ): Promise<void> => {
   // End the current subcontext and pass the subcontext calls to the flashloan action
@@ -25,8 +25,7 @@ export const PaybackFlashloanActionBuilder: ActionBuilder<steps.RepayFlashloan> 
     action: new FlashloanAction(),
     arguments: {
       amount: customData.amount,
-      // TODO: Need the hard cast because the typing system is not working correctly
-      provider: FlashloanProviderMap[customData.provider as FlashloanProvider],
+      provider: FlashloanProviderMap[customData.provider],
       calls: callsBatch,
     },
     connectedInputs: {},

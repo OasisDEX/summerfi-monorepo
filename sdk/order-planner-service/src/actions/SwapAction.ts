@@ -11,21 +11,27 @@ export class SwapAction extends BaseAction {
     storageOutputs: ['received'],
   } as const
 
-  public encodeCall(params: {
-    fromAmount: TokenAmount
-    toMinimumAmount: TokenAmount
-    fee: Percentage
-    withData: HexData
-    collectFeeInFromToken: boolean
-  }): ActionCall {
-    return this._encodeCall([
-      params.fromAmount.token.address.value,
-      params.toMinimumAmount.token.address.value,
-      params.fromAmount.toBaseUnit(),
-      params.toMinimumAmount.toBaseUnit(),
-      params.fee.toBaseUnit({ decimals: 8 }),
-      params.withData,
-      params.collectFeeInFromToken,
-    ])
+  public encodeCall(
+    params: {
+      fromAmount: TokenAmount
+      toMinimumAmount: TokenAmount
+      fee: Percentage
+      withData: HexData
+      collectFeeInFromToken: boolean
+    },
+    paramsMapping?: number[],
+  ): ActionCall {
+    return this._encodeCall({
+      arguments: [
+        params.fromAmount.token.address.value,
+        params.toMinimumAmount.token.address.value,
+        params.fromAmount.toBaseUnit(),
+        params.toMinimumAmount.toBaseUnit(),
+        params.fee.toBaseUnit({ decimals: 8 }),
+        params.withData,
+        params.collectFeeInFromToken,
+      ],
+      mapping: paramsMapping,
+    })
   }
 }

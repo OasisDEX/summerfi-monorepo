@@ -1,4 +1,4 @@
-import { TokenAmount } from '~sdk-common/common/implementation/TokenAmount'
+import { TokenAmount } from '../../common/implementation/TokenAmount'
 
 export interface Swap {
   fromTokenAmount: TokenAmount

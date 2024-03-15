@@ -1,5 +1,10 @@
 import { steps } from '@summerfi/sdk-common/simulation'
-import { BaseAction } from '~orderplannercommon/actions/BaseAction'
+import { ProtocolName } from '@summerfi/sdk-common/protocols'
+import { BaseAction } from '../actions/BaseAction'
+import { IProtocolActionBuilder } from './IProtocolActionBuilder'
+
+export type ProtocolBuilderConstructor = new () => IProtocolActionBuilder
+export type ProtocolBuilderRegistryType = Partial<Record<ProtocolName, ProtocolBuilderConstructor>>
 
 export type Slot = number
 
@@ -20,8 +25,8 @@ export type StepKeysMatching<Step extends steps.Steps, V> = {
 // type ValueReference, but for some reason the resolution of the type does not work when using an object
 // imported from another package, like the SwapStep from the sdk-common package. For now all the keys in the
 // object are used as the type for the StepInputsType.
-export type StepInputsType<T extends steps.Steps> = keyof T['inputs']
-export type StepOutputsType<T extends steps.Steps> = keyof T['outputs']
+export type StepInputsType<Step extends steps.Steps> = keyof Step['inputs']
+export type StepOutputsType<Step extends steps.Steps> = keyof Step['outputs']
 
 export type StorageInputsMapType<
   Step extends steps.Steps,
@@ -32,3 +37,5 @@ export type StorageOutputsMapType<
   Step extends steps.Steps,
   Action extends BaseAction,
 > = StorageAliasMap<StepOutputsType<Step>, StorageOutputsType<Action>>
+
+export type ParamsMapping = number[]

@@ -1,6 +1,6 @@
-import type { ChainInfo, TokenSymbol, Maybe, Token, Address } from '@summerfi/sdk-common/common'
-import type { ITokensManager } from '~sdk-client/interfaces/ITokensManager'
-import { getMockTokenBySymbol } from '~sdk-client/mocks/mockToken'
+import { Address, ChainInfo, Maybe, Token, TokenSymbol } from '@summerfi/sdk-common/common'
+import { ITokensManager } from '../interfaces/ITokensManager'
+import { getMockTokenBySymbol } from '../mocks/mockToken'
 
 export class TokensManager implements ITokensManager {
   private readonly _chainInfo: ChainInfo

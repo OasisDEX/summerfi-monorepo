@@ -1,5 +1,5 @@
-import type { ChainInfo, Maybe } from '@summerfi/sdk-common/common'
-import type { Chain } from '~sdk-client/implementation/Chain'
+import { ChainInfo, Maybe } from '@summerfi/sdk-common/common'
+import { Chain } from '../implementation/Chain'
 
 /**
  * @interface IChainsManager

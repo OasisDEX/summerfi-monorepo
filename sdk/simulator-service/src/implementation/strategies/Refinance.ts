@@ -6,7 +6,7 @@ import {
 } from '@summerfi/sdk-common/simulation'
 import { getReferencedValue, makeStrategy } from '~simulator-service/implementation/helpers'
 import { Simulator } from '~simulator-service/implementation/simulator-engine'
-import { TokenAmount } from '@summerfi/sdk-common/common'
+import { Percentage, TokenAmount } from '@summerfi/sdk-common/common'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { RefinanceParameters } from '@summerfi/sdk-common/orders'
 import { type ISwapManager } from '@summerfi/swap-common/interfaces'
@@ -34,7 +34,7 @@ export const refinanceStrategy = makeStrategy([
     optional: true,
   },
   {
-    step: SimulationSteps.PaybackFlashloan,
+    step: SimulationSteps.RepayFlashloan,
     optional: false,
   },
   {
@@ -49,7 +49,7 @@ export const refinanceStrategy = makeStrategy([
 
 export interface RefinanceDependencies {
   swapManager: ISwapManager
-  getSummerFee: () => number
+  getSummerFee: () => Percentage
 }
 
 export async function refinaceLendingToLending(
@@ -149,8 +149,8 @@ export async function refinaceLendingToLending(
       skip: isDebtSwapSkipped,
     }))
     .next(async () => ({
-      name: 'PaybackFlashloan',
-      type: SimulationSteps.PaybackFlashloan,
+      name: 'RepayFlashloan',
+      type: SimulationSteps.RepayFlashloan,
       inputs: {
         amount: args.position.debtAmount, // TODO add some amount
       },

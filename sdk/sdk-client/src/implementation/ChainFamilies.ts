@@ -2,9 +2,9 @@ import {
   EthereumChainNames,
   type ChainInfo,
   ArbitrumChainNames,
-  OptimismChainNames,
   BaseChainNames,
   ChainFamilyName,
+  OptimismChainNames,
 } from '@summerfi/sdk-common/common'
 
 /**

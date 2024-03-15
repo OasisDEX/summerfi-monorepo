@@ -1,4 +1,4 @@
-import type { Address } from '~sdk-common/common/implementation/Address'
+import { Address } from '../../common/implementation/Address'
 
 export interface IPositionsManager {
   address: Address
