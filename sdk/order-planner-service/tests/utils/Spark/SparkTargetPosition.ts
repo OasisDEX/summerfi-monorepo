@@ -44,7 +44,7 @@ export function getSparkPosition(): Position {
   }
 
   const poolId = {
-    protocol: ProtocolName.Spark,
+    protocol: protocol,
     emodeType: EmodeType.None,
   } as SparkPoolId
 
