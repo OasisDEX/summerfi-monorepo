@@ -1,4 +1,4 @@
-import { ITokenService } from '../index';
+import { ITokenService } from '../interfaces/ProtocolPlugin';
 import { Address, ChainInfo, Token, TokenSymbol } from '@summerfi/sdk-common/common';
 
 // TODO: Implement the TokenService to handle different chains

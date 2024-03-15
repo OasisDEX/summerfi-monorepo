@@ -1,10 +1,15 @@
-import { AddressValue, Percentage, TokenAmount, TokenSymbol, Price, CurrencySymbol, RiskRatio } from "@summerfi/sdk-common/common";
-import type { SparkLendingPool, SparkPoolDebtConfig, SparkPoolCollateralConfig, SparkPoolId } from "@summerfi/sdk-common/protocols";
+import { AddressValue, Percentage, TokenAmount, TokenSymbol, Price, CurrencySymbol, RiskRatio , Position } from "@summerfi/sdk-common/common";
+import type { SparkPoolId } from "@summerfi/sdk-common/protocols";
 import { PoolType, ProtocolName, EmodeType } from "@summerfi/sdk-common/protocols";
-import { Position } from "@summerfi/sdk-common/common";
 import { BigNumber } from 'bignumber.js';
 import { z } from 'zod';
-import { ProtocolPlugin, ChainId, ProtocolManagerContext, IPositionId } from "../interfaces/ProtocolPlugin";
+import {
+    ProtocolPlugin,
+    ChainId,
+    ProtocolManagerContext,
+    IPositionId,
+    SparkPoolCollateralConfig, SparkLendingPool, SparkPoolDebtConfig
+} from "../interfaces/ProtocolPlugin";
 import {AaveV3LikePluginBuilder, filterAssetsListByEMode} from "./AAVEv3LikeBuilder";
 import {UNCAPPED_SUPPLY, PRECISION_BI} from "./constants";
 
@@ -124,6 +129,7 @@ class SparkPlugin implements ProtocolPlugin<SparkPoolId> {
         throw new Error(`Not implemented ${positionId}`)
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async getPosition(positionId: IPositionId, ctx: ProtocolManagerContext): Promise<Position> {
         throw new Error(`Not implemented ${positionId}`)
     }

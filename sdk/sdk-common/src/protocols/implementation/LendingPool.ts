@@ -1,5 +1,6 @@
-import { AddressValue, CurrencySymbol } from "../../common";
-import { CollateralConfig, DebtConfig } from "../../protocols";
+import { AddressValue } from "../../common/aliases/AddressValue";
+import { CurrencySymbol } from "../../common/enums/CurrencySymbol";
+import { CollateralConfig, DebtConfig } from "../../protocols/interfaces/LendingPool";
 import { Token } from '../../common/implementation/Token'
 import { IPool } from '../interfaces/IPool'
 import { PoolType } from '../interfaces/PoolType'

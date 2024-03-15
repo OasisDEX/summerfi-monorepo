@@ -33,9 +33,10 @@ export class RiskRatio implements IRiskRatioSerialized {
         const ltv = Percentage.createFrom({ percentage: (1 / percentageAsFraction(params.ratio)) * 100 })
         return new RiskRatio({ ltv })
       }
-      case RiskRatioType.Multiple:
+      case RiskRatioType.Multiple: {
         const ltv = Percentage.createFrom({percentage: 1 / (1 + ( 1 / (params.ratio.value - 1) )) * 100})
         return new RiskRatio({ ltv })
+      }
       default:
         throw new Error('Invalid RiskRatio type')
     }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Position } from "@summerfi/sdk-common/common";
 import { ProtocolManagerContext, ProtocolPlugin } from "../interfaces/ProtocolPlugin";
 import { aaveV3Plugin } from "./AAVEv3Plugin";
@@ -6,12 +7,13 @@ import { IPoolId } from "@summerfi/sdk-common/protocols";
 import { sparkPlugin } from "./SparkPlugin";
 import { z } from "zod";
 
+
 type GetPoolIds<ProtocolPlugins extends ProtocolPlugin<any>[]> = { [K in keyof ProtocolPlugins]: ProtocolPlugins[K] extends ProtocolPlugin<infer T> ? T : never }[number]
 type UnPackPromise<T> = T extends Promise<infer U> ? U : T
-type MatchProtocol<ProtocolPlugins extends ProtocolPlugin<any>[], PoolId extends IPoolId> = ProtocolPlugins extends [infer First, ...infer Rest] 
+type MatchProtocol<ProtocolPlugins extends ProtocolPlugin<any>[], PoolId extends IPoolId> = ProtocolPlugins extends [infer First, ...infer Rest]
     ? First extends ProtocolPlugin<PoolId> 
         ? First 
-        : Rest extends ProtocolPlugin<any>[] 
+        : Rest extends ProtocolPlugin<any>[]
             ? MatchProtocol<Rest, PoolId> 
             : never
     : never
@@ -42,6 +44,7 @@ export class ProtocolManager<ProtocolPlugins extends ProtocolPlugin<any>[]> {
         return await plugin.getPool(poolId, ctx) as ReturnPool<ProtocolPlugins, PoolId>
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public getPosition(ctx: ProtocolManagerContext): Position {
         throw new Error('Not implemented')
     }

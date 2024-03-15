@@ -1,7 +1,6 @@
-import { TokenSymbol, Price, CurrencySymbol } from "@summerfi/sdk-common/common"
+import { TokenSymbol, Price, CurrencySymbol , Percentage, RiskRatio , Address, Position, Token, AddressValue } from "@summerfi/sdk-common/common"
+import { CollateralConfig, DebtConfig , IPoolId, ProtocolName, IProtocol } from "@summerfi/sdk-common/protocols";
 import type { LendingPool } from "@summerfi/sdk-common/protocols"
-import { IPoolId, ProtocolName, IProtocol } from "@summerfi/sdk-common/protocols"
-import { Address, Position, Token, AddressValue } from "@summerfi/sdk-common/common"
 import { PublicClient } from "viem"
 import { AaveV3ContractNames, SparkContractNames, MakerContractNames } from '@summerfi/deployment-types'
 import {
@@ -115,7 +114,7 @@ export enum ChainId {
     Sepolia = 31337,
 }
 
-export interface ProtocolPlugin<GenericPoolId extends IPoolId> {
+export interface ProtocolPlugin<GenericPoolId extends IPoolId = IPoolId> {
     protocol: GenericPoolId['protocol']['name']
     supportedChains: ChainId[]
     getPool: (poolId: unknown, ctx: ProtocolManagerContext) => Promise<LendingPool>
@@ -124,3 +123,36 @@ export interface ProtocolPlugin<GenericPoolId extends IPoolId> {
     isPoolId: (candidate: unknown) => asserts candidate is GenericPoolId
     schema: z.ZodSchema<GenericPoolId>
 }
+
+// TODO: Move all to plugins directory when integrating everything
+export interface MakerPoolCollateralConfig extends CollateralConfig {
+    nextPrice: Price
+    lastPriceUpdate: Date
+    nextPriceUpdate: Date
+}
+
+export interface SparkPoolCollateralConfig extends CollateralConfig {
+    usageAsCollateralEnabled: boolean
+    apy: Percentage
+    maxLtv: RiskRatio
+}
+
+export interface AaveV3PoolCollateralConfig extends CollateralConfig {
+    usageAsCollateralEnabled: boolean
+    apy: Percentage
+    maxLtv: RiskRatio
+}
+
+export interface MakerPoolDebtConfig extends DebtConfig {}
+
+export interface AaveV3PoolDebtConfig extends DebtConfig {
+    borrowingEnabled: boolean;
+}
+
+export interface SparkPoolDebtConfig extends DebtConfig {
+    borrowingEnabled: boolean;
+}
+
+export type MakerLendingPool = LendingPool<MakerPoolCollateralConfig, MakerPoolDebtConfig>
+export type SparkLendingPool = LendingPool<SparkPoolCollateralConfig, SparkPoolDebtConfig>
+export type AaveV3LendingPool = LendingPool<AaveV3PoolCollateralConfig, AaveV3PoolDebtConfig>

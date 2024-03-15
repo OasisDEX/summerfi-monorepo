@@ -1,4 +1,4 @@
-import { IPriceService } from '../index';
+import { IPriceService } from '../interfaces/ProtocolPlugin';
 import { PublicClient, getContract } from 'viem';
 import { Address, CurrencySymbol, Price, Token, TokenSymbol } from '@summerfi/sdk-common/common';
 import { BigNumber } from 'bignumber.js';

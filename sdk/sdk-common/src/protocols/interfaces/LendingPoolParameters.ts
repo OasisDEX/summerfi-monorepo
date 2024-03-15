@@ -1,6 +1,6 @@
 import { PoolParameters } from './PoolParameters'
 import { AddressValue } from "../../common";
-import { CollateralConfig, DebtConfig } from "../../protocols";
+import { CollateralConfig, DebtConfig } from "../../protocols/interfaces/LendingPool";
 
 /**
  * @name LendingPoolParameters

@@ -1,7 +1,7 @@
-import { Percentage, TokenAmount, TokenSymbol, Price, RiskRatio } from "@summerfi/sdk-common/common";
-import type { MakerLendingPool, MakerPoolCollateralConfig, MakerPoolDebtConfig, MakerPoolId } from "@summerfi/sdk-common/protocols";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Percentage, TokenAmount, TokenSymbol, Price, RiskRatio, Address, Position } from "@summerfi/sdk-common/common";
+import type { MakerPoolId } from "@summerfi/sdk-common/protocols";
 import { PoolType, ProtocolName, ILKType } from "@summerfi/sdk-common/protocols";
-import { Address, Position } from "@summerfi/sdk-common/common";
 import { stringToHex, getContract } from "viem";
 import { BigNumber } from 'bignumber.js';
 import { z } from 'zod';
@@ -10,7 +10,13 @@ import {
     ERC20_ABI
 } from "../interfaces/abis";
 import { PRECISION_BI, PRECISION } from "./constants";
-import { ProtocolManagerContext, ProtocolPlugin, ChainId, IPositionId } from "../interfaces/ProtocolPlugin";
+import {
+    ProtocolManagerContext,
+    ProtocolPlugin,
+    ChainId,
+    IPositionId,
+    MakerLendingPool, MakerPoolCollateralConfig, MakerPoolDebtConfig
+} from "../interfaces/ProtocolPlugin";
 
 class MakerPlugin implements ProtocolPlugin<MakerPoolId> {
     public readonly protocol = ProtocolName.Maker;

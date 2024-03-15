@@ -1,5 +1,5 @@
 import { LendingPool } from '../../protocols/implementation/LendingPool'
-import { AddressValue } from "../../common";
+import { AddressValue } from "../../common/aliases/AddressValue";
 import { TokenAmount } from '../implementation/TokenAmount'
 import { Position } from '../implementation/Position'
 

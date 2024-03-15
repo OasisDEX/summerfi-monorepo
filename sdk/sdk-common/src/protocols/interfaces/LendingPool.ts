@@ -1,9 +1,8 @@
 import type { Token } from '../../common/implementation/Token'
-import { LendingPool } from '../../protocols/implementation/LendingPool'
 import type { Percentage } from '../../common/implementation/Percentage'
 import { TokenAmount } from '../../common/implementation/TokenAmount'
 import { Price } from '../../common/implementation/Price'
-import { RiskRatio} from '../../common'
+import { RiskRatio } from '../../common/implementation/RiskRatio'
 
 export interface CollateralConfig {
   token: Token
@@ -13,25 +12,6 @@ export interface CollateralConfig {
   maxSupply: TokenAmount
   tokensLocked: TokenAmount
   liquidationPenalty: Percentage
-}
-
-// TODO: Move all to plugins directory when integrating everything
-export interface MakerPoolCollateralConfig extends CollateralConfig {
-  nextPrice: Price
-  lastPriceUpdate: Date
-  nextPriceUpdate: Date
-}
-
-export interface SparkPoolCollateralConfig extends CollateralConfig {
-  usageAsCollateralEnabled: boolean
-  apy: Percentage
-  maxLtv: RiskRatio
-}
-
-export interface AaveV3PoolCollateralConfig extends CollateralConfig {
-  usageAsCollateralEnabled: boolean
-  apy: Percentage 
-  maxLtv: RiskRatio
 }
 
 export interface DebtConfig {
@@ -46,16 +26,3 @@ export interface DebtConfig {
   originationFee: Percentage
 }
 
-export interface MakerPoolDebtConfig extends DebtConfig {}
-
-export interface AaveV3PoolDebtConfig extends DebtConfig {
-  borrowingEnabled: boolean;
-}
-
-export interface SparkPoolDebtConfig extends DebtConfig {
-  borrowingEnabled: boolean;
-}
-
-export type MakerLendingPool = LendingPool<MakerPoolCollateralConfig, MakerPoolDebtConfig>
-export type SparkLendingPool = LendingPool<SparkPoolCollateralConfig, SparkPoolDebtConfig>
-export type AaveV3LendingPool = LendingPool<AaveV3PoolCollateralConfig, AaveV3PoolDebtConfig>
