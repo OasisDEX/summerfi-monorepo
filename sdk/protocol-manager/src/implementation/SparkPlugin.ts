@@ -128,13 +128,12 @@ class SparkPlugin implements ProtocolPlugin<SparkPoolId> {
         throw new Error(`Not implemented ${positionId}`)
     }
 
-    // @ts-ignore -- need to resolve this fully
     schema: z.Schema<SparkPoolId> = z.object({
         protocol: z.object({
             name: z.literal(ProtocolName.Spark),
             chainInfo: z.object({
                 name: z.string(),
-                chainId: z.custom((value) => this.supportedChains.includes(value as ChainId), "Chain ID not supported", true)
+                chainId: z.custom<ChainId>((value) => this.supportedChains.includes(value as ChainId), "Chain ID not supported", true)
             })
         }),
         emodeType: z.nativeEnum(EmodeType)

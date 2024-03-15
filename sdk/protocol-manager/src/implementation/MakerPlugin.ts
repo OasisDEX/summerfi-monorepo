@@ -202,13 +202,12 @@ class MakerPlugin implements ProtocolPlugin<MakerPoolId> {
         throw new Error("Not implemented");
     }
 
-    // @ts-ignore -- need to resolve this fully
     schema: z.Schema<MakerPoolId> = z.object({
         protocol: z.object({
             name: z.literal(ProtocolName.Maker),
             chainInfo: z.object({
                 name: z.string(),
-                chainId: z.custom((value) => this.supportedChains.includes(value as ChainId), "Chain ID not supported", true)
+                chainId: z.custom<ChainId>((value) => this.supportedChains.includes(value as ChainId), "Chain ID not supported", true)
             })
         }),
         ilkType: z.nativeEnum(ILKType)

@@ -1,7 +1,6 @@
-import { AddressValue, Percentage, TokenAmount, TokenSymbol, Price, CurrencySymbol, RiskRatio } from "@summerfi/sdk-common/common"
+import { Position, AddressValue, Percentage, TokenAmount, TokenSymbol, Price, CurrencySymbol, RiskRatio } from "@summerfi/sdk-common/common"
 import type { AaveV3LendingPool, AaveV3PoolDebtConfig, AaveV3PoolCollateralConfig, AaveV3PoolId } from "@summerfi/sdk-common/protocols"
 import { PoolType, ProtocolName, EmodeType } from "@summerfi/sdk-common/protocols"
-import { Position, ChainInfo } from "@summerfi/sdk-common/common"
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
 import { ChainId, IPositionId, ProtocolManagerContext, ProtocolPlugin } from "../interfaces";
@@ -134,9 +133,7 @@ export class AaveV3Plugin implements ProtocolPlugin<AaveV3PoolId> {
             name: z.literal(ProtocolName.AAVEv3),
             chainInfo: z.object({
                 name: z.string(),
-                chainId: z.custom((value) => this.supportedChains.includes(value as ChainId), "Chain ID not supported")
-            }).refine((data) => data instanceof ChainInfo, {
-                message: "Invalid ChainInfo",
+                chainId: z.custom<ChainId>((value) => this.supportedChains.includes(value as ChainId), "Chain ID not supported")
             })
         }),
         emodeType: z.nativeEnum(EmodeType)
@@ -150,6 +147,13 @@ export class AaveV3Plugin implements ProtocolPlugin<AaveV3PoolId> {
         }
     }
 }
+// export interface AaveV3PoolId extends IPoolId {
+//     protocol: {
+//         name: ProtocolName.AAVEv3,
+//         chainInfo: ChainInfo
+//     }
+//     emodeType: EmodeType
+// }
 
 const aaveV3EmodeCategoryMap: Record<EmodeType, bigint> = Object.keys(EmodeType).reduce<Record<EmodeType, bigint>>((accumulator, key, index) => {
     accumulator[EmodeType[key as keyof typeof EmodeType]] = BigInt(index);

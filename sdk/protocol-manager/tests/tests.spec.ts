@@ -1,16 +1,12 @@
-import {
-  ProtocolManagerContext,
-  aaveV3Plugin,
-  sparkPlugin,
-} from '../src/index'
-import { createPublicClient, http } from 'viem'
-import { mainnet } from 'viem/chains'
-import { ChainInfo } from '@summerfi/sdk-common/common'
-import { ProtocolName, EmodeType, ILKType } from "@summerfi/sdk-common/protocols"
-import { protocolManager } from '../src/implementation/ProtocolManager'
-import { PriceService } from '../src/implementation/PriceService'
-import { TokenService } from '../src/implementation/TokenService'
-import { MockContractProvider } from "../src/mocks/mockContractProvider";
+import {ChainInfo} from '@summerfi/sdk-common/common'
+import {EmodeType, ILKType, ProtocolName} from "@summerfi/sdk-common/protocols"
+import {createPublicClient, http} from 'viem'
+import {mainnet} from 'viem/chains'
+import {PriceService} from '../src/implementation/PriceService'
+import {protocolManager} from '../src/implementation/ProtocolManager'
+import {TokenService} from '../src/implementation/TokenService'
+import {aaveV3Plugin, ProtocolManagerContext, sparkPlugin,} from '../src/index'
+import {MockContractProvider} from "../src/mocks/mockContractProvider";
 
 
 async function createProtocolManagerContext(): Promise<ProtocolManagerContext> {
@@ -37,13 +33,14 @@ describe('playground', () => {
   })
 
   it('template/maker', async () => {
-    const result = await protocolManager.getPool({
+    const makerPoolId = {
       protocol: {
-        name: ProtocolName.Maker,
+        name: ProtocolName.Maker as const,
         chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' })
       },
       ilkType: ILKType.ETH_A
-    }, ctx)
+    }
+    const result = await protocolManager.getPool(makerPoolId, ctx)
     console.log(`
   MAKER POOL
   ----------------

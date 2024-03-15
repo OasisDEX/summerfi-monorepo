@@ -1,7 +1,7 @@
-import {ChainInfo} from "~sdk-common/common";
-import {IPoolId, ProtocolName} from "~sdk-common/protocols";
+import { ChainInfo } from "../../common";
+import { IPoolId } from "../../protocols/interfaces/IPoolId";
+import { ProtocolName } from "../../protocols/enums/ProtocolName";
 import { EmodeType } from '../enums/EmodeType'
-
 
 // TODO: temporary interface so FE can create this data types without talking to a service
 export interface AaveV3PoolId extends IPoolId {
