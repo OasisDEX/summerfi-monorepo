@@ -86,7 +86,11 @@ const paramsSchema = z.object({
   dpm: addressSchema,
   chainId: chainIdSchema,
   rpc: urlOptionalSchema,
-  getDetails: z.boolean().optional().default(false),
+  getDetails: z
+    .boolean()
+    .or(z.string().transform((s) => s === 'true'))
+    .optional()
+    .default(false),
 })
 
 export const handler = async (

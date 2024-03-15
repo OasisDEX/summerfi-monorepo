@@ -1154,8 +1154,8 @@ importers:
         specifier: 1.6.4-alpha.1
         version: 1.6.4-alpha.1
       '@oasisdex/dma-library':
-        specifier: 0.5.21-dma-v2-workers.27-auto-withdraw-to-ltv
-        version: 0.5.21-dma-v2-workers.27-auto-withdraw-to-ltv
+        specifier: 0.5.21-dma-v2-workers.31-auto-withdraw-to-ltv
+        version: 0.5.21-dma-v2-workers.31-auto-withdraw-to-ltv
       '@summerfi/abis':
         specifier: workspace:*
         version: link:../../packages/abis
@@ -6064,8 +6064,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@oasisdex/dma-library@0.5.21-dma-v2-workers.27-auto-withdraw-to-ltv:
-    resolution: {integrity: sha512-xzUfa8pTcJL0nXdXsQcvd4+RDWdULSF5Zym2Xpsm9L5rw/LsazfYbDD0x7PpdkCBmk89DRx9IaT/+/fqdI4mZA==}
+  /@oasisdex/dma-library@0.5.21-dma-v2-workers.31-auto-withdraw-to-ltv:
+    resolution: {integrity: sha512-OqcyWd2M9MMxR2uUEzNXfVN7Oh2tGs4FJ9trYhKMpRAaJrB1uZinCZOUurntmB2GqVFVbXeCvoMtdSgq/P5ESw==}
     dependencies:
       bignumber.js: 9.0.1
       ethers: 5.6.2
