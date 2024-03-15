@@ -33,7 +33,7 @@ class DerivedAction extends BaseAction {
   }
 }
 
-describe.only('Order Planner Context', () => {
+describe('Order Planner Context', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
 
   // Tokens
