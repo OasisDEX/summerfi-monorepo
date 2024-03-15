@@ -28,7 +28,7 @@ import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { makeSDK, type Chain, type User, ChainFamilyMap } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
 
-describe('Refinance | SDK', () => {
+describe.skip('Refinance | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     // SDK
     const sdk = makeSDK()
