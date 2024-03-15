@@ -1,4 +1,3 @@
-import {ChainId} from "~sdk-common/common";
 import {
   EthereumChainNames,
   type ChainInfo,
@@ -6,6 +5,7 @@ import {
   BaseChainNames,
   ChainFamilyName,
   OptimismChainNames,
+  ChainId
 } from '@summerfi/sdk-common/common'
 
 /**

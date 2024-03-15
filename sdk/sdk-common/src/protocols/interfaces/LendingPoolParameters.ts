@@ -1,5 +1,5 @@
 import { PoolParameters } from './PoolParameters'
-import { AddressValue } from "~sdk-common/common";
+import { AddressValue } from "../../common";
 import { CollateralConfig, DebtConfig } from "../../protocols";
 
 /**

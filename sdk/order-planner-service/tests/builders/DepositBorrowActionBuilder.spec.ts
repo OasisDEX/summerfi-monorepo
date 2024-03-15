@@ -10,7 +10,7 @@ import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { SetupBuilderReturnType, setupBuilderParams } from '../utils/SetupBuilderParams'
 import { ChainFamilyMap } from '@summerfi/sdk-client'
 import { DepositBorrowActionBuilder } from '../../src/builders/DepositBorrowActionBuilder'
-import { MakerPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { MakerPoolId, PoolType, ProtocolName, ILKType } from '@summerfi/sdk-common/protocols'
 import { getErrorMessage } from '../utils/ErrorMessage'
 import assert from 'assert'
 import { EmptyProtocolBuilderMock } from '../mocks/ProtocolBuilderMock'
@@ -48,15 +48,14 @@ describe('Deposit Borrow Action Builder', () => {
   })
 
   const protocol = {
-    name: ProtocolName.Maker,
+    name: ProtocolName.Maker as const,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   }
 
-  const poolId = {
-    protocol: ProtocolName.Maker,
-    ilkType: 'ETH-A',
-    vaultId: 'somevault',
-  } as MakerPoolId
+  const poolId: MakerPoolId = {
+    protocol: protocol,
+    ilkType: ILKType.ETH_A,
+  }
 
   const pool = {
     type: PoolType.Lending,

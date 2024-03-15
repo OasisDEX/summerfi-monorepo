@@ -1,9 +1,9 @@
-import type { Token } from '~sdk-common/common/implementation/Token'
-import { LendingPool } from '~sdk-common/protocols/implementation/LendingPool'
-import type { Percentage } from '~sdk-common/common/implementation/Percentage'
-import { TokenAmount } from '~sdk-common/common/implementation/TokenAmount'
-import { Price } from '~sdk-common/common/implementation/Price'
-import { RiskRatio} from '~sdk-common/common'
+import type { Token } from '../../common/implementation/Token'
+import { LendingPool } from '../../protocols/implementation/LendingPool'
+import type { Percentage } from '../../common/implementation/Percentage'
+import { TokenAmount } from '../../common/implementation/TokenAmount'
+import { Price } from '../../common/implementation/Price'
+import { RiskRatio} from '../../common'
 
 export interface CollateralConfig {
   token: Token
