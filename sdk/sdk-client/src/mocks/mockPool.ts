@@ -1,4 +1,4 @@
-import { type Maybe, CurrencySymbol } from '@summerfi/sdk-common/common'
+import { type Maybe, CurrencySymbol, ChainInfo } from '@summerfi/sdk-common/common'
 import {
   type Protocol,
   type ProtocolParameters,
@@ -18,7 +18,7 @@ export async function mockPool(params: {
   if (isLendingPoolParameters(params.poolParameters)) {
     return new LendingPool({
       poolId: {
-        protocol: ProtocolName.Spark,
+        protocol: { name: ProtocolName.Spark, chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }) },
         emodeType: EmodeType.None,
       } as SparkPoolId,
       protocol: params.protocol,

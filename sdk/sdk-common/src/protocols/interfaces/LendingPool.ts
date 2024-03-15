@@ -15,6 +15,7 @@ export interface CollateralConfig {
   liquidationPenalty: Percentage
 }
 
+// TODO: Move all to plugins directory when integrating everything
 export interface MakerPoolCollateralConfig extends CollateralConfig {
   nextPrice: Price
   lastPriceUpdate: Date
@@ -27,7 +28,7 @@ export interface SparkPoolCollateralConfig extends CollateralConfig {
   maxLtv: RiskRatio
 }
 
-export interface AavePoolCollateralConfig extends CollateralConfig {
+export interface AaveV3PoolCollateralConfig extends CollateralConfig {
   usageAsCollateralEnabled: boolean
   apy: Percentage 
   maxLtv: RiskRatio
@@ -47,7 +48,7 @@ export interface DebtConfig {
 
 export interface MakerPoolDebtConfig extends DebtConfig {}
 
-export interface AavePoolDebtConfig extends DebtConfig {
+export interface AaveV3PoolDebtConfig extends DebtConfig {
   borrowingEnabled: boolean;
 }
 
@@ -57,4 +58,4 @@ export interface SparkPoolDebtConfig extends DebtConfig {
 
 export type MakerLendingPool = LendingPool<MakerPoolCollateralConfig, MakerPoolDebtConfig>
 export type SparkLendingPool = LendingPool<SparkPoolCollateralConfig, SparkPoolDebtConfig>
-export type AaveLendingPool = LendingPool<AavePoolCollateralConfig>
+export type AaveV3LendingPool = LendingPool<AaveV3PoolCollateralConfig, AaveV3PoolDebtConfig>

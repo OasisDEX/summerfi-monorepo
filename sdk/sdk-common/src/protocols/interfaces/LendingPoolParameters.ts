@@ -1,5 +1,4 @@
 import {AddressValue} from "~sdk-common/common";
-import type { Token } from '~sdk-common/common/implementation/Token'
 import {CollateralConfig, DebtConfig} from "~sdk-common/protocols";
 import type { PoolParameters } from '~sdk-common/protocols/interfaces/PoolParameters'
 

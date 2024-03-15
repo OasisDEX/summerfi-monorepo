@@ -1,78 +1,43 @@
-import {ProtocolManagerContext, SparkContracts} from "./protocolPlugin";
-import { HexData } from "@summerfi/sdk-common/common"
-import { Address, Token } from "@summerfi/sdk-common/common"
-import {
-    ORACLE_ABI,
-    POOL_DATA_PROVIDER
-} from "./abis"
-
-type ReservesConfigData = {
-    decimals: bigint
-    ltv: bigint
-    liquidationThreshold: bigint
-    liquidationBonus: bigint
-    reserveFactor: bigint
-    usageAsCollateralEnabled: boolean
-    borrowingEnabled: boolean
-    isActive: boolean
-    isFrozen: boolean
-}
-type ReservesCap = {
-    borrowCap: bigint
-    supplyCap: bigint
-}
-type ReservesData = {
-    unbacked: bigint
-    accruedToTreasuryScaled: bigint
-    totalAToken: bigint
-    totalStableDebt: bigint
-    totalVariableDebt: bigint
-    liquidityRate: bigint
-    variableBorrowRate: bigint
-    stableBorrowRate: bigint
-    averageStableBorrowRate: bigint
-    liquidityIndex: bigint
-    variableBorrowIndex: bigint
-    lastUpdateTimestamp: bigint
-}
-type EmodeCategory = bigint
-type OraclePrice = bigint
+import {Address, HexData, Token} from "@summerfi/sdk-common/common"
+import {ProtocolManagerContext} from '../interfaces'
+import { AllowedProtocolNames, WithToken, WithReservesCaps, WithEmode, WithPrice, WithReservesConfig, WithReservesData, EmodeCategory } from "./AAVEv3LikeBuilderTypes";
+import { fetchReservesCap, fetchAssetConfigurationData, fetchEmodeCategoriesForReserves, fetchAssetReserveData, fetchAssetPrices, fetchReservesTokens } from './AAVEv3LikeDataFetchers'
 
 interface QueuedOperation<T> {
     operation: () => Promise<T>;
-    typeMarker?: T;
 }
 
-export class SparkPluginBuilder<T>  {
+export class AaveV3LikePluginBuilder<AssetListItemType>  {
     private readonly ctx: ProtocolManagerContext;
     private operations: QueuedOperation<void>[] = [];
     private tokensUsedAsReserves: Token[] | undefined
-    private reservesAssetsList: Array<T & { token: Token}> = []
+    private reservesAssetsList: Array<WithToken<AssetListItemType>> = []
+    private readonly protocolName: AllowedProtocolNames
 
-    constructor(ctx: ProtocolManagerContext) {
+    constructor(ctx: ProtocolManagerContext, protocolName: AllowedProtocolNames) {
         this.ctx = ctx;
+        this.protocolName = protocolName
     }
 
-    async init(): Promise<SparkPluginBuilder<T & { token: Token }>> {
-        const rawTokens = await fetchReservesTokens(this.ctx);
+    async init(): Promise<AaveV3LikePluginBuilder<WithToken<AssetListItemType>>> {
+        const rawTokens = await fetchReservesTokens(this.ctx, this.protocolName);
         this._validateReservesTokens(rawTokens);
 
         const tokensUsedAsReserves = await Promise.all(rawTokens.map(async (reservesToken) => {
-            const token = await this.ctx.tokenService.getTokenByAddress(Address.createFrom({ value: reservesToken.tokenAddress }));
-            return token;
+            return await this.ctx.tokenService.getTokenByAddress(Address.createFrom({ value: reservesToken.tokenAddress }));
         }));
 
-        return Object.assign(new SparkPluginBuilder<T & { token: Token }>(this.ctx), this, {
+        return Object.assign(new AaveV3LikePluginBuilder<WithToken<AssetListItemType>>(this.ctx, this.protocolName), this, {
             tokensUsedAsReserves,
-            reservesAssetsList: tokensUsedAsReserves.map(token => ({token})),
+            reservesAssetsList: tokensUsedAsReserves.map(token => ({ token })),
         });
     }
 
-    addReservesCaps(): SparkPluginBuilder<T & { caps: ReservesCap }> {
+    addReservesCaps(): AaveV3LikePluginBuilder<WithReservesCaps<AssetListItemType>> {
         const operation: QueuedOperation<void> = {
             operation: async () => {
                 this._assertIsInitialised(this.tokensUsedAsReserves);
-                const reservesCapsPerAsset = await fetchReservesCap(this.ctx, this.tokensUsedAsReserves!)
+                const reservesCapsPerAsset = await fetchReservesCap(this.ctx, this.tokensUsedAsReserves!, this.protocolName)
                 this._assertMatchingArrayLengths(reservesCapsPerAsset, this.reservesAssetsList)
                 const nextReservesList = []
                 for (const [index, asset] of this.reservesAssetsList.entries()) {
@@ -91,14 +56,14 @@ export class SparkPluginBuilder<T>  {
             },
         };
         this.operations.push(operation);
-        return this as SparkPluginBuilder<T & { caps: ReservesCap }>;
+        return this as AaveV3LikePluginBuilder<WithReservesCaps<AssetListItemType>>;
     }
 
-    addReservesConfigData(): SparkPluginBuilder<T & { config: ReservesConfigData }> {
+    addReservesConfigData(): AaveV3LikePluginBuilder<WithReservesConfig<AssetListItemType>> {
         const operation: QueuedOperation<void> = {
             operation: async () => {
                 this._assertIsInitialised(this.tokensUsedAsReserves);
-                const reservesConfigDataPerAsset = await fetchAssetConfigurationData(this.ctx, this.tokensUsedAsReserves)
+                const reservesConfigDataPerAsset = await fetchAssetConfigurationData(this.ctx, this.tokensUsedAsReserves, this.protocolName)
                 this._assertMatchingArrayLengths(reservesConfigDataPerAsset, this.reservesAssetsList)
                 const nextReservesList = []
                 for (const [index, asset] of this.reservesAssetsList.entries()) {
@@ -124,14 +89,14 @@ export class SparkPluginBuilder<T>  {
             },
         };
         this.operations.push(operation);
-        return this as SparkPluginBuilder<T & { config: ReservesConfigData }>;
+        return this as AaveV3LikePluginBuilder<WithReservesConfig<AssetListItemType>>;
     }
 
-    addReservesData(): SparkPluginBuilder<T & { data: ReservesData }> {
+    addReservesData(): AaveV3LikePluginBuilder<WithReservesData<AssetListItemType>> {
         const operation: QueuedOperation<void> = {
             operation: async () => {
                 this._assertIsInitialised(this.tokensUsedAsReserves);
-                const reservesDataPerAsset = await fetchAssetReserveData(this.ctx, this.tokensUsedAsReserves)
+                const reservesDataPerAsset = await fetchAssetReserveData(this.ctx, this.tokensUsedAsReserves, this.protocolName)
                 this._assertMatchingArrayLengths(reservesDataPerAsset, this.reservesAssetsList)
                 const nextReservesList = []
                 for (const [index, asset] of this.reservesAssetsList.entries()) {
@@ -171,14 +136,14 @@ export class SparkPluginBuilder<T>  {
             },
         };
         this.operations.push(operation);
-        return this as SparkPluginBuilder<T & { data: ReservesData }>;
+        return this as AaveV3LikePluginBuilder<WithReservesData<AssetListItemType>>;
     }
 
-    addEmodeCategories(): SparkPluginBuilder<T & { emode: EmodeCategory }> {
+    addEmodeCategories(): AaveV3LikePluginBuilder<WithEmode<AssetListItemType>> {
         const operation: QueuedOperation<void> = {
             operation: async () => {
                 this._assertIsInitialised(this.tokensUsedAsReserves);
-                const emodeCategoryPerAsset = await fetchEmodeCategoriesForReserves(this.ctx, this.tokensUsedAsReserves)
+                const emodeCategoryPerAsset = await fetchEmodeCategoriesForReserves(this.ctx, this.tokensUsedAsReserves, this.protocolName)
                 this._assertMatchingArrayLengths(emodeCategoryPerAsset, this.reservesAssetsList)
                 const nextReservesList = []
                 for (const [index, asset] of this.reservesAssetsList.entries()) {
@@ -193,14 +158,14 @@ export class SparkPluginBuilder<T>  {
             },
         };
         this.operations.push(operation);
-        return this as SparkPluginBuilder<T & { emode: EmodeCategory }>;
+        return this as AaveV3LikePluginBuilder<WithEmode<AssetListItemType>>;
     }
 
-    addPrices(): SparkPluginBuilder<T & { price: OraclePrice }> {
+    addPrices(): AaveV3LikePluginBuilder<WithPrice<AssetListItemType>> {
         const operation: QueuedOperation<void> = {
             operation: async () => {
                 this._assertIsInitialised(this.tokensUsedAsReserves);
-                const [assetPrices] = await fetchAssetPrices(this.ctx, this.tokensUsedAsReserves)
+                const [assetPrices] = await fetchAssetPrices(this.ctx, this.tokensUsedAsReserves, this.protocolName)
                 this._assertMatchingArrayLengths(assetPrices, this.reservesAssetsList)
                 const nextReservesList = []
                 for (const [index, asset] of this.reservesAssetsList.entries()) {
@@ -216,10 +181,10 @@ export class SparkPluginBuilder<T>  {
             },
         };
         this.operations.push(operation);
-        return this as SparkPluginBuilder<T & { price: OraclePrice }>;
+        return this as AaveV3LikePluginBuilder<WithPrice<AssetListItemType>>;
     }
 
-    async build(): Promise<T[]> {
+    async build(): Promise<AssetListItemType[]> {
         try {
             for (const op of this.operations) {
                 await op.operation();
@@ -233,7 +198,7 @@ export class SparkPluginBuilder<T>  {
 
     private _assertIsInitialised(tokensUsedAsReserves: Token[] | undefined): asserts tokensUsedAsReserves is Token[] {
         if (!tokensUsedAsReserves) {
-            throw new Error("SparkPluginBuilder not initialised with tokensUsedAsReserves");
+            throw new Error("AaveV3LikePluginBuilder not initialised with tokensUsedAsReserves");
         }
     }
 
@@ -256,99 +221,6 @@ export class SparkPluginBuilder<T>  {
     }
 }
 
-// EXTRACTORS
-async function fetchReservesTokens(ctx: ProtocolManagerContext) {
-    const [
-        rawReservesTokenList
-    ] = await ctx.provider.multicall({
-        contracts: [
-            // TODO: move to PriceService
-            // {
-            //     abi: ORACLE_ABI,
-            //     address: SparkContracts.ORACLE,
-            //     functionName: "ilks",
-            //     args: [ilkInHex]
-            // },
-            {
-                abi: POOL_DATA_PROVIDER,
-                address: SparkContracts.POOL_DATA_PROVIDER,
-                functionName: "getAllReservesTokens",
-                args: []
-            },
-        ],
-        allowFailure: false
-    })
-
-    return rawReservesTokenList
-}
-async function fetchEmodeCategoriesForReserves(ctx: ProtocolManagerContext, tokensList: Token[]) {
-    const contractCalls = tokensList.map(token => ({
-            abi: POOL_DATA_PROVIDER,
-            address: SparkContracts.POOL_DATA_PROVIDER,
-            functionName: "getReserveEModeCategory" as const,
-            args: [token.address.value]
-        }))
-
-    return await ctx.provider.multicall({
-        contracts: contractCalls,
-        allowFailure: false
-    })
-}
-async function fetchAssetConfigurationData(ctx: ProtocolManagerContext, tokensList: Token[]) {
-    const contractCalls = tokensList.map(token => ({
-            abi: POOL_DATA_PROVIDER,
-            address: SparkContracts.POOL_DATA_PROVIDER,
-            functionName: "getReserveConfigurationData" as const,
-            args: [token.address.value]
-        }))
-
-    return await ctx.provider.multicall({
-        contracts: contractCalls,
-        allowFailure: false
-    })
-}
-async function fetchReservesCap(ctx: ProtocolManagerContext, tokensList: Token[]) {
-    const contractCalls = tokensList.map(token => ({
-            abi: POOL_DATA_PROVIDER,
-            address: SparkContracts.POOL_DATA_PROVIDER,
-            functionName: "getReserveCaps" as const,
-            args: [token.address.value]
-        }))
-
-    return await ctx.provider.multicall({
-        contracts: contractCalls,
-        allowFailure: false
-    })
-}
-async function fetchAssetReserveData(ctx: ProtocolManagerContext, tokensList: Token[]) {
-    const contractCalls = tokensList.map(token => ({
-            abi: POOL_DATA_PROVIDER,
-            address: SparkContracts.POOL_DATA_PROVIDER,
-            functionName: "getReserveData" as const,
-            args: [token.address.value]
-        }))
-
-    return await ctx.provider.multicall({
-        contracts: contractCalls,
-        allowFailure: false
-    })
-}
-async function fetchAssetPrices(ctx: ProtocolManagerContext, tokensList: Token[]) {
-    const contractCalls = [
-        {
-            abi: ORACLE_ABI,
-            address: SparkContracts.ORACLE,
-            functionName: "getAssetsPrices",
-            args: [tokensList.map(token => token.address.value)]
-        }
-    ] as const
-
-    return ctx.provider.multicall({
-        contracts: contractCalls,
-        allowFailure: false
-    })
-}
-
 // FILTERS
 export function filterAssetsListByEMode<T extends { emode: EmodeCategory }>(assetsList: T[], emode: bigint): T[] {
     // All reserves allowed for category 0n
@@ -358,4 +230,3 @@ export function filterAssetsListByEMode<T extends { emode: EmodeCategory }>(asse
 
     return assetsList.filter(asset => asset.emode === emode)
 }
-

@@ -1,5 +1,6 @@
 import { Position } from "@summerfi/sdk-common/common";
-import { ProtocolManagerContext, ProtocolPlugin } from "../interfaces/protocolPlugin";
+import { ProtocolManagerContext, ProtocolPlugin } from "../interfaces/ProtocolPlugin";
+import { aaveV3Plugin } from "./AAVEv3Plugin";
 import { makerPlugin } from "./MakerPlugin";
 import { IPoolId } from "@summerfi/sdk-common/protocols";
 import { sparkPlugin } from "./SparkPlugin";
@@ -21,16 +22,16 @@ export class ProtocolManager<ProtocolPlugins extends ProtocolPlugin<any>[]> {
     constructor(private readonly plugins: ProtocolPlugins) {}
 
     public get poolIdSchema(): z.ZodSchema<ExtractPoolIds<typeof this>> {
-        const allSchemas: z.ZodSchema<ExtractPoolIds<typeof this>>[] = this.plugins.map((plugin) => plugin.shcema)
+        const allSchemas: z.ZodSchema<ExtractPoolIds<typeof this>>[] = this.plugins.map((plugin) => plugin.schema)
 
         return z.union(allSchemas as any as readonly [z.ZodTypeAny, z.ZodTypeAny, ...z.ZodTypeAny[]])
-    } 
+    }
 
     public async getPool<PoolId extends  GetPoolIds<ProtocolPlugins>>(poolId: PoolId, ctx: ProtocolManagerContext): Promise<ReturnPool<ProtocolPlugins, PoolId>> {
-        const plugin: ProtocolPlugin<PoolId> | undefined = this.plugins.find((plugin) => plugin.protocol === poolId.protocol)
+        const plugin: ProtocolPlugin<PoolId> | undefined = this.plugins.find((plugin) => plugin.protocol === poolId.protocol.name)
 
         if (!plugin) {
-            throw new Error(`No plugin found for protocol: ${poolId.protocol}`)
+            throw new Error(`No plugin found for protocol: ${poolId.protocol.name}`)
         }
         const chainId = await ctx.provider.getChainId()
 
@@ -38,7 +39,7 @@ export class ProtocolManager<ProtocolPlugins extends ProtocolPlugin<any>[]> {
             throw new Error(`Chain ${chainId} is not supported by plugin ${plugin.protocol}`)
         }
 
-        return plugin.getPool(poolId, ctx) as ReturnPool<ProtocolPlugins, PoolId>
+        return await plugin.getPool(poolId, ctx) as ReturnPool<ProtocolPlugins, PoolId>
     }
 
     public getPosition(ctx: ProtocolManagerContext): Position {
@@ -49,6 +50,8 @@ export class ProtocolManager<ProtocolPlugins extends ProtocolPlugin<any>[]> {
 export const protocolManager = new ProtocolManager([
     makerPlugin, 
     sparkPlugin,
+    aaveV3Plugin,
 ] as const)
 
 export type PoolIds = ExtractPoolIds<typeof protocolManager>
+

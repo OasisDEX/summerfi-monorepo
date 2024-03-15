@@ -23,7 +23,8 @@ export class MakerWithdrawAction extends BaseAction {
     }
 
     return this._encodeCall([
-      params.pool.poolId.vaultId,
+      // TODO: get vaultId by other means prev - params.pool.poolId.vaultId,
+      0,
       params.userAddress.toString(),
       // joinAddr,
       params.amount.toBaseUnit(),

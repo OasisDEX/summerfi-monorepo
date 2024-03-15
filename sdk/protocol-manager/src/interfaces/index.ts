@@ -1,1 +1,2 @@
-export * from './protocolPlugin'
+export * from './ProtocolPlugin'
+export * from './abis'

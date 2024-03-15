@@ -1,20 +1,16 @@
 import { Percentage, TokenAmount, TokenSymbol, Price, RiskRatio } from "@summerfi/sdk-common/common";
 import type { MakerLendingPool, MakerPoolCollateralConfig, MakerPoolDebtConfig, MakerPoolId } from "@summerfi/sdk-common/protocols";
 import { PoolType, ProtocolName, ILKType } from "@summerfi/sdk-common/protocols";
-import { /* PositionId, */ Address, Position } from "@summerfi/sdk-common/common";
+import { Address, Position } from "@summerfi/sdk-common/common";
 import { stringToHex, getContract } from "viem";
 import { BigNumber } from 'bignumber.js';
 import { z } from 'zod';
 import {
-    VAT_ABI,
-    SPOT_ABI,
-    JUG_ABI,
-    DOG_ABI,
-    ILK_REGISTRY_ABI,
     OSM_ABI,
     ERC20_ABI
 } from "../interfaces/abis";
-import { ProtocolManagerContext, ProtocolPlugin, ChainId, MakerContracts, amountFromWei, amountFromRay, amountFromRad, PRESISION_BI, IPositionId } from "../interfaces/protocolPlugin";
+import { PRECISION_BI, PRECISION } from "./constants";
+import { ProtocolManagerContext, ProtocolPlugin, ChainId, IPositionId } from "../interfaces/ProtocolPlugin";
 
 class MakerPlugin implements ProtocolPlugin<MakerPoolId> {
     public readonly protocol = ProtocolName.Maker;
@@ -22,9 +18,7 @@ class MakerPlugin implements ProtocolPlugin<MakerPoolId> {
 
     async getPool(makerPoolId: unknown, ctx: ProtocolManagerContext): Promise<MakerLendingPool> {
         this.isPoolId(makerPoolId);
-        
         const ilk = makerPoolId.ilkType;
-        if (!ilk) throw new Error('Ilk type on poolId not recognised');
         const ilkInHex = stringToHex(ilk, { size: 32 });
 
         const chainId = ctx.provider.chain?.id;
@@ -33,6 +27,12 @@ class MakerPlugin implements ProtocolPlugin<MakerPoolId> {
         if (!this.supportedChains.includes(chainId)) {
             throw new Error(`Chain ID ${chainId} is not supported`);
         }
+
+        const makerDogDef = ctx.contractProvider.getContractDef('Dog', makerPoolId.protocol.name)
+        const makerVatDef = ctx.contractProvider.getContractDef('Vat', makerPoolId.protocol.name)
+        const makerSpotDef = ctx.contractProvider.getContractDef('Spot', makerPoolId.protocol.name)
+        const makerJugDef = ctx.contractProvider.getContractDef('McdJug', makerPoolId.protocol.name)
+        const makerIlkRegistryDef = ctx.contractProvider.getContractDef('IlkRegistry', makerPoolId.protocol.name)
 
         const [
             { 0: art, // Total Normalised Debt     [wad] needs to be multiplied by rate to get actual debt 
@@ -62,33 +62,33 @@ class MakerPlugin implements ProtocolPlugin<MakerPoolId> {
         ] = await ctx.provider.multicall({
             contracts: [
                 {
-                    abi: VAT_ABI,
-                    address: MakerContracts.VAT,
+                    abi: makerVatDef.abi,
+                    address: makerVatDef.address,
                     functionName: "ilks",
                     args: [ilkInHex]
                 },
                 {
-                    abi: SPOT_ABI,
-                    address: MakerContracts.SPOT,
-                    functionName: "ilks",
+                    abi: makerSpotDef.abi,
+                    address: makerSpotDef.address,
+                    functionName: "ilks" as const,
                     args: [ilkInHex]
                 },
                 {
-                    abi: JUG_ABI,
-                    address: MakerContracts.JUG,
-                    functionName: "ilks",
+                    abi: makerJugDef.abi,
+                    address: makerJugDef.address,
+                    functionName: "ilks" as const,
                     args: [ilkInHex]
                 },
                 {
-                    abi: DOG_ABI,
-                    address: MakerContracts.DOG,
-                    functionName: "ilks",
+                    abi: makerDogDef.abi,
+                    address: makerDogDef.address,
+                    functionName: "ilks" as const,
                     args: [ilkInHex]
                 },
                 {
-                    abi: ILK_REGISTRY_ABI,
-                    address: MakerContracts.ILK_REGISTRY,
-                    functionName: "ilkData",
+                    abi: makerIlkRegistryDef.abi,
+                    address: makerIlkRegistryDef.address,
+                    functionName: "ilkData" as const,
                     args: [ilkInHex]
                 }
             ],
@@ -116,7 +116,7 @@ class MakerPlugin implements ProtocolPlugin<MakerPoolId> {
         const dogRes = {
             clipperAddress: Address.createFrom({ value: clip }),
             // EG 1.13 not 0.13
-            liquidationPenalty: amountFromWei(chop - PRESISION_BI.WAD),
+            liquidationPenalty: amountFromWei(chop - PRECISION_BI.WAD),
         };
 
         const osm = getContract({
@@ -132,10 +132,10 @@ class MakerPlugin implements ProtocolPlugin<MakerPoolId> {
         });
 
         const [[peek], [peep], zzz, hop, joinGemBalance, collateralToken, quoteToken, poolBaseCurrencyToken] = await Promise.all([
-            osm.read.peek({ account: MakerContracts.SPOT }),
-            osm.read.peep({ account: MakerContracts.SPOT }),
-            osm.read.zzz({ account: MakerContracts.SPOT }),
-            osm.read.hop({ account: MakerContracts.SPOT }),
+            osm.read.peek({ account: makerSpotDef.address }),
+            osm.read.peep({ account: makerSpotDef.address }),
+            osm.read.zzz({ account: makerSpotDef.address }),
+            osm.read.hop({ account: makerSpotDef.address }),
             erc20.read.balanceOf([join]),
             ctx.tokenService.getTokenByAddress(Address.createFrom({ value: gem })),
             ctx.tokenService.getTokenBySymbol(TokenSymbol.DAI),
@@ -195,31 +195,43 @@ class MakerPlugin implements ProtocolPlugin<MakerPoolId> {
     }
 
     getPositionId(positionId: string): IPositionId {
-        return positionId as IPositionId;
+        throw new Error("Not implemented");
     }
 
     async getPosition (positionId: IPositionId): Promise<Position> {
         throw new Error("Not implemented");
     }
 
-    shcema: z.Schema<MakerPoolId> = z.object({
+    schema: z.Schema<MakerPoolId> = z.object({
         protocol: z.object({
             name: z.literal(ProtocolName.Maker),
             chainInfo: z.object({
                 name: z.string(),
-                chainId: z.custom((value) => this.supportedChains.includes(value as ChainId), "Chain ID not supported")
+                chainId: z.custom<ChainId>((value) => this.supportedChains.includes(value as ChainId), "Chain ID not supported", true)
             })
         }),
         ilkType: z.nativeEnum(ILKType)
     })
 
     isPoolId(candidate: unknown): asserts candidate is MakerPoolId {
-        const parseResult = this.shcema.safeParse(candidate);
+        const parseResult = this.schema.safeParse(candidate);
         if (!parseResult.success) {
             const errorDetails = parseResult.error.errors.map(error => `${error.path.join('.')} - ${error.message}`).join(', ');
-            throw new Error(`Candidate is not the correct shape: ${errorDetails}`);
+            throw new Error(`Candidate is not correct MakerPoolId: ${errorDetails}`);
         }
     }
+}
+
+export function amountFromWei(amount: bigint): BigNumber {
+    return new BigNumber(amount.toString()).div(new BigNumber(10).pow(PRECISION.WAD))
+}
+
+export function amountFromRay(amount: bigint): BigNumber {
+    return new BigNumber(amount.toString()).div(new BigNumber(10).pow(PRECISION.RAY))
+}
+
+export function amountFromRad(amount: bigint): BigNumber {
+    return new BigNumber(amount.toString()).div(new BigNumber(10).pow(PRECISION.RAD))
 }
 
 export const makerPlugin = new MakerPlugin()

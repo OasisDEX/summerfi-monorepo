@@ -1,4 +1,4 @@
-import { type ChainId } from '~sdk-common/common/aliases'
+import { type ChainId } from '../../common/aliases'
 import { SerializationService } from '~sdk-common/services/SerializationService'
 
 type IChainInfoSerialized = {
