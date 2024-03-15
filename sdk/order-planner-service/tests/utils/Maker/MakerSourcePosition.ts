@@ -40,11 +40,11 @@ export function getMakerPosition(): Position {
 
   const protocol = {
     name: ProtocolName.Maker,
-    chainInfo: ChainFamilyMap.Ethereum.Mainnet,
+    chainInfo: chainInfo,
   }
 
   const poolId = {
-    protocol: ProtocolName.Maker,
+    protocol: protocol,
     ilkType: 'ETH-A',
     vaultId: '34',
   } as MakerPoolId

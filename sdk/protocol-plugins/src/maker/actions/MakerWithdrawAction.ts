@@ -24,7 +24,6 @@ export class MakerWithdrawAction extends BaseAction {
       throw new Error('Pool ID is not a Maker one')
     }
 
-    // TODO: get the join address from the protocol
     return this._encodeCall({
       arguments: [
         params.pool.poolId.vaultId,

@@ -1,4 +1,4 @@
-import { type Maybe, Percentage } from '@summerfi/sdk-common/common'
+import { type Maybe, CurrencySymbol, ChainInfo } from '@summerfi/sdk-common/common'
 import {
   type Protocol,
   type ProtocolParameters,
@@ -18,13 +18,17 @@ export async function mockPool(params: {
   if (isLendingPoolParameters(params.poolParameters)) {
     return new LendingPool({
       poolId: {
-        protocol: ProtocolName.Spark,
+        protocol: {
+          name: ProtocolName.Spark,
+          chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
+        },
         emodeType: EmodeType.None,
       } as SparkPoolId,
       protocol: params.protocol,
-      maxLTV: Percentage.createFrom({ percentage: 50.3 }),
-      debtTokens: params.poolParameters.debtTokens,
-      collateralTokens: params.poolParameters.collateralTokens,
+      baseCurrency: CurrencySymbol.USD,
+      // maxLTV: Percentage.createFrom({ percentage: 50.3 }),
+      debts: params.poolParameters.debts,
+      collaterals: params.poolParameters.collaterals,
     })
   }
 
