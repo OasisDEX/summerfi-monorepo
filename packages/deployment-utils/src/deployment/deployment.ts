@@ -19,7 +19,6 @@ import {
   DirectoryFilterType,
 } from './types'
 import { verifyContract } from './verify-contract'
-import { toCamelCase } from '~deployment-utils/utils/camelCase'
 import { viem } from 'hardhat'
 import { Contract, DeploymentTransaction, TransactionReceipt, WalletClient } from './viem-types'
 import {
@@ -35,6 +34,7 @@ import {
   isWalletClient,
 } from './utils'
 import { Address } from '@summerfi/common'
+import { toCamelCase } from '../utils/camelCase'
 
 export class Deployments {
   public readonly deploymentType: DeploymentType

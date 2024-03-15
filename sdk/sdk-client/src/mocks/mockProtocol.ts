@@ -1,11 +1,11 @@
-import type { ChainInfo, Maybe } from '@summerfi/sdk-common/common'
+import { ChainInfo, Maybe } from '@summerfi/sdk-common/common'
 import {
-  type Protocol,
+  IPool,
+  LendingPoolParameters,
+  Protocol,
   ProtocolName,
-  type ProtocolParameters,
-  type IPool,
+  ProtocolParameters,
   ProtocolsRegistry,
-  type LendingPoolParameters,
 } from '@summerfi/sdk-common/protocols'
 import { mockPool } from './mockPool'
 

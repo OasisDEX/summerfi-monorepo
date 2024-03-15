@@ -1,4 +1,4 @@
-import { PositionLike, PRICE_DECIMALS } from '~types'
+import { PositionLike, PRICE_DECIMALS } from '@summerfi/triggers-shared'
 import { MAX_COVERAGE_BASE } from './defaults'
 
 export const getMaxCoverage = (position: PositionLike) => {

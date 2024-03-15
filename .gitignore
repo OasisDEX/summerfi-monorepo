@@ -64,3 +64,6 @@ artifacts
 
 # editors configs
 .vscode
+
+# private http envs
+*.private.env.json

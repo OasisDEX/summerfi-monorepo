@@ -1,4 +1,4 @@
-import { Trigger } from '@summerfi/serverless-contracts/get-triggers-response'
+import { Trigger } from '@summerfi/triggers-shared/contracts'
 
 export const getCurrentTrigger = (...args: (Trigger | undefined)[]): Trigger | undefined => {
   return args

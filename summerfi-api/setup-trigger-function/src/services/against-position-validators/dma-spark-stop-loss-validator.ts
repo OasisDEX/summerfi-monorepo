@@ -1,17 +1,19 @@
 import {
   dmaSparkStopLossTriggerDataSchema,
   mapZodResultToValidationResults,
-  positionSchema,
-  priceSchema,
   StopLossErrorCodes,
   StopLossWarningCodes,
-  SupportedActions,
-  supportedActionsSchema,
-  TWENTY_MILLIONS_DOllARS,
   ValidationResults,
 } from '~types'
+import {
+  positionSchema,
+  priceSchema,
+  TWENTY_MILLIONS_DOllARS,
+  supportedActionsSchema,
+  SupportedActions,
+} from '@summerfi/triggers-shared'
 import { z } from 'zod'
-import { GetTriggersResponse } from '@summerfi/serverless-contracts/get-triggers-response'
+import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import { safeParseBigInt } from '@summerfi/serverless-shared'
 
 const paramsSchema = z.object({

@@ -1,6 +1,6 @@
-import type { Wallet } from '@summerfi/sdk-common/common'
-import type { Chain } from '~sdk-client/implementation/Chain'
-import type { User } from '~sdk-client/implementation/User'
+import { Address } from '@summerfi/sdk-common/common'
+import { Chain } from '../implementation/Chain'
+import { User } from '../implementation/User'
 
 /**
  * @interface IUsersManager
@@ -16,5 +16,5 @@ export interface IUsersManager {
    *
    * @returns The user for the given wallet and network
    */
-  getUser(params: { chain: Chain; wallet: Wallet }): Promise<User>
+  getUser(params: { chain: Chain; walletAddress: Address }): Promise<User>
 }

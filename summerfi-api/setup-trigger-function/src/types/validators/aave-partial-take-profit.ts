@@ -6,7 +6,7 @@ import {
   positionAddressesSchema,
   priceSchema,
   supportedActionsSchema,
-} from './common'
+} from '@summerfi/triggers-shared'
 import { addressSchema, urlOptionalSchema } from '@summerfi/serverless-shared'
 import { dmaAaveStopLossTriggerDataSchema } from './aave-stop-loss'
 

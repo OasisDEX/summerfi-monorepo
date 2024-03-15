@@ -13,6 +13,7 @@ import { ActionConfig, ActionCall } from './Types'
  *              the versioned name of the action.
  */
 export abstract class BaseAction {
+  private DefaultParamsMapping: number[] = [0, 0, 0, 0]
   public abstract readonly config: ActionConfig
 
   /**
@@ -38,7 +39,7 @@ export abstract class BaseAction {
    * @param paramsMapping The mapping of the parameters to the execution storage
    * @returns The encoded call to the action
    */
-  protected _encodeCall(params: unknown[], paramsMapping: number[] = []): ActionCall {
+  protected _encodeCall(params: { arguments: unknown[]; mapping?: number[] }): ActionCall {
     const contractNameWithVersion = this.getVersionedName()
     const targetHash = keccak256(toBytes(contractNameWithVersion))
 
@@ -46,12 +47,15 @@ export abstract class BaseAction {
       'function execute(bytes calldata data, uint8[] paramsMap) external payable returns (bytes calldata)',
     ])
 
-    const encodedArgs = encodeAbiParameters(parseAbiParameters(this.config.parametersAbi), params)
+    const encodedArgs = encodeAbiParameters(
+      parseAbiParameters(this.config.parametersAbi),
+      params.arguments,
+    )
 
     const calldata = encodeFunctionData({
       abi,
       functionName: 'execute',
-      args: [encodedArgs, paramsMapping],
+      args: [encodedArgs, params.mapping ?? this.DefaultParamsMapping],
     })
 
     return {

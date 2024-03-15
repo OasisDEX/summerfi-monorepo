@@ -1,26 +1,25 @@
 import {
-  type Wallet,
-  type Position,
-  type PositionId,
-  type Maybe,
   Address,
+  ChainInfo,
+  Maybe,
+  Position,
+  PositionId,
+  Wallet,
 } from '@summerfi/sdk-common/common'
-import type { Order } from '@summerfi/sdk-common/orders'
-import type { Protocol } from '@summerfi/sdk-common/protocols'
-import type { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
-
-import { Chain } from './Chain'
-import type { IUser } from '../interfaces/IUser'
-import { getMockOrder } from '../mocks/mockOrder'
+import { Protocol } from '@summerfi/sdk-common/protocols'
 import { getMockPosition } from '../mocks/mockPosition'
+import { getMockOrder } from '../mocks/mockOrder'
+import { Order } from '@summerfi/sdk-common/orders'
+import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { IUser } from '../interfaces/IUser'
 
 export class User implements IUser {
   public readonly wallet: Wallet
-  public readonly chain: Chain
+  public readonly chainInfo: ChainInfo
 
-  public constructor(params: { chain: Chain; wallet: Wallet }) {
-    this.chain = params.chain
-    this.wallet = params.wallet
+  public constructor(params: { chainInfo: ChainInfo; walletAddress: Address }) {
+    this.chainInfo = params.chainInfo
+    this.wallet = Wallet.createFrom({ address: params.walletAddress })
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
@@ -41,7 +40,7 @@ export class User implements IUser {
     // for client impl we'll use communication layer client
     // to get the position from the network
     // but for server we'll use a communication layer caller
-    return getMockPosition({ chain: this.chain, wallet: this.wallet, id: params.id })
+    return getMockPosition({ chainInfo: this.chainInfo, wallet: this.wallet, id: params.id })
   }
 
   public async newOrder(params: { simulation: Simulation<SimulationType> }): Promise<Order> {

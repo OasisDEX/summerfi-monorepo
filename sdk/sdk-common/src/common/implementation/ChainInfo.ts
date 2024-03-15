@@ -1,5 +1,5 @@
-import { type ChainId } from '~sdk-common/common/aliases'
-import { SerializationService } from '~sdk-common/services/SerializationService'
+import { SerializationService } from '../../services/SerializationService'
+import { ChainId } from '../aliases/ChainId'
 
 type IChainInfoSerialized = {
   /** The chain ID of the network */

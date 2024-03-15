@@ -10,6 +10,6 @@
       "~sdk-client/*": ["node_modules/@summerfi/sdk-client/src/*"]
     }
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
   "exclude": ["node_modules"]
 }

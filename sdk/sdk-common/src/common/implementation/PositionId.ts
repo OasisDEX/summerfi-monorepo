@@ -1,4 +1,4 @@
-import { SerializationService } from '~sdk-common/services/SerializationService'
+import { SerializationService } from '../../services/SerializationService'
 
 interface IPositionIdSerialized {
   readonly id: string

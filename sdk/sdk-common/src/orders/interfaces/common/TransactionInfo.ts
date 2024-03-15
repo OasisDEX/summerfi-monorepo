@@ -1,5 +1,5 @@
 import { HexData } from '@summerfi/sdk-common/common/aliases'
-import { Address } from '~sdk-common/common/implementation/Address'
+import { Address } from '../../../common/implementation/Address'
 
 /**
  * @interface Transaction

@@ -1,6 +1,6 @@
 import { simulatePosition, SimulatePositionParams } from './simulate-position'
 import { Logger } from '@aws-lambda-powertools/logger'
-import { PRICE_DECIMALS } from '~types'
+import { PRICE_DECIMALS } from '@summerfi/triggers-shared'
 
 const logger = new Logger({
   serviceName: 'simulate-position-tests',

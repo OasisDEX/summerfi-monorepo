@@ -1,6 +1,5 @@
 import { ChainId, ProtocolId } from '@summerfi/serverless-shared'
-import { Price, PRICE_DECIMALS } from '~types'
-
+import { PRICE_DECIMALS, Price } from '@summerfi/triggers-shared'
 export const minNetValueMap: Record<ChainId, Record<ProtocolId, Price>> = {
   [ChainId.MAINNET]: {
     [ProtocolId.AAVE3]: 10_000n * 10n ** PRICE_DECIMALS,

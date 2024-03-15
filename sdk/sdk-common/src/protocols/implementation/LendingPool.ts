@@ -1,7 +1,7 @@
-import type { Token } from '~sdk-common/common/implementation/Token'
+import { Percentage } from '../../common/implementation/Percentage'
+import { Token } from '../../common/implementation/Token'
 import { IPool } from '../interfaces/IPool'
 import { PoolType } from '../interfaces/PoolType'
-import type { Percentage } from '~sdk-common/common/implementation/Percentage'
 import { Pool } from './Pool'
 
 export interface ILendingPoolSerialized extends IPool {

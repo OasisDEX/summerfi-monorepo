@@ -14,7 +14,7 @@ export const ActionBuildersConfig: ActionBuildersMap = {
   [SimulationSteps.PullToken]: PullTokenActionBuilder,
   [SimulationSteps.Flashloan]: FlashloanActionBuilder,
   [SimulationSteps.Swap]: SwapActionBuilder,
-  [SimulationSteps.PaybackFlashloan]: PaybackFlashloanActionBuilder,
+  [SimulationSteps.RepayFlashloan]: PaybackFlashloanActionBuilder,
   [SimulationSteps.DepositBorrow]: DepositBorrowActionBuilder,
   [SimulationSteps.PaybackWithdraw]: PaybackWithdrawActionBuilder,
   [SimulationSteps.ReturnFunds]: ReturnFundsActionBuilder,

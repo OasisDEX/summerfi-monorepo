@@ -1,5 +1,5 @@
-import { Address } from '~sdk-common/common/implementation/Address'
-import { SerializationService } from '~sdk-common/services/SerializationService'
+import { SerializationService } from '../../services/SerializationService'
+import { Address } from './Address'
 
 interface IWalletSerialized {
   address: Address

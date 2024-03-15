@@ -13,6 +13,7 @@ export function addTriggersConfig({ stack, api }: StackContext & { api: Api }) {
     runtime: 'nodejs20.x',
     environment: {
       SUBGRAPH_BASE: SUBGRAPH_BASE,
+      RPC_GATEWAY: RPC_GATEWAY,
       POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
     },
     tracing: 'active',

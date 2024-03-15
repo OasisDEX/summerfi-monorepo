@@ -12,6 +12,7 @@ export const createTestContext = (opts: ContextOptions): Context => {
     orderPlannerService: {} as any,
     swapManager: {} as any,
     configProvider: {} as any,
+    protocolsRegistry: {} as any,
   }
 }
 

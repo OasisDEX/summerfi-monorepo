@@ -15,18 +15,12 @@ import {
   eventBodyDmaSparkTrailingStopLossSchema,
   eventBodySparkPartialTakeProfitSchema,
   eventBodyAavePartialTakeProfitSchema,
-  ltvSchema,
   pathParamsSchema,
-  positionSchema,
-  priceSchema,
-  tokenBalanceSchema,
-  tokenSchema,
   dmaSparkTrailingStopLossTriggerDataSchema,
   sparkBasicBuyTriggerDataSchema,
   sparkBasicSellTriggerDataSchema,
   aavePartialTakeProfitTriggerDataSchema,
   sparkPartialTakeProfitTriggerDataSchema,
-  percentageSchema,
 } from './validators'
 
 export type AaveAutoBuyEventBody = z.infer<typeof eventBodyAaveBasicBuySchema>
@@ -52,12 +46,7 @@ export type SetupTriggerEventBody =
   | SparkPartialTakeProfitEventBody
 
 export type PathParams = z.infer<typeof pathParamsSchema>
-export type PositionLike = z.infer<typeof positionSchema>
-export type Token = z.infer<typeof tokenSchema>
-export type TokenBalance = z.infer<typeof tokenBalanceSchema>
-export type Price = z.infer<typeof priceSchema>
-export type LTV = z.infer<typeof ltvSchema>
-export type Percentage = z.infer<typeof percentageSchema>
+
 export type AaveAutoBuyTriggerData = z.infer<typeof aaveBasicBuyTriggerDataSchema>
 export type AaveAutoSellTriggerData = z.infer<typeof aaveBasicSellTriggerDataSchema>
 export type DmaAaveStopLossTriggerData = z.infer<typeof dmaAaveStopLossTriggerDataSchema>

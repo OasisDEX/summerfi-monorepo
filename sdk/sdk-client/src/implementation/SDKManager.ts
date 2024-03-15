@@ -1,7 +1,7 @@
-import { ChainsManager } from '~sdk-client/implementation/ChainsManager'
+import { ChainsManager } from './ChainsManager'
+import { PortfolioManager } from './PortfolioManager'
+import { UsersManager } from './UsersManager'
 import { SimulationManager } from './simulations/SimulationManager'
-import { UsersManager } from '~sdk-client/implementation/UsersManager'
-import { PortfolioManager } from '~sdk-client/implementation/PortfolioManager'
 
 export class SDKManager {
   public readonly simulator: SimulationManager

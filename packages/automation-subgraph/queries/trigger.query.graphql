@@ -1,10 +1,13 @@
-query TriggerByType($dpm: Bytes!, $triggerType: BigInt!) {
-  triggers(where: { account: $dpm, triggerType: $triggerType }) {
+query OneTrigger($triggerId: ID!) {
+  trigger(id: $triggerId) {
     account
     owner
     id
     protocol
-    triggerType
     triggerData
+    triggerType
+    addedTimestamp
+    decodedData
+    decodedDataNames
   }
 }

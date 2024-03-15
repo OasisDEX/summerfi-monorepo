@@ -1,4 +1,4 @@
-import { Transaction, TransactionInfo } from '~sdk-common/orders'
+import { Transaction, TransactionInfo } from '../../interfaces/common/TransactionInfo'
 
 export class TransactionInfoBaseImpl implements TransactionInfo {
   public readonly transaction: Transaction

@@ -1,13 +1,8 @@
 {
   "extends": "@summerfi/typescript-config/tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "src",
-    "outDir": "dist",
-    "baseUrl": "./src",
-    "paths": {
-      "~deployment-utils": ["./index.ts"],
-      "~deployment-utils/*": ["./*"]
-    }
+    "rootDir": ".",
+    "outDir": "dist"
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]

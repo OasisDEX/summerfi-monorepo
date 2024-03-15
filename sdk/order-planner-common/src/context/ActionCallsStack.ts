@@ -1,5 +1,5 @@
 import { Maybe } from '@summerfi/sdk-common/common'
-import { ActionCall, ActionCallBatch } from '~orderplannercommon/actions'
+import { ActionCall, ActionCallBatch } from '../actions/Types'
 
 export class ActionCallsStack {
   private callsStack: ActionCallBatch[]
@@ -11,11 +11,15 @@ export class ActionCallsStack {
   }
 
   public addCall(params: { call: ActionCall }): void {
+    if (this.callsStack.length === 0) {
+      throw new Error('Cannot add a call outside of a subcontext')
+    }
+
     const currentBatch = this.callsStack[this.callsStack.length - 1]
     currentBatch.push(params.call)
   }
 
-  public startSubContext(params: { customData?: unknown }): void {
+  public startSubContext(params: { customData?: unknown } = {}): void {
     this.callsStack.push([])
     this.customData.push(params.customData)
   }

@@ -1,29 +1,38 @@
 import { Order, type IPositionsManager } from '@summerfi/sdk-common/orders'
 import { Simulation, SimulationType, steps } from '@summerfi/sdk-common/simulation'
-import { IOrderPlanner } from '~orderplannercommon/interfaces/IOrderPlanner'
-import { encodeStrategy } from '~orderplannercommon/utils'
-import { OrderPlannerContext } from '~orderplannercommon/context'
-import { ActionBuilder, ActionBuildersMap } from '~orderplannercommon/builders'
-import { ActionCall } from '~orderplannercommon/actions'
-import { User } from '@summerfi/sdk-client'
 import { Deployment } from '@summerfi/deployment-utils'
 import { Address, Maybe } from '@summerfi/sdk-common/common'
 import { HexData } from '@summerfi/sdk-common/common/aliases'
+import { IOrderPlanner } from '../interfaces/IOrderPlanner'
+import { ActionBuilder, ActionBuildersMap } from '../builders/Types'
+import { OrderPlannerContext } from '../context/OrderPlannerContext'
+import { ActionCall } from '../actions/Types'
+import { encodeStrategy } from '../utils/EncodeStrategy'
+import { IUser } from '@summerfi/sdk-client'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
+import { ProtocolBuilderRegistryType } from '../interfaces/Types'
 
 export class OrderPlanner implements IOrderPlanner {
   private readonly ExecutorContractName = 'OperationExecutor'
 
   async buildOrder(params: {
-    user: User
+    user: IUser
     positionsManager: IPositionsManager
     simulation: Simulation<SimulationType>
     actionBuildersMap: ActionBuildersMap
     deployment: Deployment
     swapManager: ISwapManager
+    protocolsRegistry: ProtocolBuilderRegistryType
   }): Promise<Maybe<Order>> {
-    const { user, positionsManager, simulation, actionBuildersMap, deployment, swapManager } =
-      params
+    const {
+      user,
+      positionsManager,
+      simulation,
+      actionBuildersMap,
+      deployment,
+      swapManager,
+      protocolsRegistry,
+    } = params
 
     const context: OrderPlannerContext = new OrderPlannerContext()
 
@@ -39,10 +48,10 @@ export class OrderPlanner implements IOrderPlanner {
         context,
         user,
         positionsManager,
-        simulation,
         swapManager,
         deployment,
         step,
+        protocolsRegistry,
       })
     }
 

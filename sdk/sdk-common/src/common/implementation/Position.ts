@@ -1,8 +1,8 @@
-import { SerializationService } from '~sdk-common/services/SerializationService'
-import type { PositionId } from '~sdk-common/common/implementation/PositionId'
-import type { RiskRatio } from '~sdk-common/common/implementation/RiskRatio'
-import type { TokenAmount } from '~sdk-common/common/implementation/TokenAmount'
-import type { IPool } from '~sdk-common/protocols/interfaces/IPool'
+import { IPool } from '../../protocols/interfaces/IPool'
+import { SerializationService } from '../../services/SerializationService'
+import { PositionId } from './PositionId'
+import { RiskRatio } from './RiskRatio'
+import { TokenAmount } from './TokenAmount'
 
 interface IPositionSerialized {
   readonly positionId: PositionId

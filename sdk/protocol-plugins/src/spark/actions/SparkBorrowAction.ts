@@ -10,11 +10,17 @@ export class SparkBorrowAction extends BaseAction {
     storageOutputs: ['borrowedAmount'],
   } as const
 
-  public encodeCall(params: { borrowAmount: TokenAmount; borrowTo: Address }): ActionCall {
-    return this._encodeCall([
-      params.borrowAmount.token.address.toString(),
-      params.borrowAmount.toBaseUnit(),
-      params.borrowTo.toString(),
-    ])
+  public encodeCall(
+    params: { borrowAmount: TokenAmount; borrowTo: Address },
+    paramsMapping?: number[],
+  ): ActionCall {
+    return this._encodeCall({
+      arguments: [
+        params.borrowAmount.token.address.toString(),
+        params.borrowAmount.toBaseUnit(),
+        params.borrowTo.toString(),
+      ],
+      mapping: paramsMapping,
+    })
   }
 }

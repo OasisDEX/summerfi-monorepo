@@ -10,16 +10,22 @@ export class SparkDepositAction extends BaseAction {
     storageOutputs: ['depositedAmount'],
   } as const
 
-  public encodeCall(params: {
-    depositAmount: TokenAmount
-    sumAmounts: boolean
-    setAsCollateral: boolean
-  }): ActionCall {
-    return this._encodeCall([
-      params.depositAmount.token.address.toString(),
-      params.depositAmount.toBaseUnit(),
-      params.sumAmounts,
-      params.setAsCollateral,
-    ])
+  public encodeCall(
+    params: {
+      depositAmount: TokenAmount
+      sumAmounts: boolean
+      setAsCollateral: boolean
+    },
+    paramsMapping?: number[],
+  ): ActionCall {
+    return this._encodeCall({
+      arguments: [
+        params.depositAmount.token.address.toString(),
+        params.depositAmount.toBaseUnit(),
+        params.sumAmounts,
+        params.setAsCollateral,
+      ],
+      mapping: paramsMapping,
+    })
   }
 }

@@ -1,4 +1,5 @@
 import { ActionNames } from '@summerfi/deployment-types'
+import { HexData } from '@summerfi/sdk-common/common'
 
 export type ActionStorageName = string
 
@@ -20,8 +21,8 @@ export type ActionConfig = {
  * @description Represents a call to a smart contract method
  */
 export type ActionCall = {
-  targetHash: string
-  callData: string
+  targetHash: HexData
+  callData: HexData
 }
 
 export type ActionCallBatch = ActionCall[]

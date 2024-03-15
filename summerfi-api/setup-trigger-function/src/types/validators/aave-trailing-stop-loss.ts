@@ -1,7 +1,11 @@
 import { z } from 'zod'
 import { TriggerType } from '@oasisdex/automation'
 import { addressSchema, urlOptionalSchema } from '@summerfi/serverless-shared'
-import { positionAddressesSchema, priceSchema, supportedActionsSchema } from './common'
+import {
+  positionAddressesSchema,
+  priceSchema,
+  supportedActionsSchema,
+} from '@summerfi/triggers-shared'
 
 export const dmaAaveTrailingStopLossTriggerDataSchema = z.object({
   type: z

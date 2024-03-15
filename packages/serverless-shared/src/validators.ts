@@ -3,10 +3,22 @@ import { z } from 'zod'
 import { isValidAddress } from './guards'
 import { Address, ChainId, ProtocolId } from './domain-types'
 import { SUPPORTED_CHAIN_IDS, SUPPORTED_PROTOCOL_IDS } from './constants'
+import { isBigInt } from './numbers-helpers'
 
 export const addressSchema = z.custom<Address>((val: unknown) => {
   return isValidAddress(val)
 }, 'Invalid address format')
+
+export const bigIntSchema = z
+  .string()
+  .refine((value) => isBigInt(value), {
+    params: {
+      code: 'not-bigint',
+    },
+    message: 'Must be a BigInt without decimals',
+  })
+  .transform((value) => BigInt(value))
+  .or(z.bigint())
 
 export const chainIdSchema = z
   .nativeEnum(ChainId)
