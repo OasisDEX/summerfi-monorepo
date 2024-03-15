@@ -3,7 +3,7 @@ import { LendingPool, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
 import { SwapProviderType } from '@summerfi/swap-common/enums'
 import { refinaceLendingToLending } from '../src/implementation/strategies'
-import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { Simulation, SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
 
 const testChain = ChainInfo.createFrom({ chainId: 1, name: 'test' })
 
@@ -109,14 +109,31 @@ describe('Refinance', () => {
                 swapManager: swapManagerMock,
                 getSummerFee: mockGetFee,
             })
-            // console.log(JSON.stringify(simulation, null, 4))
         })
 
         it('should not include swap steps', async () => {
-            expect(simulation.steps.filter(step => step.skip).map(step => step.type)).toBeDefined()
+            const steps = simulation.steps.filter(step => !step.skip).map(step => step.type)
+
+            expect(steps).not.toContain(SimulationSteps.Swap)
         })
 
+        it('should open position with the same collateral', async () => {
+            const targetPosition = simulation.targetPosition
 
+            expect(targetPosition.collateralAmount).toEqual(testSourcePosition.collateralAmount)
+        })
+
+        it('should open position with the same debt', async () => {
+            const targetPosition = simulation.targetPosition
+
+            expect(targetPosition.debtAmount).toEqual(testSourcePosition.debtAmount)
+        })
+
+        it('should open position as required target pool', async () => {
+            const targetPosition = simulation.targetPosition
+
+            expect(targetPosition.pool).toEqual(testTargetLendingPool)
+        })
     })
 })
 

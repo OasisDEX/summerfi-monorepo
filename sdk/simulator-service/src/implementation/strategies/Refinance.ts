@@ -68,7 +68,7 @@ export async function refinaceLendingToLending(
   const isCollateralSwapSkipped =
     args.position.collateralAmount.token.address === args.targetPool.collateralTokens[0].address
   const isDebtSwapSkipped =
-    args.position.debtAmount.token.address !== args.targetPool.debtTokens[0].address
+    args.position.debtAmount.token.address === args.targetPool.debtTokens[0].address
   // let debtSwapQuote: Quote | undefined
   // TODO: implement case with swaps
   // if (!isDebtSwapSkipped) {
