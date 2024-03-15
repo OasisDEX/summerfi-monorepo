@@ -1,4 +1,4 @@
-import { IProtocol } from "../../protocols/interfaces/IProtocol";
+import { IProtocol } from '../../protocols/interfaces/IProtocol'
 
 /**
  * @name IPoolId
@@ -7,4 +7,3 @@ import { IProtocol } from "../../protocols/interfaces/IProtocol";
 export interface IPoolId {
   protocol: IProtocol
 }
-

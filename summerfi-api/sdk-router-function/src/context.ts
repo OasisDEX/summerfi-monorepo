@@ -36,4 +36,3 @@ export const createContext = (opts: ContextOptions): Context => {
     protocolsRegistry,
   }
 }
-

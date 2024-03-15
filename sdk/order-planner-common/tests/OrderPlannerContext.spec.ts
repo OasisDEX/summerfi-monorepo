@@ -1,4 +1,4 @@
-import { ILKType } from "@summerfi/sdk-common/protocols";
+import { ILKType } from '@summerfi/sdk-common/protocols'
 import { BaseAction } from '../src/actions/BaseAction'
 import { ActionCall } from '../src/actions'
 import { OrderPlannerContext } from '../src/context'
@@ -79,7 +79,7 @@ describe.only('Order Planner Context', () => {
 
   const poolId: MakerPoolId = {
     protocol: protocol,
-    ilkType: ILKType.ETH_A
+    ilkType: ILKType.ETH_A,
   }
 
   const pool = {

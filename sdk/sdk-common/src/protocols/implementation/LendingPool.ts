@@ -1,12 +1,15 @@
-import { AddressValue } from "../../common/aliases/AddressValue";
-import { CurrencySymbol } from "../../common/enums/CurrencySymbol";
-import { CollateralConfig, DebtConfig } from "../../protocols/interfaces/LendingPool";
+import { AddressValue } from '../../common/aliases/AddressValue'
+import { CurrencySymbol } from '../../common/enums/CurrencySymbol'
+import { CollateralConfig, DebtConfig } from '../../protocols/interfaces/LendingPool'
 import { Token } from '../../common/implementation/Token'
 import { IPool } from '../interfaces/IPool'
 import { PoolType } from '../interfaces/PoolType'
 import { Pool } from './Pool'
 
-export interface ILendingPoolSerialized<GenericCollateralConfig extends CollateralConfig = CollateralConfig, GenericDebtConfig extends DebtConfig = DebtConfig> extends IPool {
+export interface ILendingPoolSerialized<
+  GenericCollateralConfig extends CollateralConfig = CollateralConfig,
+  GenericDebtConfig extends DebtConfig = DebtConfig,
+> extends IPool {
   collaterals: Record<AddressValue, GenericCollateralConfig>
   debts: Record<AddressValue, GenericDebtConfig>
   baseCurrency: Token | CurrencySymbol
@@ -17,7 +20,10 @@ export interface ILendingPoolSerialized<GenericCollateralConfig extends Collater
  * @description Represents a lending pool. Provides information about the collateral
  *              and debt tokens
  */
-export class LendingPool<GenericCollateralConfig extends CollateralConfig = CollateralConfig, GenericDebtConfig extends DebtConfig = DebtConfig> extends Pool {
+export class LendingPool<
+  GenericCollateralConfig extends CollateralConfig = CollateralConfig,
+  GenericDebtConfig extends DebtConfig = DebtConfig,
+> extends Pool {
   public readonly type = PoolType.Lending
   // List of collateral configs to be used from the lending pool
   public readonly collaterals: Record<AddressValue, GenericCollateralConfig>
@@ -26,7 +32,9 @@ export class LendingPool<GenericCollateralConfig extends CollateralConfig = Coll
 
   public readonly baseCurrency: Token | CurrencySymbol
 
-  constructor(params: Omit<ILendingPoolSerialized<GenericCollateralConfig, GenericDebtConfig>, 'type'>) {
+  constructor(
+    params: Omit<ILendingPoolSerialized<GenericCollateralConfig, GenericDebtConfig>, 'type'>,
+  ) {
     super({
       ...params,
       type: PoolType.Lending,

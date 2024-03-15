@@ -18,7 +18,10 @@ export async function mockPool(params: {
   if (isLendingPoolParameters(params.poolParameters)) {
     return new LendingPool({
       poolId: {
-        protocol: { name: ProtocolName.Spark, chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }) },
+        protocol: {
+          name: ProtocolName.Spark,
+          chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
+        },
         emodeType: EmodeType.None,
       } as SparkPoolId,
       protocol: params.protocol,

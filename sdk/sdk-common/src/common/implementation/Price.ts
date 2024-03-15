@@ -25,8 +25,16 @@ export class Price implements IPriceSerialized {
     this.quoteToken = params.quoteToken
   }
 
-  static createFrom(params: { value: string; baseToken: Token; quoteToken?: Token | CurrencySymbol }): Price {
-    return new Price({value: params.value, baseToken: params.baseToken, quoteToken: params.quoteToken || Price.DEFAULT_QUOTE_TOKEN})
+  static createFrom(params: {
+    value: string
+    baseToken: Token
+    quoteToken?: Token | CurrencySymbol
+  }): Price {
+    return new Price({
+      value: params.value,
+      baseToken: params.baseToken,
+      quoteToken: params.quoteToken || Price.DEFAULT_QUOTE_TOKEN,
+    })
   }
 
   toString(): string {

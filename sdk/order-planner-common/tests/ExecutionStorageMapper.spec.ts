@@ -1,4 +1,4 @@
-import { ILKType } from "@summerfi/sdk-common/protocols";
+import { ILKType } from '@summerfi/sdk-common/protocols'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { BaseAction } from '../src/actions/BaseAction'
 import { ActionCall } from '../src/actions/Types'
@@ -68,7 +68,7 @@ describe('Execution Storage Mapper', () => {
   const poolId: MakerPoolId = {
     protocol: {
       name: ProtocolName.Maker,
-      chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' })
+      chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
     },
     ilkType: ILKType.ETH_A,
   }

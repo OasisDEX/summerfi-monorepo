@@ -1,9 +1,13 @@
 import { LendingPool } from '../../protocols/implementation/LendingPool'
-import { AddressValue } from "../../common/aliases/AddressValue";
+import { AddressValue } from '../../common/aliases/AddressValue'
 import { TokenAmount } from '../implementation/TokenAmount'
 import { Position } from '../implementation/Position'
 
-export function newEmptyPositionFromPool(pool: LendingPool, debtAddress: AddressValue, collateralAddress: AddressValue): Position {
+export function newEmptyPositionFromPool(
+  pool: LendingPool,
+  debtAddress: AddressValue,
+  collateralAddress: AddressValue,
+): Position {
   const debtConfig = pool.debts[debtAddress]
   const collateralConfig = pool.collaterals[collateralAddress]
 

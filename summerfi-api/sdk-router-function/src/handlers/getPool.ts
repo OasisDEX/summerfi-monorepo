@@ -1,6 +1,11 @@
 import { z } from 'zod'
 import { publicProcedure } from '~src/trpc'
-import { PriceService, TokenService, protocolManager, MockContractProvider } from '@summerfi/protocol-manager'
+import {
+  PriceService,
+  TokenService,
+  protocolManager,
+  MockContractProvider,
+} from '@summerfi/protocol-manager'
 import { createPublicClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
 
@@ -13,7 +18,7 @@ export const getPool = publicProcedure
   .query(async (params) => {
     const poolParameters = params.input.poolParameters
 
-    // TODO create client manager to set chain 
+    // TODO create client manager to set chain
     const client = createPublicClient({
       batch: {
         multicall: true,
@@ -29,6 +34,6 @@ export const getPool = publicProcedure
       provider: client,
       tokenService,
       priceService,
-      contractProvider
+      contractProvider,
     })
   })

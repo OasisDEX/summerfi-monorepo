@@ -48,7 +48,7 @@ export class Address implements IAddressSerialized {
   }
 
   equals(address: Address): boolean {
-    return this.value === address.value;
+    return this.value === address.value
   }
 
   toString(): string {

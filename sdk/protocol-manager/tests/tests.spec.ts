@@ -1,13 +1,12 @@
-import {ChainInfo} from '@summerfi/sdk-common/common'
-import {EmodeType, ILKType, ProtocolName} from "@summerfi/sdk-common/protocols"
-import {createPublicClient, http} from 'viem'
-import {mainnet} from 'viem/chains'
-import {PriceService} from '../src/implementation/PriceService'
-import {protocolManager} from '../src/implementation/ProtocolManager'
-import {TokenService} from '../src/implementation/TokenService'
-import {aaveV3Plugin, ProtocolManagerContext, sparkPlugin,} from '../src/index'
-import {MockContractProvider} from "../src/mocks/mockContractProvider";
-
+import { ChainInfo } from '@summerfi/sdk-common/common'
+import { EmodeType, ILKType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
+import { PriceService } from '../src/implementation/PriceService'
+import { protocolManager } from '../src/implementation/ProtocolManager'
+import { TokenService } from '../src/implementation/TokenService'
+import { aaveV3Plugin, ProtocolManagerContext, sparkPlugin } from '../src/index'
+import { MockContractProvider } from '../src/mocks/mockContractProvider'
 
 async function createProtocolManagerContext(): Promise<ProtocolManagerContext> {
   const provider = createPublicClient({
@@ -22,7 +21,7 @@ async function createProtocolManagerContext(): Promise<ProtocolManagerContext> {
     provider,
     tokenService: new TokenService(),
     priceService: new PriceService(provider),
-    contractProvider: new MockContractProvider()
+    contractProvider: new MockContractProvider(),
   }
 }
 
@@ -36,9 +35,9 @@ describe('playground', () => {
     const makerPoolId = {
       protocol: {
         name: ProtocolName.Maker as const,
-        chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' })
+        chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
       },
-      ilkType: ILKType.ETH_A
+      ilkType: ILKType.ETH_A,
     }
     const result = await protocolManager.getPool(makerPoolId, ctx)
     console.log(`
@@ -53,24 +52,30 @@ describe('playground', () => {
   })
 
   it('template/spark', async () => {
-    const result = await sparkPlugin.getPool({
-      protocol: {
-        name: ProtocolName.Spark,
-        chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' })
+    const result = await sparkPlugin.getPool(
+      {
+        protocol: {
+          name: ProtocolName.Spark,
+          chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
+        },
+        emodeType: EmodeType.None,
       },
-      emodeType: EmodeType.None
-    }, ctx)
+      ctx,
+    )
     console.log(result)
   })
 
   it('template/aave-v3', async () => {
-    const result = await aaveV3Plugin.getPool({
-      protocol: {
-        name: ProtocolName.AAVEv3,
-        chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' })
+    const result = await aaveV3Plugin.getPool(
+      {
+        protocol: {
+          name: ProtocolName.AAVEv3,
+          chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
+        },
+        emodeType: EmodeType.None,
       },
-      emodeType: EmodeType.None
-    }, ctx)
+      ctx,
+    )
     console.log(result)
   })
 })

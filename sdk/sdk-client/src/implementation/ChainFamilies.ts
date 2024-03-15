@@ -5,7 +5,7 @@ import {
   BaseChainNames,
   ChainFamilyName,
   OptimismChainNames,
-  ChainId
+  ChainId,
 } from '@summerfi/sdk-common/common'
 
 /**
@@ -71,7 +71,6 @@ export const ChainFamilyMap: ChainFamily = {
   [ChainFamilyName.Base]: BaseFamily,
 }
 
-
 // ==== NOT STRICTLY NECESSARY FOR THIS PR
 // ==== MIGHT BE USEFUL FOR TOKENSERVICE?
 
@@ -80,19 +79,18 @@ export const ChainFamilyMap: ChainFamily = {
  * @description Utility function to merge all chain families into a single map
  */
 function createChainIdToChainInfoMap(): Record<ChainId, ChainInfo> {
-  const allFamilies = { ...EthereumFamily, ...ArbitrumFamily, ...OptimismFamily, ...BaseFamily };
-  const chainIdToChainInfoMap: Record<number, ChainInfo> = {};
+  const allFamilies = { ...EthereumFamily, ...ArbitrumFamily, ...OptimismFamily, ...BaseFamily }
+  const chainIdToChainInfoMap: Record<number, ChainInfo> = {}
 
   for (const chainInfo of Object.values(allFamilies)) {
-    chainIdToChainInfoMap[chainInfo.chainId] = chainInfo;
+    chainIdToChainInfoMap[chainInfo.chainId] = chainInfo
   }
 
-  return chainIdToChainInfoMap;
+  return chainIdToChainInfoMap
 }
 
-const chainIdToChainInfoMap = createChainIdToChainInfoMap();
+const chainIdToChainInfoMap = createChainIdToChainInfoMap()
 
 export function getChainInfoByChainId(chainId: ChainId): ChainInfo | undefined {
-  return chainIdToChainInfoMap[chainId];
+  return chainIdToChainInfoMap[chainId]
 }
-

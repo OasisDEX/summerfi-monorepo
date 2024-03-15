@@ -66,9 +66,11 @@ export async function refinaceLendingToLending(
   const simulator = Simulator.create(refinanceStrategy)
 
   const isCollateralSwapSkipped =
-    args.position.collateralAmount.token.address === args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token.address
+    args.position.collateralAmount.token.address ===
+    args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token.address
   const isDebtSwapSkipped =
-    args.position.debtAmount.token.address !== args.targetPool.debts[args.position.debtAmount.token.address.value].token.address
+    args.position.debtAmount.token.address !==
+    args.targetPool.debts[args.position.debtAmount.token.address.value].token.address
   // let debtSwapQuote: Quote | undefined
   // TODO: implement case with swaps
   // if (!isDebtSwapSkipped) {
@@ -114,11 +116,12 @@ export async function refinaceLendingToLending(
         ...(await dependencies.swapManager.getSwapQuoteExactInput({
           chainInfo: args.position.pool.protocol.chainInfo,
           fromAmount: args.position.collateralAmount,
-          toToken: args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token
+          toToken:
+            args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token,
         })),
-      // inputs: await dependencies.getQuote({
-      //   from: args.position.collateralAmount,
-      //   to: args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token,
+        // inputs: await dependencies.getQuote({
+        //   from: args.position.collateralAmount,
+        //   to: args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token,
         slippage: args.slippage,
         fee: dependencies.getSummerFee(),
       },
@@ -134,7 +137,11 @@ export async function refinaceLendingToLending(
             : ['CollateralSwap', 'receivedAmount'],
         ),
         borrowAmount: args.position.debtAmount, // TODO figure the debt amount
-        position: newEmptyPositionFromPool(args.targetPool, args.position.debtAmount.token.address.value, args.position.collateralAmount.token.address.value),
+        position: newEmptyPositionFromPool(
+          args.targetPool,
+          args.position.debtAmount.token.address.value,
+          args.position.collateralAmount.token.address.value,
+        ),
       },
     }))
     .next(async (ctx) => ({
@@ -165,7 +172,8 @@ export async function refinaceLendingToLending(
       name: 'ReturnFunds',
       type: SimulationSteps.ReturnFunds,
       inputs: {
-        token: args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token,
+        token:
+          args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token,
       },
       skip: isDebtSwapSkipped,
     }))

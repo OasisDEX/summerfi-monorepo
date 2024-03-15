@@ -5,5 +5,5 @@
 export enum TokenSymbol {
   DAI = 'DAI',
   WETH = 'WETH',
-  ETH = 'ETH'
+  ETH = 'ETH',
 }

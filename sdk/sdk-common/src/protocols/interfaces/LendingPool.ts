@@ -25,4 +25,3 @@ export interface DebtConfig {
   dustLimit: TokenAmount
   originationFee: Percentage
 }
-

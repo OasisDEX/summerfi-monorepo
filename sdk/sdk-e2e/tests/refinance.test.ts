@@ -81,7 +81,7 @@ describe.skip('Refinance | SDK', () => {
     expect(prevPosition.riskRatio).toEqual(
       RiskRatio.createFrom({
         ratio: Percentage.createFrom({ percentage: 20.3 }),
-        type: RiskRatio.type.LTV
+        type: RiskRatio.type.LTV,
       }),
     )
 

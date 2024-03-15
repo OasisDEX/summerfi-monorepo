@@ -22,7 +22,7 @@ export enum ILKType {
 // TODO: temporary interface so FE can create this data types without talking to a service
 export interface MakerPoolId extends IPoolId {
   protocol: {
-    name: ProtocolName.Maker,
+    name: ProtocolName.Maker
     chainInfo: ChainInfo
   }
   ilkType: ILKType
