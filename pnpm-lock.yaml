@@ -623,7 +623,7 @@ importers:
         version: 2.7.0
       viem:
         specifier: ^2.7.9
-        version: 2.7.9(typescript@5.3.3)
+        version: 2.7.9(typescript@5.3.3)(zod@3.22.4)
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -664,7 +664,7 @@ importers:
         version: link:../../packages/typescript-config
       viem:
         specifier: ^2.7.8
-        version: 2.7.9(typescript@5.3.3)
+        version: 2.7.9(typescript@5.3.3)(zod@3.22.4)
 
   sdk/order-planner-service:
     dependencies:
@@ -704,13 +704,16 @@ importers:
         version: link:../../packages/typescript-config
       viem:
         specifier: ^2.7.8
-        version: 2.7.9(typescript@5.3.3)
+        version: 2.7.9(typescript@5.3.3)(zod@3.22.4)
 
   sdk/protocol-manager:
     dependencies:
       '@summerfi/deployment-types':
         specifier: workspace:*
         version: link:../../packages/deployment-types
+      '@summerfi/protocol-plugins':
+        specifier: workspace:*
+        version: link:../protocol-plugins
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -745,6 +748,12 @@ importers:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
+      bignumber.js:
+        specifier: 9.0.1
+        version: 9.0.1
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -757,7 +766,7 @@ importers:
         version: link:../../packages/typescript-config
       viem:
         specifier: ^2.7.8
-        version: 2.7.9(typescript@5.3.3)
+        version: 2.7.9(typescript@5.3.3)(zod@3.22.4)
 
   sdk/sdk-client:
     dependencies:
@@ -766,7 +775,7 @@ importers:
         version: link:../sdk-common
       viem:
         specifier: ^2.7.9
-        version: 2.7.9(typescript@5.3.3)
+        version: 2.7.9(typescript@5.3.3)(zod@3.22.4)
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -791,7 +800,7 @@ importers:
         version: 1.13.3
       viem:
         specifier: ^2.2.0
-        version: 2.7.9(typescript@5.3.3)
+        version: 2.7.9(typescript@5.3.3)(zod@3.22.4)
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -838,7 +847,7 @@ importers:
         version: 2.7.0
       viem:
         specifier: ^2.7.9
-        version: 2.7.9(typescript@5.3.3)
+        version: 2.7.9(typescript@5.3.3)(zod@3.22.4)
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -863,7 +872,7 @@ importers:
         version: 2.7.0
       viem:
         specifier: ^2.7.9
-        version: 2.7.9(typescript@5.3.3)
+        version: 2.7.9(typescript@5.3.3)(zod@3.22.4)
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -897,7 +906,7 @@ importers:
         version: 2.7.0
       viem:
         specifier: ^2.7.9
-        version: 2.7.9(typescript@5.3.3)
+        version: 2.7.9(typescript@5.3.3)(zod@3.22.4)
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -16458,7 +16467,7 @@ packages:
       - zod
     dev: true
 
-  /viem@2.7.9(typescript@5.3.3):
+  /viem@2.7.9(typescript@5.3.3)(zod@3.22.4):
     resolution: {integrity: sha512-iDfc8TwaZFp1K95zlsxYh6Cs0OWCt35Tqs8uYgXKSxtz7w075mZ0H5SJ8zSyJGoEaticVDhtdmRRX6TtcW9EeQ==}
     peerDependencies:
       typescript: '>=5.0.4'

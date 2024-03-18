@@ -1,8 +1,8 @@
-import { IPriceService } from '../interfaces/ProtocolPlugin'
+import { IPriceService } from '../interfaces/IPriceService'
 import { PublicClient, getContract } from 'viem'
 import { Address, CurrencySymbol, Price, Token, TokenSymbol } from '@summerfi/sdk-common/common'
 import { BigNumber } from 'bignumber.js'
-import { priceFeedABI } from './priceFeedABI'
+import { priceFeedABI } from '../interfaces/priceFeedABI'
 
 // TODO: implement for different chains, right now supports only Ethereum
 export class PriceService implements IPriceService {

@@ -39,7 +39,7 @@ describe('playground', () => {
       },
       ilkType: ILKType.ETH_A,
     }
-    const result = await protocolManager.getPool(makerPoolId, ctx)
+    const result = await protocolManager.getPool(makerPoolId)
     console.log(`
   MAKER POOL
   ----------------

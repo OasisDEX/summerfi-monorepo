@@ -21,10 +21,11 @@ import {
   SparkLendingPool,
   SparkPoolDebtConfig,
 } from '../interfaces/ProtocolPlugin'
+
 import { AaveV3LikePluginBuilder, filterAssetsListByEMode } from './AAVEv3LikeBuilder'
 import { UNCAPPED_SUPPLY, PRECISION_BI } from './constants'
 
-class SparkPlugin implements ProtocolPlugin<SparkPoolId> {
+class SparkPlugin implements IProtocolDataPlugin<SparkPoolId> {
   public readonly protocol = ProtocolName.Spark
   public supportedChains = [ChainId.Mainnet]
   async getPool(poolId: unknown, ctx: ProtocolManagerContext): Promise<SparkLendingPool> {

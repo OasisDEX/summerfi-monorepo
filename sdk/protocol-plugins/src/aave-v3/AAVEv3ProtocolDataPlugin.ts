@@ -12,22 +12,26 @@ import type { AaveV3PoolId } from '@summerfi/sdk-common/protocols'
 import { PoolType, ProtocolName, EmodeType } from '@summerfi/sdk-common/protocols'
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
-import {
-  AaveV3LendingPool,
-  AaveV3PoolCollateralConfig,
-  AaveV3PoolDebtConfig,
-  ChainId,
-  IPositionId,
-  ProtocolManagerContext,
-  ProtocolPlugin,
-} from '../interfaces'
-import { AaveV3LikePluginBuilder, filterAssetsListByEMode } from './AAVEv3LikeBuilder'
-import { UNCAPPED_SUPPLY, PRECISION_BI } from './constants'
+import {IProtocolDataPlugin} from "~protocolplugins";
+import {AaveV3LendingPool} from "./Types";
+// import {
+//   AaveV3LendingPool,
+//   AaveV3PoolCollateralConfig,
+//   AaveV3PoolDebtConfig,
+//   // ChainId,
+//   // IPositionId,
+//   ProtocolManagerContext,
+//   ProtocolPlugin,
+// } from '../interfaces'
+import { AaveV3LikePluginBuilder, filterAssetsListByEMode } from '../implementation/AAVEv3LikeBuilder'
+import { UNCAPPED_SUPPLY, PRECISION_BI } from '../implementation/constants'
+import { ChainId } from '@summerfi/sdk-common/common'
 
-export class AaveV3Plugin implements ProtocolPlugin<AaveV3PoolId> {
+export class AAVEv3ProtocolDataPlugin implements IProtocolDataPlugin<AaveV3PoolId> {
   public readonly protocol = ProtocolName.AAVEv3
   supportedChains = [ChainId.Mainnet, ChainId.Arbitrum, ChainId.Optimism]
-  async getPool(aaveV3PoolId: unknown, ctx: ProtocolManagerContext): Promise<AaveV3LendingPool> {
+
+  async getPool(aaveV3PoolId: unknown): Promise<AaveV3LendingPool> {
     this.isPoolId(aaveV3PoolId)
     const emode = aaveV3EmodeCategoryMap[aaveV3PoolId.emodeType]
 
@@ -181,11 +185,11 @@ export class AaveV3Plugin implements ProtocolPlugin<AaveV3PoolId> {
     }
   }
 
-  getPositionId(positionId: string): IPositionId {
+  getPositionId(positionId: string): string {
     throw new Error(`getPositionId not implemented ${positionId}`)
   }
 
-  async getPosition(positionId: IPositionId): Promise<Position> {
+  async getPosition(positionId: string): Promise<Position> {
     throw new Error(`getPosition not implemented ${positionId}`)
   }
 
@@ -224,4 +228,4 @@ const aaveV3EmodeCategoryMap: Record<EmodeType, bigint> = Object.keys(EmodeType)
   {} as Record<EmodeType, bigint>,
 )
 
-export const aaveV3Plugin = new AaveV3Plugin()
+export const aaveV3Plugin = new AAVEv3ProtocolDataPlugin()
