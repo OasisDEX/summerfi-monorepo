@@ -55,6 +55,7 @@ describe('Deposit Borrow Action Builder', () => {
   const poolId: MakerPoolId = {
     protocol: protocol,
     ilkType: ILKType.ETH_A,
+    vaultId: '123',
   }
 
   const pool = {

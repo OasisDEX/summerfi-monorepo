@@ -293,6 +293,7 @@ class MakerPlugin implements ProtocolPlugin<MakerPoolId> {
       }),
     }),
     ilkType: z.nativeEnum(ILKType),
+    vaultId: z.string(),
   })
 
   isPoolId(candidate: unknown): asserts candidate is MakerPoolId {
