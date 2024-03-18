@@ -12,29 +12,41 @@ import type { AaveV3PoolId } from '@summerfi/sdk-common/protocols'
 import { PoolType, ProtocolName, EmodeType } from '@summerfi/sdk-common/protocols'
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
-import {IProtocolDataPlugin} from "~protocolplugins";
-import {AaveV3LendingPool} from "./Types";
-// import {
-//   AaveV3LendingPool,
-//   AaveV3PoolCollateralConfig,
-//   AaveV3PoolDebtConfig,
-//   // ChainId,
-//   // IPositionId,
-//   ProtocolManagerContext,
-//   ProtocolPlugin,
-// } from '../interfaces'
+import {BaseProtocolPlugin} from "../implementation/BaseProtocolPlugin";
+import {AaveV3LendingPool, AaveV3PoolCollateralConfig, AaveV3PoolDebtConfig} from "./Types";
 import { AaveV3LikePluginBuilder, filterAssetsListByEMode } from '../implementation/AAVEv3LikeBuilder'
 import { UNCAPPED_SUPPLY, PRECISION_BI } from '../implementation/constants'
 import { ChainId } from '@summerfi/sdk-common/common'
 
-export class AAVEv3ProtocolDataPlugin implements IProtocolDataPlugin<AaveV3PoolId> {
-  public readonly protocol = ProtocolName.AAVEv3
-  supportedChains = [ChainId.Mainnet, ChainId.Arbitrum, ChainId.Optimism]
+export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3LendingPool, AaveV3PoolId> {
+  public static protocol: ProtocolName.AAVEv3 = ProtocolName.AAVEv3
+  public static supportedChains = [ChainId.Mainnet, ChainId.Arbitrum, ChainId.Optimism]
+  public static schema = z.object({
+    protocol: z.object({
+      name: z.literal(ProtocolName.AAVEv3),
+      chainInfo: z.object({
+        name: z.string(),
+        chainId: z.custom<ChainId>(
+            (value) => AaveV3ProtocolPlugin.supportedChains.includes(value as ChainId),
+            'Chain ID not supported',
+        ),
+      }),
+    }),
+    emodeType: z.nativeEnum(EmodeType),
+  })
+
+  constructor() {
+    const StepBuildersMap = {
+      // [SimulationSteps.DepositBorrow]: AAVEv3DepositBorrowActionBuilder,
+    }
+    super(AaveV3ProtocolPlugin.protocol, AaveV3ProtocolPlugin.supportedChains, AaveV3ProtocolPlugin.schema, StepBuildersMap)
+  }
 
   async getPool(aaveV3PoolId: unknown): Promise<AaveV3LendingPool> {
     this.isPoolId(aaveV3PoolId)
     const emode = aaveV3EmodeCategoryMap[aaveV3PoolId.emodeType]
 
+    const ctx = this.ctx
     const chainId = ctx.provider.chain?.id
     if (!chainId) throw new Error('ctx.provider.chain.id undefined')
 
@@ -192,30 +204,6 @@ export class AAVEv3ProtocolDataPlugin implements IProtocolDataPlugin<AaveV3PoolI
   async getPosition(positionId: string): Promise<Position> {
     throw new Error(`getPosition not implemented ${positionId}`)
   }
-
-  schema: z.Schema<AaveV3PoolId> = z.object({
-    protocol: z.object({
-      name: z.literal(ProtocolName.AAVEv3),
-      chainInfo: z.object({
-        name: z.string(),
-        chainId: z.custom<ChainId>(
-          (value) => this.supportedChains.includes(value as ChainId),
-          'Chain ID not supported',
-        ),
-      }),
-    }),
-    emodeType: z.nativeEnum(EmodeType),
-  })
-
-  isPoolId(candidate: unknown): asserts candidate is AaveV3PoolId {
-    const parseResult = this.schema.safeParse(candidate)
-    if (!parseResult.success) {
-      const errorDetails = parseResult.error.errors
-        .map((error) => `${error.path.join('.')} - ${error.message}`)
-        .join(', ')
-      throw new Error(`Candidate is not correct AaveV3PoolId: ${errorDetails}`)
-    }
-  }
 }
 
 const aaveV3EmodeCategoryMap: Record<EmodeType, bigint> = Object.keys(EmodeType).reduce<
@@ -228,4 +216,4 @@ const aaveV3EmodeCategoryMap: Record<EmodeType, bigint> = Object.keys(EmodeType)
   {} as Record<EmodeType, bigint>,
 )
 
-export const aaveV3Plugin = new AAVEv3ProtocolDataPlugin()
+export const aaveV3ProtocolPlugin = new AaveV3ProtocolPlugin()

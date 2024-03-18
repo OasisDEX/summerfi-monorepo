@@ -42,8 +42,18 @@ export abstract class BaseProtocolPlugin<LendingPoolType extends LendingPool, Po
     public abstract getPool(poolId: unknown): Promise<LendingPoolType>
     public abstract getPositionId(positionId: IPositionId): string
     public abstract getPosition(positionId: IPositionId): Promise<Position>
-    public abstract isPoolId(candidate: unknown): asserts candidate is PoolIdType
 
-    // Action Builder methods
-    public abstract getActionBuilder<T extends steps.Steps>(step: T): Maybe<ActionBuilder<T>>
-}
+    isPoolId(candidate: unknown): asserts candidate is PoolIdType {
+        const parseResult = this.schema.safeParse(candidate)
+        if (!parseResult.success) {
+            const errorDetails = parseResult.error.errors
+                .map((error) => `${error.path.join('.')} - ${error.message}`)
+                .join(', ')
+            throw new Error(`Candidate is not correct: ${errorDetails}`)
+        }
+    }
+
+    // Action Builder method
+    getActionBuilder<T extends steps.Steps>(step: T): Maybe<ActionBuilder<T>> {
+        return this.StepBuilders[step.type] as ActionBuilder<T>
+    }}

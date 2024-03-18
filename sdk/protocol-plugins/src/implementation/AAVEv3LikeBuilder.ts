@@ -1,5 +1,5 @@
 import { Address, HexData, Token } from '@summerfi/sdk-common/common'
-import { ProtocolManagerContext } from '../interfaces'
+import { IProtocolPluginContext } from '../interfaces/IProtocolPluginContext'
 import {
   AllowedProtocolNames,
   WithToken,
@@ -24,13 +24,13 @@ interface QueuedOperation<T> {
 }
 
 export class AaveV3LikePluginBuilder<AssetListItemType> {
-  private readonly ctx: ProtocolManagerContext
+  private readonly ctx: IProtocolPluginContext
   private operations: QueuedOperation<void>[] = []
   private tokensUsedAsReserves: Token[] | undefined
   private reservesAssetsList: Array<WithToken<AssetListItemType>> = []
   private readonly protocolName: AllowedProtocolNames
 
-  constructor(ctx: ProtocolManagerContext, protocolName: AllowedProtocolNames) {
+  constructor(ctx: IProtocolPluginContext, protocolName: AllowedProtocolNames) {
     this.ctx = ctx
     this.protocolName = protocolName
   }

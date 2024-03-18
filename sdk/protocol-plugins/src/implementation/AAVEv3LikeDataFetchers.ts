@@ -1,11 +1,11 @@
 import { Token } from '@summerfi/sdk-common/common'
-import { IProtocolManagerContext } from '../interfaces/'
+import { IProtocolPluginContext } from "../interfaces/IProtocolPluginContext";
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { AllowedProtocolNames } from './AAVEv3LikeBuilderTypes'
 
 // TODO: Update ContractProvider to work based on ChainId
 export async function fetchReservesTokens(
-  ctx: ProtocolManagerContext,
+  ctx: IProtocolPluginContext,
   protocolName: AllowedProtocolNames,
 ) {
   switch (protocolName) {
@@ -52,7 +52,7 @@ export async function fetchReservesTokens(
   }
 }
 export async function fetchEmodeCategoriesForReserves(
-  ctx: ProtocolManagerContext,
+  ctx: IProtocolPluginContext,
   tokensList: Token[],
   protocolName: AllowedProtocolNames,
 ) {
@@ -96,7 +96,7 @@ export async function fetchEmodeCategoriesForReserves(
   }
 }
 export async function fetchAssetConfigurationData(
-  ctx: ProtocolManagerContext,
+  ctx: IProtocolPluginContext,
   tokensList: Token[],
   protocolName: AllowedProtocolNames,
 ) {
@@ -140,7 +140,7 @@ export async function fetchAssetConfigurationData(
   }
 }
 export async function fetchReservesCap(
-  ctx: ProtocolManagerContext,
+  ctx: IProtocolPluginContext,
   tokensList: Token[],
   protocolName: AllowedProtocolNames,
 ) {
@@ -184,7 +184,7 @@ export async function fetchReservesCap(
   }
 }
 export async function fetchAssetReserveData(
-  ctx: ProtocolManagerContext,
+  ctx: IProtocolPluginContext,
   tokensList: Token[],
   protocolName: AllowedProtocolNames,
 ) {
@@ -228,7 +228,7 @@ export async function fetchAssetReserveData(
   }
 }
 export async function fetchAssetPrices(
-  ctx: ProtocolManagerContext,
+  ctx: IProtocolPluginContext,
   tokensList: Token[],
   protocolName: AllowedProtocolNames,
 ) {

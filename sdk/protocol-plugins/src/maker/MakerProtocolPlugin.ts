@@ -15,9 +15,9 @@ import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { stringToHex, getContract } from 'viem'
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
-import {MakerPaybackWithdrawActionBuilder} from "~protocolplugins";
-import {BaseProtocolPlugin} from "~protocolplugins/implementation/BaseProtocolPlugin";
-import {IPositionId} from "~protocolplugins/interfaces/IPositionId";
+import {MakerPaybackWithdrawActionBuilder} from "./builders/MakerPaybackWithdrawActionBuilder";
+import {BaseProtocolPlugin} from "../implementation/BaseProtocolPlugin";
+import {IPositionId} from "../interfaces/IPositionId";
 import {MakerLendingPool, MakerPoolCollateralConfig, MakerPoolDebtConfig} from "./Types";
 import { OSM_ABI, ERC20_ABI } from '../interfaces/abis'
 import { PRECISION_BI, PRECISION } from '../implementation/constants'
@@ -300,15 +300,6 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerLendingPool, Ma
     throw new Error('Not implemented')
   }
 
-  isPoolId(candidate: unknown): asserts candidate is MakerPoolId {
-    const parseResult = this.schema.safeParse(candidate)
-    if (!parseResult.success) {
-      const errorDetails = parseResult.error.errors
-        .map((error) => `${error.path.join('.')} - ${error.message}`)
-        .join(', ')
-      throw new Error(`Candidate is not correct MakerPoolId: ${errorDetails}`)
-    }
-  }
   getActionBuilder<T extends steps.Steps>(step: T): Maybe<ActionBuilder<T>> {
     return this.StepBuilders[step.type] as ActionBuilder<T>
   }
