@@ -46,9 +46,9 @@ export function subtractBalance(
 ): Record<string, TokenAmount> {
   return {
     ...balance,
-    [amount.token.address.value]: balance[amount.token.address.value] 
+    [amount.token.address.value]: balance[amount.token.address.value]
       ? balance[amount.token.address.value].subtract(amount)
-      : TokenAmount.createFrom({ amount: amount.toBN().negated().toString(), token: amount.token })
+      : TokenAmount.createFrom({ amount: amount.toBN().negated().toString(), token: amount.token }),
   }
 }
 
