@@ -83,7 +83,7 @@ importers:
         version: 2.39.7
       ts-jest:
         specifier: ^29.1.1
-        version: 29.1.1(@babel/core@7.24.0)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
+        version: 29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
       tsc-alias:
         specifier: ^1.8.8
         version: 1.8.8
@@ -733,9 +733,18 @@ importers:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
+      '@summerfi/sdk-server':
+        specifier: workspace:*
+        version: link:../sdk-server
+      '@trpc/client':
+        specifier: 11.0.0-next-beta.264
+        version: 11.0.0-next-beta.264(@trpc/server@11.0.0-next-beta.264)
+      superjson:
+        specifier: ^1.13.3
+        version: 1.13.3
       viem:
         specifier: ^2.7.9
-        version: 2.7.9(typescript@5.3.3)
+        version: 2.7.9
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -1150,57 +1159,12 @@ importers:
       '@aws-lambda-powertools/tracer':
         specifier: ^1.17.0
         version: 1.18.1
-      '@summerfi/common':
-        specifier: workspace:*
-        version: link:../../packages/common
-      '@summerfi/configuration-provider':
-        specifier: workspace:*
-        version: link:../../sdk/configuration-provider
-      '@summerfi/core-contracts':
-        specifier: workspace:*
-        version: link:../../packages/core-contracts
-      '@summerfi/deployment-utils':
-        specifier: workspace:*
-        version: link:../../packages/deployment-utils
-      '@summerfi/order-planner-common':
-        specifier: workspace:*
-        version: link:../../sdk/order-planner-common
-      '@summerfi/order-planner-service':
-        specifier: workspace:*
-        version: link:../../sdk/order-planner-service
-      '@summerfi/protocol-plugins':
-        specifier: workspace:*
-        version: link:../../sdk/protocol-plugins
-      '@summerfi/sdk-client':
-        specifier: workspace:*
-        version: link:../../sdk/sdk-client
-      '@summerfi/sdk-common':
-        specifier: workspace:*
-        version: link:../../sdk/sdk-common
       '@summerfi/sdk-server':
         specifier: workspace:*
         version: link:../../sdk/sdk-server
-      '@summerfi/serverless-shared':
-        specifier: workspace:*
-        version: link:../../packages/serverless-shared
-      '@summerfi/simulator-service':
-        specifier: workspace:^
-        version: link:../../sdk/simulator-service
-      '@summerfi/swap-common':
-        specifier: workspace:*
-        version: link:../../sdk/swap-common
-      '@summerfi/swap-service':
-        specifier: workspace:*
-        version: link:../../sdk/swap-service
       '@trpc/server':
         specifier: 11.0.0-next-beta.264
         version: 11.0.0-next-beta.264
-      superjson:
-        specifier: ^1.13.3
-        version: 1.13.3
-      zod:
-        specifier: ^3.22.4
-        version: 3.22.4
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -6997,7 +6961,6 @@ packages:
       '@trpc/server': 11.0.0-next-beta.264+f5f08f35d
     dependencies:
       '@trpc/server': 11.0.0-next-beta.264
-    dev: true
 
   /@trpc/server@11.0.0-next-beta.264:
     resolution: {integrity: sha512-h6RJX+C+VgFQusxGVtw3n1PZPLt27ZG70U8cPR5pwmsnE2E3vREijOgEo5MRKoiUhVrjbw8e6gnGVeKzl7uZXg==}
@@ -7661,6 +7624,18 @@ packages:
     dependencies:
       typescript: 5.3.3
       zod: 3.22.4
+    dev: false
+
+  /abitype@1.0.0:
+    resolution: {integrity: sha512-NMeMah//6bJ56H5XRj8QCV4AwuW6hB6zqz2LnhhLdcWVQOsXki6/Pn3APeqxCma62nXIcmZWdu1DlHWS74umVQ==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+      zod: ^3 >=3.22.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+      zod:
+        optional: true
     dev: false
 
   /abitype@1.0.0(typescript@5.0.4):
@@ -15867,6 +15842,41 @@ packages:
     engines: {node: '>=14.16'}
     dev: false
 
+  /ts-jest@29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-D6xjnnbP17cC85nliwGiL+tpoKN0StpgE0TeOjXQTU6MVCfsB4v7aW05CgQ/1OywGb0x/oy9hHFnN+sczTiRaA==}
+    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+    hasBin: true
+    peerDependencies:
+      '@babel/core': '>=7.0.0-beta.0 <8'
+      '@jest/types': ^29.0.0
+      babel-jest: ^29.0.0
+      esbuild: '*'
+      jest: ^29.0.0
+      typescript: '>=4.3 <6'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@jest/types':
+        optional: true
+      babel-jest:
+        optional: true
+      esbuild:
+        optional: true
+    dependencies:
+      '@babel/core': 7.23.7
+      bs-logger: 0.2.6
+      esbuild: 0.19.11
+      fast-json-stable-stringify: 2.1.0
+      jest: 29.7.0(@types/node@20.11.5)(ts-node@10.9.2)
+      jest-util: 29.7.0
+      json5: 2.2.3
+      lodash.memoize: 4.1.2
+      make-error: 1.3.6
+      semver: 7.5.4
+      typescript: 5.3.3
+      yargs-parser: 21.1.1
+    dev: true
+
   /ts-jest@29.1.1(@babel/core@7.24.0)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3):
     resolution: {integrity: sha512-D6xjnnbP17cC85nliwGiL+tpoKN0StpgE0TeOjXQTU6MVCfsB4v7aW05CgQ/1OywGb0x/oy9hHFnN+sczTiRaA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -16463,6 +16473,28 @@ packages:
       abitype: 1.0.0(typescript@5.3.3)(zod@3.22.4)
       isows: 1.0.3(ws@8.13.0)
       typescript: 5.3.3
+      ws: 8.13.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+      - zod
+    dev: false
+
+  /viem@2.7.9:
+    resolution: {integrity: sha512-iDfc8TwaZFp1K95zlsxYh6Cs0OWCt35Tqs8uYgXKSxtz7w075mZ0H5SJ8zSyJGoEaticVDhtdmRRX6TtcW9EeQ==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@adraffy/ens-normalize': 1.10.0
+      '@noble/curves': 1.2.0
+      '@noble/hashes': 1.3.2
+      '@scure/bip32': 1.3.2
+      '@scure/bip39': 1.2.1
+      abitype: 1.0.0
+      isows: 1.0.3(ws@8.13.0)
       ws: 8.13.0
     transitivePeerDependencies:
       - bufferutil

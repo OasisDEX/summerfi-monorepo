@@ -1,15 +1,14 @@
 import { z } from 'zod'
-import type { PoolParameters, Protocol } from '@summerfi/sdk-common/protocols'
-import type { Wallet } from '@summerfi/sdk-common/common'
+import type { IProtocol, PoolParameters, ProtocolParameters } from '@summerfi/sdk-common/protocols'
 import { publicProcedure } from '../TRPC'
 
 export const getPool = publicProcedure
   .input(
     z.object({
-      protocol: z.custom<Protocol>((protocol) => protocol !== undefined),
+      protocol: z.custom<IProtocol>((protocol) => protocol !== undefined),
       poolParameters: z.custom<PoolParameters>((poolParameter) => poolParameter !== undefined),
       protocolParameters: z
-        .custom<Wallet>((protocolParameters) => protocolParameters !== undefined)
+        .custom<ProtocolParameters>((protocolParameters) => protocolParameters !== undefined)
         .optional(),
     }),
   )

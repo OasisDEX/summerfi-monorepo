@@ -15,7 +15,6 @@ import {
   LendingPoolParameters,
   // IPool,
   PoolType,
-  Protocol,
   ProtocolName,
   isLendingPool,
   type LendingPool,
@@ -26,13 +25,14 @@ import {
 } from '@summerfi/sdk-common/protocols'
 import { type RefinanceParameters } from '@summerfi/sdk-common/orders'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import { makeSDK, type Chain, type User } from '@summerfi/sdk-client'
+import { makeSDK, type Chain, type User, Protocol } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
 
 describe('Refinance | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     // SDK
-    const sdk = makeSDK()
+    const apiURL = 'http://localhost:3000/api'
+    const sdk = makeSDK({ apiURL })
 
     // Chain
     // INFO: it should be only used on the client
@@ -48,7 +48,7 @@ describe('Refinance | SDK', () => {
       value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
     })
     const user: User = await sdk.users.getUser({
-      chain: chain,
+      chainInfo: chain.chainInfo,
       walletAddress: walletAddress,
     })
     expect(user).toBeDefined()
@@ -100,10 +100,7 @@ describe('Refinance | SDK', () => {
     // Target protocol
     // TODO: this should have spark protocol type so we don't need to cast, derive it from the protocol name
     const spark: Maybe<Protocol> = await chain.protocols.getProtocol({
-      protocol: {
-        name: ProtocolName.Spark,
-        chainInfo: chain.chainInfo,
-      },
+      name: ProtocolName.Spark,
     })
     if (!spark) {
       fail('Spark not found')

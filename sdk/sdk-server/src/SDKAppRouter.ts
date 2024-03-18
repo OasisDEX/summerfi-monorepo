@@ -10,7 +10,7 @@ import { router } from './TRPC'
 /**
  * Server
  */
-export const SDKAppRouter = router({
+export const sdkAppRouter = router({
   getPosition: getPosition,
   getPool: getPool,
   getToken: getToken,
@@ -24,4 +24,4 @@ export const SDKAppRouter = router({
   },
 })
 
-export type AppRouter = typeof SDKAppRouter
+export type SDKAppRouter = typeof sdkAppRouter

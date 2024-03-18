@@ -1,8 +1,9 @@
 import { Maybe, Position, PositionId } from '@summerfi/sdk-common/common'
-import { Protocol } from '@summerfi/sdk-common/protocols'
+
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { IUser } from '@summerfi/sdk-common/user'
 import { Order } from '@summerfi/sdk-common/orders'
+import { IProtocol } from '@summerfi/sdk-common/protocols'
 
 /**
  * @interface IUserClient
@@ -16,7 +17,7 @@ export interface IUserClient extends IUser {
    * @method getPositionsByProtocol
    * @description Retrieves the list of positions of the user for a given protocol
    */
-  getPositionsByProtocol(params: { protocol: Protocol }): Promise<Position[]>
+  getPositionsByProtocol(params: { protocol: IProtocol }): Promise<Position[]>
 
   /**
    * @method getPositionsByIds
@@ -38,5 +39,5 @@ export interface IUserClient extends IUser {
    *
    * @returns The new order created for the user
    */
-  newOrder(params: { simulation: Simulation<SimulationType> }): Promise<Order>
+  newOrder(params: { simulation: Simulation<SimulationType> }): Promise<Maybe<Order>>
 }

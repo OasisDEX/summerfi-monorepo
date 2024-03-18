@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { SDKAppRouter } from '../../src/SDKAppRouter'
+import { sdkAppRouter } from '../../src/SDKAppRouter'
 import { SDKAppContext, ContextOptions } from '../../src/Context'
 import { createCallerFactory } from '../../src/TRPC'
 
@@ -16,6 +16,6 @@ export const createTestContext = (opts: ContextOptions): SDKAppContext => {
 }
 
 const ctx = createTestContext({} as any)
-const createCaller = createCallerFactory(SDKAppRouter)
+const createCaller = createCallerFactory(sdkAppRouter)
 
 export const testAppRouter = createCaller(ctx)

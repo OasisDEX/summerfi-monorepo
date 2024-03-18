@@ -1,3 +1,4 @@
+import { RPCClientType } from '../../rpc/SDKClient'
 import { RefinanceSimulationManager } from './RefinanceSimulationManager'
 
 export class SimulationManager {
@@ -7,7 +8,7 @@ export class SimulationManager {
   public readonly importing: undefined
   public readonly migration: undefined
 
-  public constructor() {
-    this.refinance = new RefinanceSimulationManager()
+  public constructor(params: { rpcClient: RPCClientType }) {
+    this.refinance = new RefinanceSimulationManager(params)
   }
 }
