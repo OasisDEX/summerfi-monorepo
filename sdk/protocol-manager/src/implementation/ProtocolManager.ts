@@ -1,35 +1,38 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Position } from '@summerfi/sdk-common/common'
 import { IProtocolManagerContext } from '../interfaces/IProtocolManagerContext'
-import { IProtocolDataPlugin } from '@summerfi/protocol-plugins'
-// import { aaveV3Plugin } from './AAVEv3Plugin'
-// import { makerPlugin } from './MakerPlugin'
+import {
+  IProtocolPlugin,
+  aaveV3ProtocolPlugin,
+  makerProtocolPlugin,
+  sparkProtocolPlugin
+} from '@summerfi/protocol-plugins'
 import { IPoolId } from '@summerfi/sdk-common/protocols'
-// import { sparkPlugin } from './SparkPlugin'
 import { z } from 'zod'
 
-type GetPoolIds<ProtocolPlugins extends IProtocolDataPlugin<any>[]> = {
-  [K in keyof ProtocolPlugins]: ProtocolPlugins[K] extends IProtocolDataPlugin<infer T> ? T : never
+
+type GetPoolIds<ProtocolPlugins extends IProtocolPlugin<any>[]> = {
+  [K in keyof ProtocolPlugins]: ProtocolPlugins[K] extends IProtocolPlugin<infer T> ? T : never
 }[number]
 type UnPackPromise<T> = T extends Promise<infer U> ? U : T
 type MatchProtocol<
-  ProtocolPlugins extends IProtocolDataPlugin<any>[],
-  PoolId extends IPoolId,
+    ProtocolPlugins extends IProtocolPlugin<any>[],
+    PoolId extends IPoolId,
 > = ProtocolPlugins extends [infer First, ...infer Rest]
-  ? First extends IProtocolDataPlugin<PoolId>
-    ? First
-    : Rest extends IProtocolDataPlugin<any>[]
-      ? MatchProtocol<Rest, PoolId>
-      : never
-  : never
+    ? First extends IProtocolPlugin<PoolId>
+        ? First
+        : Rest extends IProtocolPlugin<any>[]
+            ? MatchProtocol<Rest, PoolId>
+            : never
+    : never
 type ReturnPool<
-  ProtocolPlugins extends IProtocolDataPlugin<any>[],
-  PoolId extends IPoolId,
+    ProtocolPlugins extends IProtocolPlugin<any>[],
+    PoolId extends IPoolId,
 > = UnPackPromise<ReturnType<MatchProtocol<ProtocolPlugins, PoolId>['getPool']>>
 type ExtractPoolIds<P extends ProtocolManager<any>> =
-  P extends ProtocolManager<infer T> ? GetPoolIds<T> : never
+    P extends ProtocolManager<infer T> ? GetPoolIds<T> : never
 
-export class ProtocolManager<ProtocolPlugins extends IProtocolDataPlugin<any>[]> {
+export class ProtocolManager<ProtocolPlugins extends IProtocolPlugin<any>[]> {
   private readonly plugins: ProtocolPlugins
   private ctx: IProtocolManagerContext | undefined
   constructor(plugins: ProtocolPlugins) {
@@ -49,13 +52,13 @@ export class ProtocolManager<ProtocolPlugins extends IProtocolDataPlugin<any>[]>
   }
 
   public async getPool<PoolId extends GetPoolIds<ProtocolPlugins>>(
-    poolId: PoolId,
+    poolId: IPoolId,
   ): Promise<ReturnPool<ProtocolPlugins, PoolId>> {
     if (!this.ctx) {
       throw new Error(`Context not initialised`)
     }
 
-    const plugin: IProtocolDataPlugin<PoolId> | undefined = this.plugins.find(
+    const plugin: IProtocolPlugin<PoolId> | undefined = this.plugins.find(
       (plugin) => plugin.protocol === poolId.protocol.name,
     )
 
@@ -77,9 +80,9 @@ export class ProtocolManager<ProtocolPlugins extends IProtocolDataPlugin<any>[]>
 }
 
 export const protocolManager = new ProtocolManager([
-  makerPlugin,
-  sparkPlugin,
-  aaveV3Plugin,
+  makerProtocolPlugin,
+  sparkProtocolPlugin,
+  aaveV3ProtocolPlugin,
 ] as const)
 
 export type PoolIds = ExtractPoolIds<typeof protocolManager>

@@ -1,2 +1,2 @@
-export type { IProtocolDataPlugin } from './IProtocolPlugin'
 export * from './abis'
+export type { IProtocolPlugin } from './IProtocolPlugin'

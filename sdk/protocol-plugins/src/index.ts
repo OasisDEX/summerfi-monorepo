@@ -1,4 +1,5 @@
 export * from './implementation'
 export * from './maker'
 export * from './spark'
+export * from './aave-v3'
 export * from './interfaces'

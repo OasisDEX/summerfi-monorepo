@@ -5,10 +5,11 @@ import { mainnet } from 'viem/chains'
 import { PriceService } from '../src/implementation/PriceService'
 import { protocolManager } from '../src/implementation/ProtocolManager'
 import { TokenService } from '../src/implementation/TokenService'
-import { aaveV3Plugin, ProtocolManagerContext, sparkPlugin } from '../src/index'
+import { aaveV3Plugin, sparkPlugin } from '../src/index'
+import { IProtocolManagerContext } from "../src/interfaces/IProtocolManagerContext";
 import { MockContractProvider } from '../src/mocks/mockContractProvider'
 
-async function createProtocolManagerContext(): Promise<ProtocolManagerContext> {
+async function createProtocolManagerContext(): Promise<IProtocolManagerContext> {
   const provider = createPublicClient({
     batch: {
       multicall: true,
@@ -26,7 +27,7 @@ async function createProtocolManagerContext(): Promise<ProtocolManagerContext> {
 }
 
 describe('playground', () => {
-  let ctx: ProtocolManagerContext
+  let ctx: IProtocolManagerContext
   beforeAll(async () => {
     ctx = await createProtocolManagerContext()
   })
@@ -74,7 +75,6 @@ describe('playground', () => {
         },
         emodeType: EmodeType.None,
       },
-      ctx,
     )
     console.log(result)
   })
