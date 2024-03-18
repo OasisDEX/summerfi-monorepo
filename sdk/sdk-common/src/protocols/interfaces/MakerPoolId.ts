@@ -1,6 +1,6 @@
 import { ChainInfo } from '../../common/implementation/ChainInfo'
 import { ProtocolName } from '../enums/ProtocolName'
-import { IPoolId } from './IPoolId'
+import { IPoolId, isPoolId } from './IPoolId'
 
 // TODO: this will probably need to be moved to the protocol plugins package
 export enum ILKType {
@@ -26,8 +26,14 @@ export interface MakerPoolId extends IPoolId {
     chainInfo: ChainInfo
   }
   ilkType: ILKType
+  vaultId: string
 }
 
-export function isMakerPoolId(poolId: IPoolId): poolId is MakerPoolId {
-  return poolId.protocol.name === ProtocolName.Maker
+export function isMakerPoolId(maybePoolId: unknown): maybePoolId is MakerPoolId {
+  return (
+    isPoolId(maybePoolId) &&
+    'ilkType' in maybePoolId &&
+    'vaultId' in maybePoolId &&
+    maybePoolId.protocol.name === ProtocolName.Maker
+  )
 }

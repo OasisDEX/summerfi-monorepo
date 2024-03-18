@@ -61,6 +61,7 @@ export default async function getPoolTest() {
       chainInfo: chain.chainInfo,
     },
     ilkType: ILKType.ETH_A,
+    vaultId: '0x123',
   }
 
   const pool = await protocol.getPool({ poolId: makerPoolId })

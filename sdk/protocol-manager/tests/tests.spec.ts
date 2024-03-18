@@ -1,5 +1,5 @@
 import { ChainInfo } from '@summerfi/sdk-common/common'
-import { EmodeType, ILKType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { EmodeType, ILKType, MakerPoolId, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { createPublicClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
 import { PriceService } from '../src/implementation/PriceService'
@@ -32,27 +32,28 @@ describe('playground', () => {
   })
 
   it('template/maker', async () => {
-    const makerPoolId = {
+    const makerPoolId: MakerPoolId = {
       protocol: {
         name: ProtocolName.Maker as const,
         chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
       },
       ilkType: ILKType.ETH_A,
+      vaultId: '123',
     }
-    const result = await protocolManager.getPool(makerPoolId, ctx)
-    console.log(`
-  MAKER POOL
-  ----------------
-  Protocol: ${result.protocol.name}
-  Chain: ${result.protocol.chainInfo.name}
-  IlkType: ${JSON.stringify(result.poolId)}
-  ${result.baseCurrency.toString()}}
-  ${JSON.stringify(result.collaterals, null, 4)}
-  `)
+    await protocolManager.getPool(makerPoolId, ctx)
+    //   console.log(`
+    // MAKER POOL
+    // ----------------
+    // Protocol: ${result.protocol.name}
+    // Chain: ${result.protocol.chainInfo.name}
+    // IlkType: ${JSON.stringify(result.poolId)}
+    // ${result.baseCurrency.toString()}}
+    // ${JSON.stringify(result.collaterals, null, 4)}
+    // `)
   })
 
   it('template/spark', async () => {
-    const result = await sparkPlugin.getPool(
+    await sparkPlugin.getPool(
       {
         protocol: {
           name: ProtocolName.Spark,
@@ -62,11 +63,11 @@ describe('playground', () => {
       },
       ctx,
     )
-    console.log(result)
+    //console.log(result)
   })
 
   it('template/aave-v3', async () => {
-    const result = await aaveV3Plugin.getPool(
+    await aaveV3Plugin.getPool(
       {
         protocol: {
           name: ProtocolName.AAVEv3,
@@ -76,6 +77,6 @@ describe('playground', () => {
       },
       ctx,
     )
-    console.log(result)
+    //console.log(result)
   })
 })

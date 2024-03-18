@@ -72,6 +72,7 @@ describe('Execution Storage Mapper', () => {
       chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
     },
     ilkType: ILKType.ETH_A,
+    vaultId: '123',
   }
 
   const pool = {

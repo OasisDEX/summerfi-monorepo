@@ -81,6 +81,7 @@ describe('Order Planner Context', () => {
   const poolId: MakerPoolId = {
     protocol: protocol,
     ilkType: ILKType.ETH_A,
+    vaultId: '123',
   }
 
   const pool = {

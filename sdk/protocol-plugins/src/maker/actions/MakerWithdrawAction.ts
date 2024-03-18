@@ -16,6 +16,7 @@ export class MakerWithdrawAction extends BaseAction {
       pool: IPool
       userAddress: Address
       amount: TokenAmount
+      joinAddress: Address
     },
     paramsMapping?: number[],
   ): ActionCall {
@@ -23,13 +24,11 @@ export class MakerWithdrawAction extends BaseAction {
       throw new Error('Pool ID is not a Maker one')
     }
 
-    // TODO: get the join address from the protocol
     return this._encodeCall({
       arguments: [
-        // TODO: get vaultId by other means prev - params.pool.poolId.vaultId,
-        0,
-        params.userAddress.toString(),
-        // joinAddr,
+        params.pool.poolId.vaultId,
+        params.userAddress.value,
+        params.joinAddress.value,
         params.amount.toBaseUnit(),
       ],
       mapping: paramsMapping,

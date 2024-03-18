@@ -7,3 +7,7 @@ import { IProtocol } from '../../protocols/interfaces/IProtocol'
 export interface IPoolId {
   protocol: IProtocol
 }
+
+export function isPoolId(maybePoolId: unknown): maybePoolId is IPoolId {
+  return typeof maybePoolId === 'object' && maybePoolId !== null && 'protocol' in maybePoolId
+}
