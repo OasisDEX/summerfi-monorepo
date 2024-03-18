@@ -1,0 +1,5 @@
+### Get Morpho Claims
+# Query Parameters:
+# `account` - required, an adress of the account which potentiallly have claims (in this case it should be a DPM).
+# `rpc` optional, you can pass your fork or any other rpc endpoint.
+GET {{url}}/api/morpho/claims?account={{dpm-address}}
