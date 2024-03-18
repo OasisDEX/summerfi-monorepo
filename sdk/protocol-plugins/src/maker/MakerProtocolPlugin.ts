@@ -15,6 +15,7 @@ import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { stringToHex, getContract } from 'viem'
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
+import {IProtocolPlugin} from "../interfaces";
 import {MakerPaybackWithdrawActionBuilder} from "./builders/MakerPaybackWithdrawActionBuilder";
 import {BaseProtocolPlugin} from "../implementation/BaseProtocolPlugin";
 import {IPositionId} from "../interfaces/IPositionId";
@@ -24,7 +25,9 @@ import { PRECISION_BI, PRECISION } from '../implementation/constants'
 import { ActionBuilder } from '@summerfi/order-planner-common/builders'
 import { Maybe } from '@summerfi/sdk-common/common'
 
-export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerLendingPool, MakerPoolId> {
+export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerLendingPool, MakerPoolId> implements IProtocolPlugin<MakerPoolId> {
+  public static protocol: ProtocolName.Maker = ProtocolName.Maker
+
   constructor() {
     const schema = z.object({
       protocol: z.object({
@@ -44,7 +47,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerLendingPool, Ma
       [SimulationSteps.PaybackWithdraw]: MakerPaybackWithdrawActionBuilder,
     }
 
-    super(ProtocolName.Maker, [ChainId.Mainnet], schema, StepBuildersMap)
+    super(MakerProtocolPlugin.protocol, [ChainId.Mainnet], schema, StepBuildersMap)
   }
 
   async getPool(makerPoolId: unknown): Promise<MakerLendingPool> {
@@ -291,6 +294,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerLendingPool, Ma
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getPositionId(positionId: string): IPositionId {
     throw new Error('Not implemented')
   }

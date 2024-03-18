@@ -12,13 +12,14 @@ import type { AaveV3PoolId } from '@summerfi/sdk-common/protocols'
 import { PoolType, ProtocolName, EmodeType } from '@summerfi/sdk-common/protocols'
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
+import {IProtocolPlugin} from "../interfaces";
 import {BaseProtocolPlugin} from "../implementation/BaseProtocolPlugin";
 import {AaveV3LendingPool, AaveV3PoolCollateralConfig, AaveV3PoolDebtConfig} from "./Types";
 import { AaveV3LikePluginBuilder, filterAssetsListByEMode } from '../implementation/AAVEv3LikeBuilder'
 import { UNCAPPED_SUPPLY, PRECISION_BI } from '../implementation/constants'
 import { ChainId } from '@summerfi/sdk-common/common'
 
-export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3LendingPool, AaveV3PoolId> {
+export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3LendingPool, AaveV3PoolId> implements IProtocolPlugin<AaveV3PoolId> {
   public static protocol: ProtocolName.AAVEv3 = ProtocolName.AAVEv3
   public static supportedChains = [ChainId.Mainnet, ChainId.Arbitrum, ChainId.Optimism]
   public static schema = z.object({
@@ -198,11 +199,11 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3LendingPool, 
   }
 
   getPositionId(positionId: string): string {
-    throw new Error(`getPositionId not implemented ${positionId}`)
+    throw new Error(`Not implemented ${positionId}`)
   }
 
   async getPosition(positionId: string): Promise<Position> {
-    throw new Error(`getPosition not implemented ${positionId}`)
+    throw new Error(`Not implemented ${positionId}`)
   }
 }
 

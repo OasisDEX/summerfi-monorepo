@@ -730,6 +730,9 @@ importers:
       '@summerfi/jest-config':
         specifier: workspace:*
         version: link:../../packages/jest-config
+      '@summerfi/order-planner-common':
+        specifier: workspace:*
+        version: link:../order-planner-common
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config

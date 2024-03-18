@@ -14,6 +14,7 @@ import type { SparkPoolId } from '@summerfi/sdk-common/protocols'
 import { PoolType, ProtocolName, EmodeType } from '@summerfi/sdk-common/protocols'
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
+import {IProtocolPlugin} from "../interfaces";
 import {SparkDepositBorrowActionBuilder} from "./builders/SparkDepositBorrowActionBuilder";
 import {BaseProtocolPlugin} from "../implementation/BaseProtocolPlugin";
 import {IPositionId} from "../interfaces/IPositionId";
@@ -25,7 +26,7 @@ import {
 import { AaveV3LikePluginBuilder, filterAssetsListByEMode } from '../implementation/AAVEv3LikeBuilder'
 import { UNCAPPED_SUPPLY, PRECISION_BI } from '../implementation/constants'
 
-export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkLendingPool, SparkPoolId> {
+export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkLendingPool, SparkPoolId> implements IProtocolPlugin<SparkPoolId> {
   public static protocol: ProtocolName.Spark = ProtocolName.Spark
   public static supportedChains = [ChainId.Mainnet]
   public static schema = z.object({

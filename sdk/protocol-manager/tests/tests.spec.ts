@@ -1,10 +1,10 @@
 import { ChainInfo } from '@summerfi/sdk-common/common'
-import { ILKType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { ILKType, ProtocolName, EmodeType, MakerPoolId, SparkPoolId, AaveV3PoolId } from '@summerfi/sdk-common/protocols'
 import { createPublicClient, http, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
-import { protocolManager } from '../src/implementation/ProtocolManager'
+import {protocolManager} from '../src/implementation/ProtocolManager'
 import { IProtocolManagerContext } from "../src/interfaces/IProtocolManagerContext";
-import { TokenService, PriceService } from '@summerfi/protocol-plugins'
+import { TokenService, PriceService } from '@summerfi/protocol-plugins/'
 import { MockContractProvider } from '@summerfi/protocol-plugins/mocks'
 
 async function createProtocolManagerContext(): Promise<IProtocolManagerContext> {
@@ -31,13 +31,14 @@ describe('playground', () => {
   })
 
   it('template/maker', async () => {
-    const makerPoolId = {
+    const makerPoolId: MakerPoolId = {
       protocol: {
         name: ProtocolName.Maker as const,
         chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
       },
       ilkType: ILKType.ETH_A,
     }
+
     protocolManager.init(ctx)
     const result = await protocolManager.getPool(makerPoolId)
     console.log(`
@@ -46,6 +47,48 @@ describe('playground', () => {
   Protocol: ${result.protocol.name}
   Chain: ${result.protocol.chainInfo.name}
   IlkType: ${JSON.stringify(result.poolId)}
+  ${result.baseCurrency.toString()}}
+  ${JSON.stringify(result.collaterals, null, 4)}
+  `)
+  })
+
+  it('template/spark', async () => {
+    const sparkPoolId: SparkPoolId = {
+      protocol: {
+        name: ProtocolName.Spark as const,
+        chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
+      },
+      emodeType: EmodeType.None
+    }
+
+    protocolManager.init(ctx)
+    const result = await protocolManager.getPool(sparkPoolId)
+    console.log(`
+  SPARK POOL
+  ----------------
+  Protocol: ${result.protocol.name}
+  Chain: ${result.protocol.chainInfo.name}
+  ${result.baseCurrency.toString()}}
+  ${JSON.stringify(result.collaterals, null, 4)}
+  `)
+  })
+
+  it('template/aave-v3', async () => {
+    const aaveV3PoolId: AaveV3PoolId = {
+      protocol: {
+        name: ProtocolName.AAVEv3 as const,
+        chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
+      },
+      emodeType: EmodeType.None
+    }
+
+    protocolManager.init(ctx)
+    const result = await protocolManager.getPool(aaveV3PoolId)
+    console.log(`
+  AAVE V£ POOL
+  ----------------
+  Protocol: ${result.protocol.name}
+  Chain: ${result.protocol.chainInfo.name}}
   ${result.baseCurrency.toString()}}
   ${JSON.stringify(result.collaterals, null, 4)}
   `)

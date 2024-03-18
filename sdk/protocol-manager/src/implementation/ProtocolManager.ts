@@ -10,7 +10,6 @@ import {
 import { IPoolId } from '@summerfi/sdk-common/protocols'
 import { z } from 'zod'
 
-
 type GetPoolIds<ProtocolPlugins extends IProtocolPlugin<any>[]> = {
   [K in keyof ProtocolPlugins]: ProtocolPlugins[K] extends IProtocolPlugin<infer T> ? T : never
 }[number]
@@ -33,15 +32,28 @@ type ExtractPoolIds<P extends ProtocolManager<any>> =
     P extends ProtocolManager<infer T> ? GetPoolIds<T> : never
 
 export class ProtocolManager<ProtocolPlugins extends IProtocolPlugin<any>[]> {
-  private readonly plugins: ProtocolPlugins
-  private ctx: IProtocolManagerContext | undefined
+  private plugins: ProtocolPlugins
+  private _ctx: IProtocolManagerContext | undefined
 
   constructor(plugins: ProtocolPlugins) {
     this.plugins = plugins;
   }
 
   init(ctx: IProtocolManagerContext): void {
-    this.ctx = ctx
+    this._ctx = ctx
+    // Initialise plugins without swapping IProtocolPlugin -> BaseProtocolPlugin
+    this.plugins.forEach(p => {
+      if (hasInitMethod(p)) {
+        p.init(ctx);
+      }
+    });
+  }
+
+  public get ctx(): IProtocolManagerContext {
+    if (!this._ctx) {
+      throw new Error('Context (ctx) is not initialized. Please call init() with a valid context.');
+    }
+    return this._ctx;
   }
 
   public get poolIdSchema(): z.ZodSchema<ExtractPoolIds<typeof this>> {
@@ -55,7 +67,6 @@ export class ProtocolManager<ProtocolPlugins extends IProtocolPlugin<any>[]> {
   public async getPool<PoolId extends GetPoolIds<ProtocolPlugins>>(
     poolId: IPoolId,
   ): Promise<ReturnPool<ProtocolPlugins, PoolId>> {
-    if (!this.ctx) throw new Error('ProtocolManagerContext not initialised')
     const plugin: IProtocolPlugin<PoolId> | undefined = this.plugins.find(
       (plugin) => plugin.protocol === poolId.protocol.name,
     )
@@ -77,6 +88,10 @@ export class ProtocolManager<ProtocolPlugins extends IProtocolPlugin<any>[]> {
   }
 }
 
+function hasInitMethod(plugin: any): plugin is { init: (ctx: IProtocolManagerContext) => void } {
+  return 'init' in plugin;
+}
+
 export const protocolManager = new ProtocolManager([
   makerProtocolPlugin,
   sparkProtocolPlugin,
@@ -84,10 +99,3 @@ export const protocolManager = new ProtocolManager([
 ] as const)
 
 
-type Ids = GetPoolIds<[
-  typeof makerProtocolPlugin,
-  typeof sparkProtocolPlugin,
-  typeof aaveV3ProtocolPlugin,
-]>
-
-export type PoolIds = ExtractPoolIds<typeof protocolManager>

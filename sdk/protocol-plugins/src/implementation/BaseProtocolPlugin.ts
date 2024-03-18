@@ -13,14 +13,14 @@ import { Maybe } from '@summerfi/sdk-common/common'
  * @class Base class for all ProtocolDataPlugins. It provides the basic functionality to encode the call to the action and provide
  *              the versioned name of the action.
  */
-export abstract class BaseProtocolPlugin<LendingPoolType extends LendingPool, PoolIdType extends IPoolId = IPoolId> implements IProtocolPlugin<PoolIdType> {
-    public readonly protocol: ProtocolName
+export abstract class BaseProtocolPlugin<LendingPoolType extends LendingPool = LendingPool, PoolIdType extends IPoolId = IPoolId> implements IProtocolPlugin<PoolIdType> {
+    public readonly protocol: PoolIdType['protocol']['name']
     public readonly supportedChains: ChainId[]
     public _ctx: IProtocolPluginContext | undefined
     public readonly schema: z.ZodSchema<PoolIdType>
     public readonly StepBuilders: Partial<ActionBuildersMap>
 
-    protected constructor(protocol: ProtocolName, supportedChains: ChainId[], schema: z.ZodSchema<PoolIdType>, StepBuildersMap: Partial<ActionBuildersMap>) {
+    protected constructor(protocol: PoolIdType['protocol']['name'], supportedChains: ChainId[], schema: z.ZodSchema<PoolIdType>, StepBuildersMap: Partial<ActionBuildersMap>) {
         this.protocol = protocol
         this.supportedChains = supportedChains
         this.schema = schema
