@@ -1,5 +1,5 @@
 import type { ChainInfo, Wallet, Position } from '@summerfi/sdk-common/common'
-import type { IPortfolioManager } from '~sdk-client/interfaces/IPortfolioManager'
+import type { IPortfolioManager } from '../interfaces/IPortfolioManager'
 
 export class PortfolioManager implements IPortfolioManager {
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */

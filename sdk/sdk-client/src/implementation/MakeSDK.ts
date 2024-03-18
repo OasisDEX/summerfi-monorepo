@@ -1,4 +1,4 @@
-import { registerMockProtocols } from '~sdk-client/mocks/mockProtocol'
+import { registerMockProtocols } from '../mocks/mockProtocol'
 import { SDKManager } from './SDKManager'
 
 /**

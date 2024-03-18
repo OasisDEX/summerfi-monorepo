@@ -1,16 +1,14 @@
 import { ChainInfo } from '@summerfi/sdk-common/common'
-import { EmodeType, ILKType, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { createPublicClient, http } from 'viem'
+import { ILKType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { createPublicClient, http, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
-import { PriceService } from '../src/implementation/PriceService'
 import { protocolManager } from '../src/implementation/ProtocolManager'
-import { TokenService } from '../src/implementation/TokenService'
-import { aaveV3Plugin, sparkPlugin } from '../src/index'
 import { IProtocolManagerContext } from "../src/interfaces/IProtocolManagerContext";
-import { MockContractProvider } from '../src/mocks/mockContractProvider'
+import { TokenService, PriceService } from '@summerfi/protocol-plugins'
+import { MockContractProvider } from '@summerfi/protocol-plugins/mocks'
 
 async function createProtocolManagerContext(): Promise<IProtocolManagerContext> {
-  const provider = createPublicClient({
+  const provider: PublicClient = createPublicClient({
     batch: {
       multicall: true,
     },
@@ -40,6 +38,7 @@ describe('playground', () => {
       },
       ilkType: ILKType.ETH_A,
     }
+    protocolManager.init(ctx)
     const result = await protocolManager.getPool(makerPoolId)
     console.log(`
   MAKER POOL
@@ -50,32 +49,5 @@ describe('playground', () => {
   ${result.baseCurrency.toString()}}
   ${JSON.stringify(result.collaterals, null, 4)}
   `)
-  })
-
-  it('template/spark', async () => {
-    const result = await sparkPlugin.getPool(
-      {
-        protocol: {
-          name: ProtocolName.Spark,
-          chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
-        },
-        emodeType: EmodeType.None,
-      },
-      ctx,
-    )
-    console.log(result)
-  })
-
-  it('template/aave-v3', async () => {
-    const result = await aaveV3Plugin.getPool(
-      {
-        protocol: {
-          name: ProtocolName.AAVEv3,
-          chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
-        },
-        emodeType: EmodeType.None,
-      },
-    )
-    console.log(result)
   })
 })

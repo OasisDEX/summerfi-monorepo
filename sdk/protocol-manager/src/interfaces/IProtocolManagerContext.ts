@@ -1,11 +1,3 @@
-import {PublicClient} from "viem";
-import {IPriceService} from "./IPriceService";
-import {ITokenService} from "./ITokenService";
-import {IContractProvider} from "./IContractProvider";
+import { IProtocolPluginContext } from '@summerfi/protocol-plugins'
 
-export interface IProtocolManagerContext {
-    provider: PublicClient
-    tokenService: ITokenService
-    priceService: IPriceService
-    contractProvider: IContractProvider
-}
+export interface IProtocolManagerContext extends  IProtocolPluginContext {}

@@ -1,4 +1,4 @@
-import type { IUser } from '~sdk-client/interfaces/IUser'
+import type { IUser } from '../interfaces/IUser'
 import { SimulationType, Simulation } from '@summerfi/sdk-common/simulation'
 import { Order, IPositionsManager } from '@summerfi/sdk-common/orders'
 

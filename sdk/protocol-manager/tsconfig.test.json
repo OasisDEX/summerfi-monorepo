@@ -5,7 +5,8 @@
     "baseUrl": ".",
     "paths": {
       "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
-      "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"]
+      "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
+      "@summerfi/protocol-plugins/*": ["node_modules/@summerfi/protocol-plugins/src/*"]
     }
   },
   "include": ["src/**/*.ts"],

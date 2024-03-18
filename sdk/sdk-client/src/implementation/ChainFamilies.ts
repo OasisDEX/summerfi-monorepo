@@ -13,32 +13,32 @@ import {
  */
 const EthereumFamily: Record<EthereumChainNames, ChainInfo> = {
   [EthereumChainNames.Mainnet]: {
-    chainId: 1,
+    chainId: ChainId.Mainnet,
     name: EthereumChainNames.Mainnet,
   },
   [EthereumChainNames.Goerli]: {
-    chainId: 5,
+    chainId: ChainId.Goerli,
     name: EthereumChainNames.Goerli,
   },
 }
 
 const ArbitrumFamily: Record<ArbitrumChainNames, ChainInfo> = {
   [ArbitrumChainNames.ArbitrumOne]: {
-    chainId: 42161,
+    chainId: ChainId.Arbitrum,
     name: ArbitrumChainNames.ArbitrumOne,
   },
 }
 
 const OptimismFamily: Record<OptimismChainNames, ChainInfo> = {
   [OptimismChainNames.Optimism]: {
-    chainId: 10,
+    chainId: ChainId.Optimism,
     name: OptimismChainNames.Optimism,
   },
 }
 
 const BaseFamily: Record<BaseChainNames, ChainInfo> = {
   [BaseChainNames.Mainnet]: {
-    chainId: 8453,
+    chainId: ChainId.Base,
     name: BaseChainNames.Mainnet,
   },
 }

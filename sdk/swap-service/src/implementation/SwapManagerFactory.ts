@@ -1,5 +1,5 @@
-import type { ChainId } from '@summerfi/sdk-common/common/aliases'
 import { type IConfigurationProvider } from '@summerfi/configuration-provider'
+import {ChainId} from "@summerfi/sdk-common/common";
 import { SwapManager } from '~swap-service/implementation/SwapManager'
 import { OneInchSwapProvider } from './oneinch/OneInchSwapProvider'
 import { OneInchSwapProviderConfig } from './oneinch/types'

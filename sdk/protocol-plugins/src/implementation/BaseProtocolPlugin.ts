@@ -27,8 +27,9 @@ export abstract class BaseProtocolPlugin<LendingPoolType extends LendingPool, Po
         this.StepBuilders = StepBuildersMap
     }
 
-    init(ctx: IProtocolPluginContext): void  {
+    init(ctx: IProtocolPluginContext): BaseProtocolPlugin<LendingPoolType, PoolIdType>  {
         this._ctx = ctx;
+        return this;
     }
 
     public get ctx(): IProtocolPluginContext {

@@ -1,7 +1,7 @@
 import { steps, getValueFromReference } from '@summerfi/sdk-common/simulation'
 import { ActionNames } from '@summerfi/deployment-types'
 
-import { SparkBorrowAction, SparkDepositAction } from '~protocolplugins/spark/actions'
+import { SparkBorrowAction, SparkDepositAction } from '../actions'
 import { ActionBuilder } from '@summerfi/order-planner-common/builders'
 
 export const SparkDepositBorrowActionList: ActionNames[] = ['SparkDeposit', 'SparkBorrow']

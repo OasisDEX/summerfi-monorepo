@@ -35,12 +35,13 @@ type ExtractPoolIds<P extends ProtocolManager<any>> =
 export class ProtocolManager<ProtocolPlugins extends IProtocolPlugin<any>[]> {
   private readonly plugins: ProtocolPlugins
   private ctx: IProtocolManagerContext | undefined
+
   constructor(plugins: ProtocolPlugins) {
     this.plugins = plugins;
   }
 
-  public init(ctx: IProtocolManagerContext) {
-    this.ctx = ctx;
+  init(ctx: IProtocolManagerContext): void {
+    this.ctx = ctx
   }
 
   public get poolIdSchema(): z.ZodSchema<ExtractPoolIds<typeof this>> {
@@ -54,10 +55,7 @@ export class ProtocolManager<ProtocolPlugins extends IProtocolPlugin<any>[]> {
   public async getPool<PoolId extends GetPoolIds<ProtocolPlugins>>(
     poolId: IPoolId,
   ): Promise<ReturnPool<ProtocolPlugins, PoolId>> {
-    if (!this.ctx) {
-      throw new Error(`Context not initialised`)
-    }
-
+    if (!this.ctx) throw new Error('ProtocolManagerContext not initialised')
     const plugin: IProtocolPlugin<PoolId> | undefined = this.plugins.find(
       (plugin) => plugin.protocol === poolId.protocol.name,
     )
@@ -84,5 +82,12 @@ export const protocolManager = new ProtocolManager([
   sparkProtocolPlugin,
   aaveV3ProtocolPlugin,
 ] as const)
+
+
+type Ids = GetPoolIds<[
+  typeof makerProtocolPlugin,
+  typeof sparkProtocolPlugin,
+  typeof aaveV3ProtocolPlugin,
+]>
 
 export type PoolIds = ExtractPoolIds<typeof protocolManager>

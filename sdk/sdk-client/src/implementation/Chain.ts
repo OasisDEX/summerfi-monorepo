@@ -1,6 +1,6 @@
-import type { IChain } from '~sdk-client/interfaces/IChain'
-import type { TokensManager } from '~sdk-client/implementation/TokensManager'
-import type { ProtocolsManager } from '~sdk-client/implementation/ProtocolsManager'
+import type { IChain } from '../interfaces/IChain'
+import type { TokensManager } from '../implementation/TokensManager'
+import type { ProtocolsManager } from '../implementation/ProtocolsManager'
 import type { ChainInfo } from '@summerfi/sdk-common/common'
 
 export class Chain implements IChain {
