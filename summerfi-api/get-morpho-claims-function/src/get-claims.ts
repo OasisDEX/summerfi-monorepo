@@ -213,6 +213,10 @@ export const getClaims = async ({
       }
       const rewardsPerAccount = parsed.rewards[account]
 
+      if (!rewardsPerAccount) {
+        return []
+      }
+
       return Object.entries(rewardsPerAccount).map(([reward, rewardData]) => {
         const claimable = safeParseBigInt(rewardData.amount) ?? 0n
         const proof = rewardData.proof
