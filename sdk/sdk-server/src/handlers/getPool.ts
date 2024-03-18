@@ -12,11 +12,11 @@ import { mainnet } from 'viem/chains'
 export const getPool = publicProcedure
   .input(
     z.object({
-      poolParameters: protocolManager.poolIdSchema,
+      poolId: protocolManager.poolIdSchema,
     }),
   )
   .query(async (params) => {
-    const poolParameters = params.input.poolParameters
+    const poolId = params.input.poolId
 
     // TODO create client manager to set chain
     const client = createPublicClient({
@@ -30,7 +30,7 @@ export const getPool = publicProcedure
     const priceService = new PriceService(client)
     const contractProvider = new MockContractProvider()
 
-    return protocolManager.getPool(poolParameters, {
+    return protocolManager.getPool(poolId, {
       provider: client,
       tokenService,
       priceService,

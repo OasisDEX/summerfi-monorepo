@@ -18,7 +18,7 @@ export class Protocol extends IRPCClient implements IProtocolClient {
 
   getPool(params: { poolId: PoolIds }): Promise<Maybe<IPool>> {
     return this.rpcClient.getPool.query({
-      poolParameters: params.poolId,
+      poolId: params.poolId,
     })
   }
 }
