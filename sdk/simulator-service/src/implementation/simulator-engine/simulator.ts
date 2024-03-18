@@ -12,23 +12,26 @@ export class Simulator<
   Strategy extends SimulationStrategy,
   NextArray extends NextFunction<SimulationStrategy, string>[] = [],
 > {
+  public schema: Strategy
+  public originalSchema: SimulationStrategy
   private state: SimulationState
   private readonly nextArray: NextArray
 
   private constructor(
-    public schema: Strategy,
-    public originalSchema: SimulationStrategy,
+    schema: Strategy,
+    originalSchema: SimulationStrategy,
     state: SimulationState = { balances: {}, positions: {}, steps: {} },
     nextArray: Readonly<NextArray> = [] as unknown as NextArray,
   ) {
+    this.schema = schema
+    this.originalSchema = originalSchema
     this.state = state
     this.nextArray = nextArray
   }
 
   static create<S extends SimulationStrategy>(schema: S) {
-    // second argument is the same as from the first schema we will substract steps 
-    // with each next step added
-    // and we also need to keep the original schema for future reference
+    // The second argument is the same as from the first schema we will substract steps
+    // with each next step added and we also need to keep the original schema for future reference
     return new Simulator(schema, schema)
   }
 
@@ -53,7 +56,9 @@ export class Simulator<
         const value = (outputs as any)[output]
         // validation if path exists
         if (!value) {
-          throw new Error(`Output not found: ${stepName}.outputs.${output} in ${this.originalSchema[i].step}`)
+          throw new Error(
+            `Output not found: ${stepName}.outputs.${output} in ${this.originalSchema[i].step}`,
+          )
         }
 
         return {
@@ -61,9 +66,9 @@ export class Simulator<
           path,
         }
       }
-      
+
       const nextStep = await this.nextArray[i]({ state: this.state, getReference })
-      
+
       if (nextStep.skip === false || nextStep.skip === undefined) {
         const fullStep = await processStepOutput(nextStep)
         this.state = stateReducer(fullStep, this.state)
