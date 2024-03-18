@@ -1,13 +1,9 @@
 import { ChainInfo, Maybe } from '@summerfi/sdk-common/common'
-import {
-  IPool,
-  PoolParameters,
-  ProtocolName,
-  ProtocolParameters,
-} from '@summerfi/sdk-common/protocols'
+import { IPool, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { IProtocolClient } from '../interfaces/IProtocolClient'
 import { IRPCClient } from '../interfaces/IRPCClient'
 import { RPCClientType } from '../rpc/SDKClient'
+import { PoolIds } from '@summerfi/protocol-manager'
 
 export class Protocol extends IRPCClient implements IProtocolClient {
   public readonly name: ProtocolName
@@ -20,13 +16,9 @@ export class Protocol extends IRPCClient implements IProtocolClient {
     this.chainInfo = params.chainInfo
   }
 
-  getPool(params: {
-    poolParameters: PoolParameters
-    protocolParameters?: ProtocolParameters
-  }): Promise<Maybe<IPool>> {
+  getPool(params: { poolId: PoolIds }): Promise<Maybe<IPool>> {
     return this.rpcClient.getPool.query({
-      ...params,
-      protocol: this,
+      poolParameters: params.poolId,
     })
   }
 }

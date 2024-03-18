@@ -5,7 +5,7 @@ import { Token } from './Token'
 interface IPriceSerialized {
   value: string
   baseToken: Token
-  quoteToken?: Token | CurrencySymbol
+  quoteToken: Token | CurrencySymbol
 }
 
 /**
@@ -22,11 +22,19 @@ export class Price implements IPriceSerialized {
   private constructor(params: IPriceSerialized) {
     this.value = params.value
     this.baseToken = params.baseToken
-    this.quoteToken = params.quoteToken ? params.quoteToken : Price.DEFAULT_QUOTE_TOKEN
+    this.quoteToken = params.quoteToken
   }
 
-  static createFrom(params: { value: string; baseToken: Token; quoteToken?: Token }): Price {
-    return new Price(params)
+  static createFrom(params: {
+    value: string
+    baseToken: Token
+    quoteToken?: Token | CurrencySymbol
+  }): Price {
+    return new Price({
+      value: params.value,
+      baseToken: params.baseToken,
+      quoteToken: params.quoteToken || Price.DEFAULT_QUOTE_TOKEN,
+    })
   }
 
   toString(): string {

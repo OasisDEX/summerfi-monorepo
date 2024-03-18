@@ -8,25 +8,25 @@ import {
   Address,
   type Maybe,
   ChainFamilyMap,
+  Price,
 } from '@summerfi/sdk-common/common'
 
 import {
-  // LendingPool,
-  LendingPoolParameters,
-  // IPool,
   PoolType,
   ProtocolName,
-  isLendingPool,
-  type LendingPool,
   isMakerPoolId,
   ILKType,
+  LendingPoolParameters,
   isSparkPoolId,
   EmodeType,
+  isLendingPool,
+  LendingPool,
 } from '@summerfi/sdk-common/protocols'
-import { type RefinanceParameters } from '@summerfi/sdk-common/orders'
-import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { makeSDK, type Chain, type User, Protocol } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
+import { Order, RefinanceParameters } from '@summerfi/sdk-common/orders'
+import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { PoolIds } from '@summerfi/protocol-manager'
 
 describe.skip('Refinance | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
@@ -82,6 +82,7 @@ describe.skip('Refinance | SDK', () => {
     expect(prevPosition.riskRatio).toEqual(
       RiskRatio.createFrom({
         ratio: Percentage.createFrom({ percentage: 20.3 }),
+        type: RiskRatio.type.LTV,
       }),
     )
 
@@ -90,7 +91,7 @@ describe.skip('Refinance | SDK', () => {
     }
 
     expect(prevPosition.pool.poolId.ilkType).toEqual(ILKType.ETH_A)
-    expect(prevPosition.pool.poolId.vaultId).toEqual('testvault')
+    // expect(prevPosition.pool.poolId.vaultId).toEqual('testvault')
     expect(prevPosition.pool.protocol).toEqual({
       name: ProtocolName.Maker,
       chainInfo: chain.chainInfo,
@@ -109,13 +110,47 @@ describe.skip('Refinance | SDK', () => {
     expect(spark.name).toEqual(ProtocolName.Spark)
 
     const poolPair: LendingPoolParameters = {
-      collateralTokens: [WETH],
-      debtTokens: [DAI],
+      debts: {
+        [WETH.address.value]: {
+          token: WETH,
+          price: Price.createFrom({ value: '123.45', baseToken: WETH }),
+          priceUSD: Price.createFrom({ value: '123.45', baseToken: WETH }),
+          rate: Percentage.createFrom({ percentage: 0.5 }),
+          totalBorrowed: TokenAmount.createFrom({ token: WETH, amount: '123456.78' }),
+          debtCeiling: TokenAmount.createFrom({ token: WETH, amount: '100000000.78' }),
+          debtAvailable: TokenAmount.createFrom({ token: WETH, amount: '100000000.78' }),
+          dustLimit: TokenAmount.createFrom({ token: WETH, amount: '0.0001' }),
+          originationFee: Percentage.createFrom({ percentage: 0.5 }),
+        },
+      },
+      collaterals: {
+        [DAI.address.value]: {
+          token: DAI,
+          price: Price.createFrom({ value: '123.45', baseToken: DAI }),
+          priceUSD: Price.createFrom({ value: '123.45', baseToken: DAI }),
+          liquidationThreshold: RiskRatio.createFrom({
+            ratio: Percentage.createFrom({ percentage: 0.5 }),
+            type: RiskRatio.type.LTV,
+          }),
+          maxSupply: TokenAmount.createFrom({ token: DAI, amount: '100000000' }),
+          tokensLocked: TokenAmount.createFrom({ token: DAI, amount: '123456.78' }),
+          liquidationPenalty: Percentage.createFrom({ percentage: 0.5 }),
+        },
+      },
+    }
+
+    const poolId: PoolIds = {
+      protocol: {
+        name: ProtocolName.Spark,
+        chainInfo: chain.chainInfo,
+      },
+      emodeType: EmodeType.None,
     }
 
     const newPool = await spark.getPool({
-      poolParameters: poolPair,
+      poolId,
     })
+
     if (!newPool) {
       fail('Pool not found')
     }
@@ -137,13 +172,12 @@ describe.skip('Refinance | SDK', () => {
     // TODO: this should have spark protocol type so we don't need to cast, derive it from the protocol name
     const newLendingPool = newPool as LendingPool
 
-    expect(newLendingPool.maxLTV).toEqual(Percentage.createFrom({ percentage: 50.3 }))
-    expect(newLendingPool.debtTokens).toEqual(poolPair.debtTokens)
-    expect(newLendingPool.collateralTokens).toEqual(poolPair.collateralTokens)
+    expect(newLendingPool.debts).toEqual(poolPair.debts)
+    expect(newLendingPool.collaterals).toEqual(poolPair.collaterals)
 
     const refinanceParameters: RefinanceParameters = {
       position: prevPosition,
-      targetPool: newPool,
+      targetPool: newLendingPool,
       slippage: Percentage.createFrom({ percentage: 0.5 }),
     }
 
@@ -151,19 +185,25 @@ describe.skip('Refinance | SDK', () => {
       await sdk.simulator.refinance.simulateRefinancePosition(refinanceParameters)
 
     expect(refinanceSimulation).toBeDefined()
-    // expect(refinanceSimulation.sourcePosition).toEqual(prevPosition)
-    // expect(refinanceSimulation.targetPosition.pool).toEqual(newPool)
+    expect(refinanceSimulation.sourcePosition).toEqual(prevPosition)
+    expect(refinanceSimulation.targetPosition.pool).toEqual(newPool)
 
-    // TODO: uncomment this when the simulator is connected
-    // expect(refinanceSimulation).toBeDefined()
-    // expect(refinanceSimulation.sourcePosition).toEqual(prevPosition)
-    // expect(refinanceSimulation.targetPosition.pool).toEqual(newPool)
+    expect(refinanceSimulation).toBeDefined()
+    expect(refinanceSimulation.sourcePosition).toEqual(prevPosition)
+    expect(refinanceSimulation.targetPosition.pool).toEqual(newPool)
 
-    // const refinanceOrder: Order = await user.newOrder({
-    //   simulation: refinanceSimulation,
-    // })
+    const refinanceOrder: Maybe<Order> = await user.newOrder({
+      positionsManager: {
+        address: Address.ZeroAddressEthereum,
+      },
+      simulation: refinanceSimulation,
+    })
 
-    // expect(refinanceOrder.simulation).toEqual(refinanceSimulation)
-    // expect(refinanceOrder.transactions).toEqual([])
+    if (!refinanceOrder) {
+      fail('Order not found')
+    }
+
+    expect(refinanceOrder.simulation).toEqual(refinanceSimulation)
+    expect(refinanceOrder.transactions).toEqual([])
   })
 })

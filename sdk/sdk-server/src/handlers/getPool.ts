@@ -1,17 +1,39 @@
 import { z } from 'zod'
-import type { IProtocol, PoolParameters, ProtocolParameters } from '@summerfi/sdk-common/protocols'
 import { publicProcedure } from '../TRPC'
+import {
+  PriceService,
+  TokenService,
+  protocolManager,
+  MockContractProvider,
+} from '@summerfi/protocol-manager'
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 export const getPool = publicProcedure
   .input(
     z.object({
-      protocol: z.custom<IProtocol>((protocol) => protocol !== undefined),
-      poolParameters: z.custom<PoolParameters>((poolParameter) => poolParameter !== undefined),
-      protocolParameters: z
-        .custom<ProtocolParameters>((protocolParameters) => protocolParameters !== undefined)
-        .optional(),
+      poolParameters: protocolManager.poolIdSchema,
     }),
   )
-  .query(async () => {
-    throw new Error('Not implemented')
+  .query(async (params) => {
+    const poolParameters = params.input.poolParameters
+
+    // TODO create client manager to set chain
+    const client = createPublicClient({
+      batch: {
+        multicall: true,
+      },
+      chain: mainnet,
+      transport: http(),
+    })
+    const tokenService = new TokenService()
+    const priceService = new PriceService(client)
+    const contractProvider = new MockContractProvider()
+
+    return protocolManager.getPool(poolParameters, {
+      provider: client,
+      tokenService,
+      priceService,
+      contractProvider,
+    })
   })

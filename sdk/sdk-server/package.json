@@ -27,6 +27,7 @@
     "@summerfi/order-planner-common": "workspace:*",
     "@summerfi/order-planner-service": "workspace:*",
     "@summerfi/protocol-plugins": "workspace:*",
+    "@summerfi/protocol-manager": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/simulator-service": "workspace:^",

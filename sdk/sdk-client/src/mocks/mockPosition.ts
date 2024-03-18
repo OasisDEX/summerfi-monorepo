@@ -43,12 +43,15 @@ export async function getMockPosition(params: {
     }),
     riskRatio: RiskRatio.createFrom({
       ratio: Percentage.createFrom({ percentage: 20.3 }),
+      type: RiskRatio.type.LTV,
     }),
     pool: {
       poolId: {
-        protocol: ProtocolName.Maker,
+        protocol: {
+          name: ProtocolName.Maker,
+          chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
+        },
         ilkType: ILKType.ETH_A,
-        vaultId: 'testvault',
       } as MakerPoolId,
       protocol: {
         name: ProtocolName.Maker,

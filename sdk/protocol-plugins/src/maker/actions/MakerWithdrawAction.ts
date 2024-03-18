@@ -26,7 +26,8 @@ export class MakerWithdrawAction extends BaseAction {
     // TODO: get the join address from the protocol
     return this._encodeCall({
       arguments: [
-        params.pool.poolId.vaultId,
+        // TODO: get vaultId by other means prev - params.pool.poolId.vaultId,
+        0,
         params.userAddress.toString(),
         // joinAddr,
         params.amount.toBaseUnit(),
