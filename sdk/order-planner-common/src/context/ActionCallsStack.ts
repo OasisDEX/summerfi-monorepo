@@ -11,7 +11,8 @@ export class ActionCallsStack {
   }
 
   public addCall(params: { call: ActionCall }): void {
-    if (this.callsStack.length === 0) {
+    // Check that at least one subcontext is open
+    if (this.subContextLevels === 0) {
       throw new Error('Cannot add a call outside of a subcontext')
     }
 
@@ -30,7 +31,7 @@ export class ActionCallsStack {
     return { callsBatch, customData }
   }
 
-  public get levels(): number {
+  public get subContextLevels(): number {
     return this.callsStack.length
   }
 }

@@ -11,8 +11,9 @@ type AddressName =
   | 'MorphoBlue'
   | 'URD_Morpho'
   | 'URD_wstETH'
-  | 'URD_SWISE'
-  | 'URD_USDC'
+  | 'URD_SWISE_StakeWise'
+  | 'URD_USDC_EtherFi'
+  | 'URD_USDC_Renzo'
   | 'wstETH'
   | 'SWISE'
   | 'Morpho'
@@ -24,8 +25,9 @@ const addressesBook: Record<AddressName, Address> = {
   MorphoBlue: '0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb',
   URD_Morpho: '0x678dDC1d07eaa166521325394cDEb1E4c086DF43',
   URD_wstETH: '0x2EfD4625d0c149EbADf118EC5446c6de24d916A4',
-  URD_SWISE: '0xfd9b178257ae397a674698834628262fd858aad3',
-  URD_USDC: '0xb5b17231e2c89ca34ce94b8cb895a9b124bb466e',
+  URD_SWISE_StakeWise: '0xfd9b178257ae397a674698834628262fd858aad3',
+  URD_USDC_EtherFi: '0xB5b17231E2C89Ca34CE94B8CB895A9B124BB466e',
+  URD_USDC_Renzo: '0x7815CAb40D9b83021f55418a013cceC3813646FB',
   wstETH: '0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0',
   SWISE: '0x48C3399719B582dD63eB5AADf12A40B4C3f52FA2',
   Morpho: '0x9994E35Db50125E0DF82e4c2dde62496CE330999',
@@ -128,13 +130,19 @@ export const getRewards = async ({
           ],
           [
             addressesBook.MorphoOperator,
-            addressesBook.URD_SWISE,
+            addressesBook.URD_SWISE_StakeWise,
             addressesBook.SWISE,
             market.marketId,
           ],
           [
             addressesBook.MorphoOperator,
-            addressesBook.URD_USDC,
+            addressesBook.URD_USDC_EtherFi,
+            addressesBook.USDC,
+            market.marketId,
+          ],
+          [
+            addressesBook.MorphoOperator,
+            addressesBook.URD_USDC_Renzo,
             addressesBook.USDC,
             market.marketId,
           ],
@@ -151,7 +159,7 @@ export const getRewards = async ({
         market: MorphoMarket
         rewards: MorphoReward[]
       }> => {
-        const [morpho, wsteth, swise, usdc] = await publicClient.multicall({
+        const [morpho, wsteth, swise, usdcEtherFi, usdcRenzo] = await publicClient.multicall({
           contracts: args.args.map((args) => ({
             abi: morphoEmissionDataProviderAbi,
             address: addressesBook.EmissionDataProvider,
@@ -209,17 +217,24 @@ export const getRewards = async ({
           })
         }
 
-        if (usdc.status === 'success') {
-          rewards.push({
+        if (usdcEtherFi.status === 'success') {
+          const reward: MorphoReward = {
             token: {
               address: addressesBook.USDC,
               decimals: 6,
               symbol: 'USDC',
             },
-            supplyRewardTokensPerYear: usdc.result[0],
-            borrowRewardTokensPerYear: usdc.result[1],
-            collateralRewardTokensPerYear: usdc.result[2],
-          })
+            supplyRewardTokensPerYear: usdcEtherFi.result[0],
+            borrowRewardTokensPerYear: usdcEtherFi.result[1],
+            collateralRewardTokensPerYear: usdcEtherFi.result[2],
+          }
+
+          if (usdcRenzo.status === 'success') {
+            reward.supplyRewardTokensPerYear += usdcRenzo.result[0]
+            reward.borrowRewardTokensPerYear += usdcRenzo.result[1]
+            reward.collateralRewardTokensPerYear += usdcRenzo.result[2]
+          }
+          rewards.push(reward)
         }
 
         return {

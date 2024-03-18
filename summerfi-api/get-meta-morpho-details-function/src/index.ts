@@ -62,13 +62,23 @@ export interface RewardsByMarket {
       decimals: number
       priceUsd: number | undefined
     }
+    quote: {
+      address: Address
+      symbol: string
+      decimals: number
+      priceUsd: number | undefined
+    }
     liquidationLtv: number
+    suppliedAssets: bigint
+    suppliedAssetsHumanReadable: BigNumber
+    allocation: number
   }
   tokens: RewardToken[]
 }
 
 export interface GetRewardsResponse {
   metaMorpho: {
+    name: string
     address: Address
     weeklyApy: number
     monthlyApy: number
@@ -89,6 +99,7 @@ const emptyResponse = (metaMorpho: Address): GetRewardsResponse => ({
     dailyApy: 0,
     apy: 0,
     fee: 0,
+    name: '',
     totalAssets: 0n,
   },
   rewardsByMarket: [],
@@ -228,6 +239,17 @@ export const handler = async (
             decimals: a.market.collateral.decimals,
             priceUsd: a.market.collateral.priceUsd,
           },
+          quote: {
+            address: a.market.loan.address,
+            symbol: a.market.loan.symbol,
+            decimals: a.market.loan.decimals,
+            priceUsd: a.market.loan.priceUsd,
+          },
+          suppliedAssetsHumanReadable: new BigNumber(a.suppliedAssets.toString()).shiftedBy(
+            -a.market.loan.decimals,
+          ),
+          suppliedAssets: a.suppliedAssets,
+          allocation: a.allocation,
         },
         tokens: tokens.filter((t) => t.amountWei > 0n),
       }
@@ -251,6 +273,7 @@ export const handler = async (
 
   const response: GetRewardsResponse = {
     metaMorpho: {
+      name: metaMorphoVault.name,
       address: params.address,
       weeklyApy: metaMorphoVault.weeklyApy,
       monthlyApy: metaMorphoVault.monthlyApy,

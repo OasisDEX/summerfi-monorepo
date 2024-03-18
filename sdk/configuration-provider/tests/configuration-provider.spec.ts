@@ -1,6 +1,6 @@
 import { ConfigurationProvider } from '../src/implementation/ConfigurationProvider'
 
-describe.skip('Configuration Provider', () => {
+describe('Configuration Provider', () => {
   it('should return config values', () => {
     const configProvider = new ConfigurationProvider()
 

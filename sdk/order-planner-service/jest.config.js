@@ -8,7 +8,6 @@ module.exports = {
     '<rootDir>/**/*.{ts,tsx}',
     '!src/**/index.ts',
     '!src/config/config.ts',
-    '!src/implementation/OrderPlannerService.ts',
     '!src/interfaces/IOrderPlannerService.ts',
   ],
   coveragePathIgnorePatterns: ['/tests/utils/', '/tests/mocks/'],
