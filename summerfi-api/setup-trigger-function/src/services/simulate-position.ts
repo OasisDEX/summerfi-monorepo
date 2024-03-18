@@ -91,10 +91,10 @@ export function simulatePosition(
 
   const collateralAmountAfterBuy = result.position.collateral.amount.isNaN()
     ? 0n
-    : BigInt(result.position.collateral.amount.abs().toString())
+    : BigInt(result.position.collateral.amount.abs().toFixed())
   const debtAmountAfterBuy = result.position.debt.amount.isNaN()
     ? 0n
-    : BigInt(result.position.debt.amount.toString())
+    : BigInt(result.position.debt.amount.toFixed())
   const calculatedTargetLTV = BigInt(
     result.position.riskRatio.loanToValue.times(10_000).integerValue().toNumber(),
   )

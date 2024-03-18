@@ -1,3 +1,4 @@
+import { ILKType } from '@summerfi/sdk-common/protocols'
 import { BaseAction } from '../src/actions/BaseAction'
 import { ActionCall } from '../src/actions'
 import { OrderPlannerContext } from '../src/context'
@@ -33,7 +34,7 @@ class DerivedAction extends BaseAction {
   }
 }
 
-describe.only('Order Planner Context', () => {
+describe('Order Planner Context', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
 
   // Tokens
@@ -72,15 +73,15 @@ describe.only('Order Planner Context', () => {
   })
 
   const protocol = {
-    name: ProtocolName.Maker,
+    name: ProtocolName.Maker as const,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   }
 
-  const poolId = {
-    protocol: ProtocolName.Maker,
-    ilkType: 'ETH-A',
-    vaultId: 'somevault',
-  } as MakerPoolId
+  const poolId: MakerPoolId = {
+    protocol: protocol,
+    ilkType: ILKType.ETH_A,
+    vaultId: '123',
+  }
 
   const pool = {
     type: PoolType.Lending,

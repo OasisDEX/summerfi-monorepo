@@ -54,7 +54,7 @@ export interface RefinanceDependencies {
 
 export async function refinaceLendingToLending(
   args: RefinanceParameters,
-  dependecies: RefinanceDependencies,
+  dependencies: RefinanceDependencies,
 ): Promise<Simulation<SimulationType.Refinance>> {
   // args validation
   if (!isLendingPool(args.targetPool)) {
@@ -66,13 +66,14 @@ export async function refinaceLendingToLending(
   const simulator = Simulator.create(refinanceStrategy)
 
   const isCollateralSwapSkipped =
-    args.position.collateralAmount.token.address === args.targetPool.collateralTokens[0].address
+    args.targetPool.collaterals[args.position.collateralAmount.token.address.value] !== undefined
   const isDebtSwapSkipped =
-    args.position.debtAmount.token.address === args.targetPool.debtTokens[0].address
+    args.targetPool.debts[args.position.debtAmount.token.address.value] !== undefined
+
   // let debtSwapQuote: Quote | undefined
   // TODO: implement case with swaps
   // if (!isDebtSwapSkipped) {
-  //     debtSwapQuote = await dependecies.getQuote({
+  //     debtSwapQuote = await dependencies.getQuote({
   //         from: args.targetPool.debtTokens[0],
   //         to: args.position.debtAmount.token,
   //         slippage: args.slippage,
@@ -111,13 +112,17 @@ export async function refinaceLendingToLending(
       name: 'CollateralSwap',
       type: SimulationSteps.Swap,
       inputs: {
-        ...(await dependecies.swapManager.getSwapQuoteExactInput({
+        ...(await dependencies.swapManager.getSwapQuoteExactInput({
           chainInfo: args.position.pool.protocol.chainInfo,
           fromAmount: args.position.collateralAmount,
-          toToken: args.targetPool.collateralTokens[0],
+          toToken:
+            args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token,
         })),
+        // inputs: await dependencies.getQuote({
+        //   from: args.position.collateralAmount,
+        //   to: args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token,
         slippage: args.slippage,
-        fee: dependecies.getSummerFee(),
+        fee: dependencies.getSummerFee(),
       },
       skip: isCollateralSwapSkipped,
     }))
@@ -131,20 +136,29 @@ export async function refinaceLendingToLending(
             : ['CollateralSwap', 'receivedAmount'],
         ),
         borrowAmount: args.position.debtAmount, // TODO figure the debt amount
-        position: newEmptyPositionFromPool(args.targetPool),
+        position: newEmptyPositionFromPool(
+          args.targetPool,
+          args.position.debtAmount.token.address.value,
+          args.position.collateralAmount.token.address.value,
+        ),
       },
     }))
     .next(async (ctx) => ({
       name: 'DebtSwap',
       type: SimulationSteps.Swap,
+      // inputs: await dependencies.getQuote({
+      //   from: getReferencedValue(ctx.getReference(['DepositBorrow', 'borrowAmount'])),
+      //   to: args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token,
       inputs: {
-        ...(await dependecies.swapManager.getSwapQuoteExactInput({
+        ...(await dependencies.swapManager.getSwapQuoteExactInput({
           chainInfo: args.position.pool.protocol.chainInfo,
-          fromAmount: getReferencedValue(ctx.getReference(['DepositBorrowToTarget', 'borrowAmount'])),
-          toToken: flashloanAmount.token,
+          fromAmount: getReferencedValue(
+            ctx.getReference(['DepositBorrowToTarget', 'borrowAmount']),
+          ),
+          toToken: args.targetPool.debts[args.position.debtAmount.token.address.value].token,
         })),
         slippage: args.slippage,
-        fee: dependecies.getSummerFee(),
+        fee: dependencies.getSummerFee(),
       },
       skip: isDebtSwapSkipped,
     }))
@@ -159,7 +173,8 @@ export async function refinaceLendingToLending(
       name: 'ReturnFunds',
       type: SimulationSteps.ReturnFunds,
       inputs: {
-        token: args.targetPool.collateralTokens[0],
+        token:
+          args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token,
       },
       skip: isDebtSwapSkipped,
     }))

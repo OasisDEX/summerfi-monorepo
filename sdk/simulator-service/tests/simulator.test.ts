@@ -46,6 +46,7 @@ describe('Refinance', () => {
       const targetPosition = simulation.targetPosition
 
       expect(targetPosition.pool).toEqual(testTargetLendingPool)
+      expect(targetPosition.positionId).toBeDefined()
     })
 
     it('should open position with id', async () => {

@@ -43,7 +43,9 @@ export class Simulator<
         const step: Maybe<steps.Steps> = this.state.steps[stepName]
 
         if (!step) {
-          throw new Error(`Step not found: ${stepName} in ${this.originalSchema[i].step}`)
+          throw new Error(
+            `Step not found: ${stepName} in ${this.originalSchema[i].step} at iteration ${i}`,
+          )
         }
 
         const outputs = step.outputs

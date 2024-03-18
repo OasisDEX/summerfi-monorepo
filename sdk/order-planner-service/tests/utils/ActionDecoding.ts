@@ -9,21 +9,21 @@ import {
   toBytes,
 } from 'viem'
 
-export const OperationExecutorSelector = '85e92d98'
-
 export function getTargethash(action: BaseAction): string {
   return keccak256(toBytes(action.getVersionedName()))
 }
 
-export function decodeActionCalldata(
-  action: BaseAction,
-  calldata: HexData | string,
-):
+export function decodeActionCalldata<Action extends BaseAction>(params: {
+  action: Action
+  calldata: HexData | string
+}):
   | {
       args: readonly unknown[]
       mapping: number[]
     }
   | undefined {
+  const { action, calldata } = params
+
   const opExecutorAbiSpec = [
     'function execute(bytes calldata data, uint8[] paramsMap) external payable returns (bytes calldata)',
   ]

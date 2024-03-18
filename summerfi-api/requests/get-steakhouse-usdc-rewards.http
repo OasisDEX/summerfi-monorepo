@@ -7,4 +7,4 @@
 # `morphoPrice` - optional, price of MORPHO in USD (without the price the APY is not calculated).
 # `swisePrice` - optional, price of SWISE in USD (without the price the APY is not calculated).
 # `usdcPrice` - optional, price of USDC in USD (without the price the APY is not calculated).
-GET {{url}}/api/meta-morpho?address={{steakhouse-usdc-address}}&wsEthPrice=4604.81
+GET {{url}}/api/morpho/meta-morpho?address={{steakhouse-usdc-address}}&wsEthPrice=4604.81

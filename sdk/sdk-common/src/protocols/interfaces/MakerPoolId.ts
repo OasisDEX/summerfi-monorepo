@@ -1,5 +1,6 @@
+import { ChainInfo } from '../../common/implementation/ChainInfo'
 import { ProtocolName } from '../enums/ProtocolName'
-import { IPoolId } from './IPoolId'
+import { IPoolId, isPoolId } from './IPoolId'
 
 // TODO: this will probably need to be moved to the protocol plugins package
 export enum ILKType {
@@ -20,11 +21,19 @@ export enum ILKType {
 
 // TODO: temporary interface so FE can create this data types without talking to a service
 export interface MakerPoolId extends IPoolId {
-  protocol: ProtocolName.Maker
+  protocol: {
+    name: ProtocolName.Maker
+    chainInfo: ChainInfo
+  }
   ilkType: ILKType
   vaultId: string
 }
 
-export function isMakerPoolId(poolId: IPoolId): poolId is MakerPoolId {
-  return poolId.protocol === ProtocolName.Maker
+export function isMakerPoolId(maybePoolId: unknown): maybePoolId is MakerPoolId {
+  return (
+    isPoolId(maybePoolId) &&
+    'ilkType' in maybePoolId &&
+    'vaultId' in maybePoolId &&
+    maybePoolId.protocol.name === ProtocolName.Maker
+  )
 }

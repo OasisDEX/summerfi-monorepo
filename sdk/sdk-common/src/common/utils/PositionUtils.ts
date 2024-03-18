@@ -1,14 +1,22 @@
 import { LendingPool } from '../../protocols/implementation/LendingPool'
+import { AddressValue } from '../../common/aliases/AddressValue'
 import { TokenAmount } from '../implementation/TokenAmount'
 import { Position } from '../implementation/Position'
 
-export function newEmptyPositionFromPool(pool: LendingPool): Position {
+export function newEmptyPositionFromPool(
+  pool: LendingPool,
+  debtAddress: AddressValue,
+  collateralAddress: AddressValue,
+): Position {
+  const debtConfig = pool.debts[debtAddress]
+  const collateralConfig = pool.collaterals[collateralAddress]
+
   return new Position({
     positionId: {
       id: 'newEmptyPositionFromPool',
     },
-    debtAmount: TokenAmount.createFrom({ token: pool.debtTokens[0], amount: '0' }),
-    collateralAmount: TokenAmount.createFrom({ token: pool.collateralTokens[0], amount: '0' }),
+    debtAmount: TokenAmount.createFrom({ token: debtConfig.token, amount: '0' }),
+    collateralAmount: TokenAmount.createFrom({ token: collateralConfig.token, amount: '0' }),
     pool,
   })
 }
