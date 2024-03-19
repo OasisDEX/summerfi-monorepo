@@ -1,6 +1,7 @@
 import { ITokenService } from '../interfaces/ITokenService'
 import { Address, ChainInfo, Token, TokenSymbol } from '@summerfi/sdk-common/common'
 
+// TODO: Create a separate service and connect up to SDK router
 // TODO: Implement the TokenService to handle different chains
 export class TokenService implements ITokenService {
   private tokens: Record<string, Token> = {

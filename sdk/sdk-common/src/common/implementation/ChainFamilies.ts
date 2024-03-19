@@ -6,7 +6,7 @@ import {
   OptimismChainNames,
 } from '../enums/ChainNames'
 import { ChainInfo } from './ChainInfo'
-import { ChainId } from '@summerfi/sdk-common/common'
+import { ChainId } from '../aliases/ChainId'
 
 /**
  * Chain definition per family
@@ -92,21 +92,9 @@ export function getChainInfoByChainId(chainId: ChainId): ChainInfo | undefined {
   return chainIdToChainInfoMap[chainId]
 }
 
-// Utility type to extract ChainInfo type arrays
-type ChainInfoArray<T extends ChainFamilyName> = T extends ChainFamilyName.Ethereum
-    ? Array<ChainInfo>
-    : T extends ChainFamilyName.Arbitrum
-        ? Array<ChainInfo>
-        : T extends ChainFamilyName.Optimism
-            ? Array<ChainInfo>
-            : T extends ChainFamilyName.Base
-                ? Array<ChainInfo>
-                : never;
-
-// Generic function to safely get the values from a chain family
-export function valuesOfChainFamilyMap<T extends ChainFamilyName>(family: T): ChainInfoArray<T> {
-  const familyMap = ChainFamilyMap[family];
-  return Object.values(familyMap) as ChainInfoArray<T>;
+export function valuesOfChainFamilyMap(families: ChainFamilyName[]): ChainInfo[] {
+  return families.flatMap(family => {
+    const familyMap = ChainFamilyMap[family];
+    return Object.values(familyMap);
+  });
 }
-
-

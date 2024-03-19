@@ -8,7 +8,9 @@ import {
   RiskRatio,
   Position,
   ChainId,
-  ChainInfo
+  ChainInfo,
+  ChainFamilyName,
+  valuesOfChainFamilyMap
 } from '@summerfi/sdk-common/common'
 import { SimulationSteps } from '@summerfi/sdk-common/simulation'
 import type { SparkPoolId } from '@summerfi/sdk-common/protocols'
@@ -28,8 +30,7 @@ import { UNCAPPED_SUPPLY, PRECISION_BI } from '../implementation/constants'
 
 export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
   public static protocol: ProtocolName.Spark = ProtocolName.Spark
-  // TODO: Replace with ChainFamilyMap entries post merge
-  public static supportedChains = [ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' })]
+  public static supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
   public static schema = z.object({
     protocol: z.object({
       name: z.literal(ProtocolName.Spark),

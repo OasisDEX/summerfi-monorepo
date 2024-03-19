@@ -4,7 +4,8 @@ import { Address, CurrencySymbol, Price, Token, TokenSymbol } from '@summerfi/sd
 import { BigNumber } from 'bignumber.js'
 import { priceFeedABI } from '../interfaces/priceFeedABI'
 
-// TODO: implement for different chains, right now supports only Ethereum
+// TODO: Create a separate service and connect up to SDK router
+// TODO: Implement the PriceService to handle different chains
 export class PriceService implements IPriceService {
   private priceFeed = '0x47Fb2585D2C56Fe188D0E6ec628a38b74fCeeeDf' as const
   private abi = priceFeedABI

@@ -8,7 +8,8 @@ import {
   Address,
   Position,
   ChainId,
-  ChainInfo
+  ChainFamilyName,
+  valuesOfChainFamilyMap
 } from '@summerfi/sdk-common/common'
 import {ILKType} from "@summerfi/sdk-common/protocols";
 import {SimulationSteps} from "@summerfi/sdk-common/simulation";
@@ -17,7 +18,6 @@ import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { stringToHex, getContract } from 'viem'
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
-import {IProtocolPlugin} from "../interfaces";
 import {MakerPaybackWithdrawActionBuilder} from "./builders/MakerPaybackWithdrawActionBuilder";
 import {BaseProtocolPlugin} from "../implementation/BaseProtocolPlugin";
 import {IPositionId} from "../interfaces/IPositionId";
@@ -27,9 +27,7 @@ import { PRECISION_BI, PRECISION } from '../implementation/constants'
 
 export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerPoolId> {
   public static protocol: ProtocolName.Maker = ProtocolName.Maker
-
-  // TODO: Replace with ChainFamilyMap entries post merge
-  public static supportedChains = [ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' })]
+  public static supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
   public static schema = z.object({
     protocol: z.object({
       name: z.literal(ProtocolName.Maker),

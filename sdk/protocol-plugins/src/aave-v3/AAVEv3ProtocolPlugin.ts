@@ -7,8 +7,9 @@ import {
   Price,
   CurrencySymbol,
   RiskRatio,
+  ChainFamilyName,
+  valuesOfChainFamilyMap
 } from '@summerfi/sdk-common/common'
-import {ChainInfo} from "@summerfi/sdk-common/common";
 import type { AaveV3PoolId } from '@summerfi/sdk-common/protocols'
 import { PoolType, ProtocolName, EmodeType } from '@summerfi/sdk-common/protocols'
 import { BigNumber } from 'bignumber.js'
@@ -21,8 +22,7 @@ import { ChainId } from '@summerfi/sdk-common/common'
 
 export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
   public static protocol: ProtocolName.AAVEv3 = ProtocolName.AAVEv3
-  // TODO: Replace with ChainFamilyMap entries post merge
-  public static supportedChains = [ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' })]
+  public static supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum, ChainFamilyName.Base, ChainFamilyName.Arbitrum, ChainFamilyName.Optimism])
   public static schema = z.object({
     protocol: z.object({
       name: z.literal(ProtocolName.AAVEv3),
@@ -79,7 +79,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
         data: { totalAToken },
       } = asset
 
-      const LTV_TO_PERCENTAGE_DIVISOR = 100n
+      const LTV_TO_PERCENTAGE_DIVISOR = new BigNumber(100);
 
       try {
         collaterals[collateralToken.address.value] = {
@@ -96,13 +96,13 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
           }),
           maxLtv: RiskRatio.createFrom({
             ratio: Percentage.createFrom({
-              percentage: Number((ltv / LTV_TO_PERCENTAGE_DIVISOR).toString()),
+              percentage: new BigNumber(ltv.toString()).div(LTV_TO_PERCENTAGE_DIVISOR).toNumber(),
             }),
             type: RiskRatio.type.LTV,
           }),
           liquidationThreshold: RiskRatio.createFrom({
             ratio: Percentage.createFrom({
-              percentage: Number((liquidationThreshold / LTV_TO_PERCENTAGE_DIVISOR).toString()),
+              percentage: new BigNumber(liquidationThreshold.toString()).div(LTV_TO_PERCENTAGE_DIVISOR).toNumber(),
             }),
             type: RiskRatio.type.LTV,
           }),
@@ -115,7 +115,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
             amount: supplyCap === 0n ? UNCAPPED_SUPPLY : supplyCap.toString(),
           }),
           liquidationPenalty: Percentage.createFrom({
-            percentage: Number((liquidationBonus / LTV_TO_PERCENTAGE_DIVISOR).toString()),
+            percentage: new BigNumber(liquidationBonus.toString()).div(LTV_TO_PERCENTAGE_DIVISOR).toNumber(),
           }),
           apy: Percentage.createFrom({ percentage: 0 }),
           usageAsCollateralEnabled,
