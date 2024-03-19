@@ -91,4 +91,5 @@ export const protocolManager = new ProtocolManager([
   aaveV3ProtocolPlugin,
 ] as const)
 
+export type PoolIds = ExtractPoolIds<typeof protocolManager>
 

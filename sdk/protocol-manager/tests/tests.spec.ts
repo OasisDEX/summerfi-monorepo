@@ -86,7 +86,7 @@ describe('playground', () => {
     protocolManager.init(ctx)
     const result = await protocolManager.getPool(aaveV3PoolId)
     console.log(`
-  AAVE V£ POOL
+  AAVE V3 POOL
   ----------------
   Protocol: ${result.protocol.name}
   Chain: ${result.protocol.chainInfo.name}}

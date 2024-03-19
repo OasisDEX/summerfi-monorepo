@@ -10,8 +10,8 @@ export const getPool = publicProcedure
       poolId: protocolManager.poolIdSchema,
     }),
   )
-  .query(async (params) => {
-    const poolId = params.input.poolId
+  .query(async (opts) => {
+    const poolId = opts.input.poolId
 
-    return protocolManager.getPool(poolId)
+    return opts.ctx.protocolManager.getPool(poolId)
   })

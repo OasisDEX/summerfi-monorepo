@@ -8,7 +8,7 @@ import {z} from "zod";
 import {
     IPoolId,
 } from '@summerfi/sdk-common/protocols'
-import {IProtocolPluginContext} from "~protocolplugins/interfaces/IProtocolPluginContext";
+import {IProtocolPluginContext} from "./IProtocolPluginContext";
 import {IPositionId} from "../interfaces/IPositionId";
 
 export interface IProtocolPlugin<PoolIdType extends IPoolId = IPoolId> extends IProtocolActionBuilder  {
