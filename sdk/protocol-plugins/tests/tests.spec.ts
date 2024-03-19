@@ -13,7 +13,11 @@ async function createProtocolPluginContext(): Promise<IProtocolPluginContext> {
       multicall: true,
     },
     chain: mainnet,
-    transport: http(),
+    transport: http(mainnet.rpcUrls.default.http[0], {
+      batch: false,
+      timeout: 500,
+      retryCount: 0
+    }),
   })
 
   return {
@@ -25,7 +29,7 @@ async function createProtocolPluginContext(): Promise<IProtocolPluginContext> {
 }
 
 const SECONDS = 1000
-jest.setTimeout(10 * SECONDS)
+jest.setTimeout(20 * SECONDS)
 
 describe('playground', () => {
   let ctx: IProtocolPluginContext

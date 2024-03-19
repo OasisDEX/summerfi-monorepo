@@ -10,7 +10,7 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest --coverage=true",
+    "test": "jest --forceExit --coverage=true",
     "testw": "jest --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -23,7 +23,8 @@
     "@summerfi/order-planner-common": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "bignumber.js": "9.0.1",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "viem": "^2.8.13"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

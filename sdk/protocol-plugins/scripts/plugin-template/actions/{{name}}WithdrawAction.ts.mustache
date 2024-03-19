@@ -1,15 +1,14 @@
 import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
 import { Address, TokenAmount } from '@summerfi/sdk-common/common'
-import { IPool } from '@summerfi/sdk-common/protocols'
-import { is{{name}}PoolId } from '@summerfi/sdk-common/protocols/'
+import { IPool, isMakerPoolId } from '@summerfi/sdk-common/protocols'
 
-export class {{name}}PaybackAction extends BaseAction {
+export class {{name}}WithdrawAction extends BaseAction {
   public readonly config = {
-    name: '{{name}}Payback',
+    name: '{{name}}Withdraw',
     version: 1,
-    parametersAbi: 'uint256 vaultId, address userAddress, uint256 amount, bool paybackAll',
+    parametersAbi: 'uint256 vaultId, address userAddress, address joinAddr, uint256 amount',
     storageInputs: [/*'vaultId'*/],
-    storageOutputs: ['amountPaidBack'],
+    storageOutputs: ['amountWithdrawn'],
   } as const
 
   public encodeCall(
@@ -17,7 +16,7 @@ export class {{name}}PaybackAction extends BaseAction {
       pool: IPool
       userAddress: Address
       amount: TokenAmount
-      paybackAll: boolean
+      joinAddress: Address
     },
     paramsMapping?: number[],
   ): ActionCall {
@@ -28,8 +27,8 @@ export class {{name}}PaybackAction extends BaseAction {
     return this._encodeCall({
       arguments: [
         params.userAddress.value,
+        params.joinAddress.value,
         params.amount.toBaseUnit(),
-        params.paybackAll,
       ],
       mapping: paramsMapping,
     })
