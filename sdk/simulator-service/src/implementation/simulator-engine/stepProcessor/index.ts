@@ -10,7 +10,7 @@ import { repayFlashloanOutputProcessor } from './repayFlashloanOutputProcessor'
 import {
   StepOutputProcessor,
   StepOutputProcessors,
-  StepsWithouOutputs,
+  StepsWithoutOutputs,
 } from '../../../interfaces/steps'
 
 const stepOutputProcessors: StepOutputProcessors = {
@@ -23,7 +23,7 @@ const stepOutputProcessors: StepOutputProcessors = {
   [SimulationSteps.PullToken]: pullTokenOutputProcessor,
 }
 
-export async function processStepOutput(step: StepsWithouOutputs): Promise<steps.Steps> {
+export async function processStepOutput(step: StepsWithoutOutputs): Promise<steps.Steps> {
   const processor = stepOutputProcessors[step.type] as StepOutputProcessor<steps.Steps>
   return processor(step)
 }
