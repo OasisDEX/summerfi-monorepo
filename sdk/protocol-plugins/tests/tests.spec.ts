@@ -24,7 +24,7 @@ async function createProtocolPluginContext(): Promise<IProtocolPluginContext> {
   }
 }
 
-const SECONDS = 1000;
+const SECONDS = 1000
 jest.setTimeout(10 * SECONDS)
 
 describe('playground', () => {
