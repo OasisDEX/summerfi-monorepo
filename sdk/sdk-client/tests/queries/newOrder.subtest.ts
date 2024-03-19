@@ -1,7 +1,7 @@
 import { IProtocol, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SDKManager } from '../../src/implementation/SDKManager'
 import { RPCClientType } from '../../src/rpc/SDKClient'
-import { MakerLendingPool, SparkLendingPool } from '@summerfi/protocol-manager'
+import { MakerLendingPool, SparkLendingPool } from '@summerfi/protocol-plugins'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import {
   Address,
