@@ -1,6 +1,6 @@
-import { SystemConfig } from '~deployment-types/system/system'
-import { ProtocolsConfig } from '~deployment-types/protocols/protocols'
-import { DependenciesConfig } from '~deployment-types/dependencies/dependency'
+import { DependenciesConfig } from '../dependencies/dependency'
+import { ProtocolsConfig } from '../protocols/protocols'
+import { SystemConfig } from '../system/system'
 
 export type Config = {
   system: SystemConfig

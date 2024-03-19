@@ -4,7 +4,7 @@ import type {
   SimulationStrategy,
   ValueReference,
 } from '@summerfi/sdk-common/simulation'
-import type { Tail } from '~simulator-service/interfaces/helperTypes'
+import { Tail } from '../../interfaces/helperTypes'
 
 export function makeStrategy<T extends SimulationStrategy>(strategy: T): T {
   return strategy

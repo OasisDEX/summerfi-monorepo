@@ -1,8 +1,7 @@
-import { ChainFamilyMap, IUser } from '@summerfi/sdk-client'
 import { FlashloanProvider, Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import { Address, ChainInfo } from '@summerfi/sdk-common/common'
+import { Address, ChainFamilyMap, ChainInfo } from '@summerfi/sdk-common/common'
 import { IPositionsManager } from '@summerfi/sdk-common/orders'
 import {
   MakerPaybackAction,
@@ -26,6 +25,7 @@ import { getSparkPosition } from '../utils/Spark/SparkTargetPosition'
 
 import assert from 'assert'
 import { getErrorMessage } from '../utils/ErrorMessage'
+import { IUser } from '@summerfi/sdk-common/user'
 
 describe('Order Planner Service', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet

@@ -3,11 +3,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "~core-contracts": ["./src/index.ts"],
-      "~core-contracts/*": ["./src/*"]
-    }
+    "baseUrl": "."
   },
   "include": ["src/**/*.ts", "src/**/*.json", "scripts/**/*.ts", "hardhat.config.ts"],
   "exclude": ["node_modules", "**/*.spec.ts", "src/deployments/hardhat/*.json", "src/local.ts"]

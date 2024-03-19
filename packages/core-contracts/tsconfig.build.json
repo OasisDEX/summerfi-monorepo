@@ -3,12 +3,7 @@
   // include tests and use module paths in tests but build without tests
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "rootDir": "src",
-    "paths": {
-      "~core-contracts": ["./src/index.ts"],
-      "~core-contracts/*": ["./src/*"],
-      "~deployment-types/*": ["node_modules/@summerfi/deployment-types/src/*"]
-    }
+    "rootDir": "src"
   },
   "include": ["src/**/*.ts", "src/**/*.json"]
 }

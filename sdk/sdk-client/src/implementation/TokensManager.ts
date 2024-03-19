@@ -1,12 +1,15 @@
 import { Address, ChainInfo, Maybe, Token, TokenSymbol } from '@summerfi/sdk-common/common'
 import { ITokensManager } from '../interfaces/ITokensManager'
 import { getMockTokenBySymbol } from '../mocks/mockToken'
+import { IRPCClient } from '../interfaces/IRPCClient'
+import { RPCClientType } from '../rpc/SDKClient'
 
-export class TokensManager implements ITokensManager {
+export class TokensManager extends IRPCClient implements ITokensManager {
   private readonly _chainInfo: ChainInfo
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public constructor(params: { chainInfo: ChainInfo }) {
+  public constructor(params: { rpcClient: RPCClientType; chainInfo: ChainInfo }) {
+    super(params)
     // TODO: load the list of tokens for the chain indicated by chainInfo
     this._chainInfo = params.chainInfo
   }

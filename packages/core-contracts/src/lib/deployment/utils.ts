@@ -1,7 +1,7 @@
 import { isConfigEntry } from '@summerfi/deployment-types'
 import { Deployments } from '@summerfi/deployment-utils'
-import { ContractsVersionsSnapshot } from '~core-contracts/lib/versions'
 import { keccak256 } from '@ethersproject/keccak256'
+import { ContractsVersionsSnapshot } from '../versions/types'
 
 export async function recurseConfig(
   ds: Deployments,

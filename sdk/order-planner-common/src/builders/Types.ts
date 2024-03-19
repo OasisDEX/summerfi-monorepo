@@ -1,10 +1,10 @@
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { IUser } from '@summerfi/sdk-client'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
 import { Deployment } from '@summerfi/deployment-utils'
 import { type IPositionsManager } from '@summerfi/sdk-common/orders'
 import { type IOrderPlannerContext } from '../interfaces/IOrderPlannerContext'
 import { type ProtocolBuilderRegistryType } from '../interfaces/Types'
+import { IUser } from '@summerfi/sdk-common/user'
 
 export type FilterStep<T extends SimulationSteps, S extends steps.Steps> = S extends { type: T }
   ? S

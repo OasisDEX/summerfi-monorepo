@@ -1,6 +1,4 @@
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { SimulationState } from '~simulator-service/interfaces/simulation'
-import type { StateReducer, StateReducers } from '~simulator-service/interfaces/steps'
 import { flashloanReducer } from './flashloanReducer'
 import { depositBorrowReducer } from './depositBorrowReducer'
 import { paybackWithdrawReducer } from './paybackWithdrawReducer'
@@ -8,6 +6,8 @@ import { swapReducer } from './swapReducer'
 import { returnFundsReducer } from './returnFundsReducer'
 import { repayFlashloanReducer } from './repayFlashloanReducer'
 import { pullTokenReducer } from './pullTokenReducer'
+import { StateReducer, StateReducers } from '../../../interfaces/steps'
+import { SimulationState } from '../../../interfaces/simulation'
 
 const stateReducers: StateReducers = {
   [SimulationSteps.Flashloan]: flashloanReducer,

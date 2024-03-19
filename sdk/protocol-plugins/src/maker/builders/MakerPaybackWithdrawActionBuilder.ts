@@ -1,10 +1,9 @@
 import { getValueFromReference, steps } from '@summerfi/sdk-common/simulation'
 import { ActionBuilder } from '@summerfi/order-planner-common/builders'
 import { ActionNames } from '@summerfi/deployment-types'
-import { Address, AddressValue } from '@summerfi/sdk-common/common'
 import { MakerPaybackAction } from '../actions/MakerPaybackAction'
 import { MakerWithdrawAction } from '../actions/MakerWithdrawAction'
-
+import { Address, AddressValue } from '@summerfi/sdk-common/common'
 export const MakerPaybackWithdrawActionList: ActionNames[] = ['MakerPayback', 'MakerWithdraw']
 
 const TokenToJoinMapping: Record<string, string> = {

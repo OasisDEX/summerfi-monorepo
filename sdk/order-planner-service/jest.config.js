@@ -7,7 +7,7 @@ module.exports = {
   collectCoverageFrom: [
     '<rootDir>/**/*.{ts,tsx}',
     '!src/**/index.ts',
-    '!src/config/config.ts',
+    '!src/config/Config.ts',
     '!src/interfaces/IOrderPlannerService.ts',
   ],
   coveragePathIgnorePatterns: ['/tests/utils/', '/tests/mocks/'],

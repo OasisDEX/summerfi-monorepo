@@ -1,12 +1,12 @@
+import { ActionNames } from '@summerfi/deployment-types'
 import { BaseAction } from '../src/actions/BaseAction'
 import { ActionCall } from '../src/actions/Types'
-import { ActionCallsStack } from '../src/context/ActionCallsStack'
 import { encodeStrategy } from '../src/utils'
 import { decodeStrategy } from './utils/DecodeStrategy'
 
 class DerivedAction extends BaseAction {
   public readonly config = {
-    name: 'PullToken',
+    name: 'PullToken' as ActionNames,
     version: 8,
     parametersAbi: 'address, address, uint256',
     storageInputs: ['someInput1', 'someInput2', 'otherInput'],

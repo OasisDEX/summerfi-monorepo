@@ -4,11 +4,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "rootDir": "src",
-    "baseUrl": ".",
-    "paths": {
-      "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
-      "~sdk-client/*": ["./src/*"]
-    }
+    "baseUrl": "."
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]

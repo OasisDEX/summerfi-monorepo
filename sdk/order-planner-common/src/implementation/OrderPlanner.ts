@@ -8,9 +8,9 @@ import { ActionBuilder, ActionBuildersMap } from '../builders/Types'
 import { OrderPlannerContext } from '../context/OrderPlannerContext'
 import { ActionCall } from '../actions/Types'
 import { encodeStrategy } from '../utils/EncodeStrategy'
-import { IUser } from '@summerfi/sdk-client'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
 import { ProtocolBuilderRegistryType } from '../interfaces/Types'
+import { IUser } from '@summerfi/sdk-common/user'
 
 export class OrderPlanner implements IOrderPlanner {
   private readonly ExecutorContractName = 'OperationExecutor'

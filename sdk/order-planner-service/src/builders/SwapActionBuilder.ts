@@ -1,8 +1,8 @@
 import { ActionBuilder } from '@summerfi/order-planner-common/builders'
-import { SwapAction } from '~orderplannerservice/actions'
 import { Address } from '@summerfi/sdk-common/common'
 import { steps } from '@summerfi/sdk-common/simulation'
 import { HexData } from '@summerfi/sdk-common/common/aliases'
+import { SwapAction } from '../actions/SwapAction'
 
 export const SwapActionBuilder: ActionBuilder<steps.SwapStep> = async (params): Promise<void> => {
   const { context, swapManager, deployment, step } = params
