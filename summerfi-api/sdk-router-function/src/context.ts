@@ -12,12 +12,8 @@ import { ProtocolPluginsRegistry } from '@summerfi/protocol-plugins'
 import { ProtocolBuilderRegistryType } from '@summerfi/order-planner-common/interfaces'
 import {createPublicClient, http} from "viem";
 import {mainnet} from "viem/chains";
-import {
-  protocolsManager,
-} from '@summerfi/protocol-manager'
-import {
-  MockContractProvider,
-} from '@summerfi/protocol-plugins'
+import { protocolManager } from '@summerfi/protocol-manager'
+import { MockContractProvider } from '@summerfi/protocol-plugins'
 
 export type ContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
@@ -27,7 +23,7 @@ export type Context = {
   swapManager: ISwapManager
   configProvider: IConfigurationProvider
   protocolsRegistry: ProtocolBuilderRegistryType
-  protocolsManager: typeof protocolManager
+  protocolManager: typeof protocolManager
 }
 
 // context for each request
@@ -44,18 +40,16 @@ export const createContext = (opts: ContextOptions): Context => {
     chain: mainnet,
     transport: http(),
   })
-  const tokenService = new TokenService()
-  const priceService = new PriceService(client)
 
   /**
    * Protocols manager has dependencies initialised after instantiation
    * To preserve type safety of protocol manager methods (such as getPool)
    */
-  protocolsManager.init({
+  protocolManager.init({
     provider: client,
-    tokenService,
-    priceService,
-    contractProvider: MockContractProvider
+    tokenService: new TokenService(),
+    priceService: new PriceService(client),
+    contractProvider: new MockContractProvider()
   })
   const swapManager = SwapManagerFactory.newSwapManager({ configProvider })
   const protocolsRegistry = ProtocolPluginsRegistry
@@ -66,6 +60,6 @@ export const createContext = (opts: ContextOptions): Context => {
     swapManager,
     configProvider,
     protocolsRegistry,
-    protocolsManager
+    protocolManager
   }
 }

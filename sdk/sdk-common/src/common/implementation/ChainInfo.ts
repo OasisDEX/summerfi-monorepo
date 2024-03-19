@@ -1,5 +1,5 @@
 import { SerializationService } from '../../services/SerializationService'
-import { ChainId } from '../enums/ChainId'
+import { ChainId } from '../aliases/ChainId'
 
 type IChainInfoSerialized = {
   /** The chain ID of the network */

@@ -13,32 +13,32 @@ import {
  */
 const EthereumFamily: Record<EthereumChainNames, ChainInfo> = {
   [EthereumChainNames.Mainnet]: {
-    chainId: ChainId.Mainnet,
+    chainId: 1,
     name: EthereumChainNames.Mainnet,
   },
   [EthereumChainNames.Goerli]: {
-    chainId: ChainId.Goerli,
+    chainId: 5,
     name: EthereumChainNames.Goerli,
   },
 }
 
 const ArbitrumFamily: Record<ArbitrumChainNames, ChainInfo> = {
   [ArbitrumChainNames.ArbitrumOne]: {
-    chainId: ChainId.Arbitrum,
+    chainId: 42161,
     name: ArbitrumChainNames.ArbitrumOne,
   },
 }
 
 const OptimismFamily: Record<OptimismChainNames, ChainInfo> = {
   [OptimismChainNames.Optimism]: {
-    chainId: ChainId.Optimism,
+    chainId: 10,
     name: OptimismChainNames.Optimism,
   },
 }
 
 const BaseFamily: Record<BaseChainNames, ChainInfo> = {
   [BaseChainNames.Mainnet]: {
-    chainId: ChainId.Base,
+    chainId: 8453,
     name: BaseChainNames.Mainnet,
   },
 }
@@ -71,9 +71,6 @@ export const ChainFamilyMap: ChainFamily = {
   [ChainFamilyName.Base]: BaseFamily,
 }
 
-// ==== NOT STRICTLY NECESSARY FOR THIS PR
-// ==== MIGHT BE USEFUL FOR TOKENSERVICE?
-
 /**
  * @type Record<ChainId, ChainInfo>
  * @description Utility function to merge all chain families into a single map
@@ -94,3 +91,22 @@ const chainIdToChainInfoMap = createChainIdToChainInfoMap()
 export function getChainInfoByChainId(chainId: ChainId): ChainInfo | undefined {
   return chainIdToChainInfoMap[chainId]
 }
+
+// Utility type to extract ChainInfo type arrays
+type ChainInfoArray<T extends ChainFamilyName> = T extends ChainFamilyName.Ethereum
+    ? Array<ChainInfo>
+    : T extends ChainFamilyName.Arbitrum
+        ? Array<ChainInfo>
+        : T extends ChainFamilyName.Optimism
+            ? Array<ChainInfo>
+            : T extends ChainFamilyName.Base
+                ? Array<ChainInfo>
+                : never;
+
+// Generic function to safely get the values from a chain family
+export function valuesOfChainFamilyMap<T extends ChainFamilyName>(family: T): ChainInfoArray<T> {
+  const familyMap = ChainFamilyMap[family];
+  return Object.values(familyMap) as ChainInfoArray<T>;
+}
+
+

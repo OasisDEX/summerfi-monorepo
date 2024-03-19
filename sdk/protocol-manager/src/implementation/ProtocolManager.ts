@@ -2,7 +2,7 @@
 import { Position } from '@summerfi/sdk-common/common'
 import { IProtocolManagerContext } from '../interfaces/IProtocolManagerContext'
 import {
-  IProtocolPlugin,
+  BaseProtocolPlugin,
   aaveV3ProtocolPlugin,
   makerProtocolPlugin,
   sparkProtocolPlugin
@@ -10,28 +10,28 @@ import {
 import { IPoolId } from '@summerfi/sdk-common/protocols'
 import { z } from 'zod'
 
-type GetPoolIds<ProtocolPlugins extends IProtocolPlugin<any>[]> = {
-  [K in keyof ProtocolPlugins]: ProtocolPlugins[K] extends IProtocolPlugin<infer T> ? T : never
+type GetPoolIds<ProtocolPlugins extends BaseProtocolPlugin<any>[]> = {
+  [K in keyof ProtocolPlugins]: ProtocolPlugins[K] extends BaseProtocolPlugin<infer T> ? T : never
 }[number]
 type UnPackPromise<T> = T extends Promise<infer U> ? U : T
 type MatchProtocol<
-    ProtocolPlugins extends IProtocolPlugin<any>[],
+    ProtocolPlugins extends BaseProtocolPlugin<any>[],
     PoolId extends IPoolId,
 > = ProtocolPlugins extends [infer First, ...infer Rest]
-    ? First extends IProtocolPlugin<PoolId>
+    ? First extends BaseProtocolPlugin<PoolId>
         ? First
-        : Rest extends IProtocolPlugin<any>[]
+        : Rest extends BaseProtocolPlugin<any>[]
             ? MatchProtocol<Rest, PoolId>
             : never
     : never
 type ReturnPool<
-    ProtocolPlugins extends IProtocolPlugin<any>[],
+    ProtocolPlugins extends BaseProtocolPlugin<any>[],
     PoolId extends IPoolId,
 > = UnPackPromise<ReturnType<MatchProtocol<ProtocolPlugins, PoolId>['getPool']>>
 type ExtractPoolIds<P extends ProtocolManager<any>> =
     P extends ProtocolManager<infer T> ? GetPoolIds<T> : never
 
-export class ProtocolManager<ProtocolPlugins extends IProtocolPlugin<any>[]> {
+export class ProtocolManager<ProtocolPlugins extends BaseProtocolPlugin<any>[]> {
   private plugins: ProtocolPlugins
   private _ctx: IProtocolManagerContext | undefined
 
@@ -41,11 +41,8 @@ export class ProtocolManager<ProtocolPlugins extends IProtocolPlugin<any>[]> {
 
   init(ctx: IProtocolManagerContext): void {
     this._ctx = ctx
-    // Initialise plugins without swapping IProtocolPlugin -> BaseProtocolPlugin
     this.plugins.forEach(p => {
-      if (hasInitMethod(p)) {
         p.init(ctx);
-      }
     });
   }
 
@@ -67,7 +64,7 @@ export class ProtocolManager<ProtocolPlugins extends IProtocolPlugin<any>[]> {
   public async getPool<PoolId extends GetPoolIds<ProtocolPlugins>>(
     poolId: IPoolId,
   ): Promise<ReturnPool<ProtocolPlugins, PoolId>> {
-    const plugin: IProtocolPlugin<PoolId> | undefined = this.plugins.find(
+    const plugin: BaseProtocolPlugin<PoolId> | undefined = this.plugins.find(
       (plugin) => plugin.protocol === poolId.protocol.name,
     )
 
@@ -76,7 +73,7 @@ export class ProtocolManager<ProtocolPlugins extends IProtocolPlugin<any>[]> {
     }
     const chainId = await this.ctx.provider.getChainId()
 
-    if (!plugin.supportedChains.includes(chainId)) {
+    if (!plugin.supportedChains.some(chainInfo => chainInfo.chainId === chainId)) {
       throw new Error(`Chain ${chainId} is not supported by plugin ${plugin.protocol}`)
     }
 
@@ -86,10 +83,6 @@ export class ProtocolManager<ProtocolPlugins extends IProtocolPlugin<any>[]> {
   public getPosition(): Position {
     throw new Error('Not implemented')
   }
-}
-
-function hasInitMethod(plugin: any): plugin is { init: (ctx: IProtocolManagerContext) => void } {
-  return 'init' in plugin;
 }
 
 export const protocolManager = new ProtocolManager([

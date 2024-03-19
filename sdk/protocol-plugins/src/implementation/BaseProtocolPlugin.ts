@@ -1,5 +1,5 @@
-import {ChainId, Position} from "@summerfi/sdk-common/common";
-import {LendingPool, ProtocolName} from "@summerfi/sdk-common/protocols";
+import {ChainId, Position, ChainInfo} from "@summerfi/sdk-common/common";
+import {LendingPool} from "@summerfi/sdk-common/protocols";
 import {z} from "zod";
 import {IPositionId} from "../interfaces/IPositionId";
 import {IProtocolPlugin} from "../interfaces/IProtocolPlugin";
@@ -10,26 +10,26 @@ import { steps } from '@summerfi/sdk-common/simulation'
 import { Maybe } from '@summerfi/sdk-common/common'
 
 /**
- * @class Base class for all ProtocolDataPlugins. It provides the basic functionality to encode the call to the action and provide
- *              the versioned name of the action.
+ * @class Base class for all ProtocolDataPlugins. It provides the basic functionality & fields for all protocol plugins
+ *              and implements shared functionality for late dependency injection, pool schema validation
+ *              and action building
  */
-export abstract class BaseProtocolPlugin<LendingPoolType extends LendingPool = LendingPool, PoolIdType extends IPoolId = IPoolId> implements IProtocolPlugin<PoolIdType> {
+export abstract class BaseProtocolPlugin<PoolIdType extends IPoolId = IPoolId, LendingPoolType extends LendingPool = LendingPool> implements IProtocolPlugin<PoolIdType> {
     public readonly protocol: PoolIdType['protocol']['name']
-    public readonly supportedChains: ChainId[]
+    public readonly supportedChains: ChainInfo[]
     public _ctx: IProtocolPluginContext | undefined
     public readonly schema: z.ZodSchema<PoolIdType>
     public readonly StepBuilders: Partial<ActionBuildersMap>
 
-    protected constructor(protocol: PoolIdType['protocol']['name'], supportedChains: ChainId[], schema: z.ZodSchema<PoolIdType>, StepBuildersMap: Partial<ActionBuildersMap>) {
+    protected constructor(protocol: PoolIdType['protocol']['name'], supportedChains: ChainInfo[], schema: z.ZodSchema<PoolIdType>, StepBuildersMap: Partial<ActionBuildersMap>) {
         this.protocol = protocol
         this.supportedChains = supportedChains
         this.schema = schema
         this.StepBuilders = StepBuildersMap
     }
 
-    init(ctx: IProtocolPluginContext): BaseProtocolPlugin<LendingPoolType, PoolIdType>  {
+    init(ctx: IProtocolPluginContext): void  {
         this._ctx = ctx;
-        return this;
     }
 
     public get ctx(): IProtocolPluginContext {

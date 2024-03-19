@@ -31,8 +31,9 @@ describe('playground', () => {
   })
 
   it('template/maker', async () => {
-    const makerProtocolPlugin = (new MakerProtocolPlugin()).init(ctx)
-    const result = await makerProtocolPlugin.getPool(
+    const makerProtocolPlugin = new MakerProtocolPlugin()
+    makerProtocolPlugin.init(ctx)
+    await makerProtocolPlugin.getPool(
         {
           protocol: {
             name: ProtocolName.Maker,
@@ -42,12 +43,12 @@ describe('playground', () => {
           vaultId: '123'
         },
     )
-    console.log(result)
   })
 
   it('template/spark', async () => {
-    const sparkProtocolPlugin = (new SparkProtocolPlugin()).init(ctx)
-    const result = await sparkProtocolPlugin.getPool(
+    const sparkProtocolPlugin = new SparkProtocolPlugin()
+    sparkProtocolPlugin.init(ctx)
+    await sparkProtocolPlugin.getPool(
       {
         protocol: {
           name: ProtocolName.Spark,
@@ -56,12 +57,12 @@ describe('playground', () => {
         emodeType: EmodeType.None,
       },
     )
-    console.log(result)
   })
 
   it('template/aave-v3', async () => {
-    const aaveV3ProtocolPlugin = (new AaveV3ProtocolPlugin()).init(ctx)
-    const result = await aaveV3ProtocolPlugin.getPool(
+    const aaveV3ProtocolPlugin = new AaveV3ProtocolPlugin()
+    aaveV3ProtocolPlugin.init(ctx)
+    await aaveV3ProtocolPlugin.getPool(
       {
         protocol: {
           name: ProtocolName.AAVEv3,
@@ -70,6 +71,5 @@ describe('playground', () => {
         emodeType: EmodeType.None,
       },
     )
-    console.log(result)
   })
 })

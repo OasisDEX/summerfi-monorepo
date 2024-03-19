@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Percentage,
   TokenAmount,
@@ -6,10 +7,11 @@ import {
   RiskRatio,
   Address,
   Position,
-  ChainId
+  ChainId,
+  ChainInfo
 } from '@summerfi/sdk-common/common'
 import {ILKType} from "@summerfi/sdk-common/protocols";
-import {SimulationSteps, steps} from "@summerfi/sdk-common/simulation";
+import {SimulationSteps} from "@summerfi/sdk-common/simulation";
 import type { MakerPoolId } from '@summerfi/sdk-common/protocols'
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { stringToHex, getContract } from 'viem'
@@ -22,19 +24,19 @@ import {IPositionId} from "../interfaces/IPositionId";
 import {MakerLendingPool, MakerPoolCollateralConfig, MakerPoolDebtConfig} from "./Types";
 import { OSM_ABI, ERC20_ABI } from '../interfaces/abis'
 import { PRECISION_BI, PRECISION } from '../implementation/constants'
-import { ActionBuilder } from '@summerfi/order-planner-common/builders'
-import { Maybe } from '@summerfi/sdk-common/common'
 
-export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerLendingPool, MakerPoolId> implements IProtocolPlugin<MakerPoolId> {
+export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerPoolId, MakerLendingPool> {
   public static protocol: ProtocolName.Maker = ProtocolName.Maker
-  public static supportedChains = [ChainId.Mainnet]
+
+  // TODO: Replace with ChainFamilyMap entries post merge
+  public static supportedChains = [ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' })]
   public static schema = z.object({
     protocol: z.object({
       name: z.literal(ProtocolName.Maker),
       chainInfo: z.object({
         name: z.string(),
         chainId: z.custom<ChainId>(
-            (value) => MakerProtocolPlugin.supportedChains.includes(value as ChainId),
+            (chainId) => MakerProtocolPlugin.supportedChains.some(chainInfo => chainInfo.chainId === chainId),
             'Chain ID not supported',
             true,
         ),
@@ -61,7 +63,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerLendingPool, Ma
     const chainId = ctx.provider.chain?.id
     if (!chainId) throw new Error('ctx.provider.chain.id undefined')
 
-    if (!this.supportedChains.includes(chainId)) {
+    if (!MakerProtocolPlugin.supportedChains.some(chainInfo => chainInfo.chainId === chainId)) {
       throw new Error(`Chain ID ${chainId} is not supported`)
     }
 
@@ -304,10 +306,6 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerLendingPool, Ma
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getPosition(positionId: IPositionId): Promise<Position> {
     throw new Error('Not implemented')
-  }
-
-  getActionBuilder<T extends steps.Steps>(step: T): Maybe<ActionBuilder<T>> {
-    return this.StepBuilders[step.type] as ActionBuilder<T>
   }
 }
 

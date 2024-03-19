@@ -8,13 +8,13 @@ import {
   RiskRatio,
   Position,
   ChainId,
+  ChainInfo
 } from '@summerfi/sdk-common/common'
 import { SimulationSteps } from '@summerfi/sdk-common/simulation'
 import type { SparkPoolId } from '@summerfi/sdk-common/protocols'
 import { PoolType, ProtocolName, EmodeType } from '@summerfi/sdk-common/protocols'
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
-import {IProtocolPlugin} from "../interfaces";
 import {SparkDepositBorrowActionBuilder} from "./builders/SparkDepositBorrowActionBuilder";
 import {BaseProtocolPlugin} from "../implementation/BaseProtocolPlugin";
 import {IPositionId} from "../interfaces/IPositionId";
@@ -26,16 +26,17 @@ import {
 import { AaveV3LikePluginBuilder, filterAssetsListByEMode } from '../implementation/AAVEv3LikeBuilder'
 import { UNCAPPED_SUPPLY, PRECISION_BI } from '../implementation/constants'
 
-export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkLendingPool, SparkPoolId> implements IProtocolPlugin<SparkPoolId> {
+export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId, SparkLendingPool> {
   public static protocol: ProtocolName.Spark = ProtocolName.Spark
-  public static supportedChains = [ChainId.Mainnet]
+  // TODO: Replace with ChainFamilyMap entries post merge
+  public static supportedChains = [ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' })]
   public static schema = z.object({
     protocol: z.object({
       name: z.literal(ProtocolName.Spark),
       chainInfo: z.object({
         name: z.string(),
         chainId: z.custom<ChainId>(
-            (value) => SparkProtocolPlugin.supportedChains.includes(value as ChainId),
+            (chainId) => SparkProtocolPlugin.supportedChains.some(chainInfo => chainInfo.chainId === chainId),
             'Chain ID not supported',
             true,
         ),
@@ -59,7 +60,7 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkLendingPool, Sp
     const chainId = ctx.provider.chain?.id
     if (!chainId) throw new Error('ctx.provider.chain.id undefined')
 
-    if (!this.supportedChains.includes(chainId)) {
+    if (!SparkProtocolPlugin.supportedChains.some(chainInfo => chainInfo.chainId === chainId)) {
       throw new Error(`Chain ID ${chainId} is not supported`)
     }
 

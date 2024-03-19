@@ -14,5 +14,7 @@
       "~swap-common/*": ["../swap-common/src/*"],
       "~sdk-client/*": ["../sdk-client/src/*"]
     }
-  }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
 }
