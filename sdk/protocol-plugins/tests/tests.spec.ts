@@ -24,6 +24,9 @@ async function createProtocolPluginContext(): Promise<IProtocolPluginContext> {
   }
 }
 
+const SECONDS = 1000;
+jest.setTimeout(2 * SECONDS)
+
 describe('playground', () => {
   let ctx: IProtocolPluginContext
   beforeAll(async () => {
