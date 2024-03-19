@@ -770,6 +770,9 @@ importers:
       '@summerfi/protocol-manager':
         specifier: workspace:*
         version: link:../protocol-manager
+      '@summerfi/protocol-plugins':
+        specifier: workspace:*
+        version: link:../protocol-plugins
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
