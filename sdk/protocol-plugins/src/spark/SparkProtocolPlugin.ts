@@ -9,22 +9,21 @@ import {
   Position,
   ChainId,
   ChainFamilyName,
-  valuesOfChainFamilyMap
+  valuesOfChainFamilyMap,
 } from '@summerfi/sdk-common/common'
 import { SimulationSteps } from '@summerfi/sdk-common/simulation'
 import type { SparkPoolId } from '@summerfi/sdk-common/protocols'
 import { PoolType, ProtocolName, EmodeType } from '@summerfi/sdk-common/protocols'
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
-import {SparkDepositBorrowActionBuilder} from "./builders/SparkDepositBorrowActionBuilder";
-import {BaseProtocolPlugin} from "../implementation/BaseProtocolPlugin";
-import {IPositionId} from "../interfaces/IPositionId";
+import { SparkDepositBorrowActionBuilder } from './builders/SparkDepositBorrowActionBuilder'
+import { BaseProtocolPlugin } from '../implementation/BaseProtocolPlugin'
+import { IPositionId } from '../interfaces/IPositionId'
+import { SparkPoolCollateralConfig, SparkLendingPool, SparkPoolDebtConfig } from './Types'
 import {
-  SparkPoolCollateralConfig,
-  SparkLendingPool,
-  SparkPoolDebtConfig,
-} from './Types'
-import { AaveV3LikePluginBuilder, filterAssetsListByEMode } from '../implementation/AAVEv3LikeBuilder'
+  AaveV3LikePluginBuilder,
+  filterAssetsListByEMode,
+} from '../implementation/AAVEv3LikeBuilder'
 import { UNCAPPED_SUPPLY, PRECISION_BI } from '../implementation/constants'
 
 export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
@@ -36,9 +35,10 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
       chainInfo: z.object({
         name: z.string(),
         chainId: z.custom<ChainId>(
-            (chainId) => SparkProtocolPlugin.supportedChains.some(chainInfo => chainInfo.chainId === chainId),
-            'Chain ID not supported',
-            true,
+          (chainId) =>
+            SparkProtocolPlugin.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
+          'Chain ID not supported',
+          true,
         ),
       }),
     }),
@@ -49,7 +49,12 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
     const StepBuildersMap = {
       [SimulationSteps.DepositBorrow]: SparkDepositBorrowActionBuilder,
     }
-    super(SparkProtocolPlugin.protocol, SparkProtocolPlugin.supportedChains, SparkProtocolPlugin.schema, StepBuildersMap)
+    super(
+      SparkProtocolPlugin.protocol,
+      SparkProtocolPlugin.supportedChains,
+      SparkProtocolPlugin.schema,
+      StepBuildersMap,
+    )
   }
 
   async getPool(poolId: unknown): Promise<SparkLendingPool> {
@@ -60,7 +65,7 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
     const chainId = ctx.provider.chain?.id
     if (!chainId) throw new Error('ctx.provider.chain.id undefined')
 
-    if (!SparkProtocolPlugin.supportedChains.some(chainInfo => chainInfo.chainId === chainId)) {
+    if (!SparkProtocolPlugin.supportedChains.some((chainInfo) => chainInfo.chainId === chainId)) {
       throw new Error(`Chain ID ${chainId} is not supported`)
     }
 

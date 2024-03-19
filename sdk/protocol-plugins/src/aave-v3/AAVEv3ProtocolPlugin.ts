@@ -8,28 +8,38 @@ import {
   CurrencySymbol,
   RiskRatio,
   ChainFamilyName,
-  valuesOfChainFamilyMap
-, ChainId } from '@summerfi/sdk-common/common'
+  valuesOfChainFamilyMap,
+  ChainId,
+} from '@summerfi/sdk-common/common'
 import type { AaveV3PoolId } from '@summerfi/sdk-common/protocols'
 import { PoolType, ProtocolName, EmodeType } from '@summerfi/sdk-common/protocols'
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
-import {BaseProtocolPlugin} from "../implementation/BaseProtocolPlugin";
-import {AaveV3LendingPool, AaveV3PoolCollateralConfig, AaveV3PoolDebtConfig} from "./Types";
-import { AaveV3LikePluginBuilder, filterAssetsListByEMode } from '../implementation/AAVEv3LikeBuilder'
+import { BaseProtocolPlugin } from '../implementation/BaseProtocolPlugin'
+import { AaveV3LendingPool, AaveV3PoolCollateralConfig, AaveV3PoolDebtConfig } from './Types'
+import {
+  AaveV3LikePluginBuilder,
+  filterAssetsListByEMode,
+} from '../implementation/AAVEv3LikeBuilder'
 import { UNCAPPED_SUPPLY, PRECISION_BI } from '../implementation/constants'
 
 export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
   public static protocol: ProtocolName.AAVEv3 = ProtocolName.AAVEv3
-  public static supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum, ChainFamilyName.Base, ChainFamilyName.Arbitrum, ChainFamilyName.Optimism])
+  public static supportedChains = valuesOfChainFamilyMap([
+    ChainFamilyName.Ethereum,
+    ChainFamilyName.Base,
+    ChainFamilyName.Arbitrum,
+    ChainFamilyName.Optimism,
+  ])
   public static schema = z.object({
     protocol: z.object({
       name: z.literal(ProtocolName.AAVEv3),
       chainInfo: z.object({
         name: z.string(),
         chainId: z.custom<ChainId>(
-            (chainId) => AaveV3ProtocolPlugin.supportedChains.some(chainInfo => chainInfo.chainId === chainId),
-            'Chain ID not supported',
+          (chainId) =>
+            AaveV3ProtocolPlugin.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
+          'Chain ID not supported',
         ),
       }),
     }),
@@ -40,7 +50,12 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
     const StepBuildersMap = {
       // [SimulationSteps.DepositBorrow]: AAVEv3DepositBorrowActionBuilder,
     }
-    super(AaveV3ProtocolPlugin.protocol, AaveV3ProtocolPlugin.supportedChains, AaveV3ProtocolPlugin.schema, StepBuildersMap)
+    super(
+      AaveV3ProtocolPlugin.protocol,
+      AaveV3ProtocolPlugin.supportedChains,
+      AaveV3ProtocolPlugin.schema,
+      StepBuildersMap,
+    )
   }
 
   async getPool(aaveV3PoolId: unknown): Promise<AaveV3LendingPool> {
@@ -51,7 +66,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
     const chainId = ctx.provider.chain?.id
     if (!chainId) throw new Error('ctx.provider.chain.id undefined')
 
-    if (!AaveV3ProtocolPlugin.supportedChains.some(chainInfo => chainInfo.chainId === chainId)) {
+    if (!AaveV3ProtocolPlugin.supportedChains.some((chainInfo) => chainInfo.chainId === chainId)) {
       throw new Error(`Chain ID ${chainId} is not supported`)
     }
 
@@ -78,7 +93,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
         data: { totalAToken },
       } = asset
 
-      const LTV_TO_PERCENTAGE_DIVISOR = new BigNumber(100);
+      const LTV_TO_PERCENTAGE_DIVISOR = new BigNumber(100)
 
       try {
         collaterals[collateralToken.address.value] = {
@@ -101,7 +116,9 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
           }),
           liquidationThreshold: RiskRatio.createFrom({
             ratio: Percentage.createFrom({
-              percentage: new BigNumber(liquidationThreshold.toString()).div(LTV_TO_PERCENTAGE_DIVISOR).toNumber(),
+              percentage: new BigNumber(liquidationThreshold.toString())
+                .div(LTV_TO_PERCENTAGE_DIVISOR)
+                .toNumber(),
             }),
             type: RiskRatio.type.LTV,
           }),
@@ -114,7 +131,9 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
             amount: supplyCap === 0n ? UNCAPPED_SUPPLY : supplyCap.toString(),
           }),
           liquidationPenalty: Percentage.createFrom({
-            percentage: new BigNumber(liquidationBonus.toString()).div(LTV_TO_PERCENTAGE_DIVISOR).toNumber(),
+            percentage: new BigNumber(liquidationBonus.toString())
+              .div(LTV_TO_PERCENTAGE_DIVISOR)
+              .toNumber(),
           }),
           apy: Percentage.createFrom({ percentage: 0 }),
           usageAsCollateralEnabled,

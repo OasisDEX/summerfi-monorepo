@@ -9,18 +9,18 @@ import {
   Position,
   ChainId,
   ChainFamilyName,
-  valuesOfChainFamilyMap
+  valuesOfChainFamilyMap,
 } from '@summerfi/sdk-common/common'
-import {ILKType, PoolType, ProtocolName } from "@summerfi/sdk-common/protocols";
-import {SimulationSteps} from "@summerfi/sdk-common/simulation";
+import { ILKType, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { SimulationSteps } from '@summerfi/sdk-common/simulation'
 import type { MakerPoolId } from '@summerfi/sdk-common/protocols'
 import { stringToHex, getContract } from 'viem'
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
-import {MakerPaybackWithdrawActionBuilder} from "./builders/MakerPaybackWithdrawActionBuilder";
-import {BaseProtocolPlugin} from "../implementation/BaseProtocolPlugin";
-import {IPositionId} from "../interfaces/IPositionId";
-import {MakerLendingPool, MakerPoolCollateralConfig, MakerPoolDebtConfig} from "./Types";
+import { MakerPaybackWithdrawActionBuilder } from './builders/MakerPaybackWithdrawActionBuilder'
+import { BaseProtocolPlugin } from '../implementation/BaseProtocolPlugin'
+import { IPositionId } from '../interfaces/IPositionId'
+import { MakerLendingPool, MakerPoolCollateralConfig, MakerPoolDebtConfig } from './Types'
 import { OSM_ABI, ERC20_ABI } from './abis'
 import { PRECISION_BI, PRECISION } from '../implementation/constants'
 
@@ -33,14 +33,15 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerPoolId> {
       chainInfo: z.object({
         name: z.string(),
         chainId: z.custom<ChainId>(
-            (chainId) => MakerProtocolPlugin.supportedChains.some(chainInfo => chainInfo.chainId === chainId),
-            'Chain ID not supported',
-            true,
+          (chainId) =>
+            MakerProtocolPlugin.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
+          'Chain ID not supported',
+          true,
         ),
       }),
     }),
     ilkType: z.nativeEnum(ILKType),
-    vaultId: z.string()
+    vaultId: z.string(),
   })
 
   constructor() {
@@ -48,7 +49,12 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerPoolId> {
       [SimulationSteps.PaybackWithdraw]: MakerPaybackWithdrawActionBuilder,
     }
 
-    super(MakerProtocolPlugin.protocol, MakerProtocolPlugin.supportedChains, MakerProtocolPlugin.schema, StepBuildersMap)
+    super(
+      MakerProtocolPlugin.protocol,
+      MakerProtocolPlugin.supportedChains,
+      MakerProtocolPlugin.schema,
+      StepBuildersMap,
+    )
   }
 
   async getPool(makerPoolId: unknown): Promise<MakerLendingPool> {
@@ -56,11 +62,11 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerPoolId> {
     const ilk = makerPoolId.ilkType
     const ilkInHex = stringToHex(ilk, { size: 32 })
 
-    const ctx = this.ctx;
+    const ctx = this.ctx
     const chainId = ctx.provider.chain?.id
     if (!chainId) throw new Error('ctx.provider.chain.id undefined')
 
-    if (!MakerProtocolPlugin.supportedChains.some(chainInfo => chainInfo.chainId === chainId)) {
+    if (!MakerProtocolPlugin.supportedChains.some((chainInfo) => chainInfo.chainId === chainId)) {
       throw new Error(`Chain ID ${chainId} is not supported`)
     }
 

@@ -93,8 +93,8 @@ export function getChainInfoByChainId(chainId: ChainId): ChainInfo | undefined {
 }
 
 export function valuesOfChainFamilyMap(families: ChainFamilyName[]): ChainInfo[] {
-  return families.flatMap(family => {
-    const familyMap = ChainFamilyMap[family];
-    return Object.values(familyMap);
-  });
+  return families.flatMap((family) => {
+    const familyMap = ChainFamilyMap[family]
+    return Object.values(familyMap)
+  })
 }

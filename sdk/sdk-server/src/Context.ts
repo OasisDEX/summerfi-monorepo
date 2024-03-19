@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {PriceService, TokenService} from "@summerfi/protocol-plugins";
+import { PriceService, TokenService } from '@summerfi/protocol-plugins'
 import { CreateAWSLambdaContextOptions } from '@trpc/server/adapters/aws-lambda'
 import type { APIGatewayProxyEventV2 } from 'aws-lambda'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
@@ -10,8 +10,8 @@ import { ConfigurationProvider, IConfigurationProvider } from '@summerfi/configu
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
 import { ProtocolPluginsRegistry } from '@summerfi/protocol-plugins'
 import { ProtocolBuilderRegistryType } from '@summerfi/order-planner-common/interfaces'
-import {createPublicClient, http} from "viem";
-import {mainnet} from "viem/chains";
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 import { protocolManager } from '@summerfi/protocol-manager'
 import { MockContractProvider } from '@summerfi/protocol-plugins'
 
@@ -49,7 +49,7 @@ export const createSDKContext = (opts: ContextOptions): SDKAppContext => {
     provider: client,
     tokenService: new TokenService(),
     priceService: new PriceService(client),
-    contractProvider: new MockContractProvider()
+    contractProvider: new MockContractProvider(),
   })
   const swapManager = SwapManagerFactory.newSwapManager({ configProvider })
   const protocolsRegistry = ProtocolPluginsRegistry
@@ -60,6 +60,6 @@ export const createSDKContext = (opts: ContextOptions): SDKAppContext => {
     swapManager,
     configProvider,
     protocolsRegistry,
-    protocolManager
+    protocolManager,
   }
 }

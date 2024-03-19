@@ -2,8 +2,8 @@ import { ChainInfo } from '@summerfi/sdk-common/common'
 import { ILKType, ProtocolName, EmodeType, SparkPoolId } from '@summerfi/sdk-common/protocols'
 import { createPublicClient, http, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
-import {protocolManager} from '../src/implementation/ProtocolManager'
-import { IProtocolManagerContext } from "../src/interfaces/IProtocolManagerContext";
+import { protocolManager } from '../src/implementation/ProtocolManager'
+import { IProtocolManagerContext } from '../src/interfaces/IProtocolManagerContext'
 import { TokenService, PriceService } from '@summerfi/protocol-plugins/'
 import { MockContractProvider } from '@summerfi/protocol-plugins/mocks'
 
@@ -37,7 +37,7 @@ describe('playground', () => {
         chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
       },
       ilkType: ILKType.ETH_A,
-      vaultId: '123'
+      vaultId: '123',
     }
 
     protocolManager.init(ctx)
@@ -59,7 +59,7 @@ describe('playground', () => {
         name: ProtocolName.Spark as const,
         chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
       },
-      emodeType: EmodeType.None
+      emodeType: EmodeType.None,
     } as SparkPoolId
 
     protocolManager.init(ctx)
@@ -80,7 +80,7 @@ describe('playground', () => {
         name: ProtocolName.AAVEv3 as const,
         chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
       },
-      emodeType: EmodeType.None
+      emodeType: EmodeType.None,
     }
 
     protocolManager.init(ctx)

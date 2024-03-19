@@ -8,5 +8,5 @@ import { ProtocolBuilderRegistryType } from '@summerfi/order-planner-common/inte
 export const ProtocolPluginsRegistry: ProtocolBuilderRegistryType = {
   [ProtocolName.Maker]: MakerProtocolPlugin,
   [ProtocolName.Spark]: SparkProtocolPlugin,
-  [ProtocolName.AAVEv3]: AaveV3ProtocolPlugin
+  [ProtocolName.AAVEv3]: AaveV3ProtocolPlugin,
 }

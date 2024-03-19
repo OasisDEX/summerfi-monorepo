@@ -5,7 +5,7 @@ import {
   BaseProtocolPlugin,
   aaveV3ProtocolPlugin,
   makerProtocolPlugin,
-  sparkProtocolPlugin
+  sparkProtocolPlugin,
 } from '@summerfi/protocol-plugins'
 import { IPoolId } from '@summerfi/sdk-common/protocols'
 import { z } from 'zod'
@@ -15,42 +15,42 @@ type GetPoolIds<ProtocolPlugins extends BaseProtocolPlugin<any>[]> = {
 }[number]
 type UnPackPromise<T> = T extends Promise<infer U> ? U : T
 type MatchProtocol<
-    ProtocolPlugins extends BaseProtocolPlugin<any>[],
-    PoolId extends IPoolId,
+  ProtocolPlugins extends BaseProtocolPlugin<any>[],
+  PoolId extends IPoolId,
 > = ProtocolPlugins extends [infer First, ...infer Rest]
-    ? First extends BaseProtocolPlugin<PoolId>
-        ? First
-        : Rest extends BaseProtocolPlugin<any>[]
-            ? MatchProtocol<Rest, PoolId>
-            : never
-    : never
+  ? First extends BaseProtocolPlugin<PoolId>
+    ? First
+    : Rest extends BaseProtocolPlugin<any>[]
+      ? MatchProtocol<Rest, PoolId>
+      : never
+  : never
 type ReturnPool<
-    ProtocolPlugins extends BaseProtocolPlugin<any>[],
-    PoolId extends IPoolId,
+  ProtocolPlugins extends BaseProtocolPlugin<any>[],
+  PoolId extends IPoolId,
 > = UnPackPromise<ReturnType<MatchProtocol<ProtocolPlugins, PoolId>['getPool']>>
 type ExtractPoolIds<P extends ProtocolManager<any>> =
-    P extends ProtocolManager<infer T> ? GetPoolIds<T> : never
+  P extends ProtocolManager<infer T> ? GetPoolIds<T> : never
 
 export class ProtocolManager<ProtocolPlugins extends BaseProtocolPlugin<any>[]> {
   private plugins: ProtocolPlugins
   private _ctx: IProtocolManagerContext | undefined
 
   constructor(plugins: ProtocolPlugins) {
-    this.plugins = plugins;
+    this.plugins = plugins
   }
 
   init(ctx: IProtocolManagerContext): void {
     this._ctx = ctx
-    this.plugins.forEach(p => {
-        p.init(ctx);
-    });
+    this.plugins.forEach((p) => {
+      p.init(ctx)
+    })
   }
 
   public get ctx(): IProtocolManagerContext {
     if (!this._ctx) {
-      throw new Error('Context (ctx) is not initialized. Please call init() with a valid context.');
+      throw new Error('Context (ctx) is not initialized. Please call init() with a valid context.')
     }
-    return this._ctx;
+    return this._ctx
   }
 
   public get poolIdSchema(): z.ZodSchema<ExtractPoolIds<typeof this>> {
@@ -73,7 +73,7 @@ export class ProtocolManager<ProtocolPlugins extends BaseProtocolPlugin<any>[]> 
     }
     const chainId = await this.ctx.provider.getChainId()
 
-    if (!plugin.supportedChains.some(chainInfo => chainInfo.chainId === chainId)) {
+    if (!plugin.supportedChains.some((chainInfo) => chainInfo.chainId === chainId)) {
       throw new Error(`Chain ${chainId} is not supported by plugin ${plugin.protocol}`)
     }
 

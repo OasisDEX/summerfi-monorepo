@@ -1,20 +1,11 @@
-import {
-  AddressAbiMapsByProtocol,
-  IContractProvider
-} from "../interfaces/IContractProvider";
+import { AddressAbiMapsByProtocol, IContractProvider } from '../interfaces/IContractProvider'
 import { IProtocol, ProtocolName } from '@summerfi/sdk-common/protocols'
 import {
   AAVEV3_LENDING_POOL_ABI,
   AAVEV3_ORACLE_ABI,
   AAVEV3_POOL_DATA_PROVIDER_ABI,
 } from '../aave-v3/abis'
-import {
-  DOG_ABI,
-  ILK_REGISTRY_ABI,
-  JUG_ABI,
-  SPOT_ABI,
-  VAT_ABI,
-} from '../maker/abis'
+import { DOG_ABI, ILK_REGISTRY_ABI, JUG_ABI, SPOT_ABI, VAT_ABI } from '../maker/abis'
 import {
   SPARK_LENDING_POOL_ABI,
   SPARK_ORACLE_ABI,
