@@ -1,12 +1,18 @@
-import type { Address } from '@summerfi/sdk-common/common'
-import type { Chain } from '~sdk-client/implementation/Chain'
-import { User } from '~sdk-client/implementation/User'
-import type { IUser } from '~sdk-client/interfaces/IUser'
-import type { IUsersManager } from '~sdk-client/interfaces/IUsersManager'
+import type { Address, ChainInfo } from '@summerfi/sdk-common/common'
+import { IUsersManager } from '../interfaces/IUsersManager'
+import { User } from './User'
+import { RPCClientType } from '../rpc/SDKClient'
+import { IRPCClient } from '../interfaces/IRPCClient'
 
-export class UsersManager implements IUsersManager {
-  public async getUser(params: { chain: Chain; walletAddress: Address }): Promise<IUser> {
-    // TODO: Implement
-    return new User({ chainInfo: params.chain.chainInfo, walletAddress: params.walletAddress })
+export class UsersManager extends IRPCClient implements IUsersManager {
+  constructor(params: { rpcClient: RPCClientType }) {
+    super(params)
+  }
+
+  public async getUser(params: { chainInfo: ChainInfo; walletAddress: Address }): Promise<User> {
+    return new User({
+      ...params,
+      rpcClient: this.rpcClient,
+    })
   }
 }

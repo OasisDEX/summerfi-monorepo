@@ -3,15 +3,8 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "~src/*": ["./src/*"],
-      "@summerfi/common": ["node_modules/@summerfi/common/src/index.ts"],
-      "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
-      "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
-      "~swap-service/*": ["node_modules/@summerfi/swap-service/src/*"]
-    }
+    "baseUrl": "."
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "e2e/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
   "exclude": ["node_modules"]
 }

@@ -4,13 +4,14 @@ import {
   SimulationSteps,
   SimulationType,
 } from '@summerfi/sdk-common/simulation'
-import { getReferencedValue, makeStrategy } from '~simulator-service/implementation/helpers'
-import { Simulator } from '~simulator-service/implementation/simulator-engine'
+
 import { Percentage, TokenAmount } from '@summerfi/sdk-common/common'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { RefinanceParameters } from '@summerfi/sdk-common/orders'
 import { type ISwapManager } from '@summerfi/swap-common/interfaces'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
+import { getReferencedValue, makeStrategy } from '../helpers'
+import { Simulator } from '../simulator-engine/simulator'
 
 export const refinanceStrategy = makeStrategy([
   {

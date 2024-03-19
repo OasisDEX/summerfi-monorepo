@@ -4,10 +4,6 @@
     "rootDir": ".",
     "baseUrl": ".",
     "paths": {
-      "~swap-service": ["./src/index.ts"],
-      "~swap-service/*": ["./src/*"],
-      "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
-      "~sdk-client/*": ["../sdk-client/src/*"],
       "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
       "@summerfi/sdk-client": ["../sdk-client/src"],
 

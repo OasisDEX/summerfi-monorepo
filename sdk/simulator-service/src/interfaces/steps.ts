@@ -6,7 +6,7 @@ export type StepOutputProcessor<T extends steps.Steps> = (step: Omit<T, 'outputs
 export type StepOutputProcessors = {
   [Type in steps.Steps['type']]: StepOutputProcessor<Where<steps.Steps, { type: Type }>>
 }
-export type StepsWithouOutputs = Omit<steps.Steps, 'outputs'>
+export type StepsWithoutOutputs = Omit<steps.Steps, 'outputs'>
 export type StateReducer<T extends steps.Steps> = (
   step: T,
   state: SimulationState,

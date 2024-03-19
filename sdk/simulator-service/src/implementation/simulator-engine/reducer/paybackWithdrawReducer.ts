@@ -1,11 +1,7 @@
 import { depositToPosition } from '@summerfi/sdk-common/common/utils'
 import { steps } from '@summerfi/sdk-common/simulation'
-import {
-  addBalance,
-  getReferencedValue,
-  subtractBalance,
-} from '~simulator-service/implementation/helpers'
-import { SimulationState } from '~simulator-service/interfaces/simulation'
+import { SimulationState } from '../../../interfaces/simulation'
+import { addBalance, getReferencedValue, subtractBalance } from '../../helpers'
 
 export function paybackWithdrawReducer(
   step: steps.PaybackWithdrawStep,

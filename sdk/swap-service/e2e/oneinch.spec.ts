@@ -10,7 +10,7 @@ import {
 import { subtractPercentage } from '@summerfi/sdk-common/utils'
 import { SwapProviderType } from '@summerfi/swap-common/enums'
 import { QuoteData, SwapData } from '@summerfi/swap-common/types'
-import { SwapManagerFactory } from '~swap-service'
+import { SwapManagerFactory } from '../src/implementation/SwapManagerFactory'
 
 describe('OneInch | SwapManager | Integration', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet

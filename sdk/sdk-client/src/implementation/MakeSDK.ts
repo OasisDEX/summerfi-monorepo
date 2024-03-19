@@ -1,13 +1,7 @@
-import { registerMockProtocols } from '~sdk-client/mocks/mockProtocol'
+import { createRPCClient } from '../rpc/SDKClient'
 import { SDKManager } from './SDKManager'
 
-/**
- * @function makeSDK
- * @returns The SDKManager singleton
- */
-export function makeSDK() {
-  // TODO: remove this mock call
-  registerMockProtocols()
-
-  return new SDKManager()
+export function makeSDK(params: { apiURL: string }) {
+  const rpcClient = createRPCClient(params.apiURL)
+  return new SDKManager({ rpcClient })
 }

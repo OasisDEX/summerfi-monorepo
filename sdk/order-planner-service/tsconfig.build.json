@@ -3,21 +3,7 @@
   // include tests and use module paths in tests but build without tests
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "rootDir": "src",
-    "paths": {
-      "~orderplannerservice": ["src/index.ts"],
-      "~orderplannerservice/*": ["./src/*"],
-      "~orderplannercommon": ["node_modules/@summerfi/order-planner-common/src/index.ts"],
-      "~orderplannercommon/*": ["node_modules/@summerfi/order-planner-common/src/*"],
-      "~protocolplugins": ["node_modules/@summerfi/protocol-plugins/src/index.ts"],
-      "~protocolplugins/*": ["node_modules/@summerfi/protocol-plugins/src/*"],
-      "~sdk-common": ["node_modules/@summerfi/sdk-common/src/index.ts"],
-      "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
-      "~swap-common/*": ["node_modules/@summerfi/swap-common/src/*"],
-      "~deployment-types/*": ["node_modules/@summerfi/deployment-types/src/*"],
-      "~sdk-client/*": ["node_modules/@summerfi/sdk-client/src/*"],
-      "~sdk-client": ["node_modules/@summerfi/sdk-client/src"]
-    }
+    "rootDir": "src"
   },
   "include": ["src/**/*.ts"]
 }

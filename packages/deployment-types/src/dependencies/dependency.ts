@@ -1,7 +1,7 @@
 import { Address } from '@summerfi/common'
-import { ConfigEntry } from '~deployment-types/common/configEntry'
 import { MiscDependencyNames } from './misc'
 import { TokenDependencyNames } from './tokens'
+import { ConfigEntry } from '../common/configEntry'
 
 export type MiscDependencyConfigEntry = {
   name: MiscDependencyNames

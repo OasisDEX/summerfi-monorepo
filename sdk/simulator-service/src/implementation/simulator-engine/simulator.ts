@@ -1,10 +1,9 @@
-import type { SimulationState } from '~simulator-service/interfaces/simulation'
-import type { Tail } from '~simulator-service/interfaces/helperTypes'
-import type { NextFunction } from '../../interfaces'
-import { tail } from '~simulator-service/implementation/helpers'
+import type { NextFunction, Tail } from '../../interfaces'
 import { processStepOutput } from './stepProcessor'
 import { stateReducer } from './reducer'
 import type { SimulationStrategy } from '@summerfi/sdk-common/simulation'
+import { SimulationState } from '../../interfaces/simulation'
+import { tail } from '../helpers'
 
 export class Simulator<
   Strategy extends SimulationStrategy,

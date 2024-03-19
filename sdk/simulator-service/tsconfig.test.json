@@ -4,9 +4,6 @@
     "rootDir": "src",
     "baseUrl": ".",
     "paths": {
-      "~simulator-service": ["./src/index.ts"],
-      "~simulator-service/*": ["./src/*"],
-      "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
       "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"]
     }
   },
