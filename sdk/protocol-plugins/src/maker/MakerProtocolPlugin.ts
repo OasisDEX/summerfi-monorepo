@@ -25,7 +25,7 @@ import {MakerLendingPool, MakerPoolCollateralConfig, MakerPoolDebtConfig} from "
 import { OSM_ABI, ERC20_ABI } from '../interfaces/abis'
 import { PRECISION_BI, PRECISION } from '../implementation/constants'
 
-export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerPoolId, MakerLendingPool> {
+export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerPoolId> {
   public static protocol: ProtocolName.Maker = ProtocolName.Maker
 
   // TODO: Replace with ChainFamilyMap entries post merge

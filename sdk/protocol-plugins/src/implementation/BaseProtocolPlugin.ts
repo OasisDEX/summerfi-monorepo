@@ -1,4 +1,4 @@
-import {ChainId, Position, ChainInfo} from "@summerfi/sdk-common/common";
+import {Position, ChainInfo} from "@summerfi/sdk-common/common";
 import {LendingPool} from "@summerfi/sdk-common/protocols";
 import {z} from "zod";
 import {IPositionId} from "../interfaces/IPositionId";
@@ -14,7 +14,7 @@ import { Maybe } from '@summerfi/sdk-common/common'
  *              and implements shared functionality for late dependency injection, pool schema validation
  *              and action building
  */
-export abstract class BaseProtocolPlugin<PoolIdType extends IPoolId = IPoolId, LendingPoolType extends LendingPool = LendingPool> implements IProtocolPlugin<PoolIdType> {
+export abstract class BaseProtocolPlugin<PoolIdType extends IPoolId> implements IProtocolPlugin<PoolIdType> {
     public readonly protocol: PoolIdType['protocol']['name']
     public readonly supportedChains: ChainInfo[]
     public _ctx: IProtocolPluginContext | undefined
@@ -40,7 +40,7 @@ export abstract class BaseProtocolPlugin<PoolIdType extends IPoolId = IPoolId, L
     }
 
     // Protocol Data Methods
-    public abstract getPool(poolId: unknown): Promise<LendingPoolType>
+    public abstract getPool(poolId: unknown): Promise<LendingPool>
     public abstract getPositionId(positionId: IPositionId): string
     public abstract getPosition(positionId: IPositionId): Promise<Position>
 

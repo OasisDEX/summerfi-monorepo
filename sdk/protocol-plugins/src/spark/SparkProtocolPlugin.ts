@@ -26,7 +26,7 @@ import {
 import { AaveV3LikePluginBuilder, filterAssetsListByEMode } from '../implementation/AAVEv3LikeBuilder'
 import { UNCAPPED_SUPPLY, PRECISION_BI } from '../implementation/constants'
 
-export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId, SparkLendingPool> {
+export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
   public static protocol: ProtocolName.Spark = ProtocolName.Spark
   // TODO: Replace with ChainFamilyMap entries post merge
   public static supportedChains = [ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' })]

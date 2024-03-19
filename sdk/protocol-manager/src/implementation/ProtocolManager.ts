@@ -62,7 +62,7 @@ export class ProtocolManager<ProtocolPlugins extends BaseProtocolPlugin<any>[]> 
   }
 
   public async getPool<PoolId extends GetPoolIds<ProtocolPlugins>>(
-    poolId: IPoolId,
+    poolId: PoolId,
   ): Promise<ReturnPool<ProtocolPlugins, PoolId>> {
     const plugin: BaseProtocolPlugin<PoolId> | undefined = this.plugins.find(
       (plugin) => plugin.protocol === poolId.protocol.name,
@@ -92,4 +92,3 @@ export const protocolManager = new ProtocolManager([
 ] as const)
 
 export type PoolIds = ExtractPoolIds<typeof protocolManager>
-

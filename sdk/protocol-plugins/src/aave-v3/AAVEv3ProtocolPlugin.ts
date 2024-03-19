@@ -19,7 +19,7 @@ import { AaveV3LikePluginBuilder, filterAssetsListByEMode } from '../implementat
 import { UNCAPPED_SUPPLY, PRECISION_BI } from '../implementation/constants'
 import { ChainId } from '@summerfi/sdk-common/common'
 
-export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId, AaveV3LendingPool> {
+export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
   public static protocol: ProtocolName.AAVEv3 = ProtocolName.AAVEv3
   // TODO: Replace with ChainFamilyMap entries post merge
   public static supportedChains = [ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' })]

@@ -1,5 +1,5 @@
 import { ChainInfo } from '@summerfi/sdk-common/common'
-import { ILKType, ProtocolName, EmodeType } from '@summerfi/sdk-common/protocols'
+import { ILKType, ProtocolName, EmodeType, SparkPoolId } from '@summerfi/sdk-common/protocols'
 import { createPublicClient, http, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
 import {protocolManager} from '../src/implementation/ProtocolManager'
@@ -54,13 +54,13 @@ describe('playground', () => {
   })
 
   it('template/spark', async () => {
-    const sparkPoolId = {
+    const sparkPoolId: SparkPoolId = {
       protocol: {
         name: ProtocolName.Spark as const,
         chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
       },
       emodeType: EmodeType.None
-    }
+    } as SparkPoolId
 
     protocolManager.init(ctx)
     const result = await protocolManager.getPool(sparkPoolId)
