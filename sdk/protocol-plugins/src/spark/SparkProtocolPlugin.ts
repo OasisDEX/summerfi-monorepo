@@ -8,7 +8,6 @@ import {
   RiskRatio,
   Position,
   ChainId,
-  ChainInfo,
   ChainFamilyName,
   valuesOfChainFamilyMap
 } from '@summerfi/sdk-common/common'

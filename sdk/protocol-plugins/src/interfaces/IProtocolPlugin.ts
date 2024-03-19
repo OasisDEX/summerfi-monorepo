@@ -1,13 +1,11 @@
 import {IProtocolActionBuilder} from "@summerfi/order-planner-common/interfaces";
 import {
     Position,
-} from '@summerfi/sdk-common/common'
-import {ChainInfo} from "@summerfi/sdk-common/common";
-import {LendingPool} from "@summerfi/sdk-common/protocols";
-import {z} from "zod";
-import {
+ChainInfo} from '@summerfi/sdk-common/common'
+import {LendingPool,
     IPoolId,
-} from '@summerfi/sdk-common/protocols'
+} from "@summerfi/sdk-common/protocols";
+import {z} from "zod";
 import {IProtocolPluginContext} from "./IProtocolPluginContext";
 import {IPositionId} from "../interfaces/IPositionId";
 

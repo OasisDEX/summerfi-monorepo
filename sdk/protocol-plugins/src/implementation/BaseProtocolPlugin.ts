@@ -1,13 +1,11 @@
-import {Position, ChainInfo} from "@summerfi/sdk-common/common";
-import {LendingPool} from "@summerfi/sdk-common/protocols";
+import {Position, ChainInfo, Maybe } from "@summerfi/sdk-common/common";
+import {LendingPool,IPoolId} from "@summerfi/sdk-common/protocols";
 import {z} from "zod";
 import {IPositionId} from "../interfaces/IPositionId";
 import {IProtocolPlugin} from "../interfaces/IProtocolPlugin";
 import {IProtocolPluginContext} from "../interfaces/IProtocolPluginContext";
-import {IPoolId} from '@summerfi/sdk-common/protocols'
 import { ActionBuilder, ActionBuildersMap } from '@summerfi/order-planner-common/builders'
 import { steps } from '@summerfi/sdk-common/simulation'
-import { Maybe } from '@summerfi/sdk-common/common'
 
 /**
  * @class Base class for all ProtocolDataPlugins. It provides the basic functionality & fields for all protocol plugins

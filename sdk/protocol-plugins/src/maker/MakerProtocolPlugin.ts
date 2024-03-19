@@ -11,10 +11,9 @@ import {
   ChainFamilyName,
   valuesOfChainFamilyMap
 } from '@summerfi/sdk-common/common'
-import {ILKType} from "@summerfi/sdk-common/protocols";
+import {ILKType, PoolType, ProtocolName } from "@summerfi/sdk-common/protocols";
 import {SimulationSteps} from "@summerfi/sdk-common/simulation";
 import type { MakerPoolId } from '@summerfi/sdk-common/protocols'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { stringToHex, getContract } from 'viem'
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
@@ -22,7 +21,7 @@ import {MakerPaybackWithdrawActionBuilder} from "./builders/MakerPaybackWithdraw
 import {BaseProtocolPlugin} from "../implementation/BaseProtocolPlugin";
 import {IPositionId} from "../interfaces/IPositionId";
 import {MakerLendingPool, MakerPoolCollateralConfig, MakerPoolDebtConfig} from "./Types";
-import { OSM_ABI, ERC20_ABI } from '../interfaces/abis'
+import { OSM_ABI, ERC20_ABI } from './abis'
 import { PRECISION_BI, PRECISION } from '../implementation/constants'
 
 export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerPoolId> {
