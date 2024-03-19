@@ -13,11 +13,7 @@ async function createProtocolPluginContext(): Promise<IProtocolPluginContext> {
       multicall: true,
     },
     chain: mainnet,
-    transport: http(mainnet.rpcUrls.default.http[0], {
-      batch: false,
-      timeout: 500,
-      retryCount: 0
-    }),
+    transport: http(),
   })
 
   return {
