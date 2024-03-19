@@ -1,6 +1,6 @@
 import { steps } from '@summerfi/sdk-common/simulation'
 import { getReferencedValue } from '../../helpers'
-import { StepOutputProcessor } from '../../../interfaces/steps'
+import type { StepOutputProcessor } from '../../../interfaces/steps'
 
 export const paybackWithdrawOutputProcessor: StepOutputProcessor<
   steps.PaybackWithdrawStep

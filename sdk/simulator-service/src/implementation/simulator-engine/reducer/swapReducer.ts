@@ -8,6 +8,7 @@ export function swapReducer(step: steps.SwapStep, state: SimulationState): Simul
   return {
     ...state,
     steps: {
+      ...state.steps,
       [step.name]: step,
     },
     balances: balanceWithToToken,

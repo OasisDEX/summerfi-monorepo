@@ -42,7 +42,9 @@ export class TokenAmount implements ITokenAmountSerialized {
 
   public add(tokenToAdd: TokenAmount): TokenAmount {
     if (tokenToAdd.token.symbol !== this.token.symbol) {
-      throw new Error('Token symbols do not match')
+      throw new Error(
+        `Token symbols do not match: ${tokenToAdd.token.symbol} !== ${this.token.symbol}`,
+      )
     }
 
     return new TokenAmount({
