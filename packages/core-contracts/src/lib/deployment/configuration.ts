@@ -1,8 +1,8 @@
 import { Config, ConfigEntry } from '@summerfi/deployment-types'
 import { Contract, Deployments } from '@summerfi/deployment-utils'
 import { Address } from '@summerfi/common'
-import { ContractsVersionsSnapshot } from '~core-contracts/lib/versions'
 import { getContractLabel, getLabelHash, recurseConfig } from './utils'
+import { ContractsVersionsSnapshot } from '../versions/types'
 
 async function addEntryToRegistry(
   serviceRegistry: Contract,

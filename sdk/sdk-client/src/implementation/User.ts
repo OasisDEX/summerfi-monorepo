@@ -6,24 +6,31 @@ import {
   PositionId,
   Wallet,
 } from '@summerfi/sdk-common/common'
-import { Protocol } from '@summerfi/sdk-common/protocols'
 import { getMockPosition } from '../mocks/mockPosition'
-import { getMockOrder } from '../mocks/mockOrder'
-import { Order } from '@summerfi/sdk-common/orders'
+import { IPositionsManager, Order } from '@summerfi/sdk-common/orders'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import { IUser } from '../interfaces/IUser'
+import { IUserClient } from '../interfaces/IUserClient'
+import { IRPCClient } from '../interfaces/IRPCClient'
+import { RPCClientType } from '../rpc/SDKClient'
+import { IProtocol } from '@summerfi/sdk-common/protocols'
 
-export class User implements IUser {
+export class User extends IRPCClient implements IUserClient {
   public readonly wallet: Wallet
   public readonly chainInfo: ChainInfo
 
-  public constructor(params: { chainInfo: ChainInfo; walletAddress: Address }) {
+  public constructor(params: {
+    rpcClient: RPCClientType
+    chainInfo: ChainInfo
+    walletAddress: Address
+  }) {
+    super(params)
+
     this.chainInfo = params.chainInfo
     this.wallet = Wallet.createFrom({ address: params.walletAddress })
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async getPositionsByProtocol(_params: { protocol: Protocol }): Promise<Position[]> {
+  public async getPositionsByProtocol(_params: { protocol: IProtocol }): Promise<Position[]> {
     // TODO: Implement
     return []
   }
@@ -43,11 +50,13 @@ export class User implements IUser {
     return getMockPosition({ chainInfo: this.chainInfo, wallet: this.wallet, id: params.id })
   }
 
-  public async newOrder(params: { simulation: Simulation<SimulationType> }): Promise<Order> {
-    return getMockOrder({
+  public async newOrder(params: {
+    positionsManager: IPositionsManager
+    simulation: Simulation<SimulationType>
+  }): Promise<Maybe<Order>> {
+    return await this.rpcClient.orders.buildOrder.query({
       user: this,
-      positionsManager: { address: Address.ZeroAddressEthereum },
-      simulation: params.simulation,
+      ...params,
     })
   }
 }

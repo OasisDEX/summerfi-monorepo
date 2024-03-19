@@ -1,6 +1,7 @@
 import {
   Address,
   AddressValue,
+  ChainFamilyMap,
   ChainInfo,
   Percentage,
   Token,
@@ -8,7 +9,6 @@ import {
 } from '@summerfi/sdk-common/common'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { SwapProviderType } from '@summerfi/swap-common/enums'
-import { ChainFamilyMap } from '@summerfi/sdk-client'
 
 import { SetupBuilderReturnType, setupBuilderParams } from '../utils/SetupBuilderParams'
 import { SwapActionBuilder } from '../../src/builders'

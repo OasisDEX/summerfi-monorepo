@@ -1,6 +1,6 @@
-import { ChainFamilyMap } from '@summerfi/sdk-client'
 import {
   Address,
+  ChainFamilyMap,
   ChainInfo,
   Position,
   PositionId,

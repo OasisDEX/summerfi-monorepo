@@ -2,7 +2,7 @@ import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import type {
   StepOutputProcessor,
   StepOutputProcessors,
-  StepsWithouOutputs,
+  StepsWithoutOutputs,
 } from '../../../interfaces/steps'
 import { flashloanOutputProcessor } from './flashloanOutputProcessor'
 import { pullTokenOutputProcessor } from './pullTokenOutputProcessor'
@@ -22,7 +22,7 @@ const stepOutputProcessors: StepOutputProcessors = {
   [SimulationSteps.PullToken]: pullTokenOutputProcessor,
 }
 
-export async function processStepOutput(step: StepsWithouOutputs): Promise<steps.Steps> {
+export async function processStepOutput(step: StepsWithoutOutputs): Promise<steps.Steps> {
   const processor = stepOutputProcessors[step.type] as StepOutputProcessor<steps.Steps>
   return processor(step)
 }

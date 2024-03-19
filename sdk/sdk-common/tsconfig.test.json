@@ -4,9 +4,8 @@
     "rootDir": "src",
     "baseUrl": ".",
     "paths": {
-      "~sdk-common": ["./src/index.ts"],
-      "~sdk-common/*": ["./src/*"],
-      "@summerfi/common": ["node_modules/@summerfi/common/src/index.ts"]
+      "@summerfi/common": ["node_modules/@summerfi/common/src/index.ts"],
+      "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"]
     }
   },
   "include": ["src/**/*.ts"],

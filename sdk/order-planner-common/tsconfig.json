@@ -3,12 +3,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "~orderplannercommon": ["src/index.ts"],
-      "~orderplannercommon/*": ["./src/*"],
-      "~sdk-client/*": ["node_modules/@summerfi/sdk-client/src/*"]
-    }
+    "baseUrl": "."
   },
   "include": ["src/**/*.ts", "tests/**/*.ts"],
   "exclude": ["node_modules"]

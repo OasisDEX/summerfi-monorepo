@@ -1,4 +1,4 @@
-import { SystemActionNames } from '~deployment-types/system/actions'
-import { ProtocolActionNames } from '~deployment-types/protocols/types'
+import { ProtocolActionNames } from '../protocols/types'
+import { SystemActionNames } from '../system/actions'
 
 export type ActionNames = SystemActionNames | ProtocolActionNames

@@ -120,11 +120,14 @@ export interface IPriceService {
   getPriceUSD: (token: Token) => Promise<Price>
 }
 
-export interface ProtocolManagerContext {
+export interface PluginContext {
   provider: PublicClient
   tokenService: ITokenService
   priceService: IPriceService
   contractProvider: IContractProvider
+}
+export interface ProtocolManagerContext extends PluginContext {
+  // Empty on purpose
 }
 
 export enum ChainId {

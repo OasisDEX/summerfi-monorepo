@@ -1,1 +1,1 @@
-export { ActionBuildersConfig } from './config'
+export { ActionBuildersConfig } from './Config'
