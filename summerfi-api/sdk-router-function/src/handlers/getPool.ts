@@ -18,11 +18,12 @@ export const getPool = publicProcedure
   .query(async (params) => {
     const poolParameters = params.input.poolParameters
 
-
     const tokenService = new TokenService()
     const priceService = new PriceService(client)
     const contractProvider = new MockContractProvider()
 
+    const protocolManager =
+    protocolManager.init(ctx)
     return protocolManager.getPool(poolParameters, {
       provider: client,
       tokenService,

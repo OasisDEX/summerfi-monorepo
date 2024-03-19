@@ -1,5 +1,5 @@
 import { ChainInfo } from '@summerfi/sdk-common/common'
-import { ILKType, ProtocolName, EmodeType, MakerPoolId, SparkPoolId, AaveV3PoolId } from '@summerfi/sdk-common/protocols'
+import { ILKType, ProtocolName, EmodeType } from '@summerfi/sdk-common/protocols'
 import { createPublicClient, http, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
 import {protocolManager} from '../src/implementation/ProtocolManager'
@@ -31,12 +31,13 @@ describe('playground', () => {
   })
 
   it('template/maker', async () => {
-    const makerPoolId: MakerPoolId = {
+    const makerPoolId = {
       protocol: {
         name: ProtocolName.Maker as const,
         chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
       },
       ilkType: ILKType.ETH_A,
+      vaultId: '123'
     }
 
     protocolManager.init(ctx)
@@ -53,7 +54,7 @@ describe('playground', () => {
   })
 
   it('template/spark', async () => {
-    const sparkPoolId: SparkPoolId = {
+    const sparkPoolId = {
       protocol: {
         name: ProtocolName.Spark as const,
         chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
@@ -74,7 +75,7 @@ describe('playground', () => {
   })
 
   it('template/aave-v3', async () => {
-    const aaveV3PoolId: AaveV3PoolId = {
+    const aaveV3PoolId = {
       protocol: {
         name: ProtocolName.AAVEv3 as const,
         chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),

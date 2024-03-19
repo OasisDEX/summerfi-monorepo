@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {ProtocolManager} from "@summerfi/protocol-manager/implementation/ProtocolManager";
 import {PriceService, TokenService} from "@summerfi/protocol-plugins";
 import { CreateAWSLambdaContextOptions } from '@trpc/server/adapters/aws-lambda'
 import type { APIGatewayProxyEventV2 } from 'aws-lambda'
@@ -13,6 +12,12 @@ import { ProtocolPluginsRegistry } from '@summerfi/protocol-plugins'
 import { ProtocolBuilderRegistryType } from '@summerfi/order-planner-common/interfaces'
 import {createPublicClient, http} from "viem";
 import {mainnet} from "viem/chains";
+import {
+  protocolsManager,
+} from '@summerfi/protocol-manager'
+import {
+  MockContractProvider,
+} from '@summerfi/protocol-plugins'
 
 export type ContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
@@ -22,6 +27,7 @@ export type Context = {
   swapManager: ISwapManager
   configProvider: IConfigurationProvider
   protocolsRegistry: ProtocolBuilderRegistryType
+  protocolsManager: typeof protocolManager
 }
 
 // context for each request
@@ -40,7 +46,17 @@ export const createContext = (opts: ContextOptions): Context => {
   })
   const tokenService = new TokenService()
   const priceService = new PriceService(client)
-  const protocolManager = new ProtocolManager()
+
+  /**
+   * Protocols manager has dependencies initialised after instantiation
+   * To preserve type safety of protocol manager methods (such as getPool)
+   */
+  protocolsManager.init({
+    provider: client,
+    tokenService,
+    priceService,
+    contractProvider: MockContractProvider
+  })
   const swapManager = SwapManagerFactory.newSwapManager({ configProvider })
   const protocolsRegistry = ProtocolPluginsRegistry
 
@@ -50,5 +66,6 @@ export const createContext = (opts: ContextOptions): Context => {
     swapManager,
     configProvider,
     protocolsRegistry,
+    protocolsManager
   }
 }

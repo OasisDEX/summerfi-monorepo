@@ -27,27 +27,29 @@ import { Maybe } from '@summerfi/sdk-common/common'
 
 export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerLendingPool, MakerPoolId> implements IProtocolPlugin<MakerPoolId> {
   public static protocol: ProtocolName.Maker = ProtocolName.Maker
+  public static supportedChains = [ChainId.Mainnet]
+  public static schema = z.object({
+    protocol: z.object({
+      name: z.literal(ProtocolName.Maker),
+      chainInfo: z.object({
+        name: z.string(),
+        chainId: z.custom<ChainId>(
+            (value) => MakerProtocolPlugin.supportedChains.includes(value as ChainId),
+            'Chain ID not supported',
+            true,
+        ),
+      }),
+    }),
+    ilkType: z.nativeEnum(ILKType),
+    vaultId: z.string()
+  })
 
   constructor() {
-    const schema = z.object({
-      protocol: z.object({
-        name: z.literal(ProtocolName.Maker),
-        chainInfo: z.object({
-          name: z.string(),
-          chainId: z.custom<ChainId>(
-              (value) => this.supportedChains.includes(value as ChainId),
-              'Chain ID not supported',
-              true,
-          ),
-        }),
-      }),
-      ilkType: z.nativeEnum(ILKType),
-    })
     const StepBuildersMap = {
       [SimulationSteps.PaybackWithdraw]: MakerPaybackWithdrawActionBuilder,
     }
 
-    super(MakerProtocolPlugin.protocol, [ChainId.Mainnet], schema, StepBuildersMap)
+    super(MakerProtocolPlugin.protocol, MakerProtocolPlugin.supportedChains, MakerProtocolPlugin.schema, StepBuildersMap)
   }
 
   async getPool(makerPoolId: unknown): Promise<MakerLendingPool> {
