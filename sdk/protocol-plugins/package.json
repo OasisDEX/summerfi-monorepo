@@ -14,8 +14,7 @@
     "testw": "jest --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "tsc -b -v tsconfig.build.json",
-    "plugin:new": "node scripts/add-protocol-plugin.js"
+    "build": "tsc -b -v tsconfig.build.json"
   },
   "dependencies": {
     "@summerfi/deployment-types": "workspace:*",
@@ -29,7 +28,6 @@
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
-    "@summerfi/typescript-config": "workspace:*",
-    "mustache": "^4.2.0"
+    "@summerfi/typescript-config": "workspace:*"
   }
 }

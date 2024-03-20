@@ -13,28 +13,28 @@ import {
 } from '@summerfi/sdk-common/common'
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SimulationSteps } from '@summerfi/sdk-common/simulation'
-import type { {{name}}PoolId } from '@summerfi/sdk-common/protocols'
+import type { {{ name }}PoolId } from '@summerfi/sdk-common/protocols'
 import { stringToHex, getContract } from 'viem'
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
-import { {{name}}PaybackWithdrawActionBuilder } from './builders/{{name}}PaybackWithdrawActionBuilder'
+import { {{ name }}PaybackWithdrawActionBuilder } from './builders/{{ name }}PaybackWithdrawActionBuilder'
 import { BaseProtocolPlugin } from '../implementation/BaseProtocolPlugin'
 import { IPositionId } from '../interfaces/IPositionId'
-import { {{name}}LendingPool, {{name}}PoolCollateralConfig, {{name}}PoolDebtConfig } from './Types'
+import { {{ name }}LendingPool, {{ name }}PoolCollateralConfig, {{ name }}PoolDebtConfig } from './Types'
 import { ERC20_ABI } from './abis'
 import { PRECISION_BI, PRECISION } from '../implementation/constants'
 
-export class {{name}}ProtocolPlugin extends BaseProtocolPlugin<{{name}}PoolId> {
-  public static protocol: ProtocolName.{{name}} = ProtocolName.{{name}}
+export class {{ name }}ProtocolPlugin extends BaseProtocolPlugin<{{ name }}PoolId> {
+  public static protocol: ProtocolName.{{ name }} = ProtocolName.{{ name }}
   public static supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
   public static schema = z.object({
     protocol: z.object({
-      name: z.literal(ProtocolName.{{name}}),
+      name: z.literal(ProtocolName.{{ name }}),
       chainInfo: z.object({
         name: z.string(),
         chainId: z.custom<ChainId>(
           (chainId) =>
-            {{name}}ProtocolPlugin.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
+            {{ name }}ProtocolPlugin.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
           'Chain ID not supported',
           true,
         ),
@@ -44,25 +44,25 @@ export class {{name}}ProtocolPlugin extends BaseProtocolPlugin<{{name}}PoolId> {
 
   constructor() {
     const StepBuildersMap = {
-      [SimulationSteps.PaybackWithdraw]: {{name}}PaybackWithdrawActionBuilder,
+      [SimulationSteps.PaybackWithdraw]: {{ name }}PaybackWithdrawActionBuilder,
     }
 
     super(
-      {{name}}ProtocolPlugin.protocol,
-      {{name}}ProtocolPlugin.supportedChains,
-      {{name}}ProtocolPlugin.schema,
+      {{ name }}ProtocolPlugin.protocol,
+      {{ name }}ProtocolPlugin.supportedChains,
+      {{ name }}ProtocolPlugin.schema,
       StepBuildersMap,
     )
   }
 
-  async getPool({{nameCamelCase}}PoolId: unknown): Promise<{{name}}LendingPool> {
-    this.isPoolId({{nameCamelCase}}PoolId)
+  async getPool({{ nameCamelCase }}PoolId: unknown): Promise<{{ name }}LendingPool> {
+    this.isPoolId({{ nameCamelCase }}PoolId)
 
     const ctx = this.ctx
     const chainId = ctx.provider.chain?.id
     if (!chainId) throw new Error('ctx.provider.chain.id undefined')
 
-    if (!{{name}}ProtocolPlugin.supportedChains.some((chainInfo) => chainInfo.chainId === chainId)) {
+    if (!{{ name }}ProtocolPlugin.supportedChains.some((chainInfo) => chainInfo.chainId === chainId)) {
       throw new Error(`Chain ID ${chainId} is not supported`)
     }
 
@@ -71,7 +71,7 @@ export class {{name}}ProtocolPlugin extends BaseProtocolPlugin<{{name}}PoolId> {
       allowFailure: false,
     })
 
-    const collaterals: Record<string, {{name}}PoolCollateralConfig> = {
+    const collaterals: Record<string, {{ name }}PoolCollateralConfig> = {
       [collateralToken.address.value]: {
         token: collateralToken,
         price: Price.createFrom({
@@ -90,7 +90,7 @@ export class {{name}}ProtocolPlugin extends BaseProtocolPlugin<{{name}}PoolId> {
       },
     }
 
-    const debts: Record<string, {{name}}PoolDebtConfig> = {
+    const debts: Record<string, {{ name }}PoolDebtConfig> = {
       [quoteToken.address.value]: {
         token: quoteToken,
         price: await ctx.priceService.getPrice({
@@ -104,8 +104,8 @@ export class {{name}}ProtocolPlugin extends BaseProtocolPlugin<{{name}}PoolId> {
 
     return {
       type: PoolType.Lending,
-      poolId: {{nameCamelCase}}PoolId,
-      protocol: {{nameCamelCase}}PoolId.protocol,
+      poolId: {{ nameCamelCase }}PoolId,
+      protocol: {{ nameCamelCase }}PoolId.protocol,
       baseCurrency: poolBaseCurrencyToken,
       collaterals,
       debts,
@@ -123,4 +123,4 @@ export class {{name}}ProtocolPlugin extends BaseProtocolPlugin<{{name}}PoolId> {
   }
 }
 
-export const {{nameCamelCase}}ProtocolPlugin = new {{name}}ProtocolPlugin()
+export const {{ nameCamelCase }}ProtocolPlugin = new {{ name }}ProtocolPlugin()
