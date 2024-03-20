@@ -302,11 +302,6 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerPoolId> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getPositionId(positionId: string): IPositionId {
-    throw new Error('Not implemented')
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getPosition(positionId: IPositionId): Promise<Position> {
     throw new Error('Not implemented')
   }

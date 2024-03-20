@@ -16,6 +16,7 @@ import { PoolType, ProtocolName, EmodeType } from '@summerfi/sdk-common/protocol
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
 import { BaseProtocolPlugin } from '../implementation/BaseProtocolPlugin'
+import {aaveV3EmodeCategoryMap} from "./emodeCategoryMap";
 import { AaveV3LendingPool, AaveV3PoolCollateralConfig, AaveV3PoolDebtConfig } from './Types'
 import {
   AaveV3LikePluginBuilder,
@@ -47,9 +48,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
   })
 
   constructor() {
-    const StepBuildersMap = {
-      // [SimulationSteps.DepositBorrow]: AAVEv3DepositBorrowActionBuilder,
-    }
+    const StepBuildersMap = {}
     super(
       AaveV3ProtocolPlugin.protocol,
       AaveV3ProtocolPlugin.supportedChains,
@@ -217,23 +216,9 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
     }
   }
 
-  getPositionId(positionId: string): string {
-    throw new Error(`Not implemented ${positionId}`)
-  }
-
   async getPosition(positionId: string): Promise<Position> {
     throw new Error(`Not implemented ${positionId}`)
   }
 }
-
-const aaveV3EmodeCategoryMap: Record<EmodeType, bigint> = Object.keys(EmodeType).reduce<
-  Record<EmodeType, bigint>
->(
-  (accumulator, key, index) => {
-    accumulator[EmodeType[key as keyof typeof EmodeType]] = BigInt(index)
-    return accumulator
-  },
-  {} as Record<EmodeType, bigint>,
-)
 
 export const aaveV3ProtocolPlugin = new AaveV3ProtocolPlugin()

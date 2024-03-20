@@ -46,7 +46,6 @@ export abstract class BaseProtocolPlugin<PoolIdType extends IPoolId>
 
   // Protocol Data Methods
   public abstract getPool(poolId: unknown): Promise<LendingPool>
-  public abstract getPositionId(positionId: IPositionId): string
   public abstract getPosition(positionId: IPositionId): Promise<Position>
 
   isPoolId(candidate: unknown): asserts candidate is PoolIdType {

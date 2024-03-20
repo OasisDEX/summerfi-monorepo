@@ -19,6 +19,7 @@ import { z } from 'zod'
 import { SparkDepositBorrowActionBuilder } from './builders/SparkDepositBorrowActionBuilder'
 import { BaseProtocolPlugin } from '../implementation/BaseProtocolPlugin'
 import { IPositionId } from '../interfaces/IPositionId'
+import {sparkEmodeCategoryMap} from "./emodeCategoryMap";
 import { SparkPoolCollateralConfig, SparkLendingPool, SparkPoolDebtConfig } from './Types'
 import {
   AaveV3LikePluginBuilder,
@@ -211,24 +212,10 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
     }
   }
 
-  getPositionId(positionId: string): IPositionId {
-    throw new Error(`Not implemented ${positionId}`)
-  }
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getPosition(positionId: IPositionId): Promise<Position> {
     throw new Error(`Not implemented ${positionId}`)
   }
 }
-
-const sparkEmodeCategoryMap: Record<EmodeType, bigint> = Object.keys(EmodeType).reduce<
-  Record<EmodeType, bigint>
->(
-  (accumulator, key, index) => {
-    accumulator[EmodeType[key as keyof typeof EmodeType]] = BigInt(index)
-    return accumulator
-  },
-  {} as Record<EmodeType, bigint>,
-)
 
 export const sparkProtocolPlugin = new SparkProtocolPlugin()
