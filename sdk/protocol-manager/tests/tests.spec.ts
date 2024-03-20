@@ -8,12 +8,13 @@ import { TokenService, PriceService } from '@summerfi/protocol-plugins/'
 import { MockContractProvider } from '@summerfi/protocol-plugins/mocks'
 
 async function createProtocolManagerContext(): Promise<IProtocolManagerContext> {
+  const RPC_URL = process.env['MAINNET_RPC_URL'] || ''
   const provider: PublicClient = createPublicClient({
     batch: {
       multicall: true,
     },
     chain: mainnet,
-    transport: http(),
+    transport: http(RPC_URL),
   })
 
   return {
