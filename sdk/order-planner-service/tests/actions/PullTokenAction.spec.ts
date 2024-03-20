@@ -4,7 +4,7 @@ import { PullTokenAction } from '../../src/actions'
 
 describe('PullToken Action', () => {
   const action = new PullTokenAction()
-  const contractNameWithVersion = `${action.config.name}_v${action.config.version}`
+  const contractNameWithVersion = `${action.config.name}_${action.config.version}`
 
   const DAI = Token.createFrom({
     chainInfo: {
