@@ -1,116 +1,118 @@
-import path from "path";
-import fs from "fs-extra";
-import type { PlopTypes } from "@turbo/gen";
+import path from 'path'
+import fs from 'fs-extra'
+import type { PlopTypes } from '@turbo/gen'
 
-const customAction: PlopTypes.CustomActionFunction = async (
-    answers: { name?: string, namePascalCase?: string, nameKebabCase?: string, nameCamelCase?: string }
-) => {
-    const name = answers.name
-    answers.namePascalCase = toPascalCase(name),
-    answers.nameKebabCase = toKebabCase(name),
-    answers.nameCamelCase = toCamelCase(name),
-
-    console.log("answers", answers)
-    return 'Added casing variants';
+const customAction: PlopTypes.CustomActionFunction = async (answers: {
+  name?: string
+  namePascalCase?: string
+  nameKebabCase?: string
+  nameCamelCase?: string
+}) => {
+  const name = answers.name
+  ;(answers.namePascalCase = toPascalCase(name)),
+    (answers.nameKebabCase = toKebabCase(name)),
+    (answers.nameCamelCase = toCamelCase(name)),
+    console.log('answers', answers)
+  return 'Added casing variants'
 }
 
 export default function generator(plop: PlopTypes.NodePlopAPI): void {
-    plop.setGenerator("plugin", {
-        description: "Add a new protocol plugin",
-        prompts: [
-            {
-                type: "input",
-                name: "name",
-                message: 'name of the protocol (example: "Morpho")',
-            },
-        ],
-        actions: [
-            customAction,
-            function createProtocolPluginDirectory(answers: { name?: string }) {
-                if (!answers.name) {
-                    return "no name provided, skipping plugin directory creation";
-                }
+  plop.setGenerator('plugin', {
+    description: 'Add a new protocol plugin',
+    prompts: [
+      {
+        type: 'input',
+        name: 'name',
+        message: 'name of the protocol (example: "Morpho")',
+      },
+    ],
+    actions: [
+      customAction,
+      function createProtocolPluginDirectory(answers: { name?: string }) {
+        if (!answers.name) {
+          return 'no name provided, skipping plugin directory creation'
+        }
 
-                const directory = path.join(
-                    // resolves to the root of the current workspace
-                    plop.getDestBasePath(),
-                    "sdk/protocol-plugins/src",
-                    answers.name
-                );
+        const directory = path.join(
+          // resolves to the root of the current workspace
+          plop.getDestBasePath(),
+          'sdk/protocol-plugins/src',
+          answers.name,
+        )
 
-                fs.mkdirSync(directory);
+        fs.mkdirSync(directory)
 
-                return `created empty ${directory} directory for protocol plugin`;
-            },
-            {
-                type: "add",
-                path: "sdk/protocol-plugins/src/{{name}}/{{name}}ProtocolPlugin.ts",
-                templateFile: "templates/plugin/ProtocolPlugin.hbs",
-            },
-            {
-                type: "add",
-                path: "sdk/protocol-plugins/src/{{name}}/index.ts",
-                templateFile: "templates/plugin/index.hbs",
-            },
-            {
-                type: "add",
-                path: "sdk/protocol-plugins/src/{{name}}/abis.ts",
-                templateFile: "templates/plugin/abis.hbs",
-            },
-            {
-                type: "add",
-                path: "sdk/protocol-plugins/src/{{name}}/Types.ts",
-                templateFile: "templates/plugin/Types.hbs",
-            },
-            {
-                type: "add",
-                path: "sdk/protocol-plugins/src/{{name}}/builders/index.ts",
-                templateFile: "templates/plugin/builders/index.hbs",
-            },
-            {
-                type: "add",
-                path: "sdk/protocol-plugins/src/{{name}}/builders/{{name}}PaybackWithdrawActionBuilder.ts",
-                templateFile: "templates/plugin/builders/PaybackWithdrawActionBuilder.hbs",
-            },
-            {
-                type: "add",
-                path: "sdk/protocol-plugins/src/{{name}}/actions/index.ts",
-                templateFile: "templates/plugin/actions/index.hbs",
-            },
-            {
-                type: "add",
-                path: "sdk/protocol-plugins/src/{{name}}/actions/{{name}}PaybackAction.ts",
-                templateFile: "templates/plugin/actions/PaybackAction.hbs",
-            },
-            {
-                type: "add",
-                path: "sdk/protocol-plugins/src/{{name}}/actions/{{name}}WithdrawAction.ts",
-                templateFile: "templates/plugin/actions/WithdrawAction.hbs",
-            },
-        ],
-    });
+        return `created empty ${directory} directory for protocol plugin`
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/{{name}}/{{name}}ProtocolPlugin.ts',
+        templateFile: 'templates/plugin/ProtocolPlugin.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/{{name}}/index.ts',
+        templateFile: 'templates/plugin/index.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/{{name}}/abis.ts',
+        templateFile: 'templates/plugin/abis.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/{{name}}/Types.ts',
+        templateFile: 'templates/plugin/Types.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/{{name}}/builders/index.ts',
+        templateFile: 'templates/plugin/builders/index.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/{{name}}/builders/{{name}}PaybackWithdrawActionBuilder.ts',
+        templateFile: 'templates/plugin/builders/PaybackWithdrawActionBuilder.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/{{name}}/actions/index.ts',
+        templateFile: 'templates/plugin/actions/index.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/{{name}}/actions/{{name}}PaybackAction.ts',
+        templateFile: 'templates/plugin/actions/PaybackAction.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/{{name}}/actions/{{name}}WithdrawAction.ts',
+        templateFile: 'templates/plugin/actions/WithdrawAction.hbs',
+      },
+    ],
+  })
 }
 
 const toKebabCase = (str) =>
-    str
-        .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-        .replace(/[\s_]+/g, '-')
-        .toLowerCase()
+  str
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/[\s_]+/g, '-')
+    .toLowerCase()
 
 const toCamelCase = (str) => {
-    return str
-        .replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
-            if (+match === 0) return ''
-            return index === 0 ? match.toLowerCase() : match.toUpperCase()
-        })
-        .replace(/-+/g, '')
-        .replace(/_+/g, '')
+  return str
+    .replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
+      if (+match === 0) return ''
+      return index === 0 ? match.toLowerCase() : match.toUpperCase()
+    })
+    .replace(/-+/g, '')
+    .replace(/_+/g, '')
 }
 
 const toPascalCase = (str) => {
-    return str.replace(/(^\w|-\w)/g, clearAndUpper)
+  return str.replace(/(^\w|-\w)/g, clearAndUpper)
 }
 
 function clearAndUpper(text) {
-    return text.replace(/-/, '').toUpperCase()
+  return text.replace(/-/, '').toUpperCase()
 }
