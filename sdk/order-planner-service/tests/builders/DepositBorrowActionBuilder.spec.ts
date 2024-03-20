@@ -7,7 +7,7 @@ import {
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
-import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
+import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
 import { SetupBuilderReturnType, setupBuilderParams } from '../utils/SetupBuilderParams'
 import { DepositBorrowActionBuilder } from '../../src/builders/DepositBorrowActionBuilder'
 import { MakerPoolId, PoolType, ProtocolName, ILKType } from '@summerfi/sdk-common/protocols'
@@ -83,6 +83,7 @@ describe('Deposit Borrow Action Builder', () => {
         depositAmount: depositAmount,
         borrowAmount: borrowAmount,
         position: position,
+        borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
       outputs: {
         depositAmount: depositAmount,
@@ -112,6 +113,7 @@ describe('Deposit Borrow Action Builder', () => {
         depositAmount: depositAmount,
         borrowAmount: borrowAmount,
         position: position,
+        borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
       outputs: {
         depositAmount: depositAmount,
@@ -143,6 +145,7 @@ describe('Deposit Borrow Action Builder', () => {
         depositAmount: depositAmount,
         borrowAmount: borrowAmount,
         position: position,
+        borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
       outputs: {
         depositAmount: depositAmount,

@@ -1,5 +1,5 @@
 import { ILKType } from '@summerfi/sdk-common/protocols'
-import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
+import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
 import { BaseAction } from '../src/actions/BaseAction'
 import { ActionCall } from '../src/actions/Types'
 import { ExecutionStorageMapper } from '../src/context/ExecutionStorageMapper'
@@ -107,6 +107,7 @@ describe('Execution Storage Mapper', () => {
         depositAmount: depositAmount,
         borrowAmount: borrowAmount,
         position: position,
+        borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
       outputs: {
         depositAmount: depositAmount,
@@ -161,6 +162,7 @@ describe('Execution Storage Mapper', () => {
         depositAmount: depositAmount,
         borrowAmount: borrowAmount,
         position: position,
+        borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
       outputs: {
         depositAmount: depositAmount,
@@ -181,6 +183,7 @@ describe('Execution Storage Mapper', () => {
           path: ['PreviousDepositBorrowStep', 'borrowAmount'],
         },
         position: position,
+        borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
       outputs: {
         depositAmount: depositAmount,
@@ -271,6 +274,7 @@ describe('Execution Storage Mapper', () => {
         },
         borrowAmount: borrowAmount,
         position: position,
+        borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
       outputs: {
         depositAmount: depositAmount,
@@ -321,6 +325,7 @@ describe('Execution Storage Mapper', () => {
           path: ['PreviousDepositBorrowStep', 'borrowAmount'],
         },
         position: position,
+        borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
       outputs: {
         depositAmount: depositAmount,
@@ -355,6 +360,7 @@ describe('Execution Storage Mapper', () => {
         depositAmount: depositAmount,
         borrowAmount: borrowAmount,
         position: position,
+        borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
       outputs: {
         depositAmount: depositAmount,
@@ -375,6 +381,7 @@ describe('Execution Storage Mapper', () => {
           path: ['PreviousDepositBorrowStep', 'borrowAmount'],
         },
         position: position,
+        borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
       outputs: {
         depositAmount: depositAmount,

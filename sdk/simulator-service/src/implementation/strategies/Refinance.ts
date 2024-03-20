@@ -3,6 +3,7 @@ import {
   Simulation,
   SimulationSteps,
   SimulationType,
+  TokenTransferTargetType,
 } from '@summerfi/sdk-common/simulation'
 import { getReferencedValue, makeStrategy } from '../helpers'
 import { Simulator } from '../simulator-engine'
@@ -141,6 +142,9 @@ export async function refinaceLendingToLending(
           args.position.debtAmount.token.address.value,
           args.position.collateralAmount.token.address.value,
         ),
+        borrowTargetType: isDebtSwapSkipped
+          ? TokenTransferTargetType.PositionsManager
+          : TokenTransferTargetType.StrategyExecutor,
       },
     }))
     .next(async (ctx) => ({

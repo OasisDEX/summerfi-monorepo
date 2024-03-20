@@ -1,4 +1,9 @@
-import { FlashloanProvider, Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import {
+  FlashloanProvider,
+  Simulation,
+  SimulationType,
+  TokenTransferTargetType,
+} from '@summerfi/sdk-common/simulation'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
 import { Address, ChainFamilyMap, ChainInfo } from '@summerfi/sdk-common/common'

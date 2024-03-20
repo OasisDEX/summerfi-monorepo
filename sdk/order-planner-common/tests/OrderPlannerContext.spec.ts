@@ -11,7 +11,7 @@ import {
   TokenAmount,
 } from '@summerfi/sdk-common/common'
 import { MakerPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
+import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
 import { ActionNames } from '@summerfi/deployment-types'
 import { ChainFamilyMap } from '@summerfi/sdk-common/common'
 
@@ -107,6 +107,7 @@ describe('Order Planner Context', () => {
         depositAmount: depositAmount,
         borrowAmount: borrowAmount,
         position: position,
+        borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
       outputs: {
         depositAmount: depositAmount,
@@ -161,6 +162,7 @@ describe('Order Planner Context', () => {
         depositAmount: depositAmount,
         borrowAmount: borrowAmount,
         position: position,
+        borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
       outputs: {
         depositAmount: depositAmount,
