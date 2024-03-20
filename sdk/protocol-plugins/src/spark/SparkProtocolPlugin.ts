@@ -173,7 +173,6 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
         usageAsCollateralEnabled,
       }
     } catch (e) {
-      console.log('error in collateral loop', e)
       throw new Error(`error in collateral loop ${e}`)
     }
   }
@@ -235,7 +234,6 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
         borrowingEnabled,
       }
     } catch (e) {
-      console.log('error in debt loop', e)
       throw new Error(`error in debt loop ${e}`)
     }
   }

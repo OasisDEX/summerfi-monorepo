@@ -175,7 +175,6 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
         usageAsCollateralEnabled,
       }
     } catch (e) {
-      console.log('error in collateral loop', e)
       throw new Error(`error in collateral loop ${e}`)
     }
   }
@@ -237,7 +236,6 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
         borrowingEnabled,
       }
     } catch (e) {
-      console.log('error in debt loop', e)
       throw new Error(`error in debt loop ${e}`)
     }
   }
