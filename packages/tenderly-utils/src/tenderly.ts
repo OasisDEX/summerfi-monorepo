@@ -21,10 +21,12 @@ const request = axios.create({
   },
 })
 
-export const createFork = async ({
+export const block_number = async ({
   network,
+  atBlock,
 }: {
-  network: 'mainnet' | 'optimism' | 'arbitrum' | 'base'
+  network: NetworkName
+  atBlock: number
 }) => {
   const network_ids = {
     mainnet: '1',
@@ -34,7 +36,7 @@ export const createFork = async ({
   }
   const network_id = network_ids[network]
 
-  return await request.post(TENDERLY_FORK_API, { network_id })
+  return await request.post(TENDERLY_FORK_API, { network_id, block_number: atBlock })
 }
 
 export const deleteFork = async (forkId: string) => {
