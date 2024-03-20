@@ -714,6 +714,9 @@ importers:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
+      '@types/node-fetch':
+        specifier: ^2.6.11
+        version: 2.6.11
       bignumber.js:
         specifier: 9.0.1
         version: 9.0.1
