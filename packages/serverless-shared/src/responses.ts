@@ -55,3 +55,11 @@ export function ResponseInternalServerError(
     body: createErrorBody(message),
   }
 }
+
+export function ResponseForbidden(message: string = 'Forbidden'): APIGatewayProxyResultV2 {
+  return {
+    statusCode: 403,
+    headers: createHeaders(),
+    body: createErrorBody(message),
+  }
+}

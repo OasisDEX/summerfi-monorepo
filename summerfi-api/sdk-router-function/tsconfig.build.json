@@ -19,8 +19,7 @@
       "~deployment-types": ["../../../packages/deployment-types/src/index.ts"],
       "~deployment-types/*": ["../../packages/deployment-types/src/*"],
       "~sdk-client/*": ["node_modules/@summerfi/sdk-client/src/*"],
-      "~sdk-client": ["node_modules/@summerfi/sdk-client/src"],
-      "~simulator-service/*": ["node_modules/@summerfi/simulator-service/src/*"]
+      "~sdk-client": ["node_modules/@summerfi/sdk-client/src"]
     }
   },
   "include": ["src/**/*.ts"]

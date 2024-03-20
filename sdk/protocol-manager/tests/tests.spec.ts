@@ -24,7 +24,8 @@ async function createProtocolManagerContext(): Promise<IProtocolManagerContext> 
   }
 }
 
-describe('playground', () => {
+// TODO: re-enable with separate Ci workflow and http transport properly configured
+describe.skip('playground', () => {
   let ctx: IProtocolManagerContext
   beforeAll(async () => {
     ctx = await createProtocolManagerContext()
