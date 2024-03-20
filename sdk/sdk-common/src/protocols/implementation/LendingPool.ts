@@ -7,11 +7,11 @@ import { PoolType } from '../interfaces/PoolType'
 import { Pool } from './Pool'
 
 export interface ILendingPoolSerialized<
-  GenericCollateralConfig extends CollateralConfig = CollateralConfig,
-  GenericDebtConfig extends DebtConfig = DebtConfig,
+  CollateralConfigType extends CollateralConfig = CollateralConfig,
+  DebtConfigType extends DebtConfig = DebtConfig,
 > extends IPool {
-  collaterals: Record<AddressValue, GenericCollateralConfig>
-  debts: Record<AddressValue, GenericDebtConfig>
+  collaterals: Record<AddressValue, CollateralConfigType>
+  debts: Record<AddressValue, DebtConfigType>
   baseCurrency: Token | CurrencySymbol
 }
 
@@ -21,19 +21,19 @@ export interface ILendingPoolSerialized<
  *              and debt tokens
  */
 export class LendingPool<
-  GenericCollateralConfig extends CollateralConfig = CollateralConfig,
-  GenericDebtConfig extends DebtConfig = DebtConfig,
+  CollateralConfigType extends CollateralConfig = CollateralConfig,
+  DebtConfigType extends DebtConfig = DebtConfig,
 > extends Pool {
   public readonly type = PoolType.Lending
   // List of collateral configs to be used from the lending pool
-  public readonly collaterals: Record<AddressValue, GenericCollateralConfig>
+  public readonly collaterals: Record<AddressValue, CollateralConfigType>
   // List of debt configs to be used from the lending pool
-  public readonly debts: Record<AddressValue, GenericDebtConfig>
+  public readonly debts: Record<AddressValue, DebtConfigType>
 
   public readonly baseCurrency: Token | CurrencySymbol
 
   constructor(
-    params: Omit<ILendingPoolSerialized<GenericCollateralConfig, GenericDebtConfig>, 'type'>,
+    params: Omit<ILendingPoolSerialized<CollateralConfigType, DebtConfigType>, 'type'>,
   ) {
     super({
       ...params,
