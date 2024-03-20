@@ -8,12 +8,13 @@ import { MockContractProvider } from '../src/mocks/mockContractProvider'
 import { TokenService, PriceService } from '../src/implementation'
 
 async function createProtocolPluginContext(): Promise<IProtocolPluginContext> {
+  const RPC_URL = process.env['MAINNET_RPC_URL'] || ''
   const provider: PublicClient = createPublicClient({
     batch: {
       multicall: true,
     },
     chain: mainnet,
-    transport: http(),
+    transport: http(RPC_URL),
   })
 
   return {
