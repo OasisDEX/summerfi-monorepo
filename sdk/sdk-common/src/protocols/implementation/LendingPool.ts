@@ -32,9 +32,7 @@ export class LendingPool<
 
   public readonly baseCurrency: Token | CurrencySymbol
 
-  constructor(
-    params: Omit<ILendingPoolSerialized<CollateralConfigType, DebtConfigType>, 'type'>,
-  ) {
+  constructor(params: Omit<ILendingPoolSerialized<CollateralConfigType, DebtConfigType>, 'type'>) {
     super({
       ...params,
       type: PoolType.Lending,
