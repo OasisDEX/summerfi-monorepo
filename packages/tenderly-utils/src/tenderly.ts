@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { ethers, JsonRpcProvider } from 'ethers'
 import { IAccountGuardAbi, IAccountImplementationAbi } from './abis'
-import { NetworkName, TokenName, tokenAddresses } from './utils'
+import { NetworkName, tokenAddresses } from './utils'
 import { getTokenDecimals } from './getTokenDecimals'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -21,7 +21,7 @@ const request = axios.create({
   },
 })
 
-export const block_number = async ({
+export const createFork = async ({
   network,
   atBlock,
 }: {
@@ -85,7 +85,7 @@ export const setERC20TokenBalance = async ({
 }: {
   forkId: string
   network: NetworkName
-  token: TokenName
+  token: string
   balance: string
   walletAddress: string
 }) => {

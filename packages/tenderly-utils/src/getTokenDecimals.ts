@@ -1,6 +1,4 @@
-import { TokenName } from './utils'
-
-export function getTokenDecimals(token: TokenName) {
+export function getTokenDecimals(token: string) {
   let decimals: number
   switch (token) {
     case 'WBTC':
