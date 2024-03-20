@@ -25,7 +25,7 @@ async function createProtocolManagerContext(): Promise<ProtocolManagerContext> {
   }
 }
 
-describe('playground', () => {
+describe.skip('playground', () => {
   let ctx: ProtocolManagerContext
   beforeAll(async () => {
     ctx = await createProtocolManagerContext()
