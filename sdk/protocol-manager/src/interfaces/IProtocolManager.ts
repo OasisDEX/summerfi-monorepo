@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {BaseProtocolPlugin} from "@summerfi/protocol-plugins";
 import {IProtocolManagerContext} from "./IProtocolManagerContext";
 import { IPoolId } from '@summerfi/sdk-common/protocols'
