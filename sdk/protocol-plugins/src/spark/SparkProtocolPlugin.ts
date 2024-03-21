@@ -1,3 +1,4 @@
+import {ActionBuildersMap} from "@summerfi/order-planner-common/builders";
 import {
   AddressValue,
   Percentage,
@@ -34,16 +35,16 @@ type AssetsList = ReturnType<AaveV3ProtocolPlugin['buildAssetsList']>
 type Asset = Awaited<AssetsList> extends (infer U)[] ? U : never
 
 export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
-  public static protocol: ProtocolName.Spark = ProtocolName.Spark
-  public static supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
-  public static schema = z.object({
+  readonly protocol: ProtocolName.Spark = ProtocolName.Spark
+  readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
+  readonly schema = z.object({
     protocol: z.object({
       name: z.literal(ProtocolName.Spark),
       chainInfo: z.object({
         name: z.string(),
         chainId: z.custom<ChainId>(
           (chainId) =>
-            SparkProtocolPlugin.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
+            this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
           'Chain ID not supported',
           true,
         ),
@@ -52,16 +53,8 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
     emodeType: z.nativeEnum(EmodeType),
   })
 
-  constructor() {
-    const StepBuildersMap = {
-      [SimulationSteps.DepositBorrow]: SparkDepositBorrowActionBuilder,
-    }
-    super(
-      SparkProtocolPlugin.protocol,
-      SparkProtocolPlugin.supportedChains,
-      SparkProtocolPlugin.schema,
-      StepBuildersMap,
-    )
+  readonly StepBuilders: Partial<ActionBuildersMap> = {
+    [SimulationSteps.DepositBorrow]: SparkDepositBorrowActionBuilder,
   }
 
   async getPool(poolId: unknown): Promise<SparkLendingPool> {
@@ -72,7 +65,7 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
     const chainId = ctx.provider.chain?.id
     if (!chainId) throw new Error('ctx.provider.chain.id undefined')
 
-    if (!SparkProtocolPlugin.supportedChains.some((chainInfo) => chainInfo.chainId === chainId)) {
+    if (!this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId)) {
       throw new Error(`Chain ID ${chainId} is not supported`)
     }
 
@@ -115,7 +108,7 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
   }
 
   private async buildAssetsList(emode: bigint) {
-    const builder = await new AaveV3LikePluginBuilder(this.ctx, SparkProtocolPlugin.protocol).init()
+    const builder = await new AaveV3LikePluginBuilder(this.ctx, this.protocol).init()
     const list = await builder
       .addPrices()
       .addReservesCaps()
