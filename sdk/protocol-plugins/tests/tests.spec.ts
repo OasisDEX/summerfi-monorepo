@@ -32,7 +32,7 @@ describe.skip('playground', () => {
     ctx = await createProtocolPluginContext()
   })
 
-  it.only('template/maker', async () => {
+  it('template/maker', async () => {
     const makerProtocolPlugin = new MakerProtocolPlugin()
     makerProtocolPlugin.init(ctx)
     await makerProtocolPlugin.getPool({
