@@ -1085,9 +1085,18 @@ importers:
 
   summerfi-api/get-migrations-function:
     dependencies:
+      '@aws-lambda-powertools/logger':
+        specifier: ^2.0.2
+        version: 2.0.2
+      '@aws-lambda-powertools/metrics':
+        specifier: ^2.0.2
+        version: 2.0.2
+      '@aws-lambda-powertools/tracer':
+        specifier: ^2.0.2
+        version: 2.0.2
       '@oasisdex/addresses':
-        specifier: ^0.1.36
-        version: 0.1.47
+        specifier: ^0.1.52-rc.1
+        version: 0.1.52-rc.1
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared
@@ -6383,8 +6392,8 @@ packages:
     resolution: {integrity: sha512-eeILfQbJAKX+v0ArlWKEpF7MWMpcyl4U7v2Xu1pDEeZhOkZZbS1XyT9Vhvdyy95x04npGa8Dn1zAZSap0NYtkQ==}
     dev: false
 
-  /@oasisdex/addresses@0.1.47:
-    resolution: {integrity: sha512-po36JPWODgqGorh6d9EgfMf+psDPko8b2wwLj0P3eYmUskexCvnsblLe3p2K0qjxK/3JiVl3BY3wMUkGD49zjQ==}
+  /@oasisdex/addresses@0.1.52-rc.1:
+    resolution: {integrity: sha512-uss34uYVo8HTODDM5MVrUq7/hLM+sG0QtGV02UJ4uUZ2aEK8ONu7v2iLw4vQ7K84GYSMxf/WE2zJFpbHallDgQ==}
     dev: false
 
   /@oasisdex/automation@1.6.4-alpha.1:
