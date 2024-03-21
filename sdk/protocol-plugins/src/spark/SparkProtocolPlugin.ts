@@ -107,16 +107,20 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
   }
 
   private async buildAssetsList(emode: bigint) {
-    const builder = await new AaveV3LikePluginBuilder(this.ctx, this.protocol).init()
-    const list = await builder
-      .addPrices()
-      .addReservesCaps()
-      .addReservesConfigData()
-      .addReservesData()
-      .addEmodeCategories()
-      .build()
+    try {
+      const builder = await new AaveV3LikePluginBuilder(this.ctx, this.protocol).init()
+      const list = await builder
+          .addPrices()
+          .addReservesCaps()
+          .addReservesConfigData()
+          .addReservesData()
+          .addEmodeCategories()
+          .build()
 
-    return filterAssetsListByEMode(list, emode)
+      return filterAssetsListByEMode(list, emode)
+    } catch(e) {
+      throw new Error("Could not fetch/build assets list for Spark")
+    }
   }
 
   private getCollateralAssetInfo(
