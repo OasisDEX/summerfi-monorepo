@@ -16,7 +16,8 @@
   "dependencies": {
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/sdk-client": "workspace:*",
-    "@summerfi/protocol-manager": "workspace:*"
+    "@summerfi/protocol-manager": "workspace:*",
+    "@summerfi/tenderly-utils": "workspace:*"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

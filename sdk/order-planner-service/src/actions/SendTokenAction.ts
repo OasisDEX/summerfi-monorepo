@@ -1,24 +1,24 @@
 import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
 import { Address, TokenAmount } from '@summerfi/sdk-common/common'
 
-export class PullTokenAction extends BaseAction {
+export class SendTokenAction extends BaseAction {
   public readonly config = {
-    name: 'PullToken',
+    name: 'SendToken',
     version: 1,
-    parametersAbi: 'address asset, address from, uint256 amount',
+    parametersAbi: 'address asset, address to, uint256 amount',
     storageInputs: [],
     storageOutputs: [],
   } as const
 
   public encodeCall(
-    params: { pullAmount: TokenAmount; pullTo: Address },
+    params: { sendAmount: TokenAmount; sendTo: Address },
     paramsMapping?: number[],
   ): ActionCall {
     return this._encodeCall({
       arguments: [
-        params.pullAmount.token.address.value,
-        params.pullTo.value,
-        params.pullAmount.toBaseUnit(),
+        params.sendAmount.token.address.value,
+        params.sendTo.value,
+        params.sendAmount.toBaseUnit(),
       ],
       mapping: paramsMapping,
     })

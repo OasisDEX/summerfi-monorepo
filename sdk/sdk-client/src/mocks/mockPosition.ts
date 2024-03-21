@@ -52,6 +52,7 @@ export async function getMockPosition(params: {
           chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
         },
         ilkType: ILKType.ETH_A,
+        vaultId: 'testvault',
       } as MakerPoolId,
       protocol: {
         name: ProtocolName.Maker,
