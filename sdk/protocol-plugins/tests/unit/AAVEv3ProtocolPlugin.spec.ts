@@ -1,43 +1,38 @@
 import {ChainInfo} from "@summerfi/sdk-common/common";
-import {ProtocolName, MakerPoolId} from "@summerfi/sdk-common/protocols";
+import {ProtocolName} from "@summerfi/sdk-common/protocols";
 import assert from "assert";
 import {
-    BaseProtocolPlugin,
+    AaveV3ProtocolPlugin,
     IProtocolPluginContext,
-    MakerProtocolPlugin
 } from "../../src";
 import {IPositionId} from "../../src/interfaces/IPositionId";
-import {makerPoolIdMock} from "../mocks/MakerPoolIdMock"
+import {aaveV3PoolIdMock} from "../mocks/AAVEv3PoolIdMock";
 import {createProtocolPluginContext} from "../utils/CreateProtocolPluginContext";
 import {getErrorMessage} from "../utils/ErrorMessage";
 
-describe.skip('AAVEv3 Protocol Plugin', () => {
+describe('AAVEv3 Protocol Plugin', () => {
     let ctx: IProtocolPluginContext
-    let makerProtocolPlugin: BaseProtocolPlugin<MakerPoolId>
+    let aaveV3ProtocolPlugin: AaveV3ProtocolPlugin
     beforeAll(async () => {
         ctx = await createProtocolPluginContext()
-        makerProtocolPlugin = new MakerProtocolPlugin()
-        makerProtocolPlugin.init(ctx)
+        aaveV3ProtocolPlugin = new AaveV3ProtocolPlugin()
+        aaveV3ProtocolPlugin.init(ctx)
     })
 
     it('should verify that a given poolId is recognised as a valid format', () => {
-        try {
-            makerProtocolPlugin.isPoolId(makerPoolIdMock)
-        } catch (error: unknown) {
-            assert.fail('Should not throw')
-        }
+        expect(aaveV3ProtocolPlugin.isPoolId(aaveV3PoolIdMock)).toBeUndefined()
     })
 
-    it('should throw a specific error when provided with a poolId not matching the MakerPoolId format', () => {
+    it('should throw a specific error when provided with a poolId not matching the AAVEv3PoolId format', () => {
         try {
-            const invalidMakerPoolId = {
-                ...makerPoolIdMock,
+            const invalidAaveV3PoolIdMock = {
+                ...aaveV3PoolIdMock,
                 protocol: {
-                    ...makerPoolIdMock.protocol,
-                    name: ProtocolName.AAVEv3
+                    ...aaveV3PoolIdMock.protocol,
+                    name: ProtocolName.Maker
                 }
             }
-            makerProtocolPlugin.isPoolId(invalidMakerPoolId)
+            aaveV3ProtocolPlugin.isPoolId(invalidAaveV3PoolIdMock)
             assert.fail('Should throw error')
         } catch (error: unknown) {
             expect(getErrorMessage(error)).toMatch('Candidate is not correct')
@@ -45,31 +40,31 @@ describe.skip('AAVEv3 Protocol Plugin', () => {
     })
 
     it('should correctly initialize and set the context', () => {
-        expect(makerProtocolPlugin.ctx).toBe(ctx);
+        expect(aaveV3ProtocolPlugin.ctx).toBe(ctx);
     });
 
-    it('should correctly return a MakerLendingPool object for a valid MakerPoolId', async () => {
-        const makerPoolIdValid = makerPoolIdMock;
-        await expect(makerProtocolPlugin.getPool(makerPoolIdValid)).resolves.toBeDefined();
+    it('should correctly return a AaveV3LendingPool object for a valid AaveV3PoolId', async () => {
+        const aaveV3PoolIdValid = aaveV3PoolIdMock;
+        await expect(aaveV3ProtocolPlugin.getPool(aaveV3PoolIdValid)).resolves.toBeDefined();
     });
 
     it('should throw an error when calling getPool with an unsupported MakerPoolId', async () => {
-        const invalidMakerPoolIdUnsupportedChain = {
-            ...makerPoolIdMock,
+        const invalidAaveV3PoolIdUnsupportedChain = {
+            ...aaveV3PoolIdMock,
             protocol: {
-                ...makerPoolIdMock.protocol,
+                ...aaveV3PoolIdMock.protocol,
                 chainInfo: ChainInfo.createFrom({
                     chainId: 2,
                     name: 'Unknown'
                 })
             }
         };
-        await expect(makerProtocolPlugin.getPool(invalidMakerPoolIdUnsupportedChain)).rejects.toThrow('Candidate is not correct')
+        await expect(aaveV3ProtocolPlugin.getPool(invalidAaveV3PoolIdUnsupportedChain)).rejects.toThrow('Candidate is not correct')
     });
 
     it('should throw an error when calling getPool with chain id missing from ctx', async () => {
-        const makerProtocolPluginWithWrongContext = new MakerProtocolPlugin()
-        makerProtocolPluginWithWrongContext.init({
+        const aaveV3ProtocolPluginWithWrongContext = new AaveV3ProtocolPlugin()
+        aaveV3ProtocolPluginWithWrongContext.init({
             ...ctx,
             provider: {
                 ...ctx.provider,
@@ -79,13 +74,13 @@ describe.skip('AAVEv3 Protocol Plugin', () => {
                 }
             }
         })
-        await expect(makerProtocolPluginWithWrongContext.getPool(makerPoolIdMock)).rejects.toThrow(`ctx.provider.chain.id undefined`);
+        await expect(aaveV3ProtocolPluginWithWrongContext.getPool(aaveV3PoolIdMock)).rejects.toThrow(`ctx.provider.chain.id undefined`);
     });
 
     it('should throw an error when calling getPool with an unsupported chain ID', async () => {
-        const makerProtocolPluginWithWrongContext = new MakerProtocolPlugin()
+        const aaveV3ProtocolPluginWithWrongContext = new AaveV3ProtocolPlugin()
         const wrongChainId = 2;
-        makerProtocolPluginWithWrongContext.init({
+        aaveV3ProtocolPluginWithWrongContext.init({
             ...ctx,
             provider: {
                 ...ctx.provider,
@@ -95,11 +90,11 @@ describe.skip('AAVEv3 Protocol Plugin', () => {
                 }
             }
         })
-        await expect(makerProtocolPluginWithWrongContext.getPool(makerPoolIdMock)).rejects.toThrow(`Chain ID ${wrongChainId} is not supported`);
+        await expect(aaveV3ProtocolPluginWithWrongContext.getPool(aaveV3PoolIdMock)).rejects.toThrow(`Chain ID ${wrongChainId} is not supported`);
     });
 
     it('should throw a "Not implemented" error when calling getPosition', async () => {
         const positionId = "mockPositionId" as IPositionId;
-        await expect(makerProtocolPlugin.getPosition(positionId)).rejects.toThrow('Not implemented');
+        await expect(aaveV3ProtocolPlugin.getPosition(positionId)).rejects.toThrow('Not implemented');
     });
 })

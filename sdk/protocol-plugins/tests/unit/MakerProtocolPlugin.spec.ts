@@ -1,8 +1,7 @@
 import {ChainInfo} from "@summerfi/sdk-common/common";
-import {ProtocolName, MakerPoolId} from "@summerfi/sdk-common/protocols";
+import {ProtocolName} from "@summerfi/sdk-common/protocols";
 import assert from "assert";
 import {
-    BaseProtocolPlugin,
     IProtocolPluginContext,
     MakerProtocolPlugin
 } from "../../src";
@@ -13,7 +12,7 @@ import {getErrorMessage} from "../utils/ErrorMessage";
 
 describe('Maker Protocol Plugin', () => {
     let ctx: IProtocolPluginContext
-    let makerProtocolPlugin: BaseProtocolPlugin<MakerPoolId>
+    let makerProtocolPlugin: MakerProtocolPlugin
     beforeAll(async () => {
         ctx = await createProtocolPluginContext()
         makerProtocolPlugin = new MakerProtocolPlugin()
@@ -21,11 +20,7 @@ describe('Maker Protocol Plugin', () => {
     })
 
     it('should verify that a given poolId is recognised as a valid format', () => {
-        try {
-            makerProtocolPlugin.isPoolId(makerPoolIdMock)
-        } catch (error: unknown) {
-            assert.fail('Should not throw')
-        }
+        expect(makerProtocolPlugin.isPoolId(makerPoolIdMock)).toBeUndefined()
     })
 
     it('should throw a specific error when provided with a poolId not matching the MakerPoolId format', () => {
