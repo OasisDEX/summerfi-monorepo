@@ -1,6 +1,6 @@
 import { createTRPCClient, httpBatchLink, loggerLink } from '@trpc/client'
 import { type SDKAppRouter } from '@summerfi/sdk-server'
-import superjson from 'superjson'
+import { SerializationService } from '@summerfi/sdk-common/services'
 
 export type RPCClientType = ReturnType<typeof createTRPCClient<SDKAppRouter>>
 
@@ -10,7 +10,7 @@ export function createRPCClient(apiURL: string): RPCClientType {
       loggerLink(),
       httpBatchLink({
         url: apiURL,
-        transformer: superjson,
+        transformer: SerializationService.getTransformer(),
       }),
     ],
   })

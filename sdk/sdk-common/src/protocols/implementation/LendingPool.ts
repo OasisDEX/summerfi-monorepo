@@ -5,6 +5,7 @@ import { Token } from '../../common/implementation/Token'
 import { IPool } from '../interfaces/IPool'
 import { PoolType } from '../interfaces/PoolType'
 import { Pool } from './Pool'
+import { SerializationService } from '../../services'
 
 export interface ILendingPoolSerialized<
   GenericCollateralConfig extends CollateralConfig = CollateralConfig,
@@ -49,3 +50,5 @@ export class LendingPool<
 export function isLendingPool(pool: IPool): pool is LendingPool {
   return pool.type === PoolType.Lending
 }
+
+SerializationService.registerClass(LendingPool)

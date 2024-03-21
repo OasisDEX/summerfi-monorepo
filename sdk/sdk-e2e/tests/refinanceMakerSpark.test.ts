@@ -35,7 +35,7 @@ describe.only('Refinance Maker Spark | SDK', () => {
     //await createFork({ network: 'mainnet', atBlock: 19482638 })
 
     // SDK
-    const apiURL = 'https://zmjmtfsocb.execute-api.us-east-1.amazonaws.com'
+    const apiURL = 'https://hklgfinvwb.execute-api.us-east-1.amazonaws.com/api/sdk'
     const sdk = makeSDK({ apiURL })
 
     // Chain
