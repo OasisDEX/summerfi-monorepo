@@ -1,6 +1,14 @@
+import {ChainInfo} from "@summerfi/sdk-common/common";
+import {SimulationSteps, steps} from "@summerfi/sdk-common/simulation";
 import {ProtocolName, MakerPoolId} from "@summerfi/sdk-common/protocols";
 import assert from "assert";
-import {BaseProtocolPlugin, IProtocolPluginContext, MakerProtocolPlugin} from "../../src";
+import {
+    BaseProtocolPlugin,
+    IProtocolPluginContext,
+    MakerPaybackWithdrawActionBuilder,
+    MakerProtocolPlugin
+} from "../../src";
+import {IPositionId} from "../../src/interfaces/IPositionId";
 import {makerPoolIdMock} from "../mocks/MakerPoolIdMock"
 import {createProtocolPluginContext} from "../utils/CreateProtocolPluginContext";
 import {getErrorMessage} from "../utils/ErrorMessage";
@@ -43,30 +51,57 @@ describe('Maker Protocol Plugin', () => {
     });
 
     it('should correctly return a MakerLendingPool object for a valid MakerPoolId', async () => {
-        const makerPoolIdValid = {/* Valid MakerPoolId mock object */};
+        const makerPoolIdValid = makerPoolIdMock;
         await expect(makerProtocolPlugin.getPool(makerPoolIdValid)).resolves.toBeDefined();
     });
 
+    it('should throw an error when calling getPool with an unsupported MakerPoolId', async () => {
+        const invalidMakerPoolIdUnsupportedChain = {
+            ...makerPoolIdMock,
+            protocol: {
+                ...makerPoolIdMock.protocol,
+                chainInfo: ChainInfo.createFrom({
+                    chainId: 2,
+                    name: 'Unknown'
+                })
+            }
+        };
+        await expect(makerProtocolPlugin.getPool(invalidMakerPoolIdUnsupportedChain)).rejects.toThrow('Candidate is not correct')
+    });
+
+    it('should throw an error when calling getPool with chain id missing from ctx', async () => {
+        const makerProtocolPluginWithWrongContext = new MakerProtocolPlugin()
+        makerProtocolPluginWithWrongContext.init({
+            ...ctx,
+            provider: {
+                ...ctx.provider,
+                chain: {
+                    ...ctx.provider.chain!,
+                    id: undefined as unknown as number
+                }
+            }
+        })
+        await expect(makerProtocolPluginWithWrongContext.getPool(makerPoolIdMock)).rejects.toThrow(`ctx.provider.chain.id undefined`);
+    });
+
     it('should throw an error when calling getPool with an unsupported chain ID', async () => {
-        const makerPoolIdUnsupportedChain = {/* MakerPoolId with unsupported chain ID */};
-        await expect(makerProtocolPlugin.getPool(makerPoolIdUnsupportedChain)).rejects.toThrow('Chain ID is not supported');
+        const makerProtocolPluginWithWrongContext = new MakerProtocolPlugin()
+        const wrongChainId = 2;
+        makerProtocolPluginWithWrongContext.init({
+            ...ctx,
+            provider: {
+                ...ctx.provider,
+                chain: {
+                    ...ctx.provider.chain!,
+                    id: wrongChainId
+                }
+            }
+        })
+        await expect(makerProtocolPluginWithWrongContext.getPool(makerPoolIdMock)).rejects.toThrow(`Chain ID ${wrongChainId} is not supported`);
     });
 
     it('should throw a "Not implemented" error when calling getPosition', async () => {
-        const positionId = {/* Mock position ID */};
+        const positionId = "mockPositionId" as IPositionId;
         await expect(makerProtocolPlugin.getPosition(positionId)).rejects.toThrow('Not implemented');
     });
-
-    // it('should return the correct action builder for a supported simulation step', () => {
-    //     const step = { type: SimulationSteps.PaybackWithdraw };
-    //     const actionBuilder = makerProtocolPlugin.getActionBuilder(step);
-    //     expect(actionBuilder).toBeInstanceOf(MakerPaybackWithdrawActionBuilder);
-    // });
-    //
-    // it('should return undefined for an unsupported simulation step', () => {
-    //     const step = { type: 'UnsupportedStep' };
-    //     const actionBuilder = makerProtocolPlugin.getActionBuilder(step);
-    //     expect(actionBuilder).toBeUndefined();
-    // });
-
 })

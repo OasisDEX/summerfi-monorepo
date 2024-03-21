@@ -25,8 +25,7 @@ describe('Base Protocol Plugin', () => {
     })
 
     it('should allow access to the context (ctx) without throwing errors after the init() method has been successfully called', () => {
-        const ctx = baseProtocolPlugin.ctx
-        assert(ctx,'Ctx is not defined')
+        expect(baseProtocolPlugin.ctx).toBe(ctx)
     })
 
     it('should correctly return the corresponding action builder for a given simulation step', () => {
