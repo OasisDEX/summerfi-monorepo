@@ -9,6 +9,7 @@ module.exports = {
     '!src/**/index.ts',
     '!src/config/Config.ts',
     '!src/interfaces/IOrderPlannerService.ts',
+    '!src/utils/**/*.{ts,tsx}',
   ],
   coveragePathIgnorePatterns: ['/tests/utils/', '/tests/mocks/'],
 }

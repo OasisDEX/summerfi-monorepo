@@ -14,21 +14,25 @@
     "testw": "jest --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "tsc -b tsconfig.build.json"
+    "build": "tsc -b tsconfig.build.json",
+    "encode:makerGive": "tsx ./scripts/encodeMakerGive.ts"
   },
   "dependencies": {
-    "@summerfi/sdk-common": "workspace:*",
-    "@summerfi/order-planner-common": "workspace:*",
-    "@summerfi/swap-common": "workspace:*",
-    "@summerfi/protocol-plugins": "workspace:*",
     "@summerfi/core-contracts": "workspace:*",
+    "@summerfi/deployment-types": "workspace:*",
     "@summerfi/deployment-utils": "workspace:*",
-    "@summerfi/deployment-types": "workspace:*"
+    "@summerfi/order-planner-common": "workspace:*",
+    "@summerfi/protocol-plugins": "workspace:*",
+    "@summerfi/sdk-common": "workspace:*",
+    "@summerfi/swap-common": "workspace:*"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
-    "viem": "^2.7.8"
+    "@types/yargs": "^17.0.32",
+    "tsx": "^4.7.1",
+    "viem": "^2.7.8",
+    "yargs": "^17.7.2"
   }
 }

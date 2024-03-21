@@ -21,7 +21,12 @@ export abstract class BaseAction {
    * @returns The versioned name of the action
    */
   public getVersionedName(): string {
-    return `${this.config.name}_v${this.config.version}`
+    if (this.config.version === 0) {
+      // Special case for compatiblility with v1 actions
+      return this.config.name
+    } else {
+      return `${this.config.name}_${this.config.version}`
+    }
   }
 
   /**

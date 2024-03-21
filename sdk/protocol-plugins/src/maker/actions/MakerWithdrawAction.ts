@@ -5,7 +5,7 @@ import { IPool, isMakerPoolId } from '@summerfi/sdk-common/protocols'
 export class MakerWithdrawAction extends BaseAction {
   public readonly config = {
     name: 'MakerWithdraw',
-    version: 1,
+    version: 0,
     parametersAbi: 'uint256 vaultId, address userAddress, address joinAddr, uint256 amount',
     storageInputs: ['vaultId'],
     storageOutputs: ['amountWithdrawn'],
