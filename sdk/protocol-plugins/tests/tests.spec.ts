@@ -26,13 +26,13 @@ async function createProtocolPluginContext(): Promise<IProtocolPluginContext> {
 }
 
 // TODO: re-enable with separate Ci workflow and http transport properly configured
-describe.skip('playground', () => {
+describe('playground', () => {
   let ctx: IProtocolPluginContext
   beforeAll(async () => {
     ctx = await createProtocolPluginContext()
   })
 
-  it('template/maker', async () => {
+  it.only('template/maker', async () => {
     const makerProtocolPlugin = new MakerProtocolPlugin()
     makerProtocolPlugin.init(ctx)
     await makerProtocolPlugin.getPool({
