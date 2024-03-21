@@ -48,6 +48,9 @@
     "test": {
       "dependsOn": ["prebuild", "build", "^test"]
     },
+    "test:integration": {
+      "dependsOn": ["prebuild", "build", "^test:integration"]
+    },
     "lint": {
       "dependsOn": ["prebuild", "build", "^lint"]
     },
