@@ -26,7 +26,7 @@ async function createProtocolPluginContext(): Promise<IProtocolPluginContext> {
 }
 
 // TODO: re-enable with separate Ci workflow and http transport properly configured
-describe('playground', () => {
+describe.skip('playground', () => {
   let ctx: IProtocolPluginContext
   beforeAll(async () => {
     ctx = await createProtocolPluginContext()
