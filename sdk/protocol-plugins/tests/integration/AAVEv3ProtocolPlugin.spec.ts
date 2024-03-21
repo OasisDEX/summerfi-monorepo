@@ -1,44 +1,44 @@
 import {ChainInfo, Token, Address, Price, RiskRatio, TokenAmount, Percentage } from "@summerfi/sdk-common/common";
 import {ProtocolName} from "@summerfi/sdk-common/protocols";
 import {
+    AaveV3ProtocolPlugin,
     defaultAddressAbiMapsByProtocol,
     IProtocolPluginContext,
-    MakerProtocolPlugin, MockContractProvider
+    MockContractProvider
 } from "../../src";
-import {makerPoolIdMock as validMakerPoolId} from "../mocks/MakerPoolIdMock"
+import {aaveV3PoolIdMock as validAaveV3PoolId} from "../mocks/AAVEv3PoolIdMock"
 import {createProtocolPluginContext} from "../utils/CreateProtocolPluginContext";
 
-describe.skip('Maker Protocol Plugin (Integration)', () => {
+describe('AAVEv3 Protocol Plugin (Integration)', () => {
     let ctx: IProtocolPluginContext
-    let makerProtocolPlugin: MakerProtocolPlugin
+    let aaveV3ProtocolPlugin: AaveV3ProtocolPlugin
     beforeAll(async () => {
         ctx = await createProtocolPluginContext()
-        makerProtocolPlugin = new MakerProtocolPlugin()
-        makerProtocolPlugin.init(ctx)
+        aaveV3ProtocolPlugin = new AaveV3ProtocolPlugin()
+        aaveV3ProtocolPlugin.init(ctx)
     })
 
-    it("should throw an error when a OSM/TokenService reads fail", async () => {
+    it("should throw an error when protocol data reads fail", async () => {
         const wrongCtx = await createProtocolPluginContext({
             contractProvider: new MockContractProvider({
                 ...defaultAddressAbiMapsByProtocol,
-                [ProtocolName.Maker]: {
-                    ...defaultAddressAbiMapsByProtocol[ProtocolName.Maker],
-                    IlkRegistry: {
-                        ...defaultAddressAbiMapsByProtocol[ProtocolName.Maker].IlkRegistry,
+                [ProtocolName.AAVEv3]: {
+                    ...defaultAddressAbiMapsByProtocol[ProtocolName.AAVEv3],
+                    PoolDataProvider: {
+                        ...defaultAddressAbiMapsByProtocol[ProtocolName.AAVEv3].PoolDataProvider,
                         address: '0xWrong',
-
                     }
                 }
             }),
         })
-        const makerProtocolPluginWithWrongCtx = new MakerProtocolPlugin()
-        makerProtocolPluginWithWrongCtx.init(wrongCtx)
+        const aaveV3ProtocolPluginWithWrongCtx = new AaveV3ProtocolPlugin()
+        aaveV3ProtocolPluginWithWrongCtx.init(wrongCtx)
 
-        await expect(makerProtocolPluginWithWrongCtx.getPool(validMakerPoolId)).rejects.toThrow(`An error occurred fetching protocol data for Maker`);
+        await expect(aaveV3ProtocolPluginWithWrongCtx.getPool(validAaveV3PoolId)).rejects.toThrow(`Could not fetch/build assets list for AAVEv3`);
     })
 
     it('correctly populates collateral configuration from blockchain data', async () => {
-        const pool = await makerProtocolPlugin.getPool(validMakerPoolId);
+        const pool = await aaveV3ProtocolPlugin.getPool(validAaveV3PoolId);
         const mockCollateralToken = Token.createFrom({
             chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
             address: Address.createFrom({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
@@ -55,27 +55,28 @@ describe.skip('Maker Protocol Plugin (Integration)', () => {
                 name: mockCollateralToken.name
             }),
             price: expect.anything(),
-            nextPrice: expect.anything(),
             priceUSD: expect.anything(),
-            lastPriceUpdate: expect.any(Date),
-            nextPriceUpdate: expect.any(Date),
+            maxLtv: expect.anything(),
             liquidationThreshold: expect.anything(),
             tokensLocked: expect.anything(),
             maxSupply: expect.anything(),
-            liquidationPenalty: expect.anything()
+            liquidationPenalty: expect.anything(),
+            apy: expect.anything(),
+            usageAsCollateralEnabled: expect.any(Boolean)
         });
 
         const { price } = pool.collaterals[mockCollateralToken.address.value];
         expect(price).toBeInstanceOf(Price);
         expect(Number(price.value)).toBeGreaterThan(0);
 
-        const { nextPrice } = pool.collaterals[mockCollateralToken.address.value];
-        expect(nextPrice).toBeInstanceOf(Price);
-        expect(Number(nextPrice.value)).toBeGreaterThan(0);
-
         const { priceUSD } = pool.collaterals[mockCollateralToken.address.value];
         expect(priceUSD).toBeInstanceOf(Price);
         expect(Number(priceUSD.value)).toBeGreaterThan(0);
+
+        const { maxLtv } = pool.collaterals[mockCollateralToken.address.value];
+        expect(maxLtv).toBeInstanceOf(RiskRatio);
+        expect(maxLtv.ltv.value).toBeGreaterThan(0);
+        expect(maxLtv.ltv.value).toBeLessThan(100);
 
         const { liquidationThreshold } = pool.collaterals[mockCollateralToken.address.value];
         expect(liquidationThreshold).toBeInstanceOf(RiskRatio);
@@ -92,12 +93,11 @@ describe.skip('Maker Protocol Plugin (Integration)', () => {
 
         const { liquidationPenalty } = pool.collaterals[mockCollateralToken.address.value];
         expect(liquidationPenalty).toBeInstanceOf(Percentage);
-        expect(Number(liquidationPenalty.value)).toBeGreaterThan(0);
-        expect(Number(liquidationPenalty.value)).toBeLessThan(100);
+        expect(Number(liquidationPenalty.value)).toBeGreaterThan(100);
     });
 
     it('correctly populates debt configuration from blockchain data', async () => {
-        const pool = await makerProtocolPlugin.getPool(validMakerPoolId);
+        const pool = await aaveV3ProtocolPlugin.getPool(validAaveV3PoolId);
 
         const mockDebtToken = Token.createFrom({
             chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
@@ -121,7 +121,8 @@ describe.skip('Maker Protocol Plugin (Integration)', () => {
             debtCeiling: expect.anything(),
             debtAvailable: expect.anything(),
             dustLimit: expect.anything(),
-            originationFee: expect.anything()
+            originationFee: expect.anything(),
+            borrowingEnabled: expect.any(Boolean)
         });
 
         const { price } = pool.debts[mockDebtToken.address.value];
@@ -151,7 +152,7 @@ describe.skip('Maker Protocol Plugin (Integration)', () => {
 
         const { dustLimit } = pool.debts[mockDebtToken.address.value];
         expect(dustLimit).toBeInstanceOf(TokenAmount);
-        expect(Number(dustLimit.amount)).toBeGreaterThan(0);
+        expect(Number(dustLimit.amount)).toBe(0);
 
         const { originationFee } = pool.debts[mockDebtToken.address.value];
         expect(originationFee).toBeInstanceOf(Percentage);
