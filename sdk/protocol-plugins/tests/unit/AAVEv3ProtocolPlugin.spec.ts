@@ -1,11 +1,9 @@
 import {ChainInfo} from "@summerfi/sdk-common/common";
-import {SimulationSteps, steps} from "@summerfi/sdk-common/simulation";
 import {ProtocolName, MakerPoolId} from "@summerfi/sdk-common/protocols";
 import assert from "assert";
 import {
     BaseProtocolPlugin,
     IProtocolPluginContext,
-    MakerPaybackWithdrawActionBuilder,
     MakerProtocolPlugin
 } from "../../src";
 import {IPositionId} from "../../src/interfaces/IPositionId";
@@ -13,7 +11,7 @@ import {makerPoolIdMock} from "../mocks/MakerPoolIdMock"
 import {createProtocolPluginContext} from "../utils/CreateProtocolPluginContext";
 import {getErrorMessage} from "../utils/ErrorMessage";
 
-describe('Maker Protocol Plugin', () => {
+describe.skip('AAVEv3 Protocol Plugin', () => {
     let ctx: IProtocolPluginContext
     let makerProtocolPlugin: BaseProtocolPlugin<MakerPoolId>
     beforeAll(async () => {

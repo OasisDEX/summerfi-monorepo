@@ -60,6 +60,9 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerPoolId> {
       throw new Error(`Chain ID ${chainId} is not supported`)
     }
 
+    try {
+
+
     const { osm, vatRes, jugRes, dogRes, spotRes, erc20, ilkRegistryRes } =
       await this.getIlkProtocolData(ilkInHex, makerPoolId)
 
@@ -142,10 +145,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerPoolId> {
     const debts: Record<string, MakerPoolDebtConfig> = {
       [quoteToken.address.value]: {
         token: quoteToken,
-        price: await ctx.priceService.getPrice({
-          baseToken: quoteToken,
-          quoteToken: collateralToken,
-        }),
+        price: await ctx.priceService.getPriceUSD(quoteToken),
         priceUSD: await ctx.priceService.getPriceUSD(quoteToken),
         rate: Percentage.createFrom({ percentage: stabilityFee.times(100).toNumber() }),
         totalBorrowed: TokenAmount.createFrom({
@@ -177,6 +177,9 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerPoolId> {
       baseCurrency: poolBaseCurrencyToken,
       collaterals,
       debts,
+    }
+    } catch(e) {
+      throw new Error(`An error occurred fetching protocol data for Maker ${e}`)
     }
   }
 
