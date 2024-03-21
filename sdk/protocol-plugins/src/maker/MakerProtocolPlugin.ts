@@ -61,124 +61,122 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerPoolId> {
     }
 
     try {
+      const { osm, vatRes, jugRes, dogRes, spotRes, erc20, ilkRegistryRes } =
+        await this.getIlkProtocolData(ilkInHex, makerPoolId)
 
+      const makerSpotDef = ctx.contractProvider.getContractDef('Spot', makerPoolId.protocol.name)
+      const [
+        [peek],
+        [peep],
+        zzz,
+        hop,
+        joinGemBalance,
+        collateralToken,
+        quoteToken,
+        poolBaseCurrencyToken,
+      ] = await Promise.all([
+        osm.read.peek({ account: makerSpotDef.address }),
+        osm.read.peep({ account: makerSpotDef.address }),
+        osm.read.zzz({ account: makerSpotDef.address }),
+        osm.read.hop({ account: makerSpotDef.address }),
+        erc20.read.balanceOf([ilkRegistryRes.join]),
+        ctx.tokenService.getTokenByAddress(Address.createFrom({ value: ilkRegistryRes.gem })),
+        ctx.tokenService.getTokenBySymbol(TokenSymbol.DAI),
+        ctx.tokenService.getTokenBySymbol(TokenSymbol.DAI),
+      ])
 
-    const { osm, vatRes, jugRes, dogRes, spotRes, erc20, ilkRegistryRes } =
-      await this.getIlkProtocolData(ilkInHex, makerPoolId)
+      const SECONDS_PER_YEAR = 60 * 60 * 24 * 365
+      BigNumber.config({ POW_PRECISION: 100 })
+      const stabilityFee = jugRes.rawFee.pow(SECONDS_PER_YEAR).minus(1)
 
-    const makerSpotDef = ctx.contractProvider.getContractDef('Spot', makerPoolId.protocol.name)
-    const [
-      [peek],
-      [peep],
-      zzz,
-      hop,
-      joinGemBalance,
-      collateralToken,
-      quoteToken,
-      poolBaseCurrencyToken,
-    ] = await Promise.all([
-      osm.read.peek({ account: makerSpotDef.address }),
-      osm.read.peep({ account: makerSpotDef.address }),
-      osm.read.zzz({ account: makerSpotDef.address }),
-      osm.read.hop({ account: makerSpotDef.address }),
-      erc20.read.balanceOf([ilkRegistryRes.join]),
-      ctx.tokenService.getTokenByAddress(Address.createFrom({ value: ilkRegistryRes.gem })),
-      ctx.tokenService.getTokenBySymbol(TokenSymbol.DAI),
-      ctx.tokenService.getTokenBySymbol(TokenSymbol.DAI),
-    ])
+      const osmData = {
+        currentPrice: new BigNumber(peek)
+          .shiftedBy(-18)
+          .toPrecision(collateralToken.decimals, BigNumber.ROUND_DOWN)
+          .toString(),
+        nextPrice: new BigNumber(peep)
+          .shiftedBy(-18)
+          .toPrecision(collateralToken.decimals, BigNumber.ROUND_DOWN)
+          .toString(),
+        currentPriceUpdate: new Date(Number(zzz) * 1000),
+        nextPriceUpdate: new Date((Number(zzz) + hop) * 1000),
+      }
 
-    const SECONDS_PER_YEAR = 60 * 60 * 24 * 365
-    BigNumber.config({ POW_PRECISION: 100 })
-    const stabilityFee = jugRes.rawFee.pow(SECONDS_PER_YEAR).minus(1)
-
-    const osmData = {
-      currentPrice: new BigNumber(peek)
-        .shiftedBy(-18)
-        .toPrecision(collateralToken.decimals, BigNumber.ROUND_DOWN)
-        .toString(),
-      nextPrice: new BigNumber(peep)
-        .shiftedBy(-18)
-        .toPrecision(collateralToken.decimals, BigNumber.ROUND_DOWN)
-        .toString(),
-      currentPriceUpdate: new Date(Number(zzz) * 1000),
-      nextPriceUpdate: new Date((Number(zzz) + hop) * 1000),
-    }
-
-    const collaterals: Record<string, MakerPoolCollateralConfig> = {
-      [collateralToken.address.value]: {
-        token: collateralToken,
-        price: Price.createFrom({
-          value: osmData.currentPrice,
-          baseToken: collateralToken,
-          quoteToken: quoteToken,
-        }),
-        nextPrice: Price.createFrom({
-          value: osmData.nextPrice,
-          baseToken: collateralToken,
-          quoteToken: quoteToken,
-        }),
-        priceUSD: await ctx.priceService.getPriceUSD(collateralToken),
-        lastPriceUpdate: osmData.currentPriceUpdate,
-        nextPriceUpdate: osmData.nextPriceUpdate,
-
-        liquidationThreshold: RiskRatio.createFrom({
-          ratio: Percentage.createFrom({
-            percentage: spotRes.liquidationRatio.times(100).toNumber(),
+      const collaterals: Record<string, MakerPoolCollateralConfig> = {
+        [collateralToken.address.value]: {
+          token: collateralToken,
+          price: Price.createFrom({
+            value: osmData.currentPrice,
+            baseToken: collateralToken,
+            quoteToken: quoteToken,
           }),
-          type: RiskRatio.type.CollateralizationRatio,
-        }),
+          nextPrice: Price.createFrom({
+            value: osmData.nextPrice,
+            baseToken: collateralToken,
+            quoteToken: quoteToken,
+          }),
+          priceUSD: await ctx.priceService.getPriceUSD(collateralToken),
+          lastPriceUpdate: osmData.currentPriceUpdate,
+          nextPriceUpdate: osmData.nextPriceUpdate,
 
-        tokensLocked: TokenAmount.createFromBaseUnit({
-          token: collateralToken,
-          amount: joinGemBalance.toString(),
-        }),
-        maxSupply: TokenAmount.createFrom({
-          token: collateralToken,
-          amount: Number.MAX_SAFE_INTEGER.toString(),
-        }),
-        liquidationPenalty: Percentage.createFrom({
-          percentage: dogRes.liquidationPenalty.toNumber() * 100,
-        }),
-      },
-    }
+          liquidationThreshold: RiskRatio.createFrom({
+            ratio: Percentage.createFrom({
+              percentage: spotRes.liquidationRatio.times(100).toNumber(),
+            }),
+            type: RiskRatio.type.CollateralizationRatio,
+          }),
 
-    const debts: Record<string, MakerPoolDebtConfig> = {
-      [quoteToken.address.value]: {
-        token: quoteToken,
-        price: await ctx.priceService.getPriceUSD(quoteToken),
-        priceUSD: await ctx.priceService.getPriceUSD(quoteToken),
-        rate: Percentage.createFrom({ percentage: stabilityFee.times(100).toNumber() }),
-        totalBorrowed: TokenAmount.createFrom({
-          token: quoteToken,
-          amount: vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor).toString(),
-        }),
-        debtCeiling: TokenAmount.createFrom({
-          token: quoteToken,
-          amount: vatRes.debtCeiling.toString(),
-        }),
-        debtAvailable: TokenAmount.createFrom({
-          token: quoteToken,
-          amount: vatRes.debtCeiling
-            .minus(vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor))
-            .toString(),
-        }),
-        dustLimit: TokenAmount.createFrom({
-          token: quoteToken,
-          amount: vatRes.debtFloor.toString(),
-        }),
-        originationFee: Percentage.createFrom({ percentage: 0 }),
-      },
-    }
+          tokensLocked: TokenAmount.createFromBaseUnit({
+            token: collateralToken,
+            amount: joinGemBalance.toString(),
+          }),
+          maxSupply: TokenAmount.createFrom({
+            token: collateralToken,
+            amount: Number.MAX_SAFE_INTEGER.toString(),
+          }),
+          liquidationPenalty: Percentage.createFrom({
+            percentage: dogRes.liquidationPenalty.toNumber() * 100,
+          }),
+        },
+      }
 
-    return {
-      type: PoolType.Lending,
-      poolId: makerPoolId,
-      protocol: makerPoolId.protocol,
-      baseCurrency: poolBaseCurrencyToken,
-      collaterals,
-      debts,
-    }
-    } catch(e) {
+      const debts: Record<string, MakerPoolDebtConfig> = {
+        [quoteToken.address.value]: {
+          token: quoteToken,
+          price: await ctx.priceService.getPriceUSD(quoteToken),
+          priceUSD: await ctx.priceService.getPriceUSD(quoteToken),
+          rate: Percentage.createFrom({ percentage: stabilityFee.times(100).toNumber() }),
+          totalBorrowed: TokenAmount.createFrom({
+            token: quoteToken,
+            amount: vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor).toString(),
+          }),
+          debtCeiling: TokenAmount.createFrom({
+            token: quoteToken,
+            amount: vatRes.debtCeiling.toString(),
+          }),
+          debtAvailable: TokenAmount.createFrom({
+            token: quoteToken,
+            amount: vatRes.debtCeiling
+              .minus(vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor))
+              .toString(),
+          }),
+          dustLimit: TokenAmount.createFrom({
+            token: quoteToken,
+            amount: vatRes.debtFloor.toString(),
+          }),
+          originationFee: Percentage.createFrom({ percentage: 0 }),
+        },
+      }
+
+      return {
+        type: PoolType.Lending,
+        poolId: makerPoolId,
+        protocol: makerPoolId.protocol,
+        baseCurrency: poolBaseCurrencyToken,
+        collaterals,
+        debts,
+      }
+    } catch (e) {
       throw new Error(`An error occurred fetching protocol data for Maker ${e}`)
     }
   }

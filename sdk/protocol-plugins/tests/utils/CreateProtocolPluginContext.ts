@@ -4,29 +4,31 @@ import { IProtocolPluginContext } from '../../src/interfaces/IProtocolPluginCont
 import { MockContractProvider } from '../../src/mocks/mockContractProvider'
 import { TokenService, PriceService } from '../../src/implementation'
 
-export async function createProtocolPluginContext(__ctxOverrides?: Partial<IProtocolPluginContext>): Promise<IProtocolPluginContext> {
-    const RPC_URL = process.env['MAINNET_RPC_URL'] || ''
-    const provider: PublicClient = createPublicClient({
-        batch: {
-            multicall: true,
-        },
-        chain: mainnet,
-        transport: http(RPC_URL),
-    })
+export async function createProtocolPluginContext(
+  __ctxOverrides?: Partial<IProtocolPluginContext>,
+): Promise<IProtocolPluginContext> {
+  const RPC_URL = process.env['MAINNET_RPC_URL'] || ''
+  const provider: PublicClient = createPublicClient({
+    batch: {
+      multicall: true,
+    },
+    chain: mainnet,
+    transport: http(RPC_URL),
+  })
 
-    const defaultContext: IProtocolPluginContext = {
-        provider,
-        tokenService: new TokenService(),
-        priceService: new PriceService(provider),
-        contractProvider: new MockContractProvider(),
-    };
+  const defaultContext: IProtocolPluginContext = {
+    provider,
+    tokenService: new TokenService(),
+    priceService: new PriceService(provider),
+    contractProvider: new MockContractProvider(),
+  }
 
-    if (__ctxOverrides) {
-        return {
-            ...defaultContext,
-            ...__ctxOverrides
-        };
+  if (__ctxOverrides) {
+    return {
+      ...defaultContext,
+      ...__ctxOverrides,
     }
+  }
 
-    return defaultContext;
+  return defaultContext
 }

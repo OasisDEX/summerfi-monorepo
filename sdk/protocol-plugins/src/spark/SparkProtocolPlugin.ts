@@ -110,16 +110,16 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
     try {
       const builder = await new AaveV3LikePluginBuilder(this.ctx, this.protocol).init()
       const list = await builder
-          .addPrices()
-          .addReservesCaps()
-          .addReservesConfigData()
-          .addReservesData()
-          .addEmodeCategories()
-          .build()
+        .addPrices()
+        .addReservesCaps()
+        .addReservesConfigData()
+        .addReservesData()
+        .addEmodeCategories()
+        .build()
 
       return filterAssetsListByEMode(list, emode)
-    } catch(e) {
-      throw new Error("Could not fetch/build assets list for Spark")
+    } catch (e) {
+      throw new Error('Could not fetch/build assets list for Spark')
     }
   }
 
