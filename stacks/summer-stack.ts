@@ -4,6 +4,7 @@ import { addSdkConfig } from './sdk'
 import { addMigrationsConfig } from './migrations'
 import { addPortfolioConfig } from './portfolio'
 import { addMorpho } from './morpho'
+import { addSwap } from './swap'
 
 export function API(stackContext: StackContext) {
   const { stack } = stackContext
@@ -19,6 +20,7 @@ export function API(stackContext: StackContext) {
   addMigrationsConfig({ ...stackContext, api })
   addPortfolioConfig({ ...stackContext, api })
   addMorpho({ ...stackContext, api })
+  addSwap({ ...stackContext, api })
 
   stack.addOutputs({
     ApiEndpoint: api.url,

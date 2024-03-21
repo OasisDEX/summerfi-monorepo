@@ -1,7 +1,7 @@
 import { depositToPosition } from '@summerfi/sdk-common/common/utils'
 import { steps } from '@summerfi/sdk-common/simulation'
-import { SimulationState } from '../../../interfaces/simulation'
 import { addBalance, getReferencedValue, subtractBalance } from '../../helpers'
+import { SimulationState } from '../../../interfaces/simulation'
 
 export function paybackWithdrawReducer(
   step: steps.PaybackWithdrawStep,
@@ -15,12 +15,14 @@ export function paybackWithdrawReducer(
   return {
     ...state,
     positions: {
+      ...state.positions,
       [step.inputs.position.positionId.id]: depositToPosition(
         step.inputs.position,
         getReferencedValue(step.inputs.withdrawAmount),
       ),
     },
     steps: {
+      ...state.steps,
       [step.name]: step,
     },
     balances: afterWithdraw,

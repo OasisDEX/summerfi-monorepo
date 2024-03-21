@@ -8,6 +8,7 @@ import {
   RiskRatio,
   Position,
   ChainId,
+  Token,
   ChainFamilyName,
   valuesOfChainFamilyMap,
 } from '@summerfi/sdk-common/common'
@@ -16,15 +17,21 @@ import type { SparkPoolId } from '@summerfi/sdk-common/protocols'
 import { PoolType, ProtocolName, EmodeType } from '@summerfi/sdk-common/protocols'
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
+import { AaveV3ProtocolPlugin } from '../aave-v3'
+import { AaveV3PoolCollateralConfig, AaveV3PoolDebtConfig } from '../aave-v3/Types'
 import { SparkDepositBorrowActionBuilder } from './builders/SparkDepositBorrowActionBuilder'
 import { BaseProtocolPlugin } from '../implementation/BaseProtocolPlugin'
 import { IPositionId } from '../interfaces/IPositionId'
+import { sparkEmodeCategoryMap } from './emodeCategoryMap'
 import { SparkPoolCollateralConfig, SparkLendingPool, SparkPoolDebtConfig } from './Types'
 import {
   AaveV3LikePluginBuilder,
   filterAssetsListByEMode,
 } from '../implementation/AAVEv3LikeBuilder'
 import { UNCAPPED_SUPPLY, PRECISION_BI } from '../implementation/constants'
+
+type AssetsList = ReturnType<AaveV3ProtocolPlugin['buildAssetsList']>
+type Asset = Awaited<AssetsList> extends (infer U)[] ? U : never
 
 export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
   public static protocol: ProtocolName.Spark = ProtocolName.Spark
@@ -69,137 +76,28 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
       throw new Error(`Chain ID ${chainId} is not supported`)
     }
 
-    const builder = await new AaveV3LikePluginBuilder(ctx, SparkProtocolPlugin.protocol).init()
-    const reservesAssetsList = await builder
-      .addPrices()
-      .addReservesCaps()
-      .addReservesConfigData()
-      .addReservesData()
-      .addEmodeCategories()
-      .build()
-
-    const filteredAssetsList = filterAssetsListByEMode(reservesAssetsList, emode)
+    const assetsList = await this.buildAssetsList(emode)
 
     // Both USDC & DAI use fixed price oracles that keep both stable at 1 USD
     const poolBaseCurrencyToken = CurrencySymbol.USD
 
-    const collaterals: Record<AddressValue, SparkPoolCollateralConfig> = {}
-    for (const asset of filteredAssetsList) {
-      const {
-        token: collateralToken,
-        config: { usageAsCollateralEnabled, ltv, liquidationThreshold, liquidationBonus },
-        caps: { supplyCap },
-        data: { totalAToken },
-      } = asset
-      const LTV_TO_PERCENTAGE_DIVISOR = 100n
-
-      try {
-        collaterals[collateralToken.address.value] = {
-          token: collateralToken,
-          price: Price.createFrom({
-            baseToken: collateralToken,
-            quoteToken: poolBaseCurrencyToken,
-            value: asset.price.toString(),
-          }),
-          priceUSD: Price.createFrom({
-            baseToken: collateralToken,
-            quoteToken: CurrencySymbol.USD,
-            value: asset.price.toString(),
-          }),
-          maxLtv: RiskRatio.createFrom({
-            ratio: Percentage.createFrom({
-              percentage: Number((ltv / LTV_TO_PERCENTAGE_DIVISOR).toString()),
-            }),
-            type: RiskRatio.type.LTV,
-          }),
-          liquidationThreshold: RiskRatio.createFrom({
-            ratio: Percentage.createFrom({
-              percentage: Number((liquidationThreshold / LTV_TO_PERCENTAGE_DIVISOR).toString()),
-            }),
-            type: RiskRatio.type.LTV,
-          }),
-          tokensLocked: TokenAmount.createFromBaseUnit({
-            token: collateralToken,
-            amount: totalAToken.toString(),
-          }),
-          maxSupply: TokenAmount.createFrom({
-            token: collateralToken,
-            amount: supplyCap === 0n ? UNCAPPED_SUPPLY : supplyCap.toString(),
-          }),
-          liquidationPenalty: Percentage.createFrom({
-            percentage: Number((liquidationBonus / LTV_TO_PERCENTAGE_DIVISOR).toString()),
-          }),
-          apy: Percentage.createFrom({ percentage: 0 }),
-          usageAsCollateralEnabled,
-        }
-      } catch (e) {
-        console.log('error in collateral loop', e)
-        throw new Error(`error in collateral loop ${e}`)
-      }
-    }
-
-    const debts: Record<AddressValue, SparkPoolDebtConfig> = {}
-    for (const asset of filteredAssetsList) {
-      const {
-        token: quoteToken,
-        config: { borrowingEnabled, reserveFactor },
-        caps: { borrowCap },
-        data: { totalVariableDebt, totalStableDebt, variableBorrowRate },
-      } = asset
-      if (quoteToken.symbol === TokenSymbol.WETH) {
-        // WETH can be used as collateral on Spark but not borrowed.
-        continue
-      }
-
-      try {
-        const RESERVE_FACTOR_TO_PERCENTAGE_DIVISOR = 10000n
-        const PRECISION_PRESERVING_OFFSET = 1000000n
-        const RATE_DIVISOR_TO_GET_PERCENTAGE = Number(
-          (PRECISION_PRESERVING_OFFSET - 100n).toString(),
-        )
-
-        const rate =
-          Number(
-            ((variableBorrowRate * PRECISION_PRESERVING_OFFSET) / PRECISION_BI.RAY).toString(),
-          ) / RATE_DIVISOR_TO_GET_PERCENTAGE
-        const totalBorrowed = totalVariableDebt + totalStableDebt
-        debts[quoteToken.address.value] = {
-          token: quoteToken,
-          // TODO: If we further restricted pools we could have token pair prices
-          price: Price.createFrom({
-            baseToken: quoteToken,
-            quoteToken: poolBaseCurrencyToken,
-            value: new BigNumber(asset.price.toString()).toString(),
-          }),
-          priceUSD: Price.createFrom({
-            baseToken: quoteToken,
-            quoteToken: CurrencySymbol.USD,
-            value: new BigNumber(asset.price.toString()).toString(),
-          }),
-          rate: Percentage.createFrom({ percentage: rate }),
-          totalBorrowed: TokenAmount.createFromBaseUnit({
-            token: quoteToken,
-            amount: totalBorrowed.toString(),
-          }),
-          debtCeiling: TokenAmount.createFrom({
-            token: quoteToken,
-            amount: borrowCap === 0n ? UNCAPPED_SUPPLY : borrowCap.toString(),
-          }),
-          debtAvailable: TokenAmount.createFromBaseUnit({
-            token: quoteToken,
-            amount: borrowCap === 0n ? UNCAPPED_SUPPLY : (borrowCap - totalBorrowed).toString(),
-          }),
-          dustLimit: TokenAmount.createFromBaseUnit({ token: quoteToken, amount: '0' }),
-          originationFee: Percentage.createFrom({
-            percentage: Number((reserveFactor / RESERVE_FACTOR_TO_PERCENTAGE_DIVISOR).toString()),
-          }),
-          borrowingEnabled,
-        }
-      } catch (e) {
-        console.log('error in debt loop', e)
-        throw new Error(`error in debt loop ${e}`)
-      }
-    }
+    const collaterals = assetsList.reduce<Record<AddressValue, SparkPoolCollateralConfig>>(
+      (colls, asset) => {
+        const assetInfo = this.getCollateralAssetInfo(asset, poolBaseCurrencyToken)
+        if (!assetInfo) return colls
+        const { token: collateralToken } = asset
+        colls[collateralToken.address.value] = assetInfo
+        return colls
+      },
+      {},
+    )
+    const debts = assetsList.reduce<Record<AddressValue, SparkPoolDebtConfig>>((debts, asset) => {
+      const assetInfo = this.getDebtAssetInfo(asset, poolBaseCurrencyToken)
+      if (!assetInfo) return debts
+      const { token: quoteToken } = asset
+      debts[quoteToken.address.value] = assetInfo
+      return debts
+    }, {})
 
     return {
       type: PoolType.Lending,
@@ -211,24 +109,140 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
     }
   }
 
-  getPositionId(positionId: string): IPositionId {
-    throw new Error(`Not implemented ${positionId}`)
-  }
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getPosition(positionId: IPositionId): Promise<Position> {
     throw new Error(`Not implemented ${positionId}`)
   }
-}
 
-const sparkEmodeCategoryMap: Record<EmodeType, bigint> = Object.keys(EmodeType).reduce<
-  Record<EmodeType, bigint>
->(
-  (accumulator, key, index) => {
-    accumulator[EmodeType[key as keyof typeof EmodeType]] = BigInt(index)
-    return accumulator
-  },
-  {} as Record<EmodeType, bigint>,
-)
+  private async buildAssetsList(emode: bigint) {
+    const builder = await new AaveV3LikePluginBuilder(this.ctx, SparkProtocolPlugin.protocol).init()
+    const list = await builder
+      .addPrices()
+      .addReservesCaps()
+      .addReservesConfigData()
+      .addReservesData()
+      .addEmodeCategories()
+      .build()
+
+    return filterAssetsListByEMode(list, emode)
+  }
+
+  private getCollateralAssetInfo(
+    asset: Asset,
+    poolBaseCurrencyToken: Token | CurrencySymbol,
+  ): AaveV3PoolCollateralConfig | undefined {
+    const {
+      token: collateralToken,
+      config: { usageAsCollateralEnabled, ltv, liquidationThreshold, liquidationBonus },
+      caps: { supplyCap },
+      data: { totalAToken },
+    } = asset
+    const LTV_TO_PERCENTAGE_DIVISOR = 100n
+
+    try {
+      return {
+        token: collateralToken,
+        price: Price.createFrom({
+          baseToken: collateralToken,
+          quoteToken: poolBaseCurrencyToken,
+          value: asset.price.toString(),
+        }),
+        priceUSD: Price.createFrom({
+          baseToken: collateralToken,
+          quoteToken: CurrencySymbol.USD,
+          value: asset.price.toString(),
+        }),
+        maxLtv: RiskRatio.createFrom({
+          ratio: Percentage.createFrom({
+            percentage: Number((ltv / LTV_TO_PERCENTAGE_DIVISOR).toString()),
+          }),
+          type: RiskRatio.type.LTV,
+        }),
+        liquidationThreshold: RiskRatio.createFrom({
+          ratio: Percentage.createFrom({
+            percentage: Number((liquidationThreshold / LTV_TO_PERCENTAGE_DIVISOR).toString()),
+          }),
+          type: RiskRatio.type.LTV,
+        }),
+        tokensLocked: TokenAmount.createFromBaseUnit({
+          token: collateralToken,
+          amount: totalAToken.toString(),
+        }),
+        maxSupply: TokenAmount.createFrom({
+          token: collateralToken,
+          amount: supplyCap === 0n ? UNCAPPED_SUPPLY : supplyCap.toString(),
+        }),
+        liquidationPenalty: Percentage.createFrom({
+          percentage: Number((liquidationBonus / LTV_TO_PERCENTAGE_DIVISOR).toString()),
+        }),
+        apy: Percentage.createFrom({ percentage: 0 }),
+        usageAsCollateralEnabled,
+      }
+    } catch (e) {
+      throw new Error(`error in collateral loop ${e}`)
+    }
+  }
+
+  private getDebtAssetInfo(
+    asset: Asset,
+    poolBaseCurrencyToken: CurrencySymbol | Token,
+  ): AaveV3PoolDebtConfig | undefined {
+    const {
+      token: quoteToken,
+      config: { borrowingEnabled, reserveFactor },
+      caps: { borrowCap },
+      data: { totalVariableDebt, totalStableDebt, variableBorrowRate },
+    } = asset
+    if (quoteToken.symbol === TokenSymbol.WETH) {
+      // WETH can be used as collateral on Spark but not borrowed.
+      return
+    }
+
+    try {
+      const RESERVE_FACTOR_TO_PERCENTAGE_DIVISOR = 10000n
+      const PRECISION_PRESERVING_OFFSET = 1000000n
+      const RATE_DIVISOR_TO_GET_PERCENTAGE = Number((PRECISION_PRESERVING_OFFSET - 100n).toString())
+
+      const rate =
+        Number(((variableBorrowRate * PRECISION_PRESERVING_OFFSET) / PRECISION_BI.RAY).toString()) /
+        RATE_DIVISOR_TO_GET_PERCENTAGE
+      const totalBorrowed = totalVariableDebt + totalStableDebt
+      return {
+        token: quoteToken,
+        // TODO: If we further restricted pools we could have token pair prices
+        price: Price.createFrom({
+          baseToken: quoteToken,
+          quoteToken: poolBaseCurrencyToken,
+          value: new BigNumber(asset.price.toString()).toString(),
+        }),
+        priceUSD: Price.createFrom({
+          baseToken: quoteToken,
+          quoteToken: CurrencySymbol.USD,
+          value: new BigNumber(asset.price.toString()).toString(),
+        }),
+        rate: Percentage.createFrom({ percentage: rate }),
+        totalBorrowed: TokenAmount.createFromBaseUnit({
+          token: quoteToken,
+          amount: totalBorrowed.toString(),
+        }),
+        debtCeiling: TokenAmount.createFrom({
+          token: quoteToken,
+          amount: borrowCap === 0n ? UNCAPPED_SUPPLY : borrowCap.toString(),
+        }),
+        debtAvailable: TokenAmount.createFromBaseUnit({
+          token: quoteToken,
+          amount: borrowCap === 0n ? UNCAPPED_SUPPLY : (borrowCap - totalBorrowed).toString(),
+        }),
+        dustLimit: TokenAmount.createFromBaseUnit({ token: quoteToken, amount: '0' }),
+        originationFee: Percentage.createFrom({
+          percentage: Number((reserveFactor / RESERVE_FACTOR_TO_PERCENTAGE_DIVISOR).toString()),
+        }),
+        borrowingEnabled,
+      }
+    } catch (e) {
+      throw new Error(`error in debt loop ${e}`)
+    }
+  }
+}
 
 export const sparkProtocolPlugin = new SparkProtocolPlugin()
