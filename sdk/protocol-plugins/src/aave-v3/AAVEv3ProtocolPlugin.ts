@@ -1,3 +1,4 @@
+import { ActionBuildersMap } from '@summerfi/order-planner-common/builders'
 import {
   Position,
   AddressValue,
@@ -29,37 +30,27 @@ type AssetsList = ReturnType<AaveV3ProtocolPlugin['buildAssetsList']>
 type Asset = Awaited<AssetsList> extends (infer U)[] ? U : never
 
 export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
-  public static protocol: ProtocolName.AAVEv3 = ProtocolName.AAVEv3
-  public static supportedChains = valuesOfChainFamilyMap([
+  readonly protocol: ProtocolName.AAVEv3 = ProtocolName.AAVEv3
+  readonly supportedChains = valuesOfChainFamilyMap([
     ChainFamilyName.Ethereum,
     ChainFamilyName.Base,
     ChainFamilyName.Arbitrum,
     ChainFamilyName.Optimism,
   ])
-  public static schema = z.object({
+  readonly schema = z.object({
     protocol: z.object({
       name: z.literal(ProtocolName.AAVEv3),
       chainInfo: z.object({
         name: z.string(),
         chainId: z.custom<ChainId>(
-          (chainId) =>
-            AaveV3ProtocolPlugin.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
+          (chainId) => this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
           'Chain ID not supported',
         ),
       }),
     }),
     emodeType: z.nativeEnum(EmodeType),
   })
-
-  constructor() {
-    const StepBuildersMap = {}
-    super(
-      AaveV3ProtocolPlugin.protocol,
-      AaveV3ProtocolPlugin.supportedChains,
-      AaveV3ProtocolPlugin.schema,
-      StepBuildersMap,
-    )
-  }
+  readonly StepBuilders: Partial<ActionBuildersMap> = {}
 
   async getPool(aaveV3PoolId: unknown): Promise<AaveV3LendingPool> {
     this.isPoolId(aaveV3PoolId)
@@ -69,7 +60,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
     const chainId = ctx.provider.chain?.id
     if (!chainId) throw new Error('ctx.provider.chain.id undefined')
 
-    if (!AaveV3ProtocolPlugin.supportedChains.some((chainInfo) => chainInfo.chainId === chainId)) {
+    if (!this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId)) {
       throw new Error(`Chain ID ${chainId} is not supported`)
     }
 
@@ -112,10 +103,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
   }
 
   private async buildAssetsList(emode: bigint) {
-    const builder = await new AaveV3LikePluginBuilder(
-      this.ctx,
-      AaveV3ProtocolPlugin.protocol,
-    ).init()
+    const builder = await new AaveV3LikePluginBuilder(this.ctx, this.protocol).init()
     const list = await builder
       .addPrices()
       .addReservesCaps()

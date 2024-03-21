@@ -15,23 +15,12 @@ import { steps } from '@summerfi/sdk-common/simulation'
 export abstract class BaseProtocolPlugin<PoolIdType extends IPoolId>
   implements IProtocolPlugin<PoolIdType>
 {
-  readonly protocol: PoolIdType['protocol']['name']
-  readonly supportedChains: ChainInfo[]
+  abstract readonly protocol: PoolIdType['protocol']['name']
+  // TODO: Use ContractProvider to determine supported chains
+  abstract readonly supportedChains: ChainInfo[]
   _ctx: IProtocolPluginContext | undefined
-  readonly schema: z.ZodSchema<PoolIdType>
-  readonly StepBuilders: Partial<ActionBuildersMap>
-
-  protected constructor(
-    protocol: PoolIdType['protocol']['name'],
-    supportedChains: ChainInfo[],
-    schema: z.ZodSchema<PoolIdType>,
-    StepBuildersMap: Partial<ActionBuildersMap>,
-  ) {
-    this.protocol = protocol
-    this.supportedChains = supportedChains
-    this.schema = schema
-    this.StepBuilders = StepBuildersMap
-  }
+  abstract readonly schema: z.ZodSchema<PoolIdType>
+  abstract readonly StepBuilders: Partial<ActionBuildersMap>
 
   init(ctx: IProtocolPluginContext): void {
     this._ctx = ctx

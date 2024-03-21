@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { ActionBuildersMap } from '@summerfi/order-planner-common/builders'
 import {
   Percentage,
   TokenAmount,
@@ -25,16 +26,15 @@ import { OSM_ABI, ERC20_ABI } from './abis'
 import { PRECISION_BI, PRECISION } from '../implementation/constants'
 
 export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerPoolId> {
-  public static protocol: ProtocolName.Maker = ProtocolName.Maker
-  public static supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
-  public static schema = z.object({
+  readonly protocol: ProtocolName.Maker = ProtocolName.Maker
+  readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
+  readonly schema = z.object({
     protocol: z.object({
       name: z.literal(ProtocolName.Maker),
       chainInfo: z.object({
         name: z.string(),
         chainId: z.custom<ChainId>(
-          (chainId) =>
-            MakerProtocolPlugin.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
+          (chainId) => this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
           'Chain ID not supported',
           true,
         ),
@@ -43,18 +43,8 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerPoolId> {
     ilkType: z.nativeEnum(ILKType),
     vaultId: z.string(),
   })
-
-  constructor() {
-    const StepBuildersMap = {
-      [SimulationSteps.PaybackWithdraw]: MakerPaybackWithdrawActionBuilder,
-    }
-
-    super(
-      MakerProtocolPlugin.protocol,
-      MakerProtocolPlugin.supportedChains,
-      MakerProtocolPlugin.schema,
-      StepBuildersMap,
-    )
+  readonly StepBuilders: Partial<ActionBuildersMap> = {
+    [SimulationSteps.PaybackWithdraw]: MakerPaybackWithdrawActionBuilder,
   }
 
   async getPool(makerPoolId: unknown): Promise<MakerLendingPool> {
@@ -66,7 +56,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerPoolId> {
     const chainId = ctx.provider.chain?.id
     if (!chainId) throw new Error('ctx.provider.chain.id undefined')
 
-    if (!MakerProtocolPlugin.supportedChains.some((chainInfo) => chainInfo.chainId === chainId)) {
+    if (!this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId)) {
       throw new Error(`Chain ID ${chainId} is not supported`)
     }
 
