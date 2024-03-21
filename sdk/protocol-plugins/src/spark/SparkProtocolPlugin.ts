@@ -1,4 +1,4 @@
-import {ActionBuildersMap} from "@summerfi/order-planner-common/builders";
+import { ActionBuildersMap } from '@summerfi/order-planner-common/builders'
 import {
   AddressValue,
   Percentage,
@@ -43,8 +43,7 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
       chainInfo: z.object({
         name: z.string(),
         chainId: z.custom<ChainId>(
-          (chainId) =>
-            this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
+          (chainId) => this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
           'Chain ID not supported',
           true,
         ),

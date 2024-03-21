@@ -1,4 +1,4 @@
-import {ActionBuildersMap} from "@summerfi/order-planner-common/builders";
+import { ActionBuildersMap } from '@summerfi/order-planner-common/builders'
 import {
   Position,
   AddressValue,
@@ -43,8 +43,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
       chainInfo: z.object({
         name: z.string(),
         chainId: z.custom<ChainId>(
-          (chainId) =>
-            this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
+          (chainId) => this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
           'Chain ID not supported',
         ),
       }),
@@ -104,10 +103,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
   }
 
   private async buildAssetsList(emode: bigint) {
-    const builder = await new AaveV3LikePluginBuilder(
-      this.ctx,
-      this.protocol,
-    ).init()
+    const builder = await new AaveV3LikePluginBuilder(this.ctx, this.protocol).init()
     const list = await builder
       .addPrices()
       .addReservesCaps()

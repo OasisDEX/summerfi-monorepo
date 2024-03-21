@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {ActionBuildersMap} from "@summerfi/order-planner-common/builders";
+import { ActionBuildersMap } from '@summerfi/order-planner-common/builders'
 import {
   Percentage,
   TokenAmount,
@@ -34,8 +34,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerPoolId> {
       chainInfo: z.object({
         name: z.string(),
         chainId: z.custom<ChainId>(
-          (chainId) =>
-            this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
+          (chainId) => this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
           'Chain ID not supported',
           true,
         ),
