@@ -185,7 +185,8 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerPoolId> {
     //   client: ctx.provider,
     // })
 
-    const {osm, vatRes, jugRes, dogRes, spotRes, erc20, ilkRegistryRes } = await this.getIlkProtocolData(ilkInHex, makerPoolId)
+    const { osm, vatRes, jugRes, dogRes, spotRes, erc20, ilkRegistryRes } =
+      await this.getIlkProtocolData(ilkInHex, makerPoolId)
 
     const makerSpotDef = ctx.contractProvider.getContractDef('Spot', makerPoolId.protocol.name)
     const [
@@ -316,8 +317,8 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerPoolId> {
     const makerSpotDef = ctx.contractProvider.getContractDef('Spot', makerPoolId.protocol.name)
     const makerJugDef = ctx.contractProvider.getContractDef('McdJug', makerPoolId.protocol.name)
     const makerIlkRegistryDef = ctx.contractProvider.getContractDef(
-        'IlkRegistry',
-        makerPoolId.protocol.name,
+      'IlkRegistry',
+      makerPoolId.protocol.name,
     )
 
     const [
@@ -429,7 +430,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerPoolId> {
     const ilkRegistryRes = {
       join,
       gem,
-      pip
+      pip,
     }
 
     return {
@@ -439,7 +440,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin<MakerPoolId> {
       dogRes,
       osm,
       erc20,
-      ilkRegistryRes
+      ilkRegistryRes,
     }
   }
 }

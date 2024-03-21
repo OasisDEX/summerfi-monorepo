@@ -13,7 +13,9 @@ import { z } from 'zod'
 type ExtractPoolIds<P extends ProtocolManager<any>> =
   P extends ProtocolManager<infer T> ? GetPoolIds<T> : never
 
-export class ProtocolManager<ProtocolPlugins extends BaseProtocolPlugin<any>[]> implements IProtocolManager<ProtocolPlugins> {
+export class ProtocolManager<ProtocolPlugins extends BaseProtocolPlugin<any>[]>
+  implements IProtocolManager<ProtocolPlugins>
+{
   private plugins: ProtocolPlugins
   private _ctx: IProtocolManagerContext | undefined
 

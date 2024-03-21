@@ -17,7 +17,7 @@ import { PoolType, ProtocolName, EmodeType } from '@summerfi/sdk-common/protocol
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
 import { BaseProtocolPlugin } from '../implementation/BaseProtocolPlugin'
-import {aaveV3EmodeCategoryMap} from "./emodeCategoryMap";
+import { aaveV3EmodeCategoryMap } from './emodeCategoryMap'
 import { AaveV3LendingPool, AaveV3PoolCollateralConfig, AaveV3PoolDebtConfig } from './Types'
 import {
   AaveV3LikePluginBuilder,
@@ -25,8 +25,8 @@ import {
 } from '../implementation/AAVEv3LikeBuilder'
 import { UNCAPPED_SUPPLY, PRECISION_BI } from '../implementation/constants'
 
-type AssetsList = ReturnType<AaveV3ProtocolPlugin['buildAssetsList']>;
-type Asset = Awaited<AssetsList> extends (infer U)[] ? U : never;
+type AssetsList = ReturnType<AaveV3ProtocolPlugin['buildAssetsList']>
+type Asset = Awaited<AssetsList> extends (infer U)[] ? U : never
 
 export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
   public static protocol: ProtocolName.AAVEv3 = ProtocolName.AAVEv3
@@ -78,20 +78,23 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
     // Both USDC & DAI use fixed price oracles that keep both stable at 1 USD
     const poolBaseCurrencyToken = CurrencySymbol.USD
 
-    const collaterals = assetsList.reduce<Record<AddressValue, AaveV3PoolCollateralConfig>>((colls, asset) => {
-          const assetInfo = this.getCollateralAssetInfo(asset, poolBaseCurrencyToken)
-          if (!assetInfo) return colls
-          const { token: collateralToken } = asset
-          colls[collateralToken.address.value] = assetInfo
-          return colls;
-    }, {})
+    const collaterals = assetsList.reduce<Record<AddressValue, AaveV3PoolCollateralConfig>>(
+      (colls, asset) => {
+        const assetInfo = this.getCollateralAssetInfo(asset, poolBaseCurrencyToken)
+        if (!assetInfo) return colls
+        const { token: collateralToken } = asset
+        colls[collateralToken.address.value] = assetInfo
+        return colls
+      },
+      {},
+    )
 
     const debts = assetsList.reduce<Record<AddressValue, AaveV3PoolDebtConfig>>((debts, asset) => {
       const assetInfo = this.getDebtAssetInfo(asset, poolBaseCurrencyToken)
       if (!assetInfo) return debts
       const { token: quoteToken } = asset
       debts[quoteToken.address.value] = assetInfo
-      return debts;
+      return debts
     }, {})
 
     return {
@@ -109,19 +112,25 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
   }
 
   private async buildAssetsList(emode: bigint) {
-    const builder = await new AaveV3LikePluginBuilder(this.ctx, AaveV3ProtocolPlugin.protocol).init()
+    const builder = await new AaveV3LikePluginBuilder(
+      this.ctx,
+      AaveV3ProtocolPlugin.protocol,
+    ).init()
     const list = await builder
-        .addPrices()
-        .addReservesCaps()
-        .addReservesConfigData()
-        .addReservesData()
-        .addEmodeCategories()
-        .build()
+      .addPrices()
+      .addReservesCaps()
+      .addReservesConfigData()
+      .addReservesData()
+      .addEmodeCategories()
+      .build()
 
     return filterAssetsListByEMode(list, emode)
   }
 
-  private getCollateralAssetInfo(asset: Asset, poolBaseCurrencyToken: Token | CurrencySymbol): AaveV3PoolCollateralConfig | undefined {
+  private getCollateralAssetInfo(
+    asset: Asset,
+    poolBaseCurrencyToken: Token | CurrencySymbol,
+  ): AaveV3PoolCollateralConfig | undefined {
     const {
       token: collateralToken,
       config: { usageAsCollateralEnabled, ltv, liquidationThreshold, liquidationBonus },
@@ -153,8 +162,8 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
         liquidationThreshold: RiskRatio.createFrom({
           ratio: Percentage.createFrom({
             percentage: new BigNumber(liquidationThreshold.toString())
-                .div(LTV_TO_PERCENTAGE_DIVISOR)
-                .toNumber(),
+              .div(LTV_TO_PERCENTAGE_DIVISOR)
+              .toNumber(),
           }),
           type: RiskRatio.type.LTV,
         }),
@@ -168,8 +177,8 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
         }),
         liquidationPenalty: Percentage.createFrom({
           percentage: new BigNumber(liquidationBonus.toString())
-              .div(LTV_TO_PERCENTAGE_DIVISOR)
-              .toNumber(),
+            .div(LTV_TO_PERCENTAGE_DIVISOR)
+            .toNumber(),
         }),
         apy: Percentage.createFrom({ percentage: 0 }),
         usageAsCollateralEnabled,
@@ -179,7 +188,10 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
     }
   }
 
-  private getDebtAssetInfo(asset: Asset, poolBaseCurrencyToken: CurrencySymbol | Token): AaveV3PoolDebtConfig | undefined {
+  private getDebtAssetInfo(
+    asset: Asset,
+    poolBaseCurrencyToken: CurrencySymbol | Token,
+  ): AaveV3PoolDebtConfig | undefined {
     const {
       token: quoteToken,
       config: { borrowingEnabled, reserveFactor },
@@ -188,20 +200,17 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
     } = asset
     if (quoteToken.symbol === TokenSymbol.WETH) {
       // WETH can be used as collateral on AaveV3 but not borrowed.
-      return;
+      return
     }
 
     try {
       const RESERVE_FACTOR_TO_PERCENTAGE_DIVISOR = 10000n
       const PRECISION_PRESERVING_OFFSET = 1000000n
-      const RATE_DIVISOR_TO_GET_PERCENTAGE = Number(
-          (PRECISION_PRESERVING_OFFSET - 100n).toString(),
-      )
+      const RATE_DIVISOR_TO_GET_PERCENTAGE = Number((PRECISION_PRESERVING_OFFSET - 100n).toString())
 
       const rate =
-          Number(
-              ((variableBorrowRate * PRECISION_PRESERVING_OFFSET) / PRECISION_BI.RAY).toString(),
-          ) / RATE_DIVISOR_TO_GET_PERCENTAGE
+        Number(((variableBorrowRate * PRECISION_PRESERVING_OFFSET) / PRECISION_BI.RAY).toString()) /
+        RATE_DIVISOR_TO_GET_PERCENTAGE
       const totalBorrowed = totalVariableDebt + totalStableDebt
       return {
         token: quoteToken,
