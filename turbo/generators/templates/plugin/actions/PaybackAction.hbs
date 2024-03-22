@@ -1,0 +1,32 @@
+import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
+import { Address, TokenAmount } from '@summerfi/sdk-common/common'
+import { IPool } from '@summerfi/sdk-common/protocols'
+import { is{{namePascalCase}}PoolId } from '@summerfi/sdk-common/protocols/'
+
+export class {{namePascalCase}}PaybackAction extends BaseAction {
+  public readonly config = {
+    name: '{{namePascalCase}}Payback',
+    version: 1,
+    parametersAbi: '/** INSERT HERE - THE ACTION PARAMETERS **/',
+    storageInputs: [/** INSERT HERE - THE STORAGE INPUTS **/],
+    storageOutputs: [/** INSERT HERE - THE STORAGE OUTPUTS **/],
+  } as const
+
+  public encodeCall(
+    params: {
+      /** INSERT HERE - THE ACTION PARAMETERS **/
+    },
+    paramsMapping?: number[],
+  ): ActionCall {
+    if (!is{{namePascalCase}}PoolId(params.pool.poolId)) {
+      throw new Error('Pool ID is not a {{namePascalCase}} one')
+    }
+
+    return this._encodeCall({
+      arguments: [
+        /** INSERT HERE - THE ACTION ARGS  **/
+      ],
+      mapping: paramsMapping,
+    })
+  }
+}
