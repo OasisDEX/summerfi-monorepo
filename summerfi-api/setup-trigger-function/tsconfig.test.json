@@ -1,0 +1,16 @@
+{
+  "extends": "@summerfi/typescript-config/tsconfig.test.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "baseUrl": "src",
+    "paths": {
+      "~types": ["./types"],
+      "~abi": ["./abi"],
+      "~helpers": ["./helpers"]
+    }
+  },
+  "files": ["node_modules/jest-expect-message/types/index.d.ts"],
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

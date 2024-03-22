@@ -1,0 +1,23 @@
+{
+  "name": "@summerfi/portfolio-assets-function",
+  "version": "1.0.0",
+  "scripts": {
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "test": "jest --passWithNoTests",
+    "build": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "@types/node": "^20.11.5",
+    "eslint": "^8.56.0"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "@summerfi/serverless-shared": "workspace:*",
+    "zod": "^3.22.4"
+  }
+}

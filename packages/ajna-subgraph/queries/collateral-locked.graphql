@@ -1,0 +1,16 @@
+query CollateralLocked($collateralAddresses: [String!]!, $block: Int!) {
+  borrowPositions(where: { pool_: { collateralToken_in:  $collateralAddresses }, collateral_gt: 0, account_not: null}, block: { number: $block }) {
+    pool {
+      collateralToken {
+        address
+        decimals
+      }
+    }
+    collateral
+    account {
+      user {
+        address
+      }
+    }
+  }
+}

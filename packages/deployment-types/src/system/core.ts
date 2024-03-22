@@ -1,0 +1,12 @@
+export type SystemCoreNames =
+  | 'ServiceRegistry'
+  | 'OperationExecutor'
+  | 'OperationStorage'
+  | 'OperationsRegistry'
+  | 'DSProxyFactory'
+  | 'DSProxyRegistry'
+  | 'DSGuardFactory'
+  | 'AccountGuard'
+  | 'AccountFactory'
+  | 'ChainLogView'
+  | 'Swap'

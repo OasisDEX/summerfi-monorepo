@@ -1,0 +1,10 @@
+{
+  "extends": "@summerfi/typescript-config/tsconfig.test.json",
+  "compilerOptions": {
+    "rootDir": "scripts",
+    "outDir": "dist",
+    "baseUrl": "scripts"
+  },
+  "include": ["scripts/**/*.ts", "./hardhat.config.ts", "tasks/**/*.ts"],
+  "exclude": ["node_modules"]
+}

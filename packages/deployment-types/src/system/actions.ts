@@ -1,0 +1,10 @@
+export type SystemActionNames =
+  | 'SwapAction'
+  | 'PullToken'
+  | 'SendToken'
+  | 'SetApproval'
+  | 'WrapEth'
+  | 'UnwrapEth'
+  | 'TakeFlashloan'
+  | 'ReturnFunds'
+  | 'PositionCreated'

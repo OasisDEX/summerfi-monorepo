@@ -1,0 +1,13 @@
+query OneTrigger($triggerId: ID!) {
+  trigger(id: $triggerId) {
+    account
+    owner
+    id
+    protocol
+    triggerData
+    triggerType
+    addedTimestamp
+    decodedData
+    decodedDataNames
+  }
+}

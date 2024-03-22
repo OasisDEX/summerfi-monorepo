@@ -1,0 +1,64 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local"],
+  "globalEnv": [
+    "SUBGRAPH_BASE",
+    "DEBANK_API_KEY",
+    "DEBANK_API_URL",
+    "RPC_GATEWAY",
+    "GET_TRIGGERS_URL",
+    "SKIP_VALIDATION",
+    "AWS_REGION",
+    "AWS_PROFILE",
+    "POWERTOOLS_LOG_LEVEL",
+    "SST_USER",
+    "CONTRACTS_DEPLOYMENT_TYPE",
+    "CONTRACTS_ENABLE_GAS_REPORT",
+    "COINMARKETCAP_API_KEY",
+    "ETHERSCAN_API_KEY",
+    "CONTRACTS_GAS_REPORT_FILE",
+    "DEPLOYER_PRIVATE_KEY",
+    "RPC_ENDPOINT_PROVIDER",
+    "INFURA_ENDPOINT_API_KEY",
+    "ALCHEMY_ENDPOINT_API_KEY",
+    "CONTRACTS_DEPLOYMENT_MAX_GAS",
+    "CONTRACTS_DEPLOYMENT_GAS_PRICE",
+    "DEPLOYER_MNEMONIC",
+    "ONE_INCH_API_KEY",
+    "ONE_INCH_API_VERSION",
+    "ONE_INCH_API_URL",
+    "ONE_INCH_ALLOWED_SWAP_PROTOCOLS",
+    "ONE_INCH_SWAP_CHAIN_IDS",
+    "SDK_API_URL",
+    "MAINNET_RPC_URL"
+  ],
+  "pipeline": {
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "prebuild": {
+      "dependsOn": ["^prebuild"],
+      "outputs": ["src/types/graphql/generated.ts"]
+    },
+    "build": {
+      "dependsOn": ["prebuild", "^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", "artifacts/**", ".sst/**"]
+    },
+    "test": {
+      "dependsOn": ["prebuild", "build", "^test"]
+    },
+    "lint": {
+      "dependsOn": ["prebuild", "build", "^lint"]
+    },
+    "check-circular": {
+      "dependsOn": ["prebuild", "build", "^check-circular"]
+    },
+    "cicheck": {
+      "dependsOn": ["prebuild", "build", "test", "lint", "check-circular"]
+    },
+    "deploy:staging": {
+      "dependsOn": ["cicheck", "^deploy:staging"]
+    }
+  }
+}

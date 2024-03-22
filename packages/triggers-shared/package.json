@@ -1,0 +1,34 @@
+{
+  "name": "@summerfi/triggers-shared",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "test": "jest --passWithNoTests",
+    "build": "tsc -b -v",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "zod": "^3.22.4",
+    "@oasisdex/addresses": "0.1.16-dma-v2-workers.11",
+    "@summerfi/serverless-shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "@types/node": "^20.11.5",
+    "eslint": "^8.56.0"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./contracts": {
+      "import": "./dist/contracts/index.js",
+      "types": "./dist/contracts/index.d.ts"
+    }
+  }
+}

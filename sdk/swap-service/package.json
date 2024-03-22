@@ -1,0 +1,36 @@
+{
+  "name": "@summerfi/swap-service",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.d.ts"
+    }
+  },
+  "scripts": {
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "test": "jest tests/ --passWithNoTests",
+    "testw": "jest --watch",
+    "e2e": "jest e2e/",
+    "build": "tsc -b tsconfig.build.json",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@summerfi/sdk-common": "workspace:*",
+    "@summerfi/swap-common": "workspace:*",
+    "@summerfi/common": "workspace:*",
+    "@summerfi/configuration-provider": "workspace:*",
+    "@types/node-fetch": "^2.6.11",
+    "node-fetch": "^2.6.7",
+    "viem": "^2.7.9"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/jest-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*"
+  }
+}
