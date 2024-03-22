@@ -28,6 +28,10 @@ export class Percentage implements IPercentageSerialized {
     return Percentage.createFrom({ percentage: this.value + percentage.value })
   }
 
+  toProportion(): number {
+    return this.value / 100
+  }
+
   toBaseUnit(params: { decimals: number }): string {
     const factor = new BigNumber(10).pow(params.decimals)
     return new BigNumber(this.value).multipliedBy(factor).toFixed(0).toString()
