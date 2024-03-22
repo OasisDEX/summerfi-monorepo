@@ -21,7 +21,7 @@ describe('RiskRatio', () => {
           type: RiskRatio.type.LTV,
         })
 
-        expect(riskRatio.toType(RiskRatio.type.CollateralizationRatio)).toEqual('125')
+        expect(riskRatio.convertTo(RiskRatio.type.CollateralizationRatio)).toEqual('125')
       })
 
       it('should convert to Multiple type correctly', () => {
@@ -30,7 +30,7 @@ describe('RiskRatio', () => {
           type: RiskRatio.type.LTV,
         })
 
-        expect(riskRatio.toType(RiskRatio.type.Multiple)).toEqual('5')
+        expect(riskRatio.convertTo(RiskRatio.type.Multiple)).toEqual('5')
       })
     })
   })
@@ -41,7 +41,7 @@ describe('RiskRatio', () => {
       type: RiskRatio.type.CollateralizationRatio,
     })
 
-    expect(riskRatio.toType(RiskRatio.type.LTV)).toEqual('76.92307692307692')
+    expect(riskRatio.convertTo(RiskRatio.type.LTV)).toEqual('76.92307692307692')
   })
 
   it('creates risk ratio from multiple', () => {
@@ -50,6 +50,6 @@ describe('RiskRatio', () => {
       type: RiskRatio.type.Multiple,
     })
 
-    expect(riskRatio.toType(RiskRatio.type.LTV)).toEqual('77.77777777777779')
+    expect(riskRatio.convertTo(RiskRatio.type.LTV)).toEqual('77.77777777777779')
   })
 })

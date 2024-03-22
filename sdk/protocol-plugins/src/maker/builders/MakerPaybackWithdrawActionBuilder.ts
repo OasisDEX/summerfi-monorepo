@@ -19,7 +19,7 @@ export const MakerPaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWithd
 
   const joinType = TokenToJoinMapping[step.inputs.position.debtAmount.token.symbol]
   const joinAddressValue = params.deployment.dependencies[joinType].address as AddressValue
-  const joinAddress = Address.createFrom({ value: joinAddressValue })
+  const joinAddress = Address.createFromEthereum({ value: joinAddressValue })
 
   context.addActionCall({
     step: params.step,

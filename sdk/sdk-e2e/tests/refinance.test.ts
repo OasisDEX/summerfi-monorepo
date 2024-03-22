@@ -24,7 +24,7 @@ import {
 } from '@summerfi/sdk-common/protocols'
 import { makeSDK, type Chain, type User, Protocol } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
-import { Order, RefinanceParameters } from '@summerfi/sdk-common/orders'
+import { Order, IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { PoolIds } from '@summerfi/protocol-manager'
 
@@ -44,7 +44,7 @@ describe.skip('Refinance | SDK', () => {
     }
 
     // User
-    const walletAddress = Address.createFrom({
+    const walletAddress = Address.createFromEthereum({
       value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
     })
     const user: User = await sdk.users.getUser({
@@ -175,7 +175,7 @@ describe.skip('Refinance | SDK', () => {
     expect(newLendingPool.debts).toEqual(poolPair.debts)
     expect(newLendingPool.collaterals).toEqual(poolPair.collaterals)
 
-    const refinanceParameters: RefinanceParameters = {
+    const refinanceParameters: IRefinanceParameters = {
       position: prevPosition,
       targetPool: newLendingPool,
       slippage: Percentage.createFrom({ percentage: 0.5 }),

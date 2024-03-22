@@ -42,7 +42,7 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
     const tokensUsedAsReserves = await Promise.all(
       rawTokens.map(async (reservesToken) => {
         return await this.ctx.tokenService.getTokenByAddress(
-          Address.createFrom({ value: reservesToken.tokenAddress }),
+          Address.createFromEthereum({ value: reservesToken.tokenAddress }),
         )
       }),
     )

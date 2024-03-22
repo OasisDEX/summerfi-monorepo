@@ -4,13 +4,13 @@ import {
   AAVEV3_LENDING_POOL_ABI,
   AAVEV3_ORACLE_ABI,
   AAVEV3_POOL_DATA_PROVIDER_ABI,
-} from '../aave-v3/abis'
-import { DOG_ABI, ILK_REGISTRY_ABI, JUG_ABI, SPOT_ABI, VAT_ABI } from '../maker/abis'
+} from '../aave-v3/abis/AaveV3ABIS'
+import { DOG_ABI, ILK_REGISTRY_ABI, JUG_ABI, SPOT_ABI, VAT_ABI } from '../maker/abis/MakerABIS'
 import {
   SPARK_LENDING_POOL_ABI,
   SPARK_ORACLE_ABI,
   SPARK_POOL_DATA_PROVIDER_ABI,
-} from '../spark/abis'
+} from '../spark/abis/SparkABIS'
 
 export class MockContractProvider implements IContractProvider {
   getContractDef<P extends IProtocol['name'], K extends keyof AddressAbiMapsByProtocol[P]>(

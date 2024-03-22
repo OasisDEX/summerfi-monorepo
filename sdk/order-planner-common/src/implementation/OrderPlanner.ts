@@ -88,7 +88,7 @@ export class OrderPlanner implements IOrderPlanner {
       transactions: [
         {
           transaction: {
-            target: Address.createFrom({ value: executorInfo.address as HexData }),
+            target: Address.createFromEthereum({ value: executorInfo.address as HexData }),
             calldata: calldata,
             value: '0',
           },

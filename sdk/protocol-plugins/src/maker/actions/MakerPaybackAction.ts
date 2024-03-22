@@ -1,7 +1,6 @@
 import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
 import { Address, TokenAmount } from '@summerfi/sdk-common/common'
-import { IPool } from '@summerfi/sdk-common/protocols'
-import { isMakerPoolId } from '@summerfi/sdk-common/protocols/'
+import { IPool, isMakerPoolId } from '@summerfi/sdk-common/protocols/'
 
 export class MakerPaybackAction extends BaseAction {
   public readonly config = {

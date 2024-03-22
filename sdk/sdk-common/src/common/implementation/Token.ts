@@ -1,41 +1,28 @@
+import { IToken } from '../interfaces/IToken'
 import { SerializationService } from '../../services/SerializationService'
 import { Address } from './Address'
 import { ChainInfo } from './ChainInfo'
-
-interface ITokenSerialized {
-  chainInfo: ChainInfo
-  address: Address
-  symbol: string
-  name: string
-  decimals: number
-}
 
 /**
  * @name Token
  * @description Represents a token on a blockchain and provides it's details
  */
-export class Token implements ITokenSerialized {
+export class Token implements IToken {
   readonly chainInfo: ChainInfo
   readonly address: Address
   readonly symbol: string
   readonly name: string
   readonly decimals: number
 
-  private constructor(params: ITokenSerialized) {
+  private constructor(params: IToken) {
     this.chainInfo = params.chainInfo
-    this.address = params.address
+    this.address = Address.createFromEthereum(params.address)
     this.symbol = params.symbol
     this.name = params.name
     this.decimals = params.decimals
   }
 
-  static createFrom(params: {
-    chainInfo: ChainInfo
-    address: Address
-    symbol: string
-    name: string
-    decimals: number
-  }): Token {
+  static createFrom(params: IToken): Token {
     return new Token(params)
   }
 

@@ -17,7 +17,9 @@ function getBorrowTargetAddress(params: ActionBuilderParams<steps.DepositBorrowS
 
   return step.inputs.borrowTargetType === TokenTransferTargetType.PositionsManager
     ? positionsManager.address
-    : Address.createFrom({ value: deployment.contracts.OperationExecutor.address as AddressValue })
+    : Address.createFromEthereum({
+        value: deployment.contracts.OperationExecutor.address as AddressValue,
+      })
 }
 
 export const SparkDepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrowStep> = async (

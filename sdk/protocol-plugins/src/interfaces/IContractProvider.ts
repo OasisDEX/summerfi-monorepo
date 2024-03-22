@@ -1,7 +1,7 @@
 import { ProtocolName, IProtocol } from '@summerfi/sdk-common/protocols'
-import { AaveV3AddressAbiMap } from '../aave-v3/Types'
-import { MakerAddressAbiMap } from '../maker/Types'
-import { SparkAddressAbiMap } from '../spark/Types'
+import { AaveV3AddressAbiMap } from '../aave-v3/types/AaveV3AddressAbiMap'
+import { MakerAddressAbiMap } from '../maker/types/MakerAddressAbiMap'
+import { SparkAddressAbiMap } from '../spark/types/SparkAddressAbiMap'
 
 // TODO: Replace with real implementations when available
 type AaveV2AddressAbiMap = Record<string, never>

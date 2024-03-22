@@ -16,7 +16,7 @@ const testChain = ChainInfo.createFrom({ chainId: 1, name: 'test' })
 
 const testCollateral = Token.createFrom({
   chainInfo: testChain,
-  address: Address.createFrom({ value: '0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5' }),
+  address: Address.createFromEthereum({ value: '0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5' }),
   decimals: 18,
   name: 'Collateral',
   symbol: 'COL',
@@ -24,7 +24,7 @@ const testCollateral = Token.createFrom({
 
 const testDebt = Token.createFrom({
   chainInfo: testChain,
-  address: Address.createFrom({ value: '0x814FaE9f487206471B6B0D713cD51a2D35980000' }),
+  address: Address.createFromEthereum({ value: '0x814FaE9f487206471B6B0D713cD51a2D35980000' }),
   decimals: 18,
   name: 'Debt',
   symbol: 'DBT',
@@ -32,7 +32,7 @@ const testDebt = Token.createFrom({
 
 export const otherTestCollateral = Token.createFrom({
   chainInfo: testChain,
-  address: Address.createFrom({ value: '0x15222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5' }),
+  address: Address.createFromEthereum({ value: '0x15222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5' }),
   decimals: 5,
   name: 'Collateral2',
   symbol: 'COL',
@@ -40,7 +40,7 @@ export const otherTestCollateral = Token.createFrom({
 
 export const otherTestDebt = Token.createFrom({
   chainInfo: testChain,
-  address: Address.createFrom({ value: '0x114FaE9f487206471B6B0D713cD51a2D35980000' }),
+  address: Address.createFromEthereum({ value: '0x114FaE9f487206471B6B0D713cD51a2D35980000' }),
   decimals: 3,
   name: 'Debt2',
   symbol: 'DBT2',
@@ -93,11 +93,7 @@ const testSourceLendingPool = new LendingPool({
 
 export const testSourcePosition = borrowFromPosition(
   depositToPosition(
-    newEmptyPositionFromPool(
-      testSourceLendingPool,
-      testDebt.address.value,
-      testCollateral.address.value,
-    ),
+    newEmptyPositionFromPool(testSourceLendingPool, testDebt, testCollateral),
     TokenAmount.createFrom({ token: testCollateral, amount: '100' }),
   ),
   TokenAmount.createFrom({ token: testDebt, amount: '50' }),

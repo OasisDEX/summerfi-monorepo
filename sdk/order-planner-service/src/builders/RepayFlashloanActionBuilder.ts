@@ -23,7 +23,7 @@ export const RepayFlashloanActionBuilder: ActionBuilder<steps.RepayFlashloan> = 
     action: new SendTokenAction(),
     arguments: {
       sendAmount: step.inputs.amount,
-      sendTo: Address.createFrom({
+      sendTo: Address.createFromEthereum({
         value: deployment.contracts.OperationExecutor.address as AddressValue,
       }),
     },

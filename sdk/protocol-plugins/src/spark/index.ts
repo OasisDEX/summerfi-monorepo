@@ -1,4 +1,5 @@
-export { sparkProtocolPlugin, SparkProtocolPlugin } from './SparkProtocolPlugin'
+export * from './interfaces'
+export * from './types'
+export * from './implementation'
 export * from './actions'
 export * from './builders'
-export { type SparkLendingPool } from './Types'

@@ -13,7 +13,7 @@ export const SwapActionBuilder: ActionBuilder<steps.SwapStep> = async (params): 
     chainInfo: params.user.chainInfo,
     fromAmount: step.inputs.fromTokenAmount,
     toToken: step.inputs.toTokenAmount.token,
-    recipient: Address.createFrom({ value: swapContractInfo.address as HexData }),
+    recipient: Address.createFromEthereum({ value: swapContractInfo.address as HexData }),
     slippage: step.inputs.slippage,
   })
 

@@ -30,7 +30,9 @@ export function setupBuilderParams(params: {
     context: new OrderPlannerContextMock(),
     user: new UserMock({
       chainInfo: params.chainInfo,
-      walletAddress: Address.createFrom({ value: '0xbA2aE424d960c26247Dd6c32edC70B295c744C43' }),
+      walletAddress: Address.createFromEthereum({
+        value: '0xbA2aE424d960c26247Dd6c32edC70B295c744C43',
+      }),
     }),
     positionsManager: {
       address: Address.ZeroAddressEthereum,

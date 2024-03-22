@@ -38,7 +38,9 @@ describe('Order Planner Service', () => {
   const deploymentsIndex: DeploymentIndex = SetupDeployments()
   const user: IUser = new UserMock({
     chainInfo: chainInfo,
-    walletAddress: Address.createFrom({ value: '0xbA2aE424d960c26247Dd6c32edC70B295c744C43' }),
+    walletAddress: Address.createFromEthereum({
+      value: '0xbA2aE424d960c26247Dd6c32edC70B295c744C43',
+    }),
   })
   const positionsManager: IPositionsManager = {
     address: Address.ZeroAddressEthereum,
