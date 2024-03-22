@@ -12,7 +12,7 @@ import {
   ChainFamilyName,
   valuesOfChainFamilyMap,
   ChainId,
-  Maybe
+  Maybe,
 } from '@summerfi/sdk-common/common'
 import type { AaveV3PoolId } from '@summerfi/sdk-common/protocols'
 import { PoolType, ProtocolName, EmodeType } from '@summerfi/sdk-common/protocols'
