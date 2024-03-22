@@ -1,6 +1,7 @@
-import { ITokenService } from '../interfaces/ProtocolPlugin'
+import { ITokenService } from '../interfaces/ITokenService'
 import { Address, ChainInfo, Token, TokenSymbol } from '@summerfi/sdk-common/common'
 
+// TODO: Create a separate service and connect up to SDK router
 // TODO: Implement the TokenService to handle different chains
 export class TokenService implements ITokenService {
   private tokens: Record<string, Token> = {
@@ -76,6 +77,7 @@ export class TokenService implements ITokenService {
     }
     return token
   }
+
   async getTokenBySymbol(symbol: TokenSymbol): Promise<Token> {
     return this.tokens[symbol]
   }

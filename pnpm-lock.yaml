@@ -751,6 +751,46 @@ importers:
       '@summerfi/deployment-types':
         specifier: workspace:*
         version: link:../../packages/deployment-types
+      '@summerfi/protocol-plugins':
+        specifier: workspace:*
+        version: link:../protocol-plugins
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../sdk-common
+      '@types/node-fetch':
+        specifier: ^2.6.11
+        version: 2.6.11
+      bignumber.js:
+        specifier: 9.0.1
+        version: 9.0.1
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/order-planner-common':
+        specifier: workspace:*
+        version: link:../order-planner-common
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+
+  sdk/protocol-plugins:
+    dependencies:
+      '@summerfi/deployment-types':
+        specifier: workspace:*
+        version: link:../../packages/deployment-types
+      '@summerfi/deployment-utils':
+        specifier: workspace:*
+        version: link:../../packages/deployment-utils
+      '@summerfi/order-planner-common':
+        specifier: workspace:*
+        version: link:../order-planner-common
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -771,39 +811,14 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
-  sdk/protocol-plugins:
-    dependencies:
-      '@summerfi/deployment-types':
-        specifier: workspace:*
-        version: link:../../packages/deployment-types
-      '@summerfi/deployment-utils':
-        specifier: workspace:*
-        version: link:../../packages/deployment-utils
-      '@summerfi/order-planner-common':
-        specifier: workspace:*
-        version: link:../order-planner-common
-      '@summerfi/sdk-common':
-        specifier: workspace:*
-        version: link:../sdk-common
-    devDependencies:
-      '@summerfi/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@summerfi/jest-config':
-        specifier: workspace:*
-        version: link:../../packages/jest-config
-      '@summerfi/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
-      viem:
-        specifier: ^2.7.8
-        version: 2.7.9(typescript@5.3.3)
-
   sdk/sdk-client:
     dependencies:
       '@summerfi/protocol-manager':
         specifier: workspace:*
         version: link:../protocol-manager
+      '@summerfi/protocol-plugins':
+        specifier: workspace:*
+        version: link:../protocol-plugins
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
