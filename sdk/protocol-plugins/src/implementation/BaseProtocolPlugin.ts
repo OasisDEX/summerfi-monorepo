@@ -18,7 +18,7 @@ export abstract class BaseProtocolPlugin<PoolIdType extends IPoolId>
   abstract readonly protocol: PoolIdType['protocol']['name']
   // TODO: Use ContractProvider to determine supported chains
   abstract readonly supportedChains: ChainInfo[]
-  _ctx: IProtocolPluginContext | undefined
+  private _ctx: IProtocolPluginContext | undefined
   abstract readonly schema: z.ZodSchema<PoolIdType>
   abstract readonly StepBuilders: Partial<ActionBuildersMap>
 

@@ -10,8 +10,10 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest --coverage=true",
-    "testw": "jest --watch",
+    "test": "jest tests/unit --coverage=true",
+    "testw": "jest tests/unit --watch",
+    "test:integration": "jest tests/integration --coverage=true",
+    "testw:integration": "jest tests/integration --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "build": "tsc -b -v tsconfig.build.json"
