@@ -23,7 +23,6 @@ interface QueuedOperation<T> {
   operation: () => Promise<T>
 }
 
-
 export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
   private readonly ctx: IProtocolPluginContext
   private operations: QueuedOperation<void>[] = []
