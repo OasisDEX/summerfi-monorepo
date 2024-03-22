@@ -797,9 +797,6 @@ importers:
       bignumber.js:
         specifier: 9.0.1
         version: 9.0.1
-      viem:
-        specifier: ^2.8.13
-        version: 2.8.13(typescript@5.3.3)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4

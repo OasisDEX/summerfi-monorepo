@@ -23,11 +23,7 @@ interface QueuedOperation<T> {
   operation: () => Promise<T>
 }
 
-<<<<<<<< HEAD:sdk/protocol-plugins/src/implementation/AAVEv3LikeBuilder.ts
-export class AaveV3LikePluginBuilder<AssetListItemType> {
-========
 export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
->>>>>>>> dev:sdk/protocol-plugins/src/implementation/AAVEv3LikeProtocolDataBuilder.ts
   private readonly ctx: IProtocolPluginContext
   private operations: QueuedOperation<void>[] = []
   private tokensUsedAsReserves: Token[] | undefined

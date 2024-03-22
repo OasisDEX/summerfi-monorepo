@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { PriceService, TokenService } from '@summerfi/protocol-plugins'
+import { PriceService, TokenService, ProtocolPluginsRegistry, MockContractProvider  } from '@summerfi/protocol-plugins'
 import { CreateAWSLambdaContextOptions } from '@trpc/server/adapters/aws-lambda'
 import type { APIGatewayProxyEventV2 } from 'aws-lambda'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
@@ -8,12 +8,10 @@ import { OrderPlannerService } from '@summerfi/order-planner-service/implementat
 import { SwapManagerFactory } from '@summerfi/swap-service'
 import { ConfigurationProvider, IConfigurationProvider } from '@summerfi/configuration-provider'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import { ProtocolPluginsRegistry } from '@summerfi/protocol-plugins'
 import { ProtocolBuilderRegistryType } from '@summerfi/order-planner-common/interfaces'
 import { createPublicClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
 import { protocolManager } from '@summerfi/protocol-manager'
-import { MockContractProvider } from '@summerfi/protocol-plugins'
 
 export type ContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
