@@ -12,6 +12,7 @@ import {
   ChainFamilyName,
   valuesOfChainFamilyMap,
   ChainId,
+  Maybe
 } from '@summerfi/sdk-common/common'
 import type { AaveV3PoolId } from '@summerfi/sdk-common/protocols'
 import { PoolType, ProtocolName, EmodeType } from '@summerfi/sdk-common/protocols'
@@ -72,7 +73,6 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
     const collaterals = assetsList.reduce<Record<AddressValue, AaveV3PoolCollateralConfig>>(
       (colls, asset) => {
         const assetInfo = this.getCollateralAssetInfo(asset, poolBaseCurrencyToken)
-        if (!assetInfo) return colls
         const { token: collateralToken } = asset
         colls[collateralToken.address.value] = assetInfo
         return colls
@@ -118,7 +118,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
   private getCollateralAssetInfo(
     asset: Asset,
     poolBaseCurrencyToken: Token | CurrencySymbol,
-  ): AaveV3PoolCollateralConfig | undefined {
+  ): AaveV3PoolCollateralConfig {
     const {
       token: collateralToken,
       config: { usageAsCollateralEnabled, ltv, liquidationThreshold, liquidationBonus },
@@ -179,7 +179,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
   private getDebtAssetInfo(
     asset: Asset,
     poolBaseCurrencyToken: CurrencySymbol | Token,
-  ): AaveV3PoolDebtConfig | undefined {
+  ): Maybe<AaveV3PoolDebtConfig> {
     const {
       token: quoteToken,
       config: { borrowingEnabled, reserveFactor },
