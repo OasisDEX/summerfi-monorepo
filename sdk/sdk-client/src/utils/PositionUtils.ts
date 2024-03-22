@@ -3,20 +3,20 @@ import BigNumber from 'bignumber.js'
 
 export class PositionUtils {
   static getLTV({
-    collateralAmount,
-    debtAmount,
+    collateralTokenAmount,
+    debtTokenAmount,
     collateralPrice,
     debtPrice,
   }: {
-    collateralAmount: TokenAmount
-    debtAmount: TokenAmount
+    collateralTokenAmount: TokenAmount
+    debtTokenAmount: TokenAmount
     collateralPrice: string
     debtPrice: string
   }): Percentage {
     // Determine the Collateral Value:
-    const collValue = new BigNumber(collateralAmount.amount).times(collateralPrice)
+    const collValue = new BigNumber(collateralTokenAmount.amount).times(collateralPrice)
     // Determine the Borrowed Value:
-    const debtValue = new BigNumber(debtAmount.amount).times(debtPrice)
+    const debtValue = new BigNumber(debtTokenAmount.amount).times(debtPrice)
     // If the collateral value is 0, return 0.
     if (collValue.isZero()) {
       return Percentage.createFrom({ percentage: 0 })

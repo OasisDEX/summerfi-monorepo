@@ -12,8 +12,8 @@ describe.only('PositionUtils', () => {
       const debtPrice = '1'
 
       const result = PositionUtils.getLTV({
-        collateralAmount,
-        debtAmount,
+        collateralTokenAmount: collateralAmount,
+        debtTokenAmount: debtAmount,
         collateralPrice,
         debtPrice,
       })
@@ -28,8 +28,8 @@ describe.only('PositionUtils', () => {
       const debtPrice = '1'
 
       const result = PositionUtils.getLTV({
-        collateralAmount,
-        debtAmount,
+        collateralTokenAmount: collateralAmount,
+        debtTokenAmount: debtAmount,
         collateralPrice,
         debtPrice,
       })
@@ -44,8 +44,8 @@ describe.only('PositionUtils', () => {
       const debtPrice = '1'
 
       const result = PositionUtils.getLTV({
-        collateralAmount,
-        debtAmount,
+        collateralTokenAmount: collateralAmount,
+        debtTokenAmount: debtAmount,
         collateralPrice,
         debtPrice,
       })
@@ -60,8 +60,8 @@ describe.only('PositionUtils', () => {
       const debtPrice = '1'
 
       const result = PositionUtils.getLTV({
-        collateralAmount,
-        debtAmount,
+        collateralTokenAmount: collateralAmount,
+        debtTokenAmount: debtAmount,
         collateralPrice,
         debtPrice,
       })
