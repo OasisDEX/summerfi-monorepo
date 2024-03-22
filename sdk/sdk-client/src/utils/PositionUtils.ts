@@ -1,20 +1,22 @@
-import { Percentage, type Position } from '@summerfi/sdk-common/common'
+import { Percentage, type Position, type TokenAmount } from '@summerfi/sdk-common/common'
 import BigNumber from 'bignumber.js'
 
 export class PositionUtils {
   static getLTV({
-    position,
+    collateralAmount,
+    debtAmount,
     collateralPrice,
     debtPrice,
   }: {
-    position: Position
+    collateralAmount: TokenAmount
+    debtAmount: TokenAmount
     collateralPrice: string
     debtPrice: string
   }): Percentage {
     // Determine the Collateral Value:
-    const collValue = new BigNumber(position.collateralAmount.amount).times(collateralPrice)
+    const collValue = new BigNumber(collateralAmount.amount).times(collateralPrice)
     // Determine the Borrowed Value:
-    const debtValue = new BigNumber(position.debtAmount.amount).times(debtPrice)
+    const debtValue = new BigNumber(debtAmount.amount).times(debtPrice)
     // If the collateral value is 0, return 0.
     if (collValue.isZero()) {
       return Percentage.createFrom({ percentage: 0 })
