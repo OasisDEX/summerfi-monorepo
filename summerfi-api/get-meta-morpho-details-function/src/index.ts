@@ -31,18 +31,32 @@ const tokenPriceSchema = z
   .optional()
   .describe('Price of the token in USD to calculate the APY')
 
-const paramsSchema = z.object({
-  address: addressSchema,
-  chainId: chainIdSchema.optional().default(ChainId.MAINNET),
-  rpc: urlOptionalSchema,
-  amount: bigIntSchema
-    .optional()
-    .describe('Amount of token accepted by Meta Morpho Vault in WEI. Default is 1000 TOKEN'),
-  morhoPrice: tokenPriceSchema,
-  wsEthPrice: tokenPriceSchema,
-  swisePrice: tokenPriceSchema,
-  usdcPrice: tokenPriceSchema,
-})
+const paramsSchema = z
+  .object({
+    address: addressSchema,
+    chainId: chainIdSchema.optional().default(ChainId.MAINNET),
+    rpc: urlOptionalSchema,
+    amount: bigIntSchema
+      .optional()
+      .describe('Amount of token accepted by Meta Morpho Vault in WEI. Default is 1000 TOKEN'),
+    price_MORPHO: tokenPriceSchema,
+    price_WSTETH: tokenPriceSchema,
+    price_SWISE: tokenPriceSchema,
+    price_USDC: tokenPriceSchema,
+    morhoPrice: tokenPriceSchema,
+    wsEthPrice: tokenPriceSchema,
+    swisePrice: tokenPriceSchema,
+    usdcPrice: tokenPriceSchema,
+  })
+  .transform((params) => {
+    return {
+      ...params,
+      price_MORPHO: params.price_MORPHO ?? params.morhoPrice,
+      price_WSTETH: params.price_WSTETH ?? params.wsEthPrice,
+      price_SWISE: params.price_SWISE ?? params.swisePrice,
+      price_USDC: params.price_USDC ?? params.usdcPrice,
+    }
+  })
 
 export interface RewardToken {
   address: Address
@@ -75,6 +89,8 @@ export interface RewardsByMarket {
   }
   tokens: RewardToken[]
 }
+
+const tokenOrder = ['Morpho', 'wstETH', 'SWISE', 'USDC']
 
 export interface GetRewardsResponse {
   metaMorpho: {
@@ -112,13 +128,13 @@ const getPriceOfToken = (
 ): number | undefined => {
   switch (tokenSymbol) {
     case 'Morpho':
-      return params.morhoPrice
+      return params.price_MORPHO
     case 'wstETH':
-      return params.wsEthPrice
+      return params.price_WSTETH
     case 'SWISE':
-      return params.swisePrice
+      return params.price_SWISE
     case 'USDC':
-      return params.usdcPrice
+      return params.price_USDC
     default:
       return undefined
   }
@@ -199,35 +215,37 @@ export const handler = async (
 
       const amountForMarket = depositedAmount.times(a.allocation)
 
-      const tokens = rewardMarket.rewards.map((r): RewardToken => {
-        const rewardsEmission = new BigNumber(r.supplyRewardTokensPerYear.toString())
-        const tokenUsdValue = new BigNumber(a.market.loan.priceUsd ?? 1)
-        const loanDecimals = new BigNumber(10).pow(a.market.loan.decimals)
-        const totalUnderlyingAssets = new BigNumber(
-          rewardMarket.market.totalSupplyAssets.toString(),
-        )
+      const tokens = rewardMarket.rewards
+        .map((r): RewardToken => {
+          const rewardsEmission = new BigNumber(r.supplyRewardTokensPerYear.toString())
+          const tokenUsdValue = new BigNumber(a.market.loan.priceUsd ?? 1)
+          const loanDecimals = new BigNumber(10).pow(a.market.loan.decimals)
+          const totalUnderlyingAssets = new BigNumber(
+            rewardMarket.market.totalSupplyAssets.toString(),
+          )
 
-        const userRewards = amountForMarket
-          .times(rewardsEmission.div(tokenUsdValue))
-          .times(loanDecimals.div(totalUnderlyingAssets))
+          const userRewards = amountForMarket
+            .times(rewardsEmission.div(tokenUsdValue))
+            .times(loanDecimals.div(totalUnderlyingAssets))
 
-        const rewardTokenPrice = getPriceOfToken(r.token.symbol, params)
+          const rewardTokenPrice = getPriceOfToken(r.token.symbol, params)
 
-        const humanReadable = userRewards.shiftedBy(-r.token.decimals)
+          const humanReadable = userRewards.shiftedBy(-r.token.decimals)
 
-        const apy = rewardTokenPrice
-          ? humanReadable.times(rewardTokenPrice).div(depositedAmountPrice).toNumber()
-          : 0
+          const apy = rewardTokenPrice
+            ? humanReadable.times(rewardTokenPrice).div(depositedAmountPrice).toNumber()
+            : 0
 
-        return {
-          address: r.token.address,
-          symbol: r.token.symbol,
-          decimals: r.token.decimals,
-          amountWei: BigInt(userRewards.integerValue().toString()),
-          humanReadable,
-          apy: apy,
-        }
-      })
+          return {
+            address: r.token.address,
+            symbol: r.token.symbol,
+            decimals: r.token.decimals,
+            amountWei: BigInt(userRewards.integerValue().toString()),
+            humanReadable,
+            apy: apy,
+          }
+        })
+        .sort((a, b) => tokenOrder.indexOf(a.symbol) - tokenOrder.indexOf(b.symbol))
 
       return {
         market: {
@@ -270,6 +288,7 @@ export const handler = async (
       }
       return acc
     }, [] as RewardToken[])
+    .sort((a, b) => tokenOrder.indexOf(a.symbol) - tokenOrder.indexOf(b.symbol))
 
   const response: GetRewardsResponse = {
     metaMorpho: {

@@ -8,12 +8,13 @@ import { MockContractProvider } from '../src/mocks/mockContractProvider'
 import { TokenService, PriceService } from '../src/implementation'
 
 async function createProtocolPluginContext(): Promise<IProtocolPluginContext> {
+  const RPC_URL = process.env['MAINNET_RPC_URL'] || ''
   const provider: PublicClient = createPublicClient({
     batch: {
       multicall: true,
     },
     chain: mainnet,
-    transport: http(),
+    transport: http(RPC_URL),
   })
 
   return {
@@ -24,10 +25,8 @@ async function createProtocolPluginContext(): Promise<IProtocolPluginContext> {
   }
 }
 
-const SECONDS = 1000
-jest.setTimeout(20 * SECONDS)
-
-describe('playground', () => {
+// TODO: re-enable with separate Ci workflow and http transport properly configured
+describe.skip('playground', () => {
   let ctx: IProtocolPluginContext
   beforeAll(async () => {
     ctx = await createProtocolPluginContext()

@@ -11,7 +11,6 @@ export interface IProtocolPlugin<PoolIdType extends IPoolId = IPoolId>
   supportedChains: ChainInfo[]
   schema: z.ZodSchema<PoolIdType>
   getPool: (poolId: unknown) => Promise<LendingPool>
-  getPositionId: (positionId: IPositionId) => string
   getPosition: (positionId: IPositionId) => Promise<Position>
   isPoolId: (candidate: unknown) => asserts candidate is PoolIdType
   init: (ctx: IProtocolPluginContext) => void

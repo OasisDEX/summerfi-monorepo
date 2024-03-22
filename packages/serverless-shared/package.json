@@ -11,7 +11,8 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "viem": "^2.8.13"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

@@ -25,7 +25,7 @@ class DerivedAction extends BaseAction {
 
 describe('Execution Storage Manager', () => {
   const derivedAction = new DerivedAction()
-  const contractNameWithVersion = 'PullToken_v8'
+  const contractNameWithVersion = 'PullToken_8'
   const functionSelector = '85e92d98'
 
   const targetHash = keccak256(toBytes(contractNameWithVersion))

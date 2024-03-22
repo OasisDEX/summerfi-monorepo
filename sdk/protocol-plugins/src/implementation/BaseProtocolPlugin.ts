@@ -15,29 +15,18 @@ import { steps } from '@summerfi/sdk-common/simulation'
 export abstract class BaseProtocolPlugin<PoolIdType extends IPoolId>
   implements IProtocolPlugin<PoolIdType>
 {
-  public readonly protocol: PoolIdType['protocol']['name']
-  public readonly supportedChains: ChainInfo[]
-  public _ctx: IProtocolPluginContext | undefined
-  public readonly schema: z.ZodSchema<PoolIdType>
-  public readonly StepBuilders: Partial<ActionBuildersMap>
-
-  protected constructor(
-    protocol: PoolIdType['protocol']['name'],
-    supportedChains: ChainInfo[],
-    schema: z.ZodSchema<PoolIdType>,
-    StepBuildersMap: Partial<ActionBuildersMap>,
-  ) {
-    this.protocol = protocol
-    this.supportedChains = supportedChains
-    this.schema = schema
-    this.StepBuilders = StepBuildersMap
-  }
+  abstract readonly protocol: PoolIdType['protocol']['name']
+  // TODO: Use ContractProvider to determine supported chains
+  abstract readonly supportedChains: ChainInfo[]
+  _ctx: IProtocolPluginContext | undefined
+  abstract readonly schema: z.ZodSchema<PoolIdType>
+  abstract readonly StepBuilders: Partial<ActionBuildersMap>
 
   init(ctx: IProtocolPluginContext): void {
     this._ctx = ctx
   }
 
-  public get ctx(): IProtocolPluginContext {
+  get ctx(): IProtocolPluginContext {
     if (!this._ctx) {
       throw new Error('Context (ctx) is not initialized. Please call init() with a valid context.')
     }
@@ -45,9 +34,8 @@ export abstract class BaseProtocolPlugin<PoolIdType extends IPoolId>
   }
 
   // Protocol Data Methods
-  public abstract getPool(poolId: unknown): Promise<LendingPool>
-  public abstract getPositionId(positionId: IPositionId): string
-  public abstract getPosition(positionId: IPositionId): Promise<Position>
+  abstract getPool(poolId: unknown): Promise<LendingPool>
+  abstract getPosition(positionId: IPositionId): Promise<Position>
 
   isPoolId(candidate: unknown): asserts candidate is PoolIdType {
     const parseResult = this.schema.safeParse(candidate)
@@ -59,7 +47,6 @@ export abstract class BaseProtocolPlugin<PoolIdType extends IPoolId>
     }
   }
 
-  // Action Builder method
   getActionBuilder<T extends steps.Steps>(step: T): Maybe<ActionBuilder<T>> {
     return this.StepBuilders[step.type] as ActionBuilder<T>
   }
