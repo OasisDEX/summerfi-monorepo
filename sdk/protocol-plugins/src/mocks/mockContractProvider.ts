@@ -1,23 +1,35 @@
-import { AddressAbiMapsByProtocol, IContractProvider } from '../interfaces/IContractProvider'
-import { IProtocol, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import {
   AAVEV3_LENDING_POOL_ABI,
   AAVEV3_ORACLE_ABI,
   AAVEV3_POOL_DATA_PROVIDER_ABI,
-} from '../aave-v3/abis/AaveV3ABIS'
-import { DOG_ABI, ILK_REGISTRY_ABI, JUG_ABI, SPOT_ABI, VAT_ABI } from '../maker/abis/MakerABIS'
+} from '../plugins/aave-v3/abis/AaveV3ABIS'
+import {
+  DOG_ABI,
+  ILK_REGISTRY_ABI,
+  JUG_ABI,
+  SPOT_ABI,
+  VAT_ABI,
+} from '../plugins/maker/abis/MakerABIS'
 import {
   SPARK_LENDING_POOL_ABI,
   SPARK_ORACLE_ABI,
   SPARK_POOL_DATA_PROVIDER_ABI,
-} from '../spark/abis/SparkABIS'
+} from '../plugins/spark/abis/SparkABIS'
+import { IContractProvider } from '@summerfi/protocol-plugins-common'
 
 export class MockContractProvider implements IContractProvider {
-  getContractDef<P extends IProtocol['name'], K extends keyof AddressAbiMapsByProtocol[P]>(
-    contractKey: K,
-    protocol: P,
-  ): AddressAbiMapsByProtocol[P][K] {
-    const map: AddressAbiMapsByProtocol = {
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  getContractDef(contractName: string, protocolName: ProtocolName): any {
+    const map: {
+      [key in ProtocolName]: {
+        [key: string]: {
+          address: string
+          /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+          abi: any
+        }
+      }
+    } = {
       [ProtocolName.Spark]: {
         Oracle: {
           address: '0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9',
@@ -104,6 +116,6 @@ export class MockContractProvider implements IContractProvider {
       [ProtocolName.MorphoBlue]: {},
       [ProtocolName.AAVEv2]: {},
     }
-    return map[protocol][contractKey]
+    return map[protocolName][contractName]
   }
 }

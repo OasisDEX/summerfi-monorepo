@@ -33,7 +33,7 @@ async function getSwapQuoteExactInput(params: {
 }
 
 export function mockGetFee() {
-  return Percentage.createFrom({ percentage: 0 })
+  return Percentage.createFrom({ value: 0 })
 }
 
 export const mockRefinanceContext = {

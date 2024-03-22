@@ -1,5 +1,5 @@
 import { initTRPC } from '@trpc/server'
-import { SDKAppContext } from './Context'
+import { SDKAppContext } from './context/Context'
 import { SerializationService } from '@summerfi/sdk-common/services'
 
 export const t = initTRPC

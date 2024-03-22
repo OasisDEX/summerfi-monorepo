@@ -1,4 +1,4 @@
-import { BaseAction } from '@summerfi/order-planner-common/actions'
+import { BaseAction } from '@summerfi/protocol-plugins-common'
 import { HexData } from '@summerfi/sdk-common/common'
 import {
   decodeAbiParameters,

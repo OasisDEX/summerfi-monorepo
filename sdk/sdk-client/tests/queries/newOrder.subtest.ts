@@ -60,7 +60,7 @@ export default async function simulateNewOrder() {
     collateralAmount: TokenAmount.createFrom({ token: WETH, amount: '105.98' }),
     positionId: PositionId.createFrom({ id: '1234567890' }),
     riskRatio: RiskRatio.createFrom({
-      ratio: Percentage.createFrom({ percentage: 0.5 }),
+      ratio: Percentage.createFrom({ value: 0.5 }),
       type: RiskRatio.type.LTV,
     }),
   }
@@ -85,7 +85,7 @@ export default async function simulateNewOrder() {
       collateralAmount: TokenAmount.createFrom({ token: WETH, amount: '105.98' }),
       pool: targetPool,
       riskRatio: RiskRatio.createFrom({
-        ratio: Percentage.createFrom({ percentage: 0.5 }),
+        ratio: Percentage.createFrom({ value: 0.5 }),
         type: RiskRatio.type.LTV,
       }),
     },

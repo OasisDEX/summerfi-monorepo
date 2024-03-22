@@ -680,6 +680,12 @@ importers:
       '@summerfi/deployment-utils':
         specifier: workspace:*
         version: link:../../packages/deployment-utils
+      '@summerfi/protocol-plugins':
+        specifier: workspace:*
+        version: link:../protocol-plugins
+      '@summerfi/protocol-plugins-common':
+        specifier: workspace:*
+        version: link:../protocol-plugins-common
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -717,6 +723,9 @@ importers:
       '@summerfi/protocol-plugins':
         specifier: workspace:*
         version: link:../protocol-plugins
+      '@summerfi/protocol-plugins-common':
+        specifier: workspace:*
+        version: link:../protocol-plugins-common
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -751,9 +760,9 @@ importers:
       '@summerfi/deployment-types':
         specifier: workspace:*
         version: link:../../packages/deployment-types
-      '@summerfi/protocol-plugins':
+      '@summerfi/protocol-plugins-common':
         specifier: workspace:*
-        version: link:../protocol-plugins
+        version: link:../protocol-plugins-common
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -791,6 +800,9 @@ importers:
       '@summerfi/protocol-plugins':
         specifier: workspace:*
         version: link:../protocol-plugins
+      '@summerfi/protocol-plugins-common':
+        specifier: workspace:*
+        version: link:../protocol-plugins-common
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -825,12 +837,43 @@ importers:
       '@summerfi/deployment-utils':
         specifier: workspace:*
         version: link:../../packages/deployment-utils
-      '@summerfi/order-planner-common':
+      '@summerfi/protocol-plugins-common':
         specifier: workspace:*
-        version: link:../order-planner-common
+        version: link:../protocol-plugins-common
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
+      bignumber.js:
+        specifier: 9.0.1
+        version: 9.0.1
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+
+  sdk/protocol-plugins-common:
+    dependencies:
+      '@summerfi/deployment-types':
+        specifier: workspace:*
+        version: link:../../packages/deployment-types
+      '@summerfi/deployment-utils':
+        specifier: workspace:*
+        version: link:../../packages/deployment-utils
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../sdk-common
+      '@summerfi/swap-common':
+        specifier: workspace:*
+        version: link:../swap-common
       bignumber.js:
         specifier: 9.0.1
         version: 9.0.1
@@ -966,9 +1009,15 @@ importers:
       '@summerfi/protocol-manager':
         specifier: workspace:*
         version: link:../protocol-manager-service
+      '@summerfi/protocol-manager-common':
+        specifier: workspace:*
+        version: link:../protocol-manager-common
       '@summerfi/protocol-plugins':
         specifier: workspace:*
         version: link:../protocol-plugins
+      '@summerfi/protocol-plugins-common':
+        specifier: workspace:*
+        version: link:../protocol-plugins-common
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common

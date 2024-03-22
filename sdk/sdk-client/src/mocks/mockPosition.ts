@@ -42,7 +42,7 @@ export async function getMockPosition(params: {
       amount: '105.98',
     }),
     riskRatio: RiskRatio.createFrom({
-      ratio: Percentage.createFrom({ percentage: 20.3 }),
+      ratio: Percentage.createFrom({ value: 20.3 }),
       type: RiskRatio.type.LTV,
     }),
     pool: {

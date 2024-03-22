@@ -1,7 +1,7 @@
 import { steps, getValueFromReference } from '@summerfi/sdk-common/simulation'
-import { ActionBuilder } from '@summerfi/order-planner-common/builders'
 import { ActionNames } from '@summerfi/deployment-types'
 import { PullTokenAction } from '../actions/PullTokenAction'
+import { ActionBuilder } from '@summerfi/protocol-plugins-common'
 
 export const PullTokenActionList: ActionNames[] = ['PullToken']
 

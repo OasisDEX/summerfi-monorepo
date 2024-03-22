@@ -1,8 +1,7 @@
-import { IPriceService } from '../interfaces/IPriceService'
 import { PublicClient, getContract } from 'viem'
 import { Address, CurrencySymbol, Price, Token, TokenSymbol } from '@summerfi/sdk-common/common'
 import { BigNumber } from 'bignumber.js'
-import { priceFeedABI } from '../interfaces/priceFeedABI'
+import { IPriceService, priceFeedABI } from '@summerfi/protocol-plugins-common'
 
 // TODO: Create a separate service and connect up to SDK router
 // TODO: Implement the PriceService to handle different chains

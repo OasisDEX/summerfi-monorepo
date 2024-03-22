@@ -1,5 +1,5 @@
 import { ChainInfo } from '../../common'
-import { IPoolId } from '../../protocols/interfaces/IPoolId'
+import { IPoolId, isPoolId } from '../../protocols/interfaces/IPoolId'
 import { ProtocolName } from '../../protocols/enums/ProtocolName'
 import { EmodeType } from '../enums/EmodeType'
 
@@ -12,6 +12,10 @@ export interface AaveV3PoolId extends IPoolId {
   emodeType: EmodeType
 }
 
-export function isAaveV3PoolId(poolId: IPoolId): poolId is AaveV3PoolId {
-  return poolId.protocol.name === ProtocolName.AAVEv3
+export function isAaveV3PoolId(maybeAaveV3PoolId: unknown): maybeAaveV3PoolId is AaveV3PoolId {
+  return (
+    isPoolId(maybeAaveV3PoolId) &&
+    'emodeType' in maybeAaveV3PoolId &&
+    maybeAaveV3PoolId.protocol.name === ProtocolName.AAVEv3
+  )
 }

@@ -24,6 +24,7 @@
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/protocol-manager-common": "workspace:*",
     "@summerfi/protocol-plugins": "workspace:*",
+    "@summerfi/protocol-plugins-common": "workspace:*",
     "@types/node-fetch": "^2.6.11",
     "bignumber.js": "9.0.1",
     "zod": "^3.22.4"

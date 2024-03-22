@@ -14,6 +14,7 @@ export const getRefinanceSimulation = publicProcedure
 
     const dependencies: RefinanceDependencies = {
       swapManager: opts.ctx.swapManager,
+      protocolManager: opts.ctx.protocolManager,
       // TODO: get summer fee from the config provider
       getSummerFee: () => Percentage.createFrom({ value: 0 }),
     }

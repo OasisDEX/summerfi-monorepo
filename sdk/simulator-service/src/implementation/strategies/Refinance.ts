@@ -11,7 +11,7 @@ import { Percentage, Position, TokenAmount } from '@summerfi/sdk-common/common'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { type ISwapManager } from '@summerfi/swap-common/interfaces'
-import { LendingPool, isLendingPool } from '@summerfi/sdk-common/protocols'
+import { isLendingPool } from '@summerfi/sdk-common/protocols'
 import { type IProtocolManager } from '@summerfi/protocol-manager-common'
 
 export const refinanceStrategy = makeStrategy([
@@ -24,26 +24,12 @@ export const refinanceStrategy = makeStrategy([
     optional: false,
   },
   {
-    step: SimulationSteps.Swap,
-    optional: true,
-  },
-  {
     step: SimulationSteps.DepositBorrow,
     optional: false,
   },
   {
-    step: SimulationSteps.Swap,
-    optional: true,
-  },
-  {
     step: SimulationSteps.RepayFlashloan,
     optional: false,
-  },
-  {
-    // In case of target debt being different then source debt we need a swap,
-    // We cannot forsee the exact amount of the swap, so we need to return excess tokens to user
-    step: SimulationSteps.ReturnFunds,
-    optional: true,
   },
 ])
 
@@ -65,27 +51,19 @@ export async function refinaceLendingToLending(
   }
 
   const position = Position.createFrom(args.position)
-  const targetPool = LendingPool.createFrom(args.targetPool)
-  const slippage = Percentage.createFrom(args.slippage)
+  const targetPool = await dependencies.protocolManager.getPool(args.targetPool.poolId)
+  if (!isLendingPool(targetPool)) {
+    throw new Error('Target pool is not a lending pool')
+  }
 
   const FLASHLOAN_MARGIN = 0.001
   const flashloanAmount = position.debtAmount.multiply(FLASHLOAN_MARGIN)
   const simulator = Simulator.create(refinanceStrategy)
 
-  const isCollateralSwapSkipped =
-    targetPool.collaterals[position.collateralAmount.token.address.value] !== undefined
-  const isDebtSwapSkipped = targetPool.debts[position.debtAmount.token.address.value] !== undefined
-
-  // let debtSwapQuote: Quote | undefined
-  // TODO: implement case with swaps
-  // if (!isDebtSwapSkipped) {
-  //     debtSwapQuote = await dependencies.getQuote({
-  //         from: args.targetPool.debtTokens[0],
-  //         to: args.position.debtAmount.token,
-  //         slippage: args.slippage,
-  //         fee: 0,
-  //     })
-  // }
+  const targetTokenConfig = targetPool.collaterals.get({ token: position.collateralAmount.token })
+  if (!targetTokenConfig) {
+    throw new Error('Target token not found in pool')
+  }
 
   // TODO: read debt amount from chain (special step: ReadDebtAmount)
   // TODO: the swap quote should also include the summer fee, in this case we need to know when we are taking the fee,
@@ -114,61 +92,19 @@ export async function refinaceLendingToLending(
         position: position,
       },
     }))
-    .next(async () => ({
-      name: 'CollateralSwap',
-      type: SimulationSteps.Swap,
-      inputs: {
-        ...(await dependencies.swapManager.getSwapQuoteExactInput({
-          chainInfo: position.pool.protocol.chainInfo,
-          fromAmount: position.collateralAmount,
-          toToken: targetPool.collaterals[position.collateralAmount.token.address.value].token,
-        })),
-        // inputs: await dependencies.getQuote({
-        //   from: args.position.collateralAmount,
-        //   to: args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token,
-        slippage: slippage,
-        fee: dependencies.getSummerFee(),
-      },
-      skip: isCollateralSwapSkipped,
-    }))
     .next(async (ctx) => ({
       name: 'DepositBorrowToTarget',
       type: SimulationSteps.DepositBorrow,
       inputs: {
-        depositAmount: ctx.getReference(
-          isCollateralSwapSkipped
-            ? ['PaybackWithdrawFromSource', 'withdrawAmount']
-            : ['CollateralSwap', 'receivedAmount'],
-        ),
+        depositAmount: ctx.getReference(['PaybackWithdrawFromSource', 'withdrawAmount']),
         borrowAmount: position.debtAmount, // TODO figure the debt amount
         position: newEmptyPositionFromPool(
           targetPool,
           position.debtAmount.token,
           position.collateralAmount.token,
         ),
-        borrowTargetType: isDebtSwapSkipped
-          ? TokenTransferTargetType.PositionsManager
-          : TokenTransferTargetType.StrategyExecutor,
+        borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
-    }))
-    .next(async (ctx) => ({
-      name: 'DebtSwap',
-      type: SimulationSteps.Swap,
-      // inputs: await dependencies.getQuote({
-      //   from: getReferencedValue(ctx.getReference(['DepositBorrow', 'borrowAmount'])),
-      //   to: args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token,
-      inputs: {
-        ...(await dependencies.swapManager.getSwapQuoteExactInput({
-          chainInfo: position.pool.protocol.chainInfo,
-          fromAmount: getReferencedValue(
-            ctx.getReference(['DepositBorrowToTarget', 'borrowAmount']),
-          ),
-          toToken: targetPool.debts[position.debtAmount.token.address.value].token,
-        })),
-        slippage: slippage,
-        fee: dependencies.getSummerFee(),
-      },
-      skip: isDebtSwapSkipped,
     }))
     .next(async () => ({
       name: 'RepayFlashloan',
@@ -176,14 +112,6 @@ export async function refinaceLendingToLending(
       inputs: {
         amount: position.debtAmount, // TODO add some amount
       },
-    }))
-    .next(async () => ({
-      name: 'ReturnFunds',
-      type: SimulationSteps.ReturnFunds,
-      inputs: {
-        token: targetPool.collaterals[position.collateralAmount.token.address.value].token,
-      },
-      skip: isDebtSwapSkipped,
     }))
     .run()
 
@@ -197,9 +125,9 @@ export async function refinaceLendingToLending(
   }
 
   return {
-    //simulationType: SimulationType.Refinance,
-    //sourcePosition: args.position,
-    //targetPosition,
-    //steps: Object.values(simulation.steps),
+    simulationType: SimulationType.Refinance,
+    sourcePosition: args.position,
+    targetPosition,
+    steps: Object.values(simulation.steps),
   } as Simulation<SimulationType.Refinance>
 }

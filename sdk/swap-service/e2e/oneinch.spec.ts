@@ -44,7 +44,7 @@ describe('OneInch | SwapManager | Integration', () => {
   })
 
   // Percentage
-  const slippage: Percentage = Percentage.createFrom({ percentage: 2.0 })
+  const slippage: Percentage = Percentage.createFrom({ value: 2.0 })
 
   it('should provide swap data', async () => {
     // SwapManager

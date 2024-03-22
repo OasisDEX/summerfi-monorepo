@@ -1,6 +1,4 @@
 import { ILKType } from '@summerfi/sdk-common/protocols'
-import { BaseAction } from '../src/actions/BaseAction'
-import { ActionCall } from '../src/actions'
 import { OrderPlannerContext } from '../src/context'
 import {
   Address,
@@ -14,6 +12,7 @@ import { MakerPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protoc
 import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
 import { ActionNames } from '@summerfi/deployment-types'
 import { ChainFamilyMap } from '@summerfi/sdk-common/common'
+import { ActionCall, BaseAction } from '@summerfi/protocol-plugins-common'
 
 class DerivedAction extends BaseAction {
   public readonly config = {

@@ -18,7 +18,7 @@ describe('Refinance', () => {
         {
           position: testSourcePosition,
           targetPool: testTargetLendingPool,
-          slippage: Percentage.createFrom({ percentage: 1 }),
+          slippage: Percentage.createFrom({ value: 1 }),
         },
         mockRefinanceContext,
       )
@@ -64,7 +64,7 @@ describe('Refinance', () => {
         {
           position: testSourcePosition,
           targetPool: testTargetLendingPoolRequiredSwaps,
-          slippage: Percentage.createFrom({ percentage: 1 }),
+          slippage: Percentage.createFrom({ value: 1 }),
         },
         mockRefinanceContext,
       )

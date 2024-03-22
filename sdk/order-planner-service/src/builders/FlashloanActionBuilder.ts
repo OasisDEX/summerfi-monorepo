@@ -1,7 +1,6 @@
 import { ActionNames } from '@summerfi/deployment-types'
+import { ActionBuilder } from '@summerfi/protocol-plugins-common'
 import { steps } from '@summerfi/sdk-common/simulation'
-
-import { ActionBuilder } from '@summerfi/order-planner-common/builders'
 
 export const FlashloanActionList: ActionNames[] = ['TakeFlashloan']
 

@@ -81,7 +81,7 @@ describe.skip('Refinance | SDK', () => {
     )
     expect(prevPosition.riskRatio).toEqual(
       RiskRatio.createFrom({
-        ratio: Percentage.createFrom({ percentage: 20.3 }),
+        ratio: Percentage.createFrom({ value: 20.3 }),
         type: RiskRatio.type.LTV,
       }),
     )
@@ -115,12 +115,12 @@ describe.skip('Refinance | SDK', () => {
           token: WETH,
           price: Price.createFrom({ value: '123.45', baseToken: WETH }),
           priceUSD: Price.createFrom({ value: '123.45', baseToken: WETH }),
-          rate: Percentage.createFrom({ percentage: 0.5 }),
+          rate: Percentage.createFrom({ value: 0.5 }),
           totalBorrowed: TokenAmount.createFrom({ token: WETH, amount: '123456.78' }),
           debtCeiling: TokenAmount.createFrom({ token: WETH, amount: '100000000.78' }),
           debtAvailable: TokenAmount.createFrom({ token: WETH, amount: '100000000.78' }),
           dustLimit: TokenAmount.createFrom({ token: WETH, amount: '0.0001' }),
-          originationFee: Percentage.createFrom({ percentage: 0.5 }),
+          originationFee: Percentage.createFrom({ value: 0.5 }),
         },
       },
       collaterals: {
@@ -129,12 +129,12 @@ describe.skip('Refinance | SDK', () => {
           price: Price.createFrom({ value: '123.45', baseToken: DAI }),
           priceUSD: Price.createFrom({ value: '123.45', baseToken: DAI }),
           liquidationThreshold: RiskRatio.createFrom({
-            ratio: Percentage.createFrom({ percentage: 0.5 }),
+            ratio: Percentage.createFrom({ value: 0.5 }),
             type: RiskRatio.type.LTV,
           }),
           maxSupply: TokenAmount.createFrom({ token: DAI, amount: '100000000' }),
           tokensLocked: TokenAmount.createFrom({ token: DAI, amount: '123456.78' }),
-          liquidationPenalty: Percentage.createFrom({ percentage: 0.5 }),
+          liquidationPenalty: Percentage.createFrom({ value: 0.5 }),
         },
       },
     }
@@ -178,7 +178,7 @@ describe.skip('Refinance | SDK', () => {
     const refinanceParameters: IRefinanceParameters = {
       position: prevPosition,
       targetPool: newLendingPool,
-      slippage: Percentage.createFrom({ percentage: 0.5 }),
+      slippage: Percentage.createFrom({ value: 0.5 }),
     }
 
     const refinanceSimulation: Simulation<SimulationType.Refinance> =

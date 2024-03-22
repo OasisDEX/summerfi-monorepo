@@ -86,7 +86,7 @@ export default async function simulateRefinanceTest() {
     collateralAmount: TokenAmount.createFrom({ token: WETH, amount: '105.98' }),
     positionId: PositionId.createFrom({ id: '1234567890' }),
     riskRatio: RiskRatio.createFrom({
-      ratio: Percentage.createFrom({ percentage: 0.5 }),
+      ratio: Percentage.createFrom({ value: 0.5 }),
       type: RiskRatio.type.LTV,
     }),
   }
@@ -105,7 +105,7 @@ export default async function simulateRefinanceTest() {
   const refinanceParameters: IRefinanceParameters = {
     position: prevPosition,
     targetPool: targetPool,
-    slippage: Percentage.createFrom({ percentage: 0.5 }),
+    slippage: Percentage.createFrom({ value: 0.5 }),
   }
 
   const simulation =

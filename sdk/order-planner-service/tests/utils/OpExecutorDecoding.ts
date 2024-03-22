@@ -1,4 +1,4 @@
-import { ActionCall } from '@summerfi/order-planner-common/actions'
+import { ActionCall } from '@summerfi/protocol-plugins-common'
 import { HexData } from '@summerfi/sdk-common/common'
 import { decodeFunctionData, parseAbi } from 'viem'
 

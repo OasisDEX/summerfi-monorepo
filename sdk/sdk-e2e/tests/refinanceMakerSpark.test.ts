@@ -129,14 +129,14 @@ describe.only('Refinance Maker Spark | SDK', () => {
     // const refinanceParameters: IRefinanceParameters = {
     //   position: makerPosition,
     //   targetPool: sparkPool,
-    //   slippage: Percentage.createFrom({ percentage: 0.2 }),
+    //   slippage: Percentage.createFrom({ value: 0.2 }),
     // }
 
     const refinanceSimulation: Simulation<SimulationType.Refinance> =
       await sdk.simulator.refinance.simulateRefinancePosition({
         position: makerPosition,
         targetPool: poolAgain,
-        slippage: Percentage.createFrom({ percentage: 0.2 }),
+        slippage: Percentage.createFrom({ value: 0.2 }),
       } as IRefinanceParameters)
 
     // expect(refinanceSimulation).toBeDefined()

@@ -46,8 +46,8 @@ describe('Swap Action Builder', () => {
     amount: '4050.8',
   })
 
-  const slippage = Percentage.createFrom({ percentage: 0.3 })
-  const fee = Percentage.createFrom({ percentage: 2.1 })
+  const slippage = Percentage.createFrom({ value: 0.3 })
+  const fee = Percentage.createFrom({ value: 2.1 })
 
   beforeEach(() => {
     builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })

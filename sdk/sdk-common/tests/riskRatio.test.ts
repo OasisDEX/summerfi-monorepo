@@ -6,18 +6,18 @@ describe('RiskRatio', () => {
     describe('creates risk ratio from ltv', () => {
       it('should have correct ltv value', () => {
         const riskRatio = RiskRatio.createFrom({
-          ratio: Percentage.createFrom({ percentage: 80 }),
+          ratio: Percentage.createFrom({ value: 80 }),
           type: RiskRatio.type.LTV,
         })
 
-        expect(riskRatio.ltv.toString()).toEqual('80')
+        expect(riskRatio.toString()).toEqual('80')
       })
     })
 
     describe('converts risk ratio to different types', () => {
       it('should convert to CollateralizationRatio type correctly', () => {
         const riskRatio = RiskRatio.createFrom({
-          ratio: Percentage.createFrom({ percentage: 80 }),
+          ratio: Percentage.createFrom({ value: 80 }),
           type: RiskRatio.type.LTV,
         })
 
@@ -26,7 +26,7 @@ describe('RiskRatio', () => {
 
       it('should convert to Multiple type correctly', () => {
         const riskRatio = RiskRatio.createFrom({
-          ratio: Percentage.createFrom({ percentage: 80 }),
+          ratio: Percentage.createFrom({ value: 80 }),
           type: RiskRatio.type.LTV,
         })
 
@@ -37,7 +37,7 @@ describe('RiskRatio', () => {
 
   it('creates risk ratio from collateralization ratio', () => {
     const riskRatio = RiskRatio.createFrom({
-      ratio: Percentage.createFrom({ percentage: 130 }),
+      ratio: Percentage.createFrom({ value: 130 }),
       type: RiskRatio.type.CollateralizationRatio,
     })
 
@@ -46,7 +46,7 @@ describe('RiskRatio', () => {
 
   it('creates risk ratio from multiple', () => {
     const riskRatio = RiskRatio.createFrom({
-      ratio: Percentage.createFrom({ percentage: 4.5 }),
+      ratio: Percentage.createFrom({ value: 4.5 }),
       type: RiskRatio.type.Multiple,
     })
 

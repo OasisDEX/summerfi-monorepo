@@ -1,4 +1,4 @@
-import { ITokenService } from '../interfaces/ITokenService'
+import { ITokenService } from '@summerfi/protocol-plugins-common'
 import { Address, ChainInfo, Token, TokenSymbol } from '@summerfi/sdk-common/common'
 
 // TODO: Create a separate service and connect up to SDK router

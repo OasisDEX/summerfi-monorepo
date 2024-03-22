@@ -35,7 +35,7 @@ describe('Swap Action', () => {
   it('should add calls', async () => {
     const fromAmount = TokenAmount.createFrom({ token: DAI, amount: '1919' })
     const toMinimumAmount = TokenAmount.createFrom({ token: WETH, amount: '0.6' })
-    const fee = Percentage.createFrom({ percentage: 2.5 })
+    const fee = Percentage.createFrom({ value: 2.5 })
 
     const call = action.encodeCall(
       {
