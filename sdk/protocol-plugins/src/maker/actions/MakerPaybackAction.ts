@@ -6,7 +6,7 @@ import { isMakerPoolId } from '@summerfi/sdk-common/protocols/'
 export class MakerPaybackAction extends BaseAction {
   public readonly config = {
     name: 'MakerPayback',
-    version: 1,
+    version: 0,
     parametersAbi: 'uint256 vaultId, address userAddress, uint256 amount, bool paybackAll',
     storageInputs: ['vaultId'],
     storageOutputs: ['amountPaidBack'],

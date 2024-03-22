@@ -26,6 +26,7 @@ export interface MakerPoolId extends IPoolId {
     chainInfo: ChainInfo
   }
   ilkType: ILKType
+  // TODO: vaultId does not belong in the poolId
   vaultId: string
 }
 

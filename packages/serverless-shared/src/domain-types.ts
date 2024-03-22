@@ -117,13 +117,21 @@ export type PortfolioMigrationAsset = {
   usdValue: number
 }
 
+export type PortfolioMigrationAddressType = 'EOA' | 'DS_PROXY'
+
 export type PortfolioMigration = {
   chainId: ChainId
   protocolId: ProtocolId
   collateralAsset: PortfolioMigrationAsset
   debtAsset: PortfolioMigrationAsset
+  positionAddress: Address
+  walletAddress: Address
+  positionAddressType: PortfolioMigrationAddressType
 }
 
 export type PortfolioMigrationsResponse = {
+  // only migrations for EOAs - need that for compatibility with the UI.
   migrations: PortfolioMigration[]
+  // migrations from EOA and DS_PROXY
+  migrationsV2: PortfolioMigration[]
 }

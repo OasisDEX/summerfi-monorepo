@@ -5,7 +5,7 @@ import { HexData } from '@summerfi/sdk-common/common/aliases'
 export class SwapAction extends BaseAction {
   public readonly config = {
     name: 'SwapAction',
-    version: 1,
+    version: 3,
     parametersAbi: 'address, address, uint256, uint256, uint256, bytes, bool',
     storageInputs: [],
     storageOutputs: ['received'],

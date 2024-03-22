@@ -1,4 +1,4 @@
-import dotenv from 'dotenv'
+import { default as dotenv } from 'dotenv'
 import { resolve } from 'path'
 
 // WARNING: Do not move the loading of the .env as the import for `getHardhatConfig`

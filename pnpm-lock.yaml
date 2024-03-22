@@ -733,15 +733,64 @@ importers:
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
+      '@types/yargs':
+        specifier: ^17.0.32
+        version: 17.0.32
+      tsx:
+        specifier: ^4.7.1
+        version: 4.7.1
       viem:
         specifier: ^2.7.8
         version: 2.7.9(typescript@5.3.3)
+      yargs:
+        specifier: ^17.7.2
+        version: 17.7.2
 
   sdk/protocol-manager:
     dependencies:
       '@summerfi/deployment-types':
         specifier: workspace:*
         version: link:../../packages/deployment-types
+      '@summerfi/protocol-plugins':
+        specifier: workspace:*
+        version: link:../protocol-plugins
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../sdk-common
+      '@types/node-fetch':
+        specifier: ^2.6.11
+        version: 2.6.11
+      bignumber.js:
+        specifier: 9.0.1
+        version: 9.0.1
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/order-planner-common':
+        specifier: workspace:*
+        version: link:../order-planner-common
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+
+  sdk/protocol-plugins:
+    dependencies:
+      '@summerfi/deployment-types':
+        specifier: workspace:*
+        version: link:../../packages/deployment-types
+      '@summerfi/deployment-utils':
+        specifier: workspace:*
+        version: link:../../packages/deployment-utils
+      '@summerfi/order-planner-common':
+        specifier: workspace:*
+        version: link:../order-planner-common
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -762,39 +811,14 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
-  sdk/protocol-plugins:
-    dependencies:
-      '@summerfi/deployment-types':
-        specifier: workspace:*
-        version: link:../../packages/deployment-types
-      '@summerfi/deployment-utils':
-        specifier: workspace:*
-        version: link:../../packages/deployment-utils
-      '@summerfi/order-planner-common':
-        specifier: workspace:*
-        version: link:../order-planner-common
-      '@summerfi/sdk-common':
-        specifier: workspace:*
-        version: link:../sdk-common
-    devDependencies:
-      '@summerfi/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@summerfi/jest-config':
-        specifier: workspace:*
-        version: link:../../packages/jest-config
-      '@summerfi/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
-      viem:
-        specifier: ^2.7.8
-        version: 2.7.9(typescript@5.3.3)
-
   sdk/sdk-client:
     dependencies:
       '@summerfi/protocol-manager':
         specifier: workspace:*
         version: link:../protocol-manager
+      '@summerfi/protocol-plugins':
+        specifier: workspace:*
+        version: link:../protocol-plugins
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -1079,9 +1103,18 @@ importers:
 
   summerfi-api/get-migrations-function:
     dependencies:
+      '@aws-lambda-powertools/logger':
+        specifier: ^2.0.2
+        version: 2.0.2
+      '@aws-lambda-powertools/metrics':
+        specifier: ^2.0.2
+        version: 2.0.2
+      '@aws-lambda-powertools/tracer':
+        specifier: ^2.0.2
+        version: 2.0.2
       '@oasisdex/addresses':
-        specifier: ^0.1.36
-        version: 0.1.47
+        specifier: ^0.1.52-rc.1
+        version: 0.1.52-rc.1
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared
@@ -1317,8 +1350,8 @@ importers:
         specifier: 1.6.4-alpha.1
         version: 1.6.4-alpha.1
       '@oasisdex/dma-library':
-        specifier: 0.5.21-dma-v2-workers.31-auto-withdraw-to-ltv
-        version: 0.5.21-dma-v2-workers.31-auto-withdraw-to-ltv
+        specifier: 0.5.21-dma-v2-workers.32-auto-withdraw-to-ltv
+        version: 0.5.21-dma-v2-workers.32-auto-withdraw-to-ltv
       '@summerfi/abis':
         specifier: workspace:*
         version: link:../../packages/abis
@@ -1371,46 +1404,6 @@ importers:
       jest-expect-message:
         specifier: ^1.0.4
         version: 1.1.3
-
-  summerfi-api/swap-proxy-function:
-    dependencies:
-      '@aws-lambda-powertools/logger':
-        specifier: ^2.0.2
-        version: 2.0.2
-      '@aws-lambda-powertools/metrics':
-        specifier: ^2.0.2
-        version: 2.0.2
-      '@aws-lambda-powertools/tracer':
-        specifier: ^2.0.2
-        version: 2.0.2
-      '@summerfi/serverless-shared':
-        specifier: workspace:*
-        version: link:../../packages/serverless-shared
-      node-fetch:
-        specifier: ^3.3.2
-        version: 3.3.2
-      viem:
-        specifier: ^1.19.11
-        version: 1.21.4(typescript@5.3.3)(zod@3.22.4)
-      zod:
-        specifier: ^3.22.4
-        version: 3.22.4
-    devDependencies:
-      '@summerfi/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@summerfi/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
-      '@types/node':
-        specifier: ^20.11.5
-        version: 20.11.5
-      eslint:
-        specifier: ^8.56.0
-        version: 8.56.0
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.5)
 
 packages:
 
@@ -6377,8 +6370,8 @@ packages:
     resolution: {integrity: sha512-eeILfQbJAKX+v0ArlWKEpF7MWMpcyl4U7v2Xu1pDEeZhOkZZbS1XyT9Vhvdyy95x04npGa8Dn1zAZSap0NYtkQ==}
     dev: false
 
-  /@oasisdex/addresses@0.1.47:
-    resolution: {integrity: sha512-po36JPWODgqGorh6d9EgfMf+psDPko8b2wwLj0P3eYmUskexCvnsblLe3p2K0qjxK/3JiVl3BY3wMUkGD49zjQ==}
+  /@oasisdex/addresses@0.1.52-rc.1:
+    resolution: {integrity: sha512-uss34uYVo8HTODDM5MVrUq7/hLM+sG0QtGV02UJ4uUZ2aEK8ONu7v2iLw4vQ7K84GYSMxf/WE2zJFpbHallDgQ==}
     dev: false
 
   /@oasisdex/automation@1.6.4-alpha.1:
@@ -6390,8 +6383,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@oasisdex/dma-library@0.5.21-dma-v2-workers.31-auto-withdraw-to-ltv:
-    resolution: {integrity: sha512-OqcyWd2M9MMxR2uUEzNXfVN7Oh2tGs4FJ9trYhKMpRAaJrB1uZinCZOUurntmB2GqVFVbXeCvoMtdSgq/P5ESw==}
+  /@oasisdex/dma-library@0.5.21-dma-v2-workers.32-auto-withdraw-to-ltv:
+    resolution: {integrity: sha512-QzYuyAKadytHt78whVNMkQJXINf8Z7SVezLGRCfLdEDIqXARYyr9/UTJjuNaVyilU8bX4EdtvGsUryZob0JqRA==}
     dependencies:
       bignumber.js: 9.0.1
       ethers: 5.6.2
@@ -16392,6 +16385,17 @@ packages:
     dependencies:
       tslib: 1.14.1
       typescript: 5.3.3
+    dev: true
+
+  /tsx@4.7.1:
+    resolution: {integrity: sha512-8d6VuibXHtlN5E3zFkgY8u4DX7Y3Z27zvvPKVmLon/D4AjuKzarkUBTLDBgj9iTQ0hg5xM7c/mYiRVM+HETf0g==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+    dependencies:
+      esbuild: 0.19.11
+      get-tsconfig: 4.7.2
+    optionalDependencies:
+      fsevents: 2.3.3
     dev: true
 
   /turbo-darwin-64@1.12.5:

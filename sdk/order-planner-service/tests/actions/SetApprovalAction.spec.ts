@@ -4,7 +4,7 @@ import { SetApprovalAction } from '../../src/actions'
 
 describe('SetApproval Action', () => {
   const action = new SetApprovalAction()
-  const contractNameWithVersion = `${action.config.name}_v${action.config.version}`
+  const contractNameWithVersion = `${action.config.name}_${action.config.version}`
 
   const DAI = Token.createFrom({
     chainInfo: {

@@ -6,6 +6,7 @@ import {
   OptimismChainNames,
 } from '../enums/ChainNames'
 import { ChainInfo } from './ChainInfo'
+import { ChainId } from '../aliases/ChainId'
 
 /**
  * Chain definition per family
@@ -68,4 +69,32 @@ export const ChainFamilyMap: ChainFamily = {
   [ChainFamilyName.Arbitrum]: ArbitrumFamily,
   [ChainFamilyName.Optimism]: OptimismFamily,
   [ChainFamilyName.Base]: BaseFamily,
+}
+
+/**
+ * @type Record<ChainId, ChainInfo>
+ * @description Utility function to merge all chain families into a single map
+ */
+function createChainIdToChainInfoMap(): Record<ChainId, ChainInfo> {
+  const allFamilies = { ...EthereumFamily, ...ArbitrumFamily, ...OptimismFamily, ...BaseFamily }
+  const chainIdToChainInfoMap: Record<number, ChainInfo> = {}
+
+  for (const chainInfo of Object.values(allFamilies)) {
+    chainIdToChainInfoMap[chainInfo.chainId] = chainInfo
+  }
+
+  return chainIdToChainInfoMap
+}
+
+const chainIdToChainInfoMap = createChainIdToChainInfoMap()
+
+export function getChainInfoByChainId(chainId: ChainId): ChainInfo | undefined {
+  return chainIdToChainInfoMap[chainId]
+}
+
+export function valuesOfChainFamilyMap(families: ChainFamilyName[]): ChainInfo[] {
+  return families.flatMap((family) => {
+    const familyMap = ChainFamilyMap[family]
+    return Object.values(familyMap)
+  })
 }

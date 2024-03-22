@@ -4,7 +4,7 @@ import { Address, TokenAmount } from '@summerfi/sdk-common/common'
 export class PullTokenAction extends BaseAction {
   public readonly config = {
     name: 'PullToken',
-    version: 1,
+    version: 3,
     parametersAbi: 'address asset, address from, uint256 amount',
     storageInputs: [],
     storageOutputs: [],

@@ -5,7 +5,7 @@ import { decodeActionCalldata, getTargethash as getTargetHash } from '../utils/A
 
 describe('Flashloan Action', () => {
   const action = new FlashloanAction()
-  const contractNameWithVersion = `${action.config.name}_v${action.config.version}`
+  const contractNameWithVersion = `${action.config.name}_${action.config.version}`
 
   const DAI = Token.createFrom({
     chainInfo: {

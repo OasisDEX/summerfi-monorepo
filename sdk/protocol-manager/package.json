@@ -22,12 +22,15 @@
   "dependencies": {
     "@summerfi/deployment-types": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
+    "@summerfi/protocol-plugins": "workspace:*",
+    "@types/node-fetch": "^2.6.11",
     "bignumber.js": "9.0.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
-    "@summerfi/typescript-config": "workspace:*"
+    "@summerfi/typescript-config": "workspace:*",
+    "@summerfi/order-planner-common": "workspace:*"
   }
 }

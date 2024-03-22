@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda'
+import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'aws-lambda'
 import { getDefaultErrorMessage } from '@summerfi/serverless-shared/helpers'
 import {
   ResponseBadRequest,
@@ -14,6 +14,9 @@ import {
 import { createMigrationsClient } from './client'
 import { parseEligibleMigration } from './parseEligibleMigration'
 import { MigrationConfig } from 'migrations-config'
+import { Logger } from '@aws-lambda-powertools/logger'
+
+const logger = new Logger({ serviceName: 'get-migrations-function' })
 
 const paramsSchema = z
   .object({
@@ -44,11 +47,16 @@ const paramsSchema = z
     },
   )
 
-export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
+export const handler = async (
+  event: APIGatewayProxyEventV2,
+  context: Context,
+): Promise<APIGatewayProxyResultV2> => {
   //set envs
   const { RPC_GATEWAY } = (event.stageVariables as Record<string, string>) || {
     RPC_GATEWAY: process.env.RPC_GATEWAY,
   }
+
+  logger.addContext(context)
 
   const params = paramsSchema.safeParse(event.queryStringParameters)
   if (!params.success) {
@@ -60,6 +68,10 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
   const customRpcUrl = params.data.customRpcUrl
   const chainId = params.data.chainId
 
+  logger.appendKeys({
+    address: address,
+  })
+
   try {
     if (!RPC_GATEWAY) {
       throw new Error('RPC_GATEWAY env variable is not set')
@@ -70,9 +82,11 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       RPC_GATEWAY,
       customRpcUrl,
       chainId,
+      logger,
     )
 
     const eligibleMigrations: PortfolioMigration[] = []
+
     const protocolAssetsToMigrate = await migrationsClient.getProtocolAssetsToMigrate(address)
 
     protocolAssetsToMigrate.forEach((protocolAssets) => {
@@ -82,7 +96,13 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       }
     })
 
-    return ResponseOk<PortfolioMigrationsResponse>({ body: { migrations: eligibleMigrations } })
+    const legacyMigration = eligibleMigrations.filter(
+      (migration) => migration.positionAddressType === 'EOA',
+    )
+
+    return ResponseOk<PortfolioMigrationsResponse>({
+      body: { migrations: legacyMigration, migrationsV2: eligibleMigrations },
+    })
   } catch (error) {
     console.error(error)
     return ResponseInternalServerError()

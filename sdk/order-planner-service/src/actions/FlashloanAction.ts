@@ -10,7 +10,7 @@ type OptionalActionCall = ActionCall & {
 export class FlashloanAction extends BaseAction {
   public readonly config = {
     name: 'TakeFlashloan',
-    version: 1,
+    version: 3,
     parametersAbi:
       'uint256 amount, address asset, bool isProxyFlashloan, bool isDPMProxy, uint8 provider, (bytes32 targetHash, bytes callData, bool skipped)[] calls',
 

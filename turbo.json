@@ -29,7 +29,8 @@
     "ONE_INCH_API_URL",
     "ONE_INCH_ALLOWED_SWAP_PROTOCOLS",
     "ONE_INCH_SWAP_CHAIN_IDS",
-    "SDK_API_URL"
+    "SDK_API_URL",
+    "MAINNET_RPC_URL"
   ],
   "pipeline": {
     "dev": {

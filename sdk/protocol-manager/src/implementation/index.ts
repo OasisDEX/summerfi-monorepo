@@ -1,5 +1,1 @@
-export { protocolManager, type PoolIds } from './ProtocolManager'
-export { PriceService } from './PriceService'
-export { sparkPlugin } from './SparkPlugin'
-export { aaveV3Plugin } from './AAVEv3Plugin'
-export { TokenService } from './TokenService'
+export { protocolManager, ProtocolManager, type PoolIds } from './ProtocolManager'
