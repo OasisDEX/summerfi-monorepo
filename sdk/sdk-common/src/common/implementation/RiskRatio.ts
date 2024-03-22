@@ -6,7 +6,7 @@ interface IRiskRatioSerialized {
   ltv: Percentage
 }
 
-enum RiskRatioType {
+export enum RiskRatioType {
   LTV = 'LTV',
   CollateralizationRatio = 'CollateralizationRatio',
   Multiple = 'Multiple',
