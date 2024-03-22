@@ -1,9 +1,9 @@
 import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
 import { Address, TokenAmount } from '@summerfi/sdk-common/common'
 
-export class {{name}}BorrowAction extends BaseAction {
+export class {{namePascalCase}}BorrowAction extends BaseAction {
   public readonly config = {
-    name: '{{name}}Borrow',
+    name: '{{namePascalCase}}Borrow',
     version: 2,
     parametersAbi: '/** INSERT HERE - THE ACTION PARAMETERS **/',
     storageInputs: [/** INSERT HERE - THE STORAGE INPUTS **/],

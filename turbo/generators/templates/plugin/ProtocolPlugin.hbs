@@ -13,23 +13,23 @@ import {
 } from '@summerfi/sdk-common/common'
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SimulationSteps } from '@summerfi/sdk-common/simulation'
-import type { {{ name }}PoolId } from '@summerfi/sdk-common/protocols'
+import type { {{namePascalCase}}PoolId } from '@summerfi/sdk-common/protocols'
 import { stringToHex, getContract } from 'viem'
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
-import { {{ name }}PaybackWithdrawActionBuilder } from './builders/{{ name }}PaybackWithdrawActionBuilder'
+import { {{namePascalCase}}PaybackWithdrawActionBuilder } from './builders/{{namePascalCase}}PaybackWithdrawActionBuilder'
 import { BaseProtocolPlugin } from '../implementation/BaseProtocolPlugin'
 import { IPositionId } from '../interfaces/IPositionId'
-import { {{ name }}LendingPool, {{ name }}PoolCollateralConfig, {{ name }}PoolDebtConfig } from './Types'
+import { {{namePascalCase}}LendingPool, {{namePascalCase}}PoolCollateralConfig, {{namePascalCase}}PoolDebtConfig } from './Types'
 import { ERC20_ABI } from './abis'
 import { PRECISION_BI, PRECISION } from '../implementation/constants'
 
-export class {{ name }}ProtocolPlugin extends BaseProtocolPlugin<{{ name }}PoolId> {
-  readonly protocol: ProtocolName.{{ name }} = ProtocolName.{{ name }}
+export class {{namePascalCase}}ProtocolPlugin extends BaseProtocolPlugin<{{namePascalCase}}PoolId> {
+  readonly protocol: ProtocolName.{{namePascalCase}} = ProtocolName.{{namePascalCase}}
   readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
   readonly schema = z.object({
     protocol: z.object({
-      name: z.literal(ProtocolName.{{ name }}),
+      name: z.literal(ProtocolName.{{namePascalCase}}),
       chainInfo: z.object({
         name: z.string(),
         chainId: z.custom<ChainId>(
@@ -42,18 +42,18 @@ export class {{ name }}ProtocolPlugin extends BaseProtocolPlugin<{{ name }}PoolI
     })
   })
   readonly StepBuildersMap = {
-     [SimulationSteps.PaybackWithdraw]: {{ name }}PaybackWithdrawActionBuilder,
-     [SimulationSteps.DepositBorrow]: {{ name }}DepositBorrowActionBuilder,
+     [SimulationSteps.PaybackWithdraw]: {{namePascalCase}}PaybackWithdrawActionBuilder,
+     [SimulationSteps.DepositBorrow]: {{namePascalCase}}DepositBorrowActionBuilder,
   }
 
-  async getPool({{ nameCamelCase }}PoolId: unknown): Promise<{{ name }}LendingPool> {
-    this.isPoolId({{ nameCamelCase }}PoolId)
+  async getPool({{namePascalCase}}PoolId: unknown): Promise<{{namePascalCase}}LendingPool> {
+    this.isPoolId({{namePascalCase}}PoolId)
 
     const ctx = this.ctx
     const chainId = ctx.provider.chain?.id
     if (!chainId) throw new Error('ctx.provider.chain.id undefined')
 
-    if (!{{ name }}ProtocolPlugin.supportedChains.some((chainInfo) => chainInfo.chainId === chainId)) {
+    if (!this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId)) {
       throw new Error(`Chain ID ${chainId} is not supported`)
     }
 
@@ -62,7 +62,7 @@ export class {{ name }}ProtocolPlugin extends BaseProtocolPlugin<{{ name }}PoolI
       allowFailure: false,
     })
 
-    const collaterals: Record<string, {{ name }}PoolCollateralConfig> = {
+    const collaterals: Record<string, {{namePascalCase}}PoolCollateralConfig> = {
       [collateralToken.address.value]: {
         token: collateralToken,
         price: Price.createFrom({
@@ -81,7 +81,7 @@ export class {{ name }}ProtocolPlugin extends BaseProtocolPlugin<{{ name }}PoolI
       },
     }
 
-    const debts: Record<string, {{ name }}PoolDebtConfig> = {
+    const debts: Record<string, {{namePascalCase}}PoolDebtConfig> = {
       [quoteToken.address.value]: {
         token: quoteToken,
         price: await ctx.priceService.getPrice({
@@ -95,8 +95,8 @@ export class {{ name }}ProtocolPlugin extends BaseProtocolPlugin<{{ name }}PoolI
 
     return {
       type: PoolType.Lending,
-      poolId: {{ nameCamelCase }}PoolId,
-      protocol: {{ nameCamelCase }}PoolId.protocol,
+      poolId: {{namePascalCase}}PoolId,
+      protocol: {{namePascalCase}}PoolId.protocol,
       baseCurrency: poolBaseCurrencyToken,
       collaterals,
       debts,
@@ -114,4 +114,4 @@ export class {{ name }}ProtocolPlugin extends BaseProtocolPlugin<{{ name }}PoolI
   }
 }
 
-export const {{ nameCamelCase }}ProtocolPlugin = new {{ name }}ProtocolPlugin()
+export const {{nameCamelCase}}ProtocolPlugin = new {{namePascalCase}}ProtocolPlugin()

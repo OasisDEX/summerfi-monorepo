@@ -1,9 +1,9 @@
 import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
 import { TokenAmount } from '@summerfi/sdk-common/common'
 
-export class {{name}}DepositAction extends BaseAction {
+export class {{namePascalCase}}DepositAction extends BaseAction {
   public readonly config = {
-    name: '{{name}}Deposit',
+    name: '{{namePascalCase}}Deposit',
     version: 0,
     parametersAbi: '/** INSERT HERE - THE ACTION PARAMETERS **/',
     storageInputs: [/** INSERT HERE - THE STORAGE INPUTS **/],

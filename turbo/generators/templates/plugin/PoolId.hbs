@@ -1,0 +1,16 @@
+import { ChainInfo } from '../../common'
+import { IPoolId } from '../../protocols/interfaces/IPoolId'
+import { ProtocolName } from '../../protocols/enums/ProtocolName'
+// import { EmodeType } from '../enums/EmodeType'
+
+export interface {{namePascalCase}}PoolId extends IPoolId {
+protocol: {
+name: ProtocolName.{{namePascalCase}}
+chainInfo: ChainInfo
+}
+/* EG emodeType: EmodeType */
+}
+
+export function is{{namePascalCase}}PoolId(poolId: IPoolId): poolId is {{namePascalCase}}PoolId {
+return poolId.protocol.name === ProtocolName.{{namePascalCase}}
+}

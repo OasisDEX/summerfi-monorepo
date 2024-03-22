@@ -28,8 +28,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
     ],
     actions: [
       customAction,
-      function createProtocolPluginDirectory(answers: { name?: string }) {
-        if (!answers.name) {
+      function createProtocolPluginDirectory(answers: { nameKebabCase?: string }) {
+        if (!answers.nameKebabCase) {
           return 'no name provided, skipping plugin directory creation'
         }
 
@@ -37,7 +37,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
           // resolves to the root of the current workspace
           plop.getDestBasePath(),
           'sdk/protocol-plugins/src',
-          answers.name,
+          answers.nameKebabCase,
         )
 
         fs.mkdirSync(directory)
@@ -46,63 +46,68 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{name}}/{{name}}ProtocolPlugin.ts',
+        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/{{namePascalCase}}ProtocolPlugin.ts',
         templateFile: 'templates/plugin/ProtocolPlugin.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{name}}/index.ts',
+        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/index.ts',
         templateFile: 'templates/plugin/index.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{name}}/abis.ts',
+        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/abis.ts',
         templateFile: 'templates/plugin/abis.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{name}}/Types.ts',
+        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/Types.ts',
         templateFile: 'templates/plugin/Types.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{name}}/builders/index.ts',
+        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/builders/index.ts',
         templateFile: 'templates/plugin/builders/index.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{name}}/builders/{{name}}PaybackWithdrawActionBuilder.ts',
+        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/builders/{{namePascalCase}}PaybackWithdrawActionBuilder.ts',
         templateFile: 'templates/plugin/builders/PaybackWithdrawActionBuilder.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{name}}/builders/{{name}}DepositBorrowActionBuilder.ts',
+        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/builders/{{namePascalCase}}DepositBorrowActionBuilder.ts',
         templateFile: 'templates/plugin/builders/DepositBorrowActionBuilder.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{name}}/actions/index.ts',
+        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/actions/index.ts',
         templateFile: 'templates/plugin/actions/index.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{name}}/actions/{{name}}PaybackAction.ts',
+        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/actions/{{namePascalCase}}PaybackAction.ts',
         templateFile: 'templates/plugin/actions/PaybackAction.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{name}}/actions/{{name}}WithdrawAction.ts',
+        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/actions/{{namePascalCase}}WithdrawAction.ts',
         templateFile: 'templates/plugin/actions/WithdrawAction.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{name}}/actions/{{name}}DepositAction.ts',
+        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/actions/{{namePascalCase}}DepositAction.ts',
         templateFile: 'templates/plugin/actions/DepositAction.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{name}}/actions/{{name}}BorrowAction.ts',
+        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/actions/{{namePascalCase}}BorrowAction.ts',
         templateFile: 'templates/plugin/actions/BorrowAction.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/sdk-common/src/protocols/interfaces/{{namePascalCase}}PoolId.ts',
+        templateFile: 'templates/plugin/PoolId.hbs',
       },
     ],
   })

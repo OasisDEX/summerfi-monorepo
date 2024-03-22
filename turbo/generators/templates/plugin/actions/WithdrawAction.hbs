@@ -1,10 +1,10 @@
 import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
 import { Address, TokenAmount } from '@summerfi/sdk-common/common'
-import { IPool, isMakerPoolId } from '@summerfi/sdk-common/protocols'
+import { IPool, is{{namePascalCase}}PoolId } from '@summerfi/sdk-common/protocols'
 
-export class {{name}}WithdrawAction extends BaseAction {
+export class {{namePascalCase}}WithdrawAction extends BaseAction {
   public readonly config = {
-    name: '{{name}}Withdraw',
+    name: '{{namePascalCase}}Withdraw',
     version: 1,
     parametersAbi: '/** INSERT HERE - THE ACTION PARAMETERS **/',
     storageInputs: [/** INSERT HERE - THE STORAGE INPUTS **/],
@@ -17,8 +17,8 @@ export class {{name}}WithdrawAction extends BaseAction {
     },
     paramsMapping?: number[],
   ): ActionCall {
-    if (!is{{name}}PoolId(params.pool.poolId)) {
-      throw new Error('Pool ID is not a {{name}} one')
+    if (!is{{namePascalCase}}PoolId(params.pool.poolId)) {
+      throw new Error('Pool ID is not a {{namePascalCase}} one')
     }
 
     return this._encodeCall({

@@ -1,20 +1,20 @@
 import { getValueFromReference, steps } from '@summerfi/sdk-common/simulation'
 import { ActionBuilder } from '@summerfi/order-planner-common/builders'
 import { ActionNames } from '@summerfi/deployment-types'
-import { {{name}}DepositAction } from '../actions/{{name}}DepositAction.ts'
-import { {{name}}BorrowAction } from '../actions/{{name}}BorrowAction.ts'
+import { {{namePascalCase}}DepositAction } from '../actions/{{name}}DepositAction.ts'
+import { {{namePascalCase}}BorrowAction } from '../actions/{{name}}BorrowAction.ts'
 import { Address, AddressValue } from '@summerfi/sdk-common/common'
 
-export const {{name}}DepositBorrowActionList: ActionNames[] = ['{{name}}Deposit', '{{name}}Borrow']
+export const {{namePascalCase}}DepositBorrowActionList: ActionNames[] = ['{{namePascalCase}}Deposit', '{{namePascalCase}}Borrow']
 
-export const {{name}}DepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrowStep> = async (
+export const {{namePascalCase}}DepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrowStep> = async (
     params,
     ): Promise<void> => {
         const { context, user, step } = params
 
         context.addActionCall({
         step: params.step,
-        action: new {{name}}DepositAction(),
+        action: new {{namePascalCase}}DepositAction(),
         arguments: {
         /** INSERT HERE - ARGS EG
         * depositAmount: getValueFromReference(step.inputs.depositAmount),
@@ -30,7 +30,7 @@ export const {{name}}DepositBorrowActionBuilder: ActionBuilder<steps.DepositBorr
 
         context.addActionCall({
         step: step,
-        action: new {{name}}BorrowAction(),
+        action: new {{namePascalCase}}BorrowAction(),
         arguments: {
         /** INSERT HERE - ARGS EG
         * borrowAmount: getValueFromReference(step.inputs.borrowAmount),
