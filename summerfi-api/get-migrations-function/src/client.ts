@@ -1,6 +1,5 @@
-import { Chain, HttpTransport, createPublicClient, extractChain, http } from 'viem'
-import { mainnet, optimism, arbitrum, base, sepolia } from 'viem/chains'
-import { getContract } from 'viem'
+import { Chain, createPublicClient, extractChain, getContract, http, HttpTransport } from 'viem'
+import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
 import { aavePoolContract } from './abi/aavePoolContract'
 import { decodeBitmapToAssetsAddresses } from './decodeBitmapToAssetsAddresses'
 import { aavePoolDataProviderContract } from './abi/aavePoolDataProviderContract'
@@ -9,19 +8,22 @@ import { USD_DECIMALS } from '@summerfi/serverless-shared/constants'
 import { ProtocolMigrationAssets } from './types'
 import {
   Address,
+  type ChainId,
+  isChainId,
+  PortfolioMigrationAddressType,
   PortfolioMigrationAsset,
   ProtocolId,
   Token,
-  isChainId,
-  type ChainId,
 } from '@summerfi/serverless-shared/domain-types'
 import { createAddressService } from './addressService'
 import { IMigrationConfig } from './migrations-config'
 import {
-  IRpcConfig,
   getRpcGatewayEndpoint,
+  IRpcConfig,
 } from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
 import { publicActionReverseMirage } from 'reverse-mirage'
+import { getDsProxy } from './getDsProxy'
+import { Logger } from '@aws-lambda-powertools/logger'
 
 export const rpcConfig: IRpcConfig = {
   skipCache: false,
@@ -36,12 +38,13 @@ export function createMigrationsClient(
   rpcGatewayUrl: string,
   customRpcUrl: string | undefined,
   customChainId?: ChainId,
+  logger?: Logger,
 ) {
   const getProtocolAssetsToMigrate = async (
     address: Address,
   ): Promise<ProtocolMigrationAssets[]> => {
     // for each supported chain
-    const promises: Promise<ProtocolMigrationAssets>[] = []
+    const promises: Promise<ProtocolMigrationAssets[]>[] = []
 
     Object.entries(migrationConfig).forEach(([chainIdString, supportedProtocolsIds]) => {
       const chainId = Number(chainIdString)
@@ -51,34 +54,56 @@ export function createMigrationsClient(
       if (customChainId && customChainId !== chainId) {
         return
       }
+      const chain = extractChain({
+        chains: [mainnet, base, optimism, arbitrum, sepolia],
+        id: chainId,
+      })
+
+      const rpcUrl = customRpcUrl ?? getRpcGatewayEndpoint(rpcGatewayUrl, chainId, rpcConfig)
+      const transport = http(rpcUrl, {
+        batch: false,
+        fetchOptions: {
+          method: 'POST',
+        },
+      })
+
+      const dsProxiesPromise = getDsProxy(address, transport, chain, logger)
+
       supportedProtocolsIds.forEach((protocolId) => {
-        const promise = async (): Promise<ProtocolMigrationAssets> => {
-          const chain = extractChain({
-            chains: [mainnet, base, optimism, arbitrum, sepolia],
-            id: chainId,
-          })
-
-          const rpcUrl = customRpcUrl ?? getRpcGatewayEndpoint(rpcGatewayUrl, chainId, rpcConfig)
-          const transport = http(rpcUrl, {
-            batch: false,
-            fetchOptions: {
-              method: 'POST',
-            },
-          })
-
-          const { collAssets, debtAssets } = await getAssets(transport, chain, protocolId, address)
-          return {
-            debtAssets,
-            collAssets,
-            chainId,
-            protocolId,
+        const promise = async (): Promise<ProtocolMigrationAssets[]> => {
+          const { dsProxy, eoa } = await dsProxiesPromise
+          const perAddress = async (
+            positionAddress: Address,
+            walletAddress: Address,
+            positionAddressType: PortfolioMigrationAddressType,
+          ): Promise<ProtocolMigrationAssets> => {
+            const { collAssets, debtAssets } = await getAssets(
+              transport,
+              chain,
+              protocolId,
+              positionAddress,
+            )
+            return {
+              positionAddress,
+              walletAddress,
+              debtAssets,
+              collAssets,
+              chainId,
+              protocolId,
+              positionAddressType,
+            }
           }
+
+          if (dsProxy) {
+            return [await perAddress(dsProxy, eoa, 'DS_PROXY'), await perAddress(eoa, eoa, 'EOA')]
+          }
+          return [await perAddress(eoa, eoa, 'EOA')]
         }
         promises.push(promise())
       })
     })
 
-    return Promise.all(promises)
+    return (await Promise.all(promises)).flatMap((x) => x)
   }
 
   return {
@@ -137,14 +162,22 @@ async function getAssets(
     ),
     aaveOracle.read.getAssetsPrices([assetsAddresses]),
     Promise.all(
-      assetsAddresses.map((address) =>
-        publicClient.getERC20({
+      assetsAddresses.map((address) => {
+        // MKR is not regular ERC20 and the symbol is in bytes32
+        if (address === '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2') {
+          return {
+            address: address as Address,
+            decimals: 18,
+            symbol: 'MKR',
+          }
+        }
+        return publicClient.getERC20({
           erc20: {
             address,
             chainID: chain.id,
           },
-        }),
-      ),
+        })
+      }),
     ),
   ])
 
