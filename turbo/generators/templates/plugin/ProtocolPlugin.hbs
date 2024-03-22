@@ -25,34 +25,25 @@ import { ERC20_ABI } from './abis'
 import { PRECISION_BI, PRECISION } from '../implementation/constants'
 
 export class {{ name }}ProtocolPlugin extends BaseProtocolPlugin<{{ name }}PoolId> {
-  public static protocol: ProtocolName.{{ name }} = ProtocolName.{{ name }}
-  public static supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
-  public static schema = z.object({
+  readonly protocol: ProtocolName.{{ name }} = ProtocolName.{{ name }}
+  readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
+  readonly schema = z.object({
     protocol: z.object({
       name: z.literal(ProtocolName.{{ name }}),
       chainInfo: z.object({
         name: z.string(),
         chainId: z.custom<ChainId>(
           (chainId) =>
-            {{ name }}ProtocolPlugin.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
+            this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
           'Chain ID not supported',
           true,
         ),
       }),
     })
   })
-
-  constructor() {
-    const StepBuildersMap = {
-      [SimulationSteps.PaybackWithdraw]: {{ name }}PaybackWithdrawActionBuilder,
-    }
-
-    super(
-      {{ name }}ProtocolPlugin.protocol,
-      {{ name }}ProtocolPlugin.supportedChains,
-      {{ name }}ProtocolPlugin.schema,
-      StepBuildersMap,
-    )
+  readonly StepBuildersMap = {
+     [SimulationSteps.PaybackWithdraw]: {{ name }}PaybackWithdrawActionBuilder,
+     [SimulationSteps.DepositBorrow]: {{ name }}DepositBorrowActionBuilder,
   }
 
   async getPool({{ nameCamelCase }}PoolId: unknown): Promise<{{ name }}LendingPool> {

@@ -16,10 +16,12 @@ export const {{name}}PaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWi
         step: params.step,
         action: new {{name}}PaybackAction(),
         arguments: {
-        pool: step.inputs.position.pool,
-        userAddress: user.wallet.address,
-        amount: getValueFromReference(step.inputs.paybackAmount),
-        paybackAll: true, // TODO: we cannot always calculate this value because debtAmount and paybackAmount are references
+        /** INSERT HERE - ARGS EG
+        * pool: step.inputs.position.pool,
+        * userAddress: user.wallet.address,
+        * amount: getValueFromReference(step.inputs.withdrawAmount),
+        * paybackAll: true, // TODO: we cannot always calculate this value because debtAmount and paybackAmount are references
+        **/
         },
         connectedInputs: {},
         connectedOutputs: {
@@ -31,9 +33,11 @@ export const {{name}}PaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWi
         step: step,
         action: new {{name}}WithdrawAction(),
         arguments: {
-        pool: step.inputs.position.pool,
-        userAddress: user.wallet.address,
-        amount: getValueFromReference(step.inputs.withdrawAmount),
+        /** INSERT HERE - ARGS EG
+        * pool: step.inputs.position.pool,
+        * userAddress: user.wallet.address,
+        * amount: getValueFromReference(step.inputs.withdrawAmount),
+        **/
         },
         connectedInputs: {},
         connectedOutputs: {

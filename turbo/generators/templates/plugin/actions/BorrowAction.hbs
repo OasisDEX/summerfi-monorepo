@@ -1,12 +1,10 @@
 import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
 import { Address, TokenAmount } from '@summerfi/sdk-common/common'
-import { IPool } from '@summerfi/sdk-common/protocols'
-import { is{{name}}PoolId } from '@summerfi/sdk-common/protocols/'
 
-export class {{name}}PaybackAction extends BaseAction {
+export class {{name}}BorrowAction extends BaseAction {
   public readonly config = {
-    name: '{{name}}Payback',
-    version: 1,
+    name: '{{name}}Borrow',
+    version: 2,
     parametersAbi: '/** INSERT HERE - THE ACTION PARAMETERS **/',
     storageInputs: [/** INSERT HERE - THE STORAGE INPUTS **/],
     storageOutputs: [/** INSERT HERE - THE STORAGE OUTPUTS **/],
@@ -14,14 +12,10 @@ export class {{name}}PaybackAction extends BaseAction {
 
   public encodeCall(
     params: {
-      /** INSERT HERE - THE ACTION PARAMETERS **/
+        /** INSERT HERE - THE ACTION PARAMETERS **/
     },
     paramsMapping?: number[],
   ): ActionCall {
-    if (!is{{name}}PoolId(params.pool.poolId)) {
-      throw new Error('Pool ID is not a {{name}} one')
-    }
-
     return this._encodeCall({
       arguments: [
         /** INSERT HERE - THE ACTION ARGS  **/

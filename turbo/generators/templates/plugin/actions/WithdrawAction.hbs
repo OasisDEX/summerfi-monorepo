@@ -6,17 +6,14 @@ export class {{name}}WithdrawAction extends BaseAction {
   public readonly config = {
     name: '{{name}}Withdraw',
     version: 1,
-    parametersAbi: 'uint256 vaultId, address userAddress, address joinAddr, uint256 amount',
-    storageInputs: [/*'vaultId'*/],
-    storageOutputs: ['amountWithdrawn'],
+    parametersAbi: '/** INSERT HERE - THE ACTION PARAMETERS **/',
+    storageInputs: [/** INSERT HERE - THE STORAGE INPUTS **/],
+    storageOutputs: [/** INSERT HERE - THE STORAGE OUTPUTS **/],
   } as const
 
   public encodeCall(
     params: {
-      pool: IPool
-      userAddress: Address
-      amount: TokenAmount
-      joinAddress: Address
+        /** INSERT HERE - THE ACTION PARAMETERS **/
     },
     paramsMapping?: number[],
   ): ActionCall {
@@ -26,9 +23,7 @@ export class {{name}}WithdrawAction extends BaseAction {
 
     return this._encodeCall({
       arguments: [
-        params.userAddress.value,
-        params.joinAddress.value,
-        params.amount.toBaseUnit(),
+        /** INSERT HERE - THE ACTION ARGS  **/
       ],
       mapping: paramsMapping,
     })

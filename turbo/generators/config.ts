@@ -76,6 +76,11 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       },
       {
         type: 'add',
+        path: 'sdk/protocol-plugins/src/{{name}}/builders/{{name}}DepositBorrowActionBuilder.ts',
+        templateFile: 'templates/plugin/builders/DepositBorrowActionBuilder.hbs',
+      },
+      {
+        type: 'add',
         path: 'sdk/protocol-plugins/src/{{name}}/actions/index.ts',
         templateFile: 'templates/plugin/actions/index.hbs',
       },
@@ -88,6 +93,16 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         type: 'add',
         path: 'sdk/protocol-plugins/src/{{name}}/actions/{{name}}WithdrawAction.ts',
         templateFile: 'templates/plugin/actions/WithdrawAction.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/{{name}}/actions/{{name}}DepositAction.ts',
+        templateFile: 'templates/plugin/actions/DepositAction.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/{{name}}/actions/{{name}}BorrowAction.ts',
+        templateFile: 'templates/plugin/actions/BorrowAction.hbs',
       },
     ],
   })

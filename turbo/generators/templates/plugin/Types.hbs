@@ -2,7 +2,6 @@ import { {{name}}ContractNames } from '@summerfi/deployment-types'
 import { CollateralConfig, DebtConfig } from '@summerfi/sdk-common/protocols'
 import { AddressValue } from '@summerfi/sdk-common/common'
 import type { LendingPool } from '@summerfi/sdk-common/protocols'
-import { ERC20_ABI } from './abis'
 
 // Lending Pool
 export interface {{name}}PoolDebtConfig extends DebtConfig {}
@@ -13,7 +12,9 @@ export type {{name}}LendingPool = LendingPool<{{name}}PoolCollateralConfig, {{na
 
 // ABIs and Protocol contracts
 export type {{name}}AbiMap = {
- // Dog: typeof DOG_ABI
+    /** INSERT HERE - ABIS EG
+    * Dog: typeof DOG_ABI
+    **/
 }
 
 export type {{name}}AddressAbiMap = {
