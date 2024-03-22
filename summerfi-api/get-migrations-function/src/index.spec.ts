@@ -1,7 +1,7 @@
 import { ProtocolId } from '@summerfi/serverless-shared/domain-types'
 import { serialize } from '@summerfi/serverless-shared/serialize'
 import { handler } from './index'
-import { APIGatewayProxyEventV2 } from 'aws-lambda'
+import { APIGatewayProxyEventV2, Context } from 'aws-lambda'
 import dotenv from 'dotenv'
 
 dotenv.config({ path: '../../../.env' })
@@ -17,7 +17,7 @@ describe('handler', () => {
       },
     }
 
-    const result = (await handler(ev as APIGatewayProxyEventV2)) as unknown as {
+    const result = (await handler(ev as APIGatewayProxyEventV2, {} as Context)) as unknown as {
       headers: Record<string, string>
       statusCode: number
       body: string
@@ -63,7 +63,7 @@ describe('handler', () => {
       },
     }
 
-    const result = (await handler(ev as APIGatewayProxyEventV2)) as unknown as {
+    const result = (await handler(ev as APIGatewayProxyEventV2, {} as Context)) as unknown as {
       headers: Record<string, string>
       statusCode: number
       body: string
@@ -90,7 +90,7 @@ describe('handler', () => {
       },
     }
 
-    const result = (await handler(ev as APIGatewayProxyEventV2)) as unknown as {
+    const result = (await handler(ev as APIGatewayProxyEventV2, {} as Context)) as unknown as {
       headers: Record<string, string>
       statusCode: number
       body: string

@@ -4,7 +4,7 @@ import { SwapAction } from '../../src/actions'
 
 describe('Swap Action', () => {
   const action = new SwapAction()
-  const contractNameWithVersion = `${action.config.name}_v${action.config.version}`
+  const contractNameWithVersion = `${action.config.name}_${action.config.version}`
 
   const DAI = Token.createFrom({
     chainInfo: {

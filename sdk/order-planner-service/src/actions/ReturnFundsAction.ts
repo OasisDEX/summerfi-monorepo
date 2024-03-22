@@ -4,7 +4,7 @@ import { Token } from '@summerfi/sdk-common/common'
 export class ReturnFundsAction extends BaseAction {
   public readonly config = {
     name: 'ReturnFunds',
-    version: 1,
+    version: 3,
     parametersAbi: 'address asset',
     storageInputs: [],
     storageOutputs: [],

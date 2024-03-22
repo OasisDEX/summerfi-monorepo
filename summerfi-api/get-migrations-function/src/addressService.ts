@@ -1,4 +1,4 @@
-import { ADDRESSES, AaveLikeProtocol, Common } from '@oasisdex/addresses'
+import { ADDRESSES, AaveLikeProtocol, Common, Core } from '@oasisdex/addresses'
 import {
   Address,
   ChainId,
@@ -20,6 +20,19 @@ export const createAddressService = (chainId: ChainId) => {
     } catch (error) {
       console.error(error)
       throw Error(`Unexpected error in getTokenContract: ${token}/${network}`)
+    }
+  }
+
+  const getCoreContract = (contract: Core): Address => {
+    try {
+      const val = addresses['mpa']['core'][contract] as Address
+      if (val == null) {
+        throw Error(`Core contract ${contract}/${network} address is null`)
+      }
+      return val
+    } catch (error) {
+      console.error(error)
+      throw Error(`Unexpected error in getCoreContract: ${contract}/${network}`)
     }
   }
 
@@ -51,5 +64,6 @@ export const createAddressService = (chainId: ChainId) => {
   return {
     getProtocolContract,
     getTokenContract,
+    getCoreContract,
   }
 }

@@ -12,6 +12,7 @@ import {
   Token,
   ChainFamilyName,
   valuesOfChainFamilyMap,
+  Maybe,
 } from '@summerfi/sdk-common/common'
 import { SimulationSteps } from '@summerfi/sdk-common/simulation'
 import type { SparkPoolId } from '@summerfi/sdk-common/protocols'
@@ -26,9 +27,9 @@ import { IPositionId } from '../interfaces/IPositionId'
 import { sparkEmodeCategoryMap } from './emodeCategoryMap'
 import { SparkPoolCollateralConfig, SparkLendingPool, SparkPoolDebtConfig } from './Types'
 import {
-  AaveV3LikePluginBuilder,
+  AaveV3LikeProtocolDataBuilder,
   filterAssetsListByEMode,
-} from '../implementation/AAVEv3LikeBuilder'
+} from '../implementation/AAVEv3LikeProtocolDataBuilder'
 import { UNCAPPED_SUPPLY, PRECISION_BI } from '../implementation/constants'
 
 type AssetsList = ReturnType<AaveV3ProtocolPlugin['buildAssetsList']>
@@ -76,7 +77,6 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
     const collaterals = assetsList.reduce<Record<AddressValue, SparkPoolCollateralConfig>>(
       (colls, asset) => {
         const assetInfo = this.getCollateralAssetInfo(asset, poolBaseCurrencyToken)
-        if (!assetInfo) return colls
         const { token: collateralToken } = asset
         colls[collateralToken.address.value] = assetInfo
         return colls
@@ -108,7 +108,7 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
 
   private async buildAssetsList(emode: bigint) {
     try {
-      const builder = await new AaveV3LikePluginBuilder(this.ctx, this.protocol).init()
+      const builder = await new AaveV3LikeProtocolDataBuilder(this.ctx, this.protocol).init()
       const list = await builder
         .addPrices()
         .addReservesCaps()
@@ -126,7 +126,7 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
   private getCollateralAssetInfo(
     asset: Asset,
     poolBaseCurrencyToken: Token | CurrencySymbol,
-  ): AaveV3PoolCollateralConfig | undefined {
+  ): AaveV3PoolCollateralConfig {
     const {
       token: collateralToken,
       config: { usageAsCollateralEnabled, ltv, liquidationThreshold, liquidationBonus },
@@ -182,7 +182,7 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
   private getDebtAssetInfo(
     asset: Asset,
     poolBaseCurrencyToken: CurrencySymbol | Token,
-  ): AaveV3PoolDebtConfig | undefined {
+  ): Maybe<AaveV3PoolDebtConfig> {
     const {
       token: quoteToken,
       config: { borrowingEnabled, reserveFactor },

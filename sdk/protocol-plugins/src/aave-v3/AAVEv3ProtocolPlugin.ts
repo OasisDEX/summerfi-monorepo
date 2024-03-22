@@ -12,6 +12,7 @@ import {
   ChainFamilyName,
   valuesOfChainFamilyMap,
   ChainId,
+  Maybe,
 } from '@summerfi/sdk-common/common'
 import type { AaveV3PoolId } from '@summerfi/sdk-common/protocols'
 import { PoolType, ProtocolName, EmodeType } from '@summerfi/sdk-common/protocols'
@@ -21,9 +22,9 @@ import { BaseProtocolPlugin } from '../implementation/BaseProtocolPlugin'
 import { aaveV3EmodeCategoryMap } from './emodeCategoryMap'
 import { AaveV3LendingPool, AaveV3PoolCollateralConfig, AaveV3PoolDebtConfig } from './Types'
 import {
-  AaveV3LikePluginBuilder,
+  AaveV3LikeProtocolDataBuilder,
   filterAssetsListByEMode,
-} from '../implementation/AAVEv3LikeBuilder'
+} from '../implementation/AAVEv3LikeProtocolDataBuilder'
 import { UNCAPPED_SUPPLY, PRECISION_BI } from '../implementation/constants'
 
 type AssetsList = ReturnType<AaveV3ProtocolPlugin['buildAssetsList']>
@@ -72,7 +73,6 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
     const collaterals = assetsList.reduce<Record<AddressValue, AaveV3PoolCollateralConfig>>(
       (colls, asset) => {
         const assetInfo = this.getCollateralAssetInfo(asset, poolBaseCurrencyToken)
-        if (!assetInfo) return colls
         const { token: collateralToken } = asset
         colls[collateralToken.address.value] = assetInfo
         return colls
@@ -104,7 +104,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
 
   private async buildAssetsList(emode: bigint) {
     try {
-      const builder = await new AaveV3LikePluginBuilder(this.ctx, this.protocol).init()
+      const builder = await new AaveV3LikeProtocolDataBuilder(this.ctx, this.protocol).init()
       const list = await builder
         .addPrices()
         .addReservesCaps()
@@ -122,7 +122,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
   private getCollateralAssetInfo(
     asset: Asset,
     poolBaseCurrencyToken: Token | CurrencySymbol,
-  ): AaveV3PoolCollateralConfig | undefined {
+  ): AaveV3PoolCollateralConfig {
     const {
       token: collateralToken,
       config: { usageAsCollateralEnabled, ltv, liquidationThreshold, liquidationBonus },
@@ -183,7 +183,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin<AaveV3PoolId> {
   private getDebtAssetInfo(
     asset: Asset,
     poolBaseCurrencyToken: CurrencySymbol | Token,
-  ): AaveV3PoolDebtConfig | undefined {
+  ): Maybe<AaveV3PoolDebtConfig> {
     const {
       token: quoteToken,
       config: { borrowingEnabled, reserveFactor },
