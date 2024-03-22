@@ -26,9 +26,9 @@ import { IPositionId } from '../interfaces/IPositionId'
 import { sparkEmodeCategoryMap } from './emodeCategoryMap'
 import { SparkPoolCollateralConfig, SparkLendingPool, SparkPoolDebtConfig } from './Types'
 import {
-  AaveV3LikePluginBuilder,
+  AaveV3LikeProtocolDataBuilder,
   filterAssetsListByEMode,
-} from '../implementation/AAVEv3LikeBuilder'
+} from '../implementation/AAVEv3LikeProtocolDataBuilder'
 import { UNCAPPED_SUPPLY, PRECISION_BI } from '../implementation/constants'
 
 type AssetsList = ReturnType<AaveV3ProtocolPlugin['buildAssetsList']>
@@ -107,7 +107,7 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin<SparkPoolId> {
   }
 
   private async buildAssetsList(emode: bigint) {
-    const builder = await new AaveV3LikePluginBuilder(this.ctx, this.protocol).init()
+    const builder = await new AaveV3LikeProtocolDataBuilder(this.ctx, this.protocol).init()
     const list = await builder
       .addPrices()
       .addReservesCaps()
