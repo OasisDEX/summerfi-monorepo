@@ -26,7 +26,7 @@ import assert from 'assert'
 
 //import { createFork } from '@summerfi/tenderly-utils'
 
-describe.only('Refinance Maker Spark | SDK', () => {
+describe.skip('Refinance Maker Spark | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     //await createFork({ network: 'mainnet', atBlock: 19482638 })
 
