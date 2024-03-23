@@ -4,6 +4,7 @@ import {
   IProtocolPluginContext,
   IProtocolPluginsRegistry,
 } from '@summerfi/protocol-plugins-common'
+import { Maybe } from '@summerfi/sdk-common/common'
 
 export type ProtocolPluginConstructor = new (params: {
   context: IProtocolPluginContext
@@ -20,10 +21,10 @@ export class ProtocolPluginsRegistry implements IProtocolPluginsRegistry {
     this.context = params.context
   }
 
-  getPlugin(params: { protocolName: ProtocolName }): IProtocolPlugin {
+  getPlugin(params: { protocolName: ProtocolName }): Maybe<IProtocolPlugin> {
     const Plugin = this.plugins[params.protocolName]
     if (!Plugin) {
-      throw new Error(`Plugin for ${params.protocolName} not found`)
+      return
     }
     return new Plugin({ context: this.context })
   }

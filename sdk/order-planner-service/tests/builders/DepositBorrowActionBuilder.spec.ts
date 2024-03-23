@@ -13,7 +13,7 @@ import { DepositBorrowActionBuilder } from '../../src/builders/DepositBorrowActi
 import { MakerPoolId, PoolType, ProtocolName, ILKType } from '@summerfi/sdk-common/protocols'
 import { getErrorMessage } from '../utils/ErrorMessage'
 import assert from 'assert'
-import { EmptyProtocolBuilderMock } from '../mocks/ProtocolBuilderMock'
+import { EmptyProtocolPluginMock } from '../mocks/ProtocolPluginMock'
 
 describe('Deposit Borrow Action Builder', () => {
   let builderParams: SetupBuilderReturnType
@@ -95,7 +95,7 @@ describe('Deposit Borrow Action Builder', () => {
       await DepositBorrowActionBuilder({
         ...builderParams,
         step: derivedStep,
-        protocolsRegistry: {},
+        protocolsRegistry: builderParams.emptyProtocolsRegistry,
       })
       assert.fail('Should have thrown an error')
     } catch (error: unknown) {
@@ -125,9 +125,7 @@ describe('Deposit Borrow Action Builder', () => {
       await DepositBorrowActionBuilder({
         ...builderParams,
         step: derivedStep,
-        protocolsRegistry: {
-          [protocol.name]: EmptyProtocolBuilderMock,
-        },
+        protocolsRegistry: builderParams.emptyBuildersProtocolRegistry,
       })
       assert.fail('Should have thrown an error')
     } catch (error: unknown) {

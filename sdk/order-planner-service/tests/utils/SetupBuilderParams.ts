@@ -2,14 +2,17 @@ import { Deployment, DeploymentIndex } from '@summerfi/deployment-utils'
 import { IPositionsManager } from '@summerfi/sdk-common/orders'
 import { Address, ChainInfo } from '@summerfi/sdk-common/common'
 import { SwapManagerMock } from '../mocks/SwapManagerMock'
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import { ProtocolBuilderMock } from '../mocks/ProtocolBuilderMock'
 import { OrderPlannerContextMock } from '../mocks/OrderPlannerContextMock'
 import { SetupDeployments } from './SetupDeployments'
 import { UserMock } from '../mocks/UserMock'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
-import { ProtocolPluginsRegistry } from '@summerfi/protocol-plugins'
+import {
+  createEmptyBuildersProtocolPluginsRegistry,
+  createEmptyProtocolPluginsRegistry,
+  createNoCheckpointProtocolPluginsRegistry,
+  createProtocolPluginsRegistry,
+} from '../mocks/ProtocolsPluginRegistryMock'
 
 export type SetupBuilderReturnType = {
   context: OrderPlannerContextMock
@@ -18,6 +21,9 @@ export type SetupBuilderReturnType = {
   swapManager: SwapManagerMock
   deployment: Deployment
   protocolsRegistry: IProtocolPluginsRegistry
+  emptyProtocolsRegistry: IProtocolPluginsRegistry
+  emptyBuildersProtocolRegistry: IProtocolPluginsRegistry
+  noCheckpointProtocolsRegistry: IProtocolPluginsRegistry
   deploymentIndex: DeploymentIndex
 }
 
@@ -26,12 +32,11 @@ export function setupBuilderParams(params: {
   deploymentKey?: string
 }): SetupBuilderReturnType {
   const deploymentIndex = SetupDeployments()
-  const protocolsRegistry: IProtocolPluginsRegistry = new ProtocolPluginsRegistry({
-    plugins: {
-      [ProtocolName.Maker]: ProtocolBuilderMock,
-      [ProtocolName.Spark]: ProtocolBuilderMock,
-    },
-  })
+  const protocolsRegistry = createProtocolPluginsRegistry()
+  const emptyProtocolsRegistry = createEmptyProtocolPluginsRegistry()
+  const noCheckpointProtocolsRegistry = createNoCheckpointProtocolPluginsRegistry()
+  const emptyBuildersProtocolRegistry = createEmptyBuildersProtocolPluginsRegistry()
+
   return {
     context: new OrderPlannerContextMock(),
     user: new UserMock({
@@ -45,10 +50,10 @@ export function setupBuilderParams(params: {
     },
     swapManager: new SwapManagerMock(),
     deployment: deploymentIndex[params.deploymentKey ?? 'Mainnet.standard'],
-    protocolsRegistry: {
-      [ProtocolName.Maker]: ProtocolBuilderMock,
-      [ProtocolName.Spark]: ProtocolBuilderMock,
-    },
+    protocolsRegistry: protocolsRegistry,
+    emptyProtocolsRegistry: emptyProtocolsRegistry,
+    noCheckpointProtocolsRegistry: noCheckpointProtocolsRegistry,
+    emptyBuildersProtocolRegistry: emptyBuildersProtocolRegistry,
     deploymentIndex: deploymentIndex,
   }
 }

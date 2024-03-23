@@ -1,34 +1,29 @@
 import {
   Percentage,
   PositionId,
-  RiskRatio,
   Token,
   TokenAmount,
   Position,
   Address,
   type Maybe,
   ChainFamilyMap,
-  Price,
 } from '@summerfi/sdk-common/common'
 
 import {
-  PoolType,
   ProtocolName,
-  isMakerPoolId,
   ILKType,
-  LendingPoolParameters,
   isSparkPoolId,
   EmodeType,
   isLendingPool,
-  LendingPool,
-  IProtocol,
+  MakerPoolId,
+  SparkPoolId,
 } from '@summerfi/sdk-common/protocols'
 import { makeSDK, type Chain, type User, Protocol } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
-import { Order, IRefinanceParameters } from '@summerfi/sdk-common/orders'
+import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import { PoolIds } from '@summerfi/protocol-manager'
 import assert from 'assert'
+
 //import { createFork } from '@summerfi/tenderly-utils'
 
 describe.only('Refinance Maker Spark | SDK', () => {
@@ -69,15 +64,17 @@ describe.only('Refinance Maker Spark | SDK', () => {
     const maker = await chain.protocols.getProtocol({ name: ProtocolName.Maker })
     assert(maker, 'Maker protocol not found')
 
-    const makerPool = await maker.getPool({
-      poolId: {
-        protocol: {
-          name: ProtocolName.Maker,
-          chainInfo: chain.chainInfo,
-        },
-        ilkType: ILKType.ETH_A,
-        vaultId: '31646',
+    const makerPoolId: MakerPoolId = {
+      protocol: {
+        name: ProtocolName.Maker,
+        chainInfo: chain.chainInfo,
       },
+      ilkType: ILKType.ETH_A,
+      vaultId: '31646',
+    }
+
+    const makerPool = await maker.getPool({
+      poolId: makerPoolId,
     })
     assert(makerPool, 'Maker pool not found')
 
@@ -101,7 +98,7 @@ describe.only('Refinance Maker Spark | SDK', () => {
     })
     assert(spark, 'Spark not found')
 
-    const poolId: PoolIds = {
+    const poolId: SparkPoolId = {
       protocol: {
         name: ProtocolName.Spark,
         chainInfo: chain.chainInfo,

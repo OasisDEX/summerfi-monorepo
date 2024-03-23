@@ -53,7 +53,6 @@ describe('Refinance', () => {
       const targetPosition = simulation.targetPosition
 
       expect(targetPosition.positionId).toBeDefined()
-      console.log(targetPosition.positionId)
     })
   })
 

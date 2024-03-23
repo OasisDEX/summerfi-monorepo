@@ -12,7 +12,6 @@ import { SetupBuilderReturnType, setupBuilderParams } from '../utils/SetupBuilde
 import { ILKType, MakerPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { getErrorMessage } from '../utils/ErrorMessage'
 import assert from 'assert'
-import { EmptyProtocolBuilderMock } from '../mocks/ProtocolBuilderMock'
 import { PaybackWithdrawActionBuilder } from '../../src/builders/PaybackWithdrawActionBuilder'
 
 describe('Payback Withdraw Action Builder', () => {
@@ -94,7 +93,7 @@ describe('Payback Withdraw Action Builder', () => {
       await PaybackWithdrawActionBuilder({
         ...builderParams,
         step: derivedStep,
-        protocolsRegistry: {},
+        protocolsRegistry: builderParams.emptyProtocolsRegistry,
       })
       assert.fail('Should have thrown an error')
     } catch (error: unknown) {
@@ -107,9 +106,7 @@ describe('Payback Withdraw Action Builder', () => {
       await PaybackWithdrawActionBuilder({
         ...builderParams,
         step: derivedStep,
-        protocolsRegistry: {
-          [protocol.name]: EmptyProtocolBuilderMock,
-        },
+        protocolsRegistry: builderParams.emptyBuildersProtocolRegistry,
       })
       assert.fail('Should have thrown an error')
     } catch (error: unknown) {

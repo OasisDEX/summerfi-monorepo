@@ -1,2 +1,2 @@
-export { EmodeType } from './EmodeType';
-export { ProtocolName } from './ProtocolName';
+export { EmodeType } from './EmodeType'
+export { ProtocolName } from './ProtocolName'

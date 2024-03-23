@@ -5,7 +5,7 @@ import {
   SimulationType,
   TokenTransferTargetType,
 } from '@summerfi/sdk-common/simulation'
-import { getReferencedValue, makeStrategy } from '../helpers'
+import { makeStrategy } from '../helpers'
 import { Simulator } from '../simulator-engine'
 import { Percentage, Position, TokenAmount } from '@summerfi/sdk-common/common'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'

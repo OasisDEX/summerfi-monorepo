@@ -26,7 +26,9 @@ export class ProtocolManager implements IProtocolManager {
     this.validatePoolId(poolId)
 
     const plugin = this.pluginsRegistry.getPlugin({ protocolName: poolId.protocol.name })
-
+    if (!plugin) {
+      throw new Error(`Protocol plugin for protocol ${poolId.protocol.name} not found`)
+    }
     return plugin.getPool(poolId)
   }
 

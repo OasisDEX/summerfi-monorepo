@@ -27,7 +27,6 @@ export default async function simulateRefinanceTest() {
         debtAmount: params.position.debtAmount,
         collateralAmount: params.position.collateralAmount,
         pool: params.targetPool,
-        riskRatio: params.position.riskRatio,
       },
       steps: [],
     } as Simulation<SimulationType.Refinance>
@@ -78,7 +77,7 @@ export default async function simulateRefinanceTest() {
     collaterals: {},
     debts: {},
     baseCurrency: DAI,
-  }
+  } as MakerLendingPool
 
   const prevPosition: Position = {
     pool: pool,
@@ -100,7 +99,7 @@ export default async function simulateRefinanceTest() {
     collaterals: {},
     debts: {},
     baseCurrency: DAI,
-  }
+  } as SparkLendingPool
 
   const refinanceParameters: IRefinanceParameters = {
     position: prevPosition,

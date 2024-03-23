@@ -8,7 +8,7 @@ import { SwapManagerFactory } from '@summerfi/swap-service'
 import { ConfigurationProvider, IConfigurationProvider } from '@summerfi/configuration-provider'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
 import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
-import { ProtocolManager } from '@summerfi/protocol-manager'
+import { ProtocolManager } from '@summerfi/protocol-manager-service'
 import { createProtocolsPluginsRegistry } from './CreateProtocolPluginsRegistry'
 import { IProtocolManager } from '@summerfi/protocol-manager-common'
 

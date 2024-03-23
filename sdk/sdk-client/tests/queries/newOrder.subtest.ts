@@ -52,7 +52,7 @@ export default async function simulateNewOrder() {
     collaterals: {},
     debts: {},
     baseCurrency: DAI,
-  }
+  } as MakerLendingPool
 
   const prevPosition: Position = {
     pool: pool,
@@ -74,7 +74,7 @@ export default async function simulateNewOrder() {
     collaterals: {},
     debts: {},
     baseCurrency: DAI,
-  }
+  } as SparkLendingPool
 
   const simulation: Simulation<SimulationType.Refinance> = {
     simulationType: SimulationType.Refinance,

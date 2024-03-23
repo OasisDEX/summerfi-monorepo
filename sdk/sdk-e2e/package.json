@@ -10,7 +10,7 @@
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
-    "@summerfi/protocol-manager": "workspace:*",
+    "@summerfi/protocol-manager-service": "workspace:*",
     "@summerfi/sdk-client": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/tenderly-utils": "workspace:*",

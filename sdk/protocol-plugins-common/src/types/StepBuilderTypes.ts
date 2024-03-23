@@ -4,7 +4,7 @@ import { Deployment } from '@summerfi/deployment-utils'
 import { type IPositionsManager } from '@summerfi/sdk-common/orders'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IStepBuilderContext } from '../interfaces/IStepBuilderContext'
-import { IProtocolPluginsRegistry } from '../interfaces/IProtocolPluginsRegistry'
+import { type IProtocolPluginsRegistry } from '../interfaces/IProtocolPluginsRegistry'
 
 export type FilterStep<
   SimulationStep extends SimulationSteps,

@@ -2,10 +2,21 @@ import { ChainInfo } from '@summerfi/sdk-common/common'
 import { ILKType, ProtocolName, EmodeType, SparkPoolId } from '@summerfi/sdk-common/protocols'
 import { createPublicClient, http, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
-import { protocolManager } from '../src/implementation/ProtocolManager'
-import { IProtocolManagerContext } from '../src/interfaces/IProtocolManagerContext'
-import { TokenService, PriceService } from '@summerfi/protocol-plugins/'
+import {
+  TokenService,
+  PriceService,
+  MakerProtocolPlugin,
+  SparkProtocolPlugin,
+  ProtocolPluginsRegistry,
+  MakerLendingPool,
+  SparkLendingPool,
+  AaveV3LendingPool,
+  AaveV3ProtocolPlugin,
+} from '@summerfi/protocol-plugins/'
 import { MockContractProvider } from '@summerfi/protocol-plugins/mocks'
+import { ProtocolManager } from '../src'
+import { IProtocolManager, IProtocolManagerContext } from '@summerfi/protocol-manager-common'
+import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
 
 async function createProtocolManagerContext(): Promise<IProtocolManagerContext> {
   const RPC_URL = process.env['MAINNET_RPC_URL'] || ''
@@ -27,9 +38,22 @@ async function createProtocolManagerContext(): Promise<IProtocolManagerContext> 
 
 // TODO: re-enable with separate Ci workflow and http transport properly configured
 describe.skip('playground', () => {
+  let pluginsRegistry: IProtocolPluginsRegistry
+  let protocolManager: IProtocolManager
   let ctx: IProtocolManagerContext
   beforeAll(async () => {
     ctx = await createProtocolManagerContext()
+
+    pluginsRegistry = new ProtocolPluginsRegistry({
+      plugins: {
+        [ProtocolName.Maker]: MakerProtocolPlugin,
+        [ProtocolName.Spark]: SparkProtocolPlugin,
+        [ProtocolName.AAVEv3]: AaveV3ProtocolPlugin,
+      },
+      context: ctx,
+    })
+
+    protocolManager = new ProtocolManager({ pluginsRegistry })
   })
 
   it('template/maker', async () => {
@@ -42,8 +66,7 @@ describe.skip('playground', () => {
       vaultId: '123',
     }
 
-    protocolManager.init(ctx)
-    const result = await protocolManager.getPool(makerPoolId)
+    const result = (await protocolManager.getPool(makerPoolId)) as MakerLendingPool
     console.log(`
   MAKER POOL
   ----------------
@@ -64,8 +87,7 @@ describe.skip('playground', () => {
       emodeType: EmodeType.None,
     } as SparkPoolId
 
-    protocolManager.init(ctx)
-    const result = await protocolManager.getPool(sparkPoolId)
+    const result = (await protocolManager.getPool(sparkPoolId)) as SparkLendingPool
     console.log(`
   SPARK POOL
   ----------------
@@ -85,8 +107,7 @@ describe.skip('playground', () => {
       emodeType: EmodeType.None,
     }
 
-    protocolManager.init(ctx)
-    const result = await protocolManager.getPool(aaveV3PoolId)
+    const result = (await protocolManager.getPool(aaveV3PoolId)) as AaveV3LendingPool
     console.log(`
   AAVE V3 POOL
   ----------------
