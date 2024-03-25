@@ -20,13 +20,13 @@ import {
 } from '@summerfi/sdk-common/protocols'
 import { makeSDK, type Chain, type User, Protocol } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
-import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
+import { IRefinanceParameters, Order } from '@summerfi/sdk-common/orders'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import assert from 'assert'
 
 //import { createFork } from '@summerfi/tenderly-utils'
 
-describe.skip('Refinance Maker Spark | SDK', () => {
+describe.only('Refinance Maker Spark | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     //await createFork({ network: 'mainnet', atBlock: 19482638 })
 
@@ -112,9 +112,6 @@ describe.skip('Refinance Maker Spark | SDK', () => {
 
     assert(sparkPool, 'Pool not found')
 
-    const poolStr = JSON.stringify(sparkPool)
-    const poolAgain = JSON.parse(poolStr)
-
     if (!isSparkPoolId(sparkPool.poolId)) {
       assert(false, 'Pool ID is not a Spark one')
     }
@@ -132,24 +129,28 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     const refinanceSimulation: Simulation<SimulationType.Refinance> =
       await sdk.simulator.refinance.simulateRefinancePosition({
         position: makerPosition,
-        targetPool: poolAgain,
+        targetPool: sparkPool,
         slippage: Percentage.createFrom({ value: 0.2 }),
       } as IRefinanceParameters)
 
-    // expect(refinanceSimulation).toBeDefined()
+    expect(refinanceSimulation).toBeDefined()
+
+    //console.log('Refinance simulation:', JSON.stringify(refinanceSimulation, null, 2))
+    // console.log(
+    //   'Refinance simulation:',
+    //   JSON.stringify(refinanceSimulation.sourcePosition, null, 2),
+    // )
     // expect(refinanceSimulation.sourcePosition).toEqual(makerPosition)
     // expect(refinanceSimulation.targetPosition.pool).toEqual(sparkPool)
 
-    console.log('Refinance simulation:', JSON.stringify(refinanceSimulation))
+    const refinanceOrder: Maybe<Order> = await user.newOrder({
+      positionsManager: {
+        address: Address.ZeroAddressEthereum,
+      },
+      simulation: refinanceSimulation,
+    })
 
-    // const refinanceOrder: Maybe<Order> = await user.newOrder({
-    //   positionsManager: {
-    //     address: Address.ZeroAddressEthereum,
-    //   },
-    //   simulation: refinanceSimulation,
-    // })
-
-    // assert(refinanceOrder, 'Order not found')
+    assert(refinanceOrder, 'Order not found')
 
     // expect(refinanceOrder.simulation).toEqual(refinanceSimulation)
     // expect(refinanceOrder.transactions).toEqual([])
