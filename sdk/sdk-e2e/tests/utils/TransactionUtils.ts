@@ -23,6 +23,7 @@ export class TransactionUtils {
       to: params.transaction.target.value,
       value: BigInt(params.transaction.value),
       chain: mainnet,
+      data: params.transaction.calldata,
     })
   }
 }

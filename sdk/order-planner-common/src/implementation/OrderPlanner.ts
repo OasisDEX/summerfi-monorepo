@@ -64,7 +64,7 @@ export class OrderPlanner implements IOrderPlanner {
       throw new Error('Mismatched nested calls levels, probably a missing endSubContext call')
     }
 
-    return this._generateOrder(simulation, callsBatch, deployment)
+    return this._generateOrder(simulation, callsBatch, positionsManager, deployment)
   }
 
   private getActionBuilder<T extends steps.Steps>(
@@ -74,24 +74,35 @@ export class OrderPlanner implements IOrderPlanner {
     return actionBuildersMap[step.type] as ActionBuilder<T>
   }
 
+  private _getStrategyName(simulation: Simulation<SimulationType>): string {
+    return `${simulation.simulationType}${simulation.sourcePosition?.pool.protocol.name}${simulation.targetPosition?.pool.protocol.name}`
+  }
+
   private _generateOrder(
     simulation: Simulation<SimulationType>,
     simulationCalls: ActionCall[],
+    positionsManager: IPositionsManager,
     deployment: Deployment,
   ): Order {
     const executorInfo = deployment.contracts[this.ExecutorContractName]
     if (!executorInfo) {
       throw new Error(`Executor contract ${this.ExecutorContractName} not found in deployment`)
     }
+    const executorAddress = Address.createFromEthereum({ value: executorInfo.address as HexData })
+    const strategyName = this._getStrategyName(simulation)
 
-    const calldata = encodeStrategy(simulation.simulationType, simulationCalls)
+    const calldata = encodeStrategy({
+      strategyName: strategyName,
+      strategyExecutor: executorAddress,
+      actions: simulationCalls,
+    })
 
     return {
       simulation: simulation,
       transactions: [
         {
           transaction: {
-            target: Address.createFromEthereum({ value: executorInfo.address as HexData }),
+            target: positionsManager.address,
             calldata: calldata,
             value: '0',
           },
