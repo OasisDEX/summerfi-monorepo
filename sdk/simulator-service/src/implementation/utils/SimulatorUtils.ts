@@ -23,8 +23,6 @@ export function getReferencedValue<T>(referenceableValue: ReferenceableField<T>)
     return referenceableValue
 }
 
-
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function tail<T extends readonly any[]>(arr: T): Tail<T> {
     const [, ...rest] = arr

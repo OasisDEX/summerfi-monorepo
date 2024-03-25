@@ -118,9 +118,6 @@ export async function refinanceLendingToLending(
           toToken:
             args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token,
         })),
-        // inputs: await dependencies.getQuote({
-        //   from: args.position.collateralAmount,
-        //   to: args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token,
         slippage: args.slippage,
         fee: dependencies.getSummerFee(),
       },
@@ -189,7 +186,7 @@ export async function refinanceLendingToLending(
     simulationType: SimulationType.Refinance,
     sourcePosition: args.position,
     targetPosition,
-    swaps: [],
+    swaps: simulation.swaps,
     steps: Object.values(simulation.steps),
   }
 }
