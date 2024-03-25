@@ -8,6 +8,10 @@
       "@summerfi/sdk-client": ["node_modules/@summerfi/sdk-client/src"],
       "@summerfi/protocol-manager-service": [
         "node_modules/@summerfi/protocol-manager-service/src/index.ts"
+      ],
+      "@summerfi/protocol-plugins": ["node_modules/@summerfi/protocol-plugins/src/index.ts"],
+      "@summerfi/protocol-plugins-common": [
+        "node_modules/@summerfi/protocol-plugins-common/src/index.ts"
       ]
     }
   },

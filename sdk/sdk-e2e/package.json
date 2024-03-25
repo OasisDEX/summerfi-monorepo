@@ -11,6 +11,8 @@
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
     "@summerfi/protocol-manager-service": "workspace:*",
+    "@summerfi/protocol-plugins-common": "workspace:*",
+    "@summerfi/protocol-plugins": "workspace:*",
     "@summerfi/sdk-client": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/tenderly-utils": "workspace:*",

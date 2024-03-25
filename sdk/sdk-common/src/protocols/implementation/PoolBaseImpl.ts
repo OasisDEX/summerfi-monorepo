@@ -1,4 +1,5 @@
 import { Address } from '../../common/implementation/Address'
+import { SerializationService } from '../../services/SerializationService'
 import { IPool } from '../interfaces/IPool'
 import { IPoolId } from '../interfaces/IPoolId'
 import { IProtocol } from '../interfaces/IProtocol'
@@ -25,3 +26,5 @@ export abstract class PoolBaseImpl<T extends PoolType> implements IPool {
     this.TVL = params.TVL
   }
 }
+
+SerializationService.registerClass(PoolBaseImpl)

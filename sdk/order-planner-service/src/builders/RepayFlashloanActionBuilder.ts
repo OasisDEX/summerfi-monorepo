@@ -18,18 +18,18 @@ export const RepayFlashloanActionBuilder: ActionBuilder<steps.RepayFlashloan> = 
 ): Promise<void> => {
   const { context, step, deployment } = params
 
-  context.addActionCall({
-    step: step,
-    action: new SendTokenAction(),
-    arguments: {
-      sendAmount: step.inputs.amount,
-      sendTo: Address.createFromEthereum({
-        value: deployment.contracts.OperationExecutor.address as AddressValue,
-      }),
-    },
-    connectedInputs: {},
-    connectedOutputs: {},
-  })
+  // context.addActionCall({
+  //   step: step,
+  //   action: new SendTokenAction(),
+  //   arguments: {
+  //     sendAmount: step.inputs.amount,
+  //     sendTo: Address.createFromEthereum({
+  //       value: deployment.contracts.OperationExecutor.address as AddressValue,
+  //     }),
+  //   },
+  //   connectedInputs: {},
+  //   connectedOutputs: {},
+  // })
 
   // End the current subcontext and pass the subcontext calls to the flashloan action
   const { callsBatch, customData } = context.endSubContext<steps.FlashloanStep['inputs']>()

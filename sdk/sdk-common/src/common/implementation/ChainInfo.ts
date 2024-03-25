@@ -10,7 +10,7 @@ export class ChainInfo implements IChainInfo {
   readonly chainId: ChainId
   readonly name: string
 
-  private constructor(params: IChainInfo) {
+  constructor(params: IChainInfo) {
     this.chainId = params.chainId
     this.name = params.name
   }

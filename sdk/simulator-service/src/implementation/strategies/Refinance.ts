@@ -124,10 +124,15 @@ export async function refinaceLendingToLending(
     throw new Error('Target position not found')
   }
 
+  const steps = []
+  for (const stepName in simulation.steps) {
+    steps.push(simulation.steps[stepName])
+  }
+
   return {
     simulationType: SimulationType.Refinance,
     sourcePosition: args.position,
     targetPosition,
-    steps: Object.values(simulation.steps),
+    steps: steps,
   } as Simulation<SimulationType.Refinance>
 }

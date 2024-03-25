@@ -13,6 +13,7 @@ import { IUserClient } from '../interfaces/IUserClient'
 import { IRPCClient } from '../interfaces/IRPCClient'
 import { RPCClientType } from '../rpc/SDKClient'
 import { IProtocol } from '@summerfi/sdk-common/protocols'
+import { SerializationService } from '@summerfi/sdk-common/services'
 
 export class User extends IRPCClient implements IUserClient {
   public readonly wallet: Wallet
@@ -54,9 +55,15 @@ export class User extends IRPCClient implements IUserClient {
     positionsManager: IPositionsManager
     simulation: Simulation<SimulationType>
   }): Promise<Maybe<Order>> {
-    return await this.rpcClient.orders.buildOrder.query({
-      user: this,
-      ...params,
+    return await this.rpcClient.orders.buildOrder.mutate({
+      user: {
+        wallet: this.wallet,
+        chainInfo: this.chainInfo,
+      },
+      positionsManager: params.positionsManager,
+      simulation: params.simulation,
     })
   }
 }
+
+SerializationService.registerClass(User)

@@ -60,7 +60,6 @@ describe.only('Refinance Maker Spark | SDK', () => {
     const DAI: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.DAI })
     assert(DAI, 'DAI not found')
 
-    // Source position
     const maker = await chain.protocols.getProtocol({ name: ProtocolName.Maker })
     assert(maker, 'Maker protocol not found')
 
@@ -78,6 +77,11 @@ describe.only('Refinance Maker Spark | SDK', () => {
     })
     assert(makerPool, 'Maker pool not found')
 
+    if (!isLendingPool(makerPool)) {
+      assert(false, 'Maker pool type is not lending')
+    }
+
+    // Source position
     const makerPosition: Position = Position.createFrom({
       positionId: PositionId.createFrom({ id: '31646' }),
       debtAmount: TokenAmount.createFromBaseUnit({
@@ -120,12 +124,6 @@ describe.only('Refinance Maker Spark | SDK', () => {
       assert(false, 'Spark pool type is not lending')
     }
 
-    // const refinanceParameters: IRefinanceParameters = {
-    //   position: makerPosition,
-    //   targetPool: sparkPool,
-    //   slippage: Percentage.createFrom({ value: 0.2 }),
-    // }
-
     const refinanceSimulation: Simulation<SimulationType.Refinance> =
       await sdk.simulator.refinance.simulateRefinancePosition({
         position: makerPosition,
@@ -135,24 +133,31 @@ describe.only('Refinance Maker Spark | SDK', () => {
 
     expect(refinanceSimulation).toBeDefined()
 
-    //console.log('Refinance simulation:', JSON.stringify(refinanceSimulation, null, 2))
-    // console.log(
-    //   'Refinance simulation:',
-    //   JSON.stringify(refinanceSimulation.sourcePosition, null, 2),
-    // )
-    // expect(refinanceSimulation.sourcePosition).toEqual(makerPosition)
-    // expect(refinanceSimulation.targetPosition.pool).toEqual(sparkPool)
+    expect(refinanceSimulation.sourcePosition?.positionId).toEqual(makerPosition.positionId)
+    expect(refinanceSimulation.targetPosition.pool.poolId).toEqual(sparkPool.poolId)
 
     const refinanceOrder: Maybe<Order> = await user.newOrder({
       positionsManager: {
-        address: Address.ZeroAddressEthereum,
+        address: Address.createFromEthereum({
+          value: '0x551Eb8395093fDE4B9eeF017C93593a3C7a75138',
+        }),
       },
       simulation: refinanceSimulation,
     })
 
     assert(refinanceOrder, 'Order not found')
 
-    // expect(refinanceOrder.simulation).toEqual(refinanceSimulation)
-    // expect(refinanceOrder.transactions).toEqual([])
+    expect(refinanceOrder.simulation.simulationType).toEqual(refinanceSimulation.simulationType)
+    expect(refinanceOrder.simulation.sourcePosition?.positionId).toEqual(
+      refinanceSimulation.sourcePosition?.positionId,
+    )
+    expect(refinanceOrder.simulation.targetPosition.pool.poolId).toEqual(sparkPool.poolId)
+    expect(refinanceOrder.simulation.steps.length).toEqual(refinanceSimulation.steps.length)
+
+    for (let i = 0; i < refinanceOrder.simulation.steps.length; i++) {
+      expect(refinanceOrder.simulation.steps[i].type).toEqual(refinanceSimulation.steps[i].type)
+    }
+
+    expect(refinanceOrder.transactions.length).toEqual(1)
   })
 })
