@@ -1,4 +1,4 @@
-import type { SimulationState } from '../../interfaces/simulation'
+import type { ISimulationState } from '../../interfaces/simulation'
 import type { Tail } from '../../interfaces/helperTypes'
 import type { NextFunction } from '../../interfaces'
 import { head, tail } from '../utils'
@@ -14,13 +14,13 @@ export class Simulator<
 > {
   public schema: Strategy
   public originalSchema: SimulationStrategy
-  private state: SimulationState
+  private state: ISimulationState
   private readonly nextArray: NextArray
 
   private constructor(
     schema: Strategy,
     originalSchema: SimulationStrategy,
-    state: SimulationState = { swaps: [], balances: {}, positions: {}, steps: {} },
+    state: ISimulationState = { swaps: {}, balances: {}, positions: {}, steps: {} },
     nextArray: Readonly<NextArray> = [] as unknown as NextArray,
   ) {
     this.schema = schema
@@ -35,7 +35,7 @@ export class Simulator<
     return new Simulator(schema, schema)
   }
 
-  public async run(): Promise<SimulationState> {
+  public async run(): Promise<ISimulationState> {
     for (let i = 0; i < this.nextArray.length; i++) {
       const processedStepSchema = this.originalSchema[i]
       const getReference = (path: [string, string]) => {

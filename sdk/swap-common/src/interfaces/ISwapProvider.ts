@@ -1,7 +1,9 @@
 import { Address, ChainInfo, Percentage, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import type { SwapProviderType } from '../enums/SwapProviderType'
-import type { SwapData } from '../types/SwapData'
-import type { QuoteData } from '../types/QuoteData'
+import type {
+  QuoteData,
+  SwapData
+} from '@summerfi/sdk-common/swap'
 
 /**
  * @name ISwapProvider

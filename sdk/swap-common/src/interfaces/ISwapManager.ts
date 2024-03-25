@@ -5,8 +5,11 @@ import type {
   Token,
   Address,
 } from '@summerfi/sdk-common/common'
-import type { QuoteData } from '../types/QuoteData'
-import type { SwapData } from '../types/SwapData'
+import type {
+  QuoteData,
+  SwapData
+} from '@summerfi/sdk-common/swap'
+
 
 /**
  * @name ISwapManager
