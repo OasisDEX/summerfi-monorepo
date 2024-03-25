@@ -84,10 +84,6 @@ export default async function simulateNewOrder() {
       debtAmount: TokenAmount.createFrom({ token: DAI, amount: '56.78' }),
       collateralAmount: TokenAmount.createFrom({ token: WETH, amount: '105.98' }),
       pool: targetPool,
-      riskRatio: RiskRatio.createFrom({
-        ratio: Percentage.createFrom({ value: 0.5 }),
-        type: RiskRatio.type.LTV,
-      }),
     },
     steps: [],
   }
