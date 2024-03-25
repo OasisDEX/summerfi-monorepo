@@ -10,7 +10,7 @@ export class ProtocolManager implements IProtocolManager {
 
   private PoolIdSchema = z.object({
     protocol: z.object({
-      name: z.literal(ProtocolName.AAVEv3),
+      name: z.nativeEnum(ProtocolName),
       chainInfo: z.object({
         name: z.string(),
         chainId: z.custom<ChainId>(),
