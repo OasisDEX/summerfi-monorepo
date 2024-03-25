@@ -4,6 +4,8 @@ import { Token } from '../common/implementation/Token'
 import { TokenAmount } from '../common/implementation/TokenAmount'
 import { FlashloanProvider, SimulationSteps } from './Enums'
 import { ReferenceableField, ValueReference } from './ValueReference'
+import { SwapProviderType } from '@summerfi/swap-common/enums'
+import { SwapRoute } from "@summerfi/swap-common/types"
 
 export interface Step<T extends SimulationSteps, I, O = undefined, N extends string = string> {
   type: T
@@ -58,6 +60,8 @@ export interface SwapStep
   extends Step<
     SimulationSteps.Swap,
     {
+      provider: SwapProviderType
+      routes: SwapRoute[]
       fromTokenAmount: TokenAmount
       toTokenAmount: TokenAmount
       slippage: Percentage

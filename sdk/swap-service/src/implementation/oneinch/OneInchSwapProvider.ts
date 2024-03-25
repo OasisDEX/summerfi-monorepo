@@ -1,19 +1,19 @@
 import { ISwapProvider } from '@summerfi/swap-common/interfaces'
 import { SwapProviderType } from '@summerfi/swap-common/enums'
-import { SwapData, QuoteData } from '@summerfi/swap-common/types'
+import { SwapData, SwapRoute, QuoteData } from '@summerfi/swap-common/types'
 import {
   OneInchAuthHeader,
   OneInchAuthHeaderKey,
   OneInchQuoteResponse,
   OneInchSwapProviderConfig,
-  OneInchSwapResponse,
+  OneInchSwapResponse, OneInchSwapRoute,
 } from './types'
 import { HexData } from '@summerfi/sdk-common/common/aliases'
 import fetch from 'node-fetch'
 import {
   type ChainInfo,
   TokenAmount,
-  type Percentage,
+  Percentage,
   type Token,
   Address,
 } from '@summerfi/sdk-common/common'
@@ -106,6 +106,7 @@ export class OneInchSwapProvider implements ISwapProvider {
         token: params.toToken,
         amount: responseData.toTokenAmount,
       }),
+      routes: this._extractSwapRoutes(responseData.protocols),
       estimatedGas: responseData.estimatedGas,
     }
   }
@@ -151,5 +152,14 @@ export class OneInchSwapProvider implements ISwapProvider {
       : ''
 
     return `${this._apiUrl}/${this._version}/${chainId}/quote?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&protocols=${protocolsParam}`
+  }
+
+  private _extractSwapRoutes(protocols: OneInchSwapRoute[]): SwapRoute[] {
+    return protocols.map(route => (route.map(hop => hop.map(hopPart => ({
+      name: hopPart.name,
+      part: Percentage.createFrom({percentage: hopPart.part}),
+      fromTokenAddress: Address.createFrom({value: hopPart.fromTokenAddress as HexData}),
+      toTokenAddress: Address.createFrom({value: hopPart.toTokenAddress as HexData})
+    })))))
   }
 }

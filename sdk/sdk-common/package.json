@@ -21,7 +21,8 @@
     "bignumber.js": "9.0.1",
     "superjson": "^1.13.3",
     "viem": "^2.2.0",
-    "@summerfi/common": "workspace:*"
+    "@summerfi/common": "workspace:*",
+    "@summerfi/swap-common": "workspace:*"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

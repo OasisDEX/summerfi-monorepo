@@ -1,4 +1,4 @@
-import { TokenAmount } from '@summerfi/sdk-common/common'
+import { TokenAmount, Percentage, Address } from '@summerfi/sdk-common/common'
 import type { SwapProviderType } from '../enums/SwapProviderType'
 
 /**
@@ -11,4 +11,17 @@ export type QuoteData = {
   fromTokenAmount: TokenAmount
   toTokenAmount: TokenAmount
   estimatedGas: string
+  /* Providers can provide multiple routes */
+  routes: SwapRoute[]
+}
+
+export type SwapRoute = SwapHop[]
+
+type SwapHop = SwapHopPart[]
+
+type SwapHopPart = {
+  name: string,
+  part: Percentage
+  fromTokenAddress: Address
+  toTokenAddress: Address
 }

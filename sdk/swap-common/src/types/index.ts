@@ -1,2 +1,2 @@
 export type { SwapData } from './SwapData'
-export type { QuoteData } from './QuoteData'
+export type { QuoteData, SwapRoute } from './QuoteData'

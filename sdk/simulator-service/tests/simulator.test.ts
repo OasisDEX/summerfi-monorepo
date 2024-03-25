@@ -1,5 +1,5 @@
 import { Percentage } from '@summerfi/sdk-common/common'
-import { refinaceLendingToLending } from '../src/implementation/strategies'
+import { refinanceLendingToLending } from '../src/implementation/strategies'
 import { Simulation, SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
 import {
   otherTestCollateral,
@@ -14,7 +14,7 @@ describe('Refinance', () => {
   describe('to the position with the same collateral and debt (no swaps)', () => {
     let simulation: Simulation<SimulationType.Refinance>
     beforeAll(async () => {
-      simulation = await refinaceLendingToLending(
+      simulation = await refinanceLendingToLending(
         {
           position: testSourcePosition,
           targetPool: testTargetLendingPool,
@@ -60,7 +60,7 @@ describe('Refinance', () => {
   describe.skip('to the position with the different collateral and debt (with swaps)', () => {
     let simulation: Simulation<SimulationType.Refinance>
     beforeAll(async () => {
-      simulation = await refinaceLendingToLending(
+      simulation = await refinanceLendingToLending(
         {
           position: testSourcePosition,
           targetPool: testTargetLendingPoolRequiredSwaps,

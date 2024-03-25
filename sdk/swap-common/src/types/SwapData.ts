@@ -13,5 +13,6 @@ export type SwapData = {
   calldata: HexData
   targetContract: Address
   value: string
+  /* The gas price for the swap portion of the t/x only */
   gasPrice: string
 }

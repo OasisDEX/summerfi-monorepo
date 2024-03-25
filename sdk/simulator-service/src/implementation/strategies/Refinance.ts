@@ -4,7 +4,7 @@ import {
   SimulationSteps,
   SimulationType,
 } from '@summerfi/sdk-common/simulation'
-import { getReferencedValue, makeStrategy } from '../helpers'
+import { getReferencedValue, makeStrategy } from '../utils'
 import { Simulator } from '../simulator-engine'
 import { Percentage, TokenAmount } from '@summerfi/sdk-common/common'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
@@ -52,7 +52,7 @@ export interface RefinanceDependencies {
   getSummerFee: () => Percentage
 }
 
-export async function refinaceLendingToLending(
+export async function refinanceLendingToLending(
   args: RefinanceParameters,
   dependencies: RefinanceDependencies,
 ): Promise<Simulation<SimulationType.Refinance>> {
@@ -146,9 +146,6 @@ export async function refinaceLendingToLending(
     .next(async (ctx) => ({
       name: 'DebtSwap',
       type: SimulationSteps.Swap,
-      // inputs: await dependencies.getQuote({
-      //   from: getReferencedValue(ctx.getReference(['DepositBorrow', 'borrowAmount'])),
-      //   to: args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token,
       inputs: {
         ...(await dependencies.swapManager.getSwapQuoteExactInput({
           chainInfo: args.position.pool.protocol.chainInfo,
@@ -180,7 +177,6 @@ export async function refinaceLendingToLending(
     }))
     .run()
 
-  // TODO: I think simulation should return the simulation position as a preperty targetPosition for easy discoverability
   const targetPosition = Object.values(simulation.positions).find(
     (p) => p.pool.protocol === args.targetPool.protocol,
   )
@@ -193,6 +189,7 @@ export async function refinaceLendingToLending(
     simulationType: SimulationType.Refinance,
     sourcePosition: args.position,
     targetPosition,
+    swaps: [],
     steps: Object.values(simulation.steps),
   }
 }
