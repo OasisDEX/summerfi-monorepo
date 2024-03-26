@@ -18,9 +18,9 @@
   },
   "dependencies": {
     "@summerfi/sdk-common": "workspace:*",
-    "@summerfi/order-planner-common": "workspace:*",
     "@summerfi/deployment-utils": "workspace:*",
     "@summerfi/deployment-types": "workspace:*",
+    "@summerfi/protocol-plugins-common": "workspace:*",
     "bignumber.js": "9.0.1",
     "zod": "^3.22.4"
   },

@@ -13,7 +13,7 @@ describe('Pull TokenAction Builder', () => {
   // Tokens
   const WETH = Token.createFrom({
     chainInfo,
-    address: Address.createFrom({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
+    address: Address.createFromEthereum({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
     symbol: 'WETH',
     name: 'Wrapped Ether',
     decimals: 18,

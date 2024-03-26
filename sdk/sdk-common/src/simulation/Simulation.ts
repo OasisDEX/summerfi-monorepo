@@ -1,4 +1,4 @@
-import { Position } from '../common/implementation/Position'
+import { IPosition } from '../common/interfaces/IPosition'
 import type { SimulationType } from './Enums'
 import type { Steps } from './Steps'
 
@@ -8,8 +8,8 @@ import type { Steps } from './Steps'
  */
 export interface Simulation<T extends SimulationType> {
   simulationType: T
-  sourcePosition?: Position // TODO figure what do to when opening position (empty position or optional)
-  targetPosition: Position
+  sourcePosition?: IPosition // TODO figure what do to when opening position (empty position or optional)
+  targetPosition: IPosition
   steps: Steps[]
   // TODO: OPEN QUESTION: where errors and warnings and info messages?
 }

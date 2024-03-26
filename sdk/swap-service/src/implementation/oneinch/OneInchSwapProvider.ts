@@ -68,7 +68,7 @@ export class OneInchSwapProvider implements ISwapProvider {
         amount: responseData.toTokenAmount,
       }),
       calldata: responseData.tx.data as HexData,
-      targetContract: Address.createFrom({ value: responseData.tx.to as HexData }),
+      targetContract: Address.createFromEthereum({ value: responseData.tx.to as HexData }),
       value: responseData.tx.value,
       gasPrice: responseData.tx.gasPrice,
     }

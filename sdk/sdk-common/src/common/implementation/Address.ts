@@ -1,17 +1,13 @@
+import { IAddress } from '../interfaces/IAddress'
 import { SerializationService } from '../../services/SerializationService'
 import { AddressValue } from '../aliases/AddressValue'
 import { AddressType } from '../enums/AddressType'
-
-interface IAddressSerialized {
-  value: AddressValue
-  type: AddressType
-}
 
 /**
  * @class Address
  * @description Represents a blockchain address, including its type
  */
-export class Address implements IAddressSerialized {
+export class Address implements IAddress {
   public static ZeroAddressEthereum: Address = new Address({
     value: '0x0000000000000000000000000000000000000000',
     type: AddressType.Ethereum,
@@ -20,19 +16,21 @@ export class Address implements IAddressSerialized {
   readonly value: AddressValue
   readonly type: AddressType
 
-  private constructor(params: IAddressSerialized) {
+  private constructor(params: IAddress) {
+    if (Address.isValid(params.value) === false) {
+      throw new Error('Address value is invalid')
+    }
+
     this.value = params.value
     this.type = params.type
   }
 
-  static createFrom({ value }: { value: AddressValue }): Address {
-    if (this.isValid(value) === false) {
-      throw new Error('value is invalid')
-    }
+  static createFrom(params: IAddress): Address {
+    return new Address(params)
+  }
 
-    const type = this.getType(value)
-
-    return new Address({ value, type })
+  static createFromEthereum(params: { value: AddressValue }): Address {
+    return new Address({ ...params, type: AddressType.Ethereum })
   }
 
   static isValid(address: string): boolean {

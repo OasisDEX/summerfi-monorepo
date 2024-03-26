@@ -1,6 +1,4 @@
 import { ILKType } from '@summerfi/sdk-common/protocols'
-import { BaseAction } from '../src/actions/BaseAction'
-import { ActionCall } from '../src/actions'
 import { OrderPlannerContext } from '../src/context'
 import {
   Address,
@@ -11,9 +9,10 @@ import {
   TokenAmount,
 } from '@summerfi/sdk-common/common'
 import { MakerPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
+import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
 import { ActionNames } from '@summerfi/deployment-types'
 import { ChainFamilyMap } from '@summerfi/sdk-common/common'
+import { ActionCall, BaseAction } from '@summerfi/protocol-plugins-common'
 
 class DerivedAction extends BaseAction {
   public readonly config = {
@@ -41,7 +40,7 @@ describe('Order Planner Context', () => {
   // Tokens
   const WETH = Token.createFrom({
     chainInfo,
-    address: Address.createFrom({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
+    address: Address.createFromEthereum({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
     symbol: 'WETH',
     name: 'Wrapped Ether',
     decimals: 18,
@@ -49,7 +48,7 @@ describe('Order Planner Context', () => {
 
   const DAI = Token.createFrom({
     chainInfo,
-    address: Address.createFrom({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
+    address: Address.createFromEthereum({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
     symbol: 'DAI',
     name: 'Dai Stablecoin',
     decimals: 18,
@@ -107,6 +106,7 @@ describe('Order Planner Context', () => {
         depositAmount: depositAmount,
         borrowAmount: borrowAmount,
         position: position,
+        borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
       outputs: {
         depositAmount: depositAmount,
@@ -161,6 +161,7 @@ describe('Order Planner Context', () => {
         depositAmount: depositAmount,
         borrowAmount: borrowAmount,
         position: position,
+        borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
       outputs: {
         depositAmount: depositAmount,
