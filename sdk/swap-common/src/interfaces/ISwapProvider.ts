@@ -42,14 +42,14 @@ export interface ISwapProvider {
   }): Promise<QuoteData>
 
   /**
-   * @name getSpotPrice
+   * @name getSpotPrices
    * @description Returns the prevailing market price for a given asset
    *              in terms of a base currency
    * @param chainInfo The chain information
    * @param tokens An array of token's for which you require a price
    * @param quoteCurrency The currency in which a token is quoted in (the denominator)
    */
-  getSpotPrice(params: {
+  getSpotPrices(params: {
     chainInfo: ChainInfo
     tokens: Token[]
     quoteCurrency?: CurrencySymbol

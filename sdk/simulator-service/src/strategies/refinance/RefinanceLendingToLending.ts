@@ -69,7 +69,7 @@ export async function refinanceLendingToLending(
           toToken:
             args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token,
         })),
-        ...(await dependencies.swapManager.getSpotPrice({
+        ...(await dependencies.swapManager.getSpotPrices({
           chainInfo: args.position.pool.protocol.chainInfo,
           tokens: [
             args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token,
@@ -110,7 +110,7 @@ export async function refinanceLendingToLending(
           ),
           toToken: args.targetPool.debts[args.position.debtAmount.token.address.value].token,
         })),
-        ...(await dependencies.swapManager.getSpotPrice({
+        ...(await dependencies.swapManager.getSpotPrices({
           chainInfo: args.position.pool.protocol.chainInfo,
           tokens: [
             args.targetPool.debts[args.position.debtAmount.token.address.value].token,

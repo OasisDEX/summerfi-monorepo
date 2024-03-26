@@ -59,7 +59,7 @@ export class SwapManager implements ISwapManager {
     return provider.getSwapQuoteExactInput(params)
   }
 
-  async getSpotPrice(params: {
+  async getSpotPrices(params: {
     chainInfo: ChainInfo
     tokens: Token[]
     quoteCurrency?: CurrencySymbol
@@ -70,7 +70,7 @@ export class SwapManager implements ISwapManager {
       throw new Error('No swap provider available')
     }
 
-    return provider.getSpotPrice(params)
+    return provider.getSpotPrices(params)
   }
 
   private _registerProvider(provider: ISwapProvider, forChainIds: number[]): void {

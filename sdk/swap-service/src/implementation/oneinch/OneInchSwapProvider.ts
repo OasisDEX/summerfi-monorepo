@@ -121,7 +121,7 @@ export class OneInchSwapProvider implements ISwapProvider {
     }
   }
 
-  async getSpotPrice(params: {
+  async getSpotPrices(params: {
     chainInfo: ChainInfo
     tokens: Token[]
     quoteCurrency?: CurrencySymbol

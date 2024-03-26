@@ -1,4 +1,13 @@
-import { Address, ChainInfo, Percentage, Token, TokenAmount } from '@summerfi/sdk-common/common'
+import {
+  Address,
+  ChainInfo,
+  Price,
+  Percentage,
+  Token,
+  TokenAmount,
+  type AddressValue,
+  CurrencySymbol,
+} from '@summerfi/sdk-common/common'
 import { SwapProviderType } from '@summerfi/sdk-common/swap'
 
 async function getSwapDataExactInput(params: {
@@ -32,6 +41,30 @@ async function getSwapQuoteExactInput(params: {
   }
 }
 
+async function getSpotPrices(params: { chainInfo: ChainInfo; tokens: Token[] }) {
+  const MOCK_PRICE = 0.5
+  const MOCK_QUOTE_CURRENCY = CurrencySymbol.USD
+  return {
+    provider: SwapProviderType.OneInch,
+    prices: params.tokens
+      .map((token) => [token.address.value, MOCK_PRICE])
+      .map(([address, price]) => {
+        const baseToken = params.tokens.find((token) =>
+          token.address.equals(Address.createFrom({ value: address as AddressValue })),
+        )
+        if (!baseToken) {
+          throw new Error('BaseToken not found in params.tokens list when fetching spot prices')
+        }
+
+        return Price.createFrom({
+          value: price.toString(),
+          baseToken,
+          quoteToken: MOCK_QUOTE_CURRENCY,
+        })
+      }),
+  }
+}
+
 export function mockGetFee() {
   return Percentage.createFrom({ percentage: 0 })
 }
@@ -41,5 +74,6 @@ export const mockRefinanceContext = {
   swapManager: {
     getSwapDataExactInput: getSwapDataExactInput,
     getSwapQuoteExactInput: jest.fn().mockImplementation(getSwapQuoteExactInput),
+    getSpotPrices: getSpotPrices,
   },
 }
