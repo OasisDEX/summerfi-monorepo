@@ -27,6 +27,8 @@ export interface OneInchSwapResponse extends OneInchBaseResponse {
   }
 }
 
+export type OneInchSpotResponse = Record<string, number>
+
 export interface OneInchQuoteResponse extends OneInchBaseResponse {
   /* One Inch can provide multiple routes */
   protocols: OneInchSwapRoute[]

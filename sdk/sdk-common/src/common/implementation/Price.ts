@@ -1,9 +1,10 @@
+import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
 import { isToken } from '../../utils/isToken'
 import { CurrencySymbol } from '../enums/CurrencySymbol'
 import { Token } from './Token'
 
-interface IPriceSerialized {
+interface IPrice {
   value: string
   baseToken: Token
   quoteToken: Token | CurrencySymbol
@@ -13,14 +14,14 @@ interface IPriceSerialized {
  * @class Price
  * @description Represents a price of a token (baseToken) in a given currency (quoteToken)
  */
-export class Price implements IPriceSerialized {
+export class Price implements IPrice {
   private static readonly DEFAULT_QUOTE_TOKEN = CurrencySymbol.USD
 
   readonly value: string
   readonly baseToken: Token
   readonly quoteToken: Token | CurrencySymbol
 
-  private constructor(params: IPriceSerialized) {
+  private constructor(params: IPrice) {
     this.value = params.value
     this.baseToken = params.baseToken
     this.quoteToken = params.quoteToken
@@ -44,6 +45,10 @@ export class Price implements IPriceSerialized {
     } else {
       return `${this.value} ${this.baseToken.symbol}/${this.quoteToken}`
     }
+  }
+
+  public toBN(): BigNumber {
+    return new BigNumber(this.value)
   }
 }
 

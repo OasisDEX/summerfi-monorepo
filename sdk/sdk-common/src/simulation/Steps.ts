@@ -1,3 +1,4 @@
+import { Price } from '../common/implementation/Price'
 import { Percentage } from '../common/implementation/Percentage'
 import { Position } from '../common/implementation/Position'
 import { Token } from '../common/implementation/Token'
@@ -61,6 +62,7 @@ export interface SwapStep
     {
       provider: SwapProviderType
       routes: SwapRoute[]
+      prices: Price[]
       fromTokenAmount: TokenAmount
       toTokenAmount: TokenAmount
       slippage: Percentage

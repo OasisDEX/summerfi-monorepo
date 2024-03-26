@@ -13,7 +13,7 @@ import { isLendingPool } from '@summerfi/sdk-common/protocols'
 import { refinanceLendingToLendingStrategy } from './Strategy'
 import { RefinanceDependencies } from './Types'
 
-export async function refinance(
+export async function refinanceLendingToLending(
   args: RefinanceParameters,
   dependencies: RefinanceDependencies,
 ): Promise<ISimulation<SimulationType.Refinance>> {
@@ -31,17 +31,6 @@ export async function refinance(
     args.targetPool.collaterals[args.position.collateralAmount.token.address.value] !== undefined
   const isDebtSwapSkipped =
     args.targetPool.debts[args.position.debtAmount.token.address.value] !== undefined
-
-  // let debtSwapQuote: Quote | undefined
-  // TODO: implement case with swaps
-  // if (!isDebtSwapSkipped) {
-  //     debtSwapQuote = await dependencies.getQuote({
-  //         from: args.targetPool.debtTokens[0],
-  //         to: args.position.debtAmount.token,
-  //         slippage: args.slippage,
-  //         fee: 0,
-  //     })
-  // }
 
   // TODO: read debt amount from chain (special step: ReadDebtAmount)
   // TODO: the swap quote should also include the summer fee, in this case we need to know when we are taking the fee,
@@ -80,6 +69,13 @@ export async function refinance(
           toToken:
             args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token,
         })),
+        ...(await dependencies.swapManager.getSpotPrice({
+          chainInfo: args.position.pool.protocol.chainInfo,
+          tokens: [
+            args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token,
+            args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token,
+          ],
+        })),
         slippage: args.slippage,
         fee: dependencies.getSummerFee(),
       },
@@ -102,6 +98,7 @@ export async function refinance(
         ),
       },
     }))
+    // TODO: Implement swapping logic properly. Current implementation is just placeholder
     .next(async (ctx) => ({
       name: 'DebtSwap',
       type: SimulationSteps.Swap,
@@ -112,6 +109,13 @@ export async function refinance(
             ctx.getReference(['DepositBorrowToTarget', 'borrowAmount']),
           ),
           toToken: args.targetPool.debts[args.position.debtAmount.token.address.value].token,
+        })),
+        ...(await dependencies.swapManager.getSpotPrice({
+          chainInfo: args.position.pool.protocol.chainInfo,
+          tokens: [
+            args.targetPool.debts[args.position.debtAmount.token.address.value].token,
+            args.targetPool.debts[args.position.debtAmount.token.address.value].token,
+          ],
         })),
         slippage: args.slippage,
         fee: dependencies.getSummerFee(),
