@@ -63,7 +63,6 @@ export interface SwapStep
       routes: SwapRoute[]
       fromTokenAmount: TokenAmount
       toTokenAmount: TokenAmount
-      estimatedGas: string
       slippage: Percentage
       fee: Percentage
     },

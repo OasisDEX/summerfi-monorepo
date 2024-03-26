@@ -60,7 +60,6 @@ describe('Swap Action Builder', () => {
       inputs: {
         provider: SwapProviderType.OneInch,
         routes: [],
-        estimatedGas: '',
         fromTokenAmount: fromAmount,
         toTokenAmount: toAmount,
         fee: fee,
