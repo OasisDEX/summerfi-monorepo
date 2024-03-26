@@ -65,8 +65,7 @@ export async function refinance(
         ...(await dependencies.swapManager.getSwapQuoteExactInput({
           chainInfo: args.position.pool.protocol.chainInfo,
           fromAmount: args.position.collateralAmount,
-          toToken:
-            args.targetPool.collaterals[args.position.collateralAmount.token.address.value].token,
+          toToken: args.targetPool.collaterals[args.targetCollateral.value].token,
         })),
         slippage: args.slippage,
         fee: dependencies.getSummerFee(),
@@ -82,11 +81,11 @@ export async function refinance(
             ? ['PaybackWithdrawFromSource', 'withdrawAmount']
             : ['CollateralSwap', 'receivedAmount'],
         ),
-        borrowAmount: args.position.debtAmount, // TODO figure the debt amount
+        borrowAmount: args.position.debtAmount, // TODO: figure the debt amount after Swap
         position: newEmptyPositionFromPool(
           args.targetPool,
-          args.position.debtAmount.token.address.value,
-          args.position.collateralAmount.token.address.value,
+          args.targetDebt.value,
+          args.targetCollateral.value,
         ),
       },
     }))
@@ -99,7 +98,7 @@ export async function refinance(
           fromAmount: getReferencedValue(
             ctx.getReference(['DepositBorrowToTarget', 'borrowAmount']),
           ),
-          toToken: args.targetPool.debts[args.position.debtAmount.token.address.value].token,
+          toToken: args.targetPool.debts[args.targetDebt.value].token,
         })),
         slippage: args.slippage,
         fee: dependencies.getSummerFee(),

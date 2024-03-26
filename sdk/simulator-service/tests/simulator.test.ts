@@ -64,27 +64,27 @@ describe('Refinance', () => {
     })
   })
 
-  describe.skip('to the position with the different collateral and debt (with swaps)', () => {
+  describe.only('to the position with the different collateral and debt (with swaps)', () => {
     let simulation: ISimulation<SimulationType.Refinance>
     beforeAll(async () => {
+      // Swapped the tokens around to force two swaps
+      console.log("targetDebt", testTargetLendingPoolRequiredSwaps.debts[testSourcePosition.collateralAmount.token.address.value].token.address)
+      console.log("targetColl", testTargetLendingPoolRequiredSwaps.collaterals[testSourcePosition.debtAmount.token.address.value].token.address)
       simulation = await refinance(
         {
           position: testSourcePosition,
           targetPool: testTargetLendingPoolRequiredSwaps,
           targetDebt:
-            testTargetLendingPool.debts[testSourcePosition.debtAmount.token.address.value].token
-              .address,
+            testTargetLendingPoolRequiredSwaps.debts[testSourcePosition.collateralAmount.token.address.value].token.address,
           targetCollateral:
-            testTargetLendingPool.collaterals[
-              testSourcePosition.collateralAmount.token.address.value
-            ].token.address,
+            testTargetLendingPoolRequiredSwaps.collaterals[testSourcePosition.debtAmount.token.address.value].token.address,
           slippage: Percentage.createFrom({ percentage: 1 }),
         },
         mockRefinanceContext,
       )
     })
 
-    it('should include two swap steps', async () => {
+    it.only('should include two swap steps', async () => {
       const steps = simulation.steps.filter((step) => !step.skip).map((step) => step.type)
 
       expect(steps.length).toBe(2)

@@ -140,29 +140,29 @@ export const testTargetLendingPool = new LendingPool({
 
 export const testTargetLendingPoolRequiredSwaps = new LendingPool({
   collaterals: {
-    [testCollateral.address.value]: {
-      token: testCollateral,
-      price: Price.createFrom({ value: '100', baseToken: testCollateral }),
-      priceUSD: Price.createFrom({ value: '100', baseToken: testCollateral }),
-      liquidationThreshold: RiskRatio.createFrom({
-        ratio: Percentage.createFrom({ percentage: 80 }),
-        type: RiskRatio.type.LTV,
-      }),
-      maxSupply: TokenAmount.createFrom({ token: testCollateral, amount: '10000000' }),
-      tokensLocked: TokenAmount.createFrom({ token: testCollateral, amount: '1000000' }),
-      liquidationPenalty: Percentage.createFrom({ percentage: 5 }),
-    },
-  },
-  debts: {
     [testDebt.address.value]: {
       token: testDebt,
       price: Price.createFrom({ value: '100', baseToken: testDebt }),
       priceUSD: Price.createFrom({ value: '100', baseToken: testDebt }),
+      liquidationThreshold: RiskRatio.createFrom({
+        ratio: Percentage.createFrom({ percentage: 80 }),
+        type: RiskRatio.type.LTV,
+      }),
+      maxSupply: TokenAmount.createFrom({ token: testDebt, amount: '10000000' }),
+      tokensLocked: TokenAmount.createFrom({ token: testDebt, amount: '1000000' }),
+      liquidationPenalty: Percentage.createFrom({ percentage: 5 }),
+    },
+  },
+  debts: {
+    [testCollateral.address.value]: {
+      token: testCollateral,
+      price: Price.createFrom({ value: '100', baseToken: testCollateral }),
+      priceUSD: Price.createFrom({ value: '100', baseToken: testCollateral }),
       rate: Percentage.createFrom({ percentage: 5 }),
-      totalBorrowed: TokenAmount.createFrom({ token: testDebt, amount: '100000' }),
-      debtCeiling: TokenAmount.createFrom({ token: testDebt, amount: '1000000' }),
-      debtAvailable: TokenAmount.createFrom({ token: testDebt, amount: '100000' }),
-      dustLimit: TokenAmount.createFrom({ token: testDebt, amount: '100' }),
+      totalBorrowed: TokenAmount.createFrom({ token: testCollateral, amount: '100000' }),
+      debtCeiling: TokenAmount.createFrom({ token: testCollateral, amount: '1000000' }),
+      debtAvailable: TokenAmount.createFrom({ token: testCollateral, amount: '100000' }),
+      dustLimit: TokenAmount.createFrom({ token: testCollateral, amount: '100' }),
       originationFee: Percentage.createFrom({ percentage: 1 }),
     },
   },
