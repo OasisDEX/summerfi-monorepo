@@ -24,11 +24,11 @@ export class PositionUtils {
     const debtValue = new BigNumber(debtTokenAmount.amount).times(debtPriceInUsd.value)
     // If the collateral value is 0, return 0.
     if (collValue.isZero()) {
-      return Percentage.createFrom({ percentage: 0 })
+      return Percentage.createFrom({ value: 0 })
     }
     // Divide the borrowed value by the collateral value and multiply by 100 to get the percentage LTV.
     const ltvRatio = debtValue.div(collValue).times(100).toNumber()
-    return Percentage.createFrom({ percentage: ltvRatio })
+    return Percentage.createFrom({ value: ltvRatio })
   }
 
   static getLiquidationPriceInUsd({

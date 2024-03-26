@@ -1,4 +1,10 @@
-import { Percentage, TokenAmount, type Position, Price } from '@summerfi/sdk-common/common'
+import {
+  Percentage,
+  TokenAmount,
+  type Position,
+  Price,
+  CurrencySymbol,
+} from '@summerfi/sdk-common/common'
 
 import { PositionUtils } from '../src/utils/PositionUtils'
 import { WETH, DAI } from './TestUtils'
@@ -7,10 +13,12 @@ describe('PositionUtils', () => {
   const ethPriceInUsd = Price.createFrom({
     value: '1000',
     baseToken: WETH,
+    quoteToken: CurrencySymbol.USD,
   })
   const daiPriceInUsd = Price.createFrom({
     value: '1',
     baseToken: DAI,
+    quoteToken: CurrencySymbol.USD,
   })
 
   describe('getLTV', () => {
@@ -25,7 +33,7 @@ describe('PositionUtils', () => {
         debtPriceInUsd: daiPriceInUsd,
       })
 
-      expect(result).toEqual(Percentage.createFrom({ percentage: 25 }))
+      expect(result).toEqual(Percentage.createFrom({ value: 25 }))
     })
 
     it('should return 0 when debt is equal to 0', () => {
@@ -39,7 +47,7 @@ describe('PositionUtils', () => {
         debtPriceInUsd: daiPriceInUsd,
       })
 
-      expect(result).toEqual(Percentage.createFrom({ percentage: 0 }))
+      expect(result).toEqual(Percentage.createFrom({ value: 0 }))
     })
 
     it('should return 0 when collateral amount is 0', () => {
@@ -53,7 +61,7 @@ describe('PositionUtils', () => {
         debtPriceInUsd: daiPriceInUsd,
       })
 
-      expect(result).toEqual(Percentage.createFrom({ percentage: 0 }))
+      expect(result).toEqual(Percentage.createFrom({ value: 0 }))
     })
 
     it('should return 100 when debt is equal to collateral', () => {
@@ -67,13 +75,13 @@ describe('PositionUtils', () => {
         debtPriceInUsd: daiPriceInUsd,
       })
 
-      expect(result).toEqual(Percentage.createFrom({ percentage: 100 }))
+      expect(result).toEqual(Percentage.createFrom({ value: 100 }))
     })
   })
 
   describe('getLiquidationPrice', () => {
     it('should correctly calculate liquidation price when debt amount is not 0', () => {
-      const liquidationThreshold = Percentage.createFrom({ percentage: 80 })
+      const liquidationThreshold = Percentage.createFrom({ value: 80 })
 
       const liquidationPrice = PositionUtils.getLiquidationPriceInUsd({
         position: {
@@ -107,7 +115,7 @@ describe('PositionUtils', () => {
     })
 
     it('should return 0 when debt amount is 0', () => {
-      const liquidationThreshold = Percentage.createFrom({ percentage: 80 })
+      const liquidationThreshold = Percentage.createFrom({ value: 80 })
 
       const liquidationPrice = PositionUtils.getLiquidationPriceInUsd({
         position: {
