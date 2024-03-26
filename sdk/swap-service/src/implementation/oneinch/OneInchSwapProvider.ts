@@ -1,12 +1,12 @@
 import { ISwapProvider } from '@summerfi/swap-common/interfaces'
-import { SwapProviderType } from '@summerfi/swap-common/enums'
-import { SwapData, SwapRoute, QuoteData } from '@summerfi/swap-common/types'
+import { SwapProviderType, SwapData, SwapRoute, QuoteData } from '@summerfi/sdk-common/swap'
 import {
   OneInchAuthHeader,
   OneInchAuthHeaderKey,
   OneInchQuoteResponse,
   OneInchSwapProviderConfig,
-  OneInchSwapResponse, OneInchSwapRoute,
+  OneInchSwapResponse,
+  OneInchSwapRoute,
 } from './types'
 import { HexData } from '@summerfi/sdk-common/common/aliases'
 import fetch from 'node-fetch'
@@ -155,11 +155,15 @@ export class OneInchSwapProvider implements ISwapProvider {
   }
 
   private _extractSwapRoutes(protocols: OneInchSwapRoute[]): SwapRoute[] {
-    return protocols.map(route => (route.map(hop => hop.map(hopPart => ({
-      name: hopPart.name,
-      part: Percentage.createFrom({percentage: hopPart.part}),
-      fromTokenAddress: Address.createFrom({value: hopPart.fromTokenAddress as HexData}),
-      toTokenAddress: Address.createFrom({value: hopPart.toTokenAddress as HexData})
-    })))))
+    return protocols.map((route) =>
+      route.map((hop) =>
+        hop.map((hopPart) => ({
+          name: hopPart.name,
+          part: Percentage.createFrom({ percentage: hopPart.part }),
+          fromTokenAddress: Address.createFrom({ value: hopPart.fromTokenAddress as HexData }),
+          toTokenAddress: Address.createFrom({ value: hopPart.toTokenAddress as HexData }),
+        })),
+      ),
+    )
   }
 }

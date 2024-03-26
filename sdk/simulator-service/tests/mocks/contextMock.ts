@@ -1,5 +1,5 @@
 import { Address, ChainInfo, Percentage, Token, TokenAmount } from '@summerfi/sdk-common/common'
-import { SwapProviderType } from '@summerfi/swap-common/enums'
+import { SwapProviderType } from '@summerfi/sdk-common/swap'
 
 async function getSwapDataExactInput(params: {
   chainInfo: ChainInfo

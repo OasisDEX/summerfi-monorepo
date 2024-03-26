@@ -25,7 +25,7 @@ import {
 import { makeSDK, type Chain, type User, Protocol } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
 import { Order, RefinanceParameters } from '@summerfi/sdk-common/orders'
-import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { PoolIds } from '@summerfi/protocol-manager'
 
 describe.skip('Refinance | SDK', () => {
@@ -181,7 +181,7 @@ describe.skip('Refinance | SDK', () => {
       slippage: Percentage.createFrom({ percentage: 0.5 }),
     }
 
-    const refinanceSimulation: Simulation<SimulationType.Refinance> =
+    const refinanceSimulation: ISimulation<SimulationType.Refinance> =
       await sdk.simulator.refinance.simulateRefinancePosition(refinanceParameters)
 
     expect(refinanceSimulation).toBeDefined()

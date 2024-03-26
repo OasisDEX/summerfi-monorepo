@@ -2,7 +2,7 @@ import { IProtocol, PoolType, ProtocolName } from '@summerfi/sdk-common/protocol
 import { SDKManager } from '../../src/implementation/SDKManager'
 import { RPCClientType } from '../../src/rpc/SDKClient'
 import { MakerLendingPool, SparkLendingPool } from '@summerfi/protocol-plugins'
-import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import {
   Address,
   ChainFamilyMap,
@@ -76,9 +76,10 @@ export default async function simulateNewOrder() {
     baseCurrency: DAI,
   }
 
-  const simulation: Simulation<SimulationType.Refinance> = {
+  const simulation: ISimulation<SimulationType.Refinance> = {
     simulationType: SimulationType.Refinance,
     sourcePosition: prevPosition,
+    swaps: [],
     targetPosition: {
       positionId: PositionId.createFrom({ id: '1234567890' }),
       debtAmount: TokenAmount.createFrom({ token: DAI, amount: '56.78' }),

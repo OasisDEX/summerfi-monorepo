@@ -1,6 +1,6 @@
 import { Address, ChainInfo, Percentage, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import { QuoteData, SwapData } from '@summerfi/swap-common/types'
+import { QuoteData, SwapData } from '@summerfi/sdk-common/swap'
 
 export class SwapManagerMock implements ISwapManager {
   private _swapDataReturnValue: SwapData = {} as SwapData

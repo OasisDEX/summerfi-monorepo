@@ -21,8 +21,8 @@ export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISim
         toTokenAmount: step.inputs.toTokenAmount,
         slippage: step.inputs.slippage,
         fee: step.inputs.fee,
-        estimatedGas: step.inputs.estimatedGas
-      }
+        estimatedGas: step.inputs.estimatedGas,
+      },
     },
     balances: balanceWithToToken,
   }

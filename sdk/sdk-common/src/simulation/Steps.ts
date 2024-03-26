@@ -2,10 +2,9 @@ import { Percentage } from '../common/implementation/Percentage'
 import { Position } from '../common/implementation/Position'
 import { Token } from '../common/implementation/Token'
 import { TokenAmount } from '../common/implementation/TokenAmount'
+import { SwapProviderType, SwapRoute } from '../swap'
 import { FlashloanProvider, SimulationSteps } from './Enums'
 import { ReferenceableField, ValueReference } from './ValueReference'
-import { SwapProviderType } from '@summerfi/swap-common/enums'
-import { SwapRoute } from "@summerfi/swap-common/types"
 
 export interface Step<T extends SimulationSteps, I, O = undefined, N extends string = string> {
   type: T

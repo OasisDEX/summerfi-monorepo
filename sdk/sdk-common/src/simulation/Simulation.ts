@@ -1,5 +1,5 @@
 import { Position } from '../common/implementation/Position'
-import {SimulatedSwapData} from "../swap";
+import { SimulatedSwapData } from '../swap'
 import type { SimulationType } from './Enums'
 import type { Steps } from './Steps'
 

@@ -2,7 +2,7 @@ import { IProtocol, PoolType, ProtocolName } from '@summerfi/sdk-common/protocol
 import { SDKManager } from '../../src/implementation/SDKManager'
 import { RPCClientType } from '../../src/rpc/SDKClient'
 import { MakerLendingPool, SparkLendingPool } from '@summerfi/protocol-plugins'
-import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import {
   Address,
   ChainFamilyMap,
@@ -22,6 +22,7 @@ export default async function simulateRefinanceTest() {
     return {
       simulationType: SimulationType.Refinance,
       sourcePosition: params.position,
+      swaps: [],
       targetPosition: {
         positionId: PositionId.createFrom({ id: '0987654321' }),
         debtAmount: params.position.debtAmount,
@@ -30,7 +31,7 @@ export default async function simulateRefinanceTest() {
         riskRatio: params.position.riskRatio,
       },
       steps: [],
-    } as Simulation<SimulationType.Refinance>
+    } as ISimulation<SimulationType.Refinance>
   })
 
   const rpcClient = {

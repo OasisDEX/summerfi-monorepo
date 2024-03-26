@@ -1,5 +1,5 @@
 import { Order, type IPositionsManager } from '@summerfi/sdk-common/orders'
-import { Simulation, SimulationType, steps } from '@summerfi/sdk-common/simulation'
+import { ISimulation, SimulationType, steps } from '@summerfi/sdk-common/simulation'
 import { Deployment } from '@summerfi/deployment-utils'
 import { Address, Maybe } from '@summerfi/sdk-common/common'
 import { HexData } from '@summerfi/sdk-common/common/aliases'
@@ -18,7 +18,7 @@ export class OrderPlanner implements IOrderPlanner {
   async buildOrder(params: {
     user: IUser
     positionsManager: IPositionsManager
-    simulation: Simulation<SimulationType>
+    simulation: ISimulation<SimulationType>
     actionBuildersMap: ActionBuildersMap
     deployment: Deployment
     swapManager: ISwapManager
@@ -72,7 +72,7 @@ export class OrderPlanner implements IOrderPlanner {
   }
 
   private _generateOrder(
-    simulation: Simulation<SimulationType>,
+    simulation: ISimulation<SimulationType>,
     simulationCalls: ActionCall[],
     deployment: Deployment,
   ): Order {

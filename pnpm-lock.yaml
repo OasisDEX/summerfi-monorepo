@@ -850,9 +850,6 @@ importers:
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
-      '@summerfi/swap-common':
-        specifier: workspace:*
-        version: link:../swap-common
       bignumber.js:
         specifier: 9.0.1
         version: 9.0.1

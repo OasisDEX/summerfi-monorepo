@@ -9,8 +9,7 @@ import type {
 import { ChainId } from '@summerfi/sdk-common/common'
 
 import { ISwapProvider, ISwapManager } from '@summerfi/swap-common/interfaces'
-import { QuoteData, SwapData } from '@summerfi/swap-common/types'
-import { SwapProviderType } from '@summerfi/swap-common/enums'
+import { QuoteData, SwapData, SwapProviderType } from '@summerfi/sdk-common/swap'
 
 export type SwapManagerProviderConfig = {
   provider: ISwapProvider

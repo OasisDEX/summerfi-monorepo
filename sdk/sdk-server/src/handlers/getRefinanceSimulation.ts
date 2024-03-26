@@ -1,7 +1,7 @@
+import { refinance, type RefinanceDependencies } from '@summerfi/simulator-service/strategies'
 import { z } from 'zod'
 import { Percentage } from '@summerfi/sdk-common/common'
-import type { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import { refinaceLendingToLending, type RefinanceDependencies } from '@summerfi/simulator-service'
+import type { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import type { RefinanceParameters } from '@summerfi/sdk-common/orders'
 import { publicProcedure } from '../TRPC'
 
@@ -9,7 +9,7 @@ const inputSchema = z.custom<RefinanceParameters>((parameters) => parameters !==
 
 export const getRefinanceSimulation = publicProcedure
   .input(inputSchema)
-  .query(async (opts): Promise<Simulation<SimulationType.Refinance>> => {
+  .query(async (opts): Promise<ISimulation<SimulationType.Refinance>> => {
     const args: RefinanceParameters = opts.input
 
     const dependencies: RefinanceDependencies = {
@@ -18,6 +18,6 @@ export const getRefinanceSimulation = publicProcedure
       getSummerFee: () => Percentage.createFrom({ percentage: 0 }),
     }
 
-    const simulation = await refinaceLendingToLending(args, dependencies)
+    const simulation = await refinance(args, dependencies)
     return simulation
   })

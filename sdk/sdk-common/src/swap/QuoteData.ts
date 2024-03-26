@@ -20,7 +20,7 @@ export type SwapRoute = SwapHop[]
 type SwapHop = SwapHopPart[]
 
 type SwapHopPart = {
-  name: string,
+  name: string
   part: Percentage
   fromTokenAddress: Address
   toTokenAddress: Address

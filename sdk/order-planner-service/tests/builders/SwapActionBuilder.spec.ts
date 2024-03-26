@@ -8,7 +8,7 @@ import {
   TokenAmount,
 } from '@summerfi/sdk-common/common'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { SwapProviderType } from '@summerfi/swap-common/enums'
+import { SwapProviderType } from '@summerfi/sdk-common/swap'
 
 import { SetupBuilderReturnType, setupBuilderParams } from '../utils/SetupBuilderParams'
 import { SwapActionBuilder } from '../../src/builders'
@@ -58,6 +58,9 @@ describe('Swap Action Builder', () => {
       type: SimulationSteps.Swap,
       name: 'SwapStep',
       inputs: {
+        provider: SwapProviderType.OneInch,
+        routes: [],
+        estimatedGas: '',
         fromTokenAmount: fromAmount,
         toTokenAmount: toAmount,
         fee: fee,

@@ -40,7 +40,7 @@ export type OneInchSwapRoute = OneInchSwapHop[]
 type OneInchSwapHop = OneInchSwapHopPart[]
 
 type OneInchSwapHopPart = {
-  name: string,
+  name: string
   part: number
   fromTokenAddress: string
   toTokenAddress: string
