@@ -3,6 +3,7 @@ import {
   Simulation,
   SimulationSteps,
   SimulationType,
+  TokenTransferTargetType,
   steps,
 } from '@summerfi/sdk-common/simulation'
 import { Position } from '@summerfi/sdk-common/common'
@@ -48,6 +49,7 @@ export function getRefinanceSimulation(params: {
           depositAmount: targetPosition.collateralAmount,
           borrowAmount: targetPosition.debtAmount,
           position: targetPosition,
+          borrowTargetType: TokenTransferTargetType.PositionsManager,
         },
         outputs: {
           depositAmount: targetPosition.collateralAmount,

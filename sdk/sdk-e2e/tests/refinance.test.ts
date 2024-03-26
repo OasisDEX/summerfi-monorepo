@@ -21,12 +21,12 @@ import {
   EmodeType,
   isLendingPool,
   LendingPool,
+  SparkPoolId,
 } from '@summerfi/sdk-common/protocols'
 import { makeSDK, type Chain, type User, Protocol } from '@summerfi/sdk-client'
-import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
-import { Order, RefinanceParameters } from '@summerfi/sdk-common/orders'
+import { CurrencySymbol, TokenSymbol } from '@summerfi/sdk-common/common/enums'
+import { Order, IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import { PoolIds } from '@summerfi/protocol-manager'
 
 describe.skip('Refinance | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
@@ -44,7 +44,7 @@ describe.skip('Refinance | SDK', () => {
     }
 
     // User
-    const walletAddress = Address.createFrom({
+    const walletAddress = Address.createFromEthereum({
       value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
     })
     const user: User = await sdk.users.getUser({
@@ -81,7 +81,7 @@ describe.skip('Refinance | SDK', () => {
     )
     expect(prevPosition.riskRatio).toEqual(
       RiskRatio.createFrom({
-        ratio: Percentage.createFrom({ percentage: 20.3 }),
+        ratio: Percentage.createFrom({ value: 20.3 }),
         type: RiskRatio.type.LTV,
       }),
     )
@@ -111,35 +111,55 @@ describe.skip('Refinance | SDK', () => {
 
     const poolPair: LendingPoolParameters = {
       debts: {
-        [WETH.address.value]: {
-          token: WETH,
-          price: Price.createFrom({ value: '123.45', baseToken: WETH }),
-          priceUSD: Price.createFrom({ value: '123.45', baseToken: WETH }),
-          rate: Percentage.createFrom({ percentage: 0.5 }),
-          totalBorrowed: TokenAmount.createFrom({ token: WETH, amount: '123456.78' }),
-          debtCeiling: TokenAmount.createFrom({ token: WETH, amount: '100000000.78' }),
-          debtAvailable: TokenAmount.createFrom({ token: WETH, amount: '100000000.78' }),
-          dustLimit: TokenAmount.createFrom({ token: WETH, amount: '0.0001' }),
-          originationFee: Percentage.createFrom({ percentage: 0.5 }),
+        record: {
+          [WETH.address.value]: {
+            token: WETH,
+            price: Price.createFrom({
+              value: '123.45',
+              baseToken: WETH,
+              quoteToken: CurrencySymbol.USD,
+            }),
+            priceUSD: Price.createFrom({
+              value: '123.45',
+              baseToken: WETH,
+              quoteToken: CurrencySymbol.USD,
+            }),
+            rate: Percentage.createFrom({ value: 0.5 }),
+            totalBorrowed: TokenAmount.createFrom({ token: WETH, amount: '123456.78' }),
+            debtCeiling: TokenAmount.createFrom({ token: WETH, amount: '100000000.78' }),
+            debtAvailable: TokenAmount.createFrom({ token: WETH, amount: '100000000.78' }),
+            dustLimit: TokenAmount.createFrom({ token: WETH, amount: '0.0001' }),
+            originationFee: Percentage.createFrom({ value: 0.5 }),
+          },
         },
       },
       collaterals: {
-        [DAI.address.value]: {
-          token: DAI,
-          price: Price.createFrom({ value: '123.45', baseToken: DAI }),
-          priceUSD: Price.createFrom({ value: '123.45', baseToken: DAI }),
-          liquidationThreshold: RiskRatio.createFrom({
-            ratio: Percentage.createFrom({ percentage: 0.5 }),
-            type: RiskRatio.type.LTV,
-          }),
-          maxSupply: TokenAmount.createFrom({ token: DAI, amount: '100000000' }),
-          tokensLocked: TokenAmount.createFrom({ token: DAI, amount: '123456.78' }),
-          liquidationPenalty: Percentage.createFrom({ percentage: 0.5 }),
+        record: {
+          [DAI.address.value]: {
+            token: DAI,
+            price: Price.createFrom({
+              value: '123.45',
+              baseToken: DAI,
+              quoteToken: CurrencySymbol.USD,
+            }),
+            priceUSD: Price.createFrom({
+              value: '123.45',
+              baseToken: DAI,
+              quoteToken: CurrencySymbol.USD,
+            }),
+            liquidationThreshold: RiskRatio.createFrom({
+              ratio: Percentage.createFrom({ value: 0.5 }),
+              type: RiskRatio.type.LTV,
+            }),
+            maxSupply: TokenAmount.createFrom({ token: DAI, amount: '100000000' }),
+            tokensLocked: TokenAmount.createFrom({ token: DAI, amount: '123456.78' }),
+            liquidationPenalty: Percentage.createFrom({ value: 0.5 }),
+          },
         },
       },
     }
 
-    const poolId: PoolIds = {
+    const poolId: SparkPoolId = {
       protocol: {
         name: ProtocolName.Spark,
         chainInfo: chain.chainInfo,
@@ -175,10 +195,10 @@ describe.skip('Refinance | SDK', () => {
     expect(newLendingPool.debts).toEqual(poolPair.debts)
     expect(newLendingPool.collaterals).toEqual(poolPair.collaterals)
 
-    const refinanceParameters: RefinanceParameters = {
+    const refinanceParameters: IRefinanceParameters = {
       position: prevPosition,
       targetPool: newLendingPool,
-      slippage: Percentage.createFrom({ percentage: 0.5 }),
+      slippage: Percentage.createFrom({ value: 0.5 }),
     }
 
     const refinanceSimulation: Simulation<SimulationType.Refinance> =

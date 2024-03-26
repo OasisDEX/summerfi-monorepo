@@ -1,11 +1,7 @@
 import { BigNumber } from 'bignumber.js'
 import { Token } from './Token'
 import { SerializationService } from '../../services/SerializationService'
-
-interface ITokenAmountSerialized {
-  token: Token
-  amount: string
-}
+import { ITokenAmount } from '../interfaces/ITokenAmount'
 
 /**
  * @class TokenAmount
@@ -13,14 +9,14 @@ interface ITokenAmountSerialized {
  *              issues with big number representation. The token gives enough information to parse it into
  *              a big number.
  */
-export class TokenAmount implements ITokenAmountSerialized {
+export class TokenAmount implements ITokenAmount {
   private readonly _baseUnitFactor: BigNumber
 
   readonly token: Token
   readonly amount: string
 
-  private constructor(params: ITokenAmountSerialized) {
-    this.token = params.token
+  private constructor(params: ITokenAmount) {
+    this.token = Token.createFrom(params.token)
     this.amount = params.amount
     this._baseUnitFactor = new BigNumber(10).pow(new BigNumber(params.token.decimals))
   }
@@ -29,7 +25,7 @@ export class TokenAmount implements ITokenAmountSerialized {
     return this.toBN()
   }
 
-  static createFrom(params: { token: Token; amount: string }): TokenAmount {
+  static createFrom(params: ITokenAmount): TokenAmount {
     return new TokenAmount(params)
   }
   // amount in base unit (1eth = 1000000000000000000, 1btc = 100000000 etc)

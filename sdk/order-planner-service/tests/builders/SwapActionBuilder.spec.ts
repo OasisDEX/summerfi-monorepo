@@ -22,7 +22,7 @@ describe('Swap Action Builder', () => {
   // Tokens
   const WETH = Token.createFrom({
     chainInfo,
-    address: Address.createFrom({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
+    address: Address.createFromEthereum({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
     symbol: 'WETH',
     name: 'Wrapped Ether',
     decimals: 18,
@@ -30,7 +30,7 @@ describe('Swap Action Builder', () => {
 
   const DAI = Token.createFrom({
     chainInfo,
-    address: Address.createFrom({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
+    address: Address.createFromEthereum({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
     symbol: 'DAI',
     name: 'Dai Stablecoin',
     decimals: 18,
@@ -46,8 +46,8 @@ describe('Swap Action Builder', () => {
     amount: '4050.8',
   })
 
-  const slippage = Percentage.createFrom({ percentage: 0.3 })
-  const fee = Percentage.createFrom({ percentage: 2.1 })
+  const slippage = Percentage.createFrom({ value: 0.3 })
+  const fee = Percentage.createFrom({ value: 2.1 })
 
   beforeEach(() => {
     builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })
@@ -74,7 +74,9 @@ describe('Swap Action Builder', () => {
       fromTokenAmount: fromAmount,
       toTokenAmount: toAmount,
       calldata: '0x12345678900987654321' as const,
-      targetContract: Address.createFrom({ value: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599' }),
+      targetContract: Address.createFromEthereum({
+        value: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+      }),
       value: '33',
       gasPrice: '8745',
     })
@@ -103,7 +105,7 @@ describe('Swap Action Builder', () => {
       chainInfo: chainInfo,
       fromAmount: fromAmount,
       toToken: toAmount.token,
-      recipient: Address.createFrom({ value: swapContractAddress }),
+      recipient: Address.createFromEthereum({ value: swapContractAddress }),
       slippage: slippage,
     })
 

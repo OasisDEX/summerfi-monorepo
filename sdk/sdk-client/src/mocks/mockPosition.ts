@@ -20,7 +20,7 @@ export async function getMockPosition(params: {
 }): Promise<Maybe<Position>> {
   const debtToken = Token.createFrom({
     symbol: TokenSymbol.DAI,
-    address: Address.createFrom({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
+    address: Address.createFromEthereum({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
     decimals: 18,
     name: 'Dai Stablecoin',
     chainInfo: params.chainInfo,
@@ -28,7 +28,7 @@ export async function getMockPosition(params: {
 
   const collateralToken = Token.createFrom({
     symbol: TokenSymbol.WETH,
-    address: Address.createFrom({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
+    address: Address.createFromEthereum({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
     decimals: 18,
     name: 'Wrapped Ether',
     chainInfo: params.chainInfo,
@@ -42,7 +42,7 @@ export async function getMockPosition(params: {
       amount: '105.98',
     }),
     riskRatio: RiskRatio.createFrom({
-      ratio: Percentage.createFrom({ percentage: 20.3 }),
+      ratio: Percentage.createFrom({ value: 20.3 }),
       type: RiskRatio.type.LTV,
     }),
     pool: {
@@ -52,6 +52,7 @@ export async function getMockPosition(params: {
           chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
         },
         ilkType: ILKType.ETH_A,
+        vaultId: 'testvault',
       } as MakerPoolId,
       protocol: {
         name: ProtocolName.Maker,

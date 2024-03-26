@@ -7,13 +7,13 @@ import {
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
-import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
+import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
 import { SetupBuilderReturnType, setupBuilderParams } from '../utils/SetupBuilderParams'
 import { DepositBorrowActionBuilder } from '../../src/builders/DepositBorrowActionBuilder'
 import { MakerPoolId, PoolType, ProtocolName, ILKType } from '@summerfi/sdk-common/protocols'
 import { getErrorMessage } from '../utils/ErrorMessage'
 import assert from 'assert'
-import { EmptyProtocolBuilderMock } from '../mocks/ProtocolBuilderMock'
+import { EmptyProtocolPluginMock } from '../mocks/ProtocolPluginMock'
 
 describe('Deposit Borrow Action Builder', () => {
   let builderParams: SetupBuilderReturnType
@@ -23,7 +23,7 @@ describe('Deposit Borrow Action Builder', () => {
   // Tokens
   const WETH = Token.createFrom({
     chainInfo,
-    address: Address.createFrom({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
+    address: Address.createFromEthereum({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
     symbol: 'WETH',
     name: 'Wrapped Ether',
     decimals: 18,
@@ -31,7 +31,7 @@ describe('Deposit Borrow Action Builder', () => {
 
   const DAI = Token.createFrom({
     chainInfo,
-    address: Address.createFrom({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
+    address: Address.createFromEthereum({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
     symbol: 'DAI',
     name: 'Dai Stablecoin',
     decimals: 18,
@@ -83,6 +83,7 @@ describe('Deposit Borrow Action Builder', () => {
         depositAmount: depositAmount,
         borrowAmount: borrowAmount,
         position: position,
+        borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
       outputs: {
         depositAmount: depositAmount,
@@ -94,7 +95,7 @@ describe('Deposit Borrow Action Builder', () => {
       await DepositBorrowActionBuilder({
         ...builderParams,
         step: derivedStep,
-        protocolsRegistry: {},
+        protocolsRegistry: builderParams.emptyProtocolsRegistry,
       })
       assert.fail('Should have thrown an error')
     } catch (error: unknown) {
@@ -112,6 +113,7 @@ describe('Deposit Borrow Action Builder', () => {
         depositAmount: depositAmount,
         borrowAmount: borrowAmount,
         position: position,
+        borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
       outputs: {
         depositAmount: depositAmount,
@@ -123,9 +125,7 @@ describe('Deposit Borrow Action Builder', () => {
       await DepositBorrowActionBuilder({
         ...builderParams,
         step: derivedStep,
-        protocolsRegistry: {
-          [protocol.name]: EmptyProtocolBuilderMock,
-        },
+        protocolsRegistry: builderParams.emptyBuildersProtocolRegistry,
       })
       assert.fail('Should have thrown an error')
     } catch (error: unknown) {
@@ -143,6 +143,7 @@ describe('Deposit Borrow Action Builder', () => {
         depositAmount: depositAmount,
         borrowAmount: borrowAmount,
         position: position,
+        borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
       outputs: {
         depositAmount: depositAmount,

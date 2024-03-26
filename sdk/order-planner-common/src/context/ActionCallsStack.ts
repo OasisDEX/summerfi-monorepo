@@ -1,5 +1,5 @@
+import { ActionCall, ActionCallBatch } from '@summerfi/protocol-plugins-common'
 import { Maybe } from '@summerfi/sdk-common/common'
-import { ActionCall, ActionCallBatch } from '../actions/Types'
 
 export class ActionCallsStack {
   private callsStack: ActionCallBatch[]

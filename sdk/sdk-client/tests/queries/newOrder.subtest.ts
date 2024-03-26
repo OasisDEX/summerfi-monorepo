@@ -24,7 +24,7 @@ export default async function simulateNewOrder() {
   // Tokens
   const WETH = Token.createFrom({
     chainInfo,
-    address: Address.createFrom({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
+    address: Address.createFromEthereum({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
     symbol: 'WETH',
     name: 'Wrapped Ether',
     decimals: 18,
@@ -32,7 +32,7 @@ export default async function simulateNewOrder() {
 
   const DAI = Token.createFrom({
     chainInfo,
-    address: Address.createFrom({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
+    address: Address.createFromEthereum({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
     symbol: 'DAI',
     name: 'Dai Stablecoin',
     decimals: 18,
@@ -52,7 +52,7 @@ export default async function simulateNewOrder() {
     collaterals: {},
     debts: {},
     baseCurrency: DAI,
-  }
+  } as MakerLendingPool
 
   const prevPosition: Position = {
     pool: pool,
@@ -60,7 +60,7 @@ export default async function simulateNewOrder() {
     collateralAmount: TokenAmount.createFrom({ token: WETH, amount: '105.98' }),
     positionId: PositionId.createFrom({ id: '1234567890' }),
     riskRatio: RiskRatio.createFrom({
-      ratio: Percentage.createFrom({ percentage: 0.5 }),
+      ratio: Percentage.createFrom({ value: 0.5 }),
       type: RiskRatio.type.LTV,
     }),
   }
@@ -74,7 +74,7 @@ export default async function simulateNewOrder() {
     collaterals: {},
     debts: {},
     baseCurrency: DAI,
-  }
+  } as SparkLendingPool
 
   const simulation: Simulation<SimulationType.Refinance> = {
     simulationType: SimulationType.Refinance,
@@ -84,10 +84,6 @@ export default async function simulateNewOrder() {
       debtAmount: TokenAmount.createFrom({ token: DAI, amount: '56.78' }),
       collateralAmount: TokenAmount.createFrom({ token: WETH, amount: '105.98' }),
       pool: targetPool,
-      riskRatio: RiskRatio.createFrom({
-        ratio: Percentage.createFrom({ percentage: 0.5 }),
-        type: RiskRatio.type.LTV,
-      }),
     },
     steps: [],
   }
@@ -125,7 +121,9 @@ export default async function simulateNewOrder() {
 
   user = await sdkManager.users.getUser({
     chainInfo: chainInfo,
-    walletAddress: Address.createFrom({ value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266' }),
+    walletAddress: Address.createFromEthereum({
+      value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+    }),
   })
 
   const order: Maybe<Order> = await user.newOrder({ simulation, positionsManager })

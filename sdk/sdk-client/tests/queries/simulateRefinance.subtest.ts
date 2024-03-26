@@ -14,7 +14,7 @@ import {
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
-import { RefinanceParameters } from '@summerfi/sdk-common/orders'
+import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 
 export default async function simulateRefinanceTest() {
   type SimulateRefinanceType = RPCClientType['simulation']['refinance']['query']
@@ -27,7 +27,6 @@ export default async function simulateRefinanceTest() {
         debtAmount: params.position.debtAmount,
         collateralAmount: params.position.collateralAmount,
         pool: params.targetPool,
-        riskRatio: params.position.riskRatio,
       },
       steps: [],
     } as Simulation<SimulationType.Refinance>
@@ -50,7 +49,7 @@ export default async function simulateRefinanceTest() {
   // Tokens
   const WETH = Token.createFrom({
     chainInfo,
-    address: Address.createFrom({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
+    address: Address.createFromEthereum({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
     symbol: 'WETH',
     name: 'Wrapped Ether',
     decimals: 18,
@@ -58,7 +57,7 @@ export default async function simulateRefinanceTest() {
 
   const DAI = Token.createFrom({
     chainInfo,
-    address: Address.createFrom({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
+    address: Address.createFromEthereum({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
     symbol: 'DAI',
     name: 'Dai Stablecoin',
     decimals: 18,
@@ -78,7 +77,7 @@ export default async function simulateRefinanceTest() {
     collaterals: {},
     debts: {},
     baseCurrency: DAI,
-  }
+  } as MakerLendingPool
 
   const prevPosition: Position = {
     pool: pool,
@@ -86,7 +85,7 @@ export default async function simulateRefinanceTest() {
     collateralAmount: TokenAmount.createFrom({ token: WETH, amount: '105.98' }),
     positionId: PositionId.createFrom({ id: '1234567890' }),
     riskRatio: RiskRatio.createFrom({
-      ratio: Percentage.createFrom({ percentage: 0.5 }),
+      ratio: Percentage.createFrom({ value: 0.5 }),
       type: RiskRatio.type.LTV,
     }),
   }
@@ -100,12 +99,12 @@ export default async function simulateRefinanceTest() {
     collaterals: {},
     debts: {},
     baseCurrency: DAI,
-  }
+  } as SparkLendingPool
 
-  const refinanceParameters: RefinanceParameters = {
+  const refinanceParameters: IRefinanceParameters = {
     position: prevPosition,
     targetPool: targetPool,
-    slippage: Percentage.createFrom({ percentage: 0.5 }),
+    slippage: Percentage.createFrom({ value: 0.5 }),
   }
 
   const simulation =

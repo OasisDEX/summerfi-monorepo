@@ -23,3 +23,8 @@ export enum FlashloanProvider {
   Maker = 0,
   Balancer = 1,
 }
+
+export enum TokenTransferTargetType {
+  PositionsManager = 1,
+  StrategyExecutor = 0,
+}

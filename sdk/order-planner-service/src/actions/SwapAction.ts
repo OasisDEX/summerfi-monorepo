@@ -1,4 +1,4 @@
-import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
+import { ActionCall, BaseAction } from '@summerfi/protocol-plugins-common'
 import { Percentage, TokenAmount } from '@summerfi/sdk-common/common'
 import { HexData } from '@summerfi/sdk-common/common/aliases'
 

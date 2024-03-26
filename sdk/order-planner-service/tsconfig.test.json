@@ -9,7 +9,10 @@
       "@summerfi/core-contracts": ["node_modules/@summerfi/core-contracts/src/index.ts"],
       "@summerfi/swap-common/*": ["node_modules/@summerfi/swap-common/src/*"],
       "@summerfi/deployment-utils": ["node_modules/@summerfi/deployment-utils/src/index.ts"],
-      "@summerfi/protocol-plugins": ["node_modules/@summerfi/protocol-plugins/src/index.ts"]
+      "@summerfi/protocol-plugins": ["node_modules/@summerfi/protocol-plugins/src/index.ts"],
+      "@summerfi/protocol-plugins-common": [
+        "node_modules/@summerfi/protocol-plugins-common/src/index.ts"
+      ]
     }
   },
   "include": ["src/**/*.ts"],
