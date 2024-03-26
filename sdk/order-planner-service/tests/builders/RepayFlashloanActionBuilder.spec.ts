@@ -1,10 +1,18 @@
-import { Address, ChainFamilyMap, ChainInfo, Token, TokenAmount } from '@summerfi/sdk-common/common'
+import {
+  Address,
+  AddressValue,
+  ChainFamilyMap,
+  ChainInfo,
+  Token,
+  TokenAmount,
+} from '@summerfi/sdk-common/common'
 import { FlashloanProvider, SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { SetupBuilderReturnType, setupBuilderParams } from '../utils/SetupBuilderParams'
 import { RepayFlashloanActionBuilder } from '../../src/builders/RepayFlashloanActionBuilder'
 import { PullTokenAction } from '../../src/actions/PullTokenAction'
 import { FlashloanAction } from '../../src/actions/FlashloanAction'
 import { getErrorMessage } from '../utils/ErrorMessage'
+import { SendTokenAction } from '../../src/actions'
 
 describe('Payback Flashloan Action Builder', () => {
   let builderParams: SetupBuilderReturnType
@@ -14,7 +22,7 @@ describe('Payback Flashloan Action Builder', () => {
   // Tokens
   const DAI = Token.createFrom({
     chainInfo,
-    address: Address.createFrom({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
+    address: Address.createFromEthereum({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
     decimals: 18,
     name: 'Dai Stablecoin',
     symbol: 'DAI',
@@ -22,7 +30,7 @@ describe('Payback Flashloan Action Builder', () => {
 
   const WETH = Token.createFrom({
     chainInfo,
-    address: Address.createFrom({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
+    address: Address.createFromEthereum({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
     symbol: 'WETH',
     name: 'Wrapped Ether',
     decimals: 18,
@@ -35,7 +43,9 @@ describe('Payback Flashloan Action Builder', () => {
 
   // Pull token step
   const pullAmount = TokenAmount.createFrom({ token: DAI, amount: '578' })
-  const recipient = Address.createFrom({ value: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599' })
+  const recipient = Address.createFromEthereum({
+    value: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+  })
 
   const pullTokenStep: steps.PullTokenStep = {
     name: 'PullTokenStep',
@@ -141,10 +151,17 @@ describe('Payback Flashloan Action Builder', () => {
       pullTo: recipient,
     })
 
+    const sendTokenCalldata = new SendTokenAction().encodeCall({
+      sendAmount: flashloanStep.inputs.amount,
+      sendTo: Address.createFromEthereum({
+        value: builderParams.deployment.contracts.OperationExecutor.address as AddressValue,
+      }),
+    })
+
     const flashloanCalldata = new FlashloanAction().encodeCall({
       amount: flashloanStep.inputs.amount,
       provider: flashloanStep.inputs.provider,
-      calls: [pullTokenCalldata],
+      calls: [pullTokenCalldata, sendTokenCalldata],
     })
 
     expect(callsBatch[0]).toEqual(flashloanCalldata)

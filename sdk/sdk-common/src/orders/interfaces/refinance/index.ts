@@ -1,1 +1,1 @@
-export type { RefinanceParameters } from './RefinanceParameters'
+export type { IRefinanceParameters } from './IRefinanceParameters'

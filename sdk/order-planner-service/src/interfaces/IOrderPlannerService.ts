@@ -3,7 +3,7 @@ import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { IUser } from '@summerfi/sdk-common/user'
 import { Maybe } from '@summerfi/sdk-common/common'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import { ProtocolBuilderRegistryType } from '@summerfi/order-planner-common/interfaces'
+import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
 
 export interface IOrderPlannerService {
   buildOrder<T extends SimulationType>(params: {
@@ -11,6 +11,6 @@ export interface IOrderPlannerService {
     positionsManager: IPositionsManager
     simulation: ISimulation<T>
     swapManager: ISwapManager
-    protocolsRegistry: ProtocolBuilderRegistryType
+    protocolsRegistry: IProtocolPluginsRegistry
   }): Promise<Maybe<Order>>
 }

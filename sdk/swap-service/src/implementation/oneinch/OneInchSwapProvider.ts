@@ -78,7 +78,7 @@ export class OneInchSwapProvider implements ISwapProvider {
         amount: responseData.toTokenAmount,
       }),
       calldata: responseData.tx.data as HexData,
-      targetContract: Address.createFrom({ value: responseData.tx.to as HexData }),
+      targetContract: Address.createFromEthereum({ value: responseData.tx.to as HexData }),
       value: responseData.tx.value,
       gasPrice: responseData.tx.gasPrice,
     }
@@ -150,7 +150,7 @@ export class OneInchSwapProvider implements ISwapProvider {
       provider: SwapProviderType.OneInch,
       prices: Object.entries(responseData).map(([address, price]) => {
         const baseToken = params.tokens.find((token) =>
-          token.address.equals(Address.createFrom({ value: address as AddressValue })),
+          token.address.equals(Address.createFromEthereum({ value: address as AddressValue })),
         )
         if (!baseToken) {
           throw new Error('BaseToken not found in params.tokens list when fetching spot prices')
@@ -159,7 +159,7 @@ export class OneInchSwapProvider implements ISwapProvider {
         return Price.createFrom({
           value: price.toString(),
           baseToken,
-          quoteToken: params.quoteCurrency,
+          quoteToken: params.quoteCurrency || CurrencySymbol.USD,
         })
       }),
     }
@@ -224,9 +224,11 @@ export class OneInchSwapProvider implements ISwapProvider {
       route.map((hop) =>
         hop.map((hopPart) => ({
           name: hopPart.name,
-          part: Percentage.createFrom({ percentage: hopPart.part }),
-          fromTokenAddress: Address.createFrom({ value: hopPart.fromTokenAddress as HexData }),
-          toTokenAddress: Address.createFrom({ value: hopPart.toTokenAddress as HexData }),
+          part: Percentage.createFrom({ value: hopPart.part }),
+          fromTokenAddress: Address.createFromEthereum({
+            value: hopPart.fromTokenAddress as HexData,
+          }),
+          toTokenAddress: Address.createFromEthereum({ value: hopPart.toTokenAddress as HexData }),
         })),
       ),
     )

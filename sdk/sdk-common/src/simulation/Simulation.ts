@@ -1,4 +1,4 @@
-import { Position } from '../common/implementation/Position'
+import { IPosition } from '../common/interfaces/IPosition'
 import { SimulatedSwapData } from '../swap'
 import type { SimulationType } from './Enums'
 import type { Steps } from './Steps'
@@ -9,9 +9,8 @@ import type { Steps } from './Steps'
  */
 export interface ISimulation<T extends SimulationType> {
   simulationType: T
-  sourcePosition?: Position // TODO figure what do to when opening position (empty position or optional)
-  /* The output of the simulation. The simulated position is the target position */
-  targetPosition: Position
+  sourcePosition?: IPosition // TODO figure what do to when opening position (empty position or optional)
+  targetPosition: IPosition
   /* The details of any swaps required as part of the simulation */
   swaps: SimulatedSwapData[]
   steps: Steps[]

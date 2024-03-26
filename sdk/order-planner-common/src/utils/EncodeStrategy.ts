@@ -1,6 +1,6 @@
+import { ActionCall } from '@summerfi/protocol-plugins-common'
 import { HexData } from '@summerfi/sdk-common/common/aliases'
 import { encodeFunctionData, parseAbi } from 'viem'
-import { ActionCall } from '../actions/Types'
 
 type SkippableActionCall = ActionCall & {
   skipped: boolean

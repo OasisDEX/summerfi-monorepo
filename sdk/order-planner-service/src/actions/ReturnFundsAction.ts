@@ -1,4 +1,4 @@
-import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
+import { ActionCall, BaseAction } from '@summerfi/protocol-plugins-common'
 import { Token } from '@summerfi/sdk-common/common'
 
 export class ReturnFundsAction extends BaseAction {

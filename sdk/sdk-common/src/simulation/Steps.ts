@@ -1,10 +1,10 @@
-import { Price } from '../common/implementation/Price'
 import { Percentage } from '../common/implementation/Percentage'
+import { Price } from '../common/implementation/Price'
 import { Position } from '../common/implementation/Position'
 import { Token } from '../common/implementation/Token'
 import { TokenAmount } from '../common/implementation/TokenAmount'
+import { FlashloanProvider, SimulationSteps, TokenTransferTargetType } from './Enums'
 import { SwapProviderType, SwapRoute } from '../swap'
-import { FlashloanProvider, SimulationSteps } from './Enums'
 import { ReferenceableField, ValueReference } from './ValueReference'
 
 export interface Step<T extends SimulationSteps, I, O = undefined, N extends string = string> {
@@ -35,6 +35,7 @@ export interface DepositBorrowStep
       borrowAmount: ReferenceableField<TokenAmount>
       position: Position
       additionalDeposit?: ValueReference<TokenAmount>
+      borrowTargetType: TokenTransferTargetType
     },
     {
       depositAmount: TokenAmount

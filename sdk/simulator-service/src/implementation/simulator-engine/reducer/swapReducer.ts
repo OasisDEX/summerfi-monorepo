@@ -50,7 +50,7 @@ export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISim
         // routes: step.inputs.routes,
         fromTokenAmount: step.inputs.fromTokenAmount,
         toTokenAmount: step.inputs.toTokenAmount,
-        slippage: step.inputs.slippage,
+        slippage: Percentage.createFrom({ value: step.inputs.slippage.value }),
         offerPrice,
         marketPrice,
         priceImpact: calculatePriceImpact(marketPrice, offerPrice),
@@ -77,7 +77,7 @@ export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISim
  */
 export function calculatePriceImpact(marketPrice: Price, offerPrice: Price): Percentage {
   return Percentage.createFrom({
-    percentage: marketPrice
+    value: marketPrice
       .toBN()
       .minus(offerPrice.toBN())
       .div(marketPrice.toBN())
