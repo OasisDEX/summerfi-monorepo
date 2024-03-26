@@ -1,22 +1,27 @@
-import { Percentage, type Position, type TokenAmount } from '@summerfi/sdk-common/common'
+import {
+  Percentage,
+  type Position,
+  type Price,
+  type TokenAmount,
+} from '@summerfi/sdk-common/common'
 import BigNumber from 'bignumber.js'
 
 export class PositionUtils {
   static getLTV({
     collateralTokenAmount,
     debtTokenAmount,
-    collateralPrice,
-    debtPrice,
+    collateralPriceInUsd,
+    debtPriceInUsd,
   }: {
     collateralTokenAmount: TokenAmount
     debtTokenAmount: TokenAmount
-    collateralPrice: string
-    debtPrice: string
+    collateralPriceInUsd: Price
+    debtPriceInUsd: Price
   }): Percentage {
     // Determine the Collateral Value:
-    const collValue = new BigNumber(collateralTokenAmount.amount).times(collateralPrice)
+    const collValue = new BigNumber(collateralTokenAmount.amount).times(collateralPriceInUsd.value)
     // Determine the Borrowed Value:
-    const debtValue = new BigNumber(debtTokenAmount.amount).times(debtPrice)
+    const debtValue = new BigNumber(debtTokenAmount.amount).times(debtPriceInUsd.value)
     // If the collateral value is 0, return 0.
     if (collValue.isZero()) {
       return Percentage.createFrom({ percentage: 0 })
@@ -26,16 +31,15 @@ export class PositionUtils {
     return Percentage.createFrom({ percentage: ltvRatio })
   }
 
-  static getLiquidationPrice({
+  static getLiquidationPriceInUsd({
     position,
     liquidationThreshold,
-    debtPrice,
+    debtPriceInUsd,
   }: {
     position: Position
-    // TODO: passed as param because it is not defined in Position
+    // TODO: it is not defined in Position yet, we should use Pool in the future
     liquidationThreshold: Percentage
-    collateralPrice: string
-    debtPrice: string
+    debtPriceInUsd: Price
   }): string {
     // Determine the Collateral Value:
     const collateralAmount = new BigNumber(position.collateralAmount.amount)
@@ -45,7 +49,7 @@ export class PositionUtils {
     if (debtAmount.isZero()) {
       return '0'
     }
-    const debtValue = debtAmount.times(debtPrice)
+    const debtValue = debtAmount.times(debtPriceInUsd.value)
     // (loanAmount * loanPrice) / (liquidationThreshold * collateralAmount)
     const liquidationPrice = debtValue.div(
       collateralAmount.times(liquidationThreshold.toProportion()),

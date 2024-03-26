@@ -1,21 +1,28 @@
-import { Percentage, TokenAmount, type Position } from '@summerfi/sdk-common/common'
+import { Percentage, TokenAmount, type Position, Price } from '@summerfi/sdk-common/common'
 
 import { PositionUtils } from '../src/utils/PositionUtils'
 import { WETH, DAI } from './TestUtils'
 
-describe.only('PositionUtils', () => {
+describe('PositionUtils', () => {
+  const ethPriceInUsd = Price.createFrom({
+    value: '1000',
+    baseToken: WETH,
+  })
+  const daiPriceInUsd = Price.createFrom({
+    value: '1',
+    baseToken: DAI,
+  })
+
   describe('getLTV', () => {
     it('should correctly calculate LTV', () => {
       const collateralAmount = TokenAmount.createFrom({ amount: '1', token: WETH })
-      const collateralPrice = '1000'
       const debtAmount = TokenAmount.createFrom({ amount: '250', token: DAI })
-      const debtPrice = '1'
 
       const result = PositionUtils.getLTV({
         collateralTokenAmount: collateralAmount,
         debtTokenAmount: debtAmount,
-        collateralPrice,
-        debtPrice,
+        collateralPriceInUsd: ethPriceInUsd,
+        debtPriceInUsd: daiPriceInUsd,
       })
 
       expect(result).toEqual(Percentage.createFrom({ percentage: 25 }))
@@ -23,15 +30,13 @@ describe.only('PositionUtils', () => {
 
     it('should return 0 when debt is equal to 0', () => {
       const collateralAmount = TokenAmount.createFrom({ amount: '1', token: WETH })
-      const collateralPrice = '1000'
       const debtAmount = TokenAmount.createFrom({ amount: '0', token: DAI })
-      const debtPrice = '1'
 
       const result = PositionUtils.getLTV({
         collateralTokenAmount: collateralAmount,
         debtTokenAmount: debtAmount,
-        collateralPrice,
-        debtPrice,
+        collateralPriceInUsd: ethPriceInUsd,
+        debtPriceInUsd: daiPriceInUsd,
       })
 
       expect(result).toEqual(Percentage.createFrom({ percentage: 0 }))
@@ -39,15 +44,13 @@ describe.only('PositionUtils', () => {
 
     it('should return 0 when collateral amount is 0', () => {
       const collateralAmount = TokenAmount.createFrom({ amount: '0', token: WETH })
-      const collateralPrice = '1000'
       const debtAmount = TokenAmount.createFrom({ amount: '1000', token: DAI })
-      const debtPrice = '1'
 
       const result = PositionUtils.getLTV({
         collateralTokenAmount: collateralAmount,
         debtTokenAmount: debtAmount,
-        collateralPrice,
-        debtPrice,
+        collateralPriceInUsd: ethPriceInUsd,
+        debtPriceInUsd: daiPriceInUsd,
       })
 
       expect(result).toEqual(Percentage.createFrom({ percentage: 0 }))
@@ -55,15 +58,13 @@ describe.only('PositionUtils', () => {
 
     it('should return 100 when debt is equal to collateral', () => {
       const collateralAmount = TokenAmount.createFrom({ amount: '1', token: WETH })
-      const collateralPrice = '1000'
       const debtAmount = TokenAmount.createFrom({ amount: '1000', token: DAI })
-      const debtPrice = '1'
 
       const result = PositionUtils.getLTV({
         collateralTokenAmount: collateralAmount,
         debtTokenAmount: debtAmount,
-        collateralPrice,
-        debtPrice,
+        collateralPriceInUsd: ethPriceInUsd,
+        debtPriceInUsd: daiPriceInUsd,
       })
 
       expect(result).toEqual(Percentage.createFrom({ percentage: 100 }))
@@ -73,56 +74,48 @@ describe.only('PositionUtils', () => {
   describe('getLiquidationPrice', () => {
     it('should correctly calculate liquidation price when debt amount is not 0', () => {
       const liquidationThreshold = Percentage.createFrom({ percentage: 80 })
-      const collateralPrice = '3000'
-      const debtPrice = '1'
 
-      const liquidationPrice = PositionUtils.getLiquidationPrice({
+      const liquidationPrice = PositionUtils.getLiquidationPriceInUsd({
         position: {
           collateralAmount: TokenAmount.createFrom({ amount: '2', token: WETH }),
           debtAmount: TokenAmount.createFrom({ amount: '5000', token: DAI }),
         } as Position,
         liquidationThreshold,
-        collateralPrice,
-        debtPrice,
+        debtPriceInUsd: daiPriceInUsd,
       })
       expect(liquidationPrice).toEqual('3125')
 
-      const liquidationPrice2 = PositionUtils.getLiquidationPrice({
+      const liquidationPrice2 = PositionUtils.getLiquidationPriceInUsd({
         position: {
           collateralAmount: TokenAmount.createFrom({ amount: '2', token: WETH }),
           debtAmount: TokenAmount.createFrom({ amount: '6000', token: DAI }),
         } as Position,
         liquidationThreshold,
-        collateralPrice,
-        debtPrice,
+        debtPriceInUsd: daiPriceInUsd,
       })
       expect(liquidationPrice2).toEqual('3750')
 
-      const liquidationPrice3 = PositionUtils.getLiquidationPrice({
+      const liquidationPrice3 = PositionUtils.getLiquidationPriceInUsd({
         position: {
           collateralAmount: TokenAmount.createFrom({ amount: '2', token: WETH }),
           debtAmount: TokenAmount.createFrom({ amount: '1', token: DAI }),
         } as Position,
         liquidationThreshold,
-        collateralPrice,
-        debtPrice,
+        debtPriceInUsd: daiPriceInUsd,
       })
       expect(liquidationPrice3).toEqual('0.625')
     })
 
     it('should return 0 when debt amount is 0', () => {
       const liquidationThreshold = Percentage.createFrom({ percentage: 80 })
-      const collateralPrice = '1000'
-      const debtPrice = '1'
 
-      const liquidationPrice = PositionUtils.getLiquidationPrice({
+      const liquidationPrice = PositionUtils.getLiquidationPriceInUsd({
         position: {
           collateralAmount: TokenAmount.createFrom({ amount: '100', token: WETH }),
           debtAmount: TokenAmount.createFrom({ amount: '0', token: DAI }),
         } as Position,
         liquidationThreshold,
-        collateralPrice,
-        debtPrice,
+        debtPriceInUsd: daiPriceInUsd,
       })
 
       expect(liquidationPrice).toEqual('0')
