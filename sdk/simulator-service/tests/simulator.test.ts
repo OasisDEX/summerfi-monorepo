@@ -18,6 +18,13 @@ describe('Refinance', () => {
         {
           position: testSourcePosition,
           targetPool: testTargetLendingPool,
+          targetDebt:
+            testTargetLendingPool.debts[testSourcePosition.debtAmount.token.address.value].token
+              .address,
+          targetCollateral:
+            testTargetLendingPool.collaterals[
+              testSourcePosition.collateralAmount.token.address.value
+            ].token.address,
           slippage: Percentage.createFrom({ percentage: 1 }),
         },
         mockRefinanceContext,
@@ -64,6 +71,13 @@ describe('Refinance', () => {
         {
           position: testSourcePosition,
           targetPool: testTargetLendingPoolRequiredSwaps,
+          targetDebt:
+            testTargetLendingPool.debts[testSourcePosition.debtAmount.token.address.value].token
+              .address,
+          targetCollateral:
+            testTargetLendingPool.collaterals[
+              testSourcePosition.collateralAmount.token.address.value
+            ].token.address,
           slippage: Percentage.createFrom({ percentage: 1 }),
         },
         mockRefinanceContext,

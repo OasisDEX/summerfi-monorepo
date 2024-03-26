@@ -26,22 +26,10 @@ export async function refinance(
   const flashloanAmount = args.position.debtAmount.multiply(FLASHLOAN_MARGIN)
   const simulator = Simulator.create(refinanceLendingToLendingStrategy)
 
-  // TODO: Update this check
-  const isCollateralSwapSkipped =
-    args.targetPool.collaterals[args.position.collateralAmount.token.address.value] !== undefined
-  const isDebtSwapSkipped =
-    args.targetPool.debts[args.position.debtAmount.token.address.value] !== undefined
-
-  // let debtSwapQuote: Quote | undefined
-  // TODO: implement case with swaps
-  // if (!isDebtSwapSkipped) {
-  //     debtSwapQuote = await dependencies.getQuote({
-  //         from: args.targetPool.debtTokens[0],
-  //         to: args.position.debtAmount.token,
-  //         slippage: args.slippage,
-  //         fee: 0,
-  //     })
-  // }
+  const isCollateralSwapSkipped = args.position.collateralAmount.token.address.equals(
+    args.targetCollateral,
+  )
+  const isDebtSwapSkipped = args.position.debtAmount.token.address.equals(args.targetDebt)
 
   // TODO: read debt amount from chain (special step: ReadDebtAmount)
   // TODO: the swap quote should also include the summer fee, in this case we need to know when we are taking the fee,

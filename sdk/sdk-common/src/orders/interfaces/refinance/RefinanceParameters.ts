@@ -1,6 +1,6 @@
 import type { Percentage } from '../../../common/implementation/Percentage'
 import type { Position } from '../../../common/implementation/Position'
-// import type { Address } from '../../../common/implementation/Address'
+import type { Address } from '../../../common/implementation/Address'
 import type { LendingPool } from '../../../protocols/implementation/LendingPool'
 
 /**
@@ -10,9 +10,8 @@ import type { LendingPool } from '../../../protocols/implementation/LendingPool'
 export interface RefinanceParameters {
   position: Position
   targetPool: LendingPool
-  // TODO: Implement means of determining if a swap is required. Follow-up PR
-  // targetCollateral: Address
-  // targetDebt: Address
+  targetCollateral: Address
+  targetDebt: Address
   slippage: Percentage
 }
 
