@@ -1,0 +1,34 @@
+{
+  "name": "@summerfi/testing-utils",
+  "version": "0.0.1",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.d.ts"
+    }
+  },
+  "scripts": {
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "test": "jest --coverage=true --passWithNoTests",
+    "testw": "jest --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "build": "tsc -b tsconfig.build.json",
+    "encode:makerGive": "tsx ./scripts/encodeMakerGive.ts"
+  },
+  "dependencies": {
+    "@summerfi/deployment-utils": "workspace:*",
+    "@summerfi/protocol-plugins-common": "workspace:*",
+    "@summerfi/sdk-common": "workspace:*"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/jest-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "@types/yargs": "^17.0.32",
+    "tsx": "^4.7.1",
+    "viem": "^2.7.8",
+    "yargs": "^17.7.2"
+  }
+}

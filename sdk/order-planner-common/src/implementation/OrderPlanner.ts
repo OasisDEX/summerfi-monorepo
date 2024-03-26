@@ -10,9 +10,10 @@ import {
   ActionBuildersMap,
   ActionCall,
   IProtocolPluginsRegistry,
+  IStepBuilderContext,
+  StepBuilderContext,
 } from '@summerfi/protocol-plugins-common'
 import { IOrderPlanner } from '../interfaces/IOrderPlanner'
-import { OrderPlannerContext } from '../context/OrderPlannerContext'
 import { encodeStrategy } from '../utils/EncodeStrategy'
 
 export class OrderPlanner implements IOrderPlanner {
@@ -37,7 +38,7 @@ export class OrderPlanner implements IOrderPlanner {
       protocolsRegistry,
     } = params
 
-    const context: OrderPlannerContext = new OrderPlannerContext()
+    const context: IStepBuilderContext = new StepBuilderContext()
 
     context.startSubContext()
 

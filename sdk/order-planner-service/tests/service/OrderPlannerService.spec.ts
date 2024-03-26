@@ -1,17 +1,13 @@
-import {
-  FlashloanProvider,
-  Simulation,
-  SimulationType,
-  TokenTransferTargetType,
-} from '@summerfi/sdk-common/simulation'
+import { FlashloanProvider, Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import { Address, ChainFamilyMap, ChainInfo } from '@summerfi/sdk-common/common'
+import { Address, AddressValue, ChainFamilyMap, ChainInfo } from '@summerfi/sdk-common/common'
 import { IPositionsManager } from '@summerfi/sdk-common/orders'
 import {
+  FlashloanAction,
   MakerPaybackAction,
   MakerWithdrawAction,
-  ProtocolPluginsRegistry,
+  ReturnFundsAction,
   SparkBorrowAction,
   SparkDepositAction,
 } from '@summerfi/protocol-plugins'
@@ -20,16 +16,20 @@ import { MakerPoolId } from '@summerfi/sdk-common/protocols'
 import { SetupDeployments } from '../utils/SetupDeployments'
 import { UserMock } from '../mocks/UserMock'
 import { SwapManagerMock } from '../mocks/SwapManagerMock'
-import { SkippableActionCall, decodeOpExecutorCalldata } from '../utils/OpExecutorDecoding'
-import { decodeActionCalldata } from '../utils/ActionDecoding'
-import { FlashloanAction, ReturnFundsAction } from '../../src/actions'
+
 import { getRefinanceSimulation } from '../utils/RefinanceSimulation/RefinanceSimulation'
 import { OrderPlannerService } from '../../src/implementation/OrderPlannerService'
-import { getMakerPosition } from '../utils/Maker/MakerSourcePosition'
-import { getSparkPosition } from '../utils/Spark/SparkTargetPosition'
 
+import {
+  getSparkPosition,
+  getMakerPosition,
+  decodeActionCalldata,
+  SkippableActionCall,
+  decodePositionsManagerCalldata,
+  decodeStrategyExecutorCalldata,
+  getErrorMessage,
+} from '@summerfi/testing-utils'
 import assert from 'assert'
-import { getErrorMessage } from '../utils/ErrorMessage'
 import { IUser } from '@summerfi/sdk-common/user'
 import { createRealProtocolsPluginsRegistry } from '../mocks/ProtocolsPluginRegistryMock'
 import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
@@ -45,7 +45,7 @@ describe('Order Planner Service', () => {
     }),
   })
   const positionsManager: IPositionsManager = {
-    address: Address.ZeroAddressEthereum,
+    address: Address.createFromEthereum({ value: '0x551eb8395093fde4b9eef017c93593a3c7a75138' }),
   }
   let swapManager: ISwapManager
   let protocolsRegistry: IProtocolPluginsRegistry
@@ -111,21 +111,37 @@ describe('Order Planner Service', () => {
     const deployments = deploymentsIndex[`${chainInfo.name}.standard`]
     assert(deployments, 'Deployments is not defined')
 
-    const opExecutorAddress = deployments.contracts.OperationExecutor.address
+    expect(order.transactions[0].transaction.target.value).toEqual(positionsManager.address.value)
 
-    expect(order.transactions[0].transaction.target.value).toEqual(opExecutorAddress)
+    const positionsManagerParams = decodePositionsManagerCalldata({
+      calldata: order.transactions[0].transaction.calldata,
+    })
 
-    const opExecutorParams = decodeOpExecutorCalldata(order.transactions[0].transaction.calldata)
-    assert(opExecutorParams, 'OpExecutorParams is not defined')
+    assert(
+      positionsManagerParams,
+      'Transaction calldata could not be decoded for Positions Manager',
+    )
 
-    expect(opExecutorParams.operationName).toEqual(SimulationType.Refinance)
+    const strategyExecutorAddress = Address.createFromEthereum({
+      value: deployments.contracts.OperationExecutor.address as AddressValue,
+    })
+
+    expect(positionsManagerParams.target.value).toEqual(strategyExecutorAddress.value)
+
+    const strategyExecutorParams = decodeStrategyExecutorCalldata(positionsManagerParams.calldata)
+
+    assert(strategyExecutorParams, 'Calldata for Strategy Executor could not be decoded')
+
+    expect(strategyExecutorParams.operationName).toEqual(
+      `${SimulationType.Refinance}${refinanceSimulation.sourcePosition?.pool.protocol.name}${refinanceSimulation.targetPosition.pool.protocol.name}`,
+    )
 
     // Flashloan is at the beginning, so we get the flashloan call plus the return funds call
-    expect(opExecutorParams.actionCalls.length).toBe(2)
+    expect(strategyExecutorParams.actionCalls.length).toBe(2)
 
     const flashloanCall = decodeActionCalldata({
       action: new FlashloanAction(),
-      calldata: opExecutorParams.actionCalls[0].callData,
+      calldata: strategyExecutorParams.actionCalls[0].callData,
     })
 
     assert(flashloanCall, 'FlashloanCall is not defined')
@@ -188,7 +204,7 @@ describe('Order Planner Service', () => {
     expect(sparkBorrowAction.args).toEqual([
       targetPosition.debtAmount.token.address.value,
       BigInt(targetPosition.debtAmount.toBaseUnit()),
-      positionsManager.address.value,
+      strategyExecutorAddress.value,
     ])
     expect(sparkBorrowAction.mapping).toEqual([0, 0, 0, 0])
 
@@ -213,7 +229,7 @@ describe('Order Planner Service', () => {
 
     const returnFundsCall = decodeActionCalldata({
       action: new ReturnFundsAction(),
-      calldata: opExecutorParams.actionCalls[1].callData,
+      calldata: strategyExecutorParams.actionCalls[1].callData,
     })
 
     assert(returnFundsCall, 'ReturnFundsCall is not defined')

@@ -7,6 +7,9 @@ import {
   Address,
   type Maybe,
   ChainFamilyMap,
+  HexData,
+  ChainInfo,
+  AddressValue,
 } from '@summerfi/sdk-common/common'
 
 import {
@@ -20,19 +23,46 @@ import {
 } from '@summerfi/sdk-common/protocols'
 import { makeSDK, type Chain, type User, Protocol } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
-import { IRefinanceParameters, Order, Transaction } from '@summerfi/sdk-common/orders'
+import {
+  IPositionsManager,
+  IRefinanceParameters,
+  Order,
+  Transaction,
+} from '@summerfi/sdk-common/orders'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import assert from 'assert'
 import { TransactionUtils } from './utils/TransactionUtils'
+import {
+  decodeActionCalldata,
+  decodePositionsManagerCalldata,
+  decodeStrategyExecutorCalldata,
+} from '@summerfi/testing-utils'
+import { Deployments } from '@summerfi/core-contracts'
+import { DeploymentIndex } from '@summerfi/deployment-utils'
+
 import { Hex } from 'viem'
+import assert from 'assert'
+import { JSONStringifyWithBigInt } from '../../../packages/common/src/JSONStringifyWithBigInt'
+import { ethers } from 'ethers'
+import {
+  FlashloanAction,
+  MakerPaybackAction,
+  MakerWithdrawAction,
+  SendTokenAction,
+  SparkBorrowAction,
+  SparkDepositAction,
+} from '@summerfi/protocol-plugins'
+
+//import ServiceRegistryAbi from '@summerfi/core-contracts/abis/contracts/core/ServiceRegistry.sol/ServiceRegistry.json'
 
 jest.setTimeout(300000)
+
+const SDKAPiUrl = 'https://zmjmtfsocb.execute-api.us-east-1.amazonaws.com/api/sdk'
+const TenderlyForkUrl = 'https://rpc.tenderly.co/fork/47a20a20-3aa1-4d21-afd7-6a230b12a0cc'
 
 describe.only('Refinance Maker Spark | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     // SDK
-    const apiURL = 'https://zmjmtfsocb.execute-api.us-east-1.amazonaws.com/api/sdk'
-    const sdk = makeSDK({ apiURL })
+    const sdk = makeSDK({ apiURL: SDKAPiUrl })
 
     // Chain
     const chain: Maybe<Chain> = await sdk.chains.getChain({
@@ -41,9 +71,19 @@ describe.only('Refinance Maker Spark | SDK', () => {
 
     assert(chain, 'Chain not found')
 
+    // Deployment
+    const deploymentName = `${chain.chainInfo.name}.standard`
+    const deployments = Deployments as DeploymentIndex
+    const deployment = deployments[deploymentName]
+
+    // Strategy Executor
+    const strategyExecutorAddress = Address.createFromEthereum({
+      value: deployment.contracts.OperationExecutor.address as AddressValue,
+    })
+
     // User
     const walletAddress = Address.createFromEthereum({
-      value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      value: '0xbEf4befb4F230F43905313077e3824d7386E09F8',
     })
     const user: User = await sdk.users.getUser({
       chainInfo: chain.chainInfo,
@@ -52,6 +92,13 @@ describe.only('Refinance Maker Spark | SDK', () => {
     expect(user).toBeDefined()
     expect(user.wallet.address).toEqual(walletAddress)
     expect(user.chainInfo).toEqual(chain.chainInfo)
+
+    // Positions Manager
+    const positionsManager: IPositionsManager = {
+      address: Address.createFromEthereum({
+        value: '0x551Eb8395093fDE4B9eeF017C93593a3C7a75138',
+      }),
+    }
 
     // Tokens
     const WETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.WETH })
@@ -86,7 +133,7 @@ describe.only('Refinance Maker Spark | SDK', () => {
       positionId: PositionId.createFrom({ id: '31646' }),
       debtAmount: TokenAmount.createFromBaseUnit({
         token: DAI,
-        amount: '3710455916381628559037000000000000000000000000000',
+        amount: '3717915731044925295249',
       }),
       collateralAmount: TokenAmount.createFromBaseUnit({
         token: WETH,
@@ -135,6 +182,7 @@ describe.only('Refinance Maker Spark | SDK', () => {
 
     expect(refinanceSimulation.sourcePosition?.positionId).toEqual(makerPosition.positionId)
     expect(refinanceSimulation.targetPosition.pool.poolId).toEqual(sparkPool.poolId)
+    expect(refinanceSimulation.steps.length).toBe(4)
 
     const refinanceOrder: Maybe<Order> = await user.newOrder({
       positionsManager: {
@@ -148,7 +196,9 @@ describe.only('Refinance Maker Spark | SDK', () => {
     assert(refinanceOrder, 'Order not found')
 
     expect(refinanceOrder.simulation.simulationType).toEqual(refinanceSimulation.simulationType)
-    expect(refinanceOrder.simulation.sourcePosition?.positionId).toEqual(
+    assert(refinanceOrder.simulation.sourcePosition, 'Source position not found')
+
+    expect(refinanceOrder.simulation.sourcePosition.positionId).toEqual(
       refinanceSimulation.sourcePosition?.positionId,
     )
     expect(refinanceOrder.simulation.targetPosition.pool.poolId).toEqual(sparkPool.poolId)
@@ -159,13 +209,157 @@ describe.only('Refinance Maker Spark | SDK', () => {
     }
 
     expect(refinanceOrder.transactions.length).toEqual(1)
+    expect(refinanceOrder.transactions[0].transaction.target.value).toEqual(
+      positionsManager.address.value,
+    )
+
+    const positionsManagerParams = decodePositionsManagerCalldata({
+      calldata: refinanceOrder.transactions[0].transaction.calldata,
+    })
+
+    assert(positionsManagerParams, 'Cannot decode Positions Manager calldata')
+    expect(positionsManagerParams.target.value).toEqual(strategyExecutorAddress.value)
+
+    // Decode calldata
+    const strategyExecutorParams = decodeStrategyExecutorCalldata(positionsManagerParams.calldata)
+
+    const strategyName = `${refinanceOrder.simulation.simulationType}${refinanceOrder.simulation.sourcePosition?.pool.protocol.name}${refinanceOrder.simulation.targetPosition.pool.protocol.name}`
+
+    assert(strategyExecutorParams, 'Cannot decode Strategy Executor calldata')
+    expect(strategyExecutorParams.operationName).toEqual(strategyName)
+    expect(strategyExecutorParams.actionCalls.length).toEqual(1)
+
+    // console.log(
+    //   'FlashloanParams:',
+    //   JSONStringifyWithBigInt(strategyExecutorParams.actionCalls[0].callData),
+    // )
+
+    // Decode Flashloan action
+    const flashloanParams = decodeActionCalldata({
+      action: new FlashloanAction(),
+      calldata: strategyExecutorParams.actionCalls[0].callData,
+    })
+
+    const sourcePosition = Position.createFrom(refinanceOrder.simulation.sourcePosition)
+    const targetPosition = Position.createFrom(refinanceOrder.simulation.targetPosition)
+
+    assert(flashloanParams, 'Cannot decode Flashloan action calldata')
+
+    const FlashloanMargin = 1.001
+    const flashloanAmount = sourcePosition.debtAmount.multiply(FlashloanMargin)
+
+    expect(flashloanParams.args[0].amount).toBe(BigInt(flashloanAmount.toBaseUnit()))
+    expect(flashloanParams.args[0].asset).toBe(sourcePosition.debtAmount.token.address.value)
+    expect(flashloanParams.args[0].isProxyFlashloan).toBe(true)
+    expect(flashloanParams.args[0].isDPMProxy).toBe(true)
+    expect(flashloanParams.args[0].provider).toBe(0)
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+    const flashloanSubcalls = flashloanParams.args[0].calls as Array<any>
+    expect(flashloanSubcalls.length).toBe(5)
+
+    // Decode Maker Payback action
+    const makerPaybackAction = decodeActionCalldata({
+      action: new MakerPaybackAction(),
+      calldata: flashloanSubcalls[0].callData,
+    })
+
+    const paybackAmount = TokenAmount.createFrom({
+      amount: Number.MAX_SAFE_INTEGER.toString(),
+      token: sourcePosition.debtAmount.token,
+    }).toBaseUnit()
+
+    assert(makerPaybackAction, 'Cannot decode Maker Payback action calldata')
+    expect(makerPaybackAction.args[0].vaultId).toBe(
+      BigInt((sourcePosition.pool.poolId as MakerPoolId).vaultId),
+    )
+    expect(makerPaybackAction.args[0].userAddress).toBe(positionsManager.address.value)
+    expect(makerPaybackAction.args[0].amount).toBe(BigInt(paybackAmount))
+    expect(makerPaybackAction.args[0].paybackAll).toBe(true)
+
+    // Decode Maker Withdraw action
+    const makerWithdrawAction = decodeActionCalldata({
+      action: new MakerWithdrawAction(),
+      calldata: flashloanSubcalls[1].callData,
+    })
+
+    assert(makerWithdrawAction, 'Cannot decode Maker Withdraw action calldata')
+
+    expect(makerWithdrawAction.args[0].vaultId).toBe(
+      BigInt((sourcePosition.pool.poolId as MakerPoolId).vaultId),
+    )
+    expect(makerWithdrawAction.args[0].userAddress).toBe(positionsManager.address.value)
+    expect(makerWithdrawAction.args[0].joinAddr).toBe(
+      deployment.dependencies.MCD_JOIN_ETH_C.address,
+    )
+    expect(makerWithdrawAction.args[0].amount).toBe(
+      BigInt(sourcePosition.collateralAmount.toBaseUnit()),
+    )
+
+    // Decode Spark Deposit action
+    const sparkDepositAction = decodeActionCalldata({
+      action: new SparkDepositAction(),
+      calldata: flashloanSubcalls[2].callData,
+    })
+
+    assert(sparkDepositAction, 'Cannot decode Spark Deposit action calldata')
+
+    expect(sparkDepositAction.args[0].asset).toBe(
+      targetPosition.collateralAmount.token.address.value,
+    )
+    expect(sparkDepositAction.args[0].amount).toBe(
+      BigInt(sourcePosition.collateralAmount.toBaseUnit()),
+    )
+    expect(sparkDepositAction.args[0].sumAmounts).toBe(false)
+    expect(sparkDepositAction.args[0].setAsCollateral).toBe(true)
+
+    // Decode Spark Borrow action
+    const sparkBorrowAction = decodeActionCalldata({
+      action: new SparkBorrowAction(),
+      calldata: flashloanSubcalls[3].callData,
+    })
+
+    assert(sparkBorrowAction, 'Cannot decode Spark Borrow action calldata')
+
+    expect(sparkBorrowAction.args[0].asset).toBe(targetPosition.debtAmount.token.address.value)
+    expect(sparkBorrowAction.args[0].amount).toBe(BigInt(targetPosition.debtAmount.toBaseUnit()))
+    expect(sparkBorrowAction.args[0].to).toBe(positionsManager.address.value)
+
+    // Decode Send Token action
+    const sendTokenAction = decodeActionCalldata({
+      action: new SendTokenAction(),
+      calldata: flashloanSubcalls[4].callData,
+    })
+
+    assert(sendTokenAction, 'Cannot decode Send Token action calldata')
+
+    expect(sendTokenAction.args[0].asset).toBe(sourcePosition.debtAmount.token.address.value)
+    expect(sendTokenAction.args[0].to).toBe(strategyExecutorAddress.value)
+    expect(sendTokenAction.args[0].amount).toBe(BigInt(flashloanAmount.toBaseUnit()))
+
+    // const encodedArgs = ethers.AbiCoder.defaultAbiCoder().encode(
+    //   [
+    //     'tuple(uint256 amount, address asset, bool isProxyFlashloan, bool isDPMProxy, uint8 provider, (bytes32 targetHash, bytes callData, bool skipped)[] calls)',
+    //   ],
+    //   [
+    //     {
+    //       amount: flashloanAmount.toBaseUnit(),
+    //       asset: sourcePosition.debtAmount.token.address.value,
+    //       isProxyFlashloan: true,
+    //       isDPMProxy: true,
+    //       provider: 0,
+    //       calls: [],
+    //     },
+    //   ],
+    // )
+
+    //console.log('Encoded args:', encodedArgs)
 
     // Send transaction
     console.log('Sending transaction...')
 
     const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex
     const transactionUtils = new TransactionUtils({
-      rpcUrl: 'https://rpc.tenderly.co/fork/122abd3c-a174-4ced-b8a6-be02f1ccaca4',
+      rpcUrl: TenderlyForkUrl,
       walletPrivateKey: privateKey,
     })
 
@@ -173,14 +367,14 @@ describe.only('Refinance Maker Spark | SDK', () => {
     //   target: Address.createFromEthereum({
     //     value: '0x551Eb8395093fDE4B9eeF017C93593a3C7a75138',
     //   }),
-    //   calldata:
-    //     '0x1cff79cd000000000000000000000000ca71c36d26f515ad0cce1d806b231cbc1185cdfc00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000c24f1298ed700000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000be000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000020659de0ea7426ebf3658481941708805f7ecc3f3743ffe9b690fb9bda9420e1f2000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ac485e92d9800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000a2000000000000000000000000000000000000000000000000000000000000009c000000000000000000000000000a661f1ebf4d0e643524c40f32fde9ddd0000000000000000000000000000006b175474e89094c44da98b954eedeac495271d0f00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c00000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000002a000000000000000000000000000000000000000000000000000000000000004c000000000000000000000000000000000000000000000000000000000000006e07c7fc43481c9c7bbaadc7550fc793b2149008f6e3edd3c92e7c0a9a057d7e9dc00000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000018485e92d98000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000007b9e000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb92266000000000000000000000000000000000001bc16d674ec7ff21f494c589c00000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000027d4d152838fb8904a3347ecd2d0c7692ae9e08499adff320d9a71aec5873f3e00000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000018485e92d98000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000007b9e000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb922660000000000000000000000009759a6ac90977b93b58547b4a71c78317f391a28000000000000000000000000000000000001bc16d674ec7ff21f494c589c000000000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002e5a52747552066d9a632214937a8417ea69760062f4039987cfe8d956646f2e00000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000018485e92d98000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e00000000000000000000000000000000000000000000000000000000000000080000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc20000000000000000000000000000000000000000000000001d84a3349a2e13de00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000065cd19ae3299f6b487d3a50d8982beaadf479209df9404651ca1fa71abfc3beb00000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000016485e92d98000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000c000000000000000000000000000000000000000000000000000000000000000600000000000000000000000006b175474e89094c44da98b954eedeac495271d0f00000000000000000000000289ee9901b4500376f979ddb5f2fd98a748000000000000000000000000000000551eb8395093fde4b9eef017c93593a3c7a75138000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000009526566696e616e6365000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    //   calldata: calldata
     //   value: '0',
     // }
-    // console.log('Transaction:', refinanceOrder.transactions[0].transaction)
+
+    //console.log('Transaction:', refinanceOrder.transactions[0].transaction)
 
     const receipt = await transactionUtils.sendTransaction({
-      //  transaction: transaction,
+      //transaction: transaction,
       transaction: refinanceOrder.transactions[0].transaction,
     })
 

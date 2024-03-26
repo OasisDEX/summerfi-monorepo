@@ -52,11 +52,12 @@ export async function refinaceLendingToLending(
 
   const position = Position.createFrom(args.position)
   const targetPool = await dependencies.protocolManager.getPool(args.targetPool.poolId)
+
   if (!isLendingPool(targetPool)) {
     throw new Error('Target pool is not a lending pool')
   }
 
-  const FLASHLOAN_MARGIN = 0.001
+  const FLASHLOAN_MARGIN = 1.001
   const flashloanAmount = position.debtAmount.multiply(FLASHLOAN_MARGIN)
   const simulator = Simulator.create(refinanceStrategy)
 
@@ -85,10 +86,7 @@ export async function refinaceLendingToLending(
           amount: Number.MAX_SAFE_INTEGER.toString(),
           token: position.debtAmount.token,
         }),
-        withdrawAmount: TokenAmount.createFrom({
-          amount: Number.MAX_SAFE_INTEGER.toString(),
-          token: position.collateralAmount.token,
-        }),
+        withdrawAmount: position.collateralAmount,
         position: position,
       },
     }))
@@ -110,7 +108,7 @@ export async function refinaceLendingToLending(
       name: 'RepayFlashloan',
       type: SimulationSteps.RepayFlashloan,
       inputs: {
-        amount: position.debtAmount, // TODO add some amount
+        amount: flashloanAmount,
       },
     }))
     .run()
@@ -124,15 +122,10 @@ export async function refinaceLendingToLending(
     throw new Error('Target position not found')
   }
 
-  const steps = []
-  for (const stepName in simulation.steps) {
-    steps.push(simulation.steps[stepName])
-  }
-
   return {
     simulationType: SimulationType.Refinance,
-    sourcePosition: args.position,
+    sourcePosition: position,
     targetPosition,
-    steps: steps,
+    steps: Object.values(simulation.steps),
   } as Simulation<SimulationType.Refinance>
 }

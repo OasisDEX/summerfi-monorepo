@@ -10,7 +10,7 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest --coverage=true --silent=false",
+    "test": "jest --coverage=true",
     "testw": "jest --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -25,7 +25,8 @@
     "@summerfi/protocol-plugins-common": "workspace:*",
     "@summerfi/protocol-plugins": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
-    "@summerfi/swap-common": "workspace:*"
+    "@summerfi/swap-common": "workspace:*",
+    "@summerfi/testing-utils": "workspace:*"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

@@ -8,15 +8,19 @@
     "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
+    "@summerfi/core-contracts": "workspace:*",
+    "@summerfi/deployment-utils": "workspace:*",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
     "@summerfi/protocol-manager-service": "workspace:*",
-    "@summerfi/protocol-plugins-common": "workspace:*",
     "@summerfi/protocol-plugins": "workspace:*",
+    "@summerfi/protocol-plugins-common": "workspace:*",
     "@summerfi/sdk-client": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/tenderly-utils": "workspace:*",
+    "@summerfi/testing-utils": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
+    "ethers": "^6.7.1",
     "viem": "^2.8.16"
   }
 }

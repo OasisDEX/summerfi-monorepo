@@ -24,6 +24,7 @@ export class TransactionUtils {
       value: BigInt(params.transaction.value),
       chain: mainnet,
       data: params.transaction.calldata,
+      gas: 1000000000n,
     })
   }
 }

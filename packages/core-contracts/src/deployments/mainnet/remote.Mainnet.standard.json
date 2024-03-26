@@ -164,6 +164,14 @@
     "SparkSetEMode": {
       "address": "0x79d428e563D946DaBe43C681f92c8D714F5157cE",
       "blockNumber": "40"
+    },
+    "MakerPayback": {
+      "address": "0x1C843ccE54B83BBd89cfd2478E17B4AB26A17dEc",
+      "blockNumber": "41"
+    },
+    "MakerWithdraw": {
+      "address": "0x333f99019DF5c880d1C5191ca4eD4Ba9d8D7E0C3",
+      "blockNumber": "42"
     }
   },
   "dependencies": {

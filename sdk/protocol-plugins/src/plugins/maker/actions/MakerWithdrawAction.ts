@@ -1,12 +1,13 @@
 import { ActionCall, BaseAction } from '@summerfi/protocol-plugins-common'
 import { Address, TokenAmount } from '@summerfi/sdk-common/common'
+import { IPositionsManager } from '@summerfi/sdk-common/orders'
 import { IPool, isMakerPoolId } from '@summerfi/sdk-common/protocols'
 
 export class MakerWithdrawAction extends BaseAction {
   public readonly config = {
     name: 'MakerWithdraw',
     version: 0,
-    parametersAbi: 'uint256 vaultId, address userAddress, address joinAddr, uint256 amount',
+    parametersAbi: '(uint256 vaultId, address userAddress, address joinAddr, uint256 amount)',
     storageInputs: ['vaultId'],
     storageOutputs: ['amountWithdrawn'],
   } as const
@@ -14,7 +15,7 @@ export class MakerWithdrawAction extends BaseAction {
   public encodeCall(
     params: {
       pool: IPool
-      userAddress: Address
+      positionsManager: IPositionsManager
       amount: TokenAmount
       joinAddress: Address
     },
@@ -26,10 +27,12 @@ export class MakerWithdrawAction extends BaseAction {
 
     return this._encodeCall({
       arguments: [
-        params.pool.poolId.vaultId,
-        params.userAddress.value,
-        params.joinAddress.value,
-        params.amount.toBaseUnit(),
+        {
+          vaultId: params.pool.poolId.vaultId,
+          userAddress: params.positionsManager.address.value,
+          joinAddr: params.joinAddress.value,
+          amount: params.amount.toBaseUnit(),
+        },
       ],
       mapping: paramsMapping,
     })

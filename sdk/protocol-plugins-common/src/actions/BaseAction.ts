@@ -52,10 +52,9 @@ export abstract class BaseAction {
       'function execute(bytes calldata data, uint8[] paramsMap) external payable returns (bytes calldata)',
     ])
 
-    const encodedArgs = encodeAbiParameters(
-      parseAbiParameters(this.config.parametersAbi),
-      params.arguments,
-    )
+    const abiParameters = parseAbiParameters(this.config.parametersAbi)
+
+    const encodedArgs = encodeAbiParameters(abiParameters, params.arguments)
 
     const calldata = encodeFunctionData({
       abi,

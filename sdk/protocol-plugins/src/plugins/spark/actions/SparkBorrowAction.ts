@@ -5,7 +5,7 @@ export class SparkBorrowAction extends BaseAction {
   public readonly config = {
     name: 'SparkBorrow',
     version: 2,
-    parametersAbi: 'address asset, uint256 amount, address to',
+    parametersAbi: '(address asset, uint256 amount, address to)',
     storageInputs: [],
     storageOutputs: ['borrowedAmount'],
   } as const
@@ -16,9 +16,11 @@ export class SparkBorrowAction extends BaseAction {
   ): ActionCall {
     return this._encodeCall({
       arguments: [
-        params.borrowAmount.token.address.value,
-        params.borrowAmount.toBaseUnit(),
-        params.borrowTo.value,
+        {
+          asset: params.borrowAmount.token.address.value,
+          amount: params.borrowAmount.toBaseUnit(),
+          to: params.borrowTo.value,
+        },
       ],
       mapping: paramsMapping,
     })

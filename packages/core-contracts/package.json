@@ -7,6 +7,10 @@
     ".": {
       "import": "./src/index.ts",
       "types": "./src/index.d.ts"
+    },
+    "./abis/*": {
+      "import": "./src/abis/*",
+      "types": "./src/abis/*"
     }
   },
   "scripts": {

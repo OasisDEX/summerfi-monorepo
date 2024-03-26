@@ -10,7 +10,7 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest --coverage=true",
+    "test": "jest --coverage=true --silent=false",
     "testw": "jest --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -21,6 +21,8 @@
     "@summerfi/deployment-utils": "workspace:*",
     "@summerfi/deployment-types": "workspace:*",
     "@summerfi/protocol-plugins-common": "workspace:*",
+    "@summerfi/testing-utils": "workspace:*",
+    "@summerfi/swap-common": "workspace:*",
     "bignumber.js": "9.0.1",
     "zod": "^3.22.4"
   },

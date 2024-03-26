@@ -49,7 +49,7 @@ export function getRefinanceSimulation(params: {
           depositAmount: targetPosition.collateralAmount,
           borrowAmount: targetPosition.debtAmount,
           position: targetPosition,
-          borrowTargetType: TokenTransferTargetType.PositionsManager,
+          borrowTargetType: TokenTransferTargetType.StrategyExecutor,
         },
         outputs: {
           depositAmount: targetPosition.collateralAmount,
