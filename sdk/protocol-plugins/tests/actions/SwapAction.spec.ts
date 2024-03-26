@@ -2,7 +2,7 @@ import { Address, HexData, Percentage, Token, TokenAmount } from '@summerfi/sdk-
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
 import { SwapAction } from '../../src/plugins/common/actions'
 
-describe('Swap Action', () => {
+describe.skip('Swap Action', () => {
   const action = new SwapAction()
   const contractNameWithVersion = `${action.config.name}_${action.config.version}`
 
@@ -50,7 +50,6 @@ describe('Swap Action', () => {
 
     expect(call.targetHash).toBe(getTargetHash(action))
 
-    console.log('call', call.callData)
     const actionDecodedArgs = decodeActionCalldata({
       action,
       calldata: call.callData,

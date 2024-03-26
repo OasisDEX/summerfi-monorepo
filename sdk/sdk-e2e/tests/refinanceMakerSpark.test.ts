@@ -7,8 +7,6 @@ import {
   Address,
   type Maybe,
   ChainFamilyMap,
-  HexData,
-  ChainInfo,
   AddressValue,
 } from '@summerfi/sdk-common/common'
 
@@ -23,12 +21,7 @@ import {
 } from '@summerfi/sdk-common/protocols'
 import { makeSDK, type Chain, type User, Protocol } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
-import {
-  IPositionsManager,
-  IRefinanceParameters,
-  Order,
-  Transaction,
-} from '@summerfi/sdk-common/orders'
+import { IPositionsManager, IRefinanceParameters, Order } from '@summerfi/sdk-common/orders'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { TransactionUtils } from './utils/TransactionUtils'
 import {
@@ -41,18 +34,15 @@ import { DeploymentIndex } from '@summerfi/deployment-utils'
 
 import { Hex } from 'viem'
 import assert from 'assert'
-import { JSONStringifyWithBigInt } from '../../../packages/common/src/JSONStringifyWithBigInt'
-import { ethers } from 'ethers'
 import {
   FlashloanAction,
   MakerPaybackAction,
   MakerWithdrawAction,
   SendTokenAction,
+  SetApprovalAction,
   SparkBorrowAction,
   SparkDepositAction,
 } from '@summerfi/protocol-plugins'
-
-//import ServiceRegistryAbi from '@summerfi/core-contracts/abis/contracts/core/ServiceRegistry.sol/ServiceRegistry.json'
 
 jest.setTimeout(300000)
 
@@ -255,7 +245,7 @@ describe.only('Refinance Maker Spark | SDK', () => {
     expect(flashloanParams.args[0].provider).toBe(0)
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     const flashloanSubcalls = flashloanParams.args[0].calls as Array<any>
-    expect(flashloanSubcalls.length).toBe(5)
+    expect(flashloanSubcalls.length).toBe(6)
 
     // Decode Maker Payback action
     const makerPaybackAction = decodeActionCalldata({
@@ -295,10 +285,30 @@ describe.only('Refinance Maker Spark | SDK', () => {
       BigInt(sourcePosition.collateralAmount.toBaseUnit()),
     )
 
+    // Set Approval
+    const setApprovalAction = decodeActionCalldata({
+      action: new SetApprovalAction(),
+      calldata: flashloanSubcalls[2].callData,
+    })
+
+    assert(setApprovalAction, 'Cannot decode Set Approval action calldata')
+
+    const sparkLendingPool = Address.createFromEthereum({
+      value: deployment.dependencies.SparkLendingPool.address as AddressValue,
+    })
+    expect(setApprovalAction.args[0].asset).toBe(
+      sourcePosition.collateralAmount.token.address.value,
+    )
+    expect(setApprovalAction.args[0].delegate).toBe(sparkLendingPool.value)
+    expect(setApprovalAction.args[0].amount).toBe(
+      BigInt(sourcePosition.collateralAmount.toBaseUnit()),
+    )
+    expect(setApprovalAction.args[0].sumAmounts).toBe(false)
+
     // Decode Spark Deposit action
     const sparkDepositAction = decodeActionCalldata({
       action: new SparkDepositAction(),
-      calldata: flashloanSubcalls[2].callData,
+      calldata: flashloanSubcalls[3].callData,
     })
 
     assert(sparkDepositAction, 'Cannot decode Spark Deposit action calldata')
@@ -315,7 +325,7 @@ describe.only('Refinance Maker Spark | SDK', () => {
     // Decode Spark Borrow action
     const sparkBorrowAction = decodeActionCalldata({
       action: new SparkBorrowAction(),
-      calldata: flashloanSubcalls[3].callData,
+      calldata: flashloanSubcalls[4].callData,
     })
 
     assert(sparkBorrowAction, 'Cannot decode Spark Borrow action calldata')
@@ -327,7 +337,7 @@ describe.only('Refinance Maker Spark | SDK', () => {
     // Decode Send Token action
     const sendTokenAction = decodeActionCalldata({
       action: new SendTokenAction(),
-      calldata: flashloanSubcalls[4].callData,
+      calldata: flashloanSubcalls[5].callData,
     })
 
     assert(sendTokenAction, 'Cannot decode Send Token action calldata')
@@ -335,24 +345,6 @@ describe.only('Refinance Maker Spark | SDK', () => {
     expect(sendTokenAction.args[0].asset).toBe(sourcePosition.debtAmount.token.address.value)
     expect(sendTokenAction.args[0].to).toBe(strategyExecutorAddress.value)
     expect(sendTokenAction.args[0].amount).toBe(BigInt(flashloanAmount.toBaseUnit()))
-
-    // const encodedArgs = ethers.AbiCoder.defaultAbiCoder().encode(
-    //   [
-    //     'tuple(uint256 amount, address asset, bool isProxyFlashloan, bool isDPMProxy, uint8 provider, (bytes32 targetHash, bytes callData, bool skipped)[] calls)',
-    //   ],
-    //   [
-    //     {
-    //       amount: flashloanAmount.toBaseUnit(),
-    //       asset: sourcePosition.debtAmount.token.address.value,
-    //       isProxyFlashloan: true,
-    //       isDPMProxy: true,
-    //       provider: 0,
-    //       calls: [],
-    //     },
-    //   ],
-    // )
-
-    //console.log('Encoded args:', encodedArgs)
 
     // Send transaction
     console.log('Sending transaction...')
@@ -363,18 +355,7 @@ describe.only('Refinance Maker Spark | SDK', () => {
       walletPrivateKey: privateKey,
     })
 
-    // const transaction: Transaction = {
-    //   target: Address.createFromEthereum({
-    //     value: '0x551Eb8395093fDE4B9eeF017C93593a3C7a75138',
-    //   }),
-    //   calldata: calldata
-    //   value: '0',
-    // }
-
-    //console.log('Transaction:', refinanceOrder.transactions[0].transaction)
-
     const receipt = await transactionUtils.sendTransaction({
-      //transaction: transaction,
       transaction: refinanceOrder.transactions[0].transaction,
     })
 

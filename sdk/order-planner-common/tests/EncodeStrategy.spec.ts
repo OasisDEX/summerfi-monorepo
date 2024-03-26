@@ -2,6 +2,7 @@ import { ActionNames } from '@summerfi/deployment-types'
 import { encodeStrategy } from '../src/utils'
 import { decodeStrategy } from './utils/DecodeStrategy'
 import { ActionCall, BaseAction } from '@summerfi/protocol-plugins-common'
+import { Address } from '@summerfi/sdk-common/common'
 
 class DerivedAction extends BaseAction {
   public readonly config = {
@@ -25,6 +26,9 @@ class DerivedAction extends BaseAction {
 
 describe.only('Encode Strategy', () => {
   const derivedAction = new DerivedAction()
+  const strategyExecutor = Address.createFromEthereum({
+    value: '0x5E81A7515F956ab642Eb698821a449FE8fE7498b',
+  })
 
   const actionCall = derivedAction.encodeCall(
     {
@@ -42,7 +46,11 @@ describe.only('Encode Strategy', () => {
   })
 
   it('should encode calls for operation executor', () => {
-    const calldata = encodeStrategy('operationName', [actionCall, otherActionCall])
+    const calldata = encodeStrategy({
+      strategyName: 'operationName',
+      strategyExecutor,
+      actions: [actionCall, otherActionCall],
+    })
 
     const decodedArgs = decodeStrategy(calldata)
 
