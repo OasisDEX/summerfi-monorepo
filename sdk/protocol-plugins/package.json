@@ -2,9 +2,9 @@
   "name": "@summerfi/protocol-plugins",
   "version": "0.0.1",
   "exports": {
-    ".": {
-      "import": "./src/index.ts",
-      "types": "./src/index.d.ts"
+    "./*": {
+      "import": "./src/*/index.ts",
+      "types": "./src/*/index.d.ts"
     }
   },
   "scripts": {

@@ -1,6 +1,6 @@
 import { PoolParameters } from './PoolParameters'
-import { ICollateralConfigMap } from './ICollateralConfigMap'
-import { IDebtConfigMap } from './IDebtConfigMap'
+import { ICollateralConfigMap } from '../interfaces/ICollateralConfigMap'
+import { IDebtConfigMap } from '../interfaces/IDebtConfigMap'
 
 /**
  * @name LendingPoolParameters

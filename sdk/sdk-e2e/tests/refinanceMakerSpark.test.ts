@@ -10,15 +10,7 @@ import {
   AddressValue,
 } from '@summerfi/sdk-common/common'
 
-import {
-  ProtocolName,
-  ILKType,
-  isSparkPoolId,
-  EmodeType,
-  isLendingPool,
-  MakerPoolId,
-  SparkPoolId,
-} from '@summerfi/sdk-common/protocols'
+import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
 import { makeSDK, type Chain, type User, Protocol } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
 import { IPositionsManager, IRefinanceParameters, Order } from '@summerfi/sdk-common/orders'
@@ -35,14 +27,23 @@ import { DeploymentIndex } from '@summerfi/deployment-utils'
 import { Hex } from 'viem'
 import assert from 'assert'
 import {
+  EmodeType,
   FlashloanAction,
-  MakerPaybackAction,
-  MakerWithdrawAction,
   SendTokenAction,
   SetApprovalAction,
+} from '@summerfi/protocol-plugins/plugins/common'
+import {
+  ILKType,
+  MakerPaybackAction,
+  MakerPoolId,
+  MakerWithdrawAction,
+} from '@summerfi/protocol-plugins/plugins/maker'
+import {
   SparkBorrowAction,
   SparkDepositAction,
-} from '@summerfi/protocol-plugins'
+  SparkPoolId,
+  isSparkPoolId,
+} from '@summerfi/protocol-plugins/plugins/spark'
 
 jest.setTimeout(300000)
 
@@ -105,7 +106,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
         name: ProtocolName.Maker,
         chainInfo: chain.chainInfo,
       },
-      ilkType: ILKType.ETH_A,
+      ilkType: ILKType.ETH_C,
       vaultId: '31646',
     }
 

@@ -6,13 +6,6 @@
     "baseUrl": "."
   },
   "references": [{ "path": "../order-planner-common" }],
-  "include": [
-    "src/**/*.ts",
-    "tests/**/*.ts",
-    "scripts/**/*.ts",
-    "../protocol-plugins/tests/utils/SetupBuilderParams.ts",
-    "../protocol-plugins/tests/utils/ProtocolsPluginRegistryMock.ts",
-    "../protocol-plugins/tests/utils/ProtocolPluginMock.ts"
-  ],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "scripts/**/*.ts"],
   "exclude": ["node_modules"]
 }

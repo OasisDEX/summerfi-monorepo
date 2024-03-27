@@ -10,9 +10,11 @@ import {
 import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
 import { SetupBuilderReturnType, setupBuilderParams } from '../utils/SetupBuilderParams'
 import { DepositBorrowActionBuilder } from '../../src/plugins/common/builders/DepositBorrowActionBuilder'
-import { MakerPoolId, PoolType, ProtocolName, ILKType } from '@summerfi/sdk-common/protocols'
+import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
+import { MakerPoolId } from '../../src/plugins/maker/types/MakerPoolId'
+import { ILKType } from '../../src/plugins/maker/enums/ILKType'
 
 describe('Deposit Borrow Action Builder', () => {
   let builderParams: SetupBuilderReturnType

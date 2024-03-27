@@ -1,4 +1,3 @@
-import { ILKType } from '@summerfi/sdk-common/protocols'
 import { StepBuilderContext } from '../src/context'
 import {
   Address,
@@ -8,7 +7,7 @@ import {
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
-import { MakerPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { IPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
 import { ActionNames } from '@summerfi/deployment-types'
 import { ChainFamilyMap } from '@summerfi/sdk-common/common'
@@ -78,10 +77,8 @@ describe('Step Builder Context', () => {
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   }
 
-  const poolId: MakerPoolId = {
+  const poolId: IPoolId = {
     protocol: protocol,
-    ilkType: ILKType.ETH_A,
-    vaultId: '123',
   }
 
   const pool = {

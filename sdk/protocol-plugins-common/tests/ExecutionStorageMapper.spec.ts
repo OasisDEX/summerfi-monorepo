@@ -1,4 +1,3 @@
-import { ILKType } from '@summerfi/sdk-common/protocols'
 import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
 import { ExecutionStorageMapper } from '../src/context/ExecutionStorageMapper'
 import {
@@ -10,7 +9,7 @@ import {
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
-import { MakerPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { IPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { ActionNames } from '@summerfi/deployment-types'
 import { BaseAction } from '../src/actions/BaseAction'
 import { ActionCall } from '../src/actions/Types'
@@ -66,13 +65,11 @@ describe('Execution Storage Mapper', () => {
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   }
 
-  const poolId: MakerPoolId = {
+  const poolId: IPoolId = {
     protocol: {
       name: ProtocolName.Maker,
       chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
     },
-    ilkType: ILKType.ETH_A,
-    vaultId: '123',
   }
 
   const pool = {

@@ -6,7 +6,6 @@ import {
   PositionId,
   Wallet,
 } from '@summerfi/sdk-common/common'
-import { getMockPosition } from '../mocks/mockPosition'
 import { IPositionsManager, Order } from '@summerfi/sdk-common/orders'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { IUserClient } from '../interfaces/IUserClient'
@@ -45,10 +44,7 @@ export class User extends IRPCClient implements IUserClient {
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public async getPosition(params: { id: PositionId }): Promise<Maybe<Position>> {
     // TODO: Implement
-    // for client impl we'll use communication layer client
-    // to get the position from the network
-    // but for server we'll use a communication layer caller
-    return getMockPosition({ chainInfo: this.chainInfo, wallet: this.wallet, id: params.id })
+    return {} as Position
   }
 
   public async newOrder(params: {

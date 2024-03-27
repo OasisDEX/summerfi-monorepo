@@ -1,7 +1,7 @@
 import { IProtocol, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SDKManager } from '../../src/implementation/SDKManager'
 import { RPCClientType } from '../../src/rpc/SDKClient'
-import { MakerLendingPool, SparkLendingPool } from '@summerfi/protocol-plugins'
+import { MakerLendingPool } from '@summerfi/protocol-plugins/plugins/maker'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import {
   Address,
@@ -17,6 +17,7 @@ import {
 } from '@summerfi/sdk-common/common'
 import { IPositionsManager, Order } from '@summerfi/sdk-common/orders'
 import { User } from '../../src/implementation/User'
+import { SparkLendingPool } from '@summerfi/protocol-plugins/plugins/spark'
 
 export default async function simulateNewOrder() {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet

@@ -19,7 +19,6 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@summerfi/protocol-plugins": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/sdk-server": "workspace:*",
     "@trpc/client": "11.0.0-next-beta.264",

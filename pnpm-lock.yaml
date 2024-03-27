@@ -896,12 +896,6 @@ importers:
 
   sdk/sdk-client:
     dependencies:
-      '@summerfi/protocol-manager-service':
-        specifier: workspace:*
-        version: link:../protocol-manager-service
-      '@summerfi/protocol-plugins':
-        specifier: workspace:*
-        version: link:../protocol-plugins
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common

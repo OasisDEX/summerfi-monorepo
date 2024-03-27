@@ -7,7 +7,8 @@ import {
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
-import { MakerPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { ILKType, MakerPoolId } from '@summerfi/protocol-plugins/plugins/maker'
 
 export function getMakerPosition(): Position {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -45,7 +46,7 @@ export function getMakerPosition(): Position {
 
   const poolId = {
     protocol: protocol,
-    ilkType: 'ETH-A',
+    ilkType: ILKType.ETH_A,
     vaultId: '34',
   } as MakerPoolId
 

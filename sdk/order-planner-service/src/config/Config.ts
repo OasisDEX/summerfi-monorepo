@@ -8,7 +8,7 @@ import {
   RepayFlashloanActionBuilder,
   ReturnFundsActionBuilder,
   SwapActionBuilder,
-} from '@summerfi/protocol-plugins'
+} from '@summerfi/protocol-plugins/plugins/common'
 
 export const ActionBuildersConfig: ActionBuildersMap = {
   [SimulationSteps.PullToken]: PullTokenActionBuilder,

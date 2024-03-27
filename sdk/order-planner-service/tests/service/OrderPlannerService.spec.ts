@@ -5,28 +5,17 @@ import { Address, AddressValue, ChainFamilyMap, ChainInfo } from '@summerfi/sdk-
 import { IPositionsManager } from '@summerfi/sdk-common/orders'
 import {
   FlashloanAction,
-  MakerPaybackAction,
-  MakerProtocolPlugin,
-  MakerWithdrawAction,
-  ProtocolPluginsRegistry,
   ReturnFundsAction,
   SetApprovalAction,
-  SparkBorrowAction,
-  SparkDepositAction,
-  SparkProtocolPlugin,
-} from '@summerfi/protocol-plugins'
-import { MakerPoolId, ProtocolName } from '@summerfi/sdk-common/protocols'
+} from '@summerfi/protocol-plugins/plugins/common'
+import { ProtocolName } from '@summerfi/sdk-common/protocols'
 
 import { SetupDeployments } from '../utils/SetupDeployments'
 import { UserMock } from '../mocks/UserMock'
 import { SwapManagerMock } from '../mocks/SwapManagerMock'
-
 import { getRefinanceSimulation } from '../utils/RefinanceSimulation/RefinanceSimulation'
 import { OrderPlannerService } from '../../src/implementation/OrderPlannerService'
-
 import {
-  getSparkPosition,
-  getMakerPosition,
   decodeActionCalldata,
   SkippableActionCall,
   decodePositionsManagerCalldata,
@@ -42,6 +31,20 @@ import {
   ITokenService,
 } from '@summerfi/protocol-plugins-common'
 import { PublicClient } from 'viem'
+import {
+  MakerPaybackAction,
+  MakerPoolId,
+  MakerProtocolPlugin,
+  MakerWithdrawAction,
+} from '@summerfi/protocol-plugins/plugins/maker'
+import {
+  SparkBorrowAction,
+  SparkDepositAction,
+  SparkProtocolPlugin,
+} from '@summerfi/protocol-plugins/plugins/spark'
+import { ProtocolPluginsRegistry } from '@summerfi/protocol-plugins/implementation'
+import { getMakerPosition } from '../utils/MakerSourcePosition'
+import { getSparkPosition } from '../utils/SparkTargetPosition'
 
 describe('Order Planner Service', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -207,7 +210,7 @@ describe('Order Planner Service', () => {
       {
         vaultId: BigInt((sourcePosition.pool.poolId as MakerPoolId).vaultId),
         userAddress: positionsManager.address.value,
-        joinAddr: deployments.dependencies.MCD_JOIN_ETH_C.address,
+        joinAddr: deployments.dependencies.MCD_JOIN_ETH_A.address,
         amount: BigInt(sourcePosition.collateralAmount.toBaseUnit()),
       },
     ])

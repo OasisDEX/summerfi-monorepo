@@ -1,7 +1,8 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { Address, TokenAmount } from '@summerfi/sdk-common/common'
 import { IPositionsManager } from '@summerfi/sdk-common/orders'
-import { IPool, isMakerPoolId } from '@summerfi/sdk-common/protocols'
+import { IPool } from '@summerfi/sdk-common/protocols'
+import { isMakerPoolId } from '../types/MakerPoolId'
 
 export class MakerWithdrawAction extends BaseAction {
   public readonly config = {

@@ -1,9 +1,7 @@
-import { ChainInfo } from '../../common'
-import { IPoolId, isPoolId } from '../../protocols/interfaces/IPoolId'
-import { ProtocolName } from '../../protocols/enums/ProtocolName'
-import { EmodeType } from '../enums/EmodeType'
+import { ChainInfo } from '@summerfi/sdk-common/common'
+import { IPoolId, ProtocolName, isPoolId } from '@summerfi/sdk-common/protocols'
+import { EmodeType } from '../../common/enums/EmodeType'
 
-// TODO: temporary interface so FE can create this data types without talking to a service
 export interface AaveV3PoolId extends IPoolId {
   protocol: {
     name: ProtocolName.AAVEv3
