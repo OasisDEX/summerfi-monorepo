@@ -23,7 +23,6 @@
     "@summerfi/protocol-plugins-common": "workspace:*",
     "@summerfi/testing-utils": "workspace:*",
     "@summerfi/swap-common": "workspace:*",
-    "bignumber.js": "9.0.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {

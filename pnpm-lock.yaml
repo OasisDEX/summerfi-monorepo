@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      bignumber.js:
+        specifier: ^9.1.2
+        version: 9.1.2
       madge:
         specifier: ^6.1.0
         version: 6.1.0(typescript@5.3.3)
@@ -243,7 +246,7 @@ importers:
     devDependencies:
       '@nomicfoundation/hardhat-toolbox-viem':
         specifier: ^2.0.0
-        version: 2.0.0(@nomicfoundation/hardhat-network-helpers@1.0.10)(@nomicfoundation/hardhat-verify@2.0.4)(@nomicfoundation/hardhat-viem@1.0.3)(@types/chai-as-promised@7.1.8)(@types/chai@4.3.11)(@types/mocha@10.0.6)(@types/node@20.11.30)(chai@4.4.1)(hardhat-gas-reporter@1.0.10)(hardhat@2.19.5)(solidity-coverage@0.8.6)(ts-node@10.9.2)(typescript@5.0.4)(viem@2.7.9)
+        version: 2.0.0(@nomicfoundation/hardhat-network-helpers@1.0.10)(@nomicfoundation/hardhat-verify@2.0.4)(@nomicfoundation/hardhat-viem@1.0.3)(@types/chai-as-promised@7.1.8)(@types/chai@4.3.11)(@types/mocha@10.0.6)(@types/node@20.11.30)(chai@4.4.1)(hardhat-gas-reporter@1.0.10)(hardhat@2.19.5)(solidity-coverage@0.8.6)(ts-node@10.9.2)(typescript@5.0.4)(viem@1.21.4)
       '@summerfi/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
@@ -256,9 +259,6 @@ importers:
       hardhat:
         specifier: ^2.19.5
         version: 2.19.5(ts-node@10.9.2)(typescript@5.0.4)
-      viem:
-        specifier: ^2.7.8
-        version: 2.7.9(typescript@5.0.4)
 
   packages/core-contracts:
     devDependencies:
@@ -267,7 +267,7 @@ importers:
         version: 5.7.0
       '@nomicfoundation/hardhat-toolbox-viem':
         specifier: ^2.0.0
-        version: 2.0.0(@nomicfoundation/hardhat-network-helpers@1.0.10)(@nomicfoundation/hardhat-verify@2.0.4)(@nomicfoundation/hardhat-viem@1.0.3)(@types/chai-as-promised@7.1.8)(@types/chai@4.3.11)(@types/mocha@10.0.6)(@types/node@20.11.30)(chai@4.4.1)(hardhat-gas-reporter@1.0.10)(hardhat@2.19.5)(solidity-coverage@0.8.6)(ts-node@10.9.2)(typescript@5.0.4)(viem@2.7.1)
+        version: 2.0.0(@nomicfoundation/hardhat-network-helpers@1.0.10)(@nomicfoundation/hardhat-verify@2.0.4)(@nomicfoundation/hardhat-viem@1.0.3)(@types/chai-as-promised@7.1.8)(@types/chai@4.3.11)(@types/mocha@10.0.6)(@types/node@20.11.30)(chai@4.4.1)(hardhat-gas-reporter@1.0.10)(hardhat@2.19.5)(solidity-coverage@0.8.6)(ts-node@10.9.2)(typescript@5.0.4)(viem@1.21.4)
       '@openzeppelin/contracts':
         specifier: 4.9.3
         version: 4.9.3
@@ -301,21 +301,9 @@ importers:
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
-      '@types/jest':
-        specifier: ^29.5.11
-        version: 29.5.11
-      dotenv:
-        specifier: ^16.3.1
-        version: 16.3.1
       hardhat:
         specifier: ^2.19.5
         version: 2.19.5(ts-node@10.9.2)(typescript@5.0.4)
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.30)(ts-node@10.9.2)
-      viem:
-        specifier: ^2.7.1
-        version: 2.7.1(typescript@5.0.4)
 
   packages/deployment-configs:
     devDependencies:
@@ -333,10 +321,6 @@ importers:
         version: link:../hardhat-utils
 
   packages/deployment-types:
-    dependencies:
-      viem:
-        specifier: ^2.2.0
-        version: 2.7.1(typescript@5.3.3)
     devDependencies:
       '@summerfi/common':
         specifier: workspace:*
@@ -347,12 +331,6 @@ importers:
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
-      '@types/jest':
-        specifier: ^29.5.11
-        version: 29.5.11
-      jest:
-        specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.5)
 
   packages/deployment-utils:
     devDependencies:
@@ -419,9 +397,6 @@ importers:
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
-      dotenv:
-        specifier: ^16.3.1
-        version: 16.3.1
       hardhat:
         specifier: ^2.19.5
         version: 2.19.5(ts-node@10.9.2)(typescript@5.0.4)
@@ -572,9 +547,6 @@ importers:
       axios:
         specifier: ^1.6.0
         version: 1.6.7
-      dotenv:
-        specifier: ^16.3.1
-        version: 16.3.1
       ethers:
         specifier: ^6.7.1
         version: 6.11.1
@@ -766,9 +738,6 @@ importers:
       '@types/node-fetch':
         specifier: ^2.6.11
         version: 2.6.11
-      bignumber.js:
-        specifier: 9.0.1
-        version: 9.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -806,9 +775,6 @@ importers:
       '@types/node-fetch':
         specifier: ^2.6.11
         version: 2.6.11
-      bignumber.js:
-        specifier: 9.0.1
-        version: 9.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -846,9 +812,6 @@ importers:
       '@summerfi/testing-utils':
         specifier: workspace:*
         version: link:../testing-utils
-      bignumber.js:
-        specifier: 9.0.1
-        version: 9.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -905,9 +868,6 @@ importers:
       '@trpc/client':
         specifier: 11.0.0-next-beta.264
         version: 11.0.0-next-beta.264(@trpc/server@11.0.0-next-beta.264)
-      bignumber.js:
-        specifier: ^9.1.2
-        version: 9.1.2
       superjson:
         specifier: ^1.13.3
         version: 1.13.3
@@ -1203,9 +1163,6 @@ importers:
       abitype:
         specifier: ^1.0.1
         version: 1.0.1(typescript@5.3.3)(zod@3.22.4)
-      bignumber.js:
-        specifier: ^9.1.2
-        version: 9.1.2
       viem:
         specifier: ^1.19.11
         version: 1.21.4(typescript@5.3.3)(zod@3.22.4)
@@ -5726,7 +5683,7 @@ packages:
       slash: 3.0.0
     dev: true
 
-  /@jest/core@29.7.0(ts-node@10.9.2):
+  /@jest/core@29.7.0:
     resolution: {integrity: sha512-n7aeXWKMnGtDA48y8TLWJPJmLmmZ642Ceo78cYWEpiD7FzDgmNDV/GCVRorPABdXLJZ/9wzzgZAlHjXjxDHGsg==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     peerDependencies:
@@ -5747,7 +5704,7 @@ packages:
       exit: 0.1.2
       graceful-fs: 4.2.11
       jest-changed-files: 29.7.0
-      jest-config: 29.7.0(@types/node@20.11.5)(ts-node@10.9.2)
+      jest-config: 29.7.0(@types/node@20.11.5)
       jest-haste-map: 29.7.0
       jest-message-util: 29.7.0
       jest-regex-util: 29.6.3
@@ -6251,76 +6208,6 @@ packages:
       viem: 1.21.4(typescript@5.0.4)
     dev: true
 
-  /@nomicfoundation/hardhat-toolbox-viem@2.0.0(@nomicfoundation/hardhat-network-helpers@1.0.10)(@nomicfoundation/hardhat-verify@2.0.4)(@nomicfoundation/hardhat-viem@1.0.3)(@types/chai-as-promised@7.1.8)(@types/chai@4.3.11)(@types/mocha@10.0.6)(@types/node@20.11.30)(chai@4.4.1)(hardhat-gas-reporter@1.0.10)(hardhat@2.19.5)(solidity-coverage@0.8.6)(ts-node@10.9.2)(typescript@5.0.4)(viem@2.7.1):
-    resolution: {integrity: sha512-1bxTaC+PcbdctwgP/AvmKJGQTeLoT2kJtAfaDvt5PbL3esZ1EO+pfoBkpliP3DJSNESLSqAjVN1yIFxoLJmiBg==}
-    peerDependencies:
-      '@nomicfoundation/hardhat-network-helpers': ^1.0.0
-      '@nomicfoundation/hardhat-verify': ^2.0.0
-      '@nomicfoundation/hardhat-viem': ^1.0.0
-      '@types/chai': ^4.2.0
-      '@types/chai-as-promised': ^7.1.6
-      '@types/mocha': '>=9.1.0'
-      '@types/node': '>=16.0.0'
-      chai: ^4.2.0
-      hardhat: ^2.11.0
-      hardhat-gas-reporter: ^1.0.8
-      solidity-coverage: ^0.8.1
-      ts-node: '>=8.0.0'
-      typescript: ~5.0.4
-      viem: ^1.15.1
-    dependencies:
-      '@nomicfoundation/hardhat-network-helpers': 1.0.10(hardhat@2.19.5)
-      '@nomicfoundation/hardhat-verify': 2.0.4(hardhat@2.19.5)
-      '@nomicfoundation/hardhat-viem': 1.0.3(hardhat@2.19.5)(typescript@5.0.4)(viem@2.7.1)
-      '@types/chai': 4.3.11
-      '@types/chai-as-promised': 7.1.8
-      '@types/mocha': 10.0.6
-      '@types/node': 20.11.30
-      chai: 4.4.1
-      chai-as-promised: 7.1.1(chai@4.4.1)
-      hardhat: 2.19.5(ts-node@10.9.2)(typescript@5.0.4)
-      hardhat-gas-reporter: 1.0.10(hardhat@2.19.5)
-      solidity-coverage: 0.8.6(hardhat@2.19.5)
-      ts-node: 10.9.2(@types/node@20.11.30)(typescript@5.0.4)
-      typescript: 5.0.4
-      viem: 2.7.1(typescript@5.0.4)
-    dev: true
-
-  /@nomicfoundation/hardhat-toolbox-viem@2.0.0(@nomicfoundation/hardhat-network-helpers@1.0.10)(@nomicfoundation/hardhat-verify@2.0.4)(@nomicfoundation/hardhat-viem@1.0.3)(@types/chai-as-promised@7.1.8)(@types/chai@4.3.11)(@types/mocha@10.0.6)(@types/node@20.11.30)(chai@4.4.1)(hardhat-gas-reporter@1.0.10)(hardhat@2.19.5)(solidity-coverage@0.8.6)(ts-node@10.9.2)(typescript@5.0.4)(viem@2.7.9):
-    resolution: {integrity: sha512-1bxTaC+PcbdctwgP/AvmKJGQTeLoT2kJtAfaDvt5PbL3esZ1EO+pfoBkpliP3DJSNESLSqAjVN1yIFxoLJmiBg==}
-    peerDependencies:
-      '@nomicfoundation/hardhat-network-helpers': ^1.0.0
-      '@nomicfoundation/hardhat-verify': ^2.0.0
-      '@nomicfoundation/hardhat-viem': ^1.0.0
-      '@types/chai': ^4.2.0
-      '@types/chai-as-promised': ^7.1.6
-      '@types/mocha': '>=9.1.0'
-      '@types/node': '>=16.0.0'
-      chai: ^4.2.0
-      hardhat: ^2.11.0
-      hardhat-gas-reporter: ^1.0.8
-      solidity-coverage: ^0.8.1
-      ts-node: '>=8.0.0'
-      typescript: ~5.0.4
-      viem: ^1.15.1
-    dependencies:
-      '@nomicfoundation/hardhat-network-helpers': 1.0.10(hardhat@2.19.5)
-      '@nomicfoundation/hardhat-verify': 2.0.4(hardhat@2.19.5)
-      '@nomicfoundation/hardhat-viem': 1.0.3(hardhat@2.19.5)(typescript@5.0.4)(viem@2.7.9)
-      '@types/chai': 4.3.11
-      '@types/chai-as-promised': 7.1.8
-      '@types/mocha': 10.0.6
-      '@types/node': 20.11.30
-      chai: 4.4.1
-      chai-as-promised: 7.1.1(chai@4.4.1)
-      hardhat: 2.19.5(ts-node@10.9.2)(typescript@5.0.4)
-      hardhat-gas-reporter: 1.0.10(hardhat@2.19.5)
-      solidity-coverage: 0.8.6(hardhat@2.19.5)
-      ts-node: 10.9.2(@types/node@20.11.30)(typescript@5.0.4)
-      typescript: 5.0.4
-      viem: 2.7.9(typescript@5.0.4)
-    dev: true
-
   /@nomicfoundation/hardhat-verify@2.0.4(hardhat@2.19.5):
     resolution: {integrity: sha512-B8ZjhOrmbbRWqJi65jvQblzjsfYktjqj2vmOm+oc2Vu8drZbT2cjeSCRHZKbS7lOtfW78aJZSFvw+zRLCiABJA==}
     peerDependencies:
@@ -6352,38 +6239,6 @@ packages:
       lodash.memoize: 4.1.2
       typescript: 5.0.4
       viem: 1.21.4(typescript@5.0.4)
-    transitivePeerDependencies:
-      - zod
-    dev: true
-
-  /@nomicfoundation/hardhat-viem@1.0.3(hardhat@2.19.5)(typescript@5.0.4)(viem@2.7.1):
-    resolution: {integrity: sha512-Yw8L/WXOjBzeRXxdC/TCUlzhD6k44L8Bm6wCdDF4/D/X0cDHT1CvBtnGuEcxp116Qcx3+5ebi3VJBx1m5w4iNw==}
-    peerDependencies:
-      hardhat: ^2.17.0
-      typescript: ~5.0.0
-      viem: ^1.15.1
-    dependencies:
-      abitype: 0.9.8(typescript@5.0.4)
-      hardhat: 2.19.5(ts-node@10.9.2)(typescript@5.0.4)
-      lodash.memoize: 4.1.2
-      typescript: 5.0.4
-      viem: 2.7.1(typescript@5.0.4)
-    transitivePeerDependencies:
-      - zod
-    dev: true
-
-  /@nomicfoundation/hardhat-viem@1.0.3(hardhat@2.19.5)(typescript@5.0.4)(viem@2.7.9):
-    resolution: {integrity: sha512-Yw8L/WXOjBzeRXxdC/TCUlzhD6k44L8Bm6wCdDF4/D/X0cDHT1CvBtnGuEcxp116Qcx3+5ebi3VJBx1m5w4iNw==}
-    peerDependencies:
-      hardhat: ^2.17.0
-      typescript: ~5.0.0
-      viem: ^1.15.1
-    dependencies:
-      abitype: 0.9.8(typescript@5.0.4)
-      hardhat: 2.19.5(ts-node@10.9.2)(typescript@5.0.4)
-      lodash.memoize: 4.1.2
-      typescript: 5.0.4
-      viem: 2.7.9(typescript@5.0.4)
     transitivePeerDependencies:
       - zod
     dev: true
@@ -8052,20 +7907,6 @@ packages:
       zod: 3.22.4
     dev: false
 
-  /abitype@1.0.0(typescript@5.0.4):
-    resolution: {integrity: sha512-NMeMah//6bJ56H5XRj8QCV4AwuW6hB6zqz2LnhhLdcWVQOsXki6/Pn3APeqxCma62nXIcmZWdu1DlHWS74umVQ==}
-    peerDependencies:
-      typescript: '>=5.0.4'
-      zod: ^3 >=3.22.0
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-      zod:
-        optional: true
-    dependencies:
-      typescript: 5.0.4
-    dev: true
-
   /abitype@1.0.0(typescript@5.3.3)(zod@3.22.4):
     resolution: {integrity: sha512-NMeMah//6bJ56H5XRj8QCV4AwuW6hB6zqz2LnhhLdcWVQOsXki6/Pn3APeqxCma62nXIcmZWdu1DlHWS74umVQ==}
     peerDependencies:
@@ -9606,25 +9447,6 @@ packages:
       sha.js: 2.4.11
     dev: true
 
-  /create-jest@29.7.0(@types/node@20.11.30)(ts-node@10.9.2):
-    resolution: {integrity: sha512-Adz2bdH0Vq3F53KEMJOoftQFutWCukm6J24wbPWRO4k1kMY7gS7ds/uoJkNuV8wDCtWWnuwGcJwpWcih+zEW1Q==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    hasBin: true
-    dependencies:
-      '@jest/types': 29.6.3
-      chalk: 4.1.2
-      exit: 0.1.2
-      graceful-fs: 4.2.11
-      jest-config: 29.7.0(@types/node@20.11.30)(ts-node@10.9.2)
-      jest-util: 29.7.0
-      prompts: 2.4.2
-    transitivePeerDependencies:
-      - '@types/node'
-      - babel-plugin-macros
-      - supports-color
-      - ts-node
-    dev: true
-
   /create-jest@29.7.0(@types/node@20.11.5):
     resolution: {integrity: sha512-Adz2bdH0Vq3F53KEMJOoftQFutWCukm6J24wbPWRO4k1kMY7gS7ds/uoJkNuV8wDCtWWnuwGcJwpWcih+zEW1Q==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -9634,7 +9456,7 @@ packages:
       chalk: 4.1.2
       exit: 0.1.2
       graceful-fs: 4.2.11
-      jest-config: 29.7.0(@types/node@20.11.5)(ts-node@10.9.2)
+      jest-config: 29.7.0(@types/node@20.11.5)
       jest-util: 29.7.0
       prompts: 2.4.2
     transitivePeerDependencies:
@@ -12825,34 +12647,6 @@ packages:
       - supports-color
     dev: true
 
-  /jest-cli@29.7.0(@types/node@20.11.30)(ts-node@10.9.2):
-    resolution: {integrity: sha512-OVVobw2IubN/GSYsxETi+gOe7Ka59EFMR/twOU3Jb2GnKKeMGJB5SGUUrEz3SFVmJASUdZUzy83sLNNQ2gZslg==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    hasBin: true
-    peerDependencies:
-      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
-    peerDependenciesMeta:
-      node-notifier:
-        optional: true
-    dependencies:
-      '@jest/core': 29.7.0(ts-node@10.9.2)
-      '@jest/test-result': 29.7.0
-      '@jest/types': 29.6.3
-      chalk: 4.1.2
-      create-jest: 29.7.0(@types/node@20.11.30)(ts-node@10.9.2)
-      exit: 0.1.2
-      import-local: 3.1.0
-      jest-config: 29.7.0(@types/node@20.11.30)(ts-node@10.9.2)
-      jest-util: 29.7.0
-      jest-validate: 29.7.0
-      yargs: 17.7.2
-    transitivePeerDependencies:
-      - '@types/node'
-      - babel-plugin-macros
-      - supports-color
-      - ts-node
-    dev: true
-
   /jest-cli@29.7.0(@types/node@20.11.5):
     resolution: {integrity: sha512-OVVobw2IubN/GSYsxETi+gOe7Ka59EFMR/twOU3Jb2GnKKeMGJB5SGUUrEz3SFVmJASUdZUzy83sLNNQ2gZslg==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -12863,14 +12657,14 @@ packages:
       node-notifier:
         optional: true
     dependencies:
-      '@jest/core': 29.7.0(ts-node@10.9.2)
+      '@jest/core': 29.7.0
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
       chalk: 4.1.2
       create-jest: 29.7.0(@types/node@20.11.5)
       exit: 0.1.2
       import-local: 3.1.0
-      jest-config: 29.7.0(@types/node@20.11.5)(ts-node@10.9.2)
+      jest-config: 29.7.0(@types/node@20.11.5)
       jest-util: 29.7.0
       jest-validate: 29.7.0
       yargs: 17.7.2
@@ -12881,48 +12675,7 @@ packages:
       - ts-node
     dev: true
 
-  /jest-config@29.7.0(@types/node@20.11.30)(ts-node@10.9.2):
-    resolution: {integrity: sha512-uXbpfeQ7R6TZBqI3/TxCU4q4ttk3u0PJeC+E0zbfSoSjq6bJ7buBPxzQPL0ifrkY4DNu4JUdk0ImlBUYi840eQ==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    peerDependencies:
-      '@types/node': '*'
-      ts-node: '>=9.0.0'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      ts-node:
-        optional: true
-    dependencies:
-      '@babel/core': 7.24.0
-      '@jest/test-sequencer': 29.7.0
-      '@jest/types': 29.6.3
-      '@types/node': 20.11.30
-      babel-jest: 29.7.0(@babel/core@7.24.0)
-      chalk: 4.1.2
-      ci-info: 3.9.0
-      deepmerge: 4.3.1
-      glob: 7.2.3
-      graceful-fs: 4.2.11
-      jest-circus: 29.7.0
-      jest-environment-node: 29.7.0
-      jest-get-type: 29.6.3
-      jest-regex-util: 29.6.3
-      jest-resolve: 29.7.0
-      jest-runner: 29.7.0
-      jest-util: 29.7.0
-      jest-validate: 29.7.0
-      micromatch: 4.0.5
-      parse-json: 5.2.0
-      pretty-format: 29.7.0
-      slash: 3.0.0
-      strip-json-comments: 3.1.1
-      ts-node: 10.9.2(@types/node@20.11.30)(typescript@5.0.4)
-    transitivePeerDependencies:
-      - babel-plugin-macros
-      - supports-color
-    dev: true
-
-  /jest-config@29.7.0(@types/node@20.11.5)(ts-node@10.9.2):
+  /jest-config@29.7.0(@types/node@20.11.5):
     resolution: {integrity: sha512-uXbpfeQ7R6TZBqI3/TxCU4q4ttk3u0PJeC+E0zbfSoSjq6bJ7buBPxzQPL0ifrkY4DNu4JUdk0ImlBUYi840eQ==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     peerDependencies:
@@ -12957,7 +12710,6 @@ packages:
       pretty-format: 29.7.0
       slash: 3.0.0
       strip-json-comments: 3.1.1
-      ts-node: 10.9.2(@types/node@20.11.30)(typescript@5.0.4)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -13264,27 +13016,6 @@ packages:
       supports-color: 8.1.1
     dev: true
 
-  /jest@29.7.0(@types/node@20.11.30)(ts-node@10.9.2):
-    resolution: {integrity: sha512-NIy3oAFp9shda19hy4HK0HRTWKtPJmGdnvywu01nOqNC2vZg+Z+fvJDxpMQA88eb2I9EcafcdjYgsDthnYTvGw==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    hasBin: true
-    peerDependencies:
-      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
-    peerDependenciesMeta:
-      node-notifier:
-        optional: true
-    dependencies:
-      '@jest/core': 29.7.0(ts-node@10.9.2)
-      '@jest/types': 29.6.3
-      import-local: 3.1.0
-      jest-cli: 29.7.0(@types/node@20.11.30)(ts-node@10.9.2)
-    transitivePeerDependencies:
-      - '@types/node'
-      - babel-plugin-macros
-      - supports-color
-      - ts-node
-    dev: true
-
   /jest@29.7.0(@types/node@20.11.5):
     resolution: {integrity: sha512-NIy3oAFp9shda19hy4HK0HRTWKtPJmGdnvywu01nOqNC2vZg+Z+fvJDxpMQA88eb2I9EcafcdjYgsDthnYTvGw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -13295,7 +13026,7 @@ packages:
       node-notifier:
         optional: true
     dependencies:
-      '@jest/core': 29.7.0(ts-node@10.9.2)
+      '@jest/core': 29.7.0
       '@jest/types': 29.6.3
       import-local: 3.1.0
       jest-cli: 29.7.0(@types/node@20.11.5)
@@ -16948,75 +16679,6 @@ packages:
       - utf-8-validate
       - zod
     dev: false
-
-  /viem@2.7.1(typescript@5.0.4):
-    resolution: {integrity: sha512-izAX2KedTFnI2l0ZshtnlK2ZuDvSlKeuaanWyNwC4ffDgrCGtwX1bvVXO3Krh53lZgqvjd8UGpjGaBl3WqJ4yQ==}
-    peerDependencies:
-      typescript: '>=5.0.4'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@adraffy/ens-normalize': 1.10.0
-      '@noble/curves': 1.2.0
-      '@noble/hashes': 1.3.2
-      '@scure/bip32': 1.3.2
-      '@scure/bip39': 1.2.1
-      abitype: 1.0.0(typescript@5.0.4)
-      isows: 1.0.3(ws@8.13.0)
-      typescript: 5.0.4
-      ws: 8.13.0
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-      - zod
-    dev: true
-
-  /viem@2.7.1(typescript@5.3.3):
-    resolution: {integrity: sha512-izAX2KedTFnI2l0ZshtnlK2ZuDvSlKeuaanWyNwC4ffDgrCGtwX1bvVXO3Krh53lZgqvjd8UGpjGaBl3WqJ4yQ==}
-    peerDependencies:
-      typescript: '>=5.0.4'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@adraffy/ens-normalize': 1.10.0
-      '@noble/curves': 1.2.0
-      '@noble/hashes': 1.3.2
-      '@scure/bip32': 1.3.2
-      '@scure/bip39': 1.2.1
-      abitype: 1.0.0(typescript@5.3.3)(zod@3.22.4)
-      isows: 1.0.3(ws@8.13.0)
-      typescript: 5.3.3
-      ws: 8.13.0
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-      - zod
-    dev: false
-
-  /viem@2.7.9(typescript@5.0.4):
-    resolution: {integrity: sha512-iDfc8TwaZFp1K95zlsxYh6Cs0OWCt35Tqs8uYgXKSxtz7w075mZ0H5SJ8zSyJGoEaticVDhtdmRRX6TtcW9EeQ==}
-    peerDependencies:
-      typescript: '>=5.0.4'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@adraffy/ens-normalize': 1.10.0
-      '@noble/curves': 1.2.0
-      '@noble/hashes': 1.3.2
-      '@scure/bip32': 1.3.2
-      '@scure/bip39': 1.2.1
-      abitype: 1.0.0(typescript@5.0.4)
-      isows: 1.0.3(ws@8.13.0)
-      typescript: 5.0.4
-      ws: 8.13.0
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-      - zod
-    dev: true
 
   /viem@2.8.13(typescript@5.3.3)(zod@3.22.4):
     resolution: {integrity: sha512-jEbRUjsiBwmoDr3fnKL1Bh1GhK5ERhmZcPLeARtEaQoBTPB6bcO2siKhNPVOF8qrYRnGHGQrZHncBWMQhTjGYg==}
