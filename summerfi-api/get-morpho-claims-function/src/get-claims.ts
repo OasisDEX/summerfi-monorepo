@@ -14,7 +14,12 @@ type Args = {
   amount: string
   proof: string[]
 }
-
+/* 
+accrued - all rewards accrued from the beginning of rewards program
+available - available to claim
+claimed - claimed by the user
+claimable - all tokens cliamable by the user - that included claimed amount
+ */
 type TokenInfo = {
   token: Token
   accrued: string
