@@ -2,11 +2,11 @@
   "name": "@summerfi/sdk-common",
   "version": "0.0.1",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/src/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/src/index.d.ts"
     },
     "./*": {
       "import": "./src/*/index.ts",
@@ -21,7 +21,8 @@
     "build": "tsc -b -v tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "check-circular": "madge --circular --extensions ts ./src"
+    "check-circular": "madge --circular --extensions ts ./src",
+    "bundle:npm": "esbuild src/index.ts --platform=neutral --target=es2020 --conditions= --main-fields=main --bundle --sourcemap --outfile=bundle/dist/index.js && tsc --emitDeclarationOnly --outDir bundle/dist"
   },
   "dependencies": {
     "bignumber.js": "9.0.1",
