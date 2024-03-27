@@ -1,4 +1,4 @@
-import { ActionCall, BaseAction } from '@summerfi/protocol-plugins-common'
+import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { TokenAmount } from '@summerfi/sdk-common/common'
 
 export class SparkDepositAction extends BaseAction {
@@ -16,7 +16,7 @@ export class SparkDepositAction extends BaseAction {
       sumAmounts: boolean
       setAsCollateral: boolean
     },
-    paramsMapping?: number[],
+    paramsMapping?: InputSlotsMapping,
   ): ActionCall {
     return this._encodeCall({
       arguments: [

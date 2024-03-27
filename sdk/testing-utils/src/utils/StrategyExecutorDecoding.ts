@@ -9,7 +9,7 @@ export type SkippableActionCall = ActionCall & {
 export function decodeStrategyExecutorCalldata(calldata: HexData | string):
   | {
       actionCalls: ActionCall[]
-      operationName: string
+      strategyName: string
     }
   | undefined {
   const opExecutorAbi = parseAbi([
@@ -33,6 +33,6 @@ export function decodeStrategyExecutorCalldata(calldata: HexData | string):
 
   return {
     actionCalls,
-    operationName: decoded.args[1] as string,
+    strategyName: decoded.args[1] as string,
   }
 }

@@ -1,4 +1,4 @@
-import { ActionCall, BaseAction } from '@summerfi/protocol-plugins-common'
+import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { Percentage, TokenAmount } from '@summerfi/sdk-common/common'
 import { HexData } from '@summerfi/sdk-common/common/aliases'
 
@@ -20,7 +20,7 @@ export class SwapAction extends BaseAction {
       withData: HexData
       collectFeeInFromToken: boolean
     },
-    paramsMapping?: number[],
+    paramsMapping?: InputSlotsMapping,
   ): ActionCall {
     return this._encodeCall({
       arguments: [
@@ -31,7 +31,7 @@ export class SwapAction extends BaseAction {
           receiveAtLeast: params.toMinimumAmount.toBaseUnit(),
           fee: params.fee.toBaseUnit({ decimals: 8 }),
           withData: params.withData,
-          collectFeeInFromToken: params.collectFeeInFromToken,
+          collectFeeFromToken: params.collectFeeInFromToken,
         },
       ],
       mapping: paramsMapping,

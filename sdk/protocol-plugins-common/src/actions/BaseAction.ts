@@ -7,13 +7,14 @@ import {
   toBytes,
 } from 'viem'
 import { ActionConfig, ActionCall } from './Types'
+import { InputSlotsMapping } from '../types/InputSlotsMapping'
 
 /**
  * @class Base class for all actions. It provides the basic functionality to encode the call to the action and provide
  *              the versioned name of the action.
  */
 export abstract class BaseAction {
-  private readonly DefaultParamsMapping: number[] = [0, 0, 0, 0]
+  private readonly DefaultParamsMapping: InputSlotsMapping = [0, 0, 0, 0]
   public abstract readonly config: ActionConfig
 
   /**
@@ -36,7 +37,7 @@ export abstract class BaseAction {
    * @param paramsMapping The mapping of the parameters to the execution storage
    * @returns The encoded call to the action
    */
-  public abstract encodeCall(params: unknown, paramsMapping?: number[]): ActionCall
+  public abstract encodeCall(params: unknown, paramsMapping?: InputSlotsMapping): ActionCall
 
   /**
    * @description Encodes the call to the action
@@ -44,7 +45,7 @@ export abstract class BaseAction {
    * @param paramsMapping The mapping of the parameters to the execution storage
    * @returns The encoded call to the action
    */
-  protected _encodeCall(params: { arguments: unknown[]; mapping?: number[] }): ActionCall {
+  protected _encodeCall(params: { arguments: unknown[]; mapping?: InputSlotsMapping }): ActionCall {
     const contractNameWithVersion = this.getVersionedName()
     const targetHash = keccak256(toBytes(contractNameWithVersion))
 

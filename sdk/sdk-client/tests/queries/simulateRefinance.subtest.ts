@@ -112,11 +112,12 @@ export default async function simulateRefinanceTest() {
 
   expect(simulation).toBeDefined()
   expect(simulation.simulationType).toBe(SimulationType.Refinance)
-  expect(simulation.sourcePosition).toBe(prevPosition)
+  expect(simulation.sourcePosition).toBeDefined()
+  expect(simulation.sourcePosition?.positionId).toBe(prevPosition.positionId)
   expect(simulation.targetPosition).toBeDefined()
   expect(simulation.targetPosition.positionId).toBeDefined()
   expect(simulation.targetPosition.debtAmount).toBe(prevPosition.debtAmount)
   expect(simulation.targetPosition.collateralAmount).toBe(prevPosition.collateralAmount)
-  expect(simulation.targetPosition.pool).toBe(targetPool)
+  expect(simulation.targetPosition.pool.poolId).toBe(targetPool.poolId)
   expect(simulation.steps).toBeDefined()
 }

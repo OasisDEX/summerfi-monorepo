@@ -6,12 +6,16 @@ import { IPositionsManager } from '@summerfi/sdk-common/orders'
 import {
   FlashloanAction,
   MakerPaybackAction,
+  MakerProtocolPlugin,
   MakerWithdrawAction,
+  ProtocolPluginsRegistry,
   ReturnFundsAction,
+  SetApprovalAction,
   SparkBorrowAction,
   SparkDepositAction,
+  SparkProtocolPlugin,
 } from '@summerfi/protocol-plugins'
-import { MakerPoolId } from '@summerfi/sdk-common/protocols'
+import { MakerPoolId, ProtocolName } from '@summerfi/sdk-common/protocols'
 
 import { SetupDeployments } from '../utils/SetupDeployments'
 import { UserMock } from '../mocks/UserMock'
@@ -31,8 +35,13 @@ import {
 } from '@summerfi/testing-utils'
 import assert from 'assert'
 import { IUser } from '@summerfi/sdk-common/user'
-import { createRealProtocolsPluginsRegistry } from '../mocks/ProtocolsPluginRegistryMock'
-import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
+import {
+  IContractProvider,
+  IPriceService,
+  IProtocolPluginsRegistry,
+  ITokenService,
+} from '@summerfi/protocol-plugins-common'
+import { PublicClient } from 'viem'
 
 describe('Order Planner Service', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -45,14 +54,26 @@ describe('Order Planner Service', () => {
     }),
   })
   const positionsManager: IPositionsManager = {
-    address: Address.createFromEthereum({ value: '0x551eb8395093fde4b9eef017c93593a3c7a75138' }),
+    address: Address.createFromEthereum({ value: '0x551Eb8395093fDE4B9eeF017C93593a3C7a75138' }),
   }
   let swapManager: ISwapManager
   let protocolsRegistry: IProtocolPluginsRegistry
 
   beforeEach(() => {
     swapManager = new SwapManagerMock()
-    protocolsRegistry = createRealProtocolsPluginsRegistry()
+    protocolsRegistry = new ProtocolPluginsRegistry({
+      plugins: {
+        [ProtocolName.Maker]: MakerProtocolPlugin,
+        [ProtocolName.Spark]: SparkProtocolPlugin,
+      },
+      context: {
+        provider: undefined as unknown as PublicClient,
+        tokenService: undefined as unknown as ITokenService,
+        priceService: undefined as unknown as IPriceService,
+        contractProvider: undefined as unknown as IContractProvider,
+      },
+    })
+
     orderPlannerService = new OrderPlannerService({
       deployments: deploymentsIndex,
     })
@@ -132,7 +153,7 @@ describe('Order Planner Service', () => {
 
     assert(strategyExecutorParams, 'Calldata for Strategy Executor could not be decoded')
 
-    expect(strategyExecutorParams.operationName).toEqual(
+    expect(strategyExecutorParams.strategyName).toEqual(
       `${SimulationType.Refinance}${refinanceSimulation.sourcePosition?.pool.protocol.name}${refinanceSimulation.targetPosition.pool.protocol.name}`,
     )
 
@@ -145,13 +166,20 @@ describe('Order Planner Service', () => {
     })
 
     assert(flashloanCall, 'FlashloanCall is not defined')
-    expect(flashloanCall.args.length).toBe(6)
+    expect(flashloanCall.args.length).toBe(1)
+    expect(flashloanCall.args[0].amount).toEqual(BigInt(sourcePosition.debtAmount.toBaseUnit()))
+    expect(flashloanCall.args[0].asset).toEqual(sourcePosition.debtAmount.token.address.value)
+    expect(flashloanCall.args[0].isProxyFlashloan).toBe(true)
+    expect(flashloanCall.args[0].isDPMProxy).toBe(true)
+    expect(flashloanCall.args[0].provider).toBe(FlashloanProvider.Balancer)
+    expect(flashloanCall.args[0].calls).toBeDefined()
+    expect(flashloanCall.mapping).toEqual([0, 0, 0, 0])
 
     /* Decode flashloan sub-calls */
-    const flashloanSubcalls = flashloanCall.args[5] as SkippableActionCall[]
+    const flashloanSubcalls = flashloanCall.args[0].calls as SkippableActionCall[]
 
     // PaybackWithdraw in Maker and DepositBorrow in Spark take 2 actions each
-    expect(flashloanSubcalls.length).toBe(5)
+    expect(flashloanSubcalls.length).toBe(6)
 
     const makerPaybackAction = decodeActionCalldata({
       action: new MakerPaybackAction(),
@@ -160,10 +188,12 @@ describe('Order Planner Service', () => {
 
     assert(makerPaybackAction, 'MakerPaybackAction is not defined')
     expect(makerPaybackAction.args).toEqual([
-      BigInt((sourcePosition.pool.poolId as MakerPoolId).vaultId),
-      user.wallet.address.value,
-      BigInt(sourcePosition.debtAmount.toBaseUnit()),
-      true,
+      {
+        vaultId: BigInt((sourcePosition.pool.poolId as MakerPoolId).vaultId),
+        userAddress: positionsManager.address.value,
+        amount: BigInt(sourcePosition.debtAmount.toBaseUnit()),
+        paybackAll: true,
+      },
     ])
     expect(makerPaybackAction.mapping).toEqual([0, 0, 0, 0])
 
@@ -174,66 +204,70 @@ describe('Order Planner Service', () => {
 
     assert(makerWithdrawAction, 'MakerWithdrawAction is not defined')
     expect(makerWithdrawAction.args).toEqual([
-      BigInt((sourcePosition.pool.poolId as MakerPoolId).vaultId),
-      user.wallet.address.value,
-      deployments.dependencies.MCD_JOIN_DAI.address,
-      BigInt(sourcePosition.collateralAmount.toBaseUnit()),
+      {
+        vaultId: BigInt((sourcePosition.pool.poolId as MakerPoolId).vaultId),
+        userAddress: positionsManager.address.value,
+        joinAddr: deployments.dependencies.MCD_JOIN_ETH_C.address,
+        amount: BigInt(sourcePosition.collateralAmount.toBaseUnit()),
+      },
     ])
     expect(makerWithdrawAction.mapping).toEqual([0, 0, 0, 0])
 
+    const setApprovalAction = decodeActionCalldata({
+      action: new SetApprovalAction(),
+      calldata: flashloanSubcalls[2].callData,
+    })
+
+    assert(setApprovalAction, 'SetApprovalAction is not defined')
+    expect(setApprovalAction.args).toEqual([
+      {
+        asset: sourcePosition.collateralAmount.token.address.value,
+        amount: BigInt(sourcePosition.collateralAmount.toBaseUnit()),
+        delegate: deployments.dependencies.SparkLendingPool.address,
+        sumAmounts: false,
+      },
+    ])
+
     const sparkDepositAction = decodeActionCalldata({
       action: new SparkDepositAction(),
-      calldata: flashloanSubcalls[2].callData,
+      calldata: flashloanSubcalls[3].callData,
     })
 
     assert(sparkDepositAction, 'SparkDepositAction is not defined')
     expect(sparkDepositAction.args).toEqual([
-      targetPosition.collateralAmount.token.address.value,
-      BigInt(targetPosition.collateralAmount.toBaseUnit()),
-      false,
-      true,
+      {
+        asset: targetPosition.collateralAmount.token.address.value,
+        amount: BigInt(targetPosition.collateralAmount.toBaseUnit()),
+        sumAmounts: false,
+        setAsCollateral: true,
+      },
     ])
     expect(sparkDepositAction.mapping).toEqual([0, 0, 0, 0])
 
     const sparkBorrowAction = decodeActionCalldata({
       action: new SparkBorrowAction(),
-      calldata: flashloanSubcalls[3].callData,
+      calldata: flashloanSubcalls[4].callData,
     })
 
     assert(sparkBorrowAction, 'SparkBorrowAction is not defined')
     expect(sparkBorrowAction.args).toEqual([
-      targetPosition.debtAmount.token.address.value,
-      BigInt(targetPosition.debtAmount.toBaseUnit()),
-      strategyExecutorAddress.value,
+      {
+        asset: targetPosition.debtAmount.token.address.value,
+        amount: BigInt(targetPosition.debtAmount.toBaseUnit()),
+        to: strategyExecutorAddress.value,
+      },
     ])
     expect(sparkBorrowAction.mapping).toEqual([0, 0, 0, 0])
 
     const returnFundsAction = decodeActionCalldata({
       action: new ReturnFundsAction(),
-      calldata: flashloanSubcalls[4].callData,
+      calldata: flashloanSubcalls[5].callData,
     })
 
     assert(returnFundsAction, 'ReturnFundsAction is not defined')
-    expect(returnFundsAction.args).toEqual([targetPosition.debtAmount.token.address.value])
-    expect(sparkBorrowAction.mapping).toEqual([0, 0, 0, 0])
-
-    // Remove last element as it is the calldata and it has been verified above
-    expect(flashloanCall.args.slice(0, 5)).toEqual([
-      BigInt(sourcePosition.debtAmount.toBaseUnit()),
-      sourcePosition.debtAmount.token.address.value,
-      true,
-      true,
-      FlashloanProvider.Balancer,
+    expect(returnFundsAction.args).toEqual([
+      { asset: targetPosition.debtAmount.token.address.value },
     ])
-    expect(flashloanCall.mapping).toEqual([0, 0, 0, 0])
-
-    const returnFundsCall = decodeActionCalldata({
-      action: new ReturnFundsAction(),
-      calldata: strategyExecutorParams.actionCalls[1].callData,
-    })
-
-    assert(returnFundsCall, 'ReturnFundsCall is not defined')
-    expect(returnFundsCall.args).toEqual([sourcePosition.debtAmount.token.address.value])
-    expect(returnFundsCall.mapping).toEqual([0, 0, 0, 0])
+    expect(sparkBorrowAction.mapping).toEqual([0, 0, 0, 0])
   })
 })

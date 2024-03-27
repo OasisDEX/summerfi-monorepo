@@ -16,7 +16,7 @@ export class Address implements IAddress {
   readonly value: AddressValue
   readonly type: AddressType
 
-  constructor(params: IAddress) {
+  private constructor(params: IAddress) {
     if (Address.isValid(params.value) === false) {
       throw new Error('Address value is invalid')
     }

@@ -1,6 +1,7 @@
 import {
   IContractProvider,
   IPriceService,
+  IProtocolPlugin,
   IProtocolPluginContext,
   IProtocolPluginsRegistry,
   ITokenService,

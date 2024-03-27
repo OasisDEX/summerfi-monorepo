@@ -1,12 +1,9 @@
 import { isValueReference, steps } from '@summerfi/sdk-common/simulation'
 import { Maybe } from '@summerfi/sdk-common/common'
 import assert from 'assert'
-import {
-  InputSlotsMapping,
-  StorageInputsMapType,
-  StorageOutputsMapType,
-} from '../types/ActionStorageTypes'
+import { StorageInputsMapType, StorageOutputsMapType } from '../types/ActionStorageTypes'
 import { BaseAction } from '../actions/BaseAction'
+import { InputSlotsMapping } from '../types/InputSlotsMapping'
 
 export class ExecutionStorageMapper {
   private slotsMap: Map<string, number> = new Map()

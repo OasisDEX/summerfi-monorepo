@@ -2,7 +2,7 @@ import { Address, HexData, Percentage, Token, TokenAmount } from '@summerfi/sdk-
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
 import { SwapAction } from '../../src/plugins/common/actions'
 
-describe.skip('Swap Action', () => {
+describe('Swap Action', () => {
   const action = new SwapAction()
   const contractNameWithVersion = `${action.config.name}_${action.config.version}`
 
@@ -57,13 +57,15 @@ describe.skip('Swap Action', () => {
 
     expect(actionDecodedArgs).toBeDefined()
     expect(actionDecodedArgs?.args).toEqual([
-      fromAmount.token.address.value,
-      toMinimumAmount.token.address.value,
-      BigInt(fromAmount.toBaseUnit()),
-      BigInt(toMinimumAmount.toBaseUnit()),
-      BigInt(fee.toBaseUnit({ decimals: 8 })),
-      '0x912381298aef89899c5498948b409230ca3234',
-      true,
+      {
+        fromAsset: fromAmount.token.address.value,
+        toAsset: toMinimumAmount.token.address.value,
+        amount: BigInt(fromAmount.toBaseUnit()),
+        receiveAtLeast: BigInt(toMinimumAmount.toBaseUnit()),
+        fee: BigInt(fee.toBaseUnit({ decimals: 8 })),
+        withData: '0xd83ddc68200dd83ddc68200dd83ddc66200dd83ddc66d83cdff4200d2620fe0f',
+        collectFeeFromToken: true,
+      },
     ])
     expect(actionDecodedArgs?.mapping).toEqual([9, 8, 7, 6])
   })

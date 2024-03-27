@@ -1,4 +1,4 @@
-import { ActionCall, BaseAction } from '@summerfi/protocol-plugins-common'
+import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { TokenAmount } from '@summerfi/sdk-common/common'
 import { IPositionsManager } from '@summerfi/sdk-common/orders'
 import { IPool, isMakerPoolId } from '@summerfi/sdk-common/protocols/'
@@ -19,7 +19,7 @@ export class MakerPaybackAction extends BaseAction {
       amount: TokenAmount
       paybackAll: boolean
     },
-    paramsMapping?: number[],
+    paramsMapping?: InputSlotsMapping,
   ): ActionCall {
     if (!isMakerPoolId(params.pool.poolId)) {
       throw new Error('Pool ID is not a Maker one')

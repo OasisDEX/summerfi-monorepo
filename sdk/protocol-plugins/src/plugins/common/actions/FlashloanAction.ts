@@ -1,4 +1,4 @@
-import { ActionCall, BaseAction } from '@summerfi/protocol-plugins-common'
+import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { TokenAmount } from '@summerfi/sdk-common/common'
 import { FlashloanProvider } from '@summerfi/sdk-common/simulation'
 
@@ -23,7 +23,7 @@ export class FlashloanAction extends BaseAction {
       provider: FlashloanProvider
       calls: ActionCall[]
     },
-    paramsMapping?: number[],
+    paramsMapping?: InputSlotsMapping,
   ): ActionCall {
     const calls: OptionalActionCall[] = params.calls.map((call) => {
       return {

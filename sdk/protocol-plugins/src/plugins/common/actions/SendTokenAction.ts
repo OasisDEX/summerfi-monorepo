@@ -1,4 +1,4 @@
-import { ActionCall, BaseAction } from '@summerfi/protocol-plugins-common'
+import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { Address, TokenAmount } from '@summerfi/sdk-common/common'
 
 export class SendTokenAction extends BaseAction {
@@ -12,7 +12,7 @@ export class SendTokenAction extends BaseAction {
 
   public encodeCall(
     params: { sendAmount: TokenAmount; sendTo: Address },
-    paramsMapping?: number[],
+    paramsMapping?: InputSlotsMapping,
   ): ActionCall {
     return this._encodeCall({
       arguments: [

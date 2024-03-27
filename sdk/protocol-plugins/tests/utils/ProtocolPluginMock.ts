@@ -1,6 +1,6 @@
 import { ChainFamilyMap, IPosition, Maybe } from '@summerfi/sdk-common/common'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { StepBuilderContextMock } from './StepBuilderContextMock'
+import { StepBuilderContextMock } from '../../../testing-utils/src/mocks/StepBuilderContextMock'
 import {
   ActionBuilder,
   ActionBuildersMap,
@@ -9,6 +9,8 @@ import {
   IProtocolPluginContext,
 } from '@summerfi/protocol-plugins-common'
 import { IPool, IPoolId, ProtocolName } from '@summerfi/sdk-common/protocols'
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 export const PaybackWithdrawActionBuilderMock: ActionBuilder<steps.PaybackWithdrawStep> = async (
   params,

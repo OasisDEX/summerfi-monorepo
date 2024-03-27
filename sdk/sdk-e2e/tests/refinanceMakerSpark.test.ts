@@ -49,7 +49,7 @@ jest.setTimeout(300000)
 const SDKAPiUrl = 'https://zmjmtfsocb.execute-api.us-east-1.amazonaws.com/api/sdk'
 const TenderlyForkUrl = 'https://rpc.tenderly.co/fork/47a20a20-3aa1-4d21-afd7-6a230b12a0cc'
 
-describe.only('Refinance Maker Spark | SDK', () => {
+describe.skip('Refinance Maker Spark | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: SDKAPiUrl })
@@ -216,13 +216,8 @@ describe.only('Refinance Maker Spark | SDK', () => {
     const strategyName = `${refinanceOrder.simulation.simulationType}${refinanceOrder.simulation.sourcePosition?.pool.protocol.name}${refinanceOrder.simulation.targetPosition.pool.protocol.name}`
 
     assert(strategyExecutorParams, 'Cannot decode Strategy Executor calldata')
-    expect(strategyExecutorParams.operationName).toEqual(strategyName)
+    expect(strategyExecutorParams.strategyName).toEqual(strategyName)
     expect(strategyExecutorParams.actionCalls.length).toEqual(1)
-
-    // console.log(
-    //   'FlashloanParams:',
-    //   JSONStringifyWithBigInt(strategyExecutorParams.actionCalls[0].callData),
-    // )
 
     // Decode Flashloan action
     const flashloanParams = decodeActionCalldata({

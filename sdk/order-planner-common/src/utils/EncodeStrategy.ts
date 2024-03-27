@@ -1,6 +1,5 @@
 import { ActionCall } from '@summerfi/protocol-plugins-common'
-import { Address } from '@summerfi/sdk-common/common'
-import { HexData } from '@summerfi/sdk-common/common/aliases'
+import { Address, HexData } from '@summerfi/sdk-common/common'
 import { encodeFunctionData, parseAbi } from 'viem'
 
 type SkippableActionCall = ActionCall & {
@@ -11,7 +10,7 @@ function encodeForExecutor(params: { strategyName: string; actions: ActionCall[]
   const { strategyName, actions } = params
 
   const abi = parseAbi([
-    'function executeOp(Call[] memory calls, string calldata operationName)',
+    'function executeOp(Call[] memory calls, string calldata strategyName)',
     'struct Call { bytes32 targetHash; bytes callData; bool skipped; }',
   ])
 

@@ -14,7 +14,7 @@ export class Token implements IToken {
   readonly name: string
   readonly decimals: number
 
-  constructor(params: IToken) {
+  private constructor(params: IToken) {
     this.chainInfo = params.chainInfo
     this.address = Address.createFromEthereum(params.address)
     this.symbol = params.symbol

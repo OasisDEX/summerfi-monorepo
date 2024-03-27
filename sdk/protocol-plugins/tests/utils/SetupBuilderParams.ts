@@ -1,10 +1,7 @@
 import { Deployment, DeploymentIndex } from '@summerfi/deployment-utils'
 import { IPositionsManager } from '@summerfi/sdk-common/orders'
 import { Address, ChainInfo } from '@summerfi/sdk-common/common'
-import { SwapManagerMock } from '../mocks/SwapManagerMock'
-import { StepBuilderContextMock } from '../mocks/StepBuilderContextMock'
 import { SetupDeployments } from './SetupDeployments'
-import { UserMock } from '../mocks/UserMock'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
 import {
@@ -12,7 +9,8 @@ import {
   createEmptyProtocolPluginsRegistry,
   createNoCheckpointProtocolPluginsRegistry,
   createProtocolPluginsRegistry,
-} from '../mocks/ProtocolsPluginRegistryMock'
+} from './ProtocolsPluginRegistryMock'
+import { StepBuilderContextMock, SwapManagerMock, UserMock } from '@summerfi/testing-utils'
 
 export type SetupBuilderReturnType = {
   context: StepBuilderContextMock

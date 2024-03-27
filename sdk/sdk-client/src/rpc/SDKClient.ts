@@ -1,4 +1,4 @@
-import { createTRPCClient, httpBatchLink } from '@trpc/client'
+import { createTRPCClient, httpBatchLink, loggerLink } from '@trpc/client'
 import { type SDKAppRouter } from '@summerfi/sdk-server'
 import { SerializationService } from '@summerfi/sdk-common/services'
 
@@ -11,7 +11,6 @@ export * from '@summerfi/sdk-common/user'
 export * from '@summerfi/sdk-common/services'
 export * from '@summerfi/sdk-common/utils'
 export * from '@summerfi/sdk-common/protocols'
-export * from '@summerfi/protocol-plugins'
 
 const EnableDeserialize = false
 
@@ -20,6 +19,12 @@ export type RPCClientType = ReturnType<typeof createTRPCClient<SDKAppRouter>>
 export function createRPCClient(apiURL: string): RPCClientType {
   return createTRPCClient<SDKAppRouter>({
     links: [
+      loggerLink({
+        enabled: (opts) => opts.direction === 'down' && opts.result instanceof Error,
+        logger: (data) => {
+          console.log(JSON.stringify(data, null, 2))
+        },
+      }),
       httpBatchLink({
         url: apiURL,
         transformer: {

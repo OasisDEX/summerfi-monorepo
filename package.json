@@ -55,6 +55,6 @@
   "dependencies": {
     "madge": "^6.1.0",
     "typescript": "^5.3.3",
-    "viem": "^2.8.5"
+    "viem": "^2.9.3"
   }
 }
