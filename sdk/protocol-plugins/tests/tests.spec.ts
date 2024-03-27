@@ -3,9 +3,9 @@ import { ChainInfo } from '@summerfi/sdk-common/common'
 import { createPublicClient, http, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
 import { MakerProtocolPlugin, AaveV3ProtocolPlugin, SparkProtocolPlugin } from '../src'
-import { IProtocolPluginContext } from '../src/interfaces/IProtocolPluginContext'
 import { MockContractProvider } from '../src/mocks/mockContractProvider'
 import { TokenService, PriceService } from '../src/implementation'
+import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 
 async function createProtocolPluginContext(): Promise<IProtocolPluginContext> {
   const RPC_URL = process.env['MAINNET_RPC_URL'] || ''
@@ -33,8 +33,7 @@ describe.skip('playground', () => {
   })
 
   it('template/maker', async () => {
-    const makerProtocolPlugin = new MakerProtocolPlugin()
-    makerProtocolPlugin.init(ctx)
+    const makerProtocolPlugin = new MakerProtocolPlugin({ context: ctx })
     await makerProtocolPlugin.getPool({
       protocol: {
         name: ProtocolName.Maker,
@@ -46,8 +45,7 @@ describe.skip('playground', () => {
   })
 
   it('template/spark', async () => {
-    const sparkProtocolPlugin = new SparkProtocolPlugin()
-    sparkProtocolPlugin.init(ctx)
+    const sparkProtocolPlugin = new SparkProtocolPlugin({ context: ctx })
     await sparkProtocolPlugin.getPool({
       protocol: {
         name: ProtocolName.Spark,
@@ -58,8 +56,7 @@ describe.skip('playground', () => {
   })
 
   it('template/aave-v3', async () => {
-    const aaveV3ProtocolPlugin = new AaveV3ProtocolPlugin()
-    aaveV3ProtocolPlugin.init(ctx)
+    const aaveV3ProtocolPlugin = new AaveV3ProtocolPlugin({ context: ctx })
     await aaveV3ProtocolPlugin.getPool({
       protocol: {
         name: ProtocolName.AAVEv3,

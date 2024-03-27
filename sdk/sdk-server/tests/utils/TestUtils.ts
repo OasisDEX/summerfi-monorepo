@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { sdkAppRouter } from '../../src/SDKAppRouter'
-import { SDKAppContext, ContextOptions } from '../../src/Context'
+import { SDKAppContext, ContextOptions } from '../../src/context/Context'
 import { createCallerFactory } from '../../src/TRPC'
 
 // context for each request

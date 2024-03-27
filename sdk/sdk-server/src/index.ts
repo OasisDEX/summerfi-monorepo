@@ -1,2 +1,2 @@
 export { sdkAppRouter, type SDKAppRouter } from './SDKAppRouter'
-export { type SDKAppContext, type ContextOptions, createSDKContext } from './Context'
+export { type SDKAppContext, type ContextOptions, createSDKContext } from './context/Context'

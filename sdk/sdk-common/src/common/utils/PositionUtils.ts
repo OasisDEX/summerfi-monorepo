@@ -1,15 +1,22 @@
 import { LendingPool } from '../../protocols/implementation/LendingPool'
-import { AddressValue } from '../../common/aliases/AddressValue'
 import { TokenAmount } from '../implementation/TokenAmount'
 import { Position } from '../implementation/Position'
+import { Token } from '../implementation/Token'
 
 export function newEmptyPositionFromPool(
   pool: LendingPool,
-  debtAddress: AddressValue,
-  collateralAddress: AddressValue,
+  debt: Token,
+  collateral: Token,
 ): Position {
-  const debtConfig = pool.debts[debtAddress]
-  const collateralConfig = pool.collaterals[collateralAddress]
+  const debtConfig = pool.debts.get({ token: debt })
+  const collateralConfig = pool.collaterals.get({ token: collateral })
+
+  if (!debtConfig) {
+    throw new Error('Debt token not supported by pool')
+  }
+  if (!collateralConfig) {
+    throw new Error('Collateral token not supported by pool')
+  }
 
   return new Position({
     positionId: {

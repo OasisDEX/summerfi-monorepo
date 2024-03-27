@@ -6,10 +6,10 @@ import type {
   Percentage,
   Address,
 } from '@summerfi/sdk-common/common'
-import { ChainId } from '@summerfi/sdk-common/common'
+import { ChainId, CurrencySymbol } from '@summerfi/sdk-common/common'
 
 import { ISwapProvider, ISwapManager } from '@summerfi/swap-common/interfaces'
-import { QuoteData, SwapData, SwapProviderType } from '@summerfi/sdk-common/swap'
+import type { QuoteData, SwapData, SwapProviderType, SpotData } from '@summerfi/sdk-common/swap'
 
 export type SwapManagerProviderConfig = {
   provider: ISwapProvider
@@ -57,6 +57,20 @@ export class SwapManager implements ISwapManager {
     }
 
     return provider.getSwapQuoteExactInput(params)
+  }
+
+  async getSpotPrices(params: {
+    chainInfo: ChainInfo
+    tokens: Token[]
+    quoteCurrency?: CurrencySymbol
+    forceUseProvider?: SwapProviderType
+  }): Promise<SpotData> {
+    const provider: Maybe<ISwapProvider> = this._getBestProvider(params)
+    if (!provider) {
+      throw new Error('No swap provider available')
+    }
+
+    return provider.getSpotPrices(params)
   }
 
   private _registerProvider(provider: ISwapProvider, forChainIds: number[]): void {

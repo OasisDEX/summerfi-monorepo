@@ -11,13 +11,15 @@ describe('SetApproval Action', () => {
       name: 'Mainnet',
       chainId: 1,
     },
-    address: Address.createFrom({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
+    address: Address.createFromEthereum({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
     decimals: 18,
     name: 'Dai Stablecoin',
     symbol: 'DAI',
   })
 
-  const delegate = Address.createFrom({ value: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599' })
+  const delegate = Address.createFromEthereum({
+    value: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+  })
 
   it('should return the versioned name', () => {
     expect(action.getVersionedName()).toBe(contractNameWithVersion)

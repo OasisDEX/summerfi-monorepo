@@ -1,8 +1,10 @@
 import { initTRPC } from '@trpc/server'
-import superjson from 'superjson'
-import { SDKAppContext } from './Context'
+import { SDKAppContext } from './context/Context'
+import { SerializationService } from '@summerfi/sdk-common/services'
 
-export const t = initTRPC.context<SDKAppContext>().create({ transformer: superjson })
+export const t = initTRPC
+  .context<SDKAppContext>()
+  .create({ transformer: SerializationService.getTransformer() })
 
 export const router = t.router
 

@@ -1,6 +1,6 @@
 import { Percentage } from '@summerfi/sdk-common/common'
 import { ISimulation, SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
-import { refinance } from '../src/strategies'
+import { refinanceLendingToLending } from '../src/strategies'
 import {
   otherTestCollateral,
   otherTestDebt,
@@ -14,18 +14,13 @@ describe('Refinance', () => {
   describe('to the position with the same collateral and debt (no swaps)', () => {
     let simulation: ISimulation<SimulationType.Refinance>
     beforeAll(async () => {
-      simulation = await refinance(
+      simulation = await refinanceLendingToLending(
         {
           position: testSourcePosition,
           targetPool: testTargetLendingPool,
-          targetDebt:
-            testTargetLendingPool.debts[testSourcePosition.debtAmount.token.address.value].token
-              .address,
-          targetCollateral:
-            testTargetLendingPool.collaterals[
-              testSourcePosition.collateralAmount.token.address.value
-            ].token.address,
-          slippage: Percentage.createFrom({ percentage: 1 }),
+          targetDebt: testTargetLendingPool.debts.get({token: testSourcePosition.debtAmount.token })!.token,
+          targetCollateral: testTargetLendingPool.collaterals.get({token: testSourcePosition.collateralAmount.token })!.token,
+          slippage: Percentage.createFrom({ value: 1 }),
         },
         mockRefinanceContext,
       )
@@ -60,7 +55,6 @@ describe('Refinance', () => {
       const targetPosition = simulation.targetPosition
 
       expect(targetPosition.positionId).toBeDefined()
-      console.log(targetPosition.positionId)
     })
   })
 
@@ -68,17 +62,16 @@ describe('Refinance', () => {
     let simulation: ISimulation<SimulationType.Refinance>
     beforeAll(async () => {
       // Swapped the tokens around to force two swaps
-      console.log("targetDebt", testTargetLendingPoolRequiredSwaps.debts[testSourcePosition.collateralAmount.token.address.value].token.address)
-      console.log("targetColl", testTargetLendingPoolRequiredSwaps.collaterals[testSourcePosition.debtAmount.token.address.value].token.address)
-      simulation = await refinance(
+      // console.log("targetDebt", testTargetLendingPoolRequiredSwaps.debts[testSourcePosition.collateralAmount.token.address.value].token.address)
+      // console.log("targetColl", testTargetLendingPoolRequiredSwaps.collaterals[testSourcePosition.debtAmount.token.address.value].token.address)
+      simulation = await refinanceLendingToLending(
         {
           position: testSourcePosition,
           targetPool: testTargetLendingPoolRequiredSwaps,
-          targetDebt:
-            testTargetLendingPoolRequiredSwaps.debts[testSourcePosition.collateralAmount.token.address.value].token.address,
-          targetCollateral:
-            testTargetLendingPoolRequiredSwaps.collaterals[testSourcePosition.debtAmount.token.address.value].token.address,
-          slippage: Percentage.createFrom({ percentage: 1 }),
+          // Note: they two tokens have been inverted
+          targetDebt: testTargetLendingPoolRequiredSwaps.debts.get({token: testSourcePosition.collateralAmount.token })!.token,
+          targetCollateral: testTargetLendingPoolRequiredSwaps.collaterals.get({token: testSourcePosition.debtAmount.token })!.token,
+          slippage: Percentage.createFrom({ value: 1 }),
         },
         mockRefinanceContext,
       )

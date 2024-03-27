@@ -1,6 +1,6 @@
 import { Maybe } from '@summerfi/sdk-common/common'
-import { IPool, IProtocol } from '@summerfi/sdk-common/protocols'
-import { PoolIds } from '@summerfi/protocol-manager'
+import { IPool, IPoolId, IProtocol } from '@summerfi/sdk-common/protocols'
+
 export interface IProtocolClient extends IProtocol {
-  getPool(params: { poolId: PoolIds }): Promise<Maybe<IPool>>
+  getPool(params: { poolId: IPoolId }): Promise<Maybe<IPool>>
 }

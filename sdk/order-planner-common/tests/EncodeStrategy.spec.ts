@@ -1,8 +1,7 @@
 import { ActionNames } from '@summerfi/deployment-types'
-import { BaseAction } from '../src/actions/BaseAction'
-import { ActionCall } from '../src/actions/Types'
 import { encodeStrategy } from '../src/utils'
 import { decodeStrategy } from './utils/DecodeStrategy'
+import { ActionCall, BaseAction } from '@summerfi/protocol-plugins-common'
 
 class DerivedAction extends BaseAction {
   public readonly config = {
