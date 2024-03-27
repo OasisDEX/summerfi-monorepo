@@ -113,7 +113,7 @@ export const getClaims = async ({ account, logger }: GetClaimsParams): Promise<M
 
     const claimable: ClaimableMorphoReward[] = data.rewards.flatMap((reward) => {
       return reward.tokens
-        .filter((token) => token.claimable != '0')
+        .filter((token) => token.available != '0')
         .map((token) => {
           return {
             urd: reward.rewards_distributor as Address,
@@ -123,8 +123,8 @@ export const getClaims = async ({ account, logger }: GetClaimsParams): Promise<M
               symbol: token.token.symbol,
               name: token.token.name,
             },
-            amount: safeParseBigInt(token.claimable) ? BigInt(token.claimable) : 0n,
-            claimable: safeParseBigInt(token.claimable) ? BigInt(token.claimable) : 0n,
+            amount: safeParseBigInt(token.available) ? BigInt(token.available) : 0n,
+            claimable: safeParseBigInt(token.available) ? BigInt(token.available) : 0n,
             rewardSymbol: token.token.symbol,
             proof: token.args ? (token.args.proof as Proof) : [],
           }
@@ -165,11 +165,11 @@ export const getClaims = async ({ account, logger }: GetClaimsParams): Promise<M
           .reduce((acc, c) => acc + c.amount, 0n)
         const claimableForReward = claimable
           .filter((c) => c.reward.address === token.token.address)
-          .reduce((acc, c) => acc + c.claimable, 0n)
+          .reduce((acc, c) => acc + c.amount, 0n)
         const accruedForReward = accrued
           .filter((c) => c.reward.address === token.token.address)
           .reduce((acc, c) => acc + c.amount, 0n)
-        const total = claimedForReward + claimableForReward + accruedForReward
+        const total = accruedForReward
         return {
           rewardToken: token.token,
           claimable: claimableForReward,
