@@ -25,5 +25,9 @@ export const refinanceLendingToLendingStrategy = makeStrategy([
   {
     step: SimulationSteps.RepayFlashloan,
     optional: false,
-  }
+  },
+  {
+    step: SimulationSteps.ReturnFunds,
+    optional: true,
+  },
 ])

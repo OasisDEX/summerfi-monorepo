@@ -1,3 +1,4 @@
+import { DebtConfig } from '@summerfi/sdk-common/protocols'
 import {
   FlashloanProvider,
   ISimulation,
@@ -6,7 +7,7 @@ import {
   TokenTransferTargetType,
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
-import { Position, TokenAmount, Percentage } from '@summerfi/sdk-common/common'
+import { Position, TokenAmount, Percentage, Price } from '@summerfi/sdk-common/common'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
@@ -39,10 +40,19 @@ export async function refinanceLendingToLending(
     throw new Error('Target token config not found in pool')
   }
 
-  const isCollateralSwapSkipped = targetCollateralConfig.token.address.equals(position.collateralAmount.token.address)
+  const isCollateralSwapSkipped = targetCollateralConfig.token.address.equals(
+    position.collateralAmount.token.address,
+  )
   const isDebtSwapSkipped = targetDebtConfig.token.address.equals(position.debtAmount.token.address)
 
-  // TODO: read debt amount from chain (special step: ReadDebtAmount)
+  const debtSpotPrice = (
+    await dependencies.swapManager.getSpotPrice({
+      chainInfo: position.pool.protocol.chainInfo,
+      baseToken: targetDebtConfig.token,
+      quoteToken: position.debtAmount.token,
+    })
+  ).price
+
   // TODO: the swap quote should also include the summer fee, in this case we need to know when we are taking the fee,
   // before or after the swap, it influences actual call to oneInch api
   const simulation = await simulator
@@ -79,10 +89,13 @@ export async function refinanceLendingToLending(
           fromAmount: position.collateralAmount,
           toToken: targetCollateralConfig.token,
         })),
-        ...(await dependencies.swapManager.getSpotPrices({
-          chainInfo: position.pool.protocol.chainInfo,
-          tokens: [position.collateralAmount.token, targetCollateralConfig.token],
-        })),
+        spotPrice: (
+          await dependencies.swapManager.getSpotPrice({
+            chainInfo: position.pool.protocol.chainInfo,
+            baseToken: targetCollateralConfig.token,
+            quoteToken: position.collateralAmount.token,
+          })
+        ).price,
         slippage: Percentage.createFrom({ value: args.slippage.value }),
         fee: dependencies.getSummerFee(),
       },
@@ -92,7 +105,13 @@ export async function refinanceLendingToLending(
       name: 'DepositBorrowToTarget',
       type: SimulationSteps.DepositBorrow,
       inputs: {
-        borrowAmount: position.debtAmount, // TODO figure the debt amount
+        borrowAmount: await calculateBorrowAmount(
+          isDebtSwapSkipped,
+          position.debtAmount,
+          debtSpotPrice,
+          targetDebtConfig,
+          args,
+        ),
         depositAmount: ctx.getReference(
           isCollateralSwapSkipped
             ? ['PaybackWithdrawFromSource', 'withdrawAmount']
@@ -100,13 +119,12 @@ export async function refinanceLendingToLending(
         ),
         position: newEmptyPositionFromPool(
           targetPool,
-          position.debtAmount.token,
-          position.collateralAmount.token,
+          targetDebtConfig.token,
+          targetCollateralConfig.token,
         ),
         borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
     }))
-    // TODO: Implement swapping logic properly. Current implementation is just placeholder
     .next(async (ctx) => ({
       name: 'DebtSwap',
       type: SimulationSteps.Swap,
@@ -118,10 +136,7 @@ export async function refinanceLendingToLending(
           ),
           toToken: targetDebtConfig.token,
         })),
-        ...(await dependencies.swapManager.getSpotPrices({
-          chainInfo: args.position.pool.protocol.chainInfo,
-          tokens: [position.debtAmount.token, targetDebtConfig.token],
-        })),
+        spotPrice: debtSpotPrice,
         slippage: Percentage.createFrom({ value: args.slippage.value }),
         fee: dependencies.getSummerFee(),
       },
@@ -131,8 +146,20 @@ export async function refinanceLendingToLending(
       name: 'RepayFlashloan',
       type: SimulationSteps.RepayFlashloan,
       inputs: {
-        amount: position.debtAmount, // TODO add some amount
+        amount: position.debtAmount,
       },
+    }))
+    .next(async () => ({
+      name: 'ReturnFunds',
+      type: SimulationSteps.ReturnFunds,
+      inputs: {
+        /*
+         * We swap back to the original position's debt in order to repay the flashloan.
+         * Therefore, the dust amount will be in the original position's debt
+         * */
+        token: position.debtAmount.token,
+      },
+      skip: isDebtSwapSkipped,
     }))
     .run()
 
@@ -151,4 +178,56 @@ export async function refinanceLendingToLending(
     swaps: Object.values(simulation.swaps),
     steps: Object.values(simulation.steps),
   } satisfies ISimulation<SimulationType.Refinance>
+}
+
+/**
+ * CalculateBorrowAmount
+ * @description Determines how much to borrow.
+ *    When the DebtSwap step is skipped we simply return the previous position's debt amount
+ *    When a DebtSwap is required we need to borrow enough to cover the original flashloan after
+ *    accounting the swap and assuming the worst case scenario on slippage IE max slippage.
+ */
+async function calculateBorrowAmount(
+  isDebtSwapSkipped: boolean,
+  prevDebtAmount: TokenAmount,
+  debtSpotPrice: Price,
+  targetDebtConfig: DebtConfig,
+  params: IRefinanceParameters,
+) {
+  /**
+   * If no swap is required we simply borrow the same amount of debt, and the same asset,
+   * on the target protocol
+   */
+  if (isDebtSwapSkipped) {
+    return prevDebtAmount
+  }
+
+  /**
+   * Worked Example
+   * @description 3 ETH/ 5000 DAI -> X WTBC / Y USDC
+   *    5000 DAI * (0.98 USDC/DAI) = 4900 USDC
+   *    but this assumes zero price impact
+   *
+   *    5000 DAI * (0.98 USDC/DAI) / (1 - 0.01) = 4949.49 USDC (slippage adjusted borrow amount)
+   *    where 0.01 is 1% slippage
+   *
+   *    More generally we'd write this as
+   *    sourcePositionDebt * targetDebtQuotedInSourceDebtPrice / (one - slippage) = borrowAmount
+   */
+  // TODO: Refactor common classes to make easier
+  // TODO: TokenAmount maths?
+  // TODO: Token equals
+  const borrowAmount = prevDebtAmount
+    .multiply(debtSpotPrice.toString())
+    .divide(
+      Percentage.createFrom({
+        value: 100 - params.slippage.value,
+      }).toString(),
+    )
+    .toString()
+
+  return TokenAmount.createFrom({
+    amount: borrowAmount,
+    token: debtSpotPrice.baseToken
+  })
 }

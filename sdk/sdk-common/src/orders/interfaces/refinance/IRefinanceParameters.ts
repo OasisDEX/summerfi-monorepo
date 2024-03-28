@@ -1,4 +1,4 @@
-import {IToken} from "../../../common/interfaces/IToken";
+import { IToken } from '../../../common/interfaces/IToken'
 import { IPercentage } from '../../../common/interfaces/IPercentage'
 import { IPosition } from '../../../common/interfaces/IPosition'
 import { ILendingPool } from '../../../protocols/interfaces/ILendingPool'

@@ -10,7 +10,7 @@ import {
 import { CurrencySymbol } from '@summerfi/sdk-common/common'
 import { IPool } from '@summerfi/sdk-common/protocols'
 import { SwapProviderType } from '@summerfi/sdk-common/swap'
-import { testTargetLendingPoolRequiredSwaps } from './testSourcePosition'
+import { testTargetLendingPool, testTargetLendingPoolRequiredSwaps } from './testSourcePosition'
 
 async function getSwapDataExactInput(params: {
   chainInfo: ChainInfo
@@ -73,6 +73,10 @@ export function mockGetFee() {
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 async function mockGetPool(poolId: unknown): Promise<IPool> {
+  return testTargetLendingPool as IPool
+}
+
+async function mockGetPoolRequiresSwaps(poolId: unknown): Promise<IPool> {
   return testTargetLendingPoolRequiredSwaps as IPool
 }
 
@@ -86,5 +90,13 @@ export const mockRefinanceContext = {
     getSwapDataExactInput,
     getSwapQuoteExactInput: jest.fn().mockImplementation(getSwapQuoteExactInput),
     getSpotPrices,
+  },
+}
+
+export const mockRefinanceContextRequiredSwaps = {
+  ...mockRefinanceContext,
+  protocolManager: {
+    getPool: mockGetPoolRequiresSwaps,
+    getPosition: () => {},
   },
 }

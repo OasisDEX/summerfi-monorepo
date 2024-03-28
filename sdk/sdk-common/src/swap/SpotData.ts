@@ -7,5 +7,5 @@ import type { SwapProviderType } from './Enums'
  */
 export type SpotData = {
   provider: SwapProviderType
-  prices: Price[]
+  price: Price
 }

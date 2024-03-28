@@ -1,11 +1,6 @@
 import { ISwapProvider } from '@summerfi/swap-common/interfaces'
-import {
-  SwapProviderType,
-  SwapData,
-  SpotData,
-  SwapRoute,
-  QuoteData,
-} from '@summerfi/sdk-common/swap'
+import { SwapProviderType } from '@summerfi/sdk-common/swap'
+import type { SwapData, SwapRoute, QuoteData, SpotData } from '@summerfi/sdk-common/swap'
 import {
   OneInchAuthHeader,
   OneInchAuthHeaderKey,
@@ -21,7 +16,7 @@ import {
   type ChainInfo,
   TokenAmount,
   Percentage,
-  type Token,
+  Token,
   Address,
   CurrencySymbol,
   Price,
@@ -121,47 +116,101 @@ export class OneInchSwapProvider implements ISwapProvider {
     }
   }
 
-  async getSpotPrices(params: {
+  async getSpotPrice(params: {
     chainInfo: ChainInfo
-    tokens: Token[]
-    quoteCurrency?: CurrencySymbol
+    baseToken: Token
+    quoteToken?: CurrencySymbol | Token
   }): Promise<SpotData> {
-    const spotUrl = this._formatOneInchSpotUrl({
-      chainInfo: params.chainInfo,
-      tokenAddresses: params.tokens.map((token) => token.address),
-      quoteCurrency: params.quoteCurrency ?? CurrencySymbol.USD,
-    })
-
     const authHeader = this._getOneInchAuthHeader()
+    if (params.quoteToken && params.quoteToken instanceof Token) {
+      isTokenType(params.quoteToken)
 
-    const response = await fetch(spotUrl, {
-      headers: authHeader,
-    })
+      const baseTokenAddress = params.baseToken.address
+      const quoteTokenAddress = params.quoteToken.address
+      const quoteCurrencySymbol = CurrencySymbol.USD
 
-    if (!(response.status === 200 && response.statusText === 'OK')) {
-      throw new Error(
-        `Error performing 1inch spot price request ${spotUrl}: ${await response.body}`,
-      )
-    }
+      const spotUrl = this._formatOneInchSpotUrl({
+        chainInfo: params.chainInfo,
+        tokenAddresses: [baseTokenAddress, quoteTokenAddress],
+        // We use USD as base for both tokens and then derive a spot price
+        quoteCurrency: quoteCurrencySymbol,
+      })
 
-    const responseData = (await response.json()) as OneInchSpotResponse
+      const response = await fetch(spotUrl, {
+        headers: authHeader,
+      })
 
-    return {
-      provider: SwapProviderType.OneInch,
-      prices: Object.entries(responseData).map(([address, price]) => {
-        const baseToken = params.tokens.find((token) =>
-          token.address.equals(Address.createFromEthereum({ value: address as AddressValue })),
+      if (!(response.status === 200 && response.statusText === 'OK')) {
+        throw new Error(
+          `Error performing 1inch spot price request ${spotUrl}: ${await response.body}`,
         )
-        if (!baseToken) {
-          throw new Error('BaseToken not found in params.tokens list when fetching spot prices')
-        }
+      }
 
+      const responseData = (await response.json()) as OneInchSpotResponse
+      const quoteToken = params.quoteToken
+      const prices = Object.entries(responseData).map(([address, price]) => {
+        const isBaseToken = params.baseToken.address.equals(
+          Address.createFromEthereum({ value: address as AddressValue }),
+        )
         return Price.createFrom({
           value: price.toString(),
-          baseToken,
-          quoteToken: params.quoteCurrency || CurrencySymbol.USD,
+          baseToken: isBaseToken ? params.baseToken : quoteToken,
+          quoteToken: quoteCurrencySymbol,
         })
-      }),
+      })
+
+      const baseTokenPriceQuotedInCurrencySymbol = prices.find((p) =>
+        p.baseToken.address.equals(params.baseToken.address),
+      )
+      const quoteTokenPriceQuoteInCurrencySymbol = prices.find((p) =>
+        p.baseToken.address.equals(quoteToken.address),
+      )
+
+      if (!baseTokenPriceQuotedInCurrencySymbol || !quoteTokenPriceQuoteInCurrencySymbol) {
+        throw new Error('BaseToken | QuoteToken spot prices could not be determined')
+      }
+
+      return {
+        provider: SwapProviderType.OneInch,
+        price: Price.createFrom({
+          value: baseTokenPriceQuotedInCurrencySymbol
+            .toBN()
+            .div(quoteTokenPriceQuoteInCurrencySymbol.toBN())
+            .toString(),
+          baseToken: params.baseToken,
+          quoteToken: quoteToken,
+        }),
+      }
+    } else {
+      const quoteCurrency = params.quoteToken ?? CurrencySymbol.USD
+      const spotUrl = this._formatOneInchSpotUrl({
+        chainInfo: params.chainInfo,
+        tokenAddresses: [params.baseToken.address],
+        quoteCurrency: params.quoteToken ?? CurrencySymbol.USD,
+      })
+
+      const response = await fetch(spotUrl, {
+        headers: authHeader,
+      })
+
+      if (!(response.status === 200 && response.statusText === 'OK')) {
+        throw new Error(
+          `Error performing 1inch spot price request ${spotUrl}: ${await response.body}`,
+        )
+      }
+
+      const responseData = (await response.json()) as OneInchSpotResponse
+
+      const [, price] = Object.entries(responseData)[0]
+
+      return {
+        provider: SwapProviderType.OneInch,
+        price: Price.createFrom({
+          value: price.toString(),
+          baseToken: params.baseToken,
+          quoteToken: quoteCurrency,
+        }),
+      }
     }
   }
 
@@ -232,5 +281,14 @@ export class OneInchSwapProvider implements ISwapProvider {
         })),
       ),
     )
+  }
+}
+
+function isTokenType(quoteToken: unknown): asserts quoteToken is Token {
+  if (!quoteToken) {
+    throw new Error('QuoteToken is undefined')
+  }
+  if (!(quoteToken instanceof Token)) {
+    throw new Error('QuoteToken is not of type Token')
   }
 }
