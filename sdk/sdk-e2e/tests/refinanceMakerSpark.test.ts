@@ -21,7 +21,7 @@ import {
 import { makeSDK, type Chain, type User, Protocol } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
-import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import assert from 'assert'
 
 //import { createFork } from '@summerfi/tenderly-utils'
@@ -129,7 +129,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     //   slippage: Percentage.createFrom({ value: 0.2 }),
     // }
 
-    const refinanceSimulation: Simulation<SimulationType.Refinance> =
+    const refinanceSimulation: ISimulation<SimulationType.Refinance> =
       await sdk.simulator.refinance.simulateRefinancePosition({
         position: makerPosition,
         targetPool: poolAgain,

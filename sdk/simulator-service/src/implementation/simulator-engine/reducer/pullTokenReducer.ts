@@ -1,11 +1,11 @@
 import { steps } from '@summerfi/sdk-common/simulation'
-import { addBalance, getReferencedValue } from '../../helpers'
-import { SimulationState } from '../../../interfaces/simulation'
+import { addBalance, getReferencedValue } from '../../utils'
+import { ISimulationState } from '../../../interfaces/simulation'
 
 export function pullTokenReducer(
   step: steps.PullTokenStep,
-  state: SimulationState,
-): SimulationState {
+  state: ISimulationState,
+): ISimulationState {
   return {
     ...state,
     steps: {

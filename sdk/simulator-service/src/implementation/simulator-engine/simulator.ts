@@ -1,7 +1,7 @@
-import type { SimulationState } from '../../interfaces/simulation'
+import type { ISimulationState } from '../../interfaces/simulation'
 import type { Tail } from '../../interfaces/helperTypes'
 import type { NextFunction } from '../../interfaces'
-import { head, tail } from '../helpers'
+import { head, tail } from '../utils'
 import { processStepOutput } from './stepProcessor/stepOutputProcessors'
 import { stateReducer } from './reducer/stateReducers'
 import type { SimulationStrategy } from '@summerfi/sdk-common/simulation'
@@ -14,13 +14,13 @@ export class Simulator<
 > {
   public schema: Strategy
   public originalSchema: SimulationStrategy
-  private state: SimulationState
+  private state: ISimulationState
   private readonly nextArray: NextArray
 
   private constructor(
     schema: Strategy,
     originalSchema: SimulationStrategy,
-    state: SimulationState = { balances: {}, positions: {}, steps: {} },
+    state: ISimulationState = { swaps: {}, balances: {}, positions: {}, steps: {} },
     nextArray: Readonly<NextArray> = [] as unknown as NextArray,
   ) {
     this.schema = schema
@@ -30,14 +30,14 @@ export class Simulator<
   }
 
   static create<S extends SimulationStrategy>(schema: S) {
-    // The second argument is the same as from the first schema we will substract steps
-    // with each next step added and we also need to keep the original schema for future reference
+    // The second argument is the same as from the first schema we will subtract steps
+    // with each next step added we also need to keep the original schema for future reference
     return new Simulator(schema, schema)
   }
 
-  public async run(): Promise<SimulationState> {
+  public async run(): Promise<ISimulationState> {
     for (let i = 0; i < this.nextArray.length; i++) {
-      const proccesesedStepSchema = this.originalSchema[i]
+      const processedStepSchema = this.originalSchema[i]
       const getReference = (path: [string, string]) => {
         const [stepName, output] = path
         const step: Maybe<steps.Steps> = this.state.steps[stepName]
@@ -76,13 +76,12 @@ export class Simulator<
         this.state = stateReducer(fullStep, this.state)
       }
 
-      if (nextStep.skip === true && proccesesedStepSchema.optional === false) {
+      if (nextStep.skip === true && processedStepSchema.optional === false) {
         throw new Error(`Step is required: ${nextStep.type}`)
       }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return this.state as any
+    return this.state
   }
 
   public next<N extends string>(

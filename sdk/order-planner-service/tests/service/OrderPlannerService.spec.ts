@@ -1,6 +1,6 @@
 import {
   FlashloanProvider,
-  Simulation,
+  ISimulation,
   SimulationType,
   TokenTransferTargetType,
 } from '@summerfi/sdk-common/simulation'
@@ -67,7 +67,7 @@ describe('Order Planner Service', () => {
     const sourcePosition = getMakerPosition()
     const targetPosition = getSparkPosition()
 
-    const refinanceSimulation: Simulation<SimulationType.Refinance> = getRefinanceSimulation({
+    const refinanceSimulation: ISimulation<SimulationType.Refinance> = getRefinanceSimulation({
       sourcePosition,
       targetPosition,
     })
@@ -91,7 +91,7 @@ describe('Order Planner Service', () => {
     const sourcePosition = getMakerPosition()
     const targetPosition = getSparkPosition()
 
-    const refinanceSimulation: Simulation<SimulationType.Refinance> = getRefinanceSimulation({
+    const refinanceSimulation: ISimulation<SimulationType.Refinance> = getRefinanceSimulation({
       sourcePosition,
       targetPosition,
     })

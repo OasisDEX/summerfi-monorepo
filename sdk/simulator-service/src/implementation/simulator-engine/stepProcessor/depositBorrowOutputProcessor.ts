@@ -1,5 +1,5 @@
 import { steps } from '@summerfi/sdk-common/simulation'
-import { getReferencedValue } from '../../helpers'
+import { getReferencedValue } from '../../utils'
 import type { StepOutputProcessor } from '../../../interfaces/steps'
 
 export const depositBorrowOutputProcessor: StepOutputProcessor<steps.DepositBorrowStep> = async (

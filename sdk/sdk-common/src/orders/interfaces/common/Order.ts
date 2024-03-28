@@ -1,5 +1,5 @@
+import { ISimulation } from '../../../simulation'
 import { SimulationType } from '../../../simulation/Enums'
-import { Simulation } from '../../../simulation/Simulation'
 import { TransactionInfo } from './TransactionInfo'
 
 /**
@@ -8,7 +8,7 @@ import { TransactionInfo } from './TransactionInfo'
  */
 export interface Order {
   /** @description Simulation */
-  simulation: Simulation<SimulationType>
+  simulation: ISimulation<SimulationType>
   /** @description Transaction info */
   transactions: TransactionInfo[]
 }

@@ -1,5 +1,6 @@
 import { IPrice } from '../interfaces/IPrice'
 import { isToken } from '../interfaces/IToken'
+import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
 import { CurrencySymbol } from '../enums/CurrencySymbol'
 import { Token } from './Token'
@@ -31,6 +32,10 @@ export class Price implements IPrice {
     } else {
       return `${this.value} ${this.baseToken.symbol}/${this.quoteToken}`
     }
+  }
+
+  public toBN(): BigNumber {
+    return new BigNumber(this.value)
   }
 }
 

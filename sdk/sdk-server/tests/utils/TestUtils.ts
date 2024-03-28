@@ -12,6 +12,7 @@ export const createTestContext = (opts: ContextOptions): SDKAppContext => {
     swapManager: {} as any,
     configProvider: {} as any,
     protocolsRegistry: {} as any,
+    protocolManager: {} as any,
   }
 }
 

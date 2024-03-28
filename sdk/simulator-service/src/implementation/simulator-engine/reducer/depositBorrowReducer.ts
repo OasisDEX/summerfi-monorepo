@@ -1,12 +1,12 @@
 import { borrowFromPosition, depositToPosition } from '@summerfi/sdk-common/common/utils'
 import { steps } from '@summerfi/sdk-common/simulation'
-import { addBalance, getReferencedValue, subtractBalance } from '../../helpers'
-import { SimulationState } from '../../../interfaces/simulation'
+import { addBalance, subtractBalance, getReferencedValue } from '../../utils'
+import { ISimulationState } from '../../../interfaces/simulation'
 
 export function depositBorrowReducer(
   step: steps.DepositBorrowStep,
-  state: SimulationState,
-): SimulationState {
+  state: ISimulationState,
+): ISimulationState {
   const afterDeposit = subtractBalance(
     getReferencedValue(step.inputs.depositAmount),
     state.balances,

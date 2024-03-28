@@ -1,6 +1,6 @@
 import { Maybe, Position, PositionId } from '@summerfi/sdk-common/common'
 
-import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { IUser } from '@summerfi/sdk-common/user'
 import { Order } from '@summerfi/sdk-common/orders'
 import { IProtocol } from '@summerfi/sdk-common/protocols'
@@ -39,5 +39,5 @@ export interface IUserClient extends IUser {
    *
    * @returns The new order created for the user
    */
-  newOrder(params: { simulation: Simulation<SimulationType> }): Promise<Maybe<Order>>
+  newOrder(params: { simulation: ISimulation<SimulationType> }): Promise<Maybe<Order>>
 }
