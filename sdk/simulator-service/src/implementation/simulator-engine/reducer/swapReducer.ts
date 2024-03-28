@@ -37,7 +37,7 @@ export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISim
         // Note: Can add routes back in later if we need them for the UI
         // routes: step.inputs.routes,
         // SummerFee should already have been subtracted by this stage
-        // Should be removed from amount when getting swap quote
+        // Should be subtracted from `from` amount when getting swap quote in simulator
         fromTokenAmount: step.inputs.fromTokenAmount,
         toTokenAmount: step.inputs.toTokenAmount,
         slippage: Percentage.createFrom({ value: step.inputs.slippage.value }),

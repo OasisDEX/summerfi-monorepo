@@ -1,4 +1,4 @@
-import { applyPercentage } from '@summerfi/sdk-common/utils'
+import { subtractPercentage } from '@summerfi/sdk-common/utils'
 import {
   FlashloanProvider,
   ISimulation,
@@ -92,10 +92,10 @@ export async function refinanceLendingToLending(
       inputs: {
         ...(await dependencies.swapManager.getSwapQuoteExactInput({
           chainInfo: position.pool.protocol.chainInfo,
-          fromAmount: applyPercentage(
+          fromAmount: subtractPercentage(
             position.collateralAmount,
             Percentage.createFrom({
-              value: 100 - collateralSwapSummerFee.value,
+              value: collateralSwapSummerFee.value,
             }),
           ),
           toToken: targetCollateralConfig.token,
@@ -142,10 +142,10 @@ export async function refinanceLendingToLending(
       inputs: {
         ...(await dependencies.swapManager.getSwapQuoteExactInput({
           chainInfo: args.position.pool.protocol.chainInfo,
-          fromAmount: applyPercentage(
+          fromAmount: subtractPercentage(
             getReferencedValue(ctx.getReference(['DepositBorrowToTarget', 'borrowAmount'])),
             Percentage.createFrom({
-              value: 100 - debtSwapSummerFee.value,
+              value: debtSwapSummerFee.value,
             }),
           ),
           toToken: targetDebtConfig.token,
@@ -236,16 +236,16 @@ async function calculateBorrowAmount(params: {
    *    (sourcePositionDebt * targetDebtQuotedInSourceDebtPrice / (one - slippage)) / (one - summer fee) = borrowAmount
    */
   const borrowAmount = prevDebtAmount.multiply(debtSpotPrice.toString())
-  const borrowAmountAdjustedForSlippage = applyPercentage(
+  const borrowAmountAdjustedForSlippage = subtractPercentage(
     borrowAmount,
     Percentage.createFrom({
-      value: 100 - slippage.value,
+      value: slippage.value,
     }),
   )
-  const borrowAmountAdjustedForSlippageAndSummerFee = applyPercentage(
+  const borrowAmountAdjustedForSlippageAndSummerFee = subtractPercentage(
     borrowAmountAdjustedForSlippage,
     Percentage.createFrom({
-      value: 100 - summerFee.value,
+      value: summerFee.value,
     }),
   )
 
