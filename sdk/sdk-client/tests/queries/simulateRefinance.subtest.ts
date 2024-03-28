@@ -105,6 +105,9 @@ export default async function simulateRefinanceTest() {
   const refinanceParameters: IRefinanceParameters = {
     position: prevPosition,
     targetPool: targetPool,
+    // Assume no swaps
+    targetDebt: prevPosition.debtAmount.token,
+    targetCollateral: prevPosition.collateralAmount.token,
     slippage: Percentage.createFrom({ value: 0.5 }),
   }
 

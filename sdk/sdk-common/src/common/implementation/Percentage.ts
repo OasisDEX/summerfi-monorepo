@@ -25,6 +25,10 @@ export class Percentage implements IPercentage {
     return Percentage.createFrom({ value: this.value + percentage.value })
   }
 
+  subtract(percentage: IPercentage): Percentage {
+    return Percentage.createFrom({ value: this.value - percentage.value })
+  }
+
   toProportion(): number {
     return this.value / 100
   }

@@ -63,14 +63,12 @@ describe('Swap Action Builder', () => {
         routes: [],
         fromTokenAmount: fromAmount,
         toTokenAmount: toAmount,
-        prices: [
-          Price.createFrom({
-            value: '0',
-            quoteToken: fromAmount.token,
-            baseToken: toAmount.token,
-          }),
-        ],
-        fee: fee,
+        spotPrice: Price.createFrom({
+          value: '0',
+          quoteToken: fromAmount.token,
+          baseToken: toAmount.token,
+        }),
+        summerFee: fee,
         slippage,
       },
       outputs: {

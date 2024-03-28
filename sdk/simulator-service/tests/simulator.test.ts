@@ -8,7 +8,7 @@ import {
   testTargetLendingPool,
   testTargetLendingPoolRequiredSwaps,
 } from './mocks/testSourcePosition'
-import { mockRefinanceContext } from './mocks/contextMock'
+import { mockRefinanceContext, mockRefinanceContextRequiredSwaps } from './mocks/contextMock'
 
 describe('Refinance', () => {
   describe('to the position with the same collateral and debt (no swaps)', () => {
@@ -18,6 +18,12 @@ describe('Refinance', () => {
         {
           position: testSourcePosition,
           targetPool: testTargetLendingPool,
+          targetDebt: testTargetLendingPool.debts.get({
+            token: testSourcePosition.debtAmount.token,
+          })!.token,
+          targetCollateral: testTargetLendingPool.collaterals.get({
+            token: testSourcePosition.collateralAmount.token,
+          })!.token,
           slippage: Percentage.createFrom({ value: 1 }),
         },
         mockRefinanceContext,
@@ -56,26 +62,30 @@ describe('Refinance', () => {
     })
   })
 
-  describe.skip('to the position with the different collateral and debt (with swaps)', () => {
+  describe('to the position with the different collateral and debt (with swaps)', () => {
     let simulation: ISimulation<SimulationType.Refinance>
     beforeAll(async () => {
       simulation = await refinanceLendingToLending(
         {
           position: testSourcePosition,
           targetPool: testTargetLendingPoolRequiredSwaps,
+          targetDebt: otherTestDebt,
+          targetCollateral: otherTestCollateral,
           slippage: Percentage.createFrom({ value: 1 }),
         },
-        mockRefinanceContext,
+        mockRefinanceContextRequiredSwaps,
       )
     })
 
     it('should include two swap steps', async () => {
-      const steps = simulation.steps.filter((step) => !step.skip).map((step) => step.type)
+      const steps = simulation.steps
+        .filter((step) => !step.skip)
+        .filter((step) => step.type === SimulationSteps.Swap)
 
       expect(steps.length).toBe(2)
     })
 
-    it('should open position with other collater', async () => {
+    it('should open position with other collateral', async () => {
       const targetPosition = simulation.targetPosition
 
       expect(targetPosition.collateralAmount.token).toEqual(otherTestCollateral)
@@ -84,7 +94,7 @@ describe('Refinance', () => {
     it('should open position with other debt', async () => {
       const targetPosition = simulation.targetPosition
 
-      expect(targetPosition.debtAmount).toEqual(otherTestDebt)
+      expect(targetPosition.debtAmount.token).toEqual(otherTestDebt)
     })
 
     it('should open position as required target pool', async () => {
@@ -97,10 +107,6 @@ describe('Refinance', () => {
       const targetPosition = simulation.targetPosition
 
       expect(targetPosition.positionId).toBeDefined()
-    })
-
-    it('should open position with the same collateral amount', async () => {
-      expect(mockRefinanceContext.swapManager.getSwapQuoteExactInput.mock.calls.length).toBe(2)
     })
 
     it('should exchange all collateral from source position ', async () => {

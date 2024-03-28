@@ -23,7 +23,7 @@ export const SwapActionBuilder: ActionBuilder<steps.SwapStep> = async (params): 
     arguments: {
       fromAmount: step.inputs.fromTokenAmount,
       toMinimumAmount: step.inputs.toTokenAmount,
-      fee: step.inputs.fee,
+      fee: step.inputs.summerFee,
       withData: swapData.calldata,
       collectFeeInFromToken: true,
     },

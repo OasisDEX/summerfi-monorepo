@@ -198,6 +198,8 @@ describe.skip('Refinance | SDK', () => {
     const refinanceParameters: IRefinanceParameters = {
       position: prevPosition,
       targetPool: newLendingPool,
+      targetCollateral: prevPosition.collateralAmount.token,
+      targetDebt: prevPosition.debtAmount.token,
       slippage: Percentage.createFrom({ value: 0.5 }),
     }
 
