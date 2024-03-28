@@ -19,22 +19,7 @@ export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISim
     quoteToken,
   })
 
-  const spotPriceOfToToken = step.inputs.prices.find((price) =>
-    price.baseToken.address.equals(baseToken.address),
-  )
-  const spotPriceOfFromToken = step.inputs.prices.find((price) =>
-    price.baseToken.address.equals(quoteToken.address),
-  )
-
-  if (!spotPriceOfToToken || !spotPriceOfFromToken) {
-    throw new Error('Spot price for either From/To token could not be found')
-  }
-
-  const marketPrice = Price.createFrom({
-    value: spotPriceOfToToken.toBN().div(spotPriceOfFromToken.toBN()).toString(),
-    baseToken: step.inputs.fromTokenAmount.token,
-    quoteToken: step.inputs.toTokenAmount.token,
-  })
+  const spotPrice = step.inputs.spotPrice
 
   return {
     ...state,
@@ -52,8 +37,8 @@ export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISim
         toTokenAmount: step.inputs.toTokenAmount,
         slippage: Percentage.createFrom({ value: step.inputs.slippage.value }),
         offerPrice,
-        marketPrice,
-        priceImpact: calculatePriceImpact(marketPrice, offerPrice),
+        spotPrice,
+        priceImpact: calculatePriceImpact(spotPrice, offerPrice),
         summerFee: TokenAmount.createFrom({
           token: step.inputs.fromTokenAmount.token,
           amount: step.inputs.fromTokenAmount.multiply(step.inputs.fee.value).amount,
@@ -67,10 +52,10 @@ export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISim
 /**
  *
  * @param marketPrice - This price represent how much it will cost for selling some very small amount
- * such as 0.1. It is the best possible price on the market.
+ *    such as 0.1. It is the best possible price on the market.
  * @param offerPrice - If the amount we would like to sell we might get deeper into the liquidity
- * meaning the price won't be a good as when you sell small amount. This is the price that is
- * represent how much it will cost for us to sell the desired amount.
+ *    meaning the price won't be a good as when you sell small amount. This is the price that is
+ *    represent how much it will cost for us to sell the desired amount.
  *
  * Both prices might be equal which means that there is no price impact. Having no
  * price impact means that you sell at the best possible price.

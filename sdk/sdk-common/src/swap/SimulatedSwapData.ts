@@ -11,7 +11,8 @@ import { QuoteData } from './QuoteData'
 export type SimulatedSwapData = Omit<QuoteData, 'estimatedGas' | 'routes'> & {
   slippage: Percentage
   offerPrice: Price
-  marketPrice: Price
+  /* Also known as marketPrice or marketPrice with zero price impact */
+  spotPrice: Price
   priceImpact: Percentage
   summerFee: TokenAmount
 }

@@ -7,7 +7,6 @@ import type {
   Address,
 } from '@summerfi/sdk-common/common'
 import { ChainId, CurrencySymbol } from '@summerfi/sdk-common/common'
-import { SpotPriceMap } from '@summerfi/swap-common/implementation'
 import { ISwapProvider, ISwapManager } from '@summerfi/swap-common/interfaces'
 import type { QuoteData, SwapData, SwapProviderType, SpotData } from '@summerfi/sdk-common/swap'
 

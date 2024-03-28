@@ -1,4 +1,3 @@
-import { DebtConfig } from '@summerfi/sdk-common/protocols'
 import {
   FlashloanProvider,
   ISimulation,
@@ -10,7 +9,7 @@ import { Simulator } from '../../implementation/simulator-engine'
 import { Position, TokenAmount, Percentage, Price } from '@summerfi/sdk-common/common'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
-import { isLendingPool } from '@summerfi/sdk-common/protocols'
+import { DebtConfig, isLendingPool } from '@summerfi/sdk-common/protocols'
 import { getReferencedValue } from '../../implementation/utils'
 import { refinanceLendingToLendingStrategy } from './Strategy'
 import { type IRefinanceDependencies } from './Types'
@@ -214,8 +213,6 @@ async function calculateBorrowAmount(
    *    More generally we'd write this as
    *    sourcePositionDebt * targetDebtQuotedInSourceDebtPrice / (one - slippage) = borrowAmount
    */
-  // TODO: Refactor common classes to make easier
-  // TODO: TokenAmount maths?
   // TODO: Token equals
   const borrowAmount = prevDebtAmount
     .multiply(debtSpotPrice.toString())
@@ -224,10 +221,11 @@ async function calculateBorrowAmount(
         value: 100 - params.slippage.value,
       }).toString(),
     )
+    .multiply(100)
     .toString()
 
   return TokenAmount.createFrom({
     amount: borrowAmount,
-    token: debtSpotPrice.baseToken
+    token: debtSpotPrice.baseToken,
   })
 }
