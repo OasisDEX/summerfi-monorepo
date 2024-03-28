@@ -67,7 +67,7 @@ export interface SwapStep
       fromTokenAmount: TokenAmount
       toTokenAmount: TokenAmount
       slippage: Percentage
-      fee: Percentage
+      summerFee: Percentage
     },
     {
       receivedAmount: TokenAmount

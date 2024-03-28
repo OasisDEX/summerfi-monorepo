@@ -53,7 +53,7 @@ export class SwapManagerMock implements ISwapManager {
     return this._quoteDataReturnValue
   }
 
-  async getSpotPrices(params: { chainInfo: ChainInfo; tokens: Token[] }): Promise<SpotData> {
+  async getSpotPrice(params: { chainInfo: ChainInfo; baseToken: Token }): Promise<SpotData> {
     return this._spotDataReturnValue
   }
 
