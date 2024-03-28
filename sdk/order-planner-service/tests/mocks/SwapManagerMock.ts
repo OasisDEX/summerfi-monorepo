@@ -6,6 +6,7 @@ export class SwapManagerMock implements ISwapManager {
   private _swapDataReturnValue: SwapData = {} as SwapData
   private _quoteDataReturnValue: QuoteData = {} as QuoteData
   private _spotDataReturnValue: SpotData = {} as SpotData
+  private _summerFeeValue: Percentage = Percentage.createFrom({ value: 0 })
 
   private _lastGetSwapDataExactInputParams:
     | {
@@ -55,6 +56,10 @@ export class SwapManagerMock implements ISwapManager {
 
   async getSpotPrice(params: { chainInfo: ChainInfo; baseToken: Token }): Promise<SpotData> {
     return this._spotDataReturnValue
+  }
+
+  getSummerFee(): Percentage {
+    return this._summerFeeValue
   }
 
   get swapDataReturnValue(): SwapData {

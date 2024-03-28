@@ -1,7 +1,6 @@
 import type { Maybe } from '@summerfi/sdk-common/common/aliases'
 import type { ChainInfo, TokenAmount, Token, Address } from '@summerfi/sdk-common/common'
-import { Percentage } from '@summerfi/sdk-common/common'
-import { ChainId, CurrencySymbol } from '@summerfi/sdk-common/common'
+import { ChainId, CurrencySymbol, Percentage } from '@summerfi/sdk-common/common'
 import { IProtocol } from '@summerfi/sdk-common/protocols'
 import { ISwapProvider, ISwapManager } from '@summerfi/swap-common/interfaces'
 import type { QuoteData, SwapData, SwapProviderType, SpotData } from '@summerfi/sdk-common/swap'
@@ -68,6 +67,7 @@ export class SwapManager implements ISwapManager {
     return provider.getSpotPrice(params)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getSummerFee(params: {
     from: { protocol: IProtocol; token: Token }
     to: { protocol: IProtocol; token: Token }

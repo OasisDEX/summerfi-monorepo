@@ -82,6 +82,7 @@ export const mockRefinanceContext = {
     getSwapDataExactInput,
     getSwapQuoteExactInput: jest.fn().mockImplementation(getSwapQuoteExactInput),
     getSpotPrice,
+    getSummerFee: jest.fn().mockImplementation(mockGetFee),
   },
 }
 
