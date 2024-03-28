@@ -4,7 +4,7 @@ import {
   type Price,
   type TokenAmount,
 } from '@summerfi/sdk-common/common'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'bignumber.js'
 
 export class PositionUtils {
   static getLTV({

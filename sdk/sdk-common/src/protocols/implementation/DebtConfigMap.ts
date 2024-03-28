@@ -1,6 +1,7 @@
 import { AddressValue } from '../../common/aliases/AddressValue'
 import { Maybe } from '../../common/aliases/Maybe'
 import { IToken } from '../../common/interfaces/IToken'
+import { SerializationService } from '../../services/SerializationService'
 
 import { IDebtConfig } from '../interfaces/IDebtConfig'
 import { IDebtConfigMap } from '../interfaces/IDebtConfigMap'
@@ -33,3 +34,5 @@ export class DebtConfigMap implements IDebtConfigMap {
     })
   }
 }
+
+SerializationService.registerClass(DebtConfigMap)

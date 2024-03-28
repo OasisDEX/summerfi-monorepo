@@ -13,8 +13,7 @@ import {
   Maybe,
 } from '@summerfi/sdk-common/common'
 import { SimulationSteps } from '@summerfi/sdk-common/simulation'
-import type { SparkPoolId } from '@summerfi/sdk-common/protocols'
-import { PoolType, ProtocolName, EmodeType } from '@summerfi/sdk-common/protocols'
+import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
 
@@ -45,6 +44,8 @@ import {
   IProtocolPluginContext,
 } from '@summerfi/protocol-plugins-common'
 import { SparkAddressAbiMap } from '../types/SparkAddressAbiMap'
+import { EmodeType } from '../../common/enums/EmodeType'
+import { SparkPoolId } from '../types/SparkPoolId'
 
 type AssetsList = ReturnType<SparkProtocolPlugin['buildAssetsList']>
 type Asset = Awaited<AssetsList> extends (infer U)[] ? U : never

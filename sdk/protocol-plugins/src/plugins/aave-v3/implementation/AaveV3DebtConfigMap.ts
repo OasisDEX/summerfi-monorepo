@@ -3,6 +3,7 @@ import { AaveV3DebtConfig } from './AaveV3DebtConfig'
 import { IAaveV3DebtConfigMap } from '../interfaces/IAaveV3DebtConfigMap'
 import { DebtConfigMap } from '@summerfi/sdk-common/protocols'
 import { IAaveV3DebtConfig } from '../interfaces/IAaveV3DebtConfig'
+import { SerializationService } from '@summerfi/sdk-common/services'
 
 export type AaveV3DebtConfigRecord = Record<AddressValue, AaveV3DebtConfig>
 
@@ -27,3 +28,5 @@ export class AaveV3DebtConfigMap extends DebtConfigMap implements IAaveV3DebtCon
     return this.record[params.token.address.value]
   }
 }
+
+SerializationService.registerClass(AaveV3DebtConfigMap)

@@ -1,7 +1,7 @@
 import { CurrencySymbol } from '../../common/enums/CurrencySymbol'
 import { Token } from '../../common/implementation/Token'
 import { IPool } from '../interfaces/IPool'
-import { PoolType } from '../interfaces/PoolType'
+import { PoolType } from '../types/PoolType'
 import { Pool } from './Pool'
 import { SerializationService } from '../../services'
 import { ILendingPool } from '../interfaces/ILendingPool'

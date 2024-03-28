@@ -2,6 +2,7 @@ import { Percentage } from '../../common/implementation/Percentage'
 import { Price } from '../../common/implementation/Price'
 import { Token } from '../../common/implementation/Token'
 import { TokenAmount } from '../../common/implementation/TokenAmount'
+import { SerializationService } from '../../services/SerializationService'
 import { IDebtConfig } from '../interfaces/IDebtConfig'
 
 export class DebtConfig implements IDebtConfig {
@@ -31,3 +32,5 @@ export class DebtConfig implements IDebtConfig {
     return new DebtConfig(params)
   }
 }
+
+SerializationService.registerClass(DebtConfig)

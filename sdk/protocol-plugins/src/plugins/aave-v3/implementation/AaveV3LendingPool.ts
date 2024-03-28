@@ -2,6 +2,7 @@ import { LendingPool } from '@summerfi/sdk-common/protocols'
 import { IAaveV3LendingPool } from '../interfaces/IAaveV3LendingPool'
 import { AaveV3CollateralConfigMap } from './AaveV3CollateralConfigMap'
 import { AaveV3DebtConfigMap } from './AaveV3DebtConfigMap'
+import { SerializationService } from '@summerfi/sdk-common/services'
 
 export class AaveV3LendingPool extends LendingPool implements IAaveV3LendingPool {
   readonly collaterals: AaveV3CollateralConfigMap
@@ -18,3 +19,5 @@ export class AaveV3LendingPool extends LendingPool implements IAaveV3LendingPool
     return new AaveV3LendingPool(params)
   }
 }
+
+SerializationService.registerClass(AaveV3LendingPool)

@@ -1,5 +1,5 @@
 import { IPoolId } from './IPoolId'
-import { PoolType } from './PoolType'
+import { PoolType } from '../types/PoolType'
 import { IProtocol } from './IProtocol'
 import { Address } from '../../common/implementation/Address'
 

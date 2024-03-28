@@ -2,19 +2,23 @@
   "name": "@summerfi/sdk-e2e",
   "version": "0.0.1",
   "scripts": {
-    "test": "jest",
+    "test": "DOTENV_CONFIG_PATH='../../.env' jest --silent=false ",
     "testw": "jest --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
+    "@summerfi/core-contracts": "workspace:*",
+    "@summerfi/deployment-utils": "workspace:*",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
     "@summerfi/protocol-manager-service": "workspace:*",
+    "@summerfi/protocol-plugins": "workspace:*",
+    "@summerfi/protocol-plugins-common": "workspace:*",
     "@summerfi/sdk-client": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/tenderly-utils": "workspace:*",
-    "@summerfi/typescript-config": "workspace:*",
-    "viem": "^2.8.16"
+    "@summerfi/testing-utils": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*"
   }
 }

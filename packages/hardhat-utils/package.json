@@ -20,7 +20,6 @@
     "@nomicfoundation/hardhat-toolbox-viem": "^2.0.0",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
-    "dotenv": "^16.3.1",
     "hardhat": "^2.19.5",
     "hardhat-abi-exporter": "^2.10.1",
     "solidity-docgen": "0.6.0-beta.36"

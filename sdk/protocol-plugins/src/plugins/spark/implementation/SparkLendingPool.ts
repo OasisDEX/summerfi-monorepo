@@ -2,6 +2,7 @@ import { LendingPool } from '@summerfi/sdk-common/protocols'
 import { ISparkLendingPool } from '../interfaces/ISparkLendingPool'
 import { SparkCollateralConfigMap } from './SparkCollateralConfigMap'
 import { SparkDebtConfigMap } from './SparkDebtConfigMap'
+import { SerializationService } from '@summerfi/sdk-common/services'
 
 export class SparkLendingPool extends LendingPool implements ISparkLendingPool {
   readonly collaterals: SparkCollateralConfigMap
@@ -18,3 +19,5 @@ export class SparkLendingPool extends LendingPool implements ISparkLendingPool {
     return new SparkLendingPool(params)
   }
 }
+
+SerializationService.registerClass(SparkLendingPool)

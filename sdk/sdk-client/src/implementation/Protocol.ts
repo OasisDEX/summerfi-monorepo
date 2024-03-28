@@ -3,6 +3,7 @@ import { IPool, IPoolId, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { IProtocolClient } from '../interfaces/IProtocolClient'
 import { IRPCClient } from '../interfaces/IRPCClient'
 import { RPCClientType } from '../rpc/SDKClient'
+import { SerializationService } from '@summerfi/sdk-common/services'
 
 export class Protocol extends IRPCClient implements IProtocolClient {
   public readonly name: ProtocolName
@@ -21,3 +22,5 @@ export class Protocol extends IRPCClient implements IProtocolClient {
     })
   }
 }
+
+SerializationService.registerClass(Protocol)

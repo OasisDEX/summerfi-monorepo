@@ -1,13 +1,12 @@
+import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { SDKManager } from '../../src/implementation/SDKManager'
+import { RPCClientType } from '../../src/rpc/SDKClient'
 import {
   ILKType,
   MakerPoolId,
-  PoolType,
-  ProtocolName,
   isMakerPoolId,
-} from '@summerfi/sdk-common/protocols'
-import { SDKManager } from '../../src/implementation/SDKManager'
-import { RPCClientType } from '../../src/rpc/SDKClient'
-import { MakerLendingPool } from '@summerfi/protocol-plugins'
+  MakerLendingPool,
+} from '@summerfi/protocol-plugins/plugins/maker'
 
 export default async function getPoolTest() {
   type GetPoolType = RPCClientType['getPool']['query']

@@ -1,4 +1,3 @@
-import { MakerLendingPool, SparkLendingPool } from '@summerfi/protocol-plugins'
 import {
   Address,
   ChainInfo,
@@ -14,6 +13,8 @@ import {
   newEmptyPositionFromPool,
 } from '@summerfi/sdk-common/common'
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { MakerLendingPool } from '@summerfi/protocol-plugins/plugins/maker'
+import { SparkLendingPool } from '@summerfi/protocol-plugins/plugins/spark'
 
 const testChain = ChainInfo.createFrom({ chainId: 1, name: 'test' })
 

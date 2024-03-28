@@ -13,7 +13,7 @@ export interface IStepBuilderContext {
     connectedOutputs: Partial<StorageOutputsMapType<Step, Action>>
   }): void
 
-  startSubContext(params: { customData?: unknown }): void
+  startSubContext(params?: { customData?: unknown }): void
 
   endSubContext<T>(): {
     callsBatch: ActionCallBatch

@@ -1,5 +1,4 @@
 export {
-  type InputSlotsMapping,
   type Slot,
   type StepInputsType,
   type StepKeysMatching,
@@ -17,3 +16,4 @@ export {
   type ActionBuildersMap,
   type FilterStep,
 } from './StepBuilderTypes'
+export { type InputSlotsMapping } from './InputSlotsMapping'

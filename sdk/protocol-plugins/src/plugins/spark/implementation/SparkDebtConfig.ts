@@ -1,5 +1,6 @@
 import { DebtConfig } from '@summerfi/sdk-common/protocols'
 import { ISparkDebtConfig } from '../interfaces/ISparkDebtConfig'
+import { SerializationService } from '@summerfi/sdk-common/services'
 
 export class SparkDebtConfig extends DebtConfig implements ISparkDebtConfig {
   readonly borrowingEnabled: boolean
@@ -14,3 +15,5 @@ export class SparkDebtConfig extends DebtConfig implements ISparkDebtConfig {
     return new SparkDebtConfig(params)
   }
 }
+
+SerializationService.registerClass(SparkDebtConfig)

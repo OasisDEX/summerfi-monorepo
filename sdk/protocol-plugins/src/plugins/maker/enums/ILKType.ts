@@ -1,0 +1,17 @@
+export enum ILKType {
+  ETH_A = 'ETH-A',
+  ETH_B = 'ETH-B',
+  ETH_C = 'ETH-C',
+  BAT_A = 'BAT-A',
+  USDC_A = 'USDC-A',
+  WBTC_A = 'WBTC-A',
+  USDC_B = 'USDC-B',
+  WBTC_B = 'WBTC-B',
+  TUSD_A = 'TUSD-A',
+  KNC_A = 'KNC-A',
+  ZRX_A = 'ZRX-A',
+  MANA_A = 'MANA-A',
+  COMP_A = 'COMP-A',
+  LRC_A = 'LRC-A',
+  LINK_A = 'LINK-A',
+}

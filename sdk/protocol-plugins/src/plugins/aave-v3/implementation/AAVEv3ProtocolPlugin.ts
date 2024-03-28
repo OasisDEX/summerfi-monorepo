@@ -12,8 +12,7 @@ import {
   IPosition,
   ChainId,
 } from '@summerfi/sdk-common/common'
-import type { AaveV3PoolId } from '@summerfi/sdk-common/protocols'
-import { EmodeType, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { BigNumber } from 'bignumber.js'
 import { BaseProtocolPlugin } from '../../../implementation/BaseProtocolPlugin'
 import { aaveV3EmodeCategoryMap } from './EmodeCategoryMap'
@@ -40,6 +39,8 @@ import {
   AAVEV3_POOL_DATA_PROVIDER_ABI,
 } from '../abis/AaveV3ABIS'
 import { AaveV3ContractNames } from '@summerfi/deployment-types'
+import { EmodeType } from '../../common/enums/EmodeType'
+import { AaveV3PoolId } from '../types/AaveV3PoolId'
 
 type AssetsList = ReturnType<AaveV3ProtocolPlugin['buildAssetsList']>
 type Asset = Awaited<AssetsList> extends (infer U)[] ? U : never

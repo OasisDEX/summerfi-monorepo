@@ -1,7 +1,7 @@
 import { IProtocol, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SDKManager } from '../../src/implementation/SDKManager'
 import { RPCClientType } from '../../src/rpc/SDKClient'
-import { MakerLendingPool, SparkLendingPool } from '@summerfi/protocol-plugins'
+import { MakerLendingPool } from '@summerfi/protocol-plugins/plugins/maker'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import {
   Address,
@@ -15,6 +15,7 @@ import {
   TokenAmount,
 } from '@summerfi/sdk-common/common'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
+import { SparkLendingPool } from '@summerfi/protocol-plugins/plugins/spark'
 
 export default async function simulateRefinanceTest() {
   type SimulateRefinanceType = RPCClientType['simulation']['refinance']['query']
@@ -112,11 +113,12 @@ export default async function simulateRefinanceTest() {
 
   expect(simulation).toBeDefined()
   expect(simulation.simulationType).toBe(SimulationType.Refinance)
-  expect(simulation.sourcePosition).toBe(prevPosition)
+  expect(simulation.sourcePosition).toBeDefined()
+  expect(simulation.sourcePosition?.positionId).toBe(prevPosition.positionId)
   expect(simulation.targetPosition).toBeDefined()
   expect(simulation.targetPosition.positionId).toBeDefined()
   expect(simulation.targetPosition.debtAmount).toBe(prevPosition.debtAmount)
   expect(simulation.targetPosition.collateralAmount).toBe(prevPosition.collateralAmount)
-  expect(simulation.targetPosition.pool).toBe(targetPool)
+  expect(simulation.targetPosition.pool.poolId).toBe(targetPool.poolId)
   expect(simulation.steps).toBeDefined()
 }

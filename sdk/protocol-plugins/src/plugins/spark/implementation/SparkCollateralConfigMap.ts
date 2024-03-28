@@ -3,6 +3,7 @@ import { SparkCollateralConfig } from './SparkCollateralConfig'
 import { ISparkCollateralConfigMap } from '../interfaces/ISparkCollateralConfigMap'
 import { CollateralConfigMap } from '@summerfi/sdk-common/protocols'
 import { ISparkCollateralConfig } from '../interfaces/ISparkCollateralConfig'
+import { SerializationService } from '@summerfi/sdk-common/services'
 
 export type SparkCollateralConfigRecord = Record<AddressValue, SparkCollateralConfig>
 
@@ -35,3 +36,5 @@ export class SparkCollateralConfigMap
     return this.record[params.token.address.value]
   }
 }
+
+SerializationService.registerClass(SparkCollateralConfigMap)
