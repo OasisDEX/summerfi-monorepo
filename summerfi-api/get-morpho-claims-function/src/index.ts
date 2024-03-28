@@ -5,22 +5,15 @@ import {
   ResponseInternalServerError,
   ResponseOk,
 } from '@summerfi/serverless-shared/responses'
-import {
-  addressSchema,
-  chainIdSchema,
-  urlOptionalSchema,
-} from '@summerfi/serverless-shared/validators'
+import { addressSchema } from '@summerfi/serverless-shared/validators'
 
 import { Logger } from '@aws-lambda-powertools/logger'
-import { ChainId } from '@summerfi/serverless-shared'
 import { getClaims } from './get-claims'
 
 const logger = new Logger({ serviceName: 'get-morpho-claims-function' })
 
 const paramsSchema = z.object({
   account: addressSchema,
-  chainId: chainIdSchema.optional().default(ChainId.MAINNET),
-  rpc: urlOptionalSchema,
 })
 
 export const handler = async (
@@ -50,15 +43,8 @@ export const handler = async (
   }
   const params = parseResult.data
 
-  logger.appendKeys({
-    chainId: params.chainId,
-  })
-
   const claims = await getClaims({
     account: params.account,
-    customRpc: params.rpc,
-    rpcGateway: RPC_GATEWAY,
-    chainId: ChainId.MAINNET,
   })
 
   return ResponseOk({ body: claims })

@@ -71,19 +71,30 @@ export const ChainFamilyMap: ChainFamily = {
   [ChainFamilyName.Base]: BaseFamily,
 }
 
+export type ChainFamilyInfo = {
+  familyName: ChainFamilyName
+  chainId: ChainId
+  name: string
+}
+
+export type ChainFamilyInfoById = Record<ChainId, ChainFamilyInfo>
+
 /**
  * @type Record<ChainId, ChainInfo>
  * @description Utility function to merge all chain families into a single map
  */
-function createChainIdToChainInfoMap(): Record<ChainId, ChainInfo> {
-  const allFamilies = { ...EthereumFamily, ...ArbitrumFamily, ...OptimismFamily, ...BaseFamily }
-  const chainIdToChainInfoMap: Record<number, ChainInfo> = {}
-
-  for (const chainInfo of Object.values(allFamilies)) {
-    chainIdToChainInfoMap[chainInfo.chainId] = chainInfo
-  }
-
-  return chainIdToChainInfoMap
+function createChainIdToChainInfoMap(): ChainFamilyInfoById {
+  return Object.entries(ChainFamilyMap).reduce((acc, [familyName, family]) => {
+    Object.entries(family).reduce((acc, [, chainInfo]) => {
+      acc[chainInfo.chainId] = {
+        familyName: familyName as ChainFamilyName,
+        chainId: chainInfo.chainId,
+        name: chainInfo.name,
+      }
+      return acc
+    }, acc)
+    return acc
+  }, {} as ChainFamilyInfoById)
 }
 
 const chainIdToChainInfoMap = createChainIdToChainInfoMap()
