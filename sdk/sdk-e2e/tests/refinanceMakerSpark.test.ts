@@ -133,6 +133,8 @@ describe.skip('Refinance Maker Spark | SDK', () => {
       await sdk.simulator.refinance.simulateRefinancePosition({
         position: makerPosition,
         targetPool: poolAgain,
+        targetCollateral: makerPosition.collateralAmount.token,
+        targetDebt: makerPosition.debtAmount.token,
         slippage: Percentage.createFrom({ value: 0.2 }),
       } as IRefinanceParameters)
 
