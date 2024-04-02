@@ -1,123 +1,48 @@
-import {
-  Address,
-  ChainId,
-  getRpcGatewayEndpoint,
-  IRpcConfig,
-  safeParseBigInt,
-} from '@summerfi/serverless-shared'
-import { Chain as ViemChain, createPublicClient, http, PublicClient } from 'viem'
-import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
-import { universalRewardsDistributorAbi } from './abis'
+import { Address, IRpcConfig, safeParseBigInt } from '@summerfi/serverless-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
-
-type AddressName =
-  | 'EmissionDataProvider'
-  | 'MorphoOperator'
-  | 'MorphoBlue'
-  | 'URD_Morpho'
-  | 'URD_wstETH'
-  | 'URD_SWISE'
-  | 'URD_USDC'
-  | 'wstETH'
-  | 'SWISE'
-  | 'Morpho'
-  | 'USDC'
-
-const addressesBook: Record<AddressName, Address> = {
-  EmissionDataProvider: '0xf27fa85b6748c8a64d4b0D3D6083Eb26f18BDE8e',
-  MorphoOperator: '0x640428D38189B11B844dAEBDBAAbbdfbd8aE0143',
-  MorphoBlue: '0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb',
-  URD_Morpho: '0x678dDC1d07eaa166521325394cDEb1E4c086DF43',
-  URD_wstETH: '0x2EfD4625d0c149EbADf118EC5446c6de24d916A4',
-  URD_SWISE: '0xfd9b178257ae397a674698834628262fd858aad3',
-  URD_USDC: '0xb5b17231e2c89ca34ce94b8cb895a9b124bb466e',
-  wstETH: '0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0',
-  SWISE: '0x48C3399719B582dD63eB5AADf12A40B4C3f52FA2',
-  Morpho: '0x9994E35Db50125E0DF82e4c2dde62496CE330999',
-  USDC: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-}
 
 type Token = {
   address: Address
   decimals: number
   symbol: string
+  name: string
+  price?: string
+}
+type Args = {
+  address: string
+  token: string
+  amount: string
+  proof: string[]
+}
+/* 
+accrued - all rewards accrued from the beginning of rewards program
+available - available to claim
+claimed - claimed by the user
+claimable - all tokens cliamable by the user - that included claimed amount
+ */
+type TokenInfo = {
+  token: Token
+  accrued: string
+  available: string
+  claimable: string
+  claimed: string
+  function_signature: string
+  args?: Args
 }
 
-const wstETH: Token = {
-  address: addressesBook.wstETH,
-  decimals: 18,
-  symbol: 'wstETH',
+type Reward = {
+  rewards_distributor: string
+  root: string
+  tokens: TokenInfo[]
 }
 
-const SWISE: Token = {
-  address: addressesBook.SWISE,
-  decimals: 18,
-  symbol: 'SWISE',
+type UserRewards = {
+  user: string
+  timestamp: number
+  rewards: Reward[]
 }
 
-const Morpho: Token = {
-  address: addressesBook.Morpho,
-  decimals: 18,
-  symbol: 'Morpho',
-}
-
-const USDC: Token = {
-  address: addressesBook.USDC,
-  decimals: 6,
-  symbol: 'USDC',
-}
-
-type DistributionData = {
-  urd: Address
-  rewards: Token[]
-  ipfs: string
-}
-
-type DistributionProvider =
-  | 'LOL - Lido committee'
-  | 'Morpho DAO'
-  | 'StakeWise DAO'
-  | 'Ether.fi'
-  | 'Renzo Protocol'
-
-const distributions: Record<DistributionProvider, DistributionData> = {
-  'LOL - Lido committee': {
-    urd: '0x2EfD4625d0c149EbADf118EC5446c6de24d916A4',
-    ipfs: 'https://cloudflare-ipfs.com/ipfs/QmWoHV2tmhrmCBtc29SbW8b4VNyEBVXs3fUM9SXo9c3rDA',
-    rewards: [wstETH],
-  },
-  'Morpho DAO': {
-    urd: '0x678dDC1d07eaa166521325394cDEb1E4c086DF43',
-    ipfs: 'https://cloudflare-ipfs.com/ipfs/QmZSCtDTbYe7pPiQKaKu1jLfZYzfeyRHXW3EgZTL4Qm73P',
-    rewards: [Morpho],
-  },
-  'StakeWise DAO': {
-    urd: '0xfD9B178257ae397a674698834628262fd858aaD3',
-    ipfs: 'https://cloudflare-ipfs.com/ipfs/QmY4CQf55yj9MyHu5o2cTWdwQW1SUuzF1LD1fcoGLXgd4q',
-    rewards: [SWISE],
-  },
-  'Ether.fi': {
-    urd: '0xB5b17231E2C89Ca34CE94B8CB895A9B124BB466e',
-    ipfs: 'https://cloudflare-ipfs.com/ipfs/QmWhQCrqh6KY6yEsfRk1iy5DSM5nVRtoC1CHdjhk76Mojt',
-    rewards: [USDC],
-  },
-  'Renzo Protocol': {
-    urd: '0x7815CAb40D9b83021f55418a013cceC3813646FB',
-    ipfs: 'https://cloudflare-ipfs.com/ipfs/QmUWE32XD7LpW9Yd9dL6KXHHbLG3bptbHwrbMD9dYWo3RR',
-    rewards: [USDC],
-  },
-}
-
-type AccountAddress = Address
-type Reward = Address
 type Proof = Array<`0x${string}`>
-
-type IpfsResponse = {
-  metadata: {
-    urd: Address
-  }
-  rewards: Record<AccountAddress, Record<Reward, { amount: string; proof: Proof }>>
-}
 
 export const rpcConfig: IRpcConfig = {
   skipCache: false,
@@ -127,29 +52,21 @@ export const rpcConfig: IRpcConfig = {
   source: 'summerfi-api',
 }
 
-const domainChainIdToViemChain: Record<ChainId, ViemChain> = {
-  [ChainId.MAINNET]: mainnet,
-  [ChainId.ARBITRUM]: arbitrum,
-  [ChainId.OPTIMISM]: optimism,
-  [ChainId.BASE]: base,
-  [ChainId.SEPOLIA]: sepolia,
-}
-
 export interface GetClaimsParams {
-  chainId: ChainId.MAINNET
-  rpcGateway: string
-  customRpc: string | undefined
   account: Address
   logger?: Logger
 }
 
-export interface MorphoClaimedReward {
+export interface MorphoReward {
   urd: Address
   reward: Token
   rewardSymbol: string
   amount: bigint
 }
-
+export interface ClaimableMorphoReward extends MorphoReward {
+  claimable: bigint
+  proof: Proof
+}
 export interface MorphoAggregatedClaims {
   rewardToken: {
     address: Address
@@ -158,180 +75,138 @@ export interface MorphoAggregatedClaims {
   }
   claimable: bigint
   claimed: bigint
+  accrued: bigint
   total: bigint
 }
 
 export interface MorphoClaims {
-  claimable: {
-    urd: Address
-    reward: Address
-    claimable: bigint
-    proof: Proof
-  }[]
-  claimed: MorphoClaimedReward[]
+  claimable: ClaimableMorphoReward[]
+  claimed: MorphoReward[]
+  accrued: MorphoReward[]
   claimsAggregated: MorphoAggregatedClaims[]
 }
 
-export const getClaims = async ({
-  account,
-  chainId,
-  rpcGateway,
-  customRpc,
-  logger,
-}: GetClaimsParams): Promise<MorphoClaims> => {
-  const rpc = customRpc ?? getRpcGatewayEndpoint(rpcGateway, chainId, rpcConfig)
-  const transport = http(rpc, {
-    batch: true,
-    fetchOptions: {
-      method: 'POST',
-    },
-  })
-
-  const viemChain: ViemChain = domainChainIdToViemChain[chainId]
-
-  const publicClient: PublicClient = createPublicClient({
-    transport,
-    chain: viemChain,
-  })
-
-  const [morphoDAO_morpho, stateWise_Swise, lidoCommittee_wstETH, etherFi_usdc, renzo_usdc] =
-    await publicClient.multicall({
-      contracts: [
-        {
-          address: distributions['Morpho DAO'].urd,
-          abi: universalRewardsDistributorAbi,
-          functionName: 'claimed',
-          args: [account, distributions['Morpho DAO'].rewards[0].address],
-        },
-        {
-          address: distributions['StakeWise DAO'].urd,
-          abi: universalRewardsDistributorAbi,
-          functionName: 'claimed',
-          args: [account, distributions['StakeWise DAO'].rewards[0].address],
-        },
-        {
-          address: distributions['LOL - Lido committee'].urd,
-          abi: universalRewardsDistributorAbi,
-          functionName: 'claimed',
-          args: [account, distributions['LOL - Lido committee'].rewards[0].address],
-        },
-        {
-          address: distributions['Ether.fi'].urd,
-          abi: universalRewardsDistributorAbi,
-          functionName: 'claimed',
-          args: [account, distributions['Ether.fi'].rewards[0].address],
-        },
-        {
-          address: distributions['Renzo Protocol'].urd,
-          abi: universalRewardsDistributorAbi,
-          functionName: 'claimed',
-          args: [account, distributions['Renzo Protocol'].rewards[0].address],
-        },
-      ],
-      allowFailure: true,
-    })
-
-  const ipfsResponses = await Promise.all(
-    Object.values(distributions).map(async (data) => {
-      const response = await fetch(data.ipfs)
-      if (response.status !== 200) {
-        logger?.warn('Failed to fetch IPFS data', { ipfs: data.ipfs })
-        return []
-      }
-      const parsed = (await response.json()) as IpfsResponse
-      if (parsed.metadata.urd !== data.urd) {
-        throw new Error('Invalid IPFS response')
-      }
-      const rewardsPerAccount = parsed.rewards[account]
-
-      if (!rewardsPerAccount) {
-        return []
-      }
-
-      return Object.entries(rewardsPerAccount).map(([reward, rewardData]) => {
-        const claimable = safeParseBigInt(rewardData.amount) ?? 0n
-        const proof = rewardData.proof
-        return { urd: data.urd, reward: reward as `0x${string}`, claimable, proof }
+export const getClaims = async ({ account, logger }: GetClaimsParams): Promise<MorphoClaims> => {
+  try {
+    const response = await fetch(`https://rewards.morpho.org/users/${account}/rewards`)
+    if (response.status !== 200) {
+      logger?.warn('Failed to fetch data from morpho rewards endpointa', {
+        error: response.statusText,
       })
-    }),
-  )
+    }
+    const data = (await response.json()) as UserRewards
 
-  const claimed: MorphoClaimedReward[] = []
+    const claimed: MorphoReward[] = []
 
-  if (morphoDAO_morpho.status === 'success') {
-    claimed.push({
-      urd: distributions['Morpho DAO'].urd,
-      reward: distributions['Morpho DAO'].rewards[0],
-      rewardSymbol: 'Morpho',
-      amount: morphoDAO_morpho.result,
+    data.rewards.forEach((reward) => {
+      reward.tokens.forEach((token) => {
+        if (token.claimed !== '0') {
+          claimed.push({
+            urd: reward.rewards_distributor as Address,
+            reward: {
+              address: token.token.address,
+              decimals: token.token.decimals,
+              symbol: token.token.symbol,
+              name: token.token.name,
+            },
+            rewardSymbol: token.token.symbol,
+            amount: safeParseBigInt(token.claimed) ? BigInt(token.claimed) : 0n,
+          })
+        }
+      })
     })
-  }
 
-  if (stateWise_Swise.status === 'success') {
-    claimed.push({
-      urd: distributions['StakeWise DAO'].urd,
-      reward: distributions['StakeWise DAO'].rewards[0],
-      rewardSymbol: 'SWISE',
-      amount: stateWise_Swise.result,
+    const claimable: ClaimableMorphoReward[] = data.rewards.flatMap((reward) => {
+      return reward.tokens
+        .filter((token) => token.available != '0')
+        .map((token) => {
+          return {
+            urd: reward.rewards_distributor as Address,
+            reward: {
+              address: token.token.address,
+              decimals: token.token.decimals,
+              symbol: token.token.symbol,
+              name: token.token.name,
+            },
+            amount: safeParseBigInt(token.available) ? BigInt(token.available) : 0n,
+            claimable: safeParseBigInt(token.available) ? BigInt(token.available) : 0n,
+            rewardSymbol: token.token.symbol,
+            proof: token.args ? (token.args.proof as Proof) : [],
+          }
+        })
     })
-  }
-
-  if (lidoCommittee_wstETH.status === 'success') {
-    claimed.push({
-      urd: distributions['LOL - Lido committee'].urd,
-      reward: distributions['LOL - Lido committee'].rewards[0],
-      rewardSymbol: 'wstETH',
-      amount: lidoCommittee_wstETH.result,
+    const accrued: MorphoReward[] = data.rewards.flatMap((reward) => {
+      return reward.tokens
+        .filter((token) => token.accrued !== '0')
+        .map((token) => {
+          return {
+            urd: reward.rewards_distributor as Address,
+            reward: {
+              address: token.token.address,
+              decimals: token.token.decimals,
+              symbol: token.token.symbol,
+              name: token.token.name,
+            },
+            rewardSymbol: token.token.symbol,
+            amount: safeParseBigInt(token.accrued) ? BigInt(token.accrued) : 0n,
+          }
+        })
     })
-  }
 
-  if (etherFi_usdc.status === 'success') {
-    claimed.push({
-      urd: distributions['Ether.fi'].urd,
-      reward: distributions['Ether.fi'].rewards[0],
-      rewardSymbol: 'USDC',
-      amount: etherFi_usdc.result,
-    })
-  }
+    const allTokens = data.rewards
+      .flatMap((reward) => reward.tokens)
+      .reduce((acc, token) => {
+        const existing = acc.find((t) => t.token.address === token.token.address)
+        if (existing) {
+          return acc
+        }
+        return [...acc, token]
+      }, [] as TokenInfo[])
 
-  if (renzo_usdc.status === 'success') {
-    claimed.push({
-      urd: distributions['Renzo Protocol'].urd,
-      reward: distributions['Renzo Protocol'].rewards[0],
-      rewardSymbol: 'USDC',
-      amount: renzo_usdc.result,
-    })
-  }
+    const claimsAggregated: MorphoAggregatedClaims[] = allTokens
+      .map((token) => {
+        const claimedForReward = claimed
+          .filter((c) => c.reward.address === token.token.address)
+          .reduce((acc, c) => acc + c.amount, 0n)
+        const claimableForReward = claimable
+          .filter((c) => c.reward.address === token.token.address)
+          .reduce((acc, c) => acc + c.amount, 0n)
+        const accruedForReward = accrued
+          .filter((c) => c.reward.address === token.token.address)
+          .reduce((acc, c) => acc + c.amount, 0n)
+        const total = accruedForReward
+        return {
+          rewardToken: token.token,
+          claimable: claimableForReward,
+          claimed: claimedForReward,
+          accrued: accruedForReward,
+          total: total,
+        }
+      })
+      .reduce((acc, claim) => {
+        const existing = acc.find((c) => c.rewardToken.address === claim.rewardToken.address)
+        if (existing) {
+          existing.claimable += claim.claimable
+          existing.claimed += claim.claimed
+          existing.accrued += claim.accrued
+          existing.total += claim.total
+          return acc
+        }
+        return [...acc, claim]
+      }, [] as MorphoAggregatedClaims[])
 
-  const claimable = ipfsResponses.flatMap((response) => response)
-
-  const claimsAggregated: MorphoAggregatedClaims[] = claimed
-    .map((claim) => {
-      const claimableForReward = claimable
-        .filter((c) => c.reward === claim.reward.address)
-        .reduce((acc, c) => acc + c.claimable, 0n)
-      const total = claim.amount + claimableForReward
-      return {
-        rewardToken: claim.reward,
-        claimable: claimableForReward,
-        claimed: claim.amount,
-        total: total,
-      }
-    })
-    .reduce((acc, claim) => {
-      const existing = acc.find((c) => c.rewardToken.address === claim.rewardToken.address)
-      if (existing) {
-        existing.claimable += claim.claimable
-        existing.claimed += claim.claimed
-        existing.total += claim.total
-        return acc
-      }
-      return [...acc, claim]
-    }, [] as MorphoAggregatedClaims[])
-
-  return {
-    claimable,
-    claimed,
-    claimsAggregated,
+    return {
+      claimable,
+      claimed,
+      accrued,
+      claimsAggregated,
+    }
+  } catch (error) {
+    return {
+      claimable: [],
+      claimed: [],
+      accrued: [],
+      claimsAggregated: [],
+    }
   }
 }

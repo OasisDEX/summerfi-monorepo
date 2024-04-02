@@ -1249,15 +1249,9 @@ importers:
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared
-      abitype:
-        specifier: ^1.0.1
-        version: 1.0.1(typescript@5.3.3)(zod@3.22.4)
       node-fetch:
         specifier: ^3.3.2
         version: 3.3.2
-      viem:
-        specifier: ^1.19.11
-        version: 1.21.4(typescript@5.3.3)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
