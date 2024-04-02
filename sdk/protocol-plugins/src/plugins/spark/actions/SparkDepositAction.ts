@@ -1,11 +1,11 @@
-import { ActionCall, BaseAction } from '@summerfi/protocol-plugins-common'
+import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { TokenAmount } from '@summerfi/sdk-common/common'
 
 export class SparkDepositAction extends BaseAction {
   public readonly config = {
     name: 'SparkDeposit',
     version: 0,
-    parametersAbi: 'address asset, uint256 amount, bool sumAmounts, bool setAsCollateral',
+    parametersAbi: '(address asset, uint256 amount, bool sumAmounts, bool setAsCollateral)',
     storageInputs: ['amountToDeposit'],
     storageOutputs: ['depositedAmount'],
   } as const
@@ -16,14 +16,16 @@ export class SparkDepositAction extends BaseAction {
       sumAmounts: boolean
       setAsCollateral: boolean
     },
-    paramsMapping?: number[],
+    paramsMapping?: InputSlotsMapping,
   ): ActionCall {
     return this._encodeCall({
       arguments: [
-        params.depositAmount.token.address.value,
-        params.depositAmount.toBaseUnit(),
-        params.sumAmounts,
-        params.setAsCollateral,
+        {
+          asset: params.depositAmount.token.address.value,
+          amount: params.depositAmount.toBaseUnit(),
+          sumAmounts: params.sumAmounts,
+          setAsCollateral: params.setAsCollateral,
+        },
       ],
       mapping: paramsMapping,
     })

@@ -19,6 +19,5 @@ export const getRefinanceSimulation = publicProcedure
       getSummerFee: () => Percentage.createFrom({ value: 0 }),
     }
 
-    const simulation = await refinaceLendingToLending(args, dependencies)
-    return simulation
+    return refinaceLendingToLending(args, dependencies)
   })

@@ -1,4 +1,4 @@
-import { EmodeType } from '@summerfi/sdk-common/protocols'
+import { EmodeType } from '../../common/enums/EmodeType'
 
 export const aaveV3EmodeCategoryMap: Record<EmodeType, bigint> = Object.keys(EmodeType).reduce<
   Record<EmodeType, bigint>

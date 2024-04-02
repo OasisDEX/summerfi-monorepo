@@ -1,6 +1,7 @@
 import { CollateralConfig } from '@summerfi/sdk-common/protocols'
 import { IMakerCollateralConfig } from '../interfaces/IMakerCollateralConfig'
 import { Price } from '@summerfi/sdk-common/common'
+import { SerializationService } from '@summerfi/sdk-common/services'
 
 export class MakerCollateralConfig extends CollateralConfig implements IMakerCollateralConfig {
   readonly nextPrice: Price
@@ -19,3 +20,5 @@ export class MakerCollateralConfig extends CollateralConfig implements IMakerCol
     return new MakerCollateralConfig(params)
   }
 }
+
+SerializationService.registerClass(MakerCollateralConfig)

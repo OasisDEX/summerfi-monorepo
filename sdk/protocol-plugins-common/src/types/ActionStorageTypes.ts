@@ -32,5 +32,3 @@ export type StorageOutputsMapType<
   Step extends steps.Steps,
   Action extends BaseAction,
 > = StorageAliasMap<StepOutputsType<Step>, StorageOutputsType<Action>>
-
-export type InputSlotsMapping = number[]
