@@ -1,7 +1,7 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { createPublicClient, http, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
-import { MockContractProvider } from '../../src/mocks/mockContractProvider'
+// import { MockContractProvider } from '../../src/mocks/mockContractProvider'
 import { TokenService, PriceService } from '../../src/implementation'
 
 export async function createProtocolPluginContext(
@@ -20,7 +20,6 @@ export async function createProtocolPluginContext(
     provider,
     tokenService: new TokenService(),
     priceService: new PriceService(provider),
-    contractProvider: new MockContractProvider(),
   }
 
   if (__ctxOverrides) {

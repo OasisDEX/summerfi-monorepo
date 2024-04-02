@@ -25,7 +25,7 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
   /** These properties are initialized in the constructor */
   readonly context: IProtocolPluginContext
 
-  constructor(params: { context: IProtocolPluginContext }) {
+  protected constructor(params: { context: IProtocolPluginContext }) {
     this.context = params.context
   }
 

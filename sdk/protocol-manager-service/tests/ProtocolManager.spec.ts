@@ -10,7 +10,6 @@ import { ChainInfo } from '@summerfi/sdk-common/common'
 import { createPublicClient, http, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
 import { TokenService, PriceService, ProtocolPluginsRegistry } from '@summerfi/protocol-plugins'
-import { MockContractProvider } from '@summerfi/protocol-plugins/mocks'
 import { ProtocolManager } from '../src'
 
 describe('Protocol Manager', () => {
@@ -137,6 +136,5 @@ async function createProtocolManagerContext(): Promise<IProtocolManagerContext> 
     provider,
     tokenService: new TokenService(),
     priceService: new PriceService(provider),
-    contractProvider: new MockContractProvider(),
   }
 }

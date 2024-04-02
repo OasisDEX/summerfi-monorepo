@@ -1,7 +1,6 @@
 import {
   AaveV3ProtocolPlugin,
   MakerProtocolPlugin,
-  MockContractProvider,
   PriceService,
   ProtocolPluginsRecordType,
   ProtocolPluginsRegistry,
@@ -30,7 +29,6 @@ export function createProtocolsPluginsRegistry(): IProtocolPluginsRegistry {
 
   const tokenService = new TokenService()
   const priceService = new PriceService(provider)
-  const contractProvider = new MockContractProvider()
 
   return new ProtocolPluginsRegistry({
     plugins: ProtocolPlugins,
@@ -38,7 +36,6 @@ export function createProtocolsPluginsRegistry(): IProtocolPluginsRegistry {
       provider,
       tokenService,
       priceService,
-      contractProvider,
     },
   })
 }

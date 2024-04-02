@@ -153,7 +153,11 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
 
   private async buildAssetsList(emode: bigint) {
     try {
-      const builder = await new AaveV3LikeProtocolDataBuilder(this.ctx, this.protocolName).init()
+      const _ctx = {
+        ...this.ctx,
+        getContractDef: this.getContractDef,
+      }
+      const builder = await new AaveV3LikeProtocolDataBuilder(_ctx, this.protocolName).init()
       const list = await builder
         .addPrices()
         .addReservesCaps()
@@ -164,7 +168,7 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
 
       return filterAssetsListByEMode(list, emode)
     } catch (e) {
-      throw new Error('Could not fetch/build assets list for Spark')
+      throw new Error(`Could not fetch/build assets list for Spark: ${JSON.stringify(e)}`)
     }
   }
 
