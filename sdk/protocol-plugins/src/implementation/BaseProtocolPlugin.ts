@@ -16,16 +16,16 @@ import { z } from 'zod'
  *              and action building
  */
 export abstract class BaseProtocolPlugin implements IProtocolPlugin {
-  /** This properties need to be initialized by the actual plugin implementation */
+  /** These properties need to be initialized by the actual plugin implementation */
   abstract readonly protocolName: ProtocolName
   // TODO: Use ContractProvider to determine supported chains
   abstract readonly supportedChains: ChainInfo[]
   abstract readonly stepBuilders: Partial<ActionBuildersMap>
 
-  /** This properties are initialized in the constructor */
+  /** These properties are initialized in the constructor */
   readonly context: IProtocolPluginContext
 
-  constructor(params: { context: IProtocolPluginContext }) {
+  protected constructor(params: { context: IProtocolPluginContext }) {
     this.context = params.context
   }
 
