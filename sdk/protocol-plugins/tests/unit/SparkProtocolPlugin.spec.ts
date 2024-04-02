@@ -1,8 +1,8 @@
+import {IProtocolPluginContext, IPositionId} from "@summerfi/protocol-plugins-common";
 import { ChainInfo } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import assert from 'assert'
-import { SparkProtocolPlugin, IProtocolPluginContext } from '../../src'
-import { IPositionId } from '../../src/interfaces/IPositionId'
+import { SparkProtocolPlugin } from '../../src'
 import { sparkPoolIdMock } from '../mocks/SparkPoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 import { getErrorMessage } from '../utils/ErrorMessage'
@@ -12,12 +12,13 @@ describe('Spark Protocol Plugin', () => {
   let sparkProtocolPlugin: SparkProtocolPlugin
   beforeAll(async () => {
     ctx = await createProtocolPluginContext()
-    sparkProtocolPlugin = new SparkProtocolPlugin()
-    sparkProtocolPlugin.init(ctx)
+    sparkProtocolPlugin = new SparkProtocolPlugin({
+      context: ctx
+    })
   })
 
   it('should verify that a given poolId is recognised as a valid format', () => {
-    expect(sparkProtocolPlugin.isPoolId(sparkPoolIdMock)).toBeUndefined()
+    expect(sparkProtocolPlugin.isPoolId(sparkPoolIdMock)).toBe(true)
   })
 
   it('should throw a specific error when provided with a poolId not matching the SparkPoolId format', () => {
@@ -29,10 +30,10 @@ describe('Spark Protocol Plugin', () => {
           name: ProtocolName.Maker,
         },
       }
-      sparkProtocolPlugin.isPoolId(invalidSparkPoolIdMock)
+      sparkProtocolPlugin.validatePoolId(invalidSparkPoolIdMock)
       assert.fail('Should throw error')
     } catch (error: unknown) {
-      expect(getErrorMessage(error)).toMatch('Candidate is not correct')
+      expect(getErrorMessage(error)).toMatch('Invalid Spark pool ID')
     }
   })
 
@@ -45,7 +46,7 @@ describe('Spark Protocol Plugin', () => {
     await expect(sparkProtocolPlugin.getPool(sparkPoolIdValid)).resolves.toBeDefined()
   })
 
-  it('should throw an error when calling getPool with an unsupported MakerPoolId', async () => {
+  it('should throw an error when calling getPool with an unsupported ChainInfo', async () => {
     const invalidSparkPoolIdUnsupportedChain = {
       ...sparkPoolIdMock,
       protocol: {
@@ -57,21 +58,22 @@ describe('Spark Protocol Plugin', () => {
       },
     }
     await expect(sparkProtocolPlugin.getPool(invalidSparkPoolIdUnsupportedChain)).rejects.toThrow(
-      'Candidate is not correct',
+      'Invalid Spark pool ID',
     )
   })
 
   it('should throw an error when calling getPool with chain id missing from ctx', async () => {
-    const sparkProtocolPluginWithWrongContext = new SparkProtocolPlugin()
-    sparkProtocolPluginWithWrongContext.init({
-      ...ctx,
-      provider: {
-        ...ctx.provider,
-        chain: {
-          ...ctx.provider.chain!,
-          id: undefined as unknown as number,
+    const sparkProtocolPluginWithWrongContext = new SparkProtocolPlugin({
+      context: {
+        ...ctx,
+        provider: {
+          ...ctx.provider,
+          chain: {
+            ...ctx.provider.chain!,
+            id: undefined as unknown as number,
+          },
         },
-      },
+      }
     })
     await expect(sparkProtocolPluginWithWrongContext.getPool(sparkPoolIdMock)).rejects.toThrow(
       `ctx.provider.chain.id undefined`,
@@ -79,18 +81,20 @@ describe('Spark Protocol Plugin', () => {
   })
 
   it('should throw an error when calling getPool with an unsupported chain ID', async () => {
-    const sparkProtocolPluginWithWrongContext = new SparkProtocolPlugin()
     const wrongChainId = 2
-    sparkProtocolPluginWithWrongContext.init({
-      ...ctx,
-      provider: {
-        ...ctx.provider,
-        chain: {
-          ...ctx.provider.chain!,
-          id: wrongChainId,
+    const sparkProtocolPluginWithWrongContext = new SparkProtocolPlugin({
+      context: {
+        ...ctx,
+        provider: {
+          ...ctx.provider,
+          chain: {
+            ...ctx.provider.chain!,
+            id: wrongChainId,
+          },
         },
-      },
+      }
     })
+
     await expect(sparkProtocolPluginWithWrongContext.getPool(sparkPoolIdMock)).rejects.toThrow(
       `Chain ID ${wrongChainId} is not supported`,
     )

@@ -1,8 +1,8 @@
+import {IProtocolPluginContext, IPositionId} from "@summerfi/protocol-plugins-common";
 import { ChainInfo } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import assert from 'assert'
-import { IProtocolPluginContext, MakerProtocolPlugin } from '../../src'
-import { IPositionId } from '../../src/interfaces/IPositionId'
+import { MakerProtocolPlugin } from '../../src'
 import { makerPoolIdMock } from '../mocks/MakerPoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 import { getErrorMessage } from '../utils/ErrorMessage'
@@ -12,12 +12,13 @@ describe('Maker Protocol Plugin', () => {
   let makerProtocolPlugin: MakerProtocolPlugin
   beforeAll(async () => {
     ctx = await createProtocolPluginContext()
-    makerProtocolPlugin = new MakerProtocolPlugin()
-    makerProtocolPlugin.init(ctx)
+    makerProtocolPlugin = new MakerProtocolPlugin({
+      context: ctx
+    })
   })
 
   it('should verify that a given poolId is recognised as a valid format', () => {
-    expect(makerProtocolPlugin.isPoolId(makerPoolIdMock)).toBeUndefined()
+    expect(makerProtocolPlugin.isPoolId(makerPoolIdMock)).toBe(true)
   })
 
   it('should throw a specific error when provided with a poolId not matching the MakerPoolId format', () => {
@@ -29,10 +30,10 @@ describe('Maker Protocol Plugin', () => {
           name: ProtocolName.AAVEv3,
         },
       }
-      makerProtocolPlugin.isPoolId(invalidMakerPoolId)
+      makerProtocolPlugin.validatePoolId(invalidMakerPoolId)
       assert.fail('Should throw error')
     } catch (error: unknown) {
-      expect(getErrorMessage(error)).toMatch('Candidate is not correct')
+      expect(getErrorMessage(error)).toMatch('Invalid Maker pool ID')
     }
   })
 
@@ -45,7 +46,7 @@ describe('Maker Protocol Plugin', () => {
     await expect(makerProtocolPlugin.getPool(makerPoolIdValid)).resolves.toBeDefined()
   })
 
-  it('should throw an error when calling getPool with an unsupported MakerPoolId', async () => {
+  it('should throw an error when calling getPool with an unsupported ChainInfo', async () => {
     const invalidMakerPoolIdUnsupportedChain = {
       ...makerPoolIdMock,
       protocol: {
@@ -57,21 +58,22 @@ describe('Maker Protocol Plugin', () => {
       },
     }
     await expect(makerProtocolPlugin.getPool(invalidMakerPoolIdUnsupportedChain)).rejects.toThrow(
-      'Candidate is not correct',
+        'Invalid Maker pool ID',
     )
   })
 
   it('should throw an error when calling getPool with chain id missing from ctx', async () => {
-    const makerProtocolPluginWithWrongContext = new MakerProtocolPlugin()
-    makerProtocolPluginWithWrongContext.init({
-      ...ctx,
-      provider: {
-        ...ctx.provider,
-        chain: {
-          ...ctx.provider.chain!,
-          id: undefined as unknown as number,
+    const makerProtocolPluginWithWrongContext = new MakerProtocolPlugin({
+      context: {
+        ...ctx,
+        provider: {
+          ...ctx.provider,
+          chain: {
+            ...ctx.provider.chain!,
+            id: undefined as unknown as number,
+          },
         },
-      },
+      }
     })
     await expect(makerProtocolPluginWithWrongContext.getPool(makerPoolIdMock)).rejects.toThrow(
       `ctx.provider.chain.id undefined`,
@@ -79,18 +81,20 @@ describe('Maker Protocol Plugin', () => {
   })
 
   it('should throw an error when calling getPool with an unsupported chain ID', async () => {
-    const makerProtocolPluginWithWrongContext = new MakerProtocolPlugin()
     const wrongChainId = 2
-    makerProtocolPluginWithWrongContext.init({
-      ...ctx,
-      provider: {
-        ...ctx.provider,
-        chain: {
-          ...ctx.provider.chain!,
-          id: wrongChainId,
+    const makerProtocolPluginWithWrongContext = new MakerProtocolPlugin({
+      context: {
+        ...ctx,
+        provider: {
+          ...ctx.provider,
+          chain: {
+            ...ctx.provider.chain!,
+            id: wrongChainId,
+          },
         },
-      },
+      }
     })
+
     await expect(makerProtocolPluginWithWrongContext.getPool(makerPoolIdMock)).rejects.toThrow(
       `Chain ID ${wrongChainId} is not supported`,
     )

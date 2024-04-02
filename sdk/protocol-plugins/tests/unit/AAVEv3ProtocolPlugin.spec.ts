@@ -1,8 +1,8 @@
+import {IProtocolPluginContext, IPositionId} from "@summerfi/protocol-plugins-common";
 import { ChainInfo } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import assert from 'assert'
-import { AaveV3ProtocolPlugin, IProtocolPluginContext } from '../../src'
-import { IPositionId } from '../../src/interfaces/IPositionId'
+import { AaveV3ProtocolPlugin } from '../../src'
 import { aaveV3PoolIdMock } from '../mocks/AAVEv3PoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 import { getErrorMessage } from '../utils/ErrorMessage'
@@ -12,12 +12,13 @@ describe('AAVEv3 Protocol Plugin', () => {
   let aaveV3ProtocolPlugin: AaveV3ProtocolPlugin
   beforeAll(async () => {
     ctx = await createProtocolPluginContext()
-    aaveV3ProtocolPlugin = new AaveV3ProtocolPlugin()
-    aaveV3ProtocolPlugin.init(ctx)
+    aaveV3ProtocolPlugin = new AaveV3ProtocolPlugin({
+      context: ctx
+    })
   })
 
   it('should verify that a given poolId is recognised as a valid format', () => {
-    expect(aaveV3ProtocolPlugin.isPoolId(aaveV3PoolIdMock)).toBeUndefined()
+    expect(aaveV3ProtocolPlugin.isPoolId(aaveV3PoolIdMock)).toBe(true)
   })
 
   it('should throw a specific error when provided with a poolId not matching the AAVEv3PoolId format', () => {
@@ -29,15 +30,11 @@ describe('AAVEv3 Protocol Plugin', () => {
           name: ProtocolName.Maker,
         },
       }
-      aaveV3ProtocolPlugin.isPoolId(invalidAaveV3PoolIdMock)
+      aaveV3ProtocolPlugin.validatePoolId(invalidAaveV3PoolIdMock)
       assert.fail('Should throw error')
     } catch (error: unknown) {
-      expect(getErrorMessage(error)).toMatch('Candidate is not correct')
+      expect(getErrorMessage(error)).toMatch('Invalid AaveV3 pool ID')
     }
-  })
-
-  it('should correctly initialize and set the context', () => {
-    expect(aaveV3ProtocolPlugin.ctx).toBe(ctx)
   })
 
   it('should correctly return a AaveV3LendingPool object for a valid AaveV3PoolId', async () => {
@@ -45,7 +42,7 @@ describe('AAVEv3 Protocol Plugin', () => {
     await expect(aaveV3ProtocolPlugin.getPool(aaveV3PoolIdValid)).resolves.toBeDefined()
   })
 
-  it('should throw an error when calling getPool with an unsupported MakerPoolId', async () => {
+  it('should throw an error when calling getPool with an unsupported Chain', async () => {
     const invalidAaveV3PoolIdUnsupportedChain = {
       ...aaveV3PoolIdMock,
       protocol: {
@@ -57,21 +54,22 @@ describe('AAVEv3 Protocol Plugin', () => {
       },
     }
     await expect(aaveV3ProtocolPlugin.getPool(invalidAaveV3PoolIdUnsupportedChain)).rejects.toThrow(
-      'Candidate is not correct',
+      'Invalid AaveV3 pool ID',
     )
   })
 
   it('should throw an error when calling getPool with chain id missing from ctx', async () => {
-    const aaveV3ProtocolPluginWithWrongContext = new AaveV3ProtocolPlugin()
-    aaveV3ProtocolPluginWithWrongContext.init({
-      ...ctx,
-      provider: {
-        ...ctx.provider,
-        chain: {
-          ...ctx.provider.chain!,
-          id: undefined as unknown as number,
+    const aaveV3ProtocolPluginWithWrongContext = new AaveV3ProtocolPlugin({
+      context: {
+        ...ctx,
+        provider: {
+          ...ctx.provider,
+          chain: {
+            ...ctx.provider.chain!,
+            id: undefined as unknown as number,
+          },
         },
-      },
+      }
     })
     await expect(aaveV3ProtocolPluginWithWrongContext.getPool(aaveV3PoolIdMock)).rejects.toThrow(
       `ctx.provider.chain.id undefined`,
@@ -79,18 +77,20 @@ describe('AAVEv3 Protocol Plugin', () => {
   })
 
   it('should throw an error when calling getPool with an unsupported chain ID', async () => {
-    const aaveV3ProtocolPluginWithWrongContext = new AaveV3ProtocolPlugin()
     const wrongChainId = 2
-    aaveV3ProtocolPluginWithWrongContext.init({
-      ...ctx,
-      provider: {
-        ...ctx.provider,
-        chain: {
-          ...ctx.provider.chain!,
-          id: wrongChainId,
+    const aaveV3ProtocolPluginWithWrongContext = new AaveV3ProtocolPlugin({
+      context: {
+        ...ctx,
+        provider: {
+          ...ctx.provider,
+          chain: {
+            ...ctx.provider.chain!,
+            id: wrongChainId,
+          },
         },
-      },
+      }
     })
+
     await expect(aaveV3ProtocolPluginWithWrongContext.getPool(aaveV3PoolIdMock)).rejects.toThrow(
       `Chain ID ${wrongChainId} is not supported`,
     )

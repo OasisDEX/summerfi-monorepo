@@ -81,7 +81,7 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
 
   validatePoolId(candidate: unknown): asserts candidate is SparkPoolId {
     if (!this.isPoolId(candidate)) {
-      throw new Error(`Invalid Maker pool ID: ${JSON.stringify(candidate)}`)
+      throw new Error(`Invalid Spark pool ID: ${JSON.stringify(candidate)}`)
     }
   }
 

@@ -1,6 +1,6 @@
+import {IProtocolPluginContext} from "@summerfi/protocol-plugins-common";
 import { createPublicClient, http, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
-import { IProtocolPluginContext } from '../../src/interfaces/IProtocolPluginContext'
 import { MockContractProvider } from '../../src/mocks/mockContractProvider'
 import { TokenService, PriceService } from '../../src/implementation'
 
