@@ -1,8 +1,7 @@
-import { IPriceService } from '../interfaces/IPriceService'
 import { PublicClient, getContract } from 'viem'
 import { Address, CurrencySymbol, Price, Token, TokenSymbol } from '@summerfi/sdk-common/common'
 import { BigNumber } from 'bignumber.js'
-import { priceFeedABI } from '../interfaces/priceFeedABI'
+import { IPriceService, priceFeedABI } from '@summerfi/protocol-plugins-common'
 
 // TODO: Create a separate service and connect up to SDK router
 // TODO: Implement the PriceService to handle different chains
@@ -10,7 +9,7 @@ export class PriceService implements IPriceService {
   private priceFeed = '0x47Fb2585D2C56Fe188D0E6ec628a38b74fCeeeDf' as const
   private abi = priceFeedABI
   private currencySymbols: Record<CurrencySymbol, Address> = {
-    [CurrencySymbol.USD]: Address.createFrom({
+    [CurrencySymbol.USD]: Address.createFromEthereum({
       value: '0x0000000000000000000000000000000000000348',
     }),
   }

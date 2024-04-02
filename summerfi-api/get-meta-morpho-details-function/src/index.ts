@@ -202,8 +202,6 @@ export const handler = async (
     ? new BigNumber(params.amount.toString()).shiftedBy(-metaMorphoVault.asset.decimals)
     : new BigNumber(1000)
 
-  const depositedAmountPrice = depositedAmount.times(metaMorphoVault.asset.priceUsd ?? 1)
-
   const rewardsByMarket: RewardsByMarket[] = allocations
     .map((a): RewardsByMarket | undefined => {
       const rewardMarket = rewards.result.find((r) => r.market.marketId === a.market.marketId)
@@ -233,7 +231,7 @@ export const handler = async (
           const humanReadable = userRewards.shiftedBy(-r.token.decimals)
 
           const apy = rewardTokenPrice
-            ? humanReadable.times(rewardTokenPrice).div(depositedAmountPrice).toNumber()
+            ? humanReadable.times(rewardTokenPrice).div(depositedAmount).toNumber()
             : 0
 
           return {

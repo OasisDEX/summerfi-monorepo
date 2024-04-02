@@ -3,14 +3,17 @@ import { Simulation, SimulationType, steps } from '@summerfi/sdk-common/simulati
 import { Deployment } from '@summerfi/deployment-utils'
 import { Address, Maybe } from '@summerfi/sdk-common/common'
 import { HexData } from '@summerfi/sdk-common/common/aliases'
-import { IOrderPlanner } from '../interfaces/IOrderPlanner'
-import { ActionBuilder, ActionBuildersMap } from '../builders/Types'
-import { OrderPlannerContext } from '../context/OrderPlannerContext'
-import { ActionCall } from '../actions/Types'
-import { encodeStrategy } from '../utils/EncodeStrategy'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import { ProtocolBuilderRegistryType } from '../interfaces/Types'
 import { IUser } from '@summerfi/sdk-common/user'
+import {
+  ActionBuilder,
+  ActionBuildersMap,
+  ActionCall,
+  IProtocolPluginsRegistry,
+} from '@summerfi/protocol-plugins-common'
+import { IOrderPlanner } from '../interfaces/IOrderPlanner'
+import { OrderPlannerContext } from '../context/OrderPlannerContext'
+import { encodeStrategy } from '../utils/EncodeStrategy'
 
 export class OrderPlanner implements IOrderPlanner {
   private readonly ExecutorContractName = 'OperationExecutor'
@@ -22,7 +25,7 @@ export class OrderPlanner implements IOrderPlanner {
     actionBuildersMap: ActionBuildersMap
     deployment: Deployment
     swapManager: ISwapManager
-    protocolsRegistry: ProtocolBuilderRegistryType
+    protocolsRegistry: IProtocolPluginsRegistry
   }): Promise<Maybe<Order>> {
     const {
       user,
@@ -88,7 +91,7 @@ export class OrderPlanner implements IOrderPlanner {
       transactions: [
         {
           transaction: {
-            target: Address.createFrom({ value: executorInfo.address as HexData }),
+            target: Address.createFromEthereum({ value: executorInfo.address as HexData }),
             calldata: calldata,
             value: '0',
           },

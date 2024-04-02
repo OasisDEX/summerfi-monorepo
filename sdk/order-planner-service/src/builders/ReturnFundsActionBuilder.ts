@@ -1,6 +1,6 @@
 import { steps } from '@summerfi/sdk-common/simulation'
-import { ActionBuilder } from '@summerfi/order-planner-common/builders'
 import { ReturnFundsAction } from '../actions/ReturnFundsAction'
+import { ActionBuilder } from '@summerfi/protocol-plugins-common'
 
 export const ReturnFundsActionBuilder: ActionBuilder<steps.ReturnFunds> = async (
   params,

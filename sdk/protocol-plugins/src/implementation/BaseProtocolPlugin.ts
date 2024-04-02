@@ -1,53 +1,54 @@
-import { Position, ChainInfo, Maybe } from '@summerfi/sdk-common/common'
-import { LendingPool, IPoolId } from '@summerfi/sdk-common/protocols'
-import { z } from 'zod'
-import { IPositionId } from '../interfaces/IPositionId'
-import { IProtocolPlugin } from '../interfaces/IProtocolPlugin'
-import { IProtocolPluginContext } from '../interfaces/IProtocolPluginContext'
-import { ActionBuilder, ActionBuildersMap } from '@summerfi/order-planner-common/builders'
+import {
+  ActionBuilder,
+  ActionBuildersMap,
+  IPositionId,
+  IProtocolPlugin,
+  IProtocolPluginContext,
+} from '@summerfi/protocol-plugins-common'
+import { ChainInfo, Maybe, IPosition } from '@summerfi/sdk-common/common'
+import { IPoolId, ProtocolName, IPool } from '@summerfi/sdk-common/protocols'
 import { steps } from '@summerfi/sdk-common/simulation'
+import { z } from 'zod'
 
 /**
  * @class Base class for all ProtocolDataPlugins. It provides the basic functionality & fields for all protocol plugins
  *              and implements shared functionality for late dependency injection, pool schema validation
  *              and action building
  */
-export abstract class BaseProtocolPlugin<PoolIdType extends IPoolId>
-  implements IProtocolPlugin<PoolIdType>
-{
-  abstract readonly protocol: PoolIdType['protocol']['name']
+export abstract class BaseProtocolPlugin implements IProtocolPlugin {
+  /** These properties need to be initialized by the actual plugin implementation */
+  abstract readonly protocolName: ProtocolName
   // TODO: Use ContractProvider to determine supported chains
   abstract readonly supportedChains: ChainInfo[]
-  private _ctx: IProtocolPluginContext | undefined
-  abstract readonly schema: z.ZodSchema<PoolIdType>
-  abstract readonly StepBuilders: Partial<ActionBuildersMap>
+  abstract readonly stepBuilders: Partial<ActionBuildersMap>
 
-  init(ctx: IProtocolPluginContext): void {
-    this._ctx = ctx
+  /** These properties are initialized in the constructor */
+  readonly context: IProtocolPluginContext
+
+  constructor(params: { context: IProtocolPluginContext }) {
+    this.context = params.context
   }
 
+  // Short alias for the context
   get ctx(): IProtocolPluginContext {
-    if (!this._ctx) {
-      throw new Error('Context (ctx) is not initialized. Please call init() with a valid context.')
-    }
-    return this._ctx
+    return this.context
   }
 
-  // Protocol Data Methods
-  abstract getPool(poolId: unknown): Promise<LendingPool>
-  abstract getPosition(positionId: IPositionId): Promise<Position>
+  abstract isPoolId(candidate: unknown): candidate is IPoolId
+  abstract validatePoolId(candidate: unknown): asserts candidate is IPoolId
 
-  isPoolId(candidate: unknown): asserts candidate is PoolIdType {
-    const parseResult = this.schema.safeParse(candidate)
-    if (!parseResult.success) {
-      const errorDetails = parseResult.error.errors
-        .map((error) => `${error.path.join('.')} - ${error.message}`)
-        .join(', ')
-      throw new Error(`Candidate is not correct: ${errorDetails}`)
-    }
-  }
+  abstract getPool(poolId: unknown): Promise<IPool>
+  abstract getPosition(positionId: IPositionId): Promise<IPosition>
 
   getActionBuilder<T extends steps.Steps>(step: T): Maybe<ActionBuilder<T>> {
-    return this.StepBuilders[step.type] as ActionBuilder<T>
+    return this.stepBuilders[step.type] as ActionBuilder<T>
+  }
+
+  protected _isPoolId<PoolId extends IPoolId>(
+    candidate: unknown,
+    schema: z.Schema,
+  ): candidate is PoolId {
+    const { success } = schema.safeParse(candidate)
+    return success
   }
 }

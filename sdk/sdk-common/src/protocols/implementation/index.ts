@@ -1,1 +1,7 @@
+export { CollateralConfig } from './CollateralConfig'
+export { CollateralConfigMap, type CollateralConfigRecord } from './CollateralConfigMap'
+export { DebtConfig } from './DebtConfig'
+export { DebtConfigMap, type DebtConfigRecord } from './DebtConfigMap'
+export { LendingPool, isLendingPool } from './LendingPool'
+export { Pool } from './Pool'
 export { PoolBaseImpl } from './PoolBaseImpl'

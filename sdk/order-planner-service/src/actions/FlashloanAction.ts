@@ -1,4 +1,4 @@
-import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
+import { ActionCall, BaseAction } from '@summerfi/protocol-plugins-common'
 import { TokenAmount } from '@summerfi/sdk-common/common'
 import { FlashloanProvider } from '@summerfi/sdk-common/simulation'
 

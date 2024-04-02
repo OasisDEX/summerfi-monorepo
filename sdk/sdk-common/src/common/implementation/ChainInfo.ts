@@ -1,27 +1,21 @@
+import { IChainInfo } from '../interfaces/IChainInfo'
 import { SerializationService } from '../../services/SerializationService'
 import { ChainId } from '../aliases/ChainId'
-
-type IChainInfoSerialized = {
-  /** The chain ID of the network */
-  chainId: ChainId
-  /** The name of the network */
-  name: string
-}
 
 /**
  * @name ChainInfo
  * @description Provides information of a blockchain network
  */
-export class ChainInfo implements IChainInfoSerialized {
+export class ChainInfo implements IChainInfo {
   readonly chainId: ChainId
   readonly name: string
 
-  private constructor(params: IChainInfoSerialized) {
+  private constructor(params: IChainInfo) {
     this.chainId = params.chainId
     this.name = params.name
   }
 
-  static createFrom(params: IChainInfoSerialized): ChainInfo {
+  static createFrom(params: IChainInfo): ChainInfo {
     return new ChainInfo(params)
   }
 

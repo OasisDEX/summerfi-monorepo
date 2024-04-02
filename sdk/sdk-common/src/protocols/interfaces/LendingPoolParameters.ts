@@ -1,17 +1,14 @@
 import { PoolParameters } from './PoolParameters'
-import { AddressValue } from '../../common'
-import { CollateralConfig, DebtConfig } from '../../protocols/interfaces/LendingPool'
+import { ICollateralConfigMap } from './ICollateralConfigMap'
+import { IDebtConfigMap } from './IDebtConfigMap'
 
 /**
  * @name LendingPoolParameters
  * @description Represents the parameters of a lending pool
  */
-export type LendingPoolParameters<
-  CollateralConfigType extends CollateralConfig = CollateralConfig,
-  DebtConfigType extends DebtConfig = DebtConfig,
-> = PoolParameters & {
-  debts: Record<AddressValue, DebtConfigType>
-  collaterals: Record<AddressValue, CollateralConfigType>
+export type LendingPoolParameters = PoolParameters & {
+  debts: IDebtConfigMap
+  collaterals: ICollateralConfigMap
 }
 
 /**

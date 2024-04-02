@@ -11,7 +11,7 @@ describe('ReturnFunds Action', () => {
       name: 'Mainnet',
       chainId: 1,
     },
-    address: Address.createFrom({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
+    address: Address.createFromEthereum({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
     decimals: 18,
     name: 'Dai Stablecoin',
     symbol: 'DAI',
