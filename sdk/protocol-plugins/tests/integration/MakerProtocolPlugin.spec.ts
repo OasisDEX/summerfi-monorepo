@@ -8,7 +8,7 @@ import {
   Percentage,
 } from '@summerfi/sdk-common/common'
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { MakerProtocolPlugin } from '../../src'
+import { MakerProtocolPlugin } from '../../src/plugins/maker'
 import { makerPoolIdMock as validMakerPoolId } from '../mocks/MakerPoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 

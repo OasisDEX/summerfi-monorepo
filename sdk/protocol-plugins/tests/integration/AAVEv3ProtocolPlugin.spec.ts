@@ -8,8 +8,7 @@ import {
   TokenAmount,
   Percentage,
 } from '@summerfi/sdk-common/common'
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import { AaveV3ProtocolPlugin } from '../../src'
+import { AaveV3ProtocolPlugin } from '../../src/plugins/aave-v3'
 import { aaveV3PoolIdMock as validAaveV3PoolId } from '../mocks/AAVEv3PoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 
