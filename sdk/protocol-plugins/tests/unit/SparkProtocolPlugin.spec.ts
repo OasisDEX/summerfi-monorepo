@@ -1,4 +1,4 @@
-import {IProtocolPluginContext, IPositionId} from "@summerfi/protocol-plugins-common";
+import { IProtocolPluginContext, IPositionId } from '@summerfi/protocol-plugins-common'
 import { ChainInfo } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import assert from 'assert'
@@ -13,7 +13,7 @@ describe('Spark Protocol Plugin', () => {
   beforeAll(async () => {
     ctx = await createProtocolPluginContext()
     sparkProtocolPlugin = new SparkProtocolPlugin({
-      context: ctx
+      context: ctx,
     })
   })
 
@@ -73,7 +73,7 @@ describe('Spark Protocol Plugin', () => {
             id: undefined as unknown as number,
           },
         },
-      }
+      },
     })
     await expect(sparkProtocolPluginWithWrongContext.getPool(sparkPoolIdMock)).rejects.toThrow(
       `ctx.provider.chain.id undefined`,
@@ -92,7 +92,7 @@ describe('Spark Protocol Plugin', () => {
             id: wrongChainId,
           },
         },
-      }
+      },
     })
 
     await expect(sparkProtocolPluginWithWrongContext.getPool(sparkPoolIdMock)).rejects.toThrow(

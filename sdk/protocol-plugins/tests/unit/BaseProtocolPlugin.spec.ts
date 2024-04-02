@@ -1,4 +1,4 @@
-import {IProtocolPluginContext} from "@summerfi/protocol-plugins-common";
+import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { MakerProtocolPlugin, BaseProtocolPlugin } from '../../src'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
@@ -10,7 +10,7 @@ describe('Base Protocol Plugin', () => {
   beforeAll(async () => {
     ctx = await createProtocolPluginContext()
     baseProtocolPlugin = new MakerProtocolPlugin({
-      context: ctx
+      context: ctx,
     })
   })
 

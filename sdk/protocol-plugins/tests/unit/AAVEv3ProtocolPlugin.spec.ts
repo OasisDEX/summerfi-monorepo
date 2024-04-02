@@ -1,4 +1,4 @@
-import {IProtocolPluginContext, IPositionId} from "@summerfi/protocol-plugins-common";
+import { IProtocolPluginContext, IPositionId } from '@summerfi/protocol-plugins-common'
 import { ChainInfo } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import assert from 'assert'
@@ -13,7 +13,7 @@ describe('AAVEv3 Protocol Plugin', () => {
   beforeAll(async () => {
     ctx = await createProtocolPluginContext()
     aaveV3ProtocolPlugin = new AaveV3ProtocolPlugin({
-      context: ctx
+      context: ctx,
     })
   })
 
@@ -69,7 +69,7 @@ describe('AAVEv3 Protocol Plugin', () => {
             id: undefined as unknown as number,
           },
         },
-      }
+      },
     })
     await expect(aaveV3ProtocolPluginWithWrongContext.getPool(aaveV3PoolIdMock)).rejects.toThrow(
       `ctx.provider.chain.id undefined`,
@@ -88,7 +88,7 @@ describe('AAVEv3 Protocol Plugin', () => {
             id: wrongChainId,
           },
         },
-      }
+      },
     })
 
     await expect(aaveV3ProtocolPluginWithWrongContext.getPool(aaveV3PoolIdMock)).rejects.toThrow(

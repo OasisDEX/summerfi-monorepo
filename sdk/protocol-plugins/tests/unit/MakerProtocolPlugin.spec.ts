@@ -1,4 +1,4 @@
-import {IProtocolPluginContext, IPositionId} from "@summerfi/protocol-plugins-common";
+import { IProtocolPluginContext, IPositionId } from '@summerfi/protocol-plugins-common'
 import { ChainInfo } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import assert from 'assert'
@@ -13,7 +13,7 @@ describe('Maker Protocol Plugin', () => {
   beforeAll(async () => {
     ctx = await createProtocolPluginContext()
     makerProtocolPlugin = new MakerProtocolPlugin({
-      context: ctx
+      context: ctx,
     })
   })
 
@@ -58,7 +58,7 @@ describe('Maker Protocol Plugin', () => {
       },
     }
     await expect(makerProtocolPlugin.getPool(invalidMakerPoolIdUnsupportedChain)).rejects.toThrow(
-        'Invalid Maker pool ID',
+      'Invalid Maker pool ID',
     )
   })
 
@@ -73,7 +73,7 @@ describe('Maker Protocol Plugin', () => {
             id: undefined as unknown as number,
           },
         },
-      }
+      },
     })
     await expect(makerProtocolPluginWithWrongContext.getPool(makerPoolIdMock)).rejects.toThrow(
       `ctx.provider.chain.id undefined`,
@@ -92,7 +92,7 @@ describe('Maker Protocol Plugin', () => {
             id: wrongChainId,
           },
         },
-      }
+      },
     })
 
     await expect(makerProtocolPluginWithWrongContext.getPool(makerPoolIdMock)).rejects.toThrow(

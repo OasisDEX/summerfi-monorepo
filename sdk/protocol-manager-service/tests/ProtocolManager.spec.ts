@@ -1,13 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {IProtocolManager, IProtocolManagerContext} from "@summerfi/protocol-manager-common";
-import {IProtocolPluginsRegistry, IProtocolPlugin, IProtocolPluginContext} from "@summerfi/protocol-plugins-common";
+import { IProtocolManager, IProtocolManagerContext } from '@summerfi/protocol-manager-common'
+import {
+  IProtocolPluginsRegistry,
+  IProtocolPlugin,
+  IProtocolPluginContext,
+} from '@summerfi/protocol-plugins-common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { ChainInfo } from '@summerfi/sdk-common/common'
 import { createPublicClient, http, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
 import { TokenService, PriceService, ProtocolPluginsRegistry } from '@summerfi/protocol-plugins'
 import { MockContractProvider } from '@summerfi/protocol-plugins/mocks'
-import {ProtocolManager} from "../src";
+import { ProtocolManager } from '../src'
 
 describe('Protocol Manager', () => {
   let ctx: IProtocolManagerContext
@@ -25,7 +29,7 @@ describe('Protocol Manager', () => {
       plugins: mockPlugins,
       context: ctx,
     })
-    protocolManager = new ProtocolManager({pluginsRegistry})
+    protocolManager = new ProtocolManager({ pluginsRegistry })
   })
 
   it('should throw an error when getPool is called with an unsupported protocol', async () => {
@@ -39,19 +43,21 @@ describe('Protocol Manager', () => {
     ctx.provider.getChainId = jest.fn().mockResolvedValue(unsupportedChainId)
     await expect(
       protocolManager.getPool({ protocol: { name: ProtocolName.Spark } } as any),
-    ).rejects.toThrow(
-      `Invalid pool ID: {"protocol":{"name":"Spark"}}`,
-    )
+    ).rejects.toThrow(`Invalid pool ID: {"protocol":{"name":"Spark"}}`)
   })
 
   it('should retrieve the pool using the correct plugin and chain ID', async () => {
     const ctx = await createProtocolManagerContext()
 
     class TestMockPlugin extends MockPlugin {
-      constructor(params: { protocolName: ProtocolName, context: IProtocolPluginContext, __overrides?: { schema?: any; supportedChains?: any[] } }) {
-        super(params);
+      constructor(params: {
+        protocolName: ProtocolName
+        context: IProtocolPluginContext
+        __overrides?: { schema?: any; supportedChains?: any[] }
+      }) {
+        super(params)
         this.protocolName = ProtocolName.Spark
-        this.getPool = jest.fn().mockResolvedValue('mockPoolData');
+        this.getPool = jest.fn().mockResolvedValue('mockPoolData')
       }
     }
 
@@ -64,10 +70,15 @@ describe('Protocol Manager', () => {
       context: ctx,
     })
 
-    protocolManager = new ProtocolManager({pluginsRegistry})
+    protocolManager = new ProtocolManager({ pluginsRegistry })
 
     const chainId = 'supportedChain'
-    const poolId = { protocol: { name: ProtocolName.Spark, chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }) } }
+    const poolId = {
+      protocol: {
+        name: ProtocolName.Spark,
+        chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
+      },
+    }
 
     ctx.provider.getChainId = jest.fn().mockResolvedValue(chainId)
 
@@ -82,30 +93,34 @@ describe('Protocol Manager', () => {
 
 export type ProtocolPluginConstructor = new (params: {
   context: IProtocolPluginContext
-}) => IProtocolPlugin;
+}) => IProtocolPlugin
 
 class MockPlugin implements IProtocolPlugin {
-  protocolName: ProtocolName;
-  schema: any;
-  supportedChains: any[];
-  stepBuilders: object;
-  readonly context: IProtocolPluginContext;
+  protocolName: ProtocolName
+  schema: any
+  supportedChains: any[]
+  stepBuilders: object
+  readonly context: IProtocolPluginContext
 
-  constructor(params: { protocolName: ProtocolName, context: IProtocolPluginContext, __overrides?: { schema?: any; supportedChains?: any[] } }) {
-    this.protocolName = params.protocolName;
-    this.context = params.context;
-    this.schema = params.__overrides?.schema ?? {};
-    this.supportedChains = params.__overrides?.supportedChains ?? [];
-    this.stepBuilders = {};
+  constructor(params: {
+    protocolName: ProtocolName
+    context: IProtocolPluginContext
+    __overrides?: { schema?: any; supportedChains?: any[] }
+  }) {
+    this.protocolName = params.protocolName
+    this.context = params.context
+    this.schema = params.__overrides?.schema ?? {}
+    this.supportedChains = params.__overrides?.supportedChains ?? []
+    this.stepBuilders = {}
   }
 
-  getPool = jest.fn();
-  getPosition = jest.fn();
+  getPool = jest.fn()
+  getPosition = jest.fn()
   // @ts-ignore
-  isPoolId = jest.fn();
-  validatePoolId = jest.fn();
-  getActionBuilder = jest.fn();
-  ctx = () => this.context;
+  isPoolId = jest.fn()
+  validatePoolId = jest.fn()
+  getActionBuilder = jest.fn()
+  ctx = () => this.context
 }
 
 async function createProtocolManagerContext(): Promise<IProtocolManagerContext> {
