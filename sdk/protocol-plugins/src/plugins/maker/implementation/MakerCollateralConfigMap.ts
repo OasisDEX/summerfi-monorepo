@@ -3,6 +3,7 @@ import { MakerCollateralConfig } from './MakerCollateralConfig'
 import { IMakerCollateralConfigMap } from '../interfaces/IMakerCollateralConfigMap'
 import { CollateralConfigMap } from '@summerfi/sdk-common/protocols'
 import { IMakerCollateralConfig } from '../interfaces/IMakerCollateralConfig'
+import { SerializationService } from '@summerfi/sdk-common/services'
 
 export type MakerCollateralConfigRecord = Record<AddressValue, MakerCollateralConfig>
 
@@ -35,3 +36,5 @@ export class MakerCollateralConfigMap
     return this.record[params.token.address.value]
   }
 }
+
+SerializationService.registerClass(MakerCollateralConfigMap)

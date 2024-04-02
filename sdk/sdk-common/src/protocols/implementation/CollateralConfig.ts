@@ -3,6 +3,7 @@ import { Price } from '../../common/implementation/Price'
 import { RiskRatio } from '../../common/implementation/RiskRatio'
 import { Token } from '../../common/implementation/Token'
 import { TokenAmount } from '../../common/implementation/TokenAmount'
+import { SerializationService } from '../../services/SerializationService'
 import { ICollateralConfig } from '../interfaces/ICollateralConfig'
 
 export class CollateralConfig implements ICollateralConfig {
@@ -28,3 +29,5 @@ export class CollateralConfig implements ICollateralConfig {
     return new CollateralConfig(params)
   }
 }
+
+SerializationService.registerClass(CollateralConfig)

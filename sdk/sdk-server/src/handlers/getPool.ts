@@ -9,6 +9,5 @@ export const getPool = publicProcedure
   )
   .query(async (opts) => {
     const poolId = opts.input.poolId
-
-    return opts.ctx.protocolManager.getPool(poolId)
+    return await opts.ctx.protocolManager.getPool(poolId)
   })
