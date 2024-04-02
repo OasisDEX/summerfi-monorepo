@@ -1,5 +1,6 @@
 import { DebtConfig } from '@summerfi/sdk-common/protocols'
 import { IAaveV3DebtConfig } from '../interfaces/IAaveV3DebtConfig'
+import { SerializationService } from '@summerfi/sdk-common/services'
 
 export class AaveV3DebtConfig extends DebtConfig implements IAaveV3DebtConfig {
   readonly borrowingEnabled: boolean
@@ -14,3 +15,5 @@ export class AaveV3DebtConfig extends DebtConfig implements IAaveV3DebtConfig {
     return new AaveV3DebtConfig(params)
   }
 }
+
+SerializationService.registerClass(AaveV3DebtConfig)

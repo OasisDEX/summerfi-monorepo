@@ -3,6 +3,7 @@ import { MakerDebtConfig } from './MakerDebtConfig'
 import { IMakerDebtConfigMap } from '../interfaces/IMakerDebtConfigMap'
 import { DebtConfigMap } from '@summerfi/sdk-common/protocols'
 import { IMakerDebtConfig } from '../interfaces/IMakerDebtConfig'
+import { SerializationService } from '@summerfi/sdk-common/services'
 
 export type MakerDebtConfigRecord = Record<AddressValue, MakerDebtConfig>
 
@@ -27,3 +28,5 @@ export class MakerDebtConfigMap extends DebtConfigMap implements IMakerDebtConfi
     return this.record[params.token.address.value]
   }
 }
+
+SerializationService.registerClass(MakerDebtConfigMap)

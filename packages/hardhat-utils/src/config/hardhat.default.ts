@@ -45,7 +45,7 @@ export const DefaultHardhatConfig: HardhatUserConfig = {
     'palm-rinkeby': getChainConfig('palm-rinkeby'),
   },
   abiExporter: {
-    path: './abis',
+    path: './src/abis',
     runOnCompile: true,
     clear: true,
     flat: false,

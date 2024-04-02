@@ -1,6 +1,7 @@
 import { CollateralConfig } from '@summerfi/sdk-common/protocols'
 import { IAaveV3CollateralConfig } from '../interfaces/IAaveV3CollateralConfig'
 import { Percentage, RiskRatio } from '@summerfi/sdk-common/common'
+import { SerializationService } from '@summerfi/sdk-common/services'
 
 export class AaveV3CollateralConfig extends CollateralConfig implements IAaveV3CollateralConfig {
   readonly usageAsCollateralEnabled: boolean
@@ -19,3 +20,5 @@ export class AaveV3CollateralConfig extends CollateralConfig implements IAaveV3C
     return new AaveV3CollateralConfig(params)
   }
 }
+
+SerializationService.registerClass(AaveV3CollateralConfig)

@@ -1,22 +1,29 @@
 import { ChainInfo } from '@summerfi/sdk-common/common'
-import { ILKType, ProtocolName, EmodeType, SparkPoolId } from '@summerfi/sdk-common/protocols'
+import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { createPublicClient, http, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
-import {
-  TokenService,
-  PriceService,
-  MakerProtocolPlugin,
-  SparkProtocolPlugin,
-  ProtocolPluginsRegistry,
-  MakerLendingPool,
-  SparkLendingPool,
-  AaveV3LendingPool,
-  AaveV3ProtocolPlugin,
-} from '@summerfi/protocol-plugins/'
+
 import { MockContractProvider } from '@summerfi/protocol-plugins/mocks'
 import { ProtocolManager } from '../src'
 import { IProtocolManager, IProtocolManagerContext } from '@summerfi/protocol-manager-common'
 import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
+import {
+  ProtocolPluginsRegistry,
+  TokenService,
+  PriceService,
+} from '@summerfi/protocol-plugins/implementation'
+import { AaveV3ProtocolPlugin, AaveV3LendingPool } from '@summerfi/protocol-plugins/plugins/aave-v3'
+import {
+  MakerProtocolPlugin,
+  MakerLendingPool,
+  ILKType,
+} from '@summerfi/protocol-plugins/plugins/maker'
+import {
+  SparkProtocolPlugin,
+  SparkLendingPool,
+  SparkPoolId,
+} from '@summerfi/protocol-plugins/plugins/spark'
+import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 
 async function createProtocolManagerContext(): Promise<IProtocolManagerContext> {
   const RPC_URL = process.env['MAINNET_RPC_URL'] || ''
