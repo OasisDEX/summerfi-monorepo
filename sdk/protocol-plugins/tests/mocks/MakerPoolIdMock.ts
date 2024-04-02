@@ -1,5 +1,6 @@
 import { ChainInfo } from '@summerfi/sdk-common/common'
-import { ILKType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { ProtocolName } from '@summerfi/sdk-common/protocols'
+import { ILKType } from '../../src/plugins/maker'
 
 export const makerPoolIdMock = {
   protocol: {

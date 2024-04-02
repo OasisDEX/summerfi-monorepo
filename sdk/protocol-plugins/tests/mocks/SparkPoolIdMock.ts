@@ -1,6 +1,6 @@
 import { ChainInfo } from '@summerfi/sdk-common/common'
-import { EmodeType } from '@summerfi/sdk-common/protocols'
-import { ILKType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { ProtocolName } from '@summerfi/sdk-common/protocols'
+import { EmodeType } from '../../src/plugins/common'
 
 export const sparkPoolIdMock = {
   protocol: {

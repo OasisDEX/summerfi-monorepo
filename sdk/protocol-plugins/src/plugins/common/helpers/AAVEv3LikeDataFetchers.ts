@@ -1,7 +1,9 @@
 import { Token } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import { AllowedProtocolNames } from './AAVEv3LikeBuilderTypes'
-import { IProtocolPluginContextWithContractDef } from './AAVEv3LikeBuilderTypes'
+import {
+  AllowedProtocolNames,
+  IProtocolPluginContextWithContractDef,
+} from './AAVEv3LikeBuilderTypes'
 
 // TODO: Update ContractProvider to work based on ChainId
 export async function fetchReservesTokens(

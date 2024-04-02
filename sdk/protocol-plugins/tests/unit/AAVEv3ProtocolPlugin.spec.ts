@@ -2,7 +2,7 @@ import { IProtocolPluginContext, IPositionId } from '@summerfi/protocol-plugins-
 import { ChainInfo } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import assert from 'assert'
-import { AaveV3ProtocolPlugin } from '../../src'
+import { AaveV3ProtocolPlugin } from '../../src/plugins/aave-v3'
 import { aaveV3PoolIdMock } from '../mocks/AAVEv3PoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 import { getErrorMessage } from '../utils/ErrorMessage'

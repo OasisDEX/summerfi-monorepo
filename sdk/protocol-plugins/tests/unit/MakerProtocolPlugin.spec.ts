@@ -2,7 +2,7 @@ import { IProtocolPluginContext, IPositionId } from '@summerfi/protocol-plugins-
 import { ChainInfo } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import assert from 'assert'
-import { MakerProtocolPlugin } from '../../src'
+import { MakerProtocolPlugin } from '../../src/plugins/maker'
 import { makerPoolIdMock } from '../mocks/MakerPoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 import { getErrorMessage } from '../utils/ErrorMessage'

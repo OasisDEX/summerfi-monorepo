@@ -73,7 +73,6 @@ describe('Order Planner Service', () => {
         provider: undefined as unknown as PublicClient,
         tokenService: undefined as unknown as ITokenService,
         priceService: undefined as unknown as IPriceService,
-        contractProvider: undefined as unknown as IContractProvider,
       },
     })
 

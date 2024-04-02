@@ -1,6 +1,7 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { MakerProtocolPlugin, BaseProtocolPlugin } from '../../src'
+import { BaseProtocolPlugin } from '../../src/implementation'
+import { MakerProtocolPlugin } from '../../src/plugins/maker'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 import assert from 'assert'
 

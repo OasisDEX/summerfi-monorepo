@@ -9,8 +9,12 @@ import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { ChainInfo } from '@summerfi/sdk-common/common'
 import { createPublicClient, http, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
-import { TokenService, PriceService, ProtocolPluginsRegistry } from '@summerfi/protocol-plugins'
 import { ProtocolManager } from '../src'
+import {
+  TokenService,
+  PriceService,
+  ProtocolPluginsRegistry,
+} from '@summerfi/protocol-plugins/implementation'
 
 describe('Protocol Manager', () => {
   let ctx: IProtocolManagerContext

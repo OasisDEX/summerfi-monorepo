@@ -2,7 +2,7 @@ import { IProtocolPluginContext, IPositionId } from '@summerfi/protocol-plugins-
 import { ChainInfo } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import assert from 'assert'
-import { SparkProtocolPlugin } from '../../src'
+import { SparkProtocolPlugin } from '../../src/plugins/spark'
 import { sparkPoolIdMock } from '../mocks/SparkPoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 import { getErrorMessage } from '../utils/ErrorMessage'
