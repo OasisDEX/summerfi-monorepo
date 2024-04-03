@@ -7,7 +7,7 @@ import {
   Wallet,
 } from '@summerfi/sdk-common/common'
 import { IPositionsManager, Order } from '@summerfi/sdk-common/orders'
-import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { IUserClient } from '../interfaces/IUserClient'
 import { IRPCClient } from '../interfaces/IRPCClient'
 import { RPCClientType } from '../rpc/SDKClient'
@@ -49,7 +49,7 @@ export class User extends IRPCClient implements IUserClient {
 
   public async newOrder(params: {
     positionsManager: IPositionsManager
-    simulation: Simulation<SimulationType>
+    simulation: ISimulation<SimulationType>
   }): Promise<Maybe<Order>> {
     return await this.rpcClient.orders.buildOrder.mutate({
       user: {

@@ -1,4 +1,5 @@
 import { BigNumber } from 'bignumber.js'
+import { Percentage } from './Percentage'
 import { Token } from './Token'
 import { SerializationService } from '../../services/SerializationService'
 import { ITokenAmount } from '../interfaces/ITokenAmount'
@@ -60,14 +61,28 @@ export class TokenAmount implements ITokenAmount {
     })
   }
 
-  public multiply(multiplier: string | number): TokenAmount {
+  public multiply(multiplier: Percentage | string | number): TokenAmount {
+    if (multiplier instanceof Percentage) {
+      return new TokenAmount({
+        token: this.token,
+        amount: this.amountBN.times(multiplier.value).toString(),
+      })
+    }
+
     return new TokenAmount({
       token: this.token,
       amount: this.amountBN.times(multiplier).toString(),
     })
   }
 
-  public divide(divisor: string | number): TokenAmount {
+  public divide(divisor: Percentage | string | number): TokenAmount {
+    if (divisor instanceof Percentage) {
+      return new TokenAmount({
+        token: this.token,
+        amount: this.amountBN.div(divisor.value).toString(),
+      })
+    }
+
     return new TokenAmount({ token: this.token, amount: this.amountBN.div(divisor).toString() })
   }
 
@@ -77,6 +92,10 @@ export class TokenAmount implements ITokenAmount {
 
   public toBaseUnit(): string {
     return new BigNumber(this.amount).times(this._baseUnitFactor).toFixed(0)
+  }
+
+  public toBaseUnitAsBn(): BigNumber {
+    return new BigNumber(this.amount).times(this._baseUnitFactor)
   }
 
   public toBN(): BigNumber {
