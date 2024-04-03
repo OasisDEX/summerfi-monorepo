@@ -94,17 +94,17 @@ export class TokenAmount implements ITokenAmount {
     return new BigNumber(this.amount).times(this._baseUnitFactor).toFixed(0)
   }
 
-  public toBaseUnitAsBn(): BigNumber {
-    return new BigNumber(this.amount).times(this._baseUnitFactor)
-  }
+  // public toBaseUnitAsBn(): BigNumber {
+  //   return new BigNumber(this.amount).times(this._baseUnitFactor)
+  // }
 
-  public fromBaseUnit(): string {
-    return new BigNumber(this.amount).div(this._baseUnitFactor).toFixed(0)
-  }
-
-  public fromBaseUnitAsBn(): BigNumber {
-    return new BigNumber(this.amount).div(this._baseUnitFactor)
-  }
+  // public fromBaseUnit(): string {
+  //   return new BigNumber(this.amount).div(this._baseUnitFactor).toFixed(0)
+  // }
+  //
+  // public fromBaseUnitAsBn(): BigNumber {
+  //   return new BigNumber(this.amount).div(this._baseUnitFactor)
+  // }
 
   public toBN(): BigNumber {
     return new BigNumber(this.amount)

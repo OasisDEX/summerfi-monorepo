@@ -12,10 +12,7 @@ export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISim
 
   // We require both from & to be at similar decimal precisions
   const offerPrice = Price.createFrom({
-    value: step.inputs.toTokenAmount
-      .fromBaseUnitAsBn()
-      .div(step.inputs.fromTokenAmount.fromBaseUnitAsBn())
-      .toString(),
+    value: step.inputs.toTokenAmount.divide(step.inputs.fromTokenAmount.amount).toString(),
     baseToken,
     quoteToken,
   })
