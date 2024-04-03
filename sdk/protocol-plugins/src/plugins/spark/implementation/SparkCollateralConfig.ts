@@ -1,6 +1,7 @@
 import { CollateralConfig } from '@summerfi/sdk-common/protocols'
 import { ISparkCollateralConfig } from '../interfaces/ISparkCollateralConfig'
 import { Percentage, RiskRatio } from '@summerfi/sdk-common/common'
+import { SerializationService } from '@summerfi/sdk-common/services'
 
 export class SparkCollateralConfig extends CollateralConfig implements ISparkCollateralConfig {
   readonly usageAsCollateralEnabled: boolean
@@ -19,3 +20,5 @@ export class SparkCollateralConfig extends CollateralConfig implements ISparkCol
     return new SparkCollateralConfig(params)
   }
 }
+
+SerializationService.registerClass(SparkCollateralConfig)

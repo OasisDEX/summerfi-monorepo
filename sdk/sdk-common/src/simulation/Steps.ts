@@ -48,7 +48,7 @@ export interface PaybackWithdrawStep
     SimulationSteps.PaybackWithdraw,
     {
       paybackAmount: ReferenceableField<TokenAmount>
-      withdrawAmount: ReferenceableField<TokenAmount>
+      withdrawAmount: TokenAmount
       position: Position
     },
     {

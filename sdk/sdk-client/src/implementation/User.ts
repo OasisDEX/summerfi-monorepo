@@ -6,13 +6,13 @@ import {
   PositionId,
   Wallet,
 } from '@summerfi/sdk-common/common'
-import { getMockPosition } from '../mocks/mockPosition'
 import { IPositionsManager, Order } from '@summerfi/sdk-common/orders'
 import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { IUserClient } from '../interfaces/IUserClient'
 import { IRPCClient } from '../interfaces/IRPCClient'
 import { RPCClientType } from '../rpc/SDKClient'
 import { IProtocol } from '@summerfi/sdk-common/protocols'
+import { SerializationService } from '@summerfi/sdk-common/services'
 
 export class User extends IRPCClient implements IUserClient {
   public readonly wallet: Wallet
@@ -44,19 +44,22 @@ export class User extends IRPCClient implements IUserClient {
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   public async getPosition(params: { id: PositionId }): Promise<Maybe<Position>> {
     // TODO: Implement
-    // for client impl we'll use communication layer client
-    // to get the position from the network
-    // but for server we'll use a communication layer caller
-    return getMockPosition({ chainInfo: this.chainInfo, wallet: this.wallet, id: params.id })
+    return {} as Position
   }
 
   public async newOrder(params: {
     positionsManager: IPositionsManager
     simulation: ISimulation<SimulationType>
   }): Promise<Maybe<Order>> {
-    return await this.rpcClient.orders.buildOrder.query({
-      user: this,
-      ...params,
+    return await this.rpcClient.orders.buildOrder.mutate({
+      user: {
+        wallet: this.wallet,
+        chainInfo: this.chainInfo,
+      },
+      positionsManager: params.positionsManager,
+      simulation: params.simulation,
     })
   }
 }
+
+SerializationService.registerClass(User)

@@ -1,13 +1,13 @@
+import { AaveV3ProtocolPlugin } from '@summerfi/protocol-plugins/plugins/aave-v3'
 import {
-  AaveV3ProtocolPlugin,
-  MakerProtocolPlugin,
-  MockContractProvider,
   PriceService,
   ProtocolPluginsRecordType,
   ProtocolPluginsRegistry,
-  SparkProtocolPlugin,
   TokenService,
-} from '@summerfi/protocol-plugins'
+} from '@summerfi/protocol-plugins/implementation'
+import { SparkProtocolPlugin } from '@summerfi/protocol-plugins/plugins/spark'
+import { MakerProtocolPlugin } from '@summerfi/protocol-plugins/plugins/maker'
+
 import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { createPublicClient, http } from 'viem'
@@ -30,7 +30,6 @@ export function createProtocolsPluginsRegistry(): IProtocolPluginsRegistry {
 
   const tokenService = new TokenService()
   const priceService = new PriceService(provider)
-  const contractProvider = new MockContractProvider()
 
   return new ProtocolPluginsRegistry({
     plugins: ProtocolPlugins,
@@ -38,7 +37,6 @@ export function createProtocolsPluginsRegistry(): IProtocolPluginsRegistry {
       provider,
       tokenService,
       priceService,
-      contractProvider,
     },
   })
 }

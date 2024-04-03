@@ -3,6 +3,7 @@ import { SparkDebtConfig } from './SparkDebtConfig'
 import { ISparkDebtConfigMap } from '../interfaces/ISparkDebtConfigMap'
 import { DebtConfigMap } from '@summerfi/sdk-common/protocols'
 import { ISparkDebtConfig } from '../interfaces/ISparkDebtConfig'
+import { SerializationService } from '@summerfi/sdk-common/services'
 
 export type SparkDebtConfigRecord = Record<AddressValue, SparkDebtConfig>
 
@@ -27,3 +28,5 @@ export class SparkDebtConfigMap extends DebtConfigMap implements ISparkDebtConfi
     return this.record[params.token.address.value]
   }
 }
+
+SerializationService.registerClass(SparkDebtConfigMap)

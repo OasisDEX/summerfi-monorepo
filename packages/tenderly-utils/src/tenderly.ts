@@ -4,6 +4,8 @@ import { IAccountGuardAbi, IAccountImplementationAbi } from './abis'
 import { NetworkName, tokenAddresses } from './utils'
 import { getTokenDecimals } from './getTokenDecimals'
 
+// TODO: use 'viem' instead of Ethers.js
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const { TENDERLY_USER, TENDERLY_PROJECT, TENDERLY_ACCESS_KEY } = process.env as any
 

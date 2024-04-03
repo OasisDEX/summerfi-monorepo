@@ -1,6 +1,6 @@
 {
   "name": "@summerfi/get-meta-morpho-details-function",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
@@ -17,8 +17,7 @@
     "@summerfi/morpho-blue-external-api-client": "workspace:*",
     "viem": "^1.19.11",
     "zod": "^3.22.4",
-    "abitype": "^1.0.1",
-    "bignumber.js": "^9.1.2"
+    "abitype": "^1.0.1"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

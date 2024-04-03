@@ -13,8 +13,7 @@ import {
   Maybe,
 } from '@summerfi/sdk-common/common'
 import { SimulationSteps } from '@summerfi/sdk-common/simulation'
-import type { SparkPoolId } from '@summerfi/sdk-common/protocols'
-import { PoolType, ProtocolName, EmodeType } from '@summerfi/sdk-common/protocols'
+import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
 
@@ -45,6 +44,8 @@ import {
   IProtocolPluginContext,
 } from '@summerfi/protocol-plugins-common'
 import { SparkAddressAbiMap } from '../types/SparkAddressAbiMap'
+import { EmodeType } from '../../common/enums/EmodeType'
+import { SparkPoolId } from '../types/SparkPoolId'
 
 type AssetsList = ReturnType<SparkProtocolPlugin['buildAssetsList']>
 type Asset = Awaited<AssetsList> extends (infer U)[] ? U : never
@@ -81,7 +82,7 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
 
   validatePoolId(candidate: unknown): asserts candidate is SparkPoolId {
     if (!this.isPoolId(candidate)) {
-      throw new Error(`Invalid Maker pool ID: ${JSON.stringify(candidate)}`)
+      throw new Error(`Invalid Spark pool ID: ${JSON.stringify(candidate)}`)
     }
   }
 
@@ -152,16 +153,24 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
   }
 
   private async buildAssetsList(emode: bigint) {
-    const builder = await new AaveV3LikeProtocolDataBuilder(this.ctx, this.protocolName).init()
-    const list = await builder
-      .addPrices()
-      .addReservesCaps()
-      .addReservesConfigData()
-      .addReservesData()
-      .addEmodeCategories()
-      .build()
+    try {
+      const _ctx = {
+        ...this.ctx,
+        getContractDef: this.getContractDef,
+      }
+      const builder = await new AaveV3LikeProtocolDataBuilder(_ctx, this.protocolName).init()
+      const list = await builder
+        .addPrices()
+        .addReservesCaps()
+        .addReservesConfigData()
+        .addReservesData()
+        .addEmodeCategories()
+        .build()
 
-    return filterAssetsListByEMode(list, emode)
+      return filterAssetsListByEMode(list, emode)
+    } catch (e) {
+      throw new Error(`Could not fetch/build assets list for Spark: ${JSON.stringify(e)}`)
+    }
   }
 
   private getCollateralAssetInfo(

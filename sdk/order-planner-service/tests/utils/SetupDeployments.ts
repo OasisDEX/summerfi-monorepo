@@ -19,6 +19,10 @@ export function SetupDeployments(): DeploymentIndex {
         },
       },
       dependencies: {
+        SparkLendingPool: {
+          name: 'SparkLendingPool',
+          address: '0x59cD1C87501baa753d0B5B5Ab5D8416A45cD71DB',
+        },
         MCD_JOIN_DAI: {
           name: 'MCD_JOIN_DAI',
           address: '0x9759A6Ac90977b93B58547b4A71c78317f391A28',
@@ -26,6 +30,10 @@ export function SetupDeployments(): DeploymentIndex {
         MCD_JOIN_ETH_A: {
           name: 'MCD_JOIN_ETH_A',
           address: '0x2F0b23f53734252Bda2277357e97e1517d6B042A',
+        },
+        MCD_JOIN_ETH_C: {
+          name: 'MCD_JOIN_ETH_A',
+          address: '0xF04a5cC80B1E94C69B48f5ee68a08CD2F09A7c3E',
         },
       },
     } as Deployment,

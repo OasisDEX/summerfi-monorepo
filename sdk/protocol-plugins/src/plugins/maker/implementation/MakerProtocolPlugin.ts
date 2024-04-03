@@ -11,9 +11,8 @@ import {
   ChainFamilyName,
   valuesOfChainFamilyMap,
 } from '@summerfi/sdk-common/common'
-import { ILKType, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SimulationSteps } from '@summerfi/sdk-common/simulation'
-import type { MakerPoolId } from '@summerfi/sdk-common/protocols'
 import { stringToHex, getContract } from 'viem'
 import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
@@ -39,6 +38,8 @@ import {
   IPositionId,
   IProtocolPluginContext,
 } from '@summerfi/protocol-plugins-common'
+import { ILKType } from '../enums/ILKType'
+import { MakerPoolId } from '../types/MakerPoolId'
 
 export class MakerProtocolPlugin extends BaseProtocolPlugin {
   readonly protocolName = ProtocolName.Maker
@@ -172,10 +173,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
     const debts: MakerDebtConfigRecord = {
       [quoteToken.address.value]: {
         token: quoteToken,
-        price: await ctx.priceService.getPrice({
-          baseToken: quoteToken,
-          quoteToken: collateralToken,
-        }),
+        price: await ctx.priceService.getPriceUSD(quoteToken),
         priceUSD: await ctx.priceService.getPriceUSD(quoteToken),
         rate: Percentage.createFrom({ value: stabilityFee.times(100).toNumber() }),
         totalBorrowed: TokenAmount.createFrom({

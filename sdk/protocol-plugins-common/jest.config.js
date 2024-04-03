@@ -6,4 +6,11 @@ require('dotenv').config({ path: '../.env' })
 module.exports = {
   ...sharedConfig(compilerOptions),
   silent: false,
+  collectCoverageFrom: [
+    '<rootDir>/**/*.{ts,tsx}',
+    '!src/**/index.ts',
+    '!src/actions/Types.ts',
+    '!src/types/*.{ts,tsx}',
+    '!src/interfaces/*.{ts,tsx}',
+  ],
 }
