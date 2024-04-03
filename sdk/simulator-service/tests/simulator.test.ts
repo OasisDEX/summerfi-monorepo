@@ -1,6 +1,7 @@
 import { Percentage } from '@summerfi/sdk-common/common'
 import { ISimulation, SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
 import { refinanceLendingToLending } from '../src/strategies'
+import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common'
 import {
   otherTestCollateral,
   otherTestDebt,
@@ -16,14 +17,16 @@ describe('Refinance', () => {
     beforeAll(async () => {
       simulation = await refinanceLendingToLending(
         {
-          position: testSourcePosition,
-          targetPool: testTargetLendingPool,
-          targetDebt: testTargetLendingPool.debts.get({
-            token: testSourcePosition.debtAmount.token,
-          })!.token,
-          targetCollateral: testTargetLendingPool.collaterals.get({
-            token: testSourcePosition.collateralAmount.token,
-          })!.token,
+          sourcePosition: testSourcePosition,
+          targetPosition: newEmptyPositionFromPool(
+            testTargetLendingPool,
+            testTargetLendingPool.debts.get({
+              token: testSourcePosition.debtAmount.token,
+            })!.token,
+            testTargetLendingPool.collaterals.get({
+              token: testSourcePosition.collateralAmount.token,
+            })!.token,
+          ),
           slippage: Percentage.createFrom({ value: 1 }),
         },
         mockRefinanceContext,
@@ -67,10 +70,12 @@ describe('Refinance', () => {
     beforeAll(async () => {
       simulation = await refinanceLendingToLending(
         {
-          position: testSourcePosition,
-          targetPool: testTargetLendingPoolRequiredSwaps,
-          targetDebt: otherTestDebt,
-          targetCollateral: otherTestCollateral,
+          sourcePosition: testSourcePosition,
+          targetPosition: newEmptyPositionFromPool(
+            testTargetLendingPoolRequiredSwaps,
+            otherTestDebt,
+            otherTestCollateral,
+          ),
           slippage: Percentage.createFrom({ value: 1 }),
         },
         mockRefinanceContextRequiredSwaps,

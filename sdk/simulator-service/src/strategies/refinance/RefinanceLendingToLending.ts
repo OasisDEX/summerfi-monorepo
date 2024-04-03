@@ -20,12 +20,12 @@ export async function refinanceLendingToLending(
   dependencies: IRefinanceDependencies,
 ): Promise<ISimulation<SimulationType.Refinance>> {
   // args validation
-  if (!isLendingPool(args.targetPool)) {
+  if (!isLendingPool(args.targetPosition.pool)) {
     throw new Error('Target pool is not a lending pool')
   }
 
-  const position = Position.createFrom(args.position)
-  const targetPool = await dependencies.protocolManager.getPool(args.targetPool.poolId)
+  const position = Position.createFrom(args.sourcePosition)
+  const targetPool = await dependencies.protocolManager.getPool(args.targetPosition.pool.poolId)
 
   if (!isLendingPool(targetPool)) {
     throw new Error('Target pool is not a lending pool')
@@ -35,8 +35,10 @@ export async function refinanceLendingToLending(
   const flashloanAmount = position.debtAmount.multiply(FLASHLOAN_MARGIN)
   const simulator = Simulator.create(refinanceLendingToLendingStrategy)
 
-  const targetCollateralConfig = targetPool.collaterals.get({ token: args.targetCollateral })
-  const targetDebtConfig = targetPool.debts.get({ token: args.targetDebt })
+  const targetCollateralConfig = targetPool.collaterals.get({
+    token: args.targetPosition.collateralAmount.token,
+  })
+  const targetDebtConfig = targetPool.debts.get({ token: args.targetPosition.debtAmount.token })
   if (!targetCollateralConfig || !targetDebtConfig) {
     throw new Error('Target token config not found in pool')
   }
@@ -142,7 +144,7 @@ export async function refinanceLendingToLending(
       type: SimulationSteps.Swap,
       inputs: {
         ...(await dependencies.swapManager.getSwapQuoteExactInput({
-          chainInfo: args.position.pool.protocol.chainInfo,
+          chainInfo: args.sourcePosition.pool.protocol.chainInfo,
           fromAmount: subtractPercentage(
             getReferencedValue(ctx.getReference(['DepositBorrowToTarget', 'borrowAmount'])),
             Percentage.createFrom({

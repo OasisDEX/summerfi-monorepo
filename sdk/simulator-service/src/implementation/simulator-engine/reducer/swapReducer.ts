@@ -1,5 +1,4 @@
 import { TokenAmount, Price, Percentage } from '@summerfi/sdk-common/common'
-import { applyPercentage } from '@summerfi/sdk-common/utils'
 import { steps } from '@summerfi/sdk-common/simulation'
 import { addBalance, subtractBalance } from '../../utils'
 import { ISimulationState } from '../../../interfaces/simulation'
@@ -22,7 +21,9 @@ export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISim
   })
 
   const spotPrice = step.inputs.spotPrice
-  const fromAmountPreSummerFee = applyPercentage(step.inputs.fromTokenAmount, step.inputs.summerFee)
+  const fromAmountPreSummerFee = step.inputs.fromTokenAmount.divide(
+    Percentage.createFrom({ value: 1 }).subtract(step.inputs.summerFee),
+  )
 
   return {
     ...state,
