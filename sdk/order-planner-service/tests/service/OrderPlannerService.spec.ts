@@ -1,7 +1,13 @@
-import { FlashloanProvider, ISimulation, SimulationType, TokenTransferTargetType } from '@summerfi/sdk-common/simulation'
+import {
+  FlashloanAction,
+  SetApprovalAction,
+  ReturnFundsAction,
+} from '@summerfi/protocol-plugins/plugins/common'
+import { FlashloanProvider, ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
 import { Address, AddressValue, ChainFamilyMap, ChainInfo } from '@summerfi/sdk-common/common'
+import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { IPositionsManager } from '@summerfi/sdk-common/orders'
 import { SetupDeployments } from '../utils/SetupDeployments'
 import { UserMock } from '../mocks/UserMock'
@@ -18,7 +24,6 @@ import {
 import assert from 'assert'
 import { IUser } from '@summerfi/sdk-common/user'
 import {
-  IContractProvider,
   IPriceService,
   IProtocolPluginsRegistry,
   ITokenService,

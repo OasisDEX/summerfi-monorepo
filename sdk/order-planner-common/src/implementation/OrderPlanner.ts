@@ -75,7 +75,7 @@ export class OrderPlanner implements IOrderPlanner {
     return actionBuildersMap[step.type] as ActionBuilder<T>
   }
 
-  private _getStrategyName(simulation: Simulation<SimulationType>): string {
+  private _getStrategyName(simulation: ISimulation<SimulationType>): string {
     return `${simulation.simulationType}${simulation.sourcePosition?.pool.protocol.name}${simulation.targetPosition?.pool.protocol.name}`
   }
 

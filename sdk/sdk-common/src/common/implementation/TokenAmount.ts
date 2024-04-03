@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js'
-import {Percentage} from "./Percentage";
+import { Percentage } from './Percentage'
 import { Token } from './Token'
 import { SerializationService } from '../../services/SerializationService'
 import { ITokenAmount } from '../interfaces/ITokenAmount'

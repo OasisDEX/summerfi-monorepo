@@ -10,7 +10,7 @@ export class RefinanceSimulationManager extends IRPCClient {
 
   public async simulateRefinancePosition(
     params: IRefinanceParameters,
-  ): Promise<Simulation<SimulationType.Refinance>> {
+  ): Promise<ISimulation<SimulationType.Refinance>> {
     const refinanceParameters: IRefinanceParameters = {
       position: {
         positionId: params.position.positionId,
