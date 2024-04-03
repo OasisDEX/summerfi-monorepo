@@ -1,21 +1,31 @@
 import { ISwapProvider } from '@summerfi/swap-common/interfaces'
-import { SwapProviderType } from '@summerfi/swap-common/enums'
-import { SwapData, QuoteData } from '@summerfi/swap-common/types'
+import {
+  SwapProviderType,
+  SwapData,
+  SpotData,
+  SwapRoute,
+  QuoteData,
+} from '@summerfi/sdk-common/swap'
 import {
   OneInchAuthHeader,
   OneInchAuthHeaderKey,
   OneInchQuoteResponse,
+  OneInchSpotResponse,
   OneInchSwapProviderConfig,
   OneInchSwapResponse,
+  OneInchSwapRoute,
 } from './types'
 import { HexData } from '@summerfi/sdk-common/common/aliases'
 import fetch from 'node-fetch'
 import {
   type ChainInfo,
   TokenAmount,
-  type Percentage,
+  Percentage,
   type Token,
   Address,
+  CurrencySymbol,
+  Price,
+  type AddressValue,
 } from '@summerfi/sdk-common/common'
 
 export class OneInchSwapProvider implements ISwapProvider {
@@ -106,7 +116,52 @@ export class OneInchSwapProvider implements ISwapProvider {
         token: params.toToken,
         amount: responseData.toTokenAmount,
       }),
+      routes: this._extractSwapRoutes(responseData.protocols),
       estimatedGas: responseData.estimatedGas,
+    }
+  }
+
+  async getSpotPrices(params: {
+    chainInfo: ChainInfo
+    tokens: Token[]
+    quoteCurrency?: CurrencySymbol
+  }): Promise<SpotData> {
+    const spotUrl = this._formatOneInchSpotUrl({
+      chainInfo: params.chainInfo,
+      tokenAddresses: params.tokens.map((token) => token.address),
+      quoteCurrency: params.quoteCurrency ?? CurrencySymbol.USD,
+    })
+
+    const authHeader = this._getOneInchAuthHeader()
+
+    const response = await fetch(spotUrl, {
+      headers: authHeader,
+    })
+
+    if (!(response.status === 200 && response.statusText === 'OK')) {
+      throw new Error(
+        `Error performing 1inch spot price request ${spotUrl}: ${await response.body}`,
+      )
+    }
+
+    const responseData = (await response.json()) as OneInchSpotResponse
+
+    return {
+      provider: SwapProviderType.OneInch,
+      prices: Object.entries(responseData).map(([address, price]) => {
+        const baseToken = params.tokens.find((token) =>
+          token.address.equals(Address.createFromEthereum({ value: address as AddressValue })),
+        )
+        if (!baseToken) {
+          throw new Error('BaseToken not found in params.tokens list when fetching spot prices')
+        }
+
+        return Price.createFrom({
+          value: price.toString(),
+          baseToken,
+          quoteToken: params.quoteCurrency || CurrencySymbol.USD,
+        })
+      }),
     }
   }
 
@@ -151,5 +206,31 @@ export class OneInchSwapProvider implements ISwapProvider {
       : ''
 
     return `${this._apiUrl}/${this._version}/${chainId}/quote?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&protocols=${protocolsParam}`
+  }
+
+  private _formatOneInchSpotUrl(params: {
+    chainInfo: ChainInfo
+    tokenAddresses: Address[]
+    quoteCurrency: CurrencySymbol
+  }): string {
+    const chainId = params.chainInfo.chainId
+    const tokenAddresses = params.tokenAddresses.map((address) => address.value.toLowerCase())
+
+    return `${this._apiUrl}/${this._version}/${chainId}/price/${tokenAddresses.join(',')}?currency=${params.quoteCurrency.toUpperCase()}`
+  }
+
+  private _extractSwapRoutes(protocols: OneInchSwapRoute[]): SwapRoute[] {
+    return protocols.map((route) =>
+      route.map((hop) =>
+        hop.map((hopPart) => ({
+          name: hopPart.name,
+          part: Percentage.createFrom({ value: hopPart.part }),
+          fromTokenAddress: Address.createFromEthereum({
+            value: hopPart.fromTokenAddress as HexData,
+          }),
+          toTokenAddress: Address.createFromEthereum({ value: hopPart.toTokenAddress as HexData }),
+        })),
+      ),
+    )
   }
 }

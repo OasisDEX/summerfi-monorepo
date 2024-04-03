@@ -1,55 +1,24 @@
 import {
   FlashloanProvider,
+  ISimulation,
   PositionType,
-  Simulation,
   SimulationSteps,
   SimulationType,
   TokenTransferTargetType,
 } from '@summerfi/sdk-common/simulation'
-import { makeStrategy } from '../helpers'
-import { Simulator } from '../simulator-engine'
-import { Percentage, Position, TokenAmount } from '@summerfi/sdk-common/common'
+import { Simulator } from '../../implementation/simulator-engine'
+import { Position, TokenAmount, Percentage } from '@summerfi/sdk-common/common'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
-import { type ISwapManager } from '@summerfi/swap-common/interfaces'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
-import { type IProtocolManager } from '@summerfi/protocol-manager-common'
+import { getReferencedValue } from '../../implementation/utils'
+import { refinanceLendingToLendingStrategy } from './Strategy'
+import { type IRefinanceDependencies } from './Types'
 
-export const refinanceStrategy = makeStrategy([
-  {
-    step: SimulationSteps.Flashloan,
-    optional: false,
-  },
-  {
-    step: SimulationSteps.PaybackWithdraw,
-    optional: false,
-  },
-  {
-    step: SimulationSteps.DepositBorrow,
-    optional: false,
-  },
-  {
-    step: SimulationSteps.RepayFlashloan,
-    optional: false,
-  },
-  {
-    step: SimulationSteps.NewPositionEvent,
-    optional: false,
-  },
-])
-
-// TODO move those interfaces to more appropriate place
-
-export interface RefinanceDependencies {
-  swapManager: ISwapManager
-  protocolManager: IProtocolManager
-  getSummerFee: () => Percentage
-}
-
-export async function refinaceLendingToLending(
+export async function refinanceLendingToLending(
   args: IRefinanceParameters,
-  dependencies: RefinanceDependencies,
-): Promise<Simulation<SimulationType.Refinance>> {
+  dependencies: IRefinanceDependencies,
+): Promise<ISimulation<SimulationType.Refinance>> {
   // args validation
   if (!isLendingPool(args.targetPool)) {
     throw new Error('Target pool is not a lending pool')
@@ -64,12 +33,18 @@ export async function refinaceLendingToLending(
 
   const FLASHLOAN_MARGIN = 1.001
   const flashloanAmount = position.debtAmount.multiply(FLASHLOAN_MARGIN)
-  const simulator = Simulator.create(refinanceStrategy)
+  const simulator = Simulator.create(refinanceLendingToLendingStrategy)
 
   const targetTokenConfig = targetPool.collaterals.get({ token: position.collateralAmount.token })
   if (!targetTokenConfig) {
     throw new Error('Target token not found in pool')
   }
+
+  // TODO: Update this check
+  const collateralConfig = targetPool.collaterals.get({ token: position.collateralAmount.token })
+  const debtConfig = targetPool.debts.get({ token: position.debtAmount.token })
+  const isCollateralSwapSkipped = collateralConfig !== undefined
+  const isDebtSwapSkipped = debtConfig !== undefined
 
   // TODO: read debt amount from chain (special step: ReadDebtAmount)
   // TODO: the swap quote should also include the summer fee, in this case we need to know when we are taking the fee,
@@ -95,6 +70,25 @@ export async function refinaceLendingToLending(
         position: position,
       },
     }))
+    .next(async () => ({
+      name: 'CollateralSwap',
+      type: SimulationSteps.Swap,
+      inputs: {
+        ...(await dependencies.swapManager.getSwapQuoteExactInput({
+          chainInfo: position.pool.protocol.chainInfo,
+          // TODO: Properly implement swaps
+          fromAmount: position.collateralAmount,
+          toToken: collateralConfig!.token,
+        })),
+        ...(await dependencies.swapManager.getSpotPrices({
+          chainInfo: position.pool.protocol.chainInfo,
+          tokens: [collateralConfig!.token, collateralConfig!.token],
+        })),
+        slippage: Percentage.createFrom({ value: args.slippage.value }),
+        fee: dependencies.getSummerFee(),
+      },
+      skip: isCollateralSwapSkipped,
+    }))
     .next(async (ctx) => ({
       name: 'DepositBorrowToTarget',
       type: SimulationSteps.DepositBorrow,
@@ -108,6 +102,27 @@ export async function refinaceLendingToLending(
         ),
         borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
+    }))
+    // TODO: Implement swapping logic properly. Current implementation is just placeholder
+    .next(async (ctx) => ({
+      name: 'DebtSwap',
+      type: SimulationSteps.Swap,
+      inputs: {
+        ...(await dependencies.swapManager.getSwapQuoteExactInput({
+          chainInfo: args.position.pool.protocol.chainInfo,
+          fromAmount: getReferencedValue(
+            ctx.getReference(['DepositBorrowToTarget', 'borrowAmount']),
+          ),
+          toToken: debtConfig!.token,
+        })),
+        ...(await dependencies.swapManager.getSpotPrices({
+          chainInfo: args.position.pool.protocol.chainInfo,
+          tokens: [debtConfig!.token, debtConfig!.token],
+        })),
+        slippage: Percentage.createFrom({ value: args.slippage.value }),
+        fee: dependencies.getSummerFee(),
+      },
+      skip: isDebtSwapSkipped,
     }))
     .next(async () => ({
       name: 'RepayFlashloan',
@@ -136,7 +151,6 @@ export async function refinaceLendingToLending(
     })
     .run()
 
-  // TODO: I think simulation should return the simulation position as a preperty targetPosition for easy discoverability
   const targetPosition = Object.values(simulation.positions).find(
     (p) => p.pool.protocol === targetPool.protocol,
   )
@@ -149,6 +163,7 @@ export async function refinaceLendingToLending(
     simulationType: SimulationType.Refinance,
     sourcePosition: position,
     targetPosition,
+    swaps: Object.values(simulation.swaps),
     steps: Object.values(simulation.steps),
-  } as Simulation<SimulationType.Refinance>
+  } as ISimulation<SimulationType.Refinance>
 }

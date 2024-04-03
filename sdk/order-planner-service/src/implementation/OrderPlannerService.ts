@@ -1,6 +1,6 @@
 import { OrderPlanner } from '@summerfi/order-planner-common/implementation'
 import { Order, type IPositionsManager } from '@summerfi/sdk-common/orders'
-import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { IUser } from '@summerfi/sdk-common/user'
 import { ChainInfo, Maybe } from '@summerfi/sdk-common/common'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
@@ -29,7 +29,7 @@ export class OrderPlannerService implements IOrderPlannerService {
   async buildOrder(params: {
     user: IUser
     positionsManager: IPositionsManager
-    simulation: Simulation<SimulationType>
+    simulation: ISimulation<SimulationType>
     swapManager: ISwapManager
     protocolsRegistry: IProtocolPluginsRegistry
   }): Promise<Maybe<Order>> {

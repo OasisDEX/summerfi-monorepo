@@ -173,10 +173,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
     const debts: MakerDebtConfigRecord = {
       [quoteToken.address.value]: {
         token: quoteToken,
-        price: await ctx.priceService.getPrice({
-          baseToken: quoteToken,
-          quoteToken: collateralToken,
-        }),
+        price: await ctx.priceService.getPriceUSD(quoteToken),
         priceUSD: await ctx.priceService.getPriceUSD(quoteToken),
         rate: Percentage.createFrom({ value: stabilityFee.times(100).toNumber() }),
         totalBorrowed: TokenAmount.createFrom({

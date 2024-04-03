@@ -1,15 +1,18 @@
 import { IPosition } from '../common/interfaces/IPosition'
+import { SimulatedSwapData } from '../swap'
 import type { SimulationType } from './Enums'
 import type { Steps } from './Steps'
 
 /**
- * @interface Simulation
+ * @interface ISimulation
  * @description Simulation of a position. Specialized into the different types of simulations needed
  */
-export interface Simulation<T extends SimulationType> {
+export interface ISimulation<T extends SimulationType> {
   simulationType: T
   sourcePosition?: IPosition // TODO figure what do to when opening position (empty position or optional)
   targetPosition: IPosition
+  /* The details of any swaps required as part of the simulation */
+  swaps: SimulatedSwapData[]
   steps: Steps[]
   // TODO: OPEN QUESTION: where errors and warnings and info messages?
 }

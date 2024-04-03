@@ -1,5 +1,4 @@
 import { AaveV3ProtocolPlugin } from '@summerfi/protocol-plugins/plugins/aave-v3'
-import { MockContractProvider } from '@summerfi/protocol-plugins/mocks'
 import {
   PriceService,
   ProtocolPluginsRecordType,
@@ -31,7 +30,6 @@ export function createProtocolsPluginsRegistry(): IProtocolPluginsRegistry {
 
   const tokenService = new TokenService()
   const priceService = new PriceService(provider)
-  const contractProvider = new MockContractProvider()
 
   return new ProtocolPluginsRegistry({
     plugins: ProtocolPlugins,
@@ -39,7 +37,6 @@ export function createProtocolsPluginsRegistry(): IProtocolPluginsRegistry {
       provider,
       tokenService,
       priceService,
-      contractProvider,
     },
   })
 }

@@ -1,5 +1,5 @@
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { SimulationState } from '../../../interfaces/simulation'
+import { ISimulationState } from '../../../interfaces/simulation'
 import type { StateReducer, StateReducers } from '../../../interfaces/steps'
 import { flashloanReducer } from './flashloanReducer'
 import { depositBorrowReducer } from './depositBorrowReducer'
@@ -21,7 +21,7 @@ const stateReducers: StateReducers = {
   [SimulationSteps.NewPositionEvent]: newPositionEventReducer,
 }
 
-export function stateReducer(step: steps.Steps, state: SimulationState): SimulationState {
+export function stateReducer(step: steps.Steps, state: ISimulationState): ISimulationState {
   const reducer = stateReducers[step.type] as StateReducer<steps.Steps>
 
   return reducer(step, state)

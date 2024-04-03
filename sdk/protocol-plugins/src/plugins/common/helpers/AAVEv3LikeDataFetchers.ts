@@ -1,19 +1,18 @@
 import { Token } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import { AllowedProtocolNames } from './AAVEv3LikeBuilderTypes'
-import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
+import {
+  AllowedProtocolNames,
+  IProtocolPluginContextWithContractDef,
+} from './AAVEv3LikeBuilderTypes'
 
 // TODO: Update ContractProvider to work based on ChainId
 export async function fetchReservesTokens(
-  ctx: IProtocolPluginContext,
+  ctx: IProtocolPluginContextWithContractDef,
   protocolName: AllowedProtocolNames,
 ) {
   switch (protocolName) {
     case ProtocolName.AAVEv3: {
-      const poolDataProviderDef = ctx.contractProvider.getContractDef(
-        'PoolDataProvider',
-        ProtocolName.AAVEv3,
-      )
+      const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
       const [rawReservesTokenList] = await ctx.provider.multicall({
         contracts: [
           {
@@ -29,10 +28,7 @@ export async function fetchReservesTokens(
       return rawReservesTokenList
     }
     case ProtocolName.Spark: {
-      const poolDataProviderDef = ctx.contractProvider.getContractDef(
-        'PoolDataProvider',
-        ProtocolName.Spark,
-      )
+      const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
       const [rawReservesTokenList] = await ctx.provider.multicall({
         contracts: [
           {
@@ -52,16 +48,13 @@ export async function fetchReservesTokens(
   }
 }
 export async function fetchEmodeCategoriesForReserves(
-  ctx: IProtocolPluginContext,
+  ctx: IProtocolPluginContextWithContractDef,
   tokensList: Token[],
   protocolName: AllowedProtocolNames,
 ) {
   switch (protocolName) {
     case ProtocolName.AAVEv3: {
-      const poolDataProviderDef = ctx.contractProvider.getContractDef(
-        'PoolDataProvider',
-        ProtocolName.AAVEv3,
-      )
+      const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
       const contractCalls = tokensList.map((token) => ({
         abi: poolDataProviderDef.abi,
         address: poolDataProviderDef.address,
@@ -75,10 +68,7 @@ export async function fetchEmodeCategoriesForReserves(
       })
     }
     case ProtocolName.Spark: {
-      const poolDataProviderDef = ctx.contractProvider.getContractDef(
-        'PoolDataProvider',
-        ProtocolName.Spark,
-      )
+      const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
       const contractCalls = tokensList.map((token) => ({
         abi: poolDataProviderDef.abi,
         address: poolDataProviderDef.address,
@@ -96,16 +86,13 @@ export async function fetchEmodeCategoriesForReserves(
   }
 }
 export async function fetchAssetConfigurationData(
-  ctx: IProtocolPluginContext,
+  ctx: IProtocolPluginContextWithContractDef,
   tokensList: Token[],
   protocolName: AllowedProtocolNames,
 ) {
   switch (protocolName) {
     case ProtocolName.AAVEv3: {
-      const poolDataProviderDef = ctx.contractProvider.getContractDef(
-        'PoolDataProvider',
-        ProtocolName.AAVEv3,
-      )
+      const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
       const contractCalls = tokensList.map((token) => ({
         abi: poolDataProviderDef.abi,
         address: poolDataProviderDef.address,
@@ -119,10 +106,7 @@ export async function fetchAssetConfigurationData(
       })
     }
     case ProtocolName.Spark: {
-      const poolDataProviderDef = ctx.contractProvider.getContractDef(
-        'PoolDataProvider',
-        ProtocolName.Spark,
-      )
+      const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
       const contractCalls = tokensList.map((token) => ({
         abi: poolDataProviderDef.abi,
         address: poolDataProviderDef.address,
@@ -140,16 +124,13 @@ export async function fetchAssetConfigurationData(
   }
 }
 export async function fetchReservesCap(
-  ctx: IProtocolPluginContext,
+  ctx: IProtocolPluginContextWithContractDef,
   tokensList: Token[],
   protocolName: AllowedProtocolNames,
 ) {
   switch (protocolName) {
     case ProtocolName.AAVEv3: {
-      const poolDataProviderDef = ctx.contractProvider.getContractDef(
-        'PoolDataProvider',
-        ProtocolName.AAVEv3,
-      )
+      const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
       const contractCalls = tokensList.map((token) => ({
         abi: poolDataProviderDef.abi,
         address: poolDataProviderDef.address,
@@ -163,10 +144,7 @@ export async function fetchReservesCap(
       })
     }
     case ProtocolName.Spark: {
-      const poolDataProviderDef = ctx.contractProvider.getContractDef(
-        'PoolDataProvider',
-        ProtocolName.Spark,
-      )
+      const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
       const contractCalls = tokensList.map((token) => ({
         abi: poolDataProviderDef.abi,
         address: poolDataProviderDef.address,
@@ -184,16 +162,13 @@ export async function fetchReservesCap(
   }
 }
 export async function fetchAssetReserveData(
-  ctx: IProtocolPluginContext,
+  ctx: IProtocolPluginContextWithContractDef,
   tokensList: Token[],
   protocolName: AllowedProtocolNames,
 ) {
   switch (protocolName) {
     case ProtocolName.AAVEv3: {
-      const poolDataProviderDef = ctx.contractProvider.getContractDef(
-        'PoolDataProvider',
-        ProtocolName.AAVEv3,
-      )
+      const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
       const contractCalls = tokensList.map((token) => ({
         abi: poolDataProviderDef.abi,
         address: poolDataProviderDef.address,
@@ -207,10 +182,7 @@ export async function fetchAssetReserveData(
       })
     }
     case ProtocolName.Spark: {
-      const poolDataProviderDef = ctx.contractProvider.getContractDef(
-        'PoolDataProvider',
-        ProtocolName.Spark,
-      )
+      const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
       const contractCalls = tokensList.map((token) => ({
         abi: poolDataProviderDef.abi,
         address: poolDataProviderDef.address,
@@ -228,17 +200,17 @@ export async function fetchAssetReserveData(
   }
 }
 export async function fetchAssetPrices(
-  ctx: IProtocolPluginContext,
+  ctx: IProtocolPluginContextWithContractDef,
   tokensList: Token[],
   protocolName: AllowedProtocolNames,
 ) {
   let oracleDef = null
   switch (protocolName) {
     case ProtocolName.AAVEv3:
-      oracleDef = ctx.contractProvider.getContractDef('Oracle', ProtocolName.AAVEv3)
+      oracleDef = ctx.getContractDef('Oracle')
       break
     case ProtocolName.Spark:
-      oracleDef = ctx.contractProvider.getContractDef('Oracle', ProtocolName.Spark)
+      oracleDef = ctx.getContractDef('Oracle')
       break
     default:
       throw new Error(`Unsupported protocol supplied ${protocolName}`)

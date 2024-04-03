@@ -812,6 +812,9 @@ importers:
       '@summerfi/testing-utils':
         specifier: workspace:*
         version: link:../testing-utils
+      bignumber.js:
+        specifier: 9.0.1
+        version: 9.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4

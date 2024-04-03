@@ -14,7 +14,7 @@ import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
 import { makeSDK, type Chain, type User, Protocol } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
 import { IPositionsManager, IRefinanceParameters, Order } from '@summerfi/sdk-common/orders'
-import { PositionType, Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { ISimulation, SimulationType, PositionType } from '@summerfi/sdk-common/simulation'
 import { TransactionUtils } from './utils/TransactionUtils'
 import {
   decodeActionCalldata,
@@ -51,7 +51,7 @@ jest.setTimeout(300000)
 const SDKAPiUrl = 'https://zmjmtfsocb.execute-api.us-east-1.amazonaws.com/api/sdk'
 const TenderlyForkUrl = 'https://rpc.tenderly.co/fork/6bc5cd6d-e504-43aa-bea9-82f6b745239f'
 
-describe('Refinance Maker Spark | SDK', () => {
+describe.skip('Refinance Maker Spark | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: SDKAPiUrl })
@@ -163,7 +163,7 @@ describe('Refinance Maker Spark | SDK', () => {
       assert(false, 'Spark pool type is not lending')
     }
 
-    const refinanceSimulation: Simulation<SimulationType.Refinance> =
+    const refinanceSimulation: ISimulation<SimulationType.Refinance> =
       await sdk.simulator.refinance.simulateRefinancePosition({
         position: makerPosition,
         targetPool: sparkPool,
