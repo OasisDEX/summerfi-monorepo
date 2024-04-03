@@ -17,7 +17,7 @@
     "build": "tsc -b -v tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "bundle:npm": "esbuild src/index.ts --platform=neutral --target=es2020 --conditions= --main-fields=main --bundle --sourcemap --outfile=bundle/dist/index.js && tsc --emitDeclarationOnly --outDir bundle/dist",
+    "bundle:npm": "esbuild src/index.ts --platform=neutral --target=es2020 --conditions= --main-fields=main --bundle --sourcemap --outfile=bundle/dist/index.js && tsc --emitDeclarationOnly --outDir bundle/dist -p tsconfig.build.json",
     "publish:npm": "pnpm bundle:npm && cd bundle && npm publish && cd .."
   },
   "dependencies": {
