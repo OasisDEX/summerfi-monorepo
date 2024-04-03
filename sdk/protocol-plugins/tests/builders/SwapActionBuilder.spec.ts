@@ -3,12 +3,13 @@ import {
   AddressValue,
   ChainFamilyMap,
   ChainInfo,
+  Price,
   Percentage,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { SwapProviderType } from '@summerfi/swap-common/enums'
+import { SwapProviderType } from '@summerfi/sdk-common/swap'
 
 import { SetupBuilderReturnType, setupBuilderParams } from '../utils/SetupBuilderParams'
 import { SwapActionBuilder } from '../../src/plugins/common/builders'
@@ -58,8 +59,17 @@ describe('Swap Action Builder', () => {
       type: SimulationSteps.Swap,
       name: 'SwapStep',
       inputs: {
+        provider: SwapProviderType.OneInch,
+        routes: [],
         fromTokenAmount: fromAmount,
         toTokenAmount: toAmount,
+        prices: [
+          Price.createFrom({
+            value: '0',
+            quoteToken: fromAmount.token,
+            baseToken: toAmount.token,
+          }),
+        ],
         fee: fee,
         slippage,
       },
