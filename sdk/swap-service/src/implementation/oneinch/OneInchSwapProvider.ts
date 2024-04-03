@@ -1,6 +1,11 @@
 import { ISwapProvider } from '@summerfi/swap-common/interfaces'
-import { SwapProviderType } from '@summerfi/sdk-common/swap'
-import type { SwapData, SwapRoute, QuoteData, SpotData } from '@summerfi/sdk-common/swap'
+import {
+  SwapProviderType,
+  SwapData,
+  SpotData,
+  SwapRoute,
+  QuoteData,
+} from '@summerfi/sdk-common/swap'
 import {
   OneInchAuthHeader,
   OneInchAuthHeaderKey,

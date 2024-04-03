@@ -7,8 +7,7 @@ import type {
   CurrencySymbol,
 } from '@summerfi/sdk-common/common'
 import { IProtocol } from '@summerfi/sdk-common/protocols'
-import { SpotData } from '@summerfi/sdk-common/swap'
-import type { QuoteData, SwapData } from '@summerfi/sdk-common/swap'
+import type { QuoteData, SwapData, SpotData } from '@summerfi/sdk-common/swap'
 
 /**
  * @name ISwapManager

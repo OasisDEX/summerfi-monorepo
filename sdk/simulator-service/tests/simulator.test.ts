@@ -1,7 +1,6 @@
-import { Percentage } from '@summerfi/sdk-common/common'
 import { ISimulation, SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
 import { refinanceLendingToLending } from '../src/strategies'
-import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common'
+import { Percentage, newEmptyPositionFromPool } from '@summerfi/sdk-common/common'
 import {
   otherTestCollateral,
   otherTestDebt,

@@ -8,8 +8,8 @@ import {
 } from '@summerfi/sdk-common/common'
 import { CurrencySymbol } from '@summerfi/sdk-common/common'
 import { IPool } from '@summerfi/sdk-common/protocols'
-import { SwapProviderType } from '@summerfi/sdk-common/swap'
 import { testTargetLendingPool, testTargetLendingPoolRequiredSwaps } from './testSourcePosition'
+import { SwapProviderType } from '@summerfi/sdk-common/swap'
 
 async function getSwapDataExactInput(params: {
   chainInfo: ChainInfo
