@@ -12,7 +12,7 @@ export class Position implements IPosition {
   readonly collateralAmount: TokenAmount
   readonly pool: IPool
 
-  constructor(params: IPosition) {
+  private constructor(params: IPosition) {
     this.positionId = params.positionId
     this.debtAmount = TokenAmount.createFrom(params.debtAmount)
     this.collateralAmount = TokenAmount.createFrom(params.collateralAmount)
