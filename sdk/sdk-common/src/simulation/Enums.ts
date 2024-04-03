@@ -17,6 +17,7 @@ export enum SimulationSteps {
   PullToken = 'PullToken',
   ReturnFunds = 'ReturnFunds',
   RepayFlashloan = 'RepayFlashloan',
+  NewPositionEvent = 'NewPositionEvent',
 }
 
 export enum FlashloanProvider {
@@ -27,4 +28,10 @@ export enum FlashloanProvider {
 export enum TokenTransferTargetType {
   PositionsManager = 1,
   StrategyExecutor = 0,
+}
+
+export enum PositionType {
+  Borrow = 'Borrow',
+  Multiply = 'Multiply',
+  Refinance = 'Refinance',
 }

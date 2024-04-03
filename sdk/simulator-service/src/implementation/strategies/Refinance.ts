@@ -1,5 +1,6 @@
 import {
   FlashloanProvider,
+  PositionType,
   Simulation,
   SimulationSteps,
   SimulationType,
@@ -29,6 +30,10 @@ export const refinanceStrategy = makeStrategy([
   },
   {
     step: SimulationSteps.RepayFlashloan,
+    optional: false,
+  },
+  {
+    step: SimulationSteps.NewPositionEvent,
     optional: false,
   },
 ])
@@ -111,6 +116,24 @@ export async function refinaceLendingToLending(
         amount: flashloanAmount,
       },
     }))
+    .next(async (ctx) => {
+      // TODO: we should have a way to get the target position more easily and realiably,
+      const targetPosition = Object.values(ctx.state.positions).find(
+        (p) => p.pool.protocol === targetPool.protocol,
+      )
+      if (!targetPosition) {
+        throw new Error('Target position not found')
+      }
+
+      return {
+        name: 'NewPositionEvent',
+        type: SimulationSteps.NewPositionEvent,
+        inputs: {
+          position: targetPosition,
+          positionType: PositionType.Refinance,
+        },
+      }
+    })
     .run()
 
   // TODO: I think simulation should return the simulation position as a preperty targetPosition for easy discoverability

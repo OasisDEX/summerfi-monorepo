@@ -14,7 +14,7 @@ import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
 import { makeSDK, type Chain, type User, Protocol } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
 import { IPositionsManager, IRefinanceParameters, Order } from '@summerfi/sdk-common/orders'
-import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { PositionType, Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { TransactionUtils } from './utils/TransactionUtils'
 import {
   decodeActionCalldata,
@@ -31,6 +31,7 @@ import {
   FlashloanAction,
   SendTokenAction,
   SetApprovalAction,
+  PositionCreatedAction,
 } from '@summerfi/protocol-plugins/plugins/common'
 import {
   ILKType,
@@ -48,9 +49,9 @@ import {
 jest.setTimeout(300000)
 
 const SDKAPiUrl = 'https://zmjmtfsocb.execute-api.us-east-1.amazonaws.com/api/sdk'
-const TenderlyForkUrl = 'https://rpc.tenderly.co/fork/47a20a20-3aa1-4d21-afd7-6a230b12a0cc'
+const TenderlyForkUrl = 'https://rpc.tenderly.co/fork/6bc5cd6d-e504-43aa-bea9-82f6b745239f'
 
-describe.skip('Refinance Maker Spark | SDK', () => {
+describe('Refinance Maker Spark | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: SDKAPiUrl })
@@ -173,7 +174,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
 
     expect(refinanceSimulation.sourcePosition?.positionId).toEqual(makerPosition.positionId)
     expect(refinanceSimulation.targetPosition.pool.poolId).toEqual(sparkPool.poolId)
-    expect(refinanceSimulation.steps.length).toBe(4)
+    expect(refinanceSimulation.steps.length).toBe(5)
 
     const refinanceOrder: Maybe<Order> = await user.newOrder({
       positionsManager: {
@@ -218,7 +219,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
 
     assert(strategyExecutorParams, 'Cannot decode Strategy Executor calldata')
     expect(strategyExecutorParams.strategyName).toEqual(strategyName)
-    expect(strategyExecutorParams.actionCalls.length).toEqual(1)
+    expect(strategyExecutorParams.actionCalls.length).toEqual(2)
 
     // Decode Flashloan action
     const flashloanParams = decodeActionCalldata({
@@ -341,6 +342,23 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     expect(sendTokenAction.args[0].asset).toBe(sourcePosition.debtAmount.token.address.value)
     expect(sendTokenAction.args[0].to).toBe(strategyExecutorAddress.value)
     expect(sendTokenAction.args[0].amount).toBe(BigInt(flashloanAmount.toBaseUnit()))
+
+    // Decode Position Created event action
+    const positionCreatedParams = decodeActionCalldata({
+      action: new PositionCreatedAction(),
+      calldata: strategyExecutorParams.actionCalls[1].callData,
+    })
+
+    assert(positionCreatedParams, 'Cannot decode Position Created action calldata')
+
+    expect(positionCreatedParams.args[0].protocol).toBe(targetPosition.pool.protocol.name)
+    expect(positionCreatedParams.args[0].positionType).toBe(PositionType.Refinance)
+    expect(positionCreatedParams.args[0].collateralToken).toBe(
+      targetPosition.collateralAmount.token.address.value,
+    )
+    expect(positionCreatedParams.args[0].debtToken).toBe(
+      targetPosition.debtAmount.token.address.value,
+    )
 
     // Send transaction
     console.log('Sending transaction...')

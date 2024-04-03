@@ -4,6 +4,7 @@ import {
   DepositBorrowActionBuilder,
   FlashloanActionBuilder,
   PaybackWithdrawActionBuilder,
+  PositionCreatedActionBuilder,
   PullTokenActionBuilder,
   RepayFlashloanActionBuilder,
   ReturnFundsActionBuilder,
@@ -18,4 +19,5 @@ export const ActionBuildersConfig: ActionBuildersMap = {
   [SimulationSteps.DepositBorrow]: DepositBorrowActionBuilder,
   [SimulationSteps.PaybackWithdraw]: PaybackWithdrawActionBuilder,
   [SimulationSteps.ReturnFunds]: ReturnFundsActionBuilder,
+  [SimulationSteps.NewPositionEvent]: PositionCreatedActionBuilder,
 }

@@ -1,6 +1,12 @@
 import { Percentage } from '@summerfi/sdk-common/common'
 import { refinaceLendingToLending } from '../src/implementation/strategies'
-import { Simulation, SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
+import {
+  PositionType,
+  Simulation,
+  SimulationSteps,
+  SimulationType,
+  steps,
+} from '@summerfi/sdk-common/simulation'
 import {
   otherTestCollateral,
   otherTestDebt,
@@ -9,6 +15,7 @@ import {
   testTargetLendingPoolRequiredSwaps,
 } from './mocks/testSourcePosition'
 import { mockRefinanceContext } from './mocks/contextMock'
+import assert from 'assert'
 
 describe('Refinance', () => {
   describe('to the position with the same collateral and debt (no swaps)', () => {
@@ -53,6 +60,16 @@ describe('Refinance', () => {
       const targetPosition = simulation.targetPosition
 
       expect(targetPosition.positionId).toBeDefined()
+    })
+
+    it('should include a new position event step', async () => {
+      const newPositionStep = simulation.steps.find(
+        (step) => step.type === SimulationSteps.NewPositionEvent,
+      ) as steps.NewPositionEvent
+
+      assert(newPositionStep, 'New position event step not found')
+      expect(newPositionStep.inputs.position).toEqual(simulation.targetPosition)
+      expect(newPositionStep.inputs.positionType).toEqual(PositionType.Refinance)
     })
   })
 

@@ -2,7 +2,7 @@ import { Percentage } from '../common/implementation/Percentage'
 import { Position } from '../common/implementation/Position'
 import { Token } from '../common/implementation/Token'
 import { TokenAmount } from '../common/implementation/TokenAmount'
-import { FlashloanProvider, SimulationSteps, TokenTransferTargetType } from './Enums'
+import { FlashloanProvider, PositionType, SimulationSteps, TokenTransferTargetType } from './Enums'
 import { ReferenceableField, ValueReference } from './ValueReference'
 
 export interface Step<T extends SimulationSteps, I, O = undefined, N extends string = string> {
@@ -79,6 +79,15 @@ export interface RepayFlashloan
     }
   > {}
 
+export interface NewPositionEvent
+  extends Step<
+    SimulationSteps.NewPositionEvent,
+    {
+      position: Position
+      positionType: PositionType
+    }
+  > {}
+
 export type Steps =
   | FlashloanStep
   | PullTokenStep
@@ -87,3 +96,4 @@ export type Steps =
   | SwapStep
   | ReturnFunds
   | RepayFlashloan
+  | NewPositionEvent
