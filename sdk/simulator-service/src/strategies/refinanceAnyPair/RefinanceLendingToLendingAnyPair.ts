@@ -78,11 +78,11 @@ export async function refinanceLendingToLendingAnyPair(
           chainInfo: position.pool.protocol.chainInfo,
           // TODO: Properly implement swaps
           fromAmount: position.collateralAmount,
-          toToken: collateralConfig!.token,
+          toToken: debtConfig!.token,
         })),
         ...(await dependencies.swapManager.getSpotPrices({
           chainInfo: position.pool.protocol.chainInfo,
-          tokens: [collateralConfig!.token, collateralConfig!.token],
+          tokens: [collateralConfig!.token, debtConfig!.token],
         })),
         slippage: Percentage.createFrom({ value: args.slippage.value }),
         fee: dependencies.getSummerFee(),
@@ -113,7 +113,7 @@ export async function refinanceLendingToLendingAnyPair(
           fromAmount: getReferencedValue(
             ctx.getReference(['DepositBorrowToTarget', 'borrowAmount']),
           ),
-          toToken: debtConfig!.token,
+          toToken: collateralConfig!.token,
         })),
         ...(await dependencies.swapManager.getSpotPrices({
           chainInfo: args.position.pool.protocol.chainInfo,
