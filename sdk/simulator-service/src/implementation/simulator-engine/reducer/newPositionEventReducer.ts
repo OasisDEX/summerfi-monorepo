@@ -1,10 +1,10 @@
 import { steps } from '@summerfi/sdk-common/simulation'
-import { SimulationState } from '../../../interfaces/simulation'
+import { ISimulationState } from '../../../interfaces/simulation'
 
 export function newPositionEventReducer(
   step: steps.NewPositionEvent,
-  state: SimulationState,
-): SimulationState {
+  state: ISimulationState,
+): ISimulationState {
   return {
     ...state,
     steps: {
