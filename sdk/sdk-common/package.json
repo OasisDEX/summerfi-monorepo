@@ -22,7 +22,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "check-circular": "madge --circular --extensions ts ./src",
-    "bundle:npm": "esbuild src/index.ts --platform=neutral --target=es2020 --conditions= --main-fields=main --bundle --sourcemap --outfile=bundle/dist/index.js && tsc --emitDeclarationOnly --outDir bundle/dist"
+    "bundle:npm": "esbuild src/index.ts --platform=neutral --target=es2020 --conditions= --main-fields=main --bundle --sourcemap --outfile=bundle/dist/index.js && tsc --emitDeclarationOnly --outDir bundle/dist",
+    "publish:npm": "pnpm bundle:npm && cd bundle && npm publish && cd .."
   },
   "dependencies": {
     "bignumber.js": "9.0.1",
