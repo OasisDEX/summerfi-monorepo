@@ -1,11 +1,11 @@
 import { IToken } from '../../../common/interfaces/IToken'
 import { IPercentage } from '../../../common/interfaces/IPercentage'
 import { IPosition } from '../../../common/interfaces/IPosition'
-import { ILendingPool } from '../../../protocols/interfaces/ILendingPool'
+import { IPool } from '../../../protocols/interfaces/IPool'
 
 export interface IRefinanceParameters {
   position: IPosition
-  targetPool: ILendingPool
+  targetPool: IPool
   targetCollateral: IToken
   targetDebt: IToken
   slippage: IPercentage

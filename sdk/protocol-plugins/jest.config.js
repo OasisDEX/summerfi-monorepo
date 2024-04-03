@@ -6,4 +6,5 @@ require('dotenv').config({ path: '../.env' })
 module.exports = {
   ...sharedConfig(compilerOptions),
   silent: false,
+  coveragePathIgnorePatterns: ['/tests/utils/', '/tests/mocks/'],
 }

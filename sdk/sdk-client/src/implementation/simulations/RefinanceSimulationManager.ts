@@ -11,6 +11,25 @@ export class RefinanceSimulationManager extends IRPCClient {
   public async simulateRefinancePosition(
     params: IRefinanceParameters,
   ): Promise<ISimulation<SimulationType.Refinance>> {
-    return this.rpcClient.simulation.refinance.query(params)
+    const refinanceParameters: IRefinanceParameters = {
+      position: {
+        positionId: params.position.positionId,
+        debtAmount: params.position.debtAmount,
+        collateralAmount: params.position.collateralAmount,
+        pool: {
+          poolId: params.position.pool.poolId,
+          protocol: params.position.pool.protocol,
+          type: params.position.pool.type,
+        },
+      },
+      targetPool: {
+        poolId: params.targetPool.poolId,
+        protocol: params.targetPool.protocol,
+        type: params.targetPool.type,
+      },
+      slippage: params.slippage,
+    }
+
+    return this.rpcClient.simulation.refinance.query(refinanceParameters)
   }
 }

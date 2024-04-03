@@ -19,6 +19,5 @@ export const getRefinanceSimulation = publicProcedure
       protocolManager: opts.ctx.protocolManager,
     }
 
-    const simulation = await refinanceLendingToLending(args, dependencies)
-    return simulation
+    return await refinanceLendingToLending(args, dependencies)
   })

@@ -6,6 +6,7 @@
     "lint": "turbo run lint --cache-dir=.turbo",
     "lint:fix": "turbo run lint:fix",
     "test": "turbo run test --cache-dir=.turbo",
+    "test:integration": "turbo run test:integration --cache-dir=.turbo",
     "check-circular": "turbo run check-circular --cache-dir=.turbo",
     "cicheck": "turbo run cicheck --cache-dir=.turbo && pnpm format",
     "sst:dev": "sst dev",
@@ -53,8 +54,9 @@
     "node": ">=18"
   },
   "dependencies": {
+    "bignumber.js": "^9.1.2",
     "madge": "^6.1.0",
     "typescript": "^5.3.3",
-    "viem": "^2.8.5"
+    "viem": "^2.9.3"
   }
 }

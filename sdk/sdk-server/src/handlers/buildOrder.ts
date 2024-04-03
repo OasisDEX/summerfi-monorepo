@@ -15,7 +15,7 @@ export const buildOrder = publicProcedure
       simulation: z.custom<ISimulation<SimulationType>>((simulation) => simulation !== undefined),
     }),
   )
-  .query(async (opts): Promise<Maybe<Order>> => {
+  .mutation(async (opts): Promise<Maybe<Order>> => {
     return opts.ctx.orderPlannerService.buildOrder({
       user: opts.input.user,
       positionsManager: opts.input.positionsManager,

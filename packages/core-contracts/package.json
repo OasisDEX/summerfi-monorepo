@@ -7,6 +7,10 @@
     ".": {
       "import": "./src/index.ts",
       "types": "./src/index.d.ts"
+    },
+    "./abis/*": {
+      "import": "./src/abis/*",
+      "types": "./src/abis/*"
     }
   },
   "scripts": {
@@ -34,10 +38,6 @@
     "@summerfi/typescript-config": "workspace:*",
     "@summerfi/common": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
-    "@types/jest": "^29.5.11",
-    "dotenv": "^16.3.1",
-    "hardhat": "^2.19.5",
-    "jest": "^29.7.0",
-    "viem": "^2.7.1"
+    "hardhat": "^2.19.5"
   }
 }

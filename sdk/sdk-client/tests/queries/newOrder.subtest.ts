@@ -1,7 +1,8 @@
 import { IProtocol, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SDKManager } from '../../src/implementation/SDKManager'
 import { RPCClientType } from '../../src/rpc/SDKClient'
-import { MakerLendingPool, SparkLendingPool } from '@summerfi/protocol-plugins'
+import { MakerLendingPool } from '@summerfi/protocol-plugins/plugins/maker'
+import { SparkLendingPool } from '@summerfi/protocol-plugins/plugins/spark'
 import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import {
   Address,
@@ -95,12 +96,13 @@ export default async function simulateNewOrder() {
 
   let user: User | undefined = undefined
 
-  type BuildOrderType = RPCClientType['orders']['buildOrder']['query']
+  type BuildOrderType = RPCClientType['orders']['buildOrder']['mutate']
   const buildOrder: BuildOrderType = jest.fn(async (params) => {
     expect(params).toBeDefined()
     expect(params.positionsManager).toBeDefined()
     expect(params.user).toBeDefined()
-    expect(params.user).toBe(user)
+    expect(params.user.chainInfo).toBe(user?.chainInfo)
+    expect(params.user.wallet).toBe(user?.wallet)
 
     expect(params.simulation).toBeDefined()
     expect(params.simulation).toBe(simulation)
@@ -111,7 +113,7 @@ export default async function simulateNewOrder() {
   const rpcClient = {
     orders: {
       buildOrder: {
-        query: buildOrder,
+        mutate: buildOrder,
       },
     },
   } as unknown as RPCClientType

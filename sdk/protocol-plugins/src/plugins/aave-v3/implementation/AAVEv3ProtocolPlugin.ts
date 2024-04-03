@@ -12,8 +12,7 @@ import {
   IPosition,
   ChainId,
 } from '@summerfi/sdk-common/common'
-import type { AaveV3PoolId } from '@summerfi/sdk-common/protocols'
-import { EmodeType, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { BigNumber } from 'bignumber.js'
 import { BaseProtocolPlugin } from '../../../implementation/BaseProtocolPlugin'
 import { aaveV3EmodeCategoryMap } from './EmodeCategoryMap'
@@ -40,6 +39,8 @@ import {
   AAVEV3_POOL_DATA_PROVIDER_ABI,
 } from '../abis/AaveV3ABIS'
 import { AaveV3ContractNames } from '@summerfi/deployment-types'
+import { EmodeType } from '../../common/enums/EmodeType'
+import { AaveV3PoolId } from '../types/AaveV3PoolId'
 
 type AssetsList = ReturnType<AaveV3ProtocolPlugin['buildAssetsList']>
 type Asset = Awaited<AssetsList> extends (infer U)[] ? U : never
@@ -130,6 +131,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
   }
 
   private getContractDef<K extends AaveV3ContractNames>(contractName: K): AaveV3AddressAbiMap[K] {
+    // TODO: Need to be driven by ChainId in future
     const map: AaveV3AddressAbiMap = {
       Oracle: {
         address: '0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9',
@@ -153,16 +155,24 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
   }
 
   private async buildAssetsList(emode: bigint) {
-    const builder = await new AaveV3LikeProtocolDataBuilder(this.ctx, this.protocolName).init()
-    const list = await builder
-      .addPrices()
-      .addReservesCaps()
-      .addReservesConfigData()
-      .addReservesData()
-      .addEmodeCategories()
-      .build()
+    try {
+      const _ctx = {
+        ...this.ctx,
+        getContractDef: this.getContractDef,
+      }
+      const builder = await new AaveV3LikeProtocolDataBuilder(_ctx, this.protocolName).init()
+      const list = await builder
+        .addPrices()
+        .addReservesCaps()
+        .addReservesConfigData()
+        .addReservesData()
+        .addEmodeCategories()
+        .build()
 
-    return filterAssetsListByEMode(list, emode)
+      return filterAssetsListByEMode(list, emode)
+    } catch (e) {
+      throw new Error(`Could not fetch/build assets list for AAVEv3: ${JSON.stringify(e)}`)
+    }
   }
 
   private getCollateralAssetInfo(

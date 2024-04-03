@@ -11,7 +11,7 @@ export interface IProtocolPlugin {
   stepBuilders: Partial<ActionBuildersMap>
   context: IProtocolPluginContext
 
-  isPoolId: (candidate: unknown) => candidate is IPoolId
+  isPoolId(candidate: unknown): candidate is IPoolId
   validatePoolId(candidate: unknown): asserts candidate is IPoolId
 
   getPool: (poolId: IPoolId) => Promise<IPool>
