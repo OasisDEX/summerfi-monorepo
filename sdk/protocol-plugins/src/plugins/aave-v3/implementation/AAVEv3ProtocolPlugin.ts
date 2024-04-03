@@ -131,6 +131,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
   }
 
   private getContractDef<K extends AaveV3ContractNames>(contractName: K): AaveV3AddressAbiMap[K] {
+    // TODO: Need to be driven by ChainId in future
     const map: AaveV3AddressAbiMap = {
       Oracle: {
         address: '0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9',
@@ -154,16 +155,24 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
   }
 
   private async buildAssetsList(emode: bigint) {
-    const builder = await new AaveV3LikeProtocolDataBuilder(this.ctx, this.protocolName).init()
-    const list = await builder
-      .addPrices()
-      .addReservesCaps()
-      .addReservesConfigData()
-      .addReservesData()
-      .addEmodeCategories()
-      .build()
+    try {
+      const _ctx = {
+        ...this.ctx,
+        getContractDef: this.getContractDef,
+      }
+      const builder = await new AaveV3LikeProtocolDataBuilder(_ctx, this.protocolName).init()
+      const list = await builder
+        .addPrices()
+        .addReservesCaps()
+        .addReservesConfigData()
+        .addReservesData()
+        .addEmodeCategories()
+        .build()
 
-    return filterAssetsListByEMode(list, emode)
+      return filterAssetsListByEMode(list, emode)
+    } catch (e) {
+      throw new Error(`Could not fetch/build assets list for AAVEv3: ${JSON.stringify(e)}`)
+    }
   }
 
   private getCollateralAssetInfo(

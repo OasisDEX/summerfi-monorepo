@@ -8,6 +8,7 @@ import {
   WithReservesConfig,
   WithReservesData,
   EmodeCategory,
+  IProtocolPluginContextWithContractDef,
 } from './AAVEv3LikeBuilderTypes'
 import {
   fetchReservesCap,
@@ -17,20 +18,19 @@ import {
   fetchAssetPrices,
   fetchReservesTokens,
 } from './AAVEv3LikeDataFetchers'
-import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 
 interface QueuedOperation<T> {
   operation: () => Promise<T>
 }
 
 export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
-  private readonly ctx: IProtocolPluginContext
+  private readonly ctx: IProtocolPluginContextWithContractDef
   private operations: QueuedOperation<void>[] = []
   private tokensUsedAsReserves: Token[] | undefined
   private reservesAssetsList: Array<WithToken<AssetListItemType>> = []
   private readonly protocolName: AllowedProtocolNames
 
-  constructor(ctx: IProtocolPluginContext, protocolName: AllowedProtocolNames) {
+  constructor(ctx: IProtocolPluginContextWithContractDef, protocolName: AllowedProtocolNames) {
     this.ctx = ctx
     this.protocolName = protocolName
   }

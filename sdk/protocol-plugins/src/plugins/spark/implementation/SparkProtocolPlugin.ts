@@ -82,7 +82,7 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
 
   validatePoolId(candidate: unknown): asserts candidate is SparkPoolId {
     if (!this.isPoolId(candidate)) {
-      throw new Error(`Invalid Maker pool ID: ${JSON.stringify(candidate)}`)
+      throw new Error(`Invalid Spark pool ID: ${JSON.stringify(candidate)}`)
     }
   }
 
@@ -153,16 +153,24 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
   }
 
   private async buildAssetsList(emode: bigint) {
-    const builder = await new AaveV3LikeProtocolDataBuilder(this.ctx, this.protocolName).init()
-    const list = await builder
-      .addPrices()
-      .addReservesCaps()
-      .addReservesConfigData()
-      .addReservesData()
-      .addEmodeCategories()
-      .build()
+    try {
+      const _ctx = {
+        ...this.ctx,
+        getContractDef: this.getContractDef,
+      }
+      const builder = await new AaveV3LikeProtocolDataBuilder(_ctx, this.protocolName).init()
+      const list = await builder
+        .addPrices()
+        .addReservesCaps()
+        .addReservesConfigData()
+        .addReservesData()
+        .addEmodeCategories()
+        .build()
 
-    return filterAssetsListByEMode(list, emode)
+      return filterAssetsListByEMode(list, emode)
+    } catch (e) {
+      throw new Error(`Could not fetch/build assets list for Spark: ${JSON.stringify(e)}`)
+    }
   }
 
   private getCollateralAssetInfo(
