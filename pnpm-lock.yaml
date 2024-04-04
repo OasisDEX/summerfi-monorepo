@@ -860,8 +860,38 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
+  sdk/protocol-plugins/bundle:
+    dependencies:
+      '@summerfi/deployment-types':
+        specifier: workspace:*
+        version: link:../../../packages/deployment-types
+      '@summerfi/deployment-utils':
+        specifier: workspace:*
+        version: link:../../../packages/deployment-utils
+      '@summerfi/protocol-plugins-common':
+        specifier: workspace:*
+        version: link:../../protocol-plugins-common
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../../sdk-common
+      '@summerfi/swap-common':
+        specifier: workspace:*
+        version: link:../../swap-common
+      '@summerfi/testing-utils':
+        specifier: workspace:*
+        version: link:../../testing-utils
+      bignumber.js:
+        specifier: 9.0.1
+        version: 9.0.1
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+
   sdk/sdk-client:
     dependencies:
+      '@summerfi/protocol-plugins':
+        specifier: workspace:*
+        version: link:../protocol-plugins
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
