@@ -113,8 +113,7 @@ export async function refinanceLendingToLending(
         slippage: Percentage.createFrom({ value: args.slippage.value }),
         summerFee: collateralSwapSummerFee,
       },
-      skip: isCollateralSwapSkipped,
-    }))
+    }), isCollateralSwapSkipped)
     .next(async (ctx) => ({
       name: 'DepositBorrowToTarget',
       type: SimulationSteps.DepositBorrow,
@@ -157,8 +156,7 @@ export async function refinanceLendingToLending(
         slippage: Percentage.createFrom({ value: args.slippage.value }),
         summerFee: debtSwapSummerFee,
       },
-      skip: isDebtSwapSkipped,
-    }))
+    }), isDebtSwapSkipped)
     .next(async () => ({
       name: 'RepayFlashloan',
       type: SimulationSteps.RepayFlashloan,
@@ -176,8 +174,7 @@ export async function refinanceLendingToLending(
          * */
         token: position.debtAmount.token,
       },
-      skip: isDebtSwapSkipped,
-    }))
+    }), isDebtSwapSkipped)
     .run()
 
   const targetPosition = Object.values(simulation.positions).find(

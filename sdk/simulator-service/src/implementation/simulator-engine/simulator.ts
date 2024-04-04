@@ -71,14 +71,8 @@ export class Simulator<
 
       const nextStep = await this.nextArray[i]({ state: this.state, getReference })
 
-      if (nextStep.skip === false || nextStep.skip === undefined) {
-        const fullStep = await processStepOutput(nextStep)
-        this.state = stateReducer(fullStep, this.state)
-      }
-
-      if (nextStep.skip === true && processedStepSchema.optional === false) {
-        throw new Error(`Step is required: ${nextStep.type}`)
-      }
+      const fullStep = await processStepOutput(nextStep)
+      this.state = stateReducer(fullStep, this.state)
     }
 
     return this.state
@@ -86,10 +80,24 @@ export class Simulator<
 
   public next<N extends string>(
     next: NextFunction<Strategy, N>,
-  ): Simulator<Tail<Strategy>, [...NextArray, NextFunction<Strategy, N>]> {
+    skip?: boolean
+  ): Simulator<Tail<Strategy>, [...NextArray]> | Simulator<Tail<Strategy>, [...NextArray, NextFunction<Strategy, N>]> {
     const schemaHead = head(this.schema)
     const schemaTail = tail(this.schema)
     const nextArray = [...this.nextArray, next] as const
+
+    if (skip) {
+      if (schemaHead.optional === false) {
+        throw new Error(`Step is required: ${schemaHead.step}`)
+      }
+
+      return new Simulator<Tail<Strategy>, [...NextArray]>(
+          schemaTail,
+          this.originalSchema,
+          this.state,
+          this.nextArray,
+      )
+    }
 
     if (!schemaHead) {
       throw new Error('No more steps to process')
