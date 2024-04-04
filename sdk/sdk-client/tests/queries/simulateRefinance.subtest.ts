@@ -117,18 +117,12 @@ export default async function simulateRefinanceTest() {
     baseCurrency: DAI,
   }
 
-  const targetPosition = new Position({
+  const targetPosition = Position.createFrom({
     positionId: {
       id: 'newEmptyPositionFromPool',
     },
-    debtAmount: TokenAmount.createFrom({
-      token: prevPosition.debtAmount.token,
-      amount: prevPosition.debtAmount.amount,
-    }),
-    collateralAmount: TokenAmount.createFrom({
-      token: prevPosition.collateralAmount.token,
-      amount: prevPosition.collateralAmount.amount,
-    }),
+    debtAmount: prevPosition.debtAmount,
+    collateralAmount: prevPosition.collateralAmount,
     pool: targetPool,
   })
   const refinanceParameters: IRefinanceParameters = {
@@ -146,8 +140,6 @@ export default async function simulateRefinanceTest() {
   expect(simulation.sourcePosition?.positionId).toBe(prevPosition.positionId)
   expect(simulation.targetPosition).toBeDefined()
   expect(simulation.targetPosition.positionId).toBeDefined()
-  // expect(simulation.targetPosition.debtAmount).toBe(prevPosition.debtAmount)
-  // expect(simulation.targetPosition.collateralAmount).toBe(prevPosition.collateralAmount)
   expect(simulation.targetPosition.pool.poolId).toBe(targetPool.poolId)
   expect(simulation.steps).toBeDefined()
 }
