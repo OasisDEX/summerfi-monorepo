@@ -17,12 +17,13 @@
     "build": "tsc -b -v tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "bundle:npm": "esbuild src/index.ts --platform=neutral --target=es2020 --conditions= --main-fields=main --bundle --sourcemap --outfile=bundle/dist/index.js && tsc --emitDeclarationOnly --outDir bundle/dist -p tsconfig.build.json",
+    "bundle:npm": "esbuild src/index.ts --platform=neutral --target=es2020 --conditions= --main-fields=main --bundle --sourcemap --outfile=bundle/dist/index.js --external:crypto --external:tls --external:https --external:net --external:http --external:stream --external:zlib --external:assert --keep-names && tsc --emitDeclarationOnly --outDir bundle/dist -p tsconfig.build.json",
     "publish:npm": "pnpm bundle:npm && cd bundle && npm publish && cd .."
   },
   "dependencies": {
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/sdk-server": "workspace:*",
+    "@summerfi/protocol-plugins": "workspace:*",
     "@trpc/client": "11.0.0-next-beta.264",
     "superjson": "^1.13.3"
   },
