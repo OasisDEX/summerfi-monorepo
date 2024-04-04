@@ -1,0 +1,56 @@
+name: Publish Packages
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: false
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'sdk/sdk-common/package.json'
+      - 'sdk/sdk-client/package.json'
+
+jobs:
+  prepare:
+    name: Prepare
+    runs-on: ubuntu-latest
+    outputs:
+      common_changed: ${{ steps.common-version-check.outputs.changed }}
+      client_changed: ${{ steps.client-version-check.outputs.changed }}
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+    - id: common-version-check
+      run: |
+        if git diff HEAD^ HEAD -- sdk/sdk-common/package.json | grep '"version":'; then
+        echo "::set-output name=changed::true"
+        else
+        echo "::set-output name=changed::false"
+        fi
+    - id: client-version-check
+      run: |
+        if git diff HEAD^ HEAD -- sdk/sdk-client/package.json | grep '"version":'; then
+        echo "::set-output name=changed::true"
+        else
+        echo "::set-output name=changed::false"
+        fi
+  
+  publish-common:
+    needs: prepare
+    if: ${{ needs.prepare.outputs.common_changed == 'true' }}
+    uses: ./.github/workflows/publish-common-package.yaml
+    with:
+      npm_access_token: ${{ secrets.NPM_ACCESS_TOKEN }}
+      version_changed: ${{ needs.prepare.outputs.common_changed }}
+
+  publish-client:
+    needs: prepare
+    if: ${{ needs.prepare.outputs.client_changed == 'true' }}
+    uses: ./.github/workflows/publish-client-package.yaml
+    with:
+      npm_access_token: ${{ secrets.NPM_ACCESS_TOKEN }}
+      version_changed: ${{ needs.prepare.outputs.client_changed }}
