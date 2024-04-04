@@ -89,31 +89,34 @@ export async function refinanceLendingToLending(
         position: position,
       },
     }))
-    .next(async () => ({
-      name: 'CollateralSwap',
-      type: SimulationSteps.Swap,
-      inputs: {
-        ...(await dependencies.swapManager.getSwapQuoteExactInput({
-          chainInfo: position.pool.protocol.chainInfo,
-          fromAmount: subtractPercentage(
-            position.collateralAmount,
-            Percentage.createFrom({
-              value: collateralSwapSummerFee.value,
-            }),
-          ),
-          toToken: targetCollateralConfig.token,
-        })),
-        spotPrice: (
-          await dependencies.swapManager.getSpotPrice({
+    .next(
+      async () => ({
+        name: 'CollateralSwap',
+        type: SimulationSteps.Swap,
+        inputs: {
+          ...(await dependencies.swapManager.getSwapQuoteExactInput({
             chainInfo: position.pool.protocol.chainInfo,
-            baseToken: targetCollateralConfig.token,
-            quoteToken: position.collateralAmount.token,
-          })
-        ).price,
-        slippage: Percentage.createFrom({ value: args.slippage.value }),
-        summerFee: collateralSwapSummerFee,
-      },
-    }), isCollateralSwapSkipped)
+            fromAmount: subtractPercentage(
+              position.collateralAmount,
+              Percentage.createFrom({
+                value: collateralSwapSummerFee.value,
+              }),
+            ),
+            toToken: targetCollateralConfig.token,
+          })),
+          spotPrice: (
+            await dependencies.swapManager.getSpotPrice({
+              chainInfo: position.pool.protocol.chainInfo,
+              baseToken: targetCollateralConfig.token,
+              quoteToken: position.collateralAmount.token,
+            })
+          ).price,
+          slippage: Percentage.createFrom({ value: args.slippage.value }),
+          summerFee: collateralSwapSummerFee,
+        },
+      }),
+      isCollateralSwapSkipped,
+    )
     .next(async (ctx) => ({
       name: 'DepositBorrowToTarget',
       type: SimulationSteps.DepositBorrow,
@@ -138,25 +141,28 @@ export async function refinanceLendingToLending(
         borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
     }))
-    .next(async (ctx) => ({
-      name: 'DebtSwap',
-      type: SimulationSteps.Swap,
-      inputs: {
-        ...(await dependencies.swapManager.getSwapQuoteExactInput({
-          chainInfo: args.sourcePosition.pool.protocol.chainInfo,
-          fromAmount: subtractPercentage(
-            getReferencedValue(ctx.getReference(['DepositBorrowToTarget', 'borrowAmount'])),
-            Percentage.createFrom({
-              value: debtSwapSummerFee.value,
-            }),
-          ),
-          toToken: targetDebtConfig.token,
-        })),
-        spotPrice: debtSpotPrice,
-        slippage: Percentage.createFrom({ value: args.slippage.value }),
-        summerFee: debtSwapSummerFee,
-      },
-    }), isDebtSwapSkipped)
+    .next(
+      async (ctx) => ({
+        name: 'DebtSwap',
+        type: SimulationSteps.Swap,
+        inputs: {
+          ...(await dependencies.swapManager.getSwapQuoteExactInput({
+            chainInfo: args.sourcePosition.pool.protocol.chainInfo,
+            fromAmount: subtractPercentage(
+              getReferencedValue(ctx.getReference(['DepositBorrowToTarget', 'borrowAmount'])),
+              Percentage.createFrom({
+                value: debtSwapSummerFee.value,
+              }),
+            ),
+            toToken: targetDebtConfig.token,
+          })),
+          spotPrice: debtSpotPrice,
+          slippage: Percentage.createFrom({ value: args.slippage.value }),
+          summerFee: debtSwapSummerFee,
+        },
+      }),
+      isDebtSwapSkipped,
+    )
     .next(async () => ({
       name: 'RepayFlashloan',
       type: SimulationSteps.RepayFlashloan,
@@ -164,17 +170,20 @@ export async function refinanceLendingToLending(
         amount: flashloanAmount,
       },
     }))
-    .next(async () => ({
-      name: 'ReturnFunds',
-      type: SimulationSteps.ReturnFunds,
-      inputs: {
-        /*
-         * We swap back to the original position's debt in order to repay the flashloan.
-         * Therefore, the dust amount will be in the original position's debt
-         * */
-        token: position.debtAmount.token,
-      },
-    }), isDebtSwapSkipped)
+    .next(
+      async () => ({
+        name: 'ReturnFunds',
+        type: SimulationSteps.ReturnFunds,
+        inputs: {
+          /*
+           * We swap back to the original position's debt in order to repay the flashloan.
+           * Therefore, the dust amount will be in the original position's debt
+           * */
+          token: position.debtAmount.token,
+        },
+      }),
+      isDebtSwapSkipped,
+    )
     .run()
 
   const targetPosition = Object.values(simulation.positions).find(

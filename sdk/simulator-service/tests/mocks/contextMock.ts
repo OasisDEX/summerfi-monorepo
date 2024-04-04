@@ -5,8 +5,8 @@ import {
   Token,
   TokenAmount,
   Price,
+  CurrencySymbol,
 } from '@summerfi/sdk-common/common'
-import { CurrencySymbol } from '@summerfi/sdk-common/common'
 import { IPool } from '@summerfi/sdk-common/protocols'
 import { testTargetLendingPool, testTargetLendingPoolRequiredSwaps } from './testSourcePosition'
 import { SwapProviderType } from '@summerfi/sdk-common/swap'

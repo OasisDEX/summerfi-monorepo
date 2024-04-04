@@ -32,15 +32,27 @@ export class SwapManagerFactory {
     })
     const chainIds = configProvider.getConfigurationItem({ name: 'ONE_INCH_SWAP_CHAIN_IDS' })
 
-    if (!apiUrl || !apiKey || !version || !allowedSwapProtocols || !chainIds) {
+    const apiV6Url = configProvider.getConfigurationItem({ name: 'ONE_INCH_API_V6_URL' })
+    const apiV6Key = configProvider.getConfigurationItem({ name: 'ONE_INCH_API_V6_KEY' })
+
+    if (
+      !apiV6Url ||
+      !apiV6Key ||
+      !apiUrl ||
+      !apiKey ||
+      !version ||
+      !allowedSwapProtocols ||
+      !chainIds
+    ) {
       throw new Error('OneInch configuration is missing')
     }
 
     return {
       config: {
-        apiUrl,
-        apiKey,
-        version,
+        apiUrlV4: apiUrl,
+        apiKeyV4: apiKey,
+        apiUrlV6: apiV6Url,
+        apiKeyV6: apiV6Key,
         allowedSwapProtocols: allowedSwapProtocols.split(','),
       },
       chainIds: chainIds.split(',').map((id: string) => parseInt(id)),

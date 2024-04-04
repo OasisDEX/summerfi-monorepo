@@ -37,7 +37,6 @@ export class Simulator<
 
   public async run(): Promise<ISimulationState> {
     for (let i = 0; i < this.nextArray.length; i++) {
-      const processedStepSchema = this.originalSchema[i]
       const getReference = (path: [string, string]) => {
         const [stepName, output] = path
         const step: Maybe<steps.Steps> = this.state.steps[stepName]
@@ -80,8 +79,10 @@ export class Simulator<
 
   public next<N extends string>(
     next: NextFunction<Strategy, N>,
-    skip?: boolean
-  ): Simulator<Tail<Strategy>, [...NextArray]> | Simulator<Tail<Strategy>, [...NextArray, NextFunction<Strategy, N>]> {
+    skip?: boolean,
+  ):
+    | Simulator<Tail<Strategy>, [...NextArray]>
+    | Simulator<Tail<Strategy>, [...NextArray, NextFunction<Strategy, N>]> {
     const schemaHead = head(this.schema)
     const schemaTail = tail(this.schema)
     const nextArray = [...this.nextArray, next] as const
@@ -92,10 +93,10 @@ export class Simulator<
       }
 
       return new Simulator<Tail<Strategy>, [...NextArray]>(
-          schemaTail,
-          this.originalSchema,
-          this.state,
-          this.nextArray,
+        schemaTail,
+        this.originalSchema,
+        this.state,
+        this.nextArray,
       )
     }
 
