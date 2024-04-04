@@ -1,10 +1,8 @@
-import type { steps } from '@summerfi/sdk-common/simulation'
-import type { TokenAmount, Position } from '@summerfi/sdk-common/common'
-import type { SimulatedSwapData } from '@summerfi/sdk-common/swap'
+import { BalancesRecord, PositionsRecord, StepsRecord, SwapsRecord } from '../types/Types'
 
 export interface ISimulationState {
-  swaps: Record<string, SimulatedSwapData>
-  balances: Record<string, TokenAmount>
-  positions: Record<string, Position>
-  steps: Record<string /* step name */, steps.Steps>
+  swaps: SwapsRecord
+  balances: BalancesRecord
+  positions: PositionsRecord
+  steps: StepsRecord
 }

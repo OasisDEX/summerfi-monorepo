@@ -4,6 +4,7 @@ import {
   ChainInfo,
   Position,
   PositionId,
+  PositionType,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
@@ -65,7 +66,8 @@ describe('Payback Withdraw Action Builder', () => {
     poolId,
   }
 
-  const position = new Position({
+  const position = Position.createFrom({
+    type: PositionType.Multiply,
     positionId: PositionId.createFrom({ id: 'someposition' }),
     debtAmount: withdrawAmount,
     collateralAmount: paybackAmount,

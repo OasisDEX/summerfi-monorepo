@@ -11,10 +11,10 @@ import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
 import { getReferencedValue } from '../../implementation/utils'
-import { refinanceLendingToLendingStrategy } from './Strategy'
-import { type IRefinanceDependencies } from './Types'
+import { refinanceLendingToLendingAnyPairStrategy } from './Strategy'
+import { type IRefinanceDependencies } from '../common/Types'
 
-export async function refinanceLendingToLending(
+export async function refinanceLendingToLendingAnyPair(
   args: IRefinanceParameters,
   dependencies: IRefinanceDependencies,
 ): Promise<ISimulation<SimulationType.Refinance>> {
@@ -32,7 +32,7 @@ export async function refinanceLendingToLending(
 
   const FLASHLOAN_MARGIN = 1.001
   const flashloanAmount = position.debtAmount.multiply(FLASHLOAN_MARGIN)
-  const simulator = Simulator.create(refinanceLendingToLendingStrategy)
+  const simulator = Simulator.create(refinanceLendingToLendingAnyPairStrategy)
 
   const targetTokenConfig = targetPool.collaterals.get({ token: position.collateralAmount.token })
   if (!targetTokenConfig) {
@@ -130,6 +130,23 @@ export async function refinanceLendingToLending(
         amount: flashloanAmount,
       },
     }))
+    .next(async (ctx) => {
+      // TODO: we should have a way to get the target position more easily and realiably,
+      const targetPosition = Object.values(ctx.state.positions).find(
+        (p) => p.pool.protocol === targetPool.protocol,
+      )
+      if (!targetPosition) {
+        throw new Error('Target position not found')
+      }
+
+      return {
+        name: 'NewPositionEvent',
+        type: SimulationSteps.NewPositionEvent,
+        inputs: {
+          position: targetPosition,
+        },
+      }
+    })
     .run()
 
   const targetPosition = Object.values(simulation.positions).find(

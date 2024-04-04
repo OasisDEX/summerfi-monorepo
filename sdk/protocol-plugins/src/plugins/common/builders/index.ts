@@ -9,3 +9,4 @@ export {
 } from './RepayFlashloanActionBuilder'
 export { ReturnFundsActionBuilder } from './ReturnFundsActionBuilder'
 export { SwapActionBuilder } from './SwapActionBuilder'
+export { PositionCreatedActionBuilder } from './PositionCreatedActionBuilder'
