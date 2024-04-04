@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { Percentage } from '@summerfi/sdk-common/common'
 import type { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import {
-  refinanceLendingToLending,
+  refinanceLendingToLendingSamePair,
   type IRefinanceDependencies,
 } from '@summerfi/simulator-service/strategies'
 import type { IRefinanceParameters } from '@summerfi/sdk-common/orders'
@@ -22,5 +22,5 @@ export const getRefinanceSimulation = publicProcedure
       getSummerFee: () => Percentage.createFrom({ value: 0 }),
     }
 
-    return await refinanceLendingToLending(args, dependencies)
+    return await refinanceLendingToLendingSamePair(args, dependencies)
   })

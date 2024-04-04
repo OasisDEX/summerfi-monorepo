@@ -84,6 +84,14 @@ export interface RepayFlashloan
     }
   > {}
 
+export interface NewPositionEvent
+  extends Step<
+    SimulationSteps.NewPositionEvent,
+    {
+      position: Position
+    }
+  > {}
+
 export type Steps =
   | FlashloanStep
   | PullTokenStep
@@ -92,3 +100,4 @@ export type Steps =
   | SwapStep
   | ReturnFunds
   | RepayFlashloan
+  | NewPositionEvent

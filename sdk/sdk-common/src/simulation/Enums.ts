@@ -17,6 +17,7 @@ export enum SimulationSteps {
   PullToken = 'PullToken',
   ReturnFunds = 'ReturnFunds',
   RepayFlashloan = 'RepayFlashloan',
+  NewPositionEvent = 'NewPositionEvent',
 }
 
 export enum FlashloanProvider {

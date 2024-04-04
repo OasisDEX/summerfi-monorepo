@@ -1,7 +1,7 @@
 import { SimulationSteps } from '@summerfi/sdk-common/simulation'
 import { makeStrategy } from '../../implementation/utils'
 
-export const refinanceLendingToLendingStrategy = makeStrategy([
+export const refinanceLendingToLendingAnyPairStrategy = makeStrategy([
   {
     step: SimulationSteps.Flashloan,
     optional: false,
@@ -31,5 +31,9 @@ export const refinanceLendingToLendingStrategy = makeStrategy([
     // We cannot forsee the exact amount of the swap, so we need to return excess tokens to user
     step: SimulationSteps.ReturnFunds,
     optional: true,
+  },
+  {
+    step: SimulationSteps.NewPositionEvent,
+    optional: false,
   },
 ])

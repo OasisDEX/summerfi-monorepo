@@ -54,11 +54,14 @@
     "lint": {
       "dependsOn": ["prebuild", "build", "^lint"]
     },
+    "format": {
+      "dependsOn": ["prebuild", "build", "^format"]
+    },
     "check-circular": {
       "dependsOn": ["prebuild", "build", "^check-circular"]
     },
     "cicheck": {
-      "dependsOn": ["prebuild", "build", "test", "lint", "check-circular"]
+      "dependsOn": ["prebuild", "build", "test", "lint", "check-circular", "format"]
     },
     "deploy:staging": {
       "dependsOn": ["cicheck", "^deploy:staging"]

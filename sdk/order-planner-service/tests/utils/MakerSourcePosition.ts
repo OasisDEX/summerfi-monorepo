@@ -9,6 +9,7 @@ import {
 } from '@summerfi/sdk-common/common'
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { ILKType, MakerPoolId } from '@summerfi/protocol-plugins/plugins/maker'
+import { PositionType } from '@summerfi/sdk-common/common'
 
 export function getMakerPosition(): Position {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -56,7 +57,8 @@ export function getMakerPosition(): Position {
     poolId,
   }
 
-  const position = new Position({
+  const position = Position.createFrom({
+    type: PositionType.Multiply,
     positionId: PositionId.createFrom({ id: 'makerPosition' }),
     debtAmount,
     collateralAmount,
