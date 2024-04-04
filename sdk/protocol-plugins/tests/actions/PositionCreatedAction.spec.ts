@@ -1,10 +1,9 @@
-import { Address, Position, Token, TokenAmount } from '@summerfi/sdk-common/common'
+import { Address, Position, Token, TokenAmount, PositionType } from '@summerfi/sdk-common/common'
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
 import { PositionCreatedAction } from '../../src/plugins/common/actions/PositionCreatedAction'
 import { IProtocol, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { MakerPoolId } from '../../src/plugins/maker/types/MakerPoolId'
 import { ILKType } from '../../src/plugins/maker'
-import { PositionType } from '@summerfi/sdk-common/simulation'
 
 describe('PositionCreated Action', () => {
   const action = new PositionCreatedAction()
@@ -41,6 +40,7 @@ describe('PositionCreated Action', () => {
   }
 
   const position = Position.createFrom({
+    type: PositionType.Multiply,
     positionId: {
       id: '0x123',
     },
@@ -71,7 +71,6 @@ describe('PositionCreated Action', () => {
     const call = action.encodeCall(
       {
         position: position,
-        positionType: PositionType.Refinance,
       },
       [8, 9, 1, 3],
     )
@@ -87,7 +86,7 @@ describe('PositionCreated Action', () => {
     expect(actionDecodedArgs?.args).toEqual([
       {
         protocol: protocol.name,
-        positionType: PositionType.Refinance,
+        positionType: position.type,
         collateralToken: WETH.address.value,
         debtToken: DAI.address.value,
       },

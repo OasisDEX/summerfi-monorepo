@@ -1,7 +1,6 @@
 import {
   FlashloanProvider,
   ISimulation,
-  PositionType,
   SimulationSteps,
   SimulationType,
   TokenTransferTargetType,
@@ -145,7 +144,6 @@ export async function refinanceLendingToLendingAnyPair(
         type: SimulationSteps.NewPositionEvent,
         inputs: {
           position: targetPosition,
-          positionType: PositionType.Refinance,
         },
       }
     })
