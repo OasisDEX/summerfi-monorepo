@@ -27,10 +27,10 @@ jobs:
 
     - name: Install dependencies with pnpm
       run: pnpm i
-      working-directory: sdk/sdk-client
+      working-directory: sdk/sdk-client/bundle
 
     - name: Publish package with pnpm
       run: pnpm bundle:npm
-      working-directory: sdk/sdk-client
+      working-directory: sdk/sdk-client/bundle
       env:
         NPM_ACCESS_TOKEN: ${{ inputs.npm_access_token }}
