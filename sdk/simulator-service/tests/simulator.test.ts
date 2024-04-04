@@ -1,6 +1,5 @@
 import { Percentage } from '@summerfi/sdk-common/common'
 import {
-  PositionType,
   ISimulation,
   SimulationSteps,
   SimulationType,
@@ -72,7 +71,6 @@ describe('Refinance', () => {
 
       assert(newPositionStep, 'New position event step not found')
       expect(newPositionStep.inputs.position).toEqual(simulation.targetPosition)
-      expect(newPositionStep.inputs.positionType).toEqual(PositionType.Refinance)
     })
   })
 

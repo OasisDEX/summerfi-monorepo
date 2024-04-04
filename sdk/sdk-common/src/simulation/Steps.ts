@@ -3,7 +3,7 @@ import { Price } from '../common/implementation/Price'
 import { Position } from '../common/implementation/Position'
 import { Token } from '../common/implementation/Token'
 import { TokenAmount } from '../common/implementation/TokenAmount'
-import { FlashloanProvider, PositionType, SimulationSteps, TokenTransferTargetType } from './Enums'
+import { FlashloanProvider, SimulationSteps, TokenTransferTargetType } from './Enums'
 import { SwapProviderType, SwapRoute } from '../swap'
 import { ReferenceableField, ValueReference } from './ValueReference'
 
@@ -89,7 +89,6 @@ export interface NewPositionEvent
     SimulationSteps.NewPositionEvent,
     {
       position: Position
-      positionType: PositionType
     }
   > {}
 

@@ -12,7 +12,6 @@ export const PositionCreatedActionBuilder: ActionBuilder<steps.NewPositionEvent>
     action: new PositionCreatedAction(),
     arguments: {
       position: step.inputs.position,
-      positionType: step.inputs.positionType,
     },
     connectedInputs: {},
     connectedOutputs: {},

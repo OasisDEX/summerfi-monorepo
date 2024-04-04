@@ -8,13 +8,14 @@ import {
   type Maybe,
   ChainFamilyMap,
   AddressValue,
+  PositionType,
 } from '@summerfi/sdk-common/common'
 
 import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
 import { makeSDK, type Chain, type User, Protocol } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
 import { IPositionsManager, IRefinanceParameters, Order } from '@summerfi/sdk-common/orders'
-import { ISimulation, SimulationType, PositionType } from '@summerfi/sdk-common/simulation'
+import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { TransactionUtils } from './utils/TransactionUtils'
 import {
   decodeActionCalldata,
@@ -122,6 +123,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
 
     // Source position
     const makerPosition: Position = Position.createFrom({
+      type: PositionType.Multiply,
       positionId: PositionId.createFrom({ id: '31646' }),
       debtAmount: TokenAmount.createFromBaseUnit({
         token: DAI,
@@ -352,7 +354,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     assert(positionCreatedParams, 'Cannot decode Position Created action calldata')
 
     expect(positionCreatedParams.args[0].protocol).toBe(targetPosition.pool.protocol.name)
-    expect(positionCreatedParams.args[0].positionType).toBe(PositionType.Refinance)
+    expect(positionCreatedParams.args[0].positionType).toBe(sourcePosition.type)
     expect(positionCreatedParams.args[0].collateralToken).toBe(
       targetPosition.collateralAmount.token.address.value,
     )
