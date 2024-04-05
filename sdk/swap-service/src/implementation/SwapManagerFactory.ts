@@ -32,15 +32,17 @@ export class SwapManagerFactory {
     })
     const chainIds = configProvider.getConfigurationItem({ name: 'ONE_INCH_SWAP_CHAIN_IDS' })
 
-    const apiV6Url = configProvider.getConfigurationItem({ name: 'ONE_INCH_API_V6_URL' })
-    const apiV6Key = configProvider.getConfigurationItem({ name: 'ONE_INCH_API_V6_KEY' })
+    const apiSpotUrl = configProvider.getConfigurationItem({ name: 'ONE_INCH_API_SPOT_URL' })
+    const spotVersion = configProvider.getConfigurationItem({ name: 'ONE_INCH_API_SPOT_VERSION' })
+    const apiSpotKey = configProvider.getConfigurationItem({ name: 'ONE_INCH_API_SPOT_KEY' })
 
     if (
-      !apiV6Url ||
-      !apiV6Key ||
+      !apiSpotUrl ||
+      !apiSpotKey ||
       !apiUrl ||
       !apiKey ||
       !version ||
+      !spotVersion ||
       !allowedSwapProtocols ||
       !chainIds
     ) {
@@ -49,10 +51,12 @@ export class SwapManagerFactory {
 
     return {
       config: {
-        apiUrlV4: apiUrl,
-        apiKeyV4: apiKey,
-        apiUrlV6: apiV6Url,
-        apiKeyV6: apiV6Key,
+        apiUrl: apiUrl,
+        apiKey: apiKey,
+        version: version,
+        apiSpotUrl: apiSpotUrl,
+        apiSpotKey: apiSpotKey,
+        spotVersion: spotVersion,
         allowedSwapProtocols: allowedSwapProtocols.split(','),
       },
       chainIds: chainIds.split(',').map((id: string) => parseInt(id)),

@@ -32,23 +32,34 @@ export class OneInchSwapProvider implements ISwapProvider {
   public type: SwapProviderType = SwapProviderType.OneInch
 
   /**
-   *  Both endpoints now explicitly versioned
-   *  given incompatible paths between api versions
+   * =============== WARNING ===============
+   * We require 1inch's new Spot Prices endpoint (not available on 1inch.io)
+   * Once we move everything to 1inch's latest API we can consolidate urls & keys
+   *
+   * DO NOT add new url's or key's when modifying this class.
+   * Try to consolidate
+   *
+   * Once we've tested Swap data with DMA & the latest API
+   * https://portal.1inch.dev/documentation/swap/swagger?method=get&path=%2Fv6.0%2F1%2Fswap
    * */
-  private readonly _apiUrlV4: string
-  private readonly _apiKeyV4: string
+  private readonly _apiUrl: string
+  private readonly _apiKey: string
+  private readonly _version: string
 
-  private readonly _apiUrlV6: string
-  private readonly _apiKeyV6: string
+  private readonly _apiSpotUrl: string
+  private readonly _apiSpotKey: string
+  private readonly _spotVersion: string
 
   private readonly _allowedSwapProtocols: string[]
 
   constructor(params: OneInchSwapProviderConfig) {
-    this._apiUrlV4 = params.apiUrlV4
-    this._apiKeyV4 = params.apiKeyV4
+    this._apiUrl = params.apiUrl
+    this._apiKey = params.apiKey
+    this._version = params.version
 
-    this._apiUrlV6 = params.apiUrlV6
-    this._apiKeyV6 = params.apiKeyV6
+    this._apiSpotUrl = params.apiSpotUrl
+    this._apiSpotKey = params.apiSpotKey
+    this._spotVersion = params.spotVersion
 
     this._allowedSwapProtocols = params.allowedSwapProtocols
   }
@@ -136,7 +147,7 @@ export class OneInchSwapProvider implements ISwapProvider {
     baseToken: Token
     quoteToken?: CurrencySymbol | Token
   }): Promise<SpotData> {
-    const authHeader = this._getOneInchAuthHeader(OneInchApiVersion.V6)
+    const authHeader = this._getOneInchSpotAuthHeader()
     if (params.quoteToken && params.quoteToken instanceof Token) {
       isTokenType(params.quoteToken)
 
@@ -229,19 +240,13 @@ export class OneInchSwapProvider implements ISwapProvider {
     }
   }
 
-  private _getOneInchAuthHeader(version?: OneInchApiVersion): OneInchAuthHeader {
-    switch (version) {
-      case OneInchApiVersion.V4: {
-        return { [OneInchAuthHeaderKey]: this._apiKeyV4 }
-      }
-      case OneInchApiVersion.V6: {
-        return { [OneInchAuthHeaderKey]: this._apiKeyV6 }
-      }
-      default: {
-        // Fallback to V4 given was previous default behaviour
-        return { [OneInchAuthHeaderKey]: this._apiKeyV4 }
-      }
-    }
+  private _getOneInchAuthHeader(): OneInchAuthHeader {
+    return { [OneInchAuthHeaderKey]: this._apiKey }
+  }
+
+
+  private _getOneInchSpotAuthHeader(): OneInchAuthHeader {
+    return { [OneInchAuthHeaderKey]: this._apiSpotKey }
   }
 
   private _formatOneInchSwapUrl(params: {
@@ -264,7 +269,7 @@ export class OneInchSwapProvider implements ISwapProvider {
       ? this._allowedSwapProtocols.join(',')
       : ''
 
-    return `${this._apiUrlV4}/${chainId}/swap?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&fromAddress=${recipient}&slippage=${params.slippage.toString()}&protocols=${protocolsParam}&disableEstimate=${disableEstimate}&allowPartialFill=${allowPartialFill}`
+    return `${this._apiUrl}/${this._version}/${chainId}/swap?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&fromAddress=${recipient}&slippage=${params.slippage.toString()}&protocols=${protocolsParam}&disableEstimate=${disableEstimate}&allowPartialFill=${allowPartialFill}`
   }
 
   private _formatOneInchQuoteUrl(params: {
@@ -280,7 +285,7 @@ export class OneInchSwapProvider implements ISwapProvider {
       ? this._allowedSwapProtocols.join(',')
       : ''
 
-    return `${this._apiUrlV4}/${chainId}/quote?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&protocols=${protocolsParam}`
+    return `${this._apiUrl}/${this._version}/${chainId}/quote?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&protocols=${protocolsParam}`
   }
 
   private _formatOneInchSpotUrl(params: {
@@ -292,11 +297,11 @@ export class OneInchSwapProvider implements ISwapProvider {
     const tokenAddresses = params.tokenAddresses.map((address) => address.value.toLowerCase())
 
     /**
+     * apiSpotUrl includes the complete path for the spot price endpoint
+     * EG <url>/price/v1.1
      * https://portal.1inch.dev/documentation/spot-price/swagger?method=get&path=%2Fv1.1%2F1%2F%7Baddresses%7D
      */
-    const SPOT_PRICE_API_ENDPOINT_VERSION = 'v1.1'
-
-    return `${this._apiUrlV6}/price/${SPOT_PRICE_API_ENDPOINT_VERSION}/${chainId}/${tokenAddresses.join(',')}?currency=${params.quoteCurrency.toUpperCase()}`
+    return `${this._apiSpotUrl}/price/${this._spotVersion}/${chainId}/${tokenAddresses.join(',')}?currency=${params.quoteCurrency.toUpperCase()}`
   }
 
   private _extractSwapRoutes(protocols: OneInchSwapRoute[]): SwapRoute[] {
@@ -313,11 +318,6 @@ export class OneInchSwapProvider implements ISwapProvider {
       ),
     )
   }
-}
-
-enum OneInchApiVersion {
-  V4,
-  V6,
 }
 
 function isTokenType(quoteToken: unknown): asserts quoteToken is Token {

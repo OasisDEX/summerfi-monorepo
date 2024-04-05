@@ -5,10 +5,12 @@ export type OneInchAuthHeader = {
 }
 
 export type OneInchSwapProviderConfig = {
-  apiUrlV4: string
-  apiKeyV4: string
-  apiUrlV6: string
-  apiKeyV6: string
+  apiUrl: string
+  apiKey: string
+  version: string
+  apiSpotUrl: string
+  apiSpotKey: string
+  spotVersion: string
   allowedSwapProtocols: string[]
 }
 
