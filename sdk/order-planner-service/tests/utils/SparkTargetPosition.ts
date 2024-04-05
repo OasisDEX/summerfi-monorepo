@@ -6,6 +6,7 @@ import {
   ChainInfo,
   Position,
   PositionId,
+  PositionType,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
@@ -56,7 +57,8 @@ export function getSparkPosition(): Position {
     poolId,
   }
 
-  const position = new Position({
+  const position = Position.createFrom({
+    type: PositionType.Multiply,
     positionId: PositionId.createFrom({ id: 'sparkPosition' }),
     debtAmount,
     collateralAmount,

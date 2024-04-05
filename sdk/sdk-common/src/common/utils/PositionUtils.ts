@@ -2,6 +2,7 @@ import { LendingPool } from '../../protocols/implementation/LendingPool'
 import { TokenAmount } from '../implementation/TokenAmount'
 import { Position } from '../implementation/Position'
 import { Token } from '../implementation/Token'
+import { PositionType } from '../enums/PositionType'
 
 export function newEmptyPositionFromPool(
   pool: LendingPool,
@@ -18,7 +19,8 @@ export function newEmptyPositionFromPool(
     throw new Error('Collateral token not supported by pool')
   }
 
-  return new Position({
+  return Position.createFrom({
+    type: PositionType.Multiply,
     positionId: {
       id: 'newEmptyPositionFromPool',
     },
@@ -29,7 +31,8 @@ export function newEmptyPositionFromPool(
 }
 
 export function depositToPosition(position: Position, amount: TokenAmount): Position {
-  return new Position({
+  return Position.createFrom({
+    type: PositionType.Multiply,
     positionId: position.positionId,
     debtAmount: position.debtAmount,
     collateralAmount: position.collateralAmount.add(amount),
@@ -38,7 +41,8 @@ export function depositToPosition(position: Position, amount: TokenAmount): Posi
 }
 
 export function withdrawFromPosition(position: Position, amount: TokenAmount): Position {
-  return new Position({
+  return Position.createFrom({
+    type: PositionType.Multiply,
     positionId: position.positionId,
     debtAmount: position.debtAmount,
     collateralAmount: position.collateralAmount.subtract(amount),
@@ -47,7 +51,8 @@ export function withdrawFromPosition(position: Position, amount: TokenAmount): P
 }
 
 export function borrowFromPosition(position: Position, amount: TokenAmount): Position {
-  return new Position({
+  return Position.createFrom({
+    type: PositionType.Multiply,
     positionId: position.positionId,
     debtAmount: position.debtAmount.add(amount),
     collateralAmount: position.collateralAmount,
@@ -56,7 +61,8 @@ export function borrowFromPosition(position: Position, amount: TokenAmount): Pos
 }
 
 export function repayPositionDebt(position: Position, amount: TokenAmount): Position {
-  return new Position({
+  return Position.createFrom({
+    type: PositionType.Multiply,
     positionId: position.positionId,
     debtAmount: position.debtAmount.subtract(amount),
     collateralAmount: position.collateralAmount,

@@ -1,12 +1,8 @@
-import { ChainInfo } from '@summerfi/sdk-common/common'
-import { IPoolId, ProtocolName, isPoolId } from '@summerfi/sdk-common/protocols'
+import { IPoolId, IProtocol, ProtocolName, isPoolId } from '@summerfi/sdk-common/protocols'
 import { ILKType } from '../enums/ILKType'
 
 export interface MakerPoolId extends IPoolId {
-  protocol: {
-    name: ProtocolName.Maker
-    chainInfo: ChainInfo
-  }
+  protocol: IProtocol
   ilkType: ILKType
   // TODO: vaultId does not belong in the poolId
   vaultId: string

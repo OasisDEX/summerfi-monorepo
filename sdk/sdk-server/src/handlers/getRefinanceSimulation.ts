@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import type { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import {
-  refinanceLendingToLending,
+  refinanceLendingToLendingSamePair,
   type IRefinanceDependencies,
 } from '@summerfi/simulator-service/strategies'
 import type { IRefinanceParameters } from '@summerfi/sdk-common/orders'
@@ -19,5 +19,5 @@ export const getRefinanceSimulation = publicProcedure
       protocolManager: opts.ctx.protocolManager,
     }
 
-    return await refinanceLendingToLending(args, dependencies)
+    return await refinanceLendingToLendingSamePair(args, dependencies)
   })

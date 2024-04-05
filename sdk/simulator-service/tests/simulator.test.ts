@@ -1,5 +1,6 @@
-import { ISimulation, SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
-import { refinanceLendingToLending } from '../src/strategies'
+import { ISimulation, SimulationSteps, SimulationType, steps } from '@summerfi/sdk-common/simulation'
+import {   refinanceLendingToLendingAnyPair,
+  refinanceLendingToLendingSamePair, } from '../src/strategies'
 import { Percentage, newEmptyPositionFromPool } from '@summerfi/sdk-common/common'
 import {
   otherTestCollateral,
@@ -9,12 +10,13 @@ import {
   testTargetLendingPoolRequiredSwaps,
 } from './mocks/testSourcePosition'
 import { mockRefinanceContext, mockRefinanceContextRequiredSwaps } from './mocks/contextMock'
+import assert from 'assert'
 
 describe('Refinance', () => {
   describe('to the position with the same collateral and debt (no swaps)', () => {
     let simulation: ISimulation<SimulationType.Refinance>
     beforeAll(async () => {
-      simulation = await refinanceLendingToLending(
+      simulation = await refinanceLendingToLendingSamePair(
         {
           sourcePosition: testSourcePosition,
           targetPosition: newEmptyPositionFromPool(
@@ -62,12 +64,21 @@ describe('Refinance', () => {
 
       expect(targetPosition.positionId).toBeDefined()
     })
+
+    it('should include a new position event step', async () => {
+      const newPositionStep = simulation.steps.find(
+        (step) => step.type === SimulationSteps.NewPositionEvent,
+      ) as steps.NewPositionEvent
+
+      assert(newPositionStep, 'New position event step not found')
+      expect(newPositionStep.inputs.position).toEqual(simulation.targetPosition)
+    })
   })
 
   describe('to the position with the different collateral and debt (with swaps)', () => {
     let simulation: ISimulation<SimulationType.Refinance>
     beforeAll(async () => {
-      simulation = await refinanceLendingToLending(
+      simulation = await refinanceLendingToLendingAnyPair(
         {
           sourcePosition: testSourcePosition,
           targetPosition: newEmptyPositionFromPool(

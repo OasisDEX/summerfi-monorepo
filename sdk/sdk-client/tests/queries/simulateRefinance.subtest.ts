@@ -16,6 +16,7 @@ import {
   Percentage,
   Position,
   PositionId,
+  PositionType,
   RiskRatio,
   Token,
   TokenAmount,
@@ -30,6 +31,7 @@ export default async function simulateRefinanceTest() {
       simulationType: SimulationType.Refinance,
       sourcePosition: params.sourcePosition,
       targetPosition: {
+        type: params.sourcePosition.type,
         positionId: PositionId.createFrom({ id: '0987654321' }),
         debtAmount: params.targetPosition.debtAmount,
         collateralAmount: params.targetPosition.collateralAmount,
@@ -88,6 +90,7 @@ export default async function simulateRefinanceTest() {
   } as MakerLendingPool
 
   const prevPosition: Position = {
+    type: PositionType.Multiply,
     pool: pool,
     debtAmount: TokenAmount.createFrom({ token: DAI, amount: '56.78' }),
     collateralAmount: TokenAmount.createFrom({ token: WETH, amount: '105.98' }),
@@ -118,6 +121,7 @@ export default async function simulateRefinanceTest() {
   }
 
   const targetPosition = Position.createFrom({
+    type: PositionType.Multiply,
     positionId: {
       id: 'newEmptyPositionFromPool',
     },

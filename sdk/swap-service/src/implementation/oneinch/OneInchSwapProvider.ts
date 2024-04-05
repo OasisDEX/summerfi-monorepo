@@ -113,7 +113,7 @@ export class OneInchSwapProvider implements ISwapProvider {
 
     if (!(response.status === 200 && response.statusText === 'OK')) {
       throw new Error(
-        `Error performing 1inch swap quote request ${swapUrl}: ${await response.body}`,
+        `Error [${response.statusText}] performing 1inch swap quote request ${swapUrl}: ${JSON.stringify(await response.body)}`,
       )
     }
 

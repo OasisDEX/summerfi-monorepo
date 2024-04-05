@@ -12,6 +12,7 @@ import {
   Percentage,
   Position,
   PositionId,
+  PositionType,
   RiskRatio,
   Token,
   TokenAmount,
@@ -56,6 +57,7 @@ export default async function simulateNewOrder() {
   } as MakerLendingPool
 
   const prevPosition: Position = {
+    type: PositionType.Multiply,
     pool: pool,
     debtAmount: TokenAmount.createFrom({ token: DAI, amount: '56.78' }),
     collateralAmount: TokenAmount.createFrom({ token: WETH, amount: '105.98' }),
@@ -82,6 +84,7 @@ export default async function simulateNewOrder() {
     sourcePosition: prevPosition,
     swaps: [],
     targetPosition: {
+      type: PositionType.Multiply,
       positionId: PositionId.createFrom({ id: '1234567890' }),
       debtAmount: TokenAmount.createFrom({ token: DAI, amount: '56.78' }),
       collateralAmount: TokenAmount.createFrom({ token: WETH, amount: '105.98' }),
