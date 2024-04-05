@@ -244,7 +244,6 @@ export class OneInchSwapProvider implements ISwapProvider {
     return { [OneInchAuthHeaderKey]: this._apiKey }
   }
 
-
   private _getOneInchSpotAuthHeader(): OneInchAuthHeader {
     return { [OneInchAuthHeaderKey]: this._apiSpotKey }
   }
