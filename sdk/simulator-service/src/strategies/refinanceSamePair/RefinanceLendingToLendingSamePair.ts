@@ -18,12 +18,12 @@ export async function refinanceLendingToLendingSamePair(
   dependencies: IRefinanceDependencies,
 ): Promise<ISimulation<SimulationType.Refinance>> {
   // args validation
-  if (!isLendingPool(args.targetPool)) {
+  if (!isLendingPool(args.targetPosition.pool)) {
     throw new Error('Target pool is not a lending pool')
   }
 
-  const position = Position.createFrom(args.position)
-  const targetPool = await dependencies.protocolManager.getPool(args.targetPool.poolId)
+  const position = Position.createFrom(args.sourcePosition)
+  const targetPool = await dependencies.protocolManager.getPool(args.targetPosition.pool.poolId)
 
   if (!isLendingPool(targetPool)) {
     throw new Error('Target pool is not a lending pool')

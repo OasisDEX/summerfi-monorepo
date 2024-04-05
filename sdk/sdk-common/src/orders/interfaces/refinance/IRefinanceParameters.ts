@@ -1,10 +1,9 @@
 import { IPercentage } from '../../../common/interfaces/IPercentage'
 import { IPosition } from '../../../common/interfaces/IPosition'
-import { IPool } from '../../../protocols/interfaces/IPool'
 
 export interface IRefinanceParameters {
-  position: IPosition
-  targetPool: IPool
+  sourcePosition: IPosition
+  targetPosition: IPosition
   slippage: IPercentage
 }
 
