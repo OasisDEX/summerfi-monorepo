@@ -1,13 +1,13 @@
 import { OrderPlanner } from '@summerfi/order-planner-common/implementation'
 import { Order, type IPositionsManager } from '@summerfi/sdk-common/orders'
-import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { IUser } from '@summerfi/sdk-common/user'
 import { ChainInfo, Maybe } from '@summerfi/sdk-common/common'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import { ProtocolBuilderRegistryType } from '@summerfi/order-planner-common/interfaces'
 import { IOrderPlannerService } from '../interfaces/IOrderPlannerService'
 import { ActionBuildersConfig } from '../config/Config'
+import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
 
 export class OrderPlannerService implements IOrderPlannerService {
   readonly orderPlanner: OrderPlanner
@@ -29,9 +29,9 @@ export class OrderPlannerService implements IOrderPlannerService {
   async buildOrder(params: {
     user: IUser
     positionsManager: IPositionsManager
-    simulation: Simulation<SimulationType>
+    simulation: ISimulation<SimulationType>
     swapManager: ISwapManager
-    protocolsRegistry: ProtocolBuilderRegistryType
+    protocolsRegistry: IProtocolPluginsRegistry
   }): Promise<Maybe<Order>> {
     const deploymentKey = this._getDeploymentKey(params.user.chainInfo)
     const deployment = this.deployments[deploymentKey]

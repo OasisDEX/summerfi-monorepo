@@ -4,9 +4,13 @@
     "rootDir": "src",
     "baseUrl": ".",
     "paths": {
-      "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
       "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
-      "@summerfi/order-planner-common/*": ["node_modules/@summerfi/order-planner-common/src/*"]
+      "@summerfi/order-planner-common/*": ["node_modules/@summerfi/order-planner-common/src/*"],
+      "@summerfi/protocol-plugins-common": [
+        "node_modules/@summerfi/protocol-plugins-common/src/index.ts"
+      ],
+      "@summerfi/testing-utils": ["node_modules/@summerfi/testing-utils/src/index.ts"],
+      "@summerfi/swap-common/*": ["node_modules/@summerfi/swap-common/src/*"]
     }
   },
   "include": ["src/**/*.ts"],

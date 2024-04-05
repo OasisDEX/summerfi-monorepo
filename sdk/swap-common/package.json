@@ -19,8 +19,7 @@
   "dependencies": {
     "@summerfi/sdk-common": "workspace:*",
     "@types/node-fetch": "^2.6.11",
-    "node-fetch": "^2.6.7",
-    "viem": "^2.8.13"
+    "node-fetch": "^2.6.7"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

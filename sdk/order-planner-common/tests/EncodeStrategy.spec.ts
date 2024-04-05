@@ -1,8 +1,13 @@
 import { ActionNames } from '@summerfi/deployment-types'
-import { BaseAction } from '../src/actions/BaseAction'
-import { ActionCall } from '../src/actions/Types'
 import { encodeStrategy } from '../src/utils'
 import { decodeStrategy } from './utils/DecodeStrategy'
+import { ActionCall, BaseAction } from '@summerfi/protocol-plugins-common'
+import { Address } from '@summerfi/sdk-common/common'
+import {
+  decodePositionsManagerCalldata,
+  decodeStrategyExecutorCalldata,
+} from '@summerfi/testing-utils'
+import assert from 'assert'
 
 class DerivedAction extends BaseAction {
   public readonly config = {
@@ -26,6 +31,9 @@ class DerivedAction extends BaseAction {
 
 describe.only('Encode Strategy', () => {
   const derivedAction = new DerivedAction()
+  const strategyExecutorAddress = Address.createFromEthereum({
+    value: '0x5e81A7515f956aB642eb698821a449fe8fE7498B',
+  })
 
   const actionCall = derivedAction.encodeCall(
     {
@@ -43,13 +51,25 @@ describe.only('Encode Strategy', () => {
   })
 
   it('should encode calls for operation executor', () => {
-    const calldata = encodeStrategy('operationName', [actionCall, otherActionCall])
-
-    const decodedArgs = decodeStrategy(calldata)
-
-    expect(decodedArgs).toEqual({
-      strategyName: 'operationName',
+    const calldata = encodeStrategy({
+      strategyName: 'SomeStrategyName',
+      strategyExecutor: strategyExecutorAddress,
       actions: [actionCall, otherActionCall],
+    })
+
+    const positionsManagerParams = decodePositionsManagerCalldata({
+      calldata: calldata,
+    })
+
+    assert(positionsManagerParams, 'Cannot decode Positions Manager calldata')
+
+    expect(positionsManagerParams.target.value).toEqual(strategyExecutorAddress.value)
+
+    const strategyExecutorParams = decodeStrategyExecutorCalldata(positionsManagerParams.calldata)
+
+    expect(strategyExecutorParams).toEqual({
+      strategyName: 'SomeStrategyName',
+      actionCalls: [actionCall, otherActionCall],
     })
   })
 })

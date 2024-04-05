@@ -1,0 +1,19 @@
+{
+  "extends": "@summerfi/typescript-config/tsconfig.test.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "~sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
+      "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
+      "@summerfi/protocol-plugins": ["node_modules/@summerfi/protocol-plugins/src/index.ts"],
+      "@summerfi/protocol-plugins/*": ["node_modules/@summerfi/protocol-plugins/src/*"],
+      "@summerfi/order-planner-common/*": ["node_modules/@summerfi/order-planner-common/src/*"],
+      "@summerfi/protocol-plugins-common": [
+        "node_modules/@summerfi/protocol-plugins-common/src/index.ts"
+      ]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

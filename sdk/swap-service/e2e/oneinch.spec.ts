@@ -8,8 +8,7 @@ import {
   type ChainInfo,
 } from '@summerfi/sdk-common/common'
 import { subtractPercentage } from '@summerfi/sdk-common/utils'
-import { SwapProviderType } from '@summerfi/swap-common/enums'
-import { QuoteData, SwapData } from '@summerfi/swap-common/types'
+import { QuoteData, SwapData, SwapProviderType } from '@summerfi/sdk-common/swap'
 import { SwapManagerFactory } from '../src/implementation/SwapManagerFactory'
 
 describe('OneInch | SwapManager | Integration', () => {
@@ -18,7 +17,7 @@ describe('OneInch | SwapManager | Integration', () => {
   // Tokens
   const WETH = Token.createFrom({
     chainInfo,
-    address: Address.createFrom({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
+    address: Address.createFromEthereum({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
     symbol: 'WETH',
     name: 'Wrapped Ether',
     decimals: 18,
@@ -26,7 +25,7 @@ describe('OneInch | SwapManager | Integration', () => {
 
   const DAI = Token.createFrom({
     chainInfo,
-    address: Address.createFrom({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
+    address: Address.createFromEthereum({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
     symbol: 'DAI',
     name: 'Dai Stablecoin',
     decimals: 18,
@@ -39,10 +38,12 @@ describe('OneInch | SwapManager | Integration', () => {
   })
 
   // Address
-  const recipient = Address.createFrom({ value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266' })
+  const recipient = Address.createFromEthereum({
+    value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+  })
 
   // Percentage
-  const slippage: Percentage = Percentage.createFrom({ percentage: 2.0 })
+  const slippage: Percentage = Percentage.createFrom({ value: 2.0 })
 
   it('should provide swap data', async () => {
     // SwapManager

@@ -9,3 +9,4 @@ export {
   EthereumChainNames,
   OptimismChainNames,
 } from './ChainNames'
+export { PositionType } from './PositionType'

@@ -10,7 +10,7 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest --coverage=true --silent=false",
+    "test": "jest --coverage=true",
     "testw": "jest --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -22,9 +22,11 @@
     "@summerfi/deployment-types": "workspace:*",
     "@summerfi/deployment-utils": "workspace:*",
     "@summerfi/order-planner-common": "workspace:*",
-    "@summerfi/protocol-plugins": "workspace:*",
+    "@summerfi/protocol-plugins": "workspace:^",
+    "@summerfi/protocol-plugins-common": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
-    "@summerfi/swap-common": "workspace:*"
+    "@summerfi/swap-common": "workspace:*",
+    "@summerfi/testing-utils": "workspace:*"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
@@ -32,7 +34,6 @@
     "@summerfi/typescript-config": "workspace:*",
     "@types/yargs": "^17.0.32",
     "tsx": "^4.7.1",
-    "viem": "^2.7.8",
     "yargs": "^17.7.2"
   }
 }

@@ -1,16 +1,20 @@
 import { Order, type IPositionsManager } from '@summerfi/sdk-common/orders'
-import { Simulation, SimulationType, steps } from '@summerfi/sdk-common/simulation'
+import { ISimulation, SimulationType, steps } from '@summerfi/sdk-common/simulation'
 import { Deployment } from '@summerfi/deployment-utils'
 import { Address, Maybe } from '@summerfi/sdk-common/common'
 import { HexData } from '@summerfi/sdk-common/common/aliases'
-import { IOrderPlanner } from '../interfaces/IOrderPlanner'
-import { ActionBuilder, ActionBuildersMap } from '../builders/Types'
-import { OrderPlannerContext } from '../context/OrderPlannerContext'
-import { ActionCall } from '../actions/Types'
-import { encodeStrategy } from '../utils/EncodeStrategy'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import { ProtocolBuilderRegistryType } from '../interfaces/Types'
 import { IUser } from '@summerfi/sdk-common/user'
+import {
+  ActionBuilder,
+  ActionBuildersMap,
+  ActionCall,
+  IProtocolPluginsRegistry,
+  IStepBuilderContext,
+  StepBuilderContext,
+} from '@summerfi/protocol-plugins-common'
+import { IOrderPlanner } from '../interfaces/IOrderPlanner'
+import { encodeStrategy } from '../utils/EncodeStrategy'
 
 export class OrderPlanner implements IOrderPlanner {
   private readonly ExecutorContractName = 'OperationExecutor'
@@ -18,11 +22,11 @@ export class OrderPlanner implements IOrderPlanner {
   async buildOrder(params: {
     user: IUser
     positionsManager: IPositionsManager
-    simulation: Simulation<SimulationType>
+    simulation: ISimulation<SimulationType>
     actionBuildersMap: ActionBuildersMap
     deployment: Deployment
     swapManager: ISwapManager
-    protocolsRegistry: ProtocolBuilderRegistryType
+    protocolsRegistry: IProtocolPluginsRegistry
   }): Promise<Maybe<Order>> {
     const {
       user,
@@ -34,7 +38,7 @@ export class OrderPlanner implements IOrderPlanner {
       protocolsRegistry,
     } = params
 
-    const context: OrderPlannerContext = new OrderPlannerContext()
+    const context: IStepBuilderContext = new StepBuilderContext()
 
     context.startSubContext()
 
@@ -61,7 +65,7 @@ export class OrderPlanner implements IOrderPlanner {
       throw new Error('Mismatched nested calls levels, probably a missing endSubContext call')
     }
 
-    return this._generateOrder(simulation, callsBatch, deployment)
+    return this._generateOrder(simulation, callsBatch, positionsManager, deployment)
   }
 
   private getActionBuilder<T extends steps.Steps>(
@@ -71,24 +75,35 @@ export class OrderPlanner implements IOrderPlanner {
     return actionBuildersMap[step.type] as ActionBuilder<T>
   }
 
+  private _getStrategyName(simulation: ISimulation<SimulationType>): string {
+    return `${simulation.simulationType}${simulation.sourcePosition?.pool.protocol.name}${simulation.targetPosition?.pool.protocol.name}`
+  }
+
   private _generateOrder(
-    simulation: Simulation<SimulationType>,
+    simulation: ISimulation<SimulationType>,
     simulationCalls: ActionCall[],
+    positionsManager: IPositionsManager,
     deployment: Deployment,
   ): Order {
     const executorInfo = deployment.contracts[this.ExecutorContractName]
     if (!executorInfo) {
       throw new Error(`Executor contract ${this.ExecutorContractName} not found in deployment`)
     }
+    const executorAddress = Address.createFromEthereum({ value: executorInfo.address as HexData })
+    const strategyName = this._getStrategyName(simulation)
 
-    const calldata = encodeStrategy(simulation.simulationType, simulationCalls)
+    const calldata = encodeStrategy({
+      strategyName: strategyName,
+      strategyExecutor: executorAddress,
+      actions: simulationCalls,
+    })
 
     return {
       simulation: simulation,
       transactions: [
         {
           transaction: {
-            target: Address.createFrom({ value: executorInfo.address as HexData }),
+            target: positionsManager.address,
             calldata: calldata,
             value: '0',
           },

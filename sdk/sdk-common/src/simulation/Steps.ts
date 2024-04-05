@@ -1,8 +1,10 @@
 import { Percentage } from '../common/implementation/Percentage'
+import { Price } from '../common/implementation/Price'
 import { Position } from '../common/implementation/Position'
 import { Token } from '../common/implementation/Token'
 import { TokenAmount } from '../common/implementation/TokenAmount'
-import { FlashloanProvider, SimulationSteps } from './Enums'
+import { FlashloanProvider, SimulationSteps, TokenTransferTargetType } from './Enums'
+import { SwapProviderType, SwapRoute } from '../swap'
 import { ReferenceableField, ValueReference } from './ValueReference'
 
 export interface Step<T extends SimulationSteps, I, O = undefined, N extends string = string> {
@@ -33,6 +35,7 @@ export interface DepositBorrowStep
       borrowAmount: ReferenceableField<TokenAmount>
       position: Position
       additionalDeposit?: ValueReference<TokenAmount>
+      borrowTargetType: TokenTransferTargetType
     },
     {
       depositAmount: TokenAmount
@@ -45,7 +48,7 @@ export interface PaybackWithdrawStep
     SimulationSteps.PaybackWithdraw,
     {
       paybackAmount: ReferenceableField<TokenAmount>
-      withdrawAmount: ReferenceableField<TokenAmount>
+      withdrawAmount: TokenAmount
       position: Position
     },
     {
@@ -58,10 +61,13 @@ export interface SwapStep
   extends Step<
     SimulationSteps.Swap,
     {
+      provider: SwapProviderType
+      routes: SwapRoute[]
+      spotPrice: Price
       fromTokenAmount: TokenAmount
       toTokenAmount: TokenAmount
       slippage: Percentage
-      fee: Percentage
+      summerFee: Percentage
     },
     {
       receivedAmount: TokenAmount
@@ -78,6 +84,14 @@ export interface RepayFlashloan
     }
   > {}
 
+export interface NewPositionEvent
+  extends Step<
+    SimulationSteps.NewPositionEvent,
+    {
+      position: Position
+    }
+  > {}
+
 export type Steps =
   | FlashloanStep
   | PullTokenStep
@@ -86,3 +100,4 @@ export type Steps =
   | SwapStep
   | ReturnFunds
   | RepayFlashloan
+  | NewPositionEvent

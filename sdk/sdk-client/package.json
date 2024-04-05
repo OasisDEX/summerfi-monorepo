@@ -21,15 +21,13 @@
   "dependencies": {
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/sdk-server": "workspace:*",
-    "@summerfi/protocol-manager": "workspace:*",
-    "@summerfi/protocol-plugins": "workspace:*",
     "@trpc/client": "11.0.0-next-beta.264",
-    "superjson": "^1.13.3",
-    "viem": "^2.7.9"
+    "superjson": "^1.13.3"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
-    "@summerfi/typescript-config": "workspace:*"
+    "@summerfi/typescript-config": "workspace:*",
+    "@summerfi/testing-utils": "workspace:*"
   }
 }

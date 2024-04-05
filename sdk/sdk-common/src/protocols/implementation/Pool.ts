@@ -1,7 +1,8 @@
+import { SerializationService } from '../../services/SerializationService'
 import { IPool } from '../interfaces/IPool'
 import { IPoolId } from '../interfaces/IPoolId'
 import { IProtocol } from '../interfaces/IProtocol'
-import { PoolType } from '../interfaces/PoolType'
+import { PoolType } from '../types/PoolType'
 
 /**
  * @see IPool
@@ -17,3 +18,5 @@ export abstract class Pool implements IPool {
     this.protocol = params.protocol
   }
 }
+
+SerializationService.registerClass(Pool)

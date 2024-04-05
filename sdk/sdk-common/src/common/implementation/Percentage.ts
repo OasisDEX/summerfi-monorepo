@@ -1,31 +1,36 @@
 import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
-
-interface IPercentageSerialized {
-  value: number
-}
+import { IPercentage } from '../interfaces/IPercentage'
 
 /**
  * @class Percentage
  * @description Represents a percentage
  */
-export class Percentage implements IPercentageSerialized {
+export class Percentage implements IPercentage {
   readonly value: number
 
-  private constructor(params: IPercentageSerialized) {
+  private constructor(params: IPercentage) {
     this.value = params.value
   }
 
-  static createFrom({ percentage }: { percentage: number }) {
-    return new Percentage({ value: percentage })
+  static createFrom(params: IPercentage) {
+    return new Percentage(params)
   }
 
   toString(): string {
     return `${this.value}`
   }
 
-  add(percentage: Percentage): Percentage {
-    return Percentage.createFrom({ percentage: this.value + percentage.value })
+  add(percentage: IPercentage): Percentage {
+    return Percentage.createFrom({ value: this.value + percentage.value })
+  }
+
+  subtract(percentage: IPercentage): Percentage {
+    return Percentage.createFrom({ value: this.value - percentage.value })
+  }
+
+  toProportion(): number {
+    return this.value / 100
   }
 
   toBaseUnit(params: { decimals: number }): string {

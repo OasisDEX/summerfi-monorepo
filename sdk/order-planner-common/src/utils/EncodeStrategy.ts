@@ -1,14 +1,16 @@
-import { HexData } from '@summerfi/sdk-common/common/aliases'
+import { ActionCall } from '@summerfi/protocol-plugins-common'
+import { Address, HexData } from '@summerfi/sdk-common/common'
 import { encodeFunctionData, parseAbi } from 'viem'
-import { ActionCall } from '../actions/Types'
 
 type SkippableActionCall = ActionCall & {
   skipped: boolean
 }
 
-export function encodeStrategy(strategyName: string, actions: ActionCall[]): HexData {
+function encodeForExecutor(params: { strategyName: string; actions: ActionCall[] }): HexData {
+  const { strategyName, actions } = params
+
   const abi = parseAbi([
-    'function executeOp(Call[] memory calls, string calldata operationName)',
+    'function executeOp(Call[] memory calls, string calldata strategyName)',
     'struct Call { bytes32 targetHash; bytes callData; bool skipped; }',
   ])
 
@@ -22,5 +24,32 @@ export function encodeStrategy(strategyName: string, actions: ActionCall[]): Hex
     abi,
     functionName: 'executeOp',
     args: [skippableActions, strategyName],
+  })
+}
+
+export function encodeForPositionsManager(params: { target: Address; data: HexData }): HexData {
+  const { target, data } = params
+
+  const abi = parseAbi(['function execute(address _target, bytes memory _data)'])
+
+  return encodeFunctionData({
+    abi,
+    functionName: 'execute',
+    args: [target.value, data],
+  })
+}
+
+export function encodeStrategy(params: {
+  strategyName: string
+  strategyExecutor: Address
+  actions: ActionCall[]
+}): HexData {
+  const { strategyName, strategyExecutor, actions } = params
+
+  const executorData = encodeForExecutor({ strategyName, actions })
+
+  return encodeForPositionsManager({
+    target: strategyExecutor,
+    data: executorData,
   })
 }

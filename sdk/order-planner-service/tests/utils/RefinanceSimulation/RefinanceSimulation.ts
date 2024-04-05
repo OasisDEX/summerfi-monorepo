@@ -1,8 +1,9 @@
 import {
   FlashloanProvider,
-  Simulation,
+  ISimulation,
   SimulationSteps,
   SimulationType,
+  TokenTransferTargetType,
   steps,
 } from '@summerfi/sdk-common/simulation'
 import { Position } from '@summerfi/sdk-common/common'
@@ -10,13 +11,14 @@ import { Position } from '@summerfi/sdk-common/common'
 export function getRefinanceSimulation(params: {
   sourcePosition: Position
   targetPosition: Position
-}): Simulation<SimulationType.Refinance> {
+}): ISimulation<SimulationType.Refinance> {
   const { sourcePosition, targetPosition } = params
 
   return {
     simulationType: SimulationType.Refinance,
     sourcePosition: sourcePosition,
     targetPosition: targetPosition,
+    swaps: [],
     steps: [
       {
         name: 'Flashloan',
@@ -48,6 +50,7 @@ export function getRefinanceSimulation(params: {
           depositAmount: targetPosition.collateralAmount,
           borrowAmount: targetPosition.debtAmount,
           position: targetPosition,
+          borrowTargetType: TokenTransferTargetType.StrategyExecutor,
         },
         outputs: {
           depositAmount: targetPosition.collateralAmount,

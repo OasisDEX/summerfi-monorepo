@@ -5,6 +5,12 @@
     "outDir": "dist",
     "baseUrl": "."
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts"],
-  "exclude": ["node_modules", "dist", "scripts/**/*"]
+  "include": [
+    "src/**/*.ts",
+    "tests/**/*.ts",
+    "tests/mocks/*.ts",
+    "src/plugins/spark/types",
+    "tests/utils/ProtocolsPluginRegistryMock.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
 }
