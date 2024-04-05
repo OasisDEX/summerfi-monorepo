@@ -1,5 +1,5 @@
 {
-  "name": "@oasisdex/summerfi-sdk-common",
+  "name": "@summerfi/sdk-common",
   "version": "0.0.1",
   "exports": {
     "./*": {
