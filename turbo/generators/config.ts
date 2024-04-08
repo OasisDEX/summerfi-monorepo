@@ -36,11 +36,16 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         const directory = path.join(
           // resolves to the root of the current workspace
           plop.getDestBasePath(),
-          'sdk/protocol-plugins/src',
+          'sdk/protocol-plugins/src/plugins',
           answers.nameKebabCase,
         )
 
         fs.mkdirSync(directory)
+        // Make inner directories
+        fs.mkdirSync(`${directory}/abis`)
+        fs.mkdirSync(`${directory}/implementation`)
+        fs.mkdirSync(`${directory}/interfaces`)
+        fs.mkdirSync(`${directory}/types`)
 
         return `created empty ${directory} directory for protocol plugin`
       },
@@ -108,6 +113,12 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         type: 'add',
         path: 'sdk/sdk-common/src/protocols/interfaces/{{namePascalCase}}PoolId.ts',
         templateFile: 'templates/plugin/PoolId.hbs',
+      },
+        // TODO: Sort out imports here
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/{{namePascalCase}}ProtocolPlugin.ts',
+        templateFile: 'templates/plugin/index.hbs',
       },
     ],
   })
