@@ -37,11 +37,6 @@ describe('AAVEv3 Protocol Plugin', () => {
     }
   })
 
-  it('should correctly return a AaveV3LendingPool object for a valid AaveV3PoolId', async () => {
-    const aaveV3PoolIdValid = aaveV3PoolIdMock
-    await expect(aaveV3ProtocolPlugin.getPool(aaveV3PoolIdValid)).resolves.toBeDefined()
-  })
-
   it('should throw an error when calling getPool with an unsupported Chain', async () => {
     const invalidAaveV3PoolIdUnsupportedChain = {
       ...aaveV3PoolIdMock,

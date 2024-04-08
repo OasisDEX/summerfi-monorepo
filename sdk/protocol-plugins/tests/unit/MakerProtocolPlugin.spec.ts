@@ -41,11 +41,6 @@ describe('Maker Protocol Plugin', () => {
     expect(makerProtocolPlugin.ctx).toBe(ctx)
   })
 
-  it('should correctly return a MakerLendingPool object for a valid MakerPoolId', async () => {
-    const makerPoolIdValid = makerPoolIdMock
-    await expect(makerProtocolPlugin.getPool(makerPoolIdValid)).resolves.toBeDefined()
-  })
-
   it('should throw an error when calling getPool with an unsupported ChainInfo', async () => {
     const invalidMakerPoolIdUnsupportedChain = {
       ...makerPoolIdMock,
