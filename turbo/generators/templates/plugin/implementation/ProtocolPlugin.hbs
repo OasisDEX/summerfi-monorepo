@@ -1,0 +1,164 @@
+import {
+Percentage,
+TokenAmount,
+Token,
+TokenSymbol,
+Price,
+CurrencySymbol,
+RiskRatio,
+ChainFamilyName,
+valuesOfChainFamilyMap,
+Maybe,
+IPosition,
+ChainId,
+} from '@summerfi/sdk-common/common'
+import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { BaseProtocolPlugin } from '../../../implementation/BaseProtocolPlugin'
+
+import { {{namePascalCase}}LendingPool } from './{{namePascalCase}}LendingPool'
+import { {{namePascalCase}}CollateralConfig } from './{{namePascalCase}}CollateralConfig'
+import { {{namePascalCase}}DebtConfig } from './{{namePascalCase}}DebtConfig'
+import {
+{{namePascalCase}}CollateralConfigMap,
+{{namePascalCase}}CollateralConfigRecord,
+} from './{{namePascalCase}}CollateralConfigMap'
+import { {{namePascalCase}}DebtConfigMap, {{namePascalCase}}DebtConfigRecord } from './{{namePascalCase}}DebtConfigMap'
+import { z } from 'zod'
+import { {{namePascalCase}}AddressAbiMap } from '../types/{{namePascalCase}}AddressAbiMap'
+import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
+import {
+{{nameCapitalised}}_PLACHOLDER_ABI
+} from '../abis/{{namePascalCase}}ABIS'
+import { {{namePascalCase}}ContractNames } from '@summerfi/deployment-types'
+import { {{namePascalCase}}PoolId } from '../types/{{namePascalCase}}PoolId'
+
+export class {{namePascalCase}}ProtocolPlugin extends BaseProtocolPlugin {
+    readonly protocolName = ProtocolName.{{namePascalCase}}
+    readonly supportedChains = valuesOfChainFamilyMap([
+        ChainFamilyName.Ethereum
+    ])
+    readonly stepBuilders: Partial<ActionBuildersMap> = {}
+
+    readonly {{nameCamelCase}}PoolidSchema = z.object({
+        protocol: z.object({
+            name: z.literal(ProtocolName.{{namePascalCase}}),
+            chainInfo: z.object({
+                name: z.string(),
+                chainId: z.custom<ChainId>(
+                    (chainId) => this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
+                    'Chain ID not supported',
+                ),
+             }),
+        })
+    })
+
+    constructor(params: { context: IProtocolPluginContext }) {
+        super(params)
+    }
+
+    isPoolId(candidate: unknown): candidate is {{namePascalCase}}PoolId {
+        return this._isPoolId(candidate, this.{{nameCamelCase}}PoolidSchema)
+    }
+
+    validatePoolId(candidate: unknown): asserts candidate is {{namePascalCase}}PoolId {
+        if (!this.isPoolId(candidate)) {
+            throw new Error(`Invalid {{namePascalCase}} pool ID: ${JSON.stringify(candidate)}`)
+        }
+    }
+
+    async getPool({{nameCamelCase}}PoolId: unknown): Promise<{{namePascalCase}}LendingPool> {
+        this.validatePoolId({{nameCamelCase}}PoolId)
+
+        const ctx = this.ctx
+        const chainId = ctx.provider.chain?.id
+        if (!chainId) throw new Error('ctx.provider.chain.id undefined')
+
+        if (!this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId)) {
+            throw new Error(`Chain ID ${chainId} is not supported`)
+        }
+
+        const assetsList = await this.buildAssetsList()
+
+        // Both USDC & DAI use fixed price oracles that keep both stable at 1 USD
+        const poolBaseCurrencyToken = CurrencySymbol.USD
+
+        const collaterals = assetsList.reduce<{{namePascalCase}}CollateralConfigRecord>((colls, asset) => {
+            const assetInfo = this.getCollateralAssetInfo(asset, poolBaseCurrencyToken)
+            const { token: collateralToken } = asset
+            colls[collateralToken.address.value] = assetInfo
+            return colls
+        }, {})
+
+        const debts = assetsList.reduce<{{namePascalCase}}DebtConfigRecord>((debts, asset) => {
+            const assetInfo = this.getDebtAssetInfo(asset, poolBaseCurrencyToken)
+            if (!assetInfo) return debts
+            const { token: quoteToken } = asset
+            debts[quoteToken.address.value] = assetInfo
+            return debts
+        }, {})
+
+        return {{namePascalCase}}LendingPool.createFrom({
+            type: PoolType.Lending,
+            poolId: {{nameCamelCase}}PoolId,
+            protocol: {{nameCamelCase}}PoolId.protocol,
+            baseCurrency: CurrencySymbol.USD,
+            collaterals: {{namePascalCase}}CollateralConfigMap.createFrom({ record: collaterals }),
+            debts: {{namePascalCase}}DebtConfigMap.createFrom({ record: debts }),
+        })
+    }
+
+    async getPosition(positionId: string): Promise<IPosition> {
+        throw new Error(`Not implemented ${positionId}`)
+    }
+
+    private getContractDef<K extends {{namePascalCase}}ContractNames>(contractName: K): {{namePascalCase}}AddressAbiMap[K] {
+        // TODO: Need to be driven by ChainId in future
+        const map: {{namePascalCase}}AddressAbiMap = {
+            Oracle: {
+                address: '0xPlaceholder',
+                abi: {{nameCapitalised}}_PLACHOLDER_ABI,
+            },
+        }
+
+        return map[contractName]
+    }
+
+    private async buildAssetsList() {
+        try {
+            // TODO: Implement
+            return []
+        } catch (e) {
+            throw new Error(`Could not fetch/build assets list for {{namePascalCase}}: ${JSON.stringify(e)}`)
+        }
+    }
+
+    private getCollateralAssetInfo(
+        asset: Asset,
+        poolBaseCurrencyToken: Token | CurrencySymbol,
+    ): {{namePascalCase}}CollateralConfig {
+        const {
+            // TODO: Implement
+        } = asset
+
+        try {
+            return {}
+        } catch (e) {
+            throw new Error(`error in collateral loop ${e}`)
+        }
+    }
+
+    private getDebtAssetInfo(
+        asset: Asset,
+        poolBaseCurrencyToken: CurrencySymbol | Token,
+    ): Maybe<{{namePascalCase}}DebtConfig> {
+        const {
+            // TODO: Implement
+        } = asset
+
+        try {
+            return {}
+        } catch (e) {
+            throw new Error(`error in debt loop ${e}`)
+        }
+    }
+}

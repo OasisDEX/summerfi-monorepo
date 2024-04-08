@@ -1,0 +1,17 @@
+// ABIs and Protocol contracts
+import { {{namePascalCase}}ContractNames } from '@summerfi/deployment-types'
+import { AddressValue } from '@summerfi/sdk-common/common'
+import {
+  {{nameCapitalised}}_PLACEHOLDER_ABI,
+} from '../abis/{{namePascalCase}}ABIS'
+
+export type {{namePascalCase}}AbiMap = {
+  Placeholder: typeof {{nameCapitalised}}_ABI
+}
+
+export type {{namePascalCase}}AddressAbiMap = {
+  [K in {{namePascalCase}}ContractNames]: {
+    address: AddressValue
+    abi: {{namePascalCase}}AbiMap[K]
+  }
+}

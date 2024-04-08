@@ -1,20 +1,7 @@
 import path from 'path'
 import fs from 'fs-extra'
 import type { PlopTypes } from '@turbo/gen'
-
-const customAction: PlopTypes.CustomActionFunction = async (answers: {
-  name?: string
-  namePascalCase?: string
-  nameKebabCase?: string
-  nameCamelCase?: string
-}) => {
-  const name = answers.name
-  ;(answers.namePascalCase = toPascalCase(name)),
-    (answers.nameKebabCase = toKebabCase(name)),
-    (answers.nameCamelCase = toCamelCase(name)),
-    console.log('answers', answers)
-  return 'Added casing variants'
-}
+import { ProtocolName } from "../../sdk/sdk-common/src/protocols";
 
 export default function generator(plop: PlopTypes.NodePlopAPI): void {
   plop.setGenerator('plugin', {
@@ -23,11 +10,16 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       {
         type: 'input',
         name: 'name',
-        message: 'name of the protocol (example: "Morpho")',
+        message: `name of the protocol (example: "MorphoBlue")`,
+      },
+      {
+        type: 'input',
+        name: 'enumLabel',
+        message: `protocol enum label. Existing values printed below. (example: "MorphoBlue") \n ${JSON.stringify(ProtocolName)}`,
       },
     ],
     actions: [
-      customAction,
+      nameAction,
       function createProtocolPluginDirectory(answers: { nameKebabCase?: string }) {
         if (!answers.nameKebabCase) {
           return 'no name provided, skipping plugin directory creation'
@@ -49,79 +41,171 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
 
         return `created empty ${directory} directory for protocol plugin`
       },
+      // ABIs directory
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/{{namePascalCase}}ProtocolPlugin.ts',
-        templateFile: 'templates/plugin/ProtocolPlugin.hbs',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/abis/{{namePascalCase}}ABIS.ts',
+        templateFile: 'templates/plugin/abis/ABIS.hbs',
+      },
+      // Implementation directory
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/implementation/{{namePascalCase}}ProtocolPlugin.ts',
+        templateFile: 'templates/plugin/implementation/ProtocolPlugin.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/index.ts',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/implementation/{{namePascalCase}}LendingPool.ts',
+        templateFile: 'templates/plugin/implementation/LendingPool.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/implementation/{{namePascalCase}}CollateralConfig.ts',
+        templateFile: 'templates/plugin/implementation/CollateralConfig.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/implementation/{{namePascalCase}}CollateralConfigMap.ts',
+        templateFile: 'templates/plugin/implementation/CollateralConfigMap.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/implementation/{{namePascalCase}}DebtConfig.ts',
+        templateFile: 'templates/plugin/implementation/DebtConfig.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/implementation/{{namePascalCase}}DebtConfigMap.ts',
+        templateFile: 'templates/plugin/implementation/DebtConfigMap.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/implementation/index.ts',
+        templateFile: 'templates/plugin/implementation/index.hbs',
+      },
+      // Interfaces directory
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/interfaces/I{{namPascalCase}}CollateralConfig.ts',
+        templateFile: 'templates/plugin/interfaces/ICollateralConfig.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/interfaces/I{{namPascalCase}}CollateralConfigMap.ts',
+        templateFile: 'templates/plugin/interfaces/ICollateralConfigMap.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/interfaces/I{{namPascalCase}}DebtConfig.ts',
+        templateFile: 'templates/plugin/interfaces/IDebtConfig.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/interfaces/I{{namPascalCase}}DebtConfigMap.ts',
+        templateFile: 'templates/plugin/interfaces/IDebtConfigMap.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/interfaces/I{{namPascalCase}}LendingPool.ts',
+        templateFile: 'templates/plugin/interfaces/ILendingPool.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/interfaces/index.ts',
+        templateFile: 'templates/plugin/interfaces/index.hbs',
+      },
+      // Types directory
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/types/index.ts',
+        templateFile: 'templates/plugin/types/index.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/types/{{namePascalCase}}PoolId.ts',
+        templateFile: 'templates/plugin/types/PoolId.hbs',
+      },
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/types/{{namePascalCase}}AddressAbiMap.ts',
+        templateFile: 'templates/plugin/types/AddressAbiMap.hbs',
+      },
+      // Plugin index
+      {
+        type: 'add',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/index.ts',
         templateFile: 'templates/plugin/index.hbs',
       },
+      // Actions & Builders
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/abis.ts',
-        templateFile: 'templates/plugin/abis.hbs',
-      },
-      {
-        type: 'add',
-        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/Types.ts',
-        templateFile: 'templates/plugin/Types.hbs',
-      },
-      {
-        type: 'add',
-        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/builders/index.ts',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/builders/index.ts',
         templateFile: 'templates/plugin/builders/index.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/builders/{{namePascalCase}}PaybackWithdrawActionBuilder.ts',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/builders/{{namePascalCase}}PaybackWithdrawActionBuilder.ts',
         templateFile: 'templates/plugin/builders/PaybackWithdrawActionBuilder.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/builders/{{namePascalCase}}DepositBorrowActionBuilder.ts',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/builders/{{namePascalCase}}DepositBorrowActionBuilder.ts',
         templateFile: 'templates/plugin/builders/DepositBorrowActionBuilder.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/actions/index.ts',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/actions/index.ts',
         templateFile: 'templates/plugin/actions/index.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/actions/{{namePascalCase}}PaybackAction.ts',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/actions/{{namePascalCase}}PaybackAction.ts',
         templateFile: 'templates/plugin/actions/PaybackAction.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/actions/{{namePascalCase}}WithdrawAction.ts',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/actions/{{namePascalCase}}WithdrawAction.ts',
         templateFile: 'templates/plugin/actions/WithdrawAction.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/actions/{{namePascalCase}}DepositAction.ts',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/actions/{{namePascalCase}}DepositAction.ts',
         templateFile: 'templates/plugin/actions/DepositAction.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/actions/{{namePascalCase}}BorrowAction.ts',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/actions/{{namePascalCase}}BorrowAction.ts',
         templateFile: 'templates/plugin/actions/BorrowAction.hbs',
       },
+      // Tests
       {
         type: 'add',
-        path: 'sdk/sdk-common/src/protocols/interfaces/{{namePascalCase}}PoolId.ts',
-        templateFile: 'templates/plugin/PoolId.hbs',
+        path: 'sdk/protocol-plugins/src/tests/integration/{{namePascalCase}}ProtocolPlugin.ts',
+        templateFile: 'templates/plugin/tests/ProtocolPlugin.spec.integration.hbs',
       },
-        // TODO: Sort out imports here
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/{{namePascalCase}}/{{namePascalCase}}ProtocolPlugin.ts',
-        templateFile: 'templates/plugin/index.hbs',
+        path: 'sdk/protocol-plugins/src/tests/unit/{{namePascalCase}}ProtocolPlugin.ts',
+        templateFile: 'templates/plugin/tests/ProtocolPlugin.spec.unit.hbs',
       },
     ],
   })
+}
+
+const nameAction: PlopTypes.CustomActionFunction = async (answers: {
+  name: string
+  namePascalCase?: string
+  nameKebabCase?: string
+  nameCamelCase?: string
+  nameCapitalised?: string
+}) => {
+  const name = answers.name
+  ;(answers.namePascalCase = toPascalCase(name)),
+      (answers.nameKebabCase = toKebabCase(name)),
+      (answers.nameCamelCase = toCamelCase(name)),
+      (answers.nameCapitalised = name.toUpperCase())
+
+  return 'Added casing variants'
 }
 
 const toKebabCase = (str) =>
