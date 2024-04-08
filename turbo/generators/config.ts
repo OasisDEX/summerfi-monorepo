@@ -1,7 +1,7 @@
 import path from 'path'
 import fs from 'fs-extra'
 import type { PlopTypes } from '@turbo/gen'
-import { ProtocolName } from "../../sdk/sdk-common/src/protocols";
+import { ProtocolName } from '../../sdk/sdk-common/src/protocols'
 
 export default function generator(plop: PlopTypes.NodePlopAPI): void {
   plop.setGenerator('plugin', {
@@ -201,9 +201,9 @@ const nameAction: PlopTypes.CustomActionFunction = async (answers: {
 }) => {
   const name = answers.name
   ;(answers.namePascalCase = toPascalCase(name)),
-      (answers.nameKebabCase = toKebabCase(name)),
-      (answers.nameCamelCase = toCamelCase(name)),
-      (answers.nameCapitalised = name.toUpperCase())
+    (answers.nameKebabCase = toKebabCase(name)),
+    (answers.nameCamelCase = toCamelCase(name)),
+    (answers.nameCapitalised = name.toUpperCase())
 
   return 'Added casing variants'
 }
