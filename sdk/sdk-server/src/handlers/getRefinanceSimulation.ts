@@ -3,11 +3,18 @@ import type { ISimulation, SimulationType } from '@summerfi/sdk-common/simulatio
 import {
   refinanceLendingToLendingSamePair,
   type IRefinanceDependencies,
+  refinanceLendingToLendingAnyPair,
 } from '@summerfi/simulator-service/strategies'
 import type { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { publicProcedure } from '../TRPC'
+import { isSameTokens } from '@summerfi/sdk-common/common'
 
 const inputSchema = z.custom<IRefinanceParameters>((parameters) => parameters !== undefined)
+
+function isToSamePair(parameters: IRefinanceParameters): boolean {
+  return isSameTokens(parameters.sourcePosition.debtAmount.token, parameters.targetPosition.debtAmount.token) && 
+  isSameTokens(parameters.sourcePosition.collateralAmount.token, parameters.targetPosition.collateralAmount.token)
+}
 
 export const getRefinanceSimulation = publicProcedure
   .input(inputSchema)
@@ -19,5 +26,10 @@ export const getRefinanceSimulation = publicProcedure
       protocolManager: opts.ctx.protocolManager,
     }
 
-    return await refinanceLendingToLendingSamePair(args, dependencies)
+    // TODO: in the end we should use just any pair
+    if (isToSamePair(opts.input)) {
+      return refinanceLendingToLendingSamePair(args, dependencies)
+    }
+
+    return refinanceLendingToLendingAnyPair(args, dependencies)
   })
