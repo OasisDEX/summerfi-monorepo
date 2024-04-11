@@ -911,6 +911,9 @@ importers:
       '@summerfi/jest-config':
         specifier: workspace:*
         version: link:../../packages/jest-config
+      '@summerfi/testing-utils':
+        specifier: workspace:*
+        version: link:../testing-utils
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config

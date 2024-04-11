@@ -1,19 +1,12 @@
-import {
-  Address,
-  ChainInfo,
-  Percentage,
-  Token,
-  TokenAmount,
-  CurrencySymbol,
-} from '@summerfi/sdk-common/common'
+import { Address, ChainInfo, Percentage, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { SpotData, SwapData, QuoteData } from '@summerfi/sdk-common/swap'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
 
 export class SwapManagerMock implements ISwapManager {
   private _swapDataReturnValue: SwapData = {} as SwapData
   private _quoteDataReturnValue: QuoteData = {} as QuoteData
-
-  private _spotPricesReturnValue: SpotData = {} as SpotData
+  private _spotDataReturnValue: SpotData = {} as SpotData
+  private _summerFeeValue: Percentage = Percentage.createFrom({ value: 0 })
 
   private _lastGetSwapDataExactInputParams:
     | {
@@ -42,12 +35,12 @@ export class SwapManagerMock implements ISwapManager {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getSpotPrices(params: {
-    chainInfo: ChainInfo
-    tokens: Token[]
-    quoteCurrency?: CurrencySymbol
-  }): Promise<SpotData> {
-    return this._spotPricesReturnValue
+  async getSpotPrice(params: { chainInfo: ChainInfo; baseToken: Token }): Promise<SpotData> {
+    return this._spotDataReturnValue
+  }
+
+  getSummerFee(): Percentage {
+    return this._summerFeeValue
   }
 
   async getSwapDataExactInput(params: {
