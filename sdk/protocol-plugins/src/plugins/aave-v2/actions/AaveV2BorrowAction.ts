@@ -1,24 +1,26 @@
-import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
+import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { Address, TokenAmount } from '@summerfi/sdk-common/common'
 
 export class AaveV2BorrowAction extends BaseAction {
   public readonly config = {
-    name: 'AaveV2Borrow',
-    version: 2,
-    parametersAbi: '/** INSERT HERE - THE ACTION PARAMETERS **/',
-    storageInputs: [/** INSERT HERE - THE STORAGE INPUTS **/],
-    storageOutputs: [/** INSERT HERE - THE STORAGE OUTPUTS **/],
+    name: 'AaveBorrow',
+    version: 3,
+    parametersAbi: '(address asset, uint256 amount, address to)',
+    storageInputs: [],
+    storageOutputs: ['borrowedAmount'],
   } as const
 
   public encodeCall(
-    params: {
-        /** INSERT HERE - THE ACTION PARAMETERS **/
-    },
-    paramsMapping?: number[],
+    params: { borrowAmount: TokenAmount; borrowTo: Address },
+    paramsMapping?: InputSlotsMapping,
   ): ActionCall {
     return this._encodeCall({
       arguments: [
-        /** INSERT HERE - THE ACTION ARGS  **/
+        {
+          asset: params.borrowAmount.token.address.value,
+          amount: params.borrowAmount.toBaseUnit(),
+          to: params.borrowTo.value,
+        },
       ],
       mapping: paramsMapping,
     })
