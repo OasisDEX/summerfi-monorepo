@@ -10,7 +10,6 @@ import { importPositionStrategy } from './Strategy'
 
 export async function importPosition(
   args: ImportPositionParameters,
-  dependencies: {},
 ): Promise<ISimulation<SimulationType.ImportPosition>> {
   const simulator = Simulator.create(importPositionStrategy)
 
