@@ -184,12 +184,12 @@ export class AaveV2ProtocolPlugin extends BaseProtocolPlugin {
           quoteToken: CurrencySymbol.USD,
           value: asset.price.toString(),
         }),
-        // maxLtv: RiskRatio.createFrom({
-        //   ratio: Percentage.createFrom({
-        //     value: new BigNumber(ltv.toString()).div(LTV_TO_PERCENTAGE_DIVISOR).toNumber(),
-        //   }),
-        //   type: RiskRatio.type.LTV,
-        // }),
+        maxLtv: RiskRatio.createFrom({
+          ratio: Percentage.createFrom({
+            value: new BigNumber(ltv.toString()).div(LTV_TO_PERCENTAGE_DIVISOR).toNumber(),
+          }),
+          type: RiskRatio.type.LTV,
+        }),
         liquidationThreshold: RiskRatio.createFrom({
           ratio: Percentage.createFrom({
             value: new BigNumber(liquidationThreshold.toString())
@@ -211,8 +211,8 @@ export class AaveV2ProtocolPlugin extends BaseProtocolPlugin {
               .div(LTV_TO_PERCENTAGE_DIVISOR)
               .toNumber(),
         }),
-        // apy: Percentage.createFrom({ value: 0 }),
-        // usageAsCollateralEnabled,
+        apy: Percentage.createFrom({ value: 0 }),
+        usageAsCollateralEnabled,
       }
     } catch (e) {
       throw new Error(`error in collateral loop ${e}`)
@@ -273,7 +273,7 @@ export class AaveV2ProtocolPlugin extends BaseProtocolPlugin {
         originationFee: Percentage.createFrom({
           value: Number((reserveFactor / RESERVE_FACTOR_TO_PERCENTAGE_DIVISOR).toString()),
         }),
-        // borrowingEnabled,
+        borrowingEnabled,
       }
     } catch (e) {
       throw new Error(`error in debt loop ${e}`)
