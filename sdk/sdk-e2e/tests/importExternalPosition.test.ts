@@ -32,7 +32,7 @@ jest.setTimeout(300000)
 
 const SDKAPiUrl = 'https://zmjmtfsocb.execute-api.us-east-1.amazonaws.com/api/sdk'
 const TenderlyForkUrl =
-  'https://virtual.mainnet.rpc.tenderly.co/75405d76-cb49-41c4-8624-e47966ee7969'
+  'https://virtual.mainnet.rpc.tenderly.co/c9231728-8442-4c98-80a0-7fbdca928099'
 
 describe('Import Maker Position | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
