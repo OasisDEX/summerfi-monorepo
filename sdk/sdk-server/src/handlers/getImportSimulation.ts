@@ -1,8 +1,6 @@
 import { z } from 'zod'
 import type { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import {
-  importPosition,
-} from '@summerfi/simulator-service/strategies'
+import { importPosition } from '@summerfi/simulator-service/strategies'
 import type { ImportPositionParameters } from '@summerfi/sdk-common/orders'
 import { publicProcedure } from '../TRPC'
 

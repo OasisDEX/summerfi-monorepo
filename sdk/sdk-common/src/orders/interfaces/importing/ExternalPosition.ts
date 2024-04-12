@@ -1,13 +1,13 @@
-import { Address, Position } from "src/common";
+import { Address, Position } from '../../../common'
 
 export enum ExternalPositionType {
-    WALLET = 'WALLET',
-    DS_PROXY = 'DS_PROXY',
-  }
-  
+  WALLET = 'WALLET',
+  DS_PROXY = 'DS_PROXY',
+}
+
 export interface ExternalPositionId {
-    type: ExternalPositionType
-    address: Address
+  type: ExternalPositionType
+  address: Address
 }
 
 /**
@@ -15,7 +15,7 @@ export interface ExternalPositionId {
  * @description Position existing in another service. This will be specialized into the IDs for the
  *              different services.
  */
-export interface ExternalPosition  {
+export interface ExternalPosition {
   position: Position
   externalId: ExternalPositionId
 }

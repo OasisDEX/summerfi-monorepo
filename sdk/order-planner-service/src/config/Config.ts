@@ -1,5 +1,5 @@
-import { SimulationSteps } from '@summerfi/sdk-common/simulation'
-import { ActionBuildersMap } from '@summerfi/protocol-plugins-common'
+import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
+import { ActionBuilder, ActionBuildersMap } from '@summerfi/protocol-plugins-common'
 import {
   DepositBorrowActionBuilder,
   FlashloanActionBuilder,
@@ -11,6 +11,10 @@ import {
   SwapActionBuilder,
 } from '@summerfi/protocol-plugins/plugins/common'
 
+const ActionBuilderNotImplemented: ActionBuilder<steps.ImportStep> = () => {
+  throw new Error('Action builder Import not implemented')
+}
+
 export const ActionBuildersConfig: ActionBuildersMap = {
   [SimulationSteps.PullToken]: PullTokenActionBuilder,
   [SimulationSteps.Flashloan]: FlashloanActionBuilder,
@@ -20,4 +24,5 @@ export const ActionBuildersConfig: ActionBuildersMap = {
   [SimulationSteps.PaybackWithdraw]: PaybackWithdrawActionBuilder,
   [SimulationSteps.ReturnFunds]: ReturnFundsActionBuilder,
   [SimulationSteps.NewPositionEvent]: PositionCreatedActionBuilder,
+  [SimulationSteps.Import]: ActionBuilderNotImplemented,
 }

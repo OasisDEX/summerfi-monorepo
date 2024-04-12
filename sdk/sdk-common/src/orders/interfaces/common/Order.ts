@@ -1,4 +1,4 @@
-import { ISimulation } from '../../../simulation'
+import { ISimulation } from '../../../simulation/Simulation'
 import { SimulationType } from '../../../simulation/Enums'
 import { TransactionInfo } from './TransactionInfo'
 

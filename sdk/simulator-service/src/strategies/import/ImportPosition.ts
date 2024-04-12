@@ -1,12 +1,7 @@
-import {
-  ISimulation,
-  SimulationSteps,
-  SimulationType,
-} from '@summerfi/sdk-common/simulation'
+import { ISimulation, SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
 import { ImportPositionParameters } from '@summerfi/sdk-common/orders'
 import { importPositionStrategy } from './Strategy'
-
 
 export async function importPosition(
   args: ImportPositionParameters,
