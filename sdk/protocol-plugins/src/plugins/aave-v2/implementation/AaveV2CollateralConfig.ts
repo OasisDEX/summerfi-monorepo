@@ -1,4 +1,4 @@
-import { CollateralConfig } from '@summerfi/sdk-common/protocols'
+import {CollateralConfig} from "@summerfi/sdk-common/protocols";
 import { IAaveV2CollateralConfig } from '../interfaces/IAaveV2CollateralConfig'
 import { SerializationService } from '@summerfi/sdk-common/services'
 
