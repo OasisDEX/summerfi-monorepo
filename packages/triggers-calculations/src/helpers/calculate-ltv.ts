@@ -1,11 +1,6 @@
-import {
-  LTV,
-  PERCENT_DECIMALS,
-  Price,
-  PRICE_DECIMALS,
-  TokenBalance,
-} from '@summerfi/triggers-shared'
+import { PERCENT_DECIMALS, Price, PRICE_DECIMALS, TokenBalance } from '@summerfi/triggers-shared'
 import { getTheLeastCommonMultiple, normalizeBalance } from './normalize-balance'
+import { LTV } from '@summerfi/serverless-shared'
 
 export function calculateLtv({
   collateral,

@@ -46,8 +46,12 @@ export const NetworkByChainID: Record<ChainId, Network> = {
 }
 
 export enum ProtocolId {
+  AAVE_V2 = 'aave-v2',
+  AAVE_V3 = 'aave-v3',
   AAVE3 = 'aave3',
   SPARK = 'spark',
+  AJNA = 'ajna',
+  MORPHO_BLUE = 'morpho-blue',
 }
 
 export const isProtocolId = (protocolId: unknown): protocolId is ProtocolId => {

@@ -18,6 +18,7 @@
     "watch": "tsc -w",
     "test": "jest --passWithNoTests",
     "build": "tsc -b tsconfig.build.json",
+    "dev": "tsc -b tsconfig.build.json -w",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "gen-versions": "hardhat run scripts/generate-versions.ts",

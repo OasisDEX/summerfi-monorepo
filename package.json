@@ -1,6 +1,7 @@
 {
   "private": true,
   "scripts": {
+    "dev": "turbo run dev --concurrency=50",
     "prebuild": "turbo run prebuild --cache-dir=.turbo",
     "build": "turbo run build --cache-dir=.turbo",
     "lint": "turbo run lint --cache-dir=.turbo",
