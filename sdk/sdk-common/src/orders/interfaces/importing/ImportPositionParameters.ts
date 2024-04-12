@@ -1,4 +1,4 @@
-import { ExternalPosition } from './ExternalPosition'
+import { IExternalPosition } from './IExternalPosition'
 
 /**
  * @interface ImportPositionParameters
@@ -6,5 +6,5 @@ import { ExternalPosition } from './ExternalPosition'
  */
 export interface ImportPositionParameters {
   /** External position to be imported */
-  externalPosition: ExternalPosition
+  externalPosition: IExternalPosition
 }

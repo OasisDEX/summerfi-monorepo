@@ -6,14 +6,15 @@ import { Maybe } from '@summerfi/sdk-common/common'
 import { IUser } from '@summerfi/sdk-common/user'
 import { ActionBuildersMap, IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
 
+export type OrderPlannerParams = {
+  user: IUser
+  positionsManager: IPositionsManager
+  simulation: ISimulation<SimulationType>
+  actionBuildersMap: ActionBuildersMap
+  deployment: Deployment
+  swapManager: ISwapManager
+  protocolsRegistry: IProtocolPluginsRegistry
+}
 export interface IOrderPlanner {
-  buildOrder<T extends SimulationType>(params: {
-    user: IUser
-    positionsManager: IPositionsManager
-    simulation: ISimulation<T>
-    actionBuildersMap: ActionBuildersMap
-    deployment: Deployment
-    swapManager: ISwapManager
-    protocolsRegistry: IProtocolPluginsRegistry
-  }): Promise<Maybe<Order>>
+  buildOrder(params: OrderPlannerParams): Promise<Maybe<Order>>
 }

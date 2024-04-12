@@ -10,6 +10,8 @@ import {
   ChainId,
   ChainFamilyName,
   valuesOfChainFamilyMap,
+  Maybe,
+  AddressValue,
 } from '@summerfi/sdk-common/common'
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SimulationSteps } from '@summerfi/sdk-common/simulation'
@@ -40,8 +42,15 @@ import {
 } from '@summerfi/protocol-plugins-common'
 import { ILKType } from '../enums/ILKType'
 import { MakerPoolId } from '../types/MakerPoolId'
+import { IUser } from '@summerfi/sdk-common/user'
+import { IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
+import { encodeMakerGiveThroughProxyActions } from '../utils/MakerGive'
+import { MakerExternalPosition, isMakerExternalPosition } from '../types/MakerExternalPosition'
 
 export class MakerProtocolPlugin extends BaseProtocolPlugin {
+  readonly CdpManagerContractName = 'CdpManager'
+  readonly DssProxyActionsContractName = 'DssProxyActions'
+
   readonly protocolName = ProtocolName.Maker
   readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
   readonly makerPoolIdSchema = z.object({
@@ -211,6 +220,39 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getPosition(positionId: IPositionId): Promise<Position> {
     throw new Error('Not implemented')
+  }
+
+  async getImportPositionTransaction(params: {
+    user: IUser
+    position: MakerExternalPosition
+    positionsManager: IPositionsManager
+  }): Promise<Maybe<TransactionInfo>> {
+    if (!isMakerExternalPosition(params.position)) {
+      throw new Error('Invalid Maker external position')
+    }
+
+    const cdpManagerAddress = this.context.deployment.dependencies[this.CdpManagerContractName]
+      .address as AddressValue
+
+    const dssProxyActionsAddress = this.context.deployment.dependencies[
+      this.DssProxyActionsContractName
+    ].address as AddressValue
+
+    const result = encodeMakerGiveThroughProxyActions({
+      cdpManagerAddress: cdpManagerAddress,
+      makerProxyActionsAddress: dssProxyActionsAddress,
+      giveToAddress: params.positionsManager.address.value,
+      cdpId: params.position.vaultId,
+    })
+
+    return {
+      description: 'Import Maker position',
+      transaction: {
+        calldata: result.transactionCalldata,
+        target: params.position.dsProxyAddress,
+        value: '0',
+      },
+    }
   }
 
   private getContractDef<K extends keyof MakerAddressAbiMap>(

@@ -6,10 +6,16 @@ import { IStepBuilderContext } from '../interfaces/IStepBuilderContext'
 import { ActionCallBatch } from '../actions/Types'
 import { ActionCallsStack } from './ActionCallsStack'
 import { ExecutionStorageMapper } from './ExecutionStorageMapper'
+import { TransactionInfo } from '@summerfi/sdk-common/orders'
 
 export class StepBuilderContext implements IStepBuilderContext {
+  private _transactions: TransactionInfo[] = []
   private _calls: ActionCallsStack = new ActionCallsStack()
   private _storage: ExecutionStorageMapper = new ExecutionStorageMapper()
+
+  public addTransaction(params: { transaction: TransactionInfo }): void {
+    this._transactions.push(params.transaction)
+  }
 
   public addActionCall<Step extends steps.Steps, Action extends BaseAction>(params: {
     step: Step
@@ -42,5 +48,9 @@ export class StepBuilderContext implements IStepBuilderContext {
 
   public get subContextLevels(): number {
     return this._calls.subContextLevels
+  }
+
+  public get transactions(): TransactionInfo[] {
+    return this._transactions
   }
 }

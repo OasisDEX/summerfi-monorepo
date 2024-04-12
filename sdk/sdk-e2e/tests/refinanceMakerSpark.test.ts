@@ -50,9 +50,9 @@ import {
 jest.setTimeout(300000)
 
 const SDKAPiUrl = 'https://zmjmtfsocb.execute-api.us-east-1.amazonaws.com/api/sdk'
-const TenderlyForkUrl = 'https://rpc.tenderly.co/fork/50e01944-8635-4d67-9569-004d72113328'
+const TenderlyForkUrl = 'https://rpc.tenderly.co/fork/82118352-dec5-442a-b03b-e5cc84533f0e'
 
-describe.skip('Refinance Maker Spark | SDK', () => {
+describe('Refinance Maker Spark | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: SDKAPiUrl })

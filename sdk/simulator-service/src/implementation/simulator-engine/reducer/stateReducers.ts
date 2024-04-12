@@ -19,6 +19,7 @@ const stateReducers: StateReducers = {
   [SimulationSteps.RepayFlashloan]: repayFlashloanReducer,
   [SimulationSteps.PullToken]: pullTokenReducer,
   [SimulationSteps.NewPositionEvent]: newPositionEventReducer,
+  [SimulationSteps.Import]: newPositionEventReducer,
 }
 
 export function stateReducer(step: steps.Steps, state: ISimulationState): ISimulationState {

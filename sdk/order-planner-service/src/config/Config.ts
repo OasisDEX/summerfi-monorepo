@@ -3,6 +3,7 @@ import { ActionBuildersMap } from '@summerfi/protocol-plugins-common'
 import {
   DepositBorrowActionBuilder,
   FlashloanActionBuilder,
+  ImportPositionActionBuilder,
   PaybackWithdrawActionBuilder,
   PositionCreatedActionBuilder,
   PullTokenActionBuilder,
@@ -20,4 +21,5 @@ export const ActionBuildersConfig: ActionBuildersMap = {
   [SimulationSteps.PaybackWithdraw]: PaybackWithdrawActionBuilder,
   [SimulationSteps.ReturnFunds]: ReturnFundsActionBuilder,
   [SimulationSteps.NewPositionEvent]: PositionCreatedActionBuilder,
+  [SimulationSteps.Import]: ImportPositionActionBuilder,
 }

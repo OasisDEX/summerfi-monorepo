@@ -2,11 +2,13 @@ import { ActionBuilder } from '@summerfi/protocol-plugins-common'
 import { steps } from '@summerfi/sdk-common/simulation'
 import { delegateToProtocolActionBuilder } from '../../utils/DelegateToProtocolActionBuilder'
 
-export const DepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrowStep> = async (
+export const ImportPositionActionBuilder: ActionBuilder<steps.ImportStep> = async (
   params,
 ): Promise<void> => {
+  const externalPosition = params.step.inputs.externalPosition
+
   delegateToProtocolActionBuilder({
-    protocolName: params.step.inputs.position.pool.protocol.name,
+    protocolName: externalPosition.position.pool.protocol.name,
     actionBuilderParams: params,
   })
 }

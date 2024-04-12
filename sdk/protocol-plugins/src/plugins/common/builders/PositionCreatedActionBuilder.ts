@@ -2,7 +2,7 @@ import { steps } from '@summerfi/sdk-common/simulation'
 import { ActionBuilder } from '@summerfi/protocol-plugins-common'
 import { PositionCreatedAction } from '../actions/PositionCreatedAction'
 
-export const PositionCreatedActionBuilder: ActionBuilder<steps.NewPositionEvent> = async (
+export const PositionCreatedActionBuilder: ActionBuilder<steps.NewPositionEventStep> = async (
   params,
 ): Promise<void> => {
   const { context, step } = params

@@ -41,6 +41,8 @@ import {
 import { AaveV3ContractNames } from '@summerfi/deployment-types'
 import { EmodeType } from '../../common/enums/EmodeType'
 import { AaveV3PoolId } from '../types/AaveV3PoolId'
+import { IUser } from '@summerfi/sdk-common/user'
+import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 
 type AssetsList = ReturnType<AaveV3ProtocolPlugin['buildAssetsList']>
 type Asset = Awaited<AssetsList> extends (infer U)[] ? U : never
@@ -128,6 +130,14 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
 
   async getPosition(positionId: string): Promise<IPosition> {
     throw new Error(`Not implemented ${positionId}`)
+  }
+
+  async getImportPositionTransaction(params: {
+    user: IUser
+    position: IExternalPosition
+    positionsManager: IPositionsManager
+  }): Promise<Maybe<TransactionInfo>> {
+    throw new Error(`Not implemented ${params}`)
   }
 
   private getContractDef<K extends AaveV3ContractNames>(contractName: K): AaveV3AddressAbiMap[K] {
