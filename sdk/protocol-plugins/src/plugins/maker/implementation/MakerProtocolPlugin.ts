@@ -41,11 +41,16 @@ import {
   IProtocolPluginContext,
 } from '@summerfi/protocol-plugins-common'
 import { ILKType } from '../enums/ILKType'
-import { MakerPoolId } from '../types/MakerPoolId'
+import { MakerPoolId, isMakerPoolId } from '../types/MakerPoolId'
 import { IUser } from '@summerfi/sdk-common/user'
-import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
+import {
+  ExternalPositionType,
+  IExternalPosition,
+  IPositionsManager,
+  TransactionInfo,
+} from '@summerfi/sdk-common/orders'
 import { encodeMakerGiveThroughProxyActions } from '../utils/MakerGive'
-import { isMakerExternalPosition } from '../types/MakerExternalPosition'
+import { MakerImportPositionActionBuilder } from '../builders/MakerImportPositionActionBuilder'
 
 export class MakerProtocolPlugin extends BaseProtocolPlugin {
   readonly CdpManagerContractName = 'CdpManager'
@@ -70,6 +75,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
   })
   readonly stepBuilders: Partial<ActionBuildersMap> = {
     [SimulationSteps.PaybackWithdraw]: MakerPaybackWithdrawActionBuilder,
+    [SimulationSteps.Import]: MakerImportPositionActionBuilder,
   }
 
   constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
@@ -224,11 +230,17 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
 
   async getImportPositionTransaction(params: {
     user: IUser
-    position: IExternalPosition
+    externalPosition: IExternalPosition
     positionsManager: IPositionsManager
   }): Promise<Maybe<TransactionInfo>> {
-    if (!isMakerExternalPosition(params.position)) {
-      throw new Error('Invalid Maker external position')
+    if (!isMakerPoolId(params.externalPosition.position.pool.poolId)) {
+      throw new Error('Invalid Maker pool ID')
+    }
+
+    if (params.externalPosition.externalId.type !== ExternalPositionType.DS_PROXY) {
+      throw new Error(
+        `External position (${params.externalPosition.externalId.type}) type not supported`,
+      )
     }
 
     const { deployments } = this.ctx
@@ -245,14 +257,14 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
       cdpManagerAddress: cdpManagerAddress,
       makerProxyActionsAddress: dssProxyActionsAddress,
       giveToAddress: params.positionsManager.address.value,
-      cdpId: params.position.vaultId,
+      cdpId: params.externalPosition.position.pool.poolId.vaultId,
     })
 
     return {
       description: 'Import Maker position',
       transaction: {
         calldata: result.transactionCalldata,
-        target: params.position.dsProxyAddress,
+        target: params.externalPosition.externalId.address,
         value: '0',
       },
     }

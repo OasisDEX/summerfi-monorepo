@@ -45,7 +45,7 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
   abstract getPosition(positionId: IPositionId): Promise<IPosition>
   abstract getImportPositionTransaction(params: {
     user: IUser
-    position: IExternalPosition
+    externalPosition: IExternalPosition
     positionsManager: IPositionsManager
   }): Promise<Maybe<TransactionInfo>>
 

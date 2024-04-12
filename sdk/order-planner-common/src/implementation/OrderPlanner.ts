@@ -94,25 +94,22 @@ export class OrderPlanner implements IOrderPlanner {
     const executorAddress = Address.createFromEthereum({ value: executorInfo.address as HexData })
     const strategyName = this._getStrategyName(simulation)
 
-    const calldata = encodeStrategy({
+    const strategyExecutorTransaction = encodeStrategy({
       strategyName: strategyName,
       strategyExecutor: executorAddress,
+      positionsManager: positionsManager,
       actions: simulationCalls,
     })
 
+    const transactions = [...preRequisiteTransactions]
+
+    if (strategyExecutorTransaction) {
+      transactions.push(strategyExecutorTransaction)
+    }
+
     return {
-      simulation: simulation,
-      transactions: [
-        ...preRequisiteTransactions,
-        {
-          transaction: {
-            target: positionsManager.address,
-            calldata: calldata,
-            value: '0',
-          },
-          description: 'Strategy execution',
-        },
-      ],
+      simulation,
+      transactions,
     }
   }
 }

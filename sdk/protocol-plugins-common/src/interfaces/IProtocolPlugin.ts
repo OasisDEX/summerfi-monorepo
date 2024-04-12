@@ -21,7 +21,7 @@ export interface IProtocolPlugin {
   getActionBuilder<StepType extends steps.Steps>(step: StepType): Maybe<ActionBuilder<StepType>>
   getImportPositionTransaction: (params: {
     user: IUser
-    position: IExternalPosition
+    externalPosition: IExternalPosition
     positionsManager: IPositionsManager
   }) => Promise<Maybe<TransactionInfo>>
 }

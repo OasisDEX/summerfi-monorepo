@@ -137,7 +137,7 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
 
   async getImportPositionTransaction(params: {
     user: IUser
-    position: IExternalPosition
+    externalPosition: IExternalPosition
     positionsManager: IPositionsManager
   }): Promise<Maybe<TransactionInfo>> {
     throw new Error(`Not implemented ${params}`)

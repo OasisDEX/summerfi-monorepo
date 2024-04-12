@@ -21,7 +21,7 @@ export const MakerImportPositionActionBuilder: ActionBuilder<steps.ImportStep> =
 
   const importPositionTransaction = await makerPlugin.getImportPositionTransaction({
     user: user,
-    position: step.inputs.externalPosition,
+    externalPosition: step.inputs.externalPosition,
     positionsManager: positionsManager,
   })
 

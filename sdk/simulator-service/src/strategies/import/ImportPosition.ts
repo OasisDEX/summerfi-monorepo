@@ -18,7 +18,6 @@ export async function importPosition(
     }))
     .run()
 
-  console.log('simulation', JSON.stringify(simulation, null, 2))
   return {
     simulationType: SimulationType.ImportPosition,
     sourcePosition: args.externalPosition.position,

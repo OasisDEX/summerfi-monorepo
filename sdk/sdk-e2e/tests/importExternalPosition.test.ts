@@ -25,6 +25,8 @@ import { DeploymentIndex } from '@summerfi/deployment-utils'
 
 import assert from 'assert'
 import { ILKType, MakerPoolId } from '@summerfi/protocol-plugins/plugins/maker'
+import { Hex } from 'viem'
+import { TransactionUtils } from './utils/TransactionUtils'
 
 jest.setTimeout(300000)
 
@@ -129,7 +131,6 @@ describe('Import Maker Position | SDK', () => {
         },
       } as IImportPositionParameters)
 
-    console.log('importPositionSimulation', JSON.stringify(importPositionSimulation, null, 2))
     expect(importPositionSimulation).toBeDefined()
 
     expect(importPositionSimulation.simulationType).toEqual(SimulationType.ImportPosition)
@@ -159,19 +160,20 @@ describe('Import Maker Position | SDK', () => {
 
     expect(importPositionOrder.transactions.length).toEqual(1)
 
+    console.log('Import Position Order:', JSON.stringify(importPositionOrder.transactions[0]))
     // Send transaction
-    // console.log('Sending transaction...')
+    console.log('Sending transaction...')
 
-    // const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex
-    // const transactionUtils = new TransactionUtils({
-    //   rpcUrl: TenderlyForkUrl,
-    //   walletPrivateKey: privateKey,
-    // })
+    const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex
+    const transactionUtils = new TransactionUtils({
+      rpcUrl: TenderlyForkUrl,
+      walletPrivateKey: privateKey,
+    })
 
-    // const receipt = await transactionUtils.sendTransaction({
-    //   transaction: importPositionOrder.transactions[0].transaction,
-    // })
+    const receipt = await transactionUtils.sendTransaction({
+      transaction: importPositionOrder.transactions[0].transaction,
+    })
 
-    // console.log('Transaction sent:', receipt)
+    console.log('Transaction sent:', receipt)
   })
 })
