@@ -1,6 +1,5 @@
 import { Address } from '@summerfi/sdk-common/common'
-import { IExternalPosition } from '@summerfi/sdk-common/orders'
-import { isExternalPosition } from 'node_modules/@summerfi/sdk-common/src/orders/interfaces/importing/IExternalPosition'
+import { IExternalPosition, isExternalPosition } from '@summerfi/sdk-common/orders'
 
 export interface MakerExternalPosition extends IExternalPosition {
   dsProxyAddress: Address

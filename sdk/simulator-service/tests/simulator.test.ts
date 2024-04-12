@@ -75,7 +75,7 @@ describe('Refinance', () => {
     it('should include a new position event step', async () => {
       const newPositionStep = simulation.steps.find(
         (step) => step.type === SimulationSteps.NewPositionEvent,
-      ) as steps.NewPositionEvent
+      ) as steps.NewPositionEventStep
 
       assert(newPositionStep, 'New position event step not found')
       expect(newPositionStep.inputs.position).toEqual(simulation.targetPosition)

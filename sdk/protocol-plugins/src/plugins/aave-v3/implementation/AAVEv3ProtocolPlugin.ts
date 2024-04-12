@@ -71,7 +71,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
     emodeType: z.nativeEnum(EmodeType),
   })
 
-  constructor(params: { context: IProtocolPluginContext }) {
+  constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
     super(params)
   }
 

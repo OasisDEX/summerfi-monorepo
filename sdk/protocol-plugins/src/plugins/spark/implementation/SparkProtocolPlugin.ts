@@ -74,7 +74,7 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
     [SimulationSteps.DepositBorrow]: SparkDepositBorrowActionBuilder,
   }
 
-  constructor(params: { context: IProtocolPluginContext }) {
+  constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
     super(params)
   }
 

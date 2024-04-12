@@ -43,9 +43,9 @@ import {
 import { ILKType } from '../enums/ILKType'
 import { MakerPoolId } from '../types/MakerPoolId'
 import { IUser } from '@summerfi/sdk-common/user'
-import { IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
+import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 import { encodeMakerGiveThroughProxyActions } from '../utils/MakerGive'
-import { MakerExternalPosition, isMakerExternalPosition } from '../types/MakerExternalPosition'
+import { isMakerExternalPosition } from '../types/MakerExternalPosition'
 
 export class MakerProtocolPlugin extends BaseProtocolPlugin {
   readonly CdpManagerContractName = 'CdpManager'
@@ -72,7 +72,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
     [SimulationSteps.PaybackWithdraw]: MakerPaybackWithdrawActionBuilder,
   }
 
-  constructor(params: { context: IProtocolPluginContext }) {
+  constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
     super(params)
   }
 
@@ -224,19 +224,22 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
 
   async getImportPositionTransaction(params: {
     user: IUser
-    position: MakerExternalPosition
+    position: IExternalPosition
     positionsManager: IPositionsManager
   }): Promise<Maybe<TransactionInfo>> {
     if (!isMakerExternalPosition(params.position)) {
       throw new Error('Invalid Maker external position')
     }
 
-    const cdpManagerAddress = this.context.deployment.dependencies[this.CdpManagerContractName]
+    const { deployments } = this.ctx
+    const deploymentKey = this._getDeploymentKey(params.user.chainInfo)
+    const deployment = deployments[deploymentKey]
+
+    const cdpManagerAddress = deployment.dependencies[this.CdpManagerContractName]
       .address as AddressValue
 
-    const dssProxyActionsAddress = this.context.deployment.dependencies[
-      this.DssProxyActionsContractName
-    ].address as AddressValue
+    const dssProxyActionsAddress = deployment.dependencies[this.DssProxyActionsContractName]
+      .address as AddressValue
 
     const result = encodeMakerGiveThroughProxyActions({
       cdpManagerAddress: cdpManagerAddress,

@@ -26,9 +26,11 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
 
   /** These properties are initialized in the constructor */
   readonly context: IProtocolPluginContext
+  readonly deploymentConfigTag: string
 
-  protected constructor(params: { context: IProtocolPluginContext }) {
+  protected constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
     this.context = params.context
+    this.deploymentConfigTag = params.deploymentConfigTag ?? 'standard'
   }
 
   // Short alias for the context
@@ -57,5 +59,9 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
   ): candidate is PoolId {
     const { success } = schema.safeParse(candidate)
     return success
+  }
+
+  protected _getDeploymentKey(chainInfo: ChainInfo): string {
+    return `${chainInfo.name}.${this.deploymentConfigTag}`
   }
 }
