@@ -11,6 +11,7 @@
     "cicheck": "turbo run cicheck --cache-dir=.turbo",
     "sst:dev": "sst dev",
     "sst:build": "sst build",
+    "sst:deploy:dev": "sst deploy --stage dev",
     "sst:deploy:staging": "sst deploy --stage staging",
     "sst:deploy:prod": "sst deploy --stage production",
     "remove": "sst remove --stage dev",

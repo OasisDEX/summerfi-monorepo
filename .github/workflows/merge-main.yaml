@@ -1,0 +1,35 @@
+# This is a basic workflow that is manually triggered
+
+name: Merge DEV -> Main
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "greet"
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: git config
+        run: |
+          git config user.name ${{ github.actor }}
+
+      - name: Merge dev -> main
+        uses: pascalgn/merge-fast-forward-action@v1.3.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SUCCESS_MESSAGE: "Release merged successfully via fast-forward"
+          FAILURE_MESSAGE: "Failed to merge release via fast-forward"
+          UPDATE_STATUS: "true"
+          PRODUCTION_BRANCH: "main"
+          STAGING_BRANCH: "dev"

@@ -27,8 +27,6 @@ export const refinanceLendingToLendingAnyPairStrategy = makeStrategy([
     optional: false,
   },
   {
-    // In case of target debt being different then source debt we need a swap,
-    // We cannot forsee the exact amount of the swap, so we need to return excess tokens to user
     step: SimulationSteps.ReturnFunds,
     optional: true,
   },

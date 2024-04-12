@@ -4,9 +4,12 @@ import { ConfigItem } from '../types/ConfigItem'
 import { ConfigKey } from '../types/ConfigKey'
 
 const CONFIG_KEYS: ConfigKey[] = [
-  'ONE_INCH_API_KEY',
   'ONE_INCH_API_VERSION',
+  'ONE_INCH_API_KEY',
   'ONE_INCH_API_URL',
+  'ONE_INCH_API_SPOT_KEY',
+  'ONE_INCH_API_SPOT_URL',
+  'ONE_INCH_API_SPOT_VERSION',
   'ONE_INCH_ALLOWED_SWAP_PROTOCOLS',
   'ONE_INCH_SWAP_CHAIN_IDS',
 ]

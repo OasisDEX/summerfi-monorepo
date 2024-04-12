@@ -10,31 +10,17 @@ export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISim
   const baseToken = step.inputs.toTokenAmount.token
   const quoteToken = step.inputs.fromTokenAmount.token
 
+  // We require both from & to be at similar decimal precisions
   const offerPrice = Price.createFrom({
-    value: step.inputs.toTokenAmount
-      .toBaseUnitAsBn()
-      .div(step.inputs.fromTokenAmount.toBaseUnitAsBn())
-      .toString(),
+    value: step.inputs.toTokenAmount.divide(step.inputs.fromTokenAmount.amount).toString(),
     baseToken,
     quoteToken,
   })
 
-  const spotPriceOfToToken = step.inputs.prices.find((price) =>
-    price.baseToken.address.equals(baseToken.address),
+  const spotPrice = step.inputs.spotPrice
+  const fromAmountPreSummerFee = step.inputs.fromTokenAmount.divide(
+    Percentage.createFrom({ value: 1 }).subtract(step.inputs.summerFee),
   )
-  const spotPriceOfFromToken = step.inputs.prices.find((price) =>
-    price.baseToken.address.equals(quoteToken.address),
-  )
-
-  if (!spotPriceOfToToken || !spotPriceOfFromToken) {
-    throw new Error('Spot price for either From/To token could not be found')
-  }
-
-  const marketPrice = Price.createFrom({
-    value: spotPriceOfToToken.toBN().div(spotPriceOfFromToken.toBN()).toString(),
-    baseToken: step.inputs.fromTokenAmount.token,
-    quoteToken: step.inputs.toTokenAmount.token,
-  })
 
   return {
     ...state,
@@ -48,15 +34,17 @@ export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISim
         provider: step.inputs.provider,
         // Note: Can add routes back in later if we need them for the UI
         // routes: step.inputs.routes,
+        // SummerFee should already have been subtracted by this stage
+        // Should be subtracted from `from` amount when getting swap quote in simulator
         fromTokenAmount: step.inputs.fromTokenAmount,
         toTokenAmount: step.inputs.toTokenAmount,
         slippage: Percentage.createFrom({ value: step.inputs.slippage.value }),
         offerPrice,
-        marketPrice,
-        priceImpact: calculatePriceImpact(marketPrice, offerPrice),
+        spotPrice,
+        priceImpact: calculatePriceImpact(spotPrice, offerPrice),
         summerFee: TokenAmount.createFrom({
           token: step.inputs.fromTokenAmount.token,
-          amount: step.inputs.fromTokenAmount.multiply(step.inputs.fee.value).amount,
+          amount: fromAmountPreSummerFee.multiply(step.inputs.summerFee.toProportion()).amount,
         }),
       },
     },
@@ -66,14 +54,10 @@ export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISim
 
 /**
  *
- * @param marketPrice - This price represent how much it will cost for selling some very small amount
- * such as 0.1. It is the best possible price on the market.
- * @param offerPrice - If the amount we would like to sell we might get deeper into the liquidity
- * meaning the price won't be a good as when you sell small amount. This is the price that is
- * represent how much it will cost for us to sell the desired amount.
- *
- * Both prices might be equal which means that there is no price impact. Having no
- * price impact means that you sell at the best possible price.
+ * @param marketPrice - This price represents a blend of spot prices from various exchanges.
+ * @param offerPrice - The offer price is price quoted to us by a liquidity provider and takes
+ *      into account price impact - where price impact is a measure of how much our trade
+ *      affects the price. It is determined by the breadth and depth of liquidity.
  */
 export function calculatePriceImpact(marketPrice: Price, offerPrice: Price): Percentage {
   return Percentage.createFrom({

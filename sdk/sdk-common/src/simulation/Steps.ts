@@ -64,11 +64,11 @@ export interface SwapStep
     {
       provider: SwapProviderType
       routes: SwapRoute[]
-      prices: Price[]
+      spotPrice: Price
       fromTokenAmount: TokenAmount
       toTokenAmount: TokenAmount
       slippage: Percentage
-      fee: Percentage
+      summerFee: Percentage
     },
     {
       receivedAmount: TokenAmount

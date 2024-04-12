@@ -7,7 +7,8 @@
       "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
       "@summerfi/sdk-server/*": ["node_modules/@summerfi/sdk-server/src/*"],
       "@summerfi/protocol-plugins/*": ["../protocol-plugins/src/*"],
-      "@summerfi/protocol-plugins-common": ["../protocol-plugins-common/src/index.ts"]
+      "@summerfi/protocol-plugins-common": ["../protocol-plugins-common/src/index.ts"],
+      "@summerfi/testing-utils": ["node_modules/@summerfi/testing-utils/src"]
     }
   },
   "include": ["src/**/*.ts"],

@@ -12,8 +12,8 @@ export type SimulatedSwapData = Omit<QuoteData, 'estimatedGas' | 'routes'> & {
   slippage: Percentage
   /* This is the impacted price that takes into account trade size */
   offerPrice: Price
-  /* This is the un-impacted blend of market prices from various DEXs */
-  marketPrice: Price
+  /* Also known as marketPrice or marketPrice with zero price impact */
+  spotPrice: Price
   priceImpact: Percentage
   summerFee: TokenAmount
 }
