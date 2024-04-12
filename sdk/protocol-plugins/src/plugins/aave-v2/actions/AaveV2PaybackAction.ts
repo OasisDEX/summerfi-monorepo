@@ -1,30 +1,29 @@
-import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
-import { Address, TokenAmount } from '@summerfi/sdk-common/common'
-import { IPool } from '@summerfi/sdk-common/protocols'
-import { isAaveV2PoolId } from '@summerfi/sdk-common/protocols/'
+import { ActionCall, BaseAction } from '@summerfi/protocol-plugins-common'
+import { TokenAmount } from '@summerfi/sdk-common/common'
 
 export class AaveV2PaybackAction extends BaseAction {
   public readonly config = {
-    name: 'AaveV2Payback',
-    version: 1,
-    parametersAbi: '/** INSERT HERE - THE ACTION PARAMETERS **/',
-    storageInputs: [/** INSERT HERE - THE STORAGE INPUTS **/],
-    storageOutputs: [/** INSERT HERE - THE STORAGE OUTPUTS **/],
+    name: 'AavePayback',
+    version: 3,
+    parametersAbi: '(address asset, uint256 amount, bool paybackAll)',
+    storageInputs: ['amountToPayback'],
+    storageOutputs: ['amountPaidBack'],
   } as const
 
   public encodeCall(
     params: {
-      /** INSERT HERE - THE ACTION PARAMETERS **/
+      paybackAmount: TokenAmount;
+      paybackAll: boolean
     },
     paramsMapping?: number[],
   ): ActionCall {
-    if (!isAaveV2PoolId(params.pool.poolId)) {
-      throw new Error('Pool ID is not a AaveV2 one')
-    }
-
     return this._encodeCall({
       arguments: [
-        /** INSERT HERE - THE ACTION ARGS  **/
+        {
+          asset: params.paybackAmount.token.address,
+          amount: params.paybackAmount.toBaseUnit(),
+          paybackAll: params.paybackAll,
+        },
       ],
       mapping: paramsMapping,
     })
