@@ -1,0 +1,26 @@
+import { ActionCall, BaseAction } from '@summerfi/order-planner-common/actions'
+import { TokenAmount } from '@summerfi/sdk-common/common'
+
+export class AaveV2DepositAction extends BaseAction {
+  public readonly config = {
+    name: 'AaveV2Deposit',
+    version: 0,
+    parametersAbi: '/** INSERT HERE - THE ACTION PARAMETERS **/',
+    storageInputs: [/** INSERT HERE - THE STORAGE INPUTS **/],
+    storageOutputs: [/** INSERT HERE - THE STORAGE OUTPUTS **/],
+  } as const
+
+  public encodeCall(
+    params: {
+        /** INSERT HERE - THE ACTION PARAMETERS **/
+    },
+    paramsMapping?: number[],
+  ): ActionCall {
+    return this._encodeCall({
+      arguments: [
+        /** INSERT HERE - THE ACTION ARGS  **/
+      ],
+      mapping: paramsMapping,
+    })
+  }
+}

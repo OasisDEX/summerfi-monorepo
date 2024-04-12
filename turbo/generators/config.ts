@@ -11,12 +11,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         type: 'input',
         name: 'name',
         message: `name of the protocol (example: "MorphoBlue")`,
-      },
-      {
-        type: 'input',
-        name: 'enumLabel',
-        message: `protocol enum label. Existing values printed below. (example: "MorphoBlue") \n ${JSON.stringify(ProtocolName)}`,
-      },
+      }
     ],
     actions: [
       nameAction,
@@ -86,27 +81,27 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       // Interfaces directory
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/interfaces/I{{namPascalCase}}CollateralConfig.ts',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/interfaces/I{{namePascalCase}}CollateralConfig.ts',
         templateFile: 'templates/plugin/interfaces/ICollateralConfig.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/interfaces/I{{namPascalCase}}CollateralConfigMap.ts',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/interfaces/I{{namePascalCase}}CollateralConfigMap.ts',
         templateFile: 'templates/plugin/interfaces/ICollateralConfigMap.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/interfaces/I{{namPascalCase}}DebtConfig.ts',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/interfaces/I{{namePascalCase}}DebtConfig.ts',
         templateFile: 'templates/plugin/interfaces/IDebtConfig.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/interfaces/I{{namPascalCase}}DebtConfigMap.ts',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/interfaces/I{{namePascalCase}}DebtConfigMap.ts',
         templateFile: 'templates/plugin/interfaces/IDebtConfigMap.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/interfaces/I{{namPascalCase}}LendingPool.ts',
+        path: 'sdk/protocol-plugins/src/plugins/{{nameKebabCase}}/interfaces/I{{namePascalCase}}LendingPool.ts',
         templateFile: 'templates/plugin/interfaces/ILendingPool.hbs',
       },
       {
@@ -180,12 +175,12 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       // Tests
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/tests/integration/{{namePascalCase}}ProtocolPlugin.ts',
+        path: 'sdk/protocol-plugins/tests/integration/{{namePascalCase}}ProtocolPlugin.spec.ts',
         templateFile: 'templates/plugin/tests/ProtocolPlugin.spec.integration.hbs',
       },
       {
         type: 'add',
-        path: 'sdk/protocol-plugins/src/tests/unit/{{namePascalCase}}ProtocolPlugin.ts',
+        path: 'sdk/protocol-plugins/tests/unit/{{namePascalCase}}ProtocolPlugin.spec.ts',
         templateFile: 'templates/plugin/tests/ProtocolPlugin.spec.unit.hbs',
       },
     ],
