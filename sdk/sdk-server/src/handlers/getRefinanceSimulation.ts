@@ -12,8 +12,16 @@ import { isSameTokens } from '@summerfi/sdk-common/common'
 const inputSchema = z.custom<IRefinanceParameters>((parameters) => parameters !== undefined)
 
 function isToSamePair(parameters: IRefinanceParameters): boolean {
-  return isSameTokens(parameters.sourcePosition.debtAmount.token, parameters.targetPosition.debtAmount.token) && 
-  isSameTokens(parameters.sourcePosition.collateralAmount.token, parameters.targetPosition.collateralAmount.token)
+  return (
+    isSameTokens(
+      parameters.sourcePosition.debtAmount.token,
+      parameters.targetPosition.debtAmount.token,
+    ) &&
+    isSameTokens(
+      parameters.sourcePosition.collateralAmount.token,
+      parameters.targetPosition.collateralAmount.token,
+    )
+  )
 }
 
 export const getRefinanceSimulation = publicProcedure
