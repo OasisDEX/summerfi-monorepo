@@ -1,6 +1,5 @@
-import { isPosition } from '../../../common'
+import { IPosition, isPosition } from '../../../common'
 import { Address } from '../../../common/implementation/Address'
-import { Position } from '../../../common/implementation/Position'
 
 export enum ExternalPositionType {
   WALLET = 'WALLET',
@@ -24,7 +23,7 @@ export function isExternalPositionId(maybeId: unknown): maybeId is IExternalPosi
  *              different services.
  */
 export interface IExternalPosition {
-  position: Position
+  position: IPosition
   externalId: IExternalPositionId
 }
 

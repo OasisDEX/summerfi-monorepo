@@ -46,7 +46,7 @@ export class SwapManagerFactory {
       !allowedSwapProtocols ||
       !chainIds
     ) {
-      throw new Error('OneInch configuration is missing')
+      //throw new Error('OneInch configuration is missing')
     }
 
     return {

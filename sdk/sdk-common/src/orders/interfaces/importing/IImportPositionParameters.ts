@@ -1,10 +1,10 @@
 import { IExternalPosition } from './IExternalPosition'
 
 /**
- * @interface ImportPositionParameters
+ * @interface IImportPositionParameters
  * @description Parameters used to import a position from another service
  */
-export interface ImportPositionParameters {
+export interface IImportPositionParameters {
   /** External position to be imported */
   externalPosition: IExternalPosition
 }
