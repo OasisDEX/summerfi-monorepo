@@ -1,6 +1,6 @@
 import { ILendingPool } from '@summerfi/sdk-common/protocols'
 import { IAaveV2DebtConfigMap } from './IAaveV2DebtConfigMap'
-import { IAaveV2CollateralConfigMap } from './ICollateralConfigMap'
+import { IAaveV2CollateralConfigMap } from './IAaveV2CollateralConfigMap'
 
 export interface IAaveV2LendingPool extends ILendingPool {
   collaterals: IAaveV2CollateralConfigMap

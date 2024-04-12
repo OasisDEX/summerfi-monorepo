@@ -89,7 +89,7 @@ describe('AaveV2 Protocol Plugin (Integration)', () => {
   })
 
   it('correctly populates debt configuration from blockchain data', async () => {
-    const pool = await aaveV3ProtocolPlugin.getPool(validAaveV3PoolId)
+    const pool = await aaveV2ProtocolPlugin.getPool(validAaveV2PoolId)
 
     const mockDebtToken = Token.createFrom({
       chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
