@@ -1,4 +1,4 @@
-import { ActionCall, BaseAction } from '@summerfi/protocol-plugins-common'
+import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { TokenAmount } from '@summerfi/sdk-common/common'
 
 export class AaveV2PaybackAction extends BaseAction {
@@ -15,7 +15,7 @@ export class AaveV2PaybackAction extends BaseAction {
       paybackAmount: TokenAmount;
       paybackAll: boolean
     },
-    paramsMapping?: number[],
+    paramsMapping?: InputSlotsMapping,
   ): ActionCall {
     return this._encodeCall({
       arguments: [
