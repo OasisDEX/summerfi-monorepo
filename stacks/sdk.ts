@@ -8,6 +8,9 @@ const {
   ONE_INCH_API_URL,
   ONE_INCH_ALLOWED_SWAP_PROTOCOLS,
   ONE_INCH_SWAP_CHAIN_IDS,
+  ONE_INCH_API_SPOT_URL,
+  ONE_INCH_API_SPOT_VERSION,
+  ONE_INCH_API_SPOT_KEY,
 } = process.env
 
 export function addSdkConfig({ stack, api }: StackContext & { api: Api }) {
@@ -16,7 +19,10 @@ export function addSdkConfig({ stack, api }: StackContext & { api: Api }) {
     !ONE_INCH_API_VERSION ||
     !ONE_INCH_API_URL ||
     !ONE_INCH_ALLOWED_SWAP_PROTOCOLS ||
-    !ONE_INCH_SWAP_CHAIN_IDS
+    !ONE_INCH_SWAP_CHAIN_IDS ||
+    !ONE_INCH_API_SPOT_URL ||
+    !ONE_INCH_API_SPOT_VERSION ||
+    !ONE_INCH_API_SPOT_KEY
   ) {
     throw new Error(
       'OneInch configuration env variables are missing: ' +
@@ -27,7 +33,12 @@ export function addSdkConfig({ stack, api }: StackContext & { api: Api }) {
             ONE_INCH_API_URL,
             ONE_INCH_ALLOWED_SWAP_PROTOCOLS,
             ONE_INCH_SWAP_CHAIN_IDS,
+            ONE_INCH_API_SPOT_URL,
+            ONE_INCH_API_SPOT_VERSION,
+            ONE_INCH_API_SPOT_KEY,
           }),
+          null,
+          2,
         ),
     )
   }
@@ -42,6 +53,9 @@ export function addSdkConfig({ stack, api }: StackContext & { api: Api }) {
       ONE_INCH_API_URL,
       ONE_INCH_ALLOWED_SWAP_PROTOCOLS,
       ONE_INCH_SWAP_CHAIN_IDS,
+      ONE_INCH_API_SPOT_URL,
+      ONE_INCH_API_SPOT_VERSION,
+      ONE_INCH_API_SPOT_KEY,
     },
   })
 
