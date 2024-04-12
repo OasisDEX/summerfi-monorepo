@@ -1,7 +1,5 @@
 import { ActionCall, BaseAction } from '@summerfi/protocol-plugins-common'
 import { Address, TokenAmount } from '@summerfi/sdk-common/common'
-import { IPool } from '@summerfi/sdk-common/protocols'
-import { is{{namePascalCase}}PoolId } from '@summerfi/sdk-common/protocols/'
 
 export class {{namePascalCase}}PaybackAction extends BaseAction {
   public readonly config = {
@@ -18,10 +16,6 @@ export class {{namePascalCase}}PaybackAction extends BaseAction {
     },
     paramsMapping?: number[],
   ): ActionCall {
-    if (!is{{namePascalCase}}PoolId(params.pool.poolId)) {
-      throw new Error('Pool ID is not a {{namePascalCase}} one')
-    }
-
     return this._encodeCall({
       arguments: [
         /** INSERT HERE - THE ACTION ARGS  **/
