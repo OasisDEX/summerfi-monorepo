@@ -1,4 +1,4 @@
-export { AaveV3ProtocolPlugin } from './AAVEv3ProtocolPlugin'
+export { AaveV3ProtocolPlugin } from './AaveV3ProtocolPlugin'
 export { AaveV3CollateralConfig } from './AaveV3CollateralConfig'
 export {
   AaveV3CollateralConfigMap,

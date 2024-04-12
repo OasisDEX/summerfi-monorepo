@@ -29,9 +29,9 @@ import { SparkCollateralConfigMap, SparkCollateralConfigRecord } from './SparkCo
 import { SparkDebtConfigRecord, SparkDebtConfigMap } from './SparkDebtConfigMap'
 
 import {
-  AaveV3LikeProtocolDataBuilder,
+  AaveLikeProtocolDataBuilder,
   filterAssetsListByEMode,
-} from '../../common/helpers/AAVEv3LikeProtocolDataBuilder'
+} from '../../common/helpers/AaveLikeProtocolDataBuilder'
 import { SparkContractNames } from '@summerfi/deployment-types'
 import {
   SPARK_LENDING_POOL_ABI,
@@ -158,7 +158,7 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
         ...this.ctx,
         getContractDef: this.getContractDef,
       }
-      const builder = await new AaveV3LikeProtocolDataBuilder(_ctx, this.protocolName).init()
+      const builder = await new AaveLikeProtocolDataBuilder(_ctx, this.protocolName).init()
       const list = await builder
         .addPrices()
         .addReservesCaps()

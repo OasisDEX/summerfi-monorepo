@@ -1,6 +1,6 @@
 import { AddressValue } from '@summerfi/sdk-common/common'
+import {ICollateralConfigMap} from "@summerfi/sdk-common/protocols";
 import { IAaveV2CollateralConfig } from './IAaveV2CollateralConfig'
-import { IAaveV2CollateralConfigMap } from '@summerfi/sdk-common/protocols'
 
 export type IAaveV2CollateralConfigRecord = Record<AddressValue, IAaveV2CollateralConfig>
 

@@ -3,7 +3,7 @@ import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import {
   AllowedProtocolNames,
   IProtocolPluginContextWithContractDef,
-} from './AAVEv3LikeBuilderTypes'
+} from './AaveLikeBuilderTypes'
 
 // TODO: Update ContractProvider to work based on ChainId
 export async function fetchReservesTokens(
@@ -11,23 +11,10 @@ export async function fetchReservesTokens(
   protocolName: AllowedProtocolNames,
 ) {
   switch (protocolName) {
+    // Collapsed because no typesafety on getContractDef currently
+    case ProtocolName.Spark:
+    case ProtocolName.AAVEv2:
     case ProtocolName.AAVEv3: {
-      const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
-      const [rawReservesTokenList] = await ctx.provider.multicall({
-        contracts: [
-          {
-            abi: poolDataProviderDef.abi,
-            address: poolDataProviderDef.address,
-            functionName: 'getAllReservesTokens',
-            args: [],
-          },
-        ],
-        allowFailure: false,
-      })
-
-      return rawReservesTokenList
-    }
-    case ProtocolName.Spark: {
       const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
       const [rawReservesTokenList] = await ctx.provider.multicall({
         contracts: [
