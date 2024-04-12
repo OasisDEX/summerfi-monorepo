@@ -11,6 +11,14 @@ export const addressSchema = z
   }, 'Invalid address format')
   .transform((a) => getAddress(a))
 
+export const addressesSchema = z
+  .string()
+  .transform((val) => val.split(','))
+  .refine((val) => {
+    return val.every((address) => isValidAddress(address))
+  })
+  .transform((val) => val.map((a): Address => getAddress(a)))
+
 export const bigIntSchema = z
   .string()
   .refine((value) => isBigInt(value), {
@@ -25,6 +33,9 @@ export const bigIntSchema = z
 export const chainIdSchema = z
   .nativeEnum(ChainId)
   .or(z.string().transform((val) => Number(val)))
+  .refine((val) => {
+    return z.nativeEnum(ChainId).safeParse(val).success
+  })
   .transform((val) => {
     return z.nativeEnum(ChainId).parse(val)
   })
@@ -56,4 +67,30 @@ export const protocolIdsSchema = z
     { message: 'Unsupported protocol id' },
   )
 
+export const protocolIdSchema = z
+  .nativeEnum(ProtocolId)
+  .or(z.string())
+  .refine((val) => z.nativeEnum(ProtocolId).safeParse(val).success)
+  .transform((val) => z.nativeEnum(ProtocolId).parse(val))
+
 export const urlOptionalSchema = z.string().url().optional()
+
+export const ltvSchema = bigIntSchema.refine((ltv) => ltv >= 0n && ltv < 10_000n, {
+  params: {
+    code: 'ltv-out-of-range',
+  },
+  message: 'LTV must be between 0 and 10_000',
+})
+
+export const percentageSchema = bigIntSchema.refine(
+  (percentage) => percentage >= 0n && percentage <= 10_000n,
+  {
+    params: {
+      code: 'percentage-out-of-range',
+    },
+    message: 'Percentage must be between 0 and 100_000',
+  },
+)
+
+export type LTV = z.infer<typeof ltvSchema>
+export type Percentage = z.infer<typeof percentageSchema>

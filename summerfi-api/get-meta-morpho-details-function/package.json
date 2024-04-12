@@ -2,8 +2,6 @@
   "name": "@summerfi/get-meta-morpho-details-function",
   "version": "0.0.2",
   "scripts": {
-    "tsc": "tsc",
-    "watch": "tsc -w",
     "test": "jest --passWithNoTests",
     "build": "tsc -b -v",
     "lint": "eslint .",

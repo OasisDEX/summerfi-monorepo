@@ -6,23 +6,20 @@ import { Logger } from '@aws-lambda-powertools/logger'
 import {
   AaveAutoBuyEventBody,
   AaveAutoSellEventBody,
-  SetupTriggerEventBody,
+  AavePartialTakeProfitEventBody,
   AaveStopLossEventBody,
-  SparkStopLossEventBody,
   AaveTrailingStopLossEventBody,
+  SetupTriggerEventBody,
   SparkAutoBuyEventBody,
   SparkAutoSellEventBody,
-  SparkTrailingStopLossEventBody,
-  AavePartialTakeProfitEventBody,
   SparkPartialTakeProfitEventBody,
+  SparkStopLossEventBody,
+  SparkTrailingStopLossEventBody,
 } from '~types'
 import type { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import fetch from 'node-fetch'
 import memoize from 'just-memoize'
-import {
-  getRpcGatewayEndpoint,
-  IRpcConfig,
-} from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
+import { getRpcGatewayEndpoint, IRpcConfig } from '@summerfi/serverless-shared'
 import { ServiceContainer } from './service-container'
 import { TriggerType } from '@oasisdex/automation'
 import { getAaveAutoBuyServiceContainer } from './get-aave-auto-buy-service-container'

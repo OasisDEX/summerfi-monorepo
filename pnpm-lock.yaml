@@ -475,6 +475,9 @@ importers:
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.12.7)
 
   packages/prices-subgraph:
     dependencies:
@@ -1205,6 +1208,46 @@ importers:
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
+
+  summerfi-api/get-apy-function:
+    dependencies:
+      '@aws-lambda-powertools/logger':
+        specifier: ^2.0.2
+        version: 2.0.4
+      '@aws-lambda-powertools/metrics':
+        specifier: ^2.0.2
+        version: 2.0.4
+      '@aws-lambda-powertools/tracer':
+        specifier: ^2.0.2
+        version: 2.0.4
+      '@summerfi/morpho-blue-subgraph':
+        specifier: workspace:*
+        version: link:../../packages/morpho-blue-subgraph
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../../packages/serverless-shared
+      viem:
+        specifier: ^1.19.11
+        version: 1.21.4(typescript@5.4.5)(zod@3.22.4)
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@types/node':
+        specifier: ^20.11.5
+        version: 20.12.7
+      eslint:
+        specifier: ^8.56.0
+        version: 8.57.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.12.7)
 
   summerfi-api/get-meta-morpho-details-function:
     dependencies:

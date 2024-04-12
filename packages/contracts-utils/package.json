@@ -6,6 +6,7 @@
   "scripts": {
     "tsc": "tsc",
     "build": "tsc -b -v",
+    "dev": "tsc -b -w",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
