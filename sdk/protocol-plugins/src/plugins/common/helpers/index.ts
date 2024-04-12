@@ -7,7 +7,7 @@ export {
   type WithReservesConfig,
   type WithReservesData,
   type WithToken,
-} from './AAVEv3LikeBuilderTypes'
+} from './AaveLikeBuilderTypes'
 export {
   fetchReservesTokens,
   fetchEmodeCategoriesForReserves,
@@ -15,8 +15,8 @@ export {
   fetchReservesCap,
   fetchAssetReserveData,
   fetchAssetPrices,
-} from './AAVEv3LikeDataFetchers'
+} from './AaveLikeDataFetchers'
 export {
-  AaveV3LikeProtocolDataBuilder,
+  AaveLikeProtocolDataBuilder,
   filterAssetsListByEMode,
-} from './AAVEv3LikeProtocolDataBuilder'
+} from './AaveLikeProtocolDataBuilder'

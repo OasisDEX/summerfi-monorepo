@@ -9,7 +9,7 @@ import {
   WithReservesData,
   EmodeCategory,
   IProtocolPluginContextWithContractDef,
-} from './AAVEv3LikeBuilderTypes'
+} from './AaveLikeBuilderTypes'
 import {
   fetchReservesCap,
   fetchAssetConfigurationData,
@@ -17,13 +17,13 @@ import {
   fetchAssetReserveData,
   fetchAssetPrices,
   fetchReservesTokens,
-} from './AAVEv3LikeDataFetchers'
+} from './AaveLikeDataFetchers'
 
 interface QueuedOperation<T> {
   operation: () => Promise<T>
 }
 
-export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
+export class AaveLikeProtocolDataBuilder<AssetListItemType> {
   private readonly ctx: IProtocolPluginContextWithContractDef
   private operations: QueuedOperation<void>[] = []
   private tokensUsedAsReserves: Token[] | undefined
@@ -35,7 +35,7 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
     this.protocolName = protocolName
   }
 
-  async init(): Promise<AaveV3LikeProtocolDataBuilder<WithToken<AssetListItemType>>> {
+  async init(): Promise<AaveLikeProtocolDataBuilder<WithToken<AssetListItemType>>> {
     const rawTokens = await fetchReservesTokens(this.ctx, this.protocolName)
     this._validateReservesTokens(rawTokens)
 
@@ -48,7 +48,7 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
     )
 
     return Object.assign(
-      new AaveV3LikeProtocolDataBuilder<WithToken<AssetListItemType>>(this.ctx, this.protocolName),
+      new AaveLikeProtocolDataBuilder<WithToken<AssetListItemType>>(this.ctx, this.protocolName),
       this,
       {
         tokensUsedAsReserves,
@@ -57,7 +57,7 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
     )
   }
 
-  addReservesCaps(): AaveV3LikeProtocolDataBuilder<WithReservesCaps<AssetListItemType>> {
+  addReservesCaps(): AaveLikeProtocolDataBuilder<WithReservesCaps<AssetListItemType>> {
     const operation: QueuedOperation<void> = {
       operation: async () => {
         this._assertIsInitialised(this.tokensUsedAsReserves)
@@ -84,10 +84,10 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
       },
     }
     this.operations.push(operation)
-    return this as AaveV3LikeProtocolDataBuilder<WithReservesCaps<AssetListItemType>>
+    return this as AaveLikeProtocolDataBuilder<WithReservesCaps<AssetListItemType>>
   }
 
-  addReservesConfigData(): AaveV3LikeProtocolDataBuilder<WithReservesConfig<AssetListItemType>> {
+  addReservesConfigData(): AaveLikeProtocolDataBuilder<WithReservesConfig<AssetListItemType>> {
     const operation: QueuedOperation<void> = {
       operation: async () => {
         this._assertIsInitialised(this.tokensUsedAsReserves)
@@ -143,10 +143,10 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
       },
     }
     this.operations.push(operation)
-    return this as AaveV3LikeProtocolDataBuilder<WithReservesConfig<AssetListItemType>>
+    return this as AaveLikeProtocolDataBuilder<WithReservesConfig<AssetListItemType>>
   }
 
-  addReservesData(): AaveV3LikeProtocolDataBuilder<WithReservesData<AssetListItemType>> {
+  addReservesData(): AaveLikeProtocolDataBuilder<WithReservesData<AssetListItemType>> {
     const operation: QueuedOperation<void> = {
       operation: async () => {
         this._assertIsInitialised(this.tokensUsedAsReserves)
@@ -209,10 +209,10 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
       },
     }
     this.operations.push(operation)
-    return this as AaveV3LikeProtocolDataBuilder<WithReservesData<AssetListItemType>>
+    return this as AaveLikeProtocolDataBuilder<WithReservesData<AssetListItemType>>
   }
 
-  addEmodeCategories(): AaveV3LikeProtocolDataBuilder<WithEmode<AssetListItemType>> {
+  addEmodeCategories(): AaveLikeProtocolDataBuilder<WithEmode<AssetListItemType>> {
     const operation: QueuedOperation<void> = {
       operation: async () => {
         this._assertIsInitialised(this.tokensUsedAsReserves)
@@ -235,10 +235,10 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
       },
     }
     this.operations.push(operation)
-    return this as AaveV3LikeProtocolDataBuilder<WithEmode<AssetListItemType>>
+    return this as AaveLikeProtocolDataBuilder<WithEmode<AssetListItemType>>
   }
 
-  addPrices(): AaveV3LikeProtocolDataBuilder<WithPrice<AssetListItemType>> {
+  addPrices(): AaveLikeProtocolDataBuilder<WithPrice<AssetListItemType>> {
     const operation: QueuedOperation<void> = {
       operation: async () => {
         this._assertIsInitialised(this.tokensUsedAsReserves)
@@ -262,7 +262,7 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
       },
     }
     this.operations.push(operation)
-    return this as AaveV3LikeProtocolDataBuilder<WithPrice<AssetListItemType>>
+    return this as AaveLikeProtocolDataBuilder<WithPrice<AssetListItemType>>
   }
 
   async build(): Promise<AssetListItemType[]> {

@@ -1,95 +1,76 @@
+import {AaveV2ContractNames} from "@summerfi/deployment-types";
 import {
   Percentage,
   TokenAmount,
+  Token,
   TokenSymbol,
   Price,
   CurrencySymbol,
   RiskRatio,
-  Position,
-  ChainId,
-  Token,
   ChainFamilyName,
   valuesOfChainFamilyMap,
   Maybe,
+  IPosition,
+  ChainId,
 } from '@summerfi/sdk-common/common'
-import { SimulationSteps } from '@summerfi/sdk-common/simulation'
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { BigNumber } from 'bignumber.js'
-import { z } from 'zod'
-
-import { SparkDepositBorrowActionBuilder } from '../builders/SparkDepositBorrowActionBuilder'
+import {BigNumber} from "bignumber.js";
 import { BaseProtocolPlugin } from '../../../implementation/BaseProtocolPlugin'
-import { sparkEmodeCategoryMap } from './EmodeCategoryMap'
+import {AaveV3ProtocolPlugin} from "../../aave-v3";
+import {PRECISION_BI, UNCAPPED_SUPPLY} from "../../common/constants/AaveV3LikeConstants";
+import {AaveLikeProtocolDataBuilder} from "../../common/helpers/AaveLikeProtocolDataBuilder";
+import {AAVEV2_LENDING_POOL_ABI, AAVEV2_ORACLE_ABI, AAVEV2_POOL_DATA_PROVIDER_ABI} from "../abis/AaveV2ABIS";
 
-import { UNCAPPED_SUPPLY, PRECISION_BI } from '../../common/constants/AaveV3LikeConstants'
-import { SparkLendingPool } from './SparkLendingPool'
-import { SparkCollateralConfig } from './SparkCollateralConfig'
-import { SparkDebtConfig } from './SparkDebtConfig'
-import { SparkCollateralConfigMap, SparkCollateralConfigRecord } from './SparkCollateralConfigMap'
-import { SparkDebtConfigRecord, SparkDebtConfigMap } from './SparkDebtConfigMap'
+import { AaveV2LendingPool } from './AaveV2LendingPool'
+import { AaveV2CollateralConfig } from './AaveV2CollateralConfig'
+import { AaveV2DebtConfig } from './AaveV2DebtConfig'
+import {
+  AaveV2CollateralConfigMap,
+  AaveV2CollateralConfigRecord,
+} from './AaveV2CollateralConfigMap'
+import { AaveV2DebtConfigMap, AaveV2DebtConfigRecord } from './AaveV2DebtConfigMap'
+import { z } from 'zod'
+import { AaveV2AddressAbiMap } from '../types/AaveV2AddressAbiMap'
+import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
+import { AaveV2PoolId } from '../types/AaveV2PoolId'
 
-import {
-  AaveLikeProtocolDataBuilder,
-  filterAssetsListByEMode,
-} from '../../common/helpers/AaveLikeProtocolDataBuilder'
-import { SparkContractNames } from '@summerfi/deployment-types'
-import {
-  SPARK_LENDING_POOL_ABI,
-  SPARK_ORACLE_ABI,
-  SPARK_POOL_DATA_PROVIDER_ABI,
-} from '../abis/SparkABIS'
-import {
-  ActionBuildersMap,
-  IPositionId,
-  IProtocolPluginContext,
-} from '@summerfi/protocol-plugins-common'
-import { SparkAddressAbiMap } from '../types/SparkAddressAbiMap'
-import { EmodeType } from '../../common/enums/EmodeType'
-import { SparkPoolId } from '../types/SparkPoolId'
-
-type AssetsList = ReturnType<SparkProtocolPlugin['buildAssetsList']>
+type AssetsList = ReturnType<AaveV3ProtocolPlugin['buildAssetsList']>
 type Asset = Awaited<AssetsList> extends (infer U)[] ? U : never
 
-export class SparkProtocolPlugin extends BaseProtocolPlugin {
-  readonly protocolName: ProtocolName.Spark = ProtocolName.Spark
+export class AaveV2ProtocolPlugin extends BaseProtocolPlugin {
+  readonly protocolName = ProtocolName.AAVEv2
   readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
-  readonly sparkPoolIdSchema = z.object({
+  readonly stepBuilders: Partial<ActionBuildersMap> = {}
+
+  readonly aaveV2PoolidSchema = z.object({
     protocol: z.object({
-      name: z.literal(ProtocolName.Spark),
+      name: z.literal(ProtocolName.AAVEv2),
       chainInfo: z.object({
         name: z.string(),
         chainId: z.custom<ChainId>(
           (chainId) => this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
           'Chain ID not supported',
-          true,
         ),
       }),
     }),
-    emodeType: z.nativeEnum(EmodeType),
   })
-
-  readonly stepBuilders: Partial<ActionBuildersMap> = {
-    [SimulationSteps.DepositBorrow]: SparkDepositBorrowActionBuilder,
-  }
 
   constructor(params: { context: IProtocolPluginContext }) {
     super(params)
   }
 
-  isPoolId(candidate: unknown): candidate is SparkPoolId {
-    return this._isPoolId(candidate, this.sparkPoolIdSchema)
+  isPoolId(candidate: unknown): candidate is AaveV2PoolId {
+    return this._isPoolId(candidate, this.aaveV2PoolidSchema)
   }
 
-  validatePoolId(candidate: unknown): asserts candidate is SparkPoolId {
+  validatePoolId(candidate: unknown): asserts candidate is AaveV2PoolId {
     if (!this.isPoolId(candidate)) {
-      throw new Error(`Invalid Spark pool ID: ${JSON.stringify(candidate)}`)
+      throw new Error(`Invalid AaveV2 pool ID: ${JSON.stringify(candidate)}`)
     }
   }
 
-  async getPool(poolId: unknown): Promise<SparkLendingPool> {
-    this.validatePoolId(poolId)
-
-    const emode = sparkEmodeCategoryMap[poolId.emodeType]
+  async getPool(aaveV2PoolId: unknown): Promise<AaveV2LendingPool> {
+    this.validatePoolId(aaveV2PoolId)
 
     const ctx = this.ctx
     const chainId = ctx.provider.chain?.id
@@ -99,18 +80,19 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
       throw new Error(`Chain ID ${chainId} is not supported`)
     }
 
-    const assetsList = await this.buildAssetsList(emode)
+    const assetsList = await this.buildAssetsList()
 
     // Both USDC & DAI use fixed price oracles that keep both stable at 1 USD
     const poolBaseCurrencyToken = CurrencySymbol.USD
 
-    const collaterals = assetsList.reduce<SparkCollateralConfigRecord>((colls, asset) => {
+    const collaterals = assetsList.reduce<AaveV2CollateralConfigRecord>((colls, asset) => {
       const assetInfo = this.getCollateralAssetInfo(asset, poolBaseCurrencyToken)
       const { token: collateralToken } = asset
       colls[collateralToken.address.value] = assetInfo
       return colls
     }, {})
-    const debts = assetsList.reduce<SparkDebtConfigRecord>((debts, asset) => {
+
+    const debts = assetsList.reduce<AaveV2DebtConfigRecord>((debts, asset) => {
       const assetInfo = this.getDebtAssetInfo(asset, poolBaseCurrencyToken)
       if (!assetInfo) return debts
       const { token: quoteToken } = asset
@@ -118,72 +100,76 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
       return debts
     }, {})
 
-    return {
+    return AaveV2LendingPool.createFrom({
       type: PoolType.Lending,
-      poolId: poolId,
-      protocol: poolId.protocol,
+      poolId: aaveV2PoolId,
+      protocol: aaveV2PoolId.protocol,
       baseCurrency: CurrencySymbol.USD,
-      collaterals: SparkCollateralConfigMap.createFrom({ record: collaterals }),
-      debts: SparkDebtConfigMap.createFrom({ record: debts }),
-    }
+      collaterals: AaveV2CollateralConfigMap.createFrom({ record: collaterals }),
+      debts: AaveV2DebtConfigMap.createFrom({ record: debts }),
+    })
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getPosition(positionId: IPositionId): Promise<Position> {
+  async getPosition(positionId: string): Promise<IPosition> {
     throw new Error(`Not implemented ${positionId}`)
   }
 
-  private getContractDef<K extends SparkContractNames>(contractName: K): SparkAddressAbiMap[K] {
-    const map: SparkAddressAbiMap = {
+  private getContractDef<K extends AaveV2ContractNames>(contractName: K): AaveV2AddressAbiMap[K] {
+    // TODO: Need to be driven by ChainId in future
+    const map: AaveV2AddressAbiMap = {
       Oracle: {
-        address: '0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9',
-        abi: SPARK_ORACLE_ABI,
+        address: '0xA50ba011c48153De246E5192C8f9258A2ba79Ca9',
+        abi: AAVEV2_ORACLE_ABI,
       },
       PoolDataProvider: {
-        address: '0xFc21d6d146E6086B8359705C8b28512a983db0cb',
-        abi: SPARK_POOL_DATA_PROVIDER_ABI,
+        address: '0x057835Ad21a177dbdd3090bB1CAE03EaCF78Fc6d',
+        abi: AAVEV2_POOL_DATA_PROVIDER_ABI,
       },
-      SparkLendingPool: {
-        address: '0xC13e21B648A5Ee794902342038FF3aDAB66BE987',
-        abi: SPARK_LENDING_POOL_ABI,
+      AaveLendingPool: {
+        address: '0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9',
+        abi: AAVEV2_LENDING_POOL_ABI,
+      },
+      AaveWethGateway: {
+        address: '0x',
+        abi: null,
       },
     }
 
     return map[contractName]
   }
 
-  private async buildAssetsList(emode: bigint) {
+  private async buildAssetsList() {
     try {
       const _ctx = {
         ...this.ctx,
         getContractDef: this.getContractDef,
       }
       const builder = await new AaveLikeProtocolDataBuilder(_ctx, this.protocolName).init()
-      const list = await builder
-        .addPrices()
-        .addReservesCaps()
-        .addReservesConfigData()
-        .addReservesData()
-        .addEmodeCategories()
-        .build()
+      return await builder
+          .addPrices()
+          .addReservesCaps()
+          .addReservesConfigData()
+          .addReservesData()
+          .addEmodeCategories()
+          .build()
 
-      return filterAssetsListByEMode(list, emode)
     } catch (e) {
-      throw new Error(`Could not fetch/build assets list for Spark: ${JSON.stringify(e)}`)
+      throw new Error(`Could not fetch/build assets list for AaveV2: ${JSON.stringify(e)}`)
     }
   }
 
   private getCollateralAssetInfo(
     asset: Asset,
     poolBaseCurrencyToken: Token | CurrencySymbol,
-  ): SparkCollateralConfig {
+  ): AaveV2CollateralConfig {
     const {
       token: collateralToken,
       config: { usageAsCollateralEnabled, ltv, liquidationThreshold, liquidationBonus },
       caps: { supplyCap },
       data: { totalAToken },
     } = asset
-    const LTV_TO_PERCENTAGE_DIVISOR = 100n
+
+    const LTV_TO_PERCENTAGE_DIVISOR = new BigNumber(100)
 
     try {
       return {
@@ -200,13 +186,15 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
         }),
         maxLtv: RiskRatio.createFrom({
           ratio: Percentage.createFrom({
-            value: Number((ltv / LTV_TO_PERCENTAGE_DIVISOR).toString()),
+            value: new BigNumber(ltv.toString()).div(LTV_TO_PERCENTAGE_DIVISOR).toNumber(),
           }),
           type: RiskRatio.type.LTV,
         }),
         liquidationThreshold: RiskRatio.createFrom({
           ratio: Percentage.createFrom({
-            value: Number((liquidationThreshold / LTV_TO_PERCENTAGE_DIVISOR).toString()),
+            value: new BigNumber(liquidationThreshold.toString())
+                .div(LTV_TO_PERCENTAGE_DIVISOR)
+                .toNumber(),
           }),
           type: RiskRatio.type.LTV,
         }),
@@ -219,7 +207,9 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
           amount: supplyCap === 0n ? UNCAPPED_SUPPLY : supplyCap.toString(),
         }),
         liquidationPenalty: Percentage.createFrom({
-          value: Number((liquidationBonus / LTV_TO_PERCENTAGE_DIVISOR).toString()),
+          value: new BigNumber(liquidationBonus.toString())
+              .div(LTV_TO_PERCENTAGE_DIVISOR)
+              .toNumber(),
         }),
         apy: Percentage.createFrom({ value: 0 }),
         usageAsCollateralEnabled,
@@ -232,7 +222,7 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
   private getDebtAssetInfo(
     asset: Asset,
     poolBaseCurrencyToken: CurrencySymbol | Token,
-  ): Maybe<SparkDebtConfig> {
+  ): Maybe<AaveV2DebtConfig> {
     const {
       token: quoteToken,
       config: { borrowingEnabled, reserveFactor },
@@ -240,7 +230,7 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
       data: { totalVariableDebt, totalStableDebt, variableBorrowRate },
     } = asset
     if (quoteToken.symbol === TokenSymbol.WETH) {
-      // WETH can be used as collateral on Spark but not borrowed.
+      // WETH can be used as collateral on AaveV3 but not borrowed.
       return
     }
 
@@ -250,8 +240,8 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
       const RATE_DIVISOR_TO_GET_PERCENTAGE = Number((PRECISION_PRESERVING_OFFSET - 100n).toString())
 
       const rate =
-        Number(((variableBorrowRate * PRECISION_PRESERVING_OFFSET) / PRECISION_BI.RAY).toString()) /
-        RATE_DIVISOR_TO_GET_PERCENTAGE
+          Number(((variableBorrowRate * PRECISION_PRESERVING_OFFSET) / PRECISION_BI.RAY).toString()) /
+          RATE_DIVISOR_TO_GET_PERCENTAGE
       const totalBorrowed = totalVariableDebt + totalStableDebt
       return {
         token: quoteToken,

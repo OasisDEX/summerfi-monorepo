@@ -18,9 +18,9 @@ import { BaseProtocolPlugin } from '../../../implementation/BaseProtocolPlugin'
 import { aaveV3EmodeCategoryMap } from './EmodeCategoryMap'
 
 import {
-  AaveV3LikeProtocolDataBuilder,
+  AaveLikeProtocolDataBuilder,
   filterAssetsListByEMode,
-} from '../../common/helpers/AAVEv3LikeProtocolDataBuilder'
+} from '../../common/helpers/AaveLikeProtocolDataBuilder'
 import { UNCAPPED_SUPPLY, PRECISION_BI } from '../../common/constants/AaveV3LikeConstants'
 import { AaveV3LendingPool } from './AaveV3LendingPool'
 import { AaveV3CollateralConfig } from './AaveV3CollateralConfig'
@@ -160,7 +160,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
         ...this.ctx,
         getContractDef: this.getContractDef,
       }
-      const builder = await new AaveV3LikeProtocolDataBuilder(_ctx, this.protocolName).init()
+      const builder = await new AaveLikeProtocolDataBuilder(_ctx, this.protocolName).init()
       const list = await builder
         .addPrices()
         .addReservesCaps()
@@ -171,7 +171,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
 
       return filterAssetsListByEMode(list, emode)
     } catch (e) {
-      throw new Error(`Could not fetch/build assets list for AAVEv3: ${JSON.stringify(e)}`)
+      throw new Error(`Could not fetch/build assets list for AaveV3: ${JSON.stringify(e)}`)
     }
   }
 

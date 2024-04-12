@@ -18,7 +18,6 @@ import { z } from 'zod'
 export abstract class BaseProtocolPlugin implements IProtocolPlugin {
   /** These properties need to be initialized by the actual plugin implementation */
   abstract readonly protocolName: ProtocolName
-  // TODO: Use ContractProvider to determine supported chains
   abstract readonly supportedChains: ChainInfo[]
   abstract readonly stepBuilders: Partial<ActionBuildersMap>
 

@@ -9,7 +9,7 @@ import {
   Percentage,
 } from '@summerfi/sdk-common/common'
 import { AaveV3ProtocolPlugin } from '../../src/plugins/aave-v3'
-import { aaveV3PoolIdMock as validAaveV3PoolId } from '../mocks/AAVEv3PoolIdMock'
+import { aaveV3PoolIdMock as validAaveV3PoolId } from '../mocks/AaveV3PoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 
 describe('AAVEv3 Protocol Plugin (Integration)', () => {
