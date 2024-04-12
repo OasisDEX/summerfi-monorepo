@@ -11,8 +11,8 @@ export class AaveV2WithdrawAction extends BaseAction {
   } as const
 
   public encodeCall(
-      params: { withdrawAmount: TokenAmount; withdrawTo: Address },
-      paramsMapping?: InputSlotsMapping,
+    params: { withdrawAmount: TokenAmount; withdrawTo: Address },
+    paramsMapping?: InputSlotsMapping,
   ): ActionCall {
     return this._encodeCall({
       arguments: [

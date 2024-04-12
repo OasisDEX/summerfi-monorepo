@@ -1,9 +1,6 @@
-import {
-  steps,
-  getValueFromReference,
-} from '@summerfi/sdk-common/simulation'
+import { steps, getValueFromReference } from '@summerfi/sdk-common/simulation'
 import { ActionNames } from '@summerfi/deployment-types'
-import {getBorrowTargetAddress} from "../../../utils/get-borrow-target-address";
+import { getBorrowTargetAddress } from '../../../utils/get-borrow-target-address'
 
 import { SparkBorrowAction } from '../actions/SparkBorrowAction'
 import { SparkDepositAction } from '../actions/SparkDepositAction'

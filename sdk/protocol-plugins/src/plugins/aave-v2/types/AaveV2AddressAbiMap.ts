@@ -1,9 +1,7 @@
 // ABIs and Protocol contracts
 import { AaveV2ContractNames } from '@summerfi/deployment-types'
 import { AddressValue } from '@summerfi/sdk-common/common'
-import {
-  AAVEV2_PLACEHOLDER_ABI,
-} from '../abis/AaveV2ABIS'
+import { AAVEV2_PLACEHOLDER_ABI } from '../abis/AaveV2ABIS'
 
 export type AaveV2AbiMap = {
   Placeholder: typeof AAVEV2_ABI

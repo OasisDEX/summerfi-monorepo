@@ -11,7 +11,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         type: 'input',
         name: 'name',
         message: `name of the protocol (example: "MorphoBlue")`,
-      }
+      },
     ],
     actions: [
       nameAction,

@@ -12,7 +12,7 @@ export class AaveV2PaybackAction extends BaseAction {
 
   public encodeCall(
     params: {
-      paybackAmount: TokenAmount;
+      paybackAmount: TokenAmount
       paybackAll: boolean
     },
     paramsMapping?: InputSlotsMapping,

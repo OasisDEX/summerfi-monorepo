@@ -9,8 +9,5 @@ export interface AaveV2PoolId extends IPoolId {
 }
 
 export function isAaveV2PoolId(maybeAaveV2PoolId: unknown): maybeAaveV2PoolId is AaveV2PoolId {
-  return (
-    isPoolId(maybeAaveV2PoolId) &&
-    maybeAaveV2PoolId.protocol.name === ProtocolName.AAVEv2
-  )
+  return isPoolId(maybeAaveV2PoolId) && maybeAaveV2PoolId.protocol.name === ProtocolName.AAVEv2
 }

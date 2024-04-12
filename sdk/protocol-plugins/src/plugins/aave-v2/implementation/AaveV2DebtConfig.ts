@@ -5,7 +5,6 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 export class AaveV2DebtConfig extends DebtConfig implements IAaveV2DebtConfig {
   /* EG readonly borrowingEnabled: boolean */
 
-
   private constructor(params: IAaveV2DebtConfig) {
     super(params)
 
