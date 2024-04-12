@@ -6,22 +6,14 @@ import {
   Address,
   type Maybe,
   ChainFamilyMap,
-  AddressValue,
   PositionType,
 } from '@summerfi/sdk-common/common'
 
 import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
 import { makeSDK, type Chain, type User } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
-import {
-  ExternalPositionType,
-  IImportPositionParameters,
-  IPositionsManager,
-  Order,
-} from '@summerfi/sdk-common/orders'
+import { ExternalPositionType, IImportPositionParameters, Order } from '@summerfi/sdk-common/orders'
 import { ISimulation, SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
-import { Deployments } from '@summerfi/core-contracts'
-import { DeploymentIndex } from '@summerfi/deployment-utils'
 
 import assert from 'assert'
 import { ILKType, MakerPoolId } from '@summerfi/protocol-plugins/plugins/maker'
@@ -46,16 +38,6 @@ describe('Import Maker Position | SDK', () => {
 
     assert(chain, 'Chain not found')
 
-    // Deployment
-    const deploymentName = `${chain.chainInfo.name}.standard`
-    const deployments = Deployments as DeploymentIndex
-    const deployment = deployments[deploymentName]
-
-    // Strategy Executor
-    const strategyExecutorAddress = Address.createFromEthereum({
-      value: deployment.contracts.OperationExecutor.address as AddressValue,
-    })
-
     // User
     const walletAddress = Address.createFromEthereum({
       value: '0xbEf4befb4F230F43905313077e3824d7386E09F8',
@@ -67,13 +49,6 @@ describe('Import Maker Position | SDK', () => {
     expect(user).toBeDefined()
     expect(user.wallet.address).toEqual(walletAddress)
     expect(user.chainInfo).toEqual(chain.chainInfo)
-
-    // Positions Manager
-    const positionsManager: IPositionsManager = {
-      address: Address.createFromEthereum({
-        value: '0x551Eb8395093fDE4B9eeF017C93593a3C7a75138',
-      }),
-    }
 
     // Tokens
     const WETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.WETH })
