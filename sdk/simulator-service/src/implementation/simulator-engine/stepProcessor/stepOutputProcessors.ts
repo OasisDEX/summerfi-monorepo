@@ -12,6 +12,7 @@ import { swapOutputProcessor } from './swapOutputProcessor'
 import { returnFundsOutputProcessor } from './returnFundsOutputProcessor'
 import { repayFlashloanOutputProcessor } from './repayFlashloanOutputProcessor'
 import { newPositionEventProcessor } from './newPositionEvent'
+import { importPositionProcessor } from './importPositionProcessor'
 
 const stepOutputProcessors: StepOutputProcessors = {
   [SimulationSteps.Flashloan]: flashloanOutputProcessor,
@@ -22,6 +23,7 @@ const stepOutputProcessors: StepOutputProcessors = {
   [SimulationSteps.RepayFlashloan]: repayFlashloanOutputProcessor,
   [SimulationSteps.PullToken]: pullTokenOutputProcessor,
   [SimulationSteps.NewPositionEvent]: newPositionEventProcessor,
+  [SimulationSteps.Import]: importPositionProcessor,
 }
 
 export async function processStepOutput(step: StepsWithoutOutputs): Promise<steps.Steps> {
