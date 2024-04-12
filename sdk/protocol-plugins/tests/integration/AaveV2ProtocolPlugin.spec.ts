@@ -42,50 +42,46 @@ describe('AaveV2 Protocol Plugin (Integration)', () => {
         name: mockCollateralToken.name,
       }),
 
-      /** EG
-      * price: expect.anything(),
-      * priceUSD: expect.anything(),
-      * maxLtv: expect.anything(),
-      * liquidationThreshold: expect.anything(),
-      * tokensLocked: expect.anything(),
-      * maxSupply: expect.anything(),
-      * liquidationPenalty: expect.anything(),
-      * apy: expect.anything(),
-      * usageAsCollateralEnabled: expect.any(Boolean),
-      * /
+      price: expect.anything(),
+      priceUSD: expect.anything(),
+      maxLtv: expect.anything(),
+      liquidationThreshold: expect.anything(),
+      tokensLocked: expect.anything(),
+      maxSupply: expect.anything(),
+      liquidationPenalty: expect.anything(),
+      apy: expect.anything(),
+      usageAsCollateralEnabled: expect.any(Boolean),
     })
 
-    /** EG
-    * const price = config!.price
-    * expect(price).toBeInstanceOf(Price)
-    * expect(Number(price.value)).toBeGreaterThan(0)
-    *
-    * const priceUSD = config!.priceUSD
-    * expect(priceUSD).toBeInstanceOf(Price)
-    * expect(Number(priceUSD.value)).toBeGreaterThan(0)
-    *
-    * const maxLtv = config!.maxLtv
-    * expect(maxLtv).toBeInstanceOf(RiskRatio)
-    * expect(maxLtv.ratio.value).toBeGreaterThan(0)
-    * expect(maxLtv.ratio.value).toBeLessThan(100)
-    *
-    * const liquidationThreshold = config!.liquidationThreshold
-    * expect(liquidationThreshold).toBeInstanceOf(RiskRatio)
-    * expect(liquidationThreshold.ratio.value).toBeGreaterThan(0)
-    * expect(liquidationThreshold.ratio.value).toBeLessThan(100)
-    *
-    * const tokensLocked = config!.tokensLocked
-    * expect(tokensLocked).toBeInstanceOf(TokenAmount)
-    * expect(Number(tokensLocked.amount)).toBeGreaterThan(0)
-    *
-    * const maxSupply = config!.maxSupply
-    * expect(maxSupply).toBeInstanceOf(TokenAmount)
-    * expect(Number(maxSupply.amount)).toBeGreaterThan(0)
-    *
-    * const liquidationPenalty = config!.liquidationPenalty
-    * expect(liquidationPenalty).toBeInstanceOf(Percentage)
-    * expect(Number(liquidationPenalty.value)).toBeGreaterThan(100)
-    */
+    const price = config!.price
+    expect(price).toBeInstanceOf(Price)
+    expect(Number(price.value)).toBeGreaterThan(0)
+
+    const priceUSD = config!.priceUSD
+    expect(priceUSD).toBeInstanceOf(Price)
+    expect(Number(priceUSD.value)).toBeGreaterThan(0)
+
+    const maxLtv = config!.maxLtv
+    expect(maxLtv).toBeInstanceOf(RiskRatio)
+    expect(maxLtv.ratio.value).toBeGreaterThan(0)
+    expect(maxLtv.ratio.value).toBeLessThan(100)
+
+    const liquidationThreshold = config!.liquidationThreshold
+    expect(liquidationThreshold).toBeInstanceOf(RiskRatio)
+    expect(liquidationThreshold.ratio.value).toBeGreaterThan(0)
+    expect(liquidationThreshold.ratio.value).toBeLessThan(100)
+
+    const tokensLocked = config!.tokensLocked
+    expect(tokensLocked).toBeInstanceOf(TokenAmount)
+    expect(Number(tokensLocked.amount)).toBeGreaterThan(0)
+
+    const maxSupply = config!.maxSupply
+    expect(maxSupply).toBeInstanceOf(TokenAmount)
+    expect(Number(maxSupply.amount)).toBeGreaterThan(0)
+
+    const liquidationPenalty = config!.liquidationPenalty
+    expect(liquidationPenalty).toBeInstanceOf(Percentage)
+    expect(Number(liquidationPenalty.value)).toBeGreaterThan(100)
   })
 
   it('correctly populates debt configuration from blockchain data', async () => {
@@ -108,52 +104,47 @@ describe('AaveV2 Protocol Plugin (Integration)', () => {
         decimals: mockDebtToken.decimals,
         name: mockDebtToken.name,
       }),
-
-      /** EG
-      * price: expect.anything(),
-      * priceUSD: expect.anything(),
-      * rate: expect.anything(),
-      * totalBorrowed: expect.anything(),
-      * debtCeiling: expect.anything(),
-      * debtAvailable: expect.anything(),
-      * dustLimit: expect.anything(),
-      * originationFee: expect.anything(),
-      * borrowingEnabled: expect.any(Boolean),
-      */
+      price: expect.anything(),
+      priceUSD: expect.anything(),
+      rate: expect.anything(),
+      totalBorrowed: expect.anything(),
+      debtCeiling: expect.anything(),
+      debtAvailable: expect.anything(),
+      dustLimit: expect.anything(),
+      originationFee: expect.anything(),
+      borrowingEnabled: expect.any(Boolean),
     })
 
-    /** EG
-    * const price = config!.price
-    * expect(price).toBeInstanceOf(Price)
-    * expect(Number(price.value)).toBeGreaterThan(0)
-    *
-    * const priceUSD = config!.priceUSD
-    * expect(priceUSD).toBeInstanceOf(Price)
-    * expect(Number(priceUSD.value)).toBeGreaterThan(0)
-    *
-    * const rate = config!.rate
-    * expect(rate).toBeInstanceOf(Percentage)
-    * expect(rate.value).toBeGreaterThan(0)
-    * expect(rate.value).toBeLessThan(100)
-    *
-    * const totalBorrowed = config!.totalBorrowed
-    * expect(totalBorrowed).toBeInstanceOf(TokenAmount)
-    * expect(Number(totalBorrowed.amount)).toBeGreaterThan(0)
-    *
-    * const debtCeiling = config!.debtCeiling
-    * expect(debtCeiling).toBeInstanceOf(TokenAmount)
-    * expect(Number(debtCeiling.amount)).toBeGreaterThan(0)
-    *
-    * const debtAvailable = config!.debtAvailable
-    * expect(debtAvailable).toBeInstanceOf(TokenAmount)
-    * expect(Number(debtAvailable.amount)).toBeGreaterThan(0)
-    *
-    * const dustLimit = config!.dustLimit
-    * expect(dustLimit).toBeInstanceOf(TokenAmount)
-    * expect(Number(dustLimit.amount)).toBe(0)
-    *
-    * const originationFee = config!.originationFee
-    * expect(originationFee).toBeInstanceOf(Percentage)
-    */
+    const price = config!.price
+    expect(price).toBeInstanceOf(Price)
+    expect(Number(price.value)).toBeGreaterThan(0)
+
+    const priceUSD = config!.priceUSD
+    expect(priceUSD).toBeInstanceOf(Price)
+    expect(Number(priceUSD.value)).toBeGreaterThan(0)
+
+    const rate = config!.rate
+    expect(rate).toBeInstanceOf(Percentage)
+    expect(rate.value).toBeGreaterThan(0)
+    expect(rate.value).toBeLessThan(100)
+
+    const totalBorrowed = config!.totalBorrowed
+    expect(totalBorrowed).toBeInstanceOf(TokenAmount)
+    expect(Number(totalBorrowed.amount)).toBeGreaterThan(0)
+
+    const debtCeiling = config!.debtCeiling
+    expect(debtCeiling).toBeInstanceOf(TokenAmount)
+    expect(Number(debtCeiling.amount)).toBeGreaterThan(0)
+
+    const debtAvailable = config!.debtAvailable
+    expect(debtAvailable).toBeInstanceOf(TokenAmount)
+    expect(Number(debtAvailable.amount)).toBeGreaterThan(0)
+
+    const dustLimit = config!.dustLimit
+    expect(dustLimit).toBeInstanceOf(TokenAmount)
+    expect(Number(dustLimit.amount)).toBe(0)
+
+    const originationFee = config!.originationFee
+    expect(originationFee).toBeInstanceOf(Percentage)
   })
 })
