@@ -1,8 +1,8 @@
 import { getValueFromReference, steps } from '@summerfi/sdk-common/simulation'
-import { ActionBuilder } from '@summerfi/order-planner-common/builders'
+import { ActionBuilder } from '@summerfi/protocol-plugins-common'
 import { ActionNames } from '@summerfi/deployment-types'
-import { {{namePascalCase}}PaybackAction } from '../actions/{{namePascalCase}}PaybackAction.ts'
-import { {{namePascalCase}}WithdrawAction } from '../actions/{{namePascalCase}}WithdrawAction.ts'
+import { {{namePascalCase}}PaybackAction } from '../actions/{{namePascalCase}}PaybackAction'
+import { {{namePascalCase}}WithdrawAction } from '../actions/{{namePascalCase}}WithdrawAction'
 import { Address, AddressValue } from '@summerfi/sdk-common/common'
 
 export const {{namePascalCase}}PaybackWithdrawActionList: ActionNames[] = ['{{namePascalCase}}Payback', '{{namePascalCase}}Withdraw']

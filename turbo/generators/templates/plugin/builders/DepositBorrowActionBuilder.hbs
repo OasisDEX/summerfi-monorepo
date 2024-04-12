@@ -1,8 +1,8 @@
 import { getValueFromReference, steps } from '@summerfi/sdk-common/simulation'
-import { ActionBuilder } from '@summerfi/order-planner-common/builders'
+import { ActionBuilder } from '@summerfi/protocol-plugins-common'
 import { ActionNames } from '@summerfi/deployment-types'
-import { {{namePascalCase}}DepositAction } from '../actions/{{name}}DepositAction.ts'
-import { {{namePascalCase}}BorrowAction } from '../actions/{{name}}BorrowAction.ts'
+import { {{namePascalCase}}DepositAction } from '../actions/{{name}}DepositAction'
+import { {{namePascalCase}}BorrowAction } from '../actions/{{name}}BorrowAction'
 import { Address, AddressValue } from '@summerfi/sdk-common/common'
 
 export const {{namePascalCase}}DepositBorrowActionList: ActionNames[] = ['{{namePascalCase}}Deposit', '{{namePascalCase}}Borrow']
