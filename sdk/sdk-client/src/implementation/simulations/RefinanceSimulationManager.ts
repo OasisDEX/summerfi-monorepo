@@ -12,20 +12,27 @@ export class RefinanceSimulationManager extends IRPCClient {
     params: IRefinanceParameters,
   ): Promise<ISimulation<SimulationType.Refinance>> {
     const refinanceParameters: IRefinanceParameters = {
-      position: {
-        positionId: params.position.positionId,
-        debtAmount: params.position.debtAmount,
-        collateralAmount: params.position.collateralAmount,
+      sourcePosition: {
+        type: params.sourcePosition.type,
+        positionId: params.sourcePosition.positionId,
+        debtAmount: params.sourcePosition.debtAmount,
+        collateralAmount: params.sourcePosition.collateralAmount,
         pool: {
-          poolId: params.position.pool.poolId,
-          protocol: params.position.pool.protocol,
-          type: params.position.pool.type,
+          poolId: params.sourcePosition.pool.poolId,
+          protocol: params.sourcePosition.pool.protocol,
+          type: params.sourcePosition.pool.type,
         },
       },
-      targetPool: {
-        poolId: params.targetPool.poolId,
-        protocol: params.targetPool.protocol,
-        type: params.targetPool.type,
+      targetPosition: {
+        type: params.targetPosition.type,
+        positionId: params.targetPosition.positionId,
+        debtAmount: params.targetPosition.debtAmount,
+        collateralAmount: params.targetPosition.collateralAmount,
+        pool: {
+          poolId: params.targetPosition.pool.poolId,
+          protocol: params.targetPosition.pool.protocol,
+          type: params.targetPosition.pool.type,
+        },
       },
       slippage: params.slippage,
     }

@@ -6,6 +6,7 @@ import {
   ChainInfo,
   Position,
   PositionId,
+  PositionType,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
@@ -78,7 +79,8 @@ describe('Execution Storage Mapper', () => {
     poolId,
   }
 
-  const position = new Position({
+  const position = Position.createFrom({
+    type: PositionType.Multiply,
     positionId: PositionId.createFrom({ id: 'someposition' }),
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,

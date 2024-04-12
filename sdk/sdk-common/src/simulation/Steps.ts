@@ -64,11 +64,11 @@ export interface SwapStep
     {
       provider: SwapProviderType
       routes: SwapRoute[]
-      prices: Price[]
+      spotPrice: Price
       fromTokenAmount: TokenAmount
       toTokenAmount: TokenAmount
       slippage: Percentage
-      fee: Percentage
+      summerFee: Percentage
     },
     {
       receivedAmount: TokenAmount
@@ -86,6 +86,13 @@ export interface RepayFlashloan
   > {}
 
 export interface ImportStep extends Step<SimulationSteps.Import, { externalPosition: ExternalPosition }> {}
+export interface NewPositionEvent
+  extends Step<
+    SimulationSteps.NewPositionEvent,
+    {
+      position: Position
+    }
+  > {}
 
 export type Steps =
   | FlashloanStep
@@ -96,3 +103,4 @@ export type Steps =
   | ReturnFunds
   | RepayFlashloan
   | ImportStep
+  | NewPositionEvent

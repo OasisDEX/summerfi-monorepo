@@ -1,13 +1,7 @@
 import type { Maybe } from '@summerfi/sdk-common/common/aliases'
-import type {
-  ChainInfo,
-  TokenAmount,
-  Token,
-  Percentage,
-  Address,
-} from '@summerfi/sdk-common/common'
-import { ChainId, CurrencySymbol } from '@summerfi/sdk-common/common'
-
+import type { ChainInfo, TokenAmount, Token, Address } from '@summerfi/sdk-common/common'
+import { ChainId, CurrencySymbol, Percentage } from '@summerfi/sdk-common/common'
+import { IProtocol } from '@summerfi/sdk-common/protocols'
 import { ISwapProvider, ISwapManager } from '@summerfi/swap-common/interfaces'
 import type { QuoteData, SwapData, SwapProviderType, SpotData } from '@summerfi/sdk-common/swap'
 
@@ -59,10 +53,10 @@ export class SwapManager implements ISwapManager {
     return provider.getSwapQuoteExactInput(params)
   }
 
-  async getSpotPrices(params: {
+  async getSpotPrice(params: {
     chainInfo: ChainInfo
-    tokens: Token[]
-    quoteCurrency?: CurrencySymbol
+    baseToken: Token
+    quoteToken?: CurrencySymbol | Token
     forceUseProvider?: SwapProviderType
   }): Promise<SpotData> {
     const provider: Maybe<ISwapProvider> = this._getBestProvider(params)
@@ -70,7 +64,18 @@ export class SwapManager implements ISwapManager {
       throw new Error('No swap provider available')
     }
 
-    return provider.getSpotPrices(params)
+    return provider.getSpotPrice(params)
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getSummerFee(params: {
+    from: { protocol: IProtocol; token: Token }
+    to: { protocol: IProtocol; token: Token }
+  }): Percentage {
+    // TODO: Implement with appropriate logic
+    return Percentage.createFrom({
+      value: 0.2,
+    })
   }
 
   private _registerProvider(provider: ISwapProvider, forChainIds: number[]): void {
