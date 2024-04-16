@@ -52,21 +52,41 @@ jobs:
         fi
   
   publish-common:
+    name: Publish Common Package
+    runs-on: ubuntu-latest
     needs: prepare
     if: >-
       (needs.prepare.outputs.common_changed == 'true') &&
       ((github.event.inputs.publish_option == 'common') || (github.event.inputs.publish_option == 'all'))
-    uses: ./.github/workflows/publish-common-package.yaml
-    with:
-      npm_access_token: ${{ secrets.NPM_ACCESS_TOKEN }}
-      version_changed: ${{ needs.prepare.outputs.common_changed }}
+
+    steps:
+      - name: Checkout all files
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Publish the package to npmjs
+        id: build_image
+        uses: ./.github/workflows/publish-common-package.yaml
+        with:
+          npm_access_token: ${{ secrets.NPM_ACCESS_TOKEN }}
+          version_changed: ${{ needs.prepare.outputs.common_changed }}
 
   publish-client:
+    name: Publish Client Package
+    runs-on: ubuntu-latest
     needs: prepare
     if: >-
       (needs.prepare.outputs.client_changed == 'true') &&
       ((github.event.inputs.publish_option == 'client') || (github.event.inputs.publish_option == 'all'))
-    uses: ./.github/workflows/publish-client-package.yaml
-    with:
-      npm_access_token: ${{ secrets.NPM_ACCESS_TOKEN }}
-      version_changed: ${{ needs.prepare.outputs.client_changed }}
+
+    steps:
+      - name: Checkout all files
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Publish the package to npmjs
+        id: build_image
+        uses: ./.github/workflows/publish-client-package.yaml
+        with:
+          npm_access_token: ${{ secrets.NPM_ACCESS_TOKEN }}
+          version_changed: ${{ needs.prepare.outputs.client_changed }}
