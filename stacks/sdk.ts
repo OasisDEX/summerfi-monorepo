@@ -1,4 +1,5 @@
-import { Api, StackContext, Function } from 'sst/constructs'
+import { Api, Function, StackContext } from 'sst/constructs'
+
 require('dotenv').config({ path: './sdk/.env' })
 
 const {
@@ -35,6 +36,7 @@ export function addSdkConfig({ stack, api }: StackContext & { api: Api }) {
   const sdkRouterFunction = new Function(stack, 'sdk-router-function', {
     handler: 'summerfi-api/sdk-router-function/src/index.handler',
     runtime: 'nodejs20.x',
+    logFormat: 'JSON',
     environment: {
       POWERTOOLS_LOG_LEVEL,
       ONE_INCH_API_KEY,

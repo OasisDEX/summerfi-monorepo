@@ -11,6 +11,7 @@ export function addTriggersConfig({ stack, api }: StackContext & { api: Api }) {
   const getTriggersFunction = new Function(stack, 'get-triggers-function', {
     handler: 'summerfi-api/get-triggers-function/src/index.handler',
     runtime: 'nodejs20.x',
+    logFormat: 'JSON',
     environment: {
       SUBGRAPH_BASE: SUBGRAPH_BASE,
       RPC_GATEWAY: RPC_GATEWAY,
@@ -25,6 +26,7 @@ export function addTriggersConfig({ stack, api }: StackContext & { api: Api }) {
   const setupTriggerFunction = new Function(stack, 'setup-trigger-function', {
     handler: 'summerfi-api/setup-trigger-function/src/index.handler',
     runtime: 'nodejs20.x',
+    logFormat: 'JSON',
     environment: {
       RPC_GATEWAY: RPC_GATEWAY,
       SKIP_VALIDATION: process.env.SKIP_VALIDATION || 'false',
