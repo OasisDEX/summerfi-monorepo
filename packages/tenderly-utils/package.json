@@ -20,15 +20,15 @@
     "build": "tsc -b -v tsconfig.build.json"
   },
   "dependencies": {
-    "@inquirer/prompts": "^4.3.0",
-    "typescript": "^5.3.3"
+    "@inquirer/prompts": "^4.3.3",
+    "typescript": "^5.4.5"
   },
   "devDependencies": {
     "@ethersproject/providers": "^5.7.2",
-    "axios": "^1.6.0",
-    "ethers": "^6.7.1",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
-    "@summerfi/typescript-config": "workspace:*"
+    "@summerfi/typescript-config": "workspace:*",
+    "axios": "^1.6.8",
+    "ethers": "^6.11.1"
   }
 }

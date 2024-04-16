@@ -33,6 +33,7 @@
     "ONE_INCH_API_SPOT_VERSION",
     "ONE_INCH_API_SPOT_KEY",
     "SDK_API_URL",
+    "SDK_LOGGING_ENABLED",
     "MAINNET_RPC_URL"
   ],
   "pipeline": {

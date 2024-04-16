@@ -10,29 +10,29 @@
     "build": "tsc -b -v"
   },
   "dependencies": {
-    "@aws-lambda-powertools/logger": "^2.0.2",
-    "@aws-lambda-powertools/metrics": "^2.0.2",
-    "@aws-lambda-powertools/tracer": "^2.0.2",
-    "@oasisdex/dma-library": "0.5.21-dma-v2-workers.32-auto-withdraw-to-ltv",
+    "@aws-lambda-powertools/logger": "^2.0.4",
+    "@aws-lambda-powertools/metrics": "^2.0.4",
+    "@aws-lambda-powertools/tracer": "^2.0.4",
     "@oasisdex/automation": "1.6.4-alpha.1",
+    "@oasisdex/dma-library": "0.5.21-dma-v2-workers.32-auto-withdraw-to-ltv",
     "@summerfi/abis": "workspace:*",
-    "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/prices-subgraph": "workspace:*",
-    "@summerfi/triggers-shared": "workspace:*",
+    "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/triggers-calculations": "workspace:*",
+    "@summerfi/triggers-shared": "workspace:*",
     "bignumber.js": "^9.1.2",
     "just-memoize": "^2.2.0",
     "node-fetch": "^3.3.2",
-    "viem": "^2.8.6",
+    "viem": "^2.9.19",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
-    "@types/jest": "^29.5.11",
-    "@types/node": "^20.11.5",
-    "eslint": "^8.56.0",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.12.7",
+    "eslint": "^8.57.0",
     "jest": "^29.7.0",
-    "jest-expect-message": "^1.0.4"
+    "jest-expect-message": "^1.1.3"
   }
 }

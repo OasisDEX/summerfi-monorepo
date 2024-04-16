@@ -37,3 +37,5 @@ jobs:
           git merge --ff-only dev
           git push origin main
           git status
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

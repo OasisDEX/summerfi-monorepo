@@ -1,0 +1,92 @@
+name: Publish Packages Manually
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: false
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch name'
+        required: true
+        type: choice
+        options:
+            - 'main'
+            - 'dev'
+      publish_option:
+        description: 'Select package(s) to publish'
+        required: true
+        type: choice
+        options:
+          - 'common'
+          - 'client'
+          - 'all'
+
+jobs:
+  prepare:
+    name: Prepare
+    runs-on: ubuntu-latest
+    outputs:
+      common_changed: ${{ steps.common-version-check.outputs.changed }}
+      client_changed: ${{ steps.client-version-check.outputs.changed }}
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+        ref: ${{ github.event.inputs.branch || github.ref_name }}
+    - id: common-version-check
+      run: |
+        if git diff HEAD^ HEAD -- sdk/sdk-common/bundle/package.json | grep '"version":'; then
+        echo "::set-output name=changed::true"
+        else
+        echo "::set-output name=changed::false"
+        fi
+    - id: client-version-check
+      run: |
+        if git diff HEAD^ HEAD -- sdk/sdk-client/bundle/package.json | grep '"version":'; then
+        echo "::set-output name=changed::true"
+        else
+        echo "::set-output name=changed::false"
+        fi
+  
+  publish-common:
+    name: Publish Common Package
+    runs-on: ubuntu-latest
+    needs: prepare
+    if: >-
+      (needs.prepare.outputs.common_changed == 'true') &&
+      ((github.event.inputs.publish_option == 'common') || (github.event.inputs.publish_option == 'all'))
+
+    steps:
+      - name: Checkout all files
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Publish the package to npmjs
+        id: build_image
+        uses: ./.github/workflows/publish-common-package.yaml
+        with:
+          npm_access_token: ${{ secrets.NPM_ACCESS_TOKEN }}
+          version_changed: ${{ needs.prepare.outputs.common_changed }}
+
+  publish-client:
+    name: Publish Client Package
+    runs-on: ubuntu-latest
+    needs: prepare
+    if: >-
+      (needs.prepare.outputs.client_changed == 'true') &&
+      ((github.event.inputs.publish_option == 'client') || (github.event.inputs.publish_option == 'all'))
+
+    steps:
+      - name: Checkout all files
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Publish the package to npmjs
+        id: build_image
+        uses: ./.github/workflows/publish-client-package.yaml
+        with:
+          npm_access_token: ${{ secrets.NPM_ACCESS_TOKEN }}
+          version_changed: ${{ needs.prepare.outputs.client_changed }}

@@ -17,6 +17,7 @@ export function ExternalAPI(stackContext: StackContext) {
   const getLockedWeEth = new Function(stack, 'get-locked-weeth', {
     handler: 'external-api/get-collateral-locked-function/src/index.handler',
     runtime: 'nodejs20.x',
+    logFormat: 'JSON',
     environment: {
       SUBGRAPH_BASE: SUBGRAPH_BASE,
       POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',

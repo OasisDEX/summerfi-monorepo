@@ -19,13 +19,13 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@summerfi/sdk-common": "workspace:*",
-    "@summerfi/swap-common": "workspace:*",
     "@summerfi/protocol-manager-common": "workspace:*",
     "@summerfi/protocol-plugins": "workspace:*",
     "@summerfi/protocol-plugins-common": "workspace:*",
+    "@summerfi/sdk-common": "workspace:*",
+    "@summerfi/swap-common": "workspace:*",
     "@types/node-fetch": "^2.6.11",
-    "node-fetch": "^2.6.7"
+    "node-fetch": "^2.7.0"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

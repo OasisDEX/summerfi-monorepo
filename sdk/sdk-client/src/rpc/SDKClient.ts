@@ -11,6 +11,7 @@ export * from '@summerfi/sdk-common/user'
 export * from '@summerfi/sdk-common/services'
 export * from '@summerfi/sdk-common/utils'
 export * from '@summerfi/sdk-common/protocols'
+export * from '@summerfi/protocol-plugins'
 
 const EnableDeserialize = false
 
@@ -21,9 +22,9 @@ export function createRPCClient(apiURL: string): RPCClientType {
     links: [
       loggerLink({
         enabled: (opts) => opts.direction === 'down' && opts.result instanceof Error,
-        logger: (data) => {
-          console.log(JSON.stringify(data, null, 2))
-        },
+        // logger: (data) => {
+        //   console.log(JSON.stringify(data, null, 2))
+        // },
       }),
       httpBatchLink({
         url: apiURL,
@@ -32,9 +33,17 @@ export function createRPCClient(apiURL: string): RPCClientType {
           output: {
             serialize: SerializationService.getTransformer().serialize,
             deserialize: (object) => {
-              return EnableDeserialize
-                ? SerializationService.getTransformer().deserialize(object)
-                : SerializationService.getTransformer().parse(JSON.stringify(object, null, 2))
+              try {
+                const res = SerializationService.getTransformer().parse(
+                  JSON.stringify(object, null, 2),
+                )
+                // console.log('deserialized', res)
+                return EnableDeserialize
+                  ? SerializationService.getTransformer().deserialize(object)
+                  : res
+              } catch (error) {
+                console.log(error)
+              }
             },
           },
         },
