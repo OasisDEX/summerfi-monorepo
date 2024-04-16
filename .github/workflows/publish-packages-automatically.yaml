@@ -1,4 +1,4 @@
-name: Publish Packages
+name: Publish Packages Automatically
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
@@ -40,17 +40,37 @@ jobs:
         fi
   
   publish-common:
+    name: Publish Common Package
+    runs-on: ubuntu-latest
     needs: prepare
     if: ${{ needs.prepare.outputs.common_changed == 'true' }}
-    uses: ./.github/workflows/publish-common-package.yaml
-    with:
-      npm_access_token: ${{ secrets.NPM_ACCESS_TOKEN }}
-      version_changed: ${{ needs.prepare.outputs.common_changed }}
+
+    steps:
+      - name: Checkout all files
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Publish the package to npmjs
+        id: build_image
+        uses: ./.github/workflows/publish-common-package.yaml
+        with:
+          npm_access_token: ${{ secrets.NPM_ACCESS_TOKEN }}
+          version_changed: ${{ needs.prepare.outputs.common_changed }}
 
   publish-client:
+    name: Publish Client Package
+    runs-on: ubuntu-latest
     needs: prepare
     if: ${{ needs.prepare.outputs.client_changed == 'true' }}
-    uses: ./.github/workflows/publish-client-package.yaml
-    with:
-      npm_access_token: ${{ secrets.NPM_ACCESS_TOKEN }}
-      version_changed: ${{ needs.prepare.outputs.client_changed }}
+
+    steps:
+      - name: Checkout all files
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Publish the package to npmjs
+        id: build_image
+        uses: ./.github/workflows/publish-client-package.yaml
+        with:
+          npm_access_token: ${{ secrets.NPM_ACCESS_TOKEN }}
+          version_changed: ${{ needs.prepare.outputs.client_changed }}
