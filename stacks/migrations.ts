@@ -9,6 +9,7 @@ export function addMigrationsConfig({ stack, api }: StackContext & { api: Api })
   const getMigrationsFunction = new Function(stack, 'get-migrations-function', {
     handler: 'summerfi-api/get-migrations-function/src/index.handler',
     runtime: 'nodejs20.x',
+    logFormat: 'JSON',
     environment: {
       RPC_GATEWAY: RPC_GATEWAY,
       POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',

@@ -9,6 +9,7 @@ export function addMorpho({ stack, api }: StackContext & { api: Api }) {
   const getMetaMorphoDetails = new Function(stack, 'get-meta-morpho-details-function', {
     handler: 'summerfi-api/get-meta-morpho-details-function/src/index.handler',
     runtime: 'nodejs20.x',
+    logFormat: 'JSON',
     environment: {
       RPC_GATEWAY: RPC_GATEWAY,
       POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
@@ -18,6 +19,7 @@ export function addMorpho({ stack, api }: StackContext & { api: Api }) {
   const morphoClaims = new Function(stack, 'get-morpho-claims-function', {
     handler: 'summerfi-api/get-morpho-claims-function/src/index.handler',
     runtime: 'nodejs20.x',
+    logFormat: 'JSON',
     environment: {
       RPC_GATEWAY: RPC_GATEWAY,
       POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
