@@ -30,6 +30,7 @@
     "ONE_INCH_ALLOWED_SWAP_PROTOCOLS",
     "ONE_INCH_SWAP_CHAIN_IDS",
     "SDK_API_URL",
+    "SDK_LOGGING_ENABLED",
     "MAINNET_RPC_URL"
   ],
   "pipeline": {
