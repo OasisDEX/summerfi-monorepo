@@ -1,4 +1,3 @@
-// TODO: is this the correct place for these constants? Seem to be Maker specific
 export const PRECISION = {
   WAD: 18,
   RAY: 27,
