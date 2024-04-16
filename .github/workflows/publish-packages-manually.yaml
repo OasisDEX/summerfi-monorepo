@@ -1,4 +1,4 @@
-name: Publish Packages
+name: Publish Packages Manually
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
