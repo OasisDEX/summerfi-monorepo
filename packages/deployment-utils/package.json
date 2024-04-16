@@ -18,11 +18,11 @@
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox-viem": "^2.0.0",
+    "@summerfi/common": "workspace:*",
     "@summerfi/contracts-utils": "workspace:*",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/hardhat-utils": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
-    "@summerfi/common": "workspace:*",
-    "hardhat": "^2.19.5"
+    "hardhat": "^2.22.2"
   }
 }

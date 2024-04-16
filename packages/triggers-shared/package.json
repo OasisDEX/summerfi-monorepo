@@ -11,15 +11,15 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "zod": "^3.22.4",
     "@oasisdex/addresses": "0.1.16-dma-v2-workers.11",
-    "@summerfi/serverless-shared": "workspace:*"
+    "@summerfi/serverless-shared": "workspace:*",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
-    "@types/node": "^20.11.5",
-    "eslint": "^8.56.0"
+    "@types/node": "^20.12.7",
+    "eslint": "^8.57.0"
   },
   "exports": {
     ".": {

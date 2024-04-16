@@ -12,12 +12,12 @@
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
-    "@types/node": "^20.11.5",
-    "eslint": "^8.56.0"
+    "@types/node": "^20.12.7",
+    "eslint": "^8.57.0"
   },
   "dependencies": {
-    "node-fetch": "^3.3.2",
     "@summerfi/serverless-shared": "workspace:*",
+    "node-fetch": "^3.3.2",
     "zod": "^3.22.4"
   }
 }
