@@ -11,6 +11,7 @@ const {
   ONE_INCH_API_SPOT_URL,
   ONE_INCH_API_SPOT_VERSION,
   ONE_INCH_API_SPOT_KEY,
+  SDK_LOGGING_ENABLED,
 } = process.env
 
 export function addSdkConfig({ stack, api }: StackContext & { api: Api }) {
@@ -56,6 +57,7 @@ export function addSdkConfig({ stack, api }: StackContext & { api: Api }) {
       ONE_INCH_API_SPOT_URL,
       ONE_INCH_API_SPOT_VERSION,
       ONE_INCH_API_SPOT_KEY,
+      SDK_LOGGING_ENABLED: SDK_LOGGING_ENABLED!,
     },
   })
 
