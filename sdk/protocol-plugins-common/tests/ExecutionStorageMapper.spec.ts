@@ -417,7 +417,7 @@ describe('Execution Storage Mapper', () => {
   })
 
   it('should use default value if step has no outputs defined', () => {
-    const derivedStep: steps.ReturnFunds = {
+    const derivedStep: steps.ReturnFundsStep = {
       type: SimulationSteps.ReturnFunds,
       name: 'ReturnFunds',
       inputs: {

@@ -1,4 +1,5 @@
 export const OneInchAuthHeaderKey = 'auth-key'
+export const OneInchSpotAuthHeaderKey = 'Authorization'
 
 export type OneInchAuthHeader = {
   [OneInchAuthHeaderKey]: string
@@ -28,6 +29,10 @@ export interface OneInchSwapResponse extends OneInchBaseResponse {
     value: string
     gasPrice: string
   }
+}
+
+export type OneInchSpotAuthHeader = {
+  [OneInchSpotAuthHeaderKey]: string
 }
 
 export type OneInchSpotResponse = Record<string, number>

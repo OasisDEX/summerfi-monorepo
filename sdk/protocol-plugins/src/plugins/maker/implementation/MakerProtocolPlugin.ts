@@ -10,6 +10,8 @@ import {
   ChainId,
   ChainFamilyName,
   valuesOfChainFamilyMap,
+  Maybe,
+  AddressValue,
 } from '@summerfi/sdk-common/common'
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SimulationSteps } from '@summerfi/sdk-common/simulation'
@@ -39,9 +41,21 @@ import {
   IProtocolPluginContext,
 } from '@summerfi/protocol-plugins-common'
 import { ILKType } from '../enums/ILKType'
-import { MakerPoolId } from '../types/MakerPoolId'
+import { MakerPoolId, isMakerPoolId } from '../types/MakerPoolId'
+import { IUser } from '@summerfi/sdk-common/user'
+import {
+  ExternalPositionType,
+  IExternalPosition,
+  IPositionsManager,
+  TransactionInfo,
+} from '@summerfi/sdk-common/orders'
+import { encodeMakerGiveThroughProxyActions } from '../utils/MakerGive'
+import { MakerImportPositionActionBuilder } from '../builders/MakerImportPositionActionBuilder'
 
 export class MakerProtocolPlugin extends BaseProtocolPlugin {
+  readonly CdpManagerContractName = 'CdpManager'
+  readonly DssProxyActionsContractName = 'DssProxyActions'
+
   readonly protocolName = ProtocolName.Maker
   readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
   readonly makerPoolIdSchema = z.object({
@@ -61,9 +75,10 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
   })
   readonly stepBuilders: Partial<ActionBuildersMap> = {
     [SimulationSteps.PaybackWithdraw]: MakerPaybackWithdrawActionBuilder,
+    [SimulationSteps.Import]: MakerImportPositionActionBuilder,
   }
 
-  constructor(params: { context: IProtocolPluginContext }) {
+  constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
     super(params)
   }
 
@@ -211,6 +226,48 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getPosition(positionId: IPositionId): Promise<Position> {
     throw new Error('Not implemented')
+  }
+
+  async getImportPositionTransaction(params: {
+    user: IUser
+    externalPosition: IExternalPosition
+    positionsManager: IPositionsManager
+  }): Promise<Maybe<TransactionInfo>> {
+    if (!isMakerPoolId(params.externalPosition.position.pool.poolId)) {
+      throw new Error('Invalid Maker pool ID')
+    }
+
+    if (params.externalPosition.externalId.type !== ExternalPositionType.DS_PROXY) {
+      throw new Error(
+        `External position (${params.externalPosition.externalId.type}) type not supported`,
+      )
+    }
+
+    const { deployments } = this.ctx
+    const deploymentKey = this._getDeploymentKey(params.user.chainInfo)
+    const deployment = deployments[deploymentKey]
+
+    const cdpManagerAddress = deployment.dependencies[this.CdpManagerContractName]
+      .address as AddressValue
+
+    const dssProxyActionsAddress = deployment.dependencies[this.DssProxyActionsContractName]
+      .address as AddressValue
+
+    const result = encodeMakerGiveThroughProxyActions({
+      cdpManagerAddress: cdpManagerAddress,
+      makerProxyActionsAddress: dssProxyActionsAddress,
+      giveToAddress: params.positionsManager.address.value,
+      cdpId: params.externalPosition.position.pool.poolId.vaultId,
+    })
+
+    return {
+      description: 'Import Maker position',
+      transaction: {
+        calldata: result.transactionCalldata,
+        target: params.externalPosition.externalId.address,
+        value: '0',
+      },
+    }
   }
 
   private getContractDef<K extends keyof MakerAddressAbiMap>(

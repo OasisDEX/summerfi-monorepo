@@ -8,6 +8,7 @@ import { Maybe } from '@summerfi/sdk-common/common'
 
 export type ProtocolPluginConstructor = new (params: {
   context: IProtocolPluginContext
+  deploymentConfigTag: string
 }) => IProtocolPlugin
 
 export type ProtocolPluginsRecordType = Partial<Record<ProtocolName, ProtocolPluginConstructor>>
@@ -15,10 +16,16 @@ export type ProtocolPluginsRecordType = Partial<Record<ProtocolName, ProtocolPlu
 export class ProtocolPluginsRegistry implements IProtocolPluginsRegistry {
   readonly plugins: ProtocolPluginsRecordType
   readonly context: IProtocolPluginContext
+  readonly deploymentConfigTag: string
 
-  constructor(params: { plugins: ProtocolPluginsRecordType; context: IProtocolPluginContext }) {
+  constructor(params: {
+    plugins: ProtocolPluginsRecordType
+    context: IProtocolPluginContext
+    deploymentConfigTag: string
+  }) {
     this.plugins = params.plugins
     this.context = params.context
+    this.deploymentConfigTag = params.deploymentConfigTag
   }
 
   getPlugin(params: { protocolName: ProtocolName }): Maybe<IProtocolPlugin> {
@@ -26,6 +33,6 @@ export class ProtocolPluginsRegistry implements IProtocolPluginsRegistry {
     if (!Plugin) {
       return
     }
-    return new Plugin({ context: this.context })
+    return new Plugin({ context: this.context, deploymentConfigTag: this.deploymentConfigTag })
   }
 }

@@ -3,6 +3,7 @@ import { IConfigurationProvider } from '../interfaces/IConfigurationProvider'
 import { ConfigItem } from '../types/ConfigItem'
 import { ConfigKey } from '../types/ConfigKey'
 
+// NOTICE: remember to add new config keys to the SDKs .env.template file as well
 const CONFIG_KEYS: ConfigKey[] = [
   'ONE_INCH_API_VERSION',
   'ONE_INCH_API_KEY',

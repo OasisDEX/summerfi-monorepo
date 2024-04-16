@@ -10,6 +10,8 @@ import {
   OneInchAuthHeader,
   OneInchAuthHeaderKey,
   OneInchQuoteResponse,
+  OneInchSpotAuthHeader,
+  OneInchSpotAuthHeaderKey,
   OneInchSpotResponse,
   OneInchSwapProviderConfig,
   OneInchSwapResponse,
@@ -124,7 +126,7 @@ export class OneInchSwapProvider implements ISwapProvider {
 
     if (!(response.status === 200 && response.statusText === 'OK')) {
       throw new Error(
-        `Error [${response.statusText}] performing 1inch swap quote request ${swapUrl}: ${JSON.stringify(await response.body)}`,
+        `Error [${response.statusText}] performing 1inch swap quote request ${swapUrl}`,
       )
     }
 
@@ -168,25 +170,26 @@ export class OneInchSwapProvider implements ISwapProvider {
 
       if (!(response.status === 200 && response.statusText === 'OK')) {
         throw new Error(
-          `Error performing 1inch spot price request ${spotUrl}: ${await response.body}`,
+          `Error performing 1inch spot price request ${spotUrl}: ${JSON.stringify(await response.statusText)}`,
         )
       }
 
       const responseData = (await response.json()) as OneInchSpotResponse
+      const baseToken = params.baseToken
       const quoteToken = params.quoteToken
       const prices = Object.entries(responseData).map(([address, price]) => {
-        const isBaseToken = params.baseToken.address.equals(
+        const isBaseToken = baseToken.address.equals(
           Address.createFromEthereum({ value: address as AddressValue }),
         )
         return Price.createFrom({
           value: price.toString(),
-          baseToken: isBaseToken ? params.baseToken : quoteToken,
+          baseToken: isBaseToken ? baseToken : quoteToken,
           quoteToken: quoteCurrencySymbol,
         })
       })
 
       const baseTokenPriceQuotedInCurrencySymbol = prices.find((p) =>
-        p.baseToken.address.equals(params.baseToken.address),
+        p.baseToken.address.equals(baseToken.address),
       )
       const quoteTokenPriceQuoteInCurrencySymbol = prices.find((p) =>
         p.baseToken.address.equals(quoteToken.address),
@@ -203,16 +206,17 @@ export class OneInchSwapProvider implements ISwapProvider {
             .toBN()
             .div(quoteTokenPriceQuoteInCurrencySymbol.toBN())
             .toString(),
-          baseToken: params.baseToken,
+          baseToken: baseToken,
           quoteToken: quoteToken,
         }),
       }
     } else {
       const quoteCurrency = params.quoteToken ?? CurrencySymbol.USD
+      const baseToken = params.baseToken
       const spotUrl = this._formatOneInchSpotUrl({
         chainInfo: params.chainInfo,
-        tokenAddresses: [params.baseToken.address],
-        quoteCurrency: params.quoteToken ?? CurrencySymbol.USD,
+        tokenAddresses: [baseToken.address],
+        quoteCurrency: quoteCurrency,
       })
 
       const response = await fetch(spotUrl, {
@@ -233,7 +237,7 @@ export class OneInchSwapProvider implements ISwapProvider {
         provider: SwapProviderType.OneInch,
         price: Price.createFrom({
           value: price.toString(),
-          baseToken: params.baseToken,
+          baseToken: baseToken,
           quoteToken: quoteCurrency,
         }),
       }
@@ -244,8 +248,8 @@ export class OneInchSwapProvider implements ISwapProvider {
     return { [OneInchAuthHeaderKey]: this._apiKey }
   }
 
-  private _getOneInchSpotAuthHeader(): OneInchAuthHeader {
-    return { [OneInchAuthHeaderKey]: this._apiSpotKey }
+  private _getOneInchSpotAuthHeader(): OneInchSpotAuthHeader {
+    return { [OneInchSpotAuthHeaderKey]: `Bearer ${this._apiSpotKey}` }
   }
 
   private _formatOneInchSwapUrl(params: {

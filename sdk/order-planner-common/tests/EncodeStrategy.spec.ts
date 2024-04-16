@@ -8,6 +8,7 @@ import {
   decodeStrategyExecutorCalldata,
 } from '@summerfi/testing-utils'
 import assert from 'assert'
+import { IPositionsManager } from '@summerfi/sdk-common/orders'
 
 class DerivedAction extends BaseAction {
   public readonly config = {
@@ -51,14 +52,23 @@ describe.only('Encode Strategy', () => {
   })
 
   it('should encode calls for operation executor', () => {
-    const calldata = encodeStrategy({
+    const positionsManager: IPositionsManager = {
+      address: Address.createFromEthereum({
+        value: '0x5e81A7515f956aB642eb698821a449fe8fE7498B',
+      }),
+    }
+
+    const transactionInfo = encodeStrategy({
       strategyName: 'SomeStrategyName',
       strategyExecutor: strategyExecutorAddress,
+      positionsManager: positionsManager,
       actions: [actionCall, otherActionCall],
     })
 
+    assert(transactionInfo, 'Cannot encode strategy')
+
     const positionsManagerParams = decodePositionsManagerCalldata({
-      calldata: calldata,
+      calldata: transactionInfo.transaction.calldata,
     })
 
     assert(positionsManagerParams, 'Cannot decode Positions Manager calldata')

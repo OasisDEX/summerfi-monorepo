@@ -6,8 +6,10 @@ import {
   IProtocolPluginContext,
 } from '@summerfi/protocol-plugins-common'
 import { ChainInfo, Maybe, IPosition } from '@summerfi/sdk-common/common'
+import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 import { IPoolId, ProtocolName, IPool } from '@summerfi/sdk-common/protocols'
 import { steps } from '@summerfi/sdk-common/simulation'
+import { IUser } from '@summerfi/sdk-common/user'
 import { z } from 'zod'
 
 /**
@@ -24,9 +26,11 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
 
   /** These properties are initialized in the constructor */
   readonly context: IProtocolPluginContext
+  readonly deploymentConfigTag: string
 
-  protected constructor(params: { context: IProtocolPluginContext }) {
+  protected constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
     this.context = params.context
+    this.deploymentConfigTag = params.deploymentConfigTag ?? 'standard'
   }
 
   // Short alias for the context
@@ -39,6 +43,11 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
 
   abstract getPool(poolId: unknown): Promise<IPool>
   abstract getPosition(positionId: IPositionId): Promise<IPosition>
+  abstract getImportPositionTransaction(params: {
+    user: IUser
+    externalPosition: IExternalPosition
+    positionsManager: IPositionsManager
+  }): Promise<Maybe<TransactionInfo>>
 
   getActionBuilder<T extends steps.Steps>(step: T): Maybe<ActionBuilder<T>> {
     return this.stepBuilders[step.type] as ActionBuilder<T>
@@ -50,5 +59,9 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
   ): candidate is PoolId {
     const { success } = schema.safeParse(candidate)
     return success
+  }
+
+  protected _getDeploymentKey(chainInfo: ChainInfo): string {
+    return `${chainInfo.name}.${this.deploymentConfigTag}`
   }
 }

@@ -46,7 +46,7 @@ export class Address implements IAddress {
   }
 
   equals(address: Address): boolean {
-    return this.value === address.value
+    return this.value.toLowerCase() === address.value.toLowerCase()
   }
 
   toString(): string {

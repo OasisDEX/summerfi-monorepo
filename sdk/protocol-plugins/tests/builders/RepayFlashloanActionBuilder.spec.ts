@@ -59,7 +59,7 @@ describe('Payback Flashloan Action Builder', () => {
   })
 
   it('should fail if there is no custom data from flashloan step', async () => {
-    const repayFlashloanStep: steps.RepayFlashloan = {
+    const repayFlashloanStep: steps.RepayFlashloanStep = {
       type: SimulationSteps.RepayFlashloan,
       name: 'RepayFlashloanStep',
       inputs: {
@@ -106,7 +106,7 @@ describe('Payback Flashloan Action Builder', () => {
       outputs: undefined,
     }
 
-    const repayFlashloanStep: steps.RepayFlashloan = {
+    const repayFlashloanStep: steps.RepayFlashloanStep = {
       type: SimulationSteps.RepayFlashloan,
       name: 'RepayFlashloanStep',
       inputs: {

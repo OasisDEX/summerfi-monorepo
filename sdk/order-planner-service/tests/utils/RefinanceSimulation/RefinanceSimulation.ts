@@ -65,7 +65,7 @@ export function getRefinanceSimulation(params: {
           amount: sourcePosition.debtAmount,
         },
         outputs: undefined,
-      } as steps.RepayFlashloan,
+      } as steps.RepayFlashloanStep,
       {
         name: 'ReturnFunds',
         type: SimulationSteps.ReturnFunds,
@@ -73,7 +73,7 @@ export function getRefinanceSimulation(params: {
           token: sourcePosition.debtAmount.token,
         },
         outputs: undefined,
-      } as steps.ReturnFunds,
+      } as steps.ReturnFundsStep,
     ],
   }
 }

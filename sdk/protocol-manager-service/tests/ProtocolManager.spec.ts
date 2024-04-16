@@ -15,6 +15,7 @@ import {
   PriceService,
   ProtocolPluginsRegistry,
 } from '@summerfi/protocol-plugins/implementation'
+import { DeploymentIndex } from '@summerfi/deployment-utils'
 
 describe('Protocol Manager', () => {
   let ctx: IProtocolManagerContext
@@ -31,6 +32,7 @@ describe('Protocol Manager', () => {
     pluginsRegistry = new ProtocolPluginsRegistry({
       plugins: mockPlugins,
       context: ctx,
+      deploymentConfigTag: 'standard',
     })
     protocolManager = new ProtocolManager({ pluginsRegistry })
   })
@@ -71,6 +73,7 @@ describe('Protocol Manager', () => {
     const pluginsRegistry = new ProtocolPluginsRegistry({
       plugins: mockPlugins,
       context: ctx,
+      deploymentConfigTag: 'standard',
     })
 
     protocolManager = new ProtocolManager({ pluginsRegistry })
@@ -140,5 +143,6 @@ async function createProtocolManagerContext(): Promise<IProtocolManagerContext> 
     provider,
     tokenService: new TokenService(),
     priceService: new PriceService(provider),
+    deployments: {} as DeploymentIndex,
   }
 }

@@ -5,13 +5,13 @@ import {
   SimulationSteps,
   SimulationType,
   TokenTransferTargetType,
+  getValueFromReference,
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
 import { Position, TokenAmount, Percentage, Price } from '@summerfi/sdk-common/common'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
-import { getReferencedValue } from '../../implementation/utils'
 import { refinanceLendingToLendingAnyPairStrategy } from './Strategy'
 import { type IRefinanceDependencies } from '../common/Types'
 
@@ -149,12 +149,13 @@ export async function refinanceLendingToLendingAnyPair(
           ...(await dependencies.swapManager.getSwapQuoteExactInput({
             chainInfo: args.sourcePosition.pool.protocol.chainInfo,
             fromAmount: subtractPercentage(
-              getReferencedValue(ctx.getReference(['DepositBorrowToTarget', 'borrowAmount'])),
+              // TODO: this should have better semantics. There was a bug where `getReferencedValue` was used instead of `getValueFromReference`, the names are too similar
+              getValueFromReference(ctx.getReference(['DepositBorrowToTarget', 'borrowAmount'])),
               Percentage.createFrom({
                 value: debtSwapSummerFee.value,
               }),
             ),
-            toToken: targetDebtConfig.token,
+            toToken: flashloanAmount.token,
           })),
           spotPrice: debtSpotPrice,
           slippage: Percentage.createFrom({ value: args.slippage.value }),
@@ -229,13 +230,13 @@ export async function refinanceLendingToLendingAnyPair(
  *
  *    We also need to factor in Summer fees ahead of time
  */
-async function calculateBorrowAmount(params: {
+function calculateBorrowAmount(params: {
   isDebtSwapSkipped: boolean
   prevDebtAmount: TokenAmount
   debtSpotPrice: Price
   slippage: Percentage
   summerFee: Percentage
-}) {
+}): TokenAmount {
   const { isDebtSwapSkipped, prevDebtAmount, debtSpotPrice, slippage, summerFee } = params
 
   /**
@@ -261,7 +262,7 @@ async function calculateBorrowAmount(params: {
    *    More generally we'd write this as
    *    (sourcePositionDebt * targetDebtQuotedInSourceDebtPrice / (one - slippage)) / (one - summer fee) = borrowAmount
    */
-  const borrowAmount = prevDebtAmount.multiply(debtSpotPrice.toString())
+  const borrowAmount = prevDebtAmount.multiply(debtSpotPrice.value)
   const borrowAmountAdjustedForSlippage = subtractPercentage(
     borrowAmount,
     Percentage.createFrom({
@@ -276,7 +277,7 @@ async function calculateBorrowAmount(params: {
   )
 
   return TokenAmount.createFrom({
-    amount: borrowAmountAdjustedForSlippageAndSummerFee.toString(),
+    amount: borrowAmountAdjustedForSlippageAndSummerFee.amount,
     token: debtSpotPrice.baseToken,
   })
 }

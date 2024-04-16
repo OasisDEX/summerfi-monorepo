@@ -6,6 +6,7 @@ import { TokenAmount } from '../common/implementation/TokenAmount'
 import { FlashloanProvider, SimulationSteps, TokenTransferTargetType } from './Enums'
 import { SwapProviderType, SwapRoute } from '../swap'
 import { ReferenceableField, ValueReference } from './ValueReference'
+import { IExternalPosition } from '../orders/interfaces/importing/IExternalPosition'
 
 export interface Step<T extends SimulationSteps, I, O = undefined, N extends string = string> {
   type: T
@@ -74,9 +75,9 @@ export interface SwapStep
     }
   > {}
 
-export interface ReturnFunds extends Step<SimulationSteps.ReturnFunds, { token: Token }> {}
+export interface ReturnFundsStep extends Step<SimulationSteps.ReturnFunds, { token: Token }> {}
 
-export interface RepayFlashloan
+export interface RepayFlashloanStep
   extends Step<
     SimulationSteps.RepayFlashloan,
     {
@@ -84,7 +85,7 @@ export interface RepayFlashloan
     }
   > {}
 
-export interface NewPositionEvent
+export interface NewPositionEventStep
   extends Step<
     SimulationSteps.NewPositionEvent,
     {
@@ -92,12 +93,16 @@ export interface NewPositionEvent
     }
   > {}
 
+export interface ImportStep
+  extends Step<SimulationSteps.Import, { externalPosition: IExternalPosition }> {}
+
 export type Steps =
   | FlashloanStep
   | PullTokenStep
   | DepositBorrowStep
   | PaybackWithdrawStep
   | SwapStep
-  | ReturnFunds
-  | RepayFlashloan
-  | NewPositionEvent
+  | ReturnFundsStep
+  | RepayFlashloanStep
+  | NewPositionEventStep
+  | ImportStep

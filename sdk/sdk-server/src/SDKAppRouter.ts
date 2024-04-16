@@ -6,6 +6,7 @@ import { getToken } from './handlers/getToken'
 import { getSwapDataExactInput } from './handlers/getSwapData'
 import { getSwapQuoteExactInput } from './handlers/getSwapQuote'
 import { router } from './TRPC'
+import { getImportSimulation } from './handlers/getImportSimulation'
 
 /**
  * Server
@@ -14,7 +15,7 @@ export const sdkAppRouter = router({
   getPosition: getPosition,
   getPool: getPool,
   getToken: getToken,
-  simulation: { refinance: getRefinanceSimulation },
+  simulation: { refinance: getRefinanceSimulation, import: getImportSimulation },
   orders: {
     buildOrder: buildOrder,
   },

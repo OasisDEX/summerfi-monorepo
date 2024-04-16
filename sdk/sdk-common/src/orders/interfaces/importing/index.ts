@@ -1,3 +1,7 @@
-export type { ExternalPosition } from './ExternalPosition'
-export type { ImportPositionParameters } from './ImportPositionParameters'
+export {
+  type IExternalPosition,
+  isExternalPosition,
+  ExternalPositionType,
+} from './IExternalPosition'
+export type { IImportPositionParameters } from './IImportPositionParameters'
 export type { ImportPositionSimulation } from './ImportPositionSimulation'

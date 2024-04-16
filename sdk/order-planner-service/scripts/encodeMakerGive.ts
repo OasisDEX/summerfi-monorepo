@@ -1,4 +1,5 @@
-import { encodeMakerGiveThroughProxyActions } from '../src/utils/MakerGive'
+import { encodeMakerGiveThroughProxyActions } from '@summerfi/protocol-plugins/plugins/maker'
+
 import yargs from 'yargs/yargs'
 import { Hex } from 'viem'
 
@@ -37,7 +38,12 @@ async function main() {
   console.log(`CDP ID: ${cdpId}`)
   console.log(`To: ${to}\n`)
 
-  const result = encodeMakerGiveThroughProxyActions({ makerProxyActions, cdpManager, cdpId, to })
+  const result = encodeMakerGiveThroughProxyActions({
+    makerProxyActionsAddress: makerProxyActions,
+    cdpManagerAddress: cdpManager,
+    cdpId,
+    giveToAddress: to,
+  })
 
   console.log(`[Full transaction Calldata]`)
   console.log(`${result.transactionCalldata}\n`)

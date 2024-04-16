@@ -4,6 +4,8 @@ import { type IProtocolPluginContext } from './IProtocolPluginContext'
 import { IPositionId } from './IPositionId'
 import { steps } from '@summerfi/sdk-common/simulation'
 import { ActionBuilder, ActionBuildersMap } from '../types/StepBuilderTypes'
+import { IUser } from '@summerfi/sdk-common/user'
+import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 
 export interface IProtocolPlugin {
   protocolName: ProtocolName
@@ -17,4 +19,9 @@ export interface IProtocolPlugin {
   getPool: (poolId: IPoolId) => Promise<IPool>
   getPosition: (positionId: IPositionId) => Promise<IPosition>
   getActionBuilder<StepType extends steps.Steps>(step: StepType): Maybe<ActionBuilder<StepType>>
+  getImportPositionTransaction: (params: {
+    user: IUser
+    externalPosition: IExternalPosition
+    positionsManager: IPositionsManager
+  }) => Promise<Maybe<TransactionInfo>>
 }

@@ -11,6 +11,7 @@ import { paybackWithdrawOutputProcessor } from './paybackWithdrawOutputProcessor
 import { swapOutputProcessor } from './swapOutputProcessor'
 import { returnFundsOutputProcessor } from './returnFundsOutputProcessor'
 import { repayFlashloanOutputProcessor } from './repayFlashloanOutputProcessor'
+import { importPositionProcessor } from './importPositionProcessor'
 import { newPositionEventProcessor } from './newPositionEvent'
 
 const stepOutputProcessors: StepOutputProcessors = {
@@ -21,6 +22,7 @@ const stepOutputProcessors: StepOutputProcessors = {
   [SimulationSteps.ReturnFunds]: returnFundsOutputProcessor,
   [SimulationSteps.RepayFlashloan]: repayFlashloanOutputProcessor,
   [SimulationSteps.PullToken]: pullTokenOutputProcessor,
+  [SimulationSteps.Import]: importPositionProcessor,
   [SimulationSteps.NewPositionEvent]: newPositionEventProcessor,
 }
 
