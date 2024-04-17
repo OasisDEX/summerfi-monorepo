@@ -1,0 +1,31 @@
+name: Publish Client Package
+description: Publish the client package to NPM
+inputs:
+  NPM_ACCESS_TOKEN:
+    description: 'The NPM access token'
+    required: true
+    default: ''
+
+runs:
+  using: 'composite'
+  steps:
+  - uses: actions/setup-node@v4
+    with:
+      node-version: '20'
+      registry-url: 'https://registry.npmjs.org'
+      corepack: true
+
+  - name: Install pnpm
+    run: corepack enable && corepack prepare pnpm@latest --activate
+
+  - name: Install dependencies with pnpm
+    run: pnpm i
+
+  - name: Build with pnpm
+    run: pnpm build
+
+  - name: Publish package with pnpm
+    run: pnpm publish:npm
+    working-directory: sdk/sdk-client
+    env:
+      NPM_ACCESS_TOKEN: ${{ inputs.NPM_ACCESS_TOKEN }}
