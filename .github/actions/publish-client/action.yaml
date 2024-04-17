@@ -16,15 +16,19 @@ runs:
       corepack: true
 
   - name: Install pnpm
+    shell: bash
     run: corepack enable && corepack prepare pnpm@latest --activate
 
   - name: Install dependencies with pnpm
+    shell: bash
     run: pnpm i
 
   - name: Build with pnpm
+    shell: bash
     run: pnpm build
 
   - name: Publish package with pnpm
+    shell: bash
     run: pnpm publish:npm
     working-directory: sdk/sdk-client
     env:
