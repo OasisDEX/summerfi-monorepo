@@ -12,8 +12,8 @@ on:
         required: true
         type: choice
         options:
-            - 'main'
-            - 'dev'
+          - 'main'
+          - 'dev'
       publish_option:
         description: 'Select package(s) to publish'
         required: true
@@ -34,6 +34,8 @@ jobs:
       - name: Checkout all files
         id: checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
 
       - name: Publish the package to npmjs
         id: build_image
@@ -51,6 +53,8 @@ jobs:
       - name: Checkout all files
         id: checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
 
       - name: Publish the package to npmjs
         id: build_image
