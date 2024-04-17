@@ -25,6 +25,14 @@ on:
           - 'all'
 
 jobs:
+  show-inputs:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Print inputs
+      run: |
+        echo "Checkout branch: ${{ github.event.inputs.branch }}"
+        echo "Publish packages: ${{ github.event.inputs.publish_option }}"
+
   publish-common:
     name: Publish Common Package
     runs-on: ubuntu-latest
