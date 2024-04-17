@@ -55,7 +55,6 @@ jobs:
         uses: ./.github/workflows/publish-common-package.yaml
         with:
           npm_access_token: ${{ secrets.NPM_ACCESS_TOKEN }}
-          version_changed: ${{ needs.prepare.outputs.common_changed }}
 
   publish-client:
     name: Publish Client Package
@@ -73,4 +72,3 @@ jobs:
         uses: ./.github/workflows/publish-client-package.yaml
         with:
           npm_access_token: ${{ secrets.NPM_ACCESS_TOKEN }}
-          version_changed: ${{ needs.prepare.outputs.client_changed }}

@@ -6,13 +6,9 @@ on:
       npm_access_token:
         required: true
         type: secret
-      version_changed:
-        required: true
-        type: boolean
 
 jobs:
   publish-client-package:
-    if: ${{ inputs.version_changed }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
