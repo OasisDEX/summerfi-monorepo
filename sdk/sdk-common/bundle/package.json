@@ -1,5 +1,5 @@
 {
-  "name": "summerfi-sdk-common",
+  "name": "@oasisdex/summerfi-sdk-common",
   "version": "0.0.9",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
