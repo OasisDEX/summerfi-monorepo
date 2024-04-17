@@ -14,6 +14,7 @@ on:
         options:
           - 'main'
           - 'dev'
+          - 'fix-automated-package-actions3'
       publish_option:
         description: 'Select package(s) to publish'
         required: true
