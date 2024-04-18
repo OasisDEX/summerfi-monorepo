@@ -19,7 +19,7 @@ jobs:
         with:
           ref: dev
           fetch-depth: 0
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.PAT_2 }}
 
       - uses: actions/setup-node@v4
         with:
@@ -38,4 +38,4 @@ jobs:
           git push origin main
           git status
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ secrets.PAT_2 }}
