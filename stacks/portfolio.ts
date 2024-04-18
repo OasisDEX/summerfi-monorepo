@@ -14,6 +14,7 @@ export function addPortfolioConfig({ stack, api }: StackContext & { api: Api }) 
   const getPortfolioAssetsFunction = new Function(stack, 'get-portfolio-assets-function', {
     handler: 'summerfi-api/portfolio-assets-function/src/index.handler',
     runtime: 'nodejs20.x',
+    logFormat: 'JSON',
     environment: {
       POWERTOOLS_LOG_LEVEL: POWERTOOLS_LOG_LEVEL || 'INFO',
       DEBANK_API_KEY: DEBANK_API_KEY,
@@ -24,6 +25,7 @@ export function addPortfolioConfig({ stack, api }: StackContext & { api: Api }) 
   const getPortfolioOverviewFunction = new Function(stack, 'get-portfolio-overview-function', {
     handler: 'summerfi-api/portfolio-overview-function/src/index.handler',
     runtime: 'nodejs20.x',
+    logFormat: 'JSON',
     environment: {
       POWERTOOLS_LOG_LEVEL: POWERTOOLS_LOG_LEVEL || 'INFO',
       DEBANK_API_KEY: DEBANK_API_KEY,

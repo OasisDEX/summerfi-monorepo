@@ -3,7 +3,7 @@ import { subtractBalance } from '../../utils'
 import { ISimulationState } from '../../../interfaces/simulation'
 
 export function repayFlashloanReducer(
-  step: steps.RepayFlashloan,
+  step: steps.RepayFlashloanStep,
   state: ISimulationState,
 ): ISimulationState {
   return {

@@ -5,7 +5,8 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "@summerfi/protocol-plugins/*": ["node_modules/@summerfi/protocol-plugins/src/*"]
+      "@summerfi/protocol-plugins/*": ["node_modules/@summerfi/protocol-plugins/src/*"],
+      "@summerfi/deployment-utils": ["../../packages/deployment-utils/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "tests/**/*.ts"],

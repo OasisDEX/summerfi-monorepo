@@ -1,0 +1,14 @@
+{
+  "name": "summerfi-sdk-client",
+  "version": "0.1.0",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "packageManager": "yarn@1.22.21",
+  "scripts": {},
+  "dependencies": {
+    "@trpc/client": "11.0.0-next-beta.264",
+    "bignumber.js": "^9.1.2",
+    "superjson": "^1.13.3",
+    "viem": "^2.7.9"
+  }
+}

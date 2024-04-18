@@ -1,5 +1,6 @@
 import { ActionCall } from '@summerfi/protocol-plugins-common'
-import { Address, HexData } from '@summerfi/sdk-common/common'
+import { Address, HexData, Maybe } from '@summerfi/sdk-common/common'
+import { IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 import { encodeFunctionData, parseAbi } from 'viem'
 
 type SkippableActionCall = ActionCall & {
@@ -42,14 +43,28 @@ export function encodeForPositionsManager(params: { target: Address; data: HexDa
 export function encodeStrategy(params: {
   strategyName: string
   strategyExecutor: Address
+  positionsManager: IPositionsManager
   actions: ActionCall[]
-}): HexData {
+}): Maybe<TransactionInfo> {
   const { strategyName, strategyExecutor, actions } = params
+
+  if (actions.length == 0) {
+    return undefined
+  }
 
   const executorData = encodeForExecutor({ strategyName, actions })
 
-  return encodeForPositionsManager({
+  const calldata = encodeForPositionsManager({
     target: strategyExecutor,
     data: executorData,
   })
+
+  return {
+    transaction: {
+      target: params.positionsManager.address,
+      calldata: calldata,
+      value: '0',
+    },
+    description: 'Strategy execution',
+  }
 }

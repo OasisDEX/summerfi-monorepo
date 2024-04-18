@@ -8,6 +8,7 @@ import { swapReducer } from './swapReducer'
 import { returnFundsReducer } from './returnFundsReducer'
 import { repayFlashloanReducer } from './repayFlashloanReducer'
 import { pullTokenReducer } from './pullTokenReducer'
+import { importReducer } from './importReducer'
 import { newPositionEventReducer } from './newPositionEventReducer'
 
 const stateReducers: StateReducers = {
@@ -18,6 +19,7 @@ const stateReducers: StateReducers = {
   [SimulationSteps.ReturnFunds]: returnFundsReducer,
   [SimulationSteps.RepayFlashloan]: repayFlashloanReducer,
   [SimulationSteps.PullToken]: pullTokenReducer,
+  [SimulationSteps.Import]: importReducer,
   [SimulationSteps.NewPositionEvent]: newPositionEventReducer,
 }
 

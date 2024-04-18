@@ -46,6 +46,8 @@ import {
 import { SparkAddressAbiMap } from '../types/SparkAddressAbiMap'
 import { EmodeType } from '../../common/enums/EmodeType'
 import { SparkPoolId } from '../types/SparkPoolId'
+import { IUser } from '@summerfi/sdk-common/user'
+import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 
 type AssetsList = ReturnType<SparkProtocolPlugin['buildAssetsList']>
 type Asset = Awaited<AssetsList> extends (infer U)[] ? U : never
@@ -72,7 +74,7 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
     [SimulationSteps.DepositBorrow]: SparkDepositBorrowActionBuilder,
   }
 
-  constructor(params: { context: IProtocolPluginContext }) {
+  constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
     super(params)
   }
 
@@ -131,6 +133,14 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getPosition(positionId: IPositionId): Promise<Position> {
     throw new Error(`Not implemented ${positionId}`)
+  }
+
+  async getImportPositionTransaction(params: {
+    user: IUser
+    externalPosition: IExternalPosition
+    positionsManager: IPositionsManager
+  }): Promise<Maybe<TransactionInfo>> {
+    throw new Error(`Not implemented ${params}`)
   }
 
   private getContractDef<K extends SparkContractNames>(contractName: K): SparkAddressAbiMap[K] {

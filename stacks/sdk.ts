@@ -1,4 +1,5 @@
-import { Api, StackContext, Function } from 'sst/constructs'
+import { Api, Function, StackContext } from 'sst/constructs'
+
 require('dotenv').config({ path: './sdk/.env' })
 
 const {
@@ -8,6 +9,10 @@ const {
   ONE_INCH_API_URL,
   ONE_INCH_ALLOWED_SWAP_PROTOCOLS,
   ONE_INCH_SWAP_CHAIN_IDS,
+  ONE_INCH_API_SPOT_URL,
+  ONE_INCH_API_SPOT_VERSION,
+  ONE_INCH_API_SPOT_KEY,
+  SDK_LOGGING_ENABLED,
 } = process.env
 
 export function addSdkConfig({ stack, api }: StackContext & { api: Api }) {
@@ -16,7 +21,10 @@ export function addSdkConfig({ stack, api }: StackContext & { api: Api }) {
     !ONE_INCH_API_VERSION ||
     !ONE_INCH_API_URL ||
     !ONE_INCH_ALLOWED_SWAP_PROTOCOLS ||
-    !ONE_INCH_SWAP_CHAIN_IDS
+    !ONE_INCH_SWAP_CHAIN_IDS ||
+    !ONE_INCH_API_SPOT_URL ||
+    !ONE_INCH_API_SPOT_VERSION ||
+    !ONE_INCH_API_SPOT_KEY
   ) {
     throw new Error(
       'OneInch configuration env variables are missing: ' +
@@ -27,7 +35,12 @@ export function addSdkConfig({ stack, api }: StackContext & { api: Api }) {
             ONE_INCH_API_URL,
             ONE_INCH_ALLOWED_SWAP_PROTOCOLS,
             ONE_INCH_SWAP_CHAIN_IDS,
+            ONE_INCH_API_SPOT_URL,
+            ONE_INCH_API_SPOT_VERSION,
+            ONE_INCH_API_SPOT_KEY,
           }),
+          null,
+          2,
         ),
     )
   }
@@ -35,6 +48,7 @@ export function addSdkConfig({ stack, api }: StackContext & { api: Api }) {
   const sdkRouterFunction = new Function(stack, 'sdk-router-function', {
     handler: 'summerfi-api/sdk-router-function/src/index.handler',
     runtime: 'nodejs20.x',
+    logFormat: 'JSON',
     environment: {
       POWERTOOLS_LOG_LEVEL,
       ONE_INCH_API_KEY,
@@ -42,6 +56,10 @@ export function addSdkConfig({ stack, api }: StackContext & { api: Api }) {
       ONE_INCH_API_URL,
       ONE_INCH_ALLOWED_SWAP_PROTOCOLS,
       ONE_INCH_SWAP_CHAIN_IDS,
+      ONE_INCH_API_SPOT_URL,
+      ONE_INCH_API_SPOT_VERSION,
+      ONE_INCH_API_SPOT_KEY,
+      SDK_LOGGING_ENABLED: SDK_LOGGING_ENABLED!,
     },
   })
 

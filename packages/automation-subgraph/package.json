@@ -5,24 +5,23 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "tsc": "tsc",
-    "watch": "tsc -w",
     "test": "jest --passWithNoTests",
     "build": "tsc -b -v",
+    "dev": "tsc -b -w",
     "prebuild": "pnpm run generate-ts-types",
     "generate-ts-types": "graphql-codegen --config graphql.config.yml",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@aws-lambda-powertools/logger": "^2.0.2",
-    "graphql-request": "^6.1.0",
-    "@summerfi/serverless-shared": "workspace:*"
+    "@aws-lambda-powertools/logger": "^2.0.4",
+    "@summerfi/serverless-shared": "workspace:*",
+    "graphql-request": "^6.1.0"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
-    "@types/node": "^20.11.5",
-    "eslint": "^8.56.0"
+    "@types/node": "^20.12.7",
+    "eslint": "^8.57.0"
   }
 }

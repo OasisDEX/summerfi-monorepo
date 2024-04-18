@@ -2,8 +2,6 @@
   "name": "@summerfi/portfolio-overview-function",
   "version": "1.0.0",
   "scripts": {
-    "tsc": "tsc",
-    "watch": "tsc -w",
     "test": "jest --passWithNoTests",
     "testw": "jest --watch",
     "lint": "eslint .",
@@ -11,16 +9,16 @@
     "build": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap"
   },
   "dependencies": {
+    "@summerfi/serverless-shared": "workspace:*",
     "graphql": "^16.8.1",
     "graphql-request": "^6.1.0",
-    "@summerfi/serverless-shared": "workspace:*",
-    "zod": "^3.22.4",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
-    "@summerfi/typescript-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
-    "eslint": "^8.56.0"
+    "@summerfi/typescript-config": "workspace:*",
+    "eslint": "^8.57.0"
   }
 }

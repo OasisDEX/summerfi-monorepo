@@ -11,7 +11,8 @@
       "@summerfi/order-planner-common/*": ["node_modules/@summerfi/order-planner-common/src/*"],
       "@summerfi/protocol-plugins-common": [
         "node_modules/@summerfi/protocol-plugins-common/src/index.ts"
-      ]
+      ],
+      "@summerfi/deployment-utils": ["../../packages/deployment-utils/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts"],

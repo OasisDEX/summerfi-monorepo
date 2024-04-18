@@ -1,13 +1,16 @@
 import { z } from 'zod'
 import { TriggerType } from '@oasisdex/automation'
 import {
-  ltvSchema,
-  percentageSchema,
   positionAddressesSchema,
   priceSchema,
   supportedActionsSchema,
 } from '@summerfi/triggers-shared'
-import { addressSchema, urlOptionalSchema } from '@summerfi/serverless-shared'
+import {
+  addressSchema,
+  ltvSchema,
+  percentageSchema,
+  urlOptionalSchema,
+} from '@summerfi/serverless-shared'
 import { dmaAaveStopLossTriggerDataSchema } from './aave-stop-loss'
 
 export const aavePartialTakeProfitTriggerDataSchema = z.object({

@@ -70,7 +70,9 @@ describe('Order Planner Service', () => {
         provider: undefined as unknown as PublicClient,
         tokenService: undefined as unknown as ITokenService,
         priceService: undefined as unknown as IPriceService,
+        deployments: deploymentsIndex,
       },
+      deploymentConfigTag: 'standard',
     })
 
     orderPlannerService = new OrderPlannerService({

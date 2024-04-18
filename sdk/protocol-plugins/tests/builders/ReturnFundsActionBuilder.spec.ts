@@ -26,7 +26,7 @@ describe('Return Funds Action Builder', () => {
   it('should encode the action calldata correctly', async () => {
     const builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })
 
-    const derivedStep: steps.ReturnFunds = {
+    const derivedStep: steps.ReturnFundsStep = {
       type: SimulationSteps.ReturnFunds,
       name: 'ReturnFundsStep',
       inputs: {

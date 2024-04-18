@@ -18,6 +18,7 @@
     "watch": "tsc -w",
     "test": "jest --passWithNoTests",
     "build": "tsc -b tsconfig.build.json",
+    "dev": "tsc -b tsconfig.build.json -w",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "gen-versions": "hardhat run scripts/generate-versions.ts",
@@ -29,15 +30,15 @@
     "@nomicfoundation/hardhat-toolbox-viem": "^2.0.0",
     "@openzeppelin/contracts": "4.9.3",
     "@prb/math": "2.5.0",
+    "@summerfi/common": "workspace:*",
     "@summerfi/contracts-utils": "workspace:*",
     "@summerfi/deployment-configs": "workspace:*",
     "@summerfi/deployment-types": "workspace:*",
     "@summerfi/deployment-utils": "workspace:*",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/hardhat-utils": "workspace:*",
-    "@summerfi/typescript-config": "workspace:*",
-    "@summerfi/common": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
-    "hardhat": "^2.19.5"
+    "@summerfi/typescript-config": "workspace:*",
+    "hardhat": "^2.22.2"
   }
 }

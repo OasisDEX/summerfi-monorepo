@@ -13,8 +13,8 @@ export const FlashloanProviderMap: Record<FlashloanProvider, number> = {
   [FlashloanProvider.Balancer]: 1,
 }
 
-export const RepayFlashloanActionBuilder: ActionBuilder<steps.RepayFlashloan> = async (
-  params: ActionBuilderParams<steps.RepayFlashloan>,
+export const RepayFlashloanActionBuilder: ActionBuilder<steps.RepayFlashloanStep> = async (
+  params: ActionBuilderParams<steps.RepayFlashloanStep>,
 ): Promise<void> => {
   const { context, step, deployment } = params
 

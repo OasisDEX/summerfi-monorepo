@@ -24,42 +24,68 @@ export class SwapManagerFactory {
     config: OneInchSwapProviderConfig
     chainIds: ChainId[]
   } {
-    const apiUrl = configProvider.getConfigurationItem({ name: 'ONE_INCH_API_URL' })
-    const apiKey = configProvider.getConfigurationItem({ name: 'ONE_INCH_API_KEY' })
-    const version = configProvider.getConfigurationItem({ name: 'ONE_INCH_API_VERSION' })
-    const allowedSwapProtocols = configProvider.getConfigurationItem({
+    const ONE_INCH_API_URL = configProvider.getConfigurationItem({ name: 'ONE_INCH_API_URL' })
+    const ONE_INCH_API_KEY = configProvider.getConfigurationItem({ name: 'ONE_INCH_API_KEY' })
+    const ONE_INCH_API_VERSION = configProvider.getConfigurationItem({
+      name: 'ONE_INCH_API_VERSION',
+    })
+    const ONE_INCH_ALLOWED_SWAP_PROTOCOLS = configProvider.getConfigurationItem({
       name: 'ONE_INCH_ALLOWED_SWAP_PROTOCOLS',
     })
-    const chainIds = configProvider.getConfigurationItem({ name: 'ONE_INCH_SWAP_CHAIN_IDS' })
+    const ONE_INCH_SWAP_CHAIN_IDS = configProvider.getConfigurationItem({
+      name: 'ONE_INCH_SWAP_CHAIN_IDS',
+    })
 
-    const apiSpotUrl = configProvider.getConfigurationItem({ name: 'ONE_INCH_API_SPOT_URL' })
-    const spotVersion = configProvider.getConfigurationItem({ name: 'ONE_INCH_API_SPOT_VERSION' })
-    const apiSpotKey = configProvider.getConfigurationItem({ name: 'ONE_INCH_API_SPOT_KEY' })
+    const ONE_INCH_API_SPOT_URL = configProvider.getConfigurationItem({
+      name: 'ONE_INCH_API_SPOT_URL',
+    })
+    const ONE_INCH_API_SPOT_VERSION = configProvider.getConfigurationItem({
+      name: 'ONE_INCH_API_SPOT_VERSION',
+    })
+    const ONE_INCH_API_SPOT_KEY = configProvider.getConfigurationItem({
+      name: 'ONE_INCH_API_SPOT_KEY',
+    })
 
     if (
-      !apiSpotUrl ||
-      !apiSpotKey ||
-      !apiUrl ||
-      !apiKey ||
-      !version ||
-      !spotVersion ||
-      !allowedSwapProtocols ||
-      !chainIds
+      !ONE_INCH_API_SPOT_URL ||
+      !ONE_INCH_API_SPOT_KEY ||
+      !ONE_INCH_API_URL ||
+      !ONE_INCH_API_KEY ||
+      !ONE_INCH_API_VERSION ||
+      !ONE_INCH_API_SPOT_VERSION ||
+      !ONE_INCH_ALLOWED_SWAP_PROTOCOLS ||
+      !ONE_INCH_SWAP_CHAIN_IDS
     ) {
-      throw new Error('OneInch configuration is missing')
+      throw new Error(
+        'OneInch configuration is missing: ' +
+          JSON.stringify(
+            Object.entries({
+              ONE_INCH_API_URL,
+              ONE_INCH_API_KEY,
+              ONE_INCH_API_VERSION,
+              ONE_INCH_API_SPOT_URL,
+              ONE_INCH_API_SPOT_KEY,
+              ONE_INCH_API_SPOT_VERSION,
+              ONE_INCH_ALLOWED_SWAP_PROTOCOLS,
+              ONE_INCH_SWAP_CHAIN_IDS,
+            }),
+            null,
+            2,
+          ),
+      )
     }
 
     return {
       config: {
-        apiUrl: apiUrl,
-        apiKey: apiKey,
-        version: version,
-        apiSpotUrl: apiSpotUrl,
-        apiSpotKey: apiSpotKey,
-        spotVersion: spotVersion,
-        allowedSwapProtocols: allowedSwapProtocols.split(','),
+        apiUrl: ONE_INCH_API_URL,
+        apiKey: ONE_INCH_API_KEY,
+        version: ONE_INCH_API_VERSION,
+        apiSpotUrl: ONE_INCH_API_SPOT_URL,
+        apiSpotKey: ONE_INCH_API_SPOT_KEY,
+        spotVersion: ONE_INCH_API_SPOT_VERSION,
+        allowedSwapProtocols: ONE_INCH_ALLOWED_SWAP_PROTOCOLS.split(','),
       },
-      chainIds: chainIds.split(',').map((id: string) => parseInt(id)),
+      chainIds: ONE_INCH_SWAP_CHAIN_IDS.split(',').map((id: string) => parseInt(id)),
     }
   }
 }
