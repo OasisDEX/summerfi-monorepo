@@ -1,11 +1,10 @@
 import {
   ActionBuilder,
   ActionBuildersMap,
-  IPositionId,
   IProtocolPlugin,
   IProtocolPluginContext,
 } from '@summerfi/protocol-plugins-common'
-import { ChainInfo, Maybe, IPosition } from '@summerfi/sdk-common/common'
+import { ChainInfo, Maybe, IPosition, IPositionId } from '@summerfi/sdk-common/common'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 import { IPoolId, ProtocolName, IPool } from '@summerfi/sdk-common/protocols'
 import { steps } from '@summerfi/sdk-common/simulation'

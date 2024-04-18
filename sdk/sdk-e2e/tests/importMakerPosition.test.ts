@@ -1,5 +1,4 @@
 import {
-  PositionId,
   Token,
   TokenAmount,
   Position,
@@ -16,7 +15,7 @@ import { ExternalPositionType, IImportPositionParameters, Order } from '@summerf
 import { ISimulation, SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
 
 import assert from 'assert'
-import { ILKType, MakerPoolId } from '@summerfi/protocol-plugins/plugins/maker'
+import { ILKType, MakerPoolId, MakerPositionId } from '@summerfi/protocol-plugins/plugins/maker'
 import { Hex } from 'viem'
 import { TransactionUtils } from './utils/TransactionUtils'
 
@@ -66,7 +65,6 @@ describe.skip('Import Maker Position | SDK', () => {
         chainInfo: chain.chainInfo,
       },
       ilkType: ILKType.ETH_C,
-      vaultId: '31646',
     }
 
     const makerPool = await maker.getPool({
@@ -81,7 +79,7 @@ describe.skip('Import Maker Position | SDK', () => {
     // Source position
     const makerPosition: Position = Position.createFrom({
       type: PositionType.Multiply,
-      positionId: PositionId.createFrom({ id: '31646' }),
+      positionId: MakerPositionId.createFrom({ id: '31646', vaultId: '31646' }),
       debtAmount: TokenAmount.createFromBaseUnit({
         token: DAI,
         amount: '3717915731044925295249',

@@ -11,6 +11,7 @@ import {
   ChainFamilyName,
   valuesOfChainFamilyMap,
   Maybe,
+  IPositionId,
 } from '@summerfi/sdk-common/common'
 import { SimulationSteps } from '@summerfi/sdk-common/simulation'
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
@@ -38,16 +39,12 @@ import {
   SPARK_ORACLE_ABI,
   SPARK_POOL_DATA_PROVIDER_ABI,
 } from '../abis/SparkABIS'
-import {
-  ActionBuildersMap,
-  IPositionId,
-  IProtocolPluginContext,
-} from '@summerfi/protocol-plugins-common'
+import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { SparkAddressAbiMap } from '../types/SparkAddressAbiMap'
 import { EmodeType } from '../../common/enums/EmodeType'
-import { SparkPoolId } from '../types/SparkPoolId'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
+import { ISparkPoolId } from '../interfaces/ISparkPoolId'
 
 type AssetsList = ReturnType<SparkProtocolPlugin['buildAssetsList']>
 type Asset = Awaited<AssetsList> extends (infer U)[] ? U : never
@@ -78,11 +75,11 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
     super(params)
   }
 
-  isPoolId(candidate: unknown): candidate is SparkPoolId {
+  isPoolId(candidate: unknown): candidate is ISparkPoolId {
     return this._isPoolId(candidate, this.sparkPoolIdSchema)
   }
 
-  validatePoolId(candidate: unknown): asserts candidate is SparkPoolId {
+  validatePoolId(candidate: unknown): asserts candidate is ISparkPoolId {
     if (!this.isPoolId(candidate)) {
       throw new Error(`Invalid Spark pool ID: ${JSON.stringify(candidate)}`)
     }

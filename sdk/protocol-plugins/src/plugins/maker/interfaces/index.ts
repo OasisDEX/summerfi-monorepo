@@ -1,8 +1,7 @@
-export { type IMakerCollateralConfig } from './IMakerCollateralConfig'
-export {
-  type IMakerCollateralConfigMap,
-  type IMakerCollateralConfigRecord,
-} from './IMakerCollateralConfigMap'
-export { type IMakerDebtConfig } from './IMakerDebtConfig'
-export { type IMakerDebtConfigMap, type IMakerDebtConfigRecord } from './IMakerDebtConfigMap'
-export { type IMakerLendingPool } from './IMakerLendingPool'
+export * from './IMakerCollateralConfig'
+export * from './IMakerCollateralConfigMap'
+export * from './IMakerDebtConfig'
+export * from './IMakerDebtConfigMap'
+export * from './IMakerLendingPool'
+export * from './IMakerPositionId'
+export * from './IMakerPoolId'

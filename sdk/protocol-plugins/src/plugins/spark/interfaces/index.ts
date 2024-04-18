@@ -1,8 +1,7 @@
-export { type ISparkCollateralConfig } from './ISparkCollateralConfig'
-export {
-  type ISparkCollateralConfigMap,
-  type ISparkCollateralConfigRecord,
-} from './ISparkCollateralConfigMap'
-export { type ISparkDebtConfig } from './ISparkDebtConfig'
-export { type ISparkDebtConfigMap, type ISparkDebtConfigRecord } from './ISparkDebtConfigMap'
-export { type ISparkLendingPool } from './ISparkLendingPool'
+export * from './ISparkCollateralConfig'
+export * from './ISparkCollateralConfigMap'
+export * from './ISparkDebtConfig'
+export * from './ISparkDebtConfigMap'
+export * from './ISparkLendingPool'
+export * from './ISparkPositionId'
+export * from './ISparkPoolId'
