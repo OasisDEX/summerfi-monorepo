@@ -17,7 +17,8 @@
     "console": "sst console --stage dev",
     "graph": "pnpm dlx nx graph",
     "format": "prettier --check \"./**/*.{ts,tsx,js,jsx,json}\"",
-    "format:fix": "prettier --write \"./**/*.{ts,tsx,js,jsx,json}\""
+    "format:fix": "prettier --write \"./**/*.{ts,tsx,js,jsx,json}\"",
+    "gen":"turbo gen"
   },
   "devDependencies": {
     "@graphql-codegen/add": "^5.0.0",

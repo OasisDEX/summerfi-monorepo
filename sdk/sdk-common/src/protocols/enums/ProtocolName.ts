@@ -9,4 +9,5 @@ export enum ProtocolName {
   MorphoBlue = 'MorphoBlue',
   Maker = 'Maker',
   Ajna = 'Ajna',
+  CompoundV3 = 'CompoundV3',
 }
