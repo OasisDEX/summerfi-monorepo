@@ -157,8 +157,8 @@ async function getInterestRates(
     }
     skip = skip + first
     const nextResult = await request(url, GetInterestRatesDocument, {
-      poolId: params.poolId,
-      poolIdBytes: params.poolId,
+      poolId: params.poolId.toLowerCase(),
+      poolIdBytes: params.poolId.toLowerCase(),
       fromTimestamp: params.fromTimestamp.toFixed(),
       toTimestamp: params.toTimestamp.toFixed(),
       skip,
