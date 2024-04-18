@@ -82,10 +82,7 @@ export async function refinanceLendingToLendingAnyPair(
           amount: Number.MAX_SAFE_INTEGER.toString(),
           token: position.debtAmount.token,
         }),
-        withdrawAmount: TokenAmount.createFrom({
-          amount: Number.MAX_SAFE_INTEGER.toString(),
-          token: position.collateralAmount.token,
-        }),
+        withdrawAmount: position.collateralAmount,
         position: position,
       },
     }))

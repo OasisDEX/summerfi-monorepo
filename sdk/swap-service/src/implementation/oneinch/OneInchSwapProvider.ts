@@ -96,7 +96,7 @@ export class OneInchSwapProvider implements ISwapProvider {
     return {
       provider: SwapProviderType.OneInch,
       fromTokenAmount: params.fromAmount,
-      toTokenAmount: TokenAmount.createFrom({
+      toTokenAmount: TokenAmount.createFromBaseUnit({
         token: params.toToken,
         amount: responseData.toTokenAmount,
       }),
@@ -135,7 +135,7 @@ export class OneInchSwapProvider implements ISwapProvider {
     return {
       provider: SwapProviderType.OneInch,
       fromTokenAmount: params.fromAmount,
-      toTokenAmount: TokenAmount.createFrom({
+      toTokenAmount: TokenAmount.createFromBaseUnit({
         token: params.toToken,
         amount: responseData.toTokenAmount,
       }),
@@ -201,14 +201,7 @@ export class OneInchSwapProvider implements ISwapProvider {
 
       return {
         provider: SwapProviderType.OneInch,
-        price: Price.createFrom({
-          value: baseTokenPriceQuotedInCurrencySymbol
-            .toBN()
-            .div(quoteTokenPriceQuoteInCurrencySymbol.toBN())
-            .toString(),
-          baseToken: baseToken,
-          quoteToken: quoteToken,
-        }),
+        price: baseTokenPriceQuotedInCurrencySymbol.div(quoteTokenPriceQuoteInCurrencySymbol),
       }
     } else {
       const quoteCurrency = params.quoteToken ?? CurrencySymbol.USD
