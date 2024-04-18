@@ -1,0 +1,26 @@
+{
+  "name": "@summerfi/defi-llama-client",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "jest --passWithNoTests",
+    "prebuild": "pnpm run generate-client",
+    "generate-client": "openapi-ts",
+    "build": "tsc -b -v",
+    "dev": "tsc -b -w",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "@summerfi/abstractions": "workspace:*"
+  },
+  "devDependencies": {
+    "@hey-api/openapi-ts": "^0.40.2",
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "eslint": "^8.57.0",
+    "typescript": "^5.4.5"
+  }
+}
