@@ -1,6 +1,6 @@
 import { request } from 'graphql-request'
 
-import type { Address } from '@summerfi/serverless-shared'
+import type { Address, Token } from '@summerfi/serverless-shared'
 import { ChainId } from '@summerfi/serverless-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { CollateralLockedDocument, GetInterestRatesDocument } from './types/graphql/generated'
@@ -60,14 +60,8 @@ export interface InterestRate {
 
 export interface AjnaPoolInterestRateResult {
   poolId: `0x${string}`
-  collateralToken: {
-    symbol: string
-    address: Address
-  }
-  quoteToken: {
-    symbol: string
-    address: Address
-  }
+  collateralToken: Token
+  quoteToken: Token
   interestRates: {
     borrow: InterestRate[]
     lend: InterestRate[]
@@ -123,10 +117,12 @@ async function getInterestRates(
       collateralToken: {
         symbol: 'UNKNOWN',
         address: '0x0',
+        decimals: 0n,
       },
       quoteToken: {
         symbol: 'UNKNOWN',
         address: '0x0',
+        decimals: 0n,
       },
       interestRates: {
         borrow: [],
@@ -256,10 +252,12 @@ async function getInterestRates(
     collateralToken: {
       symbol: pool.collateralToken!.symbol,
       address: pool.collateralToken!.address as Address,
+      decimals: pool.collateralToken!.decimals,
     },
     quoteToken: {
       symbol: pool.quoteToken!.symbol,
       address: pool.quoteToken!.address as Address,
+      decimals: pool.quoteToken!.decimals,
     },
     interestRates: {
       lend,

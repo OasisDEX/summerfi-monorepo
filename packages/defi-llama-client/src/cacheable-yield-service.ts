@@ -1,4 +1,3 @@
-import { YieldsService } from './generated/client'
 import { DistributedCache, Logger } from '@summerfi/abstractions'
 import { PoolHistoryResponse, PoolsResponse } from './types'
 
@@ -49,7 +48,7 @@ export function getCachableYieldService(
         }
       }
 
-      const pools = await YieldsService.getPools()
+      const pools = await fetch('https://yields.llama.fi/pools').then((res) => res.json())
 
       if (!checkIfIsPoolsResponse(pools)) {
         logger.error('Invalid response from DefiLlama service', { pools: pools })
@@ -70,13 +69,17 @@ export function getCachableYieldService(
           logger.warn('Invalid cache data for DefiLlama chart response', { response: parsed })
         }
       }
-      const poolResult = await YieldsService.getChartByPool({ pool: pool })
-      if (!checkIfIsPoolHistoryResponse(poolResult)) {
-        logger.error('Invalid response from DefiLlama service', { poolResult: poolResult })
+
+      const poolResponse = await fetch(`https://yields.llama.fi/chart/${pool}`).then((res) =>
+        res.json(),
+      )
+      // const poolResult = await YieldsService.getChartByPool({ pool: pool })
+      if (!checkIfIsPoolHistoryResponse(poolResponse)) {
+        logger.error('Invalid response from DefiLlama service', { poolResult: poolResponse })
         throw new Error('Invalid response from DefiLlama service')
       }
-      await cache.set(key, JSON.stringify(poolResult))
-      return poolResult
+      await cache.set(key, JSON.stringify(poolResponse))
+      return poolResponse
     },
   }
 }

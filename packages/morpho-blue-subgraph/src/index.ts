@@ -1,6 +1,6 @@
 import { request } from 'graphql-request'
 
-import type { Address } from '@summerfi/serverless-shared'
+import type { Address, Token } from '@summerfi/serverless-shared'
 import { ChainId } from '@summerfi/serverless-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { CollateralLockedDocument, GetInterestRatesDocument } from './types/graphql/generated'
@@ -57,14 +57,8 @@ export interface InterestRate {
 
 export interface MorphoBlueMarketInterestRateResult {
   marketId: `0x${string}`
-  collateralToken: {
-    symbol: string
-    address: Address
-  }
-  debtToken: {
-    symbol: string
-    address: Address
-  }
+  collateralToken: Token
+  debtToken: Token
   interestRates: {
     borrow: InterestRate[]
     lend: InterestRate[]
@@ -122,10 +116,12 @@ async function getInterestRates(
       collateralToken: {
         symbol: 'UNKNOWN',
         address: '0x0',
+        decimals: 0n,
       },
       debtToken: {
         symbol: 'UNKNOWN',
         address: '0x0',
+        decimals: 0n,
       },
       interestRates: {
         borrow: [],
@@ -255,10 +251,12 @@ async function getInterestRates(
     collateralToken: {
       symbol: market.collateralToken!.symbol,
       address: market.collateralToken!.address as Address,
+      decimals: market.collateralToken!.decimals,
     },
     debtToken: {
       symbol: market.debtToken!.symbol,
       address: market.debtToken!.address as Address,
+      decimals: market.debtToken!.decimals,
     },
     interestRates: {
       lend,
