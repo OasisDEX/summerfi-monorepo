@@ -17,6 +17,7 @@ struct WithdrawData {
   address cometAddress;
   address asset;
   uint256 amount;
+  bool withdrawAll;
 }
 
 struct PaybackData {

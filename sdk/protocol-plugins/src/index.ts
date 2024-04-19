@@ -1,5 +1,6 @@
 export * from './plugins/aave-v3'
 export * from './plugins/spark'
 export * from './plugins/maker'
+export * from './plugins/compound-v3'
 export * from './plugins/common'
 export * from './implementation'

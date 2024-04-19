@@ -5,7 +5,7 @@ export class CompoundV3WithdrawAction extends BaseAction {
   public readonly config = {
     name: 'CompoundV3Withdraw',
     version: 0,
-    parametersAbi: '(address comet, address asset, uint256 amount)',
+    parametersAbi: '(address comet, address asset, uint256 amount, bool withdrawAll)',
     storageInputs: [],
     storageOutputs: ['amountWithdrawn'],
   } as const
@@ -14,6 +14,7 @@ export class CompoundV3WithdrawAction extends BaseAction {
     params: {
       comet: Address
       withdrawAmount: TokenAmount
+      withdrawAll: boolean
     },
     paramsMapping?: InputSlotsMapping,
   ): ActionCall {
@@ -23,6 +24,7 @@ export class CompoundV3WithdrawAction extends BaseAction {
           comet: params.comet.value,
           asset: params.withdrawAmount.token.address.value,
           amount: params.withdrawAmount.toBaseUnit(),
+          withdrawAll: params.withdrawAll,
         },
       ],
       mapping: paramsMapping,

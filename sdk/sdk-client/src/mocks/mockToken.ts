@@ -25,5 +25,25 @@ export async function getMockTokenBySymbol(params: {
         name: 'Wrapped Ether',
         decimals: 18,
       })
+    case TokenSymbol.USDC:
+      return Token.createFrom({
+        chainInfo: params.chainInfo,
+        address: Address.createFromEthereum({
+          value: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+        }),
+        symbol: params.symbol,
+        name: 'USD Coin',
+        decimals: 6,
+      })
+    case TokenSymbol.WBTC:
+      return Token.createFrom({
+        chainInfo: params.chainInfo,
+        address: Address.createFromEthereum({
+          value: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
+        }),
+        symbol: params.symbol,
+        name: 'Wrapped Bitcoin',
+        decimals: 8,
+      })
   }
 }

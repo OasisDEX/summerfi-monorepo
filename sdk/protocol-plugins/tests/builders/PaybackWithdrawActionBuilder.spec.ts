@@ -7,6 +7,7 @@ import {
   PositionType,
   Token,
   TokenAmount,
+  TokenSymbol,
 } from '@summerfi/sdk-common/common'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { SetupBuilderReturnType, setupBuilderParams } from '../utils/SetupBuilderParams'
@@ -16,8 +17,9 @@ import assert from 'assert'
 import { PaybackWithdrawActionBuilder } from '../../src/plugins/common/builders/PaybackWithdrawActionBuilder'
 import { MakerPoolId } from '../../src/plugins/maker/types/MakerPoolId'
 import { ILKType } from '../../src/plugins/maker/enums/ILKType'
+import { CompoundV3PoolId } from 'src/plugins/compound-v3'
 
-describe('Payback Withdraw Action Builder', () => {
+describe('Maker | Payback Withdraw Action Builder', () => {
   let builderParams: SetupBuilderReturnType
 
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -58,6 +60,117 @@ describe('Payback Withdraw Action Builder', () => {
     protocol: protocol,
     ilkType: ILKType.ETH_A,
     vaultId: '123',
+  }
+
+  const pool = {
+    type: PoolType.Lending,
+    protocol,
+    poolId,
+  }
+
+  const position = Position.createFrom({
+    type: PositionType.Multiply,
+    positionId: PositionId.createFrom({ id: 'someposition' }),
+    debtAmount: withdrawAmount,
+    collateralAmount: paybackAmount,
+    pool: pool,
+  })
+
+  const derivedStep: steps.PaybackWithdrawStep = {
+    type: SimulationSteps.PaybackWithdraw,
+    name: 'PaybackWithdrawStep',
+    inputs: {
+      paybackAmount: paybackAmount,
+      withdrawAmount: withdrawAmount,
+      position: position,
+    },
+    outputs: {
+      paybackAmount: paybackAmount,
+      withdrawAmount: withdrawAmount,
+    },
+  }
+
+  beforeEach(() => {
+    builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })
+  })
+
+  it('should fail if no protocol plugin exists', async () => {
+    try {
+      await PaybackWithdrawActionBuilder({
+        ...builderParams,
+        step: derivedStep,
+        protocolsRegistry: builderParams.emptyProtocolsRegistry,
+      })
+      assert.fail('Should have thrown an error')
+    } catch (error: unknown) {
+      expect(getErrorMessage(error)).toEqual('No protocol plugin found for protocol Maker')
+    }
+  })
+
+  it('should fail if no protocol builder for the step exists', async () => {
+    try {
+      await PaybackWithdrawActionBuilder({
+        ...builderParams,
+        step: derivedStep,
+        protocolsRegistry: builderParams.emptyBuildersProtocolRegistry,
+      })
+      assert.fail('Should have thrown an error')
+    } catch (error: unknown) {
+      expect(getErrorMessage(error)).toEqual('No action builder found for protocol Maker')
+    }
+  })
+
+  it('should call the proper builder', async () => {
+    await PaybackWithdrawActionBuilder({
+      ...builderParams,
+      step: derivedStep,
+    })
+
+    expect(builderParams.context.checkpoints[0]).toEqual('PaybackWithdrawActionBuilderMock')
+  })
+})
+describe('Compound V3 | Payback Withdraw Action Builder', () => {
+  let builderParams: SetupBuilderReturnType
+
+  const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
+
+  // Tokens
+  const WETH = Token.createFrom({
+    chainInfo,
+    address: Address.createFromEthereum({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
+    symbol: 'WETH',
+    name: 'Wrapped Ether',
+    decimals: 18,
+  })
+
+  const DAI = Token.createFrom({
+    chainInfo,
+    address: Address.createFromEthereum({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
+    symbol: 'DAI',
+    name: 'Dai Stablecoin',
+    decimals: 18,
+  })
+
+  const paybackAmount = TokenAmount.createFrom({
+    token: WETH,
+    amount: '134.5',
+  })
+
+  const withdrawAmount = TokenAmount.createFrom({
+    token: DAI,
+    amount: '1000',
+  })
+
+  const protocol = {
+    name: ProtocolName.CompoundV3 as const,
+    chainInfo: ChainFamilyMap.Ethereum.Mainnet,
+  }
+
+  const poolId: CompoundV3PoolId = {
+    protocol: protocol,
+    collaterals: [TokenSymbol.DAI],
+    debt: TokenSymbol.USDC,
+    comet: Address.createFromEthereum({ value: '0xc3d688B66703497DAA19211EEdff47f25384cdc3' }),
   }
 
   const pool = {

@@ -31,8 +31,8 @@ import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-pl
 import { COMET_ABI } from '../abis/CompoundV3ABIS'
 import { CompoundV3ContractNames } from '@summerfi/deployment-types'
 import { CompoundV3PoolId } from '../types/CompoundV3PoolId'
-import { COMPOUND_V3_COLLATERAL_TOKENS } from '../enums/CollateralToken'
-import { COMPOUND_V3_DEBT_TOKENS } from '../enums/DebtToken'
+// import { COMPOUND_V3_COLLATERAL_TOKENS } from '../enums/CollateralToken'
+// import { COMPOUND_V3_DEBT_TOKENS } from '../enums/DebtToken'
 import { IUser } from '@summerfi/sdk-common/user'
 import {
   ExternalPositionType,
@@ -41,6 +41,9 @@ import {
 } from '@summerfi/sdk-common/orders/interfaces'
 import { IPositionsManager } from '@summerfi/sdk-common/orders'
 import { encodeERC20Transfer } from '../../common/helpers/ERC20Transfer'
+import { SimulationSteps } from '@summerfi/sdk-common/simulation'
+import { CompoundV3PaybackWithdrawActionBuilder } from '../builders'
+import { CompoundV3ImportPositionActionBuilder } from '../builders/CompoundV3ImportPositionActionBuilder'
 
 // type AssetsList = ReturnType<CompoundV3ProtocolPlugin['buildAssetsList']>
 // type Asset = Awaited<AssetsList> extends (infer U)[] ? U : never
@@ -49,8 +52,16 @@ export class CompoundV3ProtocolPlugin extends BaseProtocolPlugin {
   readonly Erc20ProxyActionsContractName = 'DssErc20ProxyActions'
 
   readonly protocolName = ProtocolName.CompoundV3
-  readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
-  readonly stepBuilders: Partial<ActionBuildersMap> = {}
+  readonly supportedChains = valuesOfChainFamilyMap([
+    ChainFamilyName.Ethereum,
+    ChainFamilyName.Base,
+    ChainFamilyName.Optimism,
+    ChainFamilyName.Arbitrum,
+  ])
+  readonly stepBuilders: Partial<ActionBuildersMap> = {
+    [SimulationSteps.PaybackWithdraw]: CompoundV3PaybackWithdrawActionBuilder,
+    [SimulationSteps.Import]: CompoundV3ImportPositionActionBuilder,
+  }
 
   readonly compoundV3PoolidSchema = z.object({
     protocol: z.object({
@@ -85,8 +96,8 @@ export class CompoundV3ProtocolPlugin extends BaseProtocolPlugin {
     const deploymentKey = this._getDeploymentKey(params.user.chainInfo)
     const deployment = deployments[deploymentKey]
 
-    const erc20ProxyActionsAddress = deployment.dependencies[this.Erc20ProxyActionsContractName]
-      .address as AddressValue
+    const erc20ProxyActionsAddress = '0xd48573cda0fed7144f2455c5270ffa16be389d04' /* deployment.dependencies[this.Erc20ProxyActionsContractName]
+      .address as AddressValue */
 
     const sourceAddress =
       params.externalPosition.externalId.type === ExternalPositionType.WALLET
@@ -101,7 +112,7 @@ export class CompoundV3ProtocolPlugin extends BaseProtocolPlugin {
           address: params.externalPosition.position.pool.poolId.comet,
           symbol: 'COMET',
           name: 'COMET',
-          decimals: 18,
+          decimals: 6,
           chainInfo: params.user.chainInfo,
         }),
         amount: '0',
@@ -130,22 +141,22 @@ export class CompoundV3ProtocolPlugin extends BaseProtocolPlugin {
     }
   }
 
-  validateCollateralTokens(collaterals: TokenSymbol[]): void {
-    collaterals.forEach((collateral) => {
-      // @ts-ignore - TODO: Fix this
-      if (!COMPOUND_V3_COLLATERAL_TOKENS.includes(collateral)) {
-        throw new Error(`Invalid collateral token: ${collateral}`)
-      }
-    })
-  }
-  validateDebtTokens(debts: TokenSymbol[]): void {
-    debts.forEach((debt) => {
-      // @ts-ignore - TODO: Fix this
-      if (!COMPOUND_V3_DEBT_TOKENS.includes(debt)) {
-        throw new Error(`Invalid debt token: ${debt}`)
-      }
-    })
-  }
+  // validateCollateralTokens(collaterals: TokenSymbol[]): void {
+  //   collaterals.forEach((collateral) => {
+  //     // @ts-ignore - TODO: Fix this
+  //     if (!COMPOUND_V3_COLLATERAL_TOKENS.includes(collateral)) {
+  //       throw new Error(`Invalid collateral token: ${collateral}`)
+  //     }
+  //   })
+  // }
+  // validateDebtTokens(debts: TokenSymbol[]): void {
+  //   debts.forEach((debt) => {
+  //     // @ts-ignore - TODO: Fix this
+  //     if (!COMPOUND_V3_DEBT_TOKENS.includes(debt)) {
+  //       throw new Error(`Invalid debt token: ${debt}`)
+  //     }
+  //   })
+  // }
 
   async getPool(compoundV3PoolId: unknown): Promise<CompoundV3LendingPool> {
     this.validatePoolId(compoundV3PoolId)

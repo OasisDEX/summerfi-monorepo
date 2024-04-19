@@ -57,10 +57,8 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
     candidate: unknown,
     schema: z.Schema,
   ): candidate is PoolId {
-    const x = schema.safeParse(candidate)
-    // @ts-ignore
-    console.log(x.error)
-    return x.success
+    const { success } = schema.safeParse(candidate)
+    return success
   }
 
   protected _getDeploymentKey(chainInfo: ChainInfo): string {

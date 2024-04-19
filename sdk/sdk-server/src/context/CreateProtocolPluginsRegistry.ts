@@ -7,6 +7,7 @@ import {
 } from '@summerfi/protocol-plugins/implementation'
 import { SparkProtocolPlugin } from '@summerfi/protocol-plugins/plugins/spark'
 import { MakerProtocolPlugin } from '@summerfi/protocol-plugins/plugins/maker'
+import { CompoundV3ProtocolPlugin } from '@summerfi/protocol-plugins/plugins/compound-v3'
 
 import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
@@ -18,6 +19,7 @@ const ProtocolPlugins: ProtocolPluginsRecordType = {
   [ProtocolName.Maker]: MakerProtocolPlugin,
   [ProtocolName.Spark]: SparkProtocolPlugin,
   [ProtocolName.AAVEv3]: AaveV3ProtocolPlugin,
+  [ProtocolName.CompoundV3]: CompoundV3ProtocolPlugin,
 }
 
 export function createProtocolsPluginsRegistry(params: {

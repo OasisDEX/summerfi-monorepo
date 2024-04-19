@@ -1,5 +1,5 @@
-export { compound-v3PaybackAction } from './compound-v3PaybackAction'
-export { compound-v3WithdrawAction } from './compound-v3WithdrawAction'
+export { CompoundV3PaybackAction } from './CompoundV3PaybackAction'
+export { CompoundV3WithdrawAction } from './CompoundV3WithdrawAction'
 
-export { compound-v3DepositAction } from './compound-v3DepositAction'
-export { compound-v3BorrowAction } from './compound-v3BorrowAction'
+export { CompoundV3DepositAction } from './CompoundV3DepositAction'
+export { CompoundV3BorrowAction } from './CompoundV3BorrowAction'
