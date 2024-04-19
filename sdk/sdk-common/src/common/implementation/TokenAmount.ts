@@ -3,6 +3,8 @@ import { Percentage } from './Percentage'
 import { Token } from './Token'
 import { SerializationService } from '../../services/SerializationService'
 import { ITokenAmount } from '../interfaces/ITokenAmount'
+import { Price } from '.'
+import { isSameTokens } from '..'
 
 /**
  * @class TokenAmount
@@ -61,11 +63,26 @@ export class TokenAmount implements ITokenAmount {
     })
   }
 
-  public multiply(multiplier: Percentage | string | number): TokenAmount {
+  public multiply(multiplier: Percentage | string | number | Price): TokenAmount {
     if (multiplier instanceof Percentage) {
       return new TokenAmount({
         token: this.token,
         amount: this.amountBN.times(multiplier.value).toString(),
+      })
+    }
+
+    if (multiplier instanceof Price) {
+      if (isSameTokens(this.token, multiplier.baseToken)) {
+        throw new Error('Token symbols do not match')
+      }
+
+      if (!(multiplier.quoteToken instanceof Token)) {
+        throw new Error('Quote token is not a Token, (Currently currency is not supported)')
+      }
+
+      return new TokenAmount({
+        token: multiplier.quoteToken,
+        amount: this.amountBN.times(multiplier.toBN()).toString(),
       })
     }
 

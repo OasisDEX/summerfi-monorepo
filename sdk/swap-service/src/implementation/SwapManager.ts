@@ -1,7 +1,6 @@
 import type { Maybe } from '@summerfi/sdk-common/common/aliases'
 import type { ChainInfo, TokenAmount, Token, Address } from '@summerfi/sdk-common/common'
 import { ChainId, CurrencySymbol, Percentage } from '@summerfi/sdk-common/common'
-import { IProtocol } from '@summerfi/sdk-common/protocols'
 import { ISwapProvider, ISwapManager } from '@summerfi/swap-common/interfaces'
 import type { QuoteData, SwapData, SwapProviderType, SpotData } from '@summerfi/sdk-common/swap'
 
@@ -68,10 +67,10 @@ export class SwapManager implements ISwapManager {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getSummerFee(params: {
-    from: { protocol: IProtocol; token: Token }
-    to: { protocol: IProtocol; token: Token }
-  }): Percentage {
+  async getSummerFee(params: {
+    from: { token: Token }
+    to: { token: Token }
+  }): Promise<Percentage> {
     // TODO: Implement with appropriate logic
     return Percentage.createFrom({
       value: 0.2,
