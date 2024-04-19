@@ -9,15 +9,14 @@ import {
 import {
   positionSchema,
   priceSchema,
-  supportedActionsSchema,
   SupportedActions,
+  supportedActionsSchema,
   TWENTY_MILLIONS_DOllARS,
-  ltvSchema,
 } from '@summerfi/triggers-shared'
 import { z } from 'zod'
 import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import { DerivedPrices } from '@summerfi/prices-subgraph'
-import { safeParseBigInt } from '@summerfi/serverless-shared'
+import { ltvSchema, safeParseBigInt } from '@summerfi/serverless-shared'
 
 const paramsSchema = z.object({
   position: positionSchema,

@@ -43,7 +43,7 @@
     },
     "prebuild": {
       "dependsOn": ["^prebuild"],
-      "outputs": ["src/types/graphql/generated.ts"]
+      "outputs": ["src/types/graphql/generated.ts", "src/generated"]
     },
     "build": {
       "dependsOn": ["prebuild", "^build"],

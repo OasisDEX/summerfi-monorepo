@@ -1,27 +1,17 @@
 import { z } from 'zod'
 import { PRICE_DECIMALS } from './constants'
-import { addressSchema, bigIntSchema, ChainId, ProtocolId } from '@summerfi/serverless-shared'
+import {
+  addressSchema,
+  bigIntSchema,
+  ChainId,
+  LTV,
+  ltvSchema,
+  ProtocolId,
+} from '@summerfi/serverless-shared'
 
 export const priceSchema = bigIntSchema.describe(`Price with ${PRICE_DECIMALS} decimals`)
 
 export const maxGasFeeSchema = bigIntSchema.describe('Max gas fee in Gwei')
-
-export const ltvSchema = bigIntSchema.refine((ltv) => ltv >= 0n && ltv < 10_000n, {
-  params: {
-    code: 'ltv-out-of-range',
-  },
-  message: 'LTV must be between 0 and 10_000',
-})
-
-export const percentageSchema = bigIntSchema.refine(
-  (percentage) => percentage >= 0n && percentage <= 10_000n,
-  {
-    params: {
-      code: 'percentage-out-of-range',
-    },
-    message: 'Percentage must be between 0 and 100_000',
-  },
-)
 
 export enum SupportedActions {
   Add = 'add',
@@ -88,8 +78,6 @@ export type PositionLike = z.infer<typeof positionSchema>
 export type Token = z.infer<typeof tokenSchema>
 export type TokenBalance = z.infer<typeof tokenBalanceSchema>
 export type Price = z.infer<typeof priceSchema>
-export type LTV = z.infer<typeof ltvSchema>
-export type Percentage = z.infer<typeof percentageSchema>
 
 export type CurrentTriggerLike = {
   id: bigint

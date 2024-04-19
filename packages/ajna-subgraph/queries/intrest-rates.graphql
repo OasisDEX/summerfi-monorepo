@@ -1,0 +1,52 @@
+query GetInterestRates(
+    $poolId: String!,
+    $poolIdBytes: ID!,
+    $fromTimestamp: BigInt!,
+    $toTimestamp: BigInt!
+    $first: Int!,
+    $skip: Int!) {
+
+    pool(id: $poolIdBytes) {
+        id
+        collateralToken {
+            address
+            symbol
+        }
+        quoteToken {
+            address
+            symbol
+        }
+    }
+    interestRates(
+        where: { pool: $poolId, timestamp_gte: $fromTimestamp, timestamp_lte: $toTimestamp },
+        orderBy: timestamp,
+        orderDirection: asc,
+        first: $first,
+        skip: $skip) {
+        id
+        rate
+        timestamp
+        type
+    }
+    previousBorrowRate: interestRates(
+        where: { pool: $poolId, timestamp_lt: $fromTimestamp, type: "borrow" },
+        orderBy: timestamp,
+        orderDirection: desc,
+        first: 1) {
+        id
+        rate
+        timestamp
+        type
+    }
+
+    previousLendRate: interestRates(
+        where: { pool: $poolId, timestamp_lt: $fromTimestamp, type: "lend" },
+        orderBy: timestamp,
+        orderDirection: desc,
+        first: 1) {
+        id
+        rate
+        timestamp
+        type
+    }
+}

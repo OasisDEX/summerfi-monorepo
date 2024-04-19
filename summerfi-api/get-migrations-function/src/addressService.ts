@@ -1,4 +1,4 @@
-import { ADDRESSES, AaveLikeProtocol, Common, Core } from '@oasisdex/addresses'
+import { AaveLikeProtocol, ADDRESSES, Common, Core } from '@oasisdex/addresses'
 import {
   Address,
   ChainId,
@@ -41,13 +41,16 @@ export const createAddressService = (chainId: ChainId) => {
       let val
       switch (protocol) {
         case ProtocolId.AAVE3:
+        case ProtocolId.AAVE_V3:
           val = addresses['aave']['v3'][contract] as Address
           break
 
         case ProtocolId.SPARK:
           val = addresses['spark'][contract] as Address
           break
-
+        case ProtocolId.AAVE_V2:
+          val = addresses['aave']['v2'][contract] as Address
+          break
         default:
           throw Error(`Unknown protocol - (${protocol}) on (${network})`)
       }

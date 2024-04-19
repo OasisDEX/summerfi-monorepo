@@ -2,10 +2,9 @@
   "name": "@summerfi/abis",
   "version": "1.0.0",
   "scripts": {
-    "tsc": "tsc",
-    "watch": "tsc -w",
     "test": "jest --passWithNoTests",
     "build": "tsc -b -v",
+    "dev": "tsc -b -w",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
