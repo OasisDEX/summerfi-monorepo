@@ -11,5 +11,5 @@ export enum TokenSymbol {
   SDAI = 'SDAI',
   USDC = 'USDC',
   USDT = 'USDT',
-  WBTC = 'WTBC'
+  WBTC = 'WTBC',
 }

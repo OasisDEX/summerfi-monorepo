@@ -4,7 +4,6 @@ export async function getMockTokenBySymbol(params: {
   chainInfo: ChainInfo
   symbol: TokenSymbol
 }): Promise<Maybe<Token>> {
-
   if (params.chainInfo.chainId !== 1) {
     throw new Error('This mock provides data only for ethereum mainnet')
   }
