@@ -17,6 +17,10 @@ import {
 import { z } from 'zod'
 import { getMorphoBlueSubgraphClient } from '@summerfi/morpho-blue-subgraph'
 import { getMorphoBlueApy } from './morpho-blue'
+import { getAjnaSubgraphClient } from '@summerfi/ajna-subgraph'
+import { getAjnaApy } from './ajna'
+import { getAaveSparkSubgraphClient } from '@summerfi/aave-spark-subgraph'
+import { getAaveSparkBorrowRates } from './aave-spark'
 
 const logger = new Logger({ serviceName: 'get-apy-function' })
 
@@ -200,6 +204,61 @@ export const handler = async (
     rates = await getMorphoBlueApy({
       ltv: positionData.data.ltv,
       marketId: positionData.data.marketId,
+      timestamp,
+      logger: logger,
+      subgraphClient: client,
+    })
+  }
+
+  if (protocol === ProtocolId.AJNA) {
+    const positionData = ajnaPositionSchema.safeParse(event.queryStringParameters)
+    if (!positionData.success) {
+      return ResponseBadRequest({
+        body: { message: 'Invalid query parameters', errors: positionData.error },
+      })
+    }
+
+    const client = getAjnaSubgraphClient({
+      logger: logger,
+      chainId: path.data.chainId,
+      urlBase: SUBGRAPH_BASE,
+    })
+
+    const timestamp = Math.floor(positionData.data.referenceDate.getTime() / 1000)
+
+    rates = await getAjnaApy({
+      ltv: positionData.data.ltv,
+      poolId: positionData.data.poolAddress,
+      timestamp,
+      logger: logger,
+      subgraphClient: client,
+    })
+  }
+
+  if (
+    protocol === ProtocolId.AAVE_V3 ||
+    protocol === ProtocolId.AAVE_V2 ||
+    protocol === ProtocolId.SPARK
+  ) {
+    const positionData = aaveLikePositionSchema.safeParse(event.queryStringParameters)
+    if (!positionData.success) {
+      return ResponseBadRequest({
+        body: { message: 'Invalid query parameters', errors: positionData.error },
+      })
+    }
+
+    const client = getAaveSparkSubgraphClient({
+      logger: logger,
+      chainId: path.data.chainId,
+      urlBase: SUBGRAPH_BASE,
+    })
+
+    const timestamp = Math.floor(positionData.data.referenceDate.getTime() / 1000)
+
+    rates = await getAaveSparkBorrowRates({
+      ltv: positionData.data.ltv,
+      token: positionData.data.debt[0],
+      protocol,
       timestamp,
       logger: logger,
       subgraphClient: client,

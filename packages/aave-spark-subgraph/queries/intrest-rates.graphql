@@ -1,0 +1,48 @@
+query GetInterestRates(
+    $token: String!,
+    $tokenBytes: ID!,
+    $protocol: String!,
+    $fromTimestamp: BigInt!,
+    $toTimestamp: BigInt!
+    $first: Int!,
+    $skip: Int!) {
+
+    token(id: $tokenBytes) {
+        id
+        symbol
+        address
+    }
+
+    interestRates(
+        where: { token: $token, timestamp_gte: $fromTimestamp, timestamp_lte: $toTimestamp, protocol: $protocol },
+        orderBy: timestamp,
+        orderDirection: asc,
+        first: $first,
+        skip: $skip) {
+        id
+        rate
+        timestamp
+        type
+    }
+    previousBorrowRate: interestRates(
+        where: { token: $token, timestamp_lt: $fromTimestamp, type: "borrow-variable", protocol: $protocol },
+        orderBy: timestamp,
+        orderDirection: desc,
+        first: 1) {
+        id
+        rate
+        timestamp
+        type
+    }
+
+    previousLendRate: interestRates(
+        where: { token: $token, timestamp_lt: $fromTimestamp, type: "lend", protocol: $protocol },
+        orderBy: timestamp,
+        orderDirection: desc,
+        first: 1) {
+        id
+        rate
+        timestamp
+        type
+    }
+}

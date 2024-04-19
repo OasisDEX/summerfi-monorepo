@@ -549,11 +549,13 @@ enum Auction_orderBy {
   pool__interestRate
   pool__borrowApr
   pool__apr30dAverage
+    pool__apr7dAverage
   pool__dailyPercentageRate30dAverage
   pool__monthlyPercentageRate30dAverage
   pool__lastInterestRateUpdate
   pool__lendApr
   pool__lendApr30dAverage
+    pool__lendApr7dAverage
   pool__lendDailyPercentageRate30dAverage
   pool__lendMonthlyPercentageRate30dAverage
   pool__poolMinDebtAmount
@@ -563,6 +565,7 @@ enum Auction_orderBy {
   pool__currentBurnEpoch
   pool__borrowDailyTokenBlocks
   pool__earnDailyTokenBlocks
+    pool__summerDepositAmountEarningInterest
   account
   account__id
   account__address
@@ -806,11 +809,13 @@ enum BorrowDailyReward_orderBy {
   pool__interestRate
   pool__borrowApr
   pool__apr30dAverage
+    pool__apr7dAverage
   pool__dailyPercentageRate30dAverage
   pool__monthlyPercentageRate30dAverage
   pool__lastInterestRateUpdate
   pool__lendApr
   pool__lendApr30dAverage
+    pool__lendApr7dAverage
   pool__lendDailyPercentageRate30dAverage
   pool__lendMonthlyPercentageRate30dAverage
   pool__poolMinDebtAmount
@@ -820,6 +825,7 @@ enum BorrowDailyReward_orderBy {
   pool__currentBurnEpoch
   pool__borrowDailyTokenBlocks
   pool__earnDailyTokenBlocks
+    pool__summerDepositAmountEarningInterest
   account
   account__id
   account__address
@@ -1295,11 +1301,13 @@ enum BorrowerEvent_orderBy {
   pool__interestRate
   pool__borrowApr
   pool__apr30dAverage
+    pool__apr7dAverage
   pool__dailyPercentageRate30dAverage
   pool__monthlyPercentageRate30dAverage
   pool__lastInterestRateUpdate
   pool__lendApr
   pool__lendApr30dAverage
+    pool__lendApr7dAverage
   pool__lendDailyPercentageRate30dAverage
   pool__lendMonthlyPercentageRate30dAverage
   pool__poolMinDebtAmount
@@ -1309,6 +1317,7 @@ enum BorrowerEvent_orderBy {
   pool__currentBurnEpoch
   pool__borrowDailyTokenBlocks
   pool__earnDailyTokenBlocks
+    pool__summerDepositAmountEarningInterest
   debtToken
   debtToken__id
   debtToken__address
@@ -1671,11 +1680,13 @@ enum BorrowPosition_orderBy {
   pool__interestRate
   pool__borrowApr
   pool__apr30dAverage
+    pool__apr7dAverage
   pool__dailyPercentageRate30dAverage
   pool__monthlyPercentageRate30dAverage
   pool__lastInterestRateUpdate
   pool__lendApr
   pool__lendApr30dAverage
+    pool__lendApr7dAverage
   pool__lendDailyPercentageRate30dAverage
   pool__lendMonthlyPercentageRate30dAverage
   pool__poolMinDebtAmount
@@ -1685,6 +1696,7 @@ enum BorrowPosition_orderBy {
   pool__currentBurnEpoch
   pool__borrowDailyTokenBlocks
   pool__earnDailyTokenBlocks
+    pool__summerDepositAmountEarningInterest
   account
   account__id
   account__address
@@ -1859,11 +1871,13 @@ enum Bucket_orderBy {
   pool__interestRate
   pool__borrowApr
   pool__apr30dAverage
+    pool__apr7dAverage
   pool__dailyPercentageRate30dAverage
   pool__monthlyPercentageRate30dAverage
   pool__lastInterestRateUpdate
   pool__lendApr
   pool__lendApr30dAverage
+    pool__lendApr7dAverage
   pool__lendDailyPercentageRate30dAverage
   pool__lendMonthlyPercentageRate30dAverage
   pool__poolMinDebtAmount
@@ -1873,6 +1887,7 @@ enum Bucket_orderBy {
   pool__currentBurnEpoch
   pool__borrowDailyTokenBlocks
   pool__earnDailyTokenBlocks
+    pool__summerDepositAmountEarningInterest
   price
   index
   quoteTokens
@@ -2463,11 +2478,13 @@ enum EarnDailyReward_orderBy {
   pool__interestRate
   pool__borrowApr
   pool__apr30dAverage
+    pool__apr7dAverage
   pool__dailyPercentageRate30dAverage
   pool__monthlyPercentageRate30dAverage
   pool__lastInterestRateUpdate
   pool__lendApr
   pool__lendApr30dAverage
+    pool__lendApr7dAverage
   pool__lendDailyPercentageRate30dAverage
   pool__lendMonthlyPercentageRate30dAverage
   pool__poolMinDebtAmount
@@ -2477,6 +2494,7 @@ enum EarnDailyReward_orderBy {
   pool__currentBurnEpoch
   pool__borrowDailyTokenBlocks
   pool__earnDailyTokenBlocks
+    pool__summerDepositAmountEarningInterest
   account
   account__id
   account__address
@@ -2782,11 +2800,13 @@ enum EarnPosition_orderBy {
   pool__interestRate
   pool__borrowApr
   pool__apr30dAverage
+    pool__apr7dAverage
   pool__dailyPercentageRate30dAverage
   pool__monthlyPercentageRate30dAverage
   pool__lastInterestRateUpdate
   pool__lendApr
   pool__lendApr30dAverage
+    pool__lendApr7dAverage
   pool__lendDailyPercentageRate30dAverage
   pool__lendMonthlyPercentageRate30dAverage
   pool__poolMinDebtAmount
@@ -2796,6 +2816,7 @@ enum EarnPosition_orderBy {
   pool__currentBurnEpoch
   pool__borrowDailyTokenBlocks
   pool__earnDailyTokenBlocks
+    pool__summerDepositAmountEarningInterest
   account
   account__id
   account__address
@@ -3028,11 +3049,13 @@ enum EarnPositionBucket_orderBy {
   pool__interestRate
   pool__borrowApr
   pool__apr30dAverage
+    pool__apr7dAverage
   pool__dailyPercentageRate30dAverage
   pool__monthlyPercentageRate30dAverage
   pool__lastInterestRateUpdate
   pool__lendApr
   pool__lendApr30dAverage
+    pool__lendApr7dAverage
   pool__lendDailyPercentageRate30dAverage
   pool__lendMonthlyPercentageRate30dAverage
   pool__poolMinDebtAmount
@@ -3042,6 +3065,7 @@ enum EarnPositionBucket_orderBy {
   pool__currentBurnEpoch
   pool__borrowDailyTokenBlocks
   pool__earnDailyTokenBlocks
+    pool__summerDepositAmountEarningInterest
   index
   account
   account__id
@@ -3152,6 +3176,152 @@ enum FeePaid_orderBy {
 
 """
 scalar Int8
+
+type InterestRate {
+    id: Bytes!
+    pool: Pool!
+    type: String!
+    rate: BigDecimal!
+    blockNumber: BigInt!
+    timestamp: BigInt!
+}
+
+input InterestRate_filter {
+    id: Bytes
+    id_not: Bytes
+    id_gt: Bytes
+    id_lt: Bytes
+    id_gte: Bytes
+    id_lte: Bytes
+    id_in: [Bytes!]
+    id_not_in: [Bytes!]
+    id_contains: Bytes
+    id_not_contains: Bytes
+    pool: String
+    pool_not: String
+    pool_gt: String
+    pool_lt: String
+    pool_gte: String
+    pool_lte: String
+    pool_in: [String!]
+    pool_not_in: [String!]
+    pool_contains: String
+    pool_contains_nocase: String
+    pool_not_contains: String
+    pool_not_contains_nocase: String
+    pool_starts_with: String
+    pool_starts_with_nocase: String
+    pool_not_starts_with: String
+    pool_not_starts_with_nocase: String
+    pool_ends_with: String
+    pool_ends_with_nocase: String
+    pool_not_ends_with: String
+    pool_not_ends_with_nocase: String
+    pool_: Pool_filter
+    type: String
+    type_not: String
+    type_gt: String
+    type_lt: String
+    type_gte: String
+    type_lte: String
+    type_in: [String!]
+    type_not_in: [String!]
+    type_contains: String
+    type_contains_nocase: String
+    type_not_contains: String
+    type_not_contains_nocase: String
+    type_starts_with: String
+    type_starts_with_nocase: String
+    type_not_starts_with: String
+    type_not_starts_with_nocase: String
+    type_ends_with: String
+    type_ends_with_nocase: String
+    type_not_ends_with: String
+    type_not_ends_with_nocase: String
+    rate: BigDecimal
+    rate_not: BigDecimal
+    rate_gt: BigDecimal
+    rate_lt: BigDecimal
+    rate_gte: BigDecimal
+    rate_lte: BigDecimal
+    rate_in: [BigDecimal!]
+    rate_not_in: [BigDecimal!]
+    blockNumber: BigInt
+    blockNumber_not: BigInt
+    blockNumber_gt: BigInt
+    blockNumber_lt: BigInt
+    blockNumber_gte: BigInt
+    blockNumber_lte: BigInt
+    blockNumber_in: [BigInt!]
+    blockNumber_not_in: [BigInt!]
+    timestamp: BigInt
+    timestamp_not: BigInt
+    timestamp_gt: BigInt
+    timestamp_lt: BigInt
+    timestamp_gte: BigInt
+    timestamp_lte: BigInt
+    timestamp_in: [BigInt!]
+    timestamp_not_in: [BigInt!]
+
+    """Filter for the block changed event."""
+    _change_block: BlockChangedFilter
+    and: [InterestRate_filter]
+    or: [InterestRate_filter]
+}
+
+enum InterestRate_orderBy {
+    id
+    pool
+    pool__id
+    pool__address
+    pool__name
+    pool__collateralAddress
+    pool__quoteTokenAddress
+    pool__collateralScale
+    pool__quoteTokenScale
+    pool__htp
+    pool__hpb
+    pool__lup
+    pool__htpIndex
+    pool__hpbIndex
+    pool__lupIndex
+    pool__debt
+    pool__debtInAuctions
+    pool__accuredDebt
+    pool__t0debt
+    pool__depositSize
+    pool__reserves
+    pool__claimableReserves
+    pool__claimableReservesRemaining
+    pool__auctionPrice
+    pool__timeRemaining
+    pool__loansCount
+    pool__totalAuctionsInPool
+    pool__interestRate
+    pool__borrowApr
+    pool__apr30dAverage
+    pool__apr7dAverage
+    pool__dailyPercentageRate30dAverage
+    pool__monthlyPercentageRate30dAverage
+    pool__lastInterestRateUpdate
+    pool__lendApr
+    pool__lendApr30dAverage
+    pool__lendApr7dAverage
+    pool__lendDailyPercentageRate30dAverage
+    pool__lendMonthlyPercentageRate30dAverage
+    pool__poolMinDebtAmount
+    pool__poolCollateralization
+    pool__poolActualUtilization
+    pool__poolTargetUtilization
+    pool__currentBurnEpoch
+    pool__borrowDailyTokenBlocks
+    pool__earnDailyTokenBlocks
+    pool__summerDepositAmountEarningInterest
+    type
+    rate
+    blockNumber
+    timestamp
+}
 
 type LenderEvent {
   id: ID!
@@ -3564,11 +3734,13 @@ enum LenderEvent_orderBy {
   pool__interestRate
   pool__borrowApr
   pool__apr30dAverage
+    pool__apr7dAverage
   pool__dailyPercentageRate30dAverage
   pool__monthlyPercentageRate30dAverage
   pool__lastInterestRateUpdate
   pool__lendApr
   pool__lendApr30dAverage
+    pool__lendApr7dAverage
   pool__lendDailyPercentageRate30dAverage
   pool__lendMonthlyPercentageRate30dAverage
   pool__poolMinDebtAmount
@@ -3578,6 +3750,7 @@ enum LenderEvent_orderBy {
   pool__currentBurnEpoch
   pool__borrowDailyTokenBlocks
   pool__earnDailyTokenBlocks
+    pool__summerDepositAmountEarningInterest
   quoteToken
   quoteToken__id
   quoteToken__address
@@ -3799,11 +3972,13 @@ enum NFT_orderBy {
   pool__interestRate
   pool__borrowApr
   pool__apr30dAverage
+    pool__apr7dAverage
   pool__dailyPercentageRate30dAverage
   pool__monthlyPercentageRate30dAverage
   pool__lastInterestRateUpdate
   pool__lendApr
   pool__lendApr30dAverage
+    pool__lendApr7dAverage
   pool__lendDailyPercentageRate30dAverage
   pool__lendMonthlyPercentageRate30dAverage
   pool__poolMinDebtAmount
@@ -3813,6 +3988,7 @@ enum NFT_orderBy {
   pool__currentBurnEpoch
   pool__borrowDailyTokenBlocks
   pool__earnDailyTokenBlocks
+    pool__summerDepositAmountEarningInterest
   buckets
   staked
   currentReward
@@ -4646,11 +4822,13 @@ enum OasisEvent_orderBy {
   pool__interestRate
   pool__borrowApr
   pool__apr30dAverage
+    pool__apr7dAverage
   pool__dailyPercentageRate30dAverage
   pool__monthlyPercentageRate30dAverage
   pool__lastInterestRateUpdate
   pool__lendApr
   pool__lendApr30dAverage
+    pool__lendApr7dAverage
   pool__lendDailyPercentageRate30dAverage
   pool__lendMonthlyPercentageRate30dAverage
   pool__poolMinDebtAmount
@@ -4660,6 +4838,7 @@ enum OasisEvent_orderBy {
   pool__currentBurnEpoch
   pool__borrowDailyTokenBlocks
   pool__earnDailyTokenBlocks
+    pool__summerDepositAmountEarningInterest
   debtToken
   debtToken__id
   debtToken__address
@@ -4854,6 +5033,7 @@ type Pool {
   interestRate: BigInt!
   borrowApr: BigInt
   apr30dAverage: BigInt!
+    apr7dAverage: BigInt
   dailyPercentageRate30dAverage: BigInt!
   monthlyPercentageRate30dAverage: BigInt!
   interestRatesHistory30d: [BigInt!]!
@@ -4861,6 +5041,7 @@ type Pool {
   lendApr: BigInt
   lendAprHistory30d: [BigInt!]!
   lendApr30dAverage: BigInt!
+    lendApr7dAverage: BigInt
   lendDailyPercentageRate30dAverage: BigInt!
   lendMonthlyPercentageRate30dAverage: BigInt!
   poolMinDebtAmount: BigInt!
@@ -4874,6 +5055,7 @@ type Pool {
   borrowPositions: [String!]!
   borrowDailyTokenBlocks: BigInt!
   earnDailyTokenBlocks: BigInt!
+    summerDepositAmountEarningInterest: BigInt
 }
 
 input Pool_filter {
@@ -5161,6 +5343,14 @@ input Pool_filter {
   apr30dAverage_lte: BigInt
   apr30dAverage_in: [BigInt!]
   apr30dAverage_not_in: [BigInt!]
+    apr7dAverage: BigInt
+    apr7dAverage_not: BigInt
+    apr7dAverage_gt: BigInt
+    apr7dAverage_lt: BigInt
+    apr7dAverage_gte: BigInt
+    apr7dAverage_lte: BigInt
+    apr7dAverage_in: [BigInt!]
+    apr7dAverage_not_in: [BigInt!]
   dailyPercentageRate30dAverage: BigInt
   dailyPercentageRate30dAverage_not: BigInt
   dailyPercentageRate30dAverage_gt: BigInt
@@ -5213,6 +5403,14 @@ input Pool_filter {
   lendApr30dAverage_lte: BigInt
   lendApr30dAverage_in: [BigInt!]
   lendApr30dAverage_not_in: [BigInt!]
+    lendApr7dAverage: BigInt
+    lendApr7dAverage_not: BigInt
+    lendApr7dAverage_gt: BigInt
+    lendApr7dAverage_lt: BigInt
+    lendApr7dAverage_gte: BigInt
+    lendApr7dAverage_lte: BigInt
+    lendApr7dAverage_in: [BigInt!]
+    lendApr7dAverage_not_in: [BigInt!]
   lendDailyPercentageRate30dAverage: BigInt
   lendDailyPercentageRate30dAverage_not: BigInt
   lendDailyPercentageRate30dAverage_gt: BigInt
@@ -5305,6 +5503,14 @@ input Pool_filter {
   earnDailyTokenBlocks_lte: BigInt
   earnDailyTokenBlocks_in: [BigInt!]
   earnDailyTokenBlocks_not_in: [BigInt!]
+    summerDepositAmountEarningInterest: BigInt
+    summerDepositAmountEarningInterest_not: BigInt
+    summerDepositAmountEarningInterest_gt: BigInt
+    summerDepositAmountEarningInterest_lt: BigInt
+    summerDepositAmountEarningInterest_gte: BigInt
+    summerDepositAmountEarningInterest_lte: BigInt
+    summerDepositAmountEarningInterest_in: [BigInt!]
+    summerDepositAmountEarningInterest_not_in: [BigInt!]
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
@@ -5353,6 +5559,7 @@ enum Pool_orderBy {
   interestRate
   borrowApr
   apr30dAverage
+    apr7dAverage
   dailyPercentageRate30dAverage
   monthlyPercentageRate30dAverage
   interestRatesHistory30d
@@ -5360,6 +5567,7 @@ enum Pool_orderBy {
   lendApr
   lendAprHistory30d
   lendApr30dAverage
+    lendApr7dAverage
   lendDailyPercentageRate30dAverage
   lendMonthlyPercentageRate30dAverage
   poolMinDebtAmount
@@ -5373,6 +5581,7 @@ enum Pool_orderBy {
   borrowPositions
   borrowDailyTokenBlocks
   earnDailyTokenBlocks
+    summerDepositAmountEarningInterest
 }
 
 type Query {
@@ -6416,6 +6625,46 @@ type Query {
     """
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): [Claimed!]!
+    interestRate(
+        id: ID!
+
+        """
+        The block at which the query should be executed. Can either be a `{ hash:
+        Bytes }` value containing a block hash, a `{ number: Int }` containing the
+        block number, or a `{ number_gte: Int }` containing the minimum block
+        number. In the case of `number_gte`, the query will be executed on the
+        latest block only if the subgraph has progressed to or past the minimum
+        block number. Defaults to the latest block when omitted.
+        """
+        block: Block_height
+
+        """
+        Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+        """
+        subgraphError: _SubgraphErrorPolicy_! = deny
+    ): InterestRate
+    interestRates(
+        skip: Int = 0
+        first: Int = 100
+        orderBy: InterestRate_orderBy
+        orderDirection: OrderDirection
+        where: InterestRate_filter
+
+        """
+        The block at which the query should be executed. Can either be a `{ hash:
+        Bytes }` value containing a block hash, a `{ number: Int }` containing the
+        block number, or a `{ number_gte: Int }` containing the minimum block
+        number. In the case of `number_gte`, the query will be executed on the
+        latest block only if the subgraph has progressed to or past the minimum
+        block number. Defaults to the latest block when omitted.
+        """
+        block: Block_height
+
+        """
+        Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+        """
+        subgraphError: _SubgraphErrorPolicy_! = deny
+    ): [InterestRate!]!
 
   """Access to subgraph metadata"""
   _meta(block: Block_height): _Meta_
@@ -7559,6 +7808,46 @@ type Subscription {
     """
     subgraphError: _SubgraphErrorPolicy_! = deny
   ): [Claimed!]!
+    interestRate(
+        id: ID!
+
+        """
+        The block at which the query should be executed. Can either be a `{ hash:
+        Bytes }` value containing a block hash, a `{ number: Int }` containing the
+        block number, or a `{ number_gte: Int }` containing the minimum block
+        number. In the case of `number_gte`, the query will be executed on the
+        latest block only if the subgraph has progressed to or past the minimum
+        block number. Defaults to the latest block when omitted.
+        """
+        block: Block_height
+
+        """
+        Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+        """
+        subgraphError: _SubgraphErrorPolicy_! = deny
+    ): InterestRate
+    interestRates(
+        skip: Int = 0
+        first: Int = 100
+        orderBy: InterestRate_orderBy
+        orderDirection: OrderDirection
+        where: InterestRate_filter
+
+        """
+        The block at which the query should be executed. Can either be a `{ hash:
+        Bytes }` value containing a block hash, a `{ number: Int }` containing the
+        block number, or a `{ number_gte: Int }` containing the minimum block
+        number. In the case of `number_gte`, the query will be executed on the
+        latest block only if the subgraph has progressed to or past the minimum
+        block number. Defaults to the latest block when omitted.
+        """
+        block: Block_height
+
+        """
+        Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+        """
+        subgraphError: _SubgraphErrorPolicy_! = deny
+    ): [InterestRate!]!
 
   """Access to subgraph metadata"""
   _meta(block: Block_height): _Meta_
