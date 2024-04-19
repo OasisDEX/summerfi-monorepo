@@ -11,6 +11,8 @@ import {
   Maybe,
   IPosition,
   ChainId,
+  AddressValue,
+  Address,
 } from '@summerfi/sdk-common/common'
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { BaseProtocolPlugin } from '../../../implementation/BaseProtocolPlugin'
@@ -31,11 +33,21 @@ import { CompoundV3ContractNames } from '@summerfi/deployment-types'
 import { CompoundV3PoolId } from '../types/CompoundV3PoolId'
 import { COMPOUND_V3_COLLATERAL_TOKENS } from '../enums/CollateralToken'
 import { COMPOUND_V3_DEBT_TOKENS } from '../enums/DebtToken'
+import { IUser } from '@summerfi/sdk-common/user'
+import {
+  ExternalPositionType,
+  IExternalPosition,
+  TransactionInfo,
+} from '@summerfi/sdk-common/orders/interfaces'
+import { IPositionsManager } from '@summerfi/sdk-common/orders'
+import { encodeERC20Transfer } from '../../common/helpers/ERC20Transfer'
 
 // type AssetsList = ReturnType<CompoundV3ProtocolPlugin['buildAssetsList']>
 // type Asset = Awaited<AssetsList> extends (infer U)[] ? U : never
 
 export class CompoundV3ProtocolPlugin extends BaseProtocolPlugin {
+  readonly Erc20ProxyActionsContractName = 'DssErc20ProxyActions'
+
   readonly protocolName = ProtocolName.CompoundV3
   readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
   readonly stepBuilders: Partial<ActionBuildersMap> = {}
@@ -52,11 +64,60 @@ export class CompoundV3ProtocolPlugin extends BaseProtocolPlugin {
       }),
     }),
     collaterals: z.array(z.string()),
-    debts: z.string(),
+    debt: z.string(),
+    comet: z.custom<Address>(
+      (address: unknown) => address instanceof Address && Address.isValid(address.value),
+      'Invalid address',
+    ),
   })
 
   constructor(params: { context: IProtocolPluginContext }) {
     super(params)
+  }
+  async getImportPositionTransaction(params: {
+    user: IUser
+    externalPosition: IExternalPosition
+    positionsManager: IPositionsManager
+  }): Promise<Maybe<TransactionInfo>> {
+    this.validatePoolId(params.externalPosition.position.pool.poolId)
+
+    const { deployments } = this.ctx
+    const deploymentKey = this._getDeploymentKey(params.user.chainInfo)
+    const deployment = deployments[deploymentKey]
+
+    const erc20ProxyActionsAddress = deployment.dependencies[this.Erc20ProxyActionsContractName]
+      .address as AddressValue
+
+    const sourceAddress =
+      params.externalPosition.externalId.type === ExternalPositionType.WALLET
+        ? params.user.wallet.address.value
+        : erc20ProxyActionsAddress
+
+    const result = encodeERC20Transfer({
+      tokenAddress: params.externalPosition.position.pool.poolId.comet.value,
+      transferTo: params.positionsManager.address.value,
+      transferAmount: TokenAmount.createFromBaseUnit({
+        token: Token.createFrom({
+          address: params.externalPosition.position.pool.poolId.comet,
+          symbol: 'COMET',
+          name: 'COMET',
+          decimals: 18,
+          chainInfo: params.user.chainInfo,
+        }),
+        amount: '0',
+      }),
+      source: params.externalPosition.externalId.type,
+      sourceAddress: sourceAddress,
+    })
+
+    return {
+      description: 'Import Compound V3 position',
+      transaction: {
+        calldata: result.calldata,
+        target: result.target,
+        value: '0',
+      },
+    }
   }
 
   isPoolId(candidate: unknown): candidate is CompoundV3PoolId {
@@ -89,7 +150,7 @@ export class CompoundV3ProtocolPlugin extends BaseProtocolPlugin {
   async getPool(compoundV3PoolId: unknown): Promise<CompoundV3LendingPool> {
     this.validatePoolId(compoundV3PoolId)
     const poolDetails = compoundV3PoolId
-    console.log(poolDetails.protocol.chainInfo)
+
     const ctx = this.ctx
 
     const chainId = ctx.provider.chain?.id
@@ -135,6 +196,12 @@ export class CompoundV3ProtocolPlugin extends BaseProtocolPlugin {
       debts: CompoundV3DebtConfigMap.createFrom({ record: debts }),
     })
   }
+
+  // readonly type: PositionType
+  // readonly positionId: PositionId
+  // readonly debtAmount: ITokenAmount
+  // readonly collateralAmount: ITokenAmount
+  // readonly pool: IPool
 
   async getPosition(positionId: string): Promise<IPosition> {
     throw new Error(`Not implemented ${positionId}`)

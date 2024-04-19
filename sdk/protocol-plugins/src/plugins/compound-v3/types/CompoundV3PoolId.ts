@@ -1,4 +1,4 @@
-import { ChainInfo, TokenSymbol } from '@summerfi/sdk-common/common'
+import { Address, ChainInfo, TokenSymbol } from '@summerfi/sdk-common/common'
 import { IPoolId, ProtocolName, isPoolId } from '@summerfi/sdk-common/protocols'
 
 export interface CompoundV3PoolId extends IPoolId {
@@ -8,6 +8,7 @@ export interface CompoundV3PoolId extends IPoolId {
   }
   collaterals: TokenSymbol[]
   debt: TokenSymbol
+  comet: Address
 }
 
 export function isCompoundV3PoolId(
@@ -17,6 +18,7 @@ export function isCompoundV3PoolId(
     isPoolId(maybeCompoundV3PoolId) &&
     'collaterals' in maybeCompoundV3PoolId &&
     'debts' in maybeCompoundV3PoolId &&
+    'comet' in maybeCompoundV3PoolId &&
     maybeCompoundV3PoolId.protocol.name === ProtocolName.CompoundV3
   )
 }

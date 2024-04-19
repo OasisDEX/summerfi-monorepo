@@ -20,3 +20,4 @@ export {
   AaveV3LikeProtocolDataBuilder,
   filterAssetsListByEMode,
 } from './AAVEv3LikeProtocolDataBuilder'
+export { encodeERC20Transfer } from './ERC20Transfer'

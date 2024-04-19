@@ -4,6 +4,8 @@ import { Address } from '../../../common/implementation/Address'
 export enum ExternalPositionType {
   WALLET = 'WALLET',
   DS_PROXY = 'DS_PROXY',
+  SAFE = 'SAFE',
+  LITTLE_FROGGY = 'LITTLE_FROGGY',
 }
 
 export interface IExternalPositionId {

@@ -1,24 +1,29 @@
-import { ActionCall, BaseAction } from '@summerfi/protocol-plugins-common'
+import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { Address, TokenAmount } from '@summerfi/sdk-common/common'
 
 export class CompoundV3WithdrawAction extends BaseAction {
   public readonly config = {
     name: 'CompoundV3Withdraw',
-    version: 1,
-    parametersAbi: '/** INSERT HERE - THE ACTION PARAMETERS **/',
-    storageInputs: [/** INSERT HERE - THE STORAGE INPUTS **/],
-    storageOutputs: [/** INSERT HERE - THE STORAGE OUTPUTS **/],
+    version: 0,
+    parametersAbi: '(address comet, address asset, uint256 amount)',
+    storageInputs: [],
+    storageOutputs: ['amountWithdrawn'],
   } as const
 
   public encodeCall(
     params: {
-        /** INSERT HERE - THE ACTION PARAMETERS **/
+      comet: Address
+      withdrawAmount: TokenAmount
     },
-    paramsMapping?: number[],
+    paramsMapping?: InputSlotsMapping,
   ): ActionCall {
     return this._encodeCall({
       arguments: [
-        /** INSERT HERE - THE ACTION ARGS  **/
+        {
+          comet: params.comet.value,
+          asset: params.withdrawAmount.token.address.value,
+          amount: params.withdrawAmount.toBaseUnit(),
+        },
       ],
       mapping: paramsMapping,
     })
