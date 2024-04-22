@@ -1,4 +1,3 @@
-import { applyPercentage, subtractPercentage } from '@summerfi/sdk-common/utils'
 import {
   FlashloanProvider,
   ISimulation,

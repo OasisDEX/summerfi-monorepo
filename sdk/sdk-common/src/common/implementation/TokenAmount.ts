@@ -3,8 +3,6 @@ import { Percentage } from './Percentage'
 import { Token } from './Token'
 import { SerializationService } from '../../services/SerializationService'
 import { ITokenAmount } from '../interfaces/ITokenAmount'
-import { Price } from '.'
-import { isSameTokens } from '..'
 
 /**
  * @class TokenAmount
