@@ -1,0 +1,53 @@
+query GetInterestRates(
+    $marketId: String!,
+    $marketIdBytes: ID!,
+    $fromTimestamp: BigInt!,
+    $toTimestamp: BigInt!
+    $first: Int!,
+    $skip: Int!) {
+    market(id: $marketIdBytes) {
+        id
+        collateralToken {
+            address
+            symbol
+            decimals
+        }
+        debtToken {
+            address
+            symbol
+            decimals
+        }
+    }
+    interestRates(
+        where: { market: $marketId, timestamp_gte: $fromTimestamp, timestamp_lte: $toTimestamp },
+        orderBy: timestamp,
+        orderDirection: asc,
+        first: $first,
+        skip: $skip) {
+        id
+        rate
+        timestamp
+        type
+    }
+    previousBorrowRate: interestRates(
+        where: { market: $marketId, timestamp_lt: $fromTimestamp, type: "borrow" },
+        orderBy: timestamp,
+        orderDirection: desc,
+        first: 1) {
+        id
+        rate
+        timestamp
+        type
+    }
+
+    previousLendRate: interestRates(
+        where: { market: $marketId, timestamp_lt: $fromTimestamp, type: "lend" },
+        orderBy: timestamp,
+        orderDirection: desc,
+        first: 1) {
+        id
+        rate
+        timestamp
+        type
+    }
+}

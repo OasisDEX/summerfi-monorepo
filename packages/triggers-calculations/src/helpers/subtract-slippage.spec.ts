@@ -1,5 +1,6 @@
-import { Percentage, TokenBalance } from '@summerfi/triggers-shared'
+import { TokenBalance } from '@summerfi/triggers-shared'
 import { subtractPercentage } from './subtract-percentage'
+import { Percentage } from '@summerfi/serverless-shared'
 
 describe('subtract slippage', () => {
   it(`Should return a value of 0.998 ETH when slippage is 0.2% and balance is 1 ETH.`, () => {

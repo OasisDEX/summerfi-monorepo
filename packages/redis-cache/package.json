@@ -1,0 +1,22 @@
+{
+  "name": "@summerfi/redis-cache",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "jest --passWithNoTests",
+    "build": "tsc -b -v",
+    "dev": "tsc -b -w",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@summerfi/abstractions": "workspace:*",
+    "redis": "^4.6.13"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "eslint": "^8.57.0"
+  }
+}

@@ -34,7 +34,10 @@
     "ONE_INCH_API_SPOT_KEY",
     "SDK_API_URL",
     "SDK_LOGGING_ENABLED",
-    "MAINNET_RPC_URL"
+    "MAINNET_RPC_URL",
+    "REDIS_CACHE_URL",
+    "REDIS_CACHE_USER",
+    "REDIS_CACHE_PASSWORD"
   ],
   "pipeline": {
     "dev": {
@@ -43,7 +46,7 @@
     },
     "prebuild": {
       "dependsOn": ["^prebuild"],
-      "outputs": ["src/types/graphql/generated.ts"]
+      "outputs": ["src/types/graphql/generated.ts", "src/generated"]
     },
     "build": {
       "dependsOn": ["prebuild", "^build"],

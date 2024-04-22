@@ -1,6 +1,7 @@
 {
   "private": true,
   "scripts": {
+    "dev": "turbo run dev --concurrency=100",
     "prebuild": "turbo run prebuild --cache-dir=.turbo",
     "build": "turbo run build --cache-dir=.turbo",
     "lint": "turbo run lint --cache-dir=.turbo",
@@ -33,7 +34,7 @@
     "@types/aws-lambda": "^8.10.137",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.7",
-    "aws-cdk-lib": "2.137.0",
+    "aws-cdk-lib": "2.132.1",
     "constructs": "10.3.0",
     "dotenv": "^16.4.5",
     "esbuild": "^0.20.2",
@@ -53,7 +54,7 @@
   "name": "summerfi-monorepo",
   "packageManager": "pnpm@8.15.4",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "dependencies": {
     "bignumber.js": "^9.1.2",

@@ -1,4 +1,5 @@
-import { PERCENT_DECIMALS, Percentage, TokenBalance } from '@summerfi/triggers-shared'
+import { PERCENT_DECIMALS, TokenBalance } from '@summerfi/triggers-shared'
+import { Percentage } from '@summerfi/serverless-shared'
 
 export const subtractPercentage = (
   tokenBalance: TokenBalance,

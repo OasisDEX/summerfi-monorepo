@@ -1,6 +1,6 @@
 {
   "name": "summerfi-sdk-client",
-  "version": "0.0.9",
+  "version": "0.1.1",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "packageManager": "yarn@1.22.21",

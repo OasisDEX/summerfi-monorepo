@@ -1,7 +1,6 @@
 import { adjustToTargetRiskRatio, RiskRatio } from '@oasisdex/dma-library'
 import BigNumber from 'bignumber.js'
 import {
-  LTV,
   MULTIPLY_DECIMALS,
   ONE_PERCENT,
   PERCENT_DECIMALS,
@@ -10,6 +9,7 @@ import {
   PRICE_DECIMALS,
 } from '@summerfi/triggers-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
+import { LTV } from '@summerfi/serverless-shared'
 
 export interface SimulatedPosition {
   targetLTV: LTV
