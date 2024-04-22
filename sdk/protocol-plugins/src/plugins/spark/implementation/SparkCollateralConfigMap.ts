@@ -27,9 +27,8 @@ export class SparkCollateralConfigMap
     collateral: IToken
     collateralConfig: ISparkCollateralConfig
   }): void {
-    this.record[this._formatRecordKey(params.collateral.address.value)] = SparkCollateralConfig.createFrom(
-      params.collateralConfig,
-    )
+    this.record[this._formatRecordKey(params.collateral.address.value)] =
+      SparkCollateralConfig.createFrom(params.collateralConfig)
   }
 
   public override get(params: { token: IToken }): Maybe<SparkCollateralConfig> {

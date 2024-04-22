@@ -27,9 +27,8 @@ export class MakerCollateralConfigMap
     collateral: IToken
     collateralConfig: IMakerCollateralConfig
   }): void {
-    this.record[this._formatRecordKey(params.collateral.address.value)] = MakerCollateralConfig.createFrom(
-      params.collateralConfig,
-    )
+    this.record[this._formatRecordKey(params.collateral.address.value)] =
+      MakerCollateralConfig.createFrom(params.collateralConfig)
   }
 
   public override get(params: { token: IToken }): Maybe<MakerCollateralConfig> {

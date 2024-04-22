@@ -1,4 +1,4 @@
-import {HexData} from "../../common/aliases/HexData";
+import { HexData } from '../../common/aliases/HexData'
 import { AddressValue } from '../../common/aliases/AddressValue'
 import { Maybe } from '../../common/aliases/Maybe'
 import { IToken } from '../../common/interfaces/IToken'
@@ -22,7 +22,9 @@ export class DebtConfigMap implements IDebtConfigMap {
   }
 
   public add(params: { debt: IToken; debtConfig: IDebtConfig }): void {
-    this.record[this._formatRecordKey(params.debt.address.value)] = DebtConfig.createFrom(params.debtConfig)
+    this.record[this._formatRecordKey(params.debt.address.value)] = DebtConfig.createFrom(
+      params.debtConfig,
+    )
   }
 
   public get(params: { token: IToken }): Maybe<DebtConfig> {

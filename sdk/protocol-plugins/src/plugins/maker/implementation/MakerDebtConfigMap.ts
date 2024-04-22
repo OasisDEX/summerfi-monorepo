@@ -21,7 +21,9 @@ export class MakerDebtConfigMap extends DebtConfigMap implements IMakerDebtConfi
   }
 
   public override add(params: { debt: IToken; debtConfig: IMakerDebtConfig }): void {
-    this.record[this._formatRecordKey(params.debt.address.value)] = MakerDebtConfig.createFrom(params.debtConfig)
+    this.record[this._formatRecordKey(params.debt.address.value)] = MakerDebtConfig.createFrom(
+      params.debtConfig,
+    )
   }
 
   public override get(params: { token: IToken }): Maybe<MakerDebtConfig> {

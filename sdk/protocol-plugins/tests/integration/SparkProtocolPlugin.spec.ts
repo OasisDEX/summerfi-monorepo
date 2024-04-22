@@ -8,7 +8,7 @@ import {
   TokenAmount,
   Percentage,
 } from '@summerfi/sdk-common/common'
-import {SparkLendingPool, SparkProtocolPlugin} from '../../src/plugins/spark'
+import { SparkLendingPool, SparkProtocolPlugin } from '../../src/plugins/spark'
 import { sparkPoolIdMock as validSparkPoolId } from '../mocks/SparkPoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 
