@@ -9,7 +9,7 @@ import {
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
 import { Position, TokenAmount, Percentage, Price, Token } from '@summerfi/sdk-common/common'
-import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
+import { exchange, newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
 import { refinanceLendingToLendingAnyPairStrategy } from './Strategy'
@@ -17,6 +17,7 @@ import { type IRefinanceDependencies } from '../common/Types'
 import { getSwapStepData } from '../../implementation/utils/GetSwapStepData'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
 import { isSameTokens } from '@summerfi/sdk-common'
+import BigNumber from 'bignumber.js'
 
 export async function refinanceLendingToLendingAnyPair(
   args: IRefinanceParameters,
@@ -50,6 +51,8 @@ export async function refinanceLendingToLendingAnyPair(
     position.collateralAmount.token.address,
   )
   const isDebtSwapSkipped = targetDebtConfig.token.address.equals(position.debtAmount.token.address)
+
+  console.log(`WE ARE FLASHLOANING ${flashloanAmount.toString()}`)
 
   const simulation = await simulator
     .next(async () => ({
@@ -91,9 +94,11 @@ export async function refinanceLendingToLendingAnyPair(
       type: SimulationSteps.DepositBorrow,
       inputs: {
         // refactor
-        borrowAmount: await estimateTokenAmountAfterSwap({
-          sourceAmount: position.debtAmount,
-          targetToken: targetDebtConfig.token,
+        borrowAmount: isDebtSwapSkipped 
+          ? ctx.getReference(['PaybackWithdrawFromSource', 'paybackAmount']) 
+          : await estimateSwapFromAmount({
+          receiveAtLeast: flashloanAmount,
+          fromToken: targetDebtConfig.token,
           slippage: Percentage.createFrom(args.slippage),
           swapManager: dependencies.swapManager,
         }),
@@ -143,7 +148,6 @@ export async function refinanceLendingToLendingAnyPair(
           token: position.debtAmount.token,
         },
       }),
-      isDebtSwapSkipped,
     )
     .next(async (ctx) => {
       // TODO: we should have a way to get the target position more easily and realiably,
@@ -181,6 +185,7 @@ export async function refinanceLendingToLendingAnyPair(
   } satisfies ISimulation<SimulationType.Refinance>
 }
 
+
 /**
  * EstimateTokenAmountAfterSwap
  * @description Estimates how much you will recive after swap.
@@ -188,40 +193,42 @@ export async function refinanceLendingToLendingAnyPair(
  *    When we perform a swap, we need to account for the summer fee,
  *    and we assume maximum slippage.
  */
-async function estimateTokenAmountAfterSwap(params: {
-  sourceAmount: TokenAmount
-  targetToken: Token
+async function estimateSwapFromAmount(params: {
+  receiveAtLeast: TokenAmount
+  fromToken: Token
   slippage: Percentage
   swapManager: ISwapManager
 }): Promise<TokenAmount> {
-  const { sourceAmount, slippage } = params
+  const { receiveAtLeast, slippage } = params
   
-  if (isSameTokens(sourceAmount.token, params.targetToken)) {
-    return sourceAmount
+  if (isSameTokens(receiveAtLeast.token, params.fromToken)) {
+    return receiveAtLeast
   }
 
   const spotPrice = (
     await params.swapManager.getSpotPrice({
-      chainInfo: sourceAmount.token.chainInfo,
-      baseToken: params.targetToken,
-      quoteToken: sourceAmount.token,
+      chainInfo: receiveAtLeast.token.chainInfo,
+      baseToken: params.fromToken,
+      quoteToken: receiveAtLeast.token,
     })
   ).price
 
+  
   const summerFee = await params.swapManager.getSummerFee({
-    from: { token: sourceAmount.token },
-    to: { token: params.targetToken },
+    from: { token: receiveAtLeast.token },
+    to: { token: params.fromToken },
   })
 
-  const summerFeeAmount = applyPercentage(sourceAmount, summerFee)
-  const prevAmountAfterFee = sourceAmount.subtract(summerFeeAmount)
-  const amountInTagetToken = prevAmountAfterFee.multiply(spotPrice)
-  
-  const amountAfterSlippage = subtractPercentage(
-    amountInTagetToken,
-    Percentage.createFrom({
-      value: slippage.value,
-    }),
-  )
-  return amountAfterSlippage
+  const ONE = new BigNumber(1)
+  /*
+  TargetAmt = SourceAmt * (1 - SummerFee) / (SpotPrice * (1 + Slippage))
+  SourceAmt = TargetAmt * SpotPrice * (1 + Slippage) / (1 - SummerFee) 
+  */
+
+  const sourceAmount = params.receiveAtLeast.toBN().multipliedBy(spotPrice.toBN().times(ONE.plus(slippage.toProportion()))).div(ONE.minus(summerFee.toProportion()))
+
+  return TokenAmount.createFrom({
+    amount: sourceAmount.toString(),
+    token: params.fromToken,
+  })
 }

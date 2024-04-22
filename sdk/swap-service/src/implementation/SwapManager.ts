@@ -42,6 +42,7 @@ export class SwapManager implements ISwapManager {
     chainInfo: ChainInfo
     fromAmount: TokenAmount
     toToken: Token
+    slippage: Percentage
     forceUseProvider?: SwapProviderType
   }): Promise<QuoteData> {
     const provider: Maybe<ISwapProvider> = this._getBestProvider(params)

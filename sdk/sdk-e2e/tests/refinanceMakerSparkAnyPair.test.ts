@@ -51,7 +51,7 @@ import {
 jest.setTimeout(300000)
 
 const SDKAPiUrl = 'https://nkllstfoy8.execute-api.us-east-1.amazonaws.com/api/sdk'
-const TenderlyForkUrl = 'https://virtual.mainnet.rpc.tenderly.co/dff10c5c-3f1d-4a78-9132-de17d2768c13'
+const TenderlyForkUrl = 'https://virtual.mainnet.rpc.tenderly.co/616d2e18-f889-4857-abc0-fa423dc91519'
 
 describe.only('Refinance Maker Spark | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
@@ -90,7 +90,7 @@ describe.only('Refinance Maker Spark | SDK', () => {
     // Positions Manager
     const positionsManager: IPositionsManager = {
       address: Address.createFromEthereum({
-        value: '0x7f65e7326f22963e2039734ddff61958d5d284ca',
+        value: '0x8c6322eaa8e3a5fe1b813d5fa266318bea3b44aa',
       }),
     }
 
@@ -116,7 +116,7 @@ describe.only('Refinance Maker Spark | SDK', () => {
         chainInfo: chain.chainInfo,
       },
       ilkType: ILKType.ETH_C,
-      vaultId: '31690',
+      vaultId: '31696',
     }
 
     const makerPool = await maker.getPool({
@@ -131,10 +131,10 @@ describe.only('Refinance Maker Spark | SDK', () => {
     // Source position
     const makerPosition: Position = Position.createFrom({
       type: PositionType.Multiply,
-      positionId: PositionId.createFrom({ id: '31690' }),
+      positionId: PositionId.createFrom({ id: '31696' }),
       debtAmount: TokenAmount.createFromBaseUnit({
         token: DAI,
-        amount: '5000000000000000000001',
+        amount: '5000000000000000000000',
       }),
       collateralAmount: TokenAmount.createFromBaseUnit({
         token: WETH,
