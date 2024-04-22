@@ -21,11 +21,13 @@ export class AaveV3DebtConfigMap extends DebtConfigMap implements IAaveV3DebtCon
   }
 
   public override add(params: { debt: IToken; debtConfig: IAaveV3DebtConfig }): void {
-    this.record[params.debt.address.value] = AaveV3DebtConfig.createFrom(params.debtConfig)
+    this.record[this._formatRecordKey(params.debt.address.value)] = AaveV3DebtConfig.createFrom(
+      params.debtConfig,
+    )
   }
 
   public override get(params: { token: IToken }): Maybe<AaveV3DebtConfig> {
-    return this.record[params.token.address.value]
+    return this.record[this._formatRecordKey(params.token.address.value)]
   }
 }
 
