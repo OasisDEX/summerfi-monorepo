@@ -1,3 +1,4 @@
+import {HexData} from "../../common";
 import { AddressValue } from '../../common/aliases/AddressValue'
 import { Maybe } from '../../common/aliases/Maybe'
 import { IToken } from '../../common/interfaces/IToken'
@@ -21,17 +22,21 @@ export class DebtConfigMap implements IDebtConfigMap {
   }
 
   public add(params: { debt: IToken; debtConfig: IDebtConfig }): void {
-    this.record[params.debt.address.value] = DebtConfig.createFrom(params.debtConfig)
+    this.record[this._lowerCaseAddress(params.debt.address.value)] = DebtConfig.createFrom(params.debtConfig)
   }
 
   public get(params: { token: IToken }): Maybe<DebtConfig> {
-    return this.record[params.token.address.value]
+    return this.record[this._lowerCaseAddress(params.token.address.value)]
   }
 
   protected _importDebtConfigMap(params: IDebtConfigMap): void {
     return Object.entries(params.record).forEach(([, debtConfig]) => {
       this.add({ debt: debtConfig.token, debtConfig })
     })
+  }
+
+  protected _lowerCaseAddress(address: HexData) {
+    return address.toLowerCase() as HexData
   }
 }
 
