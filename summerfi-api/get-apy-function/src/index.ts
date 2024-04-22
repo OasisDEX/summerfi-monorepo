@@ -16,11 +16,16 @@ import {
 } from '@summerfi/serverless-shared'
 import { z } from 'zod'
 import { getMorphoBlueSubgraphClient } from '@summerfi/morpho-blue-subgraph'
-import { getMorphoBlueApy } from './morpho-blue'
 import { getAjnaSubgraphClient } from '@summerfi/ajna-subgraph'
-import { getAjnaApy } from './ajna'
 import { getAaveSparkSubgraphClient } from '@summerfi/aave-spark-subgraph'
-import { getAaveSparkBorrowRates } from './aave-spark'
+import { getRedisInstance } from '@summerfi/redis-cache'
+import { getCachableYieldService } from '@summerfi/defi-llama-client'
+import { getTokenApyService } from './tokens-apy-service'
+import { CalculatedRates, ProtocolResponse } from './protocols/types'
+import { getAaveSparkRates, getAjnaRates, getMorphoBlueRates } from './protocols'
+import * as process from 'node:process'
+import { getFinalApy } from './final-apy-calculation'
+import { DistributedCache } from '@summerfi/abstractions'
 
 const logger = new Logger({ serviceName: 'get-apy-function' })
 
@@ -82,41 +87,97 @@ type AaveLikePosition = z.infer<typeof aaveLikePositionSchema>
 type MorphoBluePosition = z.infer<typeof morphoBluePositionSchema>
 type AjnaPosition = z.infer<typeof ajnaPositionSchema>
 
+type ApyResult = CalculatedRates & { apy: number }
+
 interface ApyResponse {
   position: AaveLikePosition | MorphoBluePosition | AjnaPosition
-  results: {
-    apy: number
-    apy7d: number
-    apy30d: number
-    apy90d: number
-  }
+  multiply: number
+  positionData: unknown
+  results: ApyResult
   breakdowns: {
-    borrowCost: {
-      apy: number
-      apy7d: number
-      apy30d: number
-      apy90d: number
-    }
-    supplyReward: {
-      apy: number
-      apy7d: number
-      apy30d: number
-      apy90d: number
-    }
-    underlyingBorrowedTokenYield: {
-      apy: number
-      apy7d: number
-      apy30d: number
-      apy90d: number
-    }
-    underlyingSuppliedTokenYield: {
-      apy: number
-      apy7d: number
-      apy30d: number
-      apy90d: number
-    }
+    borrowCost: ApyResult
+    supplyReward: ApyResult
+    underlyingBorrowedTokenYield: ApyResult
+    underlyingSuppliedTokenYield: ApyResult
   }
-  debug: unknown
+}
+
+const getUnifiedProtocolRates = async (
+  protocolId: ProtocolId,
+  event: APIGatewayProxyEventV2,
+  logger: Logger,
+  subgraphsConfig: {
+    urlBase: string
+    chainId: ChainId
+  },
+): Promise<
+  | { isValid: false; message: string }
+  | {
+      isValid: true
+      protocolRates: ProtocolResponse<unknown>
+      position: AaveLikePosition | MorphoBluePosition | AjnaPosition
+    }
+> => {
+  if (
+    protocolId === ProtocolId.AAVE3 ||
+    protocolId === ProtocolId.AAVE_V2 ||
+    protocolId === ProtocolId.AAVE_V3 ||
+    protocolId === ProtocolId.SPARK
+  ) {
+    const parseResult = aaveLikePositionSchema.safeParse(event.queryStringParameters)
+    if (!parseResult.success) {
+      return { isValid: false, message: 'Invalid query parameters' }
+    }
+
+    const rates = await getAaveSparkRates({
+      collateralToken: parseResult.data.collateral[0],
+      debtToken: parseResult.data.debt[0],
+      protocol: protocolId,
+      logger,
+      timestamp: parseResult.data.referenceDate,
+      subgraphClient: getAaveSparkSubgraphClient({ ...subgraphsConfig, logger }),
+    })
+
+    return { isValid: true, protocolRates: rates, position: parseResult.data }
+  }
+
+  if (protocolId === ProtocolId.AJNA) {
+    const parseResult = ajnaPositionSchema.safeParse(event.queryStringParameters)
+    if (!parseResult.success) {
+      return { isValid: false, message: 'Invalid query parameters' }
+    }
+
+    const rates = await getAjnaRates({
+      poolId: parseResult.data.poolAddress,
+      logger,
+      timestamp: parseResult.data.referenceDate,
+      subgraphClient: getAjnaSubgraphClient({ ...subgraphsConfig, logger }),
+    })
+
+    return { isValid: true, protocolRates: rates, position: parseResult.data }
+  }
+
+  if (protocolId === ProtocolId.MORPHO_BLUE) {
+    const parseResult = morphoBluePositionSchema.safeParse(event.queryStringParameters)
+    if (!parseResult.success) {
+      return { isValid: false, message: 'Invalid query parameters' }
+    }
+
+    const rates = await getMorphoBlueRates({
+      marketId: parseResult.data.marketId,
+      logger,
+      timestamp: parseResult.data.referenceDate,
+      subgraphClient: getMorphoBlueSubgraphClient({
+        ...subgraphsConfig,
+        logger,
+        chainId: ChainId.MAINNET,
+      }),
+    })
+
+    return { isValid: true, protocolRates: rates, position: parseResult.data }
+  }
+
+  return { isValid: false, message: 'Unsupported protocol' }
 }
 
 export const handler = async (
@@ -125,6 +186,9 @@ export const handler = async (
 ): Promise<APIGatewayProxyResultV2> => {
   const RPC_GATEWAY = process.env.RPC_GATEWAY
   const SUBGRAPH_BASE = process.env.SUBGRAPH_BASE
+  const REDIS_CACHE_URL = process.env.REDIS_CACHE_URL
+  const REDIS_CACHE_USER = process.env.REDIS_CACHE_USER
+  const REDIS_CACHE_PASSWORD = process.env.REDIS_CACHE_PASSWORD
 
   logger.addContext(context)
   if (!RPC_GATEWAY) {
@@ -137,6 +201,32 @@ export const handler = async (
     return ResponseInternalServerError('SUBGRAPH_BASE is not set')
   }
 
+  if (!REDIS_CACHE_URL) {
+    logger.warn('REDIS_CACHE_URL is not set, the function will not use cache')
+  }
+
+  const sixHoursInSeconds = 6 * 60 * 60
+
+  const cache = !REDIS_CACHE_URL
+    ? ({
+        get: async () => null,
+        set: async () => {},
+      } as DistributedCache)
+    : await getRedisInstance(
+        {
+          url: REDIS_CACHE_URL,
+          ttlInSeconds: sixHoursInSeconds,
+          username: REDIS_CACHE_USER,
+          password: REDIS_CACHE_PASSWORD,
+        },
+        logger,
+      )
+
+  const defiLlamaClient = getCachableYieldService(cache, logger)
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const tokenApyService = getTokenApyService({ yieldService: defiLlamaClient, logger })
+
   logger.debug(`Query params`, { params: event.queryStringParameters })
 
   const path = pathParamsSchema.safeParse(event.pathParameters)
@@ -148,156 +238,58 @@ export const handler = async (
     })
   }
 
-  const { protocol } = path.data
+  const { protocol, chainId } = path.data
 
-  let parser:
-    | typeof aaveLikePositionSchema
-    | typeof morphoBluePositionSchema
-    | typeof ajnaPositionSchema
-    | null = null
+  const unifiedProtocolRates = await getUnifiedProtocolRates(protocol, event, logger, {
+    urlBase: SUBGRAPH_BASE,
+    chainId,
+  })
 
-  let rates: unknown = null
-
-  switch (protocol) {
-    case ProtocolId.AAVE3:
-    case ProtocolId.AAVE_V2:
-    case ProtocolId.AAVE_V3:
-    case ProtocolId.SPARK:
-      parser = aaveLikePositionSchema
-      break
-    case ProtocolId.AJNA:
-      parser = ajnaPositionSchema
-      break
-    case ProtocolId.MORPHO_BLUE:
-      parser = morphoBluePositionSchema
+  if (!unifiedProtocolRates.isValid) {
+    logger.error('Invalid query parameters', { message: unifiedProtocolRates.message })
+    return ResponseBadRequest({ body: { message: unifiedProtocolRates.message } })
   }
 
-  if (!parser) {
-    logger.error('Unsupported protocol', { protocol })
-    return ResponseBadRequest({ body: { message: 'Unsupported protocol' } })
-  }
+  const suppliedTokenRates = await tokenApyService.getTokenApy({
+    token: unifiedProtocolRates.protocolRates.tokens.supplied,
+    referenceDate: unifiedProtocolRates.position.referenceDate,
+  })
 
-  const positionData = parser.safeParse(event.queryStringParameters)
+  const borrowedTokenRates = await tokenApyService.getTokenApy({
+    token: unifiedProtocolRates.protocolRates.tokens.borrowed,
+    referenceDate: unifiedProtocolRates.position.referenceDate,
+  })
 
-  if (!positionData.success) {
-    return ResponseBadRequest({
-      body: { message: 'Invalid query parameters', errors: positionData.error },
-    })
-  }
-
-  if (protocol === ProtocolId.MORPHO_BLUE) {
-    const positionData = morphoBluePositionSchema.safeParse(event.queryStringParameters)
-    if (!positionData.success) {
-      return ResponseBadRequest({
-        body: { message: 'Invalid query parameters', errors: positionData.error },
-      })
-    }
-
-    const client = getMorphoBlueSubgraphClient({
-      logger: logger,
-      chainId: ChainId.MAINNET,
-      urlBase: SUBGRAPH_BASE,
-    })
-
-    const timestamp = Math.floor(positionData.data.referenceDate.getTime() / 1000)
-
-    rates = await getMorphoBlueApy({
-      ltv: positionData.data.ltv,
-      marketId: positionData.data.marketId,
-      timestamp,
-      logger: logger,
-      subgraphClient: client,
-    })
-  }
-
-  if (protocol === ProtocolId.AJNA) {
-    const positionData = ajnaPositionSchema.safeParse(event.queryStringParameters)
-    if (!positionData.success) {
-      return ResponseBadRequest({
-        body: { message: 'Invalid query parameters', errors: positionData.error },
-      })
-    }
-
-    const client = getAjnaSubgraphClient({
-      logger: logger,
-      chainId: path.data.chainId,
-      urlBase: SUBGRAPH_BASE,
-    })
-
-    const timestamp = Math.floor(positionData.data.referenceDate.getTime() / 1000)
-
-    rates = await getAjnaApy({
-      ltv: positionData.data.ltv,
-      poolId: positionData.data.poolAddress,
-      timestamp,
-      logger: logger,
-      subgraphClient: client,
-    })
-  }
-
-  if (
-    protocol === ProtocolId.AAVE_V3 ||
-    protocol === ProtocolId.AAVE_V2 ||
-    protocol === ProtocolId.SPARK
-  ) {
-    const positionData = aaveLikePositionSchema.safeParse(event.queryStringParameters)
-    if (!positionData.success) {
-      return ResponseBadRequest({
-        body: { message: 'Invalid query parameters', errors: positionData.error },
-      })
-    }
-
-    const client = getAaveSparkSubgraphClient({
-      logger: logger,
-      chainId: path.data.chainId,
-      urlBase: SUBGRAPH_BASE,
-    })
-
-    const timestamp = Math.floor(positionData.data.referenceDate.getTime() / 1000)
-
-    rates = await getAaveSparkBorrowRates({
-      ltv: positionData.data.ltv,
-      token: positionData.data.debt[0],
-      protocol,
-      timestamp,
-      logger: logger,
-      subgraphClient: client,
-    })
-  }
+  const { rates: finalApy, multiply } = getFinalApy({
+    supplied: [suppliedTokenRates.rates, unifiedProtocolRates.protocolRates.supplyRates],
+    borrowed: [borrowedTokenRates.rates, unifiedProtocolRates.protocolRates.borrowRates],
+    ltv: unifiedProtocolRates.position.ltv,
+  })
 
   const result: ApyResponse = {
-    position: positionData.data,
-    debug: rates,
+    multiply,
+    position: unifiedProtocolRates.position,
+    positionData: unifiedProtocolRates.protocolRates.protocolData,
     results: {
-      apy: 0,
-      apy7d: 0,
-      apy30d: 0,
-      apy90d: 0,
+      ...finalApy,
+      apy: finalApy.apy365d,
     },
     breakdowns: {
       borrowCost: {
-        apy: 0,
-        apy7d: 0,
-        apy30d: 0,
-        apy90d: 0,
+        ...unifiedProtocolRates.protocolRates.borrowRates,
+        apy: unifiedProtocolRates.protocolRates.borrowRates.apy365d,
       },
       supplyReward: {
-        apy: 0,
-        apy7d: 0,
-        apy30d: 0,
-        apy90d: 0,
+        ...unifiedProtocolRates.protocolRates.supplyRates,
+        apy: unifiedProtocolRates.protocolRates.supplyRates.apy365d,
       },
       underlyingBorrowedTokenYield: {
-        apy: 0,
-        apy7d: 0,
-        apy30d: 0,
-        apy90d: 0,
+        ...borrowedTokenRates.rates,
+        apy: borrowedTokenRates.rates.apy365d,
       },
       underlyingSuppliedTokenYield: {
-        apy: 0,
-        apy7d: 0,
-        apy30d: 0,
-        apy90d: 0,
+        ...suppliedTokenRates.rates,
+        apy: suppliedTokenRates.rates.apy365d,
       },
     },
   }

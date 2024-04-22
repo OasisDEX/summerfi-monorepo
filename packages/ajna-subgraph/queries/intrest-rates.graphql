@@ -11,10 +11,12 @@ query GetInterestRates(
         collateralToken {
             address
             symbol
+            decimals
         }
         quoteToken {
             address
             symbol
+            decimals
         }
     }
     interestRates(

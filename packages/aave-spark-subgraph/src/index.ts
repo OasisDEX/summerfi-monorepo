@@ -46,7 +46,7 @@ export type GetCollateralLocked = (
 
 export interface GetInterestRateParams {
   token: Address
-  protocol: ProtocolId.AAVE_V3 | ProtocolId.AAVE_V2 | ProtocolId.SPARK
+  protocol: ProtocolId.AAVE_V3 | ProtocolId.AAVE_V2 | ProtocolId.SPARK | ProtocolId.AAVE3
   fromTimestamp: number
   toTimestamp: number
 }
@@ -60,10 +60,11 @@ export interface InterestRate {
 }
 
 export interface AaveSparkInterestRateResult {
-  protocol: ProtocolId.AAVE_V3 | ProtocolId.AAVE_V2 | ProtocolId.SPARK
+  protocol: ProtocolId.AAVE_V3 | ProtocolId.AAVE_V2 | ProtocolId.SPARK | ProtocolId.AAVE3
   token: {
     address: Address
     symbol: string
+    decimals: bigint
   }
   interestRates: {
     borrow: InterestRate[]
@@ -138,6 +139,7 @@ async function getInterestRates(
       token: {
         address: `0x0`,
         symbol: 'UNKNOWN',
+        decimals: 0n,
       },
       interestRates: {
         borrow: [],
@@ -213,7 +215,7 @@ async function getInterestRates(
   }
 
   const mapped = interestRates.reduce((acc, rate) => {
-    if (rate.type === 'borrow') {
+    if (rate.type === 'borrow-variable') {
       acc.borrow.push({
         rate: Number(rate.rate),
         type: 'borrow' as const,
@@ -266,6 +268,7 @@ async function getInterestRates(
     token: {
       address: params.token,
       symbol: token.symbol,
+      decimals: token.decimals,
     },
     interestRates: {
       lend,

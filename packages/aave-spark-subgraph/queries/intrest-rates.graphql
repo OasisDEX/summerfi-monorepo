@@ -11,6 +11,7 @@ query GetInterestRates(
         id
         symbol
         address
+        decimals
     }
 
     interestRates(

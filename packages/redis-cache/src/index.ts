@@ -3,9 +3,9 @@ import { createClient } from 'redis'
 
 export interface RedisConfig {
   url: string
-  username: string
-  password: string
-  database: number
+  username?: string
+  password?: string
+  database?: number
   ttlInSeconds: number
 }
 
@@ -13,6 +13,8 @@ export async function getRedisInstance(
   config: RedisConfig,
   logger: Logger,
 ): Promise<DistributedCache> {
+  logger.info('Creating Redis Client', { url: config.url })
+
   const client = await createClient({
     url: config.url,
     username: config.username,
@@ -24,7 +26,15 @@ export async function getRedisInstance(
     .connect()
 
   return {
-    get: async (key) => await client.get(key),
+    get: async (key) => {
+      const element = await client.get(key)
+      if (element !== null) {
+        logger.info('Cache Hit', { key })
+      } else {
+        logger.info('Cache Miss', { key })
+      }
+      return element
+    },
     set: async (key, value) => {
       await client.set(key, value, { EX: config.ttlInSeconds })
     },
