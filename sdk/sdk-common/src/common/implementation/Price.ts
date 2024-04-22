@@ -59,7 +59,7 @@ export class Price implements IPrice {
       quoteToken: b.baseToken,
     })
 
-    // TODO: case when the quotes are the same 
+    // TODO: case when the quotes are the same
   }
 }
 

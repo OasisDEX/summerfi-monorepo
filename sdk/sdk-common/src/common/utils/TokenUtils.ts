@@ -1,4 +1,4 @@
-import { IToken } from "../interfaces/IToken";
+import { IToken } from '../interfaces/IToken'
 
 export function isSameTokens(a: IToken, b: IToken): boolean {
   return (

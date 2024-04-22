@@ -19,7 +19,7 @@ export function addPercentage(tokenAmount: TokenAmount, percentage: Percentage):
 export function subtractPercentage(tokenAmount: TokenAmount, percentage: Percentage): TokenAmount {
   const amountBN = tokenAmount.toBN()
   const newAmount = amountBN.times(percentage.value).div(100)
-  
+
   return TokenAmount.createFrom({
     token: tokenAmount.token,
     amount: amountBN.minus(newAmount).toString(),

@@ -22,16 +22,13 @@ import { Hex } from 'viem'
 import assert from 'assert'
 import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 import { ILKType, MakerPoolId } from '@summerfi/protocol-plugins/plugins/maker'
-import {
-
-  SparkPoolId,
-  isSparkPoolId,
-} from '@summerfi/protocol-plugins/plugins/spark'
+import { SparkPoolId, isSparkPoolId } from '@summerfi/protocol-plugins/plugins/spark'
 
 jest.setTimeout(300000)
 
 const SDKAPiUrl = 'https://nkllstfoy8.execute-api.us-east-1.amazonaws.com/api/sdk'
-const TenderlyForkUrl = 'https://virtual.mainnet.rpc.tenderly.co/7bebdd10-2878-4830-833d-aba2710f3dc0'
+const TenderlyForkUrl =
+  'https://virtual.mainnet.rpc.tenderly.co/7bebdd10-2878-4830-833d-aba2710f3dc0'
 
 describe.only('Refinance Maker Spark | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
@@ -142,11 +139,7 @@ describe.only('Refinance Maker Spark | SDK', () => {
       assert(false, 'Spark pool type is not lending')
     }
 
-    const emptyTargetPosition = newEmptyPositionFromPool(
-      sparkPool,
-      USDC,
-      WBTC,
-    )
+    const emptyTargetPosition = newEmptyPositionFromPool(sparkPool, USDC, WBTC)
     const refinanceSimulation: ISimulation<SimulationType.Refinance> =
       await sdk.simulator.refinance.simulateRefinancePosition({
         sourcePosition: makerPosition,
@@ -165,7 +158,7 @@ describe.only('Refinance Maker Spark | SDK', () => {
     })
 
     assert(refinanceOrder, 'Order not found')
-   
+
     // Send transaction
     console.log('Sending transaction...')
 

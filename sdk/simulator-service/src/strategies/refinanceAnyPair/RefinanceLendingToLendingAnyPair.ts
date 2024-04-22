@@ -83,7 +83,7 @@ export async function refinanceLendingToLendingAnyPair(
           toToken: targetCollateralConfig.token,
           slippage: Percentage.createFrom({ value: args.slippage.value }),
           swapManager: dependencies.swapManager,
-        })
+        }),
       }),
       isCollateralSwapSkipped,
     )
@@ -92,14 +92,14 @@ export async function refinanceLendingToLendingAnyPair(
       type: SimulationSteps.DepositBorrow,
       inputs: {
         // refactor
-        borrowAmount: isDebtSwapSkipped 
-          ? ctx.getReference(['PaybackWithdrawFromSource', 'paybackAmount']) 
+        borrowAmount: isDebtSwapSkipped
+          ? ctx.getReference(['PaybackWithdrawFromSource', 'paybackAmount'])
           : await estimateSwapFromAmount({
-          receiveAtLeast: flashloanAmount,
-          fromToken: targetDebtConfig.token,
-          slippage: Percentage.createFrom(args.slippage),
-          swapManager: dependencies.swapManager,
-        }),
+              receiveAtLeast: flashloanAmount,
+              fromToken: targetDebtConfig.token,
+              slippage: Percentage.createFrom(args.slippage),
+              swapManager: dependencies.swapManager,
+            }),
         depositAmount: ctx.getReference(
           isCollateralSwapSkipped
             ? ['PaybackWithdrawFromSource', 'withdrawAmount']
@@ -119,11 +119,13 @@ export async function refinanceLendingToLendingAnyPair(
         type: SimulationSteps.Swap,
         inputs: await getSwapStepData({
           chainInfo: position.pool.protocol.chainInfo,
-          fromAmount: getValueFromReference(ctx.getReference(['DepositBorrowToTarget', 'borrowAmount'])),
+          fromAmount: getValueFromReference(
+            ctx.getReference(['DepositBorrowToTarget', 'borrowAmount']),
+          ),
           toToken: flashloanAmount.token,
           slippage: Percentage.createFrom({ value: args.slippage.value }),
           swapManager: dependencies.swapManager,
-        })
+        }),
       }),
       isDebtSwapSkipped,
     )
@@ -134,19 +136,17 @@ export async function refinanceLendingToLendingAnyPair(
         amount: flashloanAmount,
       },
     }))
-    .next(
-      async () => ({
-        name: 'ReturnFunds',
-        type: SimulationSteps.ReturnFunds,
-        inputs: {
-          /*
-           * We swap back to the original position's debt in order to repay the flashloan.
-           * Therefore, the dust amount will be in the original position's debt
-           * */
-          token: position.debtAmount.token,
-        },
-      }),
-    )
+    .next(async () => ({
+      name: 'ReturnFunds',
+      type: SimulationSteps.ReturnFunds,
+      inputs: {
+        /*
+         * We swap back to the original position's debt in order to repay the flashloan.
+         * Therefore, the dust amount will be in the original position's debt
+         * */
+        token: position.debtAmount.token,
+      },
+    }))
     .next(async (ctx) => {
       // TODO: we should have a way to get the target position more easily and realiably,
       const targetPosition = Object.values(ctx.state.positions).find(
@@ -183,7 +183,6 @@ export async function refinanceLendingToLendingAnyPair(
   } satisfies ISimulation<SimulationType.Refinance>
 }
 
-
 /**
  * EstimateTokenAmountAfterSwap
  * @description Estimates how much you will recive after swap.
@@ -198,7 +197,7 @@ async function estimateSwapFromAmount(params: {
   swapManager: ISwapManager
 }): Promise<TokenAmount> {
   const { receiveAtLeast, slippage } = params
-  
+
   if (isSameTokens(receiveAtLeast.token, params.fromToken)) {
     return receiveAtLeast
   }
@@ -211,7 +210,6 @@ async function estimateSwapFromAmount(params: {
     })
   ).price
 
-  
   const summerFee = await params.swapManager.getSummerFee({
     from: { token: receiveAtLeast.token },
     to: { token: params.fromToken },
@@ -223,7 +221,10 @@ async function estimateSwapFromAmount(params: {
   SourceAmt = TargetAmt * SpotPrice * (1 + Slippage) / (1 - SummerFee) 
   */
 
-  const sourceAmount = params.receiveAtLeast.toBN().multipliedBy(spotPrice.toBN().times(ONE.plus(slippage.toProportion()))).div(ONE.minus(summerFee.toProportion()))
+  const sourceAmount = params.receiveAtLeast
+    .toBN()
+    .multipliedBy(spotPrice.toBN().times(ONE.plus(slippage.toProportion())))
+    .div(ONE.minus(summerFee.toProportion()))
 
   return TokenAmount.createFrom({
     amount: sourceAmount.toString(),
