@@ -138,7 +138,7 @@ describe.only('Import Compound V3 Position | SDK', () => {
     console.log('Import Position Order:', JSON.stringify(importPositionOrder.transactions[0]))
     // Send transaction
     console.log('Sending transaction...')
-    console.log(importPositionOrder.transactions[0].transaction)
+
     const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex
     const transactionUtils = new TransactionUtils({
       rpcUrl: TenderlyForkUrl,
