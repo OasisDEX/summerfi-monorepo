@@ -135,12 +135,6 @@ export class OneInchSwapProvider implements ISwapProvider {
 
     const One = Percentage.createFrom({ value: 100 })
 
-    console.log('SLIPPAGE', One.subtract(params.slippage).toProportion())
-    console.log(`amount: ${TokenAmount.createFromBaseUnit({
-      token: params.toToken,
-      amount: responseData.toTokenAmount,
-    }).multiply(One.subtract(params.slippage))}`)
-
     return {
       provider: SwapProviderType.OneInch,
       fromTokenAmount: params.fromAmount,

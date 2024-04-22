@@ -8,8 +8,8 @@ import {
   getValueFromReference,
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
-import { Position, TokenAmount, Percentage, Price, Token } from '@summerfi/sdk-common/common'
-import { exchange, newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
+import { Position, TokenAmount, Percentage, Token } from '@summerfi/sdk-common/common'
+import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
 import { refinanceLendingToLendingAnyPairStrategy } from './Strategy'
@@ -51,8 +51,6 @@ export async function refinanceLendingToLendingAnyPair(
     position.collateralAmount.token.address,
   )
   const isDebtSwapSkipped = targetDebtConfig.token.address.equals(position.debtAmount.token.address)
-
-  console.log(`WE ARE FLASHLOANING ${flashloanAmount.toString()}`)
 
   const simulation = await simulator
     .next(async () => ({

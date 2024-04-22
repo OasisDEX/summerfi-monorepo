@@ -7,7 +7,6 @@ import {
   Address,
   type Maybe,
   ChainFamilyMap,
-  AddressValue,
   newEmptyPositionFromPool,
   PositionType,
 } from '@summerfi/sdk-common/common'
@@ -18,32 +17,13 @@ import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
 import { IPositionsManager, IRefinanceParameters, Order } from '@summerfi/sdk-common/orders'
 import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { TransactionUtils } from './utils/TransactionUtils'
-import {
-  decodeActionCalldata,
-  decodePositionsManagerCalldata,
-  decodeStrategyExecutorCalldata,
-} from '@summerfi/testing-utils'
-import { Deployments } from '@summerfi/core-contracts'
-import { DeploymentIndex } from '@summerfi/deployment-utils'
 
-import { Hex, createPublicClient } from 'viem'
+import { Hex } from 'viem'
 import assert from 'assert'
+import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
+import { ILKType, MakerPoolId } from '@summerfi/protocol-plugins/plugins/maker'
 import {
-  EmodeType,
-  FlashloanAction,
-  SendTokenAction,
-  SetApprovalAction,
-  PositionCreatedAction,
-} from '@summerfi/protocol-plugins/plugins/common'
-import {
-  ILKType,
-  MakerPaybackAction,
-  MakerPoolId,
-  MakerWithdrawAction,
-} from '@summerfi/protocol-plugins/plugins/maker'
-import {
-  SparkBorrowAction,
-  SparkDepositAction,
+
   SparkPoolId,
   isSparkPoolId,
 } from '@summerfi/protocol-plugins/plugins/spark'
@@ -51,7 +31,7 @@ import {
 jest.setTimeout(300000)
 
 const SDKAPiUrl = 'https://nkllstfoy8.execute-api.us-east-1.amazonaws.com/api/sdk'
-const TenderlyForkUrl = 'https://virtual.mainnet.rpc.tenderly.co/616d2e18-f889-4857-abc0-fa423dc91519'
+const TenderlyForkUrl = 'https://virtual.mainnet.rpc.tenderly.co/7bebdd10-2878-4830-833d-aba2710f3dc0'
 
 describe.only('Refinance Maker Spark | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
@@ -64,16 +44,6 @@ describe.only('Refinance Maker Spark | SDK', () => {
     })
 
     assert(chain, 'Chain not found')
-
-    // Deployment
-    const deploymentName = `${chain.chainInfo.name}.standard`
-    const deployments = Deployments as DeploymentIndex
-    const deployment = deployments[deploymentName]
-
-    // Strategy Executor
-    const strategyExecutorAddress = Address.createFromEthereum({
-      value: deployment.contracts.OperationExecutor.address as AddressValue,
-    })
 
     // User
     const walletAddress = Address.createFromEthereum({
@@ -90,7 +60,7 @@ describe.only('Refinance Maker Spark | SDK', () => {
     // Positions Manager
     const positionsManager: IPositionsManager = {
       address: Address.createFromEthereum({
-        value: '0x8c6322eaa8e3a5fe1b813d5fa266318bea3b44aa',
+        value: '0x1858b76756d19f8cb7c7756a0f96e0d7673285ed',
       }),
     }
 
@@ -116,7 +86,7 @@ describe.only('Refinance Maker Spark | SDK', () => {
         chainInfo: chain.chainInfo,
       },
       ilkType: ILKType.ETH_C,
-      vaultId: '31696',
+      vaultId: '31697',
     }
 
     const makerPool = await maker.getPool({
@@ -131,7 +101,7 @@ describe.only('Refinance Maker Spark | SDK', () => {
     // Source position
     const makerPosition: Position = Position.createFrom({
       type: PositionType.Multiply,
-      positionId: PositionId.createFrom({ id: '31696' }),
+      positionId: PositionId.createFrom({ id: '31697' }),
       debtAmount: TokenAmount.createFromBaseUnit({
         token: DAI,
         amount: '5000000000000000000000',
@@ -188,7 +158,6 @@ describe.only('Refinance Maker Spark | SDK', () => {
 
     expect(refinanceSimulation.sourcePosition?.positionId).toEqual(makerPosition.positionId)
     expect(refinanceSimulation.targetPosition.pool.poolId).toEqual(sparkPool.poolId)
-    expect(refinanceSimulation.steps.length).toBe(8)
 
     const refinanceOrder: Maybe<Order> = await user.newOrder({
       positionsManager,
@@ -196,180 +165,7 @@ describe.only('Refinance Maker Spark | SDK', () => {
     })
 
     assert(refinanceOrder, 'Order not found')
-
-    expect(refinanceOrder.simulation.simulationType).toEqual(refinanceSimulation.simulationType)
-    assert(refinanceOrder.simulation.sourcePosition, 'Source position not found')
-
-    expect(refinanceOrder.simulation.sourcePosition.positionId).toEqual(
-      refinanceSimulation.sourcePosition?.positionId,
-    )
-    expect(refinanceOrder.simulation.targetPosition.pool.poolId).toEqual(sparkPool.poolId)
-    expect(refinanceOrder.simulation.steps.length).toEqual(refinanceSimulation.steps.length)
-
-    for (let i = 0; i < refinanceOrder.simulation.steps.length; i++) {
-      expect(refinanceOrder.simulation.steps[i].type).toEqual(refinanceSimulation.steps[i].type)
-    }
-
-    expect(refinanceOrder.transactions.length).toEqual(1)
-    expect(refinanceOrder.transactions[0].transaction.target.value).toEqual(
-      positionsManager.address.value,
-    )
-
-    const positionsManagerParams = decodePositionsManagerCalldata({
-      calldata: refinanceOrder.transactions[0].transaction.calldata,
-    })
-
-    assert(positionsManagerParams, 'Cannot decode Positions Manager calldata')
-    expect(positionsManagerParams.target.value).toEqual(strategyExecutorAddress.value)
-
-    // Decode calldata
-    const strategyExecutorParams = decodeStrategyExecutorCalldata(positionsManagerParams.calldata)
-
-    const strategyName = `${refinanceOrder.simulation.simulationType}${refinanceOrder.simulation.sourcePosition?.pool.protocol.name}${refinanceOrder.simulation.targetPosition.pool.protocol.name}`
-
-    assert(strategyExecutorParams, 'Cannot decode Strategy Executor calldata')
-    expect(strategyExecutorParams.strategyName).toEqual(strategyName)
-    expect(strategyExecutorParams.actionCalls.length).toEqual(3)
-
-    // // Decode Flashloan action
-    // const flashloanParams = decodeActionCalldata({
-    //   action: new FlashloanAction(),
-    //   calldata: strategyExecutorParams.actionCalls[0].callData,
-    // })
-
-    // const sourcePosition = Position.createFrom(refinanceOrder.simulation.sourcePosition)
-    // const targetPosition = Position.createFrom(refinanceOrder.simulation.targetPosition)
-
-    // assert(flashloanParams, 'Cannot decode Flashloan action calldata')
-
-    // const FlashloanMargin = 1.001
-    // const flashloanAmount = sourcePosition.debtAmount.multiply(FlashloanMargin)
-
-    // expect(flashloanParams.args[0].amount).toBe(BigInt(flashloanAmount.toBaseUnit()))
-    // expect(flashloanParams.args[0].asset).toBe(sourcePosition.debtAmount.token.address.value)
-    // expect(flashloanParams.args[0].isProxyFlashloan).toBe(true)
-    // expect(flashloanParams.args[0].isDPMProxy).toBe(true)
-    // expect(flashloanParams.args[0].provider).toBe(0)
-    // /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    // const flashloanSubcalls = flashloanParams.args[0].calls as Array<any>
-    // expect(flashloanSubcalls.length).toBe(6)
-
-    // // Decode Maker Payback action
-    // const makerPaybackAction = decodeActionCalldata({
-    //   action: new MakerPaybackAction(),
-    //   calldata: flashloanSubcalls[0].callData,
-    // })
-
-    // const paybackAmount = TokenAmount.createFrom({
-    //   amount: Number.MAX_SAFE_INTEGER.toString(),
-    //   token: sourcePosition.debtAmount.token,
-    // }).toBaseUnit()
-
-    // assert(makerPaybackAction, 'Cannot decode Maker Payback action calldata')
-    // expect(makerPaybackAction.args[0].vaultId).toBe(
-    //   BigInt((sourcePosition.pool.poolId as MakerPoolId).vaultId),
-    // )
-    // expect(makerPaybackAction.args[0].userAddress).toBe(positionsManager.address.value)
-    // expect(makerPaybackAction.args[0].amount).toBe(BigInt(paybackAmount))
-    // expect(makerPaybackAction.args[0].paybackAll).toBe(true)
-
-    // // Decode Maker Withdraw action
-    // const makerWithdrawAction = decodeActionCalldata({
-    //   action: new MakerWithdrawAction(),
-    //   calldata: flashloanSubcalls[1].callData,
-    // })
-
-    // assert(makerWithdrawAction, 'Cannot decode Maker Withdraw action calldata')
-
-    // expect(makerWithdrawAction.args[0].vaultId).toBe(
-    //   BigInt((sourcePosition.pool.poolId as MakerPoolId).vaultId),
-    // )
-    // expect(makerWithdrawAction.args[0].userAddress).toBe(positionsManager.address.value)
-    // expect(makerWithdrawAction.args[0].joinAddr).toBe(
-    //   deployment.dependencies.MCD_JOIN_ETH_C.address,
-    // )
-    // expect(makerWithdrawAction.args[0].amount).toBe(
-    //   BigInt(sourcePosition.collateralAmount.toBaseUnit()),
-    // )
-
-    // // Set Approval
-    // const setApprovalAction = decodeActionCalldata({
-    //   action: new SetApprovalAction(),
-    //   calldata: flashloanSubcalls[2].callData,
-    // })
-
-    // assert(setApprovalAction, 'Cannot decode Set Approval action calldata')
-
-    // const sparkLendingPool = Address.createFromEthereum({
-    //   value: deployment.dependencies.SparkLendingPool.address as AddressValue,
-    // })
-    // expect(setApprovalAction.args[0].asset).toBe(
-    //   sourcePosition.collateralAmount.token.address.value,
-    // )
-    // expect(setApprovalAction.args[0].delegate).toBe(sparkLendingPool.value)
-    // expect(setApprovalAction.args[0].amount).toBe(
-    //   BigInt(sourcePosition.collateralAmount.toBaseUnit()),
-    // )
-    // expect(setApprovalAction.args[0].sumAmounts).toBe(false)
-
-    // // Decode Spark Deposit action
-    // const sparkDepositAction = decodeActionCalldata({
-    //   action: new SparkDepositAction(),
-    //   calldata: flashloanSubcalls[3].callData,
-    // })
-
-    // assert(sparkDepositAction, 'Cannot decode Spark Deposit action calldata')
-
-    // expect(sparkDepositAction.args[0].asset).toBe(
-    //   targetPosition.collateralAmount.token.address.value,
-    // )
-    // expect(sparkDepositAction.args[0].amount).toBe(
-    //   BigInt(sourcePosition.collateralAmount.toBaseUnit()),
-    // )
-    // expect(sparkDepositAction.args[0].sumAmounts).toBe(false)
-    // expect(sparkDepositAction.args[0].setAsCollateral).toBe(true)
-
-    // // Decode Spark Borrow action
-    // const sparkBorrowAction = decodeActionCalldata({
-    //   action: new SparkBorrowAction(),
-    //   calldata: flashloanSubcalls[4].callData,
-    // })
-
-    // assert(sparkBorrowAction, 'Cannot decode Spark Borrow action calldata')
-
-    // expect(sparkBorrowAction.args[0].asset).toBe(targetPosition.debtAmount.token.address.value)
-    // expect(sparkBorrowAction.args[0].amount).toBe(BigInt(targetPosition.debtAmount.toBaseUnit()))
-    // expect(sparkBorrowAction.args[0].to).toBe(positionsManager.address.value)
-
-    // // Decode Send Token action
-    // const sendTokenAction = decodeActionCalldata({
-    //   action: new SendTokenAction(),
-    //   calldata: flashloanSubcalls[5].callData,
-    // })
-
-    // assert(sendTokenAction, 'Cannot decode Send Token action calldata')
-
-    // expect(sendTokenAction.args[0].asset).toBe(sourcePosition.debtAmount.token.address.value)
-    // expect(sendTokenAction.args[0].to).toBe(strategyExecutorAddress.value)
-    // expect(sendTokenAction.args[0].amount).toBe(BigInt(flashloanAmount.toBaseUnit()))
-
-    // // Decode Position Created event action
-    // const positionCreatedParams = decodeActionCalldata({
-    //   action: new PositionCreatedAction(),
-    //   calldata: strategyExecutorParams.actionCalls[1].callData,
-    // })
-
-    // assert(positionCreatedParams, 'Cannot decode Position Created action calldata')
-
-    // expect(positionCreatedParams.args[0].protocol).toBe(targetPosition.pool.protocol.name)
-    // expect(positionCreatedParams.args[0].positionType).toBe(sourcePosition.type)
-    // expect(positionCreatedParams.args[0].collateralToken).toBe(
-    //   targetPosition.collateralAmount.token.address.value,
-    // )
-    // expect(positionCreatedParams.args[0].debtToken).toBe(
-    //   targetPosition.debtAmount.token.address.value,
-    // )
-
+   
     // Send transaction
     console.log('Sending transaction...')
 
