@@ -1,4 +1,4 @@
-import {HexData} from "../../common";
+import {HexData} from "../../common/aliases/HexData";
 import { AddressValue } from '../../common/aliases/AddressValue'
 import { Maybe } from '../../common/aliases/Maybe'
 import { IToken } from '../../common/interfaces/IToken'
