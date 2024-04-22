@@ -27,13 +27,13 @@ export class SparkCollateralConfigMap
     collateral: IToken
     collateralConfig: ISparkCollateralConfig
   }): void {
-    this.record[this._lowerCaseAddress(params.collateral.address.value)] = SparkCollateralConfig.createFrom(
+    this.record[this._formatRecordKey(params.collateral.address.value)] = SparkCollateralConfig.createFrom(
       params.collateralConfig,
     )
   }
 
   public override get(params: { token: IToken }): Maybe<SparkCollateralConfig> {
-    return this.record[this._lowerCaseAddress(params.token.address.value)]
+    return this.record[this._formatRecordKey(params.token.address.value)]
   }
 }
 

@@ -21,11 +21,11 @@ export class SparkDebtConfigMap extends DebtConfigMap implements ISparkDebtConfi
   }
 
   public override add(params: { debt: IToken; debtConfig: ISparkDebtConfig }): void {
-    this.record[this._lowerCaseAddress(params.debt.address.value)] = SparkDebtConfig.createFrom(params.debtConfig)
+    this.record[this._formatRecordKey(params.debt.address.value)] = SparkDebtConfig.createFrom(params.debtConfig)
   }
 
   public override get(params: { token: IToken }): Maybe<SparkDebtConfig> {
-    return this.record[this._lowerCaseAddress(params.token.address.value)]
+    return this.record[this._formatRecordKey(params.token.address.value)]
   }
 }
 

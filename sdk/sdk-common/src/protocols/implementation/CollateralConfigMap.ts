@@ -21,13 +21,13 @@ export class CollateralConfigMap implements ICollateralConfigMap {
   }
 
   public add(params: { collateral: IToken; collateralConfig: ICollateralConfig }): void {
-    this.record[this._lowerCaseAddress(params.collateral.address.value)] = CollateralConfig.createFrom(
+    this.record[this._formatRecordKey(params.collateral.address.value)] = CollateralConfig.createFrom(
       params.collateralConfig,
     )
   }
 
   public get(params: { token: IToken }): Maybe<CollateralConfig> {
-    return this.record[this._lowerCaseAddress(params.token.address.value)]
+    return this.record[this._formatRecordKey(params.token.address.value)]
   }
 
   protected _importCollateralConfigMap(params: ICollateralConfigMap): void {
@@ -36,7 +36,7 @@ export class CollateralConfigMap implements ICollateralConfigMap {
     })
   }
 
-  protected _lowerCaseAddress(address: HexData) {
+  protected _formatRecordKey(address: HexData) {
     return address.toLowerCase() as HexData
   }
 }

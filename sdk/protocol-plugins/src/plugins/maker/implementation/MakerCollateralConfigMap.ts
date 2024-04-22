@@ -27,13 +27,13 @@ export class MakerCollateralConfigMap
     collateral: IToken
     collateralConfig: IMakerCollateralConfig
   }): void {
-    this.record[this._lowerCaseAddress(params.collateral.address.value)] = MakerCollateralConfig.createFrom(
+    this.record[this._formatRecordKey(params.collateral.address.value)] = MakerCollateralConfig.createFrom(
       params.collateralConfig,
     )
   }
 
   public override get(params: { token: IToken }): Maybe<MakerCollateralConfig> {
-    return this.record[this._lowerCaseAddress(params.token.address.value)]
+    return this.record[this._formatRecordKey(params.token.address.value)]
   }
 }
 

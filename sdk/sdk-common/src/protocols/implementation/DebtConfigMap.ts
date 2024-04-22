@@ -22,11 +22,11 @@ export class DebtConfigMap implements IDebtConfigMap {
   }
 
   public add(params: { debt: IToken; debtConfig: IDebtConfig }): void {
-    this.record[this._lowerCaseAddress(params.debt.address.value)] = DebtConfig.createFrom(params.debtConfig)
+    this.record[this._formatRecordKey(params.debt.address.value)] = DebtConfig.createFrom(params.debtConfig)
   }
 
   public get(params: { token: IToken }): Maybe<DebtConfig> {
-    return this.record[this._lowerCaseAddress(params.token.address.value)]
+    return this.record[this._formatRecordKey(params.token.address.value)]
   }
 
   protected _importDebtConfigMap(params: IDebtConfigMap): void {
@@ -35,7 +35,7 @@ export class DebtConfigMap implements IDebtConfigMap {
     })
   }
 
-  protected _lowerCaseAddress(address: HexData) {
+  protected _formatRecordKey(address: HexData) {
     return address.toLowerCase() as HexData
   }
 }
