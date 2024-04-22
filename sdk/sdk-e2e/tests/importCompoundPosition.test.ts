@@ -24,7 +24,7 @@ jest.setTimeout(300000)
 
 const SDKAPiUrl = 'https://jghh34e4mj.execute-api.us-east-1.amazonaws.com/api/sdk'
 const TenderlyForkUrl =
-  'https://virtual.mainnet.rpc.tenderly.co/238b950a-7c55-4239-9bd2-568ac68a9dd4'
+  'https://virtual.mainnet.rpc.tenderly.co/f2347dca-2837-4a67-a799-1eba3eb7b600'
 
 describe.only('Import Compound V3 Position | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
@@ -145,8 +145,9 @@ describe.only('Import Compound V3 Position | SDK', () => {
       walletPrivateKey: privateKey,
     })
 
-    const receipt = await transactionUtils.sendTransaction({
+    const receipt = await transactionUtils.impersonateSendTransaction({
       transaction: importPositionOrder.transactions[0].transaction,
+      impersonate: walletAddress.value,
     })
 
     console.log('Transaction sent:', receipt)
