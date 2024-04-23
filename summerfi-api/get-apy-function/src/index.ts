@@ -22,7 +22,13 @@ import { getRedisInstance } from '@summerfi/redis-cache'
 import { getCachableYieldService } from '@summerfi/defi-llama-client'
 import { getTokenApyService } from './tokens-apy-service'
 import { CalculatedRates, ProtocolResponse } from './protocols/types'
-import { getAaveSparkRates, getAjnaRates, getMorphoBlueRates } from './protocols'
+import {
+  AaveSparkProtocolData,
+  AjnaProtocolData,
+  getAaveSparkRates,
+  getAjnaRates,
+  getMorphoBlueRates,
+} from './protocols'
 import * as process from 'node:process'
 import { getFinalApy } from './final-apy-calculation'
 import { DistributedCache } from '@summerfi/abstractions'
@@ -106,6 +112,7 @@ const getUnifiedProtocolRates = async (
   protocolId: ProtocolId,
   event: APIGatewayProxyEventV2,
   logger: Logger,
+  cache: DistributedCache,
   subgraphsConfig: {
     urlBase: string
     chainId: ChainId
@@ -129,6 +136,15 @@ const getUnifiedProtocolRates = async (
       return { isValid: false, message: 'Invalid query parameters' }
     }
 
+    const cacheKey = `${protocolId}-${subgraphsConfig.chainId}-${JSON.stringify(parseResult.data)}`
+
+    const fromCache = await cache.get(cacheKey)
+
+    if (fromCache) {
+      const parsed = JSON.parse(fromCache) as ProtocolResponse<AaveSparkProtocolData>
+      return { isValid: true, protocolRates: parsed, position: parseResult.data }
+    }
+
     const rates = await getAaveSparkRates({
       collateralToken: parseResult.data.collateral[0],
       debtToken: parseResult.data.debt[0],
@@ -137,6 +153,8 @@ const getUnifiedProtocolRates = async (
       timestamp: parseResult.data.referenceDate,
       subgraphClient: getAaveSparkSubgraphClient({ ...subgraphsConfig, logger }),
     })
+
+    await cache.set(cacheKey, JSON.stringify(rates))
 
     return { isValid: true, protocolRates: rates, position: parseResult.data }
   }
@@ -147,12 +165,23 @@ const getUnifiedProtocolRates = async (
       return { isValid: false, message: 'Invalid query parameters' }
     }
 
+    const cacheKey = `${protocolId}-${subgraphsConfig.chainId}-${JSON.stringify(parseResult.data)}`
+
+    const fromCache = await cache.get(cacheKey)
+
+    if (fromCache) {
+      const parsed = JSON.parse(fromCache) as ProtocolResponse<AjnaProtocolData>
+      return { isValid: true, protocolRates: parsed, position: parseResult.data }
+    }
+
     const rates = await getAjnaRates({
       poolId: parseResult.data.poolAddress,
       logger,
       timestamp: parseResult.data.referenceDate,
       subgraphClient: getAjnaSubgraphClient({ ...subgraphsConfig, logger }),
     })
+
+    await cache.set(cacheKey, JSON.stringify(rates))
 
     return { isValid: true, protocolRates: rates, position: parseResult.data }
   }
@@ -161,6 +190,14 @@ const getUnifiedProtocolRates = async (
     const parseResult = morphoBluePositionSchema.safeParse(event.queryStringParameters)
     if (!parseResult.success) {
       return { isValid: false, message: 'Invalid query parameters' }
+    }
+
+    const cacheKey = `${protocolId}-${subgraphsConfig.chainId}-${JSON.stringify(parseResult.data)}`
+
+    const fromCache = await cache.get(cacheKey)
+    if (fromCache) {
+      const parsed = JSON.parse(fromCache) as ProtocolResponse<AjnaProtocolData>
+      return { isValid: true, protocolRates: parsed, position: parseResult.data }
     }
 
     const rates = await getMorphoBlueRates({
@@ -173,6 +210,8 @@ const getUnifiedProtocolRates = async (
         chainId: ChainId.MAINNET,
       }),
     })
+
+    await cache.set(cacheKey, JSON.stringify(rates))
 
     return { isValid: true, protocolRates: rates, position: parseResult.data }
   }
@@ -240,7 +279,7 @@ export const handler = async (
 
   const { protocol, chainId } = path.data
 
-  const unifiedProtocolRates = await getUnifiedProtocolRates(protocol, event, logger, {
+  const unifiedProtocolRates = await getUnifiedProtocolRates(protocol, event, logger, cache, {
     urlBase: SUBGRAPH_BASE,
     chainId,
   })
