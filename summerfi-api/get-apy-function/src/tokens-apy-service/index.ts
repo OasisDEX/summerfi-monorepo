@@ -65,34 +65,29 @@ export const getTokenApyService = ({
           return acc
         }, new Map<ShortDate, EnrichedPoolHistoryEntry[]>())
 
-      const perDay = Array.from(relevantData.entries()).map(([date, elements]) => {
-        const total = elements.reduce((acc, element) => acc + element.apy, 0)
-        const apy = total / elements.length
+      const perDay = Array.from(relevantData.entries())
+        .map(([date, elements]) => {
+          const total = elements.reduce((acc, element) => acc + element.apy, 0)
+          const apy = total / elements.length
 
-        return { date, apy, timestamp: getTimestamp(date) }
-      })
+          return { date, apy, timestamp: getTimestamp(date) }
+        })
+        .sort((a, b) => b.timestamp - a.timestamp)
 
       const timestamp7daysAgo = daysAgo(referenceDate, 7)
       const timestamp30daysAgo = daysAgo(referenceDate, 30)
       const timestamp90daysAgo = daysAgo(referenceDate, 90)
 
-      const apy7d =
-        perDay
-          .filter((entry) => entry.timestamp >= timestamp7daysAgo)
-          .reduce((acc, entry) => acc + entry.apy, 0) / 7
-      const apy30d =
-        perDay
-          .filter((entry) => entry.timestamp >= timestamp30daysAgo)
-          .reduce((acc, entry) => acc + entry.apy, 0) / 30
-      const apy90d =
-        perDay
-          .filter((entry) => entry.timestamp >= timestamp90daysAgo)
-          .reduce((acc, entry) => acc + entry.apy, 0) / 90
+      const elements7d = perDay.filter((entry) => entry.timestamp >= timestamp7daysAgo)
+      const elements30d = perDay.filter((entry) => entry.timestamp >= timestamp30daysAgo)
+      const elements90d = perDay.filter((entry) => entry.timestamp >= timestamp90daysAgo)
+
+      const apy7d = elements7d.reduce((acc, entry) => acc + entry.apy, 0) / elements7d.length
+      const apy30d = elements30d.reduce((acc, entry) => acc + entry.apy, 0) / elements30d.length
+      const apy90d = elements90d.reduce((acc, entry) => acc + entry.apy, 0) / elements90d.length
       const apy365d = perDay.reduce((acc, entry) => acc + entry.apy, 0) / perDay.length
 
-      const apy1d =
-        perDay.find((entry) => entry.timestamp === getTimestamp(getShortDate(referenceDate)))
-          ?.apy ?? 0
+      const apy1d = perDay[0].apy ?? 0
 
       return {
         token: { address, symbol },
