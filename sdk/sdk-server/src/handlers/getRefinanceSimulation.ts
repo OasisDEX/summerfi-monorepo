@@ -4,6 +4,7 @@ import {
   refinanceLendingToLendingSamePair,
   type IRefinanceDependencies,
   refinanceLendingToLendingAnyPair,
+  RefinanceSimulationTypes,
 } from '@summerfi/simulator-service/strategies'
 import type { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { publicProcedure } from '../TRPC'
@@ -26,7 +27,7 @@ function isToSamePair(parameters: IRefinanceParameters): boolean {
 
 export const getRefinanceSimulation = publicProcedure
   .input(inputSchema)
-  .query(async (opts): Promise<ISimulation<SimulationType.Refinance>> => {
+  .query(async (opts): Promise<ISimulation<RefinanceSimulationTypes>> => {
     const args: IRefinanceParameters = opts.input
 
     const dependencies: IRefinanceDependencies = {

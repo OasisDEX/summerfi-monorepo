@@ -15,13 +15,13 @@ import { refinanceLendingToLendingAnyPairStrategy } from './Strategy'
 import { type IRefinanceDependencies } from '../common/Types'
 import { getSwapStepData } from '../../implementation/utils/GetSwapStepData'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import {isSameTokens} from "@summerfi/sdk-common/common";
+import { isSameTokens } from '@summerfi/sdk-common/common'
 import BigNumber from 'bignumber.js'
 
-type RefinanceSimulationTypes = 
-  | SimulationType.Refinance 
-  | SimulationType.RefinanceDifferentPair 
-  | SimulationType.RefinanceDifferentCollateral 
+export type RefinanceSimulationTypes =
+  | SimulationType.Refinance
+  | SimulationType.RefinanceDifferentPair
+  | SimulationType.RefinanceDifferentCollateral
   | SimulationType.RefinanceDifferentDebt
 
 export async function refinanceLendingToLendingAnyPair(
