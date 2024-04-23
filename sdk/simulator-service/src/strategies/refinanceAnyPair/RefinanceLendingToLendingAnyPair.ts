@@ -15,7 +15,7 @@ import { refinanceLendingToLendingAnyPairStrategy } from './Strategy'
 import { type IRefinanceDependencies } from '../common/Types'
 import { getSwapStepData } from '../../implementation/utils/GetSwapStepData'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import { isSameTokens } from '@summerfi/sdk-common'
+import {isSameTokens} from "@summerfi/sdk-common/common";
 import BigNumber from 'bignumber.js'
 
 export async function refinanceLendingToLendingAnyPair(
