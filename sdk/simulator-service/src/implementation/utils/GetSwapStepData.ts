@@ -23,11 +23,6 @@ export async function getSwapStepData(params: {
   const summerFeeAmount = applyPercentage(params.fromAmount, summerFee)
   const amountAfterSummerFee = params.fromAmount.subtract(summerFeeAmount)
 
-  // Deduct summer fee from fromAmount
-  // Call swapProvider with new amount
-  // at last we need to return from amount with summer fee
-  //
-
   const [quote, spotPrice] = await Promise.all([
     params.swapManager.getSwapQuoteExactInput({
       chainInfo: params.chainInfo,
@@ -45,7 +40,7 @@ export async function getSwapStepData(params: {
   return {
     ...quote,
     fromTokenAmount: params.fromAmount,
-    swappedAmount: amountAfterSummerFee,
+    amountAfterFee: amountAfterSummerFee,
     summerFee,
     spotPrice: spotPrice.price,
     slippage: params.slippage,
