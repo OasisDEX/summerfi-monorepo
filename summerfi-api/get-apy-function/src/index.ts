@@ -13,6 +13,7 @@ import {
   ltvSchema,
   ProtocolId,
   protocolIdSchema,
+  serialize,
 } from '@summerfi/serverless-shared'
 import { z } from 'zod'
 import { getMorphoBlueSubgraphClient } from '@summerfi/morpho-blue-subgraph'
@@ -108,6 +109,24 @@ interface ApyResponse {
   }
 }
 
+const setProtocolRatesToCache = async (params: {
+  rates: ProtocolResponse<unknown>
+  cacheKey: string
+  logger: Logger
+  cache: DistributedCache
+  protocolId: ProtocolId
+  chainId: ChainId
+}) => {
+  const { rates, cacheKey, logger, cache, protocolId, chainId } = params
+  const serialized = serialize(rates)
+  if (!serialized) {
+    logger.error('Failed to serialize rates', { cacheKey, protocolId, chainId })
+    return
+  }
+
+  await cache.set(cacheKey, serialized)
+}
+
 const getUnifiedProtocolRates = async (
   protocolId: ProtocolId,
   event: APIGatewayProxyEventV2,
@@ -125,6 +144,7 @@ const getUnifiedProtocolRates = async (
       position: AaveLikePosition | MorphoBluePosition | AjnaPosition
     }
 > => {
+  const chainId = subgraphsConfig.chainId
   if (
     protocolId === ProtocolId.AAVE3 ||
     protocolId === ProtocolId.AAVE_V2 ||
@@ -136,7 +156,7 @@ const getUnifiedProtocolRates = async (
       return { isValid: false, message: 'Invalid query parameters' }
     }
 
-    const cacheKey = `${protocolId}-${subgraphsConfig.chainId}-${JSON.stringify(parseResult.data)}`
+    const cacheKey = `${protocolId}-${subgraphsConfig.chainId}-${serialize(parseResult.data)}`
 
     const fromCache = await cache.get(cacheKey)
 
@@ -154,7 +174,7 @@ const getUnifiedProtocolRates = async (
       subgraphClient: getAaveSparkSubgraphClient({ ...subgraphsConfig, logger }),
     })
 
-    await cache.set(cacheKey, JSON.stringify(rates))
+    await setProtocolRatesToCache({ rates, protocolId, logger, cache, chainId, cacheKey })
 
     return { isValid: true, protocolRates: rates, position: parseResult.data }
   }
@@ -165,7 +185,7 @@ const getUnifiedProtocolRates = async (
       return { isValid: false, message: 'Invalid query parameters' }
     }
 
-    const cacheKey = `${protocolId}-${subgraphsConfig.chainId}-${JSON.stringify(parseResult.data)}`
+    const cacheKey = `${protocolId}-${subgraphsConfig.chainId}-${serialize(parseResult.data)}`
 
     const fromCache = await cache.get(cacheKey)
 
@@ -181,7 +201,12 @@ const getUnifiedProtocolRates = async (
       subgraphClient: getAjnaSubgraphClient({ ...subgraphsConfig, logger }),
     })
 
-    await cache.set(cacheKey, JSON.stringify(rates))
+    const serializedRates = serialize(rates)
+    if (!serializedRates) {
+      logger.error('Failed to serialize rates', { protocolId, chainId: subgraphsConfig.chainId })
+    }
+
+    await setProtocolRatesToCache({ rates, protocolId, logger, cache, chainId, cacheKey })
 
     return { isValid: true, protocolRates: rates, position: parseResult.data }
   }
@@ -192,7 +217,7 @@ const getUnifiedProtocolRates = async (
       return { isValid: false, message: 'Invalid query parameters' }
     }
 
-    const cacheKey = `${protocolId}-${subgraphsConfig.chainId}-${JSON.stringify(parseResult.data)}`
+    const cacheKey = `${protocolId}-${subgraphsConfig.chainId}-${serialize(parseResult.data)}`
 
     const fromCache = await cache.get(cacheKey)
     if (fromCache) {
@@ -211,7 +236,7 @@ const getUnifiedProtocolRates = async (
       }),
     })
 
-    await cache.set(cacheKey, JSON.stringify(rates))
+    await setProtocolRatesToCache({ rates, protocolId, logger, cache, chainId, cacheKey })
 
     return { isValid: true, protocolRates: rates, position: parseResult.data }
   }
