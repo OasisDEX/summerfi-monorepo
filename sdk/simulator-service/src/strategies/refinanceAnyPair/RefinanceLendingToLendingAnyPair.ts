@@ -18,10 +18,16 @@ import { ISwapManager } from '@summerfi/swap-common/interfaces'
 import {isSameTokens} from "@summerfi/sdk-common/common";
 import BigNumber from 'bignumber.js'
 
+type RefinanceSimulationTypes = 
+  | SimulationType.Refinance 
+  | SimulationType.RefinanceDifferentPair 
+  | SimulationType.RefinanceDifferentCollateral 
+  | SimulationType.RefinanceDifferentDebt
+
 export async function refinanceLendingToLendingAnyPair(
   args: IRefinanceParameters,
   dependencies: IRefinanceDependencies,
-): Promise<ISimulation<SimulationType.Refinance>> {
+): Promise<ISimulation<RefinanceSimulationTypes>> {
   // args validation
   if (!isLendingPool(args.targetPosition.pool)) {
     throw new Error('Target pool is not a lending pool')
@@ -174,12 +180,31 @@ export async function refinanceLendingToLendingAnyPair(
   }
 
   return {
-    simulationType: SimulationType.Refinance,
+    simulationType: getSimulationType(!isCollateralSwapSkipped, !isDebtSwapSkipped),
     sourcePosition: position,
     targetPosition,
     swaps: Object.values(simulation.swaps),
     steps: Object.values(simulation.steps),
-  } satisfies ISimulation<SimulationType.Refinance>
+  } satisfies ISimulation<RefinanceSimulationTypes>
+}
+
+function getSimulationType(
+  hasCollateralSwap: boolean,
+  hasDebtSwap: boolean,
+): RefinanceSimulationTypes {
+  if (hasCollateralSwap && hasDebtSwap) {
+    return SimulationType.RefinanceDifferentPair
+  }
+
+  if (hasCollateralSwap) {
+    return SimulationType.RefinanceDifferentCollateral
+  }
+
+  if (hasDebtSwap) {
+    return SimulationType.RefinanceDifferentDebt
+  }
+
+  return SimulationType.Refinance
 }
 
 /**

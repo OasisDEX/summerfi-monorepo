@@ -28,7 +28,7 @@ jest.setTimeout(300000)
 
 const SDKAPiUrl = 'https://nkllstfoy8.execute-api.us-east-1.amazonaws.com/api/sdk'
 const TenderlyForkUrl =
-  'https://virtual.mainnet.rpc.tenderly.co/7bebdd10-2878-4830-833d-aba2710f3dc0'
+  'https://virtual.mainnet.rpc.tenderly.co/8ffae4ec-575d-40a5-87d4-295669e8a24b'
 
 describe('Refinance Maker Spark | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
@@ -73,6 +73,9 @@ describe('Refinance Maker Spark | SDK', () => {
 
     const WBTC: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.WBTC })
     assert(WBTC, 'WBTC not found')
+
+    const WSTETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.WSTETH })
+    assert(WSTETH, 'WSTETH not found')
 
     const maker = await chain.protocols.getProtocol({ name: ProtocolName.Maker })
     assert(maker, 'Maker protocol not found')
@@ -139,7 +142,7 @@ describe('Refinance Maker Spark | SDK', () => {
       assert(false, 'Spark pool type is not lending')
     }
 
-    const emptyTargetPosition = newEmptyPositionFromPool(sparkPool, USDC, WBTC)
+    const emptyTargetPosition = newEmptyPositionFromPool(sparkPool, DAI, WSTETH)
     const refinanceSimulation: ISimulation<SimulationType.Refinance> =
       await sdk.simulator.refinance.simulateRefinancePosition({
         sourcePosition: makerPosition,

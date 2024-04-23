@@ -7,6 +7,9 @@ export enum SimulationType {
   Migrate = 'Migrate',
   CreatePosition = 'CreatePosition',
   Refinance = 'Refinance',
+  RefinanceDifferentPair = 'RefinanceDifPair',
+  RefinanceDifferentDebt = 'RefinanceDifDebt',
+  RefinanceDifferentCollateral = 'RefinanceDifCol',
 }
 
 export enum SimulationSteps {
