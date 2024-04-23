@@ -16,7 +16,7 @@ import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
 import { makeSDK, type Chain, type User, Protocol } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
 import { IPositionsManager, IRefinanceParameters, Order } from '@summerfi/sdk-common/orders'
-import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { ISimulation } from '@summerfi/sdk-common/simulation'
 import { TransactionUtils } from './utils/TransactionUtils'
 import {
   decodeActionCalldata,
@@ -47,6 +47,7 @@ import {
   SparkPoolId,
   isSparkPoolId,
 } from '@summerfi/protocol-plugins/plugins/spark'
+import { RefinanceSimulationTypes } from '@summerfi/sdk-common'
 
 jest.setTimeout(300000)
 
@@ -171,7 +172,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
       makerPosition.debtAmount.token,
       makerPosition.collateralAmount.token,
     )
-    const refinanceSimulation: ISimulation<SimulationType.Refinance> =
+    const refinanceSimulation: ISimulation<RefinanceSimulationTypes> =
       await sdk.simulator.refinance.simulateRefinancePosition({
         sourcePosition: makerPosition,
         targetPosition: emptyTargetPosition,
