@@ -33,3 +33,9 @@ export enum TokenTransferTargetType {
   PositionsManager = 1,
   StrategyExecutor = 0,
 }
+
+export type RefinanceSimulationTypes =
+  | SimulationType.Refinance
+  | SimulationType.RefinanceDifferentPair
+  | SimulationType.RefinanceDifferentCollateral
+  | SimulationType.RefinanceDifferentDebt

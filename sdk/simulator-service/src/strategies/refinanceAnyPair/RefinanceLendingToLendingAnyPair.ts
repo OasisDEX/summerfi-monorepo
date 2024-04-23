@@ -1,6 +1,7 @@
 import {
   FlashloanProvider,
   ISimulation,
+  RefinanceSimulationTypes,
   SimulationSteps,
   SimulationType,
   TokenTransferTargetType,
@@ -17,12 +18,6 @@ import { getSwapStepData } from '../../implementation/utils/GetSwapStepData'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
 import { isSameTokens } from '@summerfi/sdk-common/common'
 import BigNumber from 'bignumber.js'
-
-export type RefinanceSimulationTypes =
-  | SimulationType.Refinance
-  | SimulationType.RefinanceDifferentPair
-  | SimulationType.RefinanceDifferentCollateral
-  | SimulationType.RefinanceDifferentDebt
 
 export async function refinanceLendingToLendingAnyPair(
   args: IRefinanceParameters,
