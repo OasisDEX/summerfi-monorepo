@@ -2,8 +2,6 @@
   "name": "@summerfi/portfolio-assets-function",
   "version": "1.0.0",
   "scripts": {
-    "tsc": "tsc",
-    "watch": "tsc -w",
     "test": "jest --passWithNoTests",
     "build": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap",
     "lint": "eslint .",

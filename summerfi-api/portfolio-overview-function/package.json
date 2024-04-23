@@ -2,8 +2,6 @@
   "name": "@summerfi/portfolio-overview-function",
   "version": "1.0.0",
   "scripts": {
-    "tsc": "tsc",
-    "watch": "tsc -w",
     "test": "jest --passWithNoTests",
     "testw": "jest --watch",
     "lint": "eslint .",

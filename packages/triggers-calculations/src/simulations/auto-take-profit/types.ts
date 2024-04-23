@@ -1,6 +1,6 @@
-import { LTV, Percentage, PositionLike, Price, TokenBalance } from '@summerfi/triggers-shared'
+import { PositionLike, Price, TokenBalance } from '@summerfi/triggers-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
-import { Address } from '@summerfi/serverless-shared'
+import { Address, LTV, Percentage } from '@summerfi/serverless-shared'
 
 export interface AutoTakeProfitRealized {
   triggerPrice: Price
