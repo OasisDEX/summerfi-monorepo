@@ -24,14 +24,20 @@ contract CompoundV3Withdraw is Executable, UseStore {
    * @param data.asset The address of the asset to borrow
    * @param data.amount The amount to borrow
    * @param data.withdrawAll Flag to withdraw the full collateral balance
-   * @param paramsMap Maps operation storage values by index (index offset by +1) to execute calldata params
    */
   function execute(bytes calldata data, uint8[] memory) external payable override {
     WithdrawData memory withdraw = parseInputs(data);
 
     uint256 balanceBefore = IERC20(withdraw.asset).balanceOf(address(this));
-    uint256 withdrawAmount = withdraw.withdrawAll ? type(uint256).max : withdraw.amount;
-    CometInterface(withdraw.cometAddress).withdraw(withdraw.asset, withdrawAmount);
+    uint256 withdrawAmount = withdraw.withdrawAll
+      ? CometInterface(withdraw.cometAddress).collateralBalanceOf(withdraw.source, withdraw.asset)
+      : withdraw.amount;
+    CometInterface(withdraw.cometAddress).withdrawFrom(
+      withdraw.source,
+      address(this),
+      withdraw.asset,
+      withdrawAmount
+    );
     uint256 balanceAfter = IERC20(withdraw.asset).balanceOf(address(this));
     uint256 amountWithdrawn = balanceAfter - balanceBefore;
 

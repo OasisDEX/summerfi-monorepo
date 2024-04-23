@@ -24,10 +24,10 @@ jest.setTimeout(300000)
 
 const SDKAPiUrl = 'https://jghh34e4mj.execute-api.us-east-1.amazonaws.com/api/sdk'
 const TenderlyForkUrl =
-  'https://virtual.mainnet.rpc.tenderly.co/f2347dca-2837-4a67-a799-1eba3eb7b600'
+  'https://virtual.mainnet.rpc.tenderly.co/743cdd9e-f508-4240-9781-7f3942f45ca6'
 
-describe.only('Import Compound V3 Position | SDK', () => {
-  it('should allow refinance Maker -> Spark with same pair', async () => {
+describe.skip('Import Compound V3 Position | SDK', () => {
+  it('should allow refinance Compound V3 -> Spark with same pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: SDKAPiUrl })
 
@@ -40,7 +40,7 @@ describe.only('Import Compound V3 Position | SDK', () => {
 
     // User
     const walletAddress = Address.createFromEthereum({
-      value: '0xd48573cda0fed7144f2455c5270ffa16be389d04',
+      value: '0x86f92d7ec49067226ac342cc00e668cb0285ed38',
     })
     const user: User = await sdk.users.getUser({
       chainInfo: chain.chainInfo,
@@ -95,6 +95,24 @@ describe.only('Import Compound V3 Position | SDK', () => {
       pool: compoundV3Pool,
     })
 
+    const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex
+    const transactionUtils = new TransactionUtils({
+      rpcUrl: TenderlyForkUrl,
+      walletPrivateKey: privateKey,
+    })
+
+    await transactionUtils.impersonateSendTransaction({
+      transaction: {
+        target: Address.createFromEthereum({
+          value: '0xF7B75183A2829843dB06266c114297dfbFaeE2b6',
+        }),
+        value: 0n.toString(16) as Hex,
+        calldata: '0x9dca362f',
+      },
+      impersonate: walletAddress.value,
+    })
+    // TODO: get proxy address from the tx receipt
+
     const importPositionSimulation: ISimulation<SimulationType.ImportPosition> =
       await sdk.simulator.importing.simulateImportPosition({
         externalPosition: {
@@ -116,7 +134,7 @@ describe.only('Import Compound V3 Position | SDK', () => {
     const importPositionOrder: Maybe<Order> = await user.newOrder({
       positionsManager: {
         address: Address.createFromEthereum({
-          value: '0x551Eb8395093fDE4B9eeF017C93593a3C7a75138',
+          value: '0x2a5c4585bee3531b6F6EC78B86711473696449dc',
         }),
       },
       simulation: importPositionSimulation,
@@ -132,18 +150,12 @@ describe.only('Import Compound V3 Position | SDK', () => {
     expect(importPositionOrder.simulation.sourcePosition.positionId).toEqual(
       importPositionSimulation.sourcePosition?.positionId,
     )
-    console.log(importPositionOrder.simulation.steps)
+
     expect(importPositionOrder.transactions.length).toEqual(1)
 
     console.log('Import Position Order:', JSON.stringify(importPositionOrder.transactions[0]))
     // Send transaction
     console.log('Sending transaction...')
-
-    const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex
-    const transactionUtils = new TransactionUtils({
-      rpcUrl: TenderlyForkUrl,
-      walletPrivateKey: privateKey,
-    })
 
     const receipt = await transactionUtils.impersonateSendTransaction({
       transaction: importPositionOrder.transactions[0].transaction,

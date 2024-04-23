@@ -33,11 +33,11 @@ contract CompoundV3Payback is Executable, UseStore {
     payback.amount = store().readUint(bytes32(payback.amount), paramsMap[1], address(this));
     uint256 paybackAmount = payback.paybackAll ? type(uint256).max : payback.amount;
     uint256 balanceBefore = IERC20(payback.asset).balanceOf(address(this));
-    CometInterface(payback.cometAddress).supply(payback.asset, paybackAmount);
+    CometInterface(payback.cometAddress).supplyTo(payback.source, payback.asset, paybackAmount);
     uint256 balanceAfter = IERC20(payback.asset).balanceOf(address(this));
-    uint256 paybackAmount = balanceBefore - balanceAfter;
+    uint256 actualPaybackAmount = balanceBefore - balanceAfter;
 
-    store().write(bytes32(paybackAmount));
+    store().write(bytes32(actualPaybackAmount));
   }
 
   function parseInputs(bytes memory _callData) public pure returns (PaybackData memory params) {

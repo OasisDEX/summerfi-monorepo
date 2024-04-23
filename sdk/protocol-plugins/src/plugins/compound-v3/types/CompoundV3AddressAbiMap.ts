@@ -1,10 +1,10 @@
 // ABIs and Protocol contracts
 import { CompoundV3ContractNames } from '@summerfi/deployment-types'
 import { AddressValue } from '@summerfi/sdk-common/common'
-import { COMET_ABI } from '../abis/CompoundV3ABIS'
+import { cometAbi } from '../abis/CompoundV3ABIS'
 
 export type CompoundV3AbiMap = {
-  Comet: typeof COMET_ABI
+  Comet: typeof cometAbi
 }
 
 export type CompoundV3AddressAbiMap = {

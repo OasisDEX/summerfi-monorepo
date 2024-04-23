@@ -5,7 +5,7 @@ export class CompoundV3PaybackAction extends BaseAction {
   public readonly config = {
     name: 'CompoundV3Payback',
     version: 0,
-    parametersAbi: '(address comet, address asset, uint256 amount, bool paybackAll)',
+    parametersAbi: '(address comet, address source, address asset, uint256 amount, bool paybackAll)',
     storageInputs: [],
     storageOutputs: ['amountPaidBack'],
   } as const
@@ -13,6 +13,7 @@ export class CompoundV3PaybackAction extends BaseAction {
   public encodeCall(
     params: {
       comet: Address
+      source: Address
       paybackAmount: TokenAmount
       paybackAll: boolean
     },
@@ -22,6 +23,7 @@ export class CompoundV3PaybackAction extends BaseAction {
       arguments: [
         {
           comet: params.comet.value,
+          source: params.source.value,
           asset: params.paybackAmount.token.address.value,
           amount: params.paybackAmount.toBaseUnit(),
           paybackAll: params.paybackAll,
