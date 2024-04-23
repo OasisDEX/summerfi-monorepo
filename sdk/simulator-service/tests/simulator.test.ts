@@ -1,8 +1,4 @@
-import {
-  ISimulation,
-  SimulationSteps,
-  steps,
-} from '@summerfi/sdk-common/simulation'
+import { ISimulation, SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import {
   refinanceLendingToLendingAnyPair,
   refinanceLendingToLendingSamePair,
