@@ -149,7 +149,7 @@ describe('Spark Protocol Plugin (Integration)', () => {
   })
 
   it('resolves config maps for tokens sent with addresses in alternative formats', async () => {
-    const mockCollateralToken = Token.createFrom({
+    const testCollateralToken = Token.createFrom({
       chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
       // NOTE: Address is different format to that expected by the protocol
       address: Address.createFromEthereum({ value: '0xae78736cd615f374d3085123a210448e74fc6393' }),
@@ -158,7 +158,7 @@ describe('Spark Protocol Plugin (Integration)', () => {
       decimals: 18,
     })
 
-    const config = pool.collaterals.get({ token: mockCollateralToken })
+    const config = pool.collaterals.get({ token: testCollateralToken })
     expect(config).toBeDefined()
   })
 })
