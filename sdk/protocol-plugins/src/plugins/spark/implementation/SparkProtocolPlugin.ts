@@ -1,7 +1,6 @@
 import {
   Percentage,
   TokenAmount,
-  TokenSymbol,
   Price,
   CurrencySymbol,
   RiskRatio,
