@@ -1,10 +1,11 @@
 import { Logger } from '@aws-lambda-powertools/logger'
-import { AjnaSubgraphClient } from '@summerfi/ajna-subgraph'
-import { CustomDate, getTimestamp, oneYearAgo } from '../helpers'
+import { AjnaPoolInterestRateResult } from '@summerfi/ajna-subgraph'
+import { CustomDate } from '../helpers'
 import { calculateBorrowRates } from './borrow-rates'
 import { calculateSupplyRates } from './supply-rates'
 import { Address, ProtocolId, Token } from '@summerfi/serverless-shared'
-import { ProtocolResponse } from './types'
+import { GroupedRates, ProtocolResponse } from './types'
+import { PositionMode } from '../contracts'
 
 export interface AjnaProtocolData {
   poolId: Address
@@ -14,21 +15,21 @@ export interface AjnaProtocolData {
 
 export const getAjnaRates = async (params: {
   poolId: `0x${string}`
+  positionMode: PositionMode
   timestamp: CustomDate
   logger: Logger
-  subgraphClient: AjnaSubgraphClient
+  ajnaSubgraphResponse: AjnaPoolInterestRateResult
 }): Promise<ProtocolResponse<AjnaProtocolData>> => {
-  const earliestTimestamp = oneYearAgo(params.timestamp)
-  const timestamp = getTimestamp(params.timestamp)
+  const { ajnaSubgraphResponse } = params
 
-  const ajnaSubgraphResponse = await params.subgraphClient.getInterestRate({
-    poolId: params.poolId,
-    fromTimestamp: earliestTimestamp,
-    toTimestamp: timestamp,
-  })
-
-  const borrowRates = calculateBorrowRates(ajnaSubgraphResponse, params.timestamp)
-  const supplyRates = calculateSupplyRates(ajnaSubgraphResponse, params.timestamp)
+  const borrowRates =
+    params.positionMode === PositionMode.Borrow
+      ? calculateBorrowRates(ajnaSubgraphResponse)
+      : (new Map() as GroupedRates)
+  const supplyRates =
+    params.positionMode === PositionMode.Supply
+      ? calculateSupplyRates(ajnaSubgraphResponse)
+      : (new Map() as GroupedRates)
 
   const collateralToken = {
     address: ajnaSubgraphResponse.collateralToken.address,

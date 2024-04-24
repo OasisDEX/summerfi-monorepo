@@ -1,8 +1,8 @@
 import { Address, ProtocolId, Token } from '@summerfi/serverless-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
-import { AaveSparkSubgraphClient } from '@summerfi/aave-spark-subgraph'
+import { AaveSparkInterestRateResult } from '@summerfi/aave-spark-subgraph'
 import { calculateBorrowRates } from './borrow-rates'
-import { CustomDate, getTimestamp, oneYearAgo } from '../helpers'
+import { CustomDate } from '../helpers'
 import { ProtocolResponse } from './types'
 import { calculateSupplyRates } from './supply-rates'
 
@@ -15,29 +15,15 @@ export const getAaveSparkRates = async (params: {
   collateralToken: Address
   debtToken: Address
   protocol: ProtocolId.SPARK | ProtocolId.AAVE_V3 | ProtocolId.AAVE_V2 | ProtocolId.AAVE3
+  aaveSubgraphSupplyRatesResponse: AaveSparkInterestRateResult
+  aaveSubgraphBorrowRatesResponse: AaveSparkInterestRateResult
   timestamp: CustomDate
   logger: Logger
-  subgraphClient: AaveSparkSubgraphClient
 }): Promise<ProtocolResponse<AaveSparkProtocolData>> => {
-  const earliestTimestamp = oneYearAgo(params.timestamp)
-  const timestamp = getTimestamp(params.timestamp)
+  const { aaveSubgraphSupplyRatesResponse, aaveSubgraphBorrowRatesResponse } = params
 
-  const aaveSubgraphSupplyRatesResponse = await params.subgraphClient.getInterestRate({
-    token: params.collateralToken,
-    protocol: params.protocol,
-    fromTimestamp: earliestTimestamp,
-    toTimestamp: timestamp,
-  })
-
-  const aaveSubgraphBorrowRatesResponse = await params.subgraphClient.getInterestRate({
-    token: params.debtToken,
-    protocol: params.protocol,
-    fromTimestamp: earliestTimestamp,
-    toTimestamp: timestamp,
-  })
-
-  const borrowRates = calculateBorrowRates(aaveSubgraphBorrowRatesResponse, params.timestamp)
-  const supplyRates = calculateSupplyRates(aaveSubgraphSupplyRatesResponse, params.timestamp)
+  const borrowRates = calculateBorrowRates(aaveSubgraphBorrowRatesResponse)
+  const supplyRates = calculateSupplyRates(aaveSubgraphSupplyRatesResponse)
 
   const collateralToken = {
     address: aaveSubgraphSupplyRatesResponse.token.address,

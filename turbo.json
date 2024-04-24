@@ -37,7 +37,8 @@
     "MAINNET_RPC_URL",
     "REDIS_CACHE_URL",
     "REDIS_CACHE_USER",
-    "REDIS_CACHE_PASSWORD"
+    "REDIS_CACHE_PASSWORD",
+    "STAGE"
   ],
   "pipeline": {
     "dev": {

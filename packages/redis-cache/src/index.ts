@@ -7,6 +7,7 @@ export interface RedisConfig {
   password?: string
   database?: number
   ttlInSeconds: number
+  stage: string
 }
 
 export async function getRedisInstance(
@@ -27,7 +28,8 @@ export async function getRedisInstance(
 
   return {
     get: async (key) => {
-      const element = await client.get(key)
+      const finalKey = `${config.stage}:${key}`
+      const element = await client.get(finalKey)
       if (element !== null) {
         logger.info('Cache Hit', { key })
       } else {
@@ -36,7 +38,8 @@ export async function getRedisInstance(
       return element
     },
     set: async (key, value) => {
-      await client.set(key, value, { EX: config.ttlInSeconds })
+      const finalKey = `${config.stage}:${key}`
+      await client.set(finalKey, value, { EX: config.ttlInSeconds })
     },
   }
 }
