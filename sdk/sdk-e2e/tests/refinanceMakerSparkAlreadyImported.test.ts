@@ -1,6 +1,5 @@
 import {
   Percentage,
-  PositionId,
   Token,
   TokenAmount,
   Position,
@@ -39,13 +38,16 @@ import {
   ILKType,
   MakerPaybackAction,
   MakerPoolId,
+  MakerPositionId,
   MakerWithdrawAction,
+  isMakerPositionId,
 } from '@summerfi/protocol-plugins/plugins/maker'
 import {
   SparkBorrowAction,
   SparkDepositAction,
   SparkPoolId,
   isSparkPoolId,
+  isSparkPositionId,
 } from '@summerfi/protocol-plugins/plugins/spark'
 
 jest.setTimeout(300000)
@@ -111,7 +113,6 @@ describe.skip('Refinance Maker Spark | SDK', () => {
         chainInfo: chain.chainInfo,
       },
       ilkType: ILKType.ETH_C,
-      vaultId: '31646',
     }
 
     const makerPool = await maker.getPool({
@@ -126,7 +127,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     // Source position
     const makerPosition: Position = Position.createFrom({
       type: PositionType.Multiply,
-      positionId: PositionId.createFrom({ id: '31646' }),
+      positionId: MakerPositionId.createFrom({ id: '31646', vaultId: '31646' }),
       debtAmount: TokenAmount.createFromBaseUnit({
         token: DAI,
         amount: '3717915731044925295249',
@@ -239,6 +240,9 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     const sourcePosition = Position.createFrom(refinanceOrder.simulation.sourcePosition)
     const targetPosition = Position.createFrom(refinanceOrder.simulation.targetPosition)
 
+    assert(isMakerPositionId(sourcePosition.positionId), 'Source position is not a Maker position')
+    assert(isSparkPositionId(targetPosition.positionId), 'Target position is not a Spark position')
+
     assert(flashloanParams, 'Cannot decode Flashloan action calldata')
 
     const FlashloanMargin = 1.001
@@ -265,9 +269,8 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     }).toBaseUnit()
 
     assert(makerPaybackAction, 'Cannot decode Maker Payback action calldata')
-    expect(makerPaybackAction.args[0].vaultId).toBe(
-      BigInt((sourcePosition.pool.poolId as MakerPoolId).vaultId),
-    )
+    assert
+    expect(makerPaybackAction.args[0].vaultId).toBe(BigInt(sourcePosition.positionId.vaultId))
     expect(makerPaybackAction.args[0].userAddress).toBe(positionsManager.address.value)
     expect(makerPaybackAction.args[0].amount).toBe(BigInt(paybackAmount))
     expect(makerPaybackAction.args[0].paybackAll).toBe(true)
@@ -280,9 +283,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
 
     assert(makerWithdrawAction, 'Cannot decode Maker Withdraw action calldata')
 
-    expect(makerWithdrawAction.args[0].vaultId).toBe(
-      BigInt((sourcePosition.pool.poolId as MakerPoolId).vaultId),
-    )
+    expect(makerWithdrawAction.args[0].vaultId).toBe(BigInt(sourcePosition.positionId.vaultId))
     expect(makerWithdrawAction.args[0].userAddress).toBe(positionsManager.address.value)
     expect(makerWithdrawAction.args[0].joinAddr).toBe(
       deployment.dependencies.MCD_JOIN_ETH_C.address,

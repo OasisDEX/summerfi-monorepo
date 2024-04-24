@@ -14,7 +14,7 @@ import { DepositBorrowActionBuilder } from '../../src/plugins/common/builders/De
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
-import { MakerPoolId } from '../../src/plugins/maker/types/MakerPoolId'
+import { MakerPoolId } from '../../src/plugins/maker/implementation/MakerPoolId'
 import { ILKType } from '../../src/plugins/maker/enums/ILKType'
 
 describe('Deposit Borrow Action Builder', () => {

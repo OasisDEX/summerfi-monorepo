@@ -14,7 +14,7 @@ import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
 import { PaybackWithdrawActionBuilder } from '../../src/plugins/common/builders/PaybackWithdrawActionBuilder'
-import { MakerPoolId } from '../../src/plugins/maker/types/MakerPoolId'
+import { MakerPoolId } from '../../src/plugins/maker/implementation/MakerPoolId'
 import { ILKType } from '../../src/plugins/maker/enums/ILKType'
 
 describe('Payback Withdraw Action Builder', () => {
