@@ -249,10 +249,6 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
       caps: { borrowCap },
       data: { totalVariableDebt, totalStableDebt, variableBorrowRate },
     } = asset
-    if (quoteToken.symbol === TokenSymbol.WETH) {
-      // WETH can be used as collateral on Spark but not borrowed.
-      return
-    }
 
     try {
       const RESERVE_FACTOR_TO_PERCENTAGE_DIVISOR = 10000n
