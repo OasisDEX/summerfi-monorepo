@@ -29,7 +29,7 @@ export class SwapAction extends BaseAction {
           toAsset: params.toMinimumAmount.token.address.value,
           amount: params.fromAmount.toBaseUnit(),
           receiveAtLeast: params.toMinimumAmount.toBaseUnit(),
-          fee: params.fee.toBaseUnit({ decimals: 8 }),
+          fee: params.fee.toBaseUnit({ decimals: 2 }),
           withData: params.withData,
           collectFeeFromToken: params.collectFeeInFromToken,
         },
