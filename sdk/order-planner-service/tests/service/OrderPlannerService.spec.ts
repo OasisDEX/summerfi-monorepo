@@ -42,7 +42,6 @@ import {
 import { ProtocolPluginsRegistry } from '@summerfi/protocol-plugins/implementation'
 import { getMakerPosition } from '../utils/MakerSourcePosition'
 import { getSparkPosition } from '../utils/SparkTargetPosition'
-import { isMakerPoolId } from 'node_modules/@summerfi/protocol-plugins/src/plugins/maker/interfaces/IMakerPoolId'
 
 describe('Order Planner Service', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
