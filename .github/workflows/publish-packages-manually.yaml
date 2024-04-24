@@ -12,8 +12,8 @@ on:
         required: true
         type: choice
         options:
-            - 'main'
-            - 'dev'
+          - 'main'
+          - 'dev'
       publish_option:
         description: 'Select package(s) to publish'
         required: true
@@ -24,6 +24,14 @@ on:
           - 'all'
 
 jobs:
+  show-inputs:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Print inputs
+      run: |
+        echo "Checkout branch: ${{ github.event.inputs.branch }}"
+        echo "Publish packages: ${{ github.event.inputs.publish_option }}"
+
   publish-common:
     name: Publish Common Package
     runs-on: ubuntu-latest
@@ -34,10 +42,12 @@ jobs:
       - name: Checkout all files
         id: checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
 
       - name: Publish the package to npmjs
         id: build_image
-        uses: ./.github/workflows/publish-common-package.yaml
+        uses: ./.github/actions/publish-common
         with:
           npm_access_token: ${{ secrets.NPM_ACCESS_TOKEN }}
 
@@ -51,9 +61,11 @@ jobs:
       - name: Checkout all files
         id: checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
 
       - name: Publish the package to npmjs
         id: build_image
-        uses: ./.github/workflows/publish-client-package.yaml
+        uses: ./.github/actions/publish-client
         with:
           npm_access_token: ${{ secrets.NPM_ACCESS_TOKEN }}

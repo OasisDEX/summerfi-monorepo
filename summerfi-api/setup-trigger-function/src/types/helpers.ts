@@ -59,7 +59,7 @@ export type SupportedTriggersSchema =
 
 export const getBodySchema = (pathParams: PathParams): SupportedTriggersSchema | undefined => {
   const { trigger, chainId, protocol } = pathParams
-  if (protocol === ProtocolId.AAVE3) {
+  if (protocol === ProtocolId.AAVE3 || protocol === ProtocolId.AAVE_V3) {
     if (trigger === SupportedTriggers.AutoBuy) {
       return eventBodyAaveBasicBuySchema
     }

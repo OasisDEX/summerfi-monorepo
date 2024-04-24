@@ -1,25 +1,11 @@
-import {
-  Percentage,
-  TokenAmount,
-  type Position,
-  Price,
-  CurrencySymbol,
-} from '@summerfi/sdk-common/common'
+import { Percentage, TokenAmount, type Position } from '@summerfi/sdk-common/common'
 
 import { PositionUtils } from '../src/utils/PositionUtils'
 import { WETH, DAI } from './TestUtils'
 
 describe('PositionUtils', () => {
-  const ethPriceInUsd = Price.createFrom({
-    value: '1000',
-    baseToken: WETH,
-    quoteToken: CurrencySymbol.USD,
-  })
-  const daiPriceInUsd = Price.createFrom({
-    value: '1',
-    baseToken: DAI,
-    quoteToken: CurrencySymbol.USD,
-  })
+  const ethPriceInUsd = '1000'
+  const daiPriceInUsd = '1'
 
   describe('getLTV', () => {
     it('should correctly calculate LTV', () => {
