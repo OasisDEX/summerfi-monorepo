@@ -132,7 +132,12 @@ export class CompoundV3ProtocolPlugin extends BaseProtocolPlugin {
       throw new Error(`Invalid CompoundV3 pool ID: ${JSON.stringify(candidate)}`)
     }
   }
-
+  validatePositionID(candidate: unknown): asserts candidate is string {
+    // todo: validate position ID
+    if (typeof candidate !== 'string') {
+      throw new Error(`Invalid CompoundV3 position ID: ${JSON.stringify(candidate)}`)
+    }
+  }
   async getPool(compoundV3PoolId: unknown): Promise<CompoundV3LendingPool> {
     this.validatePoolId(compoundV3PoolId)
     const poolDetails = compoundV3PoolId
