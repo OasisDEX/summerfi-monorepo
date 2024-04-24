@@ -10,7 +10,7 @@ import { isSameTokens } from '../utils/TokenUtils'
  * @class Price
  * @description Represents a price of a token (baseToken) in a given currency (quoteToken)
  * @description Base / Quote e.q. 2000 ETH / DAI
- * @description The financial reprezentation (x ETH/DAI, Base/Quote) might be confusing as mathematically it is (x DAI/ETH, Quote/Base witch means x DAI per 1 ETH)
+ * @description The financial representation (x ETH/DAI, Base/Quote) might be confusing as mathematically it is (x DAI/ETH, Quote/Base which means x DAI per 1 ETH)
  * @description x amount of quoted token for one unit of base token
  */
 export class Price implements IPrice {
