@@ -1,8 +1,8 @@
 import { steps } from '@summerfi/sdk-common/simulation'
 import { ActionNames } from '@summerfi/deployment-types'
 import { ActionBuilder } from '@summerfi/protocol-plugins-common'
-import { isMakerPoolId } from '../types/MakerPoolId'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
+import { isMakerPoolId } from '../interfaces/IMakerPoolId'
 export const MakerPaybackWithdrawActionList: ActionNames[] = ['MakerPayback', 'MakerWithdraw']
 
 export const MakerImportPositionActionBuilder: ActionBuilder<steps.ImportStep> = async (

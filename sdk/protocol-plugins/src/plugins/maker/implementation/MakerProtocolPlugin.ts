@@ -12,6 +12,7 @@ import {
   valuesOfChainFamilyMap,
   Maybe,
   AddressValue,
+  IPositionId,
 } from '@summerfi/sdk-common/common'
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SimulationSteps } from '@summerfi/sdk-common/simulation'
@@ -35,13 +36,9 @@ import { MakerDebtConfigMap, MakerDebtConfigRecord } from './MakerDebtConfigMap'
 import { MakerLendingPool } from './MakerLendingPool'
 import { amountFromRad, amountFromRay, amountFromWei } from '../utils/AmountUtils'
 import { MakerAddressAbiMap } from '../types/MakerAddressAbiMap'
-import {
-  ActionBuildersMap,
-  IPositionId,
-  IProtocolPluginContext,
-} from '@summerfi/protocol-plugins-common'
+import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { ILKType } from '../enums/ILKType'
-import { MakerPoolId, isMakerPoolId } from '../types/MakerPoolId'
+import { MakerPoolId } from './MakerPoolId'
 import { IUser } from '@summerfi/sdk-common/user'
 import {
   ExternalPositionType,
@@ -51,6 +48,8 @@ import {
 } from '@summerfi/sdk-common/orders'
 import { encodeMakerGiveThroughProxyActions } from '../utils/MakerGive'
 import { MakerImportPositionActionBuilder } from '../builders/MakerImportPositionActionBuilder'
+import { isMakerPositionId } from '../interfaces/IMakerPositionId'
+import { isMakerPoolId } from '../interfaces/IMakerPoolId'
 
 export class MakerProtocolPlugin extends BaseProtocolPlugin {
   readonly CdpManagerContractName = 'CdpManager'
@@ -236,6 +235,9 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
     if (!isMakerPoolId(params.externalPosition.position.pool.poolId)) {
       throw new Error('Invalid Maker pool ID')
     }
+    if (!isMakerPositionId(params.externalPosition.position)) {
+      throw new Error('Invalid Maker position ID')
+    }
 
     if (params.externalPosition.externalId.type !== ExternalPositionType.DS_PROXY) {
       throw new Error(
@@ -257,7 +259,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
       cdpManagerAddress: cdpManagerAddress,
       makerProxyActionsAddress: dssProxyActionsAddress,
       giveToAddress: params.positionsManager.address.value,
-      cdpId: params.externalPosition.position.pool.poolId.vaultId,
+      cdpId: params.externalPosition.position.vaultId,
     })
 
     return {

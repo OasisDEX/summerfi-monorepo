@@ -30,9 +30,9 @@ import {
 import { PublicClient } from 'viem'
 import {
   MakerPaybackAction,
-  MakerPoolId,
   MakerProtocolPlugin,
   MakerWithdrawAction,
+  isMakerPositionId,
 } from '@summerfi/protocol-plugins/plugins/maker'
 import {
   SparkBorrowAction,
@@ -42,6 +42,7 @@ import {
 import { ProtocolPluginsRegistry } from '@summerfi/protocol-plugins/implementation'
 import { getMakerPosition } from '../utils/MakerSourcePosition'
 import { getSparkPosition } from '../utils/SparkTargetPosition'
+import { isMakerPoolId } from 'node_modules/@summerfi/protocol-plugins/src/plugins/maker/interfaces/IMakerPoolId'
 
 describe('Order Planner Service', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -188,9 +189,11 @@ describe('Order Planner Service', () => {
     })
 
     assert(makerPaybackAction, 'MakerPaybackAction is not defined')
+    assert(isMakerPositionId(sourcePosition.positionId), 'Source position ID is not a MakerPoolId')
+
     expect(makerPaybackAction.args).toEqual([
       {
-        vaultId: BigInt((sourcePosition.pool.poolId as MakerPoolId).vaultId),
+        vaultId: BigInt(sourcePosition.positionId.vaultId),
         userAddress: positionsManager.address.value,
         amount: BigInt(sourcePosition.debtAmount.toBaseUnit()),
         paybackAll: true,
@@ -206,7 +209,7 @@ describe('Order Planner Service', () => {
     assert(makerWithdrawAction, 'MakerWithdrawAction is not defined')
     expect(makerWithdrawAction.args).toEqual([
       {
-        vaultId: BigInt((sourcePosition.pool.poolId as MakerPoolId).vaultId),
+        vaultId: BigInt(sourcePosition.positionId.vaultId),
         userAddress: positionsManager.address.value,
         joinAddr: deployments.dependencies.MCD_JOIN_ETH_A.address,
         amount: BigInt(sourcePosition.collateralAmount.toBaseUnit()),
