@@ -20,10 +20,10 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         }
 
         const directory = path.join(
-            // resolves to the root of the current workspace
-            plop.getDestBasePath(),
-            'sdk/protocol-plugins/src/plugins',
-            answers.nameKebabCase,
+          // resolves to the root of the current workspace
+          plop.getDestBasePath(),
+          'sdk/protocol-plugins/src/plugins',
+          answers.nameKebabCase,
         )
 
         fs.mkdirSync(directory)
@@ -195,27 +195,27 @@ const nameAction: PlopTypes.CustomActionFunction = async (answers: {
 }) => {
   const name = answers.name
   ;(answers.namePascalCase = toPascalCase(name)),
-      (answers.nameKebabCase = toKebabCase(name)),
-      (answers.nameCamelCase = toCamelCase(name)),
-      (answers.nameCapitalised = name.toUpperCase())
+    (answers.nameKebabCase = toKebabCase(name)),
+    (answers.nameCamelCase = toCamelCase(name)),
+    (answers.nameCapitalised = name.toUpperCase())
 
   return 'Added casing variants'
 }
 
 const toKebabCase = (str) =>
-    str
-        .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-        .replace(/[\s_]+/g, '-')
-        .toLowerCase()
+  str
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/[\s_]+/g, '-')
+    .toLowerCase()
 
 const toCamelCase = (str) => {
   return str
-      .replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
-        if (+match === 0) return ''
-        return index === 0 ? match.toLowerCase() : match.toUpperCase()
-      })
-      .replace(/-+/g, '')
-      .replace(/_+/g, '')
+    .replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
+      if (+match === 0) return ''
+      return index === 0 ? match.toLowerCase() : match.toUpperCase()
+    })
+    .replace(/-+/g, '')
+    .replace(/_+/g, '')
 }
 
 const toPascalCase = (str) => {
