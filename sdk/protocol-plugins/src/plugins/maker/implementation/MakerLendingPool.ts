@@ -1,18 +1,19 @@
 import { LendingPool } from '@summerfi/sdk-common/protocols'
 import { IMakerLendingPool } from '../interfaces/IMakerLendingPool'
-import { MakerCollateralConfigMap } from './MakerCollateralConfigMap'
-import { MakerDebtConfigMap } from './MakerDebtConfigMap'
 import { SerializationService } from '@summerfi/sdk-common/services'
+import { MakerLendingPoolId } from './MakerLendingPoolId'
 
+/**
+ * @class MakerLendingPool
+ * @see IMakerLendingPool
+ */
 export class MakerLendingPool extends LendingPool implements IMakerLendingPool {
-  readonly collaterals: MakerCollateralConfigMap
-  readonly debts: MakerDebtConfigMap
+  readonly poolId: MakerLendingPoolId
 
   private constructor(params: IMakerLendingPool) {
     super(params)
 
-    this.collaterals = MakerCollateralConfigMap.createFrom(params.collaterals)
-    this.debts = MakerDebtConfigMap.createFrom(params.debts)
+    this.poolId = MakerLendingPoolId.createFrom(params.poolId)
   }
 
   public static createFrom(params: IMakerLendingPool): MakerLendingPool {

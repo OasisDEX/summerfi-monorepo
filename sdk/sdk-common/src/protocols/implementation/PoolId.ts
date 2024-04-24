@@ -1,6 +1,11 @@
+import { SerializationService } from '../../services'
 import { IPoolId } from '../interfaces/IPoolId'
 import { IProtocol } from '../interfaces/IProtocol'
 
+/**
+ * @class PoolId
+ * @see IPoolId
+ */
 export abstract class PoolId implements IPoolId {
   protocol: IProtocol
 
@@ -8,3 +13,5 @@ export abstract class PoolId implements IPoolId {
     this.protocol = params.protocol
   }
 }
+
+SerializationService.registerClass(PoolId)

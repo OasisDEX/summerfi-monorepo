@@ -6,15 +6,15 @@ import {
 } from '@summerfi/protocol-plugins-common'
 import { ChainInfo, Maybe, IPosition, IPositionId } from '@summerfi/sdk-common/common'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
-import { IPoolId, ProtocolName, IPool } from '@summerfi/sdk-common/protocols'
+import { IPoolId, ProtocolName, ILendingPool } from '@summerfi/sdk-common/protocols'
 import { steps } from '@summerfi/sdk-common/simulation'
 import { IUser } from '@summerfi/sdk-common/user'
-import { z } from 'zod'
 
 /**
- * @class Base class for all ProtocolDataPlugins. It provides the basic functionality & fields for all protocol plugins
- *              and implements shared functionality for late dependency injection, pool schema validation
- *              and action building
+ * @class BaseProtocolPlugin
+ * @description Base class for all protocol plugins
+ *
+ * It provides some extra functionality to validate input data coming from the SDK client
  */
 export abstract class BaseProtocolPlugin implements IProtocolPlugin {
   /** These properties need to be initialized by the actual plugin implementation */
@@ -37,29 +37,62 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
     return this.context
   }
 
-  abstract isPoolId(candidate: unknown): candidate is IPoolId
-  abstract validatePoolId(candidate: unknown): asserts candidate is IPoolId
+  /** LENDING POOLS */
 
-  abstract getPool(poolId: unknown): Promise<IPool>
+  /**
+   * @name validateLendingPoolId
+   * @description Validates that the candidate is a valid lending pool ID for the specific protocol
+   * @param candidate The candidate to validate
+   * @returns asserts that the candidate is a valid lending pool ID for the specific protocol
+   */
+  protected abstract validateLendingPoolId(candidate: unknown): asserts candidate is IPoolId
+
+  /**
+   * @name getLendingPoolImpl
+   * @description Gets the lending pool for the given pool ID
+   * @param poolId The pool ID
+   * @returns The lending pool for the specific protocol
+   *
+   * @remarks This method should be implemented by the protocol plugin as the external one is just a wrapper to
+   * validate the input and call this one
+   */
+  protected abstract _getLendingPoolImpl(poolId: IPoolId): Promise<ILendingPool>
+
+  /** @see IProtocolPlugin.getLendingPool */
+  getLendingPool(poolId: unknown): Promise<ILendingPool> {
+    this.validateLendingPoolId(poolId)
+    return this._getLendingPoolImpl(poolId)
+  }
+
+  /** POSITIONS */
+
+  /** @see IProtocolPlugin.getPosition */
   abstract getPosition(positionId: IPositionId): Promise<IPosition>
+
+  /** IMPORT POSITION */
+
+  /** @see IProtocolPlugin.getImportPositionTransaction */
   abstract getImportPositionTransaction(params: {
     user: IUser
     externalPosition: IExternalPosition
     positionsManager: IPositionsManager
   }): Promise<Maybe<TransactionInfo>>
 
+  /** ACTION BUILDERS */
+
+  /** @see IProtocolPlugin.getActionBuilder */
   getActionBuilder<T extends steps.Steps>(step: T): Maybe<ActionBuilder<T>> {
     return this.stepBuilders[step.type] as ActionBuilder<T>
   }
 
-  protected _isPoolId<PoolId extends IPoolId>(
-    candidate: unknown,
-    schema: z.Schema,
-  ): candidate is PoolId {
-    const { success } = schema.safeParse(candidate)
-    return success
-  }
+  /** HELPERS */
 
+  /**
+   * @name _getDeploymentKey
+   * @description Gets the key to use for the deployment configuration
+   * @param chainInfo The chain information
+   * @returns The key to use for the deployment configuration
+   */
   protected _getDeploymentKey(chainInfo: ChainInfo): string {
     return `${chainInfo.name}.${this.deploymentConfigTag}`
   }

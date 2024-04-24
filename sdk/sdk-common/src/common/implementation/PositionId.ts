@@ -1,6 +1,10 @@
 import { SerializationService } from '../../services/SerializationService'
 import { IPositionId } from '../interfaces/IPositionId'
 
+/**
+ * @class PositionId
+ * @see IPositionId
+ */
 export abstract class PositionId implements IPositionId {
   readonly id: string
 

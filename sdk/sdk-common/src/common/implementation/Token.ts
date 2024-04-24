@@ -5,7 +5,7 @@ import { ChainInfo } from './ChainInfo'
 
 /**
  * @name Token
- * @description Represents a token on a blockchain and provides it's details
+ * @see IToken
  */
 export class Token implements IToken {
   readonly chainInfo: ChainInfo

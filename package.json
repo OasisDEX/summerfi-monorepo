@@ -57,6 +57,7 @@
   },
   "dependencies": {
     "bignumber.js": "^9.1.2",
-    "viem": "^2.9.19"
+    "viem": "^2.9.19",
+    "zod": "^3.22.4"
   }
 }

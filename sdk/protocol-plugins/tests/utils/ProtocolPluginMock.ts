@@ -43,11 +43,11 @@ export class ProtocolPluginMock implements IProtocolPlugin {
   }
   context = undefined as unknown as IProtocolPluginContext
 
-  isPoolId(candidate: unknown): candidate is IPoolId {
+  isLendingPoolId(candidate: unknown): candidate is IPoolId {
     return true
   }
 
-  validatePoolId(candidate: unknown): asserts candidate is IPoolId {}
+  validateLendingPoolId(candidate: unknown): asserts candidate is IPoolId {}
 
   async getPool(poolId: IPoolId): Promise<IPool> {
     return undefined as unknown as IPool
@@ -76,11 +76,11 @@ export class EmptyProtocolPluginMock implements IProtocolPlugin {
   stepBuilders: Partial<ActionBuildersMap> = {}
   context = undefined as unknown as IProtocolPluginContext
 
-  isPoolId(candidate: unknown): candidate is IPoolId {
+  isLendingPoolId(candidate: unknown): candidate is IPoolId {
     return true
   }
 
-  validatePoolId(candidate: unknown): asserts candidate is IPoolId {}
+  validateLendingPoolId(candidate: unknown): asserts candidate is IPoolId {}
 
   async getPool(poolId: IPoolId): Promise<IPool> {
     return undefined as unknown as IPool
@@ -112,11 +112,11 @@ export class NoCheckpointProtocolPluginMock implements IProtocolPlugin {
   }
   context = undefined as unknown as IProtocolPluginContext
 
-  isPoolId(candidate: unknown): candidate is IPoolId {
+  isLendingPoolId(candidate: unknown): candidate is IPoolId {
     return true
   }
 
-  validatePoolId(candidate: unknown): asserts candidate is IPoolId {}
+  validateLendingPoolId(candidate: unknown): asserts candidate is IPoolId {}
 
   async getPool(poolId: IPoolId): Promise<IPool> {
     return undefined as unknown as IPool

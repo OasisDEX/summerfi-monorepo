@@ -1,4 +1,4 @@
-import { subtractPercentage } from '@summerfi/sdk-common/utils'
+import { applyPercentage, subtractPercentage } from '@summerfi/sdk-common/utils'
 import {
   FlashloanProvider,
   ISimulation,
@@ -14,6 +14,26 @@ import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
 import { refinanceLendingToLendingAnyPairStrategy } from './Strategy'
 import { type IRefinanceDependencies } from '../common/Types'
+import { AddressType, Token } from '@summerfi/sdk-common'
+
+// const token: TokenAmount = TokenAmount.createFrom({
+//   amount: '100',
+//   token: Token.createFrom({
+//     name: 'DAI',
+//     address: {
+//       value: '0x6b175474e89094c44da98b954eedeac495271d0f',
+//       type: AddressType.Ethereum,
+//     },
+//     decimals: 18,
+//     symbol: 'DAI',
+//     chainInfo: {
+//       chainId: 1,
+//       name: 'Ethereum',
+//     },
+//   }),
+// })
+
+// applyPercentage(token, Percentage.createFrom({ value: 0.1 }))
 
 export async function refinanceLendingToLendingAnyPair(
   args: IRefinanceParameters,

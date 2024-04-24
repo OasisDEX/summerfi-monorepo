@@ -1,19 +1,16 @@
 import { SerializationService } from '../../services/SerializationService'
+import { IWallet } from '../interfaces/IWallet'
 import { Address } from './Address'
-
-interface IWalletSerialized {
-  address: Address
-}
 
 /**
  * @interface Wallet
- * @description Represents a wallet on a blockchain
+ * @see IWallet
  */
-export class Wallet implements IWalletSerialized {
+export class Wallet implements IWallet {
   readonly address: Address
 
-  private constructor(params: IWalletSerialized) {
-    this.address = params.address
+  private constructor(params: IWallet) {
+    this.address = Address.createFrom(params.address)
   }
 
   static createFrom(params: { address: Address }): Wallet {

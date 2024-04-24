@@ -7,7 +7,7 @@ import { Token } from './Token'
 
 /**
  * @class Price
- * @description Represents a price of a token (baseToken) in a given currency (quoteToken)
+ * @see IPrice
  */
 export class Price implements IPrice {
   readonly value: string

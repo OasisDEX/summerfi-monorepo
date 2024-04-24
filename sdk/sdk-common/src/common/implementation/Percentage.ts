@@ -4,7 +4,7 @@ import { IPercentage } from '../interfaces/IPercentage'
 
 /**
  * @class Percentage
- * @description Represents a percentage
+ * @see IPercentage
  */
 export class Percentage implements IPercentage {
   readonly value: number

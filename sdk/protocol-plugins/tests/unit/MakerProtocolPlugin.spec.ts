@@ -18,7 +18,7 @@ describe('Maker Protocol Plugin', () => {
   })
 
   it('should verify that a given poolId is recognised as a valid format', () => {
-    expect(makerProtocolPlugin.isPoolId(makerPoolIdMock)).toBe(true)
+    expect(makerProtocolPlugin.isLendingPoolId(makerPoolIdMock)).toBe(true)
   })
 
   it('should throw a specific error when provided with a poolId not matching the MakerPoolId format', () => {
@@ -30,7 +30,7 @@ describe('Maker Protocol Plugin', () => {
           name: ProtocolName.AAVEv3,
         },
       }
-      makerProtocolPlugin.validatePoolId(invalidMakerPoolId)
+      makerProtocolPlugin.validateLendingPoolId(invalidMakerPoolId)
       assert.fail('Should throw error')
     } catch (error: unknown) {
       expect(getErrorMessage(error)).toMatch('Invalid Maker pool ID')

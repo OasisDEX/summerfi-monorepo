@@ -5,7 +5,7 @@ import { AddressType } from '../enums/AddressType'
 
 /**
  * @class Address
- * @description Represents a blockchain address, including its type
+ * @see IAddress
  */
 export class Address implements IAddress {
   public static ZeroAddressEthereum: Address = new Address({

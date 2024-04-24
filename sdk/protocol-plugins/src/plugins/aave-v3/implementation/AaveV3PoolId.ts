@@ -1,7 +1,7 @@
 import { PoolId } from '@summerfi/sdk-common/protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
 import { EmodeType } from '../../common'
-import { IAaveV3PoolId } from '../interfaces/IAaveV3PoolId'
+import { IAaveV3PoolId } from '../interfaces/IAaveV3LendingPoolId'
 import { IAaveV3Protocol } from '../interfaces/IAaveV3Protocol'
 
 export class AaveV3PoolId extends PoolId implements IAaveV3PoolId {

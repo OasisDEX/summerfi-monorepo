@@ -44,7 +44,7 @@ import { SparkAddressAbiMap } from '../types/SparkAddressAbiMap'
 import { EmodeType } from '../../common/enums/EmodeType'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
-import { ISparkPoolId } from '../interfaces/ISparkPoolId'
+import { ISparkPoolId } from '../interfaces/ISparkLendingPoolId'
 
 type AssetsList = ReturnType<SparkProtocolPlugin['buildAssetsList']>
 type Asset = Awaited<AssetsList> extends (infer U)[] ? U : never
@@ -75,18 +75,18 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
     super(params)
   }
 
-  isPoolId(candidate: unknown): candidate is ISparkPoolId {
-    return this._isPoolId(candidate, this.sparkPoolIdSchema)
+  isLendingPoolId(candidate: unknown): candidate is ISparkPoolId {
+    return this._isLendingPoolId(candidate, this.sparkPoolIdSchema)
   }
 
-  validatePoolId(candidate: unknown): asserts candidate is ISparkPoolId {
-    if (!this.isPoolId(candidate)) {
+  validateLendingPoolId(candidate: unknown): asserts candidate is ISparkPoolId {
+    if (!this.isLendingPoolId(candidate)) {
       throw new Error(`Invalid Spark pool ID: ${JSON.stringify(candidate)}`)
     }
   }
 
   async getPool(poolId: unknown): Promise<SparkLendingPool> {
-    this.validatePoolId(poolId)
+    this.validateLendingPoolId(poolId)
 
     const emode = sparkEmodeCategoryMap[poolId.emodeType]
 

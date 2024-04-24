@@ -41,7 +41,7 @@ import {
 } from '../abis/AaveV3ABIS'
 import { AaveV3ContractNames } from '@summerfi/deployment-types'
 import { EmodeType } from '../../common/enums/EmodeType'
-import { IAaveV3PoolId } from '../interfaces/IAaveV3PoolId'
+import { IAaveV3PoolId } from '../interfaces/IAaveV3LendingPoolId'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 
@@ -76,18 +76,18 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
     super(params)
   }
 
-  isPoolId(candidate: unknown): candidate is IAaveV3PoolId {
-    return this._isPoolId(candidate, this.aaveV3PoolIdSchema)
+  isLendingPoolId(candidate: unknown): candidate is IAaveV3PoolId {
+    return this._isLendingPoolId(candidate, this.aaveV3PoolIdSchema)
   }
 
-  validatePoolId(candidate: unknown): asserts candidate is IAaveV3PoolId {
-    if (!this.isPoolId(candidate)) {
+  validateLendingPoolId(candidate: unknown): asserts candidate is IAaveV3PoolId {
+    if (!this.isLendingPoolId(candidate)) {
       throw new Error(`Invalid AaveV3 pool ID: ${JSON.stringify(candidate)}`)
     }
   }
 
   async getPool(aaveV3PoolId: unknown): Promise<AaveV3LendingPool> {
-    this.validatePoolId(aaveV3PoolId)
+    this.validateLendingPoolId(aaveV3PoolId)
 
     const emode = aaveV3EmodeCategoryMap[aaveV3PoolId.emodeType]
 

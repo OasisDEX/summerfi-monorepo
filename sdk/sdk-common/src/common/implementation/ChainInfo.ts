@@ -4,7 +4,7 @@ import { ChainId } from '../aliases/ChainId'
 
 /**
  * @name ChainInfo
- * @description Provides information of a blockchain network
+ * @see IChainInfo
  */
 export class ChainInfo implements IChainInfo {
   readonly chainId: ChainId

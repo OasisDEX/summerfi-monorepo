@@ -18,7 +18,7 @@ describe('AAVEv3 Protocol Plugin', () => {
   })
 
   it('should verify that a given poolId is recognised as a valid format', () => {
-    expect(aaveV3ProtocolPlugin.isPoolId(aaveV3PoolIdMock)).toBe(true)
+    expect(aaveV3ProtocolPlugin.isLendingPoolId(aaveV3PoolIdMock)).toBe(true)
   })
 
   it('should throw a specific error when provided with a poolId not matching the AAVEv3PoolId format', () => {
@@ -30,7 +30,7 @@ describe('AAVEv3 Protocol Plugin', () => {
           name: ProtocolName.Maker,
         },
       }
-      aaveV3ProtocolPlugin.validatePoolId(invalidAaveV3PoolIdMock)
+      aaveV3ProtocolPlugin.validateLendingPoolId(invalidAaveV3PoolIdMock)
       assert.fail('Should throw error')
     } catch (error: unknown) {
       expect(getErrorMessage(error)).toMatch('Invalid AaveV3 pool ID')

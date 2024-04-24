@@ -18,7 +18,7 @@ describe('Spark Protocol Plugin', () => {
   })
 
   it('should verify that a given poolId is recognised as a valid format', () => {
-    expect(sparkProtocolPlugin.isPoolId(sparkPoolIdMock)).toBe(true)
+    expect(sparkProtocolPlugin.isLendingPoolId(sparkPoolIdMock)).toBe(true)
   })
 
   it('should throw a specific error when provided with a poolId not matching the SparkPoolId format', () => {
@@ -30,7 +30,7 @@ describe('Spark Protocol Plugin', () => {
           name: ProtocolName.Maker,
         },
       }
-      sparkProtocolPlugin.validatePoolId(invalidSparkPoolIdMock)
+      sparkProtocolPlugin.validateLendingPoolId(invalidSparkPoolIdMock)
       assert.fail('Should throw error')
     } catch (error: unknown) {
       expect(getErrorMessage(error)).toMatch('Invalid Spark pool ID')

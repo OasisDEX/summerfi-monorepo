@@ -5,7 +5,7 @@ import { IRiskRatio, RiskRatioType } from '../interfaces/IRiskRatio'
 
 /**
  * @class RiskRatio
- * @description Risk ratio representing the risk of position,
+ * @see IRiskRatio
  */
 export class RiskRatio implements IRiskRatio {
   readonly type: RiskRatioType

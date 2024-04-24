@@ -9,25 +9,27 @@ export function newEmptyPositionFromPool(
   debt: Token,
   collateral: Token,
 ): Position {
-  const debtConfig = pool.debts.get({ token: debt })
-  const collateralConfig = pool.collaterals.get({ token: collateral })
+  // const debtConfig = pool.debts.get({ token: debt })
+  // const collateralConfig = pool.collaterals.get({ token: collateral })
 
-  if (!debtConfig) {
-    throw new Error('Debt token not supported by pool')
-  }
-  if (!collateralConfig) {
-    throw new Error('Collateral token not supported by pool')
-  }
+  // if (!debtConfig) {
+  //   throw new Error('Debt token not supported by pool')
+  // }
+  // if (!collateralConfig) {
+  //   throw new Error('Collateral token not supported by pool')
+  // }
 
-  return Position.createFrom({
-    type: PositionType.Multiply,
-    positionId: {
-      id: 'newEmptyPositionFromPool',
-    },
-    debtAmount: TokenAmount.createFrom({ token: debtConfig.token, amount: '0' }),
-    collateralAmount: TokenAmount.createFrom({ token: collateralConfig.token, amount: '0' }),
-    pool,
-  })
+  // return Position.createFrom({
+  //   type: PositionType.Multiply,
+  //   positionId: {
+  //     id: 'newEmptyPositionFromPool',
+  //   },
+  //   debtAmount: TokenAmount.createFrom({ token: debtConfig.token, amount: '0' }),
+  //   collateralAmount: TokenAmount.createFrom({ token: collateralConfig.token, amount: '0' }),
+  //   pool,
+  // })
+
+  return {} as Position
 }
 
 export function depositToPosition(position: Position, amount: TokenAmount): Position {

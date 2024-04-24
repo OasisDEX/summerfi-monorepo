@@ -6,9 +6,7 @@ import { ITokenAmount } from '../interfaces/ITokenAmount'
 
 /**
  * @class TokenAmount
- * @description Represents an amount of a certain token. The amount is represented as a string to avoid
- *              issues with big number representation. The token gives enough information to parse it into
- *              a big number.
+ * @see ITokenAmount
  */
 export class TokenAmount implements ITokenAmount {
   private readonly _baseUnitFactor: BigNumber

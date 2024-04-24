@@ -21,6 +21,12 @@ export class Protocol extends IRPCClient implements IProtocolClient {
       poolId: params.poolId,
     })
   }
+
+  getPoolExtendedInfo(params: { poolId: IPoolId }): Promise<Maybe<IPoolExtendedInfo>> {
+    return this.rpcClient.getPoolExtendedInfo.query({
+      poolId: params.poolId,
+    })
+  }
 }
 
 SerializationService.registerClass(Protocol)

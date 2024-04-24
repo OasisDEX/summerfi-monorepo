@@ -3,6 +3,10 @@ import { IMakerPositionId } from '../interfaces/IMakerPositionId'
 import { PositionId } from '@summerfi/sdk-common'
 import { SerializationService } from '@summerfi/sdk-common/services'
 
+/**
+ * @class MakerPositionId
+ * @see IMakerPositionId
+ */
 export class MakerPositionId extends PositionId implements IMakerPositionId {
   readonly vaultId: MakerVaultId
 
