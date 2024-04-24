@@ -1,6 +1,5 @@
 import {
   Percentage,
-  PositionId,
   Token,
   TokenAmount,
   Position,
@@ -38,6 +37,7 @@ import {
 import {
   CompoundV3PaybackAction,
   CompoundV3PoolId,
+  CompoundV3PositionId,
   CompoundV3WithdrawAction,
 } from '@summerfi/protocol-plugins/plugins/compound-v3'
 import {
@@ -51,10 +51,10 @@ jest.setTimeout(300000)
 
 const SDKAPiUrl = 'https://jghh34e4mj.execute-api.us-east-1.amazonaws.com/api/sdk'
 const TenderlyForkUrl =
-  'https://virtual.mainnet.rpc.tenderly.co/743cdd9e-f508-4240-9781-7f3942f45ca6'
+  'https://virtual.mainnet.rpc.tenderly.co/ec6bdc6f-1f8b-4192-9c42-331ae2a81ff8'
 
 /* revert to pre - import state
-      curl -X POST https://virtual.mainnet.rpc.tenderly.co/743cdd9e-f508-4240-9781-7f3942f45ca6 \
+      curl -X POST https://virtual.mainnet.rpc.tenderly.co/ec6bdc6f-1f8b-4192-9c42-331ae2a81ff8 \
     -H "Content-Type: application/json" \
     -d '{
       "jsonrpc": "2.0",
@@ -92,7 +92,7 @@ const TenderlyForkUrl =
 "name": "RefinanceCompoundV3Spark"
 }
  */
-describe.skip('Refinance CompoundV3 Spark | SDK', () => {
+describe.only('Refinance CompoundV3 Spark | SDK', () => {
   it('should allow refinance CompoundV3 -> Spark with same pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: SDKAPiUrl })
@@ -130,7 +130,7 @@ describe.skip('Refinance CompoundV3 Spark | SDK', () => {
     // DPM proxy with imported position
     const positionsManager: IPositionsManager = {
       address: Address.createFromEthereum({
-        value: '0x2a5c4585bee3531b6F6EC78B86711473696449dc',
+        value: '0x5FdBC6DEfbe76c33b1d75b61208269f2181CAc0b',
       }),
     }
 
@@ -168,7 +168,15 @@ describe.skip('Refinance CompoundV3 Spark | SDK', () => {
     // Source position
     const compoundV3Position: Position = Position.createFrom({
       type: PositionType.Multiply,
-      positionId: PositionId.createFrom({ id: '31646' }),
+      positionId: CompoundV3PositionId.createFrom({
+        id: '31646',
+        positionParameters: {
+          comet: compoundV3PoolId.comet,
+          debt: compoundV3PoolId.debt,
+          collaterals: compoundV3PoolId.collaterals,
+          positionAddress: walletAddress,
+        },
+      }),
       debtAmount: TokenAmount.createFromBaseUnit({
         token: USDC,
         amount: '145000000000',
@@ -204,7 +212,7 @@ describe.skip('Refinance CompoundV3 Spark | SDK', () => {
     if (!isSparkPoolId(sparkPool.poolId)) {
       assert(false, 'Pool ID is not a Spark one')
     }
-    
+
     if (!isLendingPool(sparkPool)) {
       assert(false, 'Spark pool type is not lending')
     }
@@ -230,7 +238,7 @@ describe.skip('Refinance CompoundV3 Spark | SDK', () => {
     const refinanceOrder: Maybe<Order> = await user.newOrder({
       positionsManager: {
         address: Address.createFromEthereum({
-          value: '0x2a5c4585bee3531b6F6EC78B86711473696449dc',
+          value: '0x5FdBC6DEfbe76c33b1d75b61208269f2181CAc0b',
         }),
       },
       simulation: refinanceSimulation,

@@ -1,4 +1,4 @@
-import { IProtocolPluginContext, IPositionId } from '@summerfi/protocol-plugins-common'
+import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { ChainInfo } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import assert from 'assert'
@@ -48,9 +48,9 @@ describe.only('CompoundV3 Protocol Plugin', () => {
         }),
       },
     }
-    await expect(compoundV3ProtocolPlugin.getPool(invalidCompoundV3PoolIdUnsupportedChain)).rejects.toThrow(
-      'Invalid CompoundV3 pool ID',
-    )
+    await expect(
+      compoundV3ProtocolPlugin.getPool(invalidCompoundV3PoolIdUnsupportedChain),
+    ).rejects.toThrow('Invalid CompoundV3 pool ID')
   })
 
   it('should throw an error when calling getPool with chain id missing from ctx', async () => {
@@ -66,9 +66,9 @@ describe.only('CompoundV3 Protocol Plugin', () => {
         },
       },
     })
-    await expect(compoundV3ProtocolPluginWithWrongContext.getPool(compoundV3PoolIdMock)).rejects.toThrow(
-      `ctx.provider.chain.id undefined`,
-    )
+    await expect(
+      compoundV3ProtocolPluginWithWrongContext.getPool(compoundV3PoolIdMock),
+    ).rejects.toThrow(`ctx.provider.chain.id undefined`)
   })
 
   it('should throw an error when calling getPool with an unsupported chain ID', async () => {
@@ -86,13 +86,17 @@ describe.only('CompoundV3 Protocol Plugin', () => {
       },
     })
 
-    await expect(compoundV3ProtocolPluginWithWrongContext.getPool(compoundV3PoolIdMock)).rejects.toThrow(
-      `Chain ID ${wrongChainId} is not supported`,
-    )
+    await expect(
+      compoundV3ProtocolPluginWithWrongContext.getPool(compoundV3PoolIdMock),
+    ).rejects.toThrow(`Chain ID ${wrongChainId} is not supported`)
   })
 
   it('should throw a "Not implemented" error when calling getPosition', async () => {
-    const positionId = 'mockPositionId' as IPositionId
-    await expect(compoundV3ProtocolPlugin.getPosition(positionId)).rejects.toThrow('Not implemented')
+    const positionId = {
+      id: 'mockPositionId',
+    }
+    await expect(compoundV3ProtocolPlugin.getPosition(positionId)).rejects.toThrow(
+      'Not implemented',
+    )
   })
 })

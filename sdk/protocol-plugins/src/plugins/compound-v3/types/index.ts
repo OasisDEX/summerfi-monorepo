@@ -1,2 +1,2 @@
 export * from './CompoundV3AddressAbiMap'
-export * from './CompoundV3PoolId'
+export * from '../interfaces/ICompoundV3PoolId'

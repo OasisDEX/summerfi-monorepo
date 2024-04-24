@@ -1,5 +1,4 @@
 import {
-  PositionId,
   Token,
   TokenAmount,
   Position,
@@ -16,15 +15,19 @@ import { ExternalPositionType, IImportPositionParameters, Order } from '@summerf
 import { ISimulation, SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
 
 import assert from 'assert'
-import { CompoundV3PoolId } from '@summerfi/protocol-plugins/plugins/compound-v3'
+import {
+  CompoundV3PoolId,
+  CompoundV3PositionId,
+} from '@summerfi/protocol-plugins/plugins/compound-v3'
 import { Hex } from 'viem'
 import { TransactionUtils } from './utils/TransactionUtils'
+import { ICompoundV3Protocol } from 'node_modules/@summerfi/protocol-plugins/src/plugins/compound-v3/interfaces/ICompoundV3Protocol'
 
 jest.setTimeout(300000)
 
 const SDKAPiUrl = 'https://jghh34e4mj.execute-api.us-east-1.amazonaws.com/api/sdk'
 const TenderlyForkUrl =
-  'https://virtual.mainnet.rpc.tenderly.co/743cdd9e-f508-4240-9781-7f3942f45ca6'
+  'https://virtual.mainnet.rpc.tenderly.co/ec6bdc6f-1f8b-4192-9c42-331ae2a81ff8'
 
 describe.skip('Import Compound V3 Position | SDK', () => {
   it('should allow refinance Compound V3 -> Spark with same pair', async () => {
@@ -62,17 +65,16 @@ describe.skip('Import Compound V3 Position | SDK', () => {
     const protocol = {
       name: ProtocolName.CompoundV3 as const,
       chainInfo: ChainFamilyMap.Ethereum.Mainnet,
-    }
-
-    const poolId: CompoundV3PoolId = {
+    } as ICompoundV3Protocol
+    const compoundV3PoolId = CompoundV3PoolId.createFrom({
       protocol: protocol,
       collaterals: [TokenSymbol.WBTC],
       debt: TokenSymbol.USDC,
       comet: Address.createFromEthereum({ value: '0xc3d688B66703497DAA19211EEdff47f25384cdc3' }),
-    }
+    })
 
     const compoundV3Pool = await compoundV3.getPool({
-      poolId: poolId,
+      poolId: compoundV3PoolId,
     })
     assert(compoundV3Pool, 'Compound pool not found')
 
@@ -83,7 +85,17 @@ describe.skip('Import Compound V3 Position | SDK', () => {
     // Source position
     const compoundPosition: Position = Position.createFrom({
       type: PositionType.Multiply,
-      positionId: PositionId.createFrom({ id: '31646' }),
+      positionId: CompoundV3PositionId.createFrom({
+        id: '31646',
+        positionParameters: {
+          comet: Address.createFromEthereum({
+            value: '0xc3d688B66703497DAA19211EEdff47f25384cdc3',
+          }),
+          debt: compoundV3PoolId.debt,
+          collaterals: compoundV3PoolId.collaterals,
+          positionAddress: walletAddress,
+        },
+      }),
       debtAmount: TokenAmount.createFromBaseUnit({
         token: USDC,
         amount: '24362146803083',
@@ -101,16 +113,16 @@ describe.skip('Import Compound V3 Position | SDK', () => {
       walletPrivateKey: privateKey,
     })
 
-    await transactionUtils.impersonateSendTransaction({
-      transaction: {
-        target: Address.createFromEthereum({
-          value: '0xF7B75183A2829843dB06266c114297dfbFaeE2b6',
-        }),
-        value: 0n.toString(16) as Hex,
-        calldata: '0x9dca362f',
-      },
-      impersonate: walletAddress.value,
-    })
+    // await transactionUtils.impersonateSendTransaction({
+    //   transaction: {
+    //     target: Address.createFromEthereum({
+    //       value: '0xF7B75183A2829843dB06266c114297dfbFaeE2b6',
+    //     }),
+    //     value: 0n.toString(16) as Hex,
+    //     calldata: '0x9dca362f',
+    //   },
+    //   impersonate: walletAddress.value,
+    // })
     // TODO: get proxy address from the tx receipt
 
     const importPositionSimulation: ISimulation<SimulationType.ImportPosition> =
@@ -134,7 +146,7 @@ describe.skip('Import Compound V3 Position | SDK', () => {
     const importPositionOrder: Maybe<Order> = await user.newOrder({
       positionsManager: {
         address: Address.createFromEthereum({
-          value: '0x2a5c4585bee3531b6F6EC78B86711473696449dc',
+          value: '0x5FdBC6DEfbe76c33b1d75b61208269f2181CAc0b',
         }),
       },
       simulation: importPositionSimulation,

@@ -13,6 +13,7 @@ import {
   ChainId,
   Address,
   AddressValue,
+  IPositionId,
 } from '@summerfi/sdk-common/common'
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { BaseProtocolPlugin } from '../../../implementation/BaseProtocolPlugin'
@@ -27,7 +28,6 @@ import {
 import { CompoundV3DebtConfigMap, CompoundV3DebtConfigRecord } from './CompoundV3DebtConfigMap'
 import { z } from 'zod'
 import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { CompoundV3PoolId } from '../types/CompoundV3PoolId'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IExternalPosition, TransactionInfo } from '@summerfi/sdk-common/orders/interfaces'
 import { IPositionsManager } from '@summerfi/sdk-common/orders'
@@ -37,6 +37,7 @@ import { CompoundV3ImportPositionActionBuilder } from '../builders/CompoundV3Imp
 import { encodeCompoundV3Allow } from '../../common/helpers/CompoundV3Approval'
 import { BigNumber } from 'bignumber.js'
 import { cometAbi } from '../abis/CompoundV3ABIS'
+import { CompoundV3PoolId } from './CompoundV3PoolId'
 
 type DebtAsset = {
   token: Token
@@ -89,10 +90,10 @@ export class CompoundV3ProtocolPlugin extends BaseProtocolPlugin {
     }),
     collaterals: z.array(z.string()),
     debt: z.string(),
-    comet: z.custom<Address>(
-      (address: unknown) => address instanceof Address && Address.isValid(address.value),
-      'Invalid address',
-    ),
+    comet: z.custom<Address>((address) => {
+      console.log(address, typeof address, address instanceof Address)
+      return true/* address instanceof Address && Address.isValid(address.value) */
+    }, 'Invalid address'),
   })
 
   constructor(params: { context: IProtocolPluginContext }) {
@@ -124,6 +125,7 @@ export class CompoundV3ProtocolPlugin extends BaseProtocolPlugin {
   }
 
   isPoolId(candidate: unknown): candidate is CompoundV3PoolId {
+    console.log(candidate)
     return this._isPoolId(candidate, this.compoundV3PoolidSchema)
   }
 
@@ -191,7 +193,7 @@ export class CompoundV3ProtocolPlugin extends BaseProtocolPlugin {
     })
   }
 
-  async getPosition(positionId: string): Promise<IPosition> {
+  async getPosition(positionId: IPositionId): Promise<IPosition> {
     throw new Error(`Not implemented ${positionId}`)
   }
 
