@@ -27,7 +27,7 @@ jest.setTimeout(300000)
 
 const SDKAPiUrl = 'https://jghh34e4mj.execute-api.us-east-1.amazonaws.com/api/sdk'
 const TenderlyForkUrl =
-  'https://virtual.mainnet.rpc.tenderly.co/ec6bdc6f-1f8b-4192-9c42-331ae2a81ff8'
+  'https://virtual.mainnet.rpc.tenderly.co/5e6552f0-286c-4756-a327-0b66f3444e5a'
 
 describe.skip('Import Compound V3 Position | SDK', () => {
   it('should allow refinance Compound V3 -> Spark with same pair', async () => {
@@ -113,16 +113,16 @@ describe.skip('Import Compound V3 Position | SDK', () => {
       walletPrivateKey: privateKey,
     })
 
-    // await transactionUtils.impersonateSendTransaction({
-    //   transaction: {
-    //     target: Address.createFromEthereum({
-    //       value: '0xF7B75183A2829843dB06266c114297dfbFaeE2b6',
-    //     }),
-    //     value: 0n.toString(16) as Hex,
-    //     calldata: '0x9dca362f',
-    //   },
-    //   impersonate: walletAddress.value,
-    // })
+    await transactionUtils.impersonateSendTransaction({
+      transaction: {
+        target: Address.createFromEthereum({
+          value: '0xF7B75183A2829843dB06266c114297dfbFaeE2b6',
+        }),
+        value: 0n.toString(16) as Hex,
+        calldata: '0x9dca362f',
+      },
+      impersonate: walletAddress.value,
+    })
     // TODO: get proxy address from the tx receipt
 
     const importPositionSimulation: ISimulation<SimulationType.ImportPosition> =

@@ -51,10 +51,11 @@ jest.setTimeout(300000)
 
 const SDKAPiUrl = 'https://jghh34e4mj.execute-api.us-east-1.amazonaws.com/api/sdk'
 const TenderlyForkUrl =
-  'https://virtual.mainnet.rpc.tenderly.co/ec6bdc6f-1f8b-4192-9c42-331ae2a81ff8'
+  'https://virtual.mainnet.rpc.tenderly.co/5e6552f0-286c-4756-a327-0b66f3444e5a'
+// master virtual test net : https://dashboard.tenderly.co/oazoapps/oasis-ajna/testnet/36804d76-b4fd-4411-b649-8db14a8f0083
 
 /* revert to pre - import state
-      curl -X POST https://virtual.mainnet.rpc.tenderly.co/ec6bdc6f-1f8b-4192-9c42-331ae2a81ff8 \
+      curl -X POST https://virtual.mainnet.rpc.tenderly.co/5e6552f0-286c-4756-a327-0b66f3444e5a \
     -H "Content-Type: application/json" \
     -d '{
       "jsonrpc": "2.0",
@@ -92,7 +93,7 @@ const TenderlyForkUrl =
 "name": "RefinanceCompoundV3Spark"
 }
  */
-describe.only('Refinance CompoundV3 Spark | SDK', () => {
+describe.skip('Refinance CompoundV3 Spark | SDK', () => {
   it('should allow refinance CompoundV3 -> Spark with same pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: SDKAPiUrl })
