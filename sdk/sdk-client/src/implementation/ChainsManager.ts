@@ -1,4 +1,4 @@
-import { ChainInfo, Maybe } from '@summerfi/sdk-common/common'
+import { ChainInfo, IChainInfoData, Maybe } from '@summerfi/sdk-common/common'
 import { IChainsManager } from '../interfaces/IChainsManager'
 import { Chain } from './Chain'
 import { TokensManager } from './TokensManager'
@@ -17,13 +17,15 @@ export class ChainsManager extends IRPCClient implements IChainsManager {
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async getChain(params: { chainInfo: ChainInfo }): Promise<Maybe<Chain>> {
+  public async getChain(params: { chainInfo: IChainInfoData }): Promise<Maybe<Chain>> {
+    const chainInfo = ChainInfo.createFrom(params.chainInfo)
+
     return new Chain({
-      chainInfo: params.chainInfo,
-      tokensManager: new TokensManager({ rpcClient: this.rpcClient, chainInfo: params.chainInfo }),
+      chainInfo: chainInfo,
+      tokensManager: new TokensManager({ rpcClient: this.rpcClient, chainInfo: chainInfo }),
       protocolsManager: new ProtocolsManager({
         rpcClient: this.rpcClient,
-        chainInfo: params.chainInfo,
+        chainInfo: chainInfo,
       }),
     })
   }

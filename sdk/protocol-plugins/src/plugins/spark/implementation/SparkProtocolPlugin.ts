@@ -56,6 +56,14 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
 
   constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
     super(params)
+
+    if (
+      !this.supportedChains.some(
+        (chainInfo) => chainInfo.chainId === this.context.provider.chain?.id,
+      )
+    ) {
+      throw new Error(`Chain ID ${this.context.provider.chain?.id} is not supported`)
+    }
   }
 
   /** VALIDATORS */

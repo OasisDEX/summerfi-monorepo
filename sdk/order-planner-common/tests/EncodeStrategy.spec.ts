@@ -1,6 +1,5 @@
 import { ActionNames } from '@summerfi/deployment-types'
 import { encodeStrategy } from '../src/utils'
-import { decodeStrategy } from './utils/DecodeStrategy'
 import { ActionCall, BaseAction } from '@summerfi/protocol-plugins-common'
 import { Address } from '@summerfi/sdk-common/common'
 import {

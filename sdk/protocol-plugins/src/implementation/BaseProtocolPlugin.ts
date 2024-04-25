@@ -4,20 +4,9 @@ import {
   IProtocolPlugin,
   IProtocolPluginContext,
 } from '@summerfi/protocol-plugins-common'
-import {
-  ChainInfo,
-  Maybe,
-  IPosition,
-  IPositionId,
-  IPositionIdData,
-} from '@summerfi/sdk-common/common'
+import { ChainInfo, Maybe, IPosition, IPositionIdData } from '@summerfi/sdk-common/common'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
-import {
-  ProtocolName,
-  ILendingPool,
-  ILendingPoolId,
-  ILendingPoolIdData,
-} from '@summerfi/sdk-common/protocols'
+import { ProtocolName, ILendingPool, ILendingPoolIdData } from '@summerfi/sdk-common/protocols'
 import { steps } from '@summerfi/sdk-common/simulation'
 import { IUser } from '@summerfi/sdk-common/user'
 
@@ -42,6 +31,14 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
   protected constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
     this.context = params.context
     this.deploymentConfigTag = params.deploymentConfigTag ?? 'standard'
+
+    if (!this.context.provider.chain) {
+      throw new Error('ctx.provider.chain undefined')
+    }
+
+    if (!this.context.provider.chain.id) {
+      throw new Error('ctx.provider.chain.id undefined')
+    }
   }
 
   // Short alias for the context
@@ -52,7 +49,7 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
   /** VALIDATORS */
 
   /**
-   * @name validateLendingPoolId
+   * @name _validateLendingPoolId
    * @description Validates that the candidate is a valid lending pool ID for the specific protocol
    * @param candidate The candidate to validate
    * @returns asserts that the candidate is a valid lending pool ID for the specific protocol
@@ -62,7 +59,7 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
   ): asserts candidate is ILendingPoolIdData
 
   /**
-   * @name validatePositionId
+   * @name _validatePositionId
    * @description Validates that the candidate is a valid position ID for the specific protocol
    * @param candidate The candidate to validate
    * @returns asserts that the candidate is a valid position ID for the specific protocol
@@ -85,15 +82,17 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
   protected abstract _getLendingPoolImpl(poolId: ILendingPoolIdData): Promise<ILendingPool>
 
   /** @see IProtocolPlugin.getLendingPool */
-  getLendingPool(poolId: ILendingPoolId): Promise<ILendingPool> {
+  async getLendingPool(poolId: ILendingPoolIdData): Promise<ILendingPool> {
     this._validateLendingPoolId(poolId)
+    this._checkChainIdSupported(poolId.protocol.chainInfo.chainId)
+
     return this._getLendingPoolImpl(poolId)
   }
 
   /** POSITIONS */
 
   /** @see IProtocolPlugin.getPosition */
-  abstract getPosition(positionId: IPositionId): Promise<IPosition>
+  abstract getPosition(positionId: IPositionIdData): Promise<IPosition>
 
   /** IMPORT POSITION */
 
@@ -121,5 +120,16 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
    */
   protected _getDeploymentKey(chainInfo: ChainInfo): string {
     return `${chainInfo.name}.${this.deploymentConfigTag}`
+  }
+
+  /**
+   * @name _validateChainId
+   * @param chainId  The chain ID to validate
+   * @returns asserts that the chain ID is supported
+   */
+  private _checkChainIdSupported(chainId: number) {
+    if (!this.supportedChains.some((chain) => chain.chainId === chainId)) {
+      throw new Error(`Chain ID ${chainId} is not supported`)
+    }
   }
 }

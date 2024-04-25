@@ -97,8 +97,8 @@ function createChainIdToChainInfoMap(): ChainFamilyInfoById {
 
 const chainIdToChainInfoMap = createChainIdToChainInfoMap()
 
-export function getChainInfoByChainId(chainId: ChainId): ChainInfo | undefined {
-  return chainIdToChainInfoMap[chainId].chainInfo
+export function getChainInfoByChainId(chainId: ChainId): ChainFamilyInfo | undefined {
+  return chainIdToChainInfoMap[chainId]
 }
 
 export function valuesOfChainFamilyMap(families: ChainFamilyName[]): ChainInfo[] {

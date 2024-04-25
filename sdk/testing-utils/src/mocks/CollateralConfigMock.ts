@@ -1,3 +1,4 @@
+import { RiskRatioType } from '@summerfi/sdk-common'
 import {
   CurrencySymbol,
   Token,
@@ -53,7 +54,7 @@ export class CollateralConfigMock implements ICollateralConfig {
     })
 
     const liquidationThreshold = params.liquidationThreshold ?? {
-      type: RiskRatio.type.LTV,
+      type: RiskRatioType.LTV,
       ratio: Percentage.createFrom({
         value: 0,
       }),

@@ -1,5 +1,9 @@
 import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
-import { SparkPoolId, SparkPositionId } from '@summerfi/protocol-plugins/plugins/spark'
+import {
+  ISparkLendingPoolData,
+  ISparkLendingPoolIdData,
+  SparkPositionId,
+} from '@summerfi/protocol-plugins/plugins/spark'
 import {
   Address,
   ChainFamilyMap,
@@ -11,6 +15,7 @@ import {
   TokenAmount,
 } from '@summerfi/sdk-common/common'
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { ISparkProtocolData } from 'node_modules/@summerfi/protocol-plugins/src/plugins/spark/interfaces/ISparkProtocol'
 
 export function getSparkPosition(): Position {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -41,29 +46,30 @@ export function getSparkPosition(): Position {
     amount: '700.0',
   })
 
-  const protocol = {
+  const protocol: ISparkProtocolData = {
     name: ProtocolName.Spark,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   }
 
-  const poolId = {
+  const poolId: ISparkLendingPoolIdData = {
     protocol: protocol,
+    collateralToken: WETH,
+    debtToken: DAI,
     emodeType: EmodeType.None,
-  } as SparkPoolId
-
-  const pool = {
-    type: PoolType.Lending,
-    protocol,
-    poolId,
   }
 
-  const position = Position.createFrom({
+  const pool: ISparkLendingPoolData = {
+    type: PoolType.Lending,
+    id: poolId,
+  }
+
+  const position = {
     type: PositionType.Multiply,
-    positionId: SparkPositionId.createFrom({ id: 'sparkPosition' }),
+    id: SparkPositionId.createFrom({ id: 'sparkPosition' }),
     debtAmount,
     collateralAmount,
     pool,
-  })
+  } as unknown as Position
 
   return position
 }

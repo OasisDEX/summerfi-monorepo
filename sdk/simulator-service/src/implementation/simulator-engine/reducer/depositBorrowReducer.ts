@@ -12,6 +12,7 @@ export function depositBorrowReducer(
     state.balances,
   )
   const afterBorrow = addBalance(getReferencedValue(step.inputs.borrowAmount), afterDeposit)
+
   return {
     ...state,
     positions: {

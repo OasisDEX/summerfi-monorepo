@@ -15,7 +15,11 @@ import { ExternalPositionType, IImportPositionParameters, Order } from '@summerf
 import { ISimulation, SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
 
 import assert from 'assert'
-import { ILKType, MakerPoolId, MakerPositionId } from '@summerfi/protocol-plugins/plugins/maker'
+import {
+  ILKType,
+  IMakerLendingPoolIdData,
+  MakerPositionId,
+} from '@summerfi/protocol-plugins/plugins/maker'
 import { Hex } from 'viem'
 import { TransactionUtils } from './utils/TransactionUtils'
 
@@ -59,15 +63,17 @@ describe.skip('Import Maker Position | SDK', () => {
     const maker = await chain.protocols.getProtocol({ name: ProtocolName.Maker })
     assert(maker, 'Maker protocol not found')
 
-    const makerPoolId: MakerPoolId = {
+    const makerPoolId: IMakerLendingPoolIdData = {
       protocol: {
         name: ProtocolName.Maker,
         chainInfo: chain.chainInfo,
       },
+      debtToken: DAI,
+      collateralToken: WETH,
       ilkType: ILKType.ETH_C,
     }
 
-    const makerPool = await maker.getPool({
+    const makerPool = await maker.getLendingPool({
       poolId: makerPoolId,
     })
     assert(makerPool, 'Maker pool not found')
@@ -77,9 +83,9 @@ describe.skip('Import Maker Position | SDK', () => {
     }
 
     // Source position
-    const makerPosition: Position = Position.createFrom({
+    const makerPosition: Position = {
       type: PositionType.Multiply,
-      positionId: MakerPositionId.createFrom({ id: '31646', vaultId: '31646' }),
+      id: MakerPositionId.createFrom({ id: '31646', vaultId: '31646' }),
       debtAmount: TokenAmount.createFromBaseUnit({
         token: DAI,
         amount: '3717915731044925295249',
@@ -89,7 +95,7 @@ describe.skip('Import Maker Position | SDK', () => {
         amount: '2127004370346054622',
       }),
       pool: makerPool,
-    })
+    } as unknown as Position
 
     const importPositionSimulation: ISimulation<SimulationType.ImportPosition> =
       await sdk.simulator.importing.simulateImportPosition({
@@ -127,8 +133,8 @@ describe.skip('Import Maker Position | SDK', () => {
     )
     assert(importPositionOrder.simulation.sourcePosition, 'Source position not found')
 
-    expect(importPositionOrder.simulation.sourcePosition.positionId).toEqual(
-      importPositionSimulation.sourcePosition?.positionId,
+    expect(importPositionOrder.simulation.sourcePosition.id).toEqual(
+      importPositionSimulation.sourcePosition?.id,
     )
 
     expect(importPositionOrder.transactions.length).toEqual(1)

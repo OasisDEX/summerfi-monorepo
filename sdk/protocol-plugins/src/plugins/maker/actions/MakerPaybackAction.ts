@@ -22,7 +22,7 @@ export class MakerPaybackAction extends BaseAction {
     paramsMapping?: InputSlotsMapping,
   ): ActionCall {
     if (!isMakerPositionId(params.position.id)) {
-      throw new Error('Pool ID is not a Maker one')
+      throw new Error(`Position ID is not a Maker one: ${JSON.stringify(params.position.id)} `)
     }
 
     return this._encodeCall({

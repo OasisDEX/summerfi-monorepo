@@ -31,14 +31,6 @@ export interface IRiskRatioData {
 export interface IRiskRatio extends IRiskRatioData, IPrintable {
   readonly type: RiskRatioType
   readonly ratio: IPercentage
-
-  /**
-   * @name convertTo
-   * @description Converts the risk ratio to a different type
-   * @param type The type to convert to
-   * @returns The converted risk ratio
-   */
-  convertTo(type: RiskRatioType): IRiskRatio
 }
 
 /**

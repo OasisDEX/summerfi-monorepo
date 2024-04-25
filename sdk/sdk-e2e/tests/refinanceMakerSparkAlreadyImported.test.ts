@@ -12,7 +12,7 @@ import {
 } from '@summerfi/sdk-common/common'
 
 import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
-import { makeSDK, type Chain, type User, Protocol } from '@summerfi/sdk-client'
+import { makeSDK, type Chain, type User, ProtocolClient } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
 import { IPositionsManager, IRefinanceParameters, Order } from '@summerfi/sdk-common/orders'
 import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
@@ -37,17 +37,19 @@ import {
 import {
   ILKType,
   MakerPaybackAction,
-  MakerPoolId,
   MakerPositionId,
   MakerWithdrawAction,
   isMakerPositionId,
+  IMakerLendingPoolIdData,
+  IMakerProtocolData,
 } from '@summerfi/protocol-plugins/plugins/maker'
 import {
   SparkBorrowAction,
   SparkDepositAction,
-  SparkPoolId,
-  isSparkPoolId,
   isSparkPositionId,
+  ISparkProtocolData,
+  ISparkLendingPoolIdData,
+  isSparkLendingPoolId,
 } from '@summerfi/protocol-plugins/plugins/spark'
 
 jest.setTimeout(300000)
@@ -107,17 +109,22 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     const maker = await chain.protocols.getProtocol({ name: ProtocolName.Maker })
     assert(maker, 'Maker protocol not found')
 
-    const makerPoolId: MakerPoolId = {
-      protocol: {
-        name: ProtocolName.Maker,
-        chainInfo: chain.chainInfo,
-      },
-      ilkType: ILKType.ETH_C,
+    const makerProtocol: IMakerProtocolData = {
+      name: ProtocolName.Maker,
+      chainInfo: chain.chainInfo,
     }
 
-    const makerPool = await maker.getPool({
+    const makerPoolId: IMakerLendingPoolIdData = {
+      protocol: makerProtocol,
+      ilkType: ILKType.ETH_C,
+      collateralToken: WETH,
+      debtToken: DAI,
+    }
+
+    const makerPool = await maker.getLendingPool({
       poolId: makerPoolId,
     })
+
     assert(makerPool, 'Maker pool not found')
 
     if (!isLendingPool(makerPool)) {
@@ -125,7 +132,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     }
 
     // Source position
-    const makerPosition: Position = Position.createFrom({
+    const makerPosition: Position = {
       type: PositionType.Multiply,
       positionId: MakerPositionId.createFrom({ id: '31646', vaultId: '31646' }),
       debtAmount: TokenAmount.createFromBaseUnit({
@@ -137,30 +144,34 @@ describe.skip('Refinance Maker Spark | SDK', () => {
         amount: '2127004370346054622',
       }),
       pool: makerPool,
-    })
+    } as unknown as Position
 
     // Target protocol
     // TODO: this should have spark protocol type so we don't need to cast, derive it from the protocol name
-    const spark: Maybe<Protocol> = await chain.protocols.getProtocol({
+    const spark: Maybe<ProtocolClient> = await chain.protocols.getProtocol({
       name: ProtocolName.Spark,
     })
     assert(spark, 'Spark not found')
 
-    const poolId: SparkPoolId = {
-      protocol: {
-        name: ProtocolName.Spark,
-        chainInfo: chain.chainInfo,
-      },
+    const sparkProtocol: ISparkProtocolData = {
+      name: ProtocolName.Spark,
+      chainInfo: chain.chainInfo,
+    }
+
+    const poolId: ISparkLendingPoolIdData = {
+      protocol: sparkProtocol,
+      collateralToken: WETH,
+      debtToken: DAI,
       emodeType: EmodeType.None,
     }
 
-    const sparkPool = await spark.getPool({
+    const sparkPool = await spark.getLendingPool({
       poolId,
     })
 
     assert(sparkPool, 'Pool not found')
 
-    if (!isSparkPoolId(sparkPool.poolId)) {
+    if (!isSparkLendingPoolId(sparkPool.id)) {
       assert(false, 'Pool ID is not a Spark one')
     }
 
@@ -168,11 +179,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
       assert(false, 'Spark pool type is not lending')
     }
 
-    const emptyTargetPosition = newEmptyPositionFromPool(
-      sparkPool,
-      makerPosition.debtAmount.token,
-      makerPosition.collateralAmount.token,
-    )
+    const emptyTargetPosition = newEmptyPositionFromPool(sparkPool)
     const refinanceSimulation: ISimulation<SimulationType.Refinance> =
       await sdk.simulator.refinance.simulateRefinancePosition({
         sourcePosition: makerPosition,
@@ -182,8 +189,8 @@ describe.skip('Refinance Maker Spark | SDK', () => {
 
     expect(refinanceSimulation).toBeDefined()
 
-    expect(refinanceSimulation.sourcePosition?.positionId).toEqual(makerPosition.positionId)
-    expect(refinanceSimulation.targetPosition.pool.poolId).toEqual(sparkPool.poolId)
+    expect(refinanceSimulation.sourcePosition?.id).toEqual(makerPosition.id)
+    expect(refinanceSimulation.targetPosition.pool.id).toEqual(sparkPool.id)
     expect(refinanceSimulation.steps.length).toBe(5)
 
     const refinanceOrder: Maybe<Order> = await user.newOrder({
@@ -200,10 +207,10 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     expect(refinanceOrder.simulation.simulationType).toEqual(refinanceSimulation.simulationType)
     assert(refinanceOrder.simulation.sourcePosition, 'Source position not found')
 
-    expect(refinanceOrder.simulation.sourcePosition.positionId).toEqual(
-      refinanceSimulation.sourcePosition?.positionId,
+    expect(refinanceOrder.simulation.sourcePosition.id).toEqual(
+      refinanceSimulation.sourcePosition?.id,
     )
-    expect(refinanceOrder.simulation.targetPosition.pool.poolId).toEqual(sparkPool.poolId)
+    expect(refinanceOrder.simulation.targetPosition.pool.id).toEqual(sparkPool.id)
     expect(refinanceOrder.simulation.steps.length).toEqual(refinanceSimulation.steps.length)
 
     for (let i = 0; i < refinanceOrder.simulation.steps.length; i++) {
@@ -225,7 +232,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     // Decode calldata
     const strategyExecutorParams = decodeStrategyExecutorCalldata(positionsManagerParams.calldata)
 
-    const strategyName = `${refinanceOrder.simulation.simulationType}${refinanceOrder.simulation.sourcePosition?.pool.protocol.name}${refinanceOrder.simulation.targetPosition.pool.protocol.name}`
+    const strategyName = `${refinanceOrder.simulation.simulationType}${refinanceOrder.simulation.sourcePosition?.pool.id.protocol.name}${refinanceOrder.simulation.targetPosition.pool.id.protocol.name}`
 
     assert(strategyExecutorParams, 'Cannot decode Strategy Executor calldata')
     expect(strategyExecutorParams.strategyName).toEqual(strategyName)
@@ -237,11 +244,11 @@ describe.skip('Refinance Maker Spark | SDK', () => {
       calldata: strategyExecutorParams.actionCalls[0].callData,
     })
 
-    const sourcePosition = Position.createFrom(refinanceOrder.simulation.sourcePosition)
-    const targetPosition = Position.createFrom(refinanceOrder.simulation.targetPosition)
+    const sourcePosition = refinanceOrder.simulation.sourcePosition as Position
+    const targetPosition = refinanceOrder.simulation.targetPosition as Position
 
-    assert(isMakerPositionId(sourcePosition.positionId), 'Source position is not a Maker position')
-    assert(isSparkPositionId(targetPosition.positionId), 'Target position is not a Spark position')
+    assert(isMakerPositionId(sourcePosition.id), 'Source position is not a Maker position')
+    assert(isSparkPositionId(targetPosition.id), 'Target position is not a Spark position')
 
     assert(flashloanParams, 'Cannot decode Flashloan action calldata')
 
@@ -270,7 +277,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
 
     assert(makerPaybackAction, 'Cannot decode Maker Payback action calldata')
     assert
-    expect(makerPaybackAction.args[0].vaultId).toBe(BigInt(sourcePosition.positionId.vaultId))
+    expect(makerPaybackAction.args[0].vaultId).toBe(BigInt(sourcePosition.id.vaultId))
     expect(makerPaybackAction.args[0].userAddress).toBe(positionsManager.address.value)
     expect(makerPaybackAction.args[0].amount).toBe(BigInt(paybackAmount))
     expect(makerPaybackAction.args[0].paybackAll).toBe(true)
@@ -283,7 +290,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
 
     assert(makerWithdrawAction, 'Cannot decode Maker Withdraw action calldata')
 
-    expect(makerWithdrawAction.args[0].vaultId).toBe(BigInt(sourcePosition.positionId.vaultId))
+    expect(makerWithdrawAction.args[0].vaultId).toBe(BigInt(sourcePosition.id.vaultId))
     expect(makerWithdrawAction.args[0].userAddress).toBe(positionsManager.address.value)
     expect(makerWithdrawAction.args[0].joinAddr).toBe(
       deployment.dependencies.MCD_JOIN_ETH_C.address,
@@ -361,7 +368,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
 
     assert(positionCreatedParams, 'Cannot decode Position Created action calldata')
 
-    expect(positionCreatedParams.args[0].protocol).toBe(targetPosition.pool.protocol.name)
+    expect(positionCreatedParams.args[0].protocol).toBe(targetPosition.pool.id.protocol.name)
     expect(positionCreatedParams.args[0].positionType).toBe(sourcePosition.type)
     expect(positionCreatedParams.args[0].collateralToken).toBe(
       targetPosition.collateralAmount.token.address.value,

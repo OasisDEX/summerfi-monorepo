@@ -40,10 +40,10 @@ export async function refinanceLendingToLendingAnyPair(
   const flashloanAmount = position.debtAmount.multiply(FLASHLOAN_MARGIN)
   const simulator = Simulator.create(refinanceLendingToLendingAnyPairStrategy)
 
-  const isCollateralSwapSkipped = targetPool.id.collateralToken.equals(
+  const isCollateralSwapSkipped = !targetPool.id.collateralToken.equals(
     sourcePool.id.collateralToken,
   )
-  const isDebtSwapSkipped = targetPool.id.debtToken.equals(sourcePool.id.debtToken)
+  const isDebtSwapSkipped = !targetPool.id.debtToken.equals(sourcePool.id.debtToken)
 
   const debtSpotPrice = (
     await dependencies.swapManager.getSpotPrice({

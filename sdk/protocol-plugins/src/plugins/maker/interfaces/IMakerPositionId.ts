@@ -1,6 +1,6 @@
 import { IPositionIdData } from '@summerfi/sdk-common/common'
 import { MakerVaultId, MakerVaultIdSchema } from '../types/MakerVaultId'
-import { PositionIdSchema, isPositionId } from '@summerfi/sdk-common'
+import { PositionIdSchema } from '@summerfi/sdk-common'
 import { z } from 'zod'
 
 /**
@@ -33,13 +33,13 @@ export const MakerPositionIdSchema = z.object({
 
 /**
  * @description Type guard for IMakerPositionId
- * @param maybePositionId
- * @returns true if the object is an IMakerPositionId
+ * @param maybeMakerPositionId Object to be checked
+ * @returns true if the object is a IMakerPositionId
  */
 export function isMakerPositionId(
-  maybePositionId: unknown,
-): maybePositionId is IMakerPositionIdData {
-  return isPositionId(maybePositionId) && 'vaultId' in maybePositionId
+  maybeMakerPositionId: unknown,
+): maybeMakerPositionId is IMakerPositionIdData {
+  return MakerPositionIdSchema.safeParse(maybeMakerPositionId).success
 }
 
 /**

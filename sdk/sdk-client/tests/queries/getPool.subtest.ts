@@ -1,21 +1,21 @@
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SDKManager } from '../../src/implementation/SDKManager'
 import { RPCClientType } from '../../src/rpc/SDKClient'
+import { ILKType, MakerLendingPool } from '@summerfi/protocol-plugins/plugins/maker'
 import {
-  ILKType,
-  MakerPoolId,
-  MakerLendingPool,
-  isMakerPoolId,
-} from '@summerfi/protocol-plugins/plugins/maker'
+  IMakerLendingPoolIdData,
+  isMakerLendingPoolId,
+} from '@summerfi/protocol-plugins/plugins/maker/interfaces/IMakerLendingPoolId'
+import { AddressType } from '@summerfi/sdk-common'
 
 export default async function getPoolTest() {
-  type GetPoolType = RPCClientType['getPool']['query']
+  type GetPoolType = RPCClientType['getLendingPool']['query']
 
-  const getPoolQuery: GetPoolType = jest.fn(async (params) => {
+  const getLendingPoolQuery: GetPoolType = jest.fn(async (params) => {
     expect(params).toBeDefined()
     expect(params.poolId).toBeDefined()
 
-    if (!isMakerPoolId(params.poolId)) {
+    if (!isMakerLendingPoolId(params.poolId)) {
       fail('PoolId is not MakerPoolId')
     }
 
@@ -25,14 +25,13 @@ export default async function getPoolTest() {
 
     return {
       type: PoolType.Lending,
-      poolId: params.poolId,
-      protocol: params.poolId.protocol,
+      id: params.poolId,
     } as unknown as MakerLendingPool
   })
 
   const rpcClient = {
-    getPool: {
-      query: getPoolQuery,
+    getLendingPool: {
+      query: getLendingPoolQuery,
     },
   } as unknown as RPCClientType
 
@@ -54,15 +53,35 @@ export default async function getPoolTest() {
     fail('Protocol not found')
   }
 
-  const makerPoolId: MakerPoolId = {
+  const makerPoolId: IMakerLendingPoolIdData = {
     protocol: {
       name: ProtocolName.Maker,
       chainInfo: chain.chainInfo,
     },
+    collateralToken: {
+      address: {
+        type: AddressType.Ethereum,
+        value: '0x6b175474e89094c44da98b954eedeac495271d0f',
+      },
+      chainInfo: { chainId: 1, name: 'Ethereum' },
+      name: 'USD Coin',
+      symbol: 'USDC',
+      decimals: 6,
+    },
+    debtToken: {
+      address: {
+        type: AddressType.Ethereum,
+        value: '0x6b175474e89094c44da98b954eedeac495271d0f',
+      },
+      chainInfo: { chainId: 1, name: 'Ethereum' },
+      name: 'USD Coin',
+      symbol: 'USDC',
+      decimals: 6,
+    },
     ilkType: ILKType.ETH_A,
   }
 
-  const pool = await protocol.getPool({ poolId: makerPoolId })
+  const pool = await protocol.getLendingPool({ poolId: makerPoolId })
 
   if (!pool) {
     fail('Pool not found')
@@ -70,6 +89,6 @@ export default async function getPoolTest() {
 
   expect(pool.type).toBe(PoolType.Lending)
   expect(pool.id).toBe(makerPoolId)
-  expect(pool.protocol.name).toBe(protocol.name)
-  expect(pool.protocol.chainInfo).toBe(protocol.chainInfo)
+  expect(pool.id.protocol.name).toBe(protocol.name)
+  expect(pool.id.protocol.chainInfo).toBe(protocol.chainInfo)
 }

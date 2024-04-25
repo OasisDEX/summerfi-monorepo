@@ -50,6 +50,14 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
 
   constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
     super(params)
+
+    if (
+      !this.supportedChains.some(
+        (chainInfo) => chainInfo.chainId === this.context.provider.chain?.id,
+      )
+    ) {
+      throw new Error(`Chain ID ${this.context.provider.chain?.id} is not supported`)
+    }
   }
 
   /** VALIDATORS */
@@ -58,14 +66,14 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
   protected _validateLendingPoolId(
     candidate: ILendingPoolId,
   ): asserts candidate is MakerLendingPoolId {
-    if (isMakerLendingPoolId(candidate)) {
+    if (!isMakerLendingPoolId(candidate)) {
       throw new Error(`Invalid Maker pool ID: ${JSON.stringify(candidate)}`)
     }
   }
 
   /** @see BaseProtocolPlugin._validatePositionId */
   protected _validatePositionId(candidate: IPositionId): asserts candidate is MakerPositionId {
-    if (isMakerPositionId(candidate)) {
+    if (!isMakerPositionId(candidate)) {
       throw new Error(`Invalid Maker position ID: ${JSON.stringify(candidate)}`)
     }
   }

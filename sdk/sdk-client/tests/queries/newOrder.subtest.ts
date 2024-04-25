@@ -1,21 +1,34 @@
-import { IProtocol, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SDKManager } from '../../src/implementation/SDKManager'
 import { RPCClientType } from '../../src/rpc/SDKClient'
-import { MakerLendingPool, MakerPositionId } from '@summerfi/protocol-plugins/plugins/maker'
-import { SparkLendingPool, SparkPositionId } from '@summerfi/protocol-plugins/plugins/spark'
+import {
+  ILKType,
+  IMakerLendingPoolData,
+  MakerPositionId,
+} from '@summerfi/protocol-plugins/plugins/maker'
+import {
+  ISparkLendingPoolData,
+  ISparkLendingPoolIdData,
+  SparkPositionId,
+} from '@summerfi/protocol-plugins/plugins/spark'
 import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import {
   Address,
+  AddressType,
   ChainFamilyMap,
   ChainInfo,
   Maybe,
-  Position,
   PositionType,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
 import { IPositionsManager, Order } from '@summerfi/sdk-common/orders'
 import { User } from '../../src/implementation/User'
+import { IMakerProtocolData } from '@summerfi/protocol-plugins/plugins/maker/interfaces/IMakerProtocol'
+import { IMakerLendingPoolIdData } from '@summerfi/protocol-plugins/plugins/maker/interfaces/IMakerLendingPoolId'
+import { IPositionData } from '@summerfi/sdk-common'
+import { ISparkProtocolData } from '@summerfi/protocol-plugins/plugins/spark/interfaces/ISparkProtocol'
+import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 
 export default async function simulateNewOrder() {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -37,40 +50,83 @@ export default async function simulateNewOrder() {
     decimals: 18,
   })
 
-  const protocol: IProtocol = {
+  const makerProtocol: IMakerProtocolData = {
     name: ProtocolName.Maker,
     chainInfo: chainInfo,
   }
 
-  const pool: MakerLendingPool = {
-    type: PoolType.Lending,
-    protocol: protocol,
-    id: {
-      protocol: protocol,
+  const makerPoolId: IMakerLendingPoolIdData = {
+    protocol: makerProtocol,
+    ilkType: ILKType.ETH_A,
+    collateralToken: {
+      address: {
+        type: AddressType.Ethereum,
+        value: '0x6b175474e89094c44da98b954eedeac495271d0f',
+      },
+      chainInfo: { chainId: 1, name: 'Ethereum' },
+      name: 'USD Coin',
+      symbol: 'USDC',
+      decimals: 6,
     },
-    collaterals: {},
-    debts: {},
-    baseCurrency: DAI,
-  } as MakerLendingPool
+    debtToken: {
+      address: {
+        type: AddressType.Ethereum,
+        value: '0x6b175474e89094c44da98b954eedeac495271d0f',
+      },
+      chainInfo: { chainId: 1, name: 'Ethereum' },
+      name: 'USD Coin',
+      symbol: 'USDC',
+      decimals: 6,
+    },
+  }
 
-  const prevPosition: Position = {
+  const pool: IMakerLendingPoolData = {
+    type: PoolType.Lending,
+    id: makerPoolId,
+  }
+
+  const prevPosition: IPositionData = {
     type: PositionType.Multiply,
+    id: MakerPositionId.createFrom({ id: '1234567890', vaultId: '34' }),
     pool: pool,
     debtAmount: TokenAmount.createFrom({ token: DAI, amount: '56.78' }),
     collateralAmount: TokenAmount.createFrom({ token: WETH, amount: '105.98' }),
-    id: MakerPositionId.createFrom({ id: '1234567890', vaultId: '34' }),
   }
 
-  const targetPool: SparkLendingPool = {
-    type: PoolType.Lending,
-    protocol: protocol,
-    id: {
-      protocol: protocol,
+  const sparkProtocol: ISparkProtocolData = {
+    name: ProtocolName.Spark,
+    chainInfo: chainInfo,
+  }
+
+  const sparkPoolId: ISparkLendingPoolIdData = {
+    protocol: sparkProtocol,
+    collateralToken: {
+      address: {
+        type: AddressType.Ethereum,
+        value: '0x6b175474e89094c44da98b954eedeac495271d0f',
+      },
+      chainInfo: { chainId: 1, name: 'Ethereum' },
+      name: 'USD Coin',
+      symbol: 'USDC',
+      decimals: 6,
     },
-    collaterals: {},
-    debts: {},
-    baseCurrency: DAI,
-  } as SparkLendingPool
+    debtToken: {
+      address: {
+        type: AddressType.Ethereum,
+        value: '0x6b175474e89094c44da98b954eedeac495271d0f',
+      },
+      chainInfo: { chainId: 1, name: 'Ethereum' },
+      name: 'USD Coin',
+      symbol: 'USDC',
+      decimals: 6,
+    },
+    emodeType: EmodeType.None,
+  }
+
+  const targetPool: ISparkLendingPoolData = {
+    type: PoolType.Lending,
+    id: sparkPoolId,
+  }
 
   const simulation: ISimulation<SimulationType.Refinance> = {
     simulationType: SimulationType.Refinance,

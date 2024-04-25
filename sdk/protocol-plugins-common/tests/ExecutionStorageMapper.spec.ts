@@ -14,6 +14,7 @@ import { IPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { ActionNames } from '@summerfi/deployment-types'
 import { BaseAction } from '../src/actions/BaseAction'
 import { ActionCall } from '../src/actions/Types'
+import { IPoolIdData } from '@summerfi/sdk-common'
 
 class DerivedAction extends BaseAction {
   public readonly config = {
@@ -66,7 +67,7 @@ describe('Execution Storage Mapper', () => {
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   }
 
-  const poolId: IPoolId = {
+  const poolId: IPoolIdData = {
     protocol: {
       name: ProtocolName.Maker,
       chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
@@ -79,13 +80,13 @@ describe('Execution Storage Mapper', () => {
     poolId,
   }
 
-  const position = Position.createFrom({
+  const position = {
     type: PositionType.Multiply,
     positionId: { id: 'someposition' },
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
     pool: pool,
-  })
+  } as unknown as Position
 
   it('should return undefined if mapping does not exist', () => {
     const executionStorageMapper = new ExecutionStorageMapper()

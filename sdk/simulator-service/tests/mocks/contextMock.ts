@@ -6,10 +6,14 @@ import {
   TokenAmount,
   Price,
   CurrencySymbol,
+  Maybe,
 } from '@summerfi/sdk-common/common'
-import { IPool } from '@summerfi/sdk-common/protocols'
+import { ILendingPool } from '@summerfi/sdk-common/protocols'
 import { testTargetLendingPool, testTargetLendingPoolRequiredSwaps } from './testSourcePosition'
 import { SwapProviderType } from '@summerfi/sdk-common/swap'
+import { IPosition, IPositionIdData } from '@summerfi/sdk-common'
+import { IUser } from '@summerfi/sdk-common/user'
+import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 
 async function getSwapDataExactInput(params: {
   chainInfo: ChainInfo
@@ -64,19 +68,32 @@ export function mockGetFee() {
 }
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-async function mockGetPool(poolId: unknown): Promise<IPool> {
-  return testTargetLendingPool as IPool
+async function mockGetLendingPool(poolId: unknown): Promise<ILendingPool> {
+  return testTargetLendingPool as ILendingPool
 }
 
-async function mockGetPoolRequiresSwaps(poolId: unknown): Promise<IPool> {
-  return testTargetLendingPoolRequiredSwaps as IPool
+async function mockGetLendingPoolRequiresSwaps(poolId: unknown): Promise<ILendingPool> {
+  return testTargetLendingPoolRequiredSwaps as ILendingPool
+}
+
+async function mockGetPosition(params: IPositionIdData): Promise<IPosition> {
+  return {} as IPosition
+}
+
+async function mockGetImportPositionTransaction(params: {
+  user: IUser
+  externalPosition: IExternalPosition
+  positionsManager: IPositionsManager
+}): Promise<Maybe<TransactionInfo>> {
+  return {} as Maybe<TransactionInfo>
 }
 
 export const mockRefinanceContext = {
   getSummerFee: mockGetFee,
   protocolManager: {
-    getPool: mockGetPool,
-    getPosition: () => {},
+    getLendingPool: mockGetLendingPool,
+    getPosition: mockGetPosition,
+    getImportPositionTransaction: mockGetImportPositionTransaction,
   },
   swapManager: {
     getSwapDataExactInput,
@@ -89,7 +106,8 @@ export const mockRefinanceContext = {
 export const mockRefinanceContextRequiredSwaps = {
   ...mockRefinanceContext,
   protocolManager: {
-    getPool: mockGetPoolRequiresSwaps,
-    getPosition: () => {},
+    getLendingPool: mockGetLendingPoolRequiresSwaps,
+    getPosition: mockGetPosition,
+    getImportPositionTransaction: mockGetImportPositionTransaction,
   },
 }

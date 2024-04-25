@@ -8,7 +8,7 @@ import {
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
-import { IPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { IPoolId, IPoolIdData, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
 import { ActionNames } from '@summerfi/deployment-types'
 import { ChainFamilyMap } from '@summerfi/sdk-common/common'
@@ -78,7 +78,7 @@ describe('Step Builder Context', () => {
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   }
 
-  const poolId: IPoolId = {
+  const poolId: IPoolIdData = {
     protocol: protocol,
   }
 
@@ -88,13 +88,13 @@ describe('Step Builder Context', () => {
     poolId,
   }
 
-  const position = Position.createFrom({
+  const position = {
     type: PositionType.Multiply,
     positionId: { id: 'someposition' },
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
     pool: pool,
-  })
+  } as unknown as Position
 
   it('should not allow adding calls without subcontext', () => {
     const stepBuilderContext = new StepBuilderContext()
