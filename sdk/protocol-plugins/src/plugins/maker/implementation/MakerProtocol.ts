@@ -1,22 +1,24 @@
 import { Protocol, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
-import { IMakerProtocol } from '../interfaces/IMakerProtocol'
+import { IMakerProtocol, IMakerProtocolData } from '../interfaces/IMakerProtocol'
 
 /**
  * @class MakerProtocol
- * @see IMakerProtocol
+ * @see IMakerProtocolData
  */
 export class MakerProtocol extends Protocol implements IMakerProtocol {
   readonly name: ProtocolName.Maker
 
-  private constructor(params: IMakerProtocol) {
+  /** Factory method */
+  static createFrom(params: IMakerProtocolData): MakerProtocol {
+    return new MakerProtocol(params)
+  }
+
+  /** Sealed constructor */
+  private constructor(params: IMakerProtocolData) {
     super(params)
 
     this.name = params.name
-  }
-
-  static createFrom(params: IMakerProtocol): MakerProtocol {
-    return new MakerProtocol(params)
   }
 }
 

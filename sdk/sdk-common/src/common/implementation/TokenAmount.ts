@@ -2,7 +2,7 @@ import { BigNumber } from 'bignumber.js'
 import { Percentage } from './Percentage'
 import { Token } from './Token'
 import { SerializationService } from '../../services/SerializationService'
-import { ITokenAmount } from '../interfaces/ITokenAmount'
+import { ITokenAmount, ITokenAmountData } from '../interfaces/ITokenAmount'
 
 /**
  * @class TokenAmount
@@ -14,7 +14,7 @@ export class TokenAmount implements ITokenAmount {
   readonly token: Token
   readonly amount: string
 
-  private constructor(params: ITokenAmount) {
+  private constructor(params: ITokenAmountData) {
     this.token = Token.createFrom(params.token)
     this.amount = params.amount
     this._baseUnitFactor = new BigNumber(10).pow(new BigNumber(params.token.decimals))
@@ -24,18 +24,19 @@ export class TokenAmount implements ITokenAmount {
     return this.toBN()
   }
 
-  static createFrom(params: ITokenAmount): TokenAmount {
+  static createFrom(params: ITokenAmountData): TokenAmount {
     return new TokenAmount(params)
   }
+
   // amount in base unit (1eth = 1000000000000000000, 1btc = 100000000 etc)
-  public static createFromBaseUnit(parmas: { token: Token; amount: string }): TokenAmount {
+  static createFromBaseUnit(parmas: { token: Token; amount: string }): TokenAmount {
     const amount = new BigNumber(parmas.amount)
       .div(new BigNumber(10).pow(new BigNumber(parmas.token.decimals)))
       .toString()
     return new TokenAmount({ token: parmas.token, amount: amount })
   }
 
-  public add(tokenToAdd: TokenAmount): TokenAmount {
+  add(tokenToAdd: TokenAmount): TokenAmount {
     if (tokenToAdd.token.symbol !== this.token.symbol) {
       throw new Error(
         `Token symbols do not match: ${tokenToAdd.token.symbol} !== ${this.token.symbol}`,
@@ -48,7 +49,7 @@ export class TokenAmount implements ITokenAmount {
     })
   }
 
-  public subtract(tokenToSubstract: TokenAmount): TokenAmount {
+  subtract(tokenToSubstract: TokenAmount): TokenAmount {
     if (tokenToSubstract.token.symbol !== this.token.symbol) {
       throw new Error('Token symbols do not match')
     }
@@ -59,7 +60,7 @@ export class TokenAmount implements ITokenAmount {
     })
   }
 
-  public multiply(multiplier: Percentage | string | number): TokenAmount {
+  multiply(multiplier: Percentage | string | number): TokenAmount {
     if (multiplier instanceof Percentage) {
       return new TokenAmount({
         token: this.token,
@@ -73,7 +74,7 @@ export class TokenAmount implements ITokenAmount {
     })
   }
 
-  public divide(divisor: Percentage | string | number): TokenAmount {
+  divide(divisor: Percentage | string | number): TokenAmount {
     if (divisor instanceof Percentage) {
       return new TokenAmount({
         token: this.token,
@@ -84,15 +85,15 @@ export class TokenAmount implements ITokenAmount {
     return new TokenAmount({ token: this.token, amount: this.amountBN.div(divisor).toString() })
   }
 
-  public toString(): string {
+  toString(): string {
     return `${this.amount} ${this.token.symbol}`
   }
 
-  public toBaseUnit(): string {
+  toBaseUnit(): string {
     return new BigNumber(this.amount).times(this._baseUnitFactor).toFixed(0)
   }
 
-  public toBN(): BigNumber {
+  toBN(): BigNumber {
     return new BigNumber(this.amount)
   }
 }

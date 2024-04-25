@@ -45,7 +45,7 @@ export default async function simulateNewOrder() {
   const pool: MakerLendingPool = {
     type: PoolType.Lending,
     protocol: protocol,
-    poolId: {
+    id: {
       protocol: protocol,
     },
     collaterals: {},
@@ -58,13 +58,13 @@ export default async function simulateNewOrder() {
     pool: pool,
     debtAmount: TokenAmount.createFrom({ token: DAI, amount: '56.78' }),
     collateralAmount: TokenAmount.createFrom({ token: WETH, amount: '105.98' }),
-    positionId: MakerPositionId.createFrom({ id: '1234567890', vaultId: '34' }),
+    id: MakerPositionId.createFrom({ id: '1234567890', vaultId: '34' }),
   }
 
   const targetPool: SparkLendingPool = {
     type: PoolType.Lending,
     protocol: protocol,
-    poolId: {
+    id: {
       protocol: protocol,
     },
     collaterals: {},
@@ -78,7 +78,7 @@ export default async function simulateNewOrder() {
     swaps: [],
     targetPosition: {
       type: PositionType.Multiply,
-      positionId: SparkPositionId.createFrom({ id: '1234567890' }),
+      id: SparkPositionId.createFrom({ id: '1234567890' }),
       debtAmount: TokenAmount.createFrom({ token: DAI, amount: '56.78' }),
       collateralAmount: TokenAmount.createFrom({ token: WETH, amount: '105.98' }),
       pool: targetPool,

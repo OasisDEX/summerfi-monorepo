@@ -1,4 +1,4 @@
-import { applyPercentage, subtractPercentage } from '@summerfi/sdk-common/utils'
+import { subtractPercentage } from '@summerfi/sdk-common/utils'
 import {
   FlashloanProvider,
   ISimulation,
@@ -14,26 +14,6 @@ import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
 import { refinanceLendingToLendingAnyPairStrategy } from './Strategy'
 import { type IRefinanceDependencies } from '../common/Types'
-import { AddressType, Token } from '@summerfi/sdk-common'
-
-// const token: TokenAmount = TokenAmount.createFrom({
-//   amount: '100',
-//   token: Token.createFrom({
-//     name: 'DAI',
-//     address: {
-//       value: '0x6b175474e89094c44da98b954eedeac495271d0f',
-//       type: AddressType.Ethereum,
-//     },
-//     decimals: 18,
-//     symbol: 'DAI',
-//     chainInfo: {
-//       chainId: 1,
-//       name: 'Ethereum',
-//     },
-//   }),
-// })
-
-// applyPercentage(token, Percentage.createFrom({ value: 0.1 }))
 
 export async function refinanceLendingToLendingAnyPair(
   args: IRefinanceParameters,
@@ -44,8 +24,13 @@ export async function refinanceLendingToLendingAnyPair(
     throw new Error('Target pool is not a lending pool')
   }
 
-  const position = Position.createFrom(args.sourcePosition)
-  const targetPool = await dependencies.protocolManager.getPool(args.targetPosition.pool.poolId)
+  const position = args.sourcePosition as Position
+  const sourcePool = await dependencies.protocolManager.getLendingPool(args.sourcePosition.pool.id)
+  const targetPool = await dependencies.protocolManager.getLendingPool(args.targetPosition.pool.id)
+
+  if (!isLendingPool(sourcePool)) {
+    throw new Error('Source pool is not a lending pool')
+  }
 
   if (!isLendingPool(targetPool)) {
     throw new Error('Target pool is not a lending pool')
@@ -55,34 +40,26 @@ export async function refinanceLendingToLendingAnyPair(
   const flashloanAmount = position.debtAmount.multiply(FLASHLOAN_MARGIN)
   const simulator = Simulator.create(refinanceLendingToLendingAnyPairStrategy)
 
-  const targetCollateralConfig = targetPool.collaterals.get({
-    token: args.targetPosition.collateralAmount.token,
-  })
-  const targetDebtConfig = targetPool.debts.get({ token: args.targetPosition.debtAmount.token })
-  if (!targetCollateralConfig || !targetDebtConfig) {
-    throw new Error('Target token config not found in pool')
-  }
-
-  const isCollateralSwapSkipped = targetCollateralConfig.token.address.equals(
-    position.collateralAmount.token.address,
+  const isCollateralSwapSkipped = targetPool.id.collateralToken.equals(
+    sourcePool.id.collateralToken,
   )
-  const isDebtSwapSkipped = targetDebtConfig.token.address.equals(position.debtAmount.token.address)
+  const isDebtSwapSkipped = targetPool.id.debtToken.equals(sourcePool.id.debtToken)
 
   const debtSpotPrice = (
     await dependencies.swapManager.getSpotPrice({
-      chainInfo: position.pool.protocol.chainInfo,
-      baseToken: targetDebtConfig.token,
-      quoteToken: position.debtAmount.token,
+      chainInfo: sourcePool.id.protocol.chainInfo,
+      baseToken: targetPool.id.debtToken,
+      quoteToken: sourcePool.id.debtToken,
     })
   ).price
 
   const collateralSwapSummerFee = dependencies.swapManager.getSummerFee({
-    from: { token: position.collateralAmount.token, protocol: position.pool.protocol },
-    to: { token: targetCollateralConfig.token, protocol: targetPool.protocol },
+    from: { token: position.collateralAmount.token, protocol: position.pool.id.protocol },
+    to: { token: targetPool.id.collateralToken, protocol: targetPool.id.protocol },
   })
   const debtSwapSummerFee = dependencies.swapManager.getSummerFee({
-    from: { token: position.debtAmount.token, protocol: position.pool.protocol },
-    to: { token: targetDebtConfig.token, protocol: targetPool.protocol },
+    from: { token: position.debtAmount.token, protocol: position.pool.id.protocol },
+    to: { token: targetPool.id.debtToken, protocol: targetPool.id.protocol },
   })
 
   const simulation = await simulator
@@ -115,20 +92,20 @@ export async function refinanceLendingToLendingAnyPair(
         type: SimulationSteps.Swap,
         inputs: {
           ...(await dependencies.swapManager.getSwapQuoteExactInput({
-            chainInfo: position.pool.protocol.chainInfo,
+            chainInfo: sourcePool.id.protocol.chainInfo,
             fromAmount: subtractPercentage(
               position.collateralAmount,
               Percentage.createFrom({
                 value: collateralSwapSummerFee.value,
               }),
             ),
-            toToken: targetCollateralConfig.token,
+            toToken: targetPool.id.collateralToken,
           })),
           spotPrice: (
             await dependencies.swapManager.getSpotPrice({
-              chainInfo: position.pool.protocol.chainInfo,
-              baseToken: targetCollateralConfig.token,
-              quoteToken: position.collateralAmount.token,
+              chainInfo: sourcePool.id.protocol.chainInfo,
+              baseToken: targetPool.id.collateralToken,
+              quoteToken: sourcePool.id.collateralToken,
             })
           ).price,
           slippage: Percentage.createFrom({ value: args.slippage.value }),
@@ -153,11 +130,7 @@ export async function refinanceLendingToLendingAnyPair(
             ? ['PaybackWithdrawFromSource', 'withdrawAmount']
             : ['CollateralSwap', 'receivedAmount'],
         ),
-        position: newEmptyPositionFromPool(
-          targetPool,
-          targetDebtConfig.token,
-          targetCollateralConfig.token,
-        ),
+        position: newEmptyPositionFromPool(targetPool),
         borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
     }))
@@ -167,7 +140,7 @@ export async function refinanceLendingToLendingAnyPair(
         type: SimulationSteps.Swap,
         inputs: {
           ...(await dependencies.swapManager.getSwapQuoteExactInput({
-            chainInfo: args.sourcePosition.pool.protocol.chainInfo,
+            chainInfo: sourcePool.id.protocol.chainInfo,
             fromAmount: subtractPercentage(
               // TODO: this should have better semantics. There was a bug where `getReferencedValue` was used instead of `getValueFromReference`, the names are too similar
               getValueFromReference(ctx.getReference(['DepositBorrowToTarget', 'borrowAmount'])),
@@ -207,8 +180,8 @@ export async function refinanceLendingToLendingAnyPair(
     )
     .next(async (ctx) => {
       // TODO: we should have a way to get the target position more easily and realiably,
-      const targetPosition = Object.values(ctx.state.positions).find(
-        (p) => p.pool.protocol === targetPool.protocol,
+      const targetPosition = Object.values(ctx.state.positions).find((p) =>
+        p.pool.id.protocol.equals(targetPool.id.protocol),
       )
       if (!targetPosition) {
         throw new Error('Target position not found')
@@ -224,8 +197,8 @@ export async function refinanceLendingToLendingAnyPair(
     })
     .run()
 
-  const targetPosition = Object.values(simulation.positions).find(
-    (p) => p.pool.protocol === targetPool.protocol,
+  const targetPosition = Object.values(simulation.positions).find((p) =>
+    p.pool.id.protocol.equals(targetPool.id.protocol),
   )
 
   if (!targetPosition) {

@@ -1,6 +1,6 @@
 import { AddressValue } from '../../common/aliases/AddressValue'
 import { Maybe } from '../../common/aliases/Maybe'
-import { IToken } from '../../common/interfaces/IToken'
+import { ITokenData } from '../../common/interfaces/IToken'
 import { SerializationService } from '../../services/SerializationService'
 
 import { IDebtConfig } from '../interfaces/IDebtConfig'
@@ -20,11 +20,11 @@ export class DebtConfigMap implements IDebtConfigMap {
     return new DebtConfigMap(params)
   }
 
-  public add(params: { debt: IToken; debtConfig: IDebtConfig }): void {
+  public add(params: { debt: ITokenData; debtConfig: IDebtConfig }): void {
     this.record[params.debt.address.value] = DebtConfig.createFrom(params.debtConfig)
   }
 
-  public get(params: { token: IToken }): Maybe<DebtConfig> {
+  public get(params: { token: ITokenData }): Maybe<DebtConfig> {
     return this.record[params.token.address.value]
   }
 

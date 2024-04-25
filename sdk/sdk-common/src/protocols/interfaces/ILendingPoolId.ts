@@ -1,21 +1,42 @@
-import { IToken, TokenSchema, isToken } from '../../common/interfaces/IToken'
-import { IPoolId, isPoolId } from './IPoolId'
+import { IToken, ITokenData, TokenSchema } from '../../common/interfaces/IToken'
+import { IPoolIdData } from './IPoolId'
 import { z } from 'zod'
-import { ProtocolSchema } from './IProtocol'
+import { IProtocol, ProtocolSchema } from './IProtocol'
 
 /**
- * @interface ILendingPoolId
+ * @interface ILendingPoolIdData
  * @description Identifies a generic lending pool. This will be specialized for each protocol
  *
  * This is meant to be used for single pair collateral/debt lending pools. For multi-collateral pools,
  * a different interface should be used
  */
-export interface ILendingPoolId extends IPoolId {
+export interface ILendingPoolIdData extends IPoolIdData {
   /** Collateral token used to collateralized the pool */
-  collateral: IToken
+  collateralToken: ITokenData
   /** Debt token, which can be borrowed from the pool */
-  debt: IToken
+  debtToken: ITokenData
 }
+
+/**
+ * @name ILendingPoolId
+ * @description Interface for the implementors of the lending pool ID
+ *
+ * This interface is used to add all the methods that the interface supports
+ */
+export interface ILendingPoolId extends ILendingPoolIdData {
+  readonly protocol: IProtocol
+  readonly collateralToken: IToken
+  readonly debtToken: IToken
+}
+
+/**
+ * @description Zod schema for ILendingPoolId
+ */
+export const LendingPoolIdSchema = z.object({
+  protocol: ProtocolSchema,
+  collateralToken: TokenSchema,
+  debtToken: TokenSchema,
+})
 
 /**
  * @description Type guard for ILendingPoolId
@@ -24,29 +45,12 @@ export interface ILendingPoolId extends IPoolId {
  *
  * It also asserts the type so that TypeScript knows that the object is an ILendingPoolId
  */
-export function isLendingPoolId(maybePoolId: unknown): maybePoolId is ILendingPoolId {
-  return (
-    typeof maybePoolId === 'object' &&
-    maybePoolId !== null &&
-    isPoolId(maybePoolId) &&
-    'collateral' in maybePoolId &&
-    isToken(maybePoolId.collateral) &&
-    'debt' in maybePoolId &&
-    isToken(maybePoolId.debt)
-  )
+export function isLendingPoolId(maybePoolId: unknown): maybePoolId is ILendingPoolIdData {
+  return LendingPoolIdSchema.safeParse(maybePoolId).success
 }
-
-/**
- * @description Zod schema for ILendingPoolId
- */
-export const LendingPoolIdSchema = z.object({
-  protocol: ProtocolSchema,
-  collateral: TokenSchema,
-  debt: TokenSchema,
-})
 
 /**
  * Checker to make sure that the schema is aligned with the interface
  */
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: ILendingPoolId = {} as z.infer<typeof LendingPoolIdSchema>
+const __schemaChecker: ILendingPoolIdData = {} as z.infer<typeof LendingPoolIdSchema>

@@ -1,16 +1,17 @@
 import { SerializationService } from '../../services'
-import { IPoolId } from '../interfaces/IPoolId'
-import { IProtocol } from '../interfaces/IProtocol'
+import { IPoolIdData } from '../interfaces/IPoolId'
+import { Protocol } from './Protocol'
 
 /**
  * @class PoolId
- * @see IPoolId
+ * @see IPoolIdData
  */
-export abstract class PoolId implements IPoolId {
-  protocol: IProtocol
+export abstract class PoolId implements IPoolIdData {
+  abstract protocol: Protocol
 
-  protected constructor(params: IPoolId) {
-    this.protocol = params.protocol
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  protected constructor(params: IPoolIdData) {
+    // Empty on purpose
   }
 }
 

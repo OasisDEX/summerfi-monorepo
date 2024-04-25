@@ -1,30 +1,36 @@
-import { ChainInfoSchema, IChainInfo, isChainInfo } from '../../common/interfaces/IChainInfo'
-import { ProtocolName, isProtocolName } from '../enums/ProtocolName'
+import { ChainInfoSchema, IChainInfo, IChainInfoData } from '../../common/interfaces/IChainInfo'
+import { ProtocolName } from '../enums/ProtocolName'
 import { z } from 'zod'
 
 /**
- * @interface IProtocol
+ * @interface IProtocolData
  * @description Information relative to a protocol
  */
-export interface IProtocol {
+export interface IProtocolData {
+  /** The name of the protocol */
   name: ProtocolName
-  chainInfo: IChainInfo
+  /** The chain information */
+  chainInfo: IChainInfoData
 }
 
 /**
- * @description Type guard for IProtocol
- * @param maybeProtocol
- * @returns true if the object is an IProtocol
+ * @interface IProtocol
+ * @description Interface for the implementors of the protocol
+ *
+ * This interface is used to add all the methods that the interface supports
  */
-export function isProtocol(maybeProtocol: unknown): maybeProtocol is IProtocol {
-  return (
-    typeof maybeProtocol === 'object' &&
-    maybeProtocol !== null &&
-    'name' in maybeProtocol &&
-    isProtocolName(maybeProtocol.name) &&
-    'chainInfo' in maybeProtocol &&
-    isChainInfo(maybeProtocol.chainInfo)
-  )
+export interface IProtocol extends IProtocolData {
+  readonly name: ProtocolName
+  readonly chainInfo: IChainInfo
+
+  /**
+   * Compare if the passed protocol is equal to the current protocol
+   * @param protocol The protocol to compare
+   * @returns true if the protocols are equal
+   *
+   * Equality is determined by the name and chain information
+   */
+  equals(protocol: IProtocol): boolean
 }
 
 /**
@@ -36,7 +42,16 @@ export const ProtocolSchema = z.object({
 })
 
 /**
+ * @description Type guard for IProtocol
+ * @param maybeProtocol
+ * @returns true if the object is an IProtocol
+ */
+export function isProtocol(maybeProtocol: unknown): maybeProtocol is IProtocolData {
+  return ProtocolSchema.safeParse(maybeProtocol).success
+}
+
+/**
  * Checker to make sure that the schema is aligned with the interface
  */
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: IProtocol = {} as z.infer<typeof ProtocolSchema>
+const __schemaChecker: IProtocolData = {} as z.infer<typeof ProtocolSchema>

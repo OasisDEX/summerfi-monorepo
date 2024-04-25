@@ -1,14 +1,25 @@
-import { ILendingPool, LendingPoolSchema } from '@summerfi/sdk-common/protocols'
-import { IMakerLendingPoolId, MakerLendingPoolIdSchema } from './IMakerLendingPoolId'
+import { ILendingPoolData, LendingPoolSchema } from '@summerfi/sdk-common/protocols'
+import { IMakerLendingPoolIdData, MakerLendingPoolIdSchema } from './IMakerLendingPoolId'
 import { z } from 'zod'
 
 /**
- * @interface IMakerLendingPool
+ * @interface IMakerLendingPoolData
  * @description Represents a lending pool in the Maker protocol
  */
-export interface IMakerLendingPool extends ILendingPool {
+export interface IMakerLendingPoolData extends ILendingPoolData {
   /** The pool's ID */
-  poolId: IMakerLendingPoolId
+  readonly id: IMakerLendingPoolIdData
+}
+
+/**
+ * @interface IMakerLendingPool
+ * @description Interface for the implementors of the lending pool
+ *
+ * This interface is used to add all the methods that the interface supports
+ */
+export interface IMakerLendingPool extends IMakerLendingPoolData {
+  /** The pool's ID */
+  readonly id: IMakerLendingPoolIdData
 }
 
 /**
@@ -16,7 +27,7 @@ export interface IMakerLendingPool extends ILendingPool {
  */
 export const MakerLendingPoolSchema = z.object({
   ...LendingPoolSchema.shape,
-  poolId: MakerLendingPoolIdSchema,
+  id: MakerLendingPoolIdSchema,
 })
 
 /**
@@ -26,7 +37,7 @@ export const MakerLendingPoolSchema = z.object({
  */
 export function isMakerLendingPool(
   maybeLendingPool: unknown,
-): maybeLendingPool is IMakerLendingPool {
+): maybeLendingPool is IMakerLendingPoolData {
   return MakerLendingPoolSchema.safeParse(maybeLendingPool).success
 }
 
@@ -34,4 +45,4 @@ export function isMakerLendingPool(
  * Checker to make sure that the schema is aligned with the interface
  */
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: IMakerLendingPool = {} as z.infer<typeof MakerLendingPoolSchema>
+const __schemaChecker: IMakerLendingPoolData = {} as z.infer<typeof MakerLendingPoolSchema>

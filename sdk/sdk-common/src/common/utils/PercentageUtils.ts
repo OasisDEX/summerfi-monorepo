@@ -1,5 +1,5 @@
-import { IPercentage } from '../interfaces/IPercentage'
+import { IPercentageData } from '../interfaces/IPercentage'
 
-export function percentageAsFraction(percentage: IPercentage): number {
+export function percentageAsFraction(percentage: IPercentageData): number {
   return percentage.value / 100
 }

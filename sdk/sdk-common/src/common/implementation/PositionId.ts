@@ -1,14 +1,14 @@
 import { SerializationService } from '../../services/SerializationService'
-import { IPositionId } from '../interfaces/IPositionId'
+import { IPositionId, IPositionIdData } from '../interfaces/IPositionId'
 
 /**
  * @class PositionId
- * @see IPositionId
+ * @see IPositionIdData
  */
 export abstract class PositionId implements IPositionId {
   readonly id: string
 
-  protected constructor(params: IPositionId) {
+  protected constructor(params: IPositionIdData) {
     this.id = params.id
   }
 

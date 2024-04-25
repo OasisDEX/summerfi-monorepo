@@ -4,9 +4,20 @@ import {
   IProtocolPlugin,
   IProtocolPluginContext,
 } from '@summerfi/protocol-plugins-common'
-import { ChainInfo, Maybe, IPosition, IPositionId } from '@summerfi/sdk-common/common'
+import {
+  ChainInfo,
+  Maybe,
+  IPosition,
+  IPositionId,
+  IPositionIdData,
+} from '@summerfi/sdk-common/common'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
-import { IPoolId, ProtocolName, ILendingPool } from '@summerfi/sdk-common/protocols'
+import {
+  ProtocolName,
+  ILendingPool,
+  ILendingPoolId,
+  ILendingPoolIdData,
+} from '@summerfi/sdk-common/protocols'
 import { steps } from '@summerfi/sdk-common/simulation'
 import { IUser } from '@summerfi/sdk-common/user'
 
@@ -17,10 +28,11 @@ import { IUser } from '@summerfi/sdk-common/user'
  * It provides some extra functionality to validate input data coming from the SDK client
  */
 export abstract class BaseProtocolPlugin implements IProtocolPlugin {
-  /** These properties need to be initialized by the actual plugin implementation */
+  /** Name of the protocol that the plugin is implementing */
   abstract readonly protocolName: ProtocolName
-  // TODO: Use ContractProvider to determine supported chains
+  /** List of supported chains for the protocol */
   abstract readonly supportedChains: ChainInfo[]
+  /** Map of action builders for the protocol */
   abstract readonly stepBuilders: Partial<ActionBuildersMap>
 
   /** These properties are initialized in the constructor */
@@ -33,11 +45,11 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
   }
 
   // Short alias for the context
-  get ctx(): IProtocolPluginContext {
+  protected get ctx(): IProtocolPluginContext {
     return this.context
   }
 
-  /** LENDING POOLS */
+  /** VALIDATORS */
 
   /**
    * @name validateLendingPoolId
@@ -45,7 +57,21 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
    * @param candidate The candidate to validate
    * @returns asserts that the candidate is a valid lending pool ID for the specific protocol
    */
-  protected abstract validateLendingPoolId(candidate: unknown): asserts candidate is IPoolId
+  protected abstract _validateLendingPoolId(
+    candidate: ILendingPoolIdData,
+  ): asserts candidate is ILendingPoolIdData
+
+  /**
+   * @name validatePositionId
+   * @description Validates that the candidate is a valid position ID for the specific protocol
+   * @param candidate The candidate to validate
+   * @returns asserts that the candidate is a valid position ID for the specific protocol
+   */
+  protected abstract _validatePositionId(
+    candidate: IPositionIdData,
+  ): asserts candidate is IPositionIdData
+
+  /** LENDING POOLS */
 
   /**
    * @name getLendingPoolImpl
@@ -56,11 +82,11 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
    * @remarks This method should be implemented by the protocol plugin as the external one is just a wrapper to
    * validate the input and call this one
    */
-  protected abstract _getLendingPoolImpl(poolId: IPoolId): Promise<ILendingPool>
+  protected abstract _getLendingPoolImpl(poolId: ILendingPoolIdData): Promise<ILendingPool>
 
   /** @see IProtocolPlugin.getLendingPool */
-  getLendingPool(poolId: unknown): Promise<ILendingPool> {
-    this.validateLendingPoolId(poolId)
+  getLendingPool(poolId: ILendingPoolId): Promise<ILendingPool> {
+    this._validateLendingPoolId(poolId)
     return this._getLendingPoolImpl(poolId)
   }
 

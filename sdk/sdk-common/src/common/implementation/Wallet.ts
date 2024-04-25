@@ -1,15 +1,15 @@
 import { SerializationService } from '../../services/SerializationService'
-import { IWallet } from '../interfaces/IWallet'
+import { IWalletData } from '../interfaces/IWallet'
 import { Address } from './Address'
 
 /**
  * @interface Wallet
- * @see IWallet
+ * @see IWalletData
  */
-export class Wallet implements IWallet {
+export class Wallet implements IWalletData {
   readonly address: Address
 
-  private constructor(params: IWallet) {
+  private constructor(params: IWalletData) {
     this.address = Address.createFrom(params.address)
   }
 

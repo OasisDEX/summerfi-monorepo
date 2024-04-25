@@ -1,4 +1,5 @@
-import { IPercentage, PercentageSchema, isPercentage } from './IPercentage'
+import { IPercentage, IPercentageData, PercentageSchema } from './IPercentage'
+import { IPrintable } from './IPrintable'
 import { z } from 'zod'
 
 /**
@@ -15,35 +16,50 @@ export enum RiskRatioType {
 }
 
 /**
- * @name IRiskRatio
+ * @name IRiskRatioData
  * @description Represents a risk ratio with a certain type and percentage value
  *
  * The type indicates how to interpret the percentage value
  */
-export interface IRiskRatio {
+export interface IRiskRatioData {
   /** The type of the risk ratio */
-  type: RiskRatioType
+  readonly type: RiskRatioType
   /** The percentage value */
-  ratio: IPercentage
+  readonly ratio: IPercentageData
 }
 
-export function isRiskRatio(maybeRiskRatio: unknown): maybeRiskRatio is IRiskRatio {
-  return (
-    typeof maybeRiskRatio === 'object' &&
-    maybeRiskRatio !== null &&
-    'type' in maybeRiskRatio &&
-    'ratio' in maybeRiskRatio &&
-    isPercentage(maybeRiskRatio.ratio)
-  )
+export interface IRiskRatio extends IRiskRatioData, IPrintable {
+  readonly type: RiskRatioType
+  readonly ratio: IPercentage
+
+  /**
+   * @name convertTo
+   * @description Converts the risk ratio to a different type
+   * @param type The type to convert to
+   * @returns The converted risk ratio
+   */
+  convertTo(type: RiskRatioType): IRiskRatio
 }
 
+/**
+ * @description Zod schema for IRiskRatioData
+ */
 export const RiskRatioSchema = z.object({
   type: z.nativeEnum(RiskRatioType),
   ratio: PercentageSchema,
 })
 
 /**
+ * @description Type guard for IRiskRatioData
+ * @param maybeRiskRatio
+ * @returns true if the object is an IRiskRatioData
+ */
+export function isRiskRatio(maybeRiskRatio: unknown): maybeRiskRatio is IRiskRatioData {
+  return RiskRatioSchema.safeParse(maybeRiskRatio).success
+}
+
+/**
  * Checker to make sure that the schema is aligned with the interface
  */
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: IRiskRatio = {} as z.infer<typeof RiskRatioSchema>
+const __schemaChecker: IRiskRatioData = {} as z.infer<typeof RiskRatioSchema>

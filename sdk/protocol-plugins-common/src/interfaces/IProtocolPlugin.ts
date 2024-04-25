@@ -1,5 +1,5 @@
-import { ChainInfo, IPosition, IPositionId, Maybe } from '@summerfi/sdk-common/common'
-import { ProtocolName, ILendingPoolId, ILendingPool } from '@summerfi/sdk-common/protocols'
+import { ChainInfo, IPosition, IPositionIdData, Maybe } from '@summerfi/sdk-common/common'
+import { ProtocolName, ILendingPool, ILendingPoolIdData } from '@summerfi/sdk-common/protocols'
 import { type IProtocolPluginContext } from './IProtocolPluginContext'
 import { steps } from '@summerfi/sdk-common/simulation'
 import { ActionBuilder, ActionBuildersMap } from '../types/StepBuilderTypes'
@@ -24,7 +24,7 @@ export interface IProtocolPlugin {
    * @param poolId The pool ID
    * @returns The lending pool for the specific protocol
    */
-  getLendingPool(poolId: ILendingPoolId): Promise<ILendingPool>
+  getLendingPool(poolId: ILendingPoolIdData): Promise<ILendingPool>
 
   /** POSITIONS */
 
@@ -34,7 +34,7 @@ export interface IProtocolPlugin {
    * @param positionId The position ID for the specific protocol
    * @returns The position for the specific protocol
    */
-  getPosition(positionId: IPositionId): Promise<IPosition>
+  getPosition(positionId: IPositionIdData): Promise<IPosition>
 
   /** ACTION BUILDERS */
 

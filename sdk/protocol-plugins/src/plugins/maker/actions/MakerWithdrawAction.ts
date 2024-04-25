@@ -22,14 +22,14 @@ export class MakerWithdrawAction extends BaseAction {
     },
     paramsMapping?: InputSlotsMapping,
   ): ActionCall {
-    if (!isMakerPositionId(params.position.positionId)) {
+    if (!isMakerPositionId(params.position.id)) {
       throw new Error('Pool ID is not a Maker one')
     }
 
     return this._encodeCall({
       arguments: [
         {
-          vaultId: params.position.positionId.vaultId,
+          vaultId: params.position.id.vaultId,
           userAddress: params.positionsManager.address.value,
           joinAddr: params.joinAddress.value,
           amount: params.amount.toBaseUnit(),

@@ -3,7 +3,7 @@ import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { IProtocolsManager } from '../interfaces/IProtocolsManager'
 import { IRPCClient } from '../interfaces/IRPCClient'
 import { RPCClientType } from '../rpc/SDKClient'
-import { Protocol } from './Protocol'
+import { ProtocolClient } from './ProtocolClient'
 
 export class ProtocolsManager extends IRPCClient implements IProtocolsManager {
   private readonly _chainInfo: ChainInfo
@@ -14,8 +14,8 @@ export class ProtocolsManager extends IRPCClient implements IProtocolsManager {
     this._chainInfo = params.chainInfo
   }
 
-  public async getProtocol(params: { name: ProtocolName }): Promise<Maybe<Protocol>> {
-    return new Protocol({
+  public async getProtocol(params: { name: ProtocolName }): Promise<Maybe<ProtocolClient>> {
+    return new ProtocolClient({
       rpcClient: this.rpcClient,
       chainInfo: this._chainInfo,
       ...params,

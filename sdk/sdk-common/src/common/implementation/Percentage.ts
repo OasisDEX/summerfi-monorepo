@@ -1,6 +1,6 @@
 import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
-import { IPercentage } from '../interfaces/IPercentage'
+import { IPercentage, IPercentageData } from '../interfaces/IPercentage'
 
 /**
  * @class Percentage
@@ -9,23 +9,21 @@ import { IPercentage } from '../interfaces/IPercentage'
 export class Percentage implements IPercentage {
   readonly value: number
 
-  private constructor(params: IPercentage) {
-    this.value = params.value
-  }
-
-  static createFrom(params: IPercentage) {
+  /** Factory method */
+  static createFrom(params: IPercentageData) {
     return new Percentage(params)
   }
 
-  toString(): string {
-    return `${this.value}`
+  /** Sealed constructor */
+  private constructor(params: IPercentageData) {
+    this.value = params.value
   }
 
-  add(percentage: IPercentage): Percentage {
+  add(percentage: Percentage): Percentage {
     return Percentage.createFrom({ value: this.value + percentage.value })
   }
 
-  subtract(percentage: IPercentage): Percentage {
+  subtract(percentage: Percentage): Percentage {
     return Percentage.createFrom({ value: this.value - percentage.value })
   }
 
@@ -36,6 +34,10 @@ export class Percentage implements IPercentage {
   toBaseUnit(params: { decimals: number }): string {
     const factor = new BigNumber(10).pow(params.decimals)
     return new BigNumber(this.value).multipliedBy(factor).toFixed(0).toString()
+  }
+
+  toString(): string {
+    return `${this.value}%`
   }
 }
 

@@ -1,5 +1,5 @@
 import { LendingPool } from '@summerfi/sdk-common/protocols'
-import { ISparkLendingPool } from '../interfaces/ISparkLendingPool'
+import { ISparkLendingPool, ISparkLendingPoolData } from '../interfaces/ISparkLendingPool'
 import { SerializationService } from '@summerfi/sdk-common/services'
 import { SparkLendingPoolId } from './SparkLendingPoolId'
 
@@ -8,15 +8,15 @@ import { SparkLendingPoolId } from './SparkLendingPoolId'
  * @see ISparkLendingPool
  */
 export class SparkLendingPool extends LendingPool implements ISparkLendingPool {
-  readonly poolId: SparkLendingPoolId
+  readonly id: SparkLendingPoolId
 
   private constructor(params: ISparkLendingPool) {
     super(params)
 
-    this.poolId = SparkLendingPoolId.createFrom(params.poolId)
+    this.id = SparkLendingPoolId.createFrom(params.id)
   }
 
-  public static createFrom(params: ISparkLendingPool): SparkLendingPool {
+  public static createFrom(params: ISparkLendingPoolData): SparkLendingPool {
     return new SparkLendingPool(params)
   }
 }

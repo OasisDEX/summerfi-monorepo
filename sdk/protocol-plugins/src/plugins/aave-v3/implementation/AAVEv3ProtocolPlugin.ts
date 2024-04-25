@@ -10,13 +10,13 @@ import {
   valuesOfChainFamilyMap,
   Maybe,
   IPosition,
-  ChainId,
   IPositionId,
+  IPositionIdData,
+  RiskRatioType,
 } from '@summerfi/sdk-common/common'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { ILendingPoolIdData, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { BigNumber } from 'bignumber.js'
 import { BaseProtocolPlugin } from '../../../implementation/BaseProtocolPlugin'
-import { aaveV3EmodeCategoryMap } from './EmodeCategoryMap'
 
 import {
   AaveV3LikeProtocolDataBuilder,
@@ -26,12 +26,6 @@ import { UNCAPPED_SUPPLY, PRECISION_BI } from '../../common/constants/AaveV3Like
 import { AaveV3LendingPool } from './AaveV3LendingPool'
 import { AaveV3CollateralConfig } from './AaveV3CollateralConfig'
 import { AaveV3DebtConfig } from './AaveV3DebtConfig'
-import {
-  AaveV3CollateralConfigMap,
-  AaveV3CollateralConfigRecord,
-} from './AaveV3CollateralConfigMap'
-import { AaveV3DebtConfigMap, AaveV3DebtConfigRecord } from './AaveV3DebtConfigMap'
-import { z } from 'zod'
 import { AaveV3AddressAbiMap } from '../types/AaveV3AddressAbiMap'
 import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import {
@@ -40,14 +34,21 @@ import {
   AAVEV3_POOL_DATA_PROVIDER_ABI,
 } from '../abis/AaveV3ABIS'
 import { AaveV3ContractNames } from '@summerfi/deployment-types'
-import { EmodeType } from '../../common/enums/EmodeType'
-import { IAaveV3PoolId } from '../interfaces/IAaveV3LendingPoolId'
+import { IAaveV3LendingPoolIdData, isAaveV3LendingPoolId } from '../interfaces/IAaveV3LendingPoolId'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
+import { AaveV3StepBuilders } from '../builders'
+import { AaveV3LendingPoolId } from './AaveV3LendingPoolId'
+import { IAaveV3PositionIdData, isAaveV3PositionId } from '../interfaces/IAaveV3PositionId'
 
-type AssetsList = ReturnType<AaveV3ProtocolPlugin['buildAssetsList']>
+type AssetsList = ReturnType<AaveV3ProtocolPlugin['_buildAssetsList']>
 type Asset = Awaited<AssetsList> extends (infer U)[] ? U : never
 
+/**
+ * @class AaveV3ProtocolPlugin
+ * @description Aave V3 protocol plugin
+ * @see BaseProtocolPlugin
+ */
 export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
   readonly protocolName = ProtocolName.AAVEv3
   readonly supportedChains = valuesOfChainFamilyMap([
@@ -56,83 +57,52 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
     ChainFamilyName.Arbitrum,
     ChainFamilyName.Optimism,
   ])
-  readonly stepBuilders: Partial<ActionBuildersMap> = {}
-
-  readonly aaveV3PoolIdSchema = z.object({
-    protocol: z.object({
-      name: z.literal(ProtocolName.AAVEv3),
-      chainInfo: z.object({
-        name: z.string(),
-        chainId: z.custom<ChainId>(
-          (chainId) => this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
-          'Chain ID not supported',
-        ),
-      }),
-    }),
-    emodeType: z.nativeEnum(EmodeType),
-  })
+  readonly stepBuilders: Partial<ActionBuildersMap> = AaveV3StepBuilders
 
   constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
     super(params)
   }
 
-  isLendingPoolId(candidate: unknown): candidate is IAaveV3PoolId {
-    return this._isLendingPoolId(candidate, this.aaveV3PoolIdSchema)
-  }
+  /** VALIDATORS */
 
-  validateLendingPoolId(candidate: unknown): asserts candidate is IAaveV3PoolId {
-    if (!this.isLendingPoolId(candidate)) {
+  /** @see BaseProtocolPlugin._validateLendingPoolId */
+  protected _validateLendingPoolId(
+    candidate: ILendingPoolIdData,
+  ): asserts candidate is IAaveV3LendingPoolIdData {
+    if (!isAaveV3LendingPoolId(candidate)) {
       throw new Error(`Invalid AaveV3 pool ID: ${JSON.stringify(candidate)}`)
     }
   }
 
-  async getPool(aaveV3PoolId: unknown): Promise<AaveV3LendingPool> {
-    this.validateLendingPoolId(aaveV3PoolId)
-
-    const emode = aaveV3EmodeCategoryMap[aaveV3PoolId.emodeType]
-
-    const ctx = this.ctx
-    const chainId = ctx.provider.chain?.id
-    if (!chainId) throw new Error('ctx.provider.chain.id undefined')
-
-    if (!this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId)) {
-      throw new Error(`Chain ID ${chainId} is not supported`)
+  /** @see BaseProtocolPlugin.validateLendingPoolId */
+  protected _validatePositionId(
+    candidate: IPositionIdData,
+  ): asserts candidate is IAaveV3PositionIdData {
+    if (!isAaveV3PositionId(candidate)) {
+      throw new Error(`Invalid AaveV3 position ID: ${JSON.stringify(candidate)}`)
     }
+  }
 
-    const assetsList = await this.buildAssetsList(emode)
+  /** LENDING POOLS */
 
-    // Both USDC & DAI use fixed price oracles that keep both stable at 1 USD
-    const poolBaseCurrencyToken = CurrencySymbol.USD
-
-    const collaterals = assetsList.reduce<AaveV3CollateralConfigRecord>((colls, asset) => {
-      const assetInfo = this.getCollateralAssetInfo(asset, poolBaseCurrencyToken)
-      const { token: collateralToken } = asset
-      colls[collateralToken.address.value] = assetInfo
-      return colls
-    }, {})
-
-    const debts = assetsList.reduce<AaveV3DebtConfigRecord>((debts, asset) => {
-      const assetInfo = this.getDebtAssetInfo(asset, poolBaseCurrencyToken)
-      if (!assetInfo) return debts
-      const { token: quoteToken } = asset
-      debts[quoteToken.address.value] = assetInfo
-      return debts
-    }, {})
-
+  /** @see BaseProtocolPlugin._getLendingPoolImpl */
+  async _getLendingPoolImpl(aaveV3PoolId: AaveV3LendingPoolId): Promise<AaveV3LendingPool> {
     return AaveV3LendingPool.createFrom({
       type: PoolType.Lending,
-      poolId: aaveV3PoolId,
-      protocol: aaveV3PoolId.protocol,
-      baseCurrency: CurrencySymbol.USD,
-      collaterals: AaveV3CollateralConfigMap.createFrom({ record: collaterals }),
-      debts: AaveV3DebtConfigMap.createFrom({ record: debts }),
+      id: aaveV3PoolId,
     })
   }
 
+  /** POSITIONS */
+
+  /** @see BaseProtocolPlugin.getPosition */
   async getPosition(positionId: IPositionId): Promise<IPosition> {
     throw new Error(`Not implemented ${positionId}`)
   }
 
+  /** IMPORT TRANSACTIONS */
+
+  /** @see BaseProtocolPlugin.getImportPositionTransaction */
   async getImportPositionTransaction(params: {
     user: IUser
     externalPosition: IExternalPosition
@@ -141,7 +111,9 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
     throw new Error(`Not implemented ${params}`)
   }
 
-  private getContractDef<K extends AaveV3ContractNames>(contractName: K): AaveV3AddressAbiMap[K] {
+  /** PRIVATE */
+
+  private _getContractDef<K extends AaveV3ContractNames>(contractName: K): AaveV3AddressAbiMap[K] {
     // TODO: Need to be driven by ChainId in future
     const map: AaveV3AddressAbiMap = {
       Oracle: {
@@ -165,11 +137,11 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
     return map[contractName]
   }
 
-  private async buildAssetsList(emode: bigint) {
+  private async _buildAssetsList(emode: bigint) {
     try {
       const _ctx = {
         ...this.ctx,
-        getContractDef: this.getContractDef,
+        getContractDef: this._getContractDef,
       }
       const builder = await new AaveV3LikeProtocolDataBuilder(_ctx, this.protocolName).init()
       const list = await builder
@@ -186,7 +158,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
     }
   }
 
-  private getCollateralAssetInfo(
+  private _getCollateralAssetInfo(
     asset: Asset,
     poolBaseCurrencyToken: Token | CurrencySymbol,
   ): AaveV3CollateralConfig {
@@ -216,7 +188,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
           ratio: Percentage.createFrom({
             value: new BigNumber(ltv.toString()).div(LTV_TO_PERCENTAGE_DIVISOR).toNumber(),
           }),
-          type: RiskRatio.type.LTV,
+          type: RiskRatioType.LTV,
         }),
         liquidationThreshold: RiskRatio.createFrom({
           ratio: Percentage.createFrom({
@@ -224,7 +196,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
               .div(LTV_TO_PERCENTAGE_DIVISOR)
               .toNumber(),
           }),
-          type: RiskRatio.type.LTV,
+          type: RiskRatioType.LTV,
         }),
         tokensLocked: TokenAmount.createFromBaseUnit({
           token: collateralToken,
@@ -247,7 +219,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
     }
   }
 
-  private getDebtAssetInfo(
+  private _getDebtAssetInfo(
     asset: Asset,
     poolBaseCurrencyToken: CurrencySymbol | Token,
   ): Maybe<AaveV3DebtConfig> {
@@ -308,3 +280,37 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
     }
   }
 }
+
+/**
+ const emode = aaveV3EmodeCategoryMap[aaveV3PoolId.emodeType]
+
+    const ctx = this.ctx
+    const chainId = ctx.provider.chain?.id
+    if (!chainId) throw new Error('ctx.provider.chain.id undefined')
+
+    if (!this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId)) {
+      throw new Error(`Chain ID ${chainId} is not supported`)
+    }
+
+    const assetsList = await this.buildAssetsList(emode)
+
+    // Both USDC & DAI use fixed price oracles that keep both stable at 1 USD
+    const poolBaseCurrencyToken = CurrencySymbol.USD
+
+    const collaterals = assetsList.reduce<AaveV3CollateralConfigRecord>((colls, asset) => {
+      const assetInfo = this.getCollateralAssetInfo(asset, poolBaseCurrencyToken)
+      const { token: collateralToken } = asset
+      colls[collateralToken.address.value] = assetInfo
+      return colls
+    }, {})
+
+    const debts = assetsList.reduce<AaveV3DebtConfigRecord>((debts, asset) => {
+      const assetInfo = this.getDebtAssetInfo(asset, poolBaseCurrencyToken)
+      if (!assetInfo) return debts
+      const { token: quoteToken } = asset
+      debts[quoteToken.address.value] = assetInfo
+      return debts
+    }, {})
+
+    
+ */

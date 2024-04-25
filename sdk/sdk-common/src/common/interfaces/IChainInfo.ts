@@ -2,10 +2,10 @@ import { ChainId, ChainIdSchema } from '../aliases/ChainId'
 import { z } from 'zod'
 
 /**
- * @name IChainInfo
+ * @name IChainInfoData
  * @description Information used to identify a blockchain network
  */
-export type IChainInfo = {
+export interface IChainInfoData {
   /** The chain ID of the network */
   chainId: ChainId
   /** The name of the network */
@@ -13,17 +13,24 @@ export type IChainInfo = {
 }
 
 /**
- * @description Type guard for IChainInfo
- * @param maybeChainInfo
- * @returns true if the object is an IChainInfo
+ * @name IChainInfo
+ * @description Interface for the implementors of the chain info
+ *
+ * This interface is used to add all the methods that the interface supports
  */
-export function isChainInfo(maybeChainInfo: unknown): maybeChainInfo is IChainInfo {
-  return (
-    typeof maybeChainInfo === 'object' &&
-    maybeChainInfo !== null &&
-    'chainId' in maybeChainInfo &&
-    'name' in maybeChainInfo
-  )
+export interface IChainInfo extends IChainInfoData {
+  readonly chainId: ChainId
+  readonly name: string
+
+  /**
+   * @name equals
+   * @description Checks if two chain infos are equal
+   * @param chainInfo The chain info to compare
+   * @returns true if the chain infos are equal
+   *
+   * Equality is determined by the chain ID
+   */
+  equals(chainInfo: IChainInfoData): boolean
 }
 
 /**
@@ -35,7 +42,16 @@ export const ChainInfoSchema = z.object({
 })
 
 /**
+ * @description Type guard for IChainInfo
+ * @param maybeChainInfo
+ * @returns true if the object is an IChainInfo
+ */
+export function isChainInfo(maybeChainInfo: unknown): maybeChainInfo is IChainInfoData {
+  return ChainInfoSchema.safeParse(maybeChainInfo).success
+}
+
+/**
  * Checker to make sure that the schema is aligned with the interface
  */
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: IChainInfo = {} as z.infer<typeof ChainInfoSchema>
+const __schemaChecker: IChainInfoData = {} as z.infer<typeof ChainInfoSchema>

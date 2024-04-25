@@ -69,7 +69,7 @@ export default async function getPoolTest() {
   }
 
   expect(pool.type).toBe(PoolType.Lending)
-  expect(pool.poolId).toBe(makerPoolId)
+  expect(pool.id).toBe(makerPoolId)
   expect(pool.protocol.name).toBe(protocol.name)
   expect(pool.protocol.chainInfo).toBe(protocol.chainInfo)
 }

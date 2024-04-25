@@ -22,8 +22,8 @@ export async function refinanceLendingToLendingSamePair(
     throw new Error('Target pool is not a lending pool')
   }
 
-  const position = Position.createFrom(args.sourcePosition)
-  const targetPool = await dependencies.protocolManager.getPool(args.targetPosition.pool.poolId)
+  const position = args.sourcePosition as Position
+  const targetPool = await dependencies.protocolManager.getLendingPool(args.targetPosition.pool.id)
 
   if (!isLendingPool(targetPool)) {
     throw new Error('Target pool is not a lending pool')
@@ -32,11 +32,6 @@ export async function refinanceLendingToLendingSamePair(
   const FLASHLOAN_MARGIN = 1.001
   const flashloanAmount = position.debtAmount.multiply(FLASHLOAN_MARGIN)
   const simulator = Simulator.create(refinanceLendingToLendingSamePairStrategy)
-
-  const targetTokenConfig = targetPool.collaterals.get({ token: position.collateralAmount.token })
-  if (!targetTokenConfig) {
-    throw new Error('Target token not found in pool')
-  }
 
   // TODO: read debt amount from chain (special step: ReadDebtAmount)
   // TODO: the swap quote should also include the summer fee, in this case we need to know when we are taking the fee,
@@ -68,11 +63,7 @@ export async function refinanceLendingToLendingSamePair(
       inputs: {
         depositAmount: ctx.getReference(['PaybackWithdrawFromSource', 'withdrawAmount']),
         borrowAmount: position.debtAmount, // TODO figure the debt amount
-        position: newEmptyPositionFromPool(
-          targetPool,
-          position.debtAmount.token,
-          position.collateralAmount.token,
-        ),
+        position: newEmptyPositionFromPool(targetPool),
         borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
     }))
@@ -86,7 +77,7 @@ export async function refinanceLendingToLendingSamePair(
     .next(async (ctx) => {
       // TODO: we should have a way to get the target position more easily and realiably,
       const targetPosition = Object.values(ctx.state.positions).find(
-        (p) => p.pool.protocol === targetPool.protocol,
+        (p) => p.pool.id.protocol === targetPool.id.protocol,
       )
       if (!targetPosition) {
         throw new Error('Target position not found')
@@ -103,7 +94,7 @@ export async function refinanceLendingToLendingSamePair(
     .run()
 
   const targetPosition = Object.values(simulation.positions).find(
-    (p) => p.pool.protocol === targetPool.protocol,
+    (p) => p.pool.id.protocol === targetPool.id.protocol,
   )
 
   if (!targetPosition) {

@@ -1,19 +1,18 @@
 import { SerializationService } from '../../services/SerializationService'
-import { IPool } from '../interfaces/IPool'
-import { IPoolId } from '../interfaces/IPoolId'
+import { IPoolData } from '../interfaces/IPool'
 import { PoolType } from '../types/PoolType'
+import { PoolId } from './PoolId'
 
 /**
  * @class Pool
- * @see IPool
+ * @see IPoolData
  */
-export abstract class Pool implements IPool {
-  public readonly type: PoolType
-  public readonly poolId: IPoolId
+export abstract class Pool implements IPoolData {
+  readonly type: PoolType
+  abstract readonly id: PoolId
 
-  protected constructor(params: IPool) {
+  protected constructor(params: IPoolData) {
     this.type = params.type
-    this.poolId = params.poolId
   }
 }
 

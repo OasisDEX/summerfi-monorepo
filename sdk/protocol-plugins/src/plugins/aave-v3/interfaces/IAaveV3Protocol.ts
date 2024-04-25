@@ -1,14 +1,24 @@
 import { ChainInfoSchema, IProtocol, ProtocolSchema } from '@summerfi/sdk-common'
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
+import { IProtocolData, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { z } from 'zod'
 
 /**
- * @interface IAaveV3Protocol
+ * @interface IAaveV3ProtocolData
  * @description Identifier of the Aave V3 protocol
  */
-export interface IAaveV3Protocol extends IProtocol {
+export interface IAaveV3ProtocolData extends IProtocolData {
   /** AaveV3 protocol name */
-  name: ProtocolName.AAVEv3
+  readonly name: ProtocolName.AAVEv3
+}
+
+/**
+ * @interface IAaveV3Protocol
+ * @description Interface for the implementors of the Aave V3 protocol
+ *
+ * This interface is used to add all the methods that the interface supports
+ */
+export interface IAaveV3Protocol extends IProtocol {
+  readonly name: ProtocolName.AAVEv3
 }
 
 /**
@@ -25,7 +35,7 @@ export const AaveV3ProtocolSchema = z.object({
  * @param maybeProtocol
  * @returns true if the object is an IAaveV3Protocol
  */
-export function isAaveV3Protocol(maybeProtocol: unknown): maybeProtocol is IAaveV3Protocol {
+export function isAaveV3Protocol(maybeProtocol: unknown): maybeProtocol is IAaveV3ProtocolData {
   return AaveV3ProtocolSchema.safeParse(maybeProtocol).success
 }
 
@@ -33,4 +43,4 @@ export function isAaveV3Protocol(maybeProtocol: unknown): maybeProtocol is IAave
  * Checker to make sure that the schema is aligned with the interface
  */
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: IAaveV3Protocol = {} as z.infer<typeof AaveV3ProtocolSchema>
+const __schemaChecker: IAaveV3ProtocolData = {} as z.infer<typeof AaveV3ProtocolSchema>

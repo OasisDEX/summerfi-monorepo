@@ -1,10 +1,10 @@
 import { PoolType } from '../types'
-import { ILendingPoolId, LendingPoolIdSchema, isLendingPoolId } from './ILendingPoolId'
-import { IPool, isPool } from './IPool'
+import { ILendingPoolId, ILendingPoolIdData, LendingPoolIdSchema } from './ILendingPoolId'
+import { IPoolData } from './IPool'
 import { z } from 'zod'
 
 /**
- * @interface ILendingPool
+ * @interface ILendingPoolData
  * @description Represents a lending pool for a single pair collateral/debt
  *
  * A lending pool is a pool where users can deposit collateral and borrow debt against that collateral.
@@ -14,12 +14,31 @@ import { z } from 'zod'
  * level through the PoolId
  *
  */
-export interface ILendingPool extends IPool {
+export interface ILendingPoolData extends IPoolData {
   /** Type of the pool, in this case Lending */
   type: PoolType.Lending
   /** Pool ID of the lending pool */
-  poolId: ILendingPoolId
+  id: ILendingPoolIdData
 }
+
+/**
+ * @name ILendingPool
+ * @description Interface for the implementors of the lending pool
+ *
+ * This interface is used to add all the methods that the interface supports
+ */
+export interface ILendingPool extends ILendingPoolData {
+  type: PoolType.Lending
+  id: ILendingPoolId
+}
+
+/**
+ * @description Zod schema for ILendingPool
+ */
+export const LendingPoolSchema = z.object({
+  type: z.literal(PoolType.Lending),
+  id: LendingPoolIdSchema,
+})
 
 /**
  * @description Type guard for ILendingPool
@@ -28,27 +47,12 @@ export interface ILendingPool extends IPool {
  *
  * It also asserts the type so that TypeScript knows that the object is an ILendingPool
  */
-export function isLendingPool(maybePool: unknown): maybePool is ILendingPool {
-  return (
-    typeof maybePool === 'object' &&
-    maybePool !== null &&
-    isPool(maybePool) &&
-    maybePool.type === PoolType.Lending &&
-    'poolId' in maybePool &&
-    isLendingPoolId(maybePool.poolId)
-  )
+export function isLendingPool(maybePool: unknown): maybePool is ILendingPoolData {
+  return LendingPoolSchema.safeParse(maybePool).success
 }
-
-/**
- * @description Zod schema for ILendingPool
- */
-export const LendingPoolSchema = z.object({
-  type: z.literal(PoolType.Lending),
-  poolId: LendingPoolIdSchema,
-})
 
 /**
  * Checker to make sure that the schema is aligned with the interface
  */
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: ILendingPool = {} as z.infer<typeof LendingPoolSchema>
+const __schemaChecker: ILendingPoolData = {} as z.infer<typeof LendingPoolSchema>

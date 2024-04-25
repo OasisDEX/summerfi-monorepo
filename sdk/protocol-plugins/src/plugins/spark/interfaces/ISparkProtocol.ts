@@ -1,14 +1,23 @@
-import { IProtocol } from '@summerfi/sdk-common'
-import { ProtocolName, ProtocolSchema } from '@summerfi/sdk-common/protocols'
+import { IProtocolData, ProtocolName, ProtocolSchema } from '@summerfi/sdk-common/protocols'
 import { z } from 'zod'
 
 /**
- * @interface ISparkProtocol
+ * @interface ISparkProtocolData
  * @description Identifier of the Spark protocol
  */
-export interface ISparkProtocol extends IProtocol {
+export interface ISparkProtocolData extends IProtocolData {
   /** Spark protocol name */
-  name: ProtocolName.Spark
+  readonly name: ProtocolName.Spark
+}
+
+/**
+ * @interface ISparkProtocol
+ * @description Interface for the implementors of the Spark protocol
+ *
+ * This interface is used to add all the methods that the interface supports
+ */
+export interface ISparkProtocol extends ISparkProtocolData {
+  readonly name: ProtocolName.Spark
 }
 
 /**
@@ -24,7 +33,7 @@ export const SparkProtocolSchema = z.object({
  * @param maybeProtocol
  * @returns true if the object is an ISparkProtocol
  */
-export function isSparkProtocol(maybeProtocol: unknown): maybeProtocol is ISparkProtocol {
+export function isSparkProtocol(maybeProtocol: unknown): maybeProtocol is ISparkProtocolData {
   return SparkProtocolSchema.safeParse(maybeProtocol).success
 }
 
@@ -32,4 +41,4 @@ export function isSparkProtocol(maybeProtocol: unknown): maybeProtocol is ISpark
  * Checker to make sure that the schema is aligned with the interface
  */
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: ISparkProtocol = {} as z.infer<typeof SparkProtocolSchema>
+const __schemaChecker: ISparkProtocolData = {} as z.infer<typeof SparkProtocolSchema>

@@ -16,7 +16,7 @@ export function depositBorrowReducer(
     ...state,
     positions: {
       ...state.positions,
-      [step.inputs.position.positionId.id]: borrowFromPosition(
+      [step.inputs.position.id.id]: borrowFromPosition(
         depositToPosition(step.inputs.position, getReferencedValue(step.inputs.depositAmount)),
         getReferencedValue(step.inputs.borrowAmount),
       ),

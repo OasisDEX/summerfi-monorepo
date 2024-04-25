@@ -1,29 +1,26 @@
-import { AddressSchema, IAddress, isAddress } from './IAddress'
+import { AddressSchema, IAddress, IAddressData } from './IAddress'
 import { z } from 'zod'
 
 /**
- * @name IWallet
+ * @name IWalletData
  * @description Represents a wallet address
  *
  * This is present in the system in case it is needed to add extra information to the
  * wallet type
  */
-export interface IWallet {
-  address: IAddress
+export interface IWalletData {
+  /** Wallet address */
+  readonly address: IAddressData
 }
 
 /**
- * @description Type guard for IWallet
- * @param maybeWallet
- * @returns true if the object is an IWallet
+ * @name IWallet
+ * @description Interface for the implementors of the wallet
+ *
+ * This interface is used to add all the methods that the interface supports
  */
-export function isWallet(maybeWallet: unknown): maybeWallet is IWallet {
-  return (
-    typeof maybeWallet === 'object' &&
-    maybeWallet !== null &&
-    'address' in maybeWallet &&
-    isAddress(maybeWallet.address)
-  )
+export interface IWallet extends IWalletData {
+  readonly address: IAddress
 }
 
 /**
@@ -34,7 +31,16 @@ export const WalletSchema = z.object({
 })
 
 /**
+ * @description Type guard for IWallet
+ * @param maybeWallet
+ * @returns true if the object is an IWallet
+ */
+export function isWallet(maybeWallet: unknown): maybeWallet is IWalletData {
+  return WalletSchema.safeParse(maybeWallet).success
+}
+
+/**
  * Checker to make sure that the schema is aligned with the interface
  */
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: IWallet = {} as z.infer<typeof WalletSchema>
+const __schemaChecker: IWalletData = {} as z.infer<typeof WalletSchema>

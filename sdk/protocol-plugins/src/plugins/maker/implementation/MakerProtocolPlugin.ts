@@ -8,7 +8,7 @@ import {
   AddressValue,
   IPositionId,
 } from '@summerfi/sdk-common/common'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { ILendingPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { getContract } from 'viem'
 import { BigNumber } from 'bignumber.js'
 import { BaseProtocolPlugin } from '../../../implementation/BaseProtocolPlugin'
@@ -38,6 +38,7 @@ import { isMakerPositionId } from '../interfaces/IMakerPositionId'
 import { MakerLendingPoolId } from './MakerLendingPoolId'
 import { isMakerLendingPoolId } from '../interfaces/IMakerLendingPoolId'
 import { MakerStepBuilders } from './MakerStepBuilders'
+import { MakerPositionId } from './MakerPositionId'
 
 export class MakerProtocolPlugin extends BaseProtocolPlugin {
   readonly protocolName = ProtocolName.Maker
@@ -51,14 +52,25 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
     super(params)
   }
 
-  /** LENDING POOLS */
+  /** VALIDATORS */
 
-  /** @see BaseProtocolPlugin.validateLendingPoolId */
-  protected validateLendingPoolId(candidate: unknown): asserts candidate is MakerLendingPoolId {
+  /** @see BaseProtocolPlugin._validateLendingPoolId */
+  protected _validateLendingPoolId(
+    candidate: ILendingPoolId,
+  ): asserts candidate is MakerLendingPoolId {
     if (isMakerLendingPoolId(candidate)) {
       throw new Error(`Invalid Maker pool ID: ${JSON.stringify(candidate)}`)
     }
   }
+
+  /** @see BaseProtocolPlugin._validatePositionId */
+  protected _validatePositionId(candidate: IPositionId): asserts candidate is MakerPositionId {
+    if (isMakerPositionId(candidate)) {
+      throw new Error(`Invalid Maker position ID: ${JSON.stringify(candidate)}`)
+    }
+  }
+
+  /** LENDING POOLS */
 
   /** @see BaseProtocolPlugin._getLendingPoolImpl */
   protected async _getLendingPoolImpl(
@@ -66,7 +78,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
   ): Promise<MakerLendingPool> {
     return MakerLendingPool.createFrom({
       type: PoolType.Lending,
-      poolId: makerLendingPoolId,
+      id: makerLendingPoolId,
     })
   }
 
@@ -86,7 +98,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
     externalPosition: IExternalPosition
     positionsManager: IPositionsManager
   }): Promise<Maybe<TransactionInfo>> {
-    if (!isMakerLendingPoolId(params.externalPosition.position.pool.poolId)) {
+    if (!isMakerLendingPoolId(params.externalPosition.position.pool.id)) {
       throw new Error('Invalid Maker pool ID')
     }
     if (!isMakerPositionId(params.externalPosition.position)) {
@@ -125,6 +137,8 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
       },
     }
   }
+
+  /** PRIVATE */
 
   private _getContractDef<K extends keyof MakerAddressAbiMap>(
     contractName: K,

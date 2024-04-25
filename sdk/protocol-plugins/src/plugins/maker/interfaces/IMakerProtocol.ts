@@ -1,14 +1,24 @@
 import { IProtocol } from '@summerfi/sdk-common'
-import { ProtocolName, ProtocolSchema } from '@summerfi/sdk-common/protocols'
+import { IProtocolData, ProtocolName, ProtocolSchema } from '@summerfi/sdk-common/protocols'
 import { z } from 'zod'
 
 /**
- * @interface IMakerProtocol
+ * @interface IMakerProtocolData
  * @description Identifier of the Maker protocol
  */
-export interface IMakerProtocol extends IProtocol {
+export interface IMakerProtocolData extends IProtocolData {
   /** Maker protocol name */
   name: ProtocolName.Maker
+}
+
+/**
+ * @interface IMakerProtocol
+ * @description Interface for the implementors of the Maker protocol
+ *
+ * This interface is used to add all the methods that the interface supports
+ */
+export interface IMakerProtocol extends IProtocol {
+  readonly name: ProtocolName.Maker
 }
 
 /**
@@ -24,7 +34,7 @@ export const MakerProtocolSchema = z.object({
  * @param maybeProtocol
  * @returns true if the object is an IMakerProtocol
  */
-export function isMakerProtocol(maybeProtocol: unknown): maybeProtocol is IMakerProtocol {
+export function isMakerProtocol(maybeProtocol: unknown): maybeProtocol is IMakerProtocolData {
   return MakerProtocolSchema.safeParse(maybeProtocol).success
 }
 
@@ -32,4 +42,4 @@ export function isMakerProtocol(maybeProtocol: unknown): maybeProtocol is IMaker
  * Checker to make sure that the schema is aligned with the interface
  */
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: IMakerProtocol = {} as z.infer<typeof MakerProtocolSchema>
+const __schemaChecker: IMakerProtocolData = {} as z.infer<typeof MakerProtocolSchema>

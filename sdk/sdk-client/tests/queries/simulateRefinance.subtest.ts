@@ -30,7 +30,7 @@ export default async function simulateRefinanceTest() {
       sourcePosition: params.sourcePosition,
       targetPosition: {
         type: params.sourcePosition.type,
-        positionId: SparkPositionId.createFrom({ id: '0987654321' }),
+        id: SparkPositionId.createFrom({ id: '0987654321' }),
         debtAmount: params.targetPosition.debtAmount,
         collateralAmount: params.targetPosition.collateralAmount,
         pool: params.targetPosition.pool,
@@ -79,7 +79,7 @@ export default async function simulateRefinanceTest() {
   const pool: MakerLendingPool = {
     type: PoolType.Lending,
     protocol: protocol,
-    poolId: {
+    id: {
       protocol: protocol,
     },
     collaterals: {},
@@ -92,7 +92,7 @@ export default async function simulateRefinanceTest() {
     pool: pool,
     debtAmount: TokenAmount.createFrom({ token: DAI, amount: '56.78' }),
     collateralAmount: TokenAmount.createFrom({ token: WETH, amount: '105.98' }),
-    positionId: MakerPositionId.createFrom({ id: '1234567890', vaultId: '34' }),
+    id: MakerPositionId.createFrom({ id: '1234567890', vaultId: '34' }),
   }
 
   const targetPool = {
@@ -116,7 +116,7 @@ export default async function simulateRefinanceTest() {
 
   const targetPosition = Position.createFrom({
     type: PositionType.Multiply,
-    positionId: {
+    id: {
       id: 'newEmptyPositionFromPool',
     },
     debtAmount: prevPosition.debtAmount,
@@ -135,9 +135,9 @@ export default async function simulateRefinanceTest() {
   expect(simulation).toBeDefined()
   expect(simulation.simulationType).toBe(SimulationType.Refinance)
   expect(simulation.sourcePosition).toBeDefined()
-  expect(simulation.sourcePosition?.positionId).toBe(prevPosition.positionId)
+  expect(simulation.sourcePosition?.id).toBe(prevPosition.id)
   expect(simulation.targetPosition).toBeDefined()
-  expect(simulation.targetPosition.positionId).toBeDefined()
-  expect(simulation.targetPosition.pool.poolId).toBe(targetPool.poolId)
+  expect(simulation.targetPosition.id).toBeDefined()
+  expect(simulation.targetPosition.pool.id).toBe(targetPool.poolId)
   expect(simulation.steps).toBeDefined()
 }

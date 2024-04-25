@@ -1,14 +1,24 @@
-import { ILendingPool, LendingPoolSchema } from '@summerfi/sdk-common/protocols'
+import { ILendingPoolData, LendingPoolSchema } from '@summerfi/sdk-common/protocols'
 import { z } from 'zod'
-import { AaveV3LendingPoolIdSchema, IAaveV3LendingPoolId } from './IAaveV3LendingPoolId'
+import { AaveV3LendingPoolIdSchema, IAaveV3LendingPoolIdData } from './IAaveV3LendingPoolId'
+
+/**
+ * @interface IAaveV3LendingPoolData
+ * @description Represents a lending pool in the Aave V3 protocol
+ */
+export interface IAaveV3LendingPoolData extends ILendingPoolData {
+  /** The lending pool's ID */
+  readonly id: IAaveV3LendingPoolIdData
+}
 
 /**
  * @interface IAaveV3LendingPool
- * @description Represents a lending pool in the Aave V3 protocol
+ * @description Interface for the implementors of the lending pool
+ *
+ * This interface is used to add all the methods that the interface supports
  */
-export interface IAaveV3LendingPool extends ILendingPool {
-  /** The lending pool's ID */
-  poolId: IAaveV3LendingPoolId
+export interface IAaveV3LendingPool extends IAaveV3LendingPoolData {
+  readonly id: IAaveV3LendingPoolIdData
 }
 
 /**
@@ -16,7 +26,7 @@ export interface IAaveV3LendingPool extends ILendingPool {
  */
 export const AaveV3LendingPoolSchema = z.object({
   ...LendingPoolSchema.shape,
-  poolId: AaveV3LendingPoolIdSchema,
+  id: AaveV3LendingPoolIdSchema,
 })
 
 /**
@@ -26,7 +36,7 @@ export const AaveV3LendingPoolSchema = z.object({
  */
 export function isAaveV3LendingPool(
   maybeLendingPool: unknown,
-): maybeLendingPool is IAaveV3LendingPool {
+): maybeLendingPool is IAaveV3LendingPoolData {
   return AaveV3LendingPoolSchema.safeParse(maybeLendingPool).success
 }
 
@@ -34,4 +44,4 @@ export function isAaveV3LendingPool(
  * Checker to make sure that the schema is aligned with the interface
  */
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: IAaveV3LendingPool = {} as z.infer<typeof AaveV3LendingPoolSchema>
+const __schemaChecker: IAaveV3LendingPoolData = {} as z.infer<typeof AaveV3LendingPoolSchema>

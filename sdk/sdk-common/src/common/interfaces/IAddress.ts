@@ -3,12 +3,12 @@ import { AddressType } from '../enums/AddressType'
 import { z } from 'zod'
 
 /**
- * @name IAddress
+ * @name IAddressData
  * @description Represents an address with a certain format, specified by the type
  *
  * Currently only Ethereum type is supported
  */
-export interface IAddress {
+export interface IAddressData {
   /** The address value in the format specified by type */
   value: AddressValue
   /** The type of the address */
@@ -16,17 +16,24 @@ export interface IAddress {
 }
 
 /**
- * @description Type guard for IAddress
- * @param maybeAddress
- * @returns true if the object is an IAddress
+ * @name IAddress
+ * @description Interface for the implementors of the address
+ *
+ * This interface is used to add all the methods that the interface supports
  */
-export function isAddress(maybeAddress: unknown): maybeAddress is IAddress {
-  return (
-    typeof maybeAddress === 'object' &&
-    maybeAddress !== null &&
-    'value' in maybeAddress &&
-    'type' in maybeAddress
-  )
+export interface IAddress extends IAddressData {
+  readonly value: AddressValue
+  readonly type: AddressType
+
+  /**
+   * @name equals
+   * @description Checks if two addresses are equal
+   * @param address The address to compare
+   * @returns true if the addresses are equal
+   *
+   * Equality is determined by the address value and type
+   */
+  equals(address: IAddress): boolean
 }
 
 /**
@@ -38,7 +45,16 @@ export const AddressSchema = z.object({
 })
 
 /**
+ * @description Type guard for IAddress
+ * @param maybeAddress
+ * @returns true if the object is an IAddress
+ */
+export function isAddress(maybeAddress: unknown): maybeAddress is IAddressData {
+  return AddressSchema.safeParse(maybeAddress).success
+}
+
+/**
  * Checker to make sure that the schema is aligned with the interface
  */
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: IAddress = {} as z.infer<typeof AddressSchema>
+const __schemaChecker: IAddressData = {} as z.infer<typeof AddressSchema>
