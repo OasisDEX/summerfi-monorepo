@@ -39,7 +39,7 @@ export class SwapManagerMock implements ISwapManager {
     return this._spotDataReturnValue
   }
 
-  getSummerFee(): Percentage {
+  async getSummerFee(): Promise<Percentage> {
     return this._summerFeeValue
   }
 

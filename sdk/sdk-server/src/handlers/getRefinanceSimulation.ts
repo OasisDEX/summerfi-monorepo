@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import type { ISimulation, RefinanceSimulationTypes } from '@summerfi/sdk-common/simulation'
 import {
   refinanceLendingToLendingSamePair,
   type IRefinanceDependencies,
@@ -26,7 +26,7 @@ function isToSamePair(parameters: IRefinanceParameters): boolean {
 
 export const getRefinanceSimulation = publicProcedure
   .input(inputSchema)
-  .query(async (opts): Promise<ISimulation<SimulationType.Refinance>> => {
+  .query(async (opts): Promise<ISimulation<RefinanceSimulationTypes>> => {
     const args: IRefinanceParameters = opts.input
 
     const dependencies: IRefinanceDependencies = {

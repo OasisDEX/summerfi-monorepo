@@ -14,8 +14,6 @@ export function addApyConfig({ stack, api }: StackContext & { api: Api }) {
     console.warn(`REDIS_CACHE_URL is not set, the function will not use cache`)
   }
 
-  // const defaultVpc = Vpc.fromLookup(stack, 'vpc-0a7f44a693f27d2cb', { isDefault: true })
-
   const getApyFunction = new Function(stack, 'get-apy-function', {
     handler: 'summerfi-api/get-apy-function/src/index.handler',
     runtime: 'nodejs20.x',
@@ -26,6 +24,7 @@ export function addApyConfig({ stack, api }: StackContext & { api: Api }) {
       REDIS_CACHE_USER: process.env.REDIS_CACHE_USER,
       REDIS_CACHE_PASSWORD: process.env.REDIS_CACHE_PASSWORD,
       POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
+      STAGE: stack.stage || 'dev',
     },
     // vpc: defaultVpc,
   })

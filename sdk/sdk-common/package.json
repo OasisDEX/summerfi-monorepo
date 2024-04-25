@@ -26,9 +26,8 @@
     "publish:npm": "pnpm bundle:npm && cd bundle && npm publish && cd .."
   },
   "dependencies": {
-    "bignumber.js": "9.0.1",
-    "superjson": "^1.13.3",
-    "@summerfi/common": "workspace:*"
+    "@summerfi/common": "workspace:*",
+    "superjson": "^1.13.3"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

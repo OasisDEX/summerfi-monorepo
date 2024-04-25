@@ -35,6 +35,8 @@ export class PriceService implements IPriceService {
     let baseToken: `0x${string}`
     if (args.baseToken.symbol === TokenSymbol.WETH) {
       baseToken = `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE`
+    } else if (args.baseToken.symbol === TokenSymbol.WBTC) {
+      baseToken = `0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB`
     } else {
       baseToken = args.baseToken.address.value
     }

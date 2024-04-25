@@ -65,7 +65,7 @@ export class TokenAmount implements ITokenAmount {
     if (multiplier instanceof Percentage) {
       return new TokenAmount({
         token: this.token,
-        amount: this.amountBN.times(multiplier.value).toString(),
+        amount: this.amountBN.times(multiplier.toProportion()).toString(),
       })
     }
 
