@@ -55,8 +55,8 @@ importers:
         specifier: ^20.12.7
         version: 20.12.7
       aws-cdk-lib:
-        specifier: 2.137.0
-        version: 2.137.0(constructs@10.3.0)
+        specifier: 2.132.1
+        version: 2.132.1(constructs@10.3.0)
       constructs:
         specifier: 10.3.0
         version: 10.3.0
@@ -175,6 +175,18 @@ importers:
         version: 8.57.0
 
   packages/abis:
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+
+  packages/abstractions:
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -307,6 +319,28 @@ importers:
       hardhat:
         specifier: ^2.22.2
         version: 2.22.2(ts-node@10.9.2)(typescript@5.0.4)
+
+  packages/defi-llama-client:
+    dependencies:
+      '@summerfi/abstractions':
+        specifier: workspace:*
+        version: link:../abstractions
+      node-fetch:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+      typescript:
+        specifier: ^5.4.5
+        version: 5.4.5
 
   packages/deployment-configs:
     devDependencies:
@@ -478,6 +512,9 @@ importers:
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.12.7)
 
   packages/prices-subgraph:
     dependencies:
@@ -500,6 +537,25 @@ importers:
       '@types/node':
         specifier: ^20.12.7
         version: 20.12.7
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+
+  packages/redis-cache:
+    dependencies:
+      '@summerfi/abstractions':
+        specifier: workspace:*
+        version: link:../abstractions
+      redis:
+        specifier: ^4.6.13
+        version: 4.6.13
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
@@ -941,9 +997,6 @@ importers:
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
-      bignumber.js:
-        specifier: 9.0.1
-        version: 9.0.1
       superjson:
         specifier: ^1.13.3
         version: 1.13.3
@@ -1208,6 +1261,61 @@ importers:
       yargs:
         specifier: ^17.7.2
         version: 17.7.2
+
+  summerfi-api/get-apy-function:
+    dependencies:
+      '@aws-lambda-powertools/logger':
+        specifier: ^2.0.2
+        version: 2.0.4
+      '@aws-lambda-powertools/metrics':
+        specifier: ^2.0.2
+        version: 2.0.4
+      '@aws-lambda-powertools/tracer':
+        specifier: ^2.0.2
+        version: 2.0.4
+      '@summerfi/aave-spark-subgraph':
+        specifier: workspace:*
+        version: link:../../packages/aave-spark-subgraph
+      '@summerfi/abstractions':
+        specifier: workspace:*
+        version: link:../../packages/abstractions
+      '@summerfi/ajna-subgraph':
+        specifier: workspace:*
+        version: link:../../packages/ajna-subgraph
+      '@summerfi/defi-llama-client':
+        specifier: workspace:*
+        version: link:../../packages/defi-llama-client
+      '@summerfi/morpho-blue-subgraph':
+        specifier: workspace:*
+        version: link:../../packages/morpho-blue-subgraph
+      '@summerfi/redis-cache':
+        specifier: workspace:*
+        version: link:../../packages/redis-cache
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../../packages/serverless-shared
+      viem:
+        specifier: ^1.19.11
+        version: 1.21.4(typescript@5.4.5)(zod@3.22.4)
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@types/node':
+        specifier: ^20.11.5
+        version: 20.12.7
+      eslint:
+        specifier: ^8.56.0
+        version: 8.57.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.12.7)
 
   summerfi-api/get-meta-morpho-details-function:
     dependencies:
@@ -6574,6 +6682,55 @@ packages:
       mathjs: 10.6.4
     dev: true
 
+  /@redis/bloom@1.2.0(@redis/client@1.5.14):
+    resolution: {integrity: sha512-HG2DFjYKbpNmVXsa0keLHp/3leGJz1mjh09f2RLGGLQZzSHpkmZWuwJbAvo3QcRY8p80m5+ZdXZdYOSBLlp7Cg==}
+    peerDependencies:
+      '@redis/client': ^1.0.0
+    dependencies:
+      '@redis/client': 1.5.14
+    dev: false
+
+  /@redis/client@1.5.14:
+    resolution: {integrity: sha512-YGn0GqsRBFUQxklhY7v562VMOP0DcmlrHHs3IV1mFE3cbxe31IITUkqhBcIhVSI/2JqtWAJXg5mjV4aU+zD0HA==}
+    engines: {node: '>=14'}
+    dependencies:
+      cluster-key-slot: 1.1.2
+      generic-pool: 3.9.0
+      yallist: 4.0.0
+    dev: false
+
+  /@redis/graph@1.1.1(@redis/client@1.5.14):
+    resolution: {integrity: sha512-FEMTcTHZozZciLRl6GiiIB4zGm5z5F3F6a6FZCyrfxdKOhFlGkiAqlexWMBzCi4DcRoyiOsuLfW+cjlGWyExOw==}
+    peerDependencies:
+      '@redis/client': ^1.0.0
+    dependencies:
+      '@redis/client': 1.5.14
+    dev: false
+
+  /@redis/json@1.0.6(@redis/client@1.5.14):
+    resolution: {integrity: sha512-rcZO3bfQbm2zPRpqo82XbW8zg4G/w4W3tI7X8Mqleq9goQjAGLL7q/1n1ZX4dXEAmORVZ4s1+uKLaUOg7LrUhw==}
+    peerDependencies:
+      '@redis/client': ^1.0.0
+    dependencies:
+      '@redis/client': 1.5.14
+    dev: false
+
+  /@redis/search@1.1.6(@redis/client@1.5.14):
+    resolution: {integrity: sha512-mZXCxbTYKBQ3M2lZnEddwEAks0Kc7nauire8q20oA0oA/LoA+E/b5Y5KZn232ztPb1FkIGqo12vh3Lf+Vw5iTw==}
+    peerDependencies:
+      '@redis/client': ^1.0.0
+    dependencies:
+      '@redis/client': 1.5.14
+    dev: false
+
+  /@redis/time-series@1.0.5(@redis/client@1.5.14):
+    resolution: {integrity: sha512-IFjIgTusQym2B5IZJG3XKr5llka7ey84fw/NOYqESP5WUfQs9zz1ww/9+qoz4ka/S6KcGBodzlCeZ5UImKbscg==}
+    peerDependencies:
+      '@redis/client': ^1.0.0
+    dependencies:
+      '@redis/client': 1.5.14
+    dev: false
+
   /@repeaterjs/repeater@3.0.4:
     resolution: {integrity: sha512-AW8PKd6iX3vAZ0vA43nOUOnbq/X5ihgU+mSXXqunMkeQADGiqw/PY0JNeYtD5sr0PAy51YPgAPbDoeapv9r8WA==}
     dev: true
@@ -8494,30 +8651,6 @@ packages:
       - yaml
       - mime-types
 
-  /aws-cdk-lib@2.137.0(constructs@10.3.0):
-    resolution: {integrity: sha512-pD3AGdKBa8q1+vVWRabiDHuecVMlP8ERGPHc9Pb0dVlpbC/ODC6XXC1S0TAMsr0JI5Lh6pk4vL5cC+spsMeotw==}
-    engines: {node: '>= 14.15.0'}
-    peerDependencies:
-      constructs: ^10.0.0
-    dependencies:
-      '@aws-cdk/asset-awscli-v1': 2.2.202
-      '@aws-cdk/asset-kubectl-v20': 2.1.2
-      '@aws-cdk/asset-node-proxy-agent-v6': 2.0.3
-      constructs: 10.3.0
-    dev: true
-    bundledDependencies:
-      - '@balena/dockerignore'
-      - case
-      - fs-extra
-      - ignore
-      - jsonschema
-      - minimatch
-      - punycode
-      - semver
-      - table
-      - yaml
-      - mime-types
-
   /aws-crt@1.21.2:
     resolution: {integrity: sha512-/jq5yJwdethIaC+HyqCrgW2ZqxjUURBo/6CIfnD0HbpIE+vLIPQxENW/pp3Atu20Hm2WkjM9diJD4zJycK+olA==}
     requiresBuild: true
@@ -9267,6 +9400,11 @@ packages:
       async-hook-jl: 1.7.6
       emitter-listener: 1.1.2
       semver: 5.7.2
+    dev: false
+
+  /cluster-key-slot@1.1.2:
+    resolution: {integrity: sha512-RMr0FhtfXemyinomL4hrWcYJxmX6deFdCxpJzhDttxgO1+bcCnkk+9drydLVDmAMG7NE6aN/fl4F7ucU/90gAA==}
+    engines: {node: '>=0.10.0'}
     dev: false
 
   /co@4.6.0:
@@ -11431,6 +11569,11 @@ packages:
   /functions-have-names@1.2.3:
     resolution: {integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==}
     dev: true
+
+  /generic-pool@3.9.0:
+    resolution: {integrity: sha512-hymDOu5B53XvN4QT9dBmZxPX4CWhBPPLguTZ9MMFeFa/Kg0xWVfylOVNlJji/E7yTZWFd/q9GO5TxDLq156D7g==}
+    engines: {node: '>= 4'}
+    dev: false
 
   /gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
@@ -14848,6 +14991,17 @@ packages:
     dependencies:
       minimatch: 3.1.2
     dev: true
+
+  /redis@4.6.13:
+    resolution: {integrity: sha512-MHgkS4B+sPjCXpf+HfdetBwbRz6vCtsceTmw1pHNYJAsYxrfpOP6dz+piJWGos8wqG7qb3vj/Rrc5qOlmInUuA==}
+    dependencies:
+      '@redis/bloom': 1.2.0(@redis/client@1.5.14)
+      '@redis/client': 1.5.14
+      '@redis/graph': 1.1.1(@redis/client@1.5.14)
+      '@redis/json': 1.0.6(@redis/client@1.5.14)
+      '@redis/search': 1.1.6(@redis/client@1.5.14)
+      '@redis/time-series': 1.0.5(@redis/client@1.5.14)
+    dev: false
 
   /reflect.getprototypeof@1.0.6:
     resolution: {integrity: sha512-fmfw4XgoDke3kdI6h4xcUz1dG8uaiv5q9gcEwLS4Pnth2kxT+GZ7YehS1JTMGBQmtV7Y4GFGbs2re2NqhdozUg==}

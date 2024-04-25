@@ -4,6 +4,7 @@ import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
 import { CurrencySymbol } from '../enums/CurrencySymbol'
 import { Token } from './Token'
+import { isSameTokens } from '../utils/TokenUtils'
 
 /**
  * @class Price
@@ -38,6 +39,28 @@ export class Price implements IPrice {
 
   toBN(): BigNumber {
     return new BigNumber(this.value)
+  }
+
+  public hasSameQuoteToken(b: Price): boolean {
+    if (isToken(this.quoteToken) && isToken(b.quoteToken)) {
+      return isSameTokens(this.quoteToken, b.quoteToken)
+    }
+
+    return this.quoteToken === b.quoteToken
+  }
+
+  public div(b: Price) {
+    if (!this.hasSameQuoteToken(b)) {
+      throw new Error('Token bases must be the same')
+    }
+
+    return Price.createFrom({
+      value: this.toBN().div(b.toBN()).toString(),
+      baseToken: this.baseToken,
+      quoteToken: b.baseToken,
+    })
+
+    // TODO: case when the quotes are the same
   }
 }
 

@@ -1,9 +1,4 @@
-import {
-  Percentage,
-  type Position,
-  type Price,
-  type TokenAmount,
-} from '@summerfi/sdk-common/common'
+import { Percentage, type Position, type TokenAmount } from '@summerfi/sdk-common/common'
 import { BigNumber } from 'bignumber.js'
 
 export class PositionUtils {
@@ -15,13 +10,13 @@ export class PositionUtils {
   }: {
     collateralTokenAmount: TokenAmount
     debtTokenAmount: TokenAmount
-    collateralPriceInUsd: Price
-    debtPriceInUsd: Price
+    collateralPriceInUsd: string
+    debtPriceInUsd: string
   }): Percentage {
     // Determine the Collateral Value:
-    const collValue = new BigNumber(collateralTokenAmount.amount).times(collateralPriceInUsd.value)
+    const collValue = new BigNumber(collateralTokenAmount.amount).times(collateralPriceInUsd)
     // Determine the Borrowed Value:
-    const debtValue = new BigNumber(debtTokenAmount.amount).times(debtPriceInUsd.value)
+    const debtValue = new BigNumber(debtTokenAmount.amount).times(debtPriceInUsd)
     // If the collateral value is 0, return 0.
     if (collValue.isZero()) {
       return Percentage.createFrom({ value: 0 })
@@ -39,7 +34,7 @@ export class PositionUtils {
     position: Position
     // TODO: it is not defined in Position yet, we should use Pool in the future
     liquidationThreshold: Percentage
-    debtPriceInUsd: Price
+    debtPriceInUsd: string
   }): string {
     // Determine the Collateral Value:
     const collateralAmount = new BigNumber(position.collateralAmount.amount)
@@ -49,7 +44,7 @@ export class PositionUtils {
     if (debtAmount.isZero()) {
       return '0'
     }
-    const debtValue = debtAmount.times(debtPriceInUsd.value)
+    const debtValue = debtAmount.times(debtPriceInUsd)
     // (loanAmount * loanPrice) / (liquidationThreshold * collateralAmount)
     const liquidationPrice = debtValue.div(
       collateralAmount.times(liquidationThreshold.toProportion()),

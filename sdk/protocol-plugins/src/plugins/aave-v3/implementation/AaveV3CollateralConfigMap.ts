@@ -27,13 +27,12 @@ export class AaveV3CollateralConfigMap
     collateral: IToken
     collateralConfig: IAaveV3CollateralConfig
   }): void {
-    this.record[params.collateral.address.value] = AaveV3CollateralConfig.createFrom(
-      params.collateralConfig,
-    )
+    this.record[this._formatRecordKey(params.collateral.address.value)] =
+      AaveV3CollateralConfig.createFrom(params.collateralConfig)
   }
 
   public override get(params: { token: IToken }): Maybe<AaveV3CollateralConfig> {
-    return this.record[params.token.address.value]
+    return this.record[this._formatRecordKey(params.token.address.value)]
   }
 }
 

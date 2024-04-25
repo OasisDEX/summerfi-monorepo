@@ -1,3 +1,4 @@
+import { HexData } from '../../common/aliases/HexData'
 import { AddressValue } from '../../common/aliases/AddressValue'
 import { Maybe } from '../../common/aliases/Maybe'
 import { ITokenData } from '../../common/interfaces/IToken'
@@ -20,19 +21,22 @@ export class CollateralConfigMap implements ICollateralConfigMap {
   }
 
   public add(params: { collateral: ITokenData; collateralConfig: ICollateralConfig }): void {
-    this.record[params.collateral.address.value] = CollateralConfig.createFrom(
-      params.collateralConfig,
-    )
+    this.record[this._formatRecordKey(params.collateral.address.value)] =
+      CollateralConfig.createFrom(params.collateralConfig)
   }
 
   public get(params: { token: ITokenData }): Maybe<CollateralConfig> {
-    return this.record[params.token.address.value]
+    return this.record[this._formatRecordKey(params.token.address.value)]
   }
 
   protected _importCollateralConfigMap(params: ICollateralConfigMap): void {
     return Object.entries(params.record).forEach(([, collateralConfig]) => {
       this.add({ collateral: collateralConfig.token, collateralConfig })
     })
+  }
+
+  protected _formatRecordKey(address: HexData) {
+    return address.toLowerCase() as HexData
   }
 }
 
