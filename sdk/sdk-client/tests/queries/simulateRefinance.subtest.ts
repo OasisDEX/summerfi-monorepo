@@ -1,9 +1,4 @@
-import {
-  CollateralConfigMap,
-  DebtConfigMap,
-  PoolType,
-  ProtocolName,
-} from '@summerfi/sdk-common/protocols'
+import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SDKManager } from '../../src/implementation/SDKManager'
 import { RPCClientType, SparkPositionId } from '../../src/rpc/SDKClient'
 import {
