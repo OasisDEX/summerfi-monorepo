@@ -8,7 +8,7 @@ import {
   getValueFromReference,
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
-import { Position, TokenAmount, Percentage, Token } from '@summerfi/sdk-common/common'
+import { Position, TokenAmount, Percentage, Token, isSameTokens } from '@summerfi/sdk-common/common'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
@@ -16,8 +16,7 @@ import { refinanceLendingToLendingAnyPairStrategy } from './Strategy'
 import { type IRefinanceDependencies } from '../common/Types'
 import { getSwapStepData } from '../../implementation/utils/GetSwapStepData'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import { isSameTokens } from '@summerfi/sdk-common/common'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'bignumber.js'
 
 export async function refinanceLendingToLendingAnyPair(
   args: IRefinanceParameters,
