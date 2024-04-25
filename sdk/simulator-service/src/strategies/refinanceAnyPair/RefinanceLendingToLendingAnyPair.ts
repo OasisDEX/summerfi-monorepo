@@ -224,8 +224,8 @@ async function estimateSwapFromAmount(params: {
   const spotPrice = (
     await params.swapManager.getSpotPrice({
       chainInfo: receiveAtLeast.token.chainInfo,
-      baseToken: params.fromToken,
-      quoteToken: receiveAtLeast.token,
+      baseToken: receiveAtLeast.token,
+      quoteToken: params.fromToken,
     })
   ).price
 
@@ -240,7 +240,7 @@ async function estimateSwapFromAmount(params: {
   SourceAmt = TargetAmt * SpotPrice * (1 + Slippage) / (1 - SummerFee) 
   */
 
-  const sourceAmount = params.receiveAtLeast
+  const sourceAmount = receiveAtLeast
     .toBN()
     .multipliedBy(spotPrice.toBN().times(ONE.plus(slippage.toProportion())))
     .div(ONE.minus(summerFee.toProportion()))
