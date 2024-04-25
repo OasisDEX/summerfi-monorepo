@@ -7,5 +7,5 @@ export enum ILKType {
   WBTC_C = 'WBTC-C',
   WSTETH_A = 'WSTETH-A',
   WSTETH_B = 'WSTETH-B',
-  RETH_A = 'RETH_A',
+  RETH_A = 'RETH-A',
 }
