@@ -63,49 +63,58 @@ export const getUnifiedProtocolRates = async (
 
     const { fromTimestamp, toTimestamp } = getTimestampsForRates(parseResult.data.referenceDate)
 
-    const cacheKey = `${protocolId}-${subgraphsConfig.chainId}-c:${parseResult.data.collateral[0]}-d:${parseResult.data.debt[0]}-from:${fromTimestamp}-to:${toTimestamp}`
+    const cacheKeyCollateral = `${protocolId}-${subgraphsConfig.chainId}-t:${parseResult.data.collateral[0]}-from:${fromTimestamp}-to:${toTimestamp}`
+    const cacheKeyDebt = `${protocolId}-${subgraphsConfig.chainId}-t:${parseResult.data.debt[0]}-from:${fromTimestamp}-to:${toTimestamp}`
 
-    const fromCache = await cache.get(cacheKey)
+    const fromCacheCollateral = await cache.get(cacheKeyCollateral)
+    const fromCacheDebt = await cache.get(cacheKeyDebt)
 
-    let subgraphResult:
-      | { supply: AaveSparkInterestRateResult; borrow: AaveSparkInterestRateResult }
-      | undefined
+    let subgraphResultCollateral: AaveSparkInterestRateResult | undefined
+    let subgraphResultDebt: AaveSparkInterestRateResult | undefined
 
-    if (fromCache) {
-      subgraphResult = JSON.parse(fromCache) as {
-        supply: AaveSparkInterestRateResult
-        borrow: AaveSparkInterestRateResult
-      }
+    const subgraphClient = getAaveSparkSubgraphClient({
+      ...subgraphsConfig,
+      logger,
+      chainId,
+    })
+
+    if (fromCacheCollateral) {
+      subgraphResultCollateral = JSON.parse(fromCacheCollateral) as AaveSparkInterestRateResult
     } else {
-      const subgraphClient = getAaveSparkSubgraphClient({
-        ...subgraphsConfig,
-        logger,
-        chainId,
-      })
-
-      const supply = await subgraphClient.getInterestRate({
+      subgraphResultCollateral = await subgraphClient.getInterestRate({
         token: parseResult.data.collateral[0],
         fromTimestamp,
         toTimestamp,
         protocol: protocolId,
       })
 
-      const borrow = await subgraphClient.getInterestRate({
+      await saveSubgraphResponsesToCache({
+        subgraphResult: subgraphResultCollateral,
+        protocolId,
+        logger,
+        cache,
+        chainId,
+        cacheKey: cacheKeyCollateral,
+      })
+    }
+
+    if (fromCacheDebt) {
+      subgraphResultDebt = JSON.parse(fromCacheDebt) as AaveSparkInterestRateResult
+    } else {
+      subgraphResultDebt = await subgraphClient.getInterestRate({
         token: parseResult.data.debt[0],
         fromTimestamp,
         toTimestamp,
         protocol: protocolId,
       })
 
-      subgraphResult = { supply, borrow }
-
       await saveSubgraphResponsesToCache({
-        subgraphResult,
+        subgraphResult: subgraphResultDebt,
         protocolId,
         logger,
         cache,
         chainId,
-        cacheKey,
+        cacheKey: cacheKeyDebt,
       })
     }
 
@@ -115,8 +124,8 @@ export const getUnifiedProtocolRates = async (
       protocol: protocolId,
       logger,
       timestamp: parseResult.data.referenceDate,
-      aaveSubgraphSupplyRatesResponse: subgraphResult.supply,
-      aaveSubgraphBorrowRatesResponse: subgraphResult.borrow,
+      aaveSubgraphSupplyRatesResponse: subgraphResultCollateral,
+      aaveSubgraphBorrowRatesResponse: subgraphResultDebt,
     })
 
     return {

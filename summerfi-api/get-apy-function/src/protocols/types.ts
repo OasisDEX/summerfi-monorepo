@@ -38,9 +38,9 @@ export type GroupedRates = ReadonlyMap<ShortDate, Readonly<RatesWithAverage>>
 export interface CalculateRates {
   apy1d: number
   apy7d: number
-  apy30d: number
-  apy90d: number
-  apy365d: number
+  apy30d: number | null
+  apy90d: number | null
+  apy365d: number | null
 }
 
 export interface ProtocolResponse<TProtocolData> {
