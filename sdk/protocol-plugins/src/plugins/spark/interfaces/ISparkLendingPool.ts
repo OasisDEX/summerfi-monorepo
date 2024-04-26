@@ -5,6 +5,7 @@ import {
   SparkLendingPoolIdSchema,
 } from './ISparkLendingPoolId'
 import { z } from 'zod'
+import { ILendingPool, PoolType } from '@summerfi/sdk-common'
 
 /**
  * @interface ISparkLendingPoolData
@@ -22,10 +23,15 @@ export interface ISparkLendingPoolData extends ILendingPoolData {
  * @description Interface for the implementors of the lending pool
  *
  * This interface is used to add all the methods that the interface supports
+ *
+ * Typescript forces the interface to re-declare any properties that have different BUT compatible types.
+ * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
-export interface ISparkLendingPool extends ISparkLendingPoolData {
-  /** The id of the lending pool */
+export interface ISparkLendingPool extends ISparkLendingPoolData, ILendingPool {
   readonly id: ISparkLendingPoolId
+
+  // Re-declaring the properties with the correct types
+  readonly type: PoolType.Lending
 }
 
 /**
@@ -51,4 +57,4 @@ export function isSparkLendingPool(
  * Checker to make sure that the schema is aligned with the interface
  */
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: ISparkLendingPool = {} as z.infer<typeof SparkLendingPoolSchema>
+const __schemaChecker: ISparkLendingPoolData = {} as z.infer<typeof SparkLendingPoolSchema>

@@ -1,7 +1,7 @@
 import { ILendingPoolIdData } from '@summerfi/sdk-common/protocols'
 import { EmodeType, EmodeTypeSchema } from '../../common/enums/EmodeType'
 import { ISparkProtocol, ISparkProtocolData, SparkProtocolSchema } from './ISparkProtocol'
-import { LendingPoolIdSchema } from '@summerfi/sdk-common'
+import { ILendingPoolId, IToken, LendingPoolIdSchema } from '@summerfi/sdk-common'
 import { z } from 'zod'
 
 /**
@@ -20,10 +20,17 @@ export interface ISparkLendingPoolIdData extends ILendingPoolIdData {
  * @description Interface for the implementors of the lending pool id
  *
  * This interface is used to add all the methods that the interface supports
+ *
+ * Typescript forces the interface to re-declare any properties that have different BUT compatible types.
+ * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
-export interface ISparkLendingPoolId extends ISparkLendingPoolIdData {
+export interface ISparkLendingPoolId extends ISparkLendingPoolIdData, ILendingPoolId {
   readonly protocol: ISparkProtocol
   readonly emodeType: EmodeType
+
+  // Re-declaring the properties with the correct types
+  readonly collateralToken: IToken
+  readonly debtToken: IToken
 }
 
 /**

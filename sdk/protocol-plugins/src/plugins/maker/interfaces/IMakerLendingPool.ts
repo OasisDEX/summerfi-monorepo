@@ -1,5 +1,9 @@
-import { ILendingPoolData, LendingPoolSchema } from '@summerfi/sdk-common/protocols'
-import { IMakerLendingPoolIdData, MakerLendingPoolIdSchema } from './IMakerLendingPoolId'
+import { ILendingPool, ILendingPoolData, LendingPoolSchema } from '@summerfi/sdk-common/protocols'
+import {
+  IMakerLendingPoolId,
+  IMakerLendingPoolIdData,
+  MakerLendingPoolIdSchema,
+} from './IMakerLendingPoolId'
 import { z } from 'zod'
 
 /**
@@ -17,9 +21,8 @@ export interface IMakerLendingPoolData extends ILendingPoolData {
  *
  * This interface is used to add all the methods that the interface supports
  */
-export interface IMakerLendingPool extends IMakerLendingPoolData {
-  /** The pool's ID */
-  readonly id: IMakerLendingPoolIdData
+export interface IMakerLendingPool extends ILendingPool, IMakerLendingPoolData {
+  readonly id: IMakerLendingPoolId
 }
 
 /**

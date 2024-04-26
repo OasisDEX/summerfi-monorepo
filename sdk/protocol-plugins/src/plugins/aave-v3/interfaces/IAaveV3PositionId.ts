@@ -3,7 +3,7 @@ import { z } from 'zod'
 
 /**
  * @interface IAaveV3PositionIdData
- * @see IPositionId
+ * @see IPositionIdData
  */
 export interface IAaveV3PositionIdData extends IPositionIdData {
   // Empty on purpose
@@ -14,8 +14,9 @@ export interface IAaveV3PositionIdData extends IPositionIdData {
  * @description Interface for the implementors of the position id
  *
  * This interface is used to add all the methods that the interface supports
+ *
  */
-export interface IAaveV3PositionId extends IPositionId {
+export interface IAaveV3PositionId extends IPositionId, IAaveV3PositionIdData {
   // Empty on purpose
 }
 

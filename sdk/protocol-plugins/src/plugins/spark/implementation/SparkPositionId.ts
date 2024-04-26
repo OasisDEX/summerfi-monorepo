@@ -4,7 +4,7 @@ import { ISparkPositionId, ISparkPositionIdData } from '../interfaces/ISparkPosi
 
 /**
  * @class SparkPositionId
- * @see ISparkPositionIdData
+ * @see ISparkPositionId
  */
 export class SparkPositionId extends PositionId implements ISparkPositionId {
   /** Factory method */

@@ -1,5 +1,6 @@
+import { IPrintable } from '../../common/interfaces/IPrintable'
 import { SerializationService } from '../../services/SerializationService'
-import { IPoolData } from '../interfaces/IPool'
+import { IPool, IPoolData } from '../interfaces/IPool'
 import { PoolType } from '../types/PoolType'
 import { PoolId } from './PoolId'
 
@@ -7,12 +8,16 @@ import { PoolId } from './PoolId'
  * @class Pool
  * @see IPoolData
  */
-export abstract class Pool implements IPoolData {
+export abstract class Pool implements IPool, IPrintable {
   readonly type: PoolType
   abstract readonly id: PoolId
 
   protected constructor(params: IPoolData) {
     this.type = params.type
+  }
+
+  toString(): string {
+    return `Pool: ${this.type} (${this.id.toString()})`
   }
 }
 

@@ -1,12 +1,12 @@
 import { SerializationService } from '../../services/SerializationService'
-import { IWalletData } from '../interfaces/IWallet'
+import { IWallet, IWalletData } from '../interfaces/IWallet'
 import { Address } from './Address'
 
 /**
  * @interface Wallet
  * @see IWalletData
  */
-export class Wallet implements IWalletData {
+export class Wallet implements IWallet {
   readonly address: Address
 
   private constructor(params: IWalletData) {

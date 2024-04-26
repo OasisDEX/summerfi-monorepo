@@ -10,9 +10,9 @@ import { z } from 'zod'
  */
 export interface IAddressData {
   /** The address value in the format specified by type */
-  value: AddressValue
+  readonly value: AddressValue
   /** The type of the address */
-  type: AddressType
+  readonly type: AddressType
 }
 
 /**

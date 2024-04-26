@@ -1,14 +1,13 @@
 import {
   Token,
   TokenAmount,
-  Position,
   Address,
   type Maybe,
   ChainFamilyMap,
   PositionType,
 } from '@summerfi/sdk-common/common'
 
-import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
+import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { makeSDK, type Chain, type User } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
 import { ExternalPositionType, IImportPositionParameters, Order } from '@summerfi/sdk-common/orders'
@@ -17,8 +16,11 @@ import { ISimulation, SimulationSteps, SimulationType } from '@summerfi/sdk-comm
 import assert from 'assert'
 import {
   ILKType,
-  IMakerLendingPoolIdData,
+  MakerLendingPoolId,
+  MakerPosition,
   MakerPositionId,
+  isMakerLendingPool,
+  isMakerProtocol,
 } from '@summerfi/protocol-plugins/plugins/maker'
 import { Hex } from 'viem'
 import { TransactionUtils } from './utils/TransactionUtils'
@@ -63,27 +65,28 @@ describe.skip('Import Maker Position | SDK', () => {
     const maker = await chain.protocols.getProtocol({ name: ProtocolName.Maker })
     assert(maker, 'Maker protocol not found')
 
-    const makerPoolId: IMakerLendingPoolIdData = {
-      protocol: {
-        name: ProtocolName.Maker,
-        chainInfo: chain.chainInfo,
-      },
+    if (!isMakerProtocol(maker)) {
+      assert(false, 'Maker protocol type is not Maker')
+    }
+
+    const makerPoolId = MakerLendingPoolId.createFrom({
+      protocol: maker,
       debtToken: DAI,
       collateralToken: WETH,
       ilkType: ILKType.ETH_C,
-    }
+    })
 
     const makerPool = await maker.getLendingPool({
       poolId: makerPoolId,
     })
     assert(makerPool, 'Maker pool not found')
 
-    if (!isLendingPool(makerPool)) {
+    if (!isMakerLendingPool(makerPool)) {
       assert(false, 'Maker pool type is not lending')
     }
 
     // Source position
-    const makerPosition: Position = {
+    const makerPosition = MakerPosition.createFrom({
       type: PositionType.Multiply,
       id: MakerPositionId.createFrom({ id: '31646', vaultId: '31646' }),
       debtAmount: TokenAmount.createFromBaseUnit({
@@ -95,7 +98,7 @@ describe.skip('Import Maker Position | SDK', () => {
         amount: '2127004370346054622',
       }),
       pool: makerPool,
-    } as unknown as Position
+    })
 
     const importPositionSimulation: ISimulation<SimulationType.ImportPosition> =
       await sdk.simulator.importing.simulateImportPosition({

@@ -1,6 +1,10 @@
-import { ILendingPoolData, LendingPoolSchema } from '@summerfi/sdk-common/protocols'
+import { ILendingPool, ILendingPoolData, LendingPoolSchema } from '@summerfi/sdk-common/protocols'
 import { z } from 'zod'
-import { AaveV3LendingPoolIdSchema, IAaveV3LendingPoolIdData } from './IAaveV3LendingPoolId'
+import {
+  AaveV3LendingPoolIdSchema,
+  IAaveV3LendingPoolId,
+  IAaveV3LendingPoolIdData,
+} from './IAaveV3LendingPoolId'
 
 /**
  * @interface IAaveV3LendingPoolData
@@ -17,8 +21,8 @@ export interface IAaveV3LendingPoolData extends ILendingPoolData {
  *
  * This interface is used to add all the methods that the interface supports
  */
-export interface IAaveV3LendingPool extends IAaveV3LendingPoolData {
-  readonly id: IAaveV3LendingPoolIdData
+export interface IAaveV3LendingPool extends ILendingPool, IAaveV3LendingPoolData {
+  readonly id: IAaveV3LendingPoolId
 }
 
 /**

@@ -1,4 +1,4 @@
-import { IAddressData } from '../interfaces/IAddress'
+import { IAddress, IAddressData } from '../interfaces/IAddress'
 import { SerializationService } from '../../services/SerializationService'
 import { AddressValue } from '../aliases/AddressValue'
 import { AddressType } from '../enums/AddressType'
@@ -7,7 +7,7 @@ import { AddressType } from '../enums/AddressType'
  * @class Address
  * @see IAddressData
  */
-export class Address implements IAddressData {
+export class Address implements IAddress {
   public static ZeroAddressEthereum: Address = new Address({
     value: '0x0000000000000000000000000000000000000000',
     type: AddressType.Ethereum,

@@ -1,13 +1,14 @@
 import { ChainInfo } from '../../common/implementation/ChainInfo'
+import { IPrintable } from '../../common/interfaces/IPrintable'
 import { SerializationService } from '../../services'
 import { ProtocolName } from '../enums/ProtocolName'
-import { IProtocolData } from '../interfaces/IProtocol'
+import { IProtocol, IProtocolData } from '../interfaces/IProtocol'
 
 /**
  * @class Protocol
  * @see IProtocolData
  */
-export abstract class Protocol implements IProtocolData {
+export abstract class Protocol implements IProtocol, IPrintable {
   readonly name: ProtocolName
   readonly chainInfo: ChainInfo
 
@@ -16,15 +17,12 @@ export abstract class Protocol implements IProtocolData {
     this.chainInfo = ChainInfo.createFrom(params.chainInfo)
   }
 
-  /**
-   * Compare if the passed protocol is equal to the current protocol
-   * @param protocol The protocol to compare
-   * @returns true if the protocols are equal
-   *
-   * Equality is determined by the name and chain information
-   */
   equals(protocol: Protocol): boolean {
     return this.name === protocol.name && this.chainInfo.equals(protocol.chainInfo)
+  }
+
+  toString(): string {
+    return `Protocol: ${this.name} on ${this.chainInfo.toString()}`
   }
 }
 

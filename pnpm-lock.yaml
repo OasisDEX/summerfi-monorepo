@@ -871,9 +871,6 @@ importers:
       '@summerfi/testing-utils':
         specifier: workspace:*
         version: link:../testing-utils
-      bignumber.js:
-        specifier: 9.0.1
-        version: 9.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -902,9 +899,6 @@ importers:
       '@summerfi/swap-common':
         specifier: workspace:*
         version: link:../swap-common
-      bignumber.js:
-        specifier: 9.0.1
-        version: 9.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -939,9 +933,6 @@ importers:
       '@summerfi/testing-utils':
         specifier: workspace:*
         version: link:../../testing-utils
-      bignumber.js:
-        specifier: 9.0.1
-        version: 9.0.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -982,9 +973,6 @@ importers:
       '@trpc/client':
         specifier: 11.0.0-next-beta.264
         version: 11.0.0-next-beta.264(@trpc/server@11.0.0-next-beta.264)
-      bignumber.js:
-        specifier: ^9.1.2
-        version: 9.1.2
       superjson:
         specifier: ^1.13.3
         version: 1.13.3
@@ -1013,9 +1001,6 @@ importers:
 
   sdk/sdk-common/bundle:
     dependencies:
-      bignumber.js:
-        specifier: 9.0.1
-        version: 9.0.1
       superjson:
         specifier: ^1.13.3
         version: 1.13.3

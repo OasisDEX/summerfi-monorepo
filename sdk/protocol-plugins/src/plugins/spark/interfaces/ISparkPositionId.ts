@@ -3,7 +3,7 @@ import { z } from 'zod'
 
 /**
  * @interface ISparkPositionIdData
- * @description Represents a position in the Spark protocol
+ * @description Represents the ID of a position in the Spark protocol
  *
  * Currently empty as there are no specifics for this protocol
  */
@@ -17,7 +17,7 @@ export interface ISparkPositionIdData extends IPositionIdData {
  *
  * This interface is used to add all the methods that the interface supports
  */
-export interface ISparkPositionId extends IPositionId {
+export interface ISparkPositionId extends IPositionId, ISparkPositionIdData {
   // Empty on purpose
 }
 

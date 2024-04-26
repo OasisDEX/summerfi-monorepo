@@ -1,7 +1,12 @@
-import { ILendingPoolIdData, LendingPoolIdSchema } from '@summerfi/sdk-common/protocols'
+import {
+  ILendingPoolId,
+  ILendingPoolIdData,
+  LendingPoolIdSchema,
+} from '@summerfi/sdk-common/protocols'
 import { EmodeType, EmodeTypeSchema } from '../../common/enums/EmodeType'
 import { AaveV3ProtocolSchema, IAaveV3Protocol, IAaveV3ProtocolData } from './IAaveV3Protocol'
 import { z } from 'zod'
+import { IToken } from '@summerfi/sdk-common'
 
 /**
  * @interface IAaveV3LendingPoolIdData
@@ -9,9 +14,9 @@ import { z } from 'zod'
  */
 export interface IAaveV3LendingPoolIdData extends ILendingPoolIdData {
   /** Aave v3 protocol */
-  protocol: IAaveV3ProtocolData
+  readonly protocol: IAaveV3ProtocolData
   /** The pool's efficiency mode */
-  emodeType: EmodeType
+  readonly emodeType: EmodeType
 }
 
 /**
@@ -19,10 +24,17 @@ export interface IAaveV3LendingPoolIdData extends ILendingPoolIdData {
  * @description Interface for the implementors of the lending pool id
  *
  * This interface is used to add all the methods that the interface supports
+ *
+ * Typescript forces the interface to re-declare any properties that have different BUT compatible types.
+ * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
-export interface IAaveV3LendingPoolId extends IAaveV3LendingPoolIdData {
-  protocol: IAaveV3Protocol
-  emodeType: EmodeType
+export interface IAaveV3LendingPoolId extends ILendingPoolId, IAaveV3LendingPoolIdData {
+  readonly protocol: IAaveV3Protocol
+  readonly emodeType: EmodeType
+
+  // Re-declaring the properties with the correct types
+  readonly collateralToken: IToken
+  readonly debtToken: IToken
 }
 
 /**

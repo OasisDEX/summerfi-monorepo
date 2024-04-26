@@ -1,4 +1,4 @@
-import { ChainInfoSchema, IProtocol, ProtocolSchema } from '@summerfi/sdk-common'
+import { ChainInfoSchema, IChainInfo, IProtocol, ProtocolSchema } from '@summerfi/sdk-common'
 import { IProtocolData, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { z } from 'zod'
 
@@ -16,9 +16,15 @@ export interface IAaveV3ProtocolData extends IProtocolData {
  * @description Interface for the implementors of the Aave V3 protocol
  *
  * This interface is used to add all the methods that the interface supports
+ *
+ * Typescript forces the interface to re-declare any properties that have different BUT compatible types.
+ * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
-export interface IAaveV3Protocol extends IProtocol {
+export interface IAaveV3Protocol extends IProtocol, IAaveV3ProtocolData {
   readonly name: ProtocolName.AAVEv3
+
+  // Re-declaring the properties with the correct types
+  readonly chainInfo: IChainInfo
 }
 
 /**

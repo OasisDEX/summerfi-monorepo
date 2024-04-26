@@ -1,4 +1,4 @@
-import { IPoolData, PoolSchema } from '../../protocols/interfaces/IPool'
+import { IPool, IPoolData, PoolSchema } from '../../protocols/interfaces/IPool'
 import { PositionType } from '../enums/PositionType'
 import { IPositionId, IPositionIdData, PositionIdSchema } from './IPositionId'
 import { ITokenAmount, ITokenAmountData, TokenAmountSchema } from './ITokenAmount'
@@ -32,7 +32,7 @@ export interface IPosition extends IPositionData {
   readonly id: IPositionId
   readonly debtAmount: ITokenAmount
   readonly collateralAmount: ITokenAmount
-  readonly pool: IPoolData
+  readonly pool: IPool
 }
 
 /**

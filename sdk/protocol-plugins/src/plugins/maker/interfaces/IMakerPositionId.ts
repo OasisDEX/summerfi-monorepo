@@ -1,6 +1,6 @@
 import { IPositionIdData } from '@summerfi/sdk-common/common'
 import { MakerVaultId, MakerVaultIdSchema } from '../types/MakerVaultId'
-import { PositionIdSchema } from '@summerfi/sdk-common'
+import { IPositionId, PositionIdSchema } from '@summerfi/sdk-common'
 import { z } from 'zod'
 
 /**
@@ -18,7 +18,7 @@ export interface IMakerPositionIdData extends IPositionIdData {
  *
  * This interface is used to add all the methods that the interface supports
  */
-export interface IMakerPositionId extends IMakerPositionIdData {
+export interface IMakerPositionId extends IPositionId, IMakerPositionIdData {
   /** The vault ID that identifies the position on Maker */
   readonly vaultId: MakerVaultId
 }

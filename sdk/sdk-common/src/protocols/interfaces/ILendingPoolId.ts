@@ -1,5 +1,5 @@
 import { IToken, ITokenData, TokenSchema } from '../../common/interfaces/IToken'
-import { IPoolIdData } from './IPoolId'
+import { IPoolId, IPoolIdData } from './IPoolId'
 import { z } from 'zod'
 import { IProtocol, ProtocolSchema } from './IProtocol'
 
@@ -23,7 +23,7 @@ export interface ILendingPoolIdData extends IPoolIdData {
  *
  * This interface is used to add all the methods that the interface supports
  */
-export interface ILendingPoolId extends ILendingPoolIdData {
+export interface ILendingPoolId extends IPoolId, ILendingPoolIdData {
   readonly protocol: IProtocol
   readonly collateralToken: IToken
   readonly debtToken: IToken

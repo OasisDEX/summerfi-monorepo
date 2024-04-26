@@ -4,7 +4,7 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 
 /**
  * @class SparkProtocol
- * @see ISparkProtocolData
+ * @see ISparkProtocol
  */
 export class SparkProtocol extends Protocol implements ISparkProtocol {
   readonly name: ProtocolName.Spark

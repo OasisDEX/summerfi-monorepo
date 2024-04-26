@@ -3,12 +3,13 @@ import { ISparkLendingPoolId, ISparkLendingPoolIdData } from '../interfaces/ISpa
 import { EmodeType } from '../../common'
 import { SparkProtocol } from './SparkProtocol'
 import { LendingPoolId } from '@summerfi/sdk-common'
+import { IPrintable } from '@summerfi/sdk-common/common'
 
 /**
  * @class SparkLendingPoolId
  * @see ISparkLendingPoolIdData
  */
-export class SparkLendingPoolId extends LendingPoolId implements ISparkLendingPoolId {
+export class SparkLendingPoolId extends LendingPoolId implements ISparkLendingPoolId, IPrintable {
   readonly protocol: SparkProtocol
   readonly emodeType: EmodeType
 
@@ -23,6 +24,10 @@ export class SparkLendingPoolId extends LendingPoolId implements ISparkLendingPo
 
     this.protocol = SparkProtocol.createFrom(params.protocol)
     this.emodeType = params.emodeType
+  }
+
+  toString(): string {
+    return `${LendingPoolId.toString()} [emode: ${this.emodeType}]`
   }
 }
 

@@ -1,6 +1,6 @@
 import { PoolType } from '../types'
 import { ILendingPoolId, ILendingPoolIdData, LendingPoolIdSchema } from './ILendingPoolId'
-import { IPoolData } from './IPool'
+import { IPool, IPoolData } from './IPool'
 import { z } from 'zod'
 
 /**
@@ -16,9 +16,9 @@ import { z } from 'zod'
  */
 export interface ILendingPoolData extends IPoolData {
   /** Type of the pool, in this case Lending */
-  type: PoolType.Lending
+  readonly type: PoolType.Lending
   /** Pool ID of the lending pool */
-  id: ILendingPoolIdData
+  readonly id: ILendingPoolIdData
 }
 
 /**
@@ -27,9 +27,9 @@ export interface ILendingPoolData extends IPoolData {
  *
  * This interface is used to add all the methods that the interface supports
  */
-export interface ILendingPool extends ILendingPoolData {
-  type: PoolType.Lending
-  id: ILendingPoolId
+export interface ILendingPool extends IPool, ILendingPoolData {
+  readonly type: PoolType.Lending
+  readonly id: ILendingPoolId
 }
 
 /**

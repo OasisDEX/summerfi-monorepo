@@ -1,3 +1,4 @@
+import { IChainInfo, IProtocol } from '@summerfi/sdk-common'
 import { IProtocolData, ProtocolName, ProtocolSchema } from '@summerfi/sdk-common/protocols'
 import { z } from 'zod'
 
@@ -15,9 +16,13 @@ export interface ISparkProtocolData extends IProtocolData {
  * @description Interface for the implementors of the Spark protocol
  *
  * This interface is used to add all the methods that the interface supports
+ *
+ * Typescript forces the interface to re-declare any properties that have different BUT compatible types.
+ * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
-export interface ISparkProtocol extends ISparkProtocolData {
+export interface ISparkProtocol extends ISparkProtocolData, IProtocol {
   readonly name: ProtocolName.Spark
+  readonly chainInfo: IChainInfo
 }
 
 /**

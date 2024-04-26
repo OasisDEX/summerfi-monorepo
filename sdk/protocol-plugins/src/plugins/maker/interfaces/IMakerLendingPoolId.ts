@@ -1,7 +1,12 @@
-import { ILendingPoolIdData, LendingPoolIdSchema } from '@summerfi/sdk-common/protocols'
+import {
+  ILendingPoolId,
+  ILendingPoolIdData,
+  LendingPoolIdSchema,
+} from '@summerfi/sdk-common/protocols'
 import { ILKType } from '../enums'
 import { IMakerProtocol, IMakerProtocolData, MakerProtocolSchema } from './IMakerProtocol'
 import { z } from 'zod'
+import { IToken } from '@summerfi/sdk-common'
 
 /**
  * @name IMakerLendingPoolIdData
@@ -21,10 +26,17 @@ export interface IMakerLendingPoolIdData extends ILendingPoolIdData {
  * @description Interface for the implementors of the lending pool ID
  *
  * This interface is used to add all the methods that the interface supports
+ *
+ * Typescript forces the interface to re-declare any properties that have different BUT compatible types.
+ * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
-export interface IMakerLendingPoolId extends IMakerLendingPoolIdData {
+export interface IMakerLendingPoolId extends ILendingPoolId, IMakerLendingPoolIdData {
   readonly protocol: IMakerProtocol
   readonly ilkType: ILKType
+
+  // Re-declaring the properties with the correct types
+  readonly collateralToken: IToken
+  readonly debtToken: IToken
 }
 
 /**

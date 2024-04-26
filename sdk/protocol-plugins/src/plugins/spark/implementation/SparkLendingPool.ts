@@ -10,7 +10,7 @@ import { SparkLendingPoolId } from './SparkLendingPoolId'
 export class SparkLendingPool extends LendingPool implements ISparkLendingPool {
   readonly id: SparkLendingPoolId
 
-  private constructor(params: ISparkLendingPool) {
+  private constructor(params: ISparkLendingPoolData) {
     super(params)
 
     this.id = SparkLendingPoolId.createFrom(params.id)
