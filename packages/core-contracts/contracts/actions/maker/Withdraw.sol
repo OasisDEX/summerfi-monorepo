@@ -30,7 +30,6 @@ contract MakerWithdraw is Executable, UseStore {
   }
 
   function _withdraw(WithdrawData memory data) internal returns (uint256) {
-    address gem = data.joinAddr.gem();
     uint256 convertedAmount = MathUtils.convertTo18(data.joinAddr, data.amount);
 
     // Unlocks WETH/GEM amount from the CDP
@@ -41,14 +40,7 @@ contract MakerWithdraw is Executable, UseStore {
     manager.flux(data.vaultId, address(this), convertedAmount);
 
     // Exits token/WETH amount to the user's wallet as a token
-    data.joinAddr.exit(address(this), convertedAmount);
-
-    if (gem == registry.getRegisteredService(WETH)) {
-      // Converts WETH to ETH
-      IWETH(gem).withdraw(convertedAmount);
-      // Sends ETH back to the user's wallet
-      payable(data.userAddress).transfer(convertedAmount);
-    }
+    data.joinAddr.exit(address(this), data.amount);
 
     return convertedAmount;
   }
