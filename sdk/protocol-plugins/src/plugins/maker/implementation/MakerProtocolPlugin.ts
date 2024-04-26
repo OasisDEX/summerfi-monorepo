@@ -152,13 +152,13 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
     const [collateralQuote, daiQuote] = await Promise.all([
       ctx.swapManager.getSpotPrice({
         // Should be good enought for maker, as it won't be avaialble on other networks.
-        chainInfo: ChainInfo.createFrom({chainId: 1, name: 'Ethereum'}),
+        chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
         baseToken: collateralToken,
         quoteToken: CurrencySymbol.USD,
       }),
       ctx.swapManager.getSpotPrice({
         // Should be good enought for maker, as it won't be avaialble on other networks.
-        chainInfo: ChainInfo.createFrom({chainId: 1, name: 'Ethereum'}),
+        chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
         baseToken: quoteToken,
         quoteToken: CurrencySymbol.USD,
       }),

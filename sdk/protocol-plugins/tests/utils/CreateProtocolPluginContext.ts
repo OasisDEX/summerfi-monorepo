@@ -27,7 +27,9 @@ export async function createProtocolPluginContext(
       value: '1',
       quoteToken: CurrencySymbol.USD,
       baseToken: Token.createFrom({
-        address: Address.createFromEthereum({ value: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'}),
+        address: Address.createFromEthereum({
+          value: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+        }),
         decimals: 18,
         symbol: 'ETH',
         name: 'Ethereum',
@@ -36,7 +38,7 @@ export async function createProtocolPluginContext(
           chainId: 1,
         }),
       }),
-    })
+    }),
   })
 
   const defaultContext: IProtocolPluginContext = {
