@@ -13,6 +13,7 @@ import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { createPublicClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
+import { ISwapManager } from '@summerfi/swap-common/interfaces'
 
 const ProtocolPlugins: ProtocolPluginsRecordType = {
   [ProtocolName.Maker]: MakerProtocolPlugin,
@@ -22,8 +23,9 @@ const ProtocolPlugins: ProtocolPluginsRecordType = {
 
 export function createProtocolsPluginsRegistry(params: {
   deployments: DeploymentIndex
+  swapManager: ISwapManager
 }): IProtocolPluginsRegistry {
-  const { deployments } = params
+  const { deployments, swapManager } = params
 
   const provider = createPublicClient({
     batch: {
@@ -43,6 +45,7 @@ export function createProtocolsPluginsRegistry(params: {
       tokenService,
       priceService,
       deployments,
+      swapManager,
     },
     deploymentConfigTag: 'standard',
   })

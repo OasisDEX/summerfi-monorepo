@@ -12,6 +12,8 @@ import {
   valuesOfChainFamilyMap,
   Maybe,
   AddressValue,
+  CurrencySymbol,
+  ChainInfo,
 } from '@summerfi/sdk-common/common'
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SimulationSteps } from '@summerfi/sdk-common/simulation'
@@ -147,6 +149,21 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
       nextPriceUpdate: new Date((Number(zzz) + hop) * 1000),
     }
 
+    const [collateralQuote, daiQuote] = await Promise.all([
+      ctx.swapManager.getSpotPrice({
+        // Should be good enought for maker, as it won't be avaialble on other networks.
+        chainInfo: ChainInfo.createFrom({chainId: 1, name: 'Ethereum'}),
+        baseToken: collateralToken,
+        quoteToken: CurrencySymbol.USD,
+      }),
+      ctx.swapManager.getSpotPrice({
+        // Should be good enought for maker, as it won't be avaialble on other networks.
+        chainInfo: ChainInfo.createFrom({chainId: 1, name: 'Ethereum'}),
+        baseToken: quoteToken,
+        quoteToken: CurrencySymbol.USD,
+      }),
+    ])
+
     const collaterals: MakerCollateralConfigRecord = {
       [collateralToken.address.value]: {
         token: collateralToken,
@@ -160,7 +177,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
           baseToken: collateralToken,
           quoteToken: quoteToken,
         }),
-        priceUSD: await ctx.priceService.getPriceUSD(collateralToken),
+        priceUSD: collateralQuote.price,
         lastPriceUpdate: osmData.currentPriceUpdate,
         nextPriceUpdate: osmData.nextPriceUpdate,
 
@@ -185,11 +202,13 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
       },
     }
 
+    const daiPriceUSD = await ctx.priceService.getPriceUSD(quoteToken)
+
     const debts: MakerDebtConfigRecord = {
       [quoteToken.address.value]: {
         token: quoteToken,
-        price: await ctx.priceService.getPriceUSD(quoteToken),
-        priceUSD: await ctx.priceService.getPriceUSD(quoteToken),
+        price: daiQuote.price,
+        priceUSD: daiQuote.price,
         rate: Percentage.createFrom({ value: stabilityFee.times(100).toNumber() }),
         totalBorrowed: TokenAmount.createFrom({
           token: quoteToken,

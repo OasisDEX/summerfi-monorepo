@@ -31,9 +31,10 @@ export const createSDKContext = (opts: ContextOptions): SDKAppContext => {
   const swapManager = SwapManagerFactory.newSwapManager({ configProvider })
   const protocolsRegistry = createProtocolsPluginsRegistry({
     deployments,
+    swapManager,
   })
   const protocolManager = new ProtocolManager({ pluginsRegistry: protocolsRegistry })
-
+  
   return {
     deployments,
     orderPlannerService,
