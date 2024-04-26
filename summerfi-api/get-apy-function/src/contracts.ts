@@ -70,7 +70,7 @@ export type AaveLikePosition = z.infer<typeof aaveLikePositionSchema>
 export type MorphoBluePosition = z.infer<typeof morphoBluePositionSchema>
 export type AjnaPosition = z.infer<typeof ajnaPositionSchema>
 
-export type ApyResult = CalculateRates & { apy: number }
+export type ApyResult = CalculateRates & { apy?: number | null }
 
 export interface ApyResponse {
   position: AaveLikePosition | MorphoBluePosition | AjnaPosition
