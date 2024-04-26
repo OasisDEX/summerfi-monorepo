@@ -29,7 +29,7 @@ export const SwapActionBuilder: ActionBuilder<steps.SwapStep> = async (params): 
     },
     connectedInputs: {},
     connectedOutputs: {
-      receivedAmount: 'received',
+      received: 'received',
     },
   })
 }

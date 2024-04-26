@@ -6,7 +6,7 @@ export class SparkDepositAction extends BaseAction {
     name: 'SparkDeposit',
     version: 0,
     parametersAbi: '(address asset, uint256 amount, bool sumAmounts, bool setAsCollateral)',
-    storageInputs: ['amountToDeposit'],
+    storageInputs: ['asset', 'amountToDeposit'],
     storageOutputs: ['depositedAmount'],
   } as const
 

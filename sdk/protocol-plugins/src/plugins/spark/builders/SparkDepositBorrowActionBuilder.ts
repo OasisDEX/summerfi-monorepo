@@ -54,7 +54,9 @@ export const SparkDepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrowS
       sumAmounts: false,
       setAsCollateral: true,
     },
-    connectedInputs: {},
+    connectedInputs: {
+      depositAmount: 'amountToDeposit',
+    },
     connectedOutputs: {
       depositAmount: 'depositedAmount',
     },
