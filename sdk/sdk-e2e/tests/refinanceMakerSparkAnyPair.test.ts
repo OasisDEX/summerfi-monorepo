@@ -78,6 +78,9 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     const WSTETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.WSTETH })
     assert(WSTETH, 'WSTETH not found')
 
+    const SDAI: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.SDAI })
+    assert(SDAI, 'WSTETH not found')
+
     const maker = await chain.protocols.getProtocol({ name: ProtocolName.Maker })
     assert(maker, 'Maker protocol not found')
 
@@ -143,7 +146,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
       assert(false, 'Spark pool type is not lending')
     }
 
-    const emptyTargetPosition = newEmptyPositionFromPool(sparkPool, DAI, WSTETH)
+    const emptyTargetPosition = newEmptyPositionFromPool(sparkPool, WETH, SDAI)
     const refinanceSimulation: ISimulation<RefinanceSimulationTypes> =
       await sdk.simulator.refinance.simulateRefinancePosition({
         sourcePosition: makerPosition,
