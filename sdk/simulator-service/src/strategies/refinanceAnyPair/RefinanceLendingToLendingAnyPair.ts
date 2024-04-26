@@ -103,7 +103,7 @@ export async function refinanceLendingToLendingAnyPair(
         depositAmount: ctx.getReference(
           isCollateralSwapSkipped
             ? ['PaybackWithdrawFromSource', 'withdrawAmount']
-            : ['CollateralSwap', 'receivedAmount'],
+            : ['CollateralSwap', 'received'],
         ),
         position: newEmptyPositionFromPool(
           targetPool,

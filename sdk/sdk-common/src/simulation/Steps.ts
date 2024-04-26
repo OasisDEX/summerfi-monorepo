@@ -74,7 +74,7 @@ export interface SwapStep
       summerFee: Percentage
     },
     {
-      receivedAmount: TokenAmount
+      received: TokenAmount
     }
   > {}
 
