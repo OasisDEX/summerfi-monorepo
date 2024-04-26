@@ -1,3 +1,4 @@
+import { ProtocolId } from '@summerfi/serverless-shared'
 import { Price, TokenBalance } from '../types'
 
 export const AaveStopLossToCollateralV2ID = 111n as const
@@ -26,6 +27,12 @@ export const DmaSparkPartialTakeProfitID = 134n as const
 
 export const DmaAaveTrailingStopLossID = 10006n as const
 export const DmaSparkTrailingStopLossID = 10007n as const
+
+export const MorphoBlueBasicBuyV2ID = 111111n as const
+export const MorphoBlueBasicSellV2ID = 111111n as const
+export const MorphoBluePartialTakeProfitID = 111111n as const
+export const MorphoBlueTrailingStopLossID = 111111n as const
+export const MorphoBlueStopLossV2ID = 111111n as const
 
 export type Trigger = {
   triggerId: string
@@ -317,44 +324,168 @@ export type DmaSparkPartialTakeProfit = Trigger & {
   }
 }
 
+export type MorphoBlueBasicBuy = Trigger & {
+  triggerTypeName: 'MorphoBlueBasicBuyV2'
+  triggerType: typeof MorphoBlueBasicBuyV2ID
+  decodedParams: {
+    positionAddress: string
+    triggerType: string
+    maxCoverage: string
+    debtToken: string
+    collateralToken: string
+    operationName: string
+    executionLtv: string
+    targetLtv: string
+    maxBuyPrice: string
+    deviation: string
+    maxBaseFeeInGwei: string
+  }
+}
+
+export type MorphoBlueBasicSell = Trigger & {
+  triggerTypeName: 'MorphoBlueBasicSellV2'
+  triggerType: typeof MorphoBlueBasicSellV2ID
+  decodedParams: {
+    positionAddress: string
+    triggerType: string
+    maxCoverage: string
+    debtToken: string
+    collateralToken: string
+    operationName: string
+    executionLtv: string
+    targetLtv: string
+    minSellPrice: string
+    deviation: string
+    maxBaseFeeInGwei: string
+  }
+}
+
+export type MorphoBluePartialTakeProfit = Trigger & {
+  triggerTypeName: 'MorphoBluePartialTakeProfit'
+  triggerType: typeof MorphoBluePartialTakeProfitID
+  decodedParams: {
+    positionAddress: string
+    triggerType: string
+    maxCoverage: string
+    debtToken: string
+    collateralToken: string
+    operationName: string
+    executionLtv: string
+    targetLtv: string
+    executionPrice: string
+    deviation: string
+    withdrawToDebt: string
+  }
+  dynamicParams?: {
+    nextProfit: {
+      triggerPrice: Price
+      realizedProfitInCollateral: TokenBalance
+      realizedProfitInDebt: TokenBalance
+      totalProfitInCollateral: TokenBalance
+      totalProfitInDebt: TokenBalance
+      stopLossDynamicPrice?: Price
+      fee: TokenBalance
+      totalFee: TokenBalance
+    }
+  }
+}
+
+export type MorphoBlueTrailingStopLoss = Trigger & {
+  triggerTypeName: 'MorphoBlueTrailingStopLoss'
+  triggerType: typeof MorphoBlueTrailingStopLossID
+  decodedParams: {
+    positionAddress: string
+    triggerType: string
+    maxCoverage: string
+    debtToken: string
+    collateralToken: string
+    operationName: string
+    collateralOracle: string
+    collateralAddedRoundId: string
+    debtOracle: string
+    debtAddedRoundId: string
+    trailingDistance: string
+    closeToCollateral: string
+  }
+  dynamicParams: {
+    executionPrice?: string
+    originalExecutionPrice?: string
+  }
+}
+
+export type MorphoBlueStopLoss = Trigger & {
+  triggerTypeName: 'MorphoBlueStopLossV2'
+  triggerType: typeof MorphoBlueStopLossV2ID
+  decodedParams: {
+    positionAddress: string
+    triggerType: string
+    maxCoverage: string
+    debtToken: string
+    collateralToken: string
+    executionLtv: string
+    ltv: string
+  }
+}
+
 export type GetTriggersResponse = {
   triggers: {
-    aaveStopLossToCollateral?: AaveStopLossToCollateral
-    aaveStopLossToCollateralDMA?: AaveStopLossToCollateralDMA
-    aaveStopLossToDebt?: AaveStopLossToDebt
-    aaveStopLossToDebtDMA?: AaveStopLossToDebtDMA
-    sparkStopLossToCollateral?: SparkStopLossToCollateral
-    sparkStopLossToCollateralDMA?: SparkStopLossToCollateralDMA
-    sparkStopLossToDebt?: SparkStopLossToDebt
-    sparkStopLossToDebtDMA?: SparkStopLossToDebtDMA
-    aaveBasicBuy?: DmaAaveBasicBuy
-    aaveBasicSell?: DmaAaveBasicSell
-    sparkBasicBuy?: DmaSparkBasicBuy
-    sparkBasicSell?: DmaSparkBasicSell
-    aaveTrailingStopLossDMA?: DmaAaveTrailingStopLoss
-    sparkTrailingStopLossDMA?: DmaSparkTrailingStopLoss
-    aavePartialTakeProfit?: DmaAavePartialTakeProfit
-    sparkPartialTakeProfit?: DmaSparkPartialTakeProfit
+    [ProtocolId.AAVE_V3]: {
+      aaveStopLossToCollateral?: AaveStopLossToCollateral
+      aaveStopLossToCollateralDMA?: AaveStopLossToCollateralDMA
+      aaveStopLossToDebt?: AaveStopLossToDebt
+      aaveStopLossToDebtDMA?: AaveStopLossToDebtDMA
+      aaveBasicBuy?: DmaAaveBasicBuy
+      aaveBasicSell?: DmaAaveBasicSell
+      aaveTrailingStopLossDMA?: DmaAaveTrailingStopLoss
+      aavePartialTakeProfit?: DmaAavePartialTakeProfit
+    }
+    [ProtocolId.SPARK]: {
+      sparkStopLossToCollateral?: SparkStopLossToCollateral
+      sparkStopLossToCollateralDMA?: SparkStopLossToCollateralDMA
+      sparkStopLossToDebt?: SparkStopLossToDebt
+      sparkStopLossToDebtDMA?: SparkStopLossToDebtDMA
+      sparkBasicBuy?: DmaSparkBasicBuy
+      sparkBasicSell?: DmaSparkBasicSell
+      sparkTrailingStopLossDMA?: DmaSparkTrailingStopLoss
+      sparkPartialTakeProfit?: DmaSparkPartialTakeProfit
+    }
+    [ProtocolId.MORPHO_BLUE]: {
+      [key: `0x${string}`]: {
+        stopLoss?: MorphoBlueStopLoss
+        basicBuy?: MorphoBlueBasicBuy
+        basicSell?: MorphoBlueBasicSell
+        trailingStopLoss?: MorphoBlueTrailingStopLoss
+        partialTakeProfit?: MorphoBluePartialTakeProfit
+      }
+    }
   }
   flags: {
-    isAaveStopLossEnabled: boolean
-    isSparkStopLossEnabled: boolean
     isAaveBasicBuyEnabled: boolean
     isAaveBasicSellEnabled: boolean
+    isAavePartialTakeProfitEnabled: boolean
+    isAaveStopLossEnabled: boolean
     isSparkBasicBuyEnabled: boolean
     isSparkBasicSellEnabled: boolean
-    isAavePartialTakeProfitEnabled: boolean
     isSparkPartialTakeProfitEnabled: boolean
+    isSparkStopLossEnabled: boolean
+    isMorphoBlueBasicBuyEnabled: boolean
+    isMorphoBlueBasicSellEnabled: boolean
+    isMorphoBluePartialTakeProfitEnabled: boolean
+    isMorphoBlueStopLossEnabled: boolean
   }
   triggerGroup: {
-    aaveStopLoss?: Trigger
-    sparkStopLoss?: Trigger
     aaveBasicBuy?: Trigger
     aaveBasicSell?: Trigger
+    aavePartialTakeProfit?: Trigger
+    aaveStopLoss?: Trigger
     sparkBasicBuy?: Trigger
     sparkBasicSell?: Trigger
-    aavePartialTakeProfit?: Trigger
     sparkPartialTakeProfit?: Trigger
+    sparkStopLoss?: Trigger
+    morphoBlueBasicBuy?: Trigger
+    morphoBlueBasicSell?: Trigger
+    morphoBluePartialTakeProfit?: Trigger
+    morphoBlueStopLoss?: Trigger
   }
   triggersCount: number
   additionalData?: Record<string, unknown>
@@ -363,20 +494,27 @@ export type GetTriggersResponse = {
 export type AllDecodedParamsKeys =
   | keyof AaveStopLossToCollateral['decodedParams']
   | keyof AaveStopLossToDebt['decodedParams']
-  | keyof SparkStopLossToCollateral['decodedParams']
-  | keyof SparkStopLossToDebt['decodedParams']
   | keyof DmaAaveBasicBuy['decodedParams']
   | keyof DmaAaveBasicSell['decodedParams']
-  | keyof DmaAaveTrailingStopLoss['decodedParams']
-  | keyof DmaAaveTrailingStopLoss['dynamicParams']
   | keyof DmaAavePartialTakeProfit['decodedParams']
   | keyof DmaAavePartialTakeProfit['dynamicParams']
+  | keyof DmaAaveTrailingStopLoss['decodedParams']
+  | keyof DmaAaveTrailingStopLoss['dynamicParams']
   | keyof DmaSparkBasicBuy['decodedParams']
   | keyof DmaSparkBasicSell['decodedParams']
-  | keyof DmaSparkTrailingStopLoss['decodedParams']
-  | keyof DmaSparkTrailingStopLoss['dynamicParams']
   | keyof DmaSparkPartialTakeProfit['decodedParams']
   | keyof DmaSparkPartialTakeProfit['dynamicParams']
+  | keyof DmaSparkTrailingStopLoss['decodedParams']
+  | keyof DmaSparkTrailingStopLoss['dynamicParams']
+  | keyof SparkStopLossToCollateral['decodedParams']
+  | keyof SparkStopLossToDebt['decodedParams']
+  | keyof MorphoBlueBasicBuy['decodedParams']
+  | keyof MorphoBlueBasicSell['decodedParams']
+  | keyof MorphoBluePartialTakeProfit['decodedParams']
+  | keyof MorphoBluePartialTakeProfit['dynamicParams']
+  | keyof MorphoBlueTrailingStopLoss['decodedParams']
+  | keyof MorphoBlueTrailingStopLoss['dynamicParams']
+  | keyof MorphoBlueStopLoss['decodedParams']
 
 export const getPropertyFromTriggerParams = ({
   trigger,

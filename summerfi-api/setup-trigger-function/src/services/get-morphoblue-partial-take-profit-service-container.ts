@@ -1,5 +1,9 @@
 import { ServiceContainer } from './service-container'
-import { mergeValidationResults, SparkPartialTakeProfitEventBody, ValidationResults } from '~types'
+import {
+  mergeValidationResults,
+  MorphoBluePartialTakeProfitEventBody,
+  ValidationResults,
+} from '~types'
 import { PublicClient } from 'viem'
 import { Addresses, CurrentTriggerLike } from '@summerfi/triggers-shared'
 import { Address, ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
@@ -7,26 +11,26 @@ import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
 import {
-  dmaSparkStopLossValidator,
-  sparkPartialTakeProfitValidator,
+  dmaMorphoBlueStopLossValidator,
+  morphoBluePartialTakeProfitValidator,
 } from './against-position-validators'
 import {
   AddableTrigger,
   automationBotHelper,
-  encodeSparkPartialTakeProfit,
-  encodeSparkStopLoss,
+  encodeMorphoBluePartialTakeProfit,
+  encodeMorphoBlueStopLoss,
 } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
 import { DerivedPrices } from '@summerfi/prices-subgraph'
-import { getCurrentSparkStopLoss } from '@summerfi/triggers-calculations'
+import { getCurrentMorphoBlueStopLoss } from '@summerfi/triggers-calculations'
 import {
   calculateCollateralPriceInDebtBasedOnLtv,
-  getSparkPosition,
+  getMorphoBluePosition,
   simulateAutoTakeProfit,
 } from '@summerfi/triggers-calculations'
 import { PositionLike, SupportedActions } from '@summerfi/triggers-shared'
 
-export interface GetSparkPartialTakeProfitServiceContainerProps {
+export interface GetMorphoBluePartialTakeProfitServiceContainerProps {
   rpc: PublicClient
   addresses: Addresses
   getTriggers: (address: Address) => Promise<GetTriggersResponse>
@@ -41,14 +45,14 @@ const getIfThereIsAStopLossToChange = async ({
   position,
   logger,
 }: {
-  trigger: SparkPartialTakeProfitEventBody
+  trigger: MorphoBluePartialTakeProfitEventBody
   triggers: GetTriggersResponse
   position: PositionLike
   logger?: Logger
 }): Promise<{ result: false } | { result: true; addableStopLoss: AddableTrigger }> => {
-  const currentStopLoss = getCurrentSparkStopLoss(triggers, position, logger)
+  const currentStopLoss = getCurrentMorphoBlueStopLoss(triggers, position, logger)
   if (trigger.triggerData.stopLoss) {
-    const { addableTrigger: addableStopLoss } = encodeSparkStopLoss(
+    const { addableTrigger: addableStopLoss } = encodeMorphoBlueStopLoss(
       position,
       trigger.triggerData.stopLoss.triggerData,
       currentStopLoss,
@@ -67,22 +71,22 @@ const getIfThereIsAStopLossToChange = async ({
   }
 }
 
-export const getSparkPartialTakeProfitServiceContainer: (
-  params: GetSparkPartialTakeProfitServiceContainerProps,
-) => ServiceContainer<SparkPartialTakeProfitEventBody> = ({
+export const getMorphoBluePartialTakeProfitServiceContainer: (
+  params: GetMorphoBluePartialTakeProfitServiceContainerProps,
+) => ServiceContainer<MorphoBluePartialTakeProfitEventBody> = ({
   rpc,
   addresses,
   getTriggers,
   logger,
   chainId,
 }) => {
-  const getPosition = memoize(async (params: Parameters<typeof getSparkPosition>[0]) => {
-    return await getSparkPosition(
+  const getPosition = memoize(async (params: Parameters<typeof getMorphoBluePosition>[0]) => {
+    return await getMorphoBluePosition(
       params,
       rpc,
       {
-        poolDataProvider: addresses.Spark.SparkDataPoolProvider,
-        oracle: addresses.Spark.SparkOracle,
+        poolDataProvider: addresses.MorphoBlue.MorphoBlueDataPoolProvider,
+        oracle: addresses.MorphoBlue.MorphoBlueOracle,
       },
       logger,
     )
@@ -96,7 +100,7 @@ export const getSparkPartialTakeProfitServiceContainer: (
       })
       const triggers = await getTriggers(trigger.dpm)
 
-      const currentStopLoss = getCurrentSparkStopLoss(triggers, position, logger)
+      const currentStopLoss = getCurrentMorphoBlueStopLoss(triggers, position, logger)
       const choosenStopLossExecutionLtv = trigger.triggerData.stopLoss?.triggerData.executionLTV
       const minimalStopLossInformation = choosenStopLossExecutionLtv
         ? { executionLTV: choosenStopLossExecutionLtv }
@@ -117,7 +121,7 @@ export const getSparkPartialTakeProfitServiceContainer: (
 
       const triggers = await getTriggers(trigger.dpm)
 
-      const currentStopLoss = getCurrentSparkStopLoss(triggers, position, logger)
+      const currentStopLoss = getCurrentMorphoBlueStopLoss(triggers, position, logger)
 
       const validationResults: ValidationResults[] = []
 
@@ -127,7 +131,7 @@ export const getSparkPartialTakeProfitServiceContainer: (
           ltv: trigger.triggerData.stopLoss.triggerData.executionLTV,
         })
         validationResults.push(
-          dmaSparkStopLossValidator({
+          dmaMorphoBlueStopLossValidator({
             position,
             executionPrice,
             triggerData: trigger.triggerData.stopLoss.triggerData,
@@ -138,7 +142,7 @@ export const getSparkPartialTakeProfitServiceContainer: (
       }
 
       validationResults.push(
-        sparkPartialTakeProfitValidator({
+        morphoBluePartialTakeProfitValidator({
           position,
           triggerData: trigger.triggerData,
           action: trigger.action,
@@ -158,7 +162,7 @@ export const getSparkPartialTakeProfitServiceContainer: (
         debt: trigger.position.debt,
       })
 
-      const currentPartialTakeProfit = triggers.triggers['spark'].sparkPartialTakeProfit
+      const currentPartialTakeProfit = triggers.triggers['morpho-blue']['0xtest'].partialTakeProfit
       const currentTrigger: CurrentTriggerLike | undefined = currentPartialTakeProfit
         ? {
             triggerData: currentPartialTakeProfit.triggerData as `0x${string}`,
@@ -167,7 +171,7 @@ export const getSparkPartialTakeProfitServiceContainer: (
           }
         : undefined
 
-      const takeProfitEncoded = encodeSparkPartialTakeProfit(
+      const takeProfitEncoded = encodeMorphoBluePartialTakeProfit(
         position,
         trigger.triggerData,
         currentTrigger,
@@ -211,5 +215,5 @@ export const getSparkPartialTakeProfitServiceContainer: (
         transaction,
       }
     },
-  } as ServiceContainer<SparkPartialTakeProfitEventBody>
+  } as ServiceContainer<MorphoBluePartialTakeProfitEventBody>
 }

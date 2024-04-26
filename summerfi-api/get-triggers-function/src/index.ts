@@ -61,7 +61,7 @@ import {
   getDmaAaveTrailingStopLoss,
   getDmaSparkTrailingStopLoss,
 } from './trigger-parsers'
-import { ChainId, getRpcGatewayEndpoint, IRpcConfig } from '@summerfi/serverless-shared'
+import { ChainId, getRpcGatewayEndpoint, IRpcConfig, ProtocolId } from '@summerfi/serverless-shared'
 import { getAddresses } from '@summerfi/triggers-shared'
 
 const logger = new Logger({ serviceName: 'getTriggersFunction' })
@@ -373,22 +373,46 @@ export const handler = async (
 
   const response: GetTriggersResponse = {
     triggers: {
-      aaveStopLossToCollateral,
-      aaveStopLossToCollateralDMA,
-      aaveStopLossToDebt,
-      aaveStopLossToDebtDMA,
-      sparkStopLossToCollateral,
-      sparkStopLossToCollateralDMA,
-      sparkStopLossToDebt,
-      sparkStopLossToDebtDMA,
-      aaveBasicBuy,
-      aaveBasicSell,
-      aaveTrailingStopLossDMA,
-      sparkBasicSell,
-      sparkBasicBuy,
-      sparkTrailingStopLossDMA,
-      aavePartialTakeProfit,
-      sparkPartialTakeProfit,
+      [ProtocolId.AAVE_V3]: {
+        aaveStopLossToCollateral,
+        aaveStopLossToCollateralDMA,
+        aaveStopLossToDebt,
+        aaveStopLossToDebtDMA,
+        aaveBasicBuy,
+        aaveBasicSell,
+        aaveTrailingStopLossDMA,
+        aavePartialTakeProfit,
+      },
+      [ProtocolId.SPARK]: {
+        sparkStopLossToCollateral,
+        sparkStopLossToCollateralDMA,
+        sparkStopLossToDebt,
+        sparkStopLossToDebtDMA,
+        sparkBasicSell,
+        sparkBasicBuy,
+        sparkTrailingStopLossDMA,
+        sparkPartialTakeProfit,
+      },
+      [ProtocolId.MORPHO_BLUE]: {
+        ['0xtest']: {
+          stopLoss: {
+            triggerTypeName: 'MorphoBlueStopLossV2',
+            triggerType: 111111n,
+            triggerId: '10000000319',
+            triggerData:
+              '0x000000000000000000000000d0281cc68cdbf77d49d9a8a7691a8d53e30869d9000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000596a35b7000000000000000000000000833589fcd6edb6e08f4c7c32d4f71b54bda029130000000000000000000000004200000000000000000000000000000000000006436c6f7365414156455633506f736974696f6e5f3400000000000000000000000000000000000000000000000000000000000000000000000000000000001d7a',
+            decodedParams: {
+              positionAddress: '0xd0281cc68cdbf77d49d9a8a7691a8d53e30869d9',
+              triggerType: '128',
+              maxCoverage: '1500132791',
+              executionLtv: '7546',
+              debtToken: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
+              collateralToken: '0x4200000000000000000000000000000000000006',
+              operationName: '0x436c6f7365414156455633506f736974696f6e5f340000000000000000000000',
+            },
+          },
+        },
+      },
     },
     flags: {
       isAaveStopLossEnabled: hasAnyDefined(

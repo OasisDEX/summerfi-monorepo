@@ -6,8 +6,13 @@ import {
   eventBodyAavePartialTakeProfitSchema,
   eventBodyDmaAaveStopLossSchema,
   eventBodyDmaAaveTrailingStopLossSchema,
+  eventBodyDmaMorphoBlueStopLossSchema,
+  eventBodyDmaMorphoBlueTrailingStopLossSchema,
   eventBodyDmaSparkStopLossSchema,
   eventBodyDmaSparkTrailingStopLossSchema,
+  eventBodyMorphoBlueBasicBuySchema,
+  eventBodyMorphoBlueBasicSellSchema,
+  eventBodyMorphoBluePartialTakeProfitSchema,
   eventBodySparkBasicBuySchema,
   eventBodySparkBasicSellSchema,
   eventBodySparkPartialTakeProfitSchema,
@@ -56,6 +61,11 @@ export type SupportedTriggersSchema =
   | typeof eventBodyDmaSparkTrailingStopLossSchema
   | typeof eventBodyAavePartialTakeProfitSchema
   | typeof eventBodySparkPartialTakeProfitSchema
+  | typeof eventBodyDmaMorphoBlueStopLossSchema
+  | typeof eventBodyDmaMorphoBlueTrailingStopLossSchema
+  | typeof eventBodyMorphoBlueBasicBuySchema
+  | typeof eventBodyMorphoBlueBasicSellSchema
+  | typeof eventBodyMorphoBluePartialTakeProfitSchema
 
 export const getBodySchema = (pathParams: PathParams): SupportedTriggersSchema | undefined => {
   const { trigger, chainId, protocol } = pathParams
@@ -91,6 +101,23 @@ export const getBodySchema = (pathParams: PathParams): SupportedTriggersSchema |
     }
     if (trigger === SupportedTriggers.DmaPartialTakeProfit) {
       return eventBodySparkPartialTakeProfitSchema
+    }
+  }
+  if (protocol === ProtocolId.MORPHO_BLUE && chainId === ChainId.MAINNET) {
+    if (trigger === SupportedTriggers.DmaStopLoss) {
+      return eventBodyDmaMorphoBlueStopLossSchema
+    }
+    if (trigger === SupportedTriggers.DmaTrailingStopLoss) {
+      return eventBodyDmaMorphoBlueTrailingStopLossSchema
+    }
+    if (trigger === SupportedTriggers.AutoBuy) {
+      return eventBodyMorphoBlueBasicBuySchema
+    }
+    if (trigger === SupportedTriggers.AutoSell) {
+      return eventBodyMorphoBlueBasicSellSchema
+    }
+    if (trigger === SupportedTriggers.DmaPartialTakeProfit) {
+      return eventBodyMorphoBluePartialTakeProfitSchema
     }
   }
 

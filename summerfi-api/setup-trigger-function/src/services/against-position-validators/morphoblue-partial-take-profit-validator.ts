@@ -1,7 +1,7 @@
 import {
   mapZodResultToValidationResults,
   ValidationResults,
-  aavePartialTakeProfitTriggerDataSchema,
+  morphoBluePartialTakeProfitTriggerDataSchema,
   CommonErrorCodes,
   PartialTakeProfitErrorCodes,
 } from '~types'
@@ -17,7 +17,7 @@ import { chainIdSchema, safeParseBigInt } from '@summerfi/serverless-shared'
 
 const paramsSchema = z.object({
   position: positionSchema,
-  triggerData: aavePartialTakeProfitTriggerDataSchema,
+  triggerData: morphoBluePartialTakeProfitTriggerDataSchema,
   triggers: z.custom<GetTriggersResponse>(),
   action: supportedActionsSchema,
   currentStopLoss: z.custom<CurrentStopLoss | undefined>(),
@@ -28,7 +28,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Add) {
-        return triggers.triggers['aave-v3'].aavePartialTakeProfit === undefined
+        return triggers.triggers['morpho-blue']['0xtest'].partialTakeProfit === undefined
       }
       return true
     },
@@ -42,7 +42,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Remove || action === SupportedActions.Update)
-        return triggers.triggers['aave-v3'].aavePartialTakeProfit !== undefined
+        return triggers.triggers['morpho-blue']['0xtest'].partialTakeProfit !== undefined
       return true
     },
     {
@@ -54,7 +54,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoSell = triggers.triggers['aave-v3'].aaveBasicSell
+      const autoSell = triggers.triggers['morpho-blue']['0xtest'].basicSell
       if (!autoSell) return true
 
       const autoSellTargetLtv = safeParseBigInt(autoSell.decodedParams.targetLtv) ?? 99n
@@ -70,7 +70,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoSell = triggers.triggers['aave-v3'].aaveBasicSell
+      const autoSell = triggers.triggers['morpho-blue']['0xtest'].basicSell
       if (!autoSell) return true
 
       const autoSellExecutionLtv = safeParseBigInt(autoSell.decodedParams.executionLtv) ?? 99n
@@ -103,7 +103,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoBuy = triggers.triggers['aave-v3'].aaveBasicBuy
+      const autoBuy = triggers.triggers['morpho-blue']['0xtest'].basicBuy
       if (!autoBuy) return true
 
       const autoBuyMaxPrice = safeParseBigInt(autoBuy.decodedParams.maxBuyPrice) ?? 0n
@@ -133,11 +133,11 @@ const upsertErrorsValidation = paramsSchema
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
     if (action === SupportedActions.Remove)
-      return triggers.triggers['aave-v3'].aavePartialTakeProfit !== undefined
+      return triggers.triggers['morpho-blue']['0xtest'].partialTakeProfit !== undefined
     return true
   },
   {
-    message: 'Trigger does not exist',
+    message: 'Auto buy trigger does not exist',
     params: {
       code: CommonErrorCodes.TriggerDoesNotExist,
     },
@@ -146,7 +146,7 @@ const deleteErrorsValidation = paramsSchema.refine(
 
 const warningsValidation = paramsSchema
 
-export const aavePartialTakeProfitValidator = (
+export const morphoBluePartialTakeProfitValidator = (
   params: z.infer<typeof paramsSchema>,
 ): ValidationResults => {
   const errorsValidation =

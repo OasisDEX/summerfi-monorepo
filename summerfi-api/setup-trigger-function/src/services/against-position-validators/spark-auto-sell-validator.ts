@@ -64,7 +64,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggers, triggerData }) => {
-      const autoBuyTrigger = triggers.triggers.sparkBasicBuy
+      const autoBuyTrigger = triggers.triggers['spark'].sparkBasicBuy
       if (!autoBuyTrigger) {
         return true
       }
@@ -96,7 +96,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Add) {
-        return triggers.triggers.sparkBasicSell === undefined
+        return triggers.triggers['spark'].sparkBasicSell === undefined
       }
       return true
     },
@@ -110,7 +110,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Remove || action === SupportedActions.Update)
-        return triggers.triggers.sparkBasicBuy !== undefined
+        return triggers.triggers['spark'].sparkBasicBuy !== undefined
       return true
     },
     {
@@ -122,7 +122,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const partialTakeProfit = triggers.triggers.sparkPartialTakeProfit
+      const partialTakeProfit = triggers.triggers['spark'].sparkPartialTakeProfit
       if (!partialTakeProfit) {
         return true
       }
@@ -141,7 +141,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const partialTakeProfit = triggers.triggers.sparkPartialTakeProfit
+      const partialTakeProfit = triggers.triggers['spark'].sparkPartialTakeProfit
       if (!partialTakeProfit) {
         return true
       }
@@ -161,7 +161,8 @@ const upsertErrorsValidation = paramsSchema
 
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
-    if (action === SupportedActions.Remove) return triggers.triggers.sparkBasicSell !== undefined
+    if (action === SupportedActions.Remove)
+      return triggers.triggers['spark'].sparkBasicSell !== undefined
     return true
   },
   {
@@ -187,7 +188,7 @@ const warningsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoBuyTrigger = triggers.triggers.sparkBasicBuy
+      const autoBuyTrigger = triggers.triggers['spark'].sparkBasicBuy
       if (!autoBuyTrigger) {
         return true
       }

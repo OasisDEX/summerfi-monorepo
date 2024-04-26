@@ -28,7 +28,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Add) {
-        return triggers.triggers.sparkPartialTakeProfit === undefined
+        return triggers.triggers['spark'].sparkPartialTakeProfit === undefined
       }
       return true
     },
@@ -42,7 +42,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Remove || action === SupportedActions.Update)
-        return triggers.triggers.sparkPartialTakeProfit !== undefined
+        return triggers.triggers['spark'].sparkPartialTakeProfit !== undefined
       return true
     },
     {
@@ -54,7 +54,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoSell = triggers.triggers.sparkBasicSell
+      const autoSell = triggers.triggers['spark'].sparkBasicSell
       if (!autoSell) return true
 
       const autoSellTargetLtv = safeParseBigInt(autoSell.decodedParams.targetLtv) ?? 99n
@@ -70,7 +70,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoSell = triggers.triggers.sparkBasicSell
+      const autoSell = triggers.triggers['spark'].sparkBasicSell
       if (!autoSell) return true
 
       const autoSellExecutionLtv = safeParseBigInt(autoSell.decodedParams.executionLtv) ?? 99n
@@ -103,7 +103,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoBuy = triggers.triggers.sparkBasicBuy
+      const autoBuy = triggers.triggers['spark'].sparkBasicBuy
       if (!autoBuy) return true
 
       const autoBuyMaxPrice = safeParseBigInt(autoBuy.decodedParams.maxBuyPrice) ?? 0n
@@ -133,7 +133,7 @@ const upsertErrorsValidation = paramsSchema
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
     if (action === SupportedActions.Remove)
-      return triggers.triggers.sparkPartialTakeProfit !== undefined
+      return triggers.triggers['spark'].sparkPartialTakeProfit !== undefined
     return true
   },
   {

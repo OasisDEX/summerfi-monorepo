@@ -159,7 +159,7 @@ export const getAavePartialTakeProfitServiceContainer: (
         debt: trigger.position.debt,
       })
 
-      const currentPartialTakeProfit = triggers.triggers.aavePartialTakeProfit
+      const currentPartialTakeProfit = triggers.triggers['aave-v3'].aavePartialTakeProfit
       const currentTrigger: CurrentTriggerLike | undefined = currentPartialTakeProfit
         ? {
             triggerData: currentPartialTakeProfit.triggerData as `0x${string}`,

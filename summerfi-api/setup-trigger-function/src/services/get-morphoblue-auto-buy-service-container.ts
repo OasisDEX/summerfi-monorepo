@@ -1,5 +1,5 @@
 import { ServiceContainer } from './service-container'
-import { SparkAutoBuyEventBody } from '~types'
+import { MorphoBlueAutoBuyEventBody } from '~types'
 import { simulatePosition } from './simulate-position'
 import { PublicClient } from 'viem'
 import { Addresses, CurrentTriggerLike } from '@summerfi/triggers-shared'
@@ -7,17 +7,16 @@ import { Address, ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
 import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
-import { encodeSparkAutoBuy } from './trigger-encoders'
+import { encodeMorphoBlueAutoBuy } from './trigger-encoders'
 import { encodeFunctionForDpm } from './encode-function-for-dpm'
-import { getCurrentSparkStopLoss } from '@summerfi/triggers-calculations'
-import { sparkAutoBuyValidator } from './against-position-validators'
+import { getCurrentMorphoBlueStopLoss } from '@summerfi/triggers-calculations'
 import {
-  getSparkPosition,
+  getMorphoBluePosition,
   calculateCollateralPriceInDebtBasedOnLtv,
 } from '@summerfi/triggers-calculations'
 import { SupportedActions } from '@summerfi/triggers-shared'
 
-export interface GetSparkAutoBuyServiceContainerProps {
+export interface GetMorphoBlueAutoBuyServiceContainerProps {
   rpc: PublicClient
   addresses: Addresses
   getTriggers: (address: Address) => Promise<GetTriggersResponse>
@@ -25,22 +24,22 @@ export interface GetSparkAutoBuyServiceContainerProps {
   chainId: ChainId
 }
 
-export const getSparkAutoBuyServiceContainer: (
-  params: GetSparkAutoBuyServiceContainerProps,
-) => ServiceContainer<SparkAutoBuyEventBody> = ({
+export const getMorphoBlueAutoBuyServiceContainer: (
+  params: GetMorphoBlueAutoBuyServiceContainerProps,
+) => ServiceContainer<MorphoBlueAutoBuyEventBody> = ({
   rpc,
   addresses,
   getTriggers,
   logger,
   chainId,
 }) => {
-  const getPosition = memoize(async (params: Parameters<typeof getSparkPosition>[0]) => {
-    return await getSparkPosition(
+  const getPosition = memoize(async (params: Parameters<typeof getMorphoBluePosition>[0]) => {
+    return await getMorphoBluePosition(
       params,
       rpc,
       {
-        poolDataProvider: addresses.Spark.SparkDataPoolProvider,
-        oracle: addresses.Spark.SparkOracle,
+        poolDataProvider: addresses.MorphoBlue.MorphoBlueDataPoolProvider,
+        oracle: addresses.MorphoBlue.MorphoBlueOracle,
       },
       logger,
     )
@@ -79,9 +78,9 @@ export const getSparkAutoBuyServiceContainer: (
 
       const triggers = await getTriggers(trigger.dpm)
 
-      const currentStopLoss = getCurrentSparkStopLoss(triggers, position, logger)
+      const currentStopLoss = getCurrentMorphoBlueStopLoss(triggers, position, logger)
 
-      return sparkAutoBuyValidator({
+      return morphoBlueAutoBuyValidator({
         position,
         executionPrice,
         triggerData: trigger.triggerData,
@@ -100,7 +99,7 @@ export const getSparkAutoBuyServiceContainer: (
         debt: trigger.position.debt,
       })
 
-      const currentAutoBuy = triggers.triggers['spark'].sparkBasicBuy
+      const currentAutoBuy = triggers.triggers['morpho-blue']['0xtest'].basicBuy
       const currentTrigger: CurrentTriggerLike | undefined = currentAutoBuy
         ? {
             triggerData: currentAutoBuy.triggerData as `0x${string}`,
@@ -109,7 +108,7 @@ export const getSparkAutoBuyServiceContainer: (
           }
         : undefined
 
-      const encodedData = encodeSparkAutoBuy(position, trigger.triggerData, currentTrigger)
+      const encodedData = encodeMorphoBlueAutoBuy(position, trigger.triggerData, currentTrigger)
 
       const triggerData =
         action === SupportedActions.Remove
@@ -138,5 +137,5 @@ export const getSparkAutoBuyServiceContainer: (
         transaction,
       }
     },
-  } as ServiceContainer<SparkAutoBuyEventBody>
+  } as ServiceContainer<MorphoBlueAutoBuyEventBody>
 }

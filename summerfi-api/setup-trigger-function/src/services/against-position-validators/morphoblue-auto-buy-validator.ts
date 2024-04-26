@@ -2,8 +2,8 @@ import {
   mapZodResultToValidationResults,
   AutoBuyTriggerCustomErrorCodes,
   AutoBuyTriggerCustomWarningCodes,
-  aaveBasicBuyTriggerDataSchema,
   ValidationResults,
+  morphoBlueBasicBuyTriggerDataSchema,
 } from '~types'
 import {
   positionSchema,
@@ -21,7 +21,7 @@ import { chainIdSchema, safeParseBigInt } from '@summerfi/serverless-shared'
 const paramsSchema = z.object({
   position: positionSchema,
   executionPrice: priceSchema,
-  triggerData: aaveBasicBuyTriggerDataSchema,
+  triggerData: morphoBlueBasicBuyTriggerDataSchema,
   triggers: z.custom<GetTriggersResponse>(),
   currentStopLoss: z.custom<CurrentStopLoss | undefined>(),
   action: supportedActionsSchema,
@@ -90,7 +90,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggers, triggerData }) => {
-      const autoSellTrigger = triggers.triggers['aave-v3'].aaveBasicSell
+      const autoSellTrigger = triggers.triggers['morpho-blue']['0xtest'].basicSell
       if (!autoSellTrigger) {
         return true
       }
@@ -110,7 +110,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Add) {
-        return triggers.triggers['aave-v3'].aaveBasicBuy === undefined
+        return triggers.triggers['morpho-blue']['0xtest'].basicBuy === undefined
       }
       return true
     },
@@ -124,7 +124,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Update)
-        return triggers.triggers['aave-v3'].aaveBasicBuy !== undefined
+        return triggers.triggers['morpho-blue']['0xtest'].basicBuy !== undefined
       return true
     },
     {
@@ -151,7 +151,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const partialTakeProfit = triggers.triggers['aave-v3'].aavePartialTakeProfit
+      const partialTakeProfit = triggers.triggers['morpho-blue']['0xtest'].partialTakeProfit
       if (!partialTakeProfit) {
         return true
       }
@@ -175,7 +175,7 @@ const upsertErrorsValidation = paramsSchema
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
     if (action === SupportedActions.Remove)
-      return triggers.triggers['aave-v3'].aaveBasicBuy !== undefined
+      return triggers.triggers['morpho-blue']['0xtest'].basicBuy !== undefined
     return true
   },
   {
@@ -200,7 +200,7 @@ const warningsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoSellTrigger = triggers.triggers['aave-v3'].aaveBasicSell
+      const autoSellTrigger = triggers.triggers['morpho-blue']['0xtest'].basicSell
       if (!autoSellTrigger) {
         return true
       }
@@ -257,7 +257,9 @@ const warningsValidation = paramsSchema
     },
   )
 
-export const aaveAutoBuyValidator = (params: z.infer<typeof paramsSchema>): ValidationResults => {
+export const morphoBlueAutoBuyValidator = (
+  params: z.infer<typeof paramsSchema>,
+): ValidationResults => {
   const errorsValidation =
     params.action === SupportedActions.Remove ? deleteErrorsValidation : upsertErrorsValidation
   const errorValidation = errorsValidation.safeParse(params)

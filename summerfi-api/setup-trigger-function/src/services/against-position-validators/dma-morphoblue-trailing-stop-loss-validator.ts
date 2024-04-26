@@ -1,34 +1,37 @@
 import {
-  dmaAaveStopLossTriggerDataSchema,
+  dmaMorphoBlueTrailingStopLossTriggerDataSchema,
   mapZodResultToValidationResults,
   StopLossErrorCodes,
   StopLossWarningCodes,
+  TrailingStopLossErrorCodes,
   ValidationResults,
 } from '~types'
 import {
   positionSchema,
   priceSchema,
-  TWENTY_MILLIONS_DOllARS,
-  supportedActionsSchema,
   SupportedActions,
+  supportedActionsSchema,
+  TWENTY_MILLIONS_DOllARS,
 } from '@summerfi/triggers-shared'
 import { z } from 'zod'
 import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
-import { safeParseBigInt } from '@summerfi/serverless-shared'
+import { DerivedPrices } from '@summerfi/prices-subgraph'
+import { ltvSchema, safeParseBigInt } from '@summerfi/serverless-shared'
 
 const paramsSchema = z.object({
   position: positionSchema,
   executionPrice: priceSchema,
-  triggerData: dmaAaveStopLossTriggerDataSchema,
+  dynamicExecutionLTV: ltvSchema,
+  triggerData: dmaMorphoBlueTrailingStopLossTriggerDataSchema,
   triggers: z.custom<GetTriggersResponse>(),
+  latestPrice: z.custom<DerivedPrices | undefined>(),
   action: supportedActionsSchema,
 })
-
 const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Add) {
-        return !triggers.flags.isAaveStopLossEnabled
+        return !triggers.flags.isMorphoBlueStopLossEnabled
       }
       return true
     },
@@ -42,7 +45,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Update) {
-        return triggers.flags.isAaveStopLossEnabled
+        return triggers.flags.isMorphoBlueStopLossEnabled
       }
       return true
     },
@@ -65,11 +68,11 @@ const upsertErrorsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggerData, triggers }) => {
-      const currentAutoBuy = triggers.triggers['aave-v3'].aaveBasicBuy
+    ({ dynamicExecutionLTV, triggers }) => {
+      const currentAutoBuy = triggers.triggers['morpho-blue']['0xtest'].basicBuy
       if (currentAutoBuy) {
         const currentAutoBuyTarget = safeParseBigInt(currentAutoBuy.decodedParams.targetLtv) ?? 0n
-        return triggerData.executionLTV > currentAutoBuyTarget
+        return dynamicExecutionLTV > currentAutoBuyTarget
       }
       return true
     },
@@ -82,12 +85,23 @@ const upsertErrorsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggerData, triggers }) => {
-      const currentPartialTakeProfit = triggers.triggers['aave-v3'].aavePartialTakeProfit
+    ({ latestPrice }) => {
+      return latestPrice !== undefined
+    },
+    {
+      message: 'Latest price is undefined',
+      params: {
+        code: TrailingStopLossErrorCodes.CantObtainLatestPrice,
+      },
+    },
+  )
+  .refine(
+    ({ dynamicExecutionLTV, triggers }) => {
+      const currentPartialTakeProfit = triggers.triggers['morpho-blue']['0xtest'].partialTakeProfit
       if (currentPartialTakeProfit) {
         const currentPartialTakeProfitTarget =
           safeParseBigInt(currentPartialTakeProfit.decodedParams.targetLtv) ?? 0n
-        return triggerData.executionLTV > currentPartialTakeProfitTarget
+        return dynamicExecutionLTV > currentPartialTakeProfitTarget
       }
       return true
     },
@@ -103,7 +117,7 @@ const upsertErrorsValidation = paramsSchema
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
     if (action === SupportedActions.Remove) {
-      return triggers.flags.isAaveStopLossEnabled
+      return triggers.flags.isMorphoBlueStopLossEnabled
     }
     return true
   },
@@ -117,8 +131,8 @@ const deleteErrorsValidation = paramsSchema.refine(
 
 const warningsValidation = paramsSchema
   .refine(
-    ({ triggerData, position }) => {
-      return position.ltv < triggerData.executionLTV
+    ({ position, dynamicExecutionLTV }) => {
+      return position.ltv < dynamicExecutionLTV
     },
     {
       message: 'Stop loss triggered immediately',
@@ -128,11 +142,11 @@ const warningsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggerData, triggers }) => {
-      const autoSell = triggers.triggers['aave-v3'].aaveBasicSell
+    ({ dynamicExecutionLTV, triggers }) => {
+      const autoSell = triggers.triggers['morpho-blue']['0xtest'].basicSell
       if (autoSell) {
         const executionLTV = safeParseBigInt(autoSell.decodedParams.executionLtv) ?? 0n
-        return triggerData.executionLTV > executionLTV
+        return dynamicExecutionLTV > executionLTV
       }
       return true
     },
@@ -144,7 +158,7 @@ const warningsValidation = paramsSchema
     },
   )
 
-export const dmaAaveStopLossValidator = (
+export const dmaMorphoBlueTrailingStopLossValidator = (
   params: z.infer<typeof paramsSchema>,
 ): ValidationResults => {
   const errorsValidation =
