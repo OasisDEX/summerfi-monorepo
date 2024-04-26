@@ -49,6 +49,7 @@ export function addSdkConfig({ stack, api }: StackContext & { api: Api }) {
     handler: 'summerfi-api/sdk-router-function/src/index.handler',
     runtime: 'nodejs20.x',
     logFormat: 'JSON',
+    timeout: 30,
     environment: {
       POWERTOOLS_LOG_LEVEL,
       ONE_INCH_API_KEY,
