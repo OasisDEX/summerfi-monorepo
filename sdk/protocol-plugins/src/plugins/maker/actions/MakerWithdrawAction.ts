@@ -7,7 +7,7 @@ import { isMakerPoolId } from '../types/MakerPoolId'
 export class MakerWithdrawAction extends BaseAction {
   public readonly config = {
     name: 'MakerWithdraw',
-    version: 1,
+    version: 2,
     parametersAbi: '(uint256 vaultId, address userAddress, address joinAddr, uint256 amount)',
     storageInputs: ['vaultId'],
     storageOutputs: ['amountWithdrawn'],
