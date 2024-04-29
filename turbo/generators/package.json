@@ -1,0 +1,15 @@
+{
+  "name": "@summerfi/turbo-generators",
+  "version": "0.0.1",
+  "description": "Wrapper for the Turbopack generators",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "eslint": "^8.56.0"
+  },
+  "private": true
+}

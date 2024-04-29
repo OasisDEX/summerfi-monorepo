@@ -38,7 +38,10 @@
     "REDIS_CACHE_URL",
     "REDIS_CACHE_USER",
     "REDIS_CACHE_PASSWORD",
-    "STAGE"
+    "STAGE",
+    "VPC_ID",
+    "RAYS_DB_CONNECTION_STRING",
+    "IS_LOCAL"
   ],
   "pipeline": {
     "dev": {

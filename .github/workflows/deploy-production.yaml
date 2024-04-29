@@ -30,7 +30,7 @@ jobs:
       REDIS_CACHE_URL: ${{ secrets.REDIS_CACHE_URL }}
       REDIS_CACHE_USER: ${{ secrets.REDIS_CACHE_USER }}
       REDIS_CACHE_PASSWORD: ${{ secrets.REDIS_CACHE_PASSWORD }}
-
+      VPC_ID: ${{ secrets.VPC_ID }}
     steps:
       - name: Git clone the repository
         uses: actions/checkout@v3

@@ -1,6 +1,7 @@
 import { Api, Function, StackContext } from 'sst/constructs'
+import { config } from 'dotenv'
 
-require('dotenv').config({ path: './sdk/.env' })
+config({ path: './sdk/.env' })
 
 const {
   POWERTOOLS_LOG_LEVEL = 'INFO',
