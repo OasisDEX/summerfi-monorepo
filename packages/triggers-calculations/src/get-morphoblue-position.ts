@@ -160,15 +160,3 @@ export async function getMorphoBluePosition(
     collateralValueUSD: 1n,
   }
 }
-
-// collateral: collateralResult,
-// debt: debtResult,
-// address: address,
-// oraclePrices: {
-//   collateralPrice,
-//   debtPrice,
-// },
-// collateralPriceInDebt,
-// netValueUSD: netValue,
-// debtValueUSD,
-// collateralValueUSD,
