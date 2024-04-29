@@ -10,6 +10,8 @@ export enum SimulationType {
   RefinanceDifferentPair = 'RefinanceDifPair',
   RefinanceDifferentDebt = 'RefinanceDifDebt',
   RefinanceDifferentCollateral = 'RefinanceDifCol',
+  RefinanceNoDebt = 'RefinanceNoDebt',
+  RefinanceNoDebtDifferentCollateral = 'RefNoDebtDifCol',
 }
 
 export enum SimulationSteps {
@@ -39,3 +41,5 @@ export type RefinanceSimulationTypes =
   | SimulationType.RefinanceDifferentPair
   | SimulationType.RefinanceDifferentCollateral
   | SimulationType.RefinanceDifferentDebt
+  | SimulationType.RefinanceNoDebt
+  | SimulationType.RefinanceNoDebtDifferentCollateral
