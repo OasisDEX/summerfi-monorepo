@@ -1,4 +1,3 @@
-import { applyPercentage } from '@summerfi/sdk-common/utils'
 import type {
   ChainInfo,
   Percentage,
@@ -20,7 +19,18 @@ export async function getSwapStepData(params: {
     to: { token: params.toToken },
   })
 
-  const summerFeeAmount = applyPercentage(params.fromAmount, summerFee)
+  /*
+  From amount already includes our fee, so we need to calculate the amount before our fee
+    FROM = X + X * FEE
+    FROM = X (1 + FEE)
+    X = FROM / (1 + FEE)
+
+    OURFEE = X * FEE
+    OURFEE = FROM * FEE / (1 + FEE)
+  */
+
+  const feeAsProportion = summerFee.toProportion()
+  const summerFeeAmount = params.fromAmount.multiply(feeAsProportion).divide(feeAsProportion + 1)
   const amountAfterSummerFee = params.fromAmount.subtract(summerFeeAmount)
 
   const [quote, spotPrice] = await Promise.all([
