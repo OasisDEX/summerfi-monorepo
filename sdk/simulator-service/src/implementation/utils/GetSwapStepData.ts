@@ -1,4 +1,3 @@
-import { applyPercentage } from '@summerfi/sdk-common/utils'
 import type {
   ChainInfo,
   Percentage,
