@@ -15,7 +15,6 @@ import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
 import { makeSDK, type Chain, type User, Protocol } from '@summerfi/sdk-client'
 import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
 import { IPositionsManager, IRefinanceParameters, Order } from '@summerfi/sdk-common/orders'
-import { ISimulation } from '@summerfi/sdk-common/simulation'
 import { TransactionUtils } from './utils/TransactionUtils'
 
 import { Hex } from 'viem'
@@ -23,15 +22,14 @@ import assert from 'assert'
 import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 import { ILKType, MakerPoolId } from '@summerfi/protocol-plugins/plugins/maker'
 import { SparkPoolId, isSparkPoolId } from '@summerfi/protocol-plugins/plugins/spark'
-import { RefinanceSimulationTypes } from '@summerfi/sdk-common'
 
 jest.setTimeout(300000)
 
 const SDKAPiUrl = 'https://nkllstfoy8.execute-api.us-east-1.amazonaws.com/api/sdk'
 const TenderlyForkUrl =
-  'https://virtual.mainnet.rpc.tenderly.co/f3d20ba3-707e-4c49-88ef-21f8c32cb18d'
+  'https://virtual.mainnet.rpc.tenderly.co/ea4060f8-c16d-49ba-84dd-2c12afb98cdd'
 
-describe.skip('Refinance Maker Spark | SDK', () => {
+describe.only('Refinance Maker Spark | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: SDKAPiUrl })
@@ -58,7 +56,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     // Positions Manager
     const positionsManager: IPositionsManager = {
       address: Address.createFromEthereum({
-        value: '0x1858b76756d19f8cb7c7756a0f96e0d7673285ed',
+        value: '0xd1edd5ff690a83e9a1ebcd0ac1c3f7e231b72f76',
       }),
     }
 
@@ -90,7 +88,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
         chainInfo: chain.chainInfo,
       },
       ilkType: ILKType.ETH_C,
-      vaultId: '31697',
+      vaultId: '31717',
     }
 
     const makerPool = await maker.getPool({
@@ -105,14 +103,14 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     // Source position
     const makerPosition: Position = Position.createFrom({
       type: PositionType.Multiply,
-      positionId: PositionId.createFrom({ id: '31697' }),
+      positionId: PositionId.createFrom({ id: '31717' }),
       debtAmount: TokenAmount.createFromBaseUnit({
         token: DAI,
-        amount: '5000000000000000000000',
+        amount: '0',
       }),
       collateralAmount: TokenAmount.createFromBaseUnit({
         token: WETH,
-        amount: '100000000000000000000',
+        amount: '10000000000000000000',
       }),
       pool: makerPool,
     })
@@ -146,13 +144,12 @@ describe.skip('Refinance Maker Spark | SDK', () => {
       assert(false, 'Spark pool type is not lending')
     }
 
-    const emptyTargetPosition = newEmptyPositionFromPool(sparkPool, WETH, SDAI)
-    const refinanceSimulation: ISimulation<RefinanceSimulationTypes> =
-      await sdk.simulator.refinance.simulateRefinancePosition({
-        sourcePosition: makerPosition,
-        targetPosition: emptyTargetPosition,
-        slippage: Percentage.createFrom({ value: 0.2 }),
-      } as IRefinanceParameters)
+    const emptyTargetPosition = newEmptyPositionFromPool(sparkPool, DAI, WBTC)
+    const refinanceSimulation = await sdk.simulator.refinance.simulateRefinancePosition({
+      sourcePosition: makerPosition,
+      targetPosition: emptyTargetPosition,
+      slippage: Percentage.createFrom({ value: 0.2 }),
+    } as IRefinanceParameters)
 
     expect(refinanceSimulation).toBeDefined()
 
