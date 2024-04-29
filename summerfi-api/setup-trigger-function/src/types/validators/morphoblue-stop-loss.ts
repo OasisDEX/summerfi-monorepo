@@ -1,6 +1,10 @@
 import { z } from 'zod'
 import { addressSchema, ltvSchema, urlOptionalSchema } from '@summerfi/serverless-shared'
-import { positionAddressesSchema, supportedActionsSchema } from '@summerfi/triggers-shared'
+import {
+  poolIdSchema,
+  positionAddressesSchema,
+  supportedActionsSchema,
+} from '@summerfi/triggers-shared'
 
 export const dmaMorphoBlueStopLossToCollateralTriggerDataSchema = z.object({
   type: z
@@ -28,6 +32,7 @@ export const dmaMorphoBlueStopLossTriggerDataSchema =
 export const eventBodyDmaMorphoBlueStopLossSchema = z
   .object({
     dpm: addressSchema,
+    poolId: poolIdSchema,
     triggerData: dmaMorphoBlueStopLossTriggerDataSchema,
     position: positionAddressesSchema,
     rpc: urlOptionalSchema,

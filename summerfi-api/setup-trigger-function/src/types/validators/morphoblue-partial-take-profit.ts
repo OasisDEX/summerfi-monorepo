@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import {
+  poolIdSchema,
   positionAddressesSchema,
   priceSchema,
   supportedActionsSchema,
@@ -31,6 +32,7 @@ export const morphoBluePartialTakeProfitTriggerDataSchema = z.object({
 
 export const eventBodyMorphoBluePartialTakeProfitSchema = z.object({
   dpm: addressSchema,
+  poolId: poolIdSchema,
   triggerData: morphoBluePartialTakeProfitTriggerDataSchema,
   position: positionAddressesSchema,
   rpc: urlOptionalSchema,

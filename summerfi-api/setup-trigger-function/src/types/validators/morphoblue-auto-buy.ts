@@ -3,6 +3,7 @@ import { AutoBuyTriggerCustomErrorCodes } from '~types'
 import {
   maxGasFeeSchema,
   maxUnit256,
+  poolIdSchema,
   positionAddressesSchema,
   priceSchema,
   supportedActionsSchema,
@@ -37,6 +38,7 @@ export const morphoBlueBasicBuyTriggerDataSchema = z
 
 export const eventBodyMorphoBlueBasicBuySchema = z.object({
   dpm: addressSchema,
+  poolId: poolIdSchema,
   triggerData: morphoBlueBasicBuyTriggerDataSchema,
   position: positionAddressesSchema,
   rpc: urlOptionalSchema,

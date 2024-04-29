@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { AutoSellTriggerCustomErrorCodes } from '~types'
 import {
   maxGasFeeSchema,
+  poolIdSchema,
   positionAddressesSchema,
   priceSchema,
   supportedActionsSchema,
@@ -36,6 +37,7 @@ export const morphoBlueBasicSellTriggerDataSchema = z
 
 export const eventBodyMorphoBlueBasicSellSchema = z.object({
   dpm: addressSchema,
+  poolId: poolIdSchema,
   triggerData: morphoBlueBasicSellTriggerDataSchema,
   position: positionAddressesSchema,
   rpc: urlOptionalSchema,
