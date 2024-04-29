@@ -1,25 +1,41 @@
-import { PositionLike, PRICE_DECIMALS, TokenBalance } from '@summerfi/triggers-shared'
-import { Address } from '@summerfi/serverless-shared'
+import { PositionLike, TokenBalance } from '@summerfi/triggers-shared'
+import { Address, PoolId } from '@summerfi/serverless-shared'
 import { PublicClient } from 'viem'
-import { aavePoolDataProviderAbi, aaveOracleAbi, erc20Abi } from '@summerfi/abis'
-import { calculateLtv, isStablecoin } from './helpers'
+import { chainlinkPairOracleAbi, erc20Abi, morphoBlueAbi } from '@summerfi/abis'
 import { Logger } from '@aws-lambda-powertools/logger'
+import { calculateLtv } from './helpers'
 
 export interface GetMorphoBluePositionParams {
   address: Address
   collateral: Address
   debt: Address
+  poolId: PoolId
 }
+
+export const ONE = 1n
+export const TEN = 10n
+
+const VIRTUAL_SHARES = TEN ** 6n
+const VIRTUAL_ASSETS = 1n
+
+function mulDivDown(x: bigint, y: bigint, d: bigint): bigint {
+  return (x * y) / d
+}
+
+function toAssetsDown(shares: bigint, totalAssets: bigint, totalShares: bigint): bigint {
+  return mulDivDown(shares, totalAssets + VIRTUAL_ASSETS, totalShares + VIRTUAL_SHARES)
+}
+
 export async function getMorphoBluePosition(
-  { address, collateral, debt }: GetMorphoBluePositionParams,
+  { address, collateral, debt, poolId }: GetMorphoBluePositionParams,
   publicClient: PublicClient,
-  addresses: { poolDataProvider: Address; oracle: Address },
+  addresses: { morphoBlue: Address },
   logger?: Logger,
 ): Promise<PositionLike> {
   const [
-    collateralData,
-    debtData,
-    oraclePrices,
+    [, , oracleAddress],
+    [, , totalBorrowAssets, totalBorrowShares],
+    [, borrowShares, collateralAmount],
     collateralDecimals,
     collateralSymbol,
     debtDecimals,
@@ -27,22 +43,22 @@ export async function getMorphoBluePosition(
   ] = await publicClient.multicall({
     contracts: [
       {
-        abi: aavePoolDataProviderAbi,
-        address: addresses.poolDataProvider,
-        functionName: 'getUserReserveData',
-        args: [collateral, address],
+        abi: morphoBlueAbi,
+        address: addresses.morphoBlue,
+        functionName: 'idToMarketParams',
+        args: [poolId],
       },
       {
-        abi: aavePoolDataProviderAbi,
-        address: addresses.poolDataProvider,
-        functionName: 'getUserReserveData',
-        args: [debt, address],
+        abi: morphoBlueAbi,
+        address: addresses.morphoBlue,
+        functionName: 'market',
+        args: [poolId],
       },
       {
-        abi: aaveOracleAbi,
-        address: addresses.oracle,
-        functionName: 'getAssetsPrices',
-        args: [[collateral, debt]],
+        abi: morphoBlueAbi,
+        address: addresses.morphoBlue,
+        functionName: 'position',
+        args: [poolId, address],
       },
       {
         abi: erc20Abi,
@@ -65,25 +81,34 @@ export async function getMorphoBluePosition(
         functionName: 'symbol',
       },
     ],
-    allowFailure: true,
+    allowFailure: false,
+  })
+  const [oraclePriceTemp] = await publicClient.multicall({
+    contracts: [
+      {
+        abi: chainlinkPairOracleAbi,
+        address: oracleAddress,
+        functionName: 'price',
+      },
+    ],
+    allowFailure: false,
   })
 
-  const collateralAmount = collateralData.status === 'success' ? collateralData.result[0] : 0n
-  const debtAmount = debtData.status === 'success' ? debtData.result[1] + debtData.result[2] : 0n
-
-  const [collateralPrice, debtPrice] =
-    oraclePrices.status === 'success' ? oraclePrices.result : [0n, 0n]
-
   const collateralPriceInDebt =
-    collateralPrice == 0n || debtPrice === 0n
-      ? 0n
-      : (collateralPrice * 10n ** PRICE_DECIMALS) / debtPrice
+    (oraclePriceTemp * 10n ** 18n) /
+    10n ** (36n + BigInt(debtDecimals) - BigInt(collateralDecimals))
+
+  const debtAmount = toAssetsDown(borrowShares, totalBorrowAssets, totalBorrowShares)
+
+  if (!collateralPriceInDebt) {
+    throw new Error('Invalid oracle price')
+  }
 
   const collateralResult: TokenBalance = {
     balance: collateralAmount,
     token: {
-      decimals: collateralDecimals.status === 'success' ? collateralDecimals.result : 18,
-      symbol: collateralSymbol.status === 'success' ? collateralSymbol.result : '',
+      decimals: collateralDecimals || 18,
+      symbol: collateralSymbol || '',
       address: collateral,
     },
   }
@@ -91,8 +116,8 @@ export async function getMorphoBluePosition(
   const debtResult: TokenBalance = {
     balance: debtAmount,
     token: {
-      decimals: debtDecimals.status === 'success' ? debtDecimals.result : 18,
-      symbol: debtSymbol.status === 'success' ? debtSymbol.result : '',
+      decimals: debtDecimals || 18,
+      symbol: debtSymbol || '',
       address: debt,
     },
   }
@@ -103,34 +128,47 @@ export async function getMorphoBluePosition(
     collateralPriceInDebt,
   })
 
-  const debtValueUSD = (debtAmount * debtPrice) / 10n ** BigInt(debtResult.token.decimals)
-
-  const collateralValueUSD =
-    (collateralAmount * collateralPrice) / 10n ** BigInt(collateralResult.token.decimals)
-
-  const netValue = collateralValueUSD - debtValueUSD
+  console.log('DEBUG', {
+    debtAmount: debtResult.balance.toString(),
+    collateralAmount: collateralResult.balance.toString(),
+    debtDecimals: debtResult.token.decimals.toString(),
+    collateralDecimals: collateralResult.token.decimals.toString(),
+    oracleMarketPrice: collateralPriceInDebt.toString(),
+    ltv: ltv.toString(),
+  })
 
   logger?.debug('Position data', {
     debt: debtResult,
     collateral: collateralResult,
-    collateralPriceInDebt,
-    ltv,
-    netValue,
+    oracleMarketPrice: collateralPriceInDebt.toString(),
+    ltv: ltv.toString(),
   })
 
   return {
-    hasStablecoinDebt: isStablecoin(debtPrice),
+    hasStablecoinDebt: false,
     ltv,
     collateral: collateralResult,
     debt: debtResult,
     address: address,
     oraclePrices: {
-      collateralPrice,
-      debtPrice,
+      collateralPrice: 1n,
+      debtPrice: 1n,
     },
-    collateralPriceInDebt,
-    netValueUSD: netValue,
-    debtValueUSD,
-    collateralValueUSD,
+    collateralPriceInDebt: 1n,
+    netValueUSD: 1n,
+    debtValueUSD: 1n,
+    collateralValueUSD: 1n,
   }
 }
+
+// collateral: collateralResult,
+// debt: debtResult,
+// address: address,
+// oraclePrices: {
+//   collateralPrice,
+//   debtPrice,
+// },
+// collateralPriceInDebt,
+// netValueUSD: netValue,
+// debtValueUSD,
+// collateralValueUSD,

@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import {
-  poolIdSchema,
   positionAddressesSchema,
   priceSchema,
   supportedActionsSchema,
@@ -9,6 +8,7 @@ import {
   addressSchema,
   ltvSchema,
   percentageSchema,
+  poolIdSchema,
   urlOptionalSchema,
 } from '@summerfi/serverless-shared'
 import { dmaMorphoBlueStopLossTriggerDataSchema } from './morphoblue-stop-loss'

@@ -28,11 +28,11 @@ export const DmaSparkPartialTakeProfitID = 134n as const
 export const DmaAaveTrailingStopLossID = 10006n as const
 export const DmaSparkTrailingStopLossID = 10007n as const
 
-export const MorphoBlueBasicBuyV2ID = 111111n as const
-export const MorphoBlueBasicSellV2ID = 111111n as const
-export const MorphoBluePartialTakeProfitID = 111111n as const
-export const MorphoBlueTrailingStopLossID = 111111n as const
-export const MorphoBlueStopLossV2ID = 111111n as const
+export const MorphoBlueBasicBuyV2ID = 135n as const
+export const MorphoBlueBasicSellV2ID = 136n as const
+export const MorphoBluePartialTakeProfitID = 137n as const
+export const MorphoBlueTrailingStopLossID = 10008n as const
+export const MorphoBlueStopLossV2ID = 138n as const
 
 export type Trigger = {
   triggerId: string

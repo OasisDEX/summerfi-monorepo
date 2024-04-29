@@ -38,8 +38,8 @@ export const encodeMorphoBlueTrailingStopLoss = (
 
   const operationName =
     triggerData.token === position.collateral.token.address
-      ? OPERATION_NAMES.morphoblue.CLOSE_AND_REMAIN
-      : OPERATION_NAMES.morphoblue.CLOSE_AND_EXIT
+      ? OPERATION_NAMES.morphoblue.CLOSE_POSITION
+      : OPERATION_NAMES.morphoblue.CLOSE_POSITION
 
   const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
 

@@ -15,6 +15,7 @@ import {
   calculateCollateralPriceInDebtBasedOnLtv,
 } from '@summerfi/triggers-calculations'
 import { SupportedActions } from '@summerfi/triggers-shared'
+import { morphoBlueAutoBuyValidator } from './against-position-validators'
 
 export interface GetMorphoBlueAutoBuyServiceContainerProps {
   rpc: PublicClient
@@ -38,8 +39,7 @@ export const getMorphoBlueAutoBuyServiceContainer: (
       params,
       rpc,
       {
-        poolDataProvider: addresses.MorphoBlue.MorphoBlueDataPoolProvider,
-        oracle: addresses.MorphoBlue.MorphoBlueOracle,
+        morphoBlue: addresses.MorphoBlue.MorphoBlue,
       },
       logger,
     )
@@ -49,6 +49,7 @@ export const getMorphoBlueAutoBuyServiceContainer: (
     simulatePosition: async ({ trigger }) => {
       const position = await getPosition({
         address: trigger.dpm,
+        poolId: trigger.poolId,
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })
@@ -67,6 +68,7 @@ export const getMorphoBlueAutoBuyServiceContainer: (
     validate: async ({ trigger }) => {
       const position = await getPosition({
         address: trigger.dpm,
+        poolId: trigger.poolId,
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })
@@ -95,11 +97,12 @@ export const getMorphoBlueAutoBuyServiceContainer: (
       const triggers = await getTriggers(trigger.dpm)
       const position = await getPosition({
         address: trigger.dpm,
+        poolId: trigger.poolId,
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })
 
-      const currentAutoBuy = triggers.triggers['morpho-blue']['0xtest'].basicBuy
+      const currentAutoBuy = triggers.triggers['morpho-blue'][trigger.poolId].basicBuy
       const currentTrigger: CurrentTriggerLike | undefined = currentAutoBuy
         ? {
             triggerData: currentAutoBuy.triggerData as `0x${string}`,

@@ -85,8 +85,7 @@ export const getMorphoBluePartialTakeProfitServiceContainer: (
       params,
       rpc,
       {
-        poolDataProvider: addresses.MorphoBlue.MorphoBlueDataPoolProvider,
-        oracle: addresses.MorphoBlue.MorphoBlueOracle,
+        morphoBlue: addresses.MorphoBlue.MorphoBlue,
       },
       logger,
     )
@@ -95,6 +94,7 @@ export const getMorphoBluePartialTakeProfitServiceContainer: (
     simulatePosition: async ({ trigger }) => {
       const position = await getPosition({
         address: trigger.dpm,
+        poolId: trigger.poolId,
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })
@@ -115,6 +115,7 @@ export const getMorphoBluePartialTakeProfitServiceContainer: (
     validate: async ({ trigger }) => {
       const position = await getPosition({
         address: trigger.dpm,
+        poolId: trigger.poolId,
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })
@@ -158,11 +159,13 @@ export const getMorphoBluePartialTakeProfitServiceContainer: (
       const triggers = await getTriggers(trigger.dpm)
       const position = await getPosition({
         address: trigger.dpm,
+        poolId: trigger.poolId,
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })
 
-      const currentPartialTakeProfit = triggers.triggers['morpho-blue']['0xtest'].partialTakeProfit
+      const currentPartialTakeProfit =
+        triggers.triggers['morpho-blue'][trigger.poolId].partialTakeProfit
       const currentTrigger: CurrentTriggerLike | undefined = currentPartialTakeProfit
         ? {
             triggerData: currentPartialTakeProfit.triggerData as `0x${string}`,

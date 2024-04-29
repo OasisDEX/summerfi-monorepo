@@ -2,12 +2,16 @@ import { z } from 'zod'
 import { AutoSellTriggerCustomErrorCodes } from '~types'
 import {
   maxGasFeeSchema,
-  poolIdSchema,
   positionAddressesSchema,
   priceSchema,
   supportedActionsSchema,
 } from '@summerfi/triggers-shared'
-import { addressSchema, ltvSchema, urlOptionalSchema } from '@summerfi/serverless-shared'
+import {
+  addressSchema,
+  ltvSchema,
+  poolIdSchema,
+  urlOptionalSchema,
+} from '@summerfi/serverless-shared'
 
 export const morphoBlueBasicSellTriggerDataSchema = z
   .object({

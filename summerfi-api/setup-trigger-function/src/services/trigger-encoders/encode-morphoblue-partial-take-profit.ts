@@ -20,8 +20,8 @@ export const encodeMorphoBluePartialTakeProfit = (
 
   const operationName =
     triggerData.withdrawToken === position.debt.token.address
-      ? OPERATION_NAMES.morphoblue.WITHDRAW_TO_DEBT
-      : OPERATION_NAMES.morphoblue.WITHDRAW
+      ? OPERATION_NAMES.morphoblue.CLOSE_POSITION
+      : OPERATION_NAMES.morphoblue.CLOSE_POSITION
 
   const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
 

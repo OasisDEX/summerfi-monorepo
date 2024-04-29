@@ -32,8 +32,7 @@ export const getMorphoBlueStopLossServiceContainer: (
       params,
       rpc,
       {
-        poolDataProvider: addresses.MorphoBlue.MorphoBlueDataPoolProvider,
-        oracle: addresses.MorphoBlue.MorphoBlueOracle,
+        morphoBlue: addresses.MorphoBlue.MorphoBlue,
       },
       logger,
     )
@@ -45,6 +44,7 @@ export const getMorphoBlueStopLossServiceContainer: (
     validate: async ({ trigger }) => {
       const position = await getPosition({
         address: trigger.dpm,
+        poolId: trigger.poolId,
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })
@@ -68,6 +68,7 @@ export const getMorphoBlueStopLossServiceContainer: (
       const triggers = await getTriggers(trigger.dpm)
       const position = await getPosition({
         address: trigger.dpm,
+        poolId: trigger.poolId,
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })

@@ -40,8 +40,6 @@ export const positionAddressesSchema = z.object({
   debt: addressSchema,
 })
 
-export const poolIdSchema = z.string().startsWith('0x')
-
 export const positionTokensPricesSchema = z.object({
   collateralPrice: priceSchema,
   debtPrice: priceSchema,

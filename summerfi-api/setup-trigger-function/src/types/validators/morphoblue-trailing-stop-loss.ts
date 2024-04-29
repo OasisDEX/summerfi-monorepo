@@ -1,7 +1,6 @@
 import { z } from 'zod'
-import { addressSchema, urlOptionalSchema } from '@summerfi/serverless-shared'
+import { addressSchema, poolIdSchema, urlOptionalSchema } from '@summerfi/serverless-shared'
 import {
-  poolIdSchema,
   positionAddressesSchema,
   priceSchema,
   supportedActionsSchema,

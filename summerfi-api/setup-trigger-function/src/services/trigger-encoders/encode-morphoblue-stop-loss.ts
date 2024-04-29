@@ -31,9 +31,9 @@ export const encodeMorphoBlueStopLoss = (
 
   const operationName =
     triggerData.type == BigInt(111111)
-      ? OPERATION_NAMES.morphoblue.CLOSE_AND_REMAIN
+      ? OPERATION_NAMES.morphoblue.CLOSE_POSITION
       : triggerData.type == BigInt(111111)
-        ? OPERATION_NAMES.morphoblue.CLOSE_AND_EXIT
+        ? OPERATION_NAMES.morphoblue.CLOSE_POSITION
         : undefined
 
   if (operationName === undefined) {

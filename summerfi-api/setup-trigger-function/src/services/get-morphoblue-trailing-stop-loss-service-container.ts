@@ -41,8 +41,7 @@ export const getMorphoBlueTrailingStopLossServiceContainer: (
       params,
       rpc,
       {
-        poolDataProvider: addresses.MorphoBlue.MorphoBlueDataPoolProvider,
-        oracle: addresses.MorphoBlue.MorphoBlueOracle,
+        morphoBlue: addresses.MorphoBlue.MorphoBlue,
       },
       logger,
     )
@@ -54,6 +53,7 @@ export const getMorphoBlueTrailingStopLossServiceContainer: (
 
       const position = await getPosition({
         address: trigger.dpm,
+        poolId: trigger.poolId,
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })
@@ -86,6 +86,7 @@ export const getMorphoBlueTrailingStopLossServiceContainer: (
       const latestPrice = await getLatestPrice(trigger.position.collateral, trigger.position.debt)
       const position = await getPosition({
         address: trigger.dpm,
+        poolId: trigger.poolId,
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })
@@ -101,6 +102,7 @@ export const getMorphoBlueTrailingStopLossServiceContainer: (
 
       const position = await getPosition({
         address: trigger.dpm,
+        poolId: trigger.poolId,
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })
@@ -124,6 +126,7 @@ export const getMorphoBlueTrailingStopLossServiceContainer: (
       const triggers = await getTriggers(trigger.dpm)
       const position = await getPosition({
         address: trigger.dpm,
+        poolId: trigger.poolId,
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })

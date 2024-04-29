@@ -1,10 +1,12 @@
 import { z } from 'zod'
-import { addressSchema, ltvSchema, urlOptionalSchema } from '@summerfi/serverless-shared'
 import {
+  addressSchema,
+  ltvSchema,
   poolIdSchema,
-  positionAddressesSchema,
-  supportedActionsSchema,
-} from '@summerfi/triggers-shared'
+  urlOptionalSchema,
+} from '@summerfi/serverless-shared'
+import { positionAddressesSchema, supportedActionsSchema } from '@summerfi/triggers-shared'
+import { TriggerType } from '@oasisdex/automation'
 
 export const dmaMorphoBlueStopLossToCollateralTriggerDataSchema = z.object({
   type: z
@@ -49,13 +51,11 @@ export const eventBodyDmaMorphoBlueStopLossSchema = z
     },
   )
   .transform((data) => {
-    const closeToken = data.triggerData.token
-    const triggerType = closeToken === data.position.debt ? 111111 : 1111112
     return {
       ...data,
       triggerData: {
         ...data.triggerData,
-        type: BigInt(triggerType),
+        type: BigInt(TriggerType.DmaMorphoBlueStopLossV2),
       },
     }
   })

@@ -1,4 +1,5 @@
 export type Address = `0x${string}`
+export type PoolId = `0x${string}`
 
 export enum Network {
   MAINNET = 'mainnet',

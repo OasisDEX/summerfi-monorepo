@@ -120,7 +120,7 @@ function isSparkPartialTakeProfit(
 function isMorphoBlueStopLoss(
   trigger: SetupTriggerEventBody,
 ): trigger is MorphoBlueStopLossEventBody {
-  return trigger.triggerData?.type === BigInt(TriggerType.DmaMorphoBlueStopLoss)
+  return trigger.triggerData?.type === BigInt(TriggerType.DmaMorphoBlueStopLossV2)
 }
 
 function isMorphoBlueAutoBuy(

@@ -30,7 +30,7 @@ import {
   dmaMorphoBlueTrailingStopLossTriggerDataSchema,
   morphoBlueBasicBuyTriggerDataSchema,
   morphoBlueBasicSellTriggerDataSchema,
-  morphobluePartialTakeProfitTriggerDataSchema,
+  morphoBluePartialTakeProfitTriggerDataSchema,
 } from './validators'
 
 export type AaveAutoBuyEventBody = z.infer<typeof eventBodyAaveBasicBuySchema>
@@ -99,7 +99,7 @@ export type DmaMorphoBlueTrailingStopLossTriggerData = z.infer<
 export type MorphoBlueAutoBuyTriggerData = z.infer<typeof morphoBlueBasicBuyTriggerDataSchema>
 export type MorphoBlueAutoSellTriggerData = z.infer<typeof morphoBlueBasicSellTriggerDataSchema>
 export type MorphoBluePartialTakeProfitTriggerData = z.infer<
-  typeof morphobluePartialTakeProfitTriggerDataSchema
+  typeof morphoBluePartialTakeProfitTriggerDataSchema
 >
 
 export type TriggerData =
