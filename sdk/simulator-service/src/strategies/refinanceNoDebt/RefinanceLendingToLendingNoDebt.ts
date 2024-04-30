@@ -83,8 +83,8 @@ export async function refinanceLendingToLendingNoDebt(
       name: 'DepositBorrowToTarget',
       type: SimulationSteps.DepositBorrow,
       inputs: {
-        depositAmount: isCollateralSwapSkipped 
-          ? position.collateralAmount 
+        depositAmount: isCollateralSwapSkipped
+          ? position.collateralAmount
           : ctx.getReference(['CollateralSwap', 'received']),
         borrowAmount: TokenAmount.createFrom({
           amount: '0',
