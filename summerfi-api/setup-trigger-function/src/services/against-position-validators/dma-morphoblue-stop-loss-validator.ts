@@ -1,5 +1,5 @@
 import {
-  dmaMorphoBlueStopLossTriggerDataSchema,
+  dmaMorphoBlueStopLoss,
   mapZodResultToValidationResults,
   StopLossErrorCodes,
   StopLossWarningCodes,
@@ -19,7 +19,7 @@ import { ProtocolId, safeParseBigInt } from '@summerfi/serverless-shared'
 const paramsSchema = z.object({
   position: positionSchema,
   executionPrice: priceSchema,
-  triggerData: dmaMorphoBlueStopLossTriggerDataSchema,
+  triggerData: dmaMorphoBlueStopLoss,
   triggers: z.custom<GetTriggersResponse>(),
   action: supportedActionsSchema,
 })
@@ -66,7 +66,8 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const currentAutoBuy = triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].morphoBlueBasicBuy
+      const currentAutoBuy =
+        triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId].morphoBlueBasicBuy
       if (currentAutoBuy) {
         const currentAutoBuyTarget = safeParseBigInt(currentAutoBuy.decodedParams.targetLtv) ?? 0n
         return triggerData.executionLTV > currentAutoBuyTarget
@@ -84,7 +85,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggerData, triggers }) => {
       const currentPartialTakeProfit =
-        triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].partialTakeProfit
+        triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId].morphoBluePartialTakeProfit
       if (currentPartialTakeProfit) {
         const currentPartialTakeProfitTarget =
           safeParseBigInt(currentPartialTakeProfit.decodedParams.targetLtv) ?? 0n
@@ -130,7 +131,8 @@ const warningsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoSell = triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].morphoBlueBasicSell
+      const autoSell =
+        triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId].morphoBlueBasicSell
       if (autoSell) {
         const executionLTV = safeParseBigInt(autoSell.decodedParams.executionLtv) ?? 0n
         return triggerData.executionLTV > executionLTV

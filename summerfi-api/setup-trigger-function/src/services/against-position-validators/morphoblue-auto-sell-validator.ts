@@ -64,7 +64,8 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggers, triggerData }) => {
-      const autoBuyTrigger = triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].morphoBlueBasicBuy
+      const autoBuyTrigger =
+        triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId].morphoBlueBasicBuy
       if (!autoBuyTrigger) {
         return true
       }
@@ -94,9 +95,12 @@ const upsertErrorsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggers, action }) => {
+    ({ triggers, action, triggerData }) => {
       if (action === SupportedActions.Add) {
-        return triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].morphoBlueBasicSell === undefined
+        return (
+          triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId].morphoBlueBasicSell ===
+          undefined
+        )
       }
       return true
     },
@@ -108,9 +112,12 @@ const upsertErrorsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggers, action }) => {
+    ({ triggers, action, triggerData }) => {
       if (action === SupportedActions.Remove || action === SupportedActions.Update)
-        return triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].morphoBlueBasicBuy !== undefined
+        return (
+          triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId].morphoBlueBasicBuy !==
+          undefined
+        )
       return true
     },
     {
@@ -123,7 +130,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggerData, triggers }) => {
       const partialTakeProfit =
-        triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].morphoBluePartialTakeProfit
+        triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId].morphoBluePartialTakeProfit
       if (!partialTakeProfit) {
         return true
       }
@@ -143,7 +150,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggerData, triggers }) => {
       const partialTakeProfit =
-        triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].morphoBluePartialTakeProfit
+        triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId].morphoBluePartialTakeProfit
       if (!partialTakeProfit) {
         return true
       }
@@ -162,9 +169,12 @@ const upsertErrorsValidation = paramsSchema
   )
 
 const deleteErrorsValidation = paramsSchema.refine(
-  ({ triggers, action }) => {
+  ({ triggers, action, triggerData }) => {
     if (action === SupportedActions.Remove)
-      return triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].morphoBlueBasicSell !== undefined
+      return (
+        triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId].morphoBlueBasicSell !==
+        undefined
+      )
     return true
   },
   {
@@ -190,7 +200,8 @@ const warningsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoBuyTrigger = triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].morphoBlueBasicBuy
+      const autoBuyTrigger =
+        triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId].morphoBlueBasicBuy
       if (!autoBuyTrigger) {
         return true
       }

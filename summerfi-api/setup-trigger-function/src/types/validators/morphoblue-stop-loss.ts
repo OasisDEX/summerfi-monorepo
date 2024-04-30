@@ -8,34 +8,20 @@ import {
 import { positionAddressesSchema, supportedActionsSchema } from '@summerfi/triggers-shared'
 import { TriggerType } from '@oasisdex/automation'
 
-export const dmaMorphoBlueStopLossToCollateralTriggerDataSchema = z.object({
+export const dmaMorphoBlueStopLoss = z.object({
   type: z
     .any()
     .optional()
-    .transform(() => BigInt(111111)),
+    .transform(() => BigInt(TriggerType.DmaMorphoBlueStopLossV2)),
   executionLTV: ltvSchema,
   token: addressSchema,
+  poolId: poolIdSchema,
 })
-
-export const dmaMorphoBlueStopLossToDebtTriggerDataSchema = z.object({
-  type: z
-    .any()
-    .optional()
-    .transform(() => BigInt(111111)),
-  executionLTV: ltvSchema,
-  token: addressSchema,
-})
-
-export const dmaMorphoBlueStopLossTriggerDataSchema =
-  dmaMorphoBlueStopLossToCollateralTriggerDataSchema.or(
-    dmaMorphoBlueStopLossToDebtTriggerDataSchema,
-  )
 
 export const eventBodyDmaMorphoBlueStopLossSchema = z
   .object({
     dpm: addressSchema,
-    poolId: poolIdSchema,
-    triggerData: dmaMorphoBlueStopLossTriggerDataSchema,
+    triggerData: dmaMorphoBlueStopLoss,
     position: positionAddressesSchema,
     rpc: urlOptionalSchema,
     action: supportedActionsSchema,

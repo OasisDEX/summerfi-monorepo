@@ -14,10 +14,10 @@ export const dmaMorphoBlueTrailingStopLossTriggerDataSchema = z.object({
     .transform(() => BigInt(TriggerType.DmaMorphoBlueTrailingStopLossV2)),
   trailingDistance: priceSchema,
   token: addressSchema,
+  poolId: poolIdSchema,
 })
 export const eventBodyDmaMorphoBlueTrailingStopLossSchema = z.object({
   dpm: addressSchema,
-  poolId: poolIdSchema,
   triggerData: dmaMorphoBlueTrailingStopLossTriggerDataSchema,
   position: positionAddressesSchema,
   rpc: urlOptionalSchema,

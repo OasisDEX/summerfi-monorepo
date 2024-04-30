@@ -26,6 +26,7 @@ export const morphoBlueBasicBuyTriggerDataSchema = z
     maxBuyPrice: priceSchema.optional().default(maxUnit256),
     useMaxBuyPrice: z.boolean().optional().default(true),
     maxBaseFee: maxGasFeeSchema,
+    poolId: poolIdSchema,
   })
   .refine(
     ({ maxBuyPrice, useMaxBuyPrice }) => {
@@ -43,7 +44,6 @@ export const morphoBlueBasicBuyTriggerDataSchema = z
 
 export const eventBodyMorphoBlueBasicBuySchema = z.object({
   dpm: addressSchema,
-  poolId: poolIdSchema,
   triggerData: morphoBlueBasicBuyTriggerDataSchema,
   position: positionAddressesSchema,
   rpc: urlOptionalSchema,

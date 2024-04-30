@@ -22,6 +22,7 @@ export const morphoBlueBasicSellTriggerDataSchema = z
       .transform(() => BigInt(TriggerType.DmaMorphoBlueBasicSellV2)),
     executionLTV: ltvSchema,
     targetLTV: ltvSchema,
+    poolId: poolIdSchema,
     minSellPrice: priceSchema.optional().default(0n),
     useMinSellPrice: z.boolean().optional().default(true),
     maxBaseFee: maxGasFeeSchema,
@@ -42,7 +43,6 @@ export const morphoBlueBasicSellTriggerDataSchema = z
 
 export const eventBodyMorphoBlueBasicSellSchema = z.object({
   dpm: addressSchema,
-  poolId: poolIdSchema,
   triggerData: morphoBlueBasicSellTriggerDataSchema,
   position: positionAddressesSchema,
   rpc: urlOptionalSchema,

@@ -49,7 +49,7 @@ export const getMorphoBlueAutoBuyServiceContainer: (
     simulatePosition: async ({ trigger }) => {
       const position = await getPosition({
         address: trigger.dpm,
-        poolId: trigger.poolId,
+        poolId: trigger.triggerData.poolId,
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })
@@ -68,7 +68,7 @@ export const getMorphoBlueAutoBuyServiceContainer: (
     validate: async ({ trigger }) => {
       const position = await getPosition({
         address: trigger.dpm,
-        poolId: trigger.poolId,
+        poolId: trigger.triggerData.poolId,
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })
@@ -97,13 +97,13 @@ export const getMorphoBlueAutoBuyServiceContainer: (
       const triggers = await getTriggers(trigger.dpm)
       const position = await getPosition({
         address: trigger.dpm,
-        poolId: trigger.poolId,
+        poolId: trigger.triggerData.poolId,
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })
 
       const currentAutoBuy =
-        triggers.triggers[ProtocolId.MORPHO_BLUE][trigger.poolId].morphoBlueBasicBuy
+        triggers.triggers[ProtocolId.MORPHO_BLUE][trigger.triggerData.poolId].morphoBlueBasicBuy
       const currentTrigger: CurrentTriggerLike | undefined = currentAutoBuy
         ? {
             triggerData: currentAutoBuy.triggerData as `0x${string}`,

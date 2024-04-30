@@ -11,7 +11,7 @@ import {
   poolIdSchema,
   urlOptionalSchema,
 } from '@summerfi/serverless-shared'
-import { dmaMorphoBlueStopLossTriggerDataSchema } from './morphoblue-stop-loss'
+import { dmaMorphoBlueStopLoss } from './morphoblue-stop-loss'
 import { TriggerType } from '@oasisdex/automation'
 
 export const morphoBluePartialTakeProfitTriggerDataSchema = z.object({
@@ -23,9 +23,10 @@ export const morphoBluePartialTakeProfitTriggerDataSchema = z.object({
   executionLTV: ltvSchema,
   withdrawStep: percentageSchema,
   executionPrice: priceSchema,
+  poolId: poolIdSchema,
   stopLoss: z
     .object({
-      triggerData: dmaMorphoBlueStopLossTriggerDataSchema,
+      triggerData: dmaMorphoBlueStopLoss,
       action: supportedActionsSchema,
     })
     .optional(),
@@ -33,7 +34,6 @@ export const morphoBluePartialTakeProfitTriggerDataSchema = z.object({
 
 export const eventBodyMorphoBluePartialTakeProfitSchema = z.object({
   dpm: addressSchema,
-  poolId: poolIdSchema,
   triggerData: morphoBluePartialTakeProfitTriggerDataSchema,
   position: positionAddressesSchema,
   rpc: urlOptionalSchema,

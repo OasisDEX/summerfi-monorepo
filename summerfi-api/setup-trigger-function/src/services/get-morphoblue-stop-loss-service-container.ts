@@ -44,7 +44,7 @@ export const getMorphoBlueStopLossServiceContainer: (
     validate: async ({ trigger }) => {
       const position = await getPosition({
         address: trigger.dpm,
-        poolId: trigger.poolId,
+        poolId: trigger.triggerData.poolId,
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })
@@ -68,7 +68,7 @@ export const getMorphoBlueStopLossServiceContainer: (
       const triggers = await getTriggers(trigger.dpm)
       const position = await getPosition({
         address: trigger.dpm,
-        poolId: trigger.poolId,
+        poolId: trigger.triggerData.poolId,
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })

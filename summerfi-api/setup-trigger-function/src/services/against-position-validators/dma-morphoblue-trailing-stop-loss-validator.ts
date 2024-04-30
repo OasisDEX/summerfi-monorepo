@@ -68,8 +68,9 @@ const upsertErrorsValidation = paramsSchema
     },
   )
   .refine(
-    ({ dynamicExecutionLTV, triggers }) => {
-      const currentAutoBuy = triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].morphoBlueBasicBuy
+    ({ dynamicExecutionLTV, triggers, triggerData }) => {
+      const currentAutoBuy =
+        triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId].morphoBlueBasicBuy
       if (currentAutoBuy) {
         const currentAutoBuyTarget = safeParseBigInt(currentAutoBuy.decodedParams.targetLtv) ?? 0n
         return dynamicExecutionLTV > currentAutoBuyTarget
@@ -96,9 +97,9 @@ const upsertErrorsValidation = paramsSchema
     },
   )
   .refine(
-    ({ dynamicExecutionLTV, triggers }) => {
+    ({ dynamicExecutionLTV, triggers, triggerData }) => {
       const currentPartialTakeProfit =
-        triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].morphoBluePartialTakeProfit
+        triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId].morphoBluePartialTakeProfit
       if (currentPartialTakeProfit) {
         const currentPartialTakeProfitTarget =
           safeParseBigInt(currentPartialTakeProfit.decodedParams.targetLtv) ?? 0n
@@ -143,8 +144,9 @@ const warningsValidation = paramsSchema
     },
   )
   .refine(
-    ({ dynamicExecutionLTV, triggers }) => {
-      const autoSell = triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].morphoBlueBasicSell
+    ({ dynamicExecutionLTV, triggers, triggerData }) => {
+      const autoSell =
+        triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId].morphoBlueBasicSell
       if (autoSell) {
         const executionLTV = safeParseBigInt(autoSell.decodedParams.executionLtv) ?? 0n
         return dynamicExecutionLTV > executionLTV

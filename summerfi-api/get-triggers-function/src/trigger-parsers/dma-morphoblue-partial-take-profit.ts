@@ -53,7 +53,7 @@ export const getMorphoBluePartialTakeProfit = async ({
       executionLtv: trigger.decodedData[trigger.decodedDataNames.indexOf('executionLtv')],
       targetLtv: trigger.decodedData[trigger.decodedDataNames.indexOf('targetLtv')],
       deviation: trigger.decodedData[trigger.decodedDataNames.indexOf('deviation')],
-      id: trigger.decodedData[trigger.decodedDataNames.indexOf('id')],
+      poolId: trigger.decodedData[trigger.decodedDataNames.indexOf('poolId')],
       executionPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('executionPrice')],
     },
   }
@@ -64,7 +64,7 @@ export const getMorphoBluePartialTakeProfit = async ({
         address: parsedTrigger.decodedParams.positionAddress as Address,
         collateral: parsedTrigger.decodedParams.collateralToken as Address,
         debt: parsedTrigger.decodedParams.debtToken as Address,
-        poolId: parsedTrigger.decodedParams.id as PoolId,
+        poolId: parsedTrigger.decodedParams.poolId as PoolId,
       },
       publicClient,
       {

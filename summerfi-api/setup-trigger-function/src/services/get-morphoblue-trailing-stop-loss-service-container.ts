@@ -53,7 +53,7 @@ export const getMorphoBlueTrailingStopLossServiceContainer: (
 
       const position = await getPosition({
         address: trigger.dpm,
-        poolId: trigger.poolId,
+        poolId: trigger.triggerData.poolId,
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })
@@ -86,7 +86,7 @@ export const getMorphoBlueTrailingStopLossServiceContainer: (
       const latestPrice = await getLatestPrice(trigger.position.collateral, trigger.position.debt)
       const position = await getPosition({
         address: trigger.dpm,
-        poolId: trigger.poolId,
+        poolId: trigger.triggerData.poolId,
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })
@@ -102,7 +102,7 @@ export const getMorphoBlueTrailingStopLossServiceContainer: (
 
       const position = await getPosition({
         address: trigger.dpm,
-        poolId: trigger.poolId,
+        poolId: trigger.triggerData.poolId,
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })
@@ -126,7 +126,7 @@ export const getMorphoBlueTrailingStopLossServiceContainer: (
       const triggers = await getTriggers(trigger.dpm)
       const position = await getPosition({
         address: trigger.dpm,
-        poolId: trigger.poolId,
+        poolId: trigger.triggerData.poolId,
         collateral: trigger.position.collateral,
         debt: trigger.position.debt,
       })
