@@ -14,7 +14,12 @@ import {
   IPositionIdData,
   RiskRatioType,
 } from '@summerfi/sdk-common/common'
-import { ILendingPoolIdData, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import {
+  DebtInfo,
+  ILendingPoolIdData,
+  PoolType,
+  ProtocolName,
+} from '@summerfi/sdk-common/protocols'
 import { BigNumber } from 'bignumber.js'
 import { BaseProtocolPlugin } from '../../../implementation/BaseProtocolPlugin'
 
@@ -24,8 +29,6 @@ import {
 } from '../../common/helpers/AAVEv3LikeProtocolDataBuilder'
 import { UNCAPPED_SUPPLY, PRECISION_BI } from '../../common/constants/AaveV3LikeConstants'
 import { AaveV3LendingPool } from './AaveV3LendingPool'
-import { AaveV3CollateralConfig } from './AaveV3CollateralConfig'
-import { AaveV3DebtConfig } from './AaveV3DebtConfig'
 import { AaveV3AddressAbiMap } from '../types/AaveV3AddressAbiMap'
 import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import {
@@ -34,15 +37,22 @@ import {
   AAVEV3_POOL_DATA_PROVIDER_ABI,
 } from '../abis/AaveV3ABIS'
 import { AaveV3ContractNames } from '@summerfi/deployment-types'
-import { IAaveV3LendingPoolIdData, isAaveV3LendingPoolId } from '../interfaces/IAaveV3LendingPoolId'
+import {
+  IAaveV3LendingPoolId,
+  IAaveV3LendingPoolIdData,
+  isAaveV3LendingPoolId,
+} from '../interfaces/IAaveV3LendingPoolId'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 import { AaveV3StepBuilders } from '../builders'
 import { AaveV3LendingPoolId } from './AaveV3LendingPoolId'
 import { IAaveV3PositionIdData, isAaveV3PositionId } from '../interfaces/IAaveV3PositionId'
+import { CollateralInfo } from '@summerfi/sdk-common'
+import { AaveV3LendingPoolInfo } from './AaveV3LendingPoolInfo'
+import { aaveV3EmodeCategoryMap } from './EmodeCategoryMap'
 
-type AssetsList = ReturnType<AaveV3ProtocolPlugin['_buildAssetsList']>
-type Asset = Awaited<AssetsList> extends (infer U)[] ? U : never
+type AssetsList = Awaited<ReturnType<AaveV3ProtocolPlugin['_getAssetsList']>>
+type Asset = AssetsList extends (infer U)[] ? U : never
 
 /**
  * @class AaveV3ProtocolPlugin
@@ -58,6 +68,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
     ChainFamilyName.Optimism,
   ])
   readonly stepBuilders: Partial<ActionBuildersMap> = AaveV3StepBuilders
+  private _assetsList: Maybe<AssetsList>
 
   constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
     super(params)
@@ -94,10 +105,40 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
   /** LENDING POOLS */
 
   /** @see BaseProtocolPlugin._getLendingPoolImpl */
-  async _getLendingPoolImpl(aaveV3PoolId: AaveV3LendingPoolId): Promise<AaveV3LendingPool> {
+  async _getLendingPoolImpl(aaveV3PoolId: IAaveV3LendingPoolId): Promise<AaveV3LendingPool> {
     return AaveV3LendingPool.createFrom({
       type: PoolType.Lending,
       id: aaveV3PoolId,
+    })
+  }
+
+  /** @see BaseProtocolPlugin._getLendingPoolInfoImpl */
+  async _getLendingPoolInfoImpl(
+    aaveV3PoolId: IAaveV3LendingPoolId,
+  ): Promise<AaveV3LendingPoolInfo> {
+    this._inititalizeAssetsListIfNeeded()
+
+    const emode = aaveV3EmodeCategoryMap[aaveV3PoolId.emodeType]
+
+    const collateralInfo = await this._getCollateralInfo({
+      token: aaveV3PoolId.collateralToken,
+      emode: emode,
+      poolBaseCurrencyToken: CurrencySymbol.USD,
+    })
+    if (!collateralInfo) {
+      throw new Error(`Collateral info not found for ${aaveV3PoolId.collateralToken}`)
+    }
+
+    const debtInfo = await this._getDebtInfo(aaveV3PoolId.debtToken, emode, CurrencySymbol.USD)
+    if (!debtInfo) {
+      throw new Error(`Debt info not found for ${aaveV3PoolId.debtToken}`)
+    }
+
+    return AaveV3LendingPoolInfo.createFrom({
+      type: PoolType.Lending,
+      id: aaveV3PoolId,
+      collateral: collateralInfo,
+      debt: debtInfo,
     })
   }
 
@@ -145,34 +186,60 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
     return map[contractName]
   }
 
-  private async _buildAssetsList(emode: bigint) {
+  private async _inititalizeAssetsListIfNeeded() {
+    if (this._assetsList) {
+      return
+    }
+
+    this._assetsList = await this._getAssetsList()
+  }
+
+  private async _getAssetsList() {
     try {
       const _ctx = {
         ...this.ctx,
         getContractDef: this._getContractDef,
       }
       const builder = await new AaveV3LikeProtocolDataBuilder(_ctx, this.protocolName).init()
-      const list = await builder
+      return await builder
         .addPrices()
         .addReservesCaps()
         .addReservesConfigData()
         .addReservesData()
         .addEmodeCategories()
         .build()
-
-      return filterAssetsListByEMode(list, emode)
     } catch (e) {
       throw new Error(`Could not fetch/build assets list for AAVEv3: ${JSON.stringify(e)}`)
     }
   }
 
-  private _getCollateralAssetInfo(
-    asset: Asset,
-    poolBaseCurrencyToken: Token | CurrencySymbol,
-  ): AaveV3CollateralConfig {
+  private async _getAssetFromToken(token: Token, emode: bigint): Promise<Asset> {
+    if (!this._assetsList) {
+      throw new Error('Assets list not initialized')
+    }
+
+    const assetsList = filterAssetsListByEMode(this._assetsList, emode)
+
+    const asset = assetsList.find((asset: Asset) => token.equals(asset.token))
+    if (!asset) {
+      throw new Error(`Asset not found for token ${token}`)
+    }
+
+    return asset
+  }
+
+  private async _getCollateralInfo(params: {
+    token: Token
+    emode: bigint
+    poolBaseCurrencyToken: Token | CurrencySymbol
+  }): Promise<Maybe<CollateralInfo>> {
+    const { token, emode, poolBaseCurrencyToken } = params
+
+    const asset = await this._getAssetFromToken(token, emode)
+
     const {
       token: collateralToken,
-      config: { usageAsCollateralEnabled, ltv, liquidationThreshold, liquidationBonus },
+      config: { liquidationThreshold, liquidationBonus },
       caps: { supplyCap },
       data: { totalAToken },
     } = asset
@@ -180,7 +247,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
     const LTV_TO_PERCENTAGE_DIVISOR = new BigNumber(100)
 
     try {
-      return {
+      return CollateralInfo.createFrom({
         token: collateralToken,
         price: Price.createFrom({
           baseToken: collateralToken,
@@ -191,12 +258,6 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
           baseToken: collateralToken,
           quoteToken: CurrencySymbol.USD,
           value: asset.price.toString(),
-        }),
-        maxLtv: RiskRatio.createFrom({
-          ratio: Percentage.createFrom({
-            value: new BigNumber(ltv.toString()).div(LTV_TO_PERCENTAGE_DIVISOR).toNumber(),
-          }),
-          type: RiskRatioType.LTV,
         }),
         liquidationThreshold: RiskRatio.createFrom({
           ratio: Percentage.createFrom({
@@ -219,21 +280,22 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
             .div(LTV_TO_PERCENTAGE_DIVISOR)
             .toNumber(),
         }),
-        apy: Percentage.createFrom({ value: 0 }),
-        usageAsCollateralEnabled,
-      }
+      })
     } catch (e) {
       throw new Error(`error in collateral loop ${e}`)
     }
   }
 
-  private _getDebtAssetInfo(
-    asset: Asset,
+  private async _getDebtInfo(
+    token: Token,
+    emode: bigint,
     poolBaseCurrencyToken: CurrencySymbol | Token,
-  ): Maybe<AaveV3DebtConfig> {
+  ): Promise<Maybe<DebtInfo>> {
+    const asset = await this._getAssetFromToken(token, emode)
+
     const {
       token: quoteToken,
-      config: { borrowingEnabled, reserveFactor },
+      config: { reserveFactor },
       caps: { borrowCap },
       data: { totalVariableDebt, totalStableDebt, variableBorrowRate },
     } = asset
@@ -251,7 +313,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
         Number(((variableBorrowRate * PRECISION_PRESERVING_OFFSET) / PRECISION_BI.RAY).toString()) /
         RATE_DIVISOR_TO_GET_PERCENTAGE
       const totalBorrowed = totalVariableDebt + totalStableDebt
-      return {
+      return DebtInfo.createFrom({
         token: quoteToken,
         // TODO: If we further restricted pools we could have token pair prices
         price: Price.createFrom({
@@ -264,7 +326,7 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
           quoteToken: CurrencySymbol.USD,
           value: new BigNumber(asset.price.toString()).toString(),
         }),
-        rate: Percentage.createFrom({ value: rate }),
+        interestRate: Percentage.createFrom({ value: rate }),
         totalBorrowed: TokenAmount.createFromBaseUnit({
           token: quoteToken,
           amount: totalBorrowed.toString(),
@@ -281,44 +343,9 @@ export class AaveV3ProtocolPlugin extends BaseProtocolPlugin {
         originationFee: Percentage.createFrom({
           value: Number((reserveFactor / RESERVE_FACTOR_TO_PERCENTAGE_DIVISOR).toString()),
         }),
-        borrowingEnabled,
-      }
+      })
     } catch (e) {
       throw new Error(`error in debt loop ${e}`)
     }
   }
 }
-
-/**
- const emode = aaveV3EmodeCategoryMap[aaveV3PoolId.emodeType]
-
-    const ctx = this.ctx
-    const chainId = ctx.provider.chain?.id
-    if (!chainId) throw new Error('ctx.provider.chain.id undefined')
-
-    if (!this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId)) {
-      throw new Error(`Chain ID ${chainId} is not supported`)
-    }
-
-    const assetsList = await this.buildAssetsList(emode)
-
-    // Both USDC & DAI use fixed price oracles that keep both stable at 1 USD
-    const poolBaseCurrencyToken = CurrencySymbol.USD
-
-    const collaterals = assetsList.reduce<AaveV3CollateralConfigRecord>((colls, asset) => {
-      const assetInfo = this.getCollateralAssetInfo(asset, poolBaseCurrencyToken)
-      const { token: collateralToken } = asset
-      colls[collateralToken.address.value] = assetInfo
-      return colls
-    }, {})
-
-    const debts = assetsList.reduce<AaveV3DebtConfigRecord>((debts, asset) => {
-      const assetInfo = this.getDebtAssetInfo(asset, poolBaseCurrencyToken)
-      if (!assetInfo) return debts
-      const { token: quoteToken } = asset
-      debts[quoteToken.address.value] = assetInfo
-      return debts
-    }, {})
-
-    
- */

@@ -57,6 +57,15 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
     )
   }
 
+  async buildAll(): Promise<AssetListItemType[]> {
+    return await this.addReservesCaps()
+      .addReservesConfigData()
+      .addReservesData()
+      .addEmodeCategories()
+      .addPrices()
+      .build()
+  }
+
   addReservesCaps(): AaveV3LikeProtocolDataBuilder<WithReservesCaps<AssetListItemType>> {
     const operation: QueuedOperation<void> = {
       operation: async () => {

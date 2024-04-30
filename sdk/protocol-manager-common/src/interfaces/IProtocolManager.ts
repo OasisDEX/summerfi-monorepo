@@ -1,7 +1,7 @@
 import { Maybe } from '@summerfi/sdk-common'
 import { IPosition } from '@summerfi/sdk-common/common'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
-import { ILendingPool } from '@summerfi/sdk-common/protocols'
+import { ILendingPool, ILendingPoolInfo } from '@summerfi/sdk-common/protocols'
 import { IUser } from '@summerfi/sdk-common/user'
 
 /**
@@ -9,6 +9,8 @@ import { IUser } from '@summerfi/sdk-common/user'
  * @description Interface to be implemented by a protocol manager to provide access to protocol-specific functionality
  */
 export interface IProtocolManager {
+  /** LENDING POOLS */
+
   /**
    * @name getLendingPool
    * @description Gets the lending pool for the given pool ID
@@ -16,6 +18,14 @@ export interface IProtocolManager {
    * @returns The lending pool for the specific protocol
    */
   getLendingPool(poolId: unknown): Promise<ILendingPool>
+
+  /**
+   * @name getLendingPoolInfo
+   * @description Gets the extended lending pool information for the given pool ID
+   * @param poolId The pool ID
+   * @returns The extended lending pool information for the specific protocol
+   */
+  getLendingPoolInfo(poolId: unknown): Promise<ILendingPoolInfo>
 
   /** POSITIONS */
 

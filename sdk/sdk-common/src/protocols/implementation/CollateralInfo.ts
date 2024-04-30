@@ -4,9 +4,13 @@ import { RiskRatio } from '../../common/implementation/RiskRatio'
 import { Token } from '../../common/implementation/Token'
 import { TokenAmount } from '../../common/implementation/TokenAmount'
 import { SerializationService } from '../../services/SerializationService'
-import { ICollateralConfig } from '../interfaces/ICollateralConfig'
+import { ICollateralInfo, ICollateralInfoData } from '../interfaces/ICollateralInfo'
 
-export class CollateralConfig implements ICollateralConfig {
+/**
+ * @class CollateralInfo
+ * @see ICollateralInfo
+ */
+export class CollateralInfo implements ICollateralInfo {
   readonly token: Token
   readonly price: Price
   readonly priceUSD: Price
@@ -15,7 +19,7 @@ export class CollateralConfig implements ICollateralConfig {
   readonly tokensLocked: TokenAmount
   readonly liquidationPenalty: Percentage
 
-  protected constructor(params: ICollateralConfig) {
+  protected constructor(params: ICollateralInfoData) {
     this.token = Token.createFrom(params.token)
     this.price = Price.createFrom(params.price)
     this.priceUSD = Price.createFrom(params.priceUSD)
@@ -25,9 +29,9 @@ export class CollateralConfig implements ICollateralConfig {
     this.liquidationPenalty = Percentage.createFrom(params.liquidationPenalty)
   }
 
-  static createFrom(params: ICollateralConfig): CollateralConfig {
-    return new CollateralConfig(params)
+  static createFrom(params: ICollateralInfoData): CollateralInfo {
+    return new CollateralInfo(params)
   }
 }
 
-SerializationService.registerClass(CollateralConfig)
+SerializationService.registerClass(CollateralInfo)

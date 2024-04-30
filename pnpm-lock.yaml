@@ -797,9 +797,6 @@ importers:
       '@types/node-fetch':
         specifier: ^2.6.11
         version: 2.6.11
-      zod:
-        specifier: ^3.22.4
-        version: 3.22.4
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -834,9 +831,6 @@ importers:
       '@types/node-fetch':
         specifier: ^2.6.11
         version: 2.6.11
-      zod:
-        specifier: ^3.22.4
-        version: 3.22.4
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -871,9 +865,6 @@ importers:
       '@summerfi/testing-utils':
         specifier: workspace:*
         version: link:../testing-utils
-      zod:
-        specifier: ^3.22.4
-        version: 3.22.4
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -899,9 +890,6 @@ importers:
       '@summerfi/swap-common':
         specifier: workspace:*
         version: link:../swap-common
-      zod:
-        specifier: ^3.22.4
-        version: 3.22.4
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -933,9 +921,6 @@ importers:
       '@summerfi/testing-utils':
         specifier: workspace:*
         version: link:../../testing-utils
-      zod:
-        specifier: ^3.22.4
-        version: 3.22.4
 
   sdk/sdk-client:
     dependencies:
@@ -1109,9 +1094,6 @@ importers:
       superjson:
         specifier: ^1.13.3
         version: 1.13.3
-      zod:
-        specifier: ^3.22.4
-        version: 3.22.4
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -1556,9 +1538,6 @@ importers:
       superjson:
         specifier: ^1.13.3
         version: 1.13.3
-      zod:
-        specifier: ^3.22.4
-        version: 3.22.4
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*

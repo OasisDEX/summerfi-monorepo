@@ -7,7 +7,7 @@ import { IPrintable } from '../../common/interfaces/IPrintable'
 
 /**
  * LendingPool
- * @see ILendingPoolData
+ * @see ILendingPool
  *
  * The class is abstract to force each protocol to implement it's own version of the LendingPool by
  * customizing the PoolId

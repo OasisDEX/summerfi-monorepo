@@ -2,8 +2,8 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 import { ISparkLendingPoolId, ISparkLendingPoolIdData } from '../interfaces/ISparkLendingPoolId'
 import { EmodeType } from '../../common'
 import { SparkProtocol } from './SparkProtocol'
-import { LendingPoolId } from '@summerfi/sdk-common'
 import { IPrintable } from '@summerfi/sdk-common/common'
+import { LendingPoolId } from '@summerfi/sdk-common/protocols'
 
 /**
  * @class SparkLendingPoolId

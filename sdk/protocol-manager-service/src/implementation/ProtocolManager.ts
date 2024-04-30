@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { IPosition } from '@summerfi/sdk-common/common'
 import { IProtocolManager } from '@summerfi/protocol-manager-common'
-import { ILendingPool, ILendingPoolId, isLendingPoolId } from '@summerfi/sdk-common/protocols'
+import {
+  ILendingPool,
+  ILendingPoolId,
+  ILendingPoolInfo,
+  isLendingPoolId,
+} from '@summerfi/sdk-common/protocols'
 import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
 import { IPositionId, Maybe, isPositionId } from '@summerfi/sdk-common'
 import { IUser } from '@summerfi/sdk-common/user'
@@ -42,6 +47,17 @@ export class ProtocolManager implements IProtocolManager {
       throw new Error(`Protocol plugin for protocol ${poolId.protocol.name} not found`)
     }
     return plugin.getLendingPool(poolId)
+  }
+
+  /** @see IProtocolManager.getLendingPoolInfo */
+  async getLendingPoolInfo(poolId: unknown): Promise<ILendingPoolInfo> {
+    this._validateLendingPoolId(poolId)
+
+    const plugin = this._pluginsRegistry.getPlugin({ protocolName: poolId.protocol.name })
+    if (!plugin) {
+      throw new Error(`Protocol plugin for protocol ${poolId.protocol.name} not found`)
+    }
+    return plugin.getLendingPoolInfo(poolId)
   }
 
   /** @see IProtocolManager.getPosition */

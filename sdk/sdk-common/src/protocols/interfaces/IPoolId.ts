@@ -10,7 +10,7 @@ import { z } from 'zod'
  */
 export interface IPoolIdData {
   /** Protocol where the pool is */
-  protocol: IProtocolData
+  readonly protocol: IProtocolData
 }
 
 /**

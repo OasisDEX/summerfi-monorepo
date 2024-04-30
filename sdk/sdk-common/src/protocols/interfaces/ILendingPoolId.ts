@@ -12,9 +12,9 @@ import { IProtocol, ProtocolSchema } from './IProtocol'
  */
 export interface ILendingPoolIdData extends IPoolIdData {
   /** Collateral token used to collateralized the pool */
-  collateralToken: ITokenData
+  readonly collateralToken: ITokenData
   /** Debt token, which can be borrowed from the pool */
-  debtToken: ITokenData
+  readonly debtToken: ITokenData
 }
 
 /**

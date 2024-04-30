@@ -5,11 +5,6 @@
     "outDir": "dist",
     "baseUrl": "."
   },
-  "include": [
-    "src/**/*.ts",
-    "tests/**/*.ts",
-    "scripts/**/*.ts",
-    "../protocol-plugins/src/plugins/maker/utils/MakerGive.ts"
-  ],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "scripts/**/*.ts"],
   "exclude": ["node_modules"]
 }

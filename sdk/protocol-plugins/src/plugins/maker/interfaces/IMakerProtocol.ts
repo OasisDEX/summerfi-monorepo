@@ -8,7 +8,7 @@ import { z } from 'zod'
  */
 export interface IMakerProtocolData extends IProtocolData {
   /** Maker protocol name */
-  name: ProtocolName.Maker
+  readonly name: ProtocolName.Maker
 }
 
 /**

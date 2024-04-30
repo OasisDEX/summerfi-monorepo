@@ -6,7 +6,12 @@ import {
 } from '@summerfi/protocol-plugins-common'
 import { ChainInfo, Maybe, IPosition, IPositionIdData } from '@summerfi/sdk-common/common'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
-import { ProtocolName, ILendingPool, ILendingPoolIdData } from '@summerfi/sdk-common/protocols'
+import {
+  ProtocolName,
+  ILendingPool,
+  ILendingPoolIdData,
+  ILendingPoolInfo,
+} from '@summerfi/sdk-common/protocols'
 import { steps } from '@summerfi/sdk-common/simulation'
 import { IUser } from '@summerfi/sdk-common/user'
 
@@ -81,12 +86,31 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
    */
   protected abstract _getLendingPoolImpl(poolId: ILendingPoolIdData): Promise<ILendingPool>
 
+  /**
+   * @name getLendingPoolInfoImpl
+   * @description Gets the lending pool info for the given pool ID
+   * @param poolId The pool ID
+   * @returns The lending pool info for the specific protocol
+   *
+   * @remarks This method should be implemented by the protocol plugin as the external one is just a wrapper to
+   * validate the input and call this one
+   */
+  protected abstract _getLendingPoolInfoImpl(poolId: ILendingPoolIdData): Promise<ILendingPoolInfo>
+
   /** @see IProtocolPlugin.getLendingPool */
   async getLendingPool(poolId: ILendingPoolIdData): Promise<ILendingPool> {
     this._validateLendingPoolId(poolId)
     this._checkChainIdSupported(poolId.protocol.chainInfo.chainId)
 
     return this._getLendingPoolImpl(poolId)
+  }
+
+  /** @see IProtocolPlugin.getLendingPoolInfo */
+  async getLendingPoolInfo(poolId: ILendingPoolIdData): Promise<ILendingPoolInfo> {
+    this._validateLendingPoolId(poolId)
+    this._checkChainIdSupported(poolId.protocol.chainInfo.chainId)
+
+    return this._getLendingPoolInfoImpl(poolId)
   }
 
   /** POSITIONS */
