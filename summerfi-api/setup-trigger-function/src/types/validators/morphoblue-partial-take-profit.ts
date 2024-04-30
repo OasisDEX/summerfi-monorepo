@@ -12,12 +12,13 @@ import {
   urlOptionalSchema,
 } from '@summerfi/serverless-shared'
 import { dmaMorphoBlueStopLossTriggerDataSchema } from './morphoblue-stop-loss'
+import { TriggerType } from '@oasisdex/automation'
 
 export const morphoBluePartialTakeProfitTriggerDataSchema = z.object({
   type: z
     .any()
     .optional()
-    .transform(() => BigInt(111111)),
+    .transform(() => BigInt(TriggerType.DmaMorphoBluePartialTakeProfitV2)),
   withdrawToken: addressSchema,
   executionLTV: ltvSchema,
   withdrawStep: percentageSchema,

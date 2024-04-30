@@ -64,7 +64,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggers, triggerData }) => {
-      const autoBuyTrigger = triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].basicBuy
+      const autoBuyTrigger = triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].morphoBlueBasicBuy
       if (!autoBuyTrigger) {
         return true
       }
@@ -96,7 +96,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Add) {
-        return triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].basicSell === undefined
+        return triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].morphoBlueBasicSell === undefined
       }
       return true
     },
@@ -110,7 +110,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Remove || action === SupportedActions.Update)
-        return triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].basicBuy !== undefined
+        return triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].morphoBlueBasicBuy !== undefined
       return true
     },
     {
@@ -123,7 +123,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggerData, triggers }) => {
       const partialTakeProfit =
-        triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].partialTakeProfit
+        triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].morphoBluePartialTakeProfit
       if (!partialTakeProfit) {
         return true
       }
@@ -143,7 +143,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggerData, triggers }) => {
       const partialTakeProfit =
-        triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].partialTakeProfit
+        triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].morphoBluePartialTakeProfit
       if (!partialTakeProfit) {
         return true
       }
@@ -164,7 +164,7 @@ const upsertErrorsValidation = paramsSchema
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
     if (action === SupportedActions.Remove)
-      return triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].basicSell !== undefined
+      return triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].morphoBlueBasicSell !== undefined
     return true
   },
   {
@@ -190,7 +190,7 @@ const warningsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoBuyTrigger = triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].basicBuy
+      const autoBuyTrigger = triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].morphoBlueBasicBuy
       if (!autoBuyTrigger) {
         return true
       }

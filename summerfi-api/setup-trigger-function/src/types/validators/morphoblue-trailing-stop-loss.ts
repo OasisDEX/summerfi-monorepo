@@ -5,12 +5,13 @@ import {
   priceSchema,
   supportedActionsSchema,
 } from '@summerfi/triggers-shared'
+import { TriggerType } from '@oasisdex/automation'
 
 export const dmaMorphoBlueTrailingStopLossTriggerDataSchema = z.object({
   type: z
     .any()
     .optional()
-    .transform(() => BigInt(111111)),
+    .transform(() => BigInt(TriggerType.DmaMorphoBlueTrailingStopLossV2)),
   trailingDistance: priceSchema,
   token: addressSchema,
 })

@@ -66,7 +66,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const currentAutoBuy = triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].basicBuy
+      const currentAutoBuy = triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].morphoBlueBasicBuy
       if (currentAutoBuy) {
         const currentAutoBuyTarget = safeParseBigInt(currentAutoBuy.decodedParams.targetLtv) ?? 0n
         return triggerData.executionLTV > currentAutoBuyTarget
@@ -130,7 +130,7 @@ const warningsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoSell = triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].basicSell
+      const autoSell = triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].morphoBlueBasicSell
       if (autoSell) {
         const executionLTV = safeParseBigInt(autoSell.decodedParams.executionLtv) ?? 0n
         return triggerData.executionLTV > executionLTV

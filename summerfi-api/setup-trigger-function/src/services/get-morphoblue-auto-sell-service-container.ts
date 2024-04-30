@@ -101,7 +101,8 @@ export const getMorphoBlueAutoSellServiceContainer: (
         debt: trigger.position.debt,
       })
 
-      const currentAutoSell = triggers.triggers[ProtocolId.MORPHO_BLUE][trigger.poolId].basicSell
+      const currentAutoSell =
+        triggers.triggers[ProtocolId.MORPHO_BLUE][trigger.poolId].morphoBlueBasicSell
       const currentTrigger: CurrentTriggerLike | undefined = currentAutoSell
         ? {
             triggerData: currentAutoSell.triggerData as `0x${string}`,

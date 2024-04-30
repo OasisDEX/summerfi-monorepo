@@ -8,6 +8,7 @@ import {
 import {
   addressSchema,
   chainIdSchema,
+  poolIdSchema,
   urlOptionalSchema,
 } from '@summerfi/serverless-shared/validators'
 import { Chain as ViemChain, createPublicClient, http, PublicClient } from 'viem'
@@ -40,6 +41,12 @@ import {
   LegacyDmaAaveStopLossToDebtV2ID,
   LegacyDmaSparkStopLossToCollateralV2ID,
   LegacyDmaSparkStopLossToDebtV2ID,
+  MorphoBlueBasicBuy,
+  MorphoBlueBasicBuyV2ID,
+  MorphoBlueBasicSell,
+  MorphoBlueBasicSellV2ID,
+  MorphoBlueStopLoss,
+  MorphoBlueStopLossV2ID,
   SparkStopLossToCollateral,
   SparkStopLossToCollateralDMA,
   SparkStopLossToCollateralV2ID,
@@ -60,9 +67,11 @@ import {
   getDmaSparkPartialTakeProfit,
   getDmaAaveTrailingStopLoss,
   getDmaSparkTrailingStopLoss,
+  getDmaMorphoBlueTrailingStopLoss,
 } from './trigger-parsers'
 import { ChainId, getRpcGatewayEndpoint, IRpcConfig, ProtocolId } from '@summerfi/serverless-shared'
 import { getAddresses } from '@summerfi/triggers-shared'
+import { getMorphoBluePartialTakeProfit } from './trigger-parsers/dma-morphoblue-partial-take-profit'
 
 const logger = new Logger({ serviceName: 'getTriggersFunction' })
 
@@ -84,6 +93,7 @@ const domainChainIdToViemChain: Record<ChainId, ViemChain> = {
 
 const paramsSchema = z.object({
   dpm: addressSchema,
+  poolId: poolIdSchema,
   chainId: chainIdSchema,
   rpc: urlOptionalSchema,
   getDetails: z
@@ -327,6 +337,44 @@ export const handler = async (
       }
     })[0]
 
+  const morphoBlueStopLoss: MorphoBlueStopLoss | undefined = triggers.triggers
+    .filter((trigger) => trigger.triggerType == MorphoBlueStopLossV2ID)
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'MorphoBlueStopLossV2' as const,
+        triggerType: MorphoBlueStopLossV2ID,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapStopLossParams(trigger),
+      }
+    })[0]
+
+  const morphoBlueBasicBuy: MorphoBlueBasicBuy | undefined = triggers.triggers
+    .filter((trigger) => trigger.triggerType == MorphoBlueBasicBuyV2ID)
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'MorphoBlueBasicBuyV2' as const,
+        triggerType: MorphoBlueBasicBuyV2ID,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: {
+          maxBuyPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('maxBuyPrice')],
+          ...mapBuySellCommonParams(trigger),
+        },
+      }
+    })[0]
+  const morphoBlueBasicSell: MorphoBlueBasicSell | undefined = triggers.triggers
+    .filter((trigger) => trigger.triggerType == MorphoBlueBasicSellV2ID)
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'MorphoBlueBasicSellV2' as const,
+        triggerType: MorphoBlueBasicSellV2ID,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: {
+          minSellPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('minSellPrice')],
+          ...mapBuySellCommonParams(trigger),
+        },
+      }
+    })[0]
+
   const aaveTrailingStopLossDMA = await getDmaAaveTrailingStopLoss({
     triggers,
     pricesSubgraphClient,
@@ -337,6 +385,20 @@ export const handler = async (
     triggers,
     pricesSubgraphClient,
     logger,
+  })
+
+  const morphoBlueTrailingStopLoss = await getDmaMorphoBlueTrailingStopLoss({
+    triggers,
+    pricesSubgraphClient,
+    logger,
+  })
+  const morphoBluePartialTakeProfit = await getMorphoBluePartialTakeProfit({
+    triggers,
+    logger,
+    publicClient,
+    getDetails: params.getDetails,
+    addresses,
+    stopLoss: morphoBlueStopLoss,
   })
 
   const aaveStopLoss = getCurrentTrigger(
@@ -394,23 +456,12 @@ export const handler = async (
         sparkPartialTakeProfit,
       },
       [ProtocolId.MORPHO_BLUE]: {
-        ['0xtest']: {
-          stopLoss: {
-            triggerTypeName: 'MorphoBlueStopLossV2',
-            triggerType: 111111n,
-            triggerId: '10000000319',
-            triggerData:
-              '0x000000000000000000000000d0281cc68cdbf77d49d9a8a7691a8d53e30869d9000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000596a35b7000000000000000000000000833589fcd6edb6e08f4c7c32d4f71b54bda029130000000000000000000000004200000000000000000000000000000000000006436c6f7365414156455633506f736974696f6e5f3400000000000000000000000000000000000000000000000000000000000000000000000000000000001d7a',
-            decodedParams: {
-              positionAddress: '0xd0281cc68cdbf77d49d9a8a7691a8d53e30869d9',
-              triggerType: '128',
-              maxCoverage: '1500132791',
-              executionLtv: '7546',
-              ltv: '7546',
-              debtToken: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
-              collateralToken: '0x4200000000000000000000000000000000000006',
-            },
-          },
+        [params.poolId]: {
+          morphoBlueStopLoss,
+          morphoBlueBasicBuy,
+          morphoBlueBasicSell,
+          morphoBlueTrailingStopLoss,
+          morphoBluePartialTakeProfit,
         },
       },
     },

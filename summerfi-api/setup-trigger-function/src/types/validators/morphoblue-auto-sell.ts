@@ -12,13 +12,14 @@ import {
   poolIdSchema,
   urlOptionalSchema,
 } from '@summerfi/serverless-shared'
+import { TriggerType } from '@oasisdex/automation'
 
 export const morphoBlueBasicSellTriggerDataSchema = z
   .object({
     type: z
       .any()
       .optional()
-      .transform(() => BigInt(111111)),
+      .transform(() => BigInt(TriggerType.DmaMorphoBlueBasicSellV2)),
     executionLTV: ltvSchema,
     targetLTV: ltvSchema,
     minSellPrice: priceSchema.optional().default(0n),

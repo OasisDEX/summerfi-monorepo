@@ -451,11 +451,11 @@ export type GetTriggersResponse = {
     }
     [ProtocolId.MORPHO_BLUE]: {
       [key: `0x${string}`]: {
-        stopLoss?: MorphoBlueStopLoss
-        basicBuy?: MorphoBlueBasicBuy
-        basicSell?: MorphoBlueBasicSell
-        trailingStopLoss?: MorphoBlueTrailingStopLoss
-        partialTakeProfit?: MorphoBluePartialTakeProfit
+        morphoBlueStopLoss?: MorphoBlueStopLoss
+        morphoBlueBasicBuy?: MorphoBlueBasicBuy
+        morphoBlueBasicSell?: MorphoBlueBasicSell
+        morphoBlueTrailingStopLoss?: MorphoBlueTrailingStopLoss
+        morphoBluePartialTakeProfit?: MorphoBluePartialTakeProfit
       }
     }
   }

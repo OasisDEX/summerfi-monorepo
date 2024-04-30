@@ -63,8 +63,6 @@ export const handler = async (
 
   const body = JSON.parse(event.body ?? '{}')
 
-  console.log('pathParamsResasdult.data', pathParamsResult.data)
-
   const bodySchema = getBodySchema(pathParamsResult.data)
 
   if (!bodySchema) {

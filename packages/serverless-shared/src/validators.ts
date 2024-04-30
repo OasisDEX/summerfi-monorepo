@@ -12,6 +12,10 @@ export const addressSchema = z
   .transform((a) => getAddress(a))
 
 export const poolIdSchema = z.custom<PoolId>((val: unknown) => {
+  if (!val) {
+    // this is optional
+    return true
+  }
   return isValidPoolId(val)
 }, 'Invalid pool ID format')
 
