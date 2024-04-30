@@ -5,9 +5,6 @@ import { ISimulationState } from '../../../interfaces/simulation'
 
 export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISimulationState {
   const balanceWithoutFromToken = subtractBalance(step.inputs.inputAmount, state.balances)
-  console.log('step inputs', JSON.stringify(step.inputs, null, 2))
-  console.log('step outputs', JSON.stringify(step.outputs, null, 2))
-
   const balanceWithToToken = addBalance(step.outputs.received, balanceWithoutFromToken)
   const fromAmountPreSummerFee = step.inputs.inputAmount.divide(
     Percentage.createFrom({ value: 1 }).subtract(step.inputs.summerFee),
