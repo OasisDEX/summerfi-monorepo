@@ -41,7 +41,6 @@ import { IMakerLendingPoolId, isMakerLendingPoolId } from '../interfaces/IMakerL
 import { MakerStepBuilders } from './MakerStepBuilders'
 import { MakerPositionId } from './MakerPositionId'
 import { MakerLendingPoolInfo } from './MakerLendingPoolInfo'
-import { join } from 'path'
 import {
   CollateralInfo,
   DebtInfo,

@@ -45,7 +45,6 @@ import {
 import { IUser } from '@summerfi/sdk-common/user'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 import { AaveV3StepBuilders } from '../builders'
-import { AaveV3LendingPoolId } from './AaveV3LendingPoolId'
 import { IAaveV3PositionIdData, isAaveV3PositionId } from '../interfaces/IAaveV3PositionId'
 import { CollateralInfo } from '@summerfi/sdk-common'
 import { AaveV3LendingPoolInfo } from './AaveV3LendingPoolInfo'
