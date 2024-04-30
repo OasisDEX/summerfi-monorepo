@@ -862,6 +862,9 @@ importers:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
+      '@summerfi/serverless-shared':
+        specifier: workspace:^
+        version: link:../../packages/serverless-shared
       '@summerfi/swap-common':
         specifier: workspace:*
         version: link:../swap-common
