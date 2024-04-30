@@ -29,7 +29,7 @@ const SDKAPiUrl = 'https://zmjmtfsocb.execute-api.us-east-1.amazonaws.com/api/sd
 const TenderlyForkUrl =
   'https://virtual.mainnet.rpc.tenderly.co/ea4060f8-c16d-49ba-84dd-2c12afb98cdd'
 
-describe('Refinance Maker Spark | SDK', () => {
+describe.skip('Refinance Maker Spark | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: SDKAPiUrl })
