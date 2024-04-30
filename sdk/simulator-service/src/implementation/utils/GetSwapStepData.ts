@@ -38,7 +38,6 @@ export async function getSwapStepData(params: {
       chainInfo: params.chainInfo,
       fromAmount: amountAfterSummerFee,
       toToken: params.toToken,
-      slippage: params.slippage,
     }),
     params.swapManager.getSpotPrice({
       chainInfo: params.chainInfo,
