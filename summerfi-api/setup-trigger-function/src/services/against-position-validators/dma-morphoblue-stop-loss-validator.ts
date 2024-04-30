@@ -66,6 +66,11 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
+      console.log(
+        'triggers.triggers[ProtocolId.MORPHO_BLUE]',
+        triggers.triggers[ProtocolId.MORPHO_BLUE],
+      )
+      console.log('triggerData.poolId', triggerData.poolId)
       const currentAutoBuy =
         triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId].morphoBlueBasicBuy
       if (currentAutoBuy) {

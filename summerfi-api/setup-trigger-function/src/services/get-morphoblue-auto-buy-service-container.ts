@@ -3,7 +3,7 @@ import { MorphoBlueAutoBuyEventBody } from '~types'
 import { simulatePosition } from './simulate-position'
 import { PublicClient } from 'viem'
 import { Addresses, CurrentTriggerLike } from '@summerfi/triggers-shared'
-import { Address, ChainId, ProtocolId, safeParseBigInt } from '@summerfi/serverless-shared'
+import { Address, ChainId, PoolId, ProtocolId, safeParseBigInt } from '@summerfi/serverless-shared'
 import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
@@ -20,7 +20,7 @@ import { morphoBlueAutoBuyValidator } from './against-position-validators'
 export interface GetMorphoBlueAutoBuyServiceContainerProps {
   rpc: PublicClient
   addresses: Addresses
-  getTriggers: (address: Address) => Promise<GetTriggersResponse>
+  getTriggers: (address: Address, poolId: PoolId) => Promise<GetTriggersResponse>
   logger?: Logger
   chainId: ChainId
 }
@@ -78,7 +78,7 @@ export const getMorphoBlueAutoBuyServiceContainer: (
         ltv: trigger.triggerData.executionLTV,
       })
 
-      const triggers = await getTriggers(trigger.dpm)
+      const triggers = await getTriggers(trigger.dpm, trigger.triggerData.poolId)
 
       const currentStopLoss = getCurrentMorphoBlueStopLoss(triggers, position, logger)
 
@@ -94,7 +94,7 @@ export const getMorphoBlueAutoBuyServiceContainer: (
     },
     getTransaction: async ({ trigger }) => {
       const action = trigger.action
-      const triggers = await getTriggers(trigger.dpm)
+      const triggers = await getTriggers(trigger.dpm, trigger.triggerData.poolId)
       const position = await getPosition({
         address: trigger.dpm,
         poolId: trigger.triggerData.poolId,

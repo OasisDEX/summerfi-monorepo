@@ -2,7 +2,7 @@ import { ServiceContainer } from './service-container'
 import { MorphoBlueTrailingStopLossEventBody } from '~types'
 import { PublicClient } from 'viem'
 import { Addresses, CurrentTriggerLike } from '@summerfi/triggers-shared'
-import { Address, ChainId } from '@summerfi/serverless-shared'
+import { Address, ChainId, PoolId } from '@summerfi/serverless-shared'
 import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
@@ -21,7 +21,7 @@ import { maxUnit256, SupportedActions } from '@summerfi/triggers-shared'
 export interface GetMorphoBlueTrailingStopLossServiceContainerProps {
   rpc: PublicClient
   addresses: Addresses
-  getTriggers: (address: Address) => Promise<GetTriggersResponse>
+  getTriggers: (address: Address, poolId: PoolId) => Promise<GetTriggersResponse>
   getLatestPrice: (token: Address, denomination: Address) => Promise<DerivedPrices | undefined>
   logger?: Logger
   chainId: ChainId
@@ -107,7 +107,7 @@ export const getMorphoBlueTrailingStopLossServiceContainer: (
         debt: trigger.position.debt,
       })
 
-      const triggers = await getTriggers(trigger.dpm)
+      const triggers = await getTriggers(trigger.dpm, trigger.triggerData.poolId)
 
       const { executionPrice, dynamicExecutionLTV } = await getExecutionParams({ trigger })
 
@@ -123,7 +123,7 @@ export const getMorphoBlueTrailingStopLossServiceContainer: (
     },
     getTransaction: async ({ trigger }) => {
       const action = trigger.action
-      const triggers = await getTriggers(trigger.dpm)
+      const triggers = await getTriggers(trigger.dpm, trigger.triggerData.poolId)
       const position = await getPosition({
         address: trigger.dpm,
         poolId: trigger.triggerData.poolId,
