@@ -25,11 +25,11 @@ import { SparkPoolId, isSparkPoolId } from '@summerfi/protocol-plugins/plugins/s
 
 jest.setTimeout(300000)
 
-const SDKAPiUrl = 'https://nkllstfoy8.execute-api.us-east-1.amazonaws.com/api/sdk'
+const SDKAPiUrl = 'https://zmjmtfsocb.execute-api.us-east-1.amazonaws.com/api/sdk'
 const TenderlyForkUrl =
   'https://virtual.mainnet.rpc.tenderly.co/ea4060f8-c16d-49ba-84dd-2c12afb98cdd'
 
-describe.skip('Refinance Maker Spark | SDK', () => {
+describe('Refinance Maker Spark | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: SDKAPiUrl })
