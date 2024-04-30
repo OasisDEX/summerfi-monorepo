@@ -46,6 +46,15 @@
     },
     {
       "path": "../triggers-shared/tsconfig.json"
+    },
+    {
+      "path": "../abstractions/tsconfig.json"
+    },
+    {
+      "path": "../redis-cache/tsconfig.json"
+    },
+    {
+      "path": "../defi-llama-client/tsconfig.json"
     }
   ]
 }

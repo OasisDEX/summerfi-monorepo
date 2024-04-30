@@ -34,12 +34,20 @@ export class SwapManagerMock implements ISwapManager {
     this._quoteDataReturnValue = quoteData
   }
 
+  setSpotData(spotData: SpotData): void {
+    this._spotDataReturnValue = spotData
+  }
+
+  setSummerFee(summerFee: Percentage): void {
+    this._summerFeeValue = summerFee
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getSpotPrice(params: { chainInfo: ChainInfo; baseToken: Token }): Promise<SpotData> {
     return this._spotDataReturnValue
   }
 
-  getSummerFee(): Percentage {
+  async getSummerFee(): Promise<Percentage> {
     return this._summerFeeValue
   }
 

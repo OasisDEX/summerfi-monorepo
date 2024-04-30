@@ -144,5 +144,6 @@ async function createProtocolManagerContext(): Promise<IProtocolManagerContext> 
     tokenService: new TokenService(),
     priceService: new PriceService(provider),
     deployments: {} as DeploymentIndex,
+    swapManager: {} as any,
   }
 }

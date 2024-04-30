@@ -17,3 +17,4 @@ artifacts
 **/core-contracts/src/
 **/.sst/**
 **/.turbo/**
+/packages/**/src/generated

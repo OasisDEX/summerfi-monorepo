@@ -72,6 +72,7 @@ describe('Order Planner Service', () => {
         tokenService: undefined as unknown as ITokenService,
         priceService: undefined as unknown as IPriceService,
         deployments: deploymentsIndex,
+        swapManager: swapManager,
       },
       deploymentConfigTag: 'standard',
     })

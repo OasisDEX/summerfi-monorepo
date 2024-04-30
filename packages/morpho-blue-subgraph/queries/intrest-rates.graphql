@@ -10,10 +10,12 @@ query GetInterestRates(
         collateralToken {
             address
             symbol
+            decimals
         }
         debtToken {
             address
             symbol
+            decimals
         }
     }
     interestRates(

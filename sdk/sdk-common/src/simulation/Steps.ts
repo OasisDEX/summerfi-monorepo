@@ -65,13 +65,16 @@ export interface SwapStep
       provider: SwapProviderType
       routes: SwapRoute[]
       spotPrice: Price
+      // Amount that will be send to our Swap service which then deducts our fee
       fromTokenAmount: TokenAmount
+      // This amount has our fee already dedducted, and it will be send to exchange provider
+      amountAfterFee: TokenAmount
       toTokenAmount: TokenAmount
       slippage: Percentage
       summerFee: Percentage
     },
     {
-      receivedAmount: TokenAmount
+      received: TokenAmount
     }
   > {}
 

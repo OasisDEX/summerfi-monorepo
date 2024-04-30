@@ -5,14 +5,14 @@ import { ISimulationState } from '../../../interfaces/simulation'
 
 export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISimulationState {
   const balanceWithoutFromToken = subtractBalance(step.inputs.fromTokenAmount, state.balances)
-  const balanceWithToToken = addBalance(step.outputs.receivedAmount, balanceWithoutFromToken)
+  const balanceWithToToken = addBalance(step.outputs.received, balanceWithoutFromToken)
 
   const baseToken = step.inputs.toTokenAmount.token
   const quoteToken = step.inputs.fromTokenAmount.token
 
   // We require both from & to be at similar decimal precisions
   const offerPrice = Price.createFrom({
-    value: step.inputs.toTokenAmount.divide(step.inputs.fromTokenAmount.amount).toString(),
+    value: step.inputs.fromTokenAmount.divide(step.inputs.toTokenAmount.amount).amount,
     baseToken,
     quoteToken,
   })

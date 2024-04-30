@@ -7,7 +7,7 @@ import { isMakerPositionId } from '../interfaces'
 export class MakerWithdrawAction extends BaseAction {
   public readonly config = {
     name: 'MakerWithdraw',
-    version: 0,
+    version: 2,
     parametersAbi: '(uint256 vaultId, address userAddress, address joinAddr, uint256 amount)',
     storageInputs: ['vaultId'],
     storageOutputs: ['amountWithdrawn'],

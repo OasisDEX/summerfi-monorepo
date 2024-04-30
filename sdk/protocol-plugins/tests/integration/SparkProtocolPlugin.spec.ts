@@ -8,13 +8,14 @@ import {
   TokenAmount,
   Percentage,
 } from '@summerfi/sdk-common/common'
-import { SparkProtocolPlugin } from '../../src/plugins/spark'
+import { SparkLendingPool, SparkProtocolPlugin } from '../../src/plugins/spark'
 import { sparkPoolIdMock as validSparkPoolId } from '../mocks/SparkPoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 
 describe('Spark Protocol Plugin (Integration)', () => {
   let ctx: IProtocolPluginContext
   let sparkProtocolPlugin: SparkProtocolPlugin
+  let pool: SparkLendingPool
   beforeAll(async () => {
     ctx = await createProtocolPluginContext()
     sparkProtocolPlugin = new SparkProtocolPlugin({
@@ -84,7 +85,7 @@ describe('Spark Protocol Plugin (Integration)', () => {
   })
 
   it('correctly populates debt configuration from blockchain data', async () => {
-    const pool = await sparkProtocolPlugin.getPool(validSparkPoolId)
+    pool = await sparkProtocolPlugin.getPool(validSparkPoolId)
 
     const mockDebtToken = Token.createFrom({
       chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
@@ -145,5 +146,19 @@ describe('Spark Protocol Plugin (Integration)', () => {
 
     const originationFee = config!.originationFee
     expect(originationFee).toBeInstanceOf(Percentage)
+  })
+
+  it('resolves config maps for tokens sent with addresses in alternative formats', async () => {
+    const testCollateralToken = Token.createFrom({
+      chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
+      // NOTE: Address is different format to that expected by the protocol
+      address: Address.createFromEthereum({ value: '0xae78736cd615f374d3085123a210448e74fc6393' }),
+      symbol: 'RETH',
+      name: 'Rocket Ether',
+      decimals: 18,
+    })
+
+    const config = pool.collaterals.get({ token: testCollateralToken })
+    expect(config).toBeDefined()
   })
 })

@@ -6,6 +6,10 @@ export enum TokenSymbol {
   DAI = 'DAI',
   WETH = 'WETH',
   ETH = 'ETH',
-  WBTC = 'WBTC',
+  WSTETH = 'WSTETH',
+  RETH = 'RETH',
+  SDAI = 'SDAI',
   USDC = 'USDC',
+  USDT = 'USDT',
+  WBTC = 'WTBC',
 }

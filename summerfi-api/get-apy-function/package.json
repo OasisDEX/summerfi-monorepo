@@ -13,6 +13,11 @@
     "@aws-lambda-powertools/tracer": "^2.0.2",
     "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/morpho-blue-subgraph": "workspace:*",
+    "@summerfi/ajna-subgraph": "workspace:*",
+    "@summerfi/aave-spark-subgraph": "workspace:*",
+    "@summerfi/redis-cache": "workspace:*",
+    "@summerfi/defi-llama-client": "workspace:*",
+    "@summerfi/abstractions": "workspace:*",
     "viem": "^1.19.11",
     "zod": "^3.22.4"
   },
