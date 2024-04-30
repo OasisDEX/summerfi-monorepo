@@ -39,7 +39,6 @@ export interface ISwapProvider {
     chainInfo: ChainInfo
     fromAmount: TokenAmount
     toToken: Token
-    slippage: Percentage
   }): Promise<QuoteData>
 
   /**

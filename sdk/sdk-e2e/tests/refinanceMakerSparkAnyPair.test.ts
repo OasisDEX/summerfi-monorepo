@@ -22,17 +22,25 @@ import assert from 'assert'
 import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 import { ILKType, MakerPoolId } from '@summerfi/protocol-plugins/plugins/maker'
 import { SparkPoolId, isSparkPoolId } from '@summerfi/protocol-plugins/plugins/spark'
+import { AddressValue } from '@summerfi/sdk-common'
 
 jest.setTimeout(300000)
 
-const SDKAPiUrl = 'https://zmjmtfsocb.execute-api.us-east-1.amazonaws.com/api/sdk'
-const TenderlyForkUrl =
-  'https://virtual.mainnet.rpc.tenderly.co/ea4060f8-c16d-49ba-84dd-2c12afb98cdd'
+/** TEST CONFIG */
+const config = {
+  SDKAPiUrl: 'https://zmjmtfsocb.execute-api.us-east-1.amazonaws.com/api/sdk',
+  TenderlyForkUrl: 'https://virtual.mainnet.rpc.tenderly.co/4711dc9f-76a4-4f6c-9464-6f8c7369df61',
+  makerVaultId: '31709',
+  DPMAddress: '0xc1475b2735fb9130a4701ee9e2215b6305dd501b',
+  walletAddress: '0xbEf4befb4F230F43905313077e3824d7386E09F8',
+  collateralAmount: '5000.0',
+  debtAmount: '5000000.0',
+}
 
 describe.skip('Refinance Maker Spark | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     // SDK
-    const sdk = makeSDK({ apiURL: SDKAPiUrl })
+    const sdk = makeSDK({ apiURL: config.SDKAPiUrl })
 
     // Chain
     const chain: Maybe<Chain> = await sdk.chains.getChain({
@@ -43,7 +51,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
 
     // User
     const walletAddress = Address.createFromEthereum({
-      value: '0x34314adbfBb5d239bb67f0265c9c45EB8b834412',
+      value: config.walletAddress as AddressValue,
     })
     const user: User = await sdk.users.getUser({
       chainInfo: chain.chainInfo,
@@ -56,7 +64,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     // Positions Manager
     const positionsManager: IPositionsManager = {
       address: Address.createFromEthereum({
-        value: '0xd1edd5ff690a83e9a1ebcd0ac1c3f7e231b72f76',
+        value: config.DPMAddress as AddressValue,
       }),
     }
 
@@ -88,7 +96,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
         chainInfo: chain.chainInfo,
       },
       ilkType: ILKType.ETH_C,
-      vaultId: '31717',
+      vaultId: config.makerVaultId,
     }
 
     const makerPool = await maker.getPool({
@@ -103,14 +111,14 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     // Source position
     const makerPosition: Position = Position.createFrom({
       type: PositionType.Multiply,
-      positionId: PositionId.createFrom({ id: '31717' }),
-      debtAmount: TokenAmount.createFromBaseUnit({
+      positionId: PositionId.createFrom({ id: config.makerVaultId }),
+      debtAmount: TokenAmount.createFrom({
         token: DAI,
-        amount: '0',
+        amount: config.debtAmount,
       }),
-      collateralAmount: TokenAmount.createFromBaseUnit({
+      collateralAmount: TokenAmount.createFrom({
         token: WETH,
-        amount: '10000000000000000000',
+        amount: config.collateralAmount,
       }),
       pool: makerPool,
     })
@@ -168,7 +176,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
 
     const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex
     const transactionUtils = new TransactionUtils({
-      rpcUrl: TenderlyForkUrl,
+      rpcUrl: config.TenderlyForkUrl,
       walletPrivateKey: privateKey,
     })
 

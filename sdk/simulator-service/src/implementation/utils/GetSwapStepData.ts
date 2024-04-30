@@ -1,3 +1,4 @@
+import { Price } from '@summerfi/sdk-common'
 import type {
   ChainInfo,
   Percentage,
@@ -38,7 +39,6 @@ export async function getSwapStepData(params: {
       chainInfo: params.chainInfo,
       fromAmount: amountAfterSummerFee,
       toToken: params.toToken,
-      slippage: params.slippage,
     }),
     params.swapManager.getSpotPrice({
       chainInfo: params.chainInfo,
@@ -47,12 +47,25 @@ export async function getSwapStepData(params: {
     }),
   ])
 
+  // Actual price offered by the swap service
+  const offerPrice = Price.createFrom({
+    value: params.fromAmount.divide(quote.toTokenAmount.amount).amount,
+    baseToken: params.toToken,
+    quoteToken: params.fromAmount.token,
+  })
+
+  const minimumReceivedAmount = quote.toTokenAmount.multiply(1.0 - params.slippage.toProportion())
+
   return {
-    ...quote,
-    fromTokenAmount: params.fromAmount,
-    amountAfterFee: amountAfterSummerFee,
-    summerFee,
+    provider: quote.provider,
+    routes: quote.routes,
     spotPrice: spotPrice.price,
+    offerPrice: offerPrice,
+    inputAmount: params.fromAmount,
+    inputAmountAfterFee: amountAfterSummerFee,
+    estimatedReceivedAmount: quote.toTokenAmount,
+    minimumReceivedAmount: minimumReceivedAmount,
     slippage: params.slippage,
+    summerFee: summerFee,
   }
 }
