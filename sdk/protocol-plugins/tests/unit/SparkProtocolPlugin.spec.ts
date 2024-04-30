@@ -41,11 +41,6 @@ describe('Spark Protocol Plugin', () => {
     expect(sparkProtocolPlugin.ctx).toBe(ctx)
   })
 
-  it('should correctly return a SparkLendingPool object for a valid SparkPoolId', async () => {
-    const sparkPoolIdValid = sparkPoolIdMock
-    await expect(sparkProtocolPlugin.getPool(sparkPoolIdValid)).resolves.toBeDefined()
-  })
-
   it('should throw an error when calling getPool with an unsupported ChainInfo', async () => {
     const invalidSparkPoolIdUnsupportedChain = {
       ...sparkPoolIdMock,

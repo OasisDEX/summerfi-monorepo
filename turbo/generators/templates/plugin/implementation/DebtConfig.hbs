@@ -1,0 +1,20 @@
+import { DebtConfig } from '@summerfi/sdk-common/protocols'
+import { I{{namePascalCase}}DebtConfig } from '../interfaces/I{{namePascalCase}}DebtConfig'
+import { SerializationService } from '@summerfi/sdk-common/services'
+
+export class {{namePascalCase}}DebtConfig extends DebtConfig implements I{{namePascalCase}}DebtConfig {
+  /* EG readonly borrowingEnabled: boolean */
+
+
+  private constructor(params: I{{namePascalCase}}DebtConfig) {
+    super(params)
+
+    /* EG this.borrowingEnabled = params.borrowingEnabled */
+  }
+
+  static createFrom(params: I{{namePascalCase}}DebtConfig): {{namePascalCase}}DebtConfig {
+    return new {{namePascalCase}}DebtConfig(params)
+  }
+}
+
+SerializationService.registerClass({{namePascalCase}}DebtConfig)

@@ -1,0 +1,45 @@
+import { getValueFromReference, steps } from '@summerfi/sdk-common/simulation'
+import { ActionBuilder } from '@summerfi/protocol-plugins-common'
+import { ActionNames } from '@summerfi/deployment-types'
+import { {{namePascalCase}}DepositAction } from '../actions/{{name}}DepositAction'
+import { {{namePascalCase}}BorrowAction } from '../actions/{{name}}BorrowAction'
+import { Address, AddressValue } from '@summerfi/sdk-common/common'
+
+export const {{namePascalCase}}DepositBorrowActionList: ActionNames[] = ['{{namePascalCase}}Deposit', '{{namePascalCase}}Borrow']
+
+export const {{namePascalCase}}DepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrowStep> = async (
+    params,
+    ): Promise<void> => {
+        const { context, user, step } = params
+
+        context.addActionCall({
+        step: params.step,
+        action: new {{namePascalCase}}DepositAction(),
+        arguments: {
+        /** INSERT HERE - ARGS EG
+        * depositAmount: getValueFromReference(step.inputs.depositAmount),
+        * sumAmounts: false,
+        * setAsCollateral: true,
+        **/
+        },
+        connectedInputs: {},
+        connectedOutputs: {
+            depositAmount: 'depositedAmount',
+        },
+        })
+
+        context.addActionCall({
+        step: step,
+        action: new {{namePascalCase}}BorrowAction(),
+        arguments: {
+        /** INSERT HERE - ARGS EG
+        * borrowAmount: getValueFromReference(step.inputs.borrowAmount),
+        * borrowTo: positionsManager.address,
+        **/
+        },
+        connectedInputs: {},
+        connectedOutputs: {
+            borrowAmount: 'borrowedAmount',
+        },
+        })
+}

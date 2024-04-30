@@ -21,27 +21,6 @@ describe('Maker Protocol Plugin (Integration)', () => {
       context: ctx,
     })
   })
-  //
-  // it('should throw an error when a OSM/TokenService reads fail', async () => {
-  //   const wrongCtx = await createProtocolPluginContext({
-  //     contractProvider: new MockContractProvider({
-  //       ...defaultAddressAbiMapsByProtocol,
-  //       [ProtocolName.Maker]: {
-  //         ...defaultAddressAbiMapsByProtocol[ProtocolName.Maker],
-  //         IlkRegistry: {
-  //           ...defaultAddressAbiMapsByProtocol[ProtocolName.Maker].IlkRegistry,
-  //           address: '0xWrong',
-  //         },
-  //       },
-  //     }),
-  //   })
-  //   const makerProtocolPluginWithWrongCtx = new MakerProtocolPlugin()
-  //   makerProtocolPluginWithWrongCtx.init(wrongCtx)
-  //
-  //   await expect(makerProtocolPluginWithWrongCtx.getPool(validMakerPoolId)).rejects.toThrow(
-  //     `An error occurred fetching protocol data for Maker`,
-  //   )
-  // })
 
   it('correctly populates collateral configuration from blockchain data', async () => {
     const pool = await makerProtocolPlugin.getPool(validMakerPoolId)

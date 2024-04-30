@@ -1,0 +1,47 @@
+import { getValueFromReference, steps } from '@summerfi/sdk-common/simulation'
+import { ActionBuilder } from '@summerfi/protocol-plugins-common'
+import { ActionNames } from '@summerfi/deployment-types'
+import { {{namePascalCase}}PaybackAction } from '../actions/{{namePascalCase}}PaybackAction'
+import { {{namePascalCase}}WithdrawAction } from '../actions/{{namePascalCase}}WithdrawAction'
+import { Address, AddressValue } from '@summerfi/sdk-common/common'
+
+export const {{namePascalCase}}PaybackWithdrawActionList: ActionNames[] = ['{{namePascalCase}}Payback', '{{namePascalCase}}Withdraw']
+
+export const {{namePascalCase}}PaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWithdrawStep> = async (
+    params,
+    ): Promise<void> => {
+        const { context, user, step } = params
+
+        context.addActionCall({
+        step: params.step,
+        action: new {{namePascalCase}}PaybackAction(),
+        arguments: {
+        /** INSERT HERE - ARGS EG
+        * pool: step.inputs.position.pool,
+        * userAddress: user.wallet.address,
+        * amount: getValueFromReference(step.inputs.withdrawAmount),
+        * paybackAll: true, // TODO: we cannot always calculate this value because debtAmount and paybackAmount are references
+        **/
+        },
+        connectedInputs: {},
+        connectedOutputs: {
+        paybackAmount: 'amountPaidBack',
+        },
+        })
+
+        context.addActionCall({
+        step: step,
+        action: new {{namePascalCase}}WithdrawAction(),
+        arguments: {
+        /** INSERT HERE - ARGS EG
+        * pool: step.inputs.position.pool,
+        * userAddress: user.wallet.address,
+        * amount: getValueFromReference(step.inputs.withdrawAmount),
+        **/
+        },
+        connectedInputs: {},
+        connectedOutputs: {
+        withdrawAmount: 'amountWithdrawn',
+        },
+        })
+        }

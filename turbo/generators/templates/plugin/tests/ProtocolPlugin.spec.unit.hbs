@@ -2,59 +2,59 @@ import { IProtocolPluginContext, IPositionId } from '@summerfi/protocol-plugins-
 import { ChainInfo } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import assert from 'assert'
-import { AaveV3ProtocolPlugin } from '../../src/plugins/aave-v3'
-import { aaveV3PoolIdMock } from '../mocks/AAVEv3PoolIdMock'
+import { {{namePascalCase}}ProtocolPlugin } from '../../src/plugins/{{nameKebabCase}}'
+import { {{nameCamelCase}}PoolIdMock } from '../mocks/{{namePascalCase}}PoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 import { getErrorMessage } from '../utils/ErrorMessage'
 
-describe('AAVEv3 Protocol Plugin', () => {
+describe('{{namePascalCase}} Protocol Plugin', () => {
   let ctx: IProtocolPluginContext
-  let aaveV3ProtocolPlugin: AaveV3ProtocolPlugin
+  let {{nameCamelCase}}ProtocolPlugin: {{namePascalCase}}ProtocolPlugin
   beforeAll(async () => {
     ctx = await createProtocolPluginContext()
-    aaveV3ProtocolPlugin = new AaveV3ProtocolPlugin({
+    {{nameCamelCase}}ProtocolPlugin = new {{namePascalCase}}ProtocolPlugin({
       context: ctx,
     })
   })
 
   it('should verify that a given poolId is recognised as a valid format', () => {
-    expect(aaveV3ProtocolPlugin.isPoolId(aaveV3PoolIdMock)).toBe(true)
+    expect({{nameCamelCase}}ProtocolPlugin.isPoolId({{nameCamelCase}}PoolIdMock)).toBe(true)
   })
 
-  it('should throw a specific error when provided with a poolId not matching the AAVEv3PoolId format', () => {
+  it('should throw a specific error when provided with a poolId not matching the {{namePascalCase}}PoolId format', () => {
     try {
-      const invalidAaveV3PoolIdMock = {
-        ...aaveV3PoolIdMock,
+      const invalid{{namePascalCase}}PoolIdMock = {
+        ...{{nameCamelCase}}PoolIdMock,
         protocol: {
-          ...aaveV3PoolIdMock.protocol,
+          ...{{nameCamelCase}}PoolIdMock.protocol,
           name: ProtocolName.Maker,
         },
       }
-      aaveV3ProtocolPlugin.validatePoolId(invalidAaveV3PoolIdMock)
+      {{nameCamelCase}}ProtocolPlugin.validatePoolId(invalid{{namePascalCase}}PoolIdMock)
       assert.fail('Should throw error')
     } catch (error: unknown) {
-      expect(getErrorMessage(error)).toMatch('Invalid AaveV3 pool ID')
+      expect(getErrorMessage(error)).toMatch('Invalid {{namePascalCase}} pool ID')
     }
   })
 
   it('should throw an error when calling getPool with an unsupported Chain', async () => {
-    const invalidAaveV3PoolIdUnsupportedChain = {
-      ...aaveV3PoolIdMock,
+    const invalid{{namePascalCase}}PoolIdUnsupportedChain = {
+      ...{{nameCamelCase}}PoolIdMock,
       protocol: {
-        ...aaveV3PoolIdMock.protocol,
+        ...{{nameCamelCase}}PoolIdMock.protocol,
         chainInfo: ChainInfo.createFrom({
           chainId: 2,
           name: 'Unknown',
         }),
       },
     }
-    await expect(aaveV3ProtocolPlugin.getPool(invalidAaveV3PoolIdUnsupportedChain)).rejects.toThrow(
-      'Invalid AaveV3 pool ID',
+    await expect({{nameCamelCase}}ProtocolPlugin.getPool(invalid{{namePascalCase}}PoolIdUnsupportedChain)).rejects.toThrow(
+      'Invalid {{namePascalCase}} pool ID',
     )
   })
 
   it('should throw an error when calling getPool with chain id missing from ctx', async () => {
-    const aaveV3ProtocolPluginWithWrongContext = new AaveV3ProtocolPlugin({
+    const {{nameCamelCase}}ProtocolPluginWithWrongContext = new {{namePascalCase}}ProtocolPlugin({
       context: {
         ...ctx,
         provider: {
@@ -66,14 +66,14 @@ describe('AAVEv3 Protocol Plugin', () => {
         },
       },
     })
-    await expect(aaveV3ProtocolPluginWithWrongContext.getPool(aaveV3PoolIdMock)).rejects.toThrow(
+    await expect({{nameCamelCase}}ProtocolPluginWithWrongContext.getPool({{nameCamelCase}}PoolIdMock)).rejects.toThrow(
       `ctx.provider.chain.id undefined`,
     )
   })
 
   it('should throw an error when calling getPool with an unsupported chain ID', async () => {
     const wrongChainId = 2
-    const aaveV3ProtocolPluginWithWrongContext = new AaveV3ProtocolPlugin({
+    const {{nameCamelCase}}ProtocolPluginWithWrongContext = new {{namePascalCase}}ProtocolPlugin({
       context: {
         ...ctx,
         provider: {
@@ -86,13 +86,13 @@ describe('AAVEv3 Protocol Plugin', () => {
       },
     })
 
-    await expect(aaveV3ProtocolPluginWithWrongContext.getPool(aaveV3PoolIdMock)).rejects.toThrow(
+    await expect({{nameCamelCase}}ProtocolPluginWithWrongContext.getPool({{nameCamelCase}}PoolIdMock)).rejects.toThrow(
       `Chain ID ${wrongChainId} is not supported`,
     )
   })
 
   it('should throw a "Not implemented" error when calling getPosition', async () => {
     const positionId = 'mockPositionId' as IPositionId
-    await expect(aaveV3ProtocolPlugin.getPosition(positionId)).rejects.toThrow('Not implemented')
+    await expect({{nameCamelCase}}ProtocolPlugin.getPosition(positionId)).rejects.toThrow('Not implemented')
   })
 })
