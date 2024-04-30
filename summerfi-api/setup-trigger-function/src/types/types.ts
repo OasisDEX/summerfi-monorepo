@@ -26,7 +26,7 @@ import {
   eventBodyMorphoBluePartialTakeProfitSchema,
   eventBodyDmaMorphoBlueStopLossSchema,
   eventBodyDmaMorphoBlueTrailingStopLossSchema,
-  dmaMorphoBlueStopLossTriggerDataSchema,
+  dmaMorphoBlueStopLoss,
   dmaMorphoBlueTrailingStopLossTriggerDataSchema,
   morphoBlueBasicBuyTriggerDataSchema,
   morphoBlueBasicSellTriggerDataSchema,
@@ -90,9 +90,7 @@ export type SparkAutoSellTriggerData = z.infer<typeof sparkBasicSellTriggerDataS
 export type SparkPartialTakeProfitTriggerData = z.infer<
   typeof sparkPartialTakeProfitTriggerDataSchema
 >
-export type DmaMorphoBlueStopLossTriggerData = z.infer<
-  typeof dmaMorphoBlueStopLossTriggerDataSchema
->
+export type DmaMorphoBlueStopLossTriggerData = z.infer<typeof dmaMorphoBlueStopLoss>
 export type DmaMorphoBlueTrailingStopLossTriggerData = z.infer<
   typeof dmaMorphoBlueTrailingStopLossTriggerDataSchema
 >
