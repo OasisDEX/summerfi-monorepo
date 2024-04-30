@@ -14,7 +14,7 @@ import {
 } from '@summerfi/triggers-shared'
 import { z } from 'zod'
 import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
-import { safeParseBigInt } from '@summerfi/serverless-shared'
+import { ProtocolId, safeParseBigInt } from '@summerfi/serverless-shared'
 
 const paramsSchema = z.object({
   position: positionSchema,
@@ -66,7 +66,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const currentAutoBuy = triggers.triggers['spark'].sparkBasicBuy
+      const currentAutoBuy = triggers.triggers[ProtocolId.SPARK].sparkBasicBuy
       if (currentAutoBuy) {
         const currentAutoBuyTarget = safeParseBigInt(currentAutoBuy.decodedParams.targetLtv) ?? 0n
         return triggerData.executionLTV > currentAutoBuyTarget
@@ -83,7 +83,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const currentPartialTakeProfit = triggers.triggers['spark'].sparkPartialTakeProfit
+      const currentPartialTakeProfit = triggers.triggers[ProtocolId.SPARK].sparkPartialTakeProfit
       if (currentPartialTakeProfit) {
         const currentPartialTakeProfitTarget =
           safeParseBigInt(currentPartialTakeProfit.decodedParams.targetLtv) ?? 0n
@@ -129,7 +129,7 @@ const warningsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoSell = triggers.triggers['spark'].sparkBasicSell
+      const autoSell = triggers.triggers[ProtocolId.SPARK].sparkBasicSell
       if (autoSell) {
         const executionLTV = safeParseBigInt(autoSell.decodedParams.executionLtv) ?? 0n
         return triggerData.executionLTV > executionLTV

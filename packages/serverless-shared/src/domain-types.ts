@@ -52,7 +52,7 @@ export enum ProtocolId {
   AAVE3 = 'aave3',
   SPARK = 'spark',
   AJNA = 'ajna',
-  MORPHO_BLUE = 'morpho-blue',
+  MORPHO_BLUE = 'morphoblue',
 }
 
 export const isProtocolId = (protocolId: unknown): protocolId is ProtocolId => {

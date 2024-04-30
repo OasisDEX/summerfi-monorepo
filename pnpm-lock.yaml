@@ -615,6 +615,9 @@ importers:
       '@summerfi/abis':
         specifier: workspace:*
         version: link:../abis
+      '@summerfi/prices-subgraph':
+        specifier: workspace:*
+        version: link:../prices-subgraph
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../serverless-shared

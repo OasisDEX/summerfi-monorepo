@@ -13,7 +13,7 @@ import {
 } from '@summerfi/triggers-shared'
 import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import { z } from 'zod'
-import { chainIdSchema, safeParseBigInt } from '@summerfi/serverless-shared'
+import { ProtocolId, chainIdSchema, safeParseBigInt } from '@summerfi/serverless-shared'
 
 const paramsSchema = z.object({
   position: positionSchema,
@@ -28,7 +28,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Add) {
-        return triggers.triggers['morpho-blue']['0xtest'].partialTakeProfit === undefined
+        return triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].partialTakeProfit === undefined
       }
       return true
     },
@@ -42,7 +42,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Remove || action === SupportedActions.Update)
-        return triggers.triggers['morpho-blue']['0xtest'].partialTakeProfit !== undefined
+        return triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].partialTakeProfit !== undefined
       return true
     },
     {
@@ -54,7 +54,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoSell = triggers.triggers['morpho-blue']['0xtest'].basicSell
+      const autoSell = triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].basicSell
       if (!autoSell) return true
 
       const autoSellTargetLtv = safeParseBigInt(autoSell.decodedParams.targetLtv) ?? 99n
@@ -70,7 +70,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoSell = triggers.triggers['morpho-blue']['0xtest'].basicSell
+      const autoSell = triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].basicSell
       if (!autoSell) return true
 
       const autoSellExecutionLtv = safeParseBigInt(autoSell.decodedParams.executionLtv) ?? 99n
@@ -103,7 +103,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoBuy = triggers.triggers['morpho-blue']['0xtest'].basicBuy
+      const autoBuy = triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].basicBuy
       if (!autoBuy) return true
 
       const autoBuyMaxPrice = safeParseBigInt(autoBuy.decodedParams.maxBuyPrice) ?? 0n
@@ -133,7 +133,7 @@ const upsertErrorsValidation = paramsSchema
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
     if (action === SupportedActions.Remove)
-      return triggers.triggers['morpho-blue']['0xtest'].partialTakeProfit !== undefined
+      return triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].partialTakeProfit !== undefined
     return true
   },
   {

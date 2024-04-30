@@ -13,6 +13,7 @@ import { PositionLike, CurrentTriggerLike } from '@summerfi/triggers-shared'
 import { getMaxCoverage } from './get-max-coverage'
 import { OPERATION_NAMES } from '@oasisdex/dma-library'
 import { AddableTrigger, RemovableTrigger } from './automation-bot-helper'
+import { TriggerType } from '@oasisdex/automation'
 
 export const encodeMorphoBlueStopLoss = (
   position: PositionLike,
@@ -30,11 +31,9 @@ export const encodeMorphoBlueStopLoss = (
   )
 
   const operationName =
-    triggerData.type == BigInt(111111)
+    triggerData.type == BigInt(TriggerType.DmaMorphoBlueStopLossV2)
       ? OPERATION_NAMES.morphoblue.CLOSE_POSITION
-      : triggerData.type == BigInt(111111)
-        ? OPERATION_NAMES.morphoblue.CLOSE_POSITION
-        : undefined
+      : undefined
 
   if (operationName === undefined) {
     throw new Error('Invalid trigger type')

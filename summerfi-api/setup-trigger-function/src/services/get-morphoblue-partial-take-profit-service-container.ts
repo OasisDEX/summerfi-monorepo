@@ -6,7 +6,7 @@ import {
 } from '~types'
 import { PublicClient } from 'viem'
 import { Addresses, CurrentTriggerLike } from '@summerfi/triggers-shared'
-import { Address, ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
+import { Address, ChainId, ProtocolId, safeParseBigInt } from '@summerfi/serverless-shared'
 import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
@@ -165,7 +165,7 @@ export const getMorphoBluePartialTakeProfitServiceContainer: (
       })
 
       const currentPartialTakeProfit =
-        triggers.triggers['morpho-blue'][trigger.poolId].partialTakeProfit
+        triggers.triggers[ProtocolId.MORPHO_BLUE][trigger.poolId].partialTakeProfit
       const currentTrigger: CurrentTriggerLike | undefined = currentPartialTakeProfit
         ? {
             triggerData: currentPartialTakeProfit.triggerData as `0x${string}`,

@@ -15,7 +15,7 @@ import {
 } from '@summerfi/triggers-shared'
 import { z } from 'zod'
 import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
-import { chainIdSchema, safeParseBigInt } from '@summerfi/serverless-shared'
+import { chainIdSchema, ProtocolId, safeParseBigInt } from '@summerfi/serverless-shared'
 
 const paramsSchema = z.object({
   position: positionSchema,
@@ -64,7 +64,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggers, triggerData }) => {
-      const autoBuyTrigger = triggers.triggers['aave-v3'].aaveBasicBuy
+      const autoBuyTrigger = triggers.triggers[ProtocolId.AAVE_V3].aaveBasicBuy
       if (!autoBuyTrigger) {
         return true
       }
@@ -96,7 +96,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Add) {
-        return triggers.triggers['aave-v3'].aaveBasicSell === undefined
+        return triggers.triggers[ProtocolId.AAVE_V3].aaveBasicSell === undefined
       }
       return true
     },
@@ -110,7 +110,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Remove || action === SupportedActions.Update)
-        return triggers.triggers['aave-v3'].aaveBasicSell !== undefined
+        return triggers.triggers[ProtocolId.AAVE_V3].aaveBasicSell !== undefined
       return true
     },
     {
@@ -122,7 +122,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const partialTakeProfit = triggers.triggers['aave-v3'].aavePartialTakeProfit
+      const partialTakeProfit = triggers.triggers[ProtocolId.AAVE_V3].aavePartialTakeProfit
       if (!partialTakeProfit) {
         return true
       }
@@ -141,7 +141,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const partialTakeProfit = triggers.triggers['aave-v3'].aavePartialTakeProfit
+      const partialTakeProfit = triggers.triggers[ProtocolId.AAVE_V3].aavePartialTakeProfit
       if (!partialTakeProfit) {
         return true
       }
@@ -162,7 +162,7 @@ const upsertErrorsValidation = paramsSchema
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
     if (action === SupportedActions.Remove)
-      return triggers.triggers['aave-v3'].aaveBasicSell !== undefined
+      return triggers.triggers[ProtocolId.AAVE_V3].aaveBasicSell !== undefined
     return true
   },
   {
@@ -188,7 +188,7 @@ const warningsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoBuyTrigger = triggers.triggers['aave-v3'].aaveBasicBuy
+      const autoBuyTrigger = triggers.triggers[ProtocolId.AAVE_V3].aaveBasicBuy
       if (!autoBuyTrigger) {
         return true
       }

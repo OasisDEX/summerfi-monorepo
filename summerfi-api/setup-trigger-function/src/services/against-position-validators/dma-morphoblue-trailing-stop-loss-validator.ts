@@ -16,7 +16,7 @@ import {
 import { z } from 'zod'
 import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import { DerivedPrices } from '@summerfi/prices-subgraph'
-import { ltvSchema, safeParseBigInt } from '@summerfi/serverless-shared'
+import { ltvSchema, ProtocolId, safeParseBigInt } from '@summerfi/serverless-shared'
 
 const paramsSchema = z.object({
   position: positionSchema,
@@ -69,7 +69,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ dynamicExecutionLTV, triggers }) => {
-      const currentAutoBuy = triggers.triggers['morpho-blue']['0xtest'].basicBuy
+      const currentAutoBuy = triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].basicBuy
       if (currentAutoBuy) {
         const currentAutoBuyTarget = safeParseBigInt(currentAutoBuy.decodedParams.targetLtv) ?? 0n
         return dynamicExecutionLTV > currentAutoBuyTarget
@@ -97,7 +97,8 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ dynamicExecutionLTV, triggers }) => {
-      const currentPartialTakeProfit = triggers.triggers['morpho-blue']['0xtest'].partialTakeProfit
+      const currentPartialTakeProfit =
+        triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].partialTakeProfit
       if (currentPartialTakeProfit) {
         const currentPartialTakeProfitTarget =
           safeParseBigInt(currentPartialTakeProfit.decodedParams.targetLtv) ?? 0n
@@ -143,7 +144,7 @@ const warningsValidation = paramsSchema
   )
   .refine(
     ({ dynamicExecutionLTV, triggers }) => {
-      const autoSell = triggers.triggers['morpho-blue']['0xtest'].basicSell
+      const autoSell = triggers.triggers[ProtocolId.MORPHO_BLUE]['0xtest'].basicSell
       if (autoSell) {
         const executionLTV = safeParseBigInt(autoSell.decodedParams.executionLtv) ?? 0n
         return dynamicExecutionLTV > executionLTV

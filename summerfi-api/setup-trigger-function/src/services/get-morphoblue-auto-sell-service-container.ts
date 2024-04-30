@@ -2,7 +2,7 @@ import { ServiceContainer } from './service-container'
 import { MorphoBlueAutoSellEventBody } from '~types'
 import { PublicClient } from 'viem'
 import { Addresses, CurrentTriggerLike } from '@summerfi/triggers-shared'
-import { Address, ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
+import { Address, ChainId, ProtocolId, safeParseBigInt } from '@summerfi/serverless-shared'
 import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
@@ -101,7 +101,7 @@ export const getMorphoBlueAutoSellServiceContainer: (
         debt: trigger.position.debt,
       })
 
-      const currentAutoSell = triggers.triggers['morpho-blue'][trigger.poolId].basicSell
+      const currentAutoSell = triggers.triggers[ProtocolId.MORPHO_BLUE][trigger.poolId].basicSell
       const currentTrigger: CurrentTriggerLike | undefined = currentAutoSell
         ? {
             triggerData: currentAutoSell.triggerData as `0x${string}`,

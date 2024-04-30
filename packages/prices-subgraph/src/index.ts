@@ -4,6 +4,8 @@ import {
   PriceByRoundIdsDocument,
   PricesDocument,
   PricesQuery,
+  PricesUsdcTokenDocument,
+  PricesUsdcTokenQuery,
 } from './types/graphql/generated'
 import { Address, ChainId } from '@summerfi/serverless-shared/domain-types'
 import { Logger } from '@aws-lambda-powertools/logger'
@@ -33,6 +35,10 @@ export interface GetLatestPriceParams {
   denomination: Address
 }
 
+export interface GetUsdcAndTokenPriceParams {
+  token: Address
+}
+
 export interface GetMaxPriceParams {
   token: Address
   denomination: Address
@@ -50,6 +56,16 @@ export type DerivedPrices = Required<
     'denomination' | 'token' | 'tokenRoundId' | 'denominationRoundId' | 'derivedPrice'
   >
 >
+
+export type UsdcAndTokenPrice = {
+  usdcPrice?: PricesUsdcTokenQuery['usdcPrice'][0]['price']
+  tokenInUsdcPrice?: PricesUsdcTokenQuery['tokenInUSDC'][0]['derivedPrice']
+}
+
+export type GetUsdcAndTokenPrice = (
+  params: GetUsdcAndTokenPriceParams,
+) => Promise<UsdcAndTokenPrice>
+
 export type GetLatestPrice = (params: GetLatestPriceParams) => Promise<DerivedPrices | undefined>
 export type GetMaxPrice = (params: GetMaxPriceParams) => Promise<DerivedPrices | undefined>
 export type GetPriceByRoundIds = (
@@ -134,10 +150,34 @@ async function getPriceByRoundIds(params: GetPriceByRoundIdsParams, config: Subg
   return price
 }
 
+async function getUsdcAndTokenPrice(
+  params: GetUsdcAndTokenPriceParams,
+  config: SubgraphClientConfig,
+): Promise<UsdcAndTokenPrice> {
+  const url = getEndpoint(config.chainId, config.urlBase)
+  const prices = await request(url, PricesUsdcTokenDocument, {
+    token: params.token,
+  })
+
+  config.logger?.debug('Received USDC/Token price for', {
+    token: params.token,
+    usdcPrice: prices.usdcPrice[0]?.price,
+    tokenInUsdcPrice: prices.tokenInUSDC[0]?.derivedPrice,
+  })
+
+  return {
+    usdcPrice: prices.usdcPrice[0]?.price ? BigInt(prices.usdcPrice[0]?.price) : undefined,
+    tokenInUsdcPrice: prices.tokenInUSDC[0]?.derivedPrice
+      ? BigInt(prices.tokenInUSDC[0]?.derivedPrice)
+      : undefined,
+  }
+}
+
 export interface PricesSubgraphClient {
   getLatestPrice: GetLatestPrice
   getMaxPrice: GetMaxPrice
   getPriceByRoundIds: GetPriceByRoundIds
+  getUsdcAndTokenPrice: GetUsdcAndTokenPrice
 }
 
 export function getPricesSubgraphClient(config: SubgraphClientConfig): PricesSubgraphClient {
@@ -145,5 +185,7 @@ export function getPricesSubgraphClient(config: SubgraphClientConfig): PricesSub
     getLatestPrice: (params: GetLatestPriceParams) => getLatestPrice(params, config),
     getMaxPrice: (params: GetMaxPriceParams) => getMaxPrice(params, config),
     getPriceByRoundIds: (params: GetPriceByRoundIdsParams) => getPriceByRoundIds(params, config),
+    getUsdcAndTokenPrice: (params: GetUsdcAndTokenPriceParams) =>
+      getUsdcAndTokenPrice(params, config),
   }
 }
