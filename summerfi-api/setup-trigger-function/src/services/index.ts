@@ -1,4 +1,4 @@
-import { Address, ChainId, ProtocolId } from '@summerfi/serverless-shared/domain-types'
+import { Address, ChainId, PoolId, ProtocolId } from '@summerfi/serverless-shared/domain-types'
 import { getAddresses } from '@summerfi/triggers-shared'
 import { Chain as ViemChain, createPublicClient, http, PublicClient } from 'viem'
 import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
@@ -173,9 +173,11 @@ export function buildServiceContainer<Trigger extends SetupTriggerEventBody>(
 
   const addresses = getAddresses(chainId)
 
-  const getTriggers = memoize(async (address: Address) => {
+  const getTriggers = memoize(async (address: Address, poolId?: PoolId) => {
     try {
-      const triggers = await fetch(`${getTriggersUrl}?chainId=${chainId}&dpm=${address}`)
+      const triggers = await fetch(
+        `${getTriggersUrl}?chainId=${chainId}&dpm=${address}${poolId ? `&poolId=${poolId}` : ''}`,
+      )
       return (await triggers.json()) as GetTriggersResponse
     } catch (e) {
       logger?.error('Error fetching triggers', { error: e })
