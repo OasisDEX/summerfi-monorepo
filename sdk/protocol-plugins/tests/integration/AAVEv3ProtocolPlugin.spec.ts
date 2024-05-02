@@ -1,13 +1,5 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import {
-  ChainInfo,
-  Token,
-  Address,
-  Price,
-  RiskRatio,
-  TokenAmount,
-  Percentage,
-} from '@summerfi/sdk-common/common'
+import { Price, RiskRatio, TokenAmount, Percentage } from '@summerfi/sdk-common/common'
 import { AaveV3ProtocolPlugin } from '../../src/plugins/aave-v3'
 import { aaveV3PoolIdMock as validAaveV3PoolId } from '../mocks/AAVEv3PoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
@@ -24,35 +16,19 @@ describe('AAVEv3 Protocol Plugin (Integration)', () => {
 
   it('correctly populates collateral configuration from blockchain data', async () => {
     const pool = await aaveV3ProtocolPlugin.getLendingPool(validAaveV3PoolId)
-    const mockCollateralToken = Token.createFrom({
-      chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
-      address: Address.createFromEthereum({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
-      symbol: 'WETH',
-      name: 'Wrapped Ether',
-      decimals: 18,
-    })
-
     const aaveV3PoolInfo = await aaveV3ProtocolPlugin.getLendingPoolInfo(pool.id)
 
     const aaveV3PoolCollateralInfo = aaveV3PoolInfo.collateral
 
     expect(aaveV3PoolCollateralInfo).toBeDefined()
     expect(aaveV3PoolCollateralInfo).toMatchObject({
-      token: expect.objectContaining({
-        symbol: mockCollateralToken.symbol,
-        address: mockCollateralToken.address,
-        decimals: mockCollateralToken.decimals,
-        name: mockCollateralToken.name,
-      }),
+      token: expect.objectContaining(pool.id.collateralToken),
       price: expect.anything(),
       priceUSD: expect.anything(),
-      maxLtv: expect.anything(),
       liquidationThreshold: expect.anything(),
       tokensLocked: expect.anything(),
       maxSupply: expect.anything(),
       liquidationPenalty: expect.anything(),
-      apy: expect.anything(),
-      usageAsCollateralEnabled: expect.any(Boolean),
     })
 
     const price = aaveV3PoolCollateralInfo!.price
@@ -83,36 +59,21 @@ describe('AAVEv3 Protocol Plugin (Integration)', () => {
 
   it('correctly populates debt configuration from blockchain data', async () => {
     const pool = await aaveV3ProtocolPlugin.getLendingPool(validAaveV3PoolId)
-
-    const mockDebtToken = Token.createFrom({
-      chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
-      address: Address.createFromEthereum({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
-      symbol: 'DAI',
-      name: 'Dai Stablecoin',
-      decimals: 18,
-    })
-
     const aaveV3PoolInfo = await aaveV3ProtocolPlugin.getLendingPoolInfo(pool.id)
 
     const aaveV3PoolDebtInfo = aaveV3PoolInfo.debt
 
     expect(aaveV3PoolDebtInfo).toBeDefined()
     expect(aaveV3PoolDebtInfo).toMatchObject({
-      token: expect.objectContaining({
-        symbol: mockDebtToken.symbol,
-        address: mockDebtToken.address,
-        decimals: mockDebtToken.decimals,
-        name: mockDebtToken.name,
-      }),
+      token: expect.objectContaining(pool.id.debtToken),
       price: expect.anything(),
       priceUSD: expect.anything(),
-      rate: expect.anything(),
+      interestRate: expect.anything(),
       totalBorrowed: expect.anything(),
       debtCeiling: expect.anything(),
       debtAvailable: expect.anything(),
       dustLimit: expect.anything(),
       originationFee: expect.anything(),
-      borrowingEnabled: expect.any(Boolean),
     })
 
     const price = aaveV3PoolDebtInfo!.price

@@ -31,7 +31,7 @@ type Asset = AssetsList extends (infer U)[] ? U : never
  */
 export abstract class AAVEv3BaseProtocolPlugin extends BaseProtocolPlugin {
   abstract readonly protocolName: AllowedProtocolNames
-  private _assetsList: Maybe<AssetsList>
+  private _assetsList: Maybe<AssetsList> = undefined
 
   /** PROTECTED */
 

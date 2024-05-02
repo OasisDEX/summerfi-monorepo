@@ -88,7 +88,7 @@ export class SparkProtocolPlugin extends AAVEv3BaseProtocolPlugin {
   protected async _getLendingPoolInfoImpl(
     sparkPoolId: ISparkLendingPoolId,
   ): Promise<SparkLendingPoolInfo> {
-    this._inititalizeAssetsListIfNeeded()
+    await this._inititalizeAssetsListIfNeeded()
 
     const emode = sparkEmodeCategoryMap[sparkPoolId.emodeType]
 

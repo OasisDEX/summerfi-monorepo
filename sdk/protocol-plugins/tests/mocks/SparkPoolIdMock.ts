@@ -11,22 +11,22 @@ export const sparkPoolIdMock: ISparkLendingPoolIdData = {
   collateralToken: {
     address: {
       type: AddressType.Ethereum,
-      value: '0x6b175474e89094c44da98b954eedeac495271d0f',
+      value: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
     },
     chainInfo: { chainId: 1, name: 'Ethereum' },
-    name: 'USD Coin',
-    symbol: 'USDC',
-    decimals: 6,
+    name: 'Dai Stablecoin',
+    symbol: 'DAI',
+    decimals: 18,
   },
   debtToken: {
     address: {
       type: AddressType.Ethereum,
-      value: '0x6b175474e89094c44da98b954eedeac495271d0f',
+      value: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
     },
     chainInfo: { chainId: 1, name: 'Ethereum' },
-    name: 'USD Coin',
-    symbol: 'USDC',
-    decimals: 6,
+    name: 'Dai Stablecoin',
+    symbol: 'DAI',
+    decimals: 18,
   },
   emodeType: EmodeType.None,
 }

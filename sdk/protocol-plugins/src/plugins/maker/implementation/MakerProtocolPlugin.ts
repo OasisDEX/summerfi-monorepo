@@ -97,6 +97,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
   protected async _getLendingPoolImpl(
     makerLendingPoolId: IMakerLendingPoolId,
   ): Promise<MakerLendingPool> {
+    // TODO: validate pool ID collateral and debt against the ILK Type
     return MakerLendingPool.createFrom({
       type: PoolType.Lending,
       id: makerLendingPoolId,

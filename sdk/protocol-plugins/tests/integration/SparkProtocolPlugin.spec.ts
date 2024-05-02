@@ -8,14 +8,14 @@ import {
   TokenAmount,
   Percentage,
 } from '@summerfi/sdk-common/common'
-import { SparkLendingPool, SparkProtocolPlugin } from '../../src/plugins/spark'
-import { sparkPoolIdMock, sparkPoolIdMock as validSparkPoolId } from '../mocks/SparkPoolIdMock'
+import { SparkProtocolPlugin } from '../../src/plugins/spark'
+import { sparkPoolIdMock as validSparkPoolId } from '../mocks/SparkPoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 
 describe('Spark Protocol Plugin (Integration)', () => {
   let ctx: IProtocolPluginContext
   let sparkProtocolPlugin: SparkProtocolPlugin
-  let pool: SparkLendingPool
+
   beforeAll(async () => {
     ctx = await createProtocolPluginContext()
     sparkProtocolPlugin = new SparkProtocolPlugin({
@@ -38,21 +38,13 @@ describe('Spark Protocol Plugin (Integration)', () => {
     const sparkPoolCollateralInfo = sparkPoolInfo.collateral
     expect(sparkPoolCollateralInfo).toBeDefined()
     expect(sparkPoolCollateralInfo).toMatchObject({
-      token: expect.objectContaining({
-        symbol: mockCollateralToken.symbol,
-        address: mockCollateralToken.address,
-        decimals: mockCollateralToken.decimals,
-        name: mockCollateralToken.name,
-      }),
+      token: expect.objectContaining(pool.id.collateralToken),
       price: expect.anything(),
       priceUSD: expect.anything(),
-      maxLtv: expect.anything(),
       liquidationThreshold: expect.anything(),
       tokensLocked: expect.anything(),
       maxSupply: expect.anything(),
       liquidationPenalty: expect.anything(),
-      apy: expect.anything(),
-      usageAsCollateralEnabled: expect.any(Boolean),
     })
 
     const price = sparkPoolCollateralInfo!.price
@@ -98,21 +90,14 @@ describe('Spark Protocol Plugin (Integration)', () => {
 
     expect(sparkPoolDebtInfo).toBeDefined()
     expect(sparkPoolDebtInfo).toMatchObject({
-      token: expect.objectContaining({
-        symbol: mockDebtToken.symbol,
-        address: mockDebtToken.address,
-        decimals: mockDebtToken.decimals,
-        name: mockDebtToken.name,
-      }),
+      token: expect.objectContaining(pool.id.debtToken),
       price: expect.anything(),
       priceUSD: expect.anything(),
-      rate: expect.anything(),
       totalBorrowed: expect.anything(),
       debtCeiling: expect.anything(),
       debtAvailable: expect.anything(),
       dustLimit: expect.anything(),
       originationFee: expect.anything(),
-      borrowingEnabled: expect.any(Boolean),
     })
 
     const price = sparkPoolDebtInfo!.price

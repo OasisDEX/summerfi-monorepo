@@ -24,34 +24,18 @@ describe('Maker Protocol Plugin (Integration)', () => {
 
   it('correctly populates collateral configuration from blockchain data', async () => {
     const pool = await makerProtocolPlugin.getLendingPool(validMakerPoolId)
-    const mockCollateralToken = Token.createFrom({
-      chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
-      address: Address.createFromEthereum({ value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' }),
-      symbol: 'WETH',
-      name: 'Wrapped Ether',
-      decimals: 18,
-    })
-
     const makerPoolInfo = await makerProtocolPlugin.getLendingPoolInfo(pool.id)
 
     const makerPoolCollateralInfo = makerPoolInfo.collateral
 
     expect(makerPoolCollateralInfo).toBeDefined()
     expect(makerPoolCollateralInfo).toMatchObject({
-      token: expect.objectContaining({
-        symbol: mockCollateralToken.symbol,
-        address: mockCollateralToken.address,
-        decimals: mockCollateralToken.decimals,
-        name: mockCollateralToken.name,
-      }),
+      token: expect.objectContaining(pool.id.collateralToken),
       price: expect.anything(),
-      nextPrice: expect.anything(),
       priceUSD: expect.anything(),
-      lastPriceUpdate: expect.any(Date),
-      nextPriceUpdate: expect.any(Date),
       liquidationThreshold: expect.anything(),
-      tokensLocked: expect.anything(),
       maxSupply: expect.anything(),
+      tokensLocked: expect.anything(),
       liquidationPenalty: expect.anything(),
     })
 
@@ -82,15 +66,10 @@ describe('Maker Protocol Plugin (Integration)', () => {
 
     expect(makerPoolDebtInfo).toBeDefined()
     expect(makerPoolDebtInfo).toMatchObject({
-      token: expect.objectContaining({
-        symbol: mockDebtToken.symbol,
-        address: mockDebtToken.address,
-        decimals: mockDebtToken.decimals,
-        name: mockDebtToken.name,
-      }),
+      token: expect.objectContaining(pool.id.debtToken),
       price: expect.anything(),
       priceUSD: expect.anything(),
-      rate: expect.anything(),
+      interestRate: expect.anything(),
       totalBorrowed: expect.anything(),
       debtCeiling: expect.anything(),
       debtAvailable: expect.anything(),

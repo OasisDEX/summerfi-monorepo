@@ -92,7 +92,7 @@ export class AaveV3ProtocolPlugin extends AAVEv3BaseProtocolPlugin {
   async _getLendingPoolInfoImpl(
     aaveV3PoolId: IAaveV3LendingPoolId,
   ): Promise<AaveV3LendingPoolInfo> {
-    this._inititalizeAssetsListIfNeeded()
+    await this._inititalizeAssetsListIfNeeded()
 
     const emode = aaveV3EmodeCategoryMap[aaveV3PoolId.emodeType]
 
