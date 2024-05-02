@@ -32,56 +32,53 @@ describe('AAVEv3 Protocol Plugin (Integration)', () => {
       decimals: 18,
     })
 
-    // TODO: re-enable when pool info is implemented
-    // const config = pool.collaterals.get({ token: mockCollateralToken })
-    // expect(config).toBeDefined()
-    // expect(config).toMatchObject({
-    //   token: expect.objectContaining({
-    //     symbol: mockCollateralToken.symbol,
-    //     address: mockCollateralToken.address,
-    //     decimals: mockCollateralToken.decimals,
-    //     name: mockCollateralToken.name,
-    //   }),
-    //   price: expect.anything(),
-    //   priceUSD: expect.anything(),
-    //   maxLtv: expect.anything(),
-    //   liquidationThreshold: expect.anything(),
-    //   tokensLocked: expect.anything(),
-    //   maxSupply: expect.anything(),
-    //   liquidationPenalty: expect.anything(),
-    //   apy: expect.anything(),
-    //   usageAsCollateralEnabled: expect.any(Boolean),
-    // })
+    const aaveV3PoolInfo = await aaveV3ProtocolPlugin.getLendingPoolInfo(pool.id)
 
-    // const price = config!.price
-    // expect(price).toBeInstanceOf(Price)
-    // expect(Number(price.value)).toBeGreaterThan(0)
+    const aaveV3PoolCollateralInfo = aaveV3PoolInfo.collateral
 
-    // const priceUSD = config!.priceUSD
-    // expect(priceUSD).toBeInstanceOf(Price)
-    // expect(Number(priceUSD.value)).toBeGreaterThan(0)
+    expect(aaveV3PoolCollateralInfo).toBeDefined()
+    expect(aaveV3PoolCollateralInfo).toMatchObject({
+      token: expect.objectContaining({
+        symbol: mockCollateralToken.symbol,
+        address: mockCollateralToken.address,
+        decimals: mockCollateralToken.decimals,
+        name: mockCollateralToken.name,
+      }),
+      price: expect.anything(),
+      priceUSD: expect.anything(),
+      maxLtv: expect.anything(),
+      liquidationThreshold: expect.anything(),
+      tokensLocked: expect.anything(),
+      maxSupply: expect.anything(),
+      liquidationPenalty: expect.anything(),
+      apy: expect.anything(),
+      usageAsCollateralEnabled: expect.any(Boolean),
+    })
 
-    // const maxLtv = config!.maxLtv
-    // expect(maxLtv).toBeInstanceOf(RiskRatio)
-    // expect(maxLtv.ratio.value).toBeGreaterThan(0)
-    // expect(maxLtv.ratio.value).toBeLessThan(100)
+    const price = aaveV3PoolCollateralInfo!.price
+    expect(price).toBeInstanceOf(Price)
+    expect(Number(price.value)).toBeGreaterThan(0)
 
-    // const liquidationThreshold = config!.liquidationThreshold
-    // expect(liquidationThreshold).toBeInstanceOf(RiskRatio)
-    // expect(liquidationThreshold.ratio.value).toBeGreaterThan(0)
-    // expect(liquidationThreshold.ratio.value).toBeLessThan(100)
+    const priceUSD = aaveV3PoolCollateralInfo!.priceUSD
+    expect(priceUSD).toBeInstanceOf(Price)
+    expect(Number(priceUSD.value)).toBeGreaterThan(0)
 
-    // const tokensLocked = config!.tokensLocked
-    // expect(tokensLocked).toBeInstanceOf(TokenAmount)
-    // expect(Number(tokensLocked.amount)).toBeGreaterThan(0)
+    const liquidationThreshold = aaveV3PoolCollateralInfo!.liquidationThreshold
+    expect(liquidationThreshold).toBeInstanceOf(RiskRatio)
+    expect(liquidationThreshold.ratio.value).toBeGreaterThan(0)
+    expect(liquidationThreshold.ratio.value).toBeLessThan(100)
 
-    // const maxSupply = config!.maxSupply
-    // expect(maxSupply).toBeInstanceOf(TokenAmount)
-    // expect(Number(maxSupply.amount)).toBeGreaterThan(0)
+    const tokensLocked = aaveV3PoolCollateralInfo!.tokensLocked
+    expect(tokensLocked).toBeInstanceOf(TokenAmount)
+    expect(Number(tokensLocked.amount)).toBeGreaterThan(0)
 
-    // const liquidationPenalty = config!.liquidationPenalty
-    // expect(liquidationPenalty).toBeInstanceOf(Percentage)
-    // expect(Number(liquidationPenalty.value)).toBeGreaterThan(100)
+    const maxSupply = aaveV3PoolCollateralInfo!.maxSupply
+    expect(maxSupply).toBeInstanceOf(TokenAmount)
+    expect(Number(maxSupply.amount)).toBeGreaterThan(0)
+
+    const liquidationPenalty = aaveV3PoolCollateralInfo!.liquidationPenalty
+    expect(liquidationPenalty).toBeInstanceOf(Percentage)
+    expect(Number(liquidationPenalty.value)).toBeGreaterThan(100)
   })
 
   it('correctly populates debt configuration from blockchain data', async () => {
@@ -95,57 +92,54 @@ describe('AAVEv3 Protocol Plugin (Integration)', () => {
       decimals: 18,
     })
 
-    // TODO: re-enable when pool info is implemented
-    // const config = pool.debts.get({ token: mockDebtToken })
-    // expect(config).toBeDefined()
-    // expect(config).toMatchObject({
-    //   token: expect.objectContaining({
-    //     symbol: mockDebtToken.symbol,
-    //     address: mockDebtToken.address,
-    //     decimals: mockDebtToken.decimals,
-    //     name: mockDebtToken.name,
-    //   }),
-    //   price: expect.anything(),
-    //   priceUSD: expect.anything(),
-    //   rate: expect.anything(),
-    //   totalBorrowed: expect.anything(),
-    //   debtCeiling: expect.anything(),
-    //   debtAvailable: expect.anything(),
-    //   dustLimit: expect.anything(),
-    //   originationFee: expect.anything(),
-    //   borrowingEnabled: expect.any(Boolean),
-    // })
+    const aaveV3PoolInfo = await aaveV3ProtocolPlugin.getLendingPoolInfo(pool.id)
 
-    // const price = config!.price
-    // expect(price).toBeInstanceOf(Price)
-    // expect(Number(price.value)).toBeGreaterThan(0)
+    const aaveV3PoolDebtInfo = aaveV3PoolInfo.debt
 
-    // const priceUSD = config!.priceUSD
-    // expect(priceUSD).toBeInstanceOf(Price)
-    // expect(Number(priceUSD.value)).toBeGreaterThan(0)
+    expect(aaveV3PoolDebtInfo).toBeDefined()
+    expect(aaveV3PoolDebtInfo).toMatchObject({
+      token: expect.objectContaining({
+        symbol: mockDebtToken.symbol,
+        address: mockDebtToken.address,
+        decimals: mockDebtToken.decimals,
+        name: mockDebtToken.name,
+      }),
+      price: expect.anything(),
+      priceUSD: expect.anything(),
+      rate: expect.anything(),
+      totalBorrowed: expect.anything(),
+      debtCeiling: expect.anything(),
+      debtAvailable: expect.anything(),
+      dustLimit: expect.anything(),
+      originationFee: expect.anything(),
+      borrowingEnabled: expect.any(Boolean),
+    })
 
-    // const rate = config!.rate
-    // expect(rate).toBeInstanceOf(Percentage)
-    // expect(rate.value).toBeGreaterThan(0)
-    // expect(rate.value).toBeLessThan(100)
+    const price = aaveV3PoolDebtInfo!.price
+    expect(price).toBeInstanceOf(Price)
+    expect(Number(price.value)).toBeGreaterThan(0)
 
-    // const totalBorrowed = config!.totalBorrowed
-    // expect(totalBorrowed).toBeInstanceOf(TokenAmount)
-    // expect(Number(totalBorrowed.amount)).toBeGreaterThan(0)
+    const priceUSD = aaveV3PoolDebtInfo!.priceUSD
+    expect(priceUSD).toBeInstanceOf(Price)
+    expect(Number(priceUSD.value)).toBeGreaterThan(0)
 
-    // const debtCeiling = config!.debtCeiling
-    // expect(debtCeiling).toBeInstanceOf(TokenAmount)
-    // expect(Number(debtCeiling.amount)).toBeGreaterThan(0)
+    const totalBorrowed = aaveV3PoolDebtInfo!.totalBorrowed
+    expect(totalBorrowed).toBeInstanceOf(TokenAmount)
+    expect(Number(totalBorrowed.amount)).toBeGreaterThan(0)
 
-    // const debtAvailable = config!.debtAvailable
-    // expect(debtAvailable).toBeInstanceOf(TokenAmount)
-    // expect(Number(debtAvailable.amount)).toBeGreaterThan(0)
+    const debtCeiling = aaveV3PoolDebtInfo!.debtCeiling
+    expect(debtCeiling).toBeInstanceOf(TokenAmount)
+    expect(Number(debtCeiling.amount)).toBeGreaterThan(0)
 
-    // const dustLimit = config!.dustLimit
-    // expect(dustLimit).toBeInstanceOf(TokenAmount)
-    // expect(Number(dustLimit.amount)).toBe(0)
+    const debtAvailable = aaveV3PoolDebtInfo!.debtAvailable
+    expect(debtAvailable).toBeInstanceOf(TokenAmount)
+    expect(Number(debtAvailable.amount)).toBeGreaterThan(0)
 
-    // const originationFee = config!.originationFee
-    // expect(originationFee).toBeInstanceOf(Percentage)
+    const dustLimit = aaveV3PoolDebtInfo!.dustLimit
+    expect(dustLimit).toBeInstanceOf(TokenAmount)
+    expect(Number(dustLimit.amount)).toBe(0)
+
+    const originationFee = aaveV3PoolDebtInfo!.originationFee
+    expect(originationFee).toBeInstanceOf(Percentage)
   })
 })

@@ -32,56 +32,36 @@ describe('Maker Protocol Plugin (Integration)', () => {
       decimals: 18,
     })
 
-    // TODO: re-enable when pool info is implemented
-    // const config = pool.collaterals.get({ token: mockCollateralToken })
-    // expect(config).toBeDefined()
-    // expect(config).toMatchObject({
-    //   token: expect.objectContaining({
-    //     symbol: mockCollateralToken.symbol,
-    //     address: mockCollateralToken.address,
-    //     decimals: mockCollateralToken.decimals,
-    //     name: mockCollateralToken.name,
-    //   }),
-    //   price: expect.anything(),
-    //   nextPrice: expect.anything(),
-    //   priceUSD: expect.anything(),
-    //   lastPriceUpdate: expect.any(Date),
-    //   nextPriceUpdate: expect.any(Date),
-    //   liquidationThreshold: expect.anything(),
-    //   tokensLocked: expect.anything(),
-    //   maxSupply: expect.anything(),
-    //   liquidationPenalty: expect.anything(),
-    // })
+    const makerPoolInfo = await makerProtocolPlugin.getLendingPoolInfo(pool.id)
 
-    // const price = config!.price
-    // expect(price).toBeInstanceOf(Price)
-    // expect(Number(price.value)).toBeGreaterThan(0)
+    const makerPoolCollateralInfo = makerPoolInfo.collateral
 
-    // const nextPrice = config!.nextPrice
-    // expect(nextPrice).toBeInstanceOf(Price)
-    // expect(Number(nextPrice.value)).toBeGreaterThan(0)
+    expect(makerPoolCollateralInfo).toBeDefined()
+    expect(makerPoolCollateralInfo).toMatchObject({
+      token: expect.objectContaining({
+        symbol: mockCollateralToken.symbol,
+        address: mockCollateralToken.address,
+        decimals: mockCollateralToken.decimals,
+        name: mockCollateralToken.name,
+      }),
+      price: expect.anything(),
+      nextPrice: expect.anything(),
+      priceUSD: expect.anything(),
+      lastPriceUpdate: expect.any(Date),
+      nextPriceUpdate: expect.any(Date),
+      liquidationThreshold: expect.anything(),
+      tokensLocked: expect.anything(),
+      maxSupply: expect.anything(),
+      liquidationPenalty: expect.anything(),
+    })
 
-    // const priceUSD = config!.priceUSD
-    // expect(priceUSD).toBeInstanceOf(Price)
-    // expect(Number(priceUSD.value)).toBeGreaterThan(0)
+    const price = makerPoolCollateralInfo!.price
+    expect(price).toBeInstanceOf(Price)
+    expect(Number(price.value)).toBeGreaterThan(0)
 
-    // const liquidationThreshold = config!.liquidationThreshold
-    // expect(liquidationThreshold).toBeInstanceOf(RiskRatio)
-    // expect(liquidationThreshold.ratio.value).toBeGreaterThan(0)
-    // expect(liquidationThreshold.ratio.value).toBeLessThan(100)
-
-    // const tokensLocked = config!.tokensLocked
-    // expect(tokensLocked).toBeInstanceOf(TokenAmount)
-    // expect(Number(tokensLocked.amount)).toBeGreaterThan(0)
-
-    // const maxSupply = config!.maxSupply
-    // expect(maxSupply).toBeInstanceOf(TokenAmount)
-    // expect(Number(maxSupply.amount)).toBeGreaterThan(0)
-
-    // const liquidationPenalty = config!.liquidationPenalty
-    // expect(liquidationPenalty).toBeInstanceOf(Percentage)
-    // expect(Number(liquidationPenalty.value)).toBeGreaterThan(0)
-    // expect(Number(liquidationPenalty.value)).toBeLessThan(100)
+    const priceUSD = makerPoolCollateralInfo!.priceUSD
+    expect(priceUSD).toBeInstanceOf(Price)
+    expect(Number(priceUSD.value)).toBeGreaterThan(0)
   })
 
   it('correctly populates debt configuration from blockchain data', async () => {
@@ -96,55 +76,53 @@ describe('Maker Protocol Plugin (Integration)', () => {
     })
 
     // TODO: re-enable when pool info is implemented
-    // const config = pool.debts.get({ token: mockDebtToken })
-    // expect(config).toBeDefined()
-    // expect(config).toMatchObject({
-    //   token: expect.objectContaining({
-    //     symbol: mockDebtToken.symbol,
-    //     address: mockDebtToken.address,
-    //     decimals: mockDebtToken.decimals,
-    //     name: mockDebtToken.name,
-    //   }),
-    //   price: expect.anything(),
-    //   priceUSD: expect.anything(),
-    //   rate: expect.anything(),
-    //   totalBorrowed: expect.anything(),
-    //   debtCeiling: expect.anything(),
-    //   debtAvailable: expect.anything(),
-    //   dustLimit: expect.anything(),
-    //   originationFee: expect.anything(),
-    // })
+    const makerPoolInfo = await makerProtocolPlugin.getLendingPoolInfo(pool.id)
 
-    // const price = config!.price
-    // expect(price).toBeInstanceOf(Price)
-    // expect(Number(price.value)).toBeGreaterThan(0)
+    const makerPoolDebtInfo = makerPoolInfo.debt
 
-    // const priceUSD = config!.priceUSD
-    // expect(priceUSD).toBeInstanceOf(Price)
-    // expect(Number(priceUSD.value)).toBeGreaterThan(0)
+    expect(makerPoolDebtInfo).toBeDefined()
+    expect(makerPoolDebtInfo).toMatchObject({
+      token: expect.objectContaining({
+        symbol: mockDebtToken.symbol,
+        address: mockDebtToken.address,
+        decimals: mockDebtToken.decimals,
+        name: mockDebtToken.name,
+      }),
+      price: expect.anything(),
+      priceUSD: expect.anything(),
+      rate: expect.anything(),
+      totalBorrowed: expect.anything(),
+      debtCeiling: expect.anything(),
+      debtAvailable: expect.anything(),
+      dustLimit: expect.anything(),
+      originationFee: expect.anything(),
+    })
 
-    // const rate = config!.rate
-    // expect(rate).toBeInstanceOf(Percentage)
-    // expect(rate.value).toBeGreaterThan(0)
-    // expect(rate.value).toBeLessThan(100)
+    const price = makerPoolDebtInfo!.price
+    expect(price).toBeInstanceOf(Price)
+    expect(Number(price.value)).toBeGreaterThan(0)
 
-    // const totalBorrowed = config!.totalBorrowed
-    // expect(totalBorrowed).toBeInstanceOf(TokenAmount)
-    // expect(Number(totalBorrowed.amount)).toBeGreaterThan(0)
+    const priceUSD = makerPoolDebtInfo!.priceUSD
+    expect(priceUSD).toBeInstanceOf(Price)
+    expect(Number(priceUSD.value)).toBeGreaterThan(0)
 
-    // const debtCeiling = config!.debtCeiling
-    // expect(debtCeiling).toBeInstanceOf(TokenAmount)
-    // expect(Number(debtCeiling.amount)).toBeGreaterThan(0)
+    const totalBorrowed = makerPoolDebtInfo!.totalBorrowed
+    expect(totalBorrowed).toBeInstanceOf(TokenAmount)
+    expect(Number(totalBorrowed.amount)).toBeGreaterThan(0)
 
-    // const debtAvailable = config!.debtAvailable
-    // expect(debtAvailable).toBeInstanceOf(TokenAmount)
-    // expect(Number(debtAvailable.amount)).toBeGreaterThan(0)
+    const debtCeiling = makerPoolDebtInfo!.debtCeiling
+    expect(debtCeiling).toBeInstanceOf(TokenAmount)
+    expect(Number(debtCeiling.amount)).toBeGreaterThan(0)
 
-    // const dustLimit = config!.dustLimit
-    // expect(dustLimit).toBeInstanceOf(TokenAmount)
-    // expect(Number(dustLimit.amount)).toBeGreaterThan(0)
+    const debtAvailable = makerPoolDebtInfo!.debtAvailable
+    expect(debtAvailable).toBeInstanceOf(TokenAmount)
+    expect(Number(debtAvailable.amount)).toBeGreaterThan(0)
 
-    // const originationFee = config!.originationFee
-    // expect(originationFee).toBeInstanceOf(Percentage)
+    const dustLimit = makerPoolDebtInfo!.dustLimit
+    expect(dustLimit).toBeInstanceOf(TokenAmount)
+    expect(Number(dustLimit.amount)).toBeGreaterThan(0)
+
+    const originationFee = makerPoolDebtInfo!.originationFee
+    expect(originationFee).toBeInstanceOf(Percentage)
   })
 })

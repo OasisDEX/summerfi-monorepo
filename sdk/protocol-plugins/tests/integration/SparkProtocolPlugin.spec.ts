@@ -9,7 +9,7 @@ import {
   Percentage,
 } from '@summerfi/sdk-common/common'
 import { SparkLendingPool, SparkProtocolPlugin } from '../../src/plugins/spark'
-import { sparkPoolIdMock as validSparkPoolId } from '../mocks/SparkPoolIdMock'
+import { sparkPoolIdMock, sparkPoolIdMock as validSparkPoolId } from '../mocks/SparkPoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 
 describe('Spark Protocol Plugin (Integration)', () => {
@@ -33,56 +33,52 @@ describe('Spark Protocol Plugin (Integration)', () => {
       decimals: 18,
     })
 
-    // TODO: re-enable when pool info is implemented
-    // const config = pool.collaterals.get({ token: mockCollateralToken })
-    // expect(config).toBeDefined()
-    // expect(config).toMatchObject({
-    //   token: expect.objectContaining({
-    //     symbol: mockCollateralToken.symbol,
-    //     address: mockCollateralToken.address,
-    //     decimals: mockCollateralToken.decimals,
-    //     name: mockCollateralToken.name,
-    //   }),
-    //   price: expect.anything(),
-    //   priceUSD: expect.anything(),
-    //   maxLtv: expect.anything(),
-    //   liquidationThreshold: expect.anything(),
-    //   tokensLocked: expect.anything(),
-    //   maxSupply: expect.anything(),
-    //   liquidationPenalty: expect.anything(),
-    //   apy: expect.anything(),
-    //   usageAsCollateralEnabled: expect.any(Boolean),
-    // })
+    const sparkPoolInfo = await sparkProtocolPlugin.getLendingPoolInfo(pool.id)
 
-    // const price = config!.price
-    // expect(price).toBeInstanceOf(Price)
-    // expect(Number(price.value)).toBeGreaterThan(0)
+    const sparkPoolCollateralInfo = sparkPoolInfo.collateral
+    expect(sparkPoolCollateralInfo).toBeDefined()
+    expect(sparkPoolCollateralInfo).toMatchObject({
+      token: expect.objectContaining({
+        symbol: mockCollateralToken.symbol,
+        address: mockCollateralToken.address,
+        decimals: mockCollateralToken.decimals,
+        name: mockCollateralToken.name,
+      }),
+      price: expect.anything(),
+      priceUSD: expect.anything(),
+      maxLtv: expect.anything(),
+      liquidationThreshold: expect.anything(),
+      tokensLocked: expect.anything(),
+      maxSupply: expect.anything(),
+      liquidationPenalty: expect.anything(),
+      apy: expect.anything(),
+      usageAsCollateralEnabled: expect.any(Boolean),
+    })
 
-    // const priceUSD = config!.priceUSD
-    // expect(priceUSD).toBeInstanceOf(Price)
-    // expect(Number(priceUSD.value)).toBeGreaterThan(0)
+    const price = sparkPoolCollateralInfo!.price
+    expect(price).toBeInstanceOf(Price)
+    expect(Number(price.value)).toBeGreaterThan(0)
 
-    // const maxLtv = config!.maxLtv
-    // expect(maxLtv).toBeInstanceOf(RiskRatio)
-    // expect(maxLtv.ratio.value).toBeGreaterThan(0)
-    // expect(maxLtv.ratio.value).toBeLessThan(100)
+    const priceUSD = sparkPoolCollateralInfo!.priceUSD
+    expect(priceUSD).toBeInstanceOf(Price)
+    expect(Number(priceUSD.value)).toBeGreaterThan(0)
 
-    // const liquidationThreshold = config!.liquidationThreshold
-    // expect(liquidationThreshold).toBeInstanceOf(RiskRatio)
-    // expect(liquidationThreshold.ratio.value).toBeGreaterThan(0)
-    // expect(liquidationThreshold.ratio.value).toBeLessThan(100)
+    const liquidationThreshold = sparkPoolCollateralInfo!.liquidationThreshold
+    expect(liquidationThreshold).toBeInstanceOf(RiskRatio)
+    expect(liquidationThreshold.ratio.value).toBeGreaterThan(0)
+    expect(liquidationThreshold.ratio.value).toBeLessThan(100)
 
-    // const tokensLocked = config!.tokensLocked
-    // expect(tokensLocked).toBeInstanceOf(TokenAmount)
-    // expect(Number(tokensLocked.amount)).toBeGreaterThan(0)
+    const tokensLocked = sparkPoolCollateralInfo!.tokensLocked
+    expect(tokensLocked).toBeInstanceOf(TokenAmount)
+    expect(Number(tokensLocked.amount)).toBeGreaterThan(0)
 
-    // const maxSupply = config!.maxSupply
-    // expect(maxSupply).toBeInstanceOf(TokenAmount)
-    // expect(Number(maxSupply.amount)).toBeGreaterThan(0)
+    const maxSupply = sparkPoolCollateralInfo!.maxSupply
+    expect(maxSupply).toBeInstanceOf(TokenAmount)
+    expect(Number(maxSupply.amount)).toBeGreaterThan(0)
 
-    // const liquidationPenalty = config!.liquidationPenalty
-    // expect(liquidationPenalty).toBeInstanceOf(Percentage)
-    // expect(Number(liquidationPenalty.value)).toBeGreaterThan(100)
+    const liquidationPenalty = sparkPoolCollateralInfo!.liquidationPenalty
+    expect(liquidationPenalty).toBeInstanceOf(Percentage)
+    expect(Number(liquidationPenalty.value)).toBeGreaterThan(100)
   })
 
   it('correctly populates debt configuration from blockchain data', async () => {
@@ -96,72 +92,54 @@ describe('Spark Protocol Plugin (Integration)', () => {
       decimals: 18,
     })
 
-    // TODO: re-enable when pool info is implemented
-    // const config = pool.debts.get({ token: mockDebtToken })
-    // expect(config).toBeDefined()
-    // expect(config).toMatchObject({
-    //   token: expect.objectContaining({
-    //     symbol: mockDebtToken.symbol,
-    //     address: mockDebtToken.address,
-    //     decimals: mockDebtToken.decimals,
-    //     name: mockDebtToken.name,
-    //   }),
-    //   price: expect.anything(),
-    //   priceUSD: expect.anything(),
-    //   rate: expect.anything(),
-    //   totalBorrowed: expect.anything(),
-    //   debtCeiling: expect.anything(),
-    //   debtAvailable: expect.anything(),
-    //   dustLimit: expect.anything(),
-    //   originationFee: expect.anything(),
-    //   borrowingEnabled: expect.any(Boolean),
-    // })
+    const sparkPoolInfo = await sparkProtocolPlugin.getLendingPoolInfo(pool.id)
 
-    // const price = config!.price
-    // expect(price).toBeInstanceOf(Price)
-    // expect(Number(price.value)).toBeGreaterThan(0)
+    const sparkPoolDebtInfo = sparkPoolInfo.debt
 
-    // const priceUSD = config!.priceUSD
-    // expect(priceUSD).toBeInstanceOf(Price)
-    // expect(Number(priceUSD.value)).toBeGreaterThan(0)
-
-    // const rate = config!.rate
-    // expect(rate).toBeInstanceOf(Percentage)
-    // expect(rate.value).toBeGreaterThan(0)
-    // expect(rate.value).toBeLessThan(100)
-
-    // const totalBorrowed = config!.totalBorrowed
-    // expect(totalBorrowed).toBeInstanceOf(TokenAmount)
-    // expect(Number(totalBorrowed.amount)).toBeGreaterThan(0)
-
-    // const debtCeiling = config!.debtCeiling
-    // expect(debtCeiling).toBeInstanceOf(TokenAmount)
-    // expect(Number(debtCeiling.amount)).toBeGreaterThan(0)
-
-    // const debtAvailable = config!.debtAvailable
-    // expect(debtAvailable).toBeInstanceOf(TokenAmount)
-    // expect(Number(debtAvailable.amount)).toBeGreaterThan(0)
-
-    // const dustLimit = config!.dustLimit
-    // expect(dustLimit).toBeInstanceOf(TokenAmount)
-    // expect(Number(dustLimit.amount)).toBe(0)
-
-    // const originationFee = config!.originationFee
-    // expect(originationFee).toBeInstanceOf(Percentage)
-  })
-
-  it('resolves config maps for tokens sent with addresses in alternative formats', async () => {
-    const testCollateralToken = Token.createFrom({
-      chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
-      // NOTE: Address is different format to that expected by the protocol
-      address: Address.createFromEthereum({ value: '0xae78736cd615f374d3085123a210448e74fc6393' }),
-      symbol: 'RETH',
-      name: 'Rocket Ether',
-      decimals: 18,
+    expect(sparkPoolDebtInfo).toBeDefined()
+    expect(sparkPoolDebtInfo).toMatchObject({
+      token: expect.objectContaining({
+        symbol: mockDebtToken.symbol,
+        address: mockDebtToken.address,
+        decimals: mockDebtToken.decimals,
+        name: mockDebtToken.name,
+      }),
+      price: expect.anything(),
+      priceUSD: expect.anything(),
+      rate: expect.anything(),
+      totalBorrowed: expect.anything(),
+      debtCeiling: expect.anything(),
+      debtAvailable: expect.anything(),
+      dustLimit: expect.anything(),
+      originationFee: expect.anything(),
+      borrowingEnabled: expect.any(Boolean),
     })
 
-    // TODO re-enable when pool info is implemented
-    // const config = pool.collaterals.get({ token: testCollateralToken })
-    // expect(config).toBeDefined()
+    const price = sparkPoolDebtInfo!.price
+    expect(price).toBeInstanceOf(Price)
+    expect(Number(price.value)).toBeGreaterThan(0)
+
+    const priceUSD = sparkPoolDebtInfo!.priceUSD
+    expect(priceUSD).toBeInstanceOf(Price)
+    expect(Number(priceUSD.value)).toBeGreaterThan(0)
+
+    const totalBorrowed = sparkPoolDebtInfo!.totalBorrowed
+    expect(totalBorrowed).toBeInstanceOf(TokenAmount)
+    expect(Number(totalBorrowed.amount)).toBeGreaterThan(0)
+
+    const debtCeiling = sparkPoolDebtInfo!.debtCeiling
+    expect(debtCeiling).toBeInstanceOf(TokenAmount)
+    expect(Number(debtCeiling.amount)).toBeGreaterThan(0)
+
+    const debtAvailable = sparkPoolDebtInfo!.debtAvailable
+    expect(debtAvailable).toBeInstanceOf(TokenAmount)
+    expect(Number(debtAvailable.amount)).toBeGreaterThan(0)
+
+    const dustLimit = sparkPoolDebtInfo!.dustLimit
+    expect(dustLimit).toBeInstanceOf(TokenAmount)
+    expect(Number(dustLimit.amount)).toBe(0)
+
+    const originationFee = sparkPoolDebtInfo!.originationFee
+    expect(originationFee).toBeInstanceOf(Percentage)
   })
 })

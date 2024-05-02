@@ -8,10 +8,10 @@ import {
 } from '@summerfi/protocol-plugins/plugins/maker/interfaces/IMakerLendingPoolId'
 import { AddressType } from '@summerfi/sdk-common'
 
-export default async function getPoolTest() {
-  type GetPoolType = RPCClientType['protocols']['getLendingPool']['query']
+export default async function getLendingPoolTest() {
+  type GetLendingPoolType = RPCClientType['protocols']['getLendingPool']['query']
 
-  const getLendingPoolQuery: GetPoolType = jest.fn(async (params) => {
+  const getLendingPoolQuery: GetLendingPoolType = jest.fn(async (params) => {
     expect(params).toBeDefined()
     expect(params.poolId).toBeDefined()
 
