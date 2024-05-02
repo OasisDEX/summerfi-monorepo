@@ -2,12 +2,14 @@ import { getPosition } from './handlers/getPosition'
 import { getLendingPool } from './handlers/getLendingPool'
 import { getRefinanceSimulation } from './handlers/getRefinanceSimulation'
 import { buildOrder } from './handlers/buildOrder'
-import { getToken } from './handlers/getToken'
 import { getSwapDataExactInput } from './handlers/getSwapData'
 import { getSwapQuoteExactInput } from './handlers/getSwapQuote'
 import { router } from './TRPC'
 import { getImportSimulation } from './handlers/getImportSimulation'
 import { getLendingPoolInfo } from './handlers/getLendingPoolInfo'
+import { getTokenByName } from './handlers/getTokenByName'
+import { getTokenByAddress } from './handlers/getTokenByAddress'
+import { getTokenBySymbol } from './handlers/getTokenBySymbol'
 
 /**
  * Server
@@ -18,7 +20,11 @@ export const sdkAppRouter = router({
     getLendingPool: getLendingPool,
     getLendingPoolInfo: getLendingPoolInfo,
   },
-  getToken: getToken,
+  tokens: {
+    getTokenBySymbol: getTokenBySymbol,
+    getTokenByName: getTokenByName,
+    getTokenByAddress: getTokenByAddress,
+  },
   simulation: {
     refinance: getRefinanceSimulation,
     import: getImportSimulation,

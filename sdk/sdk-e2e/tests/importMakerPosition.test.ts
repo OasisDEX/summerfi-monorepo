@@ -9,7 +9,7 @@ import {
 
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { makeSDK, type Chain, type User } from '@summerfi/sdk-client'
-import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
+import { CommonTokenSymbols } from '@summerfi/sdk-common/common/enums'
 import { ExternalPositionType, IImportPositionParameters, Order } from '@summerfi/sdk-common/orders'
 import { ISimulation, SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
 
@@ -56,10 +56,14 @@ describe.skip('Import Maker Position | SDK', () => {
     expect(user.chainInfo).toEqual(chain.chainInfo)
 
     // Tokens
-    const WETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.WETH })
+    const WETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({
+      symbol: CommonTokenSymbols.WETH,
+    })
     assert(WETH, 'WETH not found')
 
-    const DAI: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.DAI })
+    const DAI: Maybe<Token> = await chain.tokens.getTokenBySymbol({
+      symbol: CommonTokenSymbols.DAI,
+    })
     assert(DAI, 'DAI not found')
 
     const maker = await chain.protocols.getProtocol({ name: ProtocolName.Maker })

@@ -1,19 +1,13 @@
-import { Address, Maybe, Token } from '@summerfi/sdk-common/common'
+import type { Token, Address, Maybe } from '@summerfi/sdk-common/common'
 
 /**
- * @interface ITokensManager
- * @description Used to retrieve the supported tokens for the current network. It also allows to retrieve a token
- *              by its symbol, address or name
+ * @name ITokensManagerClient
+ * @description Interface for the TokensManager client implementation. Allows to retrieve information for
+ *              a Token given its Chain, and its Address or symbol. The difference with the server side
+ *              is that it stores the chain info internally and passes it as a parameter to the RPC calls
+ * @see ITokensManager
  */
-export interface ITokensManager {
-  /**
-   * @method getSupportedTokens
-   * @description Retrieves the list supported tokens for the current network
-   *
-   * @returns The list of supported tokens
-   */
-  getSupportedTokens(): Promise<Token[]>
-
+export interface ITokensManagerClient {
   /**
    * @method getTokenBySymbol
    * @description Retrieves a token by its symbol

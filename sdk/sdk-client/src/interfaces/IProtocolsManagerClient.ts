@@ -3,10 +3,11 @@ import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { ProtocolClient } from '../implementation/ProtocolClient'
 
 /**
- * @interface IProtocolsManager
- * @description Manages the list of protocols supported by the SDK for the current network
+ * @interface IProtocolsManagerClient
+ * @description Interface of the ProtocolsManager for the SDK Client. Allows to retrieve information for a Protocol
+ * @see IProtocolsManager
  */
-export interface IProtocolsManager {
+export interface IProtocolsManagerClient {
   /**
    * @method getProtocol
    * @description Retrieves a protocol by its name

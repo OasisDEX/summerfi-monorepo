@@ -7,6 +7,10 @@ import type { QuoteData, SpotData, SwapData, SwapProviderType } from '@summerfi/
  * @description this is for implementing different swap provider plugins
  */
 export interface ISwapProvider {
+  /**
+   * @name type
+   * @description The type of the swap provider, to identify it
+   */
   type: SwapProviderType
 
   /**

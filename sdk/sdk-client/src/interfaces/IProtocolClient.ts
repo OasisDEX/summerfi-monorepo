@@ -5,6 +5,7 @@ import { ILendingPoolIdData, IProtocol } from '@summerfi/sdk-common/protocols'
 /**
  * @interface IProtocolClient
  * @description Client interface for protocols, includes some methods to interact with the protocols manager
+ * @see IProtocol
  */
 export interface IProtocolClient extends IProtocol {
   /**
