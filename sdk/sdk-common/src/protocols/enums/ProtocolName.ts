@@ -14,15 +14,21 @@ export enum ProtocolName {
 }
 
 /**
+ * @description Zod schema for ProtocolName
+ */
+export const ProtocolNameSchema = z.nativeEnum(ProtocolName)
+
+/**
  * @description Type guard for ProtocolName
  * @param maybeProtocolName Object to be checked
  * @returns true if the object is a ProtocolName
  */
 export function isProtocolName(maybeProtocolName: unknown): maybeProtocolName is ProtocolName {
-  return Object.values(ProtocolName).includes(maybeProtocolName as ProtocolName)
+  return ProtocolNameSchema.safeParse(maybeProtocolName).success
 }
 
 /**
- * @description Zod schema for ProtocolName
+ * Checker to make sure that the schema is aligned with the interface
  */
-export const ProtocolNameSchema = z.nativeEnum(ProtocolName)
+/* eslint-disable @typescript-eslint/no-unused-vars */
+const __schemaChecker: ProtocolName = {} as z.infer<typeof ProtocolNameSchema>

@@ -7,7 +7,7 @@ import {
   Maybe,
   AddressValue,
   IPositionId,
-  TokenSymbol,
+  CommonTokenSymbols,
 } from '@summerfi/sdk-common/common'
 import { ILendingPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { getContract, stringToHex } from 'viem'
@@ -323,8 +323,8 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
       this.ctx.tokenService.getTokenByAddress(
         Address.createFromEthereum({ value: ilkRegistryRes.gem }),
       ),
-      this.ctx.tokenService.getTokenBySymbol(TokenSymbol.DAI),
-      this.ctx.tokenService.getTokenBySymbol(TokenSymbol.DAI),
+      this.ctx.tokenService.getTokenBySymbol(CommonTokenSymbols.DAI),
+      this.ctx.tokenService.getTokenBySymbol(CommonTokenSymbols.DAI),
     ])
 
     const SECONDS_PER_YEAR = 60 * 60 * 24 * 365

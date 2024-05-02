@@ -9,7 +9,6 @@ import {
   RiskRatioType,
   Token,
   TokenAmount,
-  TokenSymbol,
 } from '@summerfi/sdk-common'
 import { BaseProtocolPlugin } from '../../../../implementation/BaseProtocolPlugin'
 import { AAVEv3LikeAbiInfo } from './AAVEv3LikeAbi'
@@ -20,6 +19,7 @@ import {
 import { AllowedProtocolNames } from './AAVEv3LikeBuilderTypes'
 import { BigNumber } from 'bignumber.js'
 import { PRECISION_BI, UNCAPPED_SUPPLY } from '../../constants/AaveV3LikeConstants'
+import { CommonTokenSymbols } from '@summerfi/sdk-common/common'
 
 type AssetsList = Awaited<ReturnType<AAVEv3BaseProtocolPlugin['_getAssetsList']>>
 type Asset = AssetsList extends (infer U)[] ? U : never
@@ -190,7 +190,7 @@ export abstract class AAVEv3BaseProtocolPlugin extends BaseProtocolPlugin {
       caps: { borrowCap },
       data: { totalVariableDebt, totalStableDebt, variableBorrowRate },
     } = asset
-    if (quoteToken.symbol === TokenSymbol.WETH) {
+    if (quoteToken.symbol === CommonTokenSymbols.WETH) {
       // WETH can be used as collateral on AaveV3 but not borrowed.
       return
     }

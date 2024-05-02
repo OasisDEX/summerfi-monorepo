@@ -11,7 +11,6 @@ import {
 
 import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
 import { ProtocolClient, makeSDK, type Chain, type User } from '@summerfi/sdk-client'
-import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
 import { PositionsManager, IRefinanceParameters, Order } from '@summerfi/sdk-common/orders'
 import { ISimulation } from '@summerfi/sdk-common/simulation'
 import { TransactionUtils } from './utils/TransactionUtils'
@@ -19,7 +18,7 @@ import { TransactionUtils } from './utils/TransactionUtils'
 import { Hex } from 'viem'
 import assert from 'assert'
 import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
-import { RefinanceSimulationTypes } from '@summerfi/sdk-common'
+import { CommonTokenSymbols, RefinanceSimulationTypes } from '@summerfi/sdk-common'
 import {
   SparkLendingPoolId,
   isSparkLendingPoolId,
@@ -72,19 +71,29 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     })
 
     // Tokens
-    const WETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.WETH })
+    const WETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({
+      symbol: CommonTokenSymbols.WETH,
+    })
     assert(WETH, 'WETH not found')
 
-    const DAI: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.DAI })
+    const DAI: Maybe<Token> = await chain.tokens.getTokenBySymbol({
+      symbol: CommonTokenSymbols.DAI,
+    })
     assert(DAI, 'DAI not found')
 
-    const USDC: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.USDC })
+    const USDC: Maybe<Token> = await chain.tokens.getTokenBySymbol({
+      symbol: CommonTokenSymbols.USDC,
+    })
     assert(USDC, 'USDC not found')
 
-    const WBTC: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.WBTC })
+    const WBTC: Maybe<Token> = await chain.tokens.getTokenBySymbol({
+      symbol: CommonTokenSymbols.WBTC,
+    })
     assert(WBTC, 'WBTC not found')
 
-    const WSTETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.WSTETH })
+    const WSTETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({
+      symbol: CommonTokenSymbols.WSTETH,
+    })
     assert(WSTETH, 'WSTETH not found')
 
     const maker = await chain.protocols.getProtocol({ name: ProtocolName.Maker })

@@ -1,7 +1,8 @@
 import { PublicClient, getContract } from 'viem'
-import { Address, CurrencySymbol, Price, Token, TokenSymbol } from '@summerfi/sdk-common/common'
+import { Address, CurrencySymbol, Price, Token } from '@summerfi/sdk-common/common'
 import { BigNumber } from 'bignumber.js'
 import { IPriceService, priceFeedABI } from '@summerfi/protocol-plugins-common'
+import { CommonTokenSymbols } from '@summerfi/sdk-common'
 
 // TODO: Create a separate service and connect up to SDK router
 // TODO: Implement the PriceService to handle different chains
@@ -33,9 +34,9 @@ export class PriceService implements IPriceService {
     }
 
     let baseToken: `0x${string}`
-    if (args.baseToken.symbol === TokenSymbol.WETH) {
+    if (args.baseToken.symbol === CommonTokenSymbols.WETH) {
       baseToken = `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE`
-    } else if (args.baseToken.symbol === TokenSymbol.WBTC) {
+    } else if (args.baseToken.symbol === CommonTokenSymbols.WBTC) {
       baseToken = `0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB`
     } else {
       baseToken = args.baseToken.address.value
@@ -43,7 +44,10 @@ export class PriceService implements IPriceService {
 
     let res: bigint
     // Check if the quote token is neither USD nor ETH. This condition ensures we handle pairs involving other tokens.
-    if (args.quoteToken !== CurrencySymbol.USD && args.quoteToken.symbol !== TokenSymbol.ETH) {
+    if (
+      args.quoteToken !== CurrencySymbol.USD &&
+      args.quoteToken.symbol !== CommonTokenSymbols.ETH
+    ) {
       // Example context: Consider handling a pool pair like WETH/DAI, where neither token is USD or ETH directly.
       // Retrieve the USD price of the quote token. Example: Obtaining DAI's price in USD.
       const priceOfQuoteInUSD = await this.getPriceUSD(args.quoteToken)

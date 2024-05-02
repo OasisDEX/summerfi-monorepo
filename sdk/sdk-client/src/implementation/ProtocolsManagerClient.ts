@@ -1,11 +1,11 @@
 import type { ChainInfo, Maybe } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import { IProtocolsManager } from '../interfaces/IProtocolsManager'
+import { IProtocolsManagerClient } from '../interfaces/IProtocolsManagerClient'
 import { IRPCClient } from '../interfaces/IRPCClient'
 import { RPCClientType } from '../rpc/SDKClient'
 import { ProtocolClient } from './ProtocolClient'
 
-export class ProtocolsManager extends IRPCClient implements IProtocolsManager {
+export class ProtocolsManagerClient extends IRPCClient implements IProtocolsManagerClient {
   private readonly _chainInfo: ChainInfo
 
   public constructor(params: { rpcClient: RPCClientType; chainInfo: ChainInfo }) {

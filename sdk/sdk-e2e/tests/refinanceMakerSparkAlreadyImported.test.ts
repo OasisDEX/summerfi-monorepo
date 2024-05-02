@@ -13,7 +13,7 @@ import {
 
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { makeSDK, type Chain, type User, ProtocolClient } from '@summerfi/sdk-client'
-import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
+import { CommonTokenSymbols } from '@summerfi/sdk-common/common/enums'
 import { PositionsManager, IRefinanceParameters, Order } from '@summerfi/sdk-common/orders'
 import { ISimulation, RefinanceSimulationTypes } from '@summerfi/sdk-common/simulation'
 import { TransactionUtils } from './utils/TransactionUtils'
@@ -102,10 +102,14 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     })
 
     // Tokens
-    const WETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.WETH })
+    const WETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({
+      symbol: CommonTokenSymbols.WETH,
+    })
     assert(WETH, 'WETH not found')
 
-    const DAI: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.DAI })
+    const DAI: Maybe<Token> = await chain.tokens.getTokenBySymbol({
+      symbol: CommonTokenSymbols.DAI,
+    })
     assert(DAI, 'DAI not found')
 
     const maker = await chain.protocols.getProtocol({ name: ProtocolName.Maker })
