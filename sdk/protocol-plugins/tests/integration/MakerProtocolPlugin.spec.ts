@@ -59,7 +59,6 @@ describe('Maker Protocol Plugin (Integration)', () => {
       decimals: 18,
     })
 
-    // TODO: re-enable when pool info is implemented
     const makerPoolInfo = await makerProtocolPlugin.getLendingPoolInfo(pool.id)
 
     const makerPoolDebtInfo = makerPoolInfo.debt

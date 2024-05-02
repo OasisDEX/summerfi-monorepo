@@ -5,7 +5,9 @@ import { z } from 'zod'
  * @description Indicates the type of pool (supply or lending)
  */
 export enum PoolType {
+  /** Staking pool: adding 1 token to the pool generates some interest earnings */
   Supply = 'Supply',
+  /** Lending pool, adding some collateral allows to borrow some debt */
   Lending = 'Lending',
 }
 

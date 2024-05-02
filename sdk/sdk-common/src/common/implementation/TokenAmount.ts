@@ -12,6 +12,8 @@ export class TokenAmount implements ITokenAmount {
   readonly token: Token
   readonly amount: string
 
+  // This is protected because otherwise TypeScript is removing the type when transpiling and it causes errors.
+  // Apparently using protected prevents this bug
   protected readonly _baseUnitFactor: BigNumber
 
   private constructor(params: ITokenAmountData) {

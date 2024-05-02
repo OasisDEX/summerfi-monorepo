@@ -28,7 +28,7 @@ export interface ISparkLendingPoolIdData extends ILendingPoolIdData {
  * Typescript forces the interface to re-declare any properties that have different BUT compatible types.
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
-export interface ISparkLendingPoolId extends ILendingPoolId, ISparkLendingPoolIdData {
+export interface ISparkLendingPoolId extends ISparkLendingPoolIdData, ILendingPoolId {
   readonly protocol: ISparkProtocol
   readonly emodeType: EmodeType
 

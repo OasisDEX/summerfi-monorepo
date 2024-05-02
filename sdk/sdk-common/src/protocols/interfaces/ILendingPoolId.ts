@@ -1,7 +1,7 @@
 import { IToken, ITokenData, TokenSchema } from '../../common/interfaces/IToken'
 import { IPoolId, IPoolIdData } from './IPoolId'
-import { z } from 'zod'
 import { IProtocol, ProtocolSchema } from './IProtocol'
+import { z } from 'zod'
 
 /**
  * @interface ILendingPoolIdData

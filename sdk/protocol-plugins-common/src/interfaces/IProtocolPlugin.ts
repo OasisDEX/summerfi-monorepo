@@ -5,7 +5,7 @@ import { steps } from '@summerfi/sdk-common/simulation'
 import { ActionBuilder, ActionBuildersMap } from '../types/StepBuilderTypes'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
-import { ILendingPoolInfo } from '@summerfi/sdk-common'
+import { ILendingPoolInfo } from '@summerfi/sdk-common/protocols'
 
 /**
  * @interface IProtocolPlugin
