@@ -139,6 +139,7 @@ class MockPlugin implements IProtocolPlugin {
   }
 
   getLendingPool = jest.fn()
+  getLendingPoolInfo = jest.fn()
   getPosition = jest.fn()
   getImportPositionTransaction = jest.fn()
   // @ts-ignore

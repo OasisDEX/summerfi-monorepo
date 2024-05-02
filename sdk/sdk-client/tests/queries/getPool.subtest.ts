@@ -9,7 +9,7 @@ import {
 import { AddressType } from '@summerfi/sdk-common'
 
 export default async function getPoolTest() {
-  type GetPoolType = RPCClientType['getLendingPool']['query']
+  type GetPoolType = RPCClientType['protocols']['getLendingPool']['query']
 
   const getLendingPoolQuery: GetPoolType = jest.fn(async (params) => {
     expect(params).toBeDefined()
@@ -30,8 +30,10 @@ export default async function getPoolTest() {
   })
 
   const rpcClient = {
-    getLendingPool: {
-      query: getLendingPoolQuery,
+    protocols: {
+      getLendingPool: {
+        query: getLendingPoolQuery,
+      },
     },
   } as unknown as RPCClientType
 
