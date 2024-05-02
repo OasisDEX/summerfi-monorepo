@@ -17,6 +17,7 @@ import { type IRefinanceDependencies } from '../common/Types'
 import { getSwapStepData } from '../../implementation/utils/GetSwapStepData'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
 import { BigNumber } from 'bignumber.js'
+import { IOracleManager } from '@summerfi/oracle-common'
 
 export async function refinanceLendingToLendingAnyPair(
   args: IRefinanceParameters,
@@ -79,6 +80,7 @@ export async function refinanceLendingToLendingAnyPair(
           toToken: targetPool.id.collateralToken,
           slippage: Percentage.createFrom({ value: args.slippage.value }),
           swapManager: dependencies.swapManager,
+          oracleManager: dependencies.oracleManager,
         }),
       }),
       isCollateralSwapSkipped,
@@ -95,6 +97,7 @@ export async function refinanceLendingToLendingAnyPair(
               fromToken: targetPool.id.debtToken,
               slippage: Percentage.createFrom(args.slippage),
               swapManager: dependencies.swapManager,
+              oracleManager: dependencies.oracleManager,
             }),
         depositAmount: ctx.getReference(
           isCollateralSwapSkipped
@@ -117,6 +120,7 @@ export async function refinanceLendingToLendingAnyPair(
           toToken: flashloanAmount.token,
           slippage: Percentage.createFrom({ value: args.slippage.value }),
           swapManager: dependencies.swapManager,
+          oracleManager: dependencies.oracleManager,
         }),
       }),
       isDebtSwapSkipped,
@@ -206,6 +210,7 @@ async function estimateSwapFromAmount(params: {
   fromToken: Token
   slippage: Percentage
   swapManager: ISwapManager
+  oracleManager: IOracleManager
 }): Promise<TokenAmount> {
   const { receiveAtLeast, slippage } = params
 
@@ -214,7 +219,7 @@ async function estimateSwapFromAmount(params: {
   }
 
   const spotPrice = (
-    await params.swapManager.getSpotPrice({
+    await params.oracleManager.getSpotPrice({
       chainInfo: receiveAtLeast.token.chainInfo,
       baseToken: receiveAtLeast.token,
       quoteToken: params.fromToken,

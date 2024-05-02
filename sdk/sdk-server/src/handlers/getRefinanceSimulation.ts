@@ -31,6 +31,7 @@ export const getRefinanceSimulation = publicProcedure
 
     const dependencies: IRefinanceDependencies = {
       swapManager: opts.ctx.swapManager,
+      oracleManager: opts.ctx.oracleManager,
       protocolManager: opts.ctx.protocolManager,
     }
 

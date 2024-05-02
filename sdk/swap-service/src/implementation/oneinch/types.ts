@@ -9,9 +9,6 @@ export type OneInchSwapProviderConfig = {
   apiUrl: string
   apiKey: string
   version: string
-  apiSpotUrl: string
-  apiSpotKey: string
-  spotVersion: string
   allowedSwapProtocols: string[]
 }
 
@@ -30,12 +27,6 @@ export interface OneInchSwapResponse extends OneInchBaseResponse {
     gasPrice: string
   }
 }
-
-export type OneInchSpotAuthHeader = {
-  [OneInchSpotAuthHeaderKey]: string
-}
-
-export type OneInchSpotResponse = Record<string, number>
 
 export interface OneInchQuoteResponse extends OneInchBaseResponse {
   /* One Inch can provide multiple routes */

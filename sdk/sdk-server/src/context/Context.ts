@@ -13,6 +13,8 @@ import { createProtocolsPluginsRegistry } from './CreateProtocolPluginsRegistry'
 import { IProtocolManager } from '@summerfi/protocol-manager-common'
 import { ITokensManager } from '@summerfi/tokens-common'
 import { TokensManagerFactory } from '@summerfi/tokens-service'
+import { IOracleManager } from '@summerfi/oracle-common'
+import { OracleManagerFactory } from '@summerfi/oracle-service'
 
 export type ContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
@@ -21,6 +23,7 @@ export type SDKAppContext = {
   configProvider: IConfigurationProvider
   tokensManager: ITokensManager
   swapManager: ISwapManager
+  oracleManager: IOracleManager
   protocolsRegistry: IProtocolPluginsRegistry
   protocolManager: IProtocolManager
   orderPlannerService: IOrderPlannerService
@@ -33,6 +36,7 @@ export const createSDKContext = (opts: ContextOptions): SDKAppContext => {
   const tokensManager = TokensManagerFactory.newTokensManager({ configProvider })
   const orderPlannerService = new OrderPlannerService({ deployments })
   const swapManager = SwapManagerFactory.newSwapManager({ configProvider })
+  const oracleManager = OracleManagerFactory.newOracleManager({ configProvider })
   const protocolsRegistry = createProtocolsPluginsRegistry({
     deployments,
   })
@@ -43,6 +47,7 @@ export const createSDKContext = (opts: ContextOptions): SDKAppContext => {
     configProvider,
     tokensManager,
     swapManager,
+    oracleManager,
     protocolsRegistry,
     protocolManager,
     orderPlannerService,

@@ -700,6 +700,59 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
+  sdk/oracle-common:
+    dependencies:
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../sdk-common
+      '@types/node-fetch':
+        specifier: ^2.6.11
+        version: 2.6.11
+      node-fetch:
+        specifier: ^2.7.0
+        version: 2.7.0
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+
+  sdk/oracle-service:
+    dependencies:
+      '@summerfi/common':
+        specifier: workspace:*
+        version: link:../../packages/common
+      '@summerfi/configuration-provider':
+        specifier: workspace:*
+        version: link:../configuration-provider
+      '@summerfi/oracle-common':
+        specifier: workspace:*
+        version: link:../oracle-common
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../sdk-common
+      '@types/node-fetch':
+        specifier: ^2.6.11
+        version: 2.6.11
+      node-fetch:
+        specifier: ^2.7.0
+        version: 2.7.0
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+
   sdk/order-planner-common:
     dependencies:
       '@summerfi/deployment-types':
@@ -1055,6 +1108,12 @@ importers:
       '@summerfi/deployment-utils':
         specifier: workspace:*
         version: link:../../packages/deployment-utils
+      '@summerfi/oracle-common':
+        specifier: workspace:*
+        version: link:../oracle-common
+      '@summerfi/oracle-service':
+        specifier: workspace:*
+        version: link:../oracle-service
       '@summerfi/order-planner-common':
         specifier: workspace:*
         version: link:../order-planner-common
@@ -1116,6 +1175,9 @@ importers:
 
   sdk/simulator-service:
     dependencies:
+      '@summerfi/oracle-common':
+        specifier: workspace:*
+        version: link:../oracle-common
       '@summerfi/protocol-manager-common':
         specifier: workspace:*
         version: link:../protocol-manager-common

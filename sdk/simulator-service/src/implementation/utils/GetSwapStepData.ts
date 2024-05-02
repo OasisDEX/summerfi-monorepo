@@ -7,6 +7,7 @@ import type {
 } from '@summerfi/sdk-common/common/implementation'
 import { steps } from '@summerfi/sdk-common/simulation'
 import type { ISwapManager } from '@summerfi/swap-common/interfaces'
+import { IOracleManager } from '@summerfi/oracle-common'
 
 export async function getSwapStepData(params: {
   chainInfo: ChainInfo
@@ -14,6 +15,7 @@ export async function getSwapStepData(params: {
   toToken: Token
   slippage: Percentage
   swapManager: ISwapManager
+  oracleManager: IOracleManager
 }): Promise<steps.SwapStep['inputs']> {
   const summerFee = await params.swapManager.getSummerFee({
     from: { token: params.fromAmount.token },
@@ -30,7 +32,7 @@ export async function getSwapStepData(params: {
       toToken: params.toToken,
       slippage: params.slippage,
     }),
-    params.swapManager.getSpotPrice({
+    params.oracleManager.getSpotPrice({
       chainInfo: params.chainInfo,
       baseToken: params.toToken,
       quoteToken: params.fromAmount.token,

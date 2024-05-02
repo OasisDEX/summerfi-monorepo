@@ -1,30 +1,23 @@
 {
-  "name": "@summerfi/simulator-service",
+  "name": "@summerfi/oracle-common",
   "version": "0.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
-    "./*": {
-      "import": "./src/*/index.ts",
-      "types": "./src/*/index.d.ts"
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.d.ts"
     }
   },
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest --setupFiles dotenv/config --coverage=false",
-    "testw": "jest --watch",
-    "build": "tsc -b -v tsconfig.build.json",
+    "build": "tsc -b tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@summerfi/protocol-manager-common": "workspace:*",
-    "@summerfi/protocol-plugins": "workspace:*",
-    "@summerfi/protocol-plugins-common": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
-    "@summerfi/swap-common": "workspace:*",
-    "@summerfi/oracle-common": "workspace:*",
     "@types/node-fetch": "^2.6.11",
     "node-fetch": "^2.7.0"
   },
