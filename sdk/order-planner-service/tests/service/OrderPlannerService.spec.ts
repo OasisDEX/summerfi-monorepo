@@ -27,7 +27,7 @@ import {
   IProtocolPluginsRegistry,
   ITokenService,
 } from '@summerfi/protocol-plugins-common'
-import { PublicClient } from 'viem'
+import { http, createPublicClient } from 'viem'
 import {
   MakerPaybackAction,
   MakerProtocolPlugin,
@@ -42,6 +42,7 @@ import {
 import { ProtocolPluginsRegistry } from '@summerfi/protocol-plugins/implementation'
 import { getMakerPosition } from '../utils/MakerSourcePosition'
 import { getSparkPosition } from '../utils/SparkTargetPosition'
+import { mainnet } from 'viem/chains'
 
 describe('Order Planner Service', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -67,7 +68,13 @@ describe('Order Planner Service', () => {
         [ProtocolName.Spark]: SparkProtocolPlugin,
       },
       context: {
-        provider: undefined as unknown as PublicClient,
+        provider: createPublicClient({
+          batch: {
+            multicall: true,
+          },
+          chain: mainnet,
+          transport: http(''),
+        }),
         tokenService: undefined as unknown as ITokenService,
         priceService: undefined as unknown as IPriceService,
         deployments: deploymentsIndex,
@@ -155,7 +162,7 @@ describe('Order Planner Service', () => {
     assert(strategyExecutorParams, 'Calldata for Strategy Executor could not be decoded')
 
     expect(strategyExecutorParams.strategyName).toEqual(
-      `${SimulationType.Refinance}${refinanceSimulation.sourcePosition?.pool.protocol.name}${refinanceSimulation.targetPosition.pool.protocol.name}`,
+      `${SimulationType.Refinance}${refinanceSimulation.sourcePosition?.pool.id.protocol.name}${refinanceSimulation.targetPosition.pool.id.protocol.name}`,
     )
 
     // Flashloan is at the beginning, so we get the flashloan call plus the return funds call
@@ -188,11 +195,11 @@ describe('Order Planner Service', () => {
     })
 
     assert(makerPaybackAction, 'MakerPaybackAction is not defined')
-    assert(isMakerPositionId(sourcePosition.positionId), 'Source position ID is not a MakerPoolId')
+    assert(isMakerPositionId(sourcePosition.id), 'Source position ID is not a MakerPoolId')
 
     expect(makerPaybackAction.args).toEqual([
       {
-        vaultId: BigInt(sourcePosition.positionId.vaultId),
+        vaultId: BigInt(sourcePosition.id.vaultId),
         userAddress: positionsManager.address.value,
         amount: BigInt(sourcePosition.debtAmount.toBaseUnit()),
         paybackAll: true,
@@ -208,7 +215,7 @@ describe('Order Planner Service', () => {
     assert(makerWithdrawAction, 'MakerWithdrawAction is not defined')
     expect(makerWithdrawAction.args).toEqual([
       {
-        vaultId: BigInt(sourcePosition.positionId.vaultId),
+        vaultId: BigInt(sourcePosition.id.vaultId),
         userAddress: positionsManager.address.value,
         joinAddr: deployments.dependencies.MCD_JOIN_ETH_A.address,
         amount: BigInt(sourcePosition.collateralAmount.toBaseUnit()),

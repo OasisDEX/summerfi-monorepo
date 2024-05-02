@@ -68,7 +68,7 @@ describe('Payback Withdraw Action Builder', () => {
 
   const position = Position.createFrom({
     type: PositionType.Multiply,
-    positionId: PositionId.createFrom({ id: 'someposition' }),
+    id: PositionId.createFrom({ id: 'someposition' }),
     debtAmount: withdrawAmount,
     collateralAmount: paybackAmount,
     pool: pool,

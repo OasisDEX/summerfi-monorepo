@@ -1,19 +1,25 @@
 import { MakerVaultId } from '../types/MakerVaultId'
-import { IMakerPositionId } from '../interfaces/IMakerPositionId'
+import { IMakerPositionIdData } from '../interfaces/IMakerPositionId'
 import { PositionId } from '@summerfi/sdk-common'
 import { SerializationService } from '@summerfi/sdk-common/services'
 
-export class MakerPositionId extends PositionId implements IMakerPositionId {
+/**
+ * @class MakerPositionId
+ * @see IMakerPositionIdData
+ */
+export class MakerPositionId extends PositionId implements IMakerPositionIdData {
   readonly vaultId: MakerVaultId
 
-  private constructor(params: IMakerPositionId) {
+  /** Factory method */
+  static createFrom(params: IMakerPositionIdData): MakerPositionId {
+    return new MakerPositionId(params)
+  }
+
+  /** Sealed constructor */
+  private constructor(params: IMakerPositionIdData) {
     super(params)
 
     this.vaultId = params.vaultId
-  }
-
-  static createFrom(params: IMakerPositionId): MakerPositionId {
-    return new MakerPositionId(params)
   }
 }
 

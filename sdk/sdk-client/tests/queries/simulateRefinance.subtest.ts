@@ -1,16 +1,15 @@
-import {
-  CollateralConfigMap,
-  DebtConfigMap,
-  IProtocol,
-  PoolType,
-  ProtocolName,
-} from '@summerfi/sdk-common/protocols'
+import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SDKManager } from '../../src/implementation/SDKManager'
 import { RPCClientType, SparkPositionId } from '../../src/rpc/SDKClient'
-import { MakerLendingPool, MakerPositionId } from '@summerfi/protocol-plugins/plugins/maker'
+import {
+  ILKType,
+  IMakerLendingPoolData,
+  MakerPositionId,
+} from '@summerfi/protocol-plugins/plugins/maker'
 import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import {
   Address,
+  AddressType,
   ChainFamilyMap,
   ChainInfo,
   Percentage,
@@ -20,7 +19,9 @@ import {
   TokenAmount,
 } from '@summerfi/sdk-common/common'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
-import { CollateralConfigMock, DebtConfigMock } from '@summerfi/testing-utils'
+import { IMakerProtocolData } from '@summerfi/protocol-plugins/plugins/maker/interfaces/IMakerProtocol'
+import { IMakerLendingPoolIdData } from '@summerfi/protocol-plugins/plugins/maker/interfaces/IMakerLendingPoolId'
+import { IPositionData } from '@summerfi/sdk-common'
 
 export default async function simulateRefinanceTest() {
   type SimulateRefinanceType = RPCClientType['simulation']['refinance']['query']
@@ -30,7 +31,7 @@ export default async function simulateRefinanceTest() {
       sourcePosition: params.sourcePosition,
       targetPosition: {
         type: params.sourcePosition.type,
-        positionId: SparkPositionId.createFrom({ id: '0987654321' }),
+        id: SparkPositionId.createFrom({ id: '0987654321' }),
         debtAmount: params.targetPosition.debtAmount,
         collateralAmount: params.targetPosition.collateralAmount,
         pool: params.targetPosition.pool,
@@ -71,58 +72,63 @@ export default async function simulateRefinanceTest() {
     decimals: 18,
   })
 
-  const protocol: IProtocol = {
+  const protocol: IMakerProtocolData = {
     name: ProtocolName.Maker,
     chainInfo: chainInfo,
   }
 
-  const pool: MakerLendingPool = {
-    type: PoolType.Lending,
+  const poolId: IMakerLendingPoolIdData = {
     protocol: protocol,
-    poolId: {
-      protocol: protocol,
+    ilkType: ILKType.ETH_A,
+    collateralToken: {
+      address: {
+        type: AddressType.Ethereum,
+        value: '0x6b175474e89094c44da98b954eedeac495271d0f',
+      },
+      chainInfo: { chainId: 1, name: 'Ethereum' },
+      name: 'USD Coin',
+      symbol: 'USDC',
+      decimals: 6,
     },
-    collaterals: {},
-    debts: {},
-    baseCurrency: DAI,
-  } as MakerLendingPool
+    debtToken: {
+      address: {
+        type: AddressType.Ethereum,
+        value: '0x6b175474e89094c44da98b954eedeac495271d0f',
+      },
+      chainInfo: { chainId: 1, name: 'Ethereum' },
+      name: 'USD Coin',
+      symbol: 'USDC',
+      decimals: 6,
+    },
+  }
 
-  const prevPosition: Position = {
+  const pool: IMakerLendingPoolData = {
+    type: PoolType.Lending,
+    id: poolId,
+  }
+
+  const prevPosition: IPositionData = {
     type: PositionType.Multiply,
     pool: pool,
     debtAmount: TokenAmount.createFrom({ token: DAI, amount: '56.78' }),
     collateralAmount: TokenAmount.createFrom({ token: WETH, amount: '105.98' }),
-    positionId: MakerPositionId.createFrom({ id: '1234567890', vaultId: '34' }),
+    id: MakerPositionId.createFrom({ id: '1234567890', vaultId: '34' }),
   }
 
-  const targetPool = {
+  const targetPool: IMakerLendingPoolData = {
     type: PoolType.Lending as const,
-    protocol: protocol,
-    poolId: {
-      protocol: protocol,
-    },
-    collaterals: CollateralConfigMap.createFrom({
-      record: {
-        [prevPosition.collateralAmount.token.address.value]: new CollateralConfigMock({}),
-      },
-    }),
-    debts: DebtConfigMap.createFrom({
-      record: {
-        [prevPosition.debtAmount.token.address.value]: new DebtConfigMock({}),
-      },
-    }),
-    baseCurrency: DAI,
+    id: poolId,
   }
 
-  const targetPosition = Position.createFrom({
+  const targetPosition = {
     type: PositionType.Multiply,
-    positionId: {
+    id: {
       id: 'newEmptyPositionFromPool',
     },
     debtAmount: prevPosition.debtAmount,
     collateralAmount: prevPosition.collateralAmount,
     pool: targetPool,
-  })
+  } as unknown as Position
   const refinanceParameters: IRefinanceParameters = {
     sourcePosition: prevPosition,
     targetPosition: targetPosition,
@@ -135,9 +141,9 @@ export default async function simulateRefinanceTest() {
   expect(simulation).toBeDefined()
   expect(simulation.simulationType).toBe(SimulationType.Refinance)
   expect(simulation.sourcePosition).toBeDefined()
-  expect(simulation.sourcePosition?.positionId).toBe(prevPosition.positionId)
+  expect(simulation.sourcePosition?.id).toBe(prevPosition.id)
   expect(simulation.targetPosition).toBeDefined()
-  expect(simulation.targetPosition.positionId).toBeDefined()
-  expect(simulation.targetPosition.pool.poolId).toBe(targetPool.poolId)
+  expect(simulation.targetPosition.id).toBeDefined()
+  expect(simulation.targetPosition.pool.id).toBe(targetPool.id)
   expect(simulation.steps).toBeDefined()
 }

@@ -1,63 +1,48 @@
 import { SerializationService } from '../../services/SerializationService'
 import { Percentage } from './Percentage'
-import { percentageAsFraction } from '../utils/PercentageUtils'
-import { IRiskRatio, RiskRatioType } from '../interfaces/IRiskRatio'
+import { IRiskRatio, IRiskRatioData, RiskRatioType } from '../interfaces/IRiskRatio'
+import { IPercentage } from '../interfaces/IPercentage'
 
 /**
  * @class RiskRatio
- * @description Risk ratio representing the risk of position,
+ * @see IRiskRatio
  */
 export class RiskRatio implements IRiskRatio {
   readonly type: RiskRatioType
-  readonly ratio: Percentage
+  readonly ratio: IPercentage
 
-  private constructor(params: IRiskRatio) {
-    this.type = params.type
-    this.ratio = Percentage.createFrom(params.ratio)
+  /** Factory method */
+  static createFrom(params: IRiskRatioData): RiskRatio {
+    return new RiskRatio(params)
   }
 
-  static type = RiskRatioType
+  /** Sealed constructor */
+  private constructor(params: IRiskRatioData) {
+    this.type = params.type
 
-  static createFrom(params: IRiskRatio): RiskRatio {
+    const originalRatio = Percentage.createFrom(params.ratio)
+
     switch (params.type) {
       case RiskRatioType.LTV:
-        return new RiskRatio(params)
-      case RiskRatioType.CollateralizationRatio: {
-        const ratio = Percentage.createFrom({
-          value: (1 / percentageAsFraction(params.ratio)) * 100,
+        this.ratio = originalRatio
+        break
+      case RiskRatioType.CollateralizationRatio:
+        this.ratio = Percentage.createFrom({
+          value: 1 / originalRatio.toProportion(),
         })
-        return new RiskRatio({ ...params, ratio })
-      }
-      case RiskRatioType.Multiple: {
-        const ratio = Percentage.createFrom({
-          value: (1 / (1 + 1 / (params.ratio.value - 1))) * 100,
+        break
+      case RiskRatioType.Multiple:
+        this.ratio = Percentage.createFrom({
+          value: 1 / (1 + 1 / (originalRatio.value - 1)),
         })
-        return new RiskRatio({ ...params, ratio })
-      }
+        break
       default:
-        throw new Error('Invalid RiskRatio type')
+        throw new Error('RiskRatio type not implemented')
     }
   }
 
   toString(): string {
     return `${this.ratio.toString()}`
-  }
-
-  convertTo(type: RiskRatioType): string {
-    switch (type) {
-      case RiskRatioType.LTV:
-        return this.ratio.toString()
-      case RiskRatioType.CollateralizationRatio:
-        return Percentage.createFrom({
-          value: (1 / percentageAsFraction(this.ratio)) * 100,
-        }).toString()
-      case RiskRatioType.Multiple:
-        return Percentage.createFrom({
-          value: 1 / (1 / percentageAsFraction(this.ratio) - 1) + 1,
-        }).toString()
-      default:
-        throw new Error('Invalid RiskRatio type')
-    }
   }
 }
 

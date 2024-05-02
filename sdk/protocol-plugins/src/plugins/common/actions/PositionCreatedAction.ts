@@ -15,7 +15,7 @@ export class PositionCreatedAction extends BaseAction {
     return this._encodeCall({
       arguments: [
         {
-          protocol: params.position.pool.protocol.name,
+          protocol: params.position.pool.id.protocol,
           positionType: params.position.type,
           collateralToken: params.position.collateralAmount.token.address.value,
           debtToken: params.position.debtAmount.token.address.value,

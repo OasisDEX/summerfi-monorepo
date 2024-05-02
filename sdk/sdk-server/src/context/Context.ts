@@ -32,7 +32,7 @@ export const createSDKContext = (opts: ContextOptions): SDKAppContext => {
   const protocolsRegistry = createProtocolsPluginsRegistry({
     deployments,
   })
-  const protocolManager = new ProtocolManager({ pluginsRegistry: protocolsRegistry })
+  const protocolManager = ProtocolManager.createWith({ pluginsRegistry: protocolsRegistry })
 
   return {
     deployments,

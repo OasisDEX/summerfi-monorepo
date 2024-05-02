@@ -1,10 +1,23 @@
-import { IPoolId } from '../interfaces/IPoolId'
-import { IProtocol } from '../interfaces/IProtocol'
+import { IPrintable } from '../../common/interfaces/IPrintable'
+import { SerializationService } from '../../services'
+import { IPoolId, IPoolIdData } from '../interfaces/IPoolId'
+import { Protocol } from './Protocol'
 
-export abstract class PoolId implements IPoolId {
-  protocol: IProtocol
+/**
+ * @class PoolId
+ * @see IPoolIdData
+ */
+export abstract class PoolId implements IPoolId, IPrintable {
+  abstract protocol: Protocol
 
-  protected constructor(params: IPoolId) {
-    this.protocol = params.protocol
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  protected constructor(params: IPoolIdData) {
+    // Empty on purpose
+  }
+
+  toString(): string {
+    return `Pool ID: ${this.protocol.toString()}`
   }
 }
+
+SerializationService.registerClass(PoolId)

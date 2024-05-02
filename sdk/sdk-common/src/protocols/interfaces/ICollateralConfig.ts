@@ -1,15 +1,15 @@
-import { IPercentage } from '../../common/interfaces/IPercentage'
-import { IPrice } from '../../common/interfaces/IPrice'
-import { IRiskRatio } from '../../common/interfaces/IRiskRatio'
-import { IToken } from '../../common/interfaces/IToken'
-import { ITokenAmount } from '../../common/interfaces/ITokenAmount'
+import { IPercentageData } from '../../common/interfaces/IPercentage'
+import { IPriceData } from '../../common/interfaces/IPrice'
+import { IRiskRatioData } from '../../common/interfaces/IRiskRatio'
+import { ITokenData } from '../../common/interfaces/IToken'
+import { ITokenAmountData } from '../../common/interfaces/ITokenAmount'
 
 export interface ICollateralConfig {
-  token: IToken
-  price: IPrice
-  priceUSD: IPrice
-  liquidationThreshold: IRiskRatio
-  maxSupply: ITokenAmount
-  tokensLocked: ITokenAmount
-  liquidationPenalty: IPercentage
+  token: ITokenData
+  price: IPriceData
+  priceUSD: IPriceData
+  liquidationThreshold: IRiskRatioData
+  maxSupply: ITokenAmountData
+  tokensLocked: ITokenAmountData
+  liquidationPenalty: IPercentageData
 }

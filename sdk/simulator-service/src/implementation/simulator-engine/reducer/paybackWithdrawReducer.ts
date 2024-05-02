@@ -16,7 +16,7 @@ export function paybackWithdrawReducer(
     ...state,
     positions: {
       ...state.positions,
-      [step.inputs.position.positionId.id]: depositToPosition(
+      [step.inputs.position.id.id]: depositToPosition(
         step.inputs.position,
         getReferencedValue(step.inputs.withdrawAmount),
       ),

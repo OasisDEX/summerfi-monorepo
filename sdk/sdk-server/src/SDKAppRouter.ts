@@ -1,5 +1,5 @@
 import { getPosition } from './handlers/getPosition'
-import { getPool } from './handlers/getPool'
+import { getLendingPool } from './handlers/getPool'
 import { getRefinanceSimulation } from './handlers/getRefinanceSimulation'
 import { buildOrder } from './handlers/buildOrder'
 import { getToken } from './handlers/getToken'
@@ -13,7 +13,7 @@ import { getImportSimulation } from './handlers/getImportSimulation'
  */
 export const sdkAppRouter = router({
   getPosition: getPosition,
-  getPool: getPool,
+  getLendingPool: getLendingPool,
   getToken: getToken,
   simulation: { refinance: getRefinanceSimulation, import: getImportSimulation },
   orders: {

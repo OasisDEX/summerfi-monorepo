@@ -1,14 +1,20 @@
 import { PositionId } from '@summerfi/sdk-common'
 import { SerializationService } from '@summerfi/sdk-common/services'
-import { ISparkPositionId } from '../interfaces/ISparkPositionId'
+import { ISparkPositionId, ISparkPositionIdData } from '../interfaces/ISparkPositionId'
 
+/**
+ * @class SparkPositionId
+ * @see ISparkPositionId
+ */
 export class SparkPositionId extends PositionId implements ISparkPositionId {
-  private constructor(params: ISparkPositionId) {
-    super(params)
+  /** Factory method */
+  static createFrom(params: ISparkPositionIdData): SparkPositionId {
+    return new SparkPositionId(params)
   }
 
-  static createFrom(params: ISparkPositionId): SparkPositionId {
-    return new SparkPositionId(params)
+  /** Sealed constructor */
+  private constructor(params: ISparkPositionIdData) {
+    super(params)
   }
 }
 

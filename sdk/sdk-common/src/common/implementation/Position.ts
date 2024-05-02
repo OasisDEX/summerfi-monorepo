@@ -1,28 +1,26 @@
-import { IPosition } from '../interfaces/IPosition'
-import { IPool } from '../../protocols/interfaces/IPool'
+import { IPosition, IPositionData } from '../interfaces/IPosition'
 import { SerializationService } from '../../services/SerializationService'
 import { PositionId } from './PositionId'
 import { TokenAmount } from './TokenAmount'
 import { PositionType } from '../enums/PositionType'
+import { Pool } from '../../protocols/implementation/Pool'
 
-// we should add assests prop instead of the amounts
-export class Position implements IPosition {
+/**
+ * @name Position
+ * @see IPosition
+ */
+export abstract class Position implements IPosition {
   readonly type: PositionType
-  readonly positionId: PositionId
+  readonly id: PositionId
   readonly debtAmount: TokenAmount
   readonly collateralAmount: TokenAmount
-  readonly pool: IPool
+  abstract readonly pool: Pool
 
-  private constructor(params: IPosition) {
+  protected constructor(params: IPositionData) {
     this.type = params.type
-    this.positionId = params.positionId
+    this.id = params.id
     this.debtAmount = TokenAmount.createFrom(params.debtAmount)
     this.collateralAmount = TokenAmount.createFrom(params.collateralAmount)
-    this.pool = params.pool
-  }
-
-  static createFrom(params: IPosition): Position {
-    return new Position(params)
   }
 }
 

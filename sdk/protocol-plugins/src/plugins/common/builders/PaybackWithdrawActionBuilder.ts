@@ -6,7 +6,7 @@ export const PaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWithdrawSt
   params,
 ): Promise<void> => {
   delegateToProtocolActionBuilder({
-    protocolName: params.step.inputs.position.pool.protocol.name,
+    protocolName: params.step.inputs.position.pool.id.protocol.name,
     actionBuilderParams: params,
   })
 }

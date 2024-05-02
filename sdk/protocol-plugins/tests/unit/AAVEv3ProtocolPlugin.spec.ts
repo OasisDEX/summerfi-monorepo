@@ -2,7 +2,11 @@ import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { ChainInfo, IPositionId } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import assert from 'assert'
-import { AaveV3ProtocolPlugin } from '../../src/plugins/aave-v3'
+import {
+  AaveV3ProtocolPlugin,
+  IAaveV3LendingPoolIdData,
+  isAaveV3LendingPoolId,
+} from '../../src/plugins/aave-v3'
 import { aaveV3PoolIdMock } from '../mocks/AAVEv3PoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 import { getErrorMessage } from '../utils/ErrorMessage'
@@ -18,10 +22,10 @@ describe('AAVEv3 Protocol Plugin', () => {
   })
 
   it('should verify that a given poolId is recognised as a valid format', () => {
-    expect(aaveV3ProtocolPlugin.isPoolId(aaveV3PoolIdMock)).toBe(true)
+    expect(isAaveV3LendingPoolId(aaveV3PoolIdMock)).toBe(true)
   })
 
-  it('should throw a specific error when provided with a poolId not matching the AAVEv3PoolId format', () => {
+  it('should throw a specific error when provided with a poolId not matching the AAVEv3PoolId format', async () => {
     try {
       const invalidAaveV3PoolIdMock = {
         ...aaveV3PoolIdMock,
@@ -29,8 +33,11 @@ describe('AAVEv3 Protocol Plugin', () => {
           ...aaveV3PoolIdMock.protocol,
           name: ProtocolName.Maker,
         },
-      }
-      aaveV3ProtocolPlugin.validatePoolId(invalidAaveV3PoolIdMock)
+      } as unknown as IAaveV3LendingPoolIdData
+
+      await expect(
+        aaveV3ProtocolPlugin.getLendingPool(invalidAaveV3PoolIdMock),
+      ).resolves.toBeDefined()
       assert.fail('Should throw error')
     } catch (error: unknown) {
       expect(getErrorMessage(error)).toMatch('Invalid AaveV3 pool ID')
@@ -39,10 +46,10 @@ describe('AAVEv3 Protocol Plugin', () => {
 
   it('should correctly return a AaveV3LendingPool object for a valid AaveV3PoolId', async () => {
     const aaveV3PoolIdValid = aaveV3PoolIdMock
-    await expect(aaveV3ProtocolPlugin.getPool(aaveV3PoolIdValid)).resolves.toBeDefined()
+    await expect(aaveV3ProtocolPlugin.getLendingPool(aaveV3PoolIdValid)).resolves.toBeDefined()
   })
 
-  it('should throw an error when calling getPool with an unsupported Chain', async () => {
+  it('should throw an error when calling getLendingPool with an unsupported Chain', async () => {
     const invalidAaveV3PoolIdUnsupportedChain = {
       ...aaveV3PoolIdMock,
       protocol: {
@@ -53,47 +60,53 @@ describe('AAVEv3 Protocol Plugin', () => {
         }),
       },
     }
-    await expect(aaveV3ProtocolPlugin.getPool(invalidAaveV3PoolIdUnsupportedChain)).rejects.toThrow(
-      'Invalid AaveV3 pool ID',
-    )
+    await expect(
+      aaveV3ProtocolPlugin.getLendingPool(invalidAaveV3PoolIdUnsupportedChain),
+    ).rejects.toThrow('Chain ID 2 is not supported')
   })
 
-  it('should throw an error when calling getPool with chain id missing from ctx', async () => {
-    const aaveV3ProtocolPluginWithWrongContext = new AaveV3ProtocolPlugin({
-      context: {
-        ...ctx,
-        provider: {
-          ...ctx.provider,
-          chain: {
-            ...ctx.provider.chain!,
-            id: undefined as unknown as number,
+  it('should throw an error when calling getLendingPool with chain id missing from ctx', async () => {
+    try {
+      new AaveV3ProtocolPlugin({
+        context: {
+          ...ctx,
+          provider: {
+            ...ctx.provider,
+            chain: {
+              ...ctx.provider.chain!,
+              id: undefined as unknown as number,
+            },
           },
         },
-      },
-    })
-    await expect(aaveV3ProtocolPluginWithWrongContext.getPool(aaveV3PoolIdMock)).rejects.toThrow(
-      `ctx.provider.chain.id undefined`,
-    )
+      })
+
+      assert.fail('Should throw error')
+    } catch (error: unknown) {
+      expect(getErrorMessage(error)).toMatch('ctx.provider.chain.id undefined')
+    }
   })
 
-  it('should throw an error when calling getPool with an unsupported chain ID', async () => {
+  it('should throw an error when calling getLendingPool with an unsupported chain ID', async () => {
     const wrongChainId = 2
-    const aaveV3ProtocolPluginWithWrongContext = new AaveV3ProtocolPlugin({
-      context: {
-        ...ctx,
-        provider: {
-          ...ctx.provider,
-          chain: {
-            ...ctx.provider.chain!,
-            id: wrongChainId,
+
+    try {
+      new AaveV3ProtocolPlugin({
+        context: {
+          ...ctx,
+          provider: {
+            ...ctx.provider,
+            chain: {
+              ...ctx.provider.chain!,
+              id: wrongChainId,
+            },
           },
         },
-      },
-    })
+      })
 
-    await expect(aaveV3ProtocolPluginWithWrongContext.getPool(aaveV3PoolIdMock)).rejects.toThrow(
-      `Chain ID ${wrongChainId} is not supported`,
-    )
+      assert.fail('Should throw error')
+    } catch (error: unknown) {
+      expect(getErrorMessage(error)).toMatch(`Chain ID ${wrongChainId} is not supported`)
+    }
   })
 
   it('should throw a "Not implemented" error when calling getPosition', async () => {

@@ -68,7 +68,7 @@ describe('Deposit Borrow Action Builder', () => {
 
   const position = Position.createFrom({
     type: PositionType.Multiply,
-    positionId: PositionId.createFrom({ id: 'someposition' }),
+    id: PositionId.createFrom({ id: 'someposition' }),
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
     pool: pool,

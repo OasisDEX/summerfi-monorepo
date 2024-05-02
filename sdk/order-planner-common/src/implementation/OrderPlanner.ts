@@ -12,6 +12,7 @@ import {
 } from '@summerfi/protocol-plugins-common'
 import { IOrderPlanner, OrderPlannerParams } from '../interfaces/IOrderPlanner'
 import { encodeStrategy } from '../utils/EncodeStrategy'
+import { generateStrategyName } from '../utils/GenerateStrategyName'
 
 export class OrderPlanner implements IOrderPlanner {
   // TODO: receive it as parameter in the constructor
@@ -73,10 +74,6 @@ export class OrderPlanner implements IOrderPlanner {
     return actionBuildersMap[step.type] as ActionBuilder<T>
   }
 
-  private _getStrategyName(simulation: ISimulation<SimulationType>): string {
-    return `${simulation.simulationType}${simulation.sourcePosition?.pool.protocol.name}${simulation.targetPosition?.pool.protocol.name}`
-  }
-
   private _generateOrder(params: {
     simulation: ISimulation<SimulationType>
     preRequisiteTransactions: TransactionInfo[]
@@ -92,7 +89,7 @@ export class OrderPlanner implements IOrderPlanner {
       throw new Error(`Executor contract ${this.ExecutorContractName} not found in deployment`)
     }
     const executorAddress = Address.createFromEthereum({ value: executorInfo.address as HexData })
-    const strategyName = this._getStrategyName(simulation)
+    const strategyName = generateStrategyName(simulation)
 
     const strategyExecutorTransaction = encodeStrategy({
       strategyName: strategyName,

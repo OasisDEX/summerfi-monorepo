@@ -22,15 +22,7 @@ describe('Refinance', () => {
       simulation = await refinanceLendingToLendingSamePair(
         {
           sourcePosition: testSourcePosition,
-          targetPosition: newEmptyPositionFromPool(
-            testTargetLendingPool,
-            testTargetLendingPool.debts.get({
-              token: testSourcePosition.debtAmount.token,
-            })!.token,
-            testTargetLendingPool.collaterals.get({
-              token: testSourcePosition.collateralAmount.token,
-            })!.token,
-          ),
+          targetPosition: newEmptyPositionFromPool(testTargetLendingPool),
           slippage: Percentage.createFrom({ value: 1 }),
         },
         mockRefinanceContext,
@@ -59,13 +51,13 @@ describe('Refinance', () => {
       const targetPosition = simulation.targetPosition
 
       expect(targetPosition.pool).toEqual(testTargetLendingPool)
-      expect(targetPosition.positionId).toBeDefined()
+      expect(targetPosition.id).toBeDefined()
     })
 
     it('should open position with id', async () => {
       const targetPosition = simulation.targetPosition
 
-      expect(targetPosition.positionId).toBeDefined()
+      expect(targetPosition.id).toBeDefined()
     })
 
     it('should include a new position event step', async () => {
@@ -84,11 +76,7 @@ describe('Refinance', () => {
       simulation = await refinanceLendingToLendingAnyPair(
         {
           sourcePosition: testSourcePosition,
-          targetPosition: newEmptyPositionFromPool(
-            testTargetLendingPoolRequiredSwaps,
-            otherTestDebt,
-            otherTestCollateral,
-          ),
+          targetPosition: newEmptyPositionFromPool(testTargetLendingPoolRequiredSwaps),
           slippage: Percentage.createFrom({ value: 1 }),
         },
         mockRefinanceContextRequiredSwaps,
@@ -124,7 +112,7 @@ describe('Refinance', () => {
     it('should open position with id', async () => {
       const targetPosition = simulation.targetPosition
 
-      expect(targetPosition.positionId).toBeDefined()
+      expect(targetPosition.id).toBeDefined()
     })
 
     it('should exchange all collateral from source position ', async () => {
