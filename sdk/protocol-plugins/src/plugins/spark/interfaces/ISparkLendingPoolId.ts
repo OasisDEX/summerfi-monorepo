@@ -1,7 +1,11 @@
-import { ILendingPoolIdData } from '@summerfi/sdk-common/protocols'
+import {
+  ILendingPoolId,
+  ILendingPoolIdData,
+  LendingPoolIdSchema,
+} from '@summerfi/sdk-common/protocols'
 import { EmodeType, EmodeTypeSchema } from '../../common/enums/EmodeType'
 import { ISparkProtocol, ISparkProtocolData, SparkProtocolSchema } from './ISparkProtocol'
-import { ILendingPoolId, IToken, LendingPoolIdSchema } from '@summerfi/sdk-common'
+import { IToken } from '@summerfi/sdk-common'
 import { z } from 'zod'
 
 /**

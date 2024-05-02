@@ -3,7 +3,7 @@ import { ILendingPool, ILendingPoolIdData, ProtocolName } from '@summerfi/sdk-co
 import { IProtocolClient } from '../interfaces/IProtocolClient'
 import { RPCClientType } from '../rpc/SDKClient'
 import { SerializationService } from '@summerfi/sdk-common/services'
-import { Protocol } from '@summerfi/sdk-common'
+import { ILendingPoolInfo, Protocol } from '@summerfi/sdk-common'
 
 export class ProtocolClient extends Protocol implements IProtocolClient {
   public readonly name: ProtocolName
@@ -19,17 +19,16 @@ export class ProtocolClient extends Protocol implements IProtocolClient {
   }
 
   getLendingPool(params: { poolId: ILendingPoolIdData }): Promise<Maybe<ILendingPool>> {
-    return this._rpcClient.getLendingPool.query({
+    return this._rpcClient.protocols.getLendingPool.query({
       poolId: params.poolId,
     })
   }
 
-  // TODO: Implement this method
-  // getPoolExtendedInfo(params: { poolId: IPoolId }): Promise<Maybe<IPoolExtendedInfo>> {
-  //   return this._rpcClient.getPoolExtendedInfo.query({
-  //     poolId: params.poolId,
-  //   })
-  // }
+  getLendingPoolInfo(params: { poolId: ILendingPoolIdData }): Promise<Maybe<ILendingPoolInfo>> {
+    return this._rpcClient.protocols.getLendingPoolInfo.query({
+      poolId: params.poolId,
+    })
+  }
 
   /**
    * Compare if the passed protocol is equal to the current protocol

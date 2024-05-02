@@ -1,5 +1,3 @@
 export { StepBuilderContextMock } from './StepBuilderContextMock'
 export { SwapManagerMock } from './SwapManagerMock'
 export { UserMock } from './UserMock'
-export { CollateralConfigMock } from './CollateralConfigMock'
-export { DebtConfigMock } from './DebtConfigMock'

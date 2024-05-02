@@ -1,29 +1,14 @@
 import {
-  Percentage,
-  TokenAmount,
-  Price,
   CurrencySymbol,
-  RiskRatio,
   Position,
-  Token,
   ChainFamilyName,
   valuesOfChainFamilyMap,
   Maybe,
+  IPositionIdData,
 } from '@summerfi/sdk-common/common'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { BigNumber } from 'bignumber.js'
-
-import { BaseProtocolPlugin } from '../../../implementation/BaseProtocolPlugin'
-
-import { UNCAPPED_SUPPLY, PRECISION_BI } from '../../common/constants/AaveV3LikeConstants'
+import { ILendingPoolIdData, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SparkLendingPool } from './SparkLendingPool'
-import { SparkCollateralConfig } from './SparkCollateralConfig'
-import { SparkDebtConfig } from './SparkDebtConfig'
 
-import {
-  AaveV3LikeProtocolDataBuilder,
-  filterAssetsListByEMode,
-} from '../../common/helpers/AAVEv3LikeProtocolDataBuilder'
 import { SparkContractNames } from '@summerfi/deployment-types'
 import {
   SPARK_LENDING_POOL_ABI,
@@ -34,21 +19,25 @@ import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-pl
 import { SparkAddressAbiMap } from '../types/SparkAddressAbiMap'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
-import { ISparkLendingPoolIdData, isSparkLendingPoolId } from '../interfaces/ISparkLendingPoolId'
+import {
+  ISparkLendingPoolId,
+  ISparkLendingPoolIdData,
+  isSparkLendingPoolId,
+} from '../interfaces/ISparkLendingPoolId'
 import { SparkStepBuilders } from '../builders/SparkStepBuilders'
-import { AaveV3PositionId } from '../../aave-v3/implementation/AaveV3PositionId'
 import { ISparkPositionIdData, isSparkPositionId } from '../interfaces'
-import { ILendingPoolIdData, IPositionIdData, RiskRatioType } from '@summerfi/sdk-common'
-
-type AssetsList = ReturnType<SparkProtocolPlugin['_buildAssetsList']>
-type Asset = Awaited<AssetsList> extends (infer U)[] ? U : never
+import { IAaveV3PositionIdData } from '../../aave-v3'
+import { SparkLendingPoolInfo } from './SparkLendingPoolInfo'
+import { sparkEmodeCategoryMap } from './EmodeCategoryMap'
+import { AAVEv3BaseProtocolPlugin } from '../../common/helpers/aaveV3Like/AAVEv3LikeBaseProtocolPlugin'
+import { AAVEv3LikeAbiInfo } from '../../common/helpers/aaveV3Like/AAVEv3LikeAbi'
 
 /**
  * @class SparkProtocolPlugin
  * @description Protocol plugin for the Spark protocol
  * @see BaseProtocolPlugin
  */
-export class SparkProtocolPlugin extends BaseProtocolPlugin {
+export class SparkProtocolPlugin extends AAVEv3BaseProtocolPlugin {
   readonly protocolName: ProtocolName.Spark = ProtocolName.Spark
   readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
   readonly stepBuilders: Partial<ActionBuildersMap> = SparkStepBuilders
@@ -95,11 +84,41 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
     })
   }
 
+  /** @see BaseProtocolPlugin._getLendingPoolInfoImpl */
+  protected async _getLendingPoolInfoImpl(
+    sparkPoolId: ISparkLendingPoolId,
+  ): Promise<SparkLendingPoolInfo> {
+    await this._inititalizeAssetsListIfNeeded()
+
+    const emode = sparkEmodeCategoryMap[sparkPoolId.emodeType]
+
+    const collateralInfo = await this._getCollateralInfo({
+      token: sparkPoolId.collateralToken,
+      emode: emode,
+      poolBaseCurrencyToken: CurrencySymbol.USD,
+    })
+    if (!collateralInfo) {
+      throw new Error(`Collateral info not found for ${sparkPoolId.collateralToken}`)
+    }
+
+    const debtInfo = await this._getDebtInfo(sparkPoolId.debtToken, emode, CurrencySymbol.USD)
+    if (!debtInfo) {
+      throw new Error(`Debt info not found for ${sparkPoolId.debtToken}`)
+    }
+
+    return SparkLendingPoolInfo.createFrom({
+      type: PoolType.Lending,
+      id: sparkPoolId,
+      collateral: collateralInfo,
+      debt: debtInfo,
+    })
+  }
+
   /** POSITIONS */
 
   /** @see BaseProtocolPlugin.getPosition */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getPosition(positionId: AaveV3PositionId): Promise<Position> {
+  async getPosition(positionId: IAaveV3PositionIdData): Promise<Position> {
     this._validatePositionId(positionId)
 
     throw new Error(`Not implemented ${positionId}`)
@@ -117,8 +136,7 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
   }
 
   /** PRIVATE */
-
-  private _getContractDef<K extends SparkContractNames>(contractName: K): SparkAddressAbiMap[K] {
+  protected _getContractDef(contractName: SparkContractNames): AAVEv3LikeAbiInfo {
     const map: SparkAddressAbiMap = {
       Oracle: {
         address: '0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9',
@@ -136,169 +154,4 @@ export class SparkProtocolPlugin extends BaseProtocolPlugin {
 
     return map[contractName]
   }
-
-  private async _buildAssetsList(emode: bigint) {
-    try {
-      const _ctx = {
-        ...this.ctx,
-        getContractDef: this._getContractDef,
-      }
-      const builder = await new AaveV3LikeProtocolDataBuilder(_ctx, this.protocolName).init()
-      const list = await builder
-        .addPrices()
-        .addReservesCaps()
-        .addReservesConfigData()
-        .addReservesData()
-        .addEmodeCategories()
-        .build()
-
-      return filterAssetsListByEMode(list, emode)
-    } catch (e) {
-      throw new Error(`Could not fetch/build assets list for Spark: ${JSON.stringify(e)}`)
-    }
-  }
-
-  private _getCollateralAssetInfo(
-    asset: Asset,
-    poolBaseCurrencyToken: Token | CurrencySymbol,
-  ): SparkCollateralConfig {
-    const {
-      token: collateralToken,
-      config: { usageAsCollateralEnabled, ltv, liquidationThreshold, liquidationBonus },
-      caps: { supplyCap },
-      data: { totalAToken },
-    } = asset
-    const LTV_TO_PERCENTAGE_DIVISOR = 100n
-
-    try {
-      return {
-        token: collateralToken,
-        price: Price.createFrom({
-          baseToken: collateralToken,
-          quoteToken: poolBaseCurrencyToken,
-          value: asset.price.toString(),
-        }),
-        priceUSD: Price.createFrom({
-          baseToken: collateralToken,
-          quoteToken: CurrencySymbol.USD,
-          value: asset.price.toString(),
-        }),
-        maxLtv: RiskRatio.createFrom({
-          ratio: Percentage.createFrom({
-            value: Number((ltv / LTV_TO_PERCENTAGE_DIVISOR).toString()),
-          }),
-          type: RiskRatioType.LTV,
-        }),
-        liquidationThreshold: RiskRatio.createFrom({
-          ratio: Percentage.createFrom({
-            value: Number((liquidationThreshold / LTV_TO_PERCENTAGE_DIVISOR).toString()),
-          }),
-          type: RiskRatioType.LTV,
-        }),
-        tokensLocked: TokenAmount.createFromBaseUnit({
-          token: collateralToken,
-          amount: totalAToken.toString(),
-        }),
-        maxSupply: TokenAmount.createFrom({
-          token: collateralToken,
-          amount: supplyCap === 0n ? UNCAPPED_SUPPLY : supplyCap.toString(),
-        }),
-        liquidationPenalty: Percentage.createFrom({
-          value: Number((liquidationBonus / LTV_TO_PERCENTAGE_DIVISOR).toString()),
-        }),
-        apy: Percentage.createFrom({ value: 0 }),
-        usageAsCollateralEnabled,
-      }
-    } catch (e) {
-      throw new Error(`error in collateral loop ${e}`)
-    }
-  }
-
-  private _getDebtAssetInfo(
-    asset: Asset,
-    poolBaseCurrencyToken: CurrencySymbol | Token,
-  ): Maybe<SparkDebtConfig> {
-    const {
-      token: quoteToken,
-      config: { borrowingEnabled, reserveFactor },
-      caps: { borrowCap },
-      data: { totalVariableDebt, totalStableDebt, variableBorrowRate },
-    } = asset
-
-    try {
-      const RESERVE_FACTOR_TO_PERCENTAGE_DIVISOR = 10000n
-      const PRECISION_PRESERVING_OFFSET = 1000000n
-      const RATE_DIVISOR_TO_GET_PERCENTAGE = Number((PRECISION_PRESERVING_OFFSET - 100n).toString())
-
-      const rate =
-        Number(((variableBorrowRate * PRECISION_PRESERVING_OFFSET) / PRECISION_BI.RAY).toString()) /
-        RATE_DIVISOR_TO_GET_PERCENTAGE
-      const totalBorrowed = totalVariableDebt + totalStableDebt
-      return {
-        token: quoteToken,
-        // TODO: If we further restricted pools we could have token pair prices
-        price: Price.createFrom({
-          baseToken: quoteToken,
-          quoteToken: poolBaseCurrencyToken,
-          value: new BigNumber(asset.price.toString()).toString(),
-        }),
-        priceUSD: Price.createFrom({
-          baseToken: quoteToken,
-          quoteToken: CurrencySymbol.USD,
-          value: new BigNumber(asset.price.toString()).toString(),
-        }),
-        rate: Percentage.createFrom({ value: rate }),
-        totalBorrowed: TokenAmount.createFromBaseUnit({
-          token: quoteToken,
-          amount: totalBorrowed.toString(),
-        }),
-        debtCeiling: TokenAmount.createFrom({
-          token: quoteToken,
-          amount: borrowCap === 0n ? UNCAPPED_SUPPLY : borrowCap.toString(),
-        }),
-        debtAvailable: TokenAmount.createFromBaseUnit({
-          token: quoteToken,
-          amount: borrowCap === 0n ? UNCAPPED_SUPPLY : (borrowCap - totalBorrowed).toString(),
-        }),
-        dustLimit: TokenAmount.createFromBaseUnit({ token: quoteToken, amount: '0' }),
-        originationFee: Percentage.createFrom({
-          value: Number((reserveFactor / RESERVE_FACTOR_TO_PERCENTAGE_DIVISOR).toString()),
-        }),
-        borrowingEnabled,
-      }
-    } catch (e) {
-      throw new Error(`error in debt loop ${e}`)
-    }
-  }
 }
-
-/**
-         const emode = sparkEmodeCategoryMap[poolId.emodeType]
-
-    const ctx = this.ctx
-    const chainId = ctx.provider.chain?.id
-    if (!chainId) throw new Error('ctx.provider.chain.id undefined')
-
-    if (!this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId)) {
-      throw new Error(`Chain ID ${chainId} is not supported`)
-    }
-
-    const assetsList = await this.buildAssetsList(emode)
-
-    // Both USDC & DAI use fixed price oracles that keep both stable at 1 USD
-    const poolBaseCurrencyToken = CurrencySymbol.USD
-
-     const collaterals = assetsList.reduce<SparkCollateralConfigRecord>((colls, asset) => {
-      const assetInfo = this.getCollateralAssetInfo(asset, poolBaseCurrencyToken)
-      const { token: collateralToken } = asset
-      colls[collateralToken.address.value] = assetInfo
-      return colls
-    }, {})
-    const debts = assetsList.reduce<SparkDebtConfigRecord>((debts, asset) => {
-      const assetInfo = this.getDebtAssetInfo(asset, poolBaseCurrencyToken)
-      if (!assetInfo) return debts
-      const { token: quoteToken } = asset
-      debts[quoteToken.address.value] = assetInfo
-      return debts
-    }, {})
- */

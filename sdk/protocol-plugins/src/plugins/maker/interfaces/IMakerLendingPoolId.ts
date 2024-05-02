@@ -3,7 +3,7 @@ import {
   ILendingPoolIdData,
   LendingPoolIdSchema,
 } from '@summerfi/sdk-common/protocols'
-import { ILKType } from '../enums'
+import { ILKType, ILKTypeSchema } from '../enums'
 import { IMakerProtocol, IMakerProtocolData, MakerProtocolSchema } from './IMakerProtocol'
 import { z } from 'zod'
 import { IToken } from '@summerfi/sdk-common'
@@ -45,7 +45,7 @@ export interface IMakerLendingPoolId extends ILendingPoolId, IMakerLendingPoolId
 export const MakerLendingPoolIdSchema = z.object({
   ...LendingPoolIdSchema.shape,
   protocol: MakerProtocolSchema,
-  ilkType: z.nativeEnum(ILKType),
+  ilkType: ILKTypeSchema,
 })
 
 /**

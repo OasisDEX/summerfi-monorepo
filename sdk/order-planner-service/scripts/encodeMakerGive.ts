@@ -1,4 +1,4 @@
-import { encodeMakerGiveThroughProxyActions } from '@summerfi/protocol-plugins/plugins/maker'
+import { encodeMakerGiveThroughProxyActions } from '../../protocol-plugins/src/plugins/maker/utils/MakerGive'
 
 import yargs from 'yargs/yargs'
 import { Hex } from 'viem'

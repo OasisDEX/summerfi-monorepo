@@ -9,10 +9,12 @@ import { ITokenAmount, ITokenAmountData } from '../interfaces/ITokenAmount'
  * @see ITokenAmount
  */
 export class TokenAmount implements ITokenAmount {
-  private readonly _baseUnitFactor: BigNumber
-
   readonly token: Token
   readonly amount: string
+
+  // This is protected because otherwise TypeScript is removing the type when transpiling and it causes errors.
+  // Apparently using protected prevents this bug
+  protected readonly _baseUnitFactor: BigNumber
 
   private constructor(params: ITokenAmountData) {
     this.token = Token.createFrom(params.token)
@@ -29,11 +31,11 @@ export class TokenAmount implements ITokenAmount {
   }
 
   // amount in base unit (1eth = 1000000000000000000, 1btc = 100000000 etc)
-  static createFromBaseUnit(parmas: { token: Token; amount: string }): TokenAmount {
-    const amount = new BigNumber(parmas.amount)
-      .div(new BigNumber(10).pow(new BigNumber(parmas.token.decimals)))
+  static createFromBaseUnit(params: { token: Token; amount: string }): TokenAmount {
+    const amount = new BigNumber(params.amount)
+      .div(new BigNumber(10).pow(new BigNumber(params.token.decimals)))
       .toString()
-    return new TokenAmount({ token: parmas.token, amount: amount })
+    return new TokenAmount({ token: params.token, amount: amount })
   }
 
   add(tokenToAdd: TokenAmount): TokenAmount {

@@ -1,5 +1,5 @@
 import { MakerVaultId } from '../types/MakerVaultId'
-import { IMakerPositionIdData } from '../interfaces/IMakerPositionId'
+import { IMakerPositionId, IMakerPositionIdData } from '../interfaces/IMakerPositionId'
 import { PositionId } from '@summerfi/sdk-common'
 import { SerializationService } from '@summerfi/sdk-common/services'
 
@@ -7,7 +7,7 @@ import { SerializationService } from '@summerfi/sdk-common/services'
  * @class MakerPositionId
  * @see IMakerPositionIdData
  */
-export class MakerPositionId extends PositionId implements IMakerPositionIdData {
+export class MakerPositionId extends PositionId implements IMakerPositionId {
   readonly vaultId: MakerVaultId
 
   /** Factory method */

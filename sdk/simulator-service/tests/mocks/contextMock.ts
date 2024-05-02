@@ -9,9 +9,13 @@ import {
   Maybe,
 } from '@summerfi/sdk-common/common'
 import { ILendingPool } from '@summerfi/sdk-common/protocols'
-import { testTargetLendingPool, testTargetLendingPoolRequiredSwaps } from './testSourcePosition'
+import {
+  testTargetLendingPool,
+  testTargetLendingPoolInfo,
+  testTargetLendingPoolRequiredSwaps,
+} from './testSourcePosition'
 import { SwapProviderType } from '@summerfi/sdk-common/swap'
-import { IPosition, IPositionIdData } from '@summerfi/sdk-common'
+import { ILendingPoolInfo, IPosition, IPositionIdData } from '@summerfi/sdk-common'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 
@@ -72,6 +76,11 @@ async function mockGetLendingPool(poolId: unknown): Promise<ILendingPool> {
   return testTargetLendingPool as ILendingPool
 }
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+async function mockGetLendingPoolInfo(poolId: unknown): Promise<ILendingPoolInfo> {
+  return testTargetLendingPoolInfo as ILendingPoolInfo
+}
+
 async function mockGetLendingPoolRequiresSwaps(poolId: unknown): Promise<ILendingPool> {
   return testTargetLendingPoolRequiredSwaps as ILendingPool
 }
@@ -92,6 +101,7 @@ export const mockRefinanceContext = {
   getSummerFee: mockGetFee,
   protocolManager: {
     getLendingPool: mockGetLendingPool,
+    getLendingPoolInfo: mockGetLendingPoolInfo,
     getPosition: mockGetPosition,
     getImportPositionTransaction: mockGetImportPositionTransaction,
   },
@@ -107,6 +117,7 @@ export const mockRefinanceContextRequiredSwaps = {
   ...mockRefinanceContext,
   protocolManager: {
     getLendingPool: mockGetLendingPoolRequiresSwaps,
+    getLendingPoolInfo: mockGetLendingPoolInfo,
     getPosition: mockGetPosition,
     getImportPositionTransaction: mockGetImportPositionTransaction,
   },

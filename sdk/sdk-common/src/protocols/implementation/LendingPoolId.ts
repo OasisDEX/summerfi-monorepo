@@ -6,7 +6,7 @@ import { PoolId } from './PoolId'
 
 /**
  * LendingPoolId
- * @see ILendingPoolIdData
+ * @see ILendingPoolId
  */
 export abstract class LendingPoolId extends PoolId implements ILendingPoolId, IPrintable {
   readonly collateralToken: Token

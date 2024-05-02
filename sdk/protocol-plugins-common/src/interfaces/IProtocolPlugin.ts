@@ -5,6 +5,7 @@ import { steps } from '@summerfi/sdk-common/simulation'
 import { ActionBuilder, ActionBuildersMap } from '../types/StepBuilderTypes'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
+import { ILendingPoolInfo } from '@summerfi/sdk-common/protocols'
 
 /**
  * @interface IProtocolPlugin
@@ -25,6 +26,14 @@ export interface IProtocolPlugin {
    * @returns The lending pool for the specific protocol
    */
   getLendingPool(poolId: ILendingPoolIdData): Promise<ILendingPool>
+
+  /**
+   * @name getLendingPoolInfo
+   * @description Gets the lending pool extended information for the given pool ID
+   * @param poolId The pool ID
+   * @returns The lending pool info for the specific protocol
+   */
+  getLendingPoolInfo(poolId: ILendingPoolIdData): Promise<ILendingPoolInfo>
 
   /** POSITIONS */
 

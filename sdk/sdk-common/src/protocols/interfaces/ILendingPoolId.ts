@@ -1,7 +1,7 @@
 import { IToken, ITokenData, TokenSchema } from '../../common/interfaces/IToken'
 import { IPoolId, IPoolIdData } from './IPoolId'
-import { z } from 'zod'
 import { IProtocol, ProtocolSchema } from './IProtocol'
+import { z } from 'zod'
 
 /**
  * @interface ILendingPoolIdData
@@ -12,9 +12,9 @@ import { IProtocol, ProtocolSchema } from './IProtocol'
  */
 export interface ILendingPoolIdData extends IPoolIdData {
   /** Collateral token used to collateralized the pool */
-  collateralToken: ITokenData
+  readonly collateralToken: ITokenData
   /** Debt token, which can be borrowed from the pool */
-  debtToken: ITokenData
+  readonly debtToken: ITokenData
 }
 
 /**

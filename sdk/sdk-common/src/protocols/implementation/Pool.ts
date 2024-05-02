@@ -6,7 +6,7 @@ import { PoolId } from './PoolId'
 
 /**
  * @class Pool
- * @see IPoolData
+ * @see IPool
  */
 export abstract class Pool implements IPool, IPrintable {
   readonly type: PoolType

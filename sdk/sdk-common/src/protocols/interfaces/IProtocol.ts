@@ -8,9 +8,9 @@ import { z } from 'zod'
  */
 export interface IProtocolData {
   /** The name of the protocol */
-  name: ProtocolName
+  readonly name: ProtocolName
   /** The chain information */
-  chainInfo: IChainInfoData
+  readonly chainInfo: IChainInfoData
 }
 
 /**
