@@ -1,0 +1,98 @@
+import { IProtocolPluginContext, IPositionId } from '@summerfi/protocol-plugins-common'
+import { ChainInfo } from '@summerfi/sdk-common/common'
+import { ProtocolName } from '@summerfi/sdk-common/protocols'
+import assert from 'assert'
+import { {{namePascalCase}}ProtocolPlugin } from '../../src/plugins/{{nameKebabCase}}'
+import { {{nameCamelCase}}PoolIdMock } from '../mocks/{{namePascalCase}}PoolIdMock'
+import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
+import { getErrorMessage } from '../utils/ErrorMessage'
+
+describe('{{namePascalCase}} Protocol Plugin', () => {
+  let ctx: IProtocolPluginContext
+  let {{nameCamelCase}}ProtocolPlugin: {{namePascalCase}}ProtocolPlugin
+  beforeAll(async () => {
+    ctx = await createProtocolPluginContext()
+    {{nameCamelCase}}ProtocolPlugin = new {{namePascalCase}}ProtocolPlugin({
+      context: ctx,
+    })
+  })
+
+  it('should verify that a given poolId is recognised as a valid format', () => {
+    expect({{nameCamelCase}}ProtocolPlugin.isPoolId({{nameCamelCase}}PoolIdMock)).toBe(true)
+  })
+
+  it('should throw a specific error when provided with a poolId not matching the {{namePascalCase}}PoolId format', () => {
+    try {
+      const invalid{{namePascalCase}}PoolIdMock = {
+        ...{{nameCamelCase}}PoolIdMock,
+        protocol: {
+          ...{{nameCamelCase}}PoolIdMock.protocol,
+          name: ProtocolName.Maker,
+        },
+      }
+      {{nameCamelCase}}ProtocolPlugin.validatePoolId(invalid{{namePascalCase}}PoolIdMock)
+      assert.fail('Should throw error')
+    } catch (error: unknown) {
+      expect(getErrorMessage(error)).toMatch('Invalid {{namePascalCase}} pool ID')
+    }
+  })
+
+  it('should throw an error when calling getPool with an unsupported Chain', async () => {
+    const invalid{{namePascalCase}}PoolIdUnsupportedChain = {
+      ...{{nameCamelCase}}PoolIdMock,
+      protocol: {
+        ...{{nameCamelCase}}PoolIdMock.protocol,
+        chainInfo: ChainInfo.createFrom({
+          chainId: 2,
+          name: 'Unknown',
+        }),
+      },
+    }
+    await expect({{nameCamelCase}}ProtocolPlugin.getPool(invalid{{namePascalCase}}PoolIdUnsupportedChain)).rejects.toThrow(
+      'Invalid {{namePascalCase}} pool ID',
+    )
+  })
+
+  it('should throw an error when calling getPool with chain id missing from ctx', async () => {
+    const {{nameCamelCase}}ProtocolPluginWithWrongContext = new {{namePascalCase}}ProtocolPlugin({
+      context: {
+        ...ctx,
+        provider: {
+          ...ctx.provider,
+          chain: {
+            ...ctx.provider.chain!,
+            id: undefined as unknown as number,
+          },
+        },
+      },
+    })
+    await expect({{nameCamelCase}}ProtocolPluginWithWrongContext.getPool({{nameCamelCase}}PoolIdMock)).rejects.toThrow(
+      `ctx.provider.chain.id undefined`,
+    )
+  })
+
+  it('should throw an error when calling getPool with an unsupported chain ID', async () => {
+    const wrongChainId = 2
+    const {{nameCamelCase}}ProtocolPluginWithWrongContext = new {{namePascalCase}}ProtocolPlugin({
+      context: {
+        ...ctx,
+        provider: {
+          ...ctx.provider,
+          chain: {
+            ...ctx.provider.chain!,
+            id: wrongChainId,
+          },
+        },
+      },
+    })
+
+    await expect({{nameCamelCase}}ProtocolPluginWithWrongContext.getPool({{nameCamelCase}}PoolIdMock)).rejects.toThrow(
+      `Chain ID ${wrongChainId} is not supported`,
+    )
+  })
+
+  it('should throw a "Not implemented" error when calling getPosition', async () => {
+    const positionId = 'mockPositionId' as IPositionId
+    await expect({{nameCamelCase}}ProtocolPlugin.getPosition(positionId)).rejects.toThrow('Not implemented')
+  })
+})

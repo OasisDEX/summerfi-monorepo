@@ -1,4 +1,4 @@
-import { applyPercentage } from '@summerfi/sdk-common/utils'
+import { Price } from '@summerfi/sdk-common'
 import type {
   ChainInfo,
   Percentage,
@@ -22,7 +22,18 @@ export async function getSwapStepData(params: {
     to: { token: params.toToken },
   })
 
-  const summerFeeAmount = applyPercentage(params.fromAmount, summerFee)
+  /*
+  From amount already includes our fee, so we need to calculate the amount before our fee
+    FROM = X + X * FEE
+    FROM = X (1 + FEE)
+    X = FROM / (1 + FEE)
+
+    OURFEE = X * FEE
+    OURFEE = FROM * FEE / (1 + FEE)
+  */
+
+  const feeAsProportion = summerFee.toProportion()
+  const summerFeeAmount = params.fromAmount.multiply(feeAsProportion).divide(feeAsProportion + 1)
   const amountAfterSummerFee = params.fromAmount.subtract(summerFeeAmount)
 
   const [quote, spotPrice] = await Promise.all([
@@ -30,7 +41,6 @@ export async function getSwapStepData(params: {
       chainInfo: params.chainInfo,
       fromAmount: amountAfterSummerFee,
       toToken: params.toToken,
-      slippage: params.slippage,
     }),
     params.oracleManager.getSpotPrice({
       chainInfo: params.chainInfo,
@@ -39,12 +49,25 @@ export async function getSwapStepData(params: {
     }),
   ])
 
+  // Actual price offered by the swap service
+  const offerPrice = Price.createFrom({
+    value: params.fromAmount.divide(quote.toTokenAmount.amount).amount,
+    baseToken: params.toToken,
+    quoteToken: params.fromAmount.token,
+  })
+
+  const minimumReceivedAmount = quote.toTokenAmount.multiply(1.0 - params.slippage.toProportion())
+
   return {
-    ...quote,
-    fromTokenAmount: params.fromAmount,
-    amountAfterFee: amountAfterSummerFee,
-    summerFee,
+    provider: quote.provider,
+    routes: quote.routes,
     spotPrice: spotPrice.price,
+    offerPrice: offerPrice,
+    inputAmount: params.fromAmount,
+    inputAmountAfterFee: amountAfterSummerFee,
+    estimatedReceivedAmount: quote.toTokenAmount,
+    minimumReceivedAmount: minimumReceivedAmount,
     slippage: params.slippage,
+    summerFee: summerFee,
   }
 }

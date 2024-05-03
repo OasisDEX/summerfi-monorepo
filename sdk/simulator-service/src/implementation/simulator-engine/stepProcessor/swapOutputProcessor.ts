@@ -5,7 +5,7 @@ export const swapOutputProcessor: StepOutputProcessor<steps.SwapStep> = async (s
   return {
     ...step,
     outputs: {
-      receivedAmount: step.inputs.toTokenAmount,
+      received: step.inputs.minimumReceivedAmount,
     },
   }
 }

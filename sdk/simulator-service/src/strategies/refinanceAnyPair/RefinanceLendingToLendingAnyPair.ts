@@ -99,11 +99,9 @@ export async function refinanceLendingToLendingAnyPair(
               swapManager: dependencies.swapManager,
               oracleManager: dependencies.oracleManager,
             }),
-        depositAmount: ctx.getReference(
-          isCollateralSwapSkipped
-            ? ['PaybackWithdrawFromSource', 'withdrawAmount']
-            : ['CollateralSwap', 'receivedAmount'],
-        ),
+        depositAmount: isCollateralSwapSkipped
+          ? position.collateralAmount
+          : ctx.getReference(['CollateralSwap', 'received']),
         position: newEmptyPositionFromPool(targetPool),
         borrowTargetType: TokenTransferTargetType.PositionsManager,
       },

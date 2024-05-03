@@ -13,6 +13,7 @@ const CONFIG_KEYS: ConfigKey[] = [
   'ONE_INCH_API_SPOT_VERSION',
   'ONE_INCH_ALLOWED_SWAP_PROTOCOLS',
   'ONE_INCH_SWAP_CHAIN_IDS',
+  'RPC_GATEWAY',
 ]
 
 export class ConfigurationProvider implements IConfigurationProvider {

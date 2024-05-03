@@ -38,7 +38,9 @@ export const createSDKContext = (opts: ContextOptions): SDKAppContext => {
   const swapManager = SwapManagerFactory.newSwapManager({ configProvider })
   const oracleManager = OracleManagerFactory.newOracleManager({ configProvider })
   const protocolsRegistry = createProtocolsPluginsRegistry({
+    configProvider,
     deployments,
+    swapManager,
   })
   const protocolManager = ProtocolManager.createWith({ pluginsRegistry: protocolsRegistry })
 

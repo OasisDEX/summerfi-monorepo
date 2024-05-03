@@ -6,8 +6,8 @@ export class SetApprovalAction extends BaseAction {
     name: 'SetApproval',
     version: 3,
     parametersAbi: '(address asset, address delegate, uint256 amount, bool sumAmounts)',
-    storageInputs: ['approvalAmount'],
-    storageOutputs: ['received'],
+    storageInputs: ['asset', 'delegate', 'approvalAmount'],
+    storageOutputs: [],
   } as const
 
   public encodeCall(

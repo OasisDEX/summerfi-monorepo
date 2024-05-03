@@ -1,0 +1,32 @@
+import { AddressValue, IToken, Maybe } from '@summerfi/sdk-common/common'
+import { {{namePascalCase}}DebtConfig } from './{{namePascalCase}}DebtConfig'
+import { I{{namePascalCase}}DebtConfigMap } from '../interfaces/I{{namePascalCase}}DebtConfigMap'
+import { DebtConfigMap } from '@summerfi/sdk-common/protocols'
+import { I{{namePascalCase}}DebtConfig } from '../interfaces/I{{namePascalCase}}DebtConfig'
+import { SerializationService } from '@summerfi/sdk-common/services'
+
+export type {{namePascalCase}}DebtConfigRecord = Record<AddressValue, {{namePascalCase}}DebtConfig>
+
+export class {{namePascalCase}}DebtConfigMap extends DebtConfigMap implements I{{namePascalCase}}DebtConfigMap {
+  readonly record: {{namePascalCase}}DebtConfigRecord = {}
+
+  private constructor(params: I{{namePascalCase}}DebtConfigMap) {
+    super(params)
+
+    this._importDebtConfigMap(params)
+  }
+
+  static createFrom(params: I{{namePascalCase}}DebtConfigMap): {{namePascalCase}}DebtConfigMap {
+    return new {{namePascalCase}}DebtConfigMap(params)
+  }
+
+  public override add(params: { debt: IToken; debtConfig: I{{namePascalCase}}DebtConfig }): void {
+    this.record[params.debt.address.value] = {{namePascalCase}}DebtConfig.createFrom(params.debtConfig)
+  }
+
+  public override get(params: { token: IToken }): Maybe<{{namePascalCase}}DebtConfig> {
+    return this.record[params.token.address.value]
+  }
+}
+
+SerializationService.registerClass({{namePascalCase}}DebtConfigMap)

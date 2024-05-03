@@ -12,4 +12,5 @@ export enum CommonTokenSymbols {
   WBTC = 'WBTC',
   ETH = 'ETH',
   WSTETH = 'WSTETH',
+  SDAI = 'SDAI',
 }

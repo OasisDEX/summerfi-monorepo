@@ -64,17 +64,26 @@ export interface SwapStep
     {
       provider: SwapProviderType
       routes: SwapRoute[]
+      /** Spot price of the token being traded */
       spotPrice: Price
-      // Amount that will be send to our Swap service which then deducts our fee
-      fromTokenAmount: TokenAmount
-      // This amount has our fee already dedducted, and it will be send to exchange provider
-      amountAfterFee: TokenAmount
-      toTokenAmount: TokenAmount
+      /** Offer price of the token being traded, derived from the swap quote */
+      offerPrice: Price
+      /** Full amount sent to the swap contract, before deducting the Summer fee */
+      inputAmount: TokenAmount
+      /** Amount to be swapped after deducting the Summer fee */
+      inputAmountAfterFee: TokenAmount
+      /** Amount estimated by the swap service to be received, equal to `inputAmountAfterFee / offerPrice` */
+      estimatedReceivedAmount: TokenAmount
+      /** Minimum amount to be received from the swap service, equal to `inputAmountAfterFee / offerPrice * (1 - slippage)` */
+      minimumReceivedAmount: TokenAmount
+      /** Maximum slippage accepted for the swap */
       slippage: Percentage
+      /** Fee charged by Summer */
       summerFee: Percentage
     },
     {
-      receivedAmount: TokenAmount
+      /** Effective amount received after the actual swap */
+      received: TokenAmount
     }
   > {}
 

@@ -1,0 +1,16 @@
+import { ChainInfo } from '@summerfi/sdk-common/common'
+import { IPoolId, ProtocolName, isPoolId } from '@summerfi/sdk-common/protocols'
+
+export interface {{namePascalCase}}PoolId extends IPoolId {
+  protocol: {
+    name: ProtocolName.{{namePascalCase}}
+    chainInfo: ChainInfo
+  }
+}
+
+export function is{{namePascalCase}}PoolId(maybe{{namePascalCase}}PoolId: unknown): maybe{{namePascalCase}}PoolId is {{namePascalCase}}PoolId {
+  return (
+    isPoolId(maybe{{namePascalCase}}PoolId) &&
+    maybe{{namePascalCase}}PoolId.protocol.name === ProtocolName.{{namePascalCase}}
+  )
+}

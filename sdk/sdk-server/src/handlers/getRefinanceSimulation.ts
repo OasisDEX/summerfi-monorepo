@@ -4,6 +4,7 @@ import {
   refinanceLendingToLendingSamePair,
   type IRefinanceDependencies,
   refinanceLendingToLendingAnyPair,
+  refinanceLendingToLendingNoDebt,
 } from '@summerfi/simulator-service/strategies'
 import type { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { publicProcedure } from '../TRPC'
@@ -33,6 +34,10 @@ export const getRefinanceSimulation = publicProcedure
       swapManager: opts.ctx.swapManager,
       oracleManager: opts.ctx.oracleManager,
       protocolManager: opts.ctx.protocolManager,
+    }
+
+    if (opts.input.sourcePosition.debtAmount.amount === '0') {
+      return refinanceLendingToLendingNoDebt(args, dependencies)
     }
 
     // TODO: in the end we should use just any pair

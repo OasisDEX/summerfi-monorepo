@@ -1,0 +1,9 @@
+import { AddressValue } from '@summerfi/sdk-common/common'
+import { ICollateralConfig } from '@summerfi/sdk-common/protocols'
+import { I{{namePascalCase}}CollateralConfigMap } from '@summerfi/sdk-common/protocols'
+
+export type I{{namePascalCase}}CollateralConfigRecord = Record<AddressValue, I{{namePascalCase}}CollateralConfig>
+
+export interface I{{namePascalCase}}CollateralConfigMap extends ICollateralConfigMap {
+    record: I{{namePascalCase}}CollateralConfigRecord
+}
