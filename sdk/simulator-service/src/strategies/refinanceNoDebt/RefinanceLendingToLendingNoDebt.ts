@@ -62,6 +62,7 @@ export async function refinanceLendingToLendingNoDebt(
           toToken: targetPool.id.collateralToken,
           slippage: Percentage.createFrom({ value: args.slippage.value }),
           swapManager: dependencies.swapManager,
+          oracleManager: dependencies.oracleManager,
         }),
       }),
       isCollateralSwapSkipped,
