@@ -1,7 +1,7 @@
-import { ChainFamilyMap } from '@summerfi/sdk-client'
 import { ConfigurationProvider } from '@summerfi/configuration-provider'
 import {
   Address,
+  ChainFamilyMap,
   Percentage,
   Token,
   TokenAmount,

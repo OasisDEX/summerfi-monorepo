@@ -5,6 +5,7 @@
     "baseUrl": ".",
     "paths": {
       "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
+      "@summerfi/sdk-common": ["node_modules/@summerfi/sdk-common/src/index.ts"],
       "@summerfi/sdk-client": ["../sdk-client/src"],
 
       "@summerfi/swap-common/*": ["node_modules/@summerfi/swap-common/src/*"],
@@ -14,6 +15,6 @@
       ]
     }
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "e2e/**/*.ts"],
   "exclude": ["node_modules"]
 }
