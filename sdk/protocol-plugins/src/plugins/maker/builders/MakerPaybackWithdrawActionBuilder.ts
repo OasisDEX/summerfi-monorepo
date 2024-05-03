@@ -25,20 +25,22 @@ export const MakerPaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWithd
 
   const paybackAmount = getValueFromReference(step.inputs.paybackAmount)
 
-  context.addActionCall({
-    step: params.step,
-    action: new MakerPaybackAction(),
-    arguments: {
-      position: step.inputs.position,
-      positionsManager: positionsManager,
-      amount: getValueFromReference(step.inputs.paybackAmount),
-      paybackAll: paybackAmount.toBN().gte(step.inputs.position.debtAmount.toBN()),
-    },
-    connectedInputs: {},
-    connectedOutputs: {
-      paybackAmount: 'amountPaidBack',
-    },
-  })
+  if (!paybackAmount.toBN().isZero()) {
+    context.addActionCall({
+      step: params.step,
+      action: new MakerPaybackAction(),
+      arguments: {
+        position: step.inputs.position,
+        positionsManager: positionsManager,
+        amount: getValueFromReference(step.inputs.paybackAmount),
+        paybackAll: paybackAmount.toBN().gte(step.inputs.position.debtAmount.toBN()),
+      },
+      connectedInputs: {},
+      connectedOutputs: {
+        paybackAmount: 'amountPaidBack',
+      },
+    })
+  }
 
   context.addActionCall({
     step: step,

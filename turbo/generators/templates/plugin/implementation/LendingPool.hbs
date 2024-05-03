@@ -1,0 +1,23 @@
+import { LendingPool } from '@summerfi/sdk-common/protocols'
+import { I{{namePascalCase}}LendingPool } from '../interfaces/I{{namePascalCase}}LendingPool'
+import { {{namePascalCase}}CollateralConfigMap } from './{{namePascalCase}}CollateralConfigMap'
+import { {{namePascalCase}}DebtConfigMap } from './{{namePascalCase}}DebtConfigMap'
+import { SerializationService } from '@summerfi/sdk-common/services'
+
+export class {{namePascalCase}}LendingPool extends LendingPool implements I{{namePascalCase}}LendingPool {
+readonly collaterals: {{namePascalCase}}CollateralConfigMap
+readonly debts: {{namePascalCase}}DebtConfigMap
+
+private constructor(params: I{{namePascalCase}}LendingPool) {
+super(params)
+
+this.collaterals = {{namePascalCase}}CollateralConfigMap.createFrom(params.collaterals)
+this.debts = {{namePascalCase}}DebtConfigMap.createFrom(params.debts)
+}
+
+public static createFrom(params: I{{namePascalCase}}LendingPool): {{namePascalCase}}LendingPool {
+return new {{namePascalCase}}LendingPool(params)
+}
+}
+
+SerializationService.registerClass({{namePascalCase}}LendingPool)

@@ -1,0 +1,40 @@
+import { AddressValue, IToken, Maybe } from '@summerfi/sdk-common/common'
+import { {{namePascalCase}}CollateralConfig } from './{{namePascalCase}}CollateralConfig'
+import { I{{namePascalCase}}CollateralConfigMap } from '../interfaces/I{{namePascalCase}}CollateralConfigMap'
+import { CollateralConfigMap } from '@summerfi/sdk-common/protocols'
+import { I{{namePascalCase}}CollateralConfig } from '../interfaces/I{{namePascalCase}}CollateralConfig'
+import { SerializationService } from '@summerfi/sdk-common/services'
+
+export type {{namePascalCase}}CollateralConfigRecord = Record<AddressValue, {{namePascalCase}}CollateralConfig>
+
+export class {{namePascalCase}}CollateralConfigMap
+  extends CollateralConfigMap
+  implements I{{namePascalCase}}CollateralConfigMap
+{
+  readonly record: {{namePascalCase}}CollateralConfigRecord = {}
+
+  private constructor(params: I{{namePascalCase}}CollateralConfigMap) {
+    super(params)
+
+    this._importCollateralConfigMap(params)
+  }
+
+  static createFrom(params: I{{namePascalCase}}CollateralConfigMap): {{namePascalCase}}CollateralConfigMap {
+    return new {{namePascalCase}}CollateralConfigMap(params)
+  }
+
+  public override add(params: {
+    collateral: IToken
+    collateralConfig: I{{namePascalCase}}CollateralConfig
+  }): void {
+    this.record[params.collateral.address.value] = {{namePascalCase}}CollateralConfig.createFrom(
+      params.collateralConfig,
+    )
+  }
+
+  public override get(params: { token: IToken }): Maybe<{{namePascalCase}}CollateralConfig> {
+    return this.record[params.token.address.value]
+  }
+}
+
+SerializationService.registerClass({{namePascalCase}}CollateralConfigMap)

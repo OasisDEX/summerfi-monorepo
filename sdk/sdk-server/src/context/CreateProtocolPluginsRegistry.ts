@@ -13,6 +13,12 @@ import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { createPublicClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
+import { ISwapManager } from '@summerfi/swap-common/interfaces'
+import {
+  IRpcConfig,
+  getRpcGatewayEndpoint,
+} from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
+import { ConfigurationProvider } from '@summerfi/configuration-provider'
 
 const ProtocolPlugins: ProtocolPluginsRecordType = {
   [ProtocolName.Maker]: MakerProtocolPlugin,
@@ -20,17 +26,39 @@ const ProtocolPlugins: ProtocolPluginsRecordType = {
   [ProtocolName.AAVEv3]: AaveV3ProtocolPlugin,
 }
 
-export function createProtocolsPluginsRegistry(params: {
-  deployments: DeploymentIndex
-}): IProtocolPluginsRegistry {
-  const { deployments } = params
+const rpcConfig: IRpcConfig = {
+  skipCache: false,
+  skipMulticall: false,
+  skipGraph: true,
+  stage: 'prod',
+  source: 'borrow-prod',
+}
 
+export function createProtocolsPluginsRegistry(params: {
+  configProvider: ConfigurationProvider
+  deployments: DeploymentIndex
+  swapManager: ISwapManager
+}): IProtocolPluginsRegistry {
+  const { configProvider, deployments, swapManager } = params
+  const chain = mainnet
+  const rpcGatewayUrl = configProvider.getConfigurationItem({ name: 'RPC_GATEWAY' })
+  if (!rpcGatewayUrl) {
+    throw new Error('RPC_GATEWAY not found')
+  }
+
+  const rpc = getRpcGatewayEndpoint(rpcGatewayUrl, chain.id, rpcConfig)
+  const transport = http(rpc, {
+    batch: true,
+    fetchOptions: {
+      method: 'POST',
+    },
+  })
   const provider = createPublicClient({
     batch: {
       multicall: true,
     },
-    chain: mainnet,
-    transport: http(),
+    chain,
+    transport,
   })
 
   const tokenService = new TokenService()
@@ -43,6 +71,7 @@ export function createProtocolsPluginsRegistry(params: {
       tokenService,
       priceService,
       deployments,
+      swapManager,
     },
     deploymentConfigTag: 'standard',
   })

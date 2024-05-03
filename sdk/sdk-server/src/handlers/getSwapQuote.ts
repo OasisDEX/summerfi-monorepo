@@ -18,6 +18,5 @@ export const getSwapQuoteExactInput = publicProcedure
       chainInfo: opts.input.chainInfo,
       fromAmount: opts.input.fromAmount,
       toToken: opts.input.toToken,
-      slippage: opts.input.slippage,
     })
   })

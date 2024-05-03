@@ -35,16 +35,28 @@ export const getFinalApy = (params: {
 
   for (let i = from; i <= to; i += ONE_DAY) {
     const shortDate = secondTimestampToShortDate(i)
-    let borrowApy = 0
-    let supplyApy = 0
+    const borrowApys: number[] = []
+    const supplyApys: number[] = []
     supplied.forEach((suppliedRates) => {
-      const current = suppliedRates.get(shortDate)?.averageRate ?? 0
-      supplyApy += current
+      const rate = suppliedRates.get(shortDate)
+      if (rate) {
+        supplyApys.push(rate.averageRate)
+      }
     })
     borrowed.forEach((borrowedRates) => {
-      const current = borrowedRates.get(shortDate)?.averageRate ?? 0
-      borrowApy += current
+      const rate = borrowedRates.get(shortDate)
+      if (rate) {
+        borrowApys.push(rate.averageRate)
+      }
     })
+
+    if (borrowApys.length === 0 && supplyApys.length === 0) {
+      continue
+    }
+
+    const borrowApy = borrowApys.reduce((acc, apy) => acc + apy, 0)
+    const supplyApy = supplyApys.reduce((acc, apy) => acc + apy, 0)
+
     const apy = supplyApy * multiply - borrowApy * (multiply - 1)
 
     mergedSupplied.set(i, supplyApy)
@@ -71,9 +83,14 @@ export const getFinalApy = (params: {
   const rates = {
     apy1d: rates1d.reduce((acc, apy) => acc + apy, 0) / rates1d.length,
     apy7d: rates7d.reduce((acc, apy) => acc + apy, 0) / rates7d.length,
-    apy30d: rates30d.reduce((acc, apy) => acc + apy, 0) / rates30d.length,
-    apy90d: rates90d.reduce((acc, apy) => acc + apy, 0) / rates90d.length,
-    apy365d: rates365d.reduce((acc, apy) => acc + apy, 0) / rates365d.length,
+    apy30d:
+      rates30d.length >= 30 ? rates30d.reduce((acc, apy) => acc + apy, 0) / rates30d.length : null,
+    apy90d:
+      rates90d.length >= 90 ? rates90d.reduce((acc, apy) => acc + apy, 0) / rates90d.length : null,
+    apy365d:
+      rates365d.length >= 365
+        ? rates365d.reduce((acc, apy) => acc + apy, 0) / rates365d.length
+        : null,
   }
 
   return {
