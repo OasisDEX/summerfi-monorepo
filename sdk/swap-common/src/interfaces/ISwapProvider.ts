@@ -1,6 +1,5 @@
 import { Address, ChainInfo, Percentage, Token, TokenAmount } from '@summerfi/sdk-common/common'
-import { CurrencySymbol } from '@summerfi/sdk-common/common'
-import type { QuoteData, SpotData, SwapData, SwapProviderType } from '@summerfi/sdk-common/swap'
+import type { QuoteData, SwapData, SwapProviderType } from '@summerfi/sdk-common/swap'
 
 /**
  * @name ISwapProvider
@@ -44,18 +43,4 @@ export interface ISwapProvider {
     fromAmount: TokenAmount
     toToken: Token
   }): Promise<QuoteData>
-
-  /**
-   * @name getSpotPrice
-   * @description Returns the prevailing market price for a given asset
-   *              in terms of a base currency
-   * @param chainInfo The chain information
-   * @param baseToken A price request for baseToken
-   * @param quoteToken A price request - QuoteToken is optional with a USD default.
-   */
-  getSpotPrice(params: {
-    chainInfo: ChainInfo
-    baseToken: Token
-    quoteToken?: CurrencySymbol | Token
-  }): Promise<SpotData>
 }

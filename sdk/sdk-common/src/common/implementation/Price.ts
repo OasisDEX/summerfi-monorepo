@@ -37,11 +37,13 @@ export class Price implements IPrice {
     }
   }
 
+  /** @see IPrice.toBN */
   toBN(): BigNumber {
     return new BigNumber(this.value)
   }
 
-  public hasSameQuoteToken(b: Price): boolean {
+  /** @see IPrice.hasSameQuoteToken */
+  hasSameQuoteToken(b: Price): boolean {
     if (isToken(this.quoteToken) && isToken(b.quoteToken)) {
       return isSameTokens(this.quoteToken, b.quoteToken)
     }
@@ -49,7 +51,8 @@ export class Price implements IPrice {
     return this.quoteToken === b.quoteToken
   }
 
-  public div(b: Price) {
+  /** @see IPrice.div */
+  div(b: Price) {
     if (!this.hasSameQuoteToken(b)) {
       throw new Error('Token bases must be the same')
     }

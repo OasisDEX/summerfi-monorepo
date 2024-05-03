@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js'
 import { CurrencySymbol } from '../enums/CurrencySymbol'
 import { IToken, ITokenData, TokenSchema } from './IToken'
 import { z } from 'zod'
@@ -42,6 +43,26 @@ export interface IPrice extends IPriceData {
   readonly value: string
   readonly baseToken: IToken
   readonly quoteToken: IToken | CurrencySymbol
+
+  /**
+   * @name toBN
+   * @description Converts the price to a BigNumber
+   */
+  toBN(): BigNumber
+
+  /**
+   * @name hasSameQuoteToken
+   * @description Checks if the price has the same quote token as another price
+   * @param b The price to compare against
+   */
+  hasSameQuoteToken(b: IPrice): boolean
+
+  /**
+   * @name div
+   * @description Divides the price by another price
+   * @param b The price to divide by
+   */
+  div(b: IPrice): IPrice
 }
 
 /**

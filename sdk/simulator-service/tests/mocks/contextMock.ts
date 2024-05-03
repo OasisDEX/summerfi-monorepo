@@ -15,7 +15,15 @@ import {
   testTargetLendingPoolRequiredSwaps,
 } from './testSourcePosition'
 import { SwapProviderType } from '@summerfi/sdk-common/swap'
-import { ILendingPoolInfo, IPosition, IPositionIdData } from '@summerfi/sdk-common'
+import {
+  IChainInfo,
+  ILendingPoolInfo,
+  IPosition,
+  IPositionIdData,
+  IToken,
+  OracleProviderType,
+  SpotPriceInfo,
+} from '@summerfi/sdk-common'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 
@@ -51,14 +59,15 @@ async function getSwapQuoteExactInput(params: {
 }
 
 async function getSpotPrice(params: {
-  chainInfo: ChainInfo
-  baseToken: Token
-  quoteToken: Token | CurrencySymbol
-}) {
+  chainInfo: IChainInfo
+  baseToken: IToken
+  quoteToken?: CurrencySymbol | IToken
+}): Promise<SpotPriceInfo> {
   const MOCK_PRICE = 0.5
   const MOCK_QUOTE_CURRENCY = CurrencySymbol.USD
   return {
-    provider: SwapProviderType.OneInch,
+    provider: OracleProviderType.OneInch,
+    token: params.baseToken,
     price: Price.createFrom({
       value: MOCK_PRICE.toString(),
       baseToken: params.baseToken,
@@ -108,8 +117,10 @@ export const mockRefinanceContext = {
   swapManager: {
     getSwapDataExactInput,
     getSwapQuoteExactInput: jest.fn().mockImplementation(getSwapQuoteExactInput),
-    getSpotPrice,
     getSummerFee: jest.fn().mockImplementation(mockGetFee),
+  },
+  oracleManager: {
+    getSpotPrice,
   },
 }
 
