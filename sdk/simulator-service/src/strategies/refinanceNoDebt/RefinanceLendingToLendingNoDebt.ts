@@ -88,7 +88,7 @@ export async function refinanceLendingToLendingNoDebt(
           : ctx.getReference(['CollateralSwap', 'received']),
         borrowAmount: TokenAmount.createFrom({
           amount: '0',
-          token: position.debtAmount.token,
+          token: targetDebtConfig.token,
         }),
         position: newEmptyPositionFromPool(
           targetPool,
