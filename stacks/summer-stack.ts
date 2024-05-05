@@ -9,6 +9,7 @@ import { attachVPC } from './vpc'
 import { SummerStackContext } from './summer-stack-context'
 import { addRaysDb } from './rays-db'
 import { addRaysConfig } from './rays'
+import { addRedis } from './redis'
 
 export function API(stackContext: StackContext) {
   const { stack } = stackContext
@@ -27,13 +28,14 @@ export function API(stackContext: StackContext) {
     throw new Error('Invalid stage')
   }
 
-  const { vpc, vpcSubnets } = attachVPC({ ...stackContext, isDev })
+  const vpc = attachVPC({ ...stackContext, isDev })
+  const cache = addRedis({ ...stackContext, vpc, isDev })
 
   const summerContext: SummerStackContext = {
     ...stackContext,
     api,
     vpc,
-    vpcSubnets,
+    cache,
     isDev,
     isProd,
     isStaging,

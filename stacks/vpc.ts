@@ -1,27 +1,23 @@
 import { StackContext } from 'sst/constructs'
 import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as process from 'node:process'
+import { VPCContext } from './summer-stack-context'
 
-export interface VPCContext {
-  vpc: ec2.IVpc | undefined
-  vpcSubnets: ec2.SubnetSelection | undefined
-}
-
-export function attachVPC({ stack, isDev }: StackContext & { isDev: boolean }): VPCContext {
-  const { VPC_ID } = process.env
+export function attachVPC({ stack, isDev }: StackContext & { isDev: boolean }): VPCContext | null {
+  const { VPC_ID, SECURITY_GROUP_ID } = process.env
 
   if (isDev) {
     console.info('VPC is not attached in dev stages')
-    return { vpc: undefined, vpcSubnets: undefined }
+    return null
   }
 
-  if (!VPC_ID) {
+  if (!VPC_ID || !SECURITY_GROUP_ID) {
     if (!isDev) {
       console.warn(
-        'VPC_ID is not set, VPC will not be attached to the stack. This is only allowed in dev stages.',
+        'VPC_ID or SECURITY_GROUP_ID are not set, VPC will not be attached to the stack. This is only allowed in dev stages.',
       )
     }
-    return { vpc: undefined, vpcSubnets: undefined }
+    return null
   }
 
   const vpcSubnets = {
@@ -32,5 +28,6 @@ export function attachVPC({ stack, isDev }: StackContext & { isDev: boolean }): 
     vpcId: VPC_ID,
   })
 
-  return { vpc, vpcSubnets }
+  const securityGroup = ec2.SecurityGroup.fromSecurityGroupId(stack, 'SG', 'sg-0c4c6acb8cbe23f5f')
+  return { vpc, vpcSubnets, securityGroup }
 }

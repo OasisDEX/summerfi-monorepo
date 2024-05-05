@@ -40,6 +40,7 @@
     "REDIS_CACHE_PASSWORD",
     "STAGE",
     "VPC_ID",
+    "SECURITY_GROUP_ID",
     "RAYS_DB_CONNECTION_STRING",
     "IS_LOCAL"
   ],
