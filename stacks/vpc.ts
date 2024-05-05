@@ -28,6 +28,6 @@ export function attachVPC({ stack, isDev }: StackContext & { isDev: boolean }): 
     vpcId: VPC_ID,
   })
 
-  const securityGroup = ec2.SecurityGroup.fromSecurityGroupId(stack, 'SG', 'sg-0c4c6acb8cbe23f5f')
+  const securityGroup = ec2.SecurityGroup.fromSecurityGroupId(stack, 'SG', SECURITY_GROUP_ID!)
   return { vpc, vpcSubnets, securityGroup }
 }
