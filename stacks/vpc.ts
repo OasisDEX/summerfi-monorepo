@@ -13,11 +13,11 @@ export function attachVPC({ stack, isDev }: StackContext & { isDev: boolean }): 
 
   if (!VPC_ID || !SECURITY_GROUP_ID) {
     if (!isDev) {
-      console.warn(
+      console.error(
         'VPC_ID or SECURITY_GROUP_ID are not set, VPC will not be attached to the stack. This is only allowed in dev stages.',
       )
+      throw new Error('VPC_ID or SECURITY_GROUP_ID are not set')
     }
-    return null
   }
 
   const vpcSubnets = {
