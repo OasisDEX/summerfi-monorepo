@@ -39,11 +39,9 @@ export function addApyConfig({ stack, api, vpc, cache }: SummerStackContext) {
 
   const getApyFunction = new Function(stack, 'get-apy-function', functionConfig)
 
-  const getApyFunctionv2 = new Function(stack, 'get-apy-function-v2', functionConfig)
-
   if (cache) {
-    getApyFunctionv2.addToRolePolicy(cache.policyStatement)
-    getApyFunctionv2.addEnvironment('REDIS_CACHE_URL', cache.url)
+    getApyFunction.addToRolePolicy(cache.policyStatement)
+    getApyFunction.addEnvironment('REDIS_CACHE_URL', cache.url)
   } else {
     if (REDIS_CACHE_URL) {
       getApyFunction.addEnvironment('REDIS_CACHE_URL', REDIS_CACHE_URL)
@@ -61,10 +59,4 @@ export function addApyConfig({ stack, api, vpc, cache }: SummerStackContext) {
   api.addRoutes(stack, {
     'GET /api/apy/{chainId}/{protocol}': getApyFunction,
   })
-
-  if (cache) {
-    api.addRoutes(stack, {
-      'GET /api/v2/apy/{chainId}/{protocol}': getApyFunctionv2,
-    })
-  }
 }
