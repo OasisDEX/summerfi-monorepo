@@ -14,8 +14,8 @@ export function addRedis({
   }
 
   if (!vpc) {
-    console.warn('VPC is required for Redis. Please add it to the stack context')
-    return null
+    console.error('VPC is required for Redis. Please add it to the stack context')
+    throw new Error('VPC is required for Redis')
   }
 
   const redis = new elasticache.CfnServerlessCache(stack, 'redis-cache', {

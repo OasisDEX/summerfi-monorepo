@@ -15,8 +15,8 @@ export function addRaysDb({
   }
 
   if (!vpc) {
-    console.warn('VPC and VPC subnets are required for RDS. Please add them to the stack context')
-    return null
+    console.error('VPC and VPC subnets are required for RDS. Please add them to the stack context')
+    throw new Error('VPC and VPC subnets are required for RDS')
   }
 
   const scalingStaging = {
