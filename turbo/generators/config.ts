@@ -1,5 +1,5 @@
 import path from 'path'
-import fs from 'fs-extra'
+import fs from 'node:fs'
 import type { PlopTypes } from '@turbo/gen'
 
 export default function generator(plop: PlopTypes.NodePlopAPI): void {
@@ -186,6 +186,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
   })
 }
 
+// @ts-ignore
 const nameAction: PlopTypes.CustomActionFunction = async (answers: {
   name: string
   namePascalCase?: string
@@ -202,13 +203,13 @@ const nameAction: PlopTypes.CustomActionFunction = async (answers: {
   return 'Added casing variants'
 }
 
-const toKebabCase = (str) =>
+const toKebabCase = (str: string) =>
   str
     .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
     .replace(/[\s_]+/g, '-')
     .toLowerCase()
 
-const toCamelCase = (str) => {
+const toCamelCase = (str: string) => {
   return str
     .replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
       if (+match === 0) return ''
@@ -218,10 +219,10 @@ const toCamelCase = (str) => {
     .replace(/_+/g, '')
 }
 
-const toPascalCase = (str) => {
+const toPascalCase = (str: string) => {
   return str.replace(/(^\w|-\w)/g, clearAndUpper)
 }
 
-function clearAndUpper(text) {
+function clearAndUpper(text: string) {
   return text.replace(/-/, '').toUpperCase()
 }
