@@ -1,7 +1,7 @@
 import { Function, FunctionProps } from 'sst/constructs'
 import { SummerStackContext } from './summer-stack-context'
 
-export function addApyConfig({ stack, api, vpc, vpcSubnets }: SummerStackContext) {
+export function addApyConfig({ stack, api, vpc, cache }: SummerStackContext) {
   const { RPC_GATEWAY, SUBGRAPH_BASE, REDIS_CACHE_URL, REDIS_CACHE_PASSWORD, REDIS_CACHE_USER } =
     process.env
   if (!RPC_GATEWAY) {
@@ -22,36 +22,49 @@ export function addApyConfig({ stack, api, vpc, vpcSubnets }: SummerStackContext
     POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
     STAGE: stack.stage || 'dev',
   }
-  const functionConfig: FunctionProps =
-    vpc && vpcSubnets
-      ? {
-          handler: 'summerfi-api/get-apy-function/src/index.handler',
-          runtime: 'nodejs20.x',
-          environment,
-          vpc,
-          vpcSubnets,
-        }
-      : {
-          handler: 'summerfi-api/get-apy-function/src/index.handler',
-          runtime: 'nodejs20.x',
-          environment,
-        }
+  const functionConfig: FunctionProps = vpc
+    ? {
+        handler: 'summerfi-api/get-apy-function/src/index.handler',
+        runtime: 'nodejs20.x',
+        environment,
+        vpc: vpc.vpc,
+        vpcSubnets: vpc.vpcSubnets,
+        securityGroups: [vpc.securityGroup],
+      }
+    : {
+        handler: 'summerfi-api/get-apy-function/src/index.handler',
+        runtime: 'nodejs20.x',
+        environment,
+      }
 
   const getApyFunction = new Function(stack, 'get-apy-function', functionConfig)
 
-  if (REDIS_CACHE_URL) {
-    getApyFunction.addEnvironment('REDIS_CACHE_URL', REDIS_CACHE_URL)
-  }
+  const getApyFunctionv2 = new Function(stack, 'get-apy-function-v2', functionConfig)
 
-  if (REDIS_CACHE_PASSWORD) {
-    getApyFunction.addEnvironment('REDIS_CACHE_PASSWORD', REDIS_CACHE_PASSWORD)
-  }
+  if (cache) {
+    getApyFunctionv2.addToRolePolicy(cache.policyStatement)
+    getApyFunctionv2.addEnvironment('REDIS_CACHE_URL', cache.url)
+  } else {
+    if (REDIS_CACHE_URL) {
+      getApyFunction.addEnvironment('REDIS_CACHE_URL', REDIS_CACHE_URL)
+    }
 
-  if (REDIS_CACHE_USER) {
-    getApyFunction.addEnvironment('REDIS_CACHE_USER', REDIS_CACHE_USER)
+    if (REDIS_CACHE_PASSWORD) {
+      getApyFunction.addEnvironment('REDIS_CACHE_PASSWORD', REDIS_CACHE_PASSWORD)
+    }
+
+    if (REDIS_CACHE_USER) {
+      getApyFunction.addEnvironment('REDIS_CACHE_USER', REDIS_CACHE_USER)
+    }
   }
 
   api.addRoutes(stack, {
     'GET /api/apy/{chainId}/{protocol}': getApyFunction,
   })
+
+  if (cache) {
+    api.addRoutes(stack, {
+      'GET /api/v2/apy/{chainId}/{protocol}': getApyFunctionv2,
+    })
+  }
 }

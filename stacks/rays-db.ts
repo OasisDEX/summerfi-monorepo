@@ -5,7 +5,6 @@ import { SummerStackContext } from './summer-stack-context'
 export function addRaysDb({
   stack,
   vpc,
-  vpcSubnets,
   isDev,
   isProd,
   isStaging,
@@ -15,7 +14,7 @@ export function addRaysDb({
     return null
   }
 
-  if (!vpc || !vpcSubnets) {
+  if (!vpc) {
     console.warn('VPC and VPC subnets are required for RDS. Please add them to the stack context')
     return null
   }
@@ -54,8 +53,8 @@ export function addRaysDb({
     },
     cdk: {
       cluster: {
-        vpc,
-        vpcSubnets,
+        vpc: vpc.vpc,
+        vpcSubnets: vpc.vpcSubnets,
       },
     },
   })
