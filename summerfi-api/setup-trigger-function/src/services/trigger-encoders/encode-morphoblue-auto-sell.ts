@@ -20,12 +20,17 @@ export const encodeMorphoBlueAutoSell = (
   currentTrigger: CurrentTriggerLike | undefined,
 ): TriggerTransactions => {
   const abiParameters = parseAbiParameters(
+    // CommonTriggerData
     'address positionAddress, ' +
       'uint16 triggerType, ' +
       'uint256 maxCoverage, ' +
       'address debtToken, ' +
       'address collateralToken, ' +
       'bytes32 operationName, ' +
+      // Trigger specific data
+      'bytes32 poolId, ' +
+      'uint8 quoteDecimals, ' +
+      'uint8 collateralDecimals, ' +
       'uint256 executionLtv, ' +
       'uint256 targetLTV, ' +
       'uint256 minSellPrice, ' +
@@ -39,12 +44,17 @@ export const encodeMorphoBlueAutoSell = (
   const maxCoverage = getMaxCoverage(position)
 
   const encodedTriggerData = encodeAbiParameters(abiParameters, [
+    // CommonTriggerData
     position.address,
     triggerData.type,
     maxCoverage,
     position.debt.token.address,
     position.collateral.token.address,
     operationNameInBytes,
+    // Trigger specific data
+    triggerData.poolId,
+    position.debt.token.decimals,
+    position.collateral.token.decimals,
     triggerData.executionLTV,
     triggerData.targetLTV,
     triggerData.minSellPrice ?? 0n,

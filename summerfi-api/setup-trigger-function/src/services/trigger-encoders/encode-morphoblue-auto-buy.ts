@@ -20,9 +20,22 @@ export const encodeMorphoBlueAutoBuy = (
   currentTrigger: CurrentTriggerLike | undefined,
 ): TriggerTransactions => {
   const abiParameters = parseAbiParameters(
-    'address positionAddress, uint16 triggerType, uint256 maxCoverage, address debtToken, ' +
-      'address collateralToken, bytes32 operationName, uint256 executionLtv, uint256 targetLTV, ' +
-      'uint256 maxBuyPrice, uint64 deviation, uint32 maxBaseFeeInGwei',
+    // CommonTriggerData
+    'address positionAddress, ' +
+      'uint16 triggerType, ' +
+      'uint256 maxCoverage, ' +
+      'address debtToken, ' +
+      'address collateralToken, ' +
+      'bytes32 operationName, ' +
+      // Trigger specific data
+      'bytes32 poolId, ' +
+      'uint8 quoteDecimals, ' +
+      'uint8 collateralDecimals, ' +
+      'uint256 executionLtv, ' +
+      'uint256 targetLTV, ' +
+      'uint256 maxBuyPrice, ' +
+      'uint64 deviation, ' +
+      'uint32 maxBaseFeeInGwei',
   )
 
   const operationName = OPERATION_NAMES.morphoblue.ADJUST_RISK_UP
@@ -31,12 +44,17 @@ export const encodeMorphoBlueAutoBuy = (
   const maxCoverage = getMaxCoverage(position)
 
   const encodedTriggerData = encodeAbiParameters(abiParameters, [
+    // CommonTriggerData
     position.address,
     triggerData.type,
     maxCoverage,
     position.debt.token.address,
     position.collateral.token.address,
     operationNameInBytes,
+    // Trigger specific data
+    triggerData.poolId,
+    position.debt.token.decimals,
+    position.collateral.token.decimals,
     triggerData.executionLTV,
     triggerData.targetLTV,
     triggerData.maxBuyPrice ?? maxUnit256,
