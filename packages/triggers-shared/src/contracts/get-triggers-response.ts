@@ -429,7 +429,7 @@ export type MorphoBlueStopLoss = Trigger & {
 
 export type GetTriggersResponse = {
   triggers: {
-    [ProtocolId.AAVE_V3]: {
+    [ProtocolId.AAVE3]: {
       aaveStopLossToCollateral?: AaveStopLossToCollateral
       aaveStopLossToCollateralDMA?: AaveStopLossToCollateralDMA
       aaveStopLossToDebt?: AaveStopLossToDebt

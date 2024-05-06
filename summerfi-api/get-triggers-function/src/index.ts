@@ -435,7 +435,7 @@ export const handler = async (
 
   const response: GetTriggersResponse = {
     triggers: {
-      [ProtocolId.AAVE_V3]: {
+      [ProtocolId.AAVE3]: {
         aaveStopLossToCollateral,
         aaveStopLossToCollateralDMA,
         aaveStopLossToDebt,

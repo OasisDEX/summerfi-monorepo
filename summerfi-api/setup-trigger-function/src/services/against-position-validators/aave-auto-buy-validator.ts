@@ -90,7 +90,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggers, triggerData }) => {
-      const autoSellTrigger = triggers.triggers[ProtocolId.AAVE_V3].aaveBasicSell
+      const autoSellTrigger = triggers.triggers[ProtocolId.AAVE3].aaveBasicSell
       if (!autoSellTrigger) {
         return true
       }
@@ -110,7 +110,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Add) {
-        return triggers.triggers[ProtocolId.AAVE_V3].aaveBasicBuy === undefined
+        return triggers.triggers[ProtocolId.AAVE3].aaveBasicBuy === undefined
       }
       return true
     },
@@ -124,7 +124,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Update)
-        return triggers.triggers[ProtocolId.AAVE_V3].aaveBasicBuy !== undefined
+        return triggers.triggers[ProtocolId.AAVE3].aaveBasicBuy !== undefined
       return true
     },
     {
@@ -151,7 +151,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const partialTakeProfit = triggers.triggers[ProtocolId.AAVE_V3].aavePartialTakeProfit
+      const partialTakeProfit = triggers.triggers[ProtocolId.AAVE3].aavePartialTakeProfit
       if (!partialTakeProfit) {
         return true
       }
@@ -175,7 +175,7 @@ const upsertErrorsValidation = paramsSchema
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
     if (action === SupportedActions.Remove)
-      return triggers.triggers[ProtocolId.AAVE_V3].aaveBasicBuy !== undefined
+      return triggers.triggers[ProtocolId.AAVE3].aaveBasicBuy !== undefined
     return true
   },
   {
@@ -200,7 +200,7 @@ const warningsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoSellTrigger = triggers.triggers[ProtocolId.AAVE_V3].aaveBasicSell
+      const autoSellTrigger = triggers.triggers[ProtocolId.AAVE3].aaveBasicSell
       if (!autoSellTrigger) {
         return true
       }
