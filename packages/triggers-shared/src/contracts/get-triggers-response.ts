@@ -449,14 +449,12 @@ export type GetTriggersResponse = {
       sparkTrailingStopLossDMA?: DmaSparkTrailingStopLoss
       sparkPartialTakeProfit?: DmaSparkPartialTakeProfit
     }
-    [ProtocolId.MORPHO_BLUE]: {
-      [key: `0x${string}`]: {
-        morphoBlueStopLoss?: MorphoBlueStopLoss
-        morphoBlueBasicBuy?: MorphoBlueBasicBuy
-        morphoBlueBasicSell?: MorphoBlueBasicSell
-        morphoBlueTrailingStopLoss?: MorphoBlueTrailingStopLoss
-        morphoBluePartialTakeProfit?: MorphoBluePartialTakeProfit
-      }
+    [key: `${ProtocolId.MORPHO_BLUE}-0x${string}`]: {
+      morphoBlueStopLoss?: MorphoBlueStopLoss
+      morphoBlueBasicBuy?: MorphoBlueBasicBuy
+      morphoBlueBasicSell?: MorphoBlueBasicSell
+      morphoBlueTrailingStopLoss?: MorphoBlueTrailingStopLoss
+      morphoBluePartialTakeProfit?: MorphoBluePartialTakeProfit
     }
   }
   flags: {

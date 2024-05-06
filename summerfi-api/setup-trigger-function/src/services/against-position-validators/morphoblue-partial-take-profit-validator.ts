@@ -29,7 +29,7 @@ const upsertErrorsValidation = paramsSchema
     ({ triggers, action, triggerData }) => {
       if (action === SupportedActions.Add) {
         return (
-          triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId]
+          triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`]
             .morphoBluePartialTakeProfit === undefined
         )
       }
@@ -46,7 +46,7 @@ const upsertErrorsValidation = paramsSchema
     ({ triggers, action, triggerData }) => {
       if (action === SupportedActions.Remove || action === SupportedActions.Update)
         return (
-          triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId]
+          triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`]
             .morphoBluePartialTakeProfit !== undefined
         )
       return true
@@ -61,7 +61,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggerData, triggers }) => {
       const autoSell =
-        triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId].morphoBlueBasicSell
+        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].morphoBlueBasicSell
       if (!autoSell) return true
 
       const autoSellTargetLtv = safeParseBigInt(autoSell.decodedParams.targetLtv) ?? 99n
@@ -78,7 +78,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggerData, triggers }) => {
       const autoSell =
-        triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId].morphoBlueBasicSell
+        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].morphoBlueBasicSell
       if (!autoSell) return true
 
       const autoSellExecutionLtv = safeParseBigInt(autoSell.decodedParams.executionLtv) ?? 99n
@@ -112,7 +112,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggerData, triggers }) => {
       const autoBuy =
-        triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId].morphoBlueBasicBuy
+        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].morphoBlueBasicBuy
       if (!autoBuy) return true
 
       const autoBuyMaxPrice = safeParseBigInt(autoBuy.decodedParams.maxBuyPrice) ?? 0n
@@ -143,7 +143,7 @@ const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action, triggerData }) => {
     if (action === SupportedActions.Remove)
       return (
-        triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId]
+        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`]
           .morphoBluePartialTakeProfit !== undefined
       )
     return true

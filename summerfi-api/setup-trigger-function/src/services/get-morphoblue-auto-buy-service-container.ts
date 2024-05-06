@@ -103,7 +103,8 @@ export const getMorphoBlueAutoBuyServiceContainer: (
       })
 
       const currentAutoBuy =
-        triggers.triggers[ProtocolId.MORPHO_BLUE][trigger.triggerData.poolId].morphoBlueBasicBuy
+        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${trigger.triggerData.poolId}`]
+          .morphoBlueBasicBuy
       const currentTrigger: CurrentTriggerLike | undefined = currentAutoBuy
         ? {
             triggerData: currentAutoBuy.triggerData as `0x${string}`,

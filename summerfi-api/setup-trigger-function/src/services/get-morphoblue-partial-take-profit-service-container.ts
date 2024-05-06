@@ -165,7 +165,7 @@ export const getMorphoBluePartialTakeProfitServiceContainer: (
       })
 
       const currentPartialTakeProfit =
-        triggers.triggers[ProtocolId.MORPHO_BLUE][trigger.triggerData.poolId]
+        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${trigger.triggerData.poolId}`]
           .morphoBluePartialTakeProfit
       const currentTrigger: CurrentTriggerLike | undefined = currentPartialTakeProfit
         ? {

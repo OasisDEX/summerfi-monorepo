@@ -67,7 +67,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggerData, triggers }) => {
       const currentAutoBuy =
-        triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId].morphoBlueBasicBuy
+        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].morphoBlueBasicBuy
       if (currentAutoBuy) {
         const currentAutoBuyTarget = safeParseBigInt(currentAutoBuy.decodedParams.targetLtv) ?? 0n
         return triggerData.executionLTV > currentAutoBuyTarget
@@ -85,7 +85,8 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggerData, triggers }) => {
       const currentPartialTakeProfit =
-        triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId].morphoBluePartialTakeProfit
+        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`]
+          .morphoBluePartialTakeProfit
       if (currentPartialTakeProfit) {
         const currentPartialTakeProfitTarget =
           safeParseBigInt(currentPartialTakeProfit.decodedParams.targetLtv) ?? 0n
@@ -132,7 +133,7 @@ const warningsValidation = paramsSchema
   .refine(
     ({ triggerData, triggers }) => {
       const autoSell =
-        triggers.triggers[ProtocolId.MORPHO_BLUE][triggerData.poolId].morphoBlueBasicSell
+        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].morphoBlueBasicSell
       if (autoSell) {
         const executionLTV = safeParseBigInt(autoSell.decodedParams.executionLtv) ?? 0n
         return triggerData.executionLTV > executionLTV

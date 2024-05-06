@@ -455,17 +455,15 @@ export const handler = async (
         sparkTrailingStopLossDMA,
         sparkPartialTakeProfit,
       },
-      [ProtocolId.MORPHO_BLUE]: {
-        ...(params.poolId && {
-          [params.poolId]: {
-            morphoBlueStopLoss,
-            morphoBlueBasicBuy,
-            morphoBlueBasicSell,
-            morphoBlueTrailingStopLoss,
-            morphoBluePartialTakeProfit,
-          },
-        }),
-      },
+      ...(params.poolId && {
+        [`${ProtocolId.MORPHO_BLUE}-${params.poolId}`]: {
+          morphoBlueStopLoss,
+          morphoBlueBasicBuy,
+          morphoBlueBasicSell,
+          morphoBlueTrailingStopLoss,
+          morphoBluePartialTakeProfit,
+        },
+      }),
     },
     flags: {
       isAaveStopLossEnabled: hasAnyDefined(
