@@ -124,7 +124,7 @@ export const sstConfig: SSTConfig = {
     } else {
       app.setDefaultRemovalPolicy('retain')
     }
-
+    console.log(`\n`)
     app.stack(API)
     app.stack(ExternalAPI)
   },
