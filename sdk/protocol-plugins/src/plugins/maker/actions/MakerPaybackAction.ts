@@ -1,5 +1,5 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
-import { IPosition, TokenAmount } from '@summerfi/sdk-common/common'
+import { IPosition, ITokenAmount } from '@summerfi/sdk-common/common'
 import { IPositionsManager } from '@summerfi/sdk-common/orders'
 import { isMakerPositionId } from '../interfaces/IMakerPositionId'
 
@@ -16,7 +16,7 @@ export class MakerPaybackAction extends BaseAction {
     params: {
       position: IPosition
       positionsManager: IPositionsManager
-      amount: TokenAmount
+      amount: ITokenAmount
       paybackAll: boolean
     },
     paramsMapping?: InputSlotsMapping,

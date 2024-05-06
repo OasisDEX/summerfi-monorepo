@@ -1,5 +1,5 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
-import { Position } from '@summerfi/sdk-common/common'
+import { IPosition } from '@summerfi/sdk-common/common'
 
 export class PositionCreatedAction extends BaseAction {
   public readonly config = {
@@ -11,7 +11,10 @@ export class PositionCreatedAction extends BaseAction {
     storageOutputs: [],
   } as const
 
-  public encodeCall(params: { position: Position }, paramsMapping?: InputSlotsMapping): ActionCall {
+  public encodeCall(
+    params: { position: IPosition },
+    paramsMapping?: InputSlotsMapping,
+  ): ActionCall {
     return this._encodeCall({
       arguments: [
         {

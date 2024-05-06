@@ -1,6 +1,6 @@
-import { Token, Price, CurrencySymbol } from '@summerfi/sdk-common/common'
+import { Denomination, IPrice, IToken } from '@summerfi/sdk-common/common'
 
 export interface IPriceService {
-  getPrice: (args: { baseToken: Token; quoteToken: Token | CurrencySymbol }) => Promise<Price>
-  getPriceUSD: (token: Token) => Promise<Price>
+  getPrice: (params: { base: IToken; quote: Denomination }) => Promise<IPrice>
+  getPriceUSD: (token: IToken) => Promise<IPrice>
 }

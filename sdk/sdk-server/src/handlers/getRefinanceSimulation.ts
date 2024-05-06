@@ -8,20 +8,18 @@ import {
 } from '@summerfi/simulator-service/strategies'
 import type { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { publicProcedure } from '../TRPC'
-import { isSameTokens } from '@summerfi/sdk-common/common'
+import { Token } from '@summerfi/sdk-common/common'
 
 const inputSchema = z.custom<IRefinanceParameters>((parameters) => parameters !== undefined)
 
 function isToSamePair(parameters: IRefinanceParameters): boolean {
+  const sourceDebtToken = Token.createFrom(parameters.sourcePosition.debtAmount.token)
+  const targetDebtToken = Token.createFrom(parameters.targetPosition.debtAmount.token)
+  const sourceCollateralToken = Token.createFrom(parameters.sourcePosition.collateralAmount.token)
+  const targetCollateralToken = Token.createFrom(parameters.targetPosition.collateralAmount.token)
+
   return (
-    isSameTokens(
-      parameters.sourcePosition.debtAmount.token,
-      parameters.targetPosition.debtAmount.token,
-    ) &&
-    isSameTokens(
-      parameters.sourcePosition.collateralAmount.token,
-      parameters.targetPosition.collateralAmount.token,
-    )
+    sourceDebtToken.equals(targetDebtToken) && sourceCollateralToken.equals(targetCollateralToken)
   )
 }
 

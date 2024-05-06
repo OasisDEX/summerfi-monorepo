@@ -1,5 +1,4 @@
-import { ChainId, ChainInfo, Token } from '@summerfi/sdk-common/common'
-import { CurrencySymbol } from '@summerfi/sdk-common/common'
+import { ChainId, Denomination, IChainInfo, IToken } from '@summerfi/sdk-common/common'
 import { OracleProviderType, SpotPriceInfo } from '@summerfi/sdk-common/oracle'
 
 /**
@@ -29,8 +28,8 @@ export interface IOracleProvider {
    * @param quoteToken A price request - QuoteToken is optional with a USD default.
    */
   getSpotPrice(params: {
-    chainInfo: ChainInfo
-    baseToken: Token
-    quoteToken?: CurrencySymbol | Token
+    chainInfo: IChainInfo
+    baseToken: IToken
+    quoteToken?: Denomination
   }): Promise<SpotPriceInfo>
 }

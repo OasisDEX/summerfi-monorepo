@@ -1,19 +1,14 @@
 import { Price } from '@summerfi/sdk-common'
-import type {
-  ChainInfo,
-  Percentage,
-  Token,
-  TokenAmount,
-} from '@summerfi/sdk-common/common/implementation'
 import { steps } from '@summerfi/sdk-common/simulation'
 import type { ISwapManager } from '@summerfi/swap-common/interfaces'
 import { IOracleManager } from '@summerfi/oracle-common'
+import { IChainInfo, IPercentage, IToken, ITokenAmount } from '@summerfi/sdk-common/common'
 
 export async function getSwapStepData(params: {
-  chainInfo: ChainInfo
-  fromAmount: TokenAmount
-  toToken: Token
-  slippage: Percentage
+  chainInfo: IChainInfo
+  fromAmount: ITokenAmount
+  toToken: IToken
+  slippage: IPercentage
   swapManager: ISwapManager
   oracleManager: IOracleManager
 }): Promise<steps.SwapStep['inputs']> {
@@ -52,8 +47,8 @@ export async function getSwapStepData(params: {
   // Actual price offered by the swap service
   const offerPrice = Price.createFrom({
     value: params.fromAmount.divide(quote.toTokenAmount.amount).amount,
-    baseToken: params.toToken,
-    quoteToken: params.fromAmount.token,
+    base: params.toToken,
+    quote: params.fromAmount.token,
   })
 
   const minimumReceivedAmount = quote.toTokenAmount.multiply(1.0 - params.slippage.toProportion())

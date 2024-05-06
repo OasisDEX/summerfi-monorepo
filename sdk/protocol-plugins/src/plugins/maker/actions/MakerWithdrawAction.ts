@@ -1,7 +1,6 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
-import { Address, TokenAmount } from '@summerfi/sdk-common/common'
 import { IPositionsManager } from '@summerfi/sdk-common/orders'
-import { IPosition } from '@summerfi/sdk-common'
+import { IAddress, IPosition, ITokenAmount } from '@summerfi/sdk-common'
 import { isMakerPositionId } from '../interfaces'
 
 export class MakerWithdrawAction extends BaseAction {
@@ -17,8 +16,8 @@ export class MakerWithdrawAction extends BaseAction {
     params: {
       position: IPosition
       positionsManager: IPositionsManager
-      amount: TokenAmount
-      joinAddress: Address
+      amount: ITokenAmount
+      joinAddress: IAddress
     },
     paramsMapping?: InputSlotsMapping,
   ): ActionCall {

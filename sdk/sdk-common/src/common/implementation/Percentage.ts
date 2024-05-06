@@ -1,6 +1,6 @@
 import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
-import { IPercentage, IPercentageData } from '../interfaces/IPercentage'
+import { IPercentage, IPercentageData, isPercentage } from '../interfaces/IPercentage'
 
 /**
  * @class Percentage
@@ -9,33 +9,60 @@ import { IPercentage, IPercentageData } from '../interfaces/IPercentage'
 export class Percentage implements IPercentage {
   readonly value: number
 
-  /** Factory method */
+  /** FACTORY */
   static createFrom(params: IPercentageData) {
     return new Percentage(params)
   }
+
+  /** CONSTRUCTOR */
 
   /** Sealed constructor */
   private constructor(params: IPercentageData) {
     this.value = params.value
   }
 
-  add(percentage: Percentage): Percentage {
+  /** METHODS */
+
+  /** @see IPercentage.add */
+  add(percentage: IPercentage): IPercentage {
     return Percentage.createFrom({ value: this.value + percentage.value })
   }
 
-  subtract(percentage: Percentage): Percentage {
+  /** @see IPercentage.subtract */
+  subtract(percentage: IPercentage): IPercentage {
     return Percentage.createFrom({ value: this.value - percentage.value })
   }
 
+  /** @see IPercentage.multiply */
+  multiply(multiplier: string | number | IPercentage): IPercentage {
+    if (isPercentage(multiplier)) {
+      return Percentage.createFrom({ value: this.value * multiplier.toProportion() })
+    }
+
+    return Percentage.createFrom({ value: this.value * Number(multiplier) })
+  }
+
+  /** @see IPercentage.divide */
+  divide(divisor: string | number | IPercentage): IPercentage {
+    if (isPercentage(divisor)) {
+      return Percentage.createFrom({ value: this.value / divisor.toProportion() })
+    }
+
+    return Percentage.createFrom({ value: this.value / Number(divisor) })
+  }
+
+  /** @see IPercentage.toProportion */
   toProportion(): number {
     return this.value / 100
   }
 
+  /** @see IPercentage.toBaseUnit */
   toBaseUnit(params: { decimals: number }): string {
     const factor = new BigNumber(10).pow(params.decimals)
     return new BigNumber(this.value).multipliedBy(factor).toFixed(0).toString()
   }
 
+  /** @see IPrintable.toString */
   toString(): string {
     return `${this.value}%`
   }

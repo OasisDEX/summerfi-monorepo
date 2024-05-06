@@ -1,4 +1,4 @@
-import type { CurrencySymbol, IToken, IChainInfo } from '@summerfi/sdk-common/common'
+import type { IToken, IChainInfo, Denomination } from '@summerfi/sdk-common/common'
 import type { SpotPriceInfo } from '@summerfi/sdk-common/oracle'
 
 /**
@@ -17,6 +17,6 @@ export interface IOracleManager {
   getSpotPrice(params: {
     chainInfo: IChainInfo
     baseToken: IToken
-    quoteToken?: CurrencySymbol | IToken
+    quoteToken?: Denomination
   }): Promise<SpotPriceInfo>
 }

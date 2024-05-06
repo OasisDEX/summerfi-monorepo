@@ -1,6 +1,8 @@
-import { IPercentageData } from './IPercentage'
+import { BigNumber } from 'bignumber.js'
+import { type IPercentage } from './IPercentage'
 import { IPrintable } from './IPrintable'
-import { IToken, ITokenData, TokenSchema } from './IToken'
+import { type IToken, type ITokenData, TokenSchema } from './IToken'
+import { type IPrice } from './IPrice'
 import { z } from 'zod'
 
 /**
@@ -44,17 +46,34 @@ export interface ITokenAmount extends ITokenAmountData, IPrintable {
 
   /**
    * @name multiply
-   * @param multiplier A percentage, string amount or number to multiply
+   * @param multiplier A percentage, price, string amount or number to multiply
    * @returns The resulting TokenAmount
    */
-  multiply(multiplier: IPercentageData | string | number): ITokenAmount
+  multiply(multiplier: string | number | IPercentage | IPrice): ITokenAmount
 
   /**
    * @name divide
-   * @param divisor A percentage, string amount or number to divide
+   * @param divisor A percentage, price, string amount or number to divide
    * @returns The resulting TokenAmount
    */
-  divide(divisor: IPercentageData | string | number): ITokenAmount
+  divide(divisor: string | number | IPercentage | IPrice): ITokenAmount
+
+  /**
+   * @name toBN
+   * @description Converts the amount to a BigNumber in floating point representation
+   * @returns The amount as a BigNumber
+   */
+  toBN(): BigNumber
+
+  /**
+   * @name toBaseUnit
+   * @description Converts the amount to a string in base unit
+   * @returns The amount as a string in base unit
+   *
+   * Base unit is the full integer amount in what is coloqually referred to as 'wei' units
+   * This is, it includes all the decimals of the token and can be passed to a solidity contract
+   */
+  toBaseUnit(): string
 }
 
 /**

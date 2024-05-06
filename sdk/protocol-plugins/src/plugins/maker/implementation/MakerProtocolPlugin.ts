@@ -241,8 +241,8 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
       token: collateralToken,
       price: Price.createFrom({
         value: osmData.currentPrice,
-        baseToken: collateralToken,
-        quoteToken: quoteToken,
+        base: collateralToken,
+        quote: quoteToken,
       }),
       priceUSD: await this.ctx.priceService.getPriceUSD(collateralToken),
 

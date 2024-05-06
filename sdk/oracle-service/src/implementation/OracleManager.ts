@@ -1,6 +1,6 @@
-import type { Maybe } from '@summerfi/sdk-common/common/aliases'
-import type { ChainInfo, IChainInfo, IToken } from '@summerfi/sdk-common/common'
-import { ChainId, CurrencySymbol } from '@summerfi/sdk-common/common'
+import type { Denomination, Maybe } from '@summerfi/sdk-common/common/aliases'
+import type { IChainInfo, IToken } from '@summerfi/sdk-common/common'
+import { ChainId } from '@summerfi/sdk-common/common'
 import { IOracleManager, IOracleProvider } from '@summerfi/oracle-common'
 import { OracleProviderType, SpotPriceInfo } from '@summerfi/sdk-common/oracle'
 
@@ -36,7 +36,7 @@ export class OracleManager implements IOracleManager {
   async getSpotPrice(params: {
     chainInfo: IChainInfo
     baseToken: IToken
-    quoteToken?: CurrencySymbol | IToken
+    quoteToken?: Denomination
     forceUseProvider?: OracleProviderType
   }): Promise<SpotPriceInfo> {
     const provider: Maybe<IOracleProvider> = this._getBestProvider(params)
@@ -73,7 +73,7 @@ export class OracleManager implements IOracleManager {
    * @returns The best provider for the given price consultation
    */
   private _getBestProvider(params: {
-    chainInfo: ChainInfo
+    chainInfo: IChainInfo
     forceUseProvider?: OracleProviderType
   }): Maybe<IOracleProvider> {
     if (params.forceUseProvider) {
