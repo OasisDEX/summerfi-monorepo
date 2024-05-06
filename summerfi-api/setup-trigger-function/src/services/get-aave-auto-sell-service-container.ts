@@ -3,7 +3,7 @@ import { AaveAutoSellEventBody } from '~types'
 import { PublicClient } from 'viem'
 import { SupportedActions } from '@summerfi/triggers-shared'
 import { Addresses, CurrentTriggerLike } from '@summerfi/triggers-shared'
-import { Address, ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
+import { Address, ChainId, ProtocolId, safeParseBigInt } from '@summerfi/serverless-shared'
 import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import { Logger } from '@aws-lambda-powertools/logger'
 import memoize from 'just-memoize'
@@ -100,7 +100,7 @@ export const getAaveAutoSellServiceContainer: (
         debt: trigger.position.debt,
       })
 
-      const currentAutoSell = triggers.triggers.aaveBasicSell
+      const currentAutoSell = triggers.triggers[ProtocolId.AAVE3].aaveBasicSell
       const currentTrigger: CurrentTriggerLike | undefined = currentAutoSell
         ? {
             triggerData: currentAutoSell.triggerData as `0x${string}`,
