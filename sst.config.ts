@@ -121,7 +121,10 @@ export const sstConfig: SSTConfig = {
   stacks(app) {
     if (app.stage !== 'production' && app.stage !== 'staging') {
       app.setDefaultRemovalPolicy('destroy')
+    } else {
+      app.setDefaultRemovalPolicy('retain')
     }
+
     app.stack(API)
     app.stack(ExternalAPI)
   },

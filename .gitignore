@@ -70,3 +70,7 @@ artifacts
 
 # private http envs
 *.private.env.json
+
+
+# CDK Contexts
+cdk.context.json
