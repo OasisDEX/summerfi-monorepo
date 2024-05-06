@@ -8,7 +8,7 @@ import {
 import {
   addressSchema,
   chainIdSchema,
-  poolIdSchema,
+  optionalPoolIdSchema,
   urlOptionalSchema,
 } from '@summerfi/serverless-shared/validators'
 import { Chain as ViemChain, createPublicClient, http, PublicClient } from 'viem'
@@ -93,7 +93,7 @@ const domainChainIdToViemChain: Record<ChainId, ViemChain> = {
 
 const paramsSchema = z.object({
   dpm: addressSchema,
-  poolId: poolIdSchema,
+  poolId: optionalPoolIdSchema,
   chainId: chainIdSchema,
   rpc: urlOptionalSchema,
   getDetails: z
@@ -435,6 +435,22 @@ export const handler = async (
 
   const response: GetTriggersResponse = {
     triggers: {
+      aaveBasicBuy,
+      aaveBasicSell,
+      aavePartialTakeProfit,
+      aaveStopLossToCollateral,
+      aaveStopLossToCollateralDMA,
+      aaveStopLossToDebt,
+      aaveStopLossToDebtDMA,
+      aaveTrailingStopLossDMA,
+      sparkBasicBuy,
+      sparkBasicSell,
+      sparkPartialTakeProfit,
+      sparkStopLossToCollateral,
+      sparkStopLossToCollateralDMA,
+      sparkStopLossToDebt,
+      sparkStopLossToDebtDMA,
+      sparkTrailingStopLossDMA,
       [ProtocolId.AAVE3]: {
         aaveStopLossToCollateral,
         aaveStopLossToCollateralDMA,

@@ -53,6 +53,8 @@ export enum ProtocolId {
   SPARK = 'spark',
   AJNA = 'ajna',
   MORPHO_BLUE = 'morphoblue',
+  /** @deprecated Please use ProtocolId.MORPHO_BLUE */
+  MORPHO_BLUE_DEPRECATED = 'morpho-blue',
 }
 
 export const isProtocolId = (protocolId: unknown): protocolId is ProtocolId => {

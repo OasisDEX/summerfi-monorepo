@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { getAddress } from 'viem'
-import { isValidAddress, isValidPoolId } from './guards'
+import { isValidAddress, isValidMorphoBluePool } from './guards'
 import { Address, ChainId, PoolId, ProtocolId } from './domain-types'
 import { SUPPORTED_CHAIN_IDS, SUPPORTED_PROTOCOL_IDS } from './constants'
 import { isBigInt } from './numbers-helpers'
@@ -11,13 +11,15 @@ export const addressSchema = z
   }, 'Invalid address format')
   .transform((a) => getAddress(a))
 
-export const poolIdSchema = z.custom<PoolId>((val: unknown) => {
+export const optionalPoolIdSchema = z.custom<PoolId>((val: unknown) => {
   if (!val) {
     // this is optional
     return true
   }
-  return isValidPoolId(val)
+  return isValidMorphoBluePool(val)
 }, 'Invalid pool ID format')
+
+export const poolIdSchema = z.custom<PoolId>(isValidMorphoBluePool, 'Invalid pool ID format')
 
 export const addressesSchema = z
   .string()

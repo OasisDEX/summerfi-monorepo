@@ -8,7 +8,7 @@ export const isValidAddress = (address: unknown): address is Address => {
   return true
 }
 
-export const isValidPoolId = (poolId: unknown): poolId is PoolId => {
+export const isValidMorphoBluePool = (poolId: unknown): poolId is PoolId => {
   if (typeof poolId !== 'string' || !/^0x[a-fA-F0-9]{64}$/.test(poolId)) {
     return false
   }

@@ -456,6 +456,38 @@ export type GetTriggersResponse = {
       morphoBlueTrailingStopLoss?: MorphoBlueTrailingStopLoss
       morphoBluePartialTakeProfit?: MorphoBluePartialTakeProfit
     }
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    aaveStopLossToCollateral?: AaveStopLossToCollateral
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    aaveStopLossToCollateralDMA?: AaveStopLossToCollateralDMA
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    aaveStopLossToDebt?: AaveStopLossToDebt
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    aaveStopLossToDebtDMA?: AaveStopLossToDebtDMA
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    aaveBasicBuy?: DmaAaveBasicBuy
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    aaveBasicSell?: DmaAaveBasicSell
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    aaveTrailingStopLossDMA?: DmaAaveTrailingStopLoss
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    aavePartialTakeProfit?: DmaAavePartialTakeProfit
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    sparkStopLossToCollateral?: SparkStopLossToCollateral
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    sparkStopLossToCollateralDMA?: SparkStopLossToCollateralDMA
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    sparkStopLossToDebt?: SparkStopLossToDebt
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    sparkStopLossToDebtDMA?: SparkStopLossToDebtDMA
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    sparkBasicBuy?: DmaSparkBasicBuy
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    sparkBasicSell?: DmaSparkBasicSell
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    sparkTrailingStopLossDMA?: DmaSparkTrailingStopLoss
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    sparkPartialTakeProfit?: DmaSparkPartialTakeProfit
   }
   flags: {
     isAaveBasicBuyEnabled: boolean
