@@ -1,8 +1,6 @@
 import { FiatCurrency, FiatCurrencySchema } from '../enums'
 import { type IPercentage } from './IPercentage'
-import { type IPrice } from './IPrice'
 import { IPrintable } from './IPrintable'
-import { type ITokenAmount } from './ITokenAmount'
 import { z } from 'zod'
 
 /**
@@ -46,17 +44,17 @@ export interface IFiatCurrencyAmount extends IFiatCurrencyAmountData, IPrintable
 
   /**
    * @name multiply
-   * @param multiplier A percentage, price, string amount or number to multiply
+   * @param multiplier A percentage, string amount or number to multiply
    * @returns The resulting FiatCurrencyAmount
    */
-  multiply(multiplier: string | number | IPercentage | IPrice): ITokenAmount | IFiatCurrencyAmount
+  multiply(multiplier: string | number | IPercentage): IFiatCurrencyAmount
 
   /**
    * @name divide
    * @param divisor A percentage, price string amount or number to divide
    * @returns The resulting FiatCurrencyAmount
    */
-  divide(divisor: string | number | IPercentage | IPrice): IFiatCurrencyAmount
+  divide(divisor: string | number | IPercentage): IFiatCurrencyAmount
 }
 
 /**

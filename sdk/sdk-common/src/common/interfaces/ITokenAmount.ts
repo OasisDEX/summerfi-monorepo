@@ -2,7 +2,6 @@ import { BigNumber } from 'bignumber.js'
 import { type IPercentage } from './IPercentage'
 import { IPrintable } from './IPrintable'
 import { type IToken, type ITokenData, TokenSchema } from './IToken'
-import { type IPrice } from './IPrice'
 import { z } from 'zod'
 
 /**
@@ -49,14 +48,14 @@ export interface ITokenAmount extends ITokenAmountData, IPrintable {
    * @param multiplier A percentage, price, string amount or number to multiply
    * @returns The resulting TokenAmount
    */
-  multiply(multiplier: string | number | IPercentage | IPrice): ITokenAmount
+  multiply(multiplier: string | number | IPercentage): ITokenAmount
 
   /**
    * @name divide
    * @param divisor A percentage, price, string amount or number to divide
    * @returns The resulting TokenAmount
    */
-  divide(divisor: string | number | IPercentage | IPrice): ITokenAmount
+  divide(divisor: string | number | IPercentage): ITokenAmount
 
   /**
    * @name toBN

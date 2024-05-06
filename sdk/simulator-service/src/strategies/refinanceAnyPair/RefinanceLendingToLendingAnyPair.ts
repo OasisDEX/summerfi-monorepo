@@ -12,7 +12,6 @@ import {
   Position,
   TokenAmount,
   Percentage,
-  Token,
   IToken,
   ITokenAmount,
   IPercentage,

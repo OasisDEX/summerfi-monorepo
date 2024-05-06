@@ -5,7 +5,6 @@ import {
   Token,
   TokenAmount,
   Price,
-  CurrencySymbol,
   Maybe,
 } from '@summerfi/sdk-common/common'
 import { ILendingPool } from '@summerfi/sdk-common/protocols'
@@ -16,6 +15,8 @@ import {
 } from './testSourcePosition'
 import { SwapProviderType } from '@summerfi/sdk-common/swap'
 import {
+  Denomination,
+  FiatCurrency,
   IChainInfo,
   ILendingPoolInfo,
   IPosition,
@@ -61,17 +62,17 @@ async function getSwapQuoteExactInput(params: {
 async function getSpotPrice(params: {
   chainInfo: IChainInfo
   baseToken: IToken
-  quoteToken?: CurrencySymbol | IToken
+  quoteToken?: Denomination
 }): Promise<SpotPriceInfo> {
   const MOCK_PRICE = 0.5
-  const MOCK_QUOTE_CURRENCY = CurrencySymbol.USD
+  const MOCK_QUOTE_CURRENCY = FiatCurrency.USD
   return {
     provider: OracleProviderType.OneInch,
     token: params.baseToken,
     price: Price.createFrom({
       value: MOCK_PRICE.toString(),
-      baseToken: params.baseToken,
-      quoteToken: MOCK_QUOTE_CURRENCY,
+      base: params.baseToken,
+      quote: MOCK_QUOTE_CURRENCY,
     }),
   }
 }

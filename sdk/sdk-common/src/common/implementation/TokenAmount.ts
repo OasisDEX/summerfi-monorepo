@@ -3,13 +3,10 @@ import { Token } from './Token'
 import { SerializationService } from '../../services/SerializationService'
 import { ITokenAmount, ITokenAmountData } from '../interfaces/ITokenAmount'
 import { type IPercentage, isPercentage } from '../interfaces/IPercentage'
-import { isPrice, type IPrice } from '../interfaces/IPrice'
 import {
   divideTokenAmountByPercentage,
   multiplyTokenAmountByPercentage,
 } from '../utils/PercentageUtils'
-import { divideTokenAmountByPrice, multiplyTokenAmountByPrice } from '../utils/PriceUtils'
-import { isFiatCurrencyAmount } from '../interfaces/IFiatCurrencyAmount'
 
 /**
  * @class TokenAmount
@@ -84,38 +81,22 @@ export class TokenAmount implements ITokenAmount {
   }
 
   /** @see ITokenAmount.multiply */
-  multiply(multiplier: string | number | IPercentage | IPrice): ITokenAmount {
+  multiply(multiplier: string | number | IPercentage): ITokenAmount {
     const result = isPercentage(multiplier)
       ? multiplyTokenAmountByPercentage(this, multiplier)
-      : isPrice(multiplier)
-        ? multiplyTokenAmountByPrice(this, multiplier)
-        : {
-            token: this.token,
-            amount: this.toBN().times(multiplier).toString(),
-          }
-
-    if (isFiatCurrencyAmount(result)) {
-      throw new Error(
-        'Multiplying this token amount by this price would generate a fiat currency amount, which is not supported. Instead multiply the price by the token amount',
-      )
-    }
+      : {
+          token: this.token,
+          amount: this.toBN().times(multiplier).toString(),
+        }
 
     return new TokenAmount(result)
   }
 
   /** @see ITokenAmount.divide */
-  divide(divisor: string | number | IPercentage | IPrice): ITokenAmount {
+  divide(divisor: string | number | IPercentage): ITokenAmount {
     const result = isPercentage(divisor)
       ? divideTokenAmountByPercentage(this, divisor)
-      : isPrice(divisor)
-        ? divideTokenAmountByPrice(this, divisor)
-        : { token: this.token, amount: this.toBN().div(divisor).toString() }
-
-    if (isFiatCurrencyAmount(result)) {
-      throw new Error(
-        'Dividing this token amount by this price would generate a fiat currency amount, which is not supported. Instead divide the price by the token amount',
-      )
-    }
+      : { token: this.token, amount: this.toBN().div(divisor).toString() }
 
     return new TokenAmount(result)
   }

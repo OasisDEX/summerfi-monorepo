@@ -1,5 +1,5 @@
-import { ChainInfo, OracleProviderType, Token } from '@summerfi/sdk-common'
-import { Address, CurrencySymbol } from '@summerfi/sdk-common/common'
+import { ChainInfo, FiatCurrency, OracleProviderType, Token } from '@summerfi/sdk-common'
+import { Address } from '@summerfi/sdk-common/common'
 
 import { MockOracleProvider } from './mocks/MockOracleProvider'
 import { IOracleManager } from '@summerfi/oracle-common'
@@ -36,15 +36,15 @@ describe('OracleManager', () => {
     const wethSpotPrice = await oracleManager.getSpotPrice({
       chainInfo,
       baseToken: WETH,
-      quoteToken: CurrencySymbol.USD,
+      quoteToken: FiatCurrency.USD,
     })
 
     expect(wethSpotPrice).toBeDefined()
     expect(wethSpotPrice.provider).toEqual(OracleProviderType.OneInch)
     expect(wethSpotPrice.token).toEqual(WETH)
     expect(wethSpotPrice.price).toBeDefined()
-    expect(wethSpotPrice.price.baseToken).toEqual(WETH)
-    expect(wethSpotPrice.price.quoteToken).toEqual(CurrencySymbol.USD)
+    expect(wethSpotPrice.price.base).toEqual(WETH)
+    expect(wethSpotPrice.price.quote).toEqual(FiatCurrency.USD)
     expect(wethSpotPrice.price.value).toBeDefined()
     expect(Number(wethSpotPrice.price.value)).toBeGreaterThanOrEqual(0)
   })

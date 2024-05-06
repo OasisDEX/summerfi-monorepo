@@ -9,11 +9,6 @@ import {
   divideFiatCurrencyAmountByPercentage,
   multiplyFiatCurrencyAmountByPercentage,
 } from '../utils/PercentageUtils'
-import { type IPrice, isPrice, isTokenAmount } from '../interfaces'
-import {
-  divideFiatCurrencyAmountByPrice,
-  multiplyFiatCurrencyAmountByPrice,
-} from '../utils/PriceUtils'
 
 /**
  * @class FiatCurrencyAmount
@@ -57,41 +52,25 @@ export class FiatCurrencyAmount implements IFiatCurrencyAmount {
   }
 
   /** @see IFiatCurrencyAmount.multiply */
-  multiply(multiplier: string | number | IPercentage | IPrice): IFiatCurrencyAmount {
+  multiply(multiplier: string | number | IPercentage): IFiatCurrencyAmount {
     const result = isPercentage(multiplier)
       ? multiplyFiatCurrencyAmountByPercentage(this, multiplier)
-      : isPrice(multiplier)
-        ? multiplyFiatCurrencyAmountByPrice(this, multiplier)
-        : {
-            fiat: this.fiat,
-            amount: String(Number(this.amount) * Number(multiplier)),
-          }
-
-    if (isTokenAmount(result)) {
-      throw new Error(
-        'Multiplying this fiat currency amount by this price would generate a token amount, which is not supported. Instead multiply the price by the fiat currency amount',
-      )
-    }
+      : {
+          fiat: this.fiat,
+          amount: String(Number(this.amount) * Number(multiplier)),
+        }
 
     return new FiatCurrencyAmount(result)
   }
 
   /** @see IFiatCurrencyAmount.divide */
-  divide(divisor: string | number | IPercentage | IPrice): IFiatCurrencyAmount {
+  divide(divisor: string | number | IPercentage): IFiatCurrencyAmount {
     const result = isPercentage(divisor)
       ? divideFiatCurrencyAmountByPercentage(this, divisor)
-      : isPrice(divisor)
-        ? divideFiatCurrencyAmountByPrice(this, divisor)
-        : {
-            fiat: this.fiat,
-            amount: String(Number(this.amount) / Number(divisor)),
-          }
-
-    if (isTokenAmount(result)) {
-      throw new Error(
-        'Dividing this fiat currency amount by this price would generate a token amount, which is not supported. Instead divide the price by the fiat currency amount',
-      )
-    }
+      : {
+          fiat: this.fiat,
+          amount: String(Number(this.amount) / Number(divisor)),
+        }
 
     return new FiatCurrencyAmount(result)
   }
