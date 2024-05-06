@@ -26,9 +26,9 @@ const paramsSchema = z.object({
 
 const upsertErrorsValidation = paramsSchema
   .refine(
-    ({ triggers, action }) => {
+    ({ triggers, action, triggerData }) => {
       if (action === SupportedActions.Add) {
-        return !triggers.flags.isMorphoBlueStopLossEnabled
+        return !triggers.flags[triggerData.poolId].isMorphoBlueStopLossEnabled
       }
       return true
     },
@@ -40,9 +40,9 @@ const upsertErrorsValidation = paramsSchema
     },
   )
   .refine(
-    ({ triggers, action }) => {
+    ({ triggers, action, triggerData }) => {
       if (action === SupportedActions.Update) {
-        return triggers.flags.isMorphoBlueStopLossEnabled
+        return triggers.flags[triggerData.poolId].isMorphoBlueStopLossEnabled
       }
       return true
     },
@@ -103,9 +103,9 @@ const upsertErrorsValidation = paramsSchema
   )
 
 const deleteErrorsValidation = paramsSchema.refine(
-  ({ triggers, action }) => {
+  ({ triggers, action, triggerData }) => {
     if (action === SupportedActions.Remove) {
-      return triggers.flags.isMorphoBlueStopLossEnabled
+      return triggers.flags[triggerData.poolId].isMorphoBlueStopLossEnabled
     }
     return true
   },

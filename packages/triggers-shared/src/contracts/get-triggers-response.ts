@@ -468,10 +468,12 @@ export type GetTriggersResponse = {
     isSparkBasicSellEnabled: boolean
     isSparkPartialTakeProfitEnabled: boolean
     isSparkStopLossEnabled: boolean
-    isMorphoBlueBasicBuyEnabled: boolean
-    isMorphoBlueBasicSellEnabled: boolean
-    isMorphoBluePartialTakeProfitEnabled: boolean
-    isMorphoBlueStopLossEnabled: boolean
+    [key: `0x${string}`]: {
+      isMorphoBlueBasicBuyEnabled: boolean
+      isMorphoBlueBasicSellEnabled: boolean
+      isMorphoBluePartialTakeProfitEnabled: boolean
+      isMorphoBlueStopLossEnabled: boolean
+    }
   }
   triggerGroup: {
     aaveBasicBuy?: Trigger
