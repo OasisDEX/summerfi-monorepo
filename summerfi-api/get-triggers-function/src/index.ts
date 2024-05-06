@@ -456,13 +456,15 @@ export const handler = async (
         sparkPartialTakeProfit,
       },
       [ProtocolId.MORPHO_BLUE]: {
-        [params.poolId]: {
-          morphoBlueStopLoss,
-          morphoBlueBasicBuy,
-          morphoBlueBasicSell,
-          morphoBlueTrailingStopLoss,
-          morphoBluePartialTakeProfit,
-        },
+        ...(params.poolId && {
+          [params.poolId]: {
+            morphoBlueStopLoss,
+            morphoBlueBasicBuy,
+            morphoBlueBasicSell,
+            morphoBlueTrailingStopLoss,
+            morphoBluePartialTakeProfit,
+          },
+        }),
       },
     },
     flags: {
@@ -486,12 +488,14 @@ export const handler = async (
       isSparkBasicSellEnabled: hasAnyDefined(sparkBasicSell),
       isAavePartialTakeProfitEnabled: hasAnyDefined(aavePartialTakeProfit),
       isSparkPartialTakeProfitEnabled: hasAnyDefined(sparkPartialTakeProfit),
-      [params.poolId]: {
-        isMorphoBlueBasicBuyEnabled: hasAnyDefined(morphoBlueBasicBuy),
-        isMorphoBlueBasicSellEnabled: hasAnyDefined(morphoBlueBasicSell),
-        isMorphoBlueStopLossEnabled: hasAnyDefined(morphoBlueStopLoss),
-        isMorphoBluePartialTakeProfitEnabled: hasAnyDefined(morphoBluePartialTakeProfit),
-      },
+      ...(params.poolId && {
+        [params.poolId]: {
+          isMorphoBlueBasicBuyEnabled: hasAnyDefined(morphoBlueBasicBuy),
+          isMorphoBlueBasicSellEnabled: hasAnyDefined(morphoBlueBasicSell),
+          isMorphoBlueStopLossEnabled: hasAnyDefined(morphoBlueStopLoss),
+          isMorphoBluePartialTakeProfitEnabled: hasAnyDefined(morphoBluePartialTakeProfit),
+        },
+      }),
     },
     triggersCount: triggers.triggers.length,
     triggerGroup: {
