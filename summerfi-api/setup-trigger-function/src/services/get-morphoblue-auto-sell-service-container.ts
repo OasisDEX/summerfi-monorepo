@@ -102,8 +102,7 @@ export const getMorphoBlueAutoSellServiceContainer: (
       })
 
       const currentAutoSell =
-        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${trigger.triggerData.poolId}`]
-          .morphoBlueBasicSell
+        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${trigger.triggerData.poolId}`].basicSell
       const currentTrigger: CurrentTriggerLike | undefined = currentAutoSell
         ? {
             triggerData: currentAutoSell.triggerData as `0x${string}`,

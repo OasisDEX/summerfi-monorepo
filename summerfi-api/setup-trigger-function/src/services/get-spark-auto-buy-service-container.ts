@@ -100,7 +100,7 @@ export const getSparkAutoBuyServiceContainer: (
         debt: trigger.position.debt,
       })
 
-      const currentAutoBuy = triggers.triggers[ProtocolId.SPARK].sparkBasicBuy
+      const currentAutoBuy = triggers.triggers[ProtocolId.SPARK].basicBuy
       const currentTrigger: CurrentTriggerLike | undefined = currentAutoBuy
         ? {
             triggerData: currentAutoBuy.triggerData as `0x${string}`,
