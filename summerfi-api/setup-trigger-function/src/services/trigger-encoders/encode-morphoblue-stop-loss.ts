@@ -63,7 +63,7 @@ export const encodeMorphoBlueStopLoss = (
     position.debt.token.decimals,
     position.collateral.token.decimals,
     triggerData.executionLTV,
-    triggerData.withdrawToken === position.collateral.token.address,
+    triggerData.token === position.collateral.token.address,
   ])
 
   const encodedTrigger = encodeFunctionData({
