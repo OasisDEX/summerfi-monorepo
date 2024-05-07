@@ -1,6 +1,6 @@
 import type { Denomination, Maybe } from '@summerfi/sdk-common/common/aliases'
-import type { IChainInfo, IToken } from '@summerfi/sdk-common/common'
-import { ChainId } from '@summerfi/sdk-common/common'
+import type { IToken } from '@summerfi/sdk-common/common'
+import { ChainId, isToken } from '@summerfi/sdk-common/common'
 import { IOracleManager, IOracleProvider } from '@summerfi/oracle-common'
 import { OracleProviderType, SpotPriceInfo } from '@summerfi/sdk-common/oracle'
 
@@ -34,11 +34,18 @@ export class OracleManager implements IOracleManager {
 
   /** @see IOracleManager.getSpotPrice */
   async getSpotPrice(params: {
-    chainInfo: IChainInfo
     baseToken: IToken
     quoteToken?: Denomination
     forceUseProvider?: OracleProviderType
   }): Promise<SpotPriceInfo> {
+    if (
+      params.quoteToken &&
+      isToken(params.quoteToken) &&
+      !params.baseToken.chainInfo.equals(params.quoteToken.chainInfo)
+    ) {
+      throw new Error('Base token and quote token must be on the same chain')
+    }
+
     const provider: Maybe<IOracleProvider> = this._getBestProvider(params)
     if (!provider) {
       throw new Error('No swap provider available')
@@ -73,7 +80,7 @@ export class OracleManager implements IOracleManager {
    * @returns The best provider for the given price consultation
    */
   private _getBestProvider(params: {
-    chainInfo: IChainInfo
+    baseToken: IToken
     forceUseProvider?: OracleProviderType
   }): Maybe<IOracleProvider> {
     if (params.forceUseProvider) {
@@ -83,7 +90,7 @@ export class OracleManager implements IOracleManager {
       }
     }
 
-    const providers = this._providersByChainId.get(params.chainInfo.chainId) || []
+    const providers = this._providersByChainId.get(params.baseToken.chainInfo.chainId) || []
     if (providers.length === 0) {
       return undefined
     }

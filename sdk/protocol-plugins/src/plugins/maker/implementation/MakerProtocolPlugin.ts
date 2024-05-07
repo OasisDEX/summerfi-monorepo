@@ -237,6 +237,10 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
   private async _getCollateralInfo(protocolData: ProtocolData) {
     const { osmData, joinGemBalance, collateralToken, quoteToken, dogRes, spotRes } = protocolData
 
+    const collateralPriceUSD = await this.ctx.oracleManager.getSpotPrice({
+      baseToken: collateralToken,
+    })
+
     return CollateralInfo.createFrom({
       token: collateralToken,
       price: Price.createFrom({
@@ -244,8 +248,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
         base: collateralToken,
         quote: quoteToken,
       }),
-      priceUSD: await this.ctx.priceService.getPriceUSD(collateralToken),
-
+      priceUSD: collateralPriceUSD.price,
       liquidationThreshold: RiskRatio.createFrom({
         ratio: Percentage.createFrom({
           value: spotRes.liquidationRatio.times(100).toNumber(),
@@ -270,10 +273,13 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
   private async _getDebtInfo(protocolData: ProtocolData) {
     const { quoteToken, stabilityFee, vatRes } = protocolData
 
+    const priceUSD = await this.ctx.oracleManager.getSpotPrice({
+      baseToken: quoteToken,
+    })
     return DebtInfo.createFrom({
       token: quoteToken,
-      price: await this.ctx.priceService.getPriceUSD(quoteToken),
-      priceUSD: await this.ctx.priceService.getPriceUSD(quoteToken),
+      price: priceUSD.price,
+      priceUSD: priceUSD.price,
       interestRate: Percentage.createFrom({ value: stabilityFee.times(100).toNumber() }),
       totalBorrowed: TokenAmount.createFrom({
         token: quoteToken,
@@ -303,6 +309,24 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
     const { osm, vatRes, jugRes, dogRes, spotRes, erc20, ilkRegistryRes } =
       await this._getIlkProtocolData(ilkInHex)
 
+    const DAI = await this.ctx.tokensManager.getTokenBySymbol({
+      chainInfo: makerLendingPoolId.protocol.chainInfo,
+      symbol: CommonTokenSymbols.DAI,
+    })
+    if (!DAI) {
+      throw new Error(`DAI token not found for chain: ${makerLendingPoolId.protocol.chainInfo}`)
+    }
+
+    const ilkGemToken = await this.ctx.tokensManager.getTokenByAddress({
+      chainInfo: makerLendingPoolId.protocol.chainInfo,
+      address: Address.createFromEthereum({ value: ilkRegistryRes.gem }),
+    })
+    if (!ilkGemToken) {
+      throw new Error(
+        `Collateral token not found for chain: ${makerLendingPoolId.protocol.chainInfo}`,
+      )
+    }
+
     const makerSpotDef = this._getContractDef('Spot')
     const [
       [peek],
@@ -319,12 +343,9 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
       osm.read.zzz({ account: makerSpotDef.address }),
       osm.read.hop({ account: makerSpotDef.address }),
       erc20.read.balanceOf([ilkRegistryRes.join]),
-
-      this.ctx.tokenService.getTokenByAddress(
-        Address.createFromEthereum({ value: ilkRegistryRes.gem }),
-      ),
-      this.ctx.tokenService.getTokenBySymbol(CommonTokenSymbols.DAI),
-      this.ctx.tokenService.getTokenBySymbol(CommonTokenSymbols.DAI),
+      ilkGemToken,
+      DAI,
+      DAI,
     ])
 
     const SECONDS_PER_YEAR = 60 * 60 * 24 * 365

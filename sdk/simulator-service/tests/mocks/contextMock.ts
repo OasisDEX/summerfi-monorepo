@@ -17,7 +17,6 @@ import { SwapProviderType } from '@summerfi/sdk-common/swap'
 import {
   Denomination,
   FiatCurrency,
-  IChainInfo,
   ILendingPoolInfo,
   IPosition,
   IPositionIdData,
@@ -60,7 +59,6 @@ async function getSwapQuoteExactInput(params: {
 }
 
 async function getSpotPrice(params: {
-  chainInfo: IChainInfo
   baseToken: IToken
   quoteToken?: Denomination
 }): Promise<SpotPriceInfo> {

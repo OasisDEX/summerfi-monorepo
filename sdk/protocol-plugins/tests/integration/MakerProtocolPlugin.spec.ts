@@ -11,14 +11,34 @@ import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { MakerProtocolPlugin } from '../../src/plugins/maker'
 import { makerPoolIdMock as validMakerPoolId } from '../mocks/MakerPoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
+import { OracleManagerMock } from '@summerfi/testing-utils'
+import { FiatCurrency, OracleProviderType } from '@summerfi/sdk-common'
 
 describe('Maker Protocol Plugin (Integration)', () => {
   let ctx: IProtocolPluginContext
   let makerProtocolPlugin: MakerProtocolPlugin
+
+  const mockDebtToken = Token.createFrom({
+    chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
+    address: Address.createFromEthereum({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
+    symbol: 'DAI',
+    name: 'Dai Stablecoin',
+    decimals: 18,
+  })
+
   beforeAll(async () => {
     ctx = await createProtocolPluginContext()
     makerProtocolPlugin = new MakerProtocolPlugin({
       context: ctx,
+    })
+    ;(ctx.oracleManager as OracleManagerMock).setSpotPrice({
+      provider: OracleProviderType.OneInch,
+      token: mockDebtToken,
+      price: Price.createFrom({
+        value: '1',
+        base: mockDebtToken,
+        quote: FiatCurrency.USD,
+      }),
     })
   })
 
@@ -50,14 +70,6 @@ describe('Maker Protocol Plugin (Integration)', () => {
 
   it('correctly populates debt configuration from blockchain data', async () => {
     const pool = await makerProtocolPlugin.getLendingPool(validMakerPoolId)
-
-    const mockDebtToken = Token.createFrom({
-      chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
-      address: Address.createFromEthereum({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
-      symbol: 'DAI',
-      name: 'Dai Stablecoin',
-      decimals: 18,
-    })
 
     const makerPoolInfo = await makerProtocolPlugin.getLendingPoolInfo(pool.id)
 

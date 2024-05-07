@@ -7,7 +7,7 @@ import {
   Price,
   SpotPriceInfo,
 } from '@summerfi/sdk-common'
-import { IChainInfo, IToken } from '@summerfi/sdk-common/common'
+import { IToken } from '@summerfi/sdk-common/common'
 
 export class MockOracleProvider implements IOracleProvider {
   type: OracleProviderType = OracleProviderType.OneInch
@@ -17,7 +17,6 @@ export class MockOracleProvider implements IOracleProvider {
   }
 
   async getSpotPrice(params: {
-    chainInfo: IChainInfo
     baseToken: IToken
     quoteToken?: Denomination
   }): Promise<SpotPriceInfo> {

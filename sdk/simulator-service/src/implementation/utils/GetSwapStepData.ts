@@ -38,7 +38,6 @@ export async function getSwapStepData(params: {
       toToken: params.toToken,
     }),
     params.oracleManager.getSpotPrice({
-      chainInfo: params.chainInfo,
       baseToken: params.toToken,
       quoteToken: params.fromAmount.token,
     }),

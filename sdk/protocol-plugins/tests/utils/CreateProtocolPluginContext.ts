@@ -1,9 +1,8 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { createPublicClient, http, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
-import { TokenService, PriceService } from '../../src/implementation'
 import { SetupDeployments } from './SetupDeployments'
-import { SwapManagerMock } from '@summerfi/testing-utils'
+import { OracleManagerMock, SwapManagerMock, TokensManagerMock } from '@summerfi/testing-utils'
 
 export async function createProtocolPluginContext(
   __ctxOverrides?: Partial<IProtocolPluginContext>,
@@ -19,8 +18,8 @@ export async function createProtocolPluginContext(
 
   const defaultContext: IProtocolPluginContext = {
     provider,
-    tokenService: new TokenService(),
-    priceService: new PriceService(provider),
+    tokensManager: new TokensManagerMock(),
+    oracleManager: new OracleManagerMock(),
     deployments: SetupDeployments(),
     swapManager: new SwapManagerMock(),
   }
