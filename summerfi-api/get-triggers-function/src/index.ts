@@ -475,11 +475,11 @@ export const handler = async (
       },
       ...(params.poolId && {
         [`${ProtocolId.MORPHO_BLUE}-${params.poolId}`]: {
-          basicBuy: morphoBlueStopLoss,
-          basicSell: morphoBlueBasicBuy,
-          partialTakeProfit: morphoBlueBasicSell,
-          stopLoss: morphoBlueTrailingStopLoss,
-          trailingStopLoss: morphoBluePartialTakeProfit,
+          basicBuy: morphoBlueBasicBuy,
+          basicSell: morphoBlueBasicSell,
+          partialTakeProfit: morphoBluePartialTakeProfit,
+          stopLoss: morphoBlueStopLoss,
+          trailingStopLoss: morphoBlueTrailingStopLoss,
         },
       }),
     },
@@ -512,10 +512,11 @@ export const handler = async (
       },
       ...(params.poolId && {
         [`${ProtocolId.MORPHO_BLUE}-${params.poolId}`]: {
+          isStopLossEnabled: hasAnyDefined(morphoBlueStopLoss),
           isBasicBuyEnabled: hasAnyDefined(morphoBlueBasicBuy),
           isBasicSellEnabled: hasAnyDefined(morphoBlueBasicSell),
-          isStopLossEnabled: hasAnyDefined(morphoBlueStopLoss),
           isPartialTakeProfitEnabled: hasAnyDefined(morphoBluePartialTakeProfit),
+          isTrailingStopLossEnabled: hasAnyDefined(morphoBlueTrailingStopLoss),
         },
       }),
       /* deprecated start */
