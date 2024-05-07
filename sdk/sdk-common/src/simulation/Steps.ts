@@ -51,6 +51,7 @@ export interface PaybackWithdrawStep
       paybackAmount: ReferenceableField<TokenAmount>
       withdrawAmount: TokenAmount
       position: Position
+      withdrawTargetType: TokenTransferTargetType
     },
     {
       paybackAmount: TokenAmount
