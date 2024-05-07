@@ -5,7 +5,7 @@ import { chainlinkPairOracleAbi, erc20Abi, morphoBlueAbi } from '@summerfi/abis'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { calculateLtv, normalizeAmount } from './helpers'
 import { UsdcAndTokenPrice, getPricesSubgraphClient } from '@summerfi/prices-subgraph'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'bignumber.js'
 
 export interface GetMorphoBluePositionParams {
   address: Address
