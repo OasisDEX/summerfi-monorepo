@@ -100,7 +100,7 @@ export const getAaveAutoBuyServiceContainer: (
         debt: trigger.position.debt,
       })
 
-      const currentAutoBuy = triggers.triggers[ProtocolId.AAVE3].aaveBasicBuy
+      const currentAutoBuy = triggers.triggers[ProtocolId.AAVE3].basicBuy
       const currentTrigger: CurrentTriggerLike | undefined = currentAutoBuy
         ? {
             triggerData: currentAutoBuy.triggerData as `0x${string}`,

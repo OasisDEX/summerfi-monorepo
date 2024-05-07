@@ -69,7 +69,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ dynamicExecutionLTV, triggers }) => {
-      const currentAutoBuy = triggers.triggers[ProtocolId.AAVE3].aaveBasicBuy
+      const currentAutoBuy = triggers.triggers[ProtocolId.AAVE3].basicBuy
       if (currentAutoBuy) {
         const currentAutoBuyTarget = safeParseBigInt(currentAutoBuy.decodedParams.targetLtv) ?? 0n
         return dynamicExecutionLTV > currentAutoBuyTarget
@@ -97,7 +97,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ dynamicExecutionLTV, triggers }) => {
-      const currentPartialTakeProfit = triggers.triggers[ProtocolId.AAVE3].aavePartialTakeProfit
+      const currentPartialTakeProfit = triggers.triggers[ProtocolId.AAVE3].partialTakeProfit
       if (currentPartialTakeProfit) {
         const currentPartialTakeProfitTarget =
           safeParseBigInt(currentPartialTakeProfit.decodedParams.targetLtv) ?? 0n
@@ -143,7 +143,7 @@ const warningsValidation = paramsSchema
   )
   .refine(
     ({ dynamicExecutionLTV, triggers }) => {
-      const autoSell = triggers.triggers[ProtocolId.AAVE3].aaveBasicSell
+      const autoSell = triggers.triggers[ProtocolId.AAVE3].basicSell
       if (autoSell) {
         const executionLTV = safeParseBigInt(autoSell.decodedParams.executionLtv) ?? 0n
         return dynamicExecutionLTV > executionLTV

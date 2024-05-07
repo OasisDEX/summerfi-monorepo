@@ -91,7 +91,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, triggerData }) => {
       const autoSellTrigger =
-        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].morphoBlueBasicSell
+        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].basicSell
       if (!autoSellTrigger) {
         return true
       }
@@ -112,8 +112,8 @@ const upsertErrorsValidation = paramsSchema
     ({ triggers, action, triggerData }) => {
       if (action === SupportedActions.Add) {
         return (
-          triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`]
-            .morphoBlueBasicBuy === undefined
+          triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].basicBuy ===
+          undefined
         )
       }
       return true
@@ -129,8 +129,8 @@ const upsertErrorsValidation = paramsSchema
     ({ triggers, action, triggerData }) => {
       if (action === SupportedActions.Update)
         return (
-          triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`]
-            .morphoBlueBasicBuy !== undefined
+          triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].basicBuy !==
+          undefined
         )
       return true
     },
@@ -159,8 +159,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggerData, triggers }) => {
       const partialTakeProfit =
-        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`]
-          .morphoBluePartialTakeProfit
+        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].partialTakeProfit
       if (!partialTakeProfit) {
         return true
       }
@@ -185,8 +184,7 @@ const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action, triggerData }) => {
     if (action === SupportedActions.Remove)
       return (
-        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].morphoBlueBasicBuy !==
-        undefined
+        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].basicBuy !== undefined
       )
     return true
   },
@@ -213,7 +211,7 @@ const warningsValidation = paramsSchema
   .refine(
     ({ triggerData, triggers }) => {
       const autoSellTrigger =
-        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].morphoBlueBasicSell
+        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].basicSell
       if (!autoSellTrigger) {
         return true
       }

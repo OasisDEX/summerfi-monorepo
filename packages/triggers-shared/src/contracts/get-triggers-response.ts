@@ -430,31 +430,31 @@ export type MorphoBlueStopLoss = Trigger & {
 export type GetTriggersResponse = {
   triggers: {
     [ProtocolId.AAVE3]: {
-      aaveStopLossToCollateral?: AaveStopLossToCollateral
-      aaveStopLossToCollateralDMA?: AaveStopLossToCollateralDMA
-      aaveStopLossToDebt?: AaveStopLossToDebt
-      aaveStopLossToDebtDMA?: AaveStopLossToDebtDMA
-      aaveBasicBuy?: DmaAaveBasicBuy
-      aaveBasicSell?: DmaAaveBasicSell
-      aaveTrailingStopLossDMA?: DmaAaveTrailingStopLoss
-      aavePartialTakeProfit?: DmaAavePartialTakeProfit
+      basicBuy?: DmaAaveBasicBuy
+      basicSell?: DmaAaveBasicSell
+      partialTakeProfit?: DmaAavePartialTakeProfit
+      stopLossToCollateral?: AaveStopLossToCollateral
+      stopLossToCollateralDMA?: AaveStopLossToCollateralDMA
+      stopLossToDebt?: AaveStopLossToDebt
+      stopLossToDebtDMA?: AaveStopLossToDebtDMA
+      trailingStopLossDMA?: DmaAaveTrailingStopLoss
     }
     [ProtocolId.SPARK]: {
-      sparkStopLossToCollateral?: SparkStopLossToCollateral
-      sparkStopLossToCollateralDMA?: SparkStopLossToCollateralDMA
-      sparkStopLossToDebt?: SparkStopLossToDebt
-      sparkStopLossToDebtDMA?: SparkStopLossToDebtDMA
-      sparkBasicBuy?: DmaSparkBasicBuy
-      sparkBasicSell?: DmaSparkBasicSell
-      sparkTrailingStopLossDMA?: DmaSparkTrailingStopLoss
-      sparkPartialTakeProfit?: DmaSparkPartialTakeProfit
+      basicBuy?: DmaSparkBasicBuy
+      basicSell?: DmaSparkBasicSell
+      partialTakeProfit?: DmaSparkPartialTakeProfit
+      stopLossToCollateral?: SparkStopLossToCollateral
+      stopLossToCollateralDMA?: SparkStopLossToCollateralDMA
+      stopLossToDebt?: SparkStopLossToDebt
+      stopLossToDebtDMA?: SparkStopLossToDebtDMA
+      trailingStopLossDMA?: DmaSparkTrailingStopLoss
     }
     [key: `${ProtocolId.MORPHO_BLUE}-0x${string}`]: {
-      morphoBlueStopLoss?: MorphoBlueStopLoss
-      morphoBlueBasicBuy?: MorphoBlueBasicBuy
-      morphoBlueBasicSell?: MorphoBlueBasicSell
-      morphoBlueTrailingStopLoss?: MorphoBlueTrailingStopLoss
-      morphoBluePartialTakeProfit?: MorphoBluePartialTakeProfit
+      basicBuy?: MorphoBlueBasicBuy
+      basicSell?: MorphoBlueBasicSell
+      partialTakeProfit?: MorphoBluePartialTakeProfit
+      stopLoss?: MorphoBlueStopLoss
+      trailingStopLoss?: MorphoBlueTrailingStopLoss
     }
     /** @deprecated Use ProtocolId key, these will be removed in the future */
     aaveStopLossToCollateral?: AaveStopLossToCollateral
@@ -490,20 +490,43 @@ export type GetTriggersResponse = {
     sparkPartialTakeProfit?: DmaSparkPartialTakeProfit
   }
   flags: {
-    isAaveBasicBuyEnabled: boolean
-    isAaveBasicSellEnabled: boolean
-    isAavePartialTakeProfitEnabled: boolean
-    isAaveStopLossEnabled: boolean
-    isSparkBasicBuyEnabled: boolean
-    isSparkBasicSellEnabled: boolean
-    isSparkPartialTakeProfitEnabled: boolean
-    isSparkStopLossEnabled: boolean
-    [key: `0x${string}`]: {
-      isMorphoBlueBasicBuyEnabled: boolean
-      isMorphoBlueBasicSellEnabled: boolean
-      isMorphoBluePartialTakeProfitEnabled: boolean
-      isMorphoBlueStopLossEnabled: boolean
+    [ProtocolId.AAVE3]: {
+      isBasicBuyEnabled: boolean
+      isBasicSellEnabled: boolean
+      isPartialTakeProfitEnabled: boolean
+      isStopLossEnabled: boolean
+      isTrailingStopLossEnabled: boolean
     }
+    [ProtocolId.SPARK]: {
+      isBasicBuyEnabled: boolean
+      isBasicSellEnabled: boolean
+      isPartialTakeProfitEnabled: boolean
+      isStopLossEnabled: boolean
+      isTrailingStopLossEnabled: boolean
+    }
+    [key: `${ProtocolId.MORPHO_BLUE}-0x${string}`]: {
+      isBasicBuyEnabled: boolean
+      isBasicSellEnabled: boolean
+      isPartialTakeProfitEnabled: boolean
+      isStopLossEnabled: boolean
+      isTrailingStopLossEnabled: boolean
+    }
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    isAaveStopLossEnabled: boolean
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    isSparkStopLossEnabled: boolean
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    isAaveBasicBuyEnabled: boolean
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    isAaveBasicSellEnabled: boolean
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    isSparkBasicBuyEnabled: boolean
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    isSparkBasicSellEnabled: boolean
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    isAavePartialTakeProfitEnabled: boolean
+    /** @deprecated Use ProtocolId key, these will be removed in the future */
+    isSparkPartialTakeProfitEnabled: boolean
   }
   triggerGroup: {
     aaveBasicBuy?: Trigger

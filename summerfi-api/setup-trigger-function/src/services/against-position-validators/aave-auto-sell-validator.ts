@@ -64,7 +64,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggers, triggerData }) => {
-      const autoBuyTrigger = triggers.triggers[ProtocolId.AAVE3].aaveBasicBuy
+      const autoBuyTrigger = triggers.triggers[ProtocolId.AAVE3].basicBuy
       if (!autoBuyTrigger) {
         return true
       }
@@ -96,7 +96,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Add) {
-        return triggers.triggers[ProtocolId.AAVE3].aaveBasicSell === undefined
+        return triggers.triggers[ProtocolId.AAVE3].basicSell === undefined
       }
       return true
     },
@@ -110,7 +110,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Remove || action === SupportedActions.Update)
-        return triggers.triggers[ProtocolId.AAVE3].aaveBasicSell !== undefined
+        return triggers.triggers[ProtocolId.AAVE3].basicSell !== undefined
       return true
     },
     {
@@ -122,7 +122,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const partialTakeProfit = triggers.triggers[ProtocolId.AAVE3].aavePartialTakeProfit
+      const partialTakeProfit = triggers.triggers[ProtocolId.AAVE3].partialTakeProfit
       if (!partialTakeProfit) {
         return true
       }
@@ -141,7 +141,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const partialTakeProfit = triggers.triggers[ProtocolId.AAVE3].aavePartialTakeProfit
+      const partialTakeProfit = triggers.triggers[ProtocolId.AAVE3].partialTakeProfit
       if (!partialTakeProfit) {
         return true
       }
@@ -162,7 +162,7 @@ const upsertErrorsValidation = paramsSchema
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
     if (action === SupportedActions.Remove)
-      return triggers.triggers[ProtocolId.AAVE3].aaveBasicSell !== undefined
+      return triggers.triggers[ProtocolId.AAVE3].basicSell !== undefined
     return true
   },
   {
@@ -188,7 +188,7 @@ const warningsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoBuyTrigger = triggers.triggers[ProtocolId.AAVE3].aaveBasicBuy
+      const autoBuyTrigger = triggers.triggers[ProtocolId.AAVE3].basicBuy
       if (!autoBuyTrigger) {
         return true
       }
