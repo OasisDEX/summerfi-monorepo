@@ -1,7 +1,21 @@
 import { FiatCurrency, FiatCurrencySchema } from '../enums'
 import { type IPercentage } from './IPercentage'
+import { type ITokenAmount } from './ITokenAmount'
+import { type IPrice } from './IPrice'
 import { IPrintable } from './IPrintable'
 import { z } from 'zod'
+
+/**
+ * Return Type narrowing for multiply and divide methods, so the return type can be properly inferred
+ *
+ * This helps callers to know what to expect from the result of the operation
+ */
+export type FiatCurrencyAmountMulDivParamType = string | number | IPrice | IPercentage
+export type FiatCurrencyAmountMulDivReturnType<T> = T extends IPrice
+  ? ITokenAmount | IFiatCurrencyAmount
+  : T extends IPercentage | string | number
+    ? ITokenAmount
+    : never
 
 /**
  * @name IFiatCurrencyAmountData
@@ -47,14 +61,24 @@ export interface IFiatCurrencyAmount extends IFiatCurrencyAmountData, IPrintable
    * @param multiplier A percentage, string amount or number to multiply
    * @returns The resulting FiatCurrencyAmount
    */
-  multiply(multiplier: string | number | IPercentage): IFiatCurrencyAmount
+  multiply<
+    InputParams extends FiatCurrencyAmountMulDivParamType,
+    ReturnType = FiatCurrencyAmountMulDivReturnType<InputParams>,
+  >(
+    multiplier: InputParams,
+  ): ReturnType
 
   /**
    * @name divide
    * @param divisor A percentage, price string amount or number to divide
    * @returns The resulting FiatCurrencyAmount
    */
-  divide(divisor: string | number | IPercentage): IFiatCurrencyAmount
+  divide<
+    InputParams extends FiatCurrencyAmountMulDivParamType,
+    ReturnType = FiatCurrencyAmountMulDivReturnType<InputParams>,
+  >(
+    divisor: InputParams,
+  ): ReturnType
 }
 
 /**

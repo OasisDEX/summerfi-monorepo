@@ -6,6 +6,18 @@ import { type IFiatCurrencyAmount } from './IFiatCurrencyAmount'
 import { z } from 'zod'
 
 /**
+ * Return Type narrowing for multiply and divide methods, so the return type can be properly inferred
+ *
+ * This helps callers to know what to expect from the result of the operation
+ */
+export type PriceMulDivParamType = string | number | IPrice | ITokenAmount | IFiatCurrencyAmount
+export type PriceMulDivReturnType<T> = T extends ITokenAmount
+  ? ITokenAmount | IFiatCurrencyAmount
+  : T extends IFiatCurrencyAmount
+    ? IFiatCurrencyAmount | ITokenAmount
+    : IPrice
+
+/**
  * @name IPriceData
  * @description Represents a price for a pair of tokens
  *
@@ -99,22 +111,25 @@ export interface IPrice extends IPriceData, IPrintable {
    * @throws When it is a price, if the second price quote is not the same as this price base or
    *         if the second price base is not the same as this price quote it will throw an error
    */
-  multiply(
-    multiplier: string | number | IPrice | ITokenAmount | IFiatCurrencyAmount,
-  ): IPrice | ITokenAmount | IFiatCurrencyAmount
+  multiply<
+    InputParams extends PriceMulDivParamType,
+    ReturnType = PriceMulDivReturnType<InputParams>,
+  >(
+    multiplier: InputParams,
+  ): ReturnType
 
   /**
-   * @name div
+   * @name divide
    * @description Divides the price by another price or a constant
-   * @param divier The numeric string, number, price, token amount or fiat currency amount to divide by
+   * @param divider The numeric string, number, price, token amount or fiat currency amount to divide by
    * @returns The resulting price
    *
    * @throws If the second price base is not the same as this price base
    *         or if the second price quote is not the same as this price quote
    */
-  divide(
-    divider: string | number | IPrice | ITokenAmount | IFiatCurrencyAmount,
-  ): IPrice | ITokenAmount | IFiatCurrencyAmount
+  divide<InputParams extends PriceMulDivParamType, ReturnType = PriceMulDivReturnType<InputParams>>(
+    divider: InputParams,
+  ): ReturnType
 
   /**
    * @name toBN

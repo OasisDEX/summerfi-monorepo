@@ -1,10 +1,13 @@
 import { SerializationService } from '../../services/SerializationService'
 import {
+  FiatCurrencyAmountMulDivParamType,
+  FiatCurrencyAmountMulDivReturnType,
   type IFiatCurrencyAmount,
   type IFiatCurrencyAmountData,
 } from '../interfaces/IFiatCurrencyAmount'
 import { FiatCurrency } from '../enums/FiatCurrency'
-import { type IPercentage, isPercentage } from '../interfaces/IPercentage'
+import { isPercentage } from '../interfaces/IPercentage'
+import { isPrice } from '../interfaces/IPrice'
 import {
   divideFiatCurrencyAmountByPercentage,
   multiplyFiatCurrencyAmountByPercentage,
@@ -52,7 +55,14 @@ export class FiatCurrencyAmount implements IFiatCurrencyAmount {
   }
 
   /** @see IFiatCurrencyAmount.multiply */
-  multiply(multiplier: string | number | IPercentage): IFiatCurrencyAmount {
+  multiply<
+    InputParams extends FiatCurrencyAmountMulDivParamType,
+    ReturnType = FiatCurrencyAmountMulDivReturnType<InputParams>,
+  >(multiplier: InputParams): ReturnType {
+    if (isPrice(multiplier)) {
+      return multiplier.multiply(this)
+    }
+
     const result = isPercentage(multiplier)
       ? multiplyFiatCurrencyAmountByPercentage(this, multiplier)
       : {
@@ -60,11 +70,18 @@ export class FiatCurrencyAmount implements IFiatCurrencyAmount {
           amount: String(Number(this.amount) * Number(multiplier)),
         }
 
-    return new FiatCurrencyAmount(result)
+    return new FiatCurrencyAmount(result) as ReturnType
   }
 
   /** @see IFiatCurrencyAmount.divide */
-  divide(divisor: string | number | IPercentage): IFiatCurrencyAmount {
+  divide<
+    InputParams extends FiatCurrencyAmountMulDivParamType,
+    ReturnType = FiatCurrencyAmountMulDivReturnType<InputParams>,
+  >(divisor: InputParams): ReturnType {
+    if (isPrice(divisor)) {
+      return divisor.divide(this)
+    }
+
     const result = isPercentage(divisor)
       ? divideFiatCurrencyAmountByPercentage(this, divisor)
       : {
@@ -72,7 +89,7 @@ export class FiatCurrencyAmount implements IFiatCurrencyAmount {
           amount: String(Number(this.amount) / Number(divisor)),
         }
 
-    return new FiatCurrencyAmount(result)
+    return new FiatCurrencyAmount(result) as ReturnType
   }
 
   /** @see IPrintable.toString */

@@ -2,7 +2,21 @@ import { BigNumber } from 'bignumber.js'
 import { type IPercentage } from './IPercentage'
 import { IPrintable } from './IPrintable'
 import { type IToken, type ITokenData, TokenSchema } from './IToken'
+import { type IPrice } from './IPrice'
+import { type IFiatCurrencyAmount } from './IFiatCurrencyAmount'
 import { z } from 'zod'
+
+/**
+ * Return Type narrowing for multiply and divide methods, so the return type can be properly inferred
+ *
+ * This helps callers to know what to expect from the result of the operation
+ */
+export type TokenAmountMulDivParamType = string | number | IPrice | IPercentage
+export type TokenAmountMulDivReturnType<T> = T extends IPrice
+  ? ITokenAmount | IFiatCurrencyAmount
+  : T extends IPercentage | string | number
+    ? ITokenAmount
+    : never
 
 /**
  * @name ITokenAmountData
@@ -48,14 +62,24 @@ export interface ITokenAmount extends ITokenAmountData, IPrintable {
    * @param multiplier A percentage, price, string amount or number to multiply
    * @returns The resulting TokenAmount
    */
-  multiply(multiplier: string | number | IPercentage): ITokenAmount
+  multiply<
+    InputParams extends TokenAmountMulDivParamType,
+    ReturnType = TokenAmountMulDivReturnType<InputParams>,
+  >(
+    multiplier: InputParams,
+  ): ReturnType
 
   /**
    * @name divide
    * @param divisor A percentage, price, string amount or number to divide
    * @returns The resulting TokenAmount
    */
-  divide(divisor: string | number | IPercentage): ITokenAmount
+  divide<
+    InputParams extends TokenAmountMulDivParamType,
+    ReturnType = TokenAmountMulDivReturnType<InputParams>,
+  >(
+    divisor: InputParams,
+  ): ReturnType
 
   /**
    * @name toBN

@@ -1,12 +1,18 @@
-import { type IPrice, type IPriceData, isPrice } from '../interfaces/IPrice'
+import {
+  type IPrice,
+  type IPriceData,
+  isPrice,
+  PriceMulDivReturnType,
+  PriceMulDivParamType,
+} from '../interfaces/IPrice'
 import { isToken } from '../interfaces/IToken'
 import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
 import { Token } from './Token'
 import { Denomination } from '../aliases/Denomination'
 import { isFiatCurrency } from '../enums'
-import { isTokenAmount, type ITokenAmount } from '../interfaces'
-import { isFiatCurrencyAmount, type IFiatCurrencyAmount } from '../interfaces/IFiatCurrencyAmount'
+import { isTokenAmount } from '../interfaces'
+import { isFiatCurrencyAmount } from '../interfaces/IFiatCurrencyAmount'
 import {
   divideFiatCurrencyAmountByPrice,
   dividePriceByPrice,
@@ -106,12 +112,13 @@ export class Price implements IPrice {
   }
 
   /** @see IPrice.multiply */
-  multiply(
-    multiplier: string | number | IPrice | ITokenAmount | IFiatCurrencyAmount,
-  ): IPrice | ITokenAmount | IFiatCurrencyAmount {
+  multiply<
+    InputParams extends PriceMulDivParamType,
+    ReturnType = PriceMulDivReturnType<InputParams>,
+  >(multiplier: InputParams): ReturnType {
     if (isPrice(multiplier)) {
       const result = multiplyPriceByPrice(this, multiplier)
-      return Price.createFrom(result)
+      return Price.createFrom(result) as ReturnType
     }
 
     if (!isTokenAmount(multiplier) && !isFiatCurrencyAmount(multiplier)) {
@@ -119,7 +126,7 @@ export class Price implements IPrice {
         value: this.toBN().times(multiplier).toString(),
         base: this.base,
         quote: this.quote,
-      })
+      }) as ReturnType
     }
 
     const result = isTokenAmount(multiplier)
@@ -127,19 +134,19 @@ export class Price implements IPrice {
       : multiplyFiatCurrencyAmountByPrice(multiplier, this)
 
     if (isTokenAmount(result)) {
-      return TokenAmount.createFrom(result)
+      return TokenAmount.createFrom(result) as ReturnType
     } else {
-      return FiatCurrencyAmount.createFrom(result)
+      return FiatCurrencyAmount.createFrom(result) as ReturnType
     }
   }
 
   /** @see IPrice.divide */
-  divide(
-    divider: string | number | IPrice | ITokenAmount | IFiatCurrencyAmount,
-  ): IPrice | ITokenAmount | IFiatCurrencyAmount {
+  divide<InputParams extends PriceMulDivParamType, ReturnType = PriceMulDivReturnType<InputParams>>(
+    divider: InputParams,
+  ): ReturnType {
     if (isPrice(divider)) {
       const result = dividePriceByPrice(this, divider)
-      return Price.createFrom(result)
+      return Price.createFrom(result) as ReturnType
     }
 
     if (!isTokenAmount(divider) && !isFiatCurrencyAmount(divider)) {
@@ -147,7 +154,7 @@ export class Price implements IPrice {
         value: this.toBN().div(divider).toString(),
         base: this.base,
         quote: this.quote,
-      })
+      }) as ReturnType
     }
 
     const result = isTokenAmount(divider)
@@ -155,9 +162,9 @@ export class Price implements IPrice {
       : divideFiatCurrencyAmountByPrice(divider, this)
 
     if (isTokenAmount(result)) {
-      return TokenAmount.createFrom(result)
+      return TokenAmount.createFrom(result) as ReturnType
     } else {
-      return FiatCurrencyAmount.createFrom(result)
+      return FiatCurrencyAmount.createFrom(result) as ReturnType
     }
   }
 

@@ -1,12 +1,18 @@
 import { BigNumber } from 'bignumber.js'
 import { Token } from './Token'
 import { SerializationService } from '../../services/SerializationService'
-import { ITokenAmount, ITokenAmountData } from '../interfaces/ITokenAmount'
-import { type IPercentage, isPercentage } from '../interfaces/IPercentage'
+import {
+  ITokenAmount,
+  ITokenAmountData,
+  TokenAmountMulDivParamType,
+  TokenAmountMulDivReturnType,
+} from '../interfaces/ITokenAmount'
+import { isPercentage } from '../interfaces/IPercentage'
 import {
   divideTokenAmountByPercentage,
   multiplyTokenAmountByPercentage,
 } from '../utils/PercentageUtils'
+import { isPrice } from '../interfaces/IPrice'
 
 /**
  * @class TokenAmount
@@ -81,7 +87,14 @@ export class TokenAmount implements ITokenAmount {
   }
 
   /** @see ITokenAmount.multiply */
-  multiply(multiplier: string | number | IPercentage): ITokenAmount {
+  multiply<
+    InputParams extends TokenAmountMulDivParamType,
+    ReturnType = TokenAmountMulDivReturnType<InputParams>,
+  >(multiplier: InputParams): ReturnType {
+    if (isPrice(multiplier)) {
+      return multiplier.multiply(this)
+    }
+
     const result = isPercentage(multiplier)
       ? multiplyTokenAmountByPercentage(this, multiplier)
       : {
@@ -89,16 +102,23 @@ export class TokenAmount implements ITokenAmount {
           amount: this.toBN().times(multiplier).toString(),
         }
 
-    return new TokenAmount(result)
+    return new TokenAmount(result) as ReturnType
   }
 
   /** @see ITokenAmount.divide */
-  divide(divisor: string | number | IPercentage): ITokenAmount {
+  divide<
+    InputParams extends TokenAmountMulDivParamType,
+    ReturnType = TokenAmountMulDivReturnType<InputParams>,
+  >(divisor: InputParams): ReturnType {
+    if (isPrice(divisor)) {
+      return divisor.divide(this)
+    }
+
     const result = isPercentage(divisor)
       ? divideTokenAmountByPercentage(this, divisor)
       : { token: this.token, amount: this.toBN().div(divisor).toString() }
 
-    return new TokenAmount(result)
+    return new TokenAmount(result) as ReturnType
   }
 
   /** @see IPrintable.toString */
