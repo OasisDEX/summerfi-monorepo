@@ -31,7 +31,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action, triggerData }) => {
       if (action === SupportedActions.Add) {
-        return !triggers.flags[triggerData.poolId].isMorphoBlueStopLossEnabled
+        return !triggers.flags[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].isStopLossEnabled
       }
       return true
     },
@@ -45,7 +45,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action, triggerData }) => {
       if (action === SupportedActions.Update) {
-        return triggers.flags[triggerData.poolId].isMorphoBlueStopLossEnabled
+        return triggers.flags[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].isStopLossEnabled
       }
       return true
     },
@@ -70,7 +70,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ dynamicExecutionLTV, triggers, triggerData }) => {
       const currentAutoBuy =
-        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].morphoBlueBasicBuy
+        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].basicBuy
       if (currentAutoBuy) {
         const currentAutoBuyTarget = safeParseBigInt(currentAutoBuy.decodedParams.targetLtv) ?? 0n
         return dynamicExecutionLTV > currentAutoBuyTarget
@@ -99,8 +99,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ dynamicExecutionLTV, triggers, triggerData }) => {
       const currentPartialTakeProfit =
-        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`]
-          .morphoBluePartialTakeProfit
+        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].partialTakeProfit
       if (currentPartialTakeProfit) {
         const currentPartialTakeProfitTarget =
           safeParseBigInt(currentPartialTakeProfit.decodedParams.targetLtv) ?? 0n
@@ -120,7 +119,7 @@ const upsertErrorsValidation = paramsSchema
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action, triggerData }) => {
     if (action === SupportedActions.Remove) {
-      return triggers.flags[triggerData.poolId].isMorphoBlueStopLossEnabled
+      return triggers.flags[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].isStopLossEnabled
     }
     return true
   },
@@ -147,7 +146,7 @@ const warningsValidation = paramsSchema
   .refine(
     ({ dynamicExecutionLTV, triggers, triggerData }) => {
       const autoSell =
-        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].morphoBlueBasicSell
+        triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].basicSell
       if (autoSell) {
         const executionLTV = safeParseBigInt(autoSell.decodedParams.executionLtv) ?? 0n
         return dynamicExecutionLTV > executionLTV

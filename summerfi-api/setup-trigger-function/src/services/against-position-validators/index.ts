@@ -3,6 +3,7 @@ export * from './aave-auto-sell-validator'
 export * from './aave-partial-take-profit-validator'
 export * from './dma-aave-stop-loss-validator'
 export * from './dma-aave-trailing-stop-loss-validator'
+
 export * from './dma-spark-stop-loss-validator'
 export * from './dma-spark-trailing-stop-loss-validator'
 export * from './spark-auto-buy-validator'
