@@ -11,6 +11,10 @@ export interface Addresses {
     SparkDataPoolProvider: Address
     SparkOracle: Address
   }
+  MorphoBlue: {
+    MorphoBlue: Address
+    AdaptiveCurveIrm: Address
+  }
 }
 
 export function getAddresses(chainId: ChainId): Addresses {
@@ -26,6 +30,10 @@ export function getAddresses(chainId: ChainId): Addresses {
     Spark: {
       SparkDataPoolProvider: addresses['spark'].PoolDataProvider as Address,
       SparkOracle: addresses['spark'].Oracle as Address,
+    },
+    MorphoBlue: {
+      MorphoBlue: addresses['morphoblue']['MorphoBlue'] as Address,
+      AdaptiveCurveIrm: addresses['morphoblue']['AdaptiveCurveIrm'] as Address,
     },
   }
 }

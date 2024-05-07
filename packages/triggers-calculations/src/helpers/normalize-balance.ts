@@ -5,7 +5,11 @@ export function normalizeBalance(token: TokenBalance, targetDecimals: number): b
 }
 
 export function normalizeAmount(amount: bigint, fromDecimals: number, toDecimals: number): bigint {
-  return amount * 10n ** BigInt(toDecimals - fromDecimals)
+  const exponent = BigInt(toDecimals - fromDecimals)
+  if (exponent < 0) {
+    return amount / 10n ** -exponent
+  }
+  return amount * 10n ** exponent
 }
 
 export function getTheLeastCommonMultiple(...values: number[]): number {

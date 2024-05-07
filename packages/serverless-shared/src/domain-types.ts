@@ -1,4 +1,5 @@
 export type Address = `0x${string}`
+export type PoolId = `0x${string}`
 
 export enum Network {
   MAINNET = 'mainnet',
@@ -51,7 +52,9 @@ export enum ProtocolId {
   AAVE3 = 'aave3',
   SPARK = 'spark',
   AJNA = 'ajna',
-  MORPHO_BLUE = 'morpho-blue',
+  MORPHO_BLUE = 'morphoblue',
+  /** @deprecated Please use ProtocolId.MORPHO_BLUE */
+  MORPHO_BLUE_DEPRECATED = 'morpho-blue',
 }
 
 export const isProtocolId = (protocolId: unknown): protocolId is ProtocolId => {

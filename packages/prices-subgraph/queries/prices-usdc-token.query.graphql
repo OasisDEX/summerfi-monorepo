@@ -1,0 +1,36 @@
+query PricesUsdcToken($token: Bytes!) {
+  usdcPrice: prices(
+    where: { token_: { symbol: "USDC" } }
+    orderBy: timestamp
+    orderDirection: desc
+    first: 1
+  ) {
+    price
+    oracle {
+      address
+      token {
+        symbol
+        id
+        address
+      }
+    }
+    oracleType
+  }
+  tokenInUSDC: derivedPrices(
+    where: { token_: { address: $token }, denomination_: { symbol: "USDC" } }
+    orderBy: derivedPriceTimestamp
+    orderDirection: desc
+    first: 1
+  ) {
+    tokenPair {
+      token {
+        symbol
+      }
+      denomination {
+        symbol
+      }
+    }
+    derivedPrice
+    oracleType
+  }
+}

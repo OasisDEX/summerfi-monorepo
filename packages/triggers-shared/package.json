@@ -10,7 +10,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@oasisdex/addresses": "0.1.16-dma-v2-workers.11",
+    "@oasisdex/addresses": "0.1.20-automation.0",
     "@summerfi/serverless-shared": "workspace:*",
     "zod": "^3.22.4"
   },
