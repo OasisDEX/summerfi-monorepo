@@ -21,15 +21,22 @@ export const encodeMorphoBlueStopLoss = (
   currentTrigger: CurrentTriggerLike | undefined,
 ): TriggerTransactions & EncodedTriggers => {
   const abiParameters = parseAbiParameters(
+    // CommonTriggerData
     'address positionAddress, ' +
       'uint16 triggerType, ' +
       'uint256 maxCoverage, ' +
       'address debtToken, ' +
       'address collateralToken, ' +
       'bytes32 operationName, ' +
-      'uint256 executionLtv',
+      // Trigger specific data
+      'bytes32 poolId, ' +
+      'uint8 quoteDecimals, ' +
+      'uint8 collateralDecimals, ' +
+      'uint256 executionLtv' +
+      'bool closeToCollateral',
   )
 
+  /** @todo UPDATE OPERATION NAMES FOR MB */
   const operationName =
     triggerData.type == BigInt(TriggerType.DmaMorphoBlueStopLossV2)
       ? OPERATION_NAMES.morphoblue.CLOSE_POSITION
@@ -44,13 +51,19 @@ export const encodeMorphoBlueStopLoss = (
   const maxCoverage = getMaxCoverage(position)
 
   const encodedTriggerData = encodeAbiParameters(abiParameters, [
+    // CommonTriggerData
     position.address,
     triggerData.type,
     maxCoverage,
     position.debt.token.address,
     position.collateral.token.address,
     operationNameInBytes,
+    // Trigger specific data
+    triggerData.poolId,
+    position.debt.token.decimals,
+    position.collateral.token.decimals,
     triggerData.executionLTV,
+    triggerData.withdrawToken === position.collateral.token.address,
   ])
 
   const encodedTrigger = encodeFunctionData({

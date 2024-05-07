@@ -38,6 +38,7 @@ export const encodeMorphoBlueAutoBuy = (
       'uint32 maxBaseFeeInGwei',
   )
 
+  /** @todo UPDATE OPERATION NAMES FOR MB */
   const operationName = OPERATION_NAMES.morphoblue.ADJUST_RISK_UP
   const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
 

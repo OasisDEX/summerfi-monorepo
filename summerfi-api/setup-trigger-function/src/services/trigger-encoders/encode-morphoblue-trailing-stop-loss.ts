@@ -22,12 +22,17 @@ export const encodeMorphoBlueTrailingStopLoss = (
   currentTrigger: CurrentTriggerLike | undefined,
 ): TriggerTransactions & EncodedTriggers => {
   const abiParameters = parseAbiParameters(
+    // CommonTriggerData
     'address positionAddress, ' +
       'uint16 triggerType, ' +
       'uint256 maxCoverage, ' +
       'address debtToken, ' +
       'address collateralToken, ' +
       'bytes32 operationName, ' +
+      // Trigger specific data
+      'bytes32 poolId, ' +
+      'uint8 quoteDecimals, ' +
+      'uint8 collateralDecimals, ' +
       'address collateralOracle, ' +
       'uint80 collateralAddedRoundId, ' +
       'address debtOracle, ' +
@@ -36,6 +41,7 @@ export const encodeMorphoBlueTrailingStopLoss = (
       'bool closeToCollateral',
   )
 
+  /** @todo UPDATE OPERATION NAMES FOR MB */
   const operationName =
     triggerData.token === position.collateral.token.address
       ? OPERATION_NAMES.morphoblue.CLOSE_POSITION
@@ -46,12 +52,17 @@ export const encodeMorphoBlueTrailingStopLoss = (
   const maxCoverage = getMaxCoverage(position)
 
   const encodedTriggerData = encodeAbiParameters(abiParameters, [
+    // CommonTriggerData
     position.address,
     triggerData.type,
     maxCoverage,
     position.debt.token.address,
     position.collateral.token.address,
     operationNameInBytes,
+    // Trigger specific data
+    triggerData.poolId,
+    position.debt.token.decimals,
+    position.collateral.token.decimals,
     latestPrice.token.oraclesToken[0].address ?? '0x0',
     latestPrice.tokenRoundId,
     latestPrice.denomination.oraclesToken[0].address ?? '0x0',
