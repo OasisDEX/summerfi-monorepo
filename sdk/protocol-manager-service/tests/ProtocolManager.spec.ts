@@ -10,11 +10,7 @@ import { AddressType, ChainInfo } from '@summerfi/sdk-common/common'
 import { createPublicClient, http, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
 import { ProtocolManager } from '../src'
-import {
-  TokenService,
-  PriceService,
-  ProtocolPluginsRegistry,
-} from '@summerfi/protocol-plugins/implementation'
+import { ProtocolPluginsRegistry } from '@summerfi/protocol-plugins/implementation'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
 import { EmodeType, ISparkLendingPoolIdData } from '@summerfi/protocol-plugins'
 
@@ -161,8 +157,8 @@ async function createProtocolManagerContext(): Promise<IProtocolManagerContext> 
 
   return {
     provider,
-    tokenService: new TokenService(),
-    priceService: new PriceService(provider),
+    tokensManager: {} as any,
+    oracleManager: {} as any,
     deployments: {} as DeploymentIndex,
     swapManager: {} as any,
   }

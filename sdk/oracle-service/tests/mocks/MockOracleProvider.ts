@@ -1,13 +1,13 @@
 import { IOracleProvider } from '@summerfi/oracle-common'
 import {
   ChainId,
-  ChainInfo,
-  CurrencySymbol,
+  Denomination,
+  FiatCurrency,
   OracleProviderType,
   Price,
   SpotPriceInfo,
 } from '@summerfi/sdk-common'
-import { Token } from '@summerfi/sdk-common/common'
+import { IToken } from '@summerfi/sdk-common/common'
 
 export class MockOracleProvider implements IOracleProvider {
   type: OracleProviderType = OracleProviderType.OneInch
@@ -17,16 +17,15 @@ export class MockOracleProvider implements IOracleProvider {
   }
 
   async getSpotPrice(params: {
-    chainInfo: ChainInfo
-    baseToken: Token
-    quoteToken?: CurrencySymbol | Token
+    baseToken: IToken
+    quoteToken?: Denomination
   }): Promise<SpotPriceInfo> {
     return {
       provider: this.type,
       token: params.baseToken,
       price: Price.createFrom({
-        baseToken: params.baseToken,
-        quoteToken: CurrencySymbol.USD,
+        base: params.baseToken,
+        quote: FiatCurrency.USD,
         value: '1000',
       }),
     }

@@ -1,13 +1,13 @@
 import {
   CollateralInfo,
-  CurrencySymbol,
   DebtInfo,
+  Denomination,
+  FiatCurrency,
   Maybe,
   Percentage,
   Price,
   RiskRatio,
   RiskRatioType,
-  Token,
   TokenAmount,
 } from '@summerfi/sdk-common'
 import { BaseProtocolPlugin } from '../../../../implementation/BaseProtocolPlugin'
@@ -19,9 +19,10 @@ import {
 import { AllowedProtocolNames } from './AAVEv3LikeBuilderTypes'
 import { BigNumber } from 'bignumber.js'
 import { PRECISION_BI, UNCAPPED_SUPPLY } from '../../constants/AaveV3LikeConstants'
-import { CommonTokenSymbols } from '@summerfi/sdk-common/common'
+import { CommonTokenSymbols, IToken } from '@summerfi/sdk-common/common'
+import { ICollateralInfo } from '@summerfi/sdk-common/protocols'
 
-type AssetsList = Awaited<ReturnType<AAVEv3BaseProtocolPlugin['_getAssetsList']>>
+type AssetsList = Awaited<ReturnType<AAVEv3LikeBaseProtocolPlugin['_getAssetsList']>>
 type Asset = AssetsList extends (infer U)[] ? U : never
 
 /**
@@ -29,7 +30,7 @@ type Asset = AssetsList extends (infer U)[] ? U : never
  * @description Base class for AAVEv3 protocol plugins, it contains common functionality to
  * fetch data from forks of AAVEv3 protocol.
  */
-export abstract class AAVEv3BaseProtocolPlugin extends BaseProtocolPlugin {
+export abstract class AAVEv3LikeBaseProtocolPlugin extends BaseProtocolPlugin {
   abstract readonly protocolName: AllowedProtocolNames
   private _assetsList: Maybe<AssetsList> = undefined
 
@@ -90,7 +91,7 @@ export abstract class AAVEv3BaseProtocolPlugin extends BaseProtocolPlugin {
    * @param emode  The emode to fetch the asset for.
    * @returns  The asset for the given token and emode.
    */
-  protected async _getAssetFromToken(token: Token, emode: bigint): Promise<Asset> {
+  protected async _getAssetFromToken(token: IToken, emode: bigint): Promise<Asset> {
     if (!this._assetsList) {
       throw new Error('Assets list not initialized')
     }
@@ -113,10 +114,10 @@ export abstract class AAVEv3BaseProtocolPlugin extends BaseProtocolPlugin {
    * @returns The collateral info for the given token.
    */
   protected async _getCollateralInfo(params: {
-    token: Token
+    token: IToken
     emode: bigint
-    poolBaseCurrencyToken: Token | CurrencySymbol
-  }): Promise<Maybe<CollateralInfo>> {
+    poolBaseCurrencyToken: Denomination
+  }): Promise<Maybe<ICollateralInfo>> {
     const { token, emode, poolBaseCurrencyToken } = params
 
     const asset = await this._getAssetFromToken(token, emode)
@@ -134,13 +135,13 @@ export abstract class AAVEv3BaseProtocolPlugin extends BaseProtocolPlugin {
       return CollateralInfo.createFrom({
         token: collateralToken,
         price: Price.createFrom({
-          baseToken: collateralToken,
-          quoteToken: poolBaseCurrencyToken,
+          base: collateralToken,
+          quote: poolBaseCurrencyToken,
           value: asset.price.toString(),
         }),
         priceUSD: Price.createFrom({
-          baseToken: collateralToken,
-          quoteToken: CurrencySymbol.USD,
+          base: collateralToken,
+          quote: FiatCurrency.USD,
           value: asset.price.toString(),
         }),
         liquidationThreshold: RiskRatio.createFrom({
@@ -178,9 +179,9 @@ export abstract class AAVEv3BaseProtocolPlugin extends BaseProtocolPlugin {
    * @returns The debt info for the given token.
    */
   protected async _getDebtInfo(
-    token: Token,
+    token: IToken,
     emode: bigint,
-    poolBaseCurrencyToken: CurrencySymbol | Token,
+    poolBaseCurrencyToken: Denomination,
   ): Promise<Maybe<DebtInfo>> {
     const asset = await this._getAssetFromToken(token, emode)
 
@@ -208,13 +209,13 @@ export abstract class AAVEv3BaseProtocolPlugin extends BaseProtocolPlugin {
         token: quoteToken,
         // TODO: If we further restricted pools we could have token pair prices
         price: Price.createFrom({
-          baseToken: quoteToken,
-          quoteToken: poolBaseCurrencyToken,
+          base: quoteToken,
+          quote: poolBaseCurrencyToken,
           value: new BigNumber(asset.price.toString()).toString(),
         }),
         priceUSD: Price.createFrom({
-          baseToken: quoteToken,
-          quoteToken: CurrencySymbol.USD,
+          base: quoteToken,
+          quote: FiatCurrency.USD,
           value: new BigNumber(asset.price.toString()).toString(),
         }),
         interestRate: Percentage.createFrom({ value: rate }),

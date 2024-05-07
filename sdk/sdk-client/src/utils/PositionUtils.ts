@@ -1,4 +1,4 @@
-import { Percentage, type Position, type TokenAmount } from '@summerfi/sdk-common/common'
+import { IPercentage, ITokenAmount, Percentage, type Position } from '@summerfi/sdk-common/common'
 import { BigNumber } from 'bignumber.js'
 
 export class PositionUtils {
@@ -8,11 +8,11 @@ export class PositionUtils {
     collateralPriceInUsd,
     debtPriceInUsd,
   }: {
-    collateralTokenAmount: TokenAmount
-    debtTokenAmount: TokenAmount
+    collateralTokenAmount: ITokenAmount
+    debtTokenAmount: ITokenAmount
     collateralPriceInUsd: string
     debtPriceInUsd: string
-  }): Percentage {
+  }): IPercentage {
     // Determine the Collateral Value:
     const collValue = new BigNumber(collateralTokenAmount.amount).times(collateralPriceInUsd)
     // Determine the Borrowed Value:

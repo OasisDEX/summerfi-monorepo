@@ -1,5 +1,5 @@
 export * from './AddressType'
-export * from './CurrencySymbol'
+export * from './FiatCurrency'
 export * from './TokenSymbol'
 export * from './ChainNames'
 export * from './PositionType'

@@ -8,7 +8,14 @@ import {
   getValueFromReference,
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
-import { Position, TokenAmount, Percentage, Token, isSameTokens } from '@summerfi/sdk-common/common'
+import {
+  Position,
+  TokenAmount,
+  Percentage,
+  IToken,
+  ITokenAmount,
+  IPercentage,
+} from '@summerfi/sdk-common/common'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
@@ -204,21 +211,20 @@ function getSimulationType(
  *    and we assume maximum slippage.
  */
 async function estimateSwapFromAmount(params: {
-  receiveAtLeast: TokenAmount
-  fromToken: Token
-  slippage: Percentage
+  receiveAtLeast: ITokenAmount
+  fromToken: IToken
+  slippage: IPercentage
   swapManager: ISwapManager
   oracleManager: IOracleManager
-}): Promise<TokenAmount> {
+}): Promise<ITokenAmount> {
   const { receiveAtLeast, slippage } = params
 
-  if (isSameTokens(receiveAtLeast.token, params.fromToken)) {
+  if (receiveAtLeast.token.equals(params.fromToken)) {
     return receiveAtLeast
   }
 
   const spotPrice = (
     await params.oracleManager.getSpotPrice({
-      chainInfo: receiveAtLeast.token.chainInfo,
       baseToken: receiveAtLeast.token,
       quoteToken: params.fromToken,
     })

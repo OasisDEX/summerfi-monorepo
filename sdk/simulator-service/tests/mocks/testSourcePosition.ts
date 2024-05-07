@@ -16,8 +16,8 @@ import { EmodeType } from '@summerfi/protocol-plugins'
 import { IMakerProtocolData } from 'node_modules/@summerfi/protocol-plugins/src/plugins/maker/interfaces/IMakerProtocol'
 import {
   CollateralInfo,
-  CurrencySymbol,
   DebtInfo,
+  FiatCurrency,
   Percentage,
   Price,
   RiskRatio,
@@ -116,13 +116,13 @@ export const testTargetLendingPoolInfo = SparkLendingPoolInfo.createFrom({
   collateral: CollateralInfo.createFrom({
     price: Price.createFrom({
       value: '100',
-      baseToken: testCollateral,
-      quoteToken: CurrencySymbol.USD,
+      base: testCollateral,
+      quote: FiatCurrency.USD,
     }),
     priceUSD: Price.createFrom({
       value: '200',
-      baseToken: testCollateral,
-      quoteToken: CurrencySymbol.USD,
+      base: testCollateral,
+      quote: FiatCurrency.USD,
     }),
     token: testCollateral,
     tokensLocked: TokenAmount.createFrom({ token: testCollateral, amount: '10000' }),
@@ -134,11 +134,11 @@ export const testTargetLendingPoolInfo = SparkLendingPoolInfo.createFrom({
     maxSupply: TokenAmount.createFrom({ token: testCollateral, amount: '10000000' }),
   }),
   debt: DebtInfo.createFrom({
-    price: Price.createFrom({ value: '300', baseToken: testDebt, quoteToken: CurrencySymbol.USD }),
+    price: Price.createFrom({ value: '300', base: testDebt, quote: FiatCurrency.USD }),
     priceUSD: Price.createFrom({
       value: '500',
-      baseToken: testDebt,
-      quoteToken: CurrencySymbol.USD,
+      base: testDebt,
+      quote: FiatCurrency.USD,
     }),
     token: testDebt,
     totalBorrowed: TokenAmount.createFrom({ token: testDebt, amount: '10000' }),

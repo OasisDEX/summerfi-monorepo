@@ -1,4 +1,4 @@
-import { Address, TokenAmount } from '@summerfi/sdk-common/common'
+import { IAddress, ITokenAmount } from '@summerfi/sdk-common/common'
 import { HexData } from '@summerfi/sdk-common/common/aliases'
 import type { SwapProviderType } from './Enums'
 
@@ -8,10 +8,10 @@ import type { SwapProviderType } from './Enums'
  */
 export type SwapData = {
   provider: SwapProviderType
-  fromTokenAmount: TokenAmount
-  toTokenAmount: TokenAmount
+  fromTokenAmount: ITokenAmount
+  toTokenAmount: ITokenAmount
   calldata: HexData
-  targetContract: Address
+  targetContract: IAddress
   value: string
   /* The gas price for the swap portion of the t/x only */
   gasPrice: string

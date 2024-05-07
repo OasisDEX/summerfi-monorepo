@@ -1,5 +1,4 @@
 import {
-  CurrencySymbol,
   ChainFamilyName,
   valuesOfChainFamilyMap,
   Maybe,
@@ -28,15 +27,16 @@ import { AaveV3StepBuilders } from '../builders'
 import { IAaveV3PositionIdData, isAaveV3PositionId } from '../interfaces/IAaveV3PositionId'
 import { AaveV3LendingPoolInfo } from './AaveV3LendingPoolInfo'
 import { aaveV3EmodeCategoryMap } from './EmodeCategoryMap'
-import { AAVEv3BaseProtocolPlugin } from '../../common/helpers/aaveV3Like/AAVEv3LikeBaseProtocolPlugin'
+import { AAVEv3LikeBaseProtocolPlugin } from '../../common/helpers/aaveV3Like/AAVEv3LikeBaseProtocolPlugin'
 import { AAVEv3LikeAbiInfo } from '../../common/helpers/aaveV3Like/AAVEv3LikeAbi'
+import { FiatCurrency } from '@summerfi/sdk-common'
 
 /**
  * @class AaveV3ProtocolPlugin
  * @description Aave V3 protocol plugin
  * @see BaseProtocolPlugin
  */
-export class AaveV3ProtocolPlugin extends AAVEv3BaseProtocolPlugin {
+export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin {
   readonly protocolName = ProtocolName.AAVEv3
   readonly supportedChains = valuesOfChainFamilyMap([
     ChainFamilyName.Ethereum,
@@ -99,13 +99,13 @@ export class AaveV3ProtocolPlugin extends AAVEv3BaseProtocolPlugin {
     const collateralInfo = await this._getCollateralInfo({
       token: aaveV3PoolId.collateralToken,
       emode: emode,
-      poolBaseCurrencyToken: CurrencySymbol.USD,
+      poolBaseCurrencyToken: FiatCurrency.USD,
     })
     if (!collateralInfo) {
       throw new Error(`Collateral info not found for ${aaveV3PoolId.collateralToken}`)
     }
 
-    const debtInfo = await this._getDebtInfo(aaveV3PoolId.debtToken, emode, CurrencySymbol.USD)
+    const debtInfo = await this._getDebtInfo(aaveV3PoolId.debtToken, emode, FiatCurrency.USD)
     if (!debtInfo) {
       throw new Error(`Debt info not found for ${aaveV3PoolId.debtToken}`)
     }

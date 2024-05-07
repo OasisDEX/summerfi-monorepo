@@ -40,6 +40,8 @@ export const createSDKContext = (opts: ContextOptions): SDKAppContext => {
   const protocolsRegistry = createProtocolsPluginsRegistry({
     configProvider,
     deployments,
+    tokensManager,
+    oracleManager,
     swapManager,
   })
   const protocolManager = ProtocolManager.createWith({ pluginsRegistry: protocolsRegistry })

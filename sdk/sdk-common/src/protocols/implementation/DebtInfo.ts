@@ -2,6 +2,10 @@ import { Percentage } from '../../common/implementation/Percentage'
 import { Price } from '../../common/implementation/Price'
 import { Token } from '../../common/implementation/Token'
 import { TokenAmount } from '../../common/implementation/TokenAmount'
+import { IPercentage } from '../../common/interfaces/IPercentage'
+import { IPrice } from '../../common/interfaces/IPrice'
+import { IToken } from '../../common/interfaces/IToken'
+import { ITokenAmount } from '../../common/interfaces/ITokenAmount'
 import { SerializationService } from '../../services/SerializationService'
 import { IDebtInfo, IDebtInfoData } from '../interfaces/IDebtInfo'
 
@@ -12,15 +16,15 @@ import { IDebtInfo, IDebtInfoData } from '../interfaces/IDebtInfo'
  * For now this class can be re-used among all the protocols and there is no need for specialization
  */
 export class DebtInfo implements IDebtInfo {
-  readonly token: Token
-  readonly price: Price
-  readonly priceUSD: Price
-  readonly interestRate: Percentage
-  readonly totalBorrowed: TokenAmount
-  readonly debtCeiling: TokenAmount
-  readonly debtAvailable: TokenAmount
-  readonly dustLimit: TokenAmount
-  readonly originationFee: Percentage
+  readonly token: IToken
+  readonly price: IPrice
+  readonly priceUSD: IPrice
+  readonly interestRate: IPercentage
+  readonly totalBorrowed: ITokenAmount
+  readonly debtCeiling: ITokenAmount
+  readonly debtAvailable: ITokenAmount
+  readonly dustLimit: ITokenAmount
+  readonly originationFee: IPercentage
 
   protected constructor(params: IDebtInfoData) {
     this.token = Token.createFrom(params.token)

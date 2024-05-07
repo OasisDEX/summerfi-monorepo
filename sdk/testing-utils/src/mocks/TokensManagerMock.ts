@@ -1,9 +1,15 @@
-import { ITokenService } from '@summerfi/protocol-plugins-common'
-import { Address, ChainInfo, Token, TokenSymbol } from '@summerfi/sdk-common/common'
+import {
+  Address,
+  ChainInfo,
+  IAddress,
+  IChainInfo,
+  IToken,
+  Maybe,
+  Token,
+} from '@summerfi/sdk-common/common'
+import { ITokensManager } from '@summerfi/tokens-common'
 
-// TODO: Create a separate service and connect up to SDK router
-// TODO: Implement the TokenService to handle different chains
-export class TokenService implements ITokenService {
+export class TokensManagerMock implements ITokensManager {
   private tokens: Record<string, Token> = {
     DAI: Token.createFrom({
       chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
@@ -70,15 +76,30 @@ export class TokenService implements ITokenService {
     }),
   }
 
-  async getTokenByAddress(address: Address): Promise<Token> {
-    const token = Object.values(this.tokens).find((token) => token.address.equals(address))
+  async getTokenBySymbol(params: {
+    chainInfo: IChainInfo
+    symbol: string
+  }): Promise<Maybe<IToken>> {
+    return this.tokens[params.symbol]
+  }
+
+  async getTokenByAddress(params: {
+    chainInfo: IChainInfo
+    address: IAddress
+  }): Promise<Maybe<IToken>> {
+    const token = Object.values(this.tokens).find((token) => token.address.equals(params.address))
     if (!token) {
-      throw new Error(`Token not found for ${address}`)
+      throw new Error(`Token not found for address ${params.address}`)
     }
     return token
   }
 
-  async getTokenBySymbol(symbol: TokenSymbol): Promise<Token> {
-    return this.tokens[symbol]
+  async getTokenByName(params: { chainInfo: IChainInfo; name: string }): Promise<Maybe<IToken>> {
+    const token = Object.values(this.tokens).find((token) => token.name === params.name)
+    if (!token) {
+      throw new Error(`Token not found for name ${params.name}`)
+    }
+
+    return token
   }
 }
