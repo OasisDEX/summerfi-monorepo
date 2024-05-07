@@ -1,2 +1,5 @@
 export { SparkBorrowAction } from './SparkBorrowAction'
 export { SparkDepositAction } from './SparkDepositAction'
+export { SparkPaybackAction } from './SparkPaybackAction'
+export { SparkWithdrawAction } from './SparkWithdrawAction'
+export { SparkSetEmodeAction } from './SparkSetEmodeAction'
