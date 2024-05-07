@@ -14,7 +14,9 @@
       "@summerfi/protocol-plugins-common": [
         "node_modules/@summerfi/protocol-plugins-common/src/index.ts"
       ],
-      "@summerfi/testing-utils": ["node_modules/@summerfi/testing-utils/src/index.ts"]
+      "@summerfi/testing-utils": ["node_modules/@summerfi/testing-utils/src/index.ts"],
+      "@summerfi/oracle-common": ["../oracle-common/src/index.ts"],
+      "@summerfi/tokens-common": ["../tokens-common/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts"],
