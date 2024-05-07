@@ -435,6 +435,7 @@ export const handler = async (
 
   const response: GetTriggersResponse = {
     triggers: {
+      /* deprecated start */
       aaveBasicBuy,
       aaveBasicSell,
       aavePartialTakeProfit,
@@ -451,37 +452,74 @@ export const handler = async (
       sparkStopLossToDebt,
       sparkStopLossToDebtDMA,
       sparkTrailingStopLossDMA,
+      /* deprecated end */
       [ProtocolId.AAVE3]: {
-        aaveStopLossToCollateral,
-        aaveStopLossToCollateralDMA,
-        aaveStopLossToDebt,
-        aaveStopLossToDebtDMA,
-        aaveBasicBuy,
-        aaveBasicSell,
-        aaveTrailingStopLossDMA,
-        aavePartialTakeProfit,
+        basicBuy: aaveBasicBuy,
+        basicSell: aaveBasicSell,
+        partialTakeProfit: aavePartialTakeProfit,
+        stopLossToCollateral: aaveStopLossToCollateral,
+        stopLossToCollateralDMA: aaveStopLossToCollateralDMA,
+        stopLossToDebt: aaveStopLossToDebt,
+        stopLossToDebtDMA: aaveStopLossToDebtDMA,
+        trailingStopLossDMA: aaveTrailingStopLossDMA,
       },
       [ProtocolId.SPARK]: {
-        sparkStopLossToCollateral,
-        sparkStopLossToCollateralDMA,
-        sparkStopLossToDebt,
-        sparkStopLossToDebtDMA,
-        sparkBasicSell,
-        sparkBasicBuy,
-        sparkTrailingStopLossDMA,
-        sparkPartialTakeProfit,
+        basicBuy: sparkBasicBuy,
+        basicSell: sparkBasicSell,
+        partialTakeProfit: sparkPartialTakeProfit,
+        stopLossToCollateral: sparkStopLossToCollateral,
+        stopLossToCollateralDMA: sparkStopLossToCollateralDMA,
+        stopLossToDebt: sparkStopLossToDebt,
+        stopLossToDebtDMA: sparkStopLossToDebtDMA,
+        trailingStopLossDMA: sparkTrailingStopLossDMA,
       },
       ...(params.poolId && {
         [`${ProtocolId.MORPHO_BLUE}-${params.poolId}`]: {
-          morphoBlueStopLoss,
-          morphoBlueBasicBuy,
-          morphoBlueBasicSell,
-          morphoBlueTrailingStopLoss,
-          morphoBluePartialTakeProfit,
+          basicBuy: morphoBlueBasicBuy,
+          basicSell: morphoBlueBasicSell,
+          partialTakeProfit: morphoBluePartialTakeProfit,
+          stopLoss: morphoBlueStopLoss,
+          trailingStopLoss: morphoBlueTrailingStopLoss,
         },
       }),
     },
     flags: {
+      [ProtocolId.AAVE3]: {
+        isStopLossEnabled: hasAnyDefined(
+          aaveStopLossToCollateral,
+          aaveStopLossToCollateralDMA,
+          aaveStopLossToDebt,
+          aaveStopLossToDebtDMA,
+          aaveTrailingStopLossDMA,
+        ),
+        isBasicBuyEnabled: hasAnyDefined(aaveBasicBuy),
+        isBasicSellEnabled: hasAnyDefined(aaveBasicSell),
+        isPartialTakeProfitEnabled: hasAnyDefined(aavePartialTakeProfit),
+        isTrailingStopLossEnabled: hasAnyDefined(aaveTrailingStopLossDMA),
+      },
+      [ProtocolId.SPARK]: {
+        isStopLossEnabled: hasAnyDefined(
+          sparkStopLossToCollateral,
+          sparkStopLossToCollateralDMA,
+          sparkStopLossToDebt,
+          sparkStopLossToDebtDMA,
+          sparkTrailingStopLossDMA,
+        ),
+        isBasicBuyEnabled: hasAnyDefined(sparkBasicBuy),
+        isBasicSellEnabled: hasAnyDefined(sparkBasicSell),
+        isPartialTakeProfitEnabled: hasAnyDefined(sparkPartialTakeProfit),
+        isTrailingStopLossEnabled: hasAnyDefined(sparkTrailingStopLossDMA),
+      },
+      ...(params.poolId && {
+        [`${ProtocolId.MORPHO_BLUE}-${params.poolId}`]: {
+          isStopLossEnabled: hasAnyDefined(morphoBlueStopLoss),
+          isBasicBuyEnabled: hasAnyDefined(morphoBlueBasicBuy),
+          isBasicSellEnabled: hasAnyDefined(morphoBlueBasicSell),
+          isPartialTakeProfitEnabled: hasAnyDefined(morphoBluePartialTakeProfit),
+          isTrailingStopLossEnabled: hasAnyDefined(morphoBlueTrailingStopLoss),
+        },
+      }),
+      /* deprecated start */
       isAaveStopLossEnabled: hasAnyDefined(
         aaveStopLossToCollateral,
         aaveStopLossToCollateralDMA,
@@ -489,6 +527,9 @@ export const handler = async (
         aaveStopLossToDebtDMA,
         aaveTrailingStopLossDMA,
       ),
+      isAaveBasicBuyEnabled: hasAnyDefined(aaveBasicBuy),
+      isAaveBasicSellEnabled: hasAnyDefined(aaveBasicSell),
+      isAavePartialTakeProfitEnabled: hasAnyDefined(aavePartialTakeProfit),
       isSparkStopLossEnabled: hasAnyDefined(
         sparkStopLossToCollateral,
         sparkStopLossToCollateralDMA,
@@ -496,20 +537,10 @@ export const handler = async (
         sparkStopLossToDebtDMA,
         sparkTrailingStopLossDMA,
       ),
-      isAaveBasicBuyEnabled: hasAnyDefined(aaveBasicBuy),
-      isAaveBasicSellEnabled: hasAnyDefined(aaveBasicSell),
       isSparkBasicBuyEnabled: hasAnyDefined(sparkBasicBuy),
       isSparkBasicSellEnabled: hasAnyDefined(sparkBasicSell),
-      isAavePartialTakeProfitEnabled: hasAnyDefined(aavePartialTakeProfit),
       isSparkPartialTakeProfitEnabled: hasAnyDefined(sparkPartialTakeProfit),
-      ...(params.poolId && {
-        [params.poolId]: {
-          isMorphoBlueBasicBuyEnabled: hasAnyDefined(morphoBlueBasicBuy),
-          isMorphoBlueBasicSellEnabled: hasAnyDefined(morphoBlueBasicSell),
-          isMorphoBlueStopLossEnabled: hasAnyDefined(morphoBlueStopLoss),
-          isMorphoBluePartialTakeProfitEnabled: hasAnyDefined(morphoBluePartialTakeProfit),
-        },
-      }),
+      /* deprecated end */
     },
     triggersCount: triggers.triggers.length,
     triggerGroup: {

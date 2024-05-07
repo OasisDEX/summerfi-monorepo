@@ -158,7 +158,7 @@ export const getSparkPartialTakeProfitServiceContainer: (
         debt: trigger.position.debt,
       })
 
-      const currentPartialTakeProfit = triggers.triggers[ProtocolId.SPARK].sparkPartialTakeProfit
+      const currentPartialTakeProfit = triggers.triggers[ProtocolId.SPARK].partialTakeProfit
       const currentTrigger: CurrentTriggerLike | undefined = currentPartialTakeProfit
         ? {
             triggerData: currentPartialTakeProfit.triggerData as `0x${string}`,

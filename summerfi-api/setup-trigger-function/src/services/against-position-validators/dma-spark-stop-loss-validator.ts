@@ -66,7 +66,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const currentAutoBuy = triggers.triggers[ProtocolId.SPARK].sparkBasicBuy
+      const currentAutoBuy = triggers.triggers[ProtocolId.SPARK].basicBuy
       if (currentAutoBuy) {
         const currentAutoBuyTarget = safeParseBigInt(currentAutoBuy.decodedParams.targetLtv) ?? 0n
         return triggerData.executionLTV > currentAutoBuyTarget
@@ -83,7 +83,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const currentPartialTakeProfit = triggers.triggers[ProtocolId.SPARK].sparkPartialTakeProfit
+      const currentPartialTakeProfit = triggers.triggers[ProtocolId.SPARK].partialTakeProfit
       if (currentPartialTakeProfit) {
         const currentPartialTakeProfitTarget =
           safeParseBigInt(currentPartialTakeProfit.decodedParams.targetLtv) ?? 0n
@@ -129,7 +129,7 @@ const warningsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoSell = triggers.triggers[ProtocolId.SPARK].sparkBasicSell
+      const autoSell = triggers.triggers[ProtocolId.SPARK].basicSell
       if (autoSell) {
         const executionLTV = safeParseBigInt(autoSell.decodedParams.executionLtv) ?? 0n
         return triggerData.executionLTV > executionLTV

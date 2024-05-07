@@ -99,7 +99,7 @@ export const getSparkAutoSellServiceContainer: (
         debt: trigger.position.debt,
       })
 
-      const currentAutoSell = triggers.triggers[ProtocolId.SPARK].sparkBasicSell
+      const currentAutoSell = triggers.triggers[ProtocolId.SPARK].basicSell
       const currentTrigger: CurrentTriggerLike | undefined = currentAutoSell
         ? {
             triggerData: currentAutoSell.triggerData as `0x${string}`,
