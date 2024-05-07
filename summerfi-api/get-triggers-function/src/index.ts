@@ -512,10 +512,10 @@ export const handler = async (
       },
       ...(params.poolId && {
         [`${ProtocolId.MORPHO_BLUE}-${params.poolId}`]: {
-          isMorphoBlueBasicBuyEnabled: hasAnyDefined(morphoBlueBasicBuy),
-          isMorphoBlueBasicSellEnabled: hasAnyDefined(morphoBlueBasicSell),
-          isMorphoBlueStopLossEnabled: hasAnyDefined(morphoBlueStopLoss),
-          isMorphoBluePartialTakeProfitEnabled: hasAnyDefined(morphoBluePartialTakeProfit),
+          isBasicBuyEnabled: hasAnyDefined(morphoBlueBasicBuy),
+          isBasicSellEnabled: hasAnyDefined(morphoBlueBasicSell),
+          isStopLossEnabled: hasAnyDefined(morphoBlueStopLoss),
+          isPartialTakeProfitEnabled: hasAnyDefined(morphoBluePartialTakeProfit),
         },
       }),
       /* deprecated start */
