@@ -2,21 +2,18 @@ import {
   type IPrice,
   type IPriceData,
   isPrice,
-  PriceMulDivReturnType,
-  PriceMulDivParamType,
+  PriceMulReturnType,
+  PriceMulParamType,
 } from '../interfaces/IPrice'
 import { isToken } from '../interfaces/IToken'
 import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
 import { Token } from './Token'
 import { Denomination } from '../aliases/Denomination'
-import { isFiatCurrency } from '../enums'
 import { isTokenAmount } from '../interfaces'
 import { isFiatCurrencyAmount } from '../interfaces/IFiatCurrencyAmount'
 import {
-  divideFiatCurrencyAmountByPrice,
   dividePriceByPrice,
-  divideTokenAmountByPrice,
   multiplyFiatCurrencyAmountByPrice,
   multiplyPriceByPrice,
   multiplyTokenAmountByPrice,
@@ -102,7 +99,7 @@ export class Price implements IPrice {
 
   /** @see IPrice.subtract */
   subtract(otherPrice: IPrice): IPrice {
-    this._validateSameBaseToken(otherPrice)
+    this._validateSameDenominations(otherPrice)
 
     return Price.createFrom({
       value: this.toBN().minus(otherPrice.toBN()).toString(),
@@ -112,10 +109,9 @@ export class Price implements IPrice {
   }
 
   /** @see IPrice.multiply */
-  multiply<
-    InputParams extends PriceMulDivParamType,
-    ReturnType = PriceMulDivReturnType<InputParams>,
-  >(multiplier: InputParams): ReturnType {
+  multiply<InputParams extends PriceMulParamType, ReturnType = PriceMulReturnType<InputParams>>(
+    multiplier: InputParams,
+  ): ReturnType {
     if (isPrice(multiplier)) {
       const result = multiplyPriceByPrice(this, multiplier)
       return Price.createFrom(result) as ReturnType
@@ -141,31 +137,26 @@ export class Price implements IPrice {
   }
 
   /** @see IPrice.divide */
-  divide<InputParams extends PriceMulDivParamType, ReturnType = PriceMulDivReturnType<InputParams>>(
-    divider: InputParams,
-  ): ReturnType {
+  divide(divider: string | number | IPrice): IPrice {
     if (isPrice(divider)) {
       const result = dividePriceByPrice(this, divider)
-      return Price.createFrom(result) as ReturnType
+      return Price.createFrom(result)
     }
 
-    if (!isTokenAmount(divider) && !isFiatCurrencyAmount(divider)) {
-      return new Price({
-        value: this.toBN().div(divider).toString(),
-        base: this.base,
-        quote: this.quote,
-      }) as ReturnType
-    }
+    return new Price({
+      value: this.toBN().div(divider).toString(),
+      base: this.base,
+      quote: this.quote,
+    })
+  }
 
-    const result = isTokenAmount(divider)
-      ? divideTokenAmountByPrice(divider, this)
-      : divideFiatCurrencyAmountByPrice(divider, this)
-
-    if (isTokenAmount(result)) {
-      return TokenAmount.createFrom(result) as ReturnType
-    } else {
-      return FiatCurrencyAmount.createFrom(result) as ReturnType
-    }
+  /** @see IPrice.invert */
+  invert(): IPrice {
+    return Price.createFrom({
+      value: new BigNumber(1).div(this.toBN()).toString(),
+      base: this.quote,
+      quote: this.base,
+    })
   }
 
   /** @see IPrice.toBN */
@@ -210,44 +201,6 @@ export class Price implements IPrice {
   private _validateSameDenominations(price: IPrice): void {
     this._validateSameBaseToken(price)
     this._validateSameQuoteToken(price)
-  }
-
-  /**
-   * @name _hasBaseSameToThisQuote
-   * @param price Price to compare against
-   * @returns true if the price base is the same as this price quote
-   */
-  private _hasBaseSameToThisQuote(price: IPrice): boolean {
-    if (isToken(this.quote)) {
-      if (isFiatCurrency(price.base) || !this.quote.equals(price.base)) {
-        return false
-      }
-    } else {
-      if (!isFiatCurrency(price.base) || this.quote !== price.base) {
-        return false
-      }
-    }
-
-    return true
-  }
-
-  /**
-   * @name _hasQuoteSameToThisBase
-   * @param price Price to compare against
-   * @returns true if the price quote is the same as this price base
-   */
-  private _hasQuoteSameToThisBase(price: IPrice): boolean {
-    if (isToken(this.base)) {
-      if (!isFiatCurrency(price.quote) && this.base.equals(price.quote)) {
-        return false
-      }
-    } else {
-      if (!isFiatCurrency(price.quote) || this.base !== price.quote) {
-        return false
-      }
-    }
-
-    return true
   }
 }
 

@@ -36,32 +36,6 @@ export function multiplyTokenAmountByPrice(
 }
 
 /**
- * Divide a token amount by a price
- * @param tokenAmount The token amount to divide
- * @param price The price to divide by
- * @returns The resulting token amount or currency amount depending on the price quote
- */
-export function divideTokenAmountByPrice(
-  tokenAmount: ITokenAmount,
-  price: IPrice,
-): ITokenAmountData | IFiatCurrencyAmountData {
-  _validateTokenDenomination(tokenAmount.token, price.quote)
-
-  const amount = new BigNumber(tokenAmount.amount).div(new BigNumber(price.value)).toString()
-  if (isToken(price.base)) {
-    return {
-      token: price.base,
-      amount: amount,
-    }
-  } else {
-    return {
-      fiat: price.base,
-      amount: amount,
-    }
-  }
-}
-
-/**
  * Multiply a fiat currency amount by a price
  * @param fiatCurrencyAmount The fiat currency amount to multiply
  * @param price The price to multiply by
@@ -85,33 +59,6 @@ export function multiplyFiatCurrencyAmountByPrice(
   } else {
     return {
       fiat: price.quote,
-      amount: amount,
-    }
-  }
-}
-
-/**
- * Divide a fiat currency amount by a price
- * @param fiatCurrencyAmount The fiat currency amount to divide
- * @param price The price to divide by
- * @returns The resulting fiat currency amount or token amount depending on the price quote
- */
-export function divideFiatCurrencyAmountByPrice(
-  fiatCurrencyAmount: IFiatCurrencyAmount,
-  price: IPrice,
-): IFiatCurrencyAmountData | ITokenAmountData {
-  _validateFiatDenomination(fiatCurrencyAmount.fiat, price.quote)
-
-  const amount = new BigNumber(fiatCurrencyAmount.amount).div(new BigNumber(price.value)).toString()
-
-  if (isToken(price.base)) {
-    return {
-      token: price.base,
-      amount: amount,
-    }
-  } else {
-    return {
-      fiat: price.base,
       amount: amount,
     }
   }
@@ -219,7 +166,7 @@ function _validateFiatDenomination(
       `The given denomination is a token and should be fiat currency: ${fiat} != ${denomination.symbol}`,
     )
   } else if (denomination !== fiat) {
-    throw new Error(`${denomination} must be the same as the fiat currency amount ${fiat}`)
+    throw new Error(`The denomination ${denomination} is different from the fiat currency ${fiat}`)
   }
 }
 
@@ -249,7 +196,7 @@ function _hasBaseSameToOtherQuote(price: IPrice, other: IPrice): boolean {
  */
 function _hasQuoteSameToOtherBase(price: IPrice, other: IPrice): boolean {
   if (isToken(price.base)) {
-    if (!isFiatCurrency(other.quote) && price.base.equals(other.quote)) {
+    if (isFiatCurrency(other.quote) || !price.base.equals(other.quote)) {
       return false
     }
   } else {

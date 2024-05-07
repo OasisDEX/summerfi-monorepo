@@ -10,8 +10,8 @@ import { z } from 'zod'
  *
  * This helps callers to know what to expect from the result of the operation
  */
-export type PriceMulDivParamType = string | number | IPrice | ITokenAmount | IFiatCurrencyAmount
-export type PriceMulDivReturnType<T> = T extends ITokenAmount
+export type PriceMulParamType = string | number | IPrice | ITokenAmount | IFiatCurrencyAmount
+export type PriceMulReturnType<T> = T extends ITokenAmount
   ? ITokenAmount | IFiatCurrencyAmount
   : T extends IFiatCurrencyAmount
     ? IFiatCurrencyAmount | ITokenAmount
@@ -111,25 +111,27 @@ export interface IPrice extends IPriceData, IPrintable {
    * @throws When it is a price, if the second price quote is not the same as this price base or
    *         if the second price base is not the same as this price quote it will throw an error
    */
-  multiply<
-    InputParams extends PriceMulDivParamType,
-    ReturnType = PriceMulDivReturnType<InputParams>,
-  >(
+  multiply<InputParams extends PriceMulParamType, ReturnType = PriceMulReturnType<InputParams>>(
     multiplier: InputParams,
   ): ReturnType
 
   /**
    * @name divide
    * @description Divides the price by another price or a constant
-   * @param divider The numeric string, number, price, token amount or fiat currency amount to divide by
+   * @param divider The numeric string, number or price to divide by
    * @returns The resulting price
    *
    * @throws If the second price base is not the same as this price base
    *         or if the second price quote is not the same as this price quote
    */
-  divide<InputParams extends PriceMulDivParamType, ReturnType = PriceMulDivReturnType<InputParams>>(
-    divider: InputParams,
-  ): ReturnType
+  divide(divider: string | number | IPrice): IPrice
+
+  /**
+   * @name invert
+   * @description Inverts the price
+   * @returns The inverted price
+   */
+  invert(): IPrice
 
   /**
    * @name toBN

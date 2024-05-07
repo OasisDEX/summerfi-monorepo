@@ -79,7 +79,7 @@ export class FiatCurrencyAmount implements IFiatCurrencyAmount {
     ReturnType = FiatCurrencyAmountMulDivReturnType<InputParams>,
   >(divisor: InputParams): ReturnType {
     if (isPrice(divisor)) {
-      return divisor.divide(this)
+      return divisor.invert().multiply(this)
     }
 
     const result = isPercentage(divisor)

@@ -8,6 +8,7 @@ import { z } from 'zod'
  */
 export enum FiatCurrency {
   USD = 'USD',
+  EUR = 'EUR',
 }
 
 /**
