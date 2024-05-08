@@ -5,6 +5,7 @@ import {
 } from '@summerfi/protocol-plugins/implementation'
 import { SparkProtocolPlugin } from '@summerfi/protocol-plugins/plugins/spark'
 import { MakerProtocolPlugin } from '@summerfi/protocol-plugins/plugins/maker'
+import { MorphoProtocolPlugin } from '@summerfi/protocol-plugins/plugins/morphoblue'
 
 import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
@@ -20,12 +21,21 @@ import { ConfigurationProvider } from '@summerfi/configuration-provider'
 import { ITokensManager } from '@summerfi/tokens-common'
 import { IOracleManager } from '@summerfi/oracle-common'
 
+/**
+ * Protocol plugins record
+ *
+ * Note: add here the plugins you want to use in the SDK
+ */
 const ProtocolPlugins: ProtocolPluginsRecordType = {
   [ProtocolName.Maker]: MakerProtocolPlugin,
   [ProtocolName.Spark]: SparkProtocolPlugin,
   [ProtocolName.AAVEv3]: AaveV3ProtocolPlugin,
+  [ProtocolName.Morpho]: MorphoProtocolPlugin,
 }
 
+/**
+ * RPC configuration for the RPC Gateway
+ */
 const rpcConfig: IRpcConfig = {
   skipCache: false,
   skipMulticall: false,
@@ -34,6 +44,15 @@ const rpcConfig: IRpcConfig = {
   source: 'borrow-prod',
 }
 
+/**
+ * Create the protocol plugins registry
+ * @param configProvider Configuration provider for environment variables
+ * @param deployments Deployment index for the known deployments and dependencies
+ * @param tokensManager Tokens manager for fetching known tokens
+ * @param oracleManager Oracle manager for fetching prices for tokens
+ * @param swapManager Swap manager for quoting swaps and getting calldata for performing swaps
+ * @returns
+ */
 export function createProtocolsPluginsRegistry(params: {
   configProvider: ConfigurationProvider
   deployments: DeploymentIndex

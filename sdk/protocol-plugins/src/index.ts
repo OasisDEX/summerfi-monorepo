@@ -1,5 +1,6 @@
 export * from './plugins/aave-v3'
 export * from './plugins/spark'
 export * from './plugins/maker'
+export * from './plugins/morphoblue'
 export * from './plugins/common'
 export * from './implementation'

@@ -943,6 +943,9 @@ importers:
 
   sdk/protocol-plugins:
     dependencies:
+      '@summerfi/abis':
+        specifier: workspace:*
+        version: link:../../packages/abis
       '@summerfi/deployment-types':
         specifier: workspace:*
         version: link:../../packages/deployment-types
