@@ -16,7 +16,7 @@ import {
 } from '@summerfi/triggers-shared'
 import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
 import { z } from 'zod'
-import { chainIdSchema, safeParseBigInt } from '@summerfi/serverless-shared'
+import { ProtocolId, chainIdSchema, safeParseBigInt } from '@summerfi/serverless-shared'
 
 const paramsSchema = z.object({
   position: positionSchema,
@@ -90,7 +90,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggers, triggerData }) => {
-      const autoSellTrigger = triggers.triggers.aaveBasicSell
+      const autoSellTrigger = triggers.triggers[ProtocolId.AAVE3].basicSell
       if (!autoSellTrigger) {
         return true
       }
@@ -110,7 +110,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Add) {
-        return triggers.triggers.aaveBasicBuy === undefined
+        return triggers.triggers[ProtocolId.AAVE3].basicBuy === undefined
       }
       return true
     },
@@ -123,7 +123,8 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggers, action }) => {
-      if (action === SupportedActions.Update) return triggers.triggers.aaveBasicBuy !== undefined
+      if (action === SupportedActions.Update)
+        return triggers.triggers[ProtocolId.AAVE3].basicBuy !== undefined
       return true
     },
     {
@@ -150,7 +151,7 @@ const upsertErrorsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const partialTakeProfit = triggers.triggers.aavePartialTakeProfit
+      const partialTakeProfit = triggers.triggers[ProtocolId.AAVE3].partialTakeProfit
       if (!partialTakeProfit) {
         return true
       }
@@ -173,7 +174,8 @@ const upsertErrorsValidation = paramsSchema
 
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action }) => {
-    if (action === SupportedActions.Remove) return triggers.triggers.aaveBasicBuy !== undefined
+    if (action === SupportedActions.Remove)
+      return triggers.triggers[ProtocolId.AAVE3].basicBuy !== undefined
     return true
   },
   {
@@ -198,7 +200,7 @@ const warningsValidation = paramsSchema
   )
   .refine(
     ({ triggerData, triggers }) => {
-      const autoSellTrigger = triggers.triggers.aaveBasicSell
+      const autoSellTrigger = triggers.triggers[ProtocolId.AAVE3].basicSell
       if (!autoSellTrigger) {
         return true
       }

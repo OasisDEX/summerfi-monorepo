@@ -55,6 +55,9 @@
     },
     {
       "path": "../defi-llama-client/tsconfig.json"
+    },
+    {
+      "path": "../rays-db/tsconfig.build.json"
     }
   ]
 }

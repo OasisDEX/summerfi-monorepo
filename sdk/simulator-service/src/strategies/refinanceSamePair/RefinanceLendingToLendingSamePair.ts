@@ -62,11 +62,11 @@ export async function refinanceLendingToLendingSamePair(
         position: position,
       },
     }))
-    .next(async (ctx) => ({
+    .next(async () => ({
       name: 'DepositBorrowToTarget',
       type: SimulationSteps.DepositBorrow,
       inputs: {
-        depositAmount: ctx.getReference(['PaybackWithdrawFromSource', 'withdrawAmount']),
+        depositAmount: position.collateralAmount,
         borrowAmount: position.debtAmount, // TODO figure the debt amount
         position: newEmptyPositionFromPool(
           targetPool,

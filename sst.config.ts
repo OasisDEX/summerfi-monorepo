@@ -1,7 +1,7 @@
 import { SSTConfig } from 'sst'
 import { API } from './stacks/summer-stack'
 import { ExternalAPI } from './stacks/partners-stack'
-import { $, echo } from 'zx'
+import { $, chalk, echo } from 'zx'
 
 const availableStage = ['dev', 'feature', 'staging', 'production']
 
@@ -46,6 +46,37 @@ const getCommitsToFetch = async (currentBranch: string): Promise<number | null> 
   const { stdout: commitsToFetch } =
     await $`git rev-list ${currentBranch}..origin/${currentBranch} --count`
   return Number(commitsToFetch.trim())
+}
+
+const checkIfDockerIsRunning = async () => {
+  try {
+    await $`docker version > /dev/null 2>&1`
+  } catch (error) {
+    return false
+  }
+  return true
+}
+
+const checkIfDockerComposeIsRunning = async () => {
+  try {
+    const { stdout } =
+      await $`docker compose --file ./stacks/local-env/docker-compose.yaml  ps --services --filter "status=running"`
+    const services = (stdout ?? '').trim().split('\n').filter(Boolean)
+    return services.length > 0
+  } catch (error) {
+    return false
+  }
+}
+
+const runDockerCompose = async () => {
+  try {
+    await $`docker compose --file ./stacks/local-env/docker-compose.yaml up -d`
+  } catch (error) {
+    echo(`${chalk.bgRed('Failed to start docker-compose services' + error.message)}`)
+    return false
+  }
+
+  return true
 }
 
 export const sstConfig: SSTConfig = {
@@ -111,6 +142,24 @@ export const sstConfig: SSTConfig = {
     }
 
     const stage = _input.stage ?? `dev-${process.env.SST_USER}`
+
+    if (stage.startsWith('dev-')) {
+      const isDockerRunning = await checkIfDockerIsRunning()
+      if (!isDockerRunning) {
+        echo`${chalk.bgYellow('Docker is not running. ')}`
+        echo`${chalk.bgYellow('Docker is required for some resources to work properly.')}`
+      } else {
+        echo`${chalk.green('Docker is running. ')}`
+        const isDockerComposeRunning = await checkIfDockerComposeIsRunning()
+        if (!isDockerComposeRunning) {
+          echo`${chalk.bgBlue('Local docker-compose is not running. Trying to start the services... ')}`
+          await runDockerCompose()
+        } else {
+          echo`${chalk.green('Docker Compose is running. ')}`
+        }
+      }
+    }
+
     return {
       name: `summerfi-stack`,
       region: `${process.env.AWS_REGION}`,
@@ -121,7 +170,10 @@ export const sstConfig: SSTConfig = {
   stacks(app) {
     if (app.stage !== 'production' && app.stage !== 'staging') {
       app.setDefaultRemovalPolicy('destroy')
+    } else {
+      app.setDefaultRemovalPolicy('retain')
     }
+    echo`\n`
     app.stack(API)
     app.stack(ExternalAPI)
   },

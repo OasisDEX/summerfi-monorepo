@@ -11,8 +11,8 @@ export const SwapActionBuilder: ActionBuilder<steps.SwapStep> = async (params): 
 
   const swapData = await swapManager.getSwapDataExactInput({
     chainInfo: params.user.chainInfo,
-    fromAmount: step.inputs.amountAfterFee,
-    toToken: step.inputs.toTokenAmount.token,
+    fromAmount: step.inputs.inputAmountAfterFee,
+    toToken: step.inputs.minimumReceivedAmount.token,
     recipient: Address.createFromEthereum({ value: swapContractInfo.address as HexData }),
     slippage: step.inputs.slippage,
   })
@@ -21,8 +21,8 @@ export const SwapActionBuilder: ActionBuilder<steps.SwapStep> = async (params): 
     step: step,
     action: new SwapAction(),
     arguments: {
-      fromAmount: step.inputs.fromTokenAmount,
-      toMinimumAmount: step.inputs.toTokenAmount,
+      fromAmount: step.inputs.inputAmount,
+      toMinimumAmount: step.inputs.minimumReceivedAmount,
       fee: step.inputs.summerFee,
       withData: swapData.calldata,
       collectFeeInFromToken: true,

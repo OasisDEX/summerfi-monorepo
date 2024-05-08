@@ -21,6 +21,9 @@ export async function getRedisInstance(
     username: config.username,
     password: config.password,
     database: config.database,
+    socket: {
+      tls: true,
+    },
   })
     .on('error', (err) => logger.error('Redis Client Error', err))
     .on('ready', () => logger.info('Redis Client Ready'))
