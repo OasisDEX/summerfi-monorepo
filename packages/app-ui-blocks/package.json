@@ -13,11 +13,11 @@
   ],
   "scripts": {
     "lint": "eslint *.ts*",
-    "build-watch": "tsc -w --p ./tsconfig.json & vite build -w",
-    "generate-scss-module-types": "typed-scss-modules -e default \"src/**/*.module.scss\"",
-    "generate-scss-module-types-watch": "typed-scss-modules -w -e default \"src/**/*.module.scss\"",
-    "web:dev": "pnpm clean & pnpm generate-scss-module-types-watch & tsc -w --p ./tsconfig.json & vite build -w",
-    "prebuild:web": "pnpm clean & pnpm generate-scss-module-types & tsc --p ./tsconfig.json & vite build",
+    "build-watch": "tsc -w --preserveWatchOutput --p ./tsconfig.json & vite build -w",
+    "generate-module-types": "typed-scss-modules -e default \"src/**/*.module.scss\"",
+    "generate-module-types-watch": "typed-scss-modules -w -e default \"src/**/*.module.scss\"",
+    "web:dev": "pnpm clean & pnpm generate-module-types-watch & pnpm build-watch",
+    "prebuild:web": "pnpm clean & pnpm generate-module-types & tsc --p ./tsconfig.json & vite build",
     "clean": "rm -rf dist"
   },
   "devDependencies": {
