@@ -44,7 +44,6 @@ export async function refinanceLendingToLendingNoDebt(
 
   const simulation = await simulator
     .next(async () => ({
-      name: 'PaybackWithdrawFromSource',
       type: SimulationSteps.PaybackWithdraw,
       inputs: {
         paybackAmount: zeroAmount,

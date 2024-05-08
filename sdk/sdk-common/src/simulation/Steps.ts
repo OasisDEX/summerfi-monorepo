@@ -9,9 +9,8 @@ import { ReferenceableField, ValueReference } from './ValueReference'
 import { IExternalPosition } from '../orders/interfaces/importing/IExternalPosition'
 import { Pool } from 'src/protocols'
 
-export interface Step<T extends SimulationSteps, I, O = undefined, N extends string = string> {
+export interface Step<T extends SimulationSteps, I, O = undefined> {
   type: T
-  name: N
   inputs: I
   outputs: O
   skip?: boolean

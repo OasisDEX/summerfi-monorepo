@@ -5,7 +5,7 @@ import type {
 } from '@summerfi/sdk-common/simulation'
 import type { Tail } from '../../interfaces/helperTypes'
 
-export function makeStrategy<T extends SimulationStrategy>(strategy: T): T {
+export function makeStrategy<T extends SimulationStrategy>(strategy: T): Readonly<T> {
   return strategy
 }
 

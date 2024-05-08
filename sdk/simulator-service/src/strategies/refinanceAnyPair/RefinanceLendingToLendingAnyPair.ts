@@ -51,7 +51,6 @@ export async function refinanceLendingToLendingAnyPair(
 
   const simulation = await simulator
     .next(async () => ({
-      name: 'Flashloan',
       type: SimulationSteps.Flashloan,
       inputs: {
         amount: flashloanAmount,
@@ -59,7 +58,6 @@ export async function refinanceLendingToLendingAnyPair(
       },
     }))
     .next(async () => ({
-      name: 'PaybackWithdrawFromSource',
       type: SimulationSteps.PaybackWithdraw,
       inputs: {
         paybackAmount: TokenAmount.createFrom({
@@ -68,11 +66,11 @@ export async function refinanceLendingToLendingAnyPair(
         }),
         withdrawAmount: position.collateralAmount,
         position: position,
+        withdrawTargetType: TokenTransferTargetType.PositionsManager,
       },
     }))
     .next(
       async () => ({
-        name: 'CollateralSwap',
         type: SimulationSteps.Swap,
         inputs: await getSwapStepData({
           chainInfo: position.pool.id.protocol.chainInfo,
@@ -85,13 +83,18 @@ export async function refinanceLendingToLendingAnyPair(
       }),
       isCollateralSwapSkipped,
     )
+    .next(async () => ({
+      type: SimulationSteps.OpenPosition,
+      inputs: {
+        pool: targetPool,
+      },
+    }))
     .next(async (ctx) => ({
-      name: 'DepositBorrowToTarget',
       type: SimulationSteps.DepositBorrow,
       inputs: {
         // refactor
         borrowAmount: isDebtSwapSkipped
-          ? ctx.getReference(['PaybackWithdrawFromSource', 'paybackAmount'])
+          ? ctx.getReference(['PaybackWithdrawFromSourcePosition', 'paybackAmount'])
           : await estimateSwapFromAmount({
               receiveAtLeast: flashloanAmount,
               fromToken: targetPool.id.debtToken,
@@ -101,26 +104,31 @@ export async function refinanceLendingToLendingAnyPair(
             }),
         depositAmount: isCollateralSwapSkipped
           ? position.collateralAmount
-          : ctx.getReference(['CollateralSwap', 'received']),
-        position: newEmptyPositionFromPool(targetPool),
+          : getValueFromReference(ctx.getReference(['CollateralSwap', 'received'])),
+        position: ctx.getReference(['OpenPosition', 'position']),
         borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
     }))
     .next(
-      async (ctx) => ({
-        name: 'DebtSwap',
+      async (ctx) => {
+
+        ctx.s
+        
+        const x = ctx.getReference(['DepositBorrowToTargetPosition', 'borrowAmount'])
+        const y = ctx.getReference(['PaybackWithdrawFromSourcePosition', 'paybackAmount'])
+        return ({
         type: SimulationSteps.Swap,
         inputs: await getSwapStepData({
           chainInfo: position.pool.id.protocol.chainInfo,
           fromAmount: getValueFromReference(
-            ctx.getReference(['DepositBorrowToTarget', 'borrowAmount']),
+            ctx.getReference(['DepositBorrowToTargetPosition', 'borrowAmount']),
           ),
           toToken: flashloanAmount.token,
           slippage: Percentage.createFrom({ value: args.slippage.value }),
           swapManager: dependencies.swapManager,
           oracleManager: dependencies.oracleManager,
         }),
-      }),
+      })},
       isDebtSwapSkipped,
     )
     .next(async () => ({
