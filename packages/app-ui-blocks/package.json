@@ -17,7 +17,7 @@
     "generate-module-types": "typed-scss-modules -e default \"src/**/*.module.scss\"",
     "generate-module-types-watch": "typed-scss-modules -w -e default \"src/**/*.module.scss\"",
     "web:dev": "pnpm clean & pnpm generate-module-types-watch & pnpm build-watch",
-    "prebuild:web": "pnpm clean & pnpm generate-module-types & tsc --p ./tsconfig.json & vite build",
+    "web:prebuild": "pnpm clean & pnpm generate-module-types & tsc --p ./tsconfig.json & vite build",
     "clean": "rm -rf dist"
   },
   "devDependencies": {

@@ -3,7 +3,8 @@
   "scripts": {
     "dev": "turbo run dev --concurrency=100",
     "web:dev": "turbo run web:dev",
-    "prebuild:web": "turbo run prebuild:web",
+    "web:build": "turbo run web:build",
+    "web:prebuild": "turbo run web:prebuild",
     "prebuild": "turbo run prebuild --cache-dir=.turbo",
     "build": "turbo run build --cache-dir=.turbo",
     "lint": "turbo run lint --cache-dir=.turbo",

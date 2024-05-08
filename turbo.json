@@ -53,8 +53,12 @@
       "cache": false,
       "persistent": true
     },
-    "prebuild:web": {
-      "dependsOn": ["^prebuild:web"],
+    "web:build": {
+      "dependsOn": ["^web:prebuild", "^web:build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist"]
+    },
+    "web:prebuild": {
+      "dependsOn": ["^web:prebuild"],
       "outputs": ["dist"]
     },
     "prebuild": {
