@@ -12,6 +12,7 @@ export default defineConfig({
   build: {
     copyPublicDir: false,
     lib: {
+      // eslint-disable-next-line no-undef
       entry: resolve(__dirname, 'src/index.ts'),
       formats: ['es'],
     },
