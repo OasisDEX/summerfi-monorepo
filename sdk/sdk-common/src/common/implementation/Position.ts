@@ -2,7 +2,6 @@ import { IPosition } from '../interfaces/IPosition'
 import { IPool } from '../../protocols/interfaces/IPool'
 import { SerializationService } from '../../services/SerializationService'
 import { PositionId } from './PositionId'
-import { RiskRatio } from './RiskRatio'
 import { TokenAmount } from './TokenAmount'
 import { PositionType } from '../enums/PositionType'
 
@@ -24,11 +23,6 @@ export class Position implements IPosition {
 
   static createFrom(params: IPosition): Position {
     return new Position(params)
-  }
-
-  get riskRatio(): RiskRatio {
-    // TODO: Implement risk ratio calculation
-    throw new Error('Not implemented')
   }
 }
 

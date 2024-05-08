@@ -90,7 +90,7 @@ describe('Step Builder Context', () => {
 
   const position = Position.createFrom({
     type: PositionType.Multiply,
-    positionId: PositionId.createFrom({ id: 'someposition' }),
+    positionId: { id: 'someposition' },
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
     pool: pool,

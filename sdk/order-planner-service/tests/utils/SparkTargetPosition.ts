@@ -1,5 +1,5 @@
 import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
-import { SparkPoolId } from '@summerfi/protocol-plugins/plugins/spark'
+import { SparkPoolId, SparkPositionId } from '@summerfi/protocol-plugins/plugins/spark'
 import {
   Address,
   ChainFamilyMap,
@@ -59,7 +59,7 @@ export function getSparkPosition(): Position {
 
   const position = Position.createFrom({
     type: PositionType.Multiply,
-    positionId: PositionId.createFrom({ id: 'sparkPosition' }),
+    positionId: SparkPositionId.createFrom({ id: 'sparkPosition' }),
     debtAmount,
     collateralAmount,
     pool,

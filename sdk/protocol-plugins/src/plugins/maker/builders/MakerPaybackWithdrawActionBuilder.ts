@@ -5,7 +5,7 @@ import { MakerWithdrawAction } from '../actions/MakerWithdrawAction'
 import { Address, AddressValue } from '@summerfi/sdk-common/common'
 import { ActionBuilder } from '@summerfi/protocol-plugins-common'
 import { MakerIlkToJoinMap } from '../types/MakerIlkToJoinMap'
-import { isMakerPoolId } from '../types/MakerPoolId'
+import { isMakerPoolId } from '../interfaces/IMakerPoolId'
 export const MakerPaybackWithdrawActionList: ActionNames[] = ['MakerPayback', 'MakerWithdraw']
 
 export const MakerPaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWithdrawStep> = async (
@@ -46,7 +46,7 @@ export const MakerPaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWithd
     step: step,
     action: new MakerWithdrawAction(),
     arguments: {
-      pool: step.inputs.position.pool,
+      position: step.inputs.position,
       positionsManager: positionsManager,
       amount: step.inputs.withdrawAmount,
       joinAddress: joinAddress,

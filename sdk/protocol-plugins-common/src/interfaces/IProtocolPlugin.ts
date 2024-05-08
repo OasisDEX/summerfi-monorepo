@@ -1,7 +1,6 @@
-import { ChainInfo, IPosition, Maybe } from '@summerfi/sdk-common/common'
+import { ChainInfo, IPosition, IPositionId, Maybe } from '@summerfi/sdk-common/common'
 import { IPoolId, IPool, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { type IProtocolPluginContext } from './IProtocolPluginContext'
-import { IPositionId } from './IPositionId'
 import { steps } from '@summerfi/sdk-common/simulation'
 import { ActionBuilder, ActionBuildersMap } from '../types/StepBuilderTypes'
 import { IUser } from '@summerfi/sdk-common/user'

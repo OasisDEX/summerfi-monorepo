@@ -1,5 +1,5 @@
-import { IProtocolPluginContext, IPositionId } from '@summerfi/protocol-plugins-common'
-import { ChainInfo } from '@summerfi/sdk-common/common'
+import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
+import { ChainInfo, IPositionId } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import assert from 'assert'
 import { SparkProtocolPlugin } from '../../src/plugins/spark'
@@ -96,7 +96,9 @@ describe('Spark Protocol Plugin', () => {
   })
 
   it('should throw a "Not implemented" error when calling getPosition', async () => {
-    const positionId = 'mockPositionId' as IPositionId
+    const positionId: IPositionId = {
+      id: 'mockPositionId',
+    }
     await expect(sparkProtocolPlugin.getPosition(positionId)).rejects.toThrow('Not implemented')
   })
 })

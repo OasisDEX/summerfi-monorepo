@@ -1,7 +1,6 @@
 import { IPoolId } from './IPoolId'
 import { PoolType } from '../types/PoolType'
 import { IProtocol } from './IProtocol'
-import { Address } from '../../common/implementation/Address'
 
 /**
  * @interface IPool
@@ -13,6 +12,14 @@ export interface IPool {
   type: PoolType
   poolId: IPoolId
   protocol: IProtocol
-  address?: Address
-  TVL?: number
+}
+
+export function isPool(maybePool: unknown): maybePool is IPool {
+  return (
+    typeof maybePool === 'object' &&
+    maybePool !== null &&
+    'type' in maybePool &&
+    'poolId' in maybePool &&
+    'protocol' in maybePool
+  )
 }

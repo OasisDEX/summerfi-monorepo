@@ -1,14 +1,16 @@
-import { ChainFamilyMap, IPosition, Maybe } from '@summerfi/sdk-common/common'
+import { ChainFamilyMap, IPosition, IPositionId, Maybe } from '@summerfi/sdk-common/common'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { StepBuilderContextMock } from '../../../testing-utils/src/mocks/StepBuilderContextMock'
 import {
   ActionBuilder,
   ActionBuildersMap,
-  IPositionId,
   IProtocolPlugin,
   IProtocolPluginContext,
 } from '@summerfi/protocol-plugins-common'
 import { IPool, IPoolId, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { IExternalPosition, IPositionsManager } from '@summerfi/sdk-common/orders'
+import { IUser } from '@summerfi/sdk-common/user'
+import { TransactionInfo } from '@summerfi/sdk-common'
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
@@ -58,6 +60,14 @@ export class ProtocolPluginMock implements IProtocolPlugin {
   getActionBuilder<T extends steps.Steps>(step: T): Maybe<ActionBuilder<T>> {
     return this.stepBuilders[step.type] as ActionBuilder<T>
   }
+
+  async getImportPositionTransaction(params: {
+    user: IUser
+    externalPosition: IExternalPosition
+    positionsManager: IPositionsManager
+  }): Promise<Maybe<TransactionInfo>> {
+    return undefined as unknown as TransactionInfo
+  }
 }
 
 export class EmptyProtocolPluginMock implements IProtocolPlugin {
@@ -82,6 +92,14 @@ export class EmptyProtocolPluginMock implements IProtocolPlugin {
 
   getActionBuilder<T extends steps.Steps>(step: T): Maybe<ActionBuilder<T>> {
     return this.stepBuilders[step.type] as ActionBuilder<T>
+  }
+
+  async getImportPositionTransaction(params: {
+    user: IUser
+    externalPosition: IExternalPosition
+    positionsManager: IPositionsManager
+  }): Promise<Maybe<TransactionInfo>> {
+    return undefined as unknown as TransactionInfo
   }
 }
 
@@ -110,5 +128,13 @@ export class NoCheckpointProtocolPluginMock implements IProtocolPlugin {
 
   getActionBuilder<T extends steps.Steps>(step: T): Maybe<ActionBuilder<T>> {
     return this.stepBuilders[step.type] as ActionBuilder<T>
+  }
+
+  async getImportPositionTransaction(params: {
+    user: IUser
+    externalPosition: IExternalPosition
+    positionsManager: IPositionsManager
+  }): Promise<Maybe<TransactionInfo>> {
+    return undefined as unknown as TransactionInfo
   }
 }

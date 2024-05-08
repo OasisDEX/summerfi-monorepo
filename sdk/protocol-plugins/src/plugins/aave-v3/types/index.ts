@@ -1,2 +1,2 @@
 export * from './AaveV3AddressAbiMap'
-export * from './AaveV3PoolId'
+export * from '../interfaces/IAaveV3PoolId'

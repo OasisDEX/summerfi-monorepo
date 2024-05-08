@@ -1,8 +1,8 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { Address, TokenAmount } from '@summerfi/sdk-common/common'
 import { IPositionsManager } from '@summerfi/sdk-common/orders'
-import { IPool } from '@summerfi/sdk-common/protocols'
-import { isMakerPoolId } from '../types/MakerPoolId'
+import { IPosition } from '@summerfi/sdk-common'
+import { isMakerPositionId } from '../interfaces'
 
 export class MakerWithdrawAction extends BaseAction {
   public readonly config = {
@@ -15,21 +15,21 @@ export class MakerWithdrawAction extends BaseAction {
 
   public encodeCall(
     params: {
-      pool: IPool
+      position: IPosition
       positionsManager: IPositionsManager
       amount: TokenAmount
       joinAddress: Address
     },
     paramsMapping?: InputSlotsMapping,
   ): ActionCall {
-    if (!isMakerPoolId(params.pool.poolId)) {
+    if (!isMakerPositionId(params.position.positionId)) {
       throw new Error('Pool ID is not a Maker one')
     }
 
     return this._encodeCall({
       arguments: [
         {
-          vaultId: params.pool.poolId.vaultId,
+          vaultId: params.position.positionId.vaultId,
           userAddress: params.positionsManager.address.value,
           joinAddr: params.joinAddress.value,
           amount: params.amount.toBaseUnit(),

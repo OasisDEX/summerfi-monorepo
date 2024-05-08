@@ -1,4 +1,3 @@
-export { type IPositionId } from './IPositionId'
 export { type IPriceService } from './IPriceService'
 export { type IProtocolPlugin } from './IProtocolPlugin'
 export { type IProtocolPluginContext } from './IProtocolPluginContext'

@@ -6,8 +6,8 @@ import {
   ProtocolName,
 } from '@summerfi/sdk-common/protocols'
 import { SDKManager } from '../../src/implementation/SDKManager'
-import { RPCClientType } from '../../src/rpc/SDKClient'
-import { MakerLendingPool } from '@summerfi/protocol-plugins/plugins/maker'
+import { RPCClientType, SparkPositionId } from '../../src/rpc/SDKClient'
+import { MakerLendingPool, MakerPositionId } from '@summerfi/protocol-plugins/plugins/maker'
 import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import {
   Address,
@@ -15,9 +15,7 @@ import {
   ChainInfo,
   Percentage,
   Position,
-  PositionId,
   PositionType,
-  RiskRatio,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
@@ -32,7 +30,7 @@ export default async function simulateRefinanceTest() {
       sourcePosition: params.sourcePosition,
       targetPosition: {
         type: params.sourcePosition.type,
-        positionId: PositionId.createFrom({ id: '0987654321' }),
+        positionId: SparkPositionId.createFrom({ id: '0987654321' }),
         debtAmount: params.targetPosition.debtAmount,
         collateralAmount: params.targetPosition.collateralAmount,
         pool: params.targetPosition.pool,
@@ -94,11 +92,7 @@ export default async function simulateRefinanceTest() {
     pool: pool,
     debtAmount: TokenAmount.createFrom({ token: DAI, amount: '56.78' }),
     collateralAmount: TokenAmount.createFrom({ token: WETH, amount: '105.98' }),
-    positionId: PositionId.createFrom({ id: '1234567890' }),
-    riskRatio: RiskRatio.createFrom({
-      ratio: Percentage.createFrom({ value: 0.5 }),
-      type: RiskRatio.type.LTV,
-    }),
+    positionId: MakerPositionId.createFrom({ id: '1234567890', vaultId: '34' }),
   }
 
   const targetPool = {

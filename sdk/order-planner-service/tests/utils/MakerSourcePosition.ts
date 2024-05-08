@@ -8,7 +8,7 @@ import {
   TokenAmount,
 } from '@summerfi/sdk-common/common'
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { ILKType, MakerPoolId } from '@summerfi/protocol-plugins/plugins/maker'
+import { ILKType, MakerPoolId, MakerPositionId } from '@summerfi/protocol-plugins/plugins/maker'
 import { PositionType } from '@summerfi/sdk-common/common'
 
 export function getMakerPosition(): Position {
@@ -48,7 +48,6 @@ export function getMakerPosition(): Position {
   const poolId = {
     protocol: protocol,
     ilkType: ILKType.ETH_A,
-    vaultId: '34',
   } as MakerPoolId
 
   const pool = {
@@ -59,7 +58,7 @@ export function getMakerPosition(): Position {
 
   const position = Position.createFrom({
     type: PositionType.Multiply,
-    positionId: PositionId.createFrom({ id: 'makerPosition' }),
+    positionId: MakerPositionId.createFrom({ id: 'makerPosition', vaultId: '34' }),
     debtAmount,
     collateralAmount,
     pool,

@@ -5,6 +5,7 @@
     "baseUrl": ".",
     "paths": {
       "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
+      "@summerfi/sdk-common": ["node_modules/@summerfi/sdk-common/src/index.ts"],
       "@summerfi/sdk-client": ["node_modules/@summerfi/sdk-client/src"],
       "@summerfi/protocol-manager-service": [
         "node_modules/@summerfi/protocol-manager-service/src/index.ts"
