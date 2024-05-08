@@ -1,5 +1,44 @@
 {
   "name": "@summerfi/app-ui-blocks",
   "version": "0.0.0",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/src/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "lint": "eslint *.ts*",
+    "build-watch": "tsc -w --p ./tsconfig.json & vite build -w",
+    "generate-scss-module-types": "typed-scss-modules -e default \"src/**/*.module.scss\"",
+    "generate-scss-module-types-watch": "typed-scss-modules -w -e default \"src/**/*.module.scss\"",
+    "web:dev": "pnpm clean & pnpm generate-scss-module-types-watch & tsc -w --p ./tsconfig.json & vite build -w",
+    "prebuild:web": "pnpm clean & pnpm generate-scss-module-types & tsc --p ./tsconfig.json & vite build",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "glob": "^10.3.12",
+    "sass": "^1.77.0",
+    "typed-scss-modules": "^8.0.1",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11",
+    "vite-plugin-dts": "^3.9.1",
+    "vite-plugin-lib-inject-css": "^2.0.1"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

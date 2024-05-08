@@ -53,6 +53,10 @@
       "cache": false,
       "persistent": true
     },
+    "prebuild:web": {
+      "dependsOn": ["^prebuild:web"],
+      "outputs": ["dist"]
+    },
     "prebuild": {
       "dependsOn": ["^prebuild"],
       "outputs": ["src/types/graphql/generated.ts", "src/generated"]

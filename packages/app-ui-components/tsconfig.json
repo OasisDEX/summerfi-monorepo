@@ -1,0 +1,8 @@
+{
+  "extends": "@summerfi/typescript-config/tsconfig.react-library.json",
+  "include": ["."],
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/cache-ts/.tsbuildinfo"
+  },
+  "exclude": ["dist", "build", "node_modules"]
+}
