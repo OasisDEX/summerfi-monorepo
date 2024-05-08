@@ -49,6 +49,10 @@
       "cache": false,
       "persistent": true
     },
+    "web:dev": {
+      "cache": false,
+      "persistent": true
+    },
     "prebuild": {
       "dependsOn": ["^prebuild"],
       "outputs": ["src/types/graphql/generated.ts", "src/generated"]
