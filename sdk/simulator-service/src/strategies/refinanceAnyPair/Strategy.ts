@@ -15,6 +15,10 @@ export const refinanceLendingToLendingAnyPairStrategy = makeStrategy([
     optional: true,
   },
   {
+    step: SimulationSteps.OpenPosition,
+    optional: false,
+  },
+  {
     step: SimulationSteps.DepositBorrow,
     optional: false,
   },
