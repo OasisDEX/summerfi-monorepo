@@ -24,6 +24,7 @@ export enum SimulationSteps {
   RepayFlashloan = 'RepayFlashloan',
   Import = 'Import',
   NewPositionEvent = 'NewPositionEvent',
+  OpenPosition = 'OpenPosition',
 }
 
 export enum FlashloanProvider {

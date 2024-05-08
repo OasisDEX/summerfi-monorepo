@@ -109,6 +109,8 @@ export interface NewPositionEventStep
 export interface ImportStep
   extends Step<SimulationSteps.Import, { externalPosition: IExternalPosition }> {}
 
+export interface OpenPosition extends Step<SimulationSteps.OpenPosition, { position: Position }> {}
+
 export type Steps =
   | FlashloanStep
   | PullTokenStep
@@ -119,3 +121,4 @@ export type Steps =
   | RepayFlashloanStep
   | NewPositionEventStep
   | ImportStep
+  | OpenPosition
