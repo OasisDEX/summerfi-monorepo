@@ -54,6 +54,10 @@
       "dependsOn": ["^prebuild"],
       "outputs": ["src/types/graphql/generated.ts", "src/generated"]
     },
+    "predev": {
+      "dependsOn": ["^predev"],
+      "outputs": ["dist/**"]
+    },
     "build": {
       "dependsOn": ["prebuild", "^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**", "artifacts/**", ".sst/**"]

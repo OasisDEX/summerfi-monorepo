@@ -7,8 +7,8 @@ export const ButtonExample = ({ children, text }: { children: React.ReactNode; t
       <button
         className={classnames(buttonExampleStyles.buttonExampleStyle, buttonExampleStyles.testets)}
       >
-        {children}
         {text}
+        {children}
       </button>
     </>
   )
