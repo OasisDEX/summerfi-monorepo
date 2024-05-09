@@ -1,8 +1,5 @@
 {
   "extends": "@summerfi/typescript-config/tsconfig.react-library.json",
   "include": ["vite.config.ts", "modules", "src"],
-  "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/cache-ts/.tsbuildinfo"
-  },
   "exclude": ["dist", "build", "node_modules"]
 }
