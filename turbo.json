@@ -50,6 +50,7 @@
       "persistent": true
     },
     "web:dev": {
+      "dependsOn": ["^web:prebuild"],
       "cache": false,
       "persistent": true
     },
