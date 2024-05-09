@@ -5,7 +5,8 @@
   "scripts": {
     "web:dev": "next dev",
     "web:build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "eslint . --ext .ts,.tsx"
   },
   "dependencies": {
     "@summerfi/app-ui": "workspace:*",
