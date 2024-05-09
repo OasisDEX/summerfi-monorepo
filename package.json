@@ -2,9 +2,6 @@
   "private": true,
   "scripts": {
     "dev": "turbo run dev --concurrency=100",
-    "web:dev": "turbo run web:dev --filter=@summerfi/app-*",
-    "web:build": "turbo run web:build --filter=@summerfi/app-*",
-    "web:prebuild": "turbo run web:prebuild --filter=@summerfi/app-*",
     "prebuild": "turbo run prebuild --cache-dir=.turbo",
     "build": "turbo run build --cache-dir=.turbo",
     "lint": "turbo run lint --cache-dir=.turbo",
