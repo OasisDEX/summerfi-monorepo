@@ -170,7 +170,6 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
     const collateralPriceUSD = await this.ctx.oracleManager.getSpotPrice({
       baseToken: collateralToken,
     })
-    console.log('collateralPriceUSD', collateralPriceUSD)
 
     return CollateralInfo.createFrom({
       token: collateralToken,
@@ -269,8 +268,6 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
   ): Promise<MorphoMarketInfo> {
     const morphoBlueProviderDef = this._getContractDef('MorphoBlue')
     const marketParamsId = this._getMarketParamsId(morphoLendingPoolId)
-
-    console.log('marketParamsId', marketParamsId)
 
     const [marketInfo] = await this.ctx.provider.multicall({
       contracts: [

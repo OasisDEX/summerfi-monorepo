@@ -1,4 +1,10 @@
-import { IPosition, IPositionData, ITokenAmount, PositionDataSchema } from '@summerfi/sdk-common'
+import {
+  IPosition,
+  IPositionData,
+  ITokenAmount,
+  PositionDataSchema,
+  PositionType,
+} from '@summerfi/sdk-common'
 import { z } from 'zod'
 import {
   IMakerLendingPool,
@@ -27,6 +33,7 @@ export interface IMakerPosition extends IPosition, IMakerPositionData {
   readonly pool: IMakerLendingPool
 
   // Re-declaring the properties with the correct types
+  readonly type: PositionType
   readonly debtAmount: ITokenAmount
   readonly collateralAmount: ITokenAmount
 }

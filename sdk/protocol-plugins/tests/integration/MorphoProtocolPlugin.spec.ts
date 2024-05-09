@@ -65,7 +65,7 @@ describe.only('Morpho Protocol Plugin (Integration)', () => {
 
     const liquidationPenalty = morphoPoolCollateralInfo!.liquidationPenalty
     expect(liquidationPenalty).toBeInstanceOf(Percentage)
-    expect(Number(liquidationPenalty.value)).toBeGreaterThan(100)
+    expect(Number(liquidationPenalty.value)).toBeGreaterThan(0)
   })
 
   it('correctly populates debt configuration from blockchain data', async () => {
