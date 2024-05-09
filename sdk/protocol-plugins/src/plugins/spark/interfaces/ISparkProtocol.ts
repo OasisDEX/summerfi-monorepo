@@ -1,5 +1,5 @@
 import { IChainInfo, IProtocol } from '@summerfi/sdk-common'
-import { IProtocolData, ProtocolName, ProtocolSchema } from '@summerfi/sdk-common/protocols'
+import { IProtocolData, ProtocolName, ProtocolDataSchema } from '@summerfi/sdk-common/protocols'
 import { z } from 'zod'
 
 /**
@@ -29,7 +29,7 @@ export interface ISparkProtocol extends ISparkProtocolData, IProtocol {
  * @description Zod schema for ISparkProtocol
  */
 export const SparkProtocolSchema = z.object({
-  ...ProtocolSchema.shape,
+  ...ProtocolDataSchema.shape,
   name: z.literal(ProtocolName.Spark),
 })
 

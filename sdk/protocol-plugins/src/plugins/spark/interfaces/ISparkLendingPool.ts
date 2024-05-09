@@ -1,4 +1,4 @@
-import { ILendingPoolData, LendingPoolSchema } from '@summerfi/sdk-common/protocols'
+import { ILendingPoolData, LendingPoolDataSchema } from '@summerfi/sdk-common/protocols'
 import {
   ISparkLendingPoolId,
   ISparkLendingPoolIdData,
@@ -38,7 +38,7 @@ export interface ISparkLendingPool extends ISparkLendingPoolData, ILendingPool {
  * @description Zod schema for ISparkLendingPool
  */
 export const SparkLendingPoolSchema = z.object({
-  ...LendingPoolSchema.shape,
+  ...LendingPoolDataSchema.shape,
   id: SparkLendingPoolIdSchema,
 })
 

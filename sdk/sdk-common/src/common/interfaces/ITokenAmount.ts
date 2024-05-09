@@ -1,7 +1,7 @@
 import { BigNumber } from 'bignumber.js'
 import { type IPercentage } from './IPercentage'
 import { IPrintable } from './IPrintable'
-import { type IToken, type ITokenData, TokenSchema } from './IToken'
+import { type IToken, TokenDataSchema } from './IToken'
 import { type IPrice } from './IPrice'
 import { type IFiatCurrencyAmount } from './IFiatCurrencyAmount'
 import { z } from 'zod'
@@ -19,28 +19,15 @@ export type TokenAmountMulDivReturnType<T> = T extends IPrice
     : never
 
 /**
- * @name ITokenAmountData
- * @description Represents an amount of a token
- *
- * The amount is represented as a string in floating point format without taking into consideration
- * the number of decimals of the token. This data type can be used for calculations with other types
- * like Price or Percentage
- */
-export interface ITokenAmountData {
-  /** Token for the amount */
-  readonly token: ITokenData
-  /** The amount in floating point format without taking into account the token decimals*/
-  readonly amount: string
-}
-
-/**
  * @name ITokenAmount
  * @description Interface for the implementors of the token amount
  *
  * This interface is used to add all the methods that the interface supports
  */
 export interface ITokenAmount extends ITokenAmountData, IPrintable {
+  /** Token this amount refers to */
   readonly token: IToken
+  /** Amount in floating point format without taking into account the token decimals */
   readonly amount: string
 
   /**
@@ -102,10 +89,15 @@ export interface ITokenAmount extends ITokenAmountData, IPrintable {
 /**
  * @description Zod schema for ITokenAmount
  */
-export const TokenAmountSchema = z.object({
-  token: TokenSchema,
+export const TokenAmountDataSchema = z.object({
+  token: TokenDataSchema,
   amount: z.string(),
 })
+
+/**
+ * Type definition for the TokenAmount data
+ */
+export type ITokenAmountData = Readonly<z.infer<typeof TokenAmountDataSchema>>
 
 /**
  * @description Type guard for ITokenAmount
@@ -113,11 +105,5 @@ export const TokenAmountSchema = z.object({
  * @returns true if the object is an ITokenAmount
  */
 export function isTokenAmount(maybeTokenAmount: unknown): maybeTokenAmount is ITokenAmountData {
-  return TokenAmountSchema.safeParse(maybeTokenAmount).success
+  return TokenAmountDataSchema.safeParse(maybeTokenAmount).success
 }
-
-/**
- * Checker to make sure that the schema is aligned with the interface
- */
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: ITokenAmountData = {} as z.infer<typeof TokenAmountSchema>

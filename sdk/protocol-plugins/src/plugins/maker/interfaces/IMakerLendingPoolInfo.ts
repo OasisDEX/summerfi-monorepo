@@ -3,7 +3,7 @@ import {
   IDebtInfo,
   ILendingPoolInfo,
   ILendingPoolInfoData,
-  LendingPoolInfoSchema,
+  LendingPoolInfoDataSchema,
 } from '@summerfi/sdk-common/protocols'
 import {
   IMakerLendingPoolId,
@@ -42,7 +42,7 @@ export interface IMakerLendingPoolInfo extends ILendingPoolInfo, IMakerLendingPo
  * @description Zod schema for IMakerLendingPool
  */
 export const MakerLendingPoolInfoSchema = z.object({
-  ...LendingPoolInfoSchema.shape,
+  ...LendingPoolInfoDataSchema.shape,
   id: MakerLendingPoolIdSchema,
 })
 

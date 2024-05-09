@@ -1,4 +1,4 @@
-import { IPercentage, IPercentageData, PercentageSchema } from './IPercentage'
+import { IPercentage, PercentageDataSchema } from './IPercentage'
 import { IPrintable } from './IPrintable'
 import { z } from 'zod'
 
@@ -16,42 +16,34 @@ export enum RiskRatioType {
 }
 
 /**
- * @name IRiskRatioData
- * @description Represents a risk ratio with a certain type and percentage value
- *
- * The type indicates how to interpret the percentage value
+ * @name IRiskRatio
+ * @description Interface for the implementors of the risk ratio
  */
-export interface IRiskRatioData {
+export interface IRiskRatio extends IRiskRatioData, IPrintable {
   /** The type of the risk ratio */
   readonly type: RiskRatioType
   /** The percentage value */
-  readonly ratio: IPercentageData
-}
-
-export interface IRiskRatio extends IRiskRatioData, IPrintable {
-  readonly type: RiskRatioType
   readonly ratio: IPercentage
 }
 
 /**
  * @description Zod schema for IRiskRatioData
  */
-export const RiskRatioSchema = z.object({
+export const RiskRatioDataSchema = z.object({
   type: z.nativeEnum(RiskRatioType),
-  ratio: PercentageSchema,
+  ratio: PercentageDataSchema,
 })
 
 /**
- * @description Type guard for IRiskRatioData
- * @param maybeRiskRatio
- * @returns true if the object is an IRiskRatioData
+ * Type for the data part of the IRiskRatio interface
  */
-export function isRiskRatio(maybeRiskRatio: unknown): maybeRiskRatio is IRiskRatioData {
-  return RiskRatioSchema.safeParse(maybeRiskRatio).success
-}
+export type IRiskRatioData = Readonly<z.infer<typeof RiskRatioDataSchema>>
 
 /**
- * Checker to make sure that the schema is aligned with the interface
+ * @description Type guard for IRiskRatio
+ * @param maybeRiskRatio
+ * @returns true if the object is an IRiskRatio
  */
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: IRiskRatioData = {} as z.infer<typeof RiskRatioSchema>
+export function isRiskRatio(maybeRiskRatio: unknown): maybeRiskRatio is IRiskRatioData {
+  return RiskRatioDataSchema.safeParse(maybeRiskRatio).success
+}

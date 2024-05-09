@@ -1,4 +1,4 @@
-import { IPositionId, IPositionIdData, PositionIdSchema } from '@summerfi/sdk-common/common'
+import { IPositionId, IPositionIdData, PositionIdDataSchema } from '@summerfi/sdk-common/common'
 import { z } from 'zod'
 
 /**
@@ -24,7 +24,7 @@ export interface IAaveV3PositionId extends IPositionId, IAaveV3PositionIdData {
  * @description Zod schema for IAaveV3PositionId
  */
 export const AaveV3PositionIdSchema = z.object({
-  ...PositionIdSchema.shape,
+  ...PositionIdDataSchema.shape,
 })
 
 /**

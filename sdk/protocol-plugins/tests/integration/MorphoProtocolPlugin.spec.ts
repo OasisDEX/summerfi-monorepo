@@ -3,6 +3,8 @@ import { Price, RiskRatio, TokenAmount, Percentage } from '@summerfi/sdk-common/
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 import { MorphoProtocolPlugin } from '../../src/plugins/morphoblue/implementation/MorphoProtocolPlugin'
 import { morphoPoolIdMock } from '../mocks/MorphoPoolIdMock'
+import { OracleManagerMock } from '@summerfi/testing-utils'
+import { FiatCurrency, FiatCurrencyAmount, OracleProviderType } from '@summerfi/sdk-common'
 
 describe.only('Morpho Protocol Plugin (Integration)', () => {
   let ctx: IProtocolPluginContext
@@ -16,6 +18,15 @@ describe.only('Morpho Protocol Plugin (Integration)', () => {
   })
 
   it('correctly populates collateral configuration from blockchain data', async () => {
+    ;(ctx.oracleManager as OracleManagerMock).setSpotPrice({
+      provider: OracleProviderType.OneInch,
+      token: morphoPoolIdMock.collateralToken,
+      price: Price.createFrom({
+        value: '10.5',
+        base: morphoPoolIdMock.collateralToken,
+        quote: FiatCurrency.USD,
+      }),
+    })
     const pool = await morphoProtocolPlugin.getLendingPool(morphoPoolIdMock)
     const morphoPoolInfo = await morphoProtocolPlugin.getLendingPoolInfo(pool.id)
 

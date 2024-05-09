@@ -1,8 +1,13 @@
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import { IMorphoLendingPoolIdData, MorphoProtocol } from '../../src'
+import {
+  IMorphoLendingPoolId,
+  IMorphoLendingPoolIdData,
+  MorphoLendingPoolId,
+  MorphoProtocol,
+} from '../../src'
 import { Address, ChainFamilyMap, Percentage, Token } from '@summerfi/sdk-common'
 
-export const morphoPoolIdMock: IMorphoLendingPoolIdData = {
+export const morphoPoolIdMock: IMorphoLendingPoolId = MorphoLendingPoolId.createFrom({
   protocol: MorphoProtocol.createFrom({
     name: ProtocolName.Morpho,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
@@ -24,4 +29,4 @@ export const morphoPoolIdMock: IMorphoLendingPoolIdData = {
   oracle: Address.createFromEthereum({ value: '0x2a01EB9496094dA03c4E364Def50f5aD1280AD72' }),
   irm: Address.createFromEthereum({ value: '0x870aC11D48B15DB9a138Cf899d20F13F79Ba00BC' }),
   lltv: Percentage.createFrom({ value: 94.5 }),
-}
+})

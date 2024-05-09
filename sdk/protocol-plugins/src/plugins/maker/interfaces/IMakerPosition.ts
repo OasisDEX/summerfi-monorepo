@@ -1,16 +1,18 @@
-import { IPosition, IPositionData, ITokenAmount, PositionSchema } from '@summerfi/sdk-common'
+import { IPosition, IPositionData, ITokenAmount, PositionDataSchema } from '@summerfi/sdk-common'
 import { z } from 'zod'
 import {
   IMakerLendingPool,
   IMakerLendingPoolData,
   MakerLendingPoolSchema,
 } from './IMakerLendingPool'
+import { IMakerPositionId, IMakerPositionIdData, MakerPositionIdSchema } from './IMakerPositionId'
 
 /**
  * @interface IMakerPositionData
  * @description Represents a Maker position
  */
 export interface IMakerPositionData extends IPositionData {
+  readonly id: IMakerPositionIdData
   readonly pool: IMakerLendingPoolData
 }
 
@@ -21,6 +23,7 @@ export interface IMakerPositionData extends IPositionData {
  * This interface is used to add all the methods that the interface supports
  */
 export interface IMakerPosition extends IPosition, IMakerPositionData {
+  readonly id: IMakerPositionId
   readonly pool: IMakerLendingPool
 
   // Re-declaring the properties with the correct types
@@ -32,7 +35,8 @@ export interface IMakerPosition extends IPosition, IMakerPositionData {
  * @description Zod schema for IMakerPositionId
  */
 export const MakerPositionSchema = z.object({
-  ...PositionSchema.shape,
+  ...PositionDataSchema.shape,
+  id: MakerPositionIdSchema,
   pool: MakerLendingPoolSchema,
 })
 

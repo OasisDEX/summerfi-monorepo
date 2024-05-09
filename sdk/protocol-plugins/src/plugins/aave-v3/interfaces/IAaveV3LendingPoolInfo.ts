@@ -3,7 +3,7 @@ import {
   IDebtInfo,
   ILendingPoolInfo,
   ILendingPoolInfoData,
-  LendingPoolInfoSchema,
+  LendingPoolInfoDataSchema,
 } from '@summerfi/sdk-common/protocols'
 import { z } from 'zod'
 import {
@@ -42,7 +42,7 @@ export interface IAaveV3LendingPoolInfo extends ILendingPoolInfo, IAaveV3Lending
  * @description Zod schema for IAaveV3LendingPool
  */
 export const AaveV3LendingPoolInfoSchema = z.object({
-  ...LendingPoolInfoSchema.shape,
+  ...LendingPoolInfoDataSchema.shape,
   id: AaveV3LendingPoolIdSchema,
 })
 

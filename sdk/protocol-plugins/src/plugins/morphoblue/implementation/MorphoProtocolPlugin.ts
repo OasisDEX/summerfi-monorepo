@@ -38,7 +38,7 @@ import {
   TokenAmount,
 } from '@summerfi/sdk-common'
 import { BaseProtocolPlugin } from '../../../implementation'
-import { Hex, encodeAbiParameters, encodePacked, keccak256, parseAbiParameters } from 'viem'
+import { Hex, encodeAbiParameters, keccak256, parseAbiParameters } from 'viem'
 import { MorphoLLTVPrecision, MorphoOraclePricePrecision } from '../constants/MorphoConstants'
 import { MorphoMarketInfo } from '../types/MorphoMarketInfo'
 import { BigNumber } from 'bignumber.js'
@@ -170,6 +170,7 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
     const collateralPriceUSD = await this.ctx.oracleManager.getSpotPrice({
       baseToken: collateralToken,
     })
+    console.log('collateralPriceUSD', collateralPriceUSD)
 
     return CollateralInfo.createFrom({
       token: collateralToken,
@@ -338,9 +339,12 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
 
     const lltv = morphoLendingPoolId.lltv
 
-    const LIF = BigNumber.min(MAX_LIF, ONE.div(BETA.times(lltv.value).plus(ONE.minus(BETA)))).minus(
-      ONE,
+    const LIF = BigNumber.min(
+      MAX_LIF,
+      ONE.div(BETA.times(lltv.toProportion()).plus(ONE.minus(BETA))),
     )
+      .minus(ONE)
+      .multipliedBy(100)
 
     return Percentage.createFrom({ value: LIF.toNumber() })
   }
@@ -380,11 +384,11 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
   ): MorphoAddressAbiMap[ContractName] {
     const map: MorphoAddressAbiMap = {
       MorphoBlue: {
-        address: '0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9',
+        address: '0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb',
         abi: morphoBlueAbi,
       },
       AdaptiveCurveIrm: {
-        address: '0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9',
+        address: '0x870aC11D48B15DB9a138Cf899d20F13F79Ba00BC',
         abi: undefined,
       },
     }

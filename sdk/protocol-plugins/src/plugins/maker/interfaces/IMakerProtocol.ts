@@ -1,5 +1,5 @@
 import { IChainInfo, IProtocol } from '@summerfi/sdk-common'
-import { IProtocolData, ProtocolName, ProtocolSchema } from '@summerfi/sdk-common/protocols'
+import { IProtocolData, ProtocolName, ProtocolDataSchema } from '@summerfi/sdk-common/protocols'
 import { z } from 'zod'
 
 /**
@@ -31,7 +31,7 @@ export interface IMakerProtocol extends IProtocol, IMakerProtocolData {
  * @description Zod schema for IMakerProtocol
  */
 export const MakerProtocolSchema = z.object({
-  ...ProtocolSchema.shape,
+  ...ProtocolDataSchema.shape,
   name: z.literal(ProtocolName.Maker),
 })
 

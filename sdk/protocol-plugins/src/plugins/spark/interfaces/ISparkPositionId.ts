@@ -1,4 +1,4 @@
-import { IPositionId, IPositionIdData, PositionIdSchema } from '@summerfi/sdk-common/common'
+import { IPositionId, IPositionIdData, PositionIdDataSchema } from '@summerfi/sdk-common/common'
 import { z } from 'zod'
 
 /**
@@ -25,7 +25,7 @@ export interface ISparkPositionId extends IPositionId, ISparkPositionIdData {
  * @description Zod schema for ISparkPositionId
  */
 export const SparkPositionIdSchema = z.object({
-  ...PositionIdSchema.shape,
+  ...PositionIdDataSchema.shape,
 })
 
 /**

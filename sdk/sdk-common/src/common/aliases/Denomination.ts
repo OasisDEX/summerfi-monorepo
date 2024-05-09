@@ -1,5 +1,5 @@
 import { FiatCurrency, FiatCurrencySchema } from '../enums/FiatCurrency'
-import { IToken, ITokenData, TokenSchema } from '../interfaces/IToken'
+import { IToken, ITokenData, TokenDataSchema } from '../interfaces/IToken'
 import { z } from 'zod'
 
 /**
@@ -19,7 +19,7 @@ export type Denomination = IToken | FiatCurrency
 /**
  * @description Zod schema for Denomination
  */
-export const DenominationSchema = TokenSchema.or(FiatCurrencySchema)
+export const DenominationSchema = TokenDataSchema.or(FiatCurrencySchema)
 
 /**
  * @description Type guard for Denomination

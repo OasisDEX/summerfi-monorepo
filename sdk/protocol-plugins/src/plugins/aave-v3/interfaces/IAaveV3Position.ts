@@ -1,10 +1,17 @@
-import { IPosition, IPositionData, ITokenAmount, PositionSchema } from '@summerfi/sdk-common/common'
+import {
+  IPosition,
+  IPositionData,
+  ITokenAmount,
+  PositionDataSchema,
+} from '@summerfi/sdk-common/common'
 import { z } from 'zod'
 import {
   AaveV3LendingPoolSchema,
   IAaveV3LendingPool,
   IAaveV3LendingPoolData,
 } from './IAaveV3LendingPool'
+import { IAaveV3PositionId } from './IAaveV3PositionId'
+import { PositionType } from '@summerfi/sdk-common'
 
 /**
  * @interface IAaveV3PositionData
@@ -20,11 +27,16 @@ export interface IAaveV3PositionData extends IPositionData {
  *
  * This interface is used to add all the methods that the interface supports
  *
+ * Typescript forces the interface to re-declare any properties that have different BUT compatible types.
+ * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
+ *
  */
 export interface IAaveV3Position extends IPosition, IAaveV3PositionData {
   readonly pool: IAaveV3LendingPool
 
-  // Empty on purpose
+  // Re-declaring the properties with the correct types
+  readonly type: PositionType
+  readonly id: IAaveV3PositionId
   readonly debtAmount: ITokenAmount
   readonly collateralAmount: ITokenAmount
 }
@@ -33,7 +45,7 @@ export interface IAaveV3Position extends IPosition, IAaveV3PositionData {
  * @description Zod schema for IAaveV3PositionId
  */
 export const AaveV3PositionSchema = z.object({
-  ...PositionSchema.shape,
+  ...PositionDataSchema.shape,
   pool: AaveV3LendingPoolSchema,
 })
 

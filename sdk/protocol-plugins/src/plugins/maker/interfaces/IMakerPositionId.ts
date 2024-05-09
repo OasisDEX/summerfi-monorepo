@@ -1,6 +1,6 @@
 import { IPositionIdData } from '@summerfi/sdk-common/common'
 import { MakerVaultId, MakerVaultIdSchema } from '../types/MakerVaultId'
-import { IPositionId, PositionIdSchema } from '@summerfi/sdk-common'
+import { IPositionId, PositionIdDataSchema } from '@summerfi/sdk-common'
 import { z } from 'zod'
 
 /**
@@ -27,7 +27,7 @@ export interface IMakerPositionId extends IPositionId, IMakerPositionIdData {
  * @description Zod schema for IMakerPositionId
  */
 export const MakerPositionIdSchema = z.object({
-  ...PositionIdSchema.shape,
+  ...PositionIdDataSchema.shape,
   vaultId: MakerVaultIdSchema,
 })
 

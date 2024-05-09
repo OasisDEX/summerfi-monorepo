@@ -1,17 +1,12 @@
-import { PositionSchema } from '@summerfi/sdk-common'
-import {
-  IPosition,
-  IPositionData,
-  IPositionId,
-  ITokenAmount,
-  PositionType,
-} from '@summerfi/sdk-common/common'
+import { PositionDataSchema } from '@summerfi/sdk-common'
+import { IPosition, IPositionData, ITokenAmount, PositionType } from '@summerfi/sdk-common/common'
 import { z } from 'zod'
 import {
   ISparkLendingPool,
   ISparkLendingPoolData,
   SparkLendingPoolSchema,
 } from './ISparkLendingPool'
+import { ISparkPositionId, ISparkPositionIdData } from './ISparkPositionId'
 
 /**
  * @interface ISparkPositionData
@@ -20,6 +15,9 @@ import {
  * Currently empty as there are no specifics for this protocol
  */
 export interface ISparkPositionData extends IPositionData {
+  /** Specific ID of the position for Spark */
+  readonly id: ISparkPositionIdData
+  /** Pool where the position is */
   readonly pool: ISparkLendingPoolData
 }
 
@@ -35,7 +33,7 @@ export interface ISparkPositionData extends IPositionData {
 export interface ISparkPosition extends ISparkPositionData, IPosition {
   // Re-declaring the properties with the correct types
   readonly type: PositionType
-  readonly id: IPositionId
+  readonly id: ISparkPositionId
   readonly debtAmount: ITokenAmount
   readonly collateralAmount: ITokenAmount
   readonly pool: ISparkLendingPool
@@ -45,7 +43,7 @@ export interface ISparkPosition extends ISparkPositionData, IPosition {
  * @description Zod schema for ISparkPositionId
  */
 export const SparkPositionSchema = z.object({
-  ...PositionSchema.shape,
+  ...PositionDataSchema.shape,
   pool: SparkLendingPoolSchema,
 })
 

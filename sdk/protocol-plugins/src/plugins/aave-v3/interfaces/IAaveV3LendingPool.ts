@@ -1,4 +1,8 @@
-import { ILendingPool, ILendingPoolData, LendingPoolSchema } from '@summerfi/sdk-common/protocols'
+import {
+  ILendingPool,
+  ILendingPoolData,
+  LendingPoolDataSchema,
+} from '@summerfi/sdk-common/protocols'
 import { z } from 'zod'
 import {
   AaveV3LendingPoolIdSchema,
@@ -29,7 +33,7 @@ export interface IAaveV3LendingPool extends ILendingPool, IAaveV3LendingPoolData
  * @description Zod schema for IAaveV3LendingPool
  */
 export const AaveV3LendingPoolSchema = z.object({
-  ...LendingPoolSchema.shape,
+  ...LendingPoolDataSchema.shape,
   id: AaveV3LendingPoolIdSchema,
 })
 

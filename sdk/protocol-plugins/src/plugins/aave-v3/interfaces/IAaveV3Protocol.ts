@@ -1,4 +1,9 @@
-import { ChainInfoSchema, IChainInfo, IProtocol, ProtocolSchema } from '@summerfi/sdk-common'
+import {
+  ChainInfoDataSchema,
+  IChainInfo,
+  IProtocol,
+  ProtocolDataSchema,
+} from '@summerfi/sdk-common'
 import { IProtocolData, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { z } from 'zod'
 
@@ -31,9 +36,9 @@ export interface IAaveV3Protocol extends IProtocol, IAaveV3ProtocolData {
  * @description Zod schema for IAaveV3Protocol
  */
 export const AaveV3ProtocolSchema = z.object({
-  ...ProtocolSchema.shape,
+  ...ProtocolDataSchema.shape,
   name: z.literal(ProtocolName.AAVEv3),
-  chainInfo: ChainInfoSchema,
+  chainInfo: ChainInfoDataSchema,
 })
 
 /**

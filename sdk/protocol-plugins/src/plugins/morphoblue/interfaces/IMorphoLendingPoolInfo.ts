@@ -1,35 +1,17 @@
-import {
-  ILendingPoolInfo,
-  ILendingPoolInfoData,
-  LendingPoolInfoSchema,
-} from '@summerfi/sdk-common/protocols'
-import {
-  IMorphoLendingPoolId,
-  IMorphoLendingPoolIdData,
-  MorphoLendingPoolIdSchema,
-} from './IMorphoLendingPoolId'
+import { ILendingPoolInfo, LendingPoolInfoDataSchema } from '@summerfi/sdk-common/protocols'
+import { IMorphoLendingPoolId, MorphoLendingPoolIdDataSchema } from './IMorphoLendingPoolId'
 import { z } from 'zod'
 import { ICollateralInfo, IDebtInfo } from '@summerfi/sdk-common'
 
 /**
- * @interface IMorphoLendingPoolInfoData
- * @description Represents a lending pool info in the Morpho protocol
- */
-export interface IMorphoLendingPoolInfoData extends ILendingPoolInfoData {
-  /** The id of the lending pool */
-  readonly id: IMorphoLendingPoolIdData
-}
-
-/**
  * @interface IMorphoLendingPoolInfo
- * @description Interface for the implementors of the lending pool info
- *
- * This interface is used to add all the methods that the interface supports
+ * @description Represents a lending pool info in the Morpho protocol
  *
  * Typescript forces the interface to re-declare any properties that have different BUT compatible types.
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
 export interface IMorphoLendingPoolInfo extends ILendingPoolInfo, IMorphoLendingPoolInfoData {
+  /** The id of the lending pool */
   readonly id: IMorphoLendingPoolId
 
   // Re-declaring the properties with the correct types
@@ -40,10 +22,15 @@ export interface IMorphoLendingPoolInfo extends ILendingPoolInfo, IMorphoLending
 /**
  * @description Zod schema for IMorphoLendingPoolInfo
  */
-export const MorphoLendingPoolInfoSchema = z.object({
-  ...LendingPoolInfoSchema.shape,
-  id: MorphoLendingPoolIdSchema,
+export const MorphoLendingPoolInfoDataSchema = z.object({
+  ...LendingPoolInfoDataSchema.shape,
+  id: MorphoLendingPoolIdDataSchema,
 })
+
+/**
+ * Type for the data part of the IMorphoLendingPoolInfo interface
+ */
+export type IMorphoLendingPoolInfoData = Readonly<z.infer<typeof MorphoLendingPoolInfoDataSchema>>
 
 /**
  * @description Type guard for IMorphoLendingPoolInfo
@@ -53,13 +40,5 @@ export const MorphoLendingPoolInfoSchema = z.object({
 export function isMorphoLendingPoolInfo(
   maybeLendingPoolInfo: unknown,
 ): maybeLendingPoolInfo is IMorphoLendingPoolInfoData {
-  return MorphoLendingPoolInfoSchema.safeParse(maybeLendingPoolInfo).success
+  return MorphoLendingPoolInfoDataSchema.safeParse(maybeLendingPoolInfo).success
 }
-
-/**
- * Checker to make sure that the schema is aligned with the interface
- */
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: IMorphoLendingPoolInfoData = {} as z.infer<
-  typeof MorphoLendingPoolInfoSchema
->

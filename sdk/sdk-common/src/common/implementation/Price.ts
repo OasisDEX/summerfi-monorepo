@@ -1,16 +1,14 @@
 import {
   type IPrice,
   type IPriceData,
-  isPrice,
   PriceMulReturnType,
   PriceMulParamType,
+  isPrice,
 } from '../interfaces/IPrice'
-import { isToken } from '../interfaces/IToken'
 import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
 import { Token } from './Token'
 import { Denomination } from '../aliases/Denomination'
-import { isTokenAmount } from '../interfaces'
 import { isFiatCurrencyAmount } from '../interfaces/IFiatCurrencyAmount'
 import {
   dividePriceByPrice,
@@ -20,6 +18,8 @@ import {
 } from '../utils/PriceUtils'
 import { FiatCurrencyAmount } from './FiatCurrencyAmount'
 import { TokenAmount } from './TokenAmount'
+import { isToken } from '../interfaces/IToken'
+import { isTokenAmount } from '../interfaces/ITokenAmount'
 
 /**
  * @class Price

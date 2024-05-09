@@ -1,4 +1,4 @@
-import { AddressSchema, IAddressData } from '../../common/interfaces/IAddress'
+import { AddressDataSchema, IAddressData } from '../../common/interfaces/IAddress'
 import { Address } from '../../common/implementation/Address'
 import { z } from 'zod'
 
@@ -25,7 +25,7 @@ export interface IPositionsManager extends IPositionsManagerData {
  * @description Zod schema for IPositionsManager
  */
 export const PositionsManagerSchema = z.object({
-  address: AddressSchema,
+  address: AddressDataSchema,
 })
 
 /**

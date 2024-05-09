@@ -1,26 +1,17 @@
-import { ChainInfoSchema, IChainInfo, IChainInfoData } from '../../common/interfaces/IChainInfo'
+import { ChainInfoDataSchema, IChainInfo } from '../../common/interfaces/IChainInfo'
 import { ProtocolName } from '../enums/ProtocolName'
 import { z } from 'zod'
 
 /**
- * @interface IProtocolData
- * @description Information relative to a protocol
- */
-export interface IProtocolData {
-  /** The name of the protocol */
-  readonly name: ProtocolName
-  /** The chain information */
-  readonly chainInfo: IChainInfoData
-}
-
-/**
  * @interface IProtocol
- * @description Interface for the implementors of the protocol
+ * @description Information relative to a protocol
  *
  * This interface is used to add all the methods that the interface supports
  */
 export interface IProtocol extends IProtocolData {
+  /** The name of the protocol */
   readonly name: ProtocolName
+  /** The chain information */
   readonly chainInfo: IChainInfo
 
   /**
@@ -36,10 +27,15 @@ export interface IProtocol extends IProtocolData {
 /**
  * @description Zod schema for IProtocol
  */
-export const ProtocolSchema = z.object({
+export const ProtocolDataSchema = z.object({
   name: z.nativeEnum(ProtocolName),
-  chainInfo: ChainInfoSchema,
+  chainInfo: ChainInfoDataSchema,
 })
+
+/**
+ * Type for the data part of the IProtocol interface
+ */
+export type IProtocolData = Readonly<z.infer<typeof ProtocolDataSchema>>
 
 /**
  * @description Type guard for IProtocol
@@ -47,11 +43,5 @@ export const ProtocolSchema = z.object({
  * @returns true if the object is an IProtocol
  */
 export function isProtocol(maybeProtocol: unknown): maybeProtocol is IProtocolData {
-  return ProtocolSchema.safeParse(maybeProtocol).success
+  return ProtocolDataSchema.safeParse(maybeProtocol).success
 }
-
-/**
- * Checker to make sure that the schema is aligned with the interface
- */
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: IProtocolData = {} as z.infer<typeof ProtocolSchema>

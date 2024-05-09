@@ -1,7 +1,7 @@
 import {
   ILendingPoolId,
   ILendingPoolIdData,
-  LendingPoolIdSchema,
+  LendingPoolIdDataSchema,
 } from '@summerfi/sdk-common/protocols'
 import { EmodeType, EmodeTypeSchema } from '../../common/enums/EmodeType'
 import { ISparkProtocol, ISparkProtocolData, SparkProtocolSchema } from './ISparkProtocol'
@@ -41,7 +41,7 @@ export interface ISparkLendingPoolId extends ISparkLendingPoolIdData, ILendingPo
  * @description Zod schema for ISparkLendingPoolId
  */
 export const SparkLendingPoolIdSchema = z.object({
-  ...LendingPoolIdSchema.shape,
+  ...LendingPoolIdDataSchema.shape,
   protocol: SparkProtocolSchema,
   emodeType: EmodeTypeSchema,
 })

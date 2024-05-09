@@ -1,11 +1,11 @@
 import { publicProcedure } from '../TRPC'
-import { ChainInfo, ChainInfoSchema, Maybe, Token } from '@summerfi/sdk-common'
+import { ChainInfo, ChainInfoDataSchema, Maybe, Token } from '@summerfi/sdk-common'
 import { z } from 'zod'
 
 export const getTokenByName = publicProcedure
   .input(
     z.object({
-      chainInfo: ChainInfoSchema,
+      chainInfo: ChainInfoDataSchema,
       name: z.string(),
     }),
   )

@@ -1,19 +1,10 @@
 import { IChainInfo, IProtocol } from '@summerfi/sdk-common'
-import { IProtocolData, ProtocolName, ProtocolSchema } from '@summerfi/sdk-common/protocols'
+import { ProtocolName, ProtocolDataSchema } from '@summerfi/sdk-common/protocols'
 import { z } from 'zod'
 
 /**
- * @interface IMorphoProtocolData
- * @description Identifier of the Morpho protocol
- */
-export interface IMorphoProtocolData extends IProtocolData {
-  /** Morpho protocol name */
-  readonly name: ProtocolName.Morpho
-}
-
-/**
  * @interface IMorphoProtocol
- * @description Interface for the implementors of the Morpho protocol
+ * @description Identifier of the Morpho protocol
  *
  * This interface is used to add all the methods that the interface supports
  *
@@ -21,17 +12,25 @@ export interface IMorphoProtocolData extends IProtocolData {
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
 export interface IMorphoProtocol extends IMorphoProtocolData, IProtocol {
+  /** Morpho protocol name */
   readonly name: ProtocolName.Morpho
+
+  // Re-declare the properties with the correct types
   readonly chainInfo: IChainInfo
 }
 
 /**
  * @description Zod schema for IMorphoProtocol
  */
-export const MorphoProtocolSchema = z.object({
-  ...ProtocolSchema.shape,
+export const MorphoProtocolDataSchema = z.object({
+  ...ProtocolDataSchema.shape,
   name: z.literal(ProtocolName.Morpho),
 })
+
+/**
+ * Type for the data part of the IMorphoProtocol interface
+ */
+export type IMorphoProtocolData = Readonly<z.infer<typeof MorphoProtocolDataSchema>>
 
 /**
  * @description Type guard for IMorphoProtocol
@@ -39,11 +38,5 @@ export const MorphoProtocolSchema = z.object({
  * @returns true if the object is an IMorphoProtocol
  */
 export function isMorphoProtocol(maybeProtocol: unknown): maybeProtocol is IMorphoProtocolData {
-  return MorphoProtocolSchema.safeParse(maybeProtocol).success
+  return MorphoProtocolDataSchema.safeParse(maybeProtocol).success
 }
-
-/**
- * Checker to make sure that the schema is aligned with the interface
- */
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: IMorphoProtocolData = {} as z.infer<typeof MorphoProtocolSchema>

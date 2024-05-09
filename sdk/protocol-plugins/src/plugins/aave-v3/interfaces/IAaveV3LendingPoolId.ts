@@ -1,7 +1,7 @@
 import {
   ILendingPoolId,
   ILendingPoolIdData,
-  LendingPoolIdSchema,
+  LendingPoolIdDataSchema,
 } from '@summerfi/sdk-common/protocols'
 import { EmodeType, EmodeTypeSchema } from '../../common/enums/EmodeType'
 import { AaveV3ProtocolSchema, IAaveV3Protocol, IAaveV3ProtocolData } from './IAaveV3Protocol'
@@ -41,7 +41,7 @@ export interface IAaveV3LendingPoolId extends ILendingPoolId, IAaveV3LendingPool
  * @description Zod schema for IAaveV3LendingPoolId
  */
 export const AaveV3LendingPoolIdSchema = z.object({
-  ...LendingPoolIdSchema.shape,
+  ...LendingPoolIdDataSchema.shape,
   protocol: AaveV3ProtocolSchema,
   emodeType: EmodeTypeSchema,
 })
