@@ -1,5 +1,5 @@
 {
-  "name": "@summerfi/app-ui-blocks",
+  "name": "@summerfi/app-ui",
   "version": "0.0.0",
   "license": "Apache-2.0",
   "type": "module",
@@ -14,8 +14,8 @@
   "scripts": {
     "lint": "eslint *.ts*",
     "build-watch": "tsc -w --preserveWatchOutput --p ./tsconfig.json & vite build -w",
-    "generate-module-types": "typed-scss-modules -e default \"src/**/*.module.scss\"",
-    "generate-module-types-watch": "typed-scss-modules -w -e default \"src/**/*.module.scss\"",
+    "generate-module-types": "typed-scss-modules -e default -o modules \"src/**/*.module.scss\"",
+    "generate-module-types-watch": "typed-scss-modules -w -e default -o modules \"src/**/*.module.scss\"",
     "web:dev": "pnpm clean & pnpm generate-module-types-watch & pnpm build-watch",
     "web:prebuild": "pnpm clean & pnpm generate-module-types & tsc --p ./tsconfig.json & vite build",
     "clean": "rm -rf dist"

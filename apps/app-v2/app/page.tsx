@@ -1,4 +1,4 @@
-import { ButtonExample, TitleExample } from '@summerfi/app-ui-blocks'
+import { ButtonExample, TitleExample } from '@summerfi/app-ui'
 export default function HomePage(): JSX.Element {
   return (
     <div>
