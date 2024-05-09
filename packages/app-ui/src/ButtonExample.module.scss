@@ -1,16 +1,17 @@
 .buttonExampleStyle {
-  background-color: lightcoral;
-  color: darkcyan;
+  background-color: lightblue;
+  color: darkblue;
   padding: 10px;
   border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.1s;
   &:hover {
     background-color: lightgreen;
+    color: darkgreen;
   }
 }
 
-.test {
+.testets {
   border: none;
   margin: 10px;
 }

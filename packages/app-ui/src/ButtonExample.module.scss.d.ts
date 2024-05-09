@@ -1,6 +1,6 @@
 export type Styles = {
   buttonExampleStyle: string
-  test: string
+  testets: string
 }
 
 export type ClassNames = keyof Styles

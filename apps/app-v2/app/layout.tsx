@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description: 'We be developing app v2',
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }): JSX.Element {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" data-mantine-color-scheme="dark">
       <head></head>

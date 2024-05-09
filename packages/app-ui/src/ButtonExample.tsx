@@ -1,14 +1,14 @@
 import buttonExampleStyles from './ButtonExample.module.scss'
 import classnames from 'classnames'
 
-export const ButtonExample = ({ children, test }: { children: React.ReactNode; test: string }) => {
+export const ButtonExample = ({ children, text }: { children: React.ReactNode; text?: string }) => {
   return (
     <>
       <button
-        className={classnames(buttonExampleStyles.buttonExampleStyle, buttonExampleStyles.test)}
+        className={classnames(buttonExampleStyles.buttonExampleStyle, buttonExampleStyles.testets)}
       >
         {children}
-        {test}
+        {text}
       </button>
     </>
   )
