@@ -721,6 +721,53 @@ importers:
         specifier: ^20.1.4
         version: 20.1.4
 
+  sdk/address-book-common:
+    dependencies:
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../sdk-common
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+
+  sdk/address-book-service:
+    dependencies:
+      '@summerfi/address-book-common':
+        specifier: workspace:*
+        version: link:../address-book-common
+      '@summerfi/common':
+        specifier: workspace:*
+        version: link:../../packages/common
+      '@summerfi/configuration-provider':
+        specifier: workspace:*
+        version: link:../configuration-provider
+      '@summerfi/core-contracts':
+        specifier: workspace:*
+        version: link:../../packages/core-contracts
+      '@summerfi/deployment-utils':
+        specifier: workspace:*
+        version: link:../../packages/deployment-utils
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../sdk-common
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+
   sdk/configuration-provider:
     dependencies:
       '@summerfi/sdk-common':

@@ -1,0 +1,35 @@
+{
+  "name": "@summerfi/address-book-service",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.d.ts"
+    }
+  },
+  "scripts": {
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "test": "jest tests/ --coverage=true",
+    "testw": "jest --watch",
+    "e2e": "jest e2e/",
+    "build": "tsc -b tsconfig.build.json",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@summerfi/common": "workspace:*",
+    "@summerfi/configuration-provider": "workspace:*",
+    "@summerfi/sdk-common": "workspace:*",
+    "@summerfi/address-book-common": "workspace:*",
+    "@summerfi/deployment-utils": "workspace:*",
+    "@summerfi/core-contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/jest-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*"
+  }
+}
