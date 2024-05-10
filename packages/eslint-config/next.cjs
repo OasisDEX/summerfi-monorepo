@@ -25,6 +25,8 @@ module.exports = {
   ignorePatterns: [
     // Ignore dotfiles
     '.*.js',
+    '*.cjs', // .eslint.cjs
+    '*.config.ts', // vite config
     'node_modules/',
   ],
   overrides: [{ files: ['*.js?(x)', '*.ts?(x)'] }],
