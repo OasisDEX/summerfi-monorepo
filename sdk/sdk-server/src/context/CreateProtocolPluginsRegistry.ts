@@ -1,9 +1,7 @@
 import { AaveV3ProtocolPlugin } from '@summerfi/protocol-plugins/plugins/aave-v3'
 import {
-  PriceService,
   ProtocolPluginsRecordType,
   ProtocolPluginsRegistry,
-  TokenService,
 } from '@summerfi/protocol-plugins/implementation'
 import { SparkProtocolPlugin } from '@summerfi/protocol-plugins/plugins/spark'
 import { MakerProtocolPlugin } from '@summerfi/protocol-plugins/plugins/maker'
@@ -19,6 +17,8 @@ import {
   getRpcGatewayEndpoint,
 } from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
 import { ConfigurationProvider } from '@summerfi/configuration-provider'
+import { ITokensManager } from '@summerfi/tokens-common'
+import { IOracleManager } from '@summerfi/oracle-common'
 
 const ProtocolPlugins: ProtocolPluginsRecordType = {
   [ProtocolName.Maker]: MakerProtocolPlugin,
@@ -37,9 +37,11 @@ const rpcConfig: IRpcConfig = {
 export function createProtocolsPluginsRegistry(params: {
   configProvider: ConfigurationProvider
   deployments: DeploymentIndex
+  tokensManager: ITokensManager
+  oracleManager: IOracleManager
   swapManager: ISwapManager
 }): IProtocolPluginsRegistry {
-  const { configProvider, deployments, swapManager } = params
+  const { configProvider, deployments, swapManager, tokensManager, oracleManager } = params
   const chain = mainnet
   const rpcGatewayUrl = configProvider.getConfigurationItem({ name: 'RPC_GATEWAY' })
   if (!rpcGatewayUrl) {
@@ -61,16 +63,13 @@ export function createProtocolsPluginsRegistry(params: {
     transport,
   })
 
-  const tokenService = new TokenService()
-  const priceService = new PriceService(provider)
-
   return new ProtocolPluginsRegistry({
     plugins: ProtocolPlugins,
     context: {
-      provider,
-      tokenService,
-      priceService,
       deployments,
+      provider,
+      tokensManager,
+      oracleManager,
       swapManager,
     },
     deploymentConfigTag: 'standard',

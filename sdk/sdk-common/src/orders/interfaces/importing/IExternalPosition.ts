@@ -1,4 +1,4 @@
-import { IPosition, isPosition } from '../../../common'
+import { IPositionData, isPosition } from '../../../common'
 import { Address } from '../../../common/implementation/Address'
 
 export enum ExternalPositionType {
@@ -23,7 +23,7 @@ export function isExternalPositionId(maybeId: unknown): maybeId is IExternalPosi
  *              different services.
  */
 export interface IExternalPosition {
-  position: IPosition
+  position: IPositionData
   externalId: IExternalPositionId
 }
 

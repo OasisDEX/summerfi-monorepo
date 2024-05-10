@@ -24,35 +24,22 @@ export async function refinanceLendingToLendingNoDebt(
     throw new Error('Target pool is not a lending pool')
   }
 
-  const position = Position.createFrom(args.sourcePosition)
-  const targetPool = await dependencies.protocolManager.getPool(args.targetPosition.pool.poolId)
+  const position = args.sourcePosition as Position
+  const sourcePool = await dependencies.protocolManager.getLendingPool(args.sourcePosition.pool.id)
+  const targetPool = await dependencies.protocolManager.getLendingPool(args.targetPosition.pool.id)
 
   if (!isLendingPool(targetPool)) {
     throw new Error('Target pool is not a lending pool')
   }
   const simulator = Simulator.create(refinanceLendingToLendingNoDebtStrategy)
 
-  const targetTokenConfig = targetPool.collaterals.get({ token: position.collateralAmount.token })
-  if (!targetTokenConfig) {
-    throw new Error('Target token not found in pool')
-  }
-
   const zeroAmount = TokenAmount.createFromBaseUnit({
     token: position.debtAmount.token,
     amount: '0',
   })
 
-  const targetCollateralConfig = targetPool.collaterals.get({
-    token: args.targetPosition.collateralAmount.token,
-  })
-  const targetDebtConfig = targetPool.debts.get({ token: args.targetPosition.debtAmount.token })
-
-  if (!targetCollateralConfig || !targetDebtConfig) {
-    throw new Error('Target token config not found in pool')
-  }
-
-  const isCollateralSwapSkipped = targetCollateralConfig.token.address.equals(
-    position.collateralAmount.token.address,
+  const isCollateralSwapSkipped = !targetPool.id.collateralToken.equals(
+    sourcePool.id.collateralToken,
   )
 
   const simulation = await simulator
@@ -70,11 +57,12 @@ export async function refinanceLendingToLendingNoDebt(
         name: 'CollateralSwap',
         type: SimulationSteps.Swap,
         inputs: await getSwapStepData({
-          chainInfo: position.pool.protocol.chainInfo,
+          chainInfo: position.pool.id.protocol.chainInfo,
           fromAmount: position.collateralAmount,
-          toToken: targetCollateralConfig.token,
+          toToken: targetPool.id.collateralToken,
           slippage: Percentage.createFrom({ value: args.slippage.value }),
           swapManager: dependencies.swapManager,
+          oracleManager: dependencies.oracleManager,
         }),
       }),
       isCollateralSwapSkipped,
@@ -88,20 +76,16 @@ export async function refinanceLendingToLendingNoDebt(
           : ctx.getReference(['CollateralSwap', 'received']),
         borrowAmount: TokenAmount.createFrom({
           amount: '0',
-          token: targetDebtConfig.token,
+          token: targetPool.id.debtToken,
         }),
-        position: newEmptyPositionFromPool(
-          targetPool,
-          targetDebtConfig.token,
-          targetCollateralConfig.token,
-        ),
+        position: newEmptyPositionFromPool(targetPool),
         borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
     }))
     .next(async (ctx) => {
       // TODO: we should have a way to get the target position more easily and realiably,
-      const targetPosition = Object.values(ctx.state.positions).find(
-        (p) => p.pool.protocol === targetPool.protocol,
+      const targetPosition = Object.values(ctx.state.positions).find((p) =>
+        p.pool.id.protocol.equals(targetPool.id.protocol),
       )
       if (!targetPosition) {
         throw new Error('Target position not found')
@@ -117,8 +101,8 @@ export async function refinanceLendingToLendingNoDebt(
     })
     .run()
 
-  const targetPosition = Object.values(simulation.positions).find(
-    (p) => p.pool.protocol === targetPool.protocol,
+  const targetPosition = Object.values(simulation.positions).find((p) =>
+    p.pool.id.protocol.equals(targetPool.id.protocol),
   )
 
   if (!targetPosition) {

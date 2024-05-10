@@ -1,5 +1,5 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
-import { TokenAmount } from '@summerfi/sdk-common/common'
+import { ITokenAmount } from '@summerfi/sdk-common/common'
 import { FlashloanProvider } from '@summerfi/sdk-common/simulation'
 
 // Local type as optional actions are not supported anymore in the new executor
@@ -19,7 +19,7 @@ export class FlashloanAction extends BaseAction {
 
   public encodeCall(
     params: {
-      amount: TokenAmount
+      amount: ITokenAmount
       provider: FlashloanProvider
       calls: ActionCall[]
     },

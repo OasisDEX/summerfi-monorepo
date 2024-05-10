@@ -1,0 +1,26 @@
+import { IPrice, PriceSchema } from '../common/interfaces/IPrice'
+import { IToken, TokenSchema } from '../common/interfaces/IToken'
+import { OracleProviderType, OracleProviderTypeSchema } from './OracleProviderType'
+import { z } from 'zod'
+
+/**
+ * @name SpotPriceInfo
+ * @description Gives the current market price for a specific asset
+ */
+export type SpotPriceInfo = {
+  /** The oracle provider type */
+  provider: OracleProviderType
+  /** The token for which the price is being requested. Also included in price, but added here for convenience */
+  token: IToken
+  /** The price of the asset */
+  price: IPrice
+}
+
+/**
+ * @description Zod schema for SpotPriceInfo
+ */
+export const SpotPriceInfoSchema = z.object({
+  provider: OracleProviderTypeSchema,
+  token: TokenSchema,
+  price: PriceSchema,
+})

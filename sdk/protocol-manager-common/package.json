@@ -23,8 +23,7 @@
     "@summerfi/deployment-types": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/protocol-plugins-common": "workspace:*",
-    "@types/node-fetch": "^2.6.11",
-    "zod": "^3.22.4"
+    "@types/node-fetch": "^2.6.11"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

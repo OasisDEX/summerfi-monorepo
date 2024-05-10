@@ -1,21 +1,23 @@
+import { IPrintable } from '../../common/interfaces/IPrintable'
 import { SerializationService } from '../../services/SerializationService'
-import { IPool } from '../interfaces/IPool'
-import { IPoolId } from '../interfaces/IPoolId'
-import { IProtocol } from '../interfaces/IProtocol'
+import { IPool, IPoolData } from '../interfaces/IPool'
 import { PoolType } from '../types/PoolType'
+import { PoolId } from './PoolId'
 
 /**
+ * @class Pool
  * @see IPool
  */
-export abstract class Pool implements IPool {
-  public readonly type: PoolType
-  public readonly poolId: IPoolId
-  public readonly protocol: IProtocol
+export abstract class Pool implements IPool, IPrintable {
+  readonly type: PoolType
+  abstract readonly id: PoolId
 
-  constructor(params: IPool) {
+  protected constructor(params: IPoolData) {
     this.type = params.type
-    this.poolId = params.poolId
-    this.protocol = params.protocol
+  }
+
+  toString(): string {
+    return `Pool: ${this.type} (${this.id.toString()})`
   }
 }
 

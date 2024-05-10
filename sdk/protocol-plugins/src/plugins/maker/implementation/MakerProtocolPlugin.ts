@@ -1,26 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  Percentage,
-  TokenAmount,
-  TokenSymbol,
-  Price,
-  RiskRatio,
   Address,
   Position,
-  ChainId,
   ChainFamilyName,
   valuesOfChainFamilyMap,
   Maybe,
   AddressValue,
-  CurrencySymbol,
-  ChainInfo,
+  IPositionId,
+  CommonTokenSymbols,
 } from '@summerfi/sdk-common/common'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { SimulationSteps } from '@summerfi/sdk-common/simulation'
-import { stringToHex, getContract } from 'viem'
+import { ILendingPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { getContract, stringToHex } from 'viem'
 import { BigNumber } from 'bignumber.js'
-import { z } from 'zod'
-import { MakerPaybackWithdrawActionBuilder } from '../builders/MakerPaybackWithdrawActionBuilder'
 import { BaseProtocolPlugin } from '../../../implementation/BaseProtocolPlugin'
 import { PRECISION_BI } from '../../common/constants/AaveV3LikeConstants'
 import {
@@ -32,18 +23,10 @@ import {
   SPOT_ABI,
   VAT_ABI,
 } from '../abis/MakerABIS'
-import { MakerCollateralConfigMap, MakerCollateralConfigRecord } from './MakerCollateralConfigMap'
-import { MakerDebtConfigMap, MakerDebtConfigRecord } from './MakerDebtConfigMap'
 import { MakerLendingPool } from './MakerLendingPool'
 import { amountFromRad, amountFromRay, amountFromWei } from '../utils/AmountUtils'
 import { MakerAddressAbiMap } from '../types/MakerAddressAbiMap'
-import {
-  ActionBuildersMap,
-  IPositionId,
-  IProtocolPluginContext,
-} from '@summerfi/protocol-plugins-common'
-import { ILKType } from '../enums/ILKType'
-import { MakerPoolId, isMakerPoolId } from '../types/MakerPoolId'
+import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { IUser } from '@summerfi/sdk-common/user'
 import {
   ExternalPositionType,
@@ -52,208 +35,112 @@ import {
   TransactionInfo,
 } from '@summerfi/sdk-common/orders'
 import { encodeMakerGiveThroughProxyActions } from '../utils/MakerGive'
-import { MakerImportPositionActionBuilder } from '../builders/MakerImportPositionActionBuilder'
+import { isMakerPositionId } from '../interfaces/IMakerPositionId'
+import { MakerLendingPoolId } from './MakerLendingPoolId'
+import { IMakerLendingPoolId, isMakerLendingPoolId } from '../interfaces/IMakerLendingPoolId'
+import { MakerStepBuilders } from './MakerStepBuilders'
+import { MakerPositionId } from './MakerPositionId'
+import { MakerLendingPoolInfo } from './MakerLendingPoolInfo'
+import {
+  CollateralInfo,
+  DebtInfo,
+  Percentage,
+  Price,
+  RiskRatio,
+  RiskRatioType,
+  TokenAmount,
+} from '@summerfi/sdk-common'
+
+type ProtocolData = Awaited<ReturnType<MakerProtocolPlugin['_getProtocolData']>>
 
 export class MakerProtocolPlugin extends BaseProtocolPlugin {
+  readonly protocolName = ProtocolName.Maker
+  readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
+  readonly stepBuilders: Partial<ActionBuildersMap> = MakerStepBuilders
+
   readonly CdpManagerContractName = 'CdpManager'
   readonly DssProxyActionsContractName = 'DssProxyActions'
 
-  readonly protocolName = ProtocolName.Maker
-  readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
-  readonly makerPoolIdSchema = z.object({
-    protocol: z.object({
-      name: z.literal(ProtocolName.Maker),
-      chainInfo: z.object({
-        name: z.string(),
-        chainId: z.custom<ChainId>(
-          (chainId) => this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId),
-          'Chain ID not supported',
-          true,
-        ),
-      }),
-    }),
-    ilkType: z.nativeEnum(ILKType),
-    vaultId: z.string(),
-  })
-  readonly stepBuilders: Partial<ActionBuildersMap> = {
-    [SimulationSteps.PaybackWithdraw]: MakerPaybackWithdrawActionBuilder,
-    [SimulationSteps.Import]: MakerImportPositionActionBuilder,
-  }
-
   constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
     super(params)
+
+    if (
+      !this.supportedChains.some(
+        (chainInfo) => chainInfo.chainId === this.context.provider.chain?.id,
+      )
+    ) {
+      throw new Error(`Chain ID ${this.context.provider.chain?.id} is not supported`)
+    }
   }
 
-  isPoolId(candidate: unknown): candidate is MakerPoolId {
-    return this._isPoolId(candidate, this.makerPoolIdSchema)
-  }
+  /** VALIDATORS */
 
-  validatePoolId(candidate: unknown): asserts candidate is MakerPoolId {
-    if (!this.isPoolId(candidate)) {
+  /** @see BaseProtocolPlugin._validateLendingPoolId */
+  protected _validateLendingPoolId(
+    candidate: ILendingPoolId,
+  ): asserts candidate is MakerLendingPoolId {
+    if (!isMakerLendingPoolId(candidate)) {
       throw new Error(`Invalid Maker pool ID: ${JSON.stringify(candidate)}`)
     }
   }
 
-  async getPool(makerPoolId: unknown): Promise<MakerLendingPool> {
-    this.validatePoolId(makerPoolId)
-
-    const ilk = makerPoolId.ilkType
-    const ilkInHex = stringToHex(ilk, { size: 32 })
-
-    const ctx = this.ctx
-    const chainId = ctx.provider.chain?.id
-    if (!chainId) throw new Error('ctx.provider.chain.id undefined')
-
-    if (!this.supportedChains.some((chainInfo) => chainInfo.chainId === chainId)) {
-      throw new Error(`Chain ID ${chainId} is not supported`)
+  /** @see BaseProtocolPlugin._validatePositionId */
+  protected _validatePositionId(candidate: IPositionId): asserts candidate is MakerPositionId {
+    if (!isMakerPositionId(candidate)) {
+      throw new Error(`Invalid Maker position ID: ${JSON.stringify(candidate)}`)
     }
+  }
 
-    const { osm, vatRes, jugRes, dogRes, spotRes, erc20, ilkRegistryRes } =
-      await this.getIlkProtocolData(ilkInHex, makerPoolId)
+  /** LENDING POOLS */
 
-    const makerSpotDef = this.getContractDef('Spot')
-    const [
-      [peek],
-      [peep],
-      zzz,
-      hop,
-      joinGemBalance,
-      collateralToken,
-      quoteToken,
-      poolBaseCurrencyToken,
-    ] = await Promise.all([
-      osm.read.peek({ account: makerSpotDef.address }),
-      osm.read.peep({ account: makerSpotDef.address }),
-      osm.read.zzz({ account: makerSpotDef.address }),
-      osm.read.hop({ account: makerSpotDef.address }),
-      erc20.read.balanceOf([ilkRegistryRes.join]),
-      ctx.tokenService.getTokenByAddress(Address.createFromEthereum({ value: ilkRegistryRes.gem })),
-      ctx.tokenService.getTokenBySymbol(TokenSymbol.DAI),
-      ctx.tokenService.getTokenBySymbol(TokenSymbol.DAI),
-    ])
-
-    const SECONDS_PER_YEAR = 60 * 60 * 24 * 365
-    BigNumber.config({ POW_PRECISION: 100 })
-    const stabilityFee = jugRes.rawFee.pow(SECONDS_PER_YEAR).minus(1)
-
-    const osmData = {
-      currentPrice: new BigNumber(peek)
-        .shiftedBy(-18)
-        .toPrecision(collateralToken.decimals, BigNumber.ROUND_DOWN)
-        .toString(),
-      nextPrice: new BigNumber(peep)
-        .shiftedBy(-18)
-        .toPrecision(collateralToken.decimals, BigNumber.ROUND_DOWN)
-        .toString(),
-      currentPriceUpdate: new Date(Number(zzz) * 1000),
-      nextPriceUpdate: new Date((Number(zzz) + hop) * 1000),
-    }
-
-    const [collateralQuote, daiQuote] = await Promise.all([
-      ctx.swapManager.getSpotPrice({
-        // Should be good enought for maker, as it won't be avaialble on other networks.
-        chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
-        baseToken: collateralToken,
-        quoteToken: CurrencySymbol.USD,
-      }),
-      ctx.swapManager.getSpotPrice({
-        // Should be good enought for maker, as it won't be avaialble on other networks.
-        chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
-        baseToken: quoteToken,
-        quoteToken: CurrencySymbol.USD,
-      }),
-    ])
-
-    const collaterals: MakerCollateralConfigRecord = {
-      [collateralToken.address.value]: {
-        token: collateralToken,
-        price: Price.createFrom({
-          value: osmData.currentPrice,
-          baseToken: collateralToken,
-          quoteToken: quoteToken,
-        }),
-        nextPrice: Price.createFrom({
-          value: osmData.nextPrice,
-          baseToken: collateralToken,
-          quoteToken: quoteToken,
-        }),
-        priceUSD: collateralQuote.price,
-        lastPriceUpdate: osmData.currentPriceUpdate,
-        nextPriceUpdate: osmData.nextPriceUpdate,
-
-        liquidationThreshold: RiskRatio.createFrom({
-          ratio: Percentage.createFrom({
-            value: spotRes.liquidationRatio.times(100).toNumber(),
-          }),
-          type: RiskRatio.type.CollateralizationRatio,
-        }),
-
-        tokensLocked: TokenAmount.createFromBaseUnit({
-          token: collateralToken,
-          amount: joinGemBalance.toString(),
-        }),
-        maxSupply: TokenAmount.createFrom({
-          token: collateralToken,
-          amount: Number.MAX_SAFE_INTEGER.toString(),
-        }),
-        liquidationPenalty: Percentage.createFrom({
-          value: dogRes.liquidationPenalty.toNumber() * 100,
-        }),
-      },
-    }
-
-    const daiPriceUSD = await ctx.priceService.getPriceUSD(quoteToken)
-
-    const debts: MakerDebtConfigRecord = {
-      [quoteToken.address.value]: {
-        token: quoteToken,
-        price: daiQuote.price,
-        priceUSD: daiQuote.price,
-        rate: Percentage.createFrom({ value: stabilityFee.times(100).toNumber() }),
-        totalBorrowed: TokenAmount.createFrom({
-          token: quoteToken,
-          amount: vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor).toString(),
-        }),
-        debtCeiling: TokenAmount.createFrom({
-          token: quoteToken,
-          amount: vatRes.debtCeiling.toString(),
-        }),
-        debtAvailable: TokenAmount.createFrom({
-          token: quoteToken,
-          amount: vatRes.debtCeiling
-            .minus(vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor))
-            .toString(),
-        }),
-        dustLimit: TokenAmount.createFrom({
-          token: quoteToken,
-          amount: vatRes.debtFloor.toString(),
-        }),
-        originationFee: Percentage.createFrom({ value: 0 }),
-      },
-    }
-
+  /** @see BaseProtocolPlugin._getLendingPoolImpl */
+  protected async _getLendingPoolImpl(
+    makerLendingPoolId: IMakerLendingPoolId,
+  ): Promise<MakerLendingPool> {
+    // TODO: validate pool ID collateral and debt against the ILK Type
     return MakerLendingPool.createFrom({
       type: PoolType.Lending,
-      poolId: makerPoolId,
-      protocol: makerPoolId.protocol,
-      baseCurrency: poolBaseCurrencyToken,
-      collaterals: MakerCollateralConfigMap.createFrom({ record: collaterals }),
-      debts: MakerDebtConfigMap.createFrom({ record: debts }),
+      id: makerLendingPoolId,
     })
   }
 
+  /** @see BaseProtocolPlugin._getLendingPoolInfoImpl */
+  protected async _getLendingPoolInfoImpl(
+    makerLendingPoolId: IMakerLendingPoolId,
+  ): Promise<MakerLendingPoolInfo> {
+    const protocolData = await this._getProtocolData(makerLendingPoolId)
+    const collateralInfo = await this._getCollateralInfo(protocolData)
+    const debtInfo = await this._getDebtInfo(protocolData)
+
+    return MakerLendingPoolInfo.createFrom({
+      type: PoolType.Lending,
+      id: makerLendingPoolId,
+      collateral: collateralInfo,
+      debt: debtInfo,
+    })
+  }
+
+  /** POSITIONS */
+
+  /** @see BaseProtocolPlugin.getPosition */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getPosition(positionId: IPositionId): Promise<Position> {
     throw new Error('Not implemented')
   }
 
+  /** IMPORT POSITION */
+
+  /** @see BaseProtocolPlugin.getImportPositionTransaction */
   async getImportPositionTransaction(params: {
     user: IUser
     externalPosition: IExternalPosition
     positionsManager: IPositionsManager
   }): Promise<Maybe<TransactionInfo>> {
-    if (!isMakerPoolId(params.externalPosition.position.pool.poolId)) {
+    if (!isMakerLendingPoolId(params.externalPosition.position.pool.id)) {
       throw new Error('Invalid Maker pool ID')
+    }
+    if (!isMakerPositionId(params.externalPosition.position)) {
+      throw new Error('Invalid Maker position ID')
     }
 
     if (params.externalPosition.externalId.type !== ExternalPositionType.DS_PROXY) {
@@ -276,7 +163,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
       cdpManagerAddress: cdpManagerAddress,
       makerProxyActionsAddress: dssProxyActionsAddress,
       giveToAddress: params.positionsManager.address.value,
-      cdpId: params.externalPosition.position.pool.poolId.vaultId,
+      cdpId: params.externalPosition.position.vaultId,
     })
 
     return {
@@ -289,7 +176,9 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
     }
   }
 
-  private getContractDef<K extends keyof MakerAddressAbiMap>(
+  /** PRIVATE */
+
+  private _getContractDef<K extends keyof MakerAddressAbiMap>(
     contractName: K,
   ): MakerAddressAbiMap[K] {
     const map: MakerAddressAbiMap = {
@@ -345,13 +234,157 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
     return map[contractName]
   }
 
-  private async getIlkProtocolData(ilkInHex: `0x${string}`, makerPoolId: MakerPoolId) {
+  private async _getCollateralInfo(protocolData: ProtocolData) {
+    const { osmData, joinGemBalance, collateralToken, quoteToken, dogRes, spotRes } = protocolData
+
+    const collateralPriceUSD = await this.ctx.oracleManager.getSpotPrice({
+      baseToken: collateralToken,
+    })
+
+    return CollateralInfo.createFrom({
+      token: collateralToken,
+      price: Price.createFrom({
+        value: osmData.currentPrice,
+        base: collateralToken,
+        quote: quoteToken,
+      }),
+      priceUSD: collateralPriceUSD.price,
+      liquidationThreshold: RiskRatio.createFrom({
+        ratio: Percentage.createFrom({
+          value: spotRes.liquidationRatio.times(100).toNumber(),
+        }),
+        type: RiskRatioType.CollateralizationRatio,
+      }),
+
+      tokensLocked: TokenAmount.createFromBaseUnit({
+        token: collateralToken,
+        amount: joinGemBalance.toString(),
+      }),
+      maxSupply: TokenAmount.createFrom({
+        token: collateralToken,
+        amount: Number.MAX_SAFE_INTEGER.toString(),
+      }),
+      liquidationPenalty: Percentage.createFrom({
+        value: dogRes.liquidationPenalty.toNumber() * 100,
+      }),
+    })
+  }
+
+  private async _getDebtInfo(protocolData: ProtocolData) {
+    const { quoteToken, stabilityFee, vatRes } = protocolData
+
+    const priceUSD = await this.ctx.oracleManager.getSpotPrice({
+      baseToken: quoteToken,
+    })
+    return DebtInfo.createFrom({
+      token: quoteToken,
+      price: priceUSD.price,
+      priceUSD: priceUSD.price,
+      interestRate: Percentage.createFrom({ value: stabilityFee.times(100).toNumber() }),
+      totalBorrowed: TokenAmount.createFrom({
+        token: quoteToken,
+        amount: vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor).toString(),
+      }),
+      debtCeiling: TokenAmount.createFrom({
+        token: quoteToken,
+        amount: vatRes.debtCeiling.toString(),
+      }),
+      debtAvailable: TokenAmount.createFrom({
+        token: quoteToken,
+        amount: vatRes.debtCeiling
+          .minus(vatRes.normalizedIlkDebt.times(vatRes.debtScalingFactor))
+          .toString(),
+      }),
+      dustLimit: TokenAmount.createFrom({
+        token: quoteToken,
+        amount: vatRes.debtFloor.toString(),
+      }),
+      originationFee: Percentage.createFrom({ value: 0 }),
+    })
+  }
+
+  private async _getProtocolData(makerLendingPoolId: IMakerLendingPoolId) {
+    const ilk = makerLendingPoolId.ilkType
+    const ilkInHex = stringToHex(ilk, { size: 32 })
+    const { osm, vatRes, jugRes, dogRes, spotRes, erc20, ilkRegistryRes } =
+      await this._getIlkProtocolData(ilkInHex)
+
+    const DAI = await this.ctx.tokensManager.getTokenBySymbol({
+      chainInfo: makerLendingPoolId.protocol.chainInfo,
+      symbol: CommonTokenSymbols.DAI,
+    })
+    if (!DAI) {
+      throw new Error(`DAI token not found for chain: ${makerLendingPoolId.protocol.chainInfo}`)
+    }
+
+    const ilkGemToken = await this.ctx.tokensManager.getTokenByAddress({
+      chainInfo: makerLendingPoolId.protocol.chainInfo,
+      address: Address.createFromEthereum({ value: ilkRegistryRes.gem }),
+    })
+    if (!ilkGemToken) {
+      throw new Error(
+        `Collateral token not found for chain: ${makerLendingPoolId.protocol.chainInfo}`,
+      )
+    }
+
+    const makerSpotDef = this._getContractDef('Spot')
+    const [
+      [peek],
+      [peep],
+      zzz,
+      hop,
+      joinGemBalance,
+      collateralToken,
+      quoteToken,
+      poolBaseCurrencyToken,
+    ] = await Promise.all([
+      osm.read.peek({ account: makerSpotDef.address }),
+      osm.read.peep({ account: makerSpotDef.address }),
+      osm.read.zzz({ account: makerSpotDef.address }),
+      osm.read.hop({ account: makerSpotDef.address }),
+      erc20.read.balanceOf([ilkRegistryRes.join]),
+      ilkGemToken,
+      DAI,
+      DAI,
+    ])
+
+    const SECONDS_PER_YEAR = 60 * 60 * 24 * 365
+    BigNumber.config({ POW_PRECISION: 100 })
+
+    const stabilityFee = jugRes.rawFee.pow(SECONDS_PER_YEAR).minus(1)
+
+    const osmData = {
+      currentPrice: new BigNumber(peek)
+        .shiftedBy(-18)
+        .toPrecision(collateralToken.decimals, BigNumber.ROUND_DOWN)
+        .toString(),
+      nextPrice: new BigNumber(peep)
+        .shiftedBy(-18)
+        .toPrecision(collateralToken.decimals, BigNumber.ROUND_DOWN)
+        .toString(),
+      currentPriceUpdate: new Date(Number(zzz) * 1000),
+      nextPriceUpdate: new Date((Number(zzz) + hop) * 1000),
+    }
+
+    return {
+      osmData,
+      joinGemBalance,
+      stabilityFee,
+      collateralToken,
+      quoteToken,
+      dogRes,
+      spotRes,
+      vatRes,
+    }
+  }
+
+  private async _getIlkProtocolData(ilkInHex: `0x${string}`) {
     const ctx = this.ctx
-    const makerDogDef = this.getContractDef('Dog')
-    const makerVatDef = this.getContractDef('Vat')
-    const makerSpotDef = this.getContractDef('Spot')
-    const makerJugDef = this.getContractDef('McdJug')
-    const makerIlkRegistryDef = this.getContractDef('IlkRegistry')
+    const makerDogDef = this._getContractDef('Dog')
+    const makerVatDef = this._getContractDef('Vat')
+    const makerSpotDef = this._getContractDef('Spot')
+    const makerJugDef = this._getContractDef('McdJug')
+    const makerIlkRegistryDef = this._getContractDef('IlkRegistry')
 
     const [
       {

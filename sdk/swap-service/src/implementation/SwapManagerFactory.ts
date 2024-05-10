@@ -36,23 +36,10 @@ export class SwapManagerFactory {
       name: 'ONE_INCH_SWAP_CHAIN_IDS',
     })
 
-    const ONE_INCH_API_SPOT_URL = configProvider.getConfigurationItem({
-      name: 'ONE_INCH_API_SPOT_URL',
-    })
-    const ONE_INCH_API_SPOT_VERSION = configProvider.getConfigurationItem({
-      name: 'ONE_INCH_API_SPOT_VERSION',
-    })
-    const ONE_INCH_API_SPOT_KEY = configProvider.getConfigurationItem({
-      name: 'ONE_INCH_API_SPOT_KEY',
-    })
-
     if (
-      !ONE_INCH_API_SPOT_URL ||
-      !ONE_INCH_API_SPOT_KEY ||
       !ONE_INCH_API_URL ||
       !ONE_INCH_API_KEY ||
       !ONE_INCH_API_VERSION ||
-      !ONE_INCH_API_SPOT_VERSION ||
       !ONE_INCH_ALLOWED_SWAP_PROTOCOLS ||
       !ONE_INCH_SWAP_CHAIN_IDS
     ) {
@@ -63,9 +50,6 @@ export class SwapManagerFactory {
               ONE_INCH_API_URL,
               ONE_INCH_API_KEY,
               ONE_INCH_API_VERSION,
-              ONE_INCH_API_SPOT_URL,
-              ONE_INCH_API_SPOT_KEY,
-              ONE_INCH_API_SPOT_VERSION,
               ONE_INCH_ALLOWED_SWAP_PROTOCOLS,
               ONE_INCH_SWAP_CHAIN_IDS,
             }),
@@ -80,9 +64,6 @@ export class SwapManagerFactory {
         apiUrl: ONE_INCH_API_URL,
         apiKey: ONE_INCH_API_KEY,
         version: ONE_INCH_API_VERSION,
-        apiSpotUrl: ONE_INCH_API_SPOT_URL,
-        apiSpotKey: ONE_INCH_API_SPOT_KEY,
-        spotVersion: ONE_INCH_API_SPOT_VERSION,
         allowedSwapProtocols: ONE_INCH_ALLOWED_SWAP_PROTOCOLS.split(','),
       },
       chainIds: ONE_INCH_SWAP_CHAIN_IDS.split(',').map((id: string) => parseInt(id)),

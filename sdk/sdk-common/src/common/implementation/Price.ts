@@ -1,67 +1,206 @@
-import { IPrice } from '../interfaces/IPrice'
+import {
+  type IPrice,
+  type IPriceData,
+  isPrice,
+  PriceMulReturnType,
+  PriceMulParamType,
+} from '../interfaces/IPrice'
 import { isToken } from '../interfaces/IToken'
 import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
-import { CurrencySymbol } from '../enums/CurrencySymbol'
 import { Token } from './Token'
-import { isSameTokens } from '../utils/TokenUtils'
+import { Denomination } from '../aliases/Denomination'
+import { isTokenAmount } from '../interfaces'
+import { isFiatCurrencyAmount } from '../interfaces/IFiatCurrencyAmount'
+import {
+  dividePriceByPrice,
+  multiplyFiatCurrencyAmountByPrice,
+  multiplyPriceByPrice,
+  multiplyTokenAmountByPrice,
+} from '../utils/PriceUtils'
+import { FiatCurrencyAmount } from './FiatCurrencyAmount'
+import { TokenAmount } from './TokenAmount'
 
 /**
  * @class Price
- * @description Represents a price of a token (baseToken) in a given currency (quoteToken)
- * @description Base / Quote e.q. 2000 ETH / DAI
- * @description The financial representation (x ETH/DAI, Base/Quote) might be confusing as mathematically it is (x DAI/ETH, Quote/Base which means x DAI per 1 ETH)
- * @description x amount of quoted token for one unit of base token
+ * @see IPrice
  */
 export class Price implements IPrice {
   readonly value: string
-  readonly baseToken: Token
-  readonly quoteToken: Token | CurrencySymbol
+  readonly base: Denomination
+  readonly quote: Denomination
 
-  private constructor(params: IPrice) {
-    this.value = params.value
-    this.baseToken = Token.createFrom(params.baseToken)
-    this.quoteToken = isToken(params.quoteToken)
-      ? Token.createFrom(params.quoteToken)
-      : params.quoteToken
-  }
+  /** Extracted symbol from the base */
+  private readonly _baseSymbol: string
+  /** Extracted symbol from the quote */
+  private readonly _quoteSymbol: string
 
-  static createFrom(params: IPrice): Price {
+  /** FACTORY */
+  static createFrom(params: IPriceData): IPrice {
     return new Price(params)
   }
 
-  toString(): string {
-    if (isToken(this.quoteToken)) {
-      return `${this.value} ${this.baseToken.symbol}/${this.quoteToken.symbol}`
+  /** CONSTRUCTOR */
+
+  /** Sealed constructor */
+  private constructor(params: IPriceData) {
+    this.value = params.value
+
+    if (isToken(params.base)) {
+      this.base = Token.createFrom(params.base)
+      this._baseSymbol = this.base.symbol
     } else {
-      return `${this.value} ${this.baseToken.symbol}/${this.quoteToken}`
+      this.base = params.base
+      this._baseSymbol = this.base
+    }
+
+    if (isToken(params.quote)) {
+      this.quote = Token.createFrom(params.quote)
+      this._quoteSymbol = this.quote.symbol
+    } else {
+      this.quote = params.quote
+      this._quoteSymbol = this.quote
     }
   }
 
-  public toBN(): BigNumber {
+  /** @see IPrice.hasSameQuote */
+  hasSameQuote(otherPrice: IPrice): boolean {
+    if (isToken(this.quote) && isToken(otherPrice.quote)) {
+      return this.quote.equals(otherPrice.quote)
+    }
+
+    return this.quote === otherPrice.quote
+  }
+
+  /** @see IPrice.hasSameBase */
+  hasSameBase(otherPrice: IPrice): boolean {
+    if (isToken(this.base) && isToken(otherPrice.base)) {
+      return this.base.equals(otherPrice.base)
+    }
+
+    return this.base === otherPrice.base
+  }
+
+  /** @see IPrice.hasSameDenominations */
+  hasSameDenominations(otherPrice: IPrice): boolean {
+    return this.hasSameBase(otherPrice) && this.hasSameQuote(otherPrice)
+  }
+
+  /** @see IPrice.add */
+  add(otherPrice: IPrice): IPrice {
+    this._validateSameDenominations(otherPrice)
+
+    return Price.createFrom({
+      value: this.toBN().plus(otherPrice.toBN()).toString(),
+      base: this.base,
+      quote: this.quote,
+    })
+  }
+
+  /** @see IPrice.subtract */
+  subtract(otherPrice: IPrice): IPrice {
+    this._validateSameDenominations(otherPrice)
+
+    return Price.createFrom({
+      value: this.toBN().minus(otherPrice.toBN()).toString(),
+      base: this.base,
+      quote: this.quote,
+    })
+  }
+
+  /** @see IPrice.multiply */
+  multiply<InputParams extends PriceMulParamType, ReturnType = PriceMulReturnType<InputParams>>(
+    multiplier: InputParams,
+  ): ReturnType {
+    if (isPrice(multiplier)) {
+      const result = multiplyPriceByPrice(this, multiplier)
+      return Price.createFrom(result) as ReturnType
+    }
+
+    if (!isTokenAmount(multiplier) && !isFiatCurrencyAmount(multiplier)) {
+      return new Price({
+        value: this.toBN().times(multiplier).toString(),
+        base: this.base,
+        quote: this.quote,
+      }) as ReturnType
+    }
+
+    const result = isTokenAmount(multiplier)
+      ? multiplyTokenAmountByPrice(multiplier, this)
+      : multiplyFiatCurrencyAmountByPrice(multiplier, this)
+
+    if (isTokenAmount(result)) {
+      return TokenAmount.createFrom(result) as ReturnType
+    } else {
+      return FiatCurrencyAmount.createFrom(result) as ReturnType
+    }
+  }
+
+  /** @see IPrice.divide */
+  divide(divider: string | number | IPrice): IPrice {
+    if (isPrice(divider)) {
+      const result = dividePriceByPrice(this, divider)
+      return Price.createFrom(result)
+    }
+
+    return new Price({
+      value: this.toBN().div(divider).toString(),
+      base: this.base,
+      quote: this.quote,
+    })
+  }
+
+  /** @see IPrice.invert */
+  invert(): IPrice {
+    return Price.createFrom({
+      value: new BigNumber(1).div(this.toBN()).toString(),
+      base: this.quote,
+      quote: this.base,
+    })
+  }
+
+  /** @see IPrice.toBN */
+  toBN(): BigNumber {
     return new BigNumber(this.value)
   }
 
-  public hasSameQuoteToken(b: Price): boolean {
-    if (isToken(this.quoteToken) && isToken(b.quoteToken)) {
-      return isSameTokens(this.quoteToken, b.quoteToken)
-    }
-
-    return this.quoteToken === b.quoteToken
+  /** @see IPrice.toString */
+  toString(): string {
+    return `${this.value} ${this._baseSymbol}/${this._quoteSymbol}`
   }
 
-  public div(b: Price) {
-    if (!this.hasSameQuoteToken(b)) {
-      throw new Error('Token bases must be the same')
+  /** PRIVATE */
+
+  /**
+   * @name _validateSameBaseToken
+   * @param price Price to validate against the instance
+   * @throws If the price base tokens do not match
+   */
+  private _validateSameBaseToken(price: IPrice): void {
+    if (!this.hasSameBase(price)) {
+      throw new Error(`Token bases do not match: ${this.base} !== ${price.base}`)
     }
+  }
 
-    return Price.createFrom({
-      value: this.toBN().div(b.toBN()).toString(),
-      baseToken: this.baseToken,
-      quoteToken: b.baseToken,
-    })
+  /**
+   * @name _validateSameQuoteToken
+   * @param price Price to validate against the instance
+   * @throws If the price quote tokens do not match
+   */
+  private _validateSameQuoteToken(price: IPrice): void {
+    if (!this.hasSameQuote(price)) {
+      throw new Error(`Token quotes do not match: ${this.quote} !== ${price.quote}`)
+    }
+  }
 
-    // TODO: case when the quotes are the same
+  /**
+   * @name _validateSameDenominations
+   * @param price Price to validate against the instance
+   * @throws If the price base or quote tokens do not match
+   */
+  private _validateSameDenominations(price: IPrice): void {
+    this._validateSameBaseToken(price)
+    this._validateSameQuoteToken(price)
   }
 }
 

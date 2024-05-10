@@ -8,7 +8,14 @@ import {
   getValueFromReference,
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
-import { Position, TokenAmount, Percentage, Token, isSameTokens } from '@summerfi/sdk-common/common'
+import {
+  Position,
+  TokenAmount,
+  Percentage,
+  IToken,
+  ITokenAmount,
+  IPercentage,
+} from '@summerfi/sdk-common/common'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
@@ -17,6 +24,7 @@ import { type IRefinanceDependencies } from '../common/Types'
 import { getSwapStepData } from '../../implementation/utils/GetSwapStepData'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
 import { BigNumber } from 'bignumber.js'
+import { IOracleManager } from '@summerfi/oracle-common'
 
 export async function refinanceLendingToLendingAnyPair(
   args: IRefinanceParameters,
@@ -27,8 +35,13 @@ export async function refinanceLendingToLendingAnyPair(
     throw new Error('Target pool is not a lending pool')
   }
 
-  const position = Position.createFrom(args.sourcePosition)
-  const targetPool = await dependencies.protocolManager.getPool(args.targetPosition.pool.poolId)
+  const position = args.sourcePosition as Position
+  const sourcePool = await dependencies.protocolManager.getLendingPool(args.sourcePosition.pool.id)
+  const targetPool = await dependencies.protocolManager.getLendingPool(args.targetPosition.pool.id)
+
+  if (!isLendingPool(sourcePool)) {
+    throw new Error('Source pool is not a lending pool')
+  }
 
   if (!isLendingPool(targetPool)) {
     throw new Error('Target pool is not a lending pool')
@@ -38,18 +51,10 @@ export async function refinanceLendingToLendingAnyPair(
   const flashloanAmount = position.debtAmount.multiply(FLASHLOAN_MARGIN)
   const simulator = Simulator.create(refinanceLendingToLendingAnyPairStrategy)
 
-  const targetCollateralConfig = targetPool.collaterals.get({
-    token: args.targetPosition.collateralAmount.token,
-  })
-  const targetDebtConfig = targetPool.debts.get({ token: args.targetPosition.debtAmount.token })
-  if (!targetCollateralConfig || !targetDebtConfig) {
-    throw new Error('Target token config not found in pool')
-  }
-
-  const isCollateralSwapSkipped = targetCollateralConfig.token.address.equals(
-    position.collateralAmount.token.address,
+  const isCollateralSwapSkipped = !targetPool.id.collateralToken.equals(
+    sourcePool.id.collateralToken,
   )
-  const isDebtSwapSkipped = targetDebtConfig.token.address.equals(position.debtAmount.token.address)
+  const isDebtSwapSkipped = !targetPool.id.debtToken.equals(sourcePool.id.debtToken)
 
   const simulation = await simulator
     .next(async () => ({
@@ -77,11 +82,12 @@ export async function refinanceLendingToLendingAnyPair(
         name: 'CollateralSwap',
         type: SimulationSteps.Swap,
         inputs: await getSwapStepData({
-          chainInfo: position.pool.protocol.chainInfo,
+          chainInfo: position.pool.id.protocol.chainInfo,
           fromAmount: position.collateralAmount,
-          toToken: targetCollateralConfig.token,
+          toToken: targetPool.id.collateralToken,
           slippage: Percentage.createFrom({ value: args.slippage.value }),
           swapManager: dependencies.swapManager,
+          oracleManager: dependencies.oracleManager,
         }),
       }),
       isCollateralSwapSkipped,
@@ -95,18 +101,15 @@ export async function refinanceLendingToLendingAnyPair(
           ? ctx.getReference(['PaybackWithdrawFromSource', 'paybackAmount'])
           : await estimateSwapFromAmount({
               receiveAtLeast: flashloanAmount,
-              fromToken: targetDebtConfig.token,
+              fromToken: targetPool.id.debtToken,
               slippage: Percentage.createFrom(args.slippage),
               swapManager: dependencies.swapManager,
+              oracleManager: dependencies.oracleManager,
             }),
         depositAmount: isCollateralSwapSkipped
           ? position.collateralAmount
           : ctx.getReference(['CollateralSwap', 'received']),
-        position: newEmptyPositionFromPool(
-          targetPool,
-          targetDebtConfig.token,
-          targetCollateralConfig.token,
-        ),
+        position: newEmptyPositionFromPool(targetPool),
         borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
     }))
@@ -115,13 +118,14 @@ export async function refinanceLendingToLendingAnyPair(
         name: 'DebtSwap',
         type: SimulationSteps.Swap,
         inputs: await getSwapStepData({
-          chainInfo: position.pool.protocol.chainInfo,
+          chainInfo: position.pool.id.protocol.chainInfo,
           fromAmount: getValueFromReference(
             ctx.getReference(['DepositBorrowToTarget', 'borrowAmount']),
           ),
           toToken: flashloanAmount.token,
           slippage: Percentage.createFrom({ value: args.slippage.value }),
           swapManager: dependencies.swapManager,
+          oracleManager: dependencies.oracleManager,
         }),
       }),
       isDebtSwapSkipped,
@@ -146,8 +150,8 @@ export async function refinanceLendingToLendingAnyPair(
     }))
     .next(async (ctx) => {
       // TODO: we should have a way to get the target position more easily and realiably,
-      const targetPosition = Object.values(ctx.state.positions).find(
-        (p) => p.pool.protocol === targetPool.protocol,
+      const targetPosition = Object.values(ctx.state.positions).find((p) =>
+        p.pool.id.protocol.equals(targetPool.id.protocol),
       )
       if (!targetPosition) {
         throw new Error('Target position not found')
@@ -163,8 +167,8 @@ export async function refinanceLendingToLendingAnyPair(
     })
     .run()
 
-  const targetPosition = Object.values(simulation.positions).find(
-    (p) => p.pool.protocol === targetPool.protocol,
+  const targetPosition = Object.values(simulation.positions).find((p) =>
+    p.pool.id.protocol.equals(targetPool.id.protocol),
   )
 
   if (!targetPosition) {
@@ -207,20 +211,20 @@ function getSimulationType(
  *    and we assume maximum slippage.
  */
 async function estimateSwapFromAmount(params: {
-  receiveAtLeast: TokenAmount
-  fromToken: Token
-  slippage: Percentage
+  receiveAtLeast: ITokenAmount
+  fromToken: IToken
+  slippage: IPercentage
   swapManager: ISwapManager
-}): Promise<TokenAmount> {
+  oracleManager: IOracleManager
+}): Promise<ITokenAmount> {
   const { receiveAtLeast, slippage } = params
 
-  if (isSameTokens(receiveAtLeast.token, params.fromToken)) {
+  if (receiveAtLeast.token.equals(params.fromToken)) {
     return receiveAtLeast
   }
 
   const spotPrice = (
-    await params.swapManager.getSpotPrice({
-      chainInfo: receiveAtLeast.token.chainInfo,
+    await params.oracleManager.getSpotPrice({
       baseToken: receiveAtLeast.token,
       quoteToken: params.fromToken,
     })

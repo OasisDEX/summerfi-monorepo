@@ -1,12 +1,11 @@
 import type {
-  TokenAmount,
-  ChainInfo,
-  Percentage,
-  Token,
-  Address,
-  CurrencySymbol,
+  IPercentage,
+  IAddress,
+  IToken,
+  ITokenAmount,
+  IChainInfo,
 } from '@summerfi/sdk-common/common'
-import type { QuoteData, SwapData, SpotData } from '@summerfi/sdk-common/swap'
+import type { QuoteData, SwapData } from '@summerfi/sdk-common/swap'
 
 /**
  * @name ISwapManager
@@ -24,11 +23,11 @@ export interface ISwapManager {
    * @param slippage The maximum slippage allowed
    */
   getSwapDataExactInput(params: {
-    chainInfo: ChainInfo
-    fromAmount: TokenAmount
-    toToken: Token
-    recipient: Address
-    slippage: Percentage
+    chainInfo: IChainInfo
+    fromAmount: ITokenAmount
+    toToken: IToken
+    recipient: IAddress
+    slippage: IPercentage
   }): Promise<SwapData>
 
   /**
@@ -40,24 +39,10 @@ export interface ISwapManager {
    * @param toToken The token to swap to
    */
   getSwapQuoteExactInput(params: {
-    chainInfo: ChainInfo
-    fromAmount: TokenAmount
-    toToken: Token
+    chainInfo: IChainInfo
+    fromAmount: ITokenAmount
+    toToken: IToken
   }): Promise<QuoteData>
-
-  /**
-   * @name getSpotPrice
-   * @description Returns the prevailing market price for a given asset
-   *              in terms of a base currency
-   * @param chainInfo The chain information
-   * @param baseToken A price request for baseToken
-   * @param quoteToken A price request - QuoteToken is optional with a USD default.
-   */
-  getSpotPrice(params: {
-    chainInfo: ChainInfo
-    baseToken: Token
-    quoteToken?: CurrencySymbol | Token
-  }): Promise<SpotData>
 
   /**
    * @name getSummerFee
@@ -67,10 +52,10 @@ export interface ISwapManager {
    */
   getSummerFee(params: {
     from: {
-      token: Token
+      token: IToken
     }
     to: {
-      token: Token
+      token: IToken
     }
-  }): Promise<Percentage>
+  }): Promise<IPercentage>
 }
