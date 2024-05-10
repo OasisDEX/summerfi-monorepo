@@ -19,7 +19,7 @@ export type SpotPriceInfo = {
 /**
  * @description Zod schema for SpotPriceInfo
  */
-export const SpotPriceInfoSchema = z.object({
+export const SpotPriceInfoDataSchema = z.object({
   provider: OracleProviderTypeSchema,
   token: TokenDataSchema,
   price: PriceDataSchema,

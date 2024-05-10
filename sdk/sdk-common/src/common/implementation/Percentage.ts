@@ -66,6 +66,11 @@ export class Percentage implements IPercentage {
   toString(): string {
     return `${this.value}%`
   }
+
+  /** @see IPrintable.toString */
+  toString(): string {
+    return `${this.value}%`
+  }
 }
 
 SerializationService.registerClass(Percentage)

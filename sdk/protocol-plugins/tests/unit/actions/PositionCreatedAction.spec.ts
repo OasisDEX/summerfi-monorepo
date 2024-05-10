@@ -1,16 +1,9 @@
 import { Address, Position, Token, TokenAmount, PositionType } from '@summerfi/sdk-common/common'
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
 import { PositionCreatedAction } from '../../../src/plugins/common/actions/PositionCreatedAction'
-import { IProtocol, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { ILKType } from '../../../src/plugins/maker'
+import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SparkProtocol } from '../../../src/plugins/spark/implementation/SparkProtocol'
-import {
-  EmodeType,
-  SparkLendingPool,
-  SparkLendingPoolId,
-  SparkPosition,
-  SparkPositionId,
-} from '../../../src'
+import { EmodeType, SparkLendingPool, SparkLendingPoolId, SparkPosition } from '../../../src'
 
 describe('PositionCreated Action', () => {
   const action = new PositionCreatedAction()
