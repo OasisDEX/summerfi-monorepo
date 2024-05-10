@@ -31,11 +31,10 @@ export const encodeMorphoBluePartialTakeProfit = (
       'bool withdrawToDebt',
   )
 
-  /** @todo UPDATE OPERATION NAMES FOR MB */
   const operationName =
     triggerData.withdrawToken === position.debt.token.address
-      ? OPERATION_NAMES.morphoblue.CLOSE_POSITION
-      : OPERATION_NAMES.morphoblue.CLOSE_POSITION
+      ? OPERATION_NAMES.morphoblue.WITHDRAW_TO_DEBT
+      : OPERATION_NAMES.morphoblue.WITHDRAW
 
   const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
 
