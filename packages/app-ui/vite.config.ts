@@ -4,12 +4,13 @@ import { fileURLToPath } from 'node:url'
 import { extname, relative, resolve } from 'path'
 import { defineConfig } from 'vite'
 import { libInjectCss } from 'vite-plugin-lib-inject-css'
+import tsconfigPaths from 'vite-tsconfig-paths'
 
 const fileSliceNumber = 0
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), libInjectCss()],
+  plugins: [react(), tsconfigPaths(), libInjectCss()],
   build: {
     watch: {
       skipWrite: true,

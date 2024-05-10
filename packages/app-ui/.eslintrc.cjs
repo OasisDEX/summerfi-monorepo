@@ -4,6 +4,8 @@ module.exports = {
   extends: ['@summerfi/eslint-config/next.cjs'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: true,
+    project: ['./tsconfig.json'],
+    sourceType: 'module',
+    tsconfigRootDir: __dirname,
   },
 }
