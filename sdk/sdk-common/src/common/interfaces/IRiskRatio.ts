@@ -44,6 +44,6 @@ export type IRiskRatioData = Readonly<z.infer<typeof RiskRatioDataSchema>>
  * @param maybeRiskRatio
  * @returns true if the object is an IRiskRatio
  */
-export function isRiskRatio(maybeRiskRatio: unknown): maybeRiskRatio is IRiskRatioData {
+export function isRiskRatio(maybeRiskRatio: unknown): maybeRiskRatio is IRiskRatio {
   return RiskRatioDataSchema.safeParse(maybeRiskRatio).success
 }

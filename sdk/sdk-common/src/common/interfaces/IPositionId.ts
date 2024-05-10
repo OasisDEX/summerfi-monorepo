@@ -26,6 +26,6 @@ export type IPositionIdData = Readonly<z.infer<typeof PositionIdDataSchema>>
  * @param maybePositionId
  * @returns true if the object is an IPositionId
  */
-export function isPositionId(maybePositionId: unknown): maybePositionId is IPositionIdData {
+export function isPositionId(maybePositionId: unknown): maybePositionId is IPositionId {
   return PositionIdDataSchema.safeParse(maybePositionId).success
 }

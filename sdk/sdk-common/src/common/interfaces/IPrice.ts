@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js'
-import { Denomination, DenominationSchema } from '../aliases/Denomination'
+import { Denomination, DenominationDataSchema } from '../aliases/Denomination'
 import { IPrintable } from './IPrintable'
 import { type ITokenAmount } from './ITokenAmount'
 import { type IFiatCurrencyAmount } from './IFiatCurrencyAmount'
@@ -140,8 +140,8 @@ export interface IPrice extends IPriceData, IPrintable {
  */
 export const PriceDataSchema = z.object({
   value: z.string(),
-  base: DenominationSchema,
-  quote: DenominationSchema,
+  base: DenominationDataSchema,
+  quote: DenominationDataSchema,
 })
 
 /**
@@ -154,6 +154,6 @@ export type IPriceData = Readonly<z.infer<typeof PriceDataSchema>>
  * @param maybePrice
  * @returns true if the object is an isPrice
  */
-export function isPrice(maybePrice: unknown): maybePrice is IPriceData {
+export function isPrice(maybePrice: unknown): maybePrice is IPrice {
   return PriceDataSchema.safeParse(maybePrice).success
 }

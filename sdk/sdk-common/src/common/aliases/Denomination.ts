@@ -19,7 +19,7 @@ export type Denomination = IToken | FiatCurrency
 /**
  * @description Zod schema for Denomination
  */
-export const DenominationSchema = TokenDataSchema.or(FiatCurrencySchema)
+export const DenominationDataSchema = TokenDataSchema.or(FiatCurrencySchema)
 
 /**
  * @description Type guard for Denomination
@@ -27,11 +27,11 @@ export const DenominationSchema = TokenDataSchema.or(FiatCurrencySchema)
  * @returns true if the value is a Denomination
  */
 export function isDenomination(maybeDenomination: unknown): maybeDenomination is Denomination {
-  return DenominationSchema.safeParse(maybeDenomination).success
+  return DenominationDataSchema.safeParse(maybeDenomination).success
 }
 
 /**
  * Checker to make sure that the schema is aligned with the interface
  */
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: DenominationData = {} as z.infer<typeof DenominationSchema>
+const __schemaChecker: DenominationData = {} as z.infer<typeof DenominationDataSchema>

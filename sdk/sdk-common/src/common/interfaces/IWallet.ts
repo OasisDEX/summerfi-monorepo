@@ -30,6 +30,6 @@ export type IWalletData = Readonly<z.infer<typeof WalletDataSchema>>
  * @param maybeWallet
  * @returns true if the object is an IWallet
  */
-export function isWallet(maybeWallet: unknown): maybeWallet is IWalletData {
+export function isWallet(maybeWallet: unknown): maybeWallet is IWallet {
   return WalletDataSchema.safeParse(maybeWallet).success
 }

@@ -5,9 +5,7 @@ import { z } from 'zod'
 
 /**
  * @name IToken
- * @description Interface for the implementors of the token
- *
- * This interface is used to add all the methods that the interface supports
+ * @description Represents an token in a Chain, typically used to represent ERC-20 tokens
  */
 export interface IToken extends ITokenData, IPrintable {
   /** Chain where the token is deployed */
@@ -43,7 +41,9 @@ export const TokenDataSchema = z.object({
   decimals: z.number(),
 })
 
-/**/
+/**
+ * Type for the data part of the IToken interface
+ */
 export type ITokenData = Readonly<z.infer<typeof TokenDataSchema>>
 
 /**
@@ -51,6 +51,15 @@ export type ITokenData = Readonly<z.infer<typeof TokenDataSchema>>
  * @param maybeTokenData
  * @returns true if the object is an IToken
  */
-export function isToken(maybeTokenData: unknown): maybeTokenData is ITokenData {
+export function isToken(maybeTokenData: unknown): maybeTokenData is IToken {
+  return isTokenData(maybeTokenData)
+}
+
+/**
+ * @description Type guard for ITokenData
+ * @param maybeTokenData
+ * @returns true if the object is an ITokenData
+ */
+export function isTokenData(maybeTokenData: unknown): maybeTokenData is ITokenData {
   return TokenDataSchema.safeParse(maybeTokenData).success
 }

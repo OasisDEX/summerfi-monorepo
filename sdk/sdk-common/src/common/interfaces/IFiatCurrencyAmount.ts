@@ -90,6 +90,6 @@ export type IFiatCurrencyAmountData = Readonly<z.infer<typeof FiatCurrencyAmount
  */
 export function isFiatCurrencyAmount(
   maybeTokenAmount: unknown,
-): maybeTokenAmount is IFiatCurrencyAmountData {
+): maybeTokenAmount is IFiatCurrencyAmount {
   return FiatCurrencyAmountDataSchema.safeParse(maybeTokenAmount).success
 }

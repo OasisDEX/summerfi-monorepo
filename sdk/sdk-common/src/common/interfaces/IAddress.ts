@@ -43,6 +43,6 @@ export type IAddressData = Readonly<z.infer<typeof AddressDataSchema>>
  * @param maybeAddress
  * @returns true if the object is an IAddress
  */
-export function isAddress(maybeAddress: unknown): maybeAddress is IAddressData {
+export function isAddress(maybeAddress: unknown): maybeAddress is IAddress {
   return AddressDataSchema.safeParse(maybeAddress).success
 }

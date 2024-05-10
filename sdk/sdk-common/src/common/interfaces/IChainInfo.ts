@@ -40,6 +40,6 @@ export type IChainInfoData = Readonly<z.infer<typeof ChainInfoDataSchema>>
  * @param maybeChainInfo
  * @returns true if the object is an IChainInfo
  */
-export function isChainInfo(maybeChainInfo: unknown): maybeChainInfo is IChainInfoData {
+export function isChainInfo(maybeChainInfo: unknown): maybeChainInfo is IChainInfo {
   return ChainInfoDataSchema.safeParse(maybeChainInfo).success
 }

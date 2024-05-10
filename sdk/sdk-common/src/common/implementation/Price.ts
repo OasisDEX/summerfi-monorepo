@@ -18,8 +18,8 @@ import {
 } from '../utils/PriceUtils'
 import { FiatCurrencyAmount } from './FiatCurrencyAmount'
 import { TokenAmount } from './TokenAmount'
-import { isToken } from '../interfaces/IToken'
-import { isTokenAmount } from '../interfaces/ITokenAmount'
+import { isToken, isTokenData } from '../interfaces/IToken'
+import { isTokenAmount, isTokenAmountData } from '../interfaces/ITokenAmount'
 
 /**
  * @class Price
@@ -46,7 +46,7 @@ export class Price implements IPrice {
   private constructor(params: IPriceData) {
     this.value = params.value
 
-    if (isToken(params.base)) {
+    if (isTokenData(params.base)) {
       this.base = Token.createFrom(params.base)
       this._baseSymbol = this.base.symbol
     } else {
@@ -54,7 +54,7 @@ export class Price implements IPrice {
       this._baseSymbol = this.base
     }
 
-    if (isToken(params.quote)) {
+    if (isTokenData(params.quote)) {
       this.quote = Token.createFrom(params.quote)
       this._quoteSymbol = this.quote.symbol
     } else {
@@ -129,7 +129,7 @@ export class Price implements IPrice {
       ? multiplyTokenAmountByPrice(multiplier, this)
       : multiplyFiatCurrencyAmountByPrice(multiplier, this)
 
-    if (isTokenAmount(result)) {
+    if (isTokenAmountData(result)) {
       return TokenAmount.createFrom(result) as ReturnType
     } else {
       return FiatCurrencyAmount.createFrom(result) as ReturnType

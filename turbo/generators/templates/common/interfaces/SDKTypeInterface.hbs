@@ -1,0 +1,42 @@
+import { IPrintable } from './IPrintable'
+import { z } from 'zod'
+
+/**
+ * @name I{{namePascalCase}}
+ * @description 
+ */
+export interface I{{namePascalCase}} extends I{{namePascalCase}}Data, IPrintable {
+  /** DECLARE HERE ALL THE NEEDED ATTRIBUTES WITH readonly */
+  readonly dummy: string
+
+  /** DECLARE HERE ALL THE FUNCTIONS SUPPORTED BY THIS INTERFACE */
+
+  /**
+   * @name equals
+   * @description Checks if two instances are equal
+   * @param dummy The instance to compare
+   * @returns true if the instances are equal
+   */
+  equals(dummy: I{{namePascalCase}}): boolean
+}
+
+/**
+ * @description Zod schema for I{{namePascalCase}}
+ */
+export const {{namePascalCase}}DataSchema = z.object({
+  /** DECLARE HERE THE ZOD SCHEMA FOR THE INSTANCE ATTRIBUTES */
+})
+
+/**
+ * Type for the data part of the I{{namePascalCase}} interface
+ */
+export type I{{namePascalCase}}Data = Readonly<z.infer<typeof {{namePascalCase}}DataSchema>>
+
+/**
+ * @description Type guard for I{{namePascalCase}}
+ * @param maybe{{namePascalCase}}Data
+ * @returns true if the object is an I{{namePascalCase}}
+ */
+export function is{{namePascalCase}}(maybe{{namePascalCase}}Data: unknown): maybe{{namePascalCase}}Data is I{{namePascalCase}} {
+  return {{namePascalCase}}DataSchema.safeParse(maybe{{namePascalCase}}Data).success
+}
