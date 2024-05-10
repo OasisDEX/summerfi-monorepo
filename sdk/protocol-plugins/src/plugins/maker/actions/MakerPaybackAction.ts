@@ -1,8 +1,7 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
-import { TokenAmount } from '@summerfi/sdk-common/common'
+import { IPosition, ITokenAmount } from '@summerfi/sdk-common/common'
 import { IPositionsManager } from '@summerfi/sdk-common/orders'
-import { IPool } from '@summerfi/sdk-common/protocols/'
-import { isMakerPoolId } from '../types/MakerPoolId'
+import { isMakerPositionId } from '../interfaces/IMakerPositionId'
 
 export class MakerPaybackAction extends BaseAction {
   public readonly config = {
@@ -15,21 +14,21 @@ export class MakerPaybackAction extends BaseAction {
 
   public encodeCall(
     params: {
-      pool: IPool
+      position: IPosition
       positionsManager: IPositionsManager
-      amount: TokenAmount
+      amount: ITokenAmount
       paybackAll: boolean
     },
     paramsMapping?: InputSlotsMapping,
   ): ActionCall {
-    if (!isMakerPoolId(params.pool.poolId)) {
-      throw new Error('Pool ID is not a Maker one')
+    if (!isMakerPositionId(params.position.id)) {
+      throw new Error(`Position ID is not a Maker one: ${JSON.stringify(params.position.id)} `)
     }
 
     return this._encodeCall({
       arguments: [
         {
-          vaultId: params.pool.poolId.vaultId,
+          vaultId: params.position.id.vaultId,
           userAddress: params.positionsManager.address.value,
           amount: params.amount.toBaseUnit(),
           paybackAll: params.paybackAll,

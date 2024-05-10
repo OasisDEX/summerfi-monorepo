@@ -1,101 +1,147 @@
 import { BigNumber } from 'bignumber.js'
-import { Percentage } from './Percentage'
 import { Token } from './Token'
 import { SerializationService } from '../../services/SerializationService'
-import { ITokenAmount } from '../interfaces/ITokenAmount'
+import {
+  ITokenAmount,
+  ITokenAmountData,
+  TokenAmountMulDivParamType,
+  TokenAmountMulDivReturnType,
+} from '../interfaces/ITokenAmount'
+import { isPercentage } from '../interfaces/IPercentage'
+import {
+  divideTokenAmountByPercentage,
+  multiplyTokenAmountByPercentage,
+} from '../utils/PercentageUtils'
+import { isPrice } from '../interfaces/IPrice'
 
 /**
  * @class TokenAmount
- * @description Represents an amount of a certain token. The amount is represented as a string to avoid
- *              issues with big number representation. The token gives enough information to parse it into
- *              a big number.
+ * @see ITokenAmount
  */
 export class TokenAmount implements ITokenAmount {
-  private readonly _baseUnitFactor: BigNumber
-
   readonly token: Token
   readonly amount: string
 
-  private constructor(params: ITokenAmount) {
+  // This is protected because otherwise TypeScript is removing the type when transpiling and it causes errors.
+  // Apparently using protected prevents this bug
+  protected readonly _baseUnitFactor: BigNumber
+
+  /** CONSTRUCTOR  */
+
+  /** Sealed constructor */
+  private constructor(params: ITokenAmountData) {
     this.token = Token.createFrom(params.token)
     this.amount = params.amount
     this._baseUnitFactor = new BigNumber(10).pow(new BigNumber(params.token.decimals))
   }
 
-  private get amountBN(): BigNumber {
-    return this.toBN()
-  }
+  /** FACTORY */
 
-  static createFrom(params: ITokenAmount): TokenAmount {
+  /**
+   * @name createFrom
+   * @param params Token amount data to create the instance
+   * @returns The resulting TokenAmount
+   *
+   * `amount` is the amount in floating point format without taking into account the token decimals
+   */
+  static createFrom(params: ITokenAmountData): ITokenAmount {
     return new TokenAmount(params)
   }
-  // amount in base unit (1eth = 1000000000000000000, 1btc = 100000000 etc)
-  public static createFromBaseUnit(parmas: { token: Token; amount: string }): TokenAmount {
-    const amount = new BigNumber(parmas.amount)
-      .div(new BigNumber(10).pow(new BigNumber(parmas.token.decimals)))
+
+  /**
+   * @name createFromBaseUnit
+   * @param params Token amount data to create the instance
+   * @returns The resulting TokenAmount
+   *
+   * `amount` is the integer amount including all the decimals of the token
+   *
+   * i.e.: amount in base unit (1eth = 1000000000000000000, 1btc = 100000000, etc...)
+   */
+  static createFromBaseUnit(params: ITokenAmountData): ITokenAmount {
+    const amount = new BigNumber(params.amount)
+      .div(new BigNumber(10).pow(new BigNumber(params.token.decimals)))
       .toString()
-    return new TokenAmount({ token: parmas.token, amount: amount })
+    return new TokenAmount({ token: params.token, amount: amount })
   }
 
-  public add(tokenToAdd: TokenAmount): TokenAmount {
-    if (tokenToAdd.token.symbol !== this.token.symbol) {
-      throw new Error(
-        `Token symbols do not match: ${tokenToAdd.token.symbol} !== ${this.token.symbol}`,
-      )
-    }
+  /** METHODS */
+
+  /** @see ITokenAmount.add */
+  add(tokenToAdd: ITokenAmount): ITokenAmount {
+    this._validateSameToken(tokenToAdd)
 
     return new TokenAmount({
       token: this.token,
-      amount: this.amountBN.plus(tokenToAdd.amountBN).toString(),
+      amount: this.toBN().plus(tokenToAdd.toBN()).toString(),
     })
   }
 
-  public subtract(tokenToSubstract: TokenAmount): TokenAmount {
-    if (tokenToSubstract.token.symbol !== this.token.symbol) {
-      throw new Error('Token symbols do not match')
-    }
+  /** @see ITokenAmount.subtract */
+  subtract(tokenToSubstract: ITokenAmount): ITokenAmount {
+    this._validateSameToken(tokenToSubstract)
 
     return new TokenAmount({
       token: this.token,
-      amount: this.amountBN.minus(tokenToSubstract.amountBN).toString(),
+      amount: this.toBN().minus(tokenToSubstract.toBN()).toString(),
     })
   }
 
-  public multiply(multiplier: Percentage | string | number): TokenAmount {
-    if (multiplier instanceof Percentage) {
-      return new TokenAmount({
-        token: this.token,
-        amount: this.amountBN.times(multiplier.toProportion()).toString(),
-      })
+  /** @see ITokenAmount.multiply */
+  multiply<
+    InputParams extends TokenAmountMulDivParamType,
+    ReturnType = TokenAmountMulDivReturnType<InputParams>,
+  >(multiplier: InputParams): ReturnType {
+    if (isPrice(multiplier)) {
+      return multiplier.multiply(this)
     }
 
-    return new TokenAmount({
-      token: this.token,
-      amount: this.amountBN.times(multiplier).toString(),
-    })
+    const result = isPercentage(multiplier)
+      ? multiplyTokenAmountByPercentage(this, multiplier)
+      : {
+          token: this.token,
+          amount: this.toBN().times(multiplier).toString(),
+        }
+
+    return new TokenAmount(result) as ReturnType
   }
 
-  public divide(divisor: Percentage | string | number): TokenAmount {
-    if (divisor instanceof Percentage) {
-      return new TokenAmount({
-        token: this.token,
-        amount: this.amountBN.div(divisor.value).toString(),
-      })
+  /** @see ITokenAmount.divide */
+  divide<
+    InputParams extends TokenAmountMulDivParamType,
+    ReturnType = TokenAmountMulDivReturnType<InputParams>,
+  >(divisor: InputParams): ReturnType {
+    if (isPrice(divisor)) {
+      return divisor.invert().multiply(this)
     }
 
-    return new TokenAmount({ token: this.token, amount: this.amountBN.div(divisor).toString() })
+    const result = isPercentage(divisor)
+      ? divideTokenAmountByPercentage(this, divisor)
+      : { token: this.token, amount: this.toBN().div(divisor).toString() }
+
+    return new TokenAmount(result) as ReturnType
   }
 
-  public toString(): string {
+  /** @see IPrintable.toString */
+  toString(): string {
     return `${this.amount} ${this.token.symbol}`
   }
 
-  public toBaseUnit(): string {
+  toBaseUnit(): string {
     return new BigNumber(this.amount).times(this._baseUnitFactor).toFixed(0)
   }
 
-  public toBN(): BigNumber {
+  /** @see ITokenAmount.toBN */
+  toBN(): BigNumber {
     return new BigNumber(this.amount)
+  }
+
+  /** PRIVATE */
+  private _validateSameToken(tokenAmount: ITokenAmount): void {
+    if (tokenAmount.token.symbol !== this.token.symbol) {
+      throw new Error(
+        `Token symbols do not match: ${tokenAmount.token.symbol} !== ${this.token.symbol}`,
+      )
+    }
   }
 }
 

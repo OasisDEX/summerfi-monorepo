@@ -5,11 +5,27 @@ import {
   Token,
   TokenAmount,
   Price,
-  CurrencySymbol,
+  Maybe,
 } from '@summerfi/sdk-common/common'
-import { IPool } from '@summerfi/sdk-common/protocols'
-import { testTargetLendingPool, testTargetLendingPoolRequiredSwaps } from './testSourcePosition'
+import { ILendingPool } from '@summerfi/sdk-common/protocols'
+import {
+  testTargetLendingPool,
+  testTargetLendingPoolInfo,
+  testTargetLendingPoolRequiredSwaps,
+} from './testSourcePosition'
 import { SwapProviderType } from '@summerfi/sdk-common/swap'
+import {
+  Denomination,
+  FiatCurrency,
+  ILendingPoolInfo,
+  IPosition,
+  IPositionIdData,
+  IToken,
+  OracleProviderType,
+  SpotPriceInfo,
+} from '@summerfi/sdk-common'
+import { IUser } from '@summerfi/sdk-common/user'
+import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 
 async function getSwapDataExactInput(params: {
   chainInfo: ChainInfo
@@ -43,18 +59,18 @@ async function getSwapQuoteExactInput(params: {
 }
 
 async function getSpotPrice(params: {
-  chainInfo: ChainInfo
-  baseToken: Token
-  quoteToken: Token | CurrencySymbol
-}) {
+  baseToken: IToken
+  quoteToken?: Denomination
+}): Promise<SpotPriceInfo> {
   const MOCK_PRICE = 0.5
-  const MOCK_QUOTE_CURRENCY = CurrencySymbol.USD
+  const MOCK_QUOTE_CURRENCY = FiatCurrency.USD
   return {
-    provider: SwapProviderType.OneInch,
+    provider: OracleProviderType.OneInch,
+    token: params.baseToken,
     price: Price.createFrom({
       value: MOCK_PRICE.toString(),
-      baseToken: params.baseToken,
-      quoteToken: MOCK_QUOTE_CURRENCY,
+      base: params.baseToken,
+      quote: MOCK_QUOTE_CURRENCY,
     }),
   }
 }
@@ -64,32 +80,55 @@ export function mockGetFee() {
 }
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-async function mockGetPool(poolId: unknown): Promise<IPool> {
-  return testTargetLendingPool as IPool
+async function mockGetLendingPool(poolId: unknown): Promise<ILendingPool> {
+  return testTargetLendingPool as ILendingPool
 }
 
-async function mockGetPoolRequiresSwaps(poolId: unknown): Promise<IPool> {
-  return testTargetLendingPoolRequiredSwaps as IPool
+/* eslint-disable @typescript-eslint/no-unused-vars */
+async function mockGetLendingPoolInfo(poolId: unknown): Promise<ILendingPoolInfo> {
+  return testTargetLendingPoolInfo as ILendingPoolInfo
+}
+
+async function mockGetLendingPoolRequiresSwaps(poolId: unknown): Promise<ILendingPool> {
+  return testTargetLendingPoolRequiredSwaps as ILendingPool
+}
+
+async function mockGetPosition(params: IPositionIdData): Promise<IPosition> {
+  return {} as IPosition
+}
+
+async function mockGetImportPositionTransaction(params: {
+  user: IUser
+  externalPosition: IExternalPosition
+  positionsManager: IPositionsManager
+}): Promise<Maybe<TransactionInfo>> {
+  return {} as Maybe<TransactionInfo>
 }
 
 export const mockRefinanceContext = {
   getSummerFee: mockGetFee,
   protocolManager: {
-    getPool: mockGetPool,
-    getPosition: () => {},
+    getLendingPool: mockGetLendingPool,
+    getLendingPoolInfo: mockGetLendingPoolInfo,
+    getPosition: mockGetPosition,
+    getImportPositionTransaction: mockGetImportPositionTransaction,
   },
   swapManager: {
     getSwapDataExactInput,
     getSwapQuoteExactInput: jest.fn().mockImplementation(getSwapQuoteExactInput),
-    getSpotPrice,
     getSummerFee: jest.fn().mockImplementation(mockGetFee),
+  },
+  oracleManager: {
+    getSpotPrice,
   },
 }
 
 export const mockRefinanceContextRequiredSwaps = {
   ...mockRefinanceContext,
   protocolManager: {
-    getPool: mockGetPoolRequiresSwaps,
-    getPosition: () => {},
+    getLendingPool: mockGetLendingPoolRequiresSwaps,
+    getLendingPoolInfo: mockGetLendingPoolInfo,
+    getPosition: mockGetPosition,
+    getImportPositionTransaction: mockGetImportPositionTransaction,
   },
 }

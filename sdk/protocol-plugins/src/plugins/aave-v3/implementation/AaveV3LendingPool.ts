@@ -1,22 +1,25 @@
 import { LendingPool } from '@summerfi/sdk-common/protocols'
-import { IAaveV3LendingPool } from '../interfaces/IAaveV3LendingPool'
-import { AaveV3CollateralConfigMap } from './AaveV3CollateralConfigMap'
-import { AaveV3DebtConfigMap } from './AaveV3DebtConfigMap'
+import { IAaveV3LendingPool, IAaveV3LendingPoolData } from '../interfaces/IAaveV3LendingPool'
 import { SerializationService } from '@summerfi/sdk-common/services'
+import { AaveV3LendingPoolId } from './AaveV3LendingPoolId'
 
+/**
+ * @class AaveV3LendingPool
+ * @see IAaveV3LendingPoolData
+ */
 export class AaveV3LendingPool extends LendingPool implements IAaveV3LendingPool {
-  readonly collaterals: AaveV3CollateralConfigMap
-  readonly debts: AaveV3DebtConfigMap
+  readonly id: AaveV3LendingPoolId
 
-  private constructor(params: IAaveV3LendingPool) {
-    super(params)
-
-    this.collaterals = AaveV3CollateralConfigMap.createFrom(params.collaterals)
-    this.debts = AaveV3DebtConfigMap.createFrom(params.debts)
+  /** Factory method */
+  public static createFrom(params: IAaveV3LendingPoolData): AaveV3LendingPool {
+    return new AaveV3LendingPool(params)
   }
 
-  public static createFrom(params: IAaveV3LendingPool): AaveV3LendingPool {
-    return new AaveV3LendingPool(params)
+  /** Sealed constructor */
+  private constructor(params: IAaveV3LendingPoolData) {
+    super(params)
+
+    this.id = AaveV3LendingPoolId.createFrom(params.id)
   }
 }
 

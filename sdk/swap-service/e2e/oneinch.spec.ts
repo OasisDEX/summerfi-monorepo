@@ -1,15 +1,18 @@
-import { ChainFamilyMap } from '@summerfi/sdk-client'
 import { ConfigurationProvider } from '@summerfi/configuration-provider'
 import {
   Address,
+  ChainFamilyMap,
+  IPercentage,
+  ITokenAmount,
   Percentage,
   Token,
   TokenAmount,
   type ChainInfo,
 } from '@summerfi/sdk-common/common'
-import { subtractPercentage } from '@summerfi/sdk-common/utils'
 import { QuoteData, SwapData, SwapProviderType } from '@summerfi/sdk-common/swap'
 import { SwapManagerFactory } from '../src/implementation/SwapManagerFactory'
+import { isTokenAmount } from '@summerfi/sdk-common'
+import assert from 'assert'
 
 describe('OneInch | SwapManager | Integration', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -32,7 +35,7 @@ describe('OneInch | SwapManager | Integration', () => {
   })
 
   // TokenAmount
-  const fromAmount: TokenAmount = TokenAmount.createFrom({
+  const fromAmount: ITokenAmount = TokenAmount.createFrom({
     token: WETH,
     amount: '34.5',
   })
@@ -43,7 +46,8 @@ describe('OneInch | SwapManager | Integration', () => {
   })
 
   // Percentage
-  const slippage: Percentage = Percentage.createFrom({ value: 2.0 })
+  const slippage: IPercentage = Percentage.createFrom({ value: 2.0 })
+  const Percentage100: IPercentage = Percentage.createFrom({ value: 100.0 })
 
   it('should provide swap data', async () => {
     // SwapManager
@@ -58,7 +62,8 @@ describe('OneInch | SwapManager | Integration', () => {
       slippage,
     })
 
-    const minimumOutputAmount = subtractPercentage(fromAmount, slippage)
+    const minimumOutputAmount = fromAmount.multiply(Percentage100.subtract(slippage))
+    assert(isTokenAmount(minimumOutputAmount), 'minimumOutputAmount is not a TokenAmount')
 
     expect(swapData).toBeDefined()
     expect(swapData.provider).toEqual(SwapProviderType.OneInch)
@@ -83,7 +88,8 @@ describe('OneInch | SwapManager | Integration', () => {
       toToken: DAI,
     })
 
-    const minimumOutputAmount = subtractPercentage(fromAmount, slippage)
+    const minimumOutputAmount = fromAmount.multiply(Percentage100.subtract(slippage))
+    assert(isTokenAmount(minimumOutputAmount), 'minimumOutputAmount is not a TokenAmount')
 
     expect(quoteData).toBeDefined()
     expect(quoteData.provider).toEqual(SwapProviderType.OneInch)

@@ -2,10 +2,11 @@ import { ChainInfo, Maybe } from '@summerfi/sdk-common/common'
 import { Chain } from '../implementation/Chain'
 
 /**
- * @interface IChainsManager
- * @description Manages the list of chains supported by the SDK and allows to retrive a chains by its name or chain ID
+ * @interface IChainsManagerClient
+ * @description Interface for the ChainsManager client implementation. Allows to retrieve information for
+ *             a Chain given its ChainInfo. It also supports to lookup a chain by its name or chain ID
  */
-export interface IChainsManager {
+export interface IChainsManagerClient {
   /**
    * @method getSupportedChains
    * @description Retrieves the list of supported chains
