@@ -1,6 +1,6 @@
 import { Address, HexData, Percentage, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
-import { SwapAction } from '../../src/plugins/common/actions'
+import { SwapAction } from '../../../src/plugins/common/actions'
 
 describe('Swap Action', () => {
   const action = new SwapAction()
@@ -62,7 +62,7 @@ describe('Swap Action', () => {
         toAsset: toMinimumAmount.token.address.value,
         amount: BigInt(fromAmount.toBaseUnit()),
         receiveAtLeast: BigInt(toMinimumAmount.toBaseUnit()),
-        fee: BigInt(fee.toBaseUnit({ decimals: 8 })),
+        fee: BigInt(fee.toBaseUnit({ decimals: 2 })),
         withData: '0xd83ddc68200dd83ddc68200dd83ddc66200dd83ddc66d83cdff4200d2620fe0f',
         collectFeeFromToken: true,
       },

@@ -1,9 +1,9 @@
 import { Address, ChainFamilyMap, ChainInfo, Token } from '@summerfi/sdk-common/common'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { SetupBuilderReturnType, setupBuilderParams } from '../utils/SetupBuilderParams'
+import { SetupBuilderReturnType, setupBuilderParams } from '../../utils/SetupBuilderParams'
 
-import { ReturnFundsActionBuilder } from '../../src/plugins/common/builders/ReturnFundsActionBuilder'
-import { ReturnFundsAction } from '../../src/plugins/common/actions/ReturnFundsAction'
+import { ReturnFundsActionBuilder } from '../../../src/plugins/common/builders/ReturnFundsActionBuilder'
+import { ReturnFundsAction } from '../../../src/plugins/common/actions/ReturnFundsAction'
 
 describe('Return Funds Action Builder', () => {
   let builderParams: SetupBuilderReturnType

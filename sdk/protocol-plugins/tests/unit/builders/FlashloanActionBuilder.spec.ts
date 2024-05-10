@@ -1,7 +1,7 @@
 import { Address, ChainFamilyMap, ChainInfo, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { FlashloanProvider, SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { SetupBuilderReturnType, setupBuilderParams } from '../utils/SetupBuilderParams'
-import { FlashloanActionBuilder } from '../../src/plugins/common/builders/FlashloanActionBuilder'
+import { SetupBuilderReturnType, setupBuilderParams } from '../../utils/SetupBuilderParams'
+import { FlashloanActionBuilder } from '../../../src/plugins/common/builders/FlashloanActionBuilder'
 
 describe('Flashloan Action Builder', () => {
   let builderParams: SetupBuilderReturnType

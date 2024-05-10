@@ -11,9 +11,10 @@ import {
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { SwapProviderType } from '@summerfi/sdk-common/swap'
 
-import { SetupBuilderReturnType, setupBuilderParams } from '../utils/SetupBuilderParams'
-import { SwapActionBuilder } from '../../src/plugins/common/builders'
-import { SwapAction } from '../../src/plugins/common/actions/SwapAction'
+import { SetupBuilderReturnType, setupBuilderParams } from '../../utils/SetupBuilderParams'
+import { SwapActionBuilder } from '../../../src/plugins/common/builders'
+import { SwapAction } from '../../../src/plugins/common/actions/SwapAction'
+import { FiatCurrency } from '@summerfi/sdk-common'
 
 describe('Swap Action Builder', () => {
   let builderParams: SetupBuilderReturnType
@@ -37,7 +38,7 @@ describe('Swap Action Builder', () => {
     decimals: 18,
   })
 
-  const fromAmount = TokenAmount.createFrom({
+  const inputAmount = TokenAmount.createFrom({
     token: WETH,
     amount: '1.5',
   })
@@ -47,8 +48,23 @@ describe('Swap Action Builder', () => {
     amount: '4050.8',
   })
 
+  const spotPrice = Price.createFrom({
+    value: '123',
+    base: WETH,
+    quote: FiatCurrency.USD,
+  })
+
+  const offerPrice = Price.createFrom({
+    value: '456',
+    base: WETH,
+    quote: FiatCurrency.USD,
+  })
+
+  const percent100 = Percentage.createFrom({ value: 100 })
   const slippage = Percentage.createFrom({ value: 0.3 })
   const fee = Percentage.createFrom({ value: 2.1 })
+
+  const inputAmountAfterFee = inputAmount.multiply(percent100.subtract(fee))
 
   beforeEach(() => {
     builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })
@@ -61,25 +77,24 @@ describe('Swap Action Builder', () => {
       inputs: {
         provider: SwapProviderType.OneInch,
         routes: [],
-        fromTokenAmount: fromAmount,
-        toTokenAmount: toAmount,
-        spotPrice: Price.createFrom({
-          value: '0',
-          quoteToken: fromAmount.token,
-          baseToken: toAmount.token,
-        }),
+        spotPrice: spotPrice,
+        offerPrice: offerPrice,
+        inputAmount: inputAmount,
+        inputAmountAfterFee: inputAmountAfterFee,
+        estimatedReceivedAmount: toAmount,
+        minimumReceivedAmount: toAmount,
         summerFee: fee,
         slippage,
       },
       outputs: {
-        receivedAmount: toAmount,
+        received: toAmount,
       },
     }
 
     // Setup swap manager returned data
     builderParams.swapManager.setSwapData({
       provider: SwapProviderType.OneInch,
-      fromTokenAmount: fromAmount,
+      fromTokenAmount: inputAmount,
       toTokenAmount: toAmount,
       calldata: '0x12345678900987654321' as const,
       targetContract: Address.createFromEthereum({
@@ -99,7 +114,7 @@ describe('Swap Action Builder', () => {
     const { callsBatch, customData } = builderParams.context.endSubContext()
 
     const swapCalldata = new SwapAction().encodeCall({
-      fromAmount: fromAmount,
+      fromAmount: inputAmount,
       toMinimumAmount: toAmount,
       fee: fee,
       withData: builderParams.swapManager.swapDataReturnValue.calldata,
@@ -111,7 +126,7 @@ describe('Swap Action Builder', () => {
     expect(builderParams.swapManager.lastGetSwapDataExactInputParams).toBeDefined()
     expect(builderParams.swapManager.lastGetSwapDataExactInputParams).toEqual({
       chainInfo: chainInfo,
-      fromAmount: fromAmount,
+      fromAmount: inputAmountAfterFee,
       toToken: toAmount.token,
       recipient: Address.createFromEthereum({ value: swapContractAddress }),
       slippage: slippage,

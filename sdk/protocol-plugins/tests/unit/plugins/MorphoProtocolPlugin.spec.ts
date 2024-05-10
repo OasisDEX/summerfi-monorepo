@@ -1,59 +1,59 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { ChainInfo, IPositionId } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import assert from 'assert'
+import { createProtocolPluginContext } from '../../utils/CreateProtocolPluginContext'
+import { getErrorMessage } from '../../utils/ErrorMessage'
+import { MorphoProtocolPlugin } from '../../../src/plugins/morphoblue/implementation/MorphoProtocolPlugin'
 import {
-  ISparkLendingPoolIdData,
-  SparkProtocolPlugin,
-  isSparkLendingPoolId,
-} from '../../src/plugins/spark'
-import { sparkPoolIdMock } from '../mocks/SparkPoolIdMock'
-import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
-import { getErrorMessage } from '../utils/ErrorMessage'
+  IMorphoLendingPoolIdData,
+  isMorphoLendingPoolId,
+} from '../../../src/plugins/morphoblue/interfaces/IMorphoLendingPoolId'
+import assert from 'assert'
+import { morphoPoolIdMock } from '../../mocks/MorphoPoolIdMock'
 
-describe.only('Spark Protocol Plugin', () => {
+describe('Protocol Plugin | Unit | Morpho', () => {
   let ctx: IProtocolPluginContext
-  let sparkProtocolPlugin: SparkProtocolPlugin
+  let morphoProtocolPlugin: MorphoProtocolPlugin
   beforeAll(async () => {
     ctx = await createProtocolPluginContext()
-    sparkProtocolPlugin = new SparkProtocolPlugin({
+    morphoProtocolPlugin = new MorphoProtocolPlugin({
       context: ctx,
     })
   })
 
   it('should verify that a given poolId is recognised as a valid format', () => {
-    expect(isSparkLendingPoolId(sparkPoolIdMock)).toBe(true)
+    expect(isMorphoLendingPoolId(morphoPoolIdMock)).toBe(true)
   })
 
   it('should throw a specific error when provided with a poolId not matching the SparkPoolId format', async () => {
     try {
       const invalidSparkPoolIdMock = {
-        ...sparkPoolIdMock,
+        ...morphoPoolIdMock,
         protocol: {
-          ...sparkPoolIdMock.protocol,
+          ...morphoPoolIdMock.protocol,
           name: ProtocolName.Maker,
         },
-      } as unknown as ISparkLendingPoolIdData
+      } as unknown as IMorphoLendingPoolIdData
 
       await expect(
-        sparkProtocolPlugin.getLendingPool(invalidSparkPoolIdMock),
+        morphoProtocolPlugin.getLendingPool(invalidSparkPoolIdMock),
       ).resolves.toBeDefined()
       assert.fail('Should throw error')
     } catch (error: unknown) {
-      expect(getErrorMessage(error)).toMatch('Invalid Spark pool ID')
+      expect(getErrorMessage(error)).toMatch('Invalid Morpho pool ID')
     }
   })
 
   it('should correctly return a SparkLendingPool object for a valid SparkPoolId', async () => {
-    const sparkPoolIdValid = sparkPoolIdMock
-    await expect(sparkProtocolPlugin.getLendingPool(sparkPoolIdValid)).resolves.toBeDefined()
+    const sparkPoolIdValid = morphoPoolIdMock
+    await expect(morphoProtocolPlugin.getLendingPool(sparkPoolIdValid)).resolves.toBeDefined()
   })
 
   it('should throw an error when calling getPool with an unsupported ChainInfo', async () => {
     const invalidSparkPoolIdUnsupportedChain = {
-      ...sparkPoolIdMock,
+      ...morphoPoolIdMock,
       protocol: {
-        ...sparkPoolIdMock.protocol,
+        ...morphoPoolIdMock.protocol,
         chainInfo: ChainInfo.createFrom({
           chainId: 2,
           name: 'Unknown',
@@ -61,13 +61,13 @@ describe.only('Spark Protocol Plugin', () => {
       },
     }
     await expect(
-      sparkProtocolPlugin.getLendingPool(invalidSparkPoolIdUnsupportedChain),
+      morphoProtocolPlugin.getLendingPool(invalidSparkPoolIdUnsupportedChain),
     ).rejects.toThrow('Chain ID 2 is not supported')
   })
 
   it('should throw an error when calling getPool with chain id missing from ctx', async () => {
     try {
-      new SparkProtocolPlugin({
+      new MorphoProtocolPlugin({
         context: {
           ...ctx,
           provider: {
@@ -88,7 +88,7 @@ describe.only('Spark Protocol Plugin', () => {
   it('should throw an error when calling getPool with an unsupported chain ID', async () => {
     const wrongChainId = 2
     try {
-      new SparkProtocolPlugin({
+      new MorphoProtocolPlugin({
         context: {
           ...ctx,
           provider: {
@@ -110,6 +110,6 @@ describe.only('Spark Protocol Plugin', () => {
     const positionId: IPositionId = {
       id: 'mockPositionId',
     }
-    await expect(sparkProtocolPlugin.getPosition(positionId)).rejects.toThrow('Not implemented')
+    await expect(morphoProtocolPlugin.getPosition(positionId)).rejects.toThrow('Not implemented')
   })
 })

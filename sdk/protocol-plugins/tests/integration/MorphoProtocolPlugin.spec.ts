@@ -4,9 +4,11 @@ import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContex
 import { MorphoProtocolPlugin } from '../../src/plugins/morphoblue/implementation/MorphoProtocolPlugin'
 import { morphoPoolIdMock } from '../mocks/MorphoPoolIdMock'
 import { OracleManagerMock } from '@summerfi/testing-utils'
-import { FiatCurrency, FiatCurrencyAmount, OracleProviderType } from '@summerfi/sdk-common'
+import { FiatCurrency, OracleProviderType } from '@summerfi/sdk-common'
+import { isMorphoLendingPool, isMorphoLendingPoolId } from '../../src'
+import { PoolType } from '@summerfi/sdk-common/protocols'
 
-describe.only('Morpho Protocol Plugin (Integration)', () => {
+describe.only('Protocol Plugin | Integration | Morpho', () => {
   let ctx: IProtocolPluginContext
   let morphoProtocolPlugin: MorphoProtocolPlugin
 
@@ -17,7 +19,24 @@ describe.only('Morpho Protocol Plugin (Integration)', () => {
     })
   })
 
-  it('correctly populates collateral configuration from blockchain data', async () => {
+  it('should retrieve the correct pool from the protocol', async () => {
+    const pool = await morphoProtocolPlugin.getLendingPool(morphoPoolIdMock)
+
+    expect(pool).toBeDefined()
+
+    if (!isMorphoLendingPool(pool)) {
+      fail('Expected pool to be a Morpho lending pool')
+    }
+
+    if (!isMorphoLendingPoolId(pool.id)) {
+      fail('Expected pool id to be a Morpho lending pool id')
+    }
+
+    expect(pool.type).toBe(PoolType.Lending)
+    expect(pool.id).toMatchObject(morphoPoolIdMock)
+  })
+
+  it('should retrieve the correct pool collateral information from the protocol', async () => {
     ;(ctx.oracleManager as OracleManagerMock).setSpotPrice({
       provider: OracleProviderType.OneInch,
       token: morphoPoolIdMock.collateralToken,
@@ -68,7 +87,7 @@ describe.only('Morpho Protocol Plugin (Integration)', () => {
     expect(Number(liquidationPenalty.value)).toBeGreaterThan(0)
   })
 
-  it('correctly populates debt configuration from blockchain data', async () => {
+  it('should retrieve the correct pool debt information from the protocol', async () => {
     const pool = await morphoProtocolPlugin.getLendingPool(morphoPoolIdMock)
 
     const morphoPoolInfo = await morphoProtocolPlugin.getLendingPoolInfo(pool.id)

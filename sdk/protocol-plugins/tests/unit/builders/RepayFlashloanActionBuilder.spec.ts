@@ -7,10 +7,10 @@ import {
   TokenAmount,
 } from '@summerfi/sdk-common/common'
 import { FlashloanProvider, SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { SetupBuilderReturnType, setupBuilderParams } from '../utils/SetupBuilderParams'
-import { RepayFlashloanActionBuilder } from '../../src/plugins/common/builders/RepayFlashloanActionBuilder'
+import { SetupBuilderReturnType, setupBuilderParams } from '../../utils/SetupBuilderParams'
+import { RepayFlashloanActionBuilder } from '../../../src/plugins/common/builders/RepayFlashloanActionBuilder'
 import { getErrorMessage } from '@summerfi/testing-utils'
-import { SendTokenAction, PullTokenAction, FlashloanAction } from '../../src/plugins/common'
+import { SendTokenAction, PullTokenAction, FlashloanAction } from '../../../src/plugins/common'
 
 describe('Payback Flashloan Action Builder', () => {
   let builderParams: SetupBuilderReturnType

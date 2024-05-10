@@ -1,9 +1,9 @@
-import { Address, Token, TokenAmount } from '@summerfi/sdk-common/common'
+import { Address, Token } from '@summerfi/sdk-common/common'
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
-import { PullTokenAction } from '../../src/plugins/common/actions'
+import { ReturnFundsAction } from '../../../src/plugins/common/actions'
 
-describe('PullToken Action', () => {
-  const action = new PullTokenAction()
+describe('ReturnFunds Action', () => {
+  const action = new ReturnFundsAction()
   const contractNameWithVersion = `${action.config.name}_${action.config.version}`
 
   const DAI = Token.createFrom({
@@ -17,22 +17,16 @@ describe('PullToken Action', () => {
     symbol: 'DAI',
   })
 
-  const recipient = Address.createFromEthereum({
-    value: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
-  })
-
   it('should return the versioned name', () => {
     expect(action.getVersionedName()).toBe(contractNameWithVersion)
   })
 
   it('should encode calls', async () => {
-    const tokenAmount = TokenAmount.createFrom({ token: DAI, amount: '578' })
     const call = action.encodeCall(
       {
-        pullAmount: tokenAmount,
-        pullTo: recipient,
+        asset: DAI,
       },
-      [1, 8, 5, 3],
+      [8, 9, 1, 3],
     )
 
     expect(call.targetHash).toBe(getTargetHash(action))
@@ -43,11 +37,7 @@ describe('PullToken Action', () => {
     })
 
     expect(actionDecodedArgs).toBeDefined()
-    expect(actionDecodedArgs?.args).toEqual([
-      DAI.address.value,
-      recipient.value,
-      BigInt(tokenAmount.toBaseUnit()),
-    ])
-    expect(actionDecodedArgs?.mapping).toEqual([1, 8, 5, 3])
+    expect(actionDecodedArgs?.args).toEqual([{ asset: DAI.address.value }])
+    expect(actionDecodedArgs?.mapping).toEqual([8, 9, 1, 3])
   })
 })

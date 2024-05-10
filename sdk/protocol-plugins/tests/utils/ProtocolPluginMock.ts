@@ -7,7 +7,15 @@ import {
   IProtocolPlugin,
   IProtocolPluginContext,
 } from '@summerfi/protocol-plugins-common'
-import { IPool, IPoolId, ProtocolName } from '@summerfi/sdk-common/protocols'
+import {
+  ILendingPool,
+  ILendingPoolId,
+  ILendingPoolIdData,
+  ILendingPoolInfo,
+  IPool,
+  IPoolId,
+  ProtocolName,
+} from '@summerfi/sdk-common/protocols'
 import { IExternalPosition, IPositionsManager } from '@summerfi/sdk-common/orders'
 import { IUser } from '@summerfi/sdk-common/user'
 import { TransactionInfo } from '@summerfi/sdk-common'
@@ -49,8 +57,12 @@ export class ProtocolPluginMock implements IProtocolPlugin {
 
   validateLendingPoolId(candidate: unknown): asserts candidate is IPoolId {}
 
-  async getPool(poolId: IPoolId): Promise<IPool> {
-    return undefined as unknown as IPool
+  async getLendingPool(poolId: ILendingPoolId): Promise<ILendingPool> {
+    return undefined as unknown as ILendingPool
+  }
+
+  async getLendingPoolInfo(poolId: ILendingPoolIdData): Promise<ILendingPoolInfo> {
+    return undefined as unknown as ILendingPoolInfo
   }
 
   async getPosition(positionId: IPositionId): Promise<IPosition> {
@@ -82,8 +94,12 @@ export class EmptyProtocolPluginMock implements IProtocolPlugin {
 
   validateLendingPoolId(candidate: unknown): asserts candidate is IPoolId {}
 
-  async getPool(poolId: IPoolId): Promise<IPool> {
-    return undefined as unknown as IPool
+  async getLendingPool(poolId: ILendingPoolId): Promise<ILendingPool> {
+    return undefined as unknown as ILendingPool
+  }
+
+  async getLendingPoolInfo(poolId: ILendingPoolIdData): Promise<ILendingPoolInfo> {
+    return undefined as unknown as ILendingPoolInfo
   }
 
   async getPosition(positionId: IPositionId): Promise<IPosition> {
@@ -118,8 +134,12 @@ export class NoCheckpointProtocolPluginMock implements IProtocolPlugin {
 
   validateLendingPoolId(candidate: unknown): asserts candidate is IPoolId {}
 
-  async getPool(poolId: IPoolId): Promise<IPool> {
-    return undefined as unknown as IPool
+  async getLendingPool(poolId: ILendingPoolId): Promise<ILendingPool> {
+    return undefined as unknown as ILendingPool
+  }
+
+  async getLendingPoolInfo(poolId: ILendingPoolIdData): Promise<ILendingPoolInfo> {
+    return undefined as unknown as ILendingPoolInfo
   }
 
   async getPosition(positionId: IPositionId): Promise<IPosition> {

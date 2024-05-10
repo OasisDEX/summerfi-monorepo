@@ -9,13 +9,19 @@ import {
   TokenAmount,
 } from '@summerfi/sdk-common/common'
 import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
-import { SetupBuilderReturnType, setupBuilderParams } from '../utils/SetupBuilderParams'
-import { DepositBorrowActionBuilder } from '../../src/plugins/common/builders/DepositBorrowActionBuilder'
+import { SetupBuilderReturnType, setupBuilderParams } from '../../utils/SetupBuilderParams'
+import { DepositBorrowActionBuilder } from '../../../src/plugins/common/builders/DepositBorrowActionBuilder'
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
-import { MakerPoolId } from '../../src/plugins/maker/implementation/MakerPoolId'
-import { ILKType } from '../../src/plugins/maker/enums/ILKType'
+import { ILKType } from '../../../src/plugins/maker/enums/ILKType'
+import {
+  MakerLendingPool,
+  MakerLendingPoolId,
+  MakerPosition,
+  MakerPositionId,
+  MakerProtocol,
+} from '../../../src'
 
 describe('Deposit Borrow Action Builder', () => {
   let builderParams: SetupBuilderReturnType
@@ -49,26 +55,26 @@ describe('Deposit Borrow Action Builder', () => {
     amount: '1000',
   })
 
-  const protocol = {
-    name: ProtocolName.Maker as const,
+  const protocol = MakerProtocol.createFrom({
+    name: ProtocolName.Maker,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
-  }
+  })
 
-  const poolId: MakerPoolId = {
+  const poolId = MakerLendingPoolId.createFrom({
     protocol: protocol,
     ilkType: ILKType.ETH_A,
-    vaultId: '123',
-  }
+    collateralToken: WETH,
+    debtToken: DAI,
+  })
 
-  const pool = {
+  const pool = MakerLendingPool.createFrom({
     type: PoolType.Lending,
-    protocol,
-    poolId,
-  }
+    id: poolId,
+  })
 
-  const position = Position.createFrom({
+  const position = MakerPosition.createFrom({
     type: PositionType.Multiply,
-    id: PositionId.createFrom({ id: 'someposition' }),
+    id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '123' }),
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
     pool: pool,

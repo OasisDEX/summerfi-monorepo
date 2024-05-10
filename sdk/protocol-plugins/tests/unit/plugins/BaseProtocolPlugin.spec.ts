@@ -1,8 +1,8 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { BaseProtocolPlugin } from '../../src/implementation'
-import { MakerProtocolPlugin } from '../../src/plugins/maker'
-import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
+import { BaseProtocolPlugin } from '../../../src/implementation'
+import { MakerProtocolPlugin } from '../../../src/plugins/maker'
+import { createProtocolPluginContext } from '../../utils/CreateProtocolPluginContext'
 import assert from 'assert'
 
 describe('Base Protocol Plugin', () => {

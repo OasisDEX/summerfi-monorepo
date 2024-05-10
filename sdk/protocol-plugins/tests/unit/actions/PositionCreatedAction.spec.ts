@@ -1,9 +1,16 @@
 import { Address, Position, Token, TokenAmount, PositionType } from '@summerfi/sdk-common/common'
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
-import { PositionCreatedAction } from '../../src/plugins/common/actions/PositionCreatedAction'
+import { PositionCreatedAction } from '../../../src/plugins/common/actions/PositionCreatedAction'
 import { IProtocol, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { MakerPoolId } from '../../src/plugins/maker/implementation/MakerPoolId'
-import { ILKType } from '../../src/plugins/maker'
+import { ILKType } from '../../../src/plugins/maker'
+import { SparkProtocol } from '../../../src/plugins/spark/implementation/SparkProtocol'
+import {
+  EmodeType,
+  SparkLendingPool,
+  SparkLendingPoolId,
+  SparkPosition,
+  SparkPositionId,
+} from '../../../src'
 
 describe('PositionCreated Action', () => {
   const action = new PositionCreatedAction()
@@ -31,28 +38,28 @@ describe('PositionCreated Action', () => {
     symbol: 'WETH',
   })
 
-  const protocol: IProtocol = {
+  const protocol = SparkProtocol.createFrom({
     name: ProtocolName.Spark,
     chainInfo: {
       name: 'Mainnet',
       chainId: 1,
     },
-  }
+  })
 
-  const position = Position.createFrom({
+  const position = SparkPosition.createFrom({
     type: PositionType.Multiply,
     id: {
       id: '0x123',
     },
-    pool: {
+    pool: SparkLendingPool.createFrom({
       type: PoolType.Lending,
-      protocol: protocol,
-      id: {
+      id: SparkLendingPoolId.createFrom({
         protocol: protocol,
-        vaultId: '0x123',
-        ilkType: ILKType.ETH_A,
-      } as MakerPoolId,
-    },
+        collateralToken: WETH,
+        debtToken: DAI,
+        emodeType: EmodeType.None,
+      }),
+    }),
     debtAmount: TokenAmount.createFrom({
       token: DAI,
       amount: '100',
@@ -85,7 +92,7 @@ describe('PositionCreated Action', () => {
     expect(actionDecodedArgs).toBeDefined()
     expect(actionDecodedArgs?.args).toEqual([
       {
-        protocol: protocol.name,
+        protocol: protocol.toString(),
         positionType: position.type,
         collateralToken: WETH.address.value,
         debtToken: DAI.address.value,

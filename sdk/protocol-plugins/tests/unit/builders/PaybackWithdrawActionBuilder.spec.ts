@@ -9,13 +9,14 @@ import {
   TokenAmount,
 } from '@summerfi/sdk-common/common'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { SetupBuilderReturnType, setupBuilderParams } from '../utils/SetupBuilderParams'
+import { SetupBuilderReturnType, setupBuilderParams } from '../../utils/SetupBuilderParams'
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
-import { PaybackWithdrawActionBuilder } from '../../src/plugins/common/builders/PaybackWithdrawActionBuilder'
-import { MakerPoolId } from '../../src/plugins/maker/implementation/MakerPoolId'
-import { ILKType } from '../../src/plugins/maker/enums/ILKType'
+import { PaybackWithdrawActionBuilder } from '../../../src/plugins/common/builders/PaybackWithdrawActionBuilder'
+import { ILKType } from '../../../src/plugins/maker/enums/ILKType'
+import { MakerLendingPoolId } from '../../../src/plugins/maker/implementation/MakerLendingPoolId'
+import { MakerLendingPool, MakerPosition, MakerPositionId, MakerProtocol } from '../../../src'
 
 describe('Payback Withdraw Action Builder', () => {
   let builderParams: SetupBuilderReturnType
@@ -49,26 +50,26 @@ describe('Payback Withdraw Action Builder', () => {
     amount: '1000',
   })
 
-  const protocol = {
-    name: ProtocolName.Maker as const,
+  const protocol = MakerProtocol.createFrom({
+    name: ProtocolName.Maker,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
-  }
+  })
 
-  const poolId: MakerPoolId = {
+  const poolId = MakerLendingPoolId.createFrom({
     protocol: protocol,
     ilkType: ILKType.ETH_A,
-    vaultId: '123',
-  }
+    collateralToken: WETH,
+    debtToken: DAI,
+  })
 
-  const pool = {
+  const pool = MakerLendingPool.createFrom({
     type: PoolType.Lending,
-    protocol,
-    poolId,
-  }
+    id: poolId,
+  })
 
-  const position = Position.createFrom({
+  const position = MakerPosition.createFrom({
     type: PositionType.Multiply,
-    id: PositionId.createFrom({ id: 'someposition' }),
+    id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '1337' }),
     debtAmount: withdrawAmount,
     collateralAmount: paybackAmount,
     pool: pool,

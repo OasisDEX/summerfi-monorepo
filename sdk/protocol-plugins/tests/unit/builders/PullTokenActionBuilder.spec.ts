@@ -1,9 +1,9 @@
 import { Address, ChainFamilyMap, ChainInfo, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { SetupBuilderReturnType, setupBuilderParams } from '../utils/SetupBuilderParams'
+import { SetupBuilderReturnType, setupBuilderParams } from '../../utils/SetupBuilderParams'
 
-import { PullTokenActionBuilder } from '../../src/plugins/common/builders'
-import { PullTokenAction } from '../../src/plugins/common/actions'
+import { PullTokenActionBuilder } from '../../../src/plugins/common/builders'
+import { PullTokenAction } from '../../../src/plugins/common/actions'
 
 describe('Pull TokenAction Builder', () => {
   let builderParams: SetupBuilderReturnType
