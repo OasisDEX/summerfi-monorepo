@@ -1,9 +1,11 @@
-import { defineConfig } from 'vite'
-import { extname, relative, resolve } from 'path'
-import { fileURLToPath } from 'node:url'
-import { glob } from 'glob'
 import react from '@vitejs/plugin-react'
+import { glob } from 'glob'
+import { fileURLToPath } from 'node:url'
+import { extname, relative, resolve } from 'path'
+import { defineConfig } from 'vite'
 import { libInjectCss } from 'vite-plugin-lib-inject-css'
+
+const fileSliceNumber = 0
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -25,7 +27,7 @@ export default defineConfig({
           .sync('src/**/*.{ts,tsx}')
           .filter((file) => !file.endsWith('.d.ts'))
           .map((file) => [
-            relative('src', file.slice(0, file.length - extname(file).length)),
+            relative('src', file.slice(fileSliceNumber, file.length - extname(file).length)),
             fileURLToPath(new URL(file, import.meta.url)),
           ]),
       ),
