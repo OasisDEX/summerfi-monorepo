@@ -10,11 +10,11 @@ import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import {
   ILKType,
   IMakerLendingPoolData,
+  IMakerLendingPoolIdData,
+  IMakerProtocolData,
   MakerPositionId,
 } from '@summerfi/protocol-plugins/plugins/maker'
 import { PositionType } from '@summerfi/sdk-common/common'
-import { IMakerLendingPoolIdData } from 'node_modules/@summerfi/protocol-plugins/src/plugins/maker/interfaces/IMakerLendingPoolId'
-import { IMakerProtocolData } from 'node_modules/@summerfi/protocol-plugins/src/plugins/maker/interfaces/IMakerProtocol'
 
 export function getMakerPosition(): Position {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
