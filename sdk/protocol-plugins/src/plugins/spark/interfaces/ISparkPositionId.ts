@@ -1,21 +1,11 @@
-import { IPositionId, IPositionIdData, PositionIdDataSchema } from '@summerfi/sdk-common/common'
+import { IPositionId, PositionIdDataSchema } from '@summerfi/sdk-common/common'
 import { z } from 'zod'
 
 /**
- * @interface ISparkPositionIdData
+ * @interface ISparkPositionId
  * @description Represents the ID of a position in the Spark protocol
  *
  * Currently empty as there are no specifics for this protocol
- */
-export interface ISparkPositionIdData extends IPositionIdData {
-  // Empty on purpose
-}
-
-/**
- * @interface ISparkPositionId
- * @description Interface for the implementors of the position id
- *
- * This interface is used to add all the methods that the interface supports
  */
 export interface ISparkPositionId extends IPositionId, ISparkPositionIdData {
   // Empty on purpose
@@ -24,23 +14,20 @@ export interface ISparkPositionId extends IPositionId, ISparkPositionIdData {
 /**
  * @description Zod schema for ISparkPositionId
  */
-export const SparkPositionIdSchema = z.object({
+export const SparkPositionIdDataSchema = z.object({
   ...PositionIdDataSchema.shape,
 })
+
+/**
+ * Type for the data part of ISparkPositionId
+ */
+export type ISparkPositionIdData = Readonly<z.infer<typeof SparkPositionIdDataSchema>>
 
 /**
  * @description Type guard for ISparkPositionId
  * @param maybePositionId
  * @returns true if the object is an ISparkPositionId
  */
-export function isSparkPositionId(
-  maybePositionId: unknown,
-): maybePositionId is ISparkPositionIdData {
-  return SparkPositionIdSchema.safeParse(maybePositionId).success
+export function isSparkPositionId(maybePositionId: unknown): maybePositionId is ISparkPositionId {
+  return SparkPositionIdDataSchema.safeParse(maybePositionId).success
 }
-
-/**
- * Checker to make sure that the schema is aligned with the interface
- */
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: ISparkPositionIdData = {} as z.infer<typeof SparkPositionIdSchema>

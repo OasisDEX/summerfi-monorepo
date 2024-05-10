@@ -1,35 +1,17 @@
-import {
-  ILendingPoolInfo,
-  ILendingPoolInfoData,
-  LendingPoolInfoDataSchema,
-} from '@summerfi/sdk-common/protocols'
-import {
-  ISparkLendingPoolId,
-  ISparkLendingPoolIdData,
-  SparkLendingPoolIdSchema,
-} from './ISparkLendingPoolId'
-import { z } from 'zod'
+import { ILendingPoolInfo, LendingPoolInfoDataSchema } from '@summerfi/sdk-common/protocols'
+import { ISparkLendingPoolId, SparkLendingPoolIdDataSchema } from './ISparkLendingPoolId'
 import { ICollateralInfo, IDebtInfo } from '@summerfi/sdk-common'
-
-/**
- * @interface ISparkLendingPoolInfoData
- * @description Represents a lending pool info in the Spark protocol
- */
-export interface ISparkLendingPoolInfoData extends ILendingPoolInfoData {
-  /** The id of the lending pool */
-  readonly id: ISparkLendingPoolIdData
-}
+import { z } from 'zod'
 
 /**
  * @interface ISparkLendingPoolInfo
- * @description Interface for the implementors of the lending pool info
- *
- * This interface is used to add all the methods that the interface supports
+ * @description Represents a lending pool info in the Spark protocol
  *
  * Typescript forces the interface to re-declare any properties that have different BUT compatible types.
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
 export interface ISparkLendingPoolInfo extends ILendingPoolInfo, ISparkLendingPoolInfoData {
+  /** The id of the lending pool */
   readonly id: ISparkLendingPoolId
 
   // Re-declaring the properties with the correct types
@@ -40,10 +22,15 @@ export interface ISparkLendingPoolInfo extends ILendingPoolInfo, ISparkLendingPo
 /**
  * @description Zod schema for ISparkLendingPoolInfo
  */
-export const SparkLendingPoolInfoSchema = z.object({
+export const SparkLendingPoolInfoDataSchema = z.object({
   ...LendingPoolInfoDataSchema.shape,
-  id: SparkLendingPoolIdSchema,
+  id: SparkLendingPoolIdDataSchema,
 })
+
+/**
+ * Type for the data part of ISparkLendingPoolInfo
+ */
+export type ISparkLendingPoolInfoData = Readonly<z.infer<typeof SparkLendingPoolInfoDataSchema>>
 
 /**
  * @description Type guard for ISparkLendingPoolInfo
@@ -52,12 +39,6 @@ export const SparkLendingPoolInfoSchema = z.object({
  */
 export function isSparkLendingPoolInfo(
   maybeLendingPoolInfo: unknown,
-): maybeLendingPoolInfo is ISparkLendingPoolInfoData {
-  return SparkLendingPoolInfoSchema.safeParse(maybeLendingPoolInfo).success
+): maybeLendingPoolInfo is ISparkLendingPoolInfo {
+  return SparkLendingPoolInfoDataSchema.safeParse(maybeLendingPoolInfo).success
 }
-
-/**
- * Checker to make sure that the schema is aligned with the interface
- */
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: ISparkLendingPoolInfoData = {} as z.infer<typeof SparkLendingPoolInfoSchema>

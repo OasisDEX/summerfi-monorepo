@@ -37,6 +37,6 @@ export type IMorphoProtocolData = Readonly<z.infer<typeof MorphoProtocolDataSche
  * @param maybeProtocol
  * @returns true if the object is an IMorphoProtocol
  */
-export function isMorphoProtocol(maybeProtocol: unknown): maybeProtocol is IMorphoProtocolData {
+export function isMorphoProtocol(maybeProtocol: unknown): maybeProtocol is IMorphoProtocol {
   return MorphoProtocolDataSchema.safeParse(maybeProtocol).success
 }

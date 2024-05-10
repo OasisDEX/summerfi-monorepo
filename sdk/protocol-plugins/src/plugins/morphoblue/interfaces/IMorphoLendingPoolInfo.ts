@@ -39,6 +39,6 @@ export type IMorphoLendingPoolInfoData = Readonly<z.infer<typeof MorphoLendingPo
  */
 export function isMorphoLendingPoolInfo(
   maybeLendingPoolInfo: unknown,
-): maybeLendingPoolInfo is IMorphoLendingPoolInfoData {
+): maybeLendingPoolInfo is IMorphoLendingPoolInfo {
   return MorphoLendingPoolInfoDataSchema.safeParse(maybeLendingPoolInfo).success
 }

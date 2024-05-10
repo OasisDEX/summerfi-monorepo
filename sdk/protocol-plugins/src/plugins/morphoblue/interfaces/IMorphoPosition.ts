@@ -41,6 +41,6 @@ export type IMorphoPositionData = Readonly<z.infer<typeof MorphoPositionDataSche
  * @param maybePosition
  * @returns true if the object is an IMorphoPosition
  */
-export function isMorphoPosition(maybePosition: unknown): maybePosition is IMorphoPositionData {
+export function isMorphoPosition(maybePosition: unknown): maybePosition is IMorphoPosition {
   return MorphoPositionDataSchema.safeParse(maybePosition).success
 }

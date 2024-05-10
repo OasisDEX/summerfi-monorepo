@@ -1,26 +1,7 @@
-import {
-  IPosition,
-  IPositionData,
-  ITokenAmount,
-  PositionDataSchema,
-  PositionType,
-} from '@summerfi/sdk-common'
+import { IPosition, ITokenAmount, PositionDataSchema, PositionType } from '@summerfi/sdk-common'
 import { z } from 'zod'
-import {
-  IMakerLendingPool,
-  IMakerLendingPoolData,
-  MakerLendingPoolSchema,
-} from './IMakerLendingPool'
-import { IMakerPositionId, IMakerPositionIdData, MakerPositionIdSchema } from './IMakerPositionId'
-
-/**
- * @interface IMakerPositionData
- * @description Represents a Maker position
- */
-export interface IMakerPositionData extends IPositionData {
-  readonly id: IMakerPositionIdData
-  readonly pool: IMakerLendingPoolData
-}
+import { IMakerLendingPool, MakerLendingPoolDataSchema } from './IMakerLendingPool'
+import { IMakerPositionId, MakerPositionIdDataSchema } from './IMakerPositionId'
 
 /**
  * @interface IMakerPosition
@@ -29,7 +10,9 @@ export interface IMakerPositionData extends IPositionData {
  * This interface is used to add all the methods that the interface supports
  */
 export interface IMakerPosition extends IPosition, IMakerPositionData {
+  /** ID for the maker position */
   readonly id: IMakerPositionId
+  /** Lending pool associated to this position */
   readonly pool: IMakerLendingPool
 
   // Re-declaring the properties with the correct types
@@ -41,25 +24,22 @@ export interface IMakerPosition extends IPosition, IMakerPositionData {
 /**
  * @description Zod schema for IMakerPositionId
  */
-export const MakerPositionSchema = z.object({
+export const MakerPositionDataSchema = z.object({
   ...PositionDataSchema.shape,
-  id: MakerPositionIdSchema,
-  pool: MakerLendingPoolSchema,
+  id: MakerPositionIdDataSchema,
+  pool: MakerLendingPoolDataSchema,
 })
+
+/**
+ * Type for the data part of IMakerPosition
+ */
+export type IMakerPositionData = Readonly<z.infer<typeof MakerPositionDataSchema>>
 
 /**
  * @description Type guard for IMakerPosition
  * @param maybeMakerPosition Object to be checked
  * @returns true if the object is a IMakerPosition
  */
-export function isMakerPosition(
-  maybeMakerPosition: unknown,
-): maybeMakerPosition is IMakerPositionData {
-  return MakerPositionSchema.safeParse(maybeMakerPosition).success
+export function isMakerPosition(maybeMakerPosition: unknown): maybeMakerPosition is IMakerPosition {
+  return MakerPositionDataSchema.safeParse(maybeMakerPosition).success
 }
-
-/**
- * Checker to make sure that the schema is aligned with the interface
- */
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: IMakerPositionData = {} as z.infer<typeof MakerPositionSchema>
