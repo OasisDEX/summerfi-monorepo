@@ -219,16 +219,23 @@ export async function getMorphoBluePosition(
     collateralPriceInDebt,
   })
 
-  const collateralValueUSD = collateralAmount * collateralPrice
-  const debtValueUSD = debtAmount * debtPrice
+  const collateralValueUSD =
+    (collateralAmount * collateralPrice) / 10n ** BigInt(collateralResult.token.decimals)
+  const debtValueUSD = (debtAmount * debtPrice) / 10n ** BigInt(debtResult.token.decimals)
 
   const netValue = collateralValueUSD - debtValueUSD
 
   logger?.debug('Position data', {
     debt: debtResult,
     collateral: collateralResult,
+    collateralAmount: collateralAmount.toString(),
+    debtAmount: debtAmount.toString(),
+    collateralPrice: collateralPrice.toString(),
+    debtPrice: debtPrice.toString(),
     oracleMarketPrice: collateralPriceInDebt.toString(),
     ltv: ltv.toString(),
+    collateralValueUSD: collateralValueUSD.toString(),
+    debtValueUSD: debtValueUSD.toString(),
     netValue: netValue.toString(),
   })
 

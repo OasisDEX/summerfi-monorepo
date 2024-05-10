@@ -41,10 +41,9 @@ export const encodeMorphoBlueTrailingStopLoss = (
       'bool closeToCollateral',
   )
 
-  /** @todo UPDATE OPERATION NAMES FOR MB */
   const operationName =
     triggerData.token === position.collateral.token.address
-      ? OPERATION_NAMES.morphoblue.CLOSE_POSITION
+      ? OPERATION_NAMES.morphoblue.CLOSE_AND_REMAIN
       : OPERATION_NAMES.morphoblue.CLOSE_POSITION
 
   const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
