@@ -17,7 +17,8 @@
       ],
       "@summerfi/testing-utils": ["node_modules/@summerfi/testing-utils/src/index.ts"],
       "@summerfi/core-contracts": ["node_modules/@summerfi/core-contracts/src/index.ts"],
-      "@summerfi/deployment-utils": ["node_modules/@summerfi/deployment-utils/src/index.ts"]
+      "@summerfi/deployment-utils": ["node_modules/@summerfi/deployment-utils/src/index.ts"],
+      "@summerfi/abis": ["../../packages/abis/src/index.ts"]
     }
   },
   "include": ["tests/**/*.ts"],

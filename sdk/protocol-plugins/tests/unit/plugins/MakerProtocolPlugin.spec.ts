@@ -3,19 +3,22 @@ import { ChainInfo } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import assert from 'assert'
 import { MakerProtocolPlugin } from '../../../src/plugins/maker'
-import { makerPoolIdMock } from '../../mocks/MakerPoolIdMock'
+import { getMakerPoolIdMock } from '../../mocks/MakerPoolIdMock'
 import { createProtocolPluginContext } from '../../utils/CreateProtocolPluginContext'
 import { getErrorMessage } from '../../utils/ErrorMessage'
 import {
+  IMakerLendingPoolId,
   IMakerLendingPoolIdData,
   isMakerLendingPoolId,
 } from '../../../src/plugins/maker/interfaces/IMakerLendingPoolId'
 
 describe('Maker Protocol Plugin', () => {
   let ctx: IProtocolPluginContext
+  let makerPoolIdMock: IMakerLendingPoolId
   let makerProtocolPlugin: MakerProtocolPlugin
   beforeAll(async () => {
     ctx = await createProtocolPluginContext()
+    makerPoolIdMock = await getMakerPoolIdMock()
     makerProtocolPlugin = new MakerProtocolPlugin({
       context: ctx,
     })

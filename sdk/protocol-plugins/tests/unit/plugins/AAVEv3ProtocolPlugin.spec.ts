@@ -4,18 +4,21 @@ import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import assert from 'assert'
 import {
   AaveV3ProtocolPlugin,
+  IAaveV3LendingPoolId,
   IAaveV3LendingPoolIdData,
   isAaveV3LendingPoolId,
 } from '../../../src/plugins/aave-v3'
-import { aaveV3PoolIdMock } from '../../mocks/AAVEv3PoolIdMock'
+import { getAaveV3PoolIdMock } from '../../mocks/AAVEv3PoolIdMock'
 import { createProtocolPluginContext } from '../../utils/CreateProtocolPluginContext'
 import { getErrorMessage } from '../../utils/ErrorMessage'
 
 describe('AAVEv3 Protocol Plugin', () => {
   let ctx: IProtocolPluginContext
+  let aaveV3PoolIdMock: IAaveV3LendingPoolId
   let aaveV3ProtocolPlugin: AaveV3ProtocolPlugin
   beforeAll(async () => {
     ctx = await createProtocolPluginContext()
+    aaveV3PoolIdMock = await getAaveV3PoolIdMock()
     aaveV3ProtocolPlugin = new AaveV3ProtocolPlugin({
       context: ctx,
     })

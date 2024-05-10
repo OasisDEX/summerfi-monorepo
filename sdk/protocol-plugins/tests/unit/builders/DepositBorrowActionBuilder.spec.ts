@@ -70,6 +70,8 @@ describe('Deposit Borrow Action Builder', () => {
   const pool = MakerLendingPool.createFrom({
     type: PoolType.Lending,
     id: poolId,
+    collateralToken: WETH,
+    debtToken: DAI,
   })
 
   const position = MakerPosition.createFrom({

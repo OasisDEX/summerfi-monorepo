@@ -3,19 +3,22 @@ import { ChainInfo, IPositionId } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import assert from 'assert'
 import {
+  ISparkLendingPoolId,
   ISparkLendingPoolIdData,
   SparkProtocolPlugin,
   isSparkLendingPoolId,
 } from '../../../src/plugins/spark'
-import { sparkPoolIdMock } from '../../mocks/SparkPoolIdMock'
+import { getSparkPoolIdMock } from '../../mocks/SparkPoolIdMock'
 import { createProtocolPluginContext } from '../../utils/CreateProtocolPluginContext'
 import { getErrorMessage } from '../../utils/ErrorMessage'
 
 describe('Spark Protocol Plugin', () => {
   let ctx: IProtocolPluginContext
+  let sparkPoolIdMock: ISparkLendingPoolId
   let sparkProtocolPlugin: SparkProtocolPlugin
   beforeAll(async () => {
     ctx = await createProtocolPluginContext()
+    sparkPoolIdMock = await getSparkPoolIdMock()
     sparkProtocolPlugin = new SparkProtocolPlugin({
       context: ctx,
     })

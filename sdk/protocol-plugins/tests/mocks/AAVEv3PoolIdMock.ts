@@ -4,7 +4,7 @@ import { AaveV3LendingPoolId, AaveV3Protocol, IAaveV3LendingPoolId } from '../..
 import { ChainFamilyMap } from '@summerfi/sdk-common'
 import { TokensManagerMock } from '@summerfi/testing-utils'
 
-export async function getSparkPoolIdMock(): Promise<IAaveV3LendingPoolId> {
+export async function getAaveV3PoolIdMock(): Promise<IAaveV3LendingPoolId> {
   const tokenManagerMock = new TokensManagerMock()
   const chainInfo = ChainFamilyMap.Ethereum.Mainnet
 

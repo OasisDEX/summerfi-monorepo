@@ -1,4 +1,4 @@
-import { Address, Position, Token, TokenAmount, PositionType } from '@summerfi/sdk-common/common'
+import { Address, Token, TokenAmount, PositionType } from '@summerfi/sdk-common/common'
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
 import { PositionCreatedAction } from '../../../src/plugins/common/actions/PositionCreatedAction'
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
@@ -52,6 +52,8 @@ describe('PositionCreated Action', () => {
         debtToken: DAI,
         emodeType: EmodeType.None,
       }),
+      collateralToken: WETH,
+      debtToken: DAI,
     }),
     debtAmount: TokenAmount.createFrom({
       token: DAI,

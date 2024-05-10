@@ -1,7 +1,7 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { Price, RiskRatio, TokenAmount, Percentage } from '@summerfi/sdk-common/common'
 import { AaveV3ProtocolPlugin, IAaveV3LendingPoolId } from '../../src/plugins/aave-v3'
-import { getSparkPoolIdMock } from '../mocks/AAVEv3PoolIdMock'
+import { getAaveV3PoolIdMock } from '../mocks/AAVEv3PoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 
 describe('AAVEv3 Protocol Plugin (Integration)', () => {
@@ -10,7 +10,7 @@ describe('AAVEv3 Protocol Plugin (Integration)', () => {
   let aaveV3ProtocolPlugin: AaveV3ProtocolPlugin
   beforeAll(async () => {
     ctx = await createProtocolPluginContext()
-    validAaveV3PoolId = await getSparkPoolIdMock()
+    validAaveV3PoolId = await getAaveV3PoolIdMock()
     aaveV3ProtocolPlugin = new AaveV3ProtocolPlugin({
       context: ctx,
     })

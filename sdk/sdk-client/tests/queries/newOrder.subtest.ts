@@ -83,6 +83,8 @@ export default async function simulateNewOrder() {
   const pool: IMakerLendingPoolData = {
     type: PoolType.Lending,
     id: makerPoolId,
+    collateralToken: makerPoolId.collateralToken,
+    debtToken: makerPoolId.debtToken,
   }
 
   const prevPosition: IPositionData = {
@@ -126,6 +128,8 @@ export default async function simulateNewOrder() {
   const targetPool: ISparkLendingPoolData = {
     type: PoolType.Lending,
     id: sparkPoolId,
+    collateralToken: sparkPoolId.collateralToken,
+    debtToken: sparkPoolId.debtToken,
   }
 
   const simulation: ISimulation<SimulationType.Refinance> = {

@@ -105,6 +105,8 @@ export default async function simulateRefinanceTest() {
   const pool: IMakerLendingPoolData = {
     type: PoolType.Lending,
     id: poolId,
+    collateralToken: poolId.collateralToken,
+    debtToken: poolId.debtToken,
   }
 
   const prevPosition: IPositionData = {
@@ -118,6 +120,8 @@ export default async function simulateRefinanceTest() {
   const targetPool: IMakerLendingPoolData = {
     type: PoolType.Lending as const,
     id: poolId,
+    collateralToken: poolId.collateralToken,
+    debtToken: poolId.debtToken,
   }
 
   const targetPosition = {
