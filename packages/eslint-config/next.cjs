@@ -27,6 +27,7 @@ module.exports = {
     '.*.js',
     '*.cjs', // .eslint.cjs
     '*.config.ts', // vite config
+    'tsconfig.tsbuildinfo', // tsconfig.tsbuildinfo
     'node_modules/',
   ],
   overrides: [{ files: ['*.js?(x)', '*.ts?(x)'] }],
