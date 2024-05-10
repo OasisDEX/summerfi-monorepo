@@ -5,7 +5,7 @@ import {
   SparkLendingPoolIdSchema,
 } from './ISparkLendingPoolId'
 import { z } from 'zod'
-import { ILendingPool, PoolType } from '@summerfi/sdk-common'
+import { ILendingPool, IToken, PoolType } from '@summerfi/sdk-common'
 
 /**
  * @interface ISparkLendingPoolData
@@ -32,6 +32,8 @@ export interface ISparkLendingPool extends ISparkLendingPoolData, ILendingPool {
 
   // Re-declaring the properties with the correct types
   readonly type: PoolType.Lending
+  readonly collateralToken: IToken
+  readonly debtToken: IToken
 }
 
 /**

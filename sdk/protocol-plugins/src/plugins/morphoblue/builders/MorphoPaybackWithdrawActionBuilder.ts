@@ -19,7 +19,7 @@ export const MorphoPaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWith
       step: params.step,
       action: new MorphoPaybackAction(),
       arguments: {
-        morphoLendingPoolId: step.inputs.position.pool.id,
+        morphoLendingPool: step.inputs.position.pool,
         amount: getValueFromReference(step.inputs.paybackAmount),
         onBehalf: positionsManager.address,
         paybackAll: paybackAmount.toBN().gte(step.inputs.position.debtAmount.toBN()),
@@ -37,7 +37,7 @@ export const MorphoPaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWith
     step: step,
     action: new MorphoWithdrawAction(),
     arguments: {
-      morphoLendingPoolId: step.inputs.position.pool.id,
+      morphoLendingPool: step.inputs.position.pool,
       amount: step.inputs.withdrawAmount,
       to: positionsManager.address,
     },

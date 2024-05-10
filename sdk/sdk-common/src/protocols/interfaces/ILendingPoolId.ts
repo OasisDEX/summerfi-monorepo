@@ -1,4 +1,3 @@
-import { IToken, TokenDataSchema } from '../../common/interfaces/IToken'
 import { IPoolId } from './IPoolId'
 import { IProtocol, ProtocolDataSchema } from './IProtocol'
 import { z } from 'zod'
@@ -16,11 +15,6 @@ import { z } from 'zod'
 export interface ILendingPoolId extends IPoolId, ILendingPoolIdData {
   // Re-declaring narrowed types
   readonly protocol: IProtocol
-
-  /** Collateral token used to collateralized the pool */
-  readonly collateralToken: IToken
-  /** Debt token, which can be borrowed from the pool */
-  readonly debtToken: IToken
 }
 
 /**
@@ -28,8 +22,6 @@ export interface ILendingPoolId extends IPoolId, ILendingPoolIdData {
  */
 export const LendingPoolIdDataSchema = z.object({
   protocol: ProtocolDataSchema,
-  collateralToken: TokenDataSchema,
-  debtToken: TokenDataSchema,
 })
 
 /**

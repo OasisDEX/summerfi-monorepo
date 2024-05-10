@@ -2,7 +2,7 @@ import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { Price, RiskRatio, TokenAmount, Percentage } from '@summerfi/sdk-common/common'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 import { MorphoProtocolPlugin } from '../../src/plugins/morphoblue/implementation/MorphoProtocolPlugin'
-import { morphoPoolIdMock } from '../mocks/MorphoPoolIdMock'
+import { morphoPoolIdMock, morphoPoolMarketParams } from '../mocks/MorphoPoolIdMock'
 import { OracleManagerMock } from '@summerfi/testing-utils'
 import { FiatCurrency, OracleProviderType } from '@summerfi/sdk-common'
 import { isMorphoLendingPool, isMorphoLendingPoolId } from '../../src'
@@ -34,15 +34,20 @@ describe.only('Protocol Plugin | Integration | Morpho', () => {
 
     expect(pool.type).toBe(PoolType.Lending)
     expect(pool.id).toMatchObject(morphoPoolIdMock)
+    expect(pool.collateralToken).toEqual(morphoPoolMarketParams.collateralToken)
+    expect(pool.debtToken).toEqual(morphoPoolMarketParams.debtToken)
+    expect(pool.oracle).toEqual(morphoPoolMarketParams.oracle)
+    expect(pool.irm).toEqual(morphoPoolMarketParams.irm)
+    expect(pool.lltv).toEqual(morphoPoolMarketParams.lltv)
   })
 
   it('should retrieve the correct pool collateral information from the protocol', async () => {
     ;(ctx.oracleManager as OracleManagerMock).setSpotPrice({
       provider: OracleProviderType.OneInch,
-      token: morphoPoolIdMock.collateralToken,
+      token: morphoPoolMarketParams.collateralToken,
       price: Price.createFrom({
         value: '10.5',
-        base: morphoPoolIdMock.collateralToken,
+        base: morphoPoolMarketParams.collateralToken,
         quote: FiatCurrency.USD,
       }),
     })
@@ -52,7 +57,7 @@ describe.only('Protocol Plugin | Integration | Morpho', () => {
     const morphoPoolCollateralInfo = morphoPoolInfo.collateral
     expect(morphoPoolCollateralInfo).toBeDefined()
     expect(morphoPoolCollateralInfo).toMatchObject({
-      token: expect.objectContaining(pool.id.collateralToken),
+      token: expect.objectContaining(pool.collateralToken),
       price: expect.anything(),
       priceUSD: expect.anything(),
       liquidationThreshold: expect.anything(),
@@ -96,7 +101,7 @@ describe.only('Protocol Plugin | Integration | Morpho', () => {
 
     expect(morphoPoolDebtInfo).toBeDefined()
     expect(morphoPoolDebtInfo).toMatchObject({
-      token: expect.objectContaining(pool.id.debtToken),
+      token: expect.objectContaining(pool.debtToken),
       price: expect.anything(),
       priceUSD: expect.anything(),
       totalBorrowed: expect.anything(),

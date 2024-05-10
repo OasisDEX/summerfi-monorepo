@@ -1,3 +1,4 @@
+import { IToken, TokenDataSchema } from '../../common/interfaces/IToken'
 import { PoolType } from '../types'
 import { ILendingPoolId, LendingPoolIdDataSchema } from './ILendingPoolId'
 import { IPool } from './IPool'
@@ -18,6 +19,10 @@ export interface ILendingPool extends IPool, ILendingPoolData {
   readonly type: PoolType.Lending
   /** Pool ID of the lending pool */
   readonly id: ILendingPoolId
+  /** Collateral token used to collateralized the pool */
+  readonly collateralToken: IToken
+  /** Debt token, which can be borrowed from the pool */
+  readonly debtToken: IToken
 }
 
 /**
@@ -26,6 +31,8 @@ export interface ILendingPool extends IPool, ILendingPoolData {
 export const LendingPoolDataSchema = z.object({
   type: z.literal(PoolType.Lending),
   id: LendingPoolIdDataSchema,
+  collateralToken: TokenDataSchema,
+  debtToken: TokenDataSchema,
 })
 
 /**

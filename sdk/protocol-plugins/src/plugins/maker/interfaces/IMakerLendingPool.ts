@@ -9,6 +9,7 @@ import {
   MakerLendingPoolIdSchema,
 } from './IMakerLendingPoolId'
 import { z } from 'zod'
+import { IToken } from '@summerfi/sdk-common/common'
 
 /**
  * @interface IMakerLendingPoolData
@@ -27,6 +28,10 @@ export interface IMakerLendingPoolData extends ILendingPoolData {
  */
 export interface IMakerLendingPool extends ILendingPool, IMakerLendingPoolData {
   readonly id: IMakerLendingPoolId
+
+  // Re-declaring the properties with the correct types
+  readonly collateralToken: IToken
+  readonly debtToken: IToken
 }
 
 /**

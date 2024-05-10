@@ -1,7 +1,6 @@
 import { ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common/protocols'
 import { IMorphoProtocol, MorphoProtocolDataSchema } from './IMorphoProtocol'
-import { AddressDataSchema, IToken, PercentageDataSchema } from '@summerfi/sdk-common'
-import { IAddress, IPercentage } from '@summerfi/sdk-common/common'
+import { HexData } from '@summerfi/sdk-common'
 import { z } from 'zod'
 
 /**
@@ -14,16 +13,8 @@ import { z } from 'zod'
 export interface IMorphoLendingPoolId extends IMorphoLendingPoolIdData, ILendingPoolId {
   /** The protocol to which the pool belongs */
   readonly protocol: IMorphoProtocol
-  /** The oracle used in the Morpho market */
-  readonly oracle: IAddress
-  /** The interest rate module used in the Morpho market */
-  readonly irm: IAddress
-  /** The liquidation LTV for the Morpho market */
-  readonly lltv: IPercentage
-
-  // Re-declaring the properties with the correct types
-  readonly collateralToken: IToken
-  readonly debtToken: IToken
+  /** The encoded market ID used to access the market parameters */
+  readonly marketId: HexData
 }
 
 /**
@@ -32,9 +23,7 @@ export interface IMorphoLendingPoolId extends IMorphoLendingPoolIdData, ILending
 export const MorphoLendingPoolIdDataSchema = z.object({
   ...LendingPoolIdDataSchema.shape,
   protocol: MorphoProtocolDataSchema,
-  oracle: AddressDataSchema,
-  irm: AddressDataSchema,
-  lltv: PercentageDataSchema,
+  marketId: z.custom<HexData>(),
 })
 
 /**

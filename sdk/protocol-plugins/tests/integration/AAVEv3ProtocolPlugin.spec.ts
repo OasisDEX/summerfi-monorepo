@@ -1,14 +1,16 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { Price, RiskRatio, TokenAmount, Percentage } from '@summerfi/sdk-common/common'
-import { AaveV3ProtocolPlugin } from '../../src/plugins/aave-v3'
-import { aaveV3PoolIdMock as validAaveV3PoolId } from '../mocks/AAVEv3PoolIdMock'
+import { AaveV3ProtocolPlugin, IAaveV3LendingPoolId } from '../../src/plugins/aave-v3'
+import { getSparkPoolIdMock } from '../mocks/AAVEv3PoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 
 describe('AAVEv3 Protocol Plugin (Integration)', () => {
   let ctx: IProtocolPluginContext
+  let validAaveV3PoolId: IAaveV3LendingPoolId
   let aaveV3ProtocolPlugin: AaveV3ProtocolPlugin
   beforeAll(async () => {
     ctx = await createProtocolPluginContext()
+    validAaveV3PoolId = await getSparkPoolIdMock()
     aaveV3ProtocolPlugin = new AaveV3ProtocolPlugin({
       context: ctx,
     })
@@ -22,7 +24,7 @@ describe('AAVEv3 Protocol Plugin (Integration)', () => {
 
     expect(aaveV3PoolCollateralInfo).toBeDefined()
     expect(aaveV3PoolCollateralInfo).toMatchObject({
-      token: expect.objectContaining(pool.id.collateralToken),
+      token: expect.objectContaining(pool.collateralToken),
       price: expect.anything(),
       priceUSD: expect.anything(),
       liquidationThreshold: expect.anything(),
@@ -65,7 +67,7 @@ describe('AAVEv3 Protocol Plugin (Integration)', () => {
 
     expect(aaveV3PoolDebtInfo).toBeDefined()
     expect(aaveV3PoolDebtInfo).toMatchObject({
-      token: expect.objectContaining(pool.id.debtToken),
+      token: expect.objectContaining(pool.debtToken),
       price: expect.anything(),
       priceUSD: expect.anything(),
       interestRate: expect.anything(),

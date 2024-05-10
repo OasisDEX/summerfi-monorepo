@@ -5,8 +5,9 @@ import {
 } from '@summerfi/sdk-common/protocols'
 import { EmodeType, EmodeTypeSchema } from '../../common/enums/EmodeType'
 import { ISparkProtocol, ISparkProtocolData, SparkProtocolSchema } from './ISparkProtocol'
-import { IToken } from '@summerfi/sdk-common'
 import { z } from 'zod'
+import { IToken, ITokenData } from '@summerfi/sdk-common/common'
+import { TokenDataSchema } from '@summerfi/sdk-common'
 
 /**
  * @interface ISparkLendingPoolIdData
@@ -17,6 +18,10 @@ export interface ISparkLendingPoolIdData extends ILendingPoolIdData {
   readonly protocol: ISparkProtocolData
   /** The efficiency mode of the pool */
   readonly emodeType: EmodeType
+  /** The token used to collateralized the position */
+  readonly collateralToken: ITokenData
+  /** The token used to borrow funds */
+  readonly debtToken: ITokenData
 }
 
 /**
@@ -31,8 +36,6 @@ export interface ISparkLendingPoolIdData extends ILendingPoolIdData {
 export interface ISparkLendingPoolId extends ISparkLendingPoolIdData, ILendingPoolId {
   readonly protocol: ISparkProtocol
   readonly emodeType: EmodeType
-
-  // Re-declaring the properties with the correct types
   readonly collateralToken: IToken
   readonly debtToken: IToken
 }
@@ -44,6 +47,8 @@ export const SparkLendingPoolIdSchema = z.object({
   ...LendingPoolIdDataSchema.shape,
   protocol: SparkProtocolSchema,
   emodeType: EmodeTypeSchema,
+  collateralToken: TokenDataSchema,
+  debtToken: TokenDataSchema,
 })
 
 /**

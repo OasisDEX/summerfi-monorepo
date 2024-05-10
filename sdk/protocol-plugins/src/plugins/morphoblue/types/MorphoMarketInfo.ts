@@ -5,15 +5,15 @@ import { IPercentage, ITokenAmount } from '@summerfi/sdk-common'
  */
 export type MorphoMarketInfo = {
   /** The total supply assets in the market, i.e. total collateral locked */
-  totalSupplyAssets: ITokenAmount
+  readonly totalSupplyAssets: ITokenAmount
   /** The total supply shares in the market having access to the supply assets */
-  totalSupplyShares: bigint
+  readonly totalSupplyShares: bigint
   /** The total borrow assets in the market, i.e. total debt borrowed */
-  totalBorrowAssets: ITokenAmount
+  readonly totalBorrowAssets: ITokenAmount
   /** The total borrow shares in the market having borrowed from the market */
-  totalBorrowShares: bigint
+  readonly totalBorrowShares: bigint
   /** Block timestamp of the last update */
-  lastUpdated: bigint
+  readonly lastUpdated: bigint
   /** Fee charged when borrowing from the market */
-  fee: IPercentage
+  readonly fee: IPercentage
 }

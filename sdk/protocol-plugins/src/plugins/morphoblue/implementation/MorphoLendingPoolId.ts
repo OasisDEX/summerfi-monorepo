@@ -1,8 +1,9 @@
 import { SerializationService } from '@summerfi/sdk-common/services'
 import { IMorphoLendingPoolId, IMorphoLendingPoolIdData } from '../interfaces/IMorphoLendingPoolId'
 import { MorphoProtocol } from './MorphoProtocol'
-import { Address, IPrintable, Percentage } from '@summerfi/sdk-common/common'
+import { IPrintable } from '@summerfi/sdk-common/common'
 import { LendingPoolId } from '@summerfi/sdk-common/protocols'
+import { HexData } from '@summerfi/sdk-common'
 
 /**
  * @class MorphoLendingPoolId
@@ -10,9 +11,7 @@ import { LendingPoolId } from '@summerfi/sdk-common/protocols'
  */
 export class MorphoLendingPoolId extends LendingPoolId implements IMorphoLendingPoolId, IPrintable {
   readonly protocol: MorphoProtocol
-  readonly oracle: Address
-  readonly irm: Address
-  readonly lltv: Percentage
+  readonly marketId: HexData
 
   /** Factory method */
   static createFrom(params: IMorphoLendingPoolIdData): MorphoLendingPoolId {
@@ -24,13 +23,11 @@ export class MorphoLendingPoolId extends LendingPoolId implements IMorphoLending
     super(params)
 
     this.protocol = MorphoProtocol.createFrom(params.protocol)
-    this.oracle = Address.createFrom(params.oracle)
-    this.irm = Address.createFrom(params.irm)
-    this.lltv = Percentage.createFrom(params.lltv)
+    this.marketId = params.marketId
   }
 
   toString(): string {
-    return `${LendingPoolId.toString()} [oracle=${this.oracle}, irm=${this.irm}, lltv=${this.lltv}]`
+    return `${LendingPoolId.toString()} [marketId=${this.marketId}]`
   }
 }
 

@@ -6,7 +6,8 @@ import {
 import { ILKType, ILKTypeSchema } from '../enums'
 import { IMakerProtocol, IMakerProtocolData, MakerProtocolSchema } from './IMakerProtocol'
 import { z } from 'zod'
-import { IToken } from '@summerfi/sdk-common'
+import { ITokenData, TokenDataSchema } from '@summerfi/sdk-common'
+import { IToken } from '@summerfi/sdk-common/common'
 
 /**
  * @name IMakerLendingPoolIdData
@@ -19,6 +20,10 @@ export interface IMakerLendingPoolIdData extends ILendingPoolIdData {
   readonly protocol: IMakerProtocolData
   /** The ILK type of the pool */
   readonly ilkType: ILKType
+  /** The token used to collateralize the position */
+  readonly collateralToken: ITokenData
+  /** The token used to borrow funds */
+  readonly debtToken: ITokenData
 }
 
 /**
@@ -33,8 +38,6 @@ export interface IMakerLendingPoolIdData extends ILendingPoolIdData {
 export interface IMakerLendingPoolId extends ILendingPoolId, IMakerLendingPoolIdData {
   readonly protocol: IMakerProtocol
   readonly ilkType: ILKType
-
-  // Re-declaring the properties with the correct types
   readonly collateralToken: IToken
   readonly debtToken: IToken
 }
@@ -46,6 +49,8 @@ export const MakerLendingPoolIdSchema = z.object({
   ...LendingPoolIdDataSchema.shape,
   protocol: MakerProtocolSchema,
   ilkType: ILKTypeSchema,
+  collateralToken: TokenDataSchema,
+  debtToken: TokenDataSchema,
 })
 
 /**

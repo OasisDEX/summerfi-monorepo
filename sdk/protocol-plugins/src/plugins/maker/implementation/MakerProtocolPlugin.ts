@@ -101,6 +101,8 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
     return MakerLendingPool.createFrom({
       type: PoolType.Lending,
       id: makerLendingPoolId,
+      collateralToken: makerLendingPoolId.collateralToken,
+      debtToken: makerLendingPoolId.debtToken,
     })
   }
 

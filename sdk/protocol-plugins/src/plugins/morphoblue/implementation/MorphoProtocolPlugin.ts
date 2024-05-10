@@ -24,9 +24,10 @@ import {
   isMorphoLendingPoolId,
 } from '../interfaces/IMorphoLendingPoolId'
 import { MorphoStepBuilders } from '../builders/MorphoStepBuilders'
-import { IMorphoPositionIdData, isMorphoPositionId } from '../interfaces'
+import { IMorphoLendingPool, IMorphoPositionIdData, isMorphoPositionId } from '../interfaces'
 import { MorphoLendingPoolInfo } from './MorphoLendingPoolInfo'
 import {
+  Address,
   DebtInfo,
   IPercentage,
   IPrice,
@@ -38,10 +39,10 @@ import {
   TokenAmount,
 } from '@summerfi/sdk-common'
 import { BaseProtocolPlugin } from '../../../implementation'
-import { Hex, encodeAbiParameters, keccak256, parseAbiParameters } from 'viem'
 import { MorphoLLTVPrecision, MorphoOraclePricePrecision } from '../constants/MorphoConstants'
 import { MorphoMarketInfo } from '../types/MorphoMarketInfo'
 import { BigNumber } from 'bignumber.js'
+import { MorphoMarketParameters } from '../types'
 
 /**
  * @class MorphoProtocolPlugin
@@ -89,11 +90,18 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
 
   /** @see BaseProtocolPlugin._getLendingPoolImpl */
   protected async _getLendingPoolImpl(
-    poolId: IMorphoLendingPoolIdData,
+    morphoLendingPoolId: IMorphoLendingPoolId,
   ): Promise<MorphoLendingPool> {
+    const marketParams = await this._getMarketParams(morphoLendingPoolId)
+
     return MorphoLendingPool.createFrom({
       type: PoolType.Lending,
-      id: poolId,
+      id: morphoLendingPoolId,
+      collateralToken: marketParams.collateralToken,
+      debtToken: marketParams.debtToken,
+      oracle: marketParams.oracle,
+      irm: marketParams.irm,
+      lltv: marketParams.lltv,
     })
   }
 
@@ -101,17 +109,18 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
   protected async _getLendingPoolInfoImpl(
     morphoLendingPoolId: IMorphoLendingPoolId,
   ): Promise<MorphoLendingPoolInfo> {
-    const marketInfo = await this._getMarketInfo(morphoLendingPoolId)
-    const marketCollateralPriceInDebt = await this._getMarketOraclePrice(morphoLendingPoolId)
+    const morphoLendingPool = await this._getLendingPoolImpl(morphoLendingPoolId)
+    const marketInfo = await this._getMarketInfo(morphoLendingPool)
+    const marketCollateralPriceInDebt = await this._getMarketOraclePrice(morphoLendingPool)
 
     const collateralInfo = await this._getCollateralInfo({
-      morphoLendingPoolId,
+      morphoLendingPool,
       marketInfo,
       marketCollateralPriceInDebt,
     })
 
     const debtInfo = await this._getDebtInfo({
-      morphoLendingPoolId,
+      morphoLendingPool,
       marketInfo,
       marketCollateralPriceInDebt,
     })
@@ -154,14 +163,14 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
    * @returns The collateral info
    */
   private async _getCollateralInfo(params: {
-    morphoLendingPoolId: IMorphoLendingPoolId
+    morphoLendingPool: IMorphoLendingPool
     marketInfo: MorphoMarketInfo
     marketCollateralPriceInDebt: IPrice
   }): Promise<CollateralInfo> {
-    const { morphoLendingPoolId, marketInfo, marketCollateralPriceInDebt } = params
+    const { morphoLendingPool, marketInfo, marketCollateralPriceInDebt } = params
 
-    const collateralToken = morphoLendingPoolId.collateralToken
-    const liquidationPenalty = this._getLiquidationPenalty(morphoLendingPoolId)
+    const collateralToken = morphoLendingPool.collateralToken
+    const liquidationPenalty = this._getLiquidationPenalty(morphoLendingPool)
     const liquidationThreshold = this._getLiquidationThreshold(
       marketInfo,
       marketCollateralPriceInDebt,
@@ -194,20 +203,20 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
    * @returns The debt info
    */
   private async _getDebtInfo(params: {
-    morphoLendingPoolId: IMorphoLendingPoolId
+    morphoLendingPool: IMorphoLendingPool
     marketInfo: MorphoMarketInfo
     marketCollateralPriceInDebt: IPrice
   }) {
-    const { morphoLendingPoolId, marketInfo, marketCollateralPriceInDebt } = params
+    const { morphoLendingPool, marketInfo, marketCollateralPriceInDebt } = params
 
-    const debtToken = morphoLendingPoolId.debtToken
+    const debtToken = morphoLendingPool.debtToken
     const priceUSD = await this.ctx.oracleManager.getSpotPrice({
       baseToken: debtToken,
     })
 
     const debtCeiling = marketCollateralPriceInDebt
       .multiply(marketInfo.totalSupplyAssets)
-      .multiply(morphoLendingPoolId.lltv)
+      .multiply(morphoLendingPool.lltv)
 
     const debtAvailable = debtCeiling.subtract(marketInfo.totalBorrowAssets)
 
@@ -233,12 +242,12 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
    * @param morphoLendingPoolId The lending pool ID
    * @returns The market oracle price
    */
-  private async _getMarketOraclePrice(morphoLendingPoolId: IMorphoLendingPoolId): Promise<IPrice> {
+  private async _getMarketOraclePrice(morphoLendingPool: IMorphoLendingPool): Promise<IPrice> {
     const [price] = await this.ctx.provider.multicall({
       contracts: [
         {
           abi: morphoBlueOracleAbi,
-          address: morphoLendingPoolId.oracle.value,
+          address: morphoLendingPool.oracle.value,
           functionName: 'price',
           args: [],
         },
@@ -252,8 +261,8 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
 
     return Price.createFrom({
       value: descaledPrice,
-      base: morphoLendingPoolId.collateralToken,
-      quote: morphoLendingPoolId.debtToken,
+      base: morphoLendingPool.collateralToken,
+      quote: morphoLendingPool.debtToken,
     })
   }
 
@@ -263,11 +272,9 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
    * @param morphoLendingPoolId The lending pool ID
    * @returns The market info
    */
-  private async _getMarketInfo(
-    morphoLendingPoolId: IMorphoLendingPoolId,
-  ): Promise<MorphoMarketInfo> {
+  private async _getMarketInfo(morphoLendingPool: IMorphoLendingPool): Promise<MorphoMarketInfo> {
     const morphoBlueProviderDef = this._getContractDef('MorphoBlue')
-    const marketParamsId = this._getMarketParamsId(morphoLendingPoolId)
+    const marketParamsId = morphoLendingPool.id.marketId
 
     const [marketInfo] = await this.ctx.provider.multicall({
       contracts: [
@@ -283,12 +290,12 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
 
     return {
       totalSupplyAssets: TokenAmount.createFromBaseUnit({
-        token: morphoLendingPoolId.collateralToken,
+        token: morphoLendingPool.collateralToken,
         amount: marketInfo[0].toString(),
       }),
       totalSupplyShares: marketInfo[1],
       totalBorrowAssets: TokenAmount.createFromBaseUnit({
-        token: morphoLendingPoolId.debtToken,
+        token: morphoLendingPool.debtToken,
         amount: marketInfo[2].toString(),
       }),
       totalBorrowShares: marketInfo[3],
@@ -296,6 +303,66 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
       fee: Percentage.createFrom({
         value: Number(marketInfo[5]),
       }),
+    }
+  }
+
+  /**
+   * @name _getMarketParams
+   * @description Get the market parameters from the market ID
+   * @param morphoLendingPoolId The lending pool ID
+   * @returns The market parameters
+   */
+  private async _getMarketParams(
+    morphoLendingPoolId: IMorphoLendingPoolId,
+  ): Promise<MorphoMarketParameters> {
+    const morphoBlueProviderDef = this._getContractDef('MorphoBlue')
+    const marketParamsId = morphoLendingPoolId.marketId
+
+    const [marketParameters] = await this.ctx.provider.multicall({
+      contracts: [
+        {
+          abi: morphoBlueProviderDef.abi,
+          address: morphoBlueProviderDef.address,
+          functionName: 'idToMarketParams',
+          args: [marketParamsId],
+        },
+      ],
+      allowFailure: false,
+    })
+
+    const debtToken = await this.ctx.tokensManager.getTokenByAddress({
+      address: Address.createFromEthereum({ value: marketParameters[0] }),
+      chainInfo: morphoLendingPoolId.protocol.chainInfo,
+    })
+
+    if (!debtToken) {
+      throw new Error(
+        `Invalid debt token address: ${marketParameters[0]} for chain ${morphoLendingPoolId.protocol.chainInfo.name}`,
+      )
+    }
+
+    const collateralToken = await this.ctx.tokensManager.getTokenByAddress({
+      address: Address.createFromEthereum({ value: marketParameters[1] }),
+      chainInfo: morphoLendingPoolId.protocol.chainInfo,
+    })
+
+    if (!collateralToken) {
+      throw new Error(
+        `Invalid collateral token address: ${marketParameters[1]} for chain ${morphoLendingPoolId.protocol.chainInfo.name}`,
+      )
+    }
+
+    const lltv = new BigNumber(String(marketParameters[4]))
+      .div(new BigNumber(10).pow(MorphoLLTVPrecision))
+      .multipliedBy(100)
+      .toNumber()
+
+    return {
+      debtToken,
+      collateralToken,
+      oracle: Address.createFromEthereum({ value: marketParameters[2] }),
+      irm: Address.createFromEthereum({ value: marketParameters[3] }),
+      lltv: Percentage.createFrom({ value: lltv }),
     }
   }
 
@@ -329,12 +396,12 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
    * @param morphoLendingPoolId
    * @returns The liquidation incentive factor
    */
-  private _getLiquidationPenalty(morphoLendingPoolId: IMorphoLendingPoolId): IPercentage {
+  private _getLiquidationPenalty(morphoLendingPool: IMorphoLendingPool): IPercentage {
     const ONE = new BigNumber(1)
     const MAX_LIF = new BigNumber(1.15)
     const BETA = new BigNumber(0.3)
 
-    const lltv = morphoLendingPoolId.lltv
+    const lltv = morphoLendingPool.lltv
 
     const LIF = BigNumber.min(
       MAX_LIF,
@@ -346,30 +413,6 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
     return Percentage.createFrom({ value: LIF.toNumber() })
   }
 
-  /**
-   * @name _getMarketParamsId
-   * @description Get the market params ID by hashing the market params
-   * @param morphoLendingPoolId
-   * @returns
-   */
-  private _getMarketParamsId(morphoLendingPoolId: IMorphoLendingPoolId): Hex {
-    const abiParametersFormat = parseAbiParameters([
-      'MarketParams params',
-      'struct MarketParams { address debtToken; address collateralToken; address oracle; address irm; uint256 lltv; }',
-    ])
-
-    const abiParameters = encodeAbiParameters(abiParametersFormat, [
-      {
-        debtToken: morphoLendingPoolId.debtToken.address.value,
-        collateralToken: morphoLendingPoolId.collateralToken.address.value,
-        oracle: morphoLendingPoolId.oracle.value,
-        irm: morphoLendingPoolId.irm.value,
-        lltv: BigInt(morphoLendingPoolId.lltv.toBaseUnit({ decimals: MorphoLLTVPrecision })),
-      },
-    ])
-
-    return keccak256(abiParameters)
-  }
   /**
    * @name _getContractDef
    * @description Get the contract abi and address for the given contract name

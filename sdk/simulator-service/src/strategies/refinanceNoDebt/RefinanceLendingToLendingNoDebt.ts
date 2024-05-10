@@ -38,9 +38,7 @@ export async function refinanceLendingToLendingNoDebt(
     amount: '0',
   })
 
-  const isCollateralSwapSkipped = !targetPool.id.collateralToken.equals(
-    sourcePool.id.collateralToken,
-  )
+  const isCollateralSwapSkipped = !targetPool.collateralToken.equals(sourcePool.collateralToken)
 
   const simulation = await simulator
     .next(async () => ({
@@ -59,7 +57,7 @@ export async function refinanceLendingToLendingNoDebt(
         inputs: await getSwapStepData({
           chainInfo: position.pool.id.protocol.chainInfo,
           fromAmount: position.collateralAmount,
-          toToken: targetPool.id.collateralToken,
+          toToken: targetPool.collateralToken,
           slippage: Percentage.createFrom({ value: args.slippage.value }),
           swapManager: dependencies.swapManager,
           oracleManager: dependencies.oracleManager,
@@ -76,7 +74,7 @@ export async function refinanceLendingToLendingNoDebt(
           : ctx.getReference(['CollateralSwap', 'received']),
         borrowAmount: TokenAmount.createFrom({
           amount: '0',
-          token: targetPool.id.debtToken,
+          token: targetPool.debtToken,
         }),
         position: newEmptyPositionFromPool(targetPool),
         borrowTargetType: TokenTransferTargetType.PositionsManager,

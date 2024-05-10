@@ -85,6 +85,8 @@ export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin {
     return AaveV3LendingPool.createFrom({
       type: PoolType.Lending,
       id: aaveV3PoolId,
+      collateralToken: aaveV3PoolId.collateralToken,
+      debtToken: aaveV3PoolId.debtToken,
     })
   }
 

@@ -6,7 +6,7 @@ import {
 import { EmodeType, EmodeTypeSchema } from '../../common/enums/EmodeType'
 import { AaveV3ProtocolSchema, IAaveV3Protocol, IAaveV3ProtocolData } from './IAaveV3Protocol'
 import { z } from 'zod'
-import { IToken } from '@summerfi/sdk-common'
+import { IToken, ITokenData, TokenDataSchema } from '@summerfi/sdk-common'
 
 /**
  * @interface IAaveV3LendingPoolIdData
@@ -17,6 +17,10 @@ export interface IAaveV3LendingPoolIdData extends ILendingPoolIdData {
   readonly protocol: IAaveV3ProtocolData
   /** The pool's efficiency mode */
   readonly emodeType: EmodeType
+  /** The token used to collateralized the position */
+  readonly collateralToken: ITokenData
+  /** The token used to borrow funds */
+  readonly debtToken: ITokenData
 }
 
 /**
@@ -31,8 +35,6 @@ export interface IAaveV3LendingPoolIdData extends ILendingPoolIdData {
 export interface IAaveV3LendingPoolId extends ILendingPoolId, IAaveV3LendingPoolIdData {
   readonly protocol: IAaveV3Protocol
   readonly emodeType: EmodeType
-
-  // Re-declaring the properties with the correct types
   readonly collateralToken: IToken
   readonly debtToken: IToken
 }
@@ -44,6 +46,8 @@ export const AaveV3LendingPoolIdSchema = z.object({
   ...LendingPoolIdDataSchema.shape,
   protocol: AaveV3ProtocolSchema,
   emodeType: EmodeTypeSchema,
+  collateralToken: TokenDataSchema,
+  debtToken: TokenDataSchema,
 })
 
 /**

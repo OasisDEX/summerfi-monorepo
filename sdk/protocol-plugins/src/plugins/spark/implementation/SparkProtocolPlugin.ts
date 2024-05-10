@@ -81,6 +81,8 @@ export class SparkProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin {
     return SparkLendingPool.createFrom({
       type: PoolType.Lending,
       id: poolId,
+      collateralToken: poolId.collateralToken,
+      debtToken: poolId.debtToken,
     })
   }
 

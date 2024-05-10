@@ -42,7 +42,7 @@ export const MorphoDepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrow
     step: params.step,
     action: new MorphoDepositAction(),
     arguments: {
-      morphoLendingPoolId: step.inputs.position.pool.id,
+      morphoLendingPool: step.inputs.position.pool,
       amount: getValueFromReference(step.inputs.depositAmount),
       sumAmounts: false,
     },
@@ -61,7 +61,7 @@ export const MorphoDepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrow
       step: step,
       action: new MorphoBorrowAction(),
       arguments: {
-        morphoLendingPoolId: step.inputs.position.pool.id,
+        morphoLendingPool: step.inputs.position.pool,
         amount: borrowAmount,
       },
       connectedInputs: {},

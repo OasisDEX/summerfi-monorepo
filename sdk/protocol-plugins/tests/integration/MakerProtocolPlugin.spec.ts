@@ -3,19 +3,19 @@ import {
   Token,
   Address,
   Price,
-  RiskRatio,
   TokenAmount,
   Percentage,
 } from '@summerfi/sdk-common/common'
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { MakerProtocolPlugin } from '../../src/plugins/maker'
-import { makerPoolIdMock as validMakerPoolId } from '../mocks/MakerPoolIdMock'
+import { IMakerLendingPoolId, MakerProtocolPlugin } from '../../src/plugins/maker'
+import { getMakerPoolIdMock } from '../mocks/MakerPoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 import { OracleManagerMock } from '@summerfi/testing-utils'
 import { FiatCurrency, OracleProviderType } from '@summerfi/sdk-common'
 
 describe('Maker Protocol Plugin (Integration)', () => {
   let ctx: IProtocolPluginContext
+  let validMakerPoolId: IMakerLendingPoolId
   let makerProtocolPlugin: MakerProtocolPlugin
 
   const mockDebtToken = Token.createFrom({
@@ -28,6 +28,7 @@ describe('Maker Protocol Plugin (Integration)', () => {
 
   beforeAll(async () => {
     ctx = await createProtocolPluginContext()
+    validMakerPoolId = await getMakerPoolIdMock()
     makerProtocolPlugin = new MakerProtocolPlugin({
       context: ctx,
     })
@@ -50,7 +51,7 @@ describe('Maker Protocol Plugin (Integration)', () => {
 
     expect(makerPoolCollateralInfo).toBeDefined()
     expect(makerPoolCollateralInfo).toMatchObject({
-      token: expect.objectContaining(pool.id.collateralToken),
+      token: expect.objectContaining(pool.collateralToken),
       price: expect.anything(),
       priceUSD: expect.anything(),
       liquidationThreshold: expect.anything(),
@@ -77,7 +78,7 @@ describe('Maker Protocol Plugin (Integration)', () => {
 
     expect(makerPoolDebtInfo).toBeDefined()
     expect(makerPoolDebtInfo).toMatchObject({
-      token: expect.objectContaining(pool.id.debtToken),
+      token: expect.objectContaining(pool.debtToken),
       price: expect.anything(),
       priceUSD: expect.anything(),
       interestRate: expect.anything(),

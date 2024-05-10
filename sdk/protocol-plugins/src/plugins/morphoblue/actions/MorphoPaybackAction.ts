@@ -1,8 +1,8 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { ITokenAmount } from '@summerfi/sdk-common/common'
-import { IMorphoLendingPoolId } from '../interfaces/IMorphoLendingPoolId'
 import { MorphoLLTVPrecision } from '../constants/MorphoConstants'
 import { IAddress } from '@summerfi/sdk-common'
+import { IMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
 
 export class MorphoPaybackAction extends BaseAction {
   public readonly config = {
@@ -16,24 +16,24 @@ export class MorphoPaybackAction extends BaseAction {
 
   public encodeCall(
     params: {
-      morphoLendingPoolId: IMorphoLendingPoolId
+      morphoLendingPool: IMorphoLendingPool
       amount: ITokenAmount
       onBehalf: IAddress
       paybackAll: boolean
     },
     paramsMapping?: InputSlotsMapping,
   ): ActionCall {
-    const { morphoLendingPoolId, amount, onBehalf, paybackAll } = params
+    const { morphoLendingPool, amount, onBehalf, paybackAll } = params
 
     return this._encodeCall({
       arguments: [
         {
           marketParams: {
-            loanToken: morphoLendingPoolId.debtToken.address.value,
-            collateralToken: morphoLendingPoolId.collateralToken.address.value,
-            oracle: morphoLendingPoolId.oracle.value,
-            irm: morphoLendingPoolId.irm.value,
-            lltv: morphoLendingPoolId.lltv.toBaseUnit({ decimals: MorphoLLTVPrecision }),
+            loanToken: morphoLendingPool.debtToken.address.value,
+            collateralToken: morphoLendingPool.collateralToken.address.value,
+            oracle: morphoLendingPool.oracle.value,
+            irm: morphoLendingPool.irm.value,
+            lltv: morphoLendingPool.lltv.toBaseUnit({ decimals: MorphoLLTVPrecision }),
           },
           amount: amount,
           onBehalf: onBehalf.value,
