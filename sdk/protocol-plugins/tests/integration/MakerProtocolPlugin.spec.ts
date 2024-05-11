@@ -11,7 +11,7 @@ import { IMakerLendingPoolId, MakerProtocolPlugin } from '../../src/plugins/make
 import { getMakerPoolIdMock } from '../mocks/MakerPoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 import { OracleManagerMock } from '@summerfi/testing-utils'
-import { FiatCurrency, OracleProviderType } from '@summerfi/sdk-common'
+import { ChainFamilyMap, FiatCurrency, OracleProviderType } from '@summerfi/sdk-common'
 
 describe('Maker Protocol Plugin (Integration)', () => {
   let ctx: IProtocolPluginContext
@@ -19,7 +19,7 @@ describe('Maker Protocol Plugin (Integration)', () => {
   let makerProtocolPlugin: MakerProtocolPlugin
 
   const mockDebtToken = Token.createFrom({
-    chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
+    chainInfo: ChainFamilyMap.Ethereum.Mainnet,
     address: Address.createFromEthereum({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
     symbol: 'DAI',
     name: 'Dai Stablecoin',
@@ -27,7 +27,7 @@ describe('Maker Protocol Plugin (Integration)', () => {
   })
 
   beforeAll(async () => {
-    ctx = await createProtocolPluginContext()
+    ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
     validMakerPoolId = await getMakerPoolIdMock()
     makerProtocolPlugin = new MakerProtocolPlugin({
       context: ctx,

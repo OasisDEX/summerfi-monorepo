@@ -5,27 +5,19 @@ import {
   ChainFamilyName,
   valuesOfChainFamilyMap,
   Maybe,
-  AddressValue,
   IPositionId,
   CommonTokenSymbols,
+  IChainInfo,
 } from '@summerfi/sdk-common/common'
 import { ILendingPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { getContract, stringToHex } from 'viem'
 import { BigNumber } from 'bignumber.js'
 import { BaseProtocolPlugin } from '../../../implementation/BaseProtocolPlugin'
 import { PRECISION_BI } from '../../common/constants/AaveV3LikeConstants'
-import {
-  DOG_ABI,
-  ERC20_ABI,
-  ILK_REGISTRY_ABI,
-  JUG_ABI,
-  OSM_ABI,
-  SPOT_ABI,
-  VAT_ABI,
-} from '../abis/MakerABIS'
+import { ERC20_ABI, OSM_ABI } from '../abis/MakerABIS'
 import { MakerLendingPool } from './MakerLendingPool'
 import { amountFromRad, amountFromRay, amountFromWei } from '../utils/AmountUtils'
-import { MakerAddressAbiMap } from '../types/MakerAddressAbiMap'
+import { MakerAbiMap } from '../abis/MakerAbiMap'
 import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { IUser } from '@summerfi/sdk-common/user'
 import {
@@ -50,6 +42,8 @@ import {
   RiskRatioType,
   TokenAmount,
 } from '@summerfi/sdk-common'
+import { MakerContractInfo } from '../types/MakerContractInfo'
+import { MakerContractNames } from '@summerfi/deployment-types'
 
 type ProtocolData = Awaited<ReturnType<MakerProtocolPlugin['_getProtocolData']>>
 
@@ -151,19 +145,18 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
       )
     }
 
-    const { deployments } = this.ctx
-    const deploymentKey = this._getDeploymentKey(params.user.chainInfo)
-    const deployment = deployments[deploymentKey]
-
-    const cdpManagerAddress = deployment.dependencies[this.CdpManagerContractName]
-      .address as AddressValue
-
-    const dssProxyActionsAddress = deployment.dependencies[this.DssProxyActionsContractName]
-      .address as AddressValue
+    const cdpManagerAddress = await this._getContractAddress({
+      chainInfo: params.user.chainInfo,
+      contractName: this.CdpManagerContractName,
+    })
+    const dssProxyActionsAddress = await this._getContractAddress({
+      chainInfo: params.user.chainInfo,
+      contractName: this.DssProxyActionsContractName,
+    })
 
     const result = encodeMakerGiveThroughProxyActions({
-      cdpManagerAddress: cdpManagerAddress,
-      makerProxyActionsAddress: dssProxyActionsAddress,
+      cdpManagerAddress: cdpManagerAddress.value,
+      makerProxyActionsAddress: dssProxyActionsAddress.value,
       giveToAddress: params.positionsManager.address.value,
       cdpId: params.externalPosition.position.vaultId,
     })
@@ -180,60 +173,16 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
 
   /** PRIVATE */
 
-  private _getContractDef<K extends keyof MakerAddressAbiMap>(
-    contractName: K,
-  ): MakerAddressAbiMap[K] {
-    const map: MakerAddressAbiMap = {
-      Dog: {
-        address: '0x135954d155898d42c90d2a57824c690e0c7bef1b',
-        abi: DOG_ABI,
-      },
-      Vat: {
-        address: '0x35d1b3f3d7966a1dfe207aa4514c12a259a0492b',
-        abi: VAT_ABI,
-      },
-      McdJug: {
-        address: '0x19c0976f590d67707e62397c87829d896dc0f1f1',
-        abi: JUG_ABI,
-      },
-      Spot: {
-        address: '0x65c79fcb50ca1594b025960e539ed7a9a6d434a3',
-        abi: SPOT_ABI,
-      },
-      IlkRegistry: {
-        address: '0x5a464C28D19848f44199D003BeF5ecc87d090F87',
-        abi: ILK_REGISTRY_ABI,
-      },
-      Chainlog: {
-        address: '0x',
-        abi: null,
-      },
-      CdpManager: {
-        address: '0x',
-        abi: null,
-      },
-      GetCdps: {
-        address: '0x',
-        abi: null,
-      },
-      Pot: {
-        address: '0x',
-        abi: null,
-      },
-      End: {
-        address: '0x',
-        abi: null,
-      },
-      McdGov: {
-        address: '0x',
-        abi: null,
-      },
-      FlashMintModule: {
-        address: '0x',
-        abi: null,
-      },
+  private async _getContractDef<ContractName extends MakerContractNames>(params: {
+    chainInfo: IChainInfo
+    contractName: ContractName
+  }): Promise<MakerContractInfo<ContractName>> {
+    const contractAddress = await this._getContractAddress(params)
+
+    return {
+      address: contractAddress.value,
+      abi: MakerAbiMap[params.contractName],
     }
-    return map[contractName]
   }
 
   private async _getCollateralInfo(protocolData: ProtocolData) {
@@ -309,7 +258,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
     const ilk = makerLendingPoolId.ilkType
     const ilkInHex = stringToHex(ilk, { size: 32 })
     const { osm, vatRes, jugRes, dogRes, spotRes, erc20, ilkRegistryRes } =
-      await this._getIlkProtocolData(ilkInHex)
+      await this._getIlkProtocolData({ chainInfo: makerLendingPoolId.protocol.chainInfo, ilkInHex })
 
     const DAI = await this.ctx.tokensManager.getTokenBySymbol({
       chainInfo: makerLendingPoolId.protocol.chainInfo,
@@ -329,7 +278,10 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
       )
     }
 
-    const makerSpotDef = this._getContractDef('Spot')
+    const makerSpotDef = await this._getContractDef({
+      chainInfo: makerLendingPoolId.protocol.chainInfo,
+      contractName: 'Spot',
+    })
     const [
       [peek],
       [peep],
@@ -380,13 +332,28 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
     }
   }
 
-  private async _getIlkProtocolData(ilkInHex: `0x${string}`) {
+  private async _getIlkProtocolData(params: { chainInfo: IChainInfo; ilkInHex: `0x${string}` }) {
     const ctx = this.ctx
-    const makerDogDef = this._getContractDef('Dog')
-    const makerVatDef = this._getContractDef('Vat')
-    const makerSpotDef = this._getContractDef('Spot')
-    const makerJugDef = this._getContractDef('McdJug')
-    const makerIlkRegistryDef = this._getContractDef('IlkRegistry')
+    const makerDogDef = await this._getContractDef({
+      chainInfo: params.chainInfo,
+      contractName: 'Dog',
+    })
+    const makerVatDef = await this._getContractDef({
+      chainInfo: params.chainInfo,
+      contractName: 'Vat',
+    })
+    const makerSpotDef = await this._getContractDef({
+      chainInfo: params.chainInfo,
+      contractName: 'Spot',
+    })
+    const makerJugDef = await this._getContractDef({
+      chainInfo: params.chainInfo,
+      contractName: 'McdJug',
+    })
+    const makerIlkRegistryDef = await this._getContractDef({
+      chainInfo: params.chainInfo,
+      contractName: 'IlkRegistry',
+    })
 
     const [
       {
@@ -428,31 +395,31 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
           abi: makerVatDef.abi,
           address: makerVatDef.address,
           functionName: 'ilks',
-          args: [ilkInHex],
+          args: [params.ilkInHex],
         },
         {
           abi: makerSpotDef.abi,
           address: makerSpotDef.address,
           functionName: 'ilks' as const,
-          args: [ilkInHex],
+          args: [params.ilkInHex],
         },
         {
           abi: makerJugDef.abi,
           address: makerJugDef.address,
           functionName: 'ilks' as const,
-          args: [ilkInHex],
+          args: [params.ilkInHex],
         },
         {
           abi: makerDogDef.abi,
           address: makerDogDef.address,
           functionName: 'ilks' as const,
-          args: [ilkInHex],
+          args: [params.ilkInHex],
         },
         {
           abi: makerIlkRegistryDef.abi,
           address: makerIlkRegistryDef.address,
           functionName: 'ilkData' as const,
-          args: [ilkInHex],
+          args: [params.ilkInHex],
         },
       ],
       allowFailure: false,

@@ -15,11 +15,14 @@ import { SetupBuilderReturnType, setupBuilderParams } from '../../utils/SetupBui
 import { SwapActionBuilder } from '../../../src/plugins/common/builders'
 import { SwapAction } from '../../../src/plugins/common/actions/SwapAction'
 import { FiatCurrency } from '@summerfi/sdk-common'
+import { AddressBookManagerMock } from '@summerfi/testing-utils'
 
 describe('Swap Action Builder', () => {
   let builderParams: SetupBuilderReturnType
 
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
+
+  const SwapContractAddress = '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599'
 
   // Tokens
   const WETH = Token.createFrom({
@@ -68,6 +71,11 @@ describe('Swap Action Builder', () => {
 
   beforeEach(() => {
     builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })
+    ;(builderParams.addressBookManager as AddressBookManagerMock).setAddressByName({
+      chainInfo,
+      name: 'Swap',
+      address: SwapContractAddress,
+    })
   })
 
   it('should encode the action calldata correctly', async () => {
@@ -121,14 +129,12 @@ describe('Swap Action Builder', () => {
       collectFeeInFromToken: true,
     })
 
-    const swapContractAddress = builderParams.deployment.contracts['Swap'].address as AddressValue
-
     expect(builderParams.swapManager.lastGetSwapDataExactInputParams).toBeDefined()
     expect(builderParams.swapManager.lastGetSwapDataExactInputParams).toEqual({
       chainInfo: chainInfo,
       fromAmount: inputAmountAfterFee,
       toToken: toAmount.token,
-      recipient: Address.createFromEthereum({ value: swapContractAddress }),
+      recipient: Address.createFromEthereum({ value: SwapContractAddress }),
       slippage: slippage,
     })
 

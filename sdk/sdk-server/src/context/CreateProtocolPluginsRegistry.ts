@@ -11,7 +11,6 @@ import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { createPublicClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
-import { DeploymentIndex } from '@summerfi/deployment-utils'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
 import {
   IRpcConfig,
@@ -20,6 +19,7 @@ import {
 import { ConfigurationProvider } from '@summerfi/configuration-provider'
 import { ITokensManager } from '@summerfi/tokens-common'
 import { IOracleManager } from '@summerfi/oracle-common'
+import { IAddressBookManager } from '@summerfi/address-book-common'
 
 /**
  * Protocol plugins record
@@ -55,12 +55,12 @@ const rpcConfig: IRpcConfig = {
  */
 export function createProtocolsPluginsRegistry(params: {
   configProvider: ConfigurationProvider
-  deployments: DeploymentIndex
   tokensManager: ITokensManager
   oracleManager: IOracleManager
   swapManager: ISwapManager
+  addressBookManager: IAddressBookManager
 }): IProtocolPluginsRegistry {
-  const { configProvider, deployments, swapManager, tokensManager, oracleManager } = params
+  const { configProvider, addressBookManager, swapManager, tokensManager, oracleManager } = params
   const chain = mainnet
   const rpcGatewayUrl = configProvider.getConfigurationItem({ name: 'RPC_GATEWAY' })
   if (!rpcGatewayUrl) {
@@ -85,11 +85,11 @@ export function createProtocolsPluginsRegistry(params: {
   return new ProtocolPluginsRegistry({
     plugins: ProtocolPlugins,
     context: {
-      deployments,
       provider,
       tokensManager,
       oracleManager,
       swapManager,
+      addressBookManager,
     },
     deploymentConfigTag: 'standard',
   })

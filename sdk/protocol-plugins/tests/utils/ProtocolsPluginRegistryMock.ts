@@ -16,11 +16,11 @@ import { ProtocolPluginsRegistry } from '../../src/implementation/ProtocolPlugin
 import { MakerProtocolPlugin } from '../../src/plugins/maker/implementation/MakerProtocolPlugin'
 import { SparkProtocolPlugin } from '../../src/plugins/spark/implementation/SparkProtocolPlugin'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import { DeploymentIndex } from '@summerfi/deployment-utils'
+import { IAddressBookManager } from '@summerfi/address-book-common'
 
 export function createProtocolPluginsRegistry(): IProtocolPluginsRegistry {
   const protocolPluginContext: IProtocolPluginContext = {
-    deployments: undefined as unknown as DeploymentIndex,
+    addressBookManager: undefined as unknown as IAddressBookManager,
     provider: undefined as unknown as PublicClient,
     tokensManager: undefined as unknown as ITokensManager,
     oracleManager: undefined as unknown as IOracleManager,
@@ -39,7 +39,7 @@ export function createProtocolPluginsRegistry(): IProtocolPluginsRegistry {
 
 export function createEmptyProtocolPluginsRegistry(): IProtocolPluginsRegistry {
   const protocolPluginContext: IProtocolPluginContext = {
-    deployments: undefined as unknown as DeploymentIndex,
+    addressBookManager: undefined as unknown as IAddressBookManager,
     provider: undefined as unknown as PublicClient,
     tokensManager: undefined as unknown as ITokensManager,
     oracleManager: undefined as unknown as IOracleManager,
@@ -55,7 +55,7 @@ export function createEmptyProtocolPluginsRegistry(): IProtocolPluginsRegistry {
 
 export function createEmptyBuildersProtocolPluginsRegistry(): IProtocolPluginsRegistry {
   const protocolPluginContext: IProtocolPluginContext = {
-    deployments: undefined as unknown as DeploymentIndex,
+    addressBookManager: undefined as unknown as IAddressBookManager,
     provider: undefined as unknown as PublicClient,
     tokensManager: undefined as unknown as ITokensManager,
     oracleManager: undefined as unknown as IOracleManager,
@@ -74,7 +74,7 @@ export function createEmptyBuildersProtocolPluginsRegistry(): IProtocolPluginsRe
 
 export function createNoCheckpointProtocolPluginsRegistry(): IProtocolPluginsRegistry {
   const protocolPluginContext: IProtocolPluginContext = {
-    deployments: undefined as unknown as DeploymentIndex,
+    addressBookManager: undefined as unknown as IAddressBookManager,
     provider: undefined as unknown as PublicClient,
     tokensManager: undefined as unknown as ITokensManager,
     oracleManager: undefined as unknown as IOracleManager,
@@ -93,7 +93,7 @@ export function createNoCheckpointProtocolPluginsRegistry(): IProtocolPluginsReg
 
 export function createRealProtocolsPluginsRegistry(): IProtocolPluginsRegistry {
   const protocolPluginContext: IProtocolPluginContext = {
-    deployments: undefined as unknown as DeploymentIndex,
+    addressBookManager: undefined as unknown as IAddressBookManager,
     provider: undefined as unknown as PublicClient,
     tokensManager: undefined as unknown as ITokensManager,
     oracleManager: undefined as unknown as IOracleManager,

@@ -1,5 +1,5 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { ChainInfo } from '@summerfi/sdk-common/common'
+import { ChainFamilyMap, ChainInfo } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import assert from 'assert'
 import { MakerProtocolPlugin } from '../../../src/plugins/maker'
@@ -17,7 +17,7 @@ describe('Maker Protocol Plugin', () => {
   let makerPoolIdMock: IMakerLendingPoolId
   let makerProtocolPlugin: MakerProtocolPlugin
   beforeAll(async () => {
-    ctx = await createProtocolPluginContext()
+    ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
     makerPoolIdMock = await getMakerPoolIdMock()
     makerProtocolPlugin = new MakerProtocolPlugin({
       context: ctx,

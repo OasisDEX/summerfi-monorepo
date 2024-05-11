@@ -1,5 +1,5 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { ChainInfo, IPositionId } from '@summerfi/sdk-common/common'
+import { ChainFamilyMap, ChainInfo, IPositionId } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import assert from 'assert'
 import {
@@ -17,7 +17,7 @@ describe('Spark Protocol Plugin', () => {
   let sparkPoolIdMock: ISparkLendingPoolId
   let sparkProtocolPlugin: SparkProtocolPlugin
   beforeAll(async () => {
-    ctx = await createProtocolPluginContext()
+    ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
     sparkPoolIdMock = await getSparkPoolIdMock()
     sparkProtocolPlugin = new SparkProtocolPlugin({
       context: ctx,

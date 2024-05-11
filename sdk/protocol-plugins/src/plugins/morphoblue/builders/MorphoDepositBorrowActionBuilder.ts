@@ -6,22 +6,24 @@ import {
 
 import { MorphoBorrowAction } from '../actions/MorphoBorrowAction'
 import { MorphoDepositAction } from '../actions/MorphoDepositAction'
-import { Address, AddressValue } from '@summerfi/sdk-common/common'
 import { ActionBuilder } from '@summerfi/protocol-plugins-common'
 import { SendTokenAction, SetApprovalAction } from '../../common'
 import { isMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
+import { getContractAddress } from '../../utils/GetContractAddress'
 
 export const MorphoDepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrowStep> = async (
   params,
 ): Promise<void> => {
-  const { context, step, deployment } = params
+  const { context, user, step, addressBookManager } = params
 
   if (!isMorphoLendingPool(step.inputs.position.pool)) {
     throw new Error('Invalid Morpho lending pool id')
   }
 
-  const morphoBlue = Address.createFromEthereum({
-    value: deployment.dependencies.MorphoBlue.address as AddressValue,
+  const morphoBlueAddress = await getContractAddress({
+    addressBookManager,
+    chainInfo: user.chainInfo,
+    contractName: 'MorphoBlue',
   })
 
   context.addActionCall({
@@ -29,7 +31,7 @@ export const MorphoDepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrow
     action: new SetApprovalAction(),
     arguments: {
       approvalAmount: getValueFromReference(step.inputs.depositAmount),
-      delegate: morphoBlue,
+      delegate: morphoBlueAddress,
       sumAmounts: false,
     },
     connectedInputs: {
@@ -71,8 +73,10 @@ export const MorphoDepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrow
     })
 
     if (step.inputs.borrowTargetType !== TokenTransferTargetType.PositionsManager) {
-      const operationExecutorAddress = Address.createFromEthereum({
-        value: deployment.contracts.OperationExecutor.address as AddressValue,
+      const operationExecutorAddress = await getContractAddress({
+        addressBookManager,
+        chainInfo: user.chainInfo,
+        contractName: 'OperationExecutor',
       })
 
       context.addActionCall({

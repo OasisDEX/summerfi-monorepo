@@ -11,7 +11,6 @@ import {
   TokenAmount,
 } from '@summerfi/sdk-common'
 import { BaseProtocolPlugin } from '../../../../implementation/BaseProtocolPlugin'
-import { AAVEv3LikeAbiInfo } from './AAVEv3LikeAbi'
 import {
   AaveV3LikeProtocolDataBuilder,
   filterAssetsListByEMode,
@@ -19,8 +18,9 @@ import {
 import { AllowedProtocolNames } from './AAVEv3LikeBuilderTypes'
 import { BigNumber } from 'bignumber.js'
 import { PRECISION_BI, UNCAPPED_SUPPLY } from '../../constants/AaveV3LikeConstants'
-import { CommonTokenSymbols, IToken } from '@summerfi/sdk-common/common'
+import { CommonTokenSymbols, IChainInfo, IToken } from '@summerfi/sdk-common/common'
 import { ICollateralInfo } from '@summerfi/sdk-common/protocols'
+import { ContractInfo } from '../../types/ContractInfo'
 
 type AssetsList = Awaited<ReturnType<AAVEv3LikeBaseProtocolPlugin['_getAssetsList']>>
 type Asset = AssetsList extends (infer U)[] ? U : never
@@ -38,12 +38,16 @@ export abstract class AAVEv3LikeBaseProtocolPlugin extends BaseProtocolPlugin {
 
   /**
    * Fetches the contract definition for the given contract name.
+   * @param chainInfo Chain for which the definition is retrieved
    * @param contractName The name of the contract to fetch the definition for.
    * @returns The contract definition for the given contract name.
    *
    * To be implemented by each specific protocol plugin.
    */
-  protected abstract _getContractDef(contractName: string): AAVEv3LikeAbiInfo
+  protected abstract _getContractDef(params: {
+    chainInfo: IChainInfo
+    contractName: string
+  }): Promise<ContractInfo>
 
   /**
    * Initializes the assets list if it hasn't been initialized yet.
@@ -51,12 +55,12 @@ export abstract class AAVEv3LikeBaseProtocolPlugin extends BaseProtocolPlugin {
    * To be called before fetching data from the assets list, typically from `getLendingPool` and similar
    * methods.
    */
-  protected async _inititalizeAssetsListIfNeeded() {
+  protected async _inititalizeAssetsListIfNeeded(params: { chainInfo: IChainInfo }) {
     if (this._assetsList) {
       return
     }
 
-    this._assetsList = await this._getAssetsList()
+    this._assetsList = await this._getAssetsList(params)
   }
 
   /**
@@ -66,23 +70,27 @@ export abstract class AAVEv3LikeBaseProtocolPlugin extends BaseProtocolPlugin {
    * This function must exist as the return type of the data builder is inferred from the return
    * type of this function.
    */
-  protected async _getAssetsList() {
-    try {
-      const _ctx = {
-        ...this.ctx,
-        getContractDef: this._getContractDef,
-      }
-      const builder = await new AaveV3LikeProtocolDataBuilder(_ctx, this.protocolName).init()
-      return await builder
-        .addPrices()
-        .addReservesCaps()
-        .addReservesConfigData()
-        .addReservesData()
-        .addEmodeCategories()
-        .build()
-    } catch (e) {
-      throw new Error(`Could not fetch/build assets list for AAVEv3: ${JSON.stringify(e)}`)
+  protected async _getAssetsList(params: { chainInfo: IChainInfo }) {
+    //try {
+    const _ctx = {
+      ...this.ctx,
+      getContractDef: this._getContractDef,
     }
+    const builder = await new AaveV3LikeProtocolDataBuilder(
+      _ctx,
+      this.protocolName,
+      params.chainInfo,
+    ).init()
+    return await builder
+      .addPrices()
+      .addReservesCaps()
+      .addReservesConfigData()
+      .addReservesData()
+      .addEmodeCategories()
+      .build()
+    // } catch (e) {
+    //   throw new Error(`Could not fetch/build assets list for AAVEv3: ${JSON.stringify(e)}`)
+    // }
   }
 
   /**

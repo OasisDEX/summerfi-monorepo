@@ -1,8 +1,9 @@
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { EmodeType } from '../../src/plugins/common'
-import { AaveV3LendingPoolId, AaveV3Protocol, IAaveV3LendingPoolId } from '../../src'
+import { AaveV3LendingPoolId, AaveV3Protocol } from '../../src'
 import { ChainFamilyMap } from '@summerfi/sdk-common'
 import { TokensManagerMock } from '@summerfi/testing-utils'
+import { IAaveV3LendingPoolId } from '../../src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId'
 
 export async function getAaveV3PoolIdMock(): Promise<IAaveV3LendingPoolId> {
   const tokenManagerMock = new TokensManagerMock()

@@ -7,18 +7,19 @@ import {
   RiskRatio,
   TokenAmount,
   Percentage,
+  ChainFamilyMap,
 } from '@summerfi/sdk-common/common'
 import { ISparkLendingPoolId, SparkProtocolPlugin } from '../../src/plugins/spark'
 import { getSparkPoolIdMock } from '../mocks/SparkPoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 
-describe('Spark Protocol Plugin (Integration)', () => {
+describe.only('Spark Protocol Plugin (Integration)', () => {
   let ctx: IProtocolPluginContext
   let validSparkPoolId: ISparkLendingPoolId
   let sparkProtocolPlugin: SparkProtocolPlugin
 
   beforeAll(async () => {
-    ctx = await createProtocolPluginContext()
+    ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
     validSparkPoolId = await getSparkPoolIdMock()
     sparkProtocolPlugin = new SparkProtocolPlugin({
       context: ctx,

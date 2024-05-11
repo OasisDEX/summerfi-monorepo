@@ -4,7 +4,7 @@ import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContex
 import { MorphoProtocolPlugin } from '../../src/plugins/morphoblue/implementation/MorphoProtocolPlugin'
 import { morphoPoolIdMock, morphoPoolMarketParams } from '../mocks/MorphoPoolIdMock'
 import { OracleManagerMock } from '@summerfi/testing-utils'
-import { FiatCurrency, OracleProviderType } from '@summerfi/sdk-common'
+import { ChainFamilyMap, FiatCurrency, OracleProviderType } from '@summerfi/sdk-common'
 import { isMorphoLendingPool, isMorphoLendingPoolId } from '../../src'
 import { PoolType } from '@summerfi/sdk-common/protocols'
 
@@ -13,7 +13,7 @@ describe.only('Protocol Plugin | Integration | Morpho', () => {
   let morphoProtocolPlugin: MorphoProtocolPlugin
 
   beforeAll(async () => {
-    ctx = await createProtocolPluginContext()
+    ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
     morphoProtocolPlugin = new MorphoProtocolPlugin({
       context: ctx,
     })

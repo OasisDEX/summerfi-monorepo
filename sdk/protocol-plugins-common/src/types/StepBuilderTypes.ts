@@ -1,10 +1,10 @@
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import { Deployment } from '@summerfi/deployment-utils'
 import { type IPositionsManager } from '@summerfi/sdk-common/orders'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IStepBuilderContext } from '../interfaces/IStepBuilderContext'
 import { type IProtocolPluginsRegistry } from '../interfaces/IProtocolPluginsRegistry'
+import { IAddressBookManager } from '@summerfi/address-book-common'
 
 export type FilterStep<
   SimulationStep extends SimulationSteps,
@@ -16,7 +16,7 @@ export type ActionBuilderParams<Step extends steps.Steps> = {
   user: IUser
   positionsManager: IPositionsManager
   swapManager: ISwapManager
-  deployment: Deployment
+  addressBookManager: IAddressBookManager
   protocolsRegistry: IProtocolPluginsRegistry
   step: Step
 }

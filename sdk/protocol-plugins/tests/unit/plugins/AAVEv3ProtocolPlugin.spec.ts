@@ -1,23 +1,23 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { ChainInfo, IPositionId } from '@summerfi/sdk-common/common'
+import { ChainFamilyMap, ChainInfo, IPositionId } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import assert from 'assert'
-import {
-  AaveV3ProtocolPlugin,
-  IAaveV3LendingPoolId,
-  IAaveV3LendingPoolIdData,
-  isAaveV3LendingPoolId,
-} from '../../../src/plugins/aave-v3'
 import { getAaveV3PoolIdMock } from '../../mocks/AAVEv3PoolIdMock'
 import { createProtocolPluginContext } from '../../utils/CreateProtocolPluginContext'
 import { getErrorMessage } from '../../utils/ErrorMessage'
+import {
+  IAaveV3LendingPoolId,
+  IAaveV3LendingPoolIdData,
+  isAaveV3LendingPoolId,
+} from '../../../src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId'
+import { AaveV3ProtocolPlugin } from '../../../src/plugins/aave-v3/implementation/AAVEv3ProtocolPlugin'
+import assert from 'assert'
 
 describe('AAVEv3 Protocol Plugin', () => {
   let ctx: IProtocolPluginContext
   let aaveV3PoolIdMock: IAaveV3LendingPoolId
   let aaveV3ProtocolPlugin: AaveV3ProtocolPlugin
   beforeAll(async () => {
-    ctx = await createProtocolPluginContext()
+    ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
     aaveV3PoolIdMock = await getAaveV3PoolIdMock()
     aaveV3ProtocolPlugin = new AaveV3ProtocolPlugin({
       context: ctx,

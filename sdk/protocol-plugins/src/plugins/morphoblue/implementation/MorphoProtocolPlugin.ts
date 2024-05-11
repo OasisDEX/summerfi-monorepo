@@ -12,10 +12,8 @@ import {
   ProtocolName,
 } from '@summerfi/sdk-common/protocols'
 import { MorphoLendingPool } from './MorphoLendingPool'
-import { MorphoBlueContractNames } from '@summerfi/deployment-types'
 import { morphoBlueAbi, morphoBlueOracleAbi } from '@summerfi/abis'
 import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { MorphoAddressAbiMap } from '../types/MorphoAddressAbiMap'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 import {
@@ -50,11 +48,13 @@ import { MorphoMarketParameters } from '../types'
  * @see BaseProtocolPlugin
  */
 export class MorphoProtocolPlugin extends BaseProtocolPlugin {
+  static readonly MorphoBlueContractName = 'MorphoBlue'
+
   readonly protocolName: ProtocolName.Morpho = ProtocolName.Morpho
   readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
   readonly stepBuilders: Partial<ActionBuildersMap> = MorphoStepBuilders
 
-  constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
+  constructor(params: { context: IProtocolPluginContext }) {
     super(params)
 
     if (
@@ -273,14 +273,17 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
    * @returns The market info
    */
   private async _getMarketInfo(morphoLendingPool: IMorphoLendingPool): Promise<MorphoMarketInfo> {
-    const morphoBlueProviderDef = this._getContractDef('MorphoBlue')
+    const morphoBlueAddress = await this._getContractAddress({
+      chainInfo: morphoLendingPool.id.protocol.chainInfo,
+      contractName: MorphoProtocolPlugin.MorphoBlueContractName,
+    })
     const marketParamsId = morphoLendingPool.id.marketId
 
     const [marketInfo] = await this.ctx.provider.multicall({
       contracts: [
         {
-          abi: morphoBlueProviderDef.abi,
-          address: morphoBlueProviderDef.address,
+          abi: morphoBlueAbi,
+          address: morphoBlueAddress.value,
           functionName: 'market',
           args: [marketParamsId],
         },
@@ -315,14 +318,17 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
   private async _getMarketParams(
     morphoLendingPoolId: IMorphoLendingPoolId,
   ): Promise<MorphoMarketParameters> {
-    const morphoBlueProviderDef = this._getContractDef('MorphoBlue')
+    const morphoBlueAddress = await this._getContractAddress({
+      chainInfo: morphoLendingPoolId.protocol.chainInfo,
+      contractName: MorphoProtocolPlugin.MorphoBlueContractName,
+    })
     const marketParamsId = morphoLendingPoolId.marketId
 
     const [marketParameters] = await this.ctx.provider.multicall({
       contracts: [
         {
-          abi: morphoBlueProviderDef.abi,
-          address: morphoBlueProviderDef.address,
+          abi: morphoBlueAbi,
+          address: morphoBlueAddress.value,
           functionName: 'idToMarketParams',
           args: [marketParamsId],
         },
@@ -411,28 +417,5 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
       .multipliedBy(100)
 
     return Percentage.createFrom({ value: LIF.toNumber() })
-  }
-
-  /**
-   * @name _getContractDef
-   * @description Get the contract abi and address for the given contract name
-   * @param contractName The contract name
-   * @returns The contract address and the abi
-   */
-  private _getContractDef<ContractName extends MorphoBlueContractNames>(
-    contractName: ContractName,
-  ): MorphoAddressAbiMap[ContractName] {
-    const map: MorphoAddressAbiMap = {
-      MorphoBlue: {
-        address: '0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb',
-        abi: morphoBlueAbi,
-      },
-      AdaptiveCurveIrm: {
-        address: '0x870aC11D48B15DB9a138Cf899d20F13F79Ba00BC',
-        abi: undefined,
-      },
-    }
-
-    return map[contractName]
   }
 }

@@ -4,12 +4,13 @@ import { BaseProtocolPlugin } from '../../../src/implementation'
 import { MakerProtocolPlugin } from '../../../src/plugins/maker'
 import { createProtocolPluginContext } from '../../utils/CreateProtocolPluginContext'
 import assert from 'assert'
+import { ChainFamilyMap } from '@summerfi/sdk-common'
 
 describe('Base Protocol Plugin', () => {
   let ctx: IProtocolPluginContext
   let baseProtocolPlugin: BaseProtocolPlugin
   beforeAll(async () => {
-    ctx = await createProtocolPluginContext()
+    ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
     baseProtocolPlugin = new MakerProtocolPlugin({
       context: ctx,
     })

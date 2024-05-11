@@ -10,26 +10,27 @@ import {
   createNoCheckpointProtocolPluginsRegistry,
   createProtocolPluginsRegistry,
 } from './ProtocolsPluginRegistryMock'
-import { StepBuilderContextMock, SwapManagerMock, UserMock } from '@summerfi/testing-utils'
+import {
+  AddressBookManagerMock,
+  StepBuilderContextMock,
+  SwapManagerMock,
+  UserMock,
+} from '@summerfi/testing-utils'
+import { IAddressBookManager } from '@summerfi/address-book-common'
 
 export type SetupBuilderReturnType = {
   context: StepBuilderContextMock
   user: IUser
   positionsManager: IPositionsManager
   swapManager: SwapManagerMock
-  deployment: Deployment
+  addressBookManager: IAddressBookManager
   protocolsRegistry: IProtocolPluginsRegistry
   emptyProtocolsRegistry: IProtocolPluginsRegistry
   emptyBuildersProtocolRegistry: IProtocolPluginsRegistry
   noCheckpointProtocolsRegistry: IProtocolPluginsRegistry
-  deploymentIndex: DeploymentIndex
 }
 
-export function setupBuilderParams(params: {
-  chainInfo: ChainInfo
-  deploymentKey?: string
-}): SetupBuilderReturnType {
-  const deploymentIndex = SetupDeployments()
+export function setupBuilderParams(params: { chainInfo: ChainInfo }): SetupBuilderReturnType {
   const protocolsRegistry = createProtocolPluginsRegistry()
   const emptyProtocolsRegistry = createEmptyProtocolPluginsRegistry()
   const noCheckpointProtocolsRegistry = createNoCheckpointProtocolPluginsRegistry()
@@ -47,11 +48,10 @@ export function setupBuilderParams(params: {
       address: Address.ZeroAddressEthereum,
     },
     swapManager: new SwapManagerMock(),
-    deployment: deploymentIndex[params.deploymentKey ?? 'Mainnet.standard'],
+    addressBookManager: new AddressBookManagerMock(),
     protocolsRegistry: protocolsRegistry,
     emptyProtocolsRegistry: emptyProtocolsRegistry,
     noCheckpointProtocolsRegistry: noCheckpointProtocolsRegistry,
     emptyBuildersProtocolRegistry: emptyBuildersProtocolRegistry,
-    deploymentIndex: deploymentIndex,
   }
 }

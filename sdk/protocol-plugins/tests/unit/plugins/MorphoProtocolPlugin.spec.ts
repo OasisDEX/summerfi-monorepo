@@ -1,5 +1,5 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { ChainInfo, IPositionId } from '@summerfi/sdk-common/common'
+import { ChainFamilyMap, ChainInfo, IPositionId } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { createProtocolPluginContext } from '../../utils/CreateProtocolPluginContext'
 import { getErrorMessage } from '../../utils/ErrorMessage'
@@ -15,7 +15,7 @@ describe('Protocol Plugin | Unit | Morpho', () => {
   let ctx: IProtocolPluginContext
   let morphoProtocolPlugin: MorphoProtocolPlugin
   beforeAll(async () => {
-    ctx = await createProtocolPluginContext()
+    ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
     morphoProtocolPlugin = new MorphoProtocolPlugin({
       context: ctx,
     })

@@ -18,7 +18,7 @@ import {
   fetchAssetPrices,
   fetchReservesTokens,
 } from './AAVEv3LikeDataFetchers'
-import { ChainFamilyMap } from '@summerfi/sdk-common'
+import { ChainFamilyMap, IChainInfo } from '@summerfi/sdk-common'
 
 interface QueuedOperation<T> {
   operation: () => Promise<T>
@@ -30,14 +30,20 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
   private tokensUsedAsReserves: Token[] | undefined
   private reservesAssetsList: Array<WithToken<AssetListItemType>> = []
   private readonly protocolName: AllowedProtocolNames
+  private readonly chainInfo: IChainInfo
 
-  constructor(ctx: IProtocolPluginContextWithContractDef, protocolName: AllowedProtocolNames) {
+  constructor(
+    ctx: IProtocolPluginContextWithContractDef,
+    protocolName: AllowedProtocolNames,
+    chainInfo: IChainInfo,
+  ) {
     this.ctx = ctx
     this.protocolName = protocolName
+    this.chainInfo = chainInfo
   }
 
   async init(): Promise<AaveV3LikeProtocolDataBuilder<WithToken<AssetListItemType>>> {
-    const rawTokens = await fetchReservesTokens(this.ctx, this.protocolName)
+    const rawTokens = await fetchReservesTokens(this.ctx, this.protocolName, this.chainInfo)
     this._validateReservesTokens(rawTokens)
 
     const tokensUsedAsReserves = await Promise.all(
@@ -50,7 +56,11 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
     )
 
     return Object.assign(
-      new AaveV3LikeProtocolDataBuilder<WithToken<AssetListItemType>>(this.ctx, this.protocolName),
+      new AaveV3LikeProtocolDataBuilder<WithToken<AssetListItemType>>(
+        this.ctx,
+        this.protocolName,
+        this.chainInfo,
+      ),
       this,
       {
         tokensUsedAsReserves,
@@ -76,6 +86,7 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
           this.ctx,
           this.tokensUsedAsReserves!,
           this.protocolName,
+          this.chainInfo,
         )
         this._assertMatchingArrayLengths(reservesCapsPerAsset, this.reservesAssetsList)
         const nextReservesList = []
@@ -106,6 +117,7 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
           this.ctx,
           this.tokensUsedAsReserves,
           this.protocolName,
+          this.chainInfo,
         )
         this._assertMatchingArrayLengths(reservesConfigDataPerAsset, this.reservesAssetsList)
         const nextReservesList = []
@@ -165,6 +177,7 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
           this.ctx,
           this.tokensUsedAsReserves,
           this.protocolName,
+          this.chainInfo,
         )
         this._assertMatchingArrayLengths(reservesDataPerAsset, this.reservesAssetsList)
         const nextReservesList = []
@@ -231,6 +244,7 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
           this.ctx,
           this.tokensUsedAsReserves,
           this.protocolName,
+          this.chainInfo,
         )
         this._assertMatchingArrayLengths(emodeCategoryPerAsset, this.reservesAssetsList)
         const nextReservesList = []
@@ -257,6 +271,7 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
           this.ctx,
           this.tokensUsedAsReserves,
           this.protocolName,
+          this.chainInfo,
         )
         this._assertMatchingArrayLengths(assetPrices as unknown[], this.reservesAssetsList)
         const nextReservesList = []
