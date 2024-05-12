@@ -9,7 +9,7 @@ import {
 } from '@summerfi/sdk-common/common'
 import { ILendingPoolIdData, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { AaveV3LendingPool } from './AaveV3LendingPool'
-import { AaveV3AbiMap } from '../abis/AaveV3AddressAbiMap'
+import { AaveV3AbiMap, AaveV3AbiMapType } from '../abis/AaveV3AddressAbiMap'
 import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { AaveV3ContractNames } from '@summerfi/deployment-types'
 import {
@@ -26,13 +26,17 @@ import { aaveV3EmodeCategoryMap } from './EmodeCategoryMap'
 import { AAVEv3LikeBaseProtocolPlugin } from '../../common/helpers/aaveV3Like/AAVEv3LikeBaseProtocolPlugin'
 import { FiatCurrency } from '@summerfi/sdk-common'
 import { ContractInfo } from '../../common/types/ContractInfo'
+import { ChainContractsProvider } from '../../utils/ChainContractProvider'
 
 /**
  * @class AaveV3ProtocolPlugin
  * @description Aave V3 protocol plugin
  * @see BaseProtocolPlugin
  */
-export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin {
+export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
+  AaveV3ContractNames,
+  AaveV3AbiMapType
+> {
   readonly protocolName = ProtocolName.AAVEv3
   readonly supportedChains = valuesOfChainFamilyMap([
     ChainFamilyName.Ethereum,
@@ -42,8 +46,13 @@ export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin {
   ])
   readonly stepBuilders: Partial<ActionBuildersMap> = AaveV3StepBuilders
 
-  constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
-    super(params)
+  constructor(params: { context: IProtocolPluginContext }) {
+    const contractsAbiProvider = new ChainContractsProvider(AaveV3AbiMap)
+
+    super({
+      ...params,
+      contractsAbiProvider,
+    })
 
     if (
       !this.supportedChains.some(

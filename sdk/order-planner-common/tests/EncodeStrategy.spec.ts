@@ -76,9 +76,12 @@ describe.only('Encode Strategy', () => {
 
     const strategyExecutorParams = decodeStrategyExecutorCalldata(positionsManagerParams.calldata)
 
+    const { name: actionCallName, ...actionCallNoName } = actionCall
+    const { name: otherActionCallName, ...otherActionCallNoName } = otherActionCall
+
     expect(strategyExecutorParams).toEqual({
       strategyName: 'SomeStrategyName',
-      actionCalls: [actionCall, otherActionCall],
+      actionCalls: [actionCallNoName, otherActionCallNoName],
     })
   })
 })

@@ -20,34 +20,43 @@ import { BigNumber } from 'bignumber.js'
 import { PRECISION_BI, UNCAPPED_SUPPLY } from '../../constants/AaveV3LikeConstants'
 import { CommonTokenSymbols, IChainInfo, IToken } from '@summerfi/sdk-common/common'
 import { ICollateralInfo } from '@summerfi/sdk-common/protocols'
-import { ContractInfo } from '../../types/ContractInfo'
+import { ChainContractsProvider, GenericAbiMap } from '../../../utils/ChainContractProvider'
+import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 
-type AssetsList = Awaited<ReturnType<AAVEv3LikeBaseProtocolPlugin['_getAssetsList']>>
-type Asset = AssetsList extends (infer U)[] ? U : never
+type AssetsList<
+  ContractNames extends string,
+  ContractsAbiMap extends GenericAbiMap<ContractNames>,
+> = Awaited<
+  ReturnType<AAVEv3LikeBaseProtocolPlugin<ContractNames, ContractsAbiMap>['_getAssetsList']>
+>
+type Asset<ContractNames extends string, ContractsAbiMap extends GenericAbiMap<ContractNames>> =
+  AssetsList<ContractNames, ContractsAbiMap> extends (infer U)[] ? U : never
 
 /**
  * @class AAVEv3BaseProtocolPlugin
  * @description Base class for AAVEv3 protocol plugins, it contains common functionality to
  * fetch data from forks of AAVEv3 protocol.
  */
-export abstract class AAVEv3LikeBaseProtocolPlugin extends BaseProtocolPlugin {
+export abstract class AAVEv3LikeBaseProtocolPlugin<
+  ContractNames extends string,
+  ContractsAbiMap extends GenericAbiMap<ContractNames>,
+> extends BaseProtocolPlugin {
   abstract readonly protocolName: AllowedProtocolNames
-  private _assetsList: Maybe<AssetsList> = undefined
+  readonly contractsAbiProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>
+
+  private _assetsList: Maybe<AssetsList<ContractNames, ContractsAbiMap>> = undefined
+
+  /** CONSTRUCTOR */
+  protected constructor(params: {
+    context: IProtocolPluginContext
+    contractsAbiProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>
+  }) {
+    super(params)
+
+    this.contractsAbiProvider = params.contractsAbiProvider
+  }
 
   /** PROTECTED */
-
-  /**
-   * Fetches the contract definition for the given contract name.
-   * @param chainInfo Chain for which the definition is retrieved
-   * @param contractName The name of the contract to fetch the definition for.
-   * @returns The contract definition for the given contract name.
-   *
-   * To be implemented by each specific protocol plugin.
-   */
-  protected abstract _getContractDef(params: {
-    chainInfo: IChainInfo
-    contractName: string
-  }): Promise<ContractInfo>
 
   /**
    * Initializes the assets list if it hasn't been initialized yet.
@@ -71,15 +80,11 @@ export abstract class AAVEv3LikeBaseProtocolPlugin extends BaseProtocolPlugin {
    * type of this function.
    */
   protected async _getAssetsList(params: { chainInfo: IChainInfo }) {
-    //try {
-    const _ctx = {
-      ...this.ctx,
-      getContractDef: this._getContractDef,
-    }
     const builder = await new AaveV3LikeProtocolDataBuilder(
-      _ctx,
+      this.context,
       this.protocolName,
       params.chainInfo,
+      this.contractsAbiProvider,
     ).init()
     return await builder
       .addPrices()
@@ -99,14 +104,19 @@ export abstract class AAVEv3LikeBaseProtocolPlugin extends BaseProtocolPlugin {
    * @param emode  The emode to fetch the asset for.
    * @returns  The asset for the given token and emode.
    */
-  protected async _getAssetFromToken(token: IToken, emode: bigint): Promise<Asset> {
+  protected async _getAssetFromToken(
+    token: IToken,
+    emode: bigint,
+  ): Promise<Asset<ContractNames, ContractsAbiMap>> {
     if (!this._assetsList) {
       throw new Error('Assets list not initialized')
     }
 
     const assetsList = filterAssetsListByEMode(this._assetsList, emode)
 
-    const asset = assetsList.find((asset: Asset) => token.equals(asset.token))
+    const asset = assetsList.find((asset: Asset<ContractNames, ContractsAbiMap>) =>
+      token.equals(asset.token),
+    )
     if (!asset) {
       throw new Error(`Asset not found for token ${token}`)
     }

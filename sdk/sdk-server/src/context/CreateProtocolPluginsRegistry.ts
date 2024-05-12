@@ -91,6 +91,5 @@ export function createProtocolsPluginsRegistry(params: {
       swapManager,
       addressBookManager,
     },
-    deploymentConfigTag: 'standard',
   })
 }

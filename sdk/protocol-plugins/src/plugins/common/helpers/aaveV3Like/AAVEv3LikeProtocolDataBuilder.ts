@@ -8,7 +8,6 @@ import {
   WithReservesConfig,
   WithReservesData,
   EmodeCategory,
-  IProtocolPluginContextWithContractDef,
 } from './AAVEv3LikeBuilderTypes'
 import {
   fetchReservesCap,
@@ -19,31 +18,46 @@ import {
   fetchReservesTokens,
 } from './AAVEv3LikeDataFetchers'
 import { ChainFamilyMap, IChainInfo } from '@summerfi/sdk-common'
+import { ChainContractsProvider, GenericAbiMap } from '../../../utils/ChainContractProvider'
+import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 
 interface QueuedOperation<T> {
   operation: () => Promise<T>
 }
 
-export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
-  private readonly ctx: IProtocolPluginContextWithContractDef
+export class AaveV3LikeProtocolDataBuilder<
+  AssetListItemType,
+  ContractNames extends string,
+  ContractsAbiMap extends GenericAbiMap<ContractNames>,
+> {
+  private readonly ctx: IProtocolPluginContext
   private operations: QueuedOperation<void>[] = []
   private tokensUsedAsReserves: Token[] | undefined
   private reservesAssetsList: Array<WithToken<AssetListItemType>> = []
   private readonly protocolName: AllowedProtocolNames
   private readonly chainInfo: IChainInfo
+  private readonly chainContractsProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>
 
   constructor(
-    ctx: IProtocolPluginContextWithContractDef,
+    ctx: IProtocolPluginContext,
     protocolName: AllowedProtocolNames,
     chainInfo: IChainInfo,
+    chainContractsProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>,
   ) {
     this.ctx = ctx
     this.protocolName = protocolName
     this.chainInfo = chainInfo
+    this.chainContractsProvider = chainContractsProvider
   }
 
-  async init(): Promise<AaveV3LikeProtocolDataBuilder<WithToken<AssetListItemType>>> {
-    const rawTokens = await fetchReservesTokens(this.ctx, this.protocolName, this.chainInfo)
+  async init(): Promise<
+    AaveV3LikeProtocolDataBuilder<WithToken<AssetListItemType>, ContractNames, ContractsAbiMap>
+  > {
+    const rawTokens = await fetchReservesTokens(
+      this.ctx,
+      this.chainInfo,
+      this.chainContractsProvider,
+    )
     this._validateReservesTokens(rawTokens)
 
     const tokensUsedAsReserves = await Promise.all(
@@ -56,11 +70,11 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
     )
 
     return Object.assign(
-      new AaveV3LikeProtocolDataBuilder<WithToken<AssetListItemType>>(
-        this.ctx,
-        this.protocolName,
-        this.chainInfo,
-      ),
+      new AaveV3LikeProtocolDataBuilder<
+        WithToken<AssetListItemType>,
+        ContractNames,
+        ContractsAbiMap
+      >(this.ctx, this.protocolName, this.chainInfo, this.chainContractsProvider),
       this,
       {
         tokensUsedAsReserves,
@@ -78,15 +92,19 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
       .build()
   }
 
-  addReservesCaps(): AaveV3LikeProtocolDataBuilder<WithReservesCaps<AssetListItemType>> {
+  addReservesCaps(): AaveV3LikeProtocolDataBuilder<
+    WithReservesCaps<AssetListItemType>,
+    ContractNames,
+    ContractsAbiMap
+  > {
     const operation: QueuedOperation<void> = {
       operation: async () => {
         this._assertIsInitialised(this.tokensUsedAsReserves)
         const reservesCapsPerAsset = await fetchReservesCap(
           this.ctx,
           this.tokensUsedAsReserves!,
-          this.protocolName,
           this.chainInfo,
+          this.chainContractsProvider,
         )
         this._assertMatchingArrayLengths(reservesCapsPerAsset, this.reservesAssetsList)
         const nextReservesList = []
@@ -106,18 +124,26 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
       },
     }
     this.operations.push(operation)
-    return this as AaveV3LikeProtocolDataBuilder<WithReservesCaps<AssetListItemType>>
+    return this as AaveV3LikeProtocolDataBuilder<
+      WithReservesCaps<AssetListItemType>,
+      ContractNames,
+      ContractsAbiMap
+    >
   }
 
-  addReservesConfigData(): AaveV3LikeProtocolDataBuilder<WithReservesConfig<AssetListItemType>> {
+  addReservesConfigData(): AaveV3LikeProtocolDataBuilder<
+    WithReservesConfig<AssetListItemType>,
+    ContractNames,
+    ContractsAbiMap
+  > {
     const operation: QueuedOperation<void> = {
       operation: async () => {
         this._assertIsInitialised(this.tokensUsedAsReserves)
         const reservesConfigDataPerAsset = await fetchAssetConfigurationData(
           this.ctx,
           this.tokensUsedAsReserves,
-          this.protocolName,
           this.chainInfo,
+          this.chainContractsProvider,
         )
         this._assertMatchingArrayLengths(reservesConfigDataPerAsset, this.reservesAssetsList)
         const nextReservesList = []
@@ -166,18 +192,26 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
       },
     }
     this.operations.push(operation)
-    return this as AaveV3LikeProtocolDataBuilder<WithReservesConfig<AssetListItemType>>
+    return this as AaveV3LikeProtocolDataBuilder<
+      WithReservesConfig<AssetListItemType>,
+      ContractNames,
+      ContractsAbiMap
+    >
   }
 
-  addReservesData(): AaveV3LikeProtocolDataBuilder<WithReservesData<AssetListItemType>> {
+  addReservesData(): AaveV3LikeProtocolDataBuilder<
+    WithReservesData<AssetListItemType>,
+    ContractNames,
+    ContractsAbiMap
+  > {
     const operation: QueuedOperation<void> = {
       operation: async () => {
         this._assertIsInitialised(this.tokensUsedAsReserves)
         const reservesDataPerAsset = await fetchAssetReserveData(
           this.ctx,
           this.tokensUsedAsReserves,
-          this.protocolName,
           this.chainInfo,
+          this.chainContractsProvider,
         )
         this._assertMatchingArrayLengths(reservesDataPerAsset, this.reservesAssetsList)
         const nextReservesList = []
@@ -233,18 +267,26 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
       },
     }
     this.operations.push(operation)
-    return this as AaveV3LikeProtocolDataBuilder<WithReservesData<AssetListItemType>>
+    return this as AaveV3LikeProtocolDataBuilder<
+      WithReservesData<AssetListItemType>,
+      ContractNames,
+      ContractsAbiMap
+    >
   }
 
-  addEmodeCategories(): AaveV3LikeProtocolDataBuilder<WithEmode<AssetListItemType>> {
+  addEmodeCategories(): AaveV3LikeProtocolDataBuilder<
+    WithEmode<AssetListItemType>,
+    ContractNames,
+    ContractsAbiMap
+  > {
     const operation: QueuedOperation<void> = {
       operation: async () => {
         this._assertIsInitialised(this.tokensUsedAsReserves)
         const emodeCategoryPerAsset = await fetchEmodeCategoriesForReserves(
           this.ctx,
           this.tokensUsedAsReserves,
-          this.protocolName,
           this.chainInfo,
+          this.chainContractsProvider,
         )
         this._assertMatchingArrayLengths(emodeCategoryPerAsset, this.reservesAssetsList)
         const nextReservesList = []
@@ -260,18 +302,26 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
       },
     }
     this.operations.push(operation)
-    return this as AaveV3LikeProtocolDataBuilder<WithEmode<AssetListItemType>>
+    return this as AaveV3LikeProtocolDataBuilder<
+      WithEmode<AssetListItemType>,
+      ContractNames,
+      ContractsAbiMap
+    >
   }
 
-  addPrices(): AaveV3LikeProtocolDataBuilder<WithPrice<AssetListItemType>> {
+  addPrices(): AaveV3LikeProtocolDataBuilder<
+    WithPrice<AssetListItemType>,
+    ContractNames,
+    ContractsAbiMap
+  > {
     const operation: QueuedOperation<void> = {
       operation: async () => {
         this._assertIsInitialised(this.tokensUsedAsReserves)
         const [assetPrices] = await fetchAssetPrices(
           this.ctx,
           this.tokensUsedAsReserves,
-          this.protocolName,
           this.chainInfo,
+          this.chainContractsProvider,
         )
         this._assertMatchingArrayLengths(assetPrices as unknown[], this.reservesAssetsList)
         const nextReservesList = []
@@ -288,7 +338,11 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
       },
     }
     this.operations.push(operation)
-    return this as AaveV3LikeProtocolDataBuilder<WithPrice<AssetListItemType>>
+    return this as AaveV3LikeProtocolDataBuilder<
+      WithPrice<AssetListItemType>,
+      ContractNames,
+      ContractsAbiMap
+    >
   }
 
   async build(): Promise<AssetListItemType[]> {

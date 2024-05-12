@@ -1,16 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { IChainInfo, Token } from '@summerfi/sdk-common/common'
+import { Token } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
-
-interface IAaveLikeContractDef {
-  getContractDef: (params: { chainInfo: IChainInfo; contractName: any }) => Promise<{
-    abi: any
-    address: any
-  }>
-}
-
-export type IProtocolPluginContextWithContractDef = IProtocolPluginContext & IAaveLikeContractDef
 
 type ReservesConfigData = {
   decimals: bigint

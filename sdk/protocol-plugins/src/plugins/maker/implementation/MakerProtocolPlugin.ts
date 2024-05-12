@@ -55,7 +55,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
   readonly CdpManagerContractName = 'CdpManager'
   readonly DssProxyActionsContractName = 'DssProxyActions'
 
-  constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
+  constructor(params: { context: IProtocolPluginContext }) {
     super(params)
 
     if (

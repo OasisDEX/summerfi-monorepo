@@ -30,10 +30,12 @@ describe('Flashloan Action', () => {
         provider: FlashloanProvider.Balancer,
         calls: [
           {
+            name: 'SendToken',
             targetHash: '0x3434343434343434343434343434343456565656565656565656565656565656',
             callData: '0x1234567890123456789012345678901234',
           },
           {
+            name: 'ReturnFunds',
             targetHash: '0x1212121212121212121212121212121278787878787878787878787878787878',
             callData: '0x9876543210987654321098765432109876',
           },

@@ -18,12 +18,11 @@ async function getBorrowTargetAddress(
   params: ActionBuilderParams<steps.DepositBorrowStep>,
 ): Promise<IAddress> {
   const { user, step, positionsManager, addressBookManager } = params
-
   if (step.inputs.borrowTargetType === TokenTransferTargetType.PositionsManager) {
     return positionsManager.address
   }
 
-  return await getContractAddress({
+  return getContractAddress({
     addressBookManager,
     chainInfo: user.chainInfo,
     contractName: 'OperationExecutor',

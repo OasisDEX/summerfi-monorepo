@@ -10,7 +10,7 @@ import { SparkLendingPool } from './SparkLendingPool'
 
 import { SparkContractNames } from '@summerfi/deployment-types'
 import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { SparkAbiMap } from '../abis/SparkAddressAbiMap'
+import { SparkAbiMap, SparkAbiMapType } from '../abis/SparkAddressAbiMap'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 import {
@@ -26,19 +26,28 @@ import { sparkEmodeCategoryMap } from './EmodeCategoryMap'
 import { AAVEv3LikeBaseProtocolPlugin } from '../../common/helpers/aaveV3Like/AAVEv3LikeBaseProtocolPlugin'
 import { FiatCurrency, IChainInfo } from '@summerfi/sdk-common'
 import { ContractInfo } from '../../common/types/ContractInfo'
+import { ChainContractsProvider } from '../../utils/ChainContractProvider'
 
 /**
  * @class SparkProtocolPlugin
  * @description Protocol plugin for the Spark protocol
  * @see BaseProtocolPlugin
  */
-export class SparkProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin {
+export class SparkProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
+  SparkContractNames,
+  SparkAbiMapType
+> {
   readonly protocolName: ProtocolName.Spark = ProtocolName.Spark
   readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
   readonly stepBuilders: Partial<ActionBuildersMap> = SparkStepBuilders
 
-  constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
-    super(params)
+  constructor(params: { context: IProtocolPluginContext }) {
+    const contractsAbiProvider = new ChainContractsProvider(SparkAbiMap)
+
+    super({
+      ...params,
+      contractsAbiProvider,
+    })
 
     if (
       !this.supportedChains.some(
@@ -141,7 +150,7 @@ export class SparkProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin {
 
     return {
       address: contractAddress.value,
-      abi: SparkAbiMap[params.contractName],
+      abi: this.contractsAbiProvider.getContractAbi(params.contractName),
     }
   }
 }

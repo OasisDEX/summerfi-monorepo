@@ -9,13 +9,15 @@ import {
 import { FlashloanProvider, SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { SetupBuilderReturnType, setupBuilderParams } from '../../utils/SetupBuilderParams'
 import { RepayFlashloanActionBuilder } from '../../../src/plugins/common/builders/RepayFlashloanActionBuilder'
-import { getErrorMessage } from '@summerfi/testing-utils'
+import { AddressBookManagerMock, getErrorMessage } from '@summerfi/testing-utils'
 import { SendTokenAction, PullTokenAction, FlashloanAction } from '../../../src/plugins/common'
 
 describe('Payback Flashloan Action Builder', () => {
   let builderParams: SetupBuilderReturnType
 
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
+
+  const OperationExecutorAddress = '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599'
 
   // Tokens
   const DAI = Token.createFrom({
@@ -56,6 +58,11 @@ describe('Payback Flashloan Action Builder', () => {
 
   beforeEach(() => {
     builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })
+    ;(builderParams.addressBookManager as AddressBookManagerMock).setAddressByName({
+      chainInfo: chainInfo,
+      address: OperationExecutorAddress,
+      name: 'OperationExecutor',
+    })
   })
 
   it('should fail if there is no custom data from flashloan step', async () => {
@@ -152,7 +159,7 @@ describe('Payback Flashloan Action Builder', () => {
     const sendTokenCalldata = new SendTokenAction().encodeCall({
       sendAmount: flashloanStep.inputs.amount,
       sendTo: Address.createFromEthereum({
-        value: builderParams.deployment.contracts.OperationExecutor.address as AddressValue,
+        value: OperationExecutorAddress,
       }),
     })
 

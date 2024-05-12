@@ -28,7 +28,6 @@ export function createProtocolPluginsRegistry(): IProtocolPluginsRegistry {
   } as IProtocolPluginContext
 
   return new ProtocolPluginsRegistry({
-    deploymentConfigTag: 'standard',
     plugins: {
       [ProtocolName.Maker]: ProtocolPluginMock,
       [ProtocolName.Spark]: ProtocolPluginMock,
@@ -47,7 +46,6 @@ export function createEmptyProtocolPluginsRegistry(): IProtocolPluginsRegistry {
   } as IProtocolPluginContext
 
   return new ProtocolPluginsRegistry({
-    deploymentConfigTag: 'standard',
     plugins: {},
     context: protocolPluginContext,
   })
@@ -63,7 +61,6 @@ export function createEmptyBuildersProtocolPluginsRegistry(): IProtocolPluginsRe
   } as IProtocolPluginContext
 
   return new ProtocolPluginsRegistry({
-    deploymentConfigTag: 'standard',
     plugins: {
       [ProtocolName.Maker]: EmptyProtocolPluginMock,
       [ProtocolName.Spark]: EmptyProtocolPluginMock,
@@ -82,7 +79,6 @@ export function createNoCheckpointProtocolPluginsRegistry(): IProtocolPluginsReg
   } as IProtocolPluginContext
 
   return new ProtocolPluginsRegistry({
-    deploymentConfigTag: 'standard',
     plugins: {
       [ProtocolName.Maker]: NoCheckpointProtocolPluginMock,
       [ProtocolName.Spark]: NoCheckpointProtocolPluginMock,
@@ -101,7 +97,6 @@ export function createRealProtocolsPluginsRegistry(): IProtocolPluginsRegistry {
   } as IProtocolPluginContext
 
   return new ProtocolPluginsRegistry({
-    deploymentConfigTag: 'standard',
     plugins: {
       [ProtocolName.Maker]: MakerProtocolPlugin,
       [ProtocolName.Spark]: SparkProtocolPlugin,

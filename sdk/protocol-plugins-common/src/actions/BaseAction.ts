@@ -64,6 +64,7 @@ export abstract class BaseAction {
     })
 
     return {
+      name: this.config.name,
       targetHash,
       callData: calldata,
     } as ActionCall
