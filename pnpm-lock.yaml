@@ -1428,6 +1428,9 @@ importers:
       '@summerfi/address-book-common':
         specifier: workspace:*
         version: link:../address-book-common
+      '@summerfi/configuration-provider':
+        specifier: workspace:*
+        version: link:../configuration-provider
       '@summerfi/deployment-utils':
         specifier: workspace:*
         version: link:../../packages/deployment-utils

@@ -11,7 +11,7 @@
     "tsc": "tsc",
     "watch": "tsc -w",
     "build": "tsc -b -v tsconfig.build.json",
-    "test": "jest tests/ --passWithNoTests",
+    "test": "jest tests/ --coverage=true",
     "testw": "jest --watch",
     "e2e": "jest e2e/",
     "lint": "eslint .",

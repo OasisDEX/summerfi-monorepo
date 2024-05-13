@@ -12,12 +12,12 @@ export class ManagerWithProvidersBase<
   ManagerProvider extends IManagerProvider<ProviderType>,
 > implements IManagerWithProviders<ProviderType, ManagerProvider>
 {
-  private _providersByChainId: Map<ChainId, IManagerProvider<ProviderType>[]>
-  private _providersByType: Map<ProviderType, IManagerProvider<ProviderType>>
+  private _providersByChainId: Map<ChainId, ManagerProvider[]>
+  private _providersByType: Map<ProviderType, ManagerProvider>
 
   /** CONSTRUCTOR */
 
-  protected constructor(params: { providers: IManagerProvider<ProviderType>[] }) {
+  protected constructor(params: { providers: ManagerProvider[] }) {
     const { providers } = params
 
     this._providersByChainId = new Map()
@@ -29,7 +29,7 @@ export class ManagerWithProvidersBase<
   }
 
   /** @see IManagerWithProviders.registerProvider */
-  registerProvider(provider: IManagerProvider<ProviderType>): void {
+  registerProvider(provider: ManagerProvider): void {
     const forChainIds = provider.getSupportedChainIds()
 
     for (const chainId of forChainIds) {
@@ -49,7 +49,7 @@ export class ManagerWithProvidersBase<
     if (params.forceUseProvider) {
       const provider = this._providersByType.get(params.forceUseProvider)
       if (provider) {
-        return provider as ManagerProvider
+        return provider
       }
     }
 
@@ -60,6 +60,6 @@ export class ManagerWithProvidersBase<
 
     // For now, we just return the first provider. In the future, we can implement a logic to
     // choose the best provider based on the input parameters or on the swap provider's capabilities.
-    return providers[0] as ManagerProvider
+    return providers[0]
   }
 }
