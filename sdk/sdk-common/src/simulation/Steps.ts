@@ -11,6 +11,7 @@ import { Pool } from 'src/protocols'
 
 export interface Step<T extends SimulationSteps, I, O = undefined> {
   type: T
+  name: string
   inputs: I
   outputs: O
   skip?: boolean

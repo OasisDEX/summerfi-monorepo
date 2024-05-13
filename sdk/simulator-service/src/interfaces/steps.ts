@@ -16,7 +16,15 @@ export type StateReducers = {
   [Type in steps.Steps['type']]: StateReducer<Where<steps.Steps, { type: Type }>>
 }
 
-export type NextStep<S extends Readonly<StrategyStep[]>> = Promise<Omit<Where<steps.Steps, { type: Head<S>['step'] }>, 'outputs'>>
+export type NextStep<S extends Readonly<StrategyStep[]>> = 
+  Promise<
+    Omit<
+      Where<
+        steps.Steps, 
+        { type: Head<S>['step'] }
+      >, 
+    'outputs'> & { name: Head<S>['name']}
+  >
 
 export type StepsAdded = { name: string, step: steps.Steps }[]
 export type ProccessedStep<S extends Readonly<StrategyStep[]>> = {

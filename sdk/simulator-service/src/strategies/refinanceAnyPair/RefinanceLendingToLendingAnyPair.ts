@@ -48,6 +48,7 @@ export async function refinanceLendingToLendingAnyPair(
 
   const simulation = await simulator
     .next(async () => ({
+      name: 'Flashloan',
       type: SimulationSteps.Flashloan,
       inputs: {
         amount: flashloanAmount,
@@ -55,6 +56,7 @@ export async function refinanceLendingToLendingAnyPair(
       },
     }))
     .next(async () => ({
+      name: 'PaybackWithdrawFromSourcePosition',
       type: SimulationSteps.PaybackWithdraw,
       inputs: {
         paybackAmount: TokenAmount.createFrom({
@@ -68,6 +70,7 @@ export async function refinanceLendingToLendingAnyPair(
     }))
     .next(
       async () => ({
+        name: 'SwapCollateralFromSourcePosition',
         type: SimulationSteps.Swap,
         inputs: await getSwapStepData({
           chainInfo: position.pool.id.protocol.chainInfo,
@@ -81,12 +84,14 @@ export async function refinanceLendingToLendingAnyPair(
       isCollateralSwapSkipped,
     )
     .next(async () => ({
+      name: 'OpenTargetPosition',
       type: SimulationSteps.OpenPosition,
       inputs: {
         pool: targetPool,
       },
     }))
     .next(async (ctx) => ({
+      name: 'DepositBorrowToTargetPosition',
       type: SimulationSteps.DepositBorrow,
       inputs: {
         // refactor
@@ -108,6 +113,7 @@ export async function refinanceLendingToLendingAnyPair(
     }))
     .next(
       async (ctx) => ({
+        name: 'SwapDebtFromTargetPosition',
         type: SimulationSteps.Swap,
         inputs: await getSwapStepData({
           chainInfo: position.pool.id.protocol.chainInfo,

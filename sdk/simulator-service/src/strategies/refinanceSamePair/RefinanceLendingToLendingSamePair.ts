@@ -8,7 +8,6 @@ import {
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
 import { Position, TokenAmount } from '@summerfi/sdk-common/common'
-import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
 import { refinanceLendingToLendingSamePairStrategy } from './Strategy'
@@ -47,7 +46,7 @@ export async function refinanceLendingToLendingSamePair(
       },
     }))
     .next(async () => ({
-      name: 'PaybackWithdrawFromSource',
+      name: 'PaybackWithdrawFromSourcePosition',
       type: SimulationSteps.PaybackWithdraw,
       inputs: {
         paybackAmount: TokenAmount.createFrom({
@@ -60,13 +59,14 @@ export async function refinanceLendingToLendingSamePair(
       },
     }))
     .next(async () => ({
+      name: 'OpenTargetPosition',
       type: SimulationSteps.OpenPosition,
       inputs: {
         pool: targetPool,
       },
     }))
     .next(async (ctx) => ({
-      name: 'DepositBorrowToTarget',
+      name: 'DepositBorrowToTargetPosition',
       type: SimulationSteps.DepositBorrow,
       inputs: {
         depositAmount: position.collateralAmount,
