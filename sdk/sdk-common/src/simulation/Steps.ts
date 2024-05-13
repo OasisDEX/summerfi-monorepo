@@ -1,12 +1,12 @@
-import { Percentage } from '../common/implementation/Percentage'
-import { Price } from '../common/implementation/Price'
-import { Position } from '../common/implementation/Position'
-import { Token } from '../common/implementation/Token'
-import { TokenAmount } from '../common/implementation/TokenAmount'
 import { FlashloanProvider, SimulationSteps, TokenTransferTargetType } from './Enums'
 import { SwapProviderType, SwapRoute } from '../swap'
 import { ReferenceableField, ValueReference } from './ValueReference'
 import { IExternalPosition } from '../orders/interfaces/importing/IExternalPosition'
+import { IPercentage } from '../common/interfaces/IPercentage'
+import { ITokenAmount } from '../common/interfaces/ITokenAmount'
+import { IPrice } from '../common/interfaces/IPrice'
+import { IPosition } from '../common/interfaces/IPosition'
+import { IToken } from '../common/interfaces/IToken'
 import { ILendingPool } from '../protocols/interfaces/ILendingPool'
 
 export interface Step<T extends SimulationSteps, I, O = undefined> {
@@ -21,27 +21,27 @@ export interface FlashloanStep
   extends Step<
     SimulationSteps.Flashloan,
     {
-      amount: TokenAmount
+      amount: ITokenAmount
       provider: FlashloanProvider
     }
   > {}
 
 export interface PullTokenStep
-  extends Step<SimulationSteps.PullToken, { amount: ReferenceableField<TokenAmount> }> {}
+  extends Step<SimulationSteps.PullToken, { amount: ReferenceableField<ITokenAmount> }> {}
 
 export interface DepositBorrowStep
   extends Step<
     SimulationSteps.DepositBorrow,
     {
-      depositAmount: ReferenceableField<TokenAmount>
-      borrowAmount: ReferenceableField<TokenAmount>
-      position: Position
-      additionalDeposit?: ValueReference<TokenAmount>
+      depositAmount: ReferenceableField<ITokenAmount>
+      borrowAmount: ReferenceableField<ITokenAmount>
+      position: IPosition
+      additionalDeposit?: ValueReference<ITokenAmount>
       borrowTargetType: TokenTransferTargetType
     },
     {
-      depositAmount: TokenAmount
-      borrowAmount: TokenAmount
+      depositAmount: ITokenAmount
+      borrowAmount: ITokenAmount
     }
   > {}
 
@@ -49,14 +49,14 @@ export interface PaybackWithdrawStep
   extends Step<
     SimulationSteps.PaybackWithdraw,
     {
-      paybackAmount: ReferenceableField<TokenAmount>
-      withdrawAmount: TokenAmount
-      position: Position
+      paybackAmount: ReferenceableField<ITokenAmount>
+      withdrawAmount: ITokenAmount
+      position: IPosition
       withdrawTargetType: TokenTransferTargetType
     },
     {
-      paybackAmount: TokenAmount
-      withdrawAmount: TokenAmount
+      paybackAmount: ITokenAmount
+      withdrawAmount: ITokenAmount
     }
   > {}
 
@@ -67,35 +67,35 @@ export interface SwapStep
       provider: SwapProviderType
       routes: SwapRoute[]
       /** Spot price of the token being traded */
-      spotPrice: Price
+      spotPrice: IPrice
       /** Offer price of the token being traded, derived from the swap quote */
-      offerPrice: Price
+      offerPrice: IPrice
       /** Full amount sent to the swap contract, before deducting the Summer fee */
-      inputAmount: TokenAmount
+      inputAmount: ITokenAmount
       /** Amount to be swapped after deducting the Summer fee */
-      inputAmountAfterFee: TokenAmount
+      inputAmountAfterFee: ITokenAmount
       /** Amount estimated by the swap service to be received, equal to `inputAmountAfterFee / offerPrice` */
-      estimatedReceivedAmount: TokenAmount
+      estimatedReceivedAmount: ITokenAmount
       /** Minimum amount to be received from the swap service, equal to `inputAmountAfterFee / offerPrice * (1 - slippage)` */
-      minimumReceivedAmount: TokenAmount
+      minimumReceivedAmount: ITokenAmount
       /** Maximum slippage accepted for the swap */
-      slippage: Percentage
+      slippage: IPercentage
       /** Fee charged by Summer */
-      summerFee: Percentage
+      summerFee: IPercentage
     },
     {
       /** Effective amount received after the actual swap */
-      received: TokenAmount
+      received: ITokenAmount
     }
   > {}
 
-export interface ReturnFundsStep extends Step<SimulationSteps.ReturnFunds, { token: Token }> {}
+export interface ReturnFundsStep extends Step<SimulationSteps.ReturnFunds, { token: IToken }> {}
 
 export interface RepayFlashloanStep
   extends Step<
     SimulationSteps.RepayFlashloan,
     {
-      amount: TokenAmount
+      amount: ITokenAmount
     }
   > {}
 
@@ -103,14 +103,15 @@ export interface NewPositionEventStep
   extends Step<
     SimulationSteps.NewPositionEvent,
     {
-      position: Position
+      position: IPosition
     }
   > {}
 
 export interface ImportStep
   extends Step<SimulationSteps.Import, { externalPosition: IExternalPosition }> {}
 
-export interface OpenPosition extends Step<SimulationSteps.OpenPosition, { pool: ILendingPool }, { position: Position }> {}
+export interface OpenPosition
+  extends Step<SimulationSteps.OpenPosition, { pool: ILendingPool }, { position: IPosition }> {}
 
 export type Steps =
   | FlashloanStep

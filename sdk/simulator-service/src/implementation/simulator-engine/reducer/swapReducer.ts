@@ -1,4 +1,4 @@
-import { TokenAmount, Price, Percentage } from '@summerfi/sdk-common/common'
+import { TokenAmount, Percentage, IPrice, IPercentage } from '@summerfi/sdk-common/common'
 import { steps } from '@summerfi/sdk-common/simulation'
 import { addBalance, subtractBalance } from '../../utils'
 import { ISimulationState } from '../../../interfaces/simulation'
@@ -47,7 +47,7 @@ export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISim
  *      into account price impact - where price impact is a measure of how much our trade
  *      affects the price. It is determined by the breadth and depth of liquidity.
  */
-export function calculatePriceImpact(marketPrice: Price, offerPrice: Price): Percentage {
+export function calculatePriceImpact(marketPrice: IPrice, offerPrice: IPrice): IPercentage {
   return Percentage.createFrom({
     value: marketPrice
       .toBN()

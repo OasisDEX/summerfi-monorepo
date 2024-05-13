@@ -22,11 +22,7 @@ import {
 } from '@summerfi/testing-utils'
 import assert from 'assert'
 import { IUser } from '@summerfi/sdk-common/user'
-import {
-  IPriceService,
-  IProtocolPluginsRegistry,
-  ITokenService,
-} from '@summerfi/protocol-plugins-common'
+import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
 import { http, createPublicClient } from 'viem'
 import {
   MakerPaybackAction,
@@ -43,6 +39,8 @@ import { ProtocolPluginsRegistry } from '@summerfi/protocol-plugins/implementati
 import { getMakerPosition } from '../utils/MakerSourcePosition'
 import { getSparkPosition } from '../utils/SparkTargetPosition'
 import { mainnet } from 'viem/chains'
+import { ITokensManager } from '@summerfi/tokens-common'
+import { IOracleManager } from '@summerfi/oracle-common'
 
 describe('Order Planner Service', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -75,8 +73,8 @@ describe('Order Planner Service', () => {
           chain: mainnet,
           transport: http(''),
         }),
-        tokenService: undefined as unknown as ITokenService,
-        priceService: undefined as unknown as IPriceService,
+        tokensManager: undefined as unknown as ITokensManager,
+        oracleManager: undefined as unknown as IOracleManager,
         deployments: deploymentsIndex,
         swapManager: swapManager,
       },

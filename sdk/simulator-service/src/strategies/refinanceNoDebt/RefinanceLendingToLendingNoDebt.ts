@@ -91,7 +91,9 @@ export async function refinanceLendingToLendingNoDebt(
       },
     }))
     .next(async (ctx) => {
-      const targetPosition = getValueFromReference(ctx.getReference(['OpenTargetPosition', 'position']))
+      const targetPosition = getValueFromReference(
+        ctx.getReference(['OpenTargetPosition', 'position']),
+      )
       if (!targetPosition) {
         throw new Error('Target position not found')
       }
@@ -106,8 +108,12 @@ export async function refinanceLendingToLendingNoDebt(
     })
     .run()
 
-  const targetPositionId = getValueFromReference(simulation.getReference(['OpenTargetPosition', 'position']))
-  const targetPosition = Object.values(simulation.positions).find((p) => p.id.id === targetPositionId.id.id)
+  const targetPositionId = getValueFromReference(
+    simulation.getReference(['OpenTargetPosition', 'position']),
+  )
+  const targetPosition = Object.values(simulation.positions).find(
+    (p) => p.id.id === targetPositionId.id.id,
+  )
 
   if (!targetPosition) {
     throw new Error('Target position not found')

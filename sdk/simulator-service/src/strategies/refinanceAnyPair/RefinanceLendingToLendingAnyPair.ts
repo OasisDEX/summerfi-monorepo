@@ -13,8 +13,8 @@ import { isLendingPool } from '@summerfi/sdk-common/protocols'
 import { refinanceLendingToLendingAnyPairStrategy } from './Strategy'
 import { type IRefinanceDependencies } from '../common/Types'
 import { getSwapStepData } from '../../implementation/utils/GetSwapStepData'
-import { estimateSwapFromAmount } from '../../implementation/utils/EstimateSwapFromAmount'
 import { getRefinanceSimulationType } from '../../implementation/utils/GetRefinanceSimulationType'
+import { estimateSwapFromAmount } from '../../implementation/utils/EstimateSwapFromAmount'
 
 export async function refinanceLendingToLendingAnyPair(
   args: IRefinanceParameters,
@@ -96,7 +96,7 @@ export async function refinanceLendingToLendingAnyPair(
       inputs: {
         // refactor
         borrowAmount: isDebtSwapSkipped
-          ? ctx.getReference(['SwapCollateralFromSourcePosition','received'])
+          ? ctx.getReference(['SwapCollateralFromSourcePosition', 'received'])
           : await estimateSwapFromAmount({
               receiveAtLeast: flashloanAmount,
               fromToken: targetPool.id.debtToken,
@@ -165,8 +165,12 @@ export async function refinanceLendingToLendingAnyPair(
     })
     .run()
 
-  const targetPositionId = getValueFromReference(simulation.getReference(['OpenTargetPosition','position']))
-  const targetPosition = Object.values(simulation.positions).find((p) => p.id.id === targetPositionId.id.id)
+  const targetPositionId = getValueFromReference(
+    simulation.getReference(['OpenTargetPosition', 'position']),
+  )
+  const targetPosition = Object.values(simulation.positions).find(
+    (p) => p.id.id === targetPositionId.id.id,
+  )
 
   if (!targetPosition) {
     throw new Error('Target position not found')

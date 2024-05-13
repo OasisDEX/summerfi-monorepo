@@ -22,10 +22,7 @@ export function depositBorrowReducer(
         getValueFromReference(step.inputs.borrowAmount),
       ),
     },
-    steps: [
-      ...state.steps,
-      step,
-    ],
+    steps: [...state.steps, step],
     balances: afterBorrow,
   }
 }

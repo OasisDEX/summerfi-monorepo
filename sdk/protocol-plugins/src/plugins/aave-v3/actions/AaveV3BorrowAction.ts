@@ -1,5 +1,5 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
-import { Address, TokenAmount } from '@summerfi/sdk-common/common'
+import { IAddress, ITokenAmount } from '@summerfi/sdk-common/common'
 
 export class AaveV3BorrowAction extends BaseAction {
   public readonly config = {
@@ -11,7 +11,7 @@ export class AaveV3BorrowAction extends BaseAction {
   } as const
 
   public encodeCall(
-    params: { borrowAmount: TokenAmount; borrowTo: Address },
+    params: { borrowAmount: ITokenAmount; borrowTo: IAddress },
     paramsMapping?: InputSlotsMapping,
   ): ActionCall {
     return this._encodeCall({

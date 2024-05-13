@@ -11,11 +11,14 @@ import {
 import { HexData } from '@summerfi/sdk-common/common/aliases'
 import fetch from 'node-fetch'
 import {
-  type ChainInfo,
   TokenAmount,
   Percentage,
-  Token,
   Address,
+  ITokenAmount,
+  IToken,
+  IAddress,
+  IPercentage,
+  IChainInfo,
 } from '@summerfi/sdk-common/common'
 
 export class OneInchSwapProvider implements ISwapProvider {
@@ -47,11 +50,11 @@ export class OneInchSwapProvider implements ISwapProvider {
   }
 
   async getSwapDataExactInput(params: {
-    chainInfo: ChainInfo
-    fromAmount: TokenAmount
-    toToken: Token
-    recipient: Address
-    slippage: Percentage
+    chainInfo: IChainInfo
+    fromAmount: ITokenAmount
+    toToken: IToken
+    recipient: IAddress
+    slippage: IPercentage
   }): Promise<SwapData> {
     const swapUrl = this._formatOneInchSwapUrl({
       chainInfo: params.chainInfo,
@@ -88,9 +91,9 @@ export class OneInchSwapProvider implements ISwapProvider {
   }
 
   async getSwapQuoteExactInput(params: {
-    chainInfo: ChainInfo
-    fromAmount: TokenAmount
-    toToken: Token
+    chainInfo: IChainInfo
+    fromAmount: ITokenAmount
+    toToken: IToken
   }): Promise<QuoteData> {
     const swapUrl = this._formatOneInchQuoteUrl({
       chainInfo: params.chainInfo,
@@ -129,11 +132,11 @@ export class OneInchSwapProvider implements ISwapProvider {
   }
 
   private _formatOneInchSwapUrl(params: {
-    chainInfo: ChainInfo
-    fromTokenAmount: TokenAmount
-    toToken: Token
-    recipient: Address
-    slippage: Percentage
+    chainInfo: IChainInfo
+    fromTokenAmount: ITokenAmount
+    toToken: IToken
+    recipient: IAddress
+    slippage: IPercentage
     disableEstimate?: boolean
     allowPartialFill?: boolean
   }): string {
@@ -152,9 +155,9 @@ export class OneInchSwapProvider implements ISwapProvider {
   }
 
   private _formatOneInchQuoteUrl(params: {
-    chainInfo: ChainInfo
-    fromTokenAmount: TokenAmount
-    toToken: Token
+    chainInfo: IChainInfo
+    fromTokenAmount: ITokenAmount
+    toToken: IToken
   }): string {
     const chainId = params.chainInfo.chainId
     const fromTokenAddress = params.fromTokenAmount.token.address.value.toLowerCase()

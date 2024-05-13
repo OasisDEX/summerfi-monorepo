@@ -1,8 +1,13 @@
 import { ConfigurationProvider } from '@summerfi/configuration-provider'
-import { Address, CurrencySymbol, Token, type ChainInfo } from '@summerfi/sdk-common/common'
+import { Address, Token, type ChainInfo } from '@summerfi/sdk-common/common'
 
 import { OracleManagerFactory } from '../src/implementation/OracleManagerFactory'
-import { ChainFamilyMap, OracleProviderType, SpotPriceInfo } from '@summerfi/sdk-common'
+import {
+  ChainFamilyMap,
+  FiatCurrency,
+  OracleProviderType,
+  SpotPriceInfo,
+} from '@summerfi/sdk-common'
 
 describe('OneInch | OracleManager | Integration', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -22,9 +27,8 @@ describe('OneInch | OracleManager | Integration', () => {
     const oracleManager = OracleManagerFactory.newOracleManager({ configProvider })
 
     const spotPriceInfo: SpotPriceInfo = await oracleManager.getSpotPrice({
-      chainInfo,
       baseToken: WETH,
-      quoteToken: CurrencySymbol.USD,
+      quoteToken: FiatCurrency.USD,
       forceUseProvider: OracleProviderType.OneInch,
     })
 
@@ -32,8 +36,8 @@ describe('OneInch | OracleManager | Integration', () => {
     expect(spotPriceInfo.provider).toEqual(OracleProviderType.OneInch)
     expect(spotPriceInfo.token).toEqual(WETH)
     expect(spotPriceInfo.price).toBeDefined()
-    expect(spotPriceInfo.price.baseToken).toEqual(WETH)
-    expect(spotPriceInfo.price.quoteToken).toEqual(CurrencySymbol.USD)
+    expect(spotPriceInfo.price.base).toEqual(WETH)
+    expect(spotPriceInfo.price.quote).toEqual(FiatCurrency.USD)
     expect(spotPriceInfo.price.value).toBeDefined()
     expect(Number(spotPriceInfo.price.value)).toBeGreaterThanOrEqual(0)
   })

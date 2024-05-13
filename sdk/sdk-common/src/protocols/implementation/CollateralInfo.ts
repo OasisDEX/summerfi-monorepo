@@ -3,6 +3,11 @@ import { Price } from '../../common/implementation/Price'
 import { RiskRatio } from '../../common/implementation/RiskRatio'
 import { Token } from '../../common/implementation/Token'
 import { TokenAmount } from '../../common/implementation/TokenAmount'
+import { IPercentage } from '../../common/interfaces/IPercentage'
+import { IPrice } from '../../common/interfaces/IPrice'
+import { IRiskRatio } from '../../common/interfaces/IRiskRatio'
+import { IToken } from '../../common/interfaces/IToken'
+import { ITokenAmount } from '../../common/interfaces/ITokenAmount'
 import { SerializationService } from '../../services/SerializationService'
 import { ICollateralInfo, ICollateralInfoData } from '../interfaces/ICollateralInfo'
 
@@ -11,13 +16,13 @@ import { ICollateralInfo, ICollateralInfoData } from '../interfaces/ICollateralI
  * @see ICollateralInfo
  */
 export class CollateralInfo implements ICollateralInfo {
-  readonly token: Token
-  readonly price: Price
-  readonly priceUSD: Price
-  readonly liquidationThreshold: RiskRatio
-  readonly maxSupply: TokenAmount
-  readonly tokensLocked: TokenAmount
-  readonly liquidationPenalty: Percentage
+  readonly token: IToken
+  readonly price: IPrice
+  readonly priceUSD: IPrice
+  readonly liquidationThreshold: IRiskRatio
+  readonly maxSupply: ITokenAmount
+  readonly tokensLocked: ITokenAmount
+  readonly liquidationPenalty: IPercentage
 
   protected constructor(params: ICollateralInfoData) {
     this.token = Token.createFrom(params.token)

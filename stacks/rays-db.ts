@@ -20,7 +20,7 @@ export function addRaysDb({
   }
 
   const scalingStaging = {
-    autoPause: true,
+    autoPause: 30, // auto pause after 30 minutes
     minCapacity: 'ACU_2' as const,
     maxCapacity: 'ACU_16' as const,
   }

@@ -9,7 +9,7 @@ export function addRedis({
   isDev,
 }: Pick<SummerStackContext, 'stack' | 'vpc' | 'isDev'>): CacheContext | null {
   if (isDev) {
-    console.info('Redis is not attached in dev stages')
+    console.info('Redis is only created in staging and prod stages')
     return null
   }
 

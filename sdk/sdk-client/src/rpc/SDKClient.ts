@@ -9,7 +9,6 @@ export * from '@summerfi/sdk-common/orders'
 export * from '@summerfi/sdk-common/simulation'
 export * from '@summerfi/sdk-common/user'
 export * from '@summerfi/sdk-common/services'
-export * from '@summerfi/sdk-common/utils'
 export * from '@summerfi/sdk-common/protocols'
 export * from '@summerfi/protocol-plugins'
 

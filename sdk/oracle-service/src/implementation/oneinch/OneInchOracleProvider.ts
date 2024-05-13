@@ -10,13 +10,16 @@ import {
   type ChainInfo,
   Token,
   Address,
-  CurrencySymbol,
   Price,
   type AddressValue,
   ChainId,
+  isToken,
+  Denomination,
+  isFiatCurrencyAmount,
 } from '@summerfi/sdk-common/common'
 import { OracleProviderType, SpotPriceInfo } from '@summerfi/sdk-common/oracle'
 import { IOracleProvider } from '@summerfi/oracle-common'
+import { FiatCurrency, IChainInfo, IToken, isTokenAmount } from '@summerfi/sdk-common'
 
 /**
  * @name OneInchOracleProvider
@@ -49,17 +52,17 @@ export class OneInchOracleProvider implements IOracleProvider {
 
   /** @see IOracleProvider.getSpotPrice */
   async getSpotPrice(params: {
-    chainInfo: ChainInfo
-    baseToken: Token
-    quoteToken?: CurrencySymbol | Token
+    chainInfo: IChainInfo
+    baseToken: IToken
+    quoteDenomination?: Denomination
   }): Promise<SpotPriceInfo> {
     const authHeader = this._getOneInchSpotAuthHeader()
-    if (params.quoteToken && params.quoteToken instanceof Token) {
-      isTokenType(params.quoteToken)
+    if (params.quoteDenomination && isToken(params.quoteDenomination)) {
+      isTokenType(params.quoteDenomination)
 
       const baseTokenAddress = params.baseToken.address
-      const quoteTokenAddress = params.quoteToken.address
-      const quoteCurrencySymbol = CurrencySymbol.USD
+      const quoteTokenAddress = params.quoteDenomination.address
+      const quoteCurrencySymbol = FiatCurrency.USD
 
       const spotUrl = this._formatOneInchSpotUrl({
         chainInfo: params.chainInfo,
@@ -80,36 +83,43 @@ export class OneInchOracleProvider implements IOracleProvider {
 
       const responseData = (await response.json()) as OneInchSpotResponse
       const baseToken = params.baseToken
-      const quoteToken = params.quoteToken
+      const quoteToken = params.quoteDenomination
       const prices = Object.entries(responseData).map(([address, price]) => {
         const isBaseToken = baseToken.address.equals(
           Address.createFromEthereum({ value: address as AddressValue }),
         )
         return Price.createFrom({
           value: price.toString(),
-          baseToken: isBaseToken ? baseToken : quoteToken,
-          quoteToken: quoteCurrencySymbol,
+          base: isBaseToken ? baseToken : quoteToken,
+          quote: quoteCurrencySymbol,
         })
       })
 
-      const baseTokenPriceQuotedInCurrencySymbol = prices.find((p) =>
-        p.baseToken.address.equals(baseToken.address),
+      const baseTokenPriceQuotedInCurrencySymbol = prices.find(
+        (p) => isToken(p.base) && p.base.address.equals(baseToken.address),
       )
-      const quoteTokenPriceQuoteInCurrencySymbol = prices.find((p) =>
-        p.baseToken.address.equals(quoteToken.address),
+      const quoteTokenPriceQuoteInCurrencySymbol = prices.find(
+        (p) => isToken(p.base) && p.base.address.equals(quoteToken.address),
       )
 
       if (!baseTokenPriceQuotedInCurrencySymbol || !quoteTokenPriceQuoteInCurrencySymbol) {
         throw new Error('BaseToken | QuoteToken spot prices could not be determined')
       }
 
+      const resultingPrice = baseTokenPriceQuotedInCurrencySymbol.divide(
+        quoteTokenPriceQuoteInCurrencySymbol,
+      )
+      if (isTokenAmount(resultingPrice) || isFiatCurrencyAmount(resultingPrice)) {
+        throw new Error('Resulting price is not a proper price, check the quote and base tokens')
+      }
+
       return {
         provider: OracleProviderType.OneInch,
         token: baseToken,
-        price: baseTokenPriceQuotedInCurrencySymbol.div(quoteTokenPriceQuoteInCurrencySymbol),
+        price: resultingPrice,
       }
     } else {
-      const quoteCurrency = params.quoteToken ?? CurrencySymbol.USD
+      const quoteCurrency = params.quoteDenomination ?? FiatCurrency.USD
       const baseToken = params.baseToken
       const spotUrl = this._formatOneInchSpotUrl({
         chainInfo: params.chainInfo,
@@ -136,8 +146,8 @@ export class OneInchOracleProvider implements IOracleProvider {
         token: baseToken,
         price: Price.createFrom({
           value: price.toString(),
-          baseToken: baseToken,
-          quoteToken: quoteCurrency,
+          base: baseToken,
+          quote: quoteCurrency,
         }),
       }
     }
@@ -150,7 +160,7 @@ export class OneInchOracleProvider implements IOracleProvider {
   private _formatOneInchSpotUrl(params: {
     chainInfo: ChainInfo
     tokenAddresses: Address[]
-    quoteCurrency: CurrencySymbol
+    quoteCurrency: FiatCurrency
   }): string {
     const chainId = params.chainInfo.chainId
     const tokenAddresses = params.tokenAddresses.map((address) => address.value.toLowerCase())

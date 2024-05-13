@@ -3,7 +3,8 @@ import { SerializationService } from '../../services/SerializationService'
 import { PositionId } from './PositionId'
 import { TokenAmount } from './TokenAmount'
 import { PositionType } from '../enums/PositionType'
-import { Pool } from '../../protocols/implementation/Pool'
+import { ITokenAmount } from '../interfaces/ITokenAmount'
+import { IPool } from '../../protocols/interfaces/IPool'
 
 /**
  * @name Position
@@ -12,9 +13,9 @@ import { Pool } from '../../protocols/implementation/Pool'
 export abstract class Position implements IPosition {
   readonly type: PositionType
   readonly id: PositionId
-  readonly debtAmount: TokenAmount
-  readonly collateralAmount: TokenAmount
-  abstract readonly pool: Pool
+  readonly debtAmount: ITokenAmount
+  readonly collateralAmount: ITokenAmount
+  abstract readonly pool: IPool
 
   protected constructor(params: IPositionData) {
     this.type = params.type

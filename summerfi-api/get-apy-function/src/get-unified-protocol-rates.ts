@@ -192,7 +192,7 @@ export const getUnifiedProtocolRates = async (
     }
   }
 
-  if (protocolId === ProtocolId.MORPHO_BLUE) {
+  if ([ProtocolId.MORPHO_BLUE_DEPRECATED, ProtocolId.MORPHO_BLUE].includes(protocolId)) {
     const parseResult = morphoBluePositionSchema.safeParse(event.queryStringParameters)
     if (!parseResult.success) {
       return { isValid: false, message: 'Invalid query parameters' }

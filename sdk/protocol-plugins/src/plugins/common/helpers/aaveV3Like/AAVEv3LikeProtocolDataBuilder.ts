@@ -18,6 +18,7 @@ import {
   fetchAssetPrices,
   fetchReservesTokens,
 } from './AAVEv3LikeDataFetchers'
+import { ChainFamilyMap } from '@summerfi/sdk-common'
 
 interface QueuedOperation<T> {
   operation: () => Promise<T>
@@ -41,9 +42,10 @@ export class AaveV3LikeProtocolDataBuilder<AssetListItemType> {
 
     const tokensUsedAsReserves = await Promise.all(
       rawTokens.map(async (reservesToken) => {
-        return await this.ctx.tokenService.getTokenByAddress(
-          Address.createFromEthereum({ value: reservesToken.tokenAddress }),
-        )
+        return await this.ctx.tokensManager.getTokenByAddress({
+          chainInfo: ChainFamilyMap.Ethereum.Mainnet,
+          address: Address.createFromEthereum({ value: reservesToken.tokenAddress }),
+        })
       }),
     )
 

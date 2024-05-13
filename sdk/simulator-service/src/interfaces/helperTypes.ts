@@ -8,8 +8,8 @@ export type Tail<T extends readonly any[]> = ((...t: T) => void) extends (
   : never
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Head<T extends readonly any[]> = ((...t: T) => void) extends (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   h: infer R,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ...r: any
 ) => void
   ? R

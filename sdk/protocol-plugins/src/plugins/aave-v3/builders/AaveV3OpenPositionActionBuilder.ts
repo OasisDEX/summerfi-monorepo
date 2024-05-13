@@ -3,14 +3,13 @@ import { ActionNames } from '@summerfi/deployment-types'
 
 import { ActionBuilder } from '@summerfi/protocol-plugins-common'
 import { isAaveV3LendingPool } from '../interfaces'
-import { AaveV3SetEmodeAction } from '../actions'
+import { AaveV3SetEmodeAction } from '../actions/AaveV3SetEmodeAction'
 
 export const AaveV3OpenPositionList: ActionNames[] = ['AaveV3SetEMode']
 
 export const AaveV3OpenPositionActionBuilder: ActionBuilder<steps.OpenPosition> = async (
   params,
 ): Promise<void> => {
-
   const { context, step } = params
   const pool = params.step.inputs.pool
 
@@ -23,7 +22,6 @@ export const AaveV3OpenPositionActionBuilder: ActionBuilder<steps.OpenPosition> 
     action: new AaveV3SetEmodeAction(),
     arguments: {
       emode: pool.id.emodeType,
-
     },
     connectedInputs: {},
     connectedOutputs: {},

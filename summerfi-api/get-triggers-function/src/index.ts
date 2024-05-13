@@ -8,6 +8,7 @@ import {
 import {
   addressSchema,
   chainIdSchema,
+  optionalPoolIdSchema,
   urlOptionalSchema,
 } from '@summerfi/serverless-shared/validators'
 import { Chain as ViemChain, createPublicClient, http, PublicClient } from 'viem'
@@ -40,6 +41,12 @@ import {
   LegacyDmaAaveStopLossToDebtV2ID,
   LegacyDmaSparkStopLossToCollateralV2ID,
   LegacyDmaSparkStopLossToDebtV2ID,
+  MorphoBlueBasicBuy,
+  MorphoBlueBasicBuyV2ID,
+  MorphoBlueBasicSell,
+  MorphoBlueBasicSellV2ID,
+  MorphoBlueStopLoss,
+  MorphoBlueStopLossV2ID,
   SparkStopLossToCollateral,
   SparkStopLossToCollateralDMA,
   SparkStopLossToCollateralV2ID,
@@ -60,9 +67,11 @@ import {
   getDmaSparkPartialTakeProfit,
   getDmaAaveTrailingStopLoss,
   getDmaSparkTrailingStopLoss,
+  getDmaMorphoBlueTrailingStopLoss,
 } from './trigger-parsers'
-import { ChainId, getRpcGatewayEndpoint, IRpcConfig } from '@summerfi/serverless-shared'
+import { ChainId, getRpcGatewayEndpoint, IRpcConfig, ProtocolId } from '@summerfi/serverless-shared'
 import { getAddresses } from '@summerfi/triggers-shared'
+import { getMorphoBluePartialTakeProfit } from './trigger-parsers/dma-morphoblue-partial-take-profit'
 
 const logger = new Logger({ serviceName: 'getTriggersFunction' })
 
@@ -84,6 +93,7 @@ const domainChainIdToViemChain: Record<ChainId, ViemChain> = {
 
 const paramsSchema = z.object({
   dpm: addressSchema,
+  poolId: optionalPoolIdSchema,
   chainId: chainIdSchema,
   rpc: urlOptionalSchema,
   getDetails: z
@@ -327,6 +337,44 @@ export const handler = async (
       }
     })[0]
 
+  const morphoBlueStopLoss: MorphoBlueStopLoss | undefined = triggers.triggers
+    .filter((trigger) => trigger.triggerType == MorphoBlueStopLossV2ID)
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'MorphoBlueStopLossV2' as const,
+        triggerType: MorphoBlueStopLossV2ID,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapStopLossParams(trigger),
+      }
+    })[0]
+
+  const morphoBlueBasicBuy: MorphoBlueBasicBuy | undefined = triggers.triggers
+    .filter((trigger) => trigger.triggerType == MorphoBlueBasicBuyV2ID)
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'MorphoBlueBasicBuyV2' as const,
+        triggerType: MorphoBlueBasicBuyV2ID,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: {
+          maxBuyPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('maxBuyPrice')],
+          ...mapBuySellCommonParams(trigger),
+        },
+      }
+    })[0]
+  const morphoBlueBasicSell: MorphoBlueBasicSell | undefined = triggers.triggers
+    .filter((trigger) => trigger.triggerType == MorphoBlueBasicSellV2ID)
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'MorphoBlueBasicSellV2' as const,
+        triggerType: MorphoBlueBasicSellV2ID,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: {
+          minSellPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('minSellPrice')],
+          ...mapBuySellCommonParams(trigger),
+        },
+      }
+    })[0]
+
   const aaveTrailingStopLossDMA = await getDmaAaveTrailingStopLoss({
     triggers,
     pricesSubgraphClient,
@@ -337,6 +385,20 @@ export const handler = async (
     triggers,
     pricesSubgraphClient,
     logger,
+  })
+
+  const morphoBlueTrailingStopLoss = await getDmaMorphoBlueTrailingStopLoss({
+    triggers,
+    pricesSubgraphClient,
+    logger,
+  })
+  const morphoBluePartialTakeProfit = await getMorphoBluePartialTakeProfit({
+    triggers,
+    logger,
+    publicClient,
+    getDetails: params.getDetails,
+    addresses,
+    stopLoss: morphoBlueStopLoss,
   })
 
   const aaveStopLoss = getCurrentTrigger(
@@ -373,24 +435,91 @@ export const handler = async (
 
   const response: GetTriggersResponse = {
     triggers: {
+      /* deprecated start */
+      aaveBasicBuy,
+      aaveBasicSell,
+      aavePartialTakeProfit,
       aaveStopLossToCollateral,
       aaveStopLossToCollateralDMA,
       aaveStopLossToDebt,
       aaveStopLossToDebtDMA,
+      aaveTrailingStopLossDMA,
+      sparkBasicBuy,
+      sparkBasicSell,
+      sparkPartialTakeProfit,
       sparkStopLossToCollateral,
       sparkStopLossToCollateralDMA,
       sparkStopLossToDebt,
       sparkStopLossToDebtDMA,
-      aaveBasicBuy,
-      aaveBasicSell,
-      aaveTrailingStopLossDMA,
-      sparkBasicSell,
-      sparkBasicBuy,
       sparkTrailingStopLossDMA,
-      aavePartialTakeProfit,
-      sparkPartialTakeProfit,
+      /* deprecated end */
+      [ProtocolId.AAVE3]: {
+        basicBuy: aaveBasicBuy,
+        basicSell: aaveBasicSell,
+        partialTakeProfit: aavePartialTakeProfit,
+        stopLossToCollateral: aaveStopLossToCollateral,
+        stopLossToCollateralDMA: aaveStopLossToCollateralDMA,
+        stopLossToDebt: aaveStopLossToDebt,
+        stopLossToDebtDMA: aaveStopLossToDebtDMA,
+        trailingStopLossDMA: aaveTrailingStopLossDMA,
+      },
+      [ProtocolId.SPARK]: {
+        basicBuy: sparkBasicBuy,
+        basicSell: sparkBasicSell,
+        partialTakeProfit: sparkPartialTakeProfit,
+        stopLossToCollateral: sparkStopLossToCollateral,
+        stopLossToCollateralDMA: sparkStopLossToCollateralDMA,
+        stopLossToDebt: sparkStopLossToDebt,
+        stopLossToDebtDMA: sparkStopLossToDebtDMA,
+        trailingStopLossDMA: sparkTrailingStopLossDMA,
+      },
+      ...(params.poolId && {
+        [`${ProtocolId.MORPHO_BLUE}-${params.poolId}`]: {
+          basicBuy: morphoBlueBasicBuy,
+          basicSell: morphoBlueBasicSell,
+          partialTakeProfit: morphoBluePartialTakeProfit,
+          stopLoss: morphoBlueStopLoss,
+          trailingStopLoss: morphoBlueTrailingStopLoss,
+        },
+      }),
     },
     flags: {
+      [ProtocolId.AAVE3]: {
+        isStopLossEnabled: hasAnyDefined(
+          aaveStopLossToCollateral,
+          aaveStopLossToCollateralDMA,
+          aaveStopLossToDebt,
+          aaveStopLossToDebtDMA,
+          aaveTrailingStopLossDMA,
+        ),
+        isBasicBuyEnabled: hasAnyDefined(aaveBasicBuy),
+        isBasicSellEnabled: hasAnyDefined(aaveBasicSell),
+        isPartialTakeProfitEnabled: hasAnyDefined(aavePartialTakeProfit),
+        isTrailingStopLossEnabled: hasAnyDefined(aaveTrailingStopLossDMA),
+      },
+      [ProtocolId.SPARK]: {
+        isStopLossEnabled: hasAnyDefined(
+          sparkStopLossToCollateral,
+          sparkStopLossToCollateralDMA,
+          sparkStopLossToDebt,
+          sparkStopLossToDebtDMA,
+          sparkTrailingStopLossDMA,
+        ),
+        isBasicBuyEnabled: hasAnyDefined(sparkBasicBuy),
+        isBasicSellEnabled: hasAnyDefined(sparkBasicSell),
+        isPartialTakeProfitEnabled: hasAnyDefined(sparkPartialTakeProfit),
+        isTrailingStopLossEnabled: hasAnyDefined(sparkTrailingStopLossDMA),
+      },
+      ...(params.poolId && {
+        [`${ProtocolId.MORPHO_BLUE}-${params.poolId}`]: {
+          isStopLossEnabled: hasAnyDefined(morphoBlueStopLoss),
+          isBasicBuyEnabled: hasAnyDefined(morphoBlueBasicBuy),
+          isBasicSellEnabled: hasAnyDefined(morphoBlueBasicSell),
+          isPartialTakeProfitEnabled: hasAnyDefined(morphoBluePartialTakeProfit),
+          isTrailingStopLossEnabled: hasAnyDefined(morphoBlueTrailingStopLoss),
+        },
+      }),
+      /* deprecated start */
       isAaveStopLossEnabled: hasAnyDefined(
         aaveStopLossToCollateral,
         aaveStopLossToCollateralDMA,
@@ -398,6 +527,9 @@ export const handler = async (
         aaveStopLossToDebtDMA,
         aaveTrailingStopLossDMA,
       ),
+      isAaveBasicBuyEnabled: hasAnyDefined(aaveBasicBuy),
+      isAaveBasicSellEnabled: hasAnyDefined(aaveBasicSell),
+      isAavePartialTakeProfitEnabled: hasAnyDefined(aavePartialTakeProfit),
       isSparkStopLossEnabled: hasAnyDefined(
         sparkStopLossToCollateral,
         sparkStopLossToCollateralDMA,
@@ -405,23 +537,25 @@ export const handler = async (
         sparkStopLossToDebtDMA,
         sparkTrailingStopLossDMA,
       ),
-      isAaveBasicBuyEnabled: hasAnyDefined(aaveBasicBuy),
-      isAaveBasicSellEnabled: hasAnyDefined(aaveBasicSell),
       isSparkBasicBuyEnabled: hasAnyDefined(sparkBasicBuy),
       isSparkBasicSellEnabled: hasAnyDefined(sparkBasicSell),
-      isAavePartialTakeProfitEnabled: hasAnyDefined(aavePartialTakeProfit),
       isSparkPartialTakeProfitEnabled: hasAnyDefined(sparkPartialTakeProfit),
+      /* deprecated end */
     },
     triggersCount: triggers.triggers.length,
     triggerGroup: {
-      aaveStopLoss,
-      sparkStopLoss,
       aaveBasicBuy: getCurrentTrigger(aaveBasicBuy),
       aaveBasicSell: getCurrentTrigger(aaveBasicSell),
+      aavePartialTakeProfit: getCurrentTrigger(aavePartialTakeProfit),
+      aaveStopLoss,
       sparkBasicBuy: getCurrentTrigger(sparkBasicBuy),
       sparkBasicSell: getCurrentTrigger(sparkBasicSell),
-      aavePartialTakeProfit: getCurrentTrigger(aavePartialTakeProfit),
       sparkPartialTakeProfit: getCurrentTrigger(sparkPartialTakeProfit),
+      sparkStopLoss,
+      morphoBlueBasicBuy: getCurrentTrigger(morphoBlueBasicBuy),
+      morphoBlueBasicSell: getCurrentTrigger(morphoBlueBasicSell),
+      morphoBluePartialTakeProfit: getCurrentTrigger(morphoBluePartialTakeProfit),
+      morphoBlueStopLoss,
     },
     additionalData: {
       params: {

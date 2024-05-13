@@ -2,6 +2,7 @@ import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 import {
   ISparkLendingPoolData,
   ISparkLendingPoolIdData,
+  ISparkProtocolData,
   SparkPositionId,
 } from '@summerfi/protocol-plugins/plugins/spark'
 import {
@@ -15,7 +16,6 @@ import {
   TokenAmount,
 } from '@summerfi/sdk-common/common'
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { ISparkProtocolData } from 'node_modules/@summerfi/protocol-plugins/src/plugins/spark/interfaces/ISparkProtocol'
 
 export function getSparkPosition(): Position {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet

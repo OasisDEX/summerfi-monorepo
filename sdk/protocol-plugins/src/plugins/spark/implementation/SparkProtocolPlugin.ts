@@ -1,5 +1,4 @@
 import {
-  CurrencySymbol,
   Position,
   ChainFamilyName,
   valuesOfChainFamilyMap,
@@ -29,15 +28,16 @@ import { ISparkPositionIdData, isSparkPositionId } from '../interfaces'
 import { IAaveV3PositionIdData } from '../../aave-v3'
 import { SparkLendingPoolInfo } from './SparkLendingPoolInfo'
 import { sparkEmodeCategoryMap } from './EmodeCategoryMap'
-import { AAVEv3BaseProtocolPlugin } from '../../common/helpers/aaveV3Like/AAVEv3LikeBaseProtocolPlugin'
+import { AAVEv3LikeBaseProtocolPlugin } from '../../common/helpers/aaveV3Like/AAVEv3LikeBaseProtocolPlugin'
 import { AAVEv3LikeAbiInfo } from '../../common/helpers/aaveV3Like/AAVEv3LikeAbi'
+import { FiatCurrency } from '@summerfi/sdk-common'
 
 /**
  * @class SparkProtocolPlugin
  * @description Protocol plugin for the Spark protocol
  * @see BaseProtocolPlugin
  */
-export class SparkProtocolPlugin extends AAVEv3BaseProtocolPlugin {
+export class SparkProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin {
   readonly protocolName: ProtocolName.Spark = ProtocolName.Spark
   readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
   readonly stepBuilders: Partial<ActionBuildersMap> = SparkStepBuilders
@@ -95,13 +95,13 @@ export class SparkProtocolPlugin extends AAVEv3BaseProtocolPlugin {
     const collateralInfo = await this._getCollateralInfo({
       token: sparkPoolId.collateralToken,
       emode: emode,
-      poolBaseCurrencyToken: CurrencySymbol.USD,
+      poolBaseCurrencyToken: FiatCurrency.USD,
     })
     if (!collateralInfo) {
       throw new Error(`Collateral info not found for ${sparkPoolId.collateralToken}`)
     }
 
-    const debtInfo = await this._getDebtInfo(sparkPoolId.debtToken, emode, CurrencySymbol.USD)
+    const debtInfo = await this._getDebtInfo(sparkPoolId.debtToken, emode, FiatCurrency.USD)
     if (!debtInfo) {
       throw new Error(`Debt info not found for ${sparkPoolId.debtToken}`)
     }

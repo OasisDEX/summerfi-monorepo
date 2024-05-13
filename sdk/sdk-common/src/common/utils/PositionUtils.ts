@@ -2,8 +2,12 @@ import { TokenAmount } from '../implementation/TokenAmount'
 import { Position } from '../implementation/Position'
 import { PositionType } from '../enums/PositionType'
 import { ILendingPoolData } from '../../protocols/interfaces/ILendingPool'
+import { IPosition } from '../interfaces/IPosition'
+import { ITokenAmount } from '../interfaces/ITokenAmount'
 
-export function newEmptyPositionFromPool(pool: ILendingPoolData): Position {
+// TODO: add a proper internal position type only used by the simulator that can be instantiated
+
+export function newEmptyPositionFromPool(pool: ILendingPoolData): IPosition {
   return {
     type: PositionType.Multiply,
     id: {
@@ -15,7 +19,7 @@ export function newEmptyPositionFromPool(pool: ILendingPoolData): Position {
   } as unknown as Position
 }
 
-export function depositToPosition(position: Position, amount: TokenAmount): Position {
+export function depositToPosition(position: IPosition, amount: ITokenAmount): IPosition {
   return {
     type: PositionType.Multiply,
     id: position.id,
@@ -25,7 +29,7 @@ export function depositToPosition(position: Position, amount: TokenAmount): Posi
   } as unknown as Position
 }
 
-export function withdrawFromPosition(position: Position, amount: TokenAmount): Position {
+export function withdrawFromPosition(position: IPosition, amount: ITokenAmount): IPosition {
   return {
     type: PositionType.Multiply,
     id: position.id,
@@ -35,7 +39,7 @@ export function withdrawFromPosition(position: Position, amount: TokenAmount): P
   } as unknown as Position
 }
 
-export function borrowFromPosition(position: Position, amount: TokenAmount): Position {
+export function borrowFromPosition(position: IPosition, amount: ITokenAmount): IPosition {
   return {
     type: PositionType.Multiply,
     id: position.id,
@@ -45,7 +49,7 @@ export function borrowFromPosition(position: Position, amount: TokenAmount): Pos
   } as unknown as Position
 }
 
-export function repayPositionDebt(position: Position, amount: TokenAmount): Position {
+export function repayPositionDebt(position: IPosition, amount: ITokenAmount): IPosition {
   return {
     type: PositionType.Multiply,
     id: position.id,

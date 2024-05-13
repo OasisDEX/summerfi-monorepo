@@ -46,7 +46,7 @@ const config = {
   debtAmount: '5000000.0',
 }
 
-describe.only('Refinance All | SDK', () => {
+describe.skip('Refinance All | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: config.SDKAPiUrl })

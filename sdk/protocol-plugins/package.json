@@ -31,6 +31,7 @@
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/serverless-shared": "workspace:^",
     "@summerfi/swap-common": "workspace:*",
+    "@summerfi/tokens-common": "workspace:*",
     "@summerfi/testing-utils": "workspace:*",
     "bignumber.js": "9.0.1",
     "zod": "^3.22.4"

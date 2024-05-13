@@ -1,5 +1,5 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
-import { TokenAmount } from '@summerfi/sdk-common/common'
+import { ITokenAmount } from '@summerfi/sdk-common/common'
 
 export class AaveV3DepositAction extends BaseAction {
   public readonly config = {
@@ -12,7 +12,7 @@ export class AaveV3DepositAction extends BaseAction {
 
   public encodeCall(
     params: {
-      depositAmount: TokenAmount
+      depositAmount: ITokenAmount
       sumAmounts: boolean
       setAsCollateral: boolean
     },

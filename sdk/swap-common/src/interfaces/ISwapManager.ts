@@ -1,9 +1,9 @@
 import type {
-  TokenAmount,
-  ChainInfo,
-  Percentage,
-  Token,
-  Address,
+  IPercentage,
+  IAddress,
+  IToken,
+  ITokenAmount,
+  IChainInfo,
 } from '@summerfi/sdk-common/common'
 import type { QuoteData, SwapData } from '@summerfi/sdk-common/swap'
 
@@ -23,11 +23,11 @@ export interface ISwapManager {
    * @param slippage The maximum slippage allowed
    */
   getSwapDataExactInput(params: {
-    chainInfo: ChainInfo
-    fromAmount: TokenAmount
-    toToken: Token
-    recipient: Address
-    slippage: Percentage
+    chainInfo: IChainInfo
+    fromAmount: ITokenAmount
+    toToken: IToken
+    recipient: IAddress
+    slippage: IPercentage
   }): Promise<SwapData>
 
   /**
@@ -39,9 +39,9 @@ export interface ISwapManager {
    * @param toToken The token to swap to
    */
   getSwapQuoteExactInput(params: {
-    chainInfo: ChainInfo
-    fromAmount: TokenAmount
-    toToken: Token
+    chainInfo: IChainInfo
+    fromAmount: ITokenAmount
+    toToken: IToken
   }): Promise<QuoteData>
 
   /**
@@ -52,10 +52,10 @@ export interface ISwapManager {
    */
   getSummerFee(params: {
     from: {
-      token: Token
+      token: IToken
     }
     to: {
-      token: Token
+      token: IToken
     }
-  }): Promise<Percentage>
+  }): Promise<IPercentage>
 }

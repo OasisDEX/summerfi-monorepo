@@ -1,4 +1,4 @@
-import { TokenAmount, Percentage, Address } from '@summerfi/sdk-common/common'
+import { ITokenAmount, IAddress, IPercentage } from '@summerfi/sdk-common/common'
 import type { SwapProviderType } from './Enums'
 
 /**
@@ -8,8 +8,8 @@ import type { SwapProviderType } from './Enums'
  */
 export type QuoteData = {
   provider: SwapProviderType
-  fromTokenAmount: TokenAmount
-  toTokenAmount: TokenAmount
+  fromTokenAmount: ITokenAmount
+  toTokenAmount: ITokenAmount
   estimatedGas: string
   /* Providers can provide multiple routes */
   routes: SwapRoute[]
@@ -21,7 +21,7 @@ type SwapHop = SwapHopPart[]
 
 type SwapHopPart = {
   name: string
-  part: Percentage
-  fromTokenAddress: Address
-  toTokenAddress: Address
+  part: IPercentage
+  fromTokenAddress: IAddress
+  toTokenAddress: IAddress
 }

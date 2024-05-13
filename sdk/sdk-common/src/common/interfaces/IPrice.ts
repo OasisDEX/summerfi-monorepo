@@ -1,7 +1,21 @@
-import BigNumber from 'bignumber.js'
-import { CurrencySymbol } from '../enums/CurrencySymbol'
-import { IToken, ITokenData, TokenSchema } from './IToken'
+import { BigNumber } from 'bignumber.js'
+import { Denomination, DenominationData, DenominationSchema } from '../aliases/Denomination'
+import { IPrintable } from './IPrintable'
+import { type ITokenAmount } from './ITokenAmount'
+import { type IFiatCurrencyAmount } from './IFiatCurrencyAmount'
 import { z } from 'zod'
+
+/**
+ * Return Type narrowing for multiply and divide methods, so the return type can be properly inferred
+ *
+ * This helps callers to know what to expect from the result of the operation
+ */
+export type PriceMulParamType = string | number | IPrice | ITokenAmount | IFiatCurrencyAmount
+export type PriceMulReturnType<T> = T extends ITokenAmount
+  ? ITokenAmount | IFiatCurrencyAmount
+  : T extends IFiatCurrencyAmount
+    ? IFiatCurrencyAmount | ITokenAmount
+    : IPrice
 
 /**
  * @name IPriceData
@@ -28,9 +42,9 @@ export interface IPriceData {
   /** The price value in floating point format without taking into account decimals */
   readonly value: string
   /** The token for the base of the price */
-  readonly baseToken: ITokenData
+  readonly base: DenominationData
   /** The token for the quote of the price */
-  readonly quoteToken: ITokenData | CurrencySymbol
+  readonly quote: DenominationData
 }
 
 /**
@@ -39,10 +53,85 @@ export interface IPriceData {
  *
  * This interface is used to add all the methods that the interface supports
  */
-export interface IPrice extends IPriceData {
+export interface IPrice extends IPriceData, IPrintable {
   readonly value: string
-  readonly baseToken: IToken
-  readonly quoteToken: IToken | CurrencySymbol
+  readonly base: Denomination
+  readonly quote: Denomination
+
+  /**
+   * @name hasSameQuote
+   * @description Checks if the price has the same quote as another price
+   * @param otherPrice The price to compare against
+   * @returns true if the prices have the same quote
+   */
+  hasSameQuote(otherPrice: IPrice): boolean
+
+  /**
+   * @name hasSameBase
+   * @description Checks if the price has the same base as another price
+   * @param otherPrice The price to compare against
+   * @returns true if the prices have the same base token
+   */
+  hasSameBase(otherPrice: IPrice): boolean
+
+  /**
+   * @name hasSameDenominations
+   * @description Checks if the price has the same base and quote as another price
+   * @param otherPrice The price to compare against
+   * @returns true if the prices have the same base and quote
+   */
+  hasSameDenominations(otherPrice: IPrice): boolean
+
+  /**
+   * @name add
+   * @description Adds the price to another price
+   * @param otherPrice The price to add
+   * @returns The resulting price
+   *
+   * @throws If the prices have different base tokens or quote tokens
+   */
+  add(otherPrice: IPrice): IPrice
+
+  /**
+   * @name subtract
+   * @description Subtracts the price from another price
+   * @param otherPrice The price to subtract
+   * @returns The resulting price
+   *
+   * @throws If the prices have different base tokens or quote tokens
+   */
+  subtract(otherPrice: IPrice): IPrice
+
+  /**
+   * @name multiply
+   * @description Multiplies the price by another price or a constant
+   * @param multiplier The numeric string, number, price, token amount or fiat currency amount to multiply by
+   * @returns The resulting price, token amount or fiat currency amount
+   *
+   * @throws When it is a price, if the second price quote is not the same as this price base or
+   *         if the second price base is not the same as this price quote it will throw an error
+   */
+  multiply<InputParams extends PriceMulParamType, ReturnType = PriceMulReturnType<InputParams>>(
+    multiplier: InputParams,
+  ): ReturnType
+
+  /**
+   * @name divide
+   * @description Divides the price by another price or a constant
+   * @param divider The numeric string, number or price to divide by
+   * @returns The resulting price
+   *
+   * @throws If the second price base is not the same as this price base
+   *         or if the second price quote is not the same as this price quote
+   */
+  divide(divider: string | number | IPrice): IPrice
+
+  /**
+   * @name invert
+   * @description Inverts the price
+   * @returns The inverted price
+   */
+  invert(): IPrice
 
   /**
    * @name toBN
@@ -51,18 +140,10 @@ export interface IPrice extends IPriceData {
   toBN(): BigNumber
 
   /**
-   * @name hasSameQuoteToken
-   * @description Checks if the price has the same quote token as another price
-   * @param b The price to compare against
+   * @name toString
+   * @description Converts the price to a string
    */
-  hasSameQuoteToken(b: IPrice): boolean
-
-  /**
-   * @name div
-   * @description Divides the price by another price
-   * @param b The price to divide by
-   */
-  div(b: IPrice): IPrice
+  toString(): string
 }
 
 /**
@@ -70,8 +151,8 @@ export interface IPrice extends IPriceData {
  */
 export const PriceSchema = z.object({
   value: z.string(),
-  baseToken: TokenSchema,
-  quoteToken: TokenSchema,
+  base: DenominationSchema,
+  quote: DenominationSchema,
 })
 
 /**
@@ -79,7 +160,7 @@ export const PriceSchema = z.object({
  * @param maybePrice
  * @returns true if the object is an IPrice
  */
-export function isPrice(maybePrice: unknown): maybePrice is IPriceData {
+export function isPrice(maybePrice: unknown): maybePrice is IPrice {
   return PriceSchema.safeParse(maybePrice).success
 }
 

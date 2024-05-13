@@ -1,6 +1,5 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
-import { Address } from '@summerfi/sdk-common'
-import { TokenAmount } from '@summerfi/sdk-common/common'
+import { IAddress, ITokenAmount } from '@summerfi/sdk-common/common'
 
 export class SparkWithdrawAction extends BaseAction {
   public readonly config = {
@@ -13,8 +12,8 @@ export class SparkWithdrawAction extends BaseAction {
 
   public encodeCall(
     params: {
-      withdrawAmount: TokenAmount
-      withdrawTo: Address
+      withdrawAmount: ITokenAmount
+      withdrawTo: IAddress
     },
     paramsMapping?: InputSlotsMapping,
   ): ActionCall {

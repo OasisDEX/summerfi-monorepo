@@ -1,5 +1,5 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
-import { Address, TokenAmount } from '@summerfi/sdk-common/common'
+import { IAddress, ITokenAmount } from '@summerfi/sdk-common/common'
 
 export class SetApprovalAction extends BaseAction {
   public readonly config = {
@@ -12,8 +12,8 @@ export class SetApprovalAction extends BaseAction {
 
   public encodeCall(
     params: {
-      approvalAmount: TokenAmount
-      delegate: Address
+      approvalAmount: ITokenAmount
+      delegate: IAddress
       sumAmounts: boolean
     },
     paramsMapping?: InputSlotsMapping,

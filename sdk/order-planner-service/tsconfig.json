@@ -3,8 +3,13 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "dist",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@summerfi/tokens-common": ["../tokens-common/src/index.ts"],
+      "@summerfi/oracle-common": ["../oracle-common/src/index.ts"]
+    }
   },
+  "references": [{ "path": "../tokens-common" }, { "path": "../oracle-common" }],
   "include": ["src/**/*.ts", "tests/**/*.ts", "scripts/**/*.ts"],
   "exclude": ["node_modules"]
 }

@@ -6,12 +6,15 @@ import { stateReducer } from './reducer/stateReducers'
 import type { SimulationStrategy } from '@summerfi/sdk-common/simulation'
 import { steps } from '@summerfi/sdk-common/simulation'
 import { Maybe } from '@summerfi/sdk-common'
-import { GetReferencedValue, NextFunction, Paths, ProccessedStep, StepsAdded } from '../../interfaces/steps'
+import {
+  GetReferencedValue,
+  NextFunction,
+  Paths,
+  ProccessedStep,
+  StepsAdded,
+} from '../../interfaces/steps'
 
-export class Simulator<
-  Strategy extends SimulationStrategy,
-  AddedSteps extends StepsAdded
-> {
+export class Simulator<Strategy extends SimulationStrategy, AddedSteps extends StepsAdded> {
   public schema: Strategy
   public originalSchema: SimulationStrategy
   private state: ISimulationState
@@ -42,9 +45,7 @@ export class Simulator<
     const step: Maybe<steps.Steps> = this.state.steps[index]
 
     if (!step) {
-      throw new Error(
-        `Step not found: ${stepName}`,
-      )
+      throw new Error(`Step not found: ${stepName}`)
     }
 
     const outputs = step.outputs
@@ -57,9 +58,7 @@ export class Simulator<
     const value = (outputs as any)[output]
     // validation if path exists
     if (!value) {
-      throw new Error(
-        `Output not found: ${stepName}.outputs.${output as string}`,
-      )
+      throw new Error(`Output not found: ${stepName}.outputs.${output as string}`)
     }
 
     return {
@@ -70,13 +69,16 @@ export class Simulator<
 
   public async run(): Promise<ISimulationState & { getReference: GetReferencedValue<AddedSteps> }> {
     for (let i = 0; i < this.nextArray.length; i++) {
-      const nextStep = await this.nextArray[i]({ state: this.state, getReference: this.getReference as GetReferencedValue<AddedSteps> })
+      const nextStep = await this.nextArray[i]({
+        state: this.state,
+        getReference: this.getReference as GetReferencedValue<AddedSteps>,
+      })
 
       const fullStep = await processStepOutput(nextStep)
       this.state = stateReducer(fullStep, this.state)
     }
 
-    return {...this.state, getReference: this.getReference as GetReferencedValue<AddedSteps>}
+    return { ...this.state, getReference: this.getReference as GetReferencedValue<AddedSteps> }
   }
 
   public next(
@@ -96,6 +98,8 @@ export class Simulator<
         schemaTail,
         this.originalSchema,
         this.state,
+        // TODO: We should not use any here
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
         this.nextArray as any,
       )
     }
@@ -108,6 +112,8 @@ export class Simulator<
       schemaTail,
       this.originalSchema,
       this.state,
+      // TODO: We should not use any here
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
       nextArray as any,
     )
   }

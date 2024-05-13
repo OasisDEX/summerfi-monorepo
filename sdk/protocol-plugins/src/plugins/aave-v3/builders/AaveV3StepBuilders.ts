@@ -5,7 +5,7 @@ import { AaveV3PaybackWithdrawActionBuilder } from './AaveV3PaybackWithdrawActio
 import { AaveV3OpenPositionActionBuilder } from './AaveV3OpenPositionActionBuilder'
 
 export const AaveV3StepBuilders: Partial<ActionBuildersMap> = {
-    [SimulationSteps.DepositBorrow]: AaveV3DepositBorrowActionBuilder,
-    [SimulationSteps.PaybackWithdraw]: AaveV3PaybackWithdrawActionBuilder,
-    [SimulationSteps.OpenPosition]: AaveV3OpenPositionActionBuilder,
+  [SimulationSteps.DepositBorrow]: AaveV3DepositBorrowActionBuilder,
+  [SimulationSteps.PaybackWithdraw]: AaveV3PaybackWithdrawActionBuilder,
+  [SimulationSteps.OpenPosition]: AaveV3OpenPositionActionBuilder,
 }

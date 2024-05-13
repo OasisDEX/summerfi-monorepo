@@ -1,7 +1,6 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { EmodeType } from '../../common/enums/EmodeType'
-import { aaveV3EmodeCategoryMap } from '../implementation'
-
+import { aaveV3EmodeCategoryMap } from '../implementation/EmodeCategoryMap'
 
 export class AaveV3SetEmodeAction extends BaseAction {
   public readonly config = {

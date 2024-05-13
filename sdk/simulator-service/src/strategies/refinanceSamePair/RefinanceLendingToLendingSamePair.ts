@@ -71,7 +71,7 @@ export async function refinanceLendingToLendingSamePair(
       inputs: {
         depositAmount: position.collateralAmount,
         borrowAmount: position.debtAmount, // TODO figure the debt amount
-        position: getValueFromReference(ctx.getReference(['OpenTargetPosition','position'])),
+        position: getValueFromReference(ctx.getReference(['OpenTargetPosition', 'position'])),
         borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
     }))
@@ -101,8 +101,12 @@ export async function refinanceLendingToLendingSamePair(
     })
     .run()
 
-  const targetPositionId = getValueFromReference(simulation.getReference(['OpenTargetPosition', 'position']))
-  const targetPosition = Object.values(simulation.positions).find((p) => p.id.id === targetPositionId.id.id)
+  const targetPositionId = getValueFromReference(
+    simulation.getReference(['OpenTargetPosition', 'position']),
+  )
+  const targetPosition = Object.values(simulation.positions).find(
+    (p) => p.id.id === targetPositionId.id.id,
+  )
 
   if (!targetPosition) {
     throw new Error('Target position not found')

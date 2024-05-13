@@ -33,12 +33,33 @@ export interface IPercentage extends IPercentageData {
   subtract(percentage: IPercentageData): IPercentage
 
   /**
+   * @name multiply
+   * @param multiplier A percentage, string amount or number to multiply
+   * @returns The resulting percentage
+   */
+  multiply(multiplier: string | number | IPercentage): IPercentage
+
+  /**
+   * @name divide
+   * @param divisor A percentage, string amount or number to divide
+   * @returns The resulting percentage
+   */
+  divide(divisor: string | number | IPercentage): IPercentage
+
+  /**
    * @name toProportion
    * @returns Returns the equivalent proportion of the percentage
    *
    * The proportion is the percentage divided by 100, this is, a floating value between 0 and 1
    */
   toProportion(): number
+
+  /**
+   * @name toBaseUnit
+   * @param decimals The number of decimals to use for the conversion
+   * @returns The percentage as a string in base unit
+   */
+  toBaseUnit(params: { decimals: number }): string
 }
 
 /**
@@ -53,7 +74,7 @@ export const PercentageSchema = z.object({
  * @param maybePercentage
  * @returns true if the object is an IPercentage
  */
-export function isPercentage(maybePercentage: unknown): maybePercentage is IPercentageData {
+export function isPercentage(maybePercentage: unknown): maybePercentage is IPercentage {
   return PercentageSchema.safeParse(maybePercentage).success
 }
 
