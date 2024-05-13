@@ -12,7 +12,7 @@ export const SparkOpenPositionActionBuilder: ActionBuilder<steps.OpenPosition> =
 ): Promise<void> => {
 
   const { context, step } = params
-  const pool = params.step.inputs.position.pool
+  const pool = params.step.inputs.pool
 
   if (!isSparkLendingPool(pool)) {
     throw new Error('Only Spark lending pool is supported')

@@ -37,16 +37,16 @@ jest.setTimeout(300000)
 
 /** TEST CONFIG */
 const config = {
-  SDKAPiUrl: 'https://zmjmtfsocb.execute-api.us-east-1.amazonaws.com/api/sdk',
+  SDKAPiUrl: 'https://nkllstfoy8.execute-api.us-east-1.amazonaws.com',
   TenderlyForkUrl: 'https://virtual.mainnet.rpc.tenderly.co/5a4e0cc3-48d2-4819-8426-068f029b23be',
   makerVaultId: '31709',
   DPMAddress: '0xc1475b2735fb9130a4701ee9e2215b6305dd501b',
-  walletAddress: '0xbEf4befb4F230F43905313077e3824d7386E09F8',
+  walletAddress: '0x34314adbfBb5d239bb67f0265c9c45EB8b834412',
   collateralAmount: '5000.0',
   debtAmount: '5000000.0',
 }
 
-describe.only('Refinance Maker Spark | SDK', () => {
+describe.only('Refinance All | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: config.SDKAPiUrl })
