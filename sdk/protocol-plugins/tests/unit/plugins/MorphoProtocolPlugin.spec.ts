@@ -25,9 +25,9 @@ describe('Protocol Plugin | Unit | Morpho', () => {
     expect(isMorphoLendingPoolId(morphoPoolIdMock)).toBe(true)
   })
 
-  it('should throw a specific error when provided with a poolId not matching the SparkPoolId format', async () => {
+  it('should throw a specific error when provided with a poolId not matching the MorphoPoolId format', async () => {
     try {
-      const invalidSparkPoolIdMock = {
+      const invalidMorphoPoolIdMock = {
         ...morphoPoolIdMock,
         protocol: {
           ...morphoPoolIdMock.protocol,
@@ -35,22 +35,19 @@ describe('Protocol Plugin | Unit | Morpho', () => {
         },
       } as unknown as IMorphoLendingPoolIdData
 
-      await expect(
-        morphoProtocolPlugin.getLendingPool(invalidSparkPoolIdMock),
-      ).resolves.toBeDefined()
+      expect(await morphoProtocolPlugin.getLendingPool(invalidMorphoPoolIdMock)).toBeDefined()
       assert.fail('Should throw error')
     } catch (error: unknown) {
       expect(getErrorMessage(error)).toMatch('Invalid Morpho pool ID')
     }
   })
 
-  it('should correctly return a SparkLendingPool object for a valid SparkPoolId', async () => {
-    const sparkPoolIdValid = morphoPoolIdMock
-    await expect(morphoProtocolPlugin.getLendingPool(sparkPoolIdValid)).resolves.toBeDefined()
+  it('should correctly return a MorphoLendingPool object for a valid MorphoPoolId', async () => {
+    expect(await morphoProtocolPlugin.getLendingPool(morphoPoolIdMock)).toBeDefined()
   })
 
   it('should throw an error when calling getPool with an unsupported ChainInfo', async () => {
-    const invalidSparkPoolIdUnsupportedChain = {
+    const invalidMorphoPoolIdUnsupportedChain = {
       ...morphoPoolIdMock,
       protocol: {
         ...morphoPoolIdMock.protocol,
@@ -61,7 +58,7 @@ describe('Protocol Plugin | Unit | Morpho', () => {
       },
     }
     await expect(
-      morphoProtocolPlugin.getLendingPool(invalidSparkPoolIdUnsupportedChain),
+      morphoProtocolPlugin.getLendingPool(invalidMorphoPoolIdUnsupportedChain),
     ).rejects.toThrow('Chain ID 2 is not supported')
   })
 

@@ -1,8 +1,12 @@
-import { ChainFamilyMap } from '@summerfi/sdk-common'
+import { ChainFamilyMap, TokensProviderType } from '@summerfi/sdk-common'
 import { Address, IAddress, IChainInfo, IToken, Maybe, Token } from '@summerfi/sdk-common/common'
-import { ITokensManager } from '@summerfi/tokens-common'
+import { ITokensManager, ITokensProvider } from '@summerfi/tokens-common'
+import { ManagerWithProvidersBase } from '@summerfi/sdk-server-common'
 
-export class TokensManagerMock implements ITokensManager {
+export class TokensManagerMock
+  extends ManagerWithProvidersBase<TokensProviderType, ITokensProvider>
+  implements ITokensManager
+{
   private tokens: Record<string, Token> = {
     DAI: Token.createFrom({
       chainInfo: ChainFamilyMap.Ethereum.Mainnet,
@@ -67,6 +71,12 @@ export class TokensManagerMock implements ITokensManager {
       name: 'Tether USD Stablecoin',
       decimals: 6,
     }),
+  }
+
+  constructor() {
+    super({
+      providers: [],
+    })
   }
 
   async getTokenBySymbol(params: {

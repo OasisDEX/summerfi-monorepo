@@ -24,7 +24,8 @@
     "@summerfi/swap-common": "workspace:*",
     "@summerfi/tokens-common": "workspace:*",
     "@summerfi/oracle-common": "workspace:*",
-    "@summerfi/address-book-common": "workspace:*"
+    "@summerfi/address-book-common": "workspace:*",
+    "@summerfi/sdk-server-common": "workspace:*"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
