@@ -7,7 +7,7 @@ import { FlashloanProvider, SimulationSteps, TokenTransferTargetType } from './E
 import { SwapProviderType, SwapRoute } from '../swap'
 import { ReferenceableField, ValueReference } from './ValueReference'
 import { IExternalPosition } from '../orders/interfaces/importing/IExternalPosition'
-import { Pool } from 'src/protocols'
+import { ILendingPool } from '../protocols/interfaces/ILendingPool'
 
 export interface Step<T extends SimulationSteps, I, O = undefined> {
   type: T
@@ -110,7 +110,7 @@ export interface NewPositionEventStep
 export interface ImportStep
   extends Step<SimulationSteps.Import, { externalPosition: IExternalPosition }> {}
 
-export interface OpenPosition extends Step<SimulationSteps.OpenPosition, { pool: Pool }, { position: Position }> {}
+export interface OpenPosition extends Step<SimulationSteps.OpenPosition, { pool: ILendingPool }, { position: Position }> {}
 
 export type Steps =
   | FlashloanStep
