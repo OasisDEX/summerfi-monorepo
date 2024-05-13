@@ -9,7 +9,6 @@ import {
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
 import { Position, TokenAmount, Percentage, Token, isSameTokens } from '@summerfi/sdk-common/common'
-import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
 import { refinanceLendingToLendingAnyPairStrategy } from './Strategy'
@@ -94,7 +93,7 @@ export async function refinanceLendingToLendingAnyPair(
       inputs: {
         // refactor
         borrowAmount: isDebtSwapSkipped
-          ? ctx.getReference(['PaybackWithdrawFromSourcePosition', 'paybackAmount'])
+          ? ctx.getReference(['SwapCollateralFromSourcePosition','received'])
           : await estimateSwapFromAmount({
               receiveAtLeast: flashloanAmount,
               fromToken: targetPool.id.debtToken,
@@ -104,19 +103,13 @@ export async function refinanceLendingToLendingAnyPair(
             }),
         depositAmount: isCollateralSwapSkipped
           ? position.collateralAmount
-          : getValueFromReference(ctx.getReference(['CollateralSwap', 'received'])),
-        position: ctx.getReference(['OpenPosition', 'position']),
+          : ctx.getReference(['SwapCollateralFromSourcePosition', 'received']),
+        position: getValueFromReference(ctx.getReference(['OpenTargetPosition', 'position'])),
         borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
     }))
     .next(
-      async (ctx) => {
-
-        ctx.s
-        
-        const x = ctx.getReference(['DepositBorrowToTargetPosition', 'borrowAmount'])
-        const y = ctx.getReference(['PaybackWithdrawFromSourcePosition', 'paybackAmount'])
-        return ({
+      async (ctx) => ({
         type: SimulationSteps.Swap,
         inputs: await getSwapStepData({
           chainInfo: position.pool.id.protocol.chainInfo,
@@ -128,7 +121,7 @@ export async function refinanceLendingToLendingAnyPair(
           swapManager: dependencies.swapManager,
           oracleManager: dependencies.oracleManager,
         }),
-      })},
+      }),
       isDebtSwapSkipped,
     )
     .next(async () => ({

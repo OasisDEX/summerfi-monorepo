@@ -3,10 +3,10 @@ import {
   SimulationSteps,
   SimulationType,
   TokenTransferTargetType,
+  getValueFromReference,
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
 import { Percentage, Position, TokenAmount } from '@summerfi/sdk-common/common'
-import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
 import { refinanceLendingToLendingNoDebtStrategy } from './Strategy'
@@ -49,6 +49,7 @@ export async function refinanceLendingToLendingNoDebt(
         paybackAmount: zeroAmount,
         withdrawAmount: position.collateralAmount,
         position: position,
+        withdrawTargetType: TokenTransferTargetType.PositionsManager,
       },
     }))
     .next(
@@ -66,26 +67,29 @@ export async function refinanceLendingToLendingNoDebt(
       }),
       isCollateralSwapSkipped,
     )
+    .next(async () => ({
+      type: SimulationSteps.OpenPosition,
+      inputs: {
+        pool: targetPool,
+      },
+    }))
     .next(async (ctx) => ({
       name: 'DepositBorrowToTarget',
       type: SimulationSteps.DepositBorrow,
       inputs: {
         depositAmount: isCollateralSwapSkipped
           ? position.collateralAmount
-          : ctx.getReference(['CollateralSwap', 'received']),
+          : ctx.getReference(['SwapCollateralFromSourcePosition', 'received']),
         borrowAmount: TokenAmount.createFrom({
           amount: '0',
           token: targetPool.id.debtToken,
         }),
-        position: newEmptyPositionFromPool(targetPool),
+        position: getValueFromReference(ctx.getReference(['OpenTargetPosition', 'position'])),
         borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
     }))
     .next(async (ctx) => {
-      // TODO: we should have a way to get the target position more easily and realiably,
-      const targetPosition = Object.values(ctx.state.positions).find((p) =>
-        p.pool.id.protocol.equals(targetPool.id.protocol),
-      )
+      const targetPosition = getValueFromReference(ctx.getReference(['OpenTargetPosition', 'position']))
       if (!targetPosition) {
         throw new Error('Target position not found')
       }
@@ -100,6 +104,7 @@ export async function refinanceLendingToLendingNoDebt(
     })
     .run()
 
+    // find better way to get position (maybe expose getReference on the simulation object)
   const targetPosition = Object.values(simulation.positions).find((p) =>
     p.pool.id.protocol.equals(targetPool.id.protocol),
   )

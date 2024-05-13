@@ -53,8 +53,15 @@ export async function refinanceLendingToLendingSamePair(
           amount: Number.MAX_SAFE_INTEGER.toString(),
           token: position.debtAmount.token,
         }),
+        withdrawTargetType: TokenTransferTargetType.PositionsManager,
         withdrawAmount: position.collateralAmount,
         position: position,
+      },
+    }))
+    .next(async () => ({
+      type: SimulationSteps.OpenPosition,
+      inputs: {
+        pool: targetPool,
       },
     }))
     .next(async () => ({

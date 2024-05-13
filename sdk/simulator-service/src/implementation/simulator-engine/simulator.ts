@@ -1,36 +1,27 @@
 import type { ISimulationState } from '../../interfaces/simulation'
-import type { Head, Tail, Where } from '../../interfaces/helperTypes'
-import type { NextFunction, Reference } from '../../interfaces'
-import { head, makeStrategy, tail } from '../utils'
+import type { Tail } from '../../interfaces/helperTypes'
+import { head, tail } from '../utils'
 import { processStepOutput } from './stepProcessor/stepOutputProcessors'
 import { stateReducer } from './reducer/stateReducers'
 import type { SimulationStrategy } from '@summerfi/sdk-common/simulation'
-import { FlashloanProvider, SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
-import { StrategyStep, ValueReference } from '@summerfi/sdk-common'
-import { Steps } from 'node_modules/@summerfi/sdk-common/src/simulation/Steps'
-import { Position, Token, TokenAmount } from '@summerfi/sdk-common/common/implementation'
-
-type NextStep<S extends Readonly<StrategyStep[]>> = Promise<Omit<Where<Steps, { type: Head<S>['step'] }>, 'outputs'>>
-type ProccessedStep<S extends Readonly<StrategyStep[]>> = { name: Head<S>['name'], step: Where<Steps, { type: Head<S>['step'] }> }
-type Paths<S extends { name: string, step: Steps }[]> = { [K in keyof S]: keyof S[K]['step']['outputs'] extends never ? never : [S[K]['name'], keyof S[K]['step']['outputs']] }[number]
-type GetReferencedValue<P extends Paths<S>, S extends { name: string, step: Steps }[]> = 
-  (path: P) => ValueReference<Pick<Where<S[number], { name: P[0] }>['step']['outputs'], P[1]>[keyof Pick<Where<S[number], { name: P[0] }>['step']['outputs'], P[1]>]>
-
+import { steps } from '@summerfi/sdk-common/simulation'
+import { Maybe } from '@summerfi/sdk-common'
+import { GetReferencedValue, NextFunction, Paths, ProccessedStep, StepsAdded } from '../../interfaces/steps'
 
 export class Simulator<
   Strategy extends SimulationStrategy,
-  S extends { name: string, step: Steps }[]
+  AddedSteps extends StepsAdded
 > {
   public schema: Strategy
   public originalSchema: SimulationStrategy
   private state: ISimulationState
-  private readonly nextArray: NextArray
+  private readonly nextArray: Readonly<NextFunction<SimulationStrategy, AddedSteps>[]>
 
   private constructor(
     schema: Strategy,
     originalSchema: SimulationStrategy,
     state: ISimulationState = { swaps: {}, balances: {}, positions: {}, steps: {} },
-    nextArray: Readonly<NextArray> = [] as unknown as NextArray,
+    nextArray: Readonly<NextFunction<Strategy, AddedSteps>[]> = [],
   ) {
     this.schema = schema
     this.originalSchema = originalSchema
@@ -44,9 +35,40 @@ export class Simulator<
     return new Simulator<S, []>(schema, schema)
   }
 
-  public async run(): Promise<ISimulationState> {
+  private getReference = (path: Paths<AddedSteps>) => {
+    const [stepName, output] = path
+    const step: Maybe<steps.Steps> = this.state.steps[stepName]
+
+    if (!step) {
+      throw new Error(
+        `Step not found: ${stepName}`,
+      )
+    }
+
+    const outputs = step.outputs
+
+    if (!outputs) {
+      throw new Error(`Step has no outputs: ${stepName}`)
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const value = (outputs as any)[output]
+    // validation if path exists
+    if (!value) {
+      throw new Error(
+        `Output not found: ${stepName}.outputs.${output as string}`,
+      )
+    }
+
+    return {
+      estimatedValue: value,
+      path,
+    }
+  }
+
+  public async run(): Promise<ISimulationState & { getReference: GetReferencedValue<AddedSteps> }> {
     for (let i = 0; i < this.nextArray.length; i++) {
-      const getReference = (path: [string, string]) => {
+      const getReference = (path: Paths<AddedSteps>) => {
         const [stepName, output] = path
         const step: Maybe<steps.Steps> = this.state.steps[stepName]
 
@@ -67,7 +89,7 @@ export class Simulator<
         // validation if path exists
         if (!value) {
           throw new Error(
-            `Output not found: ${stepName}.outputs.${output} in ${this.originalSchema[i].step}`,
+            `Output not found: ${stepName}.outputs.${output as string} in ${this.originalSchema[i].step}`,
           )
         }
 
@@ -77,7 +99,7 @@ export class Simulator<
         }
       }
 
-      const nextStep = await this.nextArray[i]({ state: this.state, getReference })
+      const nextStep = await this.nextArray[i]({ state: this.state, getReference: getReference as GetReferencedValue<AddedSteps> })
 
       const fullStep = await processStepOutput(nextStep)
       this.state = stateReducer(fullStep, this.state)
@@ -87,23 +109,23 @@ export class Simulator<
   }
 
   public next(
-    next: (ctx: { getReference: GetReferencedValue<Paths<S>, S>, s: S }) => NextStep<Strategy>,
+    next: NextFunction<Strategy, AddedSteps>,
     skip?: boolean,
-  ): Simulator<Tail<Strategy>, [...S, ProccessedStep<Strategy>]> {
+  ): Simulator<Tail<Strategy>, [...AddedSteps, ProccessedStep<Strategy>]> {
     const schemaHead = head(this.schema)
     const schemaTail = tail(this.schema)
-    const nextArray = [...this.nextArray, next] as const
+    const nextArray = [...this.nextArray, next]
 
     if (skip) {
       if (schemaHead.optional === false) {
         throw new Error(`Step is required: ${schemaHead.step}`)
       }
 
-      return new Simulator<Tail<Strategy>, [...NextArray], Ref & Record<Name, Record<string, string>>>(
+      return new Simulator<Tail<Strategy>, [...AddedSteps, ProccessedStep<Strategy>]>(
         schemaTail,
         this.originalSchema,
         this.state,
-        this.nextArray,
+        this.nextArray as any,
       )
     }
 
@@ -111,91 +133,11 @@ export class Simulator<
       throw new Error('No more steps to process')
     }
 
-    return new Simulator<Tail<Strategy>, [...NextArray, NextFunction<Strategy, Name>]>(
+    return new Simulator<Tail<Strategy>, [...AddedSteps, ProccessedStep<Strategy>]>(
       schemaTail,
       this.originalSchema,
       this.state,
-      nextArray,
+      nextArray as any,
     )
   }
 }
-
-const strategy = makeStrategy([
-  {
-    name: 'FL',
-    step: SimulationSteps.Flashloan,
-    optional: false,
-  },
-  {
-  name: 'TestDeposit',
-  step: SimulationSteps.DepositBorrow,
-  optional: false,
-},
-{
-  name: 'PbWd',
-  step: SimulationSteps.PaybackWithdraw,
-  optional: false,
-},
-{
-  name: 'TestWithdraw',
-  step: SimulationSteps.PaybackWithdraw,
-  optional: false,
-}
-] as const)
-
-
-const sim = Simulator.create(strategy)
-  .next(async () => ({
-    type: SimulationSteps.Flashloan,
-    inputs: {
-      amount: TokenAmount.createFrom({ amount: '100', token }),
-      provider: FlashloanProvider.Maker,
-    }
-  })
-)
-
-declare const token: Token
-declare const position: Position
-
-const sim2 = sim.next(async () => ({
-  type: SimulationSteps.DepositBorrow,
-  inputs: {
-    depositAmount: TokenAmount.createFrom({ amount: '100', token }),
-    borrowAmount: TokenAmount.createFrom({ amount: '100', token }),
-    borrowTargetType: TokenTransferTargetType.PositionsManager,
-    position,
-  }
-}))
-
-
-const sim3 = sim2.next(async (ctx) => {
-
-  const x = ctx.getReference(['TestDeposit', 'borrowAmount'])
-
-  return {
-    type: SimulationSteps.PaybackWithdraw,
-    inputs: {
-      paybackAmount: TokenAmount.createFrom({ amount: '100', token }),
-      withdrawAmount: TokenAmount.createFrom({ amount: '100', token }),
-      withdrawTargetType: TokenTransferTargetType.PositionsManager,
-      position,
-    }
-  }
-})
-
-sim3.next(async (ctx) => {
-  // const y = ctx.getReference(['TestDeposit', 'depositAmount'])
-  const x = ctx.getReference(['PbWd','withdrawAmount' ])
-  
-  return ({
-  type: SimulationSteps.PaybackWithdraw,
-  inputs: {
-    paybackAmount: TokenAmount.createFrom({ amount: '100', token }),
-    withdrawAmount: TokenAmount.createFrom({ amount: '100', token }),
-    withdrawTargetType: TokenTransferTargetType.PositionsManager,
-    position,
-  }
-})})
-
-
-
