@@ -33,7 +33,7 @@ export class MorphoDepositAction extends BaseAction {
             irm: morphoLendingPool.irm.value,
             lltv: morphoLendingPool.lltv.toBaseUnit({ decimals: MorphoLLTVPrecision }),
           },
-          amount: amount,
+          amount: amount.toBaseUnit(),
           sumAmounts: sumAmounts,
         },
       ],

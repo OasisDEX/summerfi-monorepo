@@ -7,7 +7,7 @@ import { IMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
 export class MorphoPaybackAction extends BaseAction {
   public readonly config = {
     name: 'MorphoBluePayback',
-    version: 0,
+    version: 2,
     parametersAbi:
       '((address loanToken, address collateralToken, address oracle, address irm, uint256 lltv) marketParams, uint256 amount, address onBehalf, bool paybackAll)',
     storageInputs: ['amount'],
@@ -35,7 +35,7 @@ export class MorphoPaybackAction extends BaseAction {
             irm: morphoLendingPool.irm.value,
             lltv: morphoLendingPool.lltv.toBaseUnit({ decimals: MorphoLLTVPrecision }),
           },
-          amount: amount,
+          amount: amount.toBaseUnit(),
           onBehalf: onBehalf.value,
           paybackAll: paybackAll,
         },

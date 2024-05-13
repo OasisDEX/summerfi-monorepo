@@ -34,7 +34,7 @@ export class MorphoWithdrawAction extends BaseAction {
             irm: morphoLendingPool.irm.value,
             lltv: morphoLendingPool.lltv.toBaseUnit({ decimals: MorphoLLTVPrecision }),
           },
-          amount: amount,
+          amount: amount.toBaseUnit(),
           to: to.value,
         },
       ],

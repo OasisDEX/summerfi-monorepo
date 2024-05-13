@@ -9,7 +9,7 @@ export const MorphoPaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWith
   const { context, positionsManager, step } = params
 
   if (!isMorphoLendingPool(step.inputs.position.pool)) {
-    throw new Error('Maker: Invalid pool id')
+    throw new Error('Invalid Morpho lending pool id')
   }
 
   const paybackAmount = getValueFromReference(step.inputs.paybackAmount)
