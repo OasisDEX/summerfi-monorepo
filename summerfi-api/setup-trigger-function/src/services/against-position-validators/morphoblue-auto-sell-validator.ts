@@ -115,7 +115,7 @@ const upsertErrorsValidation = paramsSchema
     ({ triggers, action, triggerData }) => {
       if (action === SupportedActions.Remove || action === SupportedActions.Update)
         return (
-          triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].basicBuy !==
+          triggers.triggers[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].basicSell !==
           undefined
         )
       return true
