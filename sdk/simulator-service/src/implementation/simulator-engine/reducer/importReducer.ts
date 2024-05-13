@@ -4,9 +4,9 @@ import { ISimulationState } from '../../../interfaces/simulation'
 export function importReducer(step: steps.ImportStep, state: ISimulationState): ISimulationState {
   return {
     ...state,
-    steps: {
+    steps: [
       ...state.steps,
-      [step.name]: step,
-    },
+      step,
+    ],
   }
 }

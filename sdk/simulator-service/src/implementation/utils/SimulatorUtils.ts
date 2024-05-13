@@ -16,7 +16,7 @@ export function isValueReference<T>(value: ReferenceableField<T>): value is Valu
   )
 }
 
-export function getValueFromReference<T>(referenceableValue: ReferenceableField<T>): Readonly<T> {
+export function getValueFromReference<T>(referenceableValue: ReferenceableField<T>): T {
   if (isValueReference(referenceableValue)) {
     return referenceableValue.estimatedValue
   }

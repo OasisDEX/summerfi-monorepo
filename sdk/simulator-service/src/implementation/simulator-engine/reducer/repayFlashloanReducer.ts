@@ -8,10 +8,10 @@ export function repayFlashloanReducer(
 ): ISimulationState {
   return {
     ...state,
-    steps: {
+    steps: [
       ...state.steps,
-      [step.name]: step,
-    },
+      step,
+    ],
     balances: subtractBalance(step.inputs.amount, state.balances),
   }
 }

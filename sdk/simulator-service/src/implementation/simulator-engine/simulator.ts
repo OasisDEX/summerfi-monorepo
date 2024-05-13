@@ -20,7 +20,7 @@ export class Simulator<
   private constructor(
     schema: Strategy,
     originalSchema: SimulationStrategy,
-    state: ISimulationState = { swaps: {}, balances: {}, positions: {}, steps: {} },
+    state: ISimulationState = { swaps: [], balances: {}, positions: {}, steps: [] },
     nextArray: Readonly<NextFunction<Strategy, AddedSteps>[]> = [],
   ) {
     this.schema = schema
@@ -37,7 +37,9 @@ export class Simulator<
 
   private getReference = (path: Paths<AddedSteps>) => {
     const [stepName, output] = path
-    const step: Maybe<steps.Steps> = this.state.steps[stepName]
+    const stepNames = this.originalSchema.map((step) => step.name)
+    const index = stepNames.indexOf(stepName as string)
+    const step: Maybe<steps.Steps> = this.state.steps[index]
 
     if (!step) {
       throw new Error(
@@ -68,44 +70,13 @@ export class Simulator<
 
   public async run(): Promise<ISimulationState & { getReference: GetReferencedValue<AddedSteps> }> {
     for (let i = 0; i < this.nextArray.length; i++) {
-      const getReference = (path: Paths<AddedSteps>) => {
-        const [stepName, output] = path
-        const step: Maybe<steps.Steps> = this.state.steps[stepName]
-
-        if (!step) {
-          throw new Error(
-            `Step not found: ${stepName} in ${this.originalSchema[i].step} at iteration ${i}`,
-          )
-        }
-
-        const outputs = step.outputs
-
-        if (!outputs) {
-          throw new Error(`Step has no outputs: ${stepName} in ${this.originalSchema[i].step}`)
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const value = (outputs as any)[output]
-        // validation if path exists
-        if (!value) {
-          throw new Error(
-            `Output not found: ${stepName}.outputs.${output as string} in ${this.originalSchema[i].step}`,
-          )
-        }
-
-        return {
-          estimatedValue: value,
-          path,
-        }
-      }
-
-      const nextStep = await this.nextArray[i]({ state: this.state, getReference: getReference as GetReferencedValue<AddedSteps> })
+      const nextStep = await this.nextArray[i]({ state: this.state, getReference: this.getReference as GetReferencedValue<AddedSteps> })
 
       const fullStep = await processStepOutput(nextStep)
       this.state = stateReducer(fullStep, this.state)
     }
 
-    return this.state
+    return {...this.state, getReference: this.getReference as GetReferencedValue<AddedSteps>}
   }
 
   public next(

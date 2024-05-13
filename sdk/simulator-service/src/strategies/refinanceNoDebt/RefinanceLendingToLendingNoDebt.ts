@@ -104,10 +104,8 @@ export async function refinanceLendingToLendingNoDebt(
     })
     .run()
 
-    // find better way to get position (maybe expose getReference on the simulation object)
-  const targetPosition = Object.values(simulation.positions).find((p) =>
-    p.pool.id.protocol.equals(targetPool.id.protocol),
-  )
+  const targetPositionId = getValueFromReference(simulation.getReference(['OpenTargetPosition', 'position']))
+  const targetPosition = Object.values(simulation.positions).find((p) => p.id.id === targetPositionId.id.id)
 
   if (!targetPosition) {
     throw new Error('Target position not found')

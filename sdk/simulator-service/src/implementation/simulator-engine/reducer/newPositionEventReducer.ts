@@ -7,9 +7,9 @@ export function newPositionEventReducer(
 ): ISimulationState {
   return {
     ...state,
-    steps: {
+    steps: [
       ...state.steps,
-      [step.name]: step,
-    },
+      step,
+    ],
   }
 }

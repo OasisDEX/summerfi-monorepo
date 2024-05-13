@@ -1,20 +1,20 @@
 import { steps } from '@summerfi/sdk-common/simulation'
-import { getReferencedValue } from '../../utils'
+import { getValueFromReference } from '../../utils'
 import type { StepOutputProcessor } from '../../../interfaces/steps'
 
 export const paybackWithdrawOutputProcessor: StepOutputProcessor<
   steps.PaybackWithdrawStep
 > = async (step) => {
   const paybackAmount =
-    getReferencedValue(step.inputs.paybackAmount).amount > step.inputs.position.debtAmount.amount
+    getValueFromReference(step.inputs.paybackAmount).amount > step.inputs.position.debtAmount.amount
       ? step.inputs.position.debtAmount
-      : getReferencedValue(step.inputs.paybackAmount)
+      : getValueFromReference(step.inputs.paybackAmount)
 
   const withdrawAmount =
-    getReferencedValue(step.inputs.withdrawAmount).amount >
-    step.inputs.position.collateralAmount.amount
+    getValueFromReference(step.inputs.withdrawAmount).amount >
+      step.inputs.position.collateralAmount.amount
       ? step.inputs.position.collateralAmount
-      : getReferencedValue(step.inputs.withdrawAmount)
+      : getValueFromReference(step.inputs.withdrawAmount)
 
   return {
     ...step,

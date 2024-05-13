@@ -3,20 +3,18 @@ import {
   ISimulation,
   RefinanceSimulationTypes,
   SimulationSteps,
-  SimulationType,
   TokenTransferTargetType,
   getValueFromReference,
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
-import { Position, TokenAmount, Percentage, Token, isSameTokens } from '@summerfi/sdk-common/common'
+import { Position, TokenAmount, Percentage } from '@summerfi/sdk-common/common'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
 import { refinanceLendingToLendingAnyPairStrategy } from './Strategy'
 import { type IRefinanceDependencies } from '../common/Types'
 import { getSwapStepData } from '../../implementation/utils/GetSwapStepData'
-import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import { BigNumber } from 'bignumber.js'
-import { IOracleManager } from '@summerfi/oracle-common'
+import { estimateSwapFromAmount } from '../../implementation/utils/EstimateSwapFromAmount'
+import { getRefinanceSimulationType } from '../../implementation/utils/GetRefinanceSimulationType'
 
 export async function refinanceLendingToLendingAnyPair(
   args: IRefinanceParameters,
@@ -161,88 +159,18 @@ export async function refinanceLendingToLendingAnyPair(
     })
     .run()
 
-  const targetPosition = Object.values(simulation.positions).find((p) =>
-    p.pool.id.protocol.equals(targetPool.id.protocol),
-  )
+  const targetPositionId = getValueFromReference(simulation.getReference(['OpenTargetPosition','position']))
+  const targetPosition = Object.values(simulation.positions).find((p) => p.id.id === targetPositionId.id.id)
 
   if (!targetPosition) {
     throw new Error('Target position not found')
   }
 
   return {
-    simulationType: getSimulationType(!isCollateralSwapSkipped, !isDebtSwapSkipped),
+    simulationType: getRefinanceSimulationType(!isCollateralSwapSkipped, !isDebtSwapSkipped),
     sourcePosition: position,
     targetPosition,
-    swaps: Object.values(simulation.swaps),
-    steps: Object.values(simulation.steps),
+    swaps: simulation.swaps,
+    steps: simulation.steps,
   } satisfies ISimulation<RefinanceSimulationTypes>
-}
-
-function getSimulationType(
-  hasCollateralSwap: boolean,
-  hasDebtSwap: boolean,
-): RefinanceSimulationTypes {
-  if (hasCollateralSwap && hasDebtSwap) {
-    return SimulationType.RefinanceDifferentPair
-  }
-
-  if (hasCollateralSwap) {
-    return SimulationType.RefinanceDifferentCollateral
-  }
-
-  if (hasDebtSwap) {
-    return SimulationType.RefinanceDifferentDebt
-  }
-
-  return SimulationType.Refinance
-}
-
-/**
- * EstimateTokenAmountAfterSwap
- * @description Estimates how much you will recive after swap.
- *    If target token is the same as source token, we return the same amount.
- *    When we perform a swap, we need to account for the summer fee,
- *    and we assume maximum slippage.
- */
-async function estimateSwapFromAmount(params: {
-  receiveAtLeast: TokenAmount
-  fromToken: Token
-  slippage: Percentage
-  swapManager: ISwapManager
-  oracleManager: IOracleManager
-}): Promise<TokenAmount> {
-  const { receiveAtLeast, slippage } = params
-
-  if (isSameTokens(receiveAtLeast.token, params.fromToken)) {
-    return receiveAtLeast
-  }
-
-  const spotPrice = (
-    await params.oracleManager.getSpotPrice({
-      chainInfo: receiveAtLeast.token.chainInfo,
-      baseToken: receiveAtLeast.token,
-      quoteToken: params.fromToken,
-    })
-  ).price
-
-  const summerFee = await params.swapManager.getSummerFee({
-    from: { token: receiveAtLeast.token },
-    to: { token: params.fromToken },
-  })
-
-  const ONE = new BigNumber(1)
-  /*
-  TargetAmt = SourceAmt * (1 - SummerFee) / (SpotPrice * (1 + Slippage))
-  SourceAmt = TargetAmt * SpotPrice * (1 + Slippage) / (1 - SummerFee) 
-  */
-
-  const sourceAmount = receiveAtLeast
-    .toBN()
-    .multipliedBy(spotPrice.toBN().times(ONE.plus(slippage.toProportion())))
-    .div(ONE.minus(summerFee.toProportion()))
-
-  return TokenAmount.createFrom({
-    amount: sourceAmount.toString(),
-    token: params.fromToken,
-  })
 }

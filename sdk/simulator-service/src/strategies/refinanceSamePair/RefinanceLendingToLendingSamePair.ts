@@ -4,6 +4,7 @@ import {
   SimulationSteps,
   SimulationType,
   TokenTransferTargetType,
+  getValueFromReference,
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
 import { Position, TokenAmount } from '@summerfi/sdk-common/common'
@@ -64,13 +65,13 @@ export async function refinanceLendingToLendingSamePair(
         pool: targetPool,
       },
     }))
-    .next(async () => ({
+    .next(async (ctx) => ({
       name: 'DepositBorrowToTarget',
       type: SimulationSteps.DepositBorrow,
       inputs: {
         depositAmount: position.collateralAmount,
         borrowAmount: position.debtAmount, // TODO figure the debt amount
-        position: newEmptyPositionFromPool(targetPool),
+        position: getValueFromReference(ctx.getReference(['OpenTargetPosition','position'])),
         borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
     }))
@@ -100,9 +101,8 @@ export async function refinanceLendingToLendingSamePair(
     })
     .run()
 
-  const targetPosition = Object.values(simulation.positions).find(
-    (p) => p.pool.id.protocol === targetPool.id.protocol,
-  )
+  const targetPositionId = getValueFromReference(simulation.getReference(['OpenTargetPosition', 'position']))
+  const targetPosition = Object.values(simulation.positions).find((p) => p.id.id === targetPositionId.id.id)
 
   if (!targetPosition) {
     throw new Error('Target position not found')
