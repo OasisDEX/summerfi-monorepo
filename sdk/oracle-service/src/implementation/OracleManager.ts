@@ -37,7 +37,7 @@ export class OracleManager
       throw new Error('Base token and quote token must be on the same chain')
     }
 
-    const provider: Maybe<IOracleProvider> = this.getBestProvider({
+    const provider: Maybe<IOracleProvider> = this._getBestProvider({
       chainInfo: params.baseToken.chainInfo,
       forceUseProvider: params.forceUseProvider,
     })

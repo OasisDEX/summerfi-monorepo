@@ -24,25 +24,20 @@ export class ManagerWithProvidersBase<
     this._providersByType = new Map()
 
     for (const provider of providers) {
-      this.registerProvider(provider)
+      this._registerProvider(provider)
     }
   }
 
-  /** @see IManagerWithProviders.registerProvider */
-  registerProvider(provider: ManagerProvider): void {
-    const forChainIds = provider.getSupportedChainIds()
+  /** PROTECTED */
 
-    for (const chainId of forChainIds) {
-      const providers = this._providersByChainId.get(chainId) || []
-      providers.push(provider)
-      this._providersByChainId.set(chainId, providers)
-    }
-
-    this._providersByType.set(provider.type, provider)
-  }
-
-  /** @see IManagerWithProviders.getBestProvider */
-  getBestProvider(params: {
+  /**
+   * @method _getBestProvider
+   * @description Retrieves the best provider for the given chain
+   * @param chainInfo The chain information of the provider to retrieve
+   * @param forceUseProvider The provider type to force use
+   * @returns The best provider for the given chain
+   */
+  protected _getBestProvider(params: {
     chainInfo: IChainInfo
     forceUseProvider?: ProviderType
   }): Maybe<ManagerProvider> {
@@ -61,5 +56,24 @@ export class ManagerWithProvidersBase<
     // For now, we just return the first provider. In the future, we can implement a logic to
     // choose the best provider based on the input parameters or on the swap provider's capabilities.
     return providers[0]
+  }
+
+  /** PRIVATE */
+
+  /**
+   * @method _registerProvider
+   * @description Registers a provider to be used by the manager
+   * @param provider The provider to register
+   */
+  private _registerProvider(provider: ManagerProvider): void {
+    const forChainIds = provider.getSupportedChainIds()
+
+    for (const chainId of forChainIds) {
+      const providers = this._providersByChainId.get(chainId) || []
+      providers.push(provider)
+      this._providersByChainId.set(chainId, providers)
+    }
+
+    this._providersByType.set(provider.type, provider)
   }
 }

@@ -24,7 +24,7 @@ export class TokensManager
     chainInfo: IChainInfo
     symbol: string
   }): Promise<Maybe<IToken>> {
-    const provider = this.getBestProvider({ chainInfo: params.chainInfo })
+    const provider = this._getBestProvider({ chainInfo: params.chainInfo })
     if (!provider) {
       return undefined
     }
@@ -37,7 +37,7 @@ export class TokensManager
     chainInfo: IChainInfo
     address: IAddress
   }): Promise<Maybe<IToken>> {
-    const provider = this.getBestProvider({ chainInfo: params.chainInfo })
+    const provider = this._getBestProvider({ chainInfo: params.chainInfo })
     if (!provider) {
       return undefined
     }
@@ -47,7 +47,7 @@ export class TokensManager
 
   /** @see ITokensManager.getTokenByName */
   async getTokenByName(params: { chainInfo: IChainInfo; name: string }): Promise<Maybe<IToken>> {
-    const provider = this.getBestProvider({ chainInfo: params.chainInfo })
+    const provider = this._getBestProvider({ chainInfo: params.chainInfo })
     if (!provider) {
       return undefined
     }

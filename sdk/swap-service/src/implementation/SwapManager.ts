@@ -45,7 +45,7 @@ export class SwapManager
     slippage: IPercentage
     forceUseProvider?: SwapProviderType
   }): Promise<SwapData> {
-    const provider: Maybe<ISwapProvider> = this.getBestProvider(params)
+    const provider: Maybe<ISwapProvider> = this._getBestProvider(params)
     if (!provider) {
       throw new Error('No swap provider available')
     }
@@ -60,7 +60,7 @@ export class SwapManager
     toToken: IToken
     forceUseProvider?: SwapProviderType
   }): Promise<QuoteData> {
-    const provider: Maybe<ISwapProvider> = this.getBestProvider(params)
+    const provider: Maybe<ISwapProvider> = this._getBestProvider(params)
     if (!provider) {
       throw new Error('No swap provider available')
     }
