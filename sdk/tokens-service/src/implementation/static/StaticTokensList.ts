@@ -13,6 +13,15 @@ export const StaticTokensData: TokenListData = {
   keywords: ['Summer.fi', 'MakerDAO'],
   tokens: [
     {
+      name: 'Savings Dai',
+      address: '0x83F20F44975D03b1b09e64809B757c47f942BEeA',
+      symbol: 'sDAI',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x83F20F44975D03b1b09e64809B757c47f942BEeA/logo.png',
+    },
+    {
       name: 'Dai Stablecoin',
       address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
       symbol: 'DAI',

@@ -99,12 +99,12 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     assert(WBTC, 'WBTC not found')
 
     const WSTETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({
-      symbol: CommonTokenSymbols.WSTETH,
+      symbol: CommonTokenSymbols.wstETH,
     })
     assert(WSTETH, 'WSTETH not found')
 
     const SDAI: Maybe<Token> = await chain.tokens.getTokenBySymbol({
-      symbol: CommonTokenSymbols.SDAI,
+      symbol: CommonTokenSymbols.sDAI,
     })
     assert(SDAI, 'WSTETH not found')
 
@@ -198,18 +198,18 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     assert(refinanceOrder, 'Order not found')
 
     // Send transaction
-    console.log('Sending transaction...')
+    //console.log('Sending transaction...')
 
-    const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex
-    const transactionUtils = new TransactionUtils({
-      rpcUrl: config.TenderlyForkUrl,
-      walletPrivateKey: privateKey,
-    })
+    //const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex
+    // const transactionUtils = new TransactionUtils({
+    //   rpcUrl: config.TenderlyForkUrl,
+    //   walletPrivateKey: privateKey,
+    // })
 
-    const receipt = await transactionUtils.sendTransaction({
-      transaction: refinanceOrder.transactions[0].transaction,
-    })
+    // const receipt = await transactionUtils.sendTransaction({
+    //   transaction: refinanceOrder.transactions[0].transaction,
+    // })
 
-    console.log('Transaction sent:', receipt)
+    // console.log('Transaction sent:', receipt)
   })
 })

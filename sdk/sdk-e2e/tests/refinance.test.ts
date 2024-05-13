@@ -37,7 +37,7 @@ jest.setTimeout(300000)
 
 /** TEST CONFIG */
 const config = {
-  SDKAPiUrl: 'https://nkllstfoy8.execute-api.us-east-1.amazonaws.com',
+  SDKAPiUrl: 'https://nkllstfoy8.execute-api.us-east-1.amazonaws.com/api/sdk',
   TenderlyForkUrl: 'https://virtual.mainnet.rpc.tenderly.co/5a4e0cc3-48d2-4819-8426-068f029b23be',
   makerVaultId: '31709',
   DPMAddress: '0xc1475b2735fb9130a4701ee9e2215b6305dd501b',
@@ -46,7 +46,7 @@ const config = {
   debtAmount: '5000000.0',
 }
 
-describe.skip('Refinance All | SDK', () => {
+describe.only('Refinance All | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: config.SDKAPiUrl })
@@ -99,12 +99,12 @@ describe.skip('Refinance All | SDK', () => {
     assert(WBTC, 'WBTC not found')
 
     const WSTETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({
-      symbol: CommonTokenSymbols.WSTETH,
+      symbol: CommonTokenSymbols.wstETH,
     })
     assert(WSTETH, 'WSTETH not found')
 
     const SDAI: Maybe<Token> = await chain.tokens.getTokenBySymbol({
-      symbol: CommonTokenSymbols.SDAI,
+      symbol: CommonTokenSymbols.sDAI,
     })
     assert(SDAI, 'WSTETH not found')
 
