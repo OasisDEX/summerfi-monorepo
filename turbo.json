@@ -7,6 +7,7 @@
     "DEBANK_API_URL",
     "RPC_GATEWAY",
     "GET_TRIGGERS_URL",
+    "WEB_APP_DATABASE_URL",
     "SKIP_VALIDATION",
     "AWS_REGION",
     "AWS_PROFILE",
@@ -76,6 +77,10 @@
     },
     "check-circular": {
       "dependsOn": ["prebuild", "build", "^check-circular"]
+    },
+    "db:migrate": {
+      "dependsOn": ["prebuild"],
+      "cache": false
     },
     "cicheck": {
       "dependsOn": [
