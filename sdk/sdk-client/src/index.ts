@@ -15,3 +15,5 @@ export * from './interfaces/IProtocolsManagerClient'
 export * from './interfaces/ITokensManagerClient'
 export * from './interfaces/IUsersManager'
 export * from './utils/PositionUtils'
+
+export * from './protocol-plugins-reexport'
