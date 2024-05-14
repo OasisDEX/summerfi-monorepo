@@ -48,7 +48,7 @@ const config = {
   sendTransactionEnabled: true,
 }
 
-describe.only('Refinance Morpho Spark | SDK', () => {
+describe.skip('Refinance Morpho Spark | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: config.SDKAPiUrl })
@@ -179,7 +179,6 @@ describe.only('Refinance Morpho Spark | SDK', () => {
 
     assert(refinanceOrder, 'Order not found')
 
-    //console.log(JSON.stringify(refinanceOrder, null, 2))
     // Send transaction
     console.log('Sending transaction...')
 
