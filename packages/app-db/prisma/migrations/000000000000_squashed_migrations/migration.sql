@@ -37,9 +37,9 @@ CREATE TYPE "ajna_rewards_position_type" AS ENUM ('earn', 'borrow');
 -- CreateTable
 CREATE TABLE "migrations" (
     "id" INTEGER NOT NULL,
-    "name" TEXT NOT NULL,
-    "hash" TEXT NOT NULL,
-    "executed_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "name" VARCHAR(100) NOT NULL,
+    "hash" VARCHAR(40) NOT NULL,
+    "executed_at" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "migrations_pkey" PRIMARY KEY ("id")
 );
@@ -47,12 +47,12 @@ CREATE TABLE "migrations" (
 -- CreateTable
 CREATE TABLE "tos_approval" (
     "id" SERIAL NOT NULL,
-    "address" TEXT NOT NULL,
-    "signature" TEXT NOT NULL,
-    "message" TEXT NOT NULL,
-    "chain_id" INTEGER NOT NULL,
-    "doc_version" TEXT NOT NULL,
-    "sign_date" TIMESTAMP(3) NOT NULL,
+    "address" VARCHAR(66) NOT NULL,
+    "doc_version" VARCHAR NOT NULL,
+    "sign_date" TIMESTAMP(6) NOT NULL,
+    "signature" VARCHAR NOT NULL DEFAULT '0x0',
+    "message" VARCHAR NOT NULL DEFAULT '0x0',
+    "chain_id" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "tos_approval_pkey" PRIMARY KEY ("id")
 );
@@ -61,10 +61,10 @@ CREATE TABLE "tos_approval" (
 CREATE TABLE "vault" (
     "vault_id" INTEGER NOT NULL,
     "type" "vault_type" NOT NULL,
-    "owner_address" TEXT NOT NULL,
+    "owner_address" CHAR(42) NOT NULL,
     "chain_id" INTEGER,
-    "protocol" TEXT NOT NULL,
-    "token_pair" TEXT NOT NULL
+    "protocol" VARCHAR(32) NOT NULL DEFAULT 'maker',
+    "token_pair" VARCHAR(32) NOT NULL DEFAULT ''
 );
 
 -- CreateTable
@@ -78,11 +78,11 @@ CREATE TABLE "user" (
 -- CreateTable
 CREATE TABLE "weekly_claim" (
     "id" SERIAL NOT NULL,
-    "timestamp" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
     "week_number" INTEGER NOT NULL,
     "user_address" TEXT NOT NULL,
     "proof" TEXT[],
     "amount" TEXT NOT NULL,
+    "timestamp" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "weekly_claim_pkey" PRIMARY KEY ("id")
 );
@@ -90,31 +90,32 @@ CREATE TABLE "weekly_claim" (
 -- CreateTable
 CREATE TABLE "merkle_tree" (
     "week_number" INTEGER NOT NULL,
-    "start_block" INTEGER,
-    "end_block" INTEGER,
-    "timestamp" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
     "tree_root" TEXT NOT NULL,
+    "start_block" DECIMAL(78,0),
+    "end_block" DECIMAL(78,0),
+    "timestamp" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
     "snapshot" TEXT,
     "tx_processed" BOOLEAN NOT NULL DEFAULT false
 );
 
 -- CreateTable
 CREATE TABLE "wallet_risk" (
-    "address" TEXT NOT NULL,
-    "last_check" TIMESTAMP(3) NOT NULL,
+    "address" VARCHAR(66) NOT NULL,
+    "last_check" TIMESTAMP(6) NOT NULL,
     "is_risky" BOOLEAN NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "collateral_type" (
     "collateral_name" TEXT NOT NULL,
-    "token" TEXT NOT NULL,
     "next_price" DECIMAL(65,30) NOT NULL,
     "current_price" DECIMAL(65,30) NOT NULL,
     "liquidation_ratio" DECIMAL(65,30) NOT NULL,
-    "liquidation_penalty" DECIMAL(65,30) NOT NULL,
+    "liquidation_penalty" DECIMAL(65,30) DEFAULT 1.13,
     "rate" DECIMAL(65,30),
-    "market_price" DECIMAL(65,30)
+    "market_price" DECIMAL(65,30),
+
+    CONSTRAINT "collateral_name_key" PRIMARY KEY ("collateral_name")
 );
 
 -- CreateTable
@@ -122,8 +123,8 @@ CREATE TABLE "discover" (
     "protocol_id" TEXT NOT NULL,
     "position_id" TEXT NOT NULL,
     "collateral_type" TEXT NOT NULL,
-    "vault_debt" DECIMAL(65,30) NOT NULL,
     "vault_normalized_debt" DECIMAL(65,30),
+    "vault_debt" DECIMAL(65,30) NOT NULL,
     "vault_collateral" DECIMAL(65,30) NOT NULL,
     "yield_30d" DECIMAL(65,30) NOT NULL,
     "status" JSONB NOT NULL,
@@ -134,87 +135,16 @@ CREATE TABLE "discover" (
     "pnl_30d" DECIMAL(65,30) NOT NULL,
     "pnl_365d" DECIMAL(65,30) NOT NULL,
     "pnl_ytd" DECIMAL(65,30) NOT NULL,
-    "net_profit_all" DECIMAL(65,30) NOT NULL,
-    "net_profit_1d" DECIMAL(65,30) NOT NULL,
-    "net_profit_7d" DECIMAL(65,30) NOT NULL,
-    "net_profit_30d" DECIMAL(65,30) NOT NULL,
-    "net_profit_365d" DECIMAL(65,30) NOT NULL,
-    "net_profit_ytd" DECIMAL(65,30) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL
-);
-
--- CreateTable
-CREATE TABLE "high_risk" (
-    "protocol_id" TEXT NOT NULL,
-    "position_id" TEXT NOT NULL,
-    "collateral_type" TEXT NOT NULL,
-    "token" TEXT NOT NULL,
-    "collateral_ratio" DECIMAL(65,30) NOT NULL,
-    "collateral_value" DECIMAL(65,30) NOT NULL,
-    "liquidation_proximity" DECIMAL(65,30) NOT NULL,
-    "liquidation_price" DECIMAL(65,30) NOT NULL,
-    "liquidation_value" DECIMAL(65,30) NOT NULL,
-    "next_price" DECIMAL(65,30) NOT NULL,
-    "status" JSONB NOT NULL,
-    "type" "vault_type"
-);
-
--- CreateTable
-CREATE TABLE "highest_pnl" (
-    "protocol_id" TEXT NOT NULL,
-    "position_id" TEXT NOT NULL,
-    "collateral_type" TEXT NOT NULL,
-    "token" TEXT NOT NULL,
-    "collateral_value" DECIMAL(65,30) NOT NULL,
-    "vault_multiple" DECIMAL(65,30) NOT NULL,
-    "pnl_all" DECIMAL(65,30) NOT NULL,
-    "pnl_1d" DECIMAL(65,30) NOT NULL,
-    "pnl_7d" DECIMAL(65,30) NOT NULL,
-    "pnl_30d" DECIMAL(65,30) NOT NULL,
-    "pnl_365d" DECIMAL(65,30) NOT NULL,
-    "pnl_ytd" DECIMAL(65,30) NOT NULL,
-    "net_profit_all" DECIMAL(65,30) NOT NULL,
-    "net_profit_1d" DECIMAL(65,30) NOT NULL,
-    "net_profit_7d" DECIMAL(65,30) NOT NULL,
-    "net_profit_30d" DECIMAL(65,30) NOT NULL,
-    "net_profit_365d" DECIMAL(65,30) NOT NULL,
-    "net_profit_ytd" DECIMAL(65,30) NOT NULL,
-    "last_action" JSONB NOT NULL,
-    "type" "vault_type"
-);
-
--- CreateTable
-CREATE TABLE "most_yield" (
-    "protocol_id" TEXT NOT NULL,
-    "position_id" TEXT NOT NULL,
-    "collateral_type" TEXT NOT NULL,
-    "token" TEXT NOT NULL,
-    "collateral_value" DECIMAL(65,30) NOT NULL,
-    "net_value" DECIMAL(65,30) NOT NULL,
-    "pnl_all" DECIMAL(65,30) NOT NULL,
-    "pnl_1d" DECIMAL(65,30) NOT NULL,
-    "pnl_7d" DECIMAL(65,30) NOT NULL,
-    "pnl_30d" DECIMAL(65,30) NOT NULL,
-    "pnl_365d" DECIMAL(65,30) NOT NULL,
-    "pnl_ytd" DECIMAL(65,30) NOT NULL,
-    "yield_30d" DECIMAL(65,30) NOT NULL,
-    "last_action" JSONB NOT NULL,
-    "type" "vault_type"
-);
-
--- CreateTable
-CREATE TABLE "largest_debt" (
-    "protocol_id" TEXT NOT NULL,
-    "position_id" TEXT NOT NULL,
-    "collateral_type" TEXT NOT NULL,
-    "token" TEXT NOT NULL,
-    "collateral_value" DECIMAL(65,30) NOT NULL,
-    "liquidation_proximity" DECIMAL(65,30) NOT NULL,
-    "vault_debt" DECIMAL(65,30) NOT NULL,
-    "coll_ratio" DECIMAL(65,30) NOT NULL,
-    "last_action" JSONB NOT NULL,
-    "type" "vault_type"
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "token" TEXT,
+    "vault_type" TEXT,
+    "net_profit_all" DECIMAL(65,30),
+    "net_profit_1d" DECIMAL(65,30),
+    "net_profit_7d" DECIMAL(65,30),
+    "net_profit_30d" DECIMAL(65,30),
+    "net_profit_365d" DECIMAL(65,30),
+    "net_profit_ytd" DECIMAL(65,30)
 );
 
 -- CreateTable
@@ -240,8 +170,6 @@ CREATE TABLE "product_hub_items" (
     "secondaryTokenGroup" TEXT,
     "weeklyNetApy" TEXT,
     "depositToken" TEXT,
-    "earnStrategy" "earnStrategies",
-    "earnStrategyDescription" TEXT,
     "fee" TEXT,
     "liquidity" TEXT,
     "managementType" "managementTypeSimple",
@@ -255,6 +183,8 @@ CREATE TABLE "product_hub_items" (
     "primaryTokenAddress" TEXT NOT NULL DEFAULT '0x0000000000000000000000000000000000000000',
     "secondaryTokenAddress" TEXT NOT NULL DEFAULT '0x0000000000000000000000000000000000000000',
     "hasRewards" BOOLEAN NOT NULL DEFAULT false,
+    "earnStrategyDescription" TEXT,
+    "earnStrategy" "earnStrategies",
     "automationFeatures" "automationFeature"[],
 
     CONSTRAINT "product_hub_items_pkey" PRIMARY KEY ("id")
@@ -267,9 +197,9 @@ CREATE TABLE "ajna_rewards_weekly_claim" (
     "chain_id" INTEGER NOT NULL,
     "user_address" TEXT NOT NULL,
     "amount" TEXT NOT NULL,
-    "source" "ajna_rewards_source" NOT NULL,
     "week_number" INTEGER NOT NULL,
     "proof" TEXT[],
+    "source" "ajna_rewards_source" NOT NULL,
 
     CONSTRAINT "ajna_rewards_weekly_claim_pkey" PRIMARY KEY ("id")
 );
@@ -279,14 +209,14 @@ CREATE TABLE "ajna_rewards_daily_claim" (
     "id" SERIAL NOT NULL,
     "timestamp" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "chain_id" INTEGER NOT NULL,
-    "account_address" TEXT NOT NULL,
-    "pool_address" TEXT NOT NULL,
     "user_address" TEXT NOT NULL,
     "amount" TEXT NOT NULL,
-    "source" "ajna_rewards_source" NOT NULL,
-    "type" "ajna_rewards_position_type" NOT NULL,
     "week_number" INTEGER NOT NULL,
     "day_number" INTEGER NOT NULL,
+    "account_address" TEXT NOT NULL,
+    "pool_address" TEXT NOT NULL,
+    "source" "ajna_rewards_source" NOT NULL,
+    "type" "ajna_rewards_position_type" NOT NULL,
 
     CONSTRAINT "ajna_rewards_daily_claim_pkey" PRIMARY KEY ("id")
 );
@@ -296,10 +226,10 @@ CREATE TABLE "ajna_rewards_merkle_tree" (
     "id" SERIAL NOT NULL,
     "timestamp" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "chain_id" INTEGER NOT NULL,
-    "source" "ajna_rewards_source" NOT NULL,
     "week_number" INTEGER NOT NULL,
     "tree_root" TEXT NOT NULL,
     "tx_processed" BOOLEAN NOT NULL DEFAULT false,
+    "source" "ajna_rewards_source" NOT NULL,
 
     CONSTRAINT "ajna_rewards_merkle_tree_pkey" PRIMARY KEY ("id")
 );
@@ -311,23 +241,35 @@ CREATE TABLE "tokens" (
     "symbol" TEXT NOT NULL,
     "precision" INTEGER NOT NULL,
     "chain_id" INTEGER NOT NULL,
-    "source" TEXT NOT NULL
+    "source" VARCHAR
+);
+
+-- CreateTable
+CREATE TABLE "vault_change_log" (
+    "id" SERIAL NOT NULL,
+    "vault_id" INTEGER NOT NULL,
+    "chain_id" INTEGER NOT NULL,
+    "token_pair" VARCHAR(32) NOT NULL,
+    "owner_address" CHAR(42) NOT NULL,
+    "protocol" VARCHAR(32) NOT NULL,
+    "old_vault_type" "vault_type",
+    "new_vault_type" "vault_type",
+    "created_at" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "vault_change_log_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "migrations_name_key" ON "migrations"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "tos_approval_address_doc_version_key" ON "tos_approval"("address", "doc_version");
+CREATE UNIQUE INDEX "tos_approval_unique_signature" ON "tos_approval"("address", "doc_version");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "tos_approval_address_chain_id_doc_version_key" ON "tos_approval"("address", "chain_id", "doc_version");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "vault_vault_id_key" ON "vault"("vault_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "vault_vault_id_chain_id_protocol_token_pair_owner_address_key" ON "vault"("vault_id", "chain_id", "protocol", "token_pair", "owner_address");
+CREATE UNIQUE INDEX "vault_unique_constraint" ON "vault"("vault_id", "chain_id", "protocol", "token_pair", "owner_address");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "user_address_key" ON "user"("address");
@@ -339,25 +281,10 @@ CREATE UNIQUE INDEX "weekly_claim_week_number_user_address_key" ON "weekly_claim
 CREATE UNIQUE INDEX "merkle_tree_week_number_key" ON "merkle_tree"("week_number");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "wallet_risk_address_key" ON "wallet_risk"("address");
-
--- CreateIndex
-CREATE UNIQUE INDEX "collateral_type_collateral_name_key" ON "collateral_type"("collateral_name");
+CREATE UNIQUE INDEX "wallet_risk_unique_index" ON "wallet_risk"("address");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "discover_protocol_id_position_id_key" ON "discover"("protocol_id", "position_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "high_risk_protocol_id_position_id_key" ON "high_risk"("protocol_id", "position_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "highest_pnl_protocol_id_position_id_key" ON "highest_pnl"("protocol_id", "position_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "most_yield_protocol_id_position_id_key" ON "most_yield"("protocol_id", "position_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "largest_debt_protocol_id_position_id_key" ON "largest_debt"("protocol_id", "position_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "product_hub_items_label_network_product_protocol_primaryTok_key" ON "product_hub_items"("label", "network", "product", "protocol", "primaryToken", "secondaryToken");
