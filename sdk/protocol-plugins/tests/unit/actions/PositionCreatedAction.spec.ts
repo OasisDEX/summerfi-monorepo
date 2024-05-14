@@ -87,7 +87,7 @@ describe('PositionCreated Action', () => {
     expect(actionDecodedArgs).toBeDefined()
     expect(actionDecodedArgs?.args).toEqual([
       {
-        protocol: protocol.toString(),
+        protocol: protocol.name,
         positionType: position.type,
         collateralToken: WETH.address.value,
         debtToken: DAI.address.value,
