@@ -42,7 +42,7 @@ export async function refinanceLendingToLendingSamePair(
       type: SimulationSteps.Flashloan,
       inputs: {
         amount: flashloanAmount,
-        provider: FlashloanProvider.Maker,
+        provider: FlashloanProvider.Balancer,
       },
     }))
     .next(async () => ({

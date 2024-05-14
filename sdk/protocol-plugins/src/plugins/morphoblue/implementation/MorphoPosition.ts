@@ -2,12 +2,14 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 import { IMorphoPosition, IMorphoPositionData } from '../interfaces/IMorphoPosition'
 import { Position } from '@summerfi/sdk-common'
 import { MorphoLendingPool } from './MorphoLendingPool'
+import { MorphoPositionId } from './MorphoPositionId'
 
 /**
  * @class MorphoPosition
  * @see IMorphoPosition
  */
 export class MorphoPosition extends Position implements IMorphoPosition {
+  readonly id: MorphoPositionId
   readonly pool: MorphoLendingPool
 
   /** Factory method */
@@ -19,6 +21,7 @@ export class MorphoPosition extends Position implements IMorphoPosition {
   private constructor(params: IMorphoPositionData) {
     super(params)
 
+    this.id = MorphoPositionId.createFrom(params.id)
     this.pool = MorphoLendingPool.createFrom(params.pool)
   }
 }

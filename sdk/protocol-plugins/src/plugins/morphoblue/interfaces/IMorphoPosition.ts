@@ -1,7 +1,8 @@
 import { PositionDataSchema } from '@summerfi/sdk-common'
-import { IPosition, IPositionId, ITokenAmount, PositionType } from '@summerfi/sdk-common/common'
+import { IPosition, ITokenAmount, PositionType } from '@summerfi/sdk-common/common'
 import { IMorphoLendingPool, MorphoLendingPoolDataSchema } from './IMorphoLendingPool'
 import { z } from 'zod'
+import { IMorphoPositionId, MorphoPositionIdDataSchema } from './IMorphoPositionId'
 
 /**
  * @interface IMorphoPosition
@@ -13,12 +14,11 @@ import { z } from 'zod'
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
 export interface IMorphoPosition extends IMorphoPositionData, IPosition {
-  /** Lending pool associated to this position */
+  readonly id: IMorphoPositionId
   readonly pool: IMorphoLendingPool
 
   // Re-declaring the properties with the correct types
   readonly type: PositionType
-  readonly id: IPositionId
   readonly debtAmount: ITokenAmount
   readonly collateralAmount: ITokenAmount
 }
@@ -28,6 +28,7 @@ export interface IMorphoPosition extends IMorphoPositionData, IPosition {
  */
 export const MorphoPositionDataSchema = z.object({
   ...PositionDataSchema.shape,
+  id: MorphoPositionIdDataSchema,
   pool: MorphoLendingPoolDataSchema,
 })
 

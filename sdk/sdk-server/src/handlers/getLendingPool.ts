@@ -3,7 +3,7 @@ import { PoolIdDataSchema } from '@summerfi/sdk-common/protocols'
 import { z } from 'zod'
 
 export const getLendingPool = publicProcedure
-  .input(z.object({ poolId: PoolIdDataSchema }))
+  .input(z.object({ poolId: PoolIdDataSchema.passthrough() }))
   .query(async (opts) => {
     return await opts.ctx.protocolManager.getLendingPool(opts.input.poolId)
   })
