@@ -99,12 +99,12 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     assert(WBTC, 'WBTC not found')
 
     const WSTETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({
-      symbol: CommonTokenSymbols.WSTETH,
+      symbol: CommonTokenSymbols.wstETH,
     })
     assert(WSTETH, 'WSTETH not found')
 
     const SDAI: Maybe<Token> = await chain.tokens.getTokenBySymbol({
-      symbol: CommonTokenSymbols.SDAI,
+      symbol: CommonTokenSymbols.sDAI,
     })
     assert(SDAI, 'WSTETH not found')
 
