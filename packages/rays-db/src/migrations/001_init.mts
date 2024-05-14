@@ -5,7 +5,7 @@ import * as console from 'node:console'
  * @param db {Kysely<any>}
  */
 export async function up(db: Kysely<never>) {
-  await sql`CREATE OR REPLACE FUNCTION update_modified_column()
+  await sql`CREATE FUNCTION update_modified_column()
       RETURNS TRIGGER AS
   $$
   BEGIN
@@ -24,7 +24,7 @@ export async function up(db: Kysely<never>) {
         ()`))
     .execute()
 
-  await sql`CREATE OR REPLACE TRIGGER update_user_updated_at
+  await sql`CREATE TRIGGER update_user_updated_at
       BEFORE UPDATE
       ON blockchain_user
       FOR EACH ROW
@@ -49,7 +49,7 @@ export async function up(db: Kysely<never>) {
 
   await db.schema.createIndex('user_address_address_index').on('user_address').columns(['address']).execute()
 
-  await sql`CREATE OR REPLACE TRIGGER update_user_address_updated_at
+  await sql`CREATE TRIGGER update_user_address_updated_at
       BEFORE UPDATE
       ON user_address
       FOR EACH ROW
@@ -72,7 +72,7 @@ export async function up(db: Kysely<never>) {
 
   await db.schema.createIndex('proxy_address_chain_id_index').on('proxy').columns(['address', 'chain_id']).execute()
 
-  await sql`CREATE OR REPLACE TRIGGER update_proxy_updated_at
+  await sql`CREATE TRIGGER update_proxy_updated_at
       BEFORE UPDATE
       ON proxy
       FOR EACH ROW
@@ -102,7 +102,7 @@ export async function up(db: Kysely<never>) {
 
   await db.schema.createIndex('position_external_id_index').on('position').columns(['external_id']).execute()
 
-  await sql`CREATE OR REPLACE TRIGGER update_position_updated_at
+  await sql`CREATE TRIGGER update_position_updated_at
       BEFORE UPDATE
       ON position
       FOR EACH ROW
@@ -123,7 +123,7 @@ export async function up(db: Kysely<never>) {
     .addColumn('metadata', 'jsonb', (col) => col.notNull())
     .execute()
 
-  await sql`CREATE OR REPLACE TRIGGER update_eligibility_condition_updated_at
+  await sql`CREATE TRIGGER update_eligibility_condition_updated_at
       BEFORE UPDATE
       ON eligibility_condition
       FOR EACH ROW
@@ -148,7 +148,7 @@ export async function up(db: Kysely<never>) {
                                                                                      OR (position_id IS NOT NULL AND user_address_id IS NULL)`)
     .execute()
 
-  await sql`CREATE OR REPLACE TRIGGER update_points_distribution_updated_at
+  await sql`CREATE TRIGGER update_points_distribution_updated_at
       BEFORE UPDATE
       ON points_distribution
       FOR EACH ROW
@@ -171,7 +171,7 @@ export async function up(db: Kysely<never>) {
                                                                             OR (position_id IS NOT NULL AND user_address_id IS NULL)`)
     .execute()
 
-  await sql`CREATE OR REPLACE TRIGGER update_multiplier_updated_at
+  await sql`CREATE TRIGGER update_multiplier_updated_at
       BEFORE UPDATE
       ON multiplier
       FOR EACH ROW
