@@ -42,6 +42,6 @@ export type IProtocolData = Readonly<z.infer<typeof ProtocolDataSchema>>
  * @param maybeProtocol
  * @returns true if the object is an IProtocol
  */
-export function isProtocol(maybeProtocol: unknown): maybeProtocol is IProtocolData {
+export function isProtocol(maybeProtocol: unknown): maybeProtocol is IProtocol {
   return ProtocolDataSchema.safeParse(maybeProtocol).success
 }

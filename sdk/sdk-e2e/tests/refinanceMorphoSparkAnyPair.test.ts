@@ -15,7 +15,7 @@ import {
   PositionType,
   IToken,
 } from '@summerfi/sdk-common'
-import { PositionsManager, IRefinanceParameters, Order } from '@summerfi/sdk-common/orders'
+import { PositionsManager, Order, RefinanceParameters } from '@summerfi/sdk-common/orders'
 import {
   SparkLendingPoolId,
   isSparkLendingPoolId,
@@ -38,7 +38,7 @@ jest.setTimeout(300000)
 /** TEST CONFIG */
 const config = {
   SDKAPiUrl: 'https://zmjmtfsocb.execute-api.us-east-1.amazonaws.com/api/sdk',
-  TenderlyForkUrl: 'https://virtual.mainnet.rpc.tenderly.co/5fa32626-1a0c-4e37-b0c0-351e2f5aa885',
+  TenderlyForkUrl: 'https://virtual.mainnet.rpc.tenderly.co/508f2861-d790-43f6-a6f0-b1c1f1854bc2',
   DPMAddress: '0x302a28D7968824f386F278a72368856BC4d82BA4',
   walletAddress: '0xbEf4befb4F230F43905313077e3824d7386E09F8',
   collateralTokenSymbol: CommonTokenSymbols.wstETH,
@@ -48,7 +48,7 @@ const config = {
   sendTransactionEnabled: true,
 }
 
-describe.skip('Refinance Morpho Spark | SDK', () => {
+describe.only('Refinance Morpho Spark | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: config.SDKAPiUrl })
@@ -160,12 +160,14 @@ describe.skip('Refinance Morpho Spark | SDK', () => {
     }
 
     const emptyTargetPosition = newEmptyPositionFromPool(sparkPool)
+    const refinanceParameters = RefinanceParameters.createFrom({
+      sourcePosition: morphoPosition,
+      targetPosition: emptyTargetPosition,
+      slippage: Percentage.createFrom({ value: 0.2 }),
+    })
+
     const refinanceSimulation: ISimulation<RefinanceSimulationTypes> =
-      await sdk.simulator.refinance.simulateRefinancePosition({
-        sourcePosition: morphoPosition,
-        targetPosition: emptyTargetPosition,
-        slippage: Percentage.createFrom({ value: 0.2 }),
-      } as IRefinanceParameters)
+      await sdk.simulator.refinance.simulateRefinancePosition(refinanceParameters)
 
     expect(refinanceSimulation).toBeDefined()
 

@@ -9,7 +9,6 @@ import {
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
 import {
-  Position,
   TokenAmount,
   Percentage,
   IToken,
@@ -31,13 +30,16 @@ export async function refinanceLendingToLendingAnyPair(
   dependencies: IRefinanceDependencies,
 ): Promise<ISimulation<RefinanceSimulationTypes>> {
   // args validation
+  if (!isLendingPool(args.sourcePosition.pool)) {
+    throw new Error('Source pool is not a lending pool')
+  }
   if (!isLendingPool(args.targetPosition.pool)) {
     throw new Error('Target pool is not a lending pool')
   }
 
-  const position = args.sourcePosition as Position
-  const sourcePool = await dependencies.protocolManager.getLendingPool(args.sourcePosition.pool.id)
-  const targetPool = await dependencies.protocolManager.getLendingPool(args.targetPosition.pool.id)
+  const position = args.sourcePosition
+  const sourcePool = args.sourcePosition.pool
+  const targetPool = args.targetPosition.pool
 
   if (!isLendingPool(sourcePool)) {
     throw new Error('Source pool is not a lending pool')

@@ -11,7 +11,7 @@ import {
 
 import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
 import { ProtocolClient, makeSDK, type Chain, type User } from '@summerfi/sdk-client'
-import { PositionsManager, IRefinanceParameters, Order } from '@summerfi/sdk-common/orders'
+import { PositionsManager, Order, RefinanceParameters } from '@summerfi/sdk-common/orders'
 import { ISimulation } from '@summerfi/sdk-common/simulation'
 import { TransactionUtils } from './utils/TransactionUtils'
 
@@ -178,12 +178,14 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     }
 
     const emptyTargetPosition = newEmptyPositionFromPool(sparkPool)
+    const refinanceParameters = RefinanceParameters.createFrom({
+      sourcePosition: makerPosition,
+      targetPosition: emptyTargetPosition,
+      slippage: Percentage.createFrom({ value: 0.2 }),
+    })
+
     const refinanceSimulation: ISimulation<RefinanceSimulationTypes> =
-      await sdk.simulator.refinance.simulateRefinancePosition({
-        sourcePosition: makerPosition,
-        targetPosition: emptyTargetPosition,
-        slippage: Percentage.createFrom({ value: 0.2 }),
-      } as IRefinanceParameters)
+      await sdk.simulator.refinance.simulateRefinancePosition(refinanceParameters)
 
     expect(refinanceSimulation).toBeDefined()
 

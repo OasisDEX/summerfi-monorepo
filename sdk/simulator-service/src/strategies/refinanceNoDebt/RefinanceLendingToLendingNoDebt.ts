@@ -5,7 +5,7 @@ import {
   TokenTransferTargetType,
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
-import { Percentage, Position, TokenAmount } from '@summerfi/sdk-common/common'
+import { Percentage, TokenAmount } from '@summerfi/sdk-common/common'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
@@ -20,13 +20,16 @@ export async function refinanceLendingToLendingNoDebt(
   ISimulation<SimulationType.RefinanceNoDebt | SimulationType.RefinanceNoDebtDifferentCollateral>
 > {
   // args validation
+  if (!isLendingPool(args.sourcePosition.pool)) {
+    throw new Error('Source pool is not a lending pool')
+  }
   if (!isLendingPool(args.targetPosition.pool)) {
     throw new Error('Target pool is not a lending pool')
   }
 
-  const position = args.sourcePosition as Position
-  const sourcePool = await dependencies.protocolManager.getLendingPool(args.sourcePosition.pool.id)
-  const targetPool = await dependencies.protocolManager.getLendingPool(args.targetPosition.pool.id)
+  const position = args.sourcePosition
+  const sourcePool = args.sourcePosition.pool
+  const targetPool = args.targetPosition.pool
 
   if (!isLendingPool(targetPool)) {
     throw new Error('Target pool is not a lending pool')
