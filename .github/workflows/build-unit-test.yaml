@@ -58,3 +58,6 @@ jobs:
 
       - name: Format
         run: pnpm format
+
+      - name: Coverage
+        run: pnpm coverage:total
