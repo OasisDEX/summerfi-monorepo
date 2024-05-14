@@ -1,4 +1,4 @@
-import type { Protocol, UsersWhoFollowVaults } from '@prisma/client'
+import type { Protocol, UsersWhoFollowVaults } from '@summerfi/app-db'
 import BigNumber from 'bignumber.js'
 import { LIMIT_OF_FOLLOWED_VAULTS } from 'features/follow/common/consts'
 import type { FollowedVaultsLimitReachedChange } from 'features/follow/common/followedVaultsLimitReached'

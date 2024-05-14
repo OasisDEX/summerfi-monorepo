@@ -1,4 +1,4 @@
-import type { Vault } from '@prisma/client'
+import type { Vault } from '@summerfi/app-db'
 import BigNumber from 'bignumber.js'
 import { getAaveV2ReserveConfigurationData, getAaveV2ReserveData } from 'blockchain/aave'
 import type { AaveV3SupportedNetwork } from 'blockchain/aave-v3'

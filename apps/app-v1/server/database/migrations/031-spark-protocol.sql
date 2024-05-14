@@ -1,1 +1,0 @@
-ALTER TYPE protocol ADD VALUE 'sparkv3';

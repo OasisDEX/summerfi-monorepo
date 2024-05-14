@@ -1,4 +1,4 @@
-import { Box } from '@theme-ui/components'
+import { Box } from 'theme-ui'
 import { AppSpinner } from 'helpers/AppSpinner'
 import React from 'react'
 

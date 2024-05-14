@@ -1,4 +1,4 @@
-import type { Tokens } from '@prisma/client'
+import type { Tokens } from '@summerfi/app-db'
 import * as erc20 from 'blockchain/abi/erc20.json'
 import { getContractNetworkByWalletNetwork, NetworkIds, networkSetById } from 'blockchain/networks'
 import type { ContractDesc } from 'features/web3Context'

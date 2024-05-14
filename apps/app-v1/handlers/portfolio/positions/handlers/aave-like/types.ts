@@ -1,4 +1,4 @@
-import type { Vault } from '@prisma/client'
+import type { Vault } from '@summerfi/app-db'
 import type BigNumber from 'bignumber.js'
 import type { TokensPricesList } from 'handlers/portfolio/positions/helpers'
 import type { DpmSubgraphData } from 'handlers/portfolio/positions/helpers/getAllDpmsForWallet'

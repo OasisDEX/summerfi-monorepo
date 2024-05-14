@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from '@theme-ui/components'
+import { Box, Flex, Text } from 'theme-ui'
 import type BigNumber from 'bignumber.js'
 import type { GasEstimationContext } from 'components/context/GasEstimationContextProvider'
 import { DimmedList } from 'components/DImmedList'

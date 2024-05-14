@@ -1,4 +1,4 @@
-import { EarnStrategies } from '@prisma/client'
+import { EarnStrategies } from '@summerfi/app-db'
 import type { NetworkIds } from 'blockchain/networks'
 import { NetworkNames } from 'blockchain/networks'
 import { AssetsTableContainer } from 'components/assetsTable/AssetsTableContainer'

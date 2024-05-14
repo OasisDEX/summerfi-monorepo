@@ -1,4 +1,4 @@
-import { EarnStrategies, type Prisma, type PrismaPromise, type Protocol } from '@prisma/client'
+import { EarnStrategies, type Prisma, type PrismaPromise, type Protocol } from '@summerfi/app-db'
 import BigNumber from 'bignumber.js'
 import { networks } from 'blockchain/networks'
 import type { Tickers } from 'blockchain/prices.types'
@@ -10,7 +10,7 @@ import { PRODUCT_HUB_HANDLERS } from 'handlers/product-hub/update-handlers'
 import { tokenTickers } from 'helpers/api/tokenTickers'
 import { flatten, uniq } from 'lodash'
 import type { NextApiResponse } from 'next'
-import { prisma } from 'server/prisma'
+import { prisma } from 'helpers/prisma-client'
 
 export async function getProductHubData(protocols: string[], testnet = false) {
   const network = networks

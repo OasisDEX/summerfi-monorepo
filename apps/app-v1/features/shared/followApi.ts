@@ -1,4 +1,4 @@
-import type { Protocol, UsersWhoFollowVaults } from '@prisma/client'
+import type { Protocol, UsersWhoFollowVaults } from '@summerfi/app-db'
 import type BigNumber from 'bignumber.js'
 
 export async function followVaultUsingApi(

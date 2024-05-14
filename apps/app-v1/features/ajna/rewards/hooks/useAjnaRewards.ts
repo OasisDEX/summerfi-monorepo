@@ -1,4 +1,4 @@
-import { AjnaRewardsSource } from '@prisma/client'
+import { AjnaRewardsSource } from '@summerfi/app-db'
 import BigNumber from 'bignumber.js'
 import { useProductContext } from 'components/context/ProductContextProvider'
 import { getAjnaRewards } from 'features/ajna/rewards/helpers'

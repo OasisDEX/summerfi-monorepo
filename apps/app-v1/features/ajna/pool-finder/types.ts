@@ -1,7 +1,6 @@
+import { EarnStrategies } from '@summerfi/app-db'
 import type { NetworkIds } from 'blockchain/networks'
 import type { ProductHubItemTooltips, ProductHubManagementType } from 'features/productHub/types'
-
-import type { EarnStrategies } from '.prisma/client'
 
 export interface SearchTokensResponse {
   symbol: string

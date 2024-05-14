@@ -1,4 +1,4 @@
-import { EarnStrategies } from '@prisma/client'
+import { EarnStrategies } from '@summerfi/app-db'
 import { NetworkNames } from 'blockchain/networks'
 import { OmniProductType } from 'features/omni-kit/types'
 import { productHubWeETHRewardsTooltip } from 'features/productHub/content'

@@ -1,4 +1,4 @@
-import type { Tokens } from '@prisma/client'
+import type { Tokens } from '@summerfi/app-db'
 import { ethers } from 'ethers'
 import {
   readTokensFromApi,

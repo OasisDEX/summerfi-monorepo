@@ -1,4 +1,4 @@
-import { EarnStrategies } from '@prisma/client'
+import { EarnStrategies } from '@summerfi/app-db'
 import type { NetworkIds } from 'blockchain/networks'
 import { strategies as aaveStrategyList } from 'features/aave'
 import { ProductType } from 'features/aave/types'

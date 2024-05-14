@@ -1,4 +1,4 @@
-import { prisma } from 'server/prisma'
+import { prisma } from 'helpers/prisma-client'
 
 interface GetPositionsFromDatabaseParams {
   address: string

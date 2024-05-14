@@ -1,5 +1,5 @@
 import { views } from '@oasisdex/dma-library'
-import type { Vault } from '@prisma/client'
+import type { Vault } from '@summerfi/app-db'
 import BigNumber from 'bignumber.js'
 import { getRpcProvider, NetworkIds, networksById } from 'blockchain/networks'
 import { getOmniPositionUrl } from 'features/omni-kit/helpers'

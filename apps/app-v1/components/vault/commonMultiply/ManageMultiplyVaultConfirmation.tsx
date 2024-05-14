@@ -1,4 +1,4 @@
-import { Divider } from '@theme-ui/components'
+import { Divider } from 'theme-ui'
 import { TxStatusCardProgress, TxStatusCardSuccess } from 'components/vault/TxStatusCard'
 import type { ManageMultiplyVaultState } from 'features/multiply/manage/pipes/ManageMultiplyVaultState.types'
 import { useTranslation } from 'next-i18next'

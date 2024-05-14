@@ -1,4 +1,4 @@
-import { EarnStrategies } from '@prisma/client'
+import { EarnStrategies } from '@summerfi/app-db'
 import {
   TOKENS_WITH_RESTAKING,
   TOKENS_WITH_STAKING_REWARDS,

@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from '@theme-ui/components'
+import { Box, Flex, Text } from 'theme-ui'
 import BigNumber from 'bignumber.js'
 import { VaultChangesInformationItem } from 'components/vault/VaultChangesInformation'
 import { formatAmount, formatPercent } from 'helpers/formatters/format'

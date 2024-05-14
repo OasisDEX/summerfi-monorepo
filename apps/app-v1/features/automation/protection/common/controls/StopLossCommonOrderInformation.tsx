@@ -1,4 +1,4 @@
-import { Box } from '@theme-ui/components'
+import { Box } from 'theme-ui'
 import BigNumber from 'bignumber.js'
 import { useAutomationContext } from 'components/context/AutomationContextProvider'
 import { VaultChangesInformationItem } from 'components/vault/VaultChangesInformation'

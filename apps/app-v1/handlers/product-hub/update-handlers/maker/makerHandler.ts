@@ -2,7 +2,7 @@
 
 import { RiskRatio } from '@oasisdex/dma-library'
 import { amountFromWei } from '@oasisdex/utils'
-import { AutomationFeature } from '@prisma/client'
+import { AutomationFeature } from '@summerfi/app-db'
 import BigNumber from 'bignumber.js'
 import { getNetworkContracts } from 'blockchain/contracts'
 import { getRpcProvider, NetworkIds, networksById } from 'blockchain/networks'

@@ -1,4 +1,4 @@
-import type { Protocol } from '@prisma/client'
+import type { Protocol } from '@summerfi/app-db'
 import BigNumber from 'bignumber.js'
 import type { PositionId } from 'features/aave/types'
 import type { FollowButtonControlProps } from 'features/follow/controllers/FollowButtonControl'

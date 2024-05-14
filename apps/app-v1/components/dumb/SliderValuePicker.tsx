@@ -1,4 +1,4 @@
-import { Grid, Slider, Text } from '@theme-ui/components'
+import { Grid, Slider, Text } from 'theme-ui'
 import BigNumber from 'bignumber.js'
 import { RcSlider } from 'components/RcSlider'
 import type { TranslateStringType } from 'helpers/translateStringType'

@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from '@theme-ui/components'
+import { Box, Flex, Text } from 'theme-ui'
 import type BigNumber from 'bignumber.js'
 import { Icon } from 'components/Icon'
 import { Tooltip, useTooltip } from 'components/Tooltip'

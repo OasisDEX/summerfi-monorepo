@@ -1,4 +1,4 @@
-import { Heading } from '@theme-ui/components'
+import { Heading } from 'theme-ui'
 import { ProtocolLabel } from 'components/ProtocolLabel'
 import type { ProtocolLabelProps } from 'components/ProtocolLabel.types'
 import { Skeleton } from 'components/Skeleton'

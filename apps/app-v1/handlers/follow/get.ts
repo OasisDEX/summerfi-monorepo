@@ -1,6 +1,6 @@
 import { selectVaultsFollowedByAddress } from 'handlers/follow/follow'
+import { prisma } from 'helpers/prisma-client'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { prisma } from 'server/prisma'
 import * as z from 'zod'
 
 const paramsSchema = z.object({

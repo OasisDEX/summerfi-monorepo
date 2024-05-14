@@ -1,4 +1,4 @@
-import { EarnStrategies } from '@prisma/client'
+import { EarnStrategies } from '@summerfi/app-db'
 import BigNumber from 'bignumber.js'
 import { networksByName } from 'blockchain/networks'
 import type {

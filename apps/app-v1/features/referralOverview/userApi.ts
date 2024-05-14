@@ -1,4 +1,4 @@
-import type { User, WeeklyClaim } from '@prisma/client'
+import type { User, WeeklyClaim } from '@summerfi/app-db'
 import { of } from 'ramda'
 import type { Observable, Subject } from 'rxjs'
 import { ajax } from 'rxjs/ajax'

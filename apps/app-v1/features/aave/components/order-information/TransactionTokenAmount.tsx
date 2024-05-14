@@ -1,5 +1,5 @@
 import type { IMultiplyStrategy } from '@oasisdex/dma-library'
-import { Flex, Text } from '@theme-ui/components'
+import { Flex, Text } from 'theme-ui'
 import { amountFromWei } from 'blockchain/utils'
 import { VaultChangesInformationItem } from 'components/vault/VaultChangesInformation'
 import type { StrategyTokenBalance } from 'features/aave/types'

@@ -1,4 +1,4 @@
-import type { VaultType } from '@prisma/client'
+import type { VaultType } from '@summerfi/app-db'
 import type BigNumber from 'bignumber.js'
 import type { Observable } from 'rxjs'
 

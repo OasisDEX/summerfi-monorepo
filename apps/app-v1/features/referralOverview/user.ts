@@ -1,7 +1,7 @@
 import type { TxState } from '@oasisdex/transactions'
 import { TxStatus } from '@oasisdex/transactions'
 import { amountFromWei } from '@oasisdex/utils'
-import type { User, WeeklyClaim } from '@prisma/client'
+import type { User, WeeklyClaim } from '@summerfi/app-db'
 import BigNumber from 'bignumber.js'
 import type { ClaimMultipleData } from 'blockchain/calls/merkleRedeemer'
 import { claimMultiple } from 'blockchain/calls/merkleRedeemer'

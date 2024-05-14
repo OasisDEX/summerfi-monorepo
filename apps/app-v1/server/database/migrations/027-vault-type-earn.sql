@@ -1,1 +1,0 @@
-ALTER TYPE vault_type ADD VALUE 'earn';

@@ -1,7 +1,7 @@
-import type { VaultType } from '@prisma/client'
+import type { VaultType } from '@summerfi/app-db'
 import { getUserFromRequest } from 'handlers/signature-auth/getUserFromRequest'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { prisma } from 'server/prisma'
+import { prisma } from 'helpers/prisma-client'
 import * as z from 'zod'
 
 import { selectVaultByIdAndChainId } from './get'

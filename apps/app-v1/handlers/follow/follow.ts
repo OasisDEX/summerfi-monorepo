@@ -1,10 +1,9 @@
-import type { PrismaClient, UsersWhoFollowVaults } from '@prisma/client'
-import { Protocol } from '@prisma/client'
+import { PrismaClient, Protocol, UsersWhoFollowVaults } from '@summerfi/app-db'
 import { NetworkIds } from 'blockchain/networks'
 import { LIMIT_OF_FOLLOWED_VAULTS } from 'features/follow/common/consts'
 import { getUserFromRequest } from 'handlers/signature-auth/getUserFromRequest'
+import { prisma } from 'helpers/prisma-client'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { prisma } from 'server/prisma'
 import * as z from 'zod'
 
 export async function selectVaultsFollowedByAddress(

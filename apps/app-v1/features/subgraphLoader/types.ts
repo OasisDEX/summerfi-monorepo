@@ -1,5 +1,5 @@
 import type { EarnCumulativesRawData, LendingCumulativesRawData } from '@oasisdex/dma-library'
-import type { AjnaRewardsSource } from '@prisma/client'
+import type { AjnaRewardsSource } from '@summerfi/app-db'
 import type { NetworkIds } from 'blockchain/networks'
 import type {
   SearchAjnaPoolFilters,

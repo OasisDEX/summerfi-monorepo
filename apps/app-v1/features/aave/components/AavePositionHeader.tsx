@@ -1,6 +1,6 @@
 import type { IRiskRatio } from '@oasisdex/dma-library'
 import { RiskRatio } from '@oasisdex/dma-library'
-import type { Protocol } from '@prisma/client'
+import type { Protocol } from '@summerfi/app-db'
 import type BigNumber from 'bignumber.js'
 import { getPriceChangeColor } from 'components/vault/VaultDetails'
 import { VaultHeadline } from 'components/vault/VaultHeadline'

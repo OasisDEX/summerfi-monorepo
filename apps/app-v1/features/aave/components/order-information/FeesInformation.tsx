@@ -1,5 +1,5 @@
 import type { Swap } from '@oasisdex/dma-library'
-import { Box, Flex, Grid, Text } from '@theme-ui/components'
+import { Box, Flex, Grid, Text } from 'theme-ui'
 import { amountFromWei } from 'blockchain/utils'
 import { Icon } from 'components/Icon'
 import {

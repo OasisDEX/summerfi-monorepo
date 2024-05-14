@@ -1,4 +1,4 @@
-import type { Vault } from '@prisma/client'
+import type { Vault } from '@summerfi/app-db'
 import type { NetworkIds } from 'blockchain/networks'
 import type { OmniProductBorrowishType } from 'features/omni-kit/types'
 import { OmniProductType } from 'features/omni-kit/types'

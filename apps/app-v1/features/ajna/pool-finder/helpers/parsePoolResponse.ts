@@ -1,5 +1,5 @@
 import { getPoolLiquidity } from '@oasisdex/dma-library'
-import { EarnStrategies } from '@prisma/client'
+import { EarnStrategies } from '@summerfi/app-db'
 import BigNumber from 'bignumber.js'
 import type { IdentifiedTokens } from 'blockchain/identifyTokens.types'
 import type { Tickers } from 'blockchain/prices.types'

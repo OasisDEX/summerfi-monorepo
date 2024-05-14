@@ -1,4 +1,4 @@
-import { AutomationFeature } from '@prisma/client'
+import { AutomationFeature } from '@summerfi/app-db'
 import { Icon } from 'components/Icon'
 import { StatefulTooltip } from 'components/Tooltip'
 import { OmniProductType } from 'features/omni-kit/types'

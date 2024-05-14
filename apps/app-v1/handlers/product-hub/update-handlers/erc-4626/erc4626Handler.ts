@@ -1,4 +1,4 @@
-import { EarnStrategies } from '@prisma/client'
+import { EarnStrategies } from '@summerfi/app-db'
 import BigNumber from 'bignumber.js'
 import { networksById } from 'blockchain/networks'
 import { erc4626Vaults } from 'features/omni-kit/protocols/erc-4626/settings'

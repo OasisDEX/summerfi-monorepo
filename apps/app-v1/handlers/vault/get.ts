@@ -1,6 +1,6 @@
-import type { Vault } from '@prisma/client'
+import type { Vault } from '@summerfi/app-db'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { prisma } from 'server/prisma'
+import { prisma } from 'helpers/prisma-client'
 import * as z from 'zod'
 
 const paramsSchema = z.object({

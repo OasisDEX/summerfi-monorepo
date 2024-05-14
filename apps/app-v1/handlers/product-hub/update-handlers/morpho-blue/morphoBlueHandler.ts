@@ -1,5 +1,5 @@
 import { getMarketRate } from '@oasisdex/dma-library'
-import { EarnStrategies } from '@prisma/client'
+import { EarnStrategies } from '@summerfi/app-db'
 import BigNumber from 'bignumber.js'
 import { getNetworkContracts } from 'blockchain/contracts'
 import { getRpcProvider, NetworkIds, networksById } from 'blockchain/networks'

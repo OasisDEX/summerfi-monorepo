@@ -1,4 +1,4 @@
-import type { Vault } from '@prisma/client'
+import type { Vault } from '@summerfi/app-db'
 import BigNumber from 'bignumber.js'
 import { getNetworkContracts } from 'blockchain/contracts'
 import { networksById } from 'blockchain/networks'

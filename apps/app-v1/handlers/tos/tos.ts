@@ -1,4 +1,4 @@
-import type { PrismaClient, TosApproval } from '@prisma/client'
+import type { PrismaClient, TosApproval } from '@summerfi/app-db'
 
 export async function selecTosForAddress(
   prisma: PrismaClient,

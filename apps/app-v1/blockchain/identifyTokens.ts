@@ -1,5 +1,5 @@
 import { ADDRESS_ZERO } from '@oasisdex/addresses'
-import type { Tokens } from '@prisma/client'
+import type { Tokens } from '@summerfi/app-db'
 import { extendTokensContracts, getNetworkContracts } from 'blockchain/contracts'
 import type { NetworkIds } from 'blockchain/networks'
 import { getToken, getTokenGuarded } from 'blockchain/tokensMetadata'

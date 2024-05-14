@@ -1,4 +1,4 @@
-import type { Vault } from '@prisma/client'
+import type { Vault } from '@summerfi/app-db'
 import type { NetworkNames } from 'blockchain/networks'
 import type { OmniProductType } from 'features/omni-kit/types'
 import type { MakerPoolId, SparkPoolId } from 'features/refinance/types'

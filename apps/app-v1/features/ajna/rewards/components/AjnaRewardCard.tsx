@@ -1,5 +1,5 @@
 import { TxStatus } from '@oasisdex/transactions'
-import { AjnaRewardsSource } from '@prisma/client'
+import { AjnaRewardsSource } from '@summerfi/app-db'
 import { sendGenericTransaction$ } from 'blockchain/better-calls/send-generic-transaction'
 import { getNetworkContracts } from 'blockchain/contracts'
 import { NetworkIds } from 'blockchain/networks'

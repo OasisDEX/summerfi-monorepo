@@ -1,5 +1,5 @@
 import type { IMultiplyStrategy } from '@oasisdex/dma-library'
-import { Text } from '@theme-ui/components'
+import { Text } from 'theme-ui'
 import { swapCall } from 'actions/aave-like'
 import type BigNumber from 'bignumber.js'
 import {

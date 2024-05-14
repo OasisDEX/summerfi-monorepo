@@ -1,15 +1,13 @@
-import type { AjnaRewardsWeeklyClaim } from '@prisma/client'
-import { AjnaRewardsPositionType } from '@prisma/client'
+import { AjnaRewardsSource, AjnaRewardsWeeklyClaim } from '@summerfi/app-db'
+import { AjnaRewardsPositionType } from '@summerfi/app-db'
 import BigNumber from 'bignumber.js'
 import { NetworkIds } from 'blockchain/networks'
 import { NEGATIVE_WAD_PRECISION } from 'components/constants'
 import { getEpochWeekId } from 'helpers/getEpochWeekId'
+import { prisma } from 'helpers/prisma-client'
 import { zero } from 'helpers/zero'
 import type { NextApiRequest } from 'next'
-import { prisma } from 'server/prisma'
 import * as z from 'zod'
-
-import { AjnaRewardsSource } from '.prisma/client'
 
 const querySchema = z.object({
   address: z.string(),

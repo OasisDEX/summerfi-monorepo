@@ -1,4 +1,4 @@
-import { EarnStrategies } from '@prisma/client'
+import { EarnStrategies } from '@summerfi/app-db'
 import { OmniProductType } from 'features/omni-kit/types'
 import {
   PROTOCOLS_ISOLATED_PAIRS,

@@ -1,5 +1,5 @@
 import type { IPosition, IStrategy } from '@oasisdex/dma-library'
-import { Flex } from '@theme-ui/components'
+import { Flex } from 'theme-ui'
 import {
   VaultChangesInformationArrow,
   VaultChangesInformationItem,

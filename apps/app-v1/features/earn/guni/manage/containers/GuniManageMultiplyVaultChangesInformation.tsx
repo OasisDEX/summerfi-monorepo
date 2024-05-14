@@ -1,4 +1,4 @@
-import { Flex, Grid, Text } from '@theme-ui/components'
+import { Flex, Grid, Text } from 'theme-ui'
 import { Icon } from 'components/Icon'
 import {
   getEstimatedGasFeeTextOld,

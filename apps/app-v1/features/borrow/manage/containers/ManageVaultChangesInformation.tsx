@@ -1,4 +1,4 @@
-import { Flex, Text } from '@theme-ui/components'
+import { Flex, Text } from 'theme-ui'
 import BigNumber from 'bignumber.js'
 import {
   VaultChangesInformationArrow,

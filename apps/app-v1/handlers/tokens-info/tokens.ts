@@ -1,10 +1,10 @@
-import type { Tokens } from '@prisma/client'
+import type { Tokens } from '@summerfi/app-db'
 import erc20 from 'blockchain/abi/erc20.json'
 import { getRpcProvider } from 'blockchain/networks'
 import { ethers } from 'ethers'
 import { getTokensList } from 'handlers/getTokensList'
 import { cacheObject } from 'helpers/api/cacheObject'
-import { prisma } from 'server/prisma'
+import { prisma } from 'helpers/prisma-client'
 
 const getTokens = cacheObject(getTokensList, 60 * 60, 'tokens-list')
 

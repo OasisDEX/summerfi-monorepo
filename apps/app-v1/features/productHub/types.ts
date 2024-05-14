@@ -1,10 +1,8 @@
-import type { AutomationFeature } from '@prisma/client'
+import type { AutomationFeature, EarnStrategies } from '@summerfi/app-db'
 import type { NetworkNames } from 'blockchain/networks'
 import type { AssetsTableTooltipProps } from 'components/assetsTable/cellComponents/AssetsTableTooltip.types'
 import type { OmniProductType } from 'features/omni-kit/types'
 import type { LendingProtocol } from 'lendingProtocols'
-
-import type { EarnStrategies } from '.prisma/client'
 
 export type ProductHubMultiplyStrategyType = 'long' | 'short'
 export type ProductHubManagementType = 'active' | 'passive'
