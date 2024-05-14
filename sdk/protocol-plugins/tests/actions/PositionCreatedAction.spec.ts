@@ -2,7 +2,7 @@ import { Address, Position, Token, TokenAmount, PositionType } from '@summerfi/s
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
 import { PositionCreatedAction } from '../../src/plugins/common/actions/PositionCreatedAction'
 import { IProtocol, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { MakerPoolId } from '../../src/plugins/maker/types/MakerPoolId'
+import { MakerPoolId } from '../../src/plugins/maker/implementation/MakerPoolId'
 import { ILKType } from '../../src/plugins/maker'
 
 describe('PositionCreated Action', () => {
@@ -41,13 +41,13 @@ describe('PositionCreated Action', () => {
 
   const position = Position.createFrom({
     type: PositionType.Multiply,
-    positionId: {
+    id: {
       id: '0x123',
     },
     pool: {
       type: PoolType.Lending,
       protocol: protocol,
-      poolId: {
+      id: {
         protocol: protocol,
         vaultId: '0x123',
         ilkType: ILKType.ETH_A,

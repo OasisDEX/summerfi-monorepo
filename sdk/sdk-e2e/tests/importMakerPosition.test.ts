@@ -1,22 +1,27 @@
 import {
-  PositionId,
   Token,
   TokenAmount,
-  Position,
   Address,
   type Maybe,
   ChainFamilyMap,
   PositionType,
 } from '@summerfi/sdk-common/common'
 
-import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
+import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { makeSDK, type Chain, type User } from '@summerfi/sdk-client'
-import { TokenSymbol } from '@summerfi/sdk-common/common/enums'
+import { CommonTokenSymbols } from '@summerfi/sdk-common/common/enums'
 import { ExternalPositionType, IImportPositionParameters, Order } from '@summerfi/sdk-common/orders'
 import { ISimulation, SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
 
 import assert from 'assert'
-import { ILKType, MakerPoolId } from '@summerfi/protocol-plugins/plugins/maker'
+import {
+  ILKType,
+  MakerLendingPoolId,
+  MakerPosition,
+  MakerPositionId,
+  isMakerLendingPool,
+  isMakerProtocol,
+} from '@summerfi/protocol-plugins/plugins/maker'
 import { Hex } from 'viem'
 import { TransactionUtils } from './utils/TransactionUtils'
 
@@ -51,37 +56,43 @@ describe.skip('Import Maker Position | SDK', () => {
     expect(user.chainInfo).toEqual(chain.chainInfo)
 
     // Tokens
-    const WETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.WETH })
+    const WETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({
+      symbol: CommonTokenSymbols.WETH,
+    })
     assert(WETH, 'WETH not found')
 
-    const DAI: Maybe<Token> = await chain.tokens.getTokenBySymbol({ symbol: TokenSymbol.DAI })
+    const DAI: Maybe<Token> = await chain.tokens.getTokenBySymbol({
+      symbol: CommonTokenSymbols.DAI,
+    })
     assert(DAI, 'DAI not found')
 
     const maker = await chain.protocols.getProtocol({ name: ProtocolName.Maker })
     assert(maker, 'Maker protocol not found')
 
-    const makerPoolId: MakerPoolId = {
-      protocol: {
-        name: ProtocolName.Maker,
-        chainInfo: chain.chainInfo,
-      },
-      ilkType: ILKType.ETH_C,
-      vaultId: '31646',
+    if (!isMakerProtocol(maker)) {
+      assert(false, 'Maker protocol type is not Maker')
     }
 
-    const makerPool = await maker.getPool({
+    const makerPoolId = MakerLendingPoolId.createFrom({
+      protocol: maker,
+      debtToken: DAI,
+      collateralToken: WETH,
+      ilkType: ILKType.ETH_C,
+    })
+
+    const makerPool = await maker.getLendingPool({
       poolId: makerPoolId,
     })
     assert(makerPool, 'Maker pool not found')
 
-    if (!isLendingPool(makerPool)) {
+    if (!isMakerLendingPool(makerPool)) {
       assert(false, 'Maker pool type is not lending')
     }
 
     // Source position
-    const makerPosition: Position = Position.createFrom({
+    const makerPosition = MakerPosition.createFrom({
       type: PositionType.Multiply,
-      positionId: PositionId.createFrom({ id: '31646' }),
+      id: MakerPositionId.createFrom({ id: '31646', vaultId: '31646' }),
       debtAmount: TokenAmount.createFromBaseUnit({
         token: DAI,
         amount: '3717915731044925295249',
@@ -129,8 +140,8 @@ describe.skip('Import Maker Position | SDK', () => {
     )
     assert(importPositionOrder.simulation.sourcePosition, 'Source position not found')
 
-    expect(importPositionOrder.simulation.sourcePosition.positionId).toEqual(
-      importPositionSimulation.sourcePosition?.positionId,
+    expect(importPositionOrder.simulation.sourcePosition.id).toEqual(
+      importPositionSimulation.sourcePosition?.id,
     )
 
     expect(importPositionOrder.transactions.length).toEqual(1)

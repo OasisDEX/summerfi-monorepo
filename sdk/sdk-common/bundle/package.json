@@ -6,7 +6,6 @@
   "packageManager": "yarn@1.22.21",
   "scripts": {},
   "dependencies": {
-    "bignumber.js": "9.0.1",
     "superjson": "^1.13.3",
     "viem": "^2.2.0"
   },

@@ -1,19 +1,19 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
-import { Address, TokenAmount } from '@summerfi/sdk-common/common'
+import { IAddress, ITokenAmount } from '@summerfi/sdk-common/common'
 
 export class SetApprovalAction extends BaseAction {
   public readonly config = {
     name: 'SetApproval',
     version: 3,
     parametersAbi: '(address asset, address delegate, uint256 amount, bool sumAmounts)',
-    storageInputs: ['approvalAmount'],
-    storageOutputs: ['received'],
+    storageInputs: ['asset', 'delegate', 'approvalAmount'],
+    storageOutputs: [],
   } as const
 
   public encodeCall(
     params: {
-      approvalAmount: TokenAmount
-      delegate: Address
+      approvalAmount: ITokenAmount
+      delegate: IAddress
       sumAmounts: boolean
     },
     paramsMapping?: InputSlotsMapping,

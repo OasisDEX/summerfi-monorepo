@@ -1,1 +1,1 @@
-export { ProtocolName } from './ProtocolName'
+export * from './ProtocolName'

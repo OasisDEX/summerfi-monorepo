@@ -1,24 +1,12 @@
-import { TokenAmount, Price, Percentage } from '@summerfi/sdk-common/common'
+import { TokenAmount, Percentage, IPrice, IPercentage } from '@summerfi/sdk-common/common'
 import { steps } from '@summerfi/sdk-common/simulation'
 import { addBalance, subtractBalance } from '../../utils'
 import { ISimulationState } from '../../../interfaces/simulation'
 
 export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISimulationState {
-  const balanceWithoutFromToken = subtractBalance(step.inputs.fromTokenAmount, state.balances)
-  const balanceWithToToken = addBalance(step.outputs.receivedAmount, balanceWithoutFromToken)
-
-  const baseToken = step.inputs.toTokenAmount.token
-  const quoteToken = step.inputs.fromTokenAmount.token
-
-  // We require both from & to be at similar decimal precisions
-  const offerPrice = Price.createFrom({
-    value: step.inputs.toTokenAmount.divide(step.inputs.fromTokenAmount.amount).toString(),
-    baseToken,
-    quoteToken,
-  })
-
-  const spotPrice = step.inputs.spotPrice
-  const fromAmountPreSummerFee = step.inputs.fromTokenAmount.divide(
+  const balanceWithoutFromToken = subtractBalance(step.inputs.inputAmount, state.balances)
+  const balanceWithToToken = addBalance(step.outputs.received, balanceWithoutFromToken)
+  const fromAmountPreSummerFee = step.inputs.inputAmount.divide(
     Percentage.createFrom({ value: 1 }).subtract(step.inputs.summerFee),
   )
 
@@ -36,14 +24,14 @@ export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISim
         // routes: step.inputs.routes,
         // SummerFee should already have been subtracted by this stage
         // Should be subtracted from `from` amount when getting swap quote in simulator
-        fromTokenAmount: step.inputs.fromTokenAmount,
-        toTokenAmount: step.inputs.toTokenAmount,
+        fromTokenAmount: step.inputs.inputAmount,
+        toTokenAmount: step.inputs.estimatedReceivedAmount,
         slippage: Percentage.createFrom({ value: step.inputs.slippage.value }),
-        offerPrice,
-        spotPrice,
-        priceImpact: calculatePriceImpact(spotPrice, offerPrice),
+        offerPrice: step.inputs.offerPrice,
+        spotPrice: step.inputs.spotPrice,
+        priceImpact: calculatePriceImpact(step.inputs.spotPrice, step.inputs.offerPrice),
         summerFee: TokenAmount.createFrom({
-          token: step.inputs.fromTokenAmount.token,
+          token: step.inputs.inputAmount.token,
           amount: fromAmountPreSummerFee.multiply(step.inputs.summerFee.toProportion()).amount,
         }),
       },
@@ -59,7 +47,7 @@ export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISim
  *      into account price impact - where price impact is a measure of how much our trade
  *      affects the price. It is determined by the breadth and depth of liquidity.
  */
-export function calculatePriceImpact(marketPrice: Price, offerPrice: Price): Percentage {
+export function calculatePriceImpact(marketPrice: IPrice, offerPrice: IPrice): IPercentage {
   return Percentage.createFrom({
     value: marketPrice
       .toBN()

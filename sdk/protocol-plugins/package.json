@@ -25,12 +25,14 @@
     "publish:npm": "pnpm bundle:npm && cd bundle && npm publish && cd .."
   },
   "dependencies": {
-    "@summerfi/sdk-common": "workspace:*",
-    "@summerfi/deployment-utils": "workspace:*",
     "@summerfi/deployment-types": "workspace:*",
+    "@summerfi/deployment-utils": "workspace:*",
     "@summerfi/protocol-plugins-common": "workspace:*",
-    "@summerfi/testing-utils": "workspace:*",
+    "@summerfi/sdk-common": "workspace:*",
+    "@summerfi/serverless-shared": "workspace:^",
     "@summerfi/swap-common": "workspace:*",
+    "@summerfi/tokens-common": "workspace:*",
+    "@summerfi/testing-utils": "workspace:*",
     "bignumber.js": "9.0.1",
     "zod": "^3.22.4"
   },

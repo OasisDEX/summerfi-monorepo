@@ -1,21 +1,22 @@
 import { LendingPool } from '@summerfi/sdk-common/protocols'
-import { ISparkLendingPool } from '../interfaces/ISparkLendingPool'
-import { SparkCollateralConfigMap } from './SparkCollateralConfigMap'
-import { SparkDebtConfigMap } from './SparkDebtConfigMap'
+import { ISparkLendingPool, ISparkLendingPoolData } from '../interfaces/ISparkLendingPool'
 import { SerializationService } from '@summerfi/sdk-common/services'
+import { SparkLendingPoolId } from './SparkLendingPoolId'
 
+/**
+ * @class SparkLendingPool
+ * @see ISparkLendingPool
+ */
 export class SparkLendingPool extends LendingPool implements ISparkLendingPool {
-  readonly collaterals: SparkCollateralConfigMap
-  readonly debts: SparkDebtConfigMap
+  readonly id: SparkLendingPoolId
 
-  private constructor(params: ISparkLendingPool) {
+  private constructor(params: ISparkLendingPoolData) {
     super(params)
 
-    this.collaterals = SparkCollateralConfigMap.createFrom(params.collaterals)
-    this.debts = SparkDebtConfigMap.createFrom(params.debts)
+    this.id = SparkLendingPoolId.createFrom(params.id)
   }
 
-  public static createFrom(params: ISparkLendingPool): SparkLendingPool {
+  public static createFrom(params: ISparkLendingPoolData): SparkLendingPool {
     return new SparkLendingPool(params)
   }
 }

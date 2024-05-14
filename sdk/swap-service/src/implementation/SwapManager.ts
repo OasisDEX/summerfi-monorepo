@@ -1,19 +1,34 @@
 import type { Maybe } from '@summerfi/sdk-common/common/aliases'
-import type { ChainInfo, TokenAmount, Token, Address } from '@summerfi/sdk-common/common'
-import { ChainId, CurrencySymbol, Percentage } from '@summerfi/sdk-common/common'
-import { IProtocol } from '@summerfi/sdk-common/protocols'
+import type {
+  IChainInfo,
+  IPercentage,
+  IAddress,
+  IToken,
+  ITokenAmount,
+} from '@summerfi/sdk-common/common'
+import { ChainId, Percentage } from '@summerfi/sdk-common/common'
 import { ISwapProvider, ISwapManager } from '@summerfi/swap-common/interfaces'
-import type { QuoteData, SwapData, SwapProviderType, SpotData } from '@summerfi/sdk-common/swap'
+import type { QuoteData, SwapData, SwapProviderType } from '@summerfi/sdk-common/swap'
 
+/**
+ * @typedef SwapManagerProviderConfig
+ * @property {ISwapProvider} Provider instance
+ * @property {ChainId[]} Chain IDs supported by the provider
+ */
 export type SwapManagerProviderConfig = {
   provider: ISwapProvider
   chainIds: ChainId[]
 }
 
+/**
+ * @class SwapManager
+ * @see ISwapManager
+ */
 export class SwapManager implements ISwapManager {
   private _providersByChainId: Map<ChainId, ISwapProvider[]>
   private _providersByType: Map<SwapProviderType, ISwapProvider>
 
+  /** CONSTRUCTOR */
   constructor(providersConfig: SwapManagerProviderConfig[]) {
     this._providersByChainId = new Map()
     this._providersByType = new Map()
@@ -23,12 +38,15 @@ export class SwapManager implements ISwapManager {
     }
   }
 
+  /** METHODS */
+
+  /** @see ISwapManager.getSwapDataExactInput */
   async getSwapDataExactInput(params: {
-    chainInfo: ChainInfo
-    fromAmount: TokenAmount
-    toToken: Token
-    recipient: Address
-    slippage: Percentage
+    chainInfo: IChainInfo
+    fromAmount: ITokenAmount
+    toToken: IToken
+    recipient: IAddress
+    slippage: IPercentage
     forceUseProvider?: SwapProviderType
   }): Promise<SwapData> {
     const provider: Maybe<ISwapProvider> = this._getBestProvider(params)
@@ -39,10 +57,11 @@ export class SwapManager implements ISwapManager {
     return provider.getSwapDataExactInput(params)
   }
 
+  /** @see ISwapManager.getSwapQuoteExactInput */
   async getSwapQuoteExactInput(params: {
-    chainInfo: ChainInfo
-    fromAmount: TokenAmount
-    toToken: Token
+    chainInfo: IChainInfo
+    fromAmount: ITokenAmount
+    toToken: IToken
     forceUseProvider?: SwapProviderType
   }): Promise<QuoteData> {
     const provider: Maybe<ISwapProvider> = this._getBestProvider(params)
@@ -53,31 +72,25 @@ export class SwapManager implements ISwapManager {
     return provider.getSwapQuoteExactInput(params)
   }
 
-  async getSpotPrice(params: {
-    chainInfo: ChainInfo
-    baseToken: Token
-    quoteToken?: CurrencySymbol | Token
-    forceUseProvider?: SwapProviderType
-  }): Promise<SpotData> {
-    const provider: Maybe<ISwapProvider> = this._getBestProvider(params)
-    if (!provider) {
-      throw new Error('No swap provider available')
-    }
-
-    return provider.getSpotPrice(params)
-  }
-
+  /** @see ISwapManager.getSummerFee */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getSummerFee(params: {
-    from: { protocol: IProtocol; token: Token }
-    to: { protocol: IProtocol; token: Token }
-  }): Percentage {
+  async getSummerFee(params: {
+    from: { token: IToken }
+    to: { token: IToken }
+  }): Promise<IPercentage> {
     // TODO: Implement with appropriate logic
     return Percentage.createFrom({
       value: 0.2,
     })
   }
 
+  /** PRIVATE */
+
+  /**
+   * Register a swap provider for the given chain IDs.
+   * @param provider Swap provider instance
+   * @param forChainIds Chain IDs supported by the provider
+   */
   private _registerProvider(provider: ISwapProvider, forChainIds: number[]): void {
     for (const chainId of forChainIds) {
       const providers = this._providersByChainId.get(chainId) || []
@@ -88,8 +101,13 @@ export class SwapManager implements ISwapManager {
     this._providersByType.set(provider.type, provider)
   }
 
+  /**
+   * Get the best provider for the given parameters.
+   * @param params Parameters to determine the best provider
+   * @returns Best provider instance or undefined if no provider is available
+   */
   private _getBestProvider(params: {
-    chainInfo: ChainInfo
+    chainInfo: IChainInfo
     forceUseProvider?: SwapProviderType
   }): Maybe<ISwapProvider> {
     if (params.forceUseProvider) {

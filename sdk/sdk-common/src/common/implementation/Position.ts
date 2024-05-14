@@ -1,34 +1,27 @@
-import { IPosition } from '../interfaces/IPosition'
-import { IPool } from '../../protocols/interfaces/IPool'
+import { IPosition, IPositionData } from '../interfaces/IPosition'
 import { SerializationService } from '../../services/SerializationService'
 import { PositionId } from './PositionId'
-import { RiskRatio } from './RiskRatio'
 import { TokenAmount } from './TokenAmount'
 import { PositionType } from '../enums/PositionType'
+import { ITokenAmount } from '../interfaces/ITokenAmount'
+import { IPool } from '../../protocols/interfaces/IPool'
 
-// we should add assests prop instead of the amounts
-export class Position implements IPosition {
+/**
+ * @name Position
+ * @see IPosition
+ */
+export abstract class Position implements IPosition {
   readonly type: PositionType
-  readonly positionId: PositionId
-  readonly debtAmount: TokenAmount
-  readonly collateralAmount: TokenAmount
-  readonly pool: IPool
+  readonly id: PositionId
+  readonly debtAmount: ITokenAmount
+  readonly collateralAmount: ITokenAmount
+  abstract readonly pool: IPool
 
-  private constructor(params: IPosition) {
+  protected constructor(params: IPositionData) {
     this.type = params.type
-    this.positionId = params.positionId
+    this.id = params.id
     this.debtAmount = TokenAmount.createFrom(params.debtAmount)
     this.collateralAmount = TokenAmount.createFrom(params.collateralAmount)
-    this.pool = params.pool
-  }
-
-  static createFrom(params: IPosition): Position {
-    return new Position(params)
-  }
-
-  get riskRatio(): RiskRatio {
-    // TODO: Implement risk ratio calculation
-    throw new Error('Not implemented')
   }
 }
 

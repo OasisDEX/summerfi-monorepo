@@ -1,12 +1,14 @@
 import { Address } from '@summerfi/serverless-shared'
-import { CalculatedRates } from '../protocols/types'
+import { GroupedRates } from '../protocols/types'
+import { SecondTimestamp } from '../helpers'
 
 export interface TokenApyParams {
   token: {
     address: Address
     symbol: string
   }
-  referenceDate: Date
+  fromTimestamp: SecondTimestamp
+  toTimestamp: SecondTimestamp
 }
 
 export interface TokenApyResult {
@@ -14,7 +16,7 @@ export interface TokenApyResult {
     address: Address
     symbol: string
   }
-  rates: CalculatedRates
+  rates: GroupedRates
 }
 
 export interface TokenApyService {

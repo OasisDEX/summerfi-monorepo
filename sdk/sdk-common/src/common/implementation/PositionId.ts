@@ -1,22 +1,19 @@
 import { SerializationService } from '../../services/SerializationService'
+import { IPositionId, IPositionIdData } from '../interfaces/IPositionId'
 
-interface IPositionIdSerialized {
+/**
+ * @class PositionId
+ * @see IPositionIdData
+ */
+export abstract class PositionId implements IPositionId {
   readonly id: string
-}
 
-export class PositionId implements IPositionIdSerialized {
-  readonly id: string
-
-  private constructor(params: IPositionIdSerialized) {
+  protected constructor(params: IPositionIdData) {
     this.id = params.id
   }
 
-  static createFrom({ id }: { id: string }): PositionId {
-    return new PositionId({ id })
-  }
-
   toString(): string {
-    return `PositionId: ${this.id}`
+    return `Position ID: ${this.id}`
   }
 }
 

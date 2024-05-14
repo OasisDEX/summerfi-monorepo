@@ -7,6 +7,11 @@ export enum SimulationType {
   Migrate = 'Migrate',
   CreatePosition = 'CreatePosition',
   Refinance = 'Refinance',
+  RefinanceDifferentPair = 'RefinanceDifPair',
+  RefinanceDifferentDebt = 'RefinanceDifDebt',
+  RefinanceDifferentCollateral = 'RefinanceDifCol',
+  RefinanceNoDebt = 'RefinanceNoDebt',
+  RefinanceNoDebtDifferentCollateral = 'RefNoDebtDifCol',
 }
 
 export enum SimulationSteps {
@@ -30,3 +35,11 @@ export enum TokenTransferTargetType {
   PositionsManager = 1,
   StrategyExecutor = 0,
 }
+
+export type RefinanceSimulationTypes =
+  | SimulationType.Refinance
+  | SimulationType.RefinanceDifferentPair
+  | SimulationType.RefinanceDifferentCollateral
+  | SimulationType.RefinanceDifferentDebt
+  | SimulationType.RefinanceNoDebt
+  | SimulationType.RefinanceNoDebtDifferentCollateral

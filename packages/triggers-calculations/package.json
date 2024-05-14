@@ -12,6 +12,7 @@
     "@aws-lambda-powertools/logger": "^2.0.4",
     "@summerfi/abis": "workspace:*",
     "@summerfi/serverless-shared": "workspace:*",
+    "@summerfi/prices-subgraph": "workspace:*",
     "@summerfi/triggers-shared": "workspace:*",
     "viem": "^2.9.19"
   },

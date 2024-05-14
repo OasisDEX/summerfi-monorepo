@@ -1,27 +1,32 @@
 import {
   ActionBuilder,
   ActionBuildersMap,
-  IPositionId,
   IProtocolPlugin,
   IProtocolPluginContext,
 } from '@summerfi/protocol-plugins-common'
-import { ChainInfo, Maybe, IPosition } from '@summerfi/sdk-common/common'
+import { ChainInfo, Maybe, IPosition, IPositionIdData } from '@summerfi/sdk-common/common'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
-import { IPoolId, ProtocolName, IPool } from '@summerfi/sdk-common/protocols'
+import {
+  ProtocolName,
+  ILendingPool,
+  ILendingPoolIdData,
+  ILendingPoolInfo,
+} from '@summerfi/sdk-common/protocols'
 import { steps } from '@summerfi/sdk-common/simulation'
 import { IUser } from '@summerfi/sdk-common/user'
-import { z } from 'zod'
 
 /**
- * @class Base class for all ProtocolDataPlugins. It provides the basic functionality & fields for all protocol plugins
- *              and implements shared functionality for late dependency injection, pool schema validation
- *              and action building
+ * @class BaseProtocolPlugin
+ * @description Base class for all protocol plugins
+ *
+ * It provides some extra functionality to validate input data coming from the SDK client
  */
 export abstract class BaseProtocolPlugin implements IProtocolPlugin {
-  /** These properties need to be initialized by the actual plugin implementation */
+  /** Name of the protocol that the plugin is implementing */
   abstract readonly protocolName: ProtocolName
-  // TODO: Use ContractProvider to determine supported chains
+  /** List of supported chains for the protocol */
   abstract readonly supportedChains: ChainInfo[]
+  /** Map of action builders for the protocol */
   abstract readonly stepBuilders: Partial<ActionBuildersMap>
 
   /** These properties are initialized in the constructor */
@@ -31,37 +36,124 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
   protected constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
     this.context = params.context
     this.deploymentConfigTag = params.deploymentConfigTag ?? 'standard'
+
+    if (!this.context.provider.chain) {
+      throw new Error('ctx.provider.chain undefined')
+    }
+
+    if (!this.context.provider.chain.id) {
+      throw new Error('ctx.provider.chain.id undefined')
+    }
   }
 
   // Short alias for the context
-  get ctx(): IProtocolPluginContext {
+  protected get ctx(): IProtocolPluginContext {
     return this.context
   }
 
-  abstract isPoolId(candidate: unknown): candidate is IPoolId
-  abstract validatePoolId(candidate: unknown): asserts candidate is IPoolId
+  /** VALIDATORS */
 
-  abstract getPool(poolId: unknown): Promise<IPool>
-  abstract getPosition(positionId: IPositionId): Promise<IPosition>
+  /**
+   * @name _validateLendingPoolId
+   * @description Validates that the candidate is a valid lending pool ID for the specific protocol
+   * @param candidate The candidate to validate
+   * @returns asserts that the candidate is a valid lending pool ID for the specific protocol
+   */
+  protected abstract _validateLendingPoolId(
+    candidate: ILendingPoolIdData,
+  ): asserts candidate is ILendingPoolIdData
+
+  /**
+   * @name _validatePositionId
+   * @description Validates that the candidate is a valid position ID for the specific protocol
+   * @param candidate The candidate to validate
+   * @returns asserts that the candidate is a valid position ID for the specific protocol
+   */
+  protected abstract _validatePositionId(
+    candidate: IPositionIdData,
+  ): asserts candidate is IPositionIdData
+
+  /** LENDING POOLS */
+
+  /**
+   * @name getLendingPoolImpl
+   * @description Gets the lending pool for the given pool ID
+   * @param poolId The pool ID
+   * @returns The lending pool for the specific protocol
+   *
+   * @remarks This method should be implemented by the protocol plugin as the external one is just a wrapper to
+   * validate the input and call this one
+   */
+  protected abstract _getLendingPoolImpl(poolId: ILendingPoolIdData): Promise<ILendingPool>
+
+  /**
+   * @name getLendingPoolInfoImpl
+   * @description Gets the lending pool info for the given pool ID
+   * @param poolId The pool ID
+   * @returns The lending pool info for the specific protocol
+   *
+   * @remarks This method should be implemented by the protocol plugin as the external one is just a wrapper to
+   * validate the input and call this one
+   */
+  protected abstract _getLendingPoolInfoImpl(poolId: ILendingPoolIdData): Promise<ILendingPoolInfo>
+
+  /** @see IProtocolPlugin.getLendingPool */
+  async getLendingPool(poolId: ILendingPoolIdData): Promise<ILendingPool> {
+    this._validateLendingPoolId(poolId)
+    this._checkChainIdSupported(poolId.protocol.chainInfo.chainId)
+
+    return this._getLendingPoolImpl(poolId)
+  }
+
+  /** @see IProtocolPlugin.getLendingPoolInfo */
+  async getLendingPoolInfo(poolId: ILendingPoolIdData): Promise<ILendingPoolInfo> {
+    this._validateLendingPoolId(poolId)
+    this._checkChainIdSupported(poolId.protocol.chainInfo.chainId)
+
+    return this._getLendingPoolInfoImpl(poolId)
+  }
+
+  /** POSITIONS */
+
+  /** @see IProtocolPlugin.getPosition */
+  abstract getPosition(positionId: IPositionIdData): Promise<IPosition>
+
+  /** IMPORT POSITION */
+
+  /** @see IProtocolPlugin.getImportPositionTransaction */
   abstract getImportPositionTransaction(params: {
     user: IUser
     externalPosition: IExternalPosition
     positionsManager: IPositionsManager
   }): Promise<Maybe<TransactionInfo>>
 
+  /** ACTION BUILDERS */
+
+  /** @see IProtocolPlugin.getActionBuilder */
   getActionBuilder<T extends steps.Steps>(step: T): Maybe<ActionBuilder<T>> {
     return this.stepBuilders[step.type] as ActionBuilder<T>
   }
 
-  protected _isPoolId<PoolId extends IPoolId>(
-    candidate: unknown,
-    schema: z.Schema,
-  ): candidate is PoolId {
-    const { success } = schema.safeParse(candidate)
-    return success
-  }
+  /** HELPERS */
 
+  /**
+   * @name _getDeploymentKey
+   * @description Gets the key to use for the deployment configuration
+   * @param chainInfo The chain information
+   * @returns The key to use for the deployment configuration
+   */
   protected _getDeploymentKey(chainInfo: ChainInfo): string {
     return `${chainInfo.name}.${this.deploymentConfigTag}`
+  }
+
+  /**
+   * @name _validateChainId
+   * @param chainId  The chain ID to validate
+   * @returns asserts that the chain ID is supported
+   */
+  private _checkChainIdSupported(chainId: number) {
+    if (!this.supportedChains.some((chain) => chain.chainId === chainId)) {
+      throw new Error(`Chain ID ${chainId} is not supported`)
+    }
   }
 }

@@ -1,9 +1,7 @@
-export { MakerCollateralConfig } from './MakerCollateralConfig'
-export {
-  MakerCollateralConfigMap,
-  type MakerCollateralConfigRecord,
-} from './MakerCollateralConfigMap'
-export { MakerDebtConfig } from './MakerDebtConfig'
-export { MakerDebtConfigMap, type MakerDebtConfigRecord } from './MakerDebtConfigMap'
-export { MakerLendingPool } from './MakerLendingPool'
-export { MakerProtocolPlugin } from './MakerProtocolPlugin'
+export * from './MakerLendingPool'
+export * from './MakerLendingPoolInfo'
+export * from './MakerProtocolPlugin'
+export * from './MakerPositionId'
+export * from './MakerPosition'
+export * from './MakerLendingPoolId'
+export * from './MakerProtocol'

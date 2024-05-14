@@ -1,4 +1,4 @@
-import { Address, ChainId, ProtocolId } from '@summerfi/serverless-shared/domain-types'
+import { Address, ChainId, PoolId, ProtocolId } from '@summerfi/serverless-shared/domain-types'
 import { getAddresses } from '@summerfi/triggers-shared'
 import { Chain as ViemChain, createPublicClient, http, PublicClient } from 'viem'
 import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
@@ -9,6 +9,11 @@ import {
   AavePartialTakeProfitEventBody,
   AaveStopLossEventBody,
   AaveTrailingStopLossEventBody,
+  MorphoBlueAutoBuyEventBody,
+  MorphoBlueAutoSellEventBody,
+  MorphoBluePartialTakeProfitEventBody,
+  MorphoBlueStopLossEventBody,
+  MorphoBlueTrailingStopLossEventBody,
   SetupTriggerEventBody,
   SparkAutoBuyEventBody,
   SparkAutoSellEventBody,
@@ -33,6 +38,11 @@ import { getSparkAutoSellServiceContainer } from './get-spark-auto-sell-service-
 import { getSparkTrailingStopLossServiceContainer } from './get-spark-trailing-stop-loss-service-container'
 import { getAavePartialTakeProfitServiceContainer } from './get-aave-partial-take-profit-service-container'
 import { getSparkPartialTakeProfitServiceContainer } from './get-spark-partial-take-profit-service-container'
+import { getMorphoBlueStopLossServiceContainer } from './get-morphoblue-stop-loss-service-container'
+import { getMorphoBlueAutoBuyServiceContainer } from './get-morphoblue-auto-buy-service-container'
+import { getMorphoBlueAutoSellServiceContainer } from './get-morphoblue-auto-sell-service-container'
+import { getMorphoBlueTrailingStopLossServiceContainer } from './get-morphoblue-trailing-stop-loss-service-container'
+import { getMorphoBluePartialTakeProfitServiceContainer } from './get-morphoblue-partial-take-profit-service-container'
 
 export const rpcConfig: IRpcConfig = {
   skipCache: false,
@@ -50,6 +60,7 @@ const domainChainIdToViemChain: Record<ChainId, ViemChain> = {
   [ChainId.SEPOLIA]: sepolia,
 }
 
+// Aave checks
 function isAaveAutoBuy(trigger: SetupTriggerEventBody): trigger is AaveAutoBuyEventBody {
   return trigger.triggerData?.type === BigInt(TriggerType.DmaAaveBasicBuyV2)
 }
@@ -71,6 +82,13 @@ function isAaveTrailingStopLoss(
   return trigger.triggerData?.type === BigInt(TriggerType.DmaAaveTrailingStopLossV2)
 }
 
+function isAavePartialTakeProfit(
+  trigger: SetupTriggerEventBody,
+): trigger is AavePartialTakeProfitEventBody {
+  return trigger.triggerData?.type === BigInt(TriggerType.DmaAavePartialTakeProfitV2)
+}
+
+// Spark checks
 function isSparkStopLoss(trigger: SetupTriggerEventBody): trigger is SparkStopLossEventBody {
   return [
     BigInt(TriggerType.DmaSparkStopLossToCollateralV2),
@@ -92,16 +110,41 @@ function isSparkTrailingStopLoss(
   return trigger.triggerData?.type === BigInt(TriggerType.DmaSparkTrailingStopLossV2)
 }
 
-function isAavePartialTakeProfit(
-  trigger: SetupTriggerEventBody,
-): trigger is AavePartialTakeProfitEventBody {
-  return trigger.triggerData?.type === BigInt(TriggerType.DmaAavePartialTakeProfitV2)
-}
-
 function isSparkPartialTakeProfit(
   trigger: SetupTriggerEventBody,
 ): trigger is SparkPartialTakeProfitEventBody {
   return trigger.triggerData?.type === BigInt(TriggerType.DmaSparkPartialTakeProfitV2)
+}
+
+// Morpho blue checks
+function isMorphoBlueStopLoss(
+  trigger: SetupTriggerEventBody,
+): trigger is MorphoBlueStopLossEventBody {
+  return trigger.triggerData?.type === BigInt(TriggerType.DmaMorphoBlueStopLossV2)
+}
+
+function isMorphoBlueAutoBuy(
+  trigger: SetupTriggerEventBody,
+): trigger is MorphoBlueAutoBuyEventBody {
+  return trigger.triggerData?.type === BigInt(TriggerType.DmaMorphoBlueBasicBuyV2)
+}
+
+function isMorphoBlueAutoSell(
+  trigger: SetupTriggerEventBody,
+): trigger is MorphoBlueAutoSellEventBody {
+  return trigger.triggerData?.type === BigInt(TriggerType.DmaMorphoBlueBasicSellV2)
+}
+
+function isMorphoBlueTrailingStopLoss(
+  trigger: SetupTriggerEventBody,
+): trigger is MorphoBlueTrailingStopLossEventBody {
+  return trigger.triggerData?.type === BigInt(TriggerType.DmaMorphoBlueTrailingStopLossV2)
+}
+
+function isMorphoBluePartialTakeProfit(
+  trigger: SetupTriggerEventBody,
+): trigger is MorphoBluePartialTakeProfitEventBody {
+  return trigger.triggerData?.type === BigInt(TriggerType.DmaMorphoBluePartialTakeProfitV2)
 }
 
 export function buildServiceContainer<Trigger extends SetupTriggerEventBody>(
@@ -130,9 +173,11 @@ export function buildServiceContainer<Trigger extends SetupTriggerEventBody>(
 
   const addresses = getAddresses(chainId)
 
-  const getTriggers = memoize(async (address: Address) => {
+  const getTriggers = memoize(async (address: Address, poolId?: PoolId) => {
     try {
-      const triggers = await fetch(`${getTriggersUrl}?chainId=${chainId}&dpm=${address}`)
+      const triggers = await fetch(
+        `${getTriggersUrl}?chainId=${chainId}&dpm=${address}${poolId ? `&poolId=${poolId}` : ''}`,
+      )
       return (await triggers.json()) as GetTriggersResponse
     } catch (e) {
       logger?.error('Error fetching triggers', { error: e })
@@ -155,6 +200,7 @@ export function buildServiceContainer<Trigger extends SetupTriggerEventBody>(
     }
   })
 
+  // Aave services
   if (isAaveAutoBuy(trigger)) {
     return getAaveAutoBuyServiceContainer({
       rpc: publicClient,
@@ -182,16 +228,6 @@ export function buildServiceContainer<Trigger extends SetupTriggerEventBody>(
       chainId,
     }) as ServiceContainer<Trigger>
   }
-  if (isSparkStopLoss(trigger)) {
-    return getSparkStopLossServiceContainer({
-      rpc: publicClient,
-      addresses,
-      getTriggers,
-      logger,
-      chainId,
-    }) as ServiceContainer<Trigger>
-  }
-
   if (isAaveTrailingStopLoss(trigger)) {
     return getAaveTrailingStopLossServiceContainer({
       rpc: publicClient,
@@ -202,38 +238,6 @@ export function buildServiceContainer<Trigger extends SetupTriggerEventBody>(
       logger,
     }) as ServiceContainer<Trigger>
   }
-
-  if (isSparkAutoBuy(trigger)) {
-    return getSparkAutoBuyServiceContainer({
-      rpc: publicClient,
-      addresses,
-      getTriggers,
-      logger,
-      chainId,
-    }) as ServiceContainer<Trigger>
-  }
-
-  if (isSparkAutoSell(trigger)) {
-    return getSparkAutoSellServiceContainer({
-      rpc: publicClient,
-      addresses,
-      getTriggers,
-      logger,
-      chainId,
-    }) as ServiceContainer<Trigger>
-  }
-
-  if (isSparkTrailingStopLoss(trigger)) {
-    return getSparkTrailingStopLossServiceContainer({
-      rpc: publicClient,
-      addresses,
-      getTriggers,
-      getLatestPrice,
-      chainId,
-      logger,
-    }) as ServiceContainer<Trigger>
-  }
-
   if (isAavePartialTakeProfit(trigger)) {
     return getAavePartialTakeProfitServiceContainer({
       rpc: publicClient,
@@ -244,9 +248,94 @@ export function buildServiceContainer<Trigger extends SetupTriggerEventBody>(
       getLatestPrice,
     }) as ServiceContainer<Trigger>
   }
-
+  // Spark services
+  if (isSparkStopLoss(trigger)) {
+    return getSparkStopLossServiceContainer({
+      rpc: publicClient,
+      addresses,
+      getTriggers,
+      logger,
+      chainId,
+    }) as ServiceContainer<Trigger>
+  }
+  if (isSparkAutoBuy(trigger)) {
+    return getSparkAutoBuyServiceContainer({
+      rpc: publicClient,
+      addresses,
+      getTriggers,
+      logger,
+      chainId,
+    }) as ServiceContainer<Trigger>
+  }
+  if (isSparkAutoSell(trigger)) {
+    return getSparkAutoSellServiceContainer({
+      rpc: publicClient,
+      addresses,
+      getTriggers,
+      logger,
+      chainId,
+    }) as ServiceContainer<Trigger>
+  }
+  if (isSparkTrailingStopLoss(trigger)) {
+    return getSparkTrailingStopLossServiceContainer({
+      rpc: publicClient,
+      addresses,
+      getTriggers,
+      getLatestPrice,
+      chainId,
+      logger,
+    }) as ServiceContainer<Trigger>
+  }
   if (isSparkPartialTakeProfit(trigger)) {
     return getSparkPartialTakeProfitServiceContainer({
+      rpc: publicClient,
+      addresses,
+      getTriggers,
+      logger,
+      chainId,
+      getLatestPrice,
+    }) as ServiceContainer<Trigger>
+  }
+  // Morpho blue services
+  if (isMorphoBlueStopLoss(trigger)) {
+    return getMorphoBlueStopLossServiceContainer({
+      rpc: publicClient,
+      addresses,
+      getTriggers,
+      logger,
+      chainId,
+    }) as ServiceContainer<Trigger>
+  }
+  if (isMorphoBlueAutoBuy(trigger)) {
+    return getMorphoBlueAutoBuyServiceContainer({
+      rpc: publicClient,
+      addresses,
+      getTriggers,
+      logger,
+      chainId,
+    }) as ServiceContainer<Trigger>
+  }
+  if (isMorphoBlueAutoSell(trigger)) {
+    return getMorphoBlueAutoSellServiceContainer({
+      rpc: publicClient,
+      addresses,
+      getTriggers,
+      logger,
+      chainId,
+    }) as ServiceContainer<Trigger>
+  }
+  if (isMorphoBlueTrailingStopLoss(trigger)) {
+    return getMorphoBlueTrailingStopLossServiceContainer({
+      rpc: publicClient,
+      addresses,
+      getTriggers,
+      getLatestPrice,
+      chainId,
+      logger,
+    }) as ServiceContainer<Trigger>
+  }
+  if (isMorphoBluePartialTakeProfit(trigger)) {
+    return getMorphoBluePartialTakeProfitServiceContainer({
       rpc: publicClient,
       addresses,
       getTriggers,

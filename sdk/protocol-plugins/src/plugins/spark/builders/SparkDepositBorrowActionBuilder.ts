@@ -54,22 +54,28 @@ export const SparkDepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrowS
       sumAmounts: false,
       setAsCollateral: true,
     },
-    connectedInputs: {},
+    connectedInputs: {
+      depositAmount: 'amountToDeposit',
+    },
     connectedOutputs: {
       depositAmount: 'depositedAmount',
     },
   })
 
-  context.addActionCall({
-    step: step,
-    action: new SparkBorrowAction(),
-    arguments: {
-      borrowAmount: getValueFromReference(step.inputs.borrowAmount),
-      borrowTo: getBorrowTargetAddress(params),
-    },
-    connectedInputs: {},
-    connectedOutputs: {
-      borrowAmount: 'borrowedAmount',
-    },
-  })
+  const borrowAmount = getValueFromReference(step.inputs.borrowAmount)
+
+  if (!borrowAmount.toBN().isZero()) {
+    context.addActionCall({
+      step: step,
+      action: new SparkBorrowAction(),
+      arguments: {
+        borrowAmount: borrowAmount,
+        borrowTo: getBorrowTargetAddress(params),
+      },
+      connectedInputs: {},
+      connectedOutputs: {
+        borrowAmount: 'borrowedAmount',
+      },
+    })
+  }
 }

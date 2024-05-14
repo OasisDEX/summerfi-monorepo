@@ -37,7 +37,12 @@
     "MAINNET_RPC_URL",
     "REDIS_CACHE_URL",
     "REDIS_CACHE_USER",
-    "REDIS_CACHE_PASSWORD"
+    "REDIS_CACHE_PASSWORD",
+    "STAGE",
+    "VPC_ID",
+    "SECURITY_GROUP_ID",
+    "RAYS_DB_CONNECTION_STRING",
+    "IS_LOCAL"
   ],
   "pipeline": {
     "dev": {
@@ -68,7 +73,15 @@
       "dependsOn": ["prebuild", "build", "^check-circular"]
     },
     "cicheck": {
-      "dependsOn": ["prebuild", "build", "test", "lint", "check-circular", "format"]
+      "dependsOn": [
+        "prebuild",
+        "build",
+        "test",
+        "test:integration",
+        "lint",
+        "check-circular",
+        "format"
+      ]
     },
     "deploy:staging": {
       "dependsOn": ["cicheck", "^deploy:staging"]

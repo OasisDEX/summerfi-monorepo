@@ -25,6 +25,7 @@ interface SubgraphClientConfig {
 
 export interface GetTriggersParams {
   dpm: string
+  poolId?: string
 }
 
 export interface GetOneTriggerParams {

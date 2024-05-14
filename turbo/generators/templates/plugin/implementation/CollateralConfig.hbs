@@ -1,0 +1,19 @@
+import { CollateralConfig } from '@summerfi/sdk-common/protocols'
+import { I{{namePascalCase}}CollateralConfig } from '../interfaces/I{{namePascalCase}}CollateralConfig'
+import { SerializationService } from '@summerfi/sdk-common/services'
+
+export class {{namePascalCase}}CollateralConfig extends CollateralConfig implements I{{namePascalCase}}CollateralConfig {
+  /* EG readonly usageAsCollateralEnabled: boolean */
+
+  private constructor(params: I{{namePascalCase}}CollateralConfig) {
+    super(params)
+
+    /* EG this.usageAsCollateralEnabled = params.usageAsCollateralEnabled */
+  }
+
+  static createFrom(params: I{{namePascalCase}}CollateralConfig): {{namePascalCase}}CollateralConfig {
+    return new {{namePascalCase}}CollateralConfig(params)
+  }
+}
+
+SerializationService.registerClass({{namePascalCase}}CollateralConfig)

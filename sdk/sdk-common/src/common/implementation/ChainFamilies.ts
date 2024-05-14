@@ -12,35 +12,35 @@ import { ChainId } from '../aliases/ChainId'
  * Chain definition per family
  */
 const EthereumFamily: Record<EthereumChainNames, ChainInfo> = {
-  [EthereumChainNames.Mainnet]: {
+  [EthereumChainNames.Mainnet]: ChainInfo.createFrom({
     chainId: 1,
     name: EthereumChainNames.Mainnet,
-  },
-  [EthereumChainNames.Goerli]: {
+  }),
+  [EthereumChainNames.Goerli]: ChainInfo.createFrom({
     chainId: 5,
     name: EthereumChainNames.Goerli,
-  },
+  }),
 }
 
 const ArbitrumFamily: Record<ArbitrumChainNames, ChainInfo> = {
-  [ArbitrumChainNames.ArbitrumOne]: {
+  [ArbitrumChainNames.ArbitrumOne]: ChainInfo.createFrom({
     chainId: 42161,
     name: ArbitrumChainNames.ArbitrumOne,
-  },
+  }),
 }
 
 const OptimismFamily: Record<OptimismChainNames, ChainInfo> = {
-  [OptimismChainNames.Optimism]: {
+  [OptimismChainNames.Optimism]: ChainInfo.createFrom({
     chainId: 10,
     name: OptimismChainNames.Optimism,
-  },
+  }),
 }
 
 const BaseFamily: Record<BaseChainNames, ChainInfo> = {
-  [BaseChainNames.Mainnet]: {
+  [BaseChainNames.Mainnet]: ChainInfo.createFrom({
     chainId: 8453,
     name: BaseChainNames.Mainnet,
-  },
+  }),
 }
 
 /**
@@ -73,8 +73,7 @@ export const ChainFamilyMap: ChainFamily = {
 
 export type ChainFamilyInfo = {
   familyName: ChainFamilyName
-  chainId: ChainId
-  name: string
+  chainInfo: ChainInfo
 }
 
 export type ChainFamilyInfoById = Record<ChainId, ChainFamilyInfo>
@@ -88,8 +87,7 @@ function createChainIdToChainInfoMap(): ChainFamilyInfoById {
     Object.entries(family).reduce((acc, [, chainInfo]) => {
       acc[chainInfo.chainId] = {
         familyName: familyName as ChainFamilyName,
-        chainId: chainInfo.chainId,
-        name: chainInfo.name,
+        chainInfo: chainInfo,
       }
       return acc
     }, acc)
@@ -99,7 +97,7 @@ function createChainIdToChainInfoMap(): ChainFamilyInfoById {
 
 const chainIdToChainInfoMap = createChainIdToChainInfoMap()
 
-export function getChainInfoByChainId(chainId: ChainId): ChainInfo | undefined {
+export function getChainInfoByChainId(chainId: ChainId): ChainFamilyInfo | undefined {
   return chainIdToChainInfoMap[chainId]
 }
 

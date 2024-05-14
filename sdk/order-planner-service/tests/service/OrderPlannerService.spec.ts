@@ -22,17 +22,13 @@ import {
 } from '@summerfi/testing-utils'
 import assert from 'assert'
 import { IUser } from '@summerfi/sdk-common/user'
-import {
-  IPriceService,
-  IProtocolPluginsRegistry,
-  ITokenService,
-} from '@summerfi/protocol-plugins-common'
-import { PublicClient } from 'viem'
+import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
+import { http, createPublicClient } from 'viem'
 import {
   MakerPaybackAction,
-  MakerPoolId,
   MakerProtocolPlugin,
   MakerWithdrawAction,
+  isMakerPositionId,
 } from '@summerfi/protocol-plugins/plugins/maker'
 import {
   SparkBorrowAction,
@@ -42,6 +38,9 @@ import {
 import { ProtocolPluginsRegistry } from '@summerfi/protocol-plugins/implementation'
 import { getMakerPosition } from '../utils/MakerSourcePosition'
 import { getSparkPosition } from '../utils/SparkTargetPosition'
+import { mainnet } from 'viem/chains'
+import { ITokensManager } from '@summerfi/tokens-common'
+import { IOracleManager } from '@summerfi/oracle-common'
 
 describe('Order Planner Service', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -67,10 +66,17 @@ describe('Order Planner Service', () => {
         [ProtocolName.Spark]: SparkProtocolPlugin,
       },
       context: {
-        provider: undefined as unknown as PublicClient,
-        tokenService: undefined as unknown as ITokenService,
-        priceService: undefined as unknown as IPriceService,
+        provider: createPublicClient({
+          batch: {
+            multicall: true,
+          },
+          chain: mainnet,
+          transport: http(''),
+        }),
+        tokensManager: undefined as unknown as ITokensManager,
+        oracleManager: undefined as unknown as IOracleManager,
         deployments: deploymentsIndex,
+        swapManager: swapManager,
       },
       deploymentConfigTag: 'standard',
     })
@@ -155,7 +161,7 @@ describe('Order Planner Service', () => {
     assert(strategyExecutorParams, 'Calldata for Strategy Executor could not be decoded')
 
     expect(strategyExecutorParams.strategyName).toEqual(
-      `${SimulationType.Refinance}${refinanceSimulation.sourcePosition?.pool.protocol.name}${refinanceSimulation.targetPosition.pool.protocol.name}`,
+      `${SimulationType.Refinance}${refinanceSimulation.sourcePosition?.pool.id.protocol.name}${refinanceSimulation.targetPosition.pool.id.protocol.name}`,
     )
 
     // Flashloan is at the beginning, so we get the flashloan call plus the return funds call
@@ -188,9 +194,11 @@ describe('Order Planner Service', () => {
     })
 
     assert(makerPaybackAction, 'MakerPaybackAction is not defined')
+    assert(isMakerPositionId(sourcePosition.id), 'Source position ID is not a MakerPoolId')
+
     expect(makerPaybackAction.args).toEqual([
       {
-        vaultId: BigInt((sourcePosition.pool.poolId as MakerPoolId).vaultId),
+        vaultId: BigInt(sourcePosition.id.vaultId),
         userAddress: positionsManager.address.value,
         amount: BigInt(sourcePosition.debtAmount.toBaseUnit()),
         paybackAll: true,
@@ -206,7 +214,7 @@ describe('Order Planner Service', () => {
     assert(makerWithdrawAction, 'MakerWithdrawAction is not defined')
     expect(makerWithdrawAction.args).toEqual([
       {
-        vaultId: BigInt((sourcePosition.pool.poolId as MakerPoolId).vaultId),
+        vaultId: BigInt(sourcePosition.id.vaultId),
         userAddress: positionsManager.address.value,
         joinAddr: deployments.dependencies.MCD_JOIN_ETH_A.address,
         amount: BigInt(sourcePosition.collateralAmount.toBaseUnit()),

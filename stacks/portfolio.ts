@@ -1,5 +1,5 @@
 import { Api, Function, StackContext } from 'sst/constructs'
-import * as process from 'process'
+import * as process from 'node:process'
 
 export function addPortfolioConfig({ stack, api }: StackContext & { api: Api }) {
   const { POWERTOOLS_LOG_LEVEL, DEBANK_API_URL, DEBANK_API_KEY } = process.env

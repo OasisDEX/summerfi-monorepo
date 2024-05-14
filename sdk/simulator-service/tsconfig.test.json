@@ -5,8 +5,10 @@
     "baseUrl": ".",
     "paths": {
       "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
+      "@summerfi/sdk-common": ["node_modules/@summerfi/sdk-common/src/index.ts"],
       "@summerfi/swap-common/*": ["node_modules/@summerfi/swap-common/src/*"],
       "@summerfi/protocol-plugins/*": ["node_modules/@summerfi/protocol-plugins/src/*"],
+      "@summerfi/protocol-plugins": ["node_modules/@summerfi/protocol-plugins/src/index.ts"],
       "@summerfi/protocol-plugins-common": [
         "node_modules/@summerfi/protocol-plugins-common/src/index.ts"
       ]

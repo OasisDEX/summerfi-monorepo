@@ -6,16 +6,13 @@ import {
   IProtocolPluginContext,
 } from '@summerfi/protocol-plugins-common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import { ChainInfo } from '@summerfi/sdk-common/common'
+import { AddressType, ChainInfo } from '@summerfi/sdk-common/common'
 import { createPublicClient, http, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
 import { ProtocolManager } from '../src'
-import {
-  TokenService,
-  PriceService,
-  ProtocolPluginsRegistry,
-} from '@summerfi/protocol-plugins/implementation'
+import { ProtocolPluginsRegistry } from '@summerfi/protocol-plugins/implementation'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
+import { EmodeType, ISparkLendingPoolIdData } from '@summerfi/protocol-plugins'
 
 describe('Protocol Manager', () => {
   let ctx: IProtocolManagerContext
@@ -34,21 +31,21 @@ describe('Protocol Manager', () => {
       context: ctx,
       deploymentConfigTag: 'standard',
     })
-    protocolManager = new ProtocolManager({ pluginsRegistry })
+    protocolManager = ProtocolManager.createWith({ pluginsRegistry })
   })
 
   it('should throw an error when getPool is called with an unsupported protocol', async () => {
     await expect(
-      protocolManager.getPool({ protocol: { name: 'unsupportedProtocol' } } as any),
-    ).rejects.toThrow('Invalid pool ID: {"protocol":{"name":"unsupportedProtocol"}}')
+      protocolManager.getLendingPool({ protocol: { name: 'unsupportedProtocol' } } as any),
+    ).rejects.toThrow('Invalid lending pool ID: {"protocol":{"name":"unsupportedProtocol"}}')
   })
 
   it('should throw an error when getPool is called for a chain that is not supported by the plugin', async () => {
     const unsupportedChainId = 'unsupportedChain'
     ctx.provider.getChainId = jest.fn().mockResolvedValue(unsupportedChainId)
     await expect(
-      protocolManager.getPool({ protocol: { name: ProtocolName.Spark } } as any),
-    ).rejects.toThrow(`Invalid pool ID: {"protocol":{"name":"Spark"}}`)
+      protocolManager.getLendingPool({ protocol: { name: ProtocolName.Spark } } as any),
+    ).rejects.toThrow(`Invalid lending pool ID: {"protocol":{"name":"Spark"}}`)
   })
 
   it('should retrieve the pool using the correct plugin and chain ID', async () => {
@@ -62,7 +59,7 @@ describe('Protocol Manager', () => {
       }) {
         super(params)
         this.protocolName = ProtocolName.Spark
-        this.getPool = jest.fn().mockResolvedValue('mockPoolData')
+        this.getLendingPool = jest.fn().mockResolvedValue('mockPoolData')
       }
     }
 
@@ -76,24 +73,41 @@ describe('Protocol Manager', () => {
       deploymentConfigTag: 'standard',
     })
 
-    protocolManager = new ProtocolManager({ pluginsRegistry })
+    protocolManager = ProtocolManager.createWith({ pluginsRegistry })
 
     const chainId = 'supportedChain'
-    const poolId = {
+    const poolId: ISparkLendingPoolIdData = {
       protocol: {
         name: ProtocolName.Spark,
         chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
       },
+      collateralToken: {
+        address: {
+          type: AddressType.Ethereum,
+          value: '0x6b175474e89094c44da98b954eedeac495271d0f',
+        },
+        chainInfo: { chainId: 1, name: 'Ethereum' },
+        name: 'USD Coin',
+        symbol: 'USDC',
+        decimals: 6,
+      },
+      debtToken: {
+        address: {
+          type: AddressType.Ethereum,
+          value: '0x6b175474e89094c44da98b954eedeac495271d0f',
+        },
+        chainInfo: { chainId: 1, name: 'Ethereum' },
+        name: 'USD Coin',
+        symbol: 'USDC',
+        decimals: 6,
+      },
+      emodeType: EmodeType.None,
     }
 
     ctx.provider.getChainId = jest.fn().mockResolvedValue(chainId)
 
-    const pool = await protocolManager.getPool(poolId as any)
+    const pool = await protocolManager.getLendingPool(poolId as any)
     expect(pool).toBe('mockPoolData')
-  })
-
-  it('should throw an error when getPosition is called as it is not implemented', () => {
-    expect(() => protocolManager.getPosition()).toThrow('Not implemented')
   })
 })
 
@@ -120,8 +134,10 @@ class MockPlugin implements IProtocolPlugin {
     this.stepBuilders = {}
   }
 
-  getPool = jest.fn()
+  getLendingPool = jest.fn()
+  getLendingPoolInfo = jest.fn()
   getPosition = jest.fn()
+  getImportPositionTransaction = jest.fn()
   // @ts-ignore
   isPoolId = jest.fn()
   validatePoolId = jest.fn()
@@ -141,8 +157,9 @@ async function createProtocolManagerContext(): Promise<IProtocolManagerContext> 
 
   return {
     provider,
-    tokenService: new TokenService(),
-    priceService: new PriceService(provider),
+    tokensManager: {} as any,
+    oracleManager: {} as any,
     deployments: {} as DeploymentIndex,
+    swapManager: {} as any,
   }
 }

@@ -1,5 +1,5 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
-import { Token } from '@summerfi/sdk-common/common'
+import { IToken } from '@summerfi/sdk-common/common'
 
 export class ReturnFundsAction extends BaseAction {
   public readonly config = {
@@ -10,7 +10,7 @@ export class ReturnFundsAction extends BaseAction {
     storageOutputs: [],
   } as const
 
-  public encodeCall(params: { asset: Token }, paramsMapping?: InputSlotsMapping): ActionCall {
+  public encodeCall(params: { asset: IToken }, paramsMapping?: InputSlotsMapping): ActionCall {
     return this._encodeCall({
       arguments: [
         {
