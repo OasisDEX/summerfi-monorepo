@@ -9,7 +9,7 @@
     "test": "turbo run test --cache-dir=.turbo",
     "test:integration": "turbo run test:integration --cache-dir=.turbo",
     "check-circular": "turbo run check-circular --cache-dir=.turbo",
-    "cicheck": "turbo run cicheck --cache-dir=.turbo",
+    "cicheck": "turbo run cicheck --cache-dir=.turbo && pnpm run coverage:total",
     "db:migrate": "turbo run db:migrate --cache-dir=.turbo",
     "sst:dev": "sst dev",
     "sst:build": "sst build",
@@ -20,7 +20,8 @@
     "console": "sst console",
     "graph": "pnpm dlx nx graph",
     "format": "prettier --check \"./**/*.{ts,tsx,js,jsx,json}\"",
-    "format:fix": "prettier --write \"./**/*.{ts,tsx,js,jsx,json}\""
+    "format:fix": "prettier --write \"./**/*.{ts,tsx,js,jsx,json}\"",
+    "coverage:total": "node scripts/coverage-report/GenerateCoverageReport.js"
   },
   "devDependencies": {
     "@graphql-codegen/add": "^5.0.2",

@@ -28,7 +28,9 @@ export function addApyConfig({ stack, api, vpc, cache }: SummerStackContext) {
         runtime: 'nodejs20.x',
         environment,
         vpc: vpc.vpc,
-        vpcSubnets: vpc.vpcSubnets,
+        vpcSubnets: {
+          subnets: [...vpc.vpc.privateSubnets],
+        },
         securityGroups: [vpc.securityGroup],
       }
     : {
