@@ -11,7 +11,6 @@ import {
   Address,
   type Maybe,
   ChainFamilyMap,
-  newEmptyPositionFromPool,
   PositionType,
   IToken,
 } from '@summerfi/sdk-common'
@@ -38,7 +37,7 @@ jest.setTimeout(300000)
 /** TEST CONFIG */
 const config = {
   SDKAPiUrl: 'https://zmjmtfsocb.execute-api.us-east-1.amazonaws.com/api/sdk',
-  TenderlyForkUrl: 'https://virtual.mainnet.rpc.tenderly.co/508f2861-d790-43f6-a6f0-b1c1f1854bc2',
+  TenderlyForkUrl: 'https://virtual.mainnet.rpc.tenderly.co/5fa32626-1a0c-4e37-b0c0-351e2f5aa885',
   DPMAddress: '0x302a28D7968824f386F278a72368856BC4d82BA4',
   walletAddress: '0xbEf4befb4F230F43905313077e3824d7386E09F8',
   collateralTokenSymbol: CommonTokenSymbols.wstETH,
@@ -159,10 +158,9 @@ describe.skip('Refinance Morpho Spark | SDK', () => {
       assert(false, 'Spark pool type is not lending')
     }
 
-    const emptyTargetPosition = newEmptyPositionFromPool(sparkPool)
     const refinanceParameters = RefinanceParameters.createFrom({
       sourcePosition: morphoPosition,
-      targetPosition: emptyTargetPosition,
+      targetPool: sparkPool,
       slippage: Percentage.createFrom({ value: 0.2 }),
     })
 

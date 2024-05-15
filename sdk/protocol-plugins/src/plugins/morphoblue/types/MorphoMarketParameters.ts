@@ -1,4 +1,4 @@
-import { IAddress, IPercentage, IToken } from '@summerfi/sdk-common'
+import { IAddress, IRiskRatio, IToken } from '@summerfi/sdk-common'
 
 /**
  * @description Morpho market parameters for a given market
@@ -13,7 +13,7 @@ export type MorphoMarketParameters = {
   /** The interest rate module used in the Morpho market */
   readonly irm: IAddress
   /** The liquidation LTV for the Morpho market */
-  readonly lltv: IPercentage
+  readonly lltv: IRiskRatio
 }
 
 /**

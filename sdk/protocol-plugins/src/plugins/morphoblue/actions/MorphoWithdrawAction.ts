@@ -35,7 +35,9 @@ export class MorphoWithdrawAction extends BaseAction<typeof MorphoWithdrawAction
             collateralToken: morphoLendingPool.collateralToken.address.value,
             oracle: morphoLendingPool.oracle.value,
             irm: morphoLendingPool.irm.value,
-            lltv: BigInt(morphoLendingPool.lltv.toBaseUnit({ decimals: MorphoLLTVPrecision })),
+            lltv: BigInt(
+              morphoLendingPool.lltv.toLTV().toBaseUnit({ decimals: MorphoLLTVPrecision }),
+            ),
           },
           amount: BigInt(amount.toBaseUnit()),
           to: to.value,

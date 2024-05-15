@@ -30,9 +30,15 @@ export default async function simulateRefinanceTest() {
       targetPosition: {
         type: params.sourcePosition.type,
         id: SparkPositionId.createFrom({ id: '0987654321' }),
-        debtAmount: params.targetPosition.debtAmount,
-        collateralAmount: params.targetPosition.collateralAmount,
-        pool: params.targetPosition.pool,
+        debtAmount: TokenAmount.createFrom({
+          amount: params.sourcePosition.debtAmount.amount,
+          token: params.targetPool.debtToken,
+        }),
+        collateralAmount: TokenAmount.createFrom({
+          amount: params.sourcePosition.collateralAmount.amount,
+          token: params.targetPool.collateralToken,
+        }),
+        pool: params.targetPool,
       },
       swaps: [],
       steps: [],
@@ -112,20 +118,9 @@ export default async function simulateRefinanceTest() {
     debtToken: poolId.debtToken,
   })
 
-  const targetPosition = MakerPosition.createFrom({
-    type: PositionType.Multiply,
-    id: {
-      id: 'newEmptyPositionFromPool',
-      vaultId: '0',
-    },
-    debtAmount: prevPosition.debtAmount,
-    collateralAmount: prevPosition.collateralAmount,
-    pool: targetPool,
-  })
-
   const refinanceParameters = RefinanceParameters.createFrom({
     sourcePosition: prevPosition,
-    targetPosition: targetPosition,
+    targetPool: targetPool,
     slippage: Percentage.createFrom({ value: 0.5 }),
   })
 

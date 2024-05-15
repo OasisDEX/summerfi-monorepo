@@ -1,4 +1,4 @@
-import type { APIGatewayProxyEventV2, Context, APIGatewayProxyResultV2 } from 'aws-lambda'
+import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'aws-lambda'
 import {
   ResponseBadRequest,
   ResponseInternalServerError,
@@ -13,7 +13,7 @@ import {
 import { Logger } from '@aws-lambda-powertools/logger'
 import { buildServiceContainer } from './services'
 
-const logger = new Logger({ serviceName: 'setupTriggerFunction' })
+const logger = new Logger({ serviceName: 'setup-triggers-function' })
 
 export const handler = async (
   event: APIGatewayProxyEventV2,
@@ -93,58 +93,63 @@ export const handler = async (
 
   const triggerBody = parseResult.data
 
-  const { simulatePosition, getTransaction, validate } = buildServiceContainer(
-    pathParamsResult.data.chainId,
-    pathParamsResult.data.protocol,
-    triggerBody,
-    RPC_GATEWAY,
-    SUBGRAPH_BASE,
-    GET_TRIGGERS_URL,
-    logger,
-  )
+  try {
+    const { simulatePosition, getTransaction, validate } = buildServiceContainer(
+      pathParamsResult.data.chainId,
+      pathParamsResult.data.protocol,
+      triggerBody,
+      RPC_GATEWAY,
+      SUBGRAPH_BASE,
+      GET_TRIGGERS_URL,
+      logger,
+    )
 
-  let validationWarnings: ValidationIssue[] = []
+    let validationWarnings: ValidationIssue[] = []
 
-  const skipValidation = event.headers['x-summer-skip-validation'] === '1'
+    const skipValidation = event.headers['x-summer-skip-validation'] === '1'
 
-  if (!skipValidation) {
-    const validation = await validate({
+    if (!skipValidation) {
+      const validation = await validate({
+        trigger: triggerBody,
+      })
+
+      validationWarnings = validation.warnings
+
+      if (!validation.success) {
+        logger.warn('Validation Errors', {
+          errors: validation.errors,
+          warnings: validation.warnings,
+        })
+        return ResponseBadRequest({
+          message: 'Validation Errors',
+          errors: validation.errors,
+          warnings: validation.warnings,
+        })
+      }
+    } else {
+      logger.warn('Skipping validation')
+    }
+
+    const { transaction, encodedTriggerData } = await getTransaction({
       trigger: triggerBody,
     })
 
-    validationWarnings = validation.warnings
+    const simulation = await simulatePosition({
+      trigger: triggerBody,
+    })
 
-    if (!validation.success) {
-      logger.warn('Validation Errors', {
-        errors: validation.errors,
-        warnings: validation.warnings,
-      })
-      return ResponseBadRequest({
-        message: 'Validation Errors',
-        errors: validation.errors,
-        warnings: validation.warnings,
-      })
-    }
-  } else {
-    logger.warn('Skipping validation')
+    return ResponseOk({
+      body: {
+        simulation,
+        transaction,
+        encodedTriggerData,
+        warnings: validationWarnings,
+      },
+    })
+  } catch (error) {
+    logger.error('Error processing trigger', { error })
+    return ResponseInternalServerError('Error processing trigger')
   }
-
-  const { transaction, encodedTriggerData } = await getTransaction({
-    trigger: triggerBody,
-  })
-
-  const simulation = await simulatePosition({
-    trigger: triggerBody,
-  })
-
-  return ResponseOk({
-    body: {
-      simulation,
-      transaction,
-      encodedTriggerData,
-      warnings: validationWarnings,
-    },
-  })
 }
 
 export default handler

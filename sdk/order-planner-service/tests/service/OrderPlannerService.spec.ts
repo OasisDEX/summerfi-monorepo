@@ -92,7 +92,7 @@ describe('Order Planner Service', () => {
 
     const refinanceSimulation: ISimulation<SimulationType.Refinance> = getRefinanceSimulation({
       sourcePosition,
-      targetPosition,
+      targetPool: targetPosition,
     })
 
     const order = await orderPlannerService.buildOrder({

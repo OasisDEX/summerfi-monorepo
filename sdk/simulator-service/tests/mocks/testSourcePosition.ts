@@ -134,7 +134,7 @@ export const testTargetLendingPoolInfo = SparkLendingPoolInfo.createFrom({
     tokensLocked: TokenAmount.createFrom({ token: testCollateral, amount: '10000' }),
     liquidationPenalty: Percentage.createFrom({ value: 0.1 }),
     liquidationThreshold: RiskRatio.createFrom({
-      ratio: Percentage.createFrom({ value: 0.6 }),
+      value: Percentage.createFrom({ value: 0.6 }),
       type: RiskRatioType.LTV,
     }),
     maxSupply: TokenAmount.createFrom({ token: testCollateral, amount: '10000000' }),

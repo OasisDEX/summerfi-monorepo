@@ -2,6 +2,7 @@ import { SerializationService } from '../../services/SerializationService'
 import { IRefinanceParameters } from '../interfaces'
 import { IPosition } from '../../common/interfaces/IPosition'
 import { IPercentage } from '../../common/interfaces/IPercentage'
+import { ILendingPool } from '../../protocols'
 
 /**
  * @name RefinanceParameters
@@ -9,7 +10,7 @@ import { IPercentage } from '../../common/interfaces/IPercentage'
  */
 export class RefinanceParameters implements IRefinanceParameters {
   readonly sourcePosition: IPosition
-  readonly targetPosition: IPosition
+  readonly targetPool: ILendingPool
   readonly slippage: IPercentage
 
   /** Factory method */
@@ -20,12 +21,12 @@ export class RefinanceParameters implements IRefinanceParameters {
   /** Sealed constructor */
   private constructor(params: IRefinanceParameters) {
     this.sourcePosition = params.sourcePosition
-    this.targetPosition = params.targetPosition
+    this.targetPool = params.targetPool
     this.slippage = params.slippage
   }
 
   toString(): string {
-    return `Refinance Parameters (source: ${this.sourcePosition}, target: ${this.targetPosition}, slippage: ${this.slippage})`
+    return `Refinance Parameters (source: ${this.sourcePosition}, target: ${this.targetPool}, slippage: ${this.slippage})`
   }
 }
 

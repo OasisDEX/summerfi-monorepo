@@ -60,8 +60,8 @@ describe.only('Spark Protocol Plugin (Integration)', () => {
 
     const liquidationThreshold = sparkPoolCollateralInfo!.liquidationThreshold
     expect(liquidationThreshold).toBeInstanceOf(RiskRatio)
-    expect(liquidationThreshold.ratio.value).toBeGreaterThan(0)
-    expect(liquidationThreshold.ratio.value).toBeLessThan(100)
+    expect(liquidationThreshold.toLTV().value).toBeGreaterThan(0)
+    expect(liquidationThreshold.toLTV().value).toBeLessThan(100)
 
     const tokensLocked = sparkPoolCollateralInfo!.tokensLocked
     expect(tokensLocked).toBeInstanceOf(TokenAmount)
