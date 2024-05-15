@@ -3,12 +3,13 @@ import { ITokenAmount } from '@summerfi/sdk-common/common'
 import { IMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
 import { MorphoLLTVPrecision } from '../constants/MorphoConstants'
 
-export class MorphoBorrowAction extends BaseAction {
-  public readonly config = {
+export class MorphoBorrowAction extends BaseAction<typeof MorphoBorrowAction.Config> {
+  public static readonly Config = {
     name: 'MorphoBlueBorrow',
     version: 0,
-    parametersAbi:
+    parametersAbi: [
       '((address loanToken, address collateralToken, address oracle, address irm, uint256 lltv) marketParams, uint256 amount)',
+    ],
     storageInputs: [],
     storageOutputs: ['borrowedAmount'],
   } as const
@@ -27,12 +28,16 @@ export class MorphoBorrowAction extends BaseAction {
             collateralToken: morphoLendingPool.collateralToken.address.value,
             oracle: morphoLendingPool.oracle.value,
             irm: morphoLendingPool.irm.value,
-            lltv: morphoLendingPool.lltv.toBaseUnit({ decimals: MorphoLLTVPrecision }),
+            lltv: BigInt(morphoLendingPool.lltv.toBaseUnit({ decimals: MorphoLLTVPrecision })),
           },
-          amount: amount.toBaseUnit(),
+          amount: BigInt(amount.toBaseUnit()),
         },
       ],
       mapping: paramsMapping,
     })
+  }
+
+  public get config() {
+    return MorphoBorrowAction.Config
   }
 }

@@ -4,12 +4,13 @@ import { MorphoLLTVPrecision } from '../constants/MorphoConstants'
 import { IAddress } from '@summerfi/sdk-common'
 import { IMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
 
-export class MorphoPaybackAction extends BaseAction {
-  public readonly config = {
+export class MorphoPaybackAction extends BaseAction<typeof MorphoPaybackAction.Config> {
+  public static readonly Config = {
     name: 'MorphoBluePayback',
     version: 2,
-    parametersAbi:
+    parametersAbi: [
       '((address loanToken, address collateralToken, address oracle, address irm, uint256 lltv) marketParams, uint256 amount, address onBehalf, bool paybackAll)',
+    ],
     storageInputs: ['amount'],
     storageOutputs: ['paybackedAmount'],
   } as const
@@ -33,14 +34,18 @@ export class MorphoPaybackAction extends BaseAction {
             collateralToken: morphoLendingPool.collateralToken.address.value,
             oracle: morphoLendingPool.oracle.value,
             irm: morphoLendingPool.irm.value,
-            lltv: morphoLendingPool.lltv.toBaseUnit({ decimals: MorphoLLTVPrecision }),
+            lltv: BigInt(morphoLendingPool.lltv.toBaseUnit({ decimals: MorphoLLTVPrecision })),
           },
-          amount: amount.toBaseUnit(),
+          amount: BigInt(amount.toBaseUnit()),
           onBehalf: onBehalf.value,
           paybackAll: paybackAll,
         },
       ],
       mapping: paramsMapping,
     })
+  }
+
+  public get config() {
+    return MorphoPaybackAction.Config
   }
 }

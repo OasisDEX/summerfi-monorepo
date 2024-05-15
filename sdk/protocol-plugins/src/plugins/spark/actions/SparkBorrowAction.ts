@@ -1,11 +1,11 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { IAddress, ITokenAmount } from '@summerfi/sdk-common/common'
 
-export class SparkBorrowAction extends BaseAction {
-  public readonly config = {
+export class SparkBorrowAction extends BaseAction<typeof SparkBorrowAction.Config> {
+  public static readonly Config = {
     name: 'SparkBorrow',
     version: 2,
-    parametersAbi: '(address asset, uint256 amount, address to)',
+    parametersAbi: ['(address asset, uint256 amount, address to)'],
     storageInputs: [],
     storageOutputs: ['borrowedAmount'],
   } as const
@@ -18,11 +18,15 @@ export class SparkBorrowAction extends BaseAction {
       arguments: [
         {
           asset: params.borrowAmount.token.address.value,
-          amount: params.borrowAmount.toBaseUnit(),
+          amount: BigInt(params.borrowAmount.toBaseUnit()),
           to: params.borrowTo.value,
         },
       ],
       mapping: paramsMapping,
     })
+  }
+
+  public get config() {
+    return SparkBorrowAction.Config
   }
 }

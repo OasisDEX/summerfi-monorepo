@@ -2,12 +2,13 @@ import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-pl
 import { IPercentage, ITokenAmount } from '@summerfi/sdk-common/common'
 import { HexData } from '@summerfi/sdk-common/common/aliases'
 
-export class SwapAction extends BaseAction {
-  public readonly config = {
+export class SwapAction extends BaseAction<typeof SwapAction.Config> {
+  public static readonly Config = {
     name: 'SwapAction',
     version: 3,
-    parametersAbi:
+    parametersAbi: [
       '(address fromAsset, address toAsset, uint256 amount, uint256 receiveAtLeast, uint256 fee, bytes withData, bool collectFeeFromToken)',
+    ],
     storageInputs: [],
     storageOutputs: ['received'],
   } as const
@@ -27,14 +28,18 @@ export class SwapAction extends BaseAction {
         {
           fromAsset: params.fromAmount.token.address.value,
           toAsset: params.toMinimumAmount.token.address.value,
-          amount: params.fromAmount.toBaseUnit(),
-          receiveAtLeast: params.toMinimumAmount.toBaseUnit(),
-          fee: params.fee.toBaseUnit({ decimals: 2 }),
+          amount: BigInt(params.fromAmount.toBaseUnit()),
+          receiveAtLeast: BigInt(params.toMinimumAmount.toBaseUnit()),
+          fee: BigInt(params.fee.toBaseUnit({ decimals: 2 })),
           withData: params.withData,
           collectFeeFromToken: params.collectFeeInFromToken,
         },
       ],
       mapping: paramsMapping,
     })
+  }
+
+  public get config() {
+    return SwapAction.Config
   }
 }
