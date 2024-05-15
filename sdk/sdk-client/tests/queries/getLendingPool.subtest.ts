@@ -11,21 +11,20 @@ import { AddressType } from '@summerfi/sdk-common'
 export default async function getLendingPoolTest() {
   type GetLendingPoolType = RPCClientType['protocols']['getLendingPool']['query']
 
-  const getLendingPoolQuery: GetLendingPoolType = jest.fn(async (params) => {
-    expect(params).toBeDefined()
-    expect(params.poolId).toBeDefined()
+  const getLendingPoolQuery: GetLendingPoolType = jest.fn(async (poolId) => {
+    expect(poolId).toBeDefined()
 
-    if (!isMakerLendingPoolId(params.poolId)) {
+    if (!isMakerLendingPoolId(poolId)) {
       fail('PoolId is not MakerPoolId')
     }
 
-    expect(params.poolId.protocol).toBeDefined()
-    expect(params.poolId.protocol.name).toBe(ProtocolName.Maker)
-    expect(params.poolId.ilkType).toBe(ILKType.ETH_A)
+    expect(poolId.protocol).toBeDefined()
+    expect(poolId.protocol.name).toBe(ProtocolName.Maker)
+    expect(poolId.ilkType).toBe(ILKType.ETH_A)
 
     return {
       type: PoolType.Lending,
-      id: params.poolId,
+      id: poolId,
     } as unknown as MakerLendingPool
   })
 

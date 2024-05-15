@@ -36,6 +36,6 @@ export type ILendingPoolIdData = Readonly<z.infer<typeof LendingPoolIdDataSchema
  *
  * It also asserts the type so that TypeScript knows that the object is an ILendingPoolId
  */
-export function isLendingPoolId(maybePoolId: unknown): maybePoolId is ILendingPoolIdData {
+export function isLendingPoolId(maybePoolId: unknown): maybePoolId is ILendingPoolId {
   return LendingPoolIdDataSchema.safeParse(maybePoolId).success
 }

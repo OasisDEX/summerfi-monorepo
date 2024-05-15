@@ -9,7 +9,6 @@ import {
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
 import {
-  Position,
   TokenAmount,
   Percentage,
   IToken,
@@ -31,13 +30,16 @@ export async function refinanceLendingToLendingAnyPair(
   dependencies: IRefinanceDependencies,
 ): Promise<ISimulation<RefinanceSimulationTypes>> {
   // args validation
-  if (!isLendingPool(args.targetPosition.pool)) {
+  if (!isLendingPool(args.sourcePosition.pool)) {
+    throw new Error('Source pool is not a lending pool')
+  }
+  if (!isLendingPool(args.targetPool)) {
     throw new Error('Target pool is not a lending pool')
   }
 
-  const position = args.sourcePosition as Position
-  const sourcePool = await dependencies.protocolManager.getLendingPool(args.sourcePosition.pool.id)
-  const targetPool = await dependencies.protocolManager.getLendingPool(args.targetPosition.pool.id)
+  const position = args.sourcePosition
+  const sourcePool = args.sourcePosition.pool
+  const targetPool = args.targetPool
 
   if (!isLendingPool(sourcePool)) {
     throw new Error('Source pool is not a lending pool')
@@ -47,12 +49,15 @@ export async function refinanceLendingToLendingAnyPair(
     throw new Error('Target pool is not a lending pool')
   }
 
+  console.log(sourcePool)
+  console.log(targetPool)
+
   const FLASHLOAN_MARGIN = 1.001
   const flashloanAmount = position.debtAmount.multiply(FLASHLOAN_MARGIN)
   const simulator = Simulator.create(refinanceLendingToLendingAnyPairStrategy)
 
-  const isCollateralSwapSkipped = !targetPool.collateralToken.equals(sourcePool.collateralToken)
-  const isDebtSwapSkipped = !targetPool.debtToken.equals(sourcePool.debtToken)
+  const isCollateralSwapSkipped = targetPool.collateralToken.equals(sourcePool.collateralToken)
+  const isDebtSwapSkipped = targetPool.debtToken.equals(sourcePool.debtToken)
 
   const simulation = await simulator
     .next(async () => ({
