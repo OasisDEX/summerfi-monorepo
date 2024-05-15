@@ -16,6 +16,8 @@ export interface DataApiRaysDbConfig {
   client: RDSData
 }
 
+export * from './database-types'
+
 export const getRaysDB = async (
   config: PgRaysDbConfig | DataApiRaysDbConfig,
 ): Promise<Kysely<Database>> => {

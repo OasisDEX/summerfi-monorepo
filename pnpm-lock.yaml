@@ -106,6 +106,49 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
 
+  background-jobs/update-rays-cron-function:
+    dependencies:
+      '@aws-lambda-powertools/logger':
+        specifier: ^2.0.2
+        version: 2.0.4
+      '@aws-lambda-powertools/metrics':
+        specifier: ^2.0.2
+        version: 2.0.4
+      '@aws-lambda-powertools/tracer':
+        specifier: ^2.0.2
+        version: 2.0.4
+      '@aws-sdk/client-rds-data':
+        specifier: ^3.565.0
+        version: 3.569.0
+      '@summerfi/rays-db':
+        specifier: workspace:*
+        version: link:../../packages/rays-db
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../../packages/serverless-shared
+      '@summerfi/summer-events-subgraph':
+        specifier: workspace:*
+        version: link:../../packages/summer-events-subgraph
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@types/node':
+        specifier: ^20.11.5
+        version: 20.12.7
+      eslint:
+        specifier: ^8.56.0
+        version: 8.57.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.12.7)
+
   external-api/get-collateral-locked-function:
     dependencies:
       '@aws-lambda-powertools/logger':
@@ -608,6 +651,28 @@ importers:
       zod:
         specifier: ^3.22.4
         version: 3.22.4
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^20.12.7
+        version: 20.12.7
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+
+  packages/summer-events-subgraph:
+    dependencies:
+      '@summerfi/abstractions':
+        specifier: workspace:*
+        version: link:../abstractions
+      graphql-request:
+        specifier: ^6.1.0
+        version: 6.1.0(graphql@16.8.1)
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -12418,7 +12483,7 @@ packages:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 5.0.1
+      minimatch: 5.1.6
       once: 1.4.0
     dev: true
 

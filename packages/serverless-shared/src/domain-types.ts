@@ -25,6 +25,7 @@ export enum NetworkNames {
 
 export enum ChainId {
   MAINNET = 1,
+  GOERLI = 5,
   ARBITRUM = 42161,
   OPTIMISM = 10,
   BASE = 8453,
@@ -44,6 +45,16 @@ export const NetworkByChainID: Record<ChainId, Network> = {
   [ChainId.OPTIMISM]: Network.OPTIMISM,
   [ChainId.BASE]: Network.BASE,
   [ChainId.SEPOLIA]: Network.SEPOLIA,
+  [ChainId.GOERLI]: Network.GOERLI,
+}
+
+export const ChainIDByNetwork: Record<Network, ChainId> = {
+  [Network.MAINNET]: ChainId.MAINNET,
+  [Network.ARBITRUM]: ChainId.ARBITRUM,
+  [Network.OPTIMISM]: ChainId.OPTIMISM,
+  [Network.BASE]: ChainId.BASE,
+  [Network.SEPOLIA]: ChainId.SEPOLIA,
+  [Network.GOERLI]: ChainId.GOERLI,
 }
 
 export enum ProtocolId {

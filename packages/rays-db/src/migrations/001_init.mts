@@ -55,31 +55,7 @@ export async function up(db: Kysely<never>) {
       FOR EACH ROW
   EXECUTE FUNCTION update_modified_column();`.execute(db)
 
-  console.log('Creating table proxy')
-  await db.schema.createTable('proxy')
-    .addColumn('id', 'serial', (col) => col.primaryKey())
-    .addColumn('address', 'varchar(50)', (col) => col.notNull())
-    .addColumn('chain_id', 'integer', (col) => col.notNull())
-    .addColumn('type', 'varchar(100)', (col) => col.notNull())
-    .addColumn('managed_by', 'varchar(100)', (col) => col.notNull())
-    .addColumn('user_address_id', 'integer', (col) => col.notNull().references('user_address.id').onDelete('restrict'))
-    .addColumn('created_at', 'timestamptz', (col) => col.notNull().defaultTo(sql`NOW
-        ()`))
-    .addColumn('updated_at', 'timestamptz', (col) => col.notNull().defaultTo(sql`NOW
-        ()`))
-    .addUniqueConstraint('proxy_address_chain_id_unique', ['address', 'chain_id'])
-    .execute()
-
-  await db.schema.createIndex('proxy_address_chain_id_index').on('proxy').columns(['address', 'chain_id']).execute()
-
-  await sql`CREATE TRIGGER update_proxy_updated_at
-      BEFORE UPDATE
-      ON proxy
-      FOR EACH ROW
-  EXECUTE FUNCTION update_modified_column();`.execute(db)
-
-
-  await db.schema.createType('protocol').asEnum(['AAVE_v3', 'MorphoBlue', 'Ajna', 'Spark', 'AAVE_v2', 'ERC_4626']).execute()
+  await db.schema.createType('protocol').asEnum(['aave_v2', 'morphoblue', 'ajna', 'spark', 'aave_v3', 'erc4626', 'maker']).execute()
 
   await db.schema.createType('position_type').asEnum(['Supply', 'Lend']).execute()
 
@@ -92,15 +68,17 @@ export async function up(db: Kysely<never>) {
     .addColumn('chain_id', 'integer', (col) => col.notNull())
     .addColumn('market', 'varchar(255)', (col) => col.notNull())
     .addColumn('type', sql`position_type`, (col) => col.notNull().defaultTo('Lend'))
+    .addColumn('address', 'varchar(50)', (col) => col.notNull())
+    .addColumn('vault_id', 'integer', (col) => col.notNull())
     .addColumn('created_at', 'timestamptz', (col) => col.notNull().defaultTo(sql`NOW
         ()`))
     .addColumn('updated_at', 'timestamptz', (col) => col.notNull().defaultTo(sql`NOW
         ()`))
     .addColumn('user_address_id', 'integer', (col) => col.notNull().references('user_address.id').onDelete('restrict'))
-    .addColumn('proxy_id', 'integer', (col) => col.notNull().references('proxy.id').onDelete('restrict'))
     .execute()
 
   await db.schema.createIndex('position_external_id_index').on('position').columns(['external_id']).execute()
+  await db.schema.createIndex('position_address_index').on('position').columns(['address']).execute()
 
   await sql`CREATE TRIGGER update_position_updated_at
       BEFORE UPDATE
@@ -211,11 +189,6 @@ export async function down(db: Kysely<never>) {
   console.log(`Dropping types position_type`)
   await db.schema.dropType('position_type').execute()
   await db.schema.dropType('protocol').execute()
-
-  console.log(`Dropping table proxy`)
-  await sql`DROP TRIGGER IF EXISTS update_proxy_updated_at ON proxy`.execute(db)
-  await db.deleteFrom('proxy').execute()
-  await db.schema.dropTable('proxy').execute()
 
   console.log(`Dropping table user_address`)
   await sql`DROP TRIGGER IF EXISTS update_user_address_updated_at ON user_address`.execute(db)

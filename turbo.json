@@ -42,7 +42,8 @@
     "VPC_ID",
     "SECURITY_GROUP_ID",
     "RAYS_DB_CONNECTION_STRING",
-    "IS_LOCAL"
+    "IS_LOCAL",
+    "ENABLE_RAYS_UPDATE_CRON"
   ],
   "pipeline": {
     "dev": {
