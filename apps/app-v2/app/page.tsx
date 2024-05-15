@@ -1,11 +1,6 @@
-'use client'
-
-import { useRef } from 'react'
-import { ButtonExample, Text, TitleExample } from '@summerfi/app-ui'
+import { Text } from '@summerfi/app-ui'
 
 export default function HomePage() {
-  const ref = useRef<HTMLElement>(null)
-
   return (
     <div>
       <Text>Text component</Text>
