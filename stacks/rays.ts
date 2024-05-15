@@ -11,7 +11,9 @@ export function addRaysConfig({ stack, api, db, vpc }: SummerStackContext & { db
           POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
         },
         vpc: vpc.vpc,
-        vpcSubnets: vpc.vpcSubnets,
+        vpcSubnets: {
+          subnets: [...vpc.vpc.privateSubnets],
+        },
       })
     : new Function(stack, 'get-rays-function', {
         handler: 'summerfi-api/get-rays-function/src/index.handler',

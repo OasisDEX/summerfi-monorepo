@@ -1,10 +1,10 @@
-import { PRICE_DECIMALS, PositionLike, TokenBalance } from '@summerfi/triggers-shared'
+import { PositionLike, PRICE_DECIMALS, TokenBalance } from '@summerfi/triggers-shared'
 import { Address, ChainId, PoolId } from '@summerfi/serverless-shared'
 import { PublicClient } from 'viem'
 import { chainlinkPairOracleAbi, erc20Abi, morphoBlueAbi } from '@summerfi/abis'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { calculateLtv, normalizeAmount } from './helpers'
-import { UsdcAndTokenPrice, getPricesSubgraphClient } from '@summerfi/prices-subgraph'
+import { getPricesSubgraphClient, UsdcAndTokenPrice } from '@summerfi/prices-subgraph'
 import { BigNumber } from 'bignumber.js'
 
 export interface GetMorphoBluePositionParams {
@@ -171,8 +171,8 @@ export async function getMorphoBluePosition(
     logger,
   })
   const [collateralData, debtData] = await Promise.all([
-    await pricesClient.getUsdcAndTokenPrice({ token: collateral }),
-    await pricesClient.getUsdcAndTokenPrice({ token: debt }),
+    pricesClient.getUsdcAndTokenPrice({ token: collateral }),
+    pricesClient.getUsdcAndTokenPrice({ token: debt }),
   ])
 
   const collateralPriceInDebt = normalizeAmount(

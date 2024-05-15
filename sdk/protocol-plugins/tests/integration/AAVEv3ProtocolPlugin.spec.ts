@@ -45,8 +45,8 @@ describe('AAVEv3 Protocol Plugin (Integration)', () => {
 
     const liquidationThreshold = aaveV3PoolCollateralInfo!.liquidationThreshold
     expect(liquidationThreshold).toBeInstanceOf(RiskRatio)
-    expect(liquidationThreshold.ratio.value).toBeGreaterThan(0)
-    expect(liquidationThreshold.ratio.value).toBeLessThan(100)
+    expect(liquidationThreshold.toLTV().value).toBeGreaterThan(0)
+    expect(liquidationThreshold.toLTV().value).toBeLessThan(100)
 
     const tokensLocked = aaveV3PoolCollateralInfo!.tokensLocked
     expect(tokensLocked).toBeInstanceOf(TokenAmount)

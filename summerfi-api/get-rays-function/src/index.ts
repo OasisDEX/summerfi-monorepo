@@ -101,7 +101,7 @@ export const handler = async (
   )
 
   const result = Object.entries(byDueDate).map(([dueDate, points]) => {
-    const total = points.reduce((acc, result) => acc + result.points, 0)
+    const total = points.reduce((acc, result) => acc + Number(result.points), 0)
     const [timestamp, type] = dueDate.split('-')
     return {
       dueDate: Number(timestamp) === 0 ? null : new Date(Number(timestamp)),
@@ -111,7 +111,7 @@ export const handler = async (
   })
 
   const eligiblePoints = result.find((result) => result.dueDate === null)?.points ?? 0
-  const allPossiblePoints = result.reduce((acc, result) => acc + result.points, 0)
+  const allPossiblePoints = result.reduce((acc, result) => acc + Number(result.points), 0)
   const actionRequiredPoints = result.filter((result) => result.dueDate !== null)
 
   return ResponseOk({

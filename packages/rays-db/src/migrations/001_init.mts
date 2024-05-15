@@ -134,7 +134,7 @@ export async function up(db: Kysely<never>) {
   await db.schema
     .createTable('points_distribution')
     .addColumn('id', 'serial', (col) => col.primaryKey())
-    .addColumn('points', 'integer', (col) => col.notNull().defaultTo(0))
+    .addColumn('points', 'decimal(20, 10)', (col) => col.notNull().defaultTo(0))
     .addColumn('description', 'varchar', (col) => col.notNull())
     .addColumn('type', 'varchar(100)', (col) => col.notNull())
     .addColumn('created_at', 'timestamptz', (col) => col.notNull().defaultTo(sql`NOW

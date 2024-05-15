@@ -54,10 +54,15 @@ export function addRaysDb({
     cdk: {
       cluster: {
         vpc: vpc.vpc,
-        vpcSubnets: vpc.vpcSubnets,
+        vpcSubnets: {
+          subnets: [...vpc.vpc.privateSubnets, ...vpc.vpc.publicSubnets],
+        },
+        securityGroups: [vpc.securityGroup],
       },
     },
   })
+
+  rds.cdk.cluster.connections.allowDefaultPortFromAnyIpv4()
 
   const resource = rds.node.defaultChild as cdk.CfnResource
   resource?.applyRemovalPolicy(cdk.RemovalPolicy.RETAIN)

@@ -171,10 +171,6 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
 
     const collateralToken = morphoLendingPool.collateralToken
     const liquidationPenalty = this._getLiquidationPenalty(morphoLendingPool)
-    const liquidationThreshold = this._getLiquidationThreshold(
-      marketInfo,
-      marketCollateralPriceInDebt,
-    )
 
     const collateralPriceUSD = await this.ctx.oracleManager.getSpotPrice({
       baseToken: collateralToken,
@@ -184,7 +180,7 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
       token: collateralToken,
       price: marketCollateralPriceInDebt,
       priceUSD: collateralPriceUSD.price,
-      liquidationThreshold: liquidationThreshold,
+      liquidationThreshold: morphoLendingPool.lltv,
       tokensLocked: marketInfo.totalSupplyAssets,
       maxSupply: TokenAmount.createFrom({
         token: collateralToken,
@@ -216,7 +212,7 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
 
     const debtCeiling = marketCollateralPriceInDebt
       .multiply(marketInfo.totalSupplyAssets)
-      .multiply(morphoLendingPool.lltv)
+      .multiply(morphoLendingPool.lltv.toLTV())
 
     const debtAvailable = debtCeiling.subtract(marketInfo.totalBorrowAssets)
 
@@ -368,34 +364,12 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
       collateralToken,
       oracle: Address.createFromEthereum({ value: marketParameters[2] }),
       irm: Address.createFromEthereum({ value: marketParameters[3] }),
-      lltv: Percentage.createFrom({ value: lltv }),
+      lltv: RiskRatio.createFrom({
+        type: RiskRatioType.LTV,
+        value: Percentage.createFrom({ value: lltv }),
+      }),
     }
   }
-
-  /**
-   * @name _getLiquidationThreshold
-   * @description Get the liquidation threshold for the given morpho lending pool ID
-   * @param marketInfo The market info
-   * @param marketCollateralPriceInDebt The market collateral price in debt
-   * @returns The liquidation threshold
-   */
-  private _getLiquidationThreshold(
-    marketInfo: MorphoMarketInfo,
-    marketCollateralPriceInDebt: IPrice,
-  ): IRiskRatio {
-    const riskRatioValue = marketInfo.totalBorrowAssets
-      .toBN()
-      .div(marketCollateralPriceInDebt.toBN().multipliedBy(marketInfo.totalSupplyAssets.toBN()))
-      .multipliedBy(100)
-
-    return RiskRatio.createFrom({
-      ratio: Percentage.createFrom({
-        value: riskRatioValue.toNumber(),
-      }),
-      type: RiskRatioType.LTV,
-    })
-  }
-
   /**
    * @name _getLiquidationPenalty
    * @description Get the liquidation incentive factor for the given morpho lending pool ID
@@ -411,7 +385,7 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
 
     const LIF = BigNumber.min(
       MAX_LIF,
-      ONE.div(BETA.times(lltv.toProportion()).plus(ONE.minus(BETA))),
+      ONE.div(BETA.times(lltv.toLTV().toProportion()).plus(ONE.minus(BETA))),
     )
       .minus(ONE)
       .multipliedBy(100)

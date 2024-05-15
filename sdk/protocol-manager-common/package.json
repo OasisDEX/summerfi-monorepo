@@ -12,8 +12,6 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest --coverage=true --passWithNoTests",
-    "testw": "jest --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "build": "tsc -b -v tsconfig.build.json",

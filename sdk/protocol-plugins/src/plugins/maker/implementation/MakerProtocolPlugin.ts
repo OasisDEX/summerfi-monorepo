@@ -201,7 +201,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
       }),
       priceUSD: collateralPriceUSD.price,
       liquidationThreshold: RiskRatio.createFrom({
-        ratio: Percentage.createFrom({
+        value: Percentage.createFrom({
           value: spotRes.liquidationRatio.times(100).toNumber(),
         }),
         type: RiskRatioType.CollateralizationRatio,
