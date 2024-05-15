@@ -55,25 +55,25 @@ import {
   SparkStopLossToDebtV2ID,
 } from '@summerfi/triggers-shared/contracts'
 import {
+  getCurrentTrigger,
+  hasAnyDefined,
   mapBuySellCommonParams,
   mapStopLossParams,
   mapTriggerCommonParams,
-  hasAnyDefined,
-  getCurrentTrigger,
 } from './helpers'
 import { getPricesSubgraphClient } from '@summerfi/prices-subgraph'
 import {
   getDmaAavePartialTakeProfit,
-  getDmaSparkPartialTakeProfit,
   getDmaAaveTrailingStopLoss,
-  getDmaSparkTrailingStopLoss,
   getDmaMorphoBlueTrailingStopLoss,
+  getDmaSparkPartialTakeProfit,
+  getDmaSparkTrailingStopLoss,
 } from './trigger-parsers'
 import { ChainId, getRpcGatewayEndpoint, IRpcConfig, ProtocolId } from '@summerfi/serverless-shared'
 import { getAddresses } from '@summerfi/triggers-shared'
 import { getMorphoBluePartialTakeProfit } from './trigger-parsers/dma-morphoblue-partial-take-profit'
 
-const logger = new Logger({ serviceName: 'getTriggersFunction' })
+const logger = new Logger({ serviceName: 'get-triggers-function' })
 
 export const rpcConfig: IRpcConfig = {
   skipCache: false,
