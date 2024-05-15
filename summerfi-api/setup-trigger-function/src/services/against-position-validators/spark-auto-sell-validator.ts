@@ -110,7 +110,7 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action }) => {
       if (action === SupportedActions.Remove || action === SupportedActions.Update)
-        return triggers.triggers[ProtocolId.SPARK].basicBuy !== undefined
+        return triggers.triggers[ProtocolId.SPARK].basicSell !== undefined
       return true
     },
     {
