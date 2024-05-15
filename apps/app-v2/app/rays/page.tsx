@@ -1,3 +1,3 @@
-export default function RaysPage(): React.JSX.Element {
+export default function RaysPage() {
   return <div>Rays!</div>
 }

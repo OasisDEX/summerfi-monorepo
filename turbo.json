@@ -52,8 +52,12 @@
       "persistent": true
     },
     "prebuild": {
-      "dependsOn": ["^prebuild"],
+      "dependsOn": ["^prebuild", "^prebuild:nocache"],
       "outputs": ["src/types/graphql/generated.ts", "src/generated"]
+    },
+    "prebuild:nocache": {
+      "dependsOn": ["^prebuild:nocache"],
+      "cache": false
     },
     "predev": {
       "dependsOn": ["^predev"],
