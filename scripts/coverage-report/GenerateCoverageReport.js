@@ -1,3 +1,6 @@
+/**
+ * Code based on https://dev.to/musatov/improving-code-coverage-reporting-in-monorepos-115e
+ */
 const {
   getAllPathsForPackagesSummaries,
   readSummaryPerPackageAndCreateJoinedSummaryReportWithTotal,
