@@ -1822,8 +1822,8 @@ importers:
         specifier: ^2.0.4
         version: 2.0.4
       '@oasisdex/automation':
-        specifier: 1.6.5-morpho.0
-        version: 1.6.5-morpho.0
+        specifier: 1.6.5-morpho.6
+        version: 1.6.5-morpho.6
       '@oasisdex/dma-library':
         specifier: 0.6.4-automation.13
         version: 0.6.4-automation.13
@@ -7191,8 +7191,8 @@ packages:
     resolution: {integrity: sha512-UAmNodCG3ld4LK5w7sgtoA0ml4lMFfSE7Zp1vswW7/3823IZFmvEO6wy0Pd/vPnJjjKDYaLJdhsRRYGYHwYGSg==}
     dev: false
 
-  /@oasisdex/automation@1.6.5-morpho.0:
-    resolution: {integrity: sha512-hMfvaBEbDQePP1MHcFdQ58Uf6Ewur+UjkLo25hns7IDj56pgQWuNxbnIf9Hz2OSX5vtFvQFYxNZ+qqxtaE3w7Q==}
+  /@oasisdex/automation@1.6.5-morpho.6:
+    resolution: {integrity: sha512-zMpuB/61QkXR5+zXaBJb2tKTJR5v+BsaNwEm8gWWpDT0xjhh/gBca3hoZvWnoJUHn4raD3DvYapYhBn1qxiZmQ==}
     dependencies:
       ethers: 5.7.2
     transitivePeerDependencies:

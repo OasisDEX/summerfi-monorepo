@@ -12,7 +12,6 @@ export type CacheContext = {
 export interface VPCContext {
   vpc: ec2.IVpc
   securityGroup: ec2.ISecurityGroup
-  vpcSubnets: ec2.SubnetSelection
 }
 
 export type SummerStackContext = StackContext & {

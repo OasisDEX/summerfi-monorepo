@@ -57,7 +57,7 @@ export const encodeMorphoBlueAutoBuy = (
     position.collateral.token.decimals,
     triggerData.executionLTV,
     triggerData.targetLTV,
-    triggerData.maxBuyPrice ?? maxUnit256,
+    maxUnit256,
     DEFAULT_DEVIATION, // 100 -> 1%
     triggerData.maxBaseFee,
   ])
