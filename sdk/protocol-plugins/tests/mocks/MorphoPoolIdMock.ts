@@ -5,7 +5,14 @@ import {
   MorphoMarketParameters,
   MorphoProtocol,
 } from '../../src'
-import { Address, ChainFamilyMap, Percentage, Token } from '@summerfi/sdk-common'
+import {
+  Address,
+  ChainFamilyMap,
+  Percentage,
+  RiskRatio,
+  RiskRatioType,
+  Token,
+} from '@summerfi/sdk-common'
 
 export const morphoPoolIdMock: IMorphoLendingPoolId = MorphoLendingPoolId.createFrom({
   protocol: MorphoProtocol.createFrom({
@@ -32,5 +39,8 @@ export const morphoPoolMarketParams: MorphoMarketParameters = {
   }),
   oracle: Address.createFromEthereum({ value: '0x2a01EB9496094dA03c4E364Def50f5aD1280AD72' }),
   irm: Address.createFromEthereum({ value: '0x870aC11D48B15DB9a138Cf899d20F13F79Ba00BC' }),
-  lltv: Percentage.createFrom({ value: 94.5 }),
+  lltv: RiskRatio.createFrom({
+    value: Percentage.createFrom({ value: 94.5 }),
+    type: RiskRatioType.LTV,
+  }),
 }

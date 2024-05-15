@@ -2,7 +2,8 @@ import { LendingPool } from '@summerfi/sdk-common/protocols'
 import { IMorphoLendingPool, IMorphoLendingPoolData } from '../interfaces/IMorphoLendingPool'
 import { SerializationService } from '@summerfi/sdk-common/services'
 import { MorphoLendingPoolId } from './MorphoLendingPoolId'
-import { Address, Percentage } from '@summerfi/sdk-common/common'
+import { Address } from '@summerfi/sdk-common/common'
+import { RiskRatio } from '@summerfi/sdk-common'
 
 /**
  * @class MorphoLendingPool
@@ -12,7 +13,7 @@ export class MorphoLendingPool extends LendingPool implements IMorphoLendingPool
   readonly id: MorphoLendingPoolId
   readonly oracle: Address
   readonly irm: Address
-  readonly lltv: Percentage
+  readonly lltv: RiskRatio
 
   private constructor(params: IMorphoLendingPoolData) {
     super(params)
@@ -20,7 +21,7 @@ export class MorphoLendingPool extends LendingPool implements IMorphoLendingPool
     this.id = MorphoLendingPoolId.createFrom(params.id)
     this.oracle = Address.createFrom(params.oracle)
     this.irm = Address.createFrom(params.irm)
-    this.lltv = Percentage.createFrom(params.lltv)
+    this.lltv = RiskRatio.createFrom(params.lltv)
   }
 
   public static createFrom(params: IMorphoLendingPoolData): MorphoLendingPool {

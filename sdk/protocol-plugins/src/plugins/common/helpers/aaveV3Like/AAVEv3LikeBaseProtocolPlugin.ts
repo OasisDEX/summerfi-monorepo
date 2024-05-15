@@ -163,7 +163,7 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
           value: asset.price.toString(),
         }),
         liquidationThreshold: RiskRatio.createFrom({
-          ratio: Percentage.createFrom({
+          value: Percentage.createFrom({
             value: new BigNumber(liquidationThreshold.toString())
               .div(LTV_TO_PERCENTAGE_DIVISOR)
               .toNumber(),

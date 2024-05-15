@@ -6,7 +6,14 @@ import {
   MorphoLendingPoolId,
   MorphoProtocol,
 } from '../../../../src'
-import { ChainFamilyMap, Percentage, Protocol, ProtocolName } from '@summerfi/sdk-common'
+import {
+  ChainFamilyMap,
+  Percentage,
+  Protocol,
+  ProtocolName,
+  RiskRatio,
+  RiskRatioType,
+} from '@summerfi/sdk-common'
 import { PoolType } from '@summerfi/sdk-common/protocols'
 import { MorphoLLTVPrecision } from '../../../../src/plugins/morphoblue/constants/MorphoConstants'
 
@@ -48,7 +55,10 @@ describe('MorphoDepositAction Action', () => {
     id: morphoLendingPoolId,
     irm: Address.createFromEthereum({ value: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599' }),
     oracle: Address.createFromEthereum({ value: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48' }),
-    lltv: Percentage.createFrom({ value: 0.5 }),
+    lltv: RiskRatio.createFrom({
+      value: Percentage.createFrom({ value: 0.5 }),
+      type: RiskRatioType.LTV,
+    }),
     type: PoolType.Lending,
   })
 
@@ -82,7 +92,9 @@ describe('MorphoDepositAction Action', () => {
           collateralToken: morphoLendingPool.collateralToken.address.value,
           oracle: morphoLendingPool.oracle.value,
           irm: morphoLendingPool.irm.value,
-          lltv: BigInt(morphoLendingPool.lltv.toBaseUnit({ decimals: MorphoLLTVPrecision })),
+          lltv: BigInt(
+            morphoLendingPool.lltv.toLTV().toBaseUnit({ decimals: MorphoLLTVPrecision }),
+          ),
         },
         sumAmounts: false,
       },

@@ -70,5 +70,16 @@ export type IPercentageData = Readonly<z.infer<typeof PercentageDataSchema>>
  * @returns true if the object is an IPercentage
  */
 export function isPercentage(maybePercentage: unknown): maybePercentage is IPercentage {
-  return PercentageDataSchema.safeParse(maybePercentage).success
+  return isPercentageData(maybePercentage)
+}
+
+/**
+ * @description Type guard for IPercentageData
+ * @param maybePercentageData
+ * @returns true if the object is an IPercentageData
+ */
+export function isPercentageData(
+  maybePercentageData: unknown,
+): maybePercentageData is IPercentageData {
+  return PercentageDataSchema.safeParse(maybePercentageData).success
 }
