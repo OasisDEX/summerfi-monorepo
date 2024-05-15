@@ -8,6 +8,7 @@ body {
   cursor: auto;
 
   font-family:
+    var(--font-inter),
     system-ui,
     /* macOS 10.11-10.12 */ -apple-system,
     /* Windows 6+ */ 'Segoe UI',
