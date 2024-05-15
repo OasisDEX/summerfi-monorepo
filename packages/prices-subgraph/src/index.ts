@@ -157,19 +157,26 @@ async function getUsdcAndTokenPrice(
   const url = getEndpoint(config.chainId, config.urlBase)
   const prices = await request(url, PricesUsdcTokenDocument, {
     token: params.token,
+    tokenID: params.token.toLowerCase(),
   })
 
+  const usdcPrice = prices.usdcPrice[0]?.price
+  const tokenInUsdcPrice = prices.tokenInUSDC[0]?.derivedPrice
+    ? BigInt(prices.tokenInUSDC[0]?.derivedPrice)
+    : prices?.token?.symbol === 'USDC'
+      ? 1n
+      : undefined
+
   config.logger?.debug('Received USDC/Token price for', {
-    token: params.token,
-    usdcPrice: prices.usdcPrice[0]?.price,
-    tokenInUsdcPrice: prices.tokenInUSDC[0]?.derivedPrice,
+    params,
+    usdcPrice,
+    tokenInUsdcPrice,
+    token: prices.token,
   })
 
   return {
-    usdcPrice: prices.usdcPrice[0]?.price ? BigInt(prices.usdcPrice[0]?.price) : undefined,
-    tokenInUsdcPrice: prices.tokenInUSDC[0]?.derivedPrice
-      ? BigInt(prices.tokenInUSDC[0]?.derivedPrice)
-      : undefined,
+    usdcPrice,
+    tokenInUsdcPrice,
   }
 }
 
