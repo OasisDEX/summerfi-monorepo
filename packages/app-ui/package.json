@@ -43,6 +43,7 @@
     "access": "public"
   },
   "dependencies": {
+    "sanitize.css": "13.0.0",
     "vite-tsconfig-paths": "^4.3.2"
   }
 }

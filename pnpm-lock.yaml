@@ -280,6 +280,9 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      sanitize.css:
+        specifier: 13.0.0
+        version: 13.0.0
       vite-tsconfig-paths:
         specifier: ^4.3.2
         version: 4.3.2(typescript@5.4.5)(vite@5.2.11)
@@ -305,9 +308,6 @@ importers:
       glob:
         specifier: ^10.3.12
         version: 10.3.12
-      sanitize.css:
-        specifier: ^13.0.0
-        version: 13.0.0
       sass:
         specifier: ^1.77.0
         version: 1.77.0
@@ -16995,7 +16995,7 @@ packages:
 
   /sanitize.css@13.0.0:
     resolution: {integrity: sha512-ZRwKbh/eQ6w9vmTjkuG0Ioi3HBwPFce0O+v//ve+aOq1oeCy7jMV2qzzAlpsNuqpqCBjjriM1lbtZbF/Q8jVyA==}
-    dev: true
+    dev: false
 
   /sass-lookup@5.0.1:
     resolution: {integrity: sha512-t0X5PaizPc2H4+rCwszAqHZRtr4bugo4pgiCvrBFvIX0XFxnr29g77LJcpyj9A0DcKf7gXMLcgvRjsonYI6x4g==}
