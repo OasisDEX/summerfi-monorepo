@@ -3,13 +3,15 @@ import { ITokenAmount } from '@summerfi/sdk-common/common'
 import { MorphoLLTVPrecision } from '../constants/MorphoConstants'
 import { IAddress } from '@summerfi/sdk-common'
 import { IMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
+import { MorphoMarketParametersAbi } from '../types/MorphoMarketParameters'
 
 export class MorphoPaybackAction extends BaseAction<typeof MorphoPaybackAction.Config> {
   public static readonly Config = {
     name: 'MorphoBluePayback',
     version: 2,
     parametersAbi: [
-      '((address loanToken, address collateralToken, address oracle, address irm, uint256 lltv) marketParams, uint256 amount, address onBehalf, bool paybackAll)',
+      '(MarketParams marketParams, uint256 amount, address onBehalf, bool paybackAll)',
+      MorphoMarketParametersAbi,
     ],
     storageInputs: ['amount'],
     storageOutputs: ['paybackedAmount'],

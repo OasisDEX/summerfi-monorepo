@@ -3,13 +3,15 @@ import { ITokenAmount } from '@summerfi/sdk-common/common'
 import { MorphoLLTVPrecision } from '../constants/MorphoConstants'
 import { IAddress } from '@summerfi/sdk-common'
 import { IMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
+import { MorphoMarketParametersAbi } from '../types/MorphoMarketParameters'
 
 export class MorphoWithdrawAction extends BaseAction<typeof MorphoWithdrawAction.Config> {
   public static readonly Config = {
     name: 'MorphoBlueWithdraw',
     version: 0,
     parametersAbi: [
-      '((address loanToken, address collateralToken, address oracle, address irm, uint256 lltv) marketParams, uint256 amount, address to)',
+      '(MarketParams marketParams, uint256 amount, address to)',
+      MorphoMarketParametersAbi,
     ],
     storageInputs: ['marketParams', 'amount', 'to'],
     storageOutputs: ['withdrawnAmount'],
