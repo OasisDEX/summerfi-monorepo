@@ -19,6 +19,8 @@ export type JsonPrimitive = boolean | number | string | null
 
 export type JsonValue = JsonArray | JsonObject | JsonPrimitive
 
+export type Numeric = ColumnType<string, number | string, number | string>
+
 export type PositionType = 'Lend' | 'Supply'
 
 export type Protocol = 'AAVE_v2' | 'AAVE_v3' | 'Ajna' | 'ERC_4626' | 'MorphoBlue' | 'Spark'
@@ -58,7 +60,7 @@ export interface PointsDistribution {
   description: string
   eligibilityConditionId: number | null
   id: Generated<number>
-  points: Generated<number>
+  points: Generated<Numeric>
   positionId: number | null
   type: string
   updatedAt: Generated<Timestamp>

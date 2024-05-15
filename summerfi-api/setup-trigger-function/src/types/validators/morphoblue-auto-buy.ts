@@ -13,14 +13,14 @@ import {
   poolIdSchema,
   urlOptionalSchema,
 } from '@summerfi/serverless-shared'
-import { TriggerType } from '@oasisdex/automation'
 
 export const morphoBlueBasicBuyTriggerDataSchema = z
   .object({
     type: z
       .any()
       .optional()
-      .transform(() => BigInt(TriggerType.DmaMorphoBlueBasicBuyV2)),
+      // just to debug
+      .transform(() => BigInt(139)),
     executionLTV: ltvSchema,
     targetLTV: ltvSchema,
     maxBuyPrice: priceSchema.optional().default(maxUnit256),
