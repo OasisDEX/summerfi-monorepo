@@ -33,13 +33,13 @@ export async function refinanceLendingToLendingAnyPair(
   if (!isLendingPool(args.sourcePosition.pool)) {
     throw new Error('Source pool is not a lending pool')
   }
-  if (!isLendingPool(args.targetPosition.pool)) {
+  if (!isLendingPool(args.targetPool)) {
     throw new Error('Target pool is not a lending pool')
   }
 
   const position = args.sourcePosition
   const sourcePool = args.sourcePosition.pool
-  const targetPool = args.targetPosition.pool
+  const targetPool = args.targetPool
 
   if (!isLendingPool(sourcePool)) {
     throw new Error('Source pool is not a lending pool')

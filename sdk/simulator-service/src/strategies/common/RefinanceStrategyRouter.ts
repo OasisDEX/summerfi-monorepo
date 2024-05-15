@@ -7,11 +7,11 @@ import { IOracleManager } from '@summerfi/oracle-common'
 import { IProtocolManager } from '@summerfi/protocol-manager-common'
 
 function isToSamePair(parameters: IRefinanceParameters): boolean {
-  const { sourcePosition, targetPosition } = parameters
+  const { sourcePosition, targetPool } = parameters
 
   return (
-    sourcePosition.debtAmount.token.equals(targetPosition.debtAmount.token) &&
-    sourcePosition.collateralAmount.token.equals(targetPosition.collateralAmount.token)
+    sourcePosition.debtAmount.token.equals(targetPool.debtToken) &&
+    sourcePosition.collateralAmount.token.equals(targetPool.collateralToken)
   )
 }
 

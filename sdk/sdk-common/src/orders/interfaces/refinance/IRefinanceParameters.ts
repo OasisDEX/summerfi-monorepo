@@ -1,15 +1,16 @@
 import { z } from 'zod'
 import { IPercentage, PercentageDataSchema } from '../../../common/interfaces/IPercentage'
 import { IPosition, PositionDataSchema } from '../../../common/interfaces/IPosition'
+import { ILendingPool, LendingPoolDataSchema } from '../../../protocols'
 
 /**
  * Parameters for a refinance simulation
  */
 export interface IRefinanceParameters extends IRefinanceParametersData {
-  /** Existing position to be refinances */
+  /** Existing position to be refinanced */
   readonly sourcePosition: IPosition
-  /** Target position to achieve with the simulation */
-  readonly targetPosition: IPosition
+  /** Target pool where the source position will be moved  */
+  readonly targetPool: ILendingPool
   /** Maximum slippage allowed for the simulation */
   readonly slippage: IPercentage
 }
@@ -19,7 +20,7 @@ export interface IRefinanceParameters extends IRefinanceParametersData {
  */
 export const RefinanceParametersDataSchema = z.object({
   sourcePosition: PositionDataSchema,
-  targetPosition: PositionDataSchema,
+  targetPool: LendingPoolDataSchema,
   slippage: PercentageDataSchema,
 })
 

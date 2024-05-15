@@ -11,7 +11,6 @@ import {
   Address,
   type Maybe,
   ChainFamilyMap,
-  newEmptyPositionFromPool,
   PositionType,
   IToken,
 } from '@summerfi/sdk-common'
@@ -159,10 +158,9 @@ describe.skip('Refinance Morpho Spark | SDK', () => {
       assert(false, 'Spark pool type is not lending')
     }
 
-    const emptyTargetPosition = newEmptyPositionFromPool(sparkPool)
     const refinanceParameters = RefinanceParameters.createFrom({
       sourcePosition: morphoPosition,
-      targetPosition: emptyTargetPosition,
+      targetPool: sparkPool,
       slippage: Percentage.createFrom({ value: 0.2 }),
     })
 
