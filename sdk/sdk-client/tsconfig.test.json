@@ -10,7 +10,8 @@
       "@summerfi/protocol-plugins/*": ["../protocol-plugins/src/*"],
       "@summerfi/protocol-plugins": ["../protocol-plugins/src/index.ts"],
       "@summerfi/protocol-plugins-common": ["../protocol-plugins-common/src/index.ts"],
-      "@summerfi/testing-utils": ["node_modules/@summerfi/testing-utils/src"]
+      "@summerfi/testing-utils": ["node_modules/@summerfi/testing-utils/src"],
+      "@summerfi/abis": ["../../packages/abis/src"]
     }
   },
   "include": ["src/**/*.ts"],

@@ -23,6 +23,7 @@
     "@summerfi/common": "workspace:*",
     "@summerfi/configuration-provider": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
+    "@summerfi/sdk-server-common": "workspace:*",
     "@summerfi/tokens-common": "workspace:*"
   },
   "devDependencies": {

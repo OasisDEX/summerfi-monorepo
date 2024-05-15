@@ -1,8 +1,10 @@
 import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 import {
+  ISparkLendingPool,
   ISparkLendingPoolData,
   ISparkLendingPoolIdData,
   ISparkProtocolData,
+  SparkLendingPool,
   SparkPositionId,
 } from '@summerfi/protocol-plugins/plugins/spark'
 import {
@@ -58,10 +60,12 @@ export function getSparkPosition(): Position {
     emodeType: EmodeType.None,
   }
 
-  const pool: ISparkLendingPoolData = {
+  const pool: ISparkLendingPool = SparkLendingPool.createFrom({
     type: PoolType.Lending,
     id: poolId,
-  }
+    debtToken: DAI,
+    collateralToken: WETH,
+  })
 
   const position = {
     type: PositionType.Multiply,

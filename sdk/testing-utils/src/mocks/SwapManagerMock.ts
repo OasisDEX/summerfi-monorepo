@@ -1,8 +1,11 @@
 import { Address, ChainInfo, Percentage, Token, TokenAmount } from '@summerfi/sdk-common/common'
-import { SwapData, QuoteData } from '@summerfi/sdk-common/swap'
-import { ISwapManager } from '@summerfi/swap-common/interfaces'
-
-export class SwapManagerMock implements ISwapManager {
+import { SwapData, QuoteData, SwapProviderType } from '@summerfi/sdk-common/swap'
+import { ISwapManager, ISwapProvider } from '@summerfi/swap-common/interfaces'
+import { ManagerWithProvidersBase } from '@summerfi/sdk-server-common'
+export class SwapManagerMock
+  extends ManagerWithProvidersBase<SwapProviderType, ISwapProvider>
+  implements ISwapManager
+{
   private _swapDataReturnValue: SwapData = {} as SwapData
   private _quoteDataReturnValue: QuoteData = {} as QuoteData
   private _summerFeeValue: Percentage = Percentage.createFrom({ value: 0 })
@@ -24,6 +27,12 @@ export class SwapManagerMock implements ISwapManager {
         toToken: Token
       }
     | undefined
+
+  constructor() {
+    super({
+      providers: [],
+    })
+  }
 
   setSwapData(swapData: SwapData): void {
     this._swapDataReturnValue = swapData

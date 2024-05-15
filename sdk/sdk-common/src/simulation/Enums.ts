@@ -32,8 +32,8 @@ export enum FlashloanProvider {
 }
 
 export enum TokenTransferTargetType {
-  PositionsManager = 1,
   StrategyExecutor = 0,
+  PositionsManager = 1,
 }
 
 export type RefinanceSimulationTypes =

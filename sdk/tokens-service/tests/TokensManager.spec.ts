@@ -16,11 +16,7 @@ describe('TokensManager', () => {
   beforeEach(() => {
     const mockTokensProvider = new MockTokensProvider()
     tokensManager = new TokensManager({
-      providersConfig: [
-        {
-          provider: mockTokensProvider,
-        },
-      ],
+      providers: [mockTokensProvider],
     })
   })
 

@@ -1,5 +1,5 @@
-import { IPrice, PriceSchema } from '../common/interfaces/IPrice'
-import { IToken, TokenSchema } from '../common/interfaces/IToken'
+import { IPrice, PriceDataSchema } from '../common/interfaces/IPrice'
+import { IToken, TokenDataSchema } from '../common/interfaces/IToken'
 import { OracleProviderType, OracleProviderTypeSchema } from './OracleProviderType'
 import { z } from 'zod'
 
@@ -19,8 +19,8 @@ export type SpotPriceInfo = {
 /**
  * @description Zod schema for SpotPriceInfo
  */
-export const SpotPriceInfoSchema = z.object({
+export const SpotPriceInfoDataSchema = z.object({
   provider: OracleProviderTypeSchema,
-  token: TokenSchema,
-  price: PriceSchema,
+  token: TokenDataSchema,
+  price: PriceDataSchema,
 })

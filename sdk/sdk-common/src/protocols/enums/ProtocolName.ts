@@ -8,7 +8,7 @@ export enum ProtocolName {
   AAVEv3 = 'AAVEv3',
   AAVEv2 = 'AAVEv2',
   Spark = 'Spark',
-  MorphoBlue = 'MorphoBlue',
+  Morpho = 'Morpho',
   Maker = 'Maker',
   Ajna = 'Ajna',
 }

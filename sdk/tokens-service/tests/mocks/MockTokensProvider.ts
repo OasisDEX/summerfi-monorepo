@@ -10,9 +10,21 @@ import {
 } from '@summerfi/sdk-common'
 import { Token } from '@summerfi/sdk-common/common'
 import { ITokensProvider } from '@summerfi/tokens-common'
+import { ManagerProviderBase } from '@summerfi/sdk-server-common'
+import { IConfigurationProvider } from '@summerfi/configuration-provider'
 
-export class MockTokensProvider implements ITokensProvider {
+export class MockTokensProvider
+  extends ManagerProviderBase<TokensProviderType>
+  implements ITokensProvider
+{
   type: TokensProviderType = TokensProviderType.Static
+
+  constructor() {
+    super({
+      type: TokensProviderType.Static,
+      configProvider: undefined as unknown as IConfigurationProvider,
+    })
+  }
 
   getSupportedChainIds(): ChainId[] {
     return [1, 4, 6]

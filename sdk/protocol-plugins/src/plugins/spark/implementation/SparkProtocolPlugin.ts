@@ -9,13 +9,8 @@ import { ILendingPoolIdData, PoolType, ProtocolName } from '@summerfi/sdk-common
 import { SparkLendingPool } from './SparkLendingPool'
 
 import { SparkContractNames } from '@summerfi/deployment-types'
-import {
-  SPARK_LENDING_POOL_ABI,
-  SPARK_ORACLE_ABI,
-  SPARK_POOL_DATA_PROVIDER_ABI,
-} from '../abis/SparkABIS'
 import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { SparkAddressAbiMap } from '../types/SparkAddressAbiMap'
+import { SparkAbiMap, SparkAbiMapType } from '../abis/SparkAddressAbiMap'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 import {
@@ -29,21 +24,30 @@ import { IAaveV3PositionIdData } from '../../aave-v3'
 import { SparkLendingPoolInfo } from './SparkLendingPoolInfo'
 import { sparkEmodeCategoryMap } from './EmodeCategoryMap'
 import { AAVEv3LikeBaseProtocolPlugin } from '../../common/helpers/aaveV3Like/AAVEv3LikeBaseProtocolPlugin'
-import { AAVEv3LikeAbiInfo } from '../../common/helpers/aaveV3Like/AAVEv3LikeAbi'
-import { FiatCurrency } from '@summerfi/sdk-common'
+import { FiatCurrency, IChainInfo } from '@summerfi/sdk-common'
+import { ContractInfo } from '../../common/types/ContractInfo'
+import { ChainContractsProvider } from '../../utils/ChainContractProvider'
 
 /**
  * @class SparkProtocolPlugin
  * @description Protocol plugin for the Spark protocol
  * @see BaseProtocolPlugin
  */
-export class SparkProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin {
+export class SparkProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
+  SparkContractNames,
+  SparkAbiMapType
+> {
   readonly protocolName: ProtocolName.Spark = ProtocolName.Spark
   readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
   readonly stepBuilders: Partial<ActionBuildersMap> = SparkStepBuilders
 
-  constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
-    super(params)
+  constructor(params: { context: IProtocolPluginContext }) {
+    const contractsAbiProvider = new ChainContractsProvider(SparkAbiMap)
+
+    super({
+      ...params,
+      contractsAbiProvider,
+    })
 
     if (
       !this.supportedChains.some(
@@ -81,6 +85,8 @@ export class SparkProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin {
     return SparkLendingPool.createFrom({
       type: PoolType.Lending,
       id: poolId,
+      collateralToken: poolId.collateralToken,
+      debtToken: poolId.debtToken,
     })
   }
 
@@ -88,7 +94,7 @@ export class SparkProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin {
   protected async _getLendingPoolInfoImpl(
     sparkPoolId: ISparkLendingPoolId,
   ): Promise<SparkLendingPoolInfo> {
-    await this._inititalizeAssetsListIfNeeded()
+    await this._inititalizeAssetsListIfNeeded({ chainInfo: sparkPoolId.protocol.chainInfo })
 
     const emode = sparkEmodeCategoryMap[sparkPoolId.emodeType]
 
@@ -136,22 +142,15 @@ export class SparkProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin {
   }
 
   /** PRIVATE */
-  protected _getContractDef(contractName: SparkContractNames): AAVEv3LikeAbiInfo {
-    const map: SparkAddressAbiMap = {
-      Oracle: {
-        address: '0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9',
-        abi: SPARK_ORACLE_ABI,
-      },
-      PoolDataProvider: {
-        address: '0xFc21d6d146E6086B8359705C8b28512a983db0cb',
-        abi: SPARK_POOL_DATA_PROVIDER_ABI,
-      },
-      SparkLendingPool: {
-        address: '0xC13e21B648A5Ee794902342038FF3aDAB66BE987',
-        abi: SPARK_LENDING_POOL_ABI,
-      },
-    }
+  protected async _getContractDef(params: {
+    chainInfo: IChainInfo
+    contractName: SparkContractNames
+  }): Promise<ContractInfo> {
+    const contractAddress = await this._getContractAddress(params)
 
-    return map[contractName]
+    return {
+      address: contractAddress.value,
+      abi: this.contractsAbiProvider.getContractAbi(params.contractName),
+    }
   }
 }

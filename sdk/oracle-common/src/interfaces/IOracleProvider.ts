@@ -1,24 +1,12 @@
-import { ChainId, Denomination, IToken } from '@summerfi/sdk-common/common'
+import { Denomination, IToken } from '@summerfi/sdk-common/common'
 import { OracleProviderType, SpotPriceInfo } from '@summerfi/sdk-common/oracle'
+import { IManagerProvider } from '@summerfi/sdk-server-common'
 
 /**
  * @name IOracleProvider
  * @description Interface for implementing different oracle provider plugins
  */
-export interface IOracleProvider {
-  /**
-   * @name type
-   * @description The type of the oracle provider, to identify it
-   */
-  type: OracleProviderType
-
-  /**
-   * @method getSupportedChainIds
-   * @description Retrieves the list of supported chain IDs
-   * @returns The list of supported chain IDs
-   */
-  getSupportedChainIds(): ChainId[]
-
+export interface IOracleProvider extends IManagerProvider<OracleProviderType> {
   /**
    * @name getSpotPrice
    * @description Returns the prevailing market price for a given asset

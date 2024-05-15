@@ -1,14 +1,18 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { Price, RiskRatio, TokenAmount, Percentage } from '@summerfi/sdk-common/common'
 import { AaveV3ProtocolPlugin } from '../../src/plugins/aave-v3'
-import { aaveV3PoolIdMock as validAaveV3PoolId } from '../mocks/AAVEv3PoolIdMock'
+import { getAaveV3PoolIdMock } from '../mocks/AAVEv3PoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
+import { IAaveV3LendingPoolId } from '../../src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId'
+import { ChainFamilyMap } from '@summerfi/sdk-common'
 
 describe('AAVEv3 Protocol Plugin (Integration)', () => {
   let ctx: IProtocolPluginContext
+  let validAaveV3PoolId: IAaveV3LendingPoolId
   let aaveV3ProtocolPlugin: AaveV3ProtocolPlugin
   beforeAll(async () => {
-    ctx = await createProtocolPluginContext()
+    ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
+    validAaveV3PoolId = await getAaveV3PoolIdMock()
     aaveV3ProtocolPlugin = new AaveV3ProtocolPlugin({
       context: ctx,
     })
@@ -22,7 +26,7 @@ describe('AAVEv3 Protocol Plugin (Integration)', () => {
 
     expect(aaveV3PoolCollateralInfo).toBeDefined()
     expect(aaveV3PoolCollateralInfo).toMatchObject({
-      token: expect.objectContaining(pool.id.collateralToken),
+      token: expect.objectContaining(pool.collateralToken),
       price: expect.anything(),
       priceUSD: expect.anything(),
       liquidationThreshold: expect.anything(),
@@ -41,8 +45,8 @@ describe('AAVEv3 Protocol Plugin (Integration)', () => {
 
     const liquidationThreshold = aaveV3PoolCollateralInfo!.liquidationThreshold
     expect(liquidationThreshold).toBeInstanceOf(RiskRatio)
-    expect(liquidationThreshold.ratio.value).toBeGreaterThan(0)
-    expect(liquidationThreshold.ratio.value).toBeLessThan(100)
+    expect(liquidationThreshold.toLTV().value).toBeGreaterThan(0)
+    expect(liquidationThreshold.toLTV().value).toBeLessThan(100)
 
     const tokensLocked = aaveV3PoolCollateralInfo!.tokensLocked
     expect(tokensLocked).toBeInstanceOf(TokenAmount)
@@ -65,7 +69,7 @@ describe('AAVEv3 Protocol Plugin (Integration)', () => {
 
     expect(aaveV3PoolDebtInfo).toBeDefined()
     expect(aaveV3PoolDebtInfo).toMatchObject({
-      token: expect.objectContaining(pool.id.debtToken),
+      token: expect.objectContaining(pool.debtToken),
       price: expect.anything(),
       priceUSD: expect.anything(),
       interestRate: expect.anything(),

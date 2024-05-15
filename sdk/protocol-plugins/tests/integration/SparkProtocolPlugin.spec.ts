@@ -7,17 +7,20 @@ import {
   RiskRatio,
   TokenAmount,
   Percentage,
+  ChainFamilyMap,
 } from '@summerfi/sdk-common/common'
-import { SparkProtocolPlugin } from '../../src/plugins/spark'
-import { sparkPoolIdMock as validSparkPoolId } from '../mocks/SparkPoolIdMock'
+import { ISparkLendingPoolId, SparkProtocolPlugin } from '../../src/plugins/spark'
+import { getSparkPoolIdMock } from '../mocks/SparkPoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 
-describe('Spark Protocol Plugin (Integration)', () => {
+describe.only('Spark Protocol Plugin (Integration)', () => {
   let ctx: IProtocolPluginContext
+  let validSparkPoolId: ISparkLendingPoolId
   let sparkProtocolPlugin: SparkProtocolPlugin
 
   beforeAll(async () => {
-    ctx = await createProtocolPluginContext()
+    ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
+    validSparkPoolId = await getSparkPoolIdMock()
     sparkProtocolPlugin = new SparkProtocolPlugin({
       context: ctx,
     })
@@ -38,7 +41,7 @@ describe('Spark Protocol Plugin (Integration)', () => {
     const sparkPoolCollateralInfo = sparkPoolInfo.collateral
     expect(sparkPoolCollateralInfo).toBeDefined()
     expect(sparkPoolCollateralInfo).toMatchObject({
-      token: expect.objectContaining(pool.id.collateralToken),
+      token: expect.objectContaining(pool.collateralToken),
       price: expect.anything(),
       priceUSD: expect.anything(),
       liquidationThreshold: expect.anything(),
@@ -57,8 +60,8 @@ describe('Spark Protocol Plugin (Integration)', () => {
 
     const liquidationThreshold = sparkPoolCollateralInfo!.liquidationThreshold
     expect(liquidationThreshold).toBeInstanceOf(RiskRatio)
-    expect(liquidationThreshold.ratio.value).toBeGreaterThan(0)
-    expect(liquidationThreshold.ratio.value).toBeLessThan(100)
+    expect(liquidationThreshold.toLTV().value).toBeGreaterThan(0)
+    expect(liquidationThreshold.toLTV().value).toBeLessThan(100)
 
     const tokensLocked = sparkPoolCollateralInfo!.tokensLocked
     expect(tokensLocked).toBeInstanceOf(TokenAmount)
@@ -90,7 +93,7 @@ describe('Spark Protocol Plugin (Integration)', () => {
 
     expect(sparkPoolDebtInfo).toBeDefined()
     expect(sparkPoolDebtInfo).toMatchObject({
-      token: expect.objectContaining(pool.id.debtToken),
+      token: expect.objectContaining(pool.debtToken),
       price: expect.anything(),
       priceUSD: expect.anything(),
       totalBorrowed: expect.anything(),

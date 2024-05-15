@@ -24,11 +24,7 @@ describe('OracleManager', () => {
   beforeEach(() => {
     const mockOracleProvider = new MockOracleProvider()
     oracleManager = new OracleManager({
-      providersConfig: [
-        {
-          provider: mockOracleProvider,
-        },
-      ],
+      providers: [mockOracleProvider],
     })
   })
 

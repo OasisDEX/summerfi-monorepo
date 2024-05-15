@@ -1,11 +1,11 @@
 import { publicProcedure } from '../TRPC'
-import { LendingPoolIdSchema } from '@summerfi/sdk-common/protocols'
+import { LendingPoolIdDataSchema } from '@summerfi/sdk-common/protocols'
 import { z } from 'zod'
 
 export const getLendingPool = publicProcedure
   .input(
     z.object({
-      poolId: LendingPoolIdSchema.catchall(z.any()),
+      poolId: LendingPoolIdDataSchema.catchall(z.any()),
     }),
   )
   .query(async (opts) => {

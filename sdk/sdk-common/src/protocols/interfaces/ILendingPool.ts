@@ -1,10 +1,11 @@
+import { IToken, TokenDataSchema } from '../../common/interfaces/IToken'
 import { PoolType } from '../types'
-import { ILendingPoolId, ILendingPoolIdData, LendingPoolIdSchema } from './ILendingPoolId'
-import { IPool, IPoolData } from './IPool'
+import { ILendingPoolId, LendingPoolIdDataSchema } from './ILendingPoolId'
+import { IPool } from './IPool'
 import { z } from 'zod'
 
 /**
- * @interface ILendingPoolData
+ * @name ILendingPool
  * @description Represents a lending pool for a single pair collateral/debt
  *
  * A lending pool is a pool where users can deposit collateral and borrow debt against that collateral.
@@ -12,33 +13,32 @@ import { z } from 'zod'
  *
  * This interface is an abstraction of a lending pool and the specialization for each protocol happens at the IPool
  * level through the PoolId
- *
  */
-export interface ILendingPoolData extends IPoolData {
+export interface ILendingPool extends IPool, ILendingPoolData {
   /** Type of the pool, in this case Lending */
   readonly type: PoolType.Lending
   /** Pool ID of the lending pool */
-  readonly id: ILendingPoolIdData
-}
-
-/**
- * @name ILendingPool
- * @description Interface for the implementors of the lending pool
- *
- * This interface is used to add all the methods that the interface supports
- */
-export interface ILendingPool extends IPool, ILendingPoolData {
-  readonly type: PoolType.Lending
   readonly id: ILendingPoolId
+  /** Collateral token used to collateralized the pool */
+  readonly collateralToken: IToken
+  /** Debt token, which can be borrowed from the pool */
+  readonly debtToken: IToken
 }
 
 /**
  * @description Zod schema for ILendingPool
  */
-export const LendingPoolSchema = z.object({
+export const LendingPoolDataSchema = z.object({
   type: z.literal(PoolType.Lending),
-  id: LendingPoolIdSchema,
+  id: LendingPoolIdDataSchema,
+  collateralToken: TokenDataSchema,
+  debtToken: TokenDataSchema,
 })
+
+/**
+ * Type for the data part of the ILendingPool interface
+ */
+export type ILendingPoolData = Readonly<z.infer<typeof LendingPoolDataSchema>>
 
 /**
  * @description Type guard for ILendingPool
@@ -48,11 +48,5 @@ export const LendingPoolSchema = z.object({
  * It also asserts the type so that TypeScript knows that the object is an ILendingPool
  */
 export function isLendingPool(maybePool: unknown): maybePool is ILendingPoolData {
-  return LendingPoolSchema.safeParse(maybePool).success
+  return LendingPoolDataSchema.safeParse(maybePool).success
 }
-
-/**
- * Checker to make sure that the schema is aligned with the interface
- */
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: ILendingPoolData = {} as z.infer<typeof LendingPoolSchema>

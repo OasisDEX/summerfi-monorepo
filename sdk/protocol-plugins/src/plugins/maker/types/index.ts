@@ -1,2 +1,2 @@
-export * from './MakerAddressAbiMap'
+export * from '../abis/MakerAbiMap'
 export * from './MakerIlkToJoinMap'

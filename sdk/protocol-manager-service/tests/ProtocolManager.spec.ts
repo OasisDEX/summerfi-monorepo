@@ -11,7 +11,6 @@ import { createPublicClient, http, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
 import { ProtocolManager } from '../src'
 import { ProtocolPluginsRegistry } from '@summerfi/protocol-plugins/implementation'
-import { DeploymentIndex } from '@summerfi/deployment-utils'
 import { EmodeType, ISparkLendingPoolIdData } from '@summerfi/protocol-plugins'
 
 describe('Protocol Manager', () => {
@@ -29,7 +28,6 @@ describe('Protocol Manager', () => {
     pluginsRegistry = new ProtocolPluginsRegistry({
       plugins: mockPlugins,
       context: ctx,
-      deploymentConfigTag: 'standard',
     })
     protocolManager = ProtocolManager.createWith({ pluginsRegistry })
   })
@@ -70,7 +68,6 @@ describe('Protocol Manager', () => {
     const pluginsRegistry = new ProtocolPluginsRegistry({
       plugins: mockPlugins,
       context: ctx,
-      deploymentConfigTag: 'standard',
     })
 
     protocolManager = ProtocolManager.createWith({ pluginsRegistry })
@@ -159,7 +156,7 @@ async function createProtocolManagerContext(): Promise<IProtocolManagerContext> 
     provider,
     tokensManager: {} as any,
     oracleManager: {} as any,
-    deployments: {} as DeploymentIndex,
+    addressBookManager: {} as any,
     swapManager: {} as any,
   }
 }

@@ -1,8 +1,8 @@
 import { PublicClient } from 'viem'
-import { DeploymentIndex } from '@summerfi/deployment-utils'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
 import { ITokensManager } from '@summerfi/tokens-common'
 import { IOracleManager } from '@summerfi/oracle-common'
+import { IAddressBookManager } from '@summerfi/address-book-common'
 
 /**
  * @name IProtocolPluginContext
@@ -10,8 +10,6 @@ import { IOracleManager } from '@summerfi/oracle-common'
  *              services that they might need
  */
 export interface IProtocolPluginContext {
-  /** The deployment index. TODO: replace it with a more proper access to deployments */
-  deployments: DeploymentIndex
   /** The public client to interact with the blockchain */
   provider: PublicClient
   /** The tokens manager to retrieve token information */
@@ -20,4 +18,6 @@ export interface IProtocolPluginContext {
   oracleManager: IOracleManager
   /** The swap manager to request swap quotes and calldata */
   swapManager: ISwapManager
+  /** Address book to retrieve contract addresses */
+  addressBookManager: IAddressBookManager
 }

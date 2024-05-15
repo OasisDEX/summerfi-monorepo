@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IPosition } from '@summerfi/sdk-common/common'
 import { IProtocolManager } from '@summerfi/protocol-manager-common'
 import {

@@ -40,6 +40,8 @@
     "@summerfi/tokens-service": "workspace:*",
     "@summerfi/oracle-common": "workspace:*",
     "@summerfi/oracle-service": "workspace:*",
+    "@summerfi/address-book-common": "workspace:*",
+    "@summerfi/address-book-service": "workspace:*",
     "@trpc/server": "11.0.0-next-beta.264",
     "superjson": "^1.13.3"
   },
