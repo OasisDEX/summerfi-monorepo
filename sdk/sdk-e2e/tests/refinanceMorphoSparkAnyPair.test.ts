@@ -1,52 +1,54 @@
+import { ProtocolClient, makeSDK, type Chain, type User } from '@summerfi/sdk-client'
+import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
+import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 import {
+  AddressValue,
+  CommonTokenSymbols,
+  RefinanceSimulationTypes,
+  ISimulation,
   Percentage,
-  Token,
   TokenAmount,
   Address,
   type Maybe,
   ChainFamilyMap,
   newEmptyPositionFromPool,
   PositionType,
-} from '@summerfi/sdk-common/common'
-
-import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
-import { ProtocolClient, makeSDK, type Chain, type User } from '@summerfi/sdk-client'
+  IToken,
+} from '@summerfi/sdk-common'
 import { PositionsManager, IRefinanceParameters, Order } from '@summerfi/sdk-common/orders'
-import { ISimulation } from '@summerfi/sdk-common/simulation'
-import { TransactionUtils } from './utils/TransactionUtils'
-
-import { Hex } from 'viem'
-import assert from 'assert'
-import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
-import { AddressValue, CommonTokenSymbols, RefinanceSimulationTypes } from '@summerfi/sdk-common'
 import {
   SparkLendingPoolId,
   isSparkLendingPoolId,
   isSparkProtocol,
 } from '@summerfi/protocol-plugins/plugins/spark'
 import {
-  ILKType,
-  MakerLendingPoolId,
-  MakerPosition,
-  MakerPositionId,
-  isMakerLendingPool,
-  isMakerProtocol,
-} from '@summerfi/protocol-plugins/plugins/maker'
+  MorphoLendingPoolId,
+  MorphoPosition,
+  MorphoPositionId,
+  isMorphoLendingPool,
+  isMorphoProtocol,
+} from '@summerfi/protocol-plugins/plugins/morphoblue'
+
+import assert from 'assert'
+import { TransactionUtils } from './utils/TransactionUtils'
+import { Hex } from 'viem'
 
 jest.setTimeout(300000)
 
 /** TEST CONFIG */
 const config = {
   SDKAPiUrl: 'https://zmjmtfsocb.execute-api.us-east-1.amazonaws.com/api/sdk',
-  TenderlyForkUrl: 'https://virtual.mainnet.rpc.tenderly.co/4711dc9f-76a4-4f6c-9464-6f8c7369df61',
-  makerVaultId: '31709',
-  DPMAddress: '0xc1475b2735fb9130a4701ee9e2215b6305dd501b',
+  TenderlyForkUrl: 'https://virtual.mainnet.rpc.tenderly.co/5fa32626-1a0c-4e37-b0c0-351e2f5aa885',
+  DPMAddress: '0x302a28D7968824f386F278a72368856BC4d82BA4',
   walletAddress: '0xbEf4befb4F230F43905313077e3824d7386E09F8',
-  collateralAmount: '5000.0',
-  debtAmount: '5000000.0',
+  collateralTokenSymbol: CommonTokenSymbols.wstETH,
+  collateralAmount: '0.025000000000000000',
+  debtTokenSymbol: CommonTokenSymbols.USDC,
+  debtAmount: '21',
+  sendTransactionEnabled: true,
 }
 
-describe.skip('Refinance Maker Spark | SDK', () => {
+describe.skip('Refinance Morpho Spark | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: config.SDKAPiUrl })
@@ -78,72 +80,52 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     })
 
     // Tokens
-    const WETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({
-      symbol: CommonTokenSymbols.WETH,
+    const debtToken: Maybe<IToken> = await chain.tokens.getTokenBySymbol({
+      symbol: config.debtTokenSymbol,
     })
-    assert(WETH, 'WETH not found')
+    assert(debtToken, `${config.debtTokenSymbol} not found`)
 
-    const DAI: Maybe<Token> = await chain.tokens.getTokenBySymbol({
-      symbol: CommonTokenSymbols.DAI,
+    const collateralToken: Maybe<IToken> = await chain.tokens.getTokenBySymbol({
+      symbol: config.collateralTokenSymbol,
     })
-    assert(DAI, 'DAI not found')
+    assert(collateralToken, `${config.collateralTokenSymbol} not found`)
 
-    const USDC: Maybe<Token> = await chain.tokens.getTokenBySymbol({
-      symbol: CommonTokenSymbols.USDC,
-    })
-    assert(USDC, 'USDC not found')
+    const morpho = await chain.protocols.getProtocol({ name: ProtocolName.Morpho })
+    assert(morpho, 'Maker protocol not found')
 
-    const WBTC: Maybe<Token> = await chain.tokens.getTokenBySymbol({
-      symbol: CommonTokenSymbols.WBTC,
-    })
-    assert(WBTC, 'WBTC not found')
-
-    const WSTETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({
-      symbol: CommonTokenSymbols.wstETH,
-    })
-    assert(WSTETH, 'WSTETH not found')
-
-    const SDAI: Maybe<Token> = await chain.tokens.getTokenBySymbol({
-      symbol: CommonTokenSymbols.sDAI,
-    })
-    assert(SDAI, 'WSTETH not found')
-
-    const maker = await chain.protocols.getProtocol({ name: ProtocolName.Maker })
-    assert(maker, 'Maker protocol not found')
-
-    if (!isMakerProtocol(maker)) {
+    if (!isMorphoProtocol(morpho)) {
       assert(false, 'Maker protocol type is not lending')
     }
 
-    const makerPoolId = MakerLendingPoolId.createFrom({
-      protocol: maker,
-      debtToken: DAI,
-      collateralToken: WETH,
-      ilkType: ILKType.ETH_C,
+    const morphoPoolId = MorphoLendingPoolId.createFrom({
+      protocol: morpho,
+      marketId: '0xB323495F7E4148BE5643A4EA4A8221EEF163E4BCCFDEDC2A6F4696BAACBC86CC',
     })
 
-    const makerPool = await maker.getLendingPool({
-      poolId: makerPoolId,
+    const morphoPool = await morpho.getLendingPool({
+      poolId: morphoPoolId,
     })
-    assert(makerPool, 'Maker pool not found')
+    assert(morphoPool, 'Maker pool not found')
 
-    if (!isMakerLendingPool(makerPool)) {
+    if (!isMorphoLendingPool(morphoPool)) {
       assert(false, 'Maker pool type is not lending')
     }
 
     // Source position
-    const makerPosition: MakerPosition = MakerPosition.createFrom({
+    const morphoPosition = MorphoPosition.createFrom({
       type: PositionType.Multiply,
-      id: MakerPositionId.createFrom({ id: '31697', vaultId: '31697' }),
+      id: MorphoPositionId.createFrom({
+        id: 'MorphoPosition',
+      }),
       debtAmount: TokenAmount.createFrom({
-        token: DAI,
+        token: debtToken,
         amount: config.debtAmount,
       }),
       collateralAmount: TokenAmount.createFrom({
-        token: WETH,
+        token: collateralToken,
         amount: config.collateralAmount,
       }),
-      pool: makerPool,
+      pool: morphoPool,
     })
 
     // Target protocol
@@ -158,8 +140,8 @@ describe.skip('Refinance Maker Spark | SDK', () => {
 
     const poolId = SparkLendingPoolId.createFrom({
       protocol: spark,
-      collateralToken: WETH,
-      debtToken: DAI,
+      collateralToken: collateralToken,
+      debtToken: debtToken,
       emodeType: EmodeType.None,
     })
 
@@ -180,14 +162,14 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     const emptyTargetPosition = newEmptyPositionFromPool(sparkPool)
     const refinanceSimulation: ISimulation<RefinanceSimulationTypes> =
       await sdk.simulator.refinance.simulateRefinancePosition({
-        sourcePosition: makerPosition,
+        sourcePosition: morphoPosition,
         targetPosition: emptyTargetPosition,
         slippage: Percentage.createFrom({ value: 0.2 }),
       } as IRefinanceParameters)
 
     expect(refinanceSimulation).toBeDefined()
 
-    expect(refinanceSimulation.sourcePosition?.id).toEqual(makerPosition.id)
+    expect(refinanceSimulation.sourcePosition?.id).toEqual(morphoPosition.id)
     expect(refinanceSimulation.targetPosition.pool.id).toEqual(sparkPool.id)
 
     const refinanceOrder: Maybe<Order> = await user.newOrder({
@@ -200,16 +182,18 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     // Send transaction
     console.log('Sending transaction...')
 
-    const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex
-    const transactionUtils = new TransactionUtils({
-      rpcUrl: config.TenderlyForkUrl,
-      walletPrivateKey: privateKey,
-    })
+    if (config.sendTransactionEnabled) {
+      const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex
+      const transactionUtils = new TransactionUtils({
+        rpcUrl: config.TenderlyForkUrl,
+        walletPrivateKey: privateKey,
+      })
 
-    const receipt = await transactionUtils.sendTransaction({
-      transaction: refinanceOrder.transactions[0].transaction,
-    })
+      const receipt = await transactionUtils.sendTransaction({
+        transaction: refinanceOrder.transactions[0].transaction,
+      })
 
-    console.log('Transaction sent:', receipt)
+      console.log('Transaction sent:', receipt)
+    }
   })
 })
