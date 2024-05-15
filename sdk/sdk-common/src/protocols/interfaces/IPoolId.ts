@@ -30,6 +30,6 @@ export type IPoolIdData = Readonly<z.infer<typeof PoolIdDataSchema>>
  * @param maybePoolId
  * @returns true if the object is an IPoolId
  */
-export function isPoolId(maybePoolId: unknown): maybePoolId is IPoolIdData {
+export function isPoolId(maybePoolId: unknown): maybePoolId is IPoolId {
   return PoolIdDataSchema.safeParse(maybePoolId).success
 }

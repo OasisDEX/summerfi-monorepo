@@ -19,15 +19,11 @@ export class ProtocolClient extends Protocol implements IProtocolClient {
   }
 
   getLendingPool(params: { poolId: ILendingPoolIdData }): Promise<Maybe<ILendingPool>> {
-    return this._rpcClient.protocols.getLendingPool.query({
-      poolId: params.poolId,
-    })
+    return this._rpcClient.protocols.getLendingPool.query(params.poolId)
   }
 
   getLendingPoolInfo(params: { poolId: ILendingPoolIdData }): Promise<Maybe<ILendingPoolInfo>> {
-    return this._rpcClient.protocols.getLendingPoolInfo.query({
-      poolId: params.poolId,
-    })
+    return this._rpcClient.protocols.getLendingPoolInfo.query(params.poolId)
   }
 
   /**

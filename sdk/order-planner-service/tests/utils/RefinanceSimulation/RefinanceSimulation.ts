@@ -10,9 +10,9 @@ import { Position } from '@summerfi/sdk-common/common'
 
 export function getRefinanceSimulation(params: {
   sourcePosition: Position
-  targetPosition: Position
+  targetPool: Position
 }): ISimulation<SimulationType.Refinance> {
-  const { sourcePosition, targetPosition } = params
+  const { sourcePosition, targetPool: targetPosition } = params
 
   return {
     simulationType: SimulationType.Refinance,

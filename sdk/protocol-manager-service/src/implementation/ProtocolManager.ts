@@ -38,7 +38,7 @@ export class ProtocolManager implements IProtocolManager {
   }
 
   /** @see IProtocolManager.getLendingPool */
-  async getLendingPool(poolId: unknown): Promise<ILendingPool> {
+  async getLendingPool(poolId: ILendingPoolId): Promise<ILendingPool> {
     this._validateLendingPoolId(poolId)
 
     const plugin = this._pluginsRegistry.getPlugin({ protocolName: poolId.protocol.name })
@@ -49,7 +49,7 @@ export class ProtocolManager implements IProtocolManager {
   }
 
   /** @see IProtocolManager.getLendingPoolInfo */
-  async getLendingPoolInfo(poolId: unknown): Promise<ILendingPoolInfo> {
+  async getLendingPoolInfo(poolId: ILendingPoolId): Promise<ILendingPoolInfo> {
     this._validateLendingPoolId(poolId)
 
     const plugin = this._pluginsRegistry.getPlugin({ protocolName: poolId.protocol.name })
@@ -60,7 +60,7 @@ export class ProtocolManager implements IProtocolManager {
   }
 
   /** @see IProtocolManager.getPosition */
-  async getPosition(positionId: unknown): Promise<IPosition> {
+  async getPosition(positionId: IPositionId): Promise<IPosition> {
     this._validatePositionId(positionId)
 
     throw new Error('Not implemented')
