@@ -74,6 +74,13 @@ function createCoverageReportForVisualRepresentation(coverageReport) {
   }
 
   return Object.keys(coverageReport).reduce((report, packageName) => {
+    if (
+      coverageReport[packageName] === undefined ||
+      Object.keys(coverageReport[packageName]).length === 0
+    ) {
+      return report
+    }
+
     const { lines, statements, functions, branches } = coverageReport[packageName]
 
     if (packageName === 'total') {
