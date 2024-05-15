@@ -1,4 +1,4 @@
-import { AjnaRewardsSource } from '@summerfi/app-db'
+import type { AjnaRewardsSource } from '@summerfi/app-db'
 import { NetworkIds } from 'blockchain/networks'
 import type { SubgraphsResponses } from 'features/subgraphLoader/types'
 import { loadSubgraph } from 'features/subgraphLoader/useSubgraphLoader'

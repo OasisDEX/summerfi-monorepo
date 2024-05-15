@@ -2,9 +2,9 @@ import type { User } from '@summerfi/app-db'
 import { getAddress } from 'ethers/lib/utils'
 import { getUserFromRequest } from 'handlers/signature-auth/getUserFromRequest'
 import { apply } from 'helpers/apply'
+import { prisma } from 'helpers/prisma-client'
 import { userJwt } from 'helpers/useJwt'
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
-import { prisma } from 'helpers/prisma-client'
 import * as z from 'zod'
 
 const bodySchema = z.object({

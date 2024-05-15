@@ -1,5 +1,4 @@
 import type { IPosition, IStrategy } from '@oasisdex/dma-library'
-import { Flex } from 'theme-ui'
 import {
   VaultChangesInformationArrow,
   VaultChangesInformationItem,
@@ -7,6 +6,7 @@ import {
 import { displayMultiple } from 'helpers/display-multiple'
 import { useTranslation } from 'next-i18next'
 import React from 'react'
+import { Flex } from 'theme-ui'
 
 interface MultiplyInformationProps {
   transactionParameters: IStrategy

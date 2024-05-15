@@ -1,4 +1,4 @@
-import { EarnStrategies } from '@summerfi/app-db'
+import type { EarnStrategies } from '@summerfi/app-db'
 import type { NetworkIds } from 'blockchain/networks'
 import type { ProductHubItemTooltips, ProductHubManagementType } from 'features/productHub/types'
 

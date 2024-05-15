@@ -1,5 +1,5 @@
-import { AjnaRewardsSource, AjnaRewardsWeeklyClaim } from '@summerfi/app-db'
-import { AjnaRewardsPositionType } from '@summerfi/app-db'
+import type { AjnaRewardsWeeklyClaim } from '@summerfi/app-db';
+import { AjnaRewardsPositionType,AjnaRewardsSource  } from '@summerfi/app-db'
 import BigNumber from 'bignumber.js'
 import { NetworkIds } from 'blockchain/networks'
 import { NEGATIVE_WAD_PRECISION } from 'components/constants'

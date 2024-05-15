@@ -1,10 +1,10 @@
-import { Divider } from 'theme-ui'
 import { TxStatusCardProgress, TxStatusCardSuccess } from 'components/vault/TxStatusCard'
 import type { ManageMultiplyVaultState } from 'features/multiply/manage/pipes/ManageMultiplyVaultState.types'
 import { useTranslation } from 'next-i18next'
 import type { ReactNode } from 'react'
 import React, { useEffect, useState } from 'react'
 import { OpenVaultAnimation } from 'theme/animations'
+import { Divider } from 'theme-ui'
 
 export function ManageMultiplyVaultConfirmation(
   props: ManageMultiplyVaultState & { children: (props: ManageMultiplyVaultState) => ReactNode },

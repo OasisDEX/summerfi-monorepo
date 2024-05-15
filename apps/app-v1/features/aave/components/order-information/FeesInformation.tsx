@@ -1,5 +1,4 @@
 import type { Swap } from '@oasisdex/dma-library'
-import { Box, Flex, Grid, Text } from 'theme-ui'
 import { amountFromWei } from 'blockchain/utils'
 import { Icon } from 'components/Icon'
 import {
@@ -13,6 +12,7 @@ import { zero } from 'helpers/zero'
 import { useTranslation } from 'next-i18next'
 import React from 'react'
 import { chevron_down, chevron_up } from 'theme/icons'
+import { Box, Flex, Grid, Text } from 'theme-ui'
 
 interface FeesInformationProps {
   estimatedGasPrice?: HasGasEstimation

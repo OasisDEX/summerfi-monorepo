@@ -1,4 +1,3 @@
-import { Heading } from 'theme-ui'
 import { ProtocolLabel } from 'components/ProtocolLabel'
 import type { ProtocolLabelProps } from 'components/ProtocolLabel.types'
 import { Skeleton } from 'components/Skeleton'
@@ -11,7 +10,7 @@ import {
 import type { FollowButtonControlProps } from 'features/follow/controllers/FollowButtonControl'
 import type { ReactNode } from 'react'
 import React from 'react'
-import { Flex } from 'theme-ui'
+import { Flex,Heading  } from 'theme-ui'
 
 import type { HeadlineDetailsProp } from './VaultHeadlineDetails'
 import { VaultHeadlineDetails } from './VaultHeadlineDetails'

@@ -1,5 +1,4 @@
 import type { IMultiplyStrategy } from '@oasisdex/dma-library'
-import { Text } from 'theme-ui'
 import { swapCall } from 'actions/aave-like'
 import type BigNumber from 'bignumber.js'
 import {
@@ -16,6 +15,7 @@ import { formatCryptoBalance, formatPercent } from 'helpers/formatters/format'
 import { one, zero } from 'helpers/zero'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useMemo, useState } from 'react'
+import { Text } from 'theme-ui'
 import { match } from 'ts-pattern'
 
 type GetPriceArgs = {

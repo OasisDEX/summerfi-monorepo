@@ -1,8 +1,9 @@
 import { getUserFromRequest } from 'handlers/signature-auth/getUserFromRequest'
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { createRiskForAddress, selectRiskForAddress, updateRiskForAddress } from './risk'
 import { prisma } from 'helpers/prisma-client'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import * as z from 'zod'
+
+import { createRiskForAddress, selectRiskForAddress, updateRiskForAddress } from './risk'
 
 enum RiskType {
   OWNERSHIP = 'OWNERSHIP',

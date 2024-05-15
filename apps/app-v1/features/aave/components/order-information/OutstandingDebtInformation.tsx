@@ -1,5 +1,4 @@
 import type { IPosition } from '@oasisdex/dma-library'
-import { Flex } from 'theme-ui'
 import { amountFromWei } from 'blockchain/utils'
 import {
   VaultChangesInformationArrow,
@@ -9,6 +8,7 @@ import { formatAmount } from 'helpers/formatters/format'
 import { zero } from 'helpers/zero'
 import { useTranslation } from 'next-i18next'
 import React from 'react'
+import { Flex } from 'theme-ui'
 
 interface DebtCollateralInformation {
   currentPosition: IPosition

@@ -1,6 +1,6 @@
+import { prisma } from 'helpers/prisma-client'
 import { isArray } from 'lodash'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { prisma } from 'helpers/prisma-client'
 import * as z from 'zod'
 
 const paramsSchema = z.object({

@@ -1,4 +1,3 @@
-import { Text } from 'theme-ui'
 import type BigNumber from 'bignumber.js'
 import {
   VaultChangesInformationArrow,
@@ -10,7 +9,7 @@ import { formatAmount, formatFiatBalance, formatPercent } from 'helpers/formatte
 import { zero } from 'helpers/zero'
 import { useTranslation } from 'next-i18next'
 import React from 'react'
-import { Flex } from 'theme-ui'
+import { Flex,Text  } from 'theme-ui'
 
 interface StopLossSummaryInformationProps {
   date: string

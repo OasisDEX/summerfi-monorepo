@@ -1,4 +1,3 @@
-import { Flex, Grid, Text } from 'theme-ui'
 import { Icon } from 'components/Icon'
 import {
   getEstimatedGasFeeTextOld,
@@ -14,6 +13,7 @@ import { zero } from 'helpers/zero'
 import { useTranslation } from 'next-i18next'
 import React, { useState } from 'react'
 import { chevron_down, chevron_up } from 'theme/icons'
+import { Flex, Grid, Text } from 'theme-ui'
 
 export function GuniOpenMultiplyVaultChangesInformation(props: OpenGuniVaultState) {
   const [showFees, setShowFees] = useState(false)

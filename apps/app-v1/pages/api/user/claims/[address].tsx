@@ -1,6 +1,6 @@
 import type { WeeklyClaim } from '@summerfi/app-db'
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from 'helpers/prisma-client'
+import type { NextApiRequest, NextApiResponse } from 'next'
 
 type paramsSchema = {
   address: string

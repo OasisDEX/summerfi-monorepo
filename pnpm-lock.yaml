@@ -412,9 +412,6 @@ importers:
       '@next/bundle-analyzer':
         specifier: ^13.5.3
         version: 13.5.6
-      '@summerfi/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -479,10 +476,10 @@ importers:
         specifier: ^1.6.7
         version: 1.6.23
       '@typescript-eslint/eslint-plugin':
-        specifier: ^7.3.1
+        specifier: ^7.7.1
         version: 7.9.0(@typescript-eslint/parser@7.9.0)(eslint@8.57.0)(typescript@5.4.5)
       '@typescript-eslint/parser':
-        specifier: ^7.3.1
+        specifier: ^7.7.1
         version: 7.9.0(eslint@8.57.0)(typescript@5.4.5)
       '@xstate/cli':
         specifier: ^0.5.1
@@ -24332,7 +24329,7 @@ packages:
       pretty-format: 29.7.0
       slash: 3.0.0
       strip-json-comments: 3.1.1
-      ts-node: 10.9.1(@swc/core@1.5.6)(@types/node@18.17.18)(typescript@5.4.5)
+      ts-node: 10.9.1(@types/node@20.12.7)(typescript@5.4.5)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color

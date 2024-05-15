@@ -1,4 +1,3 @@
-import { Flex, Grid, Text } from 'theme-ui'
 import BigNumber from 'bignumber.js'
 import { Icon } from 'components/Icon'
 import {
@@ -22,6 +21,7 @@ import { zero } from 'helpers/zero'
 import { useTranslation } from 'next-i18next'
 import React, { useState } from 'react'
 import { chevron_down, chevron_up } from 'theme/icons'
+import { Flex, Grid, Text } from 'theme-ui'
 
 export function ManageMultiplyVaultChangesInformation(props: ManageMultiplyVaultState) {
   const { t } = useTranslation()

@@ -1,4 +1,3 @@
-import { Flex, Text } from 'theme-ui'
 import BigNumber from 'bignumber.js'
 import {
   VaultChangesInformationArrow,
@@ -12,6 +11,7 @@ import { zero } from 'helpers/zero'
 import { useTranslation } from 'next-i18next'
 import type { ReactNode } from 'react'
 import React from 'react'
+import { Flex, Text } from 'theme-ui'
 
 export function ManageVaultChangesInformation(
   props: ManageMultiplyVaultState & { txnCostDisplay?: ReactNode },

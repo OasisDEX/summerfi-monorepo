@@ -1,4 +1,3 @@
-import { Box, Flex, Text } from 'theme-ui'
 import type BigNumber from 'bignumber.js'
 import { Icon } from 'components/Icon'
 import { Tooltip, useTooltip } from 'components/Tooltip'
@@ -9,6 +8,7 @@ import type { ReactNode } from 'react'
 import React from 'react'
 import { tooltip } from 'theme/icons'
 import type { ThemeUIStyleObject } from 'theme-ui'
+import { Box, Flex, Text } from 'theme-ui'
 
 import { VaultHeaderContainer } from './VaultHeaderContainer'
 

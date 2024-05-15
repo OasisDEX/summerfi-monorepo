@@ -8,9 +8,9 @@ import { filterTableData, getMissingHandlers, measureTime } from 'handlers/produ
 import type { HandleUpdateProductHubDataProps } from 'handlers/product-hub/types'
 import { PRODUCT_HUB_HANDLERS } from 'handlers/product-hub/update-handlers'
 import { tokenTickers } from 'helpers/api/tokenTickers'
+import { prisma } from 'helpers/prisma-client'
 import { flatten, uniq } from 'lodash'
 import type { NextApiResponse } from 'next'
-import { prisma } from 'helpers/prisma-client'
 
 export async function getProductHubData(protocols: string[], testnet = false) {
   const network = networks

@@ -1,4 +1,3 @@
-import { Box, Flex, Text } from 'theme-ui'
 import type BigNumber from 'bignumber.js'
 import type { GasEstimationContext } from 'components/context/GasEstimationContextProvider'
 import { DimmedList } from 'components/DImmedList'
@@ -14,6 +13,7 @@ import { useTranslation } from 'next-i18next'
 import type { PropsWithChildren, ReactNode } from 'react'
 import React, { useCallback, useMemo } from 'react'
 import { arrow_right_light, question_o } from 'theme/icons'
+import { Box, Flex, Text } from 'theme-ui'
 
 export function VaultChangesInformationItem({
   label,

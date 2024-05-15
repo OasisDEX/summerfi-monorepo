@@ -1,4 +1,3 @@
-import { Flex, Text } from 'theme-ui'
 import BigNumber from 'bignumber.js'
 import { OpenFlowStopLossSummary } from 'components/OpenFlowStopLossSummary'
 import {
@@ -14,6 +13,7 @@ import { formatCryptoBalance, formatPercent } from 'helpers/formatters/format'
 import { zero } from 'helpers/zero'
 import { useTranslation } from 'next-i18next'
 import React from 'react'
+import { Flex, Text } from 'theme-ui'
 
 export function OpenVaultChangesInformation(props: OpenVaultState) {
   const { t } = useTranslation()
