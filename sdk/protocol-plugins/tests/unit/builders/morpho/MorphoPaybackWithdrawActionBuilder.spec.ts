@@ -25,6 +25,7 @@ import {
   MorphoProtocol,
 } from '../../../../src'
 import { MorphoPaybackWithdrawActionBuilder } from '../../../../src/plugins/morphoblue/builders/MorphoPaybackWithdrawActionBuilder'
+import { RiskRatio, RiskRatioType } from '@summerfi/sdk-common'
 
 describe('Morpho Payback Withdraw Action Builder', () => {
   let builderParams: SetupBuilderReturnType
@@ -74,7 +75,10 @@ describe('Morpho Payback Withdraw Action Builder', () => {
     id: poolId,
     irm: Address.createFromEthereum({ value: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599' }),
     oracle: Address.createFromEthereum({ value: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48' }),
-    lltv: Percentage.createFrom({ value: 0.5 }),
+    lltv: RiskRatio.createFrom({
+      value: Percentage.createFrom({ value: 0.5 }),
+      type: RiskRatioType.LTV,
+    }),
     type: PoolType.Lending,
   })
 

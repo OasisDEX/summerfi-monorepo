@@ -27,7 +27,7 @@ export class MorphoBorrowAction extends BaseAction {
             collateralToken: morphoLendingPool.collateralToken.address.value,
             oracle: morphoLendingPool.oracle.value,
             irm: morphoLendingPool.irm.value,
-            lltv: morphoLendingPool.lltv.toBaseUnit({ decimals: MorphoLLTVPrecision }),
+            lltv: morphoLendingPool.lltv.toLTV().toBaseUnit({ decimals: MorphoLLTVPrecision }),
           },
           amount: amount.toBaseUnit(),
         },

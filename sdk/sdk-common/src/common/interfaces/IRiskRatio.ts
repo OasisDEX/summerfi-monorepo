@@ -7,11 +7,11 @@ import { z } from 'zod'
  * @description Enum for the different types of risk ratios supported
  */
 export enum RiskRatioType {
-  /** Loan-to-Value ratio */
+  /** Loan-to-Value ratio in percentage */
   LTV = 'LTV',
-  /** TODO */
+  /** Inverse of LTV (Value-to-Loan) ratio in percentage*/
   CollateralizationRatio = 'CollateralizationRatio',
-  /** TODO */
+  /** Multiply factor */
   Multiple = 'Multiple',
 }
 
@@ -22,8 +22,17 @@ export enum RiskRatioType {
 export interface IRiskRatio extends IRiskRatioData, IPrintable {
   /** The type of the risk ratio */
   readonly type: RiskRatioType
-  /** The percentage value */
-  readonly ratio: IPercentage
+  /** The risk ratio value, a percentage for LTV and Collateralization Ratio, a number for Multiple */
+  readonly value: IPercentage | number
+
+  /** Gets the LTV value as a collateralization ratio */
+  toCollateralizationRatio(): IPercentage
+
+  /** Gets the LTV value as a multiply factor */
+  toMultiple(): number
+
+  /** Gets the LTV value */
+  toLTV(): IPercentage
 }
 
 /**
@@ -31,7 +40,7 @@ export interface IRiskRatio extends IRiskRatioData, IPrintable {
  */
 export const RiskRatioDataSchema = z.object({
   type: z.nativeEnum(RiskRatioType),
-  ratio: PercentageDataSchema,
+  value: PercentageDataSchema.or(z.number()),
 })
 
 /**
