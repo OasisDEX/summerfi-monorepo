@@ -41,7 +41,7 @@ export async function refinanceLendingToLendingNoDebt(
     amount: '0',
   })
 
-  const isCollateralSwapSkipped = !targetPool.collateralToken.equals(sourcePool.collateralToken)
+  const isCollateralSwapSkipped = targetPool.collateralToken.equals(sourcePool.collateralToken)
 
   const simulation = await simulator
     .next(async () => ({

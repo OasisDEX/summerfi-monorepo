@@ -1,5 +1,5 @@
-import { ChainInfo, ChainInfoDataSchema, Wallet } from '@summerfi/sdk-common/common'
-import { WalletDataSchema } from '../common/interfaces/IWallet'
+import { ChainInfoDataSchema, IChainInfo } from '../common/interfaces/IChainInfo'
+import { IWallet, WalletDataSchema } from '../common/interfaces/IWallet'
 import { z } from 'zod'
 
 /**
@@ -7,9 +7,9 @@ import { z } from 'zod'
  */
 export interface IUser extends IUserData {
   /** The wallet of the user */
-  readonly wallet: Wallet
+  readonly wallet: IWallet
   /** The chain the user is connected to */
-  readonly chainInfo: ChainInfo
+  readonly chainInfo: IChainInfo
 }
 
 /**

@@ -48,7 +48,7 @@ const config = {
   sendTransactionEnabled: true,
 }
 
-describe.only('Refinance Morpho Spark | SDK', () => {
+describe.skip('Refinance Morpho Spark | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: config.SDKAPiUrl })

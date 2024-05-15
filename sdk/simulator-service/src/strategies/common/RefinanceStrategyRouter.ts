@@ -9,9 +9,6 @@ import { IProtocolManager } from '@summerfi/protocol-manager-common'
 function isToSamePair(parameters: IRefinanceParameters): boolean {
   const { sourcePosition, targetPosition } = parameters
 
-  //   console.log('sourcePosition', JSON.stringify(sourcePosition, null, 2))
-  //   console.log('targetPosition', JSON.stringify(targetPosition, null, 2))
-
   return (
     sourcePosition.debtAmount.token.equals(targetPosition.debtAmount.token) &&
     sourcePosition.collateralAmount.token.equals(targetPosition.collateralAmount.token)

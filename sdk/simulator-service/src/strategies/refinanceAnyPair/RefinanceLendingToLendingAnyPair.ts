@@ -49,12 +49,15 @@ export async function refinanceLendingToLendingAnyPair(
     throw new Error('Target pool is not a lending pool')
   }
 
+  console.log(sourcePool)
+  console.log(targetPool)
+
   const FLASHLOAN_MARGIN = 1.001
   const flashloanAmount = position.debtAmount.multiply(FLASHLOAN_MARGIN)
   const simulator = Simulator.create(refinanceLendingToLendingAnyPairStrategy)
 
-  const isCollateralSwapSkipped = !targetPool.collateralToken.equals(sourcePool.collateralToken)
-  const isDebtSwapSkipped = !targetPool.debtToken.equals(sourcePool.debtToken)
+  const isCollateralSwapSkipped = targetPool.collateralToken.equals(sourcePool.collateralToken)
+  const isDebtSwapSkipped = targetPool.debtToken.equals(sourcePool.debtToken)
 
   const simulation = await simulator
     .next(async () => ({
