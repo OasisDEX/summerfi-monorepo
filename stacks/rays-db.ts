@@ -54,7 +54,9 @@ export function addRaysDb({
     cdk: {
       cluster: {
         vpc: vpc.vpc,
-        vpcSubnets: vpc.vpcSubnets,
+        vpcSubnets: {
+          subnets: [...vpc.vpc.privateSubnets, ...vpc.vpc.publicSubnets],
+        },
       },
     },
   })
