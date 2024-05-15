@@ -171,6 +171,17 @@ const baseConfig = {
       },
     ]
   },
+  async rewrites() {
+    return {
+      // handles paths that are available in app-v2
+      beforeFiles: [
+        {
+          source: '/rays',
+          destination: 'http://localhost:3001/app-v2/rays',
+        },
+      ],
+    }
+  },
   transpilePackages: ['@lifi/widget', 'ramda'],
   experimental: {
     largePageDataBytes: 280 * 1024, // 280 KB. The default one is 128 KB, but we have a lot of that kind of errors, so we increase it.
