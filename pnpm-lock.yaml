@@ -1941,8 +1941,8 @@ importers:
         specifier: 1.6.5-morpho.0
         version: 1.6.5-morpho.0
       '@oasisdex/dma-library':
-        specifier: 0.6.4-automation.4
-        version: 0.6.4-automation.4
+        specifier: 0.6.4-automation.13
+        version: 0.6.4-automation.13
       '@summerfi/abis':
         specifier: workspace:*
         version: link:../../packages/abis
@@ -7391,8 +7391,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@oasisdex/dma-library@0.6.4-automation.4:
-    resolution: {integrity: sha512-axRZKeLXC6GW0LX7RjU0P+WNG8cjkEQJfZapw9juwY7mYM9cS7ZdvAW9p5zLEcvJ30FBQMILQz3NYpvZ1sjtuQ==}
+  /@oasisdex/dma-library@0.6.4-automation.13:
+    resolution: {integrity: sha512-m9sdWD9qtN0KFlF69Ggiztr9Q4D6Oww4iwswDuwXiKz47I+niVh5pp1Keb5FmzRzdCME0Dx29U9mf2pSKd/N8g==}
     dependencies:
       bignumber.js: 9.0.1
       ethers: 5.6.2
