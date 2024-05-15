@@ -148,8 +148,8 @@ importers:
         specifier: ^5.0.2
         version: 5.1.0
       '@oasisdex/addresses':
-        specifier: 0.1.65
-        version: 0.1.65
+        specifier: 0.1.67
+        version: 0.1.67
       '@oasisdex/automation':
         specifier: 1.6.5-morpho.0
         version: 1.6.5-morpho.0
@@ -364,7 +364,7 @@ importers:
         specifier: ^0.1.2
         version: 0.1.2(@trpc/server@11.0.0-next-beta.264)(typescript@5.4.5)(zod@3.22.4)
       summerfi-sdk-common:
-        specifier: ^0.1.2
+        specifier: ^0.1.4
         version: 0.1.4(typescript@5.4.5)(zod@3.22.4)
       terser-webpack-plugin:
         specifier: ^5.3.9
@@ -10794,8 +10794,8 @@ packages:
     resolution: {integrity: sha512-UAmNodCG3ld4LK5w7sgtoA0ml4lMFfSE7Zp1vswW7/3823IZFmvEO6wy0Pd/vPnJjjKDYaLJdhsRRYGYHwYGSg==}
     dev: false
 
-  /@oasisdex/addresses@0.1.65:
-    resolution: {integrity: sha512-9dAeWACP6mdXenHC2cWpZT3RX4HPsZYEhPkZltaqKkw8esCqvHKgOhfKMxWkIIqhLq1NB/ewwzhXzNRhzPHj5A==}
+  /@oasisdex/addresses@0.1.67:
+    resolution: {integrity: sha512-jzRzRNP/Fq2YFVTy3Gx9yecd4T/wKMUuMfoJq5SlGpQmyB9C6kroAUBPYDno/pAPY6ooimyx1/GXLenLkx+d6g==}
     dev: false
 
   /@oasisdex/automation@1.6.5-morpho.0:
@@ -24329,7 +24329,7 @@ packages:
       pretty-format: 29.7.0
       slash: 3.0.0
       strip-json-comments: 3.1.1
-      ts-node: 10.9.1(@types/node@20.12.7)(typescript@5.4.5)
+      ts-node: 10.9.1(@swc/core@1.5.6)(@types/node@18.17.18)(typescript@5.4.5)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color

@@ -16,6 +16,7 @@ yalc.lock
 *.zip
 artifacts
 *.tsbuildinfo
+snowflake.log
 
 public/precache.*.*.js
 public/sw.js
