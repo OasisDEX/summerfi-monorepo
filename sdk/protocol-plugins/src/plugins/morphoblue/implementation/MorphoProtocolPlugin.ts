@@ -29,7 +29,6 @@ import {
   DebtInfo,
   IPercentage,
   IPrice,
-  IRiskRatio,
   Percentage,
   Price,
   RiskRatio,
