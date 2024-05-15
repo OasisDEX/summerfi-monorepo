@@ -21,6 +21,7 @@ export const buildOrder = publicProcedure
       positionsManager: opts.input.positionsManager,
       simulation: opts.input.simulation,
       swapManager: opts.ctx.swapManager,
+      addressBookManager: opts.ctx.addressBookManager,
       protocolsRegistry: opts.ctx.protocolsRegistry,
     })
   })

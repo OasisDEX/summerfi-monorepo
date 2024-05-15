@@ -27,6 +27,7 @@ export class FlashloanAction extends BaseAction {
   ): ActionCall {
     const calls: OptionalActionCall[] = params.calls.map((call) => {
       return {
+        name: call.name,
         targetHash: call.targetHash,
         callData: call.callData,
         skipped: false,

@@ -1,3 +1,4 @@
+import { IConfigurationProvider } from '@summerfi/configuration-provider'
 import { IOracleProvider } from '@summerfi/oracle-common'
 import {
   ChainId,
@@ -8,9 +9,18 @@ import {
   SpotPriceInfo,
 } from '@summerfi/sdk-common'
 import { IToken } from '@summerfi/sdk-common/common'
+import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 
-export class MockOracleProvider implements IOracleProvider {
-  type: OracleProviderType = OracleProviderType.OneInch
+export class MockOracleProvider
+  extends ManagerProviderBase<OracleProviderType>
+  implements IOracleProvider
+{
+  constructor() {
+    super({
+      configProvider: undefined as unknown as IConfigurationProvider,
+      type: OracleProviderType.OneInch,
+    })
+  }
 
   getSupportedChainIds(): ChainId[] {
     return [1, 4, 6]

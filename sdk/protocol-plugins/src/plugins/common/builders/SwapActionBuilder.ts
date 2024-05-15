@@ -1,19 +1,22 @@
-import { Address } from '@summerfi/sdk-common/common'
 import { steps } from '@summerfi/sdk-common/simulation'
-import { HexData } from '@summerfi/sdk-common/common/aliases'
 import { ActionBuilder } from '@summerfi/protocol-plugins-common'
 import { SwapAction } from '../actions/SwapAction'
+import { getContractAddress } from '../../utils/GetContractAddress'
 
 export const SwapActionBuilder: ActionBuilder<steps.SwapStep> = async (params): Promise<void> => {
-  const { context, swapManager, deployment, step } = params
+  const { context, user, swapManager, addressBookManager, step } = params
 
-  const swapContractInfo = deployment.contracts['Swap']
+  const swapContractAddress = await getContractAddress({
+    addressBookManager,
+    chainInfo: user.chainInfo,
+    contractName: 'Swap',
+  })
 
   const swapData = await swapManager.getSwapDataExactInput({
     chainInfo: params.user.chainInfo,
     fromAmount: step.inputs.inputAmountAfterFee,
     toToken: step.inputs.minimumReceivedAmount.token,
-    recipient: Address.createFromEthereum({ value: swapContractInfo.address as HexData }),
+    recipient: swapContractAddress,
     slippage: step.inputs.slippage,
   })
 

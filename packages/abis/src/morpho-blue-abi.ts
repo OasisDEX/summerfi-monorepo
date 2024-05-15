@@ -1,3 +1,19 @@
+export const morphoBlueOracleAbi = [
+  {
+    inputs: [],
+    name: "price",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "price",
+        type: "uint256",
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  }
+] as const
+
 export const morphoBlueAbi = [
   {
     inputs: [

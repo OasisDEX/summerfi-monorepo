@@ -1,42 +1,33 @@
-import { IToken, ITokenData, TokenSchema } from '../../common/interfaces/IToken'
-import { IPoolId, IPoolIdData } from './IPoolId'
-import { IProtocol, ProtocolSchema } from './IProtocol'
+import { IPoolId } from './IPoolId'
+import { IProtocol, ProtocolDataSchema } from './IProtocol'
 import { z } from 'zod'
 
 /**
- * @interface ILendingPoolIdData
+ * @name ILendingPoolId
  * @description Identifies a generic lending pool. This will be specialized for each protocol
  *
  * This is meant to be used for single pair collateral/debt lending pools. For multi-collateral pools,
  * a different interface should be used
- */
-export interface ILendingPoolIdData extends IPoolIdData {
-  /** Collateral token used to collateralized the pool */
-  readonly collateralToken: ITokenData
-  /** Debt token, which can be borrowed from the pool */
-  readonly debtToken: ITokenData
-}
-
-/**
- * @name ILendingPoolId
- * @description Interface for the implementors of the lending pool ID
  *
- * This interface is used to add all the methods that the interface supports
+ * Note: Typescript forces the interface to re-declare any properties that have different BUT compatible types.
+ * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
 export interface ILendingPoolId extends IPoolId, ILendingPoolIdData {
+  // Re-declaring narrowed types
   readonly protocol: IProtocol
-  readonly collateralToken: IToken
-  readonly debtToken: IToken
 }
 
 /**
  * @description Zod schema for ILendingPoolId
  */
-export const LendingPoolIdSchema = z.object({
-  protocol: ProtocolSchema,
-  collateralToken: TokenSchema,
-  debtToken: TokenSchema,
+export const LendingPoolIdDataSchema = z.object({
+  protocol: ProtocolDataSchema,
 })
+
+/**
+ * Type for the data part of the ILendingPoolId interface
+ */
+export type ILendingPoolIdData = Readonly<z.infer<typeof LendingPoolIdDataSchema>>
 
 /**
  * @description Type guard for ILendingPoolId
@@ -46,11 +37,5 @@ export const LendingPoolIdSchema = z.object({
  * It also asserts the type so that TypeScript knows that the object is an ILendingPoolId
  */
 export function isLendingPoolId(maybePoolId: unknown): maybePoolId is ILendingPoolIdData {
-  return LendingPoolIdSchema.safeParse(maybePoolId).success
+  return LendingPoolIdDataSchema.safeParse(maybePoolId).success
 }
-
-/**
- * Checker to make sure that the schema is aligned with the interface
- */
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: ILendingPoolIdData = {} as z.infer<typeof LendingPoolIdSchema>

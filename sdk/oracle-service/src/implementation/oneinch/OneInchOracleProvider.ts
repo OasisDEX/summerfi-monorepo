@@ -8,7 +8,6 @@ import {
 import fetch from 'node-fetch'
 import {
   type ChainInfo,
-  Token,
   Address,
   Price,
   type AddressValue,
@@ -20,29 +19,31 @@ import {
 import { OracleProviderType, SpotPriceInfo } from '@summerfi/sdk-common/oracle'
 import { IOracleProvider } from '@summerfi/oracle-common'
 import { FiatCurrency, IChainInfo, IToken, isTokenAmount } from '@summerfi/sdk-common'
+import { ManagerProviderBase } from '@summerfi/sdk-server-common'
+import { IConfigurationProvider } from '@summerfi/configuration-provider'
 
 /**
  * @name OneInchOracleProvider
  * @description This class is responsible for fetching spot prices from the 1inch API
  */
-export class OneInchOracleProvider implements IOracleProvider {
-  public type: OracleProviderType = OracleProviderType.OneInch
-
+export class OneInchOracleProvider
+  extends ManagerProviderBase<OracleProviderType>
+  implements IOracleProvider
+{
   private readonly _apiUrl: string
   private readonly _apiKey: string
   private readonly _version: string
 
   /** CONSTRUCTOR */
 
-  /**
-   * @param params The configuration parameters for the 1inch oracle provider
-   */
-  constructor(params: { providerConfig: OneInchOracleProviderConfig }) {
-    const { providerConfig } = params
+  constructor(params: { configProvider: IConfigurationProvider }) {
+    super({ ...params, type: OracleProviderType.OneInch })
 
-    this._apiUrl = providerConfig.apiUrl
-    this._apiKey = providerConfig.apiKey
-    this._version = providerConfig.version
+    const { config } = this._getConfig()
+
+    this._apiUrl = config.apiUrl
+    this._apiKey = config.apiKey
+    this._version = config.version
   }
 
   /** @see IOracleProvider.getSupportedChainIds */
@@ -58,8 +59,6 @@ export class OneInchOracleProvider implements IOracleProvider {
   }): Promise<SpotPriceInfo> {
     const authHeader = this._getOneInchSpotAuthHeader()
     if (params.quoteDenomination && isToken(params.quoteDenomination)) {
-      isTokenType(params.quoteDenomination)
-
       const baseTokenAddress = params.baseToken.address
       const quoteTokenAddress = params.quoteDenomination.address
       const quoteCurrencySymbol = FiatCurrency.USD
@@ -153,10 +152,22 @@ export class OneInchOracleProvider implements IOracleProvider {
     }
   }
 
+  /**
+   * Returns the authentication header for the 1inch spot price API
+   * @returns  The authentication header with the API key
+   */
   private _getOneInchSpotAuthHeader(): OneInchSpotAuthHeader {
     return { [OneInchSpotAuthHeaderKey]: `Bearer ${this._apiKey}` }
   }
 
+  /**
+   * Formats the 1inch spot price URL
+   * @param chainInfo The chain information
+   * @param tokenAddresses The token addresses to get the spot price for
+   * @param quoteCurrency The quote currency in which the spot prices will be denominated
+   *
+   * @returns The formatted spot price URL
+   */
   private _formatOneInchSpotUrl(params: {
     chainInfo: ChainInfo
     tokenAddresses: Address[]
@@ -172,13 +183,45 @@ export class OneInchOracleProvider implements IOracleProvider {
      */
     return `${this._apiUrl}/price/${this._version}/${chainId}/${tokenAddresses.join(',')}?currency=${params.quoteCurrency.toUpperCase()}`
   }
-}
 
-function isTokenType(quoteToken: unknown): asserts quoteToken is Token {
-  if (!quoteToken) {
-    throw new Error('QuoteToken is undefined')
-  }
-  if (!(quoteToken instanceof Token)) {
-    throw new Error('QuoteToken is not of type Token')
+  /**
+   * Returns the configuration for the 1inch oracle provider
+   * @returns The 1inch oracle provider configuration
+   */
+  private _getConfig(): {
+    config: OneInchOracleProviderConfig
+  } {
+    const ONE_INCH_API_SPOT_URL = this.configProvider.getConfigurationItem({
+      name: 'ONE_INCH_API_SPOT_URL',
+    })
+    const ONE_INCH_API_SPOT_VERSION = this.configProvider.getConfigurationItem({
+      name: 'ONE_INCH_API_SPOT_VERSION',
+    })
+    const ONE_INCH_API_SPOT_KEY = this.configProvider.getConfigurationItem({
+      name: 'ONE_INCH_API_SPOT_KEY',
+    })
+
+    if (!ONE_INCH_API_SPOT_URL || !ONE_INCH_API_SPOT_KEY || !ONE_INCH_API_SPOT_VERSION) {
+      throw new Error(
+        'OneInch configuration is missing: ' +
+          JSON.stringify(
+            Object.entries({
+              ONE_INCH_API_SPOT_URL,
+              ONE_INCH_API_SPOT_KEY,
+              ONE_INCH_API_SPOT_VERSION,
+            }),
+            null,
+            2,
+          ),
+      )
+    }
+
+    return {
+      config: {
+        apiUrl: ONE_INCH_API_SPOT_URL,
+        apiKey: ONE_INCH_API_SPOT_KEY,
+        version: ONE_INCH_API_SPOT_VERSION,
+      },
+    }
   }
 }

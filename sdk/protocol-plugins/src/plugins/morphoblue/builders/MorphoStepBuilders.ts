@@ -1,0 +1,9 @@
+import { ActionBuildersMap } from '@summerfi/protocol-plugins-common'
+import { MorphoDepositBorrowActionBuilder } from './MorphoDepositBorrowActionBuilder'
+import { SimulationSteps } from '@summerfi/sdk-common/simulation'
+import { MorphoPaybackWithdrawActionBuilder } from './MorphoPaybackWithdrawActionBuilder'
+
+export const MorphoStepBuilders: Partial<ActionBuildersMap> = {
+  [SimulationSteps.DepositBorrow]: MorphoDepositBorrowActionBuilder,
+  [SimulationSteps.PaybackWithdraw]: MorphoPaybackWithdrawActionBuilder,
+}

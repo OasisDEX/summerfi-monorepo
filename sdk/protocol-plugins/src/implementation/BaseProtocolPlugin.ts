@@ -4,7 +4,14 @@ import {
   IProtocolPlugin,
   IProtocolPluginContext,
 } from '@summerfi/protocol-plugins-common'
-import { ChainInfo, Maybe, IPosition, IPositionIdData } from '@summerfi/sdk-common/common'
+import {
+  ChainInfo,
+  Maybe,
+  IPosition,
+  IPositionIdData,
+  IAddress,
+  IChainInfo,
+} from '@summerfi/sdk-common/common'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 import {
   ProtocolName,
@@ -14,6 +21,7 @@ import {
 } from '@summerfi/sdk-common/protocols'
 import { steps } from '@summerfi/sdk-common/simulation'
 import { IUser } from '@summerfi/sdk-common/user'
+import { getContractAddress } from '../plugins/utils/GetContractAddress'
 
 /**
  * @class BaseProtocolPlugin
@@ -31,11 +39,9 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
 
   /** These properties are initialized in the constructor */
   readonly context: IProtocolPluginContext
-  readonly deploymentConfigTag: string
 
-  protected constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
+  protected constructor(params: { context: IProtocolPluginContext }) {
     this.context = params.context
-    this.deploymentConfigTag = params.deploymentConfigTag ?? 'standard'
 
     if (!this.context.provider.chain) {
       throw new Error('ctx.provider.chain undefined')
@@ -137,14 +143,23 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
   /** HELPERS */
 
   /**
-   * @name _getDeploymentKey
-   * @description Gets the key to use for the deployment configuration
-   * @param chainInfo The chain information
-   * @returns The key to use for the deployment configuration
+   * Retrieves the contract address for a given chain
+   * @param chainInfo The chain where the contract is deployed
+   * @param contractName THe name of the contract
+   * @returns The address of the contract or throws if not found
    */
-  protected _getDeploymentKey(chainInfo: ChainInfo): string {
-    return `${chainInfo.name}.${this.deploymentConfigTag}`
+  protected async _getContractAddress(params: {
+    chainInfo: IChainInfo
+    contractName: string
+  }): Promise<IAddress> {
+    return getContractAddress({
+      addressBookManager: this.context.addressBookManager,
+      chainInfo: params.chainInfo,
+      contractName: params.contractName,
+    })
   }
+
+  /** PRIVATE */
 
   /**
    * @name _validateChainId

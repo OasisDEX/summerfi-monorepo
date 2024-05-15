@@ -1,8 +1,6 @@
 import { Order, type IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 import { ISimulation, SimulationType, steps } from '@summerfi/sdk-common/simulation'
-import { Deployment } from '@summerfi/deployment-utils'
-import { Address, Maybe } from '@summerfi/sdk-common/common'
-import { HexData } from '@summerfi/sdk-common/common/aliases'
+import { Maybe } from '@summerfi/sdk-common/common'
 import {
   ActionBuilder,
   ActionBuildersMap,
@@ -13,6 +11,8 @@ import {
 import { IOrderPlanner, OrderPlannerParams } from '../interfaces/IOrderPlanner'
 import { encodeStrategy } from '../utils/EncodeStrategy'
 import { generateStrategyName } from '../utils/GenerateStrategyName'
+import { IAddressBookManager } from '@summerfi/address-book-common'
+import { IUser } from '@summerfi/sdk-common'
 
 export class OrderPlanner implements IOrderPlanner {
   // TODO: receive it as parameter in the constructor
@@ -24,7 +24,7 @@ export class OrderPlanner implements IOrderPlanner {
       positionsManager,
       simulation,
       actionBuildersMap,
-      deployment,
+      addressBookManager,
       swapManager,
       protocolsRegistry,
     } = params
@@ -44,7 +44,7 @@ export class OrderPlanner implements IOrderPlanner {
         user,
         positionsManager,
         swapManager,
-        deployment,
+        addressBookManager,
         step,
         protocolsRegistry,
       })
@@ -59,11 +59,12 @@ export class OrderPlanner implements IOrderPlanner {
     const preRequisiteTransactions = context.transactions
 
     return this._generateOrder({
+      user,
       simulation,
       preRequisiteTransactions,
       simulationCalls: callsBatch,
       positionsManager,
-      deployment,
+      addressBookManager,
     })
   }
 
@@ -74,21 +75,30 @@ export class OrderPlanner implements IOrderPlanner {
     return actionBuildersMap[step.type] as ActionBuilder<T>
   }
 
-  private _generateOrder(params: {
+  private async _generateOrder(params: {
+    user: IUser
     simulation: ISimulation<SimulationType>
     preRequisiteTransactions: TransactionInfo[]
     simulationCalls: ActionCall[]
     positionsManager: IPositionsManager
-    deployment: Deployment
-  }): Order {
-    const { simulation, preRequisiteTransactions, simulationCalls, positionsManager, deployment } =
-      params
+    addressBookManager: IAddressBookManager
+  }): Promise<Order> {
+    const {
+      user,
+      simulation,
+      preRequisiteTransactions,
+      simulationCalls,
+      positionsManager,
+      addressBookManager,
+    } = params
 
-    const executorInfo = deployment.contracts[this.ExecutorContractName]
-    if (!executorInfo) {
+    const executorAddress = await addressBookManager.getAddressByName({
+      name: this.ExecutorContractName,
+      chainInfo: user.chainInfo,
+    })
+    if (!executorAddress) {
       throw new Error(`Executor contract ${this.ExecutorContractName} not found in deployment`)
     }
-    const executorAddress = Address.createFromEthereum({ value: executorInfo.address as HexData })
     const strategyName = generateStrategyName(simulation)
 
     const strategyExecutorTransaction = encodeStrategy({

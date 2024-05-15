@@ -6,7 +6,7 @@ export class SendTokenAction extends BaseAction {
     name: 'SendToken',
     version: 4,
     parametersAbi: '(address asset, address to, uint256 amount)',
-    storageInputs: [],
+    storageInputs: ['asset', 'to', 'amount'],
     storageOutputs: [],
   } as const
 

@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js'
-import { Denomination, DenominationData, DenominationSchema } from '../aliases/Denomination'
+import { Denomination, DenominationDataSchema } from '../aliases/Denomination'
 import { IPrintable } from './IPrintable'
 import { type ITokenAmount } from './ITokenAmount'
 import { type IFiatCurrencyAmount } from './IFiatCurrencyAmount'
@@ -18,8 +18,9 @@ export type PriceMulReturnType<T> = T extends ITokenAmount
     : IPrice
 
 /**
- * @name IPriceData
- * @description Represents a price for a pair of tokens
+ * @name IPrice
+ * @description Represents a price for a token with certain denomation. The denomination can be a fiat currency
+ *              or another token
  *
  * The price is represented as a string in floating point format without taking into consideration
  * the number of decimals of the tokens. This data type can be used for calculations with other types
@@ -38,24 +39,12 @@ export type PriceMulReturnType<T> = T extends ITokenAmount
  *
  * QUOTE/BASE
  */
-export interface IPriceData {
+export interface IPrice extends IPriceData, IPrintable {
   /** The price value in floating point format without taking into account decimals */
   readonly value: string
   /** The token for the base of the price */
-  readonly base: DenominationData
-  /** The token for the quote of the price */
-  readonly quote: DenominationData
-}
-
-/**
- * @name IPrice
- * @description Interface for the implementors of the price
- *
- * This interface is used to add all the methods that the interface supports
- */
-export interface IPrice extends IPriceData, IPrintable {
-  readonly value: string
   readonly base: Denomination
+  /** The token for the quote of the price */
   readonly quote: Denomination
 
   /**
@@ -149,23 +138,22 @@ export interface IPrice extends IPriceData, IPrintable {
 /**
  * @description Zod schema for IPrice
  */
-export const PriceSchema = z.object({
+export const PriceDataSchema = z.object({
   value: z.string(),
-  base: DenominationSchema,
-  quote: DenominationSchema,
+  base: DenominationDataSchema,
+  quote: DenominationDataSchema,
 })
 
 /**
- * @description Type guard for IPrice
- * @param maybePrice
- * @returns true if the object is an IPrice
+ * Type definition for the Price data
  */
-export function isPrice(maybePrice: unknown): maybePrice is IPriceData {
-  return PriceSchema.safeParse(maybePrice).success
-}
+export type IPriceData = Readonly<z.infer<typeof PriceDataSchema>>
 
 /**
- * Checker to make sure that the schema is aligned with the interface
+ * @description Type guard for isPrice
+ * @param maybePrice
+ * @returns true if the object is an isPrice
  */
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: IPriceData = {} as z.infer<typeof PriceSchema>
+export function isPrice(maybePrice: unknown): maybePrice is IPrice {
+  return PriceDataSchema.safeParse(maybePrice).success
+}

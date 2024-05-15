@@ -51,10 +51,8 @@ export async function refinanceLendingToLendingAnyPair(
   const flashloanAmount = position.debtAmount.multiply(FLASHLOAN_MARGIN)
   const simulator = Simulator.create(refinanceLendingToLendingAnyPairStrategy)
 
-  const isCollateralSwapSkipped = !targetPool.id.collateralToken.equals(
-    sourcePool.id.collateralToken,
-  )
-  const isDebtSwapSkipped = !targetPool.id.debtToken.equals(sourcePool.id.debtToken)
+  const isCollateralSwapSkipped = !targetPool.collateralToken.equals(sourcePool.collateralToken)
+  const isDebtSwapSkipped = !targetPool.debtToken.equals(sourcePool.debtToken)
 
   const simulation = await simulator
     .next(async () => ({
@@ -84,7 +82,7 @@ export async function refinanceLendingToLendingAnyPair(
         inputs: await getSwapStepData({
           chainInfo: position.pool.id.protocol.chainInfo,
           fromAmount: position.collateralAmount,
-          toToken: targetPool.id.collateralToken,
+          toToken: targetPool.collateralToken,
           slippage: Percentage.createFrom({ value: args.slippage.value }),
           swapManager: dependencies.swapManager,
           oracleManager: dependencies.oracleManager,
@@ -101,7 +99,7 @@ export async function refinanceLendingToLendingAnyPair(
           ? ctx.getReference(['PaybackWithdrawFromSource', 'paybackAmount'])
           : await estimateSwapFromAmount({
               receiveAtLeast: flashloanAmount,
-              fromToken: targetPool.id.debtToken,
+              fromToken: targetPool.debtToken,
               slippage: Percentage.createFrom(args.slippage),
               swapManager: dependencies.swapManager,
               oracleManager: dependencies.oracleManager,

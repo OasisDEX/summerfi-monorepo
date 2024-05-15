@@ -13,8 +13,8 @@ export function newEmptyPositionFromPool(pool: ILendingPoolData): IPosition {
     id: {
       id: 'newEmptyPositionFromPool',
     },
-    debtAmount: TokenAmount.createFrom({ token: pool.id.debtToken, amount: '0' }),
-    collateralAmount: TokenAmount.createFrom({ token: pool.id.collateralToken, amount: '0' }),
+    debtAmount: TokenAmount.createFrom({ token: pool.debtToken, amount: '0' }),
+    collateralAmount: TokenAmount.createFrom({ token: pool.collateralToken, amount: '0' }),
     pool,
   } as unknown as Position
 }

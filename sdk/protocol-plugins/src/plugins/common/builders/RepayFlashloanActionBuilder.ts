@@ -1,9 +1,9 @@
 import { FlashloanProvider, steps } from '@summerfi/sdk-common/simulation'
 import { ActionNames } from '@summerfi/deployment-types'
-import { Address, AddressValue } from '@summerfi/sdk-common/common'
 import { ActionBuilder, ActionBuilderParams } from '@summerfi/protocol-plugins-common'
 import { SendTokenAction } from '../actions/SendTokenAction'
 import { FlashloanAction } from '../actions/FlashloanAction'
+import { getContractAddress } from '../../utils/GetContractAddress'
 
 export const PaybackFlashloanActionList: ActionNames[] = []
 
@@ -16,16 +16,20 @@ export const FlashloanProviderMap: Record<FlashloanProvider, number> = {
 export const RepayFlashloanActionBuilder: ActionBuilder<steps.RepayFlashloanStep> = async (
   params: ActionBuilderParams<steps.RepayFlashloanStep>,
 ): Promise<void> => {
-  const { context, step, deployment } = params
+  const { user, context, step, addressBookManager } = params
+
+  const operationExecutorAddress = await getContractAddress({
+    addressBookManager,
+    chainInfo: user.chainInfo,
+    contractName: 'OperationExecutor',
+  })
 
   context.addActionCall({
     step: step,
     action: new SendTokenAction(),
     arguments: {
       sendAmount: step.inputs.amount,
-      sendTo: Address.createFromEthereum({
-        value: deployment.contracts.OperationExecutor.address as AddressValue,
-      }),
+      sendTo: operationExecutorAddress,
     },
     connectedInputs: {},
     connectedOutputs: {},

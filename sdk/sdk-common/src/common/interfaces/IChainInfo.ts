@@ -2,24 +2,13 @@ import { ChainId, ChainIdSchema } from '../aliases/ChainId'
 import { z } from 'zod'
 
 /**
- * @name IChainInfoData
+ * @name IChainInfo
  * @description Information used to identify a blockchain network
  */
-export interface IChainInfoData {
-  /** The chain ID of the network */
-  chainId: ChainId
-  /** The name of the network */
-  name: string
-}
-
-/**
- * @name IChainInfo
- * @description Interface for the implementors of the chain info
- *
- * This interface is used to add all the methods that the interface supports
- */
 export interface IChainInfo extends IChainInfoData {
+  /** The chain ID of the network */
   readonly chainId: ChainId
+  /** The name of the network */
   readonly name: string
 
   /**
@@ -36,22 +25,21 @@ export interface IChainInfo extends IChainInfoData {
 /**
  * @description Zod schema for IChainInfo
  */
-export const ChainInfoSchema = z.object({
+export const ChainInfoDataSchema = z.object({
   chainId: ChainIdSchema,
   name: z.string(),
 })
+
+/**
+ * Type for the data part of the IChainInfo interface
+ */
+export type IChainInfoData = Readonly<z.infer<typeof ChainInfoDataSchema>>
 
 /**
  * @description Type guard for IChainInfo
  * @param maybeChainInfo
  * @returns true if the object is an IChainInfo
  */
-export function isChainInfo(maybeChainInfo: unknown): maybeChainInfo is IChainInfoData {
-  return ChainInfoSchema.safeParse(maybeChainInfo).success
+export function isChainInfo(maybeChainInfo: unknown): maybeChainInfo is IChainInfo {
+  return ChainInfoDataSchema.safeParse(maybeChainInfo).success
 }
-
-/**
- * Checker to make sure that the schema is aligned with the interface
- */
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: IChainInfoData = {} as z.infer<typeof ChainInfoSchema>

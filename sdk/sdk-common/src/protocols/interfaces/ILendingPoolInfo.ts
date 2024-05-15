@@ -1,12 +1,12 @@
 import { PoolType } from '../types'
-import { ILendingPoolId, ILendingPoolIdData, LendingPoolIdSchema } from './ILendingPoolId'
-import { IPoolInfo, IPoolInfoData, PoolInfoSchema } from './IPoolInfo'
-import { CollateralInfoSchema, ICollateralInfo, ICollateralInfoData } from './ICollateralInfo'
-import { DebtInfoSchema, IDebtInfo, IDebtInfoData } from './IDebtInfo'
+import { ILendingPoolId, LendingPoolIdDataSchema } from './ILendingPoolId'
+import { IPoolInfo, PoolInfoDataSchema } from './IPoolInfo'
+import { CollateralInfoDataSchema, ICollateralInfo } from './ICollateralInfo'
+import { DebtInfoDataSchema, IDebtInfo } from './IDebtInfo'
 import { z } from 'zod'
 
 /**
- * @interface ILendingPoolInfoData
+ * @name ILendingPoolInfo
  * @description Represents the extended information for a lending pool of a single pair collateral/debt
  *
  * This extended information includes extra info for the collateral and debt like the liquidation threshold, liquidation penalty, total amount
@@ -17,40 +17,32 @@ import { z } from 'zod'
  * tries to abstract this information to provide a common interface for all the protocols on the client side.
  *
  */
-export interface ILendingPoolInfoData extends IPoolInfoData {
+export interface ILendingPoolInfo extends IPoolInfo, ILendingPoolInfoData {
   /** Type of the pool, in this case Lending */
   readonly type: PoolType.Lending
   /** Pool ID of the lending pool */
-  readonly id: ILendingPoolIdData
-  /** The collateral information of the pool */
-  readonly collateral: ICollateralInfoData
-  /** The debt information of the pool */
-  readonly debt: IDebtInfoData
-}
-
-/**
- * @name ILendingPoolInfo
- * @description Interface for the implementors of the lending pool info
- *
- * This interface is used to add all the methods that the interface supports
- */
-export interface ILendingPoolInfo extends IPoolInfo, ILendingPoolInfoData {
-  readonly type: PoolType.Lending
   readonly id: ILendingPoolId
+  /** The collateral information of the pool */
   readonly collateral: ICollateralInfo
+  /** The debt information of the pool */
   readonly debt: IDebtInfo
 }
 
 /**
  * @description Zod schema for ILendingPoolInfo
  */
-export const LendingPoolInfoSchema = z.object({
-  ...PoolInfoSchema.shape,
+export const LendingPoolInfoDataSchema = z.object({
+  ...PoolInfoDataSchema.shape,
   type: z.literal(PoolType.Lending),
-  id: LendingPoolIdSchema,
-  collateral: CollateralInfoSchema,
-  debt: DebtInfoSchema,
+  id: LendingPoolIdDataSchema,
+  collateral: CollateralInfoDataSchema,
+  debt: DebtInfoDataSchema,
 })
+
+/**
+ * Type for the data part of the ILendingPoolInfo interface
+ */
+export type ILendingPoolInfoData = Readonly<z.infer<typeof LendingPoolInfoDataSchema>>
 
 /**
  * @description Type guard for ILendingPoolInfo
@@ -60,11 +52,5 @@ export const LendingPoolInfoSchema = z.object({
  * It also asserts the type so that TypeScript knows that the object is an ILendingPool
  */
 export function isLendingPoolInfo(maybePool: unknown): maybePool is ILendingPoolInfoData {
-  return LendingPoolInfoSchema.safeParse(maybePool).success
+  return LendingPoolInfoDataSchema.safeParse(maybePool).success
 }
-
-/**
- * Checker to make sure that the schema is aligned with the interface
- */
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: ILendingPoolInfoData = {} as z.infer<typeof LendingPoolInfoSchema>

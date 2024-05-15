@@ -8,15 +8,21 @@ import { ActionCallsStack } from './ActionCallsStack'
 import { ExecutionStorageMapper } from './ExecutionStorageMapper'
 import { TransactionInfo } from '@summerfi/sdk-common/orders'
 
+/**
+ * @name StepBuilderContext
+ * @see IStepBuilderContext
+ */
 export class StepBuilderContext implements IStepBuilderContext {
   private _transactions: TransactionInfo[] = []
   private _calls: ActionCallsStack = new ActionCallsStack()
   private _storage: ExecutionStorageMapper = new ExecutionStorageMapper()
 
+  /** @see IStepBuilderContext.addTransaction */
   public addTransaction(params: { transaction: TransactionInfo }): void {
     this._transactions.push(params.transaction)
   }
 
+  /** @see IStepBuilderContext.addActionCall */
   public addActionCall<Step extends steps.Steps, Action extends BaseAction>(params: {
     step: Step
     action: Action
@@ -35,10 +41,12 @@ export class StepBuilderContext implements IStepBuilderContext {
     this._calls.addCall({ call })
   }
 
+  /** @see IStepBuilderContext.startSubContext */
   public startSubContext(params: { customData?: unknown } = {}) {
     this._calls.startSubContext(params)
   }
 
+  /** @see IStepBuilderContext.endSubContext */
   public endSubContext<T>(): {
     callsBatch: ActionCallBatch
     customData: Maybe<T>
@@ -46,10 +54,12 @@ export class StepBuilderContext implements IStepBuilderContext {
     return this._calls.endSubContext() as { callsBatch: ActionCallBatch; customData: Maybe<T> }
   }
 
+  /** @see IStepBuilderContext.subContextLevels */
   public get subContextLevels(): number {
     return this._calls.subContextLevels
   }
 
+  /** @see IStepBuilderContext.transactions */
   public get transactions(): TransactionInfo[] {
     return this._transactions
   }

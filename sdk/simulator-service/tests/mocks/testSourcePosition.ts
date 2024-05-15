@@ -75,6 +75,8 @@ const testSourceLendingPool = MakerLendingPool.createFrom({
     debtToken: testDebt,
     ilkType: ILKType.ETH_A,
   },
+  debtToken: testDebt,
+  collateralToken: testCollateral,
 })
 
 export const testSourcePosition = borrowFromPosition(
@@ -93,6 +95,8 @@ export const testTargetLendingPool = SparkLendingPool.createFrom({
     debtToken: testDebt,
     emodeType: EmodeType.None,
   },
+  collateralToken: testCollateral,
+  debtToken: testDebt,
 })
 
 export const testTargetLendingPoolRequiredSwaps = SparkLendingPool.createFrom({
@@ -103,6 +107,8 @@ export const testTargetLendingPoolRequiredSwaps = SparkLendingPool.createFrom({
     debtToken: otherTestDebt,
     emodeType: EmodeType.None,
   },
+  collateralToken: otherTestCollateral,
+  debtToken: otherTestDebt,
 })
 
 export const testTargetLendingPoolInfo = SparkLendingPoolInfo.createFrom({
@@ -128,7 +134,7 @@ export const testTargetLendingPoolInfo = SparkLendingPoolInfo.createFrom({
     tokensLocked: TokenAmount.createFrom({ token: testCollateral, amount: '10000' }),
     liquidationPenalty: Percentage.createFrom({ value: 0.1 }),
     liquidationThreshold: RiskRatio.createFrom({
-      ratio: Percentage.createFrom({ value: 0.6 }),
+      value: Percentage.createFrom({ value: 0.6 }),
       type: RiskRatioType.LTV,
     }),
     maxSupply: TokenAmount.createFrom({ token: testCollateral, amount: '10000000' }),

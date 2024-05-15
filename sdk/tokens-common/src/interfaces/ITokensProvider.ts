@@ -1,12 +1,13 @@
 import { ChainId } from '@summerfi/sdk-common'
 import { IAddress, IChainInfo, IToken, Maybe } from '@summerfi/sdk-common/common'
 import { TokensProviderType } from '@summerfi/sdk-common/tokens'
+import { IManagerProvider } from '@summerfi/sdk-server-common'
 
 /**
  * @name ITokensProvider
  * @description Interface for providers of token information
  */
-export interface ITokensProvider {
+export interface ITokensProvider extends IManagerProvider<TokensProviderType> {
   /**
    * @name type
    * @description The type of the tokens provider, used to identify the provider

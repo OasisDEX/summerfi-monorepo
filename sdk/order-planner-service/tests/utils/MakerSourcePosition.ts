@@ -9,9 +9,11 @@ import {
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import {
   ILKType,
+  IMakerLendingPool,
   IMakerLendingPoolData,
   IMakerLendingPoolIdData,
   IMakerProtocolData,
+  MakerLendingPool,
   MakerPositionId,
 } from '@summerfi/protocol-plugins/plugins/maker'
 import { PositionType } from '@summerfi/sdk-common/common'
@@ -57,10 +59,12 @@ export function getMakerPosition(): Position {
     ilkType: ILKType.ETH_A,
   }
 
-  const pool: IMakerLendingPoolData = {
+  const pool: IMakerLendingPool = MakerLendingPool.createFrom({
     type: PoolType.Lending,
     id: poolId,
-  }
+    debtToken: DAI,
+    collateralToken: WETH,
+  })
 
   const position = {
     type: PositionType.Multiply,

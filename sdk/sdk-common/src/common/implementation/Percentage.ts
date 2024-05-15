@@ -59,7 +59,7 @@ export class Percentage implements IPercentage {
   /** @see IPercentage.toBaseUnit */
   toBaseUnit(params: { decimals: number }): string {
     const factor = new BigNumber(10).pow(params.decimals)
-    return new BigNumber(this.value).multipliedBy(factor).toFixed(0).toString()
+    return new BigNumber(this.toProportion()).multipliedBy(factor).toFixed(0).toString()
   }
 
   /** @see IPrintable.toString */
