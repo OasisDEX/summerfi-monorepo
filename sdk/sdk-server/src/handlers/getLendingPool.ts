@@ -1,9 +1,11 @@
+import { isLendingPoolId } from '@summerfi/sdk-common'
 import { publicProcedure } from '../TRPC'
-import { PoolIdSchema } from '@summerfi/sdk-common/protocols'
 import { z } from 'zod'
 
-export const getLendingPool = publicProcedure
-  .input(z.object({ poolId: PoolIdSchema.passthrough() }))
-  .query(async (opts) => {
-    return await opts.ctx.protocolManager.getLendingPool(opts.input.poolId)
-  })
+export const getLendingPool = publicProcedure.input(z.any()).query(async (opts) => {
+  if (!isLendingPoolId(opts.input)) {
+    throw new Error('Invalid lending pool id')
+  }
+
+  return opts.ctx.protocolManager.getLendingPool(opts.input)
+})

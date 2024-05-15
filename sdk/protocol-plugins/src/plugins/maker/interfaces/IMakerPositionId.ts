@@ -1,22 +1,9 @@
-import { IPositionIdData } from '@summerfi/sdk-common/common'
 import { MakerVaultId, MakerVaultIdSchema } from '../types/MakerVaultId'
-import { IPositionId, PositionIdSchema } from '@summerfi/sdk-common'
+import { IPositionId, PositionIdDataSchema } from '@summerfi/sdk-common'
 import { z } from 'zod'
-
-/**
- * @interface IMakerPositionIdData
- * @description Identifier of a Maker position
- */
-export interface IMakerPositionIdData extends IPositionIdData {
-  /** The vault ID that identifies the position on Maker */
-  vaultId: MakerVaultId
-}
-
 /**
  * @interface IMakerPositionId
- * @description Interface for the implementors of the position id
- *
- * This interface is used to add all the methods that the interface supports
+ * @description Identifier of a Maker position
  */
 export interface IMakerPositionId extends IPositionId, IMakerPositionIdData {
   /** The vault ID that identifies the position on Maker */
@@ -26,10 +13,15 @@ export interface IMakerPositionId extends IPositionId, IMakerPositionIdData {
 /**
  * @description Zod schema for IMakerPositionId
  */
-export const MakerPositionIdSchema = z.object({
-  ...PositionIdSchema.shape,
+export const MakerPositionIdDataSchema = z.object({
+  ...PositionIdDataSchema.shape,
   vaultId: MakerVaultIdSchema,
 })
+
+/**
+ * Type for the data part of IMakerPositionId
+ */
+export type IMakerPositionIdData = Readonly<z.infer<typeof MakerPositionIdDataSchema>>
 
 /**
  * @description Type guard for IMakerPositionId
@@ -38,12 +30,6 @@ export const MakerPositionIdSchema = z.object({
  */
 export function isMakerPositionId(
   maybeMakerPositionId: unknown,
-): maybeMakerPositionId is IMakerPositionIdData {
-  return MakerPositionIdSchema.safeParse(maybeMakerPositionId).success
+): maybeMakerPositionId is IMakerPositionId {
+  return MakerPositionIdDataSchema.safeParse(maybeMakerPositionId).success
 }
-
-/**
- * Checker to make sure that the schema is aligned with the interface
- */
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: IMakerPositionIdData = {} as z.infer<typeof MakerPositionIdSchema>

@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CreateAWSLambdaContextOptions } from '@trpc/server/adapters/aws-lambda'
 import type { APIGatewayProxyEventV2 } from 'aws-lambda'
-import { DeploymentIndex } from '@summerfi/deployment-utils'
-import { Deployments } from '@summerfi/core-contracts'
 import { IOrderPlannerService, OrderPlannerService } from '@summerfi/order-planner-service'
 import { ConfigurationProvider, IConfigurationProvider } from '@summerfi/configuration-provider'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
@@ -15,11 +13,13 @@ import { ITokensManager } from '@summerfi/tokens-common'
 import { TokensManagerFactory } from '@summerfi/tokens-service'
 import { IOracleManager } from '@summerfi/oracle-common'
 import { OracleManagerFactory } from '@summerfi/oracle-service'
+import { IAddressBookManager } from '@summerfi/address-book-common'
+import { AddressBookManagerFactory } from '@summerfi/address-book-service'
 
 export type ContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
 export type SDKAppContext = {
-  deployments: DeploymentIndex
+  addressBookManager: IAddressBookManager
   configProvider: IConfigurationProvider
   tokensManager: ITokensManager
   swapManager: ISwapManager
@@ -31,24 +31,24 @@ export type SDKAppContext = {
 
 // context for each request
 export const createSDKContext = (opts: ContextOptions): SDKAppContext => {
-  const deployments = Deployments as DeploymentIndex
   const configProvider = new ConfigurationProvider()
+  const addressBookManager = AddressBookManagerFactory.newAddressBookManager({ configProvider })
   const tokensManager = TokensManagerFactory.newTokensManager({ configProvider })
-  const orderPlannerService = new OrderPlannerService({ deployments })
+  const orderPlannerService = new OrderPlannerService()
   const swapManager = SwapManagerFactory.newSwapManager({ configProvider })
   const oracleManager = OracleManagerFactory.newOracleManager({ configProvider })
   const protocolsRegistry = createProtocolsPluginsRegistry({
     configProvider,
-    deployments,
     tokensManager,
     oracleManager,
     swapManager,
+    addressBookManager,
   })
   const protocolManager = ProtocolManager.createWith({ pluginsRegistry: protocolsRegistry })
 
   return {
-    deployments,
     configProvider,
+    addressBookManager,
     tokensManager,
     swapManager,
     oracleManager,

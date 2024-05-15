@@ -14,6 +14,7 @@ module.exports = (pkgCompilerOptions = {}) => {
     testTimeout: 10000,
     testEnvironment: 'node',
     moduleNameMapper: mappings,
+    coverageReporters: ['json-summary', 'text', 'lcov'],
     transformIgnorePatterns: ['<rootDir>/node_modules', 'node_modules'],
     transform: {
       '^.+\\.(ts|tsx)$': [

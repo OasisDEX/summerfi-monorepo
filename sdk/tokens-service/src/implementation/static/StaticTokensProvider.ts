@@ -1,11 +1,20 @@
 import { ITokensProvider } from '@summerfi/tokens-common'
-import { TokensProviderType } from '@summerfi/sdk-common/tokens'
 import { StaticTokensData } from './StaticTokensList'
 import { IConfigurationProvider } from '@summerfi/configuration-provider'
 import { TokenData } from './TokensData'
-import { Address, ChainId, IAddress, IChainInfo, IToken, Maybe, Token } from '@summerfi/sdk-common'
+import {
+  Address,
+  ChainId,
+  IAddress,
+  IChainInfo,
+  IToken,
+  Maybe,
+  Token,
+  TokensProviderType,
+} from '@summerfi/sdk-common'
 import { AddressType } from '@summerfi/sdk-common/common'
 import { TokensMap } from './TokensMap'
+import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import assert from 'assert'
 
 /**
@@ -14,15 +23,21 @@ import assert from 'assert'
  *
  * It contains a pre-built list of tokens per chain ID
  */
-export class StaticTokensProvider implements ITokensProvider {
-  public type: TokensProviderType = TokensProviderType.Static
-
+export class StaticTokensProvider
+  extends ManagerProviderBase<TokensProviderType>
+  implements ITokensProvider
+{
   private _tokenByChainID: Map<ChainId, TokensMap>
 
   /** CONSTRUCTOR */
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
   constructor(params: { configProvider: IConfigurationProvider }) {
+    super({
+      type: TokensProviderType.Static,
+      ...params,
+    })
+
     this._tokenByChainID = new Map()
 
     for (const tokenData of StaticTokensData.tokens) {

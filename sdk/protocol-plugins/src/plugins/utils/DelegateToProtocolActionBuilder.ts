@@ -2,10 +2,10 @@ import { ActionBuilderParams, FilterStep } from '@summerfi/protocol-plugins-comm
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 
-export function delegateToProtocolActionBuilder<Step extends steps.Steps>(params: {
+export async function delegateToProtocolActionBuilder<Step extends steps.Steps>(params: {
   protocolName: ProtocolName
   actionBuilderParams: ActionBuilderParams<FilterStep<SimulationSteps, Step>>
-}) {
+}): Promise<void> {
   const { protocolName } = params
   const { protocolsRegistry } = params.actionBuilderParams
 
@@ -19,5 +19,5 @@ export function delegateToProtocolActionBuilder<Step extends steps.Steps>(params
     throw new Error(`No action builder found for protocol ${protocolName}`)
   }
 
-  builder(params.actionBuilderParams)
+  return builder(params.actionBuilderParams)
 }

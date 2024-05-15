@@ -7,29 +7,37 @@ import { ActionNames } from '@summerfi/deployment-types'
 
 import { SparkBorrowAction } from '../actions/SparkBorrowAction'
 import { SparkDepositAction } from '../actions/SparkDepositAction'
-import { Address, AddressValue } from '@summerfi/sdk-common/common'
+import { IAddress } from '@summerfi/sdk-common/common'
 import { ActionBuilder, ActionBuilderParams } from '@summerfi/protocol-plugins-common'
 import { SetApprovalAction } from '../../common'
+import { getContractAddress } from '../../utils/GetContractAddress'
 
 export const SparkDepositBorrowActionList: ActionNames[] = ['SparkDeposit', 'SparkBorrow']
 
-function getBorrowTargetAddress(params: ActionBuilderParams<steps.DepositBorrowStep>): Address {
-  const { step, positionsManager, deployment } = params
+async function getBorrowTargetAddress(
+  params: ActionBuilderParams<steps.DepositBorrowStep>,
+): Promise<IAddress> {
+  const { user, step, positionsManager, addressBookManager } = params
+  if (step.inputs.borrowTargetType === TokenTransferTargetType.PositionsManager) {
+    return positionsManager.address
+  }
 
-  return step.inputs.borrowTargetType === TokenTransferTargetType.PositionsManager
-    ? positionsManager.address
-    : Address.createFromEthereum({
-        value: deployment.contracts.OperationExecutor.address as AddressValue,
-      })
+  return getContractAddress({
+    addressBookManager,
+    chainInfo: user.chainInfo,
+    contractName: 'OperationExecutor',
+  })
 }
 
 export const SparkDepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrowStep> = async (
   params,
 ): Promise<void> => {
-  const { context, step, deployment } = params
+  const { context, user, step, addressBookManager } = params
 
-  const sparkLendingPool = Address.createFromEthereum({
-    value: deployment.dependencies.SparkLendingPool.address as AddressValue,
+  const sparkLendingPoolAddress = await getContractAddress({
+    addressBookManager,
+    chainInfo: user.chainInfo,
+    contractName: 'SparkLendingPool',
   })
 
   context.addActionCall({
@@ -37,7 +45,7 @@ export const SparkDepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrowS
     action: new SetApprovalAction(),
     arguments: {
       approvalAmount: getValueFromReference(step.inputs.depositAmount),
-      delegate: sparkLendingPool,
+      delegate: sparkLendingPoolAddress,
       sumAmounts: false,
     },
     connectedInputs: {
@@ -70,7 +78,7 @@ export const SparkDepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrowS
       action: new SparkBorrowAction(),
       arguments: {
         borrowAmount: borrowAmount,
-        borrowTo: getBorrowTargetAddress(params),
+        borrowTo: await getBorrowTargetAddress(params),
       },
       connectedInputs: {},
       connectedOutputs: {

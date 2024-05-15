@@ -7,7 +7,7 @@ import {
   getValueFromReference,
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
-import { Position, TokenAmount, Percentage } from '@summerfi/sdk-common/common'
+import { TokenAmount, Percentage } from '@summerfi/sdk-common/common'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
 import { refinanceLendingToLendingAnyPairStrategy } from './Strategy'
@@ -21,13 +21,16 @@ export async function refinanceLendingToLendingAnyPair(
   dependencies: IRefinanceDependencies,
 ): Promise<ISimulation<RefinanceSimulationTypes>> {
   // args validation
-  if (!isLendingPool(args.targetPosition.pool)) {
+  if (!isLendingPool(args.sourcePosition.pool)) {
+    throw new Error('Source pool is not a lending pool')
+  }
+  if (!isLendingPool(args.targetPool)) {
     throw new Error('Target pool is not a lending pool')
   }
 
-  const position = args.sourcePosition as Position
-  const sourcePool = await dependencies.protocolManager.getLendingPool(args.sourcePosition.pool.id)
-  const targetPool = await dependencies.protocolManager.getLendingPool(args.targetPosition.pool.id)
+  const position = args.sourcePosition
+  const sourcePool = args.sourcePosition.pool
+  const targetPool = args.targetPool
 
   if (!isLendingPool(sourcePool)) {
     throw new Error('Source pool is not a lending pool')
@@ -37,14 +40,15 @@ export async function refinanceLendingToLendingAnyPair(
     throw new Error('Target pool is not a lending pool')
   }
 
+  console.log(sourcePool)
+  console.log(targetPool)
+
   const FLASHLOAN_MARGIN = 1.001
   const flashloanAmount = position.debtAmount.multiply(FLASHLOAN_MARGIN)
   const simulator = Simulator.create(refinanceLendingToLendingAnyPairStrategy)
 
-  const isCollateralSwapSkipped = !targetPool.id.collateralToken.equals(
-    sourcePool.id.collateralToken,
-  )
-  const isDebtSwapSkipped = !targetPool.id.debtToken.equals(sourcePool.id.debtToken)
+  const isCollateralSwapSkipped = targetPool.collateralToken.equals(sourcePool.collateralToken)
+  const isDebtSwapSkipped = targetPool.debtToken.equals(sourcePool.debtToken)
 
   const simulation = await simulator
     .next(async () => ({
@@ -75,7 +79,7 @@ export async function refinanceLendingToLendingAnyPair(
         inputs: await getSwapStepData({
           chainInfo: position.pool.id.protocol.chainInfo,
           fromAmount: position.collateralAmount,
-          toToken: targetPool.id.collateralToken,
+          toToken: targetPool.collateralToken,
           slippage: Percentage.createFrom({ value: args.slippage.value }),
           swapManager: dependencies.swapManager,
           oracleManager: dependencies.oracleManager,
@@ -99,7 +103,7 @@ export async function refinanceLendingToLendingAnyPair(
           ? ctx.getReference(['SwapCollateralFromSourcePosition', 'received'])
           : await estimateSwapFromAmount({
               receiveAtLeast: flashloanAmount,
-              fromToken: targetPool.id.debtToken,
+              fromToken: targetPool.debtToken,
               slippage: Percentage.createFrom(args.slippage),
               swapManager: dependencies.swapManager,
               oracleManager: dependencies.oracleManager,

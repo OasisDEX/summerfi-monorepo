@@ -1,7 +1,7 @@
 import { type IConfigurationProvider } from '@summerfi/configuration-provider'
-import { TokensManager, TokensManagerProviderConfig } from './TokensManager'
+import { TokensManager } from './TokensManager'
 import { StaticTokensProvider } from './static/StaticTokensProvider'
-import { ITokensManager } from '@summerfi/tokens-common'
+import { ITokensManager, ITokensProvider } from '@summerfi/tokens-common'
 
 /**
  * @name TokensManagerFactory
@@ -12,7 +12,7 @@ export class TokensManagerFactory {
    * @name providersConfig
    * @description Configuration for the TokensManager. It includes the list of available providers
    */
-  static providersConfig: TokensManagerProviderConfig[] = []
+  static providers: ITokensProvider[] = []
 
   /**
    * @method newTokensManager
@@ -24,7 +24,7 @@ export class TokensManagerFactory {
   }): ITokensManager {
     this.initialize(params)
 
-    return new TokensManager({ providersConfig: this.providersConfig })
+    return new TokensManager({ providers: this.providers })
   }
 
   /** PRIVATE */
@@ -35,7 +35,7 @@ export class TokensManagerFactory {
    * @param configProvider The configuration provider used to get environment variables
    */
   private static initialize(params: { configProvider: IConfigurationProvider }): void {
-    if (this.providersConfig.length != 0) {
+    if (this.providers.length != 0) {
       return
     }
 
@@ -44,10 +44,6 @@ export class TokensManagerFactory {
     // Static provider
     const staticProvider = new StaticTokensProvider({ configProvider: configProvider })
 
-    this.providersConfig = [
-      {
-        provider: staticProvider,
-      },
-    ]
+    this.providers = [staticProvider]
   }
 }

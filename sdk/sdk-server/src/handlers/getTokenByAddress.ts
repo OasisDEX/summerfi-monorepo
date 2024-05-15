@@ -1,18 +1,24 @@
 import { publicProcedure } from '../TRPC'
-import { Address, AddressSchema, ChainInfo, ChainInfoSchema, Maybe } from '@summerfi/sdk-common'
-import { Token } from '@summerfi/sdk-common/common'
+import { IToken, Maybe, isAddress, isChainInfo } from '@summerfi/sdk-common'
 import { z } from 'zod'
 
 export const getTokenByAddress = publicProcedure
   .input(
     z.object({
-      chainInfo: ChainInfoSchema,
-      address: AddressSchema,
+      chainInfo: z.any(),
+      address: z.any(),
     }),
   )
-  .query(async (opts): Promise<Maybe<Token>> => {
+  .query(async (opts): Promise<Maybe<IToken>> => {
+    if (!isChainInfo(opts.input.chainInfo)) {
+      throw new Error('Invalid chain info')
+    }
+    if (!isAddress(opts.input.address)) {
+      throw new Error('Invalid address')
+    }
+
     return opts.ctx.tokensManager.getTokenByAddress({
-      chainInfo: ChainInfo.createFrom(opts.input.chainInfo),
-      address: Address.createFrom(opts.input.address),
+      chainInfo: opts.input.chainInfo,
+      address: opts.input.address,
     })
   })

@@ -5,16 +5,12 @@ import {
   IPosition,
   IPositionId,
   IPositionIdData,
+  IChainInfo,
 } from '@summerfi/sdk-common/common'
 import { ILendingPoolIdData, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { AaveV3LendingPool } from './AaveV3LendingPool'
-import { AaveV3AddressAbiMap } from '../types/AaveV3AddressAbiMap'
+import { AaveV3AbiMap, AaveV3AbiMapType } from '../abis/AaveV3AddressAbiMap'
 import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import {
-  AAVEV3_LENDING_POOL_ABI,
-  AAVEV3_ORACLE_ABI,
-  AAVEV3_POOL_DATA_PROVIDER_ABI,
-} from '../abis/AaveV3ABIS'
 import { AaveV3ContractNames } from '@summerfi/deployment-types'
 import {
   IAaveV3LendingPoolId,
@@ -27,8 +23,9 @@ import { IAaveV3PositionIdData, isAaveV3PositionId } from '../interfaces/IAaveV3
 import { AaveV3LendingPoolInfo } from './AaveV3LendingPoolInfo'
 import { aaveV3EmodeCategoryMap } from './EmodeCategoryMap'
 import { AAVEv3LikeBaseProtocolPlugin } from '../../common/helpers/aaveV3Like/AAVEv3LikeBaseProtocolPlugin'
-import { AAVEv3LikeAbiInfo } from '../../common/helpers/aaveV3Like/AAVEv3LikeAbi'
 import { FiatCurrency } from '@summerfi/sdk-common'
+import { ContractInfo } from '../../common/types/ContractInfo'
+import { ChainContractsProvider } from '../../utils/ChainContractProvider'
 import { AaveV3StepBuilders } from '../builders/AaveV3StepBuilders'
 
 /**
@@ -36,7 +33,10 @@ import { AaveV3StepBuilders } from '../builders/AaveV3StepBuilders'
  * @description Aave V3 protocol plugin
  * @see BaseProtocolPlugin
  */
-export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin {
+export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
+  AaveV3ContractNames,
+  AaveV3AbiMapType
+> {
   readonly protocolName = ProtocolName.AAVEv3
   readonly supportedChains = valuesOfChainFamilyMap([
     ChainFamilyName.Ethereum,
@@ -46,8 +46,13 @@ export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin {
   ])
   readonly stepBuilders: Partial<ActionBuildersMap> = AaveV3StepBuilders
 
-  constructor(params: { context: IProtocolPluginContext; deploymentConfigTag?: string }) {
-    super(params)
+  constructor(params: { context: IProtocolPluginContext }) {
+    const contractsAbiProvider = new ChainContractsProvider(AaveV3AbiMap)
+
+    super({
+      ...params,
+      contractsAbiProvider,
+    })
 
     if (
       !this.supportedChains.some(
@@ -85,6 +90,8 @@ export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin {
     return AaveV3LendingPool.createFrom({
       type: PoolType.Lending,
       id: aaveV3PoolId,
+      collateralToken: aaveV3PoolId.collateralToken,
+      debtToken: aaveV3PoolId.debtToken,
     })
   }
 
@@ -92,7 +99,7 @@ export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin {
   async _getLendingPoolInfoImpl(
     aaveV3PoolId: IAaveV3LendingPoolId,
   ): Promise<AaveV3LendingPoolInfo> {
-    await this._inititalizeAssetsListIfNeeded()
+    await this._inititalizeAssetsListIfNeeded({ chainInfo: aaveV3PoolId.protocol.chainInfo })
 
     const emode = aaveV3EmodeCategoryMap[aaveV3PoolId.emodeType]
 
@@ -138,27 +145,15 @@ export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin {
 
   /** PRIVATE */
 
-  protected _getContractDef(contractName: AaveV3ContractNames): AAVEv3LikeAbiInfo {
-    // TODO: Need to be driven by ChainId in future
-    const map: AaveV3AddressAbiMap = {
-      Oracle: {
-        address: '0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9',
-        abi: AAVEV3_ORACLE_ABI,
-      },
-      PoolDataProvider: {
-        address: '0xFc21d6d146E6086B8359705C8b28512a983db0cb',
-        abi: AAVEV3_POOL_DATA_PROVIDER_ABI,
-      },
-      AavePool: {
-        address: '0xC13e21B648A5Ee794902342038FF3aDAB66BE987',
-        abi: AAVEV3_LENDING_POOL_ABI,
-      },
-      AaveL2Encoder: {
-        address: '0x',
-        abi: null,
-      },
-    }
+  protected async _getContractDef(params: {
+    chainInfo: IChainInfo
+    contractName: AaveV3ContractNames
+  }): Promise<ContractInfo> {
+    const contractAddress = await this._getContractAddress(params)
 
-    return map[contractName]
+    return {
+      address: contractAddress.value,
+      abi: AaveV3AbiMap[params.contractName],
+    }
   }
 }

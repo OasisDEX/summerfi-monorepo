@@ -7,7 +7,7 @@ import {
   getValueFromReference,
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
-import { Position, TokenAmount } from '@summerfi/sdk-common/common'
+import { TokenAmount } from '@summerfi/sdk-common/common'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
 import { refinanceLendingToLendingSamePairStrategy } from './Strategy'
@@ -15,15 +15,19 @@ import { type IRefinanceDependencies } from '../common/Types'
 
 export async function refinanceLendingToLendingSamePair(
   args: IRefinanceParameters,
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   dependencies: IRefinanceDependencies,
 ): Promise<ISimulation<SimulationType.Refinance>> {
   // args validation
-  if (!isLendingPool(args.targetPosition.pool)) {
+  if (!isLendingPool(args.sourcePosition.pool)) {
+    throw new Error('Source pool is not a lending pool')
+  }
+  if (!isLendingPool(args.targetPool)) {
     throw new Error('Target pool is not a lending pool')
   }
 
-  const position = args.sourcePosition as Position
-  const targetPool = await dependencies.protocolManager.getLendingPool(args.targetPosition.pool.id)
+  const position = args.sourcePosition
+  const targetPool = args.targetPool
 
   if (!isLendingPool(targetPool)) {
     throw new Error('Target pool is not a lending pool')
@@ -42,7 +46,7 @@ export async function refinanceLendingToLendingSamePair(
       type: SimulationSteps.Flashloan,
       inputs: {
         amount: flashloanAmount,
-        provider: FlashloanProvider.Maker,
+        provider: FlashloanProvider.Balancer,
       },
     }))
     .next(async () => ({

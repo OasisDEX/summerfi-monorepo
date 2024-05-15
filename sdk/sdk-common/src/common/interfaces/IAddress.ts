@@ -3,26 +3,15 @@ import { AddressType } from '../enums/AddressType'
 import { z } from 'zod'
 
 /**
- * @name IAddressData
+ * @name IAddress
  * @description Represents an address with a certain format, specified by the type
  *
  * Currently only Ethereum type is supported
  */
-export interface IAddressData {
+export interface IAddress extends IAddressData {
   /** The address value in the format specified by type */
   readonly value: AddressValue
   /** The type of the address */
-  readonly type: AddressType
-}
-
-/**
- * @name IAddress
- * @description Interface for the implementors of the address
- *
- * This interface is used to add all the methods that the interface supports
- */
-export interface IAddress extends IAddressData {
-  readonly value: AddressValue
   readonly type: AddressType
 
   /**
@@ -39,22 +28,21 @@ export interface IAddress extends IAddressData {
 /**
  * @description Zod schema for IAddress
  */
-export const AddressSchema = z.object({
+export const AddressDataSchema = z.object({
   value: z.custom<AddressValue>(),
   type: z.nativeEnum(AddressType),
 })
+
+/**
+ * Type for the data part of the IAddress interface
+ */
+export type IAddressData = Readonly<z.infer<typeof AddressDataSchema>>
 
 /**
  * @description Type guard for IAddress
  * @param maybeAddress
  * @returns true if the object is an IAddress
  */
-export function isAddress(maybeAddress: unknown): maybeAddress is IAddressData {
-  return AddressSchema.safeParse(maybeAddress).success
+export function isAddress(maybeAddress: unknown): maybeAddress is IAddress {
+  return AddressDataSchema.safeParse(maybeAddress).success
 }
-
-/**
- * Checker to make sure that the schema is aligned with the interface
- */
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: IAddressData = {} as z.infer<typeof AddressSchema>

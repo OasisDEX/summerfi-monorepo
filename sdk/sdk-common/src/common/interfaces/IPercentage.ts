@@ -1,21 +1,11 @@
 import { z } from 'zod'
 
 /**
- * @name IPercentageData
+ * @name IPercentage
  * @description Percentage type that can be used for calculations with other types like TokenAmount or Price
  */
-export interface IPercentageData {
-  /** The percentage in floating point format */
-  value: number
-}
-
-/**
- * @name IPercentage
- * @description Interface for the implementors of the percentage
- *
- * This interface is used to add all the methods that the interface supports
- */
 export interface IPercentage extends IPercentageData {
+  /** The percentage in floating point format */
   readonly value: number
 
   /**
@@ -65,9 +55,14 @@ export interface IPercentage extends IPercentageData {
 /**
  * @description Zod schema for IPercentage
  */
-export const PercentageSchema = z.object({
+export const PercentageDataSchema = z.object({
   value: z.number(),
 })
+
+/**
+ * Type for the data part of the IPercentage interface
+ */
+export type IPercentageData = Readonly<z.infer<typeof PercentageDataSchema>>
 
 /**
  * @description Type guard for IPercentage
@@ -75,11 +70,16 @@ export const PercentageSchema = z.object({
  * @returns true if the object is an IPercentage
  */
 export function isPercentage(maybePercentage: unknown): maybePercentage is IPercentage {
-  return PercentageSchema.safeParse(maybePercentage).success
+  return isPercentageData(maybePercentage)
 }
 
 /**
- * Checker to make sure that the schema is aligned with the interface
+ * @description Type guard for IPercentageData
+ * @param maybePercentageData
+ * @returns true if the object is an IPercentageData
  */
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: IPercentageData = {} as z.infer<typeof PercentageSchema>
+export function isPercentageData(
+  maybePercentageData: unknown,
+): maybePercentageData is IPercentageData {
+  return PercentageDataSchema.safeParse(maybePercentageData).success
+}

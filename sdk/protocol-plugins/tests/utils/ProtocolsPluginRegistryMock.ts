@@ -1,10 +1,7 @@
 import {
   IContractProvider,
-  IPriceService,
-  IProtocolPlugin,
   IProtocolPluginContext,
   IProtocolPluginsRegistry,
-  ITokenService,
 } from '@summerfi/protocol-plugins-common'
 import { PublicClient } from 'viem'
 import {
@@ -13,16 +10,21 @@ import {
   ProtocolPluginMock,
 } from './ProtocolPluginMock'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
+import { ITokensManager } from '@summerfi/tokens-common'
+import { IOracleManager } from '@summerfi/oracle-common'
 import { ProtocolPluginsRegistry } from '../../src/implementation/ProtocolPluginsRegistry'
 import { MakerProtocolPlugin } from '../../src/plugins/maker/implementation/MakerProtocolPlugin'
 import { SparkProtocolPlugin } from '../../src/plugins/spark/implementation/SparkProtocolPlugin'
+import { ISwapManager } from '@summerfi/swap-common/interfaces'
+import { IAddressBookManager } from '@summerfi/address-book-common'
 
 export function createProtocolPluginsRegistry(): IProtocolPluginsRegistry {
   const protocolPluginContext: IProtocolPluginContext = {
+    addressBookManager: undefined as unknown as IAddressBookManager,
     provider: undefined as unknown as PublicClient,
-    tokenService: undefined as unknown as ITokenService,
-    priceService: undefined as unknown as IPriceService,
-    contractProvider: undefined as unknown as IContractProvider,
+    tokensManager: undefined as unknown as ITokensManager,
+    oracleManager: undefined as unknown as IOracleManager,
+    swapManager: undefined as unknown as ISwapManager,
   } as IProtocolPluginContext
 
   return new ProtocolPluginsRegistry({
@@ -36,10 +38,11 @@ export function createProtocolPluginsRegistry(): IProtocolPluginsRegistry {
 
 export function createEmptyProtocolPluginsRegistry(): IProtocolPluginsRegistry {
   const protocolPluginContext: IProtocolPluginContext = {
+    addressBookManager: undefined as unknown as IAddressBookManager,
     provider: undefined as unknown as PublicClient,
-    tokenService: undefined as unknown as ITokenService,
-    priceService: undefined as unknown as IPriceService,
-    contractProvider: undefined as unknown as IContractProvider,
+    tokensManager: undefined as unknown as ITokensManager,
+    oracleManager: undefined as unknown as IOracleManager,
+    swapManager: undefined as unknown as ISwapManager,
   } as IProtocolPluginContext
 
   return new ProtocolPluginsRegistry({
@@ -50,10 +53,11 @@ export function createEmptyProtocolPluginsRegistry(): IProtocolPluginsRegistry {
 
 export function createEmptyBuildersProtocolPluginsRegistry(): IProtocolPluginsRegistry {
   const protocolPluginContext: IProtocolPluginContext = {
+    addressBookManager: undefined as unknown as IAddressBookManager,
     provider: undefined as unknown as PublicClient,
-    tokenService: undefined as unknown as ITokenService,
-    priceService: undefined as unknown as IPriceService,
-    contractProvider: undefined as unknown as IContractProvider,
+    tokensManager: undefined as unknown as ITokensManager,
+    oracleManager: undefined as unknown as IOracleManager,
+    swapManager: undefined as unknown as ISwapManager,
   } as IProtocolPluginContext
 
   return new ProtocolPluginsRegistry({
@@ -67,10 +71,11 @@ export function createEmptyBuildersProtocolPluginsRegistry(): IProtocolPluginsRe
 
 export function createNoCheckpointProtocolPluginsRegistry(): IProtocolPluginsRegistry {
   const protocolPluginContext: IProtocolPluginContext = {
+    addressBookManager: undefined as unknown as IAddressBookManager,
     provider: undefined as unknown as PublicClient,
-    tokenService: undefined as unknown as ITokenService,
-    priceService: undefined as unknown as IPriceService,
-    contractProvider: undefined as unknown as IContractProvider,
+    tokensManager: undefined as unknown as ITokensManager,
+    oracleManager: undefined as unknown as IOracleManager,
+    swapManager: undefined as unknown as ISwapManager,
   } as IProtocolPluginContext
 
   return new ProtocolPluginsRegistry({
@@ -84,10 +89,11 @@ export function createNoCheckpointProtocolPluginsRegistry(): IProtocolPluginsReg
 
 export function createRealProtocolsPluginsRegistry(): IProtocolPluginsRegistry {
   const protocolPluginContext: IProtocolPluginContext = {
+    addressBookManager: undefined as unknown as IAddressBookManager,
     provider: undefined as unknown as PublicClient,
-    tokenService: undefined as unknown as ITokenService,
-    priceService: undefined as unknown as IPriceService,
-    contractProvider: undefined as unknown as IContractProvider,
+    tokensManager: undefined as unknown as ITokensManager,
+    oracleManager: undefined as unknown as IOracleManager,
+    swapManager: undefined as unknown as ISwapManager,
   } as IProtocolPluginContext
 
   return new ProtocolPluginsRegistry({

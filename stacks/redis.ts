@@ -23,7 +23,7 @@ export function addRedis({
     serverlessCacheName: `${stack.stage}-redis-cache`,
     majorEngineVersion: '7',
     securityGroupIds: [vpc.securityGroup.securityGroupId],
-    subnetIds: vpc.vpc.selectSubnets(vpc.vpcSubnets).subnetIds,
+    subnetIds: vpc.vpc.privateSubnets.map((subnet) => subnet.subnetId),
   })
 
   redis.applyRemovalPolicy(cdk.RemovalPolicy.RETAIN)

@@ -8,7 +8,7 @@ import {
   OneInchSwapResponse,
   OneInchSwapRoute,
 } from './types'
-import { HexData } from '@summerfi/sdk-common/common/aliases'
+import { ChainId, HexData } from '@summerfi/sdk-common/common/aliases'
 import fetch from 'node-fetch'
 import {
   TokenAmount,
@@ -20,10 +20,13 @@ import {
   IPercentage,
   IChainInfo,
 } from '@summerfi/sdk-common/common'
+import { ManagerProviderBase } from '@summerfi/sdk-server-common'
+import { IConfigurationProvider } from '@summerfi/configuration-provider'
 
-export class OneInchSwapProvider implements ISwapProvider {
-  public type: SwapProviderType = SwapProviderType.OneInch
-
+export class OneInchSwapProvider
+  extends ManagerProviderBase<SwapProviderType>
+  implements ISwapProvider
+{
   /**
    * =============== WARNING ===============
    * We require 1inch's new Spot Prices endpoint (not available on 1inch.io)
@@ -40,15 +43,26 @@ export class OneInchSwapProvider implements ISwapProvider {
   private readonly _version: string
 
   private readonly _allowedSwapProtocols: string[]
+  private readonly _supportedChainIds: ChainId[]
 
-  constructor(params: OneInchSwapProviderConfig) {
-    this._apiUrl = params.apiUrl
-    this._apiKey = params.apiKey
-    this._version = params.version
+  /** CONSTRUCTOR */
 
-    this._allowedSwapProtocols = params.allowedSwapProtocols
+  constructor(params: { configProvider: IConfigurationProvider }) {
+    super({ ...params, type: SwapProviderType.OneInch })
+
+    const { config, chainIds } = this._getConfig()
+
+    this._apiUrl = config.apiUrl
+    this._apiKey = config.apiKey
+    this._version = config.version
+
+    this._allowedSwapProtocols = config.allowedSwapProtocols
+    this._supportedChainIds = chainIds
   }
 
+  /** PUBLIC */
+
+  /** @see ISwapProvider.getSwapDataExactInput */
   async getSwapDataExactInput(params: {
     chainInfo: IChainInfo
     fromAmount: ITokenAmount
@@ -90,6 +104,7 @@ export class OneInchSwapProvider implements ISwapProvider {
     }
   }
 
+  /** @see ISwapProvider.getSwapQuoteExactInput */
   async getSwapQuoteExactInput(params: {
     chainInfo: IChainInfo
     fromAmount: ITokenAmount
@@ -127,10 +142,33 @@ export class OneInchSwapProvider implements ISwapProvider {
     }
   }
 
+  /** @see IManagerProvider.getSupportedChainIds */
+  getSupportedChainIds(): ChainId[] {
+    return this._supportedChainIds
+  }
+
+  /** PRIVATE */
+
+  /**
+   * @description Returns the OneInch auth header with the API key
+   * @returns The OneInch auth header
+   */
   private _getOneInchAuthHeader(): OneInchAuthHeader {
     return { [OneInchAuthHeaderKey]: this._apiKey }
   }
 
+  /**
+   * @description Formats the 1inch swap URL
+   * @param chainInfo The chain information
+   * @param fromTokenAmount The amount of tokens to swap
+   * @param toToken The token to swap to
+   * @param recipient The address that will receive the tokens
+   * @param slippage The maximum slippage allowed
+   * @param disableEstimate Whether to disable the estimate
+   * @param allowPartialFill Whether to allow partial fill of the order
+   *
+   * @returns The formatted 1inch swap URL
+   */
   private _formatOneInchSwapUrl(params: {
     chainInfo: IChainInfo
     fromTokenAmount: ITokenAmount
@@ -154,6 +192,14 @@ export class OneInchSwapProvider implements ISwapProvider {
     return `${this._apiUrl}/${this._version}/${chainId}/swap?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&fromAddress=${recipient}&slippage=${params.slippage.toString()}&protocols=${protocolsParam}&disableEstimate=${disableEstimate}&allowPartialFill=${allowPartialFill}`
   }
 
+  /**
+   * Formats the 1inch quote URL
+   * @param chainInfo The chain information
+   * @param fromTokenAmount The amount of tokens to swap
+   * @param toToken The token to swap to
+   *
+   * @returns The formatted 1inch quote URL
+   */
   private _formatOneInchQuoteUrl(params: {
     chainInfo: IChainInfo
     fromTokenAmount: ITokenAmount
@@ -170,6 +216,12 @@ export class OneInchSwapProvider implements ISwapProvider {
     return `${this._apiUrl}/${this._version}/${chainId}/quote?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&protocols=${protocolsParam}`
   }
 
+  /**
+   * Extracts the swap routes from the 1inch response
+   * @param protocols The 1inch swap routes
+   *
+   * @returns The extracted swap routes
+   */
   private _extractSwapRoutes(protocols: OneInchSwapRoute[]): SwapRoute[] {
     return protocols.map((route) =>
       route.map((hop) =>
@@ -183,5 +235,59 @@ export class OneInchSwapProvider implements ISwapProvider {
         })),
       ),
     )
+  }
+
+  /**
+   * Gets the 1inch configuration from the configuration provider
+   * @returns The 1inch configuration
+   */
+  private _getConfig(): {
+    config: OneInchSwapProviderConfig
+    chainIds: ChainId[]
+  } {
+    const ONE_INCH_API_URL = this.configProvider.getConfigurationItem({ name: 'ONE_INCH_API_URL' })
+    const ONE_INCH_API_KEY = this.configProvider.getConfigurationItem({ name: 'ONE_INCH_API_KEY' })
+    const ONE_INCH_API_VERSION = this.configProvider.getConfigurationItem({
+      name: 'ONE_INCH_API_VERSION',
+    })
+    const ONE_INCH_ALLOWED_SWAP_PROTOCOLS = this.configProvider.getConfigurationItem({
+      name: 'ONE_INCH_ALLOWED_SWAP_PROTOCOLS',
+    })
+    const ONE_INCH_SWAP_CHAIN_IDS = this.configProvider.getConfigurationItem({
+      name: 'ONE_INCH_SWAP_CHAIN_IDS',
+    })
+
+    if (
+      !ONE_INCH_API_URL ||
+      !ONE_INCH_API_KEY ||
+      !ONE_INCH_API_VERSION ||
+      !ONE_INCH_ALLOWED_SWAP_PROTOCOLS ||
+      !ONE_INCH_SWAP_CHAIN_IDS
+    ) {
+      throw new Error(
+        'OneInch configuration is missing: ' +
+          JSON.stringify(
+            Object.entries({
+              ONE_INCH_API_URL,
+              ONE_INCH_API_KEY,
+              ONE_INCH_API_VERSION,
+              ONE_INCH_ALLOWED_SWAP_PROTOCOLS,
+              ONE_INCH_SWAP_CHAIN_IDS,
+            }),
+            null,
+            2,
+          ),
+      )
+    }
+
+    return {
+      config: {
+        apiUrl: ONE_INCH_API_URL,
+        apiKey: ONE_INCH_API_KEY,
+        version: ONE_INCH_API_VERSION,
+        allowedSwapProtocols: ONE_INCH_ALLOWED_SWAP_PROTOCOLS.split(','),
+      },
+      chainIds: ONE_INCH_SWAP_CHAIN_IDS.split(',').map((id: string) => parseInt(id)),
+    }
   }
 }

@@ -12,7 +12,8 @@
       "@summerfi/common": ["node_modules/@summerfi/common/src/index.ts"],
       "@summerfi/configuration-provider": [
         "node_modules/@summerfi/configuration-provider/src/index.ts"
-      ]
+      ],
+      "@summerfi/sdk-server-common": ["node_modules/@summerfi/sdk-server-common/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts"],

@@ -15,7 +15,7 @@ export const publicProcedure = t.procedure.use(async (opts) => {
   if (process.env.SDK_LOGGING_ENABLED) {
     console.log('- path => ', path)
     console.log('- type => ', type)
-    console.log('- rawInput => ', JSON.stringify(await getRawInput(), null, 2))
+    console.log('- rawInput => ', await getRawInput())
   }
 
   const result = await opts.next()

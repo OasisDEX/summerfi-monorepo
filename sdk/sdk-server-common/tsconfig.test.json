@@ -1,0 +1,19 @@
+{
+  "extends": "@summerfi/typescript-config/tsconfig.test.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "baseUrl": ".",
+    "allowJs": true,
+    "paths": {
+      "@summerfi/common": ["node_modules/@summerfi/common/src/index.ts"],
+      "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
+      "@summerfi/sdk-common": ["node_modules/@summerfi/sdk-common/src/index.ts"],
+      "@summerfi/swap-service": ["node_modules/@summerfi/swap-service/src/index.ts"],
+      "@summerfi/swap-common/*": ["node_modules/@summerfi/swap-common/src/*"],
+      "@summerfi/simulator-service": ["node_modules/@summerfi/simulator-service/src"],
+      "@summerfi/testing-utils/*": ["../testing-utils/src/*"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

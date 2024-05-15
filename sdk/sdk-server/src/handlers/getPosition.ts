@@ -1,15 +1,13 @@
 import { z } from 'zod'
-import type { ChainInfo, Position, PositionId, Wallet } from '@summerfi/sdk-common/common'
 import { publicProcedure } from '../TRPC'
+import { IPosition, Maybe, isPositionId } from '@summerfi/sdk-common'
 
 export const getPosition = publicProcedure
-  .input(
-    z.object({
-      id: z.custom<PositionId>((id) => id !== undefined),
-      chain: z.custom<ChainInfo>((chainInfo) => chainInfo !== undefined),
-      wallet: z.custom<Wallet>((wallet) => wallet !== undefined),
-    }),
-  )
-  .query(async (): Promise<Position | undefined> => {
+  .input(z.any())
+  .query(async (opts): Promise<Maybe<IPosition>> => {
+    if (!isPositionId(opts.input)) {
+      throw new Error('Invalid position id')
+    }
+
     throw new Error('Not implemented')
   })

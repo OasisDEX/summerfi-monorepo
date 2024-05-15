@@ -1,11 +1,14 @@
 import type { Maybe, IChainInfo, IAddress, IToken } from '@summerfi/sdk-common/common'
+import { TokensProviderType } from '@summerfi/sdk-common/tokens'
+import { IManagerWithProviders } from '@summerfi/sdk-server-common'
+import { ITokensProvider } from './ITokensProvider'
 
 /**
  * @name ITokensManager
  * @description Interface for the TokensManager. Allows to retrieve information for a Token given its Chain, and
  *              its Address or symbol
  */
-export interface ITokensManager {
+export interface ITokensManager extends IManagerWithProviders<TokensProviderType, ITokensProvider> {
   /**
    * @method getTokenBySymbol
    * @description Retrieves a token by its symbol
