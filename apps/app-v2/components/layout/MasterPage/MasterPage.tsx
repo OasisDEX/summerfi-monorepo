@@ -2,6 +2,8 @@ import { FC, PropsWithChildren } from 'react'
 import { Footer } from '@summerfi/app-ui'
 import Image from 'next/image'
 
+import { getAppV2StaticFileUrl } from '@/helpers/get-static-file-url'
+
 import classNames from './MasterPage.module.scss'
 
 interface MasterPageProps {
@@ -19,7 +21,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
         {
           simple: (
             <Image
-              src="/img/backgrounds/bg-simple.svg"
+              src={getAppV2StaticFileUrl('/img/backgrounds/bg-simple.svg')}
               width={1700}
               height={611}
               className={classNames.backgroundSimple}
@@ -31,7 +33,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
       <div className={classNames.appContainer}>
         {children}
         <Footer
-          logo="img/branding/logo-dark.svg"
+          logo={getAppV2StaticFileUrl('img/branding/logo-dark.svg')}
           lists={[
             {
               title: 'About',
