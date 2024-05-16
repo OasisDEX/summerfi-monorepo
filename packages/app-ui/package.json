@@ -13,8 +13,8 @@
   ],
   "scripts": {
     "lint": "eslint *.ts*",
-    "generate-module-types": "typed-scss-modules -e default \"src/**/*.module.scss\"",
-    "generate-module-types-watch": "typed-scss-modules -w -e default \"src/**/*.module.scss\"",
+    "generate-module-types": "typed-scss-modules 'src/**/*.module.scss'",
+    "generate-module-types-watch": "typed-scss-modules -w 'src/**/*.module.scss'",
     "dev": "pnpm clean && (pnpm generate-module-types-watch & vite build -w true)",
     "build": "pnpm clean && (pnpm generate-module-types & vite build -w false)",
     "clean": "rm -rf dist"

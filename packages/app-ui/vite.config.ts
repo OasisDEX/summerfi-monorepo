@@ -17,7 +17,22 @@ export default defineConfig({
     libInjectCss(),
     dts({ outDir: 'dist/types', insertTypesEntry: true, strictOutput: true }),
   ],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `
+        @import './node_modules/include-media/dist/_include-media.scss';
+        $breakpoints: (
+          s: 768px,
+          m: 960px,
+          l: 1088px,
+        );
+        `,
+      },
+    },
+  },
   build: {
+    emptyOutDir: false,
     lib: {
       // eslint-disable-next-line no-undef
       entry: resolve(__dirname, 'src/index.ts'),
