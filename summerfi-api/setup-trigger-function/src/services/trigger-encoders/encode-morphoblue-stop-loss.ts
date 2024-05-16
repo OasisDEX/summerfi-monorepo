@@ -8,7 +8,7 @@ import {
 } from 'viem'
 import { automationBotAbi } from '@summerfi/abis'
 import { DmaMorphoBlueStopLossTriggerData } from '~types'
-import { PositionLike, CurrentTriggerLike } from '@summerfi/triggers-shared'
+import { CurrentTriggerLike, PositionLike } from '@summerfi/triggers-shared'
 
 import { getMaxCoverage } from './get-max-coverage'
 import { OPERATION_NAMES } from '@oasisdex/dma-library'
@@ -29,8 +29,6 @@ export const encodeMorphoBlueStopLoss = (
       'bytes32 operationName, ' +
       // Trigger specific data
       'bytes32 poolId, ' +
-      'uint8 quoteDecimals, ' +
-      'uint8 collateralDecimals, ' +
       'uint256 executionLtv, ' +
       'bool closeToCollateral',
   )
@@ -58,8 +56,6 @@ export const encodeMorphoBlueStopLoss = (
     operationNameInBytes,
     // Trigger specific data
     triggerData.poolId,
-    position.debt.token.decimals,
-    position.collateral.token.decimals,
     triggerData.executionLTV,
     triggerData.token === position.collateral.token.address,
   ])
