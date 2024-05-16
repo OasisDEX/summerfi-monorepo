@@ -25,7 +25,6 @@ module.exports = {
     'import/no-absolute-path': 'error',
     'import/no-unresolved': 'off',
     'no-unused-vars': 'off',
-    'unused-imports/no-unused-imports': 'error',
     'unused-imports/no-unused-vars': [
       'off',
       { vars: 'all', varsIgnorePattern: '^_', args: 'after-used', argsIgnorePattern: '^_' },
