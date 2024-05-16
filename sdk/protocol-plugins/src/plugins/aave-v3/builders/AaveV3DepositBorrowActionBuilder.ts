@@ -10,6 +10,7 @@ import { SetApprovalAction } from '../../common'
 import { AaveV3DepositAction } from '../actions/AaveV3DepositAction'
 import { AaveV3BorrowAction } from '../actions/AaveV3BorrowAction'
 import { getContractAddress } from '../../utils/GetContractAddress'
+import { isAaveV3LendingPool } from '../interfaces/IAaveV3LendingPool'
 
 export const AaveV3DepositBorrowActionList: ActionNames[] = ['AaveV3Deposit', 'AaveV3Borrow']
 
@@ -32,6 +33,10 @@ export const AaveV3DepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrow
   params,
 ): Promise<void> => {
   const { context, step, addressBookManager, user } = params
+
+  if (!isAaveV3LendingPool(step.inputs.position.pool)) {
+    throw new Error('Invalid AaveV3 lending pool')
+  }
 
   const aaveV3LendingPoolAddress = await getContractAddress({
     addressBookManager,

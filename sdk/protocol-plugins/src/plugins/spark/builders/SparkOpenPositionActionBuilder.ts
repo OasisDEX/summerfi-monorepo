@@ -10,20 +10,19 @@ export const SparkOpenPositionList: ActionNames[] = ['SparkSetEMode']
 export const SparkOpenPositionActionBuilder: ActionBuilder<steps.OpenPosition> = async (
   params,
 ): Promise<void> => {
-
   const { context, step } = params
-  const pool = params.step.inputs.pool
 
-  if (!isSparkLendingPool(pool)) {
-    throw new Error('Only Spark lending pool is supported')
+  if (!isSparkLendingPool(step.inputs.pool)) {
+    throw new Error('Invalid Spark lending pool')
   }
+
+  const pool = step.inputs.pool
 
   context.addActionCall({
     step: step,
     action: new SparkSetEmodeAction(),
     arguments: {
       emode: pool.id.emodeType,
-
     },
     connectedInputs: {},
     connectedOutputs: {},

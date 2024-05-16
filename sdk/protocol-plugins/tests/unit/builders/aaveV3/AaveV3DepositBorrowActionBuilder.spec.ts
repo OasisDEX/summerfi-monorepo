@@ -2,10 +2,7 @@ import {
   Address,
   ChainFamilyMap,
   ChainInfo,
-  Percentage,
   PositionType,
-  RiskRatio,
-  RiskRatioType,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
@@ -15,21 +12,21 @@ import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
 import {
+  EmodeType,
   ILKType,
   MakerLendingPool,
   MakerLendingPoolId,
   MakerPosition,
   MakerPositionId,
   MakerProtocol,
-  MorphoDepositBorrowActionBuilder,
-  MorphoLendingPool,
-  MorphoLendingPoolId,
-  MorphoPosition,
-  MorphoPositionId,
-  MorphoProtocol,
+  AaveV3DepositBorrowActionBuilder,
+  AaveV3LendingPool,
+  AaveV3LendingPoolId,
+  AaveV3Position,
+  AaveV3Protocol,
 } from '../../../../src'
 
-describe('Morpho  Deposit Borrow Action Builder', () => {
+describe('AaveV3 Deposit Borrow Action Builder', () => {
   let builderParams: SetupBuilderReturnType
 
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -61,32 +58,28 @@ describe('Morpho  Deposit Borrow Action Builder', () => {
     amount: '1000',
   })
 
-  const protocol = MorphoProtocol.createFrom({
-    name: ProtocolName.Morpho,
+  const protocol = AaveV3Protocol.createFrom({
+    name: ProtocolName.AAVEv3,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 
-  const poolId = MorphoLendingPoolId.createFrom({
-    marketId: '0x1234',
+  const poolId = AaveV3LendingPoolId.createFrom({
     protocol: protocol,
+    collateralToken: WETH,
+    debtToken: DAI,
+    emodeType: EmodeType.None,
   })
 
-  const pool = MorphoLendingPool.createFrom({
+  const pool = AaveV3LendingPool.createFrom({
     collateralToken: WETH,
     debtToken: DAI,
     id: poolId,
-    irm: Address.createFromEthereum({ value: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599' }),
-    oracle: Address.createFromEthereum({ value: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48' }),
-    lltv: RiskRatio.createFrom({
-      value: Percentage.createFrom({ value: 0.5 }),
-      type: RiskRatioType.LTV,
-    }),
     type: PoolType.Lending,
   })
 
-  const position = MorphoPosition.createFrom({
+  const position = AaveV3Position.createFrom({
     type: PositionType.Multiply,
-    id: MorphoPositionId.createFrom({ id: 'someposition' }),
+    id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '123' }),
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
     pool: pool,
@@ -132,9 +125,9 @@ describe('Morpho  Deposit Borrow Action Builder', () => {
     builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })
   })
 
-  it('should fail the position is not a Morpho one', async () => {
+  it('should fail the position is not a AaveV3 one', async () => {
     try {
-      await MorphoDepositBorrowActionBuilder({
+      await AaveV3DepositBorrowActionBuilder({
         ...builderParams,
         step: {
           ...derivedStep,
@@ -147,14 +140,14 @@ describe('Morpho  Deposit Borrow Action Builder', () => {
       })
       assert.fail('Should have thrown an error')
     } catch (error: unknown) {
-      expect(getErrorMessage(error)).toEqual('Invalid Morpho lending pool id')
+      expect(getErrorMessage(error)).toEqual('Invalid AaveV3 lending pool')
     }
   })
 
   it('should add all the action calls', async () => {
     builderParams.context.startSubContext()
 
-    await MorphoDepositBorrowActionBuilder({
+    await AaveV3DepositBorrowActionBuilder({
       ...builderParams,
       step: derivedStep,
       protocolsRegistry: builderParams.emptyProtocolsRegistry,
@@ -162,18 +155,17 @@ describe('Morpho  Deposit Borrow Action Builder', () => {
 
     const { callsBatch } = builderParams.context.endSubContext()
 
-    expect(callsBatch.length).toEqual(4)
+    expect(callsBatch.length).toEqual(3)
 
     expect(callsBatch[0].name).toBe('SetApproval')
-    expect(callsBatch[1].name).toBe('MorphoBlueDeposit')
-    expect(callsBatch[2].name).toBe('MorphoBlueBorrow')
-    expect(callsBatch[3].name).toBe('SendToken')
+    expect(callsBatch[1].name).toBe('AaveV3Deposit')
+    expect(callsBatch[2].name).toBe('AaveV3Borrow')
   })
 
   it('should not add borrow nor send token when borrow amount is 0', async () => {
     builderParams.context.startSubContext()
 
-    await MorphoDepositBorrowActionBuilder({
+    await AaveV3DepositBorrowActionBuilder({
       ...builderParams,
       step: {
         ...derivedStep,
@@ -193,13 +185,13 @@ describe('Morpho  Deposit Borrow Action Builder', () => {
     expect(callsBatch.length).toEqual(2)
 
     expect(callsBatch[0].name).toBe('SetApproval')
-    expect(callsBatch[1].name).toBe('MorphoBlueDeposit')
+    expect(callsBatch[1].name).toBe('AaveV3Deposit')
   })
 
   it('should add borrow but not send token when borrow target is positions manager', async () => {
     builderParams.context.startSubContext()
 
-    await MorphoDepositBorrowActionBuilder({
+    await AaveV3DepositBorrowActionBuilder({
       ...builderParams,
       step: {
         ...derivedStep,
@@ -216,7 +208,7 @@ describe('Morpho  Deposit Borrow Action Builder', () => {
     expect(callsBatch.length).toEqual(3)
 
     expect(callsBatch[0].name).toBe('SetApproval')
-    expect(callsBatch[1].name).toBe('MorphoBlueDeposit')
-    expect(callsBatch[2].name).toBe('MorphoBlueBorrow')
+    expect(callsBatch[1].name).toBe('AaveV3Deposit')
+    expect(callsBatch[2].name).toBe('AaveV3Borrow')
   })
 })

@@ -11,6 +11,7 @@ import { SetApprovalAction } from '../../common'
 import { AaveV3WithdrawAction } from '../actions/AaveV3WithdrawAction'
 import { AaveV3PaybackAction } from '../actions/AaveV3PaybackAction'
 import { getContractAddress } from '../../utils/GetContractAddress'
+import { isAaveV3LendingPool } from '../interfaces/IAaveV3LendingPool'
 
 export const AaveV3PaybackWithdrawActionList: ActionNames[] = ['AaveV3Payback', 'AaveV3Withdraw']
 
@@ -33,6 +34,10 @@ export const AaveV3PaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWith
   params,
 ): Promise<void> => {
   const { context, step, addressBookManager, user } = params
+
+  if (!isAaveV3LendingPool(step.inputs.position.pool)) {
+    throw new Error('Invalid AaveV3 lending pool')
+  }
 
   const sparkLendingPoolAddress = await getContractAddress({
     addressBookManager,

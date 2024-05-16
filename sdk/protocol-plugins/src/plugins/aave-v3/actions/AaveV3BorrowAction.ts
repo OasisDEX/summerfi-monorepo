@@ -4,7 +4,7 @@ import { IAddress, ITokenAmount } from '@summerfi/sdk-common/common'
 export class AaveV3BorrowAction extends BaseAction<typeof AaveV3BorrowAction.Config> {
   public static readonly Config = {
     name: 'AaveV3Borrow',
-    version: 0,
+    version: 4,
     parametersAbi: ['(address asset, uint256 amount, address to)'],
     storageInputs: [],
     storageOutputs: ['borrowedAmount'],

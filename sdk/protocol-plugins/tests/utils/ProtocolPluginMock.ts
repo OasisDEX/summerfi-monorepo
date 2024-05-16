@@ -78,7 +78,7 @@ export class ProtocolPluginMock implements IProtocolPlugin {
     externalPosition: IExternalPosition
     positionsManager: IPositionsManager
   }): Promise<Maybe<TransactionInfo>> {
-    return undefined as unknown as TransactionInfo
+    return {} as unknown as TransactionInfo
   }
 }
 

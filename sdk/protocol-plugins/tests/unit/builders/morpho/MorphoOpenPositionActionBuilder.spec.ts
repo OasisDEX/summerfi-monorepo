@@ -16,20 +16,18 @@ import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
 import {
   ILKType,
-  MakerLendingPool,
-  MakerLendingPoolId,
-  MakerPosition,
-  MakerPositionId,
-  MakerProtocol,
-  MorphoDepositBorrowActionBuilder,
+  MorphoPositionId,
+  MorphoPosition,
   MorphoLendingPool,
   MorphoLendingPoolId,
-  MorphoPosition,
-  MorphoPositionId,
   MorphoProtocol,
+  MakerLendingPool,
+  MakerLendingPoolId,
+  MakerProtocol,
+  MorphoOpenPositionActionBuilder,
 } from '../../../../src'
 
-describe('Morpho  Deposit Borrow Action Builder', () => {
+describe('Morpho Open Position Action Builder', () => {
   let builderParams: SetupBuilderReturnType
 
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -92,39 +90,29 @@ describe('Morpho  Deposit Borrow Action Builder', () => {
     pool: pool,
   })
 
-  const wrongPosition = MakerPosition.createFrom({
-    type: PositionType.Multiply,
-    id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '123' }),
-    debtAmount: borrowAmount,
-    collateralAmount: depositAmount,
-    pool: MakerLendingPool.createFrom({
+  const wrongPool = MakerLendingPool.createFrom({
+    collateralToken: WETH,
+    debtToken: DAI,
+    id: MakerLendingPoolId.createFrom({
       collateralToken: WETH,
       debtToken: DAI,
-      id: MakerLendingPoolId.createFrom({
-        collateralToken: WETH,
-        debtToken: DAI,
-        protocol: MakerProtocol.createFrom({
-          name: ProtocolName.Maker,
-          chainInfo: ChainFamilyMap.Ethereum.Mainnet,
-        }),
-        ilkType: ILKType.ETH_A,
+      protocol: MakerProtocol.createFrom({
+        name: ProtocolName.Maker,
+        chainInfo: ChainFamilyMap.Ethereum.Mainnet,
       }),
-      type: PoolType.Lending,
+      ilkType: ILKType.ETH_A,
     }),
+    type: PoolType.Lending,
   })
 
-  const derivedStep: steps.DepositBorrowStep = {
-    type: SimulationSteps.DepositBorrow,
-    name: 'DepositBorrowStep',
+  const derivedStep: steps.OpenPosition = {
+    type: SimulationSteps.OpenPosition,
+    name: 'OpenPosition',
     inputs: {
-      depositAmount: depositAmount,
-      borrowAmount: borrowAmount,
-      position: position,
-      borrowTargetType: TokenTransferTargetType.StrategyExecutor,
+      pool: pool,
     },
     outputs: {
-      depositAmount: depositAmount,
-      borrowAmount: borrowAmount,
+      position: position,
     },
   }
 
@@ -134,13 +122,13 @@ describe('Morpho  Deposit Borrow Action Builder', () => {
 
   it('should fail the position is not a Morpho one', async () => {
     try {
-      await MorphoDepositBorrowActionBuilder({
+      await MorphoOpenPositionActionBuilder({
         ...builderParams,
         step: {
           ...derivedStep,
           inputs: {
             ...derivedStep.inputs,
-            position: wrongPosition,
+            pool: wrongPool,
           },
         },
         protocolsRegistry: builderParams.emptyProtocolsRegistry,
@@ -151,10 +139,10 @@ describe('Morpho  Deposit Borrow Action Builder', () => {
     }
   })
 
-  it('should add all the action calls', async () => {
+  it('should not add a transaction to the context', async () => {
     builderParams.context.startSubContext()
 
-    await MorphoDepositBorrowActionBuilder({
+    await MorphoOpenPositionActionBuilder({
       ...builderParams,
       step: derivedStep,
       protocolsRegistry: builderParams.emptyProtocolsRegistry,
@@ -162,61 +150,6 @@ describe('Morpho  Deposit Borrow Action Builder', () => {
 
     const { callsBatch } = builderParams.context.endSubContext()
 
-    expect(callsBatch.length).toEqual(4)
-
-    expect(callsBatch[0].name).toBe('SetApproval')
-    expect(callsBatch[1].name).toBe('MorphoBlueDeposit')
-    expect(callsBatch[2].name).toBe('MorphoBlueBorrow')
-    expect(callsBatch[3].name).toBe('SendToken')
-  })
-
-  it('should not add borrow nor send token when borrow amount is 0', async () => {
-    builderParams.context.startSubContext()
-
-    await MorphoDepositBorrowActionBuilder({
-      ...builderParams,
-      step: {
-        ...derivedStep,
-        inputs: {
-          ...derivedStep.inputs,
-          borrowAmount: TokenAmount.createFrom({
-            token: DAI,
-            amount: '0',
-          }),
-        },
-      },
-      protocolsRegistry: builderParams.emptyProtocolsRegistry,
-    })
-
-    const { callsBatch } = builderParams.context.endSubContext()
-
-    expect(callsBatch.length).toEqual(2)
-
-    expect(callsBatch[0].name).toBe('SetApproval')
-    expect(callsBatch[1].name).toBe('MorphoBlueDeposit')
-  })
-
-  it('should add borrow but not send token when borrow target is positions manager', async () => {
-    builderParams.context.startSubContext()
-
-    await MorphoDepositBorrowActionBuilder({
-      ...builderParams,
-      step: {
-        ...derivedStep,
-        inputs: {
-          ...derivedStep.inputs,
-          borrowTargetType: TokenTransferTargetType.PositionsManager,
-        },
-      },
-      protocolsRegistry: builderParams.emptyProtocolsRegistry,
-    })
-
-    const { callsBatch } = builderParams.context.endSubContext()
-
-    expect(callsBatch.length).toEqual(3)
-
-    expect(callsBatch[0].name).toBe('SetApproval')
-    expect(callsBatch[1].name).toBe('MorphoBlueDeposit')
-    expect(callsBatch[2].name).toBe('MorphoBlueBorrow')
+    expect(callsBatch.length).toEqual(0)
   })
 })

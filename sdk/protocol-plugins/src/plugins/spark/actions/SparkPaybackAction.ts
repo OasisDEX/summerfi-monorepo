@@ -4,7 +4,7 @@ import { ITokenAmount } from '@summerfi/sdk-common/common'
 export class SparkPaybackAction extends BaseAction<typeof SparkPaybackAction.Config> {
   public static readonly Config = {
     name: 'SparkPayback',
-    version: 0,
+    version: 2,
     parametersAbi: ['(address asset, uint256 amount, bool paybackAll)'],
     storageInputs: ['asset', 'amountToPayback'],
     storageOutputs: ['paybackedAmount'],

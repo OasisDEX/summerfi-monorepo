@@ -11,11 +11,12 @@ export const AaveV3OpenPositionActionBuilder: ActionBuilder<steps.OpenPosition> 
   params,
 ): Promise<void> => {
   const { context, step } = params
-  const pool = params.step.inputs.pool
 
-  if (!isAaveV3LendingPool(pool)) {
-    throw new Error('Only Aave lending pool is supported')
+  if (!isAaveV3LendingPool(step.inputs.pool)) {
+    throw new Error('Invalid AaveV3 lending pool')
   }
+
+  const pool = step.inputs.pool
 
   context.addActionCall({
     step: step,

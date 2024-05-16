@@ -4,7 +4,7 @@ import { ITokenAmount } from '@summerfi/sdk-common/common'
 export class AaveV3PaybackAction extends BaseAction<typeof AaveV3PaybackAction.Config> {
   public static readonly Config = {
     name: 'AaveV3Payback',
-    version: 0,
+    version: 4,
     parametersAbi: ['(address asset, uint256 amount, bool paybackAll)'],
     storageInputs: ['asset', 'amountToPayback'],
     storageOutputs: ['paybackedAmount'],

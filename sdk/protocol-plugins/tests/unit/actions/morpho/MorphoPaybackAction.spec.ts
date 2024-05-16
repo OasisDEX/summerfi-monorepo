@@ -9,7 +9,6 @@ import {
 import {
   ChainFamilyMap,
   Percentage,
-  Protocol,
   ProtocolName,
   RiskRatio,
   RiskRatioType,

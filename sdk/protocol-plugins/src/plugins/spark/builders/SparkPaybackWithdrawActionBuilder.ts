@@ -11,6 +11,7 @@ import { SetApprovalAction } from '../../common'
 import { SparkWithdrawAction } from '../actions/SparkWithdrawAction'
 import { SparkPaybackAction } from '../actions/SparkPaybackAction'
 import { getContractAddress } from '../../utils/GetContractAddress'
+import { isSparkLendingPool } from '../interfaces/ISparkLendingPool'
 
 export const SparkPaybackWithdrawActionList: ActionNames[] = ['SparkPayback', 'SparkWithdraw']
 
@@ -33,6 +34,10 @@ export const SparkPaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWithd
   params,
 ): Promise<void> => {
   const { context, step, addressBookManager, user } = params
+
+  if (!isSparkLendingPool(step.inputs.position.pool)) {
+    throw new Error('Invalid Spark lending pool')
+  }
 
   const sparkLendingPoolAddress = await getContractAddress({
     addressBookManager,

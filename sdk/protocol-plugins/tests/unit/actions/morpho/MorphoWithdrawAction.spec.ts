@@ -9,7 +9,6 @@ import {
 import {
   ChainFamilyMap,
   Percentage,
-  Protocol,
   ProtocolName,
   RiskRatio,
   RiskRatioType,
@@ -17,7 +16,7 @@ import {
 import { PoolType } from '@summerfi/sdk-common/protocols'
 import { MorphoLLTVPrecision } from '../../../../src/plugins/morphoblue/constants/MorphoConstants'
 
-describe('MorphoPaybackAction Action', () => {
+describe('MorphoWithdrawAction Action', () => {
   const action = new MorphoWithdrawAction()
   const contractNameWithVersion = `${action.config.name}`
 
