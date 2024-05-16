@@ -38,7 +38,6 @@ export const encodeMorphoBlueAutoBuy = (
       'uint32 maxBaseFeeInGwei',
   )
 
-  /** @todo UPDATE OPERATION NAMES FOR MB */
   const operationName = OPERATION_NAMES.morphoblue.ADJUST_RISK_UP
   const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
 
@@ -58,7 +57,7 @@ export const encodeMorphoBlueAutoBuy = (
     position.collateral.token.decimals,
     triggerData.executionLTV,
     triggerData.targetLTV,
-    triggerData.maxBuyPrice ?? maxUnit256,
+    maxUnit256,
     DEFAULT_DEVIATION, // 100 -> 1%
     triggerData.maxBaseFee,
   ])

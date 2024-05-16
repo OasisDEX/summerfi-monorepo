@@ -19,11 +19,20 @@ export type JsonPrimitive = boolean | number | string | null
 
 export type JsonValue = JsonArray | JsonObject | JsonPrimitive
 
+export type Numeric = ColumnType<string, number | string, number | string>
+
 export type PositionType = 'Lend' | 'Supply'
 
 export type Protocol = 'AAVE_v2' | 'AAVE_v3' | 'Ajna' | 'ERC_4626' | 'MorphoBlue' | 'Spark'
 
 export type Timestamp = ColumnType<Date, Date | string, Date | string>
+
+export interface BlockchainUser {
+  category: string | null
+  createdAt: Generated<Timestamp>
+  id: Generated<number>
+  updatedAt: Generated<Timestamp>
+}
 
 export interface EligibilityCondition {
   createdAt: Generated<Timestamp>
@@ -32,13 +41,17 @@ export interface EligibilityCondition {
   id: Generated<number>
   metadata: Json
   type: string
+  updatedAt: Generated<Timestamp>
 }
 
 export interface Multiplier {
   createdAt: Generated<Timestamp>
   description: string | null
   id: Generated<number>
+  positionId: number | null
   type: string
+  updatedAt: Generated<Timestamp>
+  userAddressId: number | null
   value: number
 }
 
@@ -47,28 +60,24 @@ export interface PointsDistribution {
   description: string
   eligibilityConditionId: number | null
   id: Generated<number>
-  points: Generated<number>
-  positionId: number
+  points: Generated<Numeric>
+  positionId: number | null
   type: string
+  updatedAt: Generated<Timestamp>
+  userAddressId: number | null
 }
 
 export interface Position {
-  address: string
   chainId: number
   createdAt: Generated<Timestamp>
+  externalId: string
   id: Generated<number>
   market: string
   protocol: Protocol
-  proxyId: number | null
+  proxyId: number
   type: Generated<PositionType>
+  updatedAt: Generated<Timestamp>
   userAddressId: number
-}
-
-export interface PositionMultiplier {
-  createdAt: Generated<Timestamp>
-  id: Generated<number>
-  multiplierId: number
-  positionId: number
 }
 
 export interface Proxy {
@@ -78,13 +87,8 @@ export interface Proxy {
   id: Generated<number>
   managedBy: string
   type: string
+  updatedAt: Generated<Timestamp>
   userAddressId: number
-}
-
-export interface User {
-  category: string | null
-  createdAt: Generated<Timestamp>
-  id: Generated<number>
 }
 
 export interface UserAddress {
@@ -92,24 +96,16 @@ export interface UserAddress {
   createdAt: Generated<Timestamp>
   id: Generated<number>
   type: Generated<AddressType>
+  updatedAt: Generated<Timestamp>
   userId: number
 }
 
-export interface UserAddressMultiplier {
-  createdAt: Generated<Timestamp>
-  id: Generated<number>
-  multiplierId: number
-  userAddressId: number
-}
-
 export interface Database {
+  blockchainUser: BlockchainUser
   eligibilityCondition: EligibilityCondition
   multiplier: Multiplier
   pointsDistribution: PointsDistribution
   position: Position
-  positionMultiplier: PositionMultiplier
   proxy: Proxy
-  user: User
   userAddress: UserAddress
-  userAddressMultiplier: UserAddressMultiplier
 }

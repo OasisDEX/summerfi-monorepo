@@ -735,6 +735,9 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      sanitize.css:
+        specifier: 13.0.0
+        version: 13.0.0
       vite-tsconfig-paths:
         specifier: ^4.3.2
         version: 4.3.2(typescript@5.4.5)(vite@5.2.11)
@@ -2396,8 +2399,8 @@ importers:
         specifier: 1.6.5-morpho.0
         version: 1.6.5-morpho.0
       '@oasisdex/dma-library':
-        specifier: 0.6.4-automation.4
-        version: 0.6.4-automation.4
+        specifier: 0.6.4-automation.13
+        version: 0.6.4-automation.13
       '@summerfi/abis':
         specifier: workspace:*
         version: link:../../packages/abis
@@ -10754,8 +10757,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@oasisdex/dma-library@0.6.4-automation.4:
-    resolution: {integrity: sha512-axRZKeLXC6GW0LX7RjU0P+WNG8cjkEQJfZapw9juwY7mYM9cS7ZdvAW9p5zLEcvJ30FBQMILQz3NYpvZ1sjtuQ==}
+  /@oasisdex/dma-library@0.6.4-automation.13:
+    resolution: {integrity: sha512-m9sdWD9qtN0KFlF69Ggiztr9Q4D6Oww4iwswDuwXiKz47I+niVh5pp1Keb5FmzRzdCME0Dx29U9mf2pSKd/N8g==}
     dependencies:
       bignumber.js: 9.0.1
       ethers: 5.6.2
@@ -29141,6 +29144,10 @@ packages:
 
   /safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
+
+  /sanitize.css@13.0.0:
+    resolution: {integrity: sha512-ZRwKbh/eQ6w9vmTjkuG0Ioi3HBwPFce0O+v//ve+aOq1oeCy7jMV2qzzAlpsNuqpqCBjjriM1lbtZbF/Q8jVyA==}
+    dev: false
 
   /sass-lookup@5.0.1:
     resolution: {integrity: sha512-t0X5PaizPc2H4+rCwszAqHZRtr4bugo4pgiCvrBFvIX0XFxnr29g77LJcpyj9A0DcKf7gXMLcgvRjsonYI6x4g==}

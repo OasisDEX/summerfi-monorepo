@@ -58,79 +58,66 @@ export const handler = async (
 
   const db = await getRaysDB(dbConfig)
 
-  const query = db
+  const userPoints = await db
     .selectFrom('pointsDistribution')
+    .innerJoin('userAddress', 'pointsDistribution.userAddressId', 'userAddress.id')
     .leftJoin(
       'eligibilityCondition',
       'pointsDistribution.eligibilityConditionId',
       'eligibilityCondition.id',
     )
-    .innerJoin('position', 'pointsDistribution.positionId', 'position.id')
-    .leftJoin('positionMultiplier', 'position.id', 'positionMultiplier.positionId')
-    .leftJoin('multiplier as p_multiplier', 'positionMultiplier.multiplierId', 'p_multiplier.id')
-    .innerJoin('userAddress', 'position.userAddressId', 'userAddress.id')
-    .leftJoin('userAddressMultiplier', 'userAddress.id', 'userAddressMultiplier.userAddressId')
-    .leftJoin(
-      'multiplier as user_multiplier',
-      'userAddressMultiplier.multiplierId',
-      'user_multiplier.id',
-    )
-    .where('userAddress.address', '=', address)
+    .where('userAddress.address', '=', address.toLowerCase())
     .select([
       'userAddress.address',
-      'position.id as position_id',
       'pointsDistribution.points',
       'eligibilityCondition.dueDate',
-      'p_multiplier.value as position_multiplier',
-      'user_multiplier.value as user_multiplier',
+      'eligibilityCondition.type',
     ])
+    .execute()
 
-  const results = await query.execute()
+  const positionsPoints = await db
+    .selectFrom('pointsDistribution')
+    .innerJoin('position', 'pointsDistribution.positionId', 'position.id')
+    .innerJoin('userAddress', 'position.userAddressId', 'userAddress.id')
+    .leftJoin(
+      'eligibilityCondition',
+      'pointsDistribution.eligibilityConditionId',
+      'eligibilityCondition.id',
+    )
+    .where('userAddress.address', '=', address.toLowerCase())
+    .select([
+      'userAddress.address',
+      'pointsDistribution.points',
+      'eligibilityCondition.dueDate',
+      'eligibilityCondition.type',
+    ])
+    .execute()
 
-  const userMultiplier =
-    results.find((result) => result.user_multiplier != null)?.user_multiplier ?? 1 // the value will be the same for all results
+  const points = userPoints.concat(positionsPoints)
 
-  const byDueDate = groupBy(results, (result) => result.dueDate?.getTime() ?? 0)
+  const byDueDate = groupBy(
+    points,
+    (result) => `${result.dueDate?.getTime() ?? 0}-${result.type ?? ''}`,
+  )
 
   const result = Object.entries(byDueDate).map(([dueDate, points]) => {
-    const notNullPoints = points ?? []
-    const perPosition = groupBy(notNullPoints, (result) => result.position_id)
-    const perPositionTotal = Object.entries(perPosition).map(([positionId, positionPoints]) => {
-      const notNullPositionPoints = positionPoints ?? []
-      const allPositionPoints = notNullPositionPoints.reduce(
-        (acc, result) => acc + result.points,
-        0,
-      )
-      const multiplier =
-        notNullPositionPoints.find((result) => result.position_multiplier != null)
-          ?.position_multiplier ?? 1 // the value will be the same for all results
-      return {
-        positionId,
-        positionPoints: allPositionPoints,
-        multiplier,
-        total: allPositionPoints * multiplier,
-      }
-    })
-
-    const totalPoints = perPositionTotal.reduce((acc, result) => acc + result.total, 0)
+    const total = points.reduce((acc, result) => acc + Number(result.points), 0)
+    const [timestamp, type] = dueDate.split('-')
     return {
-      dueDate: Number(dueDate),
-      totalPoints,
-      breakdowns: perPositionTotal,
+      dueDate: Number(timestamp) === 0 ? null : new Date(Number(timestamp)),
+      points: total,
+      type: type ?? '',
     }
   })
 
-  const eligiblePoints = result.find((result) => result.dueDate === 0)?.totalPoints ?? 0
-  const multipliedPoints = eligiblePoints * userMultiplier
-  const allPossiblePoints =
-    result.reduce((acc, result) => acc + result.totalPoints, 0) * userMultiplier
-  const actionRequiredPoints = result.filter((result) => result.dueDate !== 0)
+  const eligiblePoints = result.find((result) => result.dueDate === null)?.points ?? 0
+  const allPossiblePoints = result.reduce((acc, result) => acc + Number(result.points), 0)
+  const actionRequiredPoints = result.filter((result) => result.dueDate !== null)
 
   return ResponseOk({
     body: {
       address,
       eligiblePoints,
-      multipliedPoints,
       allPossiblePoints,
       actionRequiredPoints,
     },

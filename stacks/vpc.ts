@@ -20,14 +20,10 @@ export function attachVPC({ stack, isDev }: StackContext & { isDev: boolean }): 
     }
   }
 
-  const vpcSubnets = {
-    subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
-  }
-
   const vpc = ec2.Vpc.fromLookup(stack, 'VPC', {
     vpcId: VPC_ID,
   })
 
   const securityGroup = ec2.SecurityGroup.fromSecurityGroupId(stack, 'SG', SECURITY_GROUP_ID!)
-  return { vpc, vpcSubnets, securityGroup }
+  return { vpc, securityGroup }
 }
