@@ -50,8 +50,8 @@ export function addRaysConfig({ stack, api, vpc }: SummerStackContext) {
   )
 
   new Cron(stack, 'update-rays-cron', {
-    schedule: 'rate(2 hours)',
-    enabled: process.env.ENABLE_RAYS_UPDATE_CRON === 'true',
+    schedule: 'rate(3 minutes)',
+    enabled: false,
     job: updateRaysCronFunction,
   })
 

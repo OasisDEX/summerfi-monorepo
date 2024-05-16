@@ -17,6 +17,8 @@ type PositionPoints = {
   marketId: string
   points: {
     openPositionsPoints: number
+    migrationPoints: number
+    swapPoints: number
   }
   netValue: number
   multipliers: {
@@ -146,13 +148,13 @@ export class SummerPointsService {
    * @returns The multiplier for the lazy vault.
    */
   getLazyVaultMultiplier(position: Position): number {
-    const hasLazyVault = position.activeTriggers.some((trigger) => trigger.kind === 'erc4626')
+    const hasLazyVault = position.protocol === 'erc4626'
     return hasLazyVault ? 1.2 : 1
   }
 
   /**
    * Calculates the basis points earned by users for a given time period.
-   * @param users
+   * @param usersData - The data of the users.
    * @param startTimestamp - The start timestamp of the time period.
    * @param endTimestamp - The end timestamp of the time period.
    * @returns The basis points earned by users.
@@ -181,7 +183,6 @@ export class SummerPointsService {
         const totalMultiplier =
           protocolBoostMultiplier *
           swapMultiplier *
-          openPositionsPoints *
           timeOpenMultiplier *
           automationProtectionMultiplier *
           lazyVaultMultiplier
@@ -229,9 +230,6 @@ export class SummerPointsService {
   private getOpenPositionsPoints(startTimestamp: number, position: Position, endTimestamp: number) {
     let previousTimestamp = startTimestamp
     let openPositionsPoints = 0
-    if (position.summerEvents.length != 0) {
-      console.log(position.summerEvents.length)
-    }
 
     for (const event of position.summerEvents) {
       const timeDifference = Math.min(
@@ -397,8 +395,8 @@ export class SummerPointsService {
     }
   }
 
-  protectionKinds = ['stopLoss', 'takeProfit', 'trailingStopLoss', 'trailingTakeProfit']
-  optimisationKinds = ['takeProfit', 'trailingTakeProfit']
+  protectionKinds = ['stoploss', 'basicsell']
+  optimisationKinds = ['takeprofit', 'basicbuy']
 
   /**
    * Calculates the automation protection multiplier based on the given position.
@@ -412,10 +410,12 @@ export class SummerPointsService {
    */
   getAutomationProtectionMultiplier(position: Position): number {
     const hasProtectionTrigger = position.activeTriggers.some((trigger) =>
-      this.protectionKinds.includes(trigger.kind),
+      this.protectionKinds.some((kind) => trigger.kind.toLowerCase().includes(kind.toLowerCase())),
     )
     const hasOptimisationTrigger = position.activeTriggers.some((trigger) =>
-      this.optimisationKinds.includes(trigger.kind),
+      this.optimisationKinds.some((kind) =>
+        trigger.kind.toLowerCase().includes(kind.toLowerCase()),
+      ),
     )
 
     let protectionMultiplier = 1

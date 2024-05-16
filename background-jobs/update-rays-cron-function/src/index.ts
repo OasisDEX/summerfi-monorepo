@@ -12,6 +12,12 @@ const logger = new Logger({ serviceName: 'update-rays-cron-function' })
 const LOCK_ID = 'update_points_lock'
 const LAST_RUN_ID = 'update_points_last_run'
 
+const eligibilityConditionType = 'POSITION_OPEN_TIME'
+const eligibilityConditionDescription = 'The position must be open for at least 30 days'
+const eligibilityConditionMetadata = {
+  minDays: 30,
+}
+
 export const handler = async (
   event: EventBridgeEvent<'Scheduled Event', never>,
   context: Context,
@@ -33,8 +39,9 @@ export const handler = async (
 
   const dbConfig = {
     connectionString: RAYS_DB_CONNECTION_STRING,
+    logger,
   }
-  const db = await getRaysDB(dbConfig)
+  const { db, services } = await getRaysDB(dbConfig)
 
   const mainnetSubgraphClient = getSummerPointsSubgraphClient({
     logger,
@@ -75,11 +82,7 @@ export const handler = async (
     .select('lastTimestamp')
     .executeTakeFirst()
 
-  const lock = await db
-    .selectFrom('updatePointsLock')
-    .where('id', '=', LOCK_ID)
-    .select('isLocked')
-    .executeTakeFirst()
+  const lock = await services.updateLockService.getLock()
 
   if (!lastRunTimestamp) {
     logger.error('Failed to get last run timestamp')
@@ -96,9 +99,9 @@ export const handler = async (
     return
   }
 
-  const lastRun = lastRunTimestamp.lastTimestamp.getTime() / 1000 // Convert to seconds.
-  const startTimestamp = lastRunTimestamp.lastTimestamp.getTime() / 1000 + 1 // Convert to seconds.
-  const endTimestamp = Date.now() / 1000 // Convert to seconds.
+  const lastRun = Math.floor(lastRunTimestamp.lastTimestamp.getTime() / 1000) // Convert to seconds.
+  const startTimestamp = lastRun + 1 // Convert to seconds.
+  const endTimestamp = Math.floor(Date.now() / 1000) // Convert to seconds.
 
   logger.info('Trying to update points with parameters:', {
     lastRun,
@@ -120,7 +123,7 @@ export const handler = async (
 
     const points = await pointAccuralService.accruePoints(startTimestamp, endTimestamp)
 
-    const tx = await db.transaction().execute(async (trx) => {
+    await db.transaction().execute(async (trx) => {
       for (const record of points) {
         let userAddress = await trx
           .selectFrom('userAddress')
@@ -174,6 +177,42 @@ export const handler = async (
             type: 'OPEN_POSITION',
           })
           .execute()
+
+        const currentDate = new Date()
+        const dueDateTimestamp = currentDate.setDate(currentDate.getDate() + 30)
+        const dueDate = new Date(dueDateTimestamp)
+
+        const eligibilityCondition = await trx
+          .insertInto('eligibilityCondition')
+          .values({
+            type: eligibilityConditionType,
+            description: eligibilityConditionDescription,
+            metadata: JSON.stringify(eligibilityConditionMetadata),
+            dueDate: dueDate,
+          })
+          .returningAll()
+          .executeTakeFirstOrThrow()
+
+        await trx
+          .insertInto('pointsDistribution')
+          .values({
+            description: 'Points for migrations',
+            points: record.points.migrationPoints,
+            positionId: position.id,
+            type: 'MIGRATION',
+            eligibilityConditionId: eligibilityCondition.id,
+          })
+          .executeTakeFirstOrThrow()
+
+        await trx
+          .insertInto('pointsDistribution')
+          .values({
+            description: 'Points for summer',
+            points: record.points.swapPoints,
+            positionId: position.id,
+            type: 'SWAP',
+          })
+          .executeTakeFirstOrThrow()
 
         // Multipliers
         // protocolBoostMultiplier: -> user multiplier -> type = 'PROTOCOL_BOOST'
@@ -294,6 +333,12 @@ export const handler = async (
             .execute()
         }
       }
+
+      await trx
+        .updateTable('updatePointsLastRun')
+        .set('lastTimestamp', new Date(endTimestamp * 1000))
+        .where('id', '=', LAST_RUN_ID)
+        .execute()
     })
   } catch (e) {
     logger.error('Failed to lock update points', { error: e })

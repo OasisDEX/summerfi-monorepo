@@ -136,7 +136,7 @@ export async function up(db: Kysely<never>) {
 
   await db.schema.createTable('multiplier')
     .addColumn('id', 'serial', (col) => col.primaryKey())
-    .addColumn('value', 'decimal(5, 4)', (col) => col.notNull())
+    .addColumn('value', 'decimal(6, 4)', (col) => col.notNull())
     .addColumn('type', 'varchar(100)', (col) => col.notNull())
     .addColumn('description', 'varchar')
     .addColumn('created_at', 'timestamptz', (col) => col.notNull().defaultTo(sql`NOW

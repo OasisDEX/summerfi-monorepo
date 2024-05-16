@@ -16,11 +16,40 @@ export interface PositionId {
   address: string
 }
 
+const PROTOCOLS: Record<Protocol, null> = {
+  aave_v2: null,
+  aave_v3: null,
+  ajna: null,
+  erc4626: null,
+  maker: null,
+  morphoblue: null,
+  spark: null,
+}
+
+const keys = Object.keys(PROTOCOLS)
+
 export const positionIdResolver = (positionId: string): PositionId => {
-  const [network, marketId, userAddress, protocol, address, positionType] = positionId.split('-')
+  const elements = positionId.split('-')
+  const network = elements[0]
+  // const userAddress = elements[1]
+  const address = elements[2]
+  const protocol = elements[3]
+  const marketId = elements[4]
+  const positionType = elements[5]
+  // check if protocol is of type of Protocol
+  const isValidProtocol = keys.includes(protocol as Protocol)
+
+  if (!isValidProtocol) {
+    throw new Error(`Invalid protocol: ${protocol}`)
+  }
+
+  const chainId = ChainIDByNetwork[network.split(':')[0] as Network]
+  if (!chainId) {
+    throw new Error(`Invalid network: ${network}`)
+  }
 
   return {
-    chainId: ChainIDByNetwork[network as Network],
+    chainId: chainId,
     positionType: positionType as PositionType,
     protocol: protocol as Protocol,
     marketId,

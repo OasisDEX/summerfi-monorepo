@@ -49,9 +49,10 @@ export const handler = async (
 
   const dbConfig = {
     connectionString: RAYS_DB_CONNECTION_STRING,
+    logger,
   }
 
-  const db = await getRaysDB(dbConfig)
+  const { db } = await getRaysDB(dbConfig)
 
   const userPoints = await db
     .selectFrom('pointsDistribution')
