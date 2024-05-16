@@ -1,0 +1,21 @@
+.mainContainer {
+  position: relative;
+  height: 100%;
+}
+
+.backgroundSimple {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin-left: -950px;
+  max-width: none;
+  pointer-events: none;
+}
+
+.appContainer {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-m);
+}
