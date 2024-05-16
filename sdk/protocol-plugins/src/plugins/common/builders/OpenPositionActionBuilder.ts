@@ -7,7 +7,7 @@ export const OpenPositionActionBuilder: ActionBuilder<steps.OpenPosition> = asyn
 ): Promise<void> => {
   const pool = params.step.inputs.pool
 
-  delegateToProtocolActionBuilder({
+  await delegateToProtocolActionBuilder({
     protocolName: pool.id.protocol.name,
     actionBuilderParams: params,
   })

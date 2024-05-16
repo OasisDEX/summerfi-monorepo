@@ -34,6 +34,18 @@ export const DepositBorrowActionBuilderMock: ActionBuilder<steps.DepositBorrowSt
   ;(params.context as StepBuilderContextMock).setCheckpoint('DepositBorrowActionBuilderMock')
 }
 
+export const ImportPositionActionBuilderMock: ActionBuilder<steps.ImportStep> = async (
+  params,
+): Promise<void> => {
+  ;(params.context as StepBuilderContextMock).setCheckpoint('ImportPositionActionBuilderMock')
+}
+
+export const OpenPositionActionBuilderMock: ActionBuilder<steps.OpenPosition> = async (
+  params,
+): Promise<void> => {
+  ;(params.context as StepBuilderContextMock).setCheckpoint('OpenPositionActionBuilderMock')
+}
+
 export const PaybackWithdrawActionBuilderNoCheckpointMock: ActionBuilder<
   steps.PaybackWithdrawStep
 > = async (params): Promise<void> => {}
@@ -42,12 +54,22 @@ export const DepositBorrowActionBuilderNoCheckpointMock: ActionBuilder<
   steps.DepositBorrowStep
 > = async (params): Promise<void> => {}
 
+export const ImportPositionActionBuilderNoCheckpointMock: ActionBuilder<steps.ImportStep> = async (
+  params,
+): Promise<void> => {}
+
+export const OpenPositionActionBuilderNoCheckpointMock: ActionBuilder<steps.OpenPosition> = async (
+  params,
+): Promise<void> => {}
+
 export class ProtocolPluginMock implements IProtocolPlugin {
   protocolName = ProtocolName.Spark
   supportedChains = [ChainFamilyMap.Ethereum.Mainnet]
   stepBuilders: Partial<ActionBuildersMap> = {
     [SimulationSteps.PaybackWithdraw]: PaybackWithdrawActionBuilderMock,
     [SimulationSteps.DepositBorrow]: DepositBorrowActionBuilderMock,
+    [SimulationSteps.Import]: ImportPositionActionBuilderMock,
+    [SimulationSteps.OpenPosition]: OpenPositionActionBuilderMock,
   }
   context = undefined as unknown as IProtocolPluginContext
 
@@ -125,6 +147,8 @@ export class NoCheckpointProtocolPluginMock implements IProtocolPlugin {
   stepBuilders: Partial<ActionBuildersMap> = {
     [SimulationSteps.PaybackWithdraw]: PaybackWithdrawActionBuilderNoCheckpointMock,
     [SimulationSteps.DepositBorrow]: DepositBorrowActionBuilderNoCheckpointMock,
+    [SimulationSteps.Import]: ImportPositionActionBuilderNoCheckpointMock,
+    [SimulationSteps.OpenPosition]: OpenPositionActionBuilderNoCheckpointMock,
   }
   context = undefined as unknown as IProtocolPluginContext
 

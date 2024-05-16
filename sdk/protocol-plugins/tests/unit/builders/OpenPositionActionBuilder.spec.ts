@@ -21,6 +21,7 @@ import {
   MakerPosition,
   MakerPositionId,
   MakerProtocol,
+  OpenPositionActionBuilder,
 } from '../../../src'
 
 describe('Deposit Borrow Action Builder', () => {
@@ -82,18 +83,14 @@ describe('Deposit Borrow Action Builder', () => {
     pool: pool,
   })
 
-  const derivedStep: steps.DepositBorrowStep = {
-    type: SimulationSteps.DepositBorrow,
-    name: 'DepositBorrowStep',
+  const derivedStep: steps.OpenPosition = {
+    type: SimulationSteps.OpenPosition,
+    name: 'OpenPosition',
     inputs: {
-      depositAmount: depositAmount,
-      borrowAmount: borrowAmount,
-      position: position,
-      borrowTargetType: TokenTransferTargetType.PositionsManager,
+      pool: pool,
     },
     outputs: {
-      depositAmount: depositAmount,
-      borrowAmount: borrowAmount,
+      position: position,
     },
   }
 
@@ -103,7 +100,7 @@ describe('Deposit Borrow Action Builder', () => {
 
   it('should fail if no protocol plugin exists', async () => {
     try {
-      await DepositBorrowActionBuilder({
+      await OpenPositionActionBuilder({
         ...builderParams,
         step: derivedStep,
         protocolsRegistry: builderParams.emptyProtocolsRegistry,
@@ -116,7 +113,7 @@ describe('Deposit Borrow Action Builder', () => {
 
   it('should fail if no protocol builder for the step exists', async () => {
     try {
-      await DepositBorrowActionBuilder({
+      await OpenPositionActionBuilder({
         ...builderParams,
         step: derivedStep,
         protocolsRegistry: builderParams.emptyBuildersProtocolRegistry,
@@ -128,11 +125,11 @@ describe('Deposit Borrow Action Builder', () => {
   })
 
   it('should call the proper builder', async () => {
-    await DepositBorrowActionBuilder({
+    await OpenPositionActionBuilder({
       ...builderParams,
       step: derivedStep,
     })
 
-    expect(builderParams.context.checkpoints[0]).toEqual('DepositBorrowActionBuilderMock')
+    expect(builderParams.context.checkpoints[0]).toEqual('OpenPositionActionBuilderMock')
   })
 })
