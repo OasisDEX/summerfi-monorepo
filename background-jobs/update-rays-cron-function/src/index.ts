@@ -1,8 +1,6 @@
 import type { Context, EventBridgeEvent } from 'aws-lambda'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { getRaysDB } from '@summerfi/rays-db'
-import { RDS } from 'sst/node/rds'
-import { RDSData } from '@aws-sdk/client-rds-data'
 import process from 'node:process'
 import { getSummerPointsSubgraphClient } from '@summerfi/summer-events-subgraph'
 import { ChainId } from '@summerfi/serverless-shared'
@@ -18,7 +16,7 @@ export const handler = async (
   event: EventBridgeEvent<'Scheduled Event', never>,
   context: Context,
 ): Promise<void> => {
-  const SUBGRAPH_BASE = process.env.SUBGRAPH_BASE
+  const { SUBGRAPH_BASE, RAYS_DB_CONNECTION_STRING } = process.env
 
   logger.addContext(context)
   logger.info('Hello World!')
@@ -28,18 +26,14 @@ export const handler = async (
     return
   }
 
-  const dbConfig =
-    process.env.IS_LOCAL === 'true'
-      ? {
-          connectionString: process.env.RAYS_DB_CONNECTION_STRING ?? '',
-        }
-      : {
-          database: RDS['rays-database'].defaultDatabaseName,
-          secretArn: RDS['rays-database'].secretArn,
-          resourceArn: RDS['rays-database'].clusterArn,
-          client: new RDSData({}),
-        }
+  if (!RAYS_DB_CONNECTION_STRING) {
+    logger.error('RAYS_DB_CONNECTION_STRING is not set')
+    return
+  }
 
+  const dbConfig = {
+    connectionString: RAYS_DB_CONNECTION_STRING,
+  }
   const db = await getRaysDB(dbConfig)
 
   const mainnetSubgraphClient = getSummerPointsSubgraphClient({

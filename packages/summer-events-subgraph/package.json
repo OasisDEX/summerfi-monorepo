@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "graphql-request": "^6.1.0",
-    "@summerfi/abstractions": "workspace:*"
+    "@summerfi/abstractions": "workspace:*",
+    "@summerfi/serverless-shared": "workspace:*"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

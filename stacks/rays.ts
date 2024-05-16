@@ -1,14 +1,23 @@
 import { SummerStackContext } from './summer-stack-context'
-import { Cron, Function, FunctionProps, RDS } from 'sst/constructs'
+import { Cron, Function, FunctionProps } from 'sst/constructs'
 import * as process from 'node:process'
 
-export function addRaysConfig({ stack, api, db, vpc }: SummerStackContext & { db: RDS | null }) {
+export function addRaysConfig({ stack, api, vpc }: SummerStackContext) {
+  const { RAYS_DB_CONNECTION_STRING, SUBGRAPH_BASE } = process.env
+  if (!RAYS_DB_CONNECTION_STRING) {
+    throw new Error('RAYS_DB_CONNECTION_STRING is not set')
+  }
+  if (!SUBGRAPH_BASE) {
+    throw new Error('SUBGRAPH_BASE is not set')
+  }
+
   const raysFunctionProps: FunctionProps = {
     handler: 'summerfi-api/get-rays-function/src/index.handler',
     runtime: 'nodejs20.x',
     logFormat: 'JSON',
     environment: {
       POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
+      RAYS_DB_CONNECTION_STRING,
     },
     ...(vpc && {
       vpc: vpc.vpc,
@@ -23,6 +32,8 @@ export function addRaysConfig({ stack, api, db, vpc }: SummerStackContext & { db
     runtime: 'nodejs20.x',
     environment: {
       POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
+      RAYS_DB_CONNECTION_STRING,
+      SUBGRAPH_BASE,
     },
     ...(vpc && {
       vpc: vpc.vpc,
@@ -43,16 +54,6 @@ export function addRaysConfig({ stack, api, db, vpc }: SummerStackContext & { db
     enabled: process.env.ENABLE_RAYS_UPDATE_CRON === 'true',
     job: updateRaysCronFunction,
   })
-
-  if (db) {
-    raysFunction.bind([db])
-    updateRaysCronFunction.bind([db])
-  } else {
-    const connectionString =
-      process.env.RAYS_DB_CONNECTION_STRING || 'postgres://user:password@localhost:5500/rays'
-    raysFunction.addEnvironment('RAYS_DB_CONNECTION_STRING', connectionString)
-    updateRaysCronFunction.addEnvironment('RAYS_DB_CONNECTION_STRING', connectionString)
-  }
 
   api.addRoutes(stack, {
     'GET /api/rays': raysFunction,

@@ -68,7 +68,7 @@ export interface PointsDistribution {
 }
 
 export interface Position {
-  address: Generated<string>
+  address: string
   chainId: number
   createdAt: Generated<Timestamp>
   externalId: string
@@ -78,7 +78,7 @@ export interface Position {
   type: Generated<PositionType>
   updatedAt: Generated<Timestamp>
   userAddressId: number
-  vaultId: Generated<number>
+  vaultId: number
 }
 
 export interface UpdatePointsChangelog {
