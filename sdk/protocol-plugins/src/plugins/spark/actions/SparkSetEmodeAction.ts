@@ -2,12 +2,11 @@ import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-pl
 import { EmodeType } from '../../common/enums/EmodeType'
 import { sparkEmodeCategoryMap } from '../implementation/EmodeCategoryMap'
 
-
-export class SparkSetEmodeAction extends BaseAction {
-  public readonly config = {
+export class SparkSetEmodeAction extends BaseAction<typeof SparkSetEmodeAction.Config> {
+  public static readonly Config = {
     name: 'SparkSetEMode',
     version: 0,
-    parametersAbi: '(uint8 categoryId)',
+    parametersAbi: ['(uint8 categoryId)'],
     storageInputs: [],
     storageOutputs: ['emodeCategory'],
   } as const
@@ -26,5 +25,9 @@ export class SparkSetEmodeAction extends BaseAction {
       ],
       mapping: paramsMapping,
     })
+  }
+
+  public get config() {
+    return SparkSetEmodeAction.Config
   }
 }

@@ -2,11 +2,11 @@ import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-pl
 import { EmodeType } from '../../common/enums/EmodeType'
 import { aaveV3EmodeCategoryMap } from '../implementation/EmodeCategoryMap'
 
-export class AaveV3SetEmodeAction extends BaseAction {
-  public readonly config = {
+export class AaveV3SetEmodeAction extends BaseAction<typeof AaveV3SetEmodeAction.Config> {
+  public static readonly Config = {
     name: 'AaveV3SetEMode',
     version: 0,
-    parametersAbi: '(uint8 categoryId)',
+    parametersAbi: ['(uint8 categoryId)'],
     storageInputs: [],
     storageOutputs: ['emodeCategory'],
   } as const
@@ -25,5 +25,9 @@ export class AaveV3SetEmodeAction extends BaseAction {
       ],
       mapping: paramsMapping,
     })
+  }
+
+  public get config() {
+    return AaveV3SetEmodeAction.Config
   }
 }

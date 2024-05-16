@@ -1,11 +1,11 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { IAddress, ITokenAmount } from '@summerfi/sdk-common/common'
 
-export class SparkWithdrawAction extends BaseAction {
-  public readonly config = {
+export class SparkWithdrawAction extends BaseAction<typeof SparkWithdrawAction.Config> {
+  public static readonly Config = {
     name: 'SparkWithdraw',
     version: 0,
-    parametersAbi: '(address asset, uint256 amount, address to)',
+    parametersAbi: ['(address asset, uint256 amount, address to)'],
     storageInputs: [],
     storageOutputs: ['withdrawnAmount'],
   } as const
@@ -21,11 +21,15 @@ export class SparkWithdrawAction extends BaseAction {
       arguments: [
         {
           asset: params.withdrawAmount.token.address.value,
-          amount: params.withdrawAmount.toBaseUnit(),
+          amount: BigInt(params.withdrawAmount.toBaseUnit()),
           to: params.withdrawTo.value,
         },
       ],
       mapping: paramsMapping,
     })
+  }
+
+  public get config() {
+    return SparkWithdrawAction.Config
   }
 }

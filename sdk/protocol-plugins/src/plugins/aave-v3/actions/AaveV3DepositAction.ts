@@ -1,11 +1,11 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { ITokenAmount } from '@summerfi/sdk-common/common'
 
-export class AaveV3DepositAction extends BaseAction {
-  public readonly config = {
+export class AaveV3DepositAction extends BaseAction<typeof AaveV3DepositAction.Config> {
+  public static readonly Config = {
     name: 'AaveV3Deposit',
     version: 0,
-    parametersAbi: '(address asset, uint256 amount, bool sumAmounts, bool setAsCollateral)',
+    parametersAbi: ['(address asset, uint256 amount, bool sumAmounts, bool setAsCollateral)'],
     storageInputs: ['asset', 'amountToDeposit'],
     storageOutputs: ['depositedAmount'],
   } as const
@@ -22,12 +22,16 @@ export class AaveV3DepositAction extends BaseAction {
       arguments: [
         {
           asset: params.depositAmount.token.address.value,
-          amount: params.depositAmount.toBaseUnit(),
+          amount: BigInt(params.depositAmount.toBaseUnit()),
           sumAmounts: params.sumAmounts,
           setAsCollateral: params.setAsCollateral,
         },
       ],
       mapping: paramsMapping,
     })
+  }
+
+  public get config() {
+    return AaveV3DepositAction.Config
   }
 }

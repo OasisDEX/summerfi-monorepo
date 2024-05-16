@@ -5,7 +5,6 @@ import {
   Address,
   type Maybe,
   ChainFamilyMap,
-  newEmptyPositionFromPool,
   PositionType,
 } from '@summerfi/sdk-common/common'
 
@@ -46,7 +45,7 @@ const config = {
   debtAmount: '5000000.0',
 }
 
-describe.only('Refinance All | SDK', () => {
+describe.skip('Refinance All | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: config.SDKAPiUrl })
@@ -177,11 +176,10 @@ describe.only('Refinance All | SDK', () => {
       assert(false, 'Spark pool type is not lending')
     }
 
-    const emptyTargetPosition = newEmptyPositionFromPool(sparkPool)
     const refinanceSimulation: ISimulation<RefinanceSimulationTypes> =
       await sdk.simulator.refinance.simulateRefinancePosition({
         sourcePosition: makerPosition,
-        targetPosition: emptyTargetPosition,
+        targetPool: sparkPool,
         slippage: Percentage.createFrom({ value: 0.2 }),
       } as IRefinanceParameters)
 

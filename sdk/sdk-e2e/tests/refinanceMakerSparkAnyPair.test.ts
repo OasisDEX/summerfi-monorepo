@@ -198,18 +198,18 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     assert(refinanceOrder, 'Order not found')
 
     // Send transaction
-    //console.log('Sending transaction...')
+    console.log('Sending transaction...')
 
-    //const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex
-    // const transactionUtils = new TransactionUtils({
-    //   rpcUrl: config.TenderlyForkUrl,
-    //   walletPrivateKey: privateKey,
-    // })
+    const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex
+    const transactionUtils = new TransactionUtils({
+      rpcUrl: config.TenderlyForkUrl,
+      walletPrivateKey: privateKey,
+    })
 
-    // const receipt = await transactionUtils.sendTransaction({
-    //   transaction: refinanceOrder.transactions[0].transaction,
-    // })
+    const receipt = await transactionUtils.sendTransaction({
+      transaction: refinanceOrder.transactions[0].transaction,
+    })
 
-    // console.log('Transaction sent:', receipt)
+    console.log('Transaction sent:', receipt)
   })
 })

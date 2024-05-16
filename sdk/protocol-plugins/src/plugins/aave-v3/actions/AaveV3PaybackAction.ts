@@ -1,11 +1,11 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { ITokenAmount } from '@summerfi/sdk-common/common'
 
-export class AaveV3PaybackAction extends BaseAction {
-  public readonly config = {
+export class AaveV3PaybackAction extends BaseAction<typeof AaveV3PaybackAction.Config> {
+  public static readonly Config = {
     name: 'AaveV3Payback',
     version: 0,
-    parametersAbi: '(address asset, uint256 amount, bool paybackAll)',
+    parametersAbi: ['(address asset, uint256 amount, bool paybackAll)'],
     storageInputs: ['asset', 'amountToPayback'],
     storageOutputs: ['paybackedAmount'],
   } as const
@@ -21,11 +21,15 @@ export class AaveV3PaybackAction extends BaseAction {
       arguments: [
         {
           asset: params.paybackAmount.token.address.value,
-          amount: params.paybackAmount.toBaseUnit(),
+          amount: BigInt(params.paybackAmount.toBaseUnit()),
           paybackAll: params.paybackAll,
         },
       ],
       mapping: paramsMapping,
     })
+  }
+
+  public get config() {
+    return AaveV3PaybackAction.Config
   }
 }

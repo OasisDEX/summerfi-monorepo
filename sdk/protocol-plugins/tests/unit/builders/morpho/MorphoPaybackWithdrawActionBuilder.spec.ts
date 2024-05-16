@@ -113,11 +113,12 @@ describe('Morpho Payback Withdraw Action Builder', () => {
 
   const derivedStep: steps.PaybackWithdrawStep = {
     type: SimulationSteps.PaybackWithdraw,
-    name: 'DepositBorrowStep',
+    name: 'PaybackWithdrawStep',
     inputs: {
       paybackAmount: paybackAmount,
       withdrawAmount: withdrawAmount,
       position: position,
+      withdrawTargetType: TokenTransferTargetType.PositionsManager,
     },
     outputs: {
       paybackAmount: paybackAmount,

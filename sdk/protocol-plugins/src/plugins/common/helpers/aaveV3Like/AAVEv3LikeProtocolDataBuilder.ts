@@ -399,12 +399,12 @@ export class AaveV3LikeProtocolDataBuilder<
 // FILTERS
 export function filterAssetsListByEMode<T extends { emode: EmodeCategory }>(
   assetsList: T[],
-  emode: bigint,
+  emode: number,
 ): T[] {
   // All reserves allowed for category 0n
-  if (emode === 0n) {
+  if (emode === 0) {
     return assetsList
   }
 
-  return assetsList.filter((asset) => asset.emode === emode)
+  return assetsList.filter((asset) => Number(asset.emode) === emode)
 }
