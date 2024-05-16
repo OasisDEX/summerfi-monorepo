@@ -34,17 +34,17 @@ export const Footer: FC<FooterProps> = ({ lists, logo, newsletter }) => {
         <ul className={classNames.socialsList}>
           <li>
             <a href="https://twitter.com/summerfinance_" target="_blank" rel="noreferrer">
-              <IconBrandTwitterFilled />
+              <IconBrandTwitterFilled size={20} />
             </a>
           </li>
           <li>
             <a href="https://discord.com/invite/summerfi" target="_blank" rel="noreferrer">
-              <IconBrandDiscordFilled />
+              <IconBrandDiscordFilled size={20} />
             </a>
           </li>
           <li>
             <a href="https://github.com/OasisDEX" target="_blank" rel="noreferrer">
-              <IconBrandGithubFilled />
+              <IconBrandGithubFilled size={20} />
             </a>
           </li>
         </ul>
