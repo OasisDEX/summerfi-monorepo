@@ -12,6 +12,7 @@ import { AaveV3WithdrawAction } from '../actions/AaveV3WithdrawAction'
 import { AaveV3PaybackAction } from '../actions/AaveV3PaybackAction'
 import { getContractAddress } from '../../utils/GetContractAddress'
 import { isAaveV3LendingPool } from '../interfaces/IAaveV3LendingPool'
+import { Address } from '@summerfi/sdk-common'
 
 export const AaveV3PaybackWithdrawActionList: ActionNames[] = ['AaveV3Payback', 'AaveV3Withdraw']
 
@@ -42,7 +43,7 @@ export const AaveV3PaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWith
   const sparkLendingPoolAddress = await getContractAddress({
     addressBookManager,
     chainInfo: user.chainInfo,
-    contractName: 'SparkLendingPool',
+    contractName: 'AavePool',
   })
 
   const paybackAmount = getValueFromReference(step.inputs.paybackAmount)
@@ -70,6 +71,7 @@ export const AaveV3PaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWith
         paybackAll: getValueFromReference(step.inputs.paybackAmount)
           .toBN()
           .gt(step.inputs.position.debtAmount.toBN()),
+        onBehalf: Address.ZeroAddressEthereum,
       },
       connectedInputs: {},
       connectedOutputs: {
