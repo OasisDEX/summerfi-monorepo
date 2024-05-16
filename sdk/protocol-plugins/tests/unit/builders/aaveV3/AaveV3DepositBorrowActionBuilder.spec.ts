@@ -127,7 +127,7 @@ describe('AaveV3 Deposit Borrow Action Builder', () => {
 
   it('should fail the position is not a AaveV3 one', async () => {
     try {
-      await AaveV3DepositBorrowActionBuilder({
+      await new AaveV3DepositBorrowActionBuilder().build({
         ...builderParams,
         step: {
           ...derivedStep,
@@ -147,7 +147,7 @@ describe('AaveV3 Deposit Borrow Action Builder', () => {
   it('should add all the action calls', async () => {
     builderParams.context.startSubContext()
 
-    await AaveV3DepositBorrowActionBuilder({
+    await new AaveV3DepositBorrowActionBuilder().build({
       ...builderParams,
       step: derivedStep,
       protocolsRegistry: builderParams.emptyProtocolsRegistry,
@@ -165,7 +165,7 @@ describe('AaveV3 Deposit Borrow Action Builder', () => {
   it('should not add borrow nor send token when borrow amount is 0', async () => {
     builderParams.context.startSubContext()
 
-    await AaveV3DepositBorrowActionBuilder({
+    await new AaveV3DepositBorrowActionBuilder().build({
       ...builderParams,
       step: {
         ...derivedStep,
@@ -191,7 +191,7 @@ describe('AaveV3 Deposit Borrow Action Builder', () => {
   it('should add borrow but not send token when borrow target is positions manager', async () => {
     builderParams.context.startSubContext()
 
-    await AaveV3DepositBorrowActionBuilder({
+    await new AaveV3DepositBorrowActionBuilder().build({
       ...builderParams,
       step: {
         ...derivedStep,

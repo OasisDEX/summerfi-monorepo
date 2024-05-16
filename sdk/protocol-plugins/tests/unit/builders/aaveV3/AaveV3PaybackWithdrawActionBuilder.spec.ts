@@ -127,7 +127,7 @@ describe('AaveV3 Payback Withdraw Action Builder', () => {
 
   it('should fail the position is not a AaveV3 one', async () => {
     try {
-      await AaveV3PaybackWithdrawActionBuilder({
+      await new AaveV3PaybackWithdrawActionBuilder().build({
         ...builderParams,
         step: {
           ...derivedStep,
@@ -147,7 +147,7 @@ describe('AaveV3 Payback Withdraw Action Builder', () => {
   it('should add all the action calls', async () => {
     builderParams.context.startSubContext()
 
-    await AaveV3PaybackWithdrawActionBuilder({
+    await new AaveV3PaybackWithdrawActionBuilder().build({
       ...builderParams,
       step: derivedStep,
       protocolsRegistry: builderParams.emptyProtocolsRegistry,
@@ -165,7 +165,7 @@ describe('AaveV3 Payback Withdraw Action Builder', () => {
   it('should not add payback when payback amount is 0', async () => {
     builderParams.context.startSubContext()
 
-    await AaveV3PaybackWithdrawActionBuilder({
+    await new AaveV3PaybackWithdrawActionBuilder().build({
       ...builderParams,
       step: {
         ...derivedStep,

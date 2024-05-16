@@ -133,7 +133,7 @@ describe('Maker Payback Withdraw Action Builder', () => {
 
   it('should fail the position is not a Maker one', async () => {
     try {
-      await MakerPaybackWithdrawActionBuilder({
+      await new MakerPaybackWithdrawActionBuilder().build({
         ...builderParams,
         step: {
           ...derivedStep,
@@ -153,7 +153,7 @@ describe('Maker Payback Withdraw Action Builder', () => {
   it('should add all the action calls', async () => {
     builderParams.context.startSubContext()
 
-    await MakerPaybackWithdrawActionBuilder({
+    await new MakerPaybackWithdrawActionBuilder().build({
       ...builderParams,
       step: derivedStep,
       protocolsRegistry: builderParams.emptyProtocolsRegistry,
@@ -170,7 +170,7 @@ describe('Maker Payback Withdraw Action Builder', () => {
   it('should not add payback when payback amount is 0', async () => {
     builderParams.context.startSubContext()
 
-    await MakerPaybackWithdrawActionBuilder({
+    await new MakerPaybackWithdrawActionBuilder().build({
       ...builderParams,
       step: {
         ...derivedStep,

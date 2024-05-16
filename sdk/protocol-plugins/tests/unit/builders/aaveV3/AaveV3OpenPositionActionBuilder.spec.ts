@@ -116,7 +116,7 @@ describe('AaveV3 Open Position Action Builder', () => {
 
   it('should fail the position is not a AaveV3 one', async () => {
     try {
-      await AaveV3OpenPositionActionBuilder({
+      await new AaveV3OpenPositionActionBuilder().build({
         ...builderParams,
         step: {
           ...derivedStep,
@@ -136,7 +136,7 @@ describe('AaveV3 Open Position Action Builder', () => {
   it('should add a transaction to the context', async () => {
     builderParams.context.startSubContext()
 
-    await AaveV3OpenPositionActionBuilder({
+    await new AaveV3OpenPositionActionBuilder().build({
       ...builderParams,
       step: derivedStep,
       protocolsRegistry: builderParams.emptyProtocolsRegistry,

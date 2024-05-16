@@ -98,7 +98,7 @@ describe('Payback Withdraw Action Builder', () => {
 
   it('should fail if no protocol plugin exists', async () => {
     try {
-      await PaybackWithdrawActionBuilder({
+      await new PaybackWithdrawActionBuilder().build({
         ...builderParams,
         step: derivedStep,
         protocolsRegistry: builderParams.emptyProtocolsRegistry,
@@ -111,7 +111,7 @@ describe('Payback Withdraw Action Builder', () => {
 
   it('should fail if no protocol builder for the step exists', async () => {
     try {
-      await PaybackWithdrawActionBuilder({
+      await new PaybackWithdrawActionBuilder().build({
         ...builderParams,
         step: derivedStep,
         protocolsRegistry: builderParams.emptyBuildersProtocolRegistry,
@@ -123,7 +123,7 @@ describe('Payback Withdraw Action Builder', () => {
   })
 
   it('should call the proper builder', async () => {
-    await PaybackWithdrawActionBuilder({
+    await new PaybackWithdrawActionBuilder().build({
       ...builderParams,
       step: derivedStep,
     })

@@ -122,7 +122,7 @@ describe('Maker Open Position Action Builder', () => {
 
   it('should fail the position is not a Maker one', async () => {
     try {
-      await MakerOpenPositionActionBuilder({
+      await new MakerOpenPositionActionBuilder().build({
         ...builderParams,
         step: {
           ...derivedStep,
@@ -142,7 +142,7 @@ describe('Maker Open Position Action Builder', () => {
   it('should not add a transaction to the context', async () => {
     builderParams.context.startSubContext()
 
-    await MakerOpenPositionActionBuilder({
+    await new MakerOpenPositionActionBuilder().build({
       ...builderParams,
       step: derivedStep,
       protocolsRegistry: builderParams.emptyProtocolsRegistry,

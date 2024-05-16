@@ -1,3 +1,3 @@
 export * from './ActionStorageTypes'
-export * from './StepBuilderTypes'
+export * from '../interfaces/IActionBuilder'
 export * from './InputSlotsMapping'

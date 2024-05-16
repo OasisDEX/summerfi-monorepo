@@ -1,15 +1,16 @@
 import { steps } from '@summerfi/sdk-common/simulation'
-import { ActionBuilder } from '@summerfi/protocol-plugins-common'
+import { ActionBuilderParams } from '@summerfi/protocol-plugins-common'
 import { isMakerLendingPool } from '../interfaces/IMakerLendingPool'
+import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
-export const MakerOpenPositionActionBuilder: ActionBuilder<steps.OpenPosition> = async (
-  params,
-): Promise<void> => {
-  const { step } = params
+export class MakerOpenPositionActionBuilder extends BaseActionBuilder<steps.OpenPosition> {
+  async build(params: ActionBuilderParams<steps.OpenPosition>): Promise<void> {
+    const { step } = params
 
-  if (!isMakerLendingPool(step.inputs.pool)) {
-    throw new Error('Invalid Maker lending pool id')
+    if (!isMakerLendingPool(step.inputs.pool)) {
+      throw new Error('Invalid Maker lending pool id')
+    }
+
+    // No-op for Maker
   }
-
-  // No-op for Maker
 }

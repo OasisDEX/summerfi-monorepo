@@ -1,6 +1,6 @@
 import {
-  ActionBuilder,
   ActionBuildersMap,
+  IActionBuilder,
   IProtocolPlugin,
   IProtocolPluginContext,
 } from '@summerfi/protocol-plugins-common'
@@ -136,8 +136,14 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
   /** ACTION BUILDERS */
 
   /** @see IProtocolPlugin.getActionBuilder */
-  getActionBuilder<T extends steps.Steps>(step: T): Maybe<ActionBuilder<T>> {
-    return this.stepBuilders[step.type] as ActionBuilder<T>
+  getActionBuilder<StepType extends steps.Steps>(step: StepType): Maybe<IActionBuilder<StepType>> {
+    const builder = this.stepBuilders[step.type]
+
+    if (!builder) {
+      return undefined
+    }
+
+    return new builder() as IActionBuilder<StepType>
   }
 
   /** HELPERS */

@@ -37,7 +37,7 @@ describe('Flashloan Action Builder', () => {
   })
 
   it('should start a new subcontext', async () => {
-    await FlashloanActionBuilder({
+    await new FlashloanActionBuilder().build({
       ...builderParams,
       step: derivedStep,
     })
