@@ -3,13 +3,16 @@ import { ITokenAmount } from '@summerfi/sdk-common/common'
 import { MorphoLLTVPrecision } from '../constants/MorphoConstants'
 import { IAddress } from '@summerfi/sdk-common'
 import { IMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
+import { MorphoMarketParametersAbi } from '../types/MorphoMarketParameters'
 
-export class MorphoWithdrawAction extends BaseAction {
-  public readonly config = {
+export class MorphoWithdrawAction extends BaseAction<typeof MorphoWithdrawAction.Config> {
+  public static readonly Config = {
     name: 'MorphoBlueWithdraw',
     version: 0,
-    parametersAbi:
-      '((address loanToken, address collateralToken, address oracle, address irm, uint256 lltv) marketParams, uint256 amount, address to)',
+    parametersAbi: [
+      '(MarketParams marketParams, uint256 amount, address to)',
+      MorphoMarketParametersAbi,
+    ],
     storageInputs: ['marketParams', 'amount', 'to'],
     storageOutputs: ['withdrawnAmount'],
   } as const
@@ -32,13 +35,19 @@ export class MorphoWithdrawAction extends BaseAction {
             collateralToken: morphoLendingPool.collateralToken.address.value,
             oracle: morphoLendingPool.oracle.value,
             irm: morphoLendingPool.irm.value,
-            lltv: morphoLendingPool.lltv.toLTV().toBaseUnit({ decimals: MorphoLLTVPrecision }),
+            lltv: BigInt(
+              morphoLendingPool.lltv.toLTV().toBaseUnit({ decimals: MorphoLLTVPrecision }),
+            ),
           },
-          amount: amount.toBaseUnit(),
+          amount: BigInt(amount.toBaseUnit()),
           to: to.value,
         },
       ],
       mapping: paramsMapping,
     })
+  }
+
+  public get config() {
+    return MorphoWithdrawAction.Config
   }
 }

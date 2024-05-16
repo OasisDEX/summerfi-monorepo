@@ -4,6 +4,7 @@ import assert from 'assert'
 import { StorageInputsMapType, StorageOutputsMapType } from '../types/ActionStorageTypes'
 import { BaseAction } from '../actions/BaseAction'
 import { InputSlotsMapping } from '../types/InputSlotsMapping'
+import { ActionConfig } from '../actions/Types'
 
 export class ExecutionStorageMapper {
   private slotsMap: Map<string, number> = new Map()
@@ -11,11 +12,11 @@ export class ExecutionStorageMapper {
   // Slot number starts from 1 because the contract will subtract 1 from the slot number
   private currentSlot: number = 1
 
-  public addStorageMap<Step extends steps.Steps, Action extends BaseAction>(params: {
+  public addStorageMap<Step extends steps.Steps, Config extends ActionConfig>(params: {
     step: Step
-    action: Action
-    connectedInputs: Partial<StorageInputsMapType<Step, Action>>
-    connectedOutputs: Partial<StorageOutputsMapType<Step, Action>>
+    action: BaseAction<Config>
+    connectedInputs: Partial<StorageInputsMapType<Step, Config>>
+    connectedOutputs: Partial<StorageOutputsMapType<Step, Config>>
   }): InputSlotsMapping {
     const baseSlot = this.currentSlot
     const stepOutputs = (params.step.outputs as unknown) ?? {}
@@ -23,7 +24,7 @@ export class ExecutionStorageMapper {
     for (const stepOutputName of Object.keys(stepOutputs)) {
       if (params.connectedOutputs !== undefined) {
         const actionOutputName =
-          params.connectedOutputs[stepOutputName as keyof StorageOutputsMapType<Step, Action>]
+          params.connectedOutputs[stepOutputName as keyof StorageOutputsMapType<Step, Config>]
 
         if (actionOutputName === undefined) {
           continue
@@ -61,10 +62,14 @@ export class ExecutionStorageMapper {
     return `${params.stepName}-${String(params.referenceName)}`
   }
 
-  private _resolveParamsMapping<Step extends steps.Steps, Action extends BaseAction>(params: {
+  private _resolveParamsMapping<
+    Step extends steps.Steps,
+    Config extends ActionConfig,
+    Action extends BaseAction<Config>,
+  >(params: {
     action: Action
     step: Step
-    connectedInputs: Partial<StorageInputsMapType<Step, Action>>
+    connectedInputs: Partial<StorageInputsMapType<Step, Config>>
   }): InputSlotsMapping {
     const paramsMapping: InputSlotsMapping = [0, 0, 0, 0]
 

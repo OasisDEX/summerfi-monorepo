@@ -1,6 +1,5 @@
 import { ChainFamilyMap, IPosition, IPositionId, Maybe } from '@summerfi/sdk-common/common'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { StepBuilderContextMock } from '../../../testing-utils/src/mocks/StepBuilderContextMock'
 import {
   ActionBuilder,
   ActionBuildersMap,
@@ -19,6 +18,7 @@ import {
 import { IExternalPosition, IPositionsManager } from '@summerfi/sdk-common/orders'
 import { IUser } from '@summerfi/sdk-common/user'
 import { TransactionInfo } from '@summerfi/sdk-common'
+import { StepBuilderContextMock } from '@summerfi/testing-utils'
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 

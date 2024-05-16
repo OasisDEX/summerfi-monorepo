@@ -1,11 +1,11 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { ITokenAmount } from '@summerfi/sdk-common/common'
 
-export class SparkDepositAction extends BaseAction {
-  public readonly config = {
+export class SparkDepositAction extends BaseAction<typeof SparkDepositAction.Config> {
+  public static readonly Config = {
     name: 'SparkDeposit',
     version: 0,
-    parametersAbi: '(address asset, uint256 amount, bool sumAmounts, bool setAsCollateral)',
+    parametersAbi: ['(address asset, uint256 amount, bool sumAmounts, bool setAsCollateral)'],
     storageInputs: ['asset', 'amountToDeposit'],
     storageOutputs: ['depositedAmount'],
   } as const
@@ -22,12 +22,16 @@ export class SparkDepositAction extends BaseAction {
       arguments: [
         {
           asset: params.depositAmount.token.address.value,
-          amount: params.depositAmount.toBaseUnit(),
+          amount: BigInt(params.depositAmount.toBaseUnit()),
           sumAmounts: params.sumAmounts,
           setAsCollateral: params.setAsCollateral,
         },
       ],
       mapping: paramsMapping,
     })
+  }
+
+  public get config() {
+    return SparkDepositAction.Config
   }
 }
