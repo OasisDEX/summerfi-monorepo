@@ -1,3 +1,3 @@
 import { PrismaClient } from '@summerfi/app-db'
 
-export const prisma = new PrismaClient()
+export const prisma: PrismaClient = new PrismaClient()

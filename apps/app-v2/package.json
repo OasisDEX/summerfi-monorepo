@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "license": "Apache-2.0",
   "scripts": {
-    "dev": "dotenv -e ../../.env -e ../../.env.local -- next dev",
+    "dev": "dotenv -e ../../.env -e ../../.env.local -- next dev -p 3001",
     "build": "dotenv -e ../../.env -e ../../.env.local -- next build",
-    "start": "next start",
+    "start": "next start -p 3001",
     "lint": "eslint ."
   },
   "dependencies": {

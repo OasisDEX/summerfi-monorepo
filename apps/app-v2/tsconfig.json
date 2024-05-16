@@ -1,6 +1,7 @@
 {
   "extends": "@summerfi/typescript-config/tsconfig.nextjs.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "plugins": [
       {
         "name": "next"
