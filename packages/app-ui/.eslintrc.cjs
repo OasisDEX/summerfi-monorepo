@@ -8,4 +8,8 @@ module.exports = {
     sourceType: 'module',
     tsconfigRootDir: __dirname,
   },
+  ignorePatterns: ['types', 'dist', 'node_modules'],
+  rules: {
+    '@next/next/no-img-element': 'off',
+  },
 }

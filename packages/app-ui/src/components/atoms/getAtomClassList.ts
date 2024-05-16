@@ -1,5 +1,5 @@
 interface GetAtomClassListParams {
-  variant: string
+  variant?: string
   className?: string
 }
 

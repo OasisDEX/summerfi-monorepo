@@ -13,7 +13,10 @@ export const Button: FC<AtomProps<'button', ClassNames>> = forwardRef(
       <Component
         {...{
           ref,
-          className: getAtomClassList({ className, variant: classNames[variant] }),
+          className: getAtomClassList({
+            className,
+            variant: variant ? classNames[variant] : undefined,
+          }),
           ...props,
         }}
       />

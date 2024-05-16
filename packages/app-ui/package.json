@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "license": "Apache-2.0",
   "type": "module",
-  "main": "dist/index.js",
-  "types": "src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/types/src/index.d.ts",
   "files": [
     "dist"
   ],
@@ -13,12 +13,10 @@
   ],
   "scripts": {
     "lint": "eslint *.ts*",
-    "build-watch": "tsc -w --preserveWatchOutput --p ./tsconfig.json & vite build -w true",
     "generate-module-types": "typed-scss-modules -e default \"src/**/*.module.scss\"",
-    "generate-module-types-watch": "typed-scss-modules --ignoreInitial -w -e default \"src/**/*.module.scss\"",
-    "dev": "pnpm generate-module-types-watch & pnpm build-watch",
-    "predev": "pnpm clean & pnpm generate-module-types & tsc --p ./tsconfig.json",
-    "build": "pnpm clean & pnpm generate-module-types & tsc --p ./tsconfig.json & vite build -w false",
+    "generate-module-types-watch": "typed-scss-modules -w -e default \"src/**/*.module.scss\"",
+    "dev": "pnpm clean && (pnpm generate-module-types-watch & vite build -w true)",
+    "build": "pnpm clean && (pnpm generate-module-types & vite build -w false)",
     "clean": "rm -rf dist"
   },
   "devDependencies": {
@@ -31,9 +29,9 @@
     "classnames": "^2.5.1",
     "glob": "^10.3.12",
     "sass": "^1.77.0",
-    "typed-scss-modules": "^8.0.1",
     "typescript": "^5.4.5",
     "vite": "^5.2.11",
+    "vite-plugin-dts": "^3.9.1",
     "vite-plugin-lib-inject-css": "^2.0.1"
   },
   "peerDependencies": {
@@ -46,6 +44,7 @@
   "dependencies": {
     "include-media": "2.0.0",
     "sanitize.css": "13.0.0",
+    "typed-scss-modules": "^8.0.1",
     "vite-tsconfig-paths": "^4.3.2"
   }
 }

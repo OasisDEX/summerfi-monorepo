@@ -5,5 +5,5 @@ export type AtomProps<AllowedHtmlTags, ClassNames> = DetailedHTMLProps<
   HTMLElement
 > & {
   as?: AllowedHtmlTags
-  variant: ClassNames
+  variant?: ClassNames
 }

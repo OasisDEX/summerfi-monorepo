@@ -5,17 +5,19 @@ import { extname, relative, resolve } from 'path'
 import { defineConfig } from 'vite'
 import { libInjectCss } from 'vite-plugin-lib-inject-css'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import dts from 'vite-plugin-dts'
 
 const fileSliceNumber = 0
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), tsconfigPaths(), libInjectCss()],
+  plugins: [
+    react(),
+    tsconfigPaths(),
+    libInjectCss(),
+    dts({ outDir: 'dist/types', insertTypesEntry: true, strictOutput: true }),
+  ],
   build: {
-    watch: {
-      skipWrite: true,
-    },
-    copyPublicDir: false,
     lib: {
       // eslint-disable-next-line no-undef
       entry: resolve(__dirname, 'src/index.ts'),

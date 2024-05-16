@@ -5,13 +5,13 @@ import Link from 'next/link'
 
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
 
-export default function HomePage() {
+export default function ComponentsTestPage() {
   return (
     <MasterPage>
       <div
         style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'flex-start' }}
       >
-        <Text>Text component</Text>
+        <Text>Text component lol</Text>
         <Text as="p">Text component as p</Text>
         <Text as="p" variant="p1">
           Text component as p with p1 variant

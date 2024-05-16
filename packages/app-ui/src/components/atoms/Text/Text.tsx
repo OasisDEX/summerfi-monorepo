@@ -21,7 +21,7 @@ type AllowedHtmlTags =
   | 'span'
 
 export const Text: FC<AtomProps<AllowedHtmlTags, ClassNames>> = forwardRef(
-  ({ as = 'span', className, variant, ...props }, ref) => {
+  ({ as = 'span', className, variant = 'p1', ...props }, ref) => {
     const Component = as
 
     return (

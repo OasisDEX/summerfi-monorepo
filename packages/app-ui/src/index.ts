@@ -1,6 +1,4 @@
 export { Button } from './components/atoms/Button/Button'
-export { ButtonExample } from './ButtonExample'
 export { Footer } from './components/layout/Footer/Footer'
 export { GlobalStyles } from './GlobalStyles'
 export { Text } from './components/atoms/Text/Text'
-export { TitleExample } from './TitleExample'

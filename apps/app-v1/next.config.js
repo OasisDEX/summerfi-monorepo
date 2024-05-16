@@ -176,12 +176,12 @@ const baseConfig = {
       // handles paths that are available in app-v2
       beforeFiles: [
         {
-          source: '/app-v2/:call*',
-          destination: 'http://localhost:3001/app-v2/:call*',
-        },
-        {
           source: '/components-test',
           destination: 'http://localhost:3001/app-v2/components-test',
+        },
+        {
+          source: '/app-v2/:call*',
+          destination: 'http://localhost:3001/app-v2/:call*',
         },
       ],
     }
