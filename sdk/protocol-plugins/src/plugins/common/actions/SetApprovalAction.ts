@@ -1,11 +1,11 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { IAddress, ITokenAmount } from '@summerfi/sdk-common/common'
 
-export class SetApprovalAction extends BaseAction {
-  public readonly config = {
+export class SetApprovalAction extends BaseAction<typeof SetApprovalAction.Config> {
+  public static readonly Config = {
     name: 'SetApproval',
     version: 3,
-    parametersAbi: '(address asset, address delegate, uint256 amount, bool sumAmounts)',
+    parametersAbi: ['(address asset, address delegate, uint256 amount, bool sumAmounts)'],
     storageInputs: ['asset', 'delegate', 'approvalAmount'],
     storageOutputs: [],
   } as const
@@ -23,11 +23,15 @@ export class SetApprovalAction extends BaseAction {
         {
           asset: params.approvalAmount.token.address.value,
           delegate: params.delegate.value,
-          amount: params.approvalAmount.toBaseUnit(),
+          amount: BigInt(params.approvalAmount.toBaseUnit()),
           sumAmounts: params.sumAmounts,
         },
       ],
       mapping: paramsMapping,
     })
+  }
+
+  public get config() {
+    return SetApprovalAction.Config
   }
 }

@@ -51,7 +51,7 @@ describe('Pull TokenAction Builder', () => {
 
     const pullTokenCalldata = new PullTokenAction().encodeCall({
       pullAmount: pullAmount,
-      pullTo: builderParams.positionsManager.address,
+      pullFrom: builderParams.positionsManager.address,
     })
 
     expect(customData).toBeUndefined()

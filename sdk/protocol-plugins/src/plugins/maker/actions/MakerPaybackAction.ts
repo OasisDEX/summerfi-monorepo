@@ -3,11 +3,11 @@ import { IPosition, ITokenAmount } from '@summerfi/sdk-common/common'
 import { IPositionsManager } from '@summerfi/sdk-common/orders'
 import { isMakerPositionId } from '../interfaces/IMakerPositionId'
 
-export class MakerPaybackAction extends BaseAction {
-  public readonly config = {
+export class MakerPaybackAction extends BaseAction<typeof MakerPaybackAction.Config> {
+  public static readonly Config = {
     name: 'MakerPayback',
     version: 0,
-    parametersAbi: '(uint256 vaultId, address userAddress, uint256 amount, bool paybackAll)',
+    parametersAbi: ['(uint256 vaultId, address userAddress, uint256 amount, bool paybackAll)'],
     storageInputs: ['vaultId'],
     storageOutputs: ['amountPaidBack'],
   } as const
@@ -28,13 +28,17 @@ export class MakerPaybackAction extends BaseAction {
     return this._encodeCall({
       arguments: [
         {
-          vaultId: params.position.id.vaultId,
+          vaultId: BigInt(params.position.id.vaultId),
           userAddress: params.positionsManager.address.value,
-          amount: params.amount.toBaseUnit(),
+          amount: BigInt(params.amount.toBaseUnit()),
           paybackAll: params.paybackAll,
         },
       ],
       mapping: paramsMapping,
     })
+  }
+
+  public get config() {
+    return MakerPaybackAction.Config
   }
 }

@@ -1,12 +1,13 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { IPosition } from '@summerfi/sdk-common/common'
 
-export class PositionCreatedAction extends BaseAction {
-  public readonly config = {
+export class PositionCreatedAction extends BaseAction<typeof PositionCreatedAction.Config> {
+  public static Config = {
     name: 'PositionCreated',
     version: 0,
-    parametersAbi:
+    parametersAbi: [
       '(string protocol, string positionType, address collateralToken, address debtToken)',
+    ],
     storageInputs: [],
     storageOutputs: [],
   } as const
@@ -26,5 +27,9 @@ export class PositionCreatedAction extends BaseAction {
       ],
       mapping: paramsMapping,
     })
+  }
+
+  public get config() {
+    return PositionCreatedAction.Config
   }
 }
