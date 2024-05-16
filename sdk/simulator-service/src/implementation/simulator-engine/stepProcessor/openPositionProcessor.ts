@@ -6,7 +6,7 @@ export const openPositionProcessor: StepOutputProcessor<steps.OpenPosition> = as
   return {
     ...step,
     outputs: {
-      position: newEmptyPositionFromPool(step.inputs.pool)
+      position: newEmptyPositionFromPool(step.inputs.pool),
     },
   }
 }

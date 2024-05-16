@@ -8,10 +8,7 @@ export function flashloanReducer(
 ): ISimulationState {
   return {
     ...state,
-    steps: [
-      ...state.steps,
-      step,
-    ],
+    steps: [...state.steps, step],
     balances: addBalance(step.inputs.amount, state.balances),
   }
 }

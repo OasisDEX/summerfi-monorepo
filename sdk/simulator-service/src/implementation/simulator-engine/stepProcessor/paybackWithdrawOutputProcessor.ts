@@ -12,7 +12,7 @@ export const paybackWithdrawOutputProcessor: StepOutputProcessor<
 
   const withdrawAmount =
     getValueFromReference(step.inputs.withdrawAmount).amount >
-      step.inputs.position.collateralAmount.amount
+    step.inputs.position.collateralAmount.amount
       ? step.inputs.position.collateralAmount
       : getValueFromReference(step.inputs.withdrawAmount)
 

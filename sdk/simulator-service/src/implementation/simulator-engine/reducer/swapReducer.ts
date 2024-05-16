@@ -12,10 +12,7 @@ export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISim
 
   return {
     ...state,
-    steps: [
-      ...state.steps,
-      step,
-    ],
+    steps: [...state.steps, step],
     swaps: [
       ...state.swaps,
       {

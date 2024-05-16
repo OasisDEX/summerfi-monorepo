@@ -21,10 +21,7 @@ export function paybackWithdrawReducer(
         getValueFromReference(step.inputs.withdrawAmount),
       ),
     },
-    steps: [
-      ...state.steps,
-      step,
-    ],
+    steps: [...state.steps, step],
     balances: afterWithdraw,
   }
 }

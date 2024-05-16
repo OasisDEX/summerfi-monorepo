@@ -8,10 +8,7 @@ export function pullTokenReducer(
 ): ISimulationState {
   return {
     ...state,
-    steps: [
-      ...state.steps,
-      step,
-    ],
+    steps: [...state.steps, step],
     balances: addBalance(getValueFromReference(step.inputs.amount), state.balances),
   }
 }

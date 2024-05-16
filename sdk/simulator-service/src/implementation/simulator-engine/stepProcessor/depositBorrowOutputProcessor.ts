@@ -7,7 +7,7 @@ export const depositBorrowOutputProcessor: StepOutputProcessor<steps.DepositBorr
 ) => {
   const depositAmount = step.inputs.additionalDeposit
     ? getValueFromReference(step.inputs.additionalDeposit).add(
-      getValueFromReference(step.inputs.depositAmount),
+        getValueFromReference(step.inputs.depositAmount),
       )
     : getValueFromReference(step.inputs.depositAmount)
 

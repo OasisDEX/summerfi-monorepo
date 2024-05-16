@@ -3,32 +3,32 @@ import { makeStrategy } from '../../implementation/utils'
 
 export const refinanceLendingToLendingSamePairStrategy = makeStrategy([
   {
-    name: "Flashloan",
+    name: 'Flashloan',
     step: SimulationSteps.Flashloan,
     optional: false,
   },
   {
-    name: "PaybackWithdrawFromSourcePosition",
+    name: 'PaybackWithdrawFromSourcePosition',
     step: SimulationSteps.PaybackWithdraw,
     optional: false,
   },
   {
-    name: "OpenTargetPosition",
+    name: 'OpenTargetPosition',
     step: SimulationSteps.OpenPosition,
     optional: false,
   },
   {
-    name: "DepositBorrowToTargetPosition",
+    name: 'DepositBorrowToTargetPosition',
     step: SimulationSteps.DepositBorrow,
     optional: false,
   },
   {
-    name: "RepayFlashloan",
+    name: 'RepayFlashloan',
     step: SimulationSteps.RepayFlashloan,
     optional: false,
   },
   {
-    name: "NewPositionEvent",
+    name: 'NewPositionEvent',
     step: SimulationSteps.NewPositionEvent,
     optional: false,
   },

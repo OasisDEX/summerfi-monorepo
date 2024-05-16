@@ -3,27 +3,27 @@ import { makeStrategy } from '../../implementation/utils'
 
 export const refinanceLendingToLendingNoDebtStrategy = makeStrategy([
   {
-    name: "PaybackWithdrawFromSourcePosition",
+    name: 'PaybackWithdrawFromSourcePosition',
     step: SimulationSteps.PaybackWithdraw,
     optional: false,
   },
   {
-    name: "SwapCollateralFromSourcePosition",
+    name: 'SwapCollateralFromSourcePosition',
     step: SimulationSteps.Swap,
     optional: true,
   },
   {
-    name: "OpenTargetPosition",
+    name: 'OpenTargetPosition',
     step: SimulationSteps.OpenPosition,
     optional: false,
   },
   {
-    name: "DepositBorrowToTargetPosition",
+    name: 'DepositBorrowToTargetPosition',
     step: SimulationSteps.DepositBorrow,
     optional: false,
   },
   {
-    name: "NewPositionEvent",
+    name: 'NewPositionEvent',
     step: SimulationSteps.NewPositionEvent,
     optional: false,
   },

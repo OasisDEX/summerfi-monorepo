@@ -23,5 +23,5 @@ export const ActionBuildersConfig: ActionBuildersMap = {
   [SimulationSteps.ReturnFunds]: ReturnFundsActionBuilder,
   [SimulationSteps.NewPositionEvent]: PositionCreatedActionBuilder,
   [SimulationSteps.Import]: ImportPositionActionBuilder,
-  [SimulationSteps.OpenPosition]: OpenPositionActionBuilder
+  [SimulationSteps.OpenPosition]: OpenPositionActionBuilder,
 }
