@@ -3,7 +3,7 @@ import {
   refinanceLendingToLendingAnyPair,
   refinanceLendingToLendingSamePair,
 } from '../src/strategies'
-import { Percentage, newEmptyPositionFromPool } from '@summerfi/sdk-common/common'
+import { Percentage } from '@summerfi/sdk-common/common'
 import {
   otherTestCollateral,
   otherTestDebt,
@@ -22,7 +22,7 @@ describe('Refinance', () => {
       simulation = await refinanceLendingToLendingSamePair(
         {
           sourcePosition: testSourcePosition,
-          targetPosition: newEmptyPositionFromPool(testTargetLendingPool),
+          targetPool: testTargetLendingPool,
           slippage: Percentage.createFrom({ value: 1 }),
         },
         mockRefinanceContext,
@@ -76,7 +76,7 @@ describe('Refinance', () => {
       simulation = await refinanceLendingToLendingAnyPair(
         {
           sourcePosition: testSourcePosition,
-          targetPosition: newEmptyPositionFromPool(testTargetLendingPoolRequiredSwaps),
+          targetPool: testTargetLendingPoolRequiredSwaps,
           slippage: Percentage.createFrom({ value: 1 }),
         },
         mockRefinanceContextRequiredSwaps,

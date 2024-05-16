@@ -5,30 +5,13 @@ import {
   ChainFamilyMap,
   ChainInfo,
   Position,
-  PositionId,
   PositionType,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
-import { IPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { ActionNames } from '@summerfi/deployment-types'
-import { BaseAction } from '../src/actions/BaseAction'
-import { ActionCall } from '../src/actions/Types'
+import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { IPoolIdData } from '@summerfi/sdk-common'
-
-class DerivedAction extends BaseAction {
-  public readonly config = {
-    name: 'PullToken' as ActionNames,
-    version: 8,
-    parametersAbi: 'address, address, uint256',
-    storageInputs: ['someInput1', 'someInput2', 'otherInput'],
-    storageOutputs: ['someOutput1', 'someOutput2', 'otherOutput'],
-  }
-
-  public encodeCall(params: { arguments: unknown[]; mapping?: number[] }): ActionCall {
-    return this._encodeCall(params)
-  }
-}
+import { DerivedAction } from '@summerfi/testing-utils/mocks/actions/DerivedAction'
 
 describe('Execution Storage Mapper', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -410,7 +393,7 @@ describe('Execution Storage Mapper', () => {
         step: derivedStep,
         action: derivedAction,
         connectedInputs: {
-          depositAmount: 'inputDoesNotExist',
+          depositAmount: 'inputDoesNotExist' as unknown as 'someInput1',
         },
         connectedOutputs: {},
       }),

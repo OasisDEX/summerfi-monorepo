@@ -5,14 +5,16 @@ import type {
   ITokenAmount,
   IChainInfo,
 } from '@summerfi/sdk-common/common'
-import type { QuoteData, SwapData } from '@summerfi/sdk-common/swap'
+import type { QuoteData, SwapData, SwapProviderType } from '@summerfi/sdk-common/swap'
+import { IManagerWithProviders } from '@summerfi/sdk-server-common'
+import { ISwapProvider } from './ISwapProvider'
 
 /**
  * @name ISwapManager
  * @description This is the highest level interface that will choose and call
  * appropriate provider for a swap
  */
-export interface ISwapManager {
+export interface ISwapManager extends IManagerWithProviders<SwapProviderType, ISwapProvider> {
   /**
    * @name getSwapDataExactInput
    * @description Returns the data needed to perform a swap between two tokens, by providing the

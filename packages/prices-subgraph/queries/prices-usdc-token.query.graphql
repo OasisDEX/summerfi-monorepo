@@ -1,4 +1,4 @@
-query PricesUsdcToken($token: Bytes!) {
+query PricesUsdcToken($token: Bytes!, $tokenID: ID!) {
   usdcPrice: prices(
     where: { token_: { symbol: "USDC" } }
     orderBy: timestamp
@@ -15,6 +15,11 @@ query PricesUsdcToken($token: Bytes!) {
       }
     }
     oracleType
+  }
+  token(id: $tokenID) {
+    symbol
+    id
+    address
   }
   tokenInUSDC: derivedPrices(
     where: { token_: { address: $token }, denomination_: { symbol: "USDC" } }

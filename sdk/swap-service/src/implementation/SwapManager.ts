@@ -9,6 +9,7 @@ import type {
 import { ChainId, Percentage } from '@summerfi/sdk-common/common'
 import { ISwapProvider, ISwapManager } from '@summerfi/swap-common/interfaces'
 import type { QuoteData, SwapData, SwapProviderType } from '@summerfi/sdk-common/swap'
+import { ManagerWithProvidersBase } from '@summerfi/sdk-server-common'
 
 /**
  * @typedef SwapManagerProviderConfig
@@ -24,18 +25,13 @@ export type SwapManagerProviderConfig = {
  * @class SwapManager
  * @see ISwapManager
  */
-export class SwapManager implements ISwapManager {
-  private _providersByChainId: Map<ChainId, ISwapProvider[]>
-  private _providersByType: Map<SwapProviderType, ISwapProvider>
-
+export class SwapManager
+  extends ManagerWithProvidersBase<SwapProviderType, ISwapProvider>
+  implements ISwapManager
+{
   /** CONSTRUCTOR */
-  constructor(providersConfig: SwapManagerProviderConfig[]) {
-    this._providersByChainId = new Map()
-    this._providersByType = new Map()
-
-    for (const config of providersConfig) {
-      this._registerProvider(config.provider, config.chainIds)
-    }
+  constructor(params: { providers: ISwapProvider[] }) {
+    super(params)
   }
 
   /** METHODS */
@@ -82,48 +78,5 @@ export class SwapManager implements ISwapManager {
     return Percentage.createFrom({
       value: 0.2,
     })
-  }
-
-  /** PRIVATE */
-
-  /**
-   * Register a swap provider for the given chain IDs.
-   * @param provider Swap provider instance
-   * @param forChainIds Chain IDs supported by the provider
-   */
-  private _registerProvider(provider: ISwapProvider, forChainIds: number[]): void {
-    for (const chainId of forChainIds) {
-      const providers = this._providersByChainId.get(chainId) || []
-      providers.push(provider)
-      this._providersByChainId.set(chainId, providers)
-    }
-
-    this._providersByType.set(provider.type, provider)
-  }
-
-  /**
-   * Get the best provider for the given parameters.
-   * @param params Parameters to determine the best provider
-   * @returns Best provider instance or undefined if no provider is available
-   */
-  private _getBestProvider(params: {
-    chainInfo: IChainInfo
-    forceUseProvider?: SwapProviderType
-  }): Maybe<ISwapProvider> {
-    if (params.forceUseProvider) {
-      const provider = this._providersByType.get(params.forceUseProvider)
-      if (provider) {
-        return provider
-      }
-    }
-
-    const providers = this._providersByChainId.get(params.chainInfo.chainId) || []
-    if (providers.length === 0) {
-      return undefined
-    }
-
-    // For now, we just return the first provider. In the future, we can implement a logic to
-    // choose the best provider based on the input parameters or on the swap provider's capabilities.
-    return providers[0]
   }
 }

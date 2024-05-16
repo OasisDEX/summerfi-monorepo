@@ -3,7 +3,7 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 import { IMakerLendingPoolId, IMakerLendingPoolIdData } from '../interfaces/IMakerLendingPoolId'
 import { ILKType } from '../enums/ILKType'
 import { MakerProtocol } from './MakerProtocol'
-import { IPrintable } from '@summerfi/sdk-common/common'
+import { IPrintable, IToken, Token } from '@summerfi/sdk-common/common'
 
 /**
  * @class MakerLendingPoolId
@@ -12,6 +12,8 @@ import { IPrintable } from '@summerfi/sdk-common/common'
 export class MakerLendingPoolId extends LendingPoolId implements IMakerLendingPoolId, IPrintable {
   readonly protocol: MakerProtocol
   readonly ilkType: ILKType
+  readonly collateralToken: IToken
+  readonly debtToken: IToken
 
   /** Factory method */
   public static createFrom(params: IMakerLendingPoolIdData): MakerLendingPoolId {
@@ -24,6 +26,8 @@ export class MakerLendingPoolId extends LendingPoolId implements IMakerLendingPo
 
     this.protocol = MakerProtocol.createFrom(params.protocol)
     this.ilkType = params.ilkType
+    this.collateralToken = Token.createFrom(params.collateralToken)
+    this.debtToken = Token.createFrom(params.debtToken)
   }
 
   toString(): string {

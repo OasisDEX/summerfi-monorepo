@@ -20,6 +20,7 @@ export type MakerContractNames =
   | 'Dog'
   | 'Vat'
   | 'McdGov'
+  | 'IlkRegistry'
 
 export type MakerProtocolJoins =
   | 'MCD_JOIN_DAI'

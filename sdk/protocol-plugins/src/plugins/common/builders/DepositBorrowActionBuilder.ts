@@ -5,7 +5,7 @@ import { delegateToProtocolActionBuilder } from '../../utils/DelegateToProtocolA
 export const DepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrowStep> = async (
   params,
 ): Promise<void> => {
-  delegateToProtocolActionBuilder({
+  return delegateToProtocolActionBuilder({
     protocolName: params.step.inputs.position.pool.id.protocol.name,
     actionBuilderParams: params,
   })

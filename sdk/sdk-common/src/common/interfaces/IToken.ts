@@ -1,38 +1,22 @@
-import { AddressSchema, IAddress, IAddressData } from './IAddress'
-import { ChainInfoSchema, IChainInfo, IChainInfoData } from './IChainInfo'
+import { AddressDataSchema, IAddress } from './IAddress'
+import { ChainInfoDataSchema, IChainInfo } from './IChainInfo'
 import { IPrintable } from './IPrintable'
 import { z } from 'zod'
 
 /**
- * @name ITokenData
- * @description Represents a blockchain token
- *
- * Tokens are uniquely identified by their address and chain information
+ * @name IToken
+ * @description Represents an token in a Chain, typically used to represent ERC-20 tokens
  */
-export interface ITokenData {
+export interface IToken extends ITokenData, IPrintable {
   /** Chain where the token is deployed */
-  readonly chainInfo: IChainInfoData
+  readonly chainInfo: IChainInfo
   /** Token address */
-  readonly address: IAddressData
+  readonly address: IAddress
   /** Token symbol, usually a short representation of name and used in tickers */
   readonly symbol: string
   /** Full token name */
   readonly name: string
   /** Number of decimals for the token */
-  readonly decimals: number
-}
-
-/**
- * @name IToken
- * @description Interface for the implementors of the token
- *
- * This interface is used to add all the methods that the interface supports
- */
-export interface IToken extends ITokenData, IPrintable {
-  readonly chainInfo: IChainInfo
-  readonly address: IAddress
-  readonly symbol: string
-  readonly name: string
   readonly decimals: number
 
   /**
@@ -49,25 +33,33 @@ export interface IToken extends ITokenData, IPrintable {
 /**
  * @description Zod schema for IToken
  */
-export const TokenSchema = z.object({
-  chainInfo: ChainInfoSchema,
-  address: AddressSchema,
+export const TokenDataSchema = z.object({
+  chainInfo: ChainInfoDataSchema,
+  address: AddressDataSchema,
   symbol: z.string(),
   name: z.string(),
   decimals: z.number(),
 })
 
 /**
+ * Type for the data part of the IToken interface
+ */
+export type ITokenData = Readonly<z.infer<typeof TokenDataSchema>>
+
+/**
  * @description Type guard for IToken
- * @param maybeToken
+ * @param maybeTokenData
  * @returns true if the object is an IToken
  */
-export function isToken(maybeToken: unknown): maybeToken is ITokenData {
-  return TokenSchema.safeParse(maybeToken).success
+export function isToken(maybeTokenData: unknown): maybeTokenData is IToken {
+  return isTokenData(maybeTokenData)
 }
 
 /**
- * Checker to make sure that the schema is aligned with the interface
+ * @description Type guard for ITokenData
+ * @param maybeTokenData
+ * @returns true if the object is an ITokenData
  */
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: ITokenData = {} as z.infer<typeof TokenSchema>
+export function isTokenData(maybeTokenData: unknown): maybeTokenData is ITokenData {
+  return TokenDataSchema.safeParse(maybeTokenData).success
+}

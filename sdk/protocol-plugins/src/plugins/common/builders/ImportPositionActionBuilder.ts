@@ -7,7 +7,7 @@ export const ImportPositionActionBuilder: ActionBuilder<steps.ImportStep> = asyn
 ): Promise<void> => {
   const externalPosition = params.step.inputs.externalPosition
 
-  delegateToProtocolActionBuilder({
+  return delegateToProtocolActionBuilder({
     protocolName: externalPosition.position.pool.id.protocol.name,
     actionBuilderParams: params,
   })

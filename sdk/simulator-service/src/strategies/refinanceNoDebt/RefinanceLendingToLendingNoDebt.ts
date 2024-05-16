@@ -5,7 +5,7 @@ import {
   TokenTransferTargetType,
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
-import { Percentage, Position, TokenAmount } from '@summerfi/sdk-common/common'
+import { Percentage, TokenAmount } from '@summerfi/sdk-common/common'
 import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
@@ -20,13 +20,16 @@ export async function refinanceLendingToLendingNoDebt(
   ISimulation<SimulationType.RefinanceNoDebt | SimulationType.RefinanceNoDebtDifferentCollateral>
 > {
   // args validation
-  if (!isLendingPool(args.targetPosition.pool)) {
+  if (!isLendingPool(args.sourcePosition.pool)) {
+    throw new Error('Source pool is not a lending pool')
+  }
+  if (!isLendingPool(args.targetPool)) {
     throw new Error('Target pool is not a lending pool')
   }
 
-  const position = args.sourcePosition as Position
-  const sourcePool = await dependencies.protocolManager.getLendingPool(args.sourcePosition.pool.id)
-  const targetPool = await dependencies.protocolManager.getLendingPool(args.targetPosition.pool.id)
+  const position = args.sourcePosition
+  const sourcePool = args.sourcePosition.pool
+  const targetPool = args.targetPool
 
   if (!isLendingPool(targetPool)) {
     throw new Error('Target pool is not a lending pool')
@@ -38,9 +41,7 @@ export async function refinanceLendingToLendingNoDebt(
     amount: '0',
   })
 
-  const isCollateralSwapSkipped = !targetPool.id.collateralToken.equals(
-    sourcePool.id.collateralToken,
-  )
+  const isCollateralSwapSkipped = targetPool.collateralToken.equals(sourcePool.collateralToken)
 
   const simulation = await simulator
     .next(async () => ({
@@ -59,7 +60,7 @@ export async function refinanceLendingToLendingNoDebt(
         inputs: await getSwapStepData({
           chainInfo: position.pool.id.protocol.chainInfo,
           fromAmount: position.collateralAmount,
-          toToken: targetPool.id.collateralToken,
+          toToken: targetPool.collateralToken,
           slippage: Percentage.createFrom({ value: args.slippage.value }),
           swapManager: dependencies.swapManager,
           oracleManager: dependencies.oracleManager,
@@ -76,7 +77,7 @@ export async function refinanceLendingToLendingNoDebt(
           : ctx.getReference(['CollateralSwap', 'received']),
         borrowAmount: TokenAmount.createFrom({
           amount: '0',
-          token: targetPool.id.debtToken,
+          token: targetPool.debtToken,
         }),
         position: newEmptyPositionFromPool(targetPool),
         borrowTargetType: TokenTransferTargetType.PositionsManager,

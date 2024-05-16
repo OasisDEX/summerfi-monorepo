@@ -8,7 +8,7 @@ import { DeploymentIndex } from '@summerfi/deployment-utils'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
 import { Address, AddressValue, ChainFamilyMap, ChainInfo } from '@summerfi/sdk-common/common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import { SwapManagerMock, UserMock } from '@summerfi/testing-utils'
+import { AddressBookManagerMock, SwapManagerMock, UserMock } from '@summerfi/testing-utils'
 import { IPositionsManager } from '@summerfi/sdk-common/orders'
 import { SetupDeployments } from '../utils/SetupDeployments'
 import { getRefinanceSimulation } from '../utils/RefinanceSimulation/RefinanceSimulation'
@@ -45,7 +45,10 @@ import { IOracleManager } from '@summerfi/oracle-common'
 describe('Order Planner Service', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
   let orderPlannerService: OrderPlannerService
-  const deploymentsIndex: DeploymentIndex = SetupDeployments()
+  const addressBookManager = new AddressBookManagerMock()
+
+  SetupDeployments(chainInfo, addressBookManager)
+
   const user: IUser = new UserMock({
     chainInfo: chainInfo,
     walletAddress: Address.createFromEthereum({
@@ -75,44 +78,12 @@ describe('Order Planner Service', () => {
         }),
         tokensManager: undefined as unknown as ITokensManager,
         oracleManager: undefined as unknown as IOracleManager,
-        deployments: deploymentsIndex,
+        addressBookManager: addressBookManager,
         swapManager: swapManager,
       },
-      deploymentConfigTag: 'standard',
     })
 
-    orderPlannerService = new OrderPlannerService({
-      deployments: deploymentsIndex,
-    })
-  })
-
-  it('should throw error if deployment is not found', async () => {
-    const wrongOrderPlannerService = new OrderPlannerService({
-      deployments: deploymentsIndex,
-      deploymentConfigTag: 'somethingWrong',
-    })
-
-    const sourcePosition = getMakerPosition()
-    const targetPosition = getSparkPosition()
-
-    const refinanceSimulation: ISimulation<SimulationType.Refinance> = getRefinanceSimulation({
-      sourcePosition,
-      targetPosition,
-    })
-
-    try {
-      await wrongOrderPlannerService.buildOrder({
-        user,
-        positionsManager,
-        protocolsRegistry,
-        swapManager,
-        simulation: refinanceSimulation,
-      })
-
-      assert.fail('Should throw error')
-    } catch (error: unknown) {
-      expect(getErrorMessage(error)).toEqual('No deployment found for chain Mainnet')
-    }
+    orderPlannerService = new OrderPlannerService()
   })
 
   it('should process refinance simulation correctly', async () => {
@@ -121,7 +92,7 @@ describe('Order Planner Service', () => {
 
     const refinanceSimulation: ISimulation<SimulationType.Refinance> = getRefinanceSimulation({
       sourcePosition,
-      targetPosition,
+      targetPool: targetPosition,
     })
 
     const order = await orderPlannerService.buildOrder({
@@ -130,15 +101,12 @@ describe('Order Planner Service', () => {
       protocolsRegistry,
       swapManager,
       simulation: refinanceSimulation,
+      addressBookManager,
     })
 
     assert(order, 'Order is not defined')
     expect(order.simulation).toEqual(refinanceSimulation)
     expect(order.transactions.length).toBe(1)
-
-    const deployments = deploymentsIndex[`${chainInfo.name}.standard`]
-    assert(deployments, 'Deployments is not defined')
-
     expect(order.transactions[0].transaction.target.value).toEqual(positionsManager.address.value)
 
     const positionsManagerParams = decodePositionsManagerCalldata({
@@ -150,9 +118,11 @@ describe('Order Planner Service', () => {
       'Transaction calldata could not be decoded for Positions Manager',
     )
 
-    const strategyExecutorAddress = Address.createFromEthereum({
-      value: deployments.contracts.OperationExecutor.address as AddressValue,
+    const strategyExecutorAddress = await addressBookManager.getAddressByName({
+      chainInfo: chainInfo,
+      name: 'OperationExecutor',
     })
+    assert(strategyExecutorAddress, 'OperationExecutor address is not defined')
 
     expect(positionsManagerParams.target.value).toEqual(strategyExecutorAddress.value)
 
@@ -211,12 +181,18 @@ describe('Order Planner Service', () => {
       calldata: flashloanSubcalls[1].callData,
     })
 
+    const mcdJoinEthAAddress = await addressBookManager.getAddressByName({
+      chainInfo,
+      name: 'MCD_JOIN_ETH_A',
+    })
+    assert(mcdJoinEthAAddress, 'MCD_JOIN_ETH_A address is not defined')
+
     assert(makerWithdrawAction, 'MakerWithdrawAction is not defined')
     expect(makerWithdrawAction.args).toEqual([
       {
         vaultId: BigInt(sourcePosition.id.vaultId),
         userAddress: positionsManager.address.value,
-        joinAddr: deployments.dependencies.MCD_JOIN_ETH_A.address,
+        joinAddr: mcdJoinEthAAddress.value,
         amount: BigInt(sourcePosition.collateralAmount.toBaseUnit()),
       },
     ])
@@ -227,12 +203,18 @@ describe('Order Planner Service', () => {
       calldata: flashloanSubcalls[2].callData,
     })
 
+    const sparkLendingPoolAddress = await addressBookManager.getAddressByName({
+      chainInfo,
+      name: 'SparkLendingPool',
+    })
+    assert(sparkLendingPoolAddress, 'SparkLendingPool address is not defined')
+
     assert(setApprovalAction, 'SetApprovalAction is not defined')
     expect(setApprovalAction.args).toEqual([
       {
         asset: sourcePosition.collateralAmount.token.address.value,
         amount: BigInt(sourcePosition.collateralAmount.toBaseUnit()),
-        delegate: deployments.dependencies.SparkLendingPool.address,
+        delegate: sparkLendingPoolAddress?.value,
         sumAmounts: false,
       },
     ])

@@ -7,7 +7,7 @@ import {
 } from 'viem'
 import { automationBotAbi } from '@summerfi/abis'
 import { MorphoBlueAutoBuyTriggerData } from '~types'
-import { maxUnit256, PositionLike, CurrentTriggerLike } from '@summerfi/triggers-shared'
+import { CurrentTriggerLike, maxUnit256, PositionLike } from '@summerfi/triggers-shared'
 
 import { DEFAULT_DEVIATION } from './defaults'
 import { TriggerTransactions } from './types'
@@ -29,8 +29,8 @@ export const encodeMorphoBlueAutoBuy = (
       'bytes32 operationName, ' +
       // Trigger specific data
       'bytes32 poolId, ' +
-      'uint8 quoteDecimals, ' +
-      'uint8 collateralDecimals, ' +
+      'uint8 quoteDecimals, ' + // The field is not used. It's here because the trigger wasn't redeployed.
+      'uint8 collateralDecimals, ' + // The field is not used. It's here because the trigger wasn't redeployed.
       'uint256 executionLtv, ' +
       'uint256 targetLTV, ' +
       'uint256 maxBuyPrice, ' +

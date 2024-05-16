@@ -1,224 +1,208 @@
 import { Token } from '@summerfi/sdk-common/common'
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import {
-  AllowedProtocolNames,
-  IProtocolPluginContextWithContractDef,
-} from './AAVEv3LikeBuilderTypes'
+import { IChainInfo } from '@summerfi/sdk-common'
+import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
+import { ChainContractsProvider, GenericAbiMap } from '../../../utils/ChainContractProvider'
+import { Abi } from 'viem'
 
-// TODO: Update ContractProvider to work based on ChainId
-export async function fetchReservesTokens(
-  ctx: IProtocolPluginContextWithContractDef,
-  protocolName: AllowedProtocolNames,
+export async function fetchReservesTokens<
+  ContractNames extends string,
+  ContractsAbiMap extends GenericAbiMap<ContractNames>,
+>(
+  ctx: IProtocolPluginContext,
+  chainInfo: IChainInfo,
+  chainContractsProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>,
 ) {
-  switch (protocolName) {
-    case ProtocolName.AAVEv3: {
-      const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
-      const [rawReservesTokenList] = await ctx.provider.multicall({
-        contracts: [
-          {
-            abi: poolDataProviderDef.abi,
-            address: poolDataProviderDef.address,
-            functionName: 'getAllReservesTokens',
-            args: [],
-          },
-        ],
-        allowFailure: false,
-      })
-
-      return rawReservesTokenList
-    }
-    case ProtocolName.Spark: {
-      const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
-      const [rawReservesTokenList] = await ctx.provider.multicall({
-        contracts: [
-          {
-            abi: poolDataProviderDef.abi,
-            address: poolDataProviderDef.address,
-            functionName: 'getAllReservesTokens',
-            args: [],
-          },
-        ],
-        allowFailure: false,
-      })
-
-      return rawReservesTokenList
-    }
-    default:
-      throw new Error(`Unsupported protocol supplied ${protocolName}`)
+  const contractAbi = chainContractsProvider.getContractAbi('PoolDataProvider' as ContractNames)
+  if (!contractAbi) {
+    throw new Error('PoolDataProvider ABI not found')
   }
+
+  const contractAddress = await ctx.addressBookManager.getAddressByName({
+    chainInfo,
+    name: 'PoolDataProvider',
+  })
+  if (!contractAddress) {
+    throw new Error(`PoolDataProvider address not found in address book for chain ${chainInfo}`)
+  }
+
+  const [rawReservesTokenList] = await ctx.provider.multicall({
+    contracts: [
+      {
+        abi: contractAbi as Abi,
+        address: contractAddress.value,
+        functionName: 'getAllReservesTokens',
+        args: [],
+      },
+    ],
+    allowFailure: false,
+  })
+
+  return rawReservesTokenList
 }
-export async function fetchEmodeCategoriesForReserves(
-  ctx: IProtocolPluginContextWithContractDef,
+export async function fetchEmodeCategoriesForReserves<
+  ContractNames extends string,
+  ContractsAbiMap extends GenericAbiMap<ContractNames>,
+>(
+  ctx: IProtocolPluginContext,
   tokensList: Token[],
-  protocolName: AllowedProtocolNames,
+  chainInfo: IChainInfo,
+  chainContractsProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>,
 ) {
-  switch (protocolName) {
-    case ProtocolName.AAVEv3: {
-      const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
-      const contractCalls = tokensList.map((token) => ({
-        abi: poolDataProviderDef.abi,
-        address: poolDataProviderDef.address,
-        functionName: 'getReserveEModeCategory' as const,
-        args: [token.address.value],
-      }))
-
-      return await ctx.provider.multicall({
-        contracts: contractCalls,
-        allowFailure: false,
-      })
-    }
-    case ProtocolName.Spark: {
-      const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
-      const contractCalls = tokensList.map((token) => ({
-        abi: poolDataProviderDef.abi,
-        address: poolDataProviderDef.address,
-        functionName: 'getReserveEModeCategory' as const,
-        args: [token.address.value],
-      }))
-
-      return await ctx.provider.multicall({
-        contracts: contractCalls,
-        allowFailure: false,
-      })
-    }
-    default:
-      throw new Error(`Unsupported protocol supplied ${protocolName}`)
+  const contractAbi = chainContractsProvider.getContractAbi('PoolDataProvider' as ContractNames)
+  if (!contractAbi) {
+    throw new Error('PoolDataProvider ABI not found')
   }
+
+  const contractAddress = await ctx.addressBookManager.getAddressByName({
+    chainInfo,
+    name: 'PoolDataProvider',
+  })
+  if (!contractAddress) {
+    throw new Error(`PoolDataProvider address not found in address book for chain ${chainInfo}`)
+  }
+
+  const contractCalls = tokensList.map((token) => ({
+    abi: contractAbi as Abi,
+    address: contractAddress.value,
+    functionName: 'getReserveEModeCategory' as const,
+    args: [token.address.value],
+  }))
+
+  return await ctx.provider.multicall({
+    contracts: contractCalls,
+    allowFailure: false,
+  })
 }
-export async function fetchAssetConfigurationData(
-  ctx: IProtocolPluginContextWithContractDef,
+export async function fetchAssetConfigurationData<
+  ContractNames extends string,
+  ContractsAbiMap extends GenericAbiMap<ContractNames>,
+>(
+  ctx: IProtocolPluginContext,
   tokensList: Token[],
-  protocolName: AllowedProtocolNames,
+  chainInfo: IChainInfo,
+  chainContractsProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>,
 ) {
-  switch (protocolName) {
-    case ProtocolName.AAVEv3: {
-      const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
-      const contractCalls = tokensList.map((token) => ({
-        abi: poolDataProviderDef.abi,
-        address: poolDataProviderDef.address,
-        functionName: 'getReserveConfigurationData' as const,
-        args: [token.address.value],
-      }))
-
-      return await ctx.provider.multicall({
-        contracts: contractCalls,
-        allowFailure: false,
-      })
-    }
-    case ProtocolName.Spark: {
-      const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
-      const contractCalls = tokensList.map((token) => ({
-        abi: poolDataProviderDef.abi,
-        address: poolDataProviderDef.address,
-        functionName: 'getReserveConfigurationData' as const,
-        args: [token.address.value],
-      }))
-
-      return await ctx.provider.multicall({
-        contracts: contractCalls,
-        allowFailure: false,
-      })
-    }
-    default:
-      throw new Error(`Unsupported protocol supplied ${protocolName}`)
+  const contractAbi = chainContractsProvider.getContractAbi('PoolDataProvider' as ContractNames)
+  if (!contractAbi) {
+    throw new Error('PoolDataProvider ABI not found')
   }
+
+  const contractAddress = await ctx.addressBookManager.getAddressByName({
+    chainInfo,
+    name: 'PoolDataProvider',
+  })
+  if (!contractAddress) {
+    throw new Error(`PoolDataProvider address not found in address book for chain ${chainInfo}`)
+  }
+
+  const contractCalls = tokensList.map((token) => ({
+    abi: contractAbi as Abi,
+    address: contractAddress.value,
+    functionName: 'getReserveConfigurationData' as const,
+    args: [token.address.value],
+  }))
+
+  return await ctx.provider.multicall({
+    contracts: contractCalls,
+    allowFailure: false,
+  })
 }
-export async function fetchReservesCap(
-  ctx: IProtocolPluginContextWithContractDef,
+
+export async function fetchReservesCap<
+  ContractNames extends string,
+  ContractsAbiMap extends GenericAbiMap<ContractNames>,
+>(
+  ctx: IProtocolPluginContext,
   tokensList: Token[],
-  protocolName: AllowedProtocolNames,
+  chainInfo: IChainInfo,
+  chainContractsProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>,
 ) {
-  switch (protocolName) {
-    case ProtocolName.AAVEv3: {
-      const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
-      const contractCalls = tokensList.map((token) => ({
-        abi: poolDataProviderDef.abi,
-        address: poolDataProviderDef.address,
-        functionName: 'getReserveCaps' as const,
-        args: [token.address.value],
-      }))
-
-      return await ctx.provider.multicall({
-        contracts: contractCalls,
-        allowFailure: false,
-      })
-    }
-    case ProtocolName.Spark: {
-      const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
-      const contractCalls = tokensList.map((token) => ({
-        abi: poolDataProviderDef.abi,
-        address: poolDataProviderDef.address,
-        functionName: 'getReserveCaps' as const,
-        args: [token.address.value],
-      }))
-
-      return await ctx.provider.multicall({
-        contracts: contractCalls,
-        allowFailure: false,
-      })
-    }
-    default:
-      throw new Error(`Unsupported protocol supplied ${protocolName}`)
+  const contractAbi = chainContractsProvider.getContractAbi('PoolDataProvider' as ContractNames)
+  if (!contractAbi) {
+    throw new Error('PoolDataProvider ABI not found')
   }
+
+  const contractAddress = await ctx.addressBookManager.getAddressByName({
+    chainInfo,
+    name: 'PoolDataProvider',
+  })
+  if (!contractAddress) {
+    throw new Error(`PoolDataProvider address not found in address book for chain ${chainInfo}`)
+  }
+
+  const contractCalls = tokensList.map((token) => ({
+    abi: contractAbi as Abi,
+    address: contractAddress.value,
+    functionName: 'getReserveCaps' as const,
+    args: [token.address.value],
+  }))
+
+  return await ctx.provider.multicall({
+    contracts: contractCalls,
+    allowFailure: false,
+  })
 }
-export async function fetchAssetReserveData(
-  ctx: IProtocolPluginContextWithContractDef,
+export async function fetchAssetReserveData<
+  ContractNames extends string,
+  ContractsAbiMap extends GenericAbiMap<ContractNames>,
+>(
+  ctx: IProtocolPluginContext,
   tokensList: Token[],
-  protocolName: AllowedProtocolNames,
+  chainInfo: IChainInfo,
+  chainContractsProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>,
 ) {
-  switch (protocolName) {
-    case ProtocolName.AAVEv3: {
-      const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
-      const contractCalls = tokensList.map((token) => ({
-        abi: poolDataProviderDef.abi,
-        address: poolDataProviderDef.address,
-        functionName: 'getReserveData' as const,
-        args: [token.address.value],
-      }))
-
-      return await ctx.provider.multicall({
-        contracts: contractCalls,
-        allowFailure: false,
-      })
-    }
-    case ProtocolName.Spark: {
-      const poolDataProviderDef = ctx.getContractDef('PoolDataProvider')
-      const contractCalls = tokensList.map((token) => ({
-        abi: poolDataProviderDef.abi,
-        address: poolDataProviderDef.address,
-        functionName: 'getReserveData' as const,
-        args: [token.address.value],
-      }))
-
-      return await ctx.provider.multicall({
-        contracts: contractCalls,
-        allowFailure: false,
-      })
-    }
-    default:
-      throw new Error(`Unsupported protocol supplied ${protocolName}`)
+  const contractAbi = chainContractsProvider.getContractAbi('PoolDataProvider' as ContractNames)
+  if (!contractAbi) {
+    throw new Error('PoolDataProvider ABI not found')
   }
+
+  const contractAddress = await ctx.addressBookManager.getAddressByName({
+    chainInfo,
+    name: 'PoolDataProvider',
+  })
+  if (!contractAddress) {
+    throw new Error(`PoolDataProvider address not found in address book for chain ${chainInfo}`)
+  }
+
+  const contractCalls = tokensList.map((token) => ({
+    abi: contractAbi as Abi,
+    address: contractAddress.value,
+    functionName: 'getReserveData' as const,
+    args: [token.address.value],
+  }))
+
+  return await ctx.provider.multicall({
+    contracts: contractCalls,
+    allowFailure: false,
+  })
 }
-export async function fetchAssetPrices(
-  ctx: IProtocolPluginContextWithContractDef,
+
+export async function fetchAssetPrices<
+  ContractNames extends string,
+  ContractsAbiMap extends GenericAbiMap<ContractNames>,
+>(
+  ctx: IProtocolPluginContext,
   tokensList: Token[],
-  protocolName: AllowedProtocolNames,
+  chainInfo: IChainInfo,
+  chainContractsProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>,
 ) {
-  let oracleDef = null
-  switch (protocolName) {
-    case ProtocolName.AAVEv3:
-      oracleDef = ctx.getContractDef('Oracle')
-      break
-    case ProtocolName.Spark:
-      oracleDef = ctx.getContractDef('Oracle')
-      break
-    default:
-      throw new Error(`Unsupported protocol supplied ${protocolName}`)
+  const contractAbi = chainContractsProvider.getContractAbi('Oracle' as ContractNames)
+  if (!contractAbi) {
+    throw new Error('PoolDataProvider ABI not found')
   }
+
+  const contractAddress = await ctx.addressBookManager.getAddressByName({
+    chainInfo,
+    name: 'Oracle',
+  })
+  if (!contractAddress) {
+    throw new Error(`PoolDataProvider address not found in address book for chain ${chainInfo}`)
+  }
+
   const contractCalls = [
     {
-      abi: oracleDef.abi,
-      address: oracleDef.address,
+      abi: contractAbi as Abi,
+      address: contractAddress.value,
       functionName: 'getAssetsPrices',
       args: [tokensList.map((token) => token.address.value)],
     },

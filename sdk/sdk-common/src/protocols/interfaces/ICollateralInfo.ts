@@ -1,61 +1,47 @@
-import { IPercentage, IPercentageData, PercentageSchema } from '../../common/interfaces/IPercentage'
-import { IPrice, IPriceData, PriceSchema } from '../../common/interfaces/IPrice'
-import { IRiskRatio, IRiskRatioData, RiskRatioSchema } from '../../common/interfaces/IRiskRatio'
-import { IToken, ITokenData, TokenSchema } from '../../common/interfaces/IToken'
-import {
-  ITokenAmount,
-  ITokenAmountData,
-  TokenAmountSchema,
-} from '../../common/interfaces/ITokenAmount'
+import { IPercentage, PercentageDataSchema } from '../../common/interfaces/IPercentage'
+import { IPrice, PriceDataSchema } from '../../common/interfaces/IPrice'
+import { IRiskRatio, RiskRatioDataSchema } from '../../common/interfaces/IRiskRatio'
+import { IToken, TokenDataSchema } from '../../common/interfaces/IToken'
+import { ITokenAmount, TokenAmountDataSchema } from '../../common/interfaces/ITokenAmount'
 import { z } from 'zod'
-
-/**
- * @interface ICollateralInfoData
- * @description Contains extended information about a collateral token of a lending pool
- */
-export interface ICollateralInfoData {
-  /** The token that represents the collateral */
-  readonly token: ITokenData
-  /** The price of the token in the protocol's default denomination */
-  readonly price: IPriceData
-  /** The price of the token in USD */
-  readonly priceUSD: IPriceData
-  /** The ratio between the collateral and the debt at which the position could be liquidated */
-  readonly liquidationThreshold: IRiskRatioData
-  /** The maximum amount of the token that can be supplied */
-  readonly maxSupply: ITokenAmountData
-  /** The amount of the token that is currently locked in the pool */
-  readonly tokensLocked: ITokenAmountData
-  /** The penalty that is charged for liquidating a position */
-  readonly liquidationPenalty: IPercentageData
-}
-
 /**
  * @interface ICollateralInfo
- * @description Interface for the implementors of the collateral info
+ * @description Contains extended information about a collateral token of a lending pool
  */
 export interface ICollateralInfo extends ICollateralInfoData {
+  /** The token that represents the collateral */
   readonly token: IToken
+  /** The price of the token in the protocol's default denomination */
   readonly price: IPrice
+  /** The price of the token in USD */
   readonly priceUSD: IPrice
+  /** The ratio between the collateral and the debt at which the position could be liquidated */
   readonly liquidationThreshold: IRiskRatio
+  /** The maximum amount of the token that can be supplied */
   readonly maxSupply: ITokenAmount
+  /** The amount of the token that is currently locked in the pool */
   readonly tokensLocked: ITokenAmount
+  /** The penalty that is charged for liquidating a position */
   readonly liquidationPenalty: IPercentage
 }
 
 /**
  * @description Zod schema for ICollateralInfo
  */
-export const CollateralInfoSchema = z.object({
-  token: TokenSchema,
-  price: PriceSchema,
-  priceUSD: PriceSchema,
-  liquidationThreshold: RiskRatioSchema,
-  maxSupply: TokenAmountSchema,
-  tokensLocked: TokenAmountSchema,
-  liquidationPenalty: PercentageSchema,
+export const CollateralInfoDataSchema = z.object({
+  token: TokenDataSchema,
+  price: PriceDataSchema,
+  priceUSD: PriceDataSchema,
+  liquidationThreshold: RiskRatioDataSchema,
+  maxSupply: TokenAmountDataSchema,
+  tokensLocked: TokenAmountDataSchema,
+  liquidationPenalty: PercentageDataSchema,
 })
+
+/**
+ * Type for the data part of the ICollateralInfo interface
+ */
+export type ICollateralInfoData = Readonly<z.infer<typeof CollateralInfoDataSchema>>
 
 /**
  * @description Type guard for ICollateralInfo
@@ -65,11 +51,5 @@ export const CollateralInfoSchema = z.object({
 export function isCollateralInfo(
   maybeCollateralInfo: unknown,
 ): maybeCollateralInfo is ICollateralInfoData {
-  return CollateralInfoSchema.safeParse(maybeCollateralInfo).success
+  return CollateralInfoDataSchema.safeParse(maybeCollateralInfo).success
 }
-
-/**
- * Checker to make sure that the schema is aligned with the interface
- */
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-const __schemaChecker: ICollateralInfoData = {} as z.infer<typeof CollateralInfoSchema>

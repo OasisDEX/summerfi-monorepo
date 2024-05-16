@@ -9,8 +9,8 @@ export class RefinanceSimulationManager extends IRPCClient {
   }
 
   public async simulateRefinancePosition(
-    params: IRefinanceParameters,
+    refinanceParameters: IRefinanceParameters,
   ): Promise<ISimulation<RefinanceSimulationTypes>> {
-    return this.rpcClient.simulation.refinance.query(params)
+    return this.rpcClient.simulation.refinance.query(refinanceParameters)
   }
 }
