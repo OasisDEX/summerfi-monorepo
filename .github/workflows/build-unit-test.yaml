@@ -34,6 +34,8 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+        env:
+          CONFIG_URL: ${{ secrets.CONFIG_URL }}
 
       - name: Prebuild
         run: pnpm prebuild
@@ -53,7 +55,6 @@ jobs:
           ONE_INCH_ALLOWED_SWAP_PROTOCOLS: ${{ secrets.ONE_INCH_ALLOWED_SWAP_PROTOCOLS }}
           ONE_INCH_SWAP_CHAIN_IDS: ${{ secrets.ONE_INCH_SWAP_CHAIN_IDS }}
           MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
-          CONFIG_URL: ${{ secrets.CONFIG_URL }}
       - name: Lint
         run: pnpm lint
 
