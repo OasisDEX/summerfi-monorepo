@@ -1,3 +1,3 @@
-import '@/design-system/index.scss'
+import '@/styles/index.scss'
 
 export const GlobalStyles = () => null

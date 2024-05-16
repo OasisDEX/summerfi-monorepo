@@ -244,6 +244,7 @@ module.exports = {
     'react/jsx-fragments': ['error', 'syntax'],
     'react/jsx-no-useless-fragment': ['error', { allowExpressions: true }],
     'react/jsx-pascal-case': 'error',
+    'react/prop-types': 'off',
 
     //* eslint-plugin-react-hooks */
 

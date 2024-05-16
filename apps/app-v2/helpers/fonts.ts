@@ -8,7 +8,7 @@ export const fontFtPolar = localFont({
     },
     {
       path: '../public/fonts/ft-polar-regular.woff2',
-      weight: '500',
+      weight: '400',
     },
   ],
   display: 'block',
@@ -28,7 +28,7 @@ export const fontInter = localFont({
     },
     {
       path: '../public/fonts/inter-regular.woff2',
-      weight: '500',
+      weight: '400',
     },
   ],
   display: 'block',

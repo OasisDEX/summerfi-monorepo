@@ -1,3 +1,5 @@
 export { ButtonExample } from './ButtonExample'
 export { GlobalStyles } from './GlobalStyles'
 export { TitleExample } from './TitleExample'
+export { Text } from './components/atoms/Text/Text'
+export { Button } from './components/atoms/Button/Button'
