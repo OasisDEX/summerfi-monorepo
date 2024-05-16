@@ -4,31 +4,39 @@ import {
   TokenTransferTargetType,
 } from '@summerfi/sdk-common/simulation'
 import { ActionNames } from '@summerfi/deployment-types'
-import { Address, AddressValue } from '@summerfi/sdk-common/common'
+import { IAddress } from '@summerfi/sdk-common/common'
 import { ActionBuilder, ActionBuilderParams } from '@summerfi/protocol-plugins-common'
 import { SetApprovalAction } from '../../common'
 import { AaveV3DepositAction } from '../actions/AaveV3DepositAction'
 import { AaveV3BorrowAction } from '../actions/AaveV3BorrowAction'
+import { getContractAddress } from '../../utils/GetContractAddress'
 
 export const AaveV3DepositBorrowActionList: ActionNames[] = ['AaveV3Deposit', 'AaveV3Borrow']
 
-function getBorrowTargetAddress(params: ActionBuilderParams<steps.DepositBorrowStep>): Address {
-  const { step, positionsManager, deployment } = params
+async function getBorrowTargetAddress(
+  params: ActionBuilderParams<steps.DepositBorrowStep>,
+): Promise<IAddress> {
+  const { user, step, positionsManager, addressBookManager } = params
+  if (step.inputs.borrowTargetType === TokenTransferTargetType.PositionsManager) {
+    return positionsManager.address
+  }
 
-  return step.inputs.borrowTargetType === TokenTransferTargetType.PositionsManager
-    ? positionsManager.address
-    : Address.createFromEthereum({
-        value: deployment.contracts.OperationExecutor.address as AddressValue,
-      })
+  return getContractAddress({
+    addressBookManager,
+    chainInfo: user.chainInfo,
+    contractName: 'OperationExecutor',
+  })
 }
 
 export const AaveV3DepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrowStep> = async (
   params,
 ): Promise<void> => {
-  const { context, step, deployment } = params
+  const { context, step, addressBookManager, user } = params
 
-  const aaveV3LendingPool = Address.createFromEthereum({
-    value: deployment.dependencies.AaveV3LendingPool.address as AddressValue,
+  const aaveV3LendingPoolAddress = await getContractAddress({
+    addressBookManager,
+    chainInfo: user.chainInfo,
+    contractName: 'AaveV3LendingPool',
   })
 
   context.addActionCall({
@@ -36,7 +44,7 @@ export const AaveV3DepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrow
     action: new SetApprovalAction(),
     arguments: {
       approvalAmount: getValueFromReference(step.inputs.depositAmount),
-      delegate: aaveV3LendingPool,
+      delegate: aaveV3LendingPoolAddress,
       sumAmounts: false,
     },
     connectedInputs: {
@@ -69,7 +77,7 @@ export const AaveV3DepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrow
       action: new AaveV3BorrowAction(),
       arguments: {
         borrowAmount: borrowAmount,
-        borrowTo: getBorrowTargetAddress(params),
+        borrowTo: await getBorrowTargetAddress(params),
       },
       connectedInputs: {},
       connectedOutputs: {

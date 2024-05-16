@@ -5,31 +5,39 @@ import {
 } from '@summerfi/sdk-common/simulation'
 import { ActionNames } from '@summerfi/deployment-types'
 
-import { Address, AddressValue } from '@summerfi/sdk-common/common'
+import { IAddress } from '@summerfi/sdk-common/common'
 import { ActionBuilder, ActionBuilderParams } from '@summerfi/protocol-plugins-common'
 import { SetApprovalAction } from '../../common'
 import { SparkWithdrawAction } from '../actions/SparkWithdrawAction'
 import { SparkPaybackAction } from '../actions/SparkPaybackAction'
+import { getContractAddress } from '../../utils/GetContractAddress'
 
 export const SparkPaybackWithdrawActionList: ActionNames[] = ['SparkPayback', 'SparkWithdraw']
 
-function getWithdrawTargetAddress(params: ActionBuilderParams<steps.PaybackWithdrawStep>): Address {
-  const { step, positionsManager, deployment } = params
+async function getWithdrawTargetAddress(
+  params: ActionBuilderParams<steps.PaybackWithdrawStep>,
+): Promise<IAddress> {
+  const { user, step, positionsManager, addressBookManager } = params
+  if (step.inputs.withdrawTargetType === TokenTransferTargetType.PositionsManager) {
+    return positionsManager.address
+  }
 
-  return step.inputs.withdrawTargetType === TokenTransferTargetType.PositionsManager
-    ? positionsManager.address
-    : Address.createFromEthereum({
-        value: deployment.contracts.OperationExecutor.address as AddressValue,
-      })
+  return getContractAddress({
+    addressBookManager,
+    chainInfo: user.chainInfo,
+    contractName: 'OperationExecutor',
+  })
 }
 
 export const SparkPaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWithdrawStep> = async (
   params,
 ): Promise<void> => {
-  const { context, step, deployment } = params
+  const { context, step, addressBookManager, user } = params
 
-  const sparkLendingPool = Address.createFromEthereum({
-    value: deployment.dependencies.SparkLendingPool.address as AddressValue,
+  const sparkLendingPoolAddress = await getContractAddress({
+    addressBookManager,
+    chainInfo: user.chainInfo,
+    contractName: 'SparkLendingPool',
   })
 
   const paybackAmount = getValueFromReference(step.inputs.paybackAmount)
@@ -40,7 +48,7 @@ export const SparkPaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWithd
       action: new SetApprovalAction(),
       arguments: {
         approvalAmount: getValueFromReference(step.inputs.paybackAmount),
-        delegate: sparkLendingPool,
+        delegate: sparkLendingPoolAddress,
         sumAmounts: false,
       },
       connectedInputs: {
@@ -48,13 +56,15 @@ export const SparkPaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWithd
       },
       connectedOutputs: {},
     })
-  
+
     context.addActionCall({
       step: params.step,
       action: new SparkPaybackAction(),
       arguments: {
         paybackAmount: getValueFromReference(step.inputs.paybackAmount),
-        paybackAll: getValueFromReference(step.inputs.paybackAmount).toBN().gt(step.inputs.position.debtAmount.toBN()),
+        paybackAll: getValueFromReference(step.inputs.paybackAmount)
+          .toBN()
+          .gt(step.inputs.position.debtAmount.toBN()),
       },
       connectedInputs: {},
       connectedOutputs: {
@@ -71,7 +81,7 @@ export const SparkPaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWithd
       action: new SparkWithdrawAction(),
       arguments: {
         withdrawAmount: withdrawAmount,
-        withdrawTo: getWithdrawTargetAddress(params),
+        withdrawTo: await getWithdrawTargetAddress(params),
       },
       connectedInputs: {},
       connectedOutputs: {
