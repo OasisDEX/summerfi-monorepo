@@ -253,7 +253,7 @@ module.exports = {
 
     //* eslint-plugin-no-relative-import-paths */
 
-    'no-relative-import-paths/no-relative-import-paths': 'error',
+    'no-relative-import-paths/no-relative-import-paths': ['error', { allowSameFolder: true }],
 
     //* eslint-plugin-deprecation */
 
