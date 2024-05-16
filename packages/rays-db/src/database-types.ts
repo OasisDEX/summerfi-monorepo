@@ -52,7 +52,7 @@ export interface Multiplier {
   type: string
   updatedAt: Generated<Timestamp>
   userAddressId: number | null
-  value: number
+  value: Numeric
 }
 
 export interface PointsDistribution {

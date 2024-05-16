@@ -165,7 +165,134 @@ export const handler = async (
             .executeTakeFirstOrThrow()
         }
 
-        // TODO: Insert points distributions & multipliers here.
+        await trx
+          .insertInto('pointsDistribution')
+          .values({
+            description: 'Points for opening a position',
+            points: record.points.openPositionsPoints,
+            positionId: position.id,
+            type: 'OPEN_POSITION',
+          })
+          .execute()
+
+        // Multipliers
+        // protocolBoostMultiplier: -> user multiplier -> type = 'PROTOCOL_BOOST'
+        //     swapMultiplier: number -> user multiplier -> type = 'SWAP'
+        //     timeOpenMultiplier: number -> position multiplier -> type = 'TIME_OPEN'
+        //     automationProtectionMultiplier: number -> position multiplier -> type = 'AUTOMATION'
+        //     lazyVaultMultiplier: number -> position multiplier -> type = 'LAZY_VAULT'
+
+        const userMultipliers = await trx
+          .selectFrom('multiplier')
+          .where('userAddressId', '=', userAddress.id)
+          .selectAll()
+          .execute()
+
+        const positionMultipliers = await trx
+          .selectFrom('multiplier')
+          .where('positionId', '=', position.id)
+          .selectAll()
+          .execute()
+
+        let procotolBoostMultiplier = userMultipliers.find((m) => m.type === 'PROTOCOL_BOOST')
+
+        if (!procotolBoostMultiplier) {
+          procotolBoostMultiplier = await trx
+            .insertInto('multiplier')
+            .values({
+              userAddressId: userAddress.id,
+              type: 'PROTOCOL_BOOST',
+              value: record.multipliers.protocolBoostMultiplier,
+            })
+            .returningAll()
+            .executeTakeFirstOrThrow()
+        } else {
+          await trx
+            .updateTable('multiplier')
+            .set('value', record.multipliers.protocolBoostMultiplier)
+            .where('id', '=', procotolBoostMultiplier.id)
+            .execute()
+        }
+
+        let swapMultiplier = userMultipliers.find((m) => m.type === 'SWAP')
+
+        if (!swapMultiplier) {
+          swapMultiplier = await trx
+            .insertInto('multiplier')
+            .values({
+              userAddressId: userAddress.id,
+              type: 'SWAP',
+              value: record.multipliers.swapMultiplier,
+            })
+            .returningAll()
+            .executeTakeFirstOrThrow()
+        } else {
+          await trx
+            .updateTable('multiplier')
+            .set('value', record.multipliers.swapMultiplier)
+            .where('id', '=', swapMultiplier.id)
+            .execute()
+        }
+
+        let timeOpenMultiplier = positionMultipliers.find((m) => m.type === 'TIME_OPEN')
+
+        if (!timeOpenMultiplier) {
+          timeOpenMultiplier = await trx
+            .insertInto('multiplier')
+            .values({
+              positionId: position.id,
+              type: 'TIME_OPEN',
+              value: record.multipliers.timeOpenMultiplier,
+            })
+            .returningAll()
+            .executeTakeFirstOrThrow()
+        } else {
+          await trx
+            .updateTable('multiplier')
+            .set('value', record.multipliers.timeOpenMultiplier)
+            .where('id', '=', timeOpenMultiplier.id)
+            .execute()
+        }
+
+        let automationProtectionMultiplier = positionMultipliers.find(
+          (m) => m.type === 'AUTOMATION',
+        )
+
+        if (!automationProtectionMultiplier) {
+          automationProtectionMultiplier = await trx
+            .insertInto('multiplier')
+            .values({
+              positionId: position.id,
+              type: 'AUTOMATION',
+              value: record.multipliers.automationProtectionMultiplier,
+            })
+            .returningAll()
+            .executeTakeFirstOrThrow()
+        } else {
+          await trx
+            .updateTable('multiplier')
+            .set('value', record.multipliers.automationProtectionMultiplier)
+            .where('id', '=', automationProtectionMultiplier.id)
+            .execute()
+        }
+
+        const lazyVaultMultiplier = positionMultipliers.find((m) => m.type === 'LAZY_VAULT')
+        if (!lazyVaultMultiplier) {
+          await trx
+            .insertInto('multiplier')
+            .values({
+              positionId: position.id,
+              type: 'LAZY_VAULT',
+              value: record.multipliers.lazyVaultMultiplier,
+            })
+            .execute()
+        } else {
+          await trx
+            .updateTable('multiplier')
+            .set('value', record.multipliers.lazyVaultMultiplier)
+            .where('id', '=', lazyVaultMultiplier.id)
+            .execute()
+        }
       }
     })
   } catch (e) {
