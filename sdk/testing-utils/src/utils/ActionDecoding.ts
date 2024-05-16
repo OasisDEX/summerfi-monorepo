@@ -1,4 +1,4 @@
-import { BaseAction } from '@summerfi/protocol-plugins-common'
+import { ActionConfig, BaseAction } from '@summerfi/protocol-plugins-common'
 import { HexData } from '@summerfi/sdk-common/common'
 
 import {
@@ -10,12 +10,12 @@ import {
   toBytes,
 } from 'viem'
 
-export function getTargetHash(action: BaseAction): string {
+export function getTargetHash<Config extends ActionConfig>(action: BaseAction<Config>): string {
   return keccak256(toBytes(action.getVersionedName()))
 }
 
-export function decodeActionCalldata<Action extends BaseAction>(params: {
-  action: Action
+export function decodeActionCalldata<Config extends ActionConfig>(params: {
+  action: BaseAction<Config>
   calldata: HexData | string
 }):
   | {
@@ -41,7 +41,7 @@ export function decodeActionCalldata<Action extends BaseAction>(params: {
     return undefined
   }
 
-  const actionAbi = parseAbiParameters(action.config.parametersAbi)
+  const actionAbi = parseAbiParameters(action.config.parametersAbi as unknown as string)
   const decodedActionArgs = decodeAbiParameters(actionAbi, decoded.args[0] as HexData)
 
   return {

@@ -1,26 +1,32 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { IAddress, ITokenAmount } from '@summerfi/sdk-common/common'
 
-export class PullTokenAction extends BaseAction {
-  public readonly config = {
+export class PullTokenAction extends BaseAction<typeof PullTokenAction.Config> {
+  public static readonly Config = {
     name: 'PullToken',
     version: 3,
-    parametersAbi: 'address asset, address from, uint256 amount',
+    parametersAbi: ['(address asset, address from, uint256 amount)'],
     storageInputs: [],
     storageOutputs: [],
   } as const
 
   public encodeCall(
-    params: { pullAmount: ITokenAmount; pullTo: IAddress },
+    params: { pullAmount: ITokenAmount; pullFrom: IAddress },
     paramsMapping?: InputSlotsMapping,
   ): ActionCall {
     return this._encodeCall({
       arguments: [
-        params.pullAmount.token.address.value,
-        params.pullTo.value,
-        params.pullAmount.toBaseUnit(),
+        {
+          asset: params.pullAmount.token.address.value,
+          from: params.pullFrom.value,
+          amount: BigInt(params.pullAmount.toBaseUnit()),
+        },
       ],
       mapping: paramsMapping,
     })
+  }
+
+  public get config() {
+    return PullTokenAction.Config
   }
 }

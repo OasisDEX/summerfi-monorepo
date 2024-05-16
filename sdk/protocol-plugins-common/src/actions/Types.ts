@@ -18,10 +18,9 @@ export type ActionConfig = {
   readonly name: ActionNames
   /** The version of the action */
   readonly version: ActionVersion
-  /** The human-readable Abi for the action contract execute method */
-  readonly parametersAbi: string
-  /** The list of storage inputs for the action, the position of each name also indicates
-   *  which storage slot that input will be read from */
+  /** Human-readable ABI parameters (check `viem` documentation) */
+  readonly parametersAbi: readonly [string, ...string[]]
+  /** The list of storage inputs for the action, this is the values that will be read from the storage */
   readonly storageInputs: ActionInputStorageNames
   /** The list of storage outputs for the action, this is the values that will be saved to the storage */
   readonly storageOutputs: ActionOutputStorageNames

@@ -3,37 +3,14 @@ import {
   Address,
   ChainInfo,
   Position,
-  PositionId,
   PositionType,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
-import { IPoolId, IPoolIdData, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { IPoolIdData, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
-import { ActionNames } from '@summerfi/deployment-types'
 import { ChainFamilyMap } from '@summerfi/sdk-common/common'
-import { BaseAction } from '../src/actions/BaseAction'
-import { ActionCall } from '../src/actions/Types'
-
-class DerivedAction extends BaseAction {
-  public readonly config = {
-    name: 'PullToken' as ActionNames,
-    version: 8,
-    parametersAbi: 'address, address, uint256',
-    storageInputs: ['someInput1', 'someInput2', 'otherInput'],
-    storageOutputs: ['someOutput1', 'someOutput2', 'otherOutput'],
-  }
-
-  public encodeCall(
-    params: { test1: string; test2: string; test3: number },
-    paramsMapping?: number[],
-  ): ActionCall {
-    return this._encodeCall({
-      arguments: [params.test1, params.test2, params.test3],
-      mapping: paramsMapping,
-    })
-  }
-}
+import { DerivedAction } from '@summerfi/testing-utils/mocks/actions/DerivedAction'
 
 describe('Step Builder Context', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -60,7 +37,7 @@ describe('Step Builder Context', () => {
   const otherActionCall = derivedAction.encodeCall({
     test1: '0x0000000000000000000000000000000000000999',
     test2: '0x0000000000000000000000000000000000000888',
-    test3: 200,
+    test3: BigInt(200),
   })
 
   const depositAmount = TokenAmount.createFrom({
@@ -197,7 +174,7 @@ describe('Step Builder Context', () => {
       {
         test1: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
         test2: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
-        test3: 100,
+        test3: BigInt(100),
       },
       [0, 0, 0, 0],
     )

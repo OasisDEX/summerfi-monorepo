@@ -1,11 +1,11 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { IAddress, ITokenAmount } from '@summerfi/sdk-common/common'
 
-export class SendTokenAction extends BaseAction {
-  public readonly config = {
+export class SendTokenAction extends BaseAction<typeof SendTokenAction.Config> {
+  public static readonly Config = {
     name: 'SendToken',
     version: 4,
-    parametersAbi: '(address asset, address to, uint256 amount)',
+    parametersAbi: ['(address asset, address to, uint256 amount)'],
     storageInputs: ['asset', 'to', 'amount'],
     storageOutputs: [],
   } as const
@@ -19,10 +19,14 @@ export class SendTokenAction extends BaseAction {
         {
           asset: params.sendAmount.token.address.value,
           to: params.sendTo.value,
-          amount: params.sendAmount.toBaseUnit(),
+          amount: BigInt(params.sendAmount.toBaseUnit()),
         },
       ],
       mapping: paramsMapping,
     })
+  }
+
+  public get config() {
+    return SendTokenAction.Config
   }
 }

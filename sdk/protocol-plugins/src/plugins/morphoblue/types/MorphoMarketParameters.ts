@@ -15,3 +15,10 @@ export type MorphoMarketParameters = {
   /** The liquidation LTV for the Morpho market */
   readonly lltv: IRiskRatio
 }
+
+/**
+ * Market parameters definition for Morpho, to be used in the ABI
+ * of the action wrappers
+ */
+export const MorphoMarketParametersAbi =
+  'struct MarketParams { address loanToken; address collateralToken; address oracle; address irm; uint256 lltv; }' as const

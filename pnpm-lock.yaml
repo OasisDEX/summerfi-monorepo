@@ -1134,6 +1134,9 @@ importers:
       '@summerfi/tokens-common':
         specifier: workspace:*
         version: link:../tokens-common
+      abitype:
+        specifier: ^1.0.2
+        version: 1.0.2(typescript@5.4.5)(zod@3.22.4)
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -1496,6 +1499,9 @@ importers:
       '@summerfi/configuration-provider':
         specifier: workspace:*
         version: link:../configuration-provider
+      '@summerfi/deployment-types':
+        specifier: workspace:*
+        version: link:../../packages/deployment-types
       '@summerfi/deployment-utils':
         specifier: workspace:*
         version: link:../../packages/deployment-utils

@@ -30,7 +30,7 @@ describe('PullToken Action', () => {
     const call = action.encodeCall(
       {
         pullAmount: tokenAmount,
-        pullTo: recipient,
+        pullFrom: recipient,
       },
       [1, 8, 5, 3],
     )
@@ -44,9 +44,11 @@ describe('PullToken Action', () => {
 
     expect(actionDecodedArgs).toBeDefined()
     expect(actionDecodedArgs?.args).toEqual([
-      DAI.address.value,
-      recipient.value,
-      BigInt(tokenAmount.toBaseUnit()),
+      {
+        asset: DAI.address.value,
+        from: recipient.value,
+        amount: BigInt(tokenAmount.toBaseUnit()),
+      },
     ])
     expect(actionDecodedArgs?.mapping).toEqual([1, 8, 5, 3])
   })

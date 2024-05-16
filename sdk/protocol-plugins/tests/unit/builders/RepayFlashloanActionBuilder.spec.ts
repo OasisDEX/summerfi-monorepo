@@ -43,7 +43,7 @@ describe('Payback Flashloan Action Builder', () => {
 
   // Pull token step
   const pullAmount = TokenAmount.createFrom({ token: DAI, amount: '578' })
-  const recipient = Address.createFromEthereum({
+  const pullFrom = Address.createFromEthereum({
     value: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
   })
 
@@ -86,7 +86,7 @@ describe('Payback Flashloan Action Builder', () => {
       action: new PullTokenAction(),
       arguments: {
         pullAmount: pullAmount,
-        pullTo: recipient,
+        pullFrom: pullFrom,
       },
       connectedInputs: {},
       connectedOutputs: {},
@@ -133,7 +133,7 @@ describe('Payback Flashloan Action Builder', () => {
       action: new PullTokenAction(),
       arguments: {
         pullAmount: pullAmount,
-        pullTo: recipient,
+        pullFrom: pullFrom,
       },
       connectedInputs: {},
       connectedOutputs: {},
@@ -153,7 +153,7 @@ describe('Payback Flashloan Action Builder', () => {
 
     const pullTokenCalldata = new PullTokenAction().encodeCall({
       pullAmount: pullAmount,
-      pullTo: recipient,
+      pullFrom: pullFrom,
     })
 
     const sendTokenCalldata = new SendTokenAction().encodeCall({

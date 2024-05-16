@@ -1,6 +1,6 @@
 import { steps } from '@summerfi/sdk-common/simulation'
-import { BaseAction } from '../actions/BaseAction'
 import { ReferenceableField } from '@summerfi/sdk-common'
+import { ActionConfig } from '../actions/Types'
 
 //export type Slot = number
 
@@ -17,13 +17,12 @@ export type StorageAliasMap<
 /**
  * Type for the storage inputs defined in the action config
  */
-export type StorageInputsType<Action extends BaseAction> = Action['config']['storageInputs'][number]
+export type StorageInputsType<Config extends ActionConfig> = Config['storageInputs'][number]
 
 /**
  * Type for the storage outputs defined in the action config
  */
-export type StorageOutputsType<Action extends BaseAction> =
-  Action['config']['storageOutputs'][number]
+export type StorageOutputsType<Config extends ActionConfig> = Config['storageOutputs'][number]
 
 /**
  * Extracts all the step inputs that extend a certain type. Used to extract all ReferenceableFields names
@@ -57,8 +56,8 @@ export type StepOutputsType<Step extends steps.Steps> = keyof Step['outputs']
  */
 export type StorageInputsMapType<
   Step extends steps.Steps,
-  Action extends BaseAction,
-> = StorageAliasMap<StepInputsType<Step>, StorageInputsType<Action>>
+  Config extends ActionConfig,
+> = StorageAliasMap<StepInputsType<Step>, StorageInputsType<Config>>
 
 /**
  * Record type for the connectedOutputs when adding an action call from a step
@@ -68,5 +67,5 @@ export type StorageInputsMapType<
  */
 export type StorageOutputsMapType<
   Step extends steps.Steps,
-  Action extends BaseAction,
-> = StorageAliasMap<StepOutputsType<Step>, StorageOutputsType<Action>>
+  Config extends ActionConfig,
+> = StorageAliasMap<StepOutputsType<Step>, StorageOutputsType<Config>>
