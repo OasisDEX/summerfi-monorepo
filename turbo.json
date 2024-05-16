@@ -65,7 +65,14 @@
     },
     "build": {
       "dependsOn": ["prebuild", "^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**", "artifacts/**", ".sst/**"]
+      "outputs": [
+        ".next/**",
+        ".next/server/pages/**",
+        "!.next/cache/**",
+        "dist/**",
+        "artifacts/**",
+        ".sst/**"
+      ]
     },
     "test": {
       "dependsOn": ["prebuild", "build", "^test"]

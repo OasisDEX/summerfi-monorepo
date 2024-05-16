@@ -409,6 +409,9 @@ importers:
       '@inrupt/jest-jsdom-polyfills':
         specifier: ^2.4.0
         version: 2.6.0
+      '@jest/types':
+        specifier: 29.6.3
+        version: 29.6.3
       '@next/bundle-analyzer':
         specifier: ^13.5.3
         version: 13.5.6
