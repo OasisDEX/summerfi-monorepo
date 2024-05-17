@@ -18,7 +18,7 @@ import {
 } from '@summerfi/sdk-common/common'
 import { OracleProviderType, SpotPriceInfo } from '@summerfi/sdk-common/oracle'
 import { IOracleProvider } from '@summerfi/oracle-common'
-import { FiatCurrency, IChainInfo, IToken, isTokenAmount } from '@summerfi/sdk-common'
+import { FiatCurrency, IToken, isTokenAmount } from '@summerfi/sdk-common'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider'
 
