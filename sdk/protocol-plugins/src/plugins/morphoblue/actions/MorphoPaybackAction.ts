@@ -3,13 +3,16 @@ import { ITokenAmount } from '@summerfi/sdk-common/common'
 import { MorphoLLTVPrecision } from '../constants/MorphoConstants'
 import { IAddress } from '@summerfi/sdk-common'
 import { IMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
+import { MorphoMarketParametersAbi } from '../types/MorphoMarketParameters'
 
-export class MorphoPaybackAction extends BaseAction {
-  public readonly config = {
+export class MorphoPaybackAction extends BaseAction<typeof MorphoPaybackAction.Config> {
+  public static readonly Config = {
     name: 'MorphoBluePayback',
     version: 2,
-    parametersAbi:
-      '((address loanToken, address collateralToken, address oracle, address irm, uint256 lltv) marketParams, uint256 amount, address onBehalf, bool paybackAll)',
+    parametersAbi: [
+      '(MarketParams marketParams, uint256 amount, address onBehalf, bool paybackAll)',
+      MorphoMarketParametersAbi,
+    ],
     storageInputs: ['amount'],
     storageOutputs: ['paybackedAmount'],
   } as const
@@ -33,14 +36,20 @@ export class MorphoPaybackAction extends BaseAction {
             collateralToken: morphoLendingPool.collateralToken.address.value,
             oracle: morphoLendingPool.oracle.value,
             irm: morphoLendingPool.irm.value,
-            lltv: morphoLendingPool.lltv.toLTV().toBaseUnit({ decimals: MorphoLLTVPrecision }),
+            lltv: BigInt(
+              morphoLendingPool.lltv.toLTV().toBaseUnit({ decimals: MorphoLLTVPrecision }),
+            ),
           },
-          amount: amount.toBaseUnit(),
+          amount: BigInt(amount.toBaseUnit()),
           onBehalf: onBehalf.value,
           paybackAll: paybackAll,
         },
       ],
       mapping: paramsMapping,
     })
+  }
+
+  public get config() {
+    return MorphoPaybackAction.Config
   }
 }

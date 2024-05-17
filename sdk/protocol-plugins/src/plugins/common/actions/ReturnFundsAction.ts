@@ -1,11 +1,11 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { IToken } from '@summerfi/sdk-common/common'
 
-export class ReturnFundsAction extends BaseAction {
-  public readonly config = {
+export class ReturnFundsAction extends BaseAction<typeof ReturnFundsAction.Config> {
+  static Config = {
     name: 'ReturnFunds',
     version: 3,
-    parametersAbi: '(address asset)',
+    parametersAbi: ['(address asset)'],
     storageInputs: [],
     storageOutputs: [],
   } as const
@@ -19,5 +19,9 @@ export class ReturnFundsAction extends BaseAction {
       ],
       mapping: paramsMapping,
     })
+  }
+
+  public get config() {
+    return ReturnFundsAction.Config
   }
 }

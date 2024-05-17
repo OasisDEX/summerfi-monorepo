@@ -3,7 +3,7 @@ import { Maybe } from '@summerfi/sdk-common/common'
 import { StorageInputsMapType, StorageOutputsMapType } from '../types/ActionStorageTypes'
 import { BaseAction } from '../actions/BaseAction'
 import { IStepBuilderContext } from '../interfaces/IStepBuilderContext'
-import { ActionCallBatch } from '../actions/Types'
+import { ActionCallBatch, ActionConfig } from '../actions/Types'
 import { ActionCallsStack } from './ActionCallsStack'
 import { ExecutionStorageMapper } from './ExecutionStorageMapper'
 import { TransactionInfo } from '@summerfi/sdk-common/orders'
@@ -23,12 +23,16 @@ export class StepBuilderContext implements IStepBuilderContext {
   }
 
   /** @see IStepBuilderContext.addActionCall */
-  public addActionCall<Step extends steps.Steps, Action extends BaseAction>(params: {
+  public addActionCall<
+    Step extends steps.Steps,
+    Config extends ActionConfig,
+    Action extends BaseAction<Config>,
+  >(params: {
     step: Step
-    action: Action
+    action: BaseAction<Config>
     arguments: Parameters<Action['encodeCall']>[0]
-    connectedInputs: Partial<StorageInputsMapType<Step, Action>>
-    connectedOutputs: Partial<StorageOutputsMapType<Step, Action>>
+    connectedInputs: Partial<StorageInputsMapType<Step, Config>>
+    connectedOutputs: Partial<StorageOutputsMapType<Step, Config>>
   }) {
     const paramsMapping = this._storage.addStorageMap({
       step: params.step,

@@ -1,6 +1,6 @@
 import { bytesToHex, encodeAbiParameters, parseAbiParameters, stringToBytes } from 'viem'
 import { MorphoBluePartialTakeProfitTriggerData } from '~types'
-import { PositionLike, CurrentTriggerLike } from '@summerfi/triggers-shared'
+import { CurrentTriggerLike, PositionLike } from '@summerfi/triggers-shared'
 import { DEFAULT_DEVIATION } from './defaults'
 import { EncodedTriggers } from './types'
 import { OPERATION_NAMES } from '@oasisdex/dma-library'
@@ -22,8 +22,6 @@ export const encodeMorphoBluePartialTakeProfit = (
       'bytes32 operationName, ' +
       // Trigger specific data
       'bytes32 poolId, ' +
-      'uint8 quoteDecimals, ' +
-      'uint8 collateralDecimals, ' +
       'uint256 executionLtv, ' +
       'uint256 targetLtv, ' +
       'uint256 excutionPrice, ' +
@@ -50,8 +48,6 @@ export const encodeMorphoBluePartialTakeProfit = (
     operationNameInBytes,
     // Trigger specific data
     triggerData.poolId,
-    position.debt.token.decimals,
-    position.collateral.token.decimals,
     triggerData.executionLTV,
     triggerData.executionLTV + triggerData.withdrawStep,
     triggerData.executionPrice,

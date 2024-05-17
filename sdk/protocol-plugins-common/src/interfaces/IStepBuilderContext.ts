@@ -1,5 +1,5 @@
 import { BaseAction } from '../actions/BaseAction'
-import { ActionCallBatch } from '../actions/Types'
+import { ActionCallBatch, ActionConfig } from '../actions/Types'
 import { steps } from '@summerfi/sdk-common/simulation'
 import { Maybe } from '@summerfi/sdk-common/common'
 import { StorageInputsMapType, StorageOutputsMapType } from '../types/ActionStorageTypes'
@@ -28,12 +28,16 @@ export interface IStepBuilderContext {
    * @param connectedOutputs The connected outputs to the action, this is the values that the action
    *                         will write to storage
    */
-  addActionCall<Step extends steps.Steps, Action extends BaseAction>(params: {
+  addActionCall<
+    Step extends steps.Steps,
+    Config extends ActionConfig,
+    Action extends BaseAction<Config>,
+  >(params: {
     step: Step
-    action: Action
+    action: BaseAction<Config>
     arguments: Parameters<Action['encodeCall']>[0]
-    connectedInputs: Partial<StorageInputsMapType<Step, Action>>
-    connectedOutputs: Partial<StorageOutputsMapType<Step, Action>>
+    connectedInputs: Partial<StorageInputsMapType<Step, Config>>
+    connectedOutputs: Partial<StorageOutputsMapType<Step, Config>>
   }): void
 
   /**

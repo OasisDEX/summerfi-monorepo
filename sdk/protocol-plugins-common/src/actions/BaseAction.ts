@@ -5,17 +5,25 @@ import {
   parseAbiParameters,
   keccak256,
   toBytes,
+  ParseAbiParameters,
 } from 'viem'
 import { ActionConfig, ActionCall } from './Types'
 import { InputSlotsMapping } from '../types/InputSlotsMapping'
+import { AbiParametersToPrimitiveTypes } from 'abitype'
 
 /**
  * @class Base class for all actions. It provides the basic functionality to encode the call to the action and provide
  *              the versioned name of the action.
  */
-export abstract class BaseAction {
+export abstract class BaseAction<
+  Config extends ActionConfig,
+  ParsedAbiParameters extends ParseAbiParameters<Config['parametersAbi']> = ParseAbiParameters<
+    Config['parametersAbi']
+  >,
+  AbiParametersTypes extends
+    AbiParametersToPrimitiveTypes<ParsedAbiParameters> = AbiParametersToPrimitiveTypes<ParsedAbiParameters>,
+> {
   private readonly DefaultParamsMapping: InputSlotsMapping = [0, 0, 0, 0]
-  public abstract readonly config: ActionConfig
 
   /**
    * @description Returns the versioned name of the action
@@ -45,7 +53,10 @@ export abstract class BaseAction {
    * @param paramsMapping The mapping of the parameters to the execution storage
    * @returns The encoded call to the action
    */
-  protected _encodeCall(params: { arguments: unknown[]; mapping?: InputSlotsMapping }): ActionCall {
+  protected _encodeCall(params: {
+    arguments: AbiParametersTypes
+    mapping?: InputSlotsMapping
+  }): ActionCall {
     const contractNameWithVersion = this.getVersionedName()
     const targetHash = keccak256(toBytes(contractNameWithVersion))
 
@@ -53,8 +64,7 @@ export abstract class BaseAction {
       'function execute(bytes calldata data, uint8[] paramsMap) external payable returns (bytes calldata)',
     ])
 
-    const abiParameters = parseAbiParameters(this.config.parametersAbi)
-
+    const abiParameters = parseAbiParameters(this.config.parametersAbi as unknown as string)
     const encodedArgs = encodeAbiParameters(abiParameters, params.arguments)
 
     const calldata = encodeFunctionData({
@@ -69,4 +79,6 @@ export abstract class BaseAction {
       callData: calldata,
     } as ActionCall
   }
+
+  public abstract get config(): Config
 }

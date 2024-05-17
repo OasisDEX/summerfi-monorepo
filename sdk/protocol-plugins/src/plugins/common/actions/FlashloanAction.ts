@@ -7,12 +7,13 @@ type OptionalActionCall = ActionCall & {
   skipped: boolean
 }
 
-export class FlashloanAction extends BaseAction {
-  public readonly config = {
+export class FlashloanAction extends BaseAction<typeof FlashloanAction.Config> {
+  public static Config = {
     name: 'TakeFlashloan',
     version: 3,
-    parametersAbi:
+    parametersAbi: [
       '(uint256 amount, address asset, bool isProxyFlashloan, bool isDPMProxy, uint8 provider, (bytes32 targetHash, bytes callData, bool skipped)[] calls)',
+    ],
     storageInputs: [],
     storageOutputs: [],
   } as const
@@ -37,7 +38,7 @@ export class FlashloanAction extends BaseAction {
     return this._encodeCall({
       arguments: [
         {
-          amount: params.amount.toBaseUnit(),
+          amount: BigInt(params.amount.toBaseUnit()),
           asset: params.amount.token.address.value,
           isProxyFlashloan: true,
           isDPMProxy: true,
@@ -47,5 +48,9 @@ export class FlashloanAction extends BaseAction {
       ],
       mapping: paramsMapping,
     })
+  }
+
+  public get config() {
+    return FlashloanAction.Config
   }
 }

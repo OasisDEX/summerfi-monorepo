@@ -1,27 +1,5 @@
+import { DerivedAction } from '@summerfi/testing-utils/mocks/actions/DerivedAction'
 import { keccak256, toBytes } from 'viem'
-import { ActionNames } from '@summerfi/deployment-types'
-import { ActionCall } from '../src/actions/Types'
-import { BaseAction } from '../src/actions/BaseAction'
-
-class DerivedAction extends BaseAction {
-  public readonly config = {
-    name: 'PullToken' as ActionNames,
-    version: 8,
-    parametersAbi: 'address, address, uint256',
-    storageInputs: ['someInput1', 'someInput2', 'otherInput'],
-    storageOutputs: ['someOutput1', 'someOutput2', 'otherOutput'],
-  }
-
-  public encodeCall(
-    params: { first: string; second: string; third: number },
-    paramsMapping?: number[],
-  ): ActionCall {
-    return this._encodeCall({
-      arguments: [params.first, params.second, params.third],
-      mapping: paramsMapping,
-    })
-  }
-}
 
 describe('Execution Storage Manager', () => {
   const derivedAction = new DerivedAction()
@@ -37,9 +15,9 @@ describe('Execution Storage Manager', () => {
   it('should add calls', async () => {
     const call = derivedAction.encodeCall(
       {
-        first: '0x0000000000000000000000000000000000000123',
-        second: '0x0000000000000000000000000000000000000456',
-        third: 100,
+        test1: '0x0000000000000000000000000000000000000123',
+        test2: '0x0000000000000000000000000000000000000456',
+        test3: BigInt(100),
       },
       [6, 7, 8, 9],
     )

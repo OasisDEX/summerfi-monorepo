@@ -15,7 +15,7 @@ export const PullTokenActionBuilder: ActionBuilder<steps.PullTokenStep> = async 
     action: new PullTokenAction(),
     arguments: {
       pullAmount: getValueFromReference(step.inputs.amount),
-      pullTo: positionsManager.address,
+      pullFrom: positionsManager.address,
     },
     connectedInputs: {},
     connectedOutputs: {},

@@ -10,7 +10,7 @@ import { OPERATION_NAMES } from '@oasisdex/dma-library'
 import { DEFAULT_DEVIATION } from './defaults'
 import { automationBotAbi } from '@summerfi/abis'
 import { MorphoBlueAutoSellTriggerData } from '~types'
-import { PositionLike, CurrentTriggerLike } from '@summerfi/triggers-shared'
+import { CurrentTriggerLike, PositionLike } from '@summerfi/triggers-shared'
 
 import { getMaxCoverage } from './get-max-coverage'
 
@@ -29,8 +29,6 @@ export const encodeMorphoBlueAutoSell = (
       'bytes32 operationName, ' +
       // Trigger specific data
       'bytes32 poolId, ' +
-      'uint8 quoteDecimals, ' +
-      'uint8 collateralDecimals, ' +
       'uint256 executionLtv, ' +
       'uint256 targetLTV, ' +
       'uint256 minSellPrice, ' +
@@ -53,8 +51,6 @@ export const encodeMorphoBlueAutoSell = (
     operationNameInBytes,
     // Trigger specific data
     triggerData.poolId,
-    position.debt.token.decimals,
-    position.collateral.token.decimals,
     triggerData.executionLTV,
     triggerData.targetLTV,
     triggerData.minSellPrice ?? 0n,
