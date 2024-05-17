@@ -3,8 +3,10 @@ import { BaseAaveContext } from './base-aave-context'
 import BigNumber from 'bignumber.js'
 import { ManageDebtActionsEnum } from './manage-debt-actions-enum'
 import { ManageCollateralActionsEnum } from './manage-collateral-actions-enum'
-import { get } from 'lodash'
-import { getAllowanceTokenAmount, getAllowanceTokenSymbol, getCollateralInputValue, getDebtInputValue } from 'features/aave/helpers/manage-inputs-helpers'
+import {
+  getAllowanceTokenAmount,
+  getAllowanceTokenSymbol,
+} from 'features/aave/helpers/manage-inputs-helpers'
 
 function allowanceForToken(
   transactionToken: string,
@@ -31,8 +33,7 @@ export function isAllowanceNeeded(context: BaseAaveContext): boolean {
   const allowance = allowanceForToken(token, context)
 
   const isDepositingAction =
-    context.manageTokenInput?.manageAction ===
-    ManageCollateralActionsEnum.DEPOSIT_COLLATERAL ||
+    context.manageTokenInput?.manageAction === ManageCollateralActionsEnum.DEPOSIT_COLLATERAL ||
     context.manageTokenInput?.manageAction === ManageDebtActionsEnum.PAYBACK_DEBT ||
     (context.userInput.amount || zero).gt(zero)
 
@@ -54,10 +55,7 @@ export function isAllowanceNeededManageActions(context: BaseAaveContext): boolea
 
   const allowance = allowanceForToken(tokenSymbol, context)
 
-  const allowanceNeeded =
-    (tokenAmount || zero).gt(
-      allowance || zero,
-    )
+  const allowanceNeeded = (tokenAmount || zero).gt(allowance || zero)
 
   return allowanceNeeded
 }

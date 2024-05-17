@@ -1,13 +1,15 @@
 import BigNumber from 'bignumber.js'
 import { Context } from 'blockchain/network.types'
 import { UserDpmAccount } from 'blockchain/userDpmProxies.types'
-import { type AaveLikePosition, IRiskRatio } from "@oasisdex/dma-library";
+import { type AaveLikePosition, IRiskRatio } from '@oasisdex/dma-library'
 import { TransactionParametersStateMachineResponseEvent } from 'features/stateMachines/transactionParameters'
 import { TransactionStateMachineResultEvents } from 'features/stateMachines/transaction'
 import { AllowanceStateMachineResponseEvent } from 'features/stateMachines/allowance'
 import {
-  IStrategyInfo, ManageTokenInput,
-  RefTransactionMachine, ReserveData,
+  IStrategyInfo,
+  ManageTokenInput,
+  RefTransactionMachine,
+  ReserveData,
   StrategyTokenAllowance,
   StrategyTokenBalance,
 } from './base-aave-context'
@@ -15,20 +17,31 @@ import { AutomationAddTriggerData } from 'features/automation/common/txDefinitio
 import { UserSettingsState } from 'features/userSettings/userSettings.types'
 import { ManageDebtActionsEnum } from './manage-debt-actions-enum'
 import { ManageCollateralActionsEnum } from './manage-collateral-actions-enum'
-import { ProfitsSimulationMapped, TriggerTransaction } from 'helpers/lambda/triggers';
+import { ProfitsSimulationMapped, TriggerTransaction } from 'helpers/lambda/triggers'
 
 type AaveOpenPositionWithStopLossEvents =
   | { type: 'SET_STOP_LOSS_LEVEL'; stopLossLevel: BigNumber }
   | { type: 'SET_TRAILING_STOP_LOSS_LEVEL'; trailingDistance: BigNumber }
   | { type: 'SET_COLLATERAL_ACTIVE'; collateralActive: boolean }
   | { type: 'SET_STOP_LOSS_TX_DATA'; stopLossTxData: AutomationAddTriggerData }
-  | { type: 'SET_TRAILING_STOP_LOSS_TX_DATA_LAMBDA'; trailingStopLossTxDataLambda: TriggerTransaction | undefined }
-  | { type: 'SET_PARTIAL_TAKE_PROFIT_TX_DATA_LAMBDA'; partialTakeProfitTxDataLambda: TriggerTransaction | undefined }
-  | { type: 'SET_PARTIAL_TAKE_PROFIT_PROFITS_LAMBDA'; partialTakeProfitProfits: ProfitsSimulationMapped[] | undefined }
-  | { type: 'SET_PARTIAL_TAKE_PROFIT_FIRST_PROFIT_LAMBDA'; partialTakeProfitFirstProfit: ProfitsSimulationMapped | undefined }
+  | {
+      type: 'SET_TRAILING_STOP_LOSS_TX_DATA_LAMBDA'
+      trailingStopLossTxDataLambda: TriggerTransaction | undefined
+    }
+  | {
+      type: 'SET_PARTIAL_TAKE_PROFIT_TX_DATA_LAMBDA'
+      partialTakeProfitTxDataLambda: TriggerTransaction | undefined
+    }
+  | {
+      type: 'SET_PARTIAL_TAKE_PROFIT_PROFITS_LAMBDA'
+      partialTakeProfitProfits: ProfitsSimulationMapped[] | undefined
+    }
+  | {
+      type: 'SET_PARTIAL_TAKE_PROFIT_FIRST_PROFIT_LAMBDA'
+      partialTakeProfitFirstProfit: ProfitsSimulationMapped | undefined
+    }
   | { type: 'SET_STOP_LOSS_TX_DATA_LAMBDA'; stopLossTxDataLambda: TriggerTransaction | undefined }
   | { type: 'SET_STOP_LOSS_SKIPPED'; stopLossSkipped: boolean }
-
 
 export type UpdateClosingAction = {
   type: 'UPDATE_CLOSING_ACTION'
@@ -80,4 +93,4 @@ export type BaseAaveEvent =
   | { type: 'SET_DEBT'; debt?: BigNumber }
   | AaveOpenPositionWithStopLossEvents
   | { type: 'CREATED_MACHINE'; refTransactionMachine: RefTransactionMachine }
-  | { type: 'UPDATE_RESERVE_DATA', reserveData: ReserveData }
+  | { type: 'UPDATE_RESERVE_DATA'; reserveData: ReserveData }

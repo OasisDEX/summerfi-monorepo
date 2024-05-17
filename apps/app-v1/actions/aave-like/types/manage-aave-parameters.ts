@@ -8,12 +8,12 @@ export interface ManageAaveParameters {
   currentPosition: IPosition
   slippage: BigNumber
   proxyAddress: string
-  userAddress: string,
+  userAddress: string
   manageTokenInput?: ManageTokenInput
   amount: BigNumber
   token?: string
   proxyType: ProxyType
   shouldCloseToCollateral: boolean
-  networkId: NetworkIds,
+  networkId: NetworkIds
   protocol: AaveLendingProtocol | SparkLendingProtocol
 }

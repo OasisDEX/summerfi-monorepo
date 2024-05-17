@@ -1,4 +1,4 @@
-import type { PrismaClient, UsersWhoFollowVaults } from '@summerfi/app-db';
+import type { PrismaClient, UsersWhoFollowVaults } from '@summerfi/app-db'
 import { Protocol } from '@summerfi/app-db'
 import { NetworkIds } from 'blockchain/networks'
 import { LIMIT_OF_FOLLOWED_VAULTS } from 'features/follow/common/consts'

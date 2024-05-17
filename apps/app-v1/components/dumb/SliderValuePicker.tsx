@@ -5,7 +5,7 @@ import type { SliderProps } from 'rc-slider'
 import type { ReactNode } from 'react'
 import React from 'react'
 import type { ThemeUIStyleObject } from 'theme-ui'
-import { Flex, Grid, Slider, Text , useThemeUI } from 'theme-ui'
+import { Flex, Grid, Slider, Text, useThemeUI } from 'theme-ui'
 
 export interface SliderValuePickerProps {
   sliderPercentageFill?: BigNumber

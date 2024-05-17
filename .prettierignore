@@ -18,3 +18,5 @@ artifacts
 **/.sst/**
 **/.turbo/**
 /packages/**/src/generated
+apps/app-v1/types
+apps/app-v1/**/*.json

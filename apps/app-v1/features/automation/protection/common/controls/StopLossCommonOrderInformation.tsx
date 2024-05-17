@@ -4,7 +4,7 @@ import { VaultChangesInformationItem } from 'components/vault/VaultChangesInform
 import { formatAmount, formatFiatBalance } from 'helpers/formatters/format'
 import { useTranslation } from 'next-i18next'
 import React from 'react'
-import { Box , Flex } from 'theme-ui'
+import { Box, Flex } from 'theme-ui'
 
 interface StopLossCommonOrderInformationProps {
   afterMaxToken: BigNumber

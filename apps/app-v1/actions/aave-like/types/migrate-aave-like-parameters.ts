@@ -4,11 +4,10 @@ import type { ReserveData } from 'features/aave/types'
 import type { AaveLikeLendingProtocol } from 'lendingProtocols'
 
 export interface MigrateAaveLikeParameters {
-  position: AaveLikePosition,
-  networkId: NetworkIds,
-  dpmAccount: string,
-  sourceAddress: string,
-  userAddress: string,
-  protocol: AaveLikeLendingProtocol,
-
+  position: AaveLikePosition
+  networkId: NetworkIds
+  dpmAccount: string
+  sourceAddress: string
+  userAddress: string
+  protocol: AaveLikeLendingProtocol
 }

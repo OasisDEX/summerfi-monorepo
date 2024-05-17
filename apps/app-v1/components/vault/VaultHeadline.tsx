@@ -10,7 +10,7 @@ import {
 import type { FollowButtonControlProps } from 'features/follow/controllers/FollowButtonControl'
 import type { ReactNode } from 'react'
 import React from 'react'
-import { Flex,Heading  } from 'theme-ui'
+import { Flex, Heading } from 'theme-ui'
 
 import type { HeadlineDetailsProp } from './VaultHeadlineDetails'
 import { VaultHeadlineDetails } from './VaultHeadlineDetails'

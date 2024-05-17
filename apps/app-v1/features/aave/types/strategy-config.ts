@@ -1,5 +1,5 @@
 import { NetworkConfigHexId, NetworkIds, NetworkNames } from 'blockchain/networks'
-import { AaveLikePosition, IPosition, IRiskRatio } from "@oasisdex/dma-library";
+import { AaveLikePosition, IPosition, IRiskRatio } from '@oasisdex/dma-library'
 import { AaveLendingProtocol, SparkLendingProtocol } from 'lendingProtocols'
 import BigNumber from 'bignumber.js'
 
@@ -10,15 +10,12 @@ import { BaseViewProps } from './base-aave-context'
 import { BaseAaveEvent } from './base-aave-event'
 import { ProductType } from './is-supported-product-type'
 import { FeaturesEnum } from 'types/config'
-import { AutomationFeatures } from "../../automation/common/types";
-
+import { AutomationFeatures } from '../../automation/common/types'
 
 type AaveHeader = (props: AaveHeaderProps) => JSX.Element
 type ManageAaveHeader = (props: ManageAaveHeaderProps) => JSX.Element
 type SimulateSection = (props: AaveManageComponentProps) => JSX.Element
-type VaultDetails = (
-  props: ManageSectionComponentProps & AaveManageComponentProps,
-) => JSX.Element
+type VaultDetails = (props: ManageSectionComponentProps & AaveManageComponentProps) => JSX.Element
 
 type SecondaryInput = (props: SecondaryInputProps) => JSX.Element
 
@@ -43,8 +40,8 @@ export type SecondaryInputProps = BaseViewProps<EventsRaisedFromSecondaryInput> 
 type EventsRaisedFromSecondaryInput =
   | { type: 'SET_RISK_RATIO'; riskRatio: IRiskRatio }
   | {
-  type: 'RESET_RISK_RATIO'
-}
+      type: 'RESET_RISK_RATIO'
+    }
   | { type: 'SET_DEBT'; debt: BigNumber }
   | BaseAaveEvent
 

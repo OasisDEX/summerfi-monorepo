@@ -1,7 +1,7 @@
 export enum ProductType {
   'Multiply' = 'Multiply',
   'Earn' = 'Earn',
-  'Borrow' = 'Borrow'
+  'Borrow' = 'Borrow',
 }
 
 export function isSupportedProductType(value: string): value is ProductType {

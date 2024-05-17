@@ -1,5 +1,4 @@
-import { NetworkNames } from "blockchain/networks";
-
+import { NetworkNames } from 'blockchain/networks'
 
 export type PortfolioOverviewResponse = {
   suppliedUsdValue: number

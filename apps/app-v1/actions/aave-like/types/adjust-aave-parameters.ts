@@ -1,7 +1,7 @@
 import { IPosition, IRiskRatio } from '@oasisdex/dma-library'
 import BigNumber from 'bignumber.js'
 import { ManageTokenInput, ProductType, ProxyType } from 'features/aave/types'
-import { AaveLendingProtocol, AaveLikeLendingProtocol } from 'lendingProtocols'
+import { AaveLikeLendingProtocol } from 'lendingProtocols'
 import { NetworkIds } from '../../../blockchain/networks'
 
 export interface AdjustAaveParameters {
@@ -15,5 +15,5 @@ export interface AdjustAaveParameters {
   proxyType: ProxyType
   positionType: ProductType
   protocol: AaveLikeLendingProtocol
-  networkId: NetworkIds,
+  networkId: NetworkIds
 }

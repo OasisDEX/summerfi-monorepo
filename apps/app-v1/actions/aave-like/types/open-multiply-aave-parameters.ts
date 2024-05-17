@@ -15,7 +15,7 @@ export interface OpenMultiplyAaveParameters {
   userAddress: string
   token?: string
   proxyType: ProxyType
-  positionType: 'Multiply' | 'Earn',
+  positionType: 'Multiply' | 'Earn'
   protocol: AaveLendingProtocol
   networkId: NetworkIds
 }

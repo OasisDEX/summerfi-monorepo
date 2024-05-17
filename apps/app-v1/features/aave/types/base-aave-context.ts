@@ -1,9 +1,10 @@
-import { AaveLikePosition, IPosition, IRiskRatio, IStrategy } from "@oasisdex/dma-library";
+import { AaveLikePosition, IPosition, IRiskRatio, IStrategy } from '@oasisdex/dma-library'
 import BigNumber from 'bignumber.js'
 import {
   DpmExecuteOperationExecutorActionParameters,
-  DpmExecuteOperationParameters, ExecuteTransactionParameters
-} from "blockchain/better-calls/dpm-account";
+  DpmExecuteOperationParameters,
+  ExecuteTransactionParameters,
+} from 'blockchain/better-calls/dpm-account'
 import { OperationExecutorTxMeta } from 'blockchain/calls/operationExecutor'
 import { TxMetaKind } from 'blockchain/calls/txMeta'
 import { Context, ContextConnected } from 'blockchain/network.types'
@@ -15,13 +16,16 @@ import { AutomationAddTriggerData } from 'features/automation/common/txDefinitio
 import { UserSettingsState } from 'features/userSettings/userSettings.types'
 import { HasGasEstimation } from 'helpers/types/HasGasEstimation.types'
 import { AllowanceStateMachine } from 'features/stateMachines/allowance'
-import { EthersTransactionStateMachine, TransactionStateMachine } from 'features/stateMachines/transaction'
+import {
+  EthersTransactionStateMachine,
+  TransactionStateMachine,
+} from 'features/stateMachines/transaction'
 import { zero } from 'helpers/zero'
 import { ActorRefFrom, EventObject, Sender } from 'xstate'
 import { AaveLikeReserveData } from 'lendingProtocols/aave-like-common'
-import { AaveLikeCumulativeData } from "features/omni-kit/protocols/aave-like/history/types";
-import { ProfitsSimulationMapped, TriggerTransaction } from "helpers/lambda/triggers";
-import { MigrateAaveContext } from "features/aave/manage/state/migrateAaveStateMachine";
+import { AaveLikeCumulativeData } from 'features/omni-kit/protocols/aave-like/history/types'
+import { ProfitsSimulationMapped, TriggerTransaction } from 'helpers/lambda/triggers'
+import { MigrateAaveContext } from 'features/aave/manage/state/migrateAaveStateMachine'
 
 export type UserInput = {
   riskRatio?: IRiskRatio
@@ -146,7 +150,9 @@ export function contextToTransactionParameters(context: BaseAaveContext): Operat
   }
 }
 
-export function contextToEthersTransactions(context: BaseAaveContext): DpmExecuteOperationExecutorActionParameters {
+export function contextToEthersTransactions(
+  context: BaseAaveContext,
+): DpmExecuteOperationExecutorActionParameters {
   const { amount, token } = getTxTokenAndAmount(context)
 
   return {
@@ -159,8 +165,9 @@ export function contextToEthersTransactions(context: BaseAaveContext): DpmExecut
   }
 }
 
-export function migrationContextToEthersTransactions(context: MigrateAaveContext): DpmExecuteOperationParameters {
-
+export function migrationContextToEthersTransactions(
+  context: MigrateAaveContext,
+): DpmExecuteOperationParameters {
   return {
     networkId: context.strategyConfig.networkId,
     proxyAddress: context.userDpmAccount?.proxy!,
@@ -169,13 +176,12 @@ export function migrationContextToEthersTransactions(context: MigrateAaveContext
   }
 }
 
-export function migrationContextToEthersApprovalTransactions(context: MigrateAaveContext): ExecuteTransactionParameters {
-
+export function migrationContextToEthersApprovalTransactions(
+  context: MigrateAaveContext,
+): ExecuteTransactionParameters {
   return {
     networkId: context.strategyConfig.networkId,
     ...context.approval!,
     signer: (context.web3Context as ContextConnected).transactionProvider,
   }
 }
-
-
