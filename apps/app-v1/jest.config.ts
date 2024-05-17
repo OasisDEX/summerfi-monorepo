@@ -24,8 +24,9 @@ const finalConfig = async (): Promise<Config.InitialOptions> => {
   const nextConfig: Config.InitialOptions = await createJestConfig(config)()
   return {
     ...nextConfig,
+    coveragePathIgnorePatterns: ['/src/mocks/', '/tests/'],
     transformIgnorePatterns: [
-      '/node_modules/(?!(@web3-onboard|nanoid|ramda|isows|uint8arrays|multiformats|@walletconnect)/)',
+      '<rootDir>/node_modules/(?!(@web3-onboard|nanoid|ramda|isows|uint8arrays|multiformats|@walletconnect)/)',
     ],
   }
 }
