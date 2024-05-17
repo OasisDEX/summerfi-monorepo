@@ -2,10 +2,14 @@ import { SummerStackContext } from './summer-stack-context'
 import { Cron, Function, FunctionProps } from 'sst/constructs'
 import * as process from 'node:process'
 
-export function addRaysConfig({ stack, api, vpc }: SummerStackContext) {
-  const { RAYS_DB_CONNECTION_STRING, SUBGRAPH_BASE } = process.env
-  if (!RAYS_DB_CONNECTION_STRING) {
-    throw new Error('RAYS_DB_CONNECTION_STRING is not set')
+export function addRaysConfig({ stack, api, vpc, app }: SummerStackContext) {
+  const { RAYS_DB_WRITE_CONNECTION_STRING, RAYS_DB_READ_CONNECTION_STRING, SUBGRAPH_BASE } =
+    process.env
+  if (!RAYS_DB_WRITE_CONNECTION_STRING) {
+    throw new Error('RAYS_DB_WRITE_CONNECTION_STRING is not set')
+  }
+  if (!RAYS_DB_READ_CONNECTION_STRING) {
+    throw new Error('RAYS_DB_READ_CONNECTION_STRING is not set')
   }
   if (!SUBGRAPH_BASE) {
     throw new Error('SUBGRAPH_BASE is not set')
@@ -17,7 +21,7 @@ export function addRaysConfig({ stack, api, vpc }: SummerStackContext) {
     logFormat: 'JSON',
     environment: {
       POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
-      RAYS_DB_CONNECTION_STRING,
+      RAYS_DB_CONNECTION_STRING: RAYS_DB_READ_CONNECTION_STRING,
     },
     ...(vpc && {
       vpc: vpc.vpc,
@@ -32,7 +36,7 @@ export function addRaysConfig({ stack, api, vpc }: SummerStackContext) {
     runtime: 'nodejs20.x',
     environment: {
       POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
-      RAYS_DB_CONNECTION_STRING,
+      RAYS_DB_CONNECTION_STRING: RAYS_DB_WRITE_CONNECTION_STRING,
       SUBGRAPH_BASE,
     },
     ...(vpc && {
@@ -50,8 +54,8 @@ export function addRaysConfig({ stack, api, vpc }: SummerStackContext) {
   )
 
   new Cron(stack, 'update-rays-cron', {
-    schedule: 'rate(3 minutes)',
-    enabled: false,
+    schedule: 'rate(2 hours)',
+    enabled: app.stage === 'staging', // only run in staging right now.
     job: updateRaysCronFunction,
   })
 

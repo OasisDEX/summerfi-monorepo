@@ -335,6 +335,17 @@ export const handler = async (
       }
 
       await trx
+        .insertInto('updatePointsChangelog')
+        .values({
+          endTimestamp: new Date(endTimestamp * 1000),
+          startTimestamp: new Date(startTimestamp * 1000),
+          metadata: {
+            positions: points.length,
+          },
+        })
+        .executeTakeFirstOrThrow()
+
+      await trx
         .updateTable('updatePointsLastRun')
         .set('lastTimestamp', new Date(endTimestamp * 1000))
         .where('id', '=', LAST_RUN_ID)
