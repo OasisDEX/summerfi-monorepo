@@ -164,7 +164,6 @@ export const StaticTokensData: TokenListData = {
       chainId: 1,
       logoURI: 'https://tokens.1inch.io/0x6810e776880c02933d47db1b9fc05908e5386b96.png',
     },
-    // USDT
     {
       name: 'Tether USD Stablecoin',
       address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
