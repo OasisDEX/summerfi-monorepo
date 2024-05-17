@@ -1,5 +1,5 @@
 import { FlashloanProvider, steps } from '@summerfi/sdk-common/simulation'
-import { ActionBuilderParams } from '@summerfi/protocol-plugins-common'
+import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { SendTokenAction } from '../actions/SendTokenAction'
 import { FlashloanAction } from '../actions/FlashloanAction'
 import { getContractAddress } from '../../utils/GetContractAddress'
@@ -12,6 +12,14 @@ export const FlashloanProviderMap: Record<FlashloanProvider, number> = {
 }
 
 export class RepayFlashloanActionBuilder extends BaseActionBuilder<steps.RepayFlashloanStep> {
+  /**
+   * Special case for this action builder: the Flashloan action is not declared in the list of used
+   * actions as it was already declared in the FlashloanActionBuilder. This is due to the Flashloan
+   * inversion problem in which the flashloan action is used when the RepayFlashloan step is built,
+   * but for the strategy definition we need to have the action registered at the Flashloan builder moment
+   */
+  readonly actions: ActionBuilderUsedAction[] = [{ action: SendTokenAction }]
+
   async build(params: ActionBuilderParams<steps.RepayFlashloanStep>): Promise<void> {
     const { user, context, step, addressBookManager } = params
 

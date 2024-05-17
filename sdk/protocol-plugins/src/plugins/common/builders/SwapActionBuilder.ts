@@ -1,9 +1,11 @@
 import { steps } from '@summerfi/sdk-common/simulation'
-import { ActionBuilderParams } from '@summerfi/protocol-plugins-common'
+import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { SwapAction } from '../actions/SwapAction'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
 export class SwapActionBuilder extends BaseActionBuilder<steps.SwapStep> {
+  readonly actions: ActionBuilderUsedAction[] = [{ action: SwapAction }]
+
   async build(params: ActionBuilderParams<steps.SwapStep>): Promise<void> {
     const { context, user, swapManager, addressBookManager, step } = params
 

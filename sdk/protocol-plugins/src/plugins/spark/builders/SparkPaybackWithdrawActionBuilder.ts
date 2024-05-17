@@ -4,7 +4,7 @@ import {
   TokenTransferTargetType,
 } from '@summerfi/sdk-common/simulation'
 import { IAddress } from '@summerfi/sdk-common/common'
-import { ActionBuilderParams } from '@summerfi/protocol-plugins-common'
+import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { SetApprovalAction } from '../../common'
 import { SparkWithdrawAction } from '../actions/SparkWithdrawAction'
 import { SparkPaybackAction } from '../actions/SparkPaybackAction'
@@ -13,6 +13,12 @@ import { isSparkLendingPool } from '../interfaces/ISparkLendingPool'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
 export class SparkPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.PaybackWithdrawStep> {
+  readonly actions: ActionBuilderUsedAction[] = [
+    { action: SetApprovalAction, isOptionalTags: ['paybackAmount'] },
+    { action: SparkPaybackAction, isOptionalTags: ['paybackAmount'] },
+    { action: SparkWithdrawAction, isOptionalTags: ['withdrawAmount'] },
+  ]
+
   async build(params: ActionBuilderParams<steps.PaybackWithdrawStep>): Promise<void> {
     const { context, step, addressBookManager, user } = params
 

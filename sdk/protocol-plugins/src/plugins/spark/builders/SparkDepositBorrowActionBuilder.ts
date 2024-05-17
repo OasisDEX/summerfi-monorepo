@@ -6,13 +6,19 @@ import {
 import { SparkBorrowAction } from '../actions/SparkBorrowAction'
 import { SparkDepositAction } from '../actions/SparkDepositAction'
 import { IAddress } from '@summerfi/sdk-common/common'
-import { ActionBuilderParams } from '@summerfi/protocol-plugins-common'
+import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { SetApprovalAction } from '../../common'
 import { getContractAddress } from '../../utils/GetContractAddress'
 import { isSparkLendingPool } from '../interfaces/ISparkLendingPool'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
 export class SparkDepositBorrowActionBuilder extends BaseActionBuilder<steps.DepositBorrowStep> {
+  readonly actions: ActionBuilderUsedAction[] = [
+    { action: SetApprovalAction },
+    { action: SparkDepositAction },
+    { action: SparkBorrowAction, isOptionalTags: ['borrowAmount'] },
+  ]
+
   async build(params: ActionBuilderParams<steps.DepositBorrowStep>): Promise<void> {
     const { context, user, step, addressBookManager } = params
 

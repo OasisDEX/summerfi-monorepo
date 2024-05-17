@@ -2,6 +2,7 @@ import { ChainFamilyMap, IPosition, IPositionId, Maybe } from '@summerfi/sdk-com
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import {
   ActionBuilderParams,
+  ActionBuilderUsedAction,
   ActionBuildersMap,
   IActionBuilder,
   IProtocolPlugin,
@@ -25,42 +26,50 @@ import { BaseActionBuilder } from '../../src'
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 export class PaybackWithdrawActionBuilderMock extends BaseActionBuilder<steps.PaybackWithdrawStep> {
+  actions: ActionBuilderUsedAction[] = []
   async build(params: ActionBuilderParams<steps.PaybackWithdrawStep>): Promise<void> {
     ;(params.context as StepBuilderContextMock).setCheckpoint('PaybackWithdrawActionBuilderMock')
   }
 }
 
 export class DepositBorrowActionBuilderMock extends BaseActionBuilder<steps.DepositBorrowStep> {
+  actions: ActionBuilderUsedAction[] = []
   async build(params: ActionBuilderParams<steps.DepositBorrowStep>): Promise<void> {
     ;(params.context as StepBuilderContextMock).setCheckpoint('DepositBorrowActionBuilderMock')
   }
 }
 
 export class ImportPositionActionBuilderMock extends BaseActionBuilder<steps.ImportStep> {
+  actions: ActionBuilderUsedAction[] = []
   async build(params: ActionBuilderParams<steps.ImportStep>): Promise<void> {
     ;(params.context as StepBuilderContextMock).setCheckpoint('ImportPositionActionBuilderMock')
   }
 }
 
 export class OpenPositionActionBuilderMock extends BaseActionBuilder<steps.OpenPosition> {
+  actions: ActionBuilderUsedAction[] = []
   async build(params: ActionBuilderParams<steps.OpenPosition>): Promise<void> {
     ;(params.context as StepBuilderContextMock).setCheckpoint('OpenPositionActionBuilderMock')
   }
 }
 
 export class PaybackWithdrawActionBuilderNoCheckpointMock extends BaseActionBuilder<steps.PaybackWithdrawStep> {
+  actions: ActionBuilderUsedAction[] = []
   async build(params: ActionBuilderParams<steps.PaybackWithdrawStep>): Promise<void> {}
 }
 
 export class DepositBorrowActionBuilderNoCheckpointMock extends BaseActionBuilder<steps.DepositBorrowStep> {
+  actions: ActionBuilderUsedAction[] = []
   async build(params: ActionBuilderParams<steps.DepositBorrowStep>): Promise<void> {}
 }
 
 export class ImportPositionActionBuilderNoCheckpointMock extends BaseActionBuilder<steps.ImportStep> {
+  actions: ActionBuilderUsedAction[] = []
   async build(params: ActionBuilderParams<steps.ImportStep>): Promise<void> {}
 }
 
 export class OpenPositionActionBuilderNoCheckpointMock extends BaseActionBuilder<steps.OpenPosition> {
+  actions: ActionBuilderUsedAction[] = []
   async build(params: ActionBuilderParams<steps.OpenPosition>): Promise<void> {}
 }
 

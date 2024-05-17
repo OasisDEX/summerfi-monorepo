@@ -13,10 +13,6 @@
       "path": "../testing-utils"
     }
   ],
-  "include": [
-    "src/**/*.ts",
-    "tests/**/*.ts",
-    "../protocol-plugins/src/implementation/BaseActionBuilder.ts"
-  ],
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

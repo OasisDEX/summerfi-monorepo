@@ -1,9 +1,11 @@
 import { steps } from '@summerfi/sdk-common/simulation'
-import { ActionBuilderParams } from '@summerfi/protocol-plugins-common'
+import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { ReturnFundsAction } from '../actions/ReturnFundsAction'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
 export class ReturnFundsActionBuilder extends BaseActionBuilder<steps.ReturnFundsStep> {
+  readonly actions: ActionBuilderUsedAction[] = [{ action: ReturnFundsAction }]
+
   async build(params: ActionBuilderParams<steps.ReturnFundsStep>): Promise<void> {
     const { context, step } = params
 

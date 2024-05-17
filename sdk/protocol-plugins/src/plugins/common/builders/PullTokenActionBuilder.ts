@@ -1,9 +1,11 @@
 import { steps, getValueFromReference } from '@summerfi/sdk-common/simulation'
-import { ActionBuilderParams } from '@summerfi/protocol-plugins-common'
+import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { PullTokenAction } from '../actions/PullTokenAction'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
 export class PullTokenActionBuilder extends BaseActionBuilder<steps.PullTokenStep> {
+  readonly actions: ActionBuilderUsedAction[] = [{ action: PullTokenAction }]
+
   async build(params: ActionBuilderParams<steps.PullTokenStep>): Promise<void> {
     const { context, positionsManager, step } = params
 

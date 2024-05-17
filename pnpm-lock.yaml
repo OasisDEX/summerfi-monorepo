@@ -1525,6 +1525,31 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
+  sdk/tools:
+    dependencies:
+      '@summerfi/protocol-plugins':
+        specifier: workspace:*
+        version: link:../protocol-plugins
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@types/yargs':
+        specifier: ^17.0.32
+        version: 17.0.32
+      tsx:
+        specifier: ^4.7.2
+        version: 4.9.3
+      yargs:
+        specifier: ^17.7.2
+        version: 17.7.2
+
   stacks:
     devDependencies:
       '@summerfi/eslint-config':

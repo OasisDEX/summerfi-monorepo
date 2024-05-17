@@ -4,7 +4,7 @@ import {
   TokenTransferTargetType,
 } from '@summerfi/sdk-common/simulation'
 import { IAddress } from '@summerfi/sdk-common/common'
-import { ActionBuilderParams } from '@summerfi/protocol-plugins-common'
+import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { SetApprovalAction } from '../../common'
 import { AaveV3WithdrawAction } from '../actions/AaveV3WithdrawAction'
 import { AaveV3PaybackAction } from '../actions/AaveV3PaybackAction'
@@ -14,6 +14,12 @@ import { Address } from '@summerfi/sdk-common'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
 export class AaveV3PaybackWithdrawActionBuilder extends BaseActionBuilder<steps.PaybackWithdrawStep> {
+  readonly actions: ActionBuilderUsedAction[] = [
+    { action: SetApprovalAction, isOptionalTags: ['paybackAmount'] },
+    { action: AaveV3PaybackAction, isOptionalTags: ['paybackAmount'] },
+    { action: AaveV3WithdrawAction, isOptionalTags: ['withdrawAmount'] },
+  ]
+
   async build(params: ActionBuilderParams<steps.PaybackWithdrawStep>): Promise<void> {
     const { context, step, addressBookManager, user } = params
 

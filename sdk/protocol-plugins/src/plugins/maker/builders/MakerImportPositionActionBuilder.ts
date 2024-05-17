@@ -1,10 +1,14 @@
 import { steps } from '@summerfi/sdk-common/simulation'
-import { ActionBuilderParams } from '@summerfi/protocol-plugins-common'
+import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { isMakerLendingPoolId } from '../interfaces/IMakerLendingPoolId'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
 export class MakerImportPositionActionBuilder extends BaseActionBuilder<steps.ImportStep> {
+  readonly actions: ActionBuilderUsedAction[] = [
+    // Empty on purpose, no definition needs to be generated for this builder
+  ]
+
   async build(params: ActionBuilderParams<steps.ImportStep>): Promise<void> {
     const { protocolsRegistry, step, user, context, positionsManager } = params
 

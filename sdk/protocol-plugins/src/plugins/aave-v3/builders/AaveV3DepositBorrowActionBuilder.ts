@@ -4,7 +4,7 @@ import {
   TokenTransferTargetType,
 } from '@summerfi/sdk-common/simulation'
 import { IAddress } from '@summerfi/sdk-common/common'
-import { ActionBuilderParams } from '@summerfi/protocol-plugins-common'
+import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { SetApprovalAction } from '../../common'
 import { AaveV3DepositAction } from '../actions/AaveV3DepositAction'
 import { AaveV3BorrowAction } from '../actions/AaveV3BorrowAction'
@@ -13,6 +13,12 @@ import { isAaveV3LendingPool } from '../interfaces/IAaveV3LendingPool'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
 export class AaveV3DepositBorrowActionBuilder extends BaseActionBuilder<steps.DepositBorrowStep> {
+  readonly actions: ActionBuilderUsedAction[] = [
+    { action: SetApprovalAction },
+    { action: AaveV3DepositAction },
+    { action: AaveV3BorrowAction, isOptionalTags: ['borrowAmount'] },
+  ]
+
   async build(params: ActionBuilderParams<steps.DepositBorrowStep>): Promise<void> {
     const { context, step, addressBookManager, user } = params
 

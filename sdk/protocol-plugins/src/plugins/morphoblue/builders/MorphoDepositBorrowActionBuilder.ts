@@ -5,12 +5,19 @@ import {
 } from '@summerfi/sdk-common/simulation'
 import { MorphoBorrowAction } from '../actions/MorphoBorrowAction'
 import { MorphoDepositAction } from '../actions/MorphoDepositAction'
-import { ActionBuilderParams } from '@summerfi/protocol-plugins-common'
+import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { SendTokenAction, SetApprovalAction } from '../../common'
 import { isMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
 export class MorphoDepositBorrowActionBuilder extends BaseActionBuilder<steps.DepositBorrowStep> {
+  readonly actions: ActionBuilderUsedAction[] = [
+    { action: SetApprovalAction },
+    { action: MorphoDepositAction },
+    { action: MorphoBorrowAction, isOptionalTags: ['borrowAmount'] },
+    { action: SendTokenAction, isOptionalTags: ['borrowAmount', 'borrowTargetType'] },
+  ]
+
   async build(params: ActionBuilderParams<steps.DepositBorrowStep>): Promise<void> {
     const { context, user, step, addressBookManager } = params
 

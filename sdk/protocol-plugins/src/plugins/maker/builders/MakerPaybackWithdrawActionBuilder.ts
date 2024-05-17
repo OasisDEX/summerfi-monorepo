@@ -1,12 +1,17 @@
 import { getValueFromReference, steps } from '@summerfi/sdk-common/simulation'
 import { MakerPaybackAction } from '../actions/MakerPaybackAction'
 import { MakerWithdrawAction } from '../actions/MakerWithdrawAction'
-import { ActionBuilderParams } from '@summerfi/protocol-plugins-common'
+import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { MakerIlkToJoinMap } from '../types/MakerIlkToJoinMap'
 import { isMakerLendingPoolId } from '../interfaces/IMakerLendingPoolId'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
 export class MakerPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.PaybackWithdrawStep> {
+  readonly actions: ActionBuilderUsedAction[] = [
+    { action: MakerPaybackAction, isOptionalTags: ['paybackAmount'] },
+    { action: MakerWithdrawAction },
+  ]
+
   async build(params: ActionBuilderParams<steps.PaybackWithdrawStep>): Promise<void> {
     const { context, user, positionsManager, step, addressBookManager } = params
 

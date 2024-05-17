@@ -1,11 +1,17 @@
 import { getValueFromReference, steps } from '@summerfi/sdk-common/simulation'
-import { ActionBuilderParams } from '@summerfi/protocol-plugins-common'
+import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { isMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
 import { MorphoPaybackAction, MorphoWithdrawAction } from '../actions'
 import { SetApprovalAction } from '../../common'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
 export class MorphoPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.PaybackWithdrawStep> {
+  readonly actions: ActionBuilderUsedAction[] = [
+    { action: SetApprovalAction, isOptionalTags: ['paybackAmount'] },
+    { action: MorphoPaybackAction, isOptionalTags: ['paybackAmount'] },
+    { action: MorphoWithdrawAction },
+  ]
+
   async build(params: ActionBuilderParams<steps.PaybackWithdrawStep>): Promise<void> {
     const { context, positionsManager, step, addressBookManager, user } = params
 

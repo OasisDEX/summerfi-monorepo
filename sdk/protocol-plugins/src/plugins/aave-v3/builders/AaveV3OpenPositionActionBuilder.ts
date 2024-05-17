@@ -1,10 +1,12 @@
 import { steps } from '@summerfi/sdk-common/simulation'
-import { ActionBuilderParams } from '@summerfi/protocol-plugins-common'
+import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { isAaveV3LendingPool } from '../interfaces'
 import { AaveV3SetEmodeAction } from '../actions/AaveV3SetEmodeAction'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
 export class AaveV3OpenPositionActionBuilder extends BaseActionBuilder<steps.OpenPosition> {
+  readonly actions: ActionBuilderUsedAction[] = [{ action: AaveV3SetEmodeAction }]
+
   async build(params: ActionBuilderParams<steps.OpenPosition>): Promise<void> {
     const { context, step } = params
 

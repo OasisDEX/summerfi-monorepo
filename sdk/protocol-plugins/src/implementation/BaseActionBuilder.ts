@@ -3,7 +3,12 @@ import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { IAddressBookManager } from '@summerfi/address-book-common'
 import { IAddress, IChainInfo } from '@summerfi/sdk-common/common'
 import { getContractAddress } from '../plugins/utils/GetContractAddress'
-import { ActionBuilderParams, FilterStep, IActionBuilder } from '@summerfi/protocol-plugins-common'
+import {
+  ActionBuilderParams,
+  ActionBuilderUsedAction,
+  FilterStep,
+  IActionBuilder,
+} from '@summerfi/protocol-plugins-common'
 
 /**
  * Base class for all action builders
@@ -16,14 +21,15 @@ import { ActionBuilderParams, FilterStep, IActionBuilder } from '@summerfi/proto
 export abstract class BaseActionBuilder<StepType extends steps.Steps>
   implements IActionBuilder<StepType>
 {
-  /**
-   * Main function to build the action
-   *
-   * @param params Specific parameters for the action builder. @see ActionBuilderParams
-   */
+  /** @see IActionBuilder.actions */
+  abstract readonly actions: ActionBuilderUsedAction[]
+
+  /** @see IActionBuilder.build */
   public abstract build(
     params: ActionBuilderParams<FilterStep<SimulationSteps, StepType>>,
   ): Promise<void>
+
+  /** PROTECTED */
 
   /**
    * Delegates the building of the action to the specific builder in the corresponding protocol plugin
