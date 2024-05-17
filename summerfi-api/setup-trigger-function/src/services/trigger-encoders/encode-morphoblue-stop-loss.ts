@@ -37,9 +37,9 @@ export const encodeMorphoBlueStopLoss = (
     triggerData.token === position.collateral.token.address
       ? OPERATION_NAMES.morphoblue.CLOSE_AND_REMAIN
       : OPERATION_NAMES.morphoblue.CLOSE_AND_REMAIN
-      // Note: We use close and remain name for both here as the hash of hashes for both ops are the same
-      // May cause issues tracking in Subgraph
-      // : OPERATION_NAMES.morphoblue.CLOSE_POSITION
+  // Note: We use close and remain name for both here as the hash of hashes for both ops are the same
+  // May cause issues tracking in Subgraph
+  // : OPERATION_NAMES.morphoblue.CLOSE_POSITION
 
   if (operationName === undefined) {
     throw new Error('Invalid trigger type')
