@@ -67,8 +67,6 @@ export class AaveV3LikeProtocolDataBuilder<
           address: Address.createFromEthereum({ value: reservesToken.tokenAddress }),
         })
         if (!token) {
-          console.log(reservesToken)
-
           throw new Error(`Token not found for address: ${reservesToken.tokenAddress}`)
         }
         return token
