@@ -1,4 +1,5 @@
 import type { TriggersQuery } from '@summerfi/automation-subgraph'
+import { getTriggerPoolId } from './get-trigger-pool-id'
 
 export const mapTriggerCommonParams = (trigger: TriggersQuery['triggers'][number]) => ({
   triggerId: trigger.id,
@@ -37,3 +38,15 @@ export const mapBuySellCommonParams = ({
   deviation: decodedData[decodedDataNames.indexOf('deviation')],
   maxBaseFeeInGwei: decodedData[decodedDataNames.indexOf('maxBaseFeeInGwei')],
 })
+
+export const mapTriggersWithSamePoolId = ({
+  poolId,
+  trigger,
+}: {
+  poolId: string
+  trigger: TriggersQuery['triggers'][number]
+}) => {
+  const poolIdFromTrigger = getTriggerPoolId(trigger)
+
+  return poolIdFromTrigger.toLowerCase() === poolId.toLowerCase()
+}

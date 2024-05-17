@@ -60,6 +60,7 @@ import {
   mapBuySellCommonParams,
   mapStopLossParams,
   mapTriggerCommonParams,
+  mapTriggersWithSamePoolId,
 } from './helpers'
 import { getPricesSubgraphClient } from '@summerfi/prices-subgraph'
 import {
@@ -339,6 +340,7 @@ export const handler = async (
 
   const morphoBlueStopLoss: MorphoBlueStopLoss | undefined = triggers.triggers
     .filter((trigger) => trigger.triggerType == MorphoBlueStopLossV2ID)
+    .filter((trigger) => mapTriggersWithSamePoolId({ trigger, poolId: params.poolId }))
     .map((trigger) => {
       return {
         triggerTypeName: 'MorphoBlueStopLossV2' as const,
@@ -350,6 +352,7 @@ export const handler = async (
 
   const morphoBlueBasicBuy: MorphoBlueBasicBuy | undefined = triggers.triggers
     .filter((trigger) => trigger.triggerType == MorphoBlueBasicBuyV2ID)
+    .filter((trigger) => mapTriggersWithSamePoolId({ trigger, poolId: params.poolId }))
     .map((trigger) => {
       return {
         triggerTypeName: 'MorphoBlueBasicBuyV2' as const,
@@ -363,6 +366,7 @@ export const handler = async (
     })[0]
   const morphoBlueBasicSell: MorphoBlueBasicSell | undefined = triggers.triggers
     .filter((trigger) => trigger.triggerType == MorphoBlueBasicSellV2ID)
+    .filter((trigger) => mapTriggersWithSamePoolId({ trigger, poolId: params.poolId }))
     .map((trigger) => {
       return {
         triggerTypeName: 'MorphoBlueBasicSellV2' as const,
@@ -389,11 +393,13 @@ export const handler = async (
 
   const morphoBlueTrailingStopLoss = await getDmaMorphoBlueTrailingStopLoss({
     triggers,
+    poolId: params.poolId,
     pricesSubgraphClient,
     logger,
   })
   const morphoBluePartialTakeProfit = await getMorphoBluePartialTakeProfit({
     triggers,
+    poolId: params.poolId,
     logger,
     publicClient,
     getDetails: params.getDetails,

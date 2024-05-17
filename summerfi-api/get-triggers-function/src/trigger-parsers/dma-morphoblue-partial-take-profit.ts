@@ -5,7 +5,7 @@ import {
 } from '@summerfi/triggers-shared/contracts'
 import { TriggersQuery } from '@summerfi/automation-subgraph'
 import { Logger } from '@aws-lambda-powertools/logger'
-import { mapTriggerCommonParams } from '../helpers'
+import { mapTriggerCommonParams, mapTriggersWithSamePoolId } from '../helpers'
 import {
   simulateAutoTakeProfit,
   getCurrentMorphoBlueStopLoss,
@@ -17,6 +17,7 @@ import { Addresses } from '@summerfi/triggers-shared'
 
 export const getMorphoBluePartialTakeProfit = async ({
   triggers,
+  poolId,
   logger,
   publicClient,
   getDetails,
@@ -24,6 +25,7 @@ export const getMorphoBluePartialTakeProfit = async ({
   stopLoss,
 }: {
   triggers: TriggersQuery
+  poolId: string
   logger: Logger
   publicClient: PublicClient
   getDetails: boolean
@@ -31,7 +33,9 @@ export const getMorphoBluePartialTakeProfit = async ({
   stopLoss?: Trigger
 }): Promise<MorphoBluePartialTakeProfit | undefined> => {
   const trigger = triggers.triggers.find(
-    (trigger) => trigger.triggerType == MorphoBluePartialTakeProfitID,
+    (trigger) =>
+      trigger.triggerType == MorphoBluePartialTakeProfitID &&
+      mapTriggersWithSamePoolId({ trigger, poolId }),
   )
 
   if (!trigger) {
