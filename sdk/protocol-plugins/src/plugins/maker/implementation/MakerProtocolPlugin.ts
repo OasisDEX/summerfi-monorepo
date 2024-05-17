@@ -135,7 +135,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
     if (!isMakerLendingPoolId(params.externalPosition.position.pool.id)) {
       throw new Error('Invalid Maker pool ID')
     }
-    if (!isMakerPositionId(params.externalPosition.position)) {
+    if (!isMakerPositionId(params.externalPosition.position.id)) {
       throw new Error('Invalid Maker position ID')
     }
 
@@ -158,7 +158,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
       cdpManagerAddress: cdpManagerAddress.value,
       makerProxyActionsAddress: dssProxyActionsAddress.value,
       giveToAddress: params.positionsManager.address.value,
-      cdpId: params.externalPosition.position.vaultId,
+      cdpId: params.externalPosition.position.id.vaultId,
     })
 
     return {
