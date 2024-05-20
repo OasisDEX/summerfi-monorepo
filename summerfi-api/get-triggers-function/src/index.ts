@@ -561,7 +561,7 @@ export const handler = async (
       morphoBlueBasicBuy: getCurrentTrigger(morphoBlueBasicBuy),
       morphoBlueBasicSell: getCurrentTrigger(morphoBlueBasicSell),
       morphoBluePartialTakeProfit: getCurrentTrigger(morphoBluePartialTakeProfit),
-      morphoBlueStopLoss,
+      morphoBlueStopLoss: getCurrentTrigger(morphoBlueStopLoss, morphoBlueTrailingStopLoss),
     },
     additionalData: {
       params: {
