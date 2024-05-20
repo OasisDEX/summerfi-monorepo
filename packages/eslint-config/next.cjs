@@ -29,6 +29,7 @@ module.exports = {
     '*.config.ts', // vite config
     'tsconfig.tsbuildinfo', // tsconfig.tsbuildinfo
     'node_modules/',
+    'out/',
   ],
   overrides: [{ files: ['*.js?(x)', '*.ts?(x)'] }],
   plugins: [
