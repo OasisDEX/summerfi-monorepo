@@ -1,4 +1,5 @@
 import { CacheProvider, Global } from '@emotion/core'
+import { GlobalStyles } from '@summerfi/app-ui'
 import { Web3OnboardProvider } from '@web3-onboard/react'
 import type { AbstractConnector } from '@web3-react/abstract-connector'
 import { Web3ReactProvider } from '@web3-react/core'
@@ -175,6 +176,7 @@ function App({ Component, pageProps }: AppProps & CustomAppProps) {
                               <MigrationsProvider>
                                 <DeferedContextProvider context={accountContext}>
                                   <ModalProvider>
+                                    <GlobalStyles />
                                     <Component {...pageProps} />
                                     <CookieBannerDynamic
                                       setValue={cookiesSetValue}
