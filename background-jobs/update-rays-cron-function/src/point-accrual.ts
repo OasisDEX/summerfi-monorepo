@@ -54,7 +54,7 @@ export class SummerPointsService {
   constructor(
     private clients: SummerPointsSubgraphClient[],
     private logger: Logger,
-  ) {}
+  ) { }
 
   async accruePoints(startTimestamp: number, endTimestamp: number): Promise<PositionPoints> {
     const results = await Promise.all(
@@ -175,14 +175,13 @@ export class SummerPointsService {
           endTimestamp,
         )
         const migrationPoints = this.getMigrationPoints(position.migration)
-        const swapPoints = this.getSwapPoints(user.recentSwaps)
+        const swapPoints = swapMultiplier * this.getSwapPoints(user.recentSwaps)
 
         const timeOpenMultiplier = this.getTimeOpenMultiplier(position, endTimestamp)
         const automationProtectionMultiplier = this.getAutomationProtectionMultiplier(position)
         const lazyVaultMultiplier = this.getLazyVaultMultiplier(position)
         const totalMultiplier =
           protocolBoostMultiplier *
-          swapMultiplier *
           timeOpenMultiplier *
           automationProtectionMultiplier *
           lazyVaultMultiplier
