@@ -338,7 +338,7 @@ export const handler = async (
       }
     })[0]
 
-  const morphoBlueStandardStopLoss: MorphoBlueStopLoss | undefined = triggers.triggers
+  const morphoBlueStopLoss: MorphoBlueStopLoss | undefined = triggers.triggers
     .filter((trigger) => trigger.triggerType == MorphoBlueStopLossV2ID)
     .filter((trigger) => mapTriggersWithSamePoolId({ trigger, poolId: params.poolId }))
     .map((trigger) => {
@@ -404,7 +404,7 @@ export const handler = async (
     publicClient,
     getDetails: params.getDetails,
     addresses,
-    stopLoss: morphoBlueStandardStopLoss,
+    stopLoss: morphoBlueStopLoss,
   })
 
   const aaveStopLoss = getCurrentTrigger(
@@ -420,11 +420,6 @@ export const handler = async (
     sparkStopLossToDebt,
     sparkStopLossToDebtDMA,
     sparkTrailingStopLossDMA,
-  )
-
-  const morphoBlueStopLoss = getCurrentTrigger(
-    morphoBlueStandardStopLoss,
-    morphoBlueTrailingStopLoss,
   )
 
   const aavePartialTakeProfit = await getDmaAavePartialTakeProfit({
@@ -489,7 +484,7 @@ export const handler = async (
           basicBuy: morphoBlueBasicBuy,
           basicSell: morphoBlueBasicSell,
           partialTakeProfit: morphoBluePartialTakeProfit,
-          stopLoss: morphoBlueStandardStopLoss,
+          stopLoss: morphoBlueStopLoss,
           trailingStopLoss: morphoBlueTrailingStopLoss,
         },
       }),
@@ -523,7 +518,7 @@ export const handler = async (
       },
       ...(params.poolId && {
         [`${ProtocolId.MORPHO_BLUE}-${params.poolId}`]: {
-          isStopLossEnabled: hasAnyDefined(morphoBlueStandardStopLoss),
+          isStopLossEnabled: hasAnyDefined(morphoBlueStopLoss),
           isBasicBuyEnabled: hasAnyDefined(morphoBlueBasicBuy),
           isBasicSellEnabled: hasAnyDefined(morphoBlueBasicSell),
           isPartialTakeProfitEnabled: hasAnyDefined(morphoBluePartialTakeProfit),
@@ -566,7 +561,7 @@ export const handler = async (
       morphoBlueBasicBuy: getCurrentTrigger(morphoBlueBasicBuy),
       morphoBlueBasicSell: getCurrentTrigger(morphoBlueBasicSell),
       morphoBluePartialTakeProfit: getCurrentTrigger(morphoBluePartialTakeProfit),
-      morphoBlueStopLoss,
+      morphoBlueStopLoss: getCurrentTrigger(morphoBlueStopLoss, morphoBlueTrailingStopLoss),
     },
     additionalData: {
       params: {
