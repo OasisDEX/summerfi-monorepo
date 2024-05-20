@@ -19,6 +19,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
+    "out/**/*",
     "./.eslintrc.cjs"
   ],
   "exclude": ["node_modules"]
