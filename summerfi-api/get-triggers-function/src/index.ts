@@ -56,6 +56,7 @@ import {
 } from '@summerfi/triggers-shared/contracts'
 import {
   getCurrentTrigger,
+  getMorphoLambdaPriceConverted,
   hasAnyDefined,
   mapBuySellCommonParams,
   mapStopLossParams,
@@ -73,6 +74,7 @@ import {
 import { ChainId, getRpcGatewayEndpoint, IRpcConfig, ProtocolId } from '@summerfi/serverless-shared'
 import { getAddresses } from '@summerfi/triggers-shared'
 import { getMorphoBluePartialTakeProfit } from './trigger-parsers/dma-morphoblue-partial-take-profit'
+import { getTokensFromTrigger } from './helpers/get-tokens-from-trigger'
 
 const logger = new Logger({ serviceName: 'get-triggers-function' })
 
@@ -354,12 +356,18 @@ export const handler = async (
     .filter((trigger) => trigger.triggerType == MorphoBlueBasicBuyV2ID)
     .filter((trigger) => mapTriggersWithSamePoolId({ trigger, poolId: params.poolId }))
     .map((trigger) => {
+      const { collateralToken, debtToken } = getTokensFromTrigger(trigger)
+
       return {
         triggerTypeName: 'MorphoBlueBasicBuyV2' as const,
         triggerType: MorphoBlueBasicBuyV2ID,
         ...mapTriggerCommonParams(trigger),
         decodedParams: {
-          maxBuyPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('maxBuyPrice')],
+          maxBuyPrice: getMorphoLambdaPriceConverted({
+            price: BigInt(trigger.decodedData[trigger.decodedDataNames.indexOf('maxBuyPrice')]),
+            collateralDecimals: collateralToken.decimals,
+            debtDecimals: debtToken.decimals,
+          }).toString(),
           ...mapBuySellCommonParams(trigger),
         },
       }
@@ -368,12 +376,18 @@ export const handler = async (
     .filter((trigger) => trigger.triggerType == MorphoBlueBasicSellV2ID)
     .filter((trigger) => mapTriggersWithSamePoolId({ trigger, poolId: params.poolId }))
     .map((trigger) => {
+      const { collateralToken, debtToken } = getTokensFromTrigger(trigger)
+
       return {
         triggerTypeName: 'MorphoBlueBasicSellV2' as const,
         triggerType: MorphoBlueBasicSellV2ID,
         ...mapTriggerCommonParams(trigger),
         decodedParams: {
-          minSellPrice: trigger.decodedData[trigger.decodedDataNames.indexOf('minSellPrice')],
+          minSellPrice: getMorphoLambdaPriceConverted({
+            price: BigInt(trigger.decodedData[trigger.decodedDataNames.indexOf('minSellPrice')]),
+            collateralDecimals: collateralToken.decimals,
+            debtDecimals: debtToken.decimals,
+          }).toString(),
           ...mapBuySellCommonParams(trigger),
         },
       }

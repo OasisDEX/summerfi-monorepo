@@ -13,6 +13,7 @@ import { MorphoBlueAutoSellTriggerData } from '~types'
 import { CurrentTriggerLike, PositionLike } from '@summerfi/triggers-shared'
 
 import { getMaxCoverage } from './get-max-coverage'
+import { getMorphoOraclePriceConverted } from './get-morpho-oracle-price-converted'
 
 export const encodeMorphoBlueAutoSell = (
   position: PositionLike,
@@ -41,6 +42,14 @@ export const encodeMorphoBlueAutoSell = (
 
   const maxCoverage = getMaxCoverage(position)
 
+  const resolvedMinSellPrice = triggerData.minSellPrice
+    ? getMorphoOraclePriceConverted({
+        price: triggerData.minSellPrice,
+        debtDecimals: position.debt.token.decimals,
+        collateralDecimals: position.collateral.token.decimals,
+      })
+    : 0n
+
   const encodedTriggerData = encodeAbiParameters(abiParameters, [
     // CommonTriggerData
     position.address,
@@ -53,7 +62,7 @@ export const encodeMorphoBlueAutoSell = (
     triggerData.poolId,
     triggerData.executionLTV,
     triggerData.targetLTV,
-    triggerData.minSellPrice ?? 0n,
+    resolvedMinSellPrice,
     DEFAULT_DEVIATION, // 100 -> 1%
     triggerData.maxBaseFee,
   ])
