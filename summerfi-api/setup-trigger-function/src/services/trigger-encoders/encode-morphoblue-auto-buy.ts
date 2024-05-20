@@ -13,6 +13,7 @@ import { DEFAULT_DEVIATION } from './defaults'
 import { TriggerTransactions } from './types'
 import { OPERATION_NAMES } from '@oasisdex/dma-library'
 import { getMaxCoverage } from './get-max-coverage'
+import { getMorphoOraclePriceConverted } from './get-morpho-oracle-price-converted'
 
 export const encodeMorphoBlueAutoBuy = (
   position: PositionLike,
@@ -43,6 +44,14 @@ export const encodeMorphoBlueAutoBuy = (
 
   const maxCoverage = getMaxCoverage(position)
 
+  const resolvedMaxBuyPrice = triggerData.maxBuyPrice
+    ? getMorphoOraclePriceConverted({
+        price: triggerData.maxBuyPrice,
+        debtDecimals: position.debt.token.decimals,
+        collateralDecimals: position.collateral.token.decimals,
+      })
+    : maxUnit256
+
   const encodedTriggerData = encodeAbiParameters(abiParameters, [
     // CommonTriggerData
     position.address,
@@ -57,7 +66,7 @@ export const encodeMorphoBlueAutoBuy = (
     position.collateral.token.decimals,
     triggerData.executionLTV,
     triggerData.targetLTV,
-    maxUnit256,
+    resolvedMaxBuyPrice,
     DEFAULT_DEVIATION, // 100 -> 1%
     triggerData.maxBaseFee,
   ])
