@@ -338,7 +338,7 @@ export const handler = async (
       }
     })[0]
 
-  const morphoBlueStopLoss: MorphoBlueStopLoss | undefined = triggers.triggers
+  const morphoBlueStandardStopLoss: MorphoBlueStopLoss | undefined = triggers.triggers
     .filter((trigger) => trigger.triggerType == MorphoBlueStopLossV2ID)
     .filter((trigger) => mapTriggersWithSamePoolId({ trigger, poolId: params.poolId }))
     .map((trigger) => {
@@ -404,7 +404,7 @@ export const handler = async (
     publicClient,
     getDetails: params.getDetails,
     addresses,
-    stopLoss: morphoBlueStopLoss,
+    stopLoss: morphoBlueStandardStopLoss,
   })
 
   const aaveStopLoss = getCurrentTrigger(
@@ -420,6 +420,11 @@ export const handler = async (
     sparkStopLossToDebt,
     sparkStopLossToDebtDMA,
     sparkTrailingStopLossDMA,
+  )
+
+  const morphoBlueStopLoss = getCurrentTrigger(
+    morphoBlueStandardStopLoss,
+    morphoBlueTrailingStopLoss,
   )
 
   const aavePartialTakeProfit = await getDmaAavePartialTakeProfit({
@@ -484,7 +489,7 @@ export const handler = async (
           basicBuy: morphoBlueBasicBuy,
           basicSell: morphoBlueBasicSell,
           partialTakeProfit: morphoBluePartialTakeProfit,
-          stopLoss: morphoBlueStopLoss,
+          stopLoss: morphoBlueStandardStopLoss,
           trailingStopLoss: morphoBlueTrailingStopLoss,
         },
       }),
@@ -518,7 +523,7 @@ export const handler = async (
       },
       ...(params.poolId && {
         [`${ProtocolId.MORPHO_BLUE}-${params.poolId}`]: {
-          isStopLossEnabled: hasAnyDefined(morphoBlueStopLoss),
+          isStopLossEnabled: hasAnyDefined(morphoBlueStandardStopLoss),
           isBasicBuyEnabled: hasAnyDefined(morphoBlueBasicBuy),
           isBasicSellEnabled: hasAnyDefined(morphoBlueBasicSell),
           isPartialTakeProfitEnabled: hasAnyDefined(morphoBluePartialTakeProfit),
