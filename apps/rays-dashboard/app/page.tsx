@@ -1,17 +1,15 @@
-'use client'
-
 import { Button, Text } from '@summerfi/app-ui'
 import Link from 'next/link'
 
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
 
-export default function ComponentsTestPage() {
+export default function HomePage() {
   return (
     <MasterPage>
       <div
         style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'flex-start' }}
       >
-        <Text>Text component lol</Text>
+        <Text>Text component</Text>
         <Text as="p">Text component as p</Text>
         <Text as="p" variant="p1">
           Text component as p with p1 variant

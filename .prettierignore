@@ -18,5 +18,5 @@ artifacts
 **/.sst/**
 **/.turbo/**
 /packages/**/src/generated
-apps/app-v1/types
-apps/app-v1/**/*.json
+apps/oasis-borrow/types
+apps/oasis-borrow/**/*.json

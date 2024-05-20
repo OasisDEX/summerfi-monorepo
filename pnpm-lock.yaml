@@ -127,7 +127,7 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
 
-  apps/app-v1:
+  apps/oasis-borrow:
     dependencies:
       '@babel/runtime':
         specifier: ^7.21.0
@@ -566,7 +566,7 @@ importers:
         specifier: ^5.4.3
         version: 5.4.5
 
-  apps/app-v2:
+  apps/rays-dashboard:
     dependencies:
       '@summerfi/app-db':
         specifier: workspace:*
