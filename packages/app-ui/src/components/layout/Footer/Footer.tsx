@@ -1,9 +1,12 @@
+'use client'
+
 import { FC } from 'react'
 import {
   IconBrandDiscordFilled,
   IconBrandGithubFilled,
   IconBrandTwitterFilled,
 } from '@tabler/icons-react'
+import Link from 'next/link'
 
 import { Text } from '@/components/atoms/Text/Text'
 
@@ -33,19 +36,19 @@ export const Footer: FC<FooterProps> = ({ lists, logo, newsletter }) => {
         <img src={logo} alt="Summer.fi" className={classNames.logo} />
         <ul className={classNames.socialsList}>
           <li>
-            <a href="https://twitter.com/summerfinance_" target="_blank" rel="noreferrer">
+            <Link href="https://twitter.com/summerfinance_" target="_blank" rel="noreferrer">
               <IconBrandTwitterFilled size={20} />
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="https://discord.com/invite/summerfi" target="_blank" rel="noreferrer">
+            <Link href="https://discord.com/invite/summerfi" target="_blank" rel="noreferrer">
               <IconBrandDiscordFilled size={20} />
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="https://github.com/OasisDEX" target="_blank" rel="noreferrer">
+            <Link href="https://github.com/OasisDEX" target="_blank" rel="noreferrer">
               <IconBrandGithubFilled size={20} />
-            </a>
+            </Link>
           </li>
         </ul>
       </div>
@@ -57,12 +60,12 @@ export const Footer: FC<FooterProps> = ({ lists, logo, newsletter }) => {
           <ul className={classNames.linksList}>
             {links.map(({ label, url }, j) => (
               <li key={j}>
-                <a
+                <Link
                   href={url}
                   {...(url.startsWith('http') && { target: '_blank', rel: 'noreferrer' })}
                 >
                   <Text variant="p2">{label}</Text>
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

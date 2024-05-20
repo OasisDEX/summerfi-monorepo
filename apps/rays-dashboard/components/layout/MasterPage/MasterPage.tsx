@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren } from 'react'
-import { Footer } from '@summerfi/app-ui'
+import { EXTERNAL_LINKS, Footer, INTERNAL_LINKS } from '@summerfi/app-ui'
 import Image from 'next/image'
 
 import classNames from './MasterPage.module.scss'
@@ -38,31 +38,31 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
               links: [
                 {
                   label: 'Team',
-                  url: '/',
+                  url: INTERNAL_LINKS.about,
                 },
                 {
                   label: 'Contact',
-                  url: '/',
+                  url: EXTERNAL_LINKS.KB.CONTACT,
                 },
                 {
                   label: 'Careers',
-                  url: '/',
+                  url: EXTERNAL_LINKS.WORKABLE,
                 },
                 {
                   label: 'Privacy',
-                  url: '/',
+                  url: INTERNAL_LINKS.privacy,
                 },
                 {
                   label: 'Cookie Policy',
-                  url: '/',
+                  url: INTERNAL_LINKS.cookie,
                 },
                 {
                   label: 'Terms',
-                  url: '/',
+                  url: INTERNAL_LINKS.terms,
                 },
                 {
                   label: 'Security',
-                  url: '/',
+                  url: INTERNAL_LINKS.security,
                 },
               ],
             },
@@ -71,27 +71,27 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
               links: [
                 {
                   label: 'Blog',
-                  url: '/',
+                  url: EXTERNAL_LINKS.BLOG.MAIN,
                 },
                 {
                   label: 'Knowledge base',
-                  url: '/',
+                  url: EXTERNAL_LINKS.KB.HELP,
                 },
                 {
                   label: 'Bug bounty',
-                  url: '/',
+                  url: EXTERNAL_LINKS.BUG_BOUNTY,
                 },
                 {
                   label: 'Ajna rewards',
-                  url: '/',
+                  url: INTERNAL_LINKS.ajnaRewards,
                 },
                 {
                   label: 'Referrals',
-                  url: '/',
+                  url: INTERNAL_LINKS.referrals,
                 },
                 {
                   label: 'Brand assets',
-                  url: '/',
+                  url: INTERNAL_LINKS.brand,
                 },
               ],
             },
@@ -100,15 +100,15 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
               links: [
                 {
                   label: 'Borrow',
-                  url: '/',
+                  url: INTERNAL_LINKS.borrow,
                 },
                 {
                   label: 'Multiply',
-                  url: '/',
+                  url: INTERNAL_LINKS.multiply,
                 },
                 {
                   label: 'Earn',
-                  url: '/',
+                  url: INTERNAL_LINKS.earn,
                 },
               ],
             },
