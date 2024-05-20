@@ -22,5 +22,9 @@ export const getTokensFromTrigger = (trigger: TriggersQuery['triggers'][0]) => {
     )
   }
 
+  if (!collateralToken || !debtToken) {
+    throw new Error('Collateral or debt token data is missing from trigger data')
+  }
+
   return { collateralToken, debtToken }
 }

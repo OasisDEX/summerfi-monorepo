@@ -358,10 +358,6 @@ export const handler = async (
     .map((trigger) => {
       const { collateralToken, debtToken } = getTokensFromTrigger(trigger)
 
-      if (!collateralToken || !debtToken) {
-        throw new Error('Collateral or debt token data is missing from trigger data')
-      }
-
       return {
         triggerTypeName: 'MorphoBlueBasicBuyV2' as const,
         triggerType: MorphoBlueBasicBuyV2ID,
@@ -381,10 +377,6 @@ export const handler = async (
     .filter((trigger) => mapTriggersWithSamePoolId({ trigger, poolId: params.poolId }))
     .map((trigger) => {
       const { collateralToken, debtToken } = getTokensFromTrigger(trigger)
-
-      if (!collateralToken || !debtToken) {
-        throw new Error('Collateral or debt token data is missing from trigger data')
-      }
 
       return {
         triggerTypeName: 'MorphoBlueBasicSellV2' as const,
