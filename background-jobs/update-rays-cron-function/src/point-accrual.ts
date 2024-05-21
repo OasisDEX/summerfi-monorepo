@@ -54,7 +54,7 @@ export class SummerPointsService {
   constructor(
     private clients: SummerPointsSubgraphClient[],
     private logger: Logger,
-  ) { }
+  ) {}
 
   async accruePoints(startTimestamp: number, endTimestamp: number): Promise<PositionPoints> {
     const results = await Promise.all(
