@@ -48,5 +48,5 @@ export const mapTriggersWithSamePoolId = ({
 }) => {
   const poolIdFromTrigger = getTriggerPoolId(trigger)
 
-  return poolIdFromTrigger.toLowerCase() === poolId.toLowerCase()
+  return poolIdFromTrigger?.toLowerCase() === poolId?.toLowerCase()
 }
