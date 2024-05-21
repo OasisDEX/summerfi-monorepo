@@ -8,7 +8,7 @@ import {
 } from 'viem'
 import { automationBotAbi } from '@summerfi/abis'
 import { DmaMorphoBlueTrailingStopLossTriggerData } from '~types'
-import { PositionLike, CurrentTriggerLike } from '@summerfi/triggers-shared'
+import { CurrentTriggerLike, PositionLike } from '@summerfi/triggers-shared'
 
 import { DerivedPrices } from '@summerfi/prices-subgraph'
 import { getMaxCoverage } from './get-max-coverage'
@@ -31,8 +31,6 @@ export const encodeMorphoBlueTrailingStopLoss = (
       'bytes32 operationName, ' +
       // Trigger specific data
       'bytes32 poolId, ' +
-      'uint8 quoteDecimals, ' +
-      'uint8 collateralDecimals, ' +
       'address collateralOracle, ' +
       'uint80 collateralAddedRoundId, ' +
       'address debtOracle, ' +
@@ -44,7 +42,10 @@ export const encodeMorphoBlueTrailingStopLoss = (
   const operationName =
     triggerData.token === position.collateral.token.address
       ? OPERATION_NAMES.morphoblue.CLOSE_AND_REMAIN
-      : OPERATION_NAMES.morphoblue.CLOSE_POSITION
+      : OPERATION_NAMES.morphoblue.CLOSE_AND_REMAIN
+  // Note: We use close and remain name for both here as the hash of hashes for both ops are the same
+  // May cause issues tracking in Subgraph
+  // : OPERATION_NAMES.morphoblue.CLOSE_POSITION
 
   const operationNameInBytes = bytesToHex(stringToBytes(operationName, { size: 32 }))
 
@@ -60,8 +61,6 @@ export const encodeMorphoBlueTrailingStopLoss = (
     operationNameInBytes,
     // Trigger specific data
     triggerData.poolId,
-    position.debt.token.decimals,
-    position.collateral.token.decimals,
     latestPrice.token.oraclesToken[0].address ?? '0x0',
     latestPrice.tokenRoundId,
     latestPrice.denomination.oraclesToken[0].address ?? '0x0',

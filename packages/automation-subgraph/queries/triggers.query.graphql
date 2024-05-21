@@ -1,5 +1,9 @@
 query Triggers($dpm: Bytes!) {
-  triggers(where: { account: $dpm, removedBlock: null }, orderBy: addedTimestamp, orderDirection: desc) {
+  triggers(
+    where: { account: $dpm, removedBlock: null }
+    orderBy: addedTimestamp
+    orderDirection: desc
+  ) {
     account
     owner
     id
@@ -9,5 +13,11 @@ query Triggers($dpm: Bytes!) {
     addedTimestamp
     decodedData
     decodedDataNames
+    tokens {
+      address
+      symbol
+      decimals
+      precision
+    }
   }
 }

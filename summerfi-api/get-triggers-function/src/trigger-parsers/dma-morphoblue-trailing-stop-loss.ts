@@ -6,19 +6,23 @@ import { PricesSubgraphClient } from '@summerfi/prices-subgraph'
 import { TriggersQuery } from '@summerfi/automation-subgraph'
 import { safeParseBigInt } from '@summerfi/serverless-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
-import { mapTriggerCommonParams } from '../helpers'
+import { mapTriggerCommonParams, mapTriggersWithSamePoolId } from '../helpers'
 
 export const getDmaMorphoBlueTrailingStopLoss = async ({
   triggers,
+  poolId,
   pricesSubgraphClient,
   logger,
 }: {
   triggers: TriggersQuery
+  poolId: string
   pricesSubgraphClient: PricesSubgraphClient
   logger: Logger
 }): Promise<MorphoBlueTrailingStopLoss | undefined> => {
   const trigger = triggers.triggers.find(
-    (trigger) => trigger.triggerType == MorphoBlueTrailingStopLossID,
+    (trigger) =>
+      trigger.triggerType == MorphoBlueTrailingStopLossID &&
+      mapTriggersWithSamePoolId({ trigger, poolId }),
   )
   if (!trigger) {
     return undefined

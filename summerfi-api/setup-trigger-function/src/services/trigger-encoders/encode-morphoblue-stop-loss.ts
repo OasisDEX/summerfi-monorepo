@@ -8,7 +8,7 @@ import {
 } from 'viem'
 import { automationBotAbi } from '@summerfi/abis'
 import { DmaMorphoBlueStopLossTriggerData } from '~types'
-import { PositionLike, CurrentTriggerLike } from '@summerfi/triggers-shared'
+import { CurrentTriggerLike, PositionLike } from '@summerfi/triggers-shared'
 
 import { getMaxCoverage } from './get-max-coverage'
 import { OPERATION_NAMES } from '@oasisdex/dma-library'
@@ -29,8 +29,6 @@ export const encodeMorphoBlueStopLoss = (
       'bytes32 operationName, ' +
       // Trigger specific data
       'bytes32 poolId, ' +
-      'uint8 quoteDecimals, ' +
-      'uint8 collateralDecimals, ' +
       'uint256 executionLtv, ' +
       'bool closeToCollateral',
   )
@@ -38,7 +36,10 @@ export const encodeMorphoBlueStopLoss = (
   const operationName =
     triggerData.token === position.collateral.token.address
       ? OPERATION_NAMES.morphoblue.CLOSE_AND_REMAIN
-      : OPERATION_NAMES.morphoblue.CLOSE_POSITION
+      : OPERATION_NAMES.morphoblue.CLOSE_AND_REMAIN
+  // Note: We use close and remain name for both here as the hash of hashes for both ops are the same
+  // May cause issues tracking in Subgraph
+  // : OPERATION_NAMES.morphoblue.CLOSE_POSITION
 
   if (operationName === undefined) {
     throw new Error('Invalid trigger type')
@@ -58,8 +59,6 @@ export const encodeMorphoBlueStopLoss = (
     operationNameInBytes,
     // Trigger specific data
     triggerData.poolId,
-    position.debt.token.decimals,
-    position.collateral.token.decimals,
     triggerData.executionLTV,
     triggerData.token === position.collateral.token.address,
   ])

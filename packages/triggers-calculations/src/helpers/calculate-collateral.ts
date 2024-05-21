@@ -28,7 +28,9 @@ export const calculateCollateral = ({
   )
 
   const collateral =
-    (debtNormalized * BigInt(10 ** collateralToken.decimals)) / ltvTimesPriceNormalized
+    ltvTimesPriceNormalized === 0n
+      ? 0n
+      : (debtNormalized * BigInt(10 ** collateralToken.decimals)) / ltvTimesPriceNormalized
 
   return {
     token: collateralToken,

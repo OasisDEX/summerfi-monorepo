@@ -9,5 +9,11 @@ query OneTrigger($triggerId: ID!) {
     addedTimestamp
     decodedData
     decodedDataNames
+    tokens {
+      address
+      symbol
+      decimals
+      precision
+    }
   }
 }
