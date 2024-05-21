@@ -44,13 +44,14 @@ export const encodeMorphoBlueAutoBuy = (
 
   const maxCoverage = getMaxCoverage(position)
 
-  const resolvedMaxBuyPrice = triggerData.maxBuyPrice
-    ? getMorphoOraclePriceConverted({
-        price: triggerData.maxBuyPrice,
-        debtDecimals: position.debt.token.decimals,
-        collateralDecimals: position.collateral.token.decimals,
-      })
-    : maxUnit256
+  const resolvedMaxBuyPrice =
+    triggerData.maxBuyPrice === maxUnit256
+      ? maxUnit256
+      : getMorphoOraclePriceConverted({
+          price: triggerData.maxBuyPrice,
+          debtDecimals: position.debt.token.decimals,
+          collateralDecimals: position.collateral.token.decimals,
+        })
 
   const encodedTriggerData = encodeAbiParameters(abiParameters, [
     // CommonTriggerData
