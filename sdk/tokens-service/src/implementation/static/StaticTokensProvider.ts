@@ -40,7 +40,9 @@ export class StaticTokensProvider
 
     this._tokenByChainID = new Map()
 
+    console.log('StaticTokensData.tokens', StaticTokensData.tokens)
     for (const tokenData of StaticTokensData.tokens) {
+      console.log('tokenData', tokenData)
       this._addTokenData({ tokenData })
     }
   }
