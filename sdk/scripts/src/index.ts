@@ -101,7 +101,8 @@ function createProtocolVariations(entry: [LendingActions, Protocol[]]): (Actions
 const Refinance: Actions[][][] = [
     [[CommonActions.Flashloan], []],
     createProtocolVariations([LendingActions.PaybackWithdraw, [Protocol.Aave, Protocol.Spark, Protocol.Maker, Protocol.Morpho]]),
-    createProtocolVariations([LendingActions.DepositBorrow, [Protocol.Aave, Protocol.Spark, Protocol.Maker, Protocol.Morpho]]),
+    [[CommonActions.Swap], []],
+    createProtocolVariations([LendingActions.DepositBorrow, [Protocol.Aave, Protocol.Spark, Protocol.Morpho]]),
     [[CommonActions.Swap], []],
     [[CommonActions.ReturnFunds], []],
     [[CommonActions.PositionCreated]],
@@ -133,6 +134,12 @@ const x = getAllPermutations(Refinance);
 
 // link to library gnosis `@morpho-labs/gnosis-tx-builder` 
 // https://codesandbox.io/p/sandbox/eager-maria-84gwtj?file=%2Fsrc%2Findex.ts%3A1%2C50
+
+
+const res = Refinance.map(batch => batch.length).reduce((acc, val) => acc * val, 1)
+
+// test
+console.log(x.length, res)
 
 
 console.log(Refinance)
