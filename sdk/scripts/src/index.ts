@@ -135,6 +135,4 @@ const x = getAllPermutations(Refinance);
 // https://codesandbox.io/p/sandbox/eager-maria-84gwtj?file=%2Fsrc%2Findex.ts%3A1%2C50
 
 
-
-console.log(x.length, 'Permutations')
-console.log(x)
+console.log(Refinance)
