@@ -1,5 +1,5 @@
 {
-  "name": "@summerfi/get-rays-function",
+  "name": "@summerfi/update-rays-cron-function",
   "version": "0.0.1",
   "scripts": {
     "test": "jest --passWithNoTests",
@@ -11,12 +11,11 @@
     "@aws-lambda-powertools/logger": "^2.0.2",
     "@aws-lambda-powertools/metrics": "^2.0.2",
     "@aws-lambda-powertools/tracer": "^2.0.2",
-    "@summerfi/abstractions": "workspace:*",
-    "@summerfi/serverless-shared": "workspace:*",
-    "@summerfi/rays-db": "workspace:*",
     "kysely": "^0.27.3",
-    "node-fetch": "^3.3.2",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "@summerfi/summer-events-subgraph": "workspace:*",
+    "@summerfi/rays-db": "workspace:*",
+    "@summerfi/serverless-shared": "workspace:*"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
