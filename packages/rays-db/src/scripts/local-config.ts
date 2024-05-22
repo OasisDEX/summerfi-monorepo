@@ -6,10 +6,12 @@ import { PostgresJSDialect } from 'kysely-postgres-js'
 import postgres from 'postgres'
 
 export function getMigrator() {
+  const { RAYS_DB_CONNECTION_STRING } = process.env
+  if (!RAYS_DB_CONNECTION_STRING) {
+    throw new Error('RAYS_DB_CONNECTION_STRING is not set')
+  }
   const dialect = new PostgresJSDialect({
-    postgres: postgres(
-      process.env.RAYS_DB_CONNECTION_STRING || 'postgres://user:password@localhost:5500/rays',
-    ),
+    postgres: postgres(RAYS_DB_CONNECTION_STRING),
   })
 
   const db = new Kysely<unknown>({

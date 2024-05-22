@@ -7,7 +7,8 @@ export function paybackWithdrawReducer(
   step: steps.PaybackWithdrawStep,
   state: ISimulationState,
 ): ISimulationState {
-  const afterPayback = addBalance(getValueFromReference(step.inputs.paybackAmount), state.balances)
+  const withdrawAmount = getValueFromReference(step.inputs.withdrawAmount)
+  const afterPayback = addBalance(withdrawAmount, state.balances)
   const afterWithdraw = subtractBalance(
     getValueFromReference(step.inputs.withdrawAmount),
     afterPayback,
@@ -16,10 +17,7 @@ export function paybackWithdrawReducer(
     ...state,
     positions: {
       ...state.positions,
-      [step.inputs.position.id.id]: depositToPosition(
-        step.inputs.position,
-        getValueFromReference(step.inputs.withdrawAmount),
-      ),
+      [step.inputs.position.id.id]: depositToPosition(step.inputs.position, withdrawAmount),
     },
     steps: [...state.steps, step],
     balances: afterWithdraw,

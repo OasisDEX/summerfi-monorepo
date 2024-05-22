@@ -13,15 +13,6 @@ export const StaticTokensData: TokenListData = {
   keywords: ['Summer.fi', 'MakerDAO'],
   tokens: [
     {
-      name: 'Savings Dai',
-      address: '0x83F20F44975D03b1b09e64809B757c47f942BEeA',
-      symbol: 'sDAI',
-      decimals: 18,
-      chainId: 1,
-      logoURI:
-        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x83F20F44975D03b1b09e64809B757c47f942BEeA/logo.png',
-    },
-    {
       name: 'Dai Stablecoin',
       address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
       symbol: 'DAI',
@@ -148,6 +139,38 @@ export const StaticTokensData: TokenListData = {
       symbol: 'renBTC',
       decimals: 8,
       logoURI: 'https://tokens.1inch.io/0xeb4c2781e4eba804ce9a9803c67d0893436bb27d.png',
+    },
+    {
+      name: 'Savings DAI',
+      address: '0x83F20F44975D03b1b09e64809B757c47f942BEeA',
+      symbol: 'sDAI',
+      decimals: 18,
+      chainId: 1,
+      logoURI: 'https://tokens.1inch.io/0x83f20f44975d03b1b09e64809b757c47f942beea.png',
+    },
+    {
+      name: 'Rocket ETH',
+      address: '0xae78736Cd615f374D3085123A210448E74Fc6393',
+      symbol: 'rETH',
+      decimals: 18,
+      chainId: 1,
+      logoURI: 'https://tokens.1inch.io/0xae78736cd615f374d3085123a210448e74fc6393.png',
+    },
+    {
+      name: 'Gnosis Token',
+      address: '0x6810e776880C02933D47DB1b9fc05908e5386b96',
+      symbol: 'GNO',
+      decimals: 18,
+      chainId: 1,
+      logoURI: 'https://tokens.1inch.io/0x6810e776880c02933d47db1b9fc05908e5386b96.png',
+    },
+    {
+      name: 'Tether USD Stablecoin',
+      address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+      symbol: 'USDT',
+      decimals: 6,
+      chainId: 1,
+      logoURI: 'https://tokens.1inch.io/0xdac17f958d2ee523a2206206994597c13d831ec7.png',
     },
     {
       name: 'Dai Stablecoin',

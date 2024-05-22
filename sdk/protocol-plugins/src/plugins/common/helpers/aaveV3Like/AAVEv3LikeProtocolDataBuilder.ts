@@ -62,10 +62,14 @@ export class AaveV3LikeProtocolDataBuilder<
 
     const tokensUsedAsReserves = await Promise.all(
       rawTokens.map(async (reservesToken) => {
-        return await this.ctx.tokensManager.getTokenByAddress({
+        const token = await this.ctx.tokensManager.getTokenByAddress({
           chainInfo: ChainFamilyMap.Ethereum.Mainnet,
           address: Address.createFromEthereum({ value: reservesToken.tokenAddress }),
         })
+        if (!token) {
+          throw new Error(`Token not found for address: ${reservesToken.tokenAddress}`)
+        }
+        return token
       }),
     )
 

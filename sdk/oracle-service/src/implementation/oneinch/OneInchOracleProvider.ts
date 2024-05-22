@@ -18,7 +18,7 @@ import {
 } from '@summerfi/sdk-common/common'
 import { OracleProviderType, SpotPriceInfo } from '@summerfi/sdk-common/oracle'
 import { IOracleProvider } from '@summerfi/oracle-common'
-import { FiatCurrency, IChainInfo, IToken, isTokenAmount } from '@summerfi/sdk-common'
+import { FiatCurrency, IToken, isTokenAmount } from '@summerfi/sdk-common'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider'
 
@@ -53,7 +53,6 @@ export class OneInchOracleProvider
 
   /** @see IOracleProvider.getSpotPrice */
   async getSpotPrice(params: {
-    chainInfo: IChainInfo
     baseToken: IToken
     quoteDenomination?: Denomination
   }): Promise<SpotPriceInfo> {
@@ -64,7 +63,7 @@ export class OneInchOracleProvider
       const quoteCurrencySymbol = FiatCurrency.USD
 
       const spotUrl = this._formatOneInchSpotUrl({
-        chainInfo: params.chainInfo,
+        chainInfo: params.baseToken.chainInfo,
         tokenAddresses: [baseTokenAddress, quoteTokenAddress],
         // We use USD as base for both tokens and then derive a spot price
         quoteCurrency: quoteCurrencySymbol,
@@ -120,8 +119,9 @@ export class OneInchOracleProvider
     } else {
       const quoteCurrency = params.quoteDenomination ?? FiatCurrency.USD
       const baseToken = params.baseToken
+
       const spotUrl = this._formatOneInchSpotUrl({
-        chainInfo: params.chainInfo,
+        chainInfo: params.baseToken.chainInfo,
         tokenAddresses: [baseToken.address],
         quoteCurrency: quoteCurrency,
       })

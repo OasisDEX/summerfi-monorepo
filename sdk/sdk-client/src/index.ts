@@ -15,3 +15,6 @@ export * from './interfaces/IProtocolsManagerClient'
 export * from './interfaces/ITokensManagerClient'
 export * from './interfaces/IUsersManager'
 export * from './utils/PositionUtils'
+
+// WORKAROUND: re-exporting protocol-plugins to give FE access to protocol plugins types
+export * from './protocol-plugins-reexport'

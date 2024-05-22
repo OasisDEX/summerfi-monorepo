@@ -25,7 +25,7 @@ export class TokensManagerMock
     SDAI: Token.createFrom({
       chainInfo: ChainFamilyMap.Ethereum.Mainnet,
       address: Address.createFromEthereum({ value: '0x83F20F44975D03b1b09e64809B757c47f942BEeA' }),
-      symbol: 'SDAI',
+      symbol: 'sDAI',
       name: 'Savings DAI',
       decimals: 18,
     }),
