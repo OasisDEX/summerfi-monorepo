@@ -37,7 +37,6 @@ export class SummerPointsService {
   private SECONDS_PER_YEAR = 365 * 24 * 60 * 60
   private SECONDS_PER_DAY = 86400
   private SECONDS_PER_HOUR = 3600
-  private TWO_HOURS_IN_SECONDS = 2 * 60 * 60
   private MIGRATION_POINTS_FRACTION = 0.2
   private CORRELATED_SWAP_POINTS_FRACTION = 0.06
   private UNCORRELATED_SWAP_POINTS_FRACTION = 0.2
@@ -231,10 +230,8 @@ export class SummerPointsService {
     let openPositionsPoints = 0
 
     for (const event of position.summerEvents) {
-      const timeDifference = Math.min(
-        event.timestamp - previousTimestamp,
-        this.TWO_HOURS_IN_SECONDS,
-      )
+      const timeDifference = event.timestamp - previousTimestamp
+
       const pointsPerSecond = this.getPointsPerUsdPerSecond(event.netValueBefore)
       openPositionsPoints += pointsPerSecond * timeDifference * event.netValueBefore
 
@@ -242,7 +239,7 @@ export class SummerPointsService {
     }
 
     // Calculate points for the time period after the last event
-    const timeDifference = Math.min(endTimestamp - previousTimestamp, this.TWO_HOURS_IN_SECONDS)
+    const timeDifference = endTimestamp - previousTimestamp
 
     const pointsPerSecond = this.getPointsPerUsdPerSecond(position.netValue)
 
@@ -261,7 +258,8 @@ export class SummerPointsService {
   getMigrationPoints(events: MigrationEvent[]): number {
     let migrationPoints = 0
     for (const event of events) {
-      const pointsPerYear = this.getPointsPerUsdPerYear(event.netValueAfter)
+      const pointsPerUsdPerYear = this.getPointsPerUsdPerYear(event.netValueAfter)
+      const pointsPerYear = pointsPerUsdPerYear * event.netValueAfter
       migrationPoints += pointsPerYear * this.MIGRATION_POINTS_FRACTION
     }
 
@@ -278,7 +276,8 @@ export class SummerPointsService {
   getSwapPoints(swaps: RecentSwap[]): number {
     let points = 0
     for (const swap of swaps) {
-      const pointsPerYear = this.getPointsPerUsdPerYear(swap.amountInUSD)
+      const pointsPerUsdPerYear = this.getPointsPerUsdPerYear(swap.amountInUSD)
+      const pointsPerYear = pointsPerUsdPerYear * swap.amountInUSD
       const isCorrelatedAsset = this.isCorrelatedAsset(swap.assetIn.symbol, swap.assetOut.symbol)
       const fraction = isCorrelatedAsset
         ? this.CORRELATED_SWAP_POINTS_FRACTION
