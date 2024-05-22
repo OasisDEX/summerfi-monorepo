@@ -5,6 +5,7 @@ import { FeaturesEnum } from '@/types/generated'
 import { OmniProductType } from '@/types/omni-kit'
 import { ProductHubSupportedNetworks } from '@/types/product-hub'
 
+// types needed for the contentful navigation calls start
 type NavigationModule = 'swap' | 'bridge'
 
 interface NavigationLink {
@@ -111,36 +112,9 @@ export interface NavigationResponse {
   }
 }
 
-interface NavigationMenuPanelLinkWithUrl {
-  link: string
-  onClick?: never
-}
-
-interface NavigationMenuPanelLinkWithAction {
-  link?: never
-  onClick: () => void
-}
-
-export type NavigationMenuPanelLinkType = (
-  | NavigationMenuPanelLinkWithUrl
-  | NavigationMenuPanelLinkWithAction
-) & {
-  label: ReactNode
-}
-export type NavigationMenuPanelLinkProps = NavigationMenuPanelLinkType & {
-  onMouseEnter(): void
-}
-
-export interface NavigationMenuPanelLink {
-  icon: unknown
-  title: string
-  link: string
-  hash?: string
-  footnote?: ReactNode
-}
-
+// types needed for the navigation parser start
 export interface NavigationMenuPanelIcon {
-  icon?: unknown
+  icon?: never
   image?: string
   tokens?: string[]
   position: 'global' | 'title'
@@ -168,60 +142,3 @@ export interface NavigationMenuPanelListItem {
   title: ReactNode
   url?: string
 }
-
-export interface NavigationMenuPanelType {
-  label: string
-  lists: NavigationMenuPanelListItem['list'][]
-  url?: string
-}
-export type NavigationMenuPanelProps = NavigationMenuPanelType & {
-  currentPanel?: string
-  isPanelOpen: boolean
-  onMouseEnter(center: number): void
-}
-
-export type NavigationBrandingPillColor = string | [string, string]
-
-export interface NavigationBrandingPill {
-  color: NavigationBrandingPillColor
-  label: string
-}
-export interface NavigationProps {
-  actions?: ReactNode
-  brandingLink?: string
-  links?: NavigationMenuPanelLinkType[]
-  panels?: NavigationMenuPanelType[]
-  pill?: NavigationBrandingPill
-}
-
-export interface NavigationBrandingProps {
-  link?: string
-  pill?: NavigationBrandingPill
-}
-export interface NavigationMenuPanelAsset {
-  token: string
-  link: string
-}
-
-export interface NavigationMenuPanelLink {
-  icon: unknown
-  title: string
-  link: string
-  hash?: string
-  footnote?: ReactNode
-}
-
-export interface NavigationMenuPanelIcon {
-  icon?: unknown
-  image?: string
-  tokens?: string[]
-  position: 'global' | 'title'
-}
-
-export type NavigationLinkTypes =
-  | NavigationLink
-  | NavigationLinkWithNestedLinks
-  | NavigationFeaturedProduct
-  | NavigationTopProducts
-  | NavigationTopToken
-  | NavigationSpecialModule

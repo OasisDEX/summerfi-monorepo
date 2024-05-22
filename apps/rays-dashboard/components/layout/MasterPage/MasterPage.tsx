@@ -1,7 +1,8 @@
 import { FC, PropsWithChildren } from 'react'
-import { Footer, Navigation } from '@summerfi/app-ui'
+import { Footer } from '@summerfi/app-ui'
 import Image from 'next/image'
 
+import { NavigationWrapper } from '@/components/NavigationWrapper'
 import systemConfigHandler from '@/server-handlers/system-config'
 
 import classNames from './MasterPage.module.scss'
@@ -32,7 +33,15 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
           ),
         }[background]
       }
-      <Navigation logo="img/branding/logo-dark.svg" logoSmall="img/branding/dot-dark.svg" />
+      <NavigationWrapper
+        links={[
+          {
+            label: <div>My positions link</div>,
+            link: '/#',
+          },
+        ]}
+        panels={systemConfig.navigation}
+      />
       <div className={classNames.appContainer}>
         {children}
         <pre>
