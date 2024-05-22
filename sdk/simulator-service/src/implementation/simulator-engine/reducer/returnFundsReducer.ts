@@ -8,10 +8,7 @@ export function returnFundsReducer(
 ): ISimulationState {
   return {
     ...state,
-    steps: {
-      ...state.steps,
-      [step.name]: step,
-    },
+    steps: [...state.steps, step],
     balances: subtractBalance(getTokenBalance(step.inputs.token, state.balances), state.balances),
   }
 }

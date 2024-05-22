@@ -2,8 +2,6 @@ import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'a
 import { ResponseBadRequest, ResponseOk } from '@summerfi/serverless-shared/responses'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { getRaysDB } from '@summerfi/rays-db'
-import { RDS } from 'sst/node/rds'
-import { RDSData } from '@aws-sdk/client-rds-data'
 import { addressSchema } from '@summerfi/serverless-shared'
 import { z } from 'zod'
 
@@ -35,6 +33,11 @@ export const handler = async (
   event: APIGatewayProxyEventV2,
   context: Context,
 ): Promise<APIGatewayProxyResultV2> => {
+  const { RAYS_DB_CONNECTION_STRING } = process.env
+  if (!RAYS_DB_CONNECTION_STRING) {
+    throw new Error('RAYS_DB_CONNECTION_STRING is not set')
+  }
+
   logger.addContext(context)
 
   const parsedResult = queryParamsSchema.safeParse(event.queryStringParameters)
@@ -44,19 +47,12 @@ export const handler = async (
 
   const { address } = parsedResult.data
 
-  const dbConfig =
-    process.env.IS_LOCAL === 'true'
-      ? {
-          connectionString: process.env.RAYS_DB_CONNECTION_STRING ?? '',
-        }
-      : {
-          database: RDS['rays-database'].defaultDatabaseName,
-          secretArn: RDS['rays-database'].secretArn,
-          resourceArn: RDS['rays-database'].clusterArn,
-          client: new RDSData({}),
-        }
+  const dbConfig = {
+    connectionString: RAYS_DB_CONNECTION_STRING,
+    logger,
+  }
 
-  const db = await getRaysDB(dbConfig)
+  const { db } = await getRaysDB(dbConfig)
 
   const userPoints = await db
     .selectFrom('pointsDistribution')

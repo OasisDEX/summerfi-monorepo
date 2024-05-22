@@ -1,9 +1,7 @@
 import { steps } from '@summerfi/sdk-common/simulation'
-import { ActionNames } from '@summerfi/deployment-types'
 import { ActionBuilder } from '@summerfi/protocol-plugins-common'
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { isMakerLendingPoolId } from '../interfaces/IMakerLendingPoolId'
-export const MakerPaybackWithdrawActionList: ActionNames[] = ['MakerPayback', 'MakerWithdraw']
 
 export const MakerImportPositionActionBuilder: ActionBuilder<steps.ImportStep> = async (
   params,
@@ -11,7 +9,7 @@ export const MakerImportPositionActionBuilder: ActionBuilder<steps.ImportStep> =
   const { protocolsRegistry, step, user, context, positionsManager } = params
 
   if (!isMakerLendingPoolId(step.inputs.externalPosition.position.pool.id)) {
-    throw new Error('Maker: Invalid pool id')
+    throw new Error('Invalid Maker lending pool id')
   }
 
   const makerPlugin = protocolsRegistry.getPlugin({ protocolName: ProtocolName.Maker })

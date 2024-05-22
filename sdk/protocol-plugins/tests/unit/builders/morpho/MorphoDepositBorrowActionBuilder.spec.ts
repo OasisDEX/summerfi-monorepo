@@ -25,6 +25,7 @@ import {
   MorphoLendingPool,
   MorphoLendingPoolId,
   MorphoPosition,
+  MorphoPositionId,
   MorphoProtocol,
 } from '../../../../src'
 
@@ -85,7 +86,7 @@ describe('Morpho  Deposit Borrow Action Builder', () => {
 
   const position = MorphoPosition.createFrom({
     type: PositionType.Multiply,
-    id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '123' }),
+    id: MorphoPositionId.createFrom({ id: 'someposition' }),
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
     pool: pool,

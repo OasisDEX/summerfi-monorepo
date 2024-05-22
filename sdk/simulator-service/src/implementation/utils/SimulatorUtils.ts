@@ -5,7 +5,7 @@ import type {
 } from '@summerfi/sdk-common/simulation'
 import type { Tail } from '../../interfaces/helperTypes'
 
-export function makeStrategy<T extends SimulationStrategy>(strategy: T): T {
+export function makeStrategy<T extends Readonly<SimulationStrategy>>(strategy: T): Readonly<T> {
   return strategy
 }
 
@@ -16,7 +16,7 @@ export function isValueReference<T>(value: ReferenceableField<T>): value is Valu
   )
 }
 
-export function getReferencedValue<T>(referenceableValue: ReferenceableField<T>): T {
+export function getValueFromReference<T>(referenceableValue: ReferenceableField<T>): T {
   if (isValueReference(referenceableValue)) {
     return referenceableValue.estimatedValue
   }

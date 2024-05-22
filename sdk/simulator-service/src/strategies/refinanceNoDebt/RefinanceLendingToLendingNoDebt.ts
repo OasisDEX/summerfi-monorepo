@@ -3,10 +3,10 @@ import {
   SimulationSteps,
   SimulationType,
   TokenTransferTargetType,
+  getValueFromReference,
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
 import { Percentage, TokenAmount } from '@summerfi/sdk-common/common'
-import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
 import { refinanceLendingToLendingNoDebtStrategy } from './Strategy'
@@ -45,17 +45,18 @@ export async function refinanceLendingToLendingNoDebt(
 
   const simulation = await simulator
     .next(async () => ({
-      name: 'PaybackWithdrawFromSource',
+      name: 'PaybackWithdrawFromSourcePosition',
       type: SimulationSteps.PaybackWithdraw,
       inputs: {
         paybackAmount: zeroAmount,
         withdrawAmount: position.collateralAmount,
         position: position,
+        withdrawTargetType: TokenTransferTargetType.PositionsManager,
       },
     }))
     .next(
       async () => ({
-        name: 'CollateralSwap',
+        name: 'SwapCollateralFromSourcePosition',
         type: SimulationSteps.Swap,
         inputs: await getSwapStepData({
           chainInfo: position.pool.id.protocol.chainInfo,
@@ -68,25 +69,31 @@ export async function refinanceLendingToLendingNoDebt(
       }),
       isCollateralSwapSkipped,
     )
+    .next(async () => ({
+      name: 'OpenTargetPosition',
+      type: SimulationSteps.OpenPosition,
+      inputs: {
+        pool: targetPool,
+      },
+    }))
     .next(async (ctx) => ({
-      name: 'DepositBorrowToTarget',
+      name: 'DepositBorrowToTargetPosition',
       type: SimulationSteps.DepositBorrow,
       inputs: {
         depositAmount: isCollateralSwapSkipped
           ? position.collateralAmount
-          : ctx.getReference(['CollateralSwap', 'received']),
+          : ctx.getReference(['SwapCollateralFromSourcePosition', 'received']),
         borrowAmount: TokenAmount.createFrom({
           amount: '0',
           token: targetPool.debtToken,
         }),
-        position: newEmptyPositionFromPool(targetPool),
+        position: getValueFromReference(ctx.getReference(['OpenTargetPosition', 'position'])),
         borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
     }))
     .next(async (ctx) => {
-      // TODO: we should have a way to get the target position more easily and realiably,
-      const targetPosition = Object.values(ctx.state.positions).find((p) =>
-        p.pool.id.protocol.equals(targetPool.id.protocol),
+      const targetPosition = getValueFromReference(
+        ctx.getReference(['OpenTargetPosition', 'position']),
       )
       if (!targetPosition) {
         throw new Error('Target position not found')
@@ -102,8 +109,11 @@ export async function refinanceLendingToLendingNoDebt(
     })
     .run()
 
-  const targetPosition = Object.values(simulation.positions).find((p) =>
-    p.pool.id.protocol.equals(targetPool.id.protocol),
+  const targetPositionId = getValueFromReference(
+    simulation.getReference(['OpenTargetPosition', 'position']),
+  )
+  const targetPosition = Object.values(simulation.positions).find(
+    (p) => p.id.id === targetPositionId.id.id,
   )
 
   if (!targetPosition) {

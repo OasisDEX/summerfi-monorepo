@@ -7,7 +7,6 @@ import { addMorpho } from './morpho'
 import { addApyConfig } from './apy'
 import { attachVPC } from './vpc'
 import { SummerStackContext } from './summer-stack-context'
-import { addRaysDb } from './rays-db'
 import { addRaysConfig } from './rays'
 import { addRedis } from './redis'
 
@@ -41,14 +40,13 @@ export function API(stackContext: StackContext) {
     isStaging,
   }
 
-  const db = addRaysDb(summerContext)
   addTriggersConfig(summerContext)
   addSdkConfig(summerContext)
   addMigrationsConfig(summerContext)
   addPortfolioConfig(summerContext)
   addMorpho(summerContext)
   addApyConfig(summerContext)
-  addRaysConfig({ ...summerContext, db })
+  addRaysConfig(summerContext)
 
   stack.addOutputs({
     ApiEndpoint: api.url,

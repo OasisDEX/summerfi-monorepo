@@ -1,5 +1,5 @@
 import { steps } from '@summerfi/sdk-common/simulation'
-import { addBalance, getReferencedValue } from '../../utils'
+import { addBalance, getValueFromReference } from '../../utils'
 import { ISimulationState } from '../../../interfaces/simulation'
 
 export function pullTokenReducer(
@@ -8,10 +8,7 @@ export function pullTokenReducer(
 ): ISimulationState {
   return {
     ...state,
-    steps: {
-      ...state.steps,
-      [step.name]: step,
-    },
-    balances: addBalance(getReferencedValue(step.inputs.amount), state.balances),
+    steps: [...state.steps, step],
+    balances: addBalance(getValueFromReference(step.inputs.amount), state.balances),
   }
 }

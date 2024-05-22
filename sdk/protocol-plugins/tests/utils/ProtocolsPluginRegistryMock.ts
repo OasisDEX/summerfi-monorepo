@@ -30,7 +30,9 @@ export function createProtocolPluginsRegistry(): IProtocolPluginsRegistry {
   return new ProtocolPluginsRegistry({
     plugins: {
       [ProtocolName.Maker]: ProtocolPluginMock,
+      [ProtocolName.AAVEv3]: ProtocolPluginMock,
       [ProtocolName.Spark]: ProtocolPluginMock,
+      [ProtocolName.Morpho]: ProtocolPluginMock,
     },
     context: protocolPluginContext,
   })

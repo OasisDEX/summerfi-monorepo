@@ -609,6 +609,49 @@ importers:
         specifier: ^1.7.0
         version: 1.7.0
 
+  background-jobs/update-rays-cron-function:
+    dependencies:
+      '@aws-lambda-powertools/logger':
+        specifier: ^2.0.2
+        version: 2.0.4
+      '@aws-lambda-powertools/metrics':
+        specifier: ^2.0.2
+        version: 2.0.4
+      '@aws-lambda-powertools/tracer':
+        specifier: ^2.0.2
+        version: 2.0.4
+      '@summerfi/rays-db':
+        specifier: workspace:*
+        version: link:../../packages/rays-db
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../../packages/serverless-shared
+      '@summerfi/summer-events-subgraph':
+        specifier: workspace:*
+        version: link:../../packages/summer-events-subgraph
+      kysely:
+        specifier: ^0.27.3
+        version: 0.27.3
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@types/node':
+        specifier: ^20.11.5
+        version: 20.12.7
+      eslint:
+        specifier: ^8.56.0
+        version: 8.57.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.12.7)
+
   external-api/get-collateral-locked-function:
     dependencies:
       '@aws-lambda-powertools/logger':
@@ -1156,15 +1199,12 @@ importers:
 
   packages/rays-db:
     dependencies:
-      '@aws-sdk/client-rds-data':
-        specifier: ^3.565.0
-        version: 3.569.0
+      '@summerfi/abstractions':
+        specifier: workspace:*
+        version: link:../abstractions
       kysely:
         specifier: ^0.27.3
         version: 0.27.3
-      kysely-data-api:
-        specifier: ^0.2.1
-        version: 0.2.1(@aws-sdk/client-rds-data@3.569.0)(kysely@0.27.3)
       kysely-postgres-js:
         specifier: ^2.0.0
         version: 2.0.0(kysely@0.27.3)(postgres@3.4.4)
@@ -1218,6 +1258,31 @@ importers:
       zod:
         specifier: ^3.22.4
         version: 3.22.4
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^20.12.7
+        version: 20.12.7
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+
+  packages/summer-events-subgraph:
+    dependencies:
+      '@summerfi/abstractions':
+        specifier: workspace:*
+        version: link:../abstractions
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../serverless-shared
+      graphql-request:
+        specifier: ^6.1.0
+        version: 6.1.0(graphql@16.8.1)
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -2360,9 +2425,6 @@ importers:
       '@aws-lambda-powertools/tracer':
         specifier: ^2.0.2
         version: 2.0.4
-      '@aws-sdk/client-rds-data':
-        specifier: ^3.565.0
-        version: 3.569.0
       '@summerfi/abstractions':
         specifier: workspace:*
         version: link:../../packages/abstractions
@@ -2378,9 +2440,6 @@ importers:
       node-fetch:
         specifier: ^3.3.2
         version: 3.3.2
-      viem:
-        specifier: ^1.19.11
-        version: 1.21.4(typescript@5.4.5)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2555,8 +2614,8 @@ importers:
         specifier: 1.6.5-morpho.6
         version: 1.6.5-morpho.6
       '@oasisdex/dma-library':
-        specifier: 0.6.4-automation.13
-        version: 0.6.4-automation.13
+        specifier: 0.6.4-automation.22
+        version: 0.6.4-automation.22
       '@summerfi/abis':
         specifier: workspace:*
         version: link:../../packages/abis
@@ -3364,6 +3423,7 @@ packages:
       tslib: 2.2.0
     transitivePeerDependencies:
       - aws-crt
+    dev: true
 
   /@aws-sdk/client-s3@3.554.0:
     resolution: {integrity: sha512-d5TKKtGWhN0vl9QovUFrf3UsM7jgFQkowDPx1O+E/yeQUj1FBDOoRfDCcQOKW/9ghloI6k7f0bBpNxdd+x0oKA==}
@@ -3575,6 +3635,7 @@ packages:
     transitivePeerDependencies:
       - '@aws-sdk/client-sts'
       - aws-crt
+    dev: true
 
   /@aws-sdk/client-sso@3.554.0:
     resolution: {integrity: sha512-yj6CgIxCT3UwMumEO481KH4QvwArkAPzD7Xvwe1QKgJATc9bKNEo/FxV8LfnWIJ7nOtMDxbNxYLMXH/Fs1qGaQ==}
@@ -3665,6 +3726,7 @@ packages:
       tslib: 2.2.0
     transitivePeerDependencies:
       - aws-crt
+    dev: true
 
   /@aws-sdk/client-sts@3.554.0(@aws-sdk/credential-provider-node@3.554.0):
     resolution: {integrity: sha512-EhaA6T0M0DNg5M8TCF1a7XJI5D/ZxAF3dgVIchyF98iNzjYgl/7U8K6hJay2A11aFvVu70g46xYMpz3Meky4wQ==}
@@ -3760,6 +3822,7 @@ packages:
       tslib: 2.2.0
     transitivePeerDependencies:
       - aws-crt
+    dev: true
 
   /@aws-sdk/config-resolver@3.374.0:
     resolution: {integrity: sha512-eTSbmpcgZ97o7PuFls8pH1344OS03nfqq1NO9HxxvoYoZ6DFfUO7kqKeNUhP9LxOF7slyHXajDT7eoPclGnTuw==}
@@ -3793,6 +3856,7 @@ packages:
       '@smithy/types': 2.12.0
       fast-xml-parser: 4.2.5
       tslib: 2.2.0
+    dev: true
 
   /@aws-sdk/credential-provider-cognito-identity@3.554.0:
     resolution: {integrity: sha512-soF84soy9rTAfzsH1ODP0AnJt5JlsJI8k1aWtC08/Al0CZjLkxDRHzaB1wxubFyT2Ql6bpxbDfU6KDFXsQIpdA==}
@@ -3824,6 +3888,7 @@ packages:
       '@smithy/property-provider': 2.2.0
       '@smithy/types': 2.12.0
       tslib: 2.2.0
+    dev: true
 
   /@aws-sdk/credential-provider-http@3.552.0:
     resolution: {integrity: sha512-vsmu7Cz1i45pFEqzVb4JcFmAmVnWFNLsGheZc8SCptlqCO5voETrZZILHYIl4cjKkSDk3pblBOf0PhyjqWW6WQ==}
@@ -3852,6 +3917,7 @@ packages:
       '@smithy/types': 2.12.0
       '@smithy/util-stream': 2.2.0
       tslib: 2.2.0
+    dev: true
 
   /@aws-sdk/credential-provider-ini@3.554.0(@aws-sdk/credential-provider-node@3.554.0):
     resolution: {integrity: sha512-BQenhg43S6TMJHxrdjDVdVF+HH5tA1op9ZYLyJrvV5nn7CCO4kyAkkOuSAv1NkL+RZsIkW0/vHTXwQOQw3cUsg==}
@@ -3892,6 +3958,7 @@ packages:
     transitivePeerDependencies:
       - '@aws-sdk/client-sso-oidc'
       - aws-crt
+    dev: true
 
   /@aws-sdk/credential-provider-node@3.554.0:
     resolution: {integrity: sha512-poX/+2OE3oxqp4f5MiaJh251p8l+bzcFwgcDBwz0e2rcpvMSYl9jw4AvGnCiG2bmf9yhNJdftBiS1A+KjxV0qA==}
@@ -3932,6 +3999,7 @@ packages:
       - '@aws-sdk/client-sso-oidc'
       - '@aws-sdk/client-sts'
       - aws-crt
+    dev: true
 
   /@aws-sdk/credential-provider-process@3.535.0:
     resolution: {integrity: sha512-9O1OaprGCnlb/kYl8RwmH7Mlg8JREZctB8r9sa1KhSsWFq/SWO0AuJTyowxD7zL5PkeS4eTvzFFHWCa3OO5epA==}
@@ -3952,6 +4020,7 @@ packages:
       '@smithy/shared-ini-file-loader': 2.4.0
       '@smithy/types': 2.12.0
       tslib: 2.2.0
+    dev: true
 
   /@aws-sdk/credential-provider-sso@3.554.0(@aws-sdk/credential-provider-node@3.554.0):
     resolution: {integrity: sha512-8QPpwBA31i/fZ7lDZJC4FA9EdxLg5SJ8sPB2qLSjp5UTGTYL2HRl0Eznkb7DXyp/wImsR/HFR1NxuFCCVotLCg==}
@@ -3982,6 +4051,7 @@ packages:
     transitivePeerDependencies:
       - '@aws-sdk/client-sso-oidc'
       - aws-crt
+    dev: true
 
   /@aws-sdk/credential-provider-web-identity@3.554.0(@aws-sdk/credential-provider-node@3.554.0):
     resolution: {integrity: sha512-HN54DzLjepw5ZWSF9ycGevhFTyg6pjLuLKy5Y8t/f1jFDComzYdGEDe0cdV9YO653W3+PQwZZGz09YVygGYBLg==}
@@ -4007,6 +4077,7 @@ packages:
       '@smithy/property-provider': 2.2.0
       '@smithy/types': 2.12.0
       tslib: 2.2.0
+    dev: true
 
   /@aws-sdk/credential-providers@3.554.0:
     resolution: {integrity: sha512-UMmJ4M7RknSz1p0981t57QUw6DibPEo/GG8+env6Q8dHrEc3pnRL206f1zxLcqzT5RI50XstH/bDtnyC7uRYiw==}
@@ -4083,6 +4154,7 @@ packages:
       '@smithy/protocol-http': 3.3.0
       '@smithy/types': 2.12.0
       tslib: 2.2.0
+    dev: true
 
   /@aws-sdk/middleware-location-constraint@3.535.0:
     resolution: {integrity: sha512-SxfS9wfidUZZ+WnlKRTCRn3h+XTsymXRXPJj8VV6hNRNeOwzNweoG3YhQbTowuuNfXf89m9v6meYkBBtkdacKw==}
@@ -4107,6 +4179,7 @@ packages:
       '@aws-sdk/types': 3.567.0
       '@smithy/types': 2.12.0
       tslib: 2.2.0
+    dev: true
 
   /@aws-sdk/middleware-recursion-detection@3.535.0:
     resolution: {integrity: sha512-am2qgGs+gwqmR4wHLWpzlZ8PWhm4ktj5bYSgDrsOfjhdBlWNxvPoID9/pDAz5RWL48+oH7I6SQzMqxXsFDikrw==}
@@ -4125,6 +4198,7 @@ packages:
       '@smithy/protocol-http': 3.3.0
       '@smithy/types': 2.12.0
       tslib: 2.2.0
+    dev: true
 
   /@aws-sdk/middleware-retry@3.374.0:
     resolution: {integrity: sha512-ZnT84qnT+Zmelv7y6hAqgAEaZgpGlrvf/+rchNWT0oG4duxI5bLWcRi9U88Jz7G8JgNQcGKJqPfC6oogCd7p8w==}
@@ -4189,6 +4263,7 @@ packages:
       '@smithy/protocol-http': 3.3.0
       '@smithy/types': 2.12.0
       tslib: 2.2.0
+    dev: true
 
   /@aws-sdk/node-http-handler@3.374.0:
     resolution: {integrity: sha512-v1Z6m0wwkf65/tKuhwrtPRqVoOtNkDTRn2MBMtxCwEw+8V8Q+YRFqVgGN+J1n53ktE0G5OYVBux/NHiAjJHReQ==}
@@ -4220,6 +4295,7 @@ packages:
       '@smithy/util-config-provider': 2.3.0
       '@smithy/util-middleware': 2.2.0
       tslib: 2.2.0
+    dev: true
 
   /@aws-sdk/signature-v4-crt@3.552.0:
     resolution: {integrity: sha512-5Dy4E2RtHw3hFCx5L+OsRN2n1OW3yoX06xDPqJ5xe38Pd9H8ZPYxiCEOdyw/TIJUwRjDMgsa2uPKyM/Nwr9cMg==}
@@ -4287,6 +4363,7 @@ packages:
       '@smithy/shared-ini-file-loader': 2.4.0
       '@smithy/types': 2.12.0
       tslib: 2.2.0
+    dev: true
 
   /@aws-sdk/types@3.535.0:
     resolution: {integrity: sha512-aY4MYfduNj+sRR37U7XxYR8wemfbKP6lx00ze2M2uubn7mZotuVrWYAafbMSXrdEMSToE5JDhr28vArSOoLcSg==}
@@ -4325,6 +4402,7 @@ packages:
       '@smithy/types': 2.12.0
       '@smithy/util-endpoints': 1.2.0
       tslib: 2.2.0
+    dev: true
 
   /@aws-sdk/util-locate-window@3.535.0:
     resolution: {integrity: sha512-PHJ3SL6d2jpcgbqdgiPxkXpu7Drc2PYViwxSIqvvMKhDwzSB1W3mMvtpzwKM4IE7zLFodZo0GKjJ9AsoXndXhA==}
@@ -4347,6 +4425,7 @@ packages:
       '@smithy/types': 2.12.0
       bowser: 2.11.0
       tslib: 2.2.0
+    dev: true
 
   /@aws-sdk/util-user-agent-node@3.535.0(aws-crt@1.21.2):
     resolution: {integrity: sha512-dRek0zUuIT25wOWJlsRm97nTkUlh1NDcLsQZIN2Y8KxhwoXXWtJs5vaDPT+qAg+OpcNj80i1zLR/CirqlFg/TQ==}
@@ -4376,6 +4455,7 @@ packages:
       '@smithy/node-config-provider': 2.3.0
       '@smithy/types': 2.12.0
       tslib: 2.2.0
+    dev: true
 
   /@aws-sdk/util-utf8-browser@3.259.0:
     resolution: {integrity: sha512-UvFa/vR+e19XookZF8RzFZBrw2EUkQWxiBW0yYQAhvk3C+QVGl0H3ouca8LDBlBfQKXwmW3huo/59H8rwb1wJw==}
@@ -6053,7 +6133,7 @@ packages:
       '@babel/helper-hoist-variables': 7.22.5
       '@babel/helper-split-export-declaration': 7.22.6
       '@babel/parser': 7.24.4
-      '@babel/types': 7.24.0
+      '@babel/types': 7.24.5
       debug: 4.3.4(supports-color@8.1.1)
       globals: 11.12.0
     transitivePeerDependencies:
@@ -10951,8 +11031,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@oasisdex/dma-library@0.6.4-automation.13:
-    resolution: {integrity: sha512-m9sdWD9qtN0KFlF69Ggiztr9Q4D6Oww4iwswDuwXiKz47I+niVh5pp1Keb5FmzRzdCME0Dx29U9mf2pSKd/N8g==}
+  /@oasisdex/dma-library@0.6.4-automation.22:
+    resolution: {integrity: sha512-V3fFKUptoAJeBPaV2cQI8ZJw4ONmyB0zVtFEQe/MBXKGpGBFl455zDf+U4C2TPwM3u9RImXZ6JpcESEVMdA+Bw==}
     dependencies:
       bignumber.js: 9.0.1
       ethers: 5.6.2
@@ -17453,7 +17533,7 @@ packages:
     resolution: {integrity: sha512-+UnYmVEni9NNJvE6aFY1dbvMtFquXSYAj+HYfm+90icoGKYvvLD71R7PHyFFnYct5of4NFpEXJtUJrWMv8e4mQ==}
     engines: {node: '>= 14.x'}
     dependencies:
-      '@aws-sdk/types': 3.535.0
+      '@aws-sdk/types': 3.567.0
       '@smithy/service-error-classification': 2.1.5
       '@types/cls-hooked': 4.3.8
       atomic-batcher: 1.0.2
@@ -25440,16 +25520,6 @@ packages:
       '@aws-sdk/client-rds-data': 3.569.0
       kysely: 0.25.0
     dev: true
-
-  /kysely-data-api@0.2.1(@aws-sdk/client-rds-data@3.569.0)(kysely@0.27.3):
-    resolution: {integrity: sha512-KmASvF1gmjVqyU9WOUXhCQlv29ofR+xc2DhjaIomz1+Bjd/VtR2/3g4ZuXwG1L4lWGKxMuo5iOvK3XyPbB4LdQ==}
-    peerDependencies:
-      '@aws-sdk/client-rds-data': 3.x
-      kysely: 0.x
-    dependencies:
-      '@aws-sdk/client-rds-data': 3.569.0
-      kysely: 0.27.3
-    dev: false
 
   /kysely-postgres-js@2.0.0(kysely@0.27.3)(postgres@3.4.4):
     resolution: {integrity: sha512-R1tWx6/x3tSatWvsmbHJxpBZYhNNxcnMw52QzZaHKg7ZOWtHib4iZyEaw4gb2hNKVctWQ3jfMxZT/ZaEMK6kBQ==}

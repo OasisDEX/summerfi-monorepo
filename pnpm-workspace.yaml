@@ -4,6 +4,7 @@ packages:
   - 'sdk/**'
   - 'stacks/**'
   - 'turbo/**'
+  - 'background-jobs/**'
   - 'summerfi-api/**'
   - 'external-api/**'
   - '!**/test/**'

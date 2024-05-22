@@ -11,6 +11,7 @@ import { IAddress } from '@summerfi/sdk-common/common'
 import { ActionBuilder, ActionBuilderParams } from '@summerfi/protocol-plugins-common'
 import { SetApprovalAction } from '../../common'
 import { getContractAddress } from '../../utils/GetContractAddress'
+import { isSparkLendingPool } from '../interfaces/ISparkLendingPool'
 
 export const SparkDepositBorrowActionList: ActionNames[] = ['SparkDeposit', 'SparkBorrow']
 
@@ -33,6 +34,10 @@ export const SparkDepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrowS
   params,
 ): Promise<void> => {
   const { context, user, step, addressBookManager } = params
+
+  if (!isSparkLendingPool(step.inputs.position.pool)) {
+    throw new Error('Invalid Spark lending pool')
+  }
 
   const sparkLendingPoolAddress = await getContractAddress({
     addressBookManager,

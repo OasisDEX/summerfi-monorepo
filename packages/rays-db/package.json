@@ -14,11 +14,10 @@
     "migrate:down": "tsx src/scripts/local-migrate-down.ts"
   },
   "dependencies": {
-    "@aws-sdk/client-rds-data": "^3.565.0",
     "kysely": "^0.27.3",
-    "kysely-data-api": "^0.2.1",
     "kysely-postgres-js": "^2.0.0",
-    "postgres": "^3.4.4"
+    "postgres": "^3.4.4",
+    "@summerfi/abstractions": "workspace:*"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

@@ -3,7 +3,6 @@ export type PoolId = `0x${string}`
 
 export enum Network {
   MAINNET = 'mainnet',
-  GOERLI = 'goerli',
   ARBITRUM = 'arbitrum',
   OPTIMISM = 'optimism',
   BASE = 'base',
@@ -12,15 +11,10 @@ export enum Network {
 
 export enum NetworkNames {
   ethereumMainnet = 'ethereum',
-  ethereumGoerli = 'ethereum_goerli',
   arbitrumMainnet = 'arbitrum',
-  arbitrumGoerli = 'arbitrum_goerli',
   polygonMainnet = 'polygon',
-  polygonMumbai = 'polygon_mumbai',
   optimismMainnet = 'optimism',
-  optimismGoerli = 'optimism_goerli',
   baseMainnet = 'base',
-  baseGoerli = 'base_goerli',
 }
 
 export enum ChainId {
@@ -44,6 +38,14 @@ export const NetworkByChainID: Record<ChainId, Network> = {
   [ChainId.OPTIMISM]: Network.OPTIMISM,
   [ChainId.BASE]: Network.BASE,
   [ChainId.SEPOLIA]: Network.SEPOLIA,
+}
+
+export const ChainIDByNetwork: Record<Network, ChainId> = {
+  [Network.MAINNET]: ChainId.MAINNET,
+  [Network.ARBITRUM]: ChainId.ARBITRUM,
+  [Network.OPTIMISM]: ChainId.OPTIMISM,
+  [Network.BASE]: ChainId.BASE,
+  [Network.SEPOLIA]: ChainId.SEPOLIA,
 }
 
 export enum ProtocolId {

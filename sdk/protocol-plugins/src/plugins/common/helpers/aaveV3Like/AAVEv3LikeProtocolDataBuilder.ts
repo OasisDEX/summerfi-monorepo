@@ -62,10 +62,14 @@ export class AaveV3LikeProtocolDataBuilder<
 
     const tokensUsedAsReserves = await Promise.all(
       rawTokens.map(async (reservesToken) => {
-        return await this.ctx.tokensManager.getTokenByAddress({
+        const token = await this.ctx.tokensManager.getTokenByAddress({
           chainInfo: ChainFamilyMap.Ethereum.Mainnet,
           address: Address.createFromEthereum({ value: reservesToken.tokenAddress }),
         })
+        if (!token) {
+          throw new Error(`Token not found for address: ${reservesToken.tokenAddress}`)
+        }
+        return token
       }),
     )
 
@@ -399,12 +403,12 @@ export class AaveV3LikeProtocolDataBuilder<
 // FILTERS
 export function filterAssetsListByEMode<T extends { emode: EmodeCategory }>(
   assetsList: T[],
-  emode: bigint,
+  emode: number,
 ): T[] {
   // All reserves allowed for category 0n
-  if (emode === 0n) {
+  if (emode === 0) {
     return assetsList
   }
 
-  return assetsList.filter((asset) => asset.emode === emode)
+  return assetsList.filter((asset) => Number(asset.emode) === emode)
 }
