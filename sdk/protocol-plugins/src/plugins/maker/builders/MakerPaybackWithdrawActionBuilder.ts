@@ -1,60 +1,65 @@
 import { getValueFromReference, steps } from '@summerfi/sdk-common/simulation'
 import { MakerPaybackAction } from '../actions/MakerPaybackAction'
 import { MakerWithdrawAction } from '../actions/MakerWithdrawAction'
-import { ActionBuilder } from '@summerfi/protocol-plugins-common'
+import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { MakerIlkToJoinMap } from '../types/MakerIlkToJoinMap'
 import { isMakerLendingPoolId } from '../interfaces/IMakerLendingPoolId'
-import { getContractAddress } from '../../utils/GetContractAddress'
+import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
-export const MakerPaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWithdrawStep> = async (
-  params,
-): Promise<void> => {
-  const { context, user, positionsManager, step, addressBookManager } = params
+export class MakerPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.PaybackWithdrawStep> {
+  readonly actions: ActionBuilderUsedAction[] = [
+    { action: MakerPaybackAction, isOptionalTags: ['paybackAmount'] },
+    { action: MakerWithdrawAction },
+  ]
 
-  if (!isMakerLendingPoolId(step.inputs.position.pool.id)) {
-    throw new Error('Invalid Maker lending pool id')
-  }
+  async build(params: ActionBuilderParams<steps.PaybackWithdrawStep>): Promise<void> {
+    const { context, user, positionsManager, step, addressBookManager } = params
 
-  const ilkType = step.inputs.position.pool.id.ilkType
+    if (!isMakerLendingPoolId(step.inputs.position.pool.id)) {
+      throw new Error('Invalid Maker lending pool id')
+    }
 
-  const joinName = MakerIlkToJoinMap[ilkType]
-  const joinAddress = await getContractAddress({
-    addressBookManager,
-    chainInfo: user.chainInfo,
-    contractName: joinName,
-  })
+    const ilkType = step.inputs.position.pool.id.ilkType
 
-  const paybackAmount = getValueFromReference(step.inputs.paybackAmount)
+    const joinName = MakerIlkToJoinMap[ilkType]
+    const joinAddress = await this._getContractAddress({
+      addressBookManager,
+      chainInfo: user.chainInfo,
+      contractName: joinName,
+    })
 
-  if (!paybackAmount.toBN().isZero()) {
+    const paybackAmount = getValueFromReference(step.inputs.paybackAmount)
+
+    if (!paybackAmount.toBN().isZero()) {
+      context.addActionCall({
+        step: params.step,
+        action: new MakerPaybackAction(),
+        arguments: {
+          position: step.inputs.position,
+          positionsManager: positionsManager,
+          amount: getValueFromReference(step.inputs.paybackAmount),
+          paybackAll: paybackAmount.toBN().gte(step.inputs.position.debtAmount.toBN()),
+        },
+        connectedInputs: {},
+        connectedOutputs: {
+          paybackAmount: 'amountPaidBack',
+        },
+      })
+    }
+
     context.addActionCall({
-      step: params.step,
-      action: new MakerPaybackAction(),
+      step: step,
+      action: new MakerWithdrawAction(),
       arguments: {
         position: step.inputs.position,
         positionsManager: positionsManager,
-        amount: getValueFromReference(step.inputs.paybackAmount),
-        paybackAll: paybackAmount.toBN().gte(step.inputs.position.debtAmount.toBN()),
+        amount: step.inputs.withdrawAmount,
+        joinAddress: joinAddress,
       },
       connectedInputs: {},
       connectedOutputs: {
-        paybackAmount: 'amountPaidBack',
+        withdrawAmount: 'amountWithdrawn',
       },
     })
   }
-
-  context.addActionCall({
-    step: step,
-    action: new MakerWithdrawAction(),
-    arguments: {
-      position: step.inputs.position,
-      positionsManager: positionsManager,
-      amount: step.inputs.withdrawAmount,
-      joinAddress: joinAddress,
-    },
-    connectedInputs: {},
-    connectedOutputs: {
-      withdrawAmount: 'amountWithdrawn',
-    },
-  })
 }

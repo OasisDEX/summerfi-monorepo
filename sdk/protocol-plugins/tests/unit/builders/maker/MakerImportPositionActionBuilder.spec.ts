@@ -138,7 +138,7 @@ describe('Maker Import Position Action Builder', () => {
 
   it('should fail the position is not a Maker one', async () => {
     try {
-      await MakerImportPositionActionBuilder({
+      await new MakerImportPositionActionBuilder().build({
         ...builderParams,
         step: {
           ...derivedStep,
@@ -164,7 +164,7 @@ describe('Maker Import Position Action Builder', () => {
   it('should add a new transaction to the context', async () => {
     builderParams.context.startSubContext()
 
-    await MakerImportPositionActionBuilder({
+    await new MakerImportPositionActionBuilder().build({
       ...builderParams,
       step: derivedStep,
       protocolsRegistry: builderParams.protocolsRegistry,

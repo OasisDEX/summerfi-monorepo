@@ -1,14 +1,16 @@
-import { ActionBuilder } from '@summerfi/protocol-plugins-common'
+import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { steps } from '@summerfi/sdk-common/simulation'
-import { delegateToProtocolActionBuilder } from '../../utils/DelegateToProtocolActionBuilder'
+import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
-export const ImportPositionActionBuilder: ActionBuilder<steps.ImportStep> = async (
-  params,
-): Promise<void> => {
-  const externalPosition = params.step.inputs.externalPosition
+export class ImportPositionActionBuilder extends BaseActionBuilder<steps.ImportStep> {
+  readonly actions: ActionBuilderUsedAction[] = [{ action: 'DelegatedToProtocol' }]
 
-  return delegateToProtocolActionBuilder({
-    protocolName: externalPosition.position.pool.id.protocol.name,
-    actionBuilderParams: params,
-  })
+  async build(params: ActionBuilderParams<steps.ImportStep>): Promise<void> {
+    const externalPosition = params.step.inputs.externalPosition
+
+    return this._delegateToProtocol({
+      protocolName: externalPosition.position.pool.id.protocol.name,
+      actionBuilderParams: params,
+    })
+  }
 }

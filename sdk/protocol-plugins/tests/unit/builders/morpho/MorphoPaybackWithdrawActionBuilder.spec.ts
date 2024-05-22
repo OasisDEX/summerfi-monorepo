@@ -132,7 +132,7 @@ describe('Morpho Payback Withdraw Action Builder', () => {
 
   it('should fail the position is not a Morpho one', async () => {
     try {
-      await MorphoPaybackWithdrawActionBuilder({
+      await new MorphoPaybackWithdrawActionBuilder().build({
         ...builderParams,
         step: {
           ...derivedStep,
@@ -152,7 +152,7 @@ describe('Morpho Payback Withdraw Action Builder', () => {
   it('should add all the action calls', async () => {
     builderParams.context.startSubContext()
 
-    await MorphoPaybackWithdrawActionBuilder({
+    await new MorphoPaybackWithdrawActionBuilder().build({
       ...builderParams,
       step: derivedStep,
       protocolsRegistry: builderParams.emptyProtocolsRegistry,
@@ -170,7 +170,7 @@ describe('Morpho Payback Withdraw Action Builder', () => {
   it('should not add payback when payback amount is 0', async () => {
     builderParams.context.startSubContext()
 
-    await MorphoPaybackWithdrawActionBuilder({
+    await new MorphoPaybackWithdrawActionBuilder().build({
       ...builderParams,
       step: {
         ...derivedStep,

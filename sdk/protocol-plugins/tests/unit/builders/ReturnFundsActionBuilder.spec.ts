@@ -35,7 +35,7 @@ describe('Return Funds Action Builder', () => {
   it('should encode the action calldata correctly', async () => {
     builderParams.context.startSubContext()
 
-    await ReturnFundsActionBuilder({
+    await new ReturnFundsActionBuilder().build({
       ...builderParams,
       step: derivedStep,
     })

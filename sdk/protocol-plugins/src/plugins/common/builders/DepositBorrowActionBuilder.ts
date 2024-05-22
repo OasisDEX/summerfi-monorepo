@@ -1,12 +1,14 @@
-import { ActionBuilder } from '@summerfi/protocol-plugins-common'
+import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { steps } from '@summerfi/sdk-common/simulation'
-import { delegateToProtocolActionBuilder } from '../../utils/DelegateToProtocolActionBuilder'
+import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
-export const DepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrowStep> = async (
-  params,
-): Promise<void> => {
-  return delegateToProtocolActionBuilder({
-    protocolName: params.step.inputs.position.pool.id.protocol.name,
-    actionBuilderParams: params,
-  })
+export class DepositBorrowActionBuilder extends BaseActionBuilder<steps.DepositBorrowStep> {
+  readonly actions: ActionBuilderUsedAction[] = [{ action: 'DelegatedToProtocol' }]
+
+  async build(params: ActionBuilderParams<steps.DepositBorrowStep>): Promise<void> {
+    return this._delegateToProtocol({
+      protocolName: params.step.inputs.position.pool.id.protocol.name,
+      actionBuilderParams: params,
+    })
+  }
 }

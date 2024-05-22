@@ -40,7 +40,7 @@ describe('Pull TokenAction Builder', () => {
   it('should encode the action calldata correctly', async () => {
     builderParams.context.startSubContext()
 
-    await PullTokenActionBuilder({
+    await new PullTokenActionBuilder().build({
       ...builderParams,
       step: derivedStep,
     })

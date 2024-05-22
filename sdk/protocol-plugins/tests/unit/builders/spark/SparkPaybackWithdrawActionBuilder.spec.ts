@@ -127,7 +127,7 @@ describe('Spark Payback Withdraw Action Builder', () => {
 
   it('should fail the position is not a Spark one', async () => {
     try {
-      await SparkPaybackWithdrawActionBuilder({
+      await new SparkPaybackWithdrawActionBuilder().build({
         ...builderParams,
         step: {
           ...derivedStep,
@@ -147,7 +147,7 @@ describe('Spark Payback Withdraw Action Builder', () => {
   it('should add all the action calls', async () => {
     builderParams.context.startSubContext()
 
-    await SparkPaybackWithdrawActionBuilder({
+    await new SparkPaybackWithdrawActionBuilder().build({
       ...builderParams,
       step: derivedStep,
       protocolsRegistry: builderParams.emptyProtocolsRegistry,
@@ -165,7 +165,7 @@ describe('Spark Payback Withdraw Action Builder', () => {
   it('should not add payback when payback amount is 0', async () => {
     builderParams.context.startSubContext()
 
-    await SparkPaybackWithdrawActionBuilder({
+    await new SparkPaybackWithdrawActionBuilder().build({
       ...builderParams,
       step: {
         ...derivedStep,

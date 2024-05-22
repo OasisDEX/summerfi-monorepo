@@ -7,9 +7,9 @@ import {
 } from '@summerfi/sdk-common/protocols'
 import { type IProtocolPluginContext } from './IProtocolPluginContext'
 import { steps } from '@summerfi/sdk-common/simulation'
-import { ActionBuilder, ActionBuildersMap } from '../types/StepBuilderTypes'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
+import { IActionBuilder, ActionBuildersMap } from './IActionBuilder'
 
 /**
  * @interface IProtocolPlugin
@@ -57,7 +57,7 @@ export interface IProtocolPlugin {
    * @param step The simulation step for which to get the action builder
    * @returns The action builder for the given step for the specific protocol, or undefined if not found
    */
-  getActionBuilder<StepType extends steps.Steps>(step: StepType): Maybe<ActionBuilder<StepType>>
+  getActionBuilder<StepType extends steps.Steps>(step: StepType): Maybe<IActionBuilder<StepType>>
 
   /** IMPORT POSITION */
 
