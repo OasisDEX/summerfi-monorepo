@@ -53,7 +53,7 @@ export class SummerPointsService {
   constructor(
     private clients: SummerPointsSubgraphClient[],
     private logger: Logger,
-  ) { }
+  ) {}
 
   async accruePoints(startTimestamp: number, endTimestamp: number): Promise<PositionPoints> {
     const results = await Promise.all(
@@ -258,8 +258,8 @@ export class SummerPointsService {
   getMigrationPoints(events: MigrationEvent[]): number {
     let migrationPoints = 0
     for (const event of events) {
-      const pointsPerUsdPerYear = this.getPointsPerUsdPerYear(event.netValueAfter);
-      const pointsPerYear = pointsPerUsdPerYear * event.netValueAfter;
+      const pointsPerUsdPerYear = this.getPointsPerUsdPerYear(event.netValueAfter)
+      const pointsPerYear = pointsPerUsdPerYear * event.netValueAfter
       migrationPoints += pointsPerYear * this.MIGRATION_POINTS_FRACTION
     }
 
@@ -277,7 +277,7 @@ export class SummerPointsService {
     let points = 0
     for (const swap of swaps) {
       const pointsPerUsdPerYear = this.getPointsPerUsdPerYear(swap.amountInUSD)
-      const pointsPerYear = pointsPerUsdPerYear * swap.amountInUSD;
+      const pointsPerYear = pointsPerUsdPerYear * swap.amountInUSD
       const isCorrelatedAsset = this.isCorrelatedAsset(swap.assetIn.symbol, swap.assetOut.symbol)
       const fraction = isCorrelatedAsset
         ? this.CORRELATED_SWAP_POINTS_FRACTION
