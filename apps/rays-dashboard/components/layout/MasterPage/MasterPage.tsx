@@ -1,6 +1,8 @@
 import { FC, PropsWithChildren } from 'react'
-import { EXTERNAL_LINKS, Footer, INTERNAL_LINKS } from '@summerfi/app-ui'
+import { Footer, Navigation } from '@summerfi/app-ui'
 import Image from 'next/image'
+
+import systemConfigHandler from '@/server-handlers/system-config'
 
 import classNames from './MasterPage.module.scss'
 
@@ -9,10 +11,12 @@ interface MasterPageProps {
   background?: 'simple'
 }
 
-export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
+export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
   background = 'simple',
   children,
 }) => {
+  const systemConfig = await systemConfigHandler()
+
   return (
     <div className={classNames.mainContainer}>
       {
@@ -28,91 +32,23 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({
           ),
         }[background]
       }
+      <Navigation logo="img/branding/logo-dark.svg" logoSmall="img/branding/dot-dark.svg" />
       <div className={classNames.appContainer}>
         {children}
+        <pre>
+          {
+            // eslint-disable-next-line no-magic-numbers
+            JSON.stringify(systemConfig, null, 2)
+          }
+        </pre>
         <Footer
           logo="img/branding/logo-dark.svg"
-          lists={[
-            {
-              title: 'About',
-              links: [
-                {
-                  label: 'Team',
-                  url: INTERNAL_LINKS.about,
-                },
-                {
-                  label: 'Contact',
-                  url: EXTERNAL_LINKS.KB.CONTACT,
-                },
-                {
-                  label: 'Careers',
-                  url: EXTERNAL_LINKS.WORKABLE,
-                },
-                {
-                  label: 'Privacy',
-                  url: INTERNAL_LINKS.privacy,
-                },
-                {
-                  label: 'Cookie Policy',
-                  url: INTERNAL_LINKS.cookie,
-                },
-                {
-                  label: 'Terms',
-                  url: INTERNAL_LINKS.terms,
-                },
-                {
-                  label: 'Security',
-                  url: INTERNAL_LINKS.security,
-                },
-              ],
-            },
-            {
-              title: 'Resources',
-              links: [
-                {
-                  label: 'Blog',
-                  url: EXTERNAL_LINKS.BLOG.MAIN,
-                },
-                {
-                  label: 'Knowledge base',
-                  url: EXTERNAL_LINKS.KB.HELP,
-                },
-                {
-                  label: 'Bug bounty',
-                  url: EXTERNAL_LINKS.BUG_BOUNTY,
-                },
-                {
-                  label: 'Ajna rewards',
-                  url: INTERNAL_LINKS.ajnaRewards,
-                },
-                {
-                  label: 'Referrals',
-                  url: INTERNAL_LINKS.referrals,
-                },
-                {
-                  label: 'Brand assets',
-                  url: INTERNAL_LINKS.brand,
-                },
-              ],
-            },
-            {
-              title: 'Products',
-              links: [
-                {
-                  label: 'Borrow',
-                  url: INTERNAL_LINKS.borrow,
-                },
-                {
-                  label: 'Multiply',
-                  url: INTERNAL_LINKS.multiply,
-                },
-                {
-                  label: 'Earn',
-                  url: INTERNAL_LINKS.earn,
-                },
-              ],
-            },
-          ]}
+          languageSwitcher={
+            <div className={classNames.languageSwitcher}>
+              <button>EN</button>
+              <button>US</button>
+            </div>
+          }
           newsletter={{
             button: 'Subscribe →',
             description: 'Subscribe to the newsletter for updates',

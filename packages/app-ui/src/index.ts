@@ -1,5 +1,6 @@
-export { Button } from './components/atoms/Button/Button'
-export { Footer } from './components/layout/Footer/Footer'
 export { GlobalStyles } from './GlobalStyles'
+export { Button } from './components/atoms/Button/Button'
 export { Text } from './components/atoms/Text/Text'
+export { Footer } from './components/layout/Footer/Footer'
+export { Navigation } from './components/layout/Navigation/Navigation'
 export { EXTERNAL_LINKS, INTERNAL_LINKS } from './helpers/applicationLinks'

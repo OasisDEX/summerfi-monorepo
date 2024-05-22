@@ -1,6 +1,6 @@
 'use client'
 
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
 import {
   IconBrandDiscordFilled,
   IconBrandGithubFilled,
@@ -9,18 +9,13 @@ import {
 import Link from 'next/link'
 
 import { Text } from '@/components/atoms/Text/Text'
+import { EXTERNAL_LINKS, INTERNAL_LINKS } from '@/helpers/applicationLinks'
 
-import classNames from '@/components/layout/Footer/Footer.module.scss'
+import footerStyles from '@/components/layout/Footer/Footer.module.scss'
 
 interface FooterProps {
   logo: string
-  lists: {
-    title: string
-    links: {
-      label: string
-      url: string
-    }[]
-  }[]
+  languageSwitcher?: ReactNode
   newsletter: {
     title: string
     description: string
@@ -29,12 +24,94 @@ interface FooterProps {
   }
 }
 
-export const Footer: FC<FooterProps> = ({ lists, logo, newsletter }) => {
+const linksList = [
+  {
+    title: 'About',
+    links: [
+      {
+        label: 'Team',
+        url: INTERNAL_LINKS.about,
+      },
+      {
+        label: 'Contact',
+        url: EXTERNAL_LINKS.KB.CONTACT,
+      },
+      {
+        label: 'Careers',
+        url: EXTERNAL_LINKS.WORKABLE,
+      },
+      {
+        label: 'Privacy',
+        url: INTERNAL_LINKS.privacy,
+      },
+      {
+        label: 'Cookie Policy',
+        url: INTERNAL_LINKS.cookie,
+      },
+      {
+        label: 'Terms',
+        url: INTERNAL_LINKS.terms,
+      },
+      {
+        label: 'Security',
+        url: INTERNAL_LINKS.security,
+      },
+    ],
+  },
+  {
+    title: 'Resources',
+    links: [
+      {
+        label: 'Blog',
+        url: EXTERNAL_LINKS.BLOG.MAIN,
+      },
+      {
+        label: 'Knowledge base',
+        url: EXTERNAL_LINKS.KB.HELP,
+      },
+      {
+        label: 'Bug bounty',
+        url: EXTERNAL_LINKS.BUG_BOUNTY,
+      },
+      {
+        label: 'Ajna rewards',
+        url: INTERNAL_LINKS.ajnaRewards,
+      },
+      {
+        label: 'Referrals',
+        url: INTERNAL_LINKS.referrals,
+      },
+      {
+        label: 'Brand assets',
+        url: INTERNAL_LINKS.brand,
+      },
+    ],
+  },
+  {
+    title: 'Products',
+    links: [
+      {
+        label: 'Borrow',
+        url: INTERNAL_LINKS.borrow,
+      },
+      {
+        label: 'Multiply',
+        url: INTERNAL_LINKS.multiply,
+      },
+      {
+        label: 'Earn',
+        url: INTERNAL_LINKS.earn,
+      },
+    ],
+  },
+]
+
+export const Footer: FC<FooterProps> = ({ logo, newsletter, languageSwitcher }) => {
   return (
-    <div className={classNames.container}>
+    <div className={footerStyles.container}>
       <div>
-        <img src={logo} alt="Summer.fi" className={classNames.logo} />
-        <ul className={classNames.socialsList}>
+        <img src={logo} alt="Summer.fi" className={footerStyles.logo} />
+        <ul className={footerStyles.socialsList}>
           <li>
             <Link href="https://twitter.com/summerfinance_" target="_blank" rel="noreferrer">
               <IconBrandTwitterFilled size={20} />
@@ -51,13 +128,14 @@ export const Footer: FC<FooterProps> = ({ lists, logo, newsletter }) => {
             </Link>
           </li>
         </ul>
+        {languageSwitcher}
       </div>
-      {lists.map(({ links, title }, i) => (
+      {linksList.map(({ links, title }, i) => (
         <div key={i}>
           <Text as="h3" variant="p1semi">
             {title}
           </Text>
-          <ul className={classNames.linksList}>
+          <ul className={footerStyles.linksList}>
             {links.map(({ label, url }, j) => (
               <li key={j}>
                 <Link
@@ -75,11 +153,11 @@ export const Footer: FC<FooterProps> = ({ lists, logo, newsletter }) => {
         <Text as="h3" variant="p1semi">
           {newsletter.title}
         </Text>
-        <Text as="p" variant="p2" className={classNames.newsletterDescription}>
+        <Text as="p" variant="p2" className={footerStyles.newsletterDescription}>
           {newsletter.description}
         </Text>
-        <div className={classNames.newsletterFakeInput}>
-          <Text variant="p3" className={classNames.newsletterFakeLabel}>
+        <div className={footerStyles.newsletterFakeInput}>
+          <Text variant="p3" className={footerStyles.newsletterFakeLabel}>
             {newsletter.label}
           </Text>
           <Text variant="p3semi">{newsletter.button}</Text>

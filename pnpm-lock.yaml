@@ -574,6 +574,15 @@ importers:
       '@summerfi/app-ui':
         specifier: workspace:*
         version: link:../../packages/app-ui
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../../packages/serverless-shared
+      '@types/lodash':
+        specifier: ^4.14.109
+        version: 4.17.1
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       next:
         specifier: ^14.2.3
         version: 14.2.3(@babel/core@7.24.4)(react-dom@18.3.1)(react@18.3.1)(sass@1.77.0)
@@ -596,6 +605,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
+      json-to-ts:
+        specifier: ^1.7.0
+        version: 1.7.0
 
   external-api/get-collateral-locked-function:
     dependencies:
@@ -729,6 +741,9 @@ importers:
 
   packages/app-ui:
     dependencies:
+      '@tabler/icons-react':
+        specifier: ^3.4.0
+        version: 3.4.0(react@18.3.1)
       include-media:
         specifier: 2.0.0
         version: 2.0.0
@@ -760,9 +775,9 @@ importers:
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
-      '@tabler/icons-react':
-        specifier: ^3.4.0
-        version: 3.4.0(react@18.3.1)
+      '@types/node':
+        specifier: 20.12.7
+        version: 20.12.7
       '@types/react':
         specifier: ^18.3.1
         version: 18.3.1
@@ -775,9 +790,15 @@ importers:
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
+      eslint:
+        specifier: 8.57.0
+        version: 8.57.0
       glob:
         specifier: ^10.3.12
         version: 10.3.12
+      jest:
+        specifier: 29.7.0
+        version: 29.7.0(@types/node@20.12.7)
       sass:
         specifier: ^1.77.0
         version: 1.77.0
@@ -4738,7 +4759,6 @@ packages:
   /@babel/helper-validator-identifier@7.24.5:
     resolution: {integrity: sha512-3q93SSKX2TWCG30M2G2kwaKeTYgEUp5Snjuj8qm729SObL6nbtUldAi37qbxkD5gg3xnBio+f9nqpSepGZMvxA==}
     engines: {node: '>=6.9.0'}
-    dev: false
 
   /@babel/helper-validator-option@7.23.5:
     resolution: {integrity: sha512-85ttAOMLsr53VgXkTbkx8oA6YTfT4q7/HzXSLEYmjcSTJPMPQtvq1BD79Byep5xMUYbGRzEpDsjUf3dyp54IKw==}
@@ -6054,7 +6074,6 @@ packages:
       '@babel/helper-string-parser': 7.24.1
       '@babel/helper-validator-identifier': 7.24.5
       to-fast-properties: 2.0.0
-    dev: false
 
   /@bcoe/v8-coverage@0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
@@ -13072,11 +13091,11 @@ packages:
     dependencies:
       '@tabler/icons': 3.4.0
       react: 18.3.1
-    dev: true
+    dev: false
 
   /@tabler/icons@3.4.0:
     resolution: {integrity: sha512-6gYHXG0xAJgt2KPcTYDqhe3xYoJMTgz/ZfYup4EUHsxzYsz6rBlt8WgavHsGaWckaqH7ApR/epYslfXZjK27yw==}
-    dev: true
+    dev: false
 
   /@tanstack/query-core@4.36.1:
     resolution: {integrity: sha512-DJSilV5+ytBP1FbFcEJovv4rnnm/CokuVvrBEtW/Va9DvuJ3HksbXUJEpI0aV1KtuL4ZoO9AVE6PyNLzF7tLeA==}
@@ -24814,7 +24833,7 @@ packages:
       '@babel/generator': 7.24.4
       '@babel/plugin-syntax-jsx': 7.24.1(@babel/core@7.24.4)
       '@babel/plugin-syntax-typescript': 7.24.1(@babel/core@7.24.4)
-      '@babel/types': 7.24.0
+      '@babel/types': 7.24.5
       '@jest/expect-utils': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
@@ -27353,6 +27372,7 @@ packages:
 
   /osenv@0.1.5:
     resolution: {integrity: sha512-0CWcCECdMVc2Rw3U5w9ZjqX6ga6ubk1xDVKxtBQPK7wis/0F2r9T6k4ydGYhecl7YUBxBVxhL5oisPsNxAPe2g==}
+    deprecated: This package is no longer supported.
     dependencies:
       os-homedir: 1.0.2
       os-tmpdir: 1.0.2

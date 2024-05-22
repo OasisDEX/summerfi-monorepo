@@ -4,9 +4,10 @@ export default {
   additionalData: `
   @import './node_modules/include-media/dist/_include-media.scss';
   $breakpoints: (
-    s: 768px,
-    m: 960px,
-    l: 1088px,
+    s: 531px,
+    m: 744px,
+    l: 1025px,
+    xl: 1279px,
   );
   `,
 }

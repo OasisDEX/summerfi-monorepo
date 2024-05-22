@@ -3,14 +3,18 @@
   "version": "0.0.1",
   "license": "Apache-2.0",
   "scripts": {
-    "dev": "dotenv -e ../../.env -e ../../.env.local -- next dev -p 3001",
-    "build": "dotenv -e ../../.env -e ../../.env.local -- next build",
+    "dev": "dotenv -e ../../.env -e ../../.env.local -- pnpm get-config-types && dotenv -e ../../.env -e ../../.env.local -- next dev -p 3001",
+    "build": "dotenv -e ../../.env -e ../../.env.local -- pnpm get-config-types && dotenv -e ../../.env -e ../../.env.local -- next build",
+    "get-config-types": "node scripts/get-config-types.js",
     "start": "next start -p 3001",
     "lint": "eslint ."
   },
   "dependencies": {
-    "@summerfi/app-ui": "workspace:*",
     "@summerfi/app-db": "workspace:*",
+    "@summerfi/app-ui": "workspace:*",
+    "@summerfi/serverless-shared": "workspace:*",
+    "@types/lodash": "^4.14.109",
+    "lodash": "^4.17.21",
     "next": "^14.2.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
@@ -19,7 +23,8 @@
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
     "@types/react": "^18.3.1",
-    "@types/react-dom": "^18.3.0"
+    "@types/react-dom": "^18.3.0",
+    "json-to-ts": "^1.7.0"
   },
   "packageManager": "pnpm@8.15.4"
 }

@@ -30,6 +30,8 @@ module.exports = {
     'tsconfig.tsbuildinfo', // tsconfig.tsbuildinfo
     'node_modules/',
     'out/',
+    'types/generated/*',
+    'scripts/get-config-types.js',
   ],
   overrides: [{ files: ['*.js?(x)', '*.ts?(x)'] }],
   plugins: [
@@ -203,7 +205,10 @@ module.exports = {
     '@typescript-eslint/array-type': 'error',
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/consistent-indexed-object-style': ['error', 'index-signature'],
-    '@typescript-eslint/no-unused-vars': 'error',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      { vars: 'all', varsIgnorePattern: '^_', args: 'after-used', argsIgnorePattern: '^_' },
+    ],
     '@typescript-eslint/no-duplicate-enum-values': 'error',
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/no-explicit-any': 'warn',
