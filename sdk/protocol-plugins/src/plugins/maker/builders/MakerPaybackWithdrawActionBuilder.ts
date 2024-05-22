@@ -1,12 +1,10 @@
 import { getValueFromReference, steps } from '@summerfi/sdk-common/simulation'
-import { ActionNames } from '@summerfi/deployment-types'
 import { MakerPaybackAction } from '../actions/MakerPaybackAction'
 import { MakerWithdrawAction } from '../actions/MakerWithdrawAction'
 import { ActionBuilder } from '@summerfi/protocol-plugins-common'
 import { MakerIlkToJoinMap } from '../types/MakerIlkToJoinMap'
 import { isMakerLendingPoolId } from '../interfaces/IMakerLendingPoolId'
 import { getContractAddress } from '../../utils/GetContractAddress'
-export const MakerPaybackWithdrawActionList: ActionNames[] = ['MakerPayback', 'MakerWithdraw']
 
 export const MakerPaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWithdrawStep> = async (
   params,
@@ -14,7 +12,7 @@ export const MakerPaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWithd
   const { context, user, positionsManager, step, addressBookManager } = params
 
   if (!isMakerLendingPoolId(step.inputs.position.pool.id)) {
-    throw new Error('Maker: Invalid pool id')
+    throw new Error('Invalid Maker lending pool id')
   }
 
   const ilkType = step.inputs.position.pool.id.ilkType

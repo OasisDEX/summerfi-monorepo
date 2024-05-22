@@ -19,22 +19,20 @@ describe('Return Funds Action Builder', () => {
     decimals: 18,
   })
 
+  const derivedStep: steps.ReturnFundsStep = {
+    type: SimulationSteps.ReturnFunds,
+    name: 'ReturnFundsStep',
+    inputs: {
+      token: WETH,
+    },
+    outputs: undefined,
+  }
+
   beforeEach(() => {
     builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })
   })
 
   it('should encode the action calldata correctly', async () => {
-    const builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })
-
-    const derivedStep: steps.ReturnFundsStep = {
-      type: SimulationSteps.ReturnFunds,
-      name: 'ReturnFundsStep',
-      inputs: {
-        token: WETH,
-      },
-      outputs: undefined,
-    }
-
     builderParams.context.startSubContext()
 
     await ReturnFundsActionBuilder({

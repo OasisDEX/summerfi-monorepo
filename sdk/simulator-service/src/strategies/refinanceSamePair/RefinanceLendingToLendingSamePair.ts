@@ -4,10 +4,10 @@ import {
   SimulationSteps,
   SimulationType,
   TokenTransferTargetType,
+  getValueFromReference,
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
 import { TokenAmount } from '@summerfi/sdk-common/common'
-import { newEmptyPositionFromPool } from '@summerfi/sdk-common/common/utils'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
 import { refinanceLendingToLendingSamePairStrategy } from './Strategy'
@@ -46,28 +46,39 @@ export async function refinanceLendingToLendingSamePair(
       type: SimulationSteps.Flashloan,
       inputs: {
         amount: flashloanAmount,
-        provider: FlashloanProvider.Balancer,
+        provider:
+          flashloanAmount.token.symbol === 'DAI'
+            ? FlashloanProvider.Maker
+            : FlashloanProvider.Balancer,
       },
     }))
     .next(async () => ({
-      name: 'PaybackWithdrawFromSource',
+      name: 'PaybackWithdrawFromSourcePosition',
       type: SimulationSteps.PaybackWithdraw,
       inputs: {
         paybackAmount: TokenAmount.createFrom({
           amount: Number.MAX_SAFE_INTEGER.toString(),
           token: position.debtAmount.token,
         }),
+        withdrawTargetType: TokenTransferTargetType.PositionsManager,
         withdrawAmount: position.collateralAmount,
         position: position,
       },
     }))
     .next(async () => ({
-      name: 'DepositBorrowToTarget',
+      name: 'OpenTargetPosition',
+      type: SimulationSteps.OpenPosition,
+      inputs: {
+        pool: targetPool,
+      },
+    }))
+    .next(async (ctx) => ({
+      name: 'DepositBorrowToTargetPosition',
       type: SimulationSteps.DepositBorrow,
       inputs: {
         depositAmount: position.collateralAmount,
         borrowAmount: position.debtAmount, // TODO figure the debt amount
-        position: newEmptyPositionFromPool(targetPool),
+        position: getValueFromReference(ctx.getReference(['OpenTargetPosition', 'position'])),
         borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
     }))
@@ -97,8 +108,11 @@ export async function refinanceLendingToLendingSamePair(
     })
     .run()
 
+  const targetPositionId = getValueFromReference(
+    simulation.getReference(['OpenTargetPosition', 'position']),
+  )
   const targetPosition = Object.values(simulation.positions).find(
-    (p) => p.pool.id.protocol === targetPool.id.protocol,
+    (p) => p.id.id === targetPositionId.id.id,
   )
 
   if (!targetPosition) {

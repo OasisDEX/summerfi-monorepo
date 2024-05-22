@@ -19,7 +19,6 @@ import {
 } from '../interfaces/IAaveV3LendingPoolId'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
-import { AaveV3StepBuilders } from '../builders'
 import { IAaveV3PositionIdData, isAaveV3PositionId } from '../interfaces/IAaveV3PositionId'
 import { AaveV3LendingPoolInfo } from './AaveV3LendingPoolInfo'
 import { aaveV3EmodeCategoryMap } from './EmodeCategoryMap'
@@ -27,6 +26,7 @@ import { AAVEv3LikeBaseProtocolPlugin } from '../../common/helpers/aaveV3Like/AA
 import { FiatCurrency } from '@summerfi/sdk-common'
 import { ContractInfo } from '../../common/types/ContractInfo'
 import { ChainContractsProvider } from '../../utils/ChainContractProvider'
+import { AaveV3StepBuilders } from '../builders/AaveV3StepBuilders'
 
 /**
  * @class AaveV3ProtocolPlugin

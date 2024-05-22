@@ -8,7 +8,7 @@ import {
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
-import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
+import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
 import { SetupBuilderReturnType, setupBuilderParams } from '../../utils/SetupBuilderParams'
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { getErrorMessage } from '@summerfi/testing-utils'
@@ -84,6 +84,7 @@ describe('Payback Withdraw Action Builder', () => {
       paybackAmount: paybackAmount,
       withdrawAmount: withdrawAmount,
       position: position,
+      withdrawTargetType: TokenTransferTargetType.PositionsManager,
     },
     outputs: {
       paybackAmount: paybackAmount,

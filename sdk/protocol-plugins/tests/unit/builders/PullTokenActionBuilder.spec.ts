@@ -24,22 +24,20 @@ describe('Pull TokenAction Builder', () => {
     amount: '134.5',
   })
 
+  const derivedStep: steps.PullTokenStep = {
+    type: SimulationSteps.PullToken,
+    name: 'PullTokenStep',
+    inputs: {
+      amount: pullAmount,
+    },
+    outputs: undefined,
+  }
+
   beforeEach(() => {
     builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })
   })
 
   it('should encode the action calldata correctly', async () => {
-    const builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })
-
-    const derivedStep: steps.PullTokenStep = {
-      type: SimulationSteps.PullToken,
-      name: 'PullTokenStep',
-      inputs: {
-        amount: pullAmount,
-      },
-      outputs: undefined,
-    }
-
     builderParams.context.startSubContext()
 
     await PullTokenActionBuilder({

@@ -106,7 +106,7 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
    */
   protected async _getAssetFromToken(
     token: IToken,
-    emode: bigint,
+    emode: number,
   ): Promise<Asset<ContractNames, ContractsAbiMap>> {
     if (!this._assetsList) {
       throw new Error('Assets list not initialized')
@@ -133,7 +133,7 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
    */
   protected async _getCollateralInfo(params: {
     token: IToken
-    emode: bigint
+    emode: number
     poolBaseCurrencyToken: Denomination
   }): Promise<Maybe<ICollateralInfo>> {
     const { token, emode, poolBaseCurrencyToken } = params
@@ -198,7 +198,7 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
    */
   protected async _getDebtInfo(
     token: IToken,
-    emode: bigint,
+    emode: number,
     poolBaseCurrencyToken: Denomination,
   ): Promise<Maybe<DebtInfo>> {
     const asset = await this._getAssetFromToken(token, emode)

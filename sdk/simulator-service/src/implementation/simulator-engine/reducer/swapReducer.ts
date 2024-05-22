@@ -12,13 +12,10 @@ export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISim
 
   return {
     ...state,
-    steps: {
-      ...state.steps,
-      [step.name]: step,
-    },
-    swaps: {
+    steps: [...state.steps, step],
+    swaps: [
       ...state.swaps,
-      [step.name]: {
+      {
         provider: step.inputs.provider,
         // Note: Can add routes back in later if we need them for the UI
         // routes: step.inputs.routes,
@@ -35,7 +32,7 @@ export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISim
           amount: fromAmountPreSummerFee.multiply(step.inputs.summerFee.toProportion()).amount,
         }),
       },
-    },
+    ],
     balances: balanceWithToToken,
   }
 }
