@@ -31,7 +31,8 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action, triggerData }) => {
       if (action === SupportedActions.Add) {
-        return !triggers.flags[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].isStopLossEnabled
+        return !triggers.flags[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`]
+          .isTrailingStopLossEnabled
       }
       return true
     },
@@ -45,7 +46,8 @@ const upsertErrorsValidation = paramsSchema
   .refine(
     ({ triggers, action, triggerData }) => {
       if (action === SupportedActions.Update) {
-        return triggers.flags[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].isStopLossEnabled
+        return triggers.flags[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`]
+          .isTrailingStopLossEnabled
       }
       return true
     },
@@ -119,7 +121,8 @@ const upsertErrorsValidation = paramsSchema
 const deleteErrorsValidation = paramsSchema.refine(
   ({ triggers, action, triggerData }) => {
     if (action === SupportedActions.Remove) {
-      return triggers.flags[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`].isStopLossEnabled
+      return triggers.flags[`${ProtocolId.MORPHO_BLUE}-${triggerData.poolId}`]
+        .isTrailingStopLossEnabled
     }
     return true
   },

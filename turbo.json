@@ -42,7 +42,9 @@
     "VPC_ID",
     "SECURITY_GROUP_ID",
     "RAYS_DB_CONNECTION_STRING",
-    "IS_LOCAL"
+    "IS_LOCAL",
+    "RAYS_DB_WRITE_CONNECTION_STRING",
+    "RAYS_DB_READ_CONNECTION_STRING"
   ],
   "pipeline": {
     "dev": {
