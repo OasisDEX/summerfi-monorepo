@@ -7,4 +7,4 @@ export type StepName = string
 export type BalancesRecord = Record<AddressValue, ITokenAmount>
 export type PositionsRecord = Record<string, IPosition>
 export type StepsArray = steps.Steps[]
-export type SwapArray = SimulatedSwapData[]
+export type SwapsArray = SimulatedSwapData[]
