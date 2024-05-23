@@ -34,11 +34,12 @@ export interface GetUsersPointsParams {
   endTimestamp: number // In seconds.
 }
 
-export type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType[number]
+type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType[number]
 export type User = ArrayElement<SummerPointsQuery['users']>
 export type Position = ArrayElement<User['positions']>
 export type MigrationEvent = ArrayElement<Position['migration']>
-export type RecentSwap = ArrayElement<User['recentSwaps']>
+export type RecentSwapInPosition = ArrayElement<Position['recentSwaps']>
+export type RecentSwapInUser = ArrayElement<User['recentSwaps']>
 export type UsersData = SummerPointsQuery['users']
 
 export interface GetUsersPointsResult {
