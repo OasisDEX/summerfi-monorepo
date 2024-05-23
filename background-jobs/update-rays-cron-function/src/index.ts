@@ -516,7 +516,7 @@ async function checkMigrationEligibility(db: Kysely<Database>, positionPoints: P
  * 1. Fetches all points distributions that have an associated eligibility condition but no associated position id.
  * 2. For each user with such a points distribution:
  *    a. If the due date has not passed and the type of the eligibility condition is `BECOME_SUMMER_USER`:
- *       i. Fetches all positions of the user that are eligible for a check. A position is eligible if its net value is greater than or equal to 500, it was created in the last 14 days, and it belongs to the current user.
+ *       i. Fetches all positions of the user that are eligible for a check. A position is eligible if its net value is greater than or equal to 500, it was created before 14 days ago, and it belongs to the current user.
  *       ii. If there are no eligible positions, the function returns.
  *       iii. Otherwise, it fetches user points distributions of certain types.
  *       iv. Updates each of them by setting the `eligibilityConditionId` to `null` and multiplying the points by a multiplier that depends on when the oldest eligible position was created.
@@ -552,7 +552,7 @@ async function checkOpenedPositionEligibility(
           .filter(
             (p) =>
               p.netValue >= 500 &&
-              p.positionCreated * 1000 > Date.now() - FOURTEEN_DAYS_IN_MILLISECONDS,
+              p.positionCreated * 1000 < Date.now() - FOURTEEN_DAYS_IN_MILLISECONDS,
           )
           .filter((p) => p.user === user.address)
           .sort((a, b) => a.positionCreated - b.positionCreated)
