@@ -18,7 +18,7 @@ import {
 import { AllowedProtocolNames } from './AAVEv3LikeBuilderTypes'
 import { BigNumber } from 'bignumber.js'
 import { PRECISION_BI, UNCAPPED_SUPPLY } from '../../constants/AaveV3LikeConstants'
-import { CommonTokenSymbols, IChainInfo, IToken } from '@summerfi/sdk-common/common'
+import { IChainInfo, IToken } from '@summerfi/sdk-common/common'
 import { ICollateralInfo } from '@summerfi/sdk-common/protocols'
 import { ChainContractsProvider, GenericAbiMap } from '../../../utils/ChainContractProvider'
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
@@ -209,10 +209,6 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
       caps: { borrowCap },
       data: { totalVariableDebt, totalStableDebt, variableBorrowRate },
     } = asset
-    if (quoteToken.symbol === CommonTokenSymbols.WETH) {
-      // WETH can be used as collateral on AaveV3 but not borrowed.
-      return
-    }
 
     try {
       const RESERVE_FACTOR_TO_PERCENTAGE_DIVISOR = 10000n
