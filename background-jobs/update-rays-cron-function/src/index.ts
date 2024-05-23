@@ -1,21 +1,61 @@
 import type { Context, EventBridgeEvent } from 'aws-lambda'
 import { Logger } from '@aws-lambda-powertools/logger'
-import { getRaysDB } from '@summerfi/rays-db'
+import { Database, getRaysDB } from '@summerfi/rays-db'
 import process from 'node:process'
 import { getSummerPointsSubgraphClient } from '@summerfi/summer-events-subgraph'
 import { ChainId } from '@summerfi/serverless-shared'
-import { SummerPointsService } from './point-accrual'
+import { PositionPoints, SummerPointsService } from './point-accrual'
 import { positionIdResolver } from './position-id-resolver'
+import { Kysely } from 'kysely'
 
 const logger = new Logger({ serviceName: 'update-rays-cron-function' })
 
 const LOCK_ID = 'update_points_lock'
 const LAST_RUN_ID = 'update_points_last_run'
 
-const eligibilityConditionType = 'POSITION_OPEN_TIME'
-const eligibilityConditionDescription = 'The position must be open for at least 30 days'
-const eligibilityConditionMetadata = {
-  minDays: 30,
+enum EligibilityConditionType {
+  POSITION_OPEN_TIME = 'POSITION_OPEN_TIME',
+  POINTS_EXPIRED = 'POINTS_EXPIRED',
+  BECOME_SUMMER_USER = 'BECOME_SUMMER_USER',
+}
+type Eligibility = {
+  type: EligibilityConditionType
+  description: string
+  metadata: Record<string, string | number | Record<string, string | number | object>>
+}
+
+const eligibilityConditions: Record<EligibilityConditionType, Eligibility> = {
+  [EligibilityConditionType.POSITION_OPEN_TIME]: {
+    type: EligibilityConditionType.POSITION_OPEN_TIME,
+    description: 'The position must be open for at least 30 days',
+    metadata: {
+      minDays: 30,
+    },
+  },
+  [EligibilityConditionType.POINTS_EXPIRED]: {
+    type: EligibilityConditionType.POINTS_EXPIRED,
+    description: 'The points have expired',
+    metadata: {},
+  },
+  [EligibilityConditionType.BECOME_SUMMER_USER]: {
+    type: EligibilityConditionType.BECOME_SUMMER_USER,
+    description: 'Must use summer for at least 14 days with at least 500 USD',
+    metadata: {
+      minDays: 14,
+      minUsd: 500,
+      bonus: {
+        powerFeatureEnabled: 1000,
+      },
+      possibleMultipliers: {
+        3: {
+          requirements: 'Position open in first month',
+        },
+        2: {
+          requirements: 'Position open in second month',
+        },
+      },
+    },
+  },
 }
 
 export const handler = async (
@@ -127,6 +167,8 @@ export const handler = async (
 
     const sortedPoints = points.sort((a, b) => a.positionId.localeCompare(b.positionId))
 
+    await checkMigrationEligibility(db, sortedPoints)
+
     // split points by 30 item chunks
     const chunkedPoints = []
     for (let i = 0; i < sortedPoints.length; i += 30) {
@@ -232,9 +274,9 @@ export const handler = async (
             const eligibilityCondition = await db
               .insertInto('eligibilityCondition')
               .values({
-                type: eligibilityConditionType,
-                description: eligibilityConditionDescription,
-                metadata: JSON.stringify(eligibilityConditionMetadata),
+                type: eligibilityConditions.POSITION_OPEN_TIME.type,
+                description: eligibilityConditions.POSITION_OPEN_TIME.description,
+                metadata: JSON.stringify(eligibilityConditions.POSITION_OPEN_TIME.metadata),
                 dueDate: dueDate,
               })
               .returningAll()
@@ -411,3 +453,45 @@ export const handler = async (
 }
 
 export default handler
+
+/**
+ * Checks the migration eligibility for point distributions.
+ * @param db - The database instance.
+ * @param positionPoints - The position points.
+ */
+async function checkMigrationEligibility(db: Kysely<Database>, positionPoints: PositionPoints) {
+  const existingPointDistributionsWithEligibilityCondition = await db
+    .selectFrom('pointsDistribution')
+    .leftJoin(
+      'eligibilityCondition',
+      'eligibilityCondition.id',
+      'pointsDistribution.eligibilityConditionId',
+    )
+    .leftJoin('position', 'position.id', 'pointsDistribution.positionId')
+    .selectAll()
+    .execute()
+
+  if (existingPointDistributionsWithEligibilityCondition.length > 0) {
+    existingPointDistributionsWithEligibilityCondition.forEach(async (point) => {
+      if (
+        point.dueDate &&
+        point.type == eligibilityConditions.POSITION_OPEN_TIME.type &&
+        point.dueDate < new Date()
+      ) {
+        const positionInSnapshot = positionPoints.find((p) => p.positionId === point.externalId)
+        if (!positionInSnapshot || positionInSnapshot.netValue <= 0) {
+          await db.deleteFrom('pointsDistribution').where('id', '=', point.id).execute()
+          await db
+            .deleteFrom('eligibilityCondition')
+            .where('id', '=', point.eligibilityConditionId)
+            .execute()
+        } else if (positionInSnapshot.netValue > 0) {
+          await db
+            .deleteFrom('eligibilityCondition')
+            .where('id', '=', point.eligibilityConditionId)
+            .execute()
+        }
+      }
+    })
+  }
+}
