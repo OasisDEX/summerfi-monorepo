@@ -10,12 +10,13 @@ import {
 } from '@summerfi/summer-events-subgraph'
 import { Logger } from '@aws-lambda-powertools/logger'
 
-type PositionPoints = {
+export type PositionPoints = {
   positionId: string
   vaultId: number
   user: string
   protocol: string
   marketId: string
+  positionCreated: number
   points: {
     openPositionsPoints: number
     migrationPoints: number
@@ -196,6 +197,7 @@ export class SummerPointsService {
           positionId: position.id,
           protocol: position.protocol,
           marketId: position.marketId,
+          positionCreated: position.firstEvent[0].timestamp,
           user: user.id,
           points: {
             openPositionsPoints: totalMultiplier * openPositionsPoints,
@@ -264,6 +266,7 @@ export class SummerPointsService {
         vaultId: swap.position!.account.vaultId,
         protocol: swap.position!.protocol,
         marketId: swap.position!.marketId,
+        positionCreated: swap.position!.firstEvent[0].timestamp,
         user: user.id,
         points: {
           openPositionsPoints: 0,

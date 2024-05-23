@@ -79,6 +79,9 @@ query SummerPoints(
         user {
           id
         }
+        firstEvent: summerEvents(first: 1, orderBy: timestamp, orderDirection: asc) {
+          timestamp
+        }
       }
       amountInUSD
       assetIn {

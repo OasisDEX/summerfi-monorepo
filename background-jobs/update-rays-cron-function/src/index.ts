@@ -1,21 +1,65 @@
 import type { Context, EventBridgeEvent } from 'aws-lambda'
 import { Logger } from '@aws-lambda-powertools/logger'
-import { getRaysDB } from '@summerfi/rays-db'
+import { Database, getRaysDB } from '@summerfi/rays-db'
 import process from 'node:process'
 import { getSummerPointsSubgraphClient } from '@summerfi/summer-events-subgraph'
 import { ChainId } from '@summerfi/serverless-shared'
-import { SummerPointsService } from './point-accrual'
+import { PositionPoints, SummerPointsService } from './point-accrual'
 import { positionIdResolver } from './position-id-resolver'
+import { Kysely } from 'kysely'
 
 const logger = new Logger({ serviceName: 'update-rays-cron-function' })
 
 const LOCK_ID = 'update_points_lock'
 const LAST_RUN_ID = 'update_points_last_run'
 
-const eligibilityConditionType = 'POSITION_OPEN_TIME'
-const eligibilityConditionDescription = 'The position must be open for at least 30 days'
-const eligibilityConditionMetadata = {
-  minDays: 30,
+const FOURTEEN_DAYS_IN_MILLISECONDS = 14 * 24 * 60 * 60 * 1000
+const SIXTY_DAYS_IN_MILLISECONDS = 60 * 24 * 60 * 60
+const THIRTY_DAYS_IN_MILLISECONDS = 30 * 24 * 60 * 60 * 1000
+
+enum EligibilityConditionType {
+  POSITION_OPEN_TIME = 'POSITION_OPEN_TIME',
+  POINTS_EXPIRED = 'POINTS_EXPIRED',
+  BECOME_SUMMER_USER = 'BECOME_SUMMER_USER',
+}
+type Eligibility = {
+  type: EligibilityConditionType
+  description: string
+  metadata: Record<string, string | number | Record<string, string | number | object>>
+}
+
+const eligibilityConditions: Record<EligibilityConditionType, Eligibility> = {
+  [EligibilityConditionType.POSITION_OPEN_TIME]: {
+    type: EligibilityConditionType.POSITION_OPEN_TIME,
+    description: 'The position must be open for at least 30 days',
+    metadata: {
+      minDays: 30,
+    },
+  },
+  [EligibilityConditionType.POINTS_EXPIRED]: {
+    type: EligibilityConditionType.POINTS_EXPIRED,
+    description: 'The points have expired',
+    metadata: {},
+  },
+  [EligibilityConditionType.BECOME_SUMMER_USER]: {
+    type: EligibilityConditionType.BECOME_SUMMER_USER,
+    description: 'Must use summer for at least 14 days with at least 500 USD',
+    metadata: {
+      minDays: 14,
+      minUsd: 500,
+      bonus: {
+        powerFeatureEnabled: 1000,
+      },
+      possibleMultipliers: {
+        3: {
+          requirements: 'Position open in first month',
+        },
+        2: {
+          requirements: 'Position open in second month',
+        },
+      },
+    },
+  },
 }
 
 export const handler = async (
@@ -127,6 +171,8 @@ export const handler = async (
 
     const sortedPoints = points.sort((a, b) => a.positionId.localeCompare(b.positionId))
 
+    await checkMigrationEligibility(db, sortedPoints)
+    await checkOpenedPositionEligibility(db, sortedPoints)
     // split points by 30 item chunks
     const chunkedPoints = []
     for (let i = 0; i < sortedPoints.length; i += 30) {
@@ -232,9 +278,9 @@ export const handler = async (
             const eligibilityCondition = await db
               .insertInto('eligibilityCondition')
               .values({
-                type: eligibilityConditionType,
-                description: eligibilityConditionDescription,
-                metadata: JSON.stringify(eligibilityConditionMetadata),
+                type: eligibilityConditions.POSITION_OPEN_TIME.type,
+                description: eligibilityConditions.POSITION_OPEN_TIME.description,
+                metadata: JSON.stringify(eligibilityConditions.POSITION_OPEN_TIME.metadata),
                 dueDate: dueDate,
               })
               .returningAll()
@@ -411,3 +457,160 @@ export const handler = async (
 }
 
 export default handler
+
+/**
+ * Checks the migration eligibility for point distributions.
+ * @param db - The database instance.
+ * @param positionPoints - The position points.
+ */
+async function checkMigrationEligibility(db: Kysely<Database>, positionPoints: PositionPoints) {
+  const existingPointDistributionsWithEligibilityCondition = await db
+    .selectFrom('pointsDistribution')
+    .where('positionId', '!=', null)
+    .leftJoin(
+      'eligibilityCondition',
+      'eligibilityCondition.id',
+      'pointsDistribution.eligibilityConditionId',
+    )
+    .leftJoin('position', 'position.id', 'pointsDistribution.positionId')
+    .selectAll()
+    .execute()
+
+  if (existingPointDistributionsWithEligibilityCondition.length > 0) {
+    existingPointDistributionsWithEligibilityCondition.forEach(async (point) => {
+      if (
+        point.dueDate &&
+        point.type == eligibilityConditions.POSITION_OPEN_TIME.type &&
+        point.dueDate < new Date()
+      ) {
+        const positionInSnapshot = positionPoints.find((p) => p.positionId === point.externalId)
+        if (!positionInSnapshot || positionInSnapshot.netValue <= 0) {
+          await db.deleteFrom('pointsDistribution').where('id', '=', point.id).execute()
+          await db
+            .deleteFrom('eligibilityCondition')
+            .where('id', '=', point.eligibilityConditionId)
+            .execute()
+        } else if (positionInSnapshot.netValue > 0) {
+          await db
+            .updateTable('pointsDistribution')
+            .set({ eligibilityConditionId: null })
+            .where('id', '=', point.id)
+            .execute()
+          await db
+            .deleteFrom('eligibilityCondition')
+            .where('id', '=', point.eligibilityConditionId)
+            .execute()
+        }
+      }
+    })
+  }
+}
+
+/**
+ * This function checks the eligibility of opened positions.
+ *
+ * @param {Kysely<Database>} db - The Kysely database instance.
+ * @param {PositionPoints[]} positionPoints - An array of position points.
+ *
+ * The function performs the following steps:
+ * 1. Fetches all points distributions that have an associated eligibility condition but no associated position id.
+ * 2. For each user with such a points distribution:
+ *    a. If the due date has not passed and the type of the eligibility condition is `BECOME_SUMMER_USER`:
+ *       i. Fetches all positions of the user that are eligible for a check. A position is eligible if its net value is greater than or equal to 500, it was created before 14 days ago, and it belongs to the current user.
+ *       ii. If there are no eligible positions, the function returns.
+ *       iii. Otherwise, it fetches user points distributions of certain types.
+ *       iv. Updates each of them by setting the `eligibilityConditionId` to `null` and multiplying the points by a multiplier that depends on when the oldest eligible position was created.
+ *    b. If the due date has passed and the type of the eligibility condition is `BECOME_SUMMER_USER`, it deletes all points distributions and the eligibility condition associated with the user.
+ */
+async function checkOpenedPositionEligibility(
+  db: Kysely<Database>,
+  positionPoints: PositionPoints,
+) {
+  // get all points distributions without an associated position id but with an eligibility condition
+  const existingUsersWithEligibilityCondition = await db
+    .selectFrom('pointsDistribution')
+    .where('eligibilityConditionId', '!=', null)
+    .where('positionId', '==', null)
+    .leftJoin(
+      'eligibilityCondition',
+      'eligibilityCondition.id',
+      'pointsDistribution.eligibilityConditionId',
+    )
+    .leftJoin('userAddress', 'userAddress.id', 'pointsDistribution.userAddressId')
+    .selectAll()
+    .execute()
+
+  if (existingUsersWithEligibilityCondition.length > 0) {
+    existingUsersWithEligibilityCondition.forEach(async (user) => {
+      if (
+        user.dueDate &&
+        user.type == eligibilityConditions.BECOME_SUMMER_USER.type &&
+        user.dueDate >= new Date()
+      ) {
+        // get all the positions of the user that are eligible for a check (exist in current points distribution)
+        const eligiblePositionsFromPointsAccrual = positionPoints
+          .filter(
+            (p) =>
+              p.netValue >= 500 &&
+              p.positionCreated * 1000 < Date.now() - FOURTEEN_DAYS_IN_MILLISECONDS,
+          )
+          .filter((p) => p.user === user.address)
+          .sort((a, b) => a.positionCreated - b.positionCreated)
+        if (eligiblePositionsFromPointsAccrual.length == 0) {
+          return
+        } else {
+          const oldestEligiblePosition = eligiblePositionsFromPointsAccrual[0]
+          const becomeSummerUserMultiplier = getBecomeSummerUserMultiplier(
+            oldestEligiblePosition.positionCreated,
+          )
+
+          const pointsDistributions = await db
+            .selectFrom('pointsDistribution')
+            .where('userAddressId', '=', user.id)
+            .where((eb) => eb('type', '=', 'Snapshot_General').or('type', '=', 'Snapshot_Defi'))
+            .selectAll()
+            .execute()
+          pointsDistributions.forEach(async (pointsDistribution) => {
+            await db
+              .updateTable('pointsDistribution')
+              .set({
+                eligibilityConditionId: null,
+                points: +pointsDistribution.points * becomeSummerUserMultiplier,
+              })
+              .where('id', '=', pointsDistribution.id)
+              .execute()
+          })
+        }
+      } else if (
+        user.dueDate &&
+        user.type == eligibilityConditions.BECOME_SUMMER_USER.type &&
+        user.dueDate < new Date()
+      ) {
+        // if the due date is exceeded we delete all the points distribution and the eligibility condition
+        await db
+          .deleteFrom('pointsDistribution')
+          .where('eligibilityConditionId', '=', user.eligibilityConditionId)
+          .execute()
+        await db
+          .deleteFrom('eligibilityCondition')
+          .where('id', '=', user.eligibilityConditionId)
+          .execute()
+      }
+    })
+  }
+}
+
+/**
+ * Calculates the multiplier for becoming a summer user based on the position creation date.
+ * @param positionCreated The timestamp (in seconds) of when the position was created.
+ * @returns The multiplier value.
+ */
+function getBecomeSummerUserMultiplier(positionCreated: number) {
+  let multiplier = 1
+  if (positionCreated * 1000 > Date.now() - THIRTY_DAYS_IN_MILLISECONDS) {
+    multiplier = 3
+  } else if (positionCreated * 1000 > Date.now() - SIXTY_DAYS_IN_MILLISECONDS) {
+    multiplier = 2
+  }
+  return multiplier
+}
