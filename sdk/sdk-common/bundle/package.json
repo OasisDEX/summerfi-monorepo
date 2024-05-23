@@ -1,13 +1,12 @@
 {
-  "name": "@summer_fi/summerfi-sdk-common",
-  "version": "0.2.1",
+  "name": "summerfi-sdk-common",
+  "version": "0.2.2",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "packageManager": "yarn@1.22.21",
   "scripts": {},
   "dependencies": {
-    "superjson": "^1.13.3",
-    "viem": "^2.2.0"
+    "superjson": "^1.13.3"
   },
   "devDependencies": {}
 }
