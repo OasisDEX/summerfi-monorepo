@@ -462,6 +462,7 @@ export default handler
 async function checkMigrationEligibility(db: Kysely<Database>, positionPoints: PositionPoints) {
   const existingPointDistributionsWithEligibilityCondition = await db
     .selectFrom('pointsDistribution')
+    .where('positionId', '!=', null)
     .leftJoin(
       'eligibilityCondition',
       'eligibilityCondition.id',
