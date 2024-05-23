@@ -13,11 +13,9 @@ const logger = new Logger({ serviceName: 'update-rays-cron-function' })
 const LOCK_ID = 'update_points_lock'
 const LAST_RUN_ID = 'update_points_last_run'
 
-
 const FOURTEEN_DAYS_IN_MILLISECONDS = 14 * 24 * 60 * 60 * 1000
 const SIXTY_DAYS_IN_MILLISECONDS = 60 * 24 * 60 * 60
 const THIRTY_DAYS_IN_MILLISECONDS = 30 * 24 * 60 * 60 * 1000
-
 
 enum EligibilityConditionType {
   POSITION_OPEN_TIME = 'POSITION_OPEN_TIME',
@@ -497,7 +495,7 @@ async function checkMigrationEligibility(db: Kysely<Database>, positionPoints: P
             .updateTable('pointsDistribution')
             .set({ eligibilityConditionId: null })
             .where('id', '=', point.id)
-            .execute();
+            .execute()
           await db
             .deleteFrom('eligibilityCondition')
             .where('id', '=', point.eligibilityConditionId)
@@ -507,7 +505,6 @@ async function checkMigrationEligibility(db: Kysely<Database>, positionPoints: P
     })
   }
 }
-
 
 /**
  * This function checks the eligibility of opened positions.
@@ -525,55 +522,70 @@ async function checkMigrationEligibility(db: Kysely<Database>, positionPoints: P
  *       iv. Updates each of them by setting the `eligibilityConditionId` to `null` and multiplying the points by a multiplier that depends on when the oldest eligible position was created.
  *    b. If the due date has passed and the type of the eligibility condition is `BECOME_SUMMER_USER`, it deletes all points distributions and the eligibility condition associated with the user.
  */
-async function checkOpenedPositionEligibility(db: Kysely<Database>, positionPoints: PositionPoints) {
+async function checkOpenedPositionEligibility(
+  db: Kysely<Database>,
+  positionPoints: PositionPoints,
+) {
   // get all points distributions without an associated position id but with an eligibility condition
-  const existingUsersWithEligibilityCondition = await db.selectFrom('pointsDistribution').
-    where('eligibilityConditionId', '!=', null).
-    where('positionId', '==', null).
-    leftJoin(
+  const existingUsersWithEligibilityCondition = await db
+    .selectFrom('pointsDistribution')
+    .where('eligibilityConditionId', '!=', null)
+    .where('positionId', '==', null)
+    .leftJoin(
       'eligibilityCondition',
       'eligibilityCondition.id',
       'pointsDistribution.eligibilityConditionId',
     )
-    .leftJoin(
-      'userAddress',
-      'userAddress.id',
-      'pointsDistribution.userAddressId',
-    ).
-    selectAll().execute()
+    .leftJoin('userAddress', 'userAddress.id', 'pointsDistribution.userAddressId')
+    .selectAll()
+    .execute()
 
   if (existingUsersWithEligibilityCondition.length > 0) {
     existingUsersWithEligibilityCondition.forEach(async (user) => {
       if (
-        user.dueDate && user.type == eligibilityConditions.BECOME_SUMMER_USER.type && user.dueDate >= new Date()
+        user.dueDate &&
+        user.type == eligibilityConditions.BECOME_SUMMER_USER.type &&
+        user.dueDate >= new Date()
       ) {
         // get all the positions of the user that are eligible for a check (exist in current points distribution)
-        const eligiblePositionsFromPointsAccrual = positionPoints.filter((p) => p.netValue >= 500 && p.positionCreated * 1000 > Date.now() - FOURTEEN_DAYS_IN_MILLISECONDS).filter((p) => p.user === user.address).sort((a, b) => a.positionCreated - b.positionCreated)
+        const eligiblePositionsFromPointsAccrual = positionPoints
+          .filter(
+            (p) =>
+              p.netValue >= 500 &&
+              p.positionCreated * 1000 > Date.now() - FOURTEEN_DAYS_IN_MILLISECONDS,
+          )
+          .filter((p) => p.user === user.address)
+          .sort((a, b) => a.positionCreated - b.positionCreated)
         if (eligiblePositionsFromPointsAccrual.length == 0) {
           return
         } else {
-
           const oldestEligiblePosition = eligiblePositionsFromPointsAccrual[0]
-          const becomeSummerUserMultiplier = getBecomeSummerUserMultiplier(oldestEligiblePosition.positionCreated)
+          const becomeSummerUserMultiplier = getBecomeSummerUserMultiplier(
+            oldestEligiblePosition.positionCreated,
+          )
 
           const pointsDistributions = await db
             .selectFrom('pointsDistribution')
             .where('userAddressId', '=', user.id)
-            .where((eb) =>
-              eb('type', '=', 'Snapshot_General').or('type', '=', 'Snapshot_Defi')
-            )
+            .where((eb) => eb('type', '=', 'Snapshot_General').or('type', '=', 'Snapshot_Defi'))
             .selectAll()
             .execute()
-          pointsDistributions.forEach(async (user) => {
+          pointsDistributions.forEach(async (pointsDistribution) => {
             await db
               .updateTable('pointsDistribution')
-              .set({ eligibilityConditionId: null, points: +user.points * becomeSummerUserMultiplier })
-              .where('id', '=', user.id)
-              .execute();
+              .set({
+                eligibilityConditionId: null,
+                points: +pointsDistribution.points * becomeSummerUserMultiplier,
+              })
+              .where('id', '=', pointsDistribution.id)
+              .execute()
           })
-
         }
-      } else if (user.dueDate && user.type == eligibilityConditions.BECOME_SUMMER_USER.type && user.dueDate < new Date()) {
+      } else if (
+        user.dueDate &&
+        user.type == eligibilityConditions.BECOME_SUMMER_USER.type &&
+        user.dueDate < new Date()
+      ) {
         // if the due date is exceeded we delete all the points distribution and the eligibility condition
         await db
           .deleteFrom('pointsDistribution')
