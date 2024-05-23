@@ -488,6 +488,11 @@ async function checkMigrationEligibility(db: Kysely<Database>, positionPoints: P
             .execute()
         } else if (positionInSnapshot.netValue > 0) {
           await db
+            .updateTable('pointsDistribution')
+            .set({ eligibilityConditionId: null })
+            .where('id', '=', point.id)
+            .execute();
+          await db
             .deleteFrom('eligibilityCondition')
             .where('id', '=', point.eligibilityConditionId)
             .execute()
