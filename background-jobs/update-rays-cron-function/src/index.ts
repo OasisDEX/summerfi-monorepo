@@ -466,7 +466,7 @@ export default handler
 async function checkMigrationEligibility(db: Kysely<Database>, positionPoints: PositionPoints) {
   const existingPointDistributionsWithEligibilityCondition = await db
     .selectFrom('pointsDistribution')
-    .where('positionId', '!=', null)
+    .where('positionId', '<>', null)
     .leftJoin(
       'eligibilityCondition',
       'eligibilityCondition.id',
@@ -529,8 +529,8 @@ async function checkOpenedPositionEligibility(
   // get all points distributions without an associated position id but with an eligibility condition
   const existingUsersWithEligibilityCondition = await db
     .selectFrom('pointsDistribution')
-    .where('eligibilityConditionId', '!=', null)
-    .where('positionId', '==', null)
+    .where('eligibilityConditionId', '<>', null)
+    .where('positionId', '=', null)
     .leftJoin(
       'eligibilityCondition',
       'eligibilityCondition.id',
