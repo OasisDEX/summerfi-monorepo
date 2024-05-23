@@ -48,7 +48,7 @@ export abstract class BaseActionBuilder<StepType extends steps.Steps>
       throw new Error(`No protocol plugin found for protocol ${protocolName}`)
     }
 
-    const builder = plugin.getActionBuilder(params.actionBuilderParams.step)
+    const builder = plugin.getActionBuilder(params.actionBuilderParams.step.type)
     if (!builder) {
       throw new Error(`No action builder found for protocol ${protocolName}`)
     }

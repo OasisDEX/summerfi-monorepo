@@ -68,9 +68,9 @@ describe('Protocol Plugin | Unit | Morpho', () => {
         context: {
           ...ctx,
           provider: {
-            ...ctx.provider,
+            ...context.provider,
             chain: {
-              ...ctx.provider.chain!,
+              ...context.provider.chain!,
               id: undefined as unknown as number,
             },
           },
@@ -89,9 +89,9 @@ describe('Protocol Plugin | Unit | Morpho', () => {
         context: {
           ...ctx,
           provider: {
-            ...ctx.provider,
+            ...context.provider,
             chain: {
-              ...ctx.provider.chain!,
+              ...context.provider.chain!,
               id: wrongChainId,
             },
           },

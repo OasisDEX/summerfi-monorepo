@@ -74,9 +74,9 @@ describe('Spark Protocol Plugin', () => {
         context: {
           ...ctx,
           provider: {
-            ...ctx.provider,
+            ...context.provider,
             chain: {
-              ...ctx.provider.chain!,
+              ...context.provider.chain!,
               id: undefined as unknown as number,
             },
           },
@@ -95,9 +95,9 @@ describe('Spark Protocol Plugin', () => {
         context: {
           ...ctx,
           provider: {
-            ...ctx.provider,
+            ...context.provider,
             chain: {
-              ...ctx.provider.chain!,
+              ...context.provider.chain!,
               id: wrongChainId,
             },
           },

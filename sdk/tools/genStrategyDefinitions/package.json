@@ -1,0 +1,30 @@
+{
+  "name": "@summerfi/get-strategy-definitions",
+  "version": "0.0.1",
+  "scripts": {
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "test": "jest --coverage=true --silent=false",
+    "testw": "jest --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "build": "tsc -b tsconfig.build.json",
+    "bundle:npm": "esbuild src/index.ts --platform=node --target=es2020 --conditions= --main-fields=main --bundle --sourcemap --outfile=bundle/dist/index.js --external:crypto --external:tls --external:https --external:net --external:http --external:stream --external:zlib --external:assert --keep-names && tsc --emitDeclarationOnly --outDir bundle/dist -p tsconfig.build.json",
+    "strategy:gen": "pnpm bundle:npm; node ./bundle/dist/index.js"
+  },
+  "dependencies": {
+    "@summerfi/sdk-common": "workspace:*",
+    "@summerfi/simulator-service": "workspace:*",
+    "@summerfi/order-planner-service": "workspace:*",
+    "@summerfi/protocol-plugins": "workspace:*",
+    "@summerfi/protocol-plugins-common": "workspace:*"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/jest-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "@types/yargs": "^17.0.32",
+    "tsx": "^4.7.2",
+    "yargs": "^17.7.2"
+  }
+}

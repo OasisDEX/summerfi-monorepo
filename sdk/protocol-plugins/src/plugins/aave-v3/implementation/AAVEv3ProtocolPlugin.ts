@@ -46,10 +46,10 @@ export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
   ])
   readonly stepBuilders: Partial<ActionBuildersMap> = AaveV3StepBuilders
 
-  constructor(params: { context: IProtocolPluginContext }) {
+  initialize(params: { context: IProtocolPluginContext }) {
     const contractsAbiProvider = new ChainContractsProvider(AaveV3AbiMap)
 
-    super({
+    super.initialize({
       ...params,
       contractsAbiProvider,
     })

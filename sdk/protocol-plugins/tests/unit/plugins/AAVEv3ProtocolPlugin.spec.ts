@@ -74,9 +74,9 @@ describe('AAVEv3 Protocol Plugin', () => {
         context: {
           ...ctx,
           provider: {
-            ...ctx.provider,
+            ...context.provider,
             chain: {
-              ...ctx.provider.chain!,
+              ...context.provider.chain!,
               id: undefined as unknown as number,
             },
           },
@@ -97,9 +97,9 @@ describe('AAVEv3 Protocol Plugin', () => {
         context: {
           ...ctx,
           provider: {
-            ...ctx.provider,
+            ...context.provider,
             chain: {
-              ...ctx.provider.chain!,
+              ...context.provider.chain!,
               id: wrongChainId,
             },
           },

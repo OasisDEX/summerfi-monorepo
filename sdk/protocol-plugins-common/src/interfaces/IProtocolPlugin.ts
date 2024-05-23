@@ -5,11 +5,11 @@ import {
   ILendingPoolIdData,
   ILendingPoolInfo,
 } from '@summerfi/sdk-common/protocols'
-import { type IProtocolPluginContext } from './IProtocolPluginContext'
-import { steps } from '@summerfi/sdk-common/simulation'
+import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
-import { IActionBuilder, ActionBuildersMap } from './IActionBuilder'
+import { IActionBuilder, ActionBuildersMap, FilterStep } from './IActionBuilder'
+import { IProtocolPluginContext } from './IProtocolPluginContext'
 
 /**
  * @interface IProtocolPlugin
@@ -19,7 +19,9 @@ export interface IProtocolPlugin {
   protocolName: ProtocolName
   supportedChains: ChainInfo[]
   stepBuilders: Partial<ActionBuildersMap>
-  context: IProtocolPluginContext
+
+  /** INITIALIZATION */
+  initialize(params: { context: IProtocolPluginContext }): void
 
   /** LENDING POOLS */
 
@@ -57,7 +59,12 @@ export interface IProtocolPlugin {
    * @param step The simulation step for which to get the action builder
    * @returns The action builder for the given step for the specific protocol, or undefined if not found
    */
-  getActionBuilder<StepType extends steps.Steps>(step: StepType): Maybe<IActionBuilder<StepType>>
+  getActionBuilder<
+    StepType extends SimulationSteps,
+    Step extends FilterStep<StepType, steps.Steps>,
+  >(
+    stepType: StepType,
+  ): Maybe<IActionBuilder<Step>>
 
   /** IMPORT POSITION */
 

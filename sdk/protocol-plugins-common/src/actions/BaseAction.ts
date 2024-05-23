@@ -11,6 +11,7 @@ import { ActionConfig, ActionCall } from './Types'
 import { InputSlotsMapping } from '../types/InputSlotsMapping'
 import { AbiParametersToPrimitiveTypes } from 'abitype'
 import { IAction } from '../interfaces/IAction'
+import { HexData } from '@summerfi/sdk-common'
 
 /**
  * @class Base class for all actions. It provides the basic functionality to encode the call to the action and provide
@@ -27,10 +28,7 @@ export abstract class BaseAction<
 {
   private readonly DefaultParamsMapping: InputSlotsMapping = [0, 0, 0, 0]
 
-  /**
-   * @description Returns the versioned name of the action
-   * @returns The versioned name of the action
-   */
+  /** @see IAction.getVersionedName */
   public getVersionedName(): string {
     if (this.config.version === 0) {
       // Special case for compatiblility with v1 actions
@@ -40,13 +38,12 @@ export abstract class BaseAction<
     }
   }
 
-  /**
-   * @description Encodes the call to the action. Provided so the implementer has an opportunity to pre-process
-   *              the parameters before encoding the call.
-   * @param params The parameters to encode
-   * @param paramsMapping The mapping of the parameters to the execution storage
-   * @returns The encoded call to the action
-   */
+  /** @see IAction.getActionHash */
+  public getActionHash(): HexData {
+    return keccak256(toBytes(this.getVersionedName()))
+  }
+
+  /** @see IAction.encodeCall */
   public abstract encodeCall(params: unknown, paramsMapping?: InputSlotsMapping): ActionCall
 
   /**
@@ -59,8 +56,7 @@ export abstract class BaseAction<
     arguments: AbiParametersTypes
     mapping?: InputSlotsMapping
   }): ActionCall {
-    const contractNameWithVersion = this.getVersionedName()
-    const targetHash = keccak256(toBytes(contractNameWithVersion))
+    const targetHash = this.getActionHash()
 
     const abi = parseAbi([
       'function execute(bytes calldata data, uint8[] paramsMap) external payable returns (bytes calldata)',

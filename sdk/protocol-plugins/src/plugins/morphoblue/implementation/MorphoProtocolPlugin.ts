@@ -53,8 +53,8 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
   readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
   readonly stepBuilders: Partial<ActionBuildersMap> = MorphoStepBuilders
 
-  constructor(params: { context: IProtocolPluginContext }) {
-    super(params)
+  initialize(params: { context: IProtocolPluginContext }) {
+    super.initialize(params)
 
     if (
       !this.supportedChains.some(
@@ -171,7 +171,7 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
     const collateralToken = morphoLendingPool.collateralToken
     const liquidationPenalty = this._getLiquidationPenalty(morphoLendingPool)
 
-    const collateralPriceUSD = await this.ctx.oracleManager.getSpotPrice({
+    const collateralPriceUSD = await this.context.oracleManager.getSpotPrice({
       baseToken: collateralToken,
     })
 
@@ -205,7 +205,7 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
     const { morphoLendingPool, marketInfo, marketCollateralPriceInDebt } = params
 
     const debtToken = morphoLendingPool.debtToken
-    const priceUSD = await this.ctx.oracleManager.getSpotPrice({
+    const priceUSD = await this.context.oracleManager.getSpotPrice({
       baseToken: debtToken,
     })
 
@@ -238,7 +238,7 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
    * @returns The market oracle price
    */
   private async _getMarketOraclePrice(morphoLendingPool: IMorphoLendingPool): Promise<IPrice> {
-    const [price] = await this.ctx.provider.multicall({
+    const [price] = await this.context.provider.multicall({
       contracts: [
         {
           abi: morphoBlueOracleAbi,
@@ -274,7 +274,7 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
     })
     const marketParamsId = morphoLendingPool.id.marketId
 
-    const [marketInfo] = await this.ctx.provider.multicall({
+    const [marketInfo] = await this.context.provider.multicall({
       contracts: [
         {
           abi: morphoBlueAbi,
@@ -319,7 +319,7 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
     })
     const marketParamsId = morphoLendingPoolId.marketId
 
-    const [marketParameters] = await this.ctx.provider.multicall({
+    const [marketParameters] = await this.context.provider.multicall({
       contracts: [
         {
           abi: morphoBlueAbi,
@@ -331,7 +331,7 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
       allowFailure: false,
     })
 
-    const debtToken = await this.ctx.tokensManager.getTokenByAddress({
+    const debtToken = await this.context.tokensManager.getTokenByAddress({
       address: Address.createFromEthereum({ value: marketParameters[0] }),
       chainInfo: morphoLendingPoolId.protocol.chainInfo,
     })
@@ -342,7 +342,7 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
       )
     }
 
-    const collateralToken = await this.ctx.tokensManager.getTokenByAddress({
+    const collateralToken = await this.context.tokensManager.getTokenByAddress({
       address: Address.createFromEthereum({ value: marketParameters[1] }),
       chainInfo: morphoLendingPoolId.protocol.chainInfo,
     })
