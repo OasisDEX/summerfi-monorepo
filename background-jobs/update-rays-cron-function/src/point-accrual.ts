@@ -9,7 +9,27 @@ import {
   UsersData,
 } from '@summerfi/summer-events-subgraph'
 import { Logger } from '@aws-lambda-powertools/logger'
-
+export type PositionPointsItem = {
+  positionId: string
+  vaultId: number
+  user: string
+  protocol: string
+  marketId: string
+  positionCreated: number
+  points: {
+    openPositionsPoints: number
+    migrationPoints: number
+    swapPoints: number
+  }
+  netValue: number
+  multipliers: {
+    protocolBoostMultiplier: number
+    swapMultiplier: number
+    timeOpenMultiplier: number
+    automationProtectionMultiplier: number
+    lazyVaultMultiplier: number
+  }
+}
 export type PositionPoints = {
   positionId: string
   vaultId: number
