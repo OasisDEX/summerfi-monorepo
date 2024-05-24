@@ -35,54 +35,53 @@ export class AaveV3PaybackWithdrawActionBuilder extends BaseActionBuilder<steps.
 
     const paybackAmount = getValueFromReference(step.inputs.paybackAmount)
 
-    if (!paybackAmount.toBN().isZero()) {
-      context.addActionCall({
-        step: step,
-        action: new SetApprovalAction(),
-        arguments: {
-          approvalAmount: getValueFromReference(step.inputs.paybackAmount),
-          delegate: sparkLendingPoolAddress,
-          sumAmounts: false,
-        },
-        connectedInputs: {
-          paybackAmount: 'approvalAmount',
-        },
-        connectedOutputs: {},
-      })
+    context.addActionCall({
+      step: step,
+      action: new SetApprovalAction(),
+      arguments: {
+        approvalAmount: getValueFromReference(step.inputs.paybackAmount),
+        delegate: sparkLendingPoolAddress,
+        sumAmounts: false,
+      },
+      connectedInputs: {
+        paybackAmount: 'approvalAmount',
+      },
+      connectedOutputs: {},
+      skip: paybackAmount.toBN().isZero(),
+    })
 
-      context.addActionCall({
-        step: params.step,
-        action: new AaveV3PaybackAction(),
-        arguments: {
-          paybackAmount: getValueFromReference(step.inputs.paybackAmount),
-          paybackAll: getValueFromReference(step.inputs.paybackAmount)
-            .toBN()
-            .gt(step.inputs.position.debtAmount.toBN()),
-          onBehalf: Address.ZeroAddressEthereum,
-        },
-        connectedInputs: {},
-        connectedOutputs: {
-          paybackAmount: 'paybackedAmount',
-        },
-      })
-    }
+    context.addActionCall({
+      step: params.step,
+      action: new AaveV3PaybackAction(),
+      arguments: {
+        paybackAmount: getValueFromReference(step.inputs.paybackAmount),
+        paybackAll: getValueFromReference(step.inputs.paybackAmount)
+          .toBN()
+          .gt(step.inputs.position.debtAmount.toBN()),
+        onBehalf: Address.ZeroAddressEthereum,
+      },
+      connectedInputs: {},
+      connectedOutputs: {
+        paybackAmount: 'paybackedAmount',
+      },
+      skip: paybackAmount.toBN().isZero(),
+    })
 
     const withdrawAmount = getValueFromReference(step.inputs.withdrawAmount)
 
-    if (!withdrawAmount.toBN().isZero()) {
-      context.addActionCall({
-        step: step,
-        action: new AaveV3WithdrawAction(),
-        arguments: {
-          withdrawAmount: withdrawAmount,
-          withdrawTo: await this._getWithdrawTargetAddress(params),
-        },
-        connectedInputs: {},
-        connectedOutputs: {
-          withdrawAmount: 'withdrawnAmount',
-        },
-      })
-    }
+    context.addActionCall({
+      step: step,
+      action: new AaveV3WithdrawAction(),
+      arguments: {
+        withdrawAmount: withdrawAmount,
+        withdrawTo: await this._getWithdrawTargetAddress(params),
+      },
+      connectedInputs: {},
+      connectedOutputs: {
+        withdrawAmount: 'withdrawnAmount',
+      },
+      skip: withdrawAmount.toBN().isZero(),
+    })
   }
 
   /**

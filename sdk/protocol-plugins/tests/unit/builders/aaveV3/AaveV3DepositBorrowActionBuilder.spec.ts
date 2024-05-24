@@ -182,10 +182,11 @@ describe('AaveV3 Deposit Borrow Action Builder', () => {
 
     const { callsBatch } = builderParams.context.endSubContext()
 
-    expect(callsBatch.length).toEqual(2)
+    expect(callsBatch.length).toEqual(3)
 
     expect(callsBatch[0].name).toBe('SetApproval')
     expect(callsBatch[1].name).toBe('AaveV3Deposit')
+    expect(callsBatch[2].name).toBe('AaveV3Borrow')
   })
 
   it('should add borrow but not send token when borrow target is positions manager', async () => {

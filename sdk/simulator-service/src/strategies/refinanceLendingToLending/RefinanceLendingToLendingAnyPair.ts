@@ -3,6 +3,7 @@ import {
   ISimulation,
   RefinanceSimulationTypes,
   SimulationSteps,
+  SimulationType,
   TokenTransferTargetType,
   getValueFromReference,
 } from '@summerfi/sdk-common/simulation'
@@ -13,10 +14,9 @@ import { isLendingPool } from '@summerfi/sdk-common/protocols'
 import { refinanceLendingToLendingAnyPairStrategy } from './Strategy'
 import { type IRefinanceDependencies } from '../common/Types'
 import { getSwapStepData } from '../../implementation/utils/GetSwapStepData'
-import { getRefinanceSimulationType } from '../../implementation/utils/GetRefinanceSimulationType'
 import { estimateSwapFromAmount } from '../../implementation/utils/EstimateSwapFromAmount'
 
-export async function refinanceLendingToLendingAnyPair(
+export async function refinanceLendingToLending(
   args: IRefinanceParameters,
   dependencies: IRefinanceDependencies,
 ): Promise<ISimulation<RefinanceSimulationTypes>> {
@@ -46,27 +46,36 @@ export async function refinanceLendingToLendingAnyPair(
 
   const isCollateralSwapSkipped = targetPool.collateralToken.equals(sourcePool.collateralToken)
   const isDebtSwapSkipped = targetPool.debtToken.equals(sourcePool.debtToken)
+  const isDebtAmountZero = position.debtAmount.toBaseUnit() === '0'
+
+  const maxDebtAmount = TokenAmount.createFrom({
+    token: position.debtAmount.token,
+    amount: Number.MAX_SAFE_INTEGER.toString(),
+  })
 
   const simulation = await simulator
-    .next(async () => ({
-      name: 'Flashloan',
-      type: SimulationSteps.Flashloan,
-      inputs: {
-        amount: flashloanAmount,
-        provider:
-          flashloanAmount.token.symbol === CommonTokenSymbols.DAI
-            ? FlashloanProvider.Maker
-            : FlashloanProvider.Balancer,
+    .next(
+      async () => ({
+        name: 'Flashloan',
+        type: SimulationSteps.Flashloan,
+        inputs: {
+          amount: flashloanAmount,
+          provider:
+            flashloanAmount.token.symbol === CommonTokenSymbols.DAI
+              ? FlashloanProvider.Maker
+              : FlashloanProvider.Balancer,
+        },
+      }),
+      {
+        skip: isDebtAmountZero,
+        type: SimulationSteps.Flashloan,
       },
-    }))
+    )
     .next(async () => ({
       name: 'PaybackWithdrawFromSourcePosition',
       type: SimulationSteps.PaybackWithdraw,
       inputs: {
-        paybackAmount: TokenAmount.createFrom({
-          amount: Number.MAX_SAFE_INTEGER.toString(),
-          token: position.debtAmount.token,
-        }),
+        paybackAmount: isDebtAmountZero ? position.debtAmount : maxDebtAmount,
         withdrawAmount: position.collateralAmount,
         position: position,
         withdrawTargetType: TokenTransferTargetType.PositionsManager,
@@ -85,7 +94,10 @@ export async function refinanceLendingToLendingAnyPair(
           oracleManager: dependencies.oracleManager,
         }),
       }),
-      isCollateralSwapSkipped,
+      {
+        skip: isCollateralSwapSkipped,
+        type: SimulationSteps.Swap,
+      },
     )
     .next(async () => ({
       name: 'OpenTargetPosition',
@@ -98,7 +110,9 @@ export async function refinanceLendingToLendingAnyPair(
       name: 'DepositBorrowToTargetPosition',
       type: SimulationSteps.DepositBorrow,
       inputs: {
-        // refactor
+        depositAmount: isCollateralSwapSkipped
+          ? position.collateralAmount
+          : ctx.getReference(['SwapCollateralFromSourcePosition', 'received']),
         borrowAmount: isDebtSwapSkipped
           ? position.debtAmount
           : await estimateSwapFromAmount({
@@ -108,9 +122,7 @@ export async function refinanceLendingToLendingAnyPair(
               swapManager: dependencies.swapManager,
               oracleManager: dependencies.oracleManager,
             }),
-        depositAmount: isCollateralSwapSkipped
-          ? position.collateralAmount
-          : ctx.getReference(['SwapCollateralFromSourcePosition', 'received']),
+
         position: getValueFromReference(ctx.getReference(['OpenTargetPosition', 'position'])),
         borrowTargetType: TokenTransferTargetType.PositionsManager,
       },
@@ -130,30 +142,44 @@ export async function refinanceLendingToLendingAnyPair(
           oracleManager: dependencies.oracleManager,
         }),
       }),
-      isDebtSwapSkipped,
+      {
+        skip: isDebtSwapSkipped,
+        type: SimulationSteps.Swap,
+      },
     )
-    .next(async () => ({
-      name: 'RepayFlashloan',
-      type: SimulationSteps.RepayFlashloan,
-      inputs: {
-        amount: flashloanAmount,
+    .next(
+      async () => ({
+        name: 'RepayFlashloan',
+        type: SimulationSteps.RepayFlashloan,
+        inputs: {
+          amount: flashloanAmount,
+        },
+      }),
+      {
+        skip: isDebtAmountZero,
+        type: SimulationSteps.RepayFlashloan,
       },
-    }))
-    .next(async () => ({
-      name: 'ReturnFunds',
-      type: SimulationSteps.ReturnFunds,
-      inputs: {
-        /*
-         * We swap back to the original position's debt in order to repay the flashloan.
-         * Therefore, the dust amount will be in the original position's debt
-         * */
-        token: position.debtAmount.token,
+    )
+    .next(
+      async () => ({
+        name: 'ReturnFunds',
+        type: SimulationSteps.ReturnFunds,
+        inputs: {
+          /*
+           * We swap back to the original position's debt in order to repay the flashloan.
+           * Therefore, the dust amount will be in the original position's debt
+           * */
+          token: position.debtAmount.token,
+        },
+      }),
+      {
+        skip: isDebtAmountZero || isDebtSwapSkipped,
+        type: SimulationSteps.ReturnFunds,
       },
-    }))
+    )
     .next(async (ctx) => {
-      // TODO: we should have a way to get the target position more easily and realiably,
-      const targetPosition = Object.values(ctx.state.positions).find((p) =>
-        p.pool.id.protocol.equals(targetPool.id.protocol),
+      const targetPosition = getValueFromReference(
+        ctx.getReference(['OpenTargetPosition', 'position']),
       )
       if (!targetPosition) {
         throw new Error('Target position not found')
@@ -181,9 +207,9 @@ export async function refinanceLendingToLendingAnyPair(
   }
 
   return {
-    simulationType: getRefinanceSimulationType(!isCollateralSwapSkipped, !isDebtSwapSkipped),
+    simulationType: SimulationType.Refinance,
     sourcePosition: position,
-    targetPosition,
+    targetPosition: targetPosition,
     swaps: simulation.swaps,
     steps: simulation.steps,
   } satisfies ISimulation<RefinanceSimulationTypes>

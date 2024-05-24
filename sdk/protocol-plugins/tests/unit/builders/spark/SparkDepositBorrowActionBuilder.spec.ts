@@ -182,10 +182,11 @@ describe('Spark  Deposit Borrow Action Builder', () => {
 
     const { callsBatch } = builderParams.context.endSubContext()
 
-    expect(callsBatch.length).toEqual(2)
+    expect(callsBatch.length).toEqual(3)
 
     expect(callsBatch[0].name).toBe('SetApproval')
     expect(callsBatch[1].name).toBe('SparkDeposit')
+    expect(callsBatch[2].name).toBe('SparkBorrow')
   })
 
   it('should add borrow but not send token when borrow target is positions manager', async () => {

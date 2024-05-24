@@ -13,5 +13,9 @@ export function generateStrategyName(simulation: ISimulation<SimulationType>): s
     return `Refinance${simulation.sourcePosition?.pool.id.protocol.name}${simulation.targetPosition.pool.id.protocol.name}`
   }
 
-  return `${simulation.simulationType}${simulation.sourcePosition?.pool.id.protocol.name}${simulation.targetPosition?.pool.id.protocol.name}`
+  const strategyName = `${simulation.simulationType}${simulation.sourcePosition?.pool.id.protocol.name}${simulation.targetPosition?.pool.id.protocol.name}`
+
+  console.log('Strategy name:', strategyName)
+
+  return strategyName
 }
