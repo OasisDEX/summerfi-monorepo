@@ -13,6 +13,8 @@ import { AbiParametersToPrimitiveTypes } from 'abitype'
 import { IAction } from '../interfaces/IAction'
 import { HexData } from '@summerfi/sdk-common'
 
+export interface BaseActionParams {}
+
 /**
  * @class Base class for all actions. It provides the basic functionality to encode the call to the action and provide
  *              the versioned name of the action.
@@ -75,6 +77,7 @@ export abstract class BaseAction<
       name: this.config.name,
       targetHash,
       callData: calldata,
+      skipped: false,
     } as ActionCall
   }
 

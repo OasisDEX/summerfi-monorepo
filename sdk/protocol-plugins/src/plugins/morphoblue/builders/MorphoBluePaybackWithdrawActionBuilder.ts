@@ -27,38 +27,38 @@ export class MorphoBluePaybackWithdrawActionBuilder extends BaseActionBuilder<st
 
     const paybackAmount = getValueFromReference(step.inputs.paybackAmount)
 
-    if (!paybackAmount.toBN().isZero()) {
-      context.addActionCall({
-        step: params.step,
-        action: new SetApprovalAction(),
-        arguments: {
-          approvalAmount: getValueFromReference(step.inputs.paybackAmount),
-          delegate: morphoBlueAddress,
-          sumAmounts: false,
-        },
-        connectedInputs: {
-          paybackAmount: 'approvalAmount',
-        },
-        connectedOutputs: {},
-      })
+    context.addActionCall({
+      step: params.step,
+      action: new SetApprovalAction(),
+      arguments: {
+        approvalAmount: getValueFromReference(step.inputs.paybackAmount),
+        delegate: morphoBlueAddress,
+        sumAmounts: false,
+      },
+      connectedInputs: {
+        paybackAmount: 'approvalAmount',
+      },
+      connectedOutputs: {},
+      skip: paybackAmount.toBN().isZero(),
+    })
 
-      context.addActionCall({
-        step: params.step,
-        action: new MorphoBluePaybackAction(),
-        arguments: {
-          morphoLendingPool: step.inputs.position.pool,
-          amount: getValueFromReference(step.inputs.paybackAmount),
-          onBehalf: positionsManager.address,
-          paybackAll: paybackAmount.toBN().gte(step.inputs.position.debtAmount.toBN()),
-        },
-        connectedInputs: {
-          paybackAmount: 'amount',
-        },
-        connectedOutputs: {
-          paybackAmount: 'paybackedAmount',
-        },
-      })
-    }
+    context.addActionCall({
+      step: params.step,
+      action: new MorphoBluePaybackAction(),
+      arguments: {
+        morphoLendingPool: step.inputs.position.pool,
+        amount: getValueFromReference(step.inputs.paybackAmount),
+        onBehalf: positionsManager.address,
+        paybackAll: paybackAmount.toBN().gte(step.inputs.position.debtAmount.toBN()),
+      },
+      connectedInputs: {
+        paybackAmount: 'amount',
+      },
+      connectedOutputs: {
+        paybackAmount: 'paybackedAmount',
+      },
+      skip: paybackAmount.toBN().isZero(),
+    })
 
     context.addActionCall({
       step: step,

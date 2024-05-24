@@ -64,20 +64,19 @@ export class SparkDepositBorrowActionBuilder extends BaseActionBuilder<steps.Dep
 
     const borrowAmount = getValueFromReference(step.inputs.borrowAmount)
 
-    if (!borrowAmount.toBN().isZero()) {
-      context.addActionCall({
-        step: step,
-        action: new SparkBorrowAction(),
-        arguments: {
-          borrowAmount: borrowAmount,
-          borrowTo: await this._getBorrowTargetAddress(params),
-        },
-        connectedInputs: {},
-        connectedOutputs: {
-          borrowAmount: 'borrowedAmount',
-        },
-      })
-    }
+    context.addActionCall({
+      step: step,
+      action: new SparkBorrowAction(),
+      arguments: {
+        borrowAmount: borrowAmount,
+        borrowTo: await this._getBorrowTargetAddress(params),
+      },
+      connectedInputs: {},
+      connectedOutputs: {
+        borrowAmount: 'borrowedAmount',
+      },
+      skip: borrowAmount.toBN().isZero(),
+    })
   }
 
   /**

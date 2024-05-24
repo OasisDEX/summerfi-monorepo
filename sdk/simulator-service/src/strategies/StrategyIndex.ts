@@ -1,12 +1,6 @@
-import { refinanceLendingToLendingSamePairStrategy } from './refinanceSamePair/Strategy'
-import { refinanceLendingToLendingAnyPairStrategy } from './refinanceAnyPair/Strategy'
-import { refinanceLendingToLendingNoDebtStrategy } from './refinanceNoDebt/Strategy'
+import { refinanceLendingToLending } from './refinanceLendingToLending/RefinanceLendingToLendingAnyPair'
 
 /**
  * List of all strategies so the strategy definition generation tool can use them
  */
-export const StrategyIndex = [
-  refinanceLendingToLendingSamePairStrategy,
-  refinanceLendingToLendingAnyPairStrategy,
-  refinanceLendingToLendingNoDebtStrategy,
-]
+export const StrategyIndex = [refinanceLendingToLending]

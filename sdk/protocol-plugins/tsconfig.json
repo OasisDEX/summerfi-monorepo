@@ -5,6 +5,11 @@
     "outDir": "dist",
     "baseUrl": "."
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "tests/mocks/*.ts"],
+  "include": [
+    "src/**/*.ts",
+    "tests/**/*.ts",
+    "tests/mocks/*.ts",
+    "../protocol-plugins-common/src/actions/SkippedAction.ts"
+  ],
   "exclude": ["node_modules", "dist"]
 }

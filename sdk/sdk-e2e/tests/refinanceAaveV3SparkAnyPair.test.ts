@@ -4,7 +4,6 @@ import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 import {
   AddressValue,
   CommonTokenSymbols,
-  RefinanceSimulationTypes,
   ISimulation,
   Percentage,
   TokenAmount,
@@ -13,6 +12,7 @@ import {
   ChainFamilyMap,
   PositionType,
   IToken,
+  SimulationType,
 } from '@summerfi/sdk-common'
 import { PositionsManager, Order, RefinanceParameters } from '@summerfi/sdk-common/orders'
 import {
@@ -37,13 +37,13 @@ jest.setTimeout(300000)
 /** TEST CONFIG */
 const config = {
   SDKAPiUrl: 'https://zmjmtfsocb.execute-api.us-east-1.amazonaws.com/api/sdk',
-  TenderlyForkUrl: 'https://virtual.mainnet.rpc.tenderly.co/cc7432cd-f037-4aa8-a05f-ae6d8cefba39',
+  TenderlyForkUrl: 'https://virtual.mainnet.rpc.tenderly.co/5eea57de-3dc2-4cae-b7ed-24b16b0cbde0',
   DPMAddress: '0x551eb8395093fde4b9eef017c93593a3c7a75138',
   walletAddress: '0xbEf4befb4F230F43905313077e3824d7386E09F8',
   collateralTokenSymbol: CommonTokenSymbols.WETH,
   collateralAmount: '0.0198',
   debtTokenSymbol: CommonTokenSymbols.DAI,
-  debtAmount: '26',
+  debtAmount: '34',
   sendTransactionEnabled: true,
 }
 
@@ -166,7 +166,7 @@ describe.skip('Refinance AaveV3 Spark | SDK', () => {
       slippage: Percentage.createFrom({ value: 0.2 }),
     })
 
-    const refinanceSimulation: ISimulation<RefinanceSimulationTypes> =
+    const refinanceSimulation: ISimulation<SimulationType.Refinance> =
       await sdk.simulator.refinance.simulateRefinancePosition(refinanceParameters)
 
     expect(refinanceSimulation).toBeDefined()
@@ -181,10 +181,11 @@ describe.skip('Refinance AaveV3 Spark | SDK', () => {
 
     assert(refinanceOrder, 'Order not found')
 
-    // Send transaction
-    console.log('Sending transaction...')
-
+    console.log('Order:', JSON.stringify(refinanceOrder, null, 2))
     if (config.sendTransactionEnabled) {
+      // Send transaction
+      console.log('Sending transaction...')
+
       const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex
       const transactionUtils = new TransactionUtils({
         rpcUrl: config.TenderlyForkUrl,
