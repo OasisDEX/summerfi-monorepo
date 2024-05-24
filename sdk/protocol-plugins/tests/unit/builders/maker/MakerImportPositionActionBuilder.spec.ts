@@ -103,7 +103,7 @@ describe('Maker Import Position Action Builder', () => {
       id: MorphoLendingPoolId.createFrom({
         marketId: '0x1234',
         protocol: MorphoProtocol.createFrom({
-          name: ProtocolName.Morpho,
+          name: ProtocolName.MorphoBlue,
           chainInfo: ChainFamilyMap.Ethereum.Mainnet,
         }),
       }),

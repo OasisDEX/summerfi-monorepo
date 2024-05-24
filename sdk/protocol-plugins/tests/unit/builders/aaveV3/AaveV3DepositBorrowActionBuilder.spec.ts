@@ -59,7 +59,7 @@ describe('AaveV3 Deposit Borrow Action Builder', () => {
   })
 
   const protocol = AaveV3Protocol.createFrom({
-    name: ProtocolName.AAVEv3,
+    name: ProtocolName.AaveV3,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 

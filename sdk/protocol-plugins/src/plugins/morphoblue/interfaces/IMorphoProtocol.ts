@@ -13,7 +13,7 @@ import { z } from 'zod'
  */
 export interface IMorphoProtocol extends IMorphoProtocolData, IProtocol {
   /** Morpho protocol name */
-  readonly name: ProtocolName.Morpho
+  readonly name: ProtocolName.MorphoBlue
 
   // Re-declare the properties with the correct types
   readonly chainInfo: IChainInfo
@@ -24,7 +24,7 @@ export interface IMorphoProtocol extends IMorphoProtocolData, IProtocol {
  */
 export const MorphoProtocolDataSchema = z.object({
   ...ProtocolDataSchema.shape,
-  name: z.literal(ProtocolName.Morpho),
+  name: z.literal(ProtocolName.MorphoBlue),
 })
 
 /**

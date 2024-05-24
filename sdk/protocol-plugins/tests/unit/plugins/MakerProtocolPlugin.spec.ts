@@ -34,7 +34,7 @@ describe('Maker Protocol Plugin', () => {
         ...makerPoolIdMock,
         protocol: {
           ...makerPoolIdMock.protocol,
-          name: ProtocolName.AAVEv3,
+          name: ProtocolName.AaveV3,
         },
       } as unknown as IMakerLendingPoolIdData
 

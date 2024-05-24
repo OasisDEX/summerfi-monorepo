@@ -37,7 +37,7 @@ export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
   AaveV3ContractNames,
   AaveV3AbiMapType
 > {
-  readonly protocolName = ProtocolName.AAVEv3
+  readonly protocolName = ProtocolName.AaveV3
   readonly supportedChains = valuesOfChainFamilyMap([
     ChainFamilyName.Ethereum,
     ChainFamilyName.Base,

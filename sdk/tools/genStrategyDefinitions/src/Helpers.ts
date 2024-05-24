@@ -1,15 +1,89 @@
 import { ActionBuildersConfig } from '@summerfi/order-planner-service/config/Config'
 import { ProtocolPluginsRecord } from '@summerfi/protocol-plugins'
 import { ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
-import { SimulationSteps, SimulationStrategy, StrategyStep } from '@summerfi/sdk-common/simulation'
-import { StrategyDefinitions } from './Types'
+import { SimulationStrategy, StrategyStep } from '@summerfi/sdk-common/simulation'
+import {
+  OperationDefinition,
+  OperationDefinitions,
+  StrategyDefinitions,
+  Transactions,
+} from './Types'
+import { TxBuilder } from '@morpho-labs/gnosis-tx-builder'
+import { AddressValue, HexData } from '@summerfi/sdk-common'
+import { encodeFunctionData, parseAbi } from 'viem'
+import { BatchFile } from '@morpho-labs/gnosis-tx-builder/lib/src/types'
+
+const DISABLE_OPTIONALS = true
+
+export function generateSafeMultisendJSON(
+  safeAddress: AddressValue,
+  operationsRegistryAddress: AddressValue,
+  operationDefinitions: OperationDefinitions,
+): BatchFile {
+  const transactions = generateTransactions(operationsRegistryAddress, operationDefinitions)
+
+  return TxBuilder.batch(safeAddress, transactions)
+}
+
+export function generateTransactions(
+  safeAddress: AddressValue,
+  operationDefinitions: OperationDefinitions,
+): Transactions {
+  return operationDefinitions.map((operationDefinition) => {
+    return {
+      to: safeAddress,
+      value: '0',
+      data: encodeOpRegistryParameters(operationDefinition),
+    }
+  })
+}
+
+export function encodeOpRegistryParameters(operationDefinition: OperationDefinition): HexData {
+  const opRegistryAbi = parseAbi(['function addOperation((bytes32[],bool[], string))'])
+
+  return encodeFunctionData({
+    abi: opRegistryAbi,
+    functionName: 'addOperation',
+    args: [[operationDefinition.actions, operationDefinition.optional, operationDefinition.name]],
+  })
+}
+
+export function generateOperationDefinitions(
+  strategyName: string,
+  strategyDefinitions: StrategyDefinitions,
+): OperationDefinitions {
+  return strategyDefinitions.map((strategy) => {
+    const paybackAction = strategy.find((action) => {
+      return action.name.includes('Payback')
+    })
+
+    const depositAction = strategy.find((action) => {
+      return action.name.includes('Deposit')
+    })
+
+    if (!paybackAction || !depositAction) {
+      throw new Error('Cannot find payback or deposit action')
+    }
+
+    const fromProtocol = paybackAction.name.split('Payback')[0]
+    const toProtocol = depositAction.name.split('Deposit')[0]
+
+    return {
+      actions: strategy.map((action) => action.hash),
+      optional: strategy.map((action) => action.optional),
+      name: `${strategyName}${fromProtocol}${toProtocol}`,
+    }
+  })
+}
 
 export function processStrategies(strategyConfigs: SimulationStrategy[]): StrategyDefinitions {
-  return strategyConfigs.reduce((acc, strategy) => {
+  const strategyDefinitions = strategyConfigs.reduce((acc, strategy) => {
     acc.push(...processStrategy(strategy))
 
     return acc
   }, [] as StrategyDefinitions)
+
+  return filterDuplicateStrategies(strategyDefinitions)
 }
 
 export function processStrategy(strategyConfig: SimulationStrategy): StrategyDefinitions {
@@ -25,12 +99,12 @@ export function processStrategy(strategyConfig: SimulationStrategy): StrategyDef
 }
 
 export function processActionsList(
-  stepType: SimulationSteps,
+  stepConfig: StrategyStep,
   actionsList: ActionBuilderUsedAction[],
 ): StrategyDefinitions {
   return actionsList.reduce(
     (acc, actionConfig) => {
-      const suffixes = processAction(stepType, actionConfig)
+      const suffixes = processAction(stepConfig, actionConfig)
       return combinePrefixesAndSuffixes(acc, suffixes)
     },
     [[]] as StrategyDefinitions,
@@ -39,11 +113,11 @@ export function processActionsList(
 
 export function processStep(stepConfig: StrategyStep): StrategyDefinitions {
   const stepDefinitions = processActionsList(
-    stepConfig.step,
+    stepConfig,
     new ActionBuildersConfig[stepConfig.step]().actions,
   )
 
-  if (stepConfig.optional) {
+  if (!DISABLE_OPTIONALS && stepConfig.optional) {
     return [...stepDefinitions, []]
   } else {
     return stepDefinitions
@@ -51,32 +125,41 @@ export function processStep(stepConfig: StrategyStep): StrategyDefinitions {
 }
 
 export function processAction(
-  stepType: SimulationSteps,
+  stepConfig: StrategyStep,
   actionConfig: ActionBuilderUsedAction,
 ): StrategyDefinitions {
   if (actionConfig.action === 'DelegatedToProtocol') {
-    return processDelegateToProtocol(stepType)
+    return processDelegateToProtocol(stepConfig)
   }
   const action = new actionConfig.action()
-  const definition = [[{ name: action.config.name, hash: action.getActionHash() }]]
+  const definition = [
+    [
+      {
+        name: action.config.name,
+        hash: action.getActionHash(),
+        optional:
+          DISABLE_OPTIONALS || stepConfig.optional || actionConfig.isOptionalTags !== undefined,
+      },
+    ],
+  ]
 
-  if (actionConfig.isOptionalTags !== undefined) {
+  if (!DISABLE_OPTIONALS && actionConfig.isOptionalTags !== undefined) {
     definition.push([])
   }
 
   return definition
 }
 
-export function processDelegateToProtocol(stepType: SimulationSteps): StrategyDefinitions {
+export function processDelegateToProtocol(stepConfig: StrategyStep): StrategyDefinitions {
   return Object.values(ProtocolPluginsRecord).reduce((acc, pluginClass) => {
     const plugin = new pluginClass()
 
-    const pluginBuilder = plugin.getActionBuilder(stepType)
+    const pluginBuilder = plugin.getActionBuilder(stepConfig.step)
     if (!pluginBuilder) {
       return acc
     }
 
-    const suffixes = processActionsList(stepType, pluginBuilder.actions)
+    const suffixes = processActionsList(stepConfig, pluginBuilder.actions)
     acc.push(...suffixes)
     return acc
   }, [] as StrategyDefinitions)
@@ -100,29 +183,25 @@ export function filterIncompatibleStrategies(strategies: StrategyDefinitions): S
       return action.includes('setemode')
     })
 
-    if (!setEmodeAction) {
-      return true
-    }
-
     const depositAction = strategyLowercase.find((action) => {
       return action.includes('deposit')
     })
 
-    if (!depositAction) {
-      return true
+    if (setEmodeAction === undefined && depositAction !== undefined) {
+      const protocol = depositAction.split('deposit')[0]
+
+      return protocol !== 'aavev3' && protocol !== 'spark'
     }
 
     const setEmodeProtocol = setEmodeAction?.split('setemode')[0]
     const depositProtocol = depositAction?.split('deposit')[0]
 
-    if (setEmodeProtocol === depositProtocol) {
-      console.log('strategy', strategy)
-      console.log('depositAction', depositAction)
-      console.log('setEmodeAction', setEmodeAction)
-      console.log('setEmodeProtocol', setEmodeProtocol)
-      console.log('depositProtocol', depositProtocol)
-    }
-
     return setEmodeProtocol === depositProtocol
+  })
+}
+
+export function filterDuplicateStrategies(strategies: StrategyDefinitions): StrategyDefinitions {
+  return strategies.filter((strategy, index) => {
+    return strategies.findIndex((s) => JSON.stringify(s) === JSON.stringify(strategy)) === index
   })
 }

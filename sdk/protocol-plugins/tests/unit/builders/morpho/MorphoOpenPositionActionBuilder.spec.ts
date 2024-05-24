@@ -60,7 +60,7 @@ describe('Morpho Open Position Action Builder', () => {
   })
 
   const protocol = MorphoProtocol.createFrom({
-    name: ProtocolName.Morpho,
+    name: ProtocolName.MorphoBlue,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 

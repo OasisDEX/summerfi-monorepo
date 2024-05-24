@@ -49,7 +49,7 @@ import { MorphoMarketParameters } from '../types'
 export class MorphoProtocolPlugin extends BaseProtocolPlugin {
   static readonly MorphoBlueContractName = 'MorphoBlue'
 
-  readonly protocolName: ProtocolName.Morpho = ProtocolName.Morpho
+  readonly protocolName: ProtocolName.MorphoBlue = ProtocolName.MorphoBlue
   readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
   readonly stepBuilders: Partial<ActionBuildersMap> = MorphoStepBuilders
 

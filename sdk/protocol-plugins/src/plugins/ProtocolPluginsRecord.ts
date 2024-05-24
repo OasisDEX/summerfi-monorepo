@@ -13,6 +13,6 @@ import { SparkProtocolPlugin } from './spark/implementation/SparkProtocolPlugin'
 export const ProtocolPluginsRecord: ProtocolPluginsRecordType = {
   [ProtocolName.Maker]: MakerProtocolPlugin,
   [ProtocolName.Spark]: SparkProtocolPlugin,
-  [ProtocolName.AAVEv3]: AaveV3ProtocolPlugin,
-  [ProtocolName.Morpho]: MorphoProtocolPlugin,
+  [ProtocolName.AaveV3]: AaveV3ProtocolPlugin,
+  [ProtocolName.MorphoBlue]: MorphoProtocolPlugin,
 }

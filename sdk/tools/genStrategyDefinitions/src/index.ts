@@ -1,8 +1,12 @@
-import { processStrategies, processStrategy } from './Helpers'
-import { StrategyIndex } from '@summerfi/simulator-service/strategies/StrategyIndex'
-import { StrategyDefinitions } from './Types'
+import {
+  generateOperationDefinitions,
+  generateSafeMultisendJSON,
+  processStrategies,
+} from './Helpers'
 import yargs from 'yargs'
 import fs from 'fs'
+import { refinanceLendingToLendingAnyPairStrategy } from '@summerfi/simulator-service/strategies'
+import { AddressValue } from '@summerfi/sdk-common'
 
 async function main() {
   const args = await yargs(process.argv.slice(2))
@@ -11,22 +15,42 @@ async function main() {
       description: 'Output file path',
       type: 'string',
     })
+    .option('safe', {
+      alias: 's',
+      description: 'Address of the Safe multisig',
+      type: 'string',
+    })
+    .option('registry', {
+      alias: 'r',
+      description: 'Address of the Operations Registry',
+      type: 'string',
+    })
+    .demandOption(['output', 'safe', 'registry'])
     .help()
     .alias('help', 'h').argv
 
-  const strategyDefinitions = processStrategies(StrategyIndex)
+  const strategyDefinitions = processStrategies([refinanceLendingToLendingAnyPairStrategy])
+
+  const operationDefinitions = generateOperationDefinitions('Refinance', strategyDefinitions)
+
+  const safeBatch = generateSafeMultisendJSON(
+    args.safe as AddressValue,
+    args.registry as AddressValue,
+    operationDefinitions,
+  )
 
   if (args.output) {
     console.log(`Writing to ${args.output}`)
 
     // Write to file
-    fs.writeFileSync(args.output, JSON.stringify(strategyDefinitions, null, 2))
+    fs.writeFileSync(args.output, JSON.stringify(safeBatch, null, 2))
   } else {
     console.log('--------------------')
     console.log(JSON.stringify(strategyDefinitions, null, 2))
     console.log('--------------------')
-    console.log(`Strategy Definitions (${strategyDefinitions.length})`)
   }
+
+  console.log(`Strategy Definitions (${operationDefinitions.length})`)
 }
 
 main()
