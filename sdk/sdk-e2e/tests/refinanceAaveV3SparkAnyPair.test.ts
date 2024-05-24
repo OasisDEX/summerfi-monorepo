@@ -4,7 +4,6 @@ import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 import {
   AddressValue,
   CommonTokenSymbols,
-  RefinanceSimulationTypes,
   ISimulation,
   Percentage,
   TokenAmount,
@@ -13,6 +12,7 @@ import {
   ChainFamilyMap,
   PositionType,
   IToken,
+  SimulationType,
 } from '@summerfi/sdk-common'
 import { PositionsManager, Order, RefinanceParameters } from '@summerfi/sdk-common/orders'
 import {
@@ -166,7 +166,7 @@ describe('Refinance AaveV3 Spark | SDK', () => {
       slippage: Percentage.createFrom({ value: 0.2 }),
     })
 
-    const refinanceSimulation: ISimulation<RefinanceSimulationTypes> =
+    const refinanceSimulation: ISimulation<SimulationType.Refinance> =
       await sdk.simulator.refinance.simulateRefinancePosition(refinanceParameters)
 
     expect(refinanceSimulation).toBeDefined()
