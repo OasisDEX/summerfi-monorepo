@@ -518,27 +518,28 @@ function createChunksOfUserPointsDistributions(sortedPoints: PositionPoints, chu
 async function checkMigrationEligibility(db: Kysely<Database>, positionPoints: PositionPoints) {
   const existingPointDistributionsWithEligibilityCondition = await db
     .selectFrom('pointsDistribution')
-    .where('positionId', '<>', null)
-    .leftJoin(
+    .select(['pointsDistribution.id as pointsId'])
+    .innerJoin(
       'eligibilityCondition',
       'eligibilityCondition.id',
       'pointsDistribution.eligibilityConditionId',
     )
-    .leftJoin('position', 'position.id', 'pointsDistribution.positionId')
+    .innerJoin('position', 'position.id', 'pointsDistribution.positionId')
+    .where('eligibilityCondition.type', '=', eligibilityConditions.POSITION_OPEN_TIME.type)
+    .where('pointsDistribution.type', '=', 'MIGRATION')
     .selectAll()
     .execute()
 
   if (existingPointDistributionsWithEligibilityCondition.length > 0) {
     await db.transaction().execute(async (transaction) => {
-      existingPointDistributionsWithEligibilityCondition.forEach(async (point) => {
-        if (
-          point.dueDate &&
-          point.type == eligibilityConditions.POSITION_OPEN_TIME.type &&
-          point.dueDate < new Date()
-        ) {
+      for (const point of existingPointDistributionsWithEligibilityCondition) {
+        if (point.dueDate && point.dueDate < new Date()) {
           const positionInSnapshot = positionPoints.find((p) => p.positionId === point.externalId)
           if (!positionInSnapshot || positionInSnapshot.netValue <= 0) {
-            await transaction.deleteFrom('pointsDistribution').where('id', '=', point.id).execute()
+            await transaction
+              .deleteFrom('pointsDistribution')
+              .where('id', '=', point.pointsId)
+              .execute()
             await transaction
               .deleteFrom('eligibilityCondition')
               .where('id', '=', point.eligibilityConditionId)
@@ -547,7 +548,7 @@ async function checkMigrationEligibility(db: Kysely<Database>, positionPoints: P
             await transaction
               .updateTable('pointsDistribution')
               .set({ eligibilityConditionId: null })
-              .where('id', '=', point.id)
+              .where('id', '=', point.pointsId)
               .execute()
             await transaction
               .deleteFrom('eligibilityCondition')
@@ -555,7 +556,7 @@ async function checkMigrationEligibility(db: Kysely<Database>, positionPoints: P
               .execute()
           }
         }
-      })
+      }
     })
   }
 }
@@ -583,26 +584,21 @@ async function checkOpenedPositionEligibility(
   // get all points distributions without an associated position id but with an eligibility condition
   const existingUsersWithEligibilityCondition = await db
     .selectFrom('pointsDistribution')
-    .where('eligibilityConditionId', '<>', null)
-    .where('positionId', '=', null)
+    .select(['pointsDistribution.id as pointsId'])
     .leftJoin(
       'eligibilityCondition',
       'eligibilityCondition.id',
       'pointsDistribution.eligibilityConditionId',
     )
     .leftJoin('userAddress', 'userAddress.id', 'pointsDistribution.userAddressId')
+    .where('eligibilityCondition.type', '=', eligibilityConditions.BECOME_SUMMER_USER.type)
     .selectAll()
     .execute()
 
   if (existingUsersWithEligibilityCondition.length > 0) {
     await db.transaction().execute(async (transaction) => {
-      existingUsersWithEligibilityCondition.forEach(async (user) => {
-        if (
-          user.dueDate &&
-          user.type == eligibilityConditions.BECOME_SUMMER_USER.type &&
-          user.dueDate >= new Date()
-        ) {
-          // get all the positions of the user that are eligible for a check (exist in current points distribution)
+      for (const user of existingUsersWithEligibilityCondition) {
+        if (user.dueDate && user.dueDate >= new Date()) {
           const eligiblePositionsFromPointsAccrual = positionPoints
             .filter(
               (p) =>
@@ -618,14 +614,14 @@ async function checkOpenedPositionEligibility(
             const becomeSummerUserMultiplier = getBecomeSummerUserMultiplier(
               oldestEligiblePosition.positionCreated,
             )
-
             const pointsDistributions = await transaction
               .selectFrom('pointsDistribution')
               .where('userAddressId', '=', user.id)
               .where((eb) => eb('type', '=', 'Snapshot_General').or('type', '=', 'Snapshot_Defi'))
               .selectAll()
               .execute()
-            pointsDistributions.forEach(async (pointsDistribution) => {
+            for (const pointsDistribution of pointsDistributions) {
+              // update points distribution
               await transaction
                 .updateTable('pointsDistribution')
                 .set({
@@ -634,14 +630,10 @@ async function checkOpenedPositionEligibility(
                 })
                 .where('id', '=', pointsDistribution.id)
                 .execute()
-            })
+            }
           }
-        } else if (
-          user.dueDate &&
-          user.type == eligibilityConditions.BECOME_SUMMER_USER.type &&
-          user.dueDate < new Date()
-        ) {
-          // if the due date is exceeded we delete all the points distribution and the eligibility condition
+        } else if (user.dueDate && user.dueDate < new Date()) {
+          // removes all points distributions and eligibility condition - there is one due date for all retro snapshot distributions
           await transaction
             .deleteFrom('pointsDistribution')
             .where('eligibilityConditionId', '=', user.eligibilityConditionId)
@@ -651,7 +643,7 @@ async function checkOpenedPositionEligibility(
             .where('id', '=', user.eligibilityConditionId)
             .execute()
         }
-      })
+      }
     })
   }
 }
