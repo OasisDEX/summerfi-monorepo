@@ -25,6 +25,12 @@ async function main() {
       description: 'Address of the Operations Registry',
       type: 'string',
     })
+    .option('format', {
+      alias: 'f',
+      description: 'Output format (safe, tenderly)',
+      default: 'safe',
+      type: 'string',
+    })
     .demandOption(['output', 'safe', 'registry'])
     .help()
     .alias('help', 'h').argv
@@ -43,7 +49,11 @@ async function main() {
     console.log(`Writing to ${args.output}`)
 
     // Write to file
-    fs.writeFileSync(args.output, JSON.stringify(safeBatch, null, 2))
+    if (args.format === 'safe') {
+      fs.writeFileSync(args.output, JSON.stringify(safeBatch, null, 2))
+    } else {
+      fs.writeFileSync(args.output, JSON.stringify(operationDefinitions, null, 2))
+    }
   } else {
     console.log('--------------------')
     console.log(JSON.stringify(strategyDefinitions, null, 2))
