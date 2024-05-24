@@ -166,81 +166,68 @@ export const handler = async (
     }
 
     const points = await pointAccuralService.accruePoints(startTimestamp, endTimestamp)
-
-    logger.info(`Got: ${points.length} positions to update in the database`)
-
     const sortedPoints = points.sort((a, b) => a.positionId.localeCompare(b.positionId))
 
     await checkMigrationEligibility(db, sortedPoints)
     await checkOpenedPositionEligibility(db, sortedPoints)
+    await insertAllMissingUsers(sortedPoints, db)
 
     const chunkedPoints: PositionPoints[] = createChunksOfUserPointsDistributions(sortedPoints, 30)
+    await db.transaction().execute(async (transaction) => {
+      for (let i = 0; i < chunkedPoints.length; i++) {
+        logger.info(`Processing: Chunk ${i} of ${chunkedPoints.length}`)
+        const chunk = chunkedPoints[i]
+        const addressesForChunk = chunk.map((c) => c.user)
+        const positionsForChunk = chunk.map((c) => c.positionId)
 
-    for (let i = 0; i < chunkedPoints.length; i++) {
-      logger.info(`Processing: Chunk ${i} of ${chunkedPoints.length}`)
-      const chunk = chunkedPoints[i]
-      const addressesForChunk = chunk.map((c) => c.user)
-      const positionsForChunk = chunk.map((c) => c.positionId)
+        const userAddresses = await db
+          .selectFrom('userAddress')
+          .where('address', 'in', addressesForChunk)
+          .selectAll()
+          .execute()
+        const positions = await db
+          .selectFrom('position')
+          .where('externalId', 'in', positionsForChunk)
+          .selectAll()
+          .execute()
 
-      const userAddresses = await db
-        .selectFrom('userAddress')
-        .where('address', 'in', addressesForChunk)
-        .selectAll()
-        .execute()
-      const positions = await db
-        .selectFrom('position')
-        .where('externalId', 'in', positionsForChunk)
-        .selectAll()
-        .execute()
+        const usersMultipliers = await db
+          .selectFrom('multiplier')
+          .innerJoin('userAddress', 'multiplier.userAddressId', 'userAddress.id')
+          .where('userAddress.address', 'in', addressesForChunk)
+          .select([
+            'multiplier.value',
+            'multiplier.type',
+            'multiplier.id',
+            'multiplier.userAddressId',
+            'multiplier.positionId',
+          ])
+          .execute()
 
-      const usersMultipliers = await db
-        .selectFrom('multiplier')
-        .innerJoin('userAddress', 'multiplier.userAddressId', 'userAddress.id')
-        .where('userAddress.address', 'in', addressesForChunk)
-        .select([
-          'multiplier.value',
-          'multiplier.type',
-          'multiplier.id',
-          'multiplier.userAddressId',
-          'multiplier.positionId',
-        ])
-        .execute()
+        const positionsMultipliers = await db
+          .selectFrom('multiplier')
+          .innerJoin('position', 'multiplier.positionId', 'position.id')
+          .where('position.externalId', 'in', positionsForChunk)
+          .select([
+            'multiplier.value',
+            'multiplier.type',
+            'multiplier.id',
+            'multiplier.userAddressId',
+            'multiplier.positionId',
+          ])
+          .execute()
 
-      const positionsMultipliers = await db
-        .selectFrom('multiplier')
-        .innerJoin('position', 'multiplier.positionId', 'position.id')
-        .where('position.externalId', 'in', positionsForChunk)
-        .select([
-          'multiplier.value',
-          'multiplier.type',
-          'multiplier.id',
-          'multiplier.userAddressId',
-          'multiplier.positionId',
-        ])
-        .execute()
-
-      await Promise.all(
-        chunk.map(async (record) => {
-          let userAddress = userAddresses.find((ua) => ua.address === record.user)
-
+        for (const record of chunk) {
+          const userAddress = userAddresses.find((ua) => ua.address === record.user)
           if (!userAddress) {
-            const result = await db
-              .insertInto('blockchainUser')
-              .values({ category: null })
-              .returning(['id'])
-              .executeTakeFirstOrThrow()
-            userAddress = await db
-              .insertInto('userAddress')
-              .values({ address: record.user, userId: result.id })
-              .returningAll()
-              .executeTakeFirstOrThrow()
+            throw new Error('User address not found')
           }
 
           const positionId = positionIdResolver(record.positionId)
 
           let position = positions.find((p) => p.externalId === record.positionId)
           if (!position) {
-            position = await db
+            position = await transaction
               .insertInto('position')
               .values({
                 externalId: record.positionId,
@@ -257,7 +244,7 @@ export const handler = async (
           }
 
           if (record.points.openPositionsPoints > 0) {
-            await db
+            await transaction
               .insertInto('pointsDistribution')
               .values({
                 description: 'Points for opening a position',
@@ -273,7 +260,7 @@ export const handler = async (
           const dueDate = new Date(dueDateTimestamp)
 
           if (record.points.migrationPoints > 0) {
-            const eligibilityCondition = await db
+            const eligibilityCondition = await transaction
               .insertInto('eligibilityCondition')
               .values({
                 type: eligibilityConditions.POSITION_OPEN_TIME.type,
@@ -284,7 +271,7 @@ export const handler = async (
               .returningAll()
               .executeTakeFirstOrThrow()
 
-            await db
+            await transaction
               .insertInto('pointsDistribution')
               .values({
                 description: 'Points for migrations',
@@ -297,7 +284,7 @@ export const handler = async (
           }
 
           if (record.points.swapPoints > 0) {
-            await db
+            await transaction
               .insertInto('pointsDistribution')
               .values({
                 description: 'Points for swap',
@@ -323,7 +310,7 @@ export const handler = async (
           let procotolBoostMultiplier = userMultipliers.find((m) => m.type === 'PROTOCOL_BOOST')
 
           if (!procotolBoostMultiplier) {
-            procotolBoostMultiplier = await db
+            procotolBoostMultiplier = await transaction
               .insertInto('multiplier')
               .values({
                 userAddressId: userAddress.id,
@@ -333,7 +320,7 @@ export const handler = async (
               .returningAll()
               .executeTakeFirstOrThrow()
           } else {
-            await db
+            await transaction
               .updateTable('multiplier')
               .set('value', record.multipliers.protocolBoostMultiplier)
               .where('id', '=', procotolBoostMultiplier.id)
@@ -343,7 +330,7 @@ export const handler = async (
           let swapMultiplier = userMultipliers.find((m) => m.type === 'SWAP')
 
           if (!swapMultiplier) {
-            swapMultiplier = await db
+            swapMultiplier = await transaction
               .insertInto('multiplier')
               .values({
                 userAddressId: userAddress.id,
@@ -353,7 +340,7 @@ export const handler = async (
               .returningAll()
               .executeTakeFirstOrThrow()
           } else {
-            await db
+            await transaction
               .updateTable('multiplier')
               .set('value', record.multipliers.swapMultiplier)
               .where('id', '=', swapMultiplier.id)
@@ -363,7 +350,7 @@ export const handler = async (
           let timeOpenMultiplier = positionMultipliers.find((m) => m.type === 'TIME_OPEN')
 
           if (!timeOpenMultiplier) {
-            timeOpenMultiplier = await db
+            timeOpenMultiplier = await transaction
               .insertInto('multiplier')
               .values({
                 positionId: position.id,
@@ -373,7 +360,7 @@ export const handler = async (
               .returningAll()
               .executeTakeFirstOrThrow()
           } else {
-            await db
+            await transaction
               .updateTable('multiplier')
               .set('value', record.multipliers.timeOpenMultiplier)
               .where('id', '=', timeOpenMultiplier.id)
@@ -385,7 +372,7 @@ export const handler = async (
           )
 
           if (!automationProtectionMultiplier) {
-            automationProtectionMultiplier = await db
+            automationProtectionMultiplier = await transaction
               .insertInto('multiplier')
               .values({
                 positionId: position.id,
@@ -395,7 +382,7 @@ export const handler = async (
               .returningAll()
               .executeTakeFirstOrThrow()
           } else {
-            await db
+            await transaction
               .updateTable('multiplier')
               .set('value', record.multipliers.automationProtectionMultiplier)
               .where('id', '=', automationProtectionMultiplier.id)
@@ -404,7 +391,7 @@ export const handler = async (
 
           const lazyVaultMultiplier = positionMultipliers.find((m) => m.type === 'LAZY_VAULT')
           if (!lazyVaultMultiplier) {
-            await db
+            await transaction
               .insertInto('multiplier')
               .values({
                 positionId: position.id,
@@ -413,34 +400,34 @@ export const handler = async (
               })
               .execute()
           } else {
-            await db
+            await transaction
               .updateTable('multiplier')
               .set('value', record.multipliers.lazyVaultMultiplier)
               .where('id', '=', lazyVaultMultiplier.id)
               .execute()
           }
-        }),
-      )
+        }
+        // tutj
+        logger.info(`Processed: Chunk ${i} of ${chunkedPoints.length}`)
 
-      logger.info(`Processed: Chunk ${i} of ${chunkedPoints.length}`)
-    }
+        await transaction
+          .insertInto('updatePointsChangelog')
+          .values({
+            endTimestamp: new Date(endTimestamp * 1000),
+            startTimestamp: new Date(startTimestamp * 1000),
+            metadata: {
+              positions: points.length,
+            },
+          })
+          .executeTakeFirstOrThrow()
 
-    await db
-      .insertInto('updatePointsChangelog')
-      .values({
-        endTimestamp: new Date(endTimestamp * 1000),
-        startTimestamp: new Date(startTimestamp * 1000),
-        metadata: {
-          positions: points.length,
-        },
-      })
-      .executeTakeFirstOrThrow()
-
-    await db
-      .updateTable('updatePointsLastRun')
-      .set('lastTimestamp', new Date(endTimestamp * 1000))
-      .where('id', '=', LAST_RUN_ID)
-      .execute()
+        await transaction
+          .updateTable('updatePointsLastRun')
+          .set('lastTimestamp', new Date(endTimestamp * 1000))
+          .where('id', '=', LAST_RUN_ID)
+          .execute()
+      }
+    })
   } catch (e) {
     logger.error('Failed to lock update points', { error: e })
     return
@@ -455,6 +442,40 @@ export const handler = async (
 }
 
 export default handler
+
+/**
+ * Inserts missing users into the database.
+ *
+ * @param sortedPoints - The sorted points containing user information.
+ * @param db - The database instance.
+ * @returns A Promise that resolves when all missing users are inserted.
+ */
+async function insertAllMissingUsers(sortedPoints: PositionPoints, db: Kysely<Database>) {
+  const uniqueUsers = new Set(sortedPoints.map((p) => p.user))
+  const userAddresses = await db
+    .selectFrom('userAddress')
+    .where('address', 'in', Array.from(uniqueUsers))
+    .selectAll()
+    .execute()
+
+  await db.transaction().execute(async (transaction) => {
+    for (const user of uniqueUsers) {
+      const userAddress = userAddresses.find((ua) => ua.address === user)
+      if (!userAddress) {
+        const result = await transaction
+          .insertInto('blockchainUser')
+          .values({ category: null })
+          .returning(['id'])
+          .executeTakeFirstOrThrow()
+        await transaction
+          .insertInto('userAddress')
+          .values({ address: user, userId: result.id })
+          .returningAll()
+          .executeTakeFirstOrThrow()
+      }
+    }
+  })
+}
 
 /**
  * Creates chunks of user points distributions based on a given chunk length.
@@ -508,31 +529,33 @@ async function checkMigrationEligibility(db: Kysely<Database>, positionPoints: P
     .execute()
 
   if (existingPointDistributionsWithEligibilityCondition.length > 0) {
-    existingPointDistributionsWithEligibilityCondition.forEach(async (point) => {
-      if (
-        point.dueDate &&
-        point.type == eligibilityConditions.POSITION_OPEN_TIME.type &&
-        point.dueDate < new Date()
-      ) {
-        const positionInSnapshot = positionPoints.find((p) => p.positionId === point.externalId)
-        if (!positionInSnapshot || positionInSnapshot.netValue <= 0) {
-          await db.deleteFrom('pointsDistribution').where('id', '=', point.id).execute()
-          await db
-            .deleteFrom('eligibilityCondition')
-            .where('id', '=', point.eligibilityConditionId)
-            .execute()
-        } else if (positionInSnapshot.netValue > 0) {
-          await db
-            .updateTable('pointsDistribution')
-            .set({ eligibilityConditionId: null })
-            .where('id', '=', point.id)
-            .execute()
-          await db
-            .deleteFrom('eligibilityCondition')
-            .where('id', '=', point.eligibilityConditionId)
-            .execute()
+    await db.transaction().execute(async (transaction) => {
+      existingPointDistributionsWithEligibilityCondition.forEach(async (point) => {
+        if (
+          point.dueDate &&
+          point.type == eligibilityConditions.POSITION_OPEN_TIME.type &&
+          point.dueDate < new Date()
+        ) {
+          const positionInSnapshot = positionPoints.find((p) => p.positionId === point.externalId)
+          if (!positionInSnapshot || positionInSnapshot.netValue <= 0) {
+            await transaction.deleteFrom('pointsDistribution').where('id', '=', point.id).execute()
+            await transaction
+              .deleteFrom('eligibilityCondition')
+              .where('id', '=', point.eligibilityConditionId)
+              .execute()
+          } else if (positionInSnapshot.netValue > 0) {
+            await transaction
+              .updateTable('pointsDistribution')
+              .set({ eligibilityConditionId: null })
+              .where('id', '=', point.id)
+              .execute()
+            await transaction
+              .deleteFrom('eligibilityCondition')
+              .where('id', '=', point.eligibilityConditionId)
+              .execute()
+          }
         }
-      }
+      })
     })
   }
 }
@@ -572,61 +595,63 @@ async function checkOpenedPositionEligibility(
     .execute()
 
   if (existingUsersWithEligibilityCondition.length > 0) {
-    existingUsersWithEligibilityCondition.forEach(async (user) => {
-      if (
-        user.dueDate &&
-        user.type == eligibilityConditions.BECOME_SUMMER_USER.type &&
-        user.dueDate >= new Date()
-      ) {
-        // get all the positions of the user that are eligible for a check (exist in current points distribution)
-        const eligiblePositionsFromPointsAccrual = positionPoints
-          .filter(
-            (p) =>
-              p.netValue >= 500 &&
-              p.positionCreated * 1000 < Date.now() - FOURTEEN_DAYS_IN_MILLISECONDS,
-          )
-          .filter((p) => p.user === user.address)
-          .sort((a, b) => a.positionCreated - b.positionCreated)
-        if (eligiblePositionsFromPointsAccrual.length == 0) {
-          return
-        } else {
-          const oldestEligiblePosition = eligiblePositionsFromPointsAccrual[0]
-          const becomeSummerUserMultiplier = getBecomeSummerUserMultiplier(
-            oldestEligiblePosition.positionCreated,
-          )
+    await db.transaction().execute(async (transaction) => {
+      existingUsersWithEligibilityCondition.forEach(async (user) => {
+        if (
+          user.dueDate &&
+          user.type == eligibilityConditions.BECOME_SUMMER_USER.type &&
+          user.dueDate >= new Date()
+        ) {
+          // get all the positions of the user that are eligible for a check (exist in current points distribution)
+          const eligiblePositionsFromPointsAccrual = positionPoints
+            .filter(
+              (p) =>
+                p.netValue >= 500 &&
+                p.positionCreated * 1000 < Date.now() - FOURTEEN_DAYS_IN_MILLISECONDS,
+            )
+            .filter((p) => p.user === user.address)
+            .sort((a, b) => a.positionCreated - b.positionCreated)
+          if (eligiblePositionsFromPointsAccrual.length == 0) {
+            return
+          } else {
+            const oldestEligiblePosition = eligiblePositionsFromPointsAccrual[0]
+            const becomeSummerUserMultiplier = getBecomeSummerUserMultiplier(
+              oldestEligiblePosition.positionCreated,
+            )
 
-          const pointsDistributions = await db
-            .selectFrom('pointsDistribution')
-            .where('userAddressId', '=', user.id)
-            .where((eb) => eb('type', '=', 'Snapshot_General').or('type', '=', 'Snapshot_Defi'))
-            .selectAll()
-            .execute()
-          pointsDistributions.forEach(async (pointsDistribution) => {
-            await db
-              .updateTable('pointsDistribution')
-              .set({
-                eligibilityConditionId: null,
-                points: +pointsDistribution.points * becomeSummerUserMultiplier,
-              })
-              .where('id', '=', pointsDistribution.id)
+            const pointsDistributions = await transaction
+              .selectFrom('pointsDistribution')
+              .where('userAddressId', '=', user.id)
+              .where((eb) => eb('type', '=', 'Snapshot_General').or('type', '=', 'Snapshot_Defi'))
+              .selectAll()
               .execute()
-          })
+            pointsDistributions.forEach(async (pointsDistribution) => {
+              await transaction
+                .updateTable('pointsDistribution')
+                .set({
+                  eligibilityConditionId: null,
+                  points: +pointsDistribution.points * becomeSummerUserMultiplier,
+                })
+                .where('id', '=', pointsDistribution.id)
+                .execute()
+            })
+          }
+        } else if (
+          user.dueDate &&
+          user.type == eligibilityConditions.BECOME_SUMMER_USER.type &&
+          user.dueDate < new Date()
+        ) {
+          // if the due date is exceeded we delete all the points distribution and the eligibility condition
+          await transaction
+            .deleteFrom('pointsDistribution')
+            .where('eligibilityConditionId', '=', user.eligibilityConditionId)
+            .execute()
+          await transaction
+            .deleteFrom('eligibilityCondition')
+            .where('id', '=', user.eligibilityConditionId)
+            .execute()
         }
-      } else if (
-        user.dueDate &&
-        user.type == eligibilityConditions.BECOME_SUMMER_USER.type &&
-        user.dueDate < new Date()
-      ) {
-        // if the due date is exceeded we delete all the points distribution and the eligibility condition
-        await db
-          .deleteFrom('pointsDistribution')
-          .where('eligibilityConditionId', '=', user.eligibilityConditionId)
-          .execute()
-        await db
-          .deleteFrom('eligibilityCondition')
-          .where('id', '=', user.eligibilityConditionId)
-          .execute()
-      }
+      })
     })
   }
 }
