@@ -1,20 +1,20 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { Price, RiskRatio, TokenAmount, Percentage } from '@summerfi/sdk-common/common'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
-import { MorphoProtocolPlugin } from '../../src/plugins/morphoblue/implementation/MorphoProtocolPlugin'
+import { MorphoBlueProtocolPlugin } from '../../src/plugins/morphoblue/implementation/MorphoBlueProtocolPlugin'
 import { morphoPoolIdMock, morphoPoolMarketParams } from '../mocks/MorphoPoolIdMock'
 import { OracleManagerMock } from '@summerfi/testing-utils'
 import { ChainFamilyMap, FiatCurrency, OracleProviderType } from '@summerfi/sdk-common'
-import { isMorphoLendingPool, isMorphoLendingPoolId } from '../../src'
+import { isMorphoBlueLendingPool, isMorphoBlueLendingPoolId } from '../../src'
 import { PoolType } from '@summerfi/sdk-common/protocols'
 
 describe.only('Protocol Plugin | Integration | Morpho', () => {
   let ctx: IProtocolPluginContext
-  let morphoProtocolPlugin: MorphoProtocolPlugin
+  let morphoProtocolPlugin: MorphoBlueProtocolPlugin
 
   beforeAll(async () => {
     ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
-    morphoProtocolPlugin = new MorphoProtocolPlugin()
+    morphoProtocolPlugin = new MorphoBlueProtocolPlugin()
     morphoProtocolPlugin.initialize({
       context: ctx,
     })
@@ -25,11 +25,11 @@ describe.only('Protocol Plugin | Integration | Morpho', () => {
 
     expect(pool).toBeDefined()
 
-    if (!isMorphoLendingPool(pool)) {
+    if (!isMorphoBlueLendingPool(pool)) {
       fail('Expected pool to be a Morpho lending pool')
     }
 
-    if (!isMorphoLendingPoolId(pool.id)) {
+    if (!isMorphoBlueLendingPoolId(pool.id)) {
       fail('Expected pool id to be a Morpho lending pool id')
     }
 

@@ -3,25 +3,25 @@ import {
   getValueFromReference,
   TokenTransferTargetType,
 } from '@summerfi/sdk-common/simulation'
-import { MorphoBorrowAction } from '../actions/MorphoBorrowAction'
-import { MorphoDepositAction } from '../actions/MorphoDepositAction'
+import { MorphoBlueBorrowAction } from '../actions/MorphoBlueBorrowAction'
+import { MorphoBlueDepositAction } from '../actions/MorphoBlueDepositAction'
 import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { SendTokenAction, SetApprovalAction } from '../../common'
-import { isMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
+import { isMorphoBlueLendingPool } from '../interfaces/IMorphoBlueLendingPool'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
-export class MorphoDepositBorrowActionBuilder extends BaseActionBuilder<steps.DepositBorrowStep> {
+export class MorphoBlueDepositBorrowActionBuilder extends BaseActionBuilder<steps.DepositBorrowStep> {
   readonly actions: ActionBuilderUsedAction[] = [
     { action: SetApprovalAction },
-    { action: MorphoDepositAction },
-    { action: MorphoBorrowAction, isOptionalTags: ['borrowAmount'] },
+    { action: MorphoBlueDepositAction },
+    { action: MorphoBlueBorrowAction, isOptionalTags: ['borrowAmount'] },
     { action: SendTokenAction, isOptionalTags: ['borrowAmount', 'borrowTargetType'] },
   ]
 
   async build(params: ActionBuilderParams<steps.DepositBorrowStep>): Promise<void> {
     const { context, user, step, addressBookManager } = params
 
-    if (!isMorphoLendingPool(step.inputs.position.pool)) {
+    if (!isMorphoBlueLendingPool(step.inputs.position.pool)) {
       throw new Error('Invalid Morpho lending pool id')
     }
 
@@ -47,7 +47,7 @@ export class MorphoDepositBorrowActionBuilder extends BaseActionBuilder<steps.De
 
     context.addActionCall({
       step: params.step,
-      action: new MorphoDepositAction(),
+      action: new MorphoBlueDepositAction(),
       arguments: {
         morphoLendingPool: step.inputs.position.pool,
         amount: getValueFromReference(step.inputs.depositAmount),
@@ -66,7 +66,7 @@ export class MorphoDepositBorrowActionBuilder extends BaseActionBuilder<steps.De
     if (!borrowAmount.toBN().isZero()) {
       context.addActionCall({
         step: step,
-        action: new MorphoBorrowAction(),
+        action: new MorphoBlueBorrowAction(),
         arguments: {
           morphoLendingPool: step.inputs.position.pool,
           amount: borrowAmount,

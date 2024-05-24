@@ -2,32 +2,34 @@ import { IPositionId, PositionIdDataSchema } from '@summerfi/sdk-common/common'
 import { z } from 'zod'
 
 /**
- * @interface IMorphoPositionId
+ * @interface IMorphoBluePositionId
  * @description Represents the ID of a position in the Morpho protocol
  *
  * Currently empty as there are no specifics for this protocol
  */
-export interface IMorphoPositionId extends IPositionId, IMorphoPositionIdData {
+export interface IMorphoBluePositionId extends IPositionId, IMorphoBluePositionIdData {
   // Empty on purpose
 }
 
 /**
  * @description Zod schema for IMorphoPositionId
  */
-export const MorphoPositionIdDataSchema = z.object({
+export const MorphoBluePositionIdDataSchema = z.object({
   ...PositionIdDataSchema.shape,
 })
 
 /**
  * Type for the data part of the IMorphoPositionId interface
  */
-export type IMorphoPositionIdData = Readonly<z.infer<typeof MorphoPositionIdDataSchema>>
+export type IMorphoBluePositionIdData = Readonly<z.infer<typeof MorphoBluePositionIdDataSchema>>
 
 /**
  * @description Type guard for IMorphoPositionId
  * @param maybePositionId
  * @returns true if the object is an IMorphoPositionId
  */
-export function isMorphoPositionId(maybePositionId: unknown): maybePositionId is IMorphoPositionId {
-  return MorphoPositionIdDataSchema.safeParse(maybePositionId).success
+export function isMorphoBluePositionId(
+  maybePositionId: unknown,
+): maybePositionId is IMorphoBluePositionId {
+  return MorphoBluePositionIdDataSchema.safeParse(maybePositionId).success
 }

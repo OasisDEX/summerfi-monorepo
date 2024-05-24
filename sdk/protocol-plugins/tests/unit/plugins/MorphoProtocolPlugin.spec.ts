@@ -3,27 +3,27 @@ import { ChainFamilyMap, ChainInfo, IPositionId } from '@summerfi/sdk-common/com
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { createProtocolPluginContext } from '../../utils/CreateProtocolPluginContext'
 import { getErrorMessage } from '../../utils/ErrorMessage'
-import { MorphoProtocolPlugin } from '../../../src/plugins/morphoblue/implementation/MorphoProtocolPlugin'
+import { MorphoBlueProtocolPlugin } from '../../../src/plugins/morphoblue/implementation/MorphoBlueProtocolPlugin'
 import {
-  IMorphoLendingPoolIdData,
-  isMorphoLendingPoolId,
-} from '../../../src/plugins/morphoblue/interfaces/IMorphoLendingPoolId'
+  IMorphoBlueLendingPoolIdData,
+  isMorphoBlueLendingPoolId,
+} from '../../../src/plugins/morphoblue/interfaces/IMorphoBlueLendingPoolId'
 import assert from 'assert'
 import { morphoPoolIdMock } from '../../mocks/MorphoPoolIdMock'
 
 describe('Protocol Plugin | Unit | Morpho', () => {
   let ctx: IProtocolPluginContext
-  let morphoProtocolPlugin: MorphoProtocolPlugin
+  let morphoProtocolPlugin: MorphoBlueProtocolPlugin
   beforeAll(async () => {
     ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
-    morphoProtocolPlugin = new MorphoProtocolPlugin()
+    morphoProtocolPlugin = new MorphoBlueProtocolPlugin()
     morphoProtocolPlugin.initialize({
       context: ctx,
     })
   })
 
   it('should verify that a given poolId is recognised as a valid format', () => {
-    expect(isMorphoLendingPoolId(morphoPoolIdMock)).toBe(true)
+    expect(isMorphoBlueLendingPoolId(morphoPoolIdMock)).toBe(true)
   })
 
   it('should throw a specific error when provided with a poolId not matching the MorphoPoolId format', async () => {
@@ -34,7 +34,7 @@ describe('Protocol Plugin | Unit | Morpho', () => {
           ...morphoPoolIdMock.protocol,
           name: ProtocolName.Maker,
         },
-      } as unknown as IMorphoLendingPoolIdData
+      } as unknown as IMorphoBlueLendingPoolIdData
 
       expect(await morphoProtocolPlugin.getLendingPool(invalidMorphoPoolIdMock)).toBeDefined()
       assert.fail('Should throw error')
@@ -65,7 +65,7 @@ describe('Protocol Plugin | Unit | Morpho', () => {
 
   it('should throw an error when calling getPool with chain id missing from ctx', async () => {
     try {
-      new MorphoProtocolPlugin().initialize({
+      new MorphoBlueProtocolPlugin().initialize({
         context: {
           ...ctx,
           provider: {
@@ -86,7 +86,7 @@ describe('Protocol Plugin | Unit | Morpho', () => {
   it('should throw an error when calling getPool with an unsupported chain ID', async () => {
     const wrongChainId = 2
     try {
-      new MorphoProtocolPlugin().initialize({
+      new MorphoBlueProtocolPlugin().initialize({
         context: {
           ...ctx,
           provider: {

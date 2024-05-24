@@ -16,15 +16,15 @@ import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
 import {
   ILKType,
-  MorphoPositionId,
-  MorphoPosition,
-  MorphoLendingPool,
-  MorphoLendingPoolId,
-  MorphoProtocol,
+  MorphoBluePositionId,
+  MorphoBluePosition,
+  MorphoBlueLendingPool,
+  MorphoBlueLendingPoolId,
+  MorphoBlueProtocol,
   MakerLendingPool,
   MakerLendingPoolId,
   MakerProtocol,
-  MorphoOpenPositionActionBuilder,
+  MorphoBlueOpenPositionActionBuilder,
 } from '../../../../src'
 
 describe('Morpho Open Position Action Builder', () => {
@@ -59,17 +59,17 @@ describe('Morpho Open Position Action Builder', () => {
     amount: '1000',
   })
 
-  const protocol = MorphoProtocol.createFrom({
+  const protocol = MorphoBlueProtocol.createFrom({
     name: ProtocolName.MorphoBlue,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 
-  const poolId = MorphoLendingPoolId.createFrom({
+  const poolId = MorphoBlueLendingPoolId.createFrom({
     marketId: '0x1234',
     protocol: protocol,
   })
 
-  const pool = MorphoLendingPool.createFrom({
+  const pool = MorphoBlueLendingPool.createFrom({
     collateralToken: WETH,
     debtToken: DAI,
     id: poolId,
@@ -82,9 +82,9 @@ describe('Morpho Open Position Action Builder', () => {
     type: PoolType.Lending,
   })
 
-  const position = MorphoPosition.createFrom({
+  const position = MorphoBluePosition.createFrom({
     type: PositionType.Multiply,
-    id: MorphoPositionId.createFrom({ id: 'someposition' }),
+    id: MorphoBluePositionId.createFrom({ id: 'someposition' }),
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
     pool: pool,
@@ -122,7 +122,7 @@ describe('Morpho Open Position Action Builder', () => {
 
   it('should fail the position is not a Morpho one', async () => {
     try {
-      await new MorphoOpenPositionActionBuilder().build({
+      await new MorphoBlueOpenPositionActionBuilder().build({
         ...builderParams,
         step: {
           ...derivedStep,
@@ -142,7 +142,7 @@ describe('Morpho Open Position Action Builder', () => {
   it('should not add a transaction to the context', async () => {
     builderParams.context.startSubContext()
 
-    await new MorphoOpenPositionActionBuilder().build({
+    await new MorphoBlueOpenPositionActionBuilder().build({
       ...builderParams,
       step: derivedStep,
       protocolsRegistry: builderParams.emptyProtocolsRegistry,

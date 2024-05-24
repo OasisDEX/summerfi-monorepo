@@ -1,11 +1,11 @@
 import { PositionDataSchema } from '@summerfi/sdk-common'
 import { IPosition, ITokenAmount, PositionType } from '@summerfi/sdk-common/common'
-import { IMorphoLendingPool, MorphoLendingPoolDataSchema } from './IMorphoLendingPool'
+import { IMorphoBlueLendingPool, MorphoBlueLendingPoolDataSchema } from './IMorphoBlueLendingPool'
 import { z } from 'zod'
-import { IMorphoPositionId, MorphoPositionIdDataSchema } from './IMorphoPositionId'
+import { IMorphoBluePositionId, MorphoBluePositionIdDataSchema } from './IMorphoBluePositionId'
 
 /**
- * @interface IMorphoPosition
+ * @interface IMorphoBluePosition
  * @description Represents a position in the Morpho protocol
  *
  * Currently empty as there are no specifics for this protocol
@@ -13,9 +13,9 @@ import { IMorphoPositionId, MorphoPositionIdDataSchema } from './IMorphoPosition
  * Typescript forces the interface to re-declare any properties that have different BUT compatible types.
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
-export interface IMorphoPosition extends IMorphoPositionData, IPosition {
-  readonly id: IMorphoPositionId
-  readonly pool: IMorphoLendingPool
+export interface IMorphoBluePosition extends IMorphoBluePositionData, IPosition {
+  readonly id: IMorphoBluePositionId
+  readonly pool: IMorphoBlueLendingPool
 
   // Re-declaring the properties with the correct types
   readonly type: PositionType
@@ -26,22 +26,22 @@ export interface IMorphoPosition extends IMorphoPositionData, IPosition {
 /**
  * @description Zod schema for IMorphoPositionId
  */
-export const MorphoPositionDataSchema = z.object({
+export const MorphoBluePositionDataSchema = z.object({
   ...PositionDataSchema.shape,
-  id: MorphoPositionIdDataSchema,
-  pool: MorphoLendingPoolDataSchema,
+  id: MorphoBluePositionIdDataSchema,
+  pool: MorphoBlueLendingPoolDataSchema,
 })
 
 /**
  * Type for the data part of the IMorphoPosition interface
  */
-export type IMorphoPositionData = Readonly<z.infer<typeof MorphoPositionDataSchema>>
+export type IMorphoBluePositionData = Readonly<z.infer<typeof MorphoBluePositionDataSchema>>
 
 /**
  * @description Type guard for IMorphoPosition
  * @param maybePosition
  * @returns true if the object is an IMorphoPosition
  */
-export function isMorphoPosition(maybePosition: unknown): maybePosition is IMorphoPosition {
-  return MorphoPositionDataSchema.safeParse(maybePosition).success
+export function isMorphoBluePosition(maybePosition: unknown): maybePosition is IMorphoBluePosition {
+  return MorphoBluePositionDataSchema.safeParse(maybePosition).success
 }

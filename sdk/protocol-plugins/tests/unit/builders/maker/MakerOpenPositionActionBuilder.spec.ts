@@ -22,9 +22,9 @@ import {
   MakerOpenPositionActionBuilder,
   MakerPosition,
   MakerProtocol,
-  MorphoLendingPool,
-  MorphoLendingPoolId,
-  MorphoProtocol,
+  MorphoBlueLendingPool,
+  MorphoBlueLendingPoolId,
+  MorphoBlueProtocol,
 } from '../../../../src'
 
 describe('Maker Open Position Action Builder', () => {
@@ -86,12 +86,12 @@ describe('Maker Open Position Action Builder', () => {
     pool: pool,
   })
 
-  const wrongPool = MorphoLendingPool.createFrom({
+  const wrongPool = MorphoBlueLendingPool.createFrom({
     collateralToken: WETH,
     debtToken: DAI,
-    id: MorphoLendingPoolId.createFrom({
+    id: MorphoBlueLendingPoolId.createFrom({
       marketId: '0x1234',
-      protocol: MorphoProtocol.createFrom({
+      protocol: MorphoBlueProtocol.createFrom({
         name: ProtocolName.MorphoBlue,
         chainInfo: ChainFamilyMap.Ethereum.Mainnet,
       }),

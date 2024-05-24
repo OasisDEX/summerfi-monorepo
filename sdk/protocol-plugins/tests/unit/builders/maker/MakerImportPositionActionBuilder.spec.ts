@@ -22,10 +22,10 @@ import {
   MakerPosition,
   MakerProtocol,
   MakerImportPositionActionBuilder,
-  MorphoPosition,
-  MorphoLendingPool,
-  MorphoLendingPoolId,
-  MorphoProtocol,
+  MorphoBluePosition,
+  MorphoBlueLendingPool,
+  MorphoBlueLendingPoolId,
+  MorphoBlueProtocol,
 } from '../../../../src'
 import { ExternalPositionType } from '@summerfi/sdk-common'
 
@@ -92,17 +92,17 @@ describe('Maker Import Position Action Builder', () => {
     pool: pool,
   })
 
-  const wrongPosition = MorphoPosition.createFrom({
+  const wrongPosition = MorphoBluePosition.createFrom({
     type: PositionType.Multiply,
     id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '123' }),
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
-    pool: MorphoLendingPool.createFrom({
+    pool: MorphoBlueLendingPool.createFrom({
       collateralToken: WETH,
       debtToken: DAI,
-      id: MorphoLendingPoolId.createFrom({
+      id: MorphoBlueLendingPoolId.createFrom({
         marketId: '0x1234',
-        protocol: MorphoProtocol.createFrom({
+        protocol: MorphoBlueProtocol.createFrom({
           name: ProtocolName.MorphoBlue,
           chainInfo: ChainFamilyMap.Ethereum.Mainnet,
         }),

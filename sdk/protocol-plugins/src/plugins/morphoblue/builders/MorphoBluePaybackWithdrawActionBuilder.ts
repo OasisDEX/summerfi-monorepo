@@ -1,21 +1,21 @@
 import { getValueFromReference, steps } from '@summerfi/sdk-common/simulation'
 import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
-import { isMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
-import { MorphoPaybackAction, MorphoWithdrawAction } from '../actions'
+import { isMorphoBlueLendingPool } from '../interfaces/IMorphoBlueLendingPool'
+import { MorphoBluePaybackAction, MorphoBlueWithdrawAction } from '../actions'
 import { SetApprovalAction } from '../../common'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
-export class MorphoPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.PaybackWithdrawStep> {
+export class MorphoBluePaybackWithdrawActionBuilder extends BaseActionBuilder<steps.PaybackWithdrawStep> {
   readonly actions: ActionBuilderUsedAction[] = [
     { action: SetApprovalAction, isOptionalTags: ['paybackAmount'] },
-    { action: MorphoPaybackAction, isOptionalTags: ['paybackAmount'] },
-    { action: MorphoWithdrawAction },
+    { action: MorphoBluePaybackAction, isOptionalTags: ['paybackAmount'] },
+    { action: MorphoBlueWithdrawAction },
   ]
 
   async build(params: ActionBuilderParams<steps.PaybackWithdrawStep>): Promise<void> {
     const { context, positionsManager, step, addressBookManager, user } = params
 
-    if (!isMorphoLendingPool(step.inputs.position.pool)) {
+    if (!isMorphoBlueLendingPool(step.inputs.position.pool)) {
       throw new Error('Invalid Morpho lending pool id')
     }
 
@@ -44,7 +44,7 @@ export class MorphoPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.
 
       context.addActionCall({
         step: params.step,
-        action: new MorphoPaybackAction(),
+        action: new MorphoBluePaybackAction(),
         arguments: {
           morphoLendingPool: step.inputs.position.pool,
           amount: getValueFromReference(step.inputs.paybackAmount),
@@ -62,7 +62,7 @@ export class MorphoPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.
 
     context.addActionCall({
       step: step,
-      action: new MorphoWithdrawAction(),
+      action: new MorphoBlueWithdrawAction(),
       arguments: {
         morphoLendingPool: step.inputs.position.pool,
         amount: step.inputs.withdrawAmount,

@@ -1,18 +1,23 @@
 import { ILendingPoolInfo, LendingPoolInfoDataSchema } from '@summerfi/sdk-common/protocols'
-import { IMorphoLendingPoolId, MorphoLendingPoolIdDataSchema } from './IMorphoLendingPoolId'
+import {
+  IMorphoBlueLendingPoolId,
+  MorphoBlueLendingPoolIdDataSchema,
+} from './IMorphoBlueLendingPoolId'
 import { z } from 'zod'
 import { ICollateralInfo, IDebtInfo } from '@summerfi/sdk-common'
 
 /**
- * @interface IMorphoLendingPoolInfo
+ * @interface IMorphoBlueLendingPoolInfo
  * @description Represents a lending pool info in the Morpho protocol
  *
  * Typescript forces the interface to re-declare any properties that have different BUT compatible types.
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
-export interface IMorphoLendingPoolInfo extends ILendingPoolInfo, IMorphoLendingPoolInfoData {
+export interface IMorphoBlueLendingPoolInfo
+  extends ILendingPoolInfo,
+    IMorphoBlueLendingPoolInfoData {
   /** The id of the lending pool */
-  readonly id: IMorphoLendingPoolId
+  readonly id: IMorphoBlueLendingPoolId
 
   // Re-declaring the properties with the correct types
   readonly collateral: ICollateralInfo
@@ -22,23 +27,25 @@ export interface IMorphoLendingPoolInfo extends ILendingPoolInfo, IMorphoLending
 /**
  * @description Zod schema for IMorphoLendingPoolInfo
  */
-export const MorphoLendingPoolInfoDataSchema = z.object({
+export const MorphoBlueLendingPoolInfoDataSchema = z.object({
   ...LendingPoolInfoDataSchema.shape,
-  id: MorphoLendingPoolIdDataSchema,
+  id: MorphoBlueLendingPoolIdDataSchema,
 })
 
 /**
  * Type for the data part of the IMorphoLendingPoolInfo interface
  */
-export type IMorphoLendingPoolInfoData = Readonly<z.infer<typeof MorphoLendingPoolInfoDataSchema>>
+export type IMorphoBlueLendingPoolInfoData = Readonly<
+  z.infer<typeof MorphoBlueLendingPoolInfoDataSchema>
+>
 
 /**
  * @description Type guard for IMorphoLendingPoolInfo
  * @param maybeLendingPoolInfo
  * @returns true if the object is an IMorphoLendingPoolInfo
  */
-export function isMorphoLendingPoolInfo(
+export function isMorphoBlueLendingPoolInfo(
   maybeLendingPoolInfo: unknown,
-): maybeLendingPoolInfo is IMorphoLendingPoolInfo {
-  return MorphoLendingPoolInfoDataSchema.safeParse(maybeLendingPoolInfo).success
+): maybeLendingPoolInfo is IMorphoBlueLendingPoolInfo {
+  return MorphoBlueLendingPoolInfoDataSchema.safeParse(maybeLendingPoolInfo).success
 }

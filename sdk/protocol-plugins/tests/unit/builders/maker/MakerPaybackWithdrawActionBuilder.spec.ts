@@ -19,10 +19,10 @@ import {
   MakerLendingPoolId,
   MakerPosition,
   MakerProtocol,
-  MorphoPosition,
-  MorphoLendingPool,
-  MorphoLendingPoolId,
-  MorphoProtocol,
+  MorphoBluePosition,
+  MorphoBlueLendingPool,
+  MorphoBlueLendingPoolId,
+  MorphoBlueProtocol,
   MakerPaybackWithdrawActionBuilder,
 } from '../../../../src'
 
@@ -87,17 +87,17 @@ describe('Maker Payback Withdraw Action Builder', () => {
     pool: pool,
   })
 
-  const wrongPosition = MorphoPosition.createFrom({
+  const wrongPosition = MorphoBluePosition.createFrom({
     type: PositionType.Multiply,
     id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '123' }),
     debtAmount: debtAmount,
     collateralAmount: collateralAmount,
-    pool: MorphoLendingPool.createFrom({
+    pool: MorphoBlueLendingPool.createFrom({
       collateralToken: WETH,
       debtToken: DAI,
-      id: MorphoLendingPoolId.createFrom({
+      id: MorphoBlueLendingPoolId.createFrom({
         marketId: '0x1234',
-        protocol: MorphoProtocol.createFrom({
+        protocol: MorphoBlueProtocol.createFrom({
           name: ProtocolName.MorphoBlue,
           chainInfo: ChainFamilyMap.Ethereum.Mainnet,
         }),

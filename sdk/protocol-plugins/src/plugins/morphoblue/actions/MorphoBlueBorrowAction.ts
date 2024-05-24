@@ -1,20 +1,20 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { ITokenAmount } from '@summerfi/sdk-common/common'
-import { IMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
-import { MorphoLLTVPrecision } from '../constants/MorphoConstants'
-import { MorphoMarketParametersAbi } from '../types/MorphoMarketParameters'
+import { IMorphoBlueLendingPool } from '../interfaces/IMorphoBlueLendingPool'
+import { MorphoBlueLLTVPrecision } from '../constants/MorphoBlueConstants'
+import { MorphoBlueMarketParametersAbi } from '../types/MorphoBlueMarketParameters'
 
-export class MorphoBorrowAction extends BaseAction<typeof MorphoBorrowAction.Config> {
+export class MorphoBlueBorrowAction extends BaseAction<typeof MorphoBlueBorrowAction.Config> {
   public static readonly Config = {
     name: 'MorphoBlueBorrow',
     version: 0,
-    parametersAbi: ['(MarketParams marketParams, uint256 amount)', MorphoMarketParametersAbi],
+    parametersAbi: ['(MarketParams marketParams, uint256 amount)', MorphoBlueMarketParametersAbi],
     storageInputs: [],
     storageOutputs: ['borrowedAmount'],
   } as const
 
   public encodeCall(
-    params: { morphoLendingPool: IMorphoLendingPool; amount: ITokenAmount },
+    params: { morphoLendingPool: IMorphoBlueLendingPool; amount: ITokenAmount },
     paramsMapping?: InputSlotsMapping,
   ): ActionCall {
     const { morphoLendingPool, amount } = params
@@ -28,7 +28,7 @@ export class MorphoBorrowAction extends BaseAction<typeof MorphoBorrowAction.Con
             oracle: morphoLendingPool.oracle.value,
             irm: morphoLendingPool.irm.value,
             lltv: BigInt(
-              morphoLendingPool.lltv.toLTV().toBaseUnit({ decimals: MorphoLLTVPrecision }),
+              morphoLendingPool.lltv.toLTV().toBaseUnit({ decimals: MorphoBlueLLTVPrecision }),
             ),
           },
           amount: BigInt(amount.toBaseUnit()),
@@ -39,6 +39,6 @@ export class MorphoBorrowAction extends BaseAction<typeof MorphoBorrowAction.Con
   }
 
   public get config() {
-    return MorphoBorrowAction.Config
+    return MorphoBlueBorrowAction.Config
   }
 }

@@ -1,31 +1,30 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { ITokenAmount } from '@summerfi/sdk-common/common'
-import { MorphoLLTVPrecision } from '../constants/MorphoConstants'
-import { IAddress } from '@summerfi/sdk-common'
-import { IMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
-import { MorphoMarketParametersAbi } from '../types/MorphoMarketParameters'
+import { MorphoBlueLLTVPrecision } from '../constants/MorphoBlueConstants'
+import { IMorphoBlueLendingPool } from '../interfaces/IMorphoBlueLendingPool'
+import { MorphoBlueMarketParametersAbi } from '../types/MorphoBlueMarketParameters'
 
-export class MorphoWithdrawAction extends BaseAction<typeof MorphoWithdrawAction.Config> {
+export class MorphoBlueDepositAction extends BaseAction<typeof MorphoBlueDepositAction.Config> {
   public static readonly Config = {
-    name: 'MorphoBlueWithdraw',
+    name: 'MorphoBlueDeposit',
     version: 0,
     parametersAbi: [
-      '(MarketParams marketParams, uint256 amount, address to)',
-      MorphoMarketParametersAbi,
+      '(MarketParams marketParams, uint256 amount, bool sumAmounts)',
+      MorphoBlueMarketParametersAbi,
     ],
-    storageInputs: ['marketParams', 'amount', 'to'],
-    storageOutputs: ['withdrawnAmount'],
+    storageInputs: ['marketParams', 'amount', 'sumAmounts'],
+    storageOutputs: ['depositedAmount'],
   } as const
 
   public encodeCall(
     params: {
-      morphoLendingPool: IMorphoLendingPool
+      morphoLendingPool: IMorphoBlueLendingPool
       amount: ITokenAmount
-      to: IAddress
+      sumAmounts: boolean
     },
     paramsMapping?: InputSlotsMapping,
   ): ActionCall {
-    const { morphoLendingPool, amount, to } = params
+    const { morphoLendingPool, amount, sumAmounts } = params
 
     return this._encodeCall({
       arguments: [
@@ -36,11 +35,11 @@ export class MorphoWithdrawAction extends BaseAction<typeof MorphoWithdrawAction
             oracle: morphoLendingPool.oracle.value,
             irm: morphoLendingPool.irm.value,
             lltv: BigInt(
-              morphoLendingPool.lltv.toLTV().toBaseUnit({ decimals: MorphoLLTVPrecision }),
+              morphoLendingPool.lltv.toLTV().toBaseUnit({ decimals: MorphoBlueLLTVPrecision }),
             ),
           },
           amount: BigInt(amount.toBaseUnit()),
-          to: to.value,
+          sumAmounts: sumAmounts,
         },
       ],
       mapping: paramsMapping,
@@ -48,6 +47,6 @@ export class MorphoWithdrawAction extends BaseAction<typeof MorphoWithdrawAction
   }
 
   public get config() {
-    return MorphoWithdrawAction.Config
+    return MorphoBlueDepositAction.Config
   }
 }

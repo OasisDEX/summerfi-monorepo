@@ -11,19 +11,23 @@ import {
   PoolType,
   ProtocolName,
 } from '@summerfi/sdk-common/protocols'
-import { MorphoLendingPool } from './MorphoLendingPool'
+import { MorphoBlueLendingPool } from './MorphoBlueLendingPool'
 import { morphoBlueAbi, morphoBlueOracleAbi } from '@summerfi/abis'
 import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 import {
-  IMorphoLendingPoolId,
-  IMorphoLendingPoolIdData,
-  isMorphoLendingPoolId,
-} from '../interfaces/IMorphoLendingPoolId'
-import { MorphoStepBuilders } from '../builders/MorphoStepBuilders'
-import { IMorphoLendingPool, IMorphoPositionIdData, isMorphoPositionId } from '../interfaces'
-import { MorphoLendingPoolInfo } from './MorphoLendingPoolInfo'
+  IMorphoBlueLendingPoolId,
+  IMorphoBlueLendingPoolIdData,
+  isMorphoBlueLendingPoolId,
+} from '../interfaces/IMorphoBlueLendingPoolId'
+import { MorphoBlueStepBuilders } from '../builders/MorphoBlueStepBuilders'
+import {
+  IMorphoBlueLendingPool,
+  IMorphoBluePositionIdData,
+  isMorphoBluePositionId,
+} from '../interfaces'
+import { MorphoBlueLendingPoolInfo } from './MorphoBlueLendingPoolInfo'
 import {
   Address,
   DebtInfo,
@@ -36,22 +40,25 @@ import {
   TokenAmount,
 } from '@summerfi/sdk-common'
 import { BaseProtocolPlugin } from '../../../implementation'
-import { MorphoLLTVPrecision, MorphoOraclePricePrecision } from '../constants/MorphoConstants'
-import { MorphoMarketInfo } from '../types/MorphoMarketInfo'
+import {
+  MorphoBlueLLTVPrecision,
+  MorphoBlueOraclePricePrecision,
+} from '../constants/MorphoBlueConstants'
+import { MorphoBlueMarketInfo } from '../types/MorphoBlueMarketInfo'
 import { BigNumber } from 'bignumber.js'
-import { MorphoMarketParameters } from '../types'
+import { MorphoBlueMarketParameters } from '../types'
 
 /**
- * @class MorphoProtocolPlugin
+ * @class MorphoPBluerotocolPlugin
  * @description Protocol plugin for the Morpho protocol
  * @see BaseProtocolPlugin
  */
-export class MorphoProtocolPlugin extends BaseProtocolPlugin {
+export class MorphoBlueProtocolPlugin extends BaseProtocolPlugin {
   static readonly MorphoBlueContractName = 'MorphoBlue'
 
   readonly protocolName: ProtocolName.MorphoBlue = ProtocolName.MorphoBlue
   readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
-  readonly stepBuilders: Partial<ActionBuildersMap> = MorphoStepBuilders
+  readonly stepBuilders: Partial<ActionBuildersMap> = MorphoBlueStepBuilders
 
   initialize(params: { context: IProtocolPluginContext }) {
     super.initialize(params)
@@ -70,8 +77,8 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
   /** @see BaseProtocolPlugin._validateLendingPoolId */
   protected _validateLendingPoolId(
     candidate: ILendingPoolIdData,
-  ): asserts candidate is IMorphoLendingPoolIdData {
-    if (!isMorphoLendingPoolId(candidate)) {
+  ): asserts candidate is IMorphoBlueLendingPoolIdData {
+    if (!isMorphoBlueLendingPoolId(candidate)) {
       throw new Error(`Invalid Morpho pool ID: ${JSON.stringify(candidate)}`)
     }
   }
@@ -79,8 +86,8 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
   /** @see BaseProtocolPlugin._validatePositionId */
   protected _validatePositionId(
     candidate: IPositionIdData,
-  ): asserts candidate is IMorphoPositionIdData {
-    if (!isMorphoPositionId(candidate)) {
+  ): asserts candidate is IMorphoBluePositionIdData {
+    if (!isMorphoBluePositionId(candidate)) {
       throw new Error(`Invalid Morpho position ID: ${JSON.stringify(candidate)}`)
     }
   }
@@ -89,11 +96,11 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
 
   /** @see BaseProtocolPlugin._getLendingPoolImpl */
   protected async _getLendingPoolImpl(
-    morphoLendingPoolId: IMorphoLendingPoolId,
-  ): Promise<MorphoLendingPool> {
+    morphoLendingPoolId: IMorphoBlueLendingPoolId,
+  ): Promise<MorphoBlueLendingPool> {
     const marketParams = await this._getMarketParams(morphoLendingPoolId)
 
-    return MorphoLendingPool.createFrom({
+    return MorphoBlueLendingPool.createFrom({
       type: PoolType.Lending,
       id: morphoLendingPoolId,
       collateralToken: marketParams.collateralToken,
@@ -106,8 +113,8 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
 
   /** @see BaseProtocolPlugin._getLendingPoolInfoImpl */
   protected async _getLendingPoolInfoImpl(
-    morphoLendingPoolId: IMorphoLendingPoolId,
-  ): Promise<MorphoLendingPoolInfo> {
+    morphoLendingPoolId: IMorphoBlueLendingPoolId,
+  ): Promise<MorphoBlueLendingPoolInfo> {
     const morphoLendingPool = await this._getLendingPoolImpl(morphoLendingPoolId)
     const marketInfo = await this._getMarketInfo(morphoLendingPool)
     const marketCollateralPriceInDebt = await this._getMarketOraclePrice(morphoLendingPool)
@@ -124,7 +131,7 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
       marketCollateralPriceInDebt,
     })
 
-    return MorphoLendingPoolInfo.createFrom({
+    return MorphoBlueLendingPoolInfo.createFrom({
       type: PoolType.Lending,
       id: morphoLendingPoolId,
       collateral: collateralInfo,
@@ -136,7 +143,7 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
 
   /** @see BaseProtocolPlugin.getPosition */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getPosition(positionId: IMorphoPositionIdData): Promise<Position> {
+  async getPosition(positionId: IMorphoBluePositionIdData): Promise<Position> {
     this._validatePositionId(positionId)
 
     throw new Error(`Not implemented ${positionId}`)
@@ -162,8 +169,8 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
    * @returns The collateral info
    */
   private async _getCollateralInfo(params: {
-    morphoLendingPool: IMorphoLendingPool
-    marketInfo: MorphoMarketInfo
+    morphoLendingPool: IMorphoBlueLendingPool
+    marketInfo: MorphoBlueMarketInfo
     marketCollateralPriceInDebt: IPrice
   }): Promise<CollateralInfo> {
     const { morphoLendingPool, marketInfo, marketCollateralPriceInDebt } = params
@@ -198,8 +205,8 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
    * @returns The debt info
    */
   private async _getDebtInfo(params: {
-    morphoLendingPool: IMorphoLendingPool
-    marketInfo: MorphoMarketInfo
+    morphoLendingPool: IMorphoBlueLendingPool
+    marketInfo: MorphoBlueMarketInfo
     marketCollateralPriceInDebt: IPrice
   }) {
     const { morphoLendingPool, marketInfo, marketCollateralPriceInDebt } = params
@@ -237,7 +244,7 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
    * @param morphoLendingPoolId The lending pool ID
    * @returns The market oracle price
    */
-  private async _getMarketOraclePrice(morphoLendingPool: IMorphoLendingPool): Promise<IPrice> {
+  private async _getMarketOraclePrice(morphoLendingPool: IMorphoBlueLendingPool): Promise<IPrice> {
     const [price] = await this.context.provider.multicall({
       contracts: [
         {
@@ -251,7 +258,7 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
     })
 
     const descaledPrice = new BigNumber(price.toString())
-      .div(new BigNumber(10).pow(MorphoOraclePricePrecision))
+      .div(new BigNumber(10).pow(MorphoBlueOraclePricePrecision))
       .toString()
 
     return Price.createFrom({
@@ -267,10 +274,12 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
    * @param morphoLendingPoolId The lending pool ID
    * @returns The market info
    */
-  private async _getMarketInfo(morphoLendingPool: IMorphoLendingPool): Promise<MorphoMarketInfo> {
+  private async _getMarketInfo(
+    morphoLendingPool: IMorphoBlueLendingPool,
+  ): Promise<MorphoBlueMarketInfo> {
     const morphoBlueAddress = await this._getContractAddress({
       chainInfo: morphoLendingPool.id.protocol.chainInfo,
-      contractName: MorphoProtocolPlugin.MorphoBlueContractName,
+      contractName: MorphoBlueProtocolPlugin.MorphoBlueContractName,
     })
     const marketParamsId = morphoLendingPool.id.marketId
 
@@ -311,11 +320,11 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
    * @returns The market parameters
    */
   private async _getMarketParams(
-    morphoLendingPoolId: IMorphoLendingPoolId,
-  ): Promise<MorphoMarketParameters> {
+    morphoLendingPoolId: IMorphoBlueLendingPoolId,
+  ): Promise<MorphoBlueMarketParameters> {
     const morphoBlueAddress = await this._getContractAddress({
       chainInfo: morphoLendingPoolId.protocol.chainInfo,
-      contractName: MorphoProtocolPlugin.MorphoBlueContractName,
+      contractName: MorphoBlueProtocolPlugin.MorphoBlueContractName,
     })
     const marketParamsId = morphoLendingPoolId.marketId
 
@@ -354,7 +363,7 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
     }
 
     const lltv = new BigNumber(String(marketParameters[4]))
-      .div(new BigNumber(10).pow(MorphoLLTVPrecision))
+      .div(new BigNumber(10).pow(MorphoBlueLLTVPrecision))
       .multipliedBy(100)
       .toNumber()
 
@@ -375,7 +384,7 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
    * @param morphoLendingPoolId
    * @returns The liquidation incentive factor
    */
-  private _getLiquidationPenalty(morphoLendingPool: IMorphoLendingPool): IPercentage {
+  private _getLiquidationPenalty(morphoLendingPool: IMorphoBlueLendingPool): IPercentage {
     const ONE = new BigNumber(1)
     const MAX_LIF = new BigNumber(1.15)
     const BETA = new BigNumber(0.3)
