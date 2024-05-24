@@ -51,7 +51,7 @@ export default defineConfig({
       formats: ['es'],
     },
     rollupOptions: {
-      external: ['react', 'react/jsx-runtime', 'next/link'],
+      external: ['react', 'react/jsx-runtime', 'next/link', 'lodash'],
       input: Object.fromEntries(
         glob
           .sync('src/**/*.{ts,tsx}')

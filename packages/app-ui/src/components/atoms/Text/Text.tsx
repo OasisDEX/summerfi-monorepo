@@ -1,4 +1,4 @@
-import { FC, forwardRef } from 'react'
+import { createElement, forwardRef } from 'react'
 
 import { getAtomClassList } from '@/components/atoms/getAtomClassList'
 import { AtomProps } from '@/components/atoms/types'
@@ -20,18 +20,15 @@ type AllowedHtmlTags =
   | 'small'
   | 'span'
 
-export const Text: FC<AtomProps<AllowedHtmlTags, ClassNames>> = forwardRef(
-  ({ as = 'span', className, variant = 'p1', ...props }, ref) => {
-    const Component = as
-
-    return (
-      <Component
-        {...{
-          ref,
-          className: getAtomClassList({ className, variant: classNames[variant] }),
-          ...props,
-        }}
-      />
-    )
-  },
-)
+export const Text = forwardRef<
+  HTMLElementTagNameMap[AllowedHtmlTags],
+  AtomProps<AllowedHtmlTags, ClassNames>
+>(({ as = 'span', className, variant = 'p1', ...props }, ref) => {
+  return createElement(as, {
+    ...{
+      ...props,
+      ref,
+      className: getAtomClassList({ className, variant: classNames[variant] }),
+    },
+  })
+})

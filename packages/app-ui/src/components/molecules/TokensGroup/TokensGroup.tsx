@@ -29,7 +29,7 @@ export function TokensGroup({ network, tokens }: TokensGroupProps) {
         className={classNames.tokensGroupList}
         style={{
           ...(network && {
-            pr: `${networkSize * networkSizeScaleFactor}px`,
+            paddingRight: `${networkSize * networkSizeScaleFactor}px`,
           }),
         }}
       >

@@ -1,11 +1,11 @@
-import React, { FC, JSX } from 'react'
+import { FC } from 'react'
 
 interface IconProps {
   variant?: 'large' | 'small'
   role?: 'presentation'
   focusable?: boolean
   icon: {
-    path: JSX.Element
+    path: React.JSX.Element
     viewBox?: string
   }
 }

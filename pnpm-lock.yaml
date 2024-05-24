@@ -580,12 +580,6 @@ importers:
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared
-      '@types/lodash':
-        specifier: ^4.14.109
-        version: 4.17.1
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
       next:
         specifier: ^14.2.3
         version: 14.2.3(@babel/core@7.24.4)(react-dom@18.3.1)(react@18.3.1)(sass@1.77.0)
@@ -602,6 +596,9 @@ importers:
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
+      '@types/lodash':
+        specifier: ^4.14.109
+        version: 4.17.1
       '@types/react':
         specifier: ^18.3.1
         version: 18.3.1
@@ -787,6 +784,9 @@ importers:
 
   packages/app-tokens:
     dependencies:
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -803,6 +803,9 @@ importers:
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      '@types/lodash':
+        specifier: ^4.14.109
+        version: 4.17.1
       '@types/react':
         specifier: ^18.3.1
         version: 18.3.1
@@ -830,12 +833,18 @@ importers:
       '@summerfi/app-tokens':
         specifier: workspace:*
         version: link:../app-tokens
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../serverless-shared
       '@tabler/icons-react':
         specifier: ^3.4.0
         version: 3.4.0(react@18.3.1)
       include-media:
         specifier: 2.0.0
         version: 2.0.0
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       next:
         specifier: ^14.2.3
         version: 14.2.3(@babel/core@7.24.4)(react-dom@18.3.1)(react@18.3.1)(sass@1.77.0)
@@ -864,6 +873,9 @@ importers:
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      '@types/lodash':
+        specifier: ^4.14.109
+        version: 4.17.1
       '@types/node':
         specifier: 20.12.7
         version: 20.12.7

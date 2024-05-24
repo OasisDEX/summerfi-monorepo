@@ -142,3 +142,11 @@ export interface NavigationMenuPanelListItem {
   title: ReactNode
   url?: string
 }
+
+export type NavigationLinkTypes =
+  | NavigationLink
+  | NavigationLinkWithNestedLinks
+  | NavigationFeaturedProduct
+  | NavigationTopProducts
+  | NavigationTopToken
+  | NavigationSpecialModule

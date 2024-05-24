@@ -1,13 +1,6 @@
 import { TokenConfig } from '../types'
 import { tokenConfigs } from '../config'
-
-function keyBy<T>(array: T[], key: keyof T): Record<string | number | symbol, T> {
-  return array.reduce((result, item) => {
-    const keyValue = item[key];
-    result[keyValue as string | number | symbol] = item;
-    return result;
-  }, {} as Record<string | number | symbol, T>);
-}
+import { keyBy } from 'lodash'
 
 export const tokens: TokenConfig[] = [...tokenConfigs]
 export const tokensBySymbol = keyBy(tokens, 'symbol')
