@@ -219,228 +219,232 @@ export const handler = async (
         ])
         .execute()
 
-      await Promise.all(
-        chunk.map(async (record) => {
-          let userAddress = userAddresses.find((ua) => ua.address === record.user)
+      await db.transaction().execute(async (transaction) => {
+        await Promise.all(
+          chunk.map(async (record) => {
+            let userAddress = userAddresses.find((ua) => ua.address === record.user)
 
-          if (!userAddress) {
-            const result = await db
-              .insertInto('blockchainUser')
-              .values({ category: null })
-              .returning(['id'])
-              .executeTakeFirstOrThrow()
-            userAddress = await db
-              .insertInto('userAddress')
-              .values({ address: record.user, userId: result.id })
-              .returningAll()
-              .executeTakeFirstOrThrow()
-          }
+            if (!userAddress) {
+              const result = await transaction
+                .insertInto('blockchainUser')
+                .values({ category: null })
+                .returning(['id'])
+                .executeTakeFirstOrThrow()
+              userAddress = await transaction
+                .insertInto('userAddress')
+                .values({ address: record.user, userId: result.id })
+                .returningAll()
+                .executeTakeFirstOrThrow()
+            }
 
-          const positionId = positionIdResolver(record.positionId)
+            const positionId = positionIdResolver(record.positionId)
 
-          let position = positions.find((p) => p.externalId === record.positionId)
-          if (!position) {
-            position = await db
-              .insertInto('position')
-              .values({
-                externalId: record.positionId,
-                market: record.marketId,
-                protocol: positionId.protocol,
-                type: positionId.positionType,
-                userAddressId: userAddress.id,
-                vaultId: record.vaultId,
-                chainId: positionId.chainId,
-                address: positionId.address,
-              })
-              .returningAll()
-              .executeTakeFirstOrThrow()
-          }
+            let position = positions.find((p) => p.externalId === record.positionId)
+            if (!position) {
+              position = await transaction
+                .insertInto('position')
+                .values({
+                  externalId: record.positionId,
+                  market: record.marketId,
+                  protocol: positionId.protocol,
+                  type: positionId.positionType,
+                  userAddressId: userAddress.id,
+                  vaultId: record.vaultId,
+                  chainId: positionId.chainId,
+                  address: positionId.address,
+                })
+                .returningAll()
+                .executeTakeFirstOrThrow()
+            }
 
-          if (record.points.openPositionsPoints > 0) {
-            await db
-              .insertInto('pointsDistribution')
-              .values({
-                description: 'Points for opening a position',
-                points: record.points.openPositionsPoints,
-                positionId: position.id,
-                type: 'OPEN_POSITION',
-              })
-              .executeTakeFirstOrThrow()
-          }
+            if (record.points.openPositionsPoints > 0) {
+              await transaction
+                .insertInto('pointsDistribution')
+                .values({
+                  description: 'Points for opening a position',
+                  points: record.points.openPositionsPoints,
+                  positionId: position.id,
+                  type: 'OPEN_POSITION',
+                })
+                .executeTakeFirstOrThrow()
+            }
 
-          const currentDate = new Date()
-          const dueDateTimestamp = currentDate.setDate(currentDate.getDate() + 30)
-          const dueDate = new Date(dueDateTimestamp)
+            const currentDate = new Date()
+            const dueDateTimestamp = currentDate.setDate(currentDate.getDate() + 30)
+            const dueDate = new Date(dueDateTimestamp)
 
-          if (record.points.migrationPoints > 0) {
-            const eligibilityCondition = await db
-              .insertInto('eligibilityCondition')
-              .values({
-                type: eligibilityConditions.POSITION_OPEN_TIME.type,
-                description: eligibilityConditions.POSITION_OPEN_TIME.description,
-                metadata: JSON.stringify(eligibilityConditions.POSITION_OPEN_TIME.metadata),
-                dueDate: dueDate,
-              })
-              .returningAll()
-              .executeTakeFirstOrThrow()
+            if (record.points.migrationPoints > 0) {
+              const eligibilityCondition = await transaction
+                .insertInto('eligibilityCondition')
+                .values({
+                  type: eligibilityConditions.POSITION_OPEN_TIME.type,
+                  description: eligibilityConditions.POSITION_OPEN_TIME.description,
+                  metadata: JSON.stringify(eligibilityConditions.POSITION_OPEN_TIME.metadata),
+                  dueDate: dueDate,
+                })
+                .returningAll()
+                .executeTakeFirstOrThrow()
 
-            await db
-              .insertInto('pointsDistribution')
-              .values({
-                description: 'Points for migrations',
-                points: record.points.migrationPoints,
-                positionId: position.id,
-                type: 'MIGRATION',
-                eligibilityConditionId: eligibilityCondition.id,
-              })
-              .executeTakeFirstOrThrow()
-          }
+              await transaction
+                .insertInto('pointsDistribution')
+                .values({
+                  description: 'Points for migrations',
+                  points: record.points.migrationPoints,
+                  positionId: position.id,
+                  type: 'MIGRATION',
+                  eligibilityConditionId: eligibilityCondition.id,
+                })
+                .executeTakeFirstOrThrow()
+            }
 
-          if (record.points.swapPoints > 0) {
-            await db
-              .insertInto('pointsDistribution')
-              .values({
-                description: 'Points for swap',
-                points: record.points.swapPoints,
-                positionId: position.id,
-                type: 'SWAP',
-              })
-              .executeTakeFirstOrThrow()
-          }
+            if (record.points.swapPoints > 0) {
+              await transaction
+                .insertInto('pointsDistribution')
+                .values({
+                  description: 'Points for swap',
+                  points: record.points.swapPoints,
+                  positionId: position.id,
+                  type: 'SWAP',
+                })
+                .executeTakeFirstOrThrow()
+            }
 
-          // Multipliers
-          // protocolBoostMultiplier: -> user multiplier -> type = 'PROTOCOL_BOOST'
-          //     swapMultiplier: number -> user multiplier -> type = 'SWAP'
-          //     timeOpenMultiplier: number -> position multiplier -> type = 'TIME_OPEN'
-          //     automationProtectionMultiplier: number -> position multiplier -> type = 'AUTOMATION'
-          //     lazyVaultMultiplier: number -> position multiplier -> type = 'LAZY_VAULT'
+            // Multipliers
+            // protocolBoostMultiplier: -> user multiplier -> type = 'PROTOCOL_BOOST'
+            //     swapMultiplier: number -> user multiplier -> type = 'SWAP'
+            //     timeOpenMultiplier: number -> position multiplier -> type = 'TIME_OPEN'
+            //     automationProtectionMultiplier: number -> position multiplier -> type = 'AUTOMATION'
+            //     lazyVaultMultiplier: number -> position multiplier -> type = 'LAZY_VAULT'
 
-          const userMultipliers = usersMultipliers.filter((m) => m.userAddressId === userAddress.id)
-          const positionMultipliers = positionsMultipliers.filter(
-            (m) => m.positionId === position.id,
-          )
+            const userMultipliers = usersMultipliers.filter(
+              (m) => m.userAddressId === userAddress.id,
+            )
+            const positionMultipliers = positionsMultipliers.filter(
+              (m) => m.positionId === position.id,
+            )
 
-          let procotolBoostMultiplier = userMultipliers.find((m) => m.type === 'PROTOCOL_BOOST')
+            let procotolBoostMultiplier = userMultipliers.find((m) => m.type === 'PROTOCOL_BOOST')
 
-          if (!procotolBoostMultiplier) {
-            procotolBoostMultiplier = await db
-              .insertInto('multiplier')
-              .values({
-                userAddressId: userAddress.id,
-                type: 'PROTOCOL_BOOST',
-                value: record.multipliers.protocolBoostMultiplier,
-              })
-              .returningAll()
-              .executeTakeFirstOrThrow()
-          } else {
-            await db
-              .updateTable('multiplier')
-              .set('value', record.multipliers.protocolBoostMultiplier)
-              .where('id', '=', procotolBoostMultiplier.id)
-              .execute()
-          }
+            if (!procotolBoostMultiplier) {
+              procotolBoostMultiplier = await transaction
+                .insertInto('multiplier')
+                .values({
+                  userAddressId: userAddress.id,
+                  type: 'PROTOCOL_BOOST',
+                  value: record.multipliers.protocolBoostMultiplier,
+                })
+                .returningAll()
+                .executeTakeFirstOrThrow()
+            } else {
+              await transaction
+                .updateTable('multiplier')
+                .set('value', record.multipliers.protocolBoostMultiplier)
+                .where('id', '=', procotolBoostMultiplier.id)
+                .execute()
+            }
 
-          let swapMultiplier = userMultipliers.find((m) => m.type === 'SWAP')
+            let swapMultiplier = userMultipliers.find((m) => m.type === 'SWAP')
 
-          if (!swapMultiplier) {
-            swapMultiplier = await db
-              .insertInto('multiplier')
-              .values({
-                userAddressId: userAddress.id,
-                type: 'SWAP',
-                value: record.multipliers.swapMultiplier,
-              })
-              .returningAll()
-              .executeTakeFirstOrThrow()
-          } else {
-            await db
-              .updateTable('multiplier')
-              .set('value', record.multipliers.swapMultiplier)
-              .where('id', '=', swapMultiplier.id)
-              .execute()
-          }
+            if (!swapMultiplier) {
+              swapMultiplier = await transaction
+                .insertInto('multiplier')
+                .values({
+                  userAddressId: userAddress.id,
+                  type: 'SWAP',
+                  value: record.multipliers.swapMultiplier,
+                })
+                .returningAll()
+                .executeTakeFirstOrThrow()
+            } else {
+              await transaction
+                .updateTable('multiplier')
+                .set('value', record.multipliers.swapMultiplier)
+                .where('id', '=', swapMultiplier.id)
+                .execute()
+            }
 
-          let timeOpenMultiplier = positionMultipliers.find((m) => m.type === 'TIME_OPEN')
+            let timeOpenMultiplier = positionMultipliers.find((m) => m.type === 'TIME_OPEN')
 
-          if (!timeOpenMultiplier) {
-            timeOpenMultiplier = await db
-              .insertInto('multiplier')
-              .values({
-                positionId: position.id,
-                type: 'TIME_OPEN',
-                value: record.multipliers.timeOpenMultiplier,
-              })
-              .returningAll()
-              .executeTakeFirstOrThrow()
-          } else {
-            await db
-              .updateTable('multiplier')
-              .set('value', record.multipliers.timeOpenMultiplier)
-              .where('id', '=', timeOpenMultiplier.id)
-              .execute()
-          }
+            if (!timeOpenMultiplier) {
+              timeOpenMultiplier = await transaction
+                .insertInto('multiplier')
+                .values({
+                  positionId: position.id,
+                  type: 'TIME_OPEN',
+                  value: record.multipliers.timeOpenMultiplier,
+                })
+                .returningAll()
+                .executeTakeFirstOrThrow()
+            } else {
+              await transaction
+                .updateTable('multiplier')
+                .set('value', record.multipliers.timeOpenMultiplier)
+                .where('id', '=', timeOpenMultiplier.id)
+                .execute()
+            }
 
-          let automationProtectionMultiplier = positionMultipliers.find(
-            (m) => m.type === 'AUTOMATION',
-          )
+            let automationProtectionMultiplier = positionMultipliers.find(
+              (m) => m.type === 'AUTOMATION',
+            )
 
-          if (!automationProtectionMultiplier) {
-            automationProtectionMultiplier = await db
-              .insertInto('multiplier')
-              .values({
-                positionId: position.id,
-                type: 'AUTOMATION',
-                value: record.multipliers.automationProtectionMultiplier,
-              })
-              .returningAll()
-              .executeTakeFirstOrThrow()
-          } else {
-            await db
-              .updateTable('multiplier')
-              .set('value', record.multipliers.automationProtectionMultiplier)
-              .where('id', '=', automationProtectionMultiplier.id)
-              .execute()
-          }
+            if (!automationProtectionMultiplier) {
+              automationProtectionMultiplier = await transaction
+                .insertInto('multiplier')
+                .values({
+                  positionId: position.id,
+                  type: 'AUTOMATION',
+                  value: record.multipliers.automationProtectionMultiplier,
+                })
+                .returningAll()
+                .executeTakeFirstOrThrow()
+            } else {
+              await transaction
+                .updateTable('multiplier')
+                .set('value', record.multipliers.automationProtectionMultiplier)
+                .where('id', '=', automationProtectionMultiplier.id)
+                .execute()
+            }
 
-          const lazyVaultMultiplier = positionMultipliers.find((m) => m.type === 'LAZY_VAULT')
-          if (!lazyVaultMultiplier) {
-            await db
-              .insertInto('multiplier')
-              .values({
-                positionId: position.id,
-                type: 'LAZY_VAULT',
-                value: record.multipliers.lazyVaultMultiplier,
-              })
-              .execute()
-          } else {
-            await db
-              .updateTable('multiplier')
-              .set('value', record.multipliers.lazyVaultMultiplier)
-              .where('id', '=', lazyVaultMultiplier.id)
-              .execute()
-          }
-        }),
-      )
+            const lazyVaultMultiplier = positionMultipliers.find((m) => m.type === 'LAZY_VAULT')
+            if (!lazyVaultMultiplier) {
+              await transaction
+                .insertInto('multiplier')
+                .values({
+                  positionId: position.id,
+                  type: 'LAZY_VAULT',
+                  value: record.multipliers.lazyVaultMultiplier,
+                })
+                .execute()
+            } else {
+              await transaction
+                .updateTable('multiplier')
+                .set('value', record.multipliers.lazyVaultMultiplier)
+                .where('id', '=', lazyVaultMultiplier.id)
+                .execute()
+            }
+          }),
+        )
 
-      logger.info(`Processed: Chunk ${i} of ${chunkedPoints.length}`)
-    }
+        logger.info(`Processed: Chunk ${i} of ${chunkedPoints.length}`)
 
-    await db
-      .insertInto('updatePointsChangelog')
-      .values({
-        endTimestamp: new Date(endTimestamp * 1000),
-        startTimestamp: new Date(startTimestamp * 1000),
-        metadata: {
-          positions: points.length,
-        },
+        await transaction
+          .insertInto('updatePointsChangelog')
+          .values({
+            endTimestamp: new Date(endTimestamp * 1000),
+            startTimestamp: new Date(startTimestamp * 1000),
+            metadata: {
+              positions: points.length,
+            },
+          })
+          .executeTakeFirstOrThrow()
+
+        await transaction
+          .updateTable('updatePointsLastRun')
+          .set('lastTimestamp', new Date(endTimestamp * 1000))
+          .where('id', '=', LAST_RUN_ID)
+          .execute()
       })
-      .executeTakeFirstOrThrow()
-
-    await db
-      .updateTable('updatePointsLastRun')
-      .set('lastTimestamp', new Date(endTimestamp * 1000))
-      .where('id', '=', LAST_RUN_ID)
-      .execute()
+    }
   } catch (e) {
     logger.error('Failed to lock update points', { error: e })
     return
@@ -508,31 +512,33 @@ async function checkMigrationEligibility(db: Kysely<Database>, positionPoints: P
     .execute()
 
   if (existingPointDistributionsWithEligibilityCondition.length > 0) {
-    existingPointDistributionsWithEligibilityCondition.forEach(async (point) => {
-      if (
-        point.dueDate &&
-        point.type == eligibilityConditions.POSITION_OPEN_TIME.type &&
-        point.dueDate < new Date()
-      ) {
-        const positionInSnapshot = positionPoints.find((p) => p.positionId === point.externalId)
-        if (!positionInSnapshot || positionInSnapshot.netValue <= 0) {
-          await db.deleteFrom('pointsDistribution').where('id', '=', point.id).execute()
-          await db
-            .deleteFrom('eligibilityCondition')
-            .where('id', '=', point.eligibilityConditionId)
-            .execute()
-        } else if (positionInSnapshot.netValue > 0) {
-          await db
-            .updateTable('pointsDistribution')
-            .set({ eligibilityConditionId: null })
-            .where('id', '=', point.id)
-            .execute()
-          await db
-            .deleteFrom('eligibilityCondition')
-            .where('id', '=', point.eligibilityConditionId)
-            .execute()
+    await db.transaction().execute(async (transaction) => {
+      existingPointDistributionsWithEligibilityCondition.forEach(async (point) => {
+        if (
+          point.dueDate &&
+          point.type == eligibilityConditions.POSITION_OPEN_TIME.type &&
+          point.dueDate < new Date()
+        ) {
+          const positionInSnapshot = positionPoints.find((p) => p.positionId === point.externalId)
+          if (!positionInSnapshot || positionInSnapshot.netValue <= 0) {
+            await transaction.deleteFrom('pointsDistribution').where('id', '=', point.id).execute()
+            await transaction
+              .deleteFrom('eligibilityCondition')
+              .where('id', '=', point.eligibilityConditionId)
+              .execute()
+          } else if (positionInSnapshot.netValue > 0) {
+            await transaction
+              .updateTable('pointsDistribution')
+              .set({ eligibilityConditionId: null })
+              .where('id', '=', point.id)
+              .execute()
+            await transaction
+              .deleteFrom('eligibilityCondition')
+              .where('id', '=', point.eligibilityConditionId)
+              .execute()
+          }
         }
-      }
+      })
     })
   }
 }
@@ -572,61 +578,63 @@ async function checkOpenedPositionEligibility(
     .execute()
 
   if (existingUsersWithEligibilityCondition.length > 0) {
-    existingUsersWithEligibilityCondition.forEach(async (user) => {
-      if (
-        user.dueDate &&
-        user.type == eligibilityConditions.BECOME_SUMMER_USER.type &&
-        user.dueDate >= new Date()
-      ) {
-        // get all the positions of the user that are eligible for a check (exist in current points distribution)
-        const eligiblePositionsFromPointsAccrual = positionPoints
-          .filter(
-            (p) =>
-              p.netValue >= 500 &&
-              p.positionCreated * 1000 < Date.now() - FOURTEEN_DAYS_IN_MILLISECONDS,
-          )
-          .filter((p) => p.user === user.address)
-          .sort((a, b) => a.positionCreated - b.positionCreated)
-        if (eligiblePositionsFromPointsAccrual.length == 0) {
-          return
-        } else {
-          const oldestEligiblePosition = eligiblePositionsFromPointsAccrual[0]
-          const becomeSummerUserMultiplier = getBecomeSummerUserMultiplier(
-            oldestEligiblePosition.positionCreated,
-          )
+    await db.transaction().execute(async (transaction) => {
+      existingUsersWithEligibilityCondition.forEach(async (user) => {
+        if (
+          user.dueDate &&
+          user.type == eligibilityConditions.BECOME_SUMMER_USER.type &&
+          user.dueDate >= new Date()
+        ) {
+          // get all the positions of the user that are eligible for a check (exist in current points distribution)
+          const eligiblePositionsFromPointsAccrual = positionPoints
+            .filter(
+              (p) =>
+                p.netValue >= 500 &&
+                p.positionCreated * 1000 < Date.now() - FOURTEEN_DAYS_IN_MILLISECONDS,
+            )
+            .filter((p) => p.user === user.address)
+            .sort((a, b) => a.positionCreated - b.positionCreated)
+          if (eligiblePositionsFromPointsAccrual.length == 0) {
+            return
+          } else {
+            const oldestEligiblePosition = eligiblePositionsFromPointsAccrual[0]
+            const becomeSummerUserMultiplier = getBecomeSummerUserMultiplier(
+              oldestEligiblePosition.positionCreated,
+            )
 
-          const pointsDistributions = await db
-            .selectFrom('pointsDistribution')
-            .where('userAddressId', '=', user.id)
-            .where((eb) => eb('type', '=', 'Snapshot_General').or('type', '=', 'Snapshot_Defi'))
-            .selectAll()
-            .execute()
-          pointsDistributions.forEach(async (pointsDistribution) => {
-            await db
-              .updateTable('pointsDistribution')
-              .set({
-                eligibilityConditionId: null,
-                points: +pointsDistribution.points * becomeSummerUserMultiplier,
-              })
-              .where('id', '=', pointsDistribution.id)
+            const pointsDistributions = await transaction
+              .selectFrom('pointsDistribution')
+              .where('userAddressId', '=', user.id)
+              .where((eb) => eb('type', '=', 'Snapshot_General').or('type', '=', 'Snapshot_Defi'))
+              .selectAll()
               .execute()
-          })
+            pointsDistributions.forEach(async (pointsDistribution) => {
+              await transaction
+                .updateTable('pointsDistribution')
+                .set({
+                  eligibilityConditionId: null,
+                  points: +pointsDistribution.points * becomeSummerUserMultiplier,
+                })
+                .where('id', '=', pointsDistribution.id)
+                .execute()
+            })
+          }
+        } else if (
+          user.dueDate &&
+          user.type == eligibilityConditions.BECOME_SUMMER_USER.type &&
+          user.dueDate < new Date()
+        ) {
+          // if the due date is exceeded we delete all the points distribution and the eligibility condition
+          await transaction
+            .deleteFrom('pointsDistribution')
+            .where('eligibilityConditionId', '=', user.eligibilityConditionId)
+            .execute()
+          await transaction
+            .deleteFrom('eligibilityCondition')
+            .where('id', '=', user.eligibilityConditionId)
+            .execute()
         }
-      } else if (
-        user.dueDate &&
-        user.type == eligibilityConditions.BECOME_SUMMER_USER.type &&
-        user.dueDate < new Date()
-      ) {
-        // if the due date is exceeded we delete all the points distribution and the eligibility condition
-        await db
-          .deleteFrom('pointsDistribution')
-          .where('eligibilityConditionId', '=', user.eligibilityConditionId)
-          .execute()
-        await db
-          .deleteFrom('eligibilityCondition')
-          .where('id', '=', user.eligibilityConditionId)
-          .execute()
-      }
+      })
     })
   }
 }
