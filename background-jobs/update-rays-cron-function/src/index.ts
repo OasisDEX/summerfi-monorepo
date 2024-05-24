@@ -166,265 +166,248 @@ export const handler = async (
     }
 
     const points = await pointAccuralService.accruePoints(startTimestamp, endTimestamp)
-
-    logger.info(`Got: ${points.length} positions to update in the database`)
-
     const sortedPoints = points.sort((a, b) => a.positionId.localeCompare(b.positionId))
 
     await checkMigrationEligibility(db, sortedPoints)
     await checkOpenedPositionEligibility(db, sortedPoints)
+    await insertAllMissingUsers(sortedPoints, db)
 
     const chunkedPoints: PositionPoints[] = createChunksOfUserPointsDistributions(sortedPoints, 30)
+    await db.transaction().execute(async (transaction) => {
+      for (let i = 0; i < chunkedPoints.length; i++) {
+        logger.info(`Processing: Chunk ${i} of ${chunkedPoints.length}`)
+        const chunk = chunkedPoints[i]
+        const addressesForChunk = chunk.map((c) => c.user)
+        const positionsForChunk = chunk.map((c) => c.positionId)
 
-    for (let i = 0; i < chunkedPoints.length; i++) {
-      logger.info(`Processing: Chunk ${i} of ${chunkedPoints.length}`)
-      const chunk = chunkedPoints[i]
-      const addressesForChunk = chunk.map((c) => c.user)
-      const positionsForChunk = chunk.map((c) => c.positionId)
+        const userAddresses = await db
+          .selectFrom('userAddress')
+          .where('address', 'in', addressesForChunk)
+          .selectAll()
+          .execute()
+        const positions = await db
+          .selectFrom('position')
+          .where('externalId', 'in', positionsForChunk)
+          .selectAll()
+          .execute()
 
-      const userAddresses = await db
-        .selectFrom('userAddress')
-        .where('address', 'in', addressesForChunk)
-        .selectAll()
-        .execute()
-      const positions = await db
-        .selectFrom('position')
-        .where('externalId', 'in', positionsForChunk)
-        .selectAll()
-        .execute()
+        const usersMultipliers = await db
+          .selectFrom('multiplier')
+          .innerJoin('userAddress', 'multiplier.userAddressId', 'userAddress.id')
+          .where('userAddress.address', 'in', addressesForChunk)
+          .select([
+            'multiplier.value',
+            'multiplier.type',
+            'multiplier.id',
+            'multiplier.userAddressId',
+            'multiplier.positionId',
+          ])
+          .execute()
 
-      const usersMultipliers = await db
-        .selectFrom('multiplier')
-        .innerJoin('userAddress', 'multiplier.userAddressId', 'userAddress.id')
-        .where('userAddress.address', 'in', addressesForChunk)
-        .select([
-          'multiplier.value',
-          'multiplier.type',
-          'multiplier.id',
-          'multiplier.userAddressId',
-          'multiplier.positionId',
-        ])
-        .execute()
+        const positionsMultipliers = await db
+          .selectFrom('multiplier')
+          .innerJoin('position', 'multiplier.positionId', 'position.id')
+          .where('position.externalId', 'in', positionsForChunk)
+          .select([
+            'multiplier.value',
+            'multiplier.type',
+            'multiplier.id',
+            'multiplier.userAddressId',
+            'multiplier.positionId',
+          ])
+          .execute()
 
-      const positionsMultipliers = await db
-        .selectFrom('multiplier')
-        .innerJoin('position', 'multiplier.positionId', 'position.id')
-        .where('position.externalId', 'in', positionsForChunk)
-        .select([
-          'multiplier.value',
-          'multiplier.type',
-          'multiplier.id',
-          'multiplier.userAddressId',
-          'multiplier.positionId',
-        ])
-        .execute()
+        for (const record of chunk) {
+          const userAddress = userAddresses.find((ua) => ua.address === record.user)
+          if (!userAddress) {
+            throw new Error('User address not found')
+          }
 
-      await db.transaction().execute(async (transaction) => {
-        await Promise.all(
-          chunk.map(async (record) => {
-            let userAddress = userAddresses.find((ua) => ua.address === record.user)
+          const positionId = positionIdResolver(record.positionId)
 
-            if (!userAddress) {
-              const result = await transaction
-                .insertInto('blockchainUser')
-                .values({ category: null })
-                .returning(['id'])
-                .executeTakeFirstOrThrow()
-              userAddress = await transaction
-                .insertInto('userAddress')
-                .values({ address: record.user, userId: result.id })
-                .returningAll()
-                .executeTakeFirstOrThrow()
-            }
+          let position = positions.find((p) => p.externalId === record.positionId)
+          if (!position) {
+            position = await transaction
+              .insertInto('position')
+              .values({
+                externalId: record.positionId,
+                market: record.marketId,
+                protocol: positionId.protocol,
+                type: positionId.positionType,
+                userAddressId: userAddress.id,
+                vaultId: record.vaultId,
+                chainId: positionId.chainId,
+                address: positionId.address,
+              })
+              .returningAll()
+              .executeTakeFirstOrThrow()
+          }
 
-            const positionId = positionIdResolver(record.positionId)
+          if (record.points.openPositionsPoints > 0) {
+            await transaction
+              .insertInto('pointsDistribution')
+              .values({
+                description: 'Points for opening a position',
+                points: record.points.openPositionsPoints,
+                positionId: position.id,
+                type: 'OPEN_POSITION',
+              })
+              .executeTakeFirstOrThrow()
+          }
 
-            let position = positions.find((p) => p.externalId === record.positionId)
-            if (!position) {
-              position = await transaction
-                .insertInto('position')
-                .values({
-                  externalId: record.positionId,
-                  market: record.marketId,
-                  protocol: positionId.protocol,
-                  type: positionId.positionType,
-                  userAddressId: userAddress.id,
-                  vaultId: record.vaultId,
-                  chainId: positionId.chainId,
-                  address: positionId.address,
-                })
-                .returningAll()
-                .executeTakeFirstOrThrow()
-            }
+          const currentDate = new Date()
+          const dueDateTimestamp = currentDate.setDate(currentDate.getDate() + 30)
+          const dueDate = new Date(dueDateTimestamp)
 
-            if (record.points.openPositionsPoints > 0) {
-              await transaction
-                .insertInto('pointsDistribution')
-                .values({
-                  description: 'Points for opening a position',
-                  points: record.points.openPositionsPoints,
-                  positionId: position.id,
-                  type: 'OPEN_POSITION',
-                })
-                .executeTakeFirstOrThrow()
-            }
+          if (record.points.migrationPoints > 0) {
+            const eligibilityCondition = await transaction
+              .insertInto('eligibilityCondition')
+              .values({
+                type: eligibilityConditions.POSITION_OPEN_TIME.type,
+                description: eligibilityConditions.POSITION_OPEN_TIME.description,
+                metadata: JSON.stringify(eligibilityConditions.POSITION_OPEN_TIME.metadata),
+                dueDate: dueDate,
+              })
+              .returningAll()
+              .executeTakeFirstOrThrow()
 
-            const currentDate = new Date()
-            const dueDateTimestamp = currentDate.setDate(currentDate.getDate() + 30)
-            const dueDate = new Date(dueDateTimestamp)
+            await transaction
+              .insertInto('pointsDistribution')
+              .values({
+                description: 'Points for migrations',
+                points: record.points.migrationPoints,
+                positionId: position.id,
+                type: 'MIGRATION',
+                eligibilityConditionId: eligibilityCondition.id,
+              })
+              .executeTakeFirstOrThrow()
+          }
 
-            if (record.points.migrationPoints > 0) {
-              const eligibilityCondition = await transaction
-                .insertInto('eligibilityCondition')
-                .values({
-                  type: eligibilityConditions.POSITION_OPEN_TIME.type,
-                  description: eligibilityConditions.POSITION_OPEN_TIME.description,
-                  metadata: JSON.stringify(eligibilityConditions.POSITION_OPEN_TIME.metadata),
-                  dueDate: dueDate,
-                })
-                .returningAll()
-                .executeTakeFirstOrThrow()
+          if (record.points.swapPoints > 0) {
+            await transaction
+              .insertInto('pointsDistribution')
+              .values({
+                description: 'Points for swap',
+                points: record.points.swapPoints,
+                positionId: position.id,
+                type: 'SWAP',
+              })
+              .executeTakeFirstOrThrow()
+          }
 
-              await transaction
-                .insertInto('pointsDistribution')
-                .values({
-                  description: 'Points for migrations',
-                  points: record.points.migrationPoints,
-                  positionId: position.id,
-                  type: 'MIGRATION',
-                  eligibilityConditionId: eligibilityCondition.id,
-                })
-                .executeTakeFirstOrThrow()
-            }
+          // Multipliers
+          // protocolBoostMultiplier: -> user multiplier -> type = 'PROTOCOL_BOOST'
+          //     swapMultiplier: number -> user multiplier -> type = 'SWAP'
+          //     timeOpenMultiplier: number -> position multiplier -> type = 'TIME_OPEN'
+          //     automationProtectionMultiplier: number -> position multiplier -> type = 'AUTOMATION'
+          //     lazyVaultMultiplier: number -> position multiplier -> type = 'LAZY_VAULT'
 
-            if (record.points.swapPoints > 0) {
-              await transaction
-                .insertInto('pointsDistribution')
-                .values({
-                  description: 'Points for swap',
-                  points: record.points.swapPoints,
-                  positionId: position.id,
-                  type: 'SWAP',
-                })
-                .executeTakeFirstOrThrow()
-            }
+          const userMultipliers = usersMultipliers.filter((m) => m.userAddressId === userAddress.id)
+          const positionMultipliers = positionsMultipliers.filter(
+            (m) => m.positionId === position.id,
+          )
 
-            // Multipliers
-            // protocolBoostMultiplier: -> user multiplier -> type = 'PROTOCOL_BOOST'
-            //     swapMultiplier: number -> user multiplier -> type = 'SWAP'
-            //     timeOpenMultiplier: number -> position multiplier -> type = 'TIME_OPEN'
-            //     automationProtectionMultiplier: number -> position multiplier -> type = 'AUTOMATION'
-            //     lazyVaultMultiplier: number -> position multiplier -> type = 'LAZY_VAULT'
+          let procotolBoostMultiplier = userMultipliers.find((m) => m.type === 'PROTOCOL_BOOST')
 
-            const userMultipliers = usersMultipliers.filter(
-              (m) => m.userAddressId === userAddress.id,
-            )
-            const positionMultipliers = positionsMultipliers.filter(
-              (m) => m.positionId === position.id,
-            )
+          if (!procotolBoostMultiplier) {
+            procotolBoostMultiplier = await transaction
+              .insertInto('multiplier')
+              .values({
+                userAddressId: userAddress.id,
+                type: 'PROTOCOL_BOOST',
+                value: record.multipliers.protocolBoostMultiplier,
+              })
+              .returningAll()
+              .executeTakeFirstOrThrow()
+          } else {
+            await transaction
+              .updateTable('multiplier')
+              .set('value', record.multipliers.protocolBoostMultiplier)
+              .where('id', '=', procotolBoostMultiplier.id)
+              .execute()
+          }
 
-            let procotolBoostMultiplier = userMultipliers.find((m) => m.type === 'PROTOCOL_BOOST')
+          let swapMultiplier = userMultipliers.find((m) => m.type === 'SWAP')
 
-            if (!procotolBoostMultiplier) {
-              procotolBoostMultiplier = await transaction
-                .insertInto('multiplier')
-                .values({
-                  userAddressId: userAddress.id,
-                  type: 'PROTOCOL_BOOST',
-                  value: record.multipliers.protocolBoostMultiplier,
-                })
-                .returningAll()
-                .executeTakeFirstOrThrow()
-            } else {
-              await transaction
-                .updateTable('multiplier')
-                .set('value', record.multipliers.protocolBoostMultiplier)
-                .where('id', '=', procotolBoostMultiplier.id)
-                .execute()
-            }
+          if (!swapMultiplier) {
+            swapMultiplier = await transaction
+              .insertInto('multiplier')
+              .values({
+                userAddressId: userAddress.id,
+                type: 'SWAP',
+                value: record.multipliers.swapMultiplier,
+              })
+              .returningAll()
+              .executeTakeFirstOrThrow()
+          } else {
+            await transaction
+              .updateTable('multiplier')
+              .set('value', record.multipliers.swapMultiplier)
+              .where('id', '=', swapMultiplier.id)
+              .execute()
+          }
 
-            let swapMultiplier = userMultipliers.find((m) => m.type === 'SWAP')
+          let timeOpenMultiplier = positionMultipliers.find((m) => m.type === 'TIME_OPEN')
 
-            if (!swapMultiplier) {
-              swapMultiplier = await transaction
-                .insertInto('multiplier')
-                .values({
-                  userAddressId: userAddress.id,
-                  type: 'SWAP',
-                  value: record.multipliers.swapMultiplier,
-                })
-                .returningAll()
-                .executeTakeFirstOrThrow()
-            } else {
-              await transaction
-                .updateTable('multiplier')
-                .set('value', record.multipliers.swapMultiplier)
-                .where('id', '=', swapMultiplier.id)
-                .execute()
-            }
+          if (!timeOpenMultiplier) {
+            timeOpenMultiplier = await transaction
+              .insertInto('multiplier')
+              .values({
+                positionId: position.id,
+                type: 'TIME_OPEN',
+                value: record.multipliers.timeOpenMultiplier,
+              })
+              .returningAll()
+              .executeTakeFirstOrThrow()
+          } else {
+            await transaction
+              .updateTable('multiplier')
+              .set('value', record.multipliers.timeOpenMultiplier)
+              .where('id', '=', timeOpenMultiplier.id)
+              .execute()
+          }
 
-            let timeOpenMultiplier = positionMultipliers.find((m) => m.type === 'TIME_OPEN')
+          let automationProtectionMultiplier = positionMultipliers.find(
+            (m) => m.type === 'AUTOMATION',
+          )
 
-            if (!timeOpenMultiplier) {
-              timeOpenMultiplier = await transaction
-                .insertInto('multiplier')
-                .values({
-                  positionId: position.id,
-                  type: 'TIME_OPEN',
-                  value: record.multipliers.timeOpenMultiplier,
-                })
-                .returningAll()
-                .executeTakeFirstOrThrow()
-            } else {
-              await transaction
-                .updateTable('multiplier')
-                .set('value', record.multipliers.timeOpenMultiplier)
-                .where('id', '=', timeOpenMultiplier.id)
-                .execute()
-            }
+          if (!automationProtectionMultiplier) {
+            automationProtectionMultiplier = await transaction
+              .insertInto('multiplier')
+              .values({
+                positionId: position.id,
+                type: 'AUTOMATION',
+                value: record.multipliers.automationProtectionMultiplier,
+              })
+              .returningAll()
+              .executeTakeFirstOrThrow()
+          } else {
+            await transaction
+              .updateTable('multiplier')
+              .set('value', record.multipliers.automationProtectionMultiplier)
+              .where('id', '=', automationProtectionMultiplier.id)
+              .execute()
+          }
 
-            let automationProtectionMultiplier = positionMultipliers.find(
-              (m) => m.type === 'AUTOMATION',
-            )
-
-            if (!automationProtectionMultiplier) {
-              automationProtectionMultiplier = await transaction
-                .insertInto('multiplier')
-                .values({
-                  positionId: position.id,
-                  type: 'AUTOMATION',
-                  value: record.multipliers.automationProtectionMultiplier,
-                })
-                .returningAll()
-                .executeTakeFirstOrThrow()
-            } else {
-              await transaction
-                .updateTable('multiplier')
-                .set('value', record.multipliers.automationProtectionMultiplier)
-                .where('id', '=', automationProtectionMultiplier.id)
-                .execute()
-            }
-
-            const lazyVaultMultiplier = positionMultipliers.find((m) => m.type === 'LAZY_VAULT')
-            if (!lazyVaultMultiplier) {
-              await transaction
-                .insertInto('multiplier')
-                .values({
-                  positionId: position.id,
-                  type: 'LAZY_VAULT',
-                  value: record.multipliers.lazyVaultMultiplier,
-                })
-                .execute()
-            } else {
-              await transaction
-                .updateTable('multiplier')
-                .set('value', record.multipliers.lazyVaultMultiplier)
-                .where('id', '=', lazyVaultMultiplier.id)
-                .execute()
-            }
-          }),
-        )
-
+          const lazyVaultMultiplier = positionMultipliers.find((m) => m.type === 'LAZY_VAULT')
+          if (!lazyVaultMultiplier) {
+            await transaction
+              .insertInto('multiplier')
+              .values({
+                positionId: position.id,
+                type: 'LAZY_VAULT',
+                value: record.multipliers.lazyVaultMultiplier,
+              })
+              .execute()
+          } else {
+            await transaction
+              .updateTable('multiplier')
+              .set('value', record.multipliers.lazyVaultMultiplier)
+              .where('id', '=', lazyVaultMultiplier.id)
+              .execute()
+          }
+        }
+        // tutj
         logger.info(`Processed: Chunk ${i} of ${chunkedPoints.length}`)
 
         await transaction
@@ -443,8 +426,8 @@ export const handler = async (
           .set('lastTimestamp', new Date(endTimestamp * 1000))
           .where('id', '=', LAST_RUN_ID)
           .execute()
-      })
-    }
+      }
+    })
   } catch (e) {
     logger.error('Failed to lock update points', { error: e })
     return
@@ -459,6 +442,40 @@ export const handler = async (
 }
 
 export default handler
+
+/**
+ * Inserts missing users into the database.
+ *
+ * @param sortedPoints - The sorted points containing user information.
+ * @param db - The database instance.
+ * @returns A Promise that resolves when all missing users are inserted.
+ */
+async function insertAllMissingUsers(sortedPoints: PositionPoints, db: Kysely<Database>) {
+  const uniqueUsers = new Set(sortedPoints.map((p) => p.user))
+  const userAddresses = await db
+    .selectFrom('userAddress')
+    .where('address', 'in', Array.from(uniqueUsers))
+    .selectAll()
+    .execute()
+
+  await db.transaction().execute(async (transaction) => {
+    for (const user of uniqueUsers) {
+      const userAddress = userAddresses.find((ua) => ua.address === user)
+      if (!userAddress) {
+        const result = await transaction
+          .insertInto('blockchainUser')
+          .values({ category: null })
+          .returning(['id'])
+          .executeTakeFirstOrThrow()
+        await transaction
+          .insertInto('userAddress')
+          .values({ address: user, userId: result.id })
+          .returningAll()
+          .executeTakeFirstOrThrow()
+      }
+    }
+  })
+}
 
 /**
  * Creates chunks of user points distributions based on a given chunk length.
