@@ -152,13 +152,13 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
     StepType extends SimulationSteps,
     Step extends FilterStep<StepType, steps.Steps>,
   >(stepType: StepType): Maybe<IActionBuilder<Step>> {
-    const builder = this.stepBuilders[stepType]
+    const BuilderClass = this.stepBuilders[stepType]
 
-    if (!builder) {
+    if (!BuilderClass) {
       return undefined
     }
 
-    return new builder() as IActionBuilder<Step>
+    return new BuilderClass() as IActionBuilder<Step>
   }
 
   /** HELPERS */

@@ -1,0 +1,27 @@
+{
+  "name": "@summerfi/summer-events-subgraph",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "jest --passWithNoTests",
+    "build": "tsc -b -v",
+    "dev": "tsc -b -w",
+    "prebuild": "pnpm run generate-ts-types",
+    "generate-ts-types": "graphql-codegen --config graphql.config.yml",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "graphql-request": "^6.1.0",
+    "@summerfi/abstractions": "workspace:*",
+    "@summerfi/serverless-shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "@types/node": "^20.12.7",
+    "eslint": "^8.57.0"
+  }
+}

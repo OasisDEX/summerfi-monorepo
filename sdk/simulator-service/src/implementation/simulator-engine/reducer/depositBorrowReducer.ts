@@ -7,19 +7,18 @@ export function depositBorrowReducer(
   step: steps.DepositBorrowStep,
   state: ISimulationState,
 ): ISimulationState {
-  const afterDeposit = subtractBalance(
-    getValueFromReference(step.inputs.depositAmount),
-    state.balances,
-  )
-  const afterBorrow = addBalance(getValueFromReference(step.inputs.borrowAmount), afterDeposit)
+  const depositAmount = getValueFromReference(step.inputs.depositAmount)
+  const borrowAmount = getValueFromReference(step.inputs.borrowAmount)
+  const afterDeposit = subtractBalance(depositAmount, state.balances)
+  const afterBorrow = addBalance(borrowAmount, afterDeposit)
 
   return {
     ...state,
     positions: {
       ...state.positions,
       [step.inputs.position.id.id]: borrowFromPosition(
-        depositToPosition(step.inputs.position, getValueFromReference(step.inputs.depositAmount)),
-        getValueFromReference(step.inputs.borrowAmount),
+        depositToPosition(step.inputs.position, depositAmount),
+        borrowAmount,
       ),
     },
     steps: [...state.steps, step],

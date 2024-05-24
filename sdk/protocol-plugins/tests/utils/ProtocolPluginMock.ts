@@ -4,6 +4,7 @@ import {
   ActionBuilderParams,
   ActionBuilderUsedAction,
   ActionBuildersMap,
+  FilterStep,
   IActionBuilder,
   IProtocolPlugin,
   IProtocolPluginContext,
@@ -84,6 +85,10 @@ export class ProtocolPluginMock implements IProtocolPlugin {
   }
   context = undefined as unknown as IProtocolPluginContext
 
+  initialize(params: { context: IProtocolPluginContext }): void {
+    this.context = params.context
+  }
+
   isLendingPoolId(candidate: unknown): candidate is IPoolId {
     return true
   }
@@ -102,14 +107,17 @@ export class ProtocolPluginMock implements IProtocolPlugin {
     return undefined as unknown as IPosition
   }
 
-  getActionBuilder<T extends steps.Steps>(step: T): Maybe<IActionBuilder<T>> {
-    const builder = this.stepBuilders[step.type]
+  getActionBuilder<
+    StepType extends SimulationSteps,
+    Step extends FilterStep<StepType, steps.Steps>,
+  >(stepType: StepType): Maybe<IActionBuilder<Step>> {
+    const builder = this.stepBuilders[stepType]
 
     if (!builder) {
       return undefined
     }
 
-    return new builder() as IActionBuilder<T>
+    return new builder() as IActionBuilder<Step>
   }
 
   async getImportPositionTransaction(params: {
@@ -127,6 +135,10 @@ export class EmptyProtocolPluginMock implements IProtocolPlugin {
   stepBuilders: Partial<ActionBuildersMap> = {}
   context = undefined as unknown as IProtocolPluginContext
 
+  initialize(params: { context: IProtocolPluginContext }): void {
+    this.context = params.context
+  }
+
   isLendingPoolId(candidate: unknown): candidate is IPoolId {
     return true
   }
@@ -145,14 +157,17 @@ export class EmptyProtocolPluginMock implements IProtocolPlugin {
     return undefined as unknown as IPosition
   }
 
-  getActionBuilder<T extends steps.Steps>(step: T): Maybe<IActionBuilder<T>> {
-    const builder = this.stepBuilders[step.type]
+  getActionBuilder<
+    StepType extends SimulationSteps,
+    Step extends FilterStep<StepType, steps.Steps>,
+  >(stepType: StepType): Maybe<IActionBuilder<Step>> {
+    const builder = this.stepBuilders[stepType]
 
     if (!builder) {
       return undefined
     }
 
-    return new builder() as IActionBuilder<T>
+    return new builder() as IActionBuilder<Step>
   }
 
   async getImportPositionTransaction(params: {
@@ -175,6 +190,10 @@ export class NoCheckpointProtocolPluginMock implements IProtocolPlugin {
   }
   context = undefined as unknown as IProtocolPluginContext
 
+  initialize(params: { context: IProtocolPluginContext }): void {
+    this.context = params.context
+  }
+
   isLendingPoolId(candidate: unknown): candidate is IPoolId {
     return true
   }
@@ -193,14 +212,17 @@ export class NoCheckpointProtocolPluginMock implements IProtocolPlugin {
     return undefined as unknown as IPosition
   }
 
-  getActionBuilder<T extends steps.Steps>(step: T): Maybe<IActionBuilder<T>> {
-    const builder = this.stepBuilders[step.type]
+  getActionBuilder<
+    StepType extends SimulationSteps,
+    Step extends FilterStep<StepType, steps.Steps>,
+  >(stepType: StepType): Maybe<IActionBuilder<Step>> {
+    const builder = this.stepBuilders[stepType]
 
     if (!builder) {
       return undefined
     }
 
-    return new builder() as IActionBuilder<T>
+    return new builder() as IActionBuilder<Step>
   }
 
   async getImportPositionTransaction(params: {

@@ -7,7 +7,7 @@ import {
   getValueFromReference,
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
-import { TokenAmount, Percentage } from '@summerfi/sdk-common/common'
+import { TokenAmount, Percentage, CommonTokenSymbols } from '@summerfi/sdk-common/common'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { isLendingPool } from '@summerfi/sdk-common/protocols'
 import { refinanceLendingToLendingAnyPairStrategy } from './Strategy'
@@ -53,7 +53,10 @@ export async function refinanceLendingToLendingAnyPair(
       type: SimulationSteps.Flashloan,
       inputs: {
         amount: flashloanAmount,
-        provider: FlashloanProvider.Maker,
+        provider:
+          flashloanAmount.token.symbol === CommonTokenSymbols.DAI
+            ? FlashloanProvider.Maker
+            : FlashloanProvider.Balancer,
       },
     }))
     .next(async () => ({
@@ -97,7 +100,7 @@ export async function refinanceLendingToLendingAnyPair(
       inputs: {
         // refactor
         borrowAmount: isDebtSwapSkipped
-          ? ctx.getReference(['SwapCollateralFromSourcePosition', 'received'])
+          ? position.debtAmount
           : await estimateSwapFromAmount({
               receiveAtLeast: flashloanAmount,
               fromToken: targetPool.debtToken,

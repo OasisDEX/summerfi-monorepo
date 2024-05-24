@@ -5,11 +5,11 @@ import {
   ILendingPoolIdData,
   ILendingPoolInfo,
 } from '@summerfi/sdk-common/protocols'
+import { type IProtocolPluginContext } from './IProtocolPluginContext'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { IUser } from '@summerfi/sdk-common/user'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 import { IActionBuilder, ActionBuildersMap, FilterStep } from './IActionBuilder'
-import { IProtocolPluginContext } from './IProtocolPluginContext'
 
 /**
  * @interface IProtocolPlugin

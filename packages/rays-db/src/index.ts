@@ -1,44 +1,39 @@
 import { Database } from './database-types'
 import { CamelCasePlugin, Kysely } from 'kysely'
-import { DataApiDialect } from 'kysely-data-api'
-import { RDSData } from '@aws-sdk/client-rds-data'
 import { PostgresJSDialect } from 'kysely-postgres-js'
 import postgres from 'postgres'
+import { Logger } from '@summerfi/abstractions'
+import { getUpdateLockService, UpdateLockService } from './services'
 
 export interface PgRaysDbConfig {
   connectionString: string
+  logger: Logger
 }
 
-export interface DataApiRaysDbConfig {
-  secretArn: string
-  resourceArn: string
-  database: string
-  client: RDSData
-}
-
-export const getRaysDB = async (
-  config: PgRaysDbConfig | DataApiRaysDbConfig,
-): Promise<Kysely<Database>> => {
-  if ('connectionString' in config) {
-    const pg = postgres(config.connectionString)
-    return new Kysely<Database>({
-      dialect: new PostgresJSDialect({
-        postgres: pg,
-      }),
-      plugins: [new CamelCasePlugin()],
-    })
+export interface RaysDB {
+  db: Kysely<Database>
+  services: {
+    updateLockService: UpdateLockService
   }
+}
 
-  return new Kysely<Database>({
-    dialect: new DataApiDialect({
-      mode: 'postgres',
-      driver: {
-        database: config.database,
-        secretArn: config.secretArn,
-        resourceArn: config.resourceArn,
-        client: config.client,
-      },
+export * from './database-types'
+export * from './services'
+
+export const getRaysDB = async (config: PgRaysDbConfig): Promise<RaysDB> => {
+  const pg = postgres(config.connectionString)
+  const db = new Kysely<Database>({
+    dialect: new PostgresJSDialect({
+      postgres: pg,
     }),
     plugins: [new CamelCasePlugin()],
   })
+  const updateLockService = getUpdateLockService({ db, logger: config.logger })
+
+  return {
+    db,
+    services: {
+      updateLockService,
+    },
+  }
 }

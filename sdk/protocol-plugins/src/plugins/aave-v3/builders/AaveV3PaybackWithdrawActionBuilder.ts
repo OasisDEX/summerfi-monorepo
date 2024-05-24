@@ -94,14 +94,19 @@ export class AaveV3PaybackWithdrawActionBuilder extends BaseActionBuilder<steps.
     params: ActionBuilderParams<steps.PaybackWithdrawStep>,
   ): Promise<IAddress> {
     const { user, step, positionsManager, addressBookManager } = params
-    if (step.inputs.withdrawTargetType === TokenTransferTargetType.PositionsManager) {
-      return positionsManager.address
-    }
 
-    return getContractAddress({
-      addressBookManager,
-      chainInfo: user.chainInfo,
-      contractName: 'OperationExecutor',
-    })
+    switch (step.inputs.withdrawTargetType) {
+      case TokenTransferTargetType.PositionsManager:
+        return positionsManager.address
+
+      case TokenTransferTargetType.StrategyExecutor:
+        return getContractAddress({
+          addressBookManager,
+          chainInfo: user.chainInfo,
+          contractName: 'OperationExecutor',
+        })
+      default:
+        throw new Error(`Invalid withdraw target type: ${step.inputs.withdrawTargetType}`)
+    }
   }
 }

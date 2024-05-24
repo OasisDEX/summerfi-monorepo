@@ -46,7 +46,10 @@ export async function refinanceLendingToLendingSamePair(
       type: SimulationSteps.Flashloan,
       inputs: {
         amount: flashloanAmount,
-        provider: FlashloanProvider.Balancer,
+        provider:
+          flashloanAmount.token.symbol === 'DAI'
+            ? FlashloanProvider.Maker
+            : FlashloanProvider.Balancer,
       },
     }))
     .next(async () => ({

@@ -89,14 +89,19 @@ export class SparkDepositBorrowActionBuilder extends BaseActionBuilder<steps.Dep
     params: ActionBuilderParams<steps.DepositBorrowStep>,
   ): Promise<IAddress> {
     const { user, step, positionsManager, addressBookManager } = params
-    if (step.inputs.borrowTargetType === TokenTransferTargetType.PositionsManager) {
-      return positionsManager.address
-    }
 
-    return getContractAddress({
-      addressBookManager,
-      chainInfo: user.chainInfo,
-      contractName: 'OperationExecutor',
-    })
+    switch (step.inputs.borrowTargetType) {
+      case TokenTransferTargetType.PositionsManager:
+        return positionsManager.address
+
+      case TokenTransferTargetType.StrategyExecutor:
+        return getContractAddress({
+          addressBookManager,
+          chainInfo: user.chainInfo,
+          contractName: 'OperationExecutor',
+        })
+      default:
+        throw new Error(`Invalid borrow target type: ${step.inputs.borrowTargetType}`)
+    }
   }
 }
