@@ -28,8 +28,6 @@ export class SkippedStepActionBuilder extends BaseActionBuilder<steps.SkippedSte
 
       const action = new actionConfig.action()
 
-      console.debug('Adding skipped call')
-
       context.addActionCall({
         step: params.step,
         action: action as BaseAction<ActionConfig>,
