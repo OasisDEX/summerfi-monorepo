@@ -12,6 +12,7 @@ import {
   NavigationMenuPanelProps,
   NavigationMenuPanelType,
 } from '@/components/layout/Navigation/Navigation.types'
+import { NavigationMenuDropdown } from '@/components/layout/Navigation/NavigationMenuDropdown'
 
 import navigationMenuStyles from '@/components/layout/Navigation/NavigationMenu.module.scss'
 
@@ -37,7 +38,9 @@ function NavigationMenuLink({
             [navigationMenuStyles.navigationMenuLinkElementActive]: currentPath === link,
           })}
         >
-          {label}
+          <Text as="span" variant="p3semi">
+            {label}
+          </Text>
         </Link>
       )}
       {onClick && (
@@ -62,7 +65,7 @@ function NavigationMenuPanelLabel({
   return (
     <Text
       as="span"
-      variant="p1semi"
+      variant="p3semi"
       className={classNames(navigationMenuStyles.navigationMenuPanelLabel, {
         [navigationMenuStyles.navigationMenuPanelLabelActive]:
           isPanelOpen && currentPanel === label,
@@ -85,8 +88,9 @@ function NavigationMenuPanel({
       className={navigationMenuStyles.navigationMenuPanel}
       onMouseEnter={(e) => {
         const target = e.target as HTMLDivElement
+        const halfOffsetWidth = target.offsetWidth / 2
 
-        onMouseEnter((target.offsetLeft + target.offsetWidth) / 2)
+        onMouseEnter(target.offsetLeft + halfOffsetWidth)
       }}
     >
       {url ? (
@@ -146,6 +150,15 @@ export const NavigationMenu = ({ links, panels, currentPath }: NavigationMenuPro
             />
           ))}
         </ul>
+      )}
+      {panels && panels.length > 0 && (
+        <NavigationMenuDropdown
+          arrowPosition={arrowPosition}
+          currentPanel={currentPanel}
+          isPanelOpen={isPanelOpen}
+          isPanelSwitched={isPanelSwitched}
+          panels={panels}
+        />
       )}
     </div>
   )

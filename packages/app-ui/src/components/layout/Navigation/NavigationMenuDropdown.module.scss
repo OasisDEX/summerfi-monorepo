@@ -1,0 +1,84 @@
+.navigationMenu {
+  transition: opacity 200ms;
+  opacity: 0;
+  pointer-events: none;
+  &Active {
+    opacity: 1;
+    pointer-events: auto,
+  }
+}
+
+.navigationMenuDropdownWrapper {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 10px;
+}
+
+.navigationMenuDropdownBlock {
+  justify-content: center;
+  width: 100%;
+  padding: 3px;
+  border-radius: var(--radius-12);
+  background-color: var(--color-neutral-10);
+  box-shadow: var(--shadow-depth-1);
+  overflow: hidden;
+  transition: transform 200ms;
+  transform: translateY(-5px);
+  pointer-events: none;
+  &Active {
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}
+
+.navigationMenuDropdownBlockInside {
+  position: relative;
+  flex-direction: column;
+  width: 100%;
+  &Active {
+    transition: height 200ms,
+  }
+}
+
+.navigationMenuDropdownPanelWrapper {
+  position: absolute;
+  width: 100%;
+  opacity: 0;
+  pointer-events: none;
+  &IsCurrentPanel {
+    opacity: 1;
+  }
+  &IsCurrentPanelOpen {
+    pointer-events: auto
+  }
+  &IsPanelSwitched {
+    transition: opacity 200ms, transform 200ms;
+  }
+}
+
+.navigationMenuPointer {
+  position: absolute;
+  top: 100%;
+  left: -7px;
+  margin-top: 3px;
+  transform: translateY(20px);
+  transition: transform 200ms;
+  z-index: 2;
+  &Active {
+    transform: translateY(0);
+  }
+  .arrow {
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    background: var(--color-neutral-10);
+    &Active {
+      transition: transform 200ms;
+    }
+  }
+}
