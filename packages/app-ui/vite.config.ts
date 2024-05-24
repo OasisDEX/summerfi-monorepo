@@ -45,7 +45,7 @@ export default defineConfig({
         }
       },
     },
-    dts({ outDir: 'dist/types', insertTypesEntry: true, strictOutput: true }),
+    dts({ outDir: 'dist/types', insertTypesEntry: true, strictOutput: true, copyDtsFiles: true }),
   ],
   css: {
     preprocessorOptions: {
