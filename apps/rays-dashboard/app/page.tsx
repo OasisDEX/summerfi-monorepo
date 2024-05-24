@@ -1,4 +1,5 @@
-import { Button, Text } from '@summerfi/app-ui'
+import { icons } from '@summerfi/app-tokens'
+import { Button, GenericTokenIcon, Icon, Text, TokensGroup } from '@summerfi/app-ui'
 import Link from 'next/link'
 
 export default function HomePage() {
@@ -26,6 +27,9 @@ export default function HomePage() {
       <Button variant="secondarySmall">Secondary small</Button>
       <Button variant="neutralLarge">Neutral large</Button>
       <Button variant="neutralSmall">Neutral small</Button>
+      <GenericTokenIcon variant="smallIcon" symbol="hehe" />
+      <Icon icon={icons.btc_circle_color} />
+      <TokensGroup tokens={['ETH', 'Dummy']} />
       <Text as="p" variant="p2semi">
         Text component p with p2semi variant with <Link href="/">link</Link> inline
       </Text>

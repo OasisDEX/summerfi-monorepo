@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { NavigationMenuPanelType } from '@/components/layout/Navigation/Navigation.types'
+import { NavigationMenuDropdownContentList } from '@/components/layout/Navigation/NavigationMenuDropdownContentList'
 
 import navigationMenuDropdownContentStyles from './NavigationMenuDropdownContent.module.scss'
 
