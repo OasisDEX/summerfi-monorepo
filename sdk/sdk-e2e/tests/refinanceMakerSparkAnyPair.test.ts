@@ -37,12 +37,13 @@ jest.setTimeout(300000)
 /** TEST CONFIG */
 const config = {
   SDKAPiUrl: 'https://zmjmtfsocb.execute-api.us-east-1.amazonaws.com/api/sdk',
-  TenderlyForkUrl: 'https://virtual.mainnet.rpc.tenderly.co/4711dc9f-76a4-4f6c-9464-6f8c7369df61',
-  makerVaultId: '31709',
-  DPMAddress: '0xc1475b2735fb9130a4701ee9e2215b6305dd501b',
-  walletAddress: '0xbEf4befb4F230F43905313077e3824d7386E09F8',
-  collateralAmount: '5000.0',
-  debtAmount: '5000000.0',
+  TenderlyForkUrl: 'https://virtual.mainnet.rpc.tenderly.co/5eea57de-3dc2-4cae-b7ed-24b16b0cbde0',
+  makerVaultId: '31722',
+  DPMAddress: '0x2e0515d7A3eA0276F28c94C426c5d2D1d85FD4d5',
+  walletAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
+  collateralAmount: '2.5',
+  debtAmount: '3501.0',
+  sendTransaction: true,
 }
 
 describe.skip('Refinance Maker Spark | SDK', () => {
@@ -133,7 +134,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     // Source position
     const makerPosition: MakerPosition = MakerPosition.createFrom({
       type: PositionType.Multiply,
-      id: MakerPositionId.createFrom({ id: '31697', vaultId: '31697' }),
+      id: MakerPositionId.createFrom({ id: config.makerVaultId, vaultId: config.makerVaultId }),
       debtAmount: TokenAmount.createFrom({
         token: DAI,
         amount: config.debtAmount,
@@ -197,19 +198,21 @@ describe.skip('Refinance Maker Spark | SDK', () => {
 
     assert(refinanceOrder, 'Order not found')
 
-    // Send transaction
-    console.log('Sending transaction...')
+    if (config.sendTransaction) {
+      // Send transaction
+      console.log('Sending transaction...')
 
-    const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex
-    const transactionUtils = new TransactionUtils({
-      rpcUrl: config.TenderlyForkUrl,
-      walletPrivateKey: privateKey,
-    })
+      const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex
+      const transactionUtils = new TransactionUtils({
+        rpcUrl: config.TenderlyForkUrl,
+        walletPrivateKey: privateKey,
+      })
 
-    const receipt = await transactionUtils.sendTransaction({
-      transaction: refinanceOrder.transactions[0].transaction,
-    })
+      const receipt = await transactionUtils.sendTransaction({
+        transaction: refinanceOrder.transactions[0].transaction,
+      })
 
-    console.log('Transaction sent:', receipt)
+      console.log('Transaction sent:', receipt)
+    }
   })
 })
