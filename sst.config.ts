@@ -1,9 +1,16 @@
 import { SSTConfig } from 'sst'
 import { API } from './stacks/summer-stack'
 import { ExternalAPI } from './stacks/partners-stack'
+import { SdkAPI } from './stacks/sdk-stack'
 import { $, chalk, echo } from 'zx'
 
 const availableStage = ['dev', 'feature', 'staging', 'production']
+
+enum App {
+  SummerfiStack = 'summerfi-stack',
+  Sdk = 'sdk',
+}
+const availableApps = [App.SummerfiStack, App.Sdk]
 
 const getCurrentBranch = async () => {
   const { stdout: currentBranch } = await $`git branch --show-current`
@@ -81,6 +88,8 @@ const runDockerCompose = async () => {
 
 export const sstConfig: SSTConfig = {
   async config(_input) {
+    const { app } = _input as any
+
     const currentBranch = await getCurrentBranch()
     const commitsToFetch = await getCommitsToFetch(currentBranch)
     if (commitsToFetch === null) {
@@ -133,11 +142,7 @@ export const sstConfig: SSTConfig = {
       throw new Error('Please specify stage or set SST_USER env variable')
     }
 
-    if (
-      _input.stage &&
-      !availableStage.includes(_input.stage) &&
-      !_input.stage.startsWith('dev-')
-    ) {
+    if (_input.stage && !availableStage.includes(_input.stage)) {
       throw new Error('Invalid stage, use one of: ' + availableStage.join(', '))
     }
 
@@ -160,8 +165,12 @@ export const sstConfig: SSTConfig = {
       }
     }
 
+    if (availableApps.includes(app) === false) {
+      throw new Error('Invalid --app argument, use one of: ' + availableApps.join(', '))
+    }
+
     return {
-      name: `summerfi-stack`,
+      name: app,
       region: `${process.env.AWS_REGION}`,
       profile: `${process.env.AWS_PROFILE}`,
       stage: stage,
@@ -174,8 +183,13 @@ export const sstConfig: SSTConfig = {
       app.setDefaultRemovalPolicy('retain')
     }
     echo`\n`
-    app.stack(API)
-    app.stack(ExternalAPI)
+    if (app.name === App.SummerfiStack) {
+      app.stack(API)
+      app.stack(ExternalAPI)
+    }
+    if (app.name === App.Sdk) {
+      app.stack(SdkAPI)
+    }
   },
 }
 
