@@ -22,7 +22,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "check-circular": "madge --circular --extensions ts ./src",
-    "bundle:npm": "rm -rf bundle/dist && esbuild src/index.ts --platform=neutral --target=es2020 --conditions= --main-fields=main --bundle --sourcemap --outfile=bundle/dist/index.js --keep-names && tsc --emitDeclarationOnly --outDir bundle/dist -p tsconfig.build.json",
+    "bundle:npm": "rm -rf bundle/dist bundle/tsconfig.build.tsbuildinfo && esbuild src/index.ts --platform=neutral --target=es2020 --conditions= --main-fields=main --bundle --sourcemap --outfile=bundle/dist/index.js --keep-names --external:superjson --external:zod --external:bignumber.js && tsc --emitDeclarationOnly --outDir bundle/dist -p tsconfig.build.json",
     "publish:npm": "pnpm bundle:npm && cd bundle && npm publish && cd .."
   },
   "dependencies": {
