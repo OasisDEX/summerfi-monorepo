@@ -1,7 +1,6 @@
 import {
   FlashloanProvider,
   ISimulation,
-  RefinanceSimulationTypes,
   SimulationSteps,
   SimulationType,
   TokenTransferTargetType,
@@ -19,7 +18,7 @@ import { estimateSwapFromAmount } from '../../implementation/utils/EstimateSwapF
 export async function refinanceLendingToLending(
   args: IRefinanceParameters,
   dependencies: IRefinanceDependencies,
-): Promise<ISimulation<RefinanceSimulationTypes>> {
+): Promise<ISimulation<SimulationType.Refinance>> {
   // args validation
   if (!isLendingPool(args.sourcePosition.pool)) {
     throw new Error('Source pool is not a lending pool')
@@ -212,5 +211,5 @@ export async function refinanceLendingToLending(
     targetPosition: targetPosition,
     swaps: simulation.swaps,
     steps: simulation.steps,
-  } satisfies ISimulation<RefinanceSimulationTypes>
+  } satisfies ISimulation<SimulationType.Refinance>
 }
