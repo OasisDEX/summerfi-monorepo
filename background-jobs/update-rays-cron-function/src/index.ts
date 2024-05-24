@@ -173,11 +173,9 @@ export const handler = async (
 
     await checkMigrationEligibility(db, sortedPoints)
     await checkOpenedPositionEligibility(db, sortedPoints)
-    // split points by 30 item chunks
-    const chunkedPoints = []
-    for (let i = 0; i < sortedPoints.length; i += 30) {
-      chunkedPoints.push(sortedPoints.slice(i, i + 30))
-    }
+
+    const chunkedPoints: PositionPoints[] = createChunksOfUserPointsDistributions(sortedPoints, 30)
+
     for (let i = 0; i < chunkedPoints.length; i++) {
       logger.info(`Processing: Chunk ${i} of ${chunkedPoints.length}`)
       const chunk = chunkedPoints[i]
@@ -457,6 +455,39 @@ export const handler = async (
 }
 
 export default handler
+
+/**
+ * Creates chunks of user points distributions based on a given chunk length.
+ *
+ * @remarks This function is used to create chunks of user points distributions based on a given chunk length
+ * and the fact each points distributions per user can't be split between chunks.
+ *
+ * @param sortedPoints - An array of points sorted by user.
+ * @param chunkLength - The desired length of each chunk.
+ * @returns An array of chunks, where each chunk contains points for each user.
+ */
+function createChunksOfUserPointsDistributions(sortedPoints: PositionPoints, chunkLength: number) {
+  // Create a map where the keys are the users and the values are arrays of points for each user.
+  const pointsByUser = new Map<string, PositionPoints>()
+  for (const point of sortedPoints) {
+    const userPoints = pointsByUser.get(point.user) || []
+    userPoints.push(point)
+    pointsByUser.set(point.user, userPoints)
+  }
+  const chunkedPoints: PositionPoints[] = []
+  let currentChunk: PositionPoints = []
+  for (const userPoints of pointsByUser.values()) {
+    if (currentChunk.length + userPoints.length >= chunkLength) {
+      chunkedPoints.push(currentChunk)
+      currentChunk = []
+    }
+    currentChunk.push(...userPoints)
+  }
+  if (currentChunk.length > 0) {
+    chunkedPoints.push(currentChunk)
+  }
+  return chunkedPoints
+}
 
 /**
  * Checks the migration eligibility for point distributions.
