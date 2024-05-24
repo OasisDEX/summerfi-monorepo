@@ -1,0 +1,69 @@
+.navigationMenuDropdownContentListHeader {
+  margin-left: var(--space-m);
+  margin-right: var(--space-m);
+  margin-bottom: -8px;
+  color: var(--color-neutral-80)
+}
+
+.navigationMenuDropdownContentListWrapper {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navigationMenuDropdownContentListWrapperItem {
+  border-radius: var(--radius-12);
+  transition: 200ms background-color;
+}
+
+.navigationMenuDropdownContentListWrapperItemLink {
+  display: block;
+  padding-left: var(--space-s);
+  padding-right: var(--space-s);
+  padding-top: var(--space-s);
+  padding-bottom: var(--space-s);
+  &Tight {
+    padding-top: var(--space-xs);
+    padding-bottom: var(--space-xs);
+  }
+}
+
+.itemHoverEffectDefault {
+  background-color: var(--color-neutral-30);
+  cursor: default;
+  .star-with-effect {
+    color: var(--color-interactive-100);
+  }
+  .nav-icon {
+    background-color: var(--color-interactive-100);
+    color: var(--color-neutral-10);
+  };
+  .heading-with-effect, .tag-with-effect {
+    color: transparent;
+    &::after {
+      opacity: 1;
+    }
+  }
+}
+
+.itemHoverEffectHover {
+  background-color: var(--color-neutral-30);
+  cursor: pointer;
+  &:hover {
+    background-color: var(--color-neutral-30);
+    cursor: default;
+    .star-with-effect {
+      color: var(--color-interactive-100);
+    }
+    .nav-icon {
+      color: var(--color-neutral-10);
+      background-color: var(--color-interactive-100);
+    };
+    .heading-with-effect, .tag-with-effect {
+      color: transparent;
+      &::after {
+        opacity: 1;
+      }
+    }
+  }
+}

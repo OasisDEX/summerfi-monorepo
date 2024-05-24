@@ -1,0 +1,29 @@
+.navigationMenuDropdownContentFirstColumn {
+  position: relative;
+  flex-direction: column;
+  flex-shrink: 0;
+  row-gap: 2;
+  list-style: none;
+  width: 294px;
+  margin-left: 0;
+  margin-right: 3;
+  padding-left: 0;
+  padding-right: 3;
+  &::after {
+    content: "";
+    position: absolute;
+    width: 1px;
+    min-height: 100%;
+    left: 100%;
+    top: 0;
+    height: var(--navigation-dropdown-content-dynamic-height);
+    background-color: var(--color-neutral-20);
+    transition: height 200ms;
+  }
+}
+
+.navigationMenuDropdownContentFirstColumnLi {
+  row-gap: 3;
+  flex-direction: column;
+  width: 100%;
+}
