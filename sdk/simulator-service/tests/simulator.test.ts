@@ -1,4 +1,4 @@
-import { ISimulation, SimulationSteps } from '@summerfi/sdk-common/simulation'
+import { ISimulation, SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
 import { refinanceLendingToLending } from '../src/strategies'
 import { Percentage } from '@summerfi/sdk-common/common'
 import {
@@ -8,11 +8,10 @@ import {
   testTargetLendingPoolRequiredSwaps,
 } from './mocks/testSourcePosition'
 import { mockRefinanceContext, mockRefinanceContextRequiredSwaps } from './mocks/contextMock'
-import { RefinanceSimulationTypes } from '@summerfi/sdk-common'
 
 describe('Refinance', () => {
   describe('to the position with the different collateral and debt (with swaps)', () => {
-    let simulation: ISimulation<RefinanceSimulationTypes>
+    let simulation: ISimulation<SimulationType.Refinance>
     beforeAll(async () => {
       simulation = await refinanceLendingToLending(
         {
