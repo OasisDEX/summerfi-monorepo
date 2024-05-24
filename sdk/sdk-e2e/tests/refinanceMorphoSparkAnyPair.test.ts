@@ -89,7 +89,7 @@ describe.skip('Refinance Morpho Spark | SDK', () => {
     })
     assert(collateralToken, `${config.collateralTokenSymbol} not found`)
 
-    const morpho = await chain.protocols.getProtocol({ name: ProtocolName.Morpho })
+    const morpho = await chain.protocols.getProtocol({ name: ProtocolName.MorphoBlue })
     assert(morpho, 'Maker protocol not found')
 
     if (!isMorphoProtocol(morpho)) {

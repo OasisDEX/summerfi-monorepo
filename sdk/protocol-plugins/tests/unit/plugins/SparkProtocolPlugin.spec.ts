@@ -19,7 +19,8 @@ describe('Spark Protocol Plugin', () => {
   beforeAll(async () => {
     ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
     sparkPoolIdMock = await getSparkPoolIdMock()
-    sparkProtocolPlugin = new SparkProtocolPlugin({
+    sparkProtocolPlugin = new SparkProtocolPlugin()
+    sparkProtocolPlugin.initialize({
       context: ctx,
     })
   })
@@ -70,13 +71,13 @@ describe('Spark Protocol Plugin', () => {
 
   it('should throw an error when calling getPool with chain id missing from ctx', async () => {
     try {
-      new SparkProtocolPlugin({
+      new SparkProtocolPlugin().initialize({
         context: {
           ...ctx,
           provider: {
-            ...context.provider,
+            ...ctx.provider,
             chain: {
-              ...context.provider.chain!,
+              ...ctx.provider.chain!,
               id: undefined as unknown as number,
             },
           },
@@ -91,13 +92,13 @@ describe('Spark Protocol Plugin', () => {
   it('should throw an error when calling getPool with an unsupported chain ID', async () => {
     const wrongChainId = 2
     try {
-      new SparkProtocolPlugin({
+      new SparkProtocolPlugin().initialize({
         context: {
           ...ctx,
           provider: {
-            ...context.provider,
+            ...ctx.provider,
             chain: {
-              ...context.provider.chain!,
+              ...ctx.provider.chain!,
               id: wrongChainId,
             },
           },

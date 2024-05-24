@@ -10,7 +10,10 @@ import { AddressType, ChainInfo } from '@summerfi/sdk-common/common'
 import { createPublicClient, http, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
 import { ProtocolManager } from '../src'
-import { ProtocolPluginsRegistry } from '@summerfi/protocol-plugins/implementation'
+import {
+  ProtocolPluginConstructor,
+  ProtocolPluginsRegistry,
+} from '@summerfi/protocol-plugins/implementation'
 import { EmodeType, ISparkLendingPoolIdData } from '@summerfi/protocol-plugins'
 
 describe('Protocol Manager', () => {
@@ -50,13 +53,12 @@ describe('Protocol Manager', () => {
     const ctx = await createProtocolManagerContext()
 
     class TestMockPlugin extends MockPlugin {
-      constructor(params: {
-        protocolName: ProtocolName
-        context: IProtocolPluginContext
-        __overrides?: { schema?: any; supportedChains?: any[] }
-      }) {
-        super(params)
-        this.protocolName = ProtocolName.Spark
+      constructor(params: { __overrides?: { schema?: any; supportedChains?: any[] } }) {
+        super({
+          ...params,
+          protocolName: ProtocolName.Spark,
+        })
+
         this.getLendingPool = jest.fn().mockResolvedValue('mockPoolData')
       }
     }
@@ -108,27 +110,25 @@ describe('Protocol Manager', () => {
   })
 })
 
-export type ProtocolPluginConstructor = new (params: {
-  context: IProtocolPluginContext
-}) => IProtocolPlugin
-
 class MockPlugin implements IProtocolPlugin {
   protocolName: ProtocolName
   schema: any
   supportedChains: any[]
   stepBuilders: object
-  readonly context: IProtocolPluginContext
+  context?: IProtocolPluginContext
 
   constructor(params: {
     protocolName: ProtocolName
-    context: IProtocolPluginContext
     __overrides?: { schema?: any; supportedChains?: any[] }
   }) {
     this.protocolName = params.protocolName
-    this.context = params.context
     this.schema = params.__overrides?.schema ?? {}
     this.supportedChains = params.__overrides?.supportedChains ?? []
     this.stepBuilders = {}
+  }
+
+  initialize(params: { context: IProtocolPluginContext }): void {
+    this.context = params.context
   }
 
   getLendingPool = jest.fn()

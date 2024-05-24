@@ -21,7 +21,8 @@ describe.only('Spark Protocol Plugin (Integration)', () => {
   beforeAll(async () => {
     ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
     validSparkPoolId = await getSparkPoolIdMock()
-    sparkProtocolPlugin = new SparkProtocolPlugin({
+    sparkProtocolPlugin = new SparkProtocolPlugin()
+    sparkProtocolPlugin.initialize({
       context: ctx,
     })
   })

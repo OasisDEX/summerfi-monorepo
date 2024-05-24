@@ -89,7 +89,7 @@ describe.skip('Refinance AaveV3 Spark | SDK', () => {
     })
     assert(collateralToken, `${config.collateralTokenSymbol} not found`)
 
-    const aaveV3 = await chain.protocols.getProtocol({ name: ProtocolName.AAVEv3 })
+    const aaveV3 = await chain.protocols.getProtocol({ name: ProtocolName.AaveV3 })
     assert(aaveV3, 'AaveV3 protocol not found')
 
     if (!isAaveV3Protocol(aaveV3)) {

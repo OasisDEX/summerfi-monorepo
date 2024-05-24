@@ -13,7 +13,8 @@ describe('AAVEv3 Protocol Plugin (Integration)', () => {
   beforeAll(async () => {
     ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
     validAaveV3PoolId = await getAaveV3PoolIdMock()
-    aaveV3ProtocolPlugin = new AaveV3ProtocolPlugin({
+    aaveV3ProtocolPlugin = new AaveV3ProtocolPlugin()
+    aaveV3ProtocolPlugin.initialize({
       context: ctx,
     })
   })
