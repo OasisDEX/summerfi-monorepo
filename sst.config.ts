@@ -10,7 +10,7 @@ enum App {
   SummerfiStack = 'summerfi-stack',
   Sdk = 'sdk',
 }
-const availableApps = [App.SummerfiStack, App.Sdk]
+const availableApps: string[] = [App.SummerfiStack, App.Sdk]
 
 const getCurrentBranch = async () => {
   const { stdout: currentBranch } = await $`git branch --show-current`
@@ -88,7 +88,8 @@ const runDockerCompose = async () => {
 
 export const sstConfig: SSTConfig = {
   async config(_input) {
-    const { app } = _input as any
+    // read app from cli input
+    const { app } = _input as { app?: string }
 
     const currentBranch = await getCurrentBranch()
     const commitsToFetch = await getCommitsToFetch(currentBranch)
@@ -165,7 +166,7 @@ export const sstConfig: SSTConfig = {
       }
     }
 
-    if (availableApps.includes(app) === false) {
+    if (!app || availableApps.includes(app) === false) {
       throw new Error('Invalid --app argument, use one of: ' + availableApps.join(', '))
     }
 
