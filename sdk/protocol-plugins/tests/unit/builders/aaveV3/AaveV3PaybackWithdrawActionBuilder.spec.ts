@@ -182,8 +182,10 @@ describe('AaveV3 Payback Withdraw Action Builder', () => {
 
     const { callsBatch } = builderParams.context.endSubContext()
 
-    expect(callsBatch.length).toEqual(1)
+    expect(callsBatch.length).toEqual(3)
 
-    expect(callsBatch[0].name).toBe('AaveV3Withdraw')
+    expect(callsBatch[0].name).toBe('SetApproval')
+    expect(callsBatch[1].name).toBe('AaveV3Payback')
+    expect(callsBatch[2].name).toBe('AaveV3Withdraw')
   })
 })

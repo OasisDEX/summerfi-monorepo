@@ -8,6 +8,7 @@ import { IPrice } from '../common/interfaces/IPrice'
 import { IPosition } from '../common/interfaces/IPosition'
 import { IToken } from '../common/interfaces/IToken'
 import { ILendingPool } from '../protocols/interfaces/ILendingPool'
+import { ProtocolName } from '../protocols'
 
 export interface Step<T extends SimulationSteps, I, O = undefined> {
   type: T
@@ -57,6 +58,15 @@ export interface PaybackWithdrawStep
     {
       paybackAmount: ITokenAmount
       withdrawAmount: ITokenAmount
+    }
+  > {}
+
+export interface SkippedStep
+  extends Step<
+    SimulationSteps.Skipped,
+    {
+      type: SimulationSteps
+      protocol?: ProtocolName
     }
   > {}
 
@@ -124,3 +134,4 @@ export type Steps =
   | NewPositionEventStep
   | ImportStep
   | OpenPosition
+  | SkippedStep

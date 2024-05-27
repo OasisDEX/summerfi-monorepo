@@ -27,7 +27,7 @@ async function main() {
     })
     .option('format', {
       alias: 'f',
-      description: 'Output format (safe, tenderly)',
+      description: 'Output format (safe, tenderly, debug)',
       default: 'safe',
       type: 'string',
     })
@@ -51,8 +51,10 @@ async function main() {
     // Write to file
     if (args.format === 'safe') {
       fs.writeFileSync(args.output, JSON.stringify(safeBatch, null, 2))
-    } else {
+    } else if (args.format === 'tenderly') {
       fs.writeFileSync(args.output, JSON.stringify(operationDefinitions, null, 2))
+    } else {
+      fs.writeFileSync(args.output, JSON.stringify(strategyDefinitions, null, 2))
     }
   } else {
     console.log('--------------------')

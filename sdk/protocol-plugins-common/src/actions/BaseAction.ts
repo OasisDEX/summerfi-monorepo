@@ -75,6 +75,7 @@ export abstract class BaseAction<
       name: this.config.name,
       targetHash,
       callData: calldata,
+      skipped: false,
     } as ActionCall
   }
 

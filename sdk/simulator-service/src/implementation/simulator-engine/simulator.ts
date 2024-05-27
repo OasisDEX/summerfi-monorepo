@@ -5,7 +5,7 @@ import { processStepOutput } from './stepProcessor/stepOutputProcessors'
 import { stateReducer } from './reducer/stateReducers'
 import type { SimulationStrategy } from '@summerfi/sdk-common/simulation'
 import { steps } from '@summerfi/sdk-common/simulation'
-import { Maybe } from '@summerfi/sdk-common'
+import { Maybe, ProtocolName, SimulationSteps } from '@summerfi/sdk-common'
 import {
   GetReferencedValue,
   NextFunction,
@@ -83,16 +83,23 @@ export class Simulator<Strategy extends SimulationStrategy, AddedSteps extends S
 
   public next(
     next: NextFunction<Strategy, AddedSteps>,
-    skip?: boolean,
+    skipData?: { skip: boolean; type: SimulationSteps; protocol?: ProtocolName },
   ): Simulator<Tail<Strategy>, [...AddedSteps, ProccessedStep<Strategy>]> {
     const schemaHead = head(this.schema)
     const schemaTail = tail(this.schema)
-    const nextArray = [...this.nextArray, next]
 
-    if (skip) {
+    if (skipData && skipData.skip) {
       if (schemaHead.optional === false) {
         throw new Error(`Step is required: ${schemaHead.step}`)
       }
+
+      const skippedNext = [
+        ...this.nextArray,
+        async () => ({
+          type: SimulationSteps.Skipped,
+          inputs: skipData,
+        }),
+      ]
 
       return new Simulator<Tail<Strategy>, [...AddedSteps, ProccessedStep<Strategy>]>(
         schemaTail,
@@ -100,13 +107,15 @@ export class Simulator<Strategy extends SimulationStrategy, AddedSteps extends S
         this.state,
         // TODO: We should not use any here
         /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-        this.nextArray as any,
+        skippedNext as any,
       )
     }
 
     if (!schemaHead) {
       throw new Error('No more steps to process')
     }
+
+    const nextArray = [...this.nextArray, next]
 
     return new Simulator<Tail<Strategy>, [...AddedSteps, ProccessedStep<Strategy>]>(
       schemaTail,

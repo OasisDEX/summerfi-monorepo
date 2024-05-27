@@ -11,13 +11,13 @@ import {
 import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
 import { ProtocolClient, makeSDK, type Chain, type User } from '@summerfi/sdk-client'
 import { PositionsManager, IRefinanceParameters, Order } from '@summerfi/sdk-common/orders'
-import { ISimulation } from '@summerfi/sdk-common/simulation'
+import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { TransactionUtils } from './utils/TransactionUtils'
 
 import { Hex } from 'viem'
 import assert from 'assert'
 import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
-import { AddressValue, CommonTokenSymbols, RefinanceSimulationTypes } from '@summerfi/sdk-common'
+import { AddressValue, CommonTokenSymbols } from '@summerfi/sdk-common'
 import {
   SparkLendingPoolId,
   isSparkLendingPoolId,
@@ -176,7 +176,7 @@ describe.skip('Refinance All | SDK', () => {
       assert(false, 'Spark pool type is not lending')
     }
 
-    const refinanceSimulation: ISimulation<RefinanceSimulationTypes> =
+    const refinanceSimulation: ISimulation<SimulationType.Refinance> =
       await sdk.simulator.refinance.simulateRefinancePosition({
         sourcePosition: makerPosition,
         targetPool: sparkPool,

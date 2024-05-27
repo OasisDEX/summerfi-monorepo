@@ -7,6 +7,7 @@ import { ActionCallBatch, ActionConfig } from '../actions/Types'
 import { ActionCallsStack } from './ActionCallsStack'
 import { ExecutionStorageMapper } from './ExecutionStorageMapper'
 import { TransactionInfo } from '@summerfi/sdk-common/orders'
+import { SkippedAction } from '../actions/SkippedAction'
 
 /**
  * @name StepBuilderContext
@@ -33,7 +34,19 @@ export class StepBuilderContext implements IStepBuilderContext {
     arguments: Parameters<Action['encodeCall']>[0]
     connectedInputs: Partial<StorageInputsMapType<Step, Config>>
     connectedOutputs: Partial<StorageOutputsMapType<Step, Config>>
+    skip?: boolean
   }) {
+    // TODO: temporary solution until we remove the Operations Registry
+    if (params.skip) {
+      const skipAction = new SkippedAction(params.action)
+
+      this._calls.addCall({
+        call: skipAction.encodeCall(),
+      })
+
+      return
+    }
+
     const paramsMapping = this._storage.addStorageMap({
       step: params.step,
       action: params.action,

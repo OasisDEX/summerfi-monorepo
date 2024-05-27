@@ -53,6 +53,7 @@ export class OrderPlanner implements IOrderPlanner {
         addressBookManager,
         step,
         protocolsRegistry,
+        actionBuildersMap,
       })
     }
 

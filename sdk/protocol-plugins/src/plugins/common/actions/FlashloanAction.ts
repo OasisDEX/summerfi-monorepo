@@ -2,11 +2,6 @@ import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-pl
 import { ITokenAmount } from '@summerfi/sdk-common/common'
 import { FlashloanProvider } from '@summerfi/sdk-common/simulation'
 
-// Local type as optional actions are not supported anymore in the new executor
-type OptionalActionCall = ActionCall & {
-  skipped: boolean
-}
-
 export class FlashloanAction extends BaseAction<typeof FlashloanAction.Config> {
   public static Config = {
     name: 'TakeFlashloan',
@@ -26,15 +21,6 @@ export class FlashloanAction extends BaseAction<typeof FlashloanAction.Config> {
     },
     paramsMapping?: InputSlotsMapping,
   ): ActionCall {
-    const calls: OptionalActionCall[] = params.calls.map((call) => {
-      return {
-        name: call.name,
-        targetHash: call.targetHash,
-        callData: call.callData,
-        skipped: false,
-      }
-    })
-
     return this._encodeCall({
       arguments: [
         {
@@ -43,7 +29,7 @@ export class FlashloanAction extends BaseAction<typeof FlashloanAction.Config> {
           isProxyFlashloan: true,
           isDPMProxy: true,
           provider: params.provider,
-          calls: calls,
+          calls: params.calls,
         },
       ],
       mapping: paramsMapping,

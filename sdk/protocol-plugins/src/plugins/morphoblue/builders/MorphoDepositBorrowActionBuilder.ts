@@ -63,40 +63,41 @@ export class MorphoDepositBorrowActionBuilder extends BaseActionBuilder<steps.De
 
     const borrowAmount = getValueFromReference(step.inputs.borrowAmount)
 
-    if (!borrowAmount.toBN().isZero()) {
-      context.addActionCall({
-        step: step,
-        action: new MorphoBorrowAction(),
-        arguments: {
-          morphoLendingPool: step.inputs.position.pool,
-          amount: borrowAmount,
-        },
-        connectedInputs: {},
-        connectedOutputs: {
-          borrowAmount: 'borrowedAmount',
-        },
-      })
+    context.addActionCall({
+      step: step,
+      action: new MorphoBorrowAction(),
+      arguments: {
+        morphoLendingPool: step.inputs.position.pool,
+        amount: borrowAmount,
+      },
+      connectedInputs: {},
+      connectedOutputs: {
+        borrowAmount: 'borrowedAmount',
+      },
+      skip: borrowAmount.toBN().isZero(),
+    })
 
-      if (step.inputs.borrowTargetType !== TokenTransferTargetType.PositionsManager) {
-        const operationExecutorAddress = await this._getContractAddress({
-          addressBookManager,
-          chainInfo: user.chainInfo,
-          contractName: 'OperationExecutor',
-        })
+    const isBorrowTargetOperationExecutor =
+      step.inputs.borrowTargetType !== TokenTransferTargetType.PositionsManager
 
-        context.addActionCall({
-          step: step,
-          action: new SendTokenAction(),
-          arguments: {
-            sendAmount: borrowAmount,
-            sendTo: operationExecutorAddress,
-          },
-          connectedInputs: {
-            borrowAmount: 'amount',
-          },
-          connectedOutputs: {},
-        })
-      }
-    }
+    const operationExecutorAddress = await this._getContractAddress({
+      addressBookManager,
+      chainInfo: user.chainInfo,
+      contractName: 'OperationExecutor',
+    })
+
+    context.addActionCall({
+      step: step,
+      action: new SendTokenAction(),
+      arguments: {
+        sendAmount: borrowAmount,
+        sendTo: operationExecutorAddress,
+      },
+      connectedInputs: {
+        borrowAmount: 'amount',
+      },
+      connectedOutputs: {},
+      skip: borrowAmount.toBN().isZero() && isBorrowTargetOperationExecutor,
+    })
   }
 }

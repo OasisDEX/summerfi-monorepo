@@ -3,7 +3,7 @@ import { IPositionsManager } from '@summerfi/sdk-common/orders'
 import { Address, ChainInfo } from '@summerfi/sdk-common/common'
 import { SetupDeployments } from './SetupDeployments'
 import { IUser } from '@summerfi/sdk-common/user'
-import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
+import { ActionBuildersMap, IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
 import {
   createEmptyBuildersProtocolPluginsRegistry,
   createEmptyProtocolPluginsRegistry,
@@ -25,6 +25,7 @@ export type SetupBuilderReturnType = {
   swapManager: SwapManagerMock
   addressBookManager: IAddressBookManager
   protocolsRegistry: IProtocolPluginsRegistry
+  actionBuildersMap: ActionBuildersMap
   emptyProtocolsRegistry: IProtocolPluginsRegistry
   emptyBuildersProtocolRegistry: IProtocolPluginsRegistry
   noCheckpointProtocolsRegistry: IProtocolPluginsRegistry
@@ -50,6 +51,7 @@ export function setupBuilderParams(params: { chainInfo: ChainInfo }): SetupBuild
     swapManager: new SwapManagerMock(),
     addressBookManager: new AddressBookManagerMock(),
     protocolsRegistry: protocolsRegistry,
+    actionBuildersMap: {} as ActionBuildersMap,
     emptyProtocolsRegistry: emptyProtocolsRegistry,
     noCheckpointProtocolsRegistry: noCheckpointProtocolsRegistry,
     emptyBuildersProtocolRegistry: emptyBuildersProtocolRegistry,
