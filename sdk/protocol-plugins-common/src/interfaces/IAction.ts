@@ -1,3 +1,4 @@
+import { HexData } from '@summerfi/sdk-common'
 import { ActionConfig, ActionCall } from '../actions/Types'
 import { InputSlotsMapping } from '../types/InputSlotsMapping'
 
@@ -11,6 +12,12 @@ export interface IAction {
    * @returns The versioned name of the action
    */
   getVersionedName(): string
+
+  /**
+   * @description Returns the hash of the action
+   * @returns The hash of the action
+   */
+  getActionHash(): HexData
 
   /**
    * @description Encodes the call to the action. Provided so the implementer has an opportunity to pre-process

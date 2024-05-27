@@ -1602,6 +1602,48 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
+  sdk/tools/genStrategyDefinitions:
+    dependencies:
+      '@summerfi/order-planner-service':
+        specifier: workspace:*
+        version: link:../../order-planner-service
+      '@summerfi/protocol-plugins':
+        specifier: workspace:*
+        version: link:../../protocol-plugins
+      '@summerfi/protocol-plugins-common':
+        specifier: workspace:*
+        version: link:../../protocol-plugins-common
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../../sdk-common
+      '@summerfi/simulator-service':
+        specifier: workspace:*
+        version: link:../../simulator-service
+    devDependencies:
+      '@morpho-labs/gnosis-tx-builder':
+        specifier: ^2.0.0
+        version: 2.0.0(ethers@6.11.1)
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../../packages/typescript-config
+      '@types/yargs':
+        specifier: ^17.0.32
+        version: 17.0.32
+      tsx:
+        specifier: ^4.7.2
+        version: 4.9.3
+      yargs:
+        specifier: ^17.7.2
+        version: 17.7.2
+
+  sdk/tools/genStrategyDefinitions/bundle: {}
+
   stacks:
     devDependencies:
       '@summerfi/eslint-config':
@@ -7085,6 +7127,15 @@ packages:
 
   /@microsoft/tsdoc@0.14.2:
     resolution: {integrity: sha512-9b8mPpKrfeGRuhFH5iO1iwCLeIIsV6+H1sRfxbkoGXIyQE2BTsPd9zqSqQJ+pv5sJ/hT5M1zvOFL02MnEezFug==}
+    dev: true
+
+  /@morpho-labs/gnosis-tx-builder@2.0.0(ethers@6.11.1):
+    resolution: {integrity: sha512-1xGHIe+oBOl5+AUOQgcHFRy1sFNjB5gRe03XaNbe7Rm7KY1YklU3/D0OT6EXk0ng6BuaSNO8NIGxeJXgKMMlVQ==}
+    engines: {node: '>=16.0'}
+    peerDependencies:
+      ethers: ^6.9.2
+    dependencies:
+      ethers: 6.11.1
     dev: true
 
   /@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1:

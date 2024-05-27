@@ -42,18 +42,18 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
   ContractsAbiMap extends GenericAbiMap<ContractNames>,
 > extends BaseProtocolPlugin {
   abstract readonly protocolName: AllowedProtocolNames
-  readonly contractsAbiProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>
 
+  private _contractsAbiProvider: Maybe<ChainContractsProvider<ContractNames, ContractsAbiMap>>
   private _assetsList: Maybe<AssetsList<ContractNames, ContractsAbiMap>> = undefined
 
   /** CONSTRUCTOR */
-  protected constructor(params: {
+  initialize(params: {
     context: IProtocolPluginContext
     contractsAbiProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>
   }) {
-    super(params)
+    super.initialize(params)
 
-    this.contractsAbiProvider = params.contractsAbiProvider
+    this._contractsAbiProvider = params.contractsAbiProvider
   }
 
   /** PROTECTED */
@@ -253,5 +253,13 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
     } catch (e) {
       throw new Error(`error in debt loop ${e}`)
     }
+  }
+
+  get contractsAbiProvider(): ChainContractsProvider<ContractNames, ContractsAbiMap> {
+    if (!this._contractsAbiProvider) {
+      throw new Error('Contracts ABI provider not initialized')
+    }
+
+    return this._contractsAbiProvider
   }
 }

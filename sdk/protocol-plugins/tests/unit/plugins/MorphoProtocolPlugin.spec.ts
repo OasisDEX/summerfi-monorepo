@@ -16,7 +16,8 @@ describe('Protocol Plugin | Unit | Morpho', () => {
   let morphoProtocolPlugin: MorphoProtocolPlugin
   beforeAll(async () => {
     ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
-    morphoProtocolPlugin = new MorphoProtocolPlugin({
+    morphoProtocolPlugin = new MorphoProtocolPlugin()
+    morphoProtocolPlugin.initialize({
       context: ctx,
     })
   })
@@ -64,7 +65,7 @@ describe('Protocol Plugin | Unit | Morpho', () => {
 
   it('should throw an error when calling getPool with chain id missing from ctx', async () => {
     try {
-      new MorphoProtocolPlugin({
+      new MorphoProtocolPlugin().initialize({
         context: {
           ...ctx,
           provider: {
@@ -85,7 +86,7 @@ describe('Protocol Plugin | Unit | Morpho', () => {
   it('should throw an error when calling getPool with an unsupported chain ID', async () => {
     const wrongChainId = 2
     try {
-      new MorphoProtocolPlugin({
+      new MorphoProtocolPlugin().initialize({
         context: {
           ...ctx,
           provider: {

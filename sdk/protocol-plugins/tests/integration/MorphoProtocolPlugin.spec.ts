@@ -14,7 +14,8 @@ describe.only('Protocol Plugin | Integration | Morpho', () => {
 
   beforeAll(async () => {
     ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
-    morphoProtocolPlugin = new MorphoProtocolPlugin({
+    morphoProtocolPlugin = new MorphoProtocolPlugin()
+    morphoProtocolPlugin.initialize({
       context: ctx,
     })
   })

@@ -19,7 +19,8 @@ describe('AAVEv3 Protocol Plugin', () => {
   beforeAll(async () => {
     ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
     aaveV3PoolIdMock = await getAaveV3PoolIdMock()
-    aaveV3ProtocolPlugin = new AaveV3ProtocolPlugin({
+    aaveV3ProtocolPlugin = new AaveV3ProtocolPlugin()
+    aaveV3ProtocolPlugin.initialize({
       context: ctx,
     })
   })
@@ -70,7 +71,7 @@ describe('AAVEv3 Protocol Plugin', () => {
 
   it('should throw an error when calling getLendingPool with chain id missing from ctx', async () => {
     try {
-      new AaveV3ProtocolPlugin({
+      new AaveV3ProtocolPlugin().initialize({
         context: {
           ...ctx,
           provider: {
@@ -93,7 +94,7 @@ describe('AAVEv3 Protocol Plugin', () => {
     const wrongChainId = 2
 
     try {
-      new AaveV3ProtocolPlugin({
+      new AaveV3ProtocolPlugin().initialize({
         context: {
           ...ctx,
           provider: {

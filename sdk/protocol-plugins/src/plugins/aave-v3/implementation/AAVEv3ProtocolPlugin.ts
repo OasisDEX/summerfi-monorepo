@@ -37,7 +37,7 @@ export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
   AaveV3ContractNames,
   AaveV3AbiMapType
 > {
-  readonly protocolName = ProtocolName.AAVEv3
+  readonly protocolName = ProtocolName.AaveV3
   readonly supportedChains = valuesOfChainFamilyMap([
     ChainFamilyName.Ethereum,
     ChainFamilyName.Base,
@@ -46,10 +46,10 @@ export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
   ])
   readonly stepBuilders: Partial<ActionBuildersMap> = AaveV3StepBuilders
 
-  constructor(params: { context: IProtocolPluginContext }) {
+  initialize(params: { context: IProtocolPluginContext }) {
     const contractsAbiProvider = new ChainContractsProvider(AaveV3AbiMap)
 
-    super({
+    super.initialize({
       ...params,
       contractsAbiProvider,
     })
