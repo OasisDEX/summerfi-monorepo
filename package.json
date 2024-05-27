@@ -11,7 +11,7 @@
     "check-circular": "turbo run check-circular --cache-dir=.turbo",
     "cicheck": "turbo run cicheck --cache-dir=.turbo && pnpm run coverage:total",
     "cicheck:dev": "turbo run cicheck --cache-dir=.turbo --output-logs=new-only --concurrency=100% --continue",
-    "sst:dev": "sst dev",
+    "sst:dev": "sst dev --app summerfi-stack",
     "sst:build": "sst build",
     "sst:deploy:dev": "sst deploy",
     "sst:deploy:staging": "sst deploy --stage staging --app summerfi-stack",

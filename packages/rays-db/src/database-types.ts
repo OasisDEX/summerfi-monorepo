@@ -44,6 +44,11 @@ export interface EligibilityCondition {
   updatedAt: Generated<Timestamp>
 }
 
+export interface Leaderboard {
+  totalPoints: Numeric | null
+  userAddress: string | null
+}
+
 export interface Multiplier {
   createdAt: Generated<Timestamp>
   description: string | null
@@ -111,6 +116,7 @@ export interface UserAddress {
 export interface Database {
   blockchainUser: BlockchainUser
   eligibilityCondition: EligibilityCondition
+  leaderboard: Leaderboard
   multiplier: Multiplier
   pointsDistribution: PointsDistribution
   position: Position
