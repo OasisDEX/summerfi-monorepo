@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import classNames from 'classNames'
 
 import { NavigationMenuPanelType } from '@/components/layout/Navigation/Navigation.types'
+import { NavigationMenuDropdownContent } from '@/components/layout/Navigation/NavigationMenuDropdownContent'
 
 import navigationMenuDropdownStyles from './NavigationMenuDropdown.module.scss'
 
@@ -119,7 +120,6 @@ export const NavigationMenuDropdown = ({
                 }}
                 {...(currentPanel === label && { ref })}
               >
-                {/* 
                 <NavigationMenuDropdownContent
                   currentPanel={currentPanel}
                   isPanelActive={isPanelOpen && currentPanel === label}
@@ -132,7 +132,7 @@ export const NavigationMenuDropdown = ({
                     setIsListSwitched(true)
                   }}
                   {...panel}
-                />*/}
+                />
               </div>
             ))}
           </div>

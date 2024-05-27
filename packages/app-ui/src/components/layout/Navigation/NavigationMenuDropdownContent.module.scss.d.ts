@@ -1,6 +1,8 @@
 export type Styles = {
   navigationMenuDropdownContentFirstColumn: string
   navigationMenuDropdownContentFirstColumnLi: string
+  navigationMenuDropdownContentSecondColumn: string
+  navigationMenuDropdownContentSecondColumnLi: string
 }
 
 export type ClassNames = keyof Styles

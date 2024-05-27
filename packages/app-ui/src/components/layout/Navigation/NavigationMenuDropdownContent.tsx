@@ -1,5 +1,5 @@
 /* eslint-disable no-magic-numbers */
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 
 import { NavigationMenuPanelType } from '@/components/layout/Navigation/Navigation.types'
 import { NavigationMenuDropdownContentList } from '@/components/layout/Navigation/NavigationMenuDropdownContentList'
@@ -23,7 +23,7 @@ export const NavigationMenuDropdownContent = ({
   onChange,
   onSelect,
 }: NavigationMenuDropdownContentProps) => {
-  const ref = useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLLIElement>(null)
   const [selected, setSelected] = useState<[number, number]>([0, 0])
 
   useEffect(() => {
@@ -31,6 +31,11 @@ export const NavigationMenuDropdownContent = ({
   }, [currentPanel, isPanelOpen])
 
   useEffect(() => {
+    console.log('debug', {
+      currentPanel,
+      label,
+      refCurrent: ref.current,
+    })
     if (currentPanel === label && ref.current) {
       const root = document.documentElement
 
@@ -40,6 +45,7 @@ export const NavigationMenuDropdownContent = ({
         '--navigation-dropdown-content-dynamic-height',
         `${ref.current.offsetHeight}px`,
       )
+      console.log('ref.current.offsetHeight', ref.current.offsetHeight)
       onChange(ref.current.offsetHeight)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -67,7 +73,41 @@ export const NavigationMenuDropdownContent = ({
           </li>
         ))}
       </ul>
-      <div>asd</div>
+      <ul className={navigationMenuDropdownContentStyles.navigationMenuDropdownContentSecondColumn}>
+        {lists
+          .filter(({ items }) => items.filter(({ list }) => list !== undefined))
+          .map(({ items }, i) => (
+            <Fragment key={i}>
+              {items.map(({ list }, j) => (
+                <Fragment key={j}>
+                  {list && (
+                    <li
+                      key={`${i}-${j}`}
+                      className={
+                        navigationMenuDropdownContentStyles.navigationMenuDropdownContentSecondColumnLi
+                      }
+                      style={{
+                        opacity: selected[0] === i && selected[1] === j ? 1 : 0,
+                        pointerEvents:
+                          isPanelActive && selected[0] === i && selected[1] === j ? 'auto' : 'none',
+                        transform: `translateY(${
+                          (selected[0] === i && selected[1] < j) || selected[0] < i
+                            ? 50
+                            : (selected[0] === i && selected[1] > j) || selected[0] > i
+                              ? -50
+                              : 0
+                        }px)`,
+                      }}
+                      {...(selected[0] === i && selected[1] === j && { ref })}
+                    >
+                      <NavigationMenuDropdownContentList {...list} />
+                    </li>
+                  )}
+                </Fragment>
+              ))}
+            </Fragment>
+          ))}
+      </ul>
     </>
   )
 }

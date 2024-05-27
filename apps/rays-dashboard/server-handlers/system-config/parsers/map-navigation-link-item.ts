@@ -31,7 +31,7 @@ export function mapNavigationLinkItem({
           description,
           promoted: star,
           ...(protocol && {
-            hoverColor: lendingProtocolsByName[protocol.slug].gradient,
+            protocolName: protocol.slug,
             icon: {
               image: lendingProtocolsByName[protocol.slug].icon,
               position: 'title',

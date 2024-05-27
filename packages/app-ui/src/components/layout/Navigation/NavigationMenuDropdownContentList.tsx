@@ -40,7 +40,7 @@ export const NavigationMenuDropdownContentList = ({
       <ul
         className={navigationMenuDropdownContentListStyles.navigationMenuDropdownContentListWrapper}
       >
-        {items.map(({ hoverColor, url, navigationModule, ...item }, i) => (
+        {items.map(({ protocolName, url, navigationModule, ...item }, i) => (
           <li
             key={i}
             className={classNames(
@@ -74,7 +74,7 @@ export const NavigationMenuDropdownContentList = ({
                   },
                 )}
               >
-                <NavigationMenuDropdownContentListItem hoverColor={hoverColor} {...item} />
+                <NavigationMenuDropdownContentListItem protocolName={protocolName} {...item} />
               </Link>
             ) : (
               <div
@@ -96,7 +96,7 @@ export const NavigationMenuDropdownContentList = ({
                     }
                   </>
                 ) : (
-                  <NavigationMenuDropdownContentListItem hoverColor={hoverColor} {...item} />
+                  <NavigationMenuDropdownContentListItem protocolName={protocolName} {...item} />
                 )} */}
               </div>
             )}

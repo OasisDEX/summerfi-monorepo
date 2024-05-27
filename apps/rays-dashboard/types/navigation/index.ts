@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
-import { ProtocolId } from '@summerfi/serverless-shared'
 
+import { LendingProtocol } from '@/helpers/lending-protocol'
 import { FeaturesEnum } from '@/types/generated'
 import { OmniProductType } from '@/types/omni-kit'
 import { ProductHubSupportedNetworks } from '@/types/product-hub'
@@ -15,7 +15,7 @@ interface NavigationLink {
   label: string
   link?: string
   protocol?: {
-    slug: ProtocolId
+    slug: LendingProtocol
   }
   token?: string
   star: boolean
@@ -35,7 +35,7 @@ export interface NavigationFeaturedProduct {
   primaryToken: string
   secondaryToken: string
   protocol: {
-    slug: ProtocolId
+    slug: LendingProtocol
   }
   product: {
     slug: OmniProductType
@@ -124,7 +124,7 @@ export type NavigationMenuPanelListTags = ([string, string] | string)[]
 
 export interface NavigationMenuPanelListItem {
   description?: ReactNode
-  hoverColor?: string
+  protocolName?: string
   icon?: NavigationMenuPanelIcon
   list?: {
     header?: string

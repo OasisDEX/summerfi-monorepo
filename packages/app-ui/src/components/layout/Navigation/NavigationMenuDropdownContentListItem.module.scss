@@ -3,3 +3,78 @@
   column-gap: 12px;
   line-height: 24px;
 }
+
+.navigationMenuDropdownContentListItem {
+  align-items: center;
+  column-gap: 2;
+}
+
+.starTransition {
+  transition: color 200ms;
+}
+
+.navigationMenuDropdownContentListItemTitle {
+  color: var(--color-primary-100);
+
+  &:hover {
+    position: relative;
+    transition: color 200ms;
+
+    &::after {
+      content: attr(data-value);
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transition: opacity 200ms;
+      background-clip: text;
+    }
+  }
+
+  // these are from LendingProtocol
+  &aavev2,
+  &aavev3 {
+    &:hover {
+      &::after {
+        background-image: var(--gradient-protocol-aave);
+      }
+    }
+  }
+  &ajna {
+    &:hover {
+      &::after {
+        background-image: var(--gradient-protocol-ajna);
+      }
+    }
+  }
+  &maker {
+    &:hover {
+      &::after {
+        background-image: var(--gradient-protocol-maker);
+      }
+    }
+  }
+  &morphoblue {
+    &:hover {
+      &::after {
+        background-image: var(--gradient-protocol-morpho-blue);
+      }
+    }
+  }
+  &sparkv3 {
+    &:hover {
+      &::after {
+        background-image: var(--gradient-protocol-spark);
+      }
+    }
+  }
+}
+
+.navigationMenuDropdownContentListItemDescription {
+  margin-top: var(--space-xs);
+  color: var(--color-neutral-80);
+  & em {
+    color: var(--color-primary-100);
+    font-style: normal;
+  }
+}
