@@ -88,7 +88,11 @@ export const handler = async (
       'eligibilityCondition.type',
     ])
     .execute()
-
+  const positionInLeaderboard = await db
+    .selectFrom('leaderboard')
+    .where('userAddress', '=', address.toLowerCase())
+    .select(['position'])
+    .execute()
   const points = userPoints.concat(positionsPoints)
 
   const byDueDate = groupBy(
@@ -116,6 +120,7 @@ export const handler = async (
       eligiblePoints,
       allPossiblePoints,
       actionRequiredPoints,
+      positionInLeaderboard: positionInLeaderboard[0]?.position,
     },
   })
 }
