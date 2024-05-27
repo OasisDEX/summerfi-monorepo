@@ -117,7 +117,7 @@ export class ProtocolPluginMock implements IProtocolPlugin {
       return undefined
     }
 
-    return new builder() as IActionBuilder<Step>
+    return new builder()
   }
 
   async getImportPositionTransaction(params: {
@@ -167,7 +167,7 @@ export class EmptyProtocolPluginMock implements IProtocolPlugin {
       return undefined
     }
 
-    return new builder() as IActionBuilder<Step>
+    return new builder()
   }
 
   async getImportPositionTransaction(params: {
@@ -222,7 +222,7 @@ export class NoCheckpointProtocolPluginMock implements IProtocolPlugin {
       return undefined
     }
 
-    return new builder() as IActionBuilder<Step>
+    return new builder()
   }
 
   async getImportPositionTransaction(params: {
