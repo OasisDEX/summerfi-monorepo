@@ -7,6 +7,8 @@ export type Generated<T> =
     ? ColumnType<S, I | undefined, U>
     : ColumnType<T, T | undefined, T>
 
+export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>
+
 export type Json = JsonValue
 
 export type JsonArray = JsonValue[]
@@ -45,6 +47,7 @@ export interface EligibilityCondition {
 }
 
 export interface Leaderboard {
+  position: Int8 | null
   totalPoints: Numeric | null
   userAddress: string | null
 }
