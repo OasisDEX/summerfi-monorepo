@@ -9,6 +9,7 @@ import { SummerStackContext } from './summer-stack-context'
 import { addRaysDb } from './rays-db'
 import { addRaysConfig } from './rays'
 import { addRedis } from './redis'
+import { addSdkConfig } from './sdk'
 
 export function API(stackContext: StackContext) {
   const { stack } = stackContext
@@ -42,6 +43,7 @@ export function API(stackContext: StackContext) {
 
   const db = addRaysDb(summerContext)
   addTriggersConfig(summerContext)
+  addSdkConfig(summerContext, api)
   addMigrationsConfig(summerContext)
   addPortfolioConfig(summerContext)
   addMorpho(summerContext)
