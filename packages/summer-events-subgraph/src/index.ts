@@ -48,7 +48,7 @@ export interface GetUsersPointsResult {
 
 export type GetUsersPoints = (params: GetUsersPointsParams) => Promise<GetUsersPointsResult>
 
-export const START_POINTS_TIMESTAMP = 1717372800
+export const START_POINTS_TIMESTAMP = 1716768000
 
 async function getUsersPoints(
   params: GetUsersPointsParams,
