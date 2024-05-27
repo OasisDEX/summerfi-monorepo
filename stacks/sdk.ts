@@ -17,7 +17,7 @@ const {
   RPC_GATEWAY,
 } = process.env
 
-export function addSdkConfig({ stack, api }: StackContext & { api: Api }) {
+export function addSdkConfig({ stack }: StackContext, api: Api) {
   if (
     !ONE_INCH_API_KEY ||
     !ONE_INCH_API_VERSION ||
