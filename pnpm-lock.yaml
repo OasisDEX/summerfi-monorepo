@@ -33,7 +33,7 @@ importers:
         specifier: ^0.27.3
         version: 0.27.3
       viem:
-        specifier: ^2.9.19
+        specifier: 2.9.19
         version: 2.9.19(typescript@5.4.5)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
@@ -1313,9 +1313,6 @@ importers:
 
   packages/serverless-shared:
     dependencies:
-      viem:
-        specifier: ^2.9.19
-        version: 2.10.8(typescript@5.4.5)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1405,7 +1402,7 @@ importers:
         version: link:../triggers-shared
       viem:
         specifier: ^2.9.19
-        version: 2.9.19(typescript@5.4.5)(zod@3.22.4)
+        version: 2.12.0(typescript@5.4.5)(zod@3.22.4)
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -1876,12 +1873,24 @@ importers:
       '@trpc/client':
         specifier: 11.0.0-next-beta.264
         version: 11.0.0-next-beta.264(@trpc/server@11.0.0-next-beta.264)
+      '@trpc/server':
+        specifier: 11.0.0-next-beta.264
+        version: 11.0.0-next-beta.264
+      abitype:
+        specifier: ^1.0.2
+        version: 1.0.2(typescript@5.4.5)(zod@3.22.4)
+      bignumber.js:
+        specifier: ^9.1.2
+        version: 9.1.2
       superjson:
         specifier: ^1.13.3
         version: 1.13.3
       viem:
-        specifier: ^2.7.9
+        specifier: 2.9.19
         version: 2.9.19(typescript@5.4.5)(zod@3.22.4)
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
 
   sdk/sdk-common:
     dependencies:
@@ -1904,12 +1913,15 @@ importers:
 
   sdk/sdk-common/bundle:
     dependencies:
+      bignumber.js:
+        specifier: ^9.1.2
+        version: 9.1.2
       superjson:
         specifier: ^1.13.3
         version: 1.13.3
-      viem:
-        specifier: ^2.2.0
-        version: 2.9.19(typescript@5.4.5)(zod@3.22.4)
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
 
   sdk/sdk-e2e:
     devDependencies:
@@ -2549,7 +2561,7 @@ importers:
         version: link:../../packages/triggers-shared
       viem:
         specifier: ^2.9.19
-        version: 2.9.19(typescript@5.4.5)(zod@3.22.4)
+        version: 2.12.0(typescript@5.4.5)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -2703,7 +2715,7 @@ importers:
         version: 3.3.2
       viem:
         specifier: ^2.9.19
-        version: 2.9.19(typescript@5.4.5)(zod@3.22.4)
+        version: 2.12.0(typescript@5.4.5)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -32539,8 +32551,8 @@ packages:
       - zod
     dev: false
 
-  /viem@2.10.8(typescript@5.4.5)(zod@3.22.4):
-    resolution: {integrity: sha512-ttCXlDmjjcZ8M/eJezXFzDtHj+RFOjEQ3elmXnCC7suXo/y8CuIM1LrIoyUFk7LKIE5E+bzmWUErS4u/MQBtpQ==}
+  /viem@2.12.0(typescript@5.4.5)(zod@3.22.4):
+    resolution: {integrity: sha512-XBvORspE4x2/gfy7idH6IVFwkJiXirygFCU3lxUH6fttsj8zufLtgiokfvZF/LAZUEDvdxSgL08whSYgffM2fw==}
     peerDependencies:
       typescript: '>=5.0.4'
     peerDependenciesMeta:

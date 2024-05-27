@@ -1,6 +1,5 @@
 import { Api, StackContext } from 'sst/constructs'
 import { addTriggersConfig } from './triggers'
-import { addSdkConfig } from './sdk'
 import { addMigrationsConfig } from './migrations'
 import { addPortfolioConfig } from './portfolio'
 import { addMorpho } from './morpho'
@@ -41,7 +40,6 @@ export function API(stackContext: StackContext) {
   }
 
   addTriggersConfig(summerContext)
-  addSdkConfig(summerContext)
   addMigrationsConfig(summerContext)
   addPortfolioConfig(summerContext)
   addMorpho(summerContext)

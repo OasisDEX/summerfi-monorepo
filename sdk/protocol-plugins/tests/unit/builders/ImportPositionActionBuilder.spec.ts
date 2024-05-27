@@ -109,7 +109,7 @@ describe('Deposit Borrow Action Builder', () => {
 
   it('should fail if no protocol plugin exists', async () => {
     try {
-      await ImportPositionActionBuilder({
+      await new ImportPositionActionBuilder().build({
         ...builderParams,
         step: derivedStep,
         protocolsRegistry: builderParams.emptyProtocolsRegistry,
@@ -122,7 +122,7 @@ describe('Deposit Borrow Action Builder', () => {
 
   it('should fail if no protocol builder for the step exists', async () => {
     try {
-      await ImportPositionActionBuilder({
+      await new ImportPositionActionBuilder().build({
         ...builderParams,
         step: derivedStep,
         protocolsRegistry: builderParams.emptyBuildersProtocolRegistry,
@@ -134,7 +134,7 @@ describe('Deposit Borrow Action Builder', () => {
   })
 
   it('should call the proper builder', async () => {
-    await ImportPositionActionBuilder({
+    await new ImportPositionActionBuilder().build({
       ...builderParams,
       step: derivedStep,
     })

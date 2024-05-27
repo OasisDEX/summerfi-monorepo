@@ -1,76 +1,95 @@
 query SummerPoints(
-    $first: Int!
-    $lastId: Bytes!
-    $pointsStartTimestamp: BigInt!
-    $startTimestamp: BigInt!
-    $endTimestamp: BigInt!
+  $first: Int
+  $lastId: Bytes
+  $pointsStartTimestamp: BigInt
+  $startTimestamp: BigInt
+  $endTimestamp: BigInt
 ) {
-    users(
-        orderBy: id
-        first: $first
-        where: { openPositions_gt: 0, id_gt: $lastId }
-    ) {
+  users(orderBy: id, first: $first, where: { openPositions_gt: 0, id_gt: $lastId }) {
+    id
+    positions(where: { netValue_gt: 0 }) {
+      id
+      protocol
+      marketId
+      account {
         id
-        positions(where: { netValue_gt: 0 }) {
-            account {
-                vaultId
-                address
-            }
-            id
-            protocol
-            marketId
-            netValue
-            summerEvents(
-                where: { timestamp_gt: $startTimestamp, timestamp_lt: $endTimestamp }
-            ) {
-                netValueBefore
-                netValueAfter
-                timestamp
-            }
-            migration: summerEvents(
-                where: {
-                    timestamp_gt: $startTimestamp
-                    timestamp_lt: $endTimestamp
-                    kind_contains_nocase: "migrate"
-                }
-            ) {
-                netValueBefore
-                netValueAfter
-                timestamp
-            }
-            activeTriggers: triggers(
-                where: {
-                    or: [
-                        { removedBlock: null, executedBlock: null }
-                        { continuous: true, removedBlock: null }
-                    ]
-                }
-            ) {
-                id
-                kind
-            }
-            firstEvent: summerEvents(
-                first: 1
-                orderBy: timestamp
-                orderDirection: asc
-            ) {
-                timestamp
-            }
+        vaultId
+      }
+      netValue
+      recentSwaps: swaps(where: { timestamp_gt: $startTimestamp, timestamp_lt: $endTimestamp }) {
+        id
+        amountInUSD
+        assetIn {
+          symbol
         }
-        swaps(where: { timestamp_gt: $pointsStartTimestamp }) {
-            id
+        assetOut {
+          symbol
         }
-        recentSwaps: swaps(
-            where: { timestamp_gt: $startTimestamp, timestamp_lt: $endTimestamp }
-        ) {
+        position {
+          netValue
+          user {
             id
-            amountInUSD
-            assetIn {
-                symbol
-            }
-            assetOut {
-                symbol
-            }
+          }
         }
+      }
+      summerEvents(where: { timestamp_gt: $startTimestamp, timestamp_lt: $endTimestamp }) {
+        netValueBefore
+        netValueAfter
+        timestamp
+      }
+      migration: summerEvents(
+        where: {
+          timestamp_gt: $startTimestamp
+          timestamp_lt: $endTimestamp
+          kind_contains_nocase: "migrate"
+        }
+      ) {
+        netValueBefore
+        netValueAfter
+        timestamp
+      }
+      activeTriggers: triggers(
+        where: {
+          or: [
+            { removedBlock: null, executedBlock: null }
+            { continuous: true, removedBlock: null }
+          ]
+        }
+      ) {
+        id
+        kind
+      }
+      firstEvent: summerEvents(first: 1, orderBy: timestamp, orderDirection: asc) {
+        timestamp
+      }
     }
+    swaps(where: { timestamp_gt: $pointsStartTimestamp }) {
+      id
+    }
+    recentSwaps: swaps(where: { timestamp_gt: $startTimestamp, timestamp_lt: $endTimestamp }) {
+      id
+      position {
+        id
+        account {
+          vaultId
+        }
+        protocol
+        marketId
+        netValue
+        user {
+          id
+        }
+        firstEvent: summerEvents(first: 1, orderBy: timestamp, orderDirection: asc) {
+          timestamp
+        }
+      }
+      amountInUSD
+      assetIn {
+        symbol
+      }
+      assetOut {
+        symbol
+      }
+    }
+  }
 }

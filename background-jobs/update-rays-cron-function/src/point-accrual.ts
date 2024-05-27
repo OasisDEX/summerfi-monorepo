@@ -1,20 +1,42 @@
 import {
   MigrationEvent,
   Position,
-  RecentSwap,
+  RecentSwapInPosition,
+  RecentSwapInUser,
   START_POINTS_TIMESTAMP,
   SummerPointsSubgraphClient,
   User,
   UsersData,
 } from '@summerfi/summer-events-subgraph'
 import { Logger } from '@aws-lambda-powertools/logger'
-
-type PositionPoints = {
+export type PositionPointsItem = {
   positionId: string
   vaultId: number
   user: string
   protocol: string
   marketId: string
+  positionCreated: number
+  points: {
+    openPositionsPoints: number
+    migrationPoints: number
+    swapPoints: number
+  }
+  netValue: number
+  multipliers: {
+    protocolBoostMultiplier: number
+    swapMultiplier: number
+    timeOpenMultiplier: number
+    automationProtectionMultiplier: number
+    lazyVaultMultiplier: number
+  }
+}
+export type PositionPoints = {
+  positionId: string
+  vaultId: number
+  user: string
+  protocol: string
+  marketId: string
+  positionCreated: number
   points: {
     openPositionsPoints: number
     migrationPoints: number
@@ -36,7 +58,7 @@ type PositionPoints = {
 export class SummerPointsService {
   private SECONDS_PER_YEAR = 365 * 24 * 60 * 60
   private SECONDS_PER_DAY = 86400
-  private SECONDS_PER_HOUR = 3600
+
   private MIGRATION_POINTS_FRACTION = 0.2
   private CORRELATED_SWAP_POINTS_FRACTION = 0.06
   private UNCORRELATED_SWAP_POINTS_FRACTION = 0.2
@@ -44,6 +66,8 @@ export class SummerPointsService {
 
   private AUTOMATION_OPTIMISATION_MULTIPLIER = 1.5
   private AUTOMATION_PROTECTION_MULTIPLIER = 1.1
+
+  private NET_VALUE_CAP = 10000000
 
   /**
    * Creates an instance of SummerPointsService.
@@ -94,6 +118,18 @@ export class SummerPointsService {
   }
 
   /**
+   * Calculates the total points earned over a given period of time, based on the amount and period in seconds.
+   * @param _amount - The amount used to calculate the points. It will be capped at 10,000,000.
+   * @param periodInSeconds - The period of time in seconds.
+   * @returns The total points earned over the given period of time.
+   */
+  private getPointsPerPeriodInSeconds(_amount: number, periodInSeconds: number) {
+    const amount = Math.min(_amount, this.NET_VALUE_CAP)
+    const pointsPerSecond = this.getPointsPerUsdPerSecond(amount)
+    return pointsPerSecond * periodInSeconds * amount
+  }
+
+  /**
    * Calculates the points per USD per second.
    *
    * @param usdAmount - The amount in USD.
@@ -101,24 +137,6 @@ export class SummerPointsService {
    */
   private getPointsPerUsdPerSecond(usdAmount: number): number {
     return this.getPointsPerUsdPerYear(usdAmount) / this.SECONDS_PER_YEAR
-  }
-
-  /**
-   * Calculates the points per USD per day based on the given USD amount.
-   * @param usdAmount - The USD amount for which to calculate the points.
-   * @returns The points per USD per day.
-   */
-  private getPointsPerUsdPerDay(usdAmount: number): number {
-    return this.getPointsPerUsdPerSecond(usdAmount) * this.SECONDS_PER_DAY
-  }
-
-  /**
-   * Calculates the points per USD per hour based on the given USD amount.
-   * @param usdAmount - The USD amount for which to calculate the points.
-   * @returns The points per USD per hour.
-   */
-  private getPointsPerUsdPerHour(usdAmount: number): number {
-    return this.getPointsPerUsdPerSecond(usdAmount) * this.SECONDS_PER_HOUR
   }
 
   /**
@@ -166,15 +184,20 @@ export class SummerPointsService {
     const pointsEarned = users.map((user) => {
       const swapMultiplier = this.getSwapMultiplier(user.swaps)
       const protocolBoostMultiplier = this.getNetValueMutliplier(user)
+      const closedPositionsPoints = this.getClosedPositionSwapPoints(
+        user,
+        protocolBoostMultiplier,
+        swapMultiplier,
+      )
 
-      return user.positions.map((position) => {
+      const openPositionsPoints = user.positions.map((position) => {
         const openPositionsPoints = this.getOpenPositionsPoints(
           startTimestamp,
           position,
           endTimestamp,
         )
         const migrationPoints = this.getMigrationPoints(position.migration)
-        const swapPoints = swapMultiplier * this.getSwapPoints(user.recentSwaps)
+        const swapPoints = swapMultiplier * this.getSwapPoints(position.recentSwaps)
 
         const timeOpenMultiplier = this.getTimeOpenMultiplier(position, endTimestamp)
         const automationProtectionMultiplier = this.getAutomationProtectionMultiplier(position)
@@ -190,6 +213,7 @@ export class SummerPointsService {
           positionId: position.id,
           protocol: position.protocol,
           marketId: position.marketId,
+          positionCreated: position.firstEvent[0].timestamp,
           user: user.id,
           points: {
             openPositionsPoints: totalMultiplier * openPositionsPoints,
@@ -206,11 +230,76 @@ export class SummerPointsService {
           },
         }
       })
+      return closedPositionsPoints.concat(openPositionsPoints)
     })
 
     return pointsEarned
       .flat()
       .sort((a, b) => b.points.openPositionsPoints - a.points.openPositionsPoints)
+  }
+
+  /**
+   * Calculates the closed position swap points for a user.
+   *
+   * @remarks The closed position swap points are calculated based on the swaps that are not associated with open positions.
+   *
+   * @param user - The user object containing positions, swaps, and other relevant data.
+   * @param protocolBoostMultiplier - The multiplier for protocol boost points.
+   * @param swapMultiplier - The multiplier for swap points.
+   * @returns An array of objects representing the closed position swap points.
+   */
+  private getClosedPositionSwapPoints(
+    user: User,
+    protocolBoostMultiplier: number,
+    swapMultiplier: number,
+  ) {
+    const userSwaps = user.recentSwaps
+
+    const idsOfUserOpenPositions = user.positions.map((position) => position.id)
+    /* @dev filter out swaps that are related to an open position -> position in `user.positions` - this is enforced by `netValue_gt: 0` in subgraph query */
+    const filteredSwaps = userSwaps.filter(
+      (swap) => !swap.position || !idsOfUserOpenPositions.includes(swap.position.id),
+    )
+    // Group swaps by position id
+    const swapsByPositionId = filteredSwaps.reduce(
+      (acc, swap) => {
+        const positionId = swap.position!.id
+        if (!acc[positionId]) {
+          acc[positionId] = []
+        }
+        acc[positionId].push(swap)
+        return acc
+      },
+      {} as { [key: string]: (typeof filteredSwaps)[0][] },
+    )
+
+    const closedPositionsPoints = Object.entries(swapsByPositionId).map(([positionId, swaps]) => {
+      const swapPoints = swapMultiplier * this.getSwapPoints(swaps)
+      const swap = swaps[0] // Assuming all swaps for a position have the same position data
+
+      return {
+        positionId: positionId,
+        vaultId: swap.position!.account.vaultId,
+        protocol: swap.position!.protocol,
+        marketId: swap.position!.marketId,
+        positionCreated: swap.position!.firstEvent[0].timestamp,
+        user: user.id,
+        points: {
+          openPositionsPoints: 0,
+          migrationPoints: 0,
+          swapPoints: swapPoints,
+        },
+        netValue: swap.position!.netValue,
+        multipliers: {
+          protocolBoostMultiplier,
+          swapMultiplier,
+          timeOpenMultiplier: 1,
+          automationProtectionMultiplier: 1,
+          lazyVaultMultiplier: 1,
+        },
+      }
+    })
+    return closedPositionsPoints
   }
 
   /**
@@ -231,19 +320,13 @@ export class SummerPointsService {
 
     for (const event of position.summerEvents) {
       const timeDifference = event.timestamp - previousTimestamp
-
-      const pointsPerSecond = this.getPointsPerUsdPerSecond(event.netValueBefore)
-      openPositionsPoints += pointsPerSecond * timeDifference * event.netValueBefore
-
+      openPositionsPoints += this.getPointsPerPeriodInSeconds(event.netValueBefore, timeDifference)
       previousTimestamp = event.timestamp
     }
 
     // Calculate points for the time period after the last event
     const timeDifference = endTimestamp - previousTimestamp
-
-    const pointsPerSecond = this.getPointsPerUsdPerSecond(position.netValue)
-
-    openPositionsPoints += pointsPerSecond * timeDifference * position.netValue
+    openPositionsPoints += this.getPointsPerPeriodInSeconds(position.netValue, timeDifference)
     return openPositionsPoints
   }
 
@@ -258,8 +341,10 @@ export class SummerPointsService {
   getMigrationPoints(events: MigrationEvent[]): number {
     let migrationPoints = 0
     for (const event of events) {
-      const pointsPerUsdPerYear = this.getPointsPerUsdPerYear(event.netValueAfter)
-      const pointsPerYear = pointsPerUsdPerYear * event.netValueAfter
+      const pointsPerYear = this.getPointsPerPeriodInSeconds(
+        event.netValueAfter,
+        this.SECONDS_PER_YEAR,
+      )
       migrationPoints += pointsPerYear * this.MIGRATION_POINTS_FRACTION
     }
 
@@ -273,11 +358,13 @@ export class SummerPointsService {
    * @param swaps - An array of recent swaps.
    * @returns The total swap points.
    */
-  getSwapPoints(swaps: RecentSwap[]): number {
+  getSwapPoints(swaps: RecentSwapInPosition[] | RecentSwapInUser[]): number {
     let points = 0
     for (const swap of swaps) {
-      const pointsPerUsdPerYear = this.getPointsPerUsdPerYear(swap.amountInUSD)
-      const pointsPerYear = pointsPerUsdPerYear * swap.amountInUSD
+      const pointsPerYear = this.getPointsPerPeriodInSeconds(
+        swap.amountInUSD,
+        this.SECONDS_PER_YEAR,
+      )
       const isCorrelatedAsset = this.isCorrelatedAsset(swap.assetIn.symbol, swap.assetOut.symbol)
       const fraction = isCorrelatedAsset
         ? this.CORRELATED_SWAP_POINTS_FRACTION

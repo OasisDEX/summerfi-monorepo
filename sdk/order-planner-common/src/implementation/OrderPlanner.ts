@@ -2,9 +2,9 @@ import { Order, type IPositionsManager, TransactionInfo } from '@summerfi/sdk-co
 import { ISimulation, SimulationType, steps } from '@summerfi/sdk-common/simulation'
 import { Maybe } from '@summerfi/sdk-common/common'
 import {
-  ActionBuilder,
   ActionBuildersMap,
   ActionCall,
+  IActionBuilder,
   IStepBuilderContext,
   StepBuilderContext,
 } from '@summerfi/protocol-plugins-common'
@@ -39,7 +39,7 @@ export class OrderPlanner implements IOrderPlanner {
         throw new Error(`No step builder found for step type ${step.type}`)
       }
 
-      await stepBuilder({
+      await stepBuilder.build({
         context,
         user,
         positionsManager,
@@ -68,11 +68,17 @@ export class OrderPlanner implements IOrderPlanner {
     })
   }
 
-  private _getActionBuilder<T extends steps.Steps>(
+  private _getActionBuilder<StepType extends steps.Steps>(
     actionBuildersMap: ActionBuildersMap,
-    step: T,
-  ): Maybe<ActionBuilder<T>> {
-    return actionBuildersMap[step.type] as ActionBuilder<T>
+    step: StepType,
+  ): Maybe<IActionBuilder<StepType>> {
+    const builder = actionBuildersMap[step.type]
+
+    if (!builder) {
+      return undefined
+    }
+
+    return new builder() as IActionBuilder<StepType>
   }
 
   private async _generateOrder(params: {

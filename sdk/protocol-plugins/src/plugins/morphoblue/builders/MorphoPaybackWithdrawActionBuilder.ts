@@ -1,71 +1,77 @@
 import { getValueFromReference, steps } from '@summerfi/sdk-common/simulation'
-import { ActionBuilder } from '@summerfi/protocol-plugins-common'
+import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { isMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
 import { MorphoPaybackAction, MorphoWithdrawAction } from '../actions'
 import { SetApprovalAction } from '../../common'
-import { getContractAddress } from '../../utils/GetContractAddress'
+import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
-export const MorphoPaybackWithdrawActionBuilder: ActionBuilder<steps.PaybackWithdrawStep> = async (
-  params,
-): Promise<void> => {
-  const { context, positionsManager, step, addressBookManager, user } = params
+export class MorphoPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.PaybackWithdrawStep> {
+  readonly actions: ActionBuilderUsedAction[] = [
+    { action: SetApprovalAction, isOptionalTags: ['paybackAmount'] },
+    { action: MorphoPaybackAction, isOptionalTags: ['paybackAmount'] },
+    { action: MorphoWithdrawAction },
+  ]
 
-  if (!isMorphoLendingPool(step.inputs.position.pool)) {
-    throw new Error('Invalid Morpho lending pool id')
-  }
+  async build(params: ActionBuilderParams<steps.PaybackWithdrawStep>): Promise<void> {
+    const { context, positionsManager, step, addressBookManager, user } = params
 
-  const morphoBlueAddress = await getContractAddress({
-    addressBookManager,
-    chainInfo: user.chainInfo,
-    contractName: 'MorphoBlue',
-  })
+    if (!isMorphoLendingPool(step.inputs.position.pool)) {
+      throw new Error('Invalid Morpho lending pool id')
+    }
 
-  const paybackAmount = getValueFromReference(step.inputs.paybackAmount)
-
-  if (!paybackAmount.toBN().isZero()) {
-    context.addActionCall({
-      step: params.step,
-      action: new SetApprovalAction(),
-      arguments: {
-        approvalAmount: getValueFromReference(step.inputs.paybackAmount),
-        delegate: morphoBlueAddress,
-        sumAmounts: false,
-      },
-      connectedInputs: {
-        paybackAmount: 'approvalAmount',
-      },
-      connectedOutputs: {},
+    const morphoBlueAddress = await this._getContractAddress({
+      addressBookManager,
+      chainInfo: user.chainInfo,
+      contractName: 'MorphoBlue',
     })
 
+    const paybackAmount = getValueFromReference(step.inputs.paybackAmount)
+
+    if (!paybackAmount.toBN().isZero()) {
+      context.addActionCall({
+        step: params.step,
+        action: new SetApprovalAction(),
+        arguments: {
+          approvalAmount: getValueFromReference(step.inputs.paybackAmount),
+          delegate: morphoBlueAddress,
+          sumAmounts: false,
+        },
+        connectedInputs: {
+          paybackAmount: 'approvalAmount',
+        },
+        connectedOutputs: {},
+      })
+
+      context.addActionCall({
+        step: params.step,
+        action: new MorphoPaybackAction(),
+        arguments: {
+          morphoLendingPool: step.inputs.position.pool,
+          amount: getValueFromReference(step.inputs.paybackAmount),
+          onBehalf: positionsManager.address,
+          paybackAll: paybackAmount.toBN().gte(step.inputs.position.debtAmount.toBN()),
+        },
+        connectedInputs: {
+          paybackAmount: 'amount',
+        },
+        connectedOutputs: {
+          paybackAmount: 'paybackedAmount',
+        },
+      })
+    }
+
     context.addActionCall({
-      step: params.step,
-      action: new MorphoPaybackAction(),
+      step: step,
+      action: new MorphoWithdrawAction(),
       arguments: {
         morphoLendingPool: step.inputs.position.pool,
-        amount: getValueFromReference(step.inputs.paybackAmount),
-        onBehalf: positionsManager.address,
-        paybackAll: paybackAmount.toBN().gte(step.inputs.position.debtAmount.toBN()),
+        amount: step.inputs.withdrawAmount,
+        to: positionsManager.address,
       },
-      connectedInputs: {
-        paybackAmount: 'amount',
-      },
+      connectedInputs: {},
       connectedOutputs: {
-        paybackAmount: 'paybackedAmount',
+        withdrawAmount: 'withdrawnAmount',
       },
     })
   }
-
-  context.addActionCall({
-    step: step,
-    action: new MorphoWithdrawAction(),
-    arguments: {
-      morphoLendingPool: step.inputs.position.pool,
-      amount: step.inputs.withdrawAmount,
-      to: positionsManager.address,
-    },
-    connectedInputs: {},
-    connectedOutputs: {
-      withdrawAmount: 'withdrawnAmount',
-    },
-  })
 }

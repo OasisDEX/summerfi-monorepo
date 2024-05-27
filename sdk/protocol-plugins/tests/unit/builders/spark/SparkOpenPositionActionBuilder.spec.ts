@@ -116,7 +116,7 @@ describe('Spark  Deposit Borrow Action Builder', () => {
 
   it('should fail the position is not a Spark one', async () => {
     try {
-      await SparkOpenPositionActionBuilder({
+      await new SparkOpenPositionActionBuilder().build({
         ...builderParams,
         step: {
           ...derivedStep,
@@ -136,7 +136,7 @@ describe('Spark  Deposit Borrow Action Builder', () => {
   it('should add all the action calls', async () => {
     builderParams.context.startSubContext()
 
-    await SparkOpenPositionActionBuilder({
+    await new SparkOpenPositionActionBuilder().build({
       ...builderParams,
       step: derivedStep,
       protocolsRegistry: builderParams.emptyProtocolsRegistry,

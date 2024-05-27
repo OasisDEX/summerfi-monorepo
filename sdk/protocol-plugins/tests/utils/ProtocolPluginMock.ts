@@ -1,8 +1,10 @@
 import { ChainFamilyMap, IPosition, IPositionId, Maybe } from '@summerfi/sdk-common/common'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import {
-  ActionBuilder,
+  ActionBuilderParams,
+  ActionBuilderUsedAction,
   ActionBuildersMap,
+  IActionBuilder,
   IProtocolPlugin,
   IProtocolPluginContext,
 } from '@summerfi/protocol-plugins-common'
@@ -19,48 +21,57 @@ import { IExternalPosition, IPositionsManager } from '@summerfi/sdk-common/order
 import { IUser } from '@summerfi/sdk-common/user'
 import { TransactionInfo } from '@summerfi/sdk-common'
 import { StepBuilderContextMock } from '@summerfi/testing-utils'
+import { BaseActionBuilder } from '../../src'
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-export const PaybackWithdrawActionBuilderMock: ActionBuilder<steps.PaybackWithdrawStep> = async (
-  params,
-): Promise<void> => {
-  ;(params.context as StepBuilderContextMock).setCheckpoint('PaybackWithdrawActionBuilderMock')
+export class PaybackWithdrawActionBuilderMock extends BaseActionBuilder<steps.PaybackWithdrawStep> {
+  actions: ActionBuilderUsedAction[] = []
+  async build(params: ActionBuilderParams<steps.PaybackWithdrawStep>): Promise<void> {
+    ;(params.context as StepBuilderContextMock).setCheckpoint('PaybackWithdrawActionBuilderMock')
+  }
 }
 
-export const DepositBorrowActionBuilderMock: ActionBuilder<steps.DepositBorrowStep> = async (
-  params,
-): Promise<void> => {
-  ;(params.context as StepBuilderContextMock).setCheckpoint('DepositBorrowActionBuilderMock')
+export class DepositBorrowActionBuilderMock extends BaseActionBuilder<steps.DepositBorrowStep> {
+  actions: ActionBuilderUsedAction[] = []
+  async build(params: ActionBuilderParams<steps.DepositBorrowStep>): Promise<void> {
+    ;(params.context as StepBuilderContextMock).setCheckpoint('DepositBorrowActionBuilderMock')
+  }
 }
 
-export const ImportPositionActionBuilderMock: ActionBuilder<steps.ImportStep> = async (
-  params,
-): Promise<void> => {
-  ;(params.context as StepBuilderContextMock).setCheckpoint('ImportPositionActionBuilderMock')
+export class ImportPositionActionBuilderMock extends BaseActionBuilder<steps.ImportStep> {
+  actions: ActionBuilderUsedAction[] = []
+  async build(params: ActionBuilderParams<steps.ImportStep>): Promise<void> {
+    ;(params.context as StepBuilderContextMock).setCheckpoint('ImportPositionActionBuilderMock')
+  }
 }
 
-export const OpenPositionActionBuilderMock: ActionBuilder<steps.OpenPosition> = async (
-  params,
-): Promise<void> => {
-  ;(params.context as StepBuilderContextMock).setCheckpoint('OpenPositionActionBuilderMock')
+export class OpenPositionActionBuilderMock extends BaseActionBuilder<steps.OpenPosition> {
+  actions: ActionBuilderUsedAction[] = []
+  async build(params: ActionBuilderParams<steps.OpenPosition>): Promise<void> {
+    ;(params.context as StepBuilderContextMock).setCheckpoint('OpenPositionActionBuilderMock')
+  }
 }
 
-export const PaybackWithdrawActionBuilderNoCheckpointMock: ActionBuilder<
-  steps.PaybackWithdrawStep
-> = async (params): Promise<void> => {}
+export class PaybackWithdrawActionBuilderNoCheckpointMock extends BaseActionBuilder<steps.PaybackWithdrawStep> {
+  actions: ActionBuilderUsedAction[] = []
+  async build(params: ActionBuilderParams<steps.PaybackWithdrawStep>): Promise<void> {}
+}
 
-export const DepositBorrowActionBuilderNoCheckpointMock: ActionBuilder<
-  steps.DepositBorrowStep
-> = async (params): Promise<void> => {}
+export class DepositBorrowActionBuilderNoCheckpointMock extends BaseActionBuilder<steps.DepositBorrowStep> {
+  actions: ActionBuilderUsedAction[] = []
+  async build(params: ActionBuilderParams<steps.DepositBorrowStep>): Promise<void> {}
+}
 
-export const ImportPositionActionBuilderNoCheckpointMock: ActionBuilder<steps.ImportStep> = async (
-  params,
-): Promise<void> => {}
+export class ImportPositionActionBuilderNoCheckpointMock extends BaseActionBuilder<steps.ImportStep> {
+  actions: ActionBuilderUsedAction[] = []
+  async build(params: ActionBuilderParams<steps.ImportStep>): Promise<void> {}
+}
 
-export const OpenPositionActionBuilderNoCheckpointMock: ActionBuilder<steps.OpenPosition> = async (
-  params,
-): Promise<void> => {}
+export class OpenPositionActionBuilderNoCheckpointMock extends BaseActionBuilder<steps.OpenPosition> {
+  actions: ActionBuilderUsedAction[] = []
+  async build(params: ActionBuilderParams<steps.OpenPosition>): Promise<void> {}
+}
 
 export class ProtocolPluginMock implements IProtocolPlugin {
   protocolName = ProtocolName.Spark
@@ -91,8 +102,14 @@ export class ProtocolPluginMock implements IProtocolPlugin {
     return undefined as unknown as IPosition
   }
 
-  getActionBuilder<T extends steps.Steps>(step: T): Maybe<ActionBuilder<T>> {
-    return this.stepBuilders[step.type] as ActionBuilder<T>
+  getActionBuilder<T extends steps.Steps>(step: T): Maybe<IActionBuilder<T>> {
+    const builder = this.stepBuilders[step.type]
+
+    if (!builder) {
+      return undefined
+    }
+
+    return new builder() as IActionBuilder<T>
   }
 
   async getImportPositionTransaction(params: {
@@ -128,8 +145,14 @@ export class EmptyProtocolPluginMock implements IProtocolPlugin {
     return undefined as unknown as IPosition
   }
 
-  getActionBuilder<T extends steps.Steps>(step: T): Maybe<ActionBuilder<T>> {
-    return this.stepBuilders[step.type] as ActionBuilder<T>
+  getActionBuilder<T extends steps.Steps>(step: T): Maybe<IActionBuilder<T>> {
+    const builder = this.stepBuilders[step.type]
+
+    if (!builder) {
+      return undefined
+    }
+
+    return new builder() as IActionBuilder<T>
   }
 
   async getImportPositionTransaction(params: {
@@ -170,8 +193,14 @@ export class NoCheckpointProtocolPluginMock implements IProtocolPlugin {
     return undefined as unknown as IPosition
   }
 
-  getActionBuilder<T extends steps.Steps>(step: T): Maybe<ActionBuilder<T>> {
-    return this.stepBuilders[step.type] as ActionBuilder<T>
+  getActionBuilder<T extends steps.Steps>(step: T): Maybe<IActionBuilder<T>> {
+    const builder = this.stepBuilders[step.type]
+
+    if (!builder) {
+      return undefined
+    }
+
+    return new builder() as IActionBuilder<T>
   }
 
   async getImportPositionTransaction(params: {

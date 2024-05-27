@@ -10,6 +10,7 @@ import {
 import { ActionConfig, ActionCall } from './Types'
 import { InputSlotsMapping } from '../types/InputSlotsMapping'
 import { AbiParametersToPrimitiveTypes } from 'abitype'
+import { IAction } from '../interfaces/IAction'
 
 /**
  * @class Base class for all actions. It provides the basic functionality to encode the call to the action and provide
@@ -22,7 +23,8 @@ export abstract class BaseAction<
   >,
   AbiParametersTypes extends
     AbiParametersToPrimitiveTypes<ParsedAbiParameters> = AbiParametersToPrimitiveTypes<ParsedAbiParameters>,
-> {
+> implements IAction
+{
   private readonly DefaultParamsMapping: InputSlotsMapping = [0, 0, 0, 0]
 
   /**

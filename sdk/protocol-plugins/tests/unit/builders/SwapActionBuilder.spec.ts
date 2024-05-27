@@ -114,7 +114,7 @@ describe('Swap Action Builder', () => {
 
     builderParams.context.startSubContext()
 
-    await SwapActionBuilder({
+    await new SwapActionBuilder().build({
       ...builderParams,
       step: derivedStep,
     })
