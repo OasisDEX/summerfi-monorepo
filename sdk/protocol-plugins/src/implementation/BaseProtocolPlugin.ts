@@ -158,7 +158,7 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
       return undefined
     }
 
-    return new BuilderClass() as IActionBuilder<Step>
+    return new BuilderClass()
   }
 
   /** HELPERS */
