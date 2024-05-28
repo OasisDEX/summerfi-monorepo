@@ -72,7 +72,7 @@ export default defineConfig({
       formats: ['es'],
     },
     rollupOptions: {
-      external: ['react', 'react/jsx-runtime', 'next/link', 'lodash'],
+      external: ['react', 'react/jsx-runtime', 'next/link', 'next/image', 'lodash'],
       input: Object.fromEntries(
         glob
           .sync('src/**/*.{ts,tsx}')
