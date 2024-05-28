@@ -113,7 +113,7 @@ export async function refinanceLendingToLending(
           ? position.collateralAmount
           : ctx.getReference(['SwapCollateralFromSourcePosition', 'received']),
         borrowAmount: isDebtSwapSkipped
-          ? position.debtAmount
+          ? flashloanAmount
           : await estimateSwapFromAmount({
               receiveAtLeast: flashloanAmount,
               fromToken: targetPool.debtToken,
