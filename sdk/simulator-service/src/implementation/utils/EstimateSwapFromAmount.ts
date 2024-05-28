@@ -5,7 +5,7 @@ import { IOracleManager } from '@summerfi/oracle-common'
 
 /**
  * EstimateTokenAmountAfterSwap
- * @description Estimates how much you will recive after swap.
+ * @description Estimates how much you will receive after swap.
  *    If target token is the same as source token, we return the same amount.
  *    When we perform a swap, we need to account for the summer fee,
  *    and we assume maximum slippage.
