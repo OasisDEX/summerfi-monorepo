@@ -30,6 +30,7 @@ describe('SparkPaybackAction Action', () => {
       {
         paybackAmount: tokenAmount,
         paybackAll: true,
+        onBehalf: onBehalf,
       },
       [2, 6, 7, 9],
     )
@@ -47,6 +48,7 @@ describe('SparkPaybackAction Action', () => {
         asset: tokenAmount.token.address.value,
         amount: BigInt(tokenAmount.toBaseUnit()),
         paybackAll: true,
+        onBehalf: onBehalf.value,
       },
     ])
     expect(actionDecodedArgs?.mapping).toEqual([2, 6, 7, 9])

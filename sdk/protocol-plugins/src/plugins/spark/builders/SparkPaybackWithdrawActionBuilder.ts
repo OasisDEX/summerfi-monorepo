@@ -20,7 +20,7 @@ export class SparkPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.P
   ]
 
   async build(params: ActionBuilderParams<steps.PaybackWithdrawStep>): Promise<void> {
-    const { context, step, addressBookManager, user } = params
+    const { context, step, addressBookManager, user, positionsManager } = params
 
     if (!isSparkLendingPool(step.inputs.position.pool)) {
       throw new Error('Invalid Spark lending pool')
@@ -57,6 +57,7 @@ export class SparkPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.P
         paybackAll: getValueFromReference(step.inputs.paybackAmount)
           .toBN()
           .gt(step.inputs.position.debtAmount.toBN()),
+        onBehalf: positionsManager.address,
       },
       connectedInputs: {},
       connectedOutputs: {
