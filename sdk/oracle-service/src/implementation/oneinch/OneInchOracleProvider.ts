@@ -18,7 +18,7 @@ import {
 } from '@summerfi/sdk-common/common'
 import { OracleProviderType, SpotPriceInfo } from '@summerfi/sdk-common/oracle'
 import { IOracleProvider } from '@summerfi/oracle-common'
-import { FiatCurrency, IToken, Maybe, isTokenAmount } from '@summerfi/sdk-common'
+import { FiatCurrency, IToken, isTokenAmount } from '@summerfi/sdk-common'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider'
 
@@ -54,7 +54,7 @@ export class OneInchOracleProvider
   /** @see IOracleProvider.getSpotPrice */
   async getSpotPrice(params: {
     baseToken: IToken
-    quoteToken: Maybe<Denomination>
+    quoteToken?: Denomination
   }): Promise<SpotPriceInfo> {
     const authHeader = this._getOneInchSpotAuthHeader()
 

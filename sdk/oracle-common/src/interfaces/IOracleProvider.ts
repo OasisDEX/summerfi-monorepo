@@ -1,4 +1,4 @@
-import { Denomination, IToken, Maybe } from '@summerfi/sdk-common/common'
+import { Denomination, IToken } from '@summerfi/sdk-common/common'
 import { OracleProviderType, SpotPriceInfo } from '@summerfi/sdk-common/oracle'
 import { IManagerProvider } from '@summerfi/sdk-server-common'
 
@@ -14,8 +14,5 @@ export interface IOracleProvider extends IManagerProvider<OracleProviderType> {
    * @param baseToken A price request for baseToken
    * @param quoteToken A price request - QuoteToken is optional with a USD default.
    */
-  getSpotPrice(params: {
-    baseToken: IToken
-    quoteToken: Maybe<Denomination>
-  }): Promise<SpotPriceInfo>
+  getSpotPrice(params: { baseToken: IToken; quoteToken?: Denomination }): Promise<SpotPriceInfo>
 }

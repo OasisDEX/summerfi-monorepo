@@ -26,7 +26,7 @@ export class OracleManager
   /** @see IOracleManager.getSpotPrice */
   async getSpotPrice(params: {
     baseToken: IToken
-    quoteToken: Maybe<Denomination>
+    quoteToken?: Denomination
     forceUseProvider?: OracleProviderType
   }): Promise<SpotPriceInfo> {
     if (
