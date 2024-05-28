@@ -1,10 +1,12 @@
 .navigationMenuDropdownContentListItemWrapper {
+  display: flex;
   align-items: center;
   column-gap: 12px;
   line-height: 24px;
 }
 
 .navigationMenuDropdownContentListItem {
+  display: flex;
   align-items: center;
   column-gap: 2;
 }
@@ -13,60 +15,48 @@
   transition: color 200ms;
 }
 
+.navigationMenuDropdownContentListItemTitleGradient {
+    // these are from LendingProtocol
+    &aavev2,
+    &aavev3 {
+        &::after {
+          background-image: var(--gradient-protocol-aave);
+        }
+    }
+    &ajna {
+        &::after {
+          background-image: var(--gradient-protocol-ajna);
+        }
+    }
+    &maker {
+        &::after {
+          background-image: var(--gradient-protocol-maker);
+        }
+    }
+    &morphoblue {
+        &::after {
+          background-image: var(--gradient-protocol-morpho-blue);
+        }
+    }
+    &sparkv3 {
+        &::after {
+          background-image: var(--gradient-protocol-spark);
+        }
+    }
+}
+
 .navigationMenuDropdownContentListItemTitle {
   color: var(--color-primary-100);
-
-  &:hover {
-    position: relative;
-    transition: color 200ms;
-
-    &::after {
-      content: attr(data-value);
-      position: absolute;
-      top: 0;
-      left: 0;
-      opacity: 0;
-      transition: opacity 200ms;
-      background-clip: text;
-    }
-  }
-
-  // these are from LendingProtocol
-  &aavev2,
-  &aavev3 {
-    &:hover {
-      &::after {
-        background-image: var(--gradient-protocol-aave);
-      }
-    }
-  }
-  &ajna {
-    &:hover {
-      &::after {
-        background-image: var(--gradient-protocol-ajna);
-      }
-    }
-  }
-  &maker {
-    &:hover {
-      &::after {
-        background-image: var(--gradient-protocol-maker);
-      }
-    }
-  }
-  &morphoblue {
-    &:hover {
-      &::after {
-        background-image: var(--gradient-protocol-morpho-blue);
-      }
-    }
-  }
-  &sparkv3 {
-    &:hover {
-      &::after {
-        background-image: var(--gradient-protocol-spark);
-      }
-    }
+  position: relative;
+  transition: color 200ms;
+  &::after {
+    content: attr(data-value);
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 200ms;
+    background-clip: text;
   }
 }
 
@@ -76,5 +66,41 @@
   & em {
     color: var(--color-primary-100);
     font-style: normal;
+  }
+}
+
+.navigationMenuDropdownContentListItemTags {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.navigationMenuDropdownContentListItemTagsLi {
+  color: var(--color-neutral-80);
+  position: relative;
+  &NotFirst {
+    margin-left: var(--space-m);
+    &::before {
+      content: "";
+      position: absolute;
+      top: var(--space-s);
+      left: -10px;
+      width: var(--space-xxs);
+      height: var(--space-xxs);
+      background-color: var(--color-neutral-80);
+      border-radius: var(--radius-circle);
+    }
+  }
+  &ArrayTag {
+    transition: color 200ms;
+    &::after {
+      content: attr(data-value);
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transition: opacity 200ms;
+      background-clip: text;
+    }
   }
 }

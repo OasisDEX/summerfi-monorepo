@@ -29,40 +29,44 @@
 }
 
 .itemHoverEffectDefault {
-  background-color: var(--color-neutral-30);
   cursor: default;
-  .star-with-effect {
+  background-color: var(--color-neutral-30);
+  :global .star-with-effect {
     color: var(--color-interactive-100);
   }
-  .nav-icon {
+  :global .nav-icon {
     background-color: var(--color-interactive-100);
     color: var(--color-neutral-10);
   };
-  .heading-with-effect, .tag-with-effect {
+  :global .heading-with-effect, :global .tag-with-effect {
     color: transparent;
     &::after {
-      opacity: 1;
+      opacity: 1 !important;
     }
+  }
+}
+:global .star-with-effect {
+  svg {
+    margin: 0px var(--space-xxs) 0px 0px;
   }
 }
 
 .itemHoverEffectHover {
-  background-color: var(--color-neutral-30);
   cursor: pointer;
   &:hover {
     background-color: var(--color-neutral-30);
     cursor: default;
-    .star-with-effect {
+    :global .star-with-effect {
       color: var(--color-interactive-100);
     }
-    .nav-icon {
+    :global .nav-icon {
       color: var(--color-neutral-10);
       background-color: var(--color-interactive-100);
     };
-    .heading-with-effect, .tag-with-effect {
+    :global .heading-with-effect, :global .tag-with-effect {
       color: transparent;
       &::after {
-        opacity: 1;
+        opacity: 1 !important;
       }
     }
   }

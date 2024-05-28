@@ -3,6 +3,7 @@ import classNames from 'classNames'
 import Link from 'next/link'
 
 import { Text } from '@/components/atoms/Text/Text'
+import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
 import { NavigationMenuPanelList } from '@/components/layout/Navigation/Navigation.types'
 import { NavigationMenuDropdownContentListItem } from '@/components/layout/Navigation/NavigationMenuDropdownContentListItem'
 
@@ -86,6 +87,7 @@ export const NavigationMenuDropdownContentList = ({
                   },
                 )}
               >
+                <NavigationMenuDropdownContentListItem protocolName={protocolName} {...item} />
                 {/* {navigationModule ? (
                   <>
                     {
@@ -103,27 +105,26 @@ export const NavigationMenuDropdownContentList = ({
           </li>
         ))}
       </ul>
-      {/* 
       {link && (
         <Link
           href={link.url}
-          sx={{
-            ml: 3,
-            mr: 'auto',
+          style={{
+            marginLeft: 3,
+            marginRight: 'auto',
             display: 'inline-block',
           }}
         >
           <WithArrow
             gap={1}
-            sx={{
+            style={{
               fontSize: 1,
-              color: 'interactive100',
+              color: 'var(--color-primary-100)',
             }}
           >
             {link.label}
           </WithArrow>
         </Link>
-      )} */}
+      )}
     </>
   )
 }

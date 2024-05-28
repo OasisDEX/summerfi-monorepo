@@ -31,11 +31,6 @@ export const NavigationMenuDropdownContent = ({
   }, [currentPanel, isPanelOpen])
 
   useEffect(() => {
-    console.log('debug', {
-      currentPanel,
-      label,
-      refCurrent: ref.current,
-    })
     if (currentPanel === label && ref.current) {
       const root = document.documentElement
 
@@ -45,7 +40,6 @@ export const NavigationMenuDropdownContent = ({
         '--navigation-dropdown-content-dynamic-height',
         `${ref.current.offsetHeight}px`,
       )
-      console.log('ref.current.offsetHeight', ref.current.offsetHeight)
       onChange(ref.current.offsetHeight)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

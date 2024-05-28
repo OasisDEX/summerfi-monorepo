@@ -1,4 +1,5 @@
-import { IconStar } from '@tabler/icons-react'
+/* eslint-disable no-magic-numbers */
+import { IconStar, IconStarFilled } from '@tabler/icons-react'
 import classNames from 'classNames'
 
 import { Text } from '@/components/atoms/Text/Text'
@@ -20,16 +21,6 @@ export function NavigationMenuDropdownContentListItem({
   tags,
   title,
 }: NavigationMenuDropdownContentListItemProps) {
-  const textHoverEffect = {
-    content: 'attr(data-value)',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    opacity: 0,
-    transition: 'opacity 200ms',
-    WebkitBackgroundClip: 'text',
-  }
-
   return (
     <div
       className={
@@ -52,7 +43,7 @@ export function NavigationMenuDropdownContentListItem({
             className={classNames(
               navigationMenuDropdownContentListItemStyles.navigationMenuDropdownContentListItemTitle,
               navigationMenuDropdownContentListItemStyles[
-                `navigationMenuDropdownContentListItemTitle${protocolName}` as keyof typeof navigationMenuDropdownContentListItemStyles
+                `navigationMenuDropdownContentListItemTitleGradient${protocolName}` as keyof typeof navigationMenuDropdownContentListItemStyles
               ],
               {
                 'heading-with-effect': protocolName,
@@ -66,7 +57,7 @@ export function NavigationMenuDropdownContentListItem({
                   navigationMenuDropdownContentListItemStyles.starTransition,
                 )}
               >
-                <IconStar size={16} />
+                <IconStarFilled size={16} />
               </span>
             )}
             {title}
@@ -86,49 +77,31 @@ export function NavigationMenuDropdownContentListItem({
             )}
           </Text>
         )}
-        {/* {tags && (
-          <Flex as="ul" sx={{ m: 0, p: 0, listStyle: 'none' }}>
+        {tags && (
+          <ul
+            className={
+              navigationMenuDropdownContentListItemStyles.navigationMenuDropdownContentListItemTags
+            }
+          >
             {tags.map((tag, i) => (
-              <Box
+              <li
                 key={i}
-                as="li"
-                variant="text.paragraph4"
-                {...(Array.isArray(tag) && {
-                  'data-value': tag[0],
-                  className: 'tag-with-effect',
-                })}
-                sx={
+                className={classNames(
+                  navigationMenuDropdownContentListItemStyles.navigationMenuDropdownContentListItemTagsLi,
                   {
-                    color: 'neutral80',
-                    ...(i > 0 && {
-                      ml: 3,
-                      '&::before': {
-                        content: '""',
-                        position: 'absolute',
-                        top: 2,
-                        left: '-10px',
-                        width: 1,
-                        height: 1,
-                        backgroundColor: 'neutral80',
-                        borderRadius: 'ellipse',
-                      },
-                    }),
-                    ...(Array.isArray(tag) && {
-                      position: 'relative',
-                      transition: 'color 200ms',
-                      '&::after': {
-                        ...textHoverEffect,
-                        backgroundImage: tag[1],
-                      },
-                    }),
-                  } as ThemeUIStyleObject
-                }
+                    [navigationMenuDropdownContentListItemStyles.navigationMenuDropdownContentListItemTagsLiNotFirst]:
+                      i > 0,
+                    [navigationMenuDropdownContentListItemStyles.navigationMenuDropdownContentListItemTagsLiArrayTag]:
+                      Array.isArray(tag),
+                  },
+                )}
+                data-value={Array.isArray(tag) ? tag[0] : tag}
               >
-                {Array.isArray(tag) ? tag[0] : tag}
-              </Box>
+                <Text variant="p4">{Array.isArray(tag) ? tag[0] : tag}</Text>
+              </li>
             ))}
-          </Flex>
-        )} */}
+          </ul>
+        )}
       </div>
     </div>
   )

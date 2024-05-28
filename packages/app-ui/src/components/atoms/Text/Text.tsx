@@ -5,7 +5,7 @@ import { AtomProps } from '@/components/atoms/types'
 
 import classNames, { ClassNames } from '@/components/atoms/Text/Text.module.scss'
 
-type AllowedHtmlTags =
+export type TextAllowedHtmlTags =
   | 'address'
   | 'blockquote'
   | 'h1'
@@ -21,8 +21,8 @@ type AllowedHtmlTags =
   | 'span'
 
 export const Text = forwardRef<
-  HTMLElementTagNameMap[AllowedHtmlTags],
-  AtomProps<AllowedHtmlTags, ClassNames>
+  HTMLElementTagNameMap[TextAllowedHtmlTags],
+  AtomProps<TextAllowedHtmlTags, ClassNames>
 >(({ as = 'span', className, variant = 'p1', ...props }, ref) => {
   return createElement(as, {
     ...{

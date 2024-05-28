@@ -22,7 +22,7 @@
 .navigationMenuDropdownBlock {
   justify-content: center;
   width: 100%;
-  padding: 3px;
+  padding: var(--space-m);
   border-radius: var(--radius-12);
   background-color: var(--color-neutral-10);
   box-shadow: var(--shadow-depth-1);
@@ -38,6 +38,7 @@
 
 .navigationMenuDropdownBlockInside {
   position: relative;
+  display: flex;
   flex-direction: column;
   width: 100%;
   &Active {
@@ -46,6 +47,7 @@
 }
 
 .navigationMenuDropdownPanelWrapper {
+  display: flex;
   position: absolute;
   width: 100%;
   opacity: 0;

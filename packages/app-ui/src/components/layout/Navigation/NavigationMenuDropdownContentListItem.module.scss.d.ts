@@ -1,13 +1,17 @@
 export type Styles = {
   navigationMenuDropdownContentListItem: string
   navigationMenuDropdownContentListItemDescription: string
+  navigationMenuDropdownContentListItemTags: string
+  navigationMenuDropdownContentListItemTagsLi: string
+  navigationMenuDropdownContentListItemTagsLiArrayTag: string
+  navigationMenuDropdownContentListItemTagsLiNotFirst: string
   navigationMenuDropdownContentListItemTitle: string
-  navigationMenuDropdownContentListItemTitleaavev2: string
-  navigationMenuDropdownContentListItemTitleaavev3: string
-  navigationMenuDropdownContentListItemTitleajna: string
-  navigationMenuDropdownContentListItemTitlemaker: string
-  navigationMenuDropdownContentListItemTitlemorphoblue: string
-  navigationMenuDropdownContentListItemTitlesparkv3: string
+  navigationMenuDropdownContentListItemTitleGradientaavev2: string
+  navigationMenuDropdownContentListItemTitleGradientaavev3: string
+  navigationMenuDropdownContentListItemTitleGradientajna: string
+  navigationMenuDropdownContentListItemTitleGradientmaker: string
+  navigationMenuDropdownContentListItemTitleGradientmorphoblue: string
+  navigationMenuDropdownContentListItemTitleGradientsparkv3: string
   navigationMenuDropdownContentListItemWrapper: string
   starTransition: string
 }
