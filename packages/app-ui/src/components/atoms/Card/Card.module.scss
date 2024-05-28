@@ -1,0 +1,15 @@
+.card,
+.cardSmallPaddings {
+  display: flex;
+  width: 100%;
+  border: var(--border-1);
+  border-radius: var(--radius-12);
+}
+
+.card {
+  padding: var(--space-l);
+}
+
+.cardSmallPaddings {
+  padding: var(--space-s);
+}

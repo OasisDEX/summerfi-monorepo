@@ -4,6 +4,7 @@ export type Styles = {
   h3: string
   h4: string
   h5: string
+  hidden: string
   p1: string
   p1semi: string
   p2: string

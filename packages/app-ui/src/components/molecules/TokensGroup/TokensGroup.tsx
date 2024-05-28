@@ -1,3 +1,4 @@
+import { FC } from 'react'
 import {
   getToken,
   getTokenDisplayName,
@@ -20,7 +21,7 @@ const defaultSingleSize = 44
 const defaultMultipleSize = 30
 const networkSizeScaleFactor = 0.1
 
-export function TokensGroup({ network, tokens }: TokensGroupProps) {
+export const TokensGroup: FC<TokensGroupProps> = ({ network, tokens }) => {
   const networkSize = tokens.length ? defaultSingleSize : defaultMultipleSize
 
   return (
@@ -47,7 +48,7 @@ export function TokensGroup({ network, tokens }: TokensGroupProps) {
               {Object.keys(tokensBySymbol).includes(resolvedToken) &&
               !getTokenGuarded(resolvedToken)?.iconUnavailable ? (
                 <Icon
-                  variant={tokens.length ? 'small' : 'large'}
+                  variant={tokens.length ? 'l' : 'xxxl'}
                   key={getToken(resolvedToken).name}
                   icon={getToken(resolvedToken).iconCircle}
                 />
