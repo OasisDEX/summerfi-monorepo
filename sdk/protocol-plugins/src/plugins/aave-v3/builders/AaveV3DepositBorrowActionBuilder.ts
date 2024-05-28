@@ -29,7 +29,7 @@ export class AaveV3DepositBorrowActionBuilder extends BaseActionBuilder<steps.De
     const aaveV3LendingPoolAddress = await getContractAddress({
       addressBookManager,
       chainInfo: user.chainInfo,
-      contractName: 'AaveV3LendingPool',
+      contractName: 'AavePool',
     })
 
     context.addActionCall({
