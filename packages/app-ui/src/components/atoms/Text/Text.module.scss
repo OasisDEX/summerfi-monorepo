@@ -63,3 +63,9 @@
 .p4semi {
   font-weight: 600;
 }
+
+.hidden {
+  font-size: inherit;
+  color: transparent;
+  position: absolute;
+}

@@ -1,4 +1,5 @@
 /* eslint-disable no-magic-numbers */
+import { FC } from 'react'
 import {
   getToken,
   getTokenDisplayName,
@@ -49,7 +50,7 @@ export function TokensGroup({ forceSize, network, tokens }: TokensGroupProps) {
               {Object.keys(tokensBySymbol).includes(resolvedToken) &&
               !getTokenGuarded(resolvedToken)?.iconUnavailable ? (
                 <Icon
-                  variant={tokens.length ? 'small' : 'large'}
+                  variant={tokens.length ? 'l' : 'xxxl'}
                   key={getToken(resolvedToken).name}
                   icon={getToken(resolvedToken).iconCircle}
                 />

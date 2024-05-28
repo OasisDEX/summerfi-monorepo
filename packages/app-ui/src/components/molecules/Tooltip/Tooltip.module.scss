@@ -1,0 +1,30 @@
+.tooltipWrapper {
+  display: flex;
+  position: relative;
+}
+
+.tooltip,
+.tooltipOpen {
+  min-width: 200px;
+  background-color: var(--color-neutral-10);
+  position: absolute;
+  transition:
+    opacity 200ms,
+    transform 200ms;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.tooltip {
+  opacity: 0;
+  pointer-events: none;
+  top: 16px;
+  transform: translateY(20px);
+}
+
+.tooltipOpen {
+  z-index: 2;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(30px);
+}

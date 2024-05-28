@@ -3,7 +3,8 @@
 .secondaryLarge,
 .secondarySmall,
 .neutralLarge,
-.neutralSmall {
+.neutralSmall,
+.colorful {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -83,5 +84,24 @@
   &:disabled {
     color: var(--color-primary-60);
     cursor: default;
+  }
+}
+
+.colorful {
+  font-size: 12px;
+  width: 100%;
+  height: 28px;
+  border-radius: var(--radius-8);
+  background: linear-gradient(
+    270.13deg,
+    rgba(0, 125, 163, 0.05) 0.02%,
+    rgba(231, 167, 127, 0.05) 56.92%,
+    rgba(233, 112, 71, 0.05) 98.44%
+  );
+
+  > span {
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: var(--gradient-summer-fi-dark);
   }
 }
