@@ -1,7 +1,7 @@
 import { FC } from 'react'
 
-interface IconProps {
-  variant?: 'large' | 'small'
+export interface IconProps {
+  variant?: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'
   role?: 'presentation'
   focusable?: boolean
   icon: {
@@ -11,14 +11,20 @@ interface IconProps {
 }
 
 export const Icon: FC<IconProps> = ({
-  variant = 'small',
+  variant = 'l',
   role = 'presentation',
   focusable = false,
   icon,
 }) => {
   const size = {
-    large: 44,
-    small: 30,
+    xxs: 10,
+    xs: 15,
+    s: 20,
+    m: 25,
+    l: 30,
+    xl: 35,
+    xxl: 40,
+    xxxl: 45,
   }[variant]
 
   return (

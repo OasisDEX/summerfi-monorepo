@@ -45,7 +45,7 @@ const ajnaConfig: LendingProtocolConfig = {
   label: LendingProtocolLabel.ajna,
   icon: ajnaIcon as string,
   logo: ajnaLogo as string,
-  logoScale: 1.4,
+  logoScale: 1,
   gradient: 'linear-gradient(90deg, #F154DB 0%, #974EEA 100%)',
 }
 
@@ -63,7 +63,7 @@ const morphoBlueConfig: LendingProtocolConfig = {
   label: LendingProtocolLabel.morphoblue,
   icon: morphoBlueIcon as string,
   logo: morphoBlueLogo as string,
-  logoScale: 1.4,
+  logoScale: 1.2,
   gradient: 'linear-gradient(90deg, rgba(24,89,242,1) 0%, rgba(0,55,138,1) 100%)',
 }
 
@@ -72,7 +72,7 @@ const sparkConfig: LendingProtocolConfig = {
   label: LendingProtocolLabel.sparkv3,
   icon: sparkIcon as string,
   logo: sparkLogo as string,
-  logoScale: 1.6,
+  logoScale: 1.1,
   gradient: 'linear-gradient(159deg, #F58013 12.26%, #F19D19 86.52%)',
 }
 
