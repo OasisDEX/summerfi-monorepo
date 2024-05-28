@@ -1,11 +1,12 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
+import { IAddress } from '@summerfi/sdk-common'
 import { ITokenAmount } from '@summerfi/sdk-common/common'
 
 export class SparkPaybackAction extends BaseAction<typeof SparkPaybackAction.Config> {
   public static readonly Config = {
     name: 'SparkPayback',
     version: 2,
-    parametersAbi: ['(address asset, uint256 amount, bool paybackAll)'],
+    parametersAbi: ['(address asset, uint256 amount, bool paybackAll, address onBehalf)'],
     storageInputs: ['asset', 'amountToPayback'],
     storageOutputs: ['paybackedAmount'],
   } as const
@@ -14,6 +15,7 @@ export class SparkPaybackAction extends BaseAction<typeof SparkPaybackAction.Con
     params: {
       paybackAmount: ITokenAmount
       paybackAll: boolean
+      onBehalf: IAddress
     },
     paramsMapping?: InputSlotsMapping,
   ): ActionCall {
@@ -23,6 +25,7 @@ export class SparkPaybackAction extends BaseAction<typeof SparkPaybackAction.Con
           asset: params.paybackAmount.token.address.value,
           amount: BigInt(params.paybackAmount.toBaseUnit()),
           paybackAll: params.paybackAll,
+          onBehalf: params.onBehalf.value,
         },
       ],
       mapping: paramsMapping,
