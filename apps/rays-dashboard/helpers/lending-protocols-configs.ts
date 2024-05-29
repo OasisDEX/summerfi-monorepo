@@ -19,7 +19,6 @@ export type LendingProtocolConfig = {
   icon: string
   logo: string
   logoScale: number
-  gradient: string
 }
 
 const aaveV2Config: LendingProtocolConfig = {
@@ -28,7 +27,6 @@ const aaveV2Config: LendingProtocolConfig = {
   icon: aaveIcon as string,
   logo: aaveV2Logo as string,
   logoScale: 1,
-  gradient: 'linear-gradient(230deg, #B6509E 15.42%, #2EBAC6 84.42%)',
 }
 
 const aaveV3Config: LendingProtocolConfig = {
@@ -37,7 +35,6 @@ const aaveV3Config: LendingProtocolConfig = {
   icon: aaveIcon as string,
   logo: aaveV3Logo as string,
   logoScale: 1,
-  gradient: 'linear-gradient(230deg, #B6509E 15.42%, #2EBAC6 84.42%)',
 }
 
 const ajnaConfig: LendingProtocolConfig = {
@@ -45,8 +42,7 @@ const ajnaConfig: LendingProtocolConfig = {
   label: LendingProtocolLabel.ajna,
   icon: ajnaIcon as string,
   logo: ajnaLogo as string,
-  logoScale: 1,
-  gradient: 'linear-gradient(90deg, #F154DB 0%, #974EEA 100%)',
+  logoScale: 1.4,
 }
 
 const makerConfig: LendingProtocolConfig = {
@@ -55,7 +51,6 @@ const makerConfig: LendingProtocolConfig = {
   icon: makerIcon as string,
   logo: makerLogo as string,
   logoScale: 1,
-  gradient: 'linear-gradient(135deg, #2DC1B1 0%, #139D8D 100%)',
 }
 
 const morphoBlueConfig: LendingProtocolConfig = {
@@ -63,8 +58,7 @@ const morphoBlueConfig: LendingProtocolConfig = {
   label: LendingProtocolLabel.morphoblue,
   icon: morphoBlueIcon as string,
   logo: morphoBlueLogo as string,
-  logoScale: 1.2,
-  gradient: 'linear-gradient(90deg, rgba(24,89,242,1) 0%, rgba(0,55,138,1) 100%)',
+  logoScale: 1.4,
 }
 
 const sparkConfig: LendingProtocolConfig = {
@@ -72,8 +66,7 @@ const sparkConfig: LendingProtocolConfig = {
   label: LendingProtocolLabel.sparkv3,
   icon: sparkIcon as string,
   logo: sparkLogo as string,
-  logoScale: 1.1,
-  gradient: 'linear-gradient(159deg, #F58013 12.26%, #F19D19 86.52%)',
+  logoScale: 1.6,
 }
 
 const lendingProtocols = [

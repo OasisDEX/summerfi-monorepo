@@ -2,6 +2,7 @@ import { FC } from 'react'
 
 export interface IconProps {
   variant?: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'
+  size?: number
   role?: 'presentation'
   focusable?: boolean
   icon: {
@@ -15,17 +16,20 @@ export const Icon: FC<IconProps> = ({
   role = 'presentation',
   focusable = false,
   icon,
+  size,
 }) => {
-  const size = {
-    xxs: 10,
-    xs: 15,
-    s: 20,
-    m: 25,
-    l: 30,
-    xl: 35,
-    xxl: 40,
-    xxxl: 45,
-  }[variant]
+  const finalSize =
+    size ??
+    {
+      xxs: 10,
+      xs: 15,
+      s: 20,
+      m: 25,
+      l: 30,
+      xl: 35,
+      xxl: 40,
+      xxxl: 45,
+    }[variant]
 
   return (
     <svg
@@ -34,8 +38,8 @@ export const Icon: FC<IconProps> = ({
       display="inline-block"
       focusable={focusable}
       role={role}
-      width={size}
-      height={size}
+      width={finalSize}
+      height={finalSize}
     >
       {icon.path}
     </svg>

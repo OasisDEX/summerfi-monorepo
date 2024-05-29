@@ -1,4 +1,10 @@
+/* eslint-disable no-magic-numbers */
+import { IconStar, IconStarFilled } from '@tabler/icons-react'
+import classNames from 'classNames'
+
+import { Text } from '@/components/atoms/Text/Text'
 import { NavigationMenuPanelList } from '@/components/layout/Navigation/Navigation.types'
+import { NavigationMenuDropdownContentIcon } from '@/components/layout/Navigation/NavigationMenuDropdownContentIcon'
 
 import navigationMenuDropdownContentListItemStyles from './NavigationMenuDropdownContentListItem.module.scss'
 
@@ -8,23 +14,13 @@ type NavigationMenuDropdownContentListItemProps = {
 
 export function NavigationMenuDropdownContentListItem({
   description,
-  hoverColor,
+  protocolName,
   icon,
   onClick,
   promoted,
   tags,
   title,
 }: NavigationMenuDropdownContentListItemProps) {
-  const textHoverEffect = {
-    content: 'attr(data-value)',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    opacity: 0,
-    transition: 'opacity 200ms',
-    WebkitBackgroundClip: 'text',
-  }
-
   return (
     <div
       className={
@@ -32,42 +28,47 @@ export function NavigationMenuDropdownContentListItem({
       }
       {...(onClick && { onClick })}
     >
-      {/* {icon && icon.position === 'global' && <NavigationMenuDropdownContentIcon {...icon} />}*/}
+      {icon && icon.position === 'global' && <NavigationMenuDropdownContentIcon {...icon} />}
       <div>
-        {/*
-        <Flex sx={{ alignItems: 'center', columnGap: 2 }}>
+        <div
+          className={
+            navigationMenuDropdownContentListItemStyles.navigationMenuDropdownContentListItem
+          }
+        >
           {icon && icon.position === 'title' && <NavigationMenuDropdownContentIcon {...icon} />}
-          <Heading
+          <Text
             as="h3"
-            variant="boldParagraph3"
-            {...(hoverColor && {
-              'data-value': title,
-              className: 'heading-with-effect',
-            })}
-            sx={{
-              color: 'primary100',
-              ...(hoverColor && {
-                position: 'relative',
-                transition: 'color 200ms',
-                '&::after': {
-                  ...textHoverEffect,
-                  backgroundImage: hoverColor,
-                },
-              }),
-            }}
+            variant="p3semi"
+            data-value={title}
+            className={classNames(
+              navigationMenuDropdownContentListItemStyles.navigationMenuDropdownContentListItemTitle,
+              navigationMenuDropdownContentListItemStyles[
+                `navigationMenuDropdownContentListItemTitleGradient${protocolName}` as keyof typeof navigationMenuDropdownContentListItemStyles
+              ],
+              {
+                'heading-with-effect': protocolName,
+              },
+            )}
           >
             {promoted && (
-              <Box as="span" className="star-with-effect" sx={{ transition: 'color 200ms' }}>
-                <Icon icon={star} size={16} sx={{ mr: 1, verticalAlign: 'text-top' }} />
-              </Box>
+              <span
+                className={classNames(
+                  'star-with-effect',
+                  navigationMenuDropdownContentListItemStyles.starTransition,
+                )}
+              >
+                <IconStarFilled size={16} />
+              </span>
             )}
             {title}
-          </Heading>
-        </Flex>
+          </Text>
+        </div>
         {description && (
           <Text
-            variant="paragraph4"
-            sx={{ mt: 1, color: 'neutral80', em: { color: 'primary100', fontStyle: 'normal' } }}
+            variant="p4"
+            className={
+              navigationMenuDropdownContentListItemStyles.navigationMenuDropdownContentListItemDescription
+            }
           >
             {typeof description === 'string' ? (
               <span dangerouslySetInnerHTML={{ __html: description.replace(/\n/giu, '<br />') }} />
@@ -77,48 +78,30 @@ export function NavigationMenuDropdownContentListItem({
           </Text>
         )}
         {tags && (
-          <Flex as="ul" sx={{ m: 0, p: 0, listStyle: 'none' }}>
+          <ul
+            className={
+              navigationMenuDropdownContentListItemStyles.navigationMenuDropdownContentListItemTags
+            }
+          >
             {tags.map((tag, i) => (
-              <Box
+              <li
                 key={i}
-                as="li"
-                variant="text.paragraph4"
-                {...(Array.isArray(tag) && {
-                  'data-value': tag[0],
-                  className: 'tag-with-effect',
-                })}
-                sx={
+                className={classNames(
+                  navigationMenuDropdownContentListItemStyles.navigationMenuDropdownContentListItemTagsLi,
                   {
-                    color: 'neutral80',
-                    ...(i > 0 && {
-                      ml: 3,
-                      '&::before': {
-                        content: '""',
-                        position: 'absolute',
-                        top: 2,
-                        left: '-10px',
-                        width: 1,
-                        height: 1,
-                        backgroundColor: 'neutral80',
-                        borderRadius: 'ellipse',
-                      },
-                    }),
-                    ...(Array.isArray(tag) && {
-                      position: 'relative',
-                      transition: 'color 200ms',
-                      '&::after': {
-                        ...textHoverEffect,
-                        backgroundImage: tag[1],
-                      },
-                    }),
-                  } as ThemeUIStyleObject
-                }
+                    [navigationMenuDropdownContentListItemStyles.navigationMenuDropdownContentListItemTagsLiNotFirst]:
+                      i > 0,
+                    [navigationMenuDropdownContentListItemStyles.navigationMenuDropdownContentListItemTagsLiArrayTag]:
+                      Array.isArray(tag),
+                  },
+                )}
+                data-value={Array.isArray(tag) ? tag[0] : tag}
               >
-                {Array.isArray(tag) ? tag[0] : tag}
-              </Box>
+                <Text variant="p4">{Array.isArray(tag) ? tag[0] : tag}</Text>
+              </li>
             ))}
-          </Flex>
-        )}*/}
+          </ul>
+        )}
       </div>
     </div>
   )

@@ -1,6 +1,7 @@
 import { AutomationFeature, EarnStrategies } from '@summerfi/app-db'
-import { NetworkNames, ProtocolId } from '@summerfi/serverless-shared'
+import { NetworkNames } from '@summerfi/serverless-shared'
 
+import { LendingProtocol } from '@/helpers/lending-protocol'
 import { OmniProductType } from '@/types/omni-kit'
 import { TranslatableType } from '@/types/translatable'
 
@@ -154,7 +155,7 @@ export interface ProductHubFeaturedFilters
   network: ProductHubSupportedNetworks
   primaryToken: string
   product: OmniProductType
-  protocol: ProtocolId
+  protocol: LendingProtocol
   secondaryToken: string
 }
 

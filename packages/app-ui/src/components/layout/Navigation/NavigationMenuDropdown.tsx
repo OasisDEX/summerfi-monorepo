@@ -2,11 +2,15 @@
 import { useEffect, useRef, useState } from 'react'
 import classNames from 'classNames'
 
-import { NavigationMenuPanelType } from '@/components/layout/Navigation/Navigation.types'
+import {
+  NavigationMenuPanelType,
+  WithNavigationModules,
+} from '@/components/layout/Navigation/Navigation.types'
+import { NavigationMenuDropdownContent } from '@/components/layout/Navigation/NavigationMenuDropdownContent'
 
 import navigationMenuDropdownStyles from './NavigationMenuDropdown.module.scss'
 
-export interface NavigationMenuDropdownProps {
+export interface NavigationMenuDropdownProps extends WithNavigationModules {
   arrowPosition: number
   currentPanel: string
   isPanelOpen: boolean
@@ -59,6 +63,7 @@ export const NavigationMenuDropdown = ({
   isPanelOpen,
   isPanelSwitched,
   panels,
+  navigationModules,
 }: NavigationMenuDropdownProps) => {
   const ref = useRef<HTMLDivElement>(null)
   const [isListSwitched, setIsListSwitched] = useState<boolean>(false)
@@ -119,11 +124,11 @@ export const NavigationMenuDropdown = ({
                 }}
                 {...(currentPanel === label && { ref })}
               >
-                {/* 
                 <NavigationMenuDropdownContent
                   currentPanel={currentPanel}
                   isPanelActive={isPanelOpen && currentPanel === label}
                   isPanelOpen={isPanelOpen}
+                  navigationModules={navigationModules}
                   label={label}
                   onChange={(_height) => {
                     if (ref.current) setHeight(Math.max(_height, ref.current.offsetHeight))
@@ -132,7 +137,7 @@ export const NavigationMenuDropdown = ({
                     setIsListSwitched(true)
                   }}
                   {...panel}
-                />*/}
+                />
               </div>
             ))}
           </div>

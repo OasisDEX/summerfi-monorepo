@@ -91,7 +91,7 @@ export interface NavigationMenuPanelList {
 }
 export interface NavigationMenuPanelListItem {
   description?: ReactNode
-  hoverColor?: string
+  protocolName?: string
   icon?: NavigationMenuPanelIcon
   list?: NavigationMenuPanelList
   navigationModule?: NavigationModule

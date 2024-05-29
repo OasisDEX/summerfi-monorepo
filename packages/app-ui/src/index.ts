@@ -11,9 +11,11 @@ export { GenericTokenIcon } from './components/atoms/GenericTokenIcon/GenericTok
 export { TokensGroup } from './components/molecules/TokensGroup/TokensGroup'
 export { ProtocolLabel } from './components/molecules/ProtocolLabel/ProtocolLabel'
 export { Tooltip } from './components/molecules/Tooltip/Tooltip'
+export { LoadingSpinner } from './components/molecules/Loader/Loader'
 export { AutomationIcon } from './components/molecules/AutomationIcon/AutomationIcon'
 
 export { Footer } from './components/layout/Footer/Footer'
+
 export { Navigation } from './components/layout/Navigation/Navigation'
 export * from './components/layout/Navigation/Navigation.types'
 

@@ -22,71 +22,57 @@ export enum NetworkNames {
   baseGoerli = 'base_goerli',
 }
 
-const ethereumMainnetGradient = 'linear-gradient(128deg, #6580EB 23.94%, #8EA2F2 110.63%)'
-const optimismMainnetGradient = 'linear-gradient(135deg, #FF0420 0%, #FF6C7D 100%)'
-const arbitrumMainnetGradient = 'linear-gradient(128deg, #243145 3.74%, #4DA7F8 83.51%)'
-const baseMainnetGradient = 'linear-gradient(128deg, #0052ff 3.74%, #6696ff 83.51%)'
-
 export type NetworkConfig = {
   name: NetworkNames
   testnet: boolean
-  gradient: string
   badge: string
 }
 
 const mainnetConfig: NetworkConfig = {
   name: NetworkNames.ethereumMainnet,
   testnet: false,
-  gradient: ethereumMainnetGradient,
   badge: ethereumMainnetBadge as string,
 }
 
 const goerliConfig: NetworkConfig = {
   name: NetworkNames.ethereumGoerli,
   testnet: true,
-  gradient: ethereumMainnetGradient,
   badge: ethereumMainnetBadge as string,
 }
 
 const arbitrumMainnetConfig: NetworkConfig = {
   name: NetworkNames.arbitrumMainnet,
   testnet: false,
-  gradient: arbitrumMainnetGradient,
   badge: arbitrumMainnetBadge as string,
 }
 
 const arbitrumGoerliConfig: NetworkConfig = {
   name: NetworkNames.arbitrumGoerli,
   testnet: true,
-  gradient: arbitrumMainnetGradient,
   badge: arbitrumMainnetBadge as string,
 }
 
 const optimismMainnetConfig: NetworkConfig = {
   name: NetworkNames.optimismMainnet,
   testnet: false,
-  gradient: optimismMainnetGradient,
   badge: optimismMainnetBadge as string,
 }
 
 const optimismGoerliConfig: NetworkConfig = {
   name: NetworkNames.optimismGoerli,
   testnet: true,
-  gradient: optimismMainnetGradient,
   badge: optimismMainnetBadge as string,
 }
 
 const baseMainnetConfig: NetworkConfig = {
   name: NetworkNames.baseMainnet,
   testnet: false,
-  gradient: baseMainnetGradient,
   badge: baseMainnetBadge as string,
 }
 
 const baseGoerliConfig: NetworkConfig = {
   name: NetworkNames.baseGoerli,
   testnet: true,
-  gradient: baseMainnetGradient,
   badge: baseMainnetBadge as string,
 }
 

@@ -13,7 +13,7 @@ type NavigationMenuDropdownContentListItemProps = {
 
 export function NavigationMenuDropdownContentListItem({
   description,
-  hoverColor,
+  protocolName,
   icon,
   onClick,
   promoted,
@@ -42,18 +42,18 @@ export function NavigationMenuDropdownContentListItem({
           <Heading
             as="h3"
             variant="boldParagraph3"
-            {...(hoverColor && {
+            {...(protocolName && {
               'data-value': title,
               className: 'heading-with-effect',
             })}
             sx={{
               color: 'primary100',
-              ...(hoverColor && {
+              ...(protocolName && {
                 position: 'relative',
                 transition: 'color 200ms',
                 '&::after': {
                   ...textHoverEffect,
-                  backgroundImage: hoverColor,
+                  backgroundImage: protocolName,
                 },
               }),
             }}

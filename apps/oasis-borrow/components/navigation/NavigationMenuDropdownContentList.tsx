@@ -67,7 +67,7 @@ export function NavigationMenuDropdownContentList({
           p: 0,
         }}
       >
-        {items.map(({ hoverColor, url, navigationModule, ...item }, i) => (
+        {items.map(({ protocolName, url, navigationModule, ...item }, i) => (
           <Box
             key={i}
             as="li"
@@ -93,7 +93,7 @@ export function NavigationMenuDropdownContentList({
           >
             {url ? (
               <Link href={url} sx={{ display: 'block', ...itemInnerPadding }}>
-                <NavigationMenuDropdownContentListItem hoverColor={hoverColor} {...item} />
+                <NavigationMenuDropdownContentListItem protocolName={protocolName} {...item} />
               </Link>
             ) : (
               <Box sx={{ ...itemInnerPadding }}>
@@ -107,7 +107,7 @@ export function NavigationMenuDropdownContentList({
                     }
                   </>
                 ) : (
-                  <NavigationMenuDropdownContentListItem hoverColor={hoverColor} {...item} />
+                  <NavigationMenuDropdownContentListItem protocolName={protocolName} {...item} />
                 )}
               </Box>
             )}

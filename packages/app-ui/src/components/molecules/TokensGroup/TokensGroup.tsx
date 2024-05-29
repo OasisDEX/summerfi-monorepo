@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 import { FC } from 'react'
 import {
   getToken,
@@ -13,6 +14,7 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import classNames from '@/components/molecules/TokensGroup/TokensGroup.module.scss'
 
 interface TokensGroupProps {
+  forceSize?: number
   network?: NetworkNames
   tokens: string[]
 }
@@ -21,8 +23,8 @@ const defaultSingleSize = 44
 const defaultMultipleSize = 30
 const networkSizeScaleFactor = 0.1
 
-export const TokensGroup: FC<TokensGroupProps> = ({ network, tokens }) => {
-  const networkSize = tokens.length ? defaultSingleSize : defaultMultipleSize
+export function TokensGroup({ forceSize, network, tokens }: TokensGroupProps) {
+  const networkSize = forceSize ?? (tokens.length > 1 ? defaultSingleSize : defaultMultipleSize)
 
   return (
     <div className={classNames.tokensGroupWrapper}>

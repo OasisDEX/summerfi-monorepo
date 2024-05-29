@@ -1,9 +1,14 @@
 /* eslint-disable no-magic-numbers */
+import { ReactElement, ReactNode } from 'react'
 import classNames from 'classNames'
 import Link from 'next/link'
 
 import { Text } from '@/components/atoms/Text/Text'
-import { NavigationMenuPanelList } from '@/components/layout/Navigation/Navigation.types'
+import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
+import {
+  NavigationMenuPanelList,
+  WithNavigationModules,
+} from '@/components/layout/Navigation/Navigation.types'
 import { NavigationMenuDropdownContentListItem } from '@/components/layout/Navigation/NavigationMenuDropdownContentListItem'
 
 import navigationMenuDropdownContentListStyles from './NavigationMenuDropdownContentList.module.scss'
@@ -13,7 +18,7 @@ type NavigationMenuDropdownContentListProps = NavigationMenuPanelList & {
   selected?: [number, number]
   onClick?: (selected: [number, number]) => void
   onSelect?: (selected: [number, number]) => void
-}
+} & WithNavigationModules
 
 export const NavigationMenuDropdownContentList = ({
   header,
@@ -24,6 +29,7 @@ export const NavigationMenuDropdownContentList = ({
   parentIndex,
   selected,
   tight,
+  navigationModules,
 }: NavigationMenuDropdownContentListProps) => {
   return (
     <>
@@ -40,7 +46,7 @@ export const NavigationMenuDropdownContentList = ({
       <ul
         className={navigationMenuDropdownContentListStyles.navigationMenuDropdownContentListWrapper}
       >
-        {items.map(({ hoverColor, url, navigationModule, ...item }, i) => (
+        {items.map(({ protocolName, url, navigationModule, ...item }, i) => (
           <li
             key={i}
             className={classNames(
@@ -74,7 +80,7 @@ export const NavigationMenuDropdownContentList = ({
                   },
                 )}
               >
-                <NavigationMenuDropdownContentListItem hoverColor={hoverColor} {...item} />
+                <NavigationMenuDropdownContentListItem protocolName={protocolName} {...item} />
               </Link>
             ) : (
               <div
@@ -86,44 +92,39 @@ export const NavigationMenuDropdownContentList = ({
                   },
                 )}
               >
-                {/* {navigationModule ? (
-                  <>
-                    {
-                      {
-                        swap: <NavigationModuleSwap />,
-                        bridge: <NavigationModuleBridge />,
-                      }[navigationModule]
-                    }
-                  </>
+                {navigationModule && navigationModules ? (
+                  {
+                    swap: <navigationModules.NavigationModuleSwap />,
+                    bridge: <navigationModules.NavigationModuleBridge />,
+                  }[navigationModule]
                 ) : (
-                  <NavigationMenuDropdownContentListItem hoverColor={hoverColor} {...item} />
-                )} */}
+                  <NavigationMenuDropdownContentListItem protocolName={protocolName} {...item} />
+                )}
               </div>
             )}
           </li>
         ))}
       </ul>
-      {/* 
       {link && (
         <Link
           href={link.url}
-          sx={{
-            ml: 3,
-            mr: 'auto',
+          style={{
+            marginLeft: 3,
+            marginRight: 'auto',
             display: 'inline-block',
           }}
         >
           <WithArrow
             gap={1}
-            sx={{
+            style={{
               fontSize: 1,
-              color: 'interactive100',
+              color: 'var(--color-primary-100)',
             }}
           >
             {link.label}
           </WithArrow>
         </Link>
-      )} */}
+      )}
     </>
   )
 }

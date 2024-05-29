@@ -1,9 +1,12 @@
 import { ReactNode } from 'react'
+import { ProtocolId } from '@summerfi/serverless-shared'
+
+import { IconProps } from '@/components/atoms/Icon/Icon'
 
 export type NavigationModule = 'swap' | 'bridge'
 
 export interface NavigationMenuPanelLink {
-  icon: never
+  icon: IconProps['icon']
   title: string
   link: string
   hash?: string
@@ -11,7 +14,7 @@ export interface NavigationMenuPanelLink {
 }
 
 export interface NavigationMenuPanelIcon {
-  icon?: never
+  icon?: IconProps['icon']
   image?: string
   tokens?: string[]
   position: 'global' | 'title'
@@ -55,7 +58,7 @@ export interface NavigationMenuPanelAsset {
 }
 
 export interface NavigationMenuPanelLink {
-  icon: never
+  icon: IconProps['icon']
   title: string
   link: string
   hash?: string
@@ -63,7 +66,7 @@ export interface NavigationMenuPanelLink {
 }
 
 export interface NavigationMenuPanelIcon {
-  icon?: never
+  icon?: IconProps['icon']
   image?: string
   tokens?: string[]
   position: 'global' | 'title'
@@ -75,7 +78,7 @@ export interface NavigationMenuPanelList {
   header?: string
   items: {
     description?: ReactNode
-    hoverColor?: string
+    protocolName?: string
     icon?: NavigationMenuPanelIcon
     list?: NavigationMenuPanelList
     navigationModule?: NavigationModule
@@ -108,4 +111,11 @@ export interface NavigationProps {
   links?: NavigationMenuPanelLinkType[]
   panels?: NavigationMenuPanelType[]
   pill?: NavigationBrandingPill
+}
+
+export interface WithNavigationModules {
+  navigationModules?: {
+    NavigationModuleSwap: () => React.JSX.Element
+    NavigationModuleBridge: () => React.JSX.Element
+  }
 }

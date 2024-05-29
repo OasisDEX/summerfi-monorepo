@@ -2,13 +2,13 @@
   position: relative;
   flex-direction: column;
   flex-shrink: 0;
-  row-gap: 2;
+  row-gap: var(--space-m);
   list-style: none;
   width: 294px;
   margin-left: 0;
-  margin-right: 3;
+  margin-right: var(--space-m);
   padding-left: 0;
-  padding-right: 3;
+  padding-right: var(--space-m);
   &::after {
     content: "";
     position: absolute;
@@ -23,7 +23,33 @@
 }
 
 .navigationMenuDropdownContentFirstColumnLi {
-  row-gap: 3;
+  row-gap: var(--space-m);
   flex-direction: column;
   width: 100%;
+}
+
+.navigationMenuDropdownContentSecondColumn {
+  position: relative;
+  flex-direction: column;
+  list-style: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  transition: transform 250ms;
+}
+
+.navigationMenuDropdownContentSecondColumnLi {
+    position: absolute;
+    top: 0;
+    left: 0;
+    row-gap: var(--space-m);
+    flex-direction: column;
+    width: 100%;
+    transition: opacity 250ms, transform 250ms;
+    pointer-events: none;
+    opacity: 0;
+    &Active {
+      opacity: 1;
+      pointer-events: auto;
+    }
 }
