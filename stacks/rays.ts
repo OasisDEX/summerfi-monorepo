@@ -3,8 +3,16 @@ import { Cron, Function, FunctionProps } from 'sst/constructs'
 import * as process from 'node:process'
 
 export function addRaysConfig({ stack, api, vpc, app }: SummerStackContext) {
-  const { RAYS_DB_WRITE_CONNECTION_STRING, RAYS_DB_READ_CONNECTION_STRING, SUBGRAPH_BASE } =
-    process.env
+  const {
+    RAYS_DB_WRITE_CONNECTION_STRING,
+    RAYS_DB_READ_CONNECTION_STRING,
+    SUBGRAPH_BASE,
+    BORROW_DB_READ_CONNECTION_STRING,
+  } = process.env
+
+  if (!BORROW_DB_READ_CONNECTION_STRING) {
+    throw new Error('BORROW_DB_READ_CONNECTION_STRING is not set')
+  }
   if (!RAYS_DB_WRITE_CONNECTION_STRING) {
     throw new Error('RAYS_DB_WRITE_CONNECTION_STRING is not set')
   }
@@ -22,6 +30,7 @@ export function addRaysConfig({ stack, api, vpc, app }: SummerStackContext) {
     environment: {
       POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
       RAYS_DB_CONNECTION_STRING: RAYS_DB_READ_CONNECTION_STRING,
+      BORROW_DB_READ_CONNECTION_STRING: BORROW_DB_READ_CONNECTION_STRING,
     },
     ...(vpc && {
       vpc: vpc.vpc,
@@ -54,6 +63,7 @@ export function addRaysConfig({ stack, api, vpc, app }: SummerStackContext) {
     environment: {
       POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
       RAYS_DB_CONNECTION_STRING: RAYS_DB_WRITE_CONNECTION_STRING,
+      BORROW_DB_READ_CONNECTION_STRING: BORROW_DB_READ_CONNECTION_STRING,
       SUBGRAPH_BASE,
     },
     ...(vpc && {
