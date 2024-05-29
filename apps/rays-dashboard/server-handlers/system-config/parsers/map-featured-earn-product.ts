@@ -1,9 +1,10 @@
 import { EarnStrategies } from '@summerfi/app-db'
+import { NavigationMenuPanelIcon, TokenSymbolsList } from '@summerfi/app-ui'
 import { capitalize } from 'lodash'
 
 import { networksByName } from '@/constants/networks-list'
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
-import { NavigationMenuPanelIcon, NavigationMenuPanelListItem } from '@/types/navigation'
+import { NavigationMenuPanelListItem } from '@/types/navigation'
 import { ProductHubItem } from '@/types/product-hub'
 
 export function mapFeaturedEarnProduct(items: ProductHubItem[]): NavigationMenuPanelListItem[] {
@@ -35,10 +36,10 @@ export function mapFeaturedEarnProduct(items: ProductHubItem[]): NavigationMenuP
       icon: {
         tokens:
           primaryToken === secondaryToken
-            ? [primaryToken]
+            ? ([primaryToken] as TokenSymbolsList[])
             : reverseTokens
-              ? [secondaryToken, primaryToken]
-              : [primaryToken, secondaryToken],
+              ? ([secondaryToken, primaryToken] as TokenSymbolsList[])
+              : ([primaryToken, secondaryToken] as TokenSymbolsList[]),
         position: 'global' as NavigationMenuPanelIcon['position'],
       },
       tags: [
@@ -46,9 +47,9 @@ export function mapFeaturedEarnProduct(items: ProductHubItem[]): NavigationMenuP
           earnStrategy === EarnStrategies.erc_4626 && earnStrategyDescription
             ? earnStrategyDescription
             : lendingProtocolsByName[protocol as keyof typeof lendingProtocolsByName].label,
-          lendingProtocolsByName[protocol as keyof typeof lendingProtocolsByName].gradient,
+          lendingProtocolsByName[protocol as keyof typeof lendingProtocolsByName].name,
         ],
-        [capitalize(network), networksByName[network].gradient],
+        [capitalize(network), networksByName[network].name],
       ],
       url: '/', // TODO: this is just a workaround to get this function to work
     }

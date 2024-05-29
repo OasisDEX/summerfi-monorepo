@@ -1,4 +1,5 @@
 /* eslint-disable no-magic-numbers */
+import { TokenSymbolsList } from '@summerfi/app-ui'
 import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash'
 
@@ -31,15 +32,15 @@ export function mapTopBorrowProduct(rows: ProductHubItem[]): NavigationMenuPanel
       title: 'nav.borrow-up-to-ltv', // TODO: this is just a workaround to get this function to work start
       description: 'nav.discover-the-highest-ltv', // TODO: this is just a workaround to get this function to work start
       icon: {
-        tokens: [topLtv.primaryToken, topLtv.secondaryToken],
+        tokens: [topLtv.primaryToken, topLtv.secondaryToken] as TokenSymbolsList[],
         position: 'global',
       },
       tags: [
         [
           lendingProtocolsByName[topLtv.protocol as keyof typeof lendingProtocolsByName].label,
-          lendingProtocolsByName[topLtv.protocol as keyof typeof lendingProtocolsByName].gradient,
+          lendingProtocolsByName[topLtv.protocol as keyof typeof lendingProtocolsByName].name,
         ],
-        [capitalize(topLtv.network), networksByName[topLtv.network].gradient],
+        [capitalize(topLtv.network), networksByName[topLtv.network].name],
       ],
       url: '/', // TODO: this is just a workaround to get this function to work start
     },
@@ -48,14 +49,14 @@ export function mapTopBorrowProduct(rows: ProductHubItem[]): NavigationMenuPanel
       description: 'nav.find-the-lowest-rates', // TODO: this is just a workaround to get this function to work start
       icon: {
         position: 'global',
-        tokens: [topFee.primaryToken, topFee.secondaryToken],
+        tokens: [topFee.primaryToken, topFee.secondaryToken] as TokenSymbolsList[],
       },
       tags: [
         [
           lendingProtocolsByName[topFee.protocol as keyof typeof lendingProtocolsByName].label,
-          lendingProtocolsByName[topFee.protocol as keyof typeof lendingProtocolsByName].gradient,
+          lendingProtocolsByName[topFee.protocol as keyof typeof lendingProtocolsByName].name,
         ],
-        [capitalize(topFee.network), networksByName[topFee.network].gradient],
+        [capitalize(topFee.network), networksByName[topFee.network].name],
       ],
       url: '/', // TODO: this is just a workaround to get this function to work start
     },
@@ -64,15 +65,14 @@ export function mapTopBorrowProduct(rows: ProductHubItem[]): NavigationMenuPanel
       description: 'nav.get-paid-to-borrow', // TODO: this is just a workaround to get this function to work start
       icon: {
         position: 'global',
-        tokens: [topRewards.primaryToken, topRewards.secondaryToken],
+        tokens: [topRewards.primaryToken, topRewards.secondaryToken] as TokenSymbolsList[],
       },
       tags: [
         [
           lendingProtocolsByName[topRewards.protocol as keyof typeof lendingProtocolsByName].label,
-          lendingProtocolsByName[topRewards.protocol as keyof typeof lendingProtocolsByName]
-            .gradient,
+          lendingProtocolsByName[topRewards.protocol as keyof typeof lendingProtocolsByName].name,
         ],
-        [capitalize(topRewards.network), networksByName[topRewards.network].gradient],
+        [capitalize(topRewards.network), networksByName[topRewards.network].name],
       ],
       url: '/', // TODO: this is just a workaround to get this function to work start
     },

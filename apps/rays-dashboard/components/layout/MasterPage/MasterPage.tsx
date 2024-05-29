@@ -36,12 +36,6 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
       <NavigationWrapper panels={systemConfig.navigation} />
       <div className={classNames.appContainer}>
         {children}
-        <pre>
-          {
-            // eslint-disable-next-line no-magic-numbers
-            JSON.stringify(systemConfig, null, 2)
-          }
-        </pre>
         <Footer
           logo="img/branding/logo-dark.svg"
           languageSwitcher={

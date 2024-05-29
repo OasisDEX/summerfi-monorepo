@@ -1,5 +1,13 @@
 import { FC } from 'react'
-import { AutomationIcon, Button, Card, ProtocolLabel, Text, TokensGroup } from '@summerfi/app-ui'
+import {
+  AutomationIcon,
+  Button,
+  Card,
+  ProtocolLabel,
+  Text,
+  TokensGroup,
+  TokenSymbolsList,
+} from '@summerfi/app-ui'
 import Link from 'next/link'
 
 import { NetworkNames, networksByName } from '@/constants/networks-list'
@@ -44,7 +52,7 @@ export const automationItems: AutomationItem[] = [
 
 interface ProductCardProps {
   automation: AutomationItem[]
-  tokens: string[]
+  tokens: TokenSymbolsList[]
   protocolConfig: LendingProtocolConfig
   network: NetworkNames
   btn: {
