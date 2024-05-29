@@ -1,6 +1,7 @@
 import type { Context, EventBridgeEvent } from 'aws-lambda'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { Database, getRaysDB } from '@summerfi/rays-db'
+import { getBorrowDB } from '@summerfi/borrow-db'
 import process from 'node:process'
 import { getSummerPointsSubgraphClient } from '@summerfi/summer-events-subgraph'
 import { ChainId } from '@summerfi/serverless-shared'
@@ -33,6 +34,7 @@ enum OngoingPointDistribution {
   OPEN_POSITION = 'OPEN_POSITION',
   MIGRATION = 'MIGRATION',
   SWAP = 'SWAP',
+  REFERRAL = 'REFERRAL',
 }
 
 enum PositionMultiplier {
@@ -91,11 +93,15 @@ export const handler = async (
   event: EventBridgeEvent<'Scheduled Event', never>,
   context: Context,
 ): Promise<void> => {
-  const { SUBGRAPH_BASE, RAYS_DB_CONNECTION_STRING } = process.env
+  const { SUBGRAPH_BASE, RAYS_DB_CONNECTION_STRING, BORROW_DB_READ_CONNECTION_STRING } = process.env
 
   logger.addContext(context)
   logger.info('Hello World!')
 
+  if (!BORROW_DB_READ_CONNECTION_STRING) {
+    logger.error('BORROW_DB_READ_CONNECTION_STRING is not set')
+    return
+  }
   if (!SUBGRAPH_BASE) {
     logger.error('SUBGRAPH_BASE is not set')
     return
@@ -111,6 +117,10 @@ export const handler = async (
     logger,
   }
   const { db, services } = await getRaysDB(dbConfig)
+  const { db: borrowDb } = await getBorrowDB({
+    connectionString: BORROW_DB_READ_CONNECTION_STRING,
+    logger,
+  })
 
   const mainnetSubgraphClient = getSummerPointsSubgraphClient({
     logger,
@@ -194,31 +204,49 @@ export const handler = async (
       startTimestamp,
       endTimestamp,
     )
-    const sortedAccruedPointsFromSnapshot = accruedPointsFromSnapshot.sort((a, b) =>
-      a.positionId.localeCompare(b.positionId),
-    )
-
-    await checkMigrationEligibility(db, sortedAccruedPointsFromSnapshot)
-    await checkOpenedPositionEligibility(db, sortedAccruedPointsFromSnapshot)
-    await insertAllMissingUsers(sortedAccruedPointsFromSnapshot, db)
-
-    const chunkedPoints: PositionPoints[] = createChunksOfUserPointsDistributions(
-      sortedAccruedPointsFromSnapshot,
-      30,
-    )
 
     // Get all unique addresses and positions from all chunks
-    const uniqueAddressesFromSnapshot = Array.from(
-      new Set(chunkedPoints.flatMap((chunk) => chunk.map((c) => c.user))),
+    const allUniqueUsers: Set<string> = new Set()
+    const uniqueUserAddressesFromSnapshot = Array.from(
+      new Set(accruedPointsFromSnapshot.map((c) => c.user)),
     )
-    const allPositions = Array.from(
-      new Set(chunkedPoints.flatMap((chunk) => chunk.map((c) => c.positionId))),
-    )
+
+    const allPositions = Array.from(new Set(accruedPointsFromSnapshot.map((c) => c.positionId)))
+
+    // addresses in borrow db are stored in checsummed addresses
+    const usersFromReferralsTable = (
+      await borrowDb
+        .selectFrom('user')
+        .where(borrowDb.fn('lower', ['user.address']), 'in', uniqueUserAddressesFromSnapshot)
+        .selectAll()
+        .execute()
+    ).map((u) => ({
+      address: u.address.toLowerCase(),
+      accepted: u.accepted,
+      timestamp: u.timestamp,
+      user_that_referred_address: u.userThatReferredAddress
+        ? u.userThatReferredAddress.toLowerCase()
+        : null,
+    }))
+
+    for (const user of usersFromReferralsTable) {
+      if (user.user_that_referred_address) {
+        allUniqueUsers.add(user.user_that_referred_address)
+      }
+    }
+    for (const user of uniqueUserAddressesFromSnapshot) {
+      allUniqueUsers.add(user)
+    }
+    const allUniqueUserAddresses = Array.from(allUniqueUsers)
+
+    await checkMigrationEligibility(db, accruedPointsFromSnapshot)
+    await checkOpenedPositionEligibility(db, accruedPointsFromSnapshot)
+    await insertAllMissingUsers(db, allUniqueUserAddresses)
 
     // Fetch all necessary data for all chunks at once
     const uniqueUserAddressesFromDatabase = await db
       .selectFrom('userAddress')
-      .where('address', 'in', uniqueAddressesFromSnapshot)
+      .where('address', 'in', allUniqueUserAddresses)
       .selectAll()
       .execute()
 
@@ -231,7 +259,7 @@ export const handler = async (
     const usersMultipliersFromDatabase = await db
       .selectFrom('multiplier')
       .innerJoin('userAddress', 'multiplier.userAddressId', 'userAddress.id')
-      .where('userAddress.address', 'in', uniqueAddressesFromSnapshot)
+      .where('userAddress.address', 'in', allUniqueUserAddresses)
       .select([
         'multiplier.value',
         'multiplier.type',
@@ -253,9 +281,14 @@ export const handler = async (
       ])
       .execute()
 
+    const chunkedPoints: PositionPoints[] = createChunksOfUserPointsDistributions(
+      accruedPointsFromSnapshot,
+      30,
+    )
+
     await db.transaction().execute(async (transaction) => {
       await addOrUpdateUserMultipliers(
-        uniqueAddressesFromSnapshot,
+        uniqueUserAddressesFromSnapshot,
         uniqueUserAddressesFromDatabase,
         accruedPointsFromSnapshot,
         usersMultipliersFromDatabase,
@@ -305,6 +338,26 @@ export const handler = async (
                 type: OngoingPointDistribution.OPEN_POSITION,
               })
               .executeTakeFirstOrThrow()
+
+            const isUserReferred = usersFromReferralsTable.find((u) => u.address === record.user)
+            if (isUserReferred && isUserReferred.user_that_referred_address) {
+              const referringUser = uniqueUserAddressesFromDatabase.find(
+                (ua) => ua.address === isUserReferred.user_that_referred_address,
+              )
+              if (!referringUser) {
+                throw new Error('Referring user not found')
+              }
+
+              await transaction
+                .insertInto('pointsDistribution')
+                .values({
+                  description: 'Points for referred user',
+                  points: record.points.openPositionsPoints * 0.05,
+                  userAddressId: referringUser.id,
+                  type: OngoingPointDistribution.REFERRAL,
+                })
+                .executeTakeFirstOrThrow()
+            }
           }
 
           const currentDate = new Date()
@@ -580,31 +633,36 @@ async function addOrUpdateUserMultipliers(
  * @param db - The database instance.
  * @returns A Promise that resolves when all missing users are inserted.
  */
-async function insertAllMissingUsers(sortedPoints: PositionPoints, db: Kysely<Database>) {
-  const uniqueUsers = new Set(sortedPoints.map((p) => p.user))
+async function insertAllMissingUsers(db: Kysely<Database>, allUniqueUsers: string[]) {
   const uniqueUserAddressesFromDatabase = await db
     .selectFrom('userAddress')
-    .where('address', 'in', Array.from(uniqueUsers))
+    .where('address', 'in', Array.from(allUniqueUsers))
     .selectAll()
     .execute()
 
+  const uniqueMissingUsers = allUniqueUsers.filter(
+    (userAddress) => !uniqueUserAddressesFromDatabase.some((ua) => ua.address === userAddress),
+  )
+
   await db.transaction().execute(async (transaction) => {
-    for (const user of uniqueUsers) {
-      const userAddress = uniqueUserAddressesFromDatabase.find((ua) => ua.address === user)
-      if (!userAddress) {
-        const result = await transaction
-          .insertInto('blockchainUser')
-          .values({ category: null })
-          .returning(['id'])
-          .executeTakeFirstOrThrow()
-        await transaction
-          .insertInto('userAddress')
-          .values({ address: user, userId: result.id })
-          .returningAll()
-          .executeTakeFirstOrThrow()
-      }
+    for (const userAddress of uniqueMissingUsers) {
+      await insertNewUser(transaction, userAddress)
     }
   })
+}
+
+async function insertNewUser(transaction: Transaction<Database>, userAddress: string) {
+  const result = await transaction
+    .insertInto('blockchainUser')
+    .values({ category: null })
+    .returning(['id'])
+    .executeTakeFirstOrThrow()
+  await transaction
+    .insertInto('userAddress')
+    .values({ address: userAddress, userId: result.id })
+    .returningAll()
+    .executeTakeFirstOrThrow()
+  return result
 }
 
 /**
