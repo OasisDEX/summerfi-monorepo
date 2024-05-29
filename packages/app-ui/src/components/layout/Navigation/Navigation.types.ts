@@ -112,3 +112,10 @@ export interface NavigationProps {
   panels?: NavigationMenuPanelType[]
   pill?: NavigationBrandingPill
 }
+
+export interface WithNavigationModules {
+  navigationModules?: {
+    NavigationModuleSwap: () => React.JSX.Element
+    NavigationModuleBridge: () => React.JSX.Element
+  }
+}

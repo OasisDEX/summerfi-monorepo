@@ -2,117 +2,30 @@
 
 /* eslint-disable no-magic-numbers */
 import { useState } from 'react'
-import classNames from 'classNames'
-import Link from 'next/link'
 
-import { Text } from '@/components/atoms/Text/Text'
 import {
-  NavigationMenuPanelLinkProps,
   NavigationMenuPanelLinkType,
-  NavigationMenuPanelProps,
   NavigationMenuPanelType,
+  WithNavigationModules,
 } from '@/components/layout/Navigation/Navigation.types'
 import { NavigationMenuDropdown } from '@/components/layout/Navigation/NavigationMenuDropdown'
+import { NavigationMenuLink } from '@/components/layout/Navigation/NavigationMenuLink'
+import { NavigationMenuPanel } from '@/components/layout/Navigation/NavigationMenuPanel'
 
 import navigationMenuStyles from '@/components/layout/Navigation/NavigationMenu.module.scss'
 
-interface NavigationMenuProps {
+interface NavigationMenuProps extends WithNavigationModules {
   currentPath: string
   links?: NavigationMenuPanelLinkType[]
   panels?: NavigationMenuPanelType[]
 }
 
-function NavigationMenuLink({
-  label,
-  link,
-  onClick,
-  onMouseEnter,
+export const NavigationMenu = ({
+  links,
+  panels,
   currentPath,
-}: NavigationMenuPanelLinkProps) {
-  return (
-    <li className={navigationMenuStyles.navigationMenuLink} onMouseEnter={onMouseEnter}>
-      {link && (
-        <Link
-          href={link}
-          className={classNames(navigationMenuStyles.navigationMenuLinkElement, {
-            [navigationMenuStyles.navigationMenuLinkElementActive]: currentPath === link,
-          })}
-        >
-          <Text as="span" variant="p3semi">
-            {label}
-          </Text>
-        </Link>
-      )}
-      {onClick && (
-        <Text
-          as="span"
-          variant="p3semi"
-          onClick={onClick}
-          className={navigationMenuStyles.navigationMenuLinkElementOnClick}
-        >
-          {label}
-        </Text>
-      )}
-    </li>
-  )
-}
-
-function NavigationMenuPanelLabel({
-  currentPanel,
-  label,
-  isPanelOpen,
-}: Pick<NavigationMenuPanelProps, 'currentPanel' | 'label' | 'isPanelOpen'>) {
-  return (
-    <Text
-      as="span"
-      variant="p3semi"
-      className={classNames(navigationMenuStyles.navigationMenuPanelLabel, {
-        [navigationMenuStyles.navigationMenuPanelLabelActive]:
-          isPanelOpen && currentPanel === label,
-      })}
-    >
-      {label}
-    </Text>
-  )
-}
-
-function NavigationMenuPanel({
-  currentPanel,
-  label,
-  url,
-  isPanelOpen,
-  onMouseEnter,
-}: NavigationMenuPanelProps) {
-  return (
-    <li
-      className={navigationMenuStyles.navigationMenuPanel}
-      onMouseEnter={(e) => {
-        const target = e.target as HTMLDivElement
-        const halfOffsetWidth = target.offsetWidth / 2
-
-        onMouseEnter(target.offsetLeft + halfOffsetWidth)
-      }}
-    >
-      {url ? (
-        <Link href={url}>
-          <NavigationMenuPanelLabel
-            currentPanel={currentPanel}
-            label={label}
-            isPanelOpen={isPanelOpen}
-          />
-        </Link>
-      ) : (
-        <NavigationMenuPanelLabel
-          currentPanel={currentPanel}
-          label={label}
-          isPanelOpen={isPanelOpen}
-        />
-      )}
-    </li>
-  )
-}
-
-export const NavigationMenu = ({ links, panels, currentPath }: NavigationMenuProps) => {
+  navigationModules,
+}: NavigationMenuProps) => {
   const [isPanelOpen, setIsPanelOpen] = useState<boolean>(false)
   const [isPanelSwitched, setIsPanelSwitched] = useState<boolean>(false)
   const [currentPanel, setCurrentPanel] = useState<string>(panels?.[0].label ?? '')
@@ -158,6 +71,7 @@ export const NavigationMenu = ({ links, panels, currentPath }: NavigationMenuPro
           isPanelOpen={isPanelOpen}
           isPanelSwitched={isPanelSwitched}
           panels={panels}
+          navigationModules={navigationModules}
         />
       )}
     </div>

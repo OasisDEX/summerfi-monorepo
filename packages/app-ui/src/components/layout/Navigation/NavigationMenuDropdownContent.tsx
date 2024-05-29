@@ -1,18 +1,23 @@
 /* eslint-disable no-magic-numbers */
 import { Fragment, useEffect, useRef, useState } from 'react'
+import classNames from 'classNames'
 
-import { NavigationMenuPanelType } from '@/components/layout/Navigation/Navigation.types'
+import {
+  NavigationMenuPanelType,
+  WithNavigationModules,
+} from '@/components/layout/Navigation/Navigation.types'
 import { NavigationMenuDropdownContentList } from '@/components/layout/Navigation/NavigationMenuDropdownContentList'
 
 import navigationMenuDropdownContentStyles from './NavigationMenuDropdownContent.module.scss'
 
-export type NavigationMenuDropdownContentProps = NavigationMenuPanelType & {
-  currentPanel: string
-  isPanelActive: boolean
-  isPanelOpen: boolean
-  onChange: (height: number) => void
-  onSelect: () => void
-}
+export type NavigationMenuDropdownContentProps = NavigationMenuPanelType &
+  WithNavigationModules & {
+    currentPanel: string
+    isPanelActive: boolean
+    isPanelOpen: boolean
+    onChange: (height: number) => void
+    onSelect: () => void
+  }
 
 export const NavigationMenuDropdownContent = ({
   currentPanel,
@@ -22,6 +27,7 @@ export const NavigationMenuDropdownContent = ({
   lists,
   onChange,
   onSelect,
+  navigationModules,
 }: NavigationMenuDropdownContentProps) => {
   const ref = useRef<HTMLLIElement>(null)
   const [selected, setSelected] = useState<[number, number]>([0, 0])
@@ -59,6 +65,7 @@ export const NavigationMenuDropdownContent = ({
               {...item}
               parentIndex={i}
               selected={selected}
+              navigationModules={navigationModules}
               onSelect={(_selected) => {
                 setSelected(_selected)
                 onSelect()
@@ -77,13 +84,15 @@ export const NavigationMenuDropdownContent = ({
                   {list && (
                     <li
                       key={`${i}-${j}`}
-                      className={
-                        navigationMenuDropdownContentStyles.navigationMenuDropdownContentSecondColumnLi
-                      }
+                      className={classNames(
+                        navigationMenuDropdownContentStyles.navigationMenuDropdownContentSecondColumnLi,
+                        {
+                          [navigationMenuDropdownContentStyles.navigationMenuDropdownContentSecondColumnLiActive]:
+                            selected[0] === i && selected[1] === j,
+                        },
+                      )}
                       style={{
-                        opacity: selected[0] === i && selected[1] === j ? 1 : 0,
-                        pointerEvents:
-                          isPanelActive && selected[0] === i && selected[1] === j ? 'auto' : 'none',
+                        // not worth it to extract this to a variable
                         transform: `translateY(${
                           (selected[0] === i && selected[1] < j) || selected[0] < i
                             ? 50
@@ -94,7 +103,10 @@ export const NavigationMenuDropdownContent = ({
                       }}
                       {...(selected[0] === i && selected[1] === j && { ref })}
                     >
-                      <NavigationMenuDropdownContentList {...list} />
+                      <NavigationMenuDropdownContentList
+                        {...list}
+                        navigationModules={navigationModules}
+                      />
                     </li>
                   )}
                 </Fragment>

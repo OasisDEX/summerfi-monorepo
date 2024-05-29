@@ -46,4 +46,10 @@
     flex-direction: column;
     width: 100%;
     transition: opacity 250ms, transform 250ms;
+    pointer-events: none;
+    opacity: 0;
+    &Active {
+      opacity: 1;
+      pointer-events: auto;
+    }
 }

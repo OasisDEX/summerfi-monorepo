@@ -1,10 +1,14 @@
 /* eslint-disable no-magic-numbers */
+import { ReactElement, ReactNode } from 'react'
 import classNames from 'classNames'
 import Link from 'next/link'
 
 import { Text } from '@/components/atoms/Text/Text'
 import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
-import { NavigationMenuPanelList } from '@/components/layout/Navigation/Navigation.types'
+import {
+  NavigationMenuPanelList,
+  WithNavigationModules,
+} from '@/components/layout/Navigation/Navigation.types'
 import { NavigationMenuDropdownContentListItem } from '@/components/layout/Navigation/NavigationMenuDropdownContentListItem'
 
 import navigationMenuDropdownContentListStyles from './NavigationMenuDropdownContentList.module.scss'
@@ -14,7 +18,7 @@ type NavigationMenuDropdownContentListProps = NavigationMenuPanelList & {
   selected?: [number, number]
   onClick?: (selected: [number, number]) => void
   onSelect?: (selected: [number, number]) => void
-}
+} & WithNavigationModules
 
 export const NavigationMenuDropdownContentList = ({
   header,
@@ -25,6 +29,7 @@ export const NavigationMenuDropdownContentList = ({
   parentIndex,
   selected,
   tight,
+  navigationModules,
 }: NavigationMenuDropdownContentListProps) => {
   return (
     <>
@@ -87,19 +92,14 @@ export const NavigationMenuDropdownContentList = ({
                   },
                 )}
               >
-                <NavigationMenuDropdownContentListItem protocolName={protocolName} {...item} />
-                {/* {navigationModule ? (
-                  <>
-                    {
-                      {
-                        swap: <NavigationModuleSwap />,
-                        bridge: <NavigationModuleBridge />,
-                      }[navigationModule]
-                    }
-                  </>
+                {navigationModule && navigationModules ? (
+                  {
+                    swap: <navigationModules.NavigationModuleSwap />,
+                    bridge: <navigationModules.NavigationModuleBridge />,
+                  }[navigationModule]
                 ) : (
                   <NavigationMenuDropdownContentListItem protocolName={protocolName} {...item} />
-                )} */}
+                )}
               </div>
             )}
           </li>

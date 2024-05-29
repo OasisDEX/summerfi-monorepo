@@ -3,6 +3,7 @@ export type Styles = {
   navigationMenuDropdownContentFirstColumnLi: string
   navigationMenuDropdownContentSecondColumn: string
   navigationMenuDropdownContentSecondColumnLi: string
+  navigationMenuDropdownContentSecondColumnLiActive: string
 }
 
 export type ClassNames = keyof Styles

@@ -12,15 +12,15 @@
   list-style: none;
   justify-content: center;
   padding: 0;
-  column-gap: var(--space-m + --space-xl);
+  column-gap: calc(var(--space-m) + var(--space-xl));
   @include media('>s') {
     column-gap: unset;
   }
   @include media('>l') {
     column-gap: var(--space-xl);
   }
-  @include media('>xl') {
-    column-gap: var(--space-m + --space-xl);
+  @include media('>=xl') {
+    column-gap: calc(var(--space-m) + var(--space-xl));
   }
 }
 
