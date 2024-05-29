@@ -35,7 +35,7 @@ export const NavigationMenuDropdownContentList = ({
     <>
       {header && (
         <Text
-          variant="p4"
+          variant="p4semi"
           className={
             navigationMenuDropdownContentListStyles.navigationMenuDropdownContentListHeader
           }
@@ -117,11 +117,10 @@ export const NavigationMenuDropdownContentList = ({
           <WithArrow
             gap={1}
             style={{
-              fontSize: 1,
-              color: 'var(--color-primary-100)',
+              color: 'var(--color-interactive-100)',
             }}
           >
-            {link.label}
+            <Text variant="p4">{link.label}</Text>
           </WithArrow>
         </Link>
       )}

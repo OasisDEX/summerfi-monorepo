@@ -32,8 +32,8 @@ export const NavigationMenu = ({
   const [arrowPosition, setArrowPosition] = useState<number>(0)
 
   function closeDropdown() {
-    setIsPanelSwitched(false)
-    setIsPanelOpen(false)
+    // setIsPanelSwitched(false)
+    // setIsPanelOpen(false)
   }
 
   return (

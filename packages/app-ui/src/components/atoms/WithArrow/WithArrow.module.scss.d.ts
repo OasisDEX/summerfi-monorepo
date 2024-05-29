@@ -1,5 +1,4 @@
 export type Styles = {
-  arrow: string
   withArrow: string
 }
 
