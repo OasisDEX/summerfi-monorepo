@@ -1,0 +1,29 @@
+{
+  "name": "@summerfi/borrow-db",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "jest --passWithNoTests",
+    "build": "tsc -b -v tsconfig.build.json",
+    "dev": "tsc -b -w tsconfig.build.json",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "codegen": "kysely-codegen --camel-case --out-file ./src/database-types.ts"
+  },
+  "dependencies": {
+    "@summerfi/abstractions": "workspace:*",
+    "kysely": "^0.27.3",
+    "kysely-postgres-js": "^2.0.0",
+    "pg": "^8.11.5",
+    "postgres": "^3.4.4"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "dotenv": "^16.4.5",
+    "eslint": "^8.57.0",
+    "kysely-codegen": "^0.15.0",
+    "tsx": "^4.9.0"
+  }
+}
