@@ -13,6 +13,56 @@ export const StaticTokensData: TokenListData = {
   keywords: ['Summer.fi', 'MakerDAO'],
   tokens: [
     {
+      name: 'Renzo Restaked ETH',
+      address: '0xbf5495Efe5DB9ce00f80364C8B423567e58d2110',
+      symbol: 'ezETH',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xbf5495Efe5DB9ce00f80364C8B423567e58d2110/logo.png',
+    },
+    {
+      name: 'Staked ETH',
+      address: '0xf1C9acDc66974dFB6dEcB12aA385b9cD01190E38',
+      symbol: 'osETH',
+      decimals: 18,
+      chainId: 1,
+      logoURI: '',
+    },
+    {
+      name: 'Wrapped eETH',
+      address: '0x4c9EDD5852cd905f086C759E8383e09bff1E68B3',
+      symbol: 'weETH',
+      decimals: 18,
+      chainId: 1,
+      logoURI: '',
+    },
+    {
+      name: 'USDe',
+      address: '0x4c9EDD5852cd905f086C759E8383e09bff1E68B3',
+      symbol: 'USDe',
+      decimals: 18,
+      chainId: 1,
+      logoURI: '',
+    },
+    {
+      name: 'Staked USDe',
+      address: '0x9D39A5DE30e57443BfF2A8307A4256c8797A3497',
+      symbol: 'sUSDe',
+      decimals: 18,
+      chainId: 1,
+      logoURI: '',
+    },
+    {
+      name: 'USDA',
+      address: '0x0000206329b97DB379d5E1Bf586BbDB969C63274',
+      symbol: 'USDA',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x0000206329b97DB379d5E1Bf586BbDB969C63274/logo.png',
+    },
+    {
       name: 'Dai Stablecoin',
       address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
       symbol: 'DAI',
