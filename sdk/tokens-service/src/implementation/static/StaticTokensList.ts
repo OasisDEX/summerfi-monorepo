@@ -183,6 +183,14 @@ export const StaticTokensData: TokenListData = {
       logoURI: 'https://tokens.1inch.io/0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0.png',
     },
     {
+      address: '0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0',
+      chainId: 1,
+      name: 'Wrapped Staked ETH',
+      symbol: 'WSTETH',
+      decimals: 18,
+      logoURI: 'https://tokens.1inch.io/0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0.png',
+    },
+    {
       address: '0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D',
       chainId: 1,
       name: 'renBTC',
