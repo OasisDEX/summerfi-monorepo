@@ -31,7 +31,7 @@ export const StaticTokensData: TokenListData = {
     },
     {
       name: 'Wrapped eETH',
-      address: '0x4c9EDD5852cd905f086C759E8383e09bff1E68B3',
+      address: '0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee',
       symbol: 'weETH',
       decimals: 18,
       chainId: 1,
