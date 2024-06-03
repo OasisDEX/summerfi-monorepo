@@ -23,6 +23,13 @@ export async function estimateSwapFromAmount(params: {
     return receiveAtLeast
   }
 
+  if (receiveAtLeast.isZero()) {
+    return TokenAmount.createFrom({
+      token: params.fromToken,
+      amount: '0',
+    })
+  }
+
   const spotPrice = (
     await params.oracleManager.getSpotPrice({
       baseToken: receiveAtLeast.token,
