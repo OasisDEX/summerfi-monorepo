@@ -77,8 +77,8 @@ export class MorphoBlueDepositBorrowActionBuilder extends BaseActionBuilder<step
       skip: borrowAmount.toBN().isZero(),
     })
 
-    const isBorrowTargetOperationExecutor =
-      step.inputs.borrowTargetType !== TokenTransferTargetType.PositionsManager
+    const isBorrowTargetPositionsManager =
+      step.inputs.borrowTargetType === TokenTransferTargetType.PositionsManager
 
     const operationExecutorAddress = await this._getContractAddress({
       addressBookManager,
@@ -97,7 +97,7 @@ export class MorphoBlueDepositBorrowActionBuilder extends BaseActionBuilder<step
         borrowAmount: 'amount',
       },
       connectedOutputs: {},
-      skip: borrowAmount.toBN().isZero() && isBorrowTargetOperationExecutor,
+      skip: borrowAmount.toBN().isZero() || isBorrowTargetPositionsManager,
     })
   }
 }
