@@ -7,7 +7,7 @@ import { SerializationService } from '@summerfi/sdk-common/services'
  * @see IMorphoProtocol
  */
 export class MorphoProtocol extends Protocol implements IMorphoProtocol {
-  readonly name: ProtocolName.Morpho
+  readonly name: ProtocolName.MorphoBlue
 
   /** Factory method */
   static createFrom(params: IMorphoProtocolData): MorphoProtocol {

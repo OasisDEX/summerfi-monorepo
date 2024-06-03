@@ -4,7 +4,6 @@ import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 import {
   AddressValue,
   CommonTokenSymbols,
-  RefinanceSimulationTypes,
   ISimulation,
   Percentage,
   TokenAmount,
@@ -13,6 +12,7 @@ import {
   ChainFamilyMap,
   PositionType,
   IToken,
+  SimulationType,
 } from '@summerfi/sdk-common'
 import { PositionsManager, Order, RefinanceParameters } from '@summerfi/sdk-common/orders'
 import {
@@ -89,7 +89,7 @@ describe.skip('Refinance Morpho Spark | SDK', () => {
     })
     assert(collateralToken, `${config.collateralTokenSymbol} not found`)
 
-    const morpho = await chain.protocols.getProtocol({ name: ProtocolName.Morpho })
+    const morpho = await chain.protocols.getProtocol({ name: ProtocolName.MorphoBlue })
     assert(morpho, 'Maker protocol not found')
 
     if (!isMorphoProtocol(morpho)) {
@@ -164,7 +164,7 @@ describe.skip('Refinance Morpho Spark | SDK', () => {
       slippage: Percentage.createFrom({ value: 0.2 }),
     })
 
-    const refinanceSimulation: ISimulation<RefinanceSimulationTypes> =
+    const refinanceSimulation: ISimulation<SimulationType.Refinance> =
       await sdk.simulator.refinance.simulateRefinancePosition(refinanceParameters)
 
     expect(refinanceSimulation).toBeDefined()

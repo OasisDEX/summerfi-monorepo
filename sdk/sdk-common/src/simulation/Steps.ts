@@ -7,10 +7,12 @@ import { ITokenAmount } from '../common/interfaces/ITokenAmount'
 import { IPrice } from '../common/interfaces/IPrice'
 import { IPosition } from '../common/interfaces/IPosition'
 import { IToken } from '../common/interfaces/IToken'
+import { ILendingPool } from '../protocols/interfaces/ILendingPool'
+import { ProtocolName } from '../protocols'
 
-export interface Step<T extends SimulationSteps, I, O = undefined, N extends string = string> {
+export interface Step<T extends SimulationSteps, I, O = undefined> {
   type: T
-  name: N
+  name: string
   inputs: I
   outputs: O
   skip?: boolean
@@ -51,10 +53,20 @@ export interface PaybackWithdrawStep
       paybackAmount: ReferenceableField<ITokenAmount>
       withdrawAmount: ITokenAmount
       position: IPosition
+      withdrawTargetType: TokenTransferTargetType
     },
     {
       paybackAmount: ITokenAmount
       withdrawAmount: ITokenAmount
+    }
+  > {}
+
+export interface SkippedStep
+  extends Step<
+    SimulationSteps.Skipped,
+    {
+      type: SimulationSteps
+      protocol?: ProtocolName
     }
   > {}
 
@@ -108,6 +120,9 @@ export interface NewPositionEventStep
 export interface ImportStep
   extends Step<SimulationSteps.Import, { externalPosition: IExternalPosition }> {}
 
+export interface OpenPosition
+  extends Step<SimulationSteps.OpenPosition, { pool: ILendingPool }, { position: IPosition }> {}
+
 export type Steps =
   | FlashloanStep
   | PullTokenStep
@@ -118,3 +133,5 @@ export type Steps =
   | RepayFlashloanStep
   | NewPositionEventStep
   | ImportStep
+  | OpenPosition
+  | SkippedStep

@@ -7,7 +7,7 @@ import { IAaveV3Protocol, IAaveV3ProtocolData } from '../interfaces/IAaveV3Proto
  * @see IAaveV3ProtocolData
  */
 export class AaveV3Protocol extends Protocol implements IAaveV3Protocol {
-  readonly name: ProtocolName.AAVEv3
+  readonly name: ProtocolName.AaveV3
 
   /** Factory method */
   static createFrom(params: IAaveV3ProtocolData): AaveV3Protocol {

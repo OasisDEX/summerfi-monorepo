@@ -16,7 +16,7 @@ import { z } from 'zod'
  */
 export interface IAaveV3Protocol extends IProtocol, IAaveV3ProtocolData {
   /** AaveV3 protocol name */
-  readonly name: ProtocolName.AAVEv3
+  readonly name: ProtocolName.AaveV3
 
   // Re-declaring the properties with the correct types
   readonly chainInfo: IChainInfo
@@ -27,7 +27,7 @@ export interface IAaveV3Protocol extends IProtocol, IAaveV3ProtocolData {
  */
 export const AaveV3ProtocolDataSchema = z.object({
   ...ProtocolDataSchema.shape,
-  name: z.literal(ProtocolName.AAVEv3),
+  name: z.literal(ProtocolName.AaveV3),
   chainInfo: ChainInfoDataSchema,
 })
 

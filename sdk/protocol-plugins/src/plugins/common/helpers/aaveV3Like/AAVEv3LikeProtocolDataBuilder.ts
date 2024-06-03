@@ -30,7 +30,7 @@ export class AaveV3LikeProtocolDataBuilder<
   ContractNames extends string,
   ContractsAbiMap extends GenericAbiMap<ContractNames>,
 > {
-  private readonly ctx: IProtocolPluginContext
+  private readonly context: IProtocolPluginContext
   private operations: QueuedOperation<void>[] = []
   private tokensUsedAsReserves: Token[] | undefined
   private reservesAssetsList: Array<WithToken<AssetListItemType>> = []
@@ -44,7 +44,7 @@ export class AaveV3LikeProtocolDataBuilder<
     chainInfo: IChainInfo,
     chainContractsProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>,
   ) {
-    this.ctx = ctx
+    this.context = ctx
     this.protocolName = protocolName
     this.chainInfo = chainInfo
     this.chainContractsProvider = chainContractsProvider
@@ -54,7 +54,7 @@ export class AaveV3LikeProtocolDataBuilder<
     AaveV3LikeProtocolDataBuilder<WithToken<AssetListItemType>, ContractNames, ContractsAbiMap>
   > {
     const rawTokens = await fetchReservesTokens(
-      this.ctx,
+      this.context,
       this.chainInfo,
       this.chainContractsProvider,
     )
@@ -62,7 +62,7 @@ export class AaveV3LikeProtocolDataBuilder<
 
     const tokensUsedAsReserves = await Promise.all(
       rawTokens.map(async (reservesToken) => {
-        const token = await this.ctx.tokensManager.getTokenByAddress({
+        const token = await this.context.tokensManager.getTokenByAddress({
           chainInfo: ChainFamilyMap.Ethereum.Mainnet,
           address: Address.createFromEthereum({ value: reservesToken.tokenAddress }),
         })
@@ -78,7 +78,7 @@ export class AaveV3LikeProtocolDataBuilder<
         WithToken<AssetListItemType>,
         ContractNames,
         ContractsAbiMap
-      >(this.ctx, this.protocolName, this.chainInfo, this.chainContractsProvider),
+      >(this.context, this.protocolName, this.chainInfo, this.chainContractsProvider),
       this,
       {
         tokensUsedAsReserves,
@@ -105,7 +105,7 @@ export class AaveV3LikeProtocolDataBuilder<
       operation: async () => {
         this._assertIsInitialised(this.tokensUsedAsReserves)
         const reservesCapsPerAsset = await fetchReservesCap(
-          this.ctx,
+          this.context,
           this.tokensUsedAsReserves!,
           this.chainInfo,
           this.chainContractsProvider,
@@ -144,7 +144,7 @@ export class AaveV3LikeProtocolDataBuilder<
       operation: async () => {
         this._assertIsInitialised(this.tokensUsedAsReserves)
         const reservesConfigDataPerAsset = await fetchAssetConfigurationData(
-          this.ctx,
+          this.context,
           this.tokensUsedAsReserves,
           this.chainInfo,
           this.chainContractsProvider,
@@ -212,7 +212,7 @@ export class AaveV3LikeProtocolDataBuilder<
       operation: async () => {
         this._assertIsInitialised(this.tokensUsedAsReserves)
         const reservesDataPerAsset = await fetchAssetReserveData(
-          this.ctx,
+          this.context,
           this.tokensUsedAsReserves,
           this.chainInfo,
           this.chainContractsProvider,
@@ -287,7 +287,7 @@ export class AaveV3LikeProtocolDataBuilder<
       operation: async () => {
         this._assertIsInitialised(this.tokensUsedAsReserves)
         const emodeCategoryPerAsset = await fetchEmodeCategoriesForReserves(
-          this.ctx,
+          this.context,
           this.tokensUsedAsReserves,
           this.chainInfo,
           this.chainContractsProvider,
@@ -322,7 +322,7 @@ export class AaveV3LikeProtocolDataBuilder<
       operation: async () => {
         this._assertIsInitialised(this.tokensUsedAsReserves)
         const [assetPrices] = await fetchAssetPrices(
-          this.ctx,
+          this.context,
           this.tokensUsedAsReserves,
           this.chainInfo,
           this.chainContractsProvider,
@@ -403,12 +403,12 @@ export class AaveV3LikeProtocolDataBuilder<
 // FILTERS
 export function filterAssetsListByEMode<T extends { emode: EmodeCategory }>(
   assetsList: T[],
-  emode: bigint,
+  emode: number,
 ): T[] {
   // All reserves allowed for category 0n
-  if (emode === 0n) {
+  if (emode === 0) {
     return assetsList
   }
 
-  return assetsList.filter((asset) => asset.emode === emode)
+  return assetsList.filter((asset) => Number(asset.emode) === emode)
 }

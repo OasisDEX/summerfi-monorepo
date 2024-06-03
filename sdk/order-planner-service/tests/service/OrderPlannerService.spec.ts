@@ -15,14 +15,13 @@ import { getRefinanceSimulation } from '../utils/RefinanceSimulation/RefinanceSi
 import { OrderPlannerService } from '../../src/implementation/OrderPlannerService'
 import {
   decodeActionCalldata,
-  SkippableActionCall,
   decodePositionsManagerCalldata,
   decodeStrategyExecutorCalldata,
   getErrorMessage,
 } from '@summerfi/testing-utils'
 import assert from 'assert'
 import { IUser } from '@summerfi/sdk-common/user'
-import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
+import { ActionCall, IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
 import { http, createPublicClient } from 'viem'
 import {
   MakerPaybackAction,
@@ -153,7 +152,7 @@ describe('Order Planner Service', () => {
     expect(flashloanCall.mapping).toEqual([0, 0, 0, 0])
 
     /* Decode flashloan sub-calls */
-    const flashloanSubcalls = flashloanCall.args[0].calls as SkippableActionCall[]
+    const flashloanSubcalls = flashloanCall.args[0].calls as ActionCall[]
 
     // PaybackWithdraw in Maker and DepositBorrow in Spark take 2 actions each
     expect(flashloanSubcalls.length).toBe(6)

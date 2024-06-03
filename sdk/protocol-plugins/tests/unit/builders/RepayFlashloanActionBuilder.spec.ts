@@ -93,7 +93,7 @@ describe('Payback Flashloan Action Builder', () => {
     })
 
     try {
-      await RepayFlashloanActionBuilder({
+      await new RepayFlashloanActionBuilder().build({
         ...builderParams,
         step: repayFlashloanStep,
       })
@@ -139,7 +139,7 @@ describe('Payback Flashloan Action Builder', () => {
       connectedOutputs: {},
     })
 
-    await RepayFlashloanActionBuilder({
+    await new RepayFlashloanActionBuilder().build({
       ...builderParams,
       step: repayFlashloanStep,
     })

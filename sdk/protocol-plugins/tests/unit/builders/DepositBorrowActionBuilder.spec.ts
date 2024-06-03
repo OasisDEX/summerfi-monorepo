@@ -82,28 +82,28 @@ describe('Deposit Borrow Action Builder', () => {
     pool: pool,
   })
 
+  const derivedStep: steps.DepositBorrowStep = {
+    type: SimulationSteps.DepositBorrow,
+    name: 'DepositBorrowStep',
+    inputs: {
+      depositAmount: depositAmount,
+      borrowAmount: borrowAmount,
+      position: position,
+      borrowTargetType: TokenTransferTargetType.PositionsManager,
+    },
+    outputs: {
+      depositAmount: depositAmount,
+      borrowAmount: borrowAmount,
+    },
+  }
+
   beforeEach(() => {
     builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })
   })
 
   it('should fail if no protocol plugin exists', async () => {
-    const derivedStep: steps.DepositBorrowStep = {
-      type: SimulationSteps.DepositBorrow,
-      name: 'DepositBorrowStep',
-      inputs: {
-        depositAmount: depositAmount,
-        borrowAmount: borrowAmount,
-        position: position,
-        borrowTargetType: TokenTransferTargetType.PositionsManager,
-      },
-      outputs: {
-        depositAmount: depositAmount,
-        borrowAmount: borrowAmount,
-      },
-    }
-
     try {
-      await DepositBorrowActionBuilder({
+      await new DepositBorrowActionBuilder().build({
         ...builderParams,
         step: derivedStep,
         protocolsRegistry: builderParams.emptyProtocolsRegistry,
@@ -115,25 +115,8 @@ describe('Deposit Borrow Action Builder', () => {
   })
 
   it('should fail if no protocol builder for the step exists', async () => {
-    const builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })
-
-    const derivedStep: steps.DepositBorrowStep = {
-      type: SimulationSteps.DepositBorrow,
-      name: 'DepositBorrowStep',
-      inputs: {
-        depositAmount: depositAmount,
-        borrowAmount: borrowAmount,
-        position: position,
-        borrowTargetType: TokenTransferTargetType.PositionsManager,
-      },
-      outputs: {
-        depositAmount: depositAmount,
-        borrowAmount: borrowAmount,
-      },
-    }
-
     try {
-      await DepositBorrowActionBuilder({
+      await new DepositBorrowActionBuilder().build({
         ...builderParams,
         step: derivedStep,
         protocolsRegistry: builderParams.emptyBuildersProtocolRegistry,
@@ -145,24 +128,7 @@ describe('Deposit Borrow Action Builder', () => {
   })
 
   it('should call the proper builder', async () => {
-    const builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })
-
-    const derivedStep: steps.DepositBorrowStep = {
-      type: SimulationSteps.DepositBorrow,
-      name: 'DepositBorrowStep',
-      inputs: {
-        depositAmount: depositAmount,
-        borrowAmount: borrowAmount,
-        position: position,
-        borrowTargetType: TokenTransferTargetType.PositionsManager,
-      },
-      outputs: {
-        depositAmount: depositAmount,
-        borrowAmount: borrowAmount,
-      },
-    }
-
-    await DepositBorrowActionBuilder({
+    await new DepositBorrowActionBuilder().build({
       ...builderParams,
       step: derivedStep,
     })

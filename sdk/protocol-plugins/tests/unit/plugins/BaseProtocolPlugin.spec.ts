@@ -11,15 +11,11 @@ describe('Base Protocol Plugin', () => {
   let baseProtocolPlugin: BaseProtocolPlugin
   beforeAll(async () => {
     ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
-    baseProtocolPlugin = new MakerProtocolPlugin({
-      context: ctx,
-    })
+    baseProtocolPlugin = new MakerProtocolPlugin()
   })
 
   it('should correctly return the corresponding action builder for a given simulation step', () => {
-    const actionBuilder = baseProtocolPlugin.getActionBuilder({
-      type: SimulationSteps.PaybackWithdraw,
-    } as steps.PaybackWithdrawStep)
+    const actionBuilder = baseProtocolPlugin.getActionBuilder(SimulationSteps.PaybackWithdraw)
     assert(actionBuilder, 'ActionBuilder is not defined')
   })
 })

@@ -14,7 +14,7 @@ import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { makeSDK, type Chain, type User, ProtocolClient } from '@summerfi/sdk-client'
 import { CommonTokenSymbols } from '@summerfi/sdk-common/common/enums'
 import { PositionsManager, Order, RefinanceParameters } from '@summerfi/sdk-common/orders'
-import { ISimulation, RefinanceSimulationTypes } from '@summerfi/sdk-common/simulation'
+import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { TransactionUtils } from './utils/TransactionUtils'
 import {
   decodeActionCalldata,
@@ -187,7 +187,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
       slippage: Percentage.createFrom({ value: 0.2 }),
     })
 
-    const refinanceSimulation: ISimulation<RefinanceSimulationTypes> =
+    const refinanceSimulation: ISimulation<SimulationType.Refinance> =
       await sdk.simulator.refinance.simulateRefinancePosition(refinanceParameters)
 
     expect(refinanceSimulation).toBeDefined()

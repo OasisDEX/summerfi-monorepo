@@ -7,6 +7,8 @@ export type Generated<T> =
     ? ColumnType<S, I | undefined, U>
     : ColumnType<T, T | undefined, T>
 
+export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>
+
 export type Json = JsonValue
 
 export type JsonArray = JsonValue[]
@@ -23,7 +25,7 @@ export type Numeric = ColumnType<string, number | string, number | string>
 
 export type PositionType = 'Lend' | 'Supply'
 
-export type Protocol = 'AAVE_v2' | 'AAVE_v3' | 'Ajna' | 'ERC_4626' | 'MorphoBlue' | 'Spark'
+export type Protocol = 'aave_v2' | 'aave_v3' | 'ajna' | 'erc4626' | 'maker' | 'morphoblue' | 'spark'
 
 export type Timestamp = ColumnType<Date, Date | string, Date | string>
 
@@ -44,6 +46,12 @@ export interface EligibilityCondition {
   updatedAt: Generated<Timestamp>
 }
 
+export interface Leaderboard {
+  position: Int8 | null
+  totalPoints: Numeric | null
+  userAddress: string | null
+}
+
 export interface Multiplier {
   createdAt: Generated<Timestamp>
   description: string | null
@@ -52,7 +60,7 @@ export interface Multiplier {
   type: string
   updatedAt: Generated<Timestamp>
   userAddressId: number | null
-  value: number
+  value: Numeric
 }
 
 export interface PointsDistribution {
@@ -68,27 +76,35 @@ export interface PointsDistribution {
 }
 
 export interface Position {
+  address: string
   chainId: number
   createdAt: Generated<Timestamp>
   externalId: string
   id: Generated<number>
   market: string
   protocol: Protocol
-  proxyId: number
   type: Generated<PositionType>
   updatedAt: Generated<Timestamp>
   userAddressId: number
+  vaultId: number
 }
 
-export interface Proxy {
-  address: string
-  chainId: number
+export interface UpdatePointsChangelog {
   createdAt: Generated<Timestamp>
+  endTimestamp: Timestamp
   id: Generated<number>
-  managedBy: string
-  type: string
-  updatedAt: Generated<Timestamp>
-  userAddressId: number
+  metadata: Json
+  startTimestamp: Timestamp
+}
+
+export interface UpdatePointsLastRun {
+  id: string
+  lastTimestamp: Generated<Timestamp>
+}
+
+export interface UpdatePointsLock {
+  id: string
+  isLocked: Generated<boolean>
 }
 
 export interface UserAddress {
@@ -103,9 +119,12 @@ export interface UserAddress {
 export interface Database {
   blockchainUser: BlockchainUser
   eligibilityCondition: EligibilityCondition
+  leaderboard: Leaderboard
   multiplier: Multiplier
   pointsDistribution: PointsDistribution
   position: Position
-  proxy: Proxy
+  updatePointsChangelog: UpdatePointsChangelog
+  updatePointsLastRun: UpdatePointsLastRun
+  updatePointsLock: UpdatePointsLock
   userAddress: UserAddress
 }

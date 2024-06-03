@@ -1,0 +1,4939 @@
+"""
+Marks the GraphQL type as indexable entity.  Each type that should be an entity
+is required to be annotated with this directive.
+"""
+directive @entity on OBJECT
+
+"""
+Defined a Subgraph ID for an object type
+"""
+directive @subgraphId(id: String!) on OBJECT
+
+"""
+creates a virtual field on the entity that may be queried but cannot be set manually through the mappings API.
+"""
+directive @derivedFrom(field: String!) on FIELD_DEFINITION
+
+type _Block_ {
+  """
+  The hash of the block
+  """
+  hash: Bytes
+
+  """
+  The block number
+  """
+  number: Int!
+
+  """
+  Integer representation of the timestamp stored in blocks for the chain
+  """
+  timestamp: Int
+}
+
+"""
+The type for the top-level _meta field
+"""
+type _Meta_ {
+  """
+  Information about a specific subgraph block. The hash of the block
+  will be null if the _meta field has a block constraint that asks for
+  a block number. It will be filled if the _meta field has no block constraint
+  and therefore asks for the latest  block
+  """
+  block: _Block_!
+
+  """
+  The deployment ID
+  """
+  deployment: String!
+
+  """
+  If `true`, the subgraph encountered indexing errors at some past block
+  """
+  hasIndexingErrors: Boolean!
+}
+
+enum _SubgraphErrorPolicy_ {
+  """
+  Data will be returned even if the subgraph has indexing errors
+  """
+  allow
+
+  """
+  If the subgraph has indexing errors, data will be omitted. The default.
+  """
+  deny
+}
+
+type Account {
+  id: Bytes!
+  address: Bytes!
+  user: User!
+  type: String!
+  vaultId: BigInt!
+  createPositionEvents(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: CreatePositionEvent_orderBy
+    orderDirection: OrderDirection
+    where: CreatePositionEvent_filter
+  ): [CreatePositionEvent!]!
+  summerEvents(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: SummerEvent_orderBy
+    orderDirection: OrderDirection
+    where: SummerEvent_filter
+  ): [SummerEvent!]!
+  feePaids(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: FeePaid_orderBy
+    orderDirection: OrderDirection
+    where: FeePaid_filter
+  ): [FeePaid!]!
+  automationEvents(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: TriggerEvent_orderBy
+    orderDirection: OrderDirection
+    where: TriggerEvent_filter
+  ): [TriggerEvent!]!
+  swaps(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: AssetSwap_orderBy
+    orderDirection: OrderDirection
+    where: AssetSwap_filter
+  ): [AssetSwap!]!
+  positions(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Position_orderBy
+    orderDirection: OrderDirection
+    where: Position_filter
+  ): [Position!]!
+  latestCreatePositionEvent: CreatePositionEvent
+}
+
+input Account_filter {
+  id: Bytes
+  id_not: Bytes
+  id_gt: Bytes
+  id_lt: Bytes
+  id_gte: Bytes
+  id_lte: Bytes
+  id_in: [Bytes!]
+  id_not_in: [Bytes!]
+  id_contains: Bytes
+  id_not_contains: Bytes
+  address: Bytes
+  address_not: Bytes
+  address_gt: Bytes
+  address_lt: Bytes
+  address_gte: Bytes
+  address_lte: Bytes
+  address_in: [Bytes!]
+  address_not_in: [Bytes!]
+  address_contains: Bytes
+  address_not_contains: Bytes
+  user: String
+  user_not: String
+  user_gt: String
+  user_lt: String
+  user_gte: String
+  user_lte: String
+  user_in: [String!]
+  user_not_in: [String!]
+  user_contains: String
+  user_contains_nocase: String
+  user_not_contains: String
+  user_not_contains_nocase: String
+  user_starts_with: String
+  user_starts_with_nocase: String
+  user_not_starts_with: String
+  user_not_starts_with_nocase: String
+  user_ends_with: String
+  user_ends_with_nocase: String
+  user_not_ends_with: String
+  user_not_ends_with_nocase: String
+  user_: User_filter
+  type: String
+  type_not: String
+  type_gt: String
+  type_lt: String
+  type_gte: String
+  type_lte: String
+  type_in: [String!]
+  type_not_in: [String!]
+  type_contains: String
+  type_contains_nocase: String
+  type_not_contains: String
+  type_not_contains_nocase: String
+  type_starts_with: String
+  type_starts_with_nocase: String
+  type_not_starts_with: String
+  type_not_starts_with_nocase: String
+  type_ends_with: String
+  type_ends_with_nocase: String
+  type_not_ends_with: String
+  type_not_ends_with_nocase: String
+  vaultId: BigInt
+  vaultId_not: BigInt
+  vaultId_gt: BigInt
+  vaultId_lt: BigInt
+  vaultId_gte: BigInt
+  vaultId_lte: BigInt
+  vaultId_in: [BigInt!]
+  vaultId_not_in: [BigInt!]
+  createPositionEvents_: CreatePositionEvent_filter
+  summerEvents_: SummerEvent_filter
+  feePaids_: FeePaid_filter
+  automationEvents_: TriggerEvent_filter
+  swaps_: AssetSwap_filter
+  positions_: Position_filter
+  latestCreatePositionEvent: String
+  latestCreatePositionEvent_not: String
+  latestCreatePositionEvent_gt: String
+  latestCreatePositionEvent_lt: String
+  latestCreatePositionEvent_gte: String
+  latestCreatePositionEvent_lte: String
+  latestCreatePositionEvent_in: [String!]
+  latestCreatePositionEvent_not_in: [String!]
+  latestCreatePositionEvent_contains: String
+  latestCreatePositionEvent_contains_nocase: String
+  latestCreatePositionEvent_not_contains: String
+  latestCreatePositionEvent_not_contains_nocase: String
+  latestCreatePositionEvent_starts_with: String
+  latestCreatePositionEvent_starts_with_nocase: String
+  latestCreatePositionEvent_not_starts_with: String
+  latestCreatePositionEvent_not_starts_with_nocase: String
+  latestCreatePositionEvent_ends_with: String
+  latestCreatePositionEvent_ends_with_nocase: String
+  latestCreatePositionEvent_not_ends_with: String
+  latestCreatePositionEvent_not_ends_with_nocase: String
+  latestCreatePositionEvent_: CreatePositionEvent_filter
+
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [Account_filter]
+  or: [Account_filter]
+}
+
+enum Account_orderBy {
+  id
+  address
+  user
+  user__id
+  user__openPositions
+  type
+  vaultId
+  createPositionEvents
+  summerEvents
+  feePaids
+  automationEvents
+  swaps
+  positions
+  latestCreatePositionEvent
+  latestCreatePositionEvent__id
+  latestCreatePositionEvent__blockNumber
+  latestCreatePositionEvent__timestamp
+  latestCreatePositionEvent__txHash
+  latestCreatePositionEvent__logIndex
+  latestCreatePositionEvent__protocol
+  latestCreatePositionEvent__positionType
+  latestCreatePositionEvent__marketId
+}
+
+type AssetSwap {
+  id: Bytes!
+  assetIn: Token!
+  assetOut: Token!
+  amountIn: BigInt!
+  amountOut: BigInt!
+  assetInPrice: BigDecimal!
+  oracle: String!
+  amountInUSD: BigDecimal!
+  mainEventHash: SummerEvent
+  user: User!
+  proxy: Account!
+  position: Position
+  timestamp: BigInt!
+  block: BigInt!
+}
+
+input AssetSwap_filter {
+  id: Bytes
+  id_not: Bytes
+  id_gt: Bytes
+  id_lt: Bytes
+  id_gte: Bytes
+  id_lte: Bytes
+  id_in: [Bytes!]
+  id_not_in: [Bytes!]
+  id_contains: Bytes
+  id_not_contains: Bytes
+  assetIn: String
+  assetIn_not: String
+  assetIn_gt: String
+  assetIn_lt: String
+  assetIn_gte: String
+  assetIn_lte: String
+  assetIn_in: [String!]
+  assetIn_not_in: [String!]
+  assetIn_contains: String
+  assetIn_contains_nocase: String
+  assetIn_not_contains: String
+  assetIn_not_contains_nocase: String
+  assetIn_starts_with: String
+  assetIn_starts_with_nocase: String
+  assetIn_not_starts_with: String
+  assetIn_not_starts_with_nocase: String
+  assetIn_ends_with: String
+  assetIn_ends_with_nocase: String
+  assetIn_not_ends_with: String
+  assetIn_not_ends_with_nocase: String
+  assetIn_: Token_filter
+  assetOut: String
+  assetOut_not: String
+  assetOut_gt: String
+  assetOut_lt: String
+  assetOut_gte: String
+  assetOut_lte: String
+  assetOut_in: [String!]
+  assetOut_not_in: [String!]
+  assetOut_contains: String
+  assetOut_contains_nocase: String
+  assetOut_not_contains: String
+  assetOut_not_contains_nocase: String
+  assetOut_starts_with: String
+  assetOut_starts_with_nocase: String
+  assetOut_not_starts_with: String
+  assetOut_not_starts_with_nocase: String
+  assetOut_ends_with: String
+  assetOut_ends_with_nocase: String
+  assetOut_not_ends_with: String
+  assetOut_not_ends_with_nocase: String
+  assetOut_: Token_filter
+  amountIn: BigInt
+  amountIn_not: BigInt
+  amountIn_gt: BigInt
+  amountIn_lt: BigInt
+  amountIn_gte: BigInt
+  amountIn_lte: BigInt
+  amountIn_in: [BigInt!]
+  amountIn_not_in: [BigInt!]
+  amountOut: BigInt
+  amountOut_not: BigInt
+  amountOut_gt: BigInt
+  amountOut_lt: BigInt
+  amountOut_gte: BigInt
+  amountOut_lte: BigInt
+  amountOut_in: [BigInt!]
+  amountOut_not_in: [BigInt!]
+  assetInPrice: BigDecimal
+  assetInPrice_not: BigDecimal
+  assetInPrice_gt: BigDecimal
+  assetInPrice_lt: BigDecimal
+  assetInPrice_gte: BigDecimal
+  assetInPrice_lte: BigDecimal
+  assetInPrice_in: [BigDecimal!]
+  assetInPrice_not_in: [BigDecimal!]
+  oracle: String
+  oracle_not: String
+  oracle_gt: String
+  oracle_lt: String
+  oracle_gte: String
+  oracle_lte: String
+  oracle_in: [String!]
+  oracle_not_in: [String!]
+  oracle_contains: String
+  oracle_contains_nocase: String
+  oracle_not_contains: String
+  oracle_not_contains_nocase: String
+  oracle_starts_with: String
+  oracle_starts_with_nocase: String
+  oracle_not_starts_with: String
+  oracle_not_starts_with_nocase: String
+  oracle_ends_with: String
+  oracle_ends_with_nocase: String
+  oracle_not_ends_with: String
+  oracle_not_ends_with_nocase: String
+  amountInUSD: BigDecimal
+  amountInUSD_not: BigDecimal
+  amountInUSD_gt: BigDecimal
+  amountInUSD_lt: BigDecimal
+  amountInUSD_gte: BigDecimal
+  amountInUSD_lte: BigDecimal
+  amountInUSD_in: [BigDecimal!]
+  amountInUSD_not_in: [BigDecimal!]
+  mainEventHash: String
+  mainEventHash_not: String
+  mainEventHash_gt: String
+  mainEventHash_lt: String
+  mainEventHash_gte: String
+  mainEventHash_lte: String
+  mainEventHash_in: [String!]
+  mainEventHash_not_in: [String!]
+  mainEventHash_contains: String
+  mainEventHash_contains_nocase: String
+  mainEventHash_not_contains: String
+  mainEventHash_not_contains_nocase: String
+  mainEventHash_starts_with: String
+  mainEventHash_starts_with_nocase: String
+  mainEventHash_not_starts_with: String
+  mainEventHash_not_starts_with_nocase: String
+  mainEventHash_ends_with: String
+  mainEventHash_ends_with_nocase: String
+  mainEventHash_not_ends_with: String
+  mainEventHash_not_ends_with_nocase: String
+  mainEventHash_: SummerEvent_filter
+  user: String
+  user_not: String
+  user_gt: String
+  user_lt: String
+  user_gte: String
+  user_lte: String
+  user_in: [String!]
+  user_not_in: [String!]
+  user_contains: String
+  user_contains_nocase: String
+  user_not_contains: String
+  user_not_contains_nocase: String
+  user_starts_with: String
+  user_starts_with_nocase: String
+  user_not_starts_with: String
+  user_not_starts_with_nocase: String
+  user_ends_with: String
+  user_ends_with_nocase: String
+  user_not_ends_with: String
+  user_not_ends_with_nocase: String
+  user_: User_filter
+  proxy: String
+  proxy_not: String
+  proxy_gt: String
+  proxy_lt: String
+  proxy_gte: String
+  proxy_lte: String
+  proxy_in: [String!]
+  proxy_not_in: [String!]
+  proxy_contains: String
+  proxy_contains_nocase: String
+  proxy_not_contains: String
+  proxy_not_contains_nocase: String
+  proxy_starts_with: String
+  proxy_starts_with_nocase: String
+  proxy_not_starts_with: String
+  proxy_not_starts_with_nocase: String
+  proxy_ends_with: String
+  proxy_ends_with_nocase: String
+  proxy_not_ends_with: String
+  proxy_not_ends_with_nocase: String
+  proxy_: Account_filter
+  position: String
+  position_not: String
+  position_gt: String
+  position_lt: String
+  position_gte: String
+  position_lte: String
+  position_in: [String!]
+  position_not_in: [String!]
+  position_contains: String
+  position_contains_nocase: String
+  position_not_contains: String
+  position_not_contains_nocase: String
+  position_starts_with: String
+  position_starts_with_nocase: String
+  position_not_starts_with: String
+  position_not_starts_with_nocase: String
+  position_ends_with: String
+  position_ends_with_nocase: String
+  position_not_ends_with: String
+  position_not_ends_with_nocase: String
+  position_: Position_filter
+  timestamp: BigInt
+  timestamp_not: BigInt
+  timestamp_gt: BigInt
+  timestamp_lt: BigInt
+  timestamp_gte: BigInt
+  timestamp_lte: BigInt
+  timestamp_in: [BigInt!]
+  timestamp_not_in: [BigInt!]
+  block: BigInt
+  block_not: BigInt
+  block_gt: BigInt
+  block_lt: BigInt
+  block_gte: BigInt
+  block_lte: BigInt
+  block_in: [BigInt!]
+  block_not_in: [BigInt!]
+
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [AssetSwap_filter]
+  or: [AssetSwap_filter]
+}
+
+enum AssetSwap_orderBy {
+  id
+  assetIn
+  assetIn__id
+  assetIn__address
+  assetIn__symbol
+  assetIn__decimals
+  assetIn__precision
+  assetOut
+  assetOut__id
+  assetOut__address
+  assetOut__symbol
+  assetOut__decimals
+  assetOut__precision
+  amountIn
+  amountOut
+  assetInPrice
+  oracle
+  amountInUSD
+  mainEventHash
+  mainEventHash__id
+  mainEventHash__blockNumber
+  mainEventHash__timestamp
+  mainEventHash__txHash
+  mainEventHash__logIndex
+  mainEventHash__sender
+  mainEventHash__kind
+  mainEventHash__depositedUSD
+  mainEventHash__withdrawnUSD
+  mainEventHash__deltaUSD
+  mainEventHash__feePaidUSD
+  mainEventHash__protocol
+  mainEventHash__marketId
+  mainEventHash__debtBefore
+  mainEventHash__debtInUSDBefore
+  mainEventHash__debtAfter
+  mainEventHash__debtInUSDAfter
+  mainEventHash__collateralBefore
+  mainEventHash__collateralInUSDBefore
+  mainEventHash__collateralAfter
+  mainEventHash__collateralInUSDAfter
+  mainEventHash__supplyBefore
+  mainEventHash__supplyInUSDBefore
+  mainEventHash__supplyAfter
+  mainEventHash__supplyInUSDAfter
+  mainEventHash__netValueBefore
+  mainEventHash__netValueAfter
+  mainEventHash__collateralTokenPriceInUSD
+  mainEventHash__debtTokenPriceInUSD
+  mainEventHash__supplyTokenPriceInUSD
+  user
+  user__id
+  user__openPositions
+  proxy
+  proxy__id
+  proxy__address
+  proxy__type
+  proxy__vaultId
+  position
+  position__id
+  position__protocol
+  position__marketId
+  position__positionType
+  position__cumulativeDepositedUSD
+  position__cumulativeWithdrawnUSD
+  position__cumulativeDeltaUSD
+  position__cumulativeFeesUSD
+  position__debt
+  position__debtInUSD
+  position__collateral
+  position__collateralInUSD
+  position__supply
+  position__supplyInUSD
+  position__netValue
+  position___ajnaBucket
+  timestamp
+  block
+}
+
+scalar BigDecimal
+
+scalar BigInt
+
+input Block_height {
+  hash: Bytes
+  number: Int
+  number_gte: Int
+}
+
+input BlockChangedFilter {
+  number_gte: Int!
+}
+
+scalar Bytes
+
+type CreatePositionEvent {
+  id: Bytes!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  logIndex: BigInt!
+  protocol: String!
+  positionType: String!
+  debtToken: Token!
+  collateralToken: Token!
+  marketId: String
+  user: User!
+  account: Account!
+}
+
+input CreatePositionEvent_filter {
+  id: Bytes
+  id_not: Bytes
+  id_gt: Bytes
+  id_lt: Bytes
+  id_gte: Bytes
+  id_lte: Bytes
+  id_in: [Bytes!]
+  id_not_in: [Bytes!]
+  id_contains: Bytes
+  id_not_contains: Bytes
+  blockNumber: BigInt
+  blockNumber_not: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_lt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_not_in: [BigInt!]
+  timestamp: BigInt
+  timestamp_not: BigInt
+  timestamp_gt: BigInt
+  timestamp_lt: BigInt
+  timestamp_gte: BigInt
+  timestamp_lte: BigInt
+  timestamp_in: [BigInt!]
+  timestamp_not_in: [BigInt!]
+  txHash: Bytes
+  txHash_not: Bytes
+  txHash_gt: Bytes
+  txHash_lt: Bytes
+  txHash_gte: Bytes
+  txHash_lte: Bytes
+  txHash_in: [Bytes!]
+  txHash_not_in: [Bytes!]
+  txHash_contains: Bytes
+  txHash_not_contains: Bytes
+  logIndex: BigInt
+  logIndex_not: BigInt
+  logIndex_gt: BigInt
+  logIndex_lt: BigInt
+  logIndex_gte: BigInt
+  logIndex_lte: BigInt
+  logIndex_in: [BigInt!]
+  logIndex_not_in: [BigInt!]
+  protocol: String
+  protocol_not: String
+  protocol_gt: String
+  protocol_lt: String
+  protocol_gte: String
+  protocol_lte: String
+  protocol_in: [String!]
+  protocol_not_in: [String!]
+  protocol_contains: String
+  protocol_contains_nocase: String
+  protocol_not_contains: String
+  protocol_not_contains_nocase: String
+  protocol_starts_with: String
+  protocol_starts_with_nocase: String
+  protocol_not_starts_with: String
+  protocol_not_starts_with_nocase: String
+  protocol_ends_with: String
+  protocol_ends_with_nocase: String
+  protocol_not_ends_with: String
+  protocol_not_ends_with_nocase: String
+  positionType: String
+  positionType_not: String
+  positionType_gt: String
+  positionType_lt: String
+  positionType_gte: String
+  positionType_lte: String
+  positionType_in: [String!]
+  positionType_not_in: [String!]
+  positionType_contains: String
+  positionType_contains_nocase: String
+  positionType_not_contains: String
+  positionType_not_contains_nocase: String
+  positionType_starts_with: String
+  positionType_starts_with_nocase: String
+  positionType_not_starts_with: String
+  positionType_not_starts_with_nocase: String
+  positionType_ends_with: String
+  positionType_ends_with_nocase: String
+  positionType_not_ends_with: String
+  positionType_not_ends_with_nocase: String
+  debtToken: String
+  debtToken_not: String
+  debtToken_gt: String
+  debtToken_lt: String
+  debtToken_gte: String
+  debtToken_lte: String
+  debtToken_in: [String!]
+  debtToken_not_in: [String!]
+  debtToken_contains: String
+  debtToken_contains_nocase: String
+  debtToken_not_contains: String
+  debtToken_not_contains_nocase: String
+  debtToken_starts_with: String
+  debtToken_starts_with_nocase: String
+  debtToken_not_starts_with: String
+  debtToken_not_starts_with_nocase: String
+  debtToken_ends_with: String
+  debtToken_ends_with_nocase: String
+  debtToken_not_ends_with: String
+  debtToken_not_ends_with_nocase: String
+  debtToken_: Token_filter
+  collateralToken: String
+  collateralToken_not: String
+  collateralToken_gt: String
+  collateralToken_lt: String
+  collateralToken_gte: String
+  collateralToken_lte: String
+  collateralToken_in: [String!]
+  collateralToken_not_in: [String!]
+  collateralToken_contains: String
+  collateralToken_contains_nocase: String
+  collateralToken_not_contains: String
+  collateralToken_not_contains_nocase: String
+  collateralToken_starts_with: String
+  collateralToken_starts_with_nocase: String
+  collateralToken_not_starts_with: String
+  collateralToken_not_starts_with_nocase: String
+  collateralToken_ends_with: String
+  collateralToken_ends_with_nocase: String
+  collateralToken_not_ends_with: String
+  collateralToken_not_ends_with_nocase: String
+  collateralToken_: Token_filter
+  marketId: String
+  marketId_not: String
+  marketId_gt: String
+  marketId_lt: String
+  marketId_gte: String
+  marketId_lte: String
+  marketId_in: [String!]
+  marketId_not_in: [String!]
+  marketId_contains: String
+  marketId_contains_nocase: String
+  marketId_not_contains: String
+  marketId_not_contains_nocase: String
+  marketId_starts_with: String
+  marketId_starts_with_nocase: String
+  marketId_not_starts_with: String
+  marketId_not_starts_with_nocase: String
+  marketId_ends_with: String
+  marketId_ends_with_nocase: String
+  marketId_not_ends_with: String
+  marketId_not_ends_with_nocase: String
+  user: String
+  user_not: String
+  user_gt: String
+  user_lt: String
+  user_gte: String
+  user_lte: String
+  user_in: [String!]
+  user_not_in: [String!]
+  user_contains: String
+  user_contains_nocase: String
+  user_not_contains: String
+  user_not_contains_nocase: String
+  user_starts_with: String
+  user_starts_with_nocase: String
+  user_not_starts_with: String
+  user_not_starts_with_nocase: String
+  user_ends_with: String
+  user_ends_with_nocase: String
+  user_not_ends_with: String
+  user_not_ends_with_nocase: String
+  user_: User_filter
+  account: String
+  account_not: String
+  account_gt: String
+  account_lt: String
+  account_gte: String
+  account_lte: String
+  account_in: [String!]
+  account_not_in: [String!]
+  account_contains: String
+  account_contains_nocase: String
+  account_not_contains: String
+  account_not_contains_nocase: String
+  account_starts_with: String
+  account_starts_with_nocase: String
+  account_not_starts_with: String
+  account_not_starts_with_nocase: String
+  account_ends_with: String
+  account_ends_with_nocase: String
+  account_not_ends_with: String
+  account_not_ends_with_nocase: String
+  account_: Account_filter
+
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [CreatePositionEvent_filter]
+  or: [CreatePositionEvent_filter]
+}
+
+enum CreatePositionEvent_orderBy {
+  id
+  blockNumber
+  timestamp
+  txHash
+  logIndex
+  protocol
+  positionType
+  debtToken
+  debtToken__id
+  debtToken__address
+  debtToken__symbol
+  debtToken__decimals
+  debtToken__precision
+  collateralToken
+  collateralToken__id
+  collateralToken__address
+  collateralToken__symbol
+  collateralToken__decimals
+  collateralToken__precision
+  marketId
+  user
+  user__id
+  user__openPositions
+  account
+  account__id
+  account__address
+  account__type
+  account__vaultId
+}
+
+type FeePaid {
+  id: ID!
+  block: BigInt!
+  timestamp: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  sender: Bytes!
+  beneficiary: Bytes!
+  amount: BigDecimal!
+  amountInFeeToken: BigInt
+  feeTokenPrice: BigDecimal
+  oracle: String!
+  feeToken: Token
+  mainEventHash: SummerEvent
+  user: User!
+  proxy: Account!
+}
+
+input FeePaid_filter {
+  id: ID
+  id_not: ID
+  id_gt: ID
+  id_lt: ID
+  id_gte: ID
+  id_lte: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  block: BigInt
+  block_not: BigInt
+  block_gt: BigInt
+  block_lt: BigInt
+  block_gte: BigInt
+  block_lte: BigInt
+  block_in: [BigInt!]
+  block_not_in: [BigInt!]
+  timestamp: BigInt
+  timestamp_not: BigInt
+  timestamp_gt: BigInt
+  timestamp_lt: BigInt
+  timestamp_gte: BigInt
+  timestamp_lte: BigInt
+  timestamp_in: [BigInt!]
+  timestamp_not_in: [BigInt!]
+  transactionHash: Bytes
+  transactionHash_not: Bytes
+  transactionHash_gt: Bytes
+  transactionHash_lt: Bytes
+  transactionHash_gte: Bytes
+  transactionHash_lte: Bytes
+  transactionHash_in: [Bytes!]
+  transactionHash_not_in: [Bytes!]
+  transactionHash_contains: Bytes
+  transactionHash_not_contains: Bytes
+  logIndex: BigInt
+  logIndex_not: BigInt
+  logIndex_gt: BigInt
+  logIndex_lt: BigInt
+  logIndex_gte: BigInt
+  logIndex_lte: BigInt
+  logIndex_in: [BigInt!]
+  logIndex_not_in: [BigInt!]
+  sender: Bytes
+  sender_not: Bytes
+  sender_gt: Bytes
+  sender_lt: Bytes
+  sender_gte: Bytes
+  sender_lte: Bytes
+  sender_in: [Bytes!]
+  sender_not_in: [Bytes!]
+  sender_contains: Bytes
+  sender_not_contains: Bytes
+  beneficiary: Bytes
+  beneficiary_not: Bytes
+  beneficiary_gt: Bytes
+  beneficiary_lt: Bytes
+  beneficiary_gte: Bytes
+  beneficiary_lte: Bytes
+  beneficiary_in: [Bytes!]
+  beneficiary_not_in: [Bytes!]
+  beneficiary_contains: Bytes
+  beneficiary_not_contains: Bytes
+  amount: BigDecimal
+  amount_not: BigDecimal
+  amount_gt: BigDecimal
+  amount_lt: BigDecimal
+  amount_gte: BigDecimal
+  amount_lte: BigDecimal
+  amount_in: [BigDecimal!]
+  amount_not_in: [BigDecimal!]
+  amountInFeeToken: BigInt
+  amountInFeeToken_not: BigInt
+  amountInFeeToken_gt: BigInt
+  amountInFeeToken_lt: BigInt
+  amountInFeeToken_gte: BigInt
+  amountInFeeToken_lte: BigInt
+  amountInFeeToken_in: [BigInt!]
+  amountInFeeToken_not_in: [BigInt!]
+  feeTokenPrice: BigDecimal
+  feeTokenPrice_not: BigDecimal
+  feeTokenPrice_gt: BigDecimal
+  feeTokenPrice_lt: BigDecimal
+  feeTokenPrice_gte: BigDecimal
+  feeTokenPrice_lte: BigDecimal
+  feeTokenPrice_in: [BigDecimal!]
+  feeTokenPrice_not_in: [BigDecimal!]
+  oracle: String
+  oracle_not: String
+  oracle_gt: String
+  oracle_lt: String
+  oracle_gte: String
+  oracle_lte: String
+  oracle_in: [String!]
+  oracle_not_in: [String!]
+  oracle_contains: String
+  oracle_contains_nocase: String
+  oracle_not_contains: String
+  oracle_not_contains_nocase: String
+  oracle_starts_with: String
+  oracle_starts_with_nocase: String
+  oracle_not_starts_with: String
+  oracle_not_starts_with_nocase: String
+  oracle_ends_with: String
+  oracle_ends_with_nocase: String
+  oracle_not_ends_with: String
+  oracle_not_ends_with_nocase: String
+  feeToken: String
+  feeToken_not: String
+  feeToken_gt: String
+  feeToken_lt: String
+  feeToken_gte: String
+  feeToken_lte: String
+  feeToken_in: [String!]
+  feeToken_not_in: [String!]
+  feeToken_contains: String
+  feeToken_contains_nocase: String
+  feeToken_not_contains: String
+  feeToken_not_contains_nocase: String
+  feeToken_starts_with: String
+  feeToken_starts_with_nocase: String
+  feeToken_not_starts_with: String
+  feeToken_not_starts_with_nocase: String
+  feeToken_ends_with: String
+  feeToken_ends_with_nocase: String
+  feeToken_not_ends_with: String
+  feeToken_not_ends_with_nocase: String
+  feeToken_: Token_filter
+  mainEventHash: String
+  mainEventHash_not: String
+  mainEventHash_gt: String
+  mainEventHash_lt: String
+  mainEventHash_gte: String
+  mainEventHash_lte: String
+  mainEventHash_in: [String!]
+  mainEventHash_not_in: [String!]
+  mainEventHash_contains: String
+  mainEventHash_contains_nocase: String
+  mainEventHash_not_contains: String
+  mainEventHash_not_contains_nocase: String
+  mainEventHash_starts_with: String
+  mainEventHash_starts_with_nocase: String
+  mainEventHash_not_starts_with: String
+  mainEventHash_not_starts_with_nocase: String
+  mainEventHash_ends_with: String
+  mainEventHash_ends_with_nocase: String
+  mainEventHash_not_ends_with: String
+  mainEventHash_not_ends_with_nocase: String
+  mainEventHash_: SummerEvent_filter
+  user: String
+  user_not: String
+  user_gt: String
+  user_lt: String
+  user_gte: String
+  user_lte: String
+  user_in: [String!]
+  user_not_in: [String!]
+  user_contains: String
+  user_contains_nocase: String
+  user_not_contains: String
+  user_not_contains_nocase: String
+  user_starts_with: String
+  user_starts_with_nocase: String
+  user_not_starts_with: String
+  user_not_starts_with_nocase: String
+  user_ends_with: String
+  user_ends_with_nocase: String
+  user_not_ends_with: String
+  user_not_ends_with_nocase: String
+  user_: User_filter
+  proxy: String
+  proxy_not: String
+  proxy_gt: String
+  proxy_lt: String
+  proxy_gte: String
+  proxy_lte: String
+  proxy_in: [String!]
+  proxy_not_in: [String!]
+  proxy_contains: String
+  proxy_contains_nocase: String
+  proxy_not_contains: String
+  proxy_not_contains_nocase: String
+  proxy_starts_with: String
+  proxy_starts_with_nocase: String
+  proxy_not_starts_with: String
+  proxy_not_starts_with_nocase: String
+  proxy_ends_with: String
+  proxy_ends_with_nocase: String
+  proxy_not_ends_with: String
+  proxy_not_ends_with_nocase: String
+  proxy_: Account_filter
+
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [FeePaid_filter]
+  or: [FeePaid_filter]
+}
+
+enum FeePaid_orderBy {
+  id
+  block
+  timestamp
+  transactionHash
+  logIndex
+  sender
+  beneficiary
+  amount
+  amountInFeeToken
+  feeTokenPrice
+  oracle
+  feeToken
+  feeToken__id
+  feeToken__address
+  feeToken__symbol
+  feeToken__decimals
+  feeToken__precision
+  mainEventHash
+  mainEventHash__id
+  mainEventHash__blockNumber
+  mainEventHash__timestamp
+  mainEventHash__txHash
+  mainEventHash__logIndex
+  mainEventHash__sender
+  mainEventHash__kind
+  mainEventHash__depositedUSD
+  mainEventHash__withdrawnUSD
+  mainEventHash__deltaUSD
+  mainEventHash__feePaidUSD
+  mainEventHash__protocol
+  mainEventHash__marketId
+  mainEventHash__debtBefore
+  mainEventHash__debtInUSDBefore
+  mainEventHash__debtAfter
+  mainEventHash__debtInUSDAfter
+  mainEventHash__collateralBefore
+  mainEventHash__collateralInUSDBefore
+  mainEventHash__collateralAfter
+  mainEventHash__collateralInUSDAfter
+  mainEventHash__supplyBefore
+  mainEventHash__supplyInUSDBefore
+  mainEventHash__supplyAfter
+  mainEventHash__supplyInUSDAfter
+  mainEventHash__netValueBefore
+  mainEventHash__netValueAfter
+  mainEventHash__collateralTokenPriceInUSD
+  mainEventHash__debtTokenPriceInUSD
+  mainEventHash__supplyTokenPriceInUSD
+  user
+  user__id
+  user__openPositions
+  proxy
+  proxy__id
+  proxy__address
+  proxy__type
+  proxy__vaultId
+}
+
+type Ilk {
+  id: Bytes!
+  blockNumber: BigInt!
+  token: Token!
+  oracle: Bytes
+  rate: BigDecimal!
+}
+
+input Ilk_filter {
+  id: Bytes
+  id_not: Bytes
+  id_gt: Bytes
+  id_lt: Bytes
+  id_gte: Bytes
+  id_lte: Bytes
+  id_in: [Bytes!]
+  id_not_in: [Bytes!]
+  id_contains: Bytes
+  id_not_contains: Bytes
+  blockNumber: BigInt
+  blockNumber_not: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_lt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_not_in: [BigInt!]
+  token: String
+  token_not: String
+  token_gt: String
+  token_lt: String
+  token_gte: String
+  token_lte: String
+  token_in: [String!]
+  token_not_in: [String!]
+  token_contains: String
+  token_contains_nocase: String
+  token_not_contains: String
+  token_not_contains_nocase: String
+  token_starts_with: String
+  token_starts_with_nocase: String
+  token_not_starts_with: String
+  token_not_starts_with_nocase: String
+  token_ends_with: String
+  token_ends_with_nocase: String
+  token_not_ends_with: String
+  token_not_ends_with_nocase: String
+  token_: Token_filter
+  oracle: Bytes
+  oracle_not: Bytes
+  oracle_gt: Bytes
+  oracle_lt: Bytes
+  oracle_gte: Bytes
+  oracle_lte: Bytes
+  oracle_in: [Bytes!]
+  oracle_not_in: [Bytes!]
+  oracle_contains: Bytes
+  oracle_not_contains: Bytes
+  rate: BigDecimal
+  rate_not: BigDecimal
+  rate_gt: BigDecimal
+  rate_lt: BigDecimal
+  rate_gte: BigDecimal
+  rate_lte: BigDecimal
+  rate_in: [BigDecimal!]
+  rate_not_in: [BigDecimal!]
+
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [Ilk_filter]
+  or: [Ilk_filter]
+}
+
+enum Ilk_orderBy {
+  id
+  blockNumber
+  token
+  token__id
+  token__address
+  token__symbol
+  token__decimals
+  token__precision
+  oracle
+  rate
+}
+
+"""
+8 bytes signed integer
+"""
+scalar Int8
+
+type MakerUrn {
+  id: Bytes!
+  cdp: BigInt!
+  ilk: Bytes!
+  urn: Bytes!
+}
+
+input MakerUrn_filter {
+  id: Bytes
+  id_not: Bytes
+  id_gt: Bytes
+  id_lt: Bytes
+  id_gte: Bytes
+  id_lte: Bytes
+  id_in: [Bytes!]
+  id_not_in: [Bytes!]
+  id_contains: Bytes
+  id_not_contains: Bytes
+  cdp: BigInt
+  cdp_not: BigInt
+  cdp_gt: BigInt
+  cdp_lt: BigInt
+  cdp_gte: BigInt
+  cdp_lte: BigInt
+  cdp_in: [BigInt!]
+  cdp_not_in: [BigInt!]
+  ilk: Bytes
+  ilk_not: Bytes
+  ilk_gt: Bytes
+  ilk_lt: Bytes
+  ilk_gte: Bytes
+  ilk_lte: Bytes
+  ilk_in: [Bytes!]
+  ilk_not_in: [Bytes!]
+  ilk_contains: Bytes
+  ilk_not_contains: Bytes
+  urn: Bytes
+  urn_not: Bytes
+  urn_gt: Bytes
+  urn_lt: Bytes
+  urn_gte: Bytes
+  urn_lte: Bytes
+  urn_in: [Bytes!]
+  urn_not_in: [Bytes!]
+  urn_contains: Bytes
+  urn_not_contains: Bytes
+
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [MakerUrn_filter]
+  or: [MakerUrn_filter]
+}
+
+enum MakerUrn_orderBy {
+  id
+  cdp
+  ilk
+  urn
+}
+
+type Market {
+  id: ID!
+  protocol: String!
+  marketId: String!
+  supported: Boolean!
+}
+
+input Market_filter {
+  id: ID
+  id_not: ID
+  id_gt: ID
+  id_lt: ID
+  id_gte: ID
+  id_lte: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  protocol: String
+  protocol_not: String
+  protocol_gt: String
+  protocol_lt: String
+  protocol_gte: String
+  protocol_lte: String
+  protocol_in: [String!]
+  protocol_not_in: [String!]
+  protocol_contains: String
+  protocol_contains_nocase: String
+  protocol_not_contains: String
+  protocol_not_contains_nocase: String
+  protocol_starts_with: String
+  protocol_starts_with_nocase: String
+  protocol_not_starts_with: String
+  protocol_not_starts_with_nocase: String
+  protocol_ends_with: String
+  protocol_ends_with_nocase: String
+  protocol_not_ends_with: String
+  protocol_not_ends_with_nocase: String
+  marketId: String
+  marketId_not: String
+  marketId_gt: String
+  marketId_lt: String
+  marketId_gte: String
+  marketId_lte: String
+  marketId_in: [String!]
+  marketId_not_in: [String!]
+  marketId_contains: String
+  marketId_contains_nocase: String
+  marketId_not_contains: String
+  marketId_not_contains_nocase: String
+  marketId_starts_with: String
+  marketId_starts_with_nocase: String
+  marketId_not_starts_with: String
+  marketId_not_starts_with_nocase: String
+  marketId_ends_with: String
+  marketId_ends_with_nocase: String
+  marketId_not_ends_with: String
+  marketId_not_ends_with_nocase: String
+  supported: Boolean
+  supported_not: Boolean
+  supported_in: [Boolean!]
+  supported_not_in: [Boolean!]
+
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [Market_filter]
+  or: [Market_filter]
+}
+
+enum Market_orderBy {
+  id
+  protocol
+  marketId
+  supported
+}
+
+"""
+Defines the order direction, either ascending or descending
+"""
+enum OrderDirection {
+  asc
+  desc
+}
+
+type Position {
+  id: ID!
+  account: Account!
+  user: User!
+  protocol: String!
+  marketId: String!
+  positionType: String
+  cumulativeDepositedUSD: BigDecimal!
+  cumulativeWithdrawnUSD: BigDecimal!
+  cumulativeDeltaUSD: BigDecimal!
+  cumulativeFeesUSD: BigDecimal!
+  debt: BigDecimal!
+  debtInUSD: BigDecimal!
+  collateral: BigDecimal!
+  collateralInUSD: BigDecimal!
+  supply: BigDecimal!
+  supplyInUSD: BigDecimal!
+  netValue: BigDecimal!
+  summerEvents(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: SummerEvent_orderBy
+    orderDirection: OrderDirection
+    where: SummerEvent_filter
+  ): [SummerEvent!]!
+  triggers(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Trigger_orderBy
+    orderDirection: OrderDirection
+    where: Trigger_filter
+  ): [Trigger!]!
+  swaps(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: AssetSwap_orderBy
+    orderDirection: OrderDirection
+    where: AssetSwap_filter
+  ): [AssetSwap!]!
+  lastEvent: SummerEvent
+  _ajnaBucket: BigInt!
+}
+
+input Position_filter {
+  id: ID
+  id_not: ID
+  id_gt: ID
+  id_lt: ID
+  id_gte: ID
+  id_lte: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  account: String
+  account_not: String
+  account_gt: String
+  account_lt: String
+  account_gte: String
+  account_lte: String
+  account_in: [String!]
+  account_not_in: [String!]
+  account_contains: String
+  account_contains_nocase: String
+  account_not_contains: String
+  account_not_contains_nocase: String
+  account_starts_with: String
+  account_starts_with_nocase: String
+  account_not_starts_with: String
+  account_not_starts_with_nocase: String
+  account_ends_with: String
+  account_ends_with_nocase: String
+  account_not_ends_with: String
+  account_not_ends_with_nocase: String
+  account_: Account_filter
+  user: String
+  user_not: String
+  user_gt: String
+  user_lt: String
+  user_gte: String
+  user_lte: String
+  user_in: [String!]
+  user_not_in: [String!]
+  user_contains: String
+  user_contains_nocase: String
+  user_not_contains: String
+  user_not_contains_nocase: String
+  user_starts_with: String
+  user_starts_with_nocase: String
+  user_not_starts_with: String
+  user_not_starts_with_nocase: String
+  user_ends_with: String
+  user_ends_with_nocase: String
+  user_not_ends_with: String
+  user_not_ends_with_nocase: String
+  user_: User_filter
+  protocol: String
+  protocol_not: String
+  protocol_gt: String
+  protocol_lt: String
+  protocol_gte: String
+  protocol_lte: String
+  protocol_in: [String!]
+  protocol_not_in: [String!]
+  protocol_contains: String
+  protocol_contains_nocase: String
+  protocol_not_contains: String
+  protocol_not_contains_nocase: String
+  protocol_starts_with: String
+  protocol_starts_with_nocase: String
+  protocol_not_starts_with: String
+  protocol_not_starts_with_nocase: String
+  protocol_ends_with: String
+  protocol_ends_with_nocase: String
+  protocol_not_ends_with: String
+  protocol_not_ends_with_nocase: String
+  marketId: String
+  marketId_not: String
+  marketId_gt: String
+  marketId_lt: String
+  marketId_gte: String
+  marketId_lte: String
+  marketId_in: [String!]
+  marketId_not_in: [String!]
+  marketId_contains: String
+  marketId_contains_nocase: String
+  marketId_not_contains: String
+  marketId_not_contains_nocase: String
+  marketId_starts_with: String
+  marketId_starts_with_nocase: String
+  marketId_not_starts_with: String
+  marketId_not_starts_with_nocase: String
+  marketId_ends_with: String
+  marketId_ends_with_nocase: String
+  marketId_not_ends_with: String
+  marketId_not_ends_with_nocase: String
+  positionType: String
+  positionType_not: String
+  positionType_gt: String
+  positionType_lt: String
+  positionType_gte: String
+  positionType_lte: String
+  positionType_in: [String!]
+  positionType_not_in: [String!]
+  positionType_contains: String
+  positionType_contains_nocase: String
+  positionType_not_contains: String
+  positionType_not_contains_nocase: String
+  positionType_starts_with: String
+  positionType_starts_with_nocase: String
+  positionType_not_starts_with: String
+  positionType_not_starts_with_nocase: String
+  positionType_ends_with: String
+  positionType_ends_with_nocase: String
+  positionType_not_ends_with: String
+  positionType_not_ends_with_nocase: String
+  cumulativeDepositedUSD: BigDecimal
+  cumulativeDepositedUSD_not: BigDecimal
+  cumulativeDepositedUSD_gt: BigDecimal
+  cumulativeDepositedUSD_lt: BigDecimal
+  cumulativeDepositedUSD_gte: BigDecimal
+  cumulativeDepositedUSD_lte: BigDecimal
+  cumulativeDepositedUSD_in: [BigDecimal!]
+  cumulativeDepositedUSD_not_in: [BigDecimal!]
+  cumulativeWithdrawnUSD: BigDecimal
+  cumulativeWithdrawnUSD_not: BigDecimal
+  cumulativeWithdrawnUSD_gt: BigDecimal
+  cumulativeWithdrawnUSD_lt: BigDecimal
+  cumulativeWithdrawnUSD_gte: BigDecimal
+  cumulativeWithdrawnUSD_lte: BigDecimal
+  cumulativeWithdrawnUSD_in: [BigDecimal!]
+  cumulativeWithdrawnUSD_not_in: [BigDecimal!]
+  cumulativeDeltaUSD: BigDecimal
+  cumulativeDeltaUSD_not: BigDecimal
+  cumulativeDeltaUSD_gt: BigDecimal
+  cumulativeDeltaUSD_lt: BigDecimal
+  cumulativeDeltaUSD_gte: BigDecimal
+  cumulativeDeltaUSD_lte: BigDecimal
+  cumulativeDeltaUSD_in: [BigDecimal!]
+  cumulativeDeltaUSD_not_in: [BigDecimal!]
+  cumulativeFeesUSD: BigDecimal
+  cumulativeFeesUSD_not: BigDecimal
+  cumulativeFeesUSD_gt: BigDecimal
+  cumulativeFeesUSD_lt: BigDecimal
+  cumulativeFeesUSD_gte: BigDecimal
+  cumulativeFeesUSD_lte: BigDecimal
+  cumulativeFeesUSD_in: [BigDecimal!]
+  cumulativeFeesUSD_not_in: [BigDecimal!]
+  debt: BigDecimal
+  debt_not: BigDecimal
+  debt_gt: BigDecimal
+  debt_lt: BigDecimal
+  debt_gte: BigDecimal
+  debt_lte: BigDecimal
+  debt_in: [BigDecimal!]
+  debt_not_in: [BigDecimal!]
+  debtInUSD: BigDecimal
+  debtInUSD_not: BigDecimal
+  debtInUSD_gt: BigDecimal
+  debtInUSD_lt: BigDecimal
+  debtInUSD_gte: BigDecimal
+  debtInUSD_lte: BigDecimal
+  debtInUSD_in: [BigDecimal!]
+  debtInUSD_not_in: [BigDecimal!]
+  collateral: BigDecimal
+  collateral_not: BigDecimal
+  collateral_gt: BigDecimal
+  collateral_lt: BigDecimal
+  collateral_gte: BigDecimal
+  collateral_lte: BigDecimal
+  collateral_in: [BigDecimal!]
+  collateral_not_in: [BigDecimal!]
+  collateralInUSD: BigDecimal
+  collateralInUSD_not: BigDecimal
+  collateralInUSD_gt: BigDecimal
+  collateralInUSD_lt: BigDecimal
+  collateralInUSD_gte: BigDecimal
+  collateralInUSD_lte: BigDecimal
+  collateralInUSD_in: [BigDecimal!]
+  collateralInUSD_not_in: [BigDecimal!]
+  supply: BigDecimal
+  supply_not: BigDecimal
+  supply_gt: BigDecimal
+  supply_lt: BigDecimal
+  supply_gte: BigDecimal
+  supply_lte: BigDecimal
+  supply_in: [BigDecimal!]
+  supply_not_in: [BigDecimal!]
+  supplyInUSD: BigDecimal
+  supplyInUSD_not: BigDecimal
+  supplyInUSD_gt: BigDecimal
+  supplyInUSD_lt: BigDecimal
+  supplyInUSD_gte: BigDecimal
+  supplyInUSD_lte: BigDecimal
+  supplyInUSD_in: [BigDecimal!]
+  supplyInUSD_not_in: [BigDecimal!]
+  netValue: BigDecimal
+  netValue_not: BigDecimal
+  netValue_gt: BigDecimal
+  netValue_lt: BigDecimal
+  netValue_gte: BigDecimal
+  netValue_lte: BigDecimal
+  netValue_in: [BigDecimal!]
+  netValue_not_in: [BigDecimal!]
+  summerEvents_: SummerEvent_filter
+  triggers_: Trigger_filter
+  swaps_: AssetSwap_filter
+  lastEvent: String
+  lastEvent_not: String
+  lastEvent_gt: String
+  lastEvent_lt: String
+  lastEvent_gte: String
+  lastEvent_lte: String
+  lastEvent_in: [String!]
+  lastEvent_not_in: [String!]
+  lastEvent_contains: String
+  lastEvent_contains_nocase: String
+  lastEvent_not_contains: String
+  lastEvent_not_contains_nocase: String
+  lastEvent_starts_with: String
+  lastEvent_starts_with_nocase: String
+  lastEvent_not_starts_with: String
+  lastEvent_not_starts_with_nocase: String
+  lastEvent_ends_with: String
+  lastEvent_ends_with_nocase: String
+  lastEvent_not_ends_with: String
+  lastEvent_not_ends_with_nocase: String
+  lastEvent_: SummerEvent_filter
+  _ajnaBucket: BigInt
+  _ajnaBucket_not: BigInt
+  _ajnaBucket_gt: BigInt
+  _ajnaBucket_lt: BigInt
+  _ajnaBucket_gte: BigInt
+  _ajnaBucket_lte: BigInt
+  _ajnaBucket_in: [BigInt!]
+  _ajnaBucket_not_in: [BigInt!]
+
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [Position_filter]
+  or: [Position_filter]
+}
+
+enum Position_orderBy {
+  id
+  account
+  account__id
+  account__address
+  account__type
+  account__vaultId
+  user
+  user__id
+  user__openPositions
+  protocol
+  marketId
+  positionType
+  cumulativeDepositedUSD
+  cumulativeWithdrawnUSD
+  cumulativeDeltaUSD
+  cumulativeFeesUSD
+  debt
+  debtInUSD
+  collateral
+  collateralInUSD
+  supply
+  supplyInUSD
+  netValue
+  summerEvents
+  triggers
+  swaps
+  lastEvent
+  lastEvent__id
+  lastEvent__blockNumber
+  lastEvent__timestamp
+  lastEvent__txHash
+  lastEvent__logIndex
+  lastEvent__sender
+  lastEvent__kind
+  lastEvent__depositedUSD
+  lastEvent__withdrawnUSD
+  lastEvent__deltaUSD
+  lastEvent__feePaidUSD
+  lastEvent__protocol
+  lastEvent__marketId
+  lastEvent__debtBefore
+  lastEvent__debtInUSDBefore
+  lastEvent__debtAfter
+  lastEvent__debtInUSDAfter
+  lastEvent__collateralBefore
+  lastEvent__collateralInUSDBefore
+  lastEvent__collateralAfter
+  lastEvent__collateralInUSDAfter
+  lastEvent__supplyBefore
+  lastEvent__supplyInUSDBefore
+  lastEvent__supplyAfter
+  lastEvent__supplyInUSDAfter
+  lastEvent__netValueBefore
+  lastEvent__netValueAfter
+  lastEvent__collateralTokenPriceInUSD
+  lastEvent__debtTokenPriceInUSD
+  lastEvent__supplyTokenPriceInUSD
+  _ajnaBucket
+}
+
+type Query {
+  storage(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): Storage
+  storages(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Storage_orderBy
+    orderDirection: OrderDirection
+    where: Storage_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [Storage!]!
+  snapshot(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): Snapshot
+  snapshots(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Snapshot_orderBy
+    orderDirection: OrderDirection
+    where: Snapshot_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [Snapshot!]!
+  user(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): User
+  users(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: User_orderBy
+    orderDirection: OrderDirection
+    where: User_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [User!]!
+  summerEvent(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): SummerEvent
+  summerEvents(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: SummerEvent_orderBy
+    orderDirection: OrderDirection
+    where: SummerEvent_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [SummerEvent!]!
+  createPositionEvent(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): CreatePositionEvent
+  createPositionEvents(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: CreatePositionEvent_orderBy
+    orderDirection: OrderDirection
+    where: CreatePositionEvent_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [CreatePositionEvent!]!
+  account(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): Account
+  accounts(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Account_orderBy
+    orderDirection: OrderDirection
+    where: Account_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [Account!]!
+  position(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): Position
+  positions(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Position_orderBy
+    orderDirection: OrderDirection
+    where: Position_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [Position!]!
+  feePaid(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): FeePaid
+  feePaids(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: FeePaid_orderBy
+    orderDirection: OrderDirection
+    where: FeePaid_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [FeePaid!]!
+  assetSwap(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): AssetSwap
+  assetSwaps(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: AssetSwap_orderBy
+    orderDirection: OrderDirection
+    where: AssetSwap_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [AssetSwap!]!
+  transfer(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): Transfer
+  transfers(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Transfer_orderBy
+    orderDirection: OrderDirection
+    where: Transfer_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [Transfer!]!
+  token(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): Token
+  tokens(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Token_orderBy
+    orderDirection: OrderDirection
+    where: Token_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [Token!]!
+  triggerEvent(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): TriggerEvent
+  triggerEvents(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: TriggerEvent_orderBy
+    orderDirection: OrderDirection
+    where: TriggerEvent_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [TriggerEvent!]!
+  trigger(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): Trigger
+  triggers(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Trigger_orderBy
+    orderDirection: OrderDirection
+    where: Trigger_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [Trigger!]!
+  makerUrn(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): MakerUrn
+  makerUrns(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: MakerUrn_orderBy
+    orderDirection: OrderDirection
+    where: MakerUrn_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [MakerUrn!]!
+  ilk(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): Ilk
+  ilks(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Ilk_orderBy
+    orderDirection: OrderDirection
+    where: Ilk_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [Ilk!]!
+  tokenPrice(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): TokenPrice
+  tokenPrices(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: TokenPrice_orderBy
+    orderDirection: OrderDirection
+    where: TokenPrice_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [TokenPrice!]!
+  market(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): Market
+  markets(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Market_orderBy
+    orderDirection: OrderDirection
+    where: Market_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [Market!]!
+
+  """
+  Access to subgraph metadata
+  """
+  _meta(block: Block_height): _Meta_
+}
+
+type Snapshot {
+  id: ID!
+  timestamp: BigInt!
+  netValue: BigDecimal!
+  positionCount: BigInt!
+  closedPositions: BigInt!
+  year: BigInt!
+  month: BigInt!
+  day: BigInt!
+  hour: BigInt!
+}
+
+input Snapshot_filter {
+  id: ID
+  id_not: ID
+  id_gt: ID
+  id_lt: ID
+  id_gte: ID
+  id_lte: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  timestamp: BigInt
+  timestamp_not: BigInt
+  timestamp_gt: BigInt
+  timestamp_lt: BigInt
+  timestamp_gte: BigInt
+  timestamp_lte: BigInt
+  timestamp_in: [BigInt!]
+  timestamp_not_in: [BigInt!]
+  netValue: BigDecimal
+  netValue_not: BigDecimal
+  netValue_gt: BigDecimal
+  netValue_lt: BigDecimal
+  netValue_gte: BigDecimal
+  netValue_lte: BigDecimal
+  netValue_in: [BigDecimal!]
+  netValue_not_in: [BigDecimal!]
+  positionCount: BigInt
+  positionCount_not: BigInt
+  positionCount_gt: BigInt
+  positionCount_lt: BigInt
+  positionCount_gte: BigInt
+  positionCount_lte: BigInt
+  positionCount_in: [BigInt!]
+  positionCount_not_in: [BigInt!]
+  closedPositions: BigInt
+  closedPositions_not: BigInt
+  closedPositions_gt: BigInt
+  closedPositions_lt: BigInt
+  closedPositions_gte: BigInt
+  closedPositions_lte: BigInt
+  closedPositions_in: [BigInt!]
+  closedPositions_not_in: [BigInt!]
+  year: BigInt
+  year_not: BigInt
+  year_gt: BigInt
+  year_lt: BigInt
+  year_gte: BigInt
+  year_lte: BigInt
+  year_in: [BigInt!]
+  year_not_in: [BigInt!]
+  month: BigInt
+  month_not: BigInt
+  month_gt: BigInt
+  month_lt: BigInt
+  month_gte: BigInt
+  month_lte: BigInt
+  month_in: [BigInt!]
+  month_not_in: [BigInt!]
+  day: BigInt
+  day_not: BigInt
+  day_gt: BigInt
+  day_lt: BigInt
+  day_gte: BigInt
+  day_lte: BigInt
+  day_in: [BigInt!]
+  day_not_in: [BigInt!]
+  hour: BigInt
+  hour_not: BigInt
+  hour_gt: BigInt
+  hour_lt: BigInt
+  hour_gte: BigInt
+  hour_lte: BigInt
+  hour_in: [BigInt!]
+  hour_not_in: [BigInt!]
+
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [Snapshot_filter]
+  or: [Snapshot_filter]
+}
+
+enum Snapshot_orderBy {
+  id
+  timestamp
+  netValue
+  positionCount
+  closedPositions
+  year
+  month
+  day
+  hour
+}
+
+"""
+Oasis App user
+"""
+type Storage {
+  id: ID!
+  positions(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Position_orderBy
+    orderDirection: OrderDirection
+    where: Position_filter
+  ): [Position!]!
+}
+
+input Storage_filter {
+  id: ID
+  id_not: ID
+  id_gt: ID
+  id_lt: ID
+  id_gte: ID
+  id_lte: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  positions: [String!]
+  positions_not: [String!]
+  positions_contains: [String!]
+  positions_contains_nocase: [String!]
+  positions_not_contains: [String!]
+  positions_not_contains_nocase: [String!]
+  positions_: Position_filter
+
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [Storage_filter]
+  or: [Storage_filter]
+}
+
+enum Storage_orderBy {
+  id
+  positions
+}
+
+type Subscription {
+  storage(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): Storage
+  storages(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Storage_orderBy
+    orderDirection: OrderDirection
+    where: Storage_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [Storage!]!
+  snapshot(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): Snapshot
+  snapshots(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Snapshot_orderBy
+    orderDirection: OrderDirection
+    where: Snapshot_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [Snapshot!]!
+  user(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): User
+  users(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: User_orderBy
+    orderDirection: OrderDirection
+    where: User_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [User!]!
+  summerEvent(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): SummerEvent
+  summerEvents(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: SummerEvent_orderBy
+    orderDirection: OrderDirection
+    where: SummerEvent_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [SummerEvent!]!
+  createPositionEvent(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): CreatePositionEvent
+  createPositionEvents(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: CreatePositionEvent_orderBy
+    orderDirection: OrderDirection
+    where: CreatePositionEvent_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [CreatePositionEvent!]!
+  account(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): Account
+  accounts(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Account_orderBy
+    orderDirection: OrderDirection
+    where: Account_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [Account!]!
+  position(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): Position
+  positions(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Position_orderBy
+    orderDirection: OrderDirection
+    where: Position_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [Position!]!
+  feePaid(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): FeePaid
+  feePaids(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: FeePaid_orderBy
+    orderDirection: OrderDirection
+    where: FeePaid_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [FeePaid!]!
+  assetSwap(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): AssetSwap
+  assetSwaps(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: AssetSwap_orderBy
+    orderDirection: OrderDirection
+    where: AssetSwap_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [AssetSwap!]!
+  transfer(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): Transfer
+  transfers(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Transfer_orderBy
+    orderDirection: OrderDirection
+    where: Transfer_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [Transfer!]!
+  token(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): Token
+  tokens(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Token_orderBy
+    orderDirection: OrderDirection
+    where: Token_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [Token!]!
+  triggerEvent(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): TriggerEvent
+  triggerEvents(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: TriggerEvent_orderBy
+    orderDirection: OrderDirection
+    where: TriggerEvent_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [TriggerEvent!]!
+  trigger(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): Trigger
+  triggers(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Trigger_orderBy
+    orderDirection: OrderDirection
+    where: Trigger_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [Trigger!]!
+  makerUrn(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): MakerUrn
+  makerUrns(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: MakerUrn_orderBy
+    orderDirection: OrderDirection
+    where: MakerUrn_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [MakerUrn!]!
+  ilk(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): Ilk
+  ilks(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Ilk_orderBy
+    orderDirection: OrderDirection
+    where: Ilk_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [Ilk!]!
+  tokenPrice(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): TokenPrice
+  tokenPrices(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: TokenPrice_orderBy
+    orderDirection: OrderDirection
+    where: TokenPrice_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [TokenPrice!]!
+  market(
+    id: ID!
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): Market
+  markets(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Market_orderBy
+    orderDirection: OrderDirection
+    where: Market_filter
+
+    """
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
+    """
+    block: Block_height
+
+    """
+    Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.
+    """
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [Market!]!
+
+  """
+  Access to subgraph metadata
+  """
+  _meta(block: Block_height): _Meta_
+}
+
+type SummerEvent {
+  id: Bytes!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  logIndex: BigInt!
+  sender: Bytes!
+  kind: String!
+  account: Account!
+  user: User!
+  position: Position!
+  depositedUSD: BigDecimal!
+  withdrawnUSD: BigDecimal!
+  deltaUSD: BigDecimal!
+  feePaidUSD: BigDecimal!
+  depositTransfers(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Transfer_orderBy
+    orderDirection: OrderDirection
+    where: Transfer_filter
+  ): [Transfer!]!
+  withdrawTransfers(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Transfer_orderBy
+    orderDirection: OrderDirection
+    where: Transfer_filter
+  ): [Transfer!]!
+  protocol: String!
+  marketId: String!
+  feePaids(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: FeePaid_orderBy
+    orderDirection: OrderDirection
+    where: FeePaid_filter
+  ): [FeePaid!]!
+  swaps(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: AssetSwap_orderBy
+    orderDirection: OrderDirection
+    where: AssetSwap_filter
+  ): [AssetSwap!]!
+  automationEvents(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: TriggerEvent_orderBy
+    orderDirection: OrderDirection
+    where: TriggerEvent_filter
+  ): [TriggerEvent!]!
+  debtBefore: BigDecimal!
+  debtInUSDBefore: BigDecimal!
+  debtAfter: BigDecimal!
+  debtInUSDAfter: BigDecimal!
+  collateralBefore: BigDecimal!
+  collateralInUSDBefore: BigDecimal!
+  collateralAfter: BigDecimal!
+  collateralInUSDAfter: BigDecimal!
+  supplyBefore: BigDecimal!
+  supplyInUSDBefore: BigDecimal!
+  supplyAfter: BigDecimal!
+  supplyInUSDAfter: BigDecimal!
+  netValueBefore: BigDecimal!
+  netValueAfter: BigDecimal!
+  collateralTokenPriceInUSD: BigDecimal!
+  debtTokenPriceInUSD: BigDecimal!
+  supplyTokenPriceInUSD: BigDecimal!
+}
+
+input SummerEvent_filter {
+  id: Bytes
+  id_not: Bytes
+  id_gt: Bytes
+  id_lt: Bytes
+  id_gte: Bytes
+  id_lte: Bytes
+  id_in: [Bytes!]
+  id_not_in: [Bytes!]
+  id_contains: Bytes
+  id_not_contains: Bytes
+  blockNumber: BigInt
+  blockNumber_not: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_lt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_not_in: [BigInt!]
+  timestamp: BigInt
+  timestamp_not: BigInt
+  timestamp_gt: BigInt
+  timestamp_lt: BigInt
+  timestamp_gte: BigInt
+  timestamp_lte: BigInt
+  timestamp_in: [BigInt!]
+  timestamp_not_in: [BigInt!]
+  txHash: Bytes
+  txHash_not: Bytes
+  txHash_gt: Bytes
+  txHash_lt: Bytes
+  txHash_gte: Bytes
+  txHash_lte: Bytes
+  txHash_in: [Bytes!]
+  txHash_not_in: [Bytes!]
+  txHash_contains: Bytes
+  txHash_not_contains: Bytes
+  logIndex: BigInt
+  logIndex_not: BigInt
+  logIndex_gt: BigInt
+  logIndex_lt: BigInt
+  logIndex_gte: BigInt
+  logIndex_lte: BigInt
+  logIndex_in: [BigInt!]
+  logIndex_not_in: [BigInt!]
+  sender: Bytes
+  sender_not: Bytes
+  sender_gt: Bytes
+  sender_lt: Bytes
+  sender_gte: Bytes
+  sender_lte: Bytes
+  sender_in: [Bytes!]
+  sender_not_in: [Bytes!]
+  sender_contains: Bytes
+  sender_not_contains: Bytes
+  kind: String
+  kind_not: String
+  kind_gt: String
+  kind_lt: String
+  kind_gte: String
+  kind_lte: String
+  kind_in: [String!]
+  kind_not_in: [String!]
+  kind_contains: String
+  kind_contains_nocase: String
+  kind_not_contains: String
+  kind_not_contains_nocase: String
+  kind_starts_with: String
+  kind_starts_with_nocase: String
+  kind_not_starts_with: String
+  kind_not_starts_with_nocase: String
+  kind_ends_with: String
+  kind_ends_with_nocase: String
+  kind_not_ends_with: String
+  kind_not_ends_with_nocase: String
+  account: String
+  account_not: String
+  account_gt: String
+  account_lt: String
+  account_gte: String
+  account_lte: String
+  account_in: [String!]
+  account_not_in: [String!]
+  account_contains: String
+  account_contains_nocase: String
+  account_not_contains: String
+  account_not_contains_nocase: String
+  account_starts_with: String
+  account_starts_with_nocase: String
+  account_not_starts_with: String
+  account_not_starts_with_nocase: String
+  account_ends_with: String
+  account_ends_with_nocase: String
+  account_not_ends_with: String
+  account_not_ends_with_nocase: String
+  account_: Account_filter
+  user: String
+  user_not: String
+  user_gt: String
+  user_lt: String
+  user_gte: String
+  user_lte: String
+  user_in: [String!]
+  user_not_in: [String!]
+  user_contains: String
+  user_contains_nocase: String
+  user_not_contains: String
+  user_not_contains_nocase: String
+  user_starts_with: String
+  user_starts_with_nocase: String
+  user_not_starts_with: String
+  user_not_starts_with_nocase: String
+  user_ends_with: String
+  user_ends_with_nocase: String
+  user_not_ends_with: String
+  user_not_ends_with_nocase: String
+  user_: User_filter
+  position: String
+  position_not: String
+  position_gt: String
+  position_lt: String
+  position_gte: String
+  position_lte: String
+  position_in: [String!]
+  position_not_in: [String!]
+  position_contains: String
+  position_contains_nocase: String
+  position_not_contains: String
+  position_not_contains_nocase: String
+  position_starts_with: String
+  position_starts_with_nocase: String
+  position_not_starts_with: String
+  position_not_starts_with_nocase: String
+  position_ends_with: String
+  position_ends_with_nocase: String
+  position_not_ends_with: String
+  position_not_ends_with_nocase: String
+  position_: Position_filter
+  depositedUSD: BigDecimal
+  depositedUSD_not: BigDecimal
+  depositedUSD_gt: BigDecimal
+  depositedUSD_lt: BigDecimal
+  depositedUSD_gte: BigDecimal
+  depositedUSD_lte: BigDecimal
+  depositedUSD_in: [BigDecimal!]
+  depositedUSD_not_in: [BigDecimal!]
+  withdrawnUSD: BigDecimal
+  withdrawnUSD_not: BigDecimal
+  withdrawnUSD_gt: BigDecimal
+  withdrawnUSD_lt: BigDecimal
+  withdrawnUSD_gte: BigDecimal
+  withdrawnUSD_lte: BigDecimal
+  withdrawnUSD_in: [BigDecimal!]
+  withdrawnUSD_not_in: [BigDecimal!]
+  deltaUSD: BigDecimal
+  deltaUSD_not: BigDecimal
+  deltaUSD_gt: BigDecimal
+  deltaUSD_lt: BigDecimal
+  deltaUSD_gte: BigDecimal
+  deltaUSD_lte: BigDecimal
+  deltaUSD_in: [BigDecimal!]
+  deltaUSD_not_in: [BigDecimal!]
+  feePaidUSD: BigDecimal
+  feePaidUSD_not: BigDecimal
+  feePaidUSD_gt: BigDecimal
+  feePaidUSD_lt: BigDecimal
+  feePaidUSD_gte: BigDecimal
+  feePaidUSD_lte: BigDecimal
+  feePaidUSD_in: [BigDecimal!]
+  feePaidUSD_not_in: [BigDecimal!]
+  depositTransfers: [String!]
+  depositTransfers_not: [String!]
+  depositTransfers_contains: [String!]
+  depositTransfers_contains_nocase: [String!]
+  depositTransfers_not_contains: [String!]
+  depositTransfers_not_contains_nocase: [String!]
+  depositTransfers_: Transfer_filter
+  withdrawTransfers: [String!]
+  withdrawTransfers_not: [String!]
+  withdrawTransfers_contains: [String!]
+  withdrawTransfers_contains_nocase: [String!]
+  withdrawTransfers_not_contains: [String!]
+  withdrawTransfers_not_contains_nocase: [String!]
+  withdrawTransfers_: Transfer_filter
+  protocol: String
+  protocol_not: String
+  protocol_gt: String
+  protocol_lt: String
+  protocol_gte: String
+  protocol_lte: String
+  protocol_in: [String!]
+  protocol_not_in: [String!]
+  protocol_contains: String
+  protocol_contains_nocase: String
+  protocol_not_contains: String
+  protocol_not_contains_nocase: String
+  protocol_starts_with: String
+  protocol_starts_with_nocase: String
+  protocol_not_starts_with: String
+  protocol_not_starts_with_nocase: String
+  protocol_ends_with: String
+  protocol_ends_with_nocase: String
+  protocol_not_ends_with: String
+  protocol_not_ends_with_nocase: String
+  marketId: String
+  marketId_not: String
+  marketId_gt: String
+  marketId_lt: String
+  marketId_gte: String
+  marketId_lte: String
+  marketId_in: [String!]
+  marketId_not_in: [String!]
+  marketId_contains: String
+  marketId_contains_nocase: String
+  marketId_not_contains: String
+  marketId_not_contains_nocase: String
+  marketId_starts_with: String
+  marketId_starts_with_nocase: String
+  marketId_not_starts_with: String
+  marketId_not_starts_with_nocase: String
+  marketId_ends_with: String
+  marketId_ends_with_nocase: String
+  marketId_not_ends_with: String
+  marketId_not_ends_with_nocase: String
+  feePaids_: FeePaid_filter
+  swaps_: AssetSwap_filter
+  automationEvents_: TriggerEvent_filter
+  debtBefore: BigDecimal
+  debtBefore_not: BigDecimal
+  debtBefore_gt: BigDecimal
+  debtBefore_lt: BigDecimal
+  debtBefore_gte: BigDecimal
+  debtBefore_lte: BigDecimal
+  debtBefore_in: [BigDecimal!]
+  debtBefore_not_in: [BigDecimal!]
+  debtInUSDBefore: BigDecimal
+  debtInUSDBefore_not: BigDecimal
+  debtInUSDBefore_gt: BigDecimal
+  debtInUSDBefore_lt: BigDecimal
+  debtInUSDBefore_gte: BigDecimal
+  debtInUSDBefore_lte: BigDecimal
+  debtInUSDBefore_in: [BigDecimal!]
+  debtInUSDBefore_not_in: [BigDecimal!]
+  debtAfter: BigDecimal
+  debtAfter_not: BigDecimal
+  debtAfter_gt: BigDecimal
+  debtAfter_lt: BigDecimal
+  debtAfter_gte: BigDecimal
+  debtAfter_lte: BigDecimal
+  debtAfter_in: [BigDecimal!]
+  debtAfter_not_in: [BigDecimal!]
+  debtInUSDAfter: BigDecimal
+  debtInUSDAfter_not: BigDecimal
+  debtInUSDAfter_gt: BigDecimal
+  debtInUSDAfter_lt: BigDecimal
+  debtInUSDAfter_gte: BigDecimal
+  debtInUSDAfter_lte: BigDecimal
+  debtInUSDAfter_in: [BigDecimal!]
+  debtInUSDAfter_not_in: [BigDecimal!]
+  collateralBefore: BigDecimal
+  collateralBefore_not: BigDecimal
+  collateralBefore_gt: BigDecimal
+  collateralBefore_lt: BigDecimal
+  collateralBefore_gte: BigDecimal
+  collateralBefore_lte: BigDecimal
+  collateralBefore_in: [BigDecimal!]
+  collateralBefore_not_in: [BigDecimal!]
+  collateralInUSDBefore: BigDecimal
+  collateralInUSDBefore_not: BigDecimal
+  collateralInUSDBefore_gt: BigDecimal
+  collateralInUSDBefore_lt: BigDecimal
+  collateralInUSDBefore_gte: BigDecimal
+  collateralInUSDBefore_lte: BigDecimal
+  collateralInUSDBefore_in: [BigDecimal!]
+  collateralInUSDBefore_not_in: [BigDecimal!]
+  collateralAfter: BigDecimal
+  collateralAfter_not: BigDecimal
+  collateralAfter_gt: BigDecimal
+  collateralAfter_lt: BigDecimal
+  collateralAfter_gte: BigDecimal
+  collateralAfter_lte: BigDecimal
+  collateralAfter_in: [BigDecimal!]
+  collateralAfter_not_in: [BigDecimal!]
+  collateralInUSDAfter: BigDecimal
+  collateralInUSDAfter_not: BigDecimal
+  collateralInUSDAfter_gt: BigDecimal
+  collateralInUSDAfter_lt: BigDecimal
+  collateralInUSDAfter_gte: BigDecimal
+  collateralInUSDAfter_lte: BigDecimal
+  collateralInUSDAfter_in: [BigDecimal!]
+  collateralInUSDAfter_not_in: [BigDecimal!]
+  supplyBefore: BigDecimal
+  supplyBefore_not: BigDecimal
+  supplyBefore_gt: BigDecimal
+  supplyBefore_lt: BigDecimal
+  supplyBefore_gte: BigDecimal
+  supplyBefore_lte: BigDecimal
+  supplyBefore_in: [BigDecimal!]
+  supplyBefore_not_in: [BigDecimal!]
+  supplyInUSDBefore: BigDecimal
+  supplyInUSDBefore_not: BigDecimal
+  supplyInUSDBefore_gt: BigDecimal
+  supplyInUSDBefore_lt: BigDecimal
+  supplyInUSDBefore_gte: BigDecimal
+  supplyInUSDBefore_lte: BigDecimal
+  supplyInUSDBefore_in: [BigDecimal!]
+  supplyInUSDBefore_not_in: [BigDecimal!]
+  supplyAfter: BigDecimal
+  supplyAfter_not: BigDecimal
+  supplyAfter_gt: BigDecimal
+  supplyAfter_lt: BigDecimal
+  supplyAfter_gte: BigDecimal
+  supplyAfter_lte: BigDecimal
+  supplyAfter_in: [BigDecimal!]
+  supplyAfter_not_in: [BigDecimal!]
+  supplyInUSDAfter: BigDecimal
+  supplyInUSDAfter_not: BigDecimal
+  supplyInUSDAfter_gt: BigDecimal
+  supplyInUSDAfter_lt: BigDecimal
+  supplyInUSDAfter_gte: BigDecimal
+  supplyInUSDAfter_lte: BigDecimal
+  supplyInUSDAfter_in: [BigDecimal!]
+  supplyInUSDAfter_not_in: [BigDecimal!]
+  netValueBefore: BigDecimal
+  netValueBefore_not: BigDecimal
+  netValueBefore_gt: BigDecimal
+  netValueBefore_lt: BigDecimal
+  netValueBefore_gte: BigDecimal
+  netValueBefore_lte: BigDecimal
+  netValueBefore_in: [BigDecimal!]
+  netValueBefore_not_in: [BigDecimal!]
+  netValueAfter: BigDecimal
+  netValueAfter_not: BigDecimal
+  netValueAfter_gt: BigDecimal
+  netValueAfter_lt: BigDecimal
+  netValueAfter_gte: BigDecimal
+  netValueAfter_lte: BigDecimal
+  netValueAfter_in: [BigDecimal!]
+  netValueAfter_not_in: [BigDecimal!]
+  collateralTokenPriceInUSD: BigDecimal
+  collateralTokenPriceInUSD_not: BigDecimal
+  collateralTokenPriceInUSD_gt: BigDecimal
+  collateralTokenPriceInUSD_lt: BigDecimal
+  collateralTokenPriceInUSD_gte: BigDecimal
+  collateralTokenPriceInUSD_lte: BigDecimal
+  collateralTokenPriceInUSD_in: [BigDecimal!]
+  collateralTokenPriceInUSD_not_in: [BigDecimal!]
+  debtTokenPriceInUSD: BigDecimal
+  debtTokenPriceInUSD_not: BigDecimal
+  debtTokenPriceInUSD_gt: BigDecimal
+  debtTokenPriceInUSD_lt: BigDecimal
+  debtTokenPriceInUSD_gte: BigDecimal
+  debtTokenPriceInUSD_lte: BigDecimal
+  debtTokenPriceInUSD_in: [BigDecimal!]
+  debtTokenPriceInUSD_not_in: [BigDecimal!]
+  supplyTokenPriceInUSD: BigDecimal
+  supplyTokenPriceInUSD_not: BigDecimal
+  supplyTokenPriceInUSD_gt: BigDecimal
+  supplyTokenPriceInUSD_lt: BigDecimal
+  supplyTokenPriceInUSD_gte: BigDecimal
+  supplyTokenPriceInUSD_lte: BigDecimal
+  supplyTokenPriceInUSD_in: [BigDecimal!]
+  supplyTokenPriceInUSD_not_in: [BigDecimal!]
+
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [SummerEvent_filter]
+  or: [SummerEvent_filter]
+}
+
+enum SummerEvent_orderBy {
+  id
+  blockNumber
+  timestamp
+  txHash
+  logIndex
+  sender
+  kind
+  account
+  account__id
+  account__address
+  account__type
+  account__vaultId
+  user
+  user__id
+  user__openPositions
+  position
+  position__id
+  position__protocol
+  position__marketId
+  position__positionType
+  position__cumulativeDepositedUSD
+  position__cumulativeWithdrawnUSD
+  position__cumulativeDeltaUSD
+  position__cumulativeFeesUSD
+  position__debt
+  position__debtInUSD
+  position__collateral
+  position__collateralInUSD
+  position__supply
+  position__supplyInUSD
+  position__netValue
+  position___ajnaBucket
+  depositedUSD
+  withdrawnUSD
+  deltaUSD
+  feePaidUSD
+  depositTransfers
+  withdrawTransfers
+  protocol
+  marketId
+  feePaids
+  swaps
+  automationEvents
+  debtBefore
+  debtInUSDBefore
+  debtAfter
+  debtInUSDAfter
+  collateralBefore
+  collateralInUSDBefore
+  collateralAfter
+  collateralInUSDAfter
+  supplyBefore
+  supplyInUSDBefore
+  supplyAfter
+  supplyInUSDAfter
+  netValueBefore
+  netValueAfter
+  collateralTokenPriceInUSD
+  debtTokenPriceInUSD
+  supplyTokenPriceInUSD
+}
+
+type Token {
+  id: Bytes!
+  address: Bytes!
+  symbol: String!
+  decimals: BigInt!
+  precision: BigInt!
+}
+
+input Token_filter {
+  id: Bytes
+  id_not: Bytes
+  id_gt: Bytes
+  id_lt: Bytes
+  id_gte: Bytes
+  id_lte: Bytes
+  id_in: [Bytes!]
+  id_not_in: [Bytes!]
+  id_contains: Bytes
+  id_not_contains: Bytes
+  address: Bytes
+  address_not: Bytes
+  address_gt: Bytes
+  address_lt: Bytes
+  address_gte: Bytes
+  address_lte: Bytes
+  address_in: [Bytes!]
+  address_not_in: [Bytes!]
+  address_contains: Bytes
+  address_not_contains: Bytes
+  symbol: String
+  symbol_not: String
+  symbol_gt: String
+  symbol_lt: String
+  symbol_gte: String
+  symbol_lte: String
+  symbol_in: [String!]
+  symbol_not_in: [String!]
+  symbol_contains: String
+  symbol_contains_nocase: String
+  symbol_not_contains: String
+  symbol_not_contains_nocase: String
+  symbol_starts_with: String
+  symbol_starts_with_nocase: String
+  symbol_not_starts_with: String
+  symbol_not_starts_with_nocase: String
+  symbol_ends_with: String
+  symbol_ends_with_nocase: String
+  symbol_not_ends_with: String
+  symbol_not_ends_with_nocase: String
+  decimals: BigInt
+  decimals_not: BigInt
+  decimals_gt: BigInt
+  decimals_lt: BigInt
+  decimals_gte: BigInt
+  decimals_lte: BigInt
+  decimals_in: [BigInt!]
+  decimals_not_in: [BigInt!]
+  precision: BigInt
+  precision_not: BigInt
+  precision_gt: BigInt
+  precision_lt: BigInt
+  precision_gte: BigInt
+  precision_lte: BigInt
+  precision_in: [BigInt!]
+  precision_not_in: [BigInt!]
+
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [Token_filter]
+  or: [Token_filter]
+}
+
+enum Token_orderBy {
+  id
+  address
+  symbol
+  decimals
+  precision
+}
+
+type TokenPrice {
+  id: Bytes!
+  token: Token!
+  blockNumber: BigInt!
+  price: BigDecimal!
+  oracle: String!
+}
+
+input TokenPrice_filter {
+  id: Bytes
+  id_not: Bytes
+  id_gt: Bytes
+  id_lt: Bytes
+  id_gte: Bytes
+  id_lte: Bytes
+  id_in: [Bytes!]
+  id_not_in: [Bytes!]
+  id_contains: Bytes
+  id_not_contains: Bytes
+  token: String
+  token_not: String
+  token_gt: String
+  token_lt: String
+  token_gte: String
+  token_lte: String
+  token_in: [String!]
+  token_not_in: [String!]
+  token_contains: String
+  token_contains_nocase: String
+  token_not_contains: String
+  token_not_contains_nocase: String
+  token_starts_with: String
+  token_starts_with_nocase: String
+  token_not_starts_with: String
+  token_not_starts_with_nocase: String
+  token_ends_with: String
+  token_ends_with_nocase: String
+  token_not_ends_with: String
+  token_not_ends_with_nocase: String
+  token_: Token_filter
+  blockNumber: BigInt
+  blockNumber_not: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_lt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_not_in: [BigInt!]
+  price: BigDecimal
+  price_not: BigDecimal
+  price_gt: BigDecimal
+  price_lt: BigDecimal
+  price_gte: BigDecimal
+  price_lte: BigDecimal
+  price_in: [BigDecimal!]
+  price_not_in: [BigDecimal!]
+  oracle: String
+  oracle_not: String
+  oracle_gt: String
+  oracle_lt: String
+  oracle_gte: String
+  oracle_lte: String
+  oracle_in: [String!]
+  oracle_not_in: [String!]
+  oracle_contains: String
+  oracle_contains_nocase: String
+  oracle_not_contains: String
+  oracle_not_contains_nocase: String
+  oracle_starts_with: String
+  oracle_starts_with_nocase: String
+  oracle_not_starts_with: String
+  oracle_not_starts_with_nocase: String
+  oracle_ends_with: String
+  oracle_ends_with_nocase: String
+  oracle_not_ends_with: String
+  oracle_not_ends_with_nocase: String
+
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [TokenPrice_filter]
+  or: [TokenPrice_filter]
+}
+
+enum TokenPrice_orderBy {
+  id
+  token
+  token__id
+  token__address
+  token__symbol
+  token__decimals
+  token__precision
+  blockNumber
+  price
+  oracle
+}
+
+type Transfer {
+  id: Bytes!
+  event: SummerEvent!
+  from: Bytes!
+  to: Bytes!
+  token: Token!
+  amount: BigDecimal!
+  priceInUSD: BigDecimal!
+  oracle: String!
+  amountUSD: BigDecimal!
+  txHash: String!
+}
+
+input Transfer_filter {
+  id: Bytes
+  id_not: Bytes
+  id_gt: Bytes
+  id_lt: Bytes
+  id_gte: Bytes
+  id_lte: Bytes
+  id_in: [Bytes!]
+  id_not_in: [Bytes!]
+  id_contains: Bytes
+  id_not_contains: Bytes
+  event: String
+  event_not: String
+  event_gt: String
+  event_lt: String
+  event_gte: String
+  event_lte: String
+  event_in: [String!]
+  event_not_in: [String!]
+  event_contains: String
+  event_contains_nocase: String
+  event_not_contains: String
+  event_not_contains_nocase: String
+  event_starts_with: String
+  event_starts_with_nocase: String
+  event_not_starts_with: String
+  event_not_starts_with_nocase: String
+  event_ends_with: String
+  event_ends_with_nocase: String
+  event_not_ends_with: String
+  event_not_ends_with_nocase: String
+  event_: SummerEvent_filter
+  from: Bytes
+  from_not: Bytes
+  from_gt: Bytes
+  from_lt: Bytes
+  from_gte: Bytes
+  from_lte: Bytes
+  from_in: [Bytes!]
+  from_not_in: [Bytes!]
+  from_contains: Bytes
+  from_not_contains: Bytes
+  to: Bytes
+  to_not: Bytes
+  to_gt: Bytes
+  to_lt: Bytes
+  to_gte: Bytes
+  to_lte: Bytes
+  to_in: [Bytes!]
+  to_not_in: [Bytes!]
+  to_contains: Bytes
+  to_not_contains: Bytes
+  token: String
+  token_not: String
+  token_gt: String
+  token_lt: String
+  token_gte: String
+  token_lte: String
+  token_in: [String!]
+  token_not_in: [String!]
+  token_contains: String
+  token_contains_nocase: String
+  token_not_contains: String
+  token_not_contains_nocase: String
+  token_starts_with: String
+  token_starts_with_nocase: String
+  token_not_starts_with: String
+  token_not_starts_with_nocase: String
+  token_ends_with: String
+  token_ends_with_nocase: String
+  token_not_ends_with: String
+  token_not_ends_with_nocase: String
+  token_: Token_filter
+  amount: BigDecimal
+  amount_not: BigDecimal
+  amount_gt: BigDecimal
+  amount_lt: BigDecimal
+  amount_gte: BigDecimal
+  amount_lte: BigDecimal
+  amount_in: [BigDecimal!]
+  amount_not_in: [BigDecimal!]
+  priceInUSD: BigDecimal
+  priceInUSD_not: BigDecimal
+  priceInUSD_gt: BigDecimal
+  priceInUSD_lt: BigDecimal
+  priceInUSD_gte: BigDecimal
+  priceInUSD_lte: BigDecimal
+  priceInUSD_in: [BigDecimal!]
+  priceInUSD_not_in: [BigDecimal!]
+  oracle: String
+  oracle_not: String
+  oracle_gt: String
+  oracle_lt: String
+  oracle_gte: String
+  oracle_lte: String
+  oracle_in: [String!]
+  oracle_not_in: [String!]
+  oracle_contains: String
+  oracle_contains_nocase: String
+  oracle_not_contains: String
+  oracle_not_contains_nocase: String
+  oracle_starts_with: String
+  oracle_starts_with_nocase: String
+  oracle_not_starts_with: String
+  oracle_not_starts_with_nocase: String
+  oracle_ends_with: String
+  oracle_ends_with_nocase: String
+  oracle_not_ends_with: String
+  oracle_not_ends_with_nocase: String
+  amountUSD: BigDecimal
+  amountUSD_not: BigDecimal
+  amountUSD_gt: BigDecimal
+  amountUSD_lt: BigDecimal
+  amountUSD_gte: BigDecimal
+  amountUSD_lte: BigDecimal
+  amountUSD_in: [BigDecimal!]
+  amountUSD_not_in: [BigDecimal!]
+  txHash: String
+  txHash_not: String
+  txHash_gt: String
+  txHash_lt: String
+  txHash_gte: String
+  txHash_lte: String
+  txHash_in: [String!]
+  txHash_not_in: [String!]
+  txHash_contains: String
+  txHash_contains_nocase: String
+  txHash_not_contains: String
+  txHash_not_contains_nocase: String
+  txHash_starts_with: String
+  txHash_starts_with_nocase: String
+  txHash_not_starts_with: String
+  txHash_not_starts_with_nocase: String
+  txHash_ends_with: String
+  txHash_ends_with_nocase: String
+  txHash_not_ends_with: String
+  txHash_not_ends_with_nocase: String
+
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [Transfer_filter]
+  or: [Transfer_filter]
+}
+
+enum Transfer_orderBy {
+  id
+  event
+  event__id
+  event__blockNumber
+  event__timestamp
+  event__txHash
+  event__logIndex
+  event__sender
+  event__kind
+  event__depositedUSD
+  event__withdrawnUSD
+  event__deltaUSD
+  event__feePaidUSD
+  event__protocol
+  event__marketId
+  event__debtBefore
+  event__debtInUSDBefore
+  event__debtAfter
+  event__debtInUSDAfter
+  event__collateralBefore
+  event__collateralInUSDBefore
+  event__collateralAfter
+  event__collateralInUSDAfter
+  event__supplyBefore
+  event__supplyInUSDBefore
+  event__supplyAfter
+  event__supplyInUSDAfter
+  event__netValueBefore
+  event__netValueAfter
+  event__collateralTokenPriceInUSD
+  event__debtTokenPriceInUSD
+  event__supplyTokenPriceInUSD
+  from
+  to
+  token
+  token__id
+  token__address
+  token__symbol
+  token__decimals
+  token__precision
+  amount
+  priceInUSD
+  oracle
+  amountUSD
+  txHash
+}
+
+type Trigger {
+  id: ID!
+  account: Account!
+  user: User!
+  commandAddress: Bytes!
+  triggerType: BigInt!
+  kind: String!
+  triggerData: Bytes!
+  continuous: Boolean!
+  decodedData: [String!]!
+  decodedDataNames: [String!]!
+  addedBlock: BigInt!
+  addedTransaction: Bytes!
+  addedLogIndex: BigInt!
+  addedTimestamp: BigInt!
+  removedBlock: BigInt
+  removedTransaction: Bytes
+  removedLogIndex: BigInt
+  removedTimestamp: BigInt
+  executedBlock: BigInt
+  executedTransaction: Bytes
+  executedLogIndex: BigInt
+  executedTimestamp: BigInt
+  version: BigInt!
+  tokens(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Token_orderBy
+    orderDirection: OrderDirection
+    where: Token_filter
+  ): [Token!]
+  protocol: String!
+  marketId: String!
+  position: Position!
+  operationName: String
+}
+
+input Trigger_filter {
+  id: ID
+  id_not: ID
+  id_gt: ID
+  id_lt: ID
+  id_gte: ID
+  id_lte: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  account: String
+  account_not: String
+  account_gt: String
+  account_lt: String
+  account_gte: String
+  account_lte: String
+  account_in: [String!]
+  account_not_in: [String!]
+  account_contains: String
+  account_contains_nocase: String
+  account_not_contains: String
+  account_not_contains_nocase: String
+  account_starts_with: String
+  account_starts_with_nocase: String
+  account_not_starts_with: String
+  account_not_starts_with_nocase: String
+  account_ends_with: String
+  account_ends_with_nocase: String
+  account_not_ends_with: String
+  account_not_ends_with_nocase: String
+  account_: Account_filter
+  user: String
+  user_not: String
+  user_gt: String
+  user_lt: String
+  user_gte: String
+  user_lte: String
+  user_in: [String!]
+  user_not_in: [String!]
+  user_contains: String
+  user_contains_nocase: String
+  user_not_contains: String
+  user_not_contains_nocase: String
+  user_starts_with: String
+  user_starts_with_nocase: String
+  user_not_starts_with: String
+  user_not_starts_with_nocase: String
+  user_ends_with: String
+  user_ends_with_nocase: String
+  user_not_ends_with: String
+  user_not_ends_with_nocase: String
+  user_: User_filter
+  commandAddress: Bytes
+  commandAddress_not: Bytes
+  commandAddress_gt: Bytes
+  commandAddress_lt: Bytes
+  commandAddress_gte: Bytes
+  commandAddress_lte: Bytes
+  commandAddress_in: [Bytes!]
+  commandAddress_not_in: [Bytes!]
+  commandAddress_contains: Bytes
+  commandAddress_not_contains: Bytes
+  triggerType: BigInt
+  triggerType_not: BigInt
+  triggerType_gt: BigInt
+  triggerType_lt: BigInt
+  triggerType_gte: BigInt
+  triggerType_lte: BigInt
+  triggerType_in: [BigInt!]
+  triggerType_not_in: [BigInt!]
+  kind: String
+  kind_not: String
+  kind_gt: String
+  kind_lt: String
+  kind_gte: String
+  kind_lte: String
+  kind_in: [String!]
+  kind_not_in: [String!]
+  kind_contains: String
+  kind_contains_nocase: String
+  kind_not_contains: String
+  kind_not_contains_nocase: String
+  kind_starts_with: String
+  kind_starts_with_nocase: String
+  kind_not_starts_with: String
+  kind_not_starts_with_nocase: String
+  kind_ends_with: String
+  kind_ends_with_nocase: String
+  kind_not_ends_with: String
+  kind_not_ends_with_nocase: String
+  triggerData: Bytes
+  triggerData_not: Bytes
+  triggerData_gt: Bytes
+  triggerData_lt: Bytes
+  triggerData_gte: Bytes
+  triggerData_lte: Bytes
+  triggerData_in: [Bytes!]
+  triggerData_not_in: [Bytes!]
+  triggerData_contains: Bytes
+  triggerData_not_contains: Bytes
+  continuous: Boolean
+  continuous_not: Boolean
+  continuous_in: [Boolean!]
+  continuous_not_in: [Boolean!]
+  decodedData: [String!]
+  decodedData_not: [String!]
+  decodedData_contains: [String!]
+  decodedData_contains_nocase: [String!]
+  decodedData_not_contains: [String!]
+  decodedData_not_contains_nocase: [String!]
+  decodedDataNames: [String!]
+  decodedDataNames_not: [String!]
+  decodedDataNames_contains: [String!]
+  decodedDataNames_contains_nocase: [String!]
+  decodedDataNames_not_contains: [String!]
+  decodedDataNames_not_contains_nocase: [String!]
+  addedBlock: BigInt
+  addedBlock_not: BigInt
+  addedBlock_gt: BigInt
+  addedBlock_lt: BigInt
+  addedBlock_gte: BigInt
+  addedBlock_lte: BigInt
+  addedBlock_in: [BigInt!]
+  addedBlock_not_in: [BigInt!]
+  addedTransaction: Bytes
+  addedTransaction_not: Bytes
+  addedTransaction_gt: Bytes
+  addedTransaction_lt: Bytes
+  addedTransaction_gte: Bytes
+  addedTransaction_lte: Bytes
+  addedTransaction_in: [Bytes!]
+  addedTransaction_not_in: [Bytes!]
+  addedTransaction_contains: Bytes
+  addedTransaction_not_contains: Bytes
+  addedLogIndex: BigInt
+  addedLogIndex_not: BigInt
+  addedLogIndex_gt: BigInt
+  addedLogIndex_lt: BigInt
+  addedLogIndex_gte: BigInt
+  addedLogIndex_lte: BigInt
+  addedLogIndex_in: [BigInt!]
+  addedLogIndex_not_in: [BigInt!]
+  addedTimestamp: BigInt
+  addedTimestamp_not: BigInt
+  addedTimestamp_gt: BigInt
+  addedTimestamp_lt: BigInt
+  addedTimestamp_gte: BigInt
+  addedTimestamp_lte: BigInt
+  addedTimestamp_in: [BigInt!]
+  addedTimestamp_not_in: [BigInt!]
+  removedBlock: BigInt
+  removedBlock_not: BigInt
+  removedBlock_gt: BigInt
+  removedBlock_lt: BigInt
+  removedBlock_gte: BigInt
+  removedBlock_lte: BigInt
+  removedBlock_in: [BigInt!]
+  removedBlock_not_in: [BigInt!]
+  removedTransaction: Bytes
+  removedTransaction_not: Bytes
+  removedTransaction_gt: Bytes
+  removedTransaction_lt: Bytes
+  removedTransaction_gte: Bytes
+  removedTransaction_lte: Bytes
+  removedTransaction_in: [Bytes!]
+  removedTransaction_not_in: [Bytes!]
+  removedTransaction_contains: Bytes
+  removedTransaction_not_contains: Bytes
+  removedLogIndex: BigInt
+  removedLogIndex_not: BigInt
+  removedLogIndex_gt: BigInt
+  removedLogIndex_lt: BigInt
+  removedLogIndex_gte: BigInt
+  removedLogIndex_lte: BigInt
+  removedLogIndex_in: [BigInt!]
+  removedLogIndex_not_in: [BigInt!]
+  removedTimestamp: BigInt
+  removedTimestamp_not: BigInt
+  removedTimestamp_gt: BigInt
+  removedTimestamp_lt: BigInt
+  removedTimestamp_gte: BigInt
+  removedTimestamp_lte: BigInt
+  removedTimestamp_in: [BigInt!]
+  removedTimestamp_not_in: [BigInt!]
+  executedBlock: BigInt
+  executedBlock_not: BigInt
+  executedBlock_gt: BigInt
+  executedBlock_lt: BigInt
+  executedBlock_gte: BigInt
+  executedBlock_lte: BigInt
+  executedBlock_in: [BigInt!]
+  executedBlock_not_in: [BigInt!]
+  executedTransaction: Bytes
+  executedTransaction_not: Bytes
+  executedTransaction_gt: Bytes
+  executedTransaction_lt: Bytes
+  executedTransaction_gte: Bytes
+  executedTransaction_lte: Bytes
+  executedTransaction_in: [Bytes!]
+  executedTransaction_not_in: [Bytes!]
+  executedTransaction_contains: Bytes
+  executedTransaction_not_contains: Bytes
+  executedLogIndex: BigInt
+  executedLogIndex_not: BigInt
+  executedLogIndex_gt: BigInt
+  executedLogIndex_lt: BigInt
+  executedLogIndex_gte: BigInt
+  executedLogIndex_lte: BigInt
+  executedLogIndex_in: [BigInt!]
+  executedLogIndex_not_in: [BigInt!]
+  executedTimestamp: BigInt
+  executedTimestamp_not: BigInt
+  executedTimestamp_gt: BigInt
+  executedTimestamp_lt: BigInt
+  executedTimestamp_gte: BigInt
+  executedTimestamp_lte: BigInt
+  executedTimestamp_in: [BigInt!]
+  executedTimestamp_not_in: [BigInt!]
+  version: BigInt
+  version_not: BigInt
+  version_gt: BigInt
+  version_lt: BigInt
+  version_gte: BigInt
+  version_lte: BigInt
+  version_in: [BigInt!]
+  version_not_in: [BigInt!]
+  tokens: [String!]
+  tokens_not: [String!]
+  tokens_contains: [String!]
+  tokens_contains_nocase: [String!]
+  tokens_not_contains: [String!]
+  tokens_not_contains_nocase: [String!]
+  tokens_: Token_filter
+  protocol: String
+  protocol_not: String
+  protocol_gt: String
+  protocol_lt: String
+  protocol_gte: String
+  protocol_lte: String
+  protocol_in: [String!]
+  protocol_not_in: [String!]
+  protocol_contains: String
+  protocol_contains_nocase: String
+  protocol_not_contains: String
+  protocol_not_contains_nocase: String
+  protocol_starts_with: String
+  protocol_starts_with_nocase: String
+  protocol_not_starts_with: String
+  protocol_not_starts_with_nocase: String
+  protocol_ends_with: String
+  protocol_ends_with_nocase: String
+  protocol_not_ends_with: String
+  protocol_not_ends_with_nocase: String
+  marketId: String
+  marketId_not: String
+  marketId_gt: String
+  marketId_lt: String
+  marketId_gte: String
+  marketId_lte: String
+  marketId_in: [String!]
+  marketId_not_in: [String!]
+  marketId_contains: String
+  marketId_contains_nocase: String
+  marketId_not_contains: String
+  marketId_not_contains_nocase: String
+  marketId_starts_with: String
+  marketId_starts_with_nocase: String
+  marketId_not_starts_with: String
+  marketId_not_starts_with_nocase: String
+  marketId_ends_with: String
+  marketId_ends_with_nocase: String
+  marketId_not_ends_with: String
+  marketId_not_ends_with_nocase: String
+  position: String
+  position_not: String
+  position_gt: String
+  position_lt: String
+  position_gte: String
+  position_lte: String
+  position_in: [String!]
+  position_not_in: [String!]
+  position_contains: String
+  position_contains_nocase: String
+  position_not_contains: String
+  position_not_contains_nocase: String
+  position_starts_with: String
+  position_starts_with_nocase: String
+  position_not_starts_with: String
+  position_not_starts_with_nocase: String
+  position_ends_with: String
+  position_ends_with_nocase: String
+  position_not_ends_with: String
+  position_not_ends_with_nocase: String
+  position_: Position_filter
+  operationName: String
+  operationName_not: String
+  operationName_gt: String
+  operationName_lt: String
+  operationName_gte: String
+  operationName_lte: String
+  operationName_in: [String!]
+  operationName_not_in: [String!]
+  operationName_contains: String
+  operationName_contains_nocase: String
+  operationName_not_contains: String
+  operationName_not_contains_nocase: String
+  operationName_starts_with: String
+  operationName_starts_with_nocase: String
+  operationName_not_starts_with: String
+  operationName_not_starts_with_nocase: String
+  operationName_ends_with: String
+  operationName_ends_with_nocase: String
+  operationName_not_ends_with: String
+  operationName_not_ends_with_nocase: String
+
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [Trigger_filter]
+  or: [Trigger_filter]
+}
+
+enum Trigger_orderBy {
+  id
+  account
+  account__id
+  account__address
+  account__type
+  account__vaultId
+  user
+  user__id
+  user__openPositions
+  commandAddress
+  triggerType
+  kind
+  triggerData
+  continuous
+  decodedData
+  decodedDataNames
+  addedBlock
+  addedTransaction
+  addedLogIndex
+  addedTimestamp
+  removedBlock
+  removedTransaction
+  removedLogIndex
+  removedTimestamp
+  executedBlock
+  executedTransaction
+  executedLogIndex
+  executedTimestamp
+  version
+  tokens
+  protocol
+  marketId
+  position
+  position__id
+  position__protocol
+  position__marketId
+  position__positionType
+  position__cumulativeDepositedUSD
+  position__cumulativeWithdrawnUSD
+  position__cumulativeDeltaUSD
+  position__cumulativeFeesUSD
+  position__debt
+  position__debtInUSD
+  position__collateral
+  position__collateralInUSD
+  position__supply
+  position__supplyInUSD
+  position__netValue
+  position___ajnaBucket
+  operationName
+}
+
+type TriggerEvent {
+  id: Bytes!
+  eventType: String!
+  trigger: Trigger!
+  account: Account!
+  user: User!
+  mainEventHash: SummerEvent
+  protocol: String!
+  marketId: String!
+  position: Position!
+  block: BigInt!
+  transactionHash: Bytes!
+  logIndex: BigInt!
+  timestamp: BigInt!
+}
+
+input TriggerEvent_filter {
+  id: Bytes
+  id_not: Bytes
+  id_gt: Bytes
+  id_lt: Bytes
+  id_gte: Bytes
+  id_lte: Bytes
+  id_in: [Bytes!]
+  id_not_in: [Bytes!]
+  id_contains: Bytes
+  id_not_contains: Bytes
+  eventType: String
+  eventType_not: String
+  eventType_gt: String
+  eventType_lt: String
+  eventType_gte: String
+  eventType_lte: String
+  eventType_in: [String!]
+  eventType_not_in: [String!]
+  eventType_contains: String
+  eventType_contains_nocase: String
+  eventType_not_contains: String
+  eventType_not_contains_nocase: String
+  eventType_starts_with: String
+  eventType_starts_with_nocase: String
+  eventType_not_starts_with: String
+  eventType_not_starts_with_nocase: String
+  eventType_ends_with: String
+  eventType_ends_with_nocase: String
+  eventType_not_ends_with: String
+  eventType_not_ends_with_nocase: String
+  trigger: String
+  trigger_not: String
+  trigger_gt: String
+  trigger_lt: String
+  trigger_gte: String
+  trigger_lte: String
+  trigger_in: [String!]
+  trigger_not_in: [String!]
+  trigger_contains: String
+  trigger_contains_nocase: String
+  trigger_not_contains: String
+  trigger_not_contains_nocase: String
+  trigger_starts_with: String
+  trigger_starts_with_nocase: String
+  trigger_not_starts_with: String
+  trigger_not_starts_with_nocase: String
+  trigger_ends_with: String
+  trigger_ends_with_nocase: String
+  trigger_not_ends_with: String
+  trigger_not_ends_with_nocase: String
+  trigger_: Trigger_filter
+  account: String
+  account_not: String
+  account_gt: String
+  account_lt: String
+  account_gte: String
+  account_lte: String
+  account_in: [String!]
+  account_not_in: [String!]
+  account_contains: String
+  account_contains_nocase: String
+  account_not_contains: String
+  account_not_contains_nocase: String
+  account_starts_with: String
+  account_starts_with_nocase: String
+  account_not_starts_with: String
+  account_not_starts_with_nocase: String
+  account_ends_with: String
+  account_ends_with_nocase: String
+  account_not_ends_with: String
+  account_not_ends_with_nocase: String
+  account_: Account_filter
+  user: String
+  user_not: String
+  user_gt: String
+  user_lt: String
+  user_gte: String
+  user_lte: String
+  user_in: [String!]
+  user_not_in: [String!]
+  user_contains: String
+  user_contains_nocase: String
+  user_not_contains: String
+  user_not_contains_nocase: String
+  user_starts_with: String
+  user_starts_with_nocase: String
+  user_not_starts_with: String
+  user_not_starts_with_nocase: String
+  user_ends_with: String
+  user_ends_with_nocase: String
+  user_not_ends_with: String
+  user_not_ends_with_nocase: String
+  user_: User_filter
+  mainEventHash: String
+  mainEventHash_not: String
+  mainEventHash_gt: String
+  mainEventHash_lt: String
+  mainEventHash_gte: String
+  mainEventHash_lte: String
+  mainEventHash_in: [String!]
+  mainEventHash_not_in: [String!]
+  mainEventHash_contains: String
+  mainEventHash_contains_nocase: String
+  mainEventHash_not_contains: String
+  mainEventHash_not_contains_nocase: String
+  mainEventHash_starts_with: String
+  mainEventHash_starts_with_nocase: String
+  mainEventHash_not_starts_with: String
+  mainEventHash_not_starts_with_nocase: String
+  mainEventHash_ends_with: String
+  mainEventHash_ends_with_nocase: String
+  mainEventHash_not_ends_with: String
+  mainEventHash_not_ends_with_nocase: String
+  mainEventHash_: SummerEvent_filter
+  protocol: String
+  protocol_not: String
+  protocol_gt: String
+  protocol_lt: String
+  protocol_gte: String
+  protocol_lte: String
+  protocol_in: [String!]
+  protocol_not_in: [String!]
+  protocol_contains: String
+  protocol_contains_nocase: String
+  protocol_not_contains: String
+  protocol_not_contains_nocase: String
+  protocol_starts_with: String
+  protocol_starts_with_nocase: String
+  protocol_not_starts_with: String
+  protocol_not_starts_with_nocase: String
+  protocol_ends_with: String
+  protocol_ends_with_nocase: String
+  protocol_not_ends_with: String
+  protocol_not_ends_with_nocase: String
+  marketId: String
+  marketId_not: String
+  marketId_gt: String
+  marketId_lt: String
+  marketId_gte: String
+  marketId_lte: String
+  marketId_in: [String!]
+  marketId_not_in: [String!]
+  marketId_contains: String
+  marketId_contains_nocase: String
+  marketId_not_contains: String
+  marketId_not_contains_nocase: String
+  marketId_starts_with: String
+  marketId_starts_with_nocase: String
+  marketId_not_starts_with: String
+  marketId_not_starts_with_nocase: String
+  marketId_ends_with: String
+  marketId_ends_with_nocase: String
+  marketId_not_ends_with: String
+  marketId_not_ends_with_nocase: String
+  position: String
+  position_not: String
+  position_gt: String
+  position_lt: String
+  position_gte: String
+  position_lte: String
+  position_in: [String!]
+  position_not_in: [String!]
+  position_contains: String
+  position_contains_nocase: String
+  position_not_contains: String
+  position_not_contains_nocase: String
+  position_starts_with: String
+  position_starts_with_nocase: String
+  position_not_starts_with: String
+  position_not_starts_with_nocase: String
+  position_ends_with: String
+  position_ends_with_nocase: String
+  position_not_ends_with: String
+  position_not_ends_with_nocase: String
+  position_: Position_filter
+  block: BigInt
+  block_not: BigInt
+  block_gt: BigInt
+  block_lt: BigInt
+  block_gte: BigInt
+  block_lte: BigInt
+  block_in: [BigInt!]
+  block_not_in: [BigInt!]
+  transactionHash: Bytes
+  transactionHash_not: Bytes
+  transactionHash_gt: Bytes
+  transactionHash_lt: Bytes
+  transactionHash_gte: Bytes
+  transactionHash_lte: Bytes
+  transactionHash_in: [Bytes!]
+  transactionHash_not_in: [Bytes!]
+  transactionHash_contains: Bytes
+  transactionHash_not_contains: Bytes
+  logIndex: BigInt
+  logIndex_not: BigInt
+  logIndex_gt: BigInt
+  logIndex_lt: BigInt
+  logIndex_gte: BigInt
+  logIndex_lte: BigInt
+  logIndex_in: [BigInt!]
+  logIndex_not_in: [BigInt!]
+  timestamp: BigInt
+  timestamp_not: BigInt
+  timestamp_gt: BigInt
+  timestamp_lt: BigInt
+  timestamp_gte: BigInt
+  timestamp_lte: BigInt
+  timestamp_in: [BigInt!]
+  timestamp_not_in: [BigInt!]
+
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [TriggerEvent_filter]
+  or: [TriggerEvent_filter]
+}
+
+enum TriggerEvent_orderBy {
+  id
+  eventType
+  trigger
+  trigger__id
+  trigger__commandAddress
+  trigger__triggerType
+  trigger__kind
+  trigger__triggerData
+  trigger__continuous
+  trigger__addedBlock
+  trigger__addedTransaction
+  trigger__addedLogIndex
+  trigger__addedTimestamp
+  trigger__removedBlock
+  trigger__removedTransaction
+  trigger__removedLogIndex
+  trigger__removedTimestamp
+  trigger__executedBlock
+  trigger__executedTransaction
+  trigger__executedLogIndex
+  trigger__executedTimestamp
+  trigger__version
+  trigger__protocol
+  trigger__marketId
+  trigger__operationName
+  account
+  account__id
+  account__address
+  account__type
+  account__vaultId
+  user
+  user__id
+  user__openPositions
+  mainEventHash
+  mainEventHash__id
+  mainEventHash__blockNumber
+  mainEventHash__timestamp
+  mainEventHash__txHash
+  mainEventHash__logIndex
+  mainEventHash__sender
+  mainEventHash__kind
+  mainEventHash__depositedUSD
+  mainEventHash__withdrawnUSD
+  mainEventHash__deltaUSD
+  mainEventHash__feePaidUSD
+  mainEventHash__protocol
+  mainEventHash__marketId
+  mainEventHash__debtBefore
+  mainEventHash__debtInUSDBefore
+  mainEventHash__debtAfter
+  mainEventHash__debtInUSDAfter
+  mainEventHash__collateralBefore
+  mainEventHash__collateralInUSDBefore
+  mainEventHash__collateralAfter
+  mainEventHash__collateralInUSDAfter
+  mainEventHash__supplyBefore
+  mainEventHash__supplyInUSDBefore
+  mainEventHash__supplyAfter
+  mainEventHash__supplyInUSDAfter
+  mainEventHash__netValueBefore
+  mainEventHash__netValueAfter
+  mainEventHash__collateralTokenPriceInUSD
+  mainEventHash__debtTokenPriceInUSD
+  mainEventHash__supplyTokenPriceInUSD
+  protocol
+  marketId
+  position
+  position__id
+  position__protocol
+  position__marketId
+  position__positionType
+  position__cumulativeDepositedUSD
+  position__cumulativeWithdrawnUSD
+  position__cumulativeDeltaUSD
+  position__cumulativeFeesUSD
+  position__debt
+  position__debtInUSD
+  position__collateral
+  position__collateralInUSD
+  position__supply
+  position__supplyInUSD
+  position__netValue
+  position___ajnaBucket
+  block
+  transactionHash
+  logIndex
+  timestamp
+}
+
+type User {
+  """
+  msg.sender address
+  """
+  id: Bytes!
+  accounts(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Account_orderBy
+    orderDirection: OrderDirection
+    where: Account_filter
+  ): [Account!]!
+  feePaids(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: FeePaid_orderBy
+    orderDirection: OrderDirection
+    where: FeePaid_filter
+  ): [FeePaid!]!
+  summerEvents(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: SummerEvent_orderBy
+    orderDirection: OrderDirection
+    where: SummerEvent_filter
+  ): [SummerEvent!]!
+  createPositionEvents(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: CreatePositionEvent_orderBy
+    orderDirection: OrderDirection
+    where: CreatePositionEvent_filter
+  ): [CreatePositionEvent!]!
+  automationEvents(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: TriggerEvent_orderBy
+    orderDirection: OrderDirection
+    where: TriggerEvent_filter
+  ): [TriggerEvent!]!
+  positions(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Position_orderBy
+    orderDirection: OrderDirection
+    where: Position_filter
+  ): [Position!]!
+  swaps(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: AssetSwap_orderBy
+    orderDirection: OrderDirection
+    where: AssetSwap_filter
+  ): [AssetSwap!]!
+  openPositions: BigInt!
+}
+
+input User_filter {
+  id: Bytes
+  id_not: Bytes
+  id_gt: Bytes
+  id_lt: Bytes
+  id_gte: Bytes
+  id_lte: Bytes
+  id_in: [Bytes!]
+  id_not_in: [Bytes!]
+  id_contains: Bytes
+  id_not_contains: Bytes
+  accounts_: Account_filter
+  feePaids_: FeePaid_filter
+  summerEvents_: SummerEvent_filter
+  createPositionEvents_: CreatePositionEvent_filter
+  automationEvents_: TriggerEvent_filter
+  positions_: Position_filter
+  swaps_: AssetSwap_filter
+  openPositions: BigInt
+  openPositions_not: BigInt
+  openPositions_gt: BigInt
+  openPositions_lt: BigInt
+  openPositions_gte: BigInt
+  openPositions_lte: BigInt
+  openPositions_in: [BigInt!]
+  openPositions_not_in: [BigInt!]
+
+  """
+  Filter for the block changed event.
+  """
+  _change_block: BlockChangedFilter
+  and: [User_filter]
+  or: [User_filter]
+}
+
+enum User_orderBy {
+  id
+  accounts
+  feePaids
+  summerEvents
+  createPositionEvents
+  automationEvents
+  positions
+  swaps
+  openPositions
+}

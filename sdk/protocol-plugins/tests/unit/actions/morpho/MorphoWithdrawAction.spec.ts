@@ -9,7 +9,6 @@ import {
 import {
   ChainFamilyMap,
   Percentage,
-  Protocol,
   ProtocolName,
   RiskRatio,
   RiskRatioType,
@@ -17,7 +16,7 @@ import {
 import { PoolType } from '@summerfi/sdk-common/protocols'
 import { MorphoLLTVPrecision } from '../../../../src/plugins/morphoblue/constants/MorphoConstants'
 
-describe('MorphoPaybackAction Action', () => {
+describe('MorphoWithdrawAction Action', () => {
   const action = new MorphoWithdrawAction()
   const contractNameWithVersion = `${action.config.name}`
 
@@ -44,7 +43,7 @@ describe('MorphoPaybackAction Action', () => {
   const tokenAmount = TokenAmount.createFrom({ token: DAI, amount: '578' })
 
   const morphoProtocol = MorphoProtocol.createFrom({
-    name: ProtocolName.Morpho,
+    name: ProtocolName.MorphoBlue,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 

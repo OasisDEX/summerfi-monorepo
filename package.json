@@ -10,11 +10,16 @@
     "test:integration": "turbo run test:integration --cache-dir=.turbo",
     "check-circular": "turbo run check-circular --cache-dir=.turbo",
     "cicheck": "turbo run cicheck --cache-dir=.turbo && pnpm run coverage:total",
-    "sst:dev": "sst dev",
-    "sst:build": "sst build",
-    "sst:deploy:dev": "sst deploy",
-    "sst:deploy:staging": "sst deploy --stage staging",
-    "sst:deploy:prod": "sst deploy --stage production",
+    "cicheck:dev": "turbo run cicheck --cache-dir=.turbo --output-logs=new-only --concurrency=100% --continue",
+    "sst:dev": "sst dev --app summerfi-stack",
+    "sst:build": "sst build --app summerfi-stack",
+    "sst:deploy:dev": "sst deploy --app summerfi-stack",
+    "sst:deploy:staging": "sst deploy --stage staging --app summerfi-stack",
+    "sst:deploy:prod": "sst deploy --stage production --app summerfi-stack",
+    "sst:dev:sdk": "sst dev --app sdk",
+    "sst:build:sdk": "sst build --app sdk",
+    "sst:deploy:sdk:staging": "sst deploy --stage staging --app sdk",
+    "sst:deploy:sdk:prod": "sst deploy --stage production --app sdk",
     "remove": "sst remove",
     "console": "sst console",
     "graph": "pnpm dlx nx graph",
@@ -60,7 +65,7 @@
   "dependencies": {
     "bignumber.js": "^9.1.2",
     "kysely": "^0.27.3",
-    "viem": "^2.9.19",
+    "viem": "2.9.19",
     "zod": "^3.22.4"
   }
 }

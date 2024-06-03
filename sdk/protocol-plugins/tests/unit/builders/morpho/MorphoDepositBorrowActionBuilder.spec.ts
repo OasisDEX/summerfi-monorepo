@@ -25,6 +25,7 @@ import {
   MorphoLendingPool,
   MorphoLendingPoolId,
   MorphoPosition,
+  MorphoPositionId,
   MorphoProtocol,
 } from '../../../../src'
 
@@ -61,7 +62,7 @@ describe('Morpho  Deposit Borrow Action Builder', () => {
   })
 
   const protocol = MorphoProtocol.createFrom({
-    name: ProtocolName.Morpho,
+    name: ProtocolName.MorphoBlue,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 
@@ -85,7 +86,7 @@ describe('Morpho  Deposit Borrow Action Builder', () => {
 
   const position = MorphoPosition.createFrom({
     type: PositionType.Multiply,
-    id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '123' }),
+    id: MorphoPositionId.createFrom({ id: 'someposition' }),
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
     pool: pool,
@@ -133,7 +134,7 @@ describe('Morpho  Deposit Borrow Action Builder', () => {
 
   it('should fail the position is not a Morpho one', async () => {
     try {
-      await MorphoDepositBorrowActionBuilder({
+      await new MorphoDepositBorrowActionBuilder().build({
         ...builderParams,
         step: {
           ...derivedStep,
@@ -153,7 +154,7 @@ describe('Morpho  Deposit Borrow Action Builder', () => {
   it('should add all the action calls', async () => {
     builderParams.context.startSubContext()
 
-    await MorphoDepositBorrowActionBuilder({
+    await new MorphoDepositBorrowActionBuilder().build({
       ...builderParams,
       step: derivedStep,
       protocolsRegistry: builderParams.emptyProtocolsRegistry,
@@ -172,7 +173,7 @@ describe('Morpho  Deposit Borrow Action Builder', () => {
   it('should not add borrow nor send token when borrow amount is 0', async () => {
     builderParams.context.startSubContext()
 
-    await MorphoDepositBorrowActionBuilder({
+    await new MorphoDepositBorrowActionBuilder().build({
       ...builderParams,
       step: {
         ...derivedStep,
@@ -189,16 +190,18 @@ describe('Morpho  Deposit Borrow Action Builder', () => {
 
     const { callsBatch } = builderParams.context.endSubContext()
 
-    expect(callsBatch.length).toEqual(2)
+    expect(callsBatch.length).toEqual(4)
 
     expect(callsBatch[0].name).toBe('SetApproval')
     expect(callsBatch[1].name).toBe('MorphoBlueDeposit')
+    expect(callsBatch[2].name).toBe('MorphoBlueBorrow')
+    expect(callsBatch[3].name).toBe('SendToken')
   })
 
   it('should add borrow but not send token when borrow target is positions manager', async () => {
     builderParams.context.startSubContext()
 
-    await MorphoDepositBorrowActionBuilder({
+    await new MorphoDepositBorrowActionBuilder().build({
       ...builderParams,
       step: {
         ...derivedStep,
@@ -212,10 +215,11 @@ describe('Morpho  Deposit Borrow Action Builder', () => {
 
     const { callsBatch } = builderParams.context.endSubContext()
 
-    expect(callsBatch.length).toEqual(3)
+    expect(callsBatch.length).toEqual(4)
 
     expect(callsBatch[0].name).toBe('SetApproval')
     expect(callsBatch[1].name).toBe('MorphoBlueDeposit')
     expect(callsBatch[2].name).toBe('MorphoBlueBorrow')
+    expect(callsBatch[3].name).toBe('SendToken')
   })
 })

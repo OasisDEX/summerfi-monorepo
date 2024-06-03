@@ -18,7 +18,7 @@ import {
 import { AllowedProtocolNames } from './AAVEv3LikeBuilderTypes'
 import { BigNumber } from 'bignumber.js'
 import { PRECISION_BI, UNCAPPED_SUPPLY } from '../../constants/AaveV3LikeConstants'
-import { CommonTokenSymbols, IChainInfo, IToken } from '@summerfi/sdk-common/common'
+import { IChainInfo, IToken } from '@summerfi/sdk-common/common'
 import { ICollateralInfo } from '@summerfi/sdk-common/protocols'
 import { ChainContractsProvider, GenericAbiMap } from '../../../utils/ChainContractProvider'
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
@@ -42,18 +42,18 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
   ContractsAbiMap extends GenericAbiMap<ContractNames>,
 > extends BaseProtocolPlugin {
   abstract readonly protocolName: AllowedProtocolNames
-  readonly contractsAbiProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>
 
+  private _contractsAbiProvider: Maybe<ChainContractsProvider<ContractNames, ContractsAbiMap>>
   private _assetsList: Maybe<AssetsList<ContractNames, ContractsAbiMap>> = undefined
 
   /** CONSTRUCTOR */
-  protected constructor(params: {
+  initialize(params: {
     context: IProtocolPluginContext
     contractsAbiProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>
   }) {
-    super(params)
+    super.initialize(params)
 
-    this.contractsAbiProvider = params.contractsAbiProvider
+    this._contractsAbiProvider = params.contractsAbiProvider
   }
 
   /** PROTECTED */
@@ -106,7 +106,7 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
    */
   protected async _getAssetFromToken(
     token: IToken,
-    emode: bigint,
+    emode: number,
   ): Promise<Asset<ContractNames, ContractsAbiMap>> {
     if (!this._assetsList) {
       throw new Error('Assets list not initialized')
@@ -133,7 +133,7 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
    */
   protected async _getCollateralInfo(params: {
     token: IToken
-    emode: bigint
+    emode: number
     poolBaseCurrencyToken: Denomination
   }): Promise<Maybe<ICollateralInfo>> {
     const { token, emode, poolBaseCurrencyToken } = params
@@ -198,7 +198,7 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
    */
   protected async _getDebtInfo(
     token: IToken,
-    emode: bigint,
+    emode: number,
     poolBaseCurrencyToken: Denomination,
   ): Promise<Maybe<DebtInfo>> {
     const asset = await this._getAssetFromToken(token, emode)
@@ -209,10 +209,6 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
       caps: { borrowCap },
       data: { totalVariableDebt, totalStableDebt, variableBorrowRate },
     } = asset
-    if (quoteToken.symbol === CommonTokenSymbols.WETH) {
-      // WETH can be used as collateral on AaveV3 but not borrowed.
-      return
-    }
 
     try {
       const RESERVE_FACTOR_TO_PERCENTAGE_DIVISOR = 10000n
@@ -257,5 +253,13 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
     } catch (e) {
       throw new Error(`error in debt loop ${e}`)
     }
+  }
+
+  get contractsAbiProvider(): ChainContractsProvider<ContractNames, ContractsAbiMap> {
+    if (!this._contractsAbiProvider) {
+      throw new Error('Contracts ABI provider not initialized')
+    }
+
+    return this._contractsAbiProvider
   }
 }

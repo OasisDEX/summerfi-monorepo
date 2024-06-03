@@ -7,11 +7,6 @@ export enum SimulationType {
   Migrate = 'Migrate',
   CreatePosition = 'CreatePosition',
   Refinance = 'Refinance',
-  RefinanceDifferentPair = 'RefinanceDifPair',
-  RefinanceDifferentDebt = 'RefinanceDifDebt',
-  RefinanceDifferentCollateral = 'RefinanceDifCol',
-  RefinanceNoDebt = 'RefinanceNoDebt',
-  RefinanceNoDebtDifferentCollateral = 'RefNoDebtDifCol',
 }
 
 export enum SimulationSteps {
@@ -24,6 +19,8 @@ export enum SimulationSteps {
   RepayFlashloan = 'RepayFlashloan',
   Import = 'Import',
   NewPositionEvent = 'NewPositionEvent',
+  OpenPosition = 'OpenPosition',
+  Skipped = 'Skipped',
 }
 
 export enum FlashloanProvider {
@@ -35,11 +32,3 @@ export enum TokenTransferTargetType {
   StrategyExecutor = 0,
   PositionsManager = 1,
 }
-
-export type RefinanceSimulationTypes =
-  | SimulationType.Refinance
-  | SimulationType.RefinanceDifferentPair
-  | SimulationType.RefinanceDifferentCollateral
-  | SimulationType.RefinanceDifferentDebt
-  | SimulationType.RefinanceNoDebt
-  | SimulationType.RefinanceNoDebtDifferentCollateral

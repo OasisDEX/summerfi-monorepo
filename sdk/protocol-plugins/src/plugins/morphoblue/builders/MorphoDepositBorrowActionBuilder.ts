@@ -3,62 +3,66 @@ import {
   getValueFromReference,
   TokenTransferTargetType,
 } from '@summerfi/sdk-common/simulation'
-
 import { MorphoBorrowAction } from '../actions/MorphoBorrowAction'
 import { MorphoDepositAction } from '../actions/MorphoDepositAction'
-import { ActionBuilder } from '@summerfi/protocol-plugins-common'
+import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { SendTokenAction, SetApprovalAction } from '../../common'
 import { isMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
-import { getContractAddress } from '../../utils/GetContractAddress'
+import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
-export const MorphoDepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrowStep> = async (
-  params,
-): Promise<void> => {
-  const { context, user, step, addressBookManager } = params
+export class MorphoDepositBorrowActionBuilder extends BaseActionBuilder<steps.DepositBorrowStep> {
+  readonly actions: ActionBuilderUsedAction[] = [
+    { action: SetApprovalAction },
+    { action: MorphoDepositAction },
+    { action: MorphoBorrowAction, isOptionalTags: ['borrowAmount'] },
+    { action: SendTokenAction, isOptionalTags: ['borrowAmount', 'borrowTargetType'] },
+  ]
 
-  if (!isMorphoLendingPool(step.inputs.position.pool)) {
-    throw new Error('Invalid Morpho lending pool id')
-  }
+  async build(params: ActionBuilderParams<steps.DepositBorrowStep>): Promise<void> {
+    const { context, user, step, addressBookManager } = params
 
-  const morphoBlueAddress = await getContractAddress({
-    addressBookManager,
-    chainInfo: user.chainInfo,
-    contractName: 'MorphoBlue',
-  })
+    if (!isMorphoLendingPool(step.inputs.position.pool)) {
+      throw new Error('Invalid Morpho lending pool id')
+    }
 
-  context.addActionCall({
-    step: step,
-    action: new SetApprovalAction(),
-    arguments: {
-      approvalAmount: getValueFromReference(step.inputs.depositAmount),
-      delegate: morphoBlueAddress,
-      sumAmounts: false,
-    },
-    connectedInputs: {
-      depositAmount: 'approvalAmount',
-    },
-    connectedOutputs: {},
-  })
+    const morphoBlueAddress = await this._getContractAddress({
+      addressBookManager,
+      chainInfo: user.chainInfo,
+      contractName: 'MorphoBlue',
+    })
 
-  context.addActionCall({
-    step: params.step,
-    action: new MorphoDepositAction(),
-    arguments: {
-      morphoLendingPool: step.inputs.position.pool,
-      amount: getValueFromReference(step.inputs.depositAmount),
-      sumAmounts: false,
-    },
-    connectedInputs: {
-      depositAmount: 'amount',
-    },
-    connectedOutputs: {
-      depositAmount: 'depositedAmount',
-    },
-  })
+    context.addActionCall({
+      step: step,
+      action: new SetApprovalAction(),
+      arguments: {
+        approvalAmount: getValueFromReference(step.inputs.depositAmount),
+        delegate: morphoBlueAddress,
+        sumAmounts: false,
+      },
+      connectedInputs: {
+        depositAmount: 'approvalAmount',
+      },
+      connectedOutputs: {},
+    })
 
-  const borrowAmount = getValueFromReference(step.inputs.borrowAmount)
+    context.addActionCall({
+      step: params.step,
+      action: new MorphoDepositAction(),
+      arguments: {
+        morphoLendingPool: step.inputs.position.pool,
+        amount: getValueFromReference(step.inputs.depositAmount),
+        sumAmounts: false,
+      },
+      connectedInputs: {
+        depositAmount: 'amount',
+      },
+      connectedOutputs: {
+        depositAmount: 'depositedAmount',
+      },
+    })
 
-  if (!borrowAmount.toBN().isZero()) {
+    const borrowAmount = getValueFromReference(step.inputs.borrowAmount)
+
     context.addActionCall({
       step: step,
       action: new MorphoBorrowAction(),
@@ -70,27 +74,30 @@ export const MorphoDepositBorrowActionBuilder: ActionBuilder<steps.DepositBorrow
       connectedOutputs: {
         borrowAmount: 'borrowedAmount',
       },
+      skip: borrowAmount.toBN().isZero(),
     })
 
-    if (step.inputs.borrowTargetType !== TokenTransferTargetType.PositionsManager) {
-      const operationExecutorAddress = await getContractAddress({
-        addressBookManager,
-        chainInfo: user.chainInfo,
-        contractName: 'OperationExecutor',
-      })
+    const isBorrowTargetPositionsManager =
+      step.inputs.borrowTargetType === TokenTransferTargetType.PositionsManager
 
-      context.addActionCall({
-        step: step,
-        action: new SendTokenAction(),
-        arguments: {
-          sendAmount: borrowAmount,
-          sendTo: operationExecutorAddress,
-        },
-        connectedInputs: {
-          borrowAmount: 'amount',
-        },
-        connectedOutputs: {},
-      })
-    }
+    const operationExecutorAddress = await this._getContractAddress({
+      addressBookManager,
+      chainInfo: user.chainInfo,
+      contractName: 'OperationExecutor',
+    })
+
+    context.addActionCall({
+      step: step,
+      action: new SendTokenAction(),
+      arguments: {
+        sendAmount: borrowAmount,
+        sendTo: operationExecutorAddress,
+      },
+      connectedInputs: {
+        borrowAmount: 'amount',
+      },
+      connectedOutputs: {},
+      skip: borrowAmount.toBN().isZero() || isBorrowTargetPositionsManager,
+    })
   }
 }

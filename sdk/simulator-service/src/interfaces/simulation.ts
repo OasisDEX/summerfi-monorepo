@@ -1,8 +1,8 @@
-import { BalancesRecord, PositionsRecord, StepsRecord, SwapsRecord } from '../types/Types'
+import { BalancesRecord, PositionsRecord, StepsArray, SwapsArray } from '../types/Types'
 
 export interface ISimulationState {
-  swaps: SwapsRecord
+  swaps: SwapsArray
   balances: BalancesRecord
   positions: PositionsRecord
-  steps: StepsRecord
+  steps: StepsArray
 }

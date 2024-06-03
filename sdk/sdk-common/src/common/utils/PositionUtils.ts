@@ -6,6 +6,7 @@ import { IPosition } from '../interfaces/IPosition'
 import { ITokenAmount } from '../interfaces/ITokenAmount'
 
 // TODO: add a proper internal position type only used by the simulator that can be instantiated
+// TODO implement Simulated position
 
 export function newEmptyPositionFromPool(pool: ILendingPoolData): IPosition {
   return {

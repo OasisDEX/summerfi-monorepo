@@ -10,9 +10,7 @@ import { Maybe } from '@summerfi/sdk-common/common'
  * @typedef ProtocolPluginConstructor
  * @description Constructor for a protocol plugin
  */
-export type ProtocolPluginConstructor = new (params: {
-  context: IProtocolPluginContext
-}) => IProtocolPlugin
+export type ProtocolPluginConstructor = new () => IProtocolPlugin
 
 /**
  * @typedef ProtocolPluginsRecordType
@@ -44,6 +42,10 @@ export class ProtocolPluginsRegistry implements IProtocolPluginsRegistry {
     if (!Plugin) {
       return
     }
-    return new Plugin({ context: this.context })
+    const plugin = new Plugin()
+
+    plugin.initialize({ context: this.context })
+
+    return plugin
   }
 }

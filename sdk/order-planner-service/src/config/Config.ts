@@ -10,6 +10,8 @@ import {
   RepayFlashloanActionBuilder,
   ReturnFundsActionBuilder,
   SwapActionBuilder,
+  OpenPositionActionBuilder,
+  SkippedStepActionBuilder,
 } from '@summerfi/protocol-plugins/plugins/common'
 
 export const ActionBuildersConfig: ActionBuildersMap = {
@@ -22,4 +24,6 @@ export const ActionBuildersConfig: ActionBuildersMap = {
   [SimulationSteps.ReturnFunds]: ReturnFundsActionBuilder,
   [SimulationSteps.NewPositionEvent]: PositionCreatedActionBuilder,
   [SimulationSteps.Import]: ImportPositionActionBuilder,
+  [SimulationSteps.OpenPosition]: OpenPositionActionBuilder,
+  [SimulationSteps.Skipped]: SkippedStepActionBuilder,
 }

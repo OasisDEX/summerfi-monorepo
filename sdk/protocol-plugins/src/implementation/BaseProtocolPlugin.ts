@@ -1,6 +1,7 @@
 import {
-  ActionBuilder,
   ActionBuildersMap,
+  FilterStep,
+  IActionBuilder,
   IProtocolPlugin,
   IProtocolPluginContext,
 } from '@summerfi/protocol-plugins-common'
@@ -19,7 +20,7 @@ import {
   ILendingPoolIdData,
   ILendingPoolInfo,
 } from '@summerfi/sdk-common/protocols'
-import { steps } from '@summerfi/sdk-common/simulation'
+import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { IUser } from '@summerfi/sdk-common/user'
 import { getContractAddress } from '../plugins/utils/GetContractAddress'
 
@@ -38,23 +39,34 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
   abstract readonly stepBuilders: Partial<ActionBuildersMap>
 
   /** These properties are initialized in the constructor */
-  readonly context: IProtocolPluginContext
+  private _context: Maybe<IProtocolPluginContext>
 
-  protected constructor(params: { context: IProtocolPluginContext }) {
-    this.context = params.context
+  /** INITIALIZATION */
 
-    if (!this.context.provider.chain) {
+  /** @see IProtocolPlugin.initialize */
+  initialize(params: { context: IProtocolPluginContext }) {
+    if (this._context) {
+      throw new Error('Already initialized')
+    }
+
+    this._context = params.context
+
+    if (!this._context.provider.chain) {
       throw new Error('ctx.provider.chain undefined')
     }
 
-    if (!this.context.provider.chain.id) {
+    if (!this._context.provider.chain.id) {
       throw new Error('ctx.provider.chain.id undefined')
     }
   }
 
   // Short alias for the context
-  protected get ctx(): IProtocolPluginContext {
-    return this.context
+  protected get context(): IProtocolPluginContext {
+    if (!this._context) {
+      throw new Error('Context not initialized')
+    }
+
+    return this._context
   }
 
   /** VALIDATORS */
@@ -136,8 +148,17 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
   /** ACTION BUILDERS */
 
   /** @see IProtocolPlugin.getActionBuilder */
-  getActionBuilder<T extends steps.Steps>(step: T): Maybe<ActionBuilder<T>> {
-    return this.stepBuilders[step.type] as ActionBuilder<T>
+  getActionBuilder<
+    StepType extends SimulationSteps,
+    Step extends FilterStep<StepType, steps.Steps>,
+  >(stepType: StepType): Maybe<IActionBuilder<Step>> {
+    const BuilderClass = this.stepBuilders[stepType]
+
+    if (!BuilderClass) {
+      return undefined
+    }
+
+    return new BuilderClass()
   }
 
   /** HELPERS */

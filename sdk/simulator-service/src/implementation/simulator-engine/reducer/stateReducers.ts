@@ -10,6 +10,8 @@ import { repayFlashloanReducer } from './repayFlashloanReducer'
 import { pullTokenReducer } from './pullTokenReducer'
 import { importReducer } from './importReducer'
 import { newPositionEventReducer } from './newPositionEventReducer'
+import { openPositionReducer } from './openPositionReducer'
+import { skippedStepReducer } from './skippedStepReducer'
 
 const stateReducers: StateReducers = {
   [SimulationSteps.Flashloan]: flashloanReducer,
@@ -21,6 +23,8 @@ const stateReducers: StateReducers = {
   [SimulationSteps.PullToken]: pullTokenReducer,
   [SimulationSteps.Import]: importReducer,
   [SimulationSteps.NewPositionEvent]: newPositionEventReducer,
+  [SimulationSteps.OpenPosition]: openPositionReducer,
+  [SimulationSteps.Skipped]: skippedStepReducer,
 }
 
 export function stateReducer(step: steps.Steps, state: ISimulationState): ISimulationState {

@@ -1,8 +1,11 @@
 import { ChainFamilyMap, IPosition, IPositionId, Maybe } from '@summerfi/sdk-common/common'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import {
-  ActionBuilder,
+  ActionBuilderParams,
+  ActionBuilderUsedAction,
   ActionBuildersMap,
+  FilterStep,
+  IActionBuilder,
   IProtocolPlugin,
   IProtocolPluginContext,
 } from '@summerfi/protocol-plugins-common'
@@ -19,28 +22,57 @@ import { IExternalPosition, IPositionsManager } from '@summerfi/sdk-common/order
 import { IUser } from '@summerfi/sdk-common/user'
 import { TransactionInfo } from '@summerfi/sdk-common'
 import { StepBuilderContextMock } from '@summerfi/testing-utils'
+import { BaseActionBuilder } from '../../src'
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-export const PaybackWithdrawActionBuilderMock: ActionBuilder<steps.PaybackWithdrawStep> = async (
-  params,
-): Promise<void> => {
-  ;(params.context as StepBuilderContextMock).setCheckpoint('PaybackWithdrawActionBuilderMock')
+export class PaybackWithdrawActionBuilderMock extends BaseActionBuilder<steps.PaybackWithdrawStep> {
+  actions: ActionBuilderUsedAction[] = []
+  async build(params: ActionBuilderParams<steps.PaybackWithdrawStep>): Promise<void> {
+    ;(params.context as StepBuilderContextMock).setCheckpoint('PaybackWithdrawActionBuilderMock')
+  }
 }
 
-export const DepositBorrowActionBuilderMock: ActionBuilder<steps.DepositBorrowStep> = async (
-  params,
-): Promise<void> => {
-  ;(params.context as StepBuilderContextMock).setCheckpoint('DepositBorrowActionBuilderMock')
+export class DepositBorrowActionBuilderMock extends BaseActionBuilder<steps.DepositBorrowStep> {
+  actions: ActionBuilderUsedAction[] = []
+  async build(params: ActionBuilderParams<steps.DepositBorrowStep>): Promise<void> {
+    ;(params.context as StepBuilderContextMock).setCheckpoint('DepositBorrowActionBuilderMock')
+  }
 }
 
-export const PaybackWithdrawActionBuilderNoCheckpointMock: ActionBuilder<
-  steps.PaybackWithdrawStep
-> = async (params): Promise<void> => {}
+export class ImportPositionActionBuilderMock extends BaseActionBuilder<steps.ImportStep> {
+  actions: ActionBuilderUsedAction[] = []
+  async build(params: ActionBuilderParams<steps.ImportStep>): Promise<void> {
+    ;(params.context as StepBuilderContextMock).setCheckpoint('ImportPositionActionBuilderMock')
+  }
+}
 
-export const DepositBorrowActionBuilderNoCheckpointMock: ActionBuilder<
-  steps.DepositBorrowStep
-> = async (params): Promise<void> => {}
+export class OpenPositionActionBuilderMock extends BaseActionBuilder<steps.OpenPosition> {
+  actions: ActionBuilderUsedAction[] = []
+  async build(params: ActionBuilderParams<steps.OpenPosition>): Promise<void> {
+    ;(params.context as StepBuilderContextMock).setCheckpoint('OpenPositionActionBuilderMock')
+  }
+}
+
+export class PaybackWithdrawActionBuilderNoCheckpointMock extends BaseActionBuilder<steps.PaybackWithdrawStep> {
+  actions: ActionBuilderUsedAction[] = []
+  async build(params: ActionBuilderParams<steps.PaybackWithdrawStep>): Promise<void> {}
+}
+
+export class DepositBorrowActionBuilderNoCheckpointMock extends BaseActionBuilder<steps.DepositBorrowStep> {
+  actions: ActionBuilderUsedAction[] = []
+  async build(params: ActionBuilderParams<steps.DepositBorrowStep>): Promise<void> {}
+}
+
+export class ImportPositionActionBuilderNoCheckpointMock extends BaseActionBuilder<steps.ImportStep> {
+  actions: ActionBuilderUsedAction[] = []
+  async build(params: ActionBuilderParams<steps.ImportStep>): Promise<void> {}
+}
+
+export class OpenPositionActionBuilderNoCheckpointMock extends BaseActionBuilder<steps.OpenPosition> {
+  actions: ActionBuilderUsedAction[] = []
+  async build(params: ActionBuilderParams<steps.OpenPosition>): Promise<void> {}
+}
 
 export class ProtocolPluginMock implements IProtocolPlugin {
   protocolName = ProtocolName.Spark
@@ -48,8 +80,14 @@ export class ProtocolPluginMock implements IProtocolPlugin {
   stepBuilders: Partial<ActionBuildersMap> = {
     [SimulationSteps.PaybackWithdraw]: PaybackWithdrawActionBuilderMock,
     [SimulationSteps.DepositBorrow]: DepositBorrowActionBuilderMock,
+    [SimulationSteps.Import]: ImportPositionActionBuilderMock,
+    [SimulationSteps.OpenPosition]: OpenPositionActionBuilderMock,
   }
   context = undefined as unknown as IProtocolPluginContext
+
+  initialize(params: { context: IProtocolPluginContext }): void {
+    this.context = params.context
+  }
 
   isLendingPoolId(candidate: unknown): candidate is IPoolId {
     return true
@@ -69,8 +107,17 @@ export class ProtocolPluginMock implements IProtocolPlugin {
     return undefined as unknown as IPosition
   }
 
-  getActionBuilder<T extends steps.Steps>(step: T): Maybe<ActionBuilder<T>> {
-    return this.stepBuilders[step.type] as ActionBuilder<T>
+  getActionBuilder<
+    StepType extends SimulationSteps,
+    Step extends FilterStep<StepType, steps.Steps>,
+  >(stepType: StepType): Maybe<IActionBuilder<Step>> {
+    const builder = this.stepBuilders[stepType]
+
+    if (!builder) {
+      return undefined
+    }
+
+    return new builder()
   }
 
   async getImportPositionTransaction(params: {
@@ -78,7 +125,7 @@ export class ProtocolPluginMock implements IProtocolPlugin {
     externalPosition: IExternalPosition
     positionsManager: IPositionsManager
   }): Promise<Maybe<TransactionInfo>> {
-    return undefined as unknown as TransactionInfo
+    return {} as unknown as TransactionInfo
   }
 }
 
@@ -88,6 +135,10 @@ export class EmptyProtocolPluginMock implements IProtocolPlugin {
   stepBuilders: Partial<ActionBuildersMap> = {}
   context = undefined as unknown as IProtocolPluginContext
 
+  initialize(params: { context: IProtocolPluginContext }): void {
+    this.context = params.context
+  }
+
   isLendingPoolId(candidate: unknown): candidate is IPoolId {
     return true
   }
@@ -106,8 +157,17 @@ export class EmptyProtocolPluginMock implements IProtocolPlugin {
     return undefined as unknown as IPosition
   }
 
-  getActionBuilder<T extends steps.Steps>(step: T): Maybe<ActionBuilder<T>> {
-    return this.stepBuilders[step.type] as ActionBuilder<T>
+  getActionBuilder<
+    StepType extends SimulationSteps,
+    Step extends FilterStep<StepType, steps.Steps>,
+  >(stepType: StepType): Maybe<IActionBuilder<Step>> {
+    const builder = this.stepBuilders[stepType]
+
+    if (!builder) {
+      return undefined
+    }
+
+    return new builder()
   }
 
   async getImportPositionTransaction(params: {
@@ -125,8 +185,14 @@ export class NoCheckpointProtocolPluginMock implements IProtocolPlugin {
   stepBuilders: Partial<ActionBuildersMap> = {
     [SimulationSteps.PaybackWithdraw]: PaybackWithdrawActionBuilderNoCheckpointMock,
     [SimulationSteps.DepositBorrow]: DepositBorrowActionBuilderNoCheckpointMock,
+    [SimulationSteps.Import]: ImportPositionActionBuilderNoCheckpointMock,
+    [SimulationSteps.OpenPosition]: OpenPositionActionBuilderNoCheckpointMock,
   }
   context = undefined as unknown as IProtocolPluginContext
+
+  initialize(params: { context: IProtocolPluginContext }): void {
+    this.context = params.context
+  }
 
   isLendingPoolId(candidate: unknown): candidate is IPoolId {
     return true
@@ -146,8 +212,17 @@ export class NoCheckpointProtocolPluginMock implements IProtocolPlugin {
     return undefined as unknown as IPosition
   }
 
-  getActionBuilder<T extends steps.Steps>(step: T): Maybe<ActionBuilder<T>> {
-    return this.stepBuilders[step.type] as ActionBuilder<T>
+  getActionBuilder<
+    StepType extends SimulationSteps,
+    Step extends FilterStep<StepType, steps.Steps>,
+  >(stepType: StepType): Maybe<IActionBuilder<Step>> {
+    const builder = this.stepBuilders[stepType]
+
+    if (!builder) {
+      return undefined
+    }
+
+    return new builder()
   }
 
   async getImportPositionTransaction(params: {

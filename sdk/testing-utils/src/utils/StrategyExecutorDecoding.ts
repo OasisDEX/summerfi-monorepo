@@ -2,10 +2,6 @@ import { ActionCall } from '@summerfi/protocol-plugins-common'
 import { HexData } from '@summerfi/sdk-common/common'
 import { decodeFunctionData, parseAbi } from 'viem'
 
-export type SkippableActionCall = ActionCall & {
-  skipped: boolean
-}
-
 export function decodeStrategyExecutorCalldata(calldata: HexData | string):
   | {
       actionCalls: ActionCall[]
@@ -26,13 +22,8 @@ export function decodeStrategyExecutorCalldata(calldata: HexData | string):
     return undefined
   }
 
-  const actionCalls: ActionCall[] = (decoded.args[0] as SkippableActionCall[]).map(
-    /* eslint-disable @typescript-eslint/no-unused-vars */
-    ({ skipped, ...rest }) => rest,
-  )
-
   return {
-    actionCalls,
+    actionCalls: decoded.args[0] as ActionCall[],
     strategyName: decoded.args[1] as string,
   }
 }

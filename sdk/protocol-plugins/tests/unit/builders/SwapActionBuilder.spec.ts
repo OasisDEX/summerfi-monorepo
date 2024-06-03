@@ -69,6 +69,26 @@ describe('Swap Action Builder', () => {
 
   const inputAmountAfterFee = inputAmount.multiply(percent100.subtract(fee))
 
+  const derivedStep: steps.SwapStep = {
+    type: SimulationSteps.Swap,
+    name: 'SwapStep',
+    inputs: {
+      provider: SwapProviderType.OneInch,
+      routes: [],
+      spotPrice: spotPrice,
+      offerPrice: offerPrice,
+      inputAmount: inputAmount,
+      inputAmountAfterFee: inputAmountAfterFee,
+      estimatedReceivedAmount: toAmount,
+      minimumReceivedAmount: toAmount,
+      summerFee: fee,
+      slippage,
+    },
+    outputs: {
+      received: toAmount,
+    },
+  }
+
   beforeEach(() => {
     builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })
     ;(builderParams.addressBookManager as AddressBookManagerMock).setAddressByName({
@@ -79,26 +99,6 @@ describe('Swap Action Builder', () => {
   })
 
   it('should encode the action calldata correctly', async () => {
-    const derivedStep: steps.SwapStep = {
-      type: SimulationSteps.Swap,
-      name: 'SwapStep',
-      inputs: {
-        provider: SwapProviderType.OneInch,
-        routes: [],
-        spotPrice: spotPrice,
-        offerPrice: offerPrice,
-        inputAmount: inputAmount,
-        inputAmountAfterFee: inputAmountAfterFee,
-        estimatedReceivedAmount: toAmount,
-        minimumReceivedAmount: toAmount,
-        summerFee: fee,
-        slippage,
-      },
-      outputs: {
-        received: toAmount,
-      },
-    }
-
     // Setup swap manager returned data
     builderParams.swapManager.setSwapData({
       provider: SwapProviderType.OneInch,
@@ -114,7 +114,7 @@ describe('Swap Action Builder', () => {
 
     builderParams.context.startSubContext()
 
-    await SwapActionBuilder({
+    await new SwapActionBuilder().build({
       ...builderParams,
       step: derivedStep,
     })

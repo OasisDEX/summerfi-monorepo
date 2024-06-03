@@ -3,10 +3,6 @@ import { Address, HexData, Maybe } from '@summerfi/sdk-common/common'
 import { IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 import { encodeFunctionData, parseAbi } from 'viem'
 
-type SkippableActionCall = ActionCall & {
-  skipped: boolean
-}
-
 function encodeForExecutor(params: { strategyName: string; actions: ActionCall[] }): HexData {
   const { strategyName, actions } = params
 
@@ -15,16 +11,10 @@ function encodeForExecutor(params: { strategyName: string; actions: ActionCall[]
     'struct Call { bytes32 targetHash; bytes callData; bool skipped; }',
   ])
 
-  // TODO: Hiding this here for now as we don't support skippable actions anymore in the new version
-  const skippableActions: SkippableActionCall[] = actions.map((action) => ({
-    ...action,
-    skipped: false,
-  }))
-
   return encodeFunctionData({
     abi,
     functionName: 'executeOp',
-    args: [skippableActions, strategyName],
+    args: [actions, strategyName],
   })
 }
 

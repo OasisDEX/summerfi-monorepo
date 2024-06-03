@@ -1,14 +1,5 @@
-import { AaveV3ProtocolPlugin } from '@summerfi/protocol-plugins/plugins/aave-v3'
-import {
-  ProtocolPluginsRecordType,
-  ProtocolPluginsRegistry,
-} from '@summerfi/protocol-plugins/implementation'
-import { SparkProtocolPlugin } from '@summerfi/protocol-plugins/plugins/spark'
-import { MakerProtocolPlugin } from '@summerfi/protocol-plugins/plugins/maker'
-import { MorphoProtocolPlugin } from '@summerfi/protocol-plugins/plugins/morphoblue'
-
+import { ProtocolPluginsRecord, ProtocolPluginsRegistry } from '@summerfi/protocol-plugins'
 import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { createPublicClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
@@ -20,18 +11,6 @@ import { ConfigurationProvider } from '@summerfi/configuration-provider'
 import { ITokensManager } from '@summerfi/tokens-common'
 import { IOracleManager } from '@summerfi/oracle-common'
 import { IAddressBookManager } from '@summerfi/address-book-common'
-
-/**
- * Protocol plugins record
- *
- * Note: add here the plugins you want to use in the SDK
- */
-const ProtocolPlugins: ProtocolPluginsRecordType = {
-  [ProtocolName.Maker]: MakerProtocolPlugin,
-  [ProtocolName.Spark]: SparkProtocolPlugin,
-  [ProtocolName.AAVEv3]: AaveV3ProtocolPlugin,
-  [ProtocolName.Morpho]: MorphoProtocolPlugin,
-}
 
 /**
  * RPC configuration for the RPC Gateway
@@ -83,7 +62,7 @@ export function createProtocolsPluginsRegistry(params: {
   })
 
   return new ProtocolPluginsRegistry({
-    plugins: ProtocolPlugins,
+    plugins: ProtocolPluginsRecord,
     context: {
       provider,
       tokensManager,

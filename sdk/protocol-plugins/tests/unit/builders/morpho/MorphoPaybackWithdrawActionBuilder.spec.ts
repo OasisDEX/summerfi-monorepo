@@ -60,7 +60,7 @@ describe('Morpho Payback Withdraw Action Builder', () => {
   })
 
   const protocol = MorphoProtocol.createFrom({
-    name: ProtocolName.Morpho,
+    name: ProtocolName.MorphoBlue,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 
@@ -113,11 +113,12 @@ describe('Morpho Payback Withdraw Action Builder', () => {
 
   const derivedStep: steps.PaybackWithdrawStep = {
     type: SimulationSteps.PaybackWithdraw,
-    name: 'DepositBorrowStep',
+    name: 'PaybackWithdrawStep',
     inputs: {
       paybackAmount: paybackAmount,
       withdrawAmount: withdrawAmount,
       position: position,
+      withdrawTargetType: TokenTransferTargetType.PositionsManager,
     },
     outputs: {
       paybackAmount: paybackAmount,
@@ -131,7 +132,7 @@ describe('Morpho Payback Withdraw Action Builder', () => {
 
   it('should fail the position is not a Morpho one', async () => {
     try {
-      await MorphoPaybackWithdrawActionBuilder({
+      await new MorphoPaybackWithdrawActionBuilder().build({
         ...builderParams,
         step: {
           ...derivedStep,
@@ -151,7 +152,7 @@ describe('Morpho Payback Withdraw Action Builder', () => {
   it('should add all the action calls', async () => {
     builderParams.context.startSubContext()
 
-    await MorphoPaybackWithdrawActionBuilder({
+    await new MorphoPaybackWithdrawActionBuilder().build({
       ...builderParams,
       step: derivedStep,
       protocolsRegistry: builderParams.emptyProtocolsRegistry,
@@ -169,7 +170,7 @@ describe('Morpho Payback Withdraw Action Builder', () => {
   it('should not add payback when payback amount is 0', async () => {
     builderParams.context.startSubContext()
 
-    await MorphoPaybackWithdrawActionBuilder({
+    await new MorphoPaybackWithdrawActionBuilder().build({
       ...builderParams,
       step: {
         ...derivedStep,
@@ -186,8 +187,10 @@ describe('Morpho Payback Withdraw Action Builder', () => {
 
     const { callsBatch } = builderParams.context.endSubContext()
 
-    expect(callsBatch.length).toEqual(1)
+    expect(callsBatch.length).toEqual(3)
 
-    expect(callsBatch[0].name).toBe('MorphoBlueWithdraw')
+    expect(callsBatch[0].name).toBe('SetApproval')
+    expect(callsBatch[1].name).toBe('MorphoBluePayback')
+    expect(callsBatch[2].name).toBe('MorphoBlueWithdraw')
   })
 })

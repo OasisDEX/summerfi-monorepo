@@ -22,22 +22,22 @@ describe('Flashloan Action Builder', () => {
     amount: '134.5',
   })
 
+  const derivedStep: steps.FlashloanStep = {
+    type: SimulationSteps.Flashloan,
+    name: 'FlashloanStep',
+    inputs: {
+      amount: flashloanAmount,
+      provider: FlashloanProvider.Balancer,
+    },
+    outputs: undefined,
+  }
+
   beforeEach(() => {
     builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })
   })
 
   it('should start a new subcontext', async () => {
-    const derivedStep: steps.FlashloanStep = {
-      type: SimulationSteps.Flashloan,
-      name: 'FlashloanStep',
-      inputs: {
-        amount: flashloanAmount,
-        provider: FlashloanProvider.Balancer,
-      },
-      outputs: undefined,
-    }
-
-    await FlashloanActionBuilder({
+    await new FlashloanActionBuilder().build({
       ...builderParams,
       step: derivedStep,
     })

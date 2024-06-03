@@ -5,10 +5,10 @@ import { z } from 'zod'
  * @description Enumerates the names of the protocols that are supported by the SDK
  */
 export enum ProtocolName {
-  AAVEv3 = 'AAVEv3',
-  AAVEv2 = 'AAVEv2',
+  AaveV3 = 'AaveV3',
+  AaveV2 = 'AaveV2',
   Spark = 'Spark',
-  Morpho = 'Morpho',
+  MorphoBlue = 'MorphoBlue',
   Maker = 'Maker',
   Ajna = 'Ajna',
 }

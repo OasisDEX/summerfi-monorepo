@@ -15,7 +15,7 @@ export type ActionVersion = number
  */
 export type ActionConfig = {
   /** The name of the action */
-  readonly name: ActionNames
+  readonly name: ActionNames | 'SkippedAction'
   /** The version of the action */
   readonly version: ActionVersion
   /** Human-readable ABI parameters (check `viem` documentation) */
@@ -32,11 +32,13 @@ export type ActionConfig = {
  */
 export type ActionCall = {
   /** Name of the action for logging */
-  readonly name: ActionNames
+  readonly name: ActionNames | 'SkippedAction'
   /** The hash of the action name plus its version */
   readonly targetHash: HexData
   /** The call data to be sent to the smart contract */
   readonly callData: HexData
+  /** If the action was skipped */
+  readonly skipped: boolean
 }
 
 /**
