@@ -26,7 +26,7 @@ import {
   IPositionsManager,
   TransactionInfo,
 } from '@summerfi/sdk-common/orders'
-import { encodeMakerGiveThroughProxyActions } from '../utils/MakerGive'
+import { encodeMakerAllowThroughProxyActions } from '../utils/MakerGive'
 import { isMakerPositionId } from '../interfaces/IMakerPositionId'
 import { MakerLendingPoolId } from './MakerLendingPoolId'
 import { IMakerLendingPoolId, isMakerLendingPoolId } from '../interfaces/IMakerLendingPoolId'
@@ -155,10 +155,10 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
       contractName: this.DssProxyActionsContractName,
     })
 
-    const result = encodeMakerGiveThroughProxyActions({
+    const result = encodeMakerAllowThroughProxyActions({
       cdpManagerAddress: cdpManagerAddress.value,
       makerProxyActionsAddress: dssProxyActionsAddress.value,
-      giveToAddress: params.positionsManager.address.value,
+      allowAddress: params.positionsManager.address.value,
       cdpId: params.externalPosition.position.id.vaultId,
     })
 
