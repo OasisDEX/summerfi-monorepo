@@ -13,6 +13,41 @@ export const StaticTokensData: TokenListData = {
   keywords: ['Summer.fi', 'MakerDAO'],
   tokens: [
     {
+      name: 'Lido DAO Token',
+      address: '0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32',
+      symbol: 'LDO',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32/logo.png',
+    },
+    {
+      name: 'Coinbase Wrapped Staked ETH',
+      address: '0xBe9895146f7AF43049ca1c1AE358B0541Ea49704',
+      symbol: 'cbETH',
+      decimals: 18,
+      chainId: 1,
+      logoURI: '',
+    },
+    {
+      name: 'Rocket Pool Protocol',
+      address: '0xD33526068D116cE69F19A9ee46F0bd304F21A51f',
+      symbol: 'RPL',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xD33526068D116cE69F19A9ee46F0bd304F21A51f/logo.png',
+    },
+    {
+      name: 'LUSD Stablecoin',
+      address: '0x5f98805A4E8be255a32880FDeC7F6728C6568bA0',
+      symbol: 'LUSD',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x5f98805A4E8be255a32880FDeC7F6728C6568bA0/logo.png',
+    },
+    {
       name: 'Renzo Restaked ETH',
       address: '0xbf5495Efe5DB9ce00f80364C8B423567e58d2110',
       symbol: 'ezETH',
