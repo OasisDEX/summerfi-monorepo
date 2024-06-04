@@ -1,4 +1,5 @@
 import {
+  generateDebugDefinitions,
   generateOperationDefinitions,
   generateSafeMultisendJSON,
   processStrategies,
@@ -54,7 +55,9 @@ async function main() {
     } else if (args.format === 'tenderly') {
       fs.writeFileSync(args.output, JSON.stringify(operationDefinitions, null, 2))
     } else {
-      fs.writeFileSync(args.output, JSON.stringify(strategyDefinitions, null, 2))
+      const debugDefinitions = generateDebugDefinitions('Refinance', strategyDefinitions)
+
+      fs.writeFileSync(args.output, JSON.stringify(debugDefinitions, null, 2))
     }
   } else {
     console.log('--------------------')
