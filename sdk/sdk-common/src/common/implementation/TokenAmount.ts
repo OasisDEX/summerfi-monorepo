@@ -135,6 +135,11 @@ export class TokenAmount implements ITokenAmount {
     return new BigNumber(this.amount)
   }
 
+  /** @see ITokenAmount.isZero */
+  isZero(): boolean {
+    return this.toBN().isZero()
+  }
+
   /** PRIVATE */
   private _validateSameToken(tokenAmount: ITokenAmount): void {
     if (tokenAmount.token.symbol !== this.token.symbol) {
