@@ -31,4 +31,8 @@ export enum CommonTokenSymbols {
   renBTC = 'renBTC',
   rETH = 'rETH',
   GNO = 'GNO',
+  LDO = 'LDO',
+  cbETH = 'cbETH',
+  RPL = 'RPL',
+  LUSD = 'LUSD',
 }
