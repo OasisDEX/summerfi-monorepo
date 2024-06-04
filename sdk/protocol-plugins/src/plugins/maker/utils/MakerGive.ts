@@ -1,17 +1,19 @@
 import { AddressValue } from '@summerfi/sdk-common/common'
 import { Hex, encodeFunctionData, parseAbi } from 'viem'
 
-export function encodeMakerProxyActionsGive(params: {
+export function encodeMakerProxyActionsAllow(params: {
   cdpManagerAddress: AddressValue
   cdpId: string
-  giveToAddress: AddressValue
+  allowAddress: AddressValue
 }): Hex {
-  const abi = parseAbi(['function give(address cdpManager, uint256 cdpId, address to)'])
+  const abi = parseAbi([
+    'function cdpAllow(address cdpManager, uint256 cdpId, address to, uint allow)',
+  ])
 
   return encodeFunctionData({
     abi,
-    functionName: 'give',
-    args: [params.cdpManagerAddress, BigInt(params.cdpId), params.giveToAddress],
+    functionName: 'cdpAllow',
+    args: [params.cdpManagerAddress, BigInt(params.cdpId), params.allowAddress, 1n],
   })
 }
 
@@ -25,11 +27,11 @@ export function encodeDsProxyExecute(params: { target: Hex; callData: Hex }): He
   })
 }
 
-export function encodeMakerGiveThroughProxyActions(params: {
+export function encodeMakerAllowThroughProxyActions(params: {
   makerProxyActionsAddress: AddressValue
   cdpManagerAddress: AddressValue
   cdpId: string
-  giveToAddress: AddressValue
+  allowAddress: AddressValue
 }): {
   transactionCalldata: Hex
   dsProxyParameters: {
@@ -37,17 +39,17 @@ export function encodeMakerGiveThroughProxyActions(params: {
     callData: Hex
   }
 } {
-  const makerGiveCalldata = encodeMakerProxyActionsGive(params)
+  const makerAllowCalldata = encodeMakerProxyActionsAllow(params)
   const transactionCalldata = encodeDsProxyExecute({
     target: params.makerProxyActionsAddress,
-    callData: makerGiveCalldata,
+    callData: makerAllowCalldata,
   })
 
   return {
     transactionCalldata,
     dsProxyParameters: {
       target: params.makerProxyActionsAddress,
-      callData: makerGiveCalldata,
+      callData: makerAllowCalldata,
     },
   }
 }
