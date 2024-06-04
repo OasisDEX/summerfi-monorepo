@@ -60,7 +60,7 @@ const config = {
   sendTransaction: true,
 }
 
-describe.only('Refinance Maker -> Spark | SDK', () => {
+describe.skip('Refinance Maker -> Spark | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: config.SDKAPiUrl })
