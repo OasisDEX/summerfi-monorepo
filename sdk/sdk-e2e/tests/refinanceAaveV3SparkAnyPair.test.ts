@@ -47,10 +47,10 @@ const config = {
     debtAmount: '0',
   },
   target: {
-    collateralTokenSymbol: CommonTokenSymbols.USDC,
-    debtTokenSymbol: CommonTokenSymbols.USDT,
+    collateralTokenSymbol: CommonTokenSymbols.WETH,
+    debtTokenSymbol: CommonTokenSymbols.DAI,
   },
-  sendTransactionEnabled: false,
+  sendTransactionEnabled: true,
 }
 
 describe.skip('Refinance AaveV3 Spark | SDK', () => {
@@ -159,7 +159,7 @@ describe.skip('Refinance AaveV3 Spark | SDK', () => {
       protocol: spark,
       collateralToken: targetCollateralToken,
       debtToken: targetDebtToken,
-      emodeType: EmodeType.Stablecoins,
+      emodeType: EmodeType.None,
     })
 
     const sparkPool = await spark.getLendingPool({
