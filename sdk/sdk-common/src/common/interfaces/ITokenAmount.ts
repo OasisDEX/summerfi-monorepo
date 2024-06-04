@@ -84,6 +84,13 @@ export interface ITokenAmount extends ITokenAmountData, IPrintable {
    * This is, it includes all the decimals of the token and can be passed to a solidity contract
    */
   toBaseUnit(): string
+
+  /**
+   * @name isZero
+   * @description Checks if the amount is zero
+   * @returns true if the amount is zero or false otherwise
+   */
+  isZero(): boolean
 }
 
 /**
