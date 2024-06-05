@@ -34,7 +34,7 @@ export class PositionUtils {
     position: Position
     // TODO: it is not defined in Position yet, we should use Pool in the future
     liquidationThreshold: Percentage
-    debtPriceInUsd: string
+    debtPriceInUsd: string,
   }): string {
     // Determine the Collateral Value:
     const collateralAmount = new BigNumber(position.collateralAmount.amount)
@@ -49,6 +49,6 @@ export class PositionUtils {
     const liquidationPrice = debtValue.div(
       collateralAmount.times(liquidationThreshold.toProportion()),
     )
-    return liquidationPrice.toString()
+    return liquidationPrice.times(debtPriceInUsd).toString()
   }
 }
