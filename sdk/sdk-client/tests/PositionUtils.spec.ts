@@ -66,28 +66,28 @@ describe('PositionUtils', () => {
   })
 
   describe('getLiquidationPrice', () => {
-    it('should correctly calculate liquidation price when debt amount is not 0', () => {
+    it('should correctly calculate liquidation price for long position', () => {
       const liquidationThreshold = Percentage.createFrom({ value: 80 })
 
       const liquidationPrice = PositionUtils.getLiquidationPriceInUsd({
         position: {
           collateralAmount: TokenAmount.createFrom({ amount: '2', token: WETH }),
-          debtAmount: TokenAmount.createFrom({ amount: '5000', token: DAI }),
+          debtAmount: TokenAmount.createFrom({ amount: '1500', token: DAI }),
         } as Position,
         liquidationThreshold,
         debtPriceInUsd: daiPriceInUsd,
       })
-      expect(liquidationPrice).toEqual('3125')
+      expect(liquidationPrice).toEqual('937.5')
 
       const liquidationPrice2 = PositionUtils.getLiquidationPriceInUsd({
         position: {
           collateralAmount: TokenAmount.createFrom({ amount: '2', token: WETH }),
-          debtAmount: TokenAmount.createFrom({ amount: '6000', token: DAI }),
+          debtAmount: TokenAmount.createFrom({ amount: '1600', token: DAI }),
         } as Position,
         liquidationThreshold,
         debtPriceInUsd: daiPriceInUsd,
       })
-      expect(liquidationPrice2).toEqual('3750')
+      expect(liquidationPrice2).toEqual('1000')
 
       const liquidationPrice3 = PositionUtils.getLiquidationPriceInUsd({
         position: {
@@ -96,6 +96,40 @@ describe('PositionUtils', () => {
         } as Position,
         liquidationThreshold,
         debtPriceInUsd: daiPriceInUsd,
+      })
+      expect(liquidationPrice3).toEqual('0.625')
+    })
+
+    it('should correctly calculate liquidation price for short position', () => {
+      const liquidationThreshold = Percentage.createFrom({ value: 80 })
+
+      const liquidationPrice = PositionUtils.getLiquidationPriceInUsd({
+        position: {
+          collateralAmount: TokenAmount.createFrom({ amount: '2000', token: DAI } ),
+          debtAmount: TokenAmount.createFrom({amount: '1.5', token: WETH }),
+        } as Position,
+        liquidationThreshold,
+        debtPriceInUsd: ethPriceInUsd,
+      })
+      expect(liquidationPrice).toEqual('937.5')
+
+      const liquidationPrice2 = PositionUtils.getLiquidationPriceInUsd({
+        position: {
+          collateralAmount: TokenAmount.createFrom({ amount: '2000', token: DAI }),
+          debtAmount: TokenAmount.createFrom({ amount: '1.6', token: WETH }),
+        } as Position,
+        liquidationThreshold,
+        debtPriceInUsd: ethPriceInUsd,
+      })
+      expect(liquidationPrice2).toEqual('1000')
+
+      const liquidationPrice3 = PositionUtils.getLiquidationPriceInUsd({
+        position: {
+          collateralAmount: TokenAmount.createFrom({ amount: '2000', token: DAI }),
+          debtAmount: TokenAmount.createFrom({ amount: '0.001', token: WETH }),
+        } as Position,
+        liquidationThreshold,
+        debtPriceInUsd: ethPriceInUsd,
       })
       expect(liquidationPrice3).toEqual('0.625')
     })
