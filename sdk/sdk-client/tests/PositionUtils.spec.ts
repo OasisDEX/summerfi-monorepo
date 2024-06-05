@@ -105,8 +105,8 @@ describe('PositionUtils', () => {
 
       const liquidationPrice = PositionUtils.getLiquidationPriceInUsd({
         position: {
-          collateralAmount: TokenAmount.createFrom({ amount: '2000', token: DAI } ),
-          debtAmount: TokenAmount.createFrom({amount: '1.5', token: WETH }),
+          collateralAmount: TokenAmount.createFrom({ amount: '2000', token: DAI }),
+          debtAmount: TokenAmount.createFrom({ amount: '1.5', token: WETH }),
         } as Position,
         liquidationThreshold,
         debtPriceInUsd: ethPriceInUsd,

@@ -1,6 +1,9 @@
 import { IPercentage, ITokenAmount, Percentage, type Position } from '@summerfi/sdk-common/common'
 import { BigNumber } from 'bignumber.js'
 
+// TODO: refactor BigNumbers to use the SDK's TokenAmount operations
+// TODO: refactor priceInUsd to use the SDK's Price class when FE have Position from the SDK
+
 export class PositionUtils {
   static getLTV({
     collateralTokenAmount,
@@ -34,7 +37,7 @@ export class PositionUtils {
     position: Position
     // TODO: it is not defined in Position yet, we should use Pool in the future
     liquidationThreshold: Percentage
-    debtPriceInUsd: string,
+    debtPriceInUsd: string
   }): string {
     // Determine the Collateral Value:
     const collateralAmount = new BigNumber(position.collateralAmount.amount)
