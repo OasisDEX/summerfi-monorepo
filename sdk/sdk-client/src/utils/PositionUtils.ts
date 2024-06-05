@@ -1,6 +1,9 @@
 import { IPercentage, ITokenAmount, Percentage, type Position } from '@summerfi/sdk-common/common'
 import { BigNumber } from 'bignumber.js'
 
+// TODO: refactor BigNumbers to use the SDK's TokenAmount operations
+// TODO: refactor priceInUsd to use the SDK's Price class when FE have Position from the SDK
+
 export class PositionUtils {
   static getLTV({
     collateralTokenAmount,
