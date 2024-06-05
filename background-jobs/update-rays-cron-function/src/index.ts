@@ -15,8 +15,7 @@ const LOCK_ID = 'update_points_lock'
 const LAST_RUN_ID = 'update_points_last_run'
 
 const FOURTEEN_DAYS_IN_MILLISECONDS = 14 * 24 * 60 * 60 * 1000
-const SIXTY_DAYS_IN_MILLISECONDS = 60 * 24 * 60 * 60
-const THIRTY_DAYS_IN_MILLISECONDS = 30 * 24 * 60 * 60 * 1000
+const ONE_WEEK_IN_MILLISECONDS = 7 * 24 * 60 * 60 * 1000
 
 enum UserMultiplier {
   PROTOCOL_BOOST = 'PROTOCOL_BOOST',
@@ -859,11 +858,33 @@ async function checkOpenedPositionEligibility(
  * @returns The multiplier value.
  */
 function getBecomeSummerUserMultiplier(positionCreated: number) {
+  const positionCreatedDate = positionCreated * 1000
+  const currentDate = Date.now()
+  const weeksSinceCreated = Math.floor(
+    (currentDate - positionCreatedDate) / ONE_WEEK_IN_MILLISECONDS,
+  )
+
   let multiplier = 1
-  if (positionCreated * 1000 > Date.now() - THIRTY_DAYS_IN_MILLISECONDS) {
+
+  if (weeksSinceCreated < 1) {
+    multiplier = 5
+  } else if (weeksSinceCreated < 2) {
+    multiplier = 4
+  } else if (weeksSinceCreated < 3) {
+    multiplier = 3.5
+  } else if (weeksSinceCreated < 4) {
     multiplier = 3
-  } else if (positionCreated * 1000 > Date.now() - SIXTY_DAYS_IN_MILLISECONDS) {
+  } else if (weeksSinceCreated < 5) {
+    multiplier = 2.5
+  } else if (weeksSinceCreated < 6) {
     multiplier = 2
+  } else if (weeksSinceCreated < 7) {
+    multiplier = 1.5
+  } else if (weeksSinceCreated < 8) {
+    multiplier = 1.25
+  } else {
+    multiplier = 1
   }
+
   return multiplier
 }
