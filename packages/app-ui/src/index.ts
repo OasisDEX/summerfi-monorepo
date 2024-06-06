@@ -14,6 +14,7 @@ export { Tooltip } from './components/molecules/Tooltip/Tooltip'
 export { LoadingSpinner } from './components/molecules/Loader/Loader'
 export { AutomationIcon } from './components/molecules/AutomationIcon/AutomationIcon'
 export { BannerCard } from './components/molecules/BannerCard/BannerCard'
+export { Dial } from './components/molecules/Dial/Dial'
 
 export { Footer } from './components/layout/Footer/Footer'
 
@@ -33,3 +34,5 @@ export {
   getTokens,
   getTokenGuarded,
 } from './tokens/helpers'
+
+export { icons } from './icons'
