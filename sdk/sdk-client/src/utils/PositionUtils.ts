@@ -30,31 +30,35 @@ export class PositionUtils {
   }
 
   /**
-   * Returns the liquidation price of a position in amount of collateral per amount of debt
+   * This code calculates the value of one collateral token expressed in debt tokens at which the loan-to-value (LTV) ratio will be at liquidationThreshold
    */
-  static calculateLiquidationPrice({
+  static getLiquidationPriceInDebtTokens({
     position,
     liquidationThreshold,
-    debtPriceInCollateral,
+    debtPriceInUsd,
   }: {
     position: Position
-    // TODO: it is not defined in Position yet, we should use Pool in the future
     liquidationThreshold: Percentage
-    debtPriceInCollateral: string
+    debtPriceInUsd: string
   }): string {
-    // Determine the Collateral Value:
     const collateralAmount = new BigNumber(position.collateralAmount.amount)
-    // Determine the Borrowed Value:
     const debtAmount = new BigNumber(position.debtAmount.amount)
     // If the debt value is 0, return 0.
     if (debtAmount.isZero()) {
       return '0'
     }
-    const debtValue = debtAmount.times(debtPriceInCollateral)
-    // (loanAmount * loanPrice) / (liquidationThreshold * collateralAmount)
-    const liquidationRatio = debtValue.div(
-      collateralAmount.times(liquidationThreshold.toProportion()),
-    )
-    return liquidationRatio.times(debtPriceInCollateral).toString()
+
+    const debtValueInUSD = new BigNumber(debtAmount).times(debtPriceInUsd)
+
+    // Determine the new collateral value in usd at the liquidationThreshold
+    const newCollateralValueInUSD = debtValueInUSD.div(liquidationThreshold.toProportion())
+
+    // Determine the new value of one collateral token at liquidationThreshold
+    const newCollateralPriceInUSD = newCollateralValueInUSD.dividedBy(collateralAmount)
+
+    // Convert the new value of one collateral token to debt tokens
+    const priceOfCollateralInDebtTokens = newCollateralPriceInUSD.dividedBy(debtPriceInUsd)
+
+    return priceOfCollateralInDebtTokens.toString()
   }
 }
