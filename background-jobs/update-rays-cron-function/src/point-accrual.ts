@@ -472,7 +472,7 @@ export class SummerPointsService {
     }
     const firstEvent = position.firstEvent[0].timestamp
     const lastEvent = endTimestamp
-    const startTime = Math.max(firstEvent, START_POINTS_TIMESTAMP)
+    const effectiveStartTime = Math.max(firstEvent, START_POINTS_TIMESTAMP)
 
     const howLongWasPositionOpenBeforePointsStart = START_POINTS_TIMESTAMP - firstEvent
     let additionalMultiplier = 1
@@ -486,13 +486,13 @@ export class SummerPointsService {
       additionalMultiplier = 1.01
     }
 
-    const timeOpenAfterPointsStart = lastEvent - startTime
+    const elapsedTime = lastEvent - effectiveStartTime
     let multiplier = 1
-    if (timeOpenAfterPointsStart > 180 * this.SECONDS_PER_DAY) {
+    if (elapsedTime > 180 * this.SECONDS_PER_DAY) {
       multiplier = 2
-    } else if (timeOpenAfterPointsStart > 90 * this.SECONDS_PER_DAY) {
+    } else if (elapsedTime > 90 * this.SECONDS_PER_DAY) {
       multiplier = 1.5
-    } else if (timeOpenAfterPointsStart > 30 * this.SECONDS_PER_DAY) {
+    } else if (elapsedTime > 30 * this.SECONDS_PER_DAY) {
       multiplier = 1.2
     }
     return multiplier * additionalMultiplier
