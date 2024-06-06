@@ -19,7 +19,8 @@
       "@summerfi/core-contracts": ["node_modules/@summerfi/core-contracts/src/index.ts"],
       "@summerfi/deployment-utils": ["node_modules/@summerfi/deployment-utils/src/index.ts"],
       "@summerfi/abis": ["../../packages/abis/src/index.ts"],
-      "@summerfi/sdk-server-common": ["../sdk-server-common/src/index.ts"]
+      "@summerfi/sdk-server-common": ["../sdk-server-common/src/index.ts"],
+      "@summerfi/tokens-service": ["../tokens-service/src/index.ts"]
     }
   },
   "include": ["tests/**/*.ts"],

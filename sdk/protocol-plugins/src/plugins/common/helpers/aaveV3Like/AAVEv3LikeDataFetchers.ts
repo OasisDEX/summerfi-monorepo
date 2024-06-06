@@ -1,35 +1,18 @@
 import { Token } from '@summerfi/sdk-common/common'
-import { IChainInfo } from '@summerfi/sdk-common'
+import { IAddress } from '@summerfi/sdk-common'
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { ChainContractsProvider, GenericAbiMap } from '../../../utils/ChainContractProvider'
 import { Abi } from 'viem'
 
-export async function fetchReservesTokens<
-  ContractNames extends string,
-  ContractsAbiMap extends GenericAbiMap<ContractNames>,
->(
+export async function fetchReservesTokens(
   ctx: IProtocolPluginContext,
-  chainInfo: IChainInfo,
-  chainContractsProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>,
+  dataProviderContractAbi: Abi,
+  dataProviderContractAddress: IAddress,
 ) {
-  const contractAbi = chainContractsProvider.getContractAbi('PoolDataProvider' as ContractNames)
-  if (!contractAbi) {
-    throw new Error('PoolDataProvider ABI not found')
-  }
-
-  const contractAddress = await ctx.addressBookManager.getAddressByName({
-    chainInfo,
-    name: 'PoolDataProvider',
-  })
-  if (!contractAddress) {
-    throw new Error(`PoolDataProvider address not found in address book for chain ${chainInfo}`)
-  }
-
   const [rawReservesTokenList] = await ctx.provider.multicall({
     contracts: [
       {
-        abi: contractAbi as Abi,
-        address: contractAddress.value,
+        abi: dataProviderContractAbi as Abi,
+        address: dataProviderContractAddress.value,
         functionName: 'getAllReservesTokens',
         args: [],
       },
@@ -39,31 +22,15 @@ export async function fetchReservesTokens<
 
   return rawReservesTokenList
 }
-export async function fetchEmodeCategoriesForReserves<
-  ContractNames extends string,
-  ContractsAbiMap extends GenericAbiMap<ContractNames>,
->(
+export async function fetchEmodeCategoriesForReserves(
   ctx: IProtocolPluginContext,
   tokensList: Token[],
-  chainInfo: IChainInfo,
-  chainContractsProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>,
+  dataProviderContractAbi: Abi,
+  dataProviderContractAddress: IAddress,
 ) {
-  const contractAbi = chainContractsProvider.getContractAbi('PoolDataProvider' as ContractNames)
-  if (!contractAbi) {
-    throw new Error('PoolDataProvider ABI not found')
-  }
-
-  const contractAddress = await ctx.addressBookManager.getAddressByName({
-    chainInfo,
-    name: 'PoolDataProvider',
-  })
-  if (!contractAddress) {
-    throw new Error(`PoolDataProvider address not found in address book for chain ${chainInfo}`)
-  }
-
   const contractCalls = tokensList.map((token) => ({
-    abi: contractAbi as Abi,
-    address: contractAddress.value,
+    abi: dataProviderContractAbi as Abi,
+    address: dataProviderContractAddress.value,
     functionName: 'getReserveEModeCategory' as const,
     args: [token.address.value],
   }))
@@ -73,31 +40,15 @@ export async function fetchEmodeCategoriesForReserves<
     allowFailure: false,
   })
 }
-export async function fetchAssetConfigurationData<
-  ContractNames extends string,
-  ContractsAbiMap extends GenericAbiMap<ContractNames>,
->(
+export async function fetchAssetConfigurationData(
   ctx: IProtocolPluginContext,
   tokensList: Token[],
-  chainInfo: IChainInfo,
-  chainContractsProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>,
+  dataProviderContractAbi: Abi,
+  dataProviderContractAddress: IAddress,
 ) {
-  const contractAbi = chainContractsProvider.getContractAbi('PoolDataProvider' as ContractNames)
-  if (!contractAbi) {
-    throw new Error('PoolDataProvider ABI not found')
-  }
-
-  const contractAddress = await ctx.addressBookManager.getAddressByName({
-    chainInfo,
-    name: 'PoolDataProvider',
-  })
-  if (!contractAddress) {
-    throw new Error(`PoolDataProvider address not found in address book for chain ${chainInfo}`)
-  }
-
   const contractCalls = tokensList.map((token) => ({
-    abi: contractAbi as Abi,
-    address: contractAddress.value,
+    abi: dataProviderContractAbi as Abi,
+    address: dataProviderContractAddress.value,
     functionName: 'getReserveConfigurationData' as const,
     args: [token.address.value],
   }))
@@ -108,31 +59,15 @@ export async function fetchAssetConfigurationData<
   })
 }
 
-export async function fetchReservesCap<
-  ContractNames extends string,
-  ContractsAbiMap extends GenericAbiMap<ContractNames>,
->(
+export async function fetchReservesCap(
   ctx: IProtocolPluginContext,
   tokensList: Token[],
-  chainInfo: IChainInfo,
-  chainContractsProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>,
+  dataProviderContractAbi: Abi,
+  dataProviderContractAddress: IAddress,
 ) {
-  const contractAbi = chainContractsProvider.getContractAbi('PoolDataProvider' as ContractNames)
-  if (!contractAbi) {
-    throw new Error('PoolDataProvider ABI not found')
-  }
-
-  const contractAddress = await ctx.addressBookManager.getAddressByName({
-    chainInfo,
-    name: 'PoolDataProvider',
-  })
-  if (!contractAddress) {
-    throw new Error(`PoolDataProvider address not found in address book for chain ${chainInfo}`)
-  }
-
   const contractCalls = tokensList.map((token) => ({
-    abi: contractAbi as Abi,
-    address: contractAddress.value,
+    abi: dataProviderContractAbi as Abi,
+    address: dataProviderContractAddress.value,
     functionName: 'getReserveCaps' as const,
     args: [token.address.value],
   }))
@@ -142,31 +77,15 @@ export async function fetchReservesCap<
     allowFailure: false,
   })
 }
-export async function fetchAssetReserveData<
-  ContractNames extends string,
-  ContractsAbiMap extends GenericAbiMap<ContractNames>,
->(
+export async function fetchAssetReserveData(
   ctx: IProtocolPluginContext,
   tokensList: Token[],
-  chainInfo: IChainInfo,
-  chainContractsProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>,
+  dataProviderContractAbi: Abi,
+  dataProviderContractAddress: IAddress,
 ) {
-  const contractAbi = chainContractsProvider.getContractAbi('PoolDataProvider' as ContractNames)
-  if (!contractAbi) {
-    throw new Error('PoolDataProvider ABI not found')
-  }
-
-  const contractAddress = await ctx.addressBookManager.getAddressByName({
-    chainInfo,
-    name: 'PoolDataProvider',
-  })
-  if (!contractAddress) {
-    throw new Error(`PoolDataProvider address not found in address book for chain ${chainInfo}`)
-  }
-
   const contractCalls = tokensList.map((token) => ({
-    abi: contractAbi as Abi,
-    address: contractAddress.value,
+    abi: dataProviderContractAbi as Abi,
+    address: dataProviderContractAddress.value,
     functionName: 'getReserveData' as const,
     args: [token.address.value],
   }))
@@ -177,32 +96,16 @@ export async function fetchAssetReserveData<
   })
 }
 
-export async function fetchAssetPrices<
-  ContractNames extends string,
-  ContractsAbiMap extends GenericAbiMap<ContractNames>,
->(
+export async function fetchAssetPrices(
   ctx: IProtocolPluginContext,
   tokensList: Token[],
-  chainInfo: IChainInfo,
-  chainContractsProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>,
+  dataProviderContractAbi: Abi,
+  dataProviderContractAddress: IAddress,
 ) {
-  const contractAbi = chainContractsProvider.getContractAbi('Oracle' as ContractNames)
-  if (!contractAbi) {
-    throw new Error('PoolDataProvider ABI not found')
-  }
-
-  const contractAddress = await ctx.addressBookManager.getAddressByName({
-    chainInfo,
-    name: 'Oracle',
-  })
-  if (!contractAddress) {
-    throw new Error(`PoolDataProvider address not found in address book for chain ${chainInfo}`)
-  }
-
   const contractCalls = [
     {
-      abi: contractAbi as Abi,
-      address: contractAddress.value,
+      abi: dataProviderContractAbi as Abi,
+      address: dataProviderContractAddress.value,
       functionName: 'getAssetsPrices',
       args: [tokensList.map((token) => token.address.value)],
     },

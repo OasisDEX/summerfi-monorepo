@@ -32,18 +32,20 @@ jest.setTimeout(300000)
 /** TEST CONFIG */
 const config = {
   SDKAPiUrl: 'https://72dytt1e93.execute-api.us-east-1.amazonaws.com/api/sdk',
-  TenderlyForkUrl: 'https://virtual.mainnet.rpc.tenderly.co/28f27b3b-bafb-4902-a1a0-53668b179117',
-  DPMAddress: '0xb2f1349068c1cb6a596a22a3531b8062778c9da4',
+  TenderlyForkUrl: 'https://virtual.mainnet.rpc.tenderly.co/7a1550d9-d58a-487a-b823-bf2dc0cf16aa',
+  DPMAddress: '0x2e0515d7A3eA0276F28c94C426c5d2D1d85FD4d5',
   walletAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
   source: {
     collateralTokenSymbol: CommonTokenSymbols.wstETH,
     collateralAmount: '0.0018',
     debtTokenSymbol: CommonTokenSymbols.USDC,
-    debtAmount: '2.2462',
+    debtAmount: '2.248',
+    emodeType: EmodeType.None,
   },
   target: {
-    collateralTokenSymbol: CommonTokenSymbols.USDC,
-    debtTokenSymbol: CommonTokenSymbols.USDT,
+    collateralTokenSymbol: CommonTokenSymbols.wstETH,
+    debtTokenSymbol: CommonTokenSymbols.RPL,
+    emodeType: EmodeType.None,
   },
   sendTransactionEnabled: false,
 }
@@ -111,7 +113,7 @@ describe.skip('Refinance AaveV3 -> AaveV3 | SDK', () => {
       protocol: aaveV3,
       collateralToken: sourceCollateralToken,
       debtToken: sourceDebtToken,
-      emodeType: EmodeType.None,
+      emodeType: config.source.emodeType,
     })
 
     const aaveV3Pool = await aaveV3.getLendingPool({
@@ -145,7 +147,7 @@ describe.skip('Refinance AaveV3 -> AaveV3 | SDK', () => {
       protocol: aaveV3,
       collateralToken: targetCollateralToken,
       debtToken: targetDebtToken,
-      emodeType: EmodeType.Stablecoins,
+      emodeType: config.target.emodeType,
     })
 
     const targetAaveV3Pool = await aaveV3.getLendingPool({
@@ -181,6 +183,8 @@ describe.skip('Refinance AaveV3 -> AaveV3 | SDK', () => {
 
     expect(refinanceSimulation.sourcePosition?.id).toEqual(aaveV3Position.id)
     expect(refinanceSimulation.targetPosition.pool.id).toEqual(targetAaveV3Pool.id)
+
+    console.log('Refinance simulation:', JSON.stringify(refinanceSimulation, null, 2))
 
     const refinanceOrder: Maybe<Order> = await user.newOrder({
       positionsManager,

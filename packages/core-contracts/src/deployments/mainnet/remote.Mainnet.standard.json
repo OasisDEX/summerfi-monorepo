@@ -794,13 +794,13 @@
       "address": "0x81FE72B5A8d1A857d176C3E7d5Bd2679A9B85763"
     },
     "Oracle": {
-      "address": "0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9"
+      "address": "0x54586bE62E3c3580375aE3723C145253060Ca0C2"
     },
     "AaveLendingPool": {
       "address": "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9"
     },
     "PoolDataProvider": {
-      "address": "0xFc21d6d146E6086B8359705C8b28512a983db0cb"
+      "address": "0x7B4EB56E7CD4b454BA8ff71E4518426369a138a3"
     },
     "AaveWethGateway": {
       "address": "0xcc9a0B7c43DC2a5F023Bb9b738E45B0Ef6B06E04"
@@ -810,6 +810,12 @@
     },
     "AaveL2Encoder": {
       "address": "0x0000000000000000000000000000000000000000"
+    },
+    "SparkDataProvider": {
+      "address": "0xFc21d6d146E6086B8359705C8b28512a983db0cb"
+    },
+    "SparkOracle": {
+      "address": "0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9"
     },
     "AjnaPoolInfo": {
       "address": "0x30c5eF2997d6a882DE52c4ec01B6D0a5e5B4fAAE"

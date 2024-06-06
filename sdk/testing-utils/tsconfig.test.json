@@ -12,7 +12,8 @@
       "@summerfi/protocol-plugins": ["node_modules/@summerfi/protocol-plugins/src/index.ts"],
       "@summerfi/protocol-plugins-common": [
         "node_modules/@summerfi/protocol-plugins-common/src/index.ts"
-      ]
+      ],
+      "@summerfi/tokens-service": ["node_modules/@summerfi/tokens-service/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts"],

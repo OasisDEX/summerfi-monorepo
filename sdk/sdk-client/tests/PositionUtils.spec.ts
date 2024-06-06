@@ -2,7 +2,7 @@ import { Percentage, TokenAmount, type Position } from '@summerfi/sdk-common/com
 
 import { PositionUtils } from '../src/utils/PositionUtils'
 import { WETH, DAI, WSTETH } from './TestUtils'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'bignumber.js'
 
 describe('PositionUtils', () => {
   const daiPriceInUsd = '1'
