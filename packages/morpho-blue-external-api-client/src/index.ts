@@ -101,10 +101,12 @@ const getVaultAllocations = async (
                   allocation: allocation.supplyAssets,
                 })
 
-                if (market.collateralAsset == null || market.loanAsset == null) {
-                  throw new Error(`Market ${market.id} has no collateral or loan asset`)
+                if (market.loanAsset == null) {
+                  throw new Error(`Market ${market.id} has no loan asset`)
                 }
-
+                if (market.collateralAsset == null) {
+                  return null
+                }
                 const resultMarket: MorphoMarket = {
                   marketId: market.uniqueKey as `0x${string}`,
                   liquidationLtv: Number(market.lltv) / 10 ** 18,
@@ -130,7 +132,13 @@ const getVaultAllocations = async (
       }
     })
     .map((vault): MetaMorphoAllocations => {
-      const totalAllocation = vault.allocations.reduce(
+      // TODO: we might want to handle the allocation without collateral token properly on frontend instead of filtering it out
+      const validAllocations = vault.allocations.filter((allocation) => allocation !== null) as {
+        market: MorphoMarket
+        supplyAssets: bigint
+      }[]
+
+      const totalAllocation = validAllocations.reduce(
         (acc, allocation) => acc + allocation.supplyAssets,
         0n,
       )
@@ -139,7 +147,7 @@ const getVaultAllocations = async (
 
       return {
         ...vault,
-        allocations: vault.allocations.map((allocation) => {
+        allocations: validAllocations.map((allocation) => {
           return {
             suppliedAssets: allocation.supplyAssets,
             market: allocation.market,
