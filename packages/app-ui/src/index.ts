@@ -13,6 +13,7 @@ export { ProtocolLabel } from './components/molecules/ProtocolLabel/ProtocolLabe
 export { Tooltip } from './components/molecules/Tooltip/Tooltip'
 export { LoadingSpinner } from './components/molecules/Loader/Loader'
 export { AutomationIcon } from './components/molecules/AutomationIcon/AutomationIcon'
+export { BannerCard } from './components/molecules/BannerCard/BannerCard'
 
 export { Footer } from './components/layout/Footer/Footer'
 
