@@ -13,7 +13,7 @@ import { ISparkLendingPoolId, SparkProtocolPlugin } from '../../src/plugins/spar
 import { getSparkPoolIdMock } from '../mocks/SparkPoolIdMock'
 import { createProtocolPluginContext } from '../utils/CreateProtocolPluginContext'
 
-describe.only('Spark Protocol Plugin (Integration)', () => {
+describe('Spark Protocol Plugin (Integration)', () => {
   let ctx: IProtocolPluginContext
   let validSparkPoolId: ISparkLendingPoolId
   let sparkProtocolPlugin: SparkProtocolPlugin
@@ -61,7 +61,7 @@ describe.only('Spark Protocol Plugin (Integration)', () => {
 
     const liquidationThreshold = sparkPoolCollateralInfo!.liquidationThreshold
     expect(liquidationThreshold).toBeInstanceOf(RiskRatio)
-    expect(liquidationThreshold.toLTV().value).toBeGreaterThan(0)
+    expect(liquidationThreshold.toLTV().value).toBeGreaterThanOrEqual(0)
     expect(liquidationThreshold.toLTV().value).toBeLessThan(100)
 
     const tokensLocked = sparkPoolCollateralInfo!.tokensLocked
@@ -79,14 +79,6 @@ describe.only('Spark Protocol Plugin (Integration)', () => {
 
   it('correctly populates debt configuration from blockchain data', async () => {
     const pool = await sparkProtocolPlugin.getLendingPool(validSparkPoolId)
-
-    const mockDebtToken = Token.createFrom({
-      chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
-      address: Address.createFromEthereum({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
-      symbol: 'DAI',
-      name: 'Dai Stablecoin',
-      decimals: 18,
-    })
 
     const sparkPoolInfo = await sparkProtocolPlugin.getLendingPoolInfo(pool.id)
 

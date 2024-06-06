@@ -1575,6 +1575,9 @@ importers:
       '@summerfi/tokens-common':
         specifier: workspace:*
         version: link:../tokens-common
+      '@summerfi/tokens-service':
+        specifier: workspace:^
+        version: link:../tokens-service
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*

@@ -5,7 +5,6 @@
     "outDir": "dist",
     "baseUrl": "."
   },
-  "references": [{ "path": "../order-planner-common" }],
   "include": ["src/**/*.ts", "tests/**/*.ts", "scripts/**/*.ts"],
   "exclude": ["node_modules"]
 }

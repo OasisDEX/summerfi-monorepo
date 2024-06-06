@@ -222,6 +222,12 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
       data: { totalVariableDebt, totalStableDebt, variableBorrowRate },
     } = asset
 
+    const assetDecimals = token.decimals
+    const assetFactor = new BigNumber(10).pow(assetDecimals)
+    const borrowCapWithDecimals = BigInt(
+      new BigNumber(borrowCap.toString()).multipliedBy(assetFactor).toFixed(0),
+    )
+
     try {
       const RESERVE_FACTOR_TO_PERCENTAGE_DIVISOR = 10000n
       const PRECISION_PRESERVING_OFFSET = 1000000n
@@ -231,6 +237,7 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
         Number(((variableBorrowRate * PRECISION_PRESERVING_OFFSET) / PRECISION_BI.RAY).toString()) /
         RATE_DIVISOR_TO_GET_PERCENTAGE
       const totalBorrowed = totalVariableDebt + totalStableDebt
+
       return DebtInfo.createFrom({
         token: quoteToken,
         // TODO: If we further restricted pools we could have token pair prices
@@ -251,11 +258,14 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
         }),
         debtCeiling: TokenAmount.createFrom({
           token: quoteToken,
-          amount: borrowCap === 0n ? UNCAPPED_SUPPLY : borrowCap.toString(),
+          amount: borrowCapWithDecimals === 0n ? UNCAPPED_SUPPLY : borrowCapWithDecimals.toString(),
         }),
         debtAvailable: TokenAmount.createFromBaseUnit({
           token: quoteToken,
-          amount: borrowCap === 0n ? UNCAPPED_SUPPLY : (borrowCap - totalBorrowed).toString(),
+          amount:
+            borrowCapWithDecimals === 0n
+              ? UNCAPPED_SUPPLY
+              : (borrowCapWithDecimals - totalBorrowed).toString(),
         }),
         dustLimit: TokenAmount.createFromBaseUnit({ token: quoteToken, amount: '0' }),
         originationFee: Percentage.createFrom({
