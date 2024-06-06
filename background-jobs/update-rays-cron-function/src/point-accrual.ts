@@ -285,7 +285,10 @@ export class SummerPointsService {
         vaultId: swap.position!.account.vaultId,
         protocol: swap.position!.protocol,
         marketId: swap.position!.marketId,
-        positionCreated: swap.position!.firstEvent[0].timestamp,
+        positionCreated:
+          swap.position!.firstEvent[0] && swap.position!.firstEvent[0].timestamp
+            ? swap.position!.firstEvent[0].timestamp
+            : START_POINTS_TIMESTAMP,
         user: user.id,
         points: {
           openPositionsPoints: 0,
@@ -479,19 +482,22 @@ export class SummerPointsService {
       additionalMultiplier = 1.15
     } else if (howLongWasPositionOpenBeforePointsStart > 30 * this.SECONDS_PER_DAY) {
       additionalMultiplier = 1.05
+    } else if (howLongWasPositionOpenBeforePointsStart > 0) {
+      additionalMultiplier = 1.01
     }
 
-    const timeOpen = lastEvent - startTime
-
-    if (timeOpen > 180 * this.SECONDS_PER_DAY) {
-      return 2 * additionalMultiplier
-    } else if (timeOpen > 90 * this.SECONDS_PER_DAY) {
-      return 1.5 * additionalMultiplier
-    } else if (timeOpen > 30 * this.SECONDS_PER_DAY) {
-      return 1.2 * additionalMultiplier
+    const timeOpenAfterPointsStart = lastEvent - startTime
+    let multiplier = 1
+    if (timeOpenAfterPointsStart > 180 * this.SECONDS_PER_DAY) {
+      multiplier = 2
+    } else if (timeOpenAfterPointsStart > 90 * this.SECONDS_PER_DAY) {
+      multiplier = 1.5
+    } else if (timeOpenAfterPointsStart > 30 * this.SECONDS_PER_DAY) {
+      multiplier = 1.2
     } else {
-      return 1 * additionalMultiplier
+      multiplier = 1
     }
+    return multiplier * additionalMultiplier
   }
 
   protectionKinds = ['stoploss', 'basicsell']
