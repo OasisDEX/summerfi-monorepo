@@ -474,7 +474,7 @@ export class SummerPointsService {
     const lastEvent = endTimestamp
     const startTime = Math.max(firstEvent, START_POINTS_TIMESTAMP)
 
-    const howLongWasPositionOpenBeforePointsStart = startTime - firstEvent
+    const howLongWasPositionOpenBeforePointsStart = START_POINTS_TIMESTAMP - firstEvent
     let additionalMultiplier = 1
     if (howLongWasPositionOpenBeforePointsStart > 180 * this.SECONDS_PER_DAY) {
       additionalMultiplier = 1.3
