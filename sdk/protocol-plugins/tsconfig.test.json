@@ -14,7 +14,8 @@
       "@summerfi/swap-common/*": ["node_modules/@summerfi/swap-common/src/*"],
       "@summerfi/oracle-common": ["../oracle-common/src/index.ts"],
       "@summerfi/abis": ["node_modules/@summerfi/abis/src/index.ts"],
-      "@summerfi/sdk-server-common": ["../sdk-server-common/src/index.ts"]
+      "@summerfi/sdk-server-common": ["../sdk-server-common/src/index.ts"],
+      "@summerfi/tokens-service": ["../tokens-service/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts"],

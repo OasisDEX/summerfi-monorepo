@@ -52,6 +52,8 @@ export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
     super.initialize({
       ...params,
       contractsAbiProvider,
+      dataProviderContractName: 'PoolDataProvider',
+      oracleContractName: 'Oracle',
     })
 
     if (

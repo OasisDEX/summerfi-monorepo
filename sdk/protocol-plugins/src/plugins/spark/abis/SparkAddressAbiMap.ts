@@ -7,8 +7,8 @@ import {
 } from './SparkABIS'
 
 export type SparkAbiMapType = GenericAbiMap<SparkContractNames> & {
-  Oracle: typeof SPARK_ORACLE_ABI,
-  PoolDataProvider: typeof SPARK_POOL_DATA_PROVIDER_ABI,
+  SparkOracle: typeof SPARK_ORACLE_ABI,
+  SparkDataProvider: typeof SPARK_POOL_DATA_PROVIDER_ABI,
   SparkLendingPool: typeof SPARK_LENDING_POOL_ABI,
 }
 
@@ -17,7 +17,7 @@ export type SparkAbiMapType = GenericAbiMap<SparkContractNames> & {
  * ABIs for the different Spark contracts
  */
 export const SparkAbiMap: SparkAbiMapType = {
-  Oracle: SPARK_ORACLE_ABI,
-  PoolDataProvider: SPARK_POOL_DATA_PROVIDER_ABI,
+  SparkOracle: SPARK_ORACLE_ABI,
+  SparkDataProvider: SPARK_POOL_DATA_PROVIDER_ABI,
   SparkLendingPool: SPARK_LENDING_POOL_ABI,
 } as const

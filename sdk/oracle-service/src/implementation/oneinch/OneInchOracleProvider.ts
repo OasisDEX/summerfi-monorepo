@@ -54,12 +54,13 @@ export class OneInchOracleProvider
   /** @see IOracleProvider.getSpotPrice */
   async getSpotPrice(params: {
     baseToken: IToken
-    quoteDenomination?: Denomination
+    quoteToken?: Denomination
   }): Promise<SpotPriceInfo> {
     const authHeader = this._getOneInchSpotAuthHeader()
-    if (params.quoteDenomination && isToken(params.quoteDenomination)) {
+
+    if (params.quoteToken && isToken(params.quoteToken)) {
       const baseTokenAddress = params.baseToken.address
-      const quoteTokenAddress = params.quoteDenomination.address
+      const quoteTokenAddress = params.quoteToken.address
       const quoteCurrencySymbol = FiatCurrency.USD
 
       const spotUrl = this._formatOneInchSpotUrl({
@@ -81,7 +82,7 @@ export class OneInchOracleProvider
 
       const responseData = (await response.json()) as OneInchSpotResponse
       const baseToken = params.baseToken
-      const quoteToken = params.quoteDenomination
+      const quoteToken = params.quoteToken
       const prices = Object.entries(responseData).map(([address, price]) => {
         const isBaseToken = baseToken.address.equals(
           Address.createFromEthereum({ value: address as AddressValue }),
@@ -117,7 +118,7 @@ export class OneInchOracleProvider
         price: resultingPrice,
       }
     } else {
-      const quoteCurrency = params.quoteDenomination ?? FiatCurrency.USD
+      const quoteCurrency = params.quoteToken ?? FiatCurrency.USD
       const baseToken = params.baseToken
 
       const spotUrl = this._formatOneInchSpotUrl({

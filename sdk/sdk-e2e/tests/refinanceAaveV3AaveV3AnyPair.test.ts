@@ -1,4 +1,4 @@
-import { ProtocolClient, makeSDK, type Chain, type User } from '@summerfi/sdk-client'
+import { makeSDK, type Chain, type User } from '@summerfi/sdk-client'
 import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
 import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 import {
@@ -15,12 +15,6 @@ import {
   SimulationType,
 } from '@summerfi/sdk-common'
 import { PositionsManager, Order, RefinanceParameters } from '@summerfi/sdk-common/orders'
-import {
-  SparkLendingPoolId,
-  isSparkLendingPoolId,
-  isSparkProtocol,
-} from '@summerfi/protocol-plugins/plugins/spark'
-
 import assert from 'assert'
 import { TransactionUtils } from './utils/TransactionUtils'
 import { Hex } from 'viem'
@@ -29,6 +23,7 @@ import {
   AaveV3Position,
   AaveV3PositionId,
   isAaveV3LendingPool,
+  isAaveV3LendingPoolId,
   isAaveV3Protocol,
 } from '@summerfi/protocol-plugins'
 
@@ -37,24 +32,26 @@ jest.setTimeout(300000)
 /** TEST CONFIG */
 const config = {
   SDKAPiUrl: 'https://72dytt1e93.execute-api.us-east-1.amazonaws.com/api/sdk',
-  TenderlyForkUrl: 'https://virtual.mainnet.rpc.tenderly.co/28f27b3b-bafb-4902-a1a0-53668b179117',
-  DPMAddress: '0xb2f1349068c1cb6a596a22a3531b8062778c9da4',
+  TenderlyForkUrl: 'https://virtual.mainnet.rpc.tenderly.co/7a1550d9-d58a-487a-b823-bf2dc0cf16aa',
+  DPMAddress: '0x2e0515d7A3eA0276F28c94C426c5d2D1d85FD4d5',
   walletAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
   source: {
     collateralTokenSymbol: CommonTokenSymbols.wstETH,
-    collateralAmount: '10',
+    collateralAmount: '0.0018',
     debtTokenSymbol: CommonTokenSymbols.USDC,
-    debtAmount: '0',
+    debtAmount: '2.248',
+    emodeType: EmodeType.None,
   },
   target: {
-    collateralTokenSymbol: CommonTokenSymbols.WETH,
-    debtTokenSymbol: CommonTokenSymbols.DAI,
+    collateralTokenSymbol: CommonTokenSymbols.wstETH,
+    debtTokenSymbol: CommonTokenSymbols.RPL,
+    emodeType: EmodeType.None,
   },
-  sendTransactionEnabled: true,
+  sendTransactionEnabled: false,
 }
 
-describe.skip('Refinance AaveV3 Spark | SDK', () => {
-  it('should allow refinance AaveV3 -> Spark with any pair', async () => {
+describe.skip('Refinance AaveV3 -> AaveV3 | SDK', () => {
+  it('should allow refinance AaveV3 -> AaveV3 with different pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: config.SDKAPiUrl })
 
@@ -116,7 +113,7 @@ describe.skip('Refinance AaveV3 Spark | SDK', () => {
       protocol: aaveV3,
       collateralToken: sourceCollateralToken,
       debtToken: sourceDebtToken,
-      emodeType: EmodeType.None,
+      emodeType: config.source.emodeType,
     })
 
     const aaveV3Pool = await aaveV3.getLendingPool({
@@ -146,45 +143,36 @@ describe.skip('Refinance AaveV3 Spark | SDK', () => {
     })
 
     // Target protocol
-    const spark: Maybe<ProtocolClient> = await chain.protocols.getProtocol({
-      name: ProtocolName.Spark,
-    })
-    assert(spark, 'Spark not found')
-
-    if (!isSparkProtocol(spark)) {
-      assert(false, 'Protocol type is not Spark')
-    }
-
-    const poolId = SparkLendingPoolId.createFrom({
-      protocol: spark,
+    const targetAaveV3PoolId = AaveV3LendingPoolId.createFrom({
+      protocol: aaveV3,
       collateralToken: targetCollateralToken,
       debtToken: targetDebtToken,
-      emodeType: EmodeType.None,
+      emodeType: config.target.emodeType,
     })
 
-    const sparkPool = await spark.getLendingPool({
-      poolId,
+    const targetAaveV3Pool = await aaveV3.getLendingPool({
+      poolId: targetAaveV3PoolId,
     })
 
-    assert(sparkPool, 'Pool not found')
+    assert(targetAaveV3Pool, 'Pool not found')
 
-    if (!isSparkLendingPoolId(sparkPool.id)) {
-      assert(false, 'Pool ID is not a Spark one')
+    if (!isAaveV3LendingPoolId(targetAaveV3Pool.id)) {
+      assert(false, 'Pool ID is not a AaveV3 one')
     }
 
-    if (!isLendingPool(sparkPool)) {
-      assert(false, 'Spark pool type is not lending')
+    if (!isLendingPool(targetAaveV3Pool)) {
+      assert(false, 'AaveV3 target pool type is not lending')
     }
 
-    const sparkPoolInfo = await spark.getLendingPoolInfo({
-      poolId,
+    const targetAaveV3PoolInfo = await aaveV3.getLendingPoolInfo({
+      poolId: targetAaveV3PoolId,
     })
 
-    assert(sparkPoolInfo, 'Pool info not found')
+    assert(targetAaveV3PoolInfo, 'Pool info not found')
 
     const refinanceParameters = RefinanceParameters.createFrom({
       sourcePosition: aaveV3Position,
-      targetPool: sparkPool,
+      targetPool: targetAaveV3Pool,
       slippage: Percentage.createFrom({ value: 0.2 }),
     })
 
@@ -194,7 +182,9 @@ describe.skip('Refinance AaveV3 Spark | SDK', () => {
     expect(refinanceSimulation).toBeDefined()
 
     expect(refinanceSimulation.sourcePosition?.id).toEqual(aaveV3Position.id)
-    expect(refinanceSimulation.targetPosition.pool.id).toEqual(sparkPool.id)
+    expect(refinanceSimulation.targetPosition.pool.id).toEqual(targetAaveV3Pool.id)
+
+    console.log('Refinance simulation:', JSON.stringify(refinanceSimulation, null, 2))
 
     const refinanceOrder: Maybe<Order> = await user.newOrder({
       positionsManager,

@@ -2,7 +2,7 @@ import { SparkConfig } from '@summerfi/deployment-types'
 
 export const SparkConfiguration: SparkConfig = {
   dependencies: {
-    Oracle: {
+    SparkOracle: {
       name: 'Oracle',
       address: '0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9',
     },
@@ -11,7 +11,7 @@ export const SparkConfiguration: SparkConfig = {
       address: '0xC13e21B648A5Ee794902342038FF3aDAB66BE987',
       addToRegistry: true,
     },
-    PoolDataProvider: {
+    SparkDataProvider: {
       name: 'PoolDataProvider',
       address: '0xFc21d6d146E6086B8359705C8b28512a983db0cb',
     },

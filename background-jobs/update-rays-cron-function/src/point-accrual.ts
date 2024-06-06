@@ -213,7 +213,10 @@ export class SummerPointsService {
           positionId: position.id,
           protocol: position.protocol,
           marketId: position.marketId,
-          positionCreated: position.firstEvent[0].timestamp,
+          positionCreated:
+            position.firstEvent[0] && position.firstEvent[0].timestamp
+              ? position.firstEvent[0].timestamp
+              : START_POINTS_TIMESTAMP,
           user: user.id,
           points: {
             openPositionsPoints: totalMultiplier * openPositionsPoints,

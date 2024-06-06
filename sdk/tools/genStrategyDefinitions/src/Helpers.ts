@@ -3,6 +3,7 @@ import { ProtocolPluginsRecord } from '@summerfi/protocol-plugins'
 import { ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { SimulationStrategy, StrategyStep } from '@summerfi/sdk-common/simulation'
 import {
+  DebugDefinitions,
   OperationDefinition,
   OperationDefinitions,
   StrategyDefinitions,
@@ -76,6 +77,33 @@ export function generateOperationDefinitions(
   })
 }
 
+export function generateDebugDefinitions(
+  strategyName: string,
+  strategyDefinitions: StrategyDefinitions,
+): DebugDefinitions {
+  return strategyDefinitions.map((strategy) => {
+    const paybackAction = strategy.find((action) => {
+      return action.name.includes('Payback')
+    })
+
+    const depositAction = strategy.find((action) => {
+      return action.name.includes('Deposit')
+    })
+
+    if (!paybackAction || !depositAction) {
+      throw new Error('Cannot find payback or deposit action')
+    }
+
+    const fromProtocol = paybackAction.name.split('Payback')[0]
+    const toProtocol = depositAction.name.split('Deposit')[0]
+
+    return {
+      operationName: `${strategyName}${fromProtocol}${toProtocol}`,
+      operation: strategy,
+    }
+  })
+}
+
 export function processStrategies(strategyConfigs: SimulationStrategy[]): StrategyDefinitions {
   const strategyDefinitions = strategyConfigs.reduce((acc, strategy) => {
     acc.push(...processStrategy(strategy))
@@ -136,6 +164,7 @@ export function processAction(
     [
       {
         name: action.config.name,
+        versionedName: action.getVersionedName(),
         hash: action.getActionHash(),
         optional:
           DISABLE_OPTIONALS || stepConfig.optional || actionConfig.isOptionalTags !== undefined,

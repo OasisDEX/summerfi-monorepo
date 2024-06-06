@@ -69,13 +69,6 @@ const getVaultAllocations = async (
     return []
   }
 
-  const markets = result.markets.items
-
-  if (markets == null) {
-    logger?.warn('No markets found for the given vaults')
-    return []
-  }
-
   return vaults
     .map((vault) => {
       return {
@@ -99,10 +92,7 @@ const getVaultAllocations = async (
           ? vault.state.allocation
               .filter((allocation) => allocation.supplyAssets > 0)
               .map((allocation) => {
-                const market = markets.find((m) => m.id === allocation.market.id)
-                if (market == null) {
-                  throw new Error(`No market found for allocation ${allocation.id}`)
-                }
+                const market = allocation.market
 
                 logger?.debug('Found allocation', {
                   market: market.uniqueKey,

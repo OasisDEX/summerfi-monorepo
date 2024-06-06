@@ -13,7 +13,8 @@
         "./node_modules/@summerfi/protocol-plugins-common/src/index.ts"
       ],
       "@summerfi/testing-utils": ["./node_modules/@summerfi/testing-utils/src/index.ts"],
-      "@summerfi/sdk-server-common": ["../sdk-server-common/src/index.ts"]
+      "@summerfi/sdk-server-common": ["../sdk-server-common/src/index.ts"],
+      "@summerfi/tokens-service": ["../tokens-service/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts"],

@@ -166,7 +166,7 @@ export class Price implements IPrice {
 
   /** @see IPrice.toString */
   toString(): string {
-    return `${this.value} ${this._baseSymbol}/${this._quoteSymbol}`
+    return `${this.value} ${this._quoteSymbol}/${this._baseSymbol}`
   }
 
   /** PRIVATE */

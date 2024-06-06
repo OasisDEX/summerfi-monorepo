@@ -17,9 +17,10 @@ import {
   fetchAssetPrices,
   fetchReservesTokens,
 } from './AAVEv3LikeDataFetchers'
-import { ChainFamilyMap, IChainInfo } from '@summerfi/sdk-common'
+import { ChainFamilyMap, IAddress, IChainInfo } from '@summerfi/sdk-common'
 import { ChainContractsProvider, GenericAbiMap } from '../../../utils/ChainContractProvider'
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
+import { Abi } from 'viem'
 
 interface QueuedOperation<T> {
   operation: () => Promise<T>
@@ -34,43 +35,98 @@ export class AaveV3LikeProtocolDataBuilder<
   private operations: QueuedOperation<void>[] = []
   private tokensUsedAsReserves: Token[] | undefined
   private reservesAssetsList: Array<WithToken<AssetListItemType>> = []
+  private dataProviderContractAbi: Abi = []
+  private dataProviderContractAddress: IAddress = Address.ZeroAddressEthereum
+  private oracleContractAbi: Abi = []
+  private oracleContractAddress: IAddress = Address.ZeroAddressEthereum
+
   private readonly protocolName: AllowedProtocolNames
   private readonly chainInfo: IChainInfo
   private readonly chainContractsProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>
+  private readonly dataProviderContractName: ContractNames
+  private readonly oracleContractName: ContractNames
 
   constructor(
     ctx: IProtocolPluginContext,
     protocolName: AllowedProtocolNames,
     chainInfo: IChainInfo,
     chainContractsProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>,
+    dataProviderContractName: ContractNames,
+    oracleContractName: ContractNames,
   ) {
     this.context = ctx
     this.protocolName = protocolName
     this.chainInfo = chainInfo
     this.chainContractsProvider = chainContractsProvider
+    this.dataProviderContractName = dataProviderContractName
+    this.oracleContractName = oracleContractName
   }
 
   async init(): Promise<
     AaveV3LikeProtocolDataBuilder<WithToken<AssetListItemType>, ContractNames, ContractsAbiMap>
   > {
+    // Data provider
+    const dataProviderContractAbi = this.chainContractsProvider.getContractAbi(
+      this.dataProviderContractName,
+    )
+    if (!dataProviderContractAbi) {
+      throw new Error(`${this.dataProviderContractName} ABI not found`)
+    }
+    this.dataProviderContractAbi = dataProviderContractAbi
+
+    const dataProviderContractAddress = await this.context.addressBookManager.getAddressByName({
+      chainInfo: this.chainInfo,
+      name: this.dataProviderContractName,
+    })
+    if (!dataProviderContractAddress) {
+      throw new Error(
+        `${this.dataProviderContractName} address not found in address book for chain ${this.chainInfo}`,
+      )
+    }
+    this.dataProviderContractAddress = dataProviderContractAddress
+
+    // Oracle
+    const oracleContractAbi = this.chainContractsProvider.getContractAbi(this.oracleContractName)
+    if (!oracleContractAbi) {
+      throw new Error(`${this.oracleContractName} ABI not found`)
+    }
+    this.oracleContractAbi = oracleContractAbi
+
+    const oracleContractAddress = await this.context.addressBookManager.getAddressByName({
+      chainInfo: this.chainInfo,
+      name: this.oracleContractName,
+    })
+    if (!oracleContractAddress) {
+      throw new Error(
+        `${this.oracleContractName} address not found in address book for chain ${this.chainInfo}`,
+      )
+    }
+    this.oracleContractAddress = oracleContractAddress
+
     const rawTokens = await fetchReservesTokens(
       this.context,
-      this.chainInfo,
-      this.chainContractsProvider,
+      this.dataProviderContractAbi,
+      this.dataProviderContractAddress,
     )
     this._validateReservesTokens(rawTokens)
 
-    const tokensUsedAsReserves = await Promise.all(
+    const tokensUsedAsReservesWithUndefined = await Promise.all(
       rawTokens.map(async (reservesToken) => {
         const token = await this.context.tokensManager.getTokenByAddress({
           chainInfo: ChainFamilyMap.Ethereum.Mainnet,
           address: Address.createFromEthereum({ value: reservesToken.tokenAddress }),
         })
         if (!token) {
-          throw new Error(`Token not found for address: ${reservesToken.tokenAddress}`)
+          console.error(
+            `Token not found for address ${reservesToken.tokenAddress} while processing AaveLike protocol data`,
+          )
         }
         return token
       }),
+    )
+
+    const tokensUsedAsReserves = tokensUsedAsReservesWithUndefined.filter(
+      (token): token is Token => token !== undefined,
     )
 
     return Object.assign(
@@ -78,7 +134,14 @@ export class AaveV3LikeProtocolDataBuilder<
         WithToken<AssetListItemType>,
         ContractNames,
         ContractsAbiMap
-      >(this.context, this.protocolName, this.chainInfo, this.chainContractsProvider),
+      >(
+        this.context,
+        this.protocolName,
+        this.chainInfo,
+        this.chainContractsProvider,
+        this.dataProviderContractName,
+        this.oracleContractName,
+      ),
       this,
       {
         tokensUsedAsReserves,
@@ -107,8 +170,8 @@ export class AaveV3LikeProtocolDataBuilder<
         const reservesCapsPerAsset = await fetchReservesCap(
           this.context,
           this.tokensUsedAsReserves!,
-          this.chainInfo,
-          this.chainContractsProvider,
+          this.dataProviderContractAbi,
+          this.dataProviderContractAddress,
         )
         this._assertMatchingArrayLengths(reservesCapsPerAsset, this.reservesAssetsList)
         const nextReservesList = []
@@ -146,8 +209,8 @@ export class AaveV3LikeProtocolDataBuilder<
         const reservesConfigDataPerAsset = await fetchAssetConfigurationData(
           this.context,
           this.tokensUsedAsReserves,
-          this.chainInfo,
-          this.chainContractsProvider,
+          this.dataProviderContractAbi,
+          this.dataProviderContractAddress,
         )
         this._assertMatchingArrayLengths(reservesConfigDataPerAsset, this.reservesAssetsList)
         const nextReservesList = []
@@ -214,8 +277,8 @@ export class AaveV3LikeProtocolDataBuilder<
         const reservesDataPerAsset = await fetchAssetReserveData(
           this.context,
           this.tokensUsedAsReserves,
-          this.chainInfo,
-          this.chainContractsProvider,
+          this.dataProviderContractAbi,
+          this.dataProviderContractAddress,
         )
         this._assertMatchingArrayLengths(reservesDataPerAsset, this.reservesAssetsList)
         const nextReservesList = []
@@ -289,8 +352,8 @@ export class AaveV3LikeProtocolDataBuilder<
         const emodeCategoryPerAsset = await fetchEmodeCategoriesForReserves(
           this.context,
           this.tokensUsedAsReserves,
-          this.chainInfo,
-          this.chainContractsProvider,
+          this.dataProviderContractAbi,
+          this.dataProviderContractAddress,
         )
         this._assertMatchingArrayLengths(emodeCategoryPerAsset, this.reservesAssetsList)
         const nextReservesList = []
@@ -324,8 +387,8 @@ export class AaveV3LikeProtocolDataBuilder<
         const [assetPrices] = await fetchAssetPrices(
           this.context,
           this.tokensUsedAsReserves,
-          this.chainInfo,
-          this.chainContractsProvider,
+          this.oracleContractAbi,
+          this.oracleContractAddress,
         )
         this._assertMatchingArrayLengths(assetPrices as unknown[], this.reservesAssetsList)
         const nextReservesList = []

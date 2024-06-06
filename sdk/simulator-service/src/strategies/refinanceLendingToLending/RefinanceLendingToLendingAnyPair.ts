@@ -44,8 +44,9 @@ export async function refinanceLendingToLending(
   const simulator = Simulator.create(refinanceLendingToLendingAnyPairStrategy)
 
   const isCollateralSwapSkipped = targetPool.collateralToken.equals(sourcePool.collateralToken)
-  const isDebtSwapSkipped = targetPool.debtToken.equals(sourcePool.debtToken)
   const isDebtAmountZero = position.debtAmount.toBaseUnit() === '0'
+  const isDebtTokenSame = targetPool.debtToken.equals(sourcePool.debtToken)
+  const isDebtSwapSkipped = isDebtTokenSame || isDebtAmountZero
 
   const maxDebtAmount = TokenAmount.createFrom({
     token: position.debtAmount.token,
@@ -112,8 +113,8 @@ export async function refinanceLendingToLending(
         depositAmount: isCollateralSwapSkipped
           ? position.collateralAmount
           : ctx.getReference(['SwapCollateralFromSourcePosition', 'received']),
-        borrowAmount: isDebtSwapSkipped
-          ? position.debtAmount
+        borrowAmount: isDebtTokenSame
+          ? flashloanAmount
           : await estimateSwapFromAmount({
               receiveAtLeast: flashloanAmount,
               fromToken: targetPool.debtToken,
@@ -172,7 +173,7 @@ export async function refinanceLendingToLending(
         },
       }),
       {
-        skip: isDebtAmountZero || isDebtSwapSkipped,
+        skip: isDebtSwapSkipped,
         type: SimulationSteps.ReturnFunds,
       },
     )

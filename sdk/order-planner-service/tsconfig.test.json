@@ -17,7 +17,8 @@
       "@summerfi/testing-utils": ["node_modules/@summerfi/testing-utils/src/index.ts"],
       "@summerfi/oracle-common": ["../oracle-common/src/index.ts"],
       "@summerfi/tokens-common": ["../tokens-common/src/index.ts"],
-      "@summerfi/sdk-server-common": ["../sdk-server-common/src/index.ts"]
+      "@summerfi/sdk-server-common": ["../sdk-server-common/src/index.ts"],
+      "@summerfi/tokens-service": ["../tokens-service/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts"],

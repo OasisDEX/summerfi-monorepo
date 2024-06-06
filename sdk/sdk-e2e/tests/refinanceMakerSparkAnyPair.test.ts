@@ -1,6 +1,5 @@
 import {
   Percentage,
-  Token,
   TokenAmount,
   Address,
   type Maybe,
@@ -10,14 +9,19 @@ import {
 
 import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
 import { ProtocolClient, makeSDK, type Chain, type User } from '@summerfi/sdk-client'
-import { PositionsManager, Order, RefinanceParameters } from '@summerfi/sdk-common/orders'
+import {
+  PositionsManager,
+  Order,
+  RefinanceParameters,
+  ExternalPositionType,
+} from '@summerfi/sdk-common/orders'
 import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { TransactionUtils } from './utils/TransactionUtils'
 
 import { Hex } from 'viem'
 import assert from 'assert'
 import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
-import { AddressValue, CommonTokenSymbols } from '@summerfi/sdk-common'
+import { AddressValue, CommonTokenSymbols, IToken } from '@summerfi/sdk-common'
 import {
   SparkLendingPoolId,
   isSparkLendingPoolId,
@@ -36,17 +40,27 @@ jest.setTimeout(300000)
 
 /** TEST CONFIG */
 const config = {
-  SDKAPiUrl: 'https://zmjmtfsocb.execute-api.us-east-1.amazonaws.com/api/sdk',
-  TenderlyForkUrl: 'https://virtual.mainnet.rpc.tenderly.co/5eea57de-3dc2-4cae-b7ed-24b16b0cbde0',
+  SDKAPiUrl: 'https://72dytt1e93.execute-api.us-east-1.amazonaws.com/api/sdk',
+  TenderlyForkUrl: 'https://virtual.mainnet.rpc.tenderly.co/c5113732-6db6-400d-ad7c-8706e0857239',
   makerVaultId: '31722',
-  DPMAddress: '0x2e0515d7A3eA0276F28c94C426c5d2D1d85FD4d5',
+  DPMAddress: '0x7126E8E9C26832B441a560f4283e09f9c51AB605',
   walletAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
-  collateralAmount: '2.5',
-  debtAmount: '3501.0',
-  sendTransaction: true,
+  source: {
+    collateralTokenSymbol: CommonTokenSymbols.WETH,
+    collateralAmount: '13.49',
+    debtTokenSymbol: CommonTokenSymbols.DAI,
+    debtAmount: '13329.47',
+    ilkType: ILKType.ETH_C,
+  },
+  target: {
+    collateralTokenSymbol: CommonTokenSymbols.WBTC,
+    debtTokenSymbol: CommonTokenSymbols.DAI,
+    emodeType: EmodeType.None,
+  },
+  sendTransaction: false,
 }
 
-describe.skip('Refinance Maker Spark | SDK', () => {
+describe.skip('Refinance Maker -> Spark | SDK', () => {
   it('should allow refinance Maker -> Spark with same pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: config.SDKAPiUrl })
@@ -78,36 +92,27 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     })
 
     // Tokens
-    const WETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({
-      symbol: CommonTokenSymbols.WETH,
+    const sourceDebtToken: Maybe<IToken> = await chain.tokens.getTokenBySymbol({
+      symbol: config.source.debtTokenSymbol,
     })
-    assert(WETH, 'WETH not found')
+    assert(sourceDebtToken, `${config.source.debtTokenSymbol} not found`)
 
-    const DAI: Maybe<Token> = await chain.tokens.getTokenBySymbol({
-      symbol: CommonTokenSymbols.DAI,
+    const sourceCollateralToken: Maybe<IToken> = await chain.tokens.getTokenBySymbol({
+      symbol: config.source.collateralTokenSymbol,
     })
-    assert(DAI, 'DAI not found')
+    assert(sourceCollateralToken, `${config.source.collateralTokenSymbol} not found`)
 
-    const USDC: Maybe<Token> = await chain.tokens.getTokenBySymbol({
-      symbol: CommonTokenSymbols.USDC,
+    const targetDebtToken: Maybe<IToken> = await chain.tokens.getTokenBySymbol({
+      symbol: config.target.debtTokenSymbol,
     })
-    assert(USDC, 'USDC not found')
+    assert(targetDebtToken, `${config.target.debtTokenSymbol} not found`)
 
-    const WBTC: Maybe<Token> = await chain.tokens.getTokenBySymbol({
-      symbol: CommonTokenSymbols.WBTC,
+    const targetCollateralToken: Maybe<IToken> = await chain.tokens.getTokenBySymbol({
+      symbol: config.target.collateralTokenSymbol,
     })
-    assert(WBTC, 'WBTC not found')
+    assert(targetCollateralToken, `${config.target.collateralTokenSymbol} not found`)
 
-    const WSTETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({
-      symbol: CommonTokenSymbols.wstETH,
-    })
-    assert(WSTETH, 'WSTETH not found')
-
-    const SDAI: Maybe<Token> = await chain.tokens.getTokenBySymbol({
-      symbol: CommonTokenSymbols.sDAI,
-    })
-    assert(SDAI, 'WSTETH not found')
-
+    // Source position
     const maker = await chain.protocols.getProtocol({ name: ProtocolName.Maker })
     assert(maker, 'Maker protocol not found')
 
@@ -117,9 +122,9 @@ describe.skip('Refinance Maker Spark | SDK', () => {
 
     const makerPoolId = MakerLendingPoolId.createFrom({
       protocol: maker,
-      debtToken: DAI,
-      collateralToken: WETH,
-      ilkType: ILKType.ETH_C,
+      debtToken: sourceDebtToken,
+      collateralToken: sourceCollateralToken,
+      ilkType: config.source.ilkType,
     })
 
     const makerPool = await maker.getLendingPool({
@@ -136,12 +141,12 @@ describe.skip('Refinance Maker Spark | SDK', () => {
       type: PositionType.Multiply,
       id: MakerPositionId.createFrom({ id: config.makerVaultId, vaultId: config.makerVaultId }),
       debtAmount: TokenAmount.createFrom({
-        token: DAI,
-        amount: config.debtAmount,
+        token: sourceDebtToken,
+        amount: config.source.debtAmount,
       }),
       collateralAmount: TokenAmount.createFrom({
-        token: WETH,
-        amount: config.collateralAmount,
+        token: sourceCollateralToken,
+        amount: config.source.collateralAmount,
       }),
       pool: makerPool,
     })
@@ -156,15 +161,15 @@ describe.skip('Refinance Maker Spark | SDK', () => {
       assert(false, 'Protocol type is not Spark')
     }
 
-    const poolId = SparkLendingPoolId.createFrom({
+    const targetPoolId = SparkLendingPoolId.createFrom({
       protocol: spark,
-      collateralToken: WETH,
-      debtToken: DAI,
-      emodeType: EmodeType.None,
+      collateralToken: targetCollateralToken,
+      debtToken: targetDebtToken,
+      emodeType: config.target.emodeType,
     })
 
     const sparkPool = await spark.getLendingPool({
-      poolId,
+      poolId: targetPoolId,
     })
 
     assert(sparkPool, 'Pool not found')
@@ -177,6 +182,25 @@ describe.skip('Refinance Maker Spark | SDK', () => {
       assert(false, 'Spark pool type is not lending')
     }
 
+    //
+    // IMPORT SIMULATION
+    //
+    const importSimulation: ISimulation<SimulationType.ImportPosition> =
+      await sdk.simulator.importing.simulateImportPosition({
+        externalPosition: {
+          externalId: {
+            address: Address.createFromEthereum({
+              value: '0x517775d01FA1D41c8906848e88831b6dA49AB8E7',
+            }),
+            type: ExternalPositionType.DS_PROXY,
+          },
+          position: makerPosition,
+        },
+      })
+
+    //
+    // REFINANCE SIMULATION
+    //
     const refinanceParameters = RefinanceParameters.createFrom({
       sourcePosition: makerPosition,
       targetPool: sparkPool,
@@ -191,6 +215,20 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     expect(refinanceSimulation.sourcePosition?.id).toEqual(makerPosition.id)
     expect(refinanceSimulation.targetPosition.pool.id).toEqual(sparkPool.id)
 
+    console.log('Refinance Simulation:', JSON.stringify(refinanceSimulation, null, 2))
+    //
+    // IMPORT ORDER
+    //
+    const importOrder: Maybe<Order> = await user.newOrder({
+      positionsManager,
+      simulation: importSimulation,
+    })
+
+    assert(importOrder, 'Order not found')
+
+    //
+    // REFINANCE ORDER
+    //
     const refinanceOrder: Maybe<Order> = await user.newOrder({
       positionsManager,
       simulation: refinanceSimulation,
@@ -208,11 +246,19 @@ describe.skip('Refinance Maker Spark | SDK', () => {
         walletPrivateKey: privateKey,
       })
 
-      const receipt = await transactionUtils.sendTransaction({
-        transaction: refinanceOrder.transactions[0].transaction,
+      const importTxHash = await transactionUtils.sendTransaction({
+        transaction: importOrder.transactions[0].transaction,
+        waitForConfirmation: true,
       })
 
-      console.log('Transaction sent:', receipt)
+      console.log('Import Transaction Sent:', importTxHash)
+
+      const refinanceTxHash = await transactionUtils.sendTransaction({
+        transaction: refinanceOrder.transactions[0].transaction,
+        waitForConfirmation: true,
+      })
+
+      console.log('Refinance Transaction Sent:', refinanceTxHash)
     }
   })
 })

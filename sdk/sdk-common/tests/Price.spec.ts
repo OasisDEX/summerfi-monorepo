@@ -762,7 +762,7 @@ describe('SDK Common | Price', () => {
         quote: DAI,
       })
 
-      expect(price.toString()).toEqual('108.54 USDC/DAI')
+      expect(price.toString()).toEqual('108.54 DAI/USDC')
     })
   })
 })
