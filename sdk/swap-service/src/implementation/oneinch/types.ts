@@ -1,4 +1,4 @@
-export const OneInchAuthHeaderKey = 'auth-key'
+export const OneInchAuthHeaderKey = 'Authorization'
 export const OneInchSpotAuthHeaderKey = 'Authorization'
 
 export type OneInchAuthHeader = {

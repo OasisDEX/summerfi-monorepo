@@ -154,7 +154,7 @@ export class OneInchSwapProvider
    * @returns The OneInch auth header
    */
   private _getOneInchAuthHeader(): OneInchAuthHeader {
-    return { [OneInchAuthHeaderKey]: this._apiKey }
+    return { [OneInchAuthHeaderKey]: `Bearer ${this._apiKey}` }
   }
 
   /**
@@ -189,7 +189,7 @@ export class OneInchSwapProvider
       ? this._allowedSwapProtocols.join(',')
       : ''
 
-    return `${this._apiUrl}/${this._version}/${chainId}/swap?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&fromAddress=${recipient}&slippage=${params.slippage.value}&protocols=${protocolsParam}&disableEstimate=${disableEstimate}&allowPartialFill=${allowPartialFill}`
+    return `${this._apiUrl}/swap/${this._version}/${chainId}/swap?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&fromAddress=${recipient}&slippage=${params.slippage.value}&protocols=${protocolsParam}&disableEstimate=${disableEstimate}&allowPartialFill=${allowPartialFill}`
   }
 
   /**
@@ -213,7 +213,7 @@ export class OneInchSwapProvider
       ? this._allowedSwapProtocols.join(',')
       : ''
 
-    return `${this._apiUrl}/${this._version}/${chainId}/quote?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&protocols=${protocolsParam}`
+    return `${this._apiUrl}/swap/${this._version}/${chainId}/quote?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&protocols=${protocolsParam}`
   }
 
   /**
