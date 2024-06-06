@@ -43,6 +43,8 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
 > extends BaseProtocolPlugin {
   abstract readonly protocolName: AllowedProtocolNames
 
+  private _dataProviderContractName: Maybe<ContractNames>
+  private _oracleContractName: Maybe<ContractNames>
   private _contractsAbiProvider: Maybe<ChainContractsProvider<ContractNames, ContractsAbiMap>>
   private _assetsList: Maybe<AssetsList<ContractNames, ContractsAbiMap>> = undefined
 
@@ -50,10 +52,14 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
   initialize(params: {
     context: IProtocolPluginContext
     contractsAbiProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>
+    dataProviderContractName: ContractNames
+    oracleContractName: ContractNames
   }) {
     super.initialize(params)
 
     this._contractsAbiProvider = params.contractsAbiProvider
+    this._dataProviderContractName = params.dataProviderContractName
+    this._oracleContractName = params.oracleContractName
   }
 
   /** PROTECTED */
@@ -80,11 +86,20 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
    * type of this function.
    */
   protected async _getAssetsList(params: { chainInfo: IChainInfo }) {
+    if (!this._dataProviderContractName) {
+      throw new Error('Data provider contract name not initialized')
+    }
+    if (!this._oracleContractName) {
+      throw new Error('Oracle contract name not initialized')
+    }
+
     const builder = await new AaveV3LikeProtocolDataBuilder(
       this.context,
       this.protocolName,
       params.chainInfo,
       this.contractsAbiProvider,
+      this._dataProviderContractName,
+      this._oracleContractName,
     ).init()
     return await builder
       .addPrices()
@@ -93,9 +108,6 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
       .addReservesData()
       .addEmodeCategories()
       .build()
-    // } catch (e) {
-    //   throw new Error(`Could not fetch/build assets list for AAVEv3: ${JSON.stringify(e)}`)
-    // }
   }
 
   /**

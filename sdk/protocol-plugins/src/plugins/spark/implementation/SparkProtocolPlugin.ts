@@ -47,6 +47,8 @@ export class SparkProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
     super.initialize({
       ...params,
       contractsAbiProvider,
+      dataProviderContractName: 'SparkDataProvider',
+      oracleContractName: 'SparkOracle',
     })
 
     if (

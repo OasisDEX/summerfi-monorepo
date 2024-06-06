@@ -47,17 +47,17 @@ const config = {
   walletAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
   source: {
     collateralTokenSymbol: CommonTokenSymbols.WETH,
-    collateralAmount: '2.5',
+    collateralAmount: '13.49',
     debtTokenSymbol: CommonTokenSymbols.DAI,
-    debtAmount: '3508.0',
+    debtAmount: '13329.47',
     ilkType: ILKType.ETH_C,
   },
   target: {
-    collateralTokenSymbol: CommonTokenSymbols.WETH,
+    collateralTokenSymbol: CommonTokenSymbols.WBTC,
     debtTokenSymbol: CommonTokenSymbols.DAI,
     emodeType: EmodeType.None,
   },
-  sendTransaction: true,
+  sendTransaction: false,
 }
 
 describe.skip('Refinance Maker -> Spark | SDK', () => {
@@ -215,6 +215,7 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
     expect(refinanceSimulation.sourcePosition?.id).toEqual(makerPosition.id)
     expect(refinanceSimulation.targetPosition.pool.id).toEqual(sparkPool.id)
 
+    console.log('Refinance Simulation:', JSON.stringify(refinanceSimulation, null, 2))
     //
     // IMPORT ORDER
     //

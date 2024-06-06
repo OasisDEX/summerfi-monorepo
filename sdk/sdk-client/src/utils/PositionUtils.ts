@@ -29,15 +29,18 @@ export class PositionUtils {
     return Percentage.createFrom({ value: ltvRatio })
   }
 
-  static getLiquidationPriceInUsd({
+  /**
+   * Returns the liquidation price of a position in amount of collateral per amount of debt
+   */
+  static calculateLiquidationPrice({
     position,
     liquidationThreshold,
-    debtPriceInUsd,
+    debtPriceInCollateral,
   }: {
     position: Position
     // TODO: it is not defined in Position yet, we should use Pool in the future
     liquidationThreshold: Percentage
-    debtPriceInUsd: string
+    debtPriceInCollateral: string
   }): string {
     // Determine the Collateral Value:
     const collateralAmount = new BigNumber(position.collateralAmount.amount)
@@ -47,11 +50,11 @@ export class PositionUtils {
     if (debtAmount.isZero()) {
       return '0'
     }
-    const debtValue = debtAmount.times(debtPriceInUsd)
+    const debtValue = debtAmount.times(debtPriceInCollateral)
     // (loanAmount * loanPrice) / (liquidationThreshold * collateralAmount)
-    const liquidationPrice = debtValue.div(
+    const liquidationRatio = debtValue.div(
       collateralAmount.times(liquidationThreshold.toProportion()),
     )
-    return liquidationPrice.times(debtPriceInUsd).toString()
+    return liquidationRatio.times(debtPriceInCollateral).toString()
   }
 }

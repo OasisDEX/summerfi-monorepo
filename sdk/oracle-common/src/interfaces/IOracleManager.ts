@@ -11,8 +11,8 @@ export interface IOracleManager extends IManagerWithProviders<OracleProviderType
    * @name getSpotPrice
    * @description Returns the prevailing market price for a given asset
    *              in terms of a base currency
-   * @param baseToken A price request for baseToken
-   * @param quoteToken A price request - QuoteToken is optional with a USD default.
+   * @param baseToken Token for which the price is being requested
+   * @param quoteToken Token in which the price is being requested, defaults to USD
    */
   getSpotPrice(params: { baseToken: IToken; quoteToken?: Denomination }): Promise<SpotPriceInfo>
 }
