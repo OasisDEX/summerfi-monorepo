@@ -14,6 +14,17 @@ export const WETH = Token.createFrom({
   decimals: 18,
 })
 
+export const WSTETH = Token.createFrom({
+  chainInfo,
+  address: Address.createFrom({
+    value: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+    type: AddressType.Ethereum,
+  }),
+  symbol: 'WSTETH',
+  name: 'Wrapped Staked Ether',
+  decimals: 18,
+})
+
 export const DAI = Token.createFrom({
   chainInfo,
   address: Address.createFrom({
