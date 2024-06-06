@@ -104,17 +104,16 @@ const getVaultAllocations = async (
                 if (market.loanAsset == null) {
                   throw new Error(`Market ${market.id} has no loan asset`)
                 }
-                if (market.collateralAsset == null) {
-                  return null
-                }
                 const resultMarket: MorphoMarket = {
                   marketId: market.uniqueKey as `0x${string}`,
                   liquidationLtv: Number(market.lltv) / 10 ** 18,
                   collateral: {
-                    address: market.collateralAsset.address as Address,
-                    symbol: market.collateralAsset.symbol,
-                    priceUsd: market.collateralAsset.priceUsd ?? undefined,
-                    decimals: market.collateralAsset.decimals,
+                    address:
+                      (market.collateralAsset?.address as Address) ??
+                      ('0x0000000000000000000000000000000000000000' as Address),
+                    symbol: market.collateralAsset?.symbol ?? 'NaN',
+                    priceUsd: market.collateralAsset?.priceUsd ?? undefined,
+                    decimals: market.collateralAsset?.decimals ?? 0,
                   },
                   loan: {
                     address: market.loanAsset.address as Address,
@@ -132,13 +131,7 @@ const getVaultAllocations = async (
       }
     })
     .map((vault): MetaMorphoAllocations => {
-      // TODO: we might want to handle the allocation without collateral token properly on frontend instead of filtering it out
-      const validAllocations = vault.allocations.filter((allocation) => allocation !== null) as {
-        market: MorphoMarket
-        supplyAssets: bigint
-      }[]
-
-      const totalAllocation = validAllocations.reduce(
+      const totalAllocation = vault.allocations.reduce(
         (acc, allocation) => acc + allocation.supplyAssets,
         0n,
       )
@@ -147,7 +140,7 @@ const getVaultAllocations = async (
 
       return {
         ...vault,
-        allocations: validAllocations.map((allocation) => {
+        allocations: vault.allocations.map((allocation) => {
           return {
             suppliedAssets: allocation.supplyAssets,
             market: allocation.market,
