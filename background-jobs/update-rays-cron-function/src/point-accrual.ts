@@ -494,8 +494,6 @@ export class SummerPointsService {
       multiplier = 1.5
     } else if (timeOpenAfterPointsStart > 30 * this.SECONDS_PER_DAY) {
       multiplier = 1.2
-    } else {
-      multiplier = 1
     }
     return multiplier * additionalMultiplier
   }
