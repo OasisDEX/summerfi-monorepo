@@ -33,7 +33,6 @@ export async function getSwapStepData(params: {
 
   const [quote, spotPrice] = await Promise.all([
     params.swapManager.getSwapQuoteExactInput({
-      chainInfo: params.chainInfo,
       fromAmount: amountAfterSummerFee,
       toToken: params.toToken,
     }),
