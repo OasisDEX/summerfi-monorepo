@@ -10,6 +10,7 @@ const logger = new Logger({ serviceName: 'get-rays-function' })
 export const queryParamsSchema = z.object({
   page: numberSchema.optional().default(1),
   limit: numberSchema.optional().default(10),
+  userAddress: z.string().optional().default(''),
 })
 
 export const handler = async (
@@ -28,7 +29,7 @@ export const handler = async (
     return ResponseBadRequest({ body: { message: parsedResult.error.message } })
   }
 
-  const { page, limit } = parsedResult.data
+  const { page, limit, userAddress } = parsedResult.data
   const offset = (page - 1) * limit
 
   const dbConfig = {
@@ -41,6 +42,7 @@ export const handler = async (
   const leaderboard = await db
     .selectFrom('leaderboard')
     .selectAll()
+    .where('userAddress', 'like', `%${userAddress}%`)
     .orderBy('totalPoints', 'desc')
     .limit(limit)
     .offset(offset)
