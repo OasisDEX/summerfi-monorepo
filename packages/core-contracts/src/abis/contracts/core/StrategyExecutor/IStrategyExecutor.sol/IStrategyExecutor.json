@@ -1,0 +1,120 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "actionHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "InvalidActionHash",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "initiator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "strategyName",
+        "type": "string"
+      },
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "targetHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "callData",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bool",
+            "name": "skipped",
+            "type": "bool"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct Call[]",
+        "name": "strategyActions",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "StrategyExecuted",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "strategyName",
+        "type": "string"
+      },
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "targetHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "callData",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bool",
+            "name": "skipped",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct Call[]",
+        "name": "strategyActions",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "executeStrategy",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "targetHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "callData",
+            "type": "bytes"
+          },
+          {
+            "internalType": "bool",
+            "name": "skipped",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct Call[]",
+        "name": "calls",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "executeStrategyCalls",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

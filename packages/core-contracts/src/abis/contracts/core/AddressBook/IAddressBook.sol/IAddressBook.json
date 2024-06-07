@@ -1,0 +1,225 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "actionNameHash",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "string",
+        "name": "actionName",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "actionAddress",
+        "type": "address"
+      }
+    ],
+    "name": "ActionAlreadyExists",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "serviceNamehash",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "string",
+        "name": "serviceName",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "registeredServiceAddress",
+        "type": "address"
+      }
+    ],
+    "name": "ExternalServiceAlreadyExists",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "actionNameHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "actionName",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "actionAddress",
+        "type": "address"
+      }
+    ],
+    "name": "ActionAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "serviceNamehash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "serviceName",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "serviceAddress",
+        "type": "address"
+      }
+    ],
+    "name": "ExternalServiceAdded",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "actionName",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "actionAddress",
+        "type": "address"
+      }
+    ],
+    "name": "addAction",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "serviceName",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "serviceAddress",
+        "type": "address"
+      }
+    ],
+    "name": "addExternalService",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      }
+    ],
+    "name": "calculateNameHash",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "actionName",
+        "type": "string"
+      }
+    ],
+    "name": "getAction",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "actionHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getActionByHash",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "serviceName",
+        "type": "string"
+      }
+    ],
+    "name": "getExternalService",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "serviceHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getExternalServiceByHash",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

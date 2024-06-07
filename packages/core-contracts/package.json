@@ -23,12 +23,13 @@
     "lint:fix": "eslint . --fix",
     "gen-versions": "hardhat run scripts/generate-versions.ts",
     "view-versions": "hardhat run scripts/view-versions.ts",
-    "deploy-contracts": "hardhat run scripts/deploy.ts"
+    "deploy-contracts": "hardhat run scripts/deploy.ts",
+    "compile": "hardhat compile"
   },
   "devDependencies": {
     "@ethersproject/keccak256": "^5.7.0",
     "@nomicfoundation/hardhat-toolbox-viem": "^2.0.0",
-    "@openzeppelin/contracts": "4.9.6",
+    "@openzeppelin/contracts": "5.0.2",
     "@prb/math": "2.5.0",
     "@summerfi/common": "workspace:*",
     "@summerfi/contracts-utils": "workspace:*",
@@ -39,6 +40,7 @@
     "@summerfi/hardhat-utils": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
-    "hardhat": "^2.22.2"
+    "hardhat": "^2.22.2",
+    "prettier-plugin-solidity": "^1.3.1"
   }
 }
