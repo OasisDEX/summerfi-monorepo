@@ -21,12 +21,7 @@ import { TransactionUtils } from './utils/TransactionUtils'
 import { Hex } from 'viem'
 import assert from 'assert'
 import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
-import { AddressValue, CommonTokenSymbols, IToken } from '@summerfi/sdk-common'
-import {
-  SparkLendingPoolId,
-  isSparkLendingPoolId,
-  isSparkProtocol,
-} from '@summerfi/protocol-plugins/plugins/spark'
+import { AddressValue, CommonTokenSymbols, IToken, Token } from '@summerfi/sdk-common'
 import {
   ILKType,
   MakerLendingPoolId,
@@ -35,6 +30,11 @@ import {
   isMakerLendingPool,
   isMakerProtocol,
 } from '@summerfi/protocol-plugins/plugins/maker'
+import {
+  AaveV3LendingPoolId,
+  isAaveV3LendingPoolId,
+  isAaveV3Protocol,
+} from '@summerfi/protocol-plugins'
 
 jest.setTimeout(300000)
 
@@ -47,15 +47,15 @@ const config = {
   walletAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
   source: {
     collateralTokenSymbol: CommonTokenSymbols.WETH,
-    collateralAmount: '13.49',
+    collateralAmount: '2.5',
     debtTokenSymbol: CommonTokenSymbols.DAI,
-    debtAmount: '13329.47',
+    debtAmount: '3509.8',
     ilkType: ILKType.ETH_C,
   },
   target: {
-    collateralTokenSymbol: CommonTokenSymbols.WBTC,
-    debtTokenSymbol: CommonTokenSymbols.DAI,
-    emodeType: EmodeType.None,
+    collateralTokenSymbol: CommonTokenSymbols.sDAI,
+    debtTokenSymbol: CommonTokenSymbols.LUSD,
+    emodeType: EmodeType.Stablecoins,
   },
   sendTransaction: false,
 }
@@ -107,10 +107,15 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
     })
     assert(targetDebtToken, `${config.target.debtTokenSymbol} not found`)
 
-    const targetCollateralToken: Maybe<IToken> = await chain.tokens.getTokenBySymbol({
-      symbol: config.target.collateralTokenSymbol,
+    const targetCollateralToken = Token.createFrom({
+      address: Address.createFromEthereum({
+        value: '0x83F20F44975D03b1b09e64809B757c47f942BEeA',
+      }),
+      chainInfo: ChainFamilyMap.Ethereum.Mainnet,
+      decimals: 18,
+      name: 'SDAI Test',
+      symbol: 'SDAI',
     })
-    assert(targetCollateralToken, `${config.target.collateralTokenSymbol} not found`)
 
     // Source position
     const maker = await chain.protocols.getProtocol({ name: ProtocolName.Maker })
@@ -152,35 +157,38 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
     })
 
     // Target protocol
-    const spark: Maybe<ProtocolClient> = await chain.protocols.getProtocol({
-      name: ProtocolName.Spark,
+    const aaveV3: Maybe<ProtocolClient> = await chain.protocols.getProtocol({
+      name: ProtocolName.AaveV3,
     })
-    assert(spark, 'Spark not found')
+    assert(aaveV3, 'AaveV3 not found')
 
-    if (!isSparkProtocol(spark)) {
-      assert(false, 'Protocol type is not Spark')
+    if (!isAaveV3Protocol(aaveV3)) {
+      assert(false, 'Protocol type is not AaveV3')
     }
 
-    const targetPoolId = SparkLendingPoolId.createFrom({
-      protocol: spark,
+    const targetPoolId = AaveV3LendingPoolId.createFrom({
+      protocol: aaveV3,
       collateralToken: targetCollateralToken,
       debtToken: targetDebtToken,
       emodeType: config.target.emodeType,
     })
 
-    const sparkPool = await spark.getLendingPool({
+    const targetPool = await aaveV3.getLendingPool({
       poolId: targetPoolId,
     })
 
-    assert(sparkPool, 'Pool not found')
+    assert(targetPool, 'Pool not found')
 
-    if (!isSparkLendingPoolId(sparkPool.id)) {
-      assert(false, 'Pool ID is not a Spark one')
+    if (!isAaveV3LendingPoolId(targetPool.id)) {
+      assert(false, 'Pool ID is not a AaveV3 one')
     }
 
-    if (!isLendingPool(sparkPool)) {
+    if (!isLendingPool(targetPool)) {
       assert(false, 'Spark pool type is not lending')
     }
+
+    const poolInfo = await aaveV3.getLendingPoolInfo({ poolId: targetPoolId })
+    console.log('Pool Info:', JSON.stringify(poolInfo, null, 2))
 
     //
     // IMPORT SIMULATION
@@ -203,7 +211,7 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
     //
     const refinanceParameters = RefinanceParameters.createFrom({
       sourcePosition: makerPosition,
-      targetPool: sparkPool,
+      targetPool: targetPool,
       slippage: Percentage.createFrom({ value: 0.2 }),
     })
 
@@ -213,7 +221,7 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
     expect(refinanceSimulation).toBeDefined()
 
     expect(refinanceSimulation.sourcePosition?.id).toEqual(makerPosition.id)
-    expect(refinanceSimulation.targetPosition.pool.id).toEqual(sparkPool.id)
+    expect(refinanceSimulation.targetPosition.pool.id).toEqual(targetPool.id)
 
     console.log('Refinance Simulation:', JSON.stringify(refinanceSimulation, null, 2))
     //

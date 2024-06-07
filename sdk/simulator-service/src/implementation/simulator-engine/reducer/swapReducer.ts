@@ -7,7 +7,7 @@ export function swapReducer(step: steps.SwapStep, state: ISimulationState): ISim
   const balanceWithoutFromToken = subtractBalance(step.inputs.inputAmount, state.balances)
   const balanceWithToToken = addBalance(step.outputs.received, balanceWithoutFromToken)
   const fromAmountPreSummerFee = step.inputs.inputAmount.divide(
-    Percentage.createFrom({ value: 1 }).subtract(step.inputs.summerFee),
+    Percentage.createFrom({ value: 100.0 }).subtract(step.inputs.summerFee),
   )
 
   return {

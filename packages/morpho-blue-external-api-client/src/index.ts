@@ -69,13 +69,6 @@ const getVaultAllocations = async (
     return []
   }
 
-  const markets = result.markets.items
-
-  if (markets == null) {
-    logger?.warn('No markets found for the given vaults')
-    return []
-  }
-
   return vaults
     .map((vault) => {
       return {
@@ -99,10 +92,7 @@ const getVaultAllocations = async (
           ? vault.state.allocation
               .filter((allocation) => allocation.supplyAssets > 0)
               .map((allocation) => {
-                const market = markets.find((m) => m.id === allocation.market.id)
-                if (market == null) {
-                  throw new Error(`No market found for allocation ${allocation.id}`)
-                }
+                const market = allocation.market
 
                 logger?.debug('Found allocation', {
                   market: market.uniqueKey,
@@ -111,18 +101,19 @@ const getVaultAllocations = async (
                   allocation: allocation.supplyAssets,
                 })
 
-                if (market.collateralAsset == null || market.loanAsset == null) {
-                  throw new Error(`Market ${market.id} has no collateral or loan asset`)
+                if (market.loanAsset == null) {
+                  throw new Error(`Market ${market.id} has no loan asset`)
                 }
-
                 const resultMarket: MorphoMarket = {
                   marketId: market.uniqueKey as `0x${string}`,
                   liquidationLtv: Number(market.lltv) / 10 ** 18,
                   collateral: {
-                    address: market.collateralAsset.address as Address,
-                    symbol: market.collateralAsset.symbol,
-                    priceUsd: market.collateralAsset.priceUsd ?? undefined,
-                    decimals: market.collateralAsset.decimals,
+                    address:
+                      (market.collateralAsset?.address as Address) ??
+                      ('0x0000000000000000000000000000000000000000' as Address),
+                    symbol: market.collateralAsset?.symbol ?? 'NaN',
+                    priceUsd: market.collateralAsset?.priceUsd ?? undefined,
+                    decimals: market.collateralAsset?.decimals ?? 0,
                   },
                   loan: {
                     address: market.loanAsset.address as Address,

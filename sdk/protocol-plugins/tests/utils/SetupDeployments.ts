@@ -68,18 +68,30 @@ export function SetupDeployments(
   addressBookManager.setAddressByName({
     chainInfo,
     name: 'Oracle',
-    address: '0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9',
+    address: '0x54586bE62E3c3580375aE3723C145253060Ca0C2',
   })
 
   addressBookManager.setAddressByName({
     chainInfo,
     name: 'PoolDataProvider',
-    address: '0xFc21d6d146E6086B8359705C8b28512a983db0cb',
+    address: '0x7B4EB56E7CD4b454BA8ff71E4518426369a138a3',
   })
 
   addressBookManager.setAddressByName({
     chainInfo,
     name: 'SparkLendingPool',
     address: '0xC13e21B648A5Ee794902342038FF3aDAB66BE987',
+  })
+
+  addressBookManager.setAddressByName({
+    chainInfo,
+    name: 'SparkOracle',
+    address: '0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9',
+  })
+
+  addressBookManager.setAddressByName({
+    chainInfo,
+    name: 'SparkDataProvider',
+    address: '0xFc21d6d146E6086B8359705C8b28512a983db0cb',
   })
 }

@@ -26,7 +26,7 @@ export const morphoPoolMarketParams: MorphoBlueMarketParameters = {
   collateralToken: Token.createFrom({
     address: Address.createFromEthereum({ value: '0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0' }),
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
-    name: 'Wrapped staked ETH',
+    name: 'WrappedliquidstakedEther2.0',
     symbol: 'wstETH',
     decimals: 18,
   }),

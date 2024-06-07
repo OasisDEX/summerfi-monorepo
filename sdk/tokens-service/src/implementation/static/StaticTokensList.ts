@@ -13,6 +13,157 @@ export const StaticTokensData: TokenListData = {
   keywords: ['Summer.fi', 'MakerDAO'],
   tokens: [
     {
+      name: 'PayPal USD',
+      address: '0x6c3ea9036406852006290770BEdFcAbA0e23A0e8',
+      symbol: 'PYUSD',
+      decimals: 6,
+      chainId: 1,
+      logoURI: '',
+    },
+    {
+      name: 'Curve.Fi USD Stablecoin',
+      address: '0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E',
+      symbol: 'crvUSD',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E/logo.png',
+    },
+    {
+      name: 'Frax Share',
+      address: '0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0',
+      symbol: 'FXS',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0/logo.png',
+    },
+    {
+      name: 'Kyber Network Crystal v2',
+      address: '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202',
+      symbol: 'KNC',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202/logo.png',
+    },
+    {
+      name: 'StargateToken',
+      address: '0xAf5191B0De278C7286d6C7CC6ab6BB8A73bA2Cd6',
+      symbol: 'STG',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xAf5191B0De278C7286d6C7CC6ab6BB8A73bA2Cd6/logo.png',
+    },
+    {
+      name: 'Gho Token',
+      address: '0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f',
+      symbol: 'GHO',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f/logo.png',
+    },
+    {
+      name: 'Frax',
+      address: '0x853d955aCEf822Db058eb8505911ED77F175b99e',
+      symbol: 'FRAX',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x853d955aCEf822Db058eb8505911ED77F175b99e/logo.png',
+    },
+    {
+      name: '1INCH Token',
+      address: '0x111111111117dC0aa78b770fA6A738034120C302',
+      symbol: '1INCH',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x111111111117dC0aa78b770fA6A738034120C302/logo.png',
+    },
+    {
+      name: 'Ethereum Name Service',
+      address: '0xC18360217D8F7Ab5e7c516566761Ea12Ce7F9D72',
+      symbol: 'ENS',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC18360217D8F7Ab5e7c516566761Ea12Ce7F9D72/logo.png',
+    },
+    {
+      name: 'Balancer',
+      address: '0xba100000625a3754423978a60c9317c58a424e3D',
+      symbol: 'BAL',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xba100000625a3754423978a60c9317c58a424e3D/logo.png',
+    },
+    {
+      name: 'Synthetix Network Token',
+      address: '0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F',
+      symbol: 'SNX',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo.png',
+    },
+    {
+      name: 'Curve DAO Token',
+      address: '0xD533a949740bb3306d119CC777fa900bA034cd52',
+      symbol: 'CRV',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xD533a949740bb3306d119CC777fa900bA034cd52/logo.png',
+    },
+    {
+      name: 'Aave Token',
+      address: '0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9',
+      symbol: 'AAVE',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9/logo.png',
+    },
+    {
+      name: 'Lido DAO Token',
+      address: '0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32',
+      symbol: 'LDO',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32/logo.png',
+    },
+    {
+      name: 'Coinbase Wrapped Staked ETH',
+      address: '0xBe9895146f7AF43049ca1c1AE358B0541Ea49704',
+      symbol: 'cbETH',
+      decimals: 18,
+      chainId: 1,
+      logoURI: '',
+    },
+    {
+      name: 'Rocket Pool Protocol',
+      address: '0xD33526068D116cE69F19A9ee46F0bd304F21A51f',
+      symbol: 'RPL',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xD33526068D116cE69F19A9ee46F0bd304F21A51f/logo.png',
+    },
+    {
+      name: 'LUSD Stablecoin',
+      address: '0x5f98805A4E8be255a32880FDeC7F6728C6568bA0',
+      symbol: 'LUSD',
+      decimals: 18,
+      chainId: 1,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x5f98805A4E8be255a32880FDeC7F6728C6568bA0/logo.png',
+    },
+    {
       name: 'Renzo Restaked ETH',
       address: '0xbf5495Efe5DB9ce00f80364C8B423567e58d2110',
       symbol: 'ezETH',

@@ -1,3 +1,4 @@
+import assert from 'assert'
 import {
   IToken,
   Price,
@@ -762,7 +763,288 @@ describe('SDK Common | Price', () => {
         quote: DAI,
       })
 
-      expect(price.toString()).toEqual('108.54 USDC/DAI')
+      expect(price.toString()).toEqual('108.54 DAI/USDC')
+    })
+  })
+
+  describe('#isLessThan()', () => {
+    it('should not accept a different base/quote', () => {
+      const price = Price.createFrom({
+        value: '108.54',
+        base: USDC,
+        quote: DAI,
+      })
+
+      const otherPrice = Price.createFrom({
+        value: '20.5',
+        base: DAI,
+        quote: FiatCurrency.USD,
+      })
+
+      expect(() => price.isLessThan(otherPrice)).toThrow()
+    })
+
+    it('should compare another price for less than', () => {
+      const price = Price.createFrom({
+        value: '108.54',
+        base: USDC,
+        quote: DAI,
+      })
+
+      const otherPrice = Price.createFrom({
+        value: '20.5',
+        base: USDC,
+        quote: DAI,
+      })
+
+      expect(otherPrice.isLessThan(price)).toBeTruthy()
+      expect(price.isLessThan(otherPrice)).toBeFalsy()
+    })
+  })
+
+  describe('#isLessThanOrEqual()', () => {
+    it('should not accept a different base/quote', () => {
+      const price = Price.createFrom({
+        value: '108.54',
+        base: USDC,
+        quote: DAI,
+      })
+
+      const otherPrice = Price.createFrom({
+        value: '20.5',
+        base: DAI,
+        quote: FiatCurrency.USD,
+      })
+
+      expect(() => price.isLessThanOrEqual(otherPrice)).toThrow()
+    })
+
+    it('should compare another price for less than', () => {
+      const price = Price.createFrom({
+        value: '108.54',
+        base: USDC,
+        quote: DAI,
+      })
+
+      const otherPrice = Price.createFrom({
+        value: '20.5',
+        base: USDC,
+        quote: DAI,
+      })
+
+      expect(otherPrice.isLessThanOrEqual(price)).toBeTruthy()
+      expect(price.isLessThanOrEqual(otherPrice)).toBeFalsy()
+    })
+
+    it('should compare another price for equality', () => {
+      const price = Price.createFrom({
+        value: '108.54',
+        base: USDC,
+        quote: DAI,
+      })
+
+      const otherPrice = Price.createFrom({
+        value: '108.54',
+        base: USDC,
+        quote: DAI,
+      })
+
+      expect(otherPrice.isLessThanOrEqual(price)).toBeTruthy()
+      expect(price.isLessThanOrEqual(otherPrice)).toBeTruthy()
+    })
+  })
+
+  describe('#isGreaterThan()', () => {
+    it('should not accept a different base/quote', () => {
+      const price = Price.createFrom({
+        value: '108.54',
+        base: USDC,
+        quote: DAI,
+      })
+
+      const otherPrice = Price.createFrom({
+        value: '20.5',
+        base: DAI,
+        quote: FiatCurrency.USD,
+      })
+
+      expect(() => price.isGreaterThan(otherPrice)).toThrow()
+    })
+
+    it('should compare another price for greater than', () => {
+      const price = Price.createFrom({
+        value: '108.54',
+        base: USDC,
+        quote: DAI,
+      })
+
+      const otherPrice = Price.createFrom({
+        value: '20.5',
+        base: USDC,
+        quote: DAI,
+      })
+
+      expect(otherPrice.isGreaterThan(price)).toBeFalsy()
+      expect(price.isGreaterThan(otherPrice)).toBeTruthy()
+    })
+  })
+
+  describe('#isGreaterThanOrEqual()', () => {
+    it('should not accept a different base/quote', () => {
+      const price = Price.createFrom({
+        value: '108.54',
+        base: USDC,
+        quote: DAI,
+      })
+
+      const otherPrice = Price.createFrom({
+        value: '20.5',
+        base: DAI,
+        quote: FiatCurrency.USD,
+      })
+
+      expect(() => price.isGreaterThanOrEqual(otherPrice)).toThrow()
+    })
+
+    it('should compare another price for greater than', () => {
+      const price = Price.createFrom({
+        value: '108.54',
+        base: USDC,
+        quote: DAI,
+      })
+
+      const otherPrice = Price.createFrom({
+        value: '20.5',
+        base: USDC,
+        quote: DAI,
+      })
+
+      expect(otherPrice.isGreaterThanOrEqual(price)).toBeFalsy()
+      expect(price.isGreaterThanOrEqual(otherPrice)).toBeTruthy()
+    })
+
+    it('should compare another price for equality', () => {
+      const price = Price.createFrom({
+        value: '108.54',
+        base: USDC,
+        quote: DAI,
+      })
+
+      const otherPrice = Price.createFrom({
+        value: '108.54',
+        base: USDC,
+        quote: DAI,
+      })
+
+      expect(otherPrice.isGreaterThanOrEqual(price)).toBeTruthy()
+      expect(price.isGreaterThanOrEqual(otherPrice)).toBeTruthy()
+    })
+  })
+
+  describe('#isZero()', () => {
+    it('should return true when price is 0', () => {
+      const price = Price.createFrom({
+        value: '0.000',
+        base: USDC,
+        quote: DAI,
+      })
+
+      expect(price.isZero()).toBeTruthy()
+    })
+
+    it('should return false when price is not 0', () => {
+      const price = Price.createFrom({
+        value: '0.1',
+        base: USDC,
+        quote: DAI,
+      })
+
+      expect(price.isZero()).toBeFalsy()
+    })
+
+    it('should return false when price is very small and close to 0', () => {
+      const price = Price.createFrom({
+        value: '0.0000000000000000001',
+        base: USDC,
+        quote: DAI,
+      })
+
+      expect(price.isZero()).toBeFalsy()
+    })
+  })
+
+  describe('#isEqual()', () => {
+    it('should not accept a different base/quote', () => {
+      const price = Price.createFrom({
+        value: '108.54',
+        base: USDC,
+        quote: DAI,
+      })
+
+      const otherPrice = Price.createFrom({
+        value: '20.5',
+        base: DAI,
+        quote: FiatCurrency.USD,
+      })
+
+      expect(() => price.isEqual(otherPrice)).toThrow()
+    })
+
+    it('should return true when prices are equal', () => {
+      const price = Price.createFrom({
+        value: '123.45',
+        base: USDC,
+        quote: DAI,
+      })
+
+      const otherPrice = Price.createFrom({
+        value: '123.45',
+        base: USDC,
+        quote: DAI,
+      })
+
+      expect(price.isEqual(otherPrice)).toBeTruthy()
+    })
+
+    it('should return false when prices are not equal', () => {
+      const price = Price.createFrom({
+        value: '123.45',
+        base: USDC,
+        quote: DAI,
+      })
+
+      const otherPrice = Price.createFrom({
+        value: '123.46',
+        base: USDC,
+        quote: DAI,
+      })
+
+      expect(price.isEqual(otherPrice)).toBeFalsy()
+    })
+  })
+
+  describe('#createFromAmountsRatio()', () => {
+    it('should create a price from token amounts', () => {
+      const daiAmount = TokenAmount.createFrom({
+        token: DAI,
+        amount: '100',
+      })
+
+      const usdcAmount = TokenAmount.createFrom({
+        token: USDC,
+        amount: '10854',
+      })
+
+      const price = Price.createFromAmountsRatio({
+        numerator: usdcAmount,
+        denominator: daiAmount,
+      })
+
+      expect(price.value).toEqual('108.54')
+      assert(isToken(price.base), 'Price base is not a token')
+      expect(price.base.equals(DAI)).toBeTruthy()
+      assert(isToken(price.quote), 'Price quote is not a token')
+      expect(price.quote.equals(USDC)).toBeTruthy()
     })
   })
 })
