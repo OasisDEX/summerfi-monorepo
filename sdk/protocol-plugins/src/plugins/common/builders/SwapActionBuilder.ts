@@ -16,7 +16,6 @@ export class SwapActionBuilder extends BaseActionBuilder<steps.SwapStep> {
     })
 
     const swapData = await swapManager.getSwapDataExactInput({
-      chainInfo: params.user.chainInfo,
       fromAmount: step.inputs.inputAmountAfterFee,
       toToken: step.inputs.minimumReceivedAmount.token,
       recipient: swapContractAddress,

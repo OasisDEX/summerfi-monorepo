@@ -49,7 +49,7 @@ export async function getSwapStepData(params: {
     quote: params.fromAmount.token,
   })
 
-  const minimumReceivedAmount = quote.toTokenAmount.multiply(1.0 - params.slippage.toProportion())
+  const minimumReceivedAmount = quote.toTokenAmount.multiply(params.slippage.toComplement())
 
   return {
     provider: quote.provider,
