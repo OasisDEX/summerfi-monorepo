@@ -148,4 +148,16 @@ describe('SDK Common | Percentage', () => {
       expect(percentage.toString()).toEqual('20%')
     })
   })
+
+  describe('#toComplement()', () => {
+    it('should return the complement (100-x) of the percentage', () => {
+      const percentage = Percentage.createFrom({
+        value: 20,
+      })
+
+      const complementPercentage = percentage.toComplement()
+
+      expect(complementPercentage.value).toEqual(80)
+    })
+  })
 })

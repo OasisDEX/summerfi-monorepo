@@ -11,15 +11,18 @@ import { Token } from './Token'
 import { Denomination } from '../aliases/Denomination'
 import { isFiatCurrencyAmount } from '../interfaces/IFiatCurrencyAmount'
 import {
+  dividePriceByPercentage,
   dividePriceByPrice,
   multiplyFiatCurrencyAmountByPrice,
+  multiplyPriceByPercentage,
   multiplyPriceByPrice,
   multiplyTokenAmountByPrice,
 } from '../utils/PriceUtils'
 import { FiatCurrencyAmount } from './FiatCurrencyAmount'
 import { TokenAmount } from './TokenAmount'
 import { isToken, isTokenData } from '../interfaces/IToken'
-import { isTokenAmount, isTokenAmountData } from '../interfaces/ITokenAmount'
+import { ITokenAmount, isTokenAmount, isTokenAmountData } from '../interfaces/ITokenAmount'
+import { IPercentage, isPercentage } from '../interfaces'
 
 /**
  * @class Price
@@ -38,6 +41,23 @@ export class Price implements IPrice {
   /** FACTORY */
   static createFrom(params: IPriceData): IPrice {
     return new Price(params)
+  }
+
+  /**
+   * Create a price from the ratio of two token amounts
+   * @param numerator the token amount in the numerator
+   * @param denominator the token amount in the denominator
+   * @returns the price calculated from the amounts ratio
+   */
+  static createFromAmountsRatio(params: {
+    numerator: ITokenAmount
+    denominator: ITokenAmount
+  }): IPrice {
+    return new Price({
+      value: new BigNumber(params.numerator.amount).div(params.denominator.amount).toString(),
+      base: params.denominator.token,
+      quote: params.numerator.token,
+    })
   }
 
   /** CONSTRUCTOR */
@@ -112,6 +132,11 @@ export class Price implements IPrice {
   multiply<InputParams extends PriceMulParamType, ReturnType = PriceMulReturnType<InputParams>>(
     multiplier: InputParams,
   ): ReturnType {
+    if (isPercentage(multiplier)) {
+      const result = multiplyPriceByPercentage(this, multiplier)
+      return Price.createFrom(result) as ReturnType
+    }
+
     if (isPrice(multiplier)) {
       const result = multiplyPriceByPrice(this, multiplier)
       return Price.createFrom(result) as ReturnType
@@ -137,7 +162,12 @@ export class Price implements IPrice {
   }
 
   /** @see IPrice.divide */
-  divide(divider: string | number | IPrice): IPrice {
+  divide(divider: string | number | IPrice | IPercentage): IPrice {
+    if (isPercentage(divider)) {
+      const result = dividePriceByPercentage(this, divider)
+      return Price.createFrom(result)
+    }
+
     if (isPrice(divider)) {
       const result = dividePriceByPrice(this, divider)
       return Price.createFrom(result)
@@ -167,6 +197,46 @@ export class Price implements IPrice {
   /** @see IPrice.toString */
   toString(): string {
     return `${this.value} ${this._quoteSymbol}/${this._baseSymbol}`
+  }
+
+  /** @see IPrice.isLessThan */
+  isLessThan(otherPrice: IPrice): boolean {
+    this._validateSameDenominations(otherPrice)
+
+    return this.toBN().lt(otherPrice.toBN())
+  }
+
+  /** @see IPrice.isLessThanOrEqual */
+  isLessThanOrEqual(otherPrice: IPrice): boolean {
+    this._validateSameDenominations(otherPrice)
+
+    return this.toBN().lte(otherPrice.toBN())
+  }
+
+  /** @see IPrice.isGreaterThan */
+  isGreaterThan(otherPrice: IPrice): boolean {
+    this._validateSameDenominations(otherPrice)
+
+    return this.toBN().gt(otherPrice.toBN())
+  }
+
+  /** @see IPrice.isGreaterThanOrEqual */
+  isGreaterThanOrEqual(otherPrice: IPrice): boolean {
+    this._validateSameDenominations(otherPrice)
+
+    return this.toBN().gte(otherPrice.toBN())
+  }
+
+  /** @see IPrice.isZero */
+  isZero(): boolean {
+    return this.toBN().isZero()
+  }
+
+  /** @see IPrice.isEqual */
+  isEqual(otherPrice: IPrice): boolean {
+    this._validateSameDenominations(otherPrice)
+
+    return this.toBN().eq(otherPrice.toBN())
   }
 
   /** PRIVATE */
