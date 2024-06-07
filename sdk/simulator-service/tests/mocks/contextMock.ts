@@ -1,12 +1,4 @@
-import {
-  Address,
-  ChainInfo,
-  Percentage,
-  Token,
-  TokenAmount,
-  Price,
-  Maybe,
-} from '@summerfi/sdk-common/common'
+import { Address, Percentage, Token, TokenAmount, Price, Maybe } from '@summerfi/sdk-common/common'
 import { ILendingPool } from '@summerfi/sdk-common/protocols'
 import {
   testTargetLendingPool,
@@ -28,7 +20,6 @@ import { IUser } from '@summerfi/sdk-common/user'
 import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 
 async function getSwapDataExactInput(params: {
-  chainInfo: ChainInfo
   fromAmount: TokenAmount
   toToken: Token
   recipient: Address
@@ -45,11 +36,7 @@ async function getSwapDataExactInput(params: {
   }
 }
 
-async function getSwapQuoteExactInput(params: {
-  chainInfo: ChainInfo
-  fromAmount: TokenAmount
-  toToken: Token
-}) {
+async function getSwapQuoteExactInput(params: { fromAmount: TokenAmount; toToken: Token }) {
   return {
     provider: SwapProviderType.OneInch,
     fromTokenAmount: params.fromAmount,
@@ -70,7 +57,7 @@ async function getSpotPrice(params: {
     price: Price.createFrom({
       value: MOCK_PRICE.toString(),
       base: params.baseToken,
-      quote: MOCK_QUOTE_CURRENCY,
+      quote: params.quoteToken || MOCK_QUOTE_CURRENCY,
     }),
   }
 }

@@ -7,6 +7,10 @@ import { IPercentage, IPercentageData, isPercentage } from '../interfaces/IPerce
  * @see IPercentage
  */
 export class Percentage implements IPercentage {
+  public static Percent100: Percentage = new Percentage({
+    value: 100.0,
+  })
+
   readonly value: number
 
   /** FACTORY */
@@ -54,6 +58,11 @@ export class Percentage implements IPercentage {
   /** @see IPercentage.toProportion */
   toProportion(): number {
     return this.value / 100
+  }
+
+  /** @see IPercentage.toComplement */
+  toComplement(): IPercentage {
+    return Percentage.createFrom({ value: 100 - this.value })
   }
 
   /** @see IPercentage.toBaseUnit */

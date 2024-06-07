@@ -1,11 +1,5 @@
 import type { Maybe } from '@summerfi/sdk-common/common/aliases'
-import type {
-  IChainInfo,
-  IPercentage,
-  IAddress,
-  IToken,
-  ITokenAmount,
-} from '@summerfi/sdk-common/common'
+import type { IPercentage, IAddress, IToken, ITokenAmount } from '@summerfi/sdk-common/common'
 import { ChainId, Percentage } from '@summerfi/sdk-common/common'
 import { ISwapProvider, ISwapManager } from '@summerfi/swap-common/interfaces'
 import type { QuoteData, SwapData, SwapProviderType } from '@summerfi/sdk-common/swap'
@@ -38,14 +32,16 @@ export class SwapManager
 
   /** @see ISwapManager.getSwapDataExactInput */
   async getSwapDataExactInput(params: {
-    chainInfo: IChainInfo
     fromAmount: ITokenAmount
     toToken: IToken
     recipient: IAddress
     slippage: IPercentage
     forceUseProvider?: SwapProviderType
   }): Promise<SwapData> {
-    const provider: Maybe<ISwapProvider> = this._getBestProvider(params)
+    const provider: Maybe<ISwapProvider> = this._getBestProvider({
+      chainInfo: params.fromAmount.token.chainInfo,
+      forceUseProvider: params.forceUseProvider,
+    })
     if (!provider) {
       throw new Error('No swap provider available')
     }
@@ -55,12 +51,14 @@ export class SwapManager
 
   /** @see ISwapManager.getSwapQuoteExactInput */
   async getSwapQuoteExactInput(params: {
-    chainInfo: IChainInfo
     fromAmount: ITokenAmount
     toToken: IToken
     forceUseProvider?: SwapProviderType
   }): Promise<QuoteData> {
-    const provider: Maybe<ISwapProvider> = this._getBestProvider(params)
+    const provider: Maybe<ISwapProvider> = this._getBestProvider({
+      chainInfo: params.fromAmount.token.chainInfo,
+      forceUseProvider: params.forceUseProvider,
+    })
     if (!provider) {
       throw new Error('No swap provider available')
     }

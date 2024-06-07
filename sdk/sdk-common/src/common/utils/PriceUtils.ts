@@ -8,6 +8,7 @@ import {
   type IFiatCurrencyAmountData,
 } from '../interfaces/IFiatCurrencyAmount'
 import { FiatCurrency, isFiatCurrency } from '../enums/FiatCurrency'
+import { IPercentage } from '../interfaces'
 
 /**
  * Multiply a token amount by a price
@@ -120,6 +121,34 @@ export function dividePriceByPrice(price: IPrice, otherPrice: IPrice): IPriceDat
       base: price.base,
       quote: otherPrice.base,
     }
+  }
+}
+
+/**
+ * Multiplies a price by a percentage
+ * @param price The price to multiply
+ * @param percentage The percentage to multiply by
+ * @returns The resulting price
+ */
+export function multiplyPriceByPercentage(price: IPrice, percentage: IPercentage): IPriceData {
+  return {
+    value: price.toBN().times(percentage.toProportion()).toString(),
+    base: price.base,
+    quote: price.quote,
+  }
+}
+
+/**
+ * Divides a price by a percentage
+ * @param price The price to divide
+ * @param percentage The percentage to divide by
+ * @returns The resulting price
+ */
+export function dividePriceByPercentage(price: IPrice, percentage: IPercentage): IPriceData {
+  return {
+    value: price.toBN().dividedBy(percentage.toProportion()).toString(),
+    base: price.base,
+    quote: price.quote,
   }
 }
 

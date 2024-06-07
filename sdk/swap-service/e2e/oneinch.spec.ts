@@ -55,7 +55,6 @@ describe('OneInch | SwapManager | Integration', () => {
     const swapManager = SwapManagerFactory.newSwapManager({ configProvider })
 
     const swapData: SwapData = await swapManager.getSwapDataExactInput({
-      chainInfo,
       fromAmount,
       toToken: DAI,
       recipient: recipient,
@@ -83,7 +82,6 @@ describe('OneInch | SwapManager | Integration', () => {
     const swapManager = SwapManagerFactory.newSwapManager({ configProvider })
 
     const quoteData: QuoteData = await swapManager.getSwapQuoteExactInput({
-      chainInfo,
       fromAmount,
       toToken: DAI,
     })

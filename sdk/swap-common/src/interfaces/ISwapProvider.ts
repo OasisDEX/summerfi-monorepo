@@ -1,10 +1,4 @@
-import {
-  IAddress,
-  IChainInfo,
-  IPercentage,
-  IToken,
-  ITokenAmount,
-} from '@summerfi/sdk-common/common'
+import { IAddress, IPercentage, IToken, ITokenAmount } from '@summerfi/sdk-common/common'
 import type { QuoteData, SwapData, SwapProviderType } from '@summerfi/sdk-common/swap'
 import { IManagerProvider } from '@summerfi/sdk-server-common'
 /**
@@ -16,14 +10,12 @@ export interface ISwapProvider extends IManagerProvider<SwapProviderType> {
    * @name getSwapData
    * @description Returns the data needed to perform a swap between two tokens, by providing the
    *              exact amount of input tokens to swap
-   * @param chainInfo The chain information
    * @param fromAmount The amount of tokens to swap
    * @param toToken The token to swap to
    * @param recipient The address that will receive the tokens
    * @param slippage The maximum slippage allowed
    */
   getSwapDataExactInput(params: {
-    chainInfo: IChainInfo
     fromAmount: ITokenAmount
     toToken: IToken
     recipient: IAddress
@@ -34,13 +26,8 @@ export interface ISwapProvider extends IManagerProvider<SwapProviderType> {
    * @name getSwapQuote
    * @description Returns a quote for the swap between two tokens, by providing the exact amount
    *              of input tokens to swap. It does not return the data needed to perform the swap, only the quote
-   * @param chainInfo The chain information
    * @param fromAmount The amount of tokens to swap
    * @param toToken The token to swap to
    */
-  getSwapQuoteExactInput(params: {
-    chainInfo: IChainInfo
-    fromAmount: ITokenAmount
-    toToken: IToken
-  }): Promise<QuoteData>
+  getSwapQuoteExactInput(params: { fromAmount: ITokenAmount; toToken: IToken }): Promise<QuoteData>
 }

@@ -3,6 +3,7 @@ import { Denomination, DenominationDataSchema } from '../aliases/Denomination'
 import { IPrintable } from './IPrintable'
 import { type ITokenAmount } from './ITokenAmount'
 import { type IFiatCurrencyAmount } from './IFiatCurrencyAmount'
+import { type IPercentage } from './IPercentage'
 import { z } from 'zod'
 
 /**
@@ -10,7 +11,13 @@ import { z } from 'zod'
  *
  * This helps callers to know what to expect from the result of the operation
  */
-export type PriceMulParamType = string | number | IPrice | ITokenAmount | IFiatCurrencyAmount
+export type PriceMulParamType =
+  | string
+  | number
+  | IPrice
+  | ITokenAmount
+  | IFiatCurrencyAmount
+  | IPercentage
 export type PriceMulReturnType<T> = T extends ITokenAmount
   ? ITokenAmount | IFiatCurrencyAmount
   : T extends IFiatCurrencyAmount
@@ -133,6 +140,42 @@ export interface IPrice extends IPriceData, IPrintable {
    * @description Converts the price to a string
    */
   toString(): string
+
+  /**
+   * @name isLessThan
+   * @description Checks if the price is less than another price
+   */
+  isLessThan(otherPrice: IPrice): boolean
+
+  /**
+   * @name isLessThanOrEqual
+   * @description Checks if the price is less than or equal to another price
+   */
+  isLessThanOrEqual(otherPrice: IPrice): boolean
+
+  /**
+   * @name isGreaterThan
+   * @description Checks if the price is greater than another price
+   */
+  isGreaterThan(otherPrice: IPrice): boolean
+
+  /**
+   * @name isGreaterThanOrEqual
+   * @description Checks if the price is greater than or equal to another price
+   */
+  isGreaterThanOrEqual(otherPrice: IPrice): boolean
+
+  /**
+   * @name isZero
+   * @description Checks if the price is zero
+   */
+  isZero(): boolean
+
+  /**
+   * @name isEqual
+   * @description Checks if the price is equal to another price
+   */
+  isEqual(otherPrice: IPrice): boolean
 }
 
 /**

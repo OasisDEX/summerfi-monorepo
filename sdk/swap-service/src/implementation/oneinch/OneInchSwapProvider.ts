@@ -64,14 +64,13 @@ export class OneInchSwapProvider
 
   /** @see ISwapProvider.getSwapDataExactInput */
   async getSwapDataExactInput(params: {
-    chainInfo: IChainInfo
     fromAmount: ITokenAmount
     toToken: IToken
     recipient: IAddress
     slippage: IPercentage
   }): Promise<SwapData> {
     const swapUrl = this._formatOneInchSwapUrl({
-      chainInfo: params.chainInfo,
+      chainInfo: params.fromAmount.token.chainInfo,
       fromTokenAmount: params.fromAmount,
       toToken: params.toToken,
       recipient: params.recipient,
@@ -106,12 +105,11 @@ export class OneInchSwapProvider
 
   /** @see ISwapProvider.getSwapQuoteExactInput */
   async getSwapQuoteExactInput(params: {
-    chainInfo: IChainInfo
     fromAmount: ITokenAmount
     toToken: IToken
   }): Promise<QuoteData> {
     const swapUrl = this._formatOneInchQuoteUrl({
-      chainInfo: params.chainInfo,
+      chainInfo: params.fromAmount.token.chainInfo,
       fromTokenAmount: params.fromAmount,
       toToken: params.toToken,
     })
