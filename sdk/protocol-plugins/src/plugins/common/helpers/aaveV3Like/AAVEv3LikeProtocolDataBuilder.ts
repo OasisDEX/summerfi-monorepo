@@ -118,7 +118,7 @@ export class AaveV3LikeProtocolDataBuilder<
         })
         if (!token) {
           console.error(
-            `Token not found for address ${reservesToken.tokenAddress} while processing AaveLike protocol data`,
+            `Protocol token not found in SDK token list for address ${reservesToken.tokenAddress} while processing AaveLike protocol data`,
           )
         }
         return token
@@ -474,4 +474,11 @@ export function filterAssetsListByEMode<T extends { emode: EmodeCategory }>(
   }
 
   return assetsList.filter((asset) => Number(asset.emode) === emode)
+}
+
+export function filterAssetsListByToken<T extends { token: Token }>(
+  assetsList: T[],
+  token: Token,
+): T[] {
+  return assetsList.filter((asset) => asset.token.equals(token))
 }

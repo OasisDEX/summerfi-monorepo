@@ -14,6 +14,7 @@ import { BaseProtocolPlugin } from '../../../../implementation/BaseProtocolPlugi
 import {
   AaveV3LikeProtocolDataBuilder,
   filterAssetsListByEMode,
+  filterAssetsListByToken,
 } from './AAVEv3LikeProtocolDataBuilder'
 import { AllowedProtocolNames } from './AAVEv3LikeBuilderTypes'
 import { BigNumber } from 'bignumber.js'
@@ -124,16 +125,26 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
       throw new Error('Assets list not initialized')
     }
 
-    const assetsList = filterAssetsListByEMode(this._assetsList, emode)
-
-    const asset = assetsList.find((asset: Asset<ContractNames, ContractsAbiMap>) =>
-      token.equals(asset.token),
-    )
-    if (!asset) {
-      throw new Error(`Asset not found for token ${token}`)
+    const assetsMatchingToken = filterAssetsListByToken(this._assetsList, token)
+    if (assetsMatchingToken.length === 0) {
+      throw new Error(
+        `${token} was not found in the protocols assets list, make sure the token is supported in both the protocol and the SDK`,
+      )
     }
 
-    return asset
+    const assetsMatchingTokenWithEmode = filterAssetsListByEMode(assetsMatchingToken, emode)
+    if (assetsMatchingTokenWithEmode.length === 0) {
+      throw new Error(
+        `${token} was found in the protocols assets list but not with the given emode ${emode}`,
+      )
+    }
+    if (assetsMatchingTokenWithEmode.length > 1) {
+      console.warn(
+        `${token} was found in the protocols assets list with multiple entries for the given emode ${emode}, using the first one`,
+      )
+    }
+
+    return assetsMatchingTokenWithEmode[0]
   }
 
   /**
