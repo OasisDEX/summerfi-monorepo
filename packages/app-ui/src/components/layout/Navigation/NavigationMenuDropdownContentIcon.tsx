@@ -1,5 +1,5 @@
 /* eslint-disable no-magic-numbers */
-import classNames from 'classNames'
+import classNames from 'classnames'
 import Image from 'next/image'
 
 import { Icon } from '@/components/atoms/Icon/Icon'

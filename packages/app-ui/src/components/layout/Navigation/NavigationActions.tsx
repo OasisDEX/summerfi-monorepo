@@ -1,4 +1,4 @@
-import classNames from 'classNames'
+import classNames from 'classnames'
 
 import { Button } from '@/components/atoms/Button/Button'
 import { LoadingSpinner } from '@/components/molecules/Loader/Loader'

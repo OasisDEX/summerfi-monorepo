@@ -1,4 +1,4 @@
-import classNames from 'classNames'
+import classNames from 'classnames'
 
 import loaderStyles from '@/components/molecules/Loader/Loader.module.scss'
 

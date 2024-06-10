@@ -1,6 +1,6 @@
 /* eslint-disable no-magic-numbers */
 import { Fragment, useEffect, useRef, useState } from 'react'
-import classNames from 'classNames'
+import classNames from 'classnames'
 
 import {
   NavigationMenuPanelType,

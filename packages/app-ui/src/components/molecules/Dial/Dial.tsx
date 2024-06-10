@@ -1,7 +1,7 @@
 /* eslint-disable no-magic-numbers */
 /* eslint-disable  no-mixed-operators */
 import { FC, ReactNode } from 'react'
-import classNames from 'classNames'
+import classNames from 'classnames'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'

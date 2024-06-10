@@ -1,6 +1,6 @@
 /* eslint-disable no-magic-numbers */
 import { IconStar, IconStarFilled } from '@tabler/icons-react'
-import classNames from 'classNames'
+import classNames from 'classnames'
 
 import { Text } from '@/components/atoms/Text/Text'
 import { NavigationMenuPanelList } from '@/components/layout/Navigation/Navigation.types'

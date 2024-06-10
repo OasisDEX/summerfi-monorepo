@@ -1,4 +1,4 @@
-import classNames from 'classNames'
+import classNames from 'classnames'
 import Link from 'next/link'
 
 import { Text } from '@/components/atoms/Text/Text'
