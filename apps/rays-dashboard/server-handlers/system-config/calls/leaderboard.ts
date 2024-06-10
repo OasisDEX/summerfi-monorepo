@@ -1,8 +1,12 @@
+/* eslint-disable no-magic-numbers */
+
 import { Leaderboard } from '@summerfi/rays-db'
 
 import { getBuiltGraphSDK, Position } from '@/.graphclient'
 
-const getNumberOfPositions = (portfolioArray: any[]) => portfolioArray.length
+// empty string stands for ethereum, the rest is defined with '-' to ease handling of network parameter in .graphclientrc.yml
+// it is later resolved in ./the-graph/resolver.ts
+const chainNames = ['', '-optimism', '-base', '-arbitrum']
 
 export const fetchLeaderboard = async (query: string) => {
   const sdk = getBuiltGraphSDK()
@@ -12,12 +16,13 @@ export const fetchLeaderboard = async (query: string) => {
     headers: {
       'Content-Type': 'application/json',
     },
-  }).then((response) => response.json())) as { leaderboard: Leaderboard[] }
+  }).then((resp) => resp.json())) as { leaderboard: Leaderboard[] }
 
   // fetch info about positions from subgraph
   const results = await sdk
+    // eslint-disable-next-line new-cap
     .CrossSummerPoints({
-      chainNames: ['', '-optimism', '-base', '-arbitrum'],
+      chainNames,
       addresses: response.leaderboard.map((item) => item.userAddress?.toLowerCase()),
     })
     .then((data) => data.crossUsers)
@@ -45,14 +50,12 @@ export const fetchLeaderboard = async (query: string) => {
   return {
     leaderboard: response.leaderboard.map((item) => {
       const numberOfPositions = item.userAddress
-        ? getNumberOfPositions(reducedPositions[item.userAddress.toLowerCase()])
-        : // eslint-disable-next-line no-magic-numbers
-          1 // fallback to 1
+        ? reducedPositions[item.userAddress.toLowerCase()].length
+        : 1
 
       const numberOfActiveTriggers = item.userAddress
         ? reducedNumberOfTriggers[item.userAddress.toLowerCase()]
-        : // eslint-disable-next-line no-magic-numbers
-          0 // fallback to 0
+        : 0
 
       return {
         ...item,
