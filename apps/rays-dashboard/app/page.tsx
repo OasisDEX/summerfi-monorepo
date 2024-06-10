@@ -77,7 +77,7 @@ export default function HomePage() {
         }}
       />
       <BoostCards />
-      <Dial value={280} max={400} subtext="Eligible" icon="rays" />
+      <Dial value={280} max={400} subtext="Eligible" icon="rays" iconSize={48} />
     </div>
   )
 }

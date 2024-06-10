@@ -1,12 +1,15 @@
 /* eslint-disable no-magic-numbers */
 /* eslint-disable  no-mixed-operators */
 import { FC, ReactNode } from 'react'
+import classNames from 'classNames'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { IconNamesList } from '@/tokens/types'
 
-import classNames, { ClassNames } from '@/components/molecules/Dial/Dial.module.scss'
+import dialStyles, {
+  ClassNames as DialClassnames,
+} from '@/components/molecules/Dial/Dial.module.scss'
 
 interface DialProps {
   value: number
@@ -14,14 +17,15 @@ interface DialProps {
   subtext?: ReactNode
   trackWidth?: 1 | 2 | 3 | 4
   icon?: IconNamesList
+  iconSize?: number
 }
 
-export const Dial: FC<DialProps> = ({ value, max, trackWidth = 2, subtext, icon }) => {
+export const Dial: FC<DialProps> = ({ value, max, trackWidth = 2, subtext, icon, iconSize }) => {
   const normalizedValue = Math.min(Math.max(value, 0), max)
   const progress = (normalizedValue / max) * 100
   const strokeDasharray = `${progress} ${100 - progress}`
 
-  const trackWidthClass = `trackWidth-${Math.round(trackWidth)}` as ClassNames
+  const trackWidthClass = `trackWidth-${Math.round(trackWidth)}` as DialClassnames
   const gradientRotation = -180
 
   // Calculate gradient coordinates based on rotation angle
@@ -31,8 +35,8 @@ export const Dial: FC<DialProps> = ({ value, max, trackWidth = 2, subtext, icon 
   const endY = 50 + Math.sin((gradientRotation + 90) * (Math.PI / 180)) * 50
 
   return (
-    <div className={[classNames.dialContainer, classNames[trackWidthClass]].join(' ')}>
-      <svg className={classNames.dial} viewBox="0 0 36 36">
+    <div className={classNames(dialStyles.dialContainer, dialStyles[trackWidthClass])}>
+      <svg className={dialStyles.dial} viewBox="0 0 36 36">
         <defs>
           <linearGradient
             id="gradient"
@@ -58,21 +62,21 @@ export const Dial: FC<DialProps> = ({ value, max, trackWidth = 2, subtext, icon 
           </linearGradient>
         </defs>
         <path
-          className={classNames.track}
+          className={dialStyles.track}
           d="M18 2.0845
             a 15.9155 15.9155 0 0 1 0 31.831
             a 15.9155 15.9155 0 0 1 0 -31.831"
         />
         <path
-          className={classNames.progress}
+          className={dialStyles.progress}
           strokeDasharray={strokeDasharray}
           d="M18 2.0845
             a 15.9155 15.9155 0 0 1 0 31.831
             a 15.9155 15.9155 0 0 1 0 -31.831"
         />
       </svg>
-      <div className={classNames.value}>
-        {icon && <Icon iconName={icon} />}
+      <div className={dialStyles.value}>
+        {icon && <Icon iconName={icon} size={iconSize} />}
         <Text as="h3" variant="h3">
           {value} / {max}
         </Text>
