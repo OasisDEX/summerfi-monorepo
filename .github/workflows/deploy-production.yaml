@@ -10,7 +10,6 @@ permissions:
 jobs:
   deploy:
     name: Build & Deploy production using SST
-    environment: production
     runs-on: ubuntu-latest
     env:
       ONE_INCH_API_KEY: ${{ secrets.ONE_INCH_API_KEY }}
