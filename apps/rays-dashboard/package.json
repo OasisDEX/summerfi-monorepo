@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@loadable/component": "^5.16.4",
-    "@million/lint": "1.0.0-rc.13",
     "@summerfi/app-db": "workspace:*",
     "@summerfi/app-ui": "workspace:*",
     "@summerfi/serverless-shared": "workspace:*",
