@@ -41,6 +41,8 @@ jobs:
         run: pnpm prebuild
 
       - name: Build
+        env:
+          CONFIG_URL: ${{ secrets.CONFIG_URL }}
         run: pnpm build
 
       - name: Test
