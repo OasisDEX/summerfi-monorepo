@@ -1,4 +1,4 @@
-import { Resolvers } from '.graphclient'
+import { Resolvers, User } from '.graphclient'
 
 export const resolvers: Resolvers = {
   User: {
@@ -17,14 +17,16 @@ export const resolvers: Resolvers = {
               chainName,
             },
             info,
-          }).then((users) => {
-            // We send chainName here so we can take it in the resolver above
+          }).then((users: User[]) => {
+            // We send chainName here, so we can take it in the resolver above
             return users.map((user) => ({
               ...user,
+              // temporary solution since chainNames are being passed with `-` prefix to ease handling in .graphclientrc.yml file
+              // ethereum mainnet is passed as empty string, the rest as follows: -base, -arbitrum, -optimism
               chainName: chainName.replace('-', ''),
             }))
           }),
         ),
-      ).then((allRebases) => allRebases.flat()),
+      ).then((allUsers) => allUsers.flat()),
   },
 }
