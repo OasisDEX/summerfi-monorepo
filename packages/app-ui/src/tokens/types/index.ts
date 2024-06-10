@@ -171,6 +171,8 @@ export type IconNamesList =
   | 'autoSell'
   | 'stopLoss'
   | 'takeProfit'
+  // other icons
+  | 'rays'
 
 export type TokenSymbolsList =
   | 'USDP'

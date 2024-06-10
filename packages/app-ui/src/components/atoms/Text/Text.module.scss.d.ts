@@ -12,7 +12,9 @@ export type Styles = {
   p3: string
   p3semi: string
   p4: string
+  p4colorful: string
   p4semi: string
+  p4semiColorful: string
 }
 
 export type ClassNames = keyof Styles

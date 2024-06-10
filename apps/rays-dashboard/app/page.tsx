@@ -1,5 +1,6 @@
 import {
   Button,
+  Dial,
   GenericTokenIcon,
   Icon,
   ProtocolLabel,
@@ -9,6 +10,7 @@ import {
 } from '@summerfi/app-ui'
 import Link from 'next/link'
 
+import { BoostCards } from '@/components/molecules/BoostCards/BoostCards'
 import { automationItems, ProductCard } from '@/components/molecules/ProductCard'
 import { NetworkNames, networksByName } from '@/constants/networks-list'
 import { LendingProtocol } from '@/helpers/lending-protocol'
@@ -74,6 +76,8 @@ export default function HomePage() {
           label: 'Earn xxx Rays for every Automation you add',
         }}
       />
+      <BoostCards />
+      <Dial value={280} max={400} subtext="Eligible" icon="rays" iconSize={48} />
     </div>
   )
 }
