@@ -43,6 +43,7 @@ jobs:
       - name: Build
         env:
           CONFIG_URL: ${{ secrets.CONFIG_URL }}
+          BORROW_DB_READ_CONNECTION_STRING: ${{ secrets.BORROW_DB_READ_CONNECTION_STRING }}
         run: pnpm build
 
       - name: Test
