@@ -39,7 +39,7 @@ describe('MorphoDepositAction Action', () => {
   const tokenAmount = TokenAmount.createFrom({ token: DAI, amount: '578' })
 
   const morphoProtocol = MorphoProtocol.createFrom({
-    name: ProtocolName.Morpho,
+    name: ProtocolName.MorphoBlue,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 

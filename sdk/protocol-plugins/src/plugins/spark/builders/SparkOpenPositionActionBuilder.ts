@@ -5,9 +5,7 @@ import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
 export class SparkOpenPositionActionBuilder extends BaseActionBuilder<steps.OpenPosition> {
-  readonly actions: ActionBuilderUsedAction[] = [
-    // Empty on purpose, no definition needs to be generated for this builder
-  ]
+  readonly actions: ActionBuilderUsedAction[] = [{ action: SparkSetEmodeAction }]
 
   async build(params: ActionBuilderParams<steps.OpenPosition>): Promise<void> {
     const { context, step } = params

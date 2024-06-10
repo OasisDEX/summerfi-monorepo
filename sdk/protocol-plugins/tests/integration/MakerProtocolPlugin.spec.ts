@@ -29,7 +29,8 @@ describe('Maker Protocol Plugin (Integration)', () => {
   beforeAll(async () => {
     ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
     validMakerPoolId = await getMakerPoolIdMock()
-    makerProtocolPlugin = new MakerProtocolPlugin({
+    makerProtocolPlugin = new MakerProtocolPlugin()
+    makerProtocolPlugin.initialize({
       context: ctx,
     })
     ;(ctx.oracleManager as OracleManagerMock).setSpotPrice({

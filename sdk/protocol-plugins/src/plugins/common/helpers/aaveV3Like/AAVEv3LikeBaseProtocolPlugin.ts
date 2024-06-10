@@ -14,6 +14,7 @@ import { BaseProtocolPlugin } from '../../../../implementation/BaseProtocolPlugi
 import {
   AaveV3LikeProtocolDataBuilder,
   filterAssetsListByEMode,
+  filterAssetsListByToken,
 } from './AAVEv3LikeProtocolDataBuilder'
 import { AllowedProtocolNames } from './AAVEv3LikeBuilderTypes'
 import { BigNumber } from 'bignumber.js'
@@ -42,18 +43,24 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
   ContractsAbiMap extends GenericAbiMap<ContractNames>,
 > extends BaseProtocolPlugin {
   abstract readonly protocolName: AllowedProtocolNames
-  readonly contractsAbiProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>
 
+  private _dataProviderContractName: Maybe<ContractNames>
+  private _oracleContractName: Maybe<ContractNames>
+  private _contractsAbiProvider: Maybe<ChainContractsProvider<ContractNames, ContractsAbiMap>>
   private _assetsList: Maybe<AssetsList<ContractNames, ContractsAbiMap>> = undefined
 
   /** CONSTRUCTOR */
-  protected constructor(params: {
+  initialize(params: {
     context: IProtocolPluginContext
     contractsAbiProvider: ChainContractsProvider<ContractNames, ContractsAbiMap>
+    dataProviderContractName: ContractNames
+    oracleContractName: ContractNames
   }) {
-    super(params)
+    super.initialize(params)
 
-    this.contractsAbiProvider = params.contractsAbiProvider
+    this._contractsAbiProvider = params.contractsAbiProvider
+    this._dataProviderContractName = params.dataProviderContractName
+    this._oracleContractName = params.oracleContractName
   }
 
   /** PROTECTED */
@@ -80,11 +87,20 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
    * type of this function.
    */
   protected async _getAssetsList(params: { chainInfo: IChainInfo }) {
+    if (!this._dataProviderContractName) {
+      throw new Error('Data provider contract name not initialized')
+    }
+    if (!this._oracleContractName) {
+      throw new Error('Oracle contract name not initialized')
+    }
+
     const builder = await new AaveV3LikeProtocolDataBuilder(
       this.context,
       this.protocolName,
       params.chainInfo,
       this.contractsAbiProvider,
+      this._dataProviderContractName,
+      this._oracleContractName,
     ).init()
     return await builder
       .addPrices()
@@ -93,9 +109,6 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
       .addReservesData()
       .addEmodeCategories()
       .build()
-    // } catch (e) {
-    //   throw new Error(`Could not fetch/build assets list for AAVEv3: ${JSON.stringify(e)}`)
-    // }
   }
 
   /**
@@ -112,16 +125,26 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
       throw new Error('Assets list not initialized')
     }
 
-    const assetsList = filterAssetsListByEMode(this._assetsList, emode)
-
-    const asset = assetsList.find((asset: Asset<ContractNames, ContractsAbiMap>) =>
-      token.equals(asset.token),
-    )
-    if (!asset) {
-      throw new Error(`Asset not found for token ${token}`)
+    const assetsMatchingToken = filterAssetsListByToken(this._assetsList, token)
+    if (assetsMatchingToken.length === 0) {
+      throw new Error(
+        `${token} was not found in the protocols assets list, make sure the token is supported in both the protocol and the SDK`,
+      )
     }
 
-    return asset
+    const assetsMatchingTokenWithEmode = filterAssetsListByEMode(assetsMatchingToken, emode)
+    if (assetsMatchingTokenWithEmode.length === 0) {
+      throw new Error(
+        `${token} was found in the protocols assets list but not with the given emode ${emode}`,
+      )
+    }
+    if (assetsMatchingTokenWithEmode.length > 1) {
+      console.warn(
+        `${token} was found in the protocols assets list with multiple entries for the given emode ${emode}, using the first one`,
+      )
+    }
+
+    return assetsMatchingTokenWithEmode[0]
   }
 
   /**
@@ -210,6 +233,12 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
       data: { totalVariableDebt, totalStableDebt, variableBorrowRate },
     } = asset
 
+    const assetDecimals = token.decimals
+    const assetFactor = new BigNumber(10).pow(assetDecimals)
+    const borrowCapWithDecimals = BigInt(
+      new BigNumber(borrowCap.toString()).multipliedBy(assetFactor).toFixed(0),
+    )
+
     try {
       const RESERVE_FACTOR_TO_PERCENTAGE_DIVISOR = 10000n
       const PRECISION_PRESERVING_OFFSET = 1000000n
@@ -219,6 +248,7 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
         Number(((variableBorrowRate * PRECISION_PRESERVING_OFFSET) / PRECISION_BI.RAY).toString()) /
         RATE_DIVISOR_TO_GET_PERCENTAGE
       const totalBorrowed = totalVariableDebt + totalStableDebt
+
       return DebtInfo.createFrom({
         token: quoteToken,
         // TODO: If we further restricted pools we could have token pair prices
@@ -239,11 +269,14 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
         }),
         debtCeiling: TokenAmount.createFrom({
           token: quoteToken,
-          amount: borrowCap === 0n ? UNCAPPED_SUPPLY : borrowCap.toString(),
+          amount: borrowCapWithDecimals === 0n ? UNCAPPED_SUPPLY : borrowCapWithDecimals.toString(),
         }),
         debtAvailable: TokenAmount.createFromBaseUnit({
           token: quoteToken,
-          amount: borrowCap === 0n ? UNCAPPED_SUPPLY : (borrowCap - totalBorrowed).toString(),
+          amount:
+            borrowCapWithDecimals === 0n
+              ? UNCAPPED_SUPPLY
+              : (borrowCapWithDecimals - totalBorrowed).toString(),
         }),
         dustLimit: TokenAmount.createFromBaseUnit({ token: quoteToken, amount: '0' }),
         originationFee: Percentage.createFrom({
@@ -253,5 +286,13 @@ export abstract class AAVEv3LikeBaseProtocolPlugin<
     } catch (e) {
       throw new Error(`error in debt loop ${e}`)
     }
+  }
+
+  get contractsAbiProvider(): ChainContractsProvider<ContractNames, ContractsAbiMap> {
+    if (!this._contractsAbiProvider) {
+      throw new Error('Contracts ABI provider not initialized')
+    }
+
+    return this._contractsAbiProvider
   }
 }

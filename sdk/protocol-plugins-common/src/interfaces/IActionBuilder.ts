@@ -18,6 +18,7 @@ export type ActionBuilderParams<Step extends steps.Steps> = {
   addressBookManager: IAddressBookManager
   protocolsRegistry: IProtocolPluginsRegistry
   step: Step
+  actionBuildersMap: ActionBuildersMap
 }
 
 /**

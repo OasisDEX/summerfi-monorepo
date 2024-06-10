@@ -27,6 +27,7 @@ export interface IStepBuilderContext {
    *                        will read from storage
    * @param connectedOutputs The connected outputs to the action, this is the values that the action
    *                         will write to storage
+   * @param skip If true, the action will be skipped and empty calldata will be added to the TX
    */
   addActionCall<
     Step extends steps.Steps,
@@ -38,6 +39,7 @@ export interface IStepBuilderContext {
     arguments: Parameters<Action['encodeCall']>[0]
     connectedInputs: Partial<StorageInputsMapType<Step, Config>>
     connectedOutputs: Partial<StorageOutputsMapType<Step, Config>>
+    skip?: boolean
   }): void
 
   /**

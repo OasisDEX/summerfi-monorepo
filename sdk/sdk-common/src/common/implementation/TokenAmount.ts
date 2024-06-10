@@ -135,9 +135,16 @@ export class TokenAmount implements ITokenAmount {
     return new BigNumber(this.amount)
   }
 
+  /** @see ITokenAmount.isZero */
+  isZero(): boolean {
+    return this.toBN().isZero()
+  }
+
   /** PRIVATE */
   private _validateSameToken(tokenAmount: ITokenAmount): void {
-    if (tokenAmount.token.symbol !== this.token.symbol) {
+    // TODO: relaxed check by using only lowercase due to Portfolio and Product Hub not being
+    // TODO: integrated in the SDK and using different symbols cases
+    if (tokenAmount.token.symbol.toLowerCase() !== this.token.symbol.toLowerCase()) {
       throw new Error(
         `Token symbols do not match: ${tokenAmount.token.symbol} !== ${this.token.symbol}`,
       )

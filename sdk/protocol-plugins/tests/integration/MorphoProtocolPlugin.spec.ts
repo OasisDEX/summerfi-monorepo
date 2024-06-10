@@ -8,13 +8,14 @@ import { ChainFamilyMap, FiatCurrency, OracleProviderType } from '@summerfi/sdk-
 import { isMorphoLendingPool, isMorphoLendingPoolId } from '../../src'
 import { PoolType } from '@summerfi/sdk-common/protocols'
 
-describe.only('Protocol Plugin | Integration | Morpho', () => {
+describe('Protocol Plugin | Integration | Morpho', () => {
   let ctx: IProtocolPluginContext
   let morphoProtocolPlugin: MorphoProtocolPlugin
 
   beforeAll(async () => {
     ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
-    morphoProtocolPlugin = new MorphoProtocolPlugin({
+    morphoProtocolPlugin = new MorphoProtocolPlugin()
+    morphoProtocolPlugin.initialize({
       context: ctx,
     })
   })

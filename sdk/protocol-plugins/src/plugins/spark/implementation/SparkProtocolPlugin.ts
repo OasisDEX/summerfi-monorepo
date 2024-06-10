@@ -41,12 +41,14 @@ export class SparkProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
   readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
   readonly stepBuilders: Partial<ActionBuildersMap> = SparkStepBuilders
 
-  constructor(params: { context: IProtocolPluginContext }) {
+  initialize(params: { context: IProtocolPluginContext }) {
     const contractsAbiProvider = new ChainContractsProvider(SparkAbiMap)
 
-    super({
+    super.initialize({
       ...params,
       contractsAbiProvider,
+      dataProviderContractName: 'SparkDataProvider',
+      oracleContractName: 'SparkOracle',
     })
 
     if (

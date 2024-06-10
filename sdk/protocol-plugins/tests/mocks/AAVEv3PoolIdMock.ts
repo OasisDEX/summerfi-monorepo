@@ -21,7 +21,7 @@ export async function getAaveV3PoolIdMock(): Promise<IAaveV3LendingPoolId> {
 
   return AaveV3LendingPoolId.createFrom({
     protocol: AaveV3Protocol.createFrom({
-      name: ProtocolName.AAVEv3,
+      name: ProtocolName.AaveV3,
       chainInfo,
     }),
     debtToken: DAI,

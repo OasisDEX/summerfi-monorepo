@@ -213,7 +213,10 @@ export class SummerPointsService {
           positionId: position.id,
           protocol: position.protocol,
           marketId: position.marketId,
-          positionCreated: position.firstEvent[0].timestamp,
+          positionCreated:
+            position.firstEvent[0] && position.firstEvent[0].timestamp
+              ? position.firstEvent[0].timestamp
+              : START_POINTS_TIMESTAMP,
           user: user.id,
           points: {
             openPositionsPoints: totalMultiplier * openPositionsPoints,
@@ -282,7 +285,10 @@ export class SummerPointsService {
         vaultId: swap.position!.account.vaultId,
         protocol: swap.position!.protocol,
         marketId: swap.position!.marketId,
-        positionCreated: swap.position!.firstEvent[0].timestamp,
+        positionCreated:
+          swap.position!.firstEvent[0] && swap.position!.firstEvent[0].timestamp
+            ? swap.position!.firstEvent[0].timestamp
+            : START_POINTS_TIMESTAMP,
         user: user.id,
         points: {
           openPositionsPoints: 0,
@@ -466,18 +472,30 @@ export class SummerPointsService {
     }
     const firstEvent = position.firstEvent[0].timestamp
     const lastEvent = endTimestamp
-    const startTime = Math.max(firstEvent, START_POINTS_TIMESTAMP)
-    const timeOpen = lastEvent - startTime
+    const effectiveStartTime = Math.max(firstEvent, START_POINTS_TIMESTAMP)
 
-    if (timeOpen > 180 * this.SECONDS_PER_DAY) {
-      return 2
-    } else if (timeOpen > 90 * this.SECONDS_PER_DAY) {
-      return 1.5
-    } else if (timeOpen > 30 * this.SECONDS_PER_DAY) {
-      return 1.2
-    } else {
-      return 1
+    const howLongWasPositionOpenBeforePointsStart = START_POINTS_TIMESTAMP - firstEvent
+    let additionalMultiplier = 1
+    if (howLongWasPositionOpenBeforePointsStart > 180 * this.SECONDS_PER_DAY) {
+      additionalMultiplier = 1.3
+    } else if (howLongWasPositionOpenBeforePointsStart > 90 * this.SECONDS_PER_DAY) {
+      additionalMultiplier = 1.15
+    } else if (howLongWasPositionOpenBeforePointsStart > 30 * this.SECONDS_PER_DAY) {
+      additionalMultiplier = 1.05
+    } else if (howLongWasPositionOpenBeforePointsStart > 0) {
+      additionalMultiplier = 1.01
     }
+
+    const elapsedTime = lastEvent - effectiveStartTime
+    let multiplier = 1
+    if (elapsedTime > 180 * this.SECONDS_PER_DAY) {
+      multiplier = 2
+    } else if (elapsedTime > 90 * this.SECONDS_PER_DAY) {
+      multiplier = 1.5
+    } else if (elapsedTime > 30 * this.SECONDS_PER_DAY) {
+      multiplier = 1.2
+    }
+    return multiplier * additionalMultiplier
   }
 
   protectionKinds = ['stoploss', 'basicsell']

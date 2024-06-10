@@ -19,7 +19,8 @@ describe('Maker Protocol Plugin', () => {
   beforeAll(async () => {
     ctx = await createProtocolPluginContext(ChainFamilyMap.Ethereum.Mainnet)
     makerPoolIdMock = await getMakerPoolIdMock()
-    makerProtocolPlugin = new MakerProtocolPlugin({
+    makerProtocolPlugin = new MakerProtocolPlugin()
+    makerProtocolPlugin.initialize({
       context: ctx,
     })
   })
@@ -34,7 +35,7 @@ describe('Maker Protocol Plugin', () => {
         ...makerPoolIdMock,
         protocol: {
           ...makerPoolIdMock.protocol,
-          name: ProtocolName.AAVEv3,
+          name: ProtocolName.AaveV3,
         },
       } as unknown as IMakerLendingPoolIdData
 
@@ -68,7 +69,7 @@ describe('Maker Protocol Plugin', () => {
 
   it('should throw an error when calling getPool with chain id missing from ctx', async () => {
     try {
-      new MakerProtocolPlugin({
+      new MakerProtocolPlugin().initialize({
         context: {
           ...ctx,
           provider: {
@@ -89,7 +90,7 @@ describe('Maker Protocol Plugin', () => {
   it('should throw an error when calling getPool with an unsupported chain ID', async () => {
     const wrongChainId = 2
     try {
-      new MakerProtocolPlugin({
+      new MakerProtocolPlugin().initialize({
         context: {
           ...ctx,
           provider: {

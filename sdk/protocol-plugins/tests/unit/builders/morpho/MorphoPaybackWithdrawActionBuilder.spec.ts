@@ -60,7 +60,7 @@ describe('Morpho Payback Withdraw Action Builder', () => {
   })
 
   const protocol = MorphoProtocol.createFrom({
-    name: ProtocolName.Morpho,
+    name: ProtocolName.MorphoBlue,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 
@@ -187,8 +187,10 @@ describe('Morpho Payback Withdraw Action Builder', () => {
 
     const { callsBatch } = builderParams.context.endSubContext()
 
-    expect(callsBatch.length).toEqual(1)
+    expect(callsBatch.length).toEqual(3)
 
-    expect(callsBatch[0].name).toBe('MorphoBlueWithdraw')
+    expect(callsBatch[0].name).toBe('SetApproval')
+    expect(callsBatch[1].name).toBe('MorphoBluePayback')
+    expect(callsBatch[2].name).toBe('MorphoBlueWithdraw')
   })
 })

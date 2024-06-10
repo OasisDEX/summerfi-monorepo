@@ -26,7 +26,7 @@ import {
   IPositionsManager,
   TransactionInfo,
 } from '@summerfi/sdk-common/orders'
-import { encodeMakerGiveThroughProxyActions } from '../utils/MakerGive'
+import { encodeMakerAllowThroughProxyActions } from '../utils/MakerGive'
 import { isMakerPositionId } from '../interfaces/IMakerPositionId'
 import { MakerLendingPoolId } from './MakerLendingPoolId'
 import { IMakerLendingPoolId, isMakerLendingPoolId } from '../interfaces/IMakerLendingPoolId'
@@ -55,8 +55,9 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
   readonly CdpManagerContractName = 'CdpManager'
   readonly DssProxyActionsContractName = 'DssProxyActions'
 
-  constructor(params: { context: IProtocolPluginContext }) {
-    super(params)
+  /** INITIALIZATION */
+  initialize(params: { context: IProtocolPluginContext }) {
+    super.initialize(params)
 
     if (
       !this.supportedChains.some(
@@ -154,10 +155,10 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
       contractName: this.DssProxyActionsContractName,
     })
 
-    const result = encodeMakerGiveThroughProxyActions({
+    const result = encodeMakerAllowThroughProxyActions({
       cdpManagerAddress: cdpManagerAddress.value,
       makerProxyActionsAddress: dssProxyActionsAddress.value,
-      giveToAddress: params.positionsManager.address.value,
+      allowAddress: params.positionsManager.address.value,
       cdpId: params.externalPosition.position.id.vaultId,
     })
 
@@ -188,7 +189,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
   private async _getCollateralInfo(protocolData: ProtocolData) {
     const { osmData, joinGemBalance, collateralToken, quoteToken, dogRes, spotRes } = protocolData
 
-    const collateralPriceUSD = await this.ctx.oracleManager.getSpotPrice({
+    const collateralPriceUSD = await this.context.oracleManager.getSpotPrice({
       baseToken: collateralToken,
     })
 
@@ -224,7 +225,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
   private async _getDebtInfo(protocolData: ProtocolData) {
     const { quoteToken, stabilityFee, vatRes } = protocolData
 
-    const priceUSD = await this.ctx.oracleManager.getSpotPrice({
+    const priceUSD = await this.context.oracleManager.getSpotPrice({
       baseToken: quoteToken,
     })
     return DebtInfo.createFrom({
@@ -260,7 +261,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
     const { osm, vatRes, jugRes, dogRes, spotRes, erc20, ilkRegistryRes } =
       await this._getIlkProtocolData({ chainInfo: makerLendingPoolId.protocol.chainInfo, ilkInHex })
 
-    const DAI = await this.ctx.tokensManager.getTokenBySymbol({
+    const DAI = await this.context.tokensManager.getTokenBySymbol({
       chainInfo: makerLendingPoolId.protocol.chainInfo,
       symbol: CommonTokenSymbols.DAI,
     })
@@ -268,7 +269,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
       throw new Error(`DAI token not found for chain: ${makerLendingPoolId.protocol.chainInfo}`)
     }
 
-    const ilkGemToken = await this.ctx.tokensManager.getTokenByAddress({
+    const ilkGemToken = await this.context.tokensManager.getTokenByAddress({
       chainInfo: makerLendingPoolId.protocol.chainInfo,
       address: Address.createFromEthereum({ value: ilkRegistryRes.gem }),
     })
@@ -333,7 +334,6 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
   }
 
   private async _getIlkProtocolData(params: { chainInfo: IChainInfo; ilkInHex: `0x${string}` }) {
-    const ctx = this.ctx
     const makerDogDef = await this._getContractDef({
       chainInfo: params.chainInfo,
       contractName: 'Dog',
@@ -389,7 +389,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
         7: name, // Token name
         8: symbol, // Token symbol
       },
-    ] = await ctx.provider.multicall({
+    ] = await this.context.provider.multicall({
       contracts: [
         {
           abi: makerVatDef.abi,
@@ -452,13 +452,13 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
     const osm = getContract({
       abi: OSM_ABI,
       address: spotRes.priceFeedAddress.value,
-      client: ctx.provider,
+      client: this.context.provider,
     })
 
     const erc20 = getContract({
       abi: ERC20_ABI,
       address: gem,
-      client: ctx.provider,
+      client: this.context.provider,
     })
 
     const ilkRegistryRes = {

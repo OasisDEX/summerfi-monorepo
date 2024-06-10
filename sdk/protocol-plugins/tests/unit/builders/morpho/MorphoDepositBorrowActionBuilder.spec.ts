@@ -62,7 +62,7 @@ describe('Morpho  Deposit Borrow Action Builder', () => {
   })
 
   const protocol = MorphoProtocol.createFrom({
-    name: ProtocolName.Morpho,
+    name: ProtocolName.MorphoBlue,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 
@@ -190,10 +190,12 @@ describe('Morpho  Deposit Borrow Action Builder', () => {
 
     const { callsBatch } = builderParams.context.endSubContext()
 
-    expect(callsBatch.length).toEqual(2)
+    expect(callsBatch.length).toEqual(4)
 
     expect(callsBatch[0].name).toBe('SetApproval')
     expect(callsBatch[1].name).toBe('MorphoBlueDeposit')
+    expect(callsBatch[2].name).toBe('MorphoBlueBorrow')
+    expect(callsBatch[3].name).toBe('SendToken')
   })
 
   it('should add borrow but not send token when borrow target is positions manager', async () => {
@@ -213,10 +215,11 @@ describe('Morpho  Deposit Borrow Action Builder', () => {
 
     const { callsBatch } = builderParams.context.endSubContext()
 
-    expect(callsBatch.length).toEqual(3)
+    expect(callsBatch.length).toEqual(4)
 
     expect(callsBatch[0].name).toBe('SetApproval')
     expect(callsBatch[1].name).toBe('MorphoBlueDeposit')
     expect(callsBatch[2].name).toBe('MorphoBlueBorrow')
+    expect(callsBatch[3].name).toBe('SendToken')
   })
 })

@@ -34,7 +34,7 @@ type ReservesData = {
 export type EmodeCategory = bigint
 type OraclePrice = bigint
 
-export type AllowedProtocolNames = ProtocolName.Spark | ProtocolName.AAVEv3
+export type AllowedProtocolNames = ProtocolName.Spark | ProtocolName.AaveV3
 export type WithToken<T> = T & { token: Token }
 export type WithReservesCaps<T> = T & { caps: ReservesCap }
 export type WithReservesConfig<T> = T & { config: ReservesConfigData }

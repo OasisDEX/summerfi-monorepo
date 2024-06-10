@@ -20,7 +20,7 @@ export class SparkPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.P
   ]
 
   async build(params: ActionBuilderParams<steps.PaybackWithdrawStep>): Promise<void> {
-    const { context, step, addressBookManager, user } = params
+    const { context, step, addressBookManager, user, positionsManager } = params
 
     if (!isSparkLendingPool(step.inputs.position.pool)) {
       throw new Error('Invalid Spark lending pool')
@@ -34,53 +34,53 @@ export class SparkPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.P
 
     const paybackAmount = getValueFromReference(step.inputs.paybackAmount)
 
-    if (!paybackAmount.toBN().isZero()) {
-      context.addActionCall({
-        step: step,
-        action: new SetApprovalAction(),
-        arguments: {
-          approvalAmount: getValueFromReference(step.inputs.paybackAmount),
-          delegate: sparkLendingPoolAddress,
-          sumAmounts: false,
-        },
-        connectedInputs: {
-          paybackAmount: 'approvalAmount',
-        },
-        connectedOutputs: {},
-      })
+    context.addActionCall({
+      step: step,
+      action: new SetApprovalAction(),
+      arguments: {
+        approvalAmount: getValueFromReference(step.inputs.paybackAmount),
+        delegate: sparkLendingPoolAddress,
+        sumAmounts: false,
+      },
+      connectedInputs: {
+        paybackAmount: 'approvalAmount',
+      },
+      connectedOutputs: {},
+      skip: paybackAmount.toBN().isZero(),
+    })
 
-      context.addActionCall({
-        step: params.step,
-        action: new SparkPaybackAction(),
-        arguments: {
-          paybackAmount: getValueFromReference(step.inputs.paybackAmount),
-          paybackAll: getValueFromReference(step.inputs.paybackAmount)
-            .toBN()
-            .gt(step.inputs.position.debtAmount.toBN()),
-        },
-        connectedInputs: {},
-        connectedOutputs: {
-          paybackAmount: 'paybackedAmount',
-        },
-      })
-    }
+    context.addActionCall({
+      step: params.step,
+      action: new SparkPaybackAction(),
+      arguments: {
+        paybackAmount: getValueFromReference(step.inputs.paybackAmount),
+        paybackAll: getValueFromReference(step.inputs.paybackAmount)
+          .toBN()
+          .gt(step.inputs.position.debtAmount.toBN()),
+        onBehalf: positionsManager.address,
+      },
+      connectedInputs: {},
+      connectedOutputs: {
+        paybackAmount: 'paybackedAmount',
+      },
+      skip: paybackAmount.toBN().isZero(),
+    })
 
     const withdrawAmount = getValueFromReference(step.inputs.withdrawAmount)
 
-    if (!withdrawAmount.toBN().isZero()) {
-      context.addActionCall({
-        step: step,
-        action: new SparkWithdrawAction(),
-        arguments: {
-          withdrawAmount: withdrawAmount,
-          withdrawTo: await this._getWithdrawTargetAddress(params),
-        },
-        connectedInputs: {},
-        connectedOutputs: {
-          withdrawAmount: 'withdrawnAmount',
-        },
-      })
-    }
+    context.addActionCall({
+      step: step,
+      action: new SparkWithdrawAction(),
+      arguments: {
+        withdrawAmount: withdrawAmount,
+        withdrawTo: await this._getWithdrawTargetAddress(params),
+      },
+      connectedInputs: {},
+      connectedOutputs: {
+        withdrawAmount: 'withdrawnAmount',
+      },
+      skip: withdrawAmount.toBN().isZero(),
+    })
   }
 
   /**

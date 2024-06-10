@@ -4,7 +4,6 @@ import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 import {
   AddressValue,
   CommonTokenSymbols,
-  RefinanceSimulationTypes,
   ISimulation,
   Percentage,
   TokenAmount,
@@ -13,6 +12,7 @@ import {
   ChainFamilyMap,
   PositionType,
   IToken,
+  SimulationType,
 } from '@summerfi/sdk-common'
 import { PositionsManager, Order, RefinanceParameters } from '@summerfi/sdk-common/orders'
 import {
@@ -36,19 +36,25 @@ jest.setTimeout(300000)
 
 /** TEST CONFIG */
 const config = {
-  SDKAPiUrl: 'https://zmjmtfsocb.execute-api.us-east-1.amazonaws.com/api/sdk',
-  TenderlyForkUrl: 'https://virtual.mainnet.rpc.tenderly.co/cc7432cd-f037-4aa8-a05f-ae6d8cefba39',
-  DPMAddress: '0x551eb8395093fde4b9eef017c93593a3c7a75138',
-  walletAddress: '0xbEf4befb4F230F43905313077e3824d7386E09F8',
-  collateralTokenSymbol: CommonTokenSymbols.WETH,
-  collateralAmount: '0.0198',
-  debtTokenSymbol: CommonTokenSymbols.DAI,
-  debtAmount: '26',
+  SDKAPiUrl: 'https://72dytt1e93.execute-api.us-east-1.amazonaws.com/api/sdk',
+  TenderlyForkUrl: 'https://virtual.mainnet.rpc.tenderly.co/28f27b3b-bafb-4902-a1a0-53668b179117',
+  DPMAddress: '0xb2f1349068c1cb6a596a22a3531b8062778c9da4',
+  walletAddress: '0xDDc68f9dE415ba2fE2FD84bc62Be2d2CFF1098dA',
+  source: {
+    collateralTokenSymbol: CommonTokenSymbols.wstETH,
+    collateralAmount: '10',
+    debtTokenSymbol: CommonTokenSymbols.USDC,
+    debtAmount: '0',
+  },
+  target: {
+    collateralTokenSymbol: CommonTokenSymbols.WETH,
+    debtTokenSymbol: CommonTokenSymbols.DAI,
+  },
   sendTransactionEnabled: true,
 }
 
 describe.skip('Refinance AaveV3 Spark | SDK', () => {
-  it('should allow refinance Maker -> Spark with same pair', async () => {
+  it('should allow refinance AaveV3 -> Spark with any pair', async () => {
     // SDK
     const sdk = makeSDK({ apiURL: config.SDKAPiUrl })
 
@@ -79,17 +85,27 @@ describe.skip('Refinance AaveV3 Spark | SDK', () => {
     })
 
     // Tokens
-    const debtToken: Maybe<IToken> = await chain.tokens.getTokenBySymbol({
-      symbol: config.debtTokenSymbol,
+    const sourceDebtToken: Maybe<IToken> = await chain.tokens.getTokenBySymbol({
+      symbol: config.source.debtTokenSymbol,
     })
-    assert(debtToken, `${config.debtTokenSymbol} not found`)
+    assert(sourceDebtToken, `${config.source.debtTokenSymbol} not found`)
 
-    const collateralToken: Maybe<IToken> = await chain.tokens.getTokenBySymbol({
-      symbol: config.collateralTokenSymbol,
+    const sourceCollateralToken: Maybe<IToken> = await chain.tokens.getTokenBySymbol({
+      symbol: config.source.collateralTokenSymbol,
     })
-    assert(collateralToken, `${config.collateralTokenSymbol} not found`)
+    assert(sourceCollateralToken, `${config.source.collateralTokenSymbol} not found`)
 
-    const aaveV3 = await chain.protocols.getProtocol({ name: ProtocolName.AAVEv3 })
+    const targetDebtToken: Maybe<IToken> = await chain.tokens.getTokenBySymbol({
+      symbol: config.target.debtTokenSymbol,
+    })
+    assert(targetDebtToken, `${config.target.debtTokenSymbol} not found`)
+
+    const targetCollateralToken: Maybe<IToken> = await chain.tokens.getTokenBySymbol({
+      symbol: config.target.collateralTokenSymbol,
+    })
+    assert(targetCollateralToken, `${config.target.collateralTokenSymbol} not found`)
+
+    const aaveV3 = await chain.protocols.getProtocol({ name: ProtocolName.AaveV3 })
     assert(aaveV3, 'AaveV3 protocol not found')
 
     if (!isAaveV3Protocol(aaveV3)) {
@@ -98,8 +114,8 @@ describe.skip('Refinance AaveV3 Spark | SDK', () => {
 
     const aaveV3PoolId = AaveV3LendingPoolId.createFrom({
       protocol: aaveV3,
-      collateralToken: collateralToken,
-      debtToken: debtToken,
+      collateralToken: sourceCollateralToken,
+      debtToken: sourceDebtToken,
       emodeType: EmodeType.None,
     })
 
@@ -113,18 +129,18 @@ describe.skip('Refinance AaveV3 Spark | SDK', () => {
     }
 
     // Source position
-    const morphoPosition = AaveV3Position.createFrom({
+    const aaveV3Position = AaveV3Position.createFrom({
       type: PositionType.Multiply,
       id: AaveV3PositionId.createFrom({
         id: 'AaveV3Position',
       }),
       debtAmount: TokenAmount.createFrom({
-        token: debtToken,
-        amount: config.debtAmount,
+        token: sourceDebtToken,
+        amount: config.source.debtAmount,
       }),
       collateralAmount: TokenAmount.createFrom({
-        token: collateralToken,
-        amount: config.collateralAmount,
+        token: sourceCollateralToken,
+        amount: config.source.collateralAmount,
       }),
       pool: aaveV3Pool,
     })
@@ -141,8 +157,8 @@ describe.skip('Refinance AaveV3 Spark | SDK', () => {
 
     const poolId = SparkLendingPoolId.createFrom({
       protocol: spark,
-      collateralToken: collateralToken,
-      debtToken: debtToken,
+      collateralToken: targetCollateralToken,
+      debtToken: targetDebtToken,
       emodeType: EmodeType.None,
     })
 
@@ -160,18 +176,24 @@ describe.skip('Refinance AaveV3 Spark | SDK', () => {
       assert(false, 'Spark pool type is not lending')
     }
 
+    const sparkPoolInfo = await spark.getLendingPoolInfo({
+      poolId,
+    })
+
+    assert(sparkPoolInfo, 'Pool info not found')
+
     const refinanceParameters = RefinanceParameters.createFrom({
-      sourcePosition: morphoPosition,
+      sourcePosition: aaveV3Position,
       targetPool: sparkPool,
       slippage: Percentage.createFrom({ value: 0.2 }),
     })
 
-    const refinanceSimulation: ISimulation<RefinanceSimulationTypes> =
+    const refinanceSimulation: ISimulation<SimulationType.Refinance> =
       await sdk.simulator.refinance.simulateRefinancePosition(refinanceParameters)
 
     expect(refinanceSimulation).toBeDefined()
 
-    expect(refinanceSimulation.sourcePosition?.id).toEqual(morphoPosition.id)
+    expect(refinanceSimulation.sourcePosition?.id).toEqual(aaveV3Position.id)
     expect(refinanceSimulation.targetPosition.pool.id).toEqual(sparkPool.id)
 
     const refinanceOrder: Maybe<Order> = await user.newOrder({
@@ -181,10 +203,10 @@ describe.skip('Refinance AaveV3 Spark | SDK', () => {
 
     assert(refinanceOrder, 'Order not found')
 
-    // Send transaction
-    console.log('Sending transaction...')
-
     if (config.sendTransactionEnabled) {
+      // Send transaction
+      console.log('Sending transaction...')
+
       const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex
       const transactionUtils = new TransactionUtils({
         rpcUrl: config.TenderlyForkUrl,

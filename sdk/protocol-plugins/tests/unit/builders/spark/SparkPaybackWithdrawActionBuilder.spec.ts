@@ -182,8 +182,10 @@ describe('Spark Payback Withdraw Action Builder', () => {
 
     const { callsBatch } = builderParams.context.endSubContext()
 
-    expect(callsBatch.length).toEqual(1)
+    expect(callsBatch.length).toEqual(3)
 
-    expect(callsBatch[0].name).toBe('SparkWithdraw')
+    expect(callsBatch[0].name).toBe('SetApproval')
+    expect(callsBatch[1].name).toBe('SparkPayback')
+    expect(callsBatch[2].name).toBe('SparkWithdraw')
   })
 })

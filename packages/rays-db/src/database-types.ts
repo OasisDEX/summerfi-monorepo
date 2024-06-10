@@ -7,6 +7,8 @@ export type Generated<T> =
     ? ColumnType<S, I | undefined, U>
     : ColumnType<T, T | undefined, T>
 
+export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>
+
 export type Json = JsonValue
 
 export type JsonArray = JsonValue[]
@@ -42,6 +44,12 @@ export interface EligibilityCondition {
   metadata: Json
   type: string
   updatedAt: Generated<Timestamp>
+}
+
+export interface Leaderboard {
+  position: Int8 | null
+  totalPoints: Numeric | null
+  userAddress: string | null
 }
 
 export interface Multiplier {
@@ -111,6 +119,7 @@ export interface UserAddress {
 export interface Database {
   blockchainUser: BlockchainUser
   eligibilityCondition: EligibilityCondition
+  leaderboard: Leaderboard
   multiplier: Multiplier
   pointsDistribution: PointsDistribution
   position: Position

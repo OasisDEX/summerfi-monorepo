@@ -98,7 +98,7 @@ describe('Maker Payback Withdraw Action Builder', () => {
       id: MorphoLendingPoolId.createFrom({
         marketId: '0x1234',
         protocol: MorphoProtocol.createFrom({
-          name: ProtocolName.Morpho,
+          name: ProtocolName.MorphoBlue,
           chainInfo: ChainFamilyMap.Ethereum.Mainnet,
         }),
       }),
@@ -187,8 +187,9 @@ describe('Maker Payback Withdraw Action Builder', () => {
 
     const { callsBatch } = builderParams.context.endSubContext()
 
-    expect(callsBatch.length).toEqual(1)
+    expect(callsBatch.length).toEqual(2)
 
-    expect(callsBatch[0].name).toBe('MakerWithdraw')
+    expect(callsBatch[0].name).toBe('MakerPayback')
+    expect(callsBatch[1].name).toBe('MakerWithdraw')
   })
 })

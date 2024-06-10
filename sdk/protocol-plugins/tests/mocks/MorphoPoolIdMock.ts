@@ -16,7 +16,7 @@ import {
 
 export const morphoPoolIdMock: IMorphoLendingPoolId = MorphoLendingPoolId.createFrom({
   protocol: MorphoProtocol.createFrom({
-    name: ProtocolName.Morpho,
+    name: ProtocolName.MorphoBlue,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   }),
   marketId: '0xc54d7acf14de29e0e5527cabd7a576506870346a78a11a6762e2cca66322ec41',
@@ -26,7 +26,7 @@ export const morphoPoolMarketParams: MorphoMarketParameters = {
   collateralToken: Token.createFrom({
     address: Address.createFromEthereum({ value: '0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0' }),
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
-    name: 'Wrapped staked ETH',
+    name: 'WrappedliquidstakedEther2.0',
     symbol: 'wstETH',
     decimals: 18,
   }),

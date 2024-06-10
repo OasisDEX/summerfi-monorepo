@@ -104,3 +104,14 @@ export const percentageSchema = bigIntSchema.refine(
 
 export type LTV = z.infer<typeof ltvSchema>
 export type Percentage = z.infer<typeof percentageSchema>
+
+export const numberSchema = z
+  .string()
+  .refine((value) => !isNaN(Number(value)) && Number.isInteger(Number(value)), {
+    params: {
+      code: 'not-number',
+    },
+    message: 'Must be a number without decimals',
+  })
+  .transform((value) => Number(value))
+  .or(z.number().int())

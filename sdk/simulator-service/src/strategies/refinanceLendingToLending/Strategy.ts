@@ -1,16 +1,21 @@
 import { SimulationSteps } from '@summerfi/sdk-common/simulation'
 import { makeStrategy } from '../../implementation/utils'
 
-export const refinanceLendingToLendingSamePairStrategy = makeStrategy([
+export const refinanceLendingToLendingAnyPairStrategy = makeStrategy([
   {
     name: 'Flashloan',
     step: SimulationSteps.Flashloan,
-    optional: false,
+    optional: true,
   },
   {
     name: 'PaybackWithdrawFromSourcePosition',
     step: SimulationSteps.PaybackWithdraw,
     optional: false,
+  },
+  {
+    name: 'SwapCollateralFromSourcePosition',
+    step: SimulationSteps.Swap,
+    optional: true,
   },
   {
     name: 'OpenTargetPosition',
@@ -23,9 +28,19 @@ export const refinanceLendingToLendingSamePairStrategy = makeStrategy([
     optional: false,
   },
   {
+    name: 'SwapDebtFromTargetPosition',
+    step: SimulationSteps.Swap,
+    optional: true,
+  },
+  {
     name: 'RepayFlashloan',
     step: SimulationSteps.RepayFlashloan,
-    optional: false,
+    optional: true,
+  },
+  {
+    name: 'ReturnFunds',
+    step: SimulationSteps.ReturnFunds,
+    optional: true,
   },
   {
     name: 'NewPositionEvent',

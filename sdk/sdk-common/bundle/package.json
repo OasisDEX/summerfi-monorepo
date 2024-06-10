@@ -1,6 +1,6 @@
 {
-  "name": "summerfi-sdk-common",
-  "version": "0.2.5",
+  "name": "@summer_fi/summerfi-sdk-common",
+  "version": "0.2.7",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "packageManager": "yarn@1.22.21",

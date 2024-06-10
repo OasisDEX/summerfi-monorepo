@@ -29,7 +29,7 @@ export class AaveV3DepositBorrowActionBuilder extends BaseActionBuilder<steps.De
     const aaveV3LendingPoolAddress = await getContractAddress({
       addressBookManager,
       chainInfo: user.chainInfo,
-      contractName: 'AaveV3LendingPool',
+      contractName: 'AavePool',
     })
 
     context.addActionCall({
@@ -63,21 +63,19 @@ export class AaveV3DepositBorrowActionBuilder extends BaseActionBuilder<steps.De
     })
 
     const borrowAmount = getValueFromReference(step.inputs.borrowAmount)
-
-    if (!borrowAmount.toBN().isZero()) {
-      context.addActionCall({
-        step: step,
-        action: new AaveV3BorrowAction(),
-        arguments: {
-          borrowAmount: borrowAmount,
-          borrowTo: await this._getBorrowTargetAddress(params),
-        },
-        connectedInputs: {},
-        connectedOutputs: {
-          borrowAmount: 'borrowedAmount',
-        },
-      })
-    }
+    context.addActionCall({
+      step: step,
+      action: new AaveV3BorrowAction(),
+      arguments: {
+        borrowAmount: borrowAmount,
+        borrowTo: await this._getBorrowTargetAddress(params),
+      },
+      connectedInputs: {},
+      connectedOutputs: {
+        borrowAmount: 'borrowedAmount',
+      },
+      skip: borrowAmount.toBN().isZero(),
+    })
   }
 
   /**
