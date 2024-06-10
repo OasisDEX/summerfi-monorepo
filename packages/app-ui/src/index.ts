@@ -34,5 +34,3 @@ export {
   getTokens,
   getTokenGuarded,
 } from './tokens/helpers'
-
-export { icons } from './icons'

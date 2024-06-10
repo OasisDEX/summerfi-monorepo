@@ -75,5 +75,5 @@ artifacts
 # CDK Contexts
 cdk.context.json
 
-# million.dev
-.million
+# rays-dashboard specific
+/apps/rays-dashboard/types/generated
