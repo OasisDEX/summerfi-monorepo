@@ -43,14 +43,16 @@ export const fetchLeaderboard = async (query: string) => {
   )
 
   return {
-    leaderboard: response.leaderboard.map((item, idx) => {
+    leaderboard: response.leaderboard.map((item) => {
       const numberOfPositions = item.userAddress
         ? getNumberOfPositions(reducedPositions[item.userAddress.toLowerCase()])
-        : 1 // fallback to 1
+        : // eslint-disable-next-line no-magic-numbers
+          1 // fallback to 1
 
       const numberOfActiveTriggers = item.userAddress
         ? reducedNumberOfTriggers[item.userAddress.toLowerCase()]
-        : 0 // fallback to 0
+        : // eslint-disable-next-line no-magic-numbers
+          0 // fallback to 0
 
       return {
         ...item,
