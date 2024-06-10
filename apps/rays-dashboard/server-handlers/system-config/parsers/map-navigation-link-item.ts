@@ -1,5 +1,7 @@
 /* eslint-disable no-magic-numbers */
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
+import { TokenSymbolsList } from '@summerfi/app-ui'
+
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
 import { filterFeaturedProducts } from '@/server-handlers/system-config/parsers/filter-featured-products'
 import { mapFeaturedEarnProduct } from '@/server-handlers/system-config/parsers/map-featured-earn-product'
@@ -39,7 +41,7 @@ export function mapNavigationLinkItem({
           }),
           ...(token && {
             icon: {
-              tokens: [token],
+              tokens: [token] as TokenSymbolsList[],
               position: 'title',
             },
           }),

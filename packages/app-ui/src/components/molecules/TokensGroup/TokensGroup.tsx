@@ -1,22 +1,18 @@
 /* eslint-disable no-magic-numbers */
-import { FC } from 'react'
-import {
-  getToken,
-  getTokenDisplayName,
-  getTokenGuarded,
-  tokensBySymbol,
-} from '@summerfi/app-tokens'
+
 import { NetworkNames } from '@summerfi/serverless-shared'
 
 import { GenericTokenIcon } from '@/components/atoms/GenericTokenIcon/GenericTokenIcon'
 import { Icon } from '@/components/atoms/Icon/Icon'
+import { getToken, getTokenDisplayName, getTokenGuarded, tokensBySymbol } from '@/tokens/helpers'
+import { TokenSymbolsList } from '@/tokens/types'
 
 import classNames from '@/components/molecules/TokensGroup/TokensGroup.module.scss'
 
 interface TokensGroupProps {
   forceSize?: number
   network?: NetworkNames
-  tokens: string[]
+  tokens: TokenSymbolsList[]
 }
 
 const defaultSingleSize = 44
@@ -38,6 +34,7 @@ export function TokensGroup({ forceSize, network, tokens }: TokensGroupProps) {
       >
         {tokens.map((token, i) => {
           const resolvedToken = getTokenDisplayName(token)
+          const resolvedTokenData = getToken(resolvedToken)
 
           return (
             <li
@@ -51,8 +48,8 @@ export function TokensGroup({ forceSize, network, tokens }: TokensGroupProps) {
               !getTokenGuarded(resolvedToken)?.iconUnavailable ? (
                 <Icon
                   variant={tokens.length ? 'l' : 'xxxl'}
-                  key={getToken(resolvedToken).name}
-                  icon={getToken(resolvedToken).iconCircle}
+                  key={resolvedTokenData.name}
+                  iconName={resolvedTokenData.iconName}
                 />
               ) : (
                 <GenericTokenIcon

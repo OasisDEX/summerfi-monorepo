@@ -1,4 +1,9 @@
 import { ReactNode } from 'react'
+import {
+  NavigationMenuPanelIcon,
+  NavigationMenuPanelListTags,
+  NavigationModule,
+} from '@summerfi/app-ui'
 
 import { LendingProtocol } from '@/helpers/lending-protocol'
 import { FeaturesEnum } from '@/types/generated'
@@ -6,7 +11,6 @@ import { OmniProductType } from '@/types/omni-kit'
 import { ProductHubSupportedNetworks } from '@/types/product-hub'
 
 // types needed for the contentful navigation calls start
-type NavigationModule = 'swap' | 'bridge'
 
 interface NavigationLink {
   __typename: 'NavigationLink'
@@ -111,16 +115,6 @@ export interface NavigationResponse {
     }
   }
 }
-
-// types needed for the navigation parser start
-export interface NavigationMenuPanelIcon {
-  icon?: never
-  image?: string
-  tokens?: string[]
-  position: 'global' | 'title'
-}
-
-export type NavigationMenuPanelListTags = ([string, string] | string)[]
 
 export interface NavigationMenuPanelListItem {
   description?: ReactNode

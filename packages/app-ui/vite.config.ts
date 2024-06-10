@@ -13,9 +13,6 @@ import dts from 'vite-plugin-dts'
 // preserves directives like "use client" in the output
 import preserveDirectives from 'rollup-preserve-directives'
 
-// eslint and magic numbers
-const fileSliceNumber = 0
-
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -63,6 +60,7 @@ export default defineConfig({
       },
     },
   },
+
   build: {
     emptyOutDir: false,
     cssCodeSplit: true,
@@ -72,13 +70,21 @@ export default defineConfig({
       formats: ['es'],
     },
     rollupOptions: {
-      external: ['react', 'react/jsx-runtime', 'next/link', 'next/image', 'lodash'],
+      external: [
+        'react',
+        'react/jsx-runtime',
+        'next/link',
+        'next/image',
+        'lodash',
+        '@loadable/component',
+        '@tabler/icons-react',
+      ],
       input: Object.fromEntries(
         glob
           .sync('src/**/*.{ts,tsx}')
           .filter((file) => !file.endsWith('.d.ts'))
           .map((file) => [
-            relative('src', file.slice(fileSliceNumber, file.length - extname(file).length)),
+            relative('src', file.slice(0, file.length - extname(file).length)),
             fileURLToPath(new URL(file, import.meta.url)),
           ]),
       ),

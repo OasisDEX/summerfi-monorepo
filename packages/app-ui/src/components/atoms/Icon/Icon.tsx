@@ -1,21 +1,35 @@
+'use client'
+
 import { FC } from 'react'
 
-export interface IconProps {
+import { getTokenGuarded } from '@/tokens/helpers'
+import { IconNamesList, TokenSymbolsList } from '@/tokens/types'
+
+import * as iconProxies from './iconsProxy'
+
+export interface IconPropsBase {
   variant?: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'
   size?: number
   role?: 'presentation'
   focusable?: boolean
-  icon: {
-    path: React.JSX.Element
-    viewBox?: string
-  }
+  iconName?: IconNamesList
+  tokenName?: TokenSymbolsList
 }
 
-export const Icon: FC<IconProps> = ({
+export interface IconPropsWithIconName extends IconPropsBase {
+  iconName: IconNamesList
+}
+
+export interface IconPropsWithTokenName extends IconPropsBase {
+  tokenName: TokenSymbolsList
+}
+
+export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
   variant = 'l',
   role = 'presentation',
   focusable = false,
-  icon,
+  iconName: iconNameProp,
+  tokenName,
   size,
 }) => {
   const finalSize =
@@ -31,17 +45,45 @@ export const Icon: FC<IconProps> = ({
       xxxl: 45,
     }[variant]
 
+  const iconName = iconNameProp ?? getTokenGuarded(tokenName)?.iconName ?? 'not_supported_icon'
+
+  const LazyIconComponent = iconProxies[iconName]
+
   return (
-    <svg
-      viewBox={icon.viewBox ?? '0 0 24 24'}
-      color="inherit"
-      display="inline-block"
-      focusable={focusable}
-      role={role}
-      width={finalSize}
-      height={finalSize}
+    <LazyIconComponent
+      fallback={
+        <svg
+          viewBox="0 0 6.35 6.35"
+          color="inherit"
+          display="inline-block"
+          focusable={focusable}
+          role={role}
+          width={finalSize}
+          height={finalSize}
+        >
+          <circle
+            style={{ fill: '#9d9d9d', fillOpacity: 0.350168, strokeWidth: 0.340624 }}
+            cx="3.175"
+            cy="3.175"
+            r="3.175"
+          />
+        </svg>
+      }
     >
-      {icon.path}
-    </svg>
+      {({ default: iconData }) => (
+        <svg
+          viewBox={'viewBox' in iconData ? iconData.viewBox : '0 0 24 24'}
+          color="inherit"
+          display="inline-block"
+          focusable={focusable}
+          role={role}
+          width={finalSize}
+          height={finalSize}
+        >
+          {iconName}
+          {iconData.path}
+        </svg>
+      )}
+    </LazyIconComponent>
   )
 }

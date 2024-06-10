@@ -36,7 +36,7 @@ export function NavigationMenuDropdownContentIcon({
             navigationMenuDropdownContentIconStyles.navigationMenuDropdownContentIcon,
           )}
         >
-          <Icon icon={icon} size={20} />
+          <Icon iconName={icon} size={20} />
         </div>
       )}
       {image && <Image alt={tokens?.join('-') ?? ''} src={image} width={26} />}

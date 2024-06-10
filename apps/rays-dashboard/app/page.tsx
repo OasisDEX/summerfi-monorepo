@@ -1,5 +1,12 @@
-import { icons } from '@summerfi/app-tokens'
-import { Button, GenericTokenIcon, Icon, ProtocolLabel, Text, Tooltip } from '@summerfi/app-ui'
+import {
+  Button,
+  GenericTokenIcon,
+  Icon,
+  ProtocolLabel,
+  Text,
+  TokensGroup,
+  Tooltip,
+} from '@summerfi/app-ui'
 import Link from 'next/link'
 
 import { automationItems, ProductCard } from '@/components/molecules/ProductCard'
@@ -12,6 +19,9 @@ export default function HomePage() {
 
   return (
     <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'flex-start' }}>
+      <Icon tokenName="ADAI" />
+      <Icon iconName="arb" />
+      <TokensGroup tokens={['CRV', 'AETHCBETH', 'CUSDCV3', 'XETH', 'DETH', 'GUNIV3DAIUSDC2']} />
       <Text>Text component</Text>
       <Text as="p">Text component as p</Text>
       <Text as="p" variant="p1">
@@ -48,7 +58,7 @@ export default function HomePage() {
       />
 
       <Tooltip tooltip="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries">
-        <Icon icon={icons.btc_circle_color} />
+        <Icon tokenName="WBTC" />
       </Tooltip>
 
       <Text as="p" variant="p2semi">

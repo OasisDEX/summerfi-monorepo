@@ -1,12 +1,11 @@
 import { ReactNode } from 'react'
-import { ProtocolId } from '@summerfi/serverless-shared'
 
-import { IconProps } from '@/components/atoms/Icon/Icon'
+import { IconNamesList, TokenSymbolsList } from '@/tokens/types'
 
 export type NavigationModule = 'swap' | 'bridge'
 
 export interface NavigationMenuPanelLink {
-  icon: IconProps['icon']
+  icon: IconNamesList
   title: string
   link: string
   hash?: string
@@ -14,9 +13,9 @@ export interface NavigationMenuPanelLink {
 }
 
 export interface NavigationMenuPanelIcon {
-  icon?: IconProps['icon']
+  icon?: IconNamesList
   image?: string
-  tokens?: string[]
+  tokens?: TokenSymbolsList[]
   position: 'global' | 'title'
 }
 
@@ -58,18 +57,11 @@ export interface NavigationMenuPanelAsset {
 }
 
 export interface NavigationMenuPanelLink {
-  icon: IconProps['icon']
+  icon: IconNamesList
   title: string
   link: string
   hash?: string
   footnote?: ReactNode
-}
-
-export interface NavigationMenuPanelIcon {
-  icon?: IconProps['icon']
-  image?: string
-  tokens?: string[]
-  position: 'global' | 'title'
 }
 
 export type NavigationMenuPanelListTags = ([string, string] | string)[]
