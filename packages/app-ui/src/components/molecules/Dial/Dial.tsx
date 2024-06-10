@@ -1,9 +1,10 @@
 /* eslint-disable no-magic-numbers */
 /* eslint-disable  no-mixed-operators */
 import { FC, ReactNode } from 'react'
-import Image from 'next/image'
 
+import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
+import { IconNamesList } from '@/tokens/types'
 
 import classNames, { ClassNames } from '@/components/molecules/Dial/Dial.module.scss'
 
@@ -12,12 +13,7 @@ interface DialProps {
   max: number
   subtext?: ReactNode
   trackWidth?: 1 | 2 | 3 | 4
-  icon?: {
-    src: string
-    alt: string
-    width: number
-    height: number
-  }
+  icon?: IconNamesList
 }
 
 export const Dial: FC<DialProps> = ({ value, max, trackWidth = 2, subtext, icon }) => {
@@ -76,7 +72,7 @@ export const Dial: FC<DialProps> = ({ value, max, trackWidth = 2, subtext, icon 
         />
       </svg>
       <div className={classNames.value}>
-        {icon && <Image src={icon.src} alt="dial-icon" width={icon.width} height={icon.height} />}
+        {icon && <Icon iconName={icon} />}
         <Text as="h3" variant="h3">
           {value} / {max}
         </Text>

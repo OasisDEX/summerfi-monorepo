@@ -3,7 +3,6 @@ import {
   Dial,
   GenericTokenIcon,
   Icon,
-  icons,
   ProtocolLabel,
   Text,
   TokensGroup,
@@ -78,12 +77,7 @@ export default function HomePage() {
         }}
       />
       <BoostCards />
-      <Dial
-        value={280}
-        max={400}
-        subtext="Eligible"
-        icon={{ src: icons.rays, alt: 'rays-icon', height: 48, width: 48 }}
-      />
+      <Dial value={280} max={400} subtext="Eligible" icon="rays" />
     </div>
   )
 }
