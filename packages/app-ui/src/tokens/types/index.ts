@@ -173,6 +173,7 @@ export type IconNamesList =
   | 'takeProfit'
   // other icons
   | 'rays'
+  | 'chevron_down'
 
 export type TokenSymbolsList =
   | 'USDP'

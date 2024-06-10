@@ -11,7 +11,8 @@
       "@/*": ["./*"]
     },
     "noEmit": true,
-    "module": "esnext"
+    "module": "esnext",
+    "moduleResolution": "node"
   },
   "include": [
     "next-env.d.ts",

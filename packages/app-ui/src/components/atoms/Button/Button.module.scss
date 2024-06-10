@@ -105,3 +105,10 @@
     background-image: var(--gradient-summer-fi-dark);
   }
 }
+
+.unstyled,
+.unstyled:focus {
+  all: unset;
+  outline: revert;
+  cursor: pointer;
+}

@@ -15,6 +15,7 @@ export { LoadingSpinner } from './components/molecules/Loader/Loader'
 export { AutomationIcon } from './components/molecules/AutomationIcon/AutomationIcon'
 export { BannerCard } from './components/molecules/BannerCard/BannerCard'
 export { Dial } from './components/molecules/Dial/Dial'
+export { Table } from './components/molecules/Table/Table'
 
 export { Footer } from './components/layout/Footer/Footer'
 

@@ -12,6 +12,7 @@ import Link from 'next/link'
 
 import { BoostCards } from '@/components/molecules/BoostCards/BoostCards'
 import { automationItems, ProductCard } from '@/components/molecules/ProductCard'
+import { Leaderboard } from '@/components/organisms/Leaderboard/Leaderboard'
 import { NetworkNames, networksByName } from '@/constants/networks-list'
 import { LendingProtocol } from '@/helpers/lending-protocol'
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
@@ -78,6 +79,7 @@ export default function HomePage() {
       />
       <BoostCards />
       <Dial value={280} max={400} subtext="Eligible" icon="rays" iconSize={48} />
+      <Leaderboard />
     </div>
   )
 }

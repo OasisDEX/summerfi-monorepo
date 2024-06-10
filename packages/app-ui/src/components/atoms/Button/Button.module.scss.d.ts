@@ -6,6 +6,7 @@ export type Styles = {
   primarySmall: string
   secondaryLarge: string
   secondarySmall: string
+  unstyled: string
 }
 
 export type ClassNames = keyof Styles
