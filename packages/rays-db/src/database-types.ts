@@ -36,6 +36,31 @@ export interface BlockchainUser {
   updatedAt: Generated<Timestamp>
 }
 
+export interface CronJob {
+  active: Generated<boolean>
+  command: string
+  database: Generated<string>
+  jobid: Generated<Int8>
+  jobname: string | null
+  nodename: Generated<string>
+  nodeport: Generated<number>
+  schedule: string
+  username: Generated<string>
+}
+
+export interface CronJobRunDetails {
+  command: string | null
+  database: string | null
+  endTime: Timestamp | null
+  jobid: Int8 | null
+  jobPid: number | null
+  returnMessage: string | null
+  runid: Generated<Int8>
+  startTime: Timestamp | null
+  status: string | null
+  username: string | null
+}
+
 export interface EligibilityCondition {
   createdAt: Generated<Timestamp>
   description: string
@@ -44,12 +69,6 @@ export interface EligibilityCondition {
   metadata: Json
   type: string
   updatedAt: Generated<Timestamp>
-}
-
-export interface Leaderboard {
-  position: Int8 | null
-  totalPoints: Numeric | null
-  userAddress: string | null
 }
 
 export interface Multiplier {
@@ -118,8 +137,9 @@ export interface UserAddress {
 
 export interface Database {
   blockchainUser: BlockchainUser
+  'cron.job': CronJob
+  'cron.jobRunDetails': CronJobRunDetails
   eligibilityCondition: EligibilityCondition
-  leaderboard: Leaderboard
   multiplier: Multiplier
   pointsDistribution: PointsDistribution
   position: Position
