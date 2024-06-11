@@ -131,7 +131,6 @@ describe('Swap Action Builder', () => {
 
     expect(builderParams.swapManager.lastGetSwapDataExactInputParams).toBeDefined()
     expect(builderParams.swapManager.lastGetSwapDataExactInputParams).toEqual({
-      chainInfo: chainInfo,
       fromAmount: inputAmountAfterFee,
       toToken: toAmount.token,
       recipient: Address.createFromEthereum({ value: SwapContractAddress }),

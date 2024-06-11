@@ -1,4 +1,4 @@
-import { Address, ChainInfo, Percentage, Token, TokenAmount } from '@summerfi/sdk-common/common'
+import { Address, Percentage, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { SwapData, QuoteData, SwapProviderType } from '@summerfi/sdk-common/swap'
 import { ISwapManager, ISwapProvider } from '@summerfi/swap-common/interfaces'
 import { ManagerWithProvidersBase } from '@summerfi/sdk-server-common'
@@ -12,7 +12,6 @@ export class SwapManagerMock
 
   private _lastGetSwapDataExactInputParams:
     | {
-        chainInfo: ChainInfo
         fromAmount: TokenAmount
         toToken: Token
         recipient: Address
@@ -22,7 +21,6 @@ export class SwapManagerMock
 
   private _lastGetSwapQuoteExactInputParams:
     | {
-        chainInfo: ChainInfo
         fromAmount: TokenAmount
         toToken: Token
       }
@@ -51,7 +49,6 @@ export class SwapManagerMock
   }
 
   async getSwapDataExactInput(params: {
-    chainInfo: ChainInfo
     fromAmount: TokenAmount
     toToken: Token
     recipient: Address
@@ -62,7 +59,6 @@ export class SwapManagerMock
   }
 
   async getSwapQuoteExactInput(params: {
-    chainInfo: ChainInfo
     fromAmount: TokenAmount
     toToken: Token
   }): Promise<QuoteData> {
@@ -80,7 +76,6 @@ export class SwapManagerMock
 
   get lastGetSwapDataExactInputParams():
     | {
-        chainInfo: ChainInfo
         fromAmount: TokenAmount
         toToken: Token
         recipient: Address
@@ -92,7 +87,6 @@ export class SwapManagerMock
 
   get lastGetSwapQuoteExactInputParams():
     | {
-        chainInfo: ChainInfo
         fromAmount: TokenAmount
         toToken: Token
       }

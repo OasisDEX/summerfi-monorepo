@@ -45,6 +45,14 @@ export interface IPercentage extends IPercentageData {
   toProportion(): number
 
   /**
+   * @name toComplement
+   * @returns The complement of the percentage
+   *
+   * The complement is the difference between 100% and the percentage
+   */
+  toComplement(): IPercentage
+
+  /**
    * @name toBaseUnit
    * @param decimals The number of decimals to use for the conversion
    * @returns The percentage as a string in base unit
