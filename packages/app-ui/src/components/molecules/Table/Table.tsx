@@ -1,11 +1,13 @@
+import { ReactNode } from 'react'
+
 import styles from '@/components/molecules/Table/Table.module.scss'
 
 interface Column {
-  title: string
+  title: ReactNode
 }
 
 interface Row {
-  cells: (string | React.ReactNode)[]
+  cells: ReactNode[] | ReactNode
 }
 
 interface TableProps {
