@@ -28,12 +28,12 @@ export const fetchLeaderboard = async (query: string) => {
     .then((data) => data.crossUsers)
 
   // reduce positions list from different networks by user address
-  const reducedPositions = results.reduce(
+  const reducedPositions = results.reduce<{ [key: string]: Position[] }>(
     (acc, curr) => ({
       ...acc,
       [curr.id]: [...(acc[curr.id] || []), ...curr.positions],
     }),
-    {} as { [key: string]: Position[] },
+    {},
   )
 
   // reduce active triggers list to number from different networks by user address

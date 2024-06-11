@@ -1,5 +1,5 @@
 query CrossSummerPoints($chainNames: [String!]!, $addresses: [Bytes!]!) {
-  crossUsers(chainNames: $chainNames, where: { openPositions_gt: 0, id_in: $addresses }) {
+  crossUsers(chainNames: $chainNames, where: { id_in: $addresses }) {
     id
     chainName
     positions {
