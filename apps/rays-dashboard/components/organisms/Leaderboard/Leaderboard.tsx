@@ -125,27 +125,37 @@ export const Leaderboard = () => {
   const [page, setPage] = useState(1)
   const [isLoading, setIsLoading] = useState(true)
   const [input, setInput] = useState('')
+  const [debouncedInput, setDebouncedInput] = useState('')
 
   useEffect(() => {
     setIsLoading(true)
-    fetch(`/api/leaderboard?page=${page}&limit=5${input ? `&userAddress=${input}` : ''}`)
+    fetch(
+      `/api/leaderboard?page=${page}&limit=5${debouncedInput ? `&userAddress=${debouncedInput}` : ''}`,
+    )
       .then((data) => data.json())
       .then((data) => {
         const castedData = data as { leaderboard: LeaderboardResponse }
 
-        if (input) {
+        if (debouncedInput) {
+          setPage(1)
           setLeaderboard(castedData.leaderboard)
         } else {
           setLeaderboard((prev) => [...prev, ...castedData.leaderboard])
         }
         setIsLoading(false)
       })
-  }, [page, input])
+  }, [page, debouncedInput])
 
   const mappedLeaderBoard = mappLeaderboardData({
     leaderboardData: leaderboard,
     connectedWalletAddress: '0xB710940E3659415ebd5492f43B247891De14D872',
   })
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setDebouncedInput(input as string), 300)
+
+    return () => clearTimeout(timeout)
+  }, [input])
 
   return (
     <>
@@ -158,7 +168,9 @@ export const Leaderboard = () => {
           if ('value' in e.target) {
             const { value } = e.target
 
-            if (!value) {
+            setPage(1)
+
+            if (value === '') {
               setLeaderboard([])
             }
 
