@@ -769,16 +769,17 @@ async function checkOpenedPositionEligibility(
   positionPoints: PositionPoints,
 ) {
   // get all position with net value >= 500 and created before 14 days ago, available in current snapshot
-  const allEligiblePositionsFromPointsAccrual = positionPoints
-    .filter((p) => {
-      return (
-        Number(p.netValue) >= 500 &&
-        p.positionCreated * 1000 < Date.now() - FOURTEEN_DAYS_IN_MILLISECONDS
-      )
-    })
+  const allEligiblePositionsFromPointsAccrual = positionPoints.filter((p) => {
+    return (
+      Number(p.netValue) >= 500 &&
+      p.positionCreated * 1000 < Date.now() - FOURTEEN_DAYS_IN_MILLISECONDS
+    )
+  })
 
-  const eligibleUsers =  Array.from(new Set(allEligiblePositionsFromPointsAccrual.map((p) => p.user)))
-  
+  const eligibleUsers = Array.from(
+    new Set(allEligiblePositionsFromPointsAccrual.map((p) => p.user)),
+  )
+
   // get all points distributions without an associated position id but with an eligibility condition for the eligilbe users
   const existingUsersWithEligibilityCondition = await db
     .selectFrom('pointsDistribution')
