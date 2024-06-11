@@ -71,6 +71,12 @@ export interface EligibilityCondition {
   updatedAt: Generated<Timestamp>
 }
 
+export interface Leaderboard {
+  position: Int8 | null
+  totalPoints: Numeric | null
+  userAddress: string | null
+}
+
 export interface Multiplier {
   createdAt: Generated<Timestamp>
   description: string | null
@@ -140,6 +146,7 @@ export interface Database {
   'cron.job': CronJob
   'cron.jobRunDetails': CronJobRunDetails
   eligibilityCondition: EligibilityCondition
+  leaderboard: Leaderboard
   multiplier: Multiplier
   pointsDistribution: PointsDistribution
   position: Position
