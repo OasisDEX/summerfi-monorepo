@@ -768,7 +768,19 @@ async function checkOpenedPositionEligibility(
   db: Kysely<Database>,
   positionPoints: PositionPoints,
 ) {
-  // get all points distributions without an associated position id but with an eligibility condition
+  // get all position with net value >= 500 and created before 14 days ago, available in current snapshot
+  const allEligiblePositionsFromPointsAccrual = positionPoints.filter((p) => {
+    return (
+      Number(p.netValue) >= 500 &&
+      p.positionCreated * 1000 < Date.now() - FOURTEEN_DAYS_IN_MILLISECONDS
+    )
+  })
+
+  const eligibleUsers = Array.from(
+    new Set(allEligiblePositionsFromPointsAccrual.map((p) => p.user)),
+  )
+
+  // get all points distributions without an associated position id but with an eligibility condition for the eligilbe users
   const existingUsersWithEligibilityCondition = await db
     .selectFrom('pointsDistribution')
     .select(['pointsDistribution.id as pointsId'])
@@ -778,6 +790,7 @@ async function checkOpenedPositionEligibility(
       'pointsDistribution.eligibilityConditionId',
     )
     .leftJoin('userAddress', 'userAddress.id', 'pointsDistribution.userAddressId')
+    .where('userAddress.address', 'in', eligibleUsers)
     .where((eb) =>
       eb('pointsDistribution.type', '=', RetroPointDistribution.SNAPSHOT_GENERAL).or(
         'pointsDistribution.type',
@@ -793,15 +806,9 @@ async function checkOpenedPositionEligibility(
     await db.transaction().execute(async (transaction) => {
       for (const user of existingUsersWithEligibilityCondition) {
         if (user.dueDate && user.dueDate >= new Date()) {
-          const eligiblePositionsFromPointsAccrual = positionPoints
+          // filter all eligible positions for the user and sort them by creation date
+          const eligiblePositionsFromPointsAccrual = allEligiblePositionsFromPointsAccrual
             .filter((p) => p.user === user.address)
-            .filter((p) => {
-              console.log('p', p, user.id)
-              return (
-                Number(p.netValue) >= 500 &&
-                p.positionCreated * 1000 < Date.now() - FOURTEEN_DAYS_IN_MILLISECONDS
-              )
-            })
             .sort((a, b) => a.positionCreated - b.positionCreated)
 
           if (eligiblePositionsFromPointsAccrual.length == 0) {
@@ -823,7 +830,6 @@ async function checkOpenedPositionEligibility(
               )
               .selectAll()
               .execute()
-            logger.info(`pointsDistributions for ${user.id}`, JSON.stringify(pointsDistributions))
             for (const pointsDistribution of pointsDistributions) {
               // update points distribution
               await transaction
