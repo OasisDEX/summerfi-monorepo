@@ -11,6 +11,7 @@ permissions:
 jobs:
   deploy:
     name: Build & Deploy staging using SST
+    environment: staging
     runs-on: ubuntu-latest
     env:
       ONE_INCH_API_KEY: ${{ secrets.ONE_INCH_API_KEY }}
