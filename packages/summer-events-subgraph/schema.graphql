@@ -4889,6 +4889,7 @@ type User {
     where: AssetSwap_filter
   ): [AssetSwap!]!
   openPositions: BigInt!
+  ens: String
 }
 
 input User_filter {
