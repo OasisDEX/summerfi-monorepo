@@ -121,7 +121,7 @@ const mappLeaderboardData = ({
 }
 
 export const Leaderboard = () => {
-  const [leaderboard, setLeaderboard] = useState<LeaderboardResponse>([])
+  const [leaderboardData, setLeaderboardData] = useState<LeaderboardResponse>([])
   const [page, setPage] = useState(1)
   const [isLoading, setIsLoading] = useState(true)
   const [input, setInput] = useState('')
@@ -138,16 +138,16 @@ export const Leaderboard = () => {
 
         if (debouncedInput) {
           setPage(1)
-          setLeaderboard(castedData.leaderboard)
+          setLeaderboardData(castedData.leaderboard)
         } else {
-          setLeaderboard((prev) => [...prev, ...castedData.leaderboard])
+          setLeaderboardData((prev) => [...prev, ...castedData.leaderboard])
         }
         setIsLoading(false)
       })
   }, [page, debouncedInput])
 
   const mappedLeaderBoard = mappLeaderboardData({
-    leaderboardData: leaderboard,
+    leaderboardData,
     connectedWalletAddress: '0xB710940E3659415ebd5492f43B247891De14D872',
   })
 
@@ -171,14 +171,14 @@ export const Leaderboard = () => {
             setPage(1)
 
             if (value === '') {
-              setLeaderboard([])
+              setLeaderboardData([])
             }
 
             setInput(value as string)
           }
         }}
       />
-      {leaderboard.length && (
+      {leaderboardData.length && (
         <>
           <Table
             columns={columns.map((item, idx) => ({
