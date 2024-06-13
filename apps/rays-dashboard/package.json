@@ -7,9 +7,7 @@
     "build": "dotenv -e ../../.env -e ../../.env.local -- pnpm get-config-types && dotenv -e ../../.env -e ../../.env.local -- next build",
     "get-config-types": "node scripts/get-config-types.js",
     "start": "next start -p 3001",
-    "lint": "eslint .",
-    "build-client": "graphclient build",
-    "graphiql": "graphclient serve-dev"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@loadable/component": "^5.16.4",
