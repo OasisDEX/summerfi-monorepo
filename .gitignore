@@ -77,4 +77,3 @@ cdk.context.json
 
 # rays-dashboard specific
 /apps/rays-dashboard/types/generated
-/apps/rays-dashboard/.graphclient/
