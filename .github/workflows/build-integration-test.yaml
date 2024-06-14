@@ -38,6 +38,7 @@ jobs:
           BORROW_DB_READ_HOST: ${{ secrets.BORROW_DB_READ_HOST }}
           BORROW_DB_READ_USER: ${{ secrets.BORROW_DB_READ_USER }}
           BORROW_DB_READ_PASSWORD: ${{ secrets.BORROW_DB_READ_PASSWORD }}
+          PGCONNECT_TIMEOUT: 10
         run: |
           sudo apt update
           sudo apt install -y openvpn openvpn-systemd-resolved
@@ -61,6 +62,11 @@ jobs:
       - name: Setup tmate session
         if: always()
         uses: mxschmitt/action-tmate@v3
+        env:
+          BORROW_DB_READ_DB: ${{ secrets.BORROW_DB_READ_DB }}
+          BORROW_DB_READ_HOST: ${{ secrets.BORROW_DB_READ_HOST }}
+          BORROW_DB_READ_USER: ${{ secrets.BORROW_DB_READ_USER }}
+          BORROW_DB_READ_PASSWORD: ${{ secrets.BORROW_DB_READ_PASSWORD }}
         with:
           limit-access-to-actor: true
 
