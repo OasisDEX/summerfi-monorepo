@@ -44,7 +44,7 @@ jobs:
           echo "${{ secrets.VPN_PASSWORD }}" >> vpn-credentials.txt
           echo 'Connecting to the VPN...'
           sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon
-          sleep 5
+          sleep 3
           echo 'Checking the VPN connection...'
           /usr/bin/psql -d $BORROW_DB_READ_CONNECTION_STRING -a -c "SELECT 1;"
           STATUS_CODE=$?
