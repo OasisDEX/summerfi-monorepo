@@ -48,11 +48,11 @@ jobs:
           echo "${{ secrets.VPN_PASSWORD }}" >> vpn-credentials.txt
           echo 'Connecting to the VPN...'
           sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon
-          sleep 3
+          sleep 5
           echo 'Checking the VPN connection...'
-          PGPASSWORD=$BORROW_DB_READ_PASSWORD /usr/bin/psql -d $BORROW_DB_READ_DB -U $BORROW_DB_READ_USER -h $BORROW_DB_READ_HOST -c 'SELECT 1;'
+          systemctl reload postgresql
+          PGPASSWORD=$BORROW_DB_READ_PASSWORD /usr/bin/psql -d $BORROW_DB_READ_DB -U $BORROW_DB_READ_USER -h $BORROW_DB_READ_HOST -c 'SELECT 1;' > /dev/null
           STATUS_CODE=$?
-          echo 'Status code: "$STATUS_CODE"'
           if ! [[ "$STATUS_CODE" = 0 ]]; then
             echo 'VPN connection failed'
             exit 1
