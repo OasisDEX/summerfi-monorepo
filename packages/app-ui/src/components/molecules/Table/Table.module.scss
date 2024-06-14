@@ -1,0 +1,21 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: var(--space-s);
+  }
+
+  th {
+    color: var(--color-neutral-80);
+  }
+
+  .leftAlign {
+    text-align: left;
+  }
+
+  .rightAlign {
+    text-align: right;
+  }
+}

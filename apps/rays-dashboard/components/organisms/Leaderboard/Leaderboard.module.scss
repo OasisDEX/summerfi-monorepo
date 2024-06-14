@@ -1,0 +1,14 @@
+.headingWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.errorWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-xl);
+  color: var(--color-neutral-70);
+}

@@ -13,6 +13,7 @@
     "@loadable/component": "^5.16.4",
     "@summerfi/app-db": "workspace:*",
     "@summerfi/app-ui": "workspace:*",
+    "@summerfi/rays-db": "workspace:*",
     "@summerfi/serverless-shared": "workspace:*",
     "@tabler/icons-react": "^3.4.0",
     "lodash": "^4.17.21",
