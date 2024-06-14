@@ -17,6 +17,7 @@ interface LeaderboardProps {
     page: number
     limit: number
   }
+  serverLeaderboardResponse: LeaderboardResponse['leaderboard']
 }
 
 const LeaderboardSkeleton = () => {
@@ -46,53 +47,73 @@ export const Leaderboard: FC<LeaderboardProps> = ({
     page: 1,
     limit: 5,
   },
+  serverLeaderboardResponse,
 }) => {
   const [leaderboardResponse, setLeaderboardResponse] = useState<LeaderboardResponse>({
+    leaderboard: serverLeaderboardResponse,
+  })
+  const [searchLeaderboardResponse, setSearchLeaderboardResponse] = useState<LeaderboardResponse>({
     leaderboard: [],
   })
   const [page, setPage] = useState(pagination.page)
-  const [isLoading, setIsLoading] = useState(true)
-  const [freshStart, setFreshStart] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
+  const [freshStart, setFreshStart] = useState(false)
   const [input, setInput] = useState('')
   const [debouncedInput, setDebouncedInput] = useState('')
 
   useEffect(() => {
+    console.log('page', page)
+    if (page === 1 && !debouncedInput) {
+      return
+    }
     setIsLoading(true)
-    fetch(
-      `/api/leaderboard?page=${page}&limit=${pagination.limit}${debouncedInput ? `&userAddress=${debouncedInput}` : ''}`,
-    )
+    fetch(`/api/leaderboard?page=${page}&limit=${pagination.limit}`)
       .then((data) => data.json())
       .then((data) => {
         const castedData = data as LeaderboardResponse
 
-        if (debouncedInput) {
-          setPage(1)
-          setLeaderboardResponse(castedData)
-        } else {
-          setLeaderboardResponse((prev) => {
-            const mergedLeaderboard = [
-              ...(freshStart ? [] : prev.leaderboard),
-              ...castedData.leaderboard,
-            ]
+        setLeaderboardResponse((prev) => {
+          const mergedLeaderboard = [...prev.leaderboard, ...castedData.leaderboard]
 
-            return {
-              ...castedData,
-              // in general there shouldn't be kur, but just in case filter out if exists
-              // (duplicates may occur while developing due to hot reloads)
-              leaderboard: mergedLeaderboard.filter(
-                (obj, index) =>
-                  index === mergedLeaderboard.findIndex((o) => obj.userAddress === o.userAddress),
-              ),
-            }
-          })
-        }
+          return {
+            ...castedData,
+            // in general there shouldn't be kur, but just in case filter out if exists
+            // (duplicates may occur while developing due to hot reloads)
+            leaderboard: mergedLeaderboard.filter(
+              (obj, index) =>
+                index === mergedLeaderboard.findIndex((o) => obj.userAddress === o.userAddress),
+            ),
+          }
+        })
         setIsLoading(false)
         setFreshStart(false)
       })
-  }, [page, debouncedInput, freshStart])
+  }, [page, freshStart, pagination.limit, debouncedInput])
+
+  useEffect(() => {
+    if (!debouncedInput) {
+      return
+    }
+    setIsLoading(true)
+    fetch(`/api/leaderboard?limit=${pagination.limit}&userAddress=${debouncedInput}`)
+      .then((data) => data.json())
+      .then((data) => {
+        const castedData = data as LeaderboardResponse
+
+        setSearchLeaderboardResponse(castedData)
+        setIsLoading(false)
+        setFreshStart(false)
+      })
+  }, [debouncedInput, pagination.limit])
 
   const mappedLeaderBoard = mapLeaderboardColumns({
     leaderboardData: leaderboardResponse.leaderboard,
+    // TODO use connectedWallet address once available
+    connectedWalletAddress: '0xB710940E3659415ebd5492f43B247891De14D872',
+  })
+
+  const mappedSearchLeaderBoard = mapLeaderboardColumns({
+    leaderboardData: searchLeaderboardResponse.leaderboard,
     // TODO use connectedWallet address once available
     connectedWalletAddress: '0xB710940E3659415ebd5492f43B247891De14D872',
   })
@@ -102,7 +123,6 @@ export const Leaderboard: FC<LeaderboardProps> = ({
       if (!input) {
         setFreshStart(true)
       }
-      setPage(1)
       setDebouncedInput(input as string)
     }, 300)
 
@@ -112,6 +132,11 @@ export const Leaderboard: FC<LeaderboardProps> = ({
   const isLoadingGivenAddress = isLoading && debouncedInput
   const isLoadingFirstItems = isLoading && freshStart
   const resolvedSkeletonLoading = isLoadingGivenAddress || isLoadingFirstItems
+
+  const resolvedMappedLeaderboard = debouncedInput ? mappedSearchLeaderBoard : mappedLeaderBoard
+  const resolvedLeaderboardResponse = debouncedInput
+    ? searchLeaderboardResponse
+    : leaderboardResponse
 
   return (
     <>
@@ -133,7 +158,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({
           }}
         />
       </div>
-      {leaderboardResponse.error && (
+      {resolvedLeaderboardResponse.error && (
         <div className={classNames.errorWrapper}>
           <Text as="h5" variant="h5">
             There was a problem loading the leaderboard. Please try again.
@@ -141,8 +166,8 @@ export const Leaderboard: FC<LeaderboardProps> = ({
         </div>
       )}
       {!!debouncedInput.length &&
-        !leaderboardResponse.leaderboard.length &&
-        !leaderboardResponse.error && (
+        !resolvedLeaderboardResponse.leaderboard.length &&
+        !resolvedLeaderboardResponse.error && (
           <div className={classNames.errorWrapper}>
             <Text as="h5" variant="h5">
               No results found
@@ -151,7 +176,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({
         )}
       {resolvedSkeletonLoading && <LeaderboardSkeleton />}
 
-      {!resolvedSkeletonLoading && !!leaderboardResponse.leaderboard.length && (
+      {!resolvedSkeletonLoading && !!resolvedLeaderboardResponse.leaderboard.length && (
         <>
           <Table
             columns={Object.values(leaderboardColumns).map((item, idx) => ({
@@ -161,7 +186,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({
                 </Text>
               ),
             }))}
-            rows={mappedLeaderBoard}
+            rows={resolvedMappedLeaderboard}
           />
           {!debouncedInput && (
             <Button
