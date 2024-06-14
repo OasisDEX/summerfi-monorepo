@@ -101,10 +101,8 @@ export const handler = async (
   const { SUBGRAPH_BASE, RAYS_DB_CONNECTION_STRING, BORROW_DB_READ_CONNECTION_STRING, NODE_ENV } =
     process.env
 
-  const pointsStart =
-    NODE_ENV == 'staging' ? STAGING_START_POINTS_TIMESTAMP : START_POINTS_TIMESTAMP
-  if (Date.now() / 1000 < pointsStart) {
-    logger.info('Points have not started yet')
+  if (!NODE_ENV) {
+    logger.error('NODE_ENV is not set')
     return
   }
 
@@ -119,6 +117,13 @@ export const handler = async (
 
   if (!RAYS_DB_CONNECTION_STRING) {
     logger.error('RAYS_DB_CONNECTION_STRING is not set')
+    return
+  }
+
+  const pointsStart =
+    NODE_ENV == 'staging' ? STAGING_START_POINTS_TIMESTAMP : START_POINTS_TIMESTAMP
+  if (Date.now() / 1000 < pointsStart) {
+    logger.info('Points have not started yet')
     return
   }
 
