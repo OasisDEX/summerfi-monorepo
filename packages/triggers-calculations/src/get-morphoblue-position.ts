@@ -66,31 +66,43 @@ function calculateTokenPrices({
   if (debtData.tokenInUsdcPrice && debtData.usdcPrice) {
     // we have a debt price only, so we calculate the collateral price
     // based on the collateral price in debt (from MB oracle)
-    const debtPrice = new BigNumber(debtData.tokenInUsdcPrice.toString())
+    const debtPriceWithDecimals = new BigNumber(debtData.tokenInUsdcPrice.toString())
       .div(usdcDecimals)
       .times(new BigNumber(debtData.usdcPrice.toString()).div(usdcDecimals))
-    const collateralPrice = debtPrice.times(
-      new BigNumber(collateralPriceInDebt.toString()).div(10 ** priceDecimalsNumber),
+
+    const debtPriceBigIntReady = debtPriceWithDecimals.times(priceDecimalsExp).toFixed(0)
+
+    const collateralPrice = new BigNumber(debtPriceBigIntReady).times(
+      new BigNumber(collateralPriceInDebt.toString()),
     )
+    const collateralPriceBigIntReady = collateralPrice.times(priceDecimalsExp).toFixed(0)
+
     return {
-      collateralPrice: BigInt(collateralPrice.times(priceDecimalsExp).toFixed(0)),
-      debtPrice: BigInt(debtPrice.times(priceDecimalsExp).toFixed(0)),
+      collateralPrice: BigInt(collateralPriceBigIntReady),
+      debtPrice: BigInt(debtPriceBigIntReady),
     }
   }
+
   if (collateralData.tokenInUsdcPrice && collateralData.usdcPrice) {
     // we have a collateral price only, so we do the same as above but multiply
     // by the inverse of the collateral price in debt
-    const debtPrice = new BigNumber(collateralData.tokenInUsdcPrice.toString())
+    const collateralPriceWithDecimals = new BigNumber(collateralData.tokenInUsdcPrice.toString())
       .div(usdcDecimals)
       .times(new BigNumber(collateralData.usdcPrice.toString()).div(usdcDecimals))
-    const collateralPrice = debtPrice.times(
-      new BigNumber(new BigNumber(1).div(collateralPriceInDebt.toString()).toString()).div(
-        10 ** priceDecimalsNumber,
-      ),
+
+    const collateralPriceBigIntReady = collateralPriceWithDecimals
+      .times(priceDecimalsExp)
+      .toFixed(0)
+
+    const debtPriceWithDecimals = new BigNumber(collateralPriceBigIntReady).times(
+      new BigNumber(new BigNumber(1).div(collateralPriceInDebt.toString()).toString()),
     )
+
+    const debtPriceBigIntReady = debtPriceWithDecimals.times(priceDecimalsExp).toFixed(0)
+
     return {
-      collateralPrice: BigInt(collateralPrice.times(priceDecimalsExp).toFixed(0)),
-      debtPrice: BigInt(debtPrice.times(priceDecimalsExp).toFixed(0)),
+      collateralPrice: BigInt(collateralPriceBigIntReady),
+      debtPrice: BigInt(debtPriceBigIntReady),
     }
   }
   throw new Error('Cannot calculate token prices')
