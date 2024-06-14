@@ -44,7 +44,7 @@ jobs:
           echo "${{ secrets.VPN_PASSWORD }}" >> vpn-credentials.txt
           echo 'Connecting to the VPN...'
           sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon
-          sleep 10
+          sleep 5
 
       - name: Check VPN connection
         env:
@@ -52,7 +52,7 @@ jobs:
           BORROW_DB_READ_HOST: ${{ secrets.BORROW_DB_READ_HOST }}
           BORROW_DB_READ_USER: ${{ secrets.BORROW_DB_READ_USER }}
           BORROW_DB_READ_PASSWORD: ${{ secrets.BORROW_DB_READ_PASSWORD }}
-          PGCONNECT_TIMEOUT: 10
+          PGCONNECT_TIMEOUT: 5
         run: |
           echo 'Checking the VPN connection...'
           sudo systemctl start postgresql.service
@@ -73,6 +73,9 @@ jobs:
       - name: Build
         env:
           BORROW_DB_READ_CONNECTION_STRING: ${{ secrets.BORROW_DB_READ_CONNECTION_STRING }}
+          CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_ACCESS_TOKEN }}
+          CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
+          CONTENTFUL_SPACE_ID: ${{ secrets.CONTENTFUL_SPACE_ID }}
         run: pnpm build
 
       - name: Test
