@@ -3,7 +3,11 @@ import { Logger } from '@aws-lambda-powertools/logger'
 import { Database, getRaysDB } from '@summerfi/rays-db'
 import { getBorrowDB } from '@summerfi/borrow-db'
 import process from 'node:process'
-import { getSummerPointsSubgraphClient } from '@summerfi/summer-events-subgraph'
+import {
+  STAGING_START_POINTS_TIMESTAMP,
+  START_POINTS_TIMESTAMP,
+  getSummerPointsSubgraphClient,
+} from '@summerfi/summer-events-subgraph'
 import { ChainId } from '@summerfi/serverless-shared'
 import { PositionPoints, SummerPointsService } from './point-accrual'
 import { positionIdResolver } from './position-id-resolver'
@@ -92,10 +96,15 @@ export const handler = async (
   event: EventBridgeEvent<'Scheduled Event', never>,
   context: Context,
 ): Promise<void> => {
-  const { SUBGRAPH_BASE, RAYS_DB_CONNECTION_STRING, BORROW_DB_READ_CONNECTION_STRING } = process.env
-
   logger.addContext(context)
-  logger.info('Hello World!')
+
+  const { SUBGRAPH_BASE, RAYS_DB_CONNECTION_STRING, BORROW_DB_READ_CONNECTION_STRING, NODE_ENV } =
+    process.env
+
+  if (!NODE_ENV) {
+    logger.error('NODE_ENV is not set')
+    return
+  }
 
   if (!BORROW_DB_READ_CONNECTION_STRING) {
     logger.error('BORROW_DB_READ_CONNECTION_STRING is not set')
@@ -108,6 +117,13 @@ export const handler = async (
 
   if (!RAYS_DB_CONNECTION_STRING) {
     logger.error('RAYS_DB_CONNECTION_STRING is not set')
+    return
+  }
+
+  const pointsStart =
+    NODE_ENV == 'staging' ? STAGING_START_POINTS_TIMESTAMP : START_POINTS_TIMESTAMP
+  if (Date.now() / 1000 < pointsStart) {
+    logger.info('Points have not started yet')
     return
   }
 
@@ -152,7 +168,7 @@ export const handler = async (
     arbitrumSubgraphClient,
   ]
 
-  const pointAccuralService = new SummerPointsService(clients, logger)
+  const pointAccuralService = new SummerPointsService(clients, logger, pointsStart)
 
   const lastRunTimestamp = await db
     .selectFrom('updatePointsLastRun')
@@ -199,10 +215,8 @@ export const handler = async (
       return
     }
 
-    const accruedPointsFromSnapshot = await pointAccuralService.accruePoints(
-      startTimestamp,
-      endTimestamp,
-    )
+    const { points: accruedPointsFromSnapshot, userSummary } =
+      await pointAccuralService.getAccruedPointsAndUserDetails(startTimestamp, endTimestamp)
 
     // Get all unique addresses and positions from all chunks
     const allUniqueUsers: Set<string> = new Set()
@@ -235,6 +249,9 @@ export const handler = async (
     }
     for (const user of uniqueUserAddressesFromSnapshot) {
       allUniqueUsers.add(user)
+    }
+    for (const user of userSummary) {
+      allUniqueUsers.add(user.user)
     }
     const allUniqueUserAddresses = Array.from(allUniqueUsers)
 
@@ -497,6 +514,22 @@ export const handler = async (
         logger.info(
           `Chunk ${i} of ${chunkedPoints.length} took ${endTime[0]}s ${endTime[1] / 1000000}ms`,
         )
+      }
+    })
+    await db.transaction().execute(async (transaction) => {
+      for (const user of userSummary) {
+        await transaction
+          .updateTable('userAddress')
+          .set({ details: user })
+          .where('address', '=', user.user)
+          .execute()
+        if (user.ens) {
+          await transaction
+            .updateTable('userAddress')
+            .set({ ens: user.ens })
+            .where('address', '=', user.user)
+            .execute()
+        }
       }
     })
   } catch (e) {
@@ -768,7 +801,19 @@ async function checkOpenedPositionEligibility(
   db: Kysely<Database>,
   positionPoints: PositionPoints,
 ) {
-  // get all points distributions without an associated position id but with an eligibility condition
+  // get all position with net value >= 500 and created before 14 days ago, available in current snapshot
+  const allEligiblePositionsFromPointsAccrual = positionPoints.filter((p) => {
+    return (
+      Number(p.netValue) >= 500 &&
+      p.positionCreated * 1000 < Date.now() - FOURTEEN_DAYS_IN_MILLISECONDS
+    )
+  })
+
+  const eligibleUsers = Array.from(
+    new Set(allEligiblePositionsFromPointsAccrual.map((p) => p.user)),
+  )
+
+  // get all points distributions without an associated position id but with an eligibility condition for the eligilbe users
   const existingUsersWithEligibilityCondition = await db
     .selectFrom('pointsDistribution')
     .select(['pointsDistribution.id as pointsId'])
@@ -778,6 +823,7 @@ async function checkOpenedPositionEligibility(
       'pointsDistribution.eligibilityConditionId',
     )
     .leftJoin('userAddress', 'userAddress.id', 'pointsDistribution.userAddressId')
+    .where('userAddress.address', 'in', eligibleUsers)
     .where((eb) =>
       eb('pointsDistribution.type', '=', RetroPointDistribution.SNAPSHOT_GENERAL).or(
         'pointsDistribution.type',
@@ -793,15 +839,9 @@ async function checkOpenedPositionEligibility(
     await db.transaction().execute(async (transaction) => {
       for (const user of existingUsersWithEligibilityCondition) {
         if (user.dueDate && user.dueDate >= new Date()) {
-          const eligiblePositionsFromPointsAccrual = positionPoints
+          // filter all eligible positions for the user and sort them by creation date
+          const eligiblePositionsFromPointsAccrual = allEligiblePositionsFromPointsAccrual
             .filter((p) => p.user === user.address)
-            .filter((p) => {
-              console.log('p', p, user.id)
-              return (
-                Number(p.netValue) >= 500 &&
-                p.positionCreated * 1000 < Date.now() - FOURTEEN_DAYS_IN_MILLISECONDS
-              )
-            })
             .sort((a, b) => a.positionCreated - b.positionCreated)
 
           if (eligiblePositionsFromPointsAccrual.length == 0) {
@@ -823,7 +863,6 @@ async function checkOpenedPositionEligibility(
               )
               .selectAll()
               .execute()
-            logger.info(`pointsDistributions for ${user.id}`, JSON.stringify(pointsDistributions))
             for (const pointsDistribution of pointsDistributions) {
               // update points distribution
               await transaction

@@ -75,6 +75,8 @@ export interface Leaderboard {
   position: Int8 | null
   totalPoints: Numeric | null
   userAddress: string | null
+  details: Json | null
+  ens: string | null
 }
 
 export interface Multiplier {
@@ -135,6 +137,8 @@ export interface UpdatePointsLock {
 export interface UserAddress {
   address: string
   createdAt: Generated<Timestamp>
+  details: Json | null
+  ens: string | null
   id: Generated<number>
   type: Generated<AddressType>
   updatedAt: Generated<Timestamp>

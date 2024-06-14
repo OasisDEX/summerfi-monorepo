@@ -7,6 +7,21 @@ query SummerPoints(
 ) {
   users(orderBy: id, first: $first, where: { openPositions_gt: 0, id_gt: $lastId }) {
     id
+    ens
+    allPositions: positions {
+      id
+      netValue
+      triggers(
+        where: {
+          or: [
+            { removedBlock: null, executedBlock: null }
+            { continuous: true, removedBlock: null }
+          ]
+        }
+      ) {
+        id
+      }
+    }
     positions(where: { netValue_gt: 0 }) {
       id
       protocol

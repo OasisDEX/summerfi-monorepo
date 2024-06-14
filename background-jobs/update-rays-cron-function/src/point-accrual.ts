@@ -3,7 +3,6 @@ import {
   Position,
   RecentSwapInPosition,
   RecentSwapInUser,
-  START_POINTS_TIMESTAMP,
   SummerPointsSubgraphClient,
   User,
   UsersData,
@@ -52,6 +51,14 @@ export type PositionPoints = {
   }
 }[]
 
+export type UserSummary = {
+  user: string
+  activeTriggers: number
+  activePositions: number
+  pointsEarnedPerYear: number
+  ens: string | null
+}
+
 /**
  * Service for fetching summer features.
  */
@@ -68,6 +75,7 @@ export class SummerPointsService {
   private AUTOMATION_PROTECTION_MULTIPLIER = 1.1
 
   private NET_VALUE_CAP = 10000000
+  private START_POINTS_TIMESTAMP
 
   /**
    * Creates an instance of SummerPointsService.
@@ -77,9 +85,18 @@ export class SummerPointsService {
   constructor(
     private clients: SummerPointsSubgraphClient[],
     private logger: Logger,
-  ) {}
+    startPointsTimestamp: number,
+  ) {
+    this.START_POINTS_TIMESTAMP = startPointsTimestamp
+  }
 
-  async accruePoints(startTimestamp: number, endTimestamp: number): Promise<PositionPoints> {
+  async getAccruedPointsAndUserDetails(
+    startTimestamp: number,
+    endTimestamp: number,
+  ): Promise<{
+    points: PositionPoints
+    userSummary: UserSummary[]
+  }> {
     const results = await Promise.all(
       this.clients.map((client) => client.getUsersPoints({ startTimestamp, endTimestamp })),
     )
@@ -95,11 +112,23 @@ export class SummerPointsService {
           // If the user does exist, merge the data
           usersMap[user.id].positions = [...usersMap[user.id].positions, ...user.positions]
           usersMap[user.id].swaps = [...usersMap[user.id].swaps, ...user.swaps]
+          usersMap[user.id].recentSwaps = [...usersMap[user.id].recentSwaps, ...user.recentSwaps]
+          usersMap[user.id].allPositions = [...usersMap[user.id].allPositions, ...user.allPositions]
         }
       })
     })
 
-    return this.getBasisPointsForUsers(Object.values(usersMap), startTimestamp, endTimestamp)
+    const points = this.getBasisPointsForUsers(
+      Object.values(usersMap),
+      startTimestamp,
+      endTimestamp,
+    )
+    const userSummary = this.getUserSummary(Object.values(usersMap))
+
+    return {
+      points,
+      userSummary,
+    }
   }
 
   /**
@@ -170,6 +199,36 @@ export class SummerPointsService {
   }
 
   /**
+   * Returns user summary. Sum of active triggers, positions
+   * @param usersData - The data of the users.
+   * @returns The basis points earned by users.
+   */
+  getUserSummary(usersData: UsersData): UserSummary[] {
+    const userSummary = usersData.map((user) => {
+      const activeTriggers = user.allPositions.reduce(
+        (sum, position) => sum + position.triggers.length,
+        0,
+      )
+      const activePositions = user.allPositions.length
+      const pointsEarnedPerYear = user.allPositions
+        .filter((position) => position.netValue > 0)
+        .reduce(
+          (sum, position) =>
+            sum + this.getPointsPerPeriodInSeconds(position.netValue, this.SECONDS_PER_YEAR),
+          0,
+        )
+      const ens = !user.ens || user.ens == '' ? null : user.ens
+      return {
+        user: user.id,
+        activeTriggers,
+        activePositions,
+        pointsEarnedPerYear,
+        ens,
+      }
+    })
+    return userSummary
+  }
+  /**
    * Calculates the basis points earned by users for a given time period.
    * @param usersData - The data of the users.
    * @param startTimestamp - The start timestamp of the time period.
@@ -216,7 +275,7 @@ export class SummerPointsService {
           positionCreated:
             position.firstEvent[0] && position.firstEvent[0].timestamp
               ? position.firstEvent[0].timestamp
-              : START_POINTS_TIMESTAMP,
+              : this.START_POINTS_TIMESTAMP,
           user: user.id,
           points: {
             openPositionsPoints: totalMultiplier * openPositionsPoints,
@@ -288,7 +347,7 @@ export class SummerPointsService {
         positionCreated:
           swap.position!.firstEvent[0] && swap.position!.firstEvent[0].timestamp
             ? swap.position!.firstEvent[0].timestamp
-            : START_POINTS_TIMESTAMP,
+            : this.START_POINTS_TIMESTAMP,
         user: user.id,
         points: {
           openPositionsPoints: 0,
@@ -472,9 +531,9 @@ export class SummerPointsService {
     }
     const firstEvent = position.firstEvent[0].timestamp
     const lastEvent = endTimestamp
-    const effectiveStartTime = Math.max(firstEvent, START_POINTS_TIMESTAMP)
+    const effectiveStartTime = Math.max(firstEvent, this.START_POINTS_TIMESTAMP)
 
-    const howLongWasPositionOpenBeforePointsStart = START_POINTS_TIMESTAMP - firstEvent
+    const howLongWasPositionOpenBeforePointsStart = this.START_POINTS_TIMESTAMP - firstEvent
     let additionalMultiplier = 1
     if (howLongWasPositionOpenBeforePointsStart > 180 * this.SECONDS_PER_DAY) {
       additionalMultiplier = 1.3

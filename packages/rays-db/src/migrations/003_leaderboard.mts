@@ -38,6 +38,6 @@ export async function up(db: Kysely<never>) {
 
 export async function down(db: Kysely<never>) {
     await sql`
-    DROP VIEW leaderboard;
+    DROP VIEW IF EXISTS leaderboard;
   `.execute(db)
 }
