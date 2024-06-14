@@ -42,7 +42,6 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y openvpn openvpn-systemd-resolved postgresql-client
-          sudo systemctl start postgresql.service
           echo 'Configuring the VPN...'
           echo "${{ secrets.VPN_CONFIG }}" > vpn-config.ovpn
           echo "${{ secrets.VPN_USERNAME }}" > vpn-credentials.txt
@@ -50,6 +49,10 @@ jobs:
           echo 'Connecting to the VPN...'
           sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon
           sleep 2
+          echo 'Starting the postgresql.service...'
+          where psql
+          where pg_isready
+          sudo systemctl start postgresql.service
           echo 'Checking the VPN connection...'
           pg_isready -h $BORROW_DB_READ_HOST -q
           STATUS_CODE=$?
