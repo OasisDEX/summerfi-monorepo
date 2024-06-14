@@ -49,9 +49,10 @@ jobs:
           sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon
           sleep 2
           echo 'Checking the VPN connection...'
-          STATUS_CODE=$(psql -d ${{ secrets.BORROW_DB_READ_DB }} -U ${{ secrets.BORROW_DB_READ_USER }} -h ${{ secrets.BORROW_DB_READ_HOST }} -c "SELECT 1;" > /dev/null 2>&1)
-          if ! [[ "$STATUS_CODE" =~ ^(0)$ ]]; then
-            echo 'VPN connection failed, status code: $STATUS_CODE'
+          STATUS_CODE=$(pg_isready -d ${{ secrets.BORROW_DB_READ_DB }} -U ${{ secrets.BORROW_DB_READ_USER }} -h ${{ secrets.BORROW_DB_READ_HOST }} > /dev/null 2>&1)
+          echo 'Status code: "$STATUS_CODE"'
+          if ! [[ "$STATUS_CODE" = 0 ]]; then
+            echo 'VPN connection failed'
             exit 1
           fi
           echo 'VPN connected!'
