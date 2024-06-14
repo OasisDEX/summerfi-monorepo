@@ -42,6 +42,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y openvpn openvpn-systemd-resolved postgresql-client
+          sudo systemctl start postgresql.service
           echo 'Configuring the VPN...'
           echo "${{ secrets.VPN_CONFIG }}" > vpn-config.ovpn
           echo "${{ secrets.VPN_USERNAME }}" > vpn-credentials.txt
