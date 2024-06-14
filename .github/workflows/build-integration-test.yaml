@@ -37,7 +37,6 @@ jobs:
           BORROW_DB_READ_DB: ${{ secrets.BORROW_DB_READ_DB }}
           BORROW_DB_READ_HOST: ${{ secrets.BORROW_DB_READ_HOST }}
           BORROW_DB_READ_USER: ${{ secrets.BORROW_DB_READ_USER }}
-          PGPASSWORD: ${{ secrets.BORROW_DB_READ_PASSWORD }}
         run: |
           sudo apt update
           sudo apt install -y openvpn openvpn-systemd-resolved
@@ -49,7 +48,7 @@ jobs:
           sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon
           sleep 3
           echo 'Checking the VPN connection...'
-          /usr/bin/psql -d $BORROW_DB_READ_DB -U $BORROW_DB_READ_USER -h $BORROW_DB_READ_HOST -c 'SELECT 1;'
+          PGPASSWORD=${{ secrets.BORROW_DB_READ_PASSWORD }} /usr/bin/psql -d $BORROW_DB_READ_DB -U $BORROW_DB_READ_USER -h $BORROW_DB_READ_HOST -c 'SELECT 1;'
           STATUS_CODE=$?
           echo 'Status code: "$STATUS_CODE"'
           if ! [[ "$STATUS_CODE" = 0 ]]; then
