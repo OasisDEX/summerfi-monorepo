@@ -2,7 +2,7 @@
 'use client'
 
 import { ChangeEvent, FC, useEffect, useState } from 'react'
-import { Button, Icon, Input, Table, Text } from '@summerfi/app-ui'
+import { Button, Icon, Input, SkeletonLine, Table, Text } from '@summerfi/app-ui'
 
 import {
   leaderboardColumns,
@@ -19,6 +19,28 @@ interface LeaderboardProps {
   }
 }
 
+const LeaderboardSkeleton = () => {
+  return (
+    <div
+      style={{
+        width: '100%',
+        display: 'flex',
+        rowGap: '30px',
+        flexDirection: 'column',
+        marginTop: '20px',
+      }}
+    >
+      <SkeletonLine height={20} />
+      <SkeletonLine height={20} />
+      <SkeletonLine height={20} />
+      <SkeletonLine height={20} />
+      <SkeletonLine height={20} />
+      <SkeletonLine height={20} />
+      <SkeletonLine height={20} />
+    </div>
+  )
+}
+
 export const Leaderboard: FC<LeaderboardProps> = ({
   pagination = {
     page: 1,
@@ -30,6 +52,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({
   })
   const [page, setPage] = useState(pagination.page)
   const [isLoading, setIsLoading] = useState(true)
+  const [freshStart, setFreshStart] = useState(true)
   const [input, setInput] = useState('')
   const [debouncedInput, setDebouncedInput] = useState('')
 
@@ -47,7 +70,10 @@ export const Leaderboard: FC<LeaderboardProps> = ({
           setLeaderboardResponse(castedData)
         } else {
           setLeaderboardResponse((prev) => {
-            const mergedLeaderboard = [...prev.leaderboard, ...castedData.leaderboard]
+            const mergedLeaderboard = [
+              ...(freshStart ? [] : prev.leaderboard),
+              ...castedData.leaderboard,
+            ]
 
             return {
               ...castedData,
@@ -61,8 +87,9 @@ export const Leaderboard: FC<LeaderboardProps> = ({
           })
         }
         setIsLoading(false)
+        setFreshStart(false)
       })
-  }, [page, debouncedInput])
+  }, [page, debouncedInput, freshStart])
 
   const mappedLeaderBoard = mapLeaderboardColumns({
     leaderboardData: leaderboardResponse.leaderboard,
@@ -71,10 +98,20 @@ export const Leaderboard: FC<LeaderboardProps> = ({
   })
 
   useEffect(() => {
-    const timeout = setTimeout(() => setDebouncedInput(input as string), 300)
+    const timeout = setTimeout(() => {
+      if (!input) {
+        setFreshStart(true)
+      }
+      setPage(1)
+      setDebouncedInput(input as string)
+    }, 300)
 
     return () => clearTimeout(timeout)
   }, [input])
+
+  const isLoadingGivenAddress = isLoading && debouncedInput
+  const isLoadingFirstItems = isLoading && freshStart
+  const resolvedSkeletonLoading = isLoadingGivenAddress || isLoadingFirstItems
 
   return (
     <>
@@ -90,12 +127,6 @@ export const Leaderboard: FC<LeaderboardProps> = ({
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
             if ('value' in e.target) {
               const { value } = e.target
-
-              setPage(1)
-
-              if (value === '') {
-                setLeaderboardResponse({ leaderboard: [] })
-              }
 
               setInput(value as string)
             }
@@ -118,7 +149,9 @@ export const Leaderboard: FC<LeaderboardProps> = ({
             </Text>
           </div>
         )}
-      {!!leaderboardResponse.leaderboard.length && !leaderboardResponse.error && (
+      {resolvedSkeletonLoading && <LeaderboardSkeleton />}
+
+      {!resolvedSkeletonLoading && !!leaderboardResponse.leaderboard.length && (
         <>
           <Table
             columns={Object.values(leaderboardColumns).map((item, idx) => ({
@@ -130,7 +163,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({
             }))}
             rows={mappedLeaderBoard}
           />
-          {!input && (
+          {!debouncedInput && (
             <Button
               variant="unstyled"
               disabled={isLoading}
