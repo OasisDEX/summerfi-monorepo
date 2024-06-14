@@ -47,7 +47,7 @@ jobs:
           sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon
           sleep 2
           echo 'Checking the VPN connection...'
-          /usr/bin/pg_isready -h "$BORROW_DB_READ_HOST"
+          /usr/bin/pg_isready -h $BORROW_DB_READ_HOST -q
           STATUS_CODE=$?
           echo 'Status code: "$STATUS_CODE"'
           if ! [[ "$STATUS_CODE" = 0 ]]; then
