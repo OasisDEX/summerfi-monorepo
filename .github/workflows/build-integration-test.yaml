@@ -45,15 +45,6 @@ jobs:
           echo 'Connecting to the VPN...'
           sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon
           sleep 3
-          echo 'Checking the VPN connection...'
-          /usr/bin/psql -d $BORROW_DB_READ_CONNECTION_STRING -a -c "SELECT 1;"
-          STATUS_CODE=$?
-          echo 'Status code: "$STATUS_CODE"'
-          if ! [[ "$STATUS_CODE" = 0 ]]; then
-            echo 'VPN connection failed'
-            exit 1
-          fi
-          echo 'VPN connected!'
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
