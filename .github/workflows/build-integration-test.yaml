@@ -32,6 +32,11 @@ jobs:
           node-version: 20
           cache: 'pnpm'
 
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: true
+
       - name: Establish VPN connection
         env:
           BORROW_DB_READ_CONNECTION_STRING: ${{ secrets.BORROW_DB_READ_CONNECTION_STRING }}
