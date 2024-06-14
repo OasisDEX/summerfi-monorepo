@@ -38,7 +38,7 @@ jobs:
           BORROW_DB_READ_HOST: ${{ secrets.BORROW_DB_READ_HOST }}
         run: |
           sudo apt update
-          sudo apt install -y openvpn openvpn-systemd-resolved postgresql-client
+          sudo apt install -y openvpn openvpn-systemd-resolved
           echo 'Configuring the VPN...'
           echo "${{ secrets.VPN_CONFIG }}" > vpn-config.ovpn
           echo "${{ secrets.VPN_USERNAME }}" > vpn-credentials.txt
@@ -46,11 +46,8 @@ jobs:
           echo 'Connecting to the VPN...'
           sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon
           sleep 2
-          echo 'Starting the postgresql.service...'
-          sudo systemctl start postgresql.service
-          sudo systemctl status postgresql.service
           echo 'Checking the VPN connection...'
-          pg_isready -h "$BORROW_DB_READ_HOST" -q
+          bash -c 'printf "" 2>>/dev/null >>/dev/tcp/${BORROW_DB_READ_HOST}/5432'
           STATUS_CODE=$?
           echo 'Status code: "$STATUS_CODE"'
           if ! [[ "$STATUS_CODE" = 0 ]]; then
