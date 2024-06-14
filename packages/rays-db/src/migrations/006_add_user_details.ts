@@ -38,9 +38,9 @@ export async function up(db: Kysely<never>) {
 }
 
 export async function down(db: Kysely<never>) {
-  await db.schema.alterTable('user_address').dropColumn('details').execute()
-  await db.schema.alterTable('user_address').dropColumn('ens').execute()
   await sql`
     DROP MATERIALIZED VIEW IF EXISTS leaderboard;
     `.execute(db)
+  await db.schema.alterTable('user_address').dropColumn('details').execute()
+  await db.schema.alterTable('user_address').dropColumn('ens').execute()
 }

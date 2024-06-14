@@ -3,7 +3,11 @@ import { Logger } from '@aws-lambda-powertools/logger'
 import { Database, getRaysDB } from '@summerfi/rays-db'
 import { getBorrowDB } from '@summerfi/borrow-db'
 import process from 'node:process'
-import { getSummerPointsSubgraphClient } from '@summerfi/summer-events-subgraph'
+import {
+  STAGING_START_POINTS_TIMESTAMP,
+  START_POINTS_TIMESTAMP,
+  getSummerPointsSubgraphClient,
+} from '@summerfi/summer-events-subgraph'
 import { ChainId } from '@summerfi/serverless-shared'
 import { PositionPoints, SummerPointsService } from './point-accrual'
 import { positionIdResolver } from './position-id-resolver'
@@ -92,10 +96,17 @@ export const handler = async (
   event: EventBridgeEvent<'Scheduled Event', never>,
   context: Context,
 ): Promise<void> => {
-  const { SUBGRAPH_BASE, RAYS_DB_CONNECTION_STRING, BORROW_DB_READ_CONNECTION_STRING } = process.env
-
   logger.addContext(context)
-  logger.info('Hello World!')
+
+  const { SUBGRAPH_BASE, RAYS_DB_CONNECTION_STRING, BORROW_DB_READ_CONNECTION_STRING, NODE_ENV } =
+    process.env
+
+  const pointsStart =
+    NODE_ENV == 'staging' ? STAGING_START_POINTS_TIMESTAMP : START_POINTS_TIMESTAMP
+  if (Date.now() / 1000 < pointsStart) {
+    logger.info('Points have not started yet')
+    return
+  }
 
   if (!BORROW_DB_READ_CONNECTION_STRING) {
     logger.error('BORROW_DB_READ_CONNECTION_STRING is not set')
@@ -152,7 +163,7 @@ export const handler = async (
     arbitrumSubgraphClient,
   ]
 
-  const pointAccuralService = new SummerPointsService(clients, logger)
+  const pointAccuralService = new SummerPointsService(clients, logger, pointsStart)
 
   const lastRunTimestamp = await db
     .selectFrom('updatePointsLastRun')

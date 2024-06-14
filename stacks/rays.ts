@@ -59,12 +59,13 @@ export function addRaysConfig({ stack, api, vpc, app }: SummerStackContext) {
   const updateRaysCronFunctionProps: FunctionProps = {
     handler: 'background-jobs/update-rays-cron-function/src/index.handler',
     runtime: 'nodejs20.x',
-    timeout: '300 seconds',
+    timeout: '600 seconds',
     environment: {
       POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
       RAYS_DB_CONNECTION_STRING: RAYS_DB_WRITE_CONNECTION_STRING,
       BORROW_DB_READ_CONNECTION_STRING: BORROW_DB_READ_CONNECTION_STRING,
       SUBGRAPH_BASE,
+      NODE_ENV: app.stage,
     },
     ...(vpc && {
       vpc: vpc.vpc,
@@ -87,7 +88,7 @@ export function addRaysConfig({ stack, api, vpc, app }: SummerStackContext) {
 
   new Cron(stack, 'update-rays-cron', {
     schedule: 'rate(2 hours)',
-    enabled: app.stage === 'staging', // only run in staging right now.
+    enabled: true,
     job: updateRaysCronFunction,
   })
 

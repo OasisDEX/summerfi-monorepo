@@ -39,30 +39,28 @@ export async function up(db: Kysely<never>) {
     
   `.execute(db)
 
-  /* DO IT IN AWS CONSOLE - no permissions with admin account*/
+  await sql`
+      CREATE OR REPLACE FUNCTION refresh_leaderboard() RETURNS void AS $$
+      BEGIN
+        REFRESH MATERIALIZED VIEW leaderboard;
+      END;
+      $$ LANGUAGE plpgsql;
+    `.execute(db)
 
-  //     await sql`
-  //     CREATE OR REPLACE FUNCTION refresh_leaderboard() RETURNS void AS $$
-  //     BEGIN
-  //       REFRESH MATERIALIZED VIEW leaderboard;
-  //     END;
-  //     $$ LANGUAGE plpgsql;
-  //   `.execute(db);
+  await sql`
+      CREATE OR REPLACE FUNCTION schedule_leaderboard_refresh() RETURNS void AS $$
+      DECLARE
+        cron_id bigint;
+      BEGIN
+        SELECT cron.schedule('0 * * * *', 'CALL refresh_leaderboard()') INTO cron_id;
+        RAISE NOTICE 'leaderboard refresh scheduled with job id: %', cron_id;
+      END;
+      $$ LANGUAGE plpgsql;
+    `.execute(db)
 
-  //     await sql`
-  //     CREATE OR REPLACE FUNCTION schedule_leaderboard_refresh() RETURNS void AS $$
-  //     DECLARE
-  //       cron_id bigint;
-  //     BEGIN
-  //       SELECT cron.schedule('0 * * * *', 'CALL refresh_leaderboard()') INTO cron_id;
-  //       RAISE NOTICE 'leaderboard refresh scheduled with job id: %', cron_id;
-  //     END;
-  //     $$ LANGUAGE plpgsql;
-  //   `.execute(db);
-
-  //     await sql`
-  //     SELECT schedule_leaderboard_refresh();
-  //   `.execute(db);
+  await sql`
+      SELECT schedule_leaderboard_refresh();
+    `.execute(db)
 }
 
 export async function down(db: Kysely<never>) {
