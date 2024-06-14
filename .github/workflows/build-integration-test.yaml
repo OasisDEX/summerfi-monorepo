@@ -32,9 +32,6 @@ jobs:
           node-version: 20
           cache: 'pnpm'
 
-      - name: Install dependencies
-        run: pnpm install
-
       - name: Establish VPN connection
         env:
           PGPASSWORD: ${{ secrets.BORROW_DB_READ_PASSWORD }}
@@ -61,6 +58,9 @@ jobs:
             exit 1
           fi
           echo 'VPN connected!'
+
+      - name: Install dependencies
+        run: pnpm install
 
       - name: Prebuild
         run: pnpm prebuild
