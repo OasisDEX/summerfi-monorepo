@@ -62,7 +62,6 @@ export const Leaderboard: FC<LeaderboardProps> = ({
   const [debouncedInput, setDebouncedInput] = useState('')
 
   useEffect(() => {
-    console.log('page', page)
     if (page === 1 && !debouncedInput) {
       return
     }
