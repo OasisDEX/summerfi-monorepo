@@ -62,7 +62,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({
   const [debouncedInput, setDebouncedInput] = useState('')
 
   useEffect(() => {
-    if (page === 1 && !debouncedInput) {
+    if (page === 1) {
       return
     }
     setIsLoading(true)
@@ -87,7 +87,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({
         setIsLoading(false)
         setFreshStart(false)
       })
-  }, [page, freshStart, pagination.limit, debouncedInput])
+  }, [page, pagination.limit])
 
   useEffect(() => {
     if (!debouncedInput) {
