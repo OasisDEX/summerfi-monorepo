@@ -52,6 +52,14 @@ export type PositionPoints = {
   }
 }[]
 
+export type UserSummary = {
+  user: string
+  activeTriggers: number
+  activePositions: number
+  pointsEarnedPerYear: number
+  ens: string | null
+}
+
 /**
  * Service for fetching summer features.
  */
@@ -79,7 +87,13 @@ export class SummerPointsService {
     private logger: Logger,
   ) {}
 
-  async accruePoints(startTimestamp: number, endTimestamp: number): Promise<PositionPoints> {
+  async getAccruedPointsAndUserDetails(
+    startTimestamp: number,
+    endTimestamp: number,
+  ): Promise<{
+    points: PositionPoints
+    userSummary: UserSummary[]
+  }> {
     const results = await Promise.all(
       this.clients.map((client) => client.getUsersPoints({ startTimestamp, endTimestamp })),
     )
@@ -95,11 +109,23 @@ export class SummerPointsService {
           // If the user does exist, merge the data
           usersMap[user.id].positions = [...usersMap[user.id].positions, ...user.positions]
           usersMap[user.id].swaps = [...usersMap[user.id].swaps, ...user.swaps]
+          usersMap[user.id].recentSwaps = [...usersMap[user.id].recentSwaps, ...user.recentSwaps]
+          usersMap[user.id].allPositions = [...usersMap[user.id].allPositions, ...user.allPositions]
         }
       })
     })
 
-    return this.getBasisPointsForUsers(Object.values(usersMap), startTimestamp, endTimestamp)
+    const points = this.getBasisPointsForUsers(
+      Object.values(usersMap),
+      startTimestamp,
+      endTimestamp,
+    )
+    const userSummary = this.getUserSummary(Object.values(usersMap))
+
+    return {
+      points,
+      userSummary,
+    }
   }
 
   /**
@@ -169,6 +195,36 @@ export class SummerPointsService {
     return hasLazyVault ? 1.2 : 1
   }
 
+  /**
+   * Returns user summary. Sum of active triggers, positions
+   * @param usersData - The data of the users.
+   * @returns The basis points earned by users.
+   */
+  getUserSummary(usersData: UsersData): UserSummary[] {
+    const userSummary = usersData.map((user) => {
+      const activeTriggers = user.allPositions.reduce(
+        (sum, position) => sum + position.triggers.length,
+        0,
+      )
+      const activePositions = user.allPositions.length
+      const pointsEarnedPerYear = user.allPositions
+        .filter((position) => position.netValue > 0)
+        .reduce(
+          (sum, position) =>
+            sum + this.getPointsPerPeriodInSeconds(position.netValue, this.SECONDS_PER_YEAR),
+          0,
+        )
+      const ens = !user.ens || user.ens == '' ? null : user.ens
+      return {
+        user: user.id,
+        activeTriggers,
+        activePositions,
+        pointsEarnedPerYear,
+        ens,
+      }
+    })
+    return userSummary
+  }
   /**
    * Calculates the basis points earned by users for a given time period.
    * @param usersData - The data of the users.

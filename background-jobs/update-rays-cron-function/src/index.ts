@@ -199,10 +199,8 @@ export const handler = async (
       return
     }
 
-    const accruedPointsFromSnapshot = await pointAccuralService.accruePoints(
-      startTimestamp,
-      endTimestamp,
-    )
+    const { points: accruedPointsFromSnapshot, userSummary } =
+      await pointAccuralService.getAccruedPointsAndUserDetails(startTimestamp, endTimestamp)
 
     // Get all unique addresses and positions from all chunks
     const allUniqueUsers: Set<string> = new Set()
@@ -235,6 +233,9 @@ export const handler = async (
     }
     for (const user of uniqueUserAddressesFromSnapshot) {
       allUniqueUsers.add(user)
+    }
+    for (const user of userSummary) {
+      allUniqueUsers.add(user.user)
     }
     const allUniqueUserAddresses = Array.from(allUniqueUsers)
 
@@ -497,6 +498,22 @@ export const handler = async (
         logger.info(
           `Chunk ${i} of ${chunkedPoints.length} took ${endTime[0]}s ${endTime[1] / 1000000}ms`,
         )
+      }
+    })
+    await db.transaction().execute(async (transaction) => {
+      for (const user of userSummary) {
+        await transaction
+          .updateTable('userAddress')
+          .set({ details: user })
+          .where('address', '=', user.user)
+          .execute()
+        if (user.ens) {
+          await transaction
+            .updateTable('userAddress')
+            .set({ ens: user.ens })
+            .where('address', '=', user.user)
+            .execute()
+        }
       }
     })
   } catch (e) {

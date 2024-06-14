@@ -42,7 +42,9 @@ export const handler = async (
   const leaderboard = await db
     .selectFrom('leaderboard')
     .selectAll()
-    .where('userAddress', 'like', `%${userAddress}%`)
+    .where((eb) =>
+      eb.or([eb('userAddress', 'like', `%${userAddress}%`), eb('ens', 'like', `%${userAddress}%`)]),
+    )
     .orderBy('totalPoints', 'desc')
     .limit(limit)
     .offset(offset)
