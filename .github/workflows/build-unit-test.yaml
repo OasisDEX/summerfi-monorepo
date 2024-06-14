@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
+      BORROW_DB_READ_CONNECTION_STRING: ${{ secrets.BORROW_DB_READ_CONNECTION_STRING }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -72,7 +73,6 @@ jobs:
 
       - name: Build
         env:
-          BORROW_DB_READ_CONNECTION_STRING: ${{ secrets.BORROW_DB_READ_CONNECTION_STRING }}
           CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_ACCESS_TOKEN }}
           CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
           CONTENTFUL_SPACE_ID: ${{ secrets.CONTENTFUL_SPACE_ID }}
