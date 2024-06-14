@@ -50,11 +50,10 @@ jobs:
           sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon
           sleep 2
           echo 'Starting the postgresql.service...'
-          where psql
-          where pg_isready
           sudo systemctl start postgresql.service
+          sudo systemctl status postgresql.service
           echo 'Checking the VPN connection...'
-          pg_isready -h $BORROW_DB_READ_HOST -q
+          pg_isready -h "$BORROW_DB_READ_HOST" -q
           STATUS_CODE=$?
           echo 'Status code: "$STATUS_CODE"'
           if ! [[ "$STATUS_CODE" = 0 ]]; then
