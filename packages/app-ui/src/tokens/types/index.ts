@@ -174,6 +174,7 @@ export type IconNamesList =
   // other icons
   | 'rays'
   | 'chevron_down'
+  | 'search_icon'
 
 export type TokenSymbolsList =
   | 'USDP'

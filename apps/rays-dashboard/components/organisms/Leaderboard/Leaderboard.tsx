@@ -1,128 +1,34 @@
 /* eslint-disable no-magic-numbers */
-
 'use client'
 
-import { ChangeEvent, useEffect, useState } from 'react'
-import { Button, Icon, Table, Text } from '@summerfi/app-ui'
-import Link from 'next/link'
+import { ChangeEvent, FC, useEffect, useState } from 'react'
+import { Button, Icon, Input, Table, Text } from '@summerfi/app-ui'
 
-interface LeaderboardItem {
-  id: string
-  position: string
-  userAddress: string
-  totalPoints: string
-  positions: string
+import {
+  leaderboardColumns,
+  mapLeaderboardColumns,
+} from '@/components/organisms/Leaderboard/columns'
+import { LeaderboardResponse } from '@/types/leaderboard'
+
+import classNames from '@/components/organisms/Leaderboard/Leaderboard.module.scss'
+
+interface LeaderboardProps {
+  pagination?: {
+    page: number
+    limit: number
+  }
 }
 
-type LeaderboardResponse = LeaderboardItem[]
-
-const columns = [
-  {
-    title: 'Rank',
-    cellMapper: (cell: string) => (
-      <Text as="p" variant="p1semi" style={{ color: 'var(--color-neutral-80)', minWidth: '160px' }}>
-        {[1, 2, 3].includes(Number(cell)) ? <>{cell} 🏆</> : cell}
-      </Text>
-    ),
+export const Leaderboard: FC<LeaderboardProps> = ({
+  pagination = {
+    page: 1,
+    limit: 5,
   },
-  {
-    title: 'User',
-    cellMapper: (cell: string) => (
-      <Text as="p" variant="p1semi">
-        {cell}
-      </Text>
-    ),
-  },
-  {
-    title: 'Rays',
-    cellMapper: (cell: string) => (
-      <Text as="p" variant="p1" style={{ color: 'var(--color-neutral-80)' }}>
-        {new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(Number(cell))}
-      </Text>
-    ),
-  },
-  {
-    title: 'Summer portfolio',
-    cellMapper: (cell: string) => (
-      <Text as="p" variant="p2semi">
-        <Link href={`/portfolio/${cell}`}> {cell} -&gt;</Link>
-      </Text>
-    ),
-  },
-]
-
-const mappLeaderboardData = ({
-  leaderboardData,
-  connectedWalletAddress,
-}: {
-  leaderboardData: LeaderboardResponse
-  connectedWalletAddress: string
 }) => {
-  const index = 4
-  const hehe = leaderboardData.map((item) => ({
-    cells: Object.values(item).map((cell, idx) => columns[idx].cellMapper(cell)),
-  }))
-  const value = {
-    cells: (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          rowGap: '16px',
-          background: 'linear-gradient(92deg, #fff3ef 0.78%, #f2fcff 99.57%)',
-          padding: '16px',
-          borderRadius: '16px',
-        }}
-      >
-        <Text as="h5" variant="h5">
-          How do I move up the leaderboard?
-        </Text>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            columnGap: '24px',
-          }}
-        >
-          <Button variant="neutralSmall">Enable Automations</Button>
-          <Button variant="neutralSmall">Open a position</Button>
-          <Button variant="neutralSmall">Use Swap</Button>
-        </div>
-      </div>
-    ),
-  }
-  const newArr = [...hehe.slice(0, index), value, ...hehe.slice(index, hehe.length)]
-
-  const userIndex = leaderboardData
-    .map((item) => item.userAddress)
-    .findIndex((item) => item.toLowerCase() === connectedWalletAddress.toLowerCase())
-
-  if (userIndex !== -1) {
-    const youAreHereValue = {
-      cells: (
-        <div style={{ paddingLeft: '12px' }}>
-          <Text as="p" variant="p3semi">
-            You&apos;re here 👇
-          </Text>
-        </div>
-      ),
-    }
-
-    return [
-      ...newArr.slice(0, userIndex + 1),
-      youAreHereValue,
-      ...newArr.slice(userIndex + 1, newArr.length),
-    ]
-  }
-
-  return newArr
-}
-
-export const Leaderboard = () => {
-  const [leaderboardData, setLeaderboardData] = useState<LeaderboardResponse>([])
-  const [page, setPage] = useState(1)
+  const [leaderboardResponse, setLeaderboardResponse] = useState<LeaderboardResponse>({
+    leaderboard: [],
+  })
+  const [page, setPage] = useState(pagination.page)
   const [isLoading, setIsLoading] = useState(true)
   const [input, setInput] = useState('')
   const [debouncedInput, setDebouncedInput] = useState('')
@@ -130,24 +36,37 @@ export const Leaderboard = () => {
   useEffect(() => {
     setIsLoading(true)
     fetch(
-      `/api/leaderboard?page=${page}&limit=5${debouncedInput ? `&userAddress=${debouncedInput}` : ''}`,
+      `/api/leaderboard?page=${page}&limit=${pagination.limit}${debouncedInput ? `&userAddress=${debouncedInput}` : ''}`,
     )
       .then((data) => data.json())
       .then((data) => {
-        const castedData = data as { leaderboard: LeaderboardResponse }
+        const castedData = data as LeaderboardResponse
 
         if (debouncedInput) {
           setPage(1)
-          setLeaderboardData(castedData.leaderboard)
+          setLeaderboardResponse(castedData)
         } else {
-          setLeaderboardData((prev) => [...prev, ...castedData.leaderboard])
+          setLeaderboardResponse((prev) => {
+            const mergedLeaderboard = [...prev.leaderboard, ...castedData.leaderboard]
+
+            return {
+              ...castedData,
+              // in general there shouldn't be kur, but just in case filter out if exists
+              // (duplicates may occur while developing due to hot reloads)
+              leaderboard: mergedLeaderboard.filter(
+                (obj, index) =>
+                  index === mergedLeaderboard.findIndex((o) => obj.userAddress === o.userAddress),
+              ),
+            }
+          })
         }
         setIsLoading(false)
       })
   }, [page, debouncedInput])
 
-  const mappedLeaderBoard = mappLeaderboardData({
-    leaderboardData,
+  const mappedLeaderBoard = mapLeaderboardColumns({
+    leaderboardData: leaderboardResponse.leaderboard,
+    // TODO use connectedWallet address once available
     connectedWalletAddress: '0xB710940E3659415ebd5492f43B247891De14D872',
   })
 
@@ -159,29 +78,50 @@ export const Leaderboard = () => {
 
   return (
     <>
-      <Text as="h2" variant="h2">
-        Leaderboard
-      </Text>
-      <input
-        value={input}
-        onChange={(e: ChangeEvent<HTMLInputElement>) => {
-          if ('value' in e.target) {
-            const { value } = e.target
+      <div className={classNames.headingWrapper}>
+        <Text as="h2" variant="h2">
+          Leaderboard
+        </Text>
+        <Input
+          value={input}
+          style={{ minWidth: '320px' }}
+          placeholder="Search wallet address or ENS"
+          icon={{ name: 'search_icon' }}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            if ('value' in e.target) {
+              const { value } = e.target
 
-            setPage(1)
+              setPage(1)
 
-            if (value === '') {
-              setLeaderboardData([])
+              if (value === '') {
+                setLeaderboardResponse({ leaderboard: [] })
+              }
+
+              setInput(value as string)
             }
-
-            setInput(value as string)
-          }
-        }}
-      />
-      {leaderboardData.length && (
+          }}
+        />
+      </div>
+      {leaderboardResponse.error && (
+        <div className={classNames.errorWrapper}>
+          <Text as="h5" variant="h5">
+            There was a problem loading the leaderboard. Please try again.
+          </Text>
+        </div>
+      )}
+      {!!debouncedInput.length &&
+        !leaderboardResponse.leaderboard.length &&
+        !leaderboardResponse.error && (
+          <div className={classNames.errorWrapper}>
+            <Text as="h5" variant="h5">
+              No results found
+            </Text>
+          </div>
+        )}
+      {!!leaderboardResponse.leaderboard.length && !leaderboardResponse.error && (
         <>
           <Table
-            columns={columns.map((item, idx) => ({
+            columns={Object.values(leaderboardColumns).map((item, idx) => ({
               title: (
                 <Text key={idx} as="h5" variant="h5" style={{ fontWeight: 500 }}>
                   {item.title}
@@ -190,30 +130,32 @@ export const Leaderboard = () => {
             }))}
             rows={mappedLeaderBoard}
           />
-          <Button
-            variant="unstyled"
-            disabled={isLoading}
-            onClick={() => setPage((prev) => prev + 1)}
-          >
-            <Text
-              as="p"
-              variant="p3semi"
-              style={{
-                color: 'var(--color-text-interactive',
-                display: 'flex',
-                alignItems: 'center',
-                columnGap: '8px',
-              }}
+          {!input && (
+            <Button
+              variant="unstyled"
+              disabled={isLoading}
+              onClick={() => setPage((prev) => prev + 1)}
             >
-              {isLoading ? (
-                <>Loading...</>
-              ) : (
-                <>
-                  <Icon iconName="chevron_down" /> See more
-                </>
-              )}
-            </Text>
-          </Button>
+              <Text
+                as="p"
+                variant="p3semi"
+                style={{
+                  color: 'var(--color-text-interactive',
+                  display: 'flex',
+                  alignItems: 'center',
+                  columnGap: '8px',
+                }}
+              >
+                {isLoading ? (
+                  <>Loading...</>
+                ) : (
+                  <>
+                    <Icon iconName="chevron_down" variant="xs" /> See more
+                  </>
+                )}
+              </Text>
+            </Button>
+          )}
         </>
       )}
     </>

@@ -25,7 +25,7 @@ interface BannerCardProps {
 export const BannerCard: FC<BannerCardProps> = ({ title, description, footer, button, image }) => {
   return (
     <Card className={classNames.shadow}>
-      <Image src={image.src} alt={image.alt} width={60} height={60} />
+      <Image src={image.src} alt={image.alt} height={60} style={{ width: 'auto' }} />
       <div className={classNames.content}>
         <div className={classNames.contentTextual}>
           {typeof title === 'string' ? (

@@ -7,6 +7,7 @@ export { Icon } from './components/atoms/Icon/Icon'
 export { Card } from './components/atoms/Card/Card'
 export { Pill } from './components/atoms/Pill/Pill'
 export { GenericTokenIcon } from './components/atoms/GenericTokenIcon/GenericTokenIcon'
+export { Input } from './components/atoms/Input/Input'
 
 export { TokensGroup } from './components/molecules/TokensGroup/TokensGroup'
 export { ProtocolLabel } from './components/molecules/ProtocolLabel/ProtocolLabel'
