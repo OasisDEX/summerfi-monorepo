@@ -29,7 +29,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({
   staticLeaderboardData,
 }) => {
   const [leaderboardResponse, setLeaderboardResponse] = useState<LeaderboardResponse>({
-    leaderboard: staticLeaderboardData?.leaderboard || [],
+    leaderboard: staticLeaderboardData?.leaderboard ?? [],
   })
   const [currentPage, setCurrentPage] = useState(pagination.page)
   const [isLoading, setIsLoading] = useState(!staticLeaderboardData)
