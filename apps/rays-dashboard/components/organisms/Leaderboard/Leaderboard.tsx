@@ -31,7 +31,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({
   const [leaderboardResponse, setLeaderboardResponse] = useState<LeaderboardResponse>({
     leaderboard: staticLeaderboardData?.leaderboard || [],
   })
-  const [page, setPage] = useState(pagination.page)
+  const [currentPage, setCurrentPage] = useState(pagination.page)
   const [isLoading, setIsLoading] = useState(!staticLeaderboardData)
 
   const [input, setInput] = useState('')
@@ -42,12 +42,12 @@ export const Leaderboard: FC<LeaderboardProps> = ({
     page,
     resetStatic,
     overwrite,
-    input,
+    inputQuery,
   }: {
     page?: number
     resetStatic?: LeaderboardResponse
     overwrite?: boolean
-    input?: string
+    inputQuery?: string
   }) => {
     // to be used when server, or other source leaderboard data is already available
     if (resetStatic) {
@@ -59,8 +59,8 @@ export const Leaderboard: FC<LeaderboardProps> = ({
     setIsLoading(true)
 
     const data = await fetch(
-      `/api/leaderboard?page=${page}&limit=${pagination.limit}${input ? `&userAddress=${input}` : ''}`,
-    ).then((data) => data.json())
+      `/api/leaderboard?page=${page}&limit=${pagination.limit}${inputQuery ? `&userAddress=${inputQuery}` : ''}`,
+    ).then((resp) => resp.json())
 
     const castedData = data as LeaderboardResponse
 
@@ -102,11 +102,12 @@ export const Leaderboard: FC<LeaderboardProps> = ({
     const timeout = setTimeout(() => {
       const page = pagination.page || 1
 
-      setPage(page)
+      setCurrentPage(page)
       setDebouncedInput(input as string)
-      void leaderboardUpdate({ page, overwrite: true, input })
+      void leaderboardUpdate({ page, overwrite: true, inputQuery: input })
     }, time)
 
+    // eslint-disable-next-line consistent-return
     return () => clearTimeout(timeout)
   }, [input])
 
@@ -169,8 +170,8 @@ export const Leaderboard: FC<LeaderboardProps> = ({
               variant="unstyled"
               disabled={isLoading}
               onClick={async () => {
-                setPage((prev) => prev + 1)
-                void leaderboardUpdate({ page: page + 1 })
+                setCurrentPage((prev) => prev + 1)
+                await leaderboardUpdate({ page: currentPage + 1 })
               }}
             >
               <Text
