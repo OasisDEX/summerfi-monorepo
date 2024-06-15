@@ -83,7 +83,6 @@ export default async function HomePage() {
       <BoostCards />
       <Dial value={280} max={400} subtext="Eligible" icon="rays" iconSize={48} />
       <Leaderboard staticLeaderboardData={serverLeaderboardResponse} />
-      {/*<Leaderboard />*/}
     </div>
   )
 }
