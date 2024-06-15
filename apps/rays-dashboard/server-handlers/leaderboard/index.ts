@@ -1,30 +1,21 @@
-import { Leaderboard } from '@summerfi/rays-db'
+import { LeaderboardResponse } from '@/types/leaderboard'
 
-// TODO Leaderboard type from rays-db after we will merge everything will have details and ens defined,
-// so no type extension as below will be needed
-type LeaderboardApiResponse = {
-  leaderboard?: (Leaderboard & {
-    details: { activePositions: number; activeTriggers: number } | null
-    ens: string | null
-  })[]
-}
-
-export const fetchLeaderboard = async (query: string) => {
+export const fetchLeaderboard = async (query: string): Promise<LeaderboardResponse> => {
   try {
     const response = (await fetch(`${process.env.FUNCTIONS_API_URL}/api/rays/leaderboard${query}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
-    }).then((resp) => resp.json())) as LeaderboardApiResponse
+    }).then((resp) => resp.json())) as LeaderboardResponse
 
     return {
       leaderboard: response.leaderboard ?? [],
     }
-  } catch (e) {
+  } catch (error) {
     return {
       leaderboard: [],
-      error: e,
+      error,
     }
   }
 }

@@ -1,4 +1,6 @@
-export type LeaderboardItem = {
+import { Leaderboard } from '@summerfi/rays-db'
+
+export type LeaderboardItem = Leaderboard & {
   id: string
   position: string
   totalPoints: string
@@ -7,4 +9,4 @@ export type LeaderboardItem = {
   ens: string | null
 }
 
-export type LeaderboardResponse = { leaderboard: LeaderboardItem[]; error?: string }
+export type LeaderboardResponse = { leaderboard: LeaderboardItem[]; error?: unknown }

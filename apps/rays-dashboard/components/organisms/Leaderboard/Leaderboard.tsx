@@ -2,12 +2,13 @@
 'use client'
 
 import { ChangeEvent, FC, useEffect, useState } from 'react'
-import { Button, Icon, Input, SkeletonLine, Table, Text } from '@summerfi/app-ui'
+import { Button, Icon, Input, Table, Text } from '@summerfi/app-ui'
 
 import {
   leaderboardColumns,
   mapLeaderboardColumns,
 } from '@/components/organisms/Leaderboard/columns'
+import { LeaderboardSkeleton } from '@/components/organisms/Leaderboard/LeaderboardSkeleton'
 import { LeaderboardResponse } from '@/types/leaderboard'
 
 import classNames from '@/components/organisms/Leaderboard/Leaderboard.module.scss'
@@ -17,28 +18,7 @@ interface LeaderboardProps {
     page: number
     limit: number
   }
-}
-
-const LeaderboardSkeleton = () => {
-  return (
-    <div
-      style={{
-        width: '100%',
-        display: 'flex',
-        rowGap: '30px',
-        flexDirection: 'column',
-        marginTop: '20px',
-      }}
-    >
-      <SkeletonLine height={20} />
-      <SkeletonLine height={20} />
-      <SkeletonLine height={20} />
-      <SkeletonLine height={20} />
-      <SkeletonLine height={20} />
-      <SkeletonLine height={20} />
-      <SkeletonLine height={20} />
-    </div>
-  )
+  staticLeaderboardData?: LeaderboardResponse
 }
 
 export const Leaderboard: FC<LeaderboardProps> = ({
@@ -46,50 +26,62 @@ export const Leaderboard: FC<LeaderboardProps> = ({
     page: 1,
     limit: 5,
   },
+  staticLeaderboardData,
 }) => {
   const [leaderboardResponse, setLeaderboardResponse] = useState<LeaderboardResponse>({
-    leaderboard: [],
+    leaderboard: staticLeaderboardData?.leaderboard ?? [],
   })
-  const [page, setPage] = useState(pagination.page)
-  const [isLoading, setIsLoading] = useState(true)
-  const [freshStart, setFreshStart] = useState(true)
+  const [currentPage, setCurrentPage] = useState(pagination.page)
+  const [isLoading, setIsLoading] = useState(!staticLeaderboardData)
+
   const [input, setInput] = useState('')
   const [debouncedInput, setDebouncedInput] = useState('')
 
-  useEffect(() => {
+  // to be called on action or during leaderboard initialization when staticLeaderboardData is not defined
+  const leaderboardUpdate = async ({
+    page,
+    resetStatic,
+    overwrite,
+    inputQuery,
+  }: {
+    page?: number
+    resetStatic?: LeaderboardResponse
+    overwrite?: boolean
+    inputQuery?: string
+  }) => {
+    // to be used when server, or other source leaderboard data is already available
+    if (resetStatic) {
+      setLeaderboardResponse(resetStatic)
+
+      return
+    }
+
     setIsLoading(true)
-    fetch(
-      `/api/leaderboard?page=${page}&limit=${pagination.limit}${debouncedInput ? `&userAddress=${debouncedInput}` : ''}`,
-    )
-      .then((data) => data.json())
-      .then((data) => {
-        const castedData = data as LeaderboardResponse
 
-        if (debouncedInput) {
-          setPage(1)
-          setLeaderboardResponse(castedData)
-        } else {
-          setLeaderboardResponse((prev) => {
-            const mergedLeaderboard = [
-              ...(freshStart ? [] : prev.leaderboard),
-              ...castedData.leaderboard,
-            ]
+    const data = await fetch(
+      `/api/leaderboard?page=${page}&limit=${pagination.limit}${inputQuery ? `&userAddress=${inputQuery}` : ''}`,
+    ).then((resp) => resp.json())
 
-            return {
-              ...castedData,
-              // in general there shouldn't be kur, but just in case filter out if exists
-              // (duplicates may occur while developing due to hot reloads)
-              leaderboard: mergedLeaderboard.filter(
-                (obj, index) =>
-                  index === mergedLeaderboard.findIndex((o) => obj.userAddress === o.userAddress),
-              ),
-            }
-          })
-        }
-        setIsLoading(false)
-        setFreshStart(false)
-      })
-  }, [page, debouncedInput, freshStart])
+    const castedData = data as LeaderboardResponse
+
+    setLeaderboardResponse((prev) => {
+      const mergedLeaderboard = overwrite
+        ? castedData.leaderboard
+        : [...prev.leaderboard, ...castedData.leaderboard]
+
+      return {
+        ...castedData,
+        // in general there shouldn't be kur, but just in case filter out if exists
+        // (duplicates may occur while developing due to hot reloads)
+        leaderboard: mergedLeaderboard.filter(
+          (obj, index) =>
+            index === mergedLeaderboard.findIndex((o) => obj.userAddress === o.userAddress),
+        ),
+      }
+    })
+
+    setIsLoading(false)
+  }
 
   const mappedLeaderBoard = mapLeaderboardColumns({
     leaderboardData: leaderboardResponse.leaderboard,
@@ -98,20 +90,32 @@ export const Leaderboard: FC<LeaderboardProps> = ({
   })
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (!input) {
-        setFreshStart(true)
-      }
-      setPage(1)
+    if (staticLeaderboardData && !input) {
       setDebouncedInput(input as string)
-    }, 300)
+      void leaderboardUpdate({ resetStatic: staticLeaderboardData })
 
+      return
+    }
+
+    const time = !input ? 0 : 300
+
+    const timeout = setTimeout(() => {
+      const page = pagination.page || 1
+
+      setCurrentPage(page)
+      setDebouncedInput(input as string)
+      void leaderboardUpdate({ page, overwrite: true, inputQuery: input })
+    }, time)
+
+    // eslint-disable-next-line consistent-return
     return () => clearTimeout(timeout)
   }, [input])
 
-  const isLoadingGivenAddress = isLoading && debouncedInput
-  const isLoadingFirstItems = isLoading && freshStart
-  const resolvedSkeletonLoading = isLoadingGivenAddress || isLoadingFirstItems
+  const resolvedSkeletonLoading =
+    (isLoading && debouncedInput) || (isLoading && !leaderboardResponse.leaderboard.length)
+  const isError = leaderboardResponse.error
+  const isZeroResults =
+    !!debouncedInput.length && !leaderboardResponse.leaderboard.length && !isError
 
   return (
     <>
@@ -133,22 +137,20 @@ export const Leaderboard: FC<LeaderboardProps> = ({
           }}
         />
       </div>
-      {leaderboardResponse.error && (
+      {isError && (
         <div className={classNames.errorWrapper}>
           <Text as="h5" variant="h5">
             There was a problem loading the leaderboard. Please try again.
           </Text>
         </div>
       )}
-      {!!debouncedInput.length &&
-        !leaderboardResponse.leaderboard.length &&
-        !leaderboardResponse.error && (
-          <div className={classNames.errorWrapper}>
-            <Text as="h5" variant="h5">
-              No results found
-            </Text>
-          </div>
-        )}
+      {isZeroResults && (
+        <div className={classNames.errorWrapper}>
+          <Text as="h5" variant="h5">
+            No results found
+          </Text>
+        </div>
+      )}
       {resolvedSkeletonLoading && <LeaderboardSkeleton />}
 
       {!resolvedSkeletonLoading && !!leaderboardResponse.leaderboard.length && (
@@ -167,13 +169,16 @@ export const Leaderboard: FC<LeaderboardProps> = ({
             <Button
               variant="unstyled"
               disabled={isLoading}
-              onClick={() => setPage((prev) => prev + 1)}
+              onClick={async () => {
+                setCurrentPage((prev) => prev + 1)
+                await leaderboardUpdate({ page: currentPage + 1 })
+              }}
             >
               <Text
                 as="p"
                 variant="p3semi"
                 style={{
-                  color: 'var(--color-text-interactive',
+                  color: 'var(--color-text-interactive)',
                   display: 'flex',
                   alignItems: 'center',
                   columnGap: '8px',

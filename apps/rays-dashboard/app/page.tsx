@@ -16,9 +16,17 @@ import { Leaderboard } from '@/components/organisms/Leaderboard/Leaderboard'
 import { NetworkNames, networksByName } from '@/constants/networks-list'
 import { LendingProtocol } from '@/helpers/lending-protocol'
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
+import { fetchLeaderboard } from '@/server-handlers/leaderboard'
+import { LeaderboardResponse } from '@/types/leaderboard'
 
-export default function HomePage() {
+export default async function HomePage() {
   const aaveV3Config = lendingProtocolsByName[LendingProtocol.AaveV3]
+
+  const serverLeaderboardResponse = await fetchLeaderboard('?page=1&limit=5')
+
+  const serializedServerLeaderboardResponse: LeaderboardResponse = JSON.parse(
+    JSON.stringify(serverLeaderboardResponse),
+  )
 
   return (
     <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'flex-start' }}>
@@ -79,7 +87,7 @@ export default function HomePage() {
       />
       <BoostCards />
       <Dial value={280} max={400} subtext="Eligible" icon="rays" iconSize={48} />
-      <Leaderboard />
+      <Leaderboard staticLeaderboardData={serializedServerLeaderboardResponse} />
     </div>
   )
 }
