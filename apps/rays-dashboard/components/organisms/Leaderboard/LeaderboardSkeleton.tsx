@@ -1,5 +1,6 @@
-import classNames from '@/components/organisms/Leaderboard/Leaderboard.module.scss'
 import { SkeletonLine } from '@summerfi/app-ui'
+
+import classNames from '@/components/organisms/Leaderboard/Leaderboard.module.scss'
 
 export const LeaderboardSkeleton = () => {
   return (
