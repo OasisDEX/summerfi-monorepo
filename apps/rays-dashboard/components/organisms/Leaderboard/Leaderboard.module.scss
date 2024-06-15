@@ -12,3 +12,11 @@
   margin-top: var(--space-xl);
   color: var(--color-neutral-70);
 }
+
+.leaderboardSkeletonWrapper {
+  width: 100%;
+  display: flex;
+  row-gap: 30px;
+  flex-direction: column;
+  margin-top: 20px;
+}
