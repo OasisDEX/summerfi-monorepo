@@ -1,5 +1,6 @@
 /* eslint-disable no-magic-numbers */
 import React from 'react'
+import classNames from 'classnames'
 
 import { Text, TextAllowedHtmlTags } from '@/components/atoms/Text/Text'
 
@@ -12,23 +13,29 @@ export function WithArrow({
   variant = 'p3',
   style,
   as,
+  enabled = true,
+  className,
 }: React.PropsWithChildren<{
   gap?: string | number
   style?: React.CSSProperties
   variant?: ClassNames
   as?: TextAllowedHtmlTags
+  enabled?: boolean
+  className?: string
 }>) {
   return (
     <Text
       variant={variant}
-      className={withArrowStyles.withArrow}
+      className={classNames(withArrowStyles.withArrow, className)}
       style={style}
       {...(as ? { as } : { as: 'span' })}
     >
       <span style={{ marginRight: gap }}>{children}</span>
-      <span className="arrow" style={{ position: 'absolute' }}>
-        →
-      </span>
+      {enabled && (
+        <span className="arrow" style={{ position: 'absolute' }}>
+          →
+        </span>
+      )}
     </Text>
   )
 }

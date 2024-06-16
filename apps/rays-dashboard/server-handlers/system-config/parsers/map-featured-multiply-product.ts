@@ -1,7 +1,7 @@
 import { NavigationMenuPanelIcon, TokenSymbolsList } from '@summerfi/app-ui'
 import { capitalize } from 'lodash'
 
-import { networksByName } from '@/constants/networks-list'
+import { networksByName } from '@/constants/networks-list-ssr'
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
 import { NavigationMenuPanelListItem } from '@/types/navigation'
 import { ProductHubItem } from '@/types/product-hub'
