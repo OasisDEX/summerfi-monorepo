@@ -75,6 +75,7 @@ export function addRaysConfig({ stack, api, vpc, app }: SummerStackContext) {
     }),
   }
   const raysFunction = new Function(stack, 'get-rays-function', raysFunctionProps)
+  const positionRaysFunction = new Function(stack, 'get-position-rays-function', raysFunctionProps)
   const raysLeaderBoardFunction = new Function(
     stack,
     'get-rays-leaderboard-function',
@@ -94,6 +95,7 @@ export function addRaysConfig({ stack, api, vpc, app }: SummerStackContext) {
 
   api.addRoutes(stack, {
     'GET /api/rays': raysFunction,
+    'GET /api/rays/position': positionRaysFunction,
     'GET /api/rays/leaderboard': raysLeaderBoardFunction,
   })
 }

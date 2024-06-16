@@ -5,7 +5,7 @@ query SummerPoints(
   $startTimestamp: BigInt
   $endTimestamp: BigInt
 ) {
-  users(orderBy: id, first: $first, where: { openPositions_gt: 0, id_gt: $lastId }) {
+  users(orderBy: id, first: $first, where: { id_gt: $lastId }) {
     id
     ens
     allPositions: positions {
