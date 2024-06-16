@@ -70,7 +70,7 @@ export const handler = async (
       'eligibilityCondition.dueDate',
       'eligibilityCondition.type',
       'position.details',
-      'position.externalId'
+      'position.externalId',
     ])
     .execute()
 
