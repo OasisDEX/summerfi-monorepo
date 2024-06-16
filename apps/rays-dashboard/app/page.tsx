@@ -31,7 +31,9 @@ export default async function HomePage() {
       >
         Connect wallet
       </Button>
-      <Leaderboard staticLeaderboardData={serializedServerLeaderboardResponse} />
+      <div style={{ marginBottom: 'var(--space-xxxl)', width: '100%' }}>
+        <Leaderboard staticLeaderboardData={serializedServerLeaderboardResponse} />
+      </div>
     </div>
   )
 }

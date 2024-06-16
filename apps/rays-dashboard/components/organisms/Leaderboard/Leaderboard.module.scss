@@ -1,8 +1,15 @@
+.leaderboardWrapper {
+  width: 100%;
+}
+
 .headingWrapper {
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  row-gap: var(--space-m);
+  margin-bottom: var(--space-l);
 }
 
 .errorWrapper {
@@ -19,4 +26,33 @@
   row-gap: 30px;
   flex-direction: column;
   margin-top: 20px;
+}
+
+.positionColumn {
+  min-width: auto;
+
+  // figure out how to use media mixin here
+  @media (min-width: 1025px) {
+    min-width: 160px;
+  }
+}
+
+.userColumn {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 60px;
+  font-family: var(--font-ft-polar);
+
+  @media (min-width: 531px) {
+    max-width: 150px;
+  }
+
+  @media (min-width: 744px) {
+    max-width: 250px;
+  }
+
+  @media (min-width: 1025px) {
+    max-width: 100%;
+  }
 }
