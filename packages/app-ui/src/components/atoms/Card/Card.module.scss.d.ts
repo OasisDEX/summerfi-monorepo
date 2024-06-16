@@ -1,5 +1,6 @@
 export type Styles = {
   card: string
+  cardDark: string
   cardSmallPaddings: string
 }
 

@@ -173,6 +173,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({
                 setCurrentPage((prev) => prev + 1)
                 await leaderboardUpdate({ page: currentPage + 1 })
               }}
+              style={{ cursor: isLoading ? 'not-allowed' : 'pointer' }}
             >
               <Text
                 as="p"

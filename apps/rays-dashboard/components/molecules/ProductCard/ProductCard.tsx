@@ -13,7 +13,7 @@ import Link from 'next/link'
 import { NetworkNames, networksByName } from '@/constants/networks-list'
 import { LendingProtocolConfig } from '@/helpers/lending-protocols-configs'
 
-import classNames from '@/components/molecules/ProductCard.module.scss'
+import classNames from '@/components/molecules/ProductCard/ProductCard.module.scss'
 
 interface AutomationItem {
   type: 'stopLoss' | 'autoBuy' | 'autoSell' | 'takeProfit'
