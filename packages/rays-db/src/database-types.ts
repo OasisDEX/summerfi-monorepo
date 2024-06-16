@@ -106,6 +106,7 @@ export interface Position {
   address: string
   chainId: number
   createdAt: Generated<Timestamp>
+  details: Json | null
   externalId: string
   id: Generated<number>
   market: string

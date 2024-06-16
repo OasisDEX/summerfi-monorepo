@@ -215,8 +215,11 @@ export const handler = async (
       return
     }
 
-    const { points: accruedPointsFromSnapshot, userSummary } =
-      await pointAccuralService.getAccruedPointsAndUserDetails(startTimestamp, endTimestamp)
+    const {
+      points: accruedPointsFromSnapshot,
+      userSummary,
+      positionsSummary,
+    } = await pointAccuralService.getAccruedPointsAndUserDetails(startTimestamp, endTimestamp)
 
     // Get all unique addresses and positions from all chunks
     const allUniqueUsers: Set<string> = new Set()
@@ -327,6 +330,7 @@ export const handler = async (
           const positionId = positionIdResolver(record.positionId)
 
           let position = positionsFromDatabase.find((p) => p.externalId === record.positionId)
+          const positionDetails = positionsSummary.find((p) => p.vaultId === record.positionId)
           if (!position) {
             position = await transaction
               .insertInto('position')
@@ -339,9 +343,18 @@ export const handler = async (
                 vaultId: record.vaultId,
                 chainId: positionId.chainId,
                 address: positionId.address,
+                details: positionDetails ? positionDetails : null,
               })
               .returningAll()
               .executeTakeFirstOrThrow()
+          } else {
+            if (positionDetails) {
+              await transaction
+                .updateTable('position')
+                .set('details', positionDetails)
+                .where('id', '=', position.id)
+                .execute()
+            }
           }
 
           if (record.points.openPositionsPoints > 0) {
