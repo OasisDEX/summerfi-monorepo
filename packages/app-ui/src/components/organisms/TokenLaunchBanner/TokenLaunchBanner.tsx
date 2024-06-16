@@ -1,3 +1,5 @@
+/* eslint-disable no-magic-numbers */
+
 import { FC } from 'react'
 import Link from 'next/link'
 
