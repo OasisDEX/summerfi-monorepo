@@ -5,11 +5,18 @@ import Link from 'next/link'
 
 import { LeaderboardItem, LeaderboardResponse } from '@/types/leaderboard'
 
+import classNames from '@/components/organisms/Leaderboard/Leaderboard.module.scss'
+
 export const leaderboardColumns = {
   rank: {
     title: 'Rank',
     cellMapper: (cell: LeaderboardItem) => (
-      <Text as="p" variant="p1semi" style={{ color: 'var(--color-neutral-80)', minWidth: '160px' }}>
+      <Text
+        as="p"
+        variant="p1semi"
+        style={{ color: 'var(--color-neutral-80)' }}
+        className={classNames.positionColumn}
+      >
         {[1, 2, 3].includes(Number(cell.position)) ? <>{cell.position} 🏆</> : cell.position}
       </Text>
     ),
@@ -17,7 +24,7 @@ export const leaderboardColumns = {
   user: {
     title: 'User',
     cellMapper: (cell: LeaderboardItem) => (
-      <Text as="p" variant="p1semi" style={{ fontFamily: 'var(--font-ft-polar)' }}>
+      <Text as="p" variant="p1semi" className={classNames.userColumn}>
         {cell.ens ?? cell.userAddress}
       </Text>
     ),

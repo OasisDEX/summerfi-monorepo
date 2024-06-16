@@ -175,6 +175,9 @@ export type IconNamesList =
   | 'rays'
   | 'chevron_down'
   | 'search_icon'
+  | 'tooltip'
+  | 'checkmark_colorful'
+  | 'close_colorful'
 
 export type TokenSymbolsList =
   | 'USDP'

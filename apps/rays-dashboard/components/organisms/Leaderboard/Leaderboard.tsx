@@ -113,12 +113,12 @@ export const Leaderboard: FC<LeaderboardProps> = ({
 
   const resolvedSkeletonLoading =
     (isLoading && debouncedInput) || (isLoading && !leaderboardResponse.leaderboard.length)
-  const isError = leaderboardResponse.error
+  const isError = !!leaderboardResponse.error
   const isZeroResults =
     !!debouncedInput.length && !leaderboardResponse.leaderboard.length && !isError
 
   return (
-    <>
+    <div className={classNames.leaderboardWrapper}>
       <div className={classNames.headingWrapper}>
         <Text as="h2" variant="h2">
           Leaderboard
@@ -166,36 +166,39 @@ export const Leaderboard: FC<LeaderboardProps> = ({
             rows={mappedLeaderBoard}
           />
           {!debouncedInput && (
-            <Button
-              variant="unstyled"
-              disabled={isLoading}
-              onClick={async () => {
-                setCurrentPage((prev) => prev + 1)
-                await leaderboardUpdate({ page: currentPage + 1 })
-              }}
-            >
-              <Text
-                as="p"
-                variant="p3semi"
-                style={{
-                  color: 'var(--color-text-interactive)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  columnGap: '8px',
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'var(--space-m)' }}>
+              <Button
+                variant="unstyled"
+                disabled={isLoading}
+                onClick={async () => {
+                  setCurrentPage((prev) => prev + 1)
+                  await leaderboardUpdate({ page: currentPage + 1 })
                 }}
+                style={{ cursor: isLoading ? 'not-allowed' : 'pointer' }}
               >
-                {isLoading ? (
-                  <>Loading...</>
-                ) : (
-                  <>
-                    <Icon iconName="chevron_down" variant="xs" /> See more
-                  </>
-                )}
-              </Text>
-            </Button>
+                <Text
+                  as="p"
+                  variant="p3semi"
+                  style={{
+                    color: 'var(--color-text-interactive)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    columnGap: '8px',
+                  }}
+                >
+                  {isLoading ? (
+                    <>Loading...</>
+                  ) : (
+                    <>
+                      <Icon iconName="chevron_down" variant="xs" /> See more
+                    </>
+                  )}
+                </Text>
+              </Button>
+            </div>
           )}
         </>
       )}
-    </>
+    </div>
   )
 }

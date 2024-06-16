@@ -1,4 +1,5 @@
 .card,
+.cardDark,
 .cardSmallPaddings {
   display: flex;
   width: 100%;
@@ -6,8 +7,14 @@
   border-radius: var(--radius-12);
 }
 
-.card {
+.card,
+.cardDark {
   padding: var(--space-l);
+}
+
+.cardDark {
+  border: unset;
+  background-color: var(--color-neutral-30);
 }
 
 .cardSmallPaddings {

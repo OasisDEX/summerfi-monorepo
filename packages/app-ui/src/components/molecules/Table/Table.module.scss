@@ -4,7 +4,11 @@
 
   th,
   td {
-    padding: var(--space-s);
+    padding: var(--space-s) var(--space-xs);
+
+    @include media('>s') {
+      padding: var(--space-s);
+    }
   }
 
   th {

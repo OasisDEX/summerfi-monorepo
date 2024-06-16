@@ -1,6 +1,6 @@
 'use client'
 
-import { FC, ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import { FC, HTMLAttributes, ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { Card } from '@/components/atoms/Card/Card'
 import { isTouchDevice } from '@/helpers/isTouchDevice'
@@ -29,20 +29,31 @@ export function useTooltip() {
   return { tooltipOpen, setTooltipOpen }
 }
 
-export function TooltipWrapper({ children, isOpen }: { children: ReactNode; isOpen: boolean }) {
+interface TooltipWrapperProps extends HTMLAttributes<HTMLDivElement> {
+  children: ReactNode
+  isOpen: boolean
+}
+
+const TooltipWrapper: FC<TooltipWrapperProps> = ({ children, isOpen, style }) => {
   return (
-    <div className={isOpen ? classNames.tooltipOpen : classNames.tooltip}>
+    <div className={isOpen ? classNames.tooltipOpen : classNames.tooltip} style={style}>
       <Card variant="cardSmallPaddings">{children}</Card>
     </div>
   )
 }
 
-interface StatefulTooltipProps {
+interface StatefulTooltipProps extends HTMLAttributes<HTMLDivElement> {
   tooltip: ReactNode
   children: ReactNode
+  tooltipWrapperStyles?: HTMLAttributes<HTMLDivElement>['style']
 }
 
-export const Tooltip: FC<StatefulTooltipProps> = ({ tooltip, children }) => {
+export const Tooltip: FC<StatefulTooltipProps> = ({
+  tooltip,
+  children,
+  style,
+  tooltipWrapperStyles,
+}) => {
   const { tooltipOpen, setTooltipOpen } = useTooltip()
 
   const handleMouseEnter = useMemo(
@@ -63,9 +74,12 @@ export const Tooltip: FC<StatefulTooltipProps> = ({ tooltip, children }) => {
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
       className={classNames.tooltipWrapper}
+      style={style}
     >
       {children}
-      <TooltipWrapper isOpen={tooltipOpen}>{tooltip}</TooltipWrapper>
+      <TooltipWrapper isOpen={tooltipOpen} style={tooltipWrapperStyles}>
+        {tooltip}
+      </TooltipWrapper>
     </div>
   )
 }
