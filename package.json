@@ -10,7 +10,7 @@
     "test:integration": "turbo run test:integration --cache-dir=.turbo",
     "check-circular": "turbo run check-circular --cache-dir=.turbo",
     "db:migrate": "turbo run db:migrate --cache-dir=.turbo",
-    "cicheck": "turbo run cicheck --cache-dir=.turbo && pnpm run coverage:total",
+    "cicheck": "turbo run cicheck --cache-dir=.turbo --filter=./packages/* && pnpm run coverage:total",
     "cicheck:dev": "turbo run cicheck --cache-dir=.turbo --output-logs=new-only --concurrency=100% --continue",
     "sst:dev": "sst dev --app summerfi-stack",
     "sst:build": "sst build --app summerfi-stack",

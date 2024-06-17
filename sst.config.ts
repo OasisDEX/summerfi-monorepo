@@ -34,7 +34,7 @@ const checkForUncommittedOrUntrackedChanges = async () => {
 const runInstallAndChecks = async () => {
   try {
     await $`pnpm install`
-    await $`pnpm run cicheck --filter=./packages/*`
+    await $`pnpm run cicheck`
   } catch (error) {
     echo(`cicheck failed: ${error.message}`)
     return false
