@@ -68,6 +68,7 @@ export const handler = async (
       'pointsDistribution.points',
       'eligibilityCondition.dueDate',
       'eligibilityCondition.type',
+      'pointsDistribution.description',
     ])
     .execute()
 
@@ -86,6 +87,7 @@ export const handler = async (
       'pointsDistribution.points',
       'eligibilityCondition.dueDate',
       'eligibilityCondition.type',
+      'pointsDistribution.description',
     ])
     .execute()
   const positionInLeaderboard = await db
@@ -113,6 +115,7 @@ export const handler = async (
   const eligiblePoints = result.find((result) => result.dueDate === null)?.points ?? 0
   const allPossiblePoints = result.reduce((acc, result) => acc + Number(result.points), 0)
   const actionRequiredPoints = result.filter((result) => result.dueDate !== null)
+  const userTypes = userPoints.map((item) => item.description)
 
   return ResponseOk({
     body: {
@@ -121,6 +124,7 @@ export const handler = async (
       allPossiblePoints,
       actionRequiredPoints,
       positionInLeaderboard: positionInLeaderboard[0]?.position,
+      userTypes,
     },
   })
 }
