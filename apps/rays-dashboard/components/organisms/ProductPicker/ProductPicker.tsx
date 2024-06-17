@@ -90,7 +90,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({ products, productHub }) 
         {mappedItems.map((item) => (
           <ProductCard
             key={item.link}
-            automation={item.phItem.automationFeatures || []}
+            automation={item.phItem.automationFeatures ?? []}
             protocolConfig={lendingProtocolsByName[item.phItem.protocol as LendingProtocol]}
             tokens={
               [

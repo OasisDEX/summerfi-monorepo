@@ -63,20 +63,20 @@ const main = async () => {
   if (!configPathExists) {
     await mkdir(configPath)
       .catch(() => {
-        console.error('Error creating types/generated directory')
+        console.error('Error creating rays types/generated directory')
       })
       .then(() => {
-        console.info(`${configPath} directory created`)
+        console.info(`Rays ${configPath} directory created`)
       })
   }
 
   if (interfaces !== '') {
     writeFile(join(configPath, 'rays-types.ts'), interfaces)
       .then(() => {
-        console.info('Config types generated')
+        console.info('Rays Config types generated')
       })
       .catch((error) => {
-        console.error(`Error generating config types: ${error}`)
+        console.error(`Error generating rays config types: ${error}`)
       })
   }
 }
