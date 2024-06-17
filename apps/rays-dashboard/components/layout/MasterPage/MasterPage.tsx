@@ -4,6 +4,7 @@ import Image from 'next/image'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 import systemConfigHandler from '@/server-handlers/system-config'
+
 import classNames from './MasterPage.module.scss'
 
 interface MasterPageProps {

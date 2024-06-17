@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 import { Card, Icon, Text, Tooltip } from '@summerfi/app-ui'
 import Link from 'next/link'
 
