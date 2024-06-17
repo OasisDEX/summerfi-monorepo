@@ -19,19 +19,19 @@ const getConfig = async () => {
 const getInterfaces = (_) => {
   try {
     const interfaces = [
-      'interface AppRaysConfigType {\n  products: Products;\n}',
-      'interface Products {\n' +
+      'export interface AppRaysConfigType {\n  products: Products;\n}',
+      'export interface Products {\n' +
         '  borrow: ProductsConfig;\n' +
         '  multiply: ProductsConfig;\n' +
         '  earn: ProductsConfig;\n' +
         '}',
-      'interface ProductsConfig {\n' +
+      'export interface ProductsConfig {\n' +
         '  ethereum: ProductNetworkConfig[];\n' +
         '  base: ProductNetworkConfig[];\n' +
         '  arbitrum: ProductNetworkConfig[];\n' +
         '  optimism: ProductNetworkConfig[];\n' +
         '}',
-      'interface ProductNetworkConfig {\n' +
+      'export interface ProductNetworkConfig {\n' +
         '  label: string;\n' +
         '  link: string;\n' +
         '  protocol: string;\n' +
