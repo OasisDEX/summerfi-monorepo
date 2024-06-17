@@ -1,0 +1,29 @@
+.mainContainer {
+  position: relative;
+  height: 100%;
+}
+
+.backgroundSimple {
+  position: absolute;
+  top: 0;
+  max-width: none;
+  pointer-events: none;
+}
+
+.appContainer {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-m);
+}
+
+.languageSwitcher {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  button {
+    width: 100%;
+    margin: var(--space-xs) var(--space-m);
+  }
+}

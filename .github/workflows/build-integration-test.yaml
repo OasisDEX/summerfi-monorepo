@@ -6,8 +6,14 @@ on:
 jobs:
   build:
     name: Build and Integration Test
-    timeout-minutes: 15
+    timeout-minutes: 30
     runs-on: ubuntu-latest
+    env:
+      CONFIG_URL: ${{ secrets.CONFIG_URL }}
+      BORROW_DB_READ_CONNECTION_STRING: ${{ secrets.BORROW_DB_READ_CONNECTION_STRING }}
+      CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_ACCESS_TOKEN }}
+      CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
+      CONTENTFUL_SPACE_ID: ${{ secrets.CONTENTFUL_SPACE_ID }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -32,6 +38,36 @@ jobs:
           node-version: 20
           cache: 'pnpm'
 
+      - name: Establish VPN connection
+        run: |
+          sudo apt update
+          sudo apt install -y openvpn openvpn-systemd-resolved
+          echo 'Configuring the VPN...'
+          echo "${{ secrets.VPN_CONFIG }}" > vpn-config.ovpn
+          echo "${{ secrets.VPN_USERNAME }}" > vpn-credentials.txt
+          echo "${{ secrets.VPN_PASSWORD }}" >> vpn-credentials.txt
+          echo 'Connecting to the VPN...'
+          sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-credentials.txt --daemon
+          sleep 10
+
+      - name: Check VPN connection
+        env:
+          BORROW_DB_READ_DB: ${{ secrets.BORROW_DB_READ_DB }}
+          BORROW_DB_READ_HOST: ${{ secrets.BORROW_DB_READ_HOST }}
+          BORROW_DB_READ_USER: ${{ secrets.BORROW_DB_READ_USER }}
+          BORROW_DB_READ_PASSWORD: ${{ secrets.BORROW_DB_READ_PASSWORD }}
+          PGCONNECT_TIMEOUT: 10
+        run: |
+          echo 'Checking the VPN connection...'
+          sudo systemctl start postgresql.service
+          PGPASSWORD=$BORROW_DB_READ_PASSWORD /usr/bin/psql -d $BORROW_DB_READ_DB -U $BORROW_DB_READ_USER -h $BORROW_DB_READ_HOST -c 'SELECT 1;' > /dev/null
+          STATUS_CODE=$?
+          if ! [[ "$STATUS_CODE" = 0 ]]; then
+            echo 'VPN connection failed'
+            exit 1
+          fi
+          echo 'VPN connected!'
+
       - name: Install dependencies
         run: pnpm install
 
@@ -39,6 +75,10 @@ jobs:
         run: pnpm prebuild
 
       - name: Build
+        env:
+          CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_ACCESS_TOKEN }}
+          CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
+          CONTENTFUL_SPACE_ID: ${{ secrets.CONTENTFUL_SPACE_ID }}
         run: pnpm build
 
       - name: Test

@@ -7,6 +7,11 @@
     "DEBANK_API_URL",
     "RPC_GATEWAY",
     "GET_TRIGGERS_URL",
+    "CONFIG_URL",
+    "CONTENTFUL_ACCESS_TOKEN",
+    "CONTENTFUL_PREVIEW_ACCESS_TOKEN",
+    "FUNCTIONS_API_URL",
+    "CONTENTFUL_SPACE_ID",
     "SKIP_VALIDATION",
     "AWS_REGION",
     "AWS_PROFILE",
@@ -54,12 +59,23 @@
       "persistent": true
     },
     "prebuild": {
-      "dependsOn": ["^prebuild"],
+      "dependsOn": ["^prebuild", "^prebuild:nocache"],
       "outputs": ["src/types/graphql/generated.ts", "src/generated"]
+    },
+    "prebuild:nocache": {
+      "dependsOn": ["^prebuild:nocache"],
+      "cache": false
     },
     "build": {
       "dependsOn": ["prebuild", "^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**", "artifacts/**", ".sst/**"]
+      "outputs": [
+        ".next/**",
+        ".next/server/pages/**",
+        "!.next/cache/**",
+        "dist/**",
+        "artifacts/**",
+        ".sst/**"
+      ]
     },
     "test": {
       "dependsOn": ["prebuild", "build", "^test"]
@@ -75,6 +91,10 @@
     },
     "check-circular": {
       "dependsOn": ["prebuild", "build", "^check-circular"]
+    },
+    "db:migrate": {
+      "dependsOn": ["prebuild"],
+      "cache": false
     },
     "cicheck": {
       "dependsOn": [

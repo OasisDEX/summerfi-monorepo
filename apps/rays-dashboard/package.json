@@ -1,0 +1,47 @@
+{
+  "name": "@summerfi/rays-dashboard",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "scripts": {
+    "dev": "dotenv -e ../../.env -e ../../.env.local -- pnpm get-config-types && dotenv -e ../../.env -e ../../.env.local -- next dev -p 3001",
+    "build": "dotenv -e ../../.env -e ../../.env.local -- pnpm get-config-types && dotenv -e ../../.env -e ../../.env.local -- next build",
+    "get-config-types": "node scripts/get-config-types.js",
+    "start": "next start -p 3001",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@loadable/component": "^5.16.4",
+    "@summerfi/app-db": "workspace:*",
+    "@summerfi/app-ui": "workspace:*",
+    "@summerfi/rays-db": "workspace:*",
+    "@summerfi/serverless-shared": "workspace:*",
+    "@tabler/icons-react": "^3.4.0",
+    "@web3-onboard/coinbase": "^2.4.1",
+    "@web3-onboard/common": "^2.4.2",
+    "@web3-onboard/core": "^2.22.1",
+    "@web3-onboard/gnosis": "^2.3.1",
+    "@web3-onboard/injected-wallets": "^2.11.1",
+    "@web3-onboard/ledger": "^2.7.1",
+    "@web3-onboard/react": "^2.9.1",
+    "@web3-onboard/trezor": "^2.4.6",
+    "@web3-onboard/walletconnect": "2.4.6",
+    "@web3-onboard/web3auth": "^2.3.1",
+    "lodash": "^4.17.21",
+    "next": "^14.2.3",
+    "pino-pretty": "^11.2.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "@types/lodash": "^4.14.109",
+    "@types/node": "^20.14.2",
+    "@types/node-fetch": "^2.6.11",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
+    "json-to-ts": "^1.7.0",
+    "node-fetch": "^2.7.0"
+  },
+  "packageManager": "pnpm@8.15.4"
+}

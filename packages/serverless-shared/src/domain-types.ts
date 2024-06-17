@@ -55,6 +55,7 @@ export enum ProtocolId {
   SPARK = 'spark',
   AJNA = 'ajna',
   MORPHO_BLUE = 'morphoblue',
+  MAKER = 'maker',
   /** @deprecated Please use ProtocolId.MORPHO_BLUE */
   MORPHO_BLUE_DEPRECATED = 'morpho-blue',
 }

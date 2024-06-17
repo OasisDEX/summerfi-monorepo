@@ -1,0 +1,82 @@
+.h1,
+.h2,
+.h3,
+.h4,
+.h5 {
+  font-family: var(--font-ft-polar);
+  letter-spacing: -2%;
+}
+.h1,
+.h2,
+.h3 {
+  font-weight: 400;
+}
+.h4,
+.h5 {
+  font-weight: 700;
+}
+.h1 {
+  font-size: 52px;
+  line-height: 64px;
+}
+.h2 {
+  font-size: 40px;
+  line-height: 54px;
+}
+.h3 {
+  font-size: 32px;
+  line-height: 44px;
+}
+.h4 {
+  font-size: 28px;
+  line-height: 40px;
+}
+.h5 {
+  font-size: 20px;
+  line-height: 32px;
+}
+
+.p1,
+.p1semi {
+  font-size: 18px;
+  line-height: 28px;
+}
+.p2,
+.p2semi {
+  font-size: 16px;
+  line-height: 24px;
+}
+.p3,
+.p3semi {
+  font-size: 14px;
+  line-height: 22px;
+}
+.p4,
+.p4semi,
+.p4colorful,
+.p4semiColorful {
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.p1semi,
+.p2semi,
+.p3semi,
+.p4semi,
+.p4semiColorful {
+  font-weight: 600;
+}
+
+.hidden {
+  font-size: inherit;
+  color: transparent;
+  position: absolute;
+}
+
+.p4colorful,
+.p4semiColorful {
+  background-image: var(--gradient-summer-fi-dark);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  width: fit-content;
+}
