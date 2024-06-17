@@ -42,7 +42,7 @@ const ajnaConfig: LendingProtocolConfig = {
   label: LendingProtocolLabel.ajna,
   icon: ajnaIcon as string,
   logo: ajnaLogo as string,
-  logoScale: 1.4,
+  logoScale: 1.1,
 }
 
 const makerConfig: LendingProtocolConfig = {
@@ -66,7 +66,7 @@ const sparkConfig: LendingProtocolConfig = {
   label: LendingProtocolLabel.sparkv3,
   icon: sparkIcon as string,
   logo: sparkLogo as string,
-  logoScale: 1.6,
+  logoScale: 1.2,
 }
 
 const lendingProtocols = [

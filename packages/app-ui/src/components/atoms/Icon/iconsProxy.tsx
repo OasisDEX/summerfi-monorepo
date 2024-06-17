@@ -205,7 +205,11 @@ export const zerox_color = lazy.lib(() => import('../../../tokens/icons/zerox_co
 export const autoBuy = lazy.lib(() => import('../../../tokens/icons/autoBuy'))
 export const autoSell = lazy.lib(() => import('../../../tokens/icons/autoSell'))
 export const stopLoss = lazy.lib(() => import('../../../tokens/icons/stopLoss'))
+export const trailingStopLoss = lazy.lib(() => import('../../../tokens/icons/stopLoss'))
 export const takeProfit = lazy.lib(() => import('../../../tokens/icons/takeProfit'))
+export const partialTakeProfit = lazy.lib(() => import('../../../tokens/icons/takeProfit'))
+export const autoTakeProfit = lazy.lib(() => import('../../../tokens/icons/takeProfit'))
+export const constantMultiple = lazy.lib(() => import('../../../tokens/icons/takeProfit')) // doesn't matter, no longer supported
 export const rays = lazy.lib(() => import('../../../tokens/icons/rays'))
 export const chevron_down = lazy.lib(() => import('../../../tokens/icons/chevron_down'))
 export const search_icon = lazy.lib(() => import('../../../tokens/icons/search_icon'))

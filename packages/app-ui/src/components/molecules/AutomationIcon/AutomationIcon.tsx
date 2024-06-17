@@ -8,7 +8,15 @@ import classNames from '@/components/molecules/AutomationIcon/AutomationIcon.mod
 interface AutomationIconProps {
   tooltip: ReactNode
   enabled?: boolean
-  type: 'autoBuy' | 'autoSell' | 'stopLoss' | 'takeProfit'
+  type:
+    | 'autoBuy'
+    | 'autoSell'
+    | 'stopLoss'
+    | 'takeProfit'
+    | 'trailingStopLoss'
+    | 'partialTakeProfit'
+    | 'autoTakeProfit'
+    | 'constantMultiple'
 }
 
 export const AutomationIcon: FC<AutomationIconProps> = ({ enabled, type, tooltip }) => {

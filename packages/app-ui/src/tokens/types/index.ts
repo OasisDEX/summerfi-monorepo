@@ -170,7 +170,11 @@ export type IconNamesList =
   | 'autoBuy'
   | 'autoSell'
   | 'stopLoss'
+  | 'trailingStopLoss'
   | 'takeProfit'
+  | 'partialTakeProfit'
+  | 'autoTakeProfit'
+  | 'constantMultiple'
   // other icons
   | 'rays'
   | 'chevron_down'
