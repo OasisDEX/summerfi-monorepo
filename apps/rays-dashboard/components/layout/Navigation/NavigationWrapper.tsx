@@ -1,8 +1,16 @@
 'use client'
 
 import { FC } from 'react'
-import { Button, LoadingSpinner, Navigation, NavigationMenuPanelType, Text } from '@summerfi/app-ui'
+import { LoadingSpinner, Navigation, NavigationMenuPanelType } from '@summerfi/app-ui'
+import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
+
+import { WalletButtonFallback } from '@/components/molecules/WalletButton/WalletButtonFallback'
+
+const WalletButton = dynamic(() => import('@/components/molecules/WalletButton/WalletButton'), {
+  ssr: false,
+  loading: () => <WalletButtonFallback />,
+})
 
 interface NavigationWrapperProps {
   panels?: NavigationMenuPanelType[]
@@ -37,19 +45,7 @@ export const NavigationWrapper: FC<NavigationWrapperProps> = ({
         NavigationModuleBridge,
         NavigationModuleSwap,
       }}
-      walletConnectionComponent={
-        <Button variant="secondarySmall" style={{ backgroundColor: 'var(--color-neutral-10)' }}>
-          <Text
-            variant="p4"
-            style={{
-              marginRight: 'var(--space-xl)',
-              marginLeft: 'var(--space-xl)',
-            }}
-          >
-            loaded wallet :)
-          </Text>
-        </Button>
-      }
+      walletConnectionComponent={<WalletButton />}
     />
   )
 }

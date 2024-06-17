@@ -1,6 +1,6 @@
 import { ProductHubItems, Protocol } from '@summerfi/app-db'
 
-import { networksList } from '@/constants/networks-list'
+import { networksList } from '@/constants/networks-list-ssr'
 import { prisma } from '@/helpers/prisma-client'
 import { ProductHubData } from '@/types/product-hub'
 

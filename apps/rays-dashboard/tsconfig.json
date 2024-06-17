@@ -3,6 +3,7 @@
   "compilerOptions": {
     "lib": ["dom"],
     "baseUrl": ".",
+    "lib": ["dom", "esnext"],
     "plugins": [
       {
         "name": "next"
