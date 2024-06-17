@@ -15,20 +15,3 @@
   flex-direction: column;
   row-gap: var(--space-xxs);
 }
-
-.countDown {
-  display: flex;
-  column-gap: var(--space-l);
-
-  @include media('>s') {
-    column-gap: var(--space-xxl);
-  }
-}
-
-.countDownItem {
-  display: flex;
-  flex-direction: column;
-  row-gap: var(--space-xxs);
-  align-items: center;
-  justify-content: center;
-}

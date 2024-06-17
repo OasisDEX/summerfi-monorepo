@@ -1,6 +1,6 @@
 export type Styles = {
   content: string
-  wrapper: string
+  infoWrapper: string
 }
 
 export type ClassNames = keyof Styles

@@ -1,6 +1,5 @@
 export type Styles = {
-  content: string
-  wrapper: string
+  countDownItem: string
 }
 
 export type ClassNames = keyof Styles

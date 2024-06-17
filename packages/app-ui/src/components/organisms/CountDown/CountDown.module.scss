@@ -1,0 +1,20 @@
+.countDown,
+.countDownSmallGaps {
+  display: flex;
+}
+
+.countDown {
+  column-gap: var(--space-l);
+
+  @include media('>s') {
+    column-gap: 55px;
+  }
+}
+
+.countDownSmallGaps {
+  column-gap: var(--space-s);
+
+  @include media('>s') {
+    column-gap: var(--space-l);
+  }
+}

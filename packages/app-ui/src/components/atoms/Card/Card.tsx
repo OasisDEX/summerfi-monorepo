@@ -13,8 +13,11 @@ export const Card: FC<CardProps & DetailedHTMLProps<HTMLAttributes<HTMLElement>,
   children,
   className,
   variant = 'card',
+  style,
 }) => {
   return (
-    <div className={getAtomClassList({ className, variant: classNames[variant] })}>{children}</div>
+    <div className={getAtomClassList({ className, variant: classNames[variant] })} style={style}>
+      {children}
+    </div>
   )
 }

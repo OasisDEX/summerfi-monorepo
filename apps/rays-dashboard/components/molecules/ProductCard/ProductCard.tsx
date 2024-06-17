@@ -69,46 +69,44 @@ export const ProductCard: FC<ProductCardProps> = ({
   btn,
 }) => {
   return (
-    <div className={classNames.cardWrapper}>
-      <Card>
-        <div className={classNames.content}>
-          <div className={classNames.headingWrapper}>
-            <div className={classNames.generalInfoWrapper}>
-              <TokensGroup tokens={tokens} />
-              <div className={classNames.groupWrapper}>
-                <Text as="h5" variant="h5">
-                  {tokens.join('/')}
-                </Text>
-                <ProtocolLabel
-                  protocol={{
-                    label: protocolConfig.label,
-                    logo: { scale: protocolConfig.logoScale, src: protocolConfig.logo },
-                  }}
-                  network={{
-                    badge: networksByName[network].badge,
-                    label: protocolConfig.label,
-                  }}
-                />
-              </div>
-            </div>
-            <div className={classNames.automationWrapper}>
-              {automation.map((item) => (
-                <div className={classNames.automationItem} key={item.label}>
-                  <AutomationIcon type={item.type} tooltip={item.tooltip} enabled={item.enabled} />
-                  <Text as="p" variant="p4semi" style={{ color: 'var(--color-primary-30' }}>
-                    + {item.label}
-                  </Text>
-                </div>
-              ))}
+    <Card className={classNames.cardWrapper}>
+      <div className={classNames.content}>
+        <div className={classNames.headingWrapper}>
+          <div className={classNames.generalInfoWrapper}>
+            <TokensGroup tokens={tokens} />
+            <div className={classNames.groupWrapper}>
+              <Text as="h5" variant="h5">
+                {tokens.join('/')}
+              </Text>
+              <ProtocolLabel
+                protocol={{
+                  label: protocolConfig.label,
+                  logo: { scale: protocolConfig.logoScale, src: protocolConfig.logo },
+                }}
+                network={{
+                  badge: networksByName[network].badge,
+                  label: protocolConfig.label,
+                }}
+              />
             </div>
           </div>
-          <Link href={btn.link} className={classNames.link}>
-            <Button variant="colorful">
-              <span>{btn.label}</span>
-            </Button>
-          </Link>
+          <div className={classNames.automationWrapper}>
+            {automation.map((item) => (
+              <div className={classNames.automationItem} key={item.label}>
+                <AutomationIcon type={item.type} tooltip={item.tooltip} enabled={item.enabled} />
+                <Text as="p" variant="p4semi" style={{ color: 'var(--color-primary-30' }}>
+                  + {item.label}
+                </Text>
+              </div>
+            ))}
+          </div>
         </div>
-      </Card>
-    </div>
+        <Link href={btn.link} className={classNames.link}>
+          <Button variant="colorful">
+            <span>{btn.label}</span>
+          </Button>
+        </Link>
+      </div>
+    </Card>
   )
 }
