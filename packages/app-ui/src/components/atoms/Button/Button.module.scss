@@ -90,7 +90,6 @@
 .colorful {
   font-size: 12px;
   width: 100%;
-  height: 28px;
   border-radius: var(--radius-8);
   background: linear-gradient(
     270.13deg,
@@ -103,6 +102,10 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-image: var(--gradient-summer-fi-dark);
+  }
+
+  @include media('>s') {
+    height: 28px;
   }
 }
 
