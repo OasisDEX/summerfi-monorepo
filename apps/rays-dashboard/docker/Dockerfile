@@ -1,12 +1,8 @@
 FROM node:18.19.1-alpine
 EXPOSE 3000
-COPY server/database /app/server/database
-WORKDIR /app/server/database
-RUN npm install --ignore-scripts
-WORKDIR /app
 COPY .next/standalone /app/.next/standalone
-COPY package.json yarn.lock next.config.js /app
+COPY package.json next.config.mjs /app
 COPY public /app/.next/standalone/public
 COPY .next/static /app/.next/standalone/.next/static
 
-CMD [ "yarn", "start:prod" ]
+CMD [ "pnpm", "start" ]
