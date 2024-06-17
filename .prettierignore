@@ -20,5 +20,3 @@ artifacts
 packages/**/src/generated
 packages/**/types/generated
 apps/**/types/generated/*
-apps/oasis-borrow/types
-apps/oasis-borrow/**/*.json

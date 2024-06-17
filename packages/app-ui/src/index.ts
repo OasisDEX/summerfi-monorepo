@@ -9,6 +9,7 @@ export { Pill } from './components/atoms/Pill/Pill'
 export { GenericTokenIcon } from './components/atoms/GenericTokenIcon/GenericTokenIcon'
 export { Input } from './components/atoms/Input/Input'
 export { SkeletonLine } from './components/atoms/SkeletonLine/SkeletonLine'
+export { WithArrow } from './components/atoms/WithArrow/WithArrow'
 export { Select } from './components/atoms/Select/Select'
 
 export { TokensGroup } from './components/molecules/TokensGroup/TokensGroup'

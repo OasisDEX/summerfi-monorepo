@@ -59,6 +59,12 @@ export type UserSummary = {
   ens: string | null
 }
 
+export type PositionSummary = {
+  vaultId: string
+  activeTriggers: number
+  pointsEarnedPerYear: number
+}
+
 /**
  * Service for fetching summer features.
  */
@@ -96,6 +102,7 @@ export class SummerPointsService {
   ): Promise<{
     points: PositionPoints
     userSummary: UserSummary[]
+    positionsSummary: PositionSummary[]
   }> {
     const results = await Promise.all(
       this.clients.map((client) => client.getUsersPoints({ startTimestamp, endTimestamp })),
@@ -124,10 +131,12 @@ export class SummerPointsService {
       endTimestamp,
     )
     const userSummary = this.getUserSummary(Object.values(usersMap))
+    const positionsSummary = this.getPositionsSummary(Object.values(usersMap))
 
     return {
       points,
       userSummary,
+      positionsSummary,
     }
   }
 
@@ -228,6 +237,24 @@ export class SummerPointsService {
     })
     return userSummary
   }
+
+  getPositionsSummary(usersData: UsersData): PositionSummary[] {
+    // all positions from all users
+    const allPositions = usersData.flatMap((user) => user.allPositions)
+    return allPositions.map((position) => {
+      const activeTriggers = position.triggers.length
+      const pointsEarnedPerYear = this.getPointsPerPeriodInSeconds(
+        position.netValue,
+        this.SECONDS_PER_YEAR,
+      )
+      return {
+        vaultId: position.id,
+        activeTriggers,
+        pointsEarnedPerYear,
+      }
+    })
+  }
+
   /**
    * Calculates the basis points earned by users for a given time period.
    * @param usersData - The data of the users.

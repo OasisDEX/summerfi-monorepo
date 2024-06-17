@@ -5,8 +5,8 @@ import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
 import { fontFtPolar, fontInter } from '@/helpers/fonts'
 
 export const metadata: Metadata = {
-  title: 'Hello!',
-  description: 'We be developing app v2',
+  title: 'Summer.fi Rays',
+  description: 'Something cool is coming. The future is bright. The future is sunny.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

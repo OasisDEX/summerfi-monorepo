@@ -3,7 +3,7 @@ import { TokenSymbolsList } from '@summerfi/app-ui'
 import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash'
 
-import { networksByName } from '@/constants/networks-list'
+import { networksByName } from '@/constants/networks-list-ssr'
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
 import { NavigationMenuPanelListItem } from '@/types/navigation'
 import { OmniProductType } from '@/types/omni-kit'
