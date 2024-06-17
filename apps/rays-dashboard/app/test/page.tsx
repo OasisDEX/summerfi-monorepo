@@ -12,7 +12,6 @@ import Link from 'next/link'
 
 import { BoostCards } from '@/components/molecules/BoostCards/BoostCards'
 import { CriteriaList } from '@/components/molecules/CriteriaList/CriteriaList'
-import { automationItems, ProductCard } from '@/components/molecules/ProductCard/ProductCard'
 import { Leaderboard } from '@/components/organisms/Leaderboard/Leaderboard'
 import { NetworkNames, networksByName } from '@/constants/networks-list'
 import { LendingProtocol } from '@/helpers/lending-protocol'
@@ -76,16 +75,6 @@ export default async function TestPage() {
       <Text as="p" variant="p2semi">
         Text component p with p2semi variant with <Link href="/">link</Link> inline
       </Text>
-      <ProductCard
-        automation={automationItems}
-        protocolConfig={aaveV3Config}
-        tokens={['ETH', 'DAI']}
-        network={NetworkNames.baseMainnet}
-        btn={{
-          link: '/',
-          label: 'Earn xxx Rays for every Automation you add',
-        }}
-      />
       <BoostCards />
       <Dial value={280} max={400} subtext="Eligible" icon="rays" iconSize={48} />
       <CriteriaList />
