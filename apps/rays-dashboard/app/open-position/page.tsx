@@ -1,17 +1,20 @@
 import { CountDownBanner, Text } from '@summerfi/app-ui'
 import Link from 'next/link'
 
-import { automationItems, ProductCard } from '@/components/molecules/ProductCard/ProductCard'
-import { NetworkNames } from '@/constants/networks-list'
-import { LendingProtocol } from '@/helpers/lending-protocol'
-import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
+import { ProductPicker } from '@/components/organisms/ProductPicker/ProductPicker'
 
 export default function OpenPositionPage() {
-  const aaveV3Config = lendingProtocolsByName[LendingProtocol.AaveV3]
   const futureTimestamp = '2024-12-25T00:00:00'
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginBottom: 'var(--space-xxl)',
+      }}
+    >
       <Text
         as="h2"
         variant="h2"
@@ -20,17 +23,7 @@ export default function OpenPositionPage() {
         Earn $RAYS by opening a position
       </Text>
       <CountDownBanner futureTimestamp={futureTimestamp} />
-      <ProductCard
-        automation={automationItems}
-        protocolConfig={aaveV3Config}
-        tokens={['ETH', 'DAI']}
-        network={NetworkNames.baseMainnet}
-        btn={{
-          link: '/',
-          label: 'Earn xxx Rays for every Automation you add',
-        }}
-      />
-
+      <ProductPicker />
       <Text as="p" variant="p1semi" style={{ marginTop: 'var(--space-m)' }}>
         <Link href="/">
           → Explore over 50+ positions with major protocols and collateral types supports
