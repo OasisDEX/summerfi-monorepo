@@ -1,6 +1,0 @@
-export * from './setup-auto-buy'
-export * from './setup-auto-sell'
-export * from './setup-partial-take-profit'
-export * from './setup-stop-loss'
-export * from './setup-trailing-stop-loss'
-export * from './setup-triggers-types'
