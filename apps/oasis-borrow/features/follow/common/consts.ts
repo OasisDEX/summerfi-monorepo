@@ -1,1 +1,0 @@
-export const LIMIT_OF_FOLLOWED_VAULTS = 30

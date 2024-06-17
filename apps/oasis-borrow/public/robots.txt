@@ -1,5 +1,0 @@
-User-agent: *
-Disallow: /api
-Disallow: /privacy
-Disallow: /terms
-Sitemap: https://summer.fi/sitemap.xml
