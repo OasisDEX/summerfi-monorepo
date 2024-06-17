@@ -73,10 +73,10 @@ jobs:
         run: pnpm install
 
       - name: Prebuild
-        run: pnpm prebuild
+        run: pnpm prebuild --filter=./packages/*
 
       - name: Build
-        run: pnpm build
+        run: pnpm build --filter=./packages/*
 
       - name: Deploy app
         run: |
