@@ -49,7 +49,6 @@ export const Select: React.FC<SelectProps> = ({ options, onChange, value, placeh
         <Text as="span" variant="p3semi">
           {selectedOption ? selectedOption.label : placeholder}
         </Text>
-        {/* <span className="arrow">&#9662;</span>*/}
         <Icon iconName="chevron_down" size={11} />
       </div>
       {isOpen && (

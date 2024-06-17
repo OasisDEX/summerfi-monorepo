@@ -28,7 +28,7 @@ export const ProductPicker = () => {
       <div className={classNames.heading}>
         <div className={classNames.productTypeWrapper}>
           {productTypes.map((type) => (
-            <Button variant="unstyled" onClick={() => setProductType(type)}>
+            <Button variant="unstyled" onClick={() => setProductType(type)} key={type}>
               <Text
                 as="h5"
                 variant="h5"
