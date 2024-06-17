@@ -106,6 +106,7 @@ jobs:
           LATEST_TAG: latest
           ECR_REPO_NAME: summer-fi-rays-staging
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          SHA_TAG: ${{ steps.vars.outputs.sha_short }}
         run: |
           # Build a docker container and
           # push it to ECR so that it can
