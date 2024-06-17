@@ -16,31 +16,27 @@ const getConfig = async () => {
   return await response.json()
 }
 
-const getInterfaces = (configObject = { products: {} }) => {
+const getInterfaces = (_) => {
   try {
-    const interfaces = JsonToTS(configObject)
-      .map((typeInterface) => {
-        console.log('typeInterface', typeInterface)
-        if (typeInterface.includes('RootObject')) {
-          return typeInterface.replace('interface RootObject', 'export interface AppRaysConfigType')
-        }
-        if (typeInterface.includes('Borrow;')) {
-          return typeInterface.replaceAll('Borrow;', 'ProductsConfig;')
-        }
-        if (typeInterface.includes('Borrow')) {
-          return typeInterface
-            .replace('interface Borrow', 'export interface ProductsConfig')
-            .replaceAll('Ethereum[];', 'ProductNetworkConfig[];')
-        }
-        if (typeInterface.includes('Ethereum')) {
-          return typeInterface.replace(
-            'interface Ethereum',
-            'export interface ProductNetworkConfig',
-          )
-        }
-        return typeInterface
-      })
-      .join('\n\n')
+    const interfaces = [
+      'interface AppRaysConfigType {\n  products: Products;\n}',
+      'interface Products {\n' +
+        '  borrow: ProductsConfig;\n' +
+        '  multiply: ProductsConfig;\n' +
+        '  earn: ProductsConfig;\n' +
+        '}',
+      'interface ProductsConfig {\n' +
+        '  ethereum: ProductNetworkConfig[];\n' +
+        '  base: ProductNetworkConfig[];\n' +
+        '  arbitrum: ProductNetworkConfig[];\n' +
+        '  optimism: ProductNetworkConfig[];\n' +
+        '}',
+      'interface ProductNetworkConfig {\n' +
+        '  label: string;\n' +
+        '  link: string;\n' +
+        '  protocol: string;\n' +
+        '}',
+    ].join('\n\n')
 
     const emptyConfig = `export const emptyConfig = {
     products: {},
