@@ -79,17 +79,23 @@ export const NavigationMenuDropdown = ({
       className={classNames(navigationMenuDropdownStyles.navigationMenu, {
         [navigationMenuDropdownStyles.navigationMenuActive]: isPanelOpen,
       })}
+      style={{
+        pointerEvents: isPanelOpen ? 'auto' : 'none',
+      }}
     >
       <NavigationMenuPointer
         arrowPosition={arrowPosition}
         isPanelOpen={isPanelOpen}
         isPanelSwitched={isPanelSwitched}
       />
-      <div className={navigationMenuDropdownStyles.navigationMenuDropdownWrapper}>
+      <div className={classNames(navigationMenuDropdownStyles.navigationMenuDropdownWrapper)}>
         <div
           className={classNames(navigationMenuDropdownStyles.navigationMenuDropdownBlock, {
             [navigationMenuDropdownStyles.navigationMenuDropdownBlockActive]: isPanelOpen,
           })}
+          style={{
+            pointerEvents: isPanelOpen ? 'auto' : 'none',
+          }}
         >
           <div
             className={classNames(navigationMenuDropdownStyles.navigationMenuDropdownBlockInside, {
@@ -107,8 +113,6 @@ export const NavigationMenuDropdown = ({
                   navigationMenuDropdownStyles.navigationMenuDropdownPanelWrapper,
                   {
                     [navigationMenuDropdownStyles.navigationMenuDropdownPanelWrapperIsCurrentPanel]:
-                      currentPanel === label,
-                    [navigationMenuDropdownStyles.navigationMenuDropdownPanelWrapperIsCurrentPanelOpen]:
                       isPanelOpen && currentPanel === label,
                     [navigationMenuDropdownStyles.navigationMenuDropdownPanelWrapperIsPanelSwitched]:
                       isPanelSwitched,
@@ -120,6 +124,7 @@ export const NavigationMenuDropdown = ({
                     label,
                     currentPanel,
                   )})`,
+                  pointerEvents: isPanelOpen && currentPanel === label ? 'auto' : 'none',
                 }}
                 {...(currentPanel === label && { ref })}
               >

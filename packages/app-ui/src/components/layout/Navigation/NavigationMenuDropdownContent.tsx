@@ -59,6 +59,9 @@ export const NavigationMenuDropdownContent = ({
             className={
               navigationMenuDropdownContentStyles.navigationMenuDropdownContentFirstColumnLi
             }
+            style={{
+              pointerEvents: isPanelActive ? 'auto' : 'none',
+            }}
           >
             <NavigationMenuDropdownContentList
               {...item}
