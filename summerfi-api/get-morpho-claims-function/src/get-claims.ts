@@ -88,7 +88,7 @@ export interface MorphoClaims {
 
 export const getClaims = async ({ account, logger }: GetClaimsParams): Promise<MorphoClaims> => {
   try {
-    const response = await fetch(`https://rewards.morpho.org/users/${account}/rewards`)
+    const response = await fetch(`https://rewards.morpho.org/v1/users/${account}/rewards`)
     if (response.status !== 200) {
       logger?.warn('Failed to fetch data from morpho rewards endpointa', {
         error: response.statusText,
