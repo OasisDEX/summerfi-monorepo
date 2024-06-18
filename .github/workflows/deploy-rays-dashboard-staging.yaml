@@ -115,6 +115,7 @@ jobs:
           # push it to ECR so that it can
           # be deployed to ECS.
           docker build -f apps/rays-dashboard/docker/Dockerfile \
+                       --build-arg FUNCTIONS_API_URL=${{ secrets.FUNCTIONS_API_URL }}
                        --cache-from=$ECR_REGISTRY/$ECR_REPO_NAME:$LATEST_TAG \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$SHA_TAG \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$LATEST_TAG \
