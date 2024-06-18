@@ -1,13 +1,21 @@
 'use client'
 
-import { BannerCard, Text } from '@summerfi/app-ui'
+import { FC, useMemo } from 'react'
+import { BannerCard, INTERNAL_LINKS, Text } from '@summerfi/app-ui'
+import { useRouter } from 'next/navigation'
 
 import automationIcon from '@/public/img/banners/boost-banner-1.svg'
 import multiplyIcon from '@/public/img/banners/boost-banner-2.svg'
 import protocolsIcon from '@/public/img/banners/boost-banner-3.svg'
 import migrateIcon from '@/public/img/banners/boost-banner-4.svg'
 
-const boostCards = [
+const getBoostCards = ({
+  push,
+  userAddress,
+}: {
+  push: (url: string) => void
+  userAddress: string
+}) => [
   {
     title: 'Enable automation to your active positions',
     description:
@@ -15,7 +23,7 @@ const boostCards = [
     footer: 'Boost Rays by up to 1.5X',
     button: {
       label: 'Add automation to your positions',
-      action: () => null,
+      action: () => push(`${INTERNAL_LINKS.portfolio}/${userAddress}`),
     },
     image: {
       src: automationIcon,
@@ -29,7 +37,7 @@ const boostCards = [
     footer: 'Get instant Rays plus boosts for repeated use',
     button: {
       label: 'Start Trading now',
-      action: () => null,
+      action: () => push(`${INTERNAL_LINKS.earn}/?category=yield-loops`),
     },
     image: {
       src: multiplyIcon,
@@ -43,7 +51,7 @@ const boostCards = [
     footer: 'Boost the Rays on ALL your open positions',
     button: {
       label: 'Explore other protocols',
-      action: () => null,
+      action: () => push(INTERNAL_LINKS.multiply),
     },
     image: {
       src: protocolsIcon,
@@ -57,7 +65,7 @@ const boostCards = [
     footer: 'Earn 20% of the years points instantly',
     button: {
       label: 'Migrate existing position',
-      action: () => null,
+      action: () => push(`${INTERNAL_LINKS.portfolio}/${userAddress}`),
     },
     image: {
       src: migrateIcon,
@@ -66,20 +74,27 @@ const boostCards = [
   },
 ]
 
-// to be extended with props to configure, action, if some of the banners should or should not display etc.
-export const BoostCards = () => {
+interface BoostCardsProps {
+  userAddress: string
+}
+
+export const BoostCards: FC<BoostCardsProps> = ({ userAddress }) => {
+  const { push } = useRouter()
+  const boostCards = useMemo(() => getBoostCards({ push, userAddress }), [push, userAddress])
+
   return boostCards.map((item) => (
-    <BannerCard
-      key={item.title}
-      title={item.title}
-      description={item.description}
-      footer={
-        <Text as="span" variant="p4semiColorful">
-          {item.footer}
-        </Text>
-      }
-      button={item.button}
-      image={item.image}
-    />
+    <div key={item.title} style={{ marginBottom: 'var(--space-m)' }}>
+      <BannerCard
+        title={item.title}
+        description={item.description}
+        footer={
+          <Text as="span" variant="p4semiColorful">
+            {item.footer}
+          </Text>
+        }
+        button={item.button}
+        image={item.image}
+      />
+    </div>
   ))
 }
