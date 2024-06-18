@@ -18,7 +18,7 @@ interface ClaimRaysTitleProps {
 }
 
 export const ClaimRaysTitle = ({ userAddress, userRays }: ClaimRaysTitleProps) => {
-  if (!userAddress || !userRays?.rays?.eligiblePoints) {
+  if (!userAddress || typeof userRays?.rays?.eligiblePoints === 'undefined') {
     return (
       <Text as="h1" variant="h1" style={{ marginTop: 'var(--space-xxl)' }}>
         Claim your $RAYS
@@ -29,7 +29,8 @@ export const ClaimRaysTitle = ({ userAddress, userRays }: ClaimRaysTitleProps) =
   return (
     <Text as="h2" variant="h2">
       Wallet {formatAddress(userAddress)} is eligible for{' '}
-      {userRays.rays.eligiblePoints > 0 ? `up to` : ''} {userRays.rays.eligiblePoints} $RAYS
+      {userRays.rays.eligiblePoints > 0 ? `up to` : ''} {userRays.rays.eligiblePoints.toFixed(0)}{' '}
+      $RAYS
     </Text>
   )
 }
