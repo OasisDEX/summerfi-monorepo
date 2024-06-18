@@ -1,36 +1,37 @@
-import { Button, Text } from '@summerfi/app-ui'
+import dynamic from 'next/dynamic'
 
-import { CriteriaList } from '@/components/molecules/CriteriaList/CriteriaList'
+import { ClaimRaysSkeleton } from '@/components/organisms/ClaimRays/ClaimRaysSkeleton'
 import { Leaderboard } from '@/components/organisms/Leaderboard/Leaderboard'
 import { fetchLeaderboard } from '@/server-handlers/leaderboard'
+import { fetchRays } from '@/server-handlers/rays'
 import { LeaderboardResponse } from '@/types/leaderboard'
 
-export default async function HomePage() {
-  const serverLeaderboardResponse = await fetchLeaderboard('?page=1&limit=5')
+const ClaimRays = dynamic(() => import('@/components/organisms/ClaimRays/ClaimRays'), {
+  ssr: false,
+  loading: () => <ClaimRaysSkeleton />,
+})
+
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: {
+    userAddress: string
+  }
+}) {
+  const serverLeaderboardResponse = await fetchLeaderboard({
+    page: '1',
+    limit: '5',
+  })
 
   const serializedServerLeaderboardResponse: LeaderboardResponse = JSON.parse(
     JSON.stringify(serverLeaderboardResponse),
   )
 
+  const userRays = await fetchRays({ address: searchParams.userAddress })
+
   return (
     <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'center' }}>
-      <Text as="h1" variant="h1" style={{ marginTop: 'var(--space-xxl)' }}>
-        Claim your $RAYS
-      </Text>
-      <Text
-        as="p"
-        variant="p1"
-        style={{ color: 'var(--color-neutral-80)', marginBottom: 'var(--space-l)' }}
-      >
-        Over 2 million DeFi users are eligible for Summer.fi Rays.
-      </Text>
-      <CriteriaList />
-      <Button
-        variant="primaryLarge"
-        style={{ marginTop: 'var(--space-l)', marginBottom: 'var(--space-xxxl)' }}
-      >
-        Connect wallet
-      </Button>
+      <ClaimRays userAddress={searchParams.userAddress} userRays={userRays} />
       <div style={{ marginBottom: 'var(--space-xxxl)', width: '100%' }}>
         <Leaderboard staticLeaderboardData={serializedServerLeaderboardResponse} />
       </div>

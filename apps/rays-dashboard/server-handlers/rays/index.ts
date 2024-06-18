@@ -7,9 +7,16 @@ export interface RaysApiResponse {
   userTypes: ('General Ethereum User' | 'DeFi User' | 'SummerFi User' | 'SummerFi Power User')[]
 }
 
-export const fetchRays = async (query: string) => {
+export const fetchRays = async (query: { [key: string]: string } | string) => {
   try {
-    const rays = (await fetch(`${process.env.FUNCTIONS_API_URL}/api/rays${query}`, {
+    const urlParams = new URLSearchParams(query)
+
+    if (urlParams.get('address') === null) {
+      return {
+        error: 'No address provided',
+      }
+    }
+    const rays = (await fetch(`${process.env.FUNCTIONS_API_URL}/api/rays?${urlParams.toString()}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
