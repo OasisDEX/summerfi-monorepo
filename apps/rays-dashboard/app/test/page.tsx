@@ -10,7 +10,6 @@ import {
 } from '@summerfi/app-ui'
 import Link from 'next/link'
 
-import { CriteriaList } from '@/components/molecules/CriteriaList/CriteriaList'
 import { Leaderboard } from '@/components/organisms/Leaderboard/Leaderboard'
 import { NetworkNames, networksByName } from '@/constants/networks-list'
 import { LendingProtocol } from '@/helpers/lending-protocol'
@@ -78,7 +77,6 @@ export default async function TestPage() {
         Text component p with p2semi variant with <Link href="/">link</Link> inline
       </Text>
       <Dial value={280} max={400} subtext="Eligible" icon="rays" iconSize={48} />
-      <CriteriaList />
       <Leaderboard staticLeaderboardData={serializedServerLeaderboardResponse} />
     </div>
   )
