@@ -3,6 +3,7 @@ import Link from 'next/link'
 
 import { Text } from '@/components/atoms/Text/Text'
 import { NavigationMenuPanelProps } from '@/components/layout/Navigation/Navigation.types'
+import { ProxyLinkComponent } from '@/components/layout/Navigation/ProxyLinkComponent'
 
 import navigationMenuStyles from '@/components/layout/Navigation/NavigationMenu.module.scss'
 
@@ -43,12 +44,14 @@ export function NavigationMenuPanel({
       }}
     >
       {url ? (
-        <Link href={url}>
-          <NavigationMenuPanelLabel
-            currentPanel={currentPanel}
-            label={label}
-            isPanelOpen={isPanelOpen}
-          />
+        <Link href={url} passHref legacyBehavior>
+          <ProxyLinkComponent>
+            <NavigationMenuPanelLabel
+              currentPanel={currentPanel}
+              label={label}
+              isPanelOpen={isPanelOpen}
+            />
+          </ProxyLinkComponent>
         </Link>
       ) : (
         <NavigationMenuPanelLabel

@@ -1,10 +1,8 @@
 .navigationMenu {
   transition: opacity 200ms;
   opacity: 0;
-  pointer-events: none;
   &Active {
     opacity: 1;
-    pointer-events: auto;
   }
 }
 
@@ -29,10 +27,8 @@
   overflow: hidden;
   transition: transform 200ms;
   transform: translateY(-5px);
-  pointer-events: none;
   &Active {
     transform: translateY(0);
-    pointer-events: auto;
   }
 }
 
@@ -42,7 +38,7 @@
   flex-direction: column;
   width: 100%;
   &Active {
-    transition: height 200ms,
+    transition: height 200ms;
   }
 }
 
@@ -51,12 +47,8 @@
   position: absolute;
   width: 100%;
   opacity: 0;
-  pointer-events: none;
   &IsCurrentPanel {
     opacity: 1;
-  }
-  &IsCurrentPanelOpen {
-    pointer-events: auto
   }
   &IsPanelSwitched {
     transition: opacity 200ms, transform 200ms;

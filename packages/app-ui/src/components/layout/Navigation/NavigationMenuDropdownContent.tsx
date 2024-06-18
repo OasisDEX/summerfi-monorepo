@@ -59,6 +59,9 @@ export const NavigationMenuDropdownContent = ({
             className={
               navigationMenuDropdownContentStyles.navigationMenuDropdownContentFirstColumnLi
             }
+            style={{
+              pointerEvents: isPanelActive ? 'auto' : 'none',
+            }}
           >
             <NavigationMenuDropdownContentList
               {...item}
@@ -99,6 +102,8 @@ export const NavigationMenuDropdownContent = ({
                               ? -50
                               : 0
                         }px)`,
+                        pointerEvents:
+                          isPanelActive && selected[0] === i && selected[1] === j ? 'auto' : 'none',
                       }}
                       {...(selected[0] === i && selected[1] === j && { ref })}
                     >

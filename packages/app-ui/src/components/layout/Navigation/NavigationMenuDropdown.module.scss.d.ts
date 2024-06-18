@@ -9,7 +9,6 @@ export type Styles = {
   navigationMenuDropdownBlockInsideActive: string
   navigationMenuDropdownPanelWrapper: string
   navigationMenuDropdownPanelWrapperIsCurrentPanel: string
-  navigationMenuDropdownPanelWrapperIsCurrentPanelOpen: string
   navigationMenuDropdownPanelWrapperIsPanelSwitched: string
   navigationMenuDropdownWrapper: string
   navigationMenuPointer: string
