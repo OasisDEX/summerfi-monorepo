@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 import { ProductHubFeaturedProducts, ProductHubItem } from '@/types/product-hub'
 
 interface FilterFeaturedProductsParams {

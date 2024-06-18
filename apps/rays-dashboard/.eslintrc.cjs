@@ -8,4 +8,7 @@ module.exports = {
     sourceType: 'module',
     tsconfigRootDir: __dirname,
   },
+  rules: {
+    'no-magic-numbers': 'off',
+  },
 }

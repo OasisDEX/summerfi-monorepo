@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable no-magic-numbers */
 import { keyBy } from 'lodash'
 
 import { clientId } from '@/helpers/client-id'

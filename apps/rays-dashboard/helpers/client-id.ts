@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable no-bitwise */
-/* eslint-disable no-magic-numbers */
 
 export function getRandomString() {
   let randomString = ''
