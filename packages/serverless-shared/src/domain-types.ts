@@ -116,6 +116,7 @@ export type PortfolioAssetsResponse = {
   totalAssetsUsdValue: number
   totalAssetsPercentageChange: number
   assets: PortfolioWalletAsset[]
+  totalRaysEarned: number
 }
 
 export type PortfolioMigrationAsset = {
