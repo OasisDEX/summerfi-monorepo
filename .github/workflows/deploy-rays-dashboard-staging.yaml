@@ -6,6 +6,7 @@ jobs:
   build:
     name: Build and deploy Rays Dashboard
     runs-on: ubuntu-latest
+    environment: staging
     env:
       AWS_REGION: eu-central-1
       ENVIRONMENT_TAG: staging
@@ -132,6 +133,7 @@ jobs:
           ecs-services: '["${{ env.SERVICE_NAME }}"]'
 
       - name: Invalidate CloudFront
-        run:
-          AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id
-          ${{secrets.CF_DIST_ID }} --paths "/*"
+        env:
+          CF_DIST_ID: ${{ secrets.CF_DIST_ID }}
+        run: |
+          AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ env.CF_DIST_ID }} --paths "/*"
