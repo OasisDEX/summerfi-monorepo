@@ -9,6 +9,7 @@ import {
   PortfolioWalletAsset,
   PortfolioAssetsResponse,
 } from '@summerfi/serverless-shared/domain-types'
+import { RaysUserResponse } from '@summerfi/serverless-shared/rays-types'
 import {
   DebankNetworkNameToOurs,
   DebankNetworkNames,
@@ -25,8 +26,10 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
   const {
     DEBANK_API_KEY: debankApiKey = process.env.DEBANK_API_KEY,
     DEBANK_API_URL: serviceUrl = process.env.DEBANK_API_URL,
+    FUNCTIONS_API_URL: functionsUrl = process.env.FUNCTIONS_API_URL,
   } = (event.stageVariables as Record<string, string>) || {}
-  if (!debankApiKey || !serviceUrl) {
+
+  if (!debankApiKey || !serviceUrl || !functionsUrl) {
     throw new Error('Missing env vars')
   }
   const debankAuthHeaderKey = 'Accesskey'
@@ -61,6 +64,15 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       throw new Error('Failed to fetch wallet assets')
     })
 
+  const raysResponse = await fetch(`${functionsUrl}/api/rays?address=${address}`)
+    .then(async (response) => (await response.json()) as RaysUserResponse)
+    .catch((error) => {
+      console.error(error)
+    })
+
+  const totalRaysEarned =
+    raysResponse && 'eligiblePoints' in raysResponse ? raysResponse.eligiblePoints : 0
+
   const preparedTokenData =
     response
       .filter(({ chain, is_wallet, price }) => is_wallet && chain !== undefined && price > 0)
@@ -84,6 +96,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     totalAssetsUsdValue,
     totalAssetsPercentageChange: 0,
     assets: preparedTokenData,
+    totalRaysEarned,
   }
 
   return ResponseOk({ body: walletAssetsResponse })
