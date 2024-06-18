@@ -28,8 +28,8 @@ export const NavigationWrapper: FC<NavigationWrapperProps> = ({
   return (
     <Navigation
       currentPath={currentPath}
-      logo="img/branding/logo-dark.svg"
-      logoSmall="img/branding/dot-dark.svg"
+      logo="/rays/img/branding/logo-dark.svg"
+      logoSmall="/rays/img/branding/dot-dark.svg"
       links={
         connectedWalletAddress
           ? [

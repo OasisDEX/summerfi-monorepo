@@ -60,7 +60,7 @@ export const CriteriaList = () => {
 
   useEffect(() => {
     setIsLoading(true)
-    fetch(`/api/rays?address=${address}`)
+    fetch(`/rays/api/rays?address=${address}`)
       .then((resp) => resp.json())
       .then((data) => {
         setRaysResponse(data as RaysResponse)

@@ -1,9 +1,9 @@
 FROM node:20-alpine
 EXPOSE 3000
-WORKDIR /app
-COPY .next/standalone /app/.next/standalone
-COPY package.json next.config.mjs /app
-COPY public /app/.next/standalone/public
-COPY .next/static /app/.next/standalone/.next/static
+WORKDIR .
+COPY .next/standalone .next/standalone
+COPY package.json next.config.mjs .
+COPY public .next/standalone/apps/rays-dashboard/public
+COPY .next/static .next/standalone/apps/rays-dashboard/.next/static
 
-CMD [ "node", "/app/.next/standalone/apps/rays-dashboard/server.js" ]
+CMD [ "node", ".next/standalone/apps/rays-dashboard/server.js" ]
