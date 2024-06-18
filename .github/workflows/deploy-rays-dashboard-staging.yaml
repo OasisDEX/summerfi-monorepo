@@ -134,4 +134,4 @@ jobs:
       - name: Invalidate CloudFront
         run:
           AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id
-          ${{secrets.CF_DIST_ID_STAGING }} --paths "/*"
+          ${{secrets.CF_DIST_ID }} --paths "/*"
