@@ -54,14 +54,14 @@
     "BORROW_DB_READ_CONNECTION_STRING",
     "NODE_ENV"
   ],
-  "pipeline": {
+  "tasks": {
     "dev": {
       "cache": false,
       "persistent": true
     },
     "prebuild": {
       "dependsOn": ["^prebuild", "^prebuild:nocache"],
-      "outputs": ["src/types/graphql/generated.ts", "src/generated"]
+      "outputs": ["src/types/graphql/generated.ts", "src/generated", "dist/**"]
     },
     "prebuild:nocache": {
       "dependsOn": ["^prebuild:nocache"],
