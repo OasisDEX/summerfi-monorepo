@@ -30,9 +30,9 @@ export { Footer } from './components/layout/Footer/Footer'
 export { Navigation } from './components/layout/Navigation/Navigation'
 export * from './components/layout/Navigation/Navigation.types'
 
-export { EXTERNAL_LINKS, INTERNAL_LINKS } from './helpers/applicationLinks'
+export { EXTERNAL_LINKS, INTERNAL_LINKS } from './helpers/application-links'
 
-export { formatAddress } from './helpers/formatAddress'
+export { formatAddress } from './helpers/format-address'
 
 // tokens
 export type { IconNamesList, TokenSymbolsList, TokenConfig } from './tokens/types'

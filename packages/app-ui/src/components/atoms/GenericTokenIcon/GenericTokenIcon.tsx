@@ -16,10 +16,8 @@ interface GenericTokenIconProps {
 const scaleFactor = 0.8125
 
 export const GenericTokenIcon: FC<GenericTokenIconProps> = ({ variant = 'smallIcon', symbol }) => {
-  // eslint-disable-next-line no-magic-numbers
   const size = variant === 'smallIcon' ? 30 : 44
 
-  // eslint-disable-next-line no-magic-numbers
   const innerSize = size * scaleFactor
 
   const AvatarLoadingState = loadable(() => import('boring-avatars'), {

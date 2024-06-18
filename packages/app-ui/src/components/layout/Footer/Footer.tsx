@@ -9,7 +9,7 @@ import {
 import Link from 'next/link'
 
 import { Text } from '@/components/atoms/Text/Text'
-import { EXTERNAL_LINKS, INTERNAL_LINKS } from '@/helpers/applicationLinks'
+import { EXTERNAL_LINKS, INTERNAL_LINKS } from '@/helpers/application-links'
 
 import footerStyles from '@/components/layout/Footer/Footer.module.scss'
 

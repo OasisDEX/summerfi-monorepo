@@ -3,7 +3,7 @@
 import { FC, HTMLAttributes, ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { Card } from '@/components/atoms/Card/Card'
-import { isTouchDevice } from '@/helpers/isTouchDevice'
+import { isTouchDevice } from '@/helpers/is-touch-device'
 
 import classNames from '@/components/molecules/Tooltip/Tooltip.module.scss'
 

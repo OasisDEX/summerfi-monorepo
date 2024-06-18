@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 import classNames from 'classnames'
 import Image from 'next/image'
 
