@@ -21,7 +21,10 @@ import { LeaderboardResponse } from '@/types/leaderboard'
 export default async function TestPage() {
   const aaveV3Config = lendingProtocolsByName[LendingProtocol.AaveV3]
 
-  const serverLeaderboardResponse = await fetchLeaderboard('?page=1&limit=5')
+  const serverLeaderboardResponse = await fetchLeaderboard({
+    page: '1',
+    limit: '5',
+  })
 
   const serializedServerLeaderboardResponse: LeaderboardResponse = JSON.parse(
     JSON.stringify(serverLeaderboardResponse),

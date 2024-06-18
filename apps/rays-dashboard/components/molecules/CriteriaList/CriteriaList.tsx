@@ -1,12 +1,22 @@
-'use client'
-import { useEffect, useState } from 'react'
-import { Card, Icon, SkeletonLine, Text, Tooltip } from '@summerfi/app-ui'
+import { Card, Icon, Text, Tooltip } from '@summerfi/app-ui'
 import Link from 'next/link'
 
 import { RaysApiResponse } from '@/server-handlers/rays'
-import { RaysResponse } from '@/types/rays'
 
 import classNames from '@/components/molecules/CriteriaList/CriteriaList.module.scss'
+
+interface CriteriaListProps {
+  userRays:
+    | {
+        rays: RaysApiResponse
+        error?: undefined
+      }
+    | {
+        error: unknown
+        rays?: undefined
+      }
+    | null
+}
 
 const getCriteriaItems = ({ userTypes }: { userTypes?: RaysApiResponse['userTypes'] }) => [
   {
@@ -51,23 +61,7 @@ const getCriteriaItems = ({ userTypes }: { userTypes?: RaysApiResponse['userType
   },
 ]
 
-export const CriteriaList = () => {
-  const [raysResponse, setRaysResponse] = useState<RaysResponse | undefined>()
-  const [isLoading, setIsLoading] = useState(false)
-
-  // TODO to be taken from connected wallet
-  const address = '0xbef4befb4f230f43905313077e3824d7386e09f8'
-
-  useEffect(() => {
-    setIsLoading(true)
-    fetch(`/rays/api/rays?address=${address}`)
-      .then((resp) => resp.json())
-      .then((data) => {
-        setRaysResponse(data as RaysResponse)
-        setIsLoading(false)
-      })
-  }, [address])
-
+export const CriteriaList = ({ userRays }: CriteriaListProps) => {
   return (
     <div className={classNames.wrapper}>
       <Card variant="cardDark">
@@ -76,7 +70,7 @@ export const CriteriaList = () => {
             Criteria
           </Text>
           <ul>
-            {getCriteriaItems({ userTypes: raysResponse?.rays?.userTypes }).map((item) => (
+            {getCriteriaItems({ userTypes: userRays?.rays?.userTypes }).map((item) => (
               <li key={item.title} className={classNames.listItem}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <div
@@ -85,14 +79,10 @@ export const CriteriaList = () => {
                       paddingBottom: 'var(--space-xxs)',
                     }}
                   >
-                    {isLoading ? (
-                      <SkeletonLine width={20} height={22} />
-                    ) : (
-                      <Icon
-                        iconName={item.done ? 'checkmark_colorful' : 'close_colorful'}
-                        size={item.done ? 20 : 15}
-                      />
-                    )}
+                    <Icon
+                      iconName={item.done ? 'checkmark_colorful' : 'close_colorful'}
+                      size={item.done ? 20 : 15}
+                    />
                   </div>
                   <Text as="p" variant="p2" style={{ marginRight: 'var(--space-xs)' }}>
                     {item.title}

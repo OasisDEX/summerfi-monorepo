@@ -57,7 +57,7 @@ export const mapLeaderboardColumns = ({
   connectedWalletAddress,
 }: {
   leaderboardData: LeaderboardResponse['leaderboard']
-  connectedWalletAddress: string
+  connectedWalletAddress?: string
 }) => {
   const index = 4
   const preparedRows = leaderboardData.map((item) => ({
@@ -107,7 +107,7 @@ export const mapLeaderboardColumns = ({
 
   const userIndex = leaderboardData
     .map((item) => item.userAddress)
-    .findIndex((item) => item.toLowerCase() === connectedWalletAddress.toLowerCase())
+    .findIndex((item) => item.toLowerCase() === connectedWalletAddress?.toLowerCase())
 
   if (userIndex !== -1) {
     const youAreHereValue = {

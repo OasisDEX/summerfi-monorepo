@@ -2,6 +2,7 @@
 
 import { ChangeEvent, FC, useEffect, useState } from 'react'
 import { Button, Icon, Input, Table, Text } from '@summerfi/app-ui'
+import { useConnectWallet } from '@web3-onboard/react'
 
 import {
   leaderboardColumns,
@@ -27,6 +28,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({
   },
   staticLeaderboardData,
 }) => {
+  const [{ wallet }] = useConnectWallet()
   const [leaderboardResponse, setLeaderboardResponse] = useState<LeaderboardResponse>({
     leaderboard: staticLeaderboardData?.leaderboard ?? [],
   })
@@ -84,8 +86,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({
 
   const mappedLeaderBoard = mapLeaderboardColumns({
     leaderboardData: leaderboardResponse.leaderboard,
-    // TODO use connectedWallet address once available
-    connectedWalletAddress: '0xB710940E3659415ebd5492f43B247891De14D872',
+    connectedWalletAddress: wallet?.accounts[0].address,
   })
 
   useEffect(() => {
