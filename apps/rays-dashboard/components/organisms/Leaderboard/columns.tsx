@@ -1,5 +1,3 @@
-/* eslint-disable no-magic-numbers */
-
 import { Button, Text } from '@summerfi/app-ui'
 import Link from 'next/link'
 

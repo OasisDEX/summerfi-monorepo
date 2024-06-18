@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 import { Button, LoadingSpinner } from '@summerfi/app-ui'
 
 export const WalletButtonFallback = () => {

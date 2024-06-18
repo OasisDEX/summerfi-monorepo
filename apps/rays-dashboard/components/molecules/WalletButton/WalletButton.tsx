@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 import { useLayoutEffect, useRef, useState } from 'react'
 import { Button, Divider, Text, WithArrow } from '@summerfi/app-ui'
 import { IconLogout, IconSettings } from '@tabler/icons-react'

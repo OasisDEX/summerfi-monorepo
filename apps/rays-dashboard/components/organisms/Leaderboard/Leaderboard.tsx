@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 'use client'
 
 import { ChangeEvent, FC, useEffect, useState } from 'react'

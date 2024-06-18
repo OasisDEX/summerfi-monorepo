@@ -1,5 +1,3 @@
-/* eslint-disable no-magic-numbers */
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { TokenSymbolsList } from '@summerfi/app-ui'
 
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
@@ -48,6 +46,7 @@ export function mapNavigationLinkItem({
           ...(link && { url: link }),
           ...(featureFlag && { featureFlag }),
           ...('nestedLinks' in item &&
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             item.nestedLinks && {
               list: {
                 ...(item.nestedLinks.displayTitle && {

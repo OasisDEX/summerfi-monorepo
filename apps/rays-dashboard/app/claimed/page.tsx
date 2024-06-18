@@ -1,5 +1,3 @@
-/* eslint-disable no-magic-numbers */
-
 import { formatAddress, Text } from '@summerfi/app-ui'
 import Image from 'next/image'
 

@@ -1,5 +1,4 @@
 'use client'
-/* eslint-disable no-magic-numbers */
 import { useEffect, useState } from 'react'
 import { Card, Icon, SkeletonLine, Text, Tooltip } from '@summerfi/app-ui'
 import Link from 'next/link'

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-/* eslint-disable no-magic-numbers */
 import { INTERNAL_LINKS } from '@summerfi/app-ui'
 import BigNumber from 'bignumber.js'
 

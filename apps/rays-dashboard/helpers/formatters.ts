@@ -1,5 +1,3 @@
-/* eslint-disable no-magic-numbers */
-
 import BigNumber from 'bignumber.js'
 
 export const minusOne = new BigNumber('-1')

@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 import { TokenSymbolsList } from '@summerfi/app-ui'
 import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash'
