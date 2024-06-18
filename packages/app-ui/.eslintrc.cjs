@@ -11,5 +11,6 @@ module.exports = {
   ignorePatterns: ['types', 'dist', 'node_modules'],
   rules: {
     '@next/next/no-img-element': 'off',
+    'no-magic-numbers': 'off',
   },
 }

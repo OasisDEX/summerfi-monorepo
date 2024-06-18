@@ -1,7 +1,7 @@
 import { FC } from 'react'
 
 import { CountDownItem } from '@/components/molecules/CountDownItem/CountDownItem'
-import { timeUntil } from '@/helpers/timeUntil'
+import { timeUntil } from '@/helpers/time-until'
 
 import classNames, { ClassNames } from '@/components/organisms/CountDown/CountDown.module.scss'
 

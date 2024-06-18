@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 import { useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
 

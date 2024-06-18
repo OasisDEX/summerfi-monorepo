@@ -1,5 +1,3 @@
-/* eslint-disable no-magic-numbers */
-
 type TimeUntil = {
   weeks: number
   days: number

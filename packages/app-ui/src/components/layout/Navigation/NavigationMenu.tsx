@@ -1,6 +1,5 @@
 'use client'
 
-/* eslint-disable no-magic-numbers */
 import { useState } from 'react'
 
 import {

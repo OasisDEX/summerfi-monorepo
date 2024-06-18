@@ -1,5 +1,3 @@
-/* eslint-disable no-magic-numbers */
-
 import { NetworkNames } from '@summerfi/serverless-shared'
 
 import { GenericTokenIcon } from '@/components/atoms/GenericTokenIcon/GenericTokenIcon'

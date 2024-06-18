@@ -17,6 +17,7 @@
     "generate-module-types-watch": "typed-scss-modules -w 'src/**/*.module.scss'",
     "dev": "pnpm generate-module-types-watch & vite build -w true",
     "build": "pnpm generate-module-types & vite build -w false",
+    "prebuild": "pnpm generate-module-types & vite build -w false",
     "clean": "rm -rf dist"
   },
   "devDependencies": {

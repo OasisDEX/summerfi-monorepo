@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 import { ReactElement, ReactNode } from 'react'
 import classNames from 'classnames'
 import Link from 'next/link'

@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 import { IconStar, IconStarFilled } from '@tabler/icons-react'
 import classNames from 'classnames'
 

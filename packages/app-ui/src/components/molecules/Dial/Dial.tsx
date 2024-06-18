@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 /* eslint-disable  no-mixed-operators */
 import { FC, ReactNode } from 'react'
 import classNames from 'classnames'
