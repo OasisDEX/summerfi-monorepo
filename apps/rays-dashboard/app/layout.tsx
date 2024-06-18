@@ -5,7 +5,7 @@ import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
 import { fontFtPolar, fontInter } from '@/helpers/fonts'
 
 export const metadata: Metadata = {
-  title: 'Summer.fi Rays',
+  title: 'Summer.fi Rays ☀️',
   description: 'Something cool is coming. The future is bright. The future is sunny.',
 }
 
