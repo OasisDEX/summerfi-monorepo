@@ -1,4 +1,3 @@
-import { ReactElement, ReactNode } from 'react'
 import classNames from 'classnames'
 import Link from 'next/link'
 
@@ -9,6 +8,7 @@ import {
   WithNavigationModules,
 } from '@/components/layout/Navigation/Navigation.types'
 import { NavigationMenuDropdownContentListItem } from '@/components/layout/Navigation/NavigationMenuDropdownContentListItem'
+import { ProxyLinkComponent } from '@/components/layout/Navigation/ProxyLinkComponent'
 
 import navigationMenuDropdownContentListStyles from './NavigationMenuDropdownContentList.module.scss'
 
@@ -69,17 +69,18 @@ export const NavigationMenuDropdownContentList = ({
             }}
           >
             {url ? (
-              <Link
-                href={url}
-                className={classNames(
-                  navigationMenuDropdownContentListStyles.navigationMenuDropdownContentListWrapperItemLink,
-                  {
-                    [navigationMenuDropdownContentListStyles.navigationMenuDropdownContentListWrapperItemLinkTight]:
-                      tight,
-                  },
-                )}
-              >
-                <NavigationMenuDropdownContentListItem protocolName={protocolName} {...item} />
+              <Link passHref legacyBehavior href={url}>
+                <ProxyLinkComponent
+                  className={classNames(
+                    navigationMenuDropdownContentListStyles.navigationMenuDropdownContentListWrapperItemLink,
+                    {
+                      [navigationMenuDropdownContentListStyles.navigationMenuDropdownContentListWrapperItemLinkTight]:
+                        tight,
+                    },
+                  )}
+                >
+                  <NavigationMenuDropdownContentListItem protocolName={protocolName} {...item} />
+                </ProxyLinkComponent>
               </Link>
             ) : (
               <div
@@ -105,22 +106,23 @@ export const NavigationMenuDropdownContentList = ({
         ))}
       </ul>
       {link && (
-        <Link
-          href={link.url}
-          style={{
-            marginLeft: 3,
-            marginRight: 'auto',
-            display: 'inline-block',
-          }}
-        >
-          <WithArrow
-            gap={1}
+        <Link passHref legacyBehavior href={link.url}>
+          <ProxyLinkComponent
             style={{
-              color: 'var(--color-interactive-100)',
+              marginLeft: 3,
+              marginRight: 'auto',
+              display: 'inline-block',
             }}
           >
-            <Text variant="p4">{link.label}</Text>
-          </WithArrow>
+            <WithArrow
+              gap={1}
+              style={{
+                color: 'var(--color-interactive-100)',
+              }}
+            >
+              <Text variant="p4">{link.label}</Text>
+            </WithArrow>
+          </ProxyLinkComponent>
         </Link>
       )}
     </>
