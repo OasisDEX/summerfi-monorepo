@@ -199,6 +199,9 @@ importers:
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
+      '@types/loadable__component':
+        specifier: ^5.13.9
+        version: 5.13.9
       '@types/lodash':
         specifier: ^4.14.109
         version: 4.17.1

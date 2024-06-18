@@ -2,15 +2,12 @@ import { useLayoutEffect, useRef, useState } from 'react'
 import { Button, Divider, Text, WithArrow } from '@summerfi/app-ui'
 import { IconLogout, IconSettings } from '@tabler/icons-react'
 import { WalletState } from '@web3-onboard/core'
-import { init, useConnectWallet } from '@web3-onboard/react'
+import { useConnectWallet } from '@web3-onboard/react'
 import BigNumber from 'bignumber.js'
 
 import { formatAddress, formatCryptoBalance } from '@/helpers/formatters'
-import { initWeb3OnBoardConfig } from '@/helpers/init-web3-onboard'
 
 import walletButtonStyles from './WalletButton.module.scss'
-
-init(initWeb3OnBoardConfig)
 
 const WalletIcon = ({
   wallet,
