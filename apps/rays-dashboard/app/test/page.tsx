@@ -10,7 +10,6 @@ import {
 } from '@summerfi/app-ui'
 import Link from 'next/link'
 
-import { BoostCards } from '@/components/molecules/BoostCards/BoostCards'
 import { CriteriaList } from '@/components/molecules/CriteriaList/CriteriaList'
 import { Leaderboard } from '@/components/organisms/Leaderboard/Leaderboard'
 import { NetworkNames, networksByName } from '@/constants/networks-list'
@@ -75,7 +74,6 @@ export default async function TestPage() {
       <Text as="p" variant="p2semi">
         Text component p with p2semi variant with <Link href="/">link</Link> inline
       </Text>
-      <BoostCards />
       <Dial value={280} max={400} subtext="Eligible" icon="rays" iconSize={48} />
       <CriteriaList />
       <Leaderboard staticLeaderboardData={serializedServerLeaderboardResponse} />

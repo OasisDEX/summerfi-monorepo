@@ -32,6 +32,8 @@ export * from './components/layout/Navigation/Navigation.types'
 
 export { EXTERNAL_LINKS, INTERNAL_LINKS } from './helpers/applicationLinks'
 
+export { formatAddress } from './helpers/formatAddress'
+
 // tokens
 export type { IconNamesList, TokenSymbolsList, TokenConfig } from './tokens/types'
 export { tokenConfigs } from './tokens/config'
