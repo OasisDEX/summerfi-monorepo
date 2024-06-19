@@ -30,7 +30,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
           {
             simple: (
               <Image
-                src="/rays/img/backgrounds/bg-simple.svg"
+                src="/img/backgrounds/bg-simple.svg"
                 className={classNames.backgroundSimple}
                 width={0}
                 height={0}
@@ -46,7 +46,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
         <div className={classNames.appContainer}>
           {children}
           <Footer
-            logo="/rays/img/branding/logo-dark.svg"
+            logo="/img/branding/logo-dark.svg"
             languageSwitcher={
               <div className={classNames.languageSwitcher}>
                 <button>EN</button>
