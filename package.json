@@ -4,6 +4,8 @@
     "dev": "turbo run dev --concurrency=100",
     "prebuild": "turbo run prebuild --cache-dir=.turbo",
     "build": "turbo run build --cache-dir=.turbo",
+    "prebuild:sdk": "turbo run prebuild --cache-dir=.turbo --filter=./packages/* --filter=./sdk/*",
+    "build:sdk": "turbo run build --cache-dir=.turbo --filter=./packages/* --filter=./sdk/*",
     "lint": "turbo run lint --cache-dir=.turbo",
     "lint:fix": "turbo run lint:fix",
     "test": "turbo run test --cache-dir=.turbo",
