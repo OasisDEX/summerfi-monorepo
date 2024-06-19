@@ -15,8 +15,8 @@ import classNames from '@/components/organisms/Leaderboard/Leaderboard.module.sc
 
 interface LeaderboardProps {
   pagination?: {
-    page: number
-    limit: number
+    page: string
+    limit: string
   }
   connectedWalletAddress?: string
   staticLeaderboardData?: LeaderboardResponse
@@ -30,7 +30,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({
   const [leaderboardResponse, setLeaderboardResponse] = useState<LeaderboardResponse>({
     leaderboard: staticLeaderboardData?.leaderboard ?? [],
   })
-  const [currentPage, setCurrentPage] = useState(pagination.page)
+  const [currentPage, setCurrentPage] = useState(Number(pagination.page))
   const [isLoading, setIsLoading] = useState(!staticLeaderboardData)
 
   const [input, setInput] = useState('')
