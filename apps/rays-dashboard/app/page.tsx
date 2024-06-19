@@ -31,9 +31,11 @@ export default async function HomePage({
       }
   >(await fetchRays({ address: searchParams.userAddress }))
 
-  const startingPage = userRays.rays?.positionInLeaderboard
-    ? Math.ceil(Number(userRays.rays.positionInLeaderboard) / leaderboardDefaults.limit)
-    : 1
+  const startingPage = String(
+    userRays.rays?.positionInLeaderboard
+      ? Math.ceil(Number(userRays.rays.positionInLeaderboard) / Number(leaderboardDefaults.limit))
+      : 1,
+  )
 
   const serverLeaderboardResponse = parseServerResponse<LeaderboardResponse>(
     await fetchLeaderboard({

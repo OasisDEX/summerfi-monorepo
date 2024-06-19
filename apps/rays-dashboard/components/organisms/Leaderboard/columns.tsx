@@ -1,4 +1,4 @@
-import { Button, Text } from '@summerfi/app-ui'
+import { Button, ProxyLinkComponent, Text } from '@summerfi/app-ui'
 import { IconEye } from '@tabler/icons-react'
 import Link from 'next/link'
 
@@ -53,11 +53,13 @@ export const leaderboardColumns = {
     title: 'Summer portfolio',
     cellMapper: (cell: LeaderboardItem) => (
       <Text as="p" variant="p2semi">
-        <Link href={`/portfolio/${cell.userAddress}`}>
-          {cell.details
-            ? `${cell.details.activePositions} positions, ${cell.details.activeTriggers} automations `
-            : 'No positions '}
-          -&gt;
+        <Link passHref legacyBehavior href={`/portfolio/${cell.userAddress}`}>
+          <ProxyLinkComponent>
+            {cell.details
+              ? `${cell.details.activePositions} positions, ${cell.details.activeTriggers} automations `
+              : 'No positions '}
+            -&gt;
+          </ProxyLinkComponent>
         </Link>
       </Text>
     ),

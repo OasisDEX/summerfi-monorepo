@@ -1,6 +1,7 @@
 import { Text } from '@summerfi/app-ui'
+import BigNumber from 'bignumber.js'
 
-import { formatAddress } from '@/helpers/formatters'
+import { formatAddress, formatCryptoBalance } from '@/helpers/formatters'
 import { RaysApiResponse } from '@/server-handlers/rays'
 
 interface ClaimRaysTitleProps {
@@ -35,12 +36,19 @@ export const ClaimRaysTitle = ({
     <>
       <Text as="h2" variant="h2">
         Wallet {formatAddress(userAddress)} is eligible for{' '}
-        {userRays.rays.eligiblePoints > 0 ? `up to` : ''} {userRays.rays.eligiblePoints.toFixed(0)}{' '}
-        $RAYS
+        {userRays.rays.eligiblePoints > 0 ? `up to` : ''}{' '}
+        {formatCryptoBalance(new BigNumber(userRays.rays.eligiblePoints))} $RAYS
       </Text>
       {pointsEarnedPerYear && (
-        <Text as="h2" variant="p4semiColorful">
-          +earning {pointsEarnedPerYear.toFixed(0)} $RAYS a year
+        <Text
+          as="h3"
+          variant="h3colorful"
+          style={{
+            marginTop: 'var(--space-m)',
+            marginBottom: 'var(--space-m)',
+          }}
+        >
+          + earning {formatCryptoBalance(new BigNumber(pointsEarnedPerYear))} $RAYS a year
         </Text>
       )}
     </>
