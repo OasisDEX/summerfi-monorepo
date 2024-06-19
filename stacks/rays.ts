@@ -40,6 +40,23 @@ export function addRaysConfig({ stack, api, vpc, app }: SummerStackContext) {
     }),
   }
 
+  const raysMultipliersFunctionProps: FunctionProps = {
+    handler: 'summerfi-api/get-rays-multipliers-function/src/index.handler',
+    runtime: 'nodejs20.x',
+    logFormat: 'JSON',
+    environment: {
+      POWERTOOLS_LOG_LEVEL: process.env.POWERTOOLS_LOG_LEVEL || 'INFO',
+      RAYS_DB_CONNECTION_STRING: RAYS_DB_READ_CONNECTION_STRING,
+      BORROW_DB_READ_CONNECTION_STRING: BORROW_DB_READ_CONNECTION_STRING,
+    },
+    ...(vpc && {
+      vpc: vpc.vpc,
+      vpcSubnets: {
+        subnets: [...vpc.vpc.privateSubnets],
+      },
+    }),
+  }
+
   const positionRaysFunctionProps: FunctionProps = {
     handler: 'summerfi-api/get-position-rays-function/src/index.handler',
     runtime: 'nodejs20.x',
@@ -92,6 +109,11 @@ export function addRaysConfig({ stack, api, vpc, app }: SummerStackContext) {
     }),
   }
   const raysFunction = new Function(stack, 'get-rays-function', raysFunctionProps)
+  const raysMultipliersFunction = new Function(
+    stack,
+    'get-rays-multipliers-function',
+    raysMultipliersFunctionProps,
+  )
   const positionRaysFunction = new Function(
     stack,
     'get-position-rays-function',
@@ -116,6 +138,7 @@ export function addRaysConfig({ stack, api, vpc, app }: SummerStackContext) {
 
   api.addRoutes(stack, {
     'GET /api/rays': raysFunction,
+    'GET /api/rays/multipliers': raysMultipliersFunction,
     'GET /api/rays/position': positionRaysFunction,
     'GET /api/rays/leaderboard': raysLeaderBoardFunction,
   })
