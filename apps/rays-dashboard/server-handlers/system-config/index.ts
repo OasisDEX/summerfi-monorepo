@@ -1,5 +1,3 @@
-'use server'
-
 import { ProtocolId } from '@summerfi/serverless-shared'
 
 import { configFetcher } from '@/server-handlers/system-config/calls/config'
@@ -10,31 +8,40 @@ import { configRaysFetcher } from '@/server-handlers/system-config/calls/rays-co
 import { parseNavigationResponse } from '@/server-handlers/system-config/parsers/parse-navigation-response'
 import { lendingProtocolMap } from '@/types/lending-protocol'
 import { NavigationResponse } from '@/types/navigation'
+import { ProductHubData } from '@/types/product-hub'
 
 const systemConfigHandler = async () => {
-  const config = await configFetcher()
-  const protocols = [
-    ...(config.features.AjnaSafetySwitch ? [] : [lendingProtocolMap[ProtocolId.AJNA]]),
-    lendingProtocolMap[ProtocolId.AAVE_V2],
-    lendingProtocolMap[ProtocolId.AAVE_V3],
-    lendingProtocolMap[ProtocolId.MAKER],
-    ...(config.features.MorphoSafetySwitch ? [] : [lendingProtocolMap[ProtocolId.MORPHO_BLUE]]),
-    lendingProtocolMap[ProtocolId.SPARK],
-  ]
+  try {
+    const config = await configFetcher()
+    const protocols = [
+      ...(config.features?.AjnaSafetySwitch ? [] : [lendingProtocolMap[ProtocolId.AJNA]]),
+      lendingProtocolMap[ProtocolId.AAVE_V2],
+      lendingProtocolMap[ProtocolId.AAVE_V3],
+      lendingProtocolMap[ProtocolId.MAKER],
+      ...(config.features?.MorphoSafetySwitch ? [] : [lendingProtocolMap[ProtocolId.MORPHO_BLUE]]),
+      lendingProtocolMap[ProtocolId.SPARK],
+    ]
 
-  const [productHub, navigationResponse, configRays] = await Promise.all([
-    productHubFetcher(protocols),
-    fetchContentfulGraphQL<NavigationResponse>(navigationQuery),
-    configRaysFetcher(),
-  ])
+    const [productHub, navigationResponse, configRays] = await Promise.all([
+      productHubFetcher(protocols),
+      fetchContentfulGraphQL<NavigationResponse>(navigationQuery),
+      configRaysFetcher(),
+    ])
 
-  const navigation = parseNavigationResponse({ navigationResponse, productHub })
+    const navigation = parseNavigationResponse({ navigationResponse, productHub })
 
-  return {
-    config,
-    configRays,
-    navigation,
-    productHub,
+    return {
+      config,
+      configRays,
+      navigation,
+      productHub: productHub as ProductHubData,
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    // eslint-disable-next-line no-console
+    console.error('Error in systemConfigHandler', error)
+
+    throw error
   }
 }
 
