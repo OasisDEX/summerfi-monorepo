@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import { FC } from 'react'
@@ -7,10 +8,10 @@ import { usePathname } from 'next/navigation'
 
 import { WalletButtonFallback } from '@/components/molecules/WalletButton/WalletButtonFallback'
 
-const WalletButton = dynamic(() => import('@/components/molecules/WalletButton/WalletButton'), {
-  ssr: false,
-  loading: () => <WalletButtonFallback />,
-})
+// const WalletButton = dynamic(() => import('@/components/molecules/WalletButton/WalletButton'), {
+//   ssr: false,
+//   loading: () => <WalletButtonFallback />,
+// })
 
 interface NavigationWrapperProps {
   panels?: NavigationMenuPanelType[]
@@ -45,7 +46,7 @@ export const NavigationWrapper: FC<NavigationWrapperProps> = ({
         NavigationModuleBridge,
         NavigationModuleSwap,
       }}
-      walletConnectionComponent={<WalletButton />}
+      walletConnectionComponent={<div />}
     />
   )
 }
