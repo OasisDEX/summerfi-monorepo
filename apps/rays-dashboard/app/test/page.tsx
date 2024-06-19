@@ -14,19 +14,17 @@ import { Leaderboard } from '@/components/organisms/Leaderboard/Leaderboard'
 import { NetworkNames, networksByName } from '@/constants/networks-list'
 import { LendingProtocol } from '@/helpers/lending-protocol'
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
+import { parseServerResponse } from '@/helpers/parse-server-response'
 import { fetchLeaderboard } from '@/server-handlers/leaderboard'
-import { LeaderboardResponse } from '@/types/leaderboard'
 
 export default async function TestPage() {
   const aaveV3Config = lendingProtocolsByName[LendingProtocol.AaveV3]
 
-  const serverLeaderboardResponse = await fetchLeaderboard({
-    page: '1',
-    limit: '5',
-  })
-
-  const serializedServerLeaderboardResponse: LeaderboardResponse = JSON.parse(
-    JSON.stringify(serverLeaderboardResponse),
+  const serverLeaderboardResponse = parseServerResponse(
+    await fetchLeaderboard({
+      page: '1',
+      limit: '5',
+    }),
   )
 
   return (
@@ -77,7 +75,7 @@ export default async function TestPage() {
         Text component p with p2semi variant with <Link href="/">link</Link> inline
       </Text>
       <Dial value={280} max={400} subtext="Eligible" icon="rays" iconSize={48} />
-      <Leaderboard staticLeaderboardData={serializedServerLeaderboardResponse} />
+      <Leaderboard staticLeaderboardData={serverLeaderboardResponse} />
     </div>
   )
 }

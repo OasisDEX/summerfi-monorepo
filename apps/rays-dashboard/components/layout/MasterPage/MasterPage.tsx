@@ -4,6 +4,7 @@ import Image from 'next/image'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 import { WalletInit } from '@/components/molecules/WalletInit/WalletInit'
+import { parseServerResponse } from '@/helpers/parse-server-response'
 import systemConfigHandler from '@/server-handlers/system-config'
 
 import classNames from './MasterPage.module.scss'
@@ -17,7 +18,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
   background = 'simple',
   children,
 }) => {
-  const systemConfig = await systemConfigHandler()
+  const systemConfig = parseServerResponse(await systemConfigHandler())
 
   return (
     <>
@@ -38,8 +39,6 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
             ),
           }[background]
         }
-
-        {/* TODO uncomment once navigation on mobile handled */}
         <NavigationWrapper panels={systemConfig.navigation} />
         <div className={classNames.appContainer}>
           {children}

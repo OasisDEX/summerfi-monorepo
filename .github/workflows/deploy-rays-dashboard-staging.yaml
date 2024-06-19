@@ -115,6 +115,12 @@ jobs:
           # push it to ECR so that it can
           # be deployed to ECS.
           docker build -f apps/rays-dashboard/docker/Dockerfile \
+                       --build-arg BORROW_DB_READ_CONNECTION_STRING=${{ secrets.BORROW_DB_READ_CONNECTION_STRING }} \
+                       --build-arg CONTENTFUL_SPACE_ID=${{ secrets.CONTENTFUL_SPACE_ID }} \
+                       --build-arg CONTENTFUL_ACCESS_TOKEN=${{ secrets.CONTENTFUL_ACCESS_TOKEN }} \
+                       --build-arg CONTENTFUL_PREVIEW_ACCESS_TOKEN=${{ secrets.CONTENTFUL_PREVIEW_ACCESS_TOKEN }} \
+                       --build-arg CONFIG_URL=${{ secrets.CONFIG_URL }} \
+                       --build-arg CONFIG_URL_RAYS=${{ secrets.CONFIG_URL_RAYS }} \
                        --build-arg FUNCTIONS_API_URL=${{ secrets.FUNCTIONS_API_URL }} \
                        --cache-from=$ECR_REGISTRY/$ECR_REPO_NAME:$LATEST_TAG \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$SHA_TAG \
