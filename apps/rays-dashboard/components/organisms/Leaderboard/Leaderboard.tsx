@@ -60,7 +60,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({
     setIsLoading(true)
 
     const data = await fetch(
-      `/api/leaderboard?page=${page}&limit=${pagination.limit}${inputQuery ? `&userAddress=${inputQuery}` : ''}`,
+      `/rays/api/leaderboard?page=${page}&limit=${pagination.limit}${inputQuery ? `&userAddress=${inputQuery}` : ''}`,
     ).then((resp) => resp.json())
 
     const castedData = data as LeaderboardResponse
