@@ -24,7 +24,7 @@ interface ClaimRaysPageProps {
 
 export default ({ userAddress, userRays }: ClaimRaysPageProps) => {
   const [{ wallet }, connect] = useConnectWallet()
-  const { replace } = useRouter()
+  const { replace, push } = useRouter()
   const currentPath = usePathname()
 
   const dynamicWalletAddress = useMemo(() => wallet?.accounts[0].address, [wallet?.accounts])
@@ -33,13 +33,17 @@ export default ({ userAddress, userRays }: ClaimRaysPageProps) => {
     replace(`${currentPath}?userAddress=${dynamicWalletAddress}`)
   }, [currentPath, dynamicWalletAddress, replace])
 
+  const goToClaimedView = useCallback(() => {
+    push(`${currentPath}/claimed?userAddress=${dynamicWalletAddress}`)
+  }, [currentPath, dynamicWalletAddress, push])
+
   useEffect(() => {
     // if user is connected and is visiting a page without wallet
     // address (its or others) in the query, redirect to the view with a wallet address
-    if (typeof userAddress === 'undefined' && (wallet?.accounts.length ?? 0) > 0) {
+    if (typeof userAddress === 'undefined' && dynamicWalletAddress) {
       goToOwnWalletView()
     }
-  }, [currentPath, goToOwnWalletView, replace, userAddress, wallet?.accounts])
+  }, [dynamicWalletAddress, goToOwnWalletView, userAddress])
 
   const isViewingOwnWallet = useMemo(
     () => userAddress === dynamicWalletAddress,
@@ -65,45 +69,48 @@ export default ({ userAddress, userRays }: ClaimRaysPageProps) => {
         Over 2 million DeFi users are eligible for Summer.fi Rays.
       </Text>
       <CriteriaList userRays={userRays} />
-      {typeof userAddress !== 'undefined' ? (
-        <>
-          <Button
-            disabled={claimButtonDisabled}
-            variant="primaryLarge"
-            style={{ marginTop: 'var(--space-l)', marginBottom: 'var(--space-s)' }}
-            onClick={() => {
-              // eslint-disable-next-line no-alert
-              alert('Claimed!')
-            }}
-          >
-            Claim $RAYS
-          </Button>
-          {!dynamicWalletAddress && (
-            <Button
-              variant="primarySmall"
-              style={{ marginTop: 'var(--space-xs)', marginBottom: 'var(--space-xxxl)' }}
-              onClick={() => connect()}
-            >
-              Connect wallet
-            </Button>
-          )}
-        </>
-      ) : (
+
+      {typeof userAddress !== 'undefined' && isViewingOwnWallet && (
+        <Button
+          disabled={claimButtonDisabled}
+          variant="primaryLarge"
+          style={{ marginTop: 'var(--space-l)', marginBottom: 'var(--space-s)' }}
+          onClick={goToClaimedView}
+        >
+          Claim $RAYS
+        </Button>
+      )}
+
+      {typeof userAddress !== 'undefined' && !isViewingOwnWallet && !dynamicWalletAddress && (
+        <Button
+          variant="primaryLarge"
+          style={{ marginTop: 'var(--space-l)', marginBottom: 'var(--space-s)' }}
+          onClick={() => {
+            void connect().then(() => {
+              goToOwnWalletView()
+            })
+          }}
+        >
+          Connect wallet
+        </Button>
+      )}
+
+      {typeof userAddress !== 'undefined' && !isViewingOwnWallet && dynamicWalletAddress && (
+        <Button
+          variant="secondaryLarge"
+          style={{ marginTop: 'var(--space-l)', marginBottom: 'var(--space-s)' }}
+          onClick={goToOwnWalletView}
+        >
+          View your points
+        </Button>
+      )}
+      {typeof userAddress === 'undefined' && (
         <Button
           variant="primaryLarge"
           style={{ marginTop: 'var(--space-l)', marginBottom: 'var(--space-xxxl)' }}
           onClick={() => connect()}
         >
           Connect wallet
-        </Button>
-      )}
-      {typeof userAddress !== 'undefined' && !isViewingOwnWallet && dynamicWalletAddress && (
-        <Button
-          variant="primarySmall"
-          style={{ marginBottom: 'var(--space-xxxl)' }}
-          onClick={goToOwnWalletView}
-        >
-          View your $RAYS
         </Button>
       )}
     </>

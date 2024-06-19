@@ -34,7 +34,7 @@ export default async function ClaimedPage({ searchParams }: ClaimedPageProps) {
             alignItems: 'center',
           }}
         >
-          <Image src="/gif/claimed-rays.gif" width="259" height="179" alt="claimed-rays" />
+          <Image src="/rays/gif/claimed-rays.gif" width="259" height="179" alt="claimed-rays" />
           <Text as="h2" variant="h2">
             Wallet {formatAddress(userAddress)} has claimed{' '}
             {userRays.rays.eligiblePoints.toFixed(0)} $RAYS

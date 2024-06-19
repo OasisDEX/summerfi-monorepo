@@ -1,4 +1,5 @@
 import { Button, Text } from '@summerfi/app-ui'
+import { IconEye } from '@tabler/icons-react'
 import Link from 'next/link'
 
 import { LeaderboardItem, LeaderboardResponse } from '@/types/leaderboard'
@@ -24,6 +25,17 @@ export const leaderboardColumns = {
     cellMapper: (cell: LeaderboardItem) => (
       <Text as="p" variant="p1semi" className={classNames.userColumn}>
         {cell.ens ?? cell.userAddress}
+        <IconEye
+          size={18}
+          onClick={() => {
+            if ('URLSearchParams' in window) {
+              const searchParams = new URLSearchParams(window.location.search)
+
+              searchParams.set('userAddress', cell.userAddress)
+              window.location.search = searchParams.toString()
+            }
+          }}
+        />
       </Text>
     ),
   },
@@ -120,10 +132,12 @@ export const mapLeaderboardColumns = ({
       ),
     }
 
+    const finalUserIndex = userIndex >= index ? userIndex + 1 : userIndex
+
     return [
-      ...newArr.slice(0, userIndex + 1),
+      ...newArr.slice(0, finalUserIndex),
       youAreHereValue,
-      ...newArr.slice(userIndex + 1, newArr.length),
+      ...newArr.slice(finalUserIndex, newArr.length),
     ]
   }
 

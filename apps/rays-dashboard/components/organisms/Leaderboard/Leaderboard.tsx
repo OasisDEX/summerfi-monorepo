@@ -2,13 +2,13 @@
 
 import { ChangeEvent, FC, useEffect, useState } from 'react'
 import { Button, Icon, Input, Table, Text } from '@summerfi/app-ui'
-import { useConnectWallet } from '@web3-onboard/react'
 
 import {
   leaderboardColumns,
   mapLeaderboardColumns,
 } from '@/components/organisms/Leaderboard/columns'
 import { LeaderboardSkeleton } from '@/components/organisms/Leaderboard/LeaderboardSkeleton'
+import { leaderboardDefaults } from '@/constants/leaderboard'
 import { LeaderboardResponse } from '@/types/leaderboard'
 
 import classNames from '@/components/organisms/Leaderboard/Leaderboard.module.scss'
@@ -18,17 +18,15 @@ interface LeaderboardProps {
     page: number
     limit: number
   }
+  connectedWalletAddress?: string
   staticLeaderboardData?: LeaderboardResponse
 }
 
 export const Leaderboard: FC<LeaderboardProps> = ({
-  pagination = {
-    page: 1,
-    limit: 5,
-  },
+  pagination = leaderboardDefaults,
   staticLeaderboardData,
+  connectedWalletAddress,
 }) => {
-  const [{ wallet }] = useConnectWallet()
   const [leaderboardResponse, setLeaderboardResponse] = useState<LeaderboardResponse>({
     leaderboard: staticLeaderboardData?.leaderboard ?? [],
   })
@@ -86,7 +84,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({
 
   const mappedLeaderBoard = mapLeaderboardColumns({
     leaderboardData: leaderboardResponse.leaderboard,
-    connectedWalletAddress: wallet?.accounts[0].address,
+    connectedWalletAddress,
   })
 
   useEffect(() => {
@@ -100,11 +98,11 @@ export const Leaderboard: FC<LeaderboardProps> = ({
     const time = !input ? 0 : 300
 
     const timeout = setTimeout(() => {
-      const page = pagination.page || 1
+      const page = 1
 
       setCurrentPage(page)
       setDebouncedInput(input as string)
-      void leaderboardUpdate({ page, overwrite: true, inputQuery: input })
+      void leaderboardUpdate({ page, overwrite: true, inputQuery: input.toLocaleLowerCase() })
     }, time)
 
     // eslint-disable-next-line consistent-return

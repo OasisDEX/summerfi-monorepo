@@ -1,9 +1,9 @@
 import classNames from 'classnames'
 import Link from 'next/link'
 
+import { ProxyLinkComponent } from '@/components/atoms/ProxyLinkComponent/ProxyLinkComponent'
 import { Text } from '@/components/atoms/Text/Text'
 import { NavigationMenuPanelLinkProps } from '@/components/layout/Navigation/Navigation.types'
-import { ProxyLinkComponent } from '@/components/layout/Navigation/ProxyLinkComponent'
 
 import navigationMenuStyles from '@/components/layout/Navigation/NavigationMenu.module.scss'
 

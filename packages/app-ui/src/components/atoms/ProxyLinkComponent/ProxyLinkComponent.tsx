@@ -1,5 +1,14 @@
 import { forwardRef } from 'react'
 
+/**
+ * A component that renders a proxy link - removes /rays from the href (WATCH OUT)
+ * needs: `passHref` and `legacyBehavior` on Link to work
+ *
+ * ```tsx
+ * <ProxyLinkComponent href="/example">Click me</ProxyLinkComponent>
+ * ```
+ * This link on Rays dashboard is gonna be `/rays/example`, this component fixes that
+ */
 export const ProxyLinkComponent = forwardRef(
   (
     {

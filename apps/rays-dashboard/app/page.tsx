@@ -2,9 +2,11 @@ import dynamic from 'next/dynamic'
 
 import { ClaimRaysSkeleton } from '@/components/organisms/ClaimRays/ClaimRaysSkeleton'
 import { Leaderboard } from '@/components/organisms/Leaderboard/Leaderboard'
+import { leaderboardDefaults } from '@/constants/leaderboard'
 import { parseServerResponse } from '@/helpers/parse-server-response'
 import { fetchLeaderboard } from '@/server-handlers/leaderboard'
-import { fetchRays } from '@/server-handlers/rays'
+import { fetchRays, RaysApiResponse } from '@/server-handlers/rays'
+import { LeaderboardResponse } from '@/types/leaderboard'
 
 const ClaimRays = dynamic(() => import('@/components/organisms/ClaimRays/ClaimRays'), {
   ssr: false,
@@ -18,20 +20,42 @@ export default async function HomePage({
     userAddress: string
   }
 }) {
-  const serverLeaderboardResponse = parseServerResponse(
+  const userRays = parseServerResponse<
+    | {
+        rays: RaysApiResponse
+        error?: undefined
+      }
+    | {
+        error: unknown
+        rays?: undefined
+      }
+  >(await fetchRays({ address: searchParams.userAddress }))
+
+  const startingPage = userRays.rays?.positionInLeaderboard
+    ? Math.ceil(Number(userRays.rays.positionInLeaderboard) / leaderboardDefaults.limit)
+    : 1
+
+  const serverLeaderboardResponse = parseServerResponse<LeaderboardResponse>(
     await fetchLeaderboard({
-      page: '1',
-      limit: '5',
+      ...leaderboardDefaults,
+      page: startingPage,
     }),
   )
-
-  const userRays = parseServerResponse(await fetchRays({ address: searchParams.userAddress }))
 
   return (
     <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'center' }}>
       <ClaimRays userAddress={searchParams.userAddress} userRays={userRays} />
-      <div style={{ marginBottom: 'var(--space-xxxl)', width: '100%' }}>
-        <Leaderboard staticLeaderboardData={serverLeaderboardResponse} />
+      <div
+        style={{ marginBottom: 'var(--space-xxxl)', marginTop: 'var(--space-xxxl)', width: '100%' }}
+      >
+        <Leaderboard
+          staticLeaderboardData={serverLeaderboardResponse}
+          connectedWalletAddress={searchParams.userAddress}
+          pagination={{
+            ...leaderboardDefaults,
+            page: startingPage,
+          }}
+        />
       </div>
     </div>
   )

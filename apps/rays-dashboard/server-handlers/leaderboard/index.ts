@@ -3,7 +3,7 @@ import { LeaderboardResponse } from '@/types/leaderboard'
 export const fetchLeaderboard = async (
   query:
     | {
-        [key: string]: string
+        [key: string]: string | number
       }
     | string,
 ): Promise<LeaderboardResponse> => {
