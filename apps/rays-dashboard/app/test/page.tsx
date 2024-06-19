@@ -11,20 +11,19 @@ import {
 import Link from 'next/link'
 
 import { Leaderboard } from '@/components/organisms/Leaderboard/Leaderboard'
+import { leaderboardDefaults } from '@/constants/leaderboard'
 import { NetworkNames, networksByName } from '@/constants/networks-list'
 import { LendingProtocol } from '@/helpers/lending-protocol'
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
 import { parseServerResponse } from '@/helpers/parse-server-response'
 import { fetchLeaderboard } from '@/server-handlers/leaderboard'
+import { LeaderboardResponse } from '@/types/leaderboard'
 
 export default async function TestPage() {
   const aaveV3Config = lendingProtocolsByName[LendingProtocol.AaveV3]
 
-  const serverLeaderboardResponse = parseServerResponse(
-    await fetchLeaderboard({
-      page: '1',
-      limit: '5',
-    }),
+  const serverLeaderboardResponse = parseServerResponse<LeaderboardResponse>(
+    await fetchLeaderboard(leaderboardDefaults),
   )
 
   return (

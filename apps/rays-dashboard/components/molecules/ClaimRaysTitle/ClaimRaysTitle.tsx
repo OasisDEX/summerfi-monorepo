@@ -1,10 +1,12 @@
 import { Text } from '@summerfi/app-ui'
+import BigNumber from 'bignumber.js'
 
-import { formatAddress } from '@/helpers/formatters'
+import { formatAddress, formatCryptoBalance } from '@/helpers/formatters'
 import { RaysApiResponse } from '@/server-handlers/rays'
 
 interface ClaimRaysTitleProps {
   userAddress?: string
+  pointsEarnedPerYear?: number
   userRays:
     | {
         rays: RaysApiResponse
@@ -17,7 +19,11 @@ interface ClaimRaysTitleProps {
     | null
 }
 
-export const ClaimRaysTitle = ({ userAddress, userRays }: ClaimRaysTitleProps) => {
+export const ClaimRaysTitle = ({
+  userAddress,
+  userRays,
+  pointsEarnedPerYear,
+}: ClaimRaysTitleProps) => {
   if (!userAddress || typeof userRays?.rays?.eligiblePoints === 'undefined') {
     return (
       <Text as="h1" variant="h1" style={{ marginTop: 'var(--space-xxl)' }}>
@@ -27,10 +33,24 @@ export const ClaimRaysTitle = ({ userAddress, userRays }: ClaimRaysTitleProps) =
   }
 
   return (
-    <Text as="h2" variant="h2">
-      Wallet {formatAddress(userAddress)} is eligible for{' '}
-      {userRays.rays.eligiblePoints > 0 ? `up to` : ''} {userRays.rays.eligiblePoints.toFixed(0)}{' '}
-      $RAYS
-    </Text>
+    <>
+      <Text as="h2" variant="h2">
+        Wallet {formatAddress(userAddress)} is eligible for{' '}
+        {userRays.rays.eligiblePoints > 0 ? `up to` : ''}{' '}
+        {formatCryptoBalance(new BigNumber(userRays.rays.eligiblePoints))} $RAYS
+      </Text>
+      {pointsEarnedPerYear && (
+        <Text
+          as="h3"
+          variant="h3colorful"
+          style={{
+            marginTop: 'var(--space-m)',
+            marginBottom: 'var(--space-m)',
+          }}
+        >
+          + earning {formatCryptoBalance(new BigNumber(pointsEarnedPerYear))} $RAYS a year
+        </Text>
+      )}
+    </>
   )
 }

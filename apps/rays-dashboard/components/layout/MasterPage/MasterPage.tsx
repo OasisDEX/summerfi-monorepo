@@ -18,7 +18,9 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
   background = 'simple',
   children,
 }) => {
-  const systemConfig = parseServerResponse(await systemConfigHandler())
+  const systemConfig = parseServerResponse<Awaited<ReturnType<typeof systemConfigHandler>>>(
+    await systemConfigHandler(),
+  )
 
   return (
     <>

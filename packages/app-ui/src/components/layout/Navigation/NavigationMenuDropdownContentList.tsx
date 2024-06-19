@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 import Link from 'next/link'
 
+import { ProxyLinkComponent } from '@/components/atoms/ProxyLinkComponent/ProxyLinkComponent'
 import { Text } from '@/components/atoms/Text/Text'
 import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
 import {
@@ -8,7 +9,6 @@ import {
   WithNavigationModules,
 } from '@/components/layout/Navigation/Navigation.types'
 import { NavigationMenuDropdownContentListItem } from '@/components/layout/Navigation/NavigationMenuDropdownContentListItem'
-import { ProxyLinkComponent } from '@/components/layout/Navigation/ProxyLinkComponent'
 
 import navigationMenuDropdownContentListStyles from './NavigationMenuDropdownContentList.module.scss'
 

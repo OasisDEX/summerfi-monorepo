@@ -8,6 +8,7 @@ import {
 } from '@tabler/icons-react'
 import Link from 'next/link'
 
+import { ProxyLinkComponent } from '@/components/atoms/ProxyLinkComponent/ProxyLinkComponent'
 import { Text } from '@/components/atoms/Text/Text'
 import { EXTERNAL_LINKS, INTERNAL_LINKS } from '@/helpers/application-links'
 
@@ -139,10 +140,14 @@ export const Footer: FC<FooterProps> = ({ logo, newsletter, languageSwitcher }) 
             {links.map(({ label, url }, j) => (
               <li key={j}>
                 <Link
+                  passHref
+                  legacyBehavior
                   href={url}
                   {...(url.startsWith('http') && { target: '_blank', rel: 'noreferrer' })}
                 >
-                  <Text variant="p2">{label}</Text>
+                  <ProxyLinkComponent>
+                    <Text variant="p2">{label}</Text>
+                  </ProxyLinkComponent>
                 </Link>
               </li>
             ))}

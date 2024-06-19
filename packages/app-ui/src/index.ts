@@ -12,6 +12,7 @@ export { Input } from './components/atoms/Input/Input'
 export { SkeletonLine } from './components/atoms/SkeletonLine/SkeletonLine'
 export { WithArrow } from './components/atoms/WithArrow/WithArrow'
 export { Select } from './components/atoms/Select/Select'
+export { ProxyLinkComponent } from './components/atoms/ProxyLinkComponent/ProxyLinkComponent'
 
 export { TokensGroup } from './components/molecules/TokensGroup/TokensGroup'
 export { ProtocolLabel } from './components/molecules/ProtocolLabel/ProtocolLabel'

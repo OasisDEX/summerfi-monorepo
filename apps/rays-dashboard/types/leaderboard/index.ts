@@ -5,7 +5,7 @@ export type LeaderboardItem = Leaderboard & {
   position: string
   totalPoints: string
   userAddress: string
-  details: { activePositions: number; activeTriggers: number } | null
+  details: { activePositions: number; activeTriggers: number; pointsEarnedPerYear: number } | null
   ens: string | null
 }
 
