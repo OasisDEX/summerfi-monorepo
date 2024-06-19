@@ -23,7 +23,14 @@ export const fetchContentfulGraphQL = async <T>(query: string, preview = false):
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     // eslint-disable-next-line no-console
-    console.error('Error in fetchContentfulGraphQL', error)
+    console.error(
+      'Error in fetchContentfulGraphQL',
+      error,
+      'accessing:',
+      process.env.CONTENTFUL_ACCESS_TOKEN,
+      process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN,
+      process.env.CONTENTFUL_SPACE_ID,
+    )
 
     throw error
   }

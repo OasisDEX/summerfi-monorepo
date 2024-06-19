@@ -9,7 +9,7 @@ export const configRaysFetcher = async function (): Promise<AppRaysConfigType> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     // eslint-disable-next-line no-console
-    console.error('Error in configRaysFetcher', error)
+    console.error('Error in configRaysFetcher', error, 'accessing:', process.env.CONFIG_URL_RAYS)
 
     throw error
   }

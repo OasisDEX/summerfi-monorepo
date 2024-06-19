@@ -9,7 +9,7 @@ export const configFetcher = async function (): Promise<Partial<AppConfigType>> 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     // eslint-disable-next-line no-console
-    console.error('Error in configFetcher', error)
+    console.error('Error in configFetcher', error, 'accessing:', process.env.CONFIG_URL)
 
     throw error
   }
