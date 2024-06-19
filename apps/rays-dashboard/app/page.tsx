@@ -42,9 +42,17 @@ export default async function HomePage({
     }),
   )
 
+  const userYearlyRays = serverLeaderboardResponse.leaderboard.find(
+    (user) => user.position === userRays.rays?.positionInLeaderboard,
+  )
+
   return (
     <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'center' }}>
-      <ClaimRays userAddress={searchParams.userAddress} userRays={userRays} />
+      <ClaimRays
+        userAddress={searchParams.userAddress}
+        userRays={userRays}
+        pointsEarnedPerYear={userYearlyRays?.details?.pointsEarnedPerYear}
+      />
       <div
         style={{ marginBottom: 'var(--space-xxxl)', marginTop: 'var(--space-xxxl)', width: '100%' }}
       >

@@ -10,6 +10,7 @@ import { RaysApiResponse } from '@/server-handlers/rays'
 
 interface ClaimRaysPageProps {
   userAddress: string
+  pointsEarnedPerYear?: number
   userRays:
     | {
         rays: RaysApiResponse
@@ -22,7 +23,7 @@ interface ClaimRaysPageProps {
     | null
 }
 
-export default ({ userAddress, userRays }: ClaimRaysPageProps) => {
+export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPageProps) => {
   const [{ wallet }, connect] = useConnectWallet()
   const { replace, push } = useRouter()
   const currentPath = usePathname()
@@ -60,7 +61,11 @@ export default ({ userAddress, userRays }: ClaimRaysPageProps) => {
 
   return (
     <>
-      <ClaimRaysTitle userAddress={userAddress} userRays={userRays} />
+      <ClaimRaysTitle
+        userAddress={userAddress}
+        userRays={userRays}
+        pointsEarnedPerYear={pointsEarnedPerYear}
+      />
       <Text
         as="p"
         variant="p1"
