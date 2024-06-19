@@ -104,15 +104,9 @@ export const sstConfig: SSTConfig = {
     }
 
     if (_input.stage === 'staging' || _input.stage === 'production') {
-      if (_input.stage === 'staging') {
-        if (currentBranch !== 'dev') {
-          throw new Error('You can only deploy to staging from dev branch')
-        }
-      }
-
       if (_input.stage === 'production') {
-        if (currentBranch !== 'main') {
-          throw new Error('You can only deploy to production from main branch')
+        if (currentBranch !== 'main' && currentBranch !== 'dev') {
+          throw new Error('You can only deploy to production from main or dev branch')
         }
       }
 
