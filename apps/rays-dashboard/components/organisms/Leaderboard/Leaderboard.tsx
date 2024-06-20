@@ -88,6 +88,10 @@ export const Leaderboard: FC<LeaderboardProps> = ({
   })
 
   useEffect(() => {
+    setCurrentPage(Number(pagination.page))
+  }, [pagination.page])
+
+  useEffect(() => {
     if (staticLeaderboardData && !input) {
       setDebouncedInput(input as string)
       void leaderboardUpdate({ resetStatic: staticLeaderboardData })
