@@ -24,7 +24,7 @@ export const ClaimRaysTitle = ({
   userRays,
   pointsEarnedPerYear,
 }: ClaimRaysTitleProps) => {
-  if (!userAddress || typeof userRays?.rays?.eligiblePoints === 'undefined') {
+  if (!userAddress || typeof userRays?.rays?.allPossiblePoints === 'undefined') {
     return (
       <Text as="h1" variant="h1" style={{ marginTop: 'var(--space-xxl)' }}>
         Claim your $RAYS
@@ -36,8 +36,8 @@ export const ClaimRaysTitle = ({
     <>
       <Text as="h2" variant="h2">
         Wallet {formatAddress(userAddress)} is eligible for{' '}
-        {userRays.rays.eligiblePoints > 0 ? `up to` : ''}{' '}
-        {formatCryptoBalance(new BigNumber(userRays.rays.eligiblePoints))} $RAYS
+        {userRays.rays.allPossiblePoints > 0 ? `up to` : ''}{' '}
+        {formatCryptoBalance(new BigNumber(userRays.rays.allPossiblePoints))} $RAYS
       </Text>
       {pointsEarnedPerYear && (
         <Text
