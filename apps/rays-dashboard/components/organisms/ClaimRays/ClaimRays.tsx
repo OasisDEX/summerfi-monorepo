@@ -57,12 +57,12 @@ export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPagePro
   )
 
   const claimButtonDisabled = useMemo(() => {
-    if (userRays?.rays?.eligiblePoints === 0 || !isViewingOwnWallet) {
+    if (userRays?.rays?.allPossiblePoints === 0 || !isViewingOwnWallet) {
       return true
     }
 
     return undefined
-  }, [isViewingOwnWallet, userRays?.rays?.eligiblePoints])
+  }, [isViewingOwnWallet, userRays?.rays?.allPossiblePoints])
 
   return (
     <>

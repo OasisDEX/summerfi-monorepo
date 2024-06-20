@@ -71,7 +71,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     })
 
   const totalRaysEarned =
-    raysResponse && 'eligiblePoints' in raysResponse ? raysResponse.eligiblePoints : 0
+    raysResponse && 'allPossiblePoints' in raysResponse ? raysResponse.allPossiblePoints : 0
 
   const preparedTokenData =
     response
