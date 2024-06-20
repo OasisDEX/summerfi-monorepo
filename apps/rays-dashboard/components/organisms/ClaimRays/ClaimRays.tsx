@@ -39,9 +39,17 @@ export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPagePro
     [currentPath, push],
   )
 
-  const goToClaimedView = useCallback(() => {
-    push(`${currentPath}/claimed?userAddress=${dynamicWalletAddress}`)
-  }, [currentPath, dynamicWalletAddress, push])
+  const mainCta = useCallback(() => {
+    if (
+      userRays?.rays?.userTypes.includes('SummerFi Power User') ??
+      userRays?.rays?.userTypes.includes('SummerFi User')
+    ) {
+      push(`${currentPath}/claimed?userAddress=${dynamicWalletAddress}`)
+
+      return
+    }
+    push(`${currentPath}/open-position?userAddress=${dynamicWalletAddress}`)
+  }, [currentPath, dynamicWalletAddress, push, userRays])
 
   useEffect(() => {
     // if user is connected and is visiting a page without wallet
@@ -57,12 +65,10 @@ export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPagePro
   )
 
   const claimButtonDisabled = useMemo(() => {
-    if (userRays?.rays?.allPossiblePoints === 0 || !isViewingOwnWallet) {
-      return true
-    }
+    if (!isViewingOwnWallet) return true
 
     return undefined
-  }, [isViewingOwnWallet, userRays?.rays?.allPossiblePoints])
+  }, [isViewingOwnWallet])
 
   return (
     <>
@@ -85,7 +91,7 @@ export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPagePro
           disabled={claimButtonDisabled}
           variant="primaryLarge"
           style={{ marginTop: 'var(--space-l)', marginBottom: 'var(--space-s)' }}
-          onClick={goToClaimedView}
+          onClick={mainCta}
         >
           Claim $RAYS
         </Button>
