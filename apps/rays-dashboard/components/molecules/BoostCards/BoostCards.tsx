@@ -9,13 +9,7 @@ import multiplyIcon from '@/public/img/banners/boost-banner-2.svg'
 import protocolsIcon from '@/public/img/banners/boost-banner-3.svg'
 import migrateIcon from '@/public/img/banners/boost-banner-4.svg'
 
-const getBoostCards = ({
-  push,
-  userAddress,
-}: {
-  push: (url: string) => void
-  userAddress: string
-}) => [
+const getBoostCards = ({ userAddress }: { userAddress: string }) => [
   {
     title: 'Enable automation to your active positions',
     description:
@@ -79,8 +73,7 @@ interface BoostCardsProps {
 }
 
 export const BoostCards: FC<BoostCardsProps> = ({ userAddress }) => {
-  const { push } = useRouter()
-  const boostCards = useMemo(() => getBoostCards({ push, userAddress }), [push, userAddress])
+  const boostCards = useMemo(() => getBoostCards({ userAddress }), [userAddress])
 
   return boostCards.map((item) => (
     <div key={item.title} style={{ marginBottom: 'var(--space-m)' }}>
