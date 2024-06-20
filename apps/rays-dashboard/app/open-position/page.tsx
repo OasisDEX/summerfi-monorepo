@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
 import { ProductPicker } from '@/components/organisms/ProductPicker/ProductPicker'
-import { formatAsShorthandNumbers, formatCryptoBalance } from '@/helpers/formatters'
+import { formatAsShorthandNumbers } from '@/helpers/formatters'
 import { fetchRays } from '@/server-handlers/rays'
 import systemConfigHandler from '@/server-handlers/system-config'
 
