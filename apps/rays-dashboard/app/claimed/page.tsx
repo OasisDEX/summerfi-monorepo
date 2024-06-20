@@ -46,7 +46,9 @@ export default async function ClaimedPage({ searchParams }: ClaimedPageProps) {
           <Text as="p" variant="p1" style={{ color: 'var(--color-neutral-80)' }}>
             Read more about how you can earn extra $RAYS here:
             <Text as="p" variant="p2semi" style={{ display: 'inline', marginLeft: '10px' }}>
-              <Link href={EXTERNAL_LINKS.KB.READ_ABOUT_RAYS}>Read about Rays →</Link>
+              <Link href={EXTERNAL_LINKS.KB.READ_ABOUT_RAYS} target="_blank">
+                Read about Rays →
+              </Link>
             </Text>
           </Text>
         </div>

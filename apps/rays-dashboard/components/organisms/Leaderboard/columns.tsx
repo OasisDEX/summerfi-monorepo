@@ -55,7 +55,13 @@ export const leaderboardColumns = {
     title: 'Summer portfolio',
     cellMapper: (cell: LeaderboardItem) => (
       <Text as="p" variant="p2semi">
-        <Link passHref legacyBehavior prefetch={false} href={`/portfolio/${cell.userAddress}`}>
+        <Link
+          passHref
+          legacyBehavior
+          prefetch={false}
+          href={`/portfolio/${cell.userAddress}`}
+          target="_blank"
+        >
           <ProxyLinkComponent style={{ color: 'var(--color-neutral-80)' }}>
             {cell.details
               ? `${cell.details.activePositions} positions, ${cell.details.activeTriggers} automations `
@@ -114,7 +120,14 @@ export const mapLeaderboardColumns = ({
           }}
         >
           {bannerLabels.map((label) => (
-            <Link key={label} passHref legacyBehavior prefetch={false} href={bannerLink}>
+            <Link
+              key={label}
+              passHref
+              legacyBehavior
+              prefetch={false}
+              href={bannerLink}
+              target="_blank"
+            >
               <ProxyLinkComponent style={{ color: 'var(--color-neutral-80)' }}>
                 <Button variant="neutralSmall">{label}</Button>
               </ProxyLinkComponent>

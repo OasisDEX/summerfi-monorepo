@@ -19,7 +19,9 @@ export const LaunchBanner = () => {
           Protocol Litepaper Release 👉
         </Text>
         <Text as="p" variant="p2semi">
-          <Link href={EXTERNAL_LINKS.KB.READ_ABOUT_RAYS}>Read announcement →</Link>
+          <Link href={EXTERNAL_LINKS.KB.READ_ABOUT_RAYS} target="_blank">
+            Read announcement →
+          </Link>
         </Text>
       </div>
       <CountDown futureTimestamp={futureTimestamp} />

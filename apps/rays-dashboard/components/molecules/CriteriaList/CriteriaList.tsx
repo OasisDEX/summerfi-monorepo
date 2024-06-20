@@ -113,7 +113,9 @@ export const CriteriaList = ({ userRays }: CriteriaListProps) => {
             ))}
           </ul>
           <Text as="p" variant="p3semi">
-            <Link href={EXTERNAL_LINKS.KB.READ_ABOUT_RAYS}>Read about Rays →</Link>
+            <Link href={EXTERNAL_LINKS.KB.READ_ABOUT_RAYS} target="_blank">
+              Read about Rays →
+            </Link>
           </Text>
         </div>
       </Card>

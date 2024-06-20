@@ -30,7 +30,7 @@ export default async function OpenPositionPage() {
         productHub={systemConfig.productHub.table}
       />
       <Text as="p" variant="p1semi" style={{ marginTop: 'var(--space-m)' }}>
-        <Link passHref legacyBehavior prefetch={false} href={INTERNAL_LINKS.earn}>
+        <Link passHref legacyBehavior prefetch={false} href={INTERNAL_LINKS.earn} target="_blank">
           <ProxyLinkComponent>
             → Explore over 50+ positions with major protocols and collateral types supports
           </ProxyLinkComponent>
