@@ -1,4 +1,5 @@
 import { TokenSymbolsList } from '@summerfi/app-ui'
+import { getTranslations } from 'next-intl/server'
 
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
 import { filterFeaturedProducts } from '@/server-handlers/system-config/parsers/filter-featured-products'
@@ -14,11 +15,13 @@ import { ProductHubData } from '@/types/product-hub'
 interface MapNavigationLinkItemParams {
   items: NavigationLinkTypes[]
   productHub: ProductHubData
+  tNav: Awaited<ReturnType<typeof getTranslations<'nav'>>>
 }
 
 export function mapNavigationLinkItem({
   items,
   productHub,
+  tNav,
 }: MapNavigationLinkItemParams): NavigationMenuPanelListItem[] {
   // eslint-disable-next-line consistent-return, array-callback-return
   return items.flatMap((item) => {
@@ -55,6 +58,7 @@ export function mapNavigationLinkItem({
                 items: mapNavigationLinkItem({
                   items: item.nestedLinks.linksListCollection.items,
                   productHub,
+                  tNav,
                 }),
                 ...(item.nestedLinks.link && {
                   link: item.nestedLinks.link,
@@ -74,10 +78,10 @@ export function mapNavigationLinkItem({
 
         switch (item.product.slug) {
           case OmniProductType.Multiply: {
-            return mapFeaturedMultiplyProduct(filteredProducts)
+            return mapFeaturedMultiplyProduct(filteredProducts, tNav)
           }
           case OmniProductType.Earn: {
-            return mapFeaturedEarnProduct(filteredProducts)
+            return mapFeaturedEarnProduct(filteredProducts, tNav)
           }
         }
 
@@ -86,14 +90,14 @@ export function mapNavigationLinkItem({
       case 'NavigationTopProducts': {
         switch (item.product.slug) {
           case OmniProductType.Borrow: {
-            return mapTopBorrowProduct(productHub.table)
+            return mapTopBorrowProduct(productHub.table, tNav)
           }
         }
 
         return [] as NavigationMenuPanelListItem[]
       }
       case 'NavigationTopToken': {
-        return mapTopTokens(item.token, productHub.table)
+        return mapTopTokens(item.token, productHub.table, tNav)
       }
       case 'NavigationSpecialModule': {
         return {

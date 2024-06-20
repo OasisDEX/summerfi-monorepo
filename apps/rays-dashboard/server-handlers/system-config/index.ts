@@ -1,4 +1,5 @@
 import { ProtocolId } from '@summerfi/serverless-shared'
+import { getTranslations } from 'next-intl/server'
 
 import { configFetcher } from '@/server-handlers/system-config/calls/config'
 import { fetchContentfulGraphQL } from '@/server-handlers/system-config/calls/contentful'
@@ -12,6 +13,7 @@ import { ProductHubData } from '@/types/product-hub'
 
 const systemConfigHandler = async () => {
   try {
+    const tNav = await getTranslations({ locale: 'en', namespace: 'nav' })
     const config = await configFetcher()
     const protocols = [
       ...(config.features?.AjnaSafetySwitch ? [] : [lendingProtocolMap[ProtocolId.AJNA]]),
@@ -28,7 +30,7 @@ const systemConfigHandler = async () => {
       configRaysFetcher(),
     ])
 
-    const navigation = parseNavigationResponse({ navigationResponse, productHub })
+    const navigation = parseNavigationResponse({ navigationResponse, productHub, tNav })
 
     return {
       config,
