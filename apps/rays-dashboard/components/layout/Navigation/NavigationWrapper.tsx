@@ -35,7 +35,6 @@ export const NavigationWrapper: FC<NavigationWrapperProps> = ({ panels }) => {
               {
                 label: 'Portfolio',
                 link: `/portfolio/${wallet.accounts[0].address}`,
-                active: true,
               },
             ]
           : undefined

@@ -1,4 +1,5 @@
 'use client'
+import { useEffect, useState } from 'react'
 import classNames from 'classnames'
 import Link from 'next/link'
 
@@ -14,16 +15,21 @@ export function NavigationMenuLink({
   onClick,
   onMouseEnter,
   currentPath,
-  active,
 }: NavigationMenuPanelLinkProps) {
+  // SSR hack
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (!isMounted) {
+    return null
+  }
+  // SSR hack
+
   return (
-    <li
-      className={navigationMenuStyles.navigationMenuLink}
-      onMouseEnter={onMouseEnter}
-      style={{
-        display: active ? 'block' : 'none',
-      }}
-    >
+    <li className={navigationMenuStyles.navigationMenuLink} onMouseEnter={onMouseEnter}>
       {link && (
         <Link passHref legacyBehavior prefetch={false} href={link}>
           <ProxyLinkComponent
