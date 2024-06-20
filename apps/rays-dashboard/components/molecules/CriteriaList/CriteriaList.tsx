@@ -1,4 +1,4 @@
-import { Card, Icon, Text, Tooltip } from '@summerfi/app-ui'
+import { Card, EXTERNAL_LINKS, Icon, Text, Tooltip } from '@summerfi/app-ui'
 import Link from 'next/link'
 
 import { RaysApiResponse } from '@/server-handlers/rays'
@@ -113,7 +113,7 @@ export const CriteriaList = ({ userRays }: CriteriaListProps) => {
             ))}
           </ul>
           <Text as="p" variant="p3semi">
-            <Link href="/">Read about Rays →</Link>
+            <Link href={EXTERNAL_LINKS.KB.READ_ABOUT_RAYS}>Read about Rays →</Link>
           </Text>
         </div>
       </Card>
