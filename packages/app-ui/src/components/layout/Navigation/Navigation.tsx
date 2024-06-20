@@ -18,6 +18,7 @@ interface NavigationProps extends WithNavigationModules {
   links?: NavigationMenuPanelLinkType[]
   panels?: NavigationMenuPanelType[]
   walletConnectionComponent?: React.ReactNode
+  onLogoClick?: () => void
 }
 
 export const Navigation: FC<NavigationProps> = ({
@@ -28,11 +29,12 @@ export const Navigation: FC<NavigationProps> = ({
   currentPath,
   walletConnectionComponent,
   navigationModules,
+  onLogoClick,
 }) => {
   return (
     <div className={navigationStyles.wrapper}>
       <header className={navigationStyles.container}>
-        <NavigationBranding logo={logo} logoSmall={logoSmall} />
+        <NavigationBranding logo={logo} logoSmall={logoSmall} onLogoClick={onLogoClick} />
         <NavigationMenu
           links={links}
           panels={panels}

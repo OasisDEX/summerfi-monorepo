@@ -46,6 +46,9 @@ export const NavigationWrapper: FC<NavigationWrapperProps> = ({
         NavigationModuleSwap,
       }}
       walletConnectionComponent={<WalletButton />}
+      onLogoClick={() => {
+        window.location.href = '/'
+      }}
     />
   )
 }
