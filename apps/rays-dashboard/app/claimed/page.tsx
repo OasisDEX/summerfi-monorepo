@@ -60,7 +60,7 @@ export default async function ClaimedPage({ searchParams }: ClaimedPageProps) {
           marginBottom: 'var(--space-m)',
         }}
       >
-        Add more RAYS
+        Add more $RAYS
       </Text>
       <BoostCards userAddress={userAddress} />
     </div>

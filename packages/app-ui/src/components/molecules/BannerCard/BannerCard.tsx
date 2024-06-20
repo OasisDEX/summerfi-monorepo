@@ -1,9 +1,11 @@
 'use client'
 import { FC, ReactNode } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 import { Button } from '@/components/atoms/Button/Button'
 import { Card } from '@/components/atoms/Card/Card'
+import { ProxyLinkComponent } from '@/components/atoms/ProxyLinkComponent/ProxyLinkComponent'
 import { Text } from '@/components/atoms/Text/Text'
 
 import classNames from '@/components/molecules/BannerCard/BannerCard.module.scss'
@@ -11,8 +13,8 @@ import classNames from '@/components/molecules/BannerCard/BannerCard.module.scss
 interface BannerCardProps {
   title: ReactNode
   description: ReactNode
-  button: {
-    action: () => void
+  link: {
+    href: string
     label: string
   }
   image: {
@@ -22,7 +24,7 @@ interface BannerCardProps {
   footer?: ReactNode
 }
 
-export const BannerCard: FC<BannerCardProps> = ({ title, description, footer, button, image }) => {
+export const BannerCard: FC<BannerCardProps> = ({ title, description, footer, link, image }) => {
   return (
     <Card className={classNames.shadow}>
       <Image src={image.src} alt={image.alt} height={60} style={{ width: 'auto' }} />
@@ -50,9 +52,11 @@ export const BannerCard: FC<BannerCardProps> = ({ title, description, footer, bu
             footer
           )}
         </div>
-        <Button onClick={button.action} variant="neutralSmall">
-          {button.label}
-        </Button>
+        <Link passHref legacyBehavior prefetch={false} href={link.href}>
+          <ProxyLinkComponent style={{ color: 'var(--color-neutral-80)' }}>
+            <Button variant="neutralSmall">{link.label}</Button>
+          </ProxyLinkComponent>
+        </Link>
       </div>
     </Card>
   )

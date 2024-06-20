@@ -2,28 +2,21 @@
 
 import { FC, useMemo } from 'react'
 import { BannerCard, INTERNAL_LINKS, Text } from '@summerfi/app-ui'
-import { useRouter } from 'next/navigation'
 
 import automationIcon from '@/public/img/banners/boost-banner-1.svg'
 import multiplyIcon from '@/public/img/banners/boost-banner-2.svg'
 import protocolsIcon from '@/public/img/banners/boost-banner-3.svg'
 import migrateIcon from '@/public/img/banners/boost-banner-4.svg'
 
-const getBoostCards = ({
-  push,
-  userAddress,
-}: {
-  push: (url: string) => void
-  userAddress: string
-}) => [
+const getBoostCards = ({ userAddress }: { userAddress: string }) => [
   {
     title: 'Enable automation to your active positions',
     description:
       'Automation help protect your positions from unexpected losses, and optimise their performance',
     footer: 'Boost Rays by up to 1.5X',
-    button: {
+    link: {
       label: 'Add automation to your positions',
-      action: () => push(`${INTERNAL_LINKS.portfolio}/${userAddress}`),
+      href: `${INTERNAL_LINKS.portfolio}/${userAddress}`,
     },
     image: {
       src: automationIcon,
@@ -35,9 +28,9 @@ const getBoostCards = ({
     description:
       'Perform a Multiply trade within Summer.fi, or open, close or adjust a Yield Loop position - you will instantly earn up to 20% of your yearly points total instantly. ',
     footer: 'Get instant Rays plus boosts for repeated use',
-    button: {
+    link: {
       label: 'Start Trading now',
-      action: () => push(`${INTERNAL_LINKS.earn}/?category=yield-loops`),
+      href: `${INTERNAL_LINKS.portfolio}/${userAddress}`,
     },
     image: {
       src: multiplyIcon,
@@ -49,9 +42,9 @@ const getBoostCards = ({
     description:
       'Earn up to 3X the Rays for each open position when you’re using 5 or more Protocols. ',
     footer: 'Boost the Rays on ALL your open positions',
-    button: {
+    link: {
       label: 'Explore other protocols',
-      action: () => push(INTERNAL_LINKS.multiply),
+      href: `${INTERNAL_LINKS.portfolio}/${userAddress}`,
     },
     image: {
       src: protocolsIcon,
@@ -63,9 +56,9 @@ const getBoostCards = ({
     description:
       'If you have supported DeFi positions managed through other interfaces, import them into Summer.fi using our migration tool ',
     footer: 'Earn 20% of the years points instantly',
-    button: {
+    link: {
       label: 'Migrate existing position',
-      action: () => push(`${INTERNAL_LINKS.portfolio}/${userAddress}`),
+      href: `${INTERNAL_LINKS.portfolio}/${userAddress}`,
     },
     image: {
       src: migrateIcon,
@@ -79,8 +72,7 @@ interface BoostCardsProps {
 }
 
 export const BoostCards: FC<BoostCardsProps> = ({ userAddress }) => {
-  const { push } = useRouter()
-  const boostCards = useMemo(() => getBoostCards({ push, userAddress }), [push, userAddress])
+  const boostCards = useMemo(() => getBoostCards({ userAddress }), [userAddress])
 
   return boostCards.map((item) => (
     <div key={item.title} style={{ marginBottom: 'var(--space-m)' }}>
@@ -92,7 +84,7 @@ export const BoostCards: FC<BoostCardsProps> = ({ userAddress }) => {
             {item.footer}
           </Text>
         }
-        button={item.button}
+        link={item.link}
         image={item.image}
       />
     </div>
