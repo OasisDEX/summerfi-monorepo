@@ -2,6 +2,7 @@
 
 import { FC } from 'react'
 import { LoadingSpinner, Navigation, NavigationMenuPanelType } from '@summerfi/app-ui'
+import { useConnectWallet } from '@web3-onboard/react'
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 
@@ -19,11 +20,9 @@ interface NavigationWrapperProps {
 const NavigationModuleBridge = () => <LoadingSpinner />
 const NavigationModuleSwap = () => <LoadingSpinner />
 
-export const NavigationWrapper: FC<NavigationWrapperProps> = ({
-  panels,
-  connectedWalletAddress,
-}) => {
+export const NavigationWrapper: FC<NavigationWrapperProps> = ({ panels }) => {
   const currentPath = usePathname()
+  const [{ wallet }] = useConnectWallet()
 
   return (
     <Navigation
@@ -31,11 +30,11 @@ export const NavigationWrapper: FC<NavigationWrapperProps> = ({
       logo="/rays/img/branding/logo-dark.svg"
       logoSmall="/rays/img/branding/dot-dark.svg"
       links={
-        connectedWalletAddress
+        wallet?.accounts[0].address
           ? [
               {
                 label: 'Portfolio',
-                link: `/portfolio/${connectedWalletAddress}`,
+                link: `/portfolio/${wallet.accounts[0].address}`,
               },
             ]
           : undefined
