@@ -21,9 +21,9 @@ const getBoostCards = ({
     description:
       'Automation help protect your positions from unexpected losses, and optimise their performance',
     footer: 'Boost Rays by up to 1.5X',
-    button: {
+    link: {
       label: 'Add automation to your positions',
-      action: () => push(`${INTERNAL_LINKS.portfolio}/${userAddress}`),
+      href: `${INTERNAL_LINKS.portfolio}/${userAddress}`,
     },
     image: {
       src: automationIcon,
@@ -35,9 +35,9 @@ const getBoostCards = ({
     description:
       'Perform a Multiply trade within Summer.fi, or open, close or adjust a Yield Loop position - you will instantly earn up to 20% of your yearly points total instantly. ',
     footer: 'Get instant Rays plus boosts for repeated use',
-    button: {
+    link: {
       label: 'Start Trading now',
-      action: () => push(`${INTERNAL_LINKS.earn}/?category=yield-loops`),
+      href: `${INTERNAL_LINKS.portfolio}/${userAddress}`,
     },
     image: {
       src: multiplyIcon,
@@ -49,9 +49,9 @@ const getBoostCards = ({
     description:
       'Earn up to 3X the Rays for each open position when you’re using 5 or more Protocols. ',
     footer: 'Boost the Rays on ALL your open positions',
-    button: {
+    link: {
       label: 'Explore other protocols',
-      action: () => push(INTERNAL_LINKS.multiply),
+      href: `${INTERNAL_LINKS.portfolio}/${userAddress}`,
     },
     image: {
       src: protocolsIcon,
@@ -63,9 +63,9 @@ const getBoostCards = ({
     description:
       'If you have supported DeFi positions managed through other interfaces, import them into Summer.fi using our migration tool ',
     footer: 'Earn 20% of the years points instantly',
-    button: {
+    link: {
       label: 'Migrate existing position',
-      action: () => push(`${INTERNAL_LINKS.portfolio}/${userAddress}`),
+      href: `${INTERNAL_LINKS.portfolio}/${userAddress}`,
     },
     image: {
       src: migrateIcon,
@@ -92,7 +92,7 @@ export const BoostCards: FC<BoostCardsProps> = ({ userAddress }) => {
             {item.footer}
           </Text>
         }
-        button={item.button}
+        link={item.link}
         image={item.image}
       />
     </div>
