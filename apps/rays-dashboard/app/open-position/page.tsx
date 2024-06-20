@@ -5,7 +5,7 @@ import { ProductPicker } from '@/components/organisms/ProductPicker/ProductPicke
 import systemConfigHandler from '@/server-handlers/system-config'
 
 export default async function OpenPositionPage() {
-  const futureTimestamp = '2024-12-25T00:00:00'
+  const futureTimestamp = '2024-06-27T00:00:00'
   const systemConfig = await systemConfigHandler()
 
   return (

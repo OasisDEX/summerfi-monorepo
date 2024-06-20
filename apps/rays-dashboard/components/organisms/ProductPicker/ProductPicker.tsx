@@ -101,7 +101,8 @@ export const ProductPicker: FC<ProductPickerProps> = ({ products, productHub }) 
             network={network}
             btn={{
               link: item.link,
-              label: 'Earn xxx Rays for every Automation you add',
+              label:
+                'Earn at least 690 $RAYS for every 10k of value deposited above 10k and boost with added features',
             }}
           />
         ))}

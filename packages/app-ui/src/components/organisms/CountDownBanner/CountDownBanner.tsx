@@ -21,7 +21,7 @@ export const CountDownBanner: FC<CountDownBannerProps> = ({ futureTimestamp }) =
       <div className={classNames.infoWrapper}>
         <Icon iconName="rays" size={32} />
         <Text as="p" variant="p2semi" style={{ maxWidth: '70%' }}>
-          Boost your RAYS 3x when you open a position
+          Boost your RAYS 5x when you open a position
         </Text>
       </div>
       <CountDown futureTimestamp={futureTimestamp} variant="countDownSmallGaps" />
