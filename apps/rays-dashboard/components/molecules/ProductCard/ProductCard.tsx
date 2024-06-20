@@ -5,6 +5,7 @@ import {
   Button,
   Card,
   ProtocolLabel,
+  ProxyLinkComponent,
   Text,
   TokensGroup,
   TokenSymbolsList,
@@ -107,10 +108,12 @@ export const ProductCard: FC<ProductCardProps> = ({
             ))}
           </div>
         </div>
-        <Link href={btn.link} className={classNames.link} target="_blank">
-          <Button variant="colorful">
-            <span>{btn.label}</span>
-          </Button>
+        <Link passHref legacyBehavior prefetch={false} href={btn.link} className={classNames.link}>
+          <ProxyLinkComponent target="_blank">
+            <Button variant="colorful">
+              <span>{btn.label}</span>
+            </Button>
+          </ProxyLinkComponent>
         </Link>
       </div>
     </Card>

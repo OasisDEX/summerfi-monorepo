@@ -1,4 +1,4 @@
-import { forwardRef } from 'react'
+import { forwardRef, HTMLAttributeAnchorTarget } from 'react'
 
 /**
  * A component that renders a proxy link - removes /rays from the href (WATCH OUT)
@@ -19,6 +19,7 @@ export const ProxyLinkComponent = forwardRef(
       style,
       className,
       suppressHydrationWarning,
+      target,
     }: {
       onClick?: (params: unknown) => void
       href?: string
@@ -26,9 +27,17 @@ export const ProxyLinkComponent = forwardRef(
       style?: React.CSSProperties
       className?: string
       suppressHydrationWarning?: boolean
+      target?: HTMLAttributeAnchorTarget
     },
     ref: React.Ref<HTMLAnchorElement>,
   ) => {
+    if (href && href.includes('rays/earn')) {
+      console.log('WTF', {
+        replace: href.startsWith('/rays') ? href.slice(5) : href,
+        href,
+      })
+    }
+
     return (
       <a
         suppressHydrationWarning={suppressHydrationWarning}
@@ -36,6 +45,7 @@ export const ProxyLinkComponent = forwardRef(
         href={href?.startsWith('/rays') ? href.slice(5) : href}
         className={className}
         ref={ref}
+        target={target}
       >
         {children}
       </a>

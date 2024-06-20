@@ -52,8 +52,8 @@ export const BannerCard: FC<BannerCardProps> = ({ title, description, footer, li
             footer
           )}
         </div>
-        <Link passHref legacyBehavior prefetch={false} href={link.href} target="_blank">
-          <ProxyLinkComponent style={{ color: 'var(--color-neutral-80)' }}>
+        <Link passHref legacyBehavior prefetch={false} href={link.href}>
+          <ProxyLinkComponent style={{ color: 'var(--color-neutral-80)' }} target="_blank">
             <Button variant="neutralSmall">{link.label}</Button>
           </ProxyLinkComponent>
         </Link>
