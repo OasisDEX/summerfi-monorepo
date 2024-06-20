@@ -2,7 +2,6 @@
 
 import { FC, useMemo } from 'react'
 import { BannerCard, INTERNAL_LINKS, Text } from '@summerfi/app-ui'
-import { useRouter } from 'next/navigation'
 
 import automationIcon from '@/public/img/banners/boost-banner-1.svg'
 import multiplyIcon from '@/public/img/banners/boost-banner-2.svg'
