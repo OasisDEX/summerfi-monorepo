@@ -83,17 +83,6 @@ export const getAaveLikeViewStrategyUrl = ({
     }/${resolvedType.toLocaleLowerCase()}/${collateral.toLocaleUpperCase()}-${debt.toLocaleUpperCase()}`
   }
 
-  console.log('getAaveLikeViewStrategyUrl: no url found for', {
-    aaveLikeProduct,
-    bypassFeatureFlag,
-    version,
-    product,
-    protocol,
-    primaryToken,
-    secondaryToken,
-    network,
-  })
-
   return !search?.urlSlug || !bypassFeatureFlag
     ? '/'
     : `/${network}/old/${aaveLikeProduct}/${version}/${search.type.toLocaleLowerCase()}/${
@@ -192,19 +181,6 @@ export function getGenericPositionUrl({
         aaveLikeProduct: 'spark',
       })
   }
-  console.log('getGenericPositionUrl: no url found for', {
-    bypassFeatureFlag,
-    networkId,
-    earnStrategy,
-    label,
-    network,
-    primaryToken,
-    primaryTokenAddress,
-    product,
-    protocol,
-    secondaryToken,
-    secondaryTokenAddress,
-  })
 
   return '/'
 }
