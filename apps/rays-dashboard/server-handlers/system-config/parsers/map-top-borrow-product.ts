@@ -1,8 +1,11 @@
 import { TokenSymbolsList } from '@summerfi/app-ui'
 import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash'
+import { getTranslations } from 'next-intl/server'
 
 import { networksByName } from '@/constants/networks-list-ssr'
+import { formatDecimalAsPercent } from '@/helpers/formatters'
+import { getGenericPositionUrl } from '@/helpers/get-generic-position-url'
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
 import { NavigationMenuPanelListItem } from '@/types/navigation'
 import { OmniProductType } from '@/types/omni-kit'
@@ -10,7 +13,10 @@ import { ProductHubItem } from '@/types/product-hub'
 
 const zero = new BigNumber(0)
 
-export function mapTopBorrowProduct(rows: ProductHubItem[]): NavigationMenuPanelListItem[] {
+export function mapTopBorrowProduct(
+  rows: ProductHubItem[],
+  tNav: Awaited<ReturnType<typeof getTranslations<'nav'>>>,
+): NavigationMenuPanelListItem[] {
   const borrowRows = rows
     .filter(({ product }) => product.includes(OmniProductType.Borrow))
     .filter(({ liquidity }) => new BigNumber(liquidity ?? 0).gt(zero))
@@ -28,8 +34,10 @@ export function mapTopBorrowProduct(rows: ProductHubItem[]): NavigationMenuPanel
 
   return [
     {
-      title: 'nav.borrow-up-to-ltv', // TODO: this is just a workaround to get this function to work start
-      description: 'nav.discover-the-highest-ltv', // TODO: this is just a workaround to get this function to work start
+      title: tNav('borrow-up-to-ltv', {
+        maxLtv: formatDecimalAsPercent(new BigNumber(topLtv.maxLtv ?? 0)),
+      }), // TODO: this is just a workaround to get this function to work start
+      description: tNav('discover-the-highest-ltv'), // TODO: this is just a workaround to get this function to work start
       icon: {
         tokens: [topLtv.primaryToken, topLtv.secondaryToken] as TokenSymbolsList[],
         position: 'global',
@@ -41,11 +49,17 @@ export function mapTopBorrowProduct(rows: ProductHubItem[]): NavigationMenuPanel
         ],
         [capitalize(topLtv.network), networksByName[topLtv.network].name],
       ],
-      url: '/', // TODO: this is just a workaround to get this function to work start
+      url: getGenericPositionUrl({
+        ...topLtv,
+        product: [OmniProductType.Borrow],
+      }),
     },
     {
-      title: 'nav.borrow-lowest-fee', // TODO: this is just a workaround to get this function to work start
-      description: 'nav.find-the-lowest-rates', // TODO: this is just a workaround to get this function to work start
+      title: tNav('borrow-lowest-fee', {
+        token: topFee.primaryToken,
+        fee: formatDecimalAsPercent(new BigNumber(topFee.fee ?? 0)),
+      }), // TODO: this is just a workaround to get this function to work start
+      description: tNav('find-the-lowest-rates'), // TODO: this is just a workaround to get this function to work start
       icon: {
         position: 'global',
         tokens: [topFee.primaryToken, topFee.secondaryToken] as TokenSymbolsList[],
@@ -57,11 +71,14 @@ export function mapTopBorrowProduct(rows: ProductHubItem[]): NavigationMenuPanel
         ],
         [capitalize(topFee.network), networksByName[topFee.network].name],
       ],
-      url: '/', // TODO: this is just a workaround to get this function to work start
+      url: getGenericPositionUrl({
+        ...topFee,
+        product: [OmniProductType.Borrow],
+      }),
     },
     {
-      title: 'nav.earn-rewards-while-borrowing', // TODO: this is just a workaround to get this function to work start
-      description: 'nav.get-paid-to-borrow', // TODO: this is just a workaround to get this function to work start
+      title: tNav('earn-rewards-while-borrowing'), // TODO: this is just a workaround to get this function to work start
+      description: tNav('get-paid-to-borrow'), // TODO: this is just a workaround to get this function to work start
       icon: {
         position: 'global',
         tokens: [topRewards.primaryToken, topRewards.secondaryToken] as TokenSymbolsList[],
@@ -73,7 +90,10 @@ export function mapTopBorrowProduct(rows: ProductHubItem[]): NavigationMenuPanel
         ],
         [capitalize(topRewards.network), networksByName[topRewards.network].name],
       ],
-      url: '/', // TODO: this is just a workaround to get this function to work start
+      url: getGenericPositionUrl({
+        ...topRewards,
+        product: [OmniProductType.Borrow],
+      }),
     },
   ]
 }

@@ -1,5 +1,7 @@
 import { GlobalStyles } from '@summerfi/app-ui'
 import type { Metadata } from 'next'
+import { NextIntlClientProvider } from 'next-intl'
+import { getLocale, getMessages } from 'next-intl/server'
 
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
 import { fontFtPolar, fontInter } from '@/helpers/fonts'
@@ -9,14 +11,20 @@ export const metadata: Metadata = {
   description: 'Something cool is coming. The future is bright. The future is sunny.',
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = await getLocale()
+
+  const messages = await getMessages()
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <head>
         <GlobalStyles />
       </head>
       <body className={`${fontFtPolar.variable} ${fontInter.variable}`}>
-        <MasterPage>{children}</MasterPage>
+        <NextIntlClientProvider messages={messages}>
+          <MasterPage>{children}</MasterPage>
+        </NextIntlClientProvider>
       </body>
     </html>
   )

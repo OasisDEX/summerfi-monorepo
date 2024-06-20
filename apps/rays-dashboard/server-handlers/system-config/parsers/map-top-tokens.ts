@@ -1,13 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { INTERNAL_LINKS } from '@summerfi/app-ui'
 import BigNumber from 'bignumber.js'
+import { getTranslations } from 'next-intl/server'
 
+import { formatDecimalAsPercent } from '@/helpers/formatters'
 import { NavigationMenuPanelListItem } from '@/types/navigation'
 import { ProductHubItem } from '@/types/product-hub'
 
 const zero = new BigNumber(0)
 
-export function mapTopTokens(token: string, rows: ProductHubItem[]): NavigationMenuPanelListItem[] {
+export function mapTopTokens(
+  token: string,
+  rows: ProductHubItem[],
+  tNav: Awaited<ReturnType<typeof getTranslations<'nav'>>>,
+): NavigationMenuPanelListItem[] {
   const tokenRows = rows.filter(
     ({ primaryToken }) => primaryToken.toUpperCase() === token.toUpperCase(),
   )
@@ -44,22 +50,33 @@ export function mapTopTokens(token: string, rows: ProductHubItem[]): NavigationM
     ...(topApyActive || topApyPassive
       ? [
           {
-            title: 'nav.earn', // TODO: this is just a workaround to get this function to work start
+            title: tNav('earn'), // TODO: this is just a workaround to get this function to work start
             url: `${INTERNAL_LINKS.earn}?deposit-token=${token}`,
-            description:
-              topApyActive && topApyPassive // TODO: this is just a workaround to get this function to work start
-                ? 'nav.tokens-earn'
+            description: tNav.rich(
+              topApyActive && topApyPassive
+                ? 'tokens-earn'
                 : topApyActive
-                  ? 'nav.tokens-earn-active'
-                  : 'nav.tokens-earn-passive',
+                  ? 'tokens-earn-active'
+                  : 'tokens-earn-passive',
+              {
+                token,
+                apyActive: formatDecimalAsPercent(new BigNumber(topApyActive?.weeklyNetApy ?? 0)),
+                apyPassive: formatDecimalAsPercent(new BigNumber(topApyPassive?.weeklyNetApy ?? 0)),
+                em: (chunks) => `<em>${chunks}</em>`,
+              },
+            ),
           },
         ]
       : []),
     ...(topMultiple
       ? [
           {
-            title: 'nav.multiply', // TODO: this is just a workaround to get this function to work start
-            description: 'nav.tokens-multiply', // TODO: this is just a workaround to get this function to work start
+            title: tNav('multiply'), // TODO: this is just a workaround to get this function to work start
+            description: tNav.rich('tokens-multiply', {
+              token,
+              maxMultiple: new BigNumber(topMultiple.maxMultiply ?? 0).toFixed(2),
+              em: (chunks) => `<em>${chunks}</em>`,
+            }), // TODO: this is just a workaround to get this function to work start
             url: `${INTERNAL_LINKS.multiply}?collateral-token=${token}`,
           },
         ]
@@ -67,8 +84,12 @@ export function mapTopTokens(token: string, rows: ProductHubItem[]): NavigationM
     ...(topFee
       ? [
           {
-            title: 'nav.borrow', // TODO: this is just a workaround to get this function to work start
-            description: 'nav.tokens-borrow', // TODO: this is just a workaround to get this function to work start
+            title: tNav('borrow'), // TODO: this is just a workaround to get this function to work start
+            description: tNav.rich('tokens-borrow', {
+              token,
+              fee: formatDecimalAsPercent(new BigNumber(topFee.fee ?? 0)),
+              em: (chunks) => `<em>${chunks}</em>`,
+            }), // TODO: this is just a workaround to get this function to work start
             url: `${INTERNAL_LINKS.borrow}?collateral-token=${token}`,
           },
         ]
