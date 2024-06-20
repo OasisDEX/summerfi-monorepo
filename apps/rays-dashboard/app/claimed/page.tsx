@@ -40,7 +40,7 @@ export default async function ClaimedPage({ searchParams }: ClaimedPageProps) {
             {userRays.rays.eligiblePoints.toFixed(0)} $RAYS
           </Text>
           <Text as="p" variant="p1" style={{ color: 'var(--color-neutral-80)' }}>
-            Something about points and token launch here. Remod user why they want points
+            Something about points and Protocol Litepaper here. Remod user why they want points
           </Text>
         </div>
       )}

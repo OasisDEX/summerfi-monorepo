@@ -23,7 +23,7 @@ export { BannerCard } from './components/molecules/BannerCard/BannerCard'
 export { Dial } from './components/molecules/Dial/Dial'
 export { Table } from './components/molecules/Table/Table'
 
-export { TokenLaunchBanner } from './components/organisms/TokenLaunchBanner/TokenLaunchBanner'
+export { LaunchBanner } from './components/organisms/LaunchBanner/LaunchBanner'
 export { CountDownBanner } from './components/organisms/CountDownBanner/CountDownBanner'
 
 export { Footer } from './components/layout/Footer/Footer'

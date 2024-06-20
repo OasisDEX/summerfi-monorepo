@@ -3,11 +3,10 @@ import Link from 'next/link'
 import { Text } from '@/components/atoms/Text/Text'
 import { CountDown } from '@/components/organisms/CountDown/CountDown'
 
-import classNames from '@/components/organisms/TokenLaunchBanner/TokensLaunchBanner.module.scss'
+import classNames from '@/components/organisms/LaunchBanner/LaunchBanner.module.scss'
 
-export const TokenLaunchBanner = () => {
-  // TODO update once date will be known
-  const futureTimestamp = '2024-12-25T00:00:00'
+export const LaunchBanner = () => {
+  const futureTimestamp = '2024-07-24T16:00:00-02:00'
 
   return (
     <div className={classNames.wrapper}>
@@ -16,7 +15,7 @@ export const TokenLaunchBanner = () => {
           DeFi is about to get a lot easier
         </Text>
         <Text as="h5" variant="h5">
-          Summer.fi Token launch 👉
+          Protocol Litepaper Release 👉
         </Text>
         <Text as="p" variant="p2semi">
           <Link href="/">Read announcement →</Link>
