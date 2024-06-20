@@ -50,6 +50,7 @@ export type NavigationMenuPanelLinkType = (
 export type NavigationMenuPanelLinkProps = NavigationMenuPanelLinkType & {
   currentPath: string
   onMouseEnter(): void
+  active: boolean
 }
 export interface NavigationMenuPanelAsset {
   token: string

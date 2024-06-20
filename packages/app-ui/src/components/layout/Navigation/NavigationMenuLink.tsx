@@ -1,3 +1,4 @@
+'use client'
 import classNames from 'classnames'
 import Link from 'next/link'
 
@@ -13,9 +14,16 @@ export function NavigationMenuLink({
   onClick,
   onMouseEnter,
   currentPath,
+  active,
 }: NavigationMenuPanelLinkProps) {
   return (
-    <li className={navigationMenuStyles.navigationMenuLink} onMouseEnter={onMouseEnter}>
+    <li
+      className={navigationMenuStyles.navigationMenuLink}
+      onMouseEnter={onMouseEnter}
+      style={{
+        display: active ? 'block' : 'none',
+      }}
+    >
       {link && (
         <Link passHref legacyBehavior prefetch={false} href={link}>
           <ProxyLinkComponent
