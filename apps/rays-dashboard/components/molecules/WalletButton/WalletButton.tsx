@@ -189,8 +189,8 @@ export default () => {
           <Text variant="p1semi" style={{ margin: '20px 0' }}>
             Slippage settings
           </Text>
-          <Text variant="p3" style={{ margin: '10px 0' }}>
-            Slippage settings here :)
+          <Text variant="p3" style={{ margin: '0 0 10px 0' }}>
+            If you want to change the slippage settings please go to the home page.
           </Text>
           <Divider
             style={{
