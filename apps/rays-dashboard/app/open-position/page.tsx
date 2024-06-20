@@ -1,12 +1,24 @@
-import { CountDownBanner, INTERNAL_LINKS, ProxyLinkComponent, Text } from '@summerfi/app-ui'
+import { CountDownBanner, Dial, INTERNAL_LINKS, ProxyLinkComponent, Text } from '@summerfi/app-ui'
+import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
 import { ProductPicker } from '@/components/organisms/ProductPicker/ProductPicker'
+import { formatAsShorthandNumbers, formatCryptoBalance } from '@/helpers/formatters'
+import { fetchRays } from '@/server-handlers/rays'
 import systemConfigHandler from '@/server-handlers/system-config'
 
-export default async function OpenPositionPage() {
+interface OpenPositionPageProps {
+  searchParams: {
+    userAddress: string
+  }
+}
+
+export default async function OpenPositionPage({ searchParams }: OpenPositionPageProps) {
   const futureTimestamp = '2024-06-27T00:00:00'
   const systemConfig = await systemConfigHandler()
+  const { userAddress } = searchParams
+
+  const userRays = await fetchRays({ address: userAddress })
 
   return (
     <div
@@ -17,6 +29,21 @@ export default async function OpenPositionPage() {
         marginBottom: 'var(--space-xxl)',
       }}
     >
+      {!!userRays.rays?.allPossiblePoints && (
+        <Dial
+          value={0}
+          max={userRays.rays.allPossiblePoints * 5}
+          formatter={(value) => {
+            if (value >= 10000) {
+              return formatAsShorthandNumbers(new BigNumber(value.toFixed(0)), 0)
+            }
+
+            return value.toFixed(0)
+          }}
+          subtext="Elligible"
+          icon="rays"
+        />
+      )}
       <Text
         as="h2"
         variant="h2"

@@ -14,7 +14,7 @@ interface ClaimedPageProps {
 export default async function ClaimedPage({ searchParams }: ClaimedPageProps) {
   const { userAddress } = searchParams
 
-  const userRays = await fetchRays({ address: searchParams.userAddress })
+  const userRays = await fetchRays({ address: userAddress })
 
   return (
     <div

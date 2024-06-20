@@ -17,9 +17,18 @@ interface DialProps {
   trackWidth?: 1 | 2 | 3 | 4
   icon?: IconNamesList
   iconSize?: number
+  formatter?: (value: number) => string
 }
 
-export const Dial: FC<DialProps> = ({ value, max, trackWidth = 2, subtext, icon, iconSize }) => {
+export const Dial: FC<DialProps> = ({
+  value,
+  formatter,
+  max,
+  trackWidth = 2,
+  subtext,
+  icon,
+  iconSize,
+}) => {
   const normalizedValue = Math.min(Math.max(value, 0), max)
   const progress = (normalizedValue / max) * 100
   const strokeDasharray = `${progress} ${100 - progress}`
@@ -77,7 +86,7 @@ export const Dial: FC<DialProps> = ({ value, max, trackWidth = 2, subtext, icon,
       <div className={dialStyles.value}>
         {icon && <Icon iconName={icon} size={iconSize} />}
         <Text as="h3" variant="h3">
-          {value} / {max}
+          {formatter ? formatter(value) : value} / {formatter ? formatter(max) : max}
         </Text>
         {typeof subtext === 'string' ? (
           <Text as="p" variant="p1semi" style={{ color: 'var(--color-neutral-80' }}>
