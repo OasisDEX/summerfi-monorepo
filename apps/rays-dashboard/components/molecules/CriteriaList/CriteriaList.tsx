@@ -1,4 +1,4 @@
-import { Card, Icon, Text, Tooltip } from '@summerfi/app-ui'
+import { Card, EXTERNAL_LINKS, Icon, Text, Tooltip } from '@summerfi/app-ui'
 import Link from 'next/link'
 
 import { RaysApiResponse } from '@/server-handlers/rays'
@@ -22,9 +22,9 @@ const getCriteriaItems = ({ userTypes }: { userTypes?: RaysApiResponse['userType
   {
     title: 'Active Ethereum wallet',
     tooltip: {
-      title: 'A currently active position in...',
+      title: 'Active Ethereum wallet',
       description:
-        'Maker, Aave, Compound, Morpho, Liquidity, Euler, Reflexer Finance, Spark, Frax, Pendle, Yearn, Aevo',
+        'Have a non-custodial wallet with at least 0.2 ETH on Mainnet, ARB, OP or Base and at least 5 transactions',
     },
     post: '$',
     done: !!userTypes?.includes('General Ethereum User'),
@@ -32,9 +32,8 @@ const getCriteriaItems = ({ userTypes }: { userTypes?: RaysApiResponse['userType
   {
     title: 'Active DeFi user',
     tooltip: {
-      title: 'A currently active position in...',
-      description:
-        'Maker, Aave, Compound, Morpho, Liquidity, Euler, Reflexer Finance, Spark, Frax, Pendle, Yearn, Aevo',
+      title: 'Active DeFi user',
+      description: 'Currently active position on June 18th on a supported protocol and network',
     },
     post: '$$',
     done: !!userTypes?.includes('DeFi User'),
@@ -42,9 +41,8 @@ const getCriteriaItems = ({ userTypes }: { userTypes?: RaysApiResponse['userType
   {
     title: 'Summer.fi user',
     tooltip: {
-      title: 'A currently active position in...',
-      description:
-        'Maker, Aave, Compound, Morpho, Liquidity, Euler, Reflexer Finance, Spark, Frax, Pendle, Yearn, Aevo',
+      title: 'Summer.fi user',
+      description: 'Performed a transaction on Summer.fi since June 2021',
     },
     post: '$$$',
     done: !!userTypes?.includes('SummerFi User'),
@@ -52,9 +50,9 @@ const getCriteriaItems = ({ userTypes }: { userTypes?: RaysApiResponse['userType
   {
     title: 'Summer.fi power user',
     tooltip: {
-      title: 'A currently active position in...',
+      title: 'Summer.fi power user',
       description:
-        'Maker, Aave, Compound, Morpho, Liquidity, Euler, Reflexer Finance, Spark, Frax, Pendle, Yearn, Aevo',
+        'Performed a Multiply or Yield Loop Transaction, used migrate or refinance, or enabled automation',
     },
     post: '$$$$',
     done: !!userTypes?.includes('SummerFi Power User'),
@@ -115,7 +113,7 @@ export const CriteriaList = ({ userRays }: CriteriaListProps) => {
             ))}
           </ul>
           <Text as="p" variant="p3semi">
-            <Link href="/">Read about Rays →</Link>
+            <Link href={EXTERNAL_LINKS.KB.READ_ABOUT_RAYS}>Read about Rays →</Link>
           </Text>
         </div>
       </Card>

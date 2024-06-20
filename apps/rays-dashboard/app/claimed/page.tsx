@@ -1,5 +1,6 @@
-import { formatAddress, Text } from '@summerfi/app-ui'
+import { EXTERNAL_LINKS, formatAddress, Text } from '@summerfi/app-ui'
 import Image from 'next/image'
+import Link from 'next/link'
 
 import { BoostCards } from '@/components/molecules/BoostCards/BoostCards'
 import { fetchRays } from '@/server-handlers/rays'
@@ -40,7 +41,13 @@ export default async function ClaimedPage({ searchParams }: ClaimedPageProps) {
             {userRays.rays.eligiblePoints.toFixed(0)} $RAYS
           </Text>
           <Text as="p" variant="p1" style={{ color: 'var(--color-neutral-80)' }}>
-            Something about points and Protocol Litepaper here. Remod user why they want points
+            You can now earn additional $RAYS by using Summer.fi and it&apos;s features.
+          </Text>
+          <Text as="p" variant="p1" style={{ color: 'var(--color-neutral-80)' }}>
+            Read more about how you can earn extra $RAYS here:
+            <Text as="p" variant="p2semi" style={{ display: 'inline', marginLeft: '10px' }}>
+              <Link href={EXTERNAL_LINKS.KB.READ_ABOUT_RAYS}>Read about Rays →</Link>
+            </Text>
           </Text>
         </div>
       )}
