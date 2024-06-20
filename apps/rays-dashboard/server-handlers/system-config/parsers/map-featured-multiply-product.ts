@@ -1,18 +1,30 @@
 import { NavigationMenuPanelIcon, TokenSymbolsList } from '@summerfi/app-ui'
+import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash'
+import { getTranslations } from 'next-intl/server'
 
 import { networksByName } from '@/constants/networks-list-ssr'
+import { zero } from '@/helpers/formatters'
+import { getGenericPositionUrl } from '@/helpers/get-generic-position-url'
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
 import { NavigationMenuPanelListItem } from '@/types/navigation'
+import { OmniProductType } from '@/types/omni-kit'
 import { ProductHubItem } from '@/types/product-hub'
 
-export function mapFeaturedMultiplyProduct(items: ProductHubItem[]): NavigationMenuPanelListItem[] {
+export function mapFeaturedMultiplyProduct(
+  items: ProductHubItem[],
+  tNav: Awaited<ReturnType<typeof getTranslations<'nav'>>>,
+): NavigationMenuPanelListItem[] {
   return items.map((item) => {
     const { maxMultiply, network, primaryToken, protocol, secondaryToken } = item
 
     // TODO: this is just a workaround to get this function to work start
-    const title = maxMultiply ? 'nav.multiply-get-up-to' : 'nav.multiply-exposure'
-    const description = 'nav.increase-your-exposure-against'
+    const title = tNav(maxMultiply ? 'multiply-get-up-to' : 'multiply-exposure', {
+      maxMultiply: new BigNumber(maxMultiply ?? zero).toFixed(2),
+      collateralToken: primaryToken,
+      debtToken: secondaryToken,
+    })
+    const description = tNav('increase-your-exposure-against', { token: secondaryToken })
     // TODO: this is just a workaround to get this function to work end
 
     return {
@@ -29,7 +41,10 @@ export function mapFeaturedMultiplyProduct(items: ProductHubItem[]): NavigationM
         ],
         [capitalize(network), networksByName[network].name],
       ],
-      url: '/', // TODO: this is just a workaround to get this function to work
+      url: getGenericPositionUrl({
+        ...item,
+        product: [OmniProductType.Earn],
+      }),
     }
   })
 }

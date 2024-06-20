@@ -10,6 +10,13 @@ export const thousand = new BigNumber('1000')
 export const million = new BigNumber('1000000')
 export const billion = new BigNumber('1000000000')
 
+interface FormatPercentOptions {
+  precision?: number
+  plus?: boolean
+  noPercentSign?: boolean
+  roundMode?: BigNumber.RoundingMode
+}
+
 // text formatters
 export function formatAddress(address: string, first: number = 4, last: number = 5) {
   return `${address.slice(0, first)}...${address.slice(-last)}`
@@ -70,4 +77,35 @@ export function formatCryptoBalance(amount: BigNumber): string {
   if (absAmount.lt(million)) return amount.toFormat(2, BigNumber.ROUND_DOWN)
 
   return formatAsShorthandNumbers(amount, 2)
+}
+
+export function formatPercent(
+  number: BigNumber,
+  {
+    precision = 0,
+    plus = false,
+    roundMode = undefined,
+    noPercentSign = false,
+  }: FormatPercentOptions = {},
+) {
+  const sign = plus && number.isGreaterThan(0) ? '+' : ''
+
+  return `${sign}${number.toFixed(precision, roundMode)}${noPercentSign ? '' : '%'}`
+}
+
+export function formatDecimalAsPercent(
+  number: BigNumber,
+  {
+    precision = 2,
+    plus = false,
+    roundMode = BigNumber.ROUND_DOWN,
+    noPercentSign = false,
+  }: FormatPercentOptions = {},
+) {
+  return formatPercent(number.times(100), {
+    precision,
+    plus,
+    roundMode,
+    noPercentSign,
+  })
 }
