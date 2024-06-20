@@ -12,13 +12,13 @@ import { forwardRef } from 'react'
 export const ProxyLinkComponent = forwardRef(
   (
     {
-      onClick,
+      onClick: _onClick,
       href,
       children,
       style,
       className,
     }: {
-      onClick?: () => void
+      onClick?: (params: unknown) => void
       href?: string
       children: React.ReactNode
       style?: React.CSSProperties
@@ -31,7 +31,6 @@ export const ProxyLinkComponent = forwardRef(
         style={style}
         href={href?.startsWith('/rays') ? href.slice(5) : href}
         className={className}
-        onClick={onClick}
         ref={ref}
       >
         {children}
