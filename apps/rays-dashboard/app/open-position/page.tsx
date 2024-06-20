@@ -1,4 +1,4 @@
-import { CountDownBanner, Text } from '@summerfi/app-ui'
+import { CountDownBanner, INTERNAL_LINKS, ProxyLinkComponent, Text } from '@summerfi/app-ui'
 import Link from 'next/link'
 
 import { ProductPicker } from '@/components/organisms/ProductPicker/ProductPicker'
@@ -30,8 +30,10 @@ export default async function OpenPositionPage() {
         productHub={systemConfig.productHub.table}
       />
       <Text as="p" variant="p1semi" style={{ marginTop: 'var(--space-m)' }}>
-        <Link href="/">
-          → Explore over 50+ positions with major protocols and collateral types supports
+        <Link passHref legacyBehavior prefetch={false} href={INTERNAL_LINKS.earn}>
+          <ProxyLinkComponent>
+            → Explore over 50+ positions with major protocols and collateral types supports
+          </ProxyLinkComponent>
         </Link>
       </Text>
     </div>
