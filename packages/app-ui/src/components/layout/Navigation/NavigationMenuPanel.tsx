@@ -44,7 +44,7 @@ export function NavigationMenuPanel({
       }}
     >
       {url ? (
-        <Link href={url} passHref legacyBehavior>
+        <Link href={url} passHref legacyBehavior prefetch={false}>
           <ProxyLinkComponent>
             <NavigationMenuPanelLabel
               currentPanel={currentPanel}

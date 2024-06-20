@@ -142,6 +142,7 @@ export const Footer: FC<FooterProps> = ({ logo, newsletter, languageSwitcher }) 
                 <Link
                   passHref
                   legacyBehavior
+                  prefetch={false}
                   href={url}
                   {...(url.startsWith('http') && { target: '_blank', rel: 'noreferrer' })}
                 >

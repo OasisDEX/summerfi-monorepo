@@ -69,7 +69,7 @@ export const NavigationMenuDropdownContentList = ({
             }}
           >
             {url ? (
-              <Link passHref legacyBehavior href={url}>
+              <Link passHref legacyBehavior prefetch={false} href={url}>
                 <ProxyLinkComponent
                   className={classNames(
                     navigationMenuDropdownContentListStyles.navigationMenuDropdownContentListWrapperItemLink,
@@ -106,7 +106,7 @@ export const NavigationMenuDropdownContentList = ({
         ))}
       </ul>
       {link && (
-        <Link passHref legacyBehavior href={link.url}>
+        <Link passHref legacyBehavior prefetch={false} href={link.url}>
           <ProxyLinkComponent
             style={{
               marginLeft: 3,

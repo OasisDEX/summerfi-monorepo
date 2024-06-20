@@ -17,7 +17,7 @@ export function NavigationMenuLink({
   return (
     <li className={navigationMenuStyles.navigationMenuLink} onMouseEnter={onMouseEnter}>
       {link && (
-        <Link passHref legacyBehavior href={link}>
+        <Link passHref legacyBehavior prefetch={false} href={link}>
           <ProxyLinkComponent
             className={classNames(navigationMenuStyles.navigationMenuLinkElement, {
               [navigationMenuStyles.navigationMenuLinkElementActive]: currentPath === link,

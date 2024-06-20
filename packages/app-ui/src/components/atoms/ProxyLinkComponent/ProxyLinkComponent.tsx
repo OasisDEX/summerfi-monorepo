@@ -2,7 +2,8 @@ import { forwardRef } from 'react'
 
 /**
  * A component that renders a proxy link - removes /rays from the href (WATCH OUT)
- * needs: `passHref` and `legacyBehavior` on Link to work
+ * needs: `passHref` and `legacyBehavior` on Link to work (and probably `prefetch={false}`)
+ * because we dont want to preload non-existing page
  *
  * ```tsx
  * <ProxyLinkComponent href="/example">Click me</ProxyLinkComponent>

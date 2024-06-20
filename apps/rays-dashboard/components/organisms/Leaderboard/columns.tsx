@@ -53,7 +53,7 @@ export const leaderboardColumns = {
     title: 'Summer portfolio',
     cellMapper: (cell: LeaderboardItem) => (
       <Text as="p" variant="p2semi">
-        <Link passHref legacyBehavior href={`/portfolio/${cell.userAddress}`}>
+        <Link passHref legacyBehavior prefetch={false} href={`/portfolio/${cell.userAddress}`}>
           <ProxyLinkComponent style={{ color: 'var(--color-neutral-80)' }}>
             {cell.details
               ? `${cell.details.activePositions} positions, ${cell.details.activeTriggers} automations `
