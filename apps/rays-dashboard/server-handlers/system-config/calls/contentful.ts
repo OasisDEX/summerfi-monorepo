@@ -11,6 +11,7 @@ export const fetchContentfulGraphQL = async <T>(query: string, preview = false):
           'Content-Type': 'application/json',
           Authorization: `Bearer ${preview ? previewAccessToken : accessToken}`,
         },
+        next: { tags: ['contentfulGraphQL'], revalidate: 60 },
         body: JSON.stringify({ query }),
       },
     )

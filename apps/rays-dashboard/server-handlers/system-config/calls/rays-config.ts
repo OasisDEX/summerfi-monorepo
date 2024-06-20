@@ -2,7 +2,13 @@ import { AppRaysConfigType } from '@/types/generated/rays-types'
 
 export const configRaysFetcher = async function (): Promise<AppRaysConfigType> {
   try {
-    const response = await fetch(process.env.CONFIG_URL_RAYS as string)
+    const response = await fetch(process.env.CONFIG_URL_RAYS as string, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      next: { tags: ['configRays'], revalidate: 60 },
+    })
     const data = await response.json()
 
     return data as AppRaysConfigType

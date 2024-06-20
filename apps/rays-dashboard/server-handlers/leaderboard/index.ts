@@ -13,7 +13,7 @@ export const fetchLeaderboard = async (
       `${process.env.FUNCTIONS_API_URL}/api/rays/leaderboard?${urlParams}`,
       {
         method: 'GET',
-        next: { tags: ['rays-leaderboard'] },
+        next: { tags: ['rays-leaderboard', urlParams], revalidate: 60 },
         headers: {
           'Content-Type': 'application/json',
         },
