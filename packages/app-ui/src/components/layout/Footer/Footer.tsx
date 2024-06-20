@@ -139,14 +139,10 @@ export const Footer: FC<FooterProps> = ({ logo, newsletter, languageSwitcher }) 
           <ul className={footerStyles.linksList}>
             {links.map(({ label, url }, j) => (
               <li key={j}>
-                <Link
-                  passHref
-                  legacyBehavior
-                  prefetch={false}
-                  href={url}
-                  {...(url.startsWith('http') && { target: '_blank', rel: 'noreferrer' })}
-                >
-                  <ProxyLinkComponent>
+                <Link passHref legacyBehavior prefetch={false} href={url}>
+                  <ProxyLinkComponent
+                    {...(url.startsWith('http') && { target: '_blank', rel: 'noreferrer' })}
+                  >
                     <Text variant="p2">{label}</Text>
                   </ProxyLinkComponent>
                 </Link>
