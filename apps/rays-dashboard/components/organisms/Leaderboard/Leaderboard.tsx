@@ -108,7 +108,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({
     // eslint-disable-next-line consistent-return
     return () => clearTimeout(timeout)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [input])
+  }, [input, staticLeaderboardData])
 
   const resolvedSkeletonLoading =
     (isLoading && debouncedInput) || (isLoading && !leaderboardResponse.leaderboard.length)

@@ -18,6 +18,7 @@ export const fetchRays = async (query: { [key: string]: string } | string) => {
     }
     const rays = (await fetch(`${process.env.FUNCTIONS_API_URL}/api/rays?${urlParams.toString()}`, {
       method: 'GET',
+      next: { tags: ['rays-leaderboard'] },
       headers: {
         'Content-Type': 'application/json',
       },

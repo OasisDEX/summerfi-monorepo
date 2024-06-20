@@ -25,14 +25,19 @@ interface ClaimRaysPageProps {
 
 export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPageProps) => {
   const [{ wallet }, connect] = useConnectWallet()
-  const { replace, push } = useRouter()
+  const { push } = useRouter()
   const currentPath = usePathname()
 
   const dynamicWalletAddress = useMemo(() => wallet?.accounts[0].address, [wallet?.accounts])
 
-  const goToOwnWalletView = useCallback(() => {
-    replace(`${currentPath}?userAddress=${dynamicWalletAddress}`)
-  }, [currentPath, dynamicWalletAddress, replace])
+  const goToWalletView = useCallback(
+    (walletAddress: string) => {
+      if (walletAddress) {
+        push(`${currentPath}?userAddress=${walletAddress}`)
+      }
+    },
+    [currentPath, push],
+  )
 
   const goToClaimedView = useCallback(() => {
     push(`${currentPath}/claimed?userAddress=${dynamicWalletAddress}`)
@@ -42,9 +47,9 @@ export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPagePro
     // if user is connected and is visiting a page without wallet
     // address (its or others) in the query, redirect to the view with a wallet address
     if (typeof userAddress === 'undefined' && dynamicWalletAddress) {
-      goToOwnWalletView()
+      goToWalletView(dynamicWalletAddress)
     }
-  }, [dynamicWalletAddress, goToOwnWalletView, userAddress])
+  }, [dynamicWalletAddress, goToWalletView, userAddress])
 
   const isViewingOwnWallet = useMemo(
     () => userAddress === dynamicWalletAddress,
@@ -91,8 +96,8 @@ export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPagePro
           variant="primaryLarge"
           style={{ marginTop: 'var(--space-l)', marginBottom: 'var(--space-s)' }}
           onClick={() => {
-            void connect().then(() => {
-              goToOwnWalletView()
+            void connect().then(([{ accounts }]) => {
+              goToWalletView(accounts[0].address)
             })
           }}
         >
@@ -104,7 +109,7 @@ export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPagePro
         <Button
           variant="secondaryLarge"
           style={{ marginTop: 'var(--space-l)', marginBottom: 'var(--space-s)' }}
-          onClick={goToOwnWalletView}
+          onClick={() => goToWalletView(dynamicWalletAddress)}
         >
           View your points
         </Button>
