@@ -2,6 +2,7 @@ import Link from 'next/link'
 
 import { Text } from '@/components/atoms/Text/Text'
 import { CountDown } from '@/components/organisms/CountDown/CountDown'
+import { EXTERNAL_LINKS } from '@/helpers/application-links'
 
 import classNames from '@/components/organisms/LaunchBanner/LaunchBanner.module.scss'
 
@@ -18,7 +19,7 @@ export const LaunchBanner = () => {
           Protocol Litepaper Release 👉
         </Text>
         <Text as="p" variant="p2semi">
-          <Link href="/">Read announcement →</Link>
+          <Link href={EXTERNAL_LINKS.KB.READ_ABOUT_RAYS}>Read announcement →</Link>
         </Text>
       </div>
       <CountDown futureTimestamp={futureTimestamp} />

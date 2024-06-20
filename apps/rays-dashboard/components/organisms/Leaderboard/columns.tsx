@@ -1,10 +1,12 @@
-import { Button, ProxyLinkComponent, Text } from '@summerfi/app-ui'
+import { Button, EXTERNAL_LINKS, ProxyLinkComponent, Text } from '@summerfi/app-ui'
 import { IconEye } from '@tabler/icons-react'
 import Link from 'next/link'
 
 import { LeaderboardItem, LeaderboardResponse } from '@/types/leaderboard'
 
 import classNames from '@/components/organisms/Leaderboard/Leaderboard.module.scss'
+
+const bannerLabels = ['Enable Automations', 'Open a position', 'Use Swap']
 
 export const leaderboardColumns = {
   rank: {
@@ -82,6 +84,11 @@ export const mapLeaderboardColumns = ({
       leaderboardColumns.portfolio.cellMapper(item),
     ],
   }))
+
+  const bannerLink = connectedWalletAddress
+    ? `/portfolio/${connectedWalletAddress}`
+    : EXTERNAL_LINKS.KB.READ_ABOUT_RAYS
+
   const value = {
     cells: (
       <div
@@ -106,9 +113,13 @@ export const mapLeaderboardColumns = ({
             columnGap: '24px',
           }}
         >
-          <Button variant="neutralSmall">Enable Automations</Button>
-          <Button variant="neutralSmall">Open a position</Button>
-          <Button variant="neutralSmall">Use Swap</Button>
+          {bannerLabels.map((label) => (
+            <Link key={label} passHref legacyBehavior prefetch={false} href={bannerLink}>
+              <ProxyLinkComponent style={{ color: 'var(--color-neutral-80)' }}>
+                <Button variant="neutralSmall">{label}</Button>
+              </ProxyLinkComponent>
+            </Link>
+          ))}
         </div>
       </div>
     ),
