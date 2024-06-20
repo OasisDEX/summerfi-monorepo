@@ -5,8 +5,10 @@ import { getTranslations } from 'next-intl/server'
 
 import { networksByName } from '@/constants/networks-list-ssr'
 import { zero } from '@/helpers/formatters'
+import { getGenericPositionUrl } from '@/helpers/get-generic-position-url'
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
 import { NavigationMenuPanelListItem } from '@/types/navigation'
+import { OmniProductType } from '@/types/omni-kit'
 import { ProductHubItem } from '@/types/product-hub'
 
 export function mapFeaturedMultiplyProduct(
@@ -39,7 +41,10 @@ export function mapFeaturedMultiplyProduct(
         ],
         [capitalize(network), networksByName[network].name],
       ],
-      url: '/', // TODO: this is just a workaround to get this function to work
+      url: getGenericPositionUrl({
+        ...item,
+        product: [OmniProductType.Earn],
+      }),
     }
   })
 }

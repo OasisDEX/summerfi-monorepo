@@ -5,6 +5,7 @@ import { getTranslations } from 'next-intl/server'
 
 import { networksByName } from '@/constants/networks-list-ssr'
 import { formatDecimalAsPercent } from '@/helpers/formatters'
+import { getGenericPositionUrl } from '@/helpers/get-generic-position-url'
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
 import { NavigationMenuPanelListItem } from '@/types/navigation'
 import { OmniProductType } from '@/types/omni-kit'
@@ -48,7 +49,10 @@ export function mapTopBorrowProduct(
         ],
         [capitalize(topLtv.network), networksByName[topLtv.network].name],
       ],
-      url: '/', // TODO: this is just a workaround to get this function to work start
+      url: getGenericPositionUrl({
+        ...topLtv,
+        product: [OmniProductType.Borrow],
+      }),
     },
     {
       title: tNav('borrow-lowest-fee', {
@@ -67,7 +71,10 @@ export function mapTopBorrowProduct(
         ],
         [capitalize(topFee.network), networksByName[topFee.network].name],
       ],
-      url: '/', // TODO: this is just a workaround to get this function to work start
+      url: getGenericPositionUrl({
+        ...topFee,
+        product: [OmniProductType.Borrow],
+      }),
     },
     {
       title: tNav('earn-rewards-while-borrowing'), // TODO: this is just a workaround to get this function to work start
@@ -83,7 +90,10 @@ export function mapTopBorrowProduct(
         ],
         [capitalize(topRewards.network), networksByName[topRewards.network].name],
       ],
-      url: '/', // TODO: this is just a workaround to get this function to work start
+      url: getGenericPositionUrl({
+        ...topRewards,
+        product: [OmniProductType.Borrow],
+      }),
     },
   ]
 }
