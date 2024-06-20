@@ -107,7 +107,7 @@ export const ProductCard: FC<ProductCardProps> = ({
             ))}
           </div>
         </div>
-        <Link href={btn.link} className={classNames.link}>
+        <Link href={btn.link} className={classNames.link} target="_blank">
           <Button variant="colorful">
             <span>{btn.label}</span>
           </Button>
