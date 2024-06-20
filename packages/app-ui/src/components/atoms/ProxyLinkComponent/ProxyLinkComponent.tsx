@@ -31,13 +31,6 @@ export const ProxyLinkComponent = forwardRef(
     },
     ref: React.Ref<HTMLAnchorElement>,
   ) => {
-    if (href && href.includes('rays/earn')) {
-      console.log('WTF', {
-        replace: href.startsWith('/rays') ? href.slice(5) : href,
-        href,
-      })
-    }
-
     return (
       <a
         suppressHydrationWarning={suppressHydrationWarning}
