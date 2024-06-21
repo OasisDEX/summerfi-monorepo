@@ -14,6 +14,8 @@ export interface IconPropsBase {
   focusable?: boolean
   iconName?: IconNamesList
   tokenName?: TokenSymbolsList
+  style?: React.CSSProperties
+  proxyStyle?: React.CSSProperties
 }
 
 export interface IconPropsWithIconName extends IconPropsBase {
@@ -31,6 +33,8 @@ export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
   iconName: iconNameProp,
   tokenName,
   size,
+  style,
+  proxyStyle,
 }) => {
   const finalSize =
     size ??
@@ -62,7 +66,7 @@ export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
           height={finalSize}
         >
           <circle
-            style={{ fill: '#9d9d9d', fillOpacity: 0.350168, strokeWidth: 0.340624 }}
+            style={{ fill: '#9d9d9d', fillOpacity: 0.350168, strokeWidth: 0.340624, ...proxyStyle }}
             cx="3.175"
             cy="3.175"
             r="3.175"
@@ -79,6 +83,7 @@ export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
           role={role}
           width={finalSize}
           height={finalSize}
+          style={style}
         >
           {iconName}
           {iconData.path}

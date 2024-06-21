@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 
 import { ClaimRaysTitle } from '@/components/molecules/ClaimRaysTitle/ClaimRaysTitle'
 import { CriteriaList } from '@/components/molecules/CriteriaList/CriteriaList'
+import { useClientSideMount } from '@/helpers/use-client-side-mount'
 import { RaysApiResponse } from '@/server-handlers/rays'
 
 interface ClaimRaysPageProps {
@@ -27,6 +28,7 @@ export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPagePro
   const [{ wallet }, connect] = useConnectWallet()
   const { push } = useRouter()
   const currentPath = usePathname()
+  const mountedOnClient = useClientSideMount()
 
   const dynamicWalletAddress = useMemo(() => wallet?.accounts[0].address, [wallet?.accounts])
 
@@ -86,7 +88,7 @@ export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPagePro
       </Text>
       <CriteriaList userRays={userRays} />
 
-      {typeof userAddress !== 'undefined' && isViewingOwnWallet && (
+      {mountedOnClient && typeof userAddress !== 'undefined' && isViewingOwnWallet && (
         <Button
           disabled={claimButtonDisabled}
           variant="primaryLarge"
@@ -97,30 +99,36 @@ export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPagePro
         </Button>
       )}
 
-      {typeof userAddress !== 'undefined' && !isViewingOwnWallet && !dynamicWalletAddress && (
-        <Button
-          variant="primaryLarge"
-          style={{ marginTop: 'var(--space-l)', marginBottom: 'var(--space-s)' }}
-          onClick={() => {
-            void connect().then(([{ accounts }]) => {
-              goToWalletView(accounts[0].address)
-            })
-          }}
-        >
-          Connect wallet
-        </Button>
-      )}
+      {mountedOnClient &&
+        typeof userAddress !== 'undefined' &&
+        !isViewingOwnWallet &&
+        !dynamicWalletAddress && (
+          <Button
+            variant="primaryLarge"
+            style={{ marginTop: 'var(--space-l)', marginBottom: 'var(--space-s)' }}
+            onClick={() => {
+              void connect().then(([{ accounts }]) => {
+                goToWalletView(accounts[0].address)
+              })
+            }}
+          >
+            Connect wallet
+          </Button>
+        )}
 
-      {typeof userAddress !== 'undefined' && !isViewingOwnWallet && dynamicWalletAddress && (
-        <Button
-          variant="secondaryLarge"
-          style={{ marginTop: 'var(--space-l)', marginBottom: 'var(--space-s)' }}
-          onClick={() => goToWalletView(dynamicWalletAddress)}
-        >
-          View your points
-        </Button>
-      )}
-      {typeof userAddress === 'undefined' && (
+      {mountedOnClient &&
+        typeof userAddress !== 'undefined' &&
+        !isViewingOwnWallet &&
+        dynamicWalletAddress && (
+          <Button
+            variant="secondaryLarge"
+            style={{ marginTop: 'var(--space-l)', marginBottom: 'var(--space-s)' }}
+            onClick={() => goToWalletView(dynamicWalletAddress)}
+          >
+            View your points
+          </Button>
+        )}
+      {mountedOnClient && typeof userAddress === 'undefined' && (
         <Button
           variant="primaryLarge"
           style={{ marginTop: 'var(--space-l)', marginBottom: 'var(--space-xxxl)' }}

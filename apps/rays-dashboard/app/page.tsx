@@ -1,19 +1,18 @@
-import dynamic from 'next/dynamic'
+import { Button } from '@summerfi/app-ui'
+import Link from 'next/link'
 
-import { ClaimRaysSkeleton } from '@/components/organisms/ClaimRays/ClaimRaysSkeleton'
+import ClaimRays from '@/components/organisms/ClaimRays/ClaimRays'
+import { mapLeaderboardColumns } from '@/components/organisms/Leaderboard/columns'
+import { LeaderboardBanner } from '@/components/organisms/Leaderboard/components/LeaderboardBanner'
 import { Leaderboard } from '@/components/organisms/Leaderboard/Leaderboard'
-import { leaderboardDefaults } from '@/constants/leaderboard'
+import { LeaderboardSearchBoxAndResults } from '@/components/organisms/Leaderboard/LeaderboardSearchBoxAndResults'
+import { leaderboardDefaults, userLeaderboardDefaults } from '@/constants/leaderboard'
 import { parseServerResponse } from '@/helpers/parse-server-response'
 import { fetchLeaderboard } from '@/server-handlers/leaderboard'
 import { fetchRays, RaysApiResponse } from '@/server-handlers/rays'
 import { LeaderboardResponse } from '@/types/leaderboard'
 
-const ClaimRays = dynamic(() => import('@/components/organisms/ClaimRays/ClaimRays'), {
-  ssr: false,
-  loading: () => <ClaimRaysSkeleton />,
-})
-
-export default async function HomePage({
+export default async function LeaderboardPage({
   searchParams,
 }: {
   searchParams: {
@@ -31,22 +30,38 @@ export default async function HomePage({
       }
   >(await fetchRays({ address: searchParams.userAddress }))
 
-  const startingPage = String(
+  const userLeaderboardStartingPage = String(
     userRays.rays?.positionInLeaderboard
-      ? Math.ceil(Number(userRays.rays.positionInLeaderboard) / Number(leaderboardDefaults.limit))
+      ? Math.ceil(
+          Number(userRays.rays.positionInLeaderboard) / Number(userLeaderboardDefaults.limit),
+        )
       : 1,
   )
 
-  const serverLeaderboardResponse = parseServerResponse<LeaderboardResponse>(
+  const userLeaderboardResponse = parseServerResponse<LeaderboardResponse>(
     await fetchLeaderboard({
-      ...leaderboardDefaults,
-      page: startingPage,
+      ...userLeaderboardDefaults,
+      page: userLeaderboardStartingPage,
     }),
   )
 
-  const userYearlyRays = serverLeaderboardResponse.leaderboard.find(
+  const topLeaderboardResponse =
+    userLeaderboardStartingPage !== '1' &&
+    parseServerResponse<LeaderboardResponse>(await fetchLeaderboard(leaderboardDefaults))
+
+  const userYearlyRays = userLeaderboardResponse.leaderboard.find(
     (user) => user.position === userRays.rays?.positionInLeaderboard,
   )
+
+  const mappedLeaderBoard = mapLeaderboardColumns({
+    leaderboardData: topLeaderboardResponse
+      ? [...topLeaderboardResponse.leaderboard, 'separator', ...userLeaderboardResponse.leaderboard]
+      : userLeaderboardResponse.leaderboard,
+    userWalletAddress: searchParams.userAddress
+      ? searchParams.userAddress.toLocaleLowerCase()
+      : undefined,
+    skipBanner: true,
+  })
 
   return (
     <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'center' }}>
@@ -58,14 +73,30 @@ export default async function HomePage({
       <div
         style={{ marginBottom: 'var(--space-xxxl)', marginTop: 'var(--space-xxxl)', width: '100%' }}
       >
-        <Leaderboard
-          staticLeaderboardData={serverLeaderboardResponse}
-          connectedWalletAddress={searchParams.userAddress}
-          pagination={{
-            ...leaderboardDefaults,
-            page: startingPage,
+        <LeaderboardSearchBoxAndResults />
+        <Leaderboard leaderboardData={mappedLeaderBoard} />
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            marginTop: 'var(--space-xl)',
           }}
-        />
+        >
+          <Link
+            href={{
+              pathname: '/leaderboard',
+              query: {
+                userAddress: searchParams.userAddress,
+              },
+            }}
+          >
+            <Button variant="neutralSmall">View Full Leaderboard</Button>
+          </Link>
+        </div>
+        <div style={{ marginTop: 'var(--space-xxl)' }}>
+          <LeaderboardBanner userWalletAddress={searchParams.userAddress} />
+        </div>
       </div>
     </div>
   )

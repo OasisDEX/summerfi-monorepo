@@ -1,9 +1,10 @@
 import { useLayoutEffect, useRef, useState } from 'react'
-import { Button, Divider, Text, WithArrow } from '@summerfi/app-ui'
-import { IconLogout, IconSettings } from '@tabler/icons-react'
+import { Button, Divider, EXTERNAL_LINKS, INTERNAL_LINKS, Text, WithArrow } from '@summerfi/app-ui'
+import { IconCopy, IconLogout, IconSettings } from '@tabler/icons-react'
 import { WalletState } from '@web3-onboard/core'
 import { useConnectWallet } from '@web3-onboard/react'
 import BigNumber from 'bignumber.js'
+import Link from 'next/link'
 
 import { formatAddress, formatCryptoBalance } from '@/helpers/formatters'
 
@@ -87,7 +88,7 @@ const WalletAccount = ({
         className={walletButtonStyles.CopyButton}
         onClick={() => copyToClipboard()}
       >
-        copy
+        copy&nbsp;address
       </Text>
       <textarea
         ref={clipboardContentRef}
@@ -168,7 +169,7 @@ export default () => {
         <div
           className={`${walletButtonStyles.InfoBox}${infoBoxOpened ? ` ${walletButtonStyles.InfoBoxActive}` : ''}`}
         >
-          <Text variant="p1semi" style={{ margin: '0 0 20px' }}>
+          <Text variant="p1semi" style={{ margin: '0 0 20px 0' }}>
             Wallet
           </Text>
           {[...wallet.accounts]
@@ -186,7 +187,33 @@ export default () => {
                 setPrimaryWallet={setPrimaryWallet}
               />
             ))}
-          <Text variant="p1semi" style={{ margin: '20px 0' }}>
+          <Text variant="p1semi" style={{ margin: '10px 0' }}>
+            Referrals
+          </Text>
+          <Text variant="p3" style={{ margin: '0 0 10px 0' }}>
+            Refer a friend to us and each of you get rewarded with 5% of all fees that your friend
+            generates on Summer.fi... forever! Read more about{' '}
+            <Link href={EXTERNAL_LINKS.KB.REFER_A_FRIEND} target="_blank">
+              Summer.fi Refer a Friend
+            </Link>
+          </Text>
+          <Button
+            variant="neutralSmall"
+            onClick={async () => {
+              try {
+                await navigator.clipboard.writeText(
+                  `${INTERNAL_LINKS.appUrl}?ref=${wallet.accounts[0].address}`,
+                )
+              } catch (error) {
+                // eslint-disable-next-line no-console
+                console.error('Failed to copy to clipboard:', error)
+              }
+            }}
+          >
+            <IconCopy size={16} color="var(--color-neutral-60)" />
+            Copy your active wallet referral link
+          </Button>
+          <Text variant="p1semi" style={{ margin: '20px 0 15px 0' }}>
             Slippage settings
           </Text>
           <Text variant="p3" style={{ margin: '0 0 10px 0' }}>
