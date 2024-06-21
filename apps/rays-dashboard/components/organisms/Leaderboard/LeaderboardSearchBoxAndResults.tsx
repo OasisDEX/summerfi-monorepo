@@ -1,10 +1,13 @@
 'use client'
 import { ChangeEvent, useEffect, useState } from 'react'
 import { Input } from '@summerfi/app-ui'
+import { IconX } from '@tabler/icons-react'
 
 import { mapLeaderboardColumns } from '@/components/organisms/Leaderboard/columns'
 import { Leaderboard } from '@/components/organisms/Leaderboard/Leaderboard'
 import { LeaderboardResponse } from '@/types/leaderboard'
+
+import leaderboardSearchBoxAndResults from './LeaderboardSearchBoxAndResults.module.scss'
 
 export const LeaderboardSearchBoxAndResults = () => {
   const [input, setInput] = useState('')
@@ -60,19 +63,14 @@ export const LeaderboardSearchBoxAndResults = () => {
 
   return (
     <>
-      <div
-        style={{
-          display: 'flex',
-          gap: '8px',
-          flexDirection: 'row',
-          justifyContent: 'flex-end',
-          width: '100%',
-          marginBottom: '-65px',
-        }}
-      >
+      <div className={leaderboardSearchBoxAndResults.inputWrapper}>
         <Input
           value={input}
-          style={{ minWidth: '320px' }}
+          style={{
+            minWidth: '320px',
+            paddingRight: '50px',
+            backgroundColor: 'var(--color-neutral-10)',
+          }}
           placeholder="Search wallet address or ENS"
           icon={{ name: 'search_icon' }}
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -83,6 +81,15 @@ export const LeaderboardSearchBoxAndResults = () => {
             }
           }}
         />
+        {debouncedInput && (
+          <IconX
+            onClick={() => {
+              setInput('')
+              setDebouncedInput('')
+            }}
+            style={{ cursor: 'pointer', position: 'absolute', top: '15px', right: '15px' }}
+          />
+        )}
       </div>
       {debouncedInput ? (
         <Leaderboard
