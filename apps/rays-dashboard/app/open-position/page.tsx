@@ -1,6 +1,12 @@
-import { CountDownBanner, Dial, INTERNAL_LINKS, ProxyLinkComponent, Text } from '@summerfi/app-ui'
+import {
+  CountDownBanner,
+  Dial,
+  INTERNAL_LINKS,
+  ProxyLinkComponent,
+  Text,
+  WithArrow,
+} from '@summerfi/app-ui'
 import BigNumber from 'bignumber.js'
-import Link from 'next/link'
 
 import { ProductPicker } from '@/components/organisms/ProductPicker/ProductPicker'
 import { formatAsShorthandNumbers } from '@/helpers/formatters'
@@ -56,13 +62,15 @@ export default async function OpenPositionPage({ searchParams }: OpenPositionPag
         products={systemConfig.configRays.products}
         productHub={systemConfig.productHub.table}
       />
-      <Text as="p" variant="p1semi" style={{ marginTop: 'var(--space-m)' }}>
-        <Link passHref legacyBehavior prefetch={false} href={INTERNAL_LINKS.earn}>
-          <ProxyLinkComponent target="_blank">
-            Explore over 50+ positions with major protocols and collateral types supports →
-          </ProxyLinkComponent>
-        </Link>
-      </Text>
+      <ProxyLinkComponent
+        target="_blank"
+        href={INTERNAL_LINKS.earn}
+        style={{ marginTop: 'var(--space-m)' }}
+      >
+        <WithArrow gap={0} variant="p1semi">
+          Explore over 50+ positions with major protocols and collateral types supports
+        </WithArrow>
+      </ProxyLinkComponent>
     </div>
   )
 }
