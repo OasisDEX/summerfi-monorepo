@@ -1,17 +1,10 @@
-import dynamic from 'next/dynamic'
-
-import { ClaimRaysSkeleton } from '@/components/organisms/ClaimRays/ClaimRaysSkeleton'
+import ClaimRays from '@/components/organisms/ClaimRays/ClaimRays'
 import { Leaderboard } from '@/components/organisms/Leaderboard/Leaderboard'
 import { leaderboardDefaults } from '@/constants/leaderboard'
 import { parseServerResponse } from '@/helpers/parse-server-response'
 import { fetchLeaderboard } from '@/server-handlers/leaderboard'
 import { fetchRays, RaysApiResponse } from '@/server-handlers/rays'
 import { LeaderboardResponse } from '@/types/leaderboard'
-
-const ClaimRays = dynamic(() => import('@/components/organisms/ClaimRays/ClaimRays'), {
-  ssr: false,
-  loading: () => <ClaimRaysSkeleton />,
-})
 
 export default async function HomePage({
   searchParams,

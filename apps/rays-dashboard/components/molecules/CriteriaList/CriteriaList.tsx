@@ -79,6 +79,7 @@ export const CriteriaList = ({ userRays }: CriteriaListProps) => {
                   >
                     <Icon
                       iconName={item.done ? 'checkmark_colorful' : 'close_colorful'}
+                      proxyStyle={{ fill: 'red' }}
                       size={item.done ? 20 : 15}
                     />
                   </div>
