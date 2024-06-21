@@ -30,7 +30,7 @@ export default async function LeaderboardPage({
       }
   >(await fetchRays({ address: searchParams.userAddress }))
 
-  const userleaderboardStartingPage = String(
+  const userLeaderboardStartingPage = String(
     userRays.rays?.positionInLeaderboard
       ? Math.ceil(
           Number(userRays.rays.positionInLeaderboard) / Number(userLeaderboardDefaults.limit),
@@ -41,12 +41,12 @@ export default async function LeaderboardPage({
   const userLeaderboardResponse = parseServerResponse<LeaderboardResponse>(
     await fetchLeaderboard({
       ...userLeaderboardDefaults,
-      page: userleaderboardStartingPage,
+      page: userLeaderboardStartingPage,
     }),
   )
 
   const topLeaderboardResponse =
-    userleaderboardStartingPage !== '1' &&
+    userLeaderboardStartingPage !== '1' &&
     parseServerResponse<LeaderboardResponse>(await fetchLeaderboard(leaderboardDefaults))
 
   const userYearlyRays = userLeaderboardResponse.leaderboard.find(
