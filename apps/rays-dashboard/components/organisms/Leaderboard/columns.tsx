@@ -1,58 +1,66 @@
-import { Button, EXTERNAL_LINKS, ProxyLinkComponent, Text } from '@summerfi/app-ui'
-import Link from 'next/link'
-
+import { LeaderboardBanner } from '@/components/organisms/Leaderboard/components/LeaderboardBanner'
 import {
   LeaderboardPortfolio,
   LeaderboardRank,
   LeaderboardRays,
   LeaderboardUser,
 } from '@/components/organisms/Leaderboard/components/LeaderboardColumns'
-import { LeaderboardItem, LeaderboardResponse } from '@/types/leaderboard'
-
-const bannerLabels = ['Enable Automations', 'Open a position', 'Use Swap']
+import { LeaderboardItem } from '@/types/leaderboard'
 
 export const leaderboardColumns = {
   rank: {
     title: 'Rank',
-    cellMapper: (cell: LeaderboardItem) => <LeaderboardRank cell={cell} />,
+    cellMapper: (cell: LeaderboardItem, userWalletAddress?: string) => (
+      <LeaderboardRank cell={cell} userWalletAddress={userWalletAddress} />
+    ),
   },
   user: {
     title: 'User',
-    cellMapper: (cell: LeaderboardItem) => <LeaderboardUser cell={cell} />,
+    cellMapper: (cell: LeaderboardItem, userWalletAddress?: string) => (
+      <LeaderboardUser cell={cell} userWalletAddress={userWalletAddress} />
+    ),
   },
   rays: {
     title: 'Rays',
-    cellMapper: (cell: LeaderboardItem) => <LeaderboardRays cell={cell} />,
+    cellMapper: (cell: LeaderboardItem, userWalletAddress?: string) => (
+      <LeaderboardRays cell={cell} userWalletAddress={userWalletAddress} />
+    ),
   },
   portfolio: {
     title: 'Summer portfolio',
-    cellMapper: (cell: LeaderboardItem) => <LeaderboardPortfolio cell={cell} />,
+    cellMapper: (cell: LeaderboardItem, userWalletAddress?: string) => (
+      <LeaderboardPortfolio cell={cell} userWalletAddress={userWalletAddress} />
+    ),
   },
-}
-
-const filterSeparator = (item: LeaderboardItem | 'separator'): item is LeaderboardItem => {
-  return item !== 'separator'
 }
 
 export const mapLeaderboardColumns = ({
   leaderboardData,
   userWalletAddress,
   skipBanner,
+  bannerEveryNth,
 }: {
   leaderboardData: (LeaderboardItem | 'separator')[]
   userWalletAddress?: string
   skipBanner?: boolean
+  bannerEveryNth?: number
 }) => {
-  const hasSeparator = leaderboardData.includes('separator')
   const index = 4
-  const preparedRows = leaderboardData.map((item) =>
+
+  const parsedWalletAddress = userWalletAddress?.toLocaleLowerCase()
+
+  const leaderboardBanner = {
+    cells: <LeaderboardBanner key="leaderboardBanner" userWalletAddress={parsedWalletAddress} />,
+  }
+
+  let preparedRows = leaderboardData.map((item) =>
     item === 'separator'
       ? {
           cells: Array.from({ length: Object.keys(leaderboardColumns).length })
             .fill('')
             .map((_, separatorIndex) => (
               <div
-                key={`separator${userWalletAddress}_${separatorIndex}`}
+                key={`separator${parsedWalletAddress}_${separatorIndex}`}
                 style={{
                   height: 0,
                   margin: '16px 0',
@@ -63,83 +71,37 @@ export const mapLeaderboardColumns = ({
         }
       : {
           cells: [
-            leaderboardColumns.rank.cellMapper(item),
-            leaderboardColumns.user.cellMapper(item),
-            leaderboardColumns.rays.cellMapper(item),
-            leaderboardColumns.portfolio.cellMapper(item),
+            leaderboardColumns.rank.cellMapper(item, parsedWalletAddress),
+            leaderboardColumns.user.cellMapper(item, parsedWalletAddress),
+            leaderboardColumns.rays.cellMapper(item, parsedWalletAddress),
+            leaderboardColumns.portfolio.cellMapper(item, parsedWalletAddress),
           ],
         },
   )
 
-  const bannerLink = userWalletAddress
-    ? `/portfolio/${userWalletAddress}`
-    : EXTERNAL_LINKS.KB.READ_ABOUT_RAYS
-
-  const value = {
-    cells: (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          rowGap: '16px',
-          background: 'linear-gradient(92deg, #fff3ef 0.78%, #f2fcff 99.57%)',
-          padding: '16px',
-          borderRadius: '16px',
-        }}
-      >
-        <Text as="h5" variant="h5">
-          How do I move up the leaderboard?
-        </Text>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            columnGap: '24px',
-          }}
-        >
-          {bannerLabels.map((label) => (
-            <Link key={label} passHref legacyBehavior prefetch={false} href={bannerLink}>
-              <ProxyLinkComponent style={{ color: 'var(--color-neutral-80)' }} target="_blank">
-                <Button variant="neutralSmall">{label}</Button>
-              </ProxyLinkComponent>
-            </Link>
-          ))}
-        </div>
-      </div>
-    ),
-  }
-  const newArr = skipBanner
-    ? preparedRows
-    : [...preparedRows.slice(0, index), value, ...preparedRows.slice(index, preparedRows.length)]
-
-  const userIndex = leaderboardData
-    .filter(filterSeparator)
-    .map((item) => item.userAddress)
-    .findIndex((item) => item.toLowerCase() === userWalletAddress?.toLowerCase())
-
-  if (userIndex !== -1) {
-    const youAreHereValue = {
-      cells: (
-        <div style={{ paddingLeft: '12px' }}>
-          <Text as="p" variant="p3semi">
-            You&apos;re here 👇
-          </Text>
-        </div>
-      ),
-    }
-
-    const addedUserIndex = [hasSeparator, !skipBanner].filter(Boolean).length
-
-    const finalUserIndex = userIndex >= index ? userIndex + addedUserIndex : userIndex
-
-    return [
-      ...newArr.slice(0, finalUserIndex),
-      youAreHereValue,
-      ...newArr.slice(finalUserIndex, newArr.length),
-    ]
+  if (!skipBanner) {
+    preparedRows =
+      skipBanner ?? !!bannerEveryNth
+        ? preparedRows
+        : [
+            ...preparedRows.slice(0, index),
+            leaderboardBanner as unknown as (typeof preparedRows)[0],
+            ...preparedRows.slice(index, preparedRows.length),
+          ]
   }
 
-  return newArr
+  if (bannerEveryNth) {
+    const newArrWithBanners = preparedRows.reduce<typeof preparedRows>((acc, item, idx) => {
+      if (idx % bannerEveryNth === 0 && idx !== 0) {
+        acc.push(leaderboardBanner as unknown as (typeof preparedRows)[0])
+      }
+      acc.push(item)
+
+      return acc
+    }, [])
+
+    return newArrWithBanners
+  }
+
+  return preparedRows
 }

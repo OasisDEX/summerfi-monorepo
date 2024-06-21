@@ -1,32 +1,36 @@
 'use client'
 
 import { FC } from 'react'
-import { Table, Text } from '@summerfi/app-ui'
+import { SkeletonLine, Table, Text } from '@summerfi/app-ui'
 
 import {
   leaderboardColumns,
   mapLeaderboardColumns,
 } from '@/components/organisms/Leaderboard/columns'
-import { LeaderboardSearchBox } from '@/components/organisms/Leaderboard/LeaderboardSearchBox'
 
 import classNames from '@/components/organisms/Leaderboard/Leaderboard.module.scss'
 
 interface LeaderboardProps {
   leaderboardData?: ReturnType<typeof mapLeaderboardColumns>
-  onInputUpdate?: (input?: string) => void
   isError?: boolean
+  isLoading?: boolean
+  title?: string
 }
 
-export const Leaderboard: FC<LeaderboardProps> = ({ leaderboardData, onInputUpdate, isError }) => {
+export const Leaderboard: FC<LeaderboardProps> = ({
+  leaderboardData,
+  isError,
+  isLoading,
+  title,
+}) => {
   const isZeroResults = leaderboardData?.length === 0
 
   return (
     <div className={classNames.leaderboardWrapper}>
       <div className={classNames.headingWrapper}>
         <Text as="h2" variant="h2">
-          Leaderboard
+          {title ? title : 'Leaderboard'}
         </Text>
-        {onInputUpdate && <LeaderboardSearchBox onInputUpdate={onInputUpdate} />}
       </div>
       {isError && (
         <div className={classNames.errorWrapper}>
@@ -35,15 +39,25 @@ export const Leaderboard: FC<LeaderboardProps> = ({ leaderboardData, onInputUpda
           </Text>
         </div>
       )}
-      {isZeroResults && (
-        <div className={classNames.errorWrapper}>
-          <Text as="h5" variant="h5">
-            No results found
-          </Text>
-        </div>
+      {isLoading && (
+        <Table
+          columns={Object.values(leaderboardColumns).map((item, idx) => ({
+            title: (
+              <Text key={idx} as="h5" variant="h5" style={{ fontWeight: 500 }}>
+                {item.title}
+              </Text>
+            ),
+          }))}
+          rows={[
+            {
+              cells: Array(Object.values(leaderboardColumns).length).fill(
+                <SkeletonLine height={30} />,
+              ),
+            },
+          ]}
+        />
       )}
-
-      {leaderboardData && (
+      {leaderboardData && !isLoading && (
         <Table
           columns={Object.values(leaderboardColumns).map((item, idx) => ({
             title: (
@@ -54,6 +68,13 @@ export const Leaderboard: FC<LeaderboardProps> = ({ leaderboardData, onInputUpda
           }))}
           rows={leaderboardData}
         />
+      )}
+      {isZeroResults && !isLoading && (
+        <div className={classNames.errorWrapper}>
+          <Text as="h5" variant="h5">
+            No results found
+          </Text>
+        </div>
       )}
     </div>
   )
