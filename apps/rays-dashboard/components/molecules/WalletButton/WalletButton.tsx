@@ -88,7 +88,7 @@ const WalletAccount = ({
         className={walletButtonStyles.CopyButton}
         onClick={() => copyToClipboard()}
       >
-        copy
+        copy&nbsp;address
       </Text>
       <textarea
         ref={clipboardContentRef}

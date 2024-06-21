@@ -1,6 +1,7 @@
 import ClaimRays from '@/components/organisms/ClaimRays/ClaimRays'
+import { mapLeaderboardColumns } from '@/components/organisms/Leaderboard/columns'
 import { Leaderboard } from '@/components/organisms/Leaderboard/Leaderboard'
-import { leaderboardDefaults } from '@/constants/leaderboard'
+import { leaderboardDefaults, userLeaderboardDefaults } from '@/constants/leaderboard'
 import { parseServerResponse } from '@/helpers/parse-server-response'
 import { fetchLeaderboard } from '@/server-handlers/leaderboard'
 import { fetchRays, RaysApiResponse } from '@/server-handlers/rays'
@@ -24,22 +25,36 @@ export default async function HomePage({
       }
   >(await fetchRays({ address: searchParams.userAddress }))
 
-  const startingPage = String(
+  const userleaderboardStartingPage = String(
     userRays.rays?.positionInLeaderboard
-      ? Math.ceil(Number(userRays.rays.positionInLeaderboard) / Number(leaderboardDefaults.limit))
+      ? Math.ceil(
+          Number(userRays.rays.positionInLeaderboard) / Number(userLeaderboardDefaults.limit),
+        )
       : 1,
   )
 
-  const serverLeaderboardResponse = parseServerResponse<LeaderboardResponse>(
+  const userLeaderboardResponse = parseServerResponse<LeaderboardResponse>(
     await fetchLeaderboard({
-      ...leaderboardDefaults,
-      page: startingPage,
+      ...userLeaderboardDefaults,
+      page: userleaderboardStartingPage,
     }),
   )
 
-  const userYearlyRays = serverLeaderboardResponse.leaderboard.find(
+  const topLeaderboardResponse =
+    userleaderboardStartingPage !== '1' &&
+    parseServerResponse<LeaderboardResponse>(await fetchLeaderboard(leaderboardDefaults))
+
+  const userYearlyRays = userLeaderboardResponse.leaderboard.find(
     (user) => user.position === userRays.rays?.positionInLeaderboard,
   )
+
+  const mappedLeaderBoard = mapLeaderboardColumns({
+    leaderboardData: topLeaderboardResponse
+      ? [...topLeaderboardResponse.leaderboard, 'separator', ...userLeaderboardResponse.leaderboard]
+      : userLeaderboardResponse.leaderboard,
+    userWalletAddress: searchParams.userAddress,
+    skipBanner: true,
+  })
 
   return (
     <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'center' }}>
@@ -51,14 +66,7 @@ export default async function HomePage({
       <div
         style={{ marginBottom: 'var(--space-xxxl)', marginTop: 'var(--space-xxxl)', width: '100%' }}
       >
-        <Leaderboard
-          staticLeaderboardData={serverLeaderboardResponse}
-          connectedWalletAddress={searchParams.userAddress}
-          pagination={{
-            ...leaderboardDefaults,
-            page: startingPage,
-          }}
-        />
+        <Leaderboard leaderboardData={mappedLeaderBoard} />
       </div>
     </div>
   )
