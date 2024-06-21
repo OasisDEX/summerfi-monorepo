@@ -57,7 +57,9 @@ export default async function LeaderboardPage({
     leaderboardData: topLeaderboardResponse
       ? [...topLeaderboardResponse.leaderboard, 'separator', ...userLeaderboardResponse.leaderboard]
       : userLeaderboardResponse.leaderboard,
-    userWalletAddress: searchParams.userAddress.toLocaleLowerCase(),
+    userWalletAddress: searchParams.userAddress
+      ? searchParams.userAddress.toLocaleLowerCase()
+      : undefined,
     skipBanner: true,
   })
 
