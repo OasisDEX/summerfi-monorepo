@@ -1,6 +1,7 @@
 'use client'
 import { FC, useState } from 'react'
 import { Button, Select, Text, TokenSymbolsList } from '@summerfi/app-ui'
+import { usePathname } from 'next/navigation'
 
 import { ProductCard } from '@/components/molecules/ProductCard/ProductCard'
 import { NetworkNames } from '@/constants/networks-list'
@@ -30,11 +31,13 @@ const networks = [
 interface ProductPickerProps {
   products: AppRaysConfigType['products']
   productHub: ProductHubItem[]
+  userAddress?: string
 }
 
-export const ProductPicker: FC<ProductPickerProps> = ({ products, productHub }) => {
+export const ProductPicker: FC<ProductPickerProps> = ({ products, productHub, userAddress }) => {
   const [productType, setProductType] = useState<OmniProductType>(OmniProductType.Earn)
   const [network, setNetwork] = useState<SupportedNetworks>(NetworkNames.ethereumMainnet)
+  const currentPath = usePathname()
 
   const items = products[productType][network]
 
@@ -99,6 +102,9 @@ export const ProductPicker: FC<ProductPickerProps> = ({ products, productHub }) 
             }
             title={item.label}
             network={network}
+            userAddress={userAddress}
+            currentPath={currentPath}
+            productType={productType}
             btn={{
               link: item.link,
               label:

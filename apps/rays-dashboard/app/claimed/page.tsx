@@ -3,6 +3,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { BoostCards } from '@/components/molecules/BoostCards/BoostCards'
+import { PageViewHandler } from '@/components/organisms/PageViewHandler/PageViewHandler'
+import { basePath } from '@/helpers/base-path'
 import { fetchRays } from '@/server-handlers/rays'
 
 interface ClaimedPageProps {
@@ -35,7 +37,13 @@ export default async function ClaimedPage({ searchParams }: ClaimedPageProps) {
             alignItems: 'center',
           }}
         >
-          <Image src="/rays/gif/claimed-rays.gif" width="259" height="179" alt="claimed-rays" />
+          <Image
+            src={`${basePath}/gif/claimed-rays.gif`}
+            width="259"
+            height="200"
+            alt="claimed-rays"
+            unoptimized
+          />
           <Text as="h2" variant="h2">
             Wallet {formatAddress(userAddress)} has claimed{' '}
             {userRays.rays.eligiblePoints.toFixed(0)} $RAYS
@@ -43,14 +51,16 @@ export default async function ClaimedPage({ searchParams }: ClaimedPageProps) {
           <Text as="p" variant="p1" style={{ color: 'var(--color-neutral-80)' }}>
             You can now earn additional $RAYS by using Summer.fi and it&apos;s features.
           </Text>
-          <Text as="p" variant="p1" style={{ color: 'var(--color-neutral-80)' }}>
-            Read more about how you can earn extra $RAYS here:
+          <div style={{ display: 'inline-flex', alignItems: 'center' }}>
+            <Text as="p" variant="p1" style={{ color: 'var(--color-neutral-80)' }}>
+              Read more about how you can earn extra $RAYS here:
+            </Text>
             <Text as="p" variant="p2semi" style={{ display: 'inline', marginLeft: '10px' }}>
               <Link href={EXTERNAL_LINKS.KB.READ_ABOUT_RAYS} target="_blank">
                 Read about Rays →
               </Link>
             </Text>
-          </Text>
+          </div>
         </div>
       )}
       <Text
@@ -65,6 +75,7 @@ export default async function ClaimedPage({ searchParams }: ClaimedPageProps) {
         Earn more $RAYS
       </Text>
       <BoostCards userAddress={userAddress} />
+      <PageViewHandler userAddress={searchParams.userAddress} />
     </div>
   )
 }

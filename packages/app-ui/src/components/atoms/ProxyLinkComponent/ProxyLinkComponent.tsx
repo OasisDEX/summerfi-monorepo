@@ -1,5 +1,7 @@
 import { forwardRef, HTMLAttributeAnchorTarget } from 'react'
 
+import { basePath } from '@/helpers/base-path'
+
 /**
  * A component that renders a proxy link - removes /rays from the href (WATCH OUT)
  * needs: `passHref` and `legacyBehavior` on Link to work (and probably `prefetch={false}`)
@@ -35,7 +37,7 @@ export const ProxyLinkComponent = forwardRef(
       <a
         suppressHydrationWarning={suppressHydrationWarning}
         style={style}
-        href={href?.startsWith('/rays') ? href.slice(5) : href}
+        href={href?.startsWith(basePath) ? href.slice(5) : href}
         className={className}
         ref={ref}
         target={target}

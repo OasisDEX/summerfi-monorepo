@@ -4,6 +4,8 @@ import Image from 'next/image'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 import { WalletInit } from '@/components/molecules/WalletInit/WalletInit'
+import { AccountChangeHandler } from '@/components/organisms/AccountChangeHandler/AccountChangeHandler'
+import { basePath } from '@/helpers/base-path'
 import { parseServerResponse } from '@/helpers/parse-server-response'
 import systemConfigHandler from '@/server-handlers/system-config'
 
@@ -31,7 +33,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
           {
             simple: (
               <Image
-                src="/rays/img/backgrounds/bg-simple.svg"
+                src={`${basePath}/img/backgrounds/bg-simple.svg`}
                 className={classNames.backgroundSimple}
                 width={0}
                 height={0}
@@ -45,7 +47,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
         <div className={classNames.appContainer}>
           {children}
           <Footer
-            logo="/rays/img/branding/logo-dark.svg"
+            logo={`${basePath}/img/branding/logo-dark.svg`}
             languageSwitcher={<div />}
             newsletter={{
               button: 'Subscribe →',
@@ -56,6 +58,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
           />
         </div>
       </div>
+      <AccountChangeHandler />
     </>
   )
 }

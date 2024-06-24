@@ -2,9 +2,12 @@
 import { ChangeEvent, useEffect, useState } from 'react'
 import { Input } from '@summerfi/app-ui'
 import { IconX } from '@tabler/icons-react'
+import { usePathname } from 'next/navigation'
 
 import { mapLeaderboardColumns } from '@/components/organisms/Leaderboard/columns'
 import { Leaderboard } from '@/components/organisms/Leaderboard/Leaderboard'
+import { basePath } from '@/helpers/base-path'
+import { trackInputChange } from '@/helpers/mixpanel'
 import { LeaderboardResponse } from '@/types/leaderboard'
 
 import leaderboardSearchBoxAndResults from './LeaderboardSearchBoxAndResults.module.scss'
@@ -14,6 +17,7 @@ export const LeaderboardSearchBoxAndResults = () => {
   const [debouncedInput, setDebouncedInput] = useState('')
   const [leaderboardResponse, setLeaderboardResponse] = useState<LeaderboardResponse>()
   const [isLoading, setIsLoading] = useState(false)
+  const currentPath = usePathname()
 
   useEffect(() => {
     if (!input) {
@@ -35,10 +39,15 @@ export const LeaderboardSearchBoxAndResults = () => {
 
   useEffect(() => {
     const leaderboardDataUpdate = async () => {
+      trackInputChange({
+        id: 'LeaderboardSearch',
+        page: currentPath,
+        value: debouncedInput,
+      })
       setIsLoading(true)
       setLeaderboardResponse(undefined)
       const data = await fetch(
-        `/rays/api/leaderboard?page=1&limit=5&userAddress=${debouncedInput.toLocaleLowerCase()}`,
+        `${basePath}/api/leaderboard?page=1&limit=5&userAddress=${debouncedInput.toLocaleLowerCase()}`,
       ).then((resp) => resp.json())
       const castedData = data as LeaderboardResponse
 
@@ -51,13 +60,14 @@ export const LeaderboardSearchBoxAndResults = () => {
     } else {
       setLeaderboardResponse(undefined)
     }
-  }, [debouncedInput])
+  }, [currentPath, debouncedInput])
 
   const mappedLeaderBoard = leaderboardResponse
     ? mapLeaderboardColumns({
         leaderboardData: leaderboardResponse.leaderboard,
         userWalletAddress: debouncedInput,
         skipBanner: true,
+        page: currentPath,
       })
     : []
 
