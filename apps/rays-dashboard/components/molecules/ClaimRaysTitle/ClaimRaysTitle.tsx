@@ -39,7 +39,7 @@ export const ClaimRaysTitle = ({
         {userRays.rays.allPossiblePoints > 0 ? `up to` : ''}{' '}
         {formatCryptoBalance(new BigNumber(userRays.rays.allPossiblePoints))} $RAYS
       </Text>
-      {pointsEarnedPerYear && (
+      {!!pointsEarnedPerYear && (
         <Text
           as="h3"
           variant="h3colorful"
