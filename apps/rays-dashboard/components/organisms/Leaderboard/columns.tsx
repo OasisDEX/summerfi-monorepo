@@ -38,10 +38,12 @@ export const mapLeaderboardColumns = ({
   leaderboardData,
   userWalletAddress,
   skipBanner,
+  page,
   bannerEveryNth,
 }: {
   leaderboardData: (LeaderboardItem | 'separator')[]
   userWalletAddress?: string
+  page: string
   skipBanner?: boolean
   bannerEveryNth?: number
 }) => {
@@ -50,7 +52,13 @@ export const mapLeaderboardColumns = ({
   const parsedWalletAddress = userWalletAddress?.toLocaleLowerCase()
 
   const leaderboardBanner = {
-    cells: <LeaderboardBanner key="leaderboardBanner" userWalletAddress={parsedWalletAddress} />,
+    cells: (
+      <LeaderboardBanner
+        key="leaderboardBanner"
+        userWalletAddress={parsedWalletAddress}
+        page={page}
+      />
+    ),
   }
 
   let preparedRows = leaderboardData.map((item) =>

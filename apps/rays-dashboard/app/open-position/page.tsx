@@ -8,6 +8,7 @@ import {
 } from '@summerfi/app-ui'
 import BigNumber from 'bignumber.js'
 
+import { PageViewHandler } from '@/components/organisms/PageViewHandler/PageViewHandler'
 import { ProductPicker } from '@/components/organisms/ProductPicker/ProductPicker'
 import { formatAsShorthandNumbers } from '@/helpers/formatters'
 import { fetchRays } from '@/server-handlers/rays'
@@ -61,6 +62,7 @@ export default async function OpenPositionPage({ searchParams }: OpenPositionPag
       <ProductPicker
         products={systemConfig.configRays.products}
         productHub={systemConfig.productHub.table}
+        userAddress={userAddress}
       />
       <ProxyLinkComponent
         target="_blank"
@@ -71,6 +73,7 @@ export default async function OpenPositionPage({ searchParams }: OpenPositionPag
           Explore over 50+ positions with major protocols and collateral types supports
         </WithArrow>
       </ProxyLinkComponent>
+      <PageViewHandler userAddress={searchParams.userAddress} />
     </div>
   )
 }

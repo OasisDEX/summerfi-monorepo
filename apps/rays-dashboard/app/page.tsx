@@ -2,10 +2,12 @@ import { Button } from '@summerfi/app-ui'
 import Link from 'next/link'
 
 import ClaimRays from '@/components/organisms/ClaimRays/ClaimRays'
+import { HomepageHandler } from '@/components/organisms/HomepageHandler/HomepageHandler'
 import { mapLeaderboardColumns } from '@/components/organisms/Leaderboard/columns'
 import { LeaderboardBanner } from '@/components/organisms/Leaderboard/components/LeaderboardBanner'
 import { Leaderboard } from '@/components/organisms/Leaderboard/Leaderboard'
 import { LeaderboardSearchBoxAndResults } from '@/components/organisms/Leaderboard/LeaderboardSearchBoxAndResults'
+import { PageViewHandler } from '@/components/organisms/PageViewHandler/PageViewHandler'
 import { leaderboardDefaults, userLeaderboardDefaults } from '@/constants/leaderboard'
 import { parseServerResponse } from '@/helpers/parse-server-response'
 import { fetchLeaderboard } from '@/server-handlers/leaderboard'
@@ -61,6 +63,7 @@ export default async function LeaderboardPage({
       ? searchParams.userAddress.toLocaleLowerCase()
       : undefined,
     skipBanner: true,
+    page: '/',
   })
 
   return (
@@ -95,9 +98,15 @@ export default async function LeaderboardPage({
           </Link>
         </div>
         <div style={{ marginTop: 'var(--space-xxl)' }}>
-          <LeaderboardBanner userWalletAddress={searchParams.userAddress} />
+          <LeaderboardBanner userWalletAddress={searchParams.userAddress} page="/" />
         </div>
       </div>
+      {/**
+       * The HomepageHandler component handles the redirection after wallet is connected.
+       * Now mixpanel tracking as well
+       */}
+      <HomepageHandler userAddress={searchParams.userAddress} />
+      <PageViewHandler userAddress={searchParams.userAddress} />
     </div>
   )
 }

@@ -14,6 +14,7 @@ import Link from 'next/link'
 
 import { NetworkNames, networksByName } from '@/constants/networks-list'
 import { LendingProtocolConfig } from '@/helpers/lending-protocols-configs'
+import { trackButtonClick } from '@/helpers/mixpanel'
 
 import classNames from '@/components/molecules/ProductCard/ProductCard.module.scss'
 
@@ -57,6 +58,9 @@ interface ProductCardProps {
   tokens: TokenSymbolsList[]
   protocolConfig: LendingProtocolConfig
   network: NetworkNames
+  userAddress?: string
+  currentPath: string
+  productType: string
   btn: {
     label: string
     link: string
@@ -67,6 +71,9 @@ export const ProductCard: FC<ProductCardProps> = ({
   title,
   automation,
   tokens,
+  userAddress,
+  currentPath,
+  productType,
   protocolConfig,
   network,
   btn,
@@ -110,7 +117,21 @@ export const ProductCard: FC<ProductCardProps> = ({
         </div>
         <Link passHref legacyBehavior prefetch={false} href={btn.link} className={classNames.link}>
           <ProxyLinkComponent target="_blank">
-            <Button variant="colorful">
+            <Button
+              variant="colorful"
+              onClick={() => {
+                trackButtonClick({
+                  id: 'ProductCardAction',
+                  page: currentPath,
+                  userAddress,
+                  strategy: title ?? tokens.join('/'),
+                  link: btn.link,
+                  network,
+                  productType,
+                  protocol: protocolConfig.label,
+                })
+              }}
+            >
               <span>{btn.label}</span>
             </Button>
           </ProxyLinkComponent>

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { mapLeaderboardColumns } from '@/components/organisms/Leaderboard/columns'
 import { Leaderboard } from '@/components/organisms/Leaderboard/Leaderboard'
 import { LeaderboardSearchBoxAndResults } from '@/components/organisms/Leaderboard/LeaderboardSearchBoxAndResults'
+import { PageViewHandler } from '@/components/organisms/PageViewHandler/PageViewHandler'
 import { wholeLeaderboardDefaults } from '@/constants/leaderboard'
 import { parseServerResponse } from '@/helpers/parse-server-response'
 import { fetchLeaderboard } from '@/server-handlers/leaderboard'
@@ -29,6 +30,7 @@ export default async function LeaderboardPage({
     leaderboardData: topLeaderboardResponse.leaderboard,
     userWalletAddress: searchParams.userAddress,
     bannerEveryNth: 40,
+    page: '/leaderboard',
   })
 
   const previousPageAvailable = searchParams.page && Number(searchParams.page) !== 1
@@ -100,6 +102,7 @@ export default async function LeaderboardPage({
           </Button>
         </Link>
       </div>
+      <PageViewHandler userAddress={searchParams.userAddress} />
     </div>
   )
 }

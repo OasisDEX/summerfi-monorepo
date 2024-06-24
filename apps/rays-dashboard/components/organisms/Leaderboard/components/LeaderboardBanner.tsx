@@ -1,8 +1,17 @@
+'use client'
 import { Button, EXTERNAL_LINKS, ProxyLinkComponent, Text } from '@summerfi/app-ui'
+
+import { trackButtonClick } from '@/helpers/mixpanel'
 
 const bannerLabels = ['Enable Automations', 'Open a position', 'Use Swap']
 
-export const LeaderboardBanner = ({ userWalletAddress }: { userWalletAddress?: string }) => {
+export const LeaderboardBanner = ({
+  userWalletAddress,
+  page,
+}: {
+  userWalletAddress?: string
+  page: string
+}) => {
   const bannerLink = userWalletAddress
     ? `/portfolio/${userWalletAddress}`
     : EXTERNAL_LINKS.KB.READ_ABOUT_RAYS
@@ -37,7 +46,18 @@ export const LeaderboardBanner = ({ userWalletAddress }: { userWalletAddress?: s
             target="_blank"
             href={bannerLink}
           >
-            <Button variant="neutralSmall">{label}</Button>
+            <Button
+              variant="neutralSmall"
+              onClick={() => {
+                trackButtonClick({
+                  id: 'LeaderboardBanner',
+                  label,
+                  page,
+                })
+              }}
+            >
+              {label}
+            </Button>
           </ProxyLinkComponent>
         ))}
       </div>

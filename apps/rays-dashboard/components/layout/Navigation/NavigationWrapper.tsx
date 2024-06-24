@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 
 import { WalletButtonFallback } from '@/components/molecules/WalletButton/WalletButtonFallback'
+import { basePath } from '@/helpers/base-path'
 
 const WalletButton = dynamic(() => import('@/components/molecules/WalletButton/WalletButton'), {
   ssr: false,
@@ -25,8 +26,8 @@ export const NavigationWrapper: FC<NavigationWrapperProps> = ({ panels }) => {
   return (
     <Navigation
       currentPath={currentPath}
-      logo="/rays/img/branding/logo-dark.svg"
-      logoSmall="/rays/img/branding/dot-dark.svg"
+      logo={`${basePath}/img/branding/logo-dark.svg`}
+      logoSmall={`${basePath}/img/branding/dot-dark.svg`}
       links={undefined}
       panels={panels}
       navigationModules={{

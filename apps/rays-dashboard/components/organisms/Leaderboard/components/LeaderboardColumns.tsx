@@ -1,9 +1,11 @@
 'use client'
 
-import { ProxyLinkComponent, Text } from '@summerfi/app-ui'
+import { Button, ProxyLinkComponent, Text } from '@summerfi/app-ui'
 import { IconEye } from '@tabler/icons-react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
+import { trackButtonClick } from '@/helpers/mixpanel'
 import { LeaderboardItem } from '@/types/leaderboard'
 
 import classNames from '@/components/organisms/Leaderboard/Leaderboard.module.scss'
@@ -44,6 +46,8 @@ export const LeaderboardUser = ({
   cell: LeaderboardItem
   userWalletAddress?: string
 }) => {
+  const currentPath = usePathname()
+
   return (
     <Text
       as="p"
@@ -62,7 +66,20 @@ export const LeaderboardUser = ({
           query: { userAddress: cell.userAddress },
         }}
       >
-        <IconEye size={18} />
+        <IconEye
+          size={18}
+          onClick={() => {
+            trackButtonClick({
+              id: 'LeaderboardPeek',
+              page: currentPath,
+              value: cell.userAddress,
+              ...(cell.details && {
+                activePositions: cell.details.activePositions,
+                activeTriggers: cell.details.activeTriggers,
+              }),
+            })
+          }}
+        />
       </Link>
     </Text>
   )
@@ -98,6 +115,8 @@ export const LeaderboardPortfolio = ({
   cell: LeaderboardItem
   userWalletAddress?: string
 }) => {
+  const currentPath = usePathname()
+
   return (
     <Text
       as="p"
@@ -107,10 +126,25 @@ export const LeaderboardPortfolio = ({
     >
       <Link passHref legacyBehavior prefetch={false} href={`/portfolio/${cell.userAddress}`}>
         <ProxyLinkComponent style={{ color: 'var(--color-neutral-80)' }} target="_blank">
-          {cell.details
-            ? `${cell.details.activePositions} positions, ${cell.details.activeTriggers} automations `
-            : 'No positions '}
-          -&gt;
+          <Button
+            variant="unstyled"
+            onClick={() => {
+              trackButtonClick({
+                id: 'LeaderboardPortfolio',
+                page: currentPath,
+                value: cell.userAddress,
+                ...(cell.details && {
+                  activePositions: cell.details.activePositions,
+                  activeTriggers: cell.details.activeTriggers,
+                }),
+              })
+            }}
+          >
+            {cell.details
+              ? `${cell.details.activePositions} positions, ${cell.details.activeTriggers} automations `
+              : 'No positions '}
+            -&gt;
+          </Button>
         </ProxyLinkComponent>
       </Link>
     </Text>

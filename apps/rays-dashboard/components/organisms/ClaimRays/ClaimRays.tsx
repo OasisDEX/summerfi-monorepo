@@ -1,11 +1,12 @@
 'use client'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Button, Text } from '@summerfi/app-ui'
 import { useConnectWallet } from '@web3-onboard/react'
 import { usePathname, useRouter } from 'next/navigation'
 
 import { ClaimRaysTitle } from '@/components/molecules/ClaimRaysTitle/ClaimRaysTitle'
 import { CriteriaList } from '@/components/molecules/CriteriaList/CriteriaList'
+import { trackButtonClick } from '@/helpers/mixpanel'
 import { useClientSideMount } from '@/helpers/use-client-side-mount'
 import { RaysApiResponse } from '@/server-handlers/rays'
 
@@ -46,20 +47,22 @@ export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPagePro
       userRays?.rays?.userTypes.includes('SummerFi Power User') ??
       userRays?.rays?.userTypes.includes('SummerFi User')
     ) {
+      trackButtonClick({
+        id: 'ClaimRays',
+        page: currentPath,
+        userAddress,
+      })
       push(`${currentPath}/claimed?userAddress=${dynamicWalletAddress}`)
 
       return
     }
+    trackButtonClick({
+      id: 'OpenPosition',
+      page: currentPath,
+      userAddress,
+    })
     push(`${currentPath}/open-position?userAddress=${dynamicWalletAddress}`)
-  }, [currentPath, dynamicWalletAddress, push, userRays])
-
-  useEffect(() => {
-    // if user is connected and is visiting a page without wallet
-    // address (its or others) in the query, redirect to the view with a wallet address
-    if (typeof userAddress === 'undefined' && dynamicWalletAddress) {
-      goToWalletView(dynamicWalletAddress)
-    }
-  }, [dynamicWalletAddress, goToWalletView, userAddress])
+  }, [currentPath, dynamicWalletAddress, push, userAddress, userRays?.rays?.userTypes])
 
   const isViewingOwnWallet = useMemo(
     () => userAddress === dynamicWalletAddress,
@@ -107,6 +110,11 @@ export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPagePro
             variant="primaryLarge"
             style={{ marginTop: 'var(--space-l)', marginBottom: 'var(--space-s)' }}
             onClick={() => {
+              trackButtonClick({
+                id: 'ConnectWallet',
+                page: currentPath,
+                userAddress,
+              })
               void connect().then(([{ accounts }]) => {
                 goToWalletView(accounts[0].address)
               })
@@ -123,7 +131,14 @@ export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPagePro
           <Button
             variant="secondaryLarge"
             style={{ marginTop: 'var(--space-l)', marginBottom: 'var(--space-s)' }}
-            onClick={() => goToWalletView(dynamicWalletAddress)}
+            onClick={() => {
+              trackButtonClick({
+                id: 'ViewYourPoints',
+                page: currentPath,
+                userAddress,
+              })
+              goToWalletView(dynamicWalletAddress)
+            }}
           >
             View your points
           </Button>
@@ -132,7 +147,13 @@ export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPagePro
         <Button
           variant="primaryLarge"
           style={{ marginTop: 'var(--space-l)', marginBottom: 'var(--space-xxxl)' }}
-          onClick={() => connect()}
+          onClick={() => {
+            trackButtonClick({
+              id: 'ConnectWallet',
+              page: currentPath,
+            })
+            connect()
+          }}
         >
           Connect wallet
         </Button>

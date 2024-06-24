@@ -7,6 +7,7 @@ const withNextIntl = createNextIntlPlugin()
 const nextConfig = {
   output: 'standalone',
   basePath: '/rays',
+  reactStrictMode: false,
   webpack: (config, { isServer }) => {
     if (isServer) {
       config.plugins = [...config.plugins, new PrismaPlugin()]
