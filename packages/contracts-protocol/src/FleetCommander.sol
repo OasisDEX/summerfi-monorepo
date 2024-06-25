@@ -7,8 +7,6 @@ import "./FleetCommanderAccessControl.sol";
 contract FleetCommander is ERC4626, FleetCommanderAccessControl {
     using SafeERC20 for IERC20;
 
-    bytes32 public constant GOVERNOR_ROLE = keccak256("GOVERNOR_ROLE");
-    bytes32 public constant KEEPER_ROLE = keccak256("KEEPER_ROLE");
     uint256 public constant ALLOCATION_BASIS = 10000; // Fee comes from system parameter contract
 
     struct ArkInfo {
@@ -20,6 +18,16 @@ contract FleetCommander is ERC4626, FleetCommanderAccessControl {
         address fromArk;
         address toArk;
         uint256 amount;
+    }
+
+    struct FleetCommanderParams {
+        address governor;
+        ArkInfo[] initialArks;
+        uint256 initialFundsQueueBalance;
+        uint256 initialRebalanceCooldown;
+        address asset;
+        string name;
+        string symbol;
     }
 
     mapping(address => ArkInfo) public arks;
@@ -36,18 +44,14 @@ contract FleetCommander is ERC4626, FleetCommanderAccessControl {
     event FeeAddressUpdated(address newAddress);
     event ArkAdded(address indexed ark, uint256 maxAllocation);
 
-    constructor(
-        address governor,
-        ArkInfo[] memory initialArks,
-        uint256 initialFundsQueueBalance,
-        uint256 initialRebalanceCooldown,
-        address _asset,
-        string memory _name,
-        string memory _symbol
-    ) ERC4626(IERC20(_asset)) ERC20(_name, _symbol) FleetCommanderAccessControl(governor) {
-        _setupArks(initialArks);
-        minFundsQueueBalance = initialFundsQueueBalance;
-        rebalanceCooldown = initialRebalanceCooldown;
+    constructor(FleetCommanderParams memory params)
+        ERC4626(IERC20(params.asset))
+        ERC20(params.name, params.symbol)
+        FleetCommanderAccessControl(params.governor)
+    {
+        _setupArks(params.initialArks);
+        minFundsQueueBalance = params.initialFundsQueueBalance;
+        rebalanceCooldown = params.initialRebalanceCooldown;
     }
 
     /* PUBLIC - USER */
