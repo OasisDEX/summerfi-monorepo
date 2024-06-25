@@ -1,15 +1,10 @@
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import {
-IERC20,
-Math,
-SafeERC20,
-ERC4626
-} from "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
+import {IERC20, ERC20, SafeERC20, ERC4626} from "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol";
+import "./FleetCommanderAccessControl.sol";
 
-contract FleetCommander is ERC4626, AccessControl {
-    using Math for uint256;
+contract FleetCommander is ERC4626, FleetCommanderAccessControl {
     using SafeERC20 for IERC20;
 
     bytes32 public constant GOVERNOR_ROLE = keccak256("GOVERNOR_ROLE");
@@ -49,8 +44,7 @@ contract FleetCommander is ERC4626, AccessControl {
         address _asset,
         string memory _name,
         string memory _symbol
-    ) ERC4626(IERC20(_asset)) ERC20(_name, _symbol) {
-        _setupRole(GOVERNOR_ROLE, governor);
+    ) ERC4626(IERC20(_asset)) ERC20(_name, _symbol) FleetCommanderAccessControl(governor) {
         _setupArks(initialArks);
         minFundsQueueBalance = initialFundsQueueBalance;
         rebalanceCooldown = initialRebalanceCooldown;
@@ -62,18 +56,18 @@ contract FleetCommander is ERC4626, AccessControl {
     function deposit(uint256 assets, address receiver) public override returns (uint256) {}
 
     /* EXTERNAL - KEEPER */
-    function rebalance(bytes calldata data) external onlyRole(KEEPER_ROLE) {}
-    function commitFundsQueue(bytes calldata data) external onlyRole(KEEPER_ROLE) {}
-    function refillFundsQueue(bytes calldata data) external onlyRole(KEEPER_ROLE) {}
+    function rebalance(bytes calldata data) external onlyKeeper {}
+    function commitFundsQueue(bytes calldata data) external onlyKeeper {}
+    function refillFundsQueue(bytes calldata data) external onlyKeeper {}
 
     /* EXTERNAL - GOVERNANCE */
-    function setDepositCap(uint256 newCap) external onlyRole(GOVERNOR_ROLE) {}
-    function setFeeAddress(address newAddress) external onlyRole(GOVERNOR_ROLE) {}
-    function addArk(address ark, uint256 maxAllocation) external onlyRole(GOVERNOR_ROLE) {}
-    function setMinFundsQueueBalance(uint256 newBalance) external onlyRole(GOVERNOR_ROLE) {}
-    function updateRebalanceCooldown(uint256 newCooldown) external onlyRole(GOVERNOR_ROLE) {}
-    function forceRebalance(bytes calldata data) external onlyRole(GOVERNOR_ROLE) {}
-    function emergencyShutdown() external onlyRole(GOVERNOR_ROLE) {}
+    function setDepositCap(uint256 newCap) external onlyGovernor {}
+    function setFeeAddress(address newAddress) external onlyGovernor {}
+    function addArk(address ark, uint256 maxAllocation) external onlyGovernor {}
+    function setMinFundsQueueBalance(uint256 newBalance) external onlyGovernor {}
+    function updateRebalanceCooldown(uint256 newCooldown) external onlyGovernor {}
+    function forceRebalance(bytes calldata data) external onlyGovernor {}
+    function emergencyShutdown() external onlyGovernor {}
 
     /* PUBLIC - FEES */
     function mintSharesAsFees() public {}
@@ -84,7 +78,7 @@ contract FleetCommander is ERC4626, AccessControl {
     /* INTERNAL - ARK */
     function _board(address ark, uint256 amount) internal {}
     function _disembark(address ark, uint256 amount) internal {}
-    function _move(address memory fromArk, address toArk, uint256 amount) internal {}
-    function _setupArks(ArkInfo[] arks) internal {}
+    function _move(address fromArk, address toArk, uint256 amount) internal {}
+    function _setupArks(ArkInfo[] memory _arks) internal {}
     function _addArk(address ark, uint256 maxAllocation) internal {}
 }
