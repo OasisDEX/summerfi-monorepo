@@ -12,6 +12,15 @@ export const StaticTokensData: TokenListData = {
   logoURI: 'https://summer.fi/static/img/logos/logo_dark.svg',
   keywords: ['Summer.fi', 'MakerDAO'],
   tokens: [
+    // Ethereum Mainnet
+    {
+      name: 'ETHx',
+      address: '0xA35b1B31Ce002FBF2058D22F30f95D405200A15b',
+      symbol: 'ETHx',
+      decimals: 18,
+      chainId: 1,
+      logoURI: '',
+    },
     {
       name: 'PayPal USD',
       address: '0x6c3ea9036406852006290770BEdFcAbA0e23A0e8',
@@ -381,6 +390,7 @@ export const StaticTokensData: TokenListData = {
       chainId: 1,
       logoURI: 'https://tokens.1inch.io/0xdac17f958d2ee523a2206206994597c13d831ec7.png',
     },
+    // UNKNOWN
     {
       name: 'Dai Stablecoin',
       address: '0xaD6D458402F60fD3Bd25163575031ACDce07538D',
@@ -407,6 +417,7 @@ export const StaticTokensData: TokenListData = {
       logoURI:
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xc778417E063141139Fce010982780140Aa0cD5Ab/logo.png',
     },
+    // UNKNOWN
     {
       name: 'Dai Stablecoin',
       address: '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735',
@@ -442,6 +453,7 @@ export const StaticTokensData: TokenListData = {
       logoURI:
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xc778417E063141139Fce010982780140Aa0cD5Ab/logo.png',
     },
+    // UNKNOWN
     {
       name: 'Uniswap',
       address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
@@ -459,6 +471,7 @@ export const StaticTokensData: TokenListData = {
       logoURI:
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6/logo.png',
     },
+    // LUKSO Mainnet
     {
       name: 'Dai Stablecoin',
       address: '0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa',
@@ -493,6 +506,91 @@ export const StaticTokensData: TokenListData = {
       chainId: 42,
       logoURI:
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xd0A1E359811322d97991E03f863a0C30C2cF029C/logo.png',
+    },
+    // Base Mainnet
+    {
+      name: 'Synthetix Network Token',
+      address: '0x22e6966B799c4D5B13BE962E1D117b56327FDa66',
+      symbol: 'SNX',
+      decimals: 18,
+      chainId: 8453,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo.png',
+    },
+    {
+      name: 'Coinbase Wrapped Staked ETH',
+      address: '0x2ae3f1ec7f1f5012cfeab0185bfc7aa3cf0dec22',
+      symbol: 'cbETH',
+      decimals: 18,
+      chainId: 8453,
+      logoURI: '',
+    },
+    {
+      name: 'Renzo Restaked ETH',
+      address: '0x2416092f143378750bb29b79eD961ab195CcEea5',
+      symbol: 'ezETH',
+      decimals: 18,
+      chainId: 8453,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xbf5495Efe5DB9ce00f80364C8B423567e58d2110/logo.png',
+    },
+    {
+      name: 'Wrapped eETH',
+      address: '0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A',
+      symbol: 'weETH',
+      decimals: 18,
+      chainId: 8453,
+      logoURI: '',
+    },
+    {
+      name: 'Dai Stablecoin',
+      address: '0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb',
+      symbol: 'DAI',
+      decimals: 18,
+      chainId: 8453,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png',
+    },
+    {
+      name: 'Wrapped Ether',
+      address: '0x4200000000000000000000000000000000000006',
+      symbol: 'WETH',
+      decimals: 18,
+      chainId: 8453,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
+    },
+    {
+      chainId: 8453,
+      address: '0x9EaF8C1E34F05a589EDa6BAfdF391Cf6Ad3CB239',
+      name: 'yearn finance',
+      symbol: 'YFI',
+      decimals: 18,
+      logoURI: 'https://assets.coingecko.com/coins/images/11849/thumb/yfi-192x192.png?1598325330',
+    },
+    {
+      address: '0xc1CBa3fCea344f92D9239c08C0568f6F2F0ee452',
+      chainId: 8453,
+      name: 'WrappedliquidstakedEther2.0',
+      symbol: 'wstETH',
+      decimals: 18,
+      logoURI: 'https://tokens.1inch.io/0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0.png',
+    },
+    {
+      address: '0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452',
+      chainId: 8453,
+      name: 'Wrapped Staked ETH',
+      symbol: 'WSTETH',
+      decimals: 18,
+      logoURI: 'https://tokens.1inch.io/0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0.png',
+    },
+    {
+      name: 'Rocket ETH',
+      address: '0xB6fe221Fe9EeF5aBa221c348bA20A1Bf5e73624c',
+      symbol: 'rETH',
+      decimals: 18,
+      chainId: 8453,
+      logoURI: 'https://tokens.1inch.io/0xae78736cd615f374d3085123a210448e74fc6393.png',
     },
   ],
 }
