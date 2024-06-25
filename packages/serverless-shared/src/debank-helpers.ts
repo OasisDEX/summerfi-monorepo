@@ -1,16 +1,26 @@
 import { NetworkNames } from './domain-types'
 
+// For each new network, add a new enum value
 export const DEBANK_SUPPORTED_CHAIN_IDS = ['eth', 'op', 'arb', 'base']
+// For each new protocol, add a new enum value as network_protocol
 export const DEBANK_SUPPORTED_PROTOCOL_IDS = [
+  // Mainnet
   'aave2',
   'aave3',
-  'arb_aave3',
-  'op_aave3',
-  'base_aave3',
   'ajna',
   'makerdao',
   'spark',
   'morphoblue',
+  // Optimism
+  'op_aave3',
+  'op_ajna',
+  // Arbitrum
+  'arb_aave3',
+  'arb_ajna',
+  // Base
+  'base_aave3',
+  'base_ajna',
+  'base_morphoblue',
 ]
 export const DEBANK_SUPPORTED_PROXY_IDS = ['summer', 'makerdao']
 
