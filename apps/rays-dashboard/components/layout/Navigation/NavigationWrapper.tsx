@@ -1,10 +1,16 @@
 'use client'
 
-import { FC } from 'react'
-import { LoadingSpinner, Navigation, NavigationMenuPanelType } from '@summerfi/app-ui'
+import { FC, useEffect, useState } from 'react'
+import { Navigation, NavigationMenuPanelType } from '@summerfi/app-ui'
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 
+import { BridgeSwapHandlerLoader } from '@/components/layout/Navigation/BridgeSwap/BridgeSwapLoader'
+import { BridgeSwapWrapper } from '@/components/layout/Navigation/BridgeSwap/BridgeSwapWrapper'
+import {
+  NavigationModuleBridge,
+  NavigationModuleSwap,
+} from '@/components/layout/Navigation/NavigationModules'
 import { WalletButtonFallback } from '@/components/molecules/WalletButton/WalletButtonFallback'
 import { basePath } from '@/helpers/base-path'
 
@@ -13,15 +19,28 @@ const WalletButton = dynamic(() => import('@/components/molecules/WalletButton/W
   loading: () => <WalletButtonFallback />,
 })
 
+const BridgeSwap = dynamic(() => import('@/components/layout/Navigation/BridgeSwap/BridgeSwap'), {
+  ssr: false,
+  loading: () => <BridgeSwapHandlerLoader />,
+})
+
 interface NavigationWrapperProps {
   panels?: NavigationMenuPanelType[]
   connectedWalletAddress?: string
 }
-const NavigationModuleBridge = () => <LoadingSpinner />
-const NavigationModuleSwap = () => <LoadingSpinner />
 
 export const NavigationWrapper: FC<NavigationWrapperProps> = ({ panels }) => {
+  const [showNavigationModule, setShowNavigationModule] = useState<'swap' | 'bridge'>()
+  // to prevent suddenly dissapearing bridge/swap module
+  // once loaded, stays loaded
+  const [onceLoaded, setOnceLoaded] = useState(false)
   const currentPath = usePathname()
+
+  useEffect(() => {
+    if (showNavigationModule && !onceLoaded) {
+      setOnceLoaded(true)
+    }
+  }, [showNavigationModule, onceLoaded])
 
   return (
     <Navigation
@@ -31,11 +50,29 @@ export const NavigationWrapper: FC<NavigationWrapperProps> = ({ panels }) => {
       links={undefined}
       panels={panels}
       navigationModules={{
-        NavigationModuleBridge,
-        NavigationModuleSwap,
+        NavigationModuleBridge: (
+          <NavigationModuleBridge setShowNavigationModule={setShowNavigationModule} />
+        ),
+        NavigationModuleSwap: (
+          <NavigationModuleSwap setShowNavigationModule={setShowNavigationModule} />
+        ),
       }}
+      additionalModule={
+        <BridgeSwapWrapper
+          showNavigationModule={showNavigationModule}
+          setShowNavigationModule={setShowNavigationModule}
+        >
+          {onceLoaded && (
+            <BridgeSwap
+              showNavigationModule={showNavigationModule}
+              setShowNavigationModule={setShowNavigationModule}
+            />
+          )}
+        </BridgeSwapWrapper>
+      }
       walletConnectionComponent={<WalletButton />}
       onLogoClick={() => {
+        // because router will use base path...
         window.location.href = '/'
       }}
     />

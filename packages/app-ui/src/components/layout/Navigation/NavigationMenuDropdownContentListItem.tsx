@@ -1,4 +1,4 @@
-import { IconStar, IconStarFilled } from '@tabler/icons-react'
+import { IconStarFilled } from '@tabler/icons-react'
 import classNames from 'classnames'
 
 import { Text } from '@/components/atoms/Text/Text'

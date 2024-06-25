@@ -115,7 +115,6 @@ export default () => {
     }
   }
 
-  // eslint-disable-next-line consistent-return
   useLayoutEffect(() => {
     if (infoBoxOpened) {
       const closeInfoBox = () => {
@@ -130,6 +129,8 @@ export default () => {
         listener[0].removeEventListener('click', closeInfoBox)
       }
     }
+
+    return () => {}
   }, [infoBoxOpened])
 
   return (

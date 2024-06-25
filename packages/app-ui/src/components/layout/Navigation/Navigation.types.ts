@@ -1,4 +1,5 @@
 import { ReactNode } from 'react'
+import { IconProps, TablerIcon } from '@tabler/icons-react'
 
 import { IconNamesList, TokenSymbolsList } from '@/tokens/types'
 
@@ -14,6 +15,14 @@ export interface NavigationMenuPanelLink {
 
 export interface NavigationMenuPanelIcon {
   icon?: IconNamesList
+  /**
+   * Custom icon component from @tabler/icons-react
+   */
+  customIcon?: TablerIcon
+  /**
+   * Custom icon props for @tabler/icons-react
+   */
+  customIconProps?: IconProps
   image?: string
   tokens?: TokenSymbolsList[]
   position: 'global' | 'title'
@@ -107,7 +116,7 @@ export interface NavigationProps {
 
 export interface WithNavigationModules {
   navigationModules?: {
-    NavigationModuleSwap: () => React.JSX.Element
-    NavigationModuleBridge: () => React.JSX.Element
+    NavigationModuleSwap: React.JSX.Element
+    NavigationModuleBridge: React.JSX.Element
   }
 }

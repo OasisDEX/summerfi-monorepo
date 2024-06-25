@@ -94,8 +94,8 @@ export const NavigationMenuDropdownContentList = ({
               >
                 {navigationModule && navigationModules ? (
                   {
-                    swap: <navigationModules.NavigationModuleSwap />,
-                    bridge: <navigationModules.NavigationModuleBridge />,
+                    swap: navigationModules.NavigationModuleSwap,
+                    bridge: navigationModules.NavigationModuleBridge,
                   }[navigationModule]
                 ) : (
                   <NavigationMenuDropdownContentListItem protocolName={protocolName} {...item} />

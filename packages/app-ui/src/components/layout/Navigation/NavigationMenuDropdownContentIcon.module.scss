@@ -1,4 +1,5 @@
 .navigationMenuDropdownContentIconWrapper {
+  display: flex;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
@@ -11,12 +12,13 @@
 }
 
 .navigationMenuDropdownContentIcon {
+  display: flex;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
   width: 34px;
   height: 34px;
-  border-radius: ellipse;
+  border-radius: var(--radius-circle);
   color: var(--color-neutral-80);
   background-color: var(--color-neutral-30);
   transition: 200ms color, 200ms background-color;

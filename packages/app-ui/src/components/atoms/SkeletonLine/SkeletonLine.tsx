@@ -68,7 +68,7 @@ export const SkeletonLine = ({
             left: doughnut,
             display: 'block',
             background: 'neutral10',
-            borderRadius: 'ellipse',
+            borderRadius: 'var(--radius-circle)',
             zIndex: 1,
           }}
         />
