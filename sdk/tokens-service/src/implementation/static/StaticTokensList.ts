@@ -592,5 +592,14 @@ export const StaticTokensData: TokenListData = {
       chainId: 8453,
       logoURI: 'https://tokens.1inch.io/0xae78736cd615f374d3085123a210448e74fc6393.png',
     },
+    {
+      name: 'USDCoin',
+      address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+      symbol: 'USDC',
+      decimals: 6,
+      chainId: 8453,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
+    },
   ],
 }
