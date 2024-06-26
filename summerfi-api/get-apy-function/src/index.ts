@@ -57,7 +57,8 @@ export const handler = async (
     : await getRedisInstance(
         {
           url: REDIS_CACHE_URL,
-          ttlInSeconds: ONE_HOUR * 6,
+          // Temporarily reduced to 20 min, standard value is 6h
+          ttlInSeconds: ONE_HOUR / 3,
           username: REDIS_CACHE_USER,
           password: REDIS_CACHE_PASSWORD,
           stage: STAGE,
