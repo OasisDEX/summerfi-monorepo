@@ -1,0 +1,950 @@
+{
+  "date": "2024-03-25T13:47:00.041Z",
+  "timestamp": 1711370827,
+  "provider": "remote",
+  "chain": "Base",
+  "config": "standard",
+  "contracts": {
+    "ServiceRegistry": {
+      "address": "0x0c1EDa5544EA63cf3d365912343161913a8f19Eb",
+      "blockNumber": "1"
+    },
+    "OperationExecutor": {
+      "address": "0xb65Cbf9689979e1749B38Ba5D5155c70500292D8",
+      "blockNumber": "2"
+    },
+    "OperationStorage": {
+      "address": "0x2Cb950c62Bc2e76DAEb86223E5F5D46EE9048EA4",
+      "blockNumber": "3"
+    },
+    "OperationsRegistry": {
+      "address": "0x1F15c0832bF01094C077A780ea85dC7Cfe6C209C",
+      "blockNumber": "4"
+    },
+    "DSProxyFactory": {
+      "address": "0x6eB5e634773E271F7FA7222e4244438Ea74674F1",
+      "blockNumber": "5"
+    },
+    "DSProxyRegistry": {
+      "address": "0x425fA97285965E01Cc5F951B62A51F6CDEA5cc0d",
+      "blockNumber": "6"
+    },
+    "DSGuardFactory": {
+      "address": "0x89010CBE61Ba3A800aFDc20D22E8163c6256E5Ef",
+      "blockNumber": "7"
+    },
+    "AccountGuard": {
+      "address": "0x83c8BFfD11913f0e94C1C0B615fC2Fdb1B17A27e",
+      "blockNumber": "8"
+    },
+    "AccountFactory": {
+      "address": "0x881CD31218f45a75F8ad543A3e1Af087f3986Ae0",
+      "blockNumber": "9"
+    },
+    "ChainLogView": {
+      "address": "0x4B323Eb2ece7fc1D81F1819c26A7cBD29975f75f",
+      "blockNumber": "10"
+    },
+    "Swap": {
+      "address": "0x892a23d33537d315E289e86D97291a49F487C624",
+      "blockNumber": "11"
+    },
+    "PositionCreated": {
+      "address": "0x8A20e6152B8918BC65a6F8E34B1D6adb4CbeF19F",
+      "blockNumber": "12"
+    },
+    "SwapAction": {
+      "address": "0x663A9525ffE09b736eb153092c90aaB144eDBa03",
+      "blockNumber": "13"
+    },
+    "TakeFlashloan": {
+      "address": "0x0d8e5D7A5B45Ce86a75489C7166dF69C9f453D0A",
+      "blockNumber": "14"
+    },
+    "SetApproval": {
+      "address": "0x35e847e3dAD2847C9E39196FCbF1c057b32c6469",
+      "blockNumber": "15"
+    },
+    "PullToken": {
+      "address": "0x52a9bC9a904B9eE6A4714eF883cCf14cb7283B0F",
+      "blockNumber": "16"
+    },
+    "SendToken": {
+      "address": "0x98191F148AC0A1EaB75315989b357D83d728Fc43",
+      "blockNumber": "17"
+    },
+    "WrapEth": {
+      "address": "0x499afBC7aE808e51e48A29FD30e80DfC5B1F2e56",
+      "blockNumber": "18"
+    },
+    "UnwrapEth": {
+      "address": "0xc69156420307048c9BAAe8191f9012391521a88d",
+      "blockNumber": "19"
+    },
+    "ReturnFunds": {
+      "address": "0xC58F2Ee4Ef92F2bE314743442496D6Fad0339d56",
+      "blockNumber": "20"
+    },
+    "AaveBorrow": {
+      "address": "0xAf70ff11e339C3DC79f315e05BbD6015B7bDFEf5",
+      "blockNumber": "21"
+    },
+    "AaveWithdraw": {
+      "address": "0xFBcB0bf3A7BcD1a368e8e8Ad2Ab601160088b39C",
+      "blockNumber": "22"
+    },
+    "AaveDeposit": {
+      "address": "0x53546083A3C8841e0813C6800e19F7E736585D31",
+      "blockNumber": "23"
+    },
+    "AavePayback": {
+      "address": "0x35909F6e5C36224fb44C4B448F051Fd474feDA89",
+      "blockNumber": "24"
+    },
+    "AaveV3Borrow": {
+      "address": "0xAf70ff11e339C3DC79f315e05BbD6015B7bDFEf5",
+      "blockNumber": "25"
+    },
+    "AaveV3Withdraw": {
+      "address": "0xFBcB0bf3A7BcD1a368e8e8Ad2Ab601160088b39C",
+      "blockNumber": "26"
+    },
+    "AaveV3Deposit": {
+      "address": "0x53546083A3C8841e0813C6800e19F7E736585D31",
+      "blockNumber": "27"
+    },
+    "AaveV3Payback": {
+      "address": "0x35909F6e5C36224fb44C4B448F051Fd474feDA89",
+      "blockNumber": "28"
+    },
+    "AaveV3SetEMode": {
+      "address": "0x9F47b484E921619028eF1c6F7fE73F9921B5AC6D",
+      "blockNumber": "29"
+    },
+    "AjnaDepositBorrow": {
+      "address": "0x4C020189Ed0556bD934F6d459003c95706b2D71d",
+      "blockNumber": "30"
+    },
+    "AjnaRepayWithdraw": {
+      "address": "0x595e9375bF40f2B9112c21b3Ded4e06cF3641982",
+      "blockNumber": "31"
+    },
+    "MorphoBlueBorrow": {
+      "address": "0x227B72A64FAC7597A7838034e774eAfeF95b4Ac5",
+      "blockNumber": "32"
+    },
+    "MorphoBlueWithdraw": {
+      "address": "0xe3EdfDaB49ac6756f3A9A6922Ae2c52990da6188",
+      "blockNumber": "33"
+    },
+    "MorphoBlueDeposit": {
+      "address": "0x5b8e9D4FE8f8AdF162Fc8bA12f7a93811F7BBc8c",
+      "blockNumber": "34"
+    },
+    "MorphoBluePayback": {
+      "address": "0x717175C1A85351a838eC919D105f58A25faf93e6",
+      "blockNumber": "35"
+    },
+    "SparkBorrow": {
+      "address": "0x0000000000000000000000000000000000000000",
+      "blockNumber": "36"
+    },
+    "SparkWithdraw": {
+      "address": "0x0000000000000000000000000000000000000000",
+      "blockNumber": "37"
+    },
+    "SparkDeposit": {
+      "address": "0x0000000000000000000000000000000000000000",
+      "blockNumber": "38"
+    },
+    "SparkPayback": {
+      "address": "0x0000000000000000000000000000000000000000",
+      "blockNumber": "39"
+    },
+    "SparkSetEMode": {
+      "address": "0x0000000000000000000000000000000000000000",
+      "blockNumber": "40"
+    },
+    "MakerPayback": {
+      "address": "0x0000000000000000000000000000000000000000",
+      "blockNumber": "41"
+    },
+    "MakerWithdraw": {
+      "address": "0x0000000000000000000000000000000000000000",
+      "blockNumber": "42"
+    }
+  },
+  "dependencies": {
+    "GnosisSafe": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "UniswapRouter": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "BalancerVault": {
+      "address": "0xBA12222222228d8Ba445958a75a0704d566BF2C8"
+    },
+    "OneInchAggregator": {
+      "address": "0x1111111254eeb25477b68fb85ed929f73a960582"
+    },
+    "AuthorizedCaller": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "FeeRecipient": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MerkleRedeemer": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "DssCharter": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "DssProxyActions": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "DssProxyActionsCharter": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "DssMultiplyProxyActions": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "DssCropper": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "DssProxyActionsCropjoin": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "DssProxyActionsDsr": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "Otc": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "OtcSupportMethods": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "ServiceRegistry": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "GuniProxyActions": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "GuniResolver": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "GuniRouter": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "CdpRegistry": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "DefaultExchange": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "NoFeesExchange": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "LowerFeesExchange": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "LidoCrvLiquidityFarmingReward": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "ChainlinkPriceOracle_USDCUSD": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "ChainlinkPriceOracle_ETHUSD": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "SdaiOracle": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AAVE": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "ADAI": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AJNA": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "BAL": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "BAT": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "BWAJNA": {
+      "address": "0xf0f326af3b1Ed943ab95C29470730CC8Cf66ae47"
+    },
+    "CBETH": {
+      "address": "0x2ae3f1ec7f1f5012cfeab0185bfc7aa3cf0dec22"
+    },
+    "COMP": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "CRVV1ETHSTETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "DAI": {
+      "address": "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb"
+    },
+    "ETH": {
+      "address": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+    },
+    "FRAX": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "GHO": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "GNO": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "GUNIV3DAIUSDC1": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "GUNIV3DAIUSDC2": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "GUSD": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "KNC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "LDO": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "LINK": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "LRC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "LUSD": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MANA": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MATIC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PAX": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PAXUSD": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "RENBTC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "RETH": {
+      "address": "0xB6fe221Fe9EeF5aBa221c348bA20A1Bf5e73624c"
+    },
+    "RBN": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "RWA001": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "RWA002": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "RWA003": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "RWA004": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "RWA005": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "RWA006": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "SDAI": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "STETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "STYETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "TBTC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "TUSD": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "UNI": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "UNIV2AAVEETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "UNIV2DAIETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "UNIV2DAIUSDC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "UNIV2DAIUSDT": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "UNIV2ETHUSDT": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "UNIV2LINKETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "UNIV2UNIETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "UNIV2USDCETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "UNIV2WBTCDAI": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "UNIV2WBTCETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "USDC": {
+      "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+    },
+    "USDC.E": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "USDBC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "USDT": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "WBTC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "WETH": {
+      "address": "0x4200000000000000000000000000000000000006"
+    },
+    "WLD": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "WSTETH": {
+      "address": "0xc1CBa3fCea344f92D9239c08C0568f6F2F0ee452"
+    },
+    "YIELDBTC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "YIELDETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "YFI": {
+      "address": "0x9EaF8C1E34F05a589EDa6BAfdF391Cf6Ad3CB239"
+    },
+    "ZRX": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "ARB": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "CRV": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "OP": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "SUSD": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "RPL": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "FlashMintModule": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "Chainlog": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "CdpManager": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "GetCdps": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "McdJug": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "Pot": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "End": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "Spot": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "Dog": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "Vat": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "McdGov": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "IlkRegistry": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_DAI": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_ETH_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_ETH_B": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_ETH_C": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_BAT_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_USDC_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_USDC_B": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_PSM_USDC_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_WBTC_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_WBTC_B": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_WBTC_C": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_TUSD_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_ZRX_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_KNC_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_MANA_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_USDT_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_PAXUSD_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_PSM_PAX_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_COMP_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_LRC_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_LINK_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_BAL_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_YFI_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_GUSD_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_PSM_GUSD_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_UNI_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_RENBTC_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_AAVE_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_MATIC_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_WSTETH_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_WSTETH_B": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_DIRECT_AAVEV2_DAI": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_UNIV2DAIETH_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_UNIV2WBTCETH_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_UNIV2USDCETH_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_UNIV2DAIUSDC_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_UNIV2ETHUSDT_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_UNIV2LINKETH_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_UNIV2UNIETH_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_UNIV2WBTCDAI_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_UNIV2AAVEETH_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_UNIV2DAIUSDT_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_GUNIV3DAIUSDC1_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_GUNIV3DAIUSDC2_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_CRVV1ETHSTETH_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_RWA001_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_RWA002_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_RWA003_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_RWA004_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_RWA005_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_RWA006_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_RETH_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "MCD_JOIN_GNO_A": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_ETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_BAT": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_USDC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_WBTC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_TUSD": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_ZRX": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_KNC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_MANA": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_USDT": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_PAXUSD": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_PAX": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_COMP": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_LRC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_LINK": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_BAL": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_YFI": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_GUSD": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_UNI": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_RENBTC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_AAVE": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_MATIC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_WSTETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_ADAI": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_UNIV2DAIETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_UNIV2WBTCETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_UNIV2USDCETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_UNIV2DAIUSDC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_UNIV2ETHUSDT": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_UNIV2LINKETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_UNIV2UNIETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_UNIV2WBTCDAI": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_UNIV2AAVEETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_UNIV2DAIUSDT": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_GUNIV3DAIUSDC1": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_GUNIV3DAIUSDC2": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_CRVV1ETHSTETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_RWA001": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_RWA002": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_RWA003": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_RWA004": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_RWA005": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_RWA006": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_RETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_GNO": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PIP_WETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "Oracle": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AaveLendingPool": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "PoolDataProvider": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AaveWethGateway": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AavePool": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AaveL2Encoder": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "SparkDataProvider": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "SparkOracle": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolInfo": {
+      "address": "0x97fa9b0909C238D170C1ab3B5c728A3a45BBEcBa"
+    },
+    "AjnaProxyActions": {
+      "address": "0x099708408aDb18F6D49013c88F3b1Bb514cC616F"
+    },
+    "AjnaPoolPairs_ETHDAI": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_ETHUSDC": {
+      "address": "0x0B17159F2486f669a1F930926638008E2ccB4287"
+    },
+    "AjnaPoolPairs_RETHDAI": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_RETHETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_RETHUSDC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_USDCETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_USDCWBTC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_USDCDAI": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_WBTCDAI": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_WBTCUSDC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_WSTETHDAI": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_WSTETHETH": {
+      "address": "0x63A366fc5976FF72999C89f69366F388b7D233e8"
+    },
+    "AjnaPoolPairs_WSTETHUSDC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_CBETHETH": {
+      "address": "0xCB1953EE28f89731C0ec088dA0720FC282fCFa9c"
+    },
+    "AjnaPoolPairs_TBTCWBTC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_TBTCUSDC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_ETHGHO": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_WSTETHGHO": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_GHODAI": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_RETHGHO": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_WBTCGHO": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_CBETHGHO": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_WLDUSDC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_USDCWLD": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_SDAIUSDC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_YFIDAI": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_YIELDETHETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_YIELDBTCWBTC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_TBTCGHO": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_CBETHUSDBC": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_STYETHDAI": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_RBNETH": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaPoolPairs_AJNADAI": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaRewardsManager": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaRewardsClaimer": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaRewardsReedemer": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "AjnaBonusRewardsReedemer": {
+      "address": "0x0000000000000000000000000000000000000000"
+    },
+    "ERC20PoolFactory": {
+      "address": "0x214f62B5836D83f3D6c4f71F174209097B1A779C"
+    },
+    "MorphoBlue": {
+      "address": "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb"
+    },
+    "AdaptiveCurveIrm": {
+      "address": "0x46415998764C29aB2a25CbeA6254146D50D22687"
+    },
+    "SparkLendingPool": {
+      "address": "0x0000000000000000000000000000000000000000"
+    }
+  }
+}

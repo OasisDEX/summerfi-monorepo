@@ -17,7 +17,7 @@ import {
   fetchAssetPrices,
   fetchReservesTokens,
 } from './AAVEv3LikeDataFetchers'
-import { ChainFamilyMap, IAddress, IChainInfo } from '@summerfi/sdk-common'
+import { IAddress, IChainInfo } from '@summerfi/sdk-common'
 import { ChainContractsProvider, GenericAbiMap } from '../../../utils/ChainContractProvider'
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import { Abi } from 'viem'
@@ -113,7 +113,7 @@ export class AaveV3LikeProtocolDataBuilder<
     const tokensUsedAsReservesWithUndefined = await Promise.all(
       rawTokens.map(async (reservesToken) => {
         const token = await this.context.tokensManager.getTokenByAddress({
-          chainInfo: ChainFamilyMap.Ethereum.Mainnet,
+          chainInfo: this.chainInfo,
           address: Address.createFromEthereum({ value: reservesToken.tokenAddress }),
         })
         if (!token) {
