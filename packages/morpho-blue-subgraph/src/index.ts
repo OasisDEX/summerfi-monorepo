@@ -7,6 +7,7 @@ import { CollateralLockedDocument, GetInterestRatesDocument } from './types/grap
 
 const chainIdSubgraphMap: Partial<Record<ChainId, string>> = {
   [ChainId.MAINNET]: 'summer-morpho-blue',
+  [ChainId.BASE]: 'summer-morpho-blue-base',
 }
 
 const getEndpoint = (chainId: ChainId, baseUrl: string) => {
@@ -17,7 +18,7 @@ const getEndpoint = (chainId: ChainId, baseUrl: string) => {
   return `${baseUrl}/${subgraph}`
 }
 interface SubgraphClientConfig {
-  chainId: ChainId.MAINNET
+  chainId: ChainId.MAINNET | ChainId.BASE
   urlBase: string
   logger?: Logger
 }
