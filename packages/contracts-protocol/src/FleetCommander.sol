@@ -10,7 +10,6 @@ contract FleetCommander is ERC4626, FleetCommanderAccessControl {
     uint256 public constant ALLOCATION_BASIS = 10000; // Fee comes from system parameter contract
 
     struct ArkInfo {
-        address ark;
         uint256 maxAllocation; // Max allocation as a percentage (e.g., 100 for 1%, 10000 for 100%)
     }
 
