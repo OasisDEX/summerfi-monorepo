@@ -6,9 +6,7 @@ import {IArkAccessControl} from "./IArkAccessControl.sol";
 import "../types/Percentage.sol";
 
 interface IArk is IArkAccessControl {
-    /**
-     * STRUCTS
-     */
+    /* STRUCTS */
 
     /**
      * @notice Configuration parameters for the Ark contract
@@ -19,9 +17,7 @@ interface IArk is IArkAccessControl {
         address token;
     }
 
-    /**
-     * EVENTS
-     */
+    /* EVENTS */
     event Harvested(uint256 amount);
     event Boarded(address indexed commander, uint256 amount);
     event Disembarked(address indexed commander, uint256 amount);
@@ -29,9 +25,7 @@ interface IArk is IArkAccessControl {
     event DepositCapUpdated(uint256 newCap);
     event RaftUpdated(address newRaft);
 
-    /**
-     * FUNCTIONS - PUBLIC
-     */
+    /* FUNCTIONS - PUBLIC */
     function balance() external view returns (uint256);
     function harvest() external;
 

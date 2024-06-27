@@ -6,9 +6,7 @@ import {IFleetCommanderAccessControl} from "./IFleetCommanderAccessControl.sol";
 import "../types/Percentage.sol";
 
 interface IFleetCommander is IFleetCommanderAccessControl, IERC4626 {
-    /**
-     * STRUCTS
-     */
+    /* STRUCTS */
 
     /**
      * @notice Configuration of an Ark added to the FleetCommander
@@ -41,9 +39,7 @@ interface IFleetCommander is IFleetCommanderAccessControl, IERC4626 {
         string symbol;
     }
 
-    /**
-     * EVENTS
-     */
+    /* EVENTS */
     event Rebalanced(address indexed keeper, RebalanceEventData[] rebalances);
     event QueuedFundsCommitted(address indexed keeper, uint256 prevBalance, uint256 newBalance);
     event FundsQueueRefilled(address indexed keeper, uint256 prevBalance, uint256 newBalance);
@@ -53,8 +49,11 @@ interface IFleetCommander is IFleetCommanderAccessControl, IERC4626 {
     event ArkAdded(address indexed ark, uint256 maxAllocation);
 
     /**
-     * FUNCTIONS - PUBLIC - USER
+     * @notice The ark configuration for a given ark (by address).
      */
+    function arks(address _address) external view returns (ArkConfiguration memory);
+
+    /* FUNCTIONS - PUBLIC - USER */
     function withdraw(uint256 assets, address receiver, address owner) external override returns (uint256);
     function forceWithdraw(uint256 assets, address receiver, address owner) external returns (uint256);
     function deposit(uint256 assets, address receiver) external override returns (uint256);

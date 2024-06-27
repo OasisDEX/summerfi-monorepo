@@ -3,7 +3,6 @@ pragma solidity 0.8.26;
 
 import {IERC20, ERC20, SafeERC20, ERC4626} from "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol";
 import {FleetCommanderAccessControl} from "./FleetCommanderAccessControl.sol";
-
 import {IFleetCommander} from "../interfaces/IFleetCommander.sol";
 
 /**
@@ -12,8 +11,7 @@ import {IFleetCommander} from "../interfaces/IFleetCommander.sol";
 contract FleetCommander is IFleetCommander, FleetCommanderAccessControl, ERC4626 {
     using SafeERC20 for IERC20;
 
-    uint256 public constant ALLOCATION_BASIS = 10000; // Fee comes from system parameter contract
-
+    /// @inheritdoc IFleetCommander
     mapping(address => ArkConfiguration) public arks;
     uint256 public totalQueuedFunds;
     uint256 public minFundsQueueBalance;
