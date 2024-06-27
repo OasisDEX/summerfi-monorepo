@@ -1,4 +1,4 @@
-import { safeParseBigInt } from '@summerfi/serverless-shared'
+import { ChainId, safeParseBigInt } from '@summerfi/serverless-shared'
 import {
   UserRewardsResponse,
   UserRewardsDistributionResponse,
@@ -6,6 +6,8 @@ import {
   GetClaimsParams,
   MorphoClaims,
   ClaimableMorphoReward,
+  MetaMorphoClaims,
+  ClaimsRawKeys,
 } from './types'
 
 /**
@@ -45,14 +47,22 @@ const aggregateClaimsByToken = (claims: MorphoAggregatedClaims[]): MorphoAggrega
   return Object.values(aggregatedClaims)
 }
 
-export const getClaims = async ({ account, logger }: GetClaimsParams): Promise<MorphoClaims> => {
+export const getClaims = async ({
+  account,
+  chainId,
+  claimType,
+  logger,
+}: GetClaimsParams): Promise<MorphoClaims> => {
   try {
+    if (![ChainId.MAINNET, ChainId.BASE].includes(chainId)) {
+      throw new Error(`Not supported chain id ${chainId}. Supported chain ids are: 1, 8453.`)
+    }
+
     const [responseRewards, responseDistribution] = await Promise.all([
-      fetch(`https://rewards.morpho.org/v1/users/${account}/rewards`),
-      fetch(`https://rewards.morpho.org/v1/users/${account}/distributions`),
+      fetch(`https://rewards.morpho.org/v1/users/${account}/rewards?chain_id=${chainId}`),
+      fetch(`https://rewards.morpho.org/v1/users/${account}/distributions?chain_id=${chainId}`),
     ])
 
-    // const responseRewards = await fetch(`https://rewards.morpho.org/v1/users/${account}/rewards`)
     if (responseRewards.status !== 200 || responseDistribution.status !== 200) {
       logger?.warn('Failed to fetch data from morpho rewards endpointa', {
         error: responseRewards.statusText,
@@ -73,19 +83,32 @@ export const getClaims = async ({ account, logger }: GetClaimsParams): Promise<M
       }
     })
 
+    const resolvedClaimType = {
+      [MetaMorphoClaims.BORROW]: ClaimsRawKeys.FOR_BORROW,
+      [MetaMorphoClaims.SUPPLY]: ClaimsRawKeys.FOR_SUPPLY,
+    }[claimType]
+
     const claimsAggregated: MorphoAggregatedClaims[] = aggregateClaimsByToken(
-      userRewardsResponse.data.map((item) => {
-        return {
-          rewardTokenAddress: item.program.asset.address,
-          claimable: safeParseBigInt(item.for_supply?.claimable_now) || 0n,
-          accrued: safeParseBigInt(item.for_supply?.total) || 0n,
-          claimed: safeParseBigInt(item.for_supply?.claimed) || 0n,
-        }
-      }),
+      userRewardsResponse.data
+        .map((item) => {
+          const rewards = item[resolvedClaimType]
+
+          if (rewards) {
+            return {
+              rewardTokenAddress: item.program.asset.address,
+              claimable: safeParseBigInt(rewards.claimable_now) || 0n,
+              accrued: safeParseBigInt(rewards.total) || 0n,
+              claimed: safeParseBigInt(rewards.claimed) || 0n,
+            }
+          }
+
+          return null
+        })
+        .filter((item) => !!item) as MorphoAggregatedClaims[],
     )
 
     return {
-      claimable,
+      claimable, // IMPORTANT - claimable are user specific, not claimType or even position specific
       claimsAggregated,
     }
   } catch (error) {

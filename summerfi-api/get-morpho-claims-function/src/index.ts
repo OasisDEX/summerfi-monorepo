@@ -5,15 +5,18 @@ import {
   ResponseInternalServerError,
   ResponseOk,
 } from '@summerfi/serverless-shared/responses'
-import { addressSchema } from '@summerfi/serverless-shared/validators'
+import { addressSchema, chainIdSchema } from '@summerfi/serverless-shared/validators'
 
 import { Logger } from '@aws-lambda-powertools/logger'
 import { getClaims } from './get-claims'
+import { MetaMorphoClaims } from './types'
 
 const logger = new Logger({ serviceName: 'get-morpho-claims-function' })
 
 const paramsSchema = z.object({
   account: addressSchema,
+  claimType: z.enum([MetaMorphoClaims.BORROW, MetaMorphoClaims.SUPPLY]),
+  chainId: chainIdSchema,
 })
 
 export const handler = async (
@@ -45,6 +48,8 @@ export const handler = async (
 
   const claims = await getClaims({
     account: params.account,
+    chainId: params.chainId,
+    claimType: params.claimType,
   })
 
   return ResponseOk({ body: claims })
