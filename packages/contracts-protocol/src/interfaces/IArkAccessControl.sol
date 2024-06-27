@@ -4,16 +4,17 @@ pragma solidity 0.8.26;
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
 /**
- * @title IFleetCommanderAccessControl
- * @notice Defines the specific roles for the FleetCommander contract and the
+ * @title IArkAccessControl
+ * @notice Defines the specific roles for Ark contracts and the
  *         helper functions to manage them and to enforce the access control
  */
-interface IFleetCommanderAccessControl {
+interface IArkAccessControl {
     /**
      * ERRORS
      */
     error CallerIsNotGovernor(address caller);
     error CallerIsNotKeeper(address caller);
+    error CallerIsNotCommander(address caller);
     error CallerIsNotAdmin(address caller);
     error CallerIsNotRoleAdmin(address caller);
 

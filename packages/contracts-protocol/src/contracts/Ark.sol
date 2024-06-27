@@ -2,16 +2,13 @@
 pragma solidity 0.8.26;
 
 import "./ArkAccessControl.sol";
+import "../interfaces/IArk.sol";
 
-contract Ark is ArkAccessControl {
+/**
+ * @custom:see IArk
+ */
+contract Ark is IArk, ArkAccessControl {
     address public raft;
-
-    event Harvested(uint256 amount);
-    event Boarded(address indexed commander, uint256 amount);
-    event Disembarked(address indexed commander, uint256 amount);
-    event Moved(address indexed commander, uint256 amount, address indexed newArk);
-    event DepositCapUpdated(uint256 newCap);
-    event RaftUpdated(address newRaft);
 
     constructor(address _governor, address _raft) ArkAccessControl(_governor) {
         raft = _raft;
