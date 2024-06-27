@@ -1,13 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import {IERC4626} from "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol";
+import { IERC4626 } from "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol";
+import { IFleetCommanderAccessControl } from "./IFleetCommanderAccessControl.sol";
 import "../types/Percentage.sol";
 
-interface IFleetCommander is IERC4626 {
-    /**
-     * STRUCTS
-     */
+interface IFleetCommander is IFleetCommanderAccessControl, IERC4626 {
+    /** STRUCTS */
 
     /**
      * @notice Configuration of an Ark added to the FleetCommander
@@ -40,9 +39,7 @@ interface IFleetCommander is IERC4626 {
         string symbol;
     }
 
-    /**
-     * EVENTS
-     */
+    /** EVENTS */
     event Rebalanced(address indexed keeper, RebalanceEventData[] rebalances);
     event QueuedFundsCommitted(address indexed keeper, uint256 prevBalance, uint256 newBalance);
     event FundsQueueRefilled(address indexed keeper, uint256 prevBalance, uint256 newBalance);
@@ -51,14 +48,12 @@ interface IFleetCommander is IERC4626 {
     event FeeAddressUpdated(address newAddress);
     event ArkAdded(address indexed ark, uint256 maxAllocation);
 
-    /**
-     * FUNCTIONS - PUBLIC - USER
-     */
+    /** FUNCTIONS - PUBLIC - USER*/
     function withdraw(uint256 assets, address receiver, address owner) external override returns (uint256);
     function forceWithdraw(uint256 assets, address receiver, address owner) external returns (uint256);
     function deposit(uint256 assets, address receiver) external override returns (uint256);
 
-    /* FUNCITONS - EXTERNAL - KEEPER */
+    /* FUNCTIONS - EXTERNAL - KEEPER */
     function rebalance(bytes calldata data) external;
     function commitFundsQueue(bytes calldata data) external;
     function refillFundsQueue(bytes calldata data) external;
@@ -72,6 +67,6 @@ interface IFleetCommander is IERC4626 {
     function forceRebalance(bytes calldata data) external;
     function emergencyShutdown() external;
 
-    /* FUNCITONS - PUBLIC - FEES */
+    /* FUNCTIONS - PUBLIC - FEES */
     function mintSharesAsFees() external;
 }
