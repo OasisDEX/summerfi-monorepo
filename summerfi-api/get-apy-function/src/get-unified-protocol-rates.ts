@@ -206,11 +206,11 @@ export const getUnifiedProtocolRates = async (
     let subgraphResult: MorphoBlueMarketInterestRateResult | undefined
     if (fromCache) {
       subgraphResult = JSON.parse(fromCache) as MorphoBlueMarketInterestRateResult
-    } else {
+    } else if (chainId === ChainId.MAINNET || chainId === ChainId.BASE) {
       const subgraphClient = getMorphoBlueSubgraphClient({
         ...subgraphsConfig,
         logger,
-        chainId: ChainId.MAINNET,
+        chainId,
       })
 
       subgraphResult = await subgraphClient.getInterestRate({
@@ -227,6 +227,11 @@ export const getUnifiedProtocolRates = async (
         chainId,
         cacheKey,
       })
+    } else {
+      return {
+        isValid: false,
+        message: 'Invalid subgraph chainId - morpho is available on mainnet and base',
+      }
     }
 
     const rates = await getMorphoBlueRates({
