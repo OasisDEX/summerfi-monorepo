@@ -1,8 +1,9 @@
 'use client'
 
 import { FC, useEffect, useState } from 'react'
-import { Navigation, NavigationMenuPanelType } from '@summerfi/app-ui'
+import { Icon, Navigation, NavigationMenuPanelType, Text } from '@summerfi/app-ui'
 import { useConnectWallet } from '@web3-onboard/react'
+import BigNumber from 'bignumber.js'
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 
@@ -12,6 +13,7 @@ import {
   NavigationModuleBridge,
   NavigationModuleSwap,
 } from '@/components/layout/Navigation/NavigationModules'
+import { RaysCountComponent } from '@/components/layout/Navigation/RaysCountComponent/RaysCountComponent'
 import { WalletButtonFallback } from '@/components/molecules/WalletButton/WalletButtonFallback'
 import { basePath } from '@/helpers/base-path'
 
@@ -29,7 +31,6 @@ const BridgeSwap = !process.env.NEXT_PUBLIC_SWAP_WIDGET_ONBOARDING_HIDDEN
 
 interface NavigationWrapperProps {
   panels?: NavigationMenuPanelType[]
-  connectedWalletAddress?: string
 }
 
 export const NavigationWrapper: FC<NavigationWrapperProps> = ({ panels }) => {
@@ -83,6 +84,7 @@ export const NavigationWrapper: FC<NavigationWrapperProps> = ({ panels }) => {
           )}
         </BridgeSwapWrapper>
       }
+      raysCountComponent={<RaysCountComponent />}
       walletConnectionComponent={<WalletButton />}
       onLogoClick={() => {
         // because router will use base path...

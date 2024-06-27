@@ -7,26 +7,33 @@ import navigationActionStyles from '@/components/layout/Navigation/NavigationAct
 
 interface NavigationActionsProps {
   walletConnectionComponent?: React.ReactNode
+  raysCountComponent?: React.ReactNode
 }
 
-export const NavigationActions = ({ walletConnectionComponent }: NavigationActionsProps) => {
+export const NavigationActions = ({
+  walletConnectionComponent,
+  raysCountComponent,
+}: NavigationActionsProps) => {
   return (
-    walletConnectionComponent ?? (
-      <div>
-        <Button
-          variant="secondarySmall"
-          className={classNames(navigationActionStyles.walletButtonMock)}
-        >
-          <LoadingSpinner
-            size={24}
-            color="var(--color-interactive-50)"
-            style={{
-              marginRight: 'var(--space-xxl)',
-              marginLeft: 'var(--space-xxl)',
-            }}
-          />
-        </Button>
-      </div>
-    )
+    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', columnGap: '8px' }}>
+      {raysCountComponent}
+      {walletConnectionComponent ?? (
+        <div>
+          <Button
+            variant="secondarySmall"
+            className={classNames(navigationActionStyles.walletButtonMock)}
+          >
+            <LoadingSpinner
+              size={24}
+              color="var(--color-interactive-50)"
+              style={{
+                marginRight: 'var(--space-xxl)',
+                marginLeft: 'var(--space-xxl)',
+              }}
+            />
+          </Button>
+        </div>
+      )}
+    </div>
   )
 }
