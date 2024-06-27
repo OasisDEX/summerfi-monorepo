@@ -1,10 +1,23 @@
 import { Address } from '@summerfi/serverless-shared'
 import { Logger } from '@aws-lambda-powertools/logger'
 
+export enum ClaimsRawKeys {
+  FOR_SUPPLY = 'for_supply',
+  FOR_BORROW = 'for_borrow',
+}
+
+export enum MetaMorphoClaims {
+  BORROW = 'borrow',
+  SUPPLY = 'supply',
+}
+
 export interface GetClaimsParams {
   account: Address
+  chainId: number
+  claimType: MetaMorphoClaims
   logger?: Logger
 }
+
 type Proof = Array<`0x${string}`>
 
 export interface MorphoReward {
@@ -25,6 +38,7 @@ export interface MorphoAggregatedClaims {
 export interface MorphoClaims {
   claimable: ClaimableMorphoReward[]
   claimsAggregated: MorphoAggregatedClaims[]
+  error?: string
 }
 
 type Identity = {
