@@ -53,6 +53,7 @@ const getWallets = () => {
       projectId: '832580820193ff6bae62a15dc0feff03',
       version: 2,
       dappUrl: 'https://summer.fi',
+      requiredChains: [1],
     }),
     gnosisModule(),
   ]
@@ -67,6 +68,7 @@ const getWallets = () => {
       ledgerModule({
         projectId: '832580820193ff6bae62a15dc0feff03',
         walletConnectVersion: 2,
+        requiredChains: [1],
       }),
     )
   if (connectionMethods.trezor)
