@@ -116,6 +116,7 @@ export const getClaims = async ({
     return {
       claimable: [],
       claimsAggregated: [],
+      error: `Get morpho reward claims failed. ${error}`,
     }
   }
 }

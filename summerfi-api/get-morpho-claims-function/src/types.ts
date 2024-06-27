@@ -38,6 +38,7 @@ export interface MorphoAggregatedClaims {
 export interface MorphoClaims {
   claimable: ClaimableMorphoReward[]
   claimsAggregated: MorphoAggregatedClaims[]
+  error?: string
 }
 
 type Identity = {
