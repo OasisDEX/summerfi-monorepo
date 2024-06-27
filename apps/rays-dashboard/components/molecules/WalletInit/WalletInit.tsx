@@ -14,31 +14,6 @@ import { getLocalAppConfig } from '@/helpers/access-config-context'
 import { isSSR } from '@/helpers/is-ssr'
 import { AppConfigType } from '@/types/generated'
 
-const injected = injectedWalletsModule({
-  custom: [],
-  filter: {},
-})
-
-const walletLink = coinbaseModule()
-
-const walletConnect = walletConnectModule({
-  projectId: '832580820193ff6bae62a15dc0feff03',
-  version: 2,
-  dappUrl: 'https://summer.fi',
-})
-
-const ledger = ledgerModule({
-  projectId: '832580820193ff6bae62a15dc0feff03',
-  walletConnectVersion: 2,
-})
-const gnosis = gnosisModule()
-
-const trezorOptions = {
-  email: 'support@summer.fi',
-  appUrl: 'https://summer.fi',
-}
-const trezor = trezorModule(trezorOptions)
-
 const { connectionMethods, walletRpc } = getLocalAppConfig('parameters')
 
 const getChains = () => {
@@ -69,21 +44,51 @@ const getChains = () => {
 }
 
 const getWallets = () => {
-  const wallets = [injected, walletConnect, gnosis]
+  const wallets = [
+    injectedWalletsModule({
+      custom: [],
+      filter: {},
+    }),
+    walletConnectModule({
+      projectId: '832580820193ff6bae62a15dc0feff03',
+      version: 2,
+      dappUrl: 'https://summer.fi',
+    }),
+    gnosisModule(),
+  ]
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!connectionMethods) {
     return wallets
   }
-  if (connectionMethods.walletLink) wallets.push(walletLink)
-  if (connectionMethods.ledger) wallets.push(ledger)
-  if (connectionMethods.trezor) wallets.push(trezor)
+  if (connectionMethods.walletLink) wallets.push(coinbaseModule())
+  if (connectionMethods.ledger)
+    wallets.push(
+      ledgerModule({
+        projectId: '832580820193ff6bae62a15dc0feff03',
+        walletConnectVersion: 2,
+      }),
+    )
+  if (connectionMethods.trezor)
+    wallets.push(
+      trezorModule({
+        email: 'support@summer.fi',
+        appUrl: 'https://summer.fi',
+      }),
+    )
 
   return wallets
 }
 
 const initWeb3OnBoardConfig = {
-  wallets: getWallets(),
+  wallets: process.env.NEXT_PUBLIC_DEV_WALLETS
+    ? [
+        injectedWalletsModule({
+          custom: [],
+          filter: {},
+        }),
+      ]
+    : getWallets(),
   chains: getChains(),
   appMetadata: {
     name: 'Summer.fi',

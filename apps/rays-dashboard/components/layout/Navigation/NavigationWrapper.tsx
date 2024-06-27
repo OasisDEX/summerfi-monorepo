@@ -2,6 +2,7 @@
 
 import { FC, useEffect, useState } from 'react'
 import { Navigation, NavigationMenuPanelType } from '@summerfi/app-ui'
+import { useConnectWallet } from '@web3-onboard/react'
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 
@@ -19,10 +20,12 @@ const WalletButton = dynamic(() => import('@/components/molecules/WalletButton/W
   loading: () => <WalletButtonFallback />,
 })
 
-const BridgeSwap = dynamic(() => import('@/components/layout/Navigation/BridgeSwap/BridgeSwap'), {
-  ssr: false,
-  loading: () => <BridgeSwapHandlerLoader />,
-})
+const BridgeSwap = !process.env.NEXT_PUBLIC_SWAP_WIDGET_ONBOARDING_HIDDEN
+  ? dynamic(() => import('@/components/layout/Navigation/BridgeSwap/BridgeSwap'), {
+      ssr: false,
+      loading: () => <BridgeSwapHandlerLoader />,
+    })
+  : () => null
 
 interface NavigationWrapperProps {
   panels?: NavigationMenuPanelType[]
@@ -30,6 +33,7 @@ interface NavigationWrapperProps {
 }
 
 export const NavigationWrapper: FC<NavigationWrapperProps> = ({ panels }) => {
+  const [{ wallet }] = useConnectWallet()
   const [showNavigationModule, setShowNavigationModule] = useState<'swap' | 'bridge'>()
   // to prevent suddenly dissapearing bridge/swap module
   // once loaded, stays loaded
@@ -47,7 +51,16 @@ export const NavigationWrapper: FC<NavigationWrapperProps> = ({ panels }) => {
       currentPath={currentPath}
       logo={`${basePath}/img/branding/logo-dark.svg`}
       logoSmall={`${basePath}/img/branding/dot-dark.svg`}
-      links={undefined}
+      links={
+        wallet?.accounts[0].address
+          ? [
+              {
+                label: 'Portfolio',
+                link: `/portfolio/${wallet.accounts[0].address}`,
+              },
+            ]
+          : undefined
+      }
       panels={panels}
       navigationModules={{
         NavigationModuleBridge: (
