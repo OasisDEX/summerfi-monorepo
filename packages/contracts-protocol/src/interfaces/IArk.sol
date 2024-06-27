@@ -7,6 +7,19 @@ import "../types/Percentage.sol";
 
 interface IArk is IArkAccessControl {
     /**
+     * STRUCTS
+     */
+
+    /**
+     * @notice Configuration parameters for the Ark contract
+     */
+    struct ArkParams {
+        address governor;
+        address raft;
+        address token;
+    }
+
+    /**
      * EVENTS
      */
     event Harvested(uint256 amount);
