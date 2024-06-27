@@ -2,12 +2,14 @@
 pragma solidity 0.8.26;
 
 import {IERC20, ERC20, SafeERC20, ERC4626} from "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol";
-import { FleetCommanderAccessControl } from "./FleetCommanderAccessControl.sol";
+import {FleetCommanderAccessControl} from "./FleetCommanderAccessControl.sol";
 
-import { IFleetCommander } from "../interfaces/IFleetCommander.sol";
+import {IFleetCommander} from "../interfaces/IFleetCommander.sol";
 
-/** @custom:see IFleetCommander */
-contract FleetCommander is IFleetCommander, FleetCommanderAccessControl, ERC4626  {
+/**
+ * @custom:see IFleetCommander
+ */
+contract FleetCommander is IFleetCommander, FleetCommanderAccessControl, ERC4626 {
     using SafeERC20 for IERC20;
 
     uint256 public constant ALLOCATION_BASIS = 10000; // Fee comes from system parameter contract
@@ -29,9 +31,13 @@ contract FleetCommander is IFleetCommander, FleetCommanderAccessControl, ERC4626
     }
 
     /* PUBLIC - USER */
-    function withdraw(uint256 assets, address receiver, address owner) public override (ERC4626, IFleetCommander) returns (uint256) {}
+    function withdraw(uint256 assets, address receiver, address owner)
+        public
+        override(ERC4626, IFleetCommander)
+        returns (uint256)
+    {}
     function forceWithdraw(uint256 assets, address receiver, address owner) public returns (uint256) {}
-    function deposit(uint256 assets, address receiver) public override (ERC4626, IFleetCommander) returns (uint256) {}
+    function deposit(uint256 assets, address receiver) public override(ERC4626, IFleetCommander) returns (uint256) {}
 
     /* EXTERNAL - KEEPER */
     function rebalance(bytes calldata data) external onlyKeeper {}
