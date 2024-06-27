@@ -21,9 +21,9 @@
   --color-warning-70: #e49f6c;
   --color-warning-10: #fff1cf;
 
-  --color-criticial-100: #d94a1e;
-  --color-criticial-70: #e48062;
-  --color-criticial-10: #ffeee9;
+  --color-critical-100: #d94a1e;
+  --color-critical-70: #e48062;
+  --color-critical-10: #ffeee9;
 
   --color-interactive-100: #384bf6;
   --color-interactive-50: #9ba5fb;
@@ -36,13 +36,13 @@
   --color-text-interactive: var(--color-interactive-100);
   --color-text-success: var(--color-success-100);
   --color-text-warning: var(--color-warning-100);
-  --color-text-criticial: var(--color-criticial-100);
+  --color-text-critical: var(--color-critical-100);
 
   --color-surface-neutral: var(--color-neutral-10);
   --color-surface-secondary: var(--color-secondary-60);
   --color-surface-success: var(--color-success-10);
   --color-surface-warning: var(--color-warning-10);
-  --color-surface-criticial: var(--color-criticial-10);
+  --color-surface-critical: var(--color-critical-10);
   --color-surface-interactive: var(--color-interactive-10);
 
   --color-border-neutral: var(--color-neutral-20);

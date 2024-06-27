@@ -91,7 +91,7 @@ export const handler = async (
     ])
     .execute()
   const positionInLeaderboard = await db
-    .selectFrom('leaderboard')
+    .selectFrom('leaderboard_new')
     .where('userAddress', '=', address.toLowerCase())
     .select(['position'])
     .execute()

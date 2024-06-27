@@ -1,7 +1,7 @@
 'use client'
 
 import { Button, ProxyLinkComponent, Text } from '@summerfi/app-ui'
-import { IconEye } from '@tabler/icons-react'
+import { IconArrowDown, IconArrowUp, IconEye, IconTrophyFilled } from '@tabler/icons-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -10,6 +10,9 @@ import { LeaderboardItem } from '@/types/leaderboard'
 
 import classNames from '@/components/organisms/Leaderboard/Leaderboard.module.scss'
 
+const uprankColor = 'var(--color-success-70)'
+const downrankColor = 'var(--color-critical-70)'
+
 export const LeaderboardRank = ({
   cell,
   userWalletAddress,
@@ -17,6 +20,12 @@ export const LeaderboardRank = ({
   cell: LeaderboardItem
   userWalletAddress?: string
 }) => {
+  const position = Number(cell.position)
+  const lastPosition = Number(cell.rank22h)
+  const isTop = [1, 2, 3].includes(position)
+  const rankChange = lastPosition - position
+  const rankChangeColor = rankChange > 0 ? uprankColor : rankChange < 0 ? downrankColor : ''
+
   return (
     <>
       {userWalletAddress && userWalletAddress === cell.userAddress ? (
@@ -25,16 +34,38 @@ export const LeaderboardRank = ({
             You&apos;re here 👇
           </Text>
         </div>
-      ) : (
-        ''
-      )}
-      <Text
-        as="p"
-        style={{ color: 'var(--color-neutral-80)' }}
-        className={classNames.positionColumn}
-      >
-        {[1, 2, 3].includes(Number(cell.position)) ? <>{cell.position} 🏆</> : cell.position}
-      </Text>
+      ) : null}
+      <div className={classNames.positionColumn}>
+        <Text as="p" style={{ color: 'var(--color-neutral-80)' }}>
+          {cell.position}
+        </Text>
+        {isTop && (
+          <IconTrophyFilled
+            style={{ marginLeft: '4px' }}
+            color={
+              {
+                1: 'gold',
+                2: 'silver',
+                3: 'brown',
+              }[position as 1 | 2 | 3]
+            }
+          />
+        )}
+        <Text
+          as="p"
+          style={{
+            color: rankChangeColor,
+            fontSize: '14px',
+            width: '100%',
+            marginLeft: '14px',
+          }}
+          title="Leaderboard change over 24h"
+        >
+          {rankChange === 0 ? '' : rankChange}
+          {rankChange > 0 && <IconArrowUp size={14} strokeWidth={3} />}
+          {rankChange < 0 && <IconArrowDown size={14} strokeWidth={3} />}
+        </Text>
+      </div>
     </>
   )
 }
