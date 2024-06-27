@@ -1,5 +1,12 @@
 import { ISwapProvider } from '@summerfi/swap-common/interfaces'
-import { SwapProviderType, SwapData, SwapRoute, QuoteData } from '@summerfi/sdk-common/swap'
+import {
+  SwapProviderType,
+  SwapData,
+  SwapRoute,
+  QuoteData,
+  SwapError,
+  SwapErrorType,
+} from '@summerfi/sdk-common/swap'
 import {
   OneInchAuthHeader,
   OneInchAuthHeaderKey,
@@ -19,6 +26,7 @@ import {
   IAddress,
   IPercentage,
   IChainInfo,
+  SDKErrorType,
 } from '@summerfi/sdk-common/common'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider'
@@ -84,7 +92,17 @@ export class OneInchSwapProvider
     })
 
     if (!(response.status === 200 && response.statusText === 'OK')) {
-      throw new Error(`Error performing 1inch swap data request ${swapUrl}: ${await response.body}`)
+      const errorJSON = await response.json()
+      const errorType = this._parseErrorType(errorJSON.description)
+
+      throw SwapError.createFrom({
+        type: SDKErrorType.SwapError,
+        subtype: errorType,
+        reason: errorJSON.description,
+        message: `Error performing 1inch swap data request ${swapUrl}: ${await response.body}`,
+        apiQuery: swapUrl,
+        statusCode: response.status,
+      })
     }
 
     const responseData = (await response.json()) as OneInchSwapResponse
@@ -121,9 +139,17 @@ export class OneInchSwapProvider
     })
 
     if (!(response.status === 200 && response.statusText === 'OK')) {
-      throw new Error(
-        `Error [${response.statusText}] performing 1inch swap quote request ${swapUrl}`,
-      )
+      const errorJSON = await response.json()
+      const errorType = this._parseErrorType(errorJSON.description)
+
+      throw SwapError.createFrom({
+        type: SDKErrorType.SwapError,
+        subtype: errorType,
+        reason: errorJSON.description,
+        message: `Error performing 1inch swap quote request ${swapUrl}: ${await response.body}`,
+        apiQuery: swapUrl,
+        statusCode: response.status,
+      })
     }
 
     const responseData = (await response.json()) as OneInchQuoteResponse
@@ -286,6 +312,19 @@ export class OneInchSwapProvider
         allowedSwapProtocols: ONE_INCH_ALLOWED_SWAP_PROTOCOLS.split(','),
       },
       chainIds: ONE_INCH_SWAP_CHAIN_IDS.split(',').map((id: string) => parseInt(id)),
+    }
+  }
+
+  /**
+   * @description Tries to parse the error message from 1inch to provide a higher level error type
+   * @param errorDescription The error description from 1inch
+   * @returns The parsed error type
+   */
+  private _parseErrorType(errorDescription: string): SwapErrorType {
+    if (errorDescription.toLowerCase().includes('insufficient liquidity')) {
+      return SwapErrorType.NoLiquidity
+    } else {
+      return SwapErrorType.Unknown
     }
   }
 }
