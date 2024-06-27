@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import { AccessControl } from "@openzeppelin/contracts/access/AccessControl.sol";
-import { IFleetCommanderAccessControl } from "../interfaces/IFleetCommanderAccessControl.sol";
+import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
+import {IFleetCommanderAccessControl} from "../interfaces/IFleetCommanderAccessControl.sol";
 
 /**
  * @title FleetCommanderAccessControl
@@ -22,11 +22,13 @@ contract FleetCommanderAccessControl is IFleetCommanderAccessControl, AccessCont
 
     /**
      * @dev The Keeper role is in charge of rebalancing the funds between the different
-            Arks through the Fleet Commander
+     *         Arks through the Fleet Commander
      */
     bytes32 public constant KEEPER_ROLE = keccak256("KEEPER_ROLE");
 
-    /** CONSTRUCTOR */
+    /**
+     * CONSTRUCTOR
+     */
 
     /**
      * @param governor The account that will be granted the Governor role
@@ -55,7 +57,9 @@ contract FleetCommanderAccessControl is IFleetCommanderAccessControl, AccessCont
         _;
     }
 
-    /** EXTERNAL/PUBLIC FUNCTIONS */
+    /**
+     * EXTERNAL/PUBLIC FUNCTIONS
+     */
 
     /* @inheritdoc IFleetCommanderAccessControl */
     function grantGovernorRole(address account) external onlyGovernor {

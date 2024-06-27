@@ -9,24 +9,26 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
  *         helper functions to manage them and to enforce the access control
  */
 interface IFleetCommanderAccessControl {
-    /** ERRORS */
+    /**
+     * ERRORS
+     */
     error CallerIsNotGovernor(address caller);
     error CallerIsNotKeeper(address caller);
 
-    /** FUNCTIONS */
+    /**
+     * FUNCTIONS
+     */
 
     /**
      * @notice Grants the Governor role to a given account
-     *   
+     *
      * @param account The account to which the Governor role will be granted
      */
     function grantGovernorRole(address account) external;
 
-    
-
     /**
      * @notice Revokes the Governor role from a given account
-     *   
+     *
      * @param account The account from which the Governor role will be revoked
      */
     // TODO: I'm worried that if by mistake we revoke the last governor role, the contract will be bricked.
@@ -36,14 +38,14 @@ interface IFleetCommanderAccessControl {
 
     /**
      * @notice Grants the Keeper role to a given account
-     *   
+     *
      * @param account The account to which the Keeper role will be granted
      */
     function grantKeeperRole(address account) external;
 
     /**
      * @notice Revokes the Keeper role from a given account
-     *   
+     *
      * @param account The account from which the Keeper role will be revoked
      */
     function revokeKeeperRole(address account) external;
