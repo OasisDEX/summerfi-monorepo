@@ -1,5 +1,5 @@
 import { ITokenAmount, IAddress, IPercentage } from '@summerfi/sdk-common/common'
-import type { SwapProviderType } from './Enums'
+import type { SwapProviderType } from '../enums/SwapProviderType'
 
 /**
  * @name QuoteData

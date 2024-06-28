@@ -6,6 +6,7 @@
     "paths": {
       "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
       "@summerfi/sdk-common": ["node_modules/@summerfi/sdk-common/src/index.ts"],
+      "@summerfi/sdk-server-common": ["node_modules/@summerfi/sdk-server-common/src/index.ts"],
       "@summerfi/sdk-client": ["../sdk-client/src"],
 
       "@summerfi/swap-common/*": ["node_modules/@summerfi/swap-common/src/*"],

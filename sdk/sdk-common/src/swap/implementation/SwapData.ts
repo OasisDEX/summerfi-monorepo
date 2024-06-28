@@ -1,6 +1,6 @@
 import { IAddress, ITokenAmount } from '@summerfi/sdk-common/common'
 import { HexData } from '@summerfi/sdk-common/common/aliases'
-import type { SwapProviderType } from './Enums'
+import type { SwapProviderType } from '../enums/SwapProviderType'
 
 /**
  * @name SwapData
