@@ -1,4 +1,4 @@
-button.walletButtonMock {
+.walletButtonMock {
   min-height: auto;
   line-height: 22px;
   height: 40px;
@@ -6,4 +6,18 @@ button.walletButtonMock {
   width: auto;
   box-shadow: var(--shadow-depth-1);
   background-color: var(--color-neutral-10);
+}
+
+.buttonMockWrapper {
+  @include media('<=s') {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: var(--space-m);
+    display: flex;
+    justify-content: center;
+  }
 }

@@ -1,6 +1,9 @@
 .ButtonWrapper {
   position: relative;
   user-select: none;
+  @include media('<=s') {
+    width: 100%;
+  }
 }
 
 .ButtonStyles {
@@ -8,6 +11,10 @@
   padding: 4px;
   height: 40px;
   box-shadow: var(--shadow-depth-1);
+  @include media('<=s') {
+    width: 100%;
+    justify-content: space-between;
+  }
 }
 
 .CopyButton {
@@ -57,10 +64,23 @@
   flex-direction: column;
   min-width: 380px;
   max-width: 380px;
+  @include media('<=s') {
+    top: initial;
+    bottom: 100%;
+    min-width: initial;
+    max-width: initial;
+    margin-top: initial;
+    margin-bottom: 0;
+    transition: opacity 0.1s ease-in-out, margin-bottom 0.1s ease-in-out;
+  }
   &Active {
     pointer-events: all;
     opacity: 1;
     margin-top: 10px;
+    @include media('<=s') {
+      margin-top: initial;
+      margin-bottom: 10px;
+    }
   }
   .WalletAccount {
     display: flex;

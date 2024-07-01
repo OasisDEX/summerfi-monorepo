@@ -17,8 +17,8 @@ export const NavigationActions = ({
   return (
     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', columnGap: '8px' }}>
       {raysCountComponent}
-      {walletConnectionComponent ?? (
-        <div>
+      <div className={classNames(navigationActionStyles.buttonMockWrapper)}>
+        {walletConnectionComponent ?? (
           <Button
             variant="secondarySmall"
             className={classNames(navigationActionStyles.walletButtonMock)}
@@ -32,8 +32,8 @@ export const NavigationActions = ({
               }}
             />
           </Button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }

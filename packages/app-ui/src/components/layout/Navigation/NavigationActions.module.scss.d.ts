@@ -1,4 +1,5 @@
 export type Styles = {
+  buttonMockWrapper: string
   walletButtonMock: string
 }
 

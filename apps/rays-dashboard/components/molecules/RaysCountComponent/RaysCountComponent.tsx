@@ -9,6 +9,8 @@ import { basePath } from '@/helpers/base-path'
 import { formatCryptoBalance } from '@/helpers/formatters'
 import { RaysApiResponse } from '@/server-handlers/rays'
 
+import raysCountComponentStyles from './RaysCountComponent.module.scss'
+
 export const RaysCountComponent: FC = () => {
   const [{ wallet }] = useConnectWallet()
   const [loadingRaysCount, setLoadingRaysCount] = useState<boolean>(false)
@@ -48,18 +50,9 @@ export const RaysCountComponent: FC = () => {
       }}
       style={{ textDecoration: 'none' }}
     >
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          columnGap: '4px',
-          marginRight: 'var(--space-m)',
-          color: 'var(--color-text-primary)',
-        }}
-      >
+      <div className={raysCountComponentStyles.raysCountWrapper}>
         <Icon iconName="rays" size={24} />
-        <Text variant="p4semi">
+        <Text variant="p4semi" className={raysCountComponentStyles.raysCount}>
           {formatCryptoBalance(new BigNumber(raysCount)).split('.')[0]} Rays
         </Text>
       </div>
