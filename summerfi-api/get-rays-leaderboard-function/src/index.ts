@@ -1,9 +1,10 @@
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'aws-lambda'
 import { ResponseBadRequest, ResponseOk } from '@summerfi/serverless-shared/responses'
 import { Logger } from '@aws-lambda-powertools/logger'
-import { getRaysDB } from '@summerfi/rays-db'
+import { Database, getRaysDB } from '@summerfi/rays-db'
 import { numberSchema } from '@summerfi/serverless-shared'
 import { z } from 'zod'
+import { TableExpression } from 'kysely'
 
 const logger = new Logger({ serviceName: 'get-rays-function' })
 
@@ -17,7 +18,7 @@ export const handler = async (
   event: APIGatewayProxyEventV2,
   context: Context,
 ): Promise<APIGatewayProxyResultV2> => {
-  const { RAYS_DB_CONNECTION_STRING } = process.env
+  const { RAYS_DB_CONNECTION_STRING, RAYS_DATABASE_VIEW } = process.env
   if (!RAYS_DB_CONNECTION_STRING) {
     throw new Error('RAYS_DB_CONNECTION_STRING is not set')
   }
@@ -40,7 +41,7 @@ export const handler = async (
   const { db } = await getRaysDB(dbConfig)
 
   const leaderboard = await db
-    .selectFrom('leaderboard_new')
+    .selectFrom(RAYS_DATABASE_VIEW === 'leaderboard' ? 'leaderboard' : 'leaderboard_new')
     .selectAll()
     .where((eb) =>
       eb.or([eb('userAddress', 'like', `%${userAddress}%`), eb('ens', 'like', `%${userAddress}%`)]),
