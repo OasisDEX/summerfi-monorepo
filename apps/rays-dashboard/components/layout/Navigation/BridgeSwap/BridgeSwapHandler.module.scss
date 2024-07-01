@@ -8,6 +8,7 @@
   transition: transform 0.2s, box-shadow 0.2s;
   background-color: var(--color-neutral-10);
   box-shadow: none;
+  width: 430px;
   &Active {
     transform: translateX(0);
     box-shadow: var(--shadow-depth-3);
