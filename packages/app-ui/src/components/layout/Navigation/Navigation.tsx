@@ -1,4 +1,4 @@
-import React, { ComponentType, FC } from 'react'
+import { FC, ReactNode, useState } from 'react'
 
 import {
   NavigationMenuPanelLinkType,
@@ -8,6 +8,7 @@ import {
 import { NavigationActions } from '@/components/layout/Navigation/NavigationActions'
 import { NavigationBranding } from '@/components/layout/Navigation/NavigationBranding'
 import { NavigationMenu } from '@/components/layout/Navigation/NavigationMenu'
+import { NavigationMenuMobile } from '@/components/layout/Navigation/NavigationMenuMobile'
 
 import navigationStyles from '@/components/layout/Navigation/Navigation.module.scss'
 
@@ -17,10 +18,10 @@ interface NavigationProps extends WithNavigationModules {
   logoSmall: string
   links?: NavigationMenuPanelLinkType[]
   panels?: NavigationMenuPanelType[]
-  walletConnectionComponent?: React.ReactNode
-  raysCountComponent?: React.ReactNode
+  walletConnectionComponent?: ReactNode
+  raysCountComponent?: ReactNode
   onLogoClick?: () => void
-  additionalModule?: React.ReactNode
+  additionalModule?: ReactNode
 }
 
 export const Navigation: FC<NavigationProps> = ({
@@ -35,6 +36,12 @@ export const Navigation: FC<NavigationProps> = ({
   onLogoClick,
   additionalModule,
 }) => {
+  const [mobileMenuOpened, setMobileMenuOpened] = useState(false)
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpened(!mobileMenuOpened)
+  }
+
   return (
     <div className={navigationStyles.wrapper}>
       <header className={navigationStyles.container}>
@@ -45,9 +52,17 @@ export const Navigation: FC<NavigationProps> = ({
           currentPath={currentPath}
           navigationModules={navigationModules}
         />
+        <NavigationMenuMobile
+          menuOpened={mobileMenuOpened}
+          toggleMobileMenu={toggleMobileMenu}
+          links={links}
+          panels={panels}
+          logo={logoSmall}
+        />
         <NavigationActions
           raysCountComponent={raysCountComponent}
           walletConnectionComponent={walletConnectionComponent}
+          toggleMobileMenu={toggleMobileMenu}
         />
         {additionalModule}
       </header>
