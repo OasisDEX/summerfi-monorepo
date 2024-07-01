@@ -33,7 +33,7 @@ export const handler = async (
   event: APIGatewayProxyEventV2,
   context: Context,
 ): Promise<APIGatewayProxyResultV2> => {
-  const { RAYS_DB_CONNECTION_STRING } = process.env
+  const { RAYS_DB_CONNECTION_STRING, RAYS_DATABASE_VIEW } = process.env
   if (!RAYS_DB_CONNECTION_STRING) {
     throw new Error('RAYS_DB_CONNECTION_STRING is not set')
   }
@@ -91,7 +91,7 @@ export const handler = async (
     ])
     .execute()
   const positionInLeaderboard = await db
-    .selectFrom('leaderboard_new')
+    .selectFrom(RAYS_DATABASE_VIEW === 'leaderboard' ? 'leaderboard' : 'leaderboard_new')
     .where('userAddress', '=', address.toLowerCase())
     .select(['position'])
     .execute()
