@@ -1,4 +1,5 @@
 import { FC, ReactNode, useState } from 'react'
+import { useIsMounted, useMediaQuery } from 'usehooks-ts'
 
 import {
   NavigationMenuPanelLinkType,
@@ -9,6 +10,7 @@ import { NavigationActions } from '@/components/layout/Navigation/NavigationActi
 import { NavigationBranding } from '@/components/layout/Navigation/NavigationBranding'
 import { NavigationMenu } from '@/components/layout/Navigation/NavigationMenu'
 import { NavigationMenuMobile } from '@/components/layout/Navigation/NavigationMenuMobile'
+import { useClientSideMount } from '@/helpers/use-client-side-mount'
 
 import navigationStyles from '@/components/layout/Navigation/Navigation.module.scss'
 
@@ -37,35 +39,42 @@ export const Navigation: FC<NavigationProps> = ({
   additionalModule,
 }) => {
   const [mobileMenuOpened, setMobileMenuOpened] = useState(false)
+  const isViewBelowL = useMediaQuery(`(max-width: 1024px)`)
+  const mountedOnClient = useClientSideMount()
 
   const toggleMobileMenu = () => {
     setMobileMenuOpened(!mobileMenuOpened)
   }
 
   return (
-    <div className={navigationStyles.wrapper}>
-      <header className={navigationStyles.container}>
-        <NavigationBranding logo={logo} logoSmall={logoSmall} onLogoClick={onLogoClick} />
-        <NavigationMenu
-          links={links}
-          panels={panels}
-          currentPath={currentPath}
-          navigationModules={navigationModules}
-        />
-        <NavigationMenuMobile
-          menuOpened={mobileMenuOpened}
-          toggleMobileMenu={toggleMobileMenu}
-          links={links}
-          panels={panels}
-          logo={logoSmall}
-        />
-        <NavigationActions
-          raysCountComponent={raysCountComponent}
-          walletConnectionComponent={walletConnectionComponent}
-          toggleMobileMenu={toggleMobileMenu}
-        />
-        {additionalModule}
-      </header>
-    </div>
+    mountedOnClient && (
+      <div className={navigationStyles.wrapper}>
+        <header className={navigationStyles.container}>
+          <NavigationBranding logo={logo} logoSmall={logoSmall} onLogoClick={onLogoClick} />
+          {isViewBelowL ? (
+            <NavigationMenuMobile
+              menuOpened={mobileMenuOpened}
+              toggleMobileMenu={toggleMobileMenu}
+              links={links}
+              panels={panels}
+              logo={logoSmall}
+            />
+          ) : (
+            <NavigationMenu
+              links={links}
+              panels={panels}
+              currentPath={currentPath}
+              navigationModules={navigationModules}
+            />
+          )}
+          <NavigationActions
+            raysCountComponent={raysCountComponent}
+            walletConnectionComponent={walletConnectionComponent}
+            toggleMobileMenu={toggleMobileMenu}
+          />
+          {additionalModule}
+        </header>
+      </div>
+    )
   )
 }

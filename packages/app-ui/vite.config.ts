@@ -76,6 +76,7 @@ export default defineConfig({
         'next/link',
         'next/image',
         'lodash',
+        'usehooks-ts',
         '@loadable/component',
         '@tabler/icons-react',
       ],

@@ -46,11 +46,11 @@ export const NavigationMenuMobile = ({
           strokeWidth={3}
         />
       </div>
-      {((links && links.length > 0) || (panels && panels.length > 0)) && (
+      {((links && links.length > 0) ?? (panels && panels.length > 0)) && (
         <ul className={navigationMenuMobileStyles.navigationMenuMobileUl}>
           {panels?.map((panel) => (
             <NavigationMobileMenuPanel
-              key={`panel-${panel.label}`}
+              key={`panel-mobile-${panel.label}`}
               isOpen={menuOpened}
               onOpenNestedMenu={setOpenNestedMenu}
               openNestedMenu={openNestedMenu}

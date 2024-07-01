@@ -6,7 +6,11 @@
   height: 100%;
   background-color: rgba(255, 255, 255, 1);
   z-index: 1000;
+  padding: 16px 16px 0px;
   transition: right 0.2s ease-in-out;
+  @include media('>l') {
+    display: none;
+  }
   &Active {
     right: 0;
   }
@@ -17,7 +21,6 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin: 1rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--color-neutral-20);
 }
@@ -26,7 +29,7 @@
   flex-direction: column;
   row-gap: 24px;
   height: 100%;
-  padding-top: 3rem;
+  padding-top: 1rem;
   padding-left: 0;
   list-style: none;
   overflow-y: auto;
@@ -36,11 +39,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  column-gap: 1;
+  height: 46px;
+  column-gap: 4px;
   width: 100%;
-  padding-top: 14px;
-  padding-left: 3;
-  font-size: 2;
+  padding: 14px 16px;
+  font-size: 14px;
   line-height: 18px;
   text-decoration: none;
   font-weight: 600;

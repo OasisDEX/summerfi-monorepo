@@ -31,7 +31,7 @@ button.buttonShadow {
 
 .mobileMenuButton {
   display: none;
-  @include media('<=s') {
+  @include media('<=l') {
     display: block;
   }
 }

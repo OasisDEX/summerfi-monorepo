@@ -45,8 +45,8 @@ export function TokensGroup({ forceSize, network, tokens }: TokensGroupProps) {
               {Object.keys(tokensBySymbol).includes(resolvedToken) &&
               !getTokenGuarded(resolvedToken)?.iconUnavailable ? (
                 <Icon
+                  key={`${resolvedTokenData.name}-${i}`}
                   variant={tokens.length ? 'l' : 'xxxl'}
-                  key={resolvedTokenData.name}
                   iconName={resolvedTokenData.iconName}
                 />
               ) : (

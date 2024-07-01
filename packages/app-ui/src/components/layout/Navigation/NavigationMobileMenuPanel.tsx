@@ -64,7 +64,7 @@ export function NavigationMobileMenuPanel({
               toggleIsAccordionOpen()
             }}
           >
-            {label}{' '}
+            {label}
             <ExpandableArrow
               direction={isAccordionOpen ? 'up' : 'down'}
               size={13}
