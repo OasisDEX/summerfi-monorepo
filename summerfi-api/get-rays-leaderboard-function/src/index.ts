@@ -1,10 +1,9 @@
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'aws-lambda'
 import { ResponseBadRequest, ResponseOk } from '@summerfi/serverless-shared/responses'
 import { Logger } from '@aws-lambda-powertools/logger'
-import { Database, getRaysDB } from '@summerfi/rays-db'
+import { getRaysDB } from '@summerfi/rays-db'
 import { numberSchema } from '@summerfi/serverless-shared'
 import { z } from 'zod'
-import { TableExpression } from 'kysely'
 
 const logger = new Logger({ serviceName: 'get-rays-function' })
 
