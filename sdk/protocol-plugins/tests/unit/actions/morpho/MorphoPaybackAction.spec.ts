@@ -1,10 +1,10 @@
 import { Address, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
 import {
-  MorphoLendingPool,
-  MorphoLendingPoolId,
-  MorphoPaybackAction,
-  MorphoProtocol,
+  MorphoBlueLendingPool,
+  MorphoBlueLendingPoolId,
+  MorphoBluePaybackAction,
+  MorphoBlueProtocol,
 } from '../../../../src'
 import {
   ChainFamilyMap,
@@ -14,10 +14,10 @@ import {
   RiskRatioType,
 } from '@summerfi/sdk-common'
 import { PoolType } from '@summerfi/sdk-common/protocols'
-import { MorphoLLTVPrecision } from '../../../../src/plugins/morphoblue/constants/MorphoConstants'
+import { MorphoBlueLLTVPrecision } from '../../../../src/plugins/morphoblue/constants/MorphoBlueConstants'
 
 describe('MorphoPaybackAction Action', () => {
-  const action = new MorphoPaybackAction()
+  const action = new MorphoBluePaybackAction()
   const contractNameWithVersion = `${action.config.name}_${action.config.version}`
 
   const DAI = Token.createFrom({
@@ -42,17 +42,17 @@ describe('MorphoPaybackAction Action', () => {
 
   const tokenAmount = TokenAmount.createFrom({ token: DAI, amount: '578' })
 
-  const morphoProtocol = MorphoProtocol.createFrom({
+  const morphoProtocol = MorphoBlueProtocol.createFrom({
     name: ProtocolName.MorphoBlue,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 
-  const morphoLendingPoolId = MorphoLendingPoolId.createFrom({
+  const morphoLendingPoolId = MorphoBlueLendingPoolId.createFrom({
     marketId: '0x1234',
     protocol: morphoProtocol,
   })
 
-  const morphoLendingPool = MorphoLendingPool.createFrom({
+  const morphoLendingPool = MorphoBlueLendingPool.createFrom({
     collateralToken: WETH,
     debtToken: DAI,
     id: morphoLendingPoolId,
@@ -97,7 +97,7 @@ describe('MorphoPaybackAction Action', () => {
           oracle: morphoLendingPool.oracle.value,
           irm: morphoLendingPool.irm.value,
           lltv: BigInt(
-            morphoLendingPool.lltv.toLTV().toBaseUnit({ decimals: MorphoLLTVPrecision }),
+            morphoLendingPool.lltv.toLTV().toBaseUnit({ decimals: MorphoBlueLLTVPrecision }),
           ),
         },
         onBehalf: onBehalf.value,

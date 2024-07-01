@@ -1,17 +1,17 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { ITokenAmount } from '@summerfi/sdk-common/common'
-import { MorphoLLTVPrecision } from '../constants/MorphoConstants'
+import { MorphoBlueLLTVPrecision } from '../constants/MorphoBlueConstants'
 import { IAddress } from '@summerfi/sdk-common'
-import { IMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
-import { MorphoMarketParametersAbi } from '../types/MorphoMarketParameters'
+import { IMorphoBlueLendingPool } from '../interfaces/IMorphoBlueLendingPool'
+import { MorphoBlueMarketParametersAbi } from '../types/MorphoBlueMarketParameters'
 
-export class MorphoPaybackAction extends BaseAction<typeof MorphoPaybackAction.Config> {
+export class MorphoBluePaybackAction extends BaseAction<typeof MorphoBluePaybackAction.Config> {
   public static readonly Config = {
     name: 'MorphoBluePayback',
     version: 2,
     parametersAbi: [
       '(MarketParams marketParams, uint256 amount, address onBehalf, bool paybackAll)',
-      MorphoMarketParametersAbi,
+      MorphoBlueMarketParametersAbi,
     ],
     storageInputs: ['amount'],
     storageOutputs: ['paybackedAmount'],
@@ -19,7 +19,7 @@ export class MorphoPaybackAction extends BaseAction<typeof MorphoPaybackAction.C
 
   public encodeCall(
     params: {
-      morphoLendingPool: IMorphoLendingPool
+      morphoLendingPool: IMorphoBlueLendingPool
       amount: ITokenAmount
       onBehalf: IAddress
       paybackAll: boolean
@@ -37,7 +37,7 @@ export class MorphoPaybackAction extends BaseAction<typeof MorphoPaybackAction.C
             oracle: morphoLendingPool.oracle.value,
             irm: morphoLendingPool.irm.value,
             lltv: BigInt(
-              morphoLendingPool.lltv.toLTV().toBaseUnit({ decimals: MorphoLLTVPrecision }),
+              morphoLendingPool.lltv.toLTV().toBaseUnit({ decimals: MorphoBlueLLTVPrecision }),
             ),
           },
           amount: BigInt(amount.toBaseUnit()),
@@ -50,6 +50,6 @@ export class MorphoPaybackAction extends BaseAction<typeof MorphoPaybackAction.C
   }
 
   public get config() {
-    return MorphoPaybackAction.Config
+    return MorphoBluePaybackAction.Config
   }
 }

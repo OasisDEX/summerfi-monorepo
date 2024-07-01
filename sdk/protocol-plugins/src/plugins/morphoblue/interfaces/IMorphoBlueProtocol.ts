@@ -3,7 +3,7 @@ import { ProtocolName, ProtocolDataSchema } from '@summerfi/sdk-common/protocols
 import { z } from 'zod'
 
 /**
- * @interface IMorphoProtocol
+ * @interface IMorphoBlueProtocol
  * @description Identifier of the Morpho protocol
  *
  * This interface is used to add all the methods that the interface supports
@@ -11,7 +11,7 @@ import { z } from 'zod'
  * Typescript forces the interface to re-declare any properties that have different BUT compatible types.
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
-export interface IMorphoProtocol extends IMorphoProtocolData, IProtocol {
+export interface IMorphoBlueProtocol extends IMorphoBlueProtocolData, IProtocol {
   /** Morpho protocol name */
   readonly name: ProtocolName.MorphoBlue
 
@@ -22,7 +22,7 @@ export interface IMorphoProtocol extends IMorphoProtocolData, IProtocol {
 /**
  * @description Zod schema for IMorphoProtocol
  */
-export const MorphoProtocolDataSchema = z.object({
+export const MorphoBlueProtocolDataSchema = z.object({
   ...ProtocolDataSchema.shape,
   name: z.literal(ProtocolName.MorphoBlue),
 })
@@ -30,13 +30,13 @@ export const MorphoProtocolDataSchema = z.object({
 /**
  * Type for the data part of the IMorphoProtocol interface
  */
-export type IMorphoProtocolData = Readonly<z.infer<typeof MorphoProtocolDataSchema>>
+export type IMorphoBlueProtocolData = Readonly<z.infer<typeof MorphoBlueProtocolDataSchema>>
 
 /**
  * @description Type guard for IMorphoProtocol
  * @param maybeProtocol
  * @returns true if the object is an IMorphoProtocol
  */
-export function isMorphoProtocol(maybeProtocol: unknown): maybeProtocol is IMorphoProtocol {
-  return MorphoProtocolDataSchema.safeParse(maybeProtocol).success
+export function isMorphoBlueProtocol(maybeProtocol: unknown): maybeProtocol is IMorphoBlueProtocol {
+  return MorphoBlueProtocolDataSchema.safeParse(maybeProtocol).success
 }

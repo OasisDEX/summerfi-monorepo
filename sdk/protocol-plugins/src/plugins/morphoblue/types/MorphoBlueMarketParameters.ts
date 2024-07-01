@@ -3,7 +3,7 @@ import { IAddress, IRiskRatio, IToken } from '@summerfi/sdk-common'
 /**
  * @description Morpho market parameters for a given market
  */
-export type MorphoMarketParameters = {
+export type MorphoBlueMarketParameters = {
   /** Debt token, which can be borrowed from the pool */
   readonly debtToken: IToken
   /** Collateral token used to collateralized the pool */
@@ -20,5 +20,5 @@ export type MorphoMarketParameters = {
  * Market parameters definition for Morpho, to be used in the ABI
  * of the action wrappers
  */
-export const MorphoMarketParametersAbi =
+export const MorphoBlueMarketParametersAbi =
   'struct MarketParams { address loanToken; address collateralToken; address oracle; address irm; uint256 lltv; }' as const

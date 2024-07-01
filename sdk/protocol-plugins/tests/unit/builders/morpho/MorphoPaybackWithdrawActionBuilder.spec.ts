@@ -19,12 +19,12 @@ import {
   MakerPosition,
   MakerPositionId,
   MakerProtocol,
-  MorphoLendingPool,
-  MorphoLendingPoolId,
-  MorphoPosition,
-  MorphoProtocol,
+  MorphoBlueLendingPool,
+  MorphoBlueLendingPoolId,
+  MorphoBluePosition,
+  MorphoBlueProtocol,
 } from '../../../../src'
-import { MorphoPaybackWithdrawActionBuilder } from '../../../../src/plugins/morphoblue/builders/MorphoPaybackWithdrawActionBuilder'
+import { MorphoBluePaybackWithdrawActionBuilder } from '../../../../src/plugins/morphoblue/builders/MorphoBluePaybackWithdrawActionBuilder'
 import { RiskRatio, RiskRatioType } from '@summerfi/sdk-common'
 
 describe('Morpho Payback Withdraw Action Builder', () => {
@@ -59,17 +59,17 @@ describe('Morpho Payback Withdraw Action Builder', () => {
     amount: '1000',
   })
 
-  const protocol = MorphoProtocol.createFrom({
+  const protocol = MorphoBlueProtocol.createFrom({
     name: ProtocolName.MorphoBlue,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 
-  const poolId = MorphoLendingPoolId.createFrom({
+  const poolId = MorphoBlueLendingPoolId.createFrom({
     marketId: '0x1234',
     protocol: protocol,
   })
 
-  const pool = MorphoLendingPool.createFrom({
+  const pool = MorphoBlueLendingPool.createFrom({
     collateralToken: WETH,
     debtToken: DAI,
     id: poolId,
@@ -82,7 +82,7 @@ describe('Morpho Payback Withdraw Action Builder', () => {
     type: PoolType.Lending,
   })
 
-  const position = MorphoPosition.createFrom({
+  const position = MorphoBluePosition.createFrom({
     type: PositionType.Multiply,
     id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '123' }),
     debtAmount: withdrawAmount,
@@ -132,7 +132,7 @@ describe('Morpho Payback Withdraw Action Builder', () => {
 
   it('should fail the position is not a Morpho one', async () => {
     try {
-      await new MorphoPaybackWithdrawActionBuilder().build({
+      await new MorphoBluePaybackWithdrawActionBuilder().build({
         ...builderParams,
         step: {
           ...derivedStep,
@@ -152,7 +152,7 @@ describe('Morpho Payback Withdraw Action Builder', () => {
   it('should add all the action calls', async () => {
     builderParams.context.startSubContext()
 
-    await new MorphoPaybackWithdrawActionBuilder().build({
+    await new MorphoBluePaybackWithdrawActionBuilder().build({
       ...builderParams,
       step: derivedStep,
       protocolsRegistry: builderParams.emptyProtocolsRegistry,
@@ -170,7 +170,7 @@ describe('Morpho Payback Withdraw Action Builder', () => {
   it('should not add payback when payback amount is 0', async () => {
     builderParams.context.startSubContext()
 
-    await new MorphoPaybackWithdrawActionBuilder().build({
+    await new MorphoBluePaybackWithdrawActionBuilder().build({
       ...builderParams,
       step: {
         ...derivedStep,

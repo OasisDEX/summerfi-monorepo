@@ -1,9 +1,9 @@
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import {
-  IMorphoLendingPoolId,
-  MorphoLendingPoolId,
-  MorphoMarketParameters,
-  MorphoProtocol,
+  IMorphoBlueLendingPoolId,
+  MorphoBlueLendingPoolId,
+  MorphoBlueMarketParameters,
+  MorphoBlueProtocol,
 } from '../../src'
 import {
   Address,
@@ -14,15 +14,15 @@ import {
   Token,
 } from '@summerfi/sdk-common'
 
-export const morphoPoolIdMock: IMorphoLendingPoolId = MorphoLendingPoolId.createFrom({
-  protocol: MorphoProtocol.createFrom({
+export const morphoPoolIdMock: IMorphoBlueLendingPoolId = MorphoBlueLendingPoolId.createFrom({
+  protocol: MorphoBlueProtocol.createFrom({
     name: ProtocolName.MorphoBlue,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   }),
   marketId: '0xc54d7acf14de29e0e5527cabd7a576506870346a78a11a6762e2cca66322ec41',
 })
 
-export const morphoPoolMarketParams: MorphoMarketParameters = {
+export const morphoPoolMarketParams: MorphoBlueMarketParameters = {
   collateralToken: Token.createFrom({
     address: Address.createFromEthereum({ value: '0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0' }),
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
