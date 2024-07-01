@@ -79,6 +79,17 @@ export interface Leaderboard {
   ens: string | null
 }
 
+export interface LeaderboardNew {
+  position: Int8 | null
+  rank: Int8 | null
+  rank22h: Int8 | null
+  points22h: Numeric | null
+  totalPoints: Numeric | null
+  userAddress: string | null
+  details: Json | null
+  ens: string | null
+}
+
 export interface Multiplier {
   createdAt: Generated<Timestamp>
   description: string | null
@@ -152,6 +163,8 @@ export interface Database {
   'cron.jobRunDetails': CronJobRunDetails
   eligibilityCondition: EligibilityCondition
   leaderboard: Leaderboard
+  // to be removed after we check if its all valid
+  leaderboard_new: LeaderboardNew
   multiplier: Multiplier
   pointsDistribution: PointsDistribution
   position: Position

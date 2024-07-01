@@ -40,7 +40,7 @@ export const handler = async (
   const { db } = await getRaysDB(dbConfig)
 
   const leaderboard = await db
-    .selectFrom('leaderboard')
+    .selectFrom('leaderboard_new')
     .selectAll()
     .where((eb) =>
       eb.or([eb('userAddress', 'like', `%${userAddress}%`), eb('ens', 'like', `%${userAddress}%`)]),

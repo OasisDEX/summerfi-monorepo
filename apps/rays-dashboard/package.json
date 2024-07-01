@@ -3,13 +3,15 @@
   "version": "0.0.1",
   "license": "Apache-2.0",
   "scripts": {
-    "dev": "dotenv -e ../../.env -e ../../.env.local -- pnpm get-config-types && dotenv -e ../../.env -e ../../.env.local -- next dev -p 3001",
+    "dev": "dotenv -e ../../.env -e ../../.env.local -- pnpm get-config-types && dotenv -e ../../.env -e ../../.env.local -- next dev --turbo -p 3001",
     "build": "dotenv -e ../../.env -e ../../.env.local -- pnpm get-config-types && dotenv -e ../../.env -e ../../.env.local -- next build",
     "get-config-types": "node scripts/get-config-types.js && node scripts/get-rays-config-types.js",
     "start": "next start -p 3001",
     "lint": "eslint ."
   },
   "dependencies": {
+    "@lifi/wallet-management": "^2.6.1",
+    "@lifi/widget": "^2.10.2",
     "@loadable/component": "^5.16.4",
     "@prisma/nextjs-monorepo-workaround-plugin": "^5.15.1",
     "@summerfi/app-db": "workspace:*",
@@ -35,7 +37,8 @@
     "next-intl": "^3.15.2",
     "pino-pretty": "^11.2.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "usehooks-ts": "^3.1.0"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

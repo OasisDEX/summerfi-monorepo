@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import React, { ComponentType, FC } from 'react'
 
 import {
   NavigationMenuPanelLinkType,
@@ -18,7 +18,9 @@ interface NavigationProps extends WithNavigationModules {
   links?: NavigationMenuPanelLinkType[]
   panels?: NavigationMenuPanelType[]
   walletConnectionComponent?: React.ReactNode
+  raysCountComponent?: React.ReactNode
   onLogoClick?: () => void
+  additionalModule?: React.ReactNode
 }
 
 export const Navigation: FC<NavigationProps> = ({
@@ -27,9 +29,11 @@ export const Navigation: FC<NavigationProps> = ({
   links,
   panels,
   currentPath,
+  raysCountComponent,
   walletConnectionComponent,
   navigationModules,
   onLogoClick,
+  additionalModule,
 }) => {
   return (
     <div className={navigationStyles.wrapper}>
@@ -41,7 +45,11 @@ export const Navigation: FC<NavigationProps> = ({
           currentPath={currentPath}
           navigationModules={navigationModules}
         />
-        <NavigationActions walletConnectionComponent={walletConnectionComponent} />
+        <NavigationActions
+          raysCountComponent={raysCountComponent}
+          walletConnectionComponent={walletConnectionComponent}
+        />
+        {additionalModule}
       </header>
     </div>
   )

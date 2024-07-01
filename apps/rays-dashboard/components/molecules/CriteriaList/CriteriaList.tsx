@@ -78,9 +78,10 @@ export const CriteriaList = ({ userRays }: CriteriaListProps) => {
                     }}
                   >
                     <Icon
-                      iconName={item.done ? 'checkmark_colorful' : 'close_colorful'}
-                      proxyStyle={{ fill: 'red' }}
+                      iconName="checkmark_colorful"
+                      proxyStyle={{ fill: 'var(--gradient-summer-fi-dark)' }}
                       size={item.done ? 20 : 15}
+                      style={item.done ? { opacity: 1 } : { opacity: 0.3 }}
                     />
                   </div>
                   <Text as="p" variant="p2" style={{ marginRight: 'var(--space-xs)' }}>
@@ -105,7 +106,7 @@ export const CriteriaList = ({ userRays }: CriteriaListProps) => {
                 </div>
                 <Text
                   as="p"
-                  variant="p3"
+                  variant={item.done ? 'p3semiColorful' : 'p3'}
                   style={{ letterSpacing: 'var(--space-xxs)', color: 'var(--color-neutral-80)' }}
                 >
                   {item.post}

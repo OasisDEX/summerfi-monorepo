@@ -30,6 +30,9 @@
 
 .positionColumn {
   min-width: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 
   // figure out how to use media mixin here
   @media (min-width: 1025px) {
