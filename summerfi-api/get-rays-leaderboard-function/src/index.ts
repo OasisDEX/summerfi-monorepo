@@ -17,7 +17,7 @@ export const handler = async (
   event: APIGatewayProxyEventV2,
   context: Context,
 ): Promise<APIGatewayProxyResultV2> => {
-  const { RAYS_DB_CONNECTION_STRING, RAYS_DATABASE_VIEW } = process.env
+  const { RAYS_DB_CONNECTION_STRING } = process.env
   if (!RAYS_DB_CONNECTION_STRING) {
     throw new Error('RAYS_DB_CONNECTION_STRING is not set')
   }
@@ -40,7 +40,7 @@ export const handler = async (
   const { db } = await getRaysDB(dbConfig)
 
   const leaderboard = await db
-    .selectFrom(RAYS_DATABASE_VIEW === 'leaderboard' ? 'leaderboard' : 'leaderboard_new')
+    .selectFrom('leaderboard_new')
     .selectAll()
     .where((eb) =>
       eb.or([eb('userAddress', 'like', `%${userAddress}%`), eb('ens', 'like', `%${userAddress}%`)]),
