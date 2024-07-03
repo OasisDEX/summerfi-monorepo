@@ -1,3 +1,4 @@
+'use server'
 import { LeaderboardResponse } from '@/types/leaderboard'
 
 export const fetchLeaderboard = async (

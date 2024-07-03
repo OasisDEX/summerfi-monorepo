@@ -1,6 +1,7 @@
 import { Button } from '@summerfi/app-ui'
 import Link from 'next/link'
 
+import { TopClimbersWrapper } from '@/components/molecules/TopClimbers/TopClimbersWrapper'
 import ClaimRays from '@/components/organisms/ClaimRays/ClaimRays'
 import { HomepageHandler } from '@/components/organisms/HomepageHandler/HomepageHandler'
 import { mapLeaderboardColumns } from '@/components/organisms/Leaderboard/columns'
@@ -8,7 +9,11 @@ import { LeaderboardBanner } from '@/components/organisms/Leaderboard/components
 import { Leaderboard } from '@/components/organisms/Leaderboard/Leaderboard'
 import { LeaderboardSearchBoxAndResults } from '@/components/organisms/Leaderboard/LeaderboardSearchBoxAndResults'
 import { PageViewHandler } from '@/components/organisms/PageViewHandler/PageViewHandler'
-import { leaderboardDefaults, userLeaderboardDefaults } from '@/constants/leaderboard'
+import {
+  climbersCount,
+  leaderboardDefaults,
+  userLeaderboardDefaults,
+} from '@/constants/leaderboard'
 import { parseServerResponse } from '@/helpers/parse-server-response'
 import { fetchLeaderboard } from '@/server-handlers/leaderboard'
 import { fetchRays, RaysApiResponse } from '@/server-handlers/rays'
@@ -66,6 +71,12 @@ export default async function LeaderboardPage({
     page: '/',
   })
 
+  const topClimbers = await fetchLeaderboard({
+    page: '1',
+    limit: climbersCount.toString(),
+    sortMethod: 'top_gainers',
+  })
+
   return (
     <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'center' }}>
       <ClaimRays
@@ -101,6 +112,7 @@ export default async function LeaderboardPage({
           <LeaderboardBanner userWalletAddress={searchParams.userAddress} page="/" />
         </div>
       </div>
+      <TopClimbersWrapper topClimbers={topClimbers} />
       {/**
        * The HomepageHandler component handles the redirection after wallet is connected.
        * Now mixpanel tracking as well

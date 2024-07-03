@@ -45,7 +45,11 @@ export const handler = async (
     .selectFrom('leaderboard_new')
     .selectAll()
     .where((eb) =>
-      eb.or([eb('userAddress', 'like', `%${userAddress}%`), eb('ens', 'like', `%${userAddress}%`)]),
+      eb.or(
+        sortMethod === 'top_gainers'
+          ? [eb('totalPoints', '>', '2000')]
+          : [eb('userAddress', 'like', `%${userAddress}%`), eb('ens', 'like', `%${userAddress}%`)],
+      ),
     )
     .orderBy(() => {
       if (sortMethod === 'top_gainers') {

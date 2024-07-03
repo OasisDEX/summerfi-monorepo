@@ -21,3 +21,8 @@ export const wholeLeaderboardDefaults = {
   page: '1',
   limit: '100',
 }
+
+/**
+ * Default values for the climbers count
+ */
+export const climbersCount = 5
