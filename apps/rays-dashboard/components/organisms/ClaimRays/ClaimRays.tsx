@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 
 import { ClaimRaysTitle } from '@/components/molecules/ClaimRaysTitle/ClaimRaysTitle'
 import { CriteriaList } from '@/components/molecules/CriteriaList/CriteriaList'
+import { CalculatorModal } from '@/components/organisms/CalculatorModal/CalculatorModal'
 import { trackButtonClick } from '@/helpers/mixpanel'
 import { useClientSideMount } from '@/helpers/use-client-side-mount'
 import { RaysApiResponse } from '@/server-handlers/rays'
@@ -151,6 +152,7 @@ export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPagePro
           Connect wallet
         </Button>
       )}
+      <CalculatorModal />
       <Text
         as="p"
         variant="p1"
