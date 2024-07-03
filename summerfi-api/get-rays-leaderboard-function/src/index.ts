@@ -4,6 +4,7 @@ import { Logger } from '@aws-lambda-powertools/logger'
 import { getRaysDB } from '@summerfi/rays-db'
 import { numberSchema } from '@summerfi/serverless-shared'
 import { z } from 'zod'
+import { sql } from 'kysely'
 
 const logger = new Logger({ serviceName: 'get-rays-function' })
 
@@ -11,6 +12,7 @@ export const queryParamsSchema = z.object({
   page: numberSchema.optional().default(1),
   limit: numberSchema.optional().default(10),
   userAddress: z.string().optional().default(''),
+  sortMethod: z.string().optional().default(''),
 })
 
 export const handler = async (
@@ -29,7 +31,7 @@ export const handler = async (
     return ResponseBadRequest({ body: { message: parsedResult.error.message } })
   }
 
-  const { page, limit, userAddress } = parsedResult.data
+  const { page, limit, userAddress, sortMethod } = parsedResult.data
   const offset = (page - 1) * limit
 
   const dbConfig = {
@@ -45,7 +47,12 @@ export const handler = async (
     .where((eb) =>
       eb.or([eb('userAddress', 'like', `%${userAddress}%`), eb('ens', 'like', `%${userAddress}%`)]),
     )
-    .orderBy('totalPoints', 'desc')
+    .orderBy(() => {
+      if (sortMethod === 'top_gainers') {
+        return sql`rank_22h - rank DESC`
+      }
+      return sql`total_points DESC`
+    })
     .limit(limit)
     .offset(offset)
     .execute()
