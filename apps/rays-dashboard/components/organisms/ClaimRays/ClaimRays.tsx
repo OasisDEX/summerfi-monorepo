@@ -82,13 +82,6 @@ export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPagePro
         userRays={userRays}
         pointsEarnedPerYear={pointsEarnedPerYear}
       />
-      <Text
-        as="p"
-        variant="p1"
-        style={{ color: 'var(--color-neutral-80)', marginBottom: 'var(--space-l)' }}
-      >
-        Over 2 million DeFi users are eligible for Summer.fi Rays.
-      </Text>
       <CriteriaList userRays={userRays} />
 
       {mountedOnClient && typeof userAddress !== 'undefined' && isViewingOwnWallet && (
@@ -158,6 +151,13 @@ export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPagePro
           Connect wallet
         </Button>
       )}
+      <Text
+        as="p"
+        variant="p1"
+        style={{ color: 'var(--color-neutral-80)', marginTop: 'var(--space-l)' }}
+      >
+        Over 2 million DeFi users are eligible for Summer.fi Rays.
+      </Text>
     </>
   )
 }

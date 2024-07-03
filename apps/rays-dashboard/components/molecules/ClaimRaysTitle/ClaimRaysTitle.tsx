@@ -34,9 +34,9 @@ export const ClaimRaysTitle = ({
 
   return (
     <>
-      <Text as="h2" variant="h2">
-        Wallet {formatAddress(userAddress)} is eligible for{' '}
-        {userRays.rays.allPossiblePoints > 0 ? `up to` : ''}{' '}
+      <Text as="h1" variant="h1" style={{ textAlign: 'center' }}>
+        Wallet {formatAddress(userAddress)} is eligible <br />
+        for {userRays.rays.allPossiblePoints > 0 ? `up to` : ''}{' '}
         {formatCryptoBalance(new BigNumber(userRays.rays.allPossiblePoints))} $RAYS
       </Text>
       {!!pointsEarnedPerYear && (
