@@ -74,7 +74,7 @@
       "outputs": ["src/types/graphql/generated.ts", "src/generated"]
     },
     "hackPrebuild": {
-      "dependsOn": ["^hackPrebuild", "^hackPrebuild:nocache"],
+      "dependsOn": ["^hackPrebuild"],
       "outputs": ["src/types/graphql/generated.ts", "src/generated"]
     },
     "prebuild:nocache": {
