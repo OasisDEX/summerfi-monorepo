@@ -15,6 +15,12 @@
 
 ## Commands
 
+### Install deps
+
+```shell
+pnpm i
+```
+
 ### Build
 
 To build all apps and packages, run the following command:
@@ -35,7 +41,7 @@ pnpm dev
 
 To initialize submodules use:
 
-`git submodule add -f git@github.com:OasisDEX/summer-earn-protocol.git earn-protocol`
+`git submodule update earn-protocol/`
 
 ## Useful Links
 

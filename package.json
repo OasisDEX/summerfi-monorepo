@@ -28,7 +28,8 @@
     "graph": "pnpm dlx nx graph",
     "format": "prettier --check \"./**/*.{ts,tsx,js,jsx,json}\"",
     "format:fix": "prettier --write \"./**/*.{ts,tsx,js,jsx,json}\"",
-    "coverage:total": "node scripts/coverage-report/GenerateCoverageReport.js"
+    "coverage:total": "node scripts/coverage-report/GenerateCoverageReport.js",
+    "postinstall": "git submodule update earn-protocol/ && cd earn-protocol && pnpm i"
   },
   "devDependencies": {
     "@graphql-codegen/add": "^5.0.2",
