@@ -2,12 +2,18 @@
 
 import { useEffect, useState } from 'react'
 import { Button, Divider, Input, RadioButton, RadioButtonGroup, Text } from '@summerfi/app-ui'
+import { IconCurrencyDollar } from '@tabler/icons-react'
 import BigNumber from 'bignumber.js'
 import { useToggle } from 'usehooks-ts'
 
 import { AnimatedNumber } from '@/components/molecules/AnimatedNumber/AnimatedNumber'
 import { ModalButton, ModalButtonProps } from '@/components/molecules/Modal/ModalButton'
 import { formatAsShorthandNumbers } from '@/helpers/formatters'
+
+const amountTooHighValue = 9999999999999
+const amounttooHighLocked = 99999999999999 // same as above but with one more 9
+
+const DollarIconElement = () => <IconCurrencyDollar size={20} />
 
 const AmountTooHigh = ({ label }: { label: string }) => (
   <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
@@ -71,7 +77,7 @@ const CalculatorModalContent = () => {
           padding: 'var(--space-l) var(--space-l)',
         }}
       >
-        {amount > 9999999999999 ? (
+        {amount > amountTooHighValue ? (
           <>
             <AmountTooHigh label="Base" />
             <AmountTooHigh label="Migration" />
@@ -89,15 +95,17 @@ const CalculatorModalContent = () => {
         Amount
       </Text>
       <Input
-        icon={{
-          name: 'dai_circle_color',
-          size: 24,
-        }}
+        CustomIcon={DollarIconElement}
         value={amount || 0}
-        onChange={(e) => setAmount(parseFloat(e.target.value))}
+        onChange={(e) =>
+          setAmount(
+            parseFloat(e.target.value) > amounttooHighLocked ? amount : parseFloat(e.target.value),
+          )
+        }
         style={{
           padding: 'var(--space-m) var(--space-m) var(--space-m) 50px',
           width: '100%',
+          borderRadius: 'var(--radius-8)',
         }}
       />
       <div style={{ display: 'flex', flexDirection: 'column' }}>
