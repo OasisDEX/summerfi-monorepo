@@ -21,6 +21,7 @@ export const Form = () => {
       message: 'This is my message to you',
       connector: wallet?.wagmiConnector,
     }).then((res) => {
+      // eslint-disable-next-line no-console
       console.log(res)
     })
   }
