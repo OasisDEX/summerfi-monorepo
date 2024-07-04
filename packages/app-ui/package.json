@@ -18,6 +18,8 @@
     "dev": "pnpm generate-module-types-watch & vite build -w true",
     "build": "pnpm generate-module-types & vite build -w false",
     "prebuild": "pnpm generate-module-types & vite build -w false",
+    "hackBuild": "pnpm generate-module-types & vite hackBuild -w false",
+    "prehackBuild": "pnpm generate-module-types & vite hackBuild -w false",
     "clean": "rm -rf dist"
   },
   "devDependencies": {

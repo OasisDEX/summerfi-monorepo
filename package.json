@@ -2,8 +2,11 @@
   "private": true,
   "scripts": {
     "dev": "turbo run dev --concurrency=100",
+    "hackDev": "turbo run hackDev --concurrency=100",
     "prebuild": "turbo run prebuild --cache-dir=.turbo",
+    "hackPrebuild": "turbo run hackPrebuild --cache-dir=.turbo",
     "build": "turbo run build --cache-dir=.turbo",
+    "hackBuild": "turbo run hackBuild --cache-dir=.turbo",
     "prebuild:sdk": "turbo run prebuild --cache-dir=.turbo --filter=./packages/* --filter=./sdk/*",
     "build:sdk": "turbo run build --cache-dir=.turbo --filter=./packages/* --filter=./sdk/*",
     "lint": "turbo run lint --cache-dir=.turbo",
