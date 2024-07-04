@@ -13,6 +13,7 @@ export const Form = () => {
   const [value, setValue] = useState<number>()
   const [{ wallet }] = useConnectWallet()
 
+  // @ts-ignore
   const ethBalance = wallet?.accounts[0].balance.ETH
 
   const handleChange = (event: any) => {
