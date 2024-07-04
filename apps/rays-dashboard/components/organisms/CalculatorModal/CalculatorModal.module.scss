@@ -1,0 +1,17 @@
+.valuesWrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: var(--space-l) var(--space-l);
+}
+
+.valueBox {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.amountInput {
+  padding: var(--space-m) var(--space-m) var(--space-m) 50px;
+  width: 100%;
+  border-radius: var(--radius-8);
+}

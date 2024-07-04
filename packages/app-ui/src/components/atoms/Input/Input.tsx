@@ -14,13 +14,19 @@ export const Input: FC<
       name: IconNamesList
       size?: number
     }
+    CustomIcon?: FC
   }
-> = ({ variant = 'default', className, icon, ...rest }) => {
+> = ({ variant = 'default', className, CustomIcon, icon, ...rest }) => {
   return (
     <div className={classNames.wrapper}>
       {icon && (
         <div className={classNames.iconWrapper}>
           <Icon iconName={icon.name} size={icon.size} variant="s" />
+        </div>
+      )}
+      {CustomIcon && (
+        <div className={classNames.iconWrapper}>
+          <CustomIcon />
         </div>
       )}
       <input
