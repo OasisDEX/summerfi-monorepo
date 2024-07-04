@@ -31,6 +31,12 @@ To develop all apps and packages, run the following command:
 pnpm dev
 ```
 
+## Submodules
+
+To initialize submodules use:
+
+`git submodule add -f git@github.com:OasisDEX/summer-earn-protocol.git earn-protocol`
+
 ## Useful Links
 
 Learn more about the power of Turborepo:
