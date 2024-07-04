@@ -7,6 +7,7 @@
     "watch": "tsc -w",
     "test": "jest --passWithNoTests",
     "build": "tsc -b",
+    "hackBuild": "tsc -b",
     "hackPreConstruct": "tsc -b",
     "dev": "tsc -b -w",
     "lint": "eslint .",
