@@ -1,1 +1,1 @@
-export const basePath = '/rays'
+export const basePath = ''
