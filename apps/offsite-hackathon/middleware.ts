@@ -13,7 +13,6 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // If userAddress is present, proceed as normal
   return NextResponse.next()
 }
 
