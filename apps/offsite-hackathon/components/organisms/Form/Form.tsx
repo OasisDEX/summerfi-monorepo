@@ -1,7 +1,8 @@
 'use client'
 import { useState } from 'react'
 import { Button, Card, Input, Text } from '@summerfi/app-ui'
-import { useConnectWallet } from '@web3-onboard/react'
+import { useAppState, useConnectWallet } from '@web3-onboard/react'
+import { signMessage } from '@web3-onboard/wagmi'
 
 enum Action {
   DEPOSIT = 'deposit',
@@ -12,6 +13,17 @@ export const Form = () => {
   const [action, setAction] = useState(Action.DEPOSIT)
   const [value, setValue] = useState<number>()
   const [{ wallet }] = useConnectWallet()
+  const { wagmiConfig } = useAppState()
+
+  async function signTestMessage() {
+    // current primary wallet - as multiple wallets can connect this value is the currently active
+    await signMessage(wagmiConfig, {
+      message: 'This is my message to you',
+      connector: wallet?.wagmiConnector,
+    }).then((res) => {
+      console.log(res)
+    })
+  }
 
   // @ts-ignore
   const ethBalance = wallet?.accounts[0]?.balance?.ETH
@@ -85,6 +97,9 @@ export const Form = () => {
         disabled={!value}
       >
         Confirm
+      </Button>
+      <Button variant="primaryLarge" style={{ width: '100%' }} onClick={signTestMessage}>
+        Sign test message
       </Button>
     </Card>
   )

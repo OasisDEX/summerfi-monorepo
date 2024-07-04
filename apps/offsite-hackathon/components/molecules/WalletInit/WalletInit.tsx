@@ -6,6 +6,7 @@ import injectedWalletsModule from '@web3-onboard/injected-wallets'
 import ledgerModule from '@web3-onboard/ledger'
 import { init } from '@web3-onboard/react'
 import trezorModule from '@web3-onboard/trezor'
+import wagmi from '@web3-onboard/wagmi'
 import walletConnectModule from '@web3-onboard/walletconnect'
 
 import { NetworkConfig, networksList } from '@/constants/networks-list'
@@ -83,6 +84,7 @@ const getWallets = () => {
 }
 
 const initWeb3OnBoardConfig = {
+  wagmi,
   wallets: process.env.NEXT_PUBLIC_DEV_WALLETS
     ? [
         injectedWalletsModule({
