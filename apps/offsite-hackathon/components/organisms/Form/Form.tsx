@@ -98,7 +98,11 @@ export const Form = () => {
       >
         Confirm
       </Button>
-      <Button variant="primaryLarge" style={{ width: '100%' }} onClick={signTestMessage}>
+      <Button
+        variant="secondarySmall"
+        style={{ width: '100%', marginTop: '15px' }}
+        onClick={signTestMessage}
+      >
         Sign test message
       </Button>
     </Card>
