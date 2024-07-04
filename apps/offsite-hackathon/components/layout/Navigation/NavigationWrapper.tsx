@@ -12,7 +12,6 @@ import {
   NavigationModuleBridge,
   NavigationModuleSwap,
 } from '@/components/layout/Navigation/NavigationModules'
-import { RaysCountComponent } from '@/components/layout/Navigation/RaysCountComponent/RaysCountComponent'
 import { WalletButtonFallback } from '@/components/molecules/WalletButton/WalletButtonFallback'
 import { basePath } from '@/helpers/base-path'
 
@@ -83,7 +82,7 @@ export const NavigationWrapper: FC<NavigationWrapperProps> = ({ panels }) => {
           )}
         </BridgeSwapWrapper>
       }
-      raysCountComponent={<RaysCountComponent />}
+      raysCountComponent={<div />}
       walletConnectionComponent={<WalletButton />}
       onLogoClick={() => {
         // because router will use base path...
