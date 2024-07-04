@@ -1,0 +1,3 @@
+[submodule "earn-protocol"]
+	path = earn-protocol
+	url = git@github.com:OasisDEX/summer-earn-protocol.git
