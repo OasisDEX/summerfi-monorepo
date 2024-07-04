@@ -10,7 +10,7 @@ import { IPositionsManager, Order } from '@summerfi/sdk-common/orders'
 import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { IUserClient } from '../interfaces/IUserClient'
 import { IRPCClient } from '../interfaces/IRPCClient'
-import { RPCClientType } from '../rpc/SDKClient'
+import { RPCMainClientType } from '../rpc/SDKMainClient'
 import { IProtocol } from '@summerfi/sdk-common/protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
 
@@ -19,7 +19,7 @@ export class User extends IRPCClient implements IUserClient {
   public readonly chainInfo: ChainInfo
 
   public constructor(params: {
-    rpcClient: RPCClientType
+    rpcClient: RPCMainClientType
     chainInfo: ChainInfo
     walletAddress: Address
   }) {

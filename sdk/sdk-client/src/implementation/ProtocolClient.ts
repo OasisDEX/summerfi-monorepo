@@ -1,16 +1,16 @@
 import { ChainInfo, Maybe } from '@summerfi/sdk-common/common'
 import { ILendingPool, ILendingPoolIdData, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { IProtocolClient } from '../interfaces/IProtocolClient'
-import { RPCClientType } from '../rpc/SDKClient'
+import { RPCMainClientType } from '../rpc/SDKMainClient'
 import { SerializationService } from '@summerfi/sdk-common/services'
 import { ILendingPoolInfo, Protocol } from '@summerfi/sdk-common'
 
 export class ProtocolClient extends Protocol implements IProtocolClient {
   public readonly name: ProtocolName
   public readonly chainInfo: ChainInfo
-  private readonly _rpcClient: RPCClientType
+  private readonly _rpcClient: RPCMainClientType
 
-  constructor(params: { rpcClient: RPCClientType; name: ProtocolName; chainInfo: ChainInfo }) {
+  constructor(params: { rpcClient: RPCMainClientType; name: ProtocolName; chainInfo: ChainInfo }) {
     super(params)
 
     this.name = params.name

@@ -1,10 +1,10 @@
 import { SDKManager } from '../../src/implementation/SDKManager'
-import { Address, RPCClientType } from '../../src/rpc/SDKClient'
+import { Address, RPCMainClientType } from '../../src/rpc/SDKMainClient'
 import { Token } from '@summerfi/sdk-common'
 import assert from 'assert'
 
 export default async function getTokenByAddress() {
-  type GetTokenByAddressType = RPCClientType['tokens']['getTokenByAddress']['query']
+  type GetTokenByAddressType = RPCMainClientType['tokens']['getTokenByAddress']['query']
 
   const getTokenByAddressQuery: GetTokenByAddressType = jest.fn(async (params) => {
     expect(params).toBeDefined()
@@ -26,7 +26,7 @@ export default async function getTokenByAddress() {
         query: getTokenByAddressQuery,
       },
     },
-  } as unknown as RPCClientType
+  } as unknown as RPCMainClientType
 
   const sdkManager = new SDKManager({ rpcClient })
 

@@ -3,15 +3,19 @@ import { IChainsManagerClient } from '../interfaces/IChainsManager'
 import { Chain } from './Chain'
 import { TokensManagerClient } from './TokensManagerClient'
 import { ProtocolsManagerClient } from './ProtocolsManagerClient'
-import { RPCClientType } from '../rpc/SDKClient'
+import { RPCMainClientType } from '../rpc/SDKMainClient'
 import { IRPCClient } from '../interfaces/IRPCClient'
+import { RPCEarnProtocolClientType } from '../rpc/SDKEarnProtocolClient'
 
 /**
  * @name ChainsManagerClient
  * @description Implementation of the IChainsManager interface for the SDK Client
  */
 export class ChainsManagerClient extends IRPCClient implements IChainsManagerClient {
-  constructor(params: { rpcClient: RPCClientType }) {
+  constructor(params: {
+    rpcClient: RPCMainClientType
+    earnProtocolClient?: RPCEarnProtocolClientType
+  }) {
     super(params)
   }
 
