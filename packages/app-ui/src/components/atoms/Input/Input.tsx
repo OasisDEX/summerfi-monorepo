@@ -1,4 +1,4 @@
-import { DetailedHTMLProps, FC, InputHTMLAttributes } from 'react'
+import React, { DetailedHTMLProps, FC, InputHTMLAttributes } from 'react'
 
 import { getAtomClassList } from '@/components/atoms/getAtomClassList'
 import { Icon } from '@/components/atoms/Icon/Icon'
@@ -15,10 +15,11 @@ export const Input: FC<
       size?: number
     }
     CustomIcon?: FC
+    style?: React.CSSProperties
   }
-> = ({ variant = 'default', className, CustomIcon, icon, ...rest }) => {
+> = ({ variant = 'default', className, CustomIcon, icon, style, ...rest }) => {
   return (
-    <div className={classNames.wrapper}>
+    <div className={classNames.wrapper} style={style}>
       {icon && (
         <div className={classNames.iconWrapper}>
           <Icon iconName={icon.name} size={icon.size} variant="s" />
