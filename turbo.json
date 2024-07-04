@@ -73,8 +73,8 @@
       "dependsOn": ["^prebuild", "^prebuild:nocache"],
       "outputs": ["src/types/graphql/generated.ts", "src/generated"]
     },
-    "hackPrebuild": {
-      "dependsOn": ["^hackPrebuild"],
+    "hackPreConstruct": {
+      "dependsOn": ["^hackPreConstruct"],
       "outputs": ["src/types/graphql/generated.ts", "src/generated"]
     },
     "prebuild:nocache": {
@@ -93,7 +93,7 @@
       ]
     },
     "hackBuild": {
-      "dependsOn": ["hackPrebuild", "^hackBuild"],
+      "dependsOn": ["hackPreConstruct", "^hackBuild"],
       "outputs": [
         ".next/**",
         ".next/server/pages/**",
