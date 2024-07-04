@@ -6,7 +6,7 @@ import { RPCEarnProtocolClientType } from '../rpc/SDKEarnProtocolClient'
 import { IRPCClient } from '../interfaces/IRPCClient'
 import { RPCMainClientType } from '../rpc/SDKMainClient'
 
-export class FleetCommanderClient extends IRPCClient implements IFleetClient {
+export class FleetClient extends IRPCClient implements IFleetClient {
   public readonly address: IAddress
   public readonly chainInfo: ChainInfo
 
@@ -22,17 +22,17 @@ export class FleetCommanderClient extends IRPCClient implements IFleetClient {
     this.chainInfo = params.chainInfo
   }
 
-  /** @see IFleetCommanderClient */
+  /** @see IFleetClient */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async deposit(params: { user: IUser; amount: ITokenAmount }): Promise<TransactionInfo[]> {
     return []
   }
 
-  /** @see IFleetCommanderClient */
+  /** @see IFleetClient */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async withdraw(params: { user: IUser; amount: ITokenAmount }): Promise<TransactionInfo[]> {
     return []
   }
 }
 
-SerializationService.registerClass(FleetCommanderClient)
+SerializationService.registerClass(FleetClient)
