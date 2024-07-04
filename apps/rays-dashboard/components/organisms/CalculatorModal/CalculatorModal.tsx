@@ -65,7 +65,16 @@ const CalculatorModalContent = () => {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <form
+      style={{ display: 'flex', flexDirection: 'column' }}
+      onSubmit={calculateValues}
+      onKeyDown={(ev) => {
+        if (ev.key === 'Enter') {
+          ev.preventDefault()
+          calculateValues()
+        }
+      }}
+    >
       <Text as="h5" variant="h5" style={{ marginTop: '16px' }}>
         $RAYS Calculator
       </Text>
@@ -135,7 +144,7 @@ const CalculatorModalContent = () => {
       >
         Calculate $RAYS
       </Button>
-    </div>
+    </form>
   )
 }
 
