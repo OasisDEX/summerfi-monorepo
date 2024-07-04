@@ -1,6 +1,6 @@
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SDKManager } from '../../src/implementation/SDKManager'
-import { RPCClientType, SparkPositionId } from '../../src/rpc/SDKClient'
+import { RPCMainClientType, SparkPositionId } from '../../src/rpc/SDKMainClient'
 import {
   ILKType,
   MakerLendingPool,
@@ -22,7 +22,7 @@ import {
 import { RefinanceParameters } from '@summerfi/sdk-common'
 
 export default async function simulateRefinanceTest() {
-  type SimulateRefinanceType = RPCClientType['simulation']['refinance']['query']
+  type SimulateRefinanceType = RPCMainClientType['simulation']['refinance']['query']
   const simulateRefinance: SimulateRefinanceType = jest.fn(async (params) => {
     return {
       simulationType: SimulationType.Refinance,
@@ -51,7 +51,7 @@ export default async function simulateRefinanceTest() {
         query: simulateRefinance,
       },
     },
-  } as unknown as RPCClientType
+  } as unknown as RPCMainClientType
 
   const sdkManager = new SDKManager({ rpcClient })
 

@@ -1,6 +1,7 @@
-import { type ChainInfo } from '@summerfi/sdk-common/common'
-import { TokensManagerClient } from '../implementation/TokensManagerClient'
-import { ProtocolsManagerClient } from '../implementation/ProtocolsManagerClient'
+import { IChainInfo } from '@summerfi/sdk-common/common'
+import { IEarnProtocolManagerClient } from './IEarnProtocolManagerClient'
+import { IProtocolsManagerClient } from './IProtocolsManagerClient'
+import { ITokensManagerClient } from './ITokensManagerClient'
 
 /**
  * @interface IChain
@@ -8,9 +9,11 @@ import { ProtocolsManagerClient } from '../implementation/ProtocolsManagerClient
  */
 export interface IChain {
   /** The information of the chain */
-  chainInfo: ChainInfo
+  chainInfo: IChainInfo
   /** The tokens manager client for the chain, allows to retrieve tokens on the chain */
-  tokens: TokensManagerClient
+  tokens: ITokensManagerClient
   /** The protocols manager client for the chain, allows to retrieve protocols on the chain */
-  protocols: ProtocolsManagerClient
+  protocols: IProtocolsManagerClient
+  /** The Earn Protocol manager client for the chain */
+  earnProtocol?: IEarnProtocolManagerClient
 }

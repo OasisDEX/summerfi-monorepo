@@ -1,6 +1,6 @@
 import { Address, ChainInfo, IToken, Maybe, TokenSymbol } from '@summerfi/sdk-common/common'
 import { IRPCClient } from '../interfaces/IRPCClient'
-import { RPCClientType } from '../rpc/SDKClient'
+import { RPCMainClientType } from '../rpc/SDKMainClient'
 import { ITokensManagerClient } from '../interfaces/ITokensManagerClient'
 
 /**
@@ -10,7 +10,7 @@ import { ITokensManagerClient } from '../interfaces/ITokensManagerClient'
 export class TokensManagerClient extends IRPCClient implements ITokensManagerClient {
   private readonly _chainInfo: ChainInfo
 
-  public constructor(params: { rpcClient: RPCClientType; chainInfo: ChainInfo }) {
+  public constructor(params: { rpcClient: RPCMainClientType; chainInfo: ChainInfo }) {
     super(params)
 
     this._chainInfo = params.chainInfo
