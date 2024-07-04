@@ -16,9 +16,9 @@ import { OracleManagerFactory } from '@summerfi/oracle-service'
 import { IAddressBookManager } from '@summerfi/address-book-common'
 import { AddressBookManagerFactory } from '@summerfi/address-book-service'
 
-export type ContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
+export type EarnProtocolContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
-export type SDKAppContext = {
+export type EarnProtocolAppContext = {
   addressBookManager: IAddressBookManager
   configProvider: IConfigurationProvider
   tokensManager: ITokensManager
@@ -30,7 +30,9 @@ export type SDKAppContext = {
 }
 
 // context for each request
-export const createSDKContext = (opts: ContextOptions): SDKAppContext => {
+export const createEarnProtocolContext = (
+  opts: EarnProtocolContextOptions,
+): EarnProtocolAppContext => {
   const configProvider = new ConfigurationProvider()
   const addressBookManager = AddressBookManagerFactory.newAddressBookManager({ configProvider })
   const tokensManager = TokensManagerFactory.newTokensManager({ configProvider })
