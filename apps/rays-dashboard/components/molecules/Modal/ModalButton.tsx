@@ -12,7 +12,7 @@ type ModalProps = {
 }
 
 export const ModalButton = ({ Button, ModalContent }: ModalProps) => {
-  const [isOpen, toggleModal] = useToggle(true)
+  const [isOpen, toggleModal] = useToggle(false)
   const [closing, setClosing] = useState(false)
 
   const handleModalClose = () => {
