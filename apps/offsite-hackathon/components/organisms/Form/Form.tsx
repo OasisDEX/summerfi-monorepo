@@ -14,7 +14,7 @@ export const Form = () => {
   const [{ wallet }] = useConnectWallet()
 
   // @ts-ignore
-  const ethBalance = wallet?.accounts[0].balance.ETH
+  const ethBalance = wallet?.accounts[0]?.balance?.ETH
 
   const handleChange = (event: any) => {
     setValue(event.target.value)
