@@ -1,4 +1,5 @@
-import { RPCClientType } from '../rpc/SDKClient'
+import { RPCEarnProtocolClientType } from '../rpc/SDKEarnProtocolClient'
+import { RPCMainClientType } from '../rpc/SDKMainClient'
 import { ChainsManagerClient } from './ChainsManager'
 import { PortfolioManager } from './PortfolioManager'
 import { UsersManager } from './UsersManager'
@@ -10,7 +11,10 @@ export class SDKManager {
   public readonly users: UsersManager
   public readonly portfolio: PortfolioManager
 
-  public constructor(params: { rpcClient: RPCClientType }) {
+  public constructor(params: {
+    rpcClient: RPCMainClientType
+    earnProtocolClient?: RPCEarnProtocolClientType
+  }) {
     this.simulator = new SimulationManager(params)
     this.chains = new ChainsManagerClient(params)
     this.users = new UsersManager(params)

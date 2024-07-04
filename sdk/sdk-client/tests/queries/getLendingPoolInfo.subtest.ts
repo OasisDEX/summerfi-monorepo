@@ -1,6 +1,6 @@
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SDKManager } from '../../src/implementation/SDKManager'
-import { RPCClientType } from '../../src/rpc/SDKClient'
+import { RPCMainClientType } from '../../src/rpc/SDKMainClient'
 import { ILKType, MakerLendingPoolInfo } from '@summerfi/protocol-plugins/plugins/maker'
 import {
   IMakerLendingPoolIdData,
@@ -9,7 +9,7 @@ import {
 import { AddressType } from '@summerfi/sdk-common'
 
 export default async function getLendingPoolInfoTest() {
-  type GetLendingPoolInfoType = RPCClientType['protocols']['getLendingPoolInfo']['query']
+  type GetLendingPoolInfoType = RPCMainClientType['protocols']['getLendingPoolInfo']['query']
 
   const getLendingPoolInfoQuery: GetLendingPoolInfoType = jest.fn(async (poolId) => {
     expect(poolId).toBeDefined()
@@ -34,7 +34,7 @@ export default async function getLendingPoolInfoTest() {
         query: getLendingPoolInfoQuery,
       },
     },
-  } as unknown as RPCClientType
+  } as unknown as RPCMainClientType
 
   const sdkManager = new SDKManager({ rpcClient })
 
