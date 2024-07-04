@@ -1,2 +1,12 @@
 export { sdkAppRouter, type SDKAppRouter } from './SDKAppRouter'
-export { type SDKAppContext, type ContextOptions, createSDKContext } from './context/Context'
+export { earnProtocolAppRouter, type EarnProtocolAppRouter } from './EarnProtocolAppRouter'
+export {
+  type SDKAppContext,
+  type SDKContextOptions as ContextOptions,
+  createSDKContext,
+} from './context/SDKContext'
+export {
+  type EarnProtocolAppContext,
+  type EarnProtocolContextOptions,
+  createEarnProtocolContext,
+} from './context/EarnProtocolContext'
