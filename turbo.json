@@ -93,7 +93,7 @@
       ]
     },
     "hackBuild": {
-      "dependsOn": ["hackPreConstruct", "^hackBuild"],
+      "dependsOn": ["^hackBuild"],
       "outputs": [
         ".next/**",
         ".next/server/pages/**",
