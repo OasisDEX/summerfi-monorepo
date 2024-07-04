@@ -1,10 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Button, Divider, Input, RadioButton, RadioButtonGroup, Text } from '@summerfi/app-ui'
+import { useState } from 'react'
+import { Button, Divider, Input, RadioButtonGroup, Text } from '@summerfi/app-ui'
 import { IconCurrencyDollar } from '@tabler/icons-react'
 import BigNumber from 'bignumber.js'
-import { useToggle } from 'usehooks-ts'
 
 import { AnimatedNumber } from '@/components/molecules/AnimatedNumber/AnimatedNumber'
 import { ModalButton, ModalButtonProps } from '@/components/molecules/Modal/ModalButton'
