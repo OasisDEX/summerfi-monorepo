@@ -1,12 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Button, Divider, Input, RadioButtonGroup, Text } from '@summerfi/app-ui'
-import { IconCurrencyDollar } from '@tabler/icons-react'
+import { Button, Divider, Input, LoadingSpinner, RadioButtonGroup, Text } from '@summerfi/app-ui'
+import { IconCurrencyDollar, IconWallet } from '@tabler/icons-react'
+import { useConnectWallet } from '@web3-onboard/react'
 import BigNumber from 'bignumber.js'
 
 import { AnimatedNumber } from '@/components/molecules/AnimatedNumber/AnimatedNumber'
 import { ModalButton, ModalButtonProps } from '@/components/molecules/Modal/ModalButton'
+import { basePath } from '@/helpers/base-path'
 import { CALCULATOR_NET_VALUE_CAP, getCalculatorValues } from '@/helpers/calculator'
 import { formatAsShorthandNumbers } from '@/helpers/formatters'
 
@@ -51,8 +53,10 @@ const CalculatorModalButton = (props: ModalButtonProps) => {
 }
 
 const CalculatorModalContent = () => {
+  const [{ wallet }] = useConnectWallet()
   const [amount, setAmount] = useState(0)
   const [migration, setMigration] = useState<'true' | 'false'>('true')
+  const [importingWallet, setImportingWallet] = useState(false)
   const [calculatedValues, setCalculatedValues] = useState({
     basePoints: 0,
     migrationBonus: 0,
@@ -68,6 +72,19 @@ const CalculatorModalContent = () => {
         migration: migration === 'true',
       }),
     )
+  }
+
+  const importConnectedWalletAssets = () => {
+    if (!importingWallet) {
+      setImportingWallet(true)
+      fetch(`${basePath}/api/wallet-assets?address=${wallet?.accounts[0].address}`)
+        .then((response) => response.json())
+        .then(({ totalValue }) => {
+          setImportingWallet(false)
+          if (Number.isNaN(totalValue)) return
+          setAmount(Number(Number(totalValue).toFixed(2)))
+        })
+    }
   }
 
   useEffect(() => {
@@ -116,6 +133,23 @@ const CalculatorModalContent = () => {
         }}
         className={calculatorModalStyles.amountInput}
       />
+      {wallet?.accounts[0].address && (
+        <Button
+          variant="neutralSmall"
+          style={{ marginTop: '20px' }}
+          onClick={importConnectedWalletAssets}
+          disabled={importingWallet}
+        >
+          {importingWallet ? (
+            <LoadingSpinner />
+          ) : (
+            <>
+              <IconWallet />
+              import connected wallet assets value
+            </>
+          )}
+        </Button>
+      )}
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <Text as="p" variant="p3semi" style={{ margin: '32px 0 8px 0' }}>
           Migration
@@ -136,10 +170,10 @@ const CalculatorModalContent = () => {
           ]}
         />
       </div>
-      <Divider style={{ margin: '40px 0 20px 0' }} />
+      <Divider style={{ margin: '20px 0' }} />
       <Button
         variant="secondaryLarge"
-        style={{ marginTop: 'var(--space-l)' }}
+        style={{ marginTop: 'var(--space-md)' }}
         onClick={calculateValues}
       >
         Calculate $RAYS
