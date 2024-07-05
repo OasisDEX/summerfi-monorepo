@@ -1,18 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Divider, Input, RadioButtonGroup, Text } from '@summerfi/app-ui'
 import { IconCurrencyDollar } from '@tabler/icons-react'
 import BigNumber from 'bignumber.js'
 
 import { AnimatedNumber } from '@/components/molecules/AnimatedNumber/AnimatedNumber'
 import { ModalButton, ModalButtonProps } from '@/components/molecules/Modal/ModalButton'
+import { CALCULATOR_NET_VALUE_CAP, getCalculatorValues } from '@/helpers/calculator'
 import { formatAsShorthandNumbers } from '@/helpers/formatters'
 
 import calculatorModalStyles from './CalculatorModal.module.scss'
-
-const amountTooHighValue = 9999999999999
-const amounttooHighLocked = 99999999999999 // same as above but with one more 9
 
 const DollarIconElement = () => <IconCurrencyDollar size={20} />
 
@@ -34,7 +32,7 @@ const CalculatorModalRaysValue = ({ value, label }: { value: number; label: stri
         {value > 99999 ? (
           <>{formatAsShorthandNumbers(new BigNumber(value), 1)}</>
         ) : (
-          <AnimatedNumber number={Number(value.toPrecision(4))} size={28} hasComma duration={400} />
+          <AnimatedNumber number={Number(value.toPrecision(2))} size={28} hasComma duration={400} />
         )}
       </Text>
       <Text as="p" variant="p3semi" style={{ color: 'var(--color-neutral-80)' }}>
@@ -55,33 +53,35 @@ const CalculatorModalButton = (props: ModalButtonProps) => {
 const CalculatorModalContent = () => {
   const [amount, setAmount] = useState(0)
   const [migration, setMigration] = useState<'true' | 'false'>('true')
-  const [calculatedValues, setCalculatedValues] = useState([0, 0, 0])
+  const [calculatedValues, setCalculatedValues] = useState({
+    basePoints: 0,
+    migrationBonus: 0,
+    totalPoints: 0,
+  })
 
   const calculateValues = () => {
     const safeAmount = amount > 0 ? amount : 0
-    const basePoints = (safeAmount / 10000) * 690
-    const migrationBonus = migration === 'true' ? basePoints * 0.2 : 0
-    const totalPoints = basePoints + migrationBonus
 
-    setCalculatedValues([basePoints, migrationBonus, totalPoints])
+    setCalculatedValues(
+      getCalculatorValues({
+        usdAmount: safeAmount,
+        migration: migration === 'true',
+      }),
+    )
   }
 
+  useEffect(() => {
+    calculateValues()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [migration])
+
   return (
-    <form
-      style={{ display: 'flex', flexDirection: 'column' }}
-      onSubmit={calculateValues}
-      onKeyDown={(ev) => {
-        if (ev.key === 'Enter') {
-          ev.preventDefault()
-          calculateValues()
-        }
-      }}
-    >
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
       <Text as="h5" variant="h5" style={{ marginTop: '16px' }}>
         $RAYS Calculator
       </Text>
       <div className={calculatorModalStyles.valuesWrapper}>
-        {amount > amountTooHighValue ? (
+        {amount > CALCULATOR_NET_VALUE_CAP ? (
           <>
             <AmountTooHigh label="Base" />
             <AmountTooHigh label="Migration" />
@@ -89,9 +89,9 @@ const CalculatorModalContent = () => {
           </>
         ) : (
           <>
-            <CalculatorModalRaysValue value={calculatedValues[0]} label="Base" />
-            <CalculatorModalRaysValue value={calculatedValues[1]} label="Migration" />
-            <CalculatorModalRaysValue value={calculatedValues[2]} label="Total" />
+            <CalculatorModalRaysValue value={calculatedValues.basePoints} label="Base" />
+            <CalculatorModalRaysValue value={calculatedValues.migrationBonus} label="Migration" />
+            <CalculatorModalRaysValue value={calculatedValues.totalPoints} label="Total" />
           </>
         )}
       </div>
@@ -103,9 +103,17 @@ const CalculatorModalContent = () => {
         value={amount || 0}
         onChange={(e) =>
           setAmount(
-            parseFloat(e.target.value) > amounttooHighLocked ? amount : parseFloat(e.target.value),
+            parseFloat(e.target.value) > CALCULATOR_NET_VALUE_CAP
+              ? amount
+              : parseFloat(e.target.value),
           )
         }
+        onKeyDown={(ev) => {
+          if (ev.key === 'Enter') {
+            ev.preventDefault()
+            calculateValues()
+          }
+        }}
         className={calculatorModalStyles.amountInput}
       />
       <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -136,7 +144,7 @@ const CalculatorModalContent = () => {
       >
         Calculate $RAYS
       </Button>
-    </form>
+    </div>
   )
 }
 
