@@ -1,6 +1,13 @@
 import { z } from 'zod'
 import { publicProcedure } from '../EarnProtocolTRPC'
-import { SDKError, SDKErrorType, isChainInfo, isTokenAmount, isUser } from '@summerfi/sdk-common'
+import {
+  SDKError,
+  SDKErrorType,
+  isAddress,
+  isChainInfo,
+  isTokenAmount,
+  isUser,
+} from '@summerfi/sdk-common'
 
 export const deposit = publicProcedure.input(z.any()).query(async (opts) => {
   const returnedErrors: string[] = []
@@ -8,6 +15,14 @@ export const deposit = publicProcedure.input(z.any()).query(async (opts) => {
   if (!isChainInfo(opts.input.chainInfo, returnedErrors)) {
     throw SDKError.createFrom({
       message: 'Invalid chain info in deposit request',
+      reason: returnedErrors.join('\n'),
+      type: SDKErrorType.EarnProtocolError,
+    })
+  }
+
+  if (!isAddress(opts.input.fleetAddress, returnedErrors)) {
+    throw SDKError.createFrom({
+      message: 'Invalid address in deposit request',
       reason: returnedErrors.join('\n'),
       type: SDKErrorType.EarnProtocolError,
     })
@@ -23,7 +38,7 @@ export const deposit = publicProcedure.input(z.any()).query(async (opts) => {
 
   if (!isTokenAmount(opts.input.chainInfo, returnedErrors)) {
     throw SDKError.createFrom({
-      message: 'Invalid token amount in deposit request',
+      message: 'Invalid token in deposit request',
       reason: returnedErrors.join('\n'),
       type: SDKErrorType.EarnProtocolError,
     })

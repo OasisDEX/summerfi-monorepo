@@ -28,6 +28,7 @@ export class FleetClient extends IRPCClient implements IFleetClient {
     return this.earnProtocolRpcClient.deposit.query({
       ...params,
       chainInfo: this.chainInfo,
+      fleetAddress: this.address,
     })
   }
 
@@ -37,6 +38,7 @@ export class FleetClient extends IRPCClient implements IFleetClient {
     return this.earnProtocolRpcClient.withdraw.query({
       ...params,
       chainInfo: this.chainInfo,
+      fleetAddress: this.address,
     })
   }
 }

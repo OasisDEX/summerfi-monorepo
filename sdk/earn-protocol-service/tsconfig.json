@@ -3,7 +3,10 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "dist",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@summerfi/testing-utils": ["node_modules/@summerfi/testing-utils/src/index.ts"]
+    }
   },
   "include": ["src/**/*.ts", "tests/**/*.ts", "e2e/**/*.ts"],
   "exclude": ["node_modules"]

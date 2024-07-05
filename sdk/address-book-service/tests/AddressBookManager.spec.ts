@@ -5,7 +5,7 @@ import { DeploymentIndex } from '@summerfi/deployment-utils'
 import { IAddressBookManager } from '@summerfi/address-book-common'
 import assert from 'assert'
 
-describe('TokensManager', () => {
+describe('AddressBookManager', () => {
   const chainInfo = ChainFamilyMap.Ethereum.Mainnet
   let addressBookManager: IAddressBookManager
   const deployments = {
