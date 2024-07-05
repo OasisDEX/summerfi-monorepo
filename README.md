@@ -41,7 +41,7 @@ pnpm dev
 
 To initialize submodules use:
 
-`git submodule update earn-protocol/`
+`git submodule update earn-protocol/contracts`
 
 ## Useful Links
 
