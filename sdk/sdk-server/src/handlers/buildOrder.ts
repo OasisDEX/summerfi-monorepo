@@ -3,7 +3,7 @@ import type { Order } from '@summerfi/sdk-common/orders'
 import type { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { isUser } from '@summerfi/sdk-common/user'
 import { Maybe } from '@summerfi/sdk-common/common'
-import { publicProcedure } from '../TRPC'
+import { publicProcedure } from '../SDKTRPC'
 import { isPositionsManager } from '@summerfi/sdk-common'
 
 export const buildOrder = publicProcedure

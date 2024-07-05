@@ -1,4 +1,4 @@
-import { router } from './TRPC'
+import { router } from './SDKTRPC'
 import { deposit } from './earn-protocol-handlers/deposit'
 import { withdraw } from './earn-protocol-handlers/withdraw'
 

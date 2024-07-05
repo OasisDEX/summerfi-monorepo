@@ -1,7 +1,8 @@
 import { z } from 'zod'
-import { publicProcedure } from '../TRPC'
+import { publicProcedure } from '../EarnProtocolTRPC'
 
-export const withdraw = publicProcedure.input(z.object({})).query(async (opts): Promise<void> => {
-  opts
-  throw new Error('Not implemented')
+export const withdraw = publicProcedure.input(z.any()).query(async (opts) => {
+  // validate input
+
+  return opts.ctx.earnProtocolManager.withdraw(opts.input)
 })

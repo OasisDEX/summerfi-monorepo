@@ -1,6 +1,6 @@
 import type { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { refinanceLendingToLending } from '@summerfi/simulator-service/strategies'
-import { publicProcedure } from '../TRPC'
+import { publicProcedure } from '../SDKTRPC'
 import { isRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { z } from 'zod'
 

@@ -1,5 +1,5 @@
 import { isLendingPoolId } from '@summerfi/sdk-common'
-import { publicProcedure } from '../TRPC'
+import { publicProcedure } from '../SDKTRPC'
 import { z } from 'zod'
 
 export const getLendingPool = publicProcedure.input(z.any()).query(async (opts) => {

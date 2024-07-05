@@ -1,7 +1,8 @@
 import { z } from 'zod'
-import { publicProcedure } from '../TRPC'
+import { publicProcedure } from '../EarnProtocolTRPC'
 
-export const deposit = publicProcedure.input(z.object({})).query(async (opts): Promise<void> => {
-  opts
-  throw new Error('Not implemented')
+export const deposit = publicProcedure.input(z.any()).query(async (opts) => {
+  // validate input
+
+  return opts.ctx.earnProtocolManager.deposit(opts.input)
 })
