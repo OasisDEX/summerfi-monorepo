@@ -436,18 +436,6 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.12.7)
 
-  earn-protocol/packages/core-contracts:
-    devDependencies:
-      '@summerfi/eslint-config':
-        specifier: workspace:*
-        version: link:../../../packages/eslint-config
-      '@summerfi/jest-config':
-        specifier: workspace:*
-        version: link:../../../packages/jest-config
-      '@summerfi/typescript-config':
-        specifier: workspace:*
-        version: link:../../../packages/typescript-config
-
   external-api/get-collateral-locked-function:
     dependencies:
       '@aws-lambda-powertools/logger':

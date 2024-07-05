@@ -29,8 +29,8 @@ export class Address implements IAddress {
     return new Address(params)
   }
 
-  static createFromEthereum(params: { value: AddressValue }): Address {
-    return new Address({ ...params, type: AddressType.Ethereum })
+  static createFromEthereum(params: { value: string }): Address {
+    return new Address({ value: params.value as AddressValue, type: AddressType.Ethereum })
   }
 
   static isValid(address: string): boolean {

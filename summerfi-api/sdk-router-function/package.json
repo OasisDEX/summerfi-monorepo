@@ -9,7 +9,7 @@
     "e2e": "jest e2e/",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "tsc -p tsconfig.build.json --noEmit && esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap"
+    "build": "tsc -p tsconfig.build.json --noEmit && esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap && esbuild src/earn-protocol.ts --bundle --minify --platform=node --target=node20 --outfile=dist/earn-protocol.js --sourcemap"
   },
   "dependencies": {
     "@aws-lambda-powertools/logger": "^1.18.1",

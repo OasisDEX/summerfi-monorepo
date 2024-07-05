@@ -6,6 +6,7 @@ import { ProtocolsManagerClient } from './ProtocolsManagerClient'
 import { RPCMainClientType } from '../rpc/SDKMainClient'
 import { IRPCClient } from '../interfaces/IRPCClient'
 import { RPCEarnProtocolClientType } from '../rpc/SDKEarnProtocolClient'
+import { EarnProtocolManagerClient } from './EarnProtocolManagerClient'
 
 /**
  * @name ChainsManagerClient
@@ -34,6 +35,13 @@ export class ChainsManagerClient extends IRPCClient implements IChainsManagerCli
         rpcClient: this.rpcClient,
         chainInfo: chainInfo,
       }),
+      earnProtocolManager: this.earnProtocolRpcClient
+        ? new EarnProtocolManagerClient({
+            rpcClient: this.rpcClient,
+            earnProtocolClient: this.earnProtocolRpcClient,
+            chainInfo: chainInfo,
+          })
+        : undefined,
     })
   }
 

@@ -7,10 +7,10 @@ export abstract class IRPCClient {
 
   constructor(params: {
     rpcClient: RPCMainClientType
-    earnProtocolRpcClient?: RPCEarnProtocolClientType
+    earnProtocolClient?: RPCEarnProtocolClientType
   }) {
     this._rpcClient = params.rpcClient
-    this._earnProtocolRpcClient = params.earnProtocolRpcClient
+    this._earnProtocolRpcClient = params.earnProtocolClient
   }
 
   protected get rpcClient(): RPCMainClientType {

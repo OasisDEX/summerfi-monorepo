@@ -1,5 +1,5 @@
 import { createTRPCClient, httpBatchLink, loggerLink } from '@trpc/client'
-import { type SDKAppRouter } from '@summerfi/sdk-server'
+import type { SDKAppRouter } from '@summerfi/sdk-server'
 import { SerializationService } from '@summerfi/sdk-common/services'
 
 // Quick hack to register all serializable classes
