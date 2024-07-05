@@ -1,0 +1,3 @@
+[submodule "earn-protocol/contracts"]
+	path = earn-protocol/contracts
+	url = git@github.com:OasisDEX/summerfi-monorepo.git
