@@ -30,6 +30,12 @@ export type IUserData = Readonly<z.infer<typeof UserDataSchema>>
  * @param maybeUser Object to be checked
  * @returns true if the object is an IUser
  */
-export function isUser(maybeUser: unknown): maybeUser is IUser {
-  return UserDataSchema.safeParse(maybeUser).success
+export function isUser(maybeUser: unknown, returnedErrors?: string[]): maybeUser is IUser {
+  const zodReturn = UserDataSchema.safeParse(maybeUser)
+
+  if (!zodReturn.success && returnedErrors) {
+    returnedErrors.push(...zodReturn.error.errors.map((e) => e.message))
+  }
+
+  return zodReturn.success
 }

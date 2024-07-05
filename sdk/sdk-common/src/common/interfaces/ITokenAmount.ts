@@ -111,8 +111,17 @@ export type ITokenAmountData = Readonly<z.infer<typeof TokenAmountDataSchema>>
  * @param maybeTokenAmount
  * @returns true if the object is an ITokenAmount
  */
-export function isTokenAmount(maybeTokenAmount: unknown): maybeTokenAmount is ITokenAmount {
-  return TokenAmountDataSchema.safeParse(maybeTokenAmount).success
+export function isTokenAmount(
+  maybeTokenAmount: unknown,
+  returnedErrors?: string[],
+): maybeTokenAmount is ITokenAmount {
+  const zodReturn = TokenAmountDataSchema.safeParse(maybeTokenAmount)
+
+  if (!zodReturn.success && returnedErrors) {
+    returnedErrors.push(...zodReturn.error.errors.map((e) => e.message))
+  }
+
+  return zodReturn.success
 }
 
 /**

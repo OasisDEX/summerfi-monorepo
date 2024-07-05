@@ -7,11 +7,11 @@ import { IChainInfo, ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-
  * @description This class is the implementation of the IEarnProtocolManager interface. Takes care of choosing the best provider for a price consultation
  */
 export class EarnProtocolManager implements IEarnProtocolManager {
-  _configurationProvider: IConfigurationProvider
+  private _configProvider: IConfigurationProvider
 
   /** CONSTRUCTOR */
-  constructor(params: { configurationProvider: IConfigurationProvider }) {
-    this._configurationProvider = params.configurationProvider
+  constructor(params: { configProvider: IConfigurationProvider }) {
+    this._configProvider = params.configProvider
   }
 
   /** FUNCTIONS */
