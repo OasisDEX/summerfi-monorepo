@@ -25,13 +25,19 @@ export class FleetClient extends IRPCClient implements IFleetClient {
   /** @see IFleetClient */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async deposit(params: { user: IUser; amount: ITokenAmount }): Promise<TransactionInfo[]> {
-    return []
+    return this.earnProtocolRpcClient.deposit.query({
+      ...params,
+      chainInfo: this.chainInfo,
+    })
   }
 
   /** @see IFleetClient */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async withdraw(params: { user: IUser; amount: ITokenAmount }): Promise<TransactionInfo[]> {
-    return []
+    return this.earnProtocolRpcClient.withdraw.query({
+      ...params,
+      chainInfo: this.chainInfo,
+    })
   }
 }
 

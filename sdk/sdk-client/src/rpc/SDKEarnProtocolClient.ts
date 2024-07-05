@@ -1,5 +1,6 @@
 import { createTRPCClient, httpBatchLink, loggerLink } from '@trpc/client'
 import { SerializationService } from '@summerfi/sdk-common/services'
+import { EarnProtocolAppRouter } from '@summerfi/sdk-server'
 
 // Quick hack to register all serializable classes
 export * from '@summerfi/sdk-common/common'
@@ -15,11 +16,11 @@ const EnableDeserialize = false
 
 // TODO: type of RPC is any for now until we implement the server side
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type RPCEarnProtocolClientType = ReturnType<typeof createTRPCClient<any>>
+export type RPCEarnProtocolClientType = ReturnType<typeof createTRPCClient<EarnProtocolAppRouter>>
 
 export function createEarnProtocolRPCClient(apiURL: string): RPCEarnProtocolClientType {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return createTRPCClient<any>({
+  return createTRPCClient<EarnProtocolAppRouter>({
     links: [
       loggerLink({
         enabled: (opts) => opts.direction === 'down' && opts.result instanceof Error,

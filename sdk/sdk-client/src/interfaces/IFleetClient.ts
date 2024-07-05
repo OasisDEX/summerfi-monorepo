@@ -12,8 +12,8 @@ export interface IFleetClient {
    * @param {IUser} user The user that wants to deposit funds
    * @param {ITokenAmount} amount The amount of funds to deposit
    *
-   * @returns {Promise<TransactionInfo[]>} The list of transactions that need to be sent to the blockchain, in the
-   *                                       order they need to be sent
+   * @returns {TransactionInfo[]} The list of transactions that need to be sent to the blockchain, in the
+   *                              order they need to be sent
    */
   deposit(params: { user: IUser; amount: ITokenAmount }): Promise<TransactionInfo[]>
 
@@ -24,8 +24,8 @@ export interface IFleetClient {
    * @param {IUser} user The user that wants to withdraw funds
    * @param {ITokenAmount} amount The amount of funds to withdraw
    *
-   * @returns {Promise<TransactionInfo[]} The list of transactions that need to be sent to the blockchain, in the
-   *                                      order they need to be sent
+   * @returns {TransactionInfo[]} The list of transactions that need to be sent to the blockchain, in the
+   *                              order they need to be sent
    */
   withdraw(params: { user: IUser; amount: ITokenAmount }): Promise<TransactionInfo[]>
 }
