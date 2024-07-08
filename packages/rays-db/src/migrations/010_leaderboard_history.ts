@@ -119,7 +119,7 @@ export async function up(db: Kysely<never>) {
       AND command = 'SELECT refresh_leaderboard_history()'
   `.execute(db)
 
-  // Since we already have these jobs in db, we need to make sure that we won't add new one
+  // Since we already have this job in db, we need to make sure that we won't add new one
   if (Array.isArray(jobExists.rows) && jobExists.rows.length === 0) {
     await sql`
      SELECT cron.schedule('refresh_leaderboard_history','0 */2 * * *', 'SELECT refresh_leaderboard_history()');
