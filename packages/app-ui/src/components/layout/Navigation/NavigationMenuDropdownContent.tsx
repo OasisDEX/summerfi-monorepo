@@ -108,8 +108,8 @@ export const NavigationMenuDropdownContent = ({
                       {...(selected[0] === i && selected[1] === j && { ref })}
                     >
                       <NavigationMenuDropdownContentList
-                        {...list}
                         navigationModules={navigationModules}
+                        {...list}
                       />
                     </li>
                   )}

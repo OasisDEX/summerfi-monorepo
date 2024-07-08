@@ -1,7 +1,10 @@
 import { Fragment, useEffect } from 'react'
 
 import { Button } from '@/components/atoms/Button/Button'
-import { NavigationMenuPanelType } from '@/components/layout/Navigation/Navigation.types'
+import {
+  NavigationMenuPanelType,
+  WithNavigationModules,
+} from '@/components/layout/Navigation/Navigation.types'
 import { NavigationMenuDropdownContentList } from '@/components/layout/Navigation/NavigationMenuDropdownContentList'
 import { ExpandableArrow } from '@/components/molecules/ExpandableArrow/ExpandableArrow'
 import { useToggle } from '@/helpers/use-toggle'
@@ -12,7 +15,7 @@ type NavigationMobileMenuPanelProps = NavigationMenuPanelType & {
   isOpen: boolean
   openNestedMenu?: [string, number, number]
   onOpenNestedMenu: (openNestedMenu: [string, number, number]) => void
-}
+} & WithNavigationModules
 
 export function NavigationMobileMenuPanel({
   isOpen,
@@ -20,6 +23,7 @@ export function NavigationMobileMenuPanel({
   lists,
   onOpenNestedMenu,
   openNestedMenu,
+  navigationModules,
 }: NavigationMobileMenuPanelProps) {
   const [isAccordionOpen, toggleIsAccordionOpen, setIsAccordionOpen] = useToggle(false)
 
@@ -32,6 +36,7 @@ export function NavigationMobileMenuPanel({
       {openNestedMenu ? (
         <>
           {lists
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             .filter(({ items }) => items.filter(({ list }) => list !== undefined))
             .map(({ items }, i) => (
               <Fragment key={i}>
@@ -47,7 +52,10 @@ export function NavigationMobileMenuPanel({
                             flexDirection: 'column',
                           }}
                         >
-                          <NavigationMenuDropdownContentList {...list} />
+                          <NavigationMenuDropdownContentList
+                            navigationModules={navigationModules}
+                            {...list}
+                          />
                         </li>
                       )}
                   </Fragment>
@@ -90,6 +98,7 @@ export function NavigationMobileMenuPanel({
                   <NavigationMenuDropdownContentList
                     parentIndex={i}
                     onClick={(selected) => onOpenNestedMenu([label, ...selected])}
+                    navigationModules={navigationModules}
                     {...item}
                   />
                 </li>

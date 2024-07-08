@@ -1,5 +1,5 @@
 import { FC, ReactNode, useState } from 'react'
-import { useIsMounted, useMediaQuery } from 'usehooks-ts'
+import { useMediaQuery } from 'usehooks-ts'
 
 import {
   NavigationMenuPanelLinkType,
@@ -58,6 +58,7 @@ export const Navigation: FC<NavigationProps> = ({
               links={links}
               panels={panels}
               logo={logoSmall}
+              navigationModules={navigationModules}
             />
           ) : (
             <NavigationMenu

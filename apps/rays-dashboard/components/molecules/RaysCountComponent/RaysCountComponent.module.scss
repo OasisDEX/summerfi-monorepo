@@ -8,9 +8,4 @@
   @include media('<=s') {
     margin-right: var(--space-s);
   }
-  .raysCount {
-    @include media('<=s') {
-      display: none;
-    }
-  }
 }

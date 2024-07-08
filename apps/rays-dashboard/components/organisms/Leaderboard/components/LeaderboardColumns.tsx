@@ -1,7 +1,13 @@
 'use client'
 
 import { Button, ProxyLinkComponent, Text } from '@summerfi/app-ui'
-import { IconArrowDown, IconArrowUp, IconEye, IconTrophyFilled } from '@tabler/icons-react'
+import {
+  IconArrowDown,
+  IconArrowRight,
+  IconArrowUp,
+  IconEye,
+  IconTrophyFilled,
+} from '@tabler/icons-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -27,11 +33,11 @@ export const LeaderboardRank = ({
   const rankChangeColor = rankChange > 0 ? uprankColor : rankChange < 0 ? downrankColor : ''
 
   return (
-    <>
+    <div style={{ position: 'relative' }}>
       {userWalletAddress && userWalletAddress === cell.userAddress ? (
-        <div style={{ paddingLeft: '12px', height: '30px' }}>
+        <div className={classNames.youreHere}>
           <Text as="p" variant="p3semi">
-            You&apos;re here 👇
+            You&apos;re&nbsp;here&nbsp;👇
           </Text>
         </div>
       ) : null}
@@ -55,18 +61,16 @@ export const LeaderboardRank = ({
           as="p"
           style={{
             color: rankChangeColor,
-            fontSize: '14px',
-            width: '100%',
-            marginLeft: '14px',
           }}
+          className={classNames.rankChange}
           title="Leaderboard change over 24h"
         >
-          {rankChange === 0 ? '' : rankChange}
+          {rankChange === 0 ? '' : rankChange}&nbsp;
           {rankChange > 0 && <IconArrowUp size={14} strokeWidth={3} />}
           {rankChange < 0 && <IconArrowDown size={14} strokeWidth={3} />}
         </Text>
       </div>
-    </>
+    </div>
   )
 }
 
@@ -156,7 +160,7 @@ export const LeaderboardPortfolio = ({
       }
     >
       <Link passHref legacyBehavior prefetch={false} href={`/portfolio/${cell.userAddress}`}>
-        <ProxyLinkComponent style={{ color: 'var(--color-neutral-80)' }} target="_blank">
+        <ProxyLinkComponent className={classNames.portfolioLink} target="_blank">
           <Button
             variant="unstyled"
             onClick={() => {
@@ -174,7 +178,7 @@ export const LeaderboardPortfolio = ({
             {cell.details
               ? `${cell.details.activePositions} positions, ${cell.details.activeTriggers} automations `
               : 'No positions '}
-            -&gt;
+            <IconArrowRight size={14} />
           </Button>
         </ProxyLinkComponent>
       </Link>

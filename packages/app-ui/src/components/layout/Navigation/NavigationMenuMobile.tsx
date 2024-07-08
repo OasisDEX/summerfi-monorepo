@@ -6,12 +6,13 @@ import Image from 'next/image'
 import {
   NavigationMenuPanelLinkType,
   NavigationMenuPanelType,
+  WithNavigationModules,
 } from '@/components/layout/Navigation/Navigation.types'
 import { NavigationMobileMenuPanel } from '@/components/layout/Navigation/NavigationMobileMenuPanel'
 
 import navigationMenuMobileStyles from './NavigationMenuMobile.module.scss'
 
-interface NavigationMenuMobileProps {
+interface NavigationMenuMobileProps extends WithNavigationModules {
   menuOpened: boolean
   toggleMobileMenu: () => void
   links?: NavigationMenuPanelLinkType[]
@@ -25,6 +26,7 @@ export const NavigationMenuMobile = ({
   logo,
   links,
   panels,
+  navigationModules,
 }: NavigationMenuMobileProps) => {
   const [openNestedMenu, setOpenNestedMenu] = useState<[string, number, number]>()
 
@@ -54,6 +56,7 @@ export const NavigationMenuMobile = ({
               isOpen={menuOpened}
               onOpenNestedMenu={setOpenNestedMenu}
               openNestedMenu={openNestedMenu}
+              navigationModules={navigationModules}
               {...panel}
             />
           ))}
