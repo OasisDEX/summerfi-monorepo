@@ -2,10 +2,7 @@ import { Kysely, sql } from 'kysely'
 
 export async function up(db: Kysely<never>) {
   await sql`
-    DROP MATERIALIZED VIEW IF EXISTS leaderboard_new;
-  `.execute(db)
-  await sql`
-    CREATE MATERIALIZED VIEW leaderboard_new AS 
+    CREATE MATERIALIZED VIEW IF NOT EXISTS leaderboard_new AS 
     WITH computed_points AS (
            SELECT COALESCE(p.user_address_id, pd.user_address_id) AS coalesced_user_address_id,
               sum(pd.points) AS total_points
@@ -47,10 +44,41 @@ export async function up(db: Kysely<never>) {
        LEFT JOIN history_data hd ON rd.user_address::text = hd.user_address_id::text
     ORDER BY rd.total_points DESC;
   `.execute(db)
+
+  await sql`
+    CREATE OR REPLACE FUNCTION public.refresh_leaderboard_new()
+       RETURNS void
+       LANGUAGE plpgsql
+    AS $function$
+    BEGIN
+       REFRESH MATERIALIZED VIEW leaderboard_new;
+    END;
+    $function$
+  `.execute(db)
+
+  const jobExists = await sql`
+    SELECT 1 
+    FROM cron.job
+    WHERE schedule = '30 */2 * * *' 
+      AND command = 'SELECT refresh_leaderboard_new()'
+  `.execute(db)
+
+  // Since we already have these jobs in db, we need to make sure that we won't add new one
+  if (Array.isArray(jobExists) && jobExists.length === 0) {
+    await sql`
+     SELECT cron.schedule('refresh_leaderboard_new_job', '30 */2 * * *', 'SELECT refresh_leaderboard_new()');
+  `.execute(db)
+  }
 }
 
 export async function down(db: Kysely<never>) {
   await sql`
     DROP MATERIALIZED VIEW IF EXISTS leaderboard_new;
     `.execute(db)
+
+  await sql`
+     SELECT cron.unschedule('refresh_leaderboard_new_job', '30 */2 * * *', 'SELECT refresh_leaderboard_new()');
+  `.execute(db)
+
+  await sql`DROP FUNCTION IF EXISTS refresh_leaderboard_new`.execute(db)
 }
