@@ -129,12 +129,12 @@ export async function up(db: Kysely<never>) {
 
 export async function down(db: Kysely<never>) {
   await sql`
-    DROP TABLE IF EXISTS leaderboard_history CASCADE;
-    `.execute(db)
-
-  await sql`
      SELECT cron.unschedule('0 */2 * * *', 'SELECT refresh_leaderboard_history()');
   `.execute(db)
 
   await sql`DROP FUNCTION IF EXISTS refresh_leaderboard_history`.execute(db)
+
+  await sql`
+    DROP TABLE IF EXISTS leaderboard_history CASCADE;
+    `.execute(db)
 }

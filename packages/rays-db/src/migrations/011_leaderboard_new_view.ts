@@ -73,12 +73,12 @@ export async function up(db: Kysely<never>) {
 
 export async function down(db: Kysely<never>) {
   await sql`
-    DROP MATERIALIZED VIEW IF EXISTS leaderboard_new;
-    `.execute(db)
-
-  await sql`
      SELECT cron.unschedule('refresh_leaderboard_new_job', '30 */2 * * *', 'SELECT refresh_leaderboard_new()');
   `.execute(db)
 
   await sql`DROP FUNCTION IF EXISTS refresh_leaderboard_new`.execute(db)
+
+  await sql`
+    DROP MATERIALIZED VIEW IF EXISTS leaderboard_new;
+    `.execute(db)
 }
