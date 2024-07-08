@@ -57,7 +57,7 @@ export async function up(db: Kysely<never>) {
   `.execute(db)
 
   const jobExists = await sql`
-    SELECT 1 
+    SELECT jobid 
     FROM cron.job
     WHERE schedule = '30 */2 * * *' 
       AND command = 'SELECT refresh_leaderboard_new()'

@@ -113,7 +113,7 @@ export async function up(db: Kysely<never>) {
   `.execute(db)
 
   const jobExists = await sql`
-    SELECT 1 
+    SELECT jobid 
     FROM cron.job
     WHERE schedule = '0 */2 * * *' 
       AND command = 'SELECT refresh_leaderboard_history()'
