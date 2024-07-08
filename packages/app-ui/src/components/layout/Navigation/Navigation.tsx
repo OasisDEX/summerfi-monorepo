@@ -1,3 +1,5 @@
+'use client'
+
 import { FC, ReactNode, useState } from 'react'
 import { useMediaQuery } from 'usehooks-ts'
 
