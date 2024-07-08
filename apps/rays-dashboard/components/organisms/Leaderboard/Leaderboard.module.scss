@@ -34,9 +34,11 @@
   flex-direction: row;
   justify-content: center;
 
-  // figure out how to use media mixin here
-  @media (min-width: 1025px) {
+  @include media('>=l') {
     min-width: 160px;
+  }
+  @include media('<=s') {
+    flex-direction: column;
   }
 }
 
@@ -63,15 +65,45 @@
     }
   }
 
-  @media (min-width: 531px) {
+  @include media('>=s') {
     max-width: 150px;
   }
 
-  @media (min-width: 744px) {
+  @include media('>=m') {
     max-width: 250px;
   }
 
-  @media (min-width: 1025px) {
+  @include media('>=l') {
     max-width: 100%;
+  }
+}
+
+.youreHere {
+  padding-left: 12px;
+  height: 30px;
+  @include media('<=s') {
+    position: absolute;
+    top: -20px;
+    padding-left: 0;
+    p {
+      font-size: 12px;
+    }
+  }
+}
+
+.portfolioLink {
+  color: var(--color-neutral-80);
+  @include media('<=s') {
+    font-size: 14px;
+    line-height: 1.3rem;
+  }
+}
+
+.rankChange {
+  width: 100%;
+  font-size: 14px;
+  margin-left: 14px;
+  @include media('<=s') {
+    margin-left: 0;
   }
 }

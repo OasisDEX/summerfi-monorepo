@@ -87,6 +87,7 @@ export type IconNamesList =
   | 'mana_color'
   | 'matic_circle_color'
   | 'matic_circle_mono'
+  | 'menu'
   | 'meveth'
   | 'mkr_circle_color'
   | 'moonpay'

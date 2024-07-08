@@ -5,7 +5,7 @@ import { Button } from '@summerfi/app-ui'
 import { IconX } from '@tabler/icons-react'
 import { useConnectWallet } from '@web3-onboard/react'
 
-import { BridgeSwapOnboarding } from '@/components/layout/Navigation/BridgeSwap/BridgeSwapOnboarding'
+import { BridgeSwapOnboarding } from '@/components/molecules/BridgeSwap/BridgeSwapOnboarding'
 import { swapWidgetConfig } from '@/constants/swap-widget-config'
 import { useOnboarding } from '@/helpers/use-onboarding'
 

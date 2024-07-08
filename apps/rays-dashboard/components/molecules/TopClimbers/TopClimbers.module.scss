@@ -11,6 +11,10 @@
   &:hover {
     box-shadow: var(--shadow-depth-2);
   }
+  @include media('<=s') {
+    position: static;
+    margin-top: var(--space-xxl);
+  }
 }
 
 .clickableHeader {
@@ -25,7 +29,10 @@
 }
 
 .wrapperTitle {
-  margin-right: var(--space-xxxl)
+  margin-right: var(--space-xxxl);
+  @include media('<=s') {
+    margin-right: var(--space-l);
+  }
 }
 
 .wrapperTime {
