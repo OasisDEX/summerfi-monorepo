@@ -13,6 +13,7 @@ type AppConfigTypeKey = keyof AppConfigType
  * @returns void
  */
 export function updateConfigOverrides(config: AppConfigType): void {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!window?.localStorage) return
   let overrideConfigRaw = localStorage.getItem(configLSOverridesKey)
 
@@ -36,6 +37,7 @@ export function updateConfigOverrides(config: AppConfigType): void {
  * @returns void
  */
 export function saveConfigToLocalStorage(config: AppConfigType) {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!window?.localStorage) return
   localStorage.setItem(configLSKey, JSON.stringify(config))
   updateConfigOverrides(config)
@@ -47,6 +49,7 @@ export function saveConfigToLocalStorage(config: AppConfigType) {
  * @returns AppConfigType or empty config
  */
 export function loadConfigFromLocalStorage() {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (typeof localStorage === 'undefined' || !localStorage || !window?.localStorage) {
     return emptyConfig
   }
@@ -80,6 +83,7 @@ export function loadConfigFromLocalStorage() {
  * @returns AppConfigType[T] or empty config
  */
 export function getLocalAppConfig<T extends AppConfigTypeKey>(configKey: T): AppConfigType[T] {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (typeof localStorage === 'undefined' || !localStorage || !window?.localStorage) {
     return emptyConfig[configKey]
   }

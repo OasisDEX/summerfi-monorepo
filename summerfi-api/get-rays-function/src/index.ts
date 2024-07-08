@@ -115,7 +115,9 @@ export const handler = async (
   const eligiblePoints = result.find((result) => result.dueDate === null)?.points ?? 0
   const allPossiblePoints = result.reduce((acc, result) => acc + Number(result.points), 0)
   const actionRequiredPoints = result.filter((result) => result.dueDate !== null)
-  const userTypes = userPoints.map((item) => item.description)
+  const userTypes = userPoints
+    .map((item) => item.description)
+    .filter((value, index, self) => self.indexOf(value) === index)
 
   return ResponseOk({
     body: {

@@ -50,7 +50,7 @@ const weETH_eETH_map: Record<ChainId, Address[]> = {
   ],
   [ChainId.OPTIMISM]: ['0x346e03F8Cce9fE01dCB3d0Da3e9D00dC2c0E08f0'],
   [ChainId.ARBITRUM]: ['0x35751007a407ca6FEFfE80b3cB397736D2cf4dbe'],
-  [ChainId.BASE]: [],
+  [ChainId.BASE]: ['0x04C0599Ae5A44757c0af6F9eC3b93da8976c150A'],
   [ChainId.SEPOLIA]: [],
 }
 
@@ -153,9 +153,9 @@ export const handler = async (
       }),
   )
 
-  if (params.chainId === ChainId.MAINNET) {
+  if (params.chainId === ChainId.MAINNET || params.chainId === ChainId.BASE) {
     const morphoBlueClient = getMorphoBlueSubgraphClient({
-      chainId: ChainId.MAINNET,
+      chainId: params.chainId,
       urlBase: SUBGRAPH_BASE,
       logger,
     })

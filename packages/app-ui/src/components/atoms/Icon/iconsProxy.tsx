@@ -219,3 +219,7 @@ export const search_icon = lazy.lib(() => import('../../../tokens/icons/search_i
 export const tooltip = lazy.lib(() => import('../../../tokens/icons/tooltip'))
 export const checkmark_colorful = lazy.lib(() => import('../../../tokens/icons/checkmark_colorful'))
 export const close_colorful = lazy.lib(() => import('../../../tokens/icons/close_colorful'))
+export const radio_button = lazy.lib(() => import('../../../tokens/icons/radio_button'))
+export const radio_button_checked = lazy.lib(
+  () => import('../../../tokens/icons/radio_button_checked'),
+)

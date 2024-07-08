@@ -185,6 +185,8 @@ export type IconNamesList =
   | 'tooltip'
   | 'checkmark_colorful'
   | 'close_colorful'
+  | 'radio_button'
+  | 'radio_button_checked'
 
 export type TokenSymbolsList =
   | 'USDP'
