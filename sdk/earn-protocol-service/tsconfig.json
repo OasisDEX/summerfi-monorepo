@@ -5,9 +5,10 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "@summerfi/testing-utils": ["node_modules/@summerfi/testing-utils/src/index.ts"]
+      "@summerfi/testing-utils": ["node_modules/@summerfi/testing-utils/src/index.ts"],
+      "@summerfi/testing-utils/*": ["node_modules/@summerfi/testing-utils/src/*"]
     }
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "e2e/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
   "exclude": ["node_modules"]
 }
