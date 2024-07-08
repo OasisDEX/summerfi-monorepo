@@ -64,7 +64,7 @@ export async function up(db: Kysely<never>) {
   `.execute(db)
 
   // Since we already have these jobs in db, we need to make sure that we won't add new one
-  if (Array.isArray(jobExists) && jobExists.length === 0) {
+  if (Array.isArray(jobExists.rows) && jobExists.rows.length === 0) {
     await sql`
      SELECT cron.schedule('refresh_leaderboard_new_job', '30 */2 * * *', 'SELECT refresh_leaderboard_new()');
   `.execute(db)
@@ -73,7 +73,7 @@ export async function up(db: Kysely<never>) {
 
 export async function down(db: Kysely<never>) {
   await sql`
-     SELECT cron.unschedule('refresh_leaderboard_new_job', '30 */2 * * *', 'SELECT refresh_leaderboard_new()');
+     SELECT cron.unschedule('refresh_leaderboard_new_job');
   `.execute(db)
 
   await sql`DROP FUNCTION IF EXISTS refresh_leaderboard_new`.execute(db)

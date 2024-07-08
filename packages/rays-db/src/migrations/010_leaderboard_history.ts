@@ -31,8 +31,8 @@ export async function up(db: Kysely<never>) {
           last_updated timestamp with time zone DEFAULT CURRENT_TIMESTAMP
       );
       
-      CREATE INDEX idx_leaderboard_history_last_updated ON leaderboard_history(last_updated timestamptz_ops);
-      CREATE INDEX idx_leaderboard_history_position_0h ON leaderboard_history(position_0h int8_ops);
+      CREATE INDEX IF NOT EXISTS idx_leaderboard_history_last_updated ON leaderboard_history(last_updated timestamptz_ops);
+      CREATE INDEX IF NOT EXISTS idx_leaderboard_history_position_0h ON leaderboard_history(position_0h int8_ops);
   `.execute(db)
 
   await sql`
@@ -119,17 +119,20 @@ export async function up(db: Kysely<never>) {
       AND command = 'SELECT refresh_leaderboard_history()'
   `.execute(db)
 
+  console.log('CONDITION_10', Array.isArray(jobExists.rows) && jobExists.rows.length === 0)
+  console.log('10-jobExists', jobExists)
+
   // Since we already have these jobs in db, we need to make sure that we won't add new one
-  if (Array.isArray(jobExists) && jobExists.length === 0) {
+  if (Array.isArray(jobExists.rows) && jobExists.rows.length === 0) {
     await sql`
-     SELECT cron.schedule('0 */2 * * *', 'SELECT refresh_leaderboard_history()');
+     SELECT cron.schedule('refresh_leaderboard_history','0 */2 * * *', 'SELECT refresh_leaderboard_history()');
   `.execute(db)
   }
 }
 
 export async function down(db: Kysely<never>) {
   await sql`
-     SELECT cron.unschedule('0 */2 * * *', 'SELECT refresh_leaderboard_history()');
+     SELECT cron.unschedule('refresh_leaderboard_history');
   `.execute(db)
 
   await sql`DROP FUNCTION IF EXISTS refresh_leaderboard_history`.execute(db)
