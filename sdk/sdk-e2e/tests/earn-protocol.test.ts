@@ -22,7 +22,6 @@ const DAI = Token.createFrom({
 /** TEST CONFIG */
 const config = {
   SDKApiUrl: 'https://h6bwee4lvb.execute-api.us-east-1.amazonaws.com/api/sdk',
-  EPApiUrl: 'https://h6bwee4lvb.execute-api.us-east-1.amazonaws.com/api/earn-protocol',
   forkUrl: 'https://virtual.mainnet.rpc.tenderly.co/5a4e0cc3-48d2-4819-8426-068f029b23be',
   walletAddress: Address.createFromEthereum({
     value: '0x34314adbfBb5d239bb67f0265c9c45EB8b834412',
@@ -32,12 +31,11 @@ const config = {
   }),
 }
 
-describe('Earn Protocol Deposit', () => {
+describe.only('Earn Protocol Deposit', () => {
   it('should deposit', async () => {
     // SDK
     const sdk = makeSDK({
       apiURL: config.SDKApiUrl,
-      earnProtocolEndpointUrl: config.EPApiUrl,
     })
 
     // Chain
@@ -60,22 +58,26 @@ describe('Earn Protocol Deposit', () => {
 
     // Earn Protocol Manager
 
-    const fleet = await chain.earnProtocol.getFleet({
+    const fleet = chain.earnProtocol.getFleet({
       address: config.fleetAddress,
     })
 
     assert(fleet, 'Fleet not found')
 
     const transactions = await fleet.deposit({
-      user,
+      // workaround for User serialization to work
+      user: {
+        wallet: user.wallet,
+        chainInfo: user.chainInfo,
+      },
       amount: TokenAmount.createFrom({
         amount: '1',
         token: DAI,
       }),
     })
-    console.log('transactions', transactions)
 
     // Send transaction
+    console.log('transactions', transactions)
     console.log('Sending transaction...', transactions[0].transaction)
 
     const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex

@@ -12,7 +12,6 @@ import { IUserClient } from '../interfaces/IUserClient'
 import { IRPCClient } from '../interfaces/IRPCClient'
 import { RPCMainClientType } from '../rpc/SDKMainClient'
 import { IProtocol } from '@summerfi/sdk-common/protocols'
-import { SerializationService } from '@summerfi/sdk-common/services'
 
 export class User extends IRPCClient implements IUserClient {
   public readonly wallet: Wallet
@@ -61,5 +60,3 @@ export class User extends IRPCClient implements IUserClient {
     })
   }
 }
-
-SerializationService.registerClass(User)

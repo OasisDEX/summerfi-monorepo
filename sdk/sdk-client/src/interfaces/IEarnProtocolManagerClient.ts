@@ -16,5 +16,5 @@ export interface IEarnProtocolManagerClient {
    *
    * @returns The protocol with the given name
    */
-  getFleet(params: { address: IAddress }): Promise<Maybe<IFleetClient>>
+  getFleet(params: { address: IAddress }): Maybe<IFleetClient>
 }

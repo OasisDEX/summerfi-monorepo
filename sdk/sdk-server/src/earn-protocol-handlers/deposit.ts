@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { publicProcedure } from '../EarnProtocolTRPC'
+import { publicProcedure } from '../SDKTRPC'
 import {
   SDKError,
   SDKErrorType,
@@ -12,6 +12,14 @@ import {
 export const deposit = publicProcedure.input(z.any()).query(async (opts) => {
   const returnedErrors: string[] = []
 
+  if (opts.input == null) {
+    throw SDKError.createFrom({
+      message: 'Invalid deposit request',
+      reason: 'Missing input',
+      type: SDKErrorType.EarnProtocolError,
+    })
+  }
+
   if (!isChainInfo(opts.input.chainInfo, returnedErrors)) {
     throw SDKError.createFrom({
       message: 'Invalid chain info in deposit request',
@@ -22,13 +30,13 @@ export const deposit = publicProcedure.input(z.any()).query(async (opts) => {
 
   if (!isAddress(opts.input.fleetAddress, returnedErrors)) {
     throw SDKError.createFrom({
-      message: 'Invalid address in deposit request',
+      message: 'Invalid fleet address in deposit request',
       reason: returnedErrors.join('\n'),
       type: SDKErrorType.EarnProtocolError,
     })
   }
 
-  if (!isUser(opts.input.chainInfo, returnedErrors)) {
+  if (!isUser(opts.input.user, returnedErrors)) {
     throw SDKError.createFrom({
       message: 'Invalid user in deposit request',
       reason: returnedErrors.join('\n'),
@@ -36,9 +44,9 @@ export const deposit = publicProcedure.input(z.any()).query(async (opts) => {
     })
   }
 
-  if (!isTokenAmount(opts.input.chainInfo, returnedErrors)) {
+  if (!isTokenAmount(opts.input.amount, returnedErrors)) {
     throw SDKError.createFrom({
-      message: 'Invalid token in deposit request',
+      message: 'Invalid token amount in deposit request',
       reason: returnedErrors.join('\n'),
       type: SDKErrorType.EarnProtocolError,
     })

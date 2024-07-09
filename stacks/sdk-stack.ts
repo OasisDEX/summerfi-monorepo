@@ -14,6 +14,5 @@ export function SdkAPI(stackContext: StackContext) {
 
   stack.addOutputs({
     SDKApiEndpoint: api.url + '/api/sdk',
-    EarnProtocolApiEndpoint: api.url + '/api/earn-protocol',
   })
 }

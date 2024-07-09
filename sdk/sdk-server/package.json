@@ -50,7 +50,6 @@
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
-    "@summerfi/typescript-config": "workspace:*",
-    "@trpc/client": "11.0.0-next-beta.264"
+    "@summerfi/typescript-config": "workspace:*"
   }
 }

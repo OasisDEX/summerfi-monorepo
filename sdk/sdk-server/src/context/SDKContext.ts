@@ -15,6 +15,8 @@ import { IOracleManager } from '@summerfi/oracle-common'
 import { OracleManagerFactory } from '@summerfi/oracle-service'
 import { IAddressBookManager } from '@summerfi/address-book-common'
 import { AddressBookManagerFactory } from '@summerfi/address-book-service'
+import { EarnProtocolManagerFactory } from '@summerfi/earn-protocol-service'
+import type { IEarnProtocolManager } from '@summerfi/earn-protocol-common'
 
 export type SDKContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
@@ -27,6 +29,7 @@ export type SDKAppContext = {
   protocolsRegistry: IProtocolPluginsRegistry
   protocolManager: IProtocolManager
   orderPlannerService: IOrderPlannerService
+  earnProtocolManager: IEarnProtocolManager
 }
 
 // context for each request
@@ -45,6 +48,7 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
     addressBookManager,
   })
   const protocolManager = ProtocolManager.createWith({ pluginsRegistry: protocolsRegistry })
+  const earnProtocolManager = EarnProtocolManagerFactory.newEarnProtocolManager({ configProvider })
 
   return {
     configProvider,
@@ -55,5 +59,6 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
     protocolsRegistry,
     protocolManager,
     orderPlannerService,
+    earnProtocolManager,
   }
 }

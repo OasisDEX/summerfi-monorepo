@@ -10,6 +10,8 @@ import { getLendingPoolInfo } from './handlers/getLendingPoolInfo'
 import { getTokenByName } from './handlers/getTokenByName'
 import { getTokenByAddress } from './handlers/getTokenByAddress'
 import { getTokenBySymbol } from './handlers/getTokenBySymbol'
+import { deposit } from './earn-protocol-handlers/deposit'
+import { withdraw } from './earn-protocol-handlers/withdraw'
 
 /**
  * Server
@@ -35,6 +37,10 @@ export const sdkAppRouter = router({
   swaps: {
     getSwapDataExactInput: getSwapDataExactInput,
     getSwapQuoteExactInput: getSwapQuoteExactInput,
+  },
+  earnProtocol: {
+    deposit: deposit,
+    withdraw: withdraw,
   },
 })
 

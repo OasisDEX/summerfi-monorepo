@@ -2,7 +2,6 @@ import { ChainInfo, Maybe } from '@summerfi/sdk-common/common'
 import { ILendingPool, ILendingPoolIdData, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { IProtocolClient } from '../interfaces/IProtocolClient'
 import { RPCMainClientType } from '../rpc/SDKMainClient'
-import { SerializationService } from '@summerfi/sdk-common/services'
 import { ILendingPoolInfo, Protocol } from '@summerfi/sdk-common'
 
 export class ProtocolClient extends Protocol implements IProtocolClient {
@@ -37,5 +36,3 @@ export class ProtocolClient extends Protocol implements IProtocolClient {
     return this.name === protocol.name && this.chainInfo.equals(protocol.chainInfo)
   }
 }
-
-SerializationService.registerClass(ProtocolClient)

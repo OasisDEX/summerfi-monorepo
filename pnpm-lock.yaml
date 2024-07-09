@@ -1817,6 +1817,37 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
+  sdk/sdk-router-function:
+    dependencies:
+      '@aws-lambda-powertools/logger':
+        specifier: ^1.18.1
+        version: 1.18.1
+      '@aws-lambda-powertools/metrics':
+        specifier: ^1.18.1
+        version: 1.18.1
+      '@aws-lambda-powertools/tracer':
+        specifier: ^1.18.1
+        version: 1.18.1
+      '@summerfi/sdk-server':
+        specifier: workspace:*
+        version: link:../sdk-server
+      '@trpc/server':
+        specifier: 11.0.0-next-beta.264
+        version: 11.0.0-next-beta.264
+      superjson:
+        specifier: ^1.13.3
+        version: 1.13.3
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+
   sdk/sdk-server:
     dependencies:
       '@aws-lambda-powertools/logger':
@@ -1913,9 +1944,6 @@ importers:
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
-      '@trpc/client':
-        specifier: 11.0.0-next-beta.264
-        version: 11.0.0-next-beta.264(@trpc/server@11.0.0-next-beta.264)
 
   sdk/sdk-server-common:
     dependencies:
@@ -2681,40 +2709,6 @@ importers:
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
-
-  summerfi-api/sdk-router-function:
-    dependencies:
-      '@aws-lambda-powertools/logger':
-        specifier: ^1.18.1
-        version: 1.18.1
-      '@aws-lambda-powertools/metrics':
-        specifier: ^1.18.1
-        version: 1.18.1
-      '@aws-lambda-powertools/tracer':
-        specifier: ^1.18.1
-        version: 1.18.1
-      '@summerfi/sdk-server':
-        specifier: workspace:*
-        version: link:../../sdk/sdk-server
-      '@trpc/server':
-        specifier: 11.0.0-next-beta.264
-        version: 11.0.0-next-beta.264
-      superjson:
-        specifier: ^1.13.3
-        version: 1.13.3
-    devDependencies:
-      '@summerfi/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@summerfi/jest-config':
-        specifier: workspace:*
-        version: link:../../packages/jest-config
-      '@summerfi/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
-      '@trpc/client':
-        specifier: 11.0.0-next-beta.264
-        version: 11.0.0-next-beta.264(@trpc/server@11.0.0-next-beta.264)
 
   summerfi-api/setup-trigger-function:
     dependencies:
@@ -15140,9 +15134,11 @@ packages:
       '@trpc/server': 11.0.0-next-beta.264+f5f08f35d
     dependencies:
       '@trpc/server': 11.0.0-next-beta.264
+    dev: false
 
   /@trpc/server@11.0.0-next-beta.264:
     resolution: {integrity: sha512-h6RJX+C+VgFQusxGVtw3n1PZPLt27ZG70U8cPR5pwmsnE2E3vREijOgEo5MRKoiUhVrjbw8e6gnGVeKzl7uZXg==}
+    dev: false
 
   /@trpc/server@9.16.0:
     resolution: {integrity: sha512-IENsJs41ZR4oeFUJhsNNTSgEOtuRN0m9u7ec4u3eG/qOc7bIoo1nDoYtx4bl6OJJSQYEytG9tlcVz9G8OAaHbg==}
