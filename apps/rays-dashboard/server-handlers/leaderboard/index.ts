@@ -14,7 +14,7 @@ export const fetchLeaderboard = async (
       `${process.env.FUNCTIONS_API_URL}/api/rays/leaderboard?${urlParams}`,
       {
         method: 'GET',
-        next: { tags: ['rays-leaderboard', urlParams], revalidate: 60 },
+        next: { revalidate: 0 }, // disabling cache as user values doesnt match the leaderboard position
         headers: {
           'Content-Type': 'application/json',
         },

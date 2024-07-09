@@ -4,6 +4,8 @@ import BigNumber from 'bignumber.js'
 import { formatAddress, formatCryptoBalance } from '@/helpers/formatters'
 import { RaysApiResponse } from '@/server-handlers/rays'
 
+import claimRaysTitleStyles from './ClaimRaysTitle.module.scss'
+
 interface ClaimRaysTitleProps {
   userAddress?: string
   pointsEarnedPerYear?: number
@@ -26,7 +28,7 @@ export const ClaimRaysTitle = ({
 }: ClaimRaysTitleProps) => {
   if (!userAddress || typeof userRays?.rays?.allPossiblePoints === 'undefined') {
     return (
-      <Text as="h1" variant="h1" style={{ marginTop: 'var(--space-xxl)' }}>
+      <Text as="h1" variant="h1" className={claimRaysTitleStyles.notConnectedHeader}>
         Claim your $RAYS
       </Text>
     )
@@ -34,21 +36,15 @@ export const ClaimRaysTitle = ({
 
   return (
     <>
-      <Text as="h1" variant="h1" style={{ textAlign: 'center' }}>
-        Wallet {formatAddress(userAddress)} is eligible <br />
+      <Text as="h1" variant="h1" className={claimRaysTitleStyles.connectedTitle}>
+        Wallet {formatAddress(userAddress)} is&nbsp;eligible <br />
         for {userRays.rays.allPossiblePoints > 0 ? `up to` : ''}{' '}
-        {formatCryptoBalance(new BigNumber(userRays.rays.allPossiblePoints))} $RAYS
+        {formatCryptoBalance(new BigNumber(userRays.rays.allPossiblePoints))}&nbsp;$RAYS
       </Text>
       {!!pointsEarnedPerYear && (
-        <Text
-          as="h3"
-          variant="h3colorful"
-          style={{
-            marginTop: 'var(--space-m)',
-            marginBottom: 'var(--space-m)',
-          }}
-        >
-          + earning {formatCryptoBalance(new BigNumber(pointsEarnedPerYear))} $RAYS a year
+        <Text as="h3" variant="h3colorful" className={claimRaysTitleStyles.earning}>
+          +&nbsp;earning {formatCryptoBalance(new BigNumber(pointsEarnedPerYear))}
+          &nbsp;$RAYS&nbsp;a&nbsp;year
         </Text>
       )}
     </>

@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 
 import { Button } from '@/components/atoms/Button/Button'
+import { Icon } from '@/components/atoms/Icon/Icon'
 import { LoadingSpinner } from '@/components/molecules/Loader/Loader'
 
 import navigationActionStyles from '@/components/layout/Navigation/NavigationActions.module.scss'
@@ -8,20 +9,38 @@ import navigationActionStyles from '@/components/layout/Navigation/NavigationAct
 interface NavigationActionsProps {
   walletConnectionComponent?: React.ReactNode
   raysCountComponent?: React.ReactNode
+  toggleMobileMenu: () => void
 }
 
 export const NavigationActions = ({
   walletConnectionComponent,
   raysCountComponent,
+  toggleMobileMenu,
 }: NavigationActionsProps) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', columnGap: '8px' }}>
       {raysCountComponent}
-      {walletConnectionComponent ?? (
-        <div>
+      <div className={navigationActionStyles.mobileMenuButton}>
+        <Button
+          variant="secondarySmall"
+          className={classNames(
+            navigationActionStyles.buttonWhite,
+            navigationActionStyles.buttonShadow,
+          )}
+          onClick={toggleMobileMenu}
+          style={{ padding: '10px', width: '40px', height: '40px' }}
+        >
+          <Icon iconName="menu" size={20} />
+        </Button>
+      </div>
+      <div className={navigationActionStyles.buttonMockWrapper}>
+        {walletConnectionComponent ?? (
           <Button
             variant="secondarySmall"
-            className={classNames(navigationActionStyles.walletButtonMock)}
+            className={classNames(
+              navigationActionStyles.walletButtonMock,
+              navigationActionStyles.buttonWhite,
+            )}
           >
             <LoadingSpinner
               size={24}
@@ -32,8 +51,8 @@ export const NavigationActions = ({
               }}
             />
           </Button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }

@@ -140,7 +140,7 @@ export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPagePro
       {mountedOnClient && typeof userAddress === 'undefined' && (
         <Button
           variant="primaryLarge"
-          style={{ marginTop: 'var(--space-l)', marginBottom: 'var(--space-xxxl)' }}
+          style={{ marginTop: 'var(--space-l)', marginBottom: 'var(--space-s)' }}
           onClick={() => {
             trackButtonClick({
               id: 'ConnectWallet',
