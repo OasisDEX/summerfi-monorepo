@@ -1,10 +1,14 @@
+import { cookieToInitialState } from '@alchemy/aa-alchemy/config'
 import { GlobalStyles } from '@summerfi/app-ui'
 import type { Metadata } from 'next'
+import { headers } from 'next/headers'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
 import { fontFtPolar, fontInter } from '@/helpers/fonts'
+import { Providers } from '@/providers/AlchemyAccountsProvider/AlchemyAccountsProvider'
+import { config } from '@/providers/AlchemyAccountsProvider/config'
 
 export const metadata: Metadata = {
   title: 'Summer.fi Hackathon 2024',
@@ -16,6 +20,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   const messages = await getMessages()
 
+  // hydrate the initial state on the client
+  const initialState = cookieToInitialState(config, headers().get('cookie') ?? undefined)
+
   return (
     <html lang={locale}>
       <head>
@@ -23,7 +30,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body className={`${fontFtPolar.variable} ${fontInter.variable}`}>
         <NextIntlClientProvider messages={messages}>
-          <MasterPage>{children}</MasterPage>
+          <Providers initialState={initialState}>
+            <MasterPage>{children}</MasterPage>
+          </Providers>
         </NextIntlClientProvider>
       </body>
     </html>

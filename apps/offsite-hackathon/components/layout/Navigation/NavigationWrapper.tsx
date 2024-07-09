@@ -12,13 +12,8 @@ import {
   NavigationModuleBridge,
   NavigationModuleSwap,
 } from '@/components/layout/Navigation/NavigationModules'
-import { WalletButtonFallback } from '@/components/molecules/WalletButton/WalletButtonFallback'
+import { AlchemyLogin } from '@/components/organisms/AlchemyLogin/AlchemyLogin'
 import { basePath } from '@/helpers/base-path'
-
-const WalletButton = dynamic(() => import('@/components/molecules/WalletButton/WalletButton'), {
-  ssr: false,
-  loading: () => <WalletButtonFallback />,
-})
 
 const BridgeSwap = !process.env.NEXT_PUBLIC_SWAP_WIDGET_ONBOARDING_HIDDEN
   ? dynamic(() => import('@/components/layout/Navigation/BridgeSwap/BridgeSwap'), {
@@ -83,7 +78,7 @@ export const NavigationWrapper: FC<NavigationWrapperProps> = ({ panels }) => {
         </BridgeSwapWrapper>
       }
       raysCountComponent={<div />}
-      walletConnectionComponent={<WalletButton />}
+      walletConnectionComponent={<AlchemyLogin />}
       onLogoClick={() => {
         // because router will use base path...
         window.location.href = '/'
