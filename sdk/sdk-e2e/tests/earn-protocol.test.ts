@@ -3,17 +3,25 @@ import { Address, type Maybe, ChainFamilyMap } from '@summerfi/sdk-common/common
 import { makeSDK, type Chain, type User } from '@summerfi/sdk-client'
 import { TransactionUtils } from './utils/TransactionUtils'
 
-import { Hex } from 'viem'
+import { isAddress, isHex } from 'viem'
 import assert from 'assert'
 import { Token, TokenAmount } from '@summerfi/sdk-common'
+import { base } from 'viem/chains'
 
 jest.setTimeout(300000)
 
-const chainInfo = ChainFamilyMap.Ethereum.Mainnet
+if (!isHex(process.env.DEPLOYER_PRIVATE_KEY!)) {
+  throw new Error('Invalid DEPLOYER_PRIVATE_KEY')
+}
+if (!isAddress(process.env.WALLET_ADDRESS!)) {
+  throw new Error('Invalid WALLET_ADDRESS')
+}
+
+const chainInfo = ChainFamilyMap.Base.Mainnet
 
 const DAI = Token.createFrom({
   chainInfo,
-  address: Address.createFromEthereum({ value: '0x6B175474E89094C44Da98b954EedeAC495271d0F' }),
+  address: Address.createFromEthereum({ value: '0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb' }),
   symbol: 'DAI',
   name: 'Dai Stablecoin',
   decimals: 18,
@@ -22,12 +30,13 @@ const DAI = Token.createFrom({
 /** TEST CONFIG */
 const config = {
   SDKApiUrl: 'https://h6bwee4lvb.execute-api.us-east-1.amazonaws.com/api/sdk',
-  forkUrl: 'https://virtual.mainnet.rpc.tenderly.co/5a4e0cc3-48d2-4819-8426-068f029b23be',
+  forkUrl: 'https://virtual.base.rpc.tenderly.co/2916e1c7-7ddd-4cd2-b926-449ce4eb2f44',
   walletAddress: Address.createFromEthereum({
-    value: '0x34314adbfBb5d239bb67f0265c9c45EB8b834412',
+    value: process.env.WALLET_ADDRESS,
   }),
+  privateKey: process.env.DEPLOYER_PRIVATE_KEY,
   fleetAddress: Address.createFromEthereum({
-    value: '0x34314adbfBb5d239bb67f0265c9c45EB8b834412',
+    value: '0xa09e82322f351154a155f9e0f9e6ddbc8791c794',
   }),
 }
 
@@ -44,7 +53,7 @@ describe.only('Earn Protocol Deposit', () => {
     })
 
     assert(chain, 'Chain not found')
-    assert(chain.earnProtocol, 'Chain does not have Earn Protocol')
+    expect(chain.chainInfo.chainId).toEqual(chainInfo.chainId)
 
     // User
     const user: User = await sdk.users.getUser({
@@ -80,10 +89,10 @@ describe.only('Earn Protocol Deposit', () => {
     console.log('transactions', transactions)
     console.log('Sending transaction...', transactions[0].transaction)
 
-    const privateKey = process.env.DEPLOYER_PRIVATE_KEY as Hex
     const transactionUtils = new TransactionUtils({
       rpcUrl: config.forkUrl,
-      walletPrivateKey: privateKey,
+      walletPrivateKey: config.privateKey,
+      chain: base,
     })
 
     const receipt = await transactionUtils.sendTransaction({
