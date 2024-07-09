@@ -1,4 +1,6 @@
-import { ChainInfo, IChainInfo, Wallet } from '@summerfi/sdk-common/common'
+import { ChainInfo } from '../../common/implementation/ChainInfo'
+import { Wallet } from '../../common/implementation/Wallet'
+import { IChainInfo } from '../../common/interfaces/IChainInfo'
 import { IWallet } from '../../common/interfaces/IWallet'
 import { SerializationService } from '../../services/SerializationService'
 import { IUser, IUserData } from '../interfaces/IUser'
