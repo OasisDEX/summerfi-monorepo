@@ -1,22 +1,22 @@
-import { ChainInfo } from '@summerfi/sdk-common/common'
 import { IAddress, IChainInfo, ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
-import { IFleetClient } from '../interfaces/IFleetClient'
-import { IRPCClient } from '../interfaces/IRPCClient'
+import { EarnProtocolFleet } from '@summerfi/sdk-common/common'
+import { IEarnProtocolFleetClient } from '../interfaces/IEarnProtocolFleetClient'
 import { RPCMainClientType } from '../rpc/SDKMainClient'
 
-export class FleetClient extends IRPCClient implements IFleetClient {
-  public readonly address: IAddress
-  public readonly chainInfo: ChainInfo
+/**
+ * @class EarnProtocolFleetClient
+ * @see IEarnProtocolFleetClient
+ */
+export class EarnProtocolFleetClient extends EarnProtocolFleet implements IEarnProtocolFleetClient {
+  private rpcClient: RPCMainClientType
 
   constructor(params: { rpcClient: RPCMainClientType; address: IAddress; chainInfo: IChainInfo }) {
     super(params)
 
-    this.address = params.address
-    this.chainInfo = params.chainInfo
+    this.rpcClient = params.rpcClient
   }
 
-  /** @see IFleetClient */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  /** @see IEarnProtocolFleetClient */
   public async deposit(params: { user: IUser; amount: ITokenAmount }): Promise<TransactionInfo[]> {
     return this.rpcClient.earnProtocol.deposit.query({
       chainInfo: this.chainInfo,
@@ -26,8 +26,7 @@ export class FleetClient extends IRPCClient implements IFleetClient {
     })
   }
 
-  /** @see IFleetClient */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  /** @see IEarnProtocolFleetClient */
   public async withdraw(params: { user: IUser; amount: ITokenAmount }): Promise<TransactionInfo[]> {
     return this.rpcClient.earnProtocol.withdraw.query({
       chainInfo: this.chainInfo,

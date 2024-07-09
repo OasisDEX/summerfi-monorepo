@@ -1,10 +1,11 @@
 import { ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
+import { IEarnProtocolFleet } from '@summerfi/sdk-common/common'
 
 /**
- * @interface IFleetClient
+ * @interface IEarnProtocolFleetClient
  * @description Client interface for the Earn Protocol fleets, includes the necessary methods to interact with a fleet
  */
-export interface IFleetClient {
+export interface IEarnProtocolFleetClient extends IEarnProtocolFleet {
   /**
    * @method deposit
    * @description Deposit funds into the fleet for the next cycle

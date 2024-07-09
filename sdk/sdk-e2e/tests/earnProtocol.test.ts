@@ -1,11 +1,11 @@
-import { Address, type Maybe, ChainFamilyMap } from '@summerfi/sdk-common/common'
+import { Address, ChainFamilyMap, type Maybe } from '@summerfi/sdk-common/common'
 
-import { makeSDK, type Chain, type User } from '@summerfi/sdk-client'
+import { makeSDK, type Chain } from '@summerfi/sdk-client'
 import { TransactionUtils } from './utils/TransactionUtils'
 
-import { Hex } from 'viem'
-import assert from 'assert'
 import { Token, TokenAmount } from '@summerfi/sdk-common'
+import assert from 'assert'
+import { Hex } from 'viem'
 
 jest.setTimeout(300000)
 
@@ -21,7 +21,7 @@ const DAI = Token.createFrom({
 
 /** TEST CONFIG */
 const config = {
-  SDKApiUrl: 'https://h6bwee4lvb.execute-api.us-east-1.amazonaws.com/api/sdk',
+  SDKApiUrl: 'https://72dytt1e93.execute-api.us-east-1.amazonaws.com/api/sdk',
   forkUrl: 'https://virtual.mainnet.rpc.tenderly.co/5a4e0cc3-48d2-4819-8426-068f029b23be',
   walletAddress: Address.createFromEthereum({
     value: '0x34314adbfBb5d239bb67f0265c9c45EB8b834412',
@@ -31,7 +31,7 @@ const config = {
   }),
 }
 
-describe.only('Earn Protocol Deposit', () => {
+describe('Earn Protocol Deposit', () => {
   it('should deposit', async () => {
     // SDK
     const sdk = makeSDK({
@@ -47,7 +47,7 @@ describe.only('Earn Protocol Deposit', () => {
     assert(chain.earnProtocol, 'Chain does not have Earn Protocol')
 
     // User
-    const user: User = await sdk.users.getUser({
+    const user = await sdk.users.getUser({
       chainInfo: chain.chainInfo,
       walletAddress: config.walletAddress,
     })

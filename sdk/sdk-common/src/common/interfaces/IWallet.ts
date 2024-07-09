@@ -1,5 +1,5 @@
-import { AddressDataSchema, IAddress } from './IAddress'
 import { z } from 'zod'
+import { AddressDataSchema, IAddress } from './IAddress'
 
 /**
  * @name IWallet
@@ -11,6 +11,16 @@ import { z } from 'zod'
 export interface IWallet extends IWalletData {
   /** Address of the wallet, valid for the different chains */
   readonly address: IAddress
+
+  /**
+   * @name equals
+   * @description Checks if two wallets are equal
+   * @param wallet The wallet to compare
+   * @returns true if the wallets are equal
+   *
+   * Equality is determined by the address
+   */
+  equals(token: IWallet): boolean
 }
 
 /**

@@ -1,31 +1,27 @@
-import {
-  Address,
-  ChainInfo,
-  Maybe,
-  Position,
-  PositionId,
-  Wallet,
-} from '@summerfi/sdk-common/common'
+import { User } from '@summerfi/sdk-common'
+import { IChainInfo, IWallet, Maybe, Position, PositionId } from '@summerfi/sdk-common/common'
 import { IPositionsManager, Order } from '@summerfi/sdk-common/orders'
+import { IProtocol } from '@summerfi/sdk-common/protocols'
 import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { IUserClient } from '../interfaces/IUserClient'
-import { IRPCClient } from '../interfaces/IRPCClient'
 import { RPCMainClientType } from '../rpc/SDKMainClient'
-import { IProtocol } from '@summerfi/sdk-common/protocols'
 
-export class User extends IRPCClient implements IUserClient {
-  public readonly wallet: Wallet
-  public readonly chainInfo: ChainInfo
+/**
+ * @class UserClient
+ * @see IUserClient
+ */
+export class UserClient extends User implements IUserClient {
+  private rpcClient: RPCMainClientType
 
+  /** Constructor */
   public constructor(params: {
     rpcClient: RPCMainClientType
-    chainInfo: ChainInfo
-    walletAddress: Address
+    chainInfo: IChainInfo
+    wallet: IWallet
   }) {
     super(params)
 
-    this.chainInfo = params.chainInfo
-    this.wallet = Wallet.createFrom({ address: params.walletAddress })
+    this.rpcClient = params.rpcClient
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */

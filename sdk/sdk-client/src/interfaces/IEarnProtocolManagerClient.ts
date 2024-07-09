@@ -1,6 +1,6 @@
-import { Maybe } from '@summerfi/sdk-common/common'
 import { IAddress } from '@summerfi/sdk-common'
-import { IFleetClient } from './IFleetClient'
+import { Maybe } from '@summerfi/sdk-common/common'
+import { IEarnProtocolFleetClient } from './IEarnProtocolFleetClient'
 
 /**
  * @interface IEarnProtocolManagerClient
@@ -16,5 +16,5 @@ export interface IEarnProtocolManagerClient {
    *
    * @returns The protocol with the given name
    */
-  getFleet(params: { address: IAddress }): Maybe<IFleetClient>
+  getFleet(params: { address: IAddress }): Maybe<IEarnProtocolFleetClient>
 }

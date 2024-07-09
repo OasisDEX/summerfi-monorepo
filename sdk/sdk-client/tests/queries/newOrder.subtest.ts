@@ -1,17 +1,18 @@
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { SDKManager } from '../../src/implementation/SDKManager'
-import { RPCMainClientType } from '../../src/rpc/SDKMainClient'
+import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 import {
   ILKType,
   IMakerLendingPoolData,
   MakerPositionId,
 } from '@summerfi/protocol-plugins/plugins/maker'
+import { IMakerLendingPoolIdData } from '@summerfi/protocol-plugins/plugins/maker/interfaces/IMakerLendingPoolId'
+import { IMakerProtocolData } from '@summerfi/protocol-plugins/plugins/maker/interfaces/IMakerProtocol'
 import {
   ISparkLendingPoolData,
   ISparkLendingPoolIdData,
   SparkPositionId,
 } from '@summerfi/protocol-plugins/plugins/spark'
-import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { ISparkProtocolData } from '@summerfi/protocol-plugins/plugins/spark/interfaces/ISparkProtocol'
+import { IPositionData } from '@summerfi/sdk-common'
 import {
   Address,
   AddressType,
@@ -23,12 +24,11 @@ import {
   TokenAmount,
 } from '@summerfi/sdk-common/common'
 import { IPositionsManager, Order } from '@summerfi/sdk-common/orders'
-import { User } from '../../src/implementation/User'
-import { IMakerProtocolData } from '@summerfi/protocol-plugins/plugins/maker/interfaces/IMakerProtocol'
-import { IMakerLendingPoolIdData } from '@summerfi/protocol-plugins/plugins/maker/interfaces/IMakerLendingPoolId'
-import { IPositionData } from '@summerfi/sdk-common'
-import { ISparkProtocolData } from '@summerfi/protocol-plugins/plugins/spark/interfaces/ISparkProtocol'
-import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
+import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { SDKManager } from '../../src/implementation/SDKManager'
+import { UserClient } from '../../src/implementation/UserClient'
+import { RPCMainClientType } from '../../src/rpc/SDKMainClient'
 
 export default async function simulateNewOrder() {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -150,7 +150,7 @@ export default async function simulateNewOrder() {
     address: Address.ZeroAddressEthereum,
   }
 
-  let user: User | undefined = undefined
+  let user: UserClient | undefined = undefined
 
   type BuildOrderType = RPCMainClientType['orders']['buildOrder']['mutate']
   const buildOrder: BuildOrderType = jest.fn(async (params) => {
