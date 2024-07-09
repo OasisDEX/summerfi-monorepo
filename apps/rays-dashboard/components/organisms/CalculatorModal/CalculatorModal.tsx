@@ -75,9 +75,9 @@ const CalculatorModalContent = () => {
         $RAYS Calculator
       </Text>
       <div className={calculatorModalStyles.valuesWrapper}>
-        <CalculatorModalRaysValue value={calculatedValues.basePoints} label="Base" />
+        <CalculatorModalRaysValue value={calculatedValues.basePoints} label="Per year" />
         <CalculatorModalRaysValue value={calculatedValues.migrationBonus} label="Migration" />
-        <CalculatorModalRaysValue value={calculatedValues.totalPoints} label="Total" />
+        <CalculatorModalRaysValue value={calculatedValues.totalPoints} label="Total after 1 year" />
       </div>
       <Text as="p" variant="p3semi" style={{ margin: '32px 0 8px 0' }}>
         Amount

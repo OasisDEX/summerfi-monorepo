@@ -2,7 +2,7 @@ name: summerfi-api-local
 
 services:
   rays-db:
-    image: postgres:13.9
+    image: postgres:16
     environment:
       POSTGRES_DB: rays
       POSTGRES_USER: user
@@ -17,7 +17,7 @@ services:
     ports:
       - "5500:5432"
     volumes:
-      - rays-db-pg-v13-9-data:/var/lib/postgresql/data
+      - rays-db-pg-v16-data:/var/lib/postgresql/data
   redis-cache:
     image: redis:7.2.4
     restart: always
@@ -32,7 +32,7 @@ services:
     volumes:
       - redis-cache-v7-data:/data
 volumes:
-  rays-db-pg-v13-9-data:
+  rays-db-pg-v16-data:
     driver: local
   redis-cache-v7-data:
     driver: local

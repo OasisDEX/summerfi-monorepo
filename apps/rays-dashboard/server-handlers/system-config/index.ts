@@ -31,11 +31,13 @@ const systemConfigHandler = async () => {
     ])
 
     const navigation = parseNavigationResponse({ navigationResponse, productHub, tNav })
+    // TODO figure out why unpublish of Use Cases in contentful causes error
+    const resolvedNavigation = navigation.filter((item) => item.label !== 'Use Cases')
 
     return {
       config,
       configRays,
-      navigation,
+      navigation: resolvedNavigation,
       productHub: productHub as ProductHubData,
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

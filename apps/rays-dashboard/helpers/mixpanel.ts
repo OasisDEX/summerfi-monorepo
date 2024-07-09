@@ -1,20 +1,11 @@
 import browserDetect from 'browser-detect'
 import { upperFirst } from 'lodash'
-import * as mixpanelBrowser from 'mixpanel-browser'
 
 import { basePath } from '@/helpers/base-path'
+import { mixpanelBrowser } from '@/helpers/mixpanel-init'
 import { MixpanelEventProduct, MixpanelEventTypes } from '@/types/mixpanel'
 
-if (!process.env.NEXT_PUBLIC_MIXPANEL_KEY) {
-  throw new Error('NEXT_PUBLIC_MIXPANEL_KEY is not defined')
-}
-
-mixpanelBrowser.init(process.env.NEXT_PUBLIC_MIXPANEL_KEY, {
-  debug: false,
-  ip: false,
-})
-
-export const optedOutCheck =
+export const optedOutCheck = () =>
   process.env.NODE_ENV !== 'development' && mixpanelBrowser.has_opted_out_tracking()
 
 const includeBasePath = (path: string) => `${basePath}${path.replace(/\/$/u, '')}`
@@ -53,7 +44,7 @@ export const trackEvent = (eventName: string, eventBody: { [key: string]: unknow
       eventName,
       distinctId: mixpanelBrowser.get_distinct_id(),
       currentUrl: win.location.href,
-      ...(!optedOutCheck && {
+      ...(!optedOutCheck() && {
         browser: upperFirst(browserName),
         browserVersion: versionNumber,
         initialReferrer,
@@ -82,7 +73,7 @@ export const trackPageView = ({ path, userAddress }: PageViewType) => {
       userAddress,
     }
 
-    if (!optedOutCheck) {
+    if (!optedOutCheck()) {
       trackEvent(MixpanelEventTypes.Pageview, eventBody)
     }
   } catch (error) {
@@ -121,7 +112,7 @@ export const trackAccountChange = ({
       walletLabel,
     }
 
-    if (!optedOutCheck) {
+    if (!optedOutCheck()) {
       trackEvent(MixpanelEventTypes.AccountChange, eventBody)
     }
   } catch (error) {
@@ -148,7 +139,7 @@ export const trackButtonClick = ({ id, page, userAddress, ...rest }: ButtonClick
       ...rest,
     }
 
-    if (!optedOutCheck) {
+    if (!optedOutCheck()) {
       trackEvent(MixpanelEventTypes.ButtonClick, eventBody)
     }
   } catch (error) {
@@ -175,7 +166,7 @@ export const trackInputChange = ({ id, page, userAddress, ...rest }: InputChange
       ...rest,
     }
 
-    if (!optedOutCheck) {
+    if (!optedOutCheck()) {
       trackEvent(MixpanelEventTypes.InputChange, eventBody)
     }
   } catch (error) {

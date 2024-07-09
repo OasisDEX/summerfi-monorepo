@@ -10,8 +10,16 @@ export const BridgeSwapOnboarding = () => {
 
   return (
     <div>
-      <div style={{ textAlign: 'center', paddingLeft: '0 24px' }}>
-        <Text variant="h3" style={{ marginTop: '20px' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          padding: '0 24px',
+          marginTop: '30px',
+        }}
+      >
+        <Text variant="h4" as="h4" style={{ marginBottom: '30px' }}>
           Summer.fi Swap & Bridge
         </Text>
         <Image
@@ -19,25 +27,31 @@ export const BridgeSwapOnboarding = () => {
           width={202}
           height={80}
           alt="Quickly and securely swap and bridge tokens directly on Summer.fi with our partner LiFi."
+          style={{ marginBottom: '30px' }}
         />
-        <Text variant="h5" style={{ marginBottom: '12px' }}>
+        <Text variant="h5" as="h5" style={{ marginBottom: '12px' }}>
           Say Hello to Summer.fi Swap & Bridge
         </Text>
         <Text
           variant="p3"
+          as="p"
           style={{
             padding: '0 12px',
             textAlign: 'center',
             color: 'neutral80',
-            marginBottom: '16px',
           }}
         >
           Quickly and securely swap and bridge tokens directly on Summer.fi with our partner LiFi.
+          <br />
           Visit{' '}
           <Link href={EXTERNAL_LINKS.KB.SWAP_FAQ}>Summer.fi Swap FAQ&apos;s to read more →</Link>
         </Text>
       </div>
-      <Button style={{ width: '100%' }} onClick={() => setAsOnboarded()}>
+      <Button
+        variant="primaryLarge"
+        style={{ width: '80%', display: 'block', margin: '30px auto 0 auto' }}
+        onClick={() => setAsOnboarded()}
+      >
         Got it
       </Button>
     </div>

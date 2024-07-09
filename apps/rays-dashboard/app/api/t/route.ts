@@ -6,13 +6,18 @@ import { MixpanelEventProduct, MixpanelEventTypes } from '@/types/mixpanel'
 
 export const revalidate = 0
 
+const skipArtificialTrackingOS = [
+  'Android 6.0.1', // lotta those in mixpanel skewing data
+]
+
 export async function POST(request: NextRequest) {
   try {
-    const { distinctId, eventBody, eventName, ...rest } = await request.json()
+    const { distinctId, eventBody, eventName, os, ...rest } = await request.json()
 
     if (
       ![...Object.values(MixpanelEventTypes)].includes(eventName) ||
-      ![...Object.values(MixpanelEventProduct)].includes(eventBody.product)
+      ![...Object.values(MixpanelEventProduct)].includes(eventBody.product) ||
+      skipArtificialTrackingOS.includes(os)
     ) {
       return NextResponse.json({ status: 400 })
     }

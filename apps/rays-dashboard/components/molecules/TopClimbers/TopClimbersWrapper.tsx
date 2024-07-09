@@ -25,7 +25,7 @@ export const TopClimbersWrapper = ({ topClimbers }: { topClimbers?: LeaderboardR
         <div className={topClimbersStyles.flexRowCenter}>
           <div className={topClimbersStyles.wrapperTime}>
             <IconClockHour3 size={16} style={{ stroke: 'var(--color-primary-60)' }} />
-            <Text variant="p3semi">In last 24h</Text>
+            <Text variant="p3semi">In&nbsp;last&nbsp;24h</Text>
           </div>
           {topClimbersOpen ? <IconChevronDown size={18} /> : <IconChevronUp size={18} />}
         </div>

@@ -99,6 +99,7 @@ export const mana_circle_mono = lazy.lib(() => import('../../../tokens/icons/man
 export const mana_color = lazy.lib(() => import('../../../tokens/icons/mana_color'))
 export const matic_circle_color = lazy.lib(() => import('../../../tokens/icons/matic_circle_color'))
 export const matic_circle_mono = lazy.lib(() => import('../../../tokens/icons/matic_circle_mono'))
+export const menu = lazy.lib(() => import('../../../tokens/icons/menu'))
 export const meveth = lazy.lib(() => import('../../../tokens/icons/meveth'))
 export const mkr_circle_color = lazy.lib(() => import('../../../tokens/icons/mkr_circle_color'))
 export const moonpay = lazy.lib(() => import('../../../tokens/icons/moonpay'))

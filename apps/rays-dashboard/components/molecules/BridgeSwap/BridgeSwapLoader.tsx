@@ -4,7 +4,7 @@ export const BridgeSwapHandlerLoader = () => {
   return (
     <div
       style={{
-        width: '320px',
+        width: '430px',
         padding: '30px',
         marginTop: '30px',
       }}

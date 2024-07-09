@@ -340,6 +340,9 @@ importers:
       browser-detect:
         specifier: ^0.2.28
         version: 0.2.28
+      include-media:
+        specifier: 2.0.0
+        version: 2.0.0
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -616,6 +619,9 @@ importers:
       typed-scss-modules:
         specifier: ^8.0.1
         version: 8.0.1(sass@1.77.0)
+      usehooks-ts:
+        specifier: ^3.1.0
+        version: 3.1.0(react@18.3.1)
       vite-tsconfig-paths:
         specifier: ^4.3.2
         version: 4.3.2(typescript@5.4.5)(vite@5.2.11)

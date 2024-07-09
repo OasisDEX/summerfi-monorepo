@@ -6,13 +6,13 @@ import { useConnectWallet } from '@web3-onboard/react'
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 
-import { BridgeSwapHandlerLoader } from '@/components/layout/Navigation/BridgeSwap/BridgeSwapLoader'
-import { BridgeSwapWrapper } from '@/components/layout/Navigation/BridgeSwap/BridgeSwapWrapper'
 import {
   NavigationModuleBridge,
   NavigationModuleSwap,
 } from '@/components/layout/Navigation/NavigationModules'
-import { RaysCountComponent } from '@/components/layout/Navigation/RaysCountComponent/RaysCountComponent'
+import { BridgeSwapHandlerLoader } from '@/components/molecules/BridgeSwap/BridgeSwapLoader'
+import { BridgeSwapWrapper } from '@/components/molecules/BridgeSwap/BridgeSwapWrapper'
+import { RaysCountComponent } from '@/components/molecules/RaysCountComponent/RaysCountComponent'
 import { WalletButtonFallback } from '@/components/molecules/WalletButton/WalletButtonFallback'
 import { basePath } from '@/helpers/base-path'
 
@@ -22,7 +22,7 @@ const WalletButton = dynamic(() => import('@/components/molecules/WalletButton/W
 })
 
 const BridgeSwap = !process.env.NEXT_PUBLIC_SWAP_WIDGET_ONBOARDING_HIDDEN
-  ? dynamic(() => import('@/components/layout/Navigation/BridgeSwap/BridgeSwap'), {
+  ? dynamic(() => import('@/components/molecules/BridgeSwap/BridgeSwap'), {
       ssr: false,
       loading: () => <BridgeSwapHandlerLoader />,
     })

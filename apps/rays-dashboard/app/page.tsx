@@ -108,11 +108,11 @@ export default async function LeaderboardPage({
             <Button variant="neutralSmall">View Full Leaderboard</Button>
           </Link>
         </div>
+        <TopClimbersWrapper topClimbers={topClimbers} />
         <div style={{ marginTop: 'var(--space-xxl)' }}>
           <LeaderboardBanner userWalletAddress={searchParams.userAddress} page="/" />
         </div>
       </div>
-      <TopClimbersWrapper topClimbers={topClimbers} />
       {/**
        * The HomepageHandler component handles the redirection after wallet is connected.
        * Now mixpanel tracking as well

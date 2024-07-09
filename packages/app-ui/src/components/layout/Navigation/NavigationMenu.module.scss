@@ -1,13 +1,13 @@
 // navigation base
 .navigationMenu {
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
   z-index: 2;
 
-  @include media('>l') {
-    display: flex;
+  @include media('<l') {
+    display: none;
   }
 }
 
