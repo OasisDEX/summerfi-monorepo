@@ -9,6 +9,7 @@ import {
   Hash,
   createPublicClient,
   PublicClient,
+  type Chain,
 } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { mainnet } from 'viem/chains'
@@ -18,17 +19,20 @@ export class TransactionUtils {
   private readonly walletClient: WalletClient
   private readonly publicClient: PublicClient
   private readonly transport: Transport
+  private readonly chain: Chain
 
-  constructor(params: { rpcUrl: string; walletPrivateKey: Hex }) {
+  constructor(params: { rpcUrl: string; walletPrivateKey: Hex; chain?: Chain }) {
     this.account = privateKeyToAccount(params.walletPrivateKey)
     this.transport = http(params.rpcUrl)
+    this.chain = params.chain || mainnet
 
     this.walletClient = createWalletClient({
+      chain: this.chain,
       transport: this.transport,
     })
 
     this.publicClient = createPublicClient({
-      chain: mainnet,
+      chain: this.chain,
       transport: this.transport,
     })
   }
@@ -41,9 +45,9 @@ export class TransactionUtils {
       account: this.account,
       to: params.transaction.target.value,
       value: BigInt(params.transaction.value),
-      chain: mainnet,
       data: params.transaction.calldata,
       gas: 1000000000n,
+      chain: this.chain,
     })
 
     if (params.waitForConfirmation) {

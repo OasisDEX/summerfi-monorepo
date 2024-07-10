@@ -14,13 +14,13 @@ export class Chain implements IChain {
   readonly chainInfo: IChainInfo
   readonly tokens: ITokensManagerClient
   readonly protocols: IProtocolsManagerClient
-  readonly earnProtocol?: IEarnProtocolManagerClient
+  readonly earnProtocol: IEarnProtocolManagerClient
 
   constructor(params: {
     chainInfo: ChainInfo
     tokensManager: TokensManagerClient
     protocolsManager: ProtocolsManagerClient
-    earnProtocolManager?: IEarnProtocolManagerClient
+    earnProtocolManager: IEarnProtocolManagerClient
   }) {
     this.chainInfo = params.chainInfo
     this.tokens = params.tokensManager
