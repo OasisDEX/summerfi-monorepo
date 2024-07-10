@@ -864,7 +864,8 @@ async function checkOpenedPositionEligibility(
           } else {
             const oldestEligiblePosition = eligiblePositionsFromPointsAccrual[0]
             const becomeSummerUserMultiplier = getBecomeSummerUserMultiplier(
-              oldestEligiblePosition.positionCreated, pointsStart
+              oldestEligiblePosition.positionCreated,
+              pointsStart,
             )
             const pointsDistributions = await transaction
               .selectFrom('pointsDistribution')
@@ -918,9 +919,7 @@ function getBecomeSummerUserMultiplier(positionCreated: number, pointsStart: num
   if (positionCreated < pointsStart) {
     return 5
   }
-  const weeksSinceCreated = Math.floor(
-    (positionCreated - pointsStart) / ONE_WEEK_IN_SECONDS,
-  )
+  const weeksSinceCreated = Math.floor((positionCreated - pointsStart) / ONE_WEEK_IN_SECONDS)
 
   let multiplier = 1
 
