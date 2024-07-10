@@ -153,6 +153,9 @@ importers:
       '@summerfi/app-db':
         specifier: workspace:*
         version: link:../../packages/app-db
+      '@summerfi/app-types':
+        specifier: workspace:*
+        version: link:../../packages/app-types
       '@summerfi/app-ui':
         specifier: workspace:*
         version: link:../../packages/app-ui
@@ -295,6 +298,9 @@ importers:
       '@summerfi/app-db':
         specifier: workspace:*
         version: link:../../packages/app-db
+      '@summerfi/app-types':
+        specifier: workspace:*
+        version: link:../../packages/app-types
       '@summerfi/app-ui':
         specifier: workspace:*
         version: link:../../packages/app-ui
@@ -584,6 +590,37 @@ importers:
         specifier: latest
         version: 5.13.0
 
+  packages/app-types:
+    dependencies:
+      '@summerfi/app-db':
+        specifier: workspace:*
+        version: link:../app-db
+      '@summerfi/rays-db':
+        specifier: workspace:*
+        version: link:../rays-db
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../serverless-shared
+      '@types/react':
+        specifier: ^18.3.1
+        version: 18.3.1
+    devDependencies:
+      '@tabler/icons-react':
+        specifier: ^3.4.0
+        version: 3.4.0(react@18.3.1)
+      '@types/node':
+        specifier: ^20.14.2
+        version: 20.14.2
+      '@types/node-fetch':
+        specifier: ^2.6.11
+        version: 2.6.11
+      json-to-ts:
+        specifier: ^1.7.0
+        version: 1.7.0
+      node-fetch:
+        specifier: ^2.7.0
+        version: 2.7.0
+
   packages/app-ui:
     dependencies:
       '@loadable/component':
@@ -626,6 +663,9 @@ importers:
         specifier: ^4.3.2
         version: 4.3.2(typescript@5.4.5)(vite@5.2.11)
     devDependencies:
+      '@summerfi/app-types':
+        specifier: workspace:*
+        version: link:../app-types
       '@summerfi/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
@@ -14452,11 +14492,9 @@ packages:
     dependencies:
       '@tabler/icons': 3.4.0
       react: 18.3.1
-    dev: false
 
   /@tabler/icons@3.4.0:
     resolution: {integrity: sha512-6gYHXG0xAJgt2KPcTYDqhe3xYoJMTgz/ZfYup4EUHsxzYsz6rBlt8WgavHsGaWckaqH7ApR/epYslfXZjK27yw==}
-    dev: false
 
   /@tanstack/form-core@0.19.5:
     resolution: {integrity: sha512-2ocFAnWTY3sxXemJvKArllnPNMmo9LkviSX88iUXcaClKutvJLfAc+a/lM00zhDKY9G3abXuZCp1OvGmeagszA==}

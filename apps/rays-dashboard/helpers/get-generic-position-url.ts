@@ -1,14 +1,13 @@
 import { EarnStrategies } from '@summerfi/app-db'
+import { OmniProductType, type ProductHubItem } from '@summerfi/app-types'
 import { isAddress } from 'viem'
 
 import { aaveStrategiesLite } from '@/constants/aave-strategies-lite'
 import { ajnaPoolListLite } from '@/constants/ajna-pool-list-lite'
 import { Erc4626PseudoProtocol, erc4626VaultsByName } from '@/constants/erc-4626-vaults'
-import { NetworkIds } from '@/constants/networks-list'
+import { type NetworkIds } from '@/constants/networks-list'
 import { isYieldLoopPair } from '@/helpers/is-yield-loop-pair'
 import { LendingProtocol } from '@/helpers/lending-protocol'
-import { OmniProductType } from '@/types/omni-kit'
-import { ProductHubItem } from '@/types/product-hub'
 
 interface IsPoolOraclessParams {
   collateralToken: string

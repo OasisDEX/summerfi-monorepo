@@ -1,11 +1,4 @@
-export interface RaysApiResponse {
-  address: string
-  eligiblePoints: number
-  allPossiblePoints: number
-  actionRequiredPoints: unknown[]
-  positionInLeaderboard: string
-  userTypes: ('General Ethereum User' | 'DeFi User' | 'SummerFi User' | 'SummerFi Power User')[]
-}
+import { type RaysApiResponse } from '@summerfi/app-types'
 
 export const fetchRays = async (query: { [key: string]: string } | string) => {
   try {

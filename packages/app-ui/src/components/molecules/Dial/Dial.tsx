@@ -1,10 +1,10 @@
 /* eslint-disable  no-mixed-operators */
 import { FC, ReactNode } from 'react'
+import { IconNamesList } from '@summerfi/app-types'
 import classNames from 'classnames'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
-import { IconNamesList } from '@/tokens/types'
 
 import dialStyles, {
   ClassNames as DialClassnames,

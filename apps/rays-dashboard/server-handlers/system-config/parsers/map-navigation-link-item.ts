@@ -1,5 +1,11 @@
-import { TokenSymbolsList } from '@summerfi/app-ui'
-import { getTranslations } from 'next-intl/server'
+import {
+  type NavigationLinkTypes,
+  type NavigationMenuPanelListItem,
+  OmniProductType,
+  type ProductHubData,
+  type TokenSymbolsList,
+} from '@summerfi/app-types'
+import { type getTranslations } from 'next-intl/server'
 
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
 import { filterFeaturedProducts } from '@/server-handlers/system-config/parsers/filter-featured-products'
@@ -8,9 +14,6 @@ import { mapFeaturedMultiplyProduct } from '@/server-handlers/system-config/pars
 import { mapFeaturedProductToFilterCriteria } from '@/server-handlers/system-config/parsers/map-featured-product-to-filter-criteria'
 import { mapTopBorrowProduct } from '@/server-handlers/system-config/parsers/map-top-borrow-product'
 import { mapTopTokens } from '@/server-handlers/system-config/parsers/map-top-tokens'
-import { NavigationLinkTypes, NavigationMenuPanelListItem } from '@/types/navigation'
-import { OmniProductType } from '@/types/omni-kit'
-import { ProductHubData } from '@/types/product-hub'
 
 interface MapNavigationLinkItemParams {
   items: NavigationLinkTypes[]

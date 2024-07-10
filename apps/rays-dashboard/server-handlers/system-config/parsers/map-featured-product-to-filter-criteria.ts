@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import { NavigationFeaturedProduct } from '@/types/navigation'
+import { type NavigationFeaturedProduct } from '@summerfi/app-types'
 
 export function mapFeaturedProductToFilterCriteria(item: NavigationFeaturedProduct) {
   const {

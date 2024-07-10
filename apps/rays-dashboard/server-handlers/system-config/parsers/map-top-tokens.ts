@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
+import { type NavigationMenuPanelListItem, type ProductHubItem } from '@summerfi/app-types'
 import { INTERNAL_LINKS } from '@summerfi/app-ui'
 import BigNumber from 'bignumber.js'
-import { getTranslations } from 'next-intl/server'
+import { type getTranslations } from 'next-intl/server'
 
 import { formatDecimalAsPercent } from '@/helpers/formatters'
-import { NavigationMenuPanelListItem } from '@/types/navigation'
-import { ProductHubItem } from '@/types/product-hub'
 
 const zero = new BigNumber(0)
 

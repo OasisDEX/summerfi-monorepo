@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { Button, Divider, EXTERNAL_LINKS, INTERNAL_LINKS, Text, WithArrow } from '@summerfi/app-ui'
 import { IconCopy, IconLogout, IconSettings } from '@tabler/icons-react'
-import { WalletState } from '@web3-onboard/core'
+import { type WalletState } from '@web3-onboard/core'
 import { useConnectWallet } from '@web3-onboard/react'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'

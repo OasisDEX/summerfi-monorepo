@@ -1,10 +1,10 @@
+import { type LeaderboardResponse } from '@summerfi/app-types'
 import { Text } from '@summerfi/app-ui'
 import { IconArrowRight, IconArrowUpRight, IconTrophyFilled } from '@tabler/icons-react'
 import { useConnectWallet } from '@web3-onboard/react'
 import Link from 'next/link'
 
 import { formatAddress } from '@/helpers/formatters'
-import { LeaderboardResponse } from '@/types/leaderboard'
 
 import topClimbersStyles from './TopClimbers.module.scss'
 

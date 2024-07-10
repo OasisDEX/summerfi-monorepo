@@ -1,13 +1,13 @@
 'use client'
 
 import { FC, ReactNode, useState } from 'react'
-import { useMediaQuery } from 'usehooks-ts'
-
 import {
   NavigationMenuPanelLinkType,
   NavigationMenuPanelType,
   WithNavigationModules,
-} from '@/components/layout/Navigation/Navigation.types'
+} from '@summerfi/app-types'
+import { useMediaQuery } from 'usehooks-ts'
+
 import { NavigationActions } from '@/components/layout/Navigation/NavigationActions'
 import { NavigationBranding } from '@/components/layout/Navigation/NavigationBranding'
 import { NavigationMenu } from '@/components/layout/Navigation/NavigationMenu'

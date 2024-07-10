@@ -1,8 +1,8 @@
 import { DetailedHTMLProps, FC, InputHTMLAttributes } from 'react'
+import { IconNamesList } from '@summerfi/app-types'
 
 import { getAtomClassList } from '@/components/atoms/getAtomClassList'
 import { Icon } from '@/components/atoms/Icon/Icon'
-import { IconNamesList } from '@/tokens/types'
 
 import classNames, { ClassNames } from '@/components/atoms/Input/Input.module.scss'
 

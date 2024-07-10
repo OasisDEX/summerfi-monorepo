@@ -1,9 +1,9 @@
 'use client'
+import { type AppConfigType, emptyConfig } from '@summerfi/app-types'
 import { merge } from 'lodash'
 
 import { configLSKey, configLSOverridesKey } from '@/constants/config'
 import { cleanObjectFromNull, cleanObjectToNull } from '@/helpers/clean-object'
-import { AppConfigType, emptyConfig } from '@/types/generated'
 
 type AppConfigTypeKey = keyof AppConfigType
 

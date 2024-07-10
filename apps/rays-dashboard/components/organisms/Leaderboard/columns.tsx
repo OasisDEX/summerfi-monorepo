@@ -1,3 +1,5 @@
+import { type LeaderboardItem } from '@summerfi/app-types'
+
 import { LeaderboardBanner } from '@/components/organisms/Leaderboard/components/LeaderboardBanner'
 import {
   LeaderboardPortfolio,
@@ -5,7 +7,6 @@ import {
   LeaderboardRays,
   LeaderboardUser,
 } from '@/components/organisms/Leaderboard/components/LeaderboardColumns'
-import { LeaderboardItem } from '@/types/leaderboard'
 
 export const leaderboardColumns = {
   rank: {

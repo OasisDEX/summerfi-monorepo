@@ -1,7 +1,8 @@
 'use client'
 
-import { FC, useEffect, useState } from 'react'
-import { Navigation, NavigationMenuPanelType } from '@summerfi/app-ui'
+import { type FC, useCallback, useEffect, useState } from 'react'
+import { type NavigationMenuPanelType } from '@summerfi/app-types'
+import { Navigation, RaysCountSmall } from '@summerfi/app-ui'
 import { useConnectWallet } from '@web3-onboard/react'
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
@@ -12,8 +13,8 @@ import {
 } from '@/components/layout/Navigation/NavigationModules'
 import { BridgeSwapHandlerLoader } from '@/components/molecules/BridgeSwap/BridgeSwapLoader'
 import { BridgeSwapWrapper } from '@/components/molecules/BridgeSwap/BridgeSwapWrapper'
-import { RaysCountComponent } from '@/components/molecules/RaysCountComponent/RaysCountComponent'
 import { WalletButtonFallback } from '@/components/molecules/WalletButton/WalletButtonFallback'
+import { formatCryptoBalance } from '@/helpers/formatters'
 
 const WalletButton = dynamic(() => import('@/components/molecules/WalletButton/WalletButton'), {
   ssr: false,
@@ -44,6 +45,16 @@ export const NavigationWrapper: FC<NavigationWrapperProps> = ({ panels }) => {
       setOnceLoaded(true)
     }
   }, [showNavigationModule, onceLoaded])
+
+  const raysFetchFunction = useCallback(async () => {
+    if (wallet?.accounts[0].address) {
+      return await fetch(`/api/rays?address=${wallet.accounts[0].address}`).then((resp) =>
+        resp.json(),
+      )
+    }
+
+    return {}
+  }, [wallet])
 
   return (
     <Navigation
@@ -82,7 +93,13 @@ export const NavigationWrapper: FC<NavigationWrapperProps> = ({ panels }) => {
           )}
         </BridgeSwapWrapper>
       }
-      raysCountComponent={<RaysCountComponent />}
+      raysCountComponent={
+        <RaysCountSmall
+          userAddress={wallet?.accounts[0].address}
+          formatter={formatCryptoBalance}
+          raysFetchFunction={raysFetchFunction}
+        />
+      }
       walletConnectionComponent={<WalletButton />}
       onLogoClick={() => {
         // because router will use base path...

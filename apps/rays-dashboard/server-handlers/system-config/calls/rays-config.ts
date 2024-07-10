@@ -1,4 +1,4 @@
-import { AppRaysConfigType } from '@/types/generated/rays-types'
+import { type AppRaysConfigType } from '@summerfi/app-types'
 
 export const configRaysFetcher = async function (): Promise<AppRaysConfigType> {
   try {

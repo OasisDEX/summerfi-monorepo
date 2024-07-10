@@ -1,3 +1,4 @@
+import { type LeaderboardResponse } from '@summerfi/app-types'
 import { Button } from '@summerfi/app-ui'
 import Link from 'next/link'
 
@@ -8,7 +9,6 @@ import { PageViewHandler } from '@/components/organisms/PageViewHandler/PageView
 import { wholeLeaderboardDefaults } from '@/constants/leaderboard'
 import { parseServerResponse } from '@/helpers/parse-server-response'
 import { fetchLeaderboard } from '@/server-handlers/leaderboard'
-import { LeaderboardResponse } from '@/types/leaderboard'
 
 export default async function LeaderboardPage({
   searchParams,

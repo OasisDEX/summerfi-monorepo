@@ -1,4 +1,4 @@
-import { AppConfigType } from '@/types/generated'
+import { type AppConfigType } from '@summerfi/app-types'
 
 export const configFetcher = async function (): Promise<Partial<AppConfigType>> {
   try {

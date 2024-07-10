@@ -1,9 +1,9 @@
+import { MixpanelEventProduct, MixpanelEventTypes } from '@summerfi/app-types'
 import browserDetect from 'browser-detect'
 import { upperFirst } from 'lodash'
 
 import { basePath } from '@/helpers/base-path'
 import { mixpanelBrowser } from '@/helpers/mixpanel-init'
-import { MixpanelEventProduct, MixpanelEventTypes } from '@/types/mixpanel'
 
 export const optedOutCheck = () =>
   process.env.NODE_ENV !== 'development' && mixpanelBrowser.has_opted_out_tracking()

@@ -1,6 +1,11 @@
 import { keyBy } from 'lodash'
 
-import { NetworkConfig, NetworkHexIds, NetworkIds, NetworkNames } from '@/constants/networks-list'
+import {
+  type NetworkConfig,
+  NetworkHexIds,
+  NetworkIds,
+  NetworkNames,
+} from '@/constants/networks-list'
 import arbitrumMainnetBadge from '@/public/img/network_icons/arbitrum_badge_mainnet.svg'
 import baseMainnetBadge from '@/public/img/network_icons/base_badge_mainnet.svg'
 import ethereumMainnetBadge from '@/public/img/network_icons/ethereum_badge_mainnet.svg'

@@ -1,8 +1,8 @@
-import { ProductHubItems, Protocol } from '@summerfi/app-db'
+import { type ProductHubItems, type Protocol } from '@summerfi/app-db'
+import { type ProductHubData } from '@summerfi/app-types'
 
 import { networksList } from '@/constants/networks-list-ssr'
 import { prisma } from '@/helpers/prisma-client'
-import { ProductHubData } from '@/types/product-hub'
 
 const filterProductHubData = ({ id: _id, ...table }: ProductHubItems) => table
 

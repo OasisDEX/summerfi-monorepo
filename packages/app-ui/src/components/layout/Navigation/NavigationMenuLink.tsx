@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 import { ProxyLinkComponent } from '@/components/atoms/ProxyLinkComponent/ProxyLinkComponent'
 import { Text } from '@/components/atoms/Text/Text'
-import { NavigationMenuPanelLinkProps } from '@/components/layout/Navigation/Navigation.types'
+import { NavigationMenuPanelLinkProps } from '@summerfi/app-types'
 
 import navigationMenuStyles from '@/components/layout/Navigation/NavigationMenu.module.scss'
 

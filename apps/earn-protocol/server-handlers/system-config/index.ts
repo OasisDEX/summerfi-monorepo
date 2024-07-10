@@ -1,3 +1,8 @@
+import {
+  lendingProtocolMap,
+  type NavigationResponse,
+  type ProductHubData,
+} from '@summerfi/app-types'
 import { ProtocolId } from '@summerfi/serverless-shared'
 import { getTranslations } from 'next-intl/server'
 
@@ -7,9 +12,6 @@ import { navigationQuery } from '@/server-handlers/system-config/calls/navigatio
 import { productHubFetcher } from '@/server-handlers/system-config/calls/product-hub'
 import { configRaysFetcher } from '@/server-handlers/system-config/calls/rays-config'
 import { parseNavigationResponse } from '@/server-handlers/system-config/parsers/parse-navigation-response'
-import { lendingProtocolMap } from '@/types/lending-protocol'
-import { NavigationResponse } from '@/types/navigation'
-import { ProductHubData } from '@/types/product-hub'
 
 const systemConfigHandler = async () => {
   try {

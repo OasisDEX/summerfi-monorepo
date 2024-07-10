@@ -1,5 +1,5 @@
 import NumberComponent, {
-  AnimatedNumberProps as OriginalAnimatedNumberProps,
+  type AnimatedNumberProps as OriginalAnimatedNumberProps,
 } from 'react-awesome-animated-number'
 
 import 'react-awesome-animated-number/dist/index.css'

@@ -21,6 +21,7 @@
     "clean": "rm -rf dist"
   },
   "devDependencies": {
+    "@summerfi/app-types": "workspace:*",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
     "@types/loadable__component": "^5.13.9",

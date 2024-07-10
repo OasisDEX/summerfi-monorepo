@@ -1,15 +1,18 @@
-import { NavigationMenuPanelIcon, TokenSymbolsList } from '@summerfi/app-ui'
+import {
+  type NavigationMenuPanelIcon,
+  type NavigationMenuPanelListItem,
+  OmniProductType,
+  type ProductHubItem,
+  type TokenSymbolsList,
+} from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash'
-import { getTranslations } from 'next-intl/server'
+import { type getTranslations } from 'next-intl/server'
 
 import { networksByName } from '@/constants/networks-list-ssr'
 import { zero } from '@/helpers/formatters'
 import { getGenericPositionUrl } from '@/helpers/get-generic-position-url'
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
-import { NavigationMenuPanelListItem } from '@/types/navigation'
-import { OmniProductType } from '@/types/omni-kit'
-import { ProductHubItem } from '@/types/product-hub'
 
 export function mapFeaturedMultiplyProduct(
   items: ProductHubItem[],

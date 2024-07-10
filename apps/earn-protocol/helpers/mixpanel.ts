@@ -1,14 +1,13 @@
+import { MixpanelEventProduct, MixpanelEventTypes } from '@summerfi/app-types'
 import browserDetect from 'browser-detect'
 import { upperFirst } from 'lodash'
 
-import { basePath } from '@/helpers/base-path'
 import { mixpanelBrowser } from '@/helpers/mixpanel-init'
-import { MixpanelEventProduct, MixpanelEventTypes } from '@/types/mixpanel'
 
 export const optedOutCheck = () =>
   process.env.NODE_ENV !== 'development' && mixpanelBrowser.has_opted_out_tracking()
 
-const includeBasePath = (path: string) => `${basePath}${path.replace(/\/$/u, '')}`
+const includeBasePath = (path: string) => `${path.replace(/\/$/u, '')}`
 
 export const trackEvent = (eventName: string, eventBody: { [key: string]: unknown }) => {
   let win: Window
@@ -33,7 +32,7 @@ export const trackEvent = (eventName: string, eventBody: { [key: string]: unknow
       : new URL(initialReferrer).hostname
     : ''
 
-  void fetch(`${basePath}/api/t`, {
+  void fetch(`/api/t`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',

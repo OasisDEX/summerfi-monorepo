@@ -1,6 +1,9 @@
 'use client'
-import { PropsWithChildren } from 'react'
-import { AlchemyAccountProvider, AlchemyAccountsProviderProps } from '@alchemy/aa-alchemy/react'
+import { type PropsWithChildren } from 'react'
+import {
+  AlchemyAccountProvider,
+  type AlchemyAccountsProviderProps,
+} from '@alchemy/aa-alchemy/react'
 
 import { config, queryClient } from './config'
 

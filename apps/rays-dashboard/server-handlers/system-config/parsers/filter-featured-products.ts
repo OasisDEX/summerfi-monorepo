@@ -1,4 +1,4 @@
-import { ProductHubFeaturedProducts, ProductHubItem } from '@/types/product-hub'
+import { type ProductHubFeaturedProducts, type ProductHubItem } from '@summerfi/app-types'
 
 interface FilterFeaturedProductsParams {
   filters: ProductHubFeaturedProducts

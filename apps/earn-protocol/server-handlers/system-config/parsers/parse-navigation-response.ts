@@ -1,9 +1,11 @@
-import { NavigationMenuPanelType } from '@summerfi/app-ui'
-import { getTranslations } from 'next-intl/server'
+import {
+  type NavigationMenuPanelType,
+  type NavigationResponse,
+  type ProductHubData,
+} from '@summerfi/app-types'
+import { type getTranslations } from 'next-intl/server'
 
 import { mapNavigationLinkItem } from '@/server-handlers/system-config/parsers/map-navigation-link-item'
-import { NavigationResponse } from '@/types/navigation'
-import { ProductHubData } from '@/types/product-hub'
 
 interface ParseNavigationResponseParams {
   navigationResponse: NavigationResponse

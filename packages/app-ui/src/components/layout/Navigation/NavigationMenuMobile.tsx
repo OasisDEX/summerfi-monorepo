@@ -7,7 +7,7 @@ import {
   NavigationMenuPanelLinkType,
   NavigationMenuPanelType,
   WithNavigationModules,
-} from '@/components/layout/Navigation/Navigation.types'
+} from '@summerfi/app-types'
 import { NavigationMobileMenuPanel } from '@/components/layout/Navigation/NavigationMobileMenuPanel'
 
 import navigationMenuMobileStyles from './NavigationMenuMobile.module.scss'
