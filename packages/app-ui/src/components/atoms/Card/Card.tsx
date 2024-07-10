@@ -1,8 +1,8 @@
-import { DetailedHTMLProps, FC, HTMLAttributes, ReactNode } from 'react'
+import { type DetailedHTMLProps, type FC, type HTMLAttributes, type ReactNode } from 'react'
 
 import { getAtomClassList } from '@/components/atoms/getAtomClassList'
 
-import classNames, { ClassNames } from '@/components/atoms/Card/Card.module.scss'
+import classNames, { type ClassNames } from '@/components/atoms/Card/Card.module.scss'
 
 interface CardProps {
   children: ReactNode

@@ -1,6 +1,6 @@
-import { FC, ReactNode } from 'react'
+import { type FC, type ReactNode } from 'react'
 
-import classNames, { ClassNames } from '@/components/atoms/Pill/Pill.module.scss'
+import classNames, { type ClassNames } from '@/components/atoms/Pill/Pill.module.scss'
 
 interface PillProps {
   children: ReactNode

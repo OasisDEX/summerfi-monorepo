@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
+import { type NavigationMenuPanelType, type WithNavigationModules } from '@summerfi/app-types'
 import classNames from 'classnames'
 
-import { NavigationMenuPanelType, WithNavigationModules } from '@summerfi/app-types'
 import { NavigationMenuDropdownContentList } from '@/components/layout/Navigation/NavigationMenuDropdownContentList'
 
 import navigationMenuDropdownContentStyles from './NavigationMenuDropdownContent.module.scss'

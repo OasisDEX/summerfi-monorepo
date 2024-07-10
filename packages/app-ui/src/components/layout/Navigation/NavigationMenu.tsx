@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 import {
-  NavigationMenuPanelLinkType,
-  NavigationMenuPanelType,
-  WithNavigationModules,
+  type NavigationMenuPanelLinkType,
+  type NavigationMenuPanelType,
+  type WithNavigationModules,
 } from '@summerfi/app-types'
 
 import { NavigationMenuDropdown } from '@/components/layout/Navigation/NavigationMenuDropdown'

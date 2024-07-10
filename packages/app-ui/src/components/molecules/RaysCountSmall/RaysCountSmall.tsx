@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { RaysApiResponse } from '@summerfi/app-types'
+import { type RaysApiResponse } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 

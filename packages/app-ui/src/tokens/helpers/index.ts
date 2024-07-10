@@ -1,4 +1,4 @@
-import { TokenConfig } from '@summerfi/app-types'
+import { type TokenConfig } from '@summerfi/app-types'
 import { keyBy } from 'lodash'
 
 import { tokenConfigs } from '@/tokens/config'

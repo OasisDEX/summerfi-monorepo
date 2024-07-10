@@ -1,6 +1,14 @@
 'use client'
 
-import { FC, HTMLAttributes, ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import {
+  type FC,
+  type HTMLAttributes,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 
 import { Card } from '@/components/atoms/Card/Card'
 import { isTouchDevice } from '@/helpers/is-touch-device'

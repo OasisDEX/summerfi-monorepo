@@ -1,8 +1,8 @@
+import { type NavigationMenuPanelList } from '@summerfi/app-types'
 import { IconStarFilled } from '@tabler/icons-react'
 import classNames from 'classnames'
 
 import { Text } from '@/components/atoms/Text/Text'
-import { NavigationMenuPanelList } from '@summerfi/app-types'
 import { NavigationMenuDropdownContentIcon } from '@/components/layout/Navigation/NavigationMenuDropdownContentIcon'
 
 import navigationMenuDropdownContentListItemStyles from './NavigationMenuDropdownContentListItem.module.scss'

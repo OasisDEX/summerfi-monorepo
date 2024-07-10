@@ -1,7 +1,7 @@
 import { Fragment, useEffect } from 'react'
+import { type NavigationMenuPanelType, type WithNavigationModules } from '@summerfi/app-types'
 
 import { Button } from '@/components/atoms/Button/Button'
-import { NavigationMenuPanelType, WithNavigationModules } from '@summerfi/app-types'
 import { NavigationMenuDropdownContentList } from '@/components/layout/Navigation/NavigationMenuDropdownContentList'
 import { ExpandableArrow } from '@/components/molecules/ExpandableArrow/ExpandableArrow'
 import { useToggle } from '@/helpers/use-toggle'

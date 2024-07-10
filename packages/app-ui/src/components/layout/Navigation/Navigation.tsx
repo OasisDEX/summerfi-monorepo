@@ -1,10 +1,10 @@
 'use client'
 
-import { FC, ReactNode, useState } from 'react'
+import { type FC, type ReactNode, useState } from 'react'
 import {
-  NavigationMenuPanelLinkType,
-  NavigationMenuPanelType,
-  WithNavigationModules,
+  type NavigationMenuPanelLinkType,
+  type NavigationMenuPanelType,
+  type WithNavigationModules,
 } from '@summerfi/app-types'
 import { useMediaQuery } from 'usehooks-ts'
 
