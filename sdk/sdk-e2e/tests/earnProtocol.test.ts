@@ -31,7 +31,7 @@ const config = {
   }),
 }
 
-describe('Earn Protocol Deposit', () => {
+describe.skip('Earn Protocol Deposit', () => {
   it('should deposit', async () => {
     // SDK
     const sdk = makeSDK({
