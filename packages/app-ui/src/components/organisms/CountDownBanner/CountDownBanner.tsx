@@ -8,10 +8,11 @@ import { CountDown } from '@/components/organisms/CountDown/CountDown'
 import classNames from '@/components/organisms/CountDownBanner/CountDownBanner.module.scss'
 
 interface CountDownBannerProps {
+  countdownLabel: string
   futureTimestamp: string
 }
 
-export const CountDownBanner: FC<CountDownBannerProps> = ({ futureTimestamp }) => {
+export const CountDownBanner: FC<CountDownBannerProps> = ({ futureTimestamp, countdownLabel }) => {
   return (
     <Card
       style={{ backgroundImage: 'var(--gradient-summer-fi-lightest)', border: 'unset' }}
@@ -21,7 +22,7 @@ export const CountDownBanner: FC<CountDownBannerProps> = ({ futureTimestamp }) =
       <div className={classNames.infoWrapper}>
         <Icon iconName="rays" size={32} />
         <Text as="p" variant="p2semi" style={{ maxWidth: '70%' }}>
-          Boost your RAYS 5x when you open a position
+          {countdownLabel}
         </Text>
       </div>
       <CountDown futureTimestamp={futureTimestamp} variant="countDownSmallGaps" />

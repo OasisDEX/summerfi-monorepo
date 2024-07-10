@@ -6,7 +6,9 @@ import {
   Text,
   WithArrow,
 } from '@summerfi/app-ui'
+import { EligibilityCondition } from '@summerfi/serverless-shared'
 import BigNumber from 'bignumber.js'
+import dayjs from 'dayjs'
 
 import { PageViewHandler } from '@/components/organisms/PageViewHandler/PageViewHandler'
 import { ProductPicker } from '@/components/organisms/ProductPicker/ProductPicker'
@@ -14,18 +16,44 @@ import { formatAsShorthandNumbers } from '@/helpers/formatters'
 import { fetchRays } from '@/server-handlers/rays'
 import systemConfigHandler from '@/server-handlers/system-config'
 
+const firstWeekTimestamp = dayjs('2024-06-18T11:00:00+02:00')
+
 interface OpenPositionPageProps {
   searchParams: {
     userAddress: string
   }
 }
 
+const weekBoosters = [5, 4, 3.5, 3, 2.5, 2, 1.5, 1.25]
+
 export default async function OpenPositionPage({ searchParams }: OpenPositionPageProps) {
-  const futureTimestamp = '2024-06-27T00:00:00'
+  const currentDate = dayjs()
+  const currentWeekDifference = currentDate.diff(firstWeekTimestamp, 'week')
+  const currentWeekEnd = firstWeekTimestamp
+    .add(currentWeekDifference + 1, 'week')
+    .toDate()
+    .toDateString()
+  const currentBooster = weekBoosters[currentWeekDifference]
+
   const systemConfig = await systemConfigHandler()
   const { userAddress } = searchParams
 
   const userRays = await fetchRays({ address: userAddress })
+
+  // if they dont have a position on summer, this flag will appear
+  const becomeSummerUserPoints = userRays.rays?.actionRequiredPoints.find(
+    (point) => point.type === EligibilityCondition.BECOME_SUMMER_USER,
+  )?.points
+
+  // if has open position, but will get more points after a while
+  const positionOpenTime = userRays.rays?.actionRequiredPoints.find(
+    (point) => point.type === EligibilityCondition.POSITION_OPEN_TIME,
+  )
+
+  const notAllRaysEligible =
+    userRays.rays &&
+    userRays.rays.eligiblePoints > 0 &&
+    userRays.rays.eligiblePoints !== userRays.rays.allPossiblePoints
 
   return (
     <div
@@ -36,29 +64,50 @@ export default async function OpenPositionPage({ searchParams }: OpenPositionPag
         marginBottom: 'var(--space-xxl)',
       }}
     >
-      {!!userRays.rays?.allPossiblePoints && (
+      {!!userRays.rays && (
         <Dial
-          value={0}
-          max={userRays.rays.allPossiblePoints * 5}
+          value={userRays.rays.eligiblePoints}
+          max={userRays.rays.allPossiblePoints}
           formatter={(value) => {
             if (value >= 10000) {
               return formatAsShorthandNumbers(new BigNumber(value.toFixed(0)), 0)
             }
 
-            return value.toFixed(0)
+            return value ? value.toFixed(0) : '0'
           }}
           subtext="Elligible"
           icon="rays"
         />
       )}
-      <Text
-        as="h2"
-        variant="h2"
-        style={{ marginTop: 'var(--space-xxl)', marginBottom: 'var(--space-xl)' }}
-      >
-        Earn $RAYS by opening a position
-      </Text>
-      <CountDownBanner futureTimestamp={futureTimestamp} />
+      {positionOpenTime ? (
+        <Text
+          as="h2"
+          variant="h2"
+          style={{ marginTop: 'var(--space-xxl)', marginBottom: 'var(--space-s)' }}
+        >
+          You&rsquo;ll soon qualify for all your $RAYS
+        </Text>
+      ) : (
+        <Text
+          as="h2"
+          variant="h2"
+          style={{ marginTop: 'var(--space-xxl)', marginBottom: 'var(--space-s)' }}
+        >
+          Open a position to qualify for {notAllRaysEligible ? 'all' : ''} your $RAYS
+        </Text>
+      )}
+      {currentBooster && !positionOpenTime && (
+        <CountDownBanner
+          futureTimestamp={currentWeekEnd}
+          countdownLabel={`Boost ${becomeSummerUserPoints ? `${becomeSummerUserPoints} $RAYS` : `your RAYS`} ${currentBooster}x when you open a position`}
+        />
+      )}
+      {positionOpenTime && (
+        <CountDownBanner
+          futureTimestamp={positionOpenTime.dueDate}
+          countdownLabel="Keep at least one position open for another"
+        />
+      )}
       <ProductPicker
         products={systemConfig.configRays.products}
         productHub={systemConfig.productHub.table}
