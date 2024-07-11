@@ -8,6 +8,6 @@ export enum TopClimbersTabs {
 export enum TopClimbersLabels {
   top_gainers_rank = 'Rank Gainers',
   top_gainers_points = 'Points Gainers',
-  top_gainers_rank_1000 = 'Rank Gainers (top 100)',
-  top_gainers_rank_100 = 'Rank Gainers (top 1000)',
+  top_gainers_rank_1000 = 'Rank Gainers (top 1000)',
+  top_gainers_rank_100 = 'Rank Gainers (top 100)',
 }
