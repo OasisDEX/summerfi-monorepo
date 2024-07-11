@@ -1,0 +1,66 @@
+import { publicActionReverseMirage } from 'reverse-mirage'
+import { createPublicClient, http, type Chain } from 'viem'
+import { arbitrum, base, mainnet, optimism } from 'viem/chains'
+
+import { IConfigurationProvider } from '@summerfi/configuration-provider'
+import type { IChainInfo } from '@summerfi/sdk-common'
+import {
+  IRpcConfig,
+  getRpcGatewayEndpoint,
+} from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
+import type { BlockchainClient } from '../types/BlockchainClient'
+import { IBlockchainClientProvider } from '../interfaces'
+
+/**
+ * RPC configuration for the RPC Gateway
+ */
+const rpcConfig: IRpcConfig = {
+  skipCache: false,
+  skipMulticall: false,
+  skipGraph: true,
+  stage: 'prod',
+  source: 'borrow-prod',
+}
+
+export class BlockchainnClientProvider implements IBlockchainClientProvider {
+  private readonly _blockchainClients: Record<number, BlockchainClient> = {}
+  private readonly _configProvider: IConfigurationProvider
+
+  constructor(params: { configProvider: IConfigurationProvider }) {
+    this._configProvider = params.configProvider
+    this._loadClients([mainnet, optimism, arbitrum, base])
+  }
+
+  public getBlockchainClient(params: { chainInfo: IChainInfo }): BlockchainClient {
+    const provider = this._blockchainClients[params.chainInfo.chainId]
+    if (!provider) {
+      throw new Error('Provider not found')
+    }
+    return provider
+  }
+
+  private _loadClients(chains: Chain[]) {
+    for (const chain of chains) {
+      const rpcGatewayUrl = this._configProvider.getConfigurationItem({ name: 'RPC_GATEWAY' })
+      if (!rpcGatewayUrl) {
+        throw new Error('RPC_GATEWAY not found')
+      }
+
+      const rpc = getRpcGatewayEndpoint(rpcGatewayUrl, chain.id, rpcConfig)
+      const transport = http(rpc, {
+        batch: true,
+        fetchOptions: {
+          method: 'POST',
+        },
+      })
+
+      this._blockchainClients[chain.id] = createPublicClient({
+        batch: {
+          multicall: true,
+        },
+        chain,
+        transport,
+      }).extend(publicActionReverseMirage)
+    }
+  }
+}

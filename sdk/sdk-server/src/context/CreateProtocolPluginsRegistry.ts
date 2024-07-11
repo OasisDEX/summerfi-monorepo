@@ -1,27 +1,11 @@
 import { ProtocolPluginsRecord, ProtocolPluginsRegistry } from '@summerfi/protocol-plugins'
 import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
-import { createPublicClient, http } from 'viem'
-import { mainnet } from 'viem/chains'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import {
-  IRpcConfig,
-  getRpcGatewayEndpoint,
-} from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
 import { ConfigurationProvider } from '@summerfi/configuration-provider'
 import { ITokensManager } from '@summerfi/tokens-common'
 import { IOracleManager } from '@summerfi/oracle-common'
 import { IAddressBookManager } from '@summerfi/address-book-common'
-
-/**
- * RPC configuration for the RPC Gateway
- */
-const rpcConfig: IRpcConfig = {
-  skipCache: false,
-  skipMulticall: false,
-  skipGraph: true,
-  stage: 'prod',
-  source: 'borrow-prod',
-}
+import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-provider'
 
 /**
  * Create the protocol plugins registry
@@ -34,37 +18,19 @@ const rpcConfig: IRpcConfig = {
  */
 export function createProtocolsPluginsRegistry(params: {
   configProvider: ConfigurationProvider
+  blokchainClientProvider: IBlockchainClientProvider
   tokensManager: ITokensManager
   oracleManager: IOracleManager
   swapManager: ISwapManager
   addressBookManager: IAddressBookManager
 }): IProtocolPluginsRegistry {
-  const { configProvider, addressBookManager, swapManager, tokensManager, oracleManager } = params
-  const chain = mainnet
-  const rpcGatewayUrl = configProvider.getConfigurationItem({ name: 'RPC_GATEWAY' })
-  if (!rpcGatewayUrl) {
-    throw new Error('RPC_GATEWAY not found')
-  }
-
-  const rpc = getRpcGatewayEndpoint(rpcGatewayUrl, chain.id, rpcConfig)
-  const transport = http(rpc, {
-    batch: true,
-    fetchOptions: {
-      method: 'POST',
-    },
-  })
-  const provider = createPublicClient({
-    batch: {
-      multicall: true,
-    },
-    chain,
-    transport,
-  })
+  const { blokchainClientProvider, addressBookManager, swapManager, tokensManager, oracleManager } =
+    params
 
   return new ProtocolPluginsRegistry({
     plugins: ProtocolPluginsRecord,
     context: {
-      provider,
+      provider: blokchainClientProvider,
       tokensManager,
       oracleManager,
       swapManager,

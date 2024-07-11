@@ -17,10 +17,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@summerfi/sdk-common": "workspace:*",
-    "@summerfi/sdk-server-common": "workspace:*",
-    "@types/node-fetch": "^2.6.11",
-    "node-fetch": "^2.7.0"
+    "@summerfi/sdk-common": "workspace:*"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

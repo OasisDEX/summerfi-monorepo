@@ -17,24 +17,30 @@ import { IAddressBookManager } from '@summerfi/address-book-common'
 import { AddressBookManagerFactory } from '@summerfi/address-book-service'
 import { EarnProtocolManagerFactory } from '@summerfi/earn-protocol-service'
 import type { IEarnProtocolManager } from '@summerfi/earn-protocol-common'
+import { BlockchainnClientProvider } from '@summerfi/blockchain-client-provider'
+import { AllowanceManagerFactory } from '@summerfi/allowance-service'
+import type { IAllowanceManager } from '@summerfi/allowance-common'
 
 export type SDKContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
 export type SDKAppContext = {
   addressBookManager: IAddressBookManager
   configProvider: IConfigurationProvider
+  blokchainClientProvider: BlockchainnClientProvider
   tokensManager: ITokensManager
   swapManager: ISwapManager
   oracleManager: IOracleManager
   protocolsRegistry: IProtocolPluginsRegistry
   protocolManager: IProtocolManager
   orderPlannerService: IOrderPlannerService
+  allowanceManager: IAllowanceManager
   earnProtocolManager: IEarnProtocolManager
 }
 
 // context for each request
 export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
   const configProvider = new ConfigurationProvider()
+  const blokchainClientProvider = new BlockchainnClientProvider({ configProvider })
   const addressBookManager = AddressBookManagerFactory.newAddressBookManager({ configProvider })
   const tokensManager = TokensManagerFactory.newTokensManager({ configProvider })
   const orderPlannerService = new OrderPlannerService()
@@ -42,16 +48,22 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
   const oracleManager = OracleManagerFactory.newOracleManager({ configProvider })
   const protocolsRegistry = createProtocolsPluginsRegistry({
     configProvider,
+    blokchainClientProvider,
     tokensManager,
     oracleManager,
     swapManager,
     addressBookManager,
   })
   const protocolManager = ProtocolManager.createWith({ pluginsRegistry: protocolsRegistry })
+  const allowanceManager = AllowanceManagerFactory.newAllowanceManager({
+    configProvider,
+    blockchainClientProvider: blokchainClientProvider,
+  })
   const earnProtocolManager = EarnProtocolManagerFactory.newEarnProtocolManager({ configProvider })
 
   return {
     configProvider,
+    blokchainClientProvider,
     addressBookManager,
     tokensManager,
     swapManager,
@@ -59,6 +71,7 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
     protocolsRegistry,
     protocolManager,
     orderPlannerService,
+    allowanceManager,
     earnProtocolManager,
   }
 }
