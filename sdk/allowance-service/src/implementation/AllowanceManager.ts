@@ -23,12 +23,10 @@ export class AllowanceManager implements IAllowanceManager {
     tokenAddress: IAddress
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
-    // TODO: replace with the ERC20 wrapper when it's available
-
     const calldata = encodeFunctionData({
       abi: erc20Abi,
       functionName: 'approve',
-      args: [params.fleetAddress.value, BigInt(params.amount.toString())],
+      args: [params.fleetAddress.value, BigInt(params.amount.toBaseUnit())],
     })
 
     return [
@@ -39,7 +37,7 @@ export class AllowanceManager implements IAllowanceManager {
           value: '0',
         },
         description:
-          'Approve spending ' +
+          'Approve spending of ' +
           params.amount.toString() +
           ' to Fleet at address: ' +
           params.tokenAddress.value,

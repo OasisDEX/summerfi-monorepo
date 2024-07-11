@@ -1,5 +1,4 @@
 import { IConfigurationProvider } from '@summerfi/configuration-provider'
-import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-provider'
 
 import { AllowanceManager } from './AllowanceManager'
 
@@ -10,7 +9,6 @@ import { AllowanceManager } from './AllowanceManager'
 export class AllowanceManagerFactory {
   public static newAllowanceManager(params: {
     configProvider: IConfigurationProvider
-    blockchainClientProvider: IBlockchainClientProvider
   }): AllowanceManager {
     return new AllowanceManager(params)
   }

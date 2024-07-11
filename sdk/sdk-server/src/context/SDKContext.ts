@@ -57,7 +57,6 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
   const protocolManager = ProtocolManager.createWith({ pluginsRegistry: protocolsRegistry })
   const allowanceManager = AllowanceManagerFactory.newAllowanceManager({
     configProvider,
-    blockchainClientProvider: blokchainClientProvider,
   })
   const earnProtocolManager = EarnProtocolManagerFactory.newEarnProtocolManager({ configProvider })
 
