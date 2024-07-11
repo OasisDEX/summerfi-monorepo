@@ -1,19 +1,18 @@
 import {
-  Token,
-  TokenAmount,
   Address,
-  type Maybe,
   ChainFamilyMap,
   PositionType,
+  Token,
+  TokenAmount,
+  type Maybe,
 } from '@summerfi/sdk-common/common'
 
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import { makeSDK, type Chain, type User } from '@summerfi/sdk-client'
+import { makeSDK, type Chain } from '@summerfi/sdk-client'
 import { CommonTokenSymbols } from '@summerfi/sdk-common/common/enums'
 import { ExternalPositionType, IImportPositionParameters, Order } from '@summerfi/sdk-common/orders'
+import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { ISimulation, SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
 
-import assert from 'assert'
 import {
   ILKType,
   MakerLendingPoolId,
@@ -22,6 +21,7 @@ import {
   isMakerLendingPool,
   isMakerProtocol,
 } from '@summerfi/protocol-plugins/plugins/maker'
+import assert from 'assert'
 import { Hex } from 'viem'
 import { TransactionUtils } from './utils/TransactionUtils'
 
@@ -47,7 +47,7 @@ describe.skip('Import Maker Position | SDK', () => {
     const walletAddress = Address.createFromEthereum({
       value: '0xbEf4befb4F230F43905313077e3824d7386E09F8',
     })
-    const user: User = await sdk.users.getUser({
+    const user = await sdk.users.getUser({
       chainInfo: chain.chainInfo,
       walletAddress: walletAddress,
     })

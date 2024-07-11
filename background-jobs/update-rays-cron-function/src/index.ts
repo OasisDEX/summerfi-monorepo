@@ -19,7 +19,7 @@ const LOCK_ID = 'update_points_lock'
 const LAST_RUN_ID = 'update_points_last_run'
 
 const FOURTEEN_DAYS_IN_MILLISECONDS = 14 * 24 * 60 * 60 * 1000
-const ONE_WEEK_IN_MILLISECONDS = 7 * 24 * 60 * 60 * 1000
+const ONE_WEEK_IN_SECONDS = 7 * 24 * 60 * 60
 
 enum UserMultiplier {
   PROTOCOL_BOOST = 'PROTOCOL_BOOST',
@@ -259,7 +259,7 @@ export const handler = async (
     const allUniqueUserAddresses = Array.from(allUniqueUsers)
 
     await checkMigrationEligibility(db, accruedPointsFromSnapshot)
-    await checkOpenedPositionEligibility(db, accruedPointsFromSnapshot)
+    await checkOpenedPositionEligibility(db, accruedPointsFromSnapshot, pointsStart)
     await insertAllMissingUsers(db, allUniqueUserAddresses)
 
     // Fetch all necessary data for all chunks at once
@@ -799,6 +799,7 @@ async function checkMigrationEligibility(db: Kysely<Database>, positionPoints: P
  *
  * @param {Kysely<Database>} db - The Kysely database instance.
  * @param {PositionPoints[]} positionPoints - An array of position points.
+ * @param {number} pointsStart - The timestamp when the points started (seconds).
  *
  * The function performs the following steps:
  * 1. Fetches all points distributions that have an associated eligibility condition but no associated position id.
@@ -813,6 +814,7 @@ async function checkMigrationEligibility(db: Kysely<Database>, positionPoints: P
 async function checkOpenedPositionEligibility(
   db: Kysely<Database>,
   positionPoints: PositionPoints,
+  pointsStart: number,
 ) {
   // get all position with net value >= 500 and created before 14 days ago, available in current snapshot
   const allEligiblePositionsFromPointsAccrual = positionPoints.filter((p) => {
@@ -863,6 +865,7 @@ async function checkOpenedPositionEligibility(
             const oldestEligiblePosition = eligiblePositionsFromPointsAccrual[0]
             const becomeSummerUserMultiplier = getBecomeSummerUserMultiplier(
               oldestEligiblePosition.positionCreated,
+              pointsStart,
             )
             const pointsDistributions = await transaction
               .selectFrom('pointsDistribution')
@@ -906,15 +909,17 @@ async function checkOpenedPositionEligibility(
 
 /**
  * Calculates the multiplier for becoming a summer user based on the position creation date.
+ * Multiplier depends on the number of weeks passed between the points start and position creation.
+ * If the poition was created before the points start, the multiplier is 5. ( this should not be the case as the users are already eligible).
  * @param positionCreated The timestamp (in seconds) of when the position was created.
+ * @param pointsStart The timestamp (in seconds) when the points started.
  * @returns The multiplier value.
  */
-function getBecomeSummerUserMultiplier(positionCreated: number) {
-  const positionCreatedDate = positionCreated * 1000
-  const currentDate = Date.now()
-  const weeksSinceCreated = Math.floor(
-    (currentDate - positionCreatedDate) / ONE_WEEK_IN_MILLISECONDS,
-  )
+function getBecomeSummerUserMultiplier(positionCreated: number, pointsStart: number) {
+  if (positionCreated < pointsStart) {
+    return 5
+  }
+  const weeksSinceCreated = Math.floor((positionCreated - pointsStart) / ONE_WEEK_IN_SECONDS)
 
   let multiplier = 1
 

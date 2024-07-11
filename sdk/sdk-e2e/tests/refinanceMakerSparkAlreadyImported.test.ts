@@ -1,58 +1,58 @@
 import {
+  Address,
+  AddressValue,
+  ChainFamilyMap,
   Percentage,
+  Position,
+  PositionType,
   Token,
   TokenAmount,
-  Position,
-  Address,
   type Maybe,
-  ChainFamilyMap,
-  AddressValue,
-  PositionType,
 } from '@summerfi/sdk-common/common'
 
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import { makeSDK, type Chain, type User, ProtocolClient } from '@summerfi/sdk-client'
+import { Deployments } from '@summerfi/core-contracts'
+import { DeploymentIndex } from '@summerfi/deployment-utils'
+import { ProtocolClient, makeSDK, type Chain } from '@summerfi/sdk-client'
 import { CommonTokenSymbols } from '@summerfi/sdk-common/common/enums'
-import { PositionsManager, Order, RefinanceParameters } from '@summerfi/sdk-common/orders'
+import { Order, PositionsManager, RefinanceParameters } from '@summerfi/sdk-common/orders'
+import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import { TransactionUtils } from './utils/TransactionUtils'
 import {
   decodeActionCalldata,
   decodePositionsManagerCalldata,
   decodeStrategyExecutorCalldata,
 } from '@summerfi/testing-utils'
-import { Deployments } from '@summerfi/core-contracts'
-import { DeploymentIndex } from '@summerfi/deployment-utils'
+import { TransactionUtils } from './utils/TransactionUtils'
 
-import { Hex } from 'viem'
-import assert from 'assert'
 import {
   EmodeType,
   FlashloanAction,
+  PositionCreatedAction,
   SendTokenAction,
   SetApprovalAction,
-  PositionCreatedAction,
 } from '@summerfi/protocol-plugins/plugins/common'
 import {
   ILKType,
+  MakerLendingPoolId,
   MakerPaybackAction,
+  MakerPosition,
   MakerPositionId,
   MakerWithdrawAction,
+  isMakerLendingPool,
   isMakerPositionId,
   isMakerProtocol,
-  isMakerLendingPool,
-  MakerPosition,
-  MakerLendingPoolId,
 } from '@summerfi/protocol-plugins/plugins/maker'
 import {
   SparkBorrowAction,
   SparkDepositAction,
-  isSparkPositionId,
-  isSparkLendingPoolId,
-  isSparkProtocol,
   SparkLendingPoolId,
   isSparkLendingPool,
+  isSparkLendingPoolId,
+  isSparkPositionId,
+  isSparkProtocol,
 } from '@summerfi/protocol-plugins/plugins/spark'
+import assert from 'assert'
+import { Hex } from 'viem'
 
 jest.setTimeout(300000)
 
@@ -85,7 +85,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     const walletAddress = Address.createFromEthereum({
       value: '0xbEf4befb4F230F43905313077e3824d7386E09F8',
     })
-    const user: User = await sdk.users.getUser({
+    const user = await sdk.users.getUser({
       chainInfo: chain.chainInfo,
       walletAddress: walletAddress,
     })
