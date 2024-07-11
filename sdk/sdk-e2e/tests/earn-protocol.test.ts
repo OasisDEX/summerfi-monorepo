@@ -87,18 +87,21 @@ describe.only('Earn Protocol Deposit', () => {
 
     // Send transaction
     console.log('transactions', transactions)
-    console.log('Sending transaction...', transactions[0].transaction)
 
-    const transactionUtils = new TransactionUtils({
-      rpcUrl: config.forkUrl,
-      walletPrivateKey: config.privateKey,
-      chain: base,
+    transactions.forEach(async (transaction, index) => {
+      console.log(`Sending transaction ${index}...`, transaction.description)
+
+      const transactionUtils = new TransactionUtils({
+        rpcUrl: config.forkUrl,
+        walletPrivateKey: config.privateKey,
+        chain: base,
+      })
+
+      const receipt = await transactionUtils.sendTransaction({
+        transaction: transaction.transaction,
+      })
+
+      console.log('Transaction sent:', receipt)
     })
-
-    const receipt = await transactionUtils.sendTransaction({
-      transaction: transactions[0].transaction,
-    })
-
-    console.log('Transaction sent:', receipt)
   })
 })
