@@ -1,9 +1,9 @@
-import { NetworkNames } from '@summerfi/serverless-shared'
+import { type TokenSymbolsList } from '@summerfi/app-types'
+import { type NetworkNames } from '@summerfi/serverless-shared'
 
 import { GenericTokenIcon } from '@/components/atoms/GenericTokenIcon/GenericTokenIcon'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { getToken, getTokenDisplayName, getTokenGuarded, tokensBySymbol } from '@/tokens/helpers'
-import { TokenSymbolsList } from '@/tokens/types'
 
 import classNames from '@/components/molecules/TokensGroup/TokensGroup.module.scss'
 

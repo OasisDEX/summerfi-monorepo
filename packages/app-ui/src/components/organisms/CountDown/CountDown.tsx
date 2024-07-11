@@ -1,9 +1,9 @@
-import { FC } from 'react'
+import { type FC } from 'react'
 
 import { CountDownItem } from '@/components/molecules/CountDownItem/CountDownItem'
 import { timeUntil } from '@/helpers/time-until'
 
-import classNames, { ClassNames } from '@/components/organisms/CountDown/CountDown.module.scss'
+import classNames, { type ClassNames } from '@/components/organisms/CountDown/CountDown.module.scss'
 
 interface CountDownProps {
   futureTimestamp: string

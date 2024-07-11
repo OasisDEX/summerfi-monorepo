@@ -1,9 +1,9 @@
 import { createElement, forwardRef } from 'react'
 
 import { getAtomClassList } from '@/components/atoms/getAtomClassList'
-import { AtomProps } from '@/components/atoms/types'
+import { type AtomProps } from '@/components/atoms/types'
 
-import classNames, { ClassNames } from '@/components/atoms/Text/Text.module.scss'
+import classNames, { type ClassNames } from '@/components/atoms/Text/Text.module.scss'
 
 export type TextAllowedHtmlTags =
   | 'address'

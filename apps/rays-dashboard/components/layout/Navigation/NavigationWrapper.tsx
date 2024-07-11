@@ -1,7 +1,8 @@
 'use client'
 
-import { FC, useEffect, useState } from 'react'
-import { Navigation, NavigationMenuPanelType } from '@summerfi/app-ui'
+import { type FC, useEffect, useState } from 'react'
+import { type NavigationMenuPanelType } from '@summerfi/app-types'
+import { Navigation } from '@summerfi/app-ui'
 import { useConnectWallet } from '@web3-onboard/react'
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'

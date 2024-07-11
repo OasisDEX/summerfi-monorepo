@@ -1,5 +1,6 @@
 'use client'
 
+import { type LeaderboardItem } from '@summerfi/app-types'
 import { Button, ProxyLinkComponent, Text } from '@summerfi/app-ui'
 import {
   IconArrowDown,
@@ -12,7 +13,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 import { trackButtonClick } from '@/helpers/mixpanel'
-import { LeaderboardItem } from '@/types/leaderboard'
 
 import classNames from '@/components/organisms/Leaderboard/Leaderboard.module.scss'
 

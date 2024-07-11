@@ -1,9 +1,9 @@
 'use client'
 
-import { FC } from 'react'
+import { type FC } from 'react'
+import { type IconNamesList, type TokenSymbolsList } from '@summerfi/app-types'
 
 import { getTokenGuarded } from '@/tokens/helpers'
-import { IconNamesList, TokenSymbolsList } from '@/tokens/types'
 
 import * as iconProxies from './iconsProxy'
 

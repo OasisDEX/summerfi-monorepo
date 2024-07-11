@@ -1,8 +1,8 @@
+import { type NavigationMenuPanelIcon } from '@summerfi/app-types'
 import classNames from 'classnames'
 import Image from 'next/image'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
-import { NavigationMenuPanelIcon } from '@/components/layout/Navigation/Navigation.types'
 import { TokensGroup } from '@/components/molecules/TokensGroup/TokensGroup'
 
 import navigationMenuDropdownContentIconStyles from './NavigationMenuDropdownContentIcon.module.scss'

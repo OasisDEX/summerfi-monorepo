@@ -1,12 +1,12 @@
 'use client'
 
+import { type LeaderboardResponse } from '@summerfi/app-types'
 import { Text } from '@summerfi/app-ui'
 import { IconChevronDown, IconChevronUp, IconClockHour3 } from '@tabler/icons-react'
 import { useToggle } from 'usehooks-ts'
 
 import { TopClimbers } from '@/components/molecules/TopClimbers/TopClimbers'
 import { climbersCount } from '@/constants/leaderboard'
-import { LeaderboardResponse } from '@/types/leaderboard'
 
 import topClimbersStyles from './TopClimbers.module.scss'
 

@@ -1,12 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-
 import {
-  NavigationMenuPanelLinkType,
-  NavigationMenuPanelType,
-  WithNavigationModules,
-} from '@/components/layout/Navigation/Navigation.types'
+  type NavigationMenuPanelLinkType,
+  type NavigationMenuPanelType,
+  type WithNavigationModules,
+} from '@summerfi/app-types'
+
 import { NavigationMenuDropdown } from '@/components/layout/Navigation/NavigationMenuDropdown'
 import { NavigationMenuLink } from '@/components/layout/Navigation/NavigationMenuLink'
 import { NavigationMenuPanel } from '@/components/layout/Navigation/NavigationMenuPanel'

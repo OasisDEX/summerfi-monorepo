@@ -1,10 +1,10 @@
 'use client'
 
-import { FC } from 'react'
+import { type FC } from 'react'
 import loadable from '@loadable/component'
 
 import classNames, {
-  ClassNames,
+  type ClassNames,
 } from '@/components/atoms/GenericTokenIcon/GenericTokenIcon.module.scss'
 
 interface GenericTokenIconProps {

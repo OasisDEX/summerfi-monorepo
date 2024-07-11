@@ -1,9 +1,9 @@
+import { type NavigationMenuPanelProps } from '@summerfi/app-types'
 import classNames from 'classnames'
 import Link from 'next/link'
 
 import { ProxyLinkComponent } from '@/components/atoms/ProxyLinkComponent/ProxyLinkComponent'
 import { Text } from '@/components/atoms/Text/Text'
-import { NavigationMenuPanelProps } from '@/components/layout/Navigation/Navigation.types'
 
 import navigationMenuStyles from '@/components/layout/Navigation/NavigationMenu.module.scss'
 

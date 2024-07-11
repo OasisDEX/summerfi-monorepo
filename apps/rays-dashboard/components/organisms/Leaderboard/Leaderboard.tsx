@@ -1,11 +1,11 @@
 'use client'
 
-import { FC } from 'react'
+import { type FC } from 'react'
 import { SkeletonLine, Table, Text } from '@summerfi/app-ui'
 
 import {
   leaderboardColumns,
-  mapLeaderboardColumns,
+  type mapLeaderboardColumns,
 } from '@/components/organisms/Leaderboard/columns'
 
 import classNames from '@/components/organisms/Leaderboard/Leaderboard.module.scss'

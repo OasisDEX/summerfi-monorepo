@@ -1,6 +1,6 @@
 'use client'
 
-import { FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { BannerCard, INTERNAL_LINKS, Text } from '@summerfi/app-ui'
 
 import automationIcon from '@/public/img/banners/boost-banner-1.svg'

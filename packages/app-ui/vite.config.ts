@@ -73,6 +73,7 @@ export default defineConfig({
       external: [
         'react',
         'react/jsx-runtime',
+        'next',
         'next/link',
         'next/image',
         'lodash',

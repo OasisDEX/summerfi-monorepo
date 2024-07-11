@@ -1,13 +1,13 @@
 /* eslint-disable  no-mixed-operators */
-import { FC, ReactNode } from 'react'
+import { type FC, type ReactNode } from 'react'
+import { type IconNamesList } from '@summerfi/app-types'
 import classNames from 'classnames'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
-import { IconNamesList } from '@/tokens/types'
 
 import dialStyles, {
-  ClassNames as DialClassnames,
+  type ClassNames as DialClassnames,
 } from '@/components/molecules/Dial/Dial.module.scss'
 
 interface DialProps {

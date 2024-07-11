@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { type FC } from 'react'
 import Image from 'next/image'
 
 import { Pill } from '@/components/atoms/Pill/Pill'

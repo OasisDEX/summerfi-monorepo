@@ -1,5 +1,6 @@
-import { FC } from 'react'
-import type { AutomationFeature } from '@summerfi/app-db'
+import { type FC } from 'react'
+import { type AutomationFeature } from '@summerfi/app-db'
+import { type TokenSymbolsList } from '@summerfi/app-types'
 import {
   AutomationIcon,
   Button,
@@ -8,12 +9,11 @@ import {
   ProxyLinkComponent,
   Text,
   TokensGroup,
-  TokenSymbolsList,
 } from '@summerfi/app-ui'
 import Link from 'next/link'
 
-import { NetworkNames, networksByName } from '@/constants/networks-list'
-import { LendingProtocolConfig } from '@/helpers/lending-protocols-configs'
+import { type NetworkNames, networksByName } from '@/constants/networks-list'
+import { type LendingProtocolConfig } from '@/helpers/lending-protocols-configs'
 import { trackButtonClick } from '@/helpers/mixpanel'
 
 import classNames from '@/components/molecules/ProductCard/ProductCard.module.scss'

@@ -1,9 +1,9 @@
 import React from 'react'
 import classNames from 'classnames'
 
-import { Text, TextAllowedHtmlTags } from '@/components/atoms/Text/Text'
+import { Text, type TextAllowedHtmlTags } from '@/components/atoms/Text/Text'
 
-import { ClassNames } from '@/components/atoms/Text/Text.module.scss'
+import { type ClassNames } from '@/components/atoms/Text/Text.module.scss'
 import withArrowStyles from '@/components/atoms/WithArrow/WithArrow.module.scss'
 
 export function WithArrow({

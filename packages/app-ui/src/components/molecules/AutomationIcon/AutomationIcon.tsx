@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react'
+import { type FC, type ReactNode } from 'react'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'

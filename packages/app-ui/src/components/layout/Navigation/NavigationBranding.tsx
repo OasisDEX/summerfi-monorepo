@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { type FC } from 'react'
 import classNames from 'classnames'
 
 import navigationStyles from '@/components/layout/Navigation/Navigation.module.scss'

@@ -1,5 +1,6 @@
 'use client'
-import { FC, useEffect, useState } from 'react'
+import { type FC, useEffect, useState } from 'react'
+import { type RaysApiResponse } from '@summerfi/app-types'
 import { Icon, Text } from '@summerfi/app-ui'
 import { useConnectWallet } from '@web3-onboard/react'
 import BigNumber from 'bignumber.js'
@@ -7,7 +8,6 @@ import Link from 'next/link'
 
 import { basePath } from '@/helpers/base-path'
 import { formatCryptoBalance } from '@/helpers/formatters'
-import { RaysApiResponse } from '@/server-handlers/rays'
 
 import raysCountComponentStyles from './RaysCountComponent.module.scss'
 

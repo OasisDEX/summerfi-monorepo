@@ -1,7 +1,6 @@
+import { type RaysApiResponse } from '@summerfi/app-types'
 import { Card, EXTERNAL_LINKS, Icon, Text, Tooltip } from '@summerfi/app-ui'
 import Link from 'next/link'
-
-import { RaysApiResponse } from '@/server-handlers/rays'
 
 import classNames from '@/components/molecules/CriteriaList/CriteriaList.module.scss'
 

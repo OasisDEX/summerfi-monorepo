@@ -3,9 +3,8 @@
   "version": "0.0.1",
   "license": "Apache-2.0",
   "scripts": {
-    "dev": "dotenv -e ../../.env -e ../../.env.local -- pnpm get-config-types && dotenv -e ../../.env -e ../../.env.local -- next dev -p 3001",
-    "build": "dotenv -e ../../.env -e ../../.env.local -- pnpm get-config-types && dotenv -e ../../.env -e ../../.env.local -- next build",
-    "get-config-types": "node scripts/get-config-types.js && node scripts/get-rays-config-types.js",
+    "dev": "dotenv -e ../../.env -e ../../.env.local -- next dev -p 3001",
+    "build": "dotenv -e ../../.env -e ../../.env.local -- next build",
     "start": "next start -p 3001",
     "lint": "eslint ."
   },
@@ -15,6 +14,7 @@
     "@loadable/component": "^5.16.4",
     "@prisma/nextjs-monorepo-workaround-plugin": "^5.15.1",
     "@summerfi/app-db": "workspace:*",
+    "@summerfi/app-types": "workspace:*",
     "@summerfi/app-ui": "workspace:*",
     "@summerfi/rays-db": "workspace:*",
     "@summerfi/serverless-shared": "workspace:*",
@@ -33,14 +33,14 @@
     "dayjs": "^1.11.11",
     "include-media": "2.0.0",
     "lodash": "^4.17.21",
-    "mixpanel": "^0.18.0",
     "mixpanel-browser": "^2.53.0",
-    "next": "^14.2.4",
+    "mixpanel": "^0.18.0",
     "next-intl": "^3.15.2",
+    "next": "^14.2.4",
     "pino-pretty": "^11.2.1",
-    "react": "^18.3.1",
     "react-awesome-animated-number": "^1.0.13",
     "react-dom": "^18.3.1",
+    "react": "^18.3.1",
     "usehooks-ts": "^3.1.0"
   },
   "devDependencies": {
