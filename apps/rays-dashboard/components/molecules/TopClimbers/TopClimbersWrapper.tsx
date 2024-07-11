@@ -1,23 +1,29 @@
 'use client'
 
-import { type LeaderboardResponse } from '@summerfi/app-types'
+import { type LeaderboardResponse, MixpanelEventTypes } from '@summerfi/app-types'
 import { Text } from '@summerfi/app-ui'
 import { IconChevronDown, IconChevronUp, IconClockHour3 } from '@tabler/icons-react'
 import { useToggle } from 'usehooks-ts'
 
 import { TopClimbers } from '@/components/molecules/TopClimbers/TopClimbers'
 import { climbersCount } from '@/constants/leaderboard'
+import { trackEvent } from '@/helpers/mixpanel'
 
 import topClimbersStyles from './TopClimbers.module.scss'
 
 export const TopClimbersWrapper = ({ topClimbers }: { topClimbers?: LeaderboardResponse }) => {
   const [topClimbersOpen, toggleTopClimbers] = useToggle(false)
 
+  const trackedTopClimbers = () => {
+    trackEvent(MixpanelEventTypes.RaysTopClimbers, { action: topClimbersOpen ? 'close' : 'open' })
+    toggleTopClimbers()
+  }
+
   return topClimbers ? (
     <div className={topClimbersStyles.wrapper}>
       <div
         className={`${topClimbersStyles.flexRowCenter} ${topClimbersStyles.clickableHeader}`}
-        onClick={toggleTopClimbers}
+        onClick={trackedTopClimbers}
       >
         <Text as="h5" variant="h5" className={topClimbersStyles.wrapperTitle}>
           Top {climbersCount} Biggest Climbers
@@ -33,7 +39,7 @@ export const TopClimbersWrapper = ({ topClimbers }: { topClimbers?: LeaderboardR
       <TopClimbers
         topClimbers={topClimbers}
         topClimbersOpen={topClimbersOpen}
-        toggleTopClimbers={toggleTopClimbers}
+        toggleTopClimbers={trackedTopClimbers}
       />
     </div>
   ) : null
