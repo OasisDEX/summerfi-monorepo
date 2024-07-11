@@ -101,6 +101,7 @@ describe.only('Earn Protocol Deposit', () => {
 
       const receipt = await transactionUtils.sendTransaction({
         transaction: transaction.transaction,
+        waitForConfirmation: true,
       })
 
       console.log('Transaction sent:', receipt)
