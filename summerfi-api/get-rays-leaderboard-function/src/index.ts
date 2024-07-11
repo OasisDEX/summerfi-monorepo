@@ -14,6 +14,7 @@ export const queryParamsSchema = z.object({
   userAddress: z.string().optional().default(''),
   sortMethod: z
     .union([
+      z.literal('top_gainers'), // deprecated, use top_gainers_rank
       z.literal('top_gainers_rank'),
       z.literal('top_gainers_points'),
       z.literal('top_gainers_rank_1000'),
@@ -60,6 +61,7 @@ export const handler = async (
       eb.or(
         {
           top_gainers_rank: [eb('totalPoints', '>', '2000')],
+          top_gainers: [eb('totalPoints', '>', '2000')],
           top_gainers_rank_1000: [
             eb.and([eb('rank', '<=', '1000'), eb(castedRank22h, '<=', '1000')]),
           ],
@@ -76,6 +78,7 @@ export const handler = async (
     )
     .orderBy(() => {
       return {
+        top_gainers: sql`rank_22h - rank DESC`,
         top_gainers_rank: sql`rank_22h - rank DESC`,
         top_gainers_rank_1000: sql`rank_22h - rank DESC`,
         top_gainers_rank_100: sql`rank_22h - rank DESC`,
