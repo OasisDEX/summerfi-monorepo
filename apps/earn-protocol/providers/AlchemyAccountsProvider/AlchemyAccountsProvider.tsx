@@ -1,5 +1,5 @@
 'use client'
-import { type PropsWithChildren } from 'react'
+import { type FC, type PropsWithChildren } from 'react'
 import {
   AlchemyAccountProvider,
   type AlchemyAccountsProviderProps,
@@ -7,15 +7,12 @@ import {
 
 import { config, queryClient } from './config'
 
-export const Providers = ({
-  initialState,
-  children,
-}: PropsWithChildren<{
-  initialState?: AlchemyAccountsProviderProps['initialState']
-}>) => {
-  return (
-    <AlchemyAccountProvider config={config} queryClient={queryClient} initialState={initialState}>
-      {children}
-    </AlchemyAccountProvider>
-  )
-}
+export const AlchemyAccountsProvider: FC<
+  PropsWithChildren<{
+    initialState?: AlchemyAccountsProviderProps['initialState']
+  }>
+> = ({ initialState, children }) => (
+  <AlchemyAccountProvider config={config} queryClient={queryClient} initialState={initialState}>
+    {children}
+  </AlchemyAccountProvider>
+)

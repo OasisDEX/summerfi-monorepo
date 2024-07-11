@@ -7,7 +7,7 @@ import { getLocale, getMessages } from 'next-intl/server'
 
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
 import { fontFtPolar, fontInter } from '@/helpers/fonts'
-import { Providers } from '@/providers/AlchemyAccountsProvider/AlchemyAccountsProvider'
+import { AlchemyAccountsProvider } from '@/providers/AlchemyAccountsProvider/AlchemyAccountsProvider'
 import { config } from '@/providers/AlchemyAccountsProvider/config'
 
 export const metadata: Metadata = {
@@ -20,8 +20,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   const messages = await getMessages()
 
-  // hydrate the initial state on the client
-  const initialState = cookieToInitialState(config, headers().get('cookie') ?? undefined)
+  const accountKitInitialState = cookieToInitialState(config, headers().get('cookie') ?? undefined)
 
   return (
     <html lang={locale}>
@@ -30,9 +29,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body className={`${fontFtPolar.variable} ${fontInter.variable}`}>
         <NextIntlClientProvider messages={messages}>
-          <Providers initialState={initialState}>
+          <AlchemyAccountsProvider initialState={accountKitInitialState}>
             <MasterPage>{children}</MasterPage>
-          </Providers>
+          </AlchemyAccountsProvider>
         </NextIntlClientProvider>
       </body>
     </html>
