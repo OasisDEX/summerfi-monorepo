@@ -82,7 +82,7 @@ export const handler = async (
         top_gainers_rank: sql`rank_22h - rank DESC`,
         top_gainers_rank_1000: sql`rank_22h - rank DESC`,
         top_gainers_rank_100: sql`rank_22h - rank DESC`,
-        top_gainers_points: sql`total_points - points_22h DESC`,
+        top_gainers_points: sql`points_22h DESC`,
         default: sql`total_points DESC`,
       }[sortMethod || 'default']
     })
