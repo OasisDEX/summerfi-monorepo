@@ -135,13 +135,30 @@ export const TopClimbers = ({
             </Text>
           </Link>
           <div className={topClimbersStyles.flexRowCenter}>
-            {topClimbersTab !== TopClimbersTabs.top_gainers_points && (
+            {topClimbersTab === TopClimbersTabs.top_gainers_points ? (
               <Text
                 variant="p4"
                 className={`${topClimbersStyles.topClimbersListRankChangeInfo} ${topClimbersStyles.rankChangeInfo}`}
               >
-                {entry.rank22h} <IconArrowRight size={10} style={{ marginBottom: '3px' }} />{' '}
-                {entry.rank}
+                {formatAsShorthandNumbers(
+                  new BigNumber(Number(entry.totalPoints) - Number(entry.points22h)),
+                  2,
+                )}{' '}
+                <IconArrowRight size={10} style={{ marginBottom: '3px' }} />{' '}
+                {formatAsShorthandNumbers(new BigNumber(entry.totalPoints), 2)}
+              </Text>
+            ) : (
+              <Text
+                variant="p4"
+                className={`${topClimbersStyles.topClimbersListRankChangeInfo} ${topClimbersStyles.rankChangeInfo}`}
+              >
+                {Number(entry.rank22h) > 10000
+                  ? formatAsShorthandNumbers(new BigNumber(entry.rank22h), 0)
+                  : entry.rank22h}
+                <IconArrowRight size={10} style={{ marginBottom: '3px' }} />{' '}
+                {Number(entry.rank) > 10000
+                  ? formatAsShorthandNumbers(new BigNumber(entry.rank), 0)
+                  : entry.rank}
               </Text>
             )}
             {topClimbersTab !== TopClimbersTabs.top_gainers_points && (
