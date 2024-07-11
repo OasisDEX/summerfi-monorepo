@@ -36,7 +36,6 @@ describe('Earn Protocol Service', () => {
     const transactionInfo = await allowanceManager.getAllowance({
       chainInfo,
       fleetAddress,
-      tokenAddress,
       amount: tokenAmount,
     })
 

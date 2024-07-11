@@ -22,7 +22,7 @@ const DAI = Token.createFrom({
 
 /** TEST CONFIG */
 const config = {
-  SDKApiUrl: 'https://h6bwee4lvb.execute-api.us-east-1.amazonaws.com/api/sdk',
+  SDKApiUrl: process.env.SDK_API_URL,
   forkUrl: 'https://virtual.base.rpc.tenderly.co/2916e1c7-7ddd-4cd2-b926-449ce4eb2f44',
   walletAddress: process.env.WALLET_ADDRESS,
   privateKey: process.env.DEPLOYER_PRIVATE_KEY,
@@ -31,9 +31,12 @@ const config = {
   }),
 }
 
-describe.skip('Earn Protocol Deposit', () => {
+describe.only('Earn Protocol Deposit', () => {
   it('should deposit', async () => {
     // SDK
+    if (!config.SDKApiUrl) {
+      throw new Error('Invalid SDK_API_URL')
+    }
     const sdk = makeSDK({
       apiURL: config.SDKApiUrl,
     })
@@ -46,9 +49,6 @@ describe.skip('Earn Protocol Deposit', () => {
     assert(chain, 'Chain not found')
     expect(chain.chainInfo.chainId).toEqual(chainInfo.chainId)
 
-    if (!isHex(config.privateKey!)) {
-      throw new Error('Invalid DEPLOYER_PRIVATE_KEY')
-    }
     if (!isAddress(config.walletAddress!)) {
       throw new Error('Invalid WALLET_ADDRESS')
     }
@@ -60,7 +60,7 @@ describe.skip('Earn Protocol Deposit', () => {
     })
 
     expect(user).toBeDefined()
-    expect(user.wallet.address).toEqual(config.walletAddress)
+    expect(user.wallet.address.value).toEqual(config.walletAddress)
     expect(user.chainInfo).toEqual(chain.chainInfo)
 
     // Earn Protocol Manager
@@ -86,7 +86,11 @@ describe.skip('Earn Protocol Deposit', () => {
     // Send transaction
     console.log('transactions', transactions)
 
-    transactions.forEach(async (transaction, index) => {
+    for (const [index, transaction] of transactions.entries()) {
+      if (!isHex(config.privateKey)) {
+        throw new Error('Invalid DEPLOYER_PRIVATE_KEY')
+      }
+
       console.log(`Sending transaction ${index}...`, transaction.description)
 
       const transactionUtils = new TransactionUtils({
@@ -100,6 +104,6 @@ describe.skip('Earn Protocol Deposit', () => {
       })
 
       console.log('Transaction sent:', receipt)
-    })
+    }
   })
 })

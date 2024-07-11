@@ -19,7 +19,6 @@ export interface IAllowanceManager {
   getAllowance(params: {
     chainInfo: IChainInfo
     fleetAddress: IAddress
-    tokenAddress: IAddress
     amount: ITokenAmount
   }): Promise<TransactionInfo[]>
 }

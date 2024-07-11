@@ -58,7 +58,10 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
   const allowanceManager = AllowanceManagerFactory.newAllowanceManager({
     configProvider,
   })
-  const earnProtocolManager = EarnProtocolManagerFactory.newEarnProtocolManager({ configProvider })
+  const earnProtocolManager = EarnProtocolManagerFactory.newEarnProtocolManager({
+    configProvider,
+    allowanceManager,
+  })
 
   return {
     configProvider,

@@ -1273,6 +1273,12 @@ importers:
 
   sdk/earn-protocol-service:
     dependencies:
+      '@summerfi/allowance-common':
+        specifier: workspace:^
+        version: link:../allowance-common
+      '@summerfi/allowance-service':
+        specifier: workspace:*
+        version: link:../allowance-service
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
@@ -18560,6 +18566,10 @@ packages:
 
   /dateformat@4.6.3:
     resolution: {integrity: sha512-2P0p0pFGzHS5EMnhdxQi7aJN+iMheud0UhG4dlE1DLAlvL8JHjJJTX/CSm4JXwV0Ka5nGk3zC5mcb5bUQUxxMA==}
+    dev: false
+
+  /dayjs@1.11.11:
+    resolution: {integrity: sha512-okzr3f11N6WuqYtZSvm+F776mB41wRZMhKP+hc34YdW+KmtYYK9iqvHSwo2k9FEH3fhGXvOPV6yz2IcSrfRUDg==}
     dev: false
 
   /de-indent@1.0.2:

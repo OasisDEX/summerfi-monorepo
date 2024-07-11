@@ -20,7 +20,6 @@ export class AllowanceManager implements IAllowanceManager {
   async getAllowance(params: {
     chainInfo: IChainInfo
     fleetAddress: IAddress
-    tokenAddress: IAddress
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
     const calldata = encodeFunctionData({
@@ -32,7 +31,7 @@ export class AllowanceManager implements IAllowanceManager {
     return [
       {
         transaction: {
-          target: params.tokenAddress,
+          target: params.amount.token.address,
           calldata: calldata,
           value: '0',
         },
@@ -40,7 +39,7 @@ export class AllowanceManager implements IAllowanceManager {
           'Approve spending of ' +
           params.amount.toString() +
           ' to Fleet at address: ' +
-          params.tokenAddress.value,
+          params.fleetAddress.value,
       },
     ]
   }
