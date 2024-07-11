@@ -1,4 +1,4 @@
-import { type LeaderboardResponse } from '@summerfi/app-types'
+import { type LeaderboardResponse, MixpanelEventTypes } from '@summerfi/app-types'
 import { Button, SkeletonLine, Text } from '@summerfi/app-ui'
 import { IconArrowRight, IconArrowUpRight, IconTrophyFilled } from '@tabler/icons-react'
 import { useConnectWallet } from '@web3-onboard/react'
@@ -12,7 +12,7 @@ import {
 } from '@/components/molecules/TopClimbers/TopClimbers.types'
 import { climbersCount } from '@/constants/leaderboard'
 import { formatAddress, formatAsShorthandNumbers } from '@/helpers/formatters'
-import { trackButtonClick } from '@/helpers/mixpanel'
+import { trackButtonClick, trackEvent } from '@/helpers/mixpanel'
 
 import topClimbersStyles from './TopClimbers.module.scss'
 
@@ -31,6 +31,11 @@ export const TopClimbers = ({
 }) => {
   const [{ wallet }] = useConnectWallet()
   const currentPath = usePathname()
+
+  const trackedTopClimbersTab = (tab: TopClimbersTabs) => {
+    trackEvent(MixpanelEventTypes.RaysTopClimbers, { tab })
+    setTopClimbersTab(tab)
+  }
 
   const trackedPeekTopClimbers = (userAddress: string) => () => {
     toggleTopClimbers()
@@ -55,7 +60,7 @@ export const TopClimbers = ({
         <Button
           variant={topClimbersTab === tab ? 'primarySmall' : 'secondarySmall'}
           key={tab}
-          onClick={() => setTopClimbersTab(tab as TopClimbersTabs)}
+          onClick={() => trackedTopClimbersTab(tab as TopClimbersTabs)}
         >
           {TopClimbersLabels[tab].replace('Biggest', '')}
         </Button>
