@@ -1,11 +1,12 @@
-import { ChainInfoDataSchema, IChainInfo } from '../common/interfaces/IChainInfo'
-import { IWallet, WalletDataSchema } from '../common/interfaces/IWallet'
 import { z } from 'zod'
+import { IPrintable } from '../../common'
+import { ChainInfoDataSchema, IChainInfo } from '../../common/interfaces/IChainInfo'
+import { IWallet, WalletDataSchema } from '../../common/interfaces/IWallet'
 
 /**
  * Represents a user of the system connected with a wallet on a particular chain
  */
-export interface IUser extends IUserData {
+export interface IUser extends IUserData, IPrintable {
   /** The wallet of the user */
   readonly wallet: IWallet
   /** The chain the user is connected to */

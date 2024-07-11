@@ -1,10 +1,10 @@
-import { Maybe } from '@summerfi/sdk-common/common'
-import { IEarnProtocolManagerClient } from '../interfaces/IEarnProtocolManagerClient'
 import { IAddress, IChainInfo } from '@summerfi/sdk-common'
-import { FleetClient } from './FleetClient'
-import { IFleetClient } from '../interfaces/IFleetClient'
+import { Maybe } from '@summerfi/sdk-common/common'
+import { IEarnProtocolFleetClient } from '../interfaces/IEarnProtocolFleetClient'
+import { IEarnProtocolManagerClient } from '../interfaces/IEarnProtocolManagerClient'
 import { IRPCClient } from '../interfaces/IRPCClient'
 import { RPCMainClientType } from '../rpc/SDKMainClient'
+import { EarnProtocolFleetClient } from './EarnProtocolFleetClient'
 
 /**
  * @name EarnProtocolManagerClient
@@ -20,9 +20,9 @@ export class EarnProtocolManagerClient extends IRPCClient implements IEarnProtoc
   }
 
   /** @see IEarnProtocolManagerClient */
-  public getFleet(params: { address: IAddress }): Maybe<IFleetClient> {
-    return new FleetClient({
-      ...params,
+  public getFleet(params: { address: IAddress }): Maybe<IEarnProtocolFleetClient> {
+    return new EarnProtocolFleetClient({
+      address: params.address,
       rpcClient: this.rpcClient,
       chainInfo: this.chainInfo,
     })

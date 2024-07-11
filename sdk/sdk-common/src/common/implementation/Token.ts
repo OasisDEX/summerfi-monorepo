@@ -1,11 +1,11 @@
-import { IToken, ITokenData } from '../interfaces/IToken'
 import { SerializationService } from '../../services/SerializationService'
+import { IToken, ITokenData } from '../interfaces/IToken'
 import { Address } from './Address'
 import { ChainInfo } from './ChainInfo'
 
 /**
  * @name Token
- * @see ITokenData
+ * @see IToken
  */
 export class Token implements IToken {
   readonly chainInfo: ChainInfo

@@ -1,23 +1,3 @@
-import { makeSDK, type Chain, type User } from '@summerfi/sdk-client'
-import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
-import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
-import {
-  AddressValue,
-  CommonTokenSymbols,
-  ISimulation,
-  Percentage,
-  TokenAmount,
-  Address,
-  type Maybe,
-  ChainFamilyMap,
-  PositionType,
-  IToken,
-  SimulationType,
-} from '@summerfi/sdk-common'
-import { PositionsManager, Order, RefinanceParameters } from '@summerfi/sdk-common/orders'
-import assert from 'assert'
-import { TransactionUtils } from './utils/TransactionUtils'
-import { Hex } from 'viem'
 import {
   AaveV3LendingPoolId,
   AaveV3Position,
@@ -26,6 +6,26 @@ import {
   isAaveV3LendingPoolId,
   isAaveV3Protocol,
 } from '@summerfi/protocol-plugins'
+import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
+import { makeSDK, type Chain } from '@summerfi/sdk-client'
+import {
+  Address,
+  AddressValue,
+  ChainFamilyMap,
+  CommonTokenSymbols,
+  ISimulation,
+  IToken,
+  Percentage,
+  PositionType,
+  SimulationType,
+  TokenAmount,
+  type Maybe,
+} from '@summerfi/sdk-common'
+import { Order, PositionsManager, RefinanceParameters } from '@summerfi/sdk-common/orders'
+import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
+import assert from 'assert'
+import { Hex } from 'viem'
+import { TransactionUtils } from './utils/TransactionUtils'
 
 jest.setTimeout(300000)
 
@@ -66,7 +66,7 @@ describe.skip('Refinance AaveV3 -> AaveV3 | SDK', () => {
     const walletAddress = Address.createFromEthereum({
       value: config.walletAddress as AddressValue,
     })
-    const user: User = await sdk.users.getUser({
+    const user = await sdk.users.getUser({
       chainInfo: chain.chainInfo,
       walletAddress: walletAddress,
     })

@@ -9,12 +9,18 @@ import { Address } from './Address'
 export class Wallet implements IWallet {
   readonly address: Address
 
+  /** Factory method */
+  static createFrom(params: IWalletData): Wallet {
+    return new Wallet(params)
+  }
+
+  /** Sealed constructor */
   private constructor(params: IWalletData) {
     this.address = Address.createFrom(params.address)
   }
 
-  static createFrom(params: { address: Address }): Wallet {
-    return new Wallet({ address: params.address })
+  equals(wallet: Wallet): boolean {
+    return this.address.equals(wallet.address)
   }
 
   toString(): string {

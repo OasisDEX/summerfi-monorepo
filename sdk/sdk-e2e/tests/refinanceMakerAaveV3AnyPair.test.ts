@@ -1,27 +1,29 @@
 import {
-  Percentage,
-  TokenAmount,
   Address,
-  type Maybe,
   ChainFamilyMap,
+  Percentage,
   PositionType,
+  TokenAmount,
+  type Maybe,
 } from '@summerfi/sdk-common/common'
 
-import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
-import { ProtocolClient, makeSDK, type Chain, type User } from '@summerfi/sdk-client'
+import { ProtocolClient, makeSDK, type Chain } from '@summerfi/sdk-client'
 import {
-  PositionsManager,
-  Order,
-  RefinanceParameters,
   ExternalPositionType,
+  Order,
+  PositionsManager,
+  RefinanceParameters,
 } from '@summerfi/sdk-common/orders'
+import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
 import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { TransactionUtils } from './utils/TransactionUtils'
 
-import { Hex } from 'viem'
-import assert from 'assert'
+import {
+  AaveV3LendingPoolId,
+  isAaveV3LendingPoolId,
+  isAaveV3Protocol,
+} from '@summerfi/protocol-plugins'
 import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
-import { AddressValue, CommonTokenSymbols, IToken, Token } from '@summerfi/sdk-common'
 import {
   ILKType,
   MakerLendingPoolId,
@@ -30,11 +32,9 @@ import {
   isMakerLendingPool,
   isMakerProtocol,
 } from '@summerfi/protocol-plugins/plugins/maker'
-import {
-  AaveV3LendingPoolId,
-  isAaveV3LendingPoolId,
-  isAaveV3Protocol,
-} from '@summerfi/protocol-plugins'
+import { AddressValue, CommonTokenSymbols, IToken, Token } from '@summerfi/sdk-common'
+import assert from 'assert'
+import { Hex } from 'viem'
 
 jest.setTimeout(300000)
 
@@ -76,7 +76,7 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
     const walletAddress = Address.createFromEthereum({
       value: config.walletAddress as AddressValue,
     })
-    const user: User = await sdk.users.getUser({
+    const user = await sdk.users.getUser({
       chainInfo: chain.chainInfo,
       walletAddress: walletAddress,
     })

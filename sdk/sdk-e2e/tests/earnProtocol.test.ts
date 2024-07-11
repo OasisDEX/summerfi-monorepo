@@ -1,21 +1,14 @@
-import { Address, type Maybe, ChainFamilyMap } from '@summerfi/sdk-common/common'
+import { Address, ChainFamilyMap, type Maybe } from '@summerfi/sdk-common/common'
 
-import { makeSDK, type Chain, type User } from '@summerfi/sdk-client'
+import { makeSDK, type Chain } from '@summerfi/sdk-client'
 import { TransactionUtils } from './utils/TransactionUtils'
 
-import { isAddress, isHex } from 'viem'
-import assert from 'assert'
 import { Token, TokenAmount } from '@summerfi/sdk-common'
+import assert from 'assert'
 import { base } from 'viem/chains'
+import { isAddress, isHex } from 'viem/utils'
 
 jest.setTimeout(300000)
-
-if (!isHex(process.env.DEPLOYER_PRIVATE_KEY!)) {
-  throw new Error('Invalid DEPLOYER_PRIVATE_KEY')
-}
-if (!isAddress(process.env.WALLET_ADDRESS!)) {
-  throw new Error('Invalid WALLET_ADDRESS')
-}
 
 const chainInfo = ChainFamilyMap.Base.Mainnet
 
@@ -31,16 +24,14 @@ const DAI = Token.createFrom({
 const config = {
   SDKApiUrl: 'https://h6bwee4lvb.execute-api.us-east-1.amazonaws.com/api/sdk',
   forkUrl: 'https://virtual.base.rpc.tenderly.co/2916e1c7-7ddd-4cd2-b926-449ce4eb2f44',
-  walletAddress: Address.createFromEthereum({
-    value: process.env.WALLET_ADDRESS,
-  }),
+  walletAddress: process.env.WALLET_ADDRESS,
   privateKey: process.env.DEPLOYER_PRIVATE_KEY,
   fleetAddress: Address.createFromEthereum({
     value: '0xa09e82322f351154a155f9e0f9e6ddbc8791c794',
   }),
 }
 
-describe.only('Earn Protocol Deposit', () => {
+describe.skip('Earn Protocol Deposit', () => {
   it('should deposit', async () => {
     // SDK
     const sdk = makeSDK({
@@ -55,10 +46,17 @@ describe.only('Earn Protocol Deposit', () => {
     assert(chain, 'Chain not found')
     expect(chain.chainInfo.chainId).toEqual(chainInfo.chainId)
 
+    if (!isHex(config.privateKey!)) {
+      throw new Error('Invalid DEPLOYER_PRIVATE_KEY')
+    }
+    if (!isAddress(config.walletAddress!)) {
+      throw new Error('Invalid WALLET_ADDRESS')
+    }
+
     // User
-    const user: User = await sdk.users.getUser({
+    const user = await sdk.users.getUser({
       chainInfo: chain.chainInfo,
-      walletAddress: config.walletAddress,
+      walletAddress: Address.createFromEthereum({ value: config.walletAddress }),
     })
 
     expect(user).toBeDefined()
