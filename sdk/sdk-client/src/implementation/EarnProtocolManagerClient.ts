@@ -22,7 +22,7 @@ export class EarnProtocolManagerClient extends IRPCClient implements IEarnProtoc
   /** @see IEarnProtocolManagerClient */
   public getFleet(params: { address: IAddress }): Maybe<IEarnProtocolFleetClient> {
     return new EarnProtocolFleetClient({
-      ...params,
+      address: params.address,
       rpcClient: this.rpcClient,
       chainInfo: this.chainInfo,
     })
