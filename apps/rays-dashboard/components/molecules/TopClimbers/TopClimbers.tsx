@@ -3,8 +3,10 @@ import { Text } from '@summerfi/app-ui'
 import { IconArrowRight, IconArrowUpRight, IconTrophyFilled } from '@tabler/icons-react'
 import { useConnectWallet } from '@web3-onboard/react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 import { formatAddress } from '@/helpers/formatters'
+import { trackButtonClick } from '@/helpers/mixpanel'
 
 import topClimbersStyles from './TopClimbers.module.scss'
 
@@ -18,6 +20,17 @@ export const TopClimbers = ({
   toggleTopClimbers: () => void
 }) => {
   const [{ wallet }] = useConnectWallet()
+  const currentPath = usePathname()
+
+  const trackedPeekTopClimbers = (userAddress: string) => () => {
+    toggleTopClimbers()
+    trackButtonClick({
+      id: 'LeaderboardPeek',
+      page: currentPath,
+      value: userAddress,
+      source: 'TopClimbers',
+    })
+  }
 
   return (
     <div
@@ -53,7 +66,7 @@ export const TopClimbers = ({
               pathname: '/',
               query: { userAddress: entry.userAddress },
             }}
-            onClick={toggleTopClimbers}
+            onClick={trackedPeekTopClimbers(entry.userAddress)}
             className={topClimbersStyles.topClimbersListRankRowLink}
           >
             <Text

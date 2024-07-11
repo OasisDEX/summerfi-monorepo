@@ -9,6 +9,7 @@ export enum MixpanelEventTypes {
   SwapWidgetEvent = 'swap-widget-event',
   TopBannerEvent = 'top-banner-event',
   ProductHubChange = 'product-hub-change',
+  RaysTopClimbers = 'rays-top-climbers',
 }
 
 export enum MixpanelEventProduct {
