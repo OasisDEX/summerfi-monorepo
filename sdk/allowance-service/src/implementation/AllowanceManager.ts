@@ -1,10 +1,8 @@
 import { IConfigurationProvider } from '@summerfi/configuration-provider'
 import type { IAllowanceManager } from '@summerfi/allowance-common'
-import { IAddress, IChainInfo, ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
+import { IAddress, IChainInfo, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
 
-import IFleetCommanderABIJSON from '../../../../earn-protocol/abis/IFleetCommander.sol/IFleetCommander.json'
-import { Abi, encodeFunctionData } from 'viem'
-import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-provider'
+import { encodeFunctionData, erc20Abi } from 'viem'
 
 /**
  * @name AllowanceManager
@@ -12,34 +10,26 @@ import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-prov
  */
 export class AllowanceManager implements IAllowanceManager {
   private _configProvider: IConfigurationProvider
-  private _blockchainClientProvider: IBlockchainClientProvider
-  private IFleetCommanderABI: Abi
 
   /** CONSTRUCTOR */
-  constructor(params: {
-    configProvider: IConfigurationProvider
-    blockchainClientProvider: IBlockchainClientProvider
-  }) {
+  constructor(params: { configProvider: IConfigurationProvider }) {
     this._configProvider = params.configProvider
-    this._blockchainClientProvider = params.blockchainClientProvider
-
-    this.IFleetCommanderABI = IFleetCommanderABIJSON.abi as unknown as Abi
   }
 
   /** FUNCTIONS */
   async getAllowance(params: {
     chainInfo: IChainInfo
+    fleetAddress: IAddress
     tokenAddress: IAddress
-    user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
-    const calldata = encodeFunctionData({
-      abi: this.IFleetCommanderABI,
-      functionName: 'deposit',
-      args: [params.amount.toBaseUnit(), params.user.wallet.address.value],
-    })
+    // TODO: replace with the ERC20 wrapper when it's available
 
-    // TODO: erc20 wrapper
+    const calldata = encodeFunctionData({
+      abi: erc20Abi,
+      functionName: 'approve',
+      args: [params.fleetAddress.value, BigInt(params.amount.toString())],
+    })
 
     return [
       {
@@ -49,7 +39,7 @@ export class AllowanceManager implements IAllowanceManager {
           value: '0',
         },
         description:
-          'Deposit ' +
+          'Approve spending ' +
           params.amount.toString() +
           ' to Fleet at address: ' +
           params.tokenAddress.value,

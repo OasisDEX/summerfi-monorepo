@@ -1,10 +1,4 @@
-import type {
-  IAddress,
-  IChainInfo,
-  ITokenAmount,
-  IUser,
-  TransactionInfo,
-} from '@summerfi/sdk-common'
+import type { IAddress, IChainInfo, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
 
 /**
  * @name IAllowanceManager
@@ -24,8 +18,8 @@ export interface IAllowanceManager {
    */
   getAllowance(params: {
     chainInfo: IChainInfo
+    fleetAddress: IAddress
     tokenAddress: IAddress
-    user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]>
 }

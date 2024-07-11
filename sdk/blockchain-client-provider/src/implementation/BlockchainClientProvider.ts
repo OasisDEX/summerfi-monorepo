@@ -1,4 +1,3 @@
-import { publicActionReverseMirage } from 'reverse-mirage'
 import { createPublicClient, http, type Chain } from 'viem'
 import { arbitrum, base, mainnet, optimism } from 'viem/chains'
 
@@ -54,13 +53,15 @@ export class BlockchainnClientProvider implements IBlockchainClientProvider {
         },
       })
 
-      this._blockchainClients[chain.id] = createPublicClient({
+      const client = createPublicClient({
         batch: {
           multicall: true,
         },
         chain,
         transport,
-      }).extend(publicActionReverseMirage)
+      })
+
+      this._blockchainClients[chain.id] = client
     }
   }
 }

@@ -2,7 +2,7 @@ import { ISwapManager } from '@summerfi/swap-common/interfaces'
 import { ITokensManager } from '@summerfi/tokens-common'
 import { IOracleManager } from '@summerfi/oracle-common'
 import { IAddressBookManager } from '@summerfi/address-book-common'
-import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-provider'
+import type { BlockchainClient } from '@summerfi/blockchain-client-provider'
 
 /**
  * @name IProtocolPluginContext
@@ -11,7 +11,7 @@ import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-prov
  */
 export interface IProtocolPluginContext {
   /** The public client to interact with the blockchain */
-  provider: IBlockchainClientProvider
+  provider: BlockchainClient
   /** The tokens manager to retrieve token information */
   tokensManager: ITokensManager
   /** The oracle service to fetch prices */

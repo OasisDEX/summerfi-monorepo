@@ -6,6 +6,7 @@ import { ITokensManager } from '@summerfi/tokens-common'
 import { IOracleManager } from '@summerfi/oracle-common'
 import { IAddressBookManager } from '@summerfi/address-book-common'
 import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-provider'
+import { ChainFamilyMap } from '@summerfi/sdk-common'
 
 /**
  * Create the protocol plugins registry
@@ -30,7 +31,9 @@ export function createProtocolsPluginsRegistry(params: {
   return new ProtocolPluginsRegistry({
     plugins: ProtocolPluginsRecord,
     context: {
-      provider: blokchainClientProvider,
+      provider: blokchainClientProvider.getBlockchainClient({
+        chainInfo: ChainFamilyMap.Ethereum.Mainnet,
+      }),
       tokensManager,
       oracleManager,
       swapManager,
