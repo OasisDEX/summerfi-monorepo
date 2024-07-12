@@ -4,15 +4,20 @@ import {
   AlchemyAccountProvider,
   type AlchemyAccountsProviderProps,
 } from '@alchemy/aa-alchemy/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
-import { config, queryClient } from './config'
+import { config } from './config'
+
+const queryClient = new QueryClient()
 
 export const AlchemyAccountsProvider: FC<
   PropsWithChildren<{
     initialState?: AlchemyAccountsProviderProps['initialState']
   }>
 > = ({ initialState, children }) => (
-  <AlchemyAccountProvider config={config} queryClient={queryClient} initialState={initialState}>
-    {children}
-  </AlchemyAccountProvider>
+  <QueryClientProvider client={queryClient}>
+    <AlchemyAccountProvider config={config} queryClient={queryClient} initialState={initialState}>
+      {children}
+    </AlchemyAccountProvider>
+  </QueryClientProvider>
 )

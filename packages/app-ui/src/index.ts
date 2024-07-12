@@ -14,6 +14,7 @@ export { Select } from './components/atoms/Select/Select'
 export { SkeletonLine } from './components/atoms/SkeletonLine/SkeletonLine'
 export { Text } from './components/atoms/Text/Text'
 export { WithArrow } from './components/atoms/WithArrow/WithArrow'
+export { Modal } from './components/atoms/Modal/Modal'
 
 export { AutomationIcon } from './components/molecules/AutomationIcon/AutomationIcon'
 export { BannerCard } from './components/molecules/BannerCard/BannerCard'
