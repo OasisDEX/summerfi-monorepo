@@ -1,25 +1,27 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { CreateAWSLambdaContextOptions } from '@trpc/server/adapters/aws-lambda'
-import type { APIGatewayProxyEventV2 } from 'aws-lambda'
-import { IOrderPlannerService, OrderPlannerService } from '@summerfi/order-planner-service'
-import { ConfigurationProvider, IConfigurationProvider } from '@summerfi/configuration-provider'
-import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import { SwapManagerFactory } from '@summerfi/swap-service'
-import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
-import { ProtocolManager } from '@summerfi/protocol-manager-service'
-import { createProtocolsPluginsRegistry } from './CreateProtocolPluginsRegistry'
-import { IProtocolManager } from '@summerfi/protocol-manager-common'
-import { ITokensManager } from '@summerfi/tokens-common'
-import { TokensManagerFactory } from '@summerfi/tokens-service'
-import { IOracleManager } from '@summerfi/oracle-common'
-import { OracleManagerFactory } from '@summerfi/oracle-service'
+import { IAbiProvider } from '@summerfi/abi-provider-common'
+import { AbiProviderFactory } from '@summerfi/abi-provider-service'
 import { IAddressBookManager } from '@summerfi/address-book-common'
 import { AddressBookManagerFactory } from '@summerfi/address-book-service'
-import { EarnProtocolManagerFactory } from '@summerfi/earn-protocol-service'
-import type { IEarnProtocolManager } from '@summerfi/earn-protocol-common'
-import { BlockchainClientProvider } from '@summerfi/blockchain-client-provider'
-import { AllowanceManagerFactory } from '@summerfi/allowance-service'
 import type { IAllowanceManager } from '@summerfi/allowance-common'
+import { AllowanceManagerFactory } from '@summerfi/allowance-service'
+import { BlockchainClientProvider } from '@summerfi/blockchain-client-provider'
+import { ConfigurationProvider, IConfigurationProvider } from '@summerfi/configuration-provider'
+import type { IEarnProtocolManager } from '@summerfi/earn-protocol-common'
+import { EarnProtocolManagerFactory } from '@summerfi/earn-protocol-service'
+import { IOracleManager } from '@summerfi/oracle-common'
+import { OracleManagerFactory } from '@summerfi/oracle-service'
+import { IOrderPlannerService, OrderPlannerService } from '@summerfi/order-planner-service'
+import { IProtocolManager } from '@summerfi/protocol-manager-common'
+import { ProtocolManager } from '@summerfi/protocol-manager-service'
+import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
+import { ISwapManager } from '@summerfi/swap-common/interfaces'
+import { SwapManagerFactory } from '@summerfi/swap-service'
+import { ITokensManager } from '@summerfi/tokens-common'
+import { TokensManagerFactory } from '@summerfi/tokens-service'
+import { CreateAWSLambdaContextOptions } from '@trpc/server/adapters/aws-lambda'
+import type { APIGatewayProxyEventV2 } from 'aws-lambda'
+import { createProtocolsPluginsRegistry } from './CreateProtocolPluginsRegistry'
 
 export type SDKContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>
 
@@ -27,6 +29,7 @@ export type SDKAppContext = {
   addressBookManager: IAddressBookManager
   configProvider: IConfigurationProvider
   blockchainClientProvider: BlockchainClientProvider
+  abiProvider: IAbiProvider
   tokensManager: ITokensManager
   swapManager: ISwapManager
   oracleManager: IOracleManager
@@ -41,6 +44,7 @@ export type SDKAppContext = {
 export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
   const configProvider = new ConfigurationProvider()
   const blockchainClientProvider = new BlockchainClientProvider({ configProvider })
+  const abiProvider = AbiProviderFactory.newAbiProvider({ configProvider })
   const addressBookManager = AddressBookManagerFactory.newAddressBookManager({ configProvider })
   const tokensManager = TokensManagerFactory.newTokensManager({ configProvider })
   const orderPlannerService = new OrderPlannerService()
@@ -65,7 +69,8 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
 
   return {
     configProvider,
-    blockchainClientProvider: blockchainClientProvider,
+    blockchainClientProvider,
+    abiProvider,
     addressBookManager,
     tokensManager,
     swapManager,
