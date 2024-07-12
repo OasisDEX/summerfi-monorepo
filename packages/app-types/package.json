@@ -5,7 +5,7 @@
   "main": "./types/index.ts",
   "scripts": {
     "dev": "dotenv -e ../../.env -e ../../.env.local -- pnpm get-config-types",
-    "build": "dotenv -e ../../.env -e ../../.env.local -- pnpm get-config-types",
+    "prebuild:nocache": "dotenv -e ../../.env -e ../../.env.local -- pnpm get-config-types",
     "get-config-types": "node scripts/get-config-types.js && node scripts/get-rays-config-types.js"
   },
   "dependencies": {
