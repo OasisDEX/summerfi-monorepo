@@ -37,7 +37,7 @@ export class EarnProtocolManager implements IEarnProtocolManager {
 
     const allowanceTransaction = await this._allowanceManager.getAllowance({
       chainInfo: params.chainInfo,
-      fleetAddress: params.fleetAddress,
+      spender: params.fleetAddress,
       amount: params.amount,
     })
     if (allowanceTransaction) {
