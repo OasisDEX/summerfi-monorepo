@@ -1,29 +1,17 @@
-import { Address, ChainFamilyMap, type Maybe } from '@summerfi/sdk-common/common'
-
-import { makeSDK, type Chain } from '@summerfi/sdk-client'
-import { TransactionUtils } from './utils/TransactionUtils'
-
-import { Token, TokenAmount } from '@summerfi/sdk-common'
 import assert from 'assert'
-import { base } from 'viem/chains'
-import { isAddress, isHex } from 'viem/utils'
+import { isAddress } from 'viem/utils'
+
+import { makeSDK, type Chain, type UserClient } from '@summerfi/sdk-client'
+import { TokenAmount, Address, ChainFamilyMap } from '@summerfi/sdk-common'
+
+import { USDC, DAI } from './utils/TokenMockBase'
+import { sendAndLogTransactions } from './utils/sendAndLogTransactions'
 
 jest.setTimeout(300000)
-
-const chainInfo = ChainFamilyMap.Base.Mainnet
-
-const DAI = Token.createFrom({
-  chainInfo,
-  address: Address.createFromEthereum({ value: '0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb' }),
-  symbol: 'DAI',
-  name: 'Dai Stablecoin',
-  decimals: 18,
-})
 
 /** TEST CONFIG */
 const config = {
   SDKApiUrl: process.env.SDK_API_URL,
-  forkUrl: 'https://virtual.base.rpc.tenderly.co/2916e1c7-7ddd-4cd2-b926-449ce4eb2f44',
   walletAddress: process.env.WALLET_ADDRESS,
   privateKey: process.env.DEPLOYER_PRIVATE_KEY,
   fleetAddress: Address.createFromEthereum({
@@ -32,79 +20,83 @@ const config = {
 }
 
 describe.only('Earn Protocol Deposit', () => {
-  it('should deposit', async () => {
-    // SDK
-    if (!config.SDKApiUrl) {
-      throw new Error('Invalid SDK_API_URL')
-    }
-    const sdk = makeSDK({
-      apiURL: config.SDKApiUrl,
-    })
+  // SDK
+  if (!config.SDKApiUrl) {
+    throw new Error('Invalid SDK_API_URL')
+  }
+  const sdk = makeSDK({
+    apiURL: config.SDKApiUrl,
+  })
+  const chainInfo = ChainFamilyMap.Base.Mainnet
+  let chain: Chain
+  let user: UserClient
 
+  beforeEach(async () => {
     // Chain
-    const chain: Maybe<Chain> = await sdk.chains.getChain({
+    const maybeChain = await sdk.chains.getChain({
       chainInfo,
     })
-
-    assert(chain, 'Chain not found')
-    expect(chain.chainInfo.chainId).toEqual(chainInfo.chainId)
+    assert(maybeChain, 'Chain not found')
+    expect(maybeChain.chainInfo.chainId).toEqual(chainInfo.chainId)
+    chain = maybeChain
 
     if (!isAddress(config.walletAddress!)) {
       throw new Error('Invalid WALLET_ADDRESS')
     }
 
     // User
-    const user = await sdk.users.getUser({
+    user = await sdk.users.getUser({
       chainInfo: chain.chainInfo,
       walletAddress: Address.createFromEthereum({ value: config.walletAddress }),
     })
-
     expect(user).toBeDefined()
     expect(user.wallet.address.value).toEqual(config.walletAddress)
     expect(user.chainInfo).toEqual(chain.chainInfo)
+  })
 
-    // Earn Protocol Manager
+  it('should deposit correct token', async () => {
+    const depositToken = USDC
 
     const fleet = chain.earnProtocol.getFleet({
       address: config.fleetAddress,
     })
-
     assert(fleet, 'Fleet not found')
 
     const transactions = await fleet.deposit({
-      // workaround for User serialization to work
-      user: {
-        wallet: user.wallet,
-        chainInfo: user.chainInfo,
-      },
+      user: getUserWorkaround(user),
       amount: TokenAmount.createFrom({
         amount: '1',
-        token: DAI,
+        token: depositToken,
       }),
     })
 
-    // Send transaction
-    console.log('transactions', transactions)
+    await sendAndLogTransactions(transactions)
+  })
 
-    for (const [index, transaction] of transactions.entries()) {
-      if (!isHex(config.privateKey)) {
-        throw new Error('Invalid DEPLOYER_PRIVATE_KEY')
-      }
+  it.skip('should fail deposit with incorrect token with appropriate error', async () => {
+    const depositToken = DAI
 
-      console.log(`Sending transaction ${index}...`, transaction.description)
+    const fleet = chain.earnProtocol.getFleet({
+      address: config.fleetAddress,
+    })
+    assert(fleet, 'Fleet not found')
 
-      const transactionUtils = new TransactionUtils({
-        rpcUrl: config.forkUrl,
-        walletPrivateKey: config.privateKey,
-        chain: base,
-      })
+    const transactions = await fleet.deposit({
+      user: getUserWorkaround(user),
+      amount: TokenAmount.createFrom({
+        amount: '1',
+        token: depositToken,
+      }),
+    })
 
-      const receipt = await transactionUtils.sendTransaction({
-        transaction: transaction.transaction,
-        waitForConfirmation: true,
-      })
-
-      console.log('Transaction sent:', receipt)
-    }
+    await sendAndLogTransactions(transactions)
   })
 })
+
+function getUserWorkaround(user: UserClient) {
+  // workaround for User serialization to work
+  return {
+    wallet: user.wallet,
+    chainInfo: user.chainInfo,
+  }
+}
