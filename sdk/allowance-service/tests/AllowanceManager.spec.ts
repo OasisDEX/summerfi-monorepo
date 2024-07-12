@@ -40,7 +40,7 @@ describe('Earn Protocol Service', () => {
     })
 
     expect(transactionInfo.length).toBe(1)
-    expect(transactionInfo[0].transaction.target).toBe(tokenAddress)
+    expect(transactionInfo[0].transaction.target.value).toBe(tokenAddress.value)
     expect(transactionInfo[0].transaction.value).toBe('0')
 
     const decodedCalldata = decodeAllowanceCalldata(transactionInfo[0].transaction.calldata)
