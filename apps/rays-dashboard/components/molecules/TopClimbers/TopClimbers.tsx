@@ -1,4 +1,8 @@
-import { type LeaderboardResponse, MixpanelEventTypes } from '@summerfi/app-types'
+import {
+  type LeaderboardResponse,
+  MixpanelEventProduct,
+  MixpanelEventTypes,
+} from '@summerfi/app-types'
 import { Button, SkeletonLine, Text } from '@summerfi/app-ui'
 import { IconArrowRight, IconArrowUpRight, IconTrophyFilled } from '@tabler/icons-react'
 import { useConnectWallet } from '@web3-onboard/react'
@@ -33,7 +37,7 @@ export const TopClimbers = ({
   const currentPath = usePathname()
 
   const trackedTopClimbersTab = (tab: TopClimbersTabs) => {
-    trackEvent(MixpanelEventTypes.RaysTopClimbers, { tab })
+    trackEvent(MixpanelEventTypes.RaysTopClimbers, { tab, product: MixpanelEventProduct.Rays })
     setTopClimbersTab(tab)
   }
 

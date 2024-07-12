@@ -1,7 +1,11 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { type LeaderboardResponse, MixpanelEventTypes } from '@summerfi/app-types'
+import {
+  type LeaderboardResponse,
+  MixpanelEventProduct,
+  MixpanelEventTypes,
+} from '@summerfi/app-types'
 import { Text } from '@summerfi/app-ui'
 import { IconChevronDown, IconChevronUp, IconClockHour3 } from '@tabler/icons-react'
 import { useToggle } from 'usehooks-ts'
@@ -27,7 +31,10 @@ export const TopClimbersWrapper = ({ topClimbers }: { topClimbers?: LeaderboardR
   }>()
 
   const trackedTopClimbers = () => {
-    trackEvent(MixpanelEventTypes.RaysTopClimbers, { action: topClimbersOpen ? 'close' : 'open' })
+    trackEvent(MixpanelEventTypes.RaysTopClimbers, {
+      product: MixpanelEventProduct.Rays,
+      action: topClimbersOpen ? 'close' : 'open',
+    })
     toggleTopClimbers()
   }
 
