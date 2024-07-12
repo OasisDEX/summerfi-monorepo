@@ -33,9 +33,7 @@ describe.skip('Earn Protocol Deposit', () => {
     sdk = makeSDK({
       apiURL: config.SDKApiUrl,
     })
-  })
 
-  beforeEach(async () => {
     // Chain
     const maybeChain = await sdk.chains.getChain({
       chainInfo,
