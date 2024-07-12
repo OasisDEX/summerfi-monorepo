@@ -108,6 +108,7 @@ export const LeaderboardUser = ({
               id: 'LeaderboardPeek',
               page: currentPath,
               value: cell.userAddress,
+              source: 'Leaderboard',
               ...(cell.details && {
                 activePositions: cell.details.activePositions,
                 activeTriggers: cell.details.activeTriggers,
