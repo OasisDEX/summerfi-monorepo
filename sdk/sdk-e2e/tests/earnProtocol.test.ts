@@ -1,7 +1,7 @@
 import assert from 'assert'
 import { isAddress } from 'viem/utils'
 
-import { makeSDK, type Chain, type UserClient } from '@summerfi/sdk-client'
+import { makeSDK, type Chain, type SDKManager, type UserClient } from '@summerfi/sdk-client'
 import { TokenAmount, Address, ChainFamilyMap } from '@summerfi/sdk-common'
 
 import { USDC, DAI } from './utils/TokenMockBase'
@@ -20,16 +20,20 @@ const config = {
 }
 
 describe.skip('Earn Protocol Deposit', () => {
-  // SDK
-  if (!config.SDKApiUrl) {
-    throw new Error('Invalid E2E_SDK_API_URL')
-  }
-  const sdk = makeSDK({
-    apiURL: config.SDKApiUrl,
-  })
   const chainInfo = ChainFamilyMap.Base.Mainnet
+  let sdk: SDKManager
   let chain: Chain
   let user: UserClient
+
+  beforeAll(async () => {
+    // SDK
+    if (!config.SDKApiUrl) {
+      throw new Error('Invalid E2E_SDK_API_URL')
+    }
+    sdk = makeSDK({
+      apiURL: config.SDKApiUrl,
+    })
+  })
 
   beforeEach(async () => {
     // Chain
