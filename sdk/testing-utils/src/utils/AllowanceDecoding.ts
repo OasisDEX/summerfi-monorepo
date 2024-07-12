@@ -3,12 +3,12 @@ import { HexData } from '@summerfi/sdk-common/common'
 import { decodeFunctionData, parseAbi } from 'viem'
 
 export function decodeAllowanceCalldata(calldata: HexData | string) {
-  const fleetCommanderAbi = parseAbi([
+  const abi = parseAbi([
     'function approve(address spender, uint256 amount) external returns (bool)',
   ])
 
   const decoded = decodeFunctionData({
-    abi: fleetCommanderAbi,
+    abi: abi,
     data: calldata as HexData,
   })
 

@@ -11,8 +11,8 @@ jest.setTimeout(300000)
 
 /** TEST CONFIG */
 const config = {
-  SDKApiUrl: process.env.SDK_API_URL,
-  walletAddress: process.env.WALLET_ADDRESS,
+  SDKApiUrl: process.env.E2E_SDK_API_URL,
+  walletAddress: process.env.E2E_USER_ADDRESS,
   privateKey: process.env.DEPLOYER_PRIVATE_KEY,
   fleetAddress: Address.createFromEthereum({
     value: '0xa09e82322f351154a155f9e0f9e6ddbc8791c794',
@@ -22,7 +22,7 @@ const config = {
 describe.only('Earn Protocol Deposit', () => {
   // SDK
   if (!config.SDKApiUrl) {
-    throw new Error('Invalid SDK_API_URL')
+    throw new Error('Invalid E2E_SDK_API_URL')
   }
   const sdk = makeSDK({
     apiURL: config.SDKApiUrl,
@@ -41,7 +41,7 @@ describe.only('Earn Protocol Deposit', () => {
     chain = maybeChain
 
     if (!isAddress(config.walletAddress!)) {
-      throw new Error('Invalid WALLET_ADDRESS')
+      throw new Error('Invalid E2E_USER_ADDRESS')
     }
 
     // User
