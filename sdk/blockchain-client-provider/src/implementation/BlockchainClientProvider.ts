@@ -7,7 +7,7 @@ import {
   IRpcConfig,
   getRpcGatewayEndpoint,
 } from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
-import type { BlockchainClient } from '../types/BlockchainClient'
+import type { IBlockchainClient } from '../interfaces/IBlockchainClient'
 import { IBlockchainClientProvider } from '../interfaces'
 
 /**
@@ -21,8 +21,12 @@ const rpcConfig: IRpcConfig = {
   source: 'borrow-prod',
 }
 
-export class BlockchainnClientProvider implements IBlockchainClientProvider {
-  private readonly _blockchainClients: Record<number, BlockchainClient> = {}
+/**
+ * Blockchain client provider implements the IBlockchainClientProvider interface
+ * @implements IBlockchainClientProvider
+ */
+export class BlockchainClientProvider implements IBlockchainClientProvider {
+  private readonly _blockchainClients: Record<number, IBlockchainClient> = {}
   private readonly _configProvider: IConfigurationProvider
 
   constructor(params: { configProvider: IConfigurationProvider }) {
@@ -30,7 +34,7 @@ export class BlockchainnClientProvider implements IBlockchainClientProvider {
     this._loadClients([mainnet, optimism, arbitrum, base])
   }
 
-  public getBlockchainClient(params: { chainInfo: IChainInfo }): BlockchainClient {
+  public getBlockchainClient(params: { chainInfo: IChainInfo }): IBlockchainClient {
     const provider = this._blockchainClients[params.chainInfo.chainId]
     if (!provider) {
       throw new Error('Provider not found')

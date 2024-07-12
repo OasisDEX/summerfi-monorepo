@@ -1,1 +1,1 @@
-export { BlockchainnClientProvider } from './BlockchainClientProvider'
+export { BlockchainClientProvider } from './BlockchainClientProvider'

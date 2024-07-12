@@ -1,6 +1,6 @@
 import { ChainFamilyMap } from '@summerfi/sdk-common'
 import { ConfigurationProvider } from '@summerfi/configuration-provider'
-import { BlockchainnClientProvider } from '../src/implementation/BlockchainClientProvider'
+import { BlockchainClientProvider } from '../src/implementation/BlockchainClientProvider'
 
 describe('Blockchain Provider', () => {
   it('should return a provider for supported chains', async () => {
@@ -8,7 +8,7 @@ describe('Blockchain Provider', () => {
       getConfigurationItem: jest.fn().mockReturnValue('https://rpc-gateway-url.com'),
     } as unknown as ConfigurationProvider
 
-    const blockchainClientProvider = new BlockchainnClientProvider({ configProvider })
+    const blockchainClientProvider = new BlockchainClientProvider({ configProvider })
 
     const chainInfo = ChainFamilyMap.Base.Mainnet
     const baseClient = blockchainClientProvider.getBlockchainClient({ chainInfo: chainInfo })

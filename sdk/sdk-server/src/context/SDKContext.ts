@@ -17,7 +17,7 @@ import { IAddressBookManager } from '@summerfi/address-book-common'
 import { AddressBookManagerFactory } from '@summerfi/address-book-service'
 import { EarnProtocolManagerFactory } from '@summerfi/earn-protocol-service'
 import type { IEarnProtocolManager } from '@summerfi/earn-protocol-common'
-import { BlockchainnClientProvider } from '@summerfi/blockchain-client-provider'
+import { BlockchainClientProvider } from '@summerfi/blockchain-client-provider'
 import { AllowanceManagerFactory } from '@summerfi/allowance-service'
 import type { IAllowanceManager } from '@summerfi/allowance-common'
 
@@ -26,7 +26,7 @@ export type SDKContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEve
 export type SDKAppContext = {
   addressBookManager: IAddressBookManager
   configProvider: IConfigurationProvider
-  blockchainClientProvider: BlockchainnClientProvider
+  blockchainClientProvider: BlockchainClientProvider
   tokensManager: ITokensManager
   swapManager: ISwapManager
   oracleManager: IOracleManager
@@ -40,7 +40,7 @@ export type SDKAppContext = {
 // context for each request
 export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
   const configProvider = new ConfigurationProvider()
-  const blockchainClientProvider = new BlockchainnClientProvider({ configProvider })
+  const blockchainClientProvider = new BlockchainClientProvider({ configProvider })
   const addressBookManager = AddressBookManagerFactory.newAddressBookManager({ configProvider })
   const tokensManager = TokensManagerFactory.newTokensManager({ configProvider })
   const orderPlannerService = new OrderPlannerService()

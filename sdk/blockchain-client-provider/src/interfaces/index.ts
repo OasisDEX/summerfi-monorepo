@@ -1,1 +1,2 @@
-export { type IBlockchainClientProvider } from './IBlockchainClientProvider'
+export * from './IBlockchainClientProvider'
+export * from './IBlockchainClient'

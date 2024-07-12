@@ -6,7 +6,7 @@ import { encodeFunctionData, erc20Abi } from 'viem'
 
 /**
  * @name AllowanceManager
- * @description This class is the implementation of the IEarnProtocolManager interface. Takes care of choosing the best provider for a price consultation
+ * @description This class is the implementation of the IAllowanceManager interface. Takes care of generating transactions for setting an allowance
  */
 export class AllowanceManager implements IAllowanceManager {
   private _configProvider: IConfigurationProvider
@@ -19,13 +19,13 @@ export class AllowanceManager implements IAllowanceManager {
   /** FUNCTIONS */
   async getAllowance(params: {
     chainInfo: IChainInfo
-    fleetAddress: IAddress
+    spender: IAddress
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
     const calldata = encodeFunctionData({
       abi: erc20Abi,
       functionName: 'approve',
-      args: [params.fleetAddress.value, BigInt(params.amount.toBaseUnit())],
+      args: [params.spender.value, BigInt(params.amount.toBaseUnit())],
     })
 
     return [
@@ -38,8 +38,8 @@ export class AllowanceManager implements IAllowanceManager {
         description:
           'Approve spending of ' +
           params.amount.toString() +
-          ' to Fleet at address: ' +
-          params.fleetAddress.value,
+          ' to the spender at address: ' +
+          params.spender.value,
       },
     ]
   }
