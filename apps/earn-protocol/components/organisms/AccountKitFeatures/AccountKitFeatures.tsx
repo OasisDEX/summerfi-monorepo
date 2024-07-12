@@ -1,6 +1,7 @@
 'use client'
 import { useSigner, useUser } from '@alchemy/aa-alchemy/react'
 
+import { AccountKitClient } from '@/components/molecules/AccountKitClient/AccountKitClient'
 import { AccountKitExportPrivateKey } from '@/components/molecules/AccountKitExportPrivateKey/AccountKitExportPrivateKey'
 import { AccountKitLogin } from '@/components/molecules/AccountKitLogin/AccountKitLogin'
 import { AccountKitAddPassKey } from '@/components/molecules/AcountKitAddPassKey/AccountKitAddPassKey'
@@ -13,13 +14,21 @@ export const AccountKitFeatures = () => {
     <div style={{ display: 'flex', flexDirection: 'column', rowGap: '24px' }}>
       Account kit features
       <AccountKitLogin />
-      {user && <>Logged user: {user.email}</>}
-      {signer && user && (
-        <div style={{ display: 'flex', alignItems: 'center', columnGap: '8px' }}>
-          <AccountKitAddPassKey /> (Optional)
+      {user && (
+        <div>
+          <p>Logged user: {user.email}</p>
+          <p>Logged user address: {user.address}</p>
         </div>
       )}
-      {signer && user && <AccountKitExportPrivateKey signer={signer} />}
+      {signer && user && (
+        <>
+          <div style={{ display: 'flex', alignItems: 'center', columnGap: '8px' }}>
+            <AccountKitAddPassKey /> (Optional)
+          </div>
+          <AccountKitExportPrivateKey signer={signer} />
+          <AccountKitClient />
+        </>
+      )}
     </div>
   )
 }
