@@ -45,6 +45,7 @@
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
     "@tsconfig/node20": "^20.1.4",
+    "@turbo/gen": "^2.0.6",
     "@types/aws-lambda": "^8.10.137",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.7",

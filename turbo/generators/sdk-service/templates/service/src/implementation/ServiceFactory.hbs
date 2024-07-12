@@ -1,0 +1,12 @@
+import { IConfigurationProvider } from '@summerfi/configuration-provider'
+import { {{namePascalCase}} } from './{{namePascalCase}}'
+
+/**
+ * @name {{namePascalCase}}Factory
+ * @description This class is responsible for creating instances of the {{namePascalCase}}
+ */
+export class {{namePascalCase}}Factory {
+  public static new{{namePascalCase}}(params: { configProvider: IConfigurationProvider }): {{namePascalCase}} {
+    return new {{namePascalCase}}(params)
+  }
+}
