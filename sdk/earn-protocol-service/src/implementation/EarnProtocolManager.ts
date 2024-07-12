@@ -4,6 +4,7 @@ import { IAddress, IChainInfo, ITokenAmount, IUser, TransactionInfo } from '@sum
 
 import IFleetCommanderABIJSON from '../../../../earn-protocol/abis/IFleetCommander.sol/IFleetCommander.json'
 import { Abi, encodeFunctionData } from 'viem'
+import type { IAllowanceManager } from '@summerfi/allowance-common'
 
 /**
  * @name EarnProtocolManager
@@ -11,12 +12,16 @@ import { Abi, encodeFunctionData } from 'viem'
  */
 export class EarnProtocolManager implements IEarnProtocolManager {
   private _configProvider: IConfigurationProvider
+  private _allowanceManager: IAllowanceManager
   private IFleetCommanderABI: Abi
 
   /** CONSTRUCTOR */
-  constructor(params: { configProvider: IConfigurationProvider }) {
+  constructor(params: {
+    configProvider: IConfigurationProvider
+    allowanceManager: IAllowanceManager
+  }) {
     this._configProvider = params.configProvider
-
+    this._allowanceManager = params.allowanceManager
     this.IFleetCommanderABI = IFleetCommanderABIJSON.abi as unknown as Abi
   }
 
@@ -28,27 +33,37 @@ export class EarnProtocolManager implements IEarnProtocolManager {
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
+    const transactions: TransactionInfo[] = []
+
+    const allowanceTransaction = await this._allowanceManager.getAllowance({
+      chainInfo: params.chainInfo,
+      spender: params.fleetAddress,
+      amount: params.amount,
+    })
+    if (allowanceTransaction) {
+      transactions.push(...allowanceTransaction)
+    }
+
     // TODO: validate that the given token is actually the token for this Fleet
     const calldata = encodeFunctionData({
       abi: this.IFleetCommanderABI,
       functionName: 'deposit',
       args: [params.amount.toBaseUnit(), params.user.wallet.address.value],
     })
-
-    return [
-      {
-        transaction: {
-          target: params.fleetAddress,
-          calldata: calldata,
-          value: '0',
-        },
-        description:
-          'Deposit ' +
-          params.amount.toString() +
-          ' to Fleet at address: ' +
-          params.fleetAddress.value,
+    transactions.push({
+      transaction: {
+        target: params.fleetAddress,
+        calldata: calldata,
+        value: '0',
       },
-    ]
+      description:
+        'Deposit ' +
+        params.amount.toString() +
+        ' to Fleet at address: ' +
+        params.fleetAddress.value,
+    })
+
+    return transactions
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -77,9 +92,9 @@ export class EarnProtocolManager implements IEarnProtocolManager {
           value: '0',
         },
         description:
-          'Deposit ' +
+          'Withdraw ' +
           params.amount.toString() +
-          ' to Fleet at address: ' +
+          ' from Fleet at address: ' +
           params.fleetAddress.value,
       },
     ]

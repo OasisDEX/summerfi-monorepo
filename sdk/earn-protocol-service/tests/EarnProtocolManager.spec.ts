@@ -6,6 +6,7 @@ import {
   decodeFleetWithdrawCalldata,
 } from '@summerfi/testing-utils/utils/EarnProtocolDecoding'
 import { EarnProtocolManager, EarnProtocolManagerFactory } from '../src'
+import type { AllowanceManager } from '@summerfi/allowance-service'
 
 describe('Earn Protocol Service', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -38,7 +39,13 @@ describe('Earn Protocol Service', () => {
 
   beforeEach(() => {
     const configProvider = new ConfigurationProvider()
-    earnProtocolManager = EarnProtocolManagerFactory.newEarnProtocolManager({ configProvider })
+    const allowanceManager = {
+      getAllowance: jest.fn().mockReturnValue([]),
+    } as unknown as AllowanceManager
+    earnProtocolManager = EarnProtocolManagerFactory.newEarnProtocolManager({
+      configProvider,
+      allowanceManager,
+    })
   })
 
   it('should return deposit transaction correctly', async () => {
