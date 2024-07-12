@@ -26,7 +26,7 @@ export type SDKContextOptions = CreateAWSLambdaContextOptions<APIGatewayProxyEve
 export type SDKAppContext = {
   addressBookManager: IAddressBookManager
   configProvider: IConfigurationProvider
-  blokchainClientProvider: BlockchainnClientProvider
+  blockchainClientProvider: BlockchainnClientProvider
   tokensManager: ITokensManager
   swapManager: ISwapManager
   oracleManager: IOracleManager
@@ -40,7 +40,7 @@ export type SDKAppContext = {
 // context for each request
 export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
   const configProvider = new ConfigurationProvider()
-  const blokchainClientProvider = new BlockchainnClientProvider({ configProvider })
+  const blockchainClientProvider = new BlockchainnClientProvider({ configProvider })
   const addressBookManager = AddressBookManagerFactory.newAddressBookManager({ configProvider })
   const tokensManager = TokensManagerFactory.newTokensManager({ configProvider })
   const orderPlannerService = new OrderPlannerService()
@@ -48,7 +48,7 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
   const oracleManager = OracleManagerFactory.newOracleManager({ configProvider })
   const protocolsRegistry = createProtocolsPluginsRegistry({
     configProvider,
-    blokchainClientProvider,
+    blockchainClientProvider: blockchainClientProvider,
     tokensManager,
     oracleManager,
     swapManager,
@@ -65,7 +65,7 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
 
   return {
     configProvider,
-    blokchainClientProvider,
+    blockchainClientProvider: blockchainClientProvider,
     addressBookManager,
     tokensManager,
     swapManager,

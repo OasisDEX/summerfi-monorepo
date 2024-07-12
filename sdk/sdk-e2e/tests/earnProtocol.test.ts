@@ -54,8 +54,9 @@ describe.skip('Earn Protocol Deposit', () => {
     expect(user.chainInfo).toEqual(chain.chainInfo)
   })
 
-  it('should deposit correct token', async () => {
-    const depositToken = USDC
+  it('should deposit 1 USDC', async () => {
+    const token = USDC
+    const amount = '1'
 
     const fleet = chain.earnProtocol.getFleet({
       address: config.fleetAddress,
@@ -65,16 +66,17 @@ describe.skip('Earn Protocol Deposit', () => {
     const transactions = await fleet.deposit({
       user: getUserWorkaround(user),
       amount: TokenAmount.createFrom({
-        amount: '1',
-        token: depositToken,
+        amount,
+        token,
       }),
     })
 
     await sendAndLogTransactions(transactions)
   })
 
-  it('should fail deposit with incorrect token with appropriate error', async () => {
-    const depositToken = DAI
+  it('should fail deposit of DAI with incorrect token error', async () => {
+    const token = DAI
+    const amount = '1'
 
     const fleet = chain.earnProtocol.getFleet({
       address: config.fleetAddress,
@@ -84,8 +86,28 @@ describe.skip('Earn Protocol Deposit', () => {
     const transactions = await fleet.deposit({
       user: getUserWorkaround(user),
       amount: TokenAmount.createFrom({
-        amount: '1',
-        token: depositToken,
+        amount,
+        token,
+      }),
+    })
+
+    await sendAndLogTransactions(transactions)
+  })
+
+  it('should withdraw 1 USDC', async () => {
+    const token = USDC
+    const amount = '1'
+
+    const fleet = chain.earnProtocol.getFleet({
+      address: config.fleetAddress,
+    })
+    assert(fleet, 'Fleet not found')
+
+    const transactions = await fleet.withdraw({
+      user: getUserWorkaround(user),
+      amount: TokenAmount.createFrom({
+        amount,
+        token,
       }),
     })
 

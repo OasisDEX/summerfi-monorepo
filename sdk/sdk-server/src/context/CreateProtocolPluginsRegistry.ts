@@ -19,19 +19,24 @@ import { ChainFamilyMap } from '@summerfi/sdk-common'
  */
 export function createProtocolsPluginsRegistry(params: {
   configProvider: ConfigurationProvider
-  blokchainClientProvider: IBlockchainClientProvider
+  blockchainClientProvider: IBlockchainClientProvider
   tokensManager: ITokensManager
   oracleManager: IOracleManager
   swapManager: ISwapManager
   addressBookManager: IAddressBookManager
 }): IProtocolPluginsRegistry {
-  const { blokchainClientProvider, addressBookManager, swapManager, tokensManager, oracleManager } =
-    params
+  const {
+    blockchainClientProvider,
+    addressBookManager,
+    swapManager,
+    tokensManager,
+    oracleManager,
+  } = params
 
   return new ProtocolPluginsRegistry({
     plugins: ProtocolPluginsRecord,
     context: {
-      provider: blokchainClientProvider.getBlockchainClient({
+      provider: blockchainClientProvider.getBlockchainClient({
         chainInfo: ChainFamilyMap.Ethereum.Mainnet,
       }),
       tokensManager,

@@ -92,9 +92,9 @@ export class EarnProtocolManager implements IEarnProtocolManager {
           value: '0',
         },
         description:
-          'Deposit ' +
+          'Withdraw ' +
           params.amount.toString() +
-          ' to Fleet at address: ' +
+          ' from Fleet at address: ' +
           params.fleetAddress.value,
       },
     ]
