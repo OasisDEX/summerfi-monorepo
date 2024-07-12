@@ -60,8 +60,8 @@
     "NODE_ENV",
     "ACCOUNT_KIT_API_KEY",
     "E2E_SDK_API_URL",
-    "E2E_FORK_URL",
-    "E2E_WALLET_ADDRESS"
+    "E2E_SDK_FORK_URL",
+    "E2E_USER_ADDRESS"
   ],
   "pipeline": {
     "dev": {

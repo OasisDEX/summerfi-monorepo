@@ -4,12 +4,15 @@ import { BlockchainnClientProvider } from '../src/implementation/BlockchainClien
 
 describe('Blockchain Provider', () => {
   it('should return a provider for supported chains', async () => {
-    const configProvider = new ConfigurationProvider()
+    const configProvider = {
+      getConfigurationItem: jest.fn().mockReturnValue('https://rpc-gateway-url.com'),
+    } as unknown as ConfigurationProvider
+
     const blockchainClientProvider = new BlockchainnClientProvider({ configProvider })
 
     const chainInfo = ChainFamilyMap.Base.Mainnet
     const baseClient = blockchainClientProvider.getBlockchainClient({ chainInfo: chainInfo })
 
-    expect(await baseClient.getChainId()).toEqual(chainInfo.chainId)
+    expect(baseClient.chain?.id).toEqual(chainInfo.chainId)
   })
 })

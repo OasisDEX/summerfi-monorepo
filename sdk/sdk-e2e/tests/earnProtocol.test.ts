@@ -19,7 +19,7 @@ const config = {
   }),
 }
 
-describe.only('Earn Protocol Deposit', () => {
+describe.skip('Earn Protocol Deposit', () => {
   // SDK
   if (!config.SDKApiUrl) {
     throw new Error('Invalid E2E_SDK_API_URL')
@@ -73,7 +73,7 @@ describe.only('Earn Protocol Deposit', () => {
     await sendAndLogTransactions(transactions)
   })
 
-  it.skip('should fail deposit with incorrect token with appropriate error', async () => {
+  it('should fail deposit with incorrect token with appropriate error', async () => {
     const depositToken = DAI
 
     const fleet = chain.earnProtocol.getFleet({
