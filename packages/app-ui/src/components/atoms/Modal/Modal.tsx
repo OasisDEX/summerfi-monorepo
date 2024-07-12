@@ -1,6 +1,8 @@
 'use client'
 import { type FC, type ReactNode, useEffect, useRef } from 'react'
 
+import classNames from '@/components/atoms/Modal/Modal.module.scss'
+
 interface ModalProps {
   openModal: boolean
   closeModal: () => void
@@ -11,8 +13,8 @@ export const Modal: FC<ModalProps> = ({ openModal, closeModal, children }) => {
   const ref = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent) => {
-      if (ref.current && event.target instanceof Node && event.target === ref.current) {
+    const handleOutsideClick = (ev: MouseEvent) => {
+      if (ref.current && ev.target instanceof Node && ev.target === ref.current) {
         closeModal()
       }
     }
@@ -30,11 +32,7 @@ export const Modal: FC<ModalProps> = ({ openModal, closeModal, children }) => {
   }, [openModal, closeModal])
 
   return (
-    <dialog
-      ref={ref}
-      onCancel={closeModal}
-      style={{ border: 'unset', padding: 'unset', background: 'unset' }}
-    >
+    <dialog ref={ref} onCancel={closeModal} className={classNames.dialog}>
       {children}
     </dialog>
   )

@@ -88,7 +88,8 @@ export const Form = () => {
       <Input
         type="number"
         value={value}
-        style={{ width: '100%', marginBottom: '24px' }}
+        wrapperStyles={{ width: '100%', marginBottom: '24px' }}
+        style={{ width: '100%' }}
         onChange={handleChange}
       />
       <Button
