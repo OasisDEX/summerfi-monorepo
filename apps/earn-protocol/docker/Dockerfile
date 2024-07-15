@@ -3,8 +3,8 @@ EXPOSE 3000
 WORKDIR .
 COPY .next/standalone .next/standalone
 COPY package.json next.config.mjs .
-COPY public .next/standalone/apps/earn-protofol/public
-COPY .next/static .next/standalone/apps/earn-protofol/.next/static
+COPY public .next/standalone/apps/earn-protocol/public
+COPY .next/static .next/standalone/apps/earn-protocol/.next/static
 
 ARG FUNCTIONS_API_URL \
     BORROW_DB_READ_CONNECTION_STRING \
@@ -30,4 +30,4 @@ ENV FUNCTIONS_API_URL=$FUNCTIONS_API_URL \
     FUNCTIONS_API_URL=$FUNCTIONS_API_URL \
     ACCOUNT_KIT_API_KEY=$ACCOUNT_KIT_API_KEY
 
-CMD [ "node", ".next/standalone/apps/earn-protofol/server.js" ]
+CMD [ "node", ".next/standalone/apps/earn-protocol/server.js" ]
