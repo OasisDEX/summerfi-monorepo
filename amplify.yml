@@ -12,10 +12,6 @@ applications:
         build:
           commands:
             - pnpm build-earn-frontend
-        postBuild:
-          commands:
-            - cp -r apps/earn-protocol/.next/standalone/apps/earn-protocol/.
-              apps/earn-protocol/.next/standalone
       artifacts:
         baseDirectory: apps/earn-protocol/.next
         files:
