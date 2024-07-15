@@ -6,11 +6,13 @@ applications:
       phases:
         preBuild:
           commands:
-            - npx pnpm install
-            - npx pnpm prebuild
+            - echo "node-linker=hoisted" > .npmrc
+            - npm install -g pnpm
+            - pnpm install
+            - pnpm prebuild
         build:
           commands:
-            - npx pnpm build-earn-frontend
+            - pnpm build-earn-frontend
         postBuild:
           commands:
             - cp -r apps/earn-protocol/.next/standalone/apps/earn-protocol/.
