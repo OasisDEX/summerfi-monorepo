@@ -122,7 +122,6 @@ jobs:
                        --build-arg FUNCTIONS_API_URL=${{ secrets.FUNCTIONS_API_URL }} \
                        --build-arg MIXPANEL_KEY=${{ secrets.MIXPANEL_KEY }} \
                        --build-arg NEXT_PUBLIC_MIXPANEL_KEY=${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }} \
-                       --cache-from=$ECR_REGISTRY/$ECR_REPO_NAME:$LATEST_TAG \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$SHA_TAG \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$LATEST_TAG \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$ENVIRONMENT_TAG \
