@@ -4,9 +4,9 @@ frontend:
     preBuild:
       commands:
         - npx pnpm install
+        - npx pnpm prebuild
     build:
       commands:
-        - npx pnpm prebuild
         - npx pnpm build-earn-frontend
   artifacts:
     baseDirectory: apps/earn-protocol/.next
@@ -16,3 +16,5 @@ frontend:
     paths:
       - node_modules/**/*
       - /**/*/node_modules/**/*
+      - .turbo/**/*
+      - /**/*/.turbo/**/*
