@@ -6,7 +6,6 @@ applications:
       phases:
         preBuild:
           commands:
-            - echo "node-linker=hoisted" > .npmrc
             - npm install -g pnpm
             - pnpm install
             - pnpm prebuild
