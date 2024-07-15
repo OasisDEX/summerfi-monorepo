@@ -17,6 +17,6 @@ applications:
             - cp -r apps/earn-protocol/.next/standalone/apps/earn-protocol/.
               apps/earn-protocol/.next/standalone
       artifacts:
-        baseDirectory: apps/earn-protocol/.next/standalone
+        baseDirectory: apps/earn-protocol/.next
         files:
           - '**/*'
