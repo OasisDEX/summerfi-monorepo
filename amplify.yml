@@ -15,9 +15,3 @@ applications:
         baseDirectory: apps/earn-protocol/.next
         files:
           - '**/*'
-      cache:
-        paths:
-          - node_modules/**/*
-          - /**/*/node_modules/**/*
-          - .turbo/**/*
-          - /**/*/.turbo/**/*
