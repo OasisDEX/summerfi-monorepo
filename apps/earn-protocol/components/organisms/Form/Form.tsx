@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { Button, Card, Input, Text } from '@summerfi/app-ui'
 import { useAppState, useConnectWallet } from '@web3-onboard/react'
-import { signMessage } from '@web3-onboard/wagmi'
+import { type Config as WagmiConfig, signMessage } from '@web3-onboard/wagmi'
 
 enum Action {
   DEPOSIT = 'deposit',
@@ -17,7 +17,7 @@ export const Form = () => {
 
   async function signTestMessage() {
     // current primary wallet - as multiple wallets can connect this value is the currently active
-    await signMessage(wagmiConfig, {
+    await signMessage(wagmiConfig as WagmiConfig, {
       message: 'This is my message to you',
       connector: wallet?.wagmiConnector,
     }).then((res) => {

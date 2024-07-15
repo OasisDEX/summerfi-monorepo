@@ -6,7 +6,8 @@ frontend:
         - npx pnpm install
     build:
       commands:
-        - npx pnpm build
+        - npx pnpm prebuild
+        - npx pnpm build-earn-frontend
   artifacts:
     baseDirectory: apps/earn-protocol/.next
     files:
