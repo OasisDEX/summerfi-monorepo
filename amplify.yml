@@ -1,20 +1,23 @@
 version: 1
-frontend:
-  phases:
-    preBuild:
-      commands:
-        - npx pnpm install
-        - npx pnpm prebuild
-    build:
-      commands:
-        - npx pnpm build-earn-frontend
-  artifacts:
-    baseDirectory: apps/earn-protocol/.next
-    files:
-      - '**/*'
-  cache:
-    paths:
-      - node_modules/**/*
-      - /**/*/node_modules/**/*
-      - .turbo/**/*
-      - /**/*/.turbo/**/*
+applications:
+  - appRoot: apps/react-app
+    frontend:
+      buildPath: /
+      phases:
+        preBuild:
+          commands:
+            - npx pnpm install
+            - npx pnpm prebuild
+        build:
+          commands:
+            - npx pnpm build-earn-frontend
+      artifacts:
+        baseDirectory: apps/earn-protocol/.next
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
+          - /**/*/node_modules/**/*
+          - .turbo/**/*
+          - /**/*/.turbo/**/*
