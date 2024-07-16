@@ -14,6 +14,7 @@ export { Select } from './components/atoms/Select/Select'
 export { SkeletonLine } from './components/atoms/SkeletonLine/SkeletonLine'
 export { Text } from './components/atoms/Text/Text'
 export { WithArrow } from './components/atoms/WithArrow/WithArrow'
+export { Modal } from './components/atoms/Modal/Modal'
 
 export { AutomationIcon } from './components/molecules/AutomationIcon/AutomationIcon'
 export { BannerCard } from './components/molecules/BannerCard/BannerCard'
@@ -21,6 +22,7 @@ export { Dial } from './components/molecules/Dial/Dial'
 export { LoadingSpinner } from './components/molecules/Loader/Loader'
 export { ProtocolLabel } from './components/molecules/ProtocolLabel/ProtocolLabel'
 export { RadioButtonGroup } from './components/molecules/RadioButtonGroup/RadioButtonGroup'
+export { RaysCountSmall } from './components/molecules/RaysCountSmall/RaysCountSmall'
 export { Table } from './components/molecules/Table/Table'
 export { TokensGroup } from './components/molecules/TokensGroup/TokensGroup'
 export { Tooltip } from './components/molecules/Tooltip/Tooltip'
@@ -32,14 +34,12 @@ export { Footer } from './components/layout/Footer/Footer'
 
 export { Navigation } from './components/layout/Navigation/Navigation'
 export { NavigationMenuDropdownContentListItem } from './components/layout/Navigation/NavigationMenuDropdownContentListItem'
-export * from './components/layout/Navigation/Navigation.types'
 
 export { EXTERNAL_LINKS, INTERNAL_LINKS } from './helpers/application-links'
 
 export { formatAddress } from './helpers/format-address'
 
 // tokens
-export type { IconNamesList, TokenSymbolsList, TokenConfig } from './tokens/types'
 export { tokenConfigs } from './tokens/config'
 export {
   getToken,

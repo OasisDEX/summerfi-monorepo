@@ -204,6 +204,13 @@ module.exports = {
     // @typescript-eslint/eslint-plugin */
 
     '@typescript-eslint/array-type': 'error',
+    '@typescript-eslint/consistent-type-imports': [
+      'error',
+      {
+        prefer: 'type-imports',
+        fixStyle: 'inline-type-imports',
+      },
+    ],
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/consistent-indexed-object-style': ['error', 'index-signature'],
     '@typescript-eslint/no-unused-vars': [

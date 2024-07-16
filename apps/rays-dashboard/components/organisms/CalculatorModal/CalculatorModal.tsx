@@ -5,7 +5,7 @@ import { Button, Divider, Input, RadioButtonGroup, Text } from '@summerfi/app-ui
 import BigNumber from 'bignumber.js'
 
 import { AnimatedNumber } from '@/components/molecules/AnimatedNumber/AnimatedNumber'
-import { ModalButton, ModalButtonProps } from '@/components/molecules/Modal/ModalButton'
+import { ModalButton, type ModalButtonProps } from '@/components/molecules/Modal/ModalButton'
 import { CALCULATOR_NET_VALUE_CAP, getCalculatorValues } from '@/helpers/calculator'
 import { formatAsShorthandNumbers } from '@/helpers/formatters'
 
@@ -15,7 +15,7 @@ const cleanInputValue = (value: string) => `${value}`.replace('$', '').trim()
 
 const CalculatorModalRaysValue = ({ value, label }: { value: number; label: string }) => {
   return (
-    <div className={calculatorModalStyles.valueBox}>
+    <div className={calculatorModalStyles.valueBox} title={`${label}: ${value.toPrecision(2)}`}>
       <Text
         as="h4"
         variant="h4"

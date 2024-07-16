@@ -1,4 +1,4 @@
-import classNames from 'classnames'
+import clsx from 'clsx'
 
 import loaderStyles from '@/components/molecules/Loader/Loader.module.scss'
 
@@ -30,7 +30,7 @@ export const LoadingSpinner = ({
     strokeLinecap="round"
     strokeLinejoin="round"
     style={style}
-    className={classNames(loaderStyles.animateSpin, className, {
+    className={clsx(loaderStyles.animateSpin, className, {
       [loaderStyles.animateSpinFast]: fast,
     })}
   >

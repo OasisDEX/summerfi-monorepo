@@ -1,9 +1,9 @@
-import { createElement, FC, forwardRef } from 'react'
+import { createElement, type FC, forwardRef } from 'react'
 
 import { getAtomClassList } from '@/components/atoms/getAtomClassList'
-import { AtomProps } from '@/components/atoms/types'
+import { type AtomProps } from '@/components/atoms/types'
 
-import classNames, { ClassNames } from '@/components/atoms/Button/Button.module.scss'
+import buttonStyles, { type ClassNames } from '@/components/atoms/Button/Button.module.scss'
 
 // TODO this props handling is broken, we shouldn't need to manually type disabled prop etc.
 export const Button: FC<AtomProps<'button', ClassNames> & { disabled?: boolean }> = forwardRef(
@@ -13,7 +13,7 @@ export const Button: FC<AtomProps<'button', ClassNames> & { disabled?: boolean }
         ref,
         className: getAtomClassList({
           className,
-          variant: variant ? classNames[variant] : undefined,
+          variant: variant ? buttonStyles[variant] : undefined,
         }),
         ...props,
       },

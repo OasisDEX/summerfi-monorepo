@@ -29,6 +29,8 @@
 }
 
 .wrapperTitle {
+  width: 100%;
+  max-width: 360px;
   margin-right: var(--space-xxxl);
   @include media('<=s') {
     margin-right: var(--space-l);
@@ -84,6 +86,7 @@ span.rankChangeInfo {
 }
 
 .topClimbersListRankChange {
+  white-space: nowrap;
   color: var(--color-success-100);
   stroke: var(--color-success-100);
 }

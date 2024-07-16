@@ -1,9 +1,8 @@
+import { type RaysApiResponse } from '@summerfi/app-types'
 import { Card, EXTERNAL_LINKS, Icon, Text, Tooltip } from '@summerfi/app-ui'
 import Link from 'next/link'
 
-import { RaysApiResponse } from '@/server-handlers/rays'
-
-import classNames from '@/components/molecules/CriteriaList/CriteriaList.module.scss'
+import criteriaListStyles from '@/components/molecules/CriteriaList/CriteriaList.module.scss'
 
 interface CriteriaListProps {
   userRays:
@@ -61,15 +60,15 @@ const getCriteriaItems = ({ userTypes }: { userTypes?: RaysApiResponse['userType
 
 export const CriteriaList = ({ userRays }: CriteriaListProps) => {
   return (
-    <div className={classNames.wrapper}>
+    <div className={criteriaListStyles.wrapper}>
       <Card variant="cardDark">
-        <div className={classNames.cardContent}>
+        <div className={criteriaListStyles.cardContent}>
           <Text as="h5" variant="h5">
             Criteria
           </Text>
           <ul>
             {getCriteriaItems({ userTypes: userRays?.rays?.userTypes }).map((item) => (
-              <li key={item.title} className={classNames.listItem}>
+              <li key={item.title} className={criteriaListStyles.listItem}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <div
                     style={{
@@ -89,7 +88,7 @@ export const CriteriaList = ({ userRays }: CriteriaListProps) => {
                   </Text>
                   <Tooltip
                     tooltip={
-                      <div className={classNames.tooltipWrapper}>
+                      <div className={criteriaListStyles.tooltipWrapper}>
                         <Text as="p" variant="p2semi" style={{ color: 'var(--color-primary-100' }}>
                           {item.tooltip.title}
                         </Text>

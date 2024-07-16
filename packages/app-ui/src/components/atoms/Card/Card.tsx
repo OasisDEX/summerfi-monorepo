@@ -1,8 +1,8 @@
-import { DetailedHTMLProps, FC, HTMLAttributes, ReactNode } from 'react'
+import { type DetailedHTMLProps, type FC, type HTMLAttributes, type ReactNode } from 'react'
 
 import { getAtomClassList } from '@/components/atoms/getAtomClassList'
 
-import classNames, { ClassNames } from '@/components/atoms/Card/Card.module.scss'
+import cardStyles, { type ClassNames } from '@/components/atoms/Card/Card.module.scss'
 
 interface CardProps {
   children: ReactNode
@@ -16,7 +16,7 @@ export const Card: FC<CardProps & DetailedHTMLProps<HTMLAttributes<HTMLElement>,
   style,
 }) => {
   return (
-    <div className={getAtomClassList({ className, variant: classNames[variant] })} style={style}>
+    <div className={getAtomClassList({ className, variant: cardStyles[variant] })} style={style}>
       {children}
     </div>
   )

@@ -17,12 +17,10 @@
     "generate-module-types-watch": "typed-scss-modules -w 'src/**/*.module.scss'",
     "dev": "pnpm generate-module-types-watch & vite build -w true",
     "build": "pnpm generate-module-types & vite build -w false",
-    "prebuild": "pnpm generate-module-types & vite build -w false",
-    "hackBuild": "pnpm generate-module-types & vite build -w false",
-    "hackPreConstruct": "pnpm generate-module-types & vite build -w false",
     "clean": "rm -rf dist"
   },
   "devDependencies": {
+    "@summerfi/app-types": "workspace:*",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
     "@types/loadable__component": "^5.13.9",
@@ -31,8 +29,6 @@
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.2.1",
-    "boring-avatars": "1.10.1",
-    "classnames": "^2.5.1",
     "eslint": "8.57.0",
     "glob": "^10.3.12",
     "jest": "29.7.0",
@@ -45,6 +41,9 @@
   "peerDependencies": {
     "@loadable/component": "^5.16.4",
     "@tabler/icons-react": "^3.4.0",
+    "bignumber.js": "^9.1.2",
+    "boring-avatars": "1.10.2",
+    "clsx": "^2.1.1",
     "lodash": "^4.17.21",
     "next": "^14.2.3",
     "react": "^18.3.1",

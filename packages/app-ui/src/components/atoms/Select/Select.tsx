@@ -1,11 +1,11 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 
-import classNames from '@/components/atoms/Select/Select.module.scss'
+import selectStyles from '@/components/atoms/Select/Select.module.scss'
 
 interface SelectProps {
   options: { value: string; label: string }[]
@@ -27,8 +27,8 @@ export const Select: React.FC<SelectProps> = ({ options, onChange, value, placeh
     setIsOpen(false)
   }
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
+  const handleClickOutside = (ev: MouseEvent) => {
+    if (selectRef.current && !selectRef.current.contains(ev.target as Node)) {
       setIsOpen(false)
     }
   }
@@ -44,20 +44,20 @@ export const Select: React.FC<SelectProps> = ({ options, onChange, value, placeh
   const selectedOption = options.find((option) => option.value === value)
 
   return (
-    <div className={classNames.selectContainer} ref={selectRef}>
-      <div className={classNames.styledSelect} onClick={handleToggle}>
+    <div className={selectStyles.selectContainer} ref={selectRef}>
+      <div className={selectStyles.styledSelect} onClick={handleToggle}>
         <Text as="span" variant="p3semi">
           {selectedOption ? selectedOption.label : placeholder}
         </Text>
         <Icon iconName="chevron_down" size={11} />
       </div>
       {isOpen && (
-        <ul className={classNames.selectOptions}>
+        <ul className={selectStyles.selectOptions}>
           {options.map((option) => (
             <li
               key={option.value}
               className={
-                option.value === value ? classNames.selectedOption : classNames.selectOption
+                option.value === value ? selectStyles.selectedOption : selectStyles.selectOption
               }
               onClick={() => handleOptionClick(option.value)}
             >

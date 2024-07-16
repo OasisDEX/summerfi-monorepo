@@ -1,10 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import classNames from 'classnames'
+import { type NavigationMenuPanelType, type WithNavigationModules } from '@summerfi/app-types'
+import clsx from 'clsx'
 
-import {
-  NavigationMenuPanelType,
-  WithNavigationModules,
-} from '@/components/layout/Navigation/Navigation.types'
 import { NavigationMenuDropdownContent } from '@/components/layout/Navigation/NavigationMenuDropdownContent'
 
 import navigationMenuDropdownStyles from './NavigationMenuDropdown.module.scss'
@@ -40,12 +37,12 @@ function NavigationMenuPointer({
 }: NavigationMenuPointerProps) {
   return (
     <div
-      className={classNames(navigationMenuDropdownStyles.navigationMenuPointer, {
+      className={clsx(navigationMenuDropdownStyles.navigationMenuPointer, {
         [navigationMenuDropdownStyles.navigationMenuPointerActive]: isPanelOpen,
       })}
     >
       <div
-        className={classNames(navigationMenuDropdownStyles.arrow, {
+        className={clsx(navigationMenuDropdownStyles.arrow, {
           [navigationMenuDropdownStyles.arrowActive]: isPanelSwitched,
         })}
         style={{
@@ -76,7 +73,7 @@ export const NavigationMenuDropdown = ({
 
   return (
     <div
-      className={classNames(navigationMenuDropdownStyles.navigationMenu, {
+      className={clsx(navigationMenuDropdownStyles.navigationMenu, {
         [navigationMenuDropdownStyles.navigationMenuActive]: isPanelOpen,
       })}
       style={{
@@ -88,9 +85,9 @@ export const NavigationMenuDropdown = ({
         isPanelOpen={isPanelOpen}
         isPanelSwitched={isPanelSwitched}
       />
-      <div className={classNames(navigationMenuDropdownStyles.navigationMenuDropdownWrapper)}>
+      <div className={clsx(navigationMenuDropdownStyles.navigationMenuDropdownWrapper)}>
         <div
-          className={classNames(navigationMenuDropdownStyles.navigationMenuDropdownBlock, {
+          className={clsx(navigationMenuDropdownStyles.navigationMenuDropdownBlock, {
             [navigationMenuDropdownStyles.navigationMenuDropdownBlockActive]: isPanelOpen,
           })}
           style={{
@@ -98,7 +95,7 @@ export const NavigationMenuDropdown = ({
           }}
         >
           <div
-            className={classNames(navigationMenuDropdownStyles.navigationMenuDropdownBlockInside, {
+            className={clsx(navigationMenuDropdownStyles.navigationMenuDropdownBlockInside, {
               [navigationMenuDropdownStyles.navigationMenuDropdownBlockInsideActive]:
                 isPanelSwitched || isListSwitched,
             })}
@@ -109,15 +106,12 @@ export const NavigationMenuDropdown = ({
             {panels.map(({ label, ...panel }, i) => (
               <div
                 key={i}
-                className={classNames(
-                  navigationMenuDropdownStyles.navigationMenuDropdownPanelWrapper,
-                  {
-                    [navigationMenuDropdownStyles.navigationMenuDropdownPanelWrapperIsCurrentPanel]:
-                      isPanelOpen && currentPanel === label,
-                    [navigationMenuDropdownStyles.navigationMenuDropdownPanelWrapperIsPanelSwitched]:
-                      isPanelSwitched,
-                  },
-                )}
+                className={clsx(navigationMenuDropdownStyles.navigationMenuDropdownPanelWrapper, {
+                  [navigationMenuDropdownStyles.navigationMenuDropdownPanelWrapperIsCurrentPanel]:
+                    isPanelOpen && currentPanel === label,
+                  [navigationMenuDropdownStyles.navigationMenuDropdownPanelWrapperIsPanelSwitched]:
+                    isPanelSwitched,
+                })}
                 style={{
                   transform: `translateX(${getDropdownTranslation(
                     labelsMap,

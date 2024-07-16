@@ -1,8 +1,8 @@
+import { type NavigationMenuPanelList } from '@summerfi/app-types'
 import { IconStarFilled } from '@tabler/icons-react'
-import classNames from 'classnames'
+import clsx from 'clsx'
 
 import { Text } from '@/components/atoms/Text/Text'
-import { NavigationMenuPanelList } from '@/components/layout/Navigation/Navigation.types'
 import { NavigationMenuDropdownContentIcon } from '@/components/layout/Navigation/NavigationMenuDropdownContentIcon'
 
 import navigationMenuDropdownContentListItemStyles from './NavigationMenuDropdownContentListItem.module.scss'
@@ -39,7 +39,7 @@ export function NavigationMenuDropdownContentListItem({
             as="h3"
             variant="p3semi"
             data-value={title}
-            className={classNames(
+            className={clsx(
               navigationMenuDropdownContentListItemStyles.navigationMenuDropdownContentListItemTitle,
               navigationMenuDropdownContentListItemStyles[
                 `navigationMenuDropdownContentListItemTitleGradient${protocolName}` as keyof typeof navigationMenuDropdownContentListItemStyles
@@ -51,7 +51,7 @@ export function NavigationMenuDropdownContentListItem({
           >
             {promoted && (
               <span
-                className={classNames(
+                className={clsx(
                   'star-with-effect',
                   navigationMenuDropdownContentListItemStyles.starTransition,
                 )}
@@ -85,7 +85,7 @@ export function NavigationMenuDropdownContentListItem({
             {tags.map((tag, i) => (
               <li
                 key={i}
-                className={classNames(
+                className={clsx(
                   navigationMenuDropdownContentListItemStyles.navigationMenuDropdownContentListItemTagsLi,
                   {
                     [navigationMenuDropdownContentListItemStyles.navigationMenuDropdownContentListItemTagsLiNotFirst]:

@@ -1,14 +1,14 @@
 'use client'
 
-import { FC } from 'react'
+import { type FC } from 'react'
 import { SkeletonLine, Table, Text } from '@summerfi/app-ui'
 
 import {
   leaderboardColumns,
-  mapLeaderboardColumns,
+  type mapLeaderboardColumns,
 } from '@/components/organisms/Leaderboard/columns'
 
-import classNames from '@/components/organisms/Leaderboard/Leaderboard.module.scss'
+import leaderboardStyles from '@/components/organisms/Leaderboard/Leaderboard.module.scss'
 
 interface LeaderboardProps {
   leaderboardData?: ReturnType<typeof mapLeaderboardColumns>
@@ -26,14 +26,14 @@ export const Leaderboard: FC<LeaderboardProps> = ({
   const isZeroResults = leaderboardData?.length === 0
 
   return (
-    <div className={classNames.leaderboardWrapper}>
-      <div className={classNames.headingWrapper}>
+    <div className={leaderboardStyles.leaderboardWrapper}>
+      <div className={leaderboardStyles.headingWrapper}>
         <Text as="h2" variant="h2">
           {title ? title : 'Leaderboard'}
         </Text>
       </div>
       {isError && (
-        <div className={classNames.errorWrapper}>
+        <div className={leaderboardStyles.errorWrapper}>
           <Text as="h5" variant="h5">
             There was a problem loading the leaderboard. Please try again.
           </Text>
@@ -70,7 +70,7 @@ export const Leaderboard: FC<LeaderboardProps> = ({
         />
       )}
       {isZeroResults && !isLoading && (
-        <div className={classNames.errorWrapper}>
+        <div className={leaderboardStyles.errorWrapper}>
           <Text as="h5" variant="h5">
             No results found
           </Text>

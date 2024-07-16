@@ -1,10 +1,15 @@
-import React, { DetailedHTMLProps, FC, InputHTMLAttributes } from 'react'
+import {
+  type CSSProperties,
+  type DetailedHTMLProps,
+  type FC,
+  type InputHTMLAttributes,
+} from 'react'
+import { type IconNamesList } from '@summerfi/app-types'
 
 import { getAtomClassList } from '@/components/atoms/getAtomClassList'
 import { Icon } from '@/components/atoms/Icon/Icon'
-import { IconNamesList } from '@/tokens/types'
 
-import classNames, { ClassNames } from '@/components/atoms/Input/Input.module.scss'
+import inputStyles, { type ClassNames } from '@/components/atoms/Input/Input.module.scss'
 
 export const Input: FC<
   DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
@@ -15,25 +20,25 @@ export const Input: FC<
       size?: number
     }
     CustomIcon?: FC
-    style?: React.CSSProperties
+    wrapperStyles?: CSSProperties
   }
-> = ({ variant = 'default', className, CustomIcon, icon, style, ...rest }) => {
+> = ({ variant = 'default', className, CustomIcon, icon, wrapperStyles, ...rest }) => {
   return (
-    <div className={classNames.wrapper} style={style}>
+    <div className={inputStyles.wrapper} style={wrapperStyles}>
       {icon && (
-        <div className={classNames.iconWrapper}>
+        <div className={inputStyles.iconWrapper}>
           <Icon iconName={icon.name} size={icon.size} variant="s" />
         </div>
       )}
       {CustomIcon && (
-        <div className={classNames.iconWrapper}>
+        <div className={inputStyles.iconWrapper}>
           <CustomIcon />
         </div>
       )}
       <input
         className={[
-          icon ? classNames.withIconOffset : '',
-          getAtomClassList({ className, variant: classNames[variant] }),
+          icon ? inputStyles.withIconOffset : '',
+          getAtomClassList({ className, variant: inputStyles[variant] }),
         ].join(' ')}
         {...rest}
       />

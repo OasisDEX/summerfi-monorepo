@@ -73,6 +73,10 @@ export default defineConfig({
       external: [
         'react',
         'react/jsx-runtime',
+        'next',
+        'clsx',
+        'bignumber.js',
+        'boring-avatars',
         'next/link',
         'next/image',
         'lodash',

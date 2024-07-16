@@ -1,4 +1,4 @@
-import classNames from '@/components/atoms/SkeletonLine/SkeletonLine.module.scss'
+import skeletonStyles from '@/components/atoms/SkeletonLine/SkeletonLine.module.scss'
 
 type SkeletonColorTheme =
   | 'default'
@@ -47,7 +47,7 @@ export const SkeletonLine = ({
 
   return (
     <span
-      className={classNames.skeletonLine}
+      className={skeletonStyles.skeletonLine}
       style={{
         position: 'relative',
         display: 'block',

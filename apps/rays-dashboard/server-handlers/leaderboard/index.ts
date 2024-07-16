@@ -1,5 +1,6 @@
 'use server'
-import { LeaderboardResponse } from '@/types/leaderboard'
+
+import { type LeaderboardResponse } from '@summerfi/app-types'
 
 export const fetchLeaderboard = async (
   query:

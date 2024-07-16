@@ -1,9 +1,9 @@
-import { DetailedHTMLProps, HTMLAttributes } from 'react'
+import { type DetailedHTMLProps, type HTMLAttributes } from 'react'
 
-export type AtomProps<AllowedHtmlTags, ClassNames> = DetailedHTMLProps<
+export type AtomProps<AllowedHtmlTags, AtomPropsClasses> = DetailedHTMLProps<
   HTMLAttributes<HTMLElement>,
   HTMLElement
 > & {
   as?: AllowedHtmlTags
-  variant?: ClassNames
+  variant?: AtomPropsClasses
 }
