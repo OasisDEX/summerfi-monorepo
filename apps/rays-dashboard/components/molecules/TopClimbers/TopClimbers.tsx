@@ -149,10 +149,7 @@ export const TopClimbers = ({
                 variant="p4"
                 className={`${topClimbersStyles.topClimbersListRankChangeInfo} ${topClimbersStyles.rankChangeInfo}`}
               >
-                {formatAsShorthandNumbers(
-                  new BigNumber(Number(entry.totalPoints) - Number(entry.points22h)),
-                  2,
-                )}{' '}
+                {formatAsShorthandNumbers(new BigNumber(Number(entry.points22h)), 2)}{' '}
                 <IconArrowRight size={10} style={{ marginBottom: '3px' }} />{' '}
                 {formatAsShorthandNumbers(new BigNumber(entry.totalPoints), 2)}
               </Text>
@@ -179,7 +176,7 @@ export const TopClimbers = ({
             )}
             <Text variant="p3semi" className={topClimbersStyles.topClimbersListRankChange}>
               {topClimbersTab === TopClimbersTabs.top_gainers_points
-                ? `+ ${formatAsShorthandNumbers(new BigNumber(entry.points22h), 2)}`
+                ? `+ ${formatAsShorthandNumbers(new BigNumber(Number(entry.totalPoints) - Number(entry.points22h)), 2)}`
                 : `${formatAsShorthandNumbers(new BigNumber(Number(entry.rank22h) - Number(entry.rank)), 0)}`}
             </Text>
           </div>
