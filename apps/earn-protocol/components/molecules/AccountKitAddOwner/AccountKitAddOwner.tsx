@@ -47,7 +47,12 @@ export const AccountKitAddOwner = () => {
 
   return (
     <div>
-      <Input value={owner} onChange={handleChange} placeholder="Additional owner address" />
+      <Input
+        value={owner}
+        onChange={handleChange}
+        placeholder="Additional owner address"
+        style={{ marginBottom: '16px' }}
+      />
       <Button variant="primarySmall" onClick={handleUpdate} disabled={isLoading}>
         {isLoading ? 'Adding' : 'Add'} Backup Owner
         {txHash && <p>TxHash: {txHash}</p>}
