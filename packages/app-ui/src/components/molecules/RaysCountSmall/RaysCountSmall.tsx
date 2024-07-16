@@ -48,26 +48,30 @@ export const RaysCountSmall = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userAddress])
 
-  if (!userAddress) {
-    return null
-  }
-
   return (
     <Link
-      href={{
-        pathname: '/',
-        query: { userAddress },
-      }}
+      href={
+        userAddress
+          ? {
+              pathname: '/',
+              query: { userAddress },
+            }
+          : '/'
+      }
       style={{ textDecoration: 'none' }}
       suppressHydrationWarning
     >
       <div className={raysCountSmallStyles.raysCountWrapper}>
         <Icon iconName="rays" size={24} />
         <Text variant="p4semi" suppressHydrationWarning>
-          {loadingRaysCount || raysCount === null ? (
+          {loadingRaysCount ? (
             <SkeletonLine height={15} width={60} />
           ) : (
-            <>{formatter(new BigNumber(raysCount)).split('.')[0]} Rays</>
+            <>
+              {raysCount
+                ? `${formatter(new BigNumber(raysCount)).split('.')[0]} Rays`
+                : 'Get $RAYS'}
+            </>
           )}
         </Text>
       </div>
