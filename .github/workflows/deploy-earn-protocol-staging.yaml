@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: staging
     env:
-      AWS_REGION: eu-central-1
+      AWS_REGION: us-east-1
       ENVIRONMENT_TAG: staging
       SERVICE_NAME: summer-fi-earn-protocol-staging
       CLUSTER_NAME: summer-fi-earn-protocol-staging
