@@ -5,7 +5,7 @@ import {
   type WithNavigationModules,
 } from '@summerfi/app-types'
 import { IconX } from '@tabler/icons-react'
-import classNames from 'classnames'
+import clsx from 'clsx'
 import Image from 'next/image'
 
 import { NavigationMobileMenuPanel } from '@/components/layout/Navigation/NavigationMobileMenuPanel'
@@ -32,7 +32,7 @@ export const NavigationMenuMobile = ({
 
   return (
     <div
-      className={classNames(navigationMenuMobileStyles.navigationMenuMobileWrapper, {
+      className={clsx(navigationMenuMobileStyles.navigationMenuMobileWrapper, {
         [navigationMenuMobileStyles.navigationMenuMobileWrapperActive]: menuOpened,
       })}
     >

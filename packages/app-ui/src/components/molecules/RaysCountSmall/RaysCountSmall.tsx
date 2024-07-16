@@ -32,13 +32,15 @@ export const RaysCountSmall = ({
 }: RaysCountSmallProps) => {
   const [loadingRaysCount, setLoadingRaysCount] = useState<boolean>(false)
   const [raysCount, setRaysCount] = useState<number | null>(null)
+  const [raysAddresses, setRaysAddresses] = useState<string[]>([])
 
   useEffect(() => {
-    if (userAddress) {
+    if (userAddress && !raysAddresses.includes(userAddress)) {
       setLoadingRaysCount(true)
       raysFetchFunction().then((response) => {
         if (response.rays?.allPossiblePoints !== undefined) {
           setLoadingRaysCount(false)
+          setRaysAddresses([...raysAddresses, userAddress])
           setRaysCount(response.rays.allPossiblePoints)
         }
       })
@@ -48,19 +50,28 @@ export const RaysCountSmall = ({
 
   return (
     <Link
-      href={{
-        pathname: '/',
-        query: { userAddress },
-      }}
+      href={
+        userAddress
+          ? {
+              pathname: '/',
+              query: { userAddress },
+            }
+          : '/'
+      }
       style={{ textDecoration: 'none' }}
+      suppressHydrationWarning
     >
       <div className={raysCountSmallStyles.raysCountWrapper}>
         <Icon iconName="rays" size={24} />
         <Text variant="p4semi" suppressHydrationWarning>
-          {loadingRaysCount || raysCount === null ? (
+          {loadingRaysCount ? (
             <SkeletonLine height={15} width={60} />
           ) : (
-            <>{formatter(new BigNumber(raysCount)).split('.')[0]} Rays</>
+            <>
+              {raysCount
+                ? `${formatter(new BigNumber(raysCount)).split('.')[0]} Rays`
+                : 'Get $RAYS'}
+            </>
           )}
         </Text>
       </div>

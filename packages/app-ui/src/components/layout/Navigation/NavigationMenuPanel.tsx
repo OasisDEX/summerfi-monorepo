@@ -1,5 +1,5 @@
 import { type NavigationMenuPanelProps } from '@summerfi/app-types'
-import classNames from 'classnames'
+import clsx from 'clsx'
 import Link from 'next/link'
 
 import { ProxyLinkComponent } from '@/components/atoms/ProxyLinkComponent/ProxyLinkComponent'
@@ -16,7 +16,7 @@ function NavigationMenuPanelLabel({
     <Text
       as="span"
       variant="p3semi"
-      className={classNames(navigationMenuStyles.navigationMenuPanelLabel, {
+      className={clsx(navigationMenuStyles.navigationMenuPanelLabel, {
         [navigationMenuStyles.navigationMenuPanelLabelActive]:
           isPanelOpen && currentPanel === label,
       })}

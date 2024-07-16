@@ -1,7 +1,7 @@
 'use client'
 import { type FC, type ReactNode, useEffect, useRef } from 'react'
 
-import classNames from '@/components/atoms/Modal/Modal.module.scss'
+import modalStyles from '@/components/atoms/Modal/Modal.module.scss'
 
 interface ModalProps {
   openModal: boolean
@@ -32,7 +32,7 @@ export const Modal: FC<ModalProps> = ({ openModal, closeModal, children }) => {
   }, [openModal, closeModal])
 
   return (
-    <dialog ref={ref} onCancel={closeModal} className={classNames.dialog}>
+    <dialog ref={ref} onCancel={closeModal} className={modalStyles.dialog}>
       {children}
     </dialog>
   )

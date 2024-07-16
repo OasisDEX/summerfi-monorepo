@@ -8,7 +8,7 @@ import { AccountChangeHandler } from '@/components/organisms/AccountChangeHandle
 import { parseServerResponse } from '@/helpers/parse-server-response'
 import systemConfigHandler from '@/server-handlers/system-config'
 
-import classNames from './MasterPage.module.scss'
+import masterPageStyles from './MasterPage.module.scss'
 
 interface MasterPageProps {}
 
@@ -20,17 +20,17 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({ child
   return (
     <>
       <WalletInit />
-      <div className={classNames.mainContainer}>
+      <div className={masterPageStyles.mainContainer}>
         <Image
           src="/img/backgrounds/bg-simple.svg"
-          className={classNames.backgroundSimple}
+          className={masterPageStyles.backgroundSimple}
           width={0}
           height={0}
           style={{ height: 'auto', width: '100%' }}
           alt=""
         />
         <NavigationWrapper panels={systemConfig.navigation} />
-        <div className={classNames.appContainer}>
+        <div className={masterPageStyles.appContainer}>
           {children}
           <Footer
             logo="img/branding/logo-dark.svg"

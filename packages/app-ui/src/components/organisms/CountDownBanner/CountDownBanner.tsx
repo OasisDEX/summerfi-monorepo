@@ -5,7 +5,7 @@ import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { CountDown } from '@/components/organisms/CountDown/CountDown'
 
-import classNames from '@/components/organisms/CountDownBanner/CountDownBanner.module.scss'
+import countdownBannerStyles from '@/components/organisms/CountDownBanner/CountDownBanner.module.scss'
 
 interface CountDownBannerProps {
   countdownLabel: string
@@ -16,10 +16,10 @@ export const CountDownBanner: FC<CountDownBannerProps> = ({ futureTimestamp, cou
   return (
     <Card
       style={{ backgroundImage: 'var(--gradient-summer-fi-lightest)', border: 'unset' }}
-      className={classNames.content}
+      className={countdownBannerStyles.content}
       variant="cardSmallPaddings"
     >
-      <div className={classNames.infoWrapper}>
+      <div className={countdownBannerStyles.infoWrapper}>
         <Icon iconName="rays" size={32} />
         <Text as="p" variant="p2semi" style={{ maxWidth: '70%' }}>
           {countdownLabel}

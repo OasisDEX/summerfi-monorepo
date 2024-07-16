@@ -1,7 +1,7 @@
 /* eslint-disable  no-mixed-operators */
 import { type FC, type ReactNode } from 'react'
 import { type IconNamesList } from '@summerfi/app-types'
-import classNames from 'classnames'
+import clsx from 'clsx'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
@@ -43,7 +43,7 @@ export const Dial: FC<DialProps> = ({
   const endY = 50 + Math.sin((gradientRotation + 90) * (Math.PI / 180)) * 50
 
   return (
-    <div className={classNames(dialStyles.dialContainer, dialStyles[trackWidthClass])}>
+    <div className={clsx(dialStyles.dialContainer, dialStyles[trackWidthClass])}>
       <svg className={dialStyles.dial} viewBox="0 0 36 36">
         <defs>
           <linearGradient
