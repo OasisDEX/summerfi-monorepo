@@ -29,8 +29,8 @@ export const Form = () => {
   const withdraw = useWithdraw()
 
   const confirmDisabled = !value || isPendingTransaction
-  const chainId = Number(wallet?.chains[0]?.id)
-  const walletAddress = wallet?.accounts[0]?.address
+  const chainId = wallet?.chains[0].id ? Number(wallet.chains[0].id) : undefined
+  const walletAddress = wallet?.accounts[0].address
 
   async function signTestMessage() {
     // current primary wallet - as multiple wallets can connect this value is the currently active
