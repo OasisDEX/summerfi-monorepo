@@ -5,7 +5,7 @@ import { accountType } from '@/providers/AlchemyAccountsProvider/config'
 
 export const AccountKitClient = () => {
   // If this is the first time the hook is called, then the client will be undefined until the underlying account is connected to the client
-  const { isLoadingClient, client, ...rest } = useSmartAccountClient({
+  const { isLoadingClient, client } = useSmartAccountClient({
     type: accountType,
     accountParams: {
       // here it's possible to use different modular account address if given user is added to it as owner
