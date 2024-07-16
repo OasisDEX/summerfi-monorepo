@@ -3,7 +3,7 @@ import { type FC } from 'react'
 import { Text, type TextAllowedHtmlTags } from '@/components/atoms/Text/Text'
 
 import { type Styles } from '@/components/atoms/Text/Text.module.scss'
-import classNames from '@/components/molecules/CountDownItem/CountDownItem.module.scss'
+import countDownItemStyles from '@/components/molecules/CountDownItem/CountDownItem.module.scss'
 
 interface Variants {
   value: {
@@ -47,7 +47,7 @@ export const CountDownItem: FC<CountDownItemProps> = ({ title, value, variant = 
   }[variant] as Variants
 
   return (
-    <div className={classNames.countDownItem}>
+    <div className={countDownItemStyles.countDownItem}>
       <Text as={styles.value.as} variant={styles.value.variant}>
         {value}
       </Text>

@@ -3,7 +3,7 @@ import { createElement, forwardRef } from 'react'
 import { getAtomClassList } from '@/components/atoms/getAtomClassList'
 import { type AtomProps } from '@/components/atoms/types'
 
-import classNames, { type ClassNames } from '@/components/atoms/Text/Text.module.scss'
+import textStyles, { type ClassNames } from '@/components/atoms/Text/Text.module.scss'
 
 export type TextAllowedHtmlTags =
   | 'address'
@@ -28,7 +28,7 @@ export const Text = forwardRef<
     ...{
       ...props,
       ref,
-      className: getAtomClassList({ className, variant: classNames[variant] }),
+      className: getAtomClassList({ className, variant: textStyles[variant] }),
     },
   })
 })

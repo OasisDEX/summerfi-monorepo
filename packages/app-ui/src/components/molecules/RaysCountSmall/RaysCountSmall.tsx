@@ -48,6 +48,10 @@ export const RaysCountSmall = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userAddress])
 
+  if (!userAddress) {
+    return null
+  }
+
   return (
     <Link
       href={{
@@ -55,6 +59,7 @@ export const RaysCountSmall = ({
         query: { userAddress },
       }}
       style={{ textDecoration: 'none' }}
+      suppressHydrationWarning
     >
       <div className={raysCountSmallStyles.raysCountWrapper}>
         <Icon iconName="rays" size={24} />

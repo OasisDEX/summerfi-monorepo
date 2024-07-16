@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { Pill } from '@/components/atoms/Pill/Pill'
 import { Text } from '@/components/atoms/Text/Text'
 
-import classNames from '@/components/molecules/ProtocolLabel/ProtocolLabel.module.scss'
+import protocolLabelStyles from '@/components/molecules/ProtocolLabel/ProtocolLabel.module.scss'
 
 interface ProtocolLabelProps {
   protocol: {
@@ -31,8 +31,8 @@ export const ProtocolLabel: FC<ProtocolLabelProps> = ({
       <Text variant="hidden">{protocol.label}</Text>
       <Image src={protocol.logo.src} alt={protocol.label} width={sizeBase * protocol.logo.scale} />
       {network && (
-        <div className={classNames.networkWrapper}>
-          <div className={classNames.networkIconWrapper}>
+        <div className={protocolLabelStyles.networkWrapper}>
+          <div className={protocolLabelStyles.networkIconWrapper}>
             <Image src={network.badge} alt={network.label} fill />
           </div>
         </div>

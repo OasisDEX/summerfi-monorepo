@@ -1,5 +1,5 @@
 import { type NavigationMenuPanelList, type WithNavigationModules } from '@summerfi/app-types'
-import classNames from 'classnames'
+import clsx from 'clsx'
 import Link from 'next/link'
 
 import { ProxyLinkComponent } from '@/components/atoms/ProxyLinkComponent/ProxyLinkComponent'
@@ -42,7 +42,7 @@ export const NavigationMenuDropdownContentList = ({
       {items.map(({ protocolName, url, navigationModule, ...item }, i) => (
         <li
           key={i}
-          className={classNames(
+          className={clsx(
             navigationMenuDropdownContentListStyles.navigationMenuDropdownContentListWrapperItem,
             {
               [navigationMenuDropdownContentListStyles.itemHoverEffectDefault]:
@@ -65,7 +65,7 @@ export const NavigationMenuDropdownContentList = ({
           {url ? (
             <Link passHref legacyBehavior prefetch={false} href={url}>
               <ProxyLinkComponent
-                className={classNames(
+                className={clsx(
                   navigationMenuDropdownContentListStyles.navigationMenuDropdownContentListWrapperItemLink,
                   {
                     [navigationMenuDropdownContentListStyles.navigationMenuDropdownContentListWrapperItemLinkTight]:
@@ -78,7 +78,7 @@ export const NavigationMenuDropdownContentList = ({
             </Link>
           ) : (
             <div
-              className={classNames(
+              className={clsx(
                 navigationMenuDropdownContentListStyles.navigationMenuDropdownContentListWrapperItemLink,
                 {
                   [navigationMenuDropdownContentListStyles.navigationMenuDropdownContentListWrapperItemLinkTight]:

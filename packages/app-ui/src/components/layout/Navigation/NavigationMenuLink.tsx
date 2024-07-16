@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { type NavigationMenuPanelLinkProps } from '@summerfi/app-types'
-import classNames from 'classnames'
+import clsx from 'clsx'
 import Link from 'next/link'
 
 import { ProxyLinkComponent } from '@/components/atoms/ProxyLinkComponent/ProxyLinkComponent'
@@ -33,7 +33,7 @@ export function NavigationMenuLink({
       {link && (
         <Link passHref legacyBehavior prefetch={false} href={link}>
           <ProxyLinkComponent
-            className={classNames(navigationMenuStyles.navigationMenuLinkElement, {
+            className={clsx(navigationMenuStyles.navigationMenuLinkElement, {
               [navigationMenuStyles.navigationMenuLinkElementActive]: currentPath === link,
             })}
           >

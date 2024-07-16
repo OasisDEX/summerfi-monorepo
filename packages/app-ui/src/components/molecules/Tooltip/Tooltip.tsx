@@ -13,7 +13,7 @@ import {
 import { Card } from '@/components/atoms/Card/Card'
 import { isTouchDevice } from '@/helpers/is-touch-device'
 
-import classNames from '@/components/molecules/Tooltip/Tooltip.module.scss'
+import tooltipStyles from '@/components/molecules/Tooltip/Tooltip.module.scss'
 
 export function useTooltip() {
   const [tooltipOpen, setTooltipOpen] = useState(false)
@@ -32,7 +32,7 @@ export function useTooltip() {
     }
 
     return () => null
-  }, [tooltipOpen])
+  }, [tooltipOpen, closeHandler])
 
   return { tooltipOpen, setTooltipOpen }
 }
@@ -44,7 +44,7 @@ interface TooltipWrapperProps extends HTMLAttributes<HTMLDivElement> {
 
 const TooltipWrapper: FC<TooltipWrapperProps> = ({ children, isOpen, style }) => {
   return (
-    <div className={isOpen ? classNames.tooltipOpen : classNames.tooltip} style={style}>
+    <div className={isOpen ? tooltipStyles.tooltipOpen : tooltipStyles.tooltip} style={style}>
       <Card variant="cardSmallPaddings">{children}</Card>
     </div>
   )
@@ -81,7 +81,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
-      className={classNames.tooltipWrapper}
+      className={tooltipStyles.tooltipWrapper}
       style={style}
     >
       {children}

@@ -5,7 +5,7 @@ import { GenericTokenIcon } from '@/components/atoms/GenericTokenIcon/GenericTok
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { getToken, getTokenDisplayName, getTokenGuarded, tokensBySymbol } from '@/tokens/helpers'
 
-import classNames from '@/components/molecules/TokensGroup/TokensGroup.module.scss'
+import tokensGroupStyles from '@/components/molecules/TokensGroup/TokensGroup.module.scss'
 
 interface TokensGroupProps {
   forceSize?: number
@@ -21,9 +21,9 @@ export function TokensGroup({ forceSize, network, tokens }: TokensGroupProps) {
   const networkSize = forceSize ?? (tokens.length > 1 ? defaultSingleSize : defaultMultipleSize)
 
   return (
-    <div className={classNames.tokensGroupWrapper}>
+    <div className={tokensGroupStyles.tokensGroupWrapper}>
       <ul
-        className={classNames.tokensGroupList}
+        className={tokensGroupStyles.tokensGroupList}
         style={{
           ...(network && {
             paddingRight: `${networkSize * networkSizeScaleFactor}px`,
@@ -37,7 +37,7 @@ export function TokensGroup({ forceSize, network, tokens }: TokensGroupProps) {
           return (
             <li
               key={i}
-              className={classNames.tokensGroupListItem}
+              className={tokensGroupStyles.tokensGroupListItem}
               style={{
                 zIndex: tokens.length - i,
               }}

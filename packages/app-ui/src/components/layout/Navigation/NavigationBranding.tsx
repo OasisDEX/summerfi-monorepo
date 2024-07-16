@@ -1,5 +1,5 @@
 import { type FC } from 'react'
-import classNames from 'classnames'
+import clsx from 'clsx'
 
 import navigationStyles from '@/components/layout/Navigation/Navigation.module.scss'
 
@@ -16,7 +16,7 @@ export const NavigationBranding: FC<NavigationBrandingProps> = ({
 }) => {
   return (
     <div
-      className={classNames(navigationStyles.logoWrapper)}
+      className={clsx(navigationStyles.logoWrapper)}
       onClick={onLogoClick}
       style={{
         cursor: onLogoClick ? 'pointer' : 'default',

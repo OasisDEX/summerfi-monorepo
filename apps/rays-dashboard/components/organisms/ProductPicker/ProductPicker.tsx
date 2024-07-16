@@ -15,7 +15,7 @@ import { NetworkNames } from '@/constants/networks-list'
 import { type LendingProtocol } from '@/helpers/lending-protocol'
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
 
-import classNames from '@/components/organisms/ProductPicker/ProductPicker.module.scss'
+import productPickerStyles from '@/components/organisms/ProductPicker/ProductPicker.module.scss'
 
 const productTypes = [OmniProductType.Earn, OmniProductType.Borrow, OmniProductType.Multiply]
 
@@ -67,9 +67,9 @@ export const ProductPicker: FC<ProductPickerProps> = ({ products, productHub, us
     .filter((item) => !!item) as (ProductNetworkConfig & { phItem: ProductHubItem })[]
 
   return (
-    <div className={classNames.content}>
-      <div className={classNames.heading}>
-        <div className={classNames.productTypeWrapper}>
+    <div className={productPickerStyles.content}>
+      <div className={productPickerStyles.heading}>
+        <div className={productPickerStyles.productTypeWrapper}>
           {productTypes.map((type) => (
             <Button variant="unstyled" onClick={() => setProductType(type)} key={type}>
               <Text
@@ -93,7 +93,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({ products, productHub, us
         />
       </div>
 
-      <div className={classNames.productsWrapper}>
+      <div className={productPickerStyles.productsWrapper}>
         {mappedItems.map((item) => (
           <ProductCard
             key={item.link}

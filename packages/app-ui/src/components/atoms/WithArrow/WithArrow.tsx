@@ -1,9 +1,8 @@
-import React from 'react'
-import classNames from 'classnames'
+import clsx from 'clsx'
 
 import { Text, type TextAllowedHtmlTags } from '@/components/atoms/Text/Text'
 
-import { type ClassNames } from '@/components/atoms/Text/Text.module.scss'
+import { type ClassNames as TextClassNames } from '@/components/atoms/Text/Text.module.scss'
 import withArrowStyles from '@/components/atoms/WithArrow/WithArrow.module.scss'
 
 export function WithArrow({
@@ -17,7 +16,7 @@ export function WithArrow({
 }: React.PropsWithChildren<{
   gap?: string | number
   style?: React.CSSProperties
-  variant?: ClassNames
+  variant?: TextClassNames
   as?: TextAllowedHtmlTags
   enabled?: boolean
   className?: string
@@ -25,7 +24,7 @@ export function WithArrow({
   return (
     <Text
       variant={variant}
-      className={classNames(withArrowStyles.withArrow, className)}
+      className={clsx(withArrowStyles.withArrow, className)}
       style={style}
       {...(as ? { as } : { as: 'span' })}
     >
