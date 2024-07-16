@@ -32,13 +32,15 @@ export const RaysCountSmall = ({
 }: RaysCountSmallProps) => {
   const [loadingRaysCount, setLoadingRaysCount] = useState<boolean>(false)
   const [raysCount, setRaysCount] = useState<number | null>(null)
+  const [raysAddresses, setRaysAddresses] = useState<string[]>([])
 
   useEffect(() => {
-    if (userAddress) {
+    if (userAddress && !raysAddresses.includes(userAddress)) {
       setLoadingRaysCount(true)
       raysFetchFunction().then((response) => {
         if (response.rays?.allPossiblePoints !== undefined) {
           setLoadingRaysCount(false)
+          setRaysAddresses([...raysAddresses, userAddress])
           setRaysCount(response.rays.allPossiblePoints)
         }
       })
