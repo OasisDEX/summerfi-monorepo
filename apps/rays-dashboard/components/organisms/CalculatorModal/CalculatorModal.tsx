@@ -15,7 +15,7 @@ const cleanInputValue = (value: string) => `${value}`.replace('$', '').trim()
 
 const CalculatorModalRaysValue = ({ value, label }: { value: number; label: string }) => {
   return (
-    <div className={calculatorModalStyles.valueBox}>
+    <div className={calculatorModalStyles.valueBox} title={`${label}: ${value.toPrecision(2)}`}>
       <Text
         as="h4"
         variant="h4"
