@@ -4,7 +4,7 @@ import { Button, Card, Input, Text } from '@summerfi/app-ui'
 import type { TransactionInfo } from '@summerfi/sdk-common'
 import { useAppState, useConnectWallet } from '@web3-onboard/react'
 import { type Config as WagmiConfig, sendTransaction, signMessage } from '@web3-onboard/wagmi'
-import { useDeposit, useWithdraw } from 'providers/SDK'
+import { prepareTransaction, useDeposit, useWithdraw } from 'providers/SDK'
 
 enum Action {
   DEPOSIT = 'deposit',
@@ -18,11 +18,19 @@ const usdcFleetAddress = '0xa09e82322f351154a155f9e0f9e6ddbc8791c794'
 export const Form = () => {
   const [action, setAction] = useState(Action.DEPOSIT)
   const [value, setValue] = useState<number>()
+  const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
   const [{ wallet }] = useConnectWallet()
   const { wagmiConfig } = useAppState()
 
+  const [transactionHash, setTransactionHash] = useState<string>()
+  const [transactionError, setTransactionError] = useState<string>()
+
   const deposit = useDeposit()
   const withdraw = useWithdraw()
+
+  const confirmDisabled = !value || isPendingTransaction
+  const chainId = Number(wallet?.chains[0]?.id)
+  const walletAddress = wallet?.accounts[0]?.address
 
   async function signTestMessage() {
     // current primary wallet - as multiple wallets can connect this value is the currently active
@@ -36,12 +44,11 @@ export const Form = () => {
   }
 
   async function sendSDKTransaction(transaction: TransactionInfo) {
-    // current primary wallet
-    await sendTransaction(wagmiConfig as WagmiConfig, {
-      // TODO: add params
+    return await sendTransaction(wagmiConfig as WagmiConfig, {
+      connector: wallet?.wagmiConnector,
+      ...prepareTransaction(transaction),
     }).then((res) => {
-      // eslint-disable-next-line no-console
-      console.log(res)
+      return res
     })
   }
 
@@ -53,13 +60,13 @@ export const Form = () => {
   }
 
   const getDepositTransaction = () => {
-    if (!value) {
+    if (!value || !chainId || !walletAddress) {
       return undefined
     }
 
     return deposit({
-      chainId: wallet?.chains[0]?.id,
-      walletAddress: wallet?.accounts[0]?.address,
+      chainId,
+      walletAddress,
       fleetAddress: usdcFleetAddress,
       amountString: value.toString(),
       tokenSymbol,
@@ -67,13 +74,13 @@ export const Form = () => {
   }
 
   const getWithdrawTransaction = () => {
-    if (!value) {
+    if (!value || !chainId || !walletAddress) {
       return undefined
     }
 
     return withdraw({
-      chainId: wallet?.chains[0]?.id,
-      walletAddress: wallet?.accounts[0]?.address,
+      chainId,
+      walletAddress,
       fleetAddress: usdcFleetAddress,
       amountString: value.toString(),
       tokenSymbol,
@@ -97,12 +104,24 @@ export const Form = () => {
     }
 
     if (transactions) {
-      for (const [_, transaction] of transactions.entries()) {
-        const receipt = await sendSDKTransaction(transaction)
+      try {
+        const transactionHashes: string[] = []
 
-        // eslint-disable-next-line no-console
-        console.log('Transaction sent:', receipt)
+        setIsPendingTransaction(true)
+
+        for (const [_, transaction] of transactions.entries()) {
+          const txHash = await sendSDKTransaction(transaction)
+
+          transactionHashes.push(txHash)
+        }
+        setTransactionHash(transactionHashes.join(', '))
+      } catch (error) {
+        setTransactionError('An error occurred while sending the transaction (check the console)')
+        setIsPendingTransaction(false)
+
+        throw error
       }
+      setIsPendingTransaction(false)
     }
   }
 
@@ -169,10 +188,12 @@ export const Form = () => {
         variant="primaryLarge"
         onClick={handleConfirm}
         style={{ width: '100%' }}
-        disabled={!value}
+        disabled={confirmDisabled}
       >
         Confirm
       </Button>
+      {transactionHash && <Text as="p">Transaction sent: {transactionHash}</Text>}
+      {transactionError && <Text as="p">Transaction error: {transactionError}</Text>}
       <Button
         variant="secondarySmall"
         style={{ width: '100%', marginTop: '15px' }}

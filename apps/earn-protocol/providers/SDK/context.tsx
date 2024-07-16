@@ -1,3 +1,5 @@
+'use client'
+
 import React, { createContext, type PropsWithChildren, useContext } from 'react'
 import { type IEarnProtocolFleetClient, makeSDK, type UserClient } from '@summerfi/sdk-client'
 import { Address, type Token } from '@summerfi/sdk-common'
