@@ -1,19 +1,28 @@
 'use client'
 import { useState } from 'react'
 import { Button, Card, Input, Text } from '@summerfi/app-ui'
+import type { TransactionInfo } from '@summerfi/sdk-common'
 import { useAppState, useConnectWallet } from '@web3-onboard/react'
-import { type Config as WagmiConfig, signMessage } from '@web3-onboard/wagmi'
+import { type Config as WagmiConfig, sendTransaction, signMessage } from '@web3-onboard/wagmi'
+import { useDeposit, useWithdraw } from 'providers/SDK'
 
 enum Action {
   DEPOSIT = 'deposit',
   WITHDRAW = 'withdraw',
 }
 
+// TODO: Replace with the real dynamic values from the UI state
+const tokenSymbol = 'USDC'
+const usdcFleetAddress = '0xa09e82322f351154a155f9e0f9e6ddbc8791c794'
+
 export const Form = () => {
   const [action, setAction] = useState(Action.DEPOSIT)
   const [value, setValue] = useState<number>()
   const [{ wallet }] = useConnectWallet()
   const { wagmiConfig } = useAppState()
+
+  const deposit = useDeposit()
+  const withdraw = useWithdraw()
 
   async function signTestMessage() {
     // current primary wallet - as multiple wallets can connect this value is the currently active
@@ -26,11 +35,75 @@ export const Form = () => {
     })
   }
 
+  async function sendSDKTransaction(transaction: TransactionInfo) {
+    // current primary wallet
+    await sendTransaction(wagmiConfig as WagmiConfig, {
+      // TODO: add params
+    }).then((res) => {
+      // eslint-disable-next-line no-console
+      console.log(res)
+    })
+  }
+
   // @ts-ignore
-  const ethBalance = wallet?.accounts[0]?.balance?.ETH
+  const usdcBalance = wallet?.accounts[0]?.balance?.[tokenSymbol]
 
   const handleChange = (event: any) => {
     setValue(event.target.value)
+  }
+
+  const getDepositTransaction = () => {
+    if (!value) {
+      return undefined
+    }
+
+    return deposit({
+      chainId: wallet?.chains[0]?.id,
+      walletAddress: wallet?.accounts[0]?.address,
+      fleetAddress: usdcFleetAddress,
+      amountString: value.toString(),
+      tokenSymbol,
+    })
+  }
+
+  const getWithdrawTransaction = () => {
+    if (!value) {
+      return undefined
+    }
+
+    return withdraw({
+      chainId: wallet?.chains[0]?.id,
+      walletAddress: wallet?.accounts[0]?.address,
+      fleetAddress: usdcFleetAddress,
+      amountString: value.toString(),
+      tokenSymbol,
+    })
+  }
+
+  const handleConfirm = async () => {
+    let transactions: TransactionInfo[] | undefined
+
+    switch (action) {
+      case Action.DEPOSIT:
+        transactions = await getDepositTransaction()
+
+        break
+      case Action.WITHDRAW:
+        transactions = await getWithdrawTransaction()
+
+        break
+      default:
+        throw new Error('Invalid action')
+    }
+
+    if (transactions) {
+      for (const [_, transaction] of transactions.entries()) {
+        const receipt = await sendSDKTransaction(transaction)
+
+        // eslint-disable-next-line no-console
+        console.log('Transaction sent:', receipt)
+      }
+    }
   }
 
   return (
@@ -73,14 +146,14 @@ export const Form = () => {
         <Text as="p" variant="p3semi">
           {action === Action.DEPOSIT ? 'Deposit' : 'Withdraw'}
         </Text>
-        {ethBalance && (
+        {usdcBalance && (
           <Text
             as="p"
             variant="p3semi"
             style={{ cursor: 'pointer' }}
-            onClick={() => setValue(Number(ethBalance))}
+            onClick={() => setValue(Number(usdcBalance))}
           >
-            Balance: {Number(ethBalance).toFixed(3)} ETH
+            Balance: {Number(usdcBalance).toFixed(3)} ETH
           </Text>
         )}
       </div>
@@ -94,7 +167,7 @@ export const Form = () => {
       />
       <Button
         variant="primaryLarge"
-        onClick={() => null}
+        onClick={handleConfirm}
         style={{ width: '100%' }}
         disabled={!value}
       >

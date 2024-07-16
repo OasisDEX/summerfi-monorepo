@@ -21,4 +21,4 @@ artifacts
 packages/**/src/generated
 packages/**/types/generated
 apps/**/types/generated/*
-earn-protocol
+earn-protocol/contracts/** */
