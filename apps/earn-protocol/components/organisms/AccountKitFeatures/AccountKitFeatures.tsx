@@ -1,9 +1,11 @@
 'use client'
 import { useSigner, useUser } from '@alchemy/aa-alchemy/react'
 
+import { AccountKitAddOwner } from '@/components/molecules/AccountKitAddOwner/AccountKitAddOwner'
 import { AccountKitClient } from '@/components/molecules/AccountKitClient/AccountKitClient'
 import { AccountKitExportPrivateKey } from '@/components/molecules/AccountKitExportPrivateKey/AccountKitExportPrivateKey'
 import { AccountKitLogin } from '@/components/molecules/AccountKitLogin/AccountKitLogin'
+import { AccountKitSendUserOperation } from '@/components/molecules/AccountKitSendUserOperation/AccountKitSendUserOperation'
 import { AccountKitAddPassKey } from '@/components/molecules/AcountKitAddPassKey/AccountKitAddPassKey'
 
 export const AccountKitFeatures = () => {
@@ -17,7 +19,7 @@ export const AccountKitFeatures = () => {
       {user && (
         <div>
           <p>Logged user: {user.email}</p>
-          <p>Logged user address: {user.address}</p>
+          <p>Logged user signer address: {user.address}</p>
         </div>
       )}
       {signer && user && (
@@ -27,6 +29,8 @@ export const AccountKitFeatures = () => {
           </div>
           <AccountKitExportPrivateKey signer={signer} />
           <AccountKitClient />
+          <AccountKitSendUserOperation />
+          <AccountKitAddOwner />
         </>
       )}
     </div>

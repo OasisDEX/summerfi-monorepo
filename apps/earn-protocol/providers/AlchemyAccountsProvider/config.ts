@@ -12,3 +12,5 @@ export const config = createConfig({
   ssr: true,
   storage: cookieStorage,
 })
+
+export const accountType = 'MultiOwnerModularAccount'
