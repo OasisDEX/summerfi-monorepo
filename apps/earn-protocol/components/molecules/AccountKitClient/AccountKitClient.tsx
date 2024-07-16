@@ -19,8 +19,6 @@ export const AccountKitClient = () => {
     if (client) {
       // eslint-disable-next-line no-console
       console.log('client', client)
-      // eslint-disable-next-line no-console
-      console.log('rest', rest)
       void client.readOwners().then((_owners) => setOwners(_owners as string[]))
     }
   }, [client?.account.address])
