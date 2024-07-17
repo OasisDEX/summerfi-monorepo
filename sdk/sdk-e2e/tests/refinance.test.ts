@@ -12,7 +12,6 @@ import { ProtocolClient, makeSDK, type Chain } from '@summerfi/sdk-client'
 import { IRefinanceParameters, Order, PositionsManager } from '@summerfi/sdk-common/orders'
 import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
 import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import { TransactionUtils } from './utils/TransactionUtils'
 
 import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 import {
@@ -29,6 +28,7 @@ import {
   isSparkProtocol,
 } from '@summerfi/protocol-plugins/plugins/spark'
 import { AddressValue, CommonTokenSymbols } from '@summerfi/sdk-common'
+import { TransactionUtils } from '@summerfi/testing-utils'
 import assert from 'assert'
 import { Hex } from 'viem'
 

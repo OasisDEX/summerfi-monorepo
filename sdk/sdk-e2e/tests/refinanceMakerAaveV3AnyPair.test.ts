@@ -16,7 +16,6 @@ import {
 } from '@summerfi/sdk-common/orders'
 import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
 import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import { TransactionUtils } from './utils/TransactionUtils'
 
 import {
   AaveV3LendingPoolId,
@@ -33,6 +32,7 @@ import {
   isMakerProtocol,
 } from '@summerfi/protocol-plugins/plugins/maker'
 import { AddressValue, CommonTokenSymbols, IToken, Token } from '@summerfi/sdk-common'
+import { TransactionUtils } from '@summerfi/testing-utils'
 import assert from 'assert'
 import { Hex } from 'viem'
 

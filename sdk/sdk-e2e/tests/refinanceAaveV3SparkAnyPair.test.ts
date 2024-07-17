@@ -28,9 +28,9 @@ import {
   isAaveV3LendingPool,
   isAaveV3Protocol,
 } from '@summerfi/protocol-plugins'
+import { TransactionUtils } from '@summerfi/testing-utils'
 import assert from 'assert'
 import { Hex } from 'viem'
-import { TransactionUtils } from './utils/TransactionUtils'
 
 jest.setTimeout(300000)
 

@@ -1,9 +1,11 @@
-import { base } from 'viem/chains'
+import { IChainInfo, type TransactionInfo } from '@summerfi/sdk-common'
 import { isHex } from 'viem/utils'
-import { type TransactionInfo } from '@summerfi/sdk-common'
 import { TransactionUtils } from './TransactionUtils'
 
-export async function sendAndLogTransactions(transactions: TransactionInfo[]) {
+export async function sendAndLogTransactions(params: {
+  chainInfo: IChainInfo
+  transactions: TransactionInfo[]
+}) {
   if (!process.env.DEPLOYER_PRIVATE_KEY) {
     throw new Error('DEPLOYER_PRIVATE_KEY not set')
   }
@@ -13,9 +15,9 @@ export async function sendAndLogTransactions(transactions: TransactionInfo[]) {
   const privateKey = process.env.DEPLOYER_PRIVATE_KEY
   const forkUrl = process.env.E2E_SDK_FORK_URL
 
-  console.log('transactions', transactions)
+  console.log('transactions', params.transactions)
 
-  for (const [index, transaction] of transactions.entries()) {
+  for (const [index, transaction] of params.transactions.entries()) {
     console.log(`Sending transaction ${index}...`, transaction.description)
 
     if (!isHex(privateKey)) {
@@ -24,7 +26,7 @@ export async function sendAndLogTransactions(transactions: TransactionInfo[]) {
     const transactionUtils = new TransactionUtils({
       rpcUrl: forkUrl,
       walletPrivateKey: privateKey,
-      chain: base,
+      chainInfo: params.chainInfo,
     })
 
     const receipt = await transactionUtils.sendTransaction({

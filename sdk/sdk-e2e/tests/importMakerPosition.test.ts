@@ -21,9 +21,9 @@ import {
   isMakerLendingPool,
   isMakerProtocol,
 } from '@summerfi/protocol-plugins/plugins/maker'
+import { TransactionUtils } from '@summerfi/testing-utils'
 import assert from 'assert'
 import { Hex } from 'viem'
-import { TransactionUtils } from './utils/TransactionUtils'
 
 jest.setTimeout(300000)
 
