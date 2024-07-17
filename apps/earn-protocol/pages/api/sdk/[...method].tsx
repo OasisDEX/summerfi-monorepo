@@ -1,17 +1,17 @@
 import type { NextApiHandler } from 'next'
 
 const handler: NextApiHandler = async (req, res) => {
-  const baseUrl = process.env.SDK_API_URL
+  const sdkApiUrl = process.env.SDK_API_URL
 
-  if (!baseUrl) {
+  if (!sdkApiUrl) {
     return res.status(500).json({ error: 'SDK_API_URL is not set' })
   }
 
-  const url = baseUrl + req.url
+  const url = sdkApiUrl + req.url
   const headers = {}
-  let response
 
   const { method } = req
+  let response
 
   if (method === 'GET') {
     response = await fetch(url, { headers })

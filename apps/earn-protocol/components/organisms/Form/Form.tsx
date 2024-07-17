@@ -1,34 +1,40 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Card, Input, Text } from '@summerfi/app-ui'
 import type { TransactionInfo } from '@summerfi/sdk-common'
 import { useAppState, useConnectWallet } from '@web3-onboard/react'
-import { type Config as WagmiConfig, sendTransaction, signMessage } from '@web3-onboard/wagmi'
-import { prepareTransaction, useDeposit, useWithdraw } from 'providers/SDK'
+import {
+  type Config as WagmiConfig,
+  getBalance,
+  sendTransaction,
+  signMessage,
+} from '@web3-onboard/wagmi'
+import { prepareTransaction, useDeposit, useSDK, useWithdraw } from 'providers/SDK'
 
 enum Action {
   DEPOSIT = 'deposit',
   WITHDRAW = 'withdraw',
 }
 
-// TODO: Replace with the real dynamic values from the UI state
+// TODO: Replace with the real dynamic values from the UI controls state
 const tokenSymbol = 'USDC'
 const usdcFleetAddress = '0xa09e82322f351154a155f9e0f9e6ddbc8791c794'
 
 export const Form = () => {
   const [action, setAction] = useState(Action.DEPOSIT)
-  const [value, setValue] = useState<number>()
+  const [amountValue, setAmountValue] = useState<number>()
+  const [transactionHash, setTransactionHash] = useState<string>()
+  const [transactionError, setTransactionError] = useState<string>()
+  const [tokenBalance, setTokenBalance] = useState<number>()
+
   const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
   const [{ wallet }] = useConnectWallet()
   const { wagmiConfig } = useAppState()
-
-  const [transactionHash, setTransactionHash] = useState<string>()
-  const [transactionError, setTransactionError] = useState<string>()
-
+  const { getTokenBySymbol } = useSDK()
   const deposit = useDeposit()
   const withdraw = useWithdraw()
 
-  const confirmDisabled = !value || isPendingTransaction
+  const confirmDisabled = !amountValue || isPendingTransaction
   const chainId = wallet?.chains[0].id ? Number(wallet.chains[0].id) : undefined
   const walletAddress = wallet?.accounts[0].address
 
@@ -52,15 +58,33 @@ export const Form = () => {
     })
   }
 
-  // @ts-ignore
-  const usdcBalance = wallet?.accounts[0]?.balance?.[tokenSymbol]
+  useEffect(() => {
+    async function fetchData() {
+      if (chainId && walletAddress) {
+        const token = await getTokenBySymbol({ chainId, symbol: tokenSymbol })
+        console.log({
+          chainId,
+          address: walletAddress,
+          token: token.address.value,
+        })
+        const { value, decimals } = await getBalance(wagmiConfig as WagmiConfig, {
+          chainId,
+          address: walletAddress,
+          token: token.address.value,
+        })
+        setTokenBalance(Number(value / BigInt(10 ** decimals)))
+        console.log('usdcBalance', tokenBalance)
+      }
+    }
+    fetchData()
+  }, [chainId, tokenSymbol, walletAddress])
 
   const handleChange = (event: any) => {
-    setValue(event.target.value)
+    setAmountValue(event.target.value)
   }
 
   const getDepositTransaction = () => {
-    if (!value || !chainId || !walletAddress) {
+    if (!amountValue || !chainId || !walletAddress) {
       return undefined
     }
 
@@ -68,13 +92,13 @@ export const Form = () => {
       chainId,
       walletAddress,
       fleetAddress: usdcFleetAddress,
-      amountString: value.toString(),
+      amountString: amountValue.toString(),
       tokenSymbol,
     })
   }
 
   const getWithdrawTransaction = () => {
-    if (!value || !chainId || !walletAddress) {
+    if (!amountValue || !chainId || !walletAddress) {
       return undefined
     }
 
@@ -82,7 +106,7 @@ export const Form = () => {
       chainId,
       walletAddress,
       fleetAddress: usdcFleetAddress,
-      amountString: value.toString(),
+      amountString: amountValue.toString(),
       tokenSymbol,
     })
   }
@@ -138,7 +162,7 @@ export const Form = () => {
           borderBottom: '1px solid rgb(240, 240, 240)',
         }}
       >
-        Manage your Summer Earn position
+        Manage your USDC Fleet
       </Text>
       <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
         <Button
@@ -165,21 +189,21 @@ export const Form = () => {
         <Text as="p" variant="p3semi">
           {action === Action.DEPOSIT ? 'Deposit' : 'Withdraw'}
         </Text>
-        {usdcBalance && (
+        {tokenBalance && (
           <Text
             as="p"
             variant="p3semi"
             style={{ cursor: 'pointer' }}
-            onClick={() => setValue(Number(usdcBalance))}
+            onClick={() => setAmountValue(Number(tokenBalance))}
           >
-            Balance: {Number(usdcBalance).toFixed(3)} ETH
+            Balance: {Number(tokenBalance).toFixed(3)} {tokenSymbol}
           </Text>
         )}
       </div>
 
       <Input
         type="number"
-        value={value}
+        value={amountValue}
         wrapperStyles={{ width: '100%', marginBottom: '24px' }}
         style={{ width: '100%' }}
         onChange={handleChange}
