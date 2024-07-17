@@ -7,6 +7,7 @@ import { AccountKitExportPrivateKey } from '@/components/molecules/AccountKitExp
 import { AccountKitLogin } from '@/components/molecules/AccountKitLogin/AccountKitLogin'
 import { AccountKitSendUserOperation } from '@/components/molecules/AccountKitSendUserOperation/AccountKitSendUserOperation'
 import { AccountKitAddPassKey } from '@/components/molecules/AcountKitAddPassKey/AccountKitAddPassKey'
+import { TransakWidget } from '@/components/molecules/TransakWidget/TransakWidget'
 
 export const AccountKitFeatures = () => {
   const signer = useSigner()
@@ -31,6 +32,7 @@ export const AccountKitFeatures = () => {
           <AccountKitClient />
           <AccountKitSendUserOperation />
           <AccountKitAddOwner />
+          <TransakWidget />
         </>
       )}
     </div>
