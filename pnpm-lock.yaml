@@ -1012,34 +1012,6 @@ importers:
         specifier: ^8.57.0
         version: 8.57.0
 
-  packages/tenderly-utils:
-    dependencies:
-      '@inquirer/prompts':
-        specifier: ^4.3.3
-        version: 4.3.3
-      typescript:
-        specifier: ^5.4.5
-        version: 5.4.5
-    devDependencies:
-      '@ethersproject/providers':
-        specifier: ^5.7.2
-        version: 5.7.2
-      '@summerfi/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@summerfi/jest-config':
-        specifier: workspace:*
-        version: link:../jest-config
-      '@summerfi/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      axios:
-        specifier: ^1.6.8
-        version: 1.6.8
-      ethers:
-        specifier: ^6.11.1
-        version: 6.11.1
-
   packages/triggers-calculations:
     dependencies:
       '@aws-lambda-powertools/logger':
@@ -1332,6 +1304,12 @@ importers:
 
   sdk/contracts-provider-service:
     dependencies:
+      '@summerfi/abi-provider-common':
+        specifier: workspace:*
+        version: link:../abi-provider-common
+      '@summerfi/blockchain-client-provider':
+        specifier: workspace:*
+        version: link:../blockchain-client-provider
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
@@ -1344,6 +1322,12 @@ importers:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
+      '@summerfi/tenderly-utils':
+        specifier: workspace:*
+        version: link:../tenderly-utils
+      '@summerfi/testing-utils':
+        specifier: workspace:*
+        version: link:../testing-utils
       '@types/node-fetch':
         specifier: ^2.6.11
         version: 2.6.11
@@ -1357,9 +1341,6 @@ importers:
       '@summerfi/jest-config':
         specifier: workspace:*
         version: link:../../packages/jest-config
-      '@summerfi/testing-utils':
-        specifier: workspace:*
-        version: link:../testing-utils
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -1854,7 +1835,7 @@ importers:
         version: link:../sdk-common
       '@summerfi/tenderly-utils':
         specifier: workspace:*
-        version: link:../../packages/tenderly-utils
+        version: link:../tenderly-utils
       '@summerfi/testing-utils':
         specifier: workspace:*
         version: link:../testing-utils
@@ -1931,6 +1912,12 @@ importers:
       '@summerfi/configuration-provider':
         specifier: workspace:*
         version: link:../configuration-provider
+      '@summerfi/contracts-provider-common':
+        specifier: workspace:*
+        version: link:../contracts-provider-common
+      '@summerfi/contracts-provider-service':
+        specifier: workspace:*
+        version: link:../contracts-provider-service
       '@summerfi/core-contracts':
         specifier: workspace:*
         version: link:../../packages/core-contracts
@@ -2123,11 +2110,51 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
+  sdk/tenderly-utils:
+    dependencies:
+      '@inquirer/prompts':
+        specifier: ^4.3.3
+        version: 4.3.3
+      '@summerfi/configuration-provider':
+        specifier: workspace:*
+        version: link:../configuration-provider
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../sdk-common
+      '@summerfi/testing-utils':
+        specifier: workspace:*
+        version: link:../testing-utils
+      typescript:
+        specifier: ^5.4.5
+        version: 5.4.5
+    devDependencies:
+      '@ethersproject/providers':
+        specifier: ^5.7.2
+        version: 5.7.2
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      axios:
+        specifier: ^1.6.8
+        version: 1.7.2
+      ethers:
+        specifier: ^6.11.1
+        version: 6.13.0
+
   sdk/testing-utils:
     dependencies:
       '@summerfi/address-book-common':
         specifier: workspace:*
         version: link:../address-book-common
+      '@summerfi/blockchain-client-provider':
+        specifier: workspace:*
+        version: link:../blockchain-client-provider
       '@summerfi/configuration-provider':
         specifier: workspace:*
         version: link:../configuration-provider
@@ -2152,6 +2179,9 @@ importers:
       '@summerfi/swap-common':
         specifier: workspace:*
         version: link:../swap-common
+      '@summerfi/tenderly-utils':
+        specifier: workspace:*
+        version: link:../tenderly-utils
       '@summerfi/tokens-common':
         specifier: workspace:*
         version: link:../tokens-common
@@ -8395,12 +8425,6 @@ packages:
       '@ethersproject/logger': 5.7.0
     dev: false
 
-  /@ethersproject/networks@5.7.0:
-    resolution: {integrity: sha512-MG6oHSQHd4ebvJrleEQQ4HhVu8Ichr0RDYEfHzsVAVjHNM+w36x9wp9r+hf1JstMXtseXDtkiVoARAG6M959AA==}
-    dependencies:
-      '@ethersproject/logger': 5.7.0
-    dev: false
-
   /@ethersproject/networks@5.7.1:
     resolution: {integrity: sha512-n/MufjFYv3yFcUyfhnXotyDlNdFb7onmkSy8aQERi2PjNcnWQ66xXxa3XlS8nCcA8aJKJjIIMNJTC7tu80GwpQ==}
     dependencies:
@@ -8503,34 +8527,6 @@ packages:
       '@ethersproject/abstract-provider': 5.7.0
       '@ethersproject/abstract-signer': 5.7.0
       '@ethersproject/address': 5.7.0
-      '@ethersproject/basex': 5.7.0
-      '@ethersproject/bignumber': 5.7.0
-      '@ethersproject/bytes': 5.7.0
-      '@ethersproject/constants': 5.7.0
-      '@ethersproject/hash': 5.7.0
-      '@ethersproject/logger': 5.7.0
-      '@ethersproject/networks': 5.7.1
-      '@ethersproject/properties': 5.7.0
-      '@ethersproject/random': 5.7.0
-      '@ethersproject/rlp': 5.7.0
-      '@ethersproject/sha2': 5.7.0
-      '@ethersproject/strings': 5.7.0
-      '@ethersproject/transactions': 5.7.0
-      '@ethersproject/web': 5.7.1
-      bech32: 1.1.4
-      ws: 7.4.6
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-    dev: false
-
-  /@ethersproject/providers@5.7.0:
-    resolution: {integrity: sha512-+TTrrINMzZ0aXtlwO/95uhAggKm4USLm1PbeCBR/3XZ7+Oey+3pMyddzZEyRhizHpy1HXV0FRWRMI1O3EGYibA==}
-    dependencies:
-      '@ethersproject/abstract-provider': 5.7.0
-      '@ethersproject/abstract-signer': 5.7.0
-      '@ethersproject/address': 5.7.0
-      '@ethersproject/base64': 5.7.0
       '@ethersproject/basex': 5.7.0
       '@ethersproject/bignumber': 5.7.0
       '@ethersproject/bytes': 5.7.0
@@ -8842,16 +8838,6 @@ packages:
 
   /@ethersproject/web@5.6.0:
     resolution: {integrity: sha512-G/XHj0hV1FxI2teHRfCGvfBUHFmU+YOSbCxlAMqJklxSa7QMiHFQfAxvwY2PFqgvdkxEKwRNr/eCjfAPEm2Ctg==}
-    dependencies:
-      '@ethersproject/base64': 5.7.0
-      '@ethersproject/bytes': 5.7.0
-      '@ethersproject/logger': 5.7.0
-      '@ethersproject/properties': 5.7.0
-      '@ethersproject/strings': 5.7.0
-    dev: false
-
-  /@ethersproject/web@5.7.0:
-    resolution: {integrity: sha512-ApHcbbj+muRASVDSCl/tgxaH2LBkRMEYfLOLVa0COipx0+nlu0QKet7U2lEg0vdkh8XRSLf2nd1f1Uk9SrVSGA==}
     dependencies:
       '@ethersproject/base64': 5.7.0
       '@ethersproject/bytes': 5.7.0
@@ -11769,7 +11755,7 @@ packages:
   /@oasisdex/automation@1.6.5-morpho.6:
     resolution: {integrity: sha512-zMpuB/61QkXR5+zXaBJb2tKTJR5v+BsaNwEm8gWWpDT0xjhh/gBca3hoZvWnoJUHn4raD3DvYapYhBn1qxiZmQ==}
     dependencies:
-      ethers: 5.7.0
+      ethers: 5.7.2
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -17129,7 +17115,7 @@ packages:
     dependencies:
       '@aws-sdk/util-utf8-browser': 3.259.0
       '@httptoolkit/websocket-stream': 6.0.1
-      axios: 1.6.8
+      axios: 1.7.2
       buffer: 6.0.3
       crypto-js: 4.2.0
       mqtt: 4.3.8
@@ -17187,16 +17173,6 @@ packages:
   /axe-core@4.7.0:
     resolution: {integrity: sha512-M0JtH+hlOL5pLQwHOLNYZaXuhqmvS8oExsqB1SBYgA4Dk7u/xx+YdGHXaK5pyUfed5mYXdlYiphWq3G8cRi5JQ==}
     engines: {node: '>=4'}
-    dev: true
-
-  /axios@1.6.8:
-    resolution: {integrity: sha512-v/ZHtJDU39mDpyBoFVkETcd/uNdxrWRrg3bKpOKzXFA6Bvqopts6ALSMU3y6ijYxbw2B+wPrIv46egTzJXCLGQ==}
-    dependencies:
-      follow-redirects: 1.15.6(debug@4.3.4)
-      form-data: 4.0.0
-      proxy-from-env: 1.1.0
-    transitivePeerDependencies:
-      - debug
     dev: true
 
   /axios@1.7.2:
@@ -20672,44 +20648,6 @@ packages:
       - utf-8-validate
     dev: false
 
-  /ethers@5.7.0:
-    resolution: {integrity: sha512-5Xhzp2ZQRi0Em+0OkOcRHxPzCfoBfgtOQA+RUylSkuHbhTEaQklnYi2hsWbRgs3ztJsXVXd9VKBcO1ScWL8YfA==}
-    dependencies:
-      '@ethersproject/abi': 5.7.0
-      '@ethersproject/abstract-provider': 5.7.0
-      '@ethersproject/abstract-signer': 5.7.0
-      '@ethersproject/address': 5.7.0
-      '@ethersproject/base64': 5.7.0
-      '@ethersproject/basex': 5.7.0
-      '@ethersproject/bignumber': 5.7.0
-      '@ethersproject/bytes': 5.7.0
-      '@ethersproject/constants': 5.7.0
-      '@ethersproject/contracts': 5.7.0
-      '@ethersproject/hash': 5.7.0
-      '@ethersproject/hdnode': 5.7.0
-      '@ethersproject/json-wallets': 5.7.0
-      '@ethersproject/keccak256': 5.7.0
-      '@ethersproject/logger': 5.7.0
-      '@ethersproject/networks': 5.7.0
-      '@ethersproject/pbkdf2': 5.7.0
-      '@ethersproject/properties': 5.7.0
-      '@ethersproject/providers': 5.7.0
-      '@ethersproject/random': 5.7.0
-      '@ethersproject/rlp': 5.7.0
-      '@ethersproject/sha2': 5.7.0
-      '@ethersproject/signing-key': 5.7.0
-      '@ethersproject/solidity': 5.7.0
-      '@ethersproject/strings': 5.7.0
-      '@ethersproject/transactions': 5.7.0
-      '@ethersproject/units': 5.7.0
-      '@ethersproject/wallet': 5.7.0
-      '@ethersproject/web': 5.7.0
-      '@ethersproject/wordlists': 5.7.0
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-    dev: false
-
   /ethers@5.7.2:
     resolution: {integrity: sha512-wswUsmWo1aOK8rR7DIKiWSw9DbLWe6x98Jrn8wcTflTVvaXhAMaB5zGAXy0GYQEQp9iO1iSHWVyARQm11zUtyg==}
     dependencies:
@@ -20746,22 +20684,6 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
-
-  /ethers@6.11.1:
-    resolution: {integrity: sha512-mxTAE6wqJQAbp5QAe/+o+rXOID7Nw91OZXvgpjDa1r4fAbq2Nu314oEZSbjoRLacuCzs7kUC3clEvkCQowffGg==}
-    engines: {node: '>=14.0.0'}
-    dependencies:
-      '@adraffy/ens-normalize': 1.10.1
-      '@noble/curves': 1.2.0
-      '@noble/hashes': 1.3.2
-      '@types/node': 18.15.13
-      aes-js: 4.0.0-beta.5
-      tslib: 2.2.0
-      ws: 8.5.0
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-    dev: true
 
   /ethers@6.13.0:
     resolution: {integrity: sha512-+yyQQQWEntY5UVbCv++guA14RRVFm1rSnO1GoLFdrK7/XRWMoktNgyG9UjwxrQqGBfGyFKknNZ81YpUS2emCgg==}

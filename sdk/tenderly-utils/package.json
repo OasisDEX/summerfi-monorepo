@@ -21,6 +21,9 @@
     "dev": "tsc -b tsconfig.build.json  -w"
   },
   "dependencies": {
+    "@summerfi/sdk-common": "workspace:*",
+    "@summerfi/configuration-provider": "workspace:*",
+    "@summerfi/testing-utils": "workspace:*",
     "@inquirer/prompts": "^4.3.3",
     "typescript": "^5.4.5"
   },
