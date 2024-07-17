@@ -4,7 +4,6 @@ import type { Metadata } from 'next'
 import { headers } from 'next/headers'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
-import { SDKProvider } from 'providers/SDK'
 
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
 import { fontFtPolar, fontInter } from '@/helpers/fonts'
@@ -31,9 +30,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className={`${fontFtPolar.variable} ${fontInter.variable}`}>
         <NextIntlClientProvider messages={messages}>
           <AlchemyAccountsProvider initialState={accountKitInitialState}>
-            <SDKProvider>
-              <MasterPage>{children}</MasterPage>
-            </SDKProvider>
+            <MasterPage>{children}</MasterPage>
           </AlchemyAccountsProvider>
         </NextIntlClientProvider>
       </body>
