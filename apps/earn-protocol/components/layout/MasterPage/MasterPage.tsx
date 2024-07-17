@@ -11,8 +11,6 @@ import systemConfigHandler from '@/server-handlers/system-config'
 
 import masterPageStyles from './MasterPage.module.scss'
 
-// import metamaskSDK from '@web3-onboard/metamask'
-
 interface MasterPageProps {}
 
 export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({ children }) => {
