@@ -3,8 +3,8 @@ import { IAbiProvider } from '@summerfi/abi-provider-common'
 import { AbiProviderFactory } from '@summerfi/abi-provider-service'
 import { IAddressBookManager } from '@summerfi/address-book-common'
 import { AddressBookManagerFactory } from '@summerfi/address-book-service'
-import type { IAllowanceManager } from '@summerfi/allowance-common'
-import { AllowanceManagerFactory } from '@summerfi/allowance-service'
+import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
+import { AllowanceManagerFactory } from '@summerfi/allowance-manager-service'
 import { BlockchainClientProvider } from '@summerfi/blockchain-client-provider'
 import { ConfigurationProvider, IConfigurationProvider } from '@summerfi/configuration-provider'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
@@ -68,6 +68,7 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
   const protocolManager = ProtocolManager.createWith({ pluginsRegistry: protocolsRegistry })
   const allowanceManager = AllowanceManagerFactory.newAllowanceManager({
     configProvider,
+    contractsProvider,
   })
   const earnProtocolManager = EarnProtocolManagerFactory.newEarnProtocolManager({
     configProvider,

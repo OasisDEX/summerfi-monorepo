@@ -1,5 +1,5 @@
 {
-  "name": "@summerfi/earn-protocol-service",
+  "name": "@summerfi/allowance-manager-service",
   "version": "0.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,16 +19,17 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@summerfi/allowance-manager-common": "workspace:^",
-    "@summerfi/allowance-manager-service": "workspace:*",
+    "@summerfi/allowance-manager-common": "workspace:*",
     "@summerfi/common": "workspace:*",
     "@summerfi/configuration-provider": "workspace:*",
-    "@summerfi/earn-protocol-common": "workspace:*",
+    "@summerfi/contracts-provider-common": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "@types/node-fetch": "^2.6.11",
     "node-fetch": "^2.7.0"
   },
   "devDependencies": {
+    "@summerfi/blockchain-client-provider": "workspace:*",
+    "@summerfi/contracts-provider-service": "workspace:*",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
     "@summerfi/testing-utils": "workspace:*",

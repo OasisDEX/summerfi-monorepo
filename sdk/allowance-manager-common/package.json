@@ -1,5 +1,5 @@
 {
-  "name": "@summerfi/allowance-service",
+  "name": "@summerfi/allowance-manager-common",
   "version": "0.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,24 +12,16 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "test": "jest tests/",
-    "testw": "jest --watch",
     "build": "tsc -b tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@summerfi/allowance-common": "workspace:*",
-    "@summerfi/common": "workspace:*",
-    "@summerfi/configuration-provider": "workspace:*",
-    "@summerfi/sdk-common": "workspace:*",
-    "@types/node-fetch": "^2.6.11",
-    "node-fetch": "^2.7.0"
+    "@summerfi/sdk-common": "workspace:*"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
-    "@summerfi/testing-utils": "workspace:*",
     "@summerfi/typescript-config": "workspace:*"
   }
 }

@@ -1,5 +1,6 @@
 import { IConfigurationProvider } from '@summerfi/configuration-provider'
 
+import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import { AllowanceManager } from './AllowanceManager'
 
 /**
@@ -9,6 +10,7 @@ import { AllowanceManager } from './AllowanceManager'
 export class AllowanceManagerFactory {
   public static newAllowanceManager(params: {
     configProvider: IConfigurationProvider
+    contractsProvider: IContractsProvider
   }): AllowanceManager {
     return new AllowanceManager(params)
   }

@@ -2,9 +2,9 @@ import { IConfigurationProvider } from '@summerfi/configuration-provider'
 import type { IEarnProtocolManager } from '@summerfi/earn-protocol-common'
 import { IAddress, IChainInfo, ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
 
-import IFleetCommanderABIJSON from '../../../../earn-protocol/abis/IFleetCommander.sol/IFleetCommander.json'
+import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import { Abi, encodeFunctionData } from 'viem'
-import type { IAllowanceManager } from '@summerfi/allowance-common'
+import IFleetCommanderABIJSON from '../../../../earn-protocol/abis/IFleetCommander.sol/IFleetCommander.json'
 
 /**
  * @name EarnProtocolManager

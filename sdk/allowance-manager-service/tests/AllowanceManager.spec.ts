@@ -1,4 +1,6 @@
+import { BlockchainClientProvider } from '@summerfi/blockchain-client-provider'
 import { ConfigurationProvider } from '@summerfi/configuration-provider'
+import { ContractsProviderFactory } from '@summerfi/contracts-provider-service'
 import { Address, ChainFamilyMap, ChainInfo, Token, TokenAmount } from '@summerfi/sdk-common'
 import { decodeAllowanceCalldata } from '@summerfi/testing-utils/utils/AllowanceDecoding'
 import { AllowanceManagerFactory, type AllowanceManager } from '../src'
@@ -29,7 +31,16 @@ describe('Earn Protocol Service', () => {
 
   beforeEach(() => {
     const configProvider = new ConfigurationProvider()
-    allowanceManager = AllowanceManagerFactory.newAllowanceManager({ configProvider })
+    const blockchainClientProvider = new BlockchainClientProvider({ configProvider })
+    const contractsProvider = ContractsProviderFactory.newContractsProvider({
+      configProvider,
+      blockchainClientProvider,
+    })
+
+    allowanceManager = AllowanceManagerFactory.newAllowanceManager({
+      configProvider,
+      contractsProvider,
+    })
   })
 
   it('should return approval transaction correctly', async () => {

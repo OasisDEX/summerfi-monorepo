@@ -1,8 +1,7 @@
-import type { IAllowanceManager } from '@summerfi/allowance-common'
+import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider'
+import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import { IAddress, IChainInfo, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
-
-import { encodeFunctionData, erc20Abi } from 'viem'
 
 /**
  * @name AllowanceManager
@@ -10,10 +9,15 @@ import { encodeFunctionData, erc20Abi } from 'viem'
  */
 export class AllowanceManager implements IAllowanceManager {
   private _configProvider: IConfigurationProvider
+  private _contractsProvider: IContractsProvider
 
   /** CONSTRUCTOR */
-  constructor(params: { configProvider: IConfigurationProvider }) {
+  constructor(params: {
+    configProvider: IConfigurationProvider
+    contractsProvider: IContractsProvider
+  }) {
     this._configProvider = params.configProvider
+    this._contractsProvider = params.contractsProvider
   }
 
   /** FUNCTIONS */
@@ -22,25 +26,16 @@ export class AllowanceManager implements IAllowanceManager {
     spender: IAddress
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
-    const calldata = encodeFunctionData({
-      abi: erc20Abi,
-      functionName: 'approve',
-      args: [params.spender.value, BigInt(params.amount.toBaseUnit())],
+    const erc20Contract = await this._contractsProvider.getErc20Contract({
+      address: params.amount.token.address,
+      chainInfo: params.chainInfo,
     })
 
     return [
-      {
-        transaction: {
-          target: params.amount.token.address,
-          calldata: calldata,
-          value: '0',
-        },
-        description:
-          'Approve spending of ' +
-          params.amount.toString() +
-          ' to the spender at address: ' +
-          params.spender.value,
-      },
+      await erc20Contract.approve({
+        amount: params.amount,
+        spender: params.spender,
+      }),
     ]
   }
 }

@@ -1,6 +1,6 @@
+import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider'
 import { EarnProtocolManager } from './EarnProtocolManager'
-import type { IAllowanceManager } from '@summerfi/allowance-common'
 
 /**
  * @name EarnProtocolManagerFactory

@@ -5,8 +5,8 @@ import {
   decodeFleetDepositCalldata,
   decodeFleetWithdrawCalldata,
 } from '@summerfi/testing-utils/utils/EarnProtocolDecoding'
+import type { AllowanceManager } from '../../allowance-manager-service/src'
 import { EarnProtocolManager, EarnProtocolManagerFactory } from '../src'
-import type { AllowanceManager } from '@summerfi/allowance-service'
 
 describe('Earn Protocol Service', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
