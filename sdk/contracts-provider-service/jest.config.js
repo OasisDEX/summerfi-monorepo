@@ -5,4 +5,5 @@ require('dotenv').config({ path: '../.env' })
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   ...sharedConfig(compilerOptions),
+  roots: ['<rootDir>/src', '<rootDir>/e2e'],
 }

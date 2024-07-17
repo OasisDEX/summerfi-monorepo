@@ -1,7 +1,16 @@
 import { IBlockchainClient } from '@summerfi/blockchain-client-provider'
 import { IErc20Contract, IErc4626Contract } from '@summerfi/contracts-provider-common'
-import { IAddress, IChainInfo, ITokenAmount, TokenAmount } from '@summerfi/sdk-common'
-import { erc4626Abi } from 'viem'
+import {
+  Address,
+  IAddress,
+  IChainInfo,
+  IToken,
+  ITokenAmount,
+  Maybe,
+  TokenAmount,
+  TransactionInfo,
+} from '@summerfi/sdk-common'
+import { Abi, encodeFunctionData, erc4626Abi } from 'viem'
 import { ContractWrapper } from '../ContractWrapper'
 import { Erc20Contract } from '../Erc20Contract/Erc20Contract'
 
@@ -14,7 +23,8 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
   extends ContractWrapper<typeof erc4626Abi, TClient, TAddress>
   implements IErc4626Contract
 {
-  readonly _erc20Contract: IErc20Contract
+  private readonly _erc20Contract: IErc20Contract
+  private _asset: Maybe<IToken>
 
   /** CONSTRUCTOR */
   constructor(params: { blockchainClient: TClient; chainInfo: IChainInfo; address: TAddress }) {
@@ -25,15 +35,74 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
 
   /** PUBLIC */
 
+  /** READ METHODS */
+
+  /** @see IErc4626Contract.asset */
+  async asset(): Promise<IToken> {
+    if (!this._asset) {
+      await this._updateAsset()
+    }
+    if (!this._asset) {
+      throw new Error('Could not retrieve underlying asset information')
+    }
+
+    return this._asset
+  }
+
   /** @see IErc4626Contract.totalAssets */
   async totalAssets(): Promise<ITokenAmount> {
     const totalAssets = await this.contract.read.totalAssets()
+    const token = await this.asset()
 
-    return TokenAmount.createFrom({
-      token: await this.asErc20().getToken(),
+    return TokenAmount.createFromBaseUnit({
+      token,
       amount: totalAssets.toString(),
     })
   }
+
+  /** WRITE METHODS */
+
+  /** @see IErc4626Contract.deposit */
+  async deposit(params: { amount: ITokenAmount; receiver: IAddress }): Promise<TransactionInfo> {
+    const calldata = encodeFunctionData({
+      abi: this.getAbi() as Abi,
+      functionName: 'deposit',
+      args: [params.amount.toBaseUnit(), params.receiver.value],
+    })
+
+    return {
+      description: `Deposit ${params.amount} on vault ${this.address}`,
+      transaction: {
+        calldata,
+        target: this.address,
+        value: '0',
+      },
+    }
+  }
+
+  /** @see IErc4626Contract.withdraw */
+  async withdraw(params: {
+    amount: ITokenAmount
+    receiver: IAddress
+    owner: IAddress
+  }): Promise<TransactionInfo> {
+    const calldata = encodeFunctionData({
+      abi: this.getAbi() as Abi,
+      functionName: 'withdraw',
+      args: [params.amount.toBaseUnit(), params.receiver.value, params.owner.value],
+    })
+
+    return {
+      description: `Withdraw ${params.amount} from vault ${this.address} to address ${params.receiver} on behalf of ${params.owner}`,
+      transaction: {
+        calldata,
+        target: this.address,
+        value: '0',
+      },
+    }
+  }
+
+  /** CONVERSION METHODS */
 
   /** @see IErc4626Contract.asErc20 */
   asErc20(): IErc20Contract {
@@ -43,5 +112,20 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
   /** @see IContractWrapper.getAbi */
   getAbi(): typeof erc4626Abi {
     return erc4626Abi
+  }
+
+  /** PRIVATE */
+  private async _updateAsset(): Promise<void> {
+    const assetAddress = await this.contract.read.asset()
+
+    const assetErc20Contract = new Erc20Contract({
+      blockchainClient: this.blockchainClient,
+      chainInfo: this.chainInfo,
+      address: Address.createFromEthereum({
+        value: assetAddress,
+      }),
+    })
+
+    this._asset = await assetErc20Contract.getToken()
   }
 }
