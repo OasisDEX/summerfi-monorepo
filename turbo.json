@@ -1,5 +1,5 @@
 {
-  "$schema": "https://turbo.build/schema.json",
+  "$schema": "https://turbo.build/schema.v1.json",
   "globalDependencies": ["**/.env.*local"],
   "globalEnv": [
     "SUBGRAPH_BASE",
@@ -14,6 +14,8 @@
     "NEXT_PUBLIC_SWAP_WIDGET_ONBOARDING_HIDDEN",
     "NEXT_PUBLIC_DEV_WALLETS",
     "ACCOUNT_KIT_API_KEY",
+    "NEXT_PUBLIC_TRANSAK_API_KEY",
+    "NEXT_PUBLIC_TRANSAK_ENVIRONMENT",
     "CONFIG_URL",
     "CONFIG_URL_RAYS",
     "CONTENTFUL_ACCESS_TOKEN",

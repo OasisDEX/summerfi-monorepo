@@ -7,7 +7,7 @@ import { EXTERNAL_LINKS } from '@/helpers/application-links'
 import launchBannerStyles from '@/components/organisms/LaunchBanner/LaunchBanner.module.scss'
 
 export const LaunchBanner = () => {
-  const futureTimestamp = '2024-07-24T16:00:00-02:00'
+  const futureTimestamp = '2024-07-31T16:00:00-02:00'
 
   return (
     <div className={launchBannerStyles.wrapper}>
