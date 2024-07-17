@@ -29,7 +29,8 @@ export const Form = () => {
 
   const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
   const [{ wallet }] = useConnectWallet()
-  const { wagmiConfig } = useAppState()
+
+  console.log('wagmiConfig', wagmiConfig)
   const { getTokenBySymbol } = useSDK()
   const deposit = useDeposit()
   const withdraw = useWithdraw()

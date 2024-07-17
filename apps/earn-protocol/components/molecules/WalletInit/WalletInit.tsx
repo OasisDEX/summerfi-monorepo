@@ -159,8 +159,7 @@ const initWeb3OnBoardConfig = {
   },
 }
 
-init(initWeb3OnBoardConfig)
-
+export const onboard = init(initWeb3OnBoardConfig)
 export const WalletInit = () => {
   return null
 }
