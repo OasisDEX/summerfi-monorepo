@@ -13,6 +13,7 @@ jobs:
     outputs:
       build-earn-protocol: ${{ steps.filter.outputs.changes.build-earn-protocol }}
     steps:
+      - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
         id: filter
         with:
