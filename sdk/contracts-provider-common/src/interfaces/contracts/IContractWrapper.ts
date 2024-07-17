@@ -23,7 +23,7 @@ export interface IContractWrapper {
    * @name getBlockchainProvider
    * @description Returns the blockchain provider associated with the wrapper
    */
-  get blockchainProvider(): IBlockchainClient
+  get blockchainClient(): IBlockchainClient
 
   /**
    * @name getAbi

@@ -1,6 +1,7 @@
 import { IAddress, IChainInfo } from '@summerfi/sdk-common'
 import { IErc20Contract } from './contracts/IErc20Contract'
 import { IErc4626Contract } from './contracts/IErc4626Contract'
+import { IFleetCommanderContract } from './contracts/IFleetCommanderContract'
 
 /**
  * @name IContractsProvider
@@ -31,10 +32,24 @@ export interface IContractsProvider {
    * @param {IChainInfo} chainInfo The chain information where the contract is deployed
    * @param {IAddress} address The address of the ERC4626 contract
    *
-   * @returns {IErc4626Contract
+   * @returns {IErc4626Contract}
    */
   getErc4626Contract(params: {
     chainInfo: IChainInfo
     address: IAddress
   }): Promise<IErc4626Contract>
+
+  /**
+   * @name getFleetCommanderContract
+   * @description Returns a FleetCommander contract wrapper
+   *
+   * @param {IChainInfo} chainInfo The chain information where the contract is deployed
+   * @param {IAddress} address The address of the FleetCommander contract
+   *
+   * @returns {IFleetCommanderContract}
+   */
+  getFleetCommanderContract(params: {
+    chainInfo: IChainInfo
+    address: IAddress
+  }): Promise<IFleetCommanderContract>
 }

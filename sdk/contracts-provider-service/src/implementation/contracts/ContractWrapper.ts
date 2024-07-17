@@ -1,8 +1,8 @@
 import { ContractAbi } from '@summerfi/abi-provider-common'
 import { IBlockchainClient } from '@summerfi/blockchain-client-provider'
+import { IContractWrapper } from '@summerfi/contracts-provider-common'
 import { IAddress, IChainInfo } from '@summerfi/sdk-common'
 import { GetContractReturnType, getContract } from 'viem'
-import { IContractWrapper } from '../../interfaces/contracts/IContractWrapper'
 
 /**
  * @name ContractWrapper
@@ -48,7 +48,7 @@ export abstract class ContractWrapper<
   }
 
   /** @see IErc20Contract.blockchainProvider */
-  get blockchainProvider(): TClient {
+  get blockchainClient(): TClient {
     return this._blockchainClient
   }
 

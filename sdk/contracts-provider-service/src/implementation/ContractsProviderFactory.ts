@@ -1,3 +1,4 @@
+import { IBlockchainClientProvider } from '@summerfi/blockchain-client-provider'
 import { IConfigurationProvider } from '@summerfi/configuration-provider'
 import { ContractsProvider } from './ContractsProvider'
 
@@ -6,7 +7,10 @@ import { ContractsProvider } from './ContractsProvider'
  * @description This class is responsible for creating instances of the ContractsProvider
  */
 export class ContractsProviderFactory {
-  public static newContractsProvider(params: { configProvider: IConfigurationProvider }): ContractsProvider {
+  public static newContractsProvider(params: {
+    configProvider: IConfigurationProvider
+    blockchainClientProvider: IBlockchainClientProvider
+  }): ContractsProvider {
     return new ContractsProvider(params)
   }
 }

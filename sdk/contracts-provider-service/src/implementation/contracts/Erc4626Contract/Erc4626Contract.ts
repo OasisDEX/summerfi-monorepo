@@ -1,10 +1,9 @@
 import { IBlockchainClient } from '@summerfi/blockchain-client-provider'
+import { IErc20Contract, IErc4626Contract } from '@summerfi/contracts-provider-common'
 import { IAddress, IChainInfo, ITokenAmount, TokenAmount } from '@summerfi/sdk-common'
 import { erc4626Abi } from 'viem'
-import { IErc20Contract } from '../../interfaces/contracts/IErc20Contract'
-import { IErc4626Contract } from '../../interfaces/contracts/IErc4626Contract'
-import { ContractWrapper } from './ContractWrapper'
-import { Erc20Contract } from './Erc20Contract'
+import { ContractWrapper } from '../ContractWrapper'
+import { Erc20Contract } from '../Erc20Contract/Erc20Contract'
 
 /**
  * @name Erc4626Contract

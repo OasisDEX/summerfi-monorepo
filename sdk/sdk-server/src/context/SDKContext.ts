@@ -7,6 +7,8 @@ import type { IAllowanceManager } from '@summerfi/allowance-common'
 import { AllowanceManagerFactory } from '@summerfi/allowance-service'
 import { BlockchainClientProvider } from '@summerfi/blockchain-client-provider'
 import { ConfigurationProvider, IConfigurationProvider } from '@summerfi/configuration-provider'
+import { IContractsProvider } from '@summerfi/contracts-provider-common'
+import { ContractsProviderFactory } from '@summerfi/contracts-provider-service'
 import type { IEarnProtocolManager } from '@summerfi/earn-protocol-common'
 import { EarnProtocolManagerFactory } from '@summerfi/earn-protocol-service'
 import { IOracleManager } from '@summerfi/oracle-common'
@@ -30,6 +32,7 @@ export type SDKAppContext = {
   configProvider: IConfigurationProvider
   blockchainClientProvider: BlockchainClientProvider
   abiProvider: IAbiProvider
+  contractsProvider: IContractsProvider
   tokensManager: ITokensManager
   swapManager: ISwapManager
   oracleManager: IOracleManager
@@ -45,6 +48,10 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
   const configProvider = new ConfigurationProvider()
   const blockchainClientProvider = new BlockchainClientProvider({ configProvider })
   const abiProvider = AbiProviderFactory.newAbiProvider({ configProvider })
+  const contractsProvider = ContractsProviderFactory.newContractsProvider({
+    configProvider,
+    blockchainClientProvider,
+  })
   const addressBookManager = AddressBookManagerFactory.newAddressBookManager({ configProvider })
   const tokensManager = TokensManagerFactory.newTokensManager({ configProvider })
   const orderPlannerService = new OrderPlannerService()
@@ -71,6 +78,7 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
     configProvider,
     blockchainClientProvider,
     abiProvider,
+    contractsProvider,
     addressBookManager,
     tokensManager,
     swapManager,

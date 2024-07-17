@@ -14,6 +14,9 @@ const CONFIG_KEYS: ConfigKey[] = [
   'ONE_INCH_ALLOWED_SWAP_PROTOCOLS',
   'ONE_INCH_SWAP_CHAIN_IDS',
   'RPC_GATEWAY',
+  'TENDERLY_USER',
+  'TENDERLY_PROJECT',
+  'TENDERLY_ACCESS_KEY',
 ]
 
 export class ConfigurationProvider implements IConfigurationProvider {

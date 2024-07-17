@@ -7,6 +7,13 @@ import { IPercentage, IPercentageData, isPercentage } from '../interfaces/IPerce
  * @see IPercentage
  */
 export class Percentage implements IPercentage {
+  /** The number of decimals used to represent the percentage in Solidity */
+  public static PERCENTAGE_DECIMALS = 6
+
+  /**The factor used to scale the percentage */
+  public static PERCENTAGE_FACTOR = 10 ** Percentage.PERCENTAGE_DECIMALS
+
+  /** The percentage of 100% with the given `PERCENTAGE_DECIMALS` */
   public static Percent100: Percentage = new Percentage({
     value: 100.0,
   })
@@ -16,6 +23,19 @@ export class Percentage implements IPercentage {
   /** FACTORY */
   static createFrom(params: IPercentageData) {
     return new Percentage(params)
+  }
+
+  /**
+   * Creates a Percentage instance from a Solidity value with PERCENTAGE_DECIMALS decimals
+   * @param value The Solidity value
+   * @returns The Percentage instance
+   */
+  static createFromSolidityValue(params: { value: bigint }): Percentage {
+    const percentageValue = new BigNumber(params.value.toString())
+      .div(Percentage.PERCENTAGE_FACTOR)
+      .toNumber()
+
+    return Percentage.createFrom({ value: percentageValue })
   }
 
   /** CONSTRUCTOR */
