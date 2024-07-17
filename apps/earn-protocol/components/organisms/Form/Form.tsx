@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { Button, Card, Input, Text } from '@summerfi/app-ui'
-import type { TransactionInfo } from '@summerfi/sdk-common'
+import type { Token, TransactionInfo } from '@summerfi/sdk-common'
 import { useAppState, useConnectWallet } from '@web3-onboard/react'
 import {
   type Config as WagmiConfig,
@@ -23,14 +23,14 @@ const usdcFleetAddress = '0xa09e82322f351154a155f9e0f9e6ddbc8791c794'
 export const Form = () => {
   const [action, setAction] = useState(Action.DEPOSIT)
   const [amountValue, setAmountValue] = useState<number>()
-  const [transactionHash, setTransactionHash] = useState<string>()
+  const [transactionsHash, setTransactionsHash] = useState<string>()
   const [transactionError, setTransactionError] = useState<string>()
+  const [token, setToken] = useState<Token>()
   const [tokenBalance, setTokenBalance] = useState<number>()
 
   const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
   const [{ wallet }] = useConnectWallet()
-
-  console.log('wagmiConfig', wagmiConfig)
+  const { wagmiConfig } = useAppState()
   const { getTokenBySymbol } = useSDK()
   const deposit = useDeposit()
   const withdraw = useWithdraw()
@@ -60,32 +60,37 @@ export const Form = () => {
   }
 
   useEffect(() => {
-    async function fetchData() {
-      if (chainId && walletAddress) {
+    async function fetchToken() {
+      if (chainId) {
         const token = await getTokenBySymbol({ chainId, symbol: tokenSymbol })
-        console.log({
-          chainId,
-          address: walletAddress,
-          token: token.address.value,
-        })
+
+        setToken(token)
+      }
+    }
+    fetchToken()
+  }, [chainId, tokenSymbol])
+
+  useEffect(() => {
+    async function fetchData() {
+      if (chainId && walletAddress && token) {
         const { value, decimals } = await getBalance(wagmiConfig as WagmiConfig, {
           chainId,
           address: walletAddress,
           token: token.address.value,
         })
+
         setTokenBalance(Number(value / BigInt(10 ** decimals)))
-        console.log('usdcBalance', tokenBalance)
       }
     }
     fetchData()
-  }, [chainId, tokenSymbol, walletAddress])
+  }, [chainId, walletAddress, token?.symbol])
 
   const handleChange = (event: any) => {
     setAmountValue(event.target.value)
   }
 
   const getDepositTransaction = () => {
-    if (!amountValue || !chainId || !walletAddress) {
+    if (!amountValue || !chainId || !walletAddress || !token) {
       return undefined
     }
 
@@ -94,12 +99,12 @@ export const Form = () => {
       walletAddress,
       fleetAddress: usdcFleetAddress,
       amountString: amountValue.toString(),
-      tokenSymbol,
+      token,
     })
   }
 
   const getWithdrawTransaction = () => {
-    if (!amountValue || !chainId || !walletAddress) {
+    if (!amountValue || !chainId || !walletAddress || !token) {
       return undefined
     }
 
@@ -108,7 +113,7 @@ export const Form = () => {
       walletAddress,
       fleetAddress: usdcFleetAddress,
       amountString: amountValue.toString(),
-      tokenSymbol,
+      token,
     })
   }
 
@@ -132,6 +137,8 @@ export const Form = () => {
       try {
         const transactionHashes: string[] = []
 
+        setTransactionsHash(undefined)
+        setTransactionError(undefined)
         setIsPendingTransaction(true)
 
         for (const [_, transaction] of transactions.entries()) {
@@ -139,7 +146,7 @@ export const Form = () => {
 
           transactionHashes.push(txHash)
         }
-        setTransactionHash(transactionHashes.join(', '))
+        setTransactionsHash(transactionHashes.join(', '))
       } catch (error) {
         setTransactionError('An error occurred while sending the transaction (check the console)')
         setIsPendingTransaction(false)
@@ -190,7 +197,7 @@ export const Form = () => {
         <Text as="p" variant="p3semi">
           {action === Action.DEPOSIT ? 'Deposit' : 'Withdraw'}
         </Text>
-        {tokenBalance && (
+        {tokenBalance != null && (
           <Text
             as="p"
             variant="p3semi"
@@ -217,7 +224,7 @@ export const Form = () => {
       >
         Confirm
       </Button>
-      {transactionHash && <Text as="p">Transaction sent: {transactionHash}</Text>}
+      {transactionsHash && <Text as="p">Transactions sent: {transactionsHash}</Text>}
       {transactionError && <Text as="p">Transaction error: {transactionError}</Text>}
       <Button
         variant="secondarySmall"
