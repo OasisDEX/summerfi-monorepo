@@ -73,7 +73,10 @@ describe.skip('Earn Protocol Deposit', () => {
       }),
     })
 
-    await sendAndLogTransactions(transactions)
+    await sendAndLogTransactions({
+      chainInfo,
+      transactions,
+    })
   })
 
   it('should fail deposit of DAI with incorrect token error', async () => {
@@ -93,7 +96,10 @@ describe.skip('Earn Protocol Deposit', () => {
       }),
     })
 
-    await sendAndLogTransactions(transactions)
+    await sendAndLogTransactions({
+      chainInfo,
+      transactions,
+    })
   })
 
   it('should withdraw 1 USDC', async () => {
@@ -113,7 +119,7 @@ describe.skip('Earn Protocol Deposit', () => {
       }),
     })
 
-    await sendAndLogTransactions(transactions)
+    await sendAndLogTransactions({ chainInfo, transactions })
   })
 })
 
