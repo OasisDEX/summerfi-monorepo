@@ -1,5 +1,5 @@
 'use client'
-import { FC, ReactNode } from 'react'
+import { type FC, type ReactNode } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -8,7 +8,7 @@ import { Card } from '@/components/atoms/Card/Card'
 import { ProxyLinkComponent } from '@/components/atoms/ProxyLinkComponent/ProxyLinkComponent'
 import { Text } from '@/components/atoms/Text/Text'
 
-import classNames from '@/components/molecules/BannerCard/BannerCard.module.scss'
+import bannerCardStyles from '@/components/molecules/BannerCard/BannerCard.module.scss'
 
 interface BannerCardProps {
   title: ReactNode
@@ -26,10 +26,10 @@ interface BannerCardProps {
 
 export const BannerCard: FC<BannerCardProps> = ({ title, description, footer, link, image }) => {
   return (
-    <Card className={classNames.shadow}>
+    <Card className={bannerCardStyles.shadow}>
       <Image src={image.src} alt={image.alt} height={60} style={{ width: 'auto' }} />
-      <div className={classNames.content}>
-        <div className={classNames.contentTextual}>
+      <div className={bannerCardStyles.content}>
+        <div className={bannerCardStyles.contentTextual}>
           {typeof title === 'string' ? (
             <Text as="p" variant="p2semi">
               {title}
@@ -38,14 +38,14 @@ export const BannerCard: FC<BannerCardProps> = ({ title, description, footer, li
             title
           )}
           {typeof description === 'string' ? (
-            <Text as="p" variant="p3" className={classNames.contentDescription}>
+            <Text as="p" variant="p3" className={bannerCardStyles.contentDescription}>
               {description}
             </Text>
           ) : (
             description
           )}
           {typeof footer === 'string' ? (
-            <Text as="p" variant="p4semi" className={classNames.contentDescription}>
+            <Text as="p" variant="p4semi" className={bannerCardStyles.contentDescription}>
               {footer}
             </Text>
           ) : (

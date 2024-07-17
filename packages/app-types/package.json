@@ -1,0 +1,25 @@
+{
+  "name": "@summerfi/app-types",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "main": "./types/index.ts",
+  "scripts": {
+    "dev": "dotenv -e ../../.env -e ../../.env.local -- pnpm get-config-types",
+    "prebuild:nocache": "dotenv -e ../../.env -e ../../.env.local -- pnpm get-config-types",
+    "get-config-types": "node scripts/get-config-types.js && node scripts/get-rays-config-types.js"
+  },
+  "dependencies": {
+    "@summerfi/app-db": "workspace:*",
+    "@summerfi/rays-db": "workspace:*",
+    "@summerfi/serverless-shared": "workspace:*",
+    "@types/react": "^18.3.1"
+  },
+  "devDependencies": {
+    "@tabler/icons-react": "^3.4.0",
+    "@types/node-fetch": "^2.6.11",
+    "@types/node": "^20.14.2",
+    "@types/react": "^18.3.1",
+    "json-to-ts": "^1.7.0",
+    "node-fetch": "^2.7.0"
+  }
+}

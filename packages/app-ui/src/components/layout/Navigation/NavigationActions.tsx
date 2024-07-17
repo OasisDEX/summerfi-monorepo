@@ -1,4 +1,4 @@
-import classNames from 'classnames'
+import clsx from 'clsx'
 
 import { Button } from '@/components/atoms/Button/Button'
 import { Icon } from '@/components/atoms/Icon/Icon'
@@ -23,10 +23,7 @@ export const NavigationActions = ({
       <div className={navigationActionStyles.mobileMenuButton}>
         <Button
           variant="secondarySmall"
-          className={classNames(
-            navigationActionStyles.buttonWhite,
-            navigationActionStyles.buttonShadow,
-          )}
+          className={clsx(navigationActionStyles.buttonWhite, navigationActionStyles.buttonShadow)}
           onClick={toggleMobileMenu}
           style={{ padding: '10px', width: '40px', height: '40px' }}
         >
@@ -37,7 +34,7 @@ export const NavigationActions = ({
         {walletConnectionComponent ?? (
           <Button
             variant="secondarySmall"
-            className={classNames(
+            className={clsx(
               navigationActionStyles.walletButtonMock,
               navigationActionStyles.buttonWhite,
             )}

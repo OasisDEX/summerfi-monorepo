@@ -1,5 +1,6 @@
 'use client'
 
+import { type LeaderboardItem } from '@summerfi/app-types'
 import { Button, ProxyLinkComponent, Text } from '@summerfi/app-ui'
 import {
   IconArrowDown,
@@ -12,9 +13,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 import { trackButtonClick } from '@/helpers/mixpanel'
-import { LeaderboardItem } from '@/types/leaderboard'
 
-import classNames from '@/components/organisms/Leaderboard/Leaderboard.module.scss'
+import leaderboardStyles from '@/components/organisms/Leaderboard/Leaderboard.module.scss'
 
 const uprankColor = 'var(--color-success-70)'
 const downrankColor = 'var(--color-critical-70)'
@@ -35,13 +35,13 @@ export const LeaderboardRank = ({
   return (
     <div style={{ position: 'relative' }}>
       {userWalletAddress && userWalletAddress === cell.userAddress ? (
-        <div className={classNames.youreHere}>
+        <div className={leaderboardStyles.youreHere}>
           <Text as="p" variant="p3semi">
             You&apos;re&nbsp;here&nbsp;👇
           </Text>
         </div>
       ) : null}
-      <div className={classNames.positionColumn}>
+      <div className={leaderboardStyles.positionColumn}>
         <Text as="p" style={{ color: 'var(--color-neutral-80)' }}>
           {cell.position}
         </Text>
@@ -62,7 +62,7 @@ export const LeaderboardRank = ({
           style={{
             color: rankChangeColor,
           }}
-          className={classNames.rankChange}
+          className={leaderboardStyles.rankChange}
           title="Leaderboard change over 24h"
         >
           {rankChange === 0 ? '' : rankChange}&nbsp;
@@ -89,7 +89,7 @@ export const LeaderboardUser = ({
       variant={
         userWalletAddress && userWalletAddress === cell.userAddress ? 'p1semiColorful' : 'p1semi'
       }
-      className={classNames.userColumn}
+      className={leaderboardStyles.userColumn}
       style={
         userWalletAddress && userWalletAddress === cell.userAddress ? { marginTop: '30px' } : {}
       }
@@ -108,6 +108,7 @@ export const LeaderboardUser = ({
               id: 'LeaderboardPeek',
               page: currentPath,
               value: cell.userAddress,
+              source: 'Leaderboard',
               ...(cell.details && {
                 activePositions: cell.details.activePositions,
                 activeTriggers: cell.details.activeTriggers,
@@ -160,7 +161,7 @@ export const LeaderboardPortfolio = ({
       }
     >
       <Link passHref legacyBehavior prefetch={false} href={`/portfolio/${cell.userAddress}`}>
-        <ProxyLinkComponent className={classNames.portfolioLink} target="_blank">
+        <ProxyLinkComponent className={leaderboardStyles.portfolioLink} target="_blank">
           <Button
             variant="unstyled"
             onClick={() => {

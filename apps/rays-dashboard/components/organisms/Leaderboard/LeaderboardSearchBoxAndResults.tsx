@@ -1,5 +1,6 @@
 'use client'
-import { ChangeEvent, useEffect, useState } from 'react'
+import { type ChangeEvent, useEffect, useState } from 'react'
+import { type LeaderboardResponse } from '@summerfi/app-types'
 import { Input } from '@summerfi/app-ui'
 import { IconX } from '@tabler/icons-react'
 import { usePathname } from 'next/navigation'
@@ -8,7 +9,6 @@ import { mapLeaderboardColumns } from '@/components/organisms/Leaderboard/column
 import { Leaderboard } from '@/components/organisms/Leaderboard/Leaderboard'
 import { basePath } from '@/helpers/base-path'
 import { trackInputChange } from '@/helpers/mixpanel'
-import { LeaderboardResponse } from '@/types/leaderboard'
 
 import leaderboardSearchBoxAndResults from './LeaderboardSearchBoxAndResults.module.scss'
 

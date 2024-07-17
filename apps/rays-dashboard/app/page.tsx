@@ -1,3 +1,4 @@
+import { type LeaderboardResponse, type RaysApiResponse } from '@summerfi/app-types'
 import { Button } from '@summerfi/app-ui'
 import Link from 'next/link'
 
@@ -16,8 +17,7 @@ import {
 } from '@/constants/leaderboard'
 import { parseServerResponse } from '@/helpers/parse-server-response'
 import { fetchLeaderboard } from '@/server-handlers/leaderboard'
-import { fetchRays, RaysApiResponse } from '@/server-handlers/rays'
-import { LeaderboardResponse } from '@/types/leaderboard'
+import { fetchRays } from '@/server-handlers/rays'
 
 export default async function LeaderboardPage({
   searchParams,

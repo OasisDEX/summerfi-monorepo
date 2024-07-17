@@ -1,13 +1,10 @@
-import classNames from 'classnames'
+import { type NavigationMenuPanelList, type WithNavigationModules } from '@summerfi/app-types'
+import clsx from 'clsx'
 import Link from 'next/link'
 
 import { ProxyLinkComponent } from '@/components/atoms/ProxyLinkComponent/ProxyLinkComponent'
 import { Text } from '@/components/atoms/Text/Text'
 import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
-import {
-  NavigationMenuPanelList,
-  WithNavigationModules,
-} from '@/components/layout/Navigation/Navigation.types'
 import { NavigationMenuDropdownContentListItem } from '@/components/layout/Navigation/NavigationMenuDropdownContentListItem'
 
 import navigationMenuDropdownContentListStyles from './NavigationMenuDropdownContentList.module.scss'
@@ -45,7 +42,7 @@ export const NavigationMenuDropdownContentList = ({
       {items.map(({ protocolName, url, navigationModule, ...item }, i) => (
         <li
           key={i}
-          className={classNames(
+          className={clsx(
             navigationMenuDropdownContentListStyles.navigationMenuDropdownContentListWrapperItem,
             {
               [navigationMenuDropdownContentListStyles.itemHoverEffectDefault]:
@@ -68,7 +65,7 @@ export const NavigationMenuDropdownContentList = ({
           {url ? (
             <Link passHref legacyBehavior prefetch={false} href={url}>
               <ProxyLinkComponent
-                className={classNames(
+                className={clsx(
                   navigationMenuDropdownContentListStyles.navigationMenuDropdownContentListWrapperItemLink,
                   {
                     [navigationMenuDropdownContentListStyles.navigationMenuDropdownContentListWrapperItemLinkTight]:
@@ -81,7 +78,7 @@ export const NavigationMenuDropdownContentList = ({
             </Link>
           ) : (
             <div
-              className={classNames(
+              className={clsx(
                 navigationMenuDropdownContentListStyles.navigationMenuDropdownContentListWrapperItemLink,
                 {
                   [navigationMenuDropdownContentListStyles.navigationMenuDropdownContentListWrapperItemLinkTight]:

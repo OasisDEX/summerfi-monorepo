@@ -1,9 +1,11 @@
-import { FC } from 'react'
+import { type FC } from 'react'
 
 import { CountDownItem } from '@/components/molecules/CountDownItem/CountDownItem'
 import { timeUntil } from '@/helpers/time-until'
 
-import classNames, { ClassNames } from '@/components/organisms/CountDown/CountDown.module.scss'
+import countdownStyles, {
+  type ClassNames,
+} from '@/components/organisms/CountDown/CountDown.module.scss'
 
 interface CountDownProps {
   futureTimestamp: string
@@ -16,7 +18,7 @@ export const CountDown: FC<CountDownProps> = ({ futureTimestamp, variant = 'coun
   const itemVariant = variant === 'countDown' ? 'large' : 'medium'
 
   return (
-    <div className={classNames[variant]}>
+    <div className={countdownStyles[variant]}>
       <CountDownItem title="Weeks" value={weeks} variant={itemVariant} />
       <CountDownItem title="Days" value={days} variant={itemVariant} />
       <CountDownItem title="Hours" value={hours} variant={itemVariant} />

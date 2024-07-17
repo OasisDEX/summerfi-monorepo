@@ -1,6 +1,6 @@
-import { FC, ReactNode } from 'react'
+import { type FC, type ReactNode } from 'react'
 
-import classNames, { ClassNames } from '@/components/atoms/Pill/Pill.module.scss'
+import pillStyles, { type ClassNames } from '@/components/atoms/Pill/Pill.module.scss'
 
 interface PillProps {
   children: ReactNode
@@ -8,5 +8,5 @@ interface PillProps {
 }
 
 export const Pill: FC<PillProps> = ({ children, variant = 'default' }) => (
-  <div className={classNames[variant]}>{children}</div>
+  <div className={pillStyles[variant]}>{children}</div>
 )

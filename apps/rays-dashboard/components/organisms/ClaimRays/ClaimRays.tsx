@@ -1,5 +1,6 @@
 'use client'
 import { useCallback, useMemo } from 'react'
+import { type RaysApiResponse } from '@summerfi/app-types'
 import { Button, Text } from '@summerfi/app-ui'
 import { useConnectWallet } from '@web3-onboard/react'
 import { usePathname, useRouter } from 'next/navigation'
@@ -9,7 +10,6 @@ import { CriteriaList } from '@/components/molecules/CriteriaList/CriteriaList'
 import { CalculatorModal } from '@/components/organisms/CalculatorModal/CalculatorModal'
 import { trackButtonClick } from '@/helpers/mixpanel'
 import { useClientSideMount } from '@/helpers/use-client-side-mount'
-import { RaysApiResponse } from '@/server-handlers/rays'
 
 interface ClaimRaysPageProps {
   userAddress: string

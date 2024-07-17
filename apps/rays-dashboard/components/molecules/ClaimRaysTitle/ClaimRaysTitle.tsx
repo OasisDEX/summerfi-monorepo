@@ -1,8 +1,8 @@
+import { type RaysApiResponse } from '@summerfi/app-types'
 import { Text } from '@summerfi/app-ui'
 import BigNumber from 'bignumber.js'
 
 import { formatAddress, formatCryptoBalance } from '@/helpers/formatters'
-import { RaysApiResponse } from '@/server-handlers/rays'
 
 import claimRaysTitleStyles from './ClaimRaysTitle.module.scss'
 

@@ -1,10 +1,10 @@
 'use client'
 
-import { FC } from 'react'
+import { type FC } from 'react'
 import loadable from '@loadable/component'
 
-import classNames, {
-  ClassNames,
+import genericTokenIconStyles, {
+  type ClassNames,
 } from '@/components/atoms/GenericTokenIcon/GenericTokenIcon.module.scss'
 
 interface GenericTokenIconProps {
@@ -35,14 +35,14 @@ export const GenericTokenIcon: FC<GenericTokenIconProps> = ({ variant = 'smallIc
   })
 
   return (
-    <div className={classNames[variant]}>
+    <div className={genericTokenIconStyles[variant]}>
       <AvatarLoadingState
         size={innerSize}
         name={btoa(symbol)}
         variant="marble"
         colors={['#6FD9FF', '#F2FCFF', '#FFE7D8', '#FBB677']}
       />
-      <div className={classNames.unknownIcon}>?</div>
+      <div className={genericTokenIconStyles.unknownIcon}>?</div>
     </div>
   )
 }

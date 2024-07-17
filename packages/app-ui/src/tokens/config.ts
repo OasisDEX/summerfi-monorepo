@@ -1,4 +1,4 @@
-import { TokenConfig } from './types'
+import { type TokenConfig } from '@summerfi/app-types'
 
 export const tokenConfigs: TokenConfig[] = [
   {

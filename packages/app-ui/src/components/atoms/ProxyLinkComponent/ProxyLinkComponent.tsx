@@ -1,4 +1,4 @@
-import { forwardRef, HTMLAttributeAnchorTarget } from 'react'
+import { forwardRef, type HTMLAttributeAnchorTarget } from 'react'
 
 import { basePath } from '@/helpers/base-path'
 

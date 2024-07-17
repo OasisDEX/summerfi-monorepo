@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-import React from 'react'
-import classNames from 'classnames'
+import clsx from 'clsx'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
@@ -26,7 +25,7 @@ export const RadioButton = ({
 }) => {
   return (
     <div
-      className={classNames(radioButtonStyles.radioButtonWrapper, className, {
+      className={clsx(radioButtonStyles.radioButtonWrapper, className, {
         [radioButtonStyles.radioButtonWrapperChecked]: checked,
       })}
       style={style}

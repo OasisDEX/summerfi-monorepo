@@ -1,8 +1,8 @@
-import classNames from 'classnames'
+import { type NavigationMenuPanelIcon } from '@summerfi/app-types'
+import clsx from 'clsx'
 import Image from 'next/image'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
-import { NavigationMenuPanelIcon } from '@/components/layout/Navigation/Navigation.types'
 import { TokensGroup } from '@/components/molecules/TokensGroup/TokensGroup'
 
 import navigationMenuDropdownContentIconStyles from './NavigationMenuDropdownContentIcon.module.scss'
@@ -22,7 +22,7 @@ export function NavigationMenuDropdownContentIcon({
 
   return (
     <div
-      className={classNames(
+      className={clsx(
         navigationMenuDropdownContentIconStyles.navigationMenuDropdownContentIconWrapper,
         {
           [navigationMenuDropdownContentIconStyles.navigationMenuDropdownContentIconWrapperGlobal]:
@@ -32,7 +32,7 @@ export function NavigationMenuDropdownContentIcon({
     >
       {(icon ?? CustomIcon) && (
         <div
-          className={classNames(
+          className={clsx(
             'nav-icon',
             navigationMenuDropdownContentIconStyles.navigationMenuDropdownContentIcon,
           )}

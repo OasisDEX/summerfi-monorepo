@@ -1,10 +1,7 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
-import classNames from 'classnames'
+import { type NavigationMenuPanelType, type WithNavigationModules } from '@summerfi/app-types'
+import clsx from 'clsx'
 
-import {
-  NavigationMenuPanelType,
-  WithNavigationModules,
-} from '@/components/layout/Navigation/Navigation.types'
 import { NavigationMenuDropdownContentList } from '@/components/layout/Navigation/NavigationMenuDropdownContentList'
 
 import navigationMenuDropdownContentStyles from './NavigationMenuDropdownContent.module.scss'
@@ -86,7 +83,7 @@ export const NavigationMenuDropdownContent = ({
                   {list && (
                     <li
                       key={`${i}-${j}`}
-                      className={classNames(
+                      className={clsx(
                         navigationMenuDropdownContentStyles.navigationMenuDropdownContentSecondColumnLi,
                         {
                           [navigationMenuDropdownContentStyles.navigationMenuDropdownContentSecondColumnLiActive]:

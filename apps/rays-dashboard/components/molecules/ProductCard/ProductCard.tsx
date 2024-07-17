@@ -1,5 +1,6 @@
-import { FC } from 'react'
-import type { AutomationFeature } from '@summerfi/app-db'
+import { type FC } from 'react'
+import { type AutomationFeature } from '@summerfi/app-db'
+import { type TokenSymbolsList } from '@summerfi/app-types'
 import {
   AutomationIcon,
   Button,
@@ -8,15 +9,14 @@ import {
   ProxyLinkComponent,
   Text,
   TokensGroup,
-  TokenSymbolsList,
 } from '@summerfi/app-ui'
 import Link from 'next/link'
 
-import { NetworkNames, networksByName } from '@/constants/networks-list'
-import { LendingProtocolConfig } from '@/helpers/lending-protocols-configs'
+import { type NetworkNames, networksByName } from '@/constants/networks-list'
+import { type LendingProtocolConfig } from '@/helpers/lending-protocols-configs'
 import { trackButtonClick } from '@/helpers/mixpanel'
 
-import classNames from '@/components/molecules/ProductCard/ProductCard.module.scss'
+import productCardStyles from '@/components/molecules/ProductCard/ProductCard.module.scss'
 
 interface AutomationItem {
   tooltip: string
@@ -79,12 +79,12 @@ export const ProductCard: FC<ProductCardProps> = ({
   btn,
 }) => {
   return (
-    <Card className={classNames.cardWrapper}>
-      <div className={classNames.content}>
-        <div className={classNames.headingWrapper}>
-          <div className={classNames.generalInfoWrapper}>
+    <Card className={productCardStyles.cardWrapper}>
+      <div className={productCardStyles.content}>
+        <div className={productCardStyles.headingWrapper}>
+          <div className={productCardStyles.generalInfoWrapper}>
             <TokensGroup tokens={tokens} />
-            <div className={classNames.groupWrapper}>
+            <div className={productCardStyles.groupWrapper}>
               <Text as="h5" variant="h5">
                 {title ?? tokens.join('/')}
               </Text>
@@ -100,9 +100,12 @@ export const ProductCard: FC<ProductCardProps> = ({
               />
             </div>
           </div>
-          <div className={classNames.automationWrapper}>
+          <div className={productCardStyles.automationWrapper}>
             {automation.map((item) => (
-              <div className={classNames.automationItem} key={automationItemsMapper[item].label}>
+              <div
+                className={productCardStyles.automationItem}
+                key={automationItemsMapper[item].label}
+              >
                 <AutomationIcon
                   type={item}
                   tooltip={automationItemsMapper[item].tooltip}
@@ -115,7 +118,13 @@ export const ProductCard: FC<ProductCardProps> = ({
             ))}
           </div>
         </div>
-        <Link passHref legacyBehavior prefetch={false} href={btn.link} className={classNames.link}>
+        <Link
+          passHref
+          legacyBehavior
+          prefetch={false}
+          href={btn.link}
+          className={productCardStyles.link}
+        >
           <ProxyLinkComponent target="_blank">
             <Button
               variant="colorful"

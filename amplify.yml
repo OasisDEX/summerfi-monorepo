@@ -1,0 +1,18 @@
+version: 1
+applications:
+  - appRoot: apps/earn-protocol
+    frontend:
+      buildPath: /
+      phases:
+        preBuild:
+          commands:
+            - npm install -g pnpm
+            - pnpm install
+            - pnpm prebuild
+        build:
+          commands:
+            - pnpm build-earn-frontend
+      artifacts:
+        baseDirectory: apps/earn-protocol/.next
+        files:
+          - '**/*'

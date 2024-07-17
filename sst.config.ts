@@ -69,7 +69,7 @@ const checkIfDockerComposeIsRunning = async () => {
     const { stdout } =
       await $`docker compose --file ./stacks/local-env/docker-compose.yaml  ps --services --filter "status=running"`
     const services = (stdout ?? '').trim().split('\n').filter(Boolean)
-    return services.length > 0
+    return services.length === 3 // 3 services are expected to be running - rays-db, redis-cache, oasis-borrow-db
   } catch (error) {
     return false
   }
@@ -77,7 +77,7 @@ const checkIfDockerComposeIsRunning = async () => {
 
 const runDockerCompose = async () => {
   try {
-    await $`docker compose --file ./stacks/local-env/docker-compose.yaml up -d`
+    await $`docker compose --file ./stacks/local-env/docker-compose.yaml up --build -d`
   } catch (error) {
     echo(`${chalk.bgRed('Failed to start docker-compose services' + error.message)}`)
     return false
