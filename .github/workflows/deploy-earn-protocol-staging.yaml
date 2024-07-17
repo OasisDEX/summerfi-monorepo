@@ -1,12 +1,33 @@
 name: Deploy Earn Protocol App Staging
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - dev
 
 jobs:
-  build:
+  changes:
+    name: Check for earn protocol changes
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      build-earn-protocol: ${{ steps.filter.outputs.changes.build-earn-protocol }}
+    steps:
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            build-earn-protocol:
+              - 'apps/earn-protocol/**'
+              - 'packages/app-db/**'
+              - 'packages/app-types/**'
+              - 'packages/app-ui/**'
+  build-earn-protocol:
     name: Build and deploy Earn Protocol App
     runs-on: ubuntu-latest
     environment: staging
+    needs: changes
+    if: ${{ needs.changes.outputs.build-earn-protocol == 'true' }}
     env:
       AWS_REGION: us-east-1
       ENVIRONMENT_TAG: staging
