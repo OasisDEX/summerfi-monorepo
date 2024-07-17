@@ -11,7 +11,7 @@ import { AlchemyAccountsProvider } from '@/providers/AlchemyAccountsProvider/Alc
 import { config } from '@/providers/AlchemyAccountsProvider/config'
 
 export const metadata: Metadata = {
-  title: 'Summer.fi Earn Protocol',
+  title: 'Summer.fi Earn Protocol ⛱️',
   description: '⛱️',
 }
 

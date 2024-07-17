@@ -1,12 +1,34 @@
 name: Deploy Rays Dashboard Staging
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - dev
 
 jobs:
+  changes:
+    name: Check for rays dashboard changes
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      build-rays-dashboard: ${{ steps.filter.outputs.build-rays-dashboard }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            build-rays-dashboard:
+              - 'apps/rays-dashboard/**'
+              - 'packages/app-db/**'
+              - 'packages/app-types/**'
+              - 'packages/app-ui/**'
   build:
     name: Build and deploy Rays Dashboard
     runs-on: ubuntu-latest
     environment: staging
+    needs: changes
+    if: ${{ needs.changes.outputs.build-rays-dashboard == 'true' }}
     env:
       AWS_REGION: eu-central-1
       ENVIRONMENT_TAG: staging
