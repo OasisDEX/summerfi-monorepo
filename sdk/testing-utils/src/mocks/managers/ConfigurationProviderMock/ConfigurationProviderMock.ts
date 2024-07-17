@@ -1,7 +1,7 @@
-import { ConfigItem, ConfigKey, IConfigurationProvider } from '@summerfi/configuration-provider'
+import { ConfigItem, ConfigKey, ConfigurationProvider } from '@summerfi/configuration-provider'
 import { Maybe } from '@summerfi/sdk-common'
 
-export class ConfigurationProviderMock implements IConfigurationProvider {
+export class ConfigurationProviderMock extends ConfigurationProvider {
   readonly configItems: Map<ConfigKey, ConfigItem> = new Map<ConfigKey, ConfigItem>()
 
   setConfigurationItem(params: { name: ConfigKey; value: ConfigItem }): void {
@@ -9,6 +9,11 @@ export class ConfigurationProviderMock implements IConfigurationProvider {
   }
 
   getConfigurationItem(params: { name: ConfigKey }): Maybe<ConfigItem> {
-    return this.configItems.get(params.name)
+    const item = this.configItems.get(params.name)
+    if (item) {
+      return item
+    }
+
+    return super.getConfigurationItem(params)
   }
 }

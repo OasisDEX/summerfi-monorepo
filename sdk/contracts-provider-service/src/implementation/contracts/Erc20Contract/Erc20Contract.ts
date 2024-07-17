@@ -46,7 +46,7 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
     const balance = await this.contract.read.balanceOf([params.address.value])
     const token = await this.getToken()
 
-    return TokenAmount.createFrom({
+    return TokenAmount.createFromBaseUnit({
       token,
       amount: balance.toString(),
     })
@@ -57,7 +57,7 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
     const allowance = await this.contract.read.allowance([params.owner.value, params.spender.value])
     const token = await this.getToken()
 
-    return TokenAmount.createFrom({
+    return TokenAmount.createFromBaseUnit({
       token,
       amount: allowance.toString(),
     })

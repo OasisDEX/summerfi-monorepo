@@ -1,5 +1,5 @@
-import { TestManagerProvider, TestProviderType } from './mocks/TestManagerProvider'
 import { ConfigurationProviderMock } from '@summerfi/testing-utils/mocks/managers/ConfigurationProviderMock'
+import { TestManagerProvider, TestProviderType } from './mocks/TestManagerProvider'
 
 describe('SDK Server Common | Unit | ManagerProviderBase', () => {
   let testManagerProvider: TestManagerProvider

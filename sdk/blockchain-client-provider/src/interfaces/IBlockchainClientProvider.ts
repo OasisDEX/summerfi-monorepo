@@ -1,5 +1,5 @@
-import { type IBlockchainClient } from './IBlockchainClient'
 import type { IChainInfo } from '@summerfi/sdk-common'
+import { type IBlockchainClient } from './IBlockchainClient'
 
 /**
  * @name IBlockchainClientProvider
@@ -13,4 +13,15 @@ export interface IBlockchainClientProvider {
    * @returns IBlockchainClient The client for a particular chain
    */
   getBlockchainClient(params: { chainInfo: IChainInfo }): IBlockchainClient
+
+  /**
+   * @name getCustomBlockchainClient
+   *  @description Gets a custom blockchain client
+   *
+   * @param rpcUrl RPC URL to be used for this client
+   * @param chainInfo Chain for which we want to get the blockchain client
+   *
+   * @returns The custom blockchain client
+   */
+  getCustomBlockchainClient(params: { rpcUrl: string; chainInfo: IChainInfo }): IBlockchainClient
 }
