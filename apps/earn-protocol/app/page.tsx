@@ -8,6 +8,7 @@ export default function HomePage() {
         <div style={{ flex: 1 }}>
           <AccountKitFeatures />
         </div>
+        Build test heyy there!
         <Form />
       </div>
     </div>
