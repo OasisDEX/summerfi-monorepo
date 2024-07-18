@@ -4,7 +4,7 @@ export async function POST(req: Request, { params }: { params: { routes: string[
   const apiUrl = 'https://api.g.alchemy.com'
   const apiKey = process.env.ACCOUNT_KIT_API_KEY
 
-  if (apiKey == null) {
+  if (!apiKey) {
     return NextResponse.json({ error: 'ACCOUNT_KIT_API_KEY is not set' }, { status: 500 })
   }
 

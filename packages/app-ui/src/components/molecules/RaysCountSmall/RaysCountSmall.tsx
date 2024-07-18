@@ -38,8 +38,8 @@ export const RaysCountSmall = ({
     if (userAddress && !raysAddresses.includes(userAddress)) {
       setLoadingRaysCount(true)
       raysFetchFunction().then((response) => {
+        setLoadingRaysCount(false)
         if (response.rays?.allPossiblePoints !== undefined) {
-          setLoadingRaysCount(false)
           setRaysAddresses([...raysAddresses, userAddress])
           setRaysCount(response.rays.allPossiblePoints)
         }
