@@ -56,6 +56,10 @@ export const NavigationWrapper: FC<NavigationWrapperProps> = ({ panels }) => {
     return {}
   }, [wallet])
 
+  if (currentPath == null) {
+    return null
+  }
+
   return (
     <Navigation
       currentPath={currentPath}

@@ -6,6 +6,7 @@ import { ProtocolsManagerClient } from './ProtocolsManagerClient'
 import { RPCMainClientType } from '../rpc/SDKMainClient'
 import { IRPCClient } from '../interfaces/IRPCClient'
 import { EarnProtocolManagerClient } from './EarnProtocolManagerClient'
+import { getChainInfoByChainId } from '@summerfi/sdk-common'
 
 /**
  * @name ChainsManagerClient
@@ -18,7 +19,7 @@ export class ChainsManagerClient extends IRPCClient implements IChainsManagerCli
 
   public async getSupportedChains(): Promise<ChainInfo[]> {
     // TODO: Implement
-    return [] as ChainInfo[]
+    throw new Error('Method not implemented.')
   }
 
   public async getChain(params: { chainInfo: IChainInfoData }): Promise<Maybe<Chain>> {
@@ -39,14 +40,16 @@ export class ChainsManagerClient extends IRPCClient implements IChainsManagerCli
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async getChainByName(_params: { name: string }): Promise<Maybe<Chain>> {
+  public async getChainByName(params: { name: string }): Promise<Maybe<Chain>> {
     // TODO: Implement
-    return undefined
+    throw new Error('Method not implemented.')
   }
 
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async getChainById(_params: { chainId: number }): Promise<Maybe<Chain>> {
-    // TODO: Implement
-    return undefined
+  public async getChainById(params: { chainId: number }): Promise<Maybe<Chain>> {
+    const chainFamily = getChainInfoByChainId(params.chainId)
+    if (chainFamily == null) {
+      throw new Error('Unsupported chainId: ' + params.chainId)
+    }
+    return this.getChain({ chainInfo: chainFamily.chainInfo })
   }
 }

@@ -1,6 +1,6 @@
 import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SDKManager } from '../../src/implementation/SDKManager'
-import { RPCMainClientType, SparkPositionId } from '../../src/rpc/SDKMainClient'
+import { RPCMainClientType } from '../../src/rpc/SDKMainClient'
 import {
   ILKType,
   MakerLendingPool,
@@ -20,6 +20,7 @@ import {
   TokenAmount,
 } from '@summerfi/sdk-common/common'
 import { RefinanceParameters } from '@summerfi/sdk-common'
+import { SparkPositionId } from '@summerfi/protocol-plugins'
 
 export default async function simulateRefinanceTest() {
   type SimulateRefinanceType = RPCMainClientType['simulation']['refinance']['query']

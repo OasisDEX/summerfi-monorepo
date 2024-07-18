@@ -1,6 +1,6 @@
 import { SDKManager } from '../../src/implementation/SDKManager'
-import { Address, RPCMainClientType } from '../../src/rpc/SDKMainClient'
-import { AddressType, Token } from '@summerfi/sdk-common'
+import { RPCMainClientType } from '../../src/rpc/SDKMainClient'
+import { Address, AddressType, Token } from '@summerfi/sdk-common'
 import assert from 'assert'
 
 export default async function getTokenBySymbol() {
