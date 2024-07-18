@@ -1,5 +1,6 @@
 name: Deploy Earn Protocol App Staging
 on:
+  workflow_dispatch:
   push:
     branches:
       - dev
@@ -8,6 +9,7 @@ jobs:
   changes:
     name: Check for earn protocol changes
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' }}
     permissions:
       pull-requests: read
     outputs:
