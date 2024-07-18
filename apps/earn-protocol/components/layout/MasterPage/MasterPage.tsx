@@ -1,7 +1,6 @@
 import { type FC, type PropsWithChildren } from 'react'
 import { Footer } from '@summerfi/app-ui'
 import Image from 'next/image'
-import { SDKProvider } from 'providers/SDK/SDKProvider'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 import { WalletInit } from '@/components/molecules/WalletInit/WalletInit'
@@ -32,7 +31,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({ child
         />
         <NavigationWrapper panels={systemConfig.navigation} />
         <div className={masterPageStyles.appContainer}>
-          <SDKProvider>{children}</SDKProvider>
+          {children}
           <Footer
             logo="img/branding/logo-dark.svg"
             languageSwitcher={<div />}

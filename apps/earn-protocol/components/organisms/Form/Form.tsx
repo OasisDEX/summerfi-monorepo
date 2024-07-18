@@ -9,7 +9,11 @@ import {
   sendTransaction,
   signMessage,
 } from '@web3-onboard/wagmi'
-import { prepareTransaction, useDeposit, useSDK, useWithdraw } from 'providers/SDK'
+
+import { prepareTransaction } from '@/helpers/sdk/prepare-transaction'
+import { useDeposit } from '@/hooks/use-deposit'
+import { useSDK } from '@/hooks/use-sdk'
+import { useWithdraw } from '@/hooks/use-withdraw'
 
 enum Action {
   DEPOSIT = 'deposit',
@@ -68,7 +72,7 @@ export const Form = () => {
       }
     }
     fetchToken()
-  }, [chainId, tokenSymbol])
+  }, [chainId, getTokenBySymbol])
 
   useEffect(() => {
     async function fetchData() {
@@ -83,10 +87,10 @@ export const Form = () => {
       }
     }
     fetchData()
-  }, [chainId, walletAddress, token?.symbol])
+  }, [chainId, walletAddress, token?.symbol, token, wagmiConfig])
 
-  const handleChange = (event: any) => {
-    setAmountValue(event.target.value)
+  const handleChange = (ev: any) => {
+    setAmountValue(ev.target.value)
   }
 
   const getDepositTransaction = () => {

@@ -1,6 +1,6 @@
 import { type Token, TokenAmount } from '@summerfi/sdk-common'
 
-import { useSDK } from './context'
+import { useSDK } from '@/hooks/use-sdk'
 
 export const useDeposit = () => {
   const { getFleetClient, getUserClient } = useSDK()
