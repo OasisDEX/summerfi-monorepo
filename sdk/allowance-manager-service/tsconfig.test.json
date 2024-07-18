@@ -18,6 +18,6 @@
       "@summerfi/allowance-common": ["node_modules/@summerfi/allowance-common/src/index.ts"]
     }
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "include": ["src/**/*.ts", "e2e/**/*.ts"],
   "exclude": ["node_modules"]
 }

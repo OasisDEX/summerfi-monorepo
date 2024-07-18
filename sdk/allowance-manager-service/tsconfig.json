@@ -9,6 +9,6 @@
       "@summerfi/testing-utils/*": ["node_modules/@summerfi/testing-utils/src/*"]
     }
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "include": ["src/**/*.ts", "e2e/**/*.ts"],
   "exclude": ["node_modules"]
 }
