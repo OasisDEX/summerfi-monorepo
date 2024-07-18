@@ -4,6 +4,8 @@ import { Button, Card, Input, Text } from '@summerfi/app-ui'
 import { useAppState, useConnectWallet } from '@web3-onboard/react'
 import { type Config as WagmiConfig, signMessage } from '@web3-onboard/wagmi'
 
+import { SetForkModal } from '@/components/organisms/SetForkModal/SetForkModal'
+
 enum Action {
   DEPOSIT = 'deposit',
   WITHDRAW = 'withdraw',
@@ -107,6 +109,7 @@ export const Form = () => {
       >
         Sign test message
       </Button>
+      <SetForkModal />
     </Card>
   )
 }

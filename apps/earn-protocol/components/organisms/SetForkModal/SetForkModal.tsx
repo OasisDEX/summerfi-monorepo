@@ -6,7 +6,6 @@ import { Button, Input, Text } from '@summerfi/app-ui'
 import { ModalButton, type ModalButtonProps } from '@/components/molecules/Modal/ModalButton'
 import { forksCookieName } from '@/constants/forks-cookie-name'
 import { networksByName } from '@/constants/networks-list'
-import { basePath } from '@/helpers/base-path'
 
 const getCookies = (cookiename: string) => {
   const cookiestring = RegExp(`${cookiename}=[^;]+`, 'u').exec(document.cookie)
@@ -44,7 +43,7 @@ const setFork =
 
     const networkId = networksByName[networkKey].id
 
-    fetch(`${basePath}/api/set-fork`, {
+    fetch('/api/set-fork', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -74,7 +73,7 @@ const setFork =
 
 const resetForks = (setResetting: Dispatch<SetStateAction<boolean>>) => () => {
   setResetting(true)
-  fetch(`${basePath}/api/set-fork`, {
+  fetch('/api/set-fork', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
