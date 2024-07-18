@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'SDK_API_URL is not set' }, { status: 500 })
   }
 
-  const url = sdkApiUrl + req.nextUrl.pathname
+  const url = sdkApiUrl + req.nextUrl.pathname + req.nextUrl.search
   const headers = {}
   const response = await fetch(url, {
     headers,
@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'SDK_API_URL is not set' }, { status: 500 })
   }
 
-  const url = sdkApiUrl + req.nextUrl.pathname
+  const url = sdkApiUrl + req.nextUrl.pathname + req.nextUrl.search
 
   const headers = {}
   const response = await fetch(url, { headers })
