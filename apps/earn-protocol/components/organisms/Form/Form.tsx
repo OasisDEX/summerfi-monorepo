@@ -62,9 +62,9 @@ export const Form = () => {
   useEffect(() => {
     async function fetchToken() {
       if (chainId) {
-        const token = await getTokenBySymbol({ chainId, symbol: tokenSymbol })
+        const _token = await getTokenBySymbol({ chainId, symbol: tokenSymbol })
 
-        setToken(token)
+        setToken(_token)
       }
     }
     fetchToken()
