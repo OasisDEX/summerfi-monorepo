@@ -20,6 +20,8 @@
     "@summerfi/app-types": "workspace:*",
     "@summerfi/app-ui": "workspace:*",
     "@summerfi/rays-db": "workspace:*",
+    "@summerfi/sdk-client": "workspace:^",
+    "@summerfi/sdk-common": "workspace:^",
     "@summerfi/serverless-shared": "workspace:*",
     "@tabler/icons-react": "^3.4.0",
     "@tanstack/react-query": "^5.51.1",

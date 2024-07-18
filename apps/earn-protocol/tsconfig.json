@@ -12,7 +12,8 @@
       "@/*": ["./*"]
     },
     "noEmit": true,
-    "module": "esnext"
+    "module": "esnext",
+    "strictNullChecks": true
   },
   "include": [
     "next-env.d.ts",
