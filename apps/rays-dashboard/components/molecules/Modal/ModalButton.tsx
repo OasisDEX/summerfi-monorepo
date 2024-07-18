@@ -9,9 +9,10 @@ export type ModalButtonProps = { onClick: () => void }
 type ModalProps = {
   Button: React.ComponentType<PropsWithChildren<ModalButtonProps>>
   ModalContent: React.ComponentType
+  modalWrapperStyles?: React.CSSProperties
 }
 
-export const ModalButton = ({ Button, ModalContent }: ModalProps) => {
+export const ModalButton = ({ Button, ModalContent, modalWrapperStyles }: ModalProps) => {
   const [isOpen, toggleModal] = useToggle(false)
   const [closing, setClosing] = useState(false)
 
@@ -35,6 +36,7 @@ export const ModalButton = ({ Button, ModalContent }: ModalProps) => {
             onClick={handleModalClose}
           />
           <div
+            style={modalWrapperStyles}
             className={`${modalButtonStyles.modalWrapper} ${closing ? modalButtonStyles.isModalWrapperClosing : ''}`}
           >
             <ModalContent />

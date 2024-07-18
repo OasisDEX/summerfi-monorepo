@@ -5,9 +5,10 @@ import Image from 'next/image'
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 import { WalletInit } from '@/components/molecules/WalletInit/WalletInit'
 import { AccountChangeHandler } from '@/components/organisms/AccountChangeHandler/AccountChangeHandler'
+import { SetForkModal } from '@/components/organisms/SetForkModal/SetForkModal'
 import { basePath } from '@/helpers/base-path'
 import { parseServerResponse } from '@/helpers/parse-server-response'
-import systemConfigHandler from '@/server-handlers/system-config'
+import systemConfigHandler, { type SystemConfig } from '@/server-handlers/system-config'
 
 import masterPageStyles from './MasterPage.module.scss'
 
@@ -20,9 +21,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
   background = 'simple',
   children,
 }) => {
-  const systemConfig = parseServerResponse<Awaited<ReturnType<typeof systemConfigHandler>>>(
-    await systemConfigHandler(),
-  )
+  const systemConfig = parseServerResponse<SystemConfig>(await systemConfigHandler())
 
   return (
     <>
@@ -58,6 +57,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
           />
         </div>
       </div>
+      <SetForkModal />
       <AccountChangeHandler />
     </>
   )

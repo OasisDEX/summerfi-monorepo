@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers'
 import { type NextRequest } from 'next/server'
 
+import { forksCookieName } from '@/constants/forks-cookie-name'
 import { NetworkIds } from '@/constants/networks-list'
 
 export type SetForkRequest = {
@@ -17,16 +18,16 @@ export async function POST(request: NextRequest) {
 
       if (Object.keys(NetworkIds).includes(body.clear)) {
         const currentForks = JSON.parse(
-          (cookieStore.get('SummerFiForks')?.value as string | undefined) ?? '{}',
+          (cookieStore.get(forksCookieName)?.value as string | undefined) ?? '{}',
         )
 
         delete currentForks[body.clear]
-        cookieStore.set('SummerFiForks', JSON.stringify(currentForks))
+        cookieStore.set(forksCookieName, JSON.stringify(currentForks))
 
         return new Response('Fork updated', { status: 200 })
       }
 
-      cookieStore.delete('SummerFiForks')
+      cookieStore.delete(forksCookieName)
 
       return new Response('Forks cleared', { status: 200 })
     }
@@ -36,11 +37,11 @@ export async function POST(request: NextRequest) {
       const cookieStore = cookies()
 
       const currentForks = JSON.parse(
-        (cookieStore.get('SummerFiForks')?.value as string | undefined) ?? '{}',
+        (cookieStore.get(forksCookieName)?.value as string | undefined) ?? '{}',
       )
       const newForks = { ...currentForks, ...body }
 
-      cookieStore.set('SummerFiForks', JSON.stringify(newForks))
+      cookieStore.set(forksCookieName, JSON.stringify(newForks))
 
       return new Response('Forks set', { status: 200 })
     }
