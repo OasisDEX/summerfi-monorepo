@@ -1,33 +1,20 @@
 import { Maybe } from '@summerfi/sdk-common/common'
+import TurboConfig from '../../../../turbo.json'
 import { IConfigurationProvider } from '../interfaces/IConfigurationProvider'
 import { ConfigItem } from '../types/ConfigItem'
 import { ConfigKey } from '../types/ConfigKey'
-
-// NOTICE: remember to add new config keys to the SDKs .env.template file as well
-const CONFIG_KEYS: ConfigKey[] = [
-  'ONE_INCH_API_VERSION',
-  'ONE_INCH_API_KEY',
-  'ONE_INCH_API_URL',
-  'ONE_INCH_API_SPOT_KEY',
-  'ONE_INCH_API_SPOT_URL',
-  'ONE_INCH_API_SPOT_VERSION',
-  'ONE_INCH_ALLOWED_SWAP_PROTOCOLS',
-  'ONE_INCH_SWAP_CHAIN_IDS',
-  'RPC_GATEWAY',
-  'TENDERLY_USER',
-  'TENDERLY_PROJECT',
-  'TENDERLY_ACCESS_KEY',
-]
 
 export class ConfigurationProvider implements IConfigurationProvider {
   private readonly _config: Record<ConfigKey, ConfigItem> = {}
 
   constructor() {
-    this._loadConfigKeys(CONFIG_KEYS)
+    this._loadConfigKeys(TurboConfig.globalEnv)
   }
 
-  public getConfigurationItem(params: { name: ConfigKey }): Maybe<ConfigItem> {
-    return this._config[params.name]
+  public getConfigurationItem<ReturnType = ConfigItem>(params: {
+    name: ConfigKey
+  }): Maybe<ReturnType> {
+    return this._config[params.name] as Maybe<ReturnType>
   }
 
   private _loadConfigKeys(configKeys: ConfigKey[]) {

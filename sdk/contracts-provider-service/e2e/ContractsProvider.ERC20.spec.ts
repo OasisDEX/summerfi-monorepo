@@ -30,11 +30,6 @@ describe('Contracts Provider Service - ERC20 Contract', () => {
   let blockchainClientProvider: IBlockchainClientProvider
 
   beforeEach(async () => {
-    configurationProvider.setConfigurationItem({
-      name: 'RPC_GATEWAY',
-      value: 'https://rpc-gateway-url.com',
-    })
-
     // Tenderly Fork
     tenderlyFork = await tenderly.createFork({ chainInfo, atBlock: 19475802 })
 
@@ -59,7 +54,7 @@ describe('Contracts Provider Service - ERC20 Contract', () => {
 
   it('should retrieve information from the ERC20 contract', async () => {
     await tenderlyFork.setErc20Balance({
-      amount: TokenAmount.createFrom({
+      amount: TokenAmount.createFromBaseUnit({
         token: await erc20Contract.getToken(),
         amount: '123000000', // 123 USDC
       }),
@@ -80,7 +75,7 @@ describe('Contracts Provider Service - ERC20 Contract', () => {
 
     const userBalance = await erc20Contract.balanceOf({ address: userAddress })
     expect(userBalance).toBeDefined()
-    expect(userBalance.amount).toEqual('123000000')
+    expect(userBalance.toBaseUnit()).toEqual('123000000')
     expect(userBalance.token).toEqual(token)
 
     const userAllowance = await erc20Contract.allowance({
@@ -92,22 +87,22 @@ describe('Contracts Provider Service - ERC20 Contract', () => {
     expect(userAllowance.token).toEqual(token)
   })
 
-  it('should generate allowance transaction', async () => {
-    const allowanceTransaction = await erc20Contract.approve({
+  it('should generate approve transaction', async () => {
+    const approveTransaction = await erc20Contract.approve({
       spender: spenderAddress,
-      amount: TokenAmount.createFrom({
+      amount: TokenAmount.createFromBaseUnit({
         token: await erc20Contract.getToken(),
         amount: '84000000', // 84 USDC
       }), //
     })
 
-    expect(allowanceTransaction).toBeDefined()
-    expect(allowanceTransaction.description).toEqual(
-      `Approve ${spenderAddress} to spend 84000000 USDC of ${contractAddress}`,
+    expect(approveTransaction).toBeDefined()
+    expect(approveTransaction.description).toEqual(
+      `Approve ${spenderAddress} to spend 84 USDC of ${contractAddress}`,
     )
-    expect(allowanceTransaction.transaction).toBeDefined()
-    expect(allowanceTransaction.transaction.calldata).toBeDefined()
-    expect(allowanceTransaction.transaction.target).toEqual(contractAddress)
-    expect(allowanceTransaction.transaction.value).toEqual('0')
+    expect(approveTransaction.transaction).toBeDefined()
+    expect(approveTransaction.transaction.calldata).toBeDefined()
+    expect(approveTransaction.transaction.target).toEqual(contractAddress)
+    expect(approveTransaction.transaction.value).toEqual('0')
   })
 })

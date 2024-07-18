@@ -35,7 +35,7 @@ export class ContractsProvider implements IContractsProvider {
     chainInfo: IChainInfo
     address: IAddress
   }): Promise<IErc20Contract> {
-    return new Erc20Contract({
+    return Erc20Contract.create({
       blockchainClient: this._blockchainClientProvider.getBlockchainClient({
         chainInfo: params.chainInfo,
       }),
@@ -49,7 +49,7 @@ export class ContractsProvider implements IContractsProvider {
     chainInfo: IChainInfo
     address: IAddress
   }): Promise<IErc4626Contract> {
-    return new Erc4626Contract({
+    return Erc4626Contract.create({
       blockchainClient: this._blockchainClientProvider.getBlockchainClient({
         chainInfo: params.chainInfo,
       }),
@@ -63,7 +63,7 @@ export class ContractsProvider implements IContractsProvider {
     chainInfo: IChainInfo
     address: IAddress
   }): Promise<IFleetCommanderContract> {
-    return new FleetCommanderContract({
+    return FleetCommanderContract.create({
       blockchainClient: this._blockchainClientProvider.getBlockchainClient({
         chainInfo: params.chainInfo,
       }),

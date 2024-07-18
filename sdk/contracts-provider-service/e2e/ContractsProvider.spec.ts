@@ -4,21 +4,25 @@ import { Address, ChainFamilyMap, ChainInfo } from '@summerfi/sdk-common'
 import { ConfigurationProviderMock } from '@summerfi/testing-utils/mocks/managers/ConfigurationProviderMock'
 import { ContractsProviderFactory } from '../src'
 
-describe('Contracts Provider Service - ERC20 Contract', () => {
-  const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
+describe.only('Contracts Provider Service - ERC20 Contract', () => {
+  const chainInfo: ChainInfo = ChainFamilyMap.Base.Mainnet
 
-  const contractAddress = Address.createFromEthereum({
-    value: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+  const erc20ContractAddress = Address.createFromEthereum({
+    value: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', // USDC on Base
+  })
+
+  const erc4626ContractAddress = Address.createFromEthereum({
+    value: '0xa09E82322f351154a155f9e0f9e6ddbc8791C794', // FleetCommander on Base
+  })
+
+  const fleetCommanderContractAddress = Address.createFromEthereum({
+    value: '0xa09E82322f351154a155f9e0f9e6ddbc8791C794', // FleetCommander on Base
   })
 
   let contractsProvider: IContractsProvider
 
   beforeEach(() => {
     const configProvider = new ConfigurationProviderMock()
-    configProvider.setConfigurationItem({
-      name: 'RPC_GATEWAY',
-      value: 'https://rpc-gateway-url.com',
-    })
 
     const blockchainClientProvider = new BlockchainClientProvider({ configProvider })
     contractsProvider = ContractsProviderFactory.newContractsProvider({
@@ -30,19 +34,19 @@ describe('Contracts Provider Service - ERC20 Contract', () => {
   it('should return contract instances for all supported contracts', async () => {
     const erc20Contract = await contractsProvider.getErc20Contract({
       chainInfo,
-      address: contractAddress,
+      address: erc20ContractAddress,
     })
     expect(erc20Contract).toBeDefined()
 
     const erc4626Contract = await contractsProvider.getErc4626Contract({
       chainInfo,
-      address: contractAddress,
+      address: erc4626ContractAddress,
     })
     expect(erc4626Contract).toBeDefined()
 
     const fleetCommanderContract = await contractsProvider.getFleetCommanderContract({
       chainInfo,
-      address: contractAddress,
+      address: fleetCommanderContractAddress,
     })
     expect(fleetCommanderContract).toBeDefined()
   })

@@ -23,7 +23,7 @@ describe('Blockchain Provider', () => {
 
   it('should return a provider for custom chains', async () => {
     const chainInfo = ChainFamilyMap.Base.Mainnet
-    const baseClient = blockchainClientProvider.getCustomBlockchainClient({
+    const baseClient = blockchainClientProvider.getBlockchainClient({
       rpcUrl: 'https://custom-rpc.com',
       chainInfo: chainInfo,
     })

@@ -14,7 +14,7 @@ export class TenderlyFork {
   public readonly forkId: string
   public readonly forkUrl: string
   public readonly chainInfo: IChainInfo
-  public readonly atBlock: number
+  public readonly atBlock: number | 'latest'
   public readonly transactionUtils: TransactionUtils
   private readonly rpcProvider: JsonRpcProvider
 
@@ -26,7 +26,7 @@ export class TenderlyFork {
     chainInfo: IChainInfo
     forkId: string
     forkUrl: string
-    atBlock: number
+    atBlock: number | 'latest'
   }) {
     this.transactionUtils = params.transactionUtils
     this.tenderlyApiUrl = params.tenderlyApiUrl
@@ -62,7 +62,7 @@ export class TenderlyFork {
     tenderlyApiUrl: string
     tenderlyAccessKey: string
     chainInfo: IChainInfo
-    atBlock: number
+    atBlock: number | 'latest'
   }) {
     const apiRequestClient = axios.create({
       baseURL: 'https://api.tenderly.co/api/v1',
@@ -168,20 +168,28 @@ export class TenderlyFork {
    * @name setETHBalance
    * @description Sets the ETH balance of a wallet in the fork
    *
-   * @param forkId The fork ID
-   * @param balance The balance to set
+   * @param amount The amount to set as a bigint
    * @param walletAddress The address of the wallet
    */
-  async setETHBalance(params: { amount: ITokenAmount; walletAddress: IAddress }) {
-    if (params.amount.token.symbol !== 'ETH') {
-      throw new Error(
-        'Only ETH balances can be set with this method and the token amount passed is not ETH',
-      )
-    }
-
+  async setETHBalance(params: { amount: bigint; walletAddress: IAddress }) {
     return this.rpcProvider.send('tenderly_setBalance', [
       [params.walletAddress.value],
-      ethers.toQuantity(params.amount.toBaseUnit()),
+      ethers.toQuantity(params.amount),
+    ])
+  }
+
+  /**
+   * @name getETHBalance
+   * @description Retrieves the ETH balance of a wallet in the fork
+   *
+   * @param walletAddress The address of the wallet
+   *
+   * @returns The ETH balance of the wallet as a big integer
+   */
+  async getETHBalance(params: { walletAddress: IAddress; atBlock?: number }): Promise<bigint> {
+    return this.rpcProvider.send('eth_getBalance', [
+      params.walletAddress.value,
+      params.atBlock ? String(params.atBlock) : 'latest',
     ])
   }
 
@@ -196,7 +204,7 @@ export class TenderlyFork {
     tenderlyApiUrl: string
     tenderlyAccessKey: string
     chainInfo: IChainInfo
-    atBlock: number
+    atBlock: number | 'latest'
   }): Promise<{
     forkId: string
     forkUrl: string
@@ -210,7 +218,7 @@ export class TenderlyFork {
       })
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      throw new Error(`Error creating fork: ${error.response.data}`)
+      throw new Error(`Error creating fork: ${JSON.stringify(error.response.data)}`)
     }
 
     const forkId = response.data.root_transaction.fork_id

@@ -11,14 +11,13 @@ export class BlockchainClientProviderMock extends BlockchainClientProvider {
     this.rpcUrl = params.rpcUrl
   }
 
-  public getBlockchainClient(params: { chainInfo: IChainInfo }): IBlockchainClient {
-    return this.getCustomBlockchainClient({ rpcUrl: this.rpcUrl, chainInfo: params.chainInfo })
-  }
-
-  public getCustomBlockchainClient(params: {
-    rpcUrl: string
+  public getBlockchainClient(params: {
     chainInfo: IChainInfo
+    rpcUrl?: string
   }): IBlockchainClient {
-    return super.getCustomBlockchainClient(params)
+    return super.getBlockchainClient({
+      rpcUrl: params.rpcUrl ? params.rpcUrl : this.rpcUrl,
+      chainInfo: params.chainInfo,
+    })
   }
 }

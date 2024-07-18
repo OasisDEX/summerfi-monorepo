@@ -47,7 +47,10 @@ export class Tenderly {
    * @name createFork
    * @description Creates a new Tenderly fork
    */
-  async createFork(params: { chainInfo: IChainInfo; atBlock: number }): Promise<TenderlyFork> {
+  async createFork(params: {
+    chainInfo: IChainInfo
+    atBlock: number | 'latest'
+  }): Promise<TenderlyFork> {
     return TenderlyFork.create({
       tenderlyAccessKey: this.tenderlyAccessKey,
       tenderlyApiUrl: this.tenderlyApiUrl,

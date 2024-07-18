@@ -36,11 +36,6 @@ describe('Contracts Provider Service - ERC4626 Contract', () => {
   let blockchainClientProvider: IBlockchainClientProvider
 
   beforeEach(async () => {
-    configurationProvider.setConfigurationItem({
-      name: 'RPC_GATEWAY',
-      value: 'https://rpc-gateway-url.com',
-    })
-
     // Tenderly Fork
     tenderlyFork = await tenderly.createFork({ chainInfo, atBlock: 17211722 })
 

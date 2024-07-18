@@ -10,6 +10,7 @@ import {
   TokenAmount,
   TransactionInfo,
 } from '@summerfi/sdk-common'
+import assert from 'assert'
 import { Abi, encodeFunctionData, erc4626Abi } from 'viem'
 import { ContractWrapper } from '../ContractWrapper'
 import { Erc20Contract } from '../Erc20Contract/Erc20Contract'
@@ -26,11 +27,48 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
   private readonly _erc20Contract: IErc20Contract
   private _asset: Maybe<IToken>
 
-  /** CONSTRUCTOR */
-  constructor(params: { blockchainClient: TClient; chainInfo: IChainInfo; address: TAddress }) {
+  /** FACTORY METHOD */
+
+  /**
+   * Creates a new instance of the Erc4626Contract
+   *
+   * @see constructor
+   */
+  static async create<TClient extends IBlockchainClient, TAddress extends IAddress>(params: {
+    blockchainClient: TClient
+    chainInfo: IChainInfo
+    address: TAddress
+  }): Promise<IErc4626Contract> {
+    const erc20Contract = await Erc20Contract.create(params)
+
+    const instance = new Erc4626Contract({
+      blockchainClient: params.blockchainClient,
+      chainInfo: params.chainInfo,
+      address: params.address,
+      erc20Contract,
+    })
+
+    await instance._initializeUnderlyingAsset()
+
+    return instance
+  }
+
+  /** SEALED CONSTRUCTOR */
+
+  /**
+   * @param blockchainClient The blockchain client to be used for interacting with the contract
+   * @param chainInfo The chain information for the chain where the contract is deployed
+   * @param address The address of the contract
+   */
+  private constructor(params: {
+    blockchainClient: TClient
+    chainInfo: IChainInfo
+    address: TAddress
+    erc20Contract: IErc20Contract
+  }) {
     super(params)
 
-    this._erc20Contract = new Erc20Contract(params)
+    this._erc20Contract = params.erc20Contract
   }
 
   /** PUBLIC */
@@ -39,12 +77,7 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
 
   /** @see IErc4626Contract.asset */
   async asset(): Promise<IToken> {
-    if (!this._asset) {
-      await this._updateAsset()
-    }
-    if (!this._asset) {
-      throw new Error('Could not retrieve underlying asset information')
-    }
+    assert(this._asset, 'Underlying asset is not initialized, this should never happen')
 
     return this._asset
   }
@@ -115,10 +148,14 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
   }
 
   /** PRIVATE */
-  private async _updateAsset(): Promise<void> {
+
+  /**
+   * Initializes the underlying asset of the contract to be used when returning the total assets of the vault
+   */
+  private async _initializeUnderlyingAsset(): Promise<void> {
     const assetAddress = await this.contract.read.asset()
 
-    const assetErc20Contract = new Erc20Contract({
+    const assetErc20Contract = await Erc20Contract.create({
       blockchainClient: this.blockchainClient,
       chainInfo: this.chainInfo,
       address: Address.createFromEthereum({

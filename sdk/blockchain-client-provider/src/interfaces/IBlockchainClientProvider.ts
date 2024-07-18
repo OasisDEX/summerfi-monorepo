@@ -9,19 +9,13 @@ export interface IBlockchainClientProvider {
   /**
    * @name getBlockchainClient
    * @description Retrieves a BlockchainClient for a particular chain
+   *
    * @param chainInfo The chain information for the chain
+   * @param rpcUrl Custom RPC URL for the chain (optional)
+   *
    * @returns IBlockchainClient The client for a particular chain
-   */
-  getBlockchainClient(params: { chainInfo: IChainInfo }): IBlockchainClient
-
-  /**
-   * @name getCustomBlockchainClient
-   *  @description Gets a custom blockchain client
    *
-   * @param rpcUrl RPC URL to be used for this client
-   * @param chainInfo Chain for which we want to get the blockchain client
-   *
-   * @returns The custom blockchain client
+   * @dev The custom RPC url can be used to create a blockchain client for a fork, for example
    */
-  getCustomBlockchainClient(params: { rpcUrl: string; chainInfo: IChainInfo }): IBlockchainClient
+  getBlockchainClient(params: { chainInfo: IChainInfo; rpcUrl?: string }): IBlockchainClient
 }

@@ -8,10 +8,10 @@ export class ConfigurationProviderMock extends ConfigurationProvider {
     this.configItems.set(params.name, params.value)
   }
 
-  getConfigurationItem(params: { name: ConfigKey }): Maybe<ConfigItem> {
+  getConfigurationItem<ReturnType = ConfigItem>(params: { name: ConfigKey }): Maybe<ReturnType> {
     const item = this.configItems.get(params.name)
     if (item) {
-      return item
+      return item as ReturnType
     }
 
     return super.getConfigurationItem(params)
