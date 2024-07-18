@@ -35,8 +35,11 @@ const setFork =
   (ev: FormEvent<HTMLFormElement>) => {
     ev.preventDefault()
     const forkUrl = (ev.currentTarget.elements[0] as HTMLInputElement).value
+    const hasCookieSetForNetwork = safeParseJson(getCookies(forksCookieName))[
+      networksByName[networkKey].id
+    ]
 
-    if (!forkUrl) {
+    if (!forkUrl && !hasCookieSetForNetwork) {
       return
     }
     setUpdating((prev) => [...prev, networksByName[networkKey].id])

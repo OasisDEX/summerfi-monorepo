@@ -7,6 +7,15 @@ import { NetworkIds } from '@/constants/networks-list'
 export type SetForkRequest = {
   [key in NetworkIds | 'clear']?: string
 }
+type ObjectLike<T> = { [K in keyof T as T[K] extends null | undefined ? never : K]: T[K] }
+
+const getCleanObject = <T extends object, V = ObjectLike<T>>(obj: T): V => {
+  return Object.fromEntries(
+    Object.entries(obj).filter(
+      ([, v]) => !((typeof v === 'string' && !v.length) || v === null || typeof v === 'undefined'),
+    ),
+  ) as V
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -41,7 +50,7 @@ export async function POST(request: NextRequest) {
       )
       const newForks = { ...currentForks, ...body }
 
-      cookieStore.set(forksCookieName, JSON.stringify(newForks))
+      cookieStore.set(forksCookieName, JSON.stringify(getCleanObject(newForks)))
 
       return new Response('Forks set', { status: 200 })
     }
