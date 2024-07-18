@@ -9,9 +9,9 @@ import {
 } from '@summerfi/contracts-provider-common'
 import { IAddress, IChainInfo, Percentage } from '@summerfi/sdk-common'
 import { ContractWrapper } from '../ContractWrapper'
-import { Erc4626Contract } from '../Erc4626Contract/Erc4626Contract'
 
 import FleetCommanderAbiJSON from '../../../../../../earn-protocol/abis/FleetCommander.sol/FleetCommander.json'
+import { Erc4626Contract } from '../Erc4626Contract/Erc4626Contract'
 
 const FleetCommanderAbi = FleetCommanderAbiJSON.abi as ContractAbi
 
@@ -29,11 +29,40 @@ export class FleetCommanderContract<
 {
   readonly _erc4626Contract: IErc4626Contract
 
+  /** FACTORY METHOD */
+
+  /**
+   * Creates a new instance of the Erc4626Contract
+   *
+   * @see constructor
+   */
+  static async create<TClient extends IBlockchainClient, TAddress extends IAddress>(params: {
+    blockchainClient: TClient
+    chainInfo: IChainInfo
+    address: TAddress
+  }): Promise<IFleetCommanderContract> {
+    const erc4626Contract = await Erc4626Contract.create(params)
+
+    const instance = new FleetCommanderContract({
+      blockchainClient: params.blockchainClient,
+      chainInfo: params.chainInfo,
+      address: params.address,
+      erc4626Contract,
+    })
+
+    return instance
+  }
+
   /** CONSTRUCTOR */
-  constructor(params: { blockchainClient: TClient; chainInfo: IChainInfo; address: TAddress }) {
+  constructor(params: {
+    blockchainClient: TClient
+    chainInfo: IChainInfo
+    address: TAddress
+    erc4626Contract: IErc4626Contract
+  }) {
     super(params)
 
-    this._erc4626Contract = new Erc4626Contract(params)
+    this._erc4626Contract = params.erc4626Contract
   }
 
   /** PUBLIC */

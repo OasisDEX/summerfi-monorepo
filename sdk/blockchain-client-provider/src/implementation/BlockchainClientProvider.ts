@@ -7,6 +7,7 @@ import {
   IRpcConfig,
   getRpcGatewayEndpoint,
 } from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
+import { assert } from 'console'
 import { IBlockchainClientProvider } from '../interfaces'
 import type { IBlockchainClient } from '../interfaces/IBlockchainClient'
 
@@ -27,6 +28,7 @@ const rpcConfig: IRpcConfig = {
  */
 export class BlockchainClientProvider implements IBlockchainClientProvider {
   private readonly _blockchainClients: Record<number, IBlockchainClient> = {}
+  private readonly _chains: Record<number, Chain> = {}
   private readonly _configProvider: IConfigurationProvider
 
   /** CONSTRUCTOR */
@@ -38,38 +40,31 @@ export class BlockchainClientProvider implements IBlockchainClientProvider {
   /** PUBLIC */
 
   /** @see IBlockchainClientProvider.getBlockchainClient */
-  public getBlockchainClient(params: { chainInfo: IChainInfo }): IBlockchainClient {
-    const provider = this._blockchainClients[params.chainInfo.chainId]
-    if (!provider) {
-      throw new Error('Provider not found')
-    }
-    return provider
-  }
-
-  /** @see IBlockchainClientProvider.getCustomBlockchainClient */
-  public getCustomBlockchainClient(params: {
-    rpcUrl: string
+  public getBlockchainClient(params: {
     chainInfo: IChainInfo
+    rpcUrl?: string
   }): IBlockchainClient {
-    const chain = defineChain({
-      id: params.chainInfo.chainId,
-      name: params.chainInfo.name,
-      nativeCurrency: {
-        decimals: 18,
-        name: 'Ether',
-        symbol: 'ETH',
-      },
-      rpcUrls: {
-        default: {
-          http: [params.rpcUrl],
-        },
-      },
-      blockExplorers: {
-        default: { name: 'Explorer', url: '' },
-      },
-    })
+    const chain = this._chains[params.chainInfo.chainId]
+    assert(chain, 'Blockchain client was found but not its chain, this should never happen')
 
-    return this._createBlockchainClient({ rpcUrl: params.rpcUrl, chain })
+    if (params.rpcUrl) {
+      const customChain = defineChain({
+        ...chain,
+        rpcUrls: {
+          default: {
+            http: [params.rpcUrl],
+          },
+        },
+      })
+
+      return this._createBlockchainClient({ rpcUrl: params.rpcUrl, chain: customChain })
+    } else {
+      const provider = this._blockchainClients[params.chainInfo.chainId]
+      if (!provider) {
+        throw new Error('Provider not found')
+      }
+      return provider
+    }
   }
 
   /** PRIVATE */
@@ -103,6 +98,7 @@ export class BlockchainClientProvider implements IBlockchainClientProvider {
       })
 
       this._blockchainClients[chain.id] = client
+      this._chains[chain.id] = chain
     }
   }
 

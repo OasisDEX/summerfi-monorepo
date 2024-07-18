@@ -1,16 +1,29 @@
 import { ConfigurationProvider } from '@summerfi/configuration-provider'
-import { Address, ChainFamilyMap, Token, TokenAmount } from '@summerfi/sdk-common'
+import { Address, AddressValue, ChainFamilyMap, Token, TokenAmount } from '@summerfi/sdk-common'
+import { createPublicClient, erc20Abi, getContract, http } from 'viem'
+import { arbitrum, mainnet } from 'viem/chains'
 import { Tenderly } from '../src/Tenderly'
 
 describe('e2e', () => {
+  const configurationProvider = new ConfigurationProvider()
+
+  const userAddress = configurationProvider.getConfigurationItem<AddressValue>({
+    name: 'E2E_USER_ADDRESS',
+  })
+
+  if (!userAddress) {
+    throw new Error('E2E_USER_ADDRESS not defined in .env')
+  }
+
   const walletAddress = Address.createFromEthereum({
-    value: '0x275f568287595D30E216b618da37897f4bbaB1B6',
+    value: userAddress,
   })
 
   const forksInfo = [
     {
       chainInfo: ChainFamilyMap.Ethereum.Mainnet,
       atBlock: 19475802,
+      chain: mainnet,
       tokens: {
         CBETH: '0xbe9895146f7af43049ca1c1ae358b0541ea49704',
         DAI: '0x6b175474e89094c44da98b954eedeac495271d0f',
@@ -24,6 +37,7 @@ describe('e2e', () => {
     {
       chainInfo: ChainFamilyMap.Arbitrum.ArbitrumOne,
       atBlock: 233082201,
+      chain: arbitrum,
       tokens: {
         DAI: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1',
         RETH: '0xEC70Dcb4A1EFa46b8F2D97C310C9c4790ba5ffA8',
@@ -31,44 +45,52 @@ describe('e2e', () => {
         WSTETH: '0x5979D7b546E38E414F7E9822514be443A4800529',
       },
     },
-    {
-      chainInfo: ChainFamilyMap.Optimism.Optimism,
-      atBlock: 122801659,
-      tokens: {
-        DAI: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1',
-        OP: '0x4200000000000000000000000000000000000042',
-        RETH: '0x9Bcef72be871e61ED4fBbc7630889beE758eb81D',
-        WBTC: '0x68f180fcCe6836688e9084f035309E29Bf0A2095',
-        WSTETH: '0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb',
-      },
-    },
   ]
 
   it('should test fork creation and cleanup', async () => {
     const tenderly = new Tenderly({ configurationProvider: new ConfigurationProvider() })
+
     for (const forkInfo of forksInfo) {
       const tenderlyFork = await tenderly.createFork({
         chainInfo: forkInfo.chainInfo,
         atBlock: forkInfo.atBlock,
       })
+
+      expect(tenderlyFork).toBeDefined()
+      expect(tenderlyFork.atBlock).toEqual(forkInfo.atBlock)
+      expect(tenderlyFork.chainInfo).toEqual(forkInfo.chainInfo)
+      expect(tenderlyFork.forkId).toBeDefined()
+      expect(tenderlyFork.forkUrl).toBeDefined()
+
       console.log('-------------------------------------')
-      console.log('Fork created: ', `${tenderlyFork.forkUrl}`)
+      console.log(`Fork created for chain ${forkInfo.chainInfo.name}: ${tenderlyFork.forkUrl}`)
+
+      // Create public client to read from the fork
+      const transport = http(tenderlyFork.forkUrl, {
+        batch: true,
+        fetchOptions: {
+          method: 'POST',
+        },
+      })
+
+      const publicClient = createPublicClient({
+        batch: {
+          multicall: true,
+        },
+        chain: forkInfo.chain,
+        transport,
+      })
+
+      const ethBalanceBefore = await tenderlyFork.getETHBalance({ walletAddress })
 
       await tenderlyFork.setETHBalance({
-        amount: TokenAmount.createFrom({
-          amount: '100',
-          token: Token.createFrom({
-            chainInfo: forkInfo.chainInfo,
-            address: Address.createFromEthereum({
-              value: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-            }),
-            decimals: 18,
-            name: 'Ether',
-            symbol: 'ETH',
-          }),
-        }),
+        amount: ethBalanceBefore + 10n,
         walletAddress,
       })
+
+      const ethBalanceAfter = await tenderlyFork.getETHBalance({ walletAddress })
+
+      expect(ethBalanceAfter).toEqual(ethBalanceBefore + 10n)
 
       for (const [token, address] of Object.entries(forkInfo.tokens)) {
         await tenderlyFork.setErc20Balance({
@@ -84,6 +106,16 @@ describe('e2e', () => {
           }),
           walletAddress,
         })
+
+        const erc20Contract = getContract({
+          abi: erc20Abi,
+          address,
+          client: publicClient,
+        })
+
+        const balance = await erc20Contract.read.balanceOf([walletAddress.value])
+
+        expect(balance.toString()).toEqual('123180000000000000000')
       }
 
       await tenderlyFork.dispose()

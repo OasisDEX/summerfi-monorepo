@@ -6,7 +6,7 @@ import { BlockchainClientProviderMock } from '@summerfi/testing-utils/mocks/mana
 import { ConfigurationProviderMock } from '@summerfi/testing-utils/mocks/managers/ConfigurationProviderMock'
 import { ContractsProviderFactory } from '../src/implementation/ContractsProviderFactory'
 
-describe.only('Contracts Provider Service - FleetCommander Contract', () => {
+describe('Contracts Provider Service - FleetCommander Contract', () => {
   const configurationProvider = new ConfigurationProviderMock()
   const tenderly = new Tenderly({ configurationProvider })
 
@@ -26,11 +26,6 @@ describe.only('Contracts Provider Service - FleetCommander Contract', () => {
   let blockchainClientProvider: IBlockchainClientProvider
 
   beforeEach(async () => {
-    configurationProvider.setConfigurationItem({
-      name: 'RPC_GATEWAY',
-      value: 'https://rpc-gateway-url.com',
-    })
-
     // Tenderly Fork
     tenderlyFork = await tenderly.createFork({ chainInfo, atBlock: 17211722 })
 
