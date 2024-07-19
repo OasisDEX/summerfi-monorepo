@@ -15,6 +15,9 @@ export async function POST(req: NextRequest) {
     body: JSON.stringify(await req.json()),
   })
 
+  if (!response.ok) {
+    return NextResponse.json({ error: 'Failed to fetch data from SDK API' }, { status: response.status })
+  }
   return NextResponse.json(await response.json())
 }
 
