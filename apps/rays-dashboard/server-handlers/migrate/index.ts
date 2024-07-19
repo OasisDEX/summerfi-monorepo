@@ -35,27 +35,27 @@ export const fetchMigrations = async ({
         DsProxyMigrationOptimism,
       } = systemConfig.config.features
 
-      return {
-        ...migrations,
-        migrationsV2: migrations.migrationsV2.filter((migration) => {
-          if (migration.positionAddressType === 'EOA') {
-            return true
-          }
-          const networkMigration = networksByChainId[migration.chainId].id
+      const filteredMigrations = migrations.migrationsV2.filter((migration) => {
+        if (migration.positionAddressType === 'EOA') {
+          return true
+        }
+        const networkMigration = networksByChainId[migration.chainId].id
 
-          if (networkMigration === NetworkIds.MAINNET) {
+        switch (networkMigration) {
+          case NetworkIds.MAINNET:
             return DsProxyMigrationEthereum
-          } else if (networkMigration === NetworkIds.ARBITRUMMAINNET) {
+          case NetworkIds.ARBITRUMMAINNET:
             return DsProxyMigrationArbitrum
-          } else if (networkMigration === NetworkIds.OPTIMISMMAINNET) {
+          case NetworkIds.OPTIMISMMAINNET:
             return DsProxyMigrationOptimism
-          } else if (networkMigration === NetworkIds.BASEMAINNET) {
+          case NetworkIds.BASEMAINNET:
             return DsProxyMigrationBase
-          }
+          default:
+            return false
+        }
+      })
 
-          return false
-        }),
-      }
+      return { ...migrations, migrationsV2: filteredMigrations }
     }
 
     return migrations
