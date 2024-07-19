@@ -39,9 +39,11 @@ export const useSDK = () => {
         if (!chain) {
           throw new Error('Chain not found')
         }
-        const fleet = chain.earnProtocol.getFleet({
+        const fleet = await chain.earnProtocol.getFleet({
           address: Address.createFromEthereum({ value: fleetAddress }),
-        })
+        }).catch(error => {
+          throw new Error(`Failed to get fleet: ${error.message}`);
+        });
 
         if (!fleet) {
           throw new Error(`SDK: Fleet not found: ${fleetAddress}`)
