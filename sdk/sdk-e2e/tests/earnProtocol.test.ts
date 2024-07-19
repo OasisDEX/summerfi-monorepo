@@ -2,10 +2,10 @@ import assert from 'assert'
 import { isAddress } from 'viem/utils'
 
 import { makeSDK, type Chain, type SDKManager, type UserClient } from '@summerfi/sdk-client'
-import { TokenAmount, Address, ChainFamilyMap } from '@summerfi/sdk-common'
+import { Address, ChainFamilyMap, TokenAmount } from '@summerfi/sdk-common'
 
-import { USDC, DAI } from './utils/TokenMockBase'
-import { sendAndLogTransactions } from './utils/sendAndLogTransactions'
+import { sendAndLogTransactions } from '@summerfi/testing-utils'
+import { DAI, USDC } from './utils/TokenMockBase'
 
 jest.setTimeout(300000)
 
@@ -73,7 +73,10 @@ describe.skip('Earn Protocol Deposit', () => {
       }),
     })
 
-    await sendAndLogTransactions(transactions)
+    await sendAndLogTransactions({
+      chainInfo,
+      transactions,
+    })
   })
 
   it('should fail deposit of DAI with incorrect token error', async () => {
@@ -93,7 +96,10 @@ describe.skip('Earn Protocol Deposit', () => {
       }),
     })
 
-    await sendAndLogTransactions(transactions)
+    await sendAndLogTransactions({
+      chainInfo,
+      transactions,
+    })
   })
 
   it('should withdraw 1 USDC', async () => {
@@ -113,7 +119,7 @@ describe.skip('Earn Protocol Deposit', () => {
       }),
     })
 
-    await sendAndLogTransactions(transactions)
+    await sendAndLogTransactions({ chainInfo, transactions })
   })
 })
 

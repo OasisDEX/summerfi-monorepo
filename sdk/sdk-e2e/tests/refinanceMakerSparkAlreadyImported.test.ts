@@ -18,11 +18,11 @@ import { Order, PositionsManager, RefinanceParameters } from '@summerfi/sdk-comm
 import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import {
+  TransactionUtils,
   decodeActionCalldata,
   decodePositionsManagerCalldata,
   decodeStrategyExecutorCalldata,
 } from '@summerfi/testing-utils'
-import { TransactionUtils } from './utils/TransactionUtils'
 
 import {
   EmodeType,

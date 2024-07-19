@@ -27,10 +27,10 @@ import {
 } from '@summerfi/sdk-common'
 import { Order, PositionsManager, RefinanceParameters } from '@summerfi/sdk-common/orders'
 import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
+import { TransactionUtils } from '@summerfi/testing-utils'
 
 import assert from 'assert'
 import { Hex } from 'viem'
-import { TransactionUtils } from './utils/TransactionUtils'
 
 jest.setTimeout(300000)
 

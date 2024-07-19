@@ -11,7 +11,8 @@
         "node_modules/@summerfi/configuration-provider/src/index.ts"
       ],
       "@summerfi/testing-utils": ["node_modules/@summerfi/testing-utils/src/index.ts"],
-      "@summerfi/testing-utils/*": ["node_modules/@summerfi/testing-utils/src/*"]
+      "@summerfi/testing-utils/*": ["node_modules/@summerfi/testing-utils/src/*"],
+      "@summerfi/allowance-common": ["node_modules/@summerfi/allowance-common/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "tests/**/*.ts"],

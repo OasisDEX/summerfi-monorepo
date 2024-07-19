@@ -64,6 +64,9 @@
     "E2E_SDK_API_URL",
     "E2E_SDK_FORK_URL",
     "E2E_USER_ADDRESS",
+    "TENDERLY_USER",
+    "TENDERLY_PROJECT",
+    "TENDERLY_ACCESS_KEY",
     "SDK_API_URL"
   ],
   "pipeline": {

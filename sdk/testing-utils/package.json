@@ -32,6 +32,7 @@
     "@summerfi/sdk-server-common": "workspace:*",
     "@summerfi/swap-common": "workspace:*",
     "@summerfi/tokens-common": "workspace:*",
+    "@summerfi/blockchain-client-provider": "workspace:*",
     "@summerfi/tokens-service": "workspace:^"
   },
   "devDependencies": {

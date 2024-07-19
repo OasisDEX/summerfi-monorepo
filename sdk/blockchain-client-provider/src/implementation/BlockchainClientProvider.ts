@@ -1,4 +1,4 @@
-import { createPublicClient, http, type Chain } from 'viem'
+import { createPublicClient, defineChain, http, type Chain } from 'viem'
 import { arbitrum, base, mainnet, optimism } from 'viem/chains'
 
 import { IConfigurationProvider } from '@summerfi/configuration-provider'
@@ -7,8 +7,9 @@ import {
   IRpcConfig,
   getRpcGatewayEndpoint,
 } from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
-import type { IBlockchainClient } from '../interfaces/IBlockchainClient'
+import { assert } from 'console'
 import { IBlockchainClientProvider } from '../interfaces'
+import type { IBlockchainClient } from '../interfaces/IBlockchainClient'
 
 /**
  * RPC configuration for the RPC Gateway
@@ -27,21 +28,55 @@ const rpcConfig: IRpcConfig = {
  */
 export class BlockchainClientProvider implements IBlockchainClientProvider {
   private readonly _blockchainClients: Record<number, IBlockchainClient> = {}
+  private readonly _chains: Record<number, Chain> = {}
   private readonly _configProvider: IConfigurationProvider
 
+  /** CONSTRUCTOR */
   constructor(params: { configProvider: IConfigurationProvider }) {
     this._configProvider = params.configProvider
     this._loadClients([mainnet, optimism, arbitrum, base])
   }
 
-  public getBlockchainClient(params: { chainInfo: IChainInfo }): IBlockchainClient {
-    const provider = this._blockchainClients[params.chainInfo.chainId]
-    if (!provider) {
-      throw new Error('Provider not found')
+  /** PUBLIC */
+
+  /** @see IBlockchainClientProvider.getBlockchainClient */
+  public getBlockchainClient(params: {
+    chainInfo: IChainInfo
+    rpcUrl?: string
+  }): IBlockchainClient {
+    const chain = this._chains[params.chainInfo.chainId]
+    if (!chain) {
+      throw new Error(`Chain not supported: ${params.chainInfo}`)
     }
-    return provider
+
+    if (params.rpcUrl) {
+      const customChain = defineChain({
+        ...chain,
+        rpcUrls: {
+          default: {
+            http: [params.rpcUrl],
+          },
+        },
+      })
+
+      return this._createBlockchainClient({ rpcUrl: params.rpcUrl, chain: customChain })
+    } else {
+      const provider = this._blockchainClients[params.chainInfo.chainId]
+      assert(
+        provider,
+        'Chain was found for the given chain info but the blockchain client was not, this should never happen',
+      )
+      return provider
+    }
   }
 
+  /** PRIVATE */
+
+  /**
+   * Pre-loads a list of known blockchain clients
+   *
+   * @param chains List of known chains to be preloaded
+   */
   private _loadClients(chains: Chain[]) {
     for (const chain of chains) {
       const rpcGatewayUrl = this._configProvider.getConfigurationItem({ name: 'RPC_GATEWAY' })
@@ -66,6 +101,32 @@ export class BlockchainClientProvider implements IBlockchainClientProvider {
       })
 
       this._blockchainClients[chain.id] = client
+      this._chains[chain.id] = chain
     }
+  }
+
+  /**
+   * Creates a blockchain client with the given parameters
+   *
+   * @param rpcUrl RPC URL to be used for this client
+   * @param chain Chain for which we want to get the blockchain client
+   *
+   * @returns The blockchain client
+   */
+  private _createBlockchainClient(params: { rpcUrl: string; chain: Chain }) {
+    const transport = http(params.rpcUrl, {
+      batch: true,
+      fetchOptions: {
+        method: 'POST',
+      },
+    })
+
+    return createPublicClient({
+      batch: {
+        multicall: true,
+      },
+      chain: params.chain,
+      transport,
+    })
   }
 }

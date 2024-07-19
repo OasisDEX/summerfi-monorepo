@@ -47,6 +47,10 @@
     "@summerfi/allowance-common": "workspace:*",
     "@summerfi/allowance-service": "workspace:*",
     "@summerfi/blockchain-client-provider": "workspace:*",
+    "@summerfi/abi-provider-common": "workspace:*",
+    "@summerfi/abi-provider-service": "workspace:*",
+    "@summerfi/contracts-provider-common": "workspace:*",
+    "@summerfi/contracts-provider-service": "workspace:*",
     "@trpc/server": "11.0.0-next-beta.264",
     "superjson": "^1.13.3"
   },

@@ -1,5 +1,5 @@
-import { IConfigurationProvider } from '@summerfi/configuration-provider'
 import type { IAllowanceManager } from '@summerfi/allowance-common'
+import { IConfigurationProvider } from '@summerfi/configuration-provider'
 import { IAddress, IChainInfo, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
 
 import { encodeFunctionData, erc20Abi } from 'viem'
