@@ -4,7 +4,7 @@ import { Address, ChainFamilyMap, ChainInfo } from '@summerfi/sdk-common'
 import { ConfigurationProviderMock } from '@summerfi/testing-utils/mocks/managers/ConfigurationProviderMock'
 import { ContractsProviderFactory } from '../src'
 
-describe.only('Contracts Provider Service - ERC20 Contract', () => {
+describe('Contracts Provider Service - ERC20 Contract', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Base.Mainnet
 
   const erc20ContractAddress = Address.createFromEthereum({
