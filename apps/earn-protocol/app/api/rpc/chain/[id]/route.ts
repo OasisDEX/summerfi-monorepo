@@ -1,15 +1,18 @@
 import { getChain } from '@alchemy/aa-core'
+import type { Chain } from 'viem'
 
 export async function POST(req: Request) {
   const id = req.url.split('/').pop()
+  let chain: Chain
 
-  const chain = getChain(parseInt(id as string, 10))
-
-  if (!chain) {
-    return new Response(`Chain not found: ${chain}`, {
+  try {
+    chain = getChain(parseInt(id as string, 10))
+  } catch (error) {
+    return new Response(`Chain with id ${id} not found.`, {
       status: 404,
     })
   }
+
   const [rpcUrl] = chain.rpcUrls.alchemy.http
 
   const apiKey = process.env.ACCOUNT_KIT_API_KEY

@@ -16,8 +16,12 @@ export async function POST(req: NextRequest) {
   })
 
   if (!response.ok) {
-    return NextResponse.json({ error: 'Failed to fetch data from SDK API' }, { status: response.status })
+    return NextResponse.json(
+      { error: 'Failed to fetch data from SDK API' },
+      { status: response.status },
+    )
   }
+
   return NextResponse.json(await response.json())
 }
 
@@ -34,7 +38,11 @@ export async function GET(req: NextRequest) {
   const response = await fetch(url, { headers })
 
   if (!response.ok) {
-    return NextResponse.json({ error: 'Failed to fetch data from SDK API' }, { status: response.status })
+    return NextResponse.json(
+      { error: 'Failed to fetch data from SDK API' },
+      { status: response.status },
+    )
   }
+
   return NextResponse.json(await response.json())
 }
