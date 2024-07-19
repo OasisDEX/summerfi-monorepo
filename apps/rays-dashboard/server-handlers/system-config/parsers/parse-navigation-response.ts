@@ -3,14 +3,14 @@ import {
   type NavigationResponse,
   type ProductHubData,
 } from '@summerfi/app-types'
-import { type getTranslations } from 'next-intl/server'
 
+import { type tNavType } from '@/messages/types'
 import { mapNavigationLinkItem } from '@/server-handlers/system-config/parsers/map-navigation-link-item'
 
 interface ParseNavigationResponseParams {
   navigationResponse: NavigationResponse
   productHub: ProductHubData
-  tNav: Awaited<ReturnType<typeof getTranslations>>
+  tNav: tNavType
 }
 
 export function parseNavigationResponse({

@@ -6,16 +6,14 @@ import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrap
 import { WalletInit } from '@/components/molecules/WalletInit/WalletInit'
 import { AccountChangeHandler } from '@/components/organisms/AccountChangeHandler/AccountChangeHandler'
 import { parseServerResponse } from '@/helpers/parse-server-response'
-import systemConfigHandler from '@/server-handlers/system-config'
+import systemConfigHandler, { type SystemConfig } from '@/server-handlers/system-config'
 
 import masterPageStyles from './MasterPage.module.scss'
 
 interface MasterPageProps {}
 
 export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({ children }) => {
-  const systemConfig = parseServerResponse<Awaited<ReturnType<typeof systemConfigHandler>>>(
-    await systemConfigHandler(),
-  )
+  const systemConfig = parseServerResponse<SystemConfig>(await systemConfigHandler())
 
   return (
     <>

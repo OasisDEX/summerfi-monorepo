@@ -10,7 +10,7 @@ import { AccountKitAddPassKey } from '@/components/molecules/AcountKitAddPassKey
 import { TransakOneWidget } from '@/components/molecules/TransakOneWidget/TransakOneWidget'
 import { TransakWidget } from '@/components/molecules/TransakWidget/TransakWidget'
 
-export const AccountKitFeatures = () => {
+const AccountKitFeatures = () => {
   const signer = useSigner()
   const user = useUser()
 
@@ -40,3 +40,5 @@ export const AccountKitFeatures = () => {
     </div>
   )
 }
+
+export default AccountKitFeatures
