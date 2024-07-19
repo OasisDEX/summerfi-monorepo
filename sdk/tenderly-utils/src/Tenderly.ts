@@ -49,13 +49,13 @@ export class Tenderly {
    */
   async createFork(params: {
     chainInfo: IChainInfo
-    atBlock: number | 'latest'
+    atBlock?: number | 'latest'
   }): Promise<TenderlyFork> {
     return TenderlyFork.create({
       tenderlyAccessKey: this.tenderlyAccessKey,
       tenderlyApiUrl: this.tenderlyApiUrl,
       chainInfo: params.chainInfo,
-      atBlock: params.atBlock,
+      atBlock: params.atBlock || 'latest',
     })
   }
 }

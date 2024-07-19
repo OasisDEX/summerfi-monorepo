@@ -45,7 +45,9 @@ export class BlockchainClientProvider implements IBlockchainClientProvider {
     rpcUrl?: string
   }): IBlockchainClient {
     const chain = this._chains[params.chainInfo.chainId]
-    assert(chain, 'Blockchain client was found but not its chain, this should never happen')
+    if (!chain) {
+      throw new Error(`Chain not supported: ${params.chainInfo}`)
+    }
 
     if (params.rpcUrl) {
       const customChain = defineChain({
@@ -60,9 +62,10 @@ export class BlockchainClientProvider implements IBlockchainClientProvider {
       return this._createBlockchainClient({ rpcUrl: params.rpcUrl, chain: customChain })
     } else {
       const provider = this._blockchainClients[params.chainInfo.chainId]
-      if (!provider) {
-        throw new Error('Provider not found')
-      }
+      assert(
+        provider,
+        'Chain was found for the given chain info but the blockchain client was not, this should never happen',
+      )
       return provider
     }
   }
