@@ -20,7 +20,9 @@ export const useSDK = () => {
         const user = await sdk.users.getUser({
           chainInfo: chain.chainInfo,
           walletAddress: Address.createFromEthereum({ value: walletAddress }),
-        })
+        }).catch(error => {
+          throw new Error(`Failed to get user: ${error.message}`);
+        });
 
         return user
       },
