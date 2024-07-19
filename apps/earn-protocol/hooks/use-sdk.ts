@@ -17,12 +17,14 @@ export const useSDK = () => {
         if (!chain) {
           throw new Error('Chain not found')
         }
-        const user = await sdk.users.getUser({
-          chainInfo: chain.chainInfo,
-          walletAddress: Address.createFromEthereum({ value: walletAddress }),
-        }).catch(error => {
-          throw new Error(`Failed to get user: ${error.message}`);
-        });
+        const user = await sdk.users
+          .getUser({
+            chainInfo: chain.chainInfo,
+            walletAddress: Address.createFromEthereum({ value: walletAddress }),
+          })
+          .catch((error) => {
+            throw new Error(`Failed to get user: ${error.message}`)
+          })
 
         return user
       },
@@ -39,11 +41,9 @@ export const useSDK = () => {
         if (!chain) {
           throw new Error('Chain not found')
         }
-        const fleet = await chain.earnProtocol.getFleet({
+        const fleet = chain.earnProtocol.getFleet({
           address: Address.createFromEthereum({ value: fleetAddress }),
-        }).catch(error => {
-          throw new Error(`Failed to get fleet: ${error.message}`);
-        });
+        })
 
         if (!fleet) {
           throw new Error(`SDK: Fleet not found: ${fleetAddress}`)
@@ -65,9 +65,9 @@ export const useSDK = () => {
           throw new Error('Chain not found')
         }
 
-        const token = await chain.tokens.getTokenBySymbol({ symbol }).catch(error => {
-          throw new Error(`Failed to get token: ${error.message}`);
-        });
+        const token = await chain.tokens.getTokenBySymbol({ symbol }).catch((error) => {
+          throw new Error(`Failed to get token: ${error.message}`)
+        })
 
         if (!token) {
           throw new Error(`SDK: Unsupport token: ${symbol}`)
