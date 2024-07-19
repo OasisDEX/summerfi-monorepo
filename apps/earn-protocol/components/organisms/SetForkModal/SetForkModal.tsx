@@ -5,24 +5,9 @@ import { Button, Input, Text } from '@summerfi/app-ui'
 
 import { ModalButton, type ModalButtonProps } from '@/components/molecules/Modal/ModalButton'
 import { forksCookieName } from '@/constants/forks-cookie-name'
+import { getCookies } from '@/constants/get-cookies'
 import { networksByName } from '@/constants/networks-list'
-
-const getCookies = (cookiename: string) => {
-  const cookiestring = RegExp(`${cookiename}=[^;]+`, 'u').exec(document.cookie)
-
-  return decodeURIComponent(cookiestring ? cookiestring.toString().replace(/^[^=]+./u, '') : '')
-}
-
-const safeParseJson = (json: string) => {
-  try {
-    return JSON.parse(json)
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error parsing JSON', error)
-
-    return {}
-  }
-}
+import { safeParseJson } from '@/constants/safe-parse-json'
 
 const setFork =
   ({
