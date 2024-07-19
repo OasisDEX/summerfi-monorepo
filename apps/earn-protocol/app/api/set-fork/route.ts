@@ -25,6 +25,8 @@ export async function POST(request: NextRequest) {
     if (typeof body.clear !== 'undefined') {
       const cookieStore = cookies()
 
+      console.log('Object.keys(NetworkIds)', Object.keys(NetworkIds))
+      console.log('body.clear', body.clear)
       if (Object.keys(NetworkIds).includes(body.clear)) {
         const currentForks = JSON.parse(
           (cookieStore.get(forksCookieName)?.value as string | undefined) ?? '{}',

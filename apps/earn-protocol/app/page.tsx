@@ -1,5 +1,15 @@
-import { AccountKitFeatures } from '@/components/organisms/AccountKitFeatures/AccountKitFeatures'
-import { Form } from '@/components/organisms/Form/Form'
+import dynamic from 'next/dynamic'
+
+const AccountKitFeatures = dynamic(
+  () => import('@/components/organisms/AccountKitFeatures/AccountKitFeatures'),
+  {
+    ssr: false,
+  },
+)
+
+const Form = dynamic(() => import('@/components/organisms/Form/Form'), {
+  ssr: false,
+})
 
 export default function HomePage() {
   return (

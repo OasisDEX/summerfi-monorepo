@@ -3,15 +3,18 @@ import { useState } from 'react'
 import { Button, Card, Input, Text } from '@summerfi/app-ui'
 import { useAppState, useConnectWallet } from '@web3-onboard/react'
 import { type Config as WagmiConfig, signMessage } from '@web3-onboard/wagmi'
-
-import { SetForkModal } from '@/components/organisms/SetForkModal/SetForkModal'
+import dynamic from 'next/dynamic'
 
 enum Action {
   DEPOSIT = 'deposit',
   WITHDRAW = 'withdraw',
 }
 
-export const Form = () => {
+const SetForkModal = dynamic(() => import('@/components/organisms/SetFork/SetForkModal'), {
+  ssr: false,
+})
+
+const Form = () => {
   const [action, setAction] = useState(Action.DEPOSIT)
   const [value, setValue] = useState<number>()
   const [{ wallet }] = useConnectWallet()
@@ -22,10 +25,15 @@ export const Form = () => {
     await signMessage(wagmiConfig as WagmiConfig, {
       message: 'This is my message to you',
       connector: wallet?.wagmiConnector,
-    }).then((res) => {
-      // eslint-disable-next-line no-console
-      console.log(res)
     })
+      .then((res) => {
+        // eslint-disable-next-line no-console
+        console.log(res)
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.log(error)
+      })
   }
 
   // @ts-ignore
@@ -113,3 +121,5 @@ export const Form = () => {
     </Card>
   )
 }
+
+export default Form

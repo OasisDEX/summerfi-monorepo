@@ -1,4 +1,7 @@
 export const safeParseJson = (json: string) => {
+  if (!json) {
+    return {}
+  }
   try {
     return JSON.parse(json)
   } catch (error) {
