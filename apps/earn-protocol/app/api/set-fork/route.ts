@@ -17,42 +17,42 @@ const getCleanObject = <T extends object, V = ObjectLike<T>>(obj: T): V => {
   ) as V
 }
 
+function handleClearFork(clear: string, cookieStore: ReturnType<typeof cookies>) {
+  if (Object.keys(NetworkIds).includes(clear)) {
+    const currentForks = JSON.parse(
+      (cookieStore.get(forksCookieName)?.value as string | undefined) ?? '{}',
+    )
+
+    delete currentForks[clear]
+    cookieStore.set(forksCookieName, JSON.stringify(currentForks))
+
+    return new Response('Fork updated', { status: 200 })
+  }
+  cookieStore.delete(forksCookieName)
+
+  return new Response('Forks cleared', { status: 200 })
+}
+function handleSetFork(body: SetForkRequest, cookieStore: ReturnType<typeof cookies>) {
+  const currentForks = JSON.parse(
+    (cookieStore.get(forksCookieName)?.value as string | undefined) ?? '{}',
+  )
+  const newForks = { ...currentForks, ...body }
+
+  cookieStore.set(forksCookieName, JSON.stringify(getCleanObject(newForks)))
+
+  return new Response('Forks set', { status: 200 })
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as SetForkRequest
+    const cookieStore = cookies()
 
-    // Clear all forks or a specific fork
     if (typeof body.clear !== 'undefined') {
-      const cookieStore = cookies()
-
-      if (Object.keys(NetworkIds).includes(body.clear)) {
-        const currentForks = JSON.parse(
-          (cookieStore.get(forksCookieName)?.value as string | undefined) ?? '{}',
-        )
-
-        delete currentForks[body.clear]
-        cookieStore.set(forksCookieName, JSON.stringify(currentForks))
-
-        return new Response('Fork updated', { status: 200 })
-      }
-
-      cookieStore.delete(forksCookieName)
-
-      return new Response('Forks cleared', { status: 200 })
+      return handleClearFork(body.clear, cookieStore)
     }
-
-    // Set a new fork
     if (typeof body === 'object' && Object.keys(NetworkIds).includes(Object.keys(body)[0])) {
-      const cookieStore = cookies()
-
-      const currentForks = JSON.parse(
-        (cookieStore.get(forksCookieName)?.value as string | undefined) ?? '{}',
-      )
-      const newForks = { ...currentForks, ...body }
-
-      cookieStore.set(forksCookieName, JSON.stringify(getCleanObject(newForks)))
-
-      return new Response('Forks set', { status: 200 })
+      return handleSetFork(body, cookieStore)
     }
 
     return new Response('Invalid body data', { status: 400 })

@@ -17,6 +17,7 @@ import { forksCookieName } from '@/constants/forks-cookie-name'
 import { getCookies } from '@/constants/get-cookies'
 import { networksByName } from '@/constants/networks-list'
 import { safeParseJson } from '@/constants/safe-parse-json'
+import { isValidUrl } from '@/helpers/is-valid-url'
 import { numberToHexId } from '@/helpers/number-to-hex-id'
 
 const setFork =
@@ -30,6 +31,13 @@ const setFork =
   (ev: FormEvent<HTMLFormElement>) => {
     ev.preventDefault()
     const forkUrl = (ev.currentTarget.elements[0] as HTMLInputElement).value
+
+    if (!isValidUrl(forkUrl)) {
+      // eslint-disable-next-line no-console
+      console.error('Invalid URL')
+
+      return
+    }
     const hasCookieSetForNetwork = safeParseJson(getCookies(forksCookieName))[
       networksByName[networkKey].id
     ]
@@ -50,7 +58,13 @@ const setFork =
         [networkId]: forkUrl,
       }),
     })
-      .then((response) => response.text())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        return response.text()
+      })
       .then((_data) => {
         setUpdating((prev) => {
           prev.splice(prev.indexOf(networksByName[networkKey].id), 1)
@@ -98,7 +112,13 @@ const resetFork =
         clear: network?.id ? network?.id.toString() : 'yes :)',
       }),
     })
-      .then((response) => response.text())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        return response.text()
+      })
       .then((_data) => {
         setResetting(false)
       })
