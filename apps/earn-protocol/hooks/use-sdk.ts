@@ -61,7 +61,9 @@ export const useSDK = () => {
           throw new Error('Chain not found')
         }
 
-        const token = await chain.tokens.getTokenBySymbol({ symbol })
+        const token = await chain.tokens.getTokenBySymbol({ symbol }).catch(error => {
+          throw new Error(`Failed to get token: ${error.message}`);
+        });
 
         if (!token) {
           throw new Error(`SDK: Unsupport token: ${symbol}`)
