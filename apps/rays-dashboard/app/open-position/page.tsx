@@ -1,3 +1,4 @@
+import { type AppRaysConfigType } from '@summerfi/app-types'
 import {
   CountDownBanner,
   Dial,
@@ -13,6 +14,7 @@ import dayjs from 'dayjs'
 import { PageViewHandler } from '@/components/organisms/PageViewHandler/PageViewHandler'
 import { ProductPicker } from '@/components/organisms/ProductPicker/ProductPicker'
 import { formatAsShorthandNumbers } from '@/helpers/formatters'
+import { fetchMigrations } from '@/server-handlers/migrate'
 import { fetchRays } from '@/server-handlers/rays'
 import systemConfigHandler from '@/server-handlers/system-config'
 
@@ -39,6 +41,10 @@ export default async function OpenPositionPage({ searchParams }: OpenPositionPag
   const { userAddress } = searchParams
 
   const userRays = await fetchRays({ address: userAddress })
+  const { migrationsV2, error: migrationsListError } = await fetchMigrations({
+    address: userAddress,
+    systemConfig,
+  })
 
   // if they dont have a position on summer, this flag will appear
   const becomeSummerUserPoints = userRays.rays?.actionRequiredPoints.find(
@@ -109,9 +115,10 @@ export default async function OpenPositionPage({ searchParams }: OpenPositionPag
         />
       )}
       <ProductPicker
-        products={systemConfig.configRays.products}
+        products={systemConfig.configRays.products as AppRaysConfigType['products']}
         productHub={systemConfig.productHub.table}
         userAddress={userAddress}
+        migrations={!migrationsListError ? migrationsV2 : undefined}
       />
       <ProxyLinkComponent
         target="_blank"
