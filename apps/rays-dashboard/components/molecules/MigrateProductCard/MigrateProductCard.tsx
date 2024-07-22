@@ -1,27 +1,17 @@
-import { type FC, useCallback, useMemo } from 'react'
+import { type FC, useCallback } from 'react'
 import {
   LendingProtocol,
   type NetworkNames,
   type PortfolioMigrations,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
-import {
-  AutomationIcon,
-  BlockLabel,
-  Button,
-  Card,
-  Divider,
-  ProtocolLabel,
-  Text,
-  TokensGroup,
-  Tooltip,
-} from '@summerfi/app-ui'
-import { IconArrowRight } from '@tabler/icons-react'
-import BigNumber from 'bignumber.js'
+import { Card, Divider } from '@summerfi/app-ui'
 
+import { MigrateProductCardFooter } from '@/components/molecules/MigrateProductCard/MigrateProductCardFooter'
+import { MigrateProductCardPositionInfo } from '@/components/molecules/MigrateProductCard/MigrateProductCardPositionInfo'
+import { MigrateProductCardProtocolInfo } from '@/components/molecules/MigrateProductCard/MigrateProductCardProtocolInfo'
+import { MigrateProductCardTitle } from '@/components/molecules/MigrateProductCard/MigrationProductCardTitle'
 import { networksByChainId } from '@/constants/networks-list'
-import { getCalculatorValues } from '@/helpers/calculator'
-import { formatAsShorthandNumbers, formatCryptoBalance } from '@/helpers/formatters'
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
 
 import migrateProductCardStyles from '@/components/molecules/MigrateProductCard/MigrateProductCard.module.scss'
@@ -40,24 +30,8 @@ const LendingProtocolByProtocolId: { [key in ProtocolId]: LendingProtocol } = {
   [ProtocolId.SPARK]: LendingProtocol.SparkV3,
 }
 
-const getMigrationTokenValue = (
-  asset:
-    | MigrateProductCardProps['migration']['collateralAsset']
-    | MigrateProductCardProps['migration']['debtAsset'],
-) =>
-  formatAsShorthandNumbers(
-    new BigNumber(Number(asset.balance)).div(
-      new BigNumber(10).pow(new BigNumber(Number(asset.balanceDecimals))),
-    ),
-    4,
-  )
-
-const formatRaysPoints = (points: string | number) =>
-  formatCryptoBalance(new BigNumber(Number(points).toFixed(0)))
-
 export const MigrateProductCard: FC<MigrateProductCardProps> = ({ migration }) => {
   const protocolConfig = lendingProtocolsByName[migration.protocolId]
-  const network = networksByChainId[migration.chainId]
   const tokens = [migration.collateralAsset.symbol, migration.debtAsset.symbol].map((token) =>
     token === 'WETH' ? 'ETH' : token,
   ) as TokenSymbolsList[]
@@ -93,131 +67,19 @@ export const MigrateProductCard: FC<MigrateProductCardProps> = ({ migration }) =
     }
   }, [migration])
 
-  const { basePoints, migrationBonus, totalPoints } = useMemo(
-    () =>
-      getCalculatorValues({
-        migration: true,
-        usdAmount: migration.collateralAsset.usdValue - migration.debtAsset.usdValue,
-      }),
-    [migration.collateralAsset.usdValue, migration.debtAsset.usdValue],
-  )
-
   return (
     <Card className={migrateProductCardStyles.cardWrapper}>
       <div className={migrateProductCardStyles.content}>
-        <div className={migrateProductCardStyles.titleRow}>
-          <Text
-            as="h4"
-            variant="p3semi"
-            style={{
-              color: 'var(--color-neutral-80)',
-            }}
-          >
-            Migrate
-          </Text>
-          <div style={{ display: 'flex', flexDirection: 'row', columnGap: '10px' }}>
-            <Tooltip
-              tooltip={
-                <div style={{ display: 'flex', flexDirection: 'column', rowGap: '5px' }}>
-                  <Text as="span" variant="p4">
-                    Base amount:{' '}
-                    <Text as="span" variant="p4semi">
-                      {formatRaysPoints(basePoints)}
-                    </Text>
-                  </Text>
-                  <Text as="span" variant="p4">
-                    Migration bonus:{' '}
-                    <Text as="span" variant="p4semi">
-                      {formatRaysPoints(migrationBonus)}
-                    </Text>
-                  </Text>
-                </div>
-              }
-            >
-              <BlockLabel label={`${formatRaysPoints(totalPoints)} RAYS`} variant="colorful" />
-            </Tooltip>
-            <ProtocolLabel
-              protocol={{
-                label: protocolConfig.label,
-                logo: { scale: protocolConfig.logoScale, src: protocolConfig.logo },
-              }}
-              network={{
-                badge: network.badge,
-                label: protocolConfig.label,
-              }}
-            />
-          </div>
-        </div>
-        <div className={migrateProductCardStyles.protocolInfoWrapper}>
-          <TokensGroup tokens={tokens} />
-          <div className={migrateProductCardStyles.protocolInfo}>
-            <Text as="p" variant="p1semi">
-              {tokens.join('/')}
-            </Text>
-            <Text as="p" variant="p3" style={{ color: 'var(--color-neutral-80)' }}>
-              {protocolConfig.label}
-            </Text>
-          </div>
-        </div>
-        <div className={migrateProductCardStyles.positionInfo}>
-          <div>
-            <Text variant="p4semi" className={migrateProductCardStyles.heading}>
-              Supplied
-            </Text>
-            <TokensGroup tokens={[tokens[0]]} />
-          </div>
-          <div>
-            <Text variant="p4semi" className={migrateProductCardStyles.heading}>
-              Balance of Supplied
-            </Text>
-            <Text variant="p1semi">{getMigrationTokenValue(migration.collateralAsset)}</Text>
-          </div>
-          <div>
-            <Text variant="p4semi" className={migrateProductCardStyles.heading}>
-              Borrowed
-            </Text>
-            <TokensGroup tokens={[tokens[1]]} />
-          </div>
-          <div>
-            <Text variant="p4semi" className={migrateProductCardStyles.heading}>
-              Balance of Borrowed
-            </Text>
-            <Text variant="p1semi">{getMigrationTokenValue(migration.debtAsset)}</Text>
-          </div>
-        </div>
+        <MigrateProductCardTitle migration={migration} protocolConfig={protocolConfig} />
+        <MigrateProductCardProtocolInfo protocolConfig={protocolConfig} tokens={tokens} />
+        <MigrateProductCardPositionInfo migration={migration} tokens={tokens} />
         <Divider
           style={{
             marginTop: 'var(--space-m)',
             marginBottom: 'var(--space-m)',
           }}
         />
-        <div className={migrateProductCardStyles.footer}>
-          <div className={migrateProductCardStyles.footerAutomations}>
-            <Text variant="p4semi" className={migrateProductCardStyles.heading}>
-              Available Upon Migration
-            </Text>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                columnGap: 'var(--space-xs)',
-                marginTop: 'var(--space-xs)',
-              }}
-            >
-              <AutomationIcon type="stopLoss" tooltip="Stop Loss" variant="s" />
-              <AutomationIcon type="autoBuy" tooltip="Auto Buy" variant="s" />
-              <AutomationIcon type="autoSell" tooltip="Auto Sell" variant="s" />
-              <AutomationIcon type="partialTakeProfit" tooltip="Partial Take Profit" variant="s" />
-            </div>
-          </div>
-          {/*
-           * Migration link should have following format:
-           * [networkOrProduct]/aave/[version]/migrate/[address]
-           */}
-          <Button variant="secondarySmall" onClick={goToMigration}>
-            Migrate <IconArrowRight size={14} />
-          </Button>
-        </div>
+        <MigrateProductCardFooter action={goToMigration} />
       </div>
     </Card>
   )
