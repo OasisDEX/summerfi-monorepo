@@ -136,7 +136,6 @@ export const MigrateProductCard: FC<MigrateProductCardProps> = ({ migration }) =
             >
               <BlockLabel label={`${formatRaysPoints(totalPoints)} RAYS`} variant="colorful" />
             </Tooltip>
-            <BlockLabel label="Low Risk" variant="success" />
             <ProtocolLabel
               protocol={{
                 label: protocolConfig.label,

@@ -97,9 +97,11 @@ export default async function OpenPositionPage({ searchParams }: OpenPositionPag
         <Text
           as="h2"
           variant="h2"
-          style={{ marginTop: 'var(--space-xxl)', marginBottom: 'var(--space-s)' }}
+          style={{ marginTop: 'var(--space-xl)', marginBottom: 'var(--space-l)' }}
         >
-          Open a position to qualify for {notAllRaysEligible ? 'all' : ''} your $RAYS
+          Open{migrationsV2.length ? ' or migrate' : ''} a position
+          <br />
+          to qualify for {notAllRaysEligible ? 'all' : ''} your $RAYS
         </Text>
       )}
       {currentBooster && !positionOpenTime && (
