@@ -26,6 +26,8 @@ body {
   line-height: 1.5;
 
   color: var(--color-primary-100);
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizelegibility;
 }
 
 h1,

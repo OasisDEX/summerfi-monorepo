@@ -109,3 +109,7 @@ export function formatDecimalAsPercent(
     noPercentSign,
   })
 }
+
+export function formatBigNumber(amount: BigNumber, digits: number) {
+  return amount.dp(digits, BigNumber.ROUND_DOWN).toString()
+}

@@ -208,3 +208,4 @@ export const L2Networks = [
 export const networksList = [...mainnetNetworks, ...L2Networks]
 export const networksByName = keyBy(networksList, 'name')
 export const networksByHexId = keyBy(networksList, 'hexId')
+export const networksByChainId = keyBy(networksList, 'id')
