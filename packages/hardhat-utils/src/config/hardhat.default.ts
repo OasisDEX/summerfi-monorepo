@@ -1,8 +1,7 @@
 import '@nomicfoundation/hardhat-toolbox-viem'
+import type { HardhatUserConfig } from 'hardhat/config'
 import 'hardhat-abi-exporter'
 import 'solidity-docgen'
-
-import type { HardhatUserConfig } from 'hardhat/config'
 
 import {
   getChainConfig,
