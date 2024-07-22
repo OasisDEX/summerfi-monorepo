@@ -11,9 +11,10 @@ import {
 import { Button, Select, Text } from '@summerfi/app-ui'
 import { usePathname } from 'next/navigation'
 
-import { ProductCard } from '@/components/molecules/ProductCard/ProductCard'
-import { NetworkNames, networksByChainId } from '@/constants/networks-list'
-import { LendingProtocol } from '@/helpers/lending-protocol'
+import { MigrateProductCard } from '@/components/molecules/MigrateProductCard/MigrateProductCard'
+import { RaysProductCard } from '@/components/molecules/RaysProductCard/RaysProductCard'
+import { NetworkNames } from '@/constants/networks-list'
+import { type LendingProtocol } from '@/helpers/lending-protocol'
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
 
 import productPickerStyles from '@/components/organisms/ProductPicker/ProductPicker.module.scss'
@@ -26,16 +27,6 @@ type SupportedNetworks =
 
 enum MigrateProductType {
   'Migrate' = 'Migrate',
-}
-
-enum ProtocolId {
-  AAVE3 = 'aave3',
-  SPARK = 'spark',
-}
-
-const LendingProtocolByProtocolId = {
-  [ProtocolId.AAVE3]: LendingProtocol.AaveV3,
-  [ProtocolId.SPARK]: LendingProtocol.SparkV3,
 }
 
 const networks = [
@@ -132,7 +123,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
       <div className={productPickerStyles.productsWrapper}>
         {productType !== MigrateProductType.Migrate
           ? mappedItems.map((item) => (
-              <ProductCard
+              <RaysProductCard
                 key={item.link}
                 automation={item.phItem.automationFeatures ?? []}
                 protocolConfig={lendingProtocolsByName[item.phItem.protocol as LendingProtocol]}
@@ -154,36 +145,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
               />
             ))
           : migrations?.map((migration) => (
-              /**
-               * Migration link should have following format:
-               * [networkOrProduct]/aave/[version]/migrate/[address]
-               * @returns string
-               */
-              <ProductCard
-                key={migration.positionAddress}
-                automation={[]}
-                protocolConfig={
-                  lendingProtocolsByName[
-                    LendingProtocolByProtocolId[
-                      migration.protocolId as keyof typeof LendingProtocolByProtocolId
-                    ]
-                  ]
-                }
-                tokens={
-                  [
-                    ...new Set([migration.collateralAsset.symbol, migration.debtAsset.symbol]),
-                  ] as TokenSymbolsList[]
-                }
-                title={`${migration.collateralAsset.symbol}/${migration.debtAsset.symbol}`}
-                network={networksByChainId[migration.chainId].name}
-                userAddress={userAddress}
-                currentPath={currentPath}
-                productType={productType}
-                btn={{
-                  link: '#',
-                  label: 'Testing',
-                }}
-              />
+              <MigrateProductCard key={migration.positionAddress} migration={migration} />
             ))}
       </div>
     </div>

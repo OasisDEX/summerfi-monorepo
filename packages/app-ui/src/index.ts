@@ -18,6 +18,7 @@ export { Modal } from './components/atoms/Modal/Modal'
 
 export { AutomationIcon } from './components/molecules/AutomationIcon/AutomationIcon'
 export { BannerCard } from './components/molecules/BannerCard/BannerCard'
+export { BlockLabel } from './components/molecules/BlockLabel/BlockLabel'
 export { Dial } from './components/molecules/Dial/Dial'
 export { LoadingSpinner } from './components/molecules/Loader/Loader'
 export { ProtocolLabel } from './components/molecules/ProtocolLabel/ProtocolLabel'
