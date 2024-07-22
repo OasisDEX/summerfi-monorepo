@@ -9,6 +9,7 @@ import {
   sendTransaction,
   signMessage,
 } from '@web3-onboard/wagmi'
+import dynamic from 'next/dynamic'
 
 import { prepareTransaction } from '@/helpers/sdk/prepare-transaction'
 import { useDeposit } from '@/hooks/use-deposit'
@@ -24,7 +25,11 @@ enum Action {
 const tokenSymbol = 'USDC'
 const usdcFleetAddress = '0xa09e82322f351154a155f9e0f9e6ddbc8791c794'
 
-export const Form = () => {
+const SetForkModal = dynamic(() => import('@/components/organisms/SetFork/SetForkModal'), {
+  ssr: false,
+})
+
+const Form = () => {
   const [action, setAction] = useState(Action.DEPOSIT)
   const [amountValue, setAmountValue] = useState<string>()
   const [transactionsHash, setTransactionsHash] = useState<string>()
@@ -48,10 +53,15 @@ export const Form = () => {
     await signMessage(wagmiConfig as WagmiConfig, {
       message: 'This is my message to you',
       connector: wallet?.wagmiConnector,
-    }).then((res) => {
-      // eslint-disable-next-line no-console
-      console.log(res)
     })
+      .then((res) => {
+        // eslint-disable-next-line no-console
+        console.log(res)
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.log(error)
+      })
   }
 
   async function sendSDKTransaction(transaction: TransactionInfo) {
@@ -237,6 +247,9 @@ export const Form = () => {
       >
         Sign test message
       </Button>
+      <SetForkModal />
     </Card>
   )
 }
+
+export default Form

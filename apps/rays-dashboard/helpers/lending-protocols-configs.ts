@@ -14,7 +14,7 @@ import sparkLogo from 'public/img/protocol_icons/spark_logo.svg'
 import { LendingProtocol, LendingProtocolLabel } from '@/helpers/lending-protocol'
 
 export type LendingProtocolConfig = {
-  name: LendingProtocol
+  name: LendingProtocol | 'aave3'
   label: LendingProtocolLabel
   icon: string
   logo: string
@@ -35,6 +35,13 @@ const aaveV3Config: LendingProtocolConfig = {
   icon: aaveIcon as string,
   logo: aaveV3Logo as string,
   logoScale: 1,
+}
+
+// "protocolId": "aave3"
+// ?????????
+const aave3Config: LendingProtocolConfig = {
+  ...aaveV3Config,
+  name: 'aave3',
 }
 
 const ajnaConfig: LendingProtocolConfig = {
@@ -72,6 +79,7 @@ const sparkConfig: LendingProtocolConfig = {
 const lendingProtocols = [
   aaveV2Config,
   aaveV3Config,
+  aave3Config,
   ajnaConfig,
   makerConfig,
   morphoBlueConfig,
