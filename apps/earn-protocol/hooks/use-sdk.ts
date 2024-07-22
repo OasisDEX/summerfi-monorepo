@@ -17,10 +17,14 @@ export const useSDK = () => {
         if (!chain) {
           throw new Error('Chain not found')
         }
-        const user = await sdk.users.getUser({
-          chainInfo: chain.chainInfo,
-          walletAddress: Address.createFromEthereum({ value: walletAddress }),
-        })
+        const user = await sdk.users
+          .getUser({
+            chainInfo: chain.chainInfo,
+            walletAddress: Address.createFromEthereum({ value: walletAddress }),
+          })
+          .catch((error) => {
+            throw new Error(`Failed to get user: ${error.message}`)
+          })
 
         return user
       },
@@ -61,7 +65,9 @@ export const useSDK = () => {
           throw new Error('Chain not found')
         }
 
-        const token = await chain.tokens.getTokenBySymbol({ symbol })
+        const token = await chain.tokens.getTokenBySymbol({ symbol }).catch((error) => {
+          throw new Error(`Failed to get token: ${error.message}`)
+        })
 
         if (!token) {
           throw new Error(`SDK: Unsupport token: ${symbol}`)

@@ -74,16 +74,8 @@
       "cache": false,
       "persistent": true
     },
-    "hackDev": {
-      "cache": false,
-      "persistent": true
-    },
     "prebuild": {
       "dependsOn": ["^prebuild", "^prebuild:nocache"],
-      "outputs": ["src/types/graphql/generated.ts", "src/generated"]
-    },
-    "hackPreConstruct": {
-      "dependsOn": ["^hackPreConstruct"],
       "outputs": ["src/types/graphql/generated.ts", "src/generated"]
     },
     "prebuild:nocache": {
@@ -92,17 +84,6 @@
     },
     "build": {
       "dependsOn": ["prebuild", "^build"],
-      "outputs": [
-        ".next/**",
-        ".next/server/pages/**",
-        "!.next/cache/**",
-        "dist/**",
-        "artifacts/**",
-        ".sst/**"
-      ]
-    },
-    "hackBuild": {
-      "dependsOn": ["^hackBuild"],
       "outputs": [
         ".next/**",
         ".next/server/pages/**",

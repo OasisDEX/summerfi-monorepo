@@ -26,7 +26,7 @@ const usdcFleetAddress = '0xa09e82322f351154a155f9e0f9e6ddbc8791c794'
 
 export const Form = () => {
   const [action, setAction] = useState(Action.DEPOSIT)
-  const [amountValue, setAmountValue] = useState<number>()
+  const [amountValue, setAmountValue] = useState<string>()
   const [transactionsHash, setTransactionsHash] = useState<string>()
   const [transactionError, setTransactionError] = useState<string>()
   const [token, setToken] = useState<Token>()
@@ -89,7 +89,7 @@ export const Form = () => {
     fetchData()
   }, [chainId, walletAddress, token?.symbol, token, wagmiConfig])
 
-  const handleChange = (ev: any) => {
+  const handleChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     setAmountValue(ev.target.value)
   }
 
@@ -206,7 +206,7 @@ export const Form = () => {
             as="p"
             variant="p3semi"
             style={{ cursor: 'pointer' }}
-            onClick={() => setAmountValue(Number(tokenBalance))}
+            onClick={() => setAmountValue(tokenBalance.toString())}
           >
             Balance: {Number(tokenBalance).toFixed(3)} {tokenSymbol}
           </Text>
