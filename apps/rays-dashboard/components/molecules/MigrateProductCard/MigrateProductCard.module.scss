@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
 
-  @include media('<=s') {
+  @media screen and (min-width: 600px) {
     min-width: 818px;
   }
 }

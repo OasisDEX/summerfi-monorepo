@@ -5,7 +5,7 @@
     justify-content: flex-end;
     width: 100%;
     position: relative;
-    @include media('<=m') {
+    @media (min-width: 744px) {
       margin: initial;
       margin-bottom: -65px;
     }
