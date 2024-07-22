@@ -39,9 +39,15 @@
   flex-direction: row;
   justify-content: space-between;
   margin-top: var(--space-m);
+  @include media('<=s') {
+    flex-direction: column;
+  }
   & > div {
     display: flex;
     flex-direction: column;
+    @include media('<=s') {
+      margin-top: var(--space-m);
+    }
   }
 }
 
