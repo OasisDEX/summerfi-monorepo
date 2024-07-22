@@ -1,6 +1,7 @@
 .wrapper {
   padding: 5px 12px;
   border-radius: var(--radius-16);
+  user-select: none;
 }
 
 .neutral {

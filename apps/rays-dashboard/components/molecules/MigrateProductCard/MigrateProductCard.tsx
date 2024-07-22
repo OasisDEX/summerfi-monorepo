@@ -1,4 +1,4 @@
-import { type FC, useCallback } from 'react'
+import { type FC, useCallback, useMemo } from 'react'
 import {
   LendingProtocol,
   type NetworkNames,
@@ -11,16 +11,17 @@ import {
   Button,
   Card,
   Divider,
-  Icon,
   ProtocolLabel,
   Text,
   TokensGroup,
+  Tooltip,
 } from '@summerfi/app-ui'
 import { IconArrowRight } from '@tabler/icons-react'
 import BigNumber from 'bignumber.js'
 
 import { networksByChainId } from '@/constants/networks-list'
-import { formatAsShorthandNumbers } from '@/helpers/formatters'
+import { getCalculatorValues } from '@/helpers/calculator'
+import { formatAsShorthandNumbers, formatCryptoBalance } from '@/helpers/formatters'
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
 
 import migrateProductCardStyles from '@/components/molecules/MigrateProductCard/MigrateProductCard.module.scss'
@@ -50,6 +51,9 @@ const getMigrationTokenValue = (
     ),
     4,
   )
+
+const formatRaysPoints = (points: string | number) =>
+  formatCryptoBalance(new BigNumber(Number(points).toFixed(0)))
 
 export const MigrateProductCard: FC<MigrateProductCardProps> = ({ migration }) => {
   const protocolConfig = lendingProtocolsByName[migration.protocolId]
@@ -89,6 +93,15 @@ export const MigrateProductCard: FC<MigrateProductCardProps> = ({ migration }) =
     }
   }, [migration])
 
+  const { basePoints, migrationBonus, totalPoints } = useMemo(
+    () =>
+      getCalculatorValues({
+        migration: true,
+        usdAmount: migration.collateralAsset.usdValue - migration.debtAsset.usdValue,
+      }),
+    [migration.collateralAsset.usdValue, migration.debtAsset.usdValue],
+  )
+
   return (
     <Card className={migrateProductCardStyles.cardWrapper}>
       <div className={migrateProductCardStyles.content}>
@@ -103,7 +116,26 @@ export const MigrateProductCard: FC<MigrateProductCardProps> = ({ migration }) =
             Migrate
           </Text>
           <div style={{ display: 'flex', flexDirection: 'row', columnGap: '10px' }}>
-            <BlockLabel label="1000 rays" variant="colorful" />
+            <Tooltip
+              tooltip={
+                <div style={{ display: 'flex', flexDirection: 'column', rowGap: '5px' }}>
+                  <Text as="span" variant="p4">
+                    Base amount:{' '}
+                    <Text as="span" variant="p4semi">
+                      {formatRaysPoints(basePoints)}
+                    </Text>
+                  </Text>
+                  <Text as="span" variant="p4">
+                    Migration bonus:{' '}
+                    <Text as="span" variant="p4semi">
+                      {formatRaysPoints(migrationBonus)}
+                    </Text>
+                  </Text>
+                </div>
+              }
+            >
+              <BlockLabel label={`${formatRaysPoints(totalPoints)} RAYS`} variant="colorful" />
+            </Tooltip>
             <BlockLabel label="Low Risk" variant="success" />
             <ProtocolLabel
               protocol={{
