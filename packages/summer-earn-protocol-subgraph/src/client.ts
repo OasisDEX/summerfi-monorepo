@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // @ts-nocheck
 // This file was automatically generated and should not be edited.
 import { GraphQLClient, RequestOptions } from 'graphql-request';
