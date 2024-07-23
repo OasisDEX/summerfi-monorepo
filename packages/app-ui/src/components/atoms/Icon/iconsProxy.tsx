@@ -205,6 +205,9 @@ export const yieldeth_circle_color = lazy.lib(
 export const zerox = lazy.lib(() => import('../../../tokens/icons/zerox'))
 export const zerox_circle_color = lazy.lib(() => import('../../../tokens/icons/zerox_circle_color'))
 export const zerox_color = lazy.lib(() => import('../../../tokens/icons/zerox_color'))
+export const bsdeth_circle_color = lazy.lib(
+  () => import('../../../tokens/icons/bsdeth_circle_color'),
+)
 export const autoBuy = lazy.lib(() => import('../../../tokens/icons/autoBuy'))
 export const autoSell = lazy.lib(() => import('../../../tokens/icons/autoSell'))
 export const stopLoss = lazy.lib(() => import('../../../tokens/icons/stopLoss'))
