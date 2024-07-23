@@ -1,5 +1,5 @@
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
-import { IConfigurationProvider } from '@summerfi/configuration-provider'
+import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import { IAddress, IChainInfo, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
 

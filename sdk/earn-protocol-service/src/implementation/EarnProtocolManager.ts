@@ -1,10 +1,9 @@
-import { IConfigurationProvider } from '@summerfi/configuration-provider'
+import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import type { IEarnProtocolManager } from '@summerfi/earn-protocol-common'
 import { IAddress, IChainInfo, ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
 
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
-import { Abi, encodeFunctionData } from 'viem'
-import IFleetCommanderABIJSON from '../../../../earn-protocol/abis/IFleetCommander.sol/IFleetCommander.json'
+import { IContractsProvider } from '@summerfi/contracts-provider-common'
 
 /**
  * @name EarnProtocolManager
@@ -13,20 +12,22 @@ import IFleetCommanderABIJSON from '../../../../earn-protocol/abis/IFleetCommand
 export class EarnProtocolManager implements IEarnProtocolManager {
   private _configProvider: IConfigurationProvider
   private _allowanceManager: IAllowanceManager
-  private IFleetCommanderABI: Abi
+  private _contractsProvider: IContractsProvider
 
   /** CONSTRUCTOR */
   constructor(params: {
     configProvider: IConfigurationProvider
     allowanceManager: IAllowanceManager
+    contractsProvider: IContractsProvider
   }) {
     this._configProvider = params.configProvider
     this._allowanceManager = params.allowanceManager
-    this.IFleetCommanderABI = IFleetCommanderABIJSON.abi as unknown as Abi
+    this._contractsProvider = params.contractsProvider
   }
 
   /** FUNCTIONS */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+  /** @see IEarnProtocolManager.deposit */
   async deposit(params: {
     chainInfo: IChainInfo
     fleetAddress: IAddress
@@ -35,6 +36,7 @@ export class EarnProtocolManager implements IEarnProtocolManager {
   }): Promise<TransactionInfo[]> {
     const transactions: TransactionInfo[] = []
 
+    // Allowance
     const allowanceTransaction = await this._allowanceManager.getAllowance({
       chainInfo: params.chainInfo,
       spender: params.fleetAddress,
@@ -44,59 +46,40 @@ export class EarnProtocolManager implements IEarnProtocolManager {
       transactions.push(...allowanceTransaction)
     }
 
-    // TODO: validate that the given token is actually the token for this Fleet
-    const calldata = encodeFunctionData({
-      abi: this.IFleetCommanderABI,
-      functionName: 'deposit',
-      args: [params.amount.toBaseUnit(), params.user.wallet.address.value],
+    // Deposit
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.chainInfo,
+      address: params.fleetAddress,
     })
-    transactions.push({
-      transaction: {
-        target: params.fleetAddress,
-        calldata: calldata,
-        value: '0',
-      },
-      description:
-        'Deposit ' +
-        params.amount.toString() +
-        ' to Fleet at address: ' +
-        params.fleetAddress.value,
+
+    const fleetDepositTransaction = await fleetContract.deposit({
+      assets: params.amount,
+      receiver: params.user.wallet.address,
     })
+
+    transactions.push(fleetDepositTransaction)
 
     return transactions
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  /** @see IEarnProtocolManager.withdraw */
   async withdraw(params: {
     chainInfo: IChainInfo
     fleetAddress: IAddress
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
-    // TODO: validate that the given token is actually the token for this Fleet
-    const calldata = encodeFunctionData({
-      abi: this.IFleetCommanderABI,
-      functionName: 'withdraw',
-      args: [
-        params.amount.toBaseUnit(),
-        params.user.wallet.address.value,
-        params.user.wallet.address.value,
-      ],
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.chainInfo,
+      address: params.fleetAddress,
     })
 
-    return [
-      {
-        transaction: {
-          target: params.fleetAddress,
-          calldata: calldata,
-          value: '0',
-        },
-        description:
-          'Withdraw ' +
-          params.amount.toString() +
-          ' from Fleet at address: ' +
-          params.fleetAddress.value,
-      },
-    ]
+    const fleetWithdrawTransaction = await fleetContract.withdraw({
+      assets: params.amount,
+      receiver: params.user.wallet.address,
+      owner: params.user.wallet.address,
+    })
+
+    return [fleetWithdrawTransaction]
   }
 }

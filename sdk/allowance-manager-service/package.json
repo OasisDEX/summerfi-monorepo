@@ -21,7 +21,7 @@
   "dependencies": {
     "@summerfi/allowance-manager-common": "workspace:*",
     "@summerfi/common": "workspace:*",
-    "@summerfi/configuration-provider": "workspace:*",
+    "@summerfi/configuration-provider-common": "workspace:*",
     "@summerfi/contracts-provider-common": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "@types/node-fetch": "^2.6.11",

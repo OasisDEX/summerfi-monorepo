@@ -12,14 +12,15 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "build": "tsc -b",
+    "build": "tsc -b -v tsconfig.build.json",
     "test": "jest --setupFiles dotenv/config",
     "testw": "jest --setupFiles dotenv/config --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@summerfi/configuration-provider": "workspace:^",
+    "@summerfi/configuration-provider-common": "workspace:^",
+    "@summerfi/blockchain-client-common": "workspace:^",
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/serverless-shared": "workspace:^",
     "@types/node-fetch": "^2.6.11",

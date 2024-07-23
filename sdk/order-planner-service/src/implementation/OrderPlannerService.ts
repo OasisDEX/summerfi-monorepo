@@ -1,19 +1,20 @@
-import { OrderPlanner } from '@summerfi/order-planner-common/implementation'
+import { IAddressBookManager } from '@summerfi/address-book-common'
+import { IOrderPlannerService } from '@summerfi/order-planner-common/interfaces'
+import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
+import { Maybe } from '@summerfi/sdk-common/common'
 import { Order, type IPositionsManager } from '@summerfi/sdk-common/orders'
 import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { IUser } from '@summerfi/sdk-common/user'
-import { Maybe } from '@summerfi/sdk-common/common'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import { IOrderPlannerService } from '../interfaces/IOrderPlannerService'
 import { ActionBuildersConfig } from '../config/Config'
-import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
-import { IAddressBookManager } from '@summerfi/address-book-common'
+import { DMAOrderPlanner } from './planners'
 
+/** @see IOrderPlannerService */
 export class OrderPlannerService implements IOrderPlannerService {
-  readonly orderPlanner: OrderPlanner
+  readonly orderPlanner: DMAOrderPlanner
 
   constructor() {
-    this.orderPlanner = new OrderPlanner()
+    this.orderPlanner = new DMAOrderPlanner()
   }
 
   async buildOrder(params: {

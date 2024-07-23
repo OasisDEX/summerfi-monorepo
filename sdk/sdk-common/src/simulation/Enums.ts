@@ -7,6 +7,7 @@ export enum SimulationType {
   Migrate = 'Migrate',
   CreatePosition = 'CreatePosition',
   Refinance = 'Refinance',
+  EarnProtocol = 'EarnProtocol',
 }
 
 export enum SimulationSteps {

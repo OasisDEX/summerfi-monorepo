@@ -1,4 +1,4 @@
-import { IConfigurationProvider } from '@summerfi/configuration-provider'
+import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import { AllowanceManager } from './AllowanceManager'

@@ -24,6 +24,7 @@
   "dependencies": {
     "@summerfi/address-book-common": "workspace:*",
     "@summerfi/configuration-provider": "workspace:*",
+    "@summerfi/configuration-provider-common": "workspace:*",
     "@summerfi/deployment-types": "workspace:*",
     "@summerfi/deployment-utils": "workspace:*",
     "@summerfi/oracle-common": "workspace:*",

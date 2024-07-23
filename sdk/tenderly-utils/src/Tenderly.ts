@@ -1,4 +1,4 @@
-import { IConfigurationProvider } from '@summerfi/configuration-provider'
+import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IChainInfo } from '@summerfi/sdk-common'
 import { TenderlyFork } from './TenderlyFork'
 

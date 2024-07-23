@@ -1,15 +1,14 @@
 import { createPublicClient, defineChain, http, type Chain } from 'viem'
 import { arbitrum, base, mainnet, optimism } from 'viem/chains'
 
-import { IConfigurationProvider } from '@summerfi/configuration-provider'
+import { IBlockchainClient, IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
+import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import type { IChainInfo } from '@summerfi/sdk-common'
 import {
   IRpcConfig,
   getRpcGatewayEndpoint,
 } from '@summerfi/serverless-shared/getRpcGatewayEndpoint'
 import { assert } from 'console'
-import { IBlockchainClientProvider } from '../interfaces'
-import type { IBlockchainClient } from '../interfaces/IBlockchainClient'
 
 /**
  * RPC configuration for the RPC Gateway

@@ -1,10 +1,12 @@
+import { ISDKManager } from '../interfaces/ISDKManager'
 import { RPCMainClientType } from '../rpc/SDKMainClient'
 import { ChainsManagerClient } from './ChainsManager'
 import { PortfolioManager } from './PortfolioManager'
 import { UsersManager } from './UsersManager'
 import { SimulationManager } from './simulations/SimulationManager'
 
-export class SDKManager {
+/** @see ISDKManager */
+export class SDKManager implements ISDKManager {
   public readonly simulator: SimulationManager
   public readonly chains: ChainsManagerClient
   public readonly users: UsersManager

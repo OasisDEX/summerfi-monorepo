@@ -5,6 +5,9 @@
     "baseUrl": ".",
     "paths": {
       "@summerfi/order-planner-common/*": ["node_modules/@summerfi/order-planner-common/src/*"],
+      "@summerfi/order-planner-common": [
+        "node_modules/@summerfi/order-planner-common/src/index.ts"
+      ],
       "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
       "@summerfi/sdk-common": ["node_modules/@summerfi/sdk-common/src/index.ts"],
       "@summerfi/core-contracts": ["node_modules/@summerfi/core-contracts/src/index.ts"],

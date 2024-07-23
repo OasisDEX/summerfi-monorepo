@@ -1,9 +1,12 @@
+import {
+  ConfigItem,
+  ConfigKey,
+  IConfigurationProvider,
+} from '@summerfi/configuration-provider-common'
 import { Maybe } from '@summerfi/sdk-common/common'
 import TurboConfig from '../../../../turbo.json'
-import { IConfigurationProvider } from '../interfaces/IConfigurationProvider'
-import { ConfigItem } from '../types/ConfigItem'
-import { ConfigKey } from '../types/ConfigKey'
 
+/** @see IConfigurationProvider */
 export class ConfigurationProvider implements IConfigurationProvider {
   private readonly _config: Record<ConfigKey, ConfigItem> = {}
 

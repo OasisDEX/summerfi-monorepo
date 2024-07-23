@@ -1,11 +1,10 @@
-import { Order, type IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
+import { IAddressBookManager } from '@summerfi/address-book-common'
 import {
-  ISimulation,
-  SimulationSteps,
-  SimulationType,
-  steps,
-} from '@summerfi/sdk-common/simulation'
-import { Maybe } from '@summerfi/sdk-common/common'
+  IOrderPlanner,
+  OrderPlannerParams,
+  encodeStrategy,
+  generateStrategyName,
+} from '@summerfi/order-planner-common'
 import {
   ActionBuildersMap,
   ActionCall,
@@ -14,16 +13,29 @@ import {
   IStepBuilderContext,
   StepBuilderContext,
 } from '@summerfi/protocol-plugins-common'
-import { IOrderPlanner, OrderPlannerParams } from '../interfaces/IOrderPlanner'
-import { encodeStrategy } from '../utils/EncodeStrategy'
-import { generateStrategyName } from '../utils/GenerateStrategyName'
-import { IAddressBookManager } from '@summerfi/address-book-common'
 import { IUser } from '@summerfi/sdk-common'
+import { Maybe } from '@summerfi/sdk-common/common'
+import { Order, TransactionInfo, type IPositionsManager } from '@summerfi/sdk-common/orders'
+import {
+  ISimulation,
+  SimulationSteps,
+  SimulationType,
+  steps,
+} from '@summerfi/sdk-common/simulation'
 
-export class OrderPlanner implements IOrderPlanner {
+/**
+ * @name DMAOrderPlanner
+ * @description Order planner that generates transactions for the DMA system based on an input simulation
+ *
+ * @see IOrderPlanner
+ */
+export class DMAOrderPlanner implements IOrderPlanner {
   // TODO: receive it as parameter in the constructor
   private readonly ExecutorContractName = 'OperationExecutor'
 
+  /** PUBLIC */
+
+  /** @see IOrderPlanner.buildOrder */
   async buildOrder(params: OrderPlannerParams): Promise<Maybe<Order>> {
     const {
       user,
@@ -74,6 +86,13 @@ export class OrderPlanner implements IOrderPlanner {
       addressBookManager,
     })
   }
+
+  /** @see IOrderPlanner.getAcceptedSimulations */
+  async getAcceptedSimulations(): Promise<SimulationType[]> {
+    return [SimulationType.Refinance, SimulationType.ImportPosition]
+  }
+
+  /** PRIVATE */
 
   private _getActionBuilder<
     StepType extends SimulationSteps,

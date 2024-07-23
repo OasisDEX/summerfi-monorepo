@@ -1,4 +1,5 @@
-import { ConfigItem, ConfigKey, ConfigurationProvider } from '@summerfi/configuration-provider'
+import { ConfigurationProvider } from '@summerfi/configuration-provider'
+import { ConfigItem, ConfigKey } from '@summerfi/configuration-provider-common'
 import { Maybe } from '@summerfi/sdk-common'
 
 export class ConfigurationProviderMock extends ConfigurationProvider {

@@ -4,7 +4,7 @@ import {
   ContractAbiRecord,
   IAbiProvider,
 } from '@summerfi/abi-provider-common'
-import { IConfigurationProvider } from '@summerfi/configuration-provider'
+import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { erc20Abi, erc4626Abi } from 'viem'
 import IFleetCommanderABIJSON from '../../../../earn-protocol/abis/IFleetCommander.sol/IFleetCommander.json'
 

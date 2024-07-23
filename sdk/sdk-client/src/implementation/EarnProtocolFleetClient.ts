@@ -18,7 +18,7 @@ export class EarnProtocolFleetClient extends EarnProtocolFleet implements IEarnP
 
   /** @see IEarnProtocolFleetClient */
   public async deposit(params: { user: IUser; amount: ITokenAmount }): Promise<TransactionInfo[]> {
-    return this.rpcClient.earnProtocol.deposit.query({
+    return this.rpcClient.earn.deposit.query({
       chainInfo: this.chainInfo,
       fleetAddress: this.address,
       user: params.user,
@@ -28,7 +28,7 @@ export class EarnProtocolFleetClient extends EarnProtocolFleet implements IEarnP
 
   /** @see IEarnProtocolFleetClient */
   public async withdraw(params: { user: IUser; amount: ITokenAmount }): Promise<TransactionInfo[]> {
-    return this.rpcClient.earnProtocol.withdraw.query({
+    return this.rpcClient.earn.withdraw.query({
       chainInfo: this.chainInfo,
       fleetAddress: this.address,
       user: params.user,

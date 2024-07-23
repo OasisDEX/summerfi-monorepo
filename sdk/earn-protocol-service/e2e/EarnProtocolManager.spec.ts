@@ -1,15 +1,17 @@
+import { IAllowanceManager } from '@summerfi/allowance-manager-common'
+import { BlockchainClientProvider } from '@summerfi/blockchain-client-provider'
 import { ConfigurationProvider } from '@summerfi/configuration-provider'
+import { ContractsProvider } from '@summerfi/contracts-provider-service'
 import { Address, ChainFamilyMap, ChainInfo, IUser, Token, TokenAmount } from '@summerfi/sdk-common'
 import { UserMock } from '@summerfi/testing-utils/mocks/UserMock'
 import {
   decodeFleetDepositCalldata,
   decodeFleetWithdrawCalldata,
 } from '@summerfi/testing-utils/utils/EarnProtocolDecoding'
-import type { AllowanceManager } from '../../allowance-manager-service/src'
 import { EarnProtocolManager, EarnProtocolManagerFactory } from '../src'
 
 describe('Earn Protocol Service', () => {
-  const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
+  const chainInfo: ChainInfo = ChainFamilyMap.Base.Mainnet
 
   const user: IUser = new UserMock({
     chainInfo: chainInfo,
@@ -19,7 +21,7 @@ describe('Earn Protocol Service', () => {
   })
 
   const fleetAddress = Address.createFromEthereum({
-    value: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+    value: '0xa09E82322f351154a155f9e0f9e6ddbc8791C794', // FleetCommander on Base
   })
 
   const DAI = Token.createFrom({
@@ -39,12 +41,21 @@ describe('Earn Protocol Service', () => {
 
   beforeEach(() => {
     const configProvider = new ConfigurationProvider()
+    const blockchainClientProvider = new BlockchainClientProvider({
+      configProvider,
+    })
+    const contractsProvider = new ContractsProvider({
+      configProvider,
+      blockchainClientProvider,
+    })
+
     const allowanceManager = {
       getAllowance: jest.fn().mockReturnValue([]),
-    } as unknown as AllowanceManager
+    } as unknown as IAllowanceManager
     earnProtocolManager = EarnProtocolManagerFactory.newEarnProtocolManager({
       configProvider,
       allowanceManager,
+      contractsProvider,
     })
   })
 

@@ -1,10 +1,10 @@
+import { IAddressBookManager } from '@summerfi/address-book-common'
+import { ActionBuildersMap, IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
+import { Maybe } from '@summerfi/sdk-common/common'
 import { Order, type IPositionsManager } from '@summerfi/sdk-common/orders'
 import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import { Maybe } from '@summerfi/sdk-common/common'
 import { IUser } from '@summerfi/sdk-common/user'
-import { ActionBuildersMap, IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
-import { IAddressBookManager } from '@summerfi/address-book-common'
+import { ISwapManager } from '@summerfi/swap-common/interfaces'
 
 /**
  * Type for the parameters to build an order
@@ -37,4 +37,9 @@ export interface IOrderPlanner {
    * @see OrderPlannerParams
    */
   buildOrder(params: OrderPlannerParams): Promise<Maybe<Order>>
+
+  /**
+   * Get the list of accepted simulations for the order planner
+   */
+  getAcceptedSimulations(): Promise<SimulationType[]>
 }

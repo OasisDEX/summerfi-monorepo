@@ -1322,9 +1322,9 @@ importers:
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
-      '@summerfi/configuration-provider':
+      '@summerfi/configuration-provider-common':
         specifier: workspace:*
-        version: link:../configuration-provider
+        version: link:../configuration-provider-common
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -1372,9 +1372,9 @@ importers:
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
-      '@summerfi/configuration-provider':
+      '@summerfi/configuration-provider-common':
         specifier: workspace:*
-        version: link:../configuration-provider
+        version: link:../configuration-provider-common
       '@summerfi/core-contracts':
         specifier: workspace:*
         version: link:../../packages/core-contracts
@@ -1419,9 +1419,9 @@ importers:
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
-      '@summerfi/configuration-provider':
+      '@summerfi/configuration-provider-common':
         specifier: workspace:*
-        version: link:../configuration-provider
+        version: link:../configuration-provider-common
       '@summerfi/contracts-provider-common':
         specifier: workspace:*
         version: link:../contracts-provider-common
@@ -1454,11 +1454,30 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
+  sdk/blockchain-client-common:
+    dependencies:
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../sdk-common
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+
   sdk/blockchain-client-provider:
     dependencies:
-      '@summerfi/configuration-provider':
+      '@summerfi/blockchain-client-common':
         specifier: workspace:^
-        version: link:../configuration-provider
+        version: link:../blockchain-client-common
+      '@summerfi/configuration-provider-common':
+        specifier: workspace:^
+        version: link:../configuration-provider-common
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -1483,6 +1502,31 @@ importers:
         version: link:../../packages/typescript-config
 
   sdk/configuration-provider:
+    dependencies:
+      '@summerfi/configuration-provider-common':
+        specifier: workspace:*
+        version: link:../configuration-provider-common
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../sdk-common
+      '@types/node-fetch':
+        specifier: ^2.6.11
+        version: 2.6.11
+      node-fetch:
+        specifier: ^2.7.0
+        version: 2.7.0
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+
+  sdk/configuration-provider-common:
     dependencies:
       '@summerfi/sdk-common':
         specifier: workspace:*
@@ -1509,9 +1553,9 @@ importers:
       '@summerfi/abi-provider-common':
         specifier: workspace:*
         version: link:../abi-provider-common
-      '@summerfi/blockchain-client-provider':
+      '@summerfi/blockchain-client-common':
         specifier: workspace:*
-        version: link:../blockchain-client-provider
+        version: link:../blockchain-client-common
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -1531,15 +1575,15 @@ importers:
       '@summerfi/abi-provider-common':
         specifier: workspace:*
         version: link:../abi-provider-common
-      '@summerfi/blockchain-client-provider':
+      '@summerfi/blockchain-client-common':
         specifier: workspace:*
-        version: link:../blockchain-client-provider
+        version: link:../blockchain-client-common
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
-      '@summerfi/configuration-provider':
+      '@summerfi/configuration-provider-common':
         specifier: workspace:*
-        version: link:../configuration-provider
+        version: link:../configuration-provider-common
       '@summerfi/contracts-provider-common':
         specifier: workspace:*
         version: link:../contracts-provider-common
@@ -1596,9 +1640,12 @@ importers:
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
-      '@summerfi/configuration-provider':
+      '@summerfi/configuration-provider-common':
         specifier: workspace:*
-        version: link:../configuration-provider
+        version: link:../configuration-provider-common
+      '@summerfi/contracts-provider-common':
+        specifier: workspace:*
+        version: link:../contracts-provider-common
       '@summerfi/earn-protocol-common':
         specifier: workspace:*
         version: link:../earn-protocol-common
@@ -1655,9 +1702,9 @@ importers:
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
-      '@summerfi/configuration-provider':
+      '@summerfi/configuration-provider-common':
         specifier: workspace:*
-        version: link:../configuration-provider
+        version: link:../configuration-provider-common
       '@summerfi/oracle-common':
         specifier: workspace:*
         version: link:../oracle-common
@@ -1886,9 +1933,9 @@ importers:
       '@summerfi/address-book-common':
         specifier: workspace:*
         version: link:../address-book-common
-      '@summerfi/blockchain-client-provider':
+      '@summerfi/blockchain-client-common':
         specifier: workspace:*
-        version: link:../blockchain-client-provider
+        version: link:../blockchain-client-common
       '@summerfi/deployment-types':
         specifier: workspace:*
         version: link:../../packages/deployment-types
@@ -2127,6 +2174,9 @@ importers:
       '@summerfi/allowance-manager-service':
         specifier: workspace:*
         version: link:../allowance-manager-service
+      '@summerfi/blockchain-client-common':
+        specifier: workspace:*
+        version: link:../blockchain-client-common
       '@summerfi/blockchain-client-provider':
         specifier: workspace:*
         version: link:../blockchain-client-provider
@@ -2136,6 +2186,9 @@ importers:
       '@summerfi/configuration-provider':
         specifier: workspace:*
         version: link:../configuration-provider
+      '@summerfi/configuration-provider-common':
+        specifier: workspace:*
+        version: link:../configuration-provider-common
       '@summerfi/contracts-provider-common':
         specifier: workspace:*
         version: link:../contracts-provider-common
@@ -2181,6 +2234,9 @@ importers:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
+      '@summerfi/sdk-server-common':
+        specifier: workspace:*
+        version: link:../sdk-server-common
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared
@@ -2221,9 +2277,9 @@ importers:
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
-      '@summerfi/configuration-provider':
+      '@summerfi/configuration-provider-common':
         specifier: workspace:*
-        version: link:../configuration-provider
+        version: link:../configuration-provider-common
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -2240,6 +2296,9 @@ importers:
 
   sdk/simulator-service:
     dependencies:
+      '@summerfi/earn-protocol-common':
+        specifier: workspace:*
+        version: link:../earn-protocol-common
       '@summerfi/oracle-common':
         specifier: workspace:*
         version: link:../oracle-common
@@ -2305,9 +2364,9 @@ importers:
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
-      '@summerfi/configuration-provider':
+      '@summerfi/configuration-provider-common':
         specifier: workspace:*
-        version: link:../configuration-provider
+        version: link:../configuration-provider-common
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -2339,9 +2398,9 @@ importers:
       '@inquirer/prompts':
         specifier: ^4.3.3
         version: 4.3.3
-      '@summerfi/configuration-provider':
+      '@summerfi/configuration-provider-common':
         specifier: workspace:*
-        version: link:../configuration-provider
+        version: link:../configuration-provider-common
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -2382,6 +2441,9 @@ importers:
       '@summerfi/configuration-provider':
         specifier: workspace:*
         version: link:../configuration-provider
+      '@summerfi/configuration-provider-common':
+        specifier: workspace:*
+        version: link:../configuration-provider-common
       '@summerfi/deployment-types':
         specifier: workspace:*
         version: link:../../packages/deployment-types
@@ -2453,9 +2515,9 @@ importers:
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
-      '@summerfi/configuration-provider':
+      '@summerfi/configuration-provider-common':
         specifier: workspace:*
-        version: link:../configuration-provider
+        version: link:../configuration-provider-common
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common

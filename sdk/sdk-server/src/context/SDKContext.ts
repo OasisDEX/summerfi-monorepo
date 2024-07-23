@@ -6,14 +6,16 @@ import { AddressBookManagerFactory } from '@summerfi/address-book-service'
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import { AllowanceManagerFactory } from '@summerfi/allowance-manager-service'
 import { BlockchainClientProvider } from '@summerfi/blockchain-client-provider'
-import { ConfigurationProvider, IConfigurationProvider } from '@summerfi/configuration-provider'
+import { ConfigurationProvider } from '@summerfi/configuration-provider'
+import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import { ContractsProviderFactory } from '@summerfi/contracts-provider-service'
 import type { IEarnProtocolManager } from '@summerfi/earn-protocol-common'
 import { EarnProtocolManagerFactory } from '@summerfi/earn-protocol-service'
 import { IOracleManager } from '@summerfi/oracle-common'
 import { OracleManagerFactory } from '@summerfi/oracle-service'
-import { IOrderPlannerService, OrderPlannerService } from '@summerfi/order-planner-service'
+import { IOrderPlannerService } from '@summerfi/order-planner-common'
+import { OrderPlannerService } from '@summerfi/order-planner-service'
 import { IProtocolManager } from '@summerfi/protocol-manager-common'
 import { ProtocolManager } from '@summerfi/protocol-manager-service'
 import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
@@ -73,6 +75,7 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
   const earnProtocolManager = EarnProtocolManagerFactory.newEarnProtocolManager({
     configProvider,
     allowanceManager,
+    contractsProvider,
   })
 
   return {
