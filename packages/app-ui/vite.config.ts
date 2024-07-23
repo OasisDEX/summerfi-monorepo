@@ -12,6 +12,8 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 import dts from 'vite-plugin-dts'
 // preserves directives like "use client" in the output
 import preserveDirectives from 'rollup-preserve-directives'
+// compresses svgs (around 40-50% reduction with no build time increase)
+import svgo from 'vite-plugin-svgo'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -43,6 +45,7 @@ export default defineConfig({
       },
     },
     dts({ outDir: 'dist/types', insertTypesEntry: true, strictOutput: true, copyDtsFiles: true }),
+    svgo(),
   ],
   css: {
     preprocessorOptions: {
