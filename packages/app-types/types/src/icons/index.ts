@@ -169,6 +169,7 @@ export type IconNamesList =
   | 'zerox'
   | 'zerox_circle_color'
   | 'zerox_color'
+  | 'bsdeth_circle_color'
   // automation icons
   | 'autoBuy'
   | 'autoSell'
@@ -290,6 +291,7 @@ export type TokenSymbolsList =
   | 'AERO'
   | 'PRIME'
   | 'UNIV2'
+  | 'BSDETH'
   // deprecated ones
   | 'UNIV2WBTCETH'
   | 'UNIV2LINKETH'
