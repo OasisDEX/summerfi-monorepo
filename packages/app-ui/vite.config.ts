@@ -1,8 +1,8 @@
-import react from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react-swc'
 import { glob } from 'glob'
 import { fileURLToPath } from 'node:url'
 import { extname, relative, resolve } from 'path'
-import { defineConfig } from 'vite'
+import { defineConfig, createLogger } from 'vite'
 
 // injects the css import at top of the components
 import { libInjectCss } from 'vite-plugin-lib-inject-css'
@@ -14,6 +14,14 @@ import dts from 'vite-plugin-dts'
 import preserveDirectives from 'rollup-preserve-directives'
 // compresses svgs (around 40-50% reduction with no build time increase)
 import svgo from 'vite-plugin-svgo'
+
+const logger = createLogger()
+const loggerInfo = logger.info
+
+logger.info = (msg, options) => {
+  if (msg.includes('dist')) return
+  loggerInfo(msg, options)
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -44,7 +52,12 @@ export default defineConfig({
         }
       },
     },
-    dts({ outDir: 'dist/types', insertTypesEntry: true, strictOutput: true, copyDtsFiles: true }),
+    dts({
+      outDir: 'dist/types',
+      insertTypesEntry: true,
+      strictOutput: true,
+      copyDtsFiles: true,
+    }),
     svgo(),
   ],
   css: {
@@ -63,10 +76,15 @@ export default defineConfig({
       },
     },
   },
-
+  customLogger: logger,
+  experimental: {
+    skipSsrTransform: true,
+  },
   build: {
-    emptyOutDir: false,
+    emptyOutDir: true,
     cssCodeSplit: true,
+    sourcemap: false,
+    cssMinify: false,
     lib: {
       // eslint-disable-next-line no-undef
       entry: resolve(__dirname, 'src/index.ts'),
