@@ -8,16 +8,16 @@ import {
 } from '@summerfi/app-types'
 import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash'
-import { type getTranslations } from 'next-intl/server'
 
 import { networksByName } from '@/constants/networks-list-ssr'
 import { formatDecimalAsPercent, zero } from '@/helpers/formatters'
 import { getGenericPositionUrl } from '@/helpers/get-generic-position-url'
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
+import { type tNavType } from '@/messages/types'
 
 export function mapFeaturedEarnProduct(
   items: ProductHubItem[],
-  tNav: Awaited<ReturnType<typeof getTranslations<'nav'>>>,
+  tNav: tNavType,
 ): NavigationMenuPanelListItem[] {
   return items.map((item) => {
     const {

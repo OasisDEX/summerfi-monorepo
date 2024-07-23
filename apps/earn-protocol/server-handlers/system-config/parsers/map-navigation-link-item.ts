@@ -5,9 +5,9 @@ import {
   type ProductHubData,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
-import { type getTranslations } from 'next-intl/server'
 
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
+import { type tNavType } from '@/messages/types'
 import { filterFeaturedProducts } from '@/server-handlers/system-config/parsers/filter-featured-products'
 import { mapFeaturedEarnProduct } from '@/server-handlers/system-config/parsers/map-featured-earn-product'
 import { mapFeaturedMultiplyProduct } from '@/server-handlers/system-config/parsers/map-featured-multiply-product'
@@ -18,7 +18,7 @@ import { mapTopTokens } from '@/server-handlers/system-config/parsers/map-top-to
 interface MapNavigationLinkItemParams {
   items: NavigationLinkTypes[]
   productHub: ProductHubData
-  tNav: Awaited<ReturnType<typeof getTranslations<'nav'>>>
+  tNav: tNavType
 }
 
 export function mapNavigationLinkItem({

@@ -16,7 +16,7 @@ import { type NetworkNames, networksByName } from '@/constants/networks-list'
 import { type LendingProtocolConfig } from '@/helpers/lending-protocols-configs'
 import { trackButtonClick } from '@/helpers/mixpanel'
 
-import productCardStyles from '@/components/molecules/ProductCard/ProductCard.module.scss'
+import raysProductCardStyles from '@/components/molecules/RaysProductCard/RaysProductCard.module.scss'
 
 interface AutomationItem {
   tooltip: string
@@ -52,7 +52,7 @@ const automationItemsMapper = {
   },
 } as { [key in AutomationFeature]: AutomationItem }
 
-interface ProductCardProps {
+interface RaysProductCardProps {
   title?: string
   automation: AutomationFeature[]
   tokens: TokenSymbolsList[]
@@ -67,7 +67,7 @@ interface ProductCardProps {
   }
 }
 
-export const ProductCard: FC<ProductCardProps> = ({
+export const RaysProductCard: FC<RaysProductCardProps> = ({
   title,
   automation,
   tokens,
@@ -79,12 +79,12 @@ export const ProductCard: FC<ProductCardProps> = ({
   btn,
 }) => {
   return (
-    <Card className={productCardStyles.cardWrapper}>
-      <div className={productCardStyles.content}>
-        <div className={productCardStyles.headingWrapper}>
-          <div className={productCardStyles.generalInfoWrapper}>
+    <Card className={raysProductCardStyles.cardWrapper}>
+      <div className={raysProductCardStyles.content}>
+        <div className={raysProductCardStyles.headingWrapper}>
+          <div className={raysProductCardStyles.generalInfoWrapper}>
             <TokensGroup tokens={tokens} />
-            <div className={productCardStyles.groupWrapper}>
+            <div className={raysProductCardStyles.groupWrapper}>
               <Text as="h5" variant="h5">
                 {title ?? tokens.join('/')}
               </Text>
@@ -100,10 +100,10 @@ export const ProductCard: FC<ProductCardProps> = ({
               />
             </div>
           </div>
-          <div className={productCardStyles.automationWrapper}>
+          <div className={raysProductCardStyles.automationWrapper}>
             {automation.map((item) => (
               <div
-                className={productCardStyles.automationItem}
+                className={raysProductCardStyles.automationItem}
                 key={automationItemsMapper[item].label}
               >
                 <AutomationIcon
@@ -123,14 +123,14 @@ export const ProductCard: FC<ProductCardProps> = ({
           legacyBehavior
           prefetch={false}
           href={btn.link}
-          className={productCardStyles.link}
+          className={raysProductCardStyles.link}
         >
           <ProxyLinkComponent target="_blank">
             <Button
               variant="colorful"
               onClick={() => {
                 trackButtonClick({
-                  id: 'ProductCardAction',
+                  id: 'RaysProductCardAction',
                   page: currentPath,
                   userAddress,
                   strategy: title ?? tokens.join('/'),

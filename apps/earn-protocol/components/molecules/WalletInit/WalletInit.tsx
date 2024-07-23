@@ -10,8 +10,11 @@ import trezorModule from '@web3-onboard/trezor'
 import wagmi from '@web3-onboard/wagmi'
 import walletConnectModule from '@web3-onboard/walletconnect'
 
+import { forksCookieName } from '@/constants/forks-cookie-name'
+import { getCookies } from '@/constants/get-cookies'
 import { type NetworkConfig, networksList } from '@/constants/networks-list'
 import { networksList as ssrNetworksList } from '@/constants/networks-list-ssr'
+import { safeParseJson } from '@/constants/safe-parse-json'
 import { getLocalAppConfig } from '@/helpers/access-config-context'
 import { isSSR } from '@/helpers/is-ssr'
 
@@ -21,6 +24,7 @@ const getChains = () => {
   const resolvedNetworksList = isSSR() ? ssrNetworksList : networksList
 
   return resolvedNetworksList.map((network: NetworkConfig) => {
+    const forkCookie = safeParseJson(getCookies(forksCookieName))[network.id]
     const localWalletRpcConfig = {
       // copied from the oazo-configuration
       // needs some base url before the config loads
@@ -28,6 +32,16 @@ const getChains = () => {
       8453: 'https://mainnet.base.org/', // Base
       10: 'https://mainnet.optimism.io/', // Optimism
       42161: 'https://arb1.arbitrum.io/rpc', // Arbitrum
+    }
+
+    if (forkCookie) {
+      return {
+        id: network.hexId,
+        label: network.label,
+        token: network.token,
+        color: network.color,
+        rpcUrl: forkCookie,
+      }
     }
 
     return {

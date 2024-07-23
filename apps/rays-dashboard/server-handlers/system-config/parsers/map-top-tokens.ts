@@ -2,16 +2,16 @@
 import { type NavigationMenuPanelListItem, type ProductHubItem } from '@summerfi/app-types'
 import { INTERNAL_LINKS } from '@summerfi/app-ui'
 import BigNumber from 'bignumber.js'
-import { type getTranslations } from 'next-intl/server'
 
 import { formatDecimalAsPercent } from '@/helpers/formatters'
+import { type tNavType } from '@/messages/types'
 
 const zero = new BigNumber(0)
 
 export function mapTopTokens(
   token: string,
   rows: ProductHubItem[],
-  tNav: Awaited<ReturnType<typeof getTranslations<'nav'>>>,
+  tNav: tNavType,
 ): NavigationMenuPanelListItem[] {
   const tokenRows = rows.filter(
     ({ primaryToken }) => primaryToken.toUpperCase() === token.toUpperCase(),
