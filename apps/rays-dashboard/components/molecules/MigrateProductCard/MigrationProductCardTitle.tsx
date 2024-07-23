@@ -59,6 +59,7 @@ export const MigrateProductCardTitle = ({
               </Text>
             </div>
           }
+          tooltipWrapperStyles={{ minWidth: '130px' }}
         >
           <BlockLabel label={`${formatRaysPoints(totalPoints)} RAYS`} variant="colorful" />
         </Tooltip>

@@ -1,5 +1,6 @@
 import { type PortfolioMigrations, type TokenSymbolsList } from '@summerfi/app-types'
-import { Text, TokensGroup } from '@summerfi/app-ui'
+import { Text, TokensGroup, Tooltip } from '@summerfi/app-ui'
+import { IconHelpCircle } from '@tabler/icons-react'
 import BigNumber from 'bignumber.js'
 
 import { formatAsShorthandNumbers } from '@/helpers/formatters'
@@ -31,9 +32,24 @@ export const MigrateProductCardPositionInfo = ({
       <TokensGroup tokens={[tokens[0]]} />
     </div>
     <div>
-      <Text variant="p4semi" className={migrateProductCardStyles.heading}>
-        Balance of Supplied
-      </Text>
+      <Tooltip
+        tooltip={
+          <Text as="span" variant="p4">
+            The total amount of your supplied asset(s), expressed in{' '}
+            {migration.collateralAsset.symbol}.
+          </Text>
+        }
+        tooltipWrapperStyles={{ minWidth: '200px' }}
+      >
+        <Text variant="p4semi" className={migrateProductCardStyles.heading}>
+          Balance of Supplied
+        </Text>
+        <IconHelpCircle
+          size={14}
+          strokeWidth={2}
+          style={{ marginTop: '3px', marginLeft: '5px', stroke: 'var(--color-neutral-80)' }}
+        />
+      </Tooltip>
       <Text variant="p1semi">{getMigrationTokenValue(migration.collateralAsset)}</Text>
     </div>
     <div>
@@ -43,9 +59,23 @@ export const MigrateProductCardPositionInfo = ({
       <TokensGroup tokens={[tokens[1]]} />
     </div>
     <div>
-      <Text variant="p4semi" className={migrateProductCardStyles.heading}>
-        Balance of Borrowed
-      </Text>
+      <Tooltip
+        tooltip={
+          <Text as="span" variant="p4">
+            The total amount of your borrowed asset(s), expressed in {migration.debtAsset.symbol}.
+          </Text>
+        }
+        tooltipWrapperStyles={{ minWidth: '200px' }}
+      >
+        <Text variant="p4semi" className={migrateProductCardStyles.heading}>
+          Balance of Borrowed
+        </Text>
+        <IconHelpCircle
+          size={14}
+          strokeWidth={2}
+          style={{ marginTop: '3px', marginLeft: '5px', stroke: 'var(--color-neutral-80)' }}
+        />
+      </Tooltip>
       <Text variant="p1semi">{getMigrationTokenValue(migration.debtAsset)}</Text>
     </div>
   </div>
