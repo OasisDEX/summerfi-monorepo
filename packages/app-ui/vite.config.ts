@@ -19,7 +19,7 @@ const logger = createLogger()
 const loggerInfo = logger.info
 
 logger.info = (msg, options) => {
-  // if (msg.includes('dist')) return
+  if (msg.includes('dist')) return
   loggerInfo(msg, options)
 }
 
