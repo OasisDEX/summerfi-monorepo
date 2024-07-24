@@ -83,6 +83,8 @@ export class SummerPointsService {
   private NET_VALUE_CAP = 10000000
   private START_POINTS_TIMESTAMP
 
+  private ETH_TOKEN_BONANZA_END = 1722470399
+
   /**
    * Creates an instance of SummerPointsService.
    * @param clients - An array of clients for fetching data from the summer points subgraph.
@@ -285,6 +287,8 @@ export class SummerPointsService {
         const migrationPoints = this.getMigrationPoints(position.migration)
         const swapPoints = swapMultiplier * this.getSwapPoints(position.recentSwaps)
 
+        const ethTokenMultiplier = this.ethTokenPositionMultiplier(position)
+
         const timeOpenMultiplier = this.getTimeOpenMultiplier(position, endTimestamp)
         const automationProtectionMultiplier = this.getAutomationProtectionMultiplier(position)
         const lazyVaultMultiplier = this.getLazyVaultMultiplier(position)
@@ -292,7 +296,8 @@ export class SummerPointsService {
           protocolBoostMultiplier *
           timeOpenMultiplier *
           automationProtectionMultiplier *
-          lazyVaultMultiplier
+          lazyVaultMultiplier *
+          ethTokenMultiplier
 
         return {
           vaultId: position.account.vaultId,
@@ -441,6 +446,24 @@ export class SummerPointsService {
     }
 
     return migrationPoints
+  }
+
+  ethTokenPositionMultiplier(position: Position): number {
+    let multiplier = 1
+    if (Date.now() / 1000 > this.ETH_TOKEN_BONANZA_END) {
+      return multiplier
+    }
+    if (position.debtToken && position.debtToken.symbol.toLowerCase().includes('eth')) {
+      multiplier = 2
+    } else if (
+      position.collateralToken &&
+      position.collateralToken.symbol.toLowerCase().includes('eth')
+    ) {
+      multiplier = 2
+    } else if (position.supplyToken && position.supplyToken.symbol.toLowerCase().includes('weth')) {
+      multiplier = 2
+    }
+    return multiplier
   }
 
   /**
