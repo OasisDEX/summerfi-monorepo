@@ -1341,6 +1341,11 @@ type Position {
   protocol: String!
   marketId: String!
   positionType: String
+
+  debtToken: Token
+  collateralToken: Token
+  supplyToken: Token
+
   cumulativeDepositedUSD: BigDecimal!
   cumulativeWithdrawnUSD: BigDecimal!
   cumulativeDeltaUSD: BigDecimal!
