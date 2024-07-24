@@ -1,5 +1,5 @@
 <svg width="30" height="30" viewBox="1 1 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <g clipPath="url(#clip0_14423_2371)">
+  <g clip-path="url(#clip0_14423_2371)">
     <path fill-rule="evenodd" clip-rule="evenodd"
       d="M16.0003 4H15.9997C9.37248 4 4 9.37248 4 15.9998V16.0003C4 22.6276 9.37247 28 15.9997 28H16.0003C22.6275 28 28 22.6276 28 16.0003V15.9998C28 9.37248 22.6275 4 16.0003 4ZM15.9997 3H16.0003C23.1798 3 29 8.82019 29 15.9998V16.0003C29 23.1799 23.1798 29 16.0003 29H15.9997C8.82019 29 3 23.1799 3 16.0003V15.9998C3 8.82019 8.82019 3 15.9997 3Z"
       fill="url(#paint0_linear_14423_2371)" />
@@ -26,8 +26,8 @@
       <stop stop-color="#F4F4F4" />
       <stop offset="1" stop-color="#BEBEBE" />
     </linearGradient>
-    <clipPath id="clip0_14423_2371">
+    <clip-path id="clip0_14423_2371">
       <rect width="26" height="26" fill="white" transform="translate(3 3)" />
-    </clipPath>
+    </clip-path>
   </defs>
 </svg>

@@ -1,5 +1,5 @@
 <svg width="1046" height="1046" viewBox="0 0 1046 1046" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <g clipPath="url(#F)" transform="matrix(.846154 0 0 .846154 80.461538 80.461538)">
+  <g clip-path="url(#F)" transform="matrix(.846154 0 0 .846154 80.461538 80.461538)">
     <circle cx="523.2" cy="523.2" r="523.2" fill="#1b1713" key="iaKb-yguo" />
     <path
       d="M476.264 918.644l-271.5-315.8c-5.1-5.9 1.8-14.5 8.7-10.7l182.6 99.1c8.6 4.7 15.3 12.3 18.7 21.5l73.5 199c2.6 7.2-6.9 12.9-12 6.9z"
@@ -38,9 +38,9 @@
       <stop stop-color="#f78e1e" key="JtYNcS1ItJ" />
       <stop offset="1" stop-color="#f2a529" key="AxSiY5gOrH" />
     </linearGradient>
-    <clipPath id="F" key="F">
+    <clip-path id="F" key="F">
       <rect width="1046" height="1046" rx="97" fill="#fff" key="q0LVuFQKyT1" />
-    </clipPath>
+    </clip-path>
     <linearGradient id="G" gradientUnits="userSpaceOnUse" key="728nYxSNNbO" />
   </defs>
 </svg>

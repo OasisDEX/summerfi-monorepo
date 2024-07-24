@@ -14,8 +14,8 @@
   </g>
   <defs>
     <filter id="filter0_d_2726_31734" key="filter0_d_2726_31734" x="12.3903" y="12.3906" width="23.6097"
-      height="23.6094" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-      <feFlood floodOpacity="0" result="BackgroundImageFix" key="yYkPTcUdWF" />
+      height="23.6094" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix" key="yYkPTcUdWF" />
       <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
         result="hardAlpha" key="3JZfaKbUFS" />
       <feOffset key="wr8oswtPTf" />

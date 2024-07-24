@@ -106,8 +106,8 @@
       <stop stop-color="#DF3600" />
       <stop offset="1" stop-color="#DF3600" stop-opacity="0" />
     </linearGradient>
-    <clipPath id="clip0_10423_103308">
+    <clip-path id="clip0_10423_103308">
       <rect width="600" height="600" fill="white" />
-    </clipPath>
+    </clip-path>
   </defs>
 </svg>

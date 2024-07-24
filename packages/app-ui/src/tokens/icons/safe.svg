@@ -1,5 +1,5 @@
 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <g clipPath="url(#clip0_15087_4297)">
+  <g clip-path="url(#clip0_15087_4297)">
     <circle cx="16" cy="16" r="13" fill="url(#paint0_linear_15087_4297)" />
     <path
       d="M12 8C11.4477 8 11 8.44772 11 9V10.2C11 10.6418 10.6418 11 10.2 11H9C8.44772 11 8 11.4477 8 12V15C8 15.5523 8.44772 16 9 16H11C11.5523 16 12 15.5523 12 15V12.8C12 12.3582 12.3582 12 12.8 12H19C19.5523 12 20 11.5523 20 11V9C20 8.44772 19.5523 8 19 8H12Z"
@@ -19,8 +19,8 @@
       <stop offset="0.69" stop-color="#48E7D9" />
       <stop offset="0.87" stop-color="#5FDDFF" />
     </linearGradient>
-    <clipPath id="clip0_15087_4297">
+    <clip-path id="clip0_15087_4297">
       <rect width="26" height="26" fill="white" transform="translate(3 3)" />
-    </clipPath>
+    </clip-path>
   </defs>
 </svg>

@@ -1,5 +1,5 @@
 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <g clipPath="url(#clip0_13483_663)">
+  <g clip-path="url(#clip0_13483_663)">
     <path
       d="M16 29C23.1797 29 29 23.1797 29 16C29 8.8203 23.1797 3 16 3C8.8203 3 3 8.8203 3 16C3 23.1797 8.8203 29 16 29Z"
       fill="url(#paint0_linear_13483_663)" key="1sBBuwAz8" />
@@ -13,8 +13,8 @@
       <stop stop-color="#4CAF50" key="wMlEaQQMB3" />
       <stop offset="1" stop-color="#8BC34A" key="R1IXgWdGbm" />
     </linearGradient>
-    <clipPath id="clip0_13483_663" key="clip0_13483_663">
+    <clip-path id="clip0_13483_663" key="clip0_13483_663">
       <rect width="26" height="26" fill="white" transform="translate(3 3)" key="I-oGwQZCFF" />
-    </clipPath>
+    </clip-path>
   </defs>
 </svg>

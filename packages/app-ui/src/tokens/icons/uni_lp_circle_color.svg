@@ -14,8 +14,8 @@
     <stop offset="1" stop-color="#FF80BC" key="lHoSvBeVSA" />
   </linearGradient>
   <filter id="uni_lp_filter_1" key="uni_lp_filter_1" x="12.3901" y="12.3906" width="23.6099" height="23.6094"
-    filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-    <feFlood floodOpacity="0" result="BackgroundImageFix" key="b85YtfPj-i" />
+    filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+    <feFlood flood-opacity="0" result="BackgroundImageFix" key="b85YtfPj-i" />
     <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"
       key="l7GnIvOxe2" />
     <feOffset />

@@ -1,12 +1,14 @@
 // please do not export * from this file, unless its just types
 export { GlobalStyles } from './GlobalStyles'
 
+export { AllIconsList } from './components/atoms/Icon/AllIconsList'
 export { Button } from './components/atoms/Button/Button'
 export { Card } from './components/atoms/Card/Card'
 export { Divider } from './components/atoms/Divider/Divider'
 export { GenericTokenIcon } from './components/atoms/GenericTokenIcon/GenericTokenIcon'
 export { Icon } from './components/atoms/Icon/Icon'
 export { Input } from './components/atoms/Input/Input'
+export { Modal } from './components/atoms/Modal/Modal'
 export { Pill } from './components/atoms/Pill/Pill'
 export { ProxyLinkComponent } from './components/atoms/ProxyLinkComponent/ProxyLinkComponent'
 export { RadioButton } from './components/atoms/RadioButton/RadioButton'
@@ -14,7 +16,6 @@ export { Select } from './components/atoms/Select/Select'
 export { SkeletonLine } from './components/atoms/SkeletonLine/SkeletonLine'
 export { Text } from './components/atoms/Text/Text'
 export { WithArrow } from './components/atoms/WithArrow/WithArrow'
-export { Modal } from './components/atoms/Modal/Modal'
 
 export { AutomationIcon } from './components/molecules/AutomationIcon/AutomationIcon'
 export { BannerCard } from './components/molecules/BannerCard/BannerCard'

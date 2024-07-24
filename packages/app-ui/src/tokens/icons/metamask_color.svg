@@ -1,5 +1,5 @@
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <g clipPath="url(#clip0_metamask)">
+  <g clip-path="url(#clip0_metamask)">
     <path d="M20.6116 2.44287L13.1526 8.03834L14.5233 4.73046L20.6116 2.44287Z" fill="#E2761B" key="XCYJ9zRMe" />
     <path d="M3.38794 2.44287L10.7832 8.09204L9.47626 4.73046L3.38794 2.44287Z" fill="#E4761B" key="wbhAQ2aJO9" />
     <path d="M17.9235 15.4272L15.9365 18.4988L20.1867 19.6802L21.4086 15.4917L17.9235 15.4272Z" fill="#E4761B"
@@ -57,8 +57,8 @@
       fill="#F6851B" key="p6DgvTITwUN" />
   </g>
   <defs>
-    <clipPath id="clip0_metamask" key="clip0_metamask">
+    <clip-path id="clip0_metamask" key="clip0_metamask">
       <rect x="2.3999" y="2.3999" width="19.2" height="18" fill="white" key="1KA29rJScWm" />
-    </clipPath>
+    </clip-path>
   </defs>
 </svg>

@@ -1,6 +1,6 @@
 <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
   <circle cx="21" cy="21" r="21" fill="url(#paint0_linear_7098_49387)" key="cMQyMy7m9" />
-  <g clipPath="url(#clip0_7098_49387)">
+  <g clip-path="url(#clip0_7098_49387)">
     <path d="M29.6133 11.4429L22.1543 17.0383L23.525 13.7305L29.6133 11.4429Z" fill="#E2761B" key="3tUHrz0Yrj" />
     <path d="M12.3887 11.4429L19.7839 17.092L18.477 13.7305L12.3887 11.4429Z" fill="#E4761B" key="iOpDQoh0la" />
     <path d="M26.9244 24.4273L24.9375 27.4989L29.1876 28.6803L30.4096 24.4917L26.9244 24.4273Z" fill="#E4761B"
@@ -63,8 +63,8 @@
       <stop stop-color="#FFE1A8" key="JBMuDI5nB4B" />
       <stop offset="1" stop-color="#FFD2F0" key="vD-BCV1kvMl" />
     </linearGradient>
-    <clipPath id="clip0_7098_49387" key="clip0_7098_49387">
+    <clip-path id="clip0_7098_49387" key="clip0_7098_49387">
       <rect width="19.2" height="18" fill="white" transform="translate(11.4004 11.3999)" key="7-Py33A1x76" />
-    </clipPath>
+    </clip-path>
   </defs>
 </svg>
