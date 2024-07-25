@@ -1,6 +1,8 @@
 import { resolve } from 'path'
 import { defineConfig, createLogger } from 'vite'
 
+// generates typescript declaration files (just the js/ts, scss is done in package.json)
+import dts from 'vite-plugin-dts'
 // compresses svgs (around 40-50% reduction with no build time increase)
 import svgo from 'vite-plugin-svgo'
 
@@ -17,6 +19,13 @@ export default defineConfig(({ mode }) => {
   const notDev = mode !== 'dev'
   return {
     plugins: [
+      dts({
+        include: 'src/**/*',
+        outDir: 'dist/types',
+        insertTypesEntry: true,
+        strictOutput: true,
+        copyDtsFiles: true,
+      }),
       notDev
         ? svgo({
             multipass: true,

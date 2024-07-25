@@ -33,6 +33,7 @@
     "access": "public"
   },
   "dependencies": {
+    "vite-plugin-dts": "4.0.0-beta.1",
     "vite-plugin-svgo": "^1.4.0"
   }
 }
