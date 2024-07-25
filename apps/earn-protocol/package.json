@@ -17,6 +17,7 @@
     "@loadable/component": "^5.16.4",
     "@prisma/nextjs-monorepo-workaround-plugin": "^5.15.1",
     "@summerfi/app-db": "workspace:*",
+    "@summerfi/app-icons": "workspace:*",
     "@summerfi/app-types": "workspace:*",
     "@summerfi/app-ui": "workspace:*",
     "@summerfi/rays-db": "workspace:*",

@@ -153,6 +153,9 @@ importers:
       '@summerfi/app-db':
         specifier: workspace:*
         version: link:../../packages/app-db
+      '@summerfi/app-icons':
+        specifier: workspace:*
+        version: link:../../packages/app-icons
       '@summerfi/app-types':
         specifier: workspace:*
         version: link:../../packages/app-types
@@ -307,6 +310,9 @@ importers:
       '@summerfi/app-db':
         specifier: workspace:*
         version: link:../../packages/app-db
+      '@summerfi/app-icons':
+        specifier: workspace:*
+        version: link:../../packages/app-icons
       '@summerfi/app-types':
         specifier: workspace:*
         version: link:../../packages/app-types
