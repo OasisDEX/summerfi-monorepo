@@ -1,8 +1,8 @@
 'use client'
+import * as iconsList from '@summerfi/app-icons'
 import { type IconNamesList } from '@summerfi/app-types'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
-import * as iconsList from '@/tokens/icons/iconsProxy'
 
 export const AllIconsList = () => {
   return (
