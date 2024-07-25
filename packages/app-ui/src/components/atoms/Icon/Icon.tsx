@@ -101,7 +101,7 @@ export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
         />
       }
     >
-      {({ default: iconData }) =>
+      {({ default: iconData }: { default: string }) =>
         iconData && !errorLoading ? (
           <Image
             src={iconData}
