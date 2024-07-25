@@ -33,6 +33,8 @@ export type PositionPoints = {
   positionId: string
   vaultId: number
   user: string
+  ens: string | null
+  activeTriggers: number
   protocol: string
   marketId: string
   positionCreated: number
@@ -132,8 +134,8 @@ export class SummerPointsService {
       startTimestamp,
       endTimestamp,
     )
-    const userSummary = this.getUserSummary(Object.values(usersMap))
-    const positionsSummary = this.getPositionsSummary(Object.values(usersMap))
+    const userSummary = this.getUserSummary(points)
+    const positionsSummary = this.getPositionsSummary(points)
 
     return {
       points,
@@ -214,45 +216,42 @@ export class SummerPointsService {
    * @param usersData - The data of the users.
    * @returns The basis points earned by users.
    */
-  getUserSummary(usersData: UsersData): UserSummary[] {
-    const userSummary = usersData.map((user) => {
-      const activeTriggers = user.allPositions.reduce(
-        (sum, position) => sum + position.triggers.length,
-        0,
-      )
-      const activePositions = user.allPositions.length
-      const pointsEarnedPerYear = user.allPositions
-        .filter((position) => position.netValue > 0)
-        .reduce(
-          (sum, position) =>
-            sum + this.getPointsPerPeriodInSeconds(position.netValue, this.SECONDS_PER_YEAR),
-          0,
-        )
-      const ens = !user.ens || user.ens == '' ? null : user.ens
-      return {
-        user: user.id,
-        activeTriggers,
-        activePositions,
-        pointsEarnedPerYear,
-        ens,
+  getUserSummary(positionPoints: PositionPoints): UserSummary[] {
+    const userMap = new Map<string, UserSummary>()
+
+    for (const position of positionPoints) {
+      const { user, netValue, points } = position
+      const totalPoints = points.openPositionsPoints
+
+      if (!userMap.has(user)) {
+        userMap.set(user, {
+          user,
+          activeTriggers: 0, // We'll update this if we get trigger information
+          activePositions: 0,
+          pointsEarnedPerYear: 0,
+          ens: position.ens ? position.ens : null,
+        })
       }
-    })
-    return userSummary
+
+      const userSummary = userMap.get(user)!
+      userSummary.activePositions += netValue > 0 ? 1 : 0
+      userSummary.pointsEarnedPerYear += totalPoints
+      userSummary.activeTriggers += position.activeTriggers
+    }
+
+    return Array.from(userMap.values())
   }
 
-  getPositionsSummary(usersData: UsersData): PositionSummary[] {
-    // all positions from all users
-    const allPositions = usersData.flatMap((user) => user.allPositions)
-    return allPositions.map((position) => {
-      const activeTriggers = position.triggers.length
-      const pointsEarnedPerYear = this.getPointsPerPeriodInSeconds(
-        position.netValue,
-        this.SECONDS_PER_YEAR,
-      )
+  getPositionsSummary(positionPoints: PositionPoints): PositionSummary[] {
+    return positionPoints.map((position) => {
+      const { positionId, points } = position
+      const totalPoints = points.openPositionsPoints
+      const activeTriggers = position.activeTriggers
+
       return {
-        vaultId: position.id,
-        activeTriggers,
-        pointsEarnedPerYear,
+        vaultId: positionId,
+        activeTriggers: activeTriggers,
+        pointsEarnedPerYear: totalPoints,
       }
     })
   }
@@ -309,6 +308,8 @@ export class SummerPointsService {
               ? position.firstEvent[0].timestamp
               : this.START_POINTS_TIMESTAMP,
           user: user.id,
+          ens: user.ens ? user.ens : null,
+          activeTriggers: position.activeTriggers.length,
           points: {
             openPositionsPoints: totalMultiplier * openPositionsPoints,
             migrationPoints: migrationPoints,
@@ -381,6 +382,8 @@ export class SummerPointsService {
             ? swap.position!.firstEvent[0].timestamp
             : this.START_POINTS_TIMESTAMP,
         user: user.id,
+        ens: user.ens ? user.ens : null,
+        activeTriggers: swap.position!.activeTriggers.length,
         points: {
           openPositionsPoints: 0,
           migrationPoints: 0,
