@@ -25,6 +25,7 @@ jobs:
               - 'packages/app-db/**'
               - 'packages/app-types/**'
               - 'packages/app-ui/**'
+              - 'packages/app-icons/**'
   build:
     name: Build and deploy Rays Dashboard
     runs-on: ubuntu-latest
