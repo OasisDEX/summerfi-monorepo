@@ -1,9 +1,9 @@
-import { ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common/protocols'
+import { TokenDataSchema } from '@summerfi/sdk-common'
+import { IToken } from '@summerfi/sdk-common/common'
+import { ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common/lending-protocols'
+import { z } from 'zod'
 import { EmodeType, EmodeTypeSchema } from '../../common/enums/EmodeType'
 import { ISparkProtocol, SparkProtocolDataSchema } from './ISparkProtocol'
-import { IToken } from '@summerfi/sdk-common/common'
-import { TokenDataSchema } from '@summerfi/sdk-common'
-import { z } from 'zod'
 
 /**
  * @interface ISparkLendingPoolId

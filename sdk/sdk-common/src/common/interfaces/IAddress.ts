@@ -1,6 +1,6 @@
-import { AddressValue } from '../aliases/AddressValue'
-import { AddressType } from '../enums/AddressType'
 import { z } from 'zod'
+import { AddressValue } from '../aliases/AddressValue'
+import { AddressType } from '../types/AddressType'
 
 /**
  * @name IAddress

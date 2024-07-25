@@ -1,6 +1,6 @@
-import { Protocol, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { ISparkProtocol, ISparkProtocolData } from '../interfaces/ISparkProtocol'
+import { Protocol, ProtocolName } from '@summerfi/sdk-common/common'
 import { SerializationService } from '@summerfi/sdk-common/services'
+import { ISparkProtocol, ISparkProtocolData } from '../interfaces/ISparkProtocol'
 
 /**
  * @class SparkProtocol

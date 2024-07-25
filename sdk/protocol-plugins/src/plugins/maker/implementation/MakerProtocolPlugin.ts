@@ -1,49 +1,54 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  Address,
-  Position,
-  ChainFamilyName,
-  valuesOfChainFamilyMap,
-  Maybe,
-  IPositionId,
-  CommonTokenSymbols,
-  IChainInfo,
-} from '@summerfi/sdk-common/common'
-import { ILendingPoolId, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { getContract, stringToHex } from 'viem'
-import { BigNumber } from 'bignumber.js'
-import { BaseProtocolPlugin } from '../../../implementation/BaseProtocolPlugin'
-import { PRECISION_BI } from '../../common/constants/AaveV3LikeConstants'
-import { ERC20_ABI, OSM_ABI } from '../abis/MakerABIS'
-import { MakerLendingPool } from './MakerLendingPool'
-import { amountFromRad, amountFromRay, amountFromWei } from '../utils/AmountUtils'
-import { MakerAbiMap } from '../abis/MakerAbiMap'
+import { MakerContractNames } from '@summerfi/deployment-types'
 import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { IUser } from '@summerfi/sdk-common/user'
-import {
-  ExternalPositionType,
-  IExternalPosition,
-  IPositionsManager,
-  TransactionInfo,
-} from '@summerfi/sdk-common/orders'
-import { encodeMakerAllowThroughProxyActions } from '../utils/MakerGive'
-import { isMakerPositionId } from '../interfaces/IMakerPositionId'
-import { MakerLendingPoolId } from './MakerLendingPoolId'
-import { IMakerLendingPoolId, isMakerLendingPoolId } from '../interfaces/IMakerLendingPoolId'
-import { MakerStepBuilders } from './MakerStepBuilders'
-import { MakerPositionId } from './MakerPositionId'
-import { MakerLendingPoolInfo } from './MakerLendingPoolInfo'
 import {
   CollateralInfo,
   DebtInfo,
   Percentage,
+  PoolType,
   Price,
   RiskRatio,
   RiskRatioType,
   TokenAmount,
 } from '@summerfi/sdk-common'
+import {
+  Address,
+  ChainFamilyName,
+  CommonTokenSymbols,
+  IChainInfo,
+  IPositionId,
+  Maybe,
+  ProtocolName,
+  valuesOfChainFamilyMap,
+} from '@summerfi/sdk-common/common'
+import {
+  ILendingPoolId,
+  ILendingPosition,
+  ILendingPositionId,
+} from '@summerfi/sdk-common/lending-protocols'
+import {
+  ExternalLendingPositionType,
+  IExternalLendingPosition,
+  IPositionsManager,
+  TransactionInfo,
+} from '@summerfi/sdk-common/orders'
+import { IUser } from '@summerfi/sdk-common/user'
+import { BigNumber } from 'bignumber.js'
+import { getContract, stringToHex } from 'viem'
+import { BaseProtocolPlugin } from '../../../implementation/BaseProtocolPlugin'
+import { PRECISION_BI } from '../../common/constants/AaveV3LikeConstants'
+import { ERC20_ABI, OSM_ABI } from '../abis/MakerABIS'
+import { MakerAbiMap } from '../abis/MakerAbiMap'
+import { IMakerLendingPoolId, isMakerLendingPoolId } from '../interfaces/IMakerLendingPoolId'
+import { isMakerLendingPositionId } from '../interfaces/IMakerLendingPositionId'
 import { MakerContractInfo } from '../types/MakerContractInfo'
-import { MakerContractNames } from '@summerfi/deployment-types'
+import { amountFromRad, amountFromRay, amountFromWei } from '../utils/AmountUtils'
+import { encodeMakerAllowThroughProxyActions } from '../utils/MakerGive'
+import { MakerLendingPool } from './MakerLendingPool'
+import { MakerLendingPoolId } from './MakerLendingPoolId'
+import { MakerLendingPoolInfo } from './MakerLendingPoolInfo'
+import { MakerLendingPositionId } from './MakerLendingPositionId'
+import { MakerStepBuilders } from './MakerStepBuilders'
 
 type ProtocolData = Awaited<ReturnType<MakerProtocolPlugin['_getProtocolData']>>
 
@@ -79,9 +84,11 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
     }
   }
 
-  /** @see BaseProtocolPlugin._validatePositionId */
-  protected _validatePositionId(candidate: IPositionId): asserts candidate is MakerPositionId {
-    if (!isMakerPositionId(candidate)) {
+  /** @see BaseProtocolPlugin._validateLendingPositionId */
+  protected _validateLendingPositionId(
+    candidate: IPositionId,
+  ): asserts candidate is MakerLendingPositionId {
+    if (!isMakerLendingPositionId(candidate)) {
       throw new Error(`Invalid Maker position ID: ${JSON.stringify(candidate)}`)
     }
   }
@@ -119,9 +126,9 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
 
   /** POSITIONS */
 
-  /** @see BaseProtocolPlugin.getPosition */
+  /** @see BaseProtocolPlugin.getLendingPosition */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getPosition(positionId: IPositionId): Promise<Position> {
+  async getLendingPosition(positionId: ILendingPositionId): Promise<ILendingPosition> {
     throw new Error('Not implemented')
   }
 
@@ -130,19 +137,19 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
   /** @see BaseProtocolPlugin.getImportPositionTransaction */
   async getImportPositionTransaction(params: {
     user: IUser
-    externalPosition: IExternalPosition
+    externalPosition: IExternalLendingPosition
     positionsManager: IPositionsManager
   }): Promise<Maybe<TransactionInfo>> {
-    if (!isMakerLendingPoolId(params.externalPosition.position.pool.id)) {
+    if (!isMakerLendingPoolId(params.externalPosition.pool.id)) {
       throw new Error('Invalid Maker pool ID')
     }
-    if (!isMakerPositionId(params.externalPosition.position.id)) {
+    if (!isMakerLendingPositionId(params.externalPosition.id)) {
       throw new Error('Invalid Maker position ID')
     }
 
-    if (params.externalPosition.externalId.type !== ExternalPositionType.DS_PROXY) {
+    if (params.externalPosition.id.externalType !== ExternalLendingPositionType.DS_PROXY) {
       throw new Error(
-        `External position (${params.externalPosition.externalId.type}) type not supported`,
+        `External position (${params.externalPosition.id.externalType}) type not supported`,
       )
     }
 
@@ -159,14 +166,14 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
       cdpManagerAddress: cdpManagerAddress.value,
       makerProxyActionsAddress: dssProxyActionsAddress.value,
       allowAddress: params.positionsManager.address.value,
-      cdpId: params.externalPosition.position.id.vaultId,
+      cdpId: params.externalPosition.id.vaultId,
     })
 
     return {
       description: 'Import Maker position',
       transaction: {
         calldata: result.transactionCalldata,
-        target: params.externalPosition.externalId.address,
+        target: params.externalPosition.id.address,
         value: '0',
       },
     }

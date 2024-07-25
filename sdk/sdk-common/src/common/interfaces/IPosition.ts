@@ -1,8 +1,8 @@
-import { IPool, PoolDataSchema } from '../../protocols/interfaces/IPool'
-import { PositionType } from '../enums/PositionType'
+import { z } from 'zod'
+import { PositionType } from '../types/PositionType'
+import { IPool, PoolDataSchema } from './IPool'
 import { IPositionId, PositionIdDataSchema } from './IPositionId'
 import { ITokenAmount, TokenAmountDataSchema } from './ITokenAmount'
-import { z } from 'zod'
 
 /**
  * @name IPosition

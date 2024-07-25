@@ -1,5 +1,3 @@
-import { LendingPoolDataSchema } from '@summerfi/sdk-common/protocols'
-import { IMorphoLendingPoolId, MorphoLendingPoolIdDataSchema } from './IMorphoLendingPoolId'
 import {
   ILendingPool,
   IRiskRatio,
@@ -7,8 +5,10 @@ import {
   PoolType,
   RiskRatioDataSchema,
 } from '@summerfi/sdk-common'
-import { z } from 'zod'
 import { AddressDataSchema, IAddress } from '@summerfi/sdk-common/common'
+import { LendingPoolDataSchema } from '@summerfi/sdk-common/lending-protocols'
+import { z } from 'zod'
+import { IMorphoLendingPoolId, MorphoLendingPoolIdDataSchema } from './IMorphoLendingPoolId'
 
 /**
  * @interface IMorphoLendingPool

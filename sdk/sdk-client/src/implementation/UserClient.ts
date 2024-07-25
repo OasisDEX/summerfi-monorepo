@@ -1,8 +1,14 @@
 import { User } from '@summerfi/sdk-common'
-import { IChainInfo, IWallet, Maybe, Position, PositionId } from '@summerfi/sdk-common/common'
+import {
+  IChainInfo,
+  IProtocol,
+  IWallet,
+  Maybe,
+  Position,
+  PositionId,
+} from '@summerfi/sdk-common/common'
 import { IPositionsManager, Order } from '@summerfi/sdk-common/orders'
-import { IProtocol } from '@summerfi/sdk-common/protocols'
-import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { ISimulation } from '@summerfi/sdk-common/simulation'
 import { IUserClient } from '../interfaces/IUserClient'
 import { RPCMainClientType } from '../rpc/SDKMainClient'
 
@@ -44,7 +50,7 @@ export class UserClient extends User implements IUserClient {
 
   public async newOrder(params: {
     positionsManager: IPositionsManager
-    simulation: ISimulation<SimulationType>
+    simulation: ISimulation
   }): Promise<Maybe<Order>> {
     return await this.rpcClient.orders.buildOrder.mutate({
       user: {

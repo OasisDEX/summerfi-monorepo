@@ -3,8 +3,9 @@ import {
   IChainInfo,
   IProtocol,
   ProtocolDataSchema,
+  ProtocolName,
 } from '@summerfi/sdk-common'
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
+
 import { z } from 'zod'
 
 /**

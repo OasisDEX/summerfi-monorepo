@@ -2,21 +2,26 @@ import {
   Address,
   ChainFamilyMap,
   ChainInfo,
-  Position,
-  PositionId,
+  PoolType,
   PositionType,
+  ProtocolName,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
 import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
-import { SetupBuilderReturnType, setupBuilderParams } from '../../utils/SetupBuilderParams'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
+import {
+  MakerLendingPool,
+  MakerLendingPosition,
+  MakerLendingPositionId,
+  MakerProtocol,
+} from '../../../src'
 import { PaybackWithdrawActionBuilder } from '../../../src/plugins/common/builders/PaybackWithdrawActionBuilder'
 import { ILKType } from '../../../src/plugins/maker/enums/ILKType'
 import { MakerLendingPoolId } from '../../../src/plugins/maker/implementation/MakerLendingPoolId'
-import { MakerLendingPool, MakerPosition, MakerPositionId, MakerProtocol } from '../../../src'
+import { SetupBuilderReturnType, setupBuilderParams } from '../../utils/SetupBuilderParams'
 
 describe('Payback Withdraw Action Builder', () => {
   let builderParams: SetupBuilderReturnType
@@ -69,9 +74,14 @@ describe('Payback Withdraw Action Builder', () => {
     debtToken: DAI,
   })
 
-  const position = MakerPosition.createFrom({
-    type: PositionType.Multiply,
-    id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '1337' }),
+  const position = MakerLendingPosition.createFrom({
+    type: PositionType.Lending,
+    subtype: LendingPositionType.Multiply,
+    id: MakerLendingPositionId.createFrom({
+      type: PositionType.Lending,
+      id: 'someposition',
+      vaultId: '1337',
+    }),
     debtAmount: withdrawAmount,
     collateralAmount: paybackAmount,
     pool: pool,

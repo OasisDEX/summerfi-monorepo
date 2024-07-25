@@ -1,9 +1,9 @@
-import { LendingPool } from '@summerfi/sdk-common/protocols'
-import { IMorphoLendingPool, IMorphoLendingPoolData } from '../interfaces/IMorphoLendingPool'
-import { SerializationService } from '@summerfi/sdk-common/services'
-import { MorphoLendingPoolId } from './MorphoLendingPoolId'
-import { Address } from '@summerfi/sdk-common/common'
 import { RiskRatio } from '@summerfi/sdk-common'
+import { Address } from '@summerfi/sdk-common/common'
+import { LendingPool } from '@summerfi/sdk-common/lending-protocols'
+import { SerializationService } from '@summerfi/sdk-common/services'
+import { IMorphoLendingPool, IMorphoLendingPoolData } from '../interfaces/IMorphoLendingPool'
+import { MorphoLendingPoolId } from './MorphoLendingPoolId'
 
 /**
  * @class MorphoLendingPool

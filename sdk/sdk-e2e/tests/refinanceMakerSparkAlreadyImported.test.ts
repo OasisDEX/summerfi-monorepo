@@ -3,7 +3,6 @@ import {
   AddressValue,
   ChainFamilyMap,
   Percentage,
-  Position,
   PositionType,
   Token,
   TokenAmount,
@@ -13,10 +12,8 @@ import {
 import { Deployments } from '@summerfi/core-contracts'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
 import { ProtocolClient, makeSDK, type Chain } from '@summerfi/sdk-client'
-import { CommonTokenSymbols } from '@summerfi/sdk-common/common/enums'
+import { CommonTokenSymbols, ProtocolName } from '@summerfi/sdk-common/common/enums'
 import { Order, PositionsManager, RefinanceParameters } from '@summerfi/sdk-common/orders'
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import {
   TransactionUtils,
   decodeActionCalldata,
@@ -34,12 +31,13 @@ import {
 import {
   ILKType,
   MakerLendingPoolId,
+  MakerLendingPosition,
+  MakerLendingPositionId,
   MakerPaybackAction,
-  MakerPosition,
-  MakerPositionId,
   MakerWithdrawAction,
   isMakerLendingPool,
-  isMakerPositionId,
+  isMakerLendingPosition,
+  isMakerLendingPositionId,
   isMakerProtocol,
 } from '@summerfi/protocol-plugins/plugins/maker'
 import {
@@ -48,9 +46,15 @@ import {
   SparkLendingPoolId,
   isSparkLendingPool,
   isSparkLendingPoolId,
-  isSparkPositionId,
+  isSparkLendingPosition,
+  isSparkLendingPositionId,
   isSparkProtocol,
 } from '@summerfi/protocol-plugins/plugins/spark'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
+import {
+  IRefinanceSimulation,
+  isRefinanceSimulation,
+} from '@summerfi/sdk-common/simulation/interfaces'
 import assert from 'assert'
 import { Hex } from 'viem'
 
@@ -136,9 +140,14 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     }
 
     // Source position
-    const makerPosition = MakerPosition.createFrom({
-      type: PositionType.Multiply,
-      id: MakerPositionId.createFrom({ id: '31646', vaultId: '31646' }),
+    const makerPosition = MakerLendingPosition.createFrom({
+      type: PositionType.Lending,
+      subtype: LendingPositionType.Multiply,
+      id: MakerLendingPositionId.createFrom({
+        type: PositionType.Lending,
+        id: '31646',
+        vaultId: '31646',
+      }),
       debtAmount: TokenAmount.createFromBaseUnit({
         token: DAI,
         amount: '3717915731044925295249',
@@ -187,7 +196,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
       slippage: Percentage.createFrom({ value: 0.2 }),
     })
 
-    const refinanceSimulation: ISimulation<SimulationType.Refinance> =
+    const refinanceSimulation: IRefinanceSimulation =
       await sdk.simulator.refinance.simulateRefinancePosition(refinanceParameters)
 
     expect(refinanceSimulation).toBeDefined()
@@ -207,7 +216,8 @@ describe.skip('Refinance Maker Spark | SDK', () => {
 
     assert(refinanceOrder, 'Order not found')
 
-    expect(refinanceOrder.simulation.simulationType).toEqual(refinanceSimulation.simulationType)
+    expect(refinanceOrder.simulation.type).toEqual(refinanceSimulation.type)
+    assert(isRefinanceSimulation(refinanceOrder.simulation), 'Simulation type is not Refinance')
     assert(refinanceOrder.simulation.sourcePosition, 'Source position not found')
 
     expect(refinanceOrder.simulation.sourcePosition.id).toEqual(
@@ -235,7 +245,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     // Decode calldata
     const strategyExecutorParams = decodeStrategyExecutorCalldata(positionsManagerParams.calldata)
 
-    const strategyName = `${refinanceOrder.simulation.simulationType}${refinanceOrder.simulation.sourcePosition?.pool.id.protocol.name}${refinanceOrder.simulation.targetPosition.pool.id.protocol.name}`
+    const strategyName = `${refinanceOrder.simulation.type}${refinanceOrder.simulation.sourcePosition?.pool.id.protocol.name}${refinanceOrder.simulation.targetPosition.pool.id.protocol.name}`
 
     assert(strategyExecutorParams, 'Cannot decode Strategy Executor calldata')
     expect(strategyExecutorParams.strategyName).toEqual(strategyName)
@@ -247,11 +257,20 @@ describe.skip('Refinance Maker Spark | SDK', () => {
       calldata: strategyExecutorParams.actionCalls[0].callData,
     })
 
-    const sourcePosition = refinanceOrder.simulation.sourcePosition as Position
-    const targetPosition = refinanceOrder.simulation.targetPosition as Position
+    assert(
+      isMakerLendingPosition(refinanceOrder.simulation.sourcePosition),
+      'Source position is not a Maker position',
+    )
+    assert(
+      isSparkLendingPosition(refinanceOrder.simulation.targetPosition),
+      'Target position is not a Spark position',
+    )
 
-    assert(isMakerPositionId(sourcePosition.id), 'Source position is not a Maker position')
-    assert(isSparkPositionId(targetPosition.id), 'Target position is not a Spark position')
+    const sourcePosition = refinanceOrder.simulation.sourcePosition
+    const targetPosition = refinanceOrder.simulation.targetPosition
+
+    assert(isMakerLendingPositionId(sourcePosition.id), 'Source position is not a Maker position')
+    assert(isSparkLendingPositionId(targetPosition.id), 'Target position is not a Spark position')
 
     assert(flashloanParams, 'Cannot decode Flashloan action calldata')
 

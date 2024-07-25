@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { PositionType, PositionTypeSchema } from '../types'
 
 /**
  * @name IPositionId
@@ -7,6 +8,8 @@ import { z } from 'zod'
 export interface IPositionId extends IPositionIdData {
   /* Unique identifier for the position inside the Summer.fi system */
   readonly id: string
+  /** Type of the position */
+  readonly type: PositionType
 }
 
 /**
@@ -14,6 +17,7 @@ export interface IPositionId extends IPositionIdData {
  */
 export const PositionIdDataSchema = z.object({
   id: z.string(),
+  type: PositionTypeSchema,
 })
 
 /**

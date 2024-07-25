@@ -1,6 +1,6 @@
-import { SDKErrorType } from '../enums/SDKErrorType'
-import { IPrintable } from './IPrintable'
 import { z } from 'zod'
+import { SDKErrorType } from '../types/SDKErrorType'
+import { IPrintable } from './IPrintable'
 
 /**
  * @name ISDKError

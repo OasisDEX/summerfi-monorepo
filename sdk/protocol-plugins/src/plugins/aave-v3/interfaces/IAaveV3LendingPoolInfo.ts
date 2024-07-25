@@ -3,7 +3,7 @@ import {
   IDebtInfo,
   ILendingPoolInfo,
   LendingPoolInfoDataSchema,
-} from '@summerfi/sdk-common/protocols'
+} from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
 import { AaveV3LendingPoolIdDataSchema, IAaveV3LendingPoolId } from './IAaveV3LendingPoolId'
 

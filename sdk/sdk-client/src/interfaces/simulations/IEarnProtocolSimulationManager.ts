@@ -1,5 +1,5 @@
-import { IEarnProtocolParameters } from '@summerfi/sdk-common/orders/interfaces/earn-protocol'
-import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { IEarnProtocolSimulation } from '@summerfi/sdk-common'
+import { IEarnProtocolParameters } from '@summerfi/sdk-common/orders/earn-protocol'
 /**
  * Interface for the Earn Protocol Simulation Manager
  *
@@ -15,5 +15,5 @@ export interface IEarnProtocolSimulationManager {
    *
    * @returns The simulation result
    */
-  simulate(params: IEarnProtocolParameters): Promise<ISimulation<SimulationType.EarnProtocol>>
+  simulate(params: IEarnProtocolParameters): Promise<IEarnProtocolSimulation>
 }

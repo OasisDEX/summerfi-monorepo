@@ -1,9 +1,9 @@
-import { LendingPoolId } from '@summerfi/sdk-common/protocols'
-import { SerializationService } from '@summerfi/sdk-common/services'
-import { IMakerLendingPoolId, IMakerLendingPoolIdData } from '../interfaces/IMakerLendingPoolId'
-import { ILKType } from '../enums/ILKType'
-import { MakerProtocol } from './MakerProtocol'
 import { IPrintable, IToken, Token } from '@summerfi/sdk-common/common'
+import { LendingPoolId } from '@summerfi/sdk-common/lending-protocols'
+import { SerializationService } from '@summerfi/sdk-common/services'
+import { ILKType } from '../enums/ILKType'
+import { IMakerLendingPoolId, IMakerLendingPoolIdData } from '../interfaces/IMakerLendingPoolId'
+import { MakerProtocol } from './MakerProtocol'
 
 /**
  * @class MakerLendingPoolId

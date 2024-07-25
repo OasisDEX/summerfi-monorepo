@@ -1,7 +1,7 @@
-import { ILendingPoolInfo, LendingPoolInfoDataSchema } from '@summerfi/sdk-common/protocols'
-import { IMorphoLendingPoolId, MorphoLendingPoolIdDataSchema } from './IMorphoLendingPoolId'
-import { z } from 'zod'
 import { ICollateralInfo, IDebtInfo } from '@summerfi/sdk-common'
+import { ILendingPoolInfo, LendingPoolInfoDataSchema } from '@summerfi/sdk-common/lending-protocols'
+import { z } from 'zod'
+import { IMorphoLendingPoolId, MorphoLendingPoolIdDataSchema } from './IMorphoLendingPoolId'
 
 /**
  * @interface IMorphoLendingPoolInfo

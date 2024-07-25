@@ -8,19 +8,20 @@ import {
 } from '@summerfi/sdk-common/common'
 
 import { makeSDK, type Chain } from '@summerfi/sdk-client'
-import { CommonTokenSymbols } from '@summerfi/sdk-common/common/enums'
+import { CommonTokenSymbols, ProtocolName } from '@summerfi/sdk-common/common/enums'
 import { ExternalPositionType, IImportPositionParameters, Order } from '@summerfi/sdk-common/orders'
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import { ISimulation, SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
+import { SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
 
 import {
   ILKType,
   MakerLendingPoolId,
-  MakerPosition,
-  MakerPositionId,
+  MakerLendingPosition,
+  MakerLendingPositionId,
   isMakerLendingPool,
   isMakerProtocol,
 } from '@summerfi/protocol-plugins/plugins/maker'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
+import { IImportSimulation, isImportSimulation } from '@summerfi/sdk-common/simulation/interfaces'
 import { TransactionUtils } from '@summerfi/testing-utils'
 import assert from 'assert'
 import { Hex } from 'viem'
@@ -90,9 +91,14 @@ describe.skip('Import Maker Position | SDK', () => {
     }
 
     // Source position
-    const makerPosition = MakerPosition.createFrom({
-      type: PositionType.Multiply,
-      id: MakerPositionId.createFrom({ id: '31646', vaultId: '31646' }),
+    const makerPosition = MakerLendingPosition.createFrom({
+      type: PositionType.Lending,
+      subtype: LendingPositionType.Multiply,
+      id: MakerLendingPositionId.createFrom({
+        type: PositionType.Lending,
+        id: '31646',
+        vaultId: '31646',
+      }),
       debtAmount: TokenAmount.createFromBaseUnit({
         token: DAI,
         amount: '3717915731044925295249',
@@ -104,7 +110,7 @@ describe.skip('Import Maker Position | SDK', () => {
       pool: makerPool,
     })
 
-    const importPositionSimulation: ISimulation<SimulationType.ImportPosition> =
+    const importPositionSimulation: IImportSimulation =
       await sdk.simulator.importing.simulateImportPosition({
         externalPosition: {
           position: makerPosition,
@@ -119,7 +125,7 @@ describe.skip('Import Maker Position | SDK', () => {
 
     expect(importPositionSimulation).toBeDefined()
 
-    expect(importPositionSimulation.simulationType).toEqual(SimulationType.ImportPosition)
+    expect(importPositionSimulation.type).toEqual(SimulationType.ImportPosition)
     assert(importPositionSimulation.sourcePosition, 'Source position not found')
     expect(importPositionSimulation.steps.length).toBe(1)
     expect(importPositionSimulation.steps[0].type).toBe(SimulationSteps.Import)
@@ -135,10 +141,8 @@ describe.skip('Import Maker Position | SDK', () => {
 
     assert(importPositionOrder, 'Order not found')
 
-    expect(importPositionOrder.simulation.simulationType).toEqual(
-      importPositionSimulation.simulationType,
-    )
-    assert(importPositionOrder.simulation.sourcePosition, 'Source position not found')
+    expect(importPositionOrder.simulation.type).toEqual(importPositionSimulation.type)
+    assert(isImportSimulation(importPositionOrder.simulation), 'Simulation is not Import')
 
     expect(importPositionOrder.simulation.sourcePosition.id).toEqual(
       importPositionSimulation.sourcePosition?.id,

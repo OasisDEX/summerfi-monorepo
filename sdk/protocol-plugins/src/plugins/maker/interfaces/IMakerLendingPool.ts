@@ -1,7 +1,8 @@
-import { ILendingPool, LendingPoolDataSchema } from '@summerfi/sdk-common/protocols'
-import { IMakerLendingPoolId, MakerLendingPoolIdDataSchema } from './IMakerLendingPoolId'
-import { z } from 'zod'
+import { PoolType } from '@summerfi/sdk-common'
 import { IToken } from '@summerfi/sdk-common/common'
+import { ILendingPool, LendingPoolDataSchema } from '@summerfi/sdk-common/lending-protocols'
+import { z } from 'zod'
+import { IMakerLendingPoolId, MakerLendingPoolIdDataSchema } from './IMakerLendingPoolId'
 
 /**
  * @interface IMakerLendingPool
@@ -12,6 +13,7 @@ export interface IMakerLendingPool extends ILendingPool, IMakerLendingPoolData {
   readonly id: IMakerLendingPoolId
 
   // Re-declaring the properties with the correct types
+  readonly type: PoolType.Lending
   readonly collateralToken: IToken
   readonly debtToken: IToken
 }

@@ -1,11 +1,3 @@
-import { Address, Token, TokenAmount } from '@summerfi/sdk-common/common'
-import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
-import {
-  MorphoLendingPool,
-  MorphoLendingPoolId,
-  MorphoProtocol,
-  MorphoWithdrawAction,
-} from '../../../../src'
 import {
   ChainFamilyMap,
   Percentage,
@@ -13,7 +5,14 @@ import {
   RiskRatio,
   RiskRatioType,
 } from '@summerfi/sdk-common'
-import { PoolType } from '@summerfi/sdk-common/protocols'
+import { Address, PoolType, Token, TokenAmount } from '@summerfi/sdk-common/common'
+import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
+import {
+  MorphoLendingPool,
+  MorphoLendingPoolId,
+  MorphoProtocol,
+  MorphoWithdrawAction,
+} from '../../../../src'
 import { MorphoLLTVPrecision } from '../../../../src/plugins/morphoblue/constants/MorphoConstants'
 
 describe('MorphoWithdrawAction Action', () => {

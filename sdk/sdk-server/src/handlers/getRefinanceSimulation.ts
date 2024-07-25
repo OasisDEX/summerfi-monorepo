@@ -1,12 +1,12 @@
-import type { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import { refinanceLendingToLending } from '@summerfi/simulator-service/strategies'
-import { publicProcedure } from '../SDKTRPC'
 import { isRefinanceParameters } from '@summerfi/sdk-common/orders'
+import { IRefinanceSimulation } from '@summerfi/sdk-common/simulation'
+import { refinanceLendingToLending } from '@summerfi/simulator-service/strategies'
 import { z } from 'zod'
+import { publicProcedure } from '../SDKTRPC'
 
 export const getRefinanceSimulation = publicProcedure
   .input(z.any())
-  .query(async (opts): Promise<ISimulation<SimulationType.Refinance>> => {
+  .query(async (opts): Promise<IRefinanceSimulation> => {
     if (!isRefinanceParameters(opts.input)) {
       throw new Error('Invalid refinance parameters')
     }

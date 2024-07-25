@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import { SDKErrorDataSchema, ISDKError } from '../../common/interfaces/ISDKError'
-import { SDKErrorType } from '../../common/enums/SDKErrorType'
+import { ISDKError, SDKErrorDataSchema } from '../../common/interfaces/ISDKError'
+import { SDKErrorType } from '../../common/types/SDKErrorType'
 import { SwapErrorType } from '../enums/SwapErrorType'
 
 /**

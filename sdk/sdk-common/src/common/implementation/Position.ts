@@ -1,10 +1,10 @@
-import { IPosition, IPositionData } from '../interfaces/IPosition'
 import { SerializationService } from '../../services/SerializationService'
+import { IPool } from '../interfaces/IPool'
+import { IPosition, IPositionData } from '../interfaces/IPosition'
+import { ITokenAmount } from '../interfaces/ITokenAmount'
+import { PositionType } from '../types/PositionType'
 import { PositionId } from './PositionId'
 import { TokenAmount } from './TokenAmount'
-import { PositionType } from '../enums/PositionType'
-import { ITokenAmount } from '../interfaces/ITokenAmount'
-import { IPool } from '../../protocols/interfaces/IPool'
 
 /**
  * @name Position

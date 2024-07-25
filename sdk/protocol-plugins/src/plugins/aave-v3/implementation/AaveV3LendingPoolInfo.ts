@@ -1,10 +1,10 @@
-import { LendingPoolInfo } from '@summerfi/sdk-common/protocols'
+import { LendingPoolInfo } from '@summerfi/sdk-common/lending-protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
-import { AaveV3LendingPoolId } from './AaveV3LendingPoolId'
 import {
   IAaveV3LendingPoolInfo,
   IAaveV3LendingPoolInfoData,
 } from '../interfaces/IAaveV3LendingPoolInfo'
+import { AaveV3LendingPoolId } from './AaveV3LendingPoolId'
 
 /**
  * @class AaveV3LendingPoolInfo

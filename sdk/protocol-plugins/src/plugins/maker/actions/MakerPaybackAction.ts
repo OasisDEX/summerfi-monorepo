@@ -1,7 +1,7 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
 import { IPosition, ITokenAmount } from '@summerfi/sdk-common/common'
 import { IPositionsManager } from '@summerfi/sdk-common/orders'
-import { isMakerPositionId } from '../interfaces/IMakerPositionId'
+import { isMakerLendingPositionId } from '../interfaces/IMakerLendingPositionId'
 
 export class MakerPaybackAction extends BaseAction<typeof MakerPaybackAction.Config> {
   public static readonly Config = {
@@ -21,7 +21,7 @@ export class MakerPaybackAction extends BaseAction<typeof MakerPaybackAction.Con
     },
     paramsMapping?: InputSlotsMapping,
   ): ActionCall {
-    if (!isMakerPositionId(params.position.id)) {
+    if (!isMakerLendingPositionId(params.position.id)) {
       throw new Error(`Position ID is not a Maker one: ${JSON.stringify(params.position.id)} `)
     }
 

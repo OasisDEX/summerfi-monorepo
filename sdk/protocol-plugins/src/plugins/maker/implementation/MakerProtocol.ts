@@ -1,4 +1,4 @@
-import { Protocol, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { Protocol, ProtocolName } from '@summerfi/sdk-common/common'
 import { SerializationService } from '@summerfi/sdk-common/services'
 import { IMakerProtocol, IMakerProtocolData } from '../interfaces/IMakerProtocol'
 

@@ -1,36 +1,39 @@
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { SDKManager } from '../../src/implementation/SDKManager'
-import { RPCMainClientType } from '../../src/rpc/SDKMainClient'
+import { SparkLendingPositionId } from '@summerfi/protocol-plugins'
 import {
   ILKType,
   MakerLendingPool,
   MakerLendingPoolId,
-  MakerPosition,
-  MakerPositionId,
+  MakerLendingPosition,
+  MakerLendingPositionId,
   MakerProtocol,
 } from '@summerfi/protocol-plugins/plugins/maker'
-import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { RefinanceParameters } from '@summerfi/sdk-common'
 import {
   Address,
   ChainFamilyMap,
   ChainInfo,
   Percentage,
+  PoolType,
   PositionType,
+  ProtocolName,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
-import { RefinanceParameters } from '@summerfi/sdk-common'
-import { SparkPositionId } from '@summerfi/protocol-plugins'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
+import { SimulationType } from '@summerfi/sdk-common/simulation'
+import { IRefinanceSimulation } from '@summerfi/sdk-common/simulation/interfaces'
+import { SDKManager } from '../../src/implementation/SDKManager'
+import { RPCMainClientType } from '../../src/rpc/SDKMainClient'
 
 export default async function simulateRefinanceTest() {
   type SimulateRefinanceType = RPCMainClientType['simulation']['refinance']['query']
   const simulateRefinance: SimulateRefinanceType = jest.fn(async (params) => {
     return {
-      simulationType: SimulationType.Refinance,
+      type: SimulationType.Refinance,
       sourcePosition: params.sourcePosition,
       targetPosition: {
         type: params.sourcePosition.type,
-        id: SparkPositionId.createFrom({ id: '0987654321' }),
+        id: SparkLendingPositionId.createFrom({ type: PositionType.Lending, id: '0987654321' }),
         debtAmount: TokenAmount.createFrom({
           amount: params.sourcePosition.debtAmount.amount,
           token: params.targetPool.debtToken,
@@ -43,7 +46,7 @@ export default async function simulateRefinanceTest() {
       },
       swaps: [],
       steps: [],
-    } as ISimulation<SimulationType.Refinance>
+    } as IRefinanceSimulation
   })
 
   const rpcClient = {
@@ -104,16 +107,21 @@ export default async function simulateRefinanceTest() {
     debtToken: poolId.debtToken,
   })
 
-  const prevPosition = MakerPosition.createFrom({
-    type: PositionType.Multiply,
+  const prevPosition = MakerLendingPosition.createFrom({
+    type: PositionType.Lending,
+    subtype: LendingPositionType.Multiply,
     pool: pool,
     debtAmount: TokenAmount.createFrom({ token: DAI, amount: '56.78' }),
     collateralAmount: TokenAmount.createFrom({ token: WETH, amount: '105.98' }),
-    id: MakerPositionId.createFrom({ id: '1234567890', vaultId: '34' }),
+    id: MakerLendingPositionId.createFrom({
+      type: PositionType.Lending,
+      id: '1234567890',
+      vaultId: '34',
+    }),
   })
 
   const targetPool = MakerLendingPool.createFrom({
-    type: PoolType.Lending as const,
+    type: PoolType.Lending,
     id: poolId,
     collateralToken: poolId.collateralToken,
     debtToken: poolId.debtToken,
@@ -129,7 +137,7 @@ export default async function simulateRefinanceTest() {
     await sdkManager.simulator.refinance.simulateRefinancePosition(refinanceParameters)
 
   expect(simulation).toBeDefined()
-  expect(simulation.simulationType).toBe(SimulationType.Refinance)
+  expect(simulation.type).toBe(SimulationType.Refinance)
   expect(simulation.sourcePosition).toBeDefined()
   expect(simulation.sourcePosition?.id).toBe(prevPosition.id)
   expect(simulation.targetPosition).toBeDefined()

@@ -1,6 +1,8 @@
 import {
   Address,
   ChainInfo,
+  PoolType,
+  ProtocolName,
   RiskRatioType,
   Token,
   TokenAmount,
@@ -8,12 +10,10 @@ import {
   depositToPosition,
   newEmptyPositionFromPool,
 } from '@summerfi/sdk-common/common'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+
+import { EmodeType } from '@summerfi/protocol-plugins'
 import { ILKType, MakerLendingPool } from '@summerfi/protocol-plugins/plugins/maker'
 import { SparkLendingPool, SparkLendingPoolInfo } from '@summerfi/protocol-plugins/plugins/spark'
-import { ISparkProtocolData } from 'node_modules/@summerfi/protocol-plugins/src/plugins/spark/interfaces/ISparkProtocol'
-import { EmodeType } from '@summerfi/protocol-plugins'
-import { IMakerProtocolData } from 'node_modules/@summerfi/protocol-plugins/src/plugins/maker/interfaces/IMakerProtocol'
 import {
   CollateralInfo,
   DebtInfo,
@@ -22,6 +22,8 @@ import {
   Price,
   RiskRatio,
 } from '@summerfi/sdk-common'
+import { IMakerProtocolData } from 'node_modules/@summerfi/protocol-plugins/src/plugins/maker/interfaces/IMakerProtocol'
+import { ISparkProtocolData } from 'node_modules/@summerfi/protocol-plugins/src/plugins/spark/interfaces/ISparkProtocol'
 
 const testChain = ChainInfo.createFrom({ chainId: 1, name: 'test' })
 

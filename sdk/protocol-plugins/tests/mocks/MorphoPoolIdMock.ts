@@ -1,18 +1,18 @@
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
+import {
+  Address,
+  ChainFamilyMap,
+  Percentage,
+  ProtocolName,
+  RiskRatio,
+  RiskRatioType,
+  Token,
+} from '@summerfi/sdk-common'
 import {
   IMorphoLendingPoolId,
   MorphoLendingPoolId,
   MorphoMarketParameters,
   MorphoProtocol,
 } from '../../src'
-import {
-  Address,
-  ChainFamilyMap,
-  Percentage,
-  RiskRatio,
-  RiskRatioType,
-  Token,
-} from '@summerfi/sdk-common'
 
 export const morphoPoolIdMock: IMorphoLendingPoolId = MorphoLendingPoolId.createFrom({
   protocol: MorphoProtocol.createFrom({

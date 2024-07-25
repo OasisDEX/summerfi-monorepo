@@ -26,6 +26,7 @@
     "@summerfi/address-book-common": "workspace:*",
     "@summerfi/protocol-plugins-common": "workspace:*",
     "@summerfi/protocol-plugins": "workspace:*",
+    "@summerfi/contracts-provider-common": "workspace:*",
     "@summerfi/testing-utils": "workspace:*"
   },
   "devDependencies": {

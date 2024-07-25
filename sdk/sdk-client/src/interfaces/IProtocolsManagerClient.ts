@@ -1,5 +1,4 @@
-import { Maybe } from '@summerfi/sdk-common/common'
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
+import { Maybe, ProtocolName } from '@summerfi/sdk-common/common'
 import { ProtocolClient } from '../implementation/ProtocolClient'
 
 /**

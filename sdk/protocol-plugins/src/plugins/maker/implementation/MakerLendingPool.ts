@@ -1,6 +1,6 @@
-import { LendingPool } from '@summerfi/sdk-common/protocols'
-import { IMakerLendingPool, IMakerLendingPoolData } from '../interfaces/IMakerLendingPool'
+import { LendingPool } from '@summerfi/sdk-common/lending-protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
+import { IMakerLendingPool, IMakerLendingPoolData } from '../interfaces/IMakerLendingPool'
 import { MakerLendingPoolId } from './MakerLendingPoolId'
 
 /**

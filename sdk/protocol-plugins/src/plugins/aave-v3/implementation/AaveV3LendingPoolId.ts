@@ -1,9 +1,10 @@
+import { IToken } from '@summerfi/sdk-common'
+import { IPrintable, Token } from '@summerfi/sdk-common/common'
+import { LendingPoolId } from '@summerfi/sdk-common/lending-protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
 import { EmodeType } from '../../common'
 import { IAaveV3LendingPoolId, IAaveV3LendingPoolIdData } from '../interfaces/IAaveV3LendingPoolId'
-import { IToken, LendingPoolId } from '@summerfi/sdk-common'
 import { AaveV3Protocol } from './AaveV3Protocol'
-import { IPrintable, Token } from '@summerfi/sdk-common/common'
 
 /**
  * @class AaveV3LendingPoolId

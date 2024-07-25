@@ -1,5 +1,5 @@
-import { IImportPositionParameters } from '@summerfi/sdk-common/orders/interfaces/importing'
-import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { IImportPositionParameters } from '@summerfi/sdk-common/orders/importing'
+import { IImportSimulation } from '@summerfi/sdk-common/simulation'
 
 /**
  * Interface for the Importing Simulation Manager
@@ -18,7 +18,5 @@ export interface IImportingSimulationManager {
    *
    * TODO: rename the method to `simulate`
    */
-  simulateImportPosition(
-    params: IImportPositionParameters,
-  ): Promise<ISimulation<SimulationType.ImportPosition>>
+  simulateImportPosition(params: IImportPositionParameters): Promise<IImportSimulation>
 }

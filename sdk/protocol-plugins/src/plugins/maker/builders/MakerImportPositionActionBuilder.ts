@@ -1,8 +1,8 @@
-import { steps } from '@summerfi/sdk-common/simulation'
 import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import { isMakerLendingPoolId } from '../interfaces/IMakerLendingPoolId'
+import { ProtocolName } from '@summerfi/sdk-common'
+import { steps } from '@summerfi/sdk-common/simulation'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
+import { isMakerLendingPoolId } from '../interfaces/IMakerLendingPoolId'
 
 export class MakerImportPositionActionBuilder extends BaseActionBuilder<steps.ImportStep> {
   readonly actions: ActionBuilderUsedAction[] = [
@@ -12,7 +12,7 @@ export class MakerImportPositionActionBuilder extends BaseActionBuilder<steps.Im
   async build(params: ActionBuilderParams<steps.ImportStep>): Promise<void> {
     const { protocolsRegistry, step, user, context, positionsManager } = params
 
-    if (!isMakerLendingPoolId(step.inputs.externalPosition.position.pool.id)) {
+    if (!isMakerLendingPoolId(step.inputs.externalPosition.pool.id)) {
       throw new Error('Invalid Maker lending pool id')
     }
 

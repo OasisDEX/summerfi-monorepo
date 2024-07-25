@@ -1,32 +1,43 @@
+import { AaveV3ContractNames } from '@summerfi/deployment-types'
+import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
+import { FiatCurrency } from '@summerfi/sdk-common'
 import {
   ChainFamilyName,
-  valuesOfChainFamilyMap,
-  Maybe,
-  IPosition,
-  IPositionId,
-  IPositionIdData,
   IChainInfo,
+  IPositionIdData,
+  Maybe,
+  PoolType,
+  ProtocolName,
+  valuesOfChainFamilyMap,
 } from '@summerfi/sdk-common/common'
-import { ILendingPoolIdData, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { AaveV3LendingPool } from './AaveV3LendingPool'
+import {
+  ILendingPoolIdData,
+  ILendingPosition,
+  ILendingPositionId,
+} from '@summerfi/sdk-common/lending-protocols'
+import {
+  IExternalLendingPosition,
+  IPositionsManager,
+  TransactionInfo,
+} from '@summerfi/sdk-common/orders'
+import { IUser } from '@summerfi/sdk-common/user'
+import { AAVEv3LikeBaseProtocolPlugin } from '../../common/helpers/aaveV3Like/AAVEv3LikeBaseProtocolPlugin'
+import { ContractInfo } from '../../common/types/ContractInfo'
+import { ChainContractsProvider } from '../../utils/ChainContractProvider'
 import { AaveV3AbiMap, AaveV3AbiMapType } from '../abis/AaveV3AddressAbiMap'
-import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { AaveV3ContractNames } from '@summerfi/deployment-types'
+import { AaveV3StepBuilders } from '../builders/AaveV3StepBuilders'
 import {
   IAaveV3LendingPoolId,
   IAaveV3LendingPoolIdData,
   isAaveV3LendingPoolId,
 } from '../interfaces/IAaveV3LendingPoolId'
-import { IUser } from '@summerfi/sdk-common/user'
-import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
-import { IAaveV3PositionIdData, isAaveV3PositionId } from '../interfaces/IAaveV3PositionId'
+import {
+  IAaveV3LendingPositionIdData,
+  isAaveV3PositionId,
+} from '../interfaces/IAaveV3LendingPositionId'
+import { AaveV3LendingPool } from './AaveV3LendingPool'
 import { AaveV3LendingPoolInfo } from './AaveV3LendingPoolInfo'
 import { aaveV3EmodeCategoryMap } from './EmodeCategoryMap'
-import { AAVEv3LikeBaseProtocolPlugin } from '../../common/helpers/aaveV3Like/AAVEv3LikeBaseProtocolPlugin'
-import { FiatCurrency } from '@summerfi/sdk-common'
-import { ContractInfo } from '../../common/types/ContractInfo'
-import { ChainContractsProvider } from '../../utils/ChainContractProvider'
-import { AaveV3StepBuilders } from '../builders/AaveV3StepBuilders'
 
 /**
  * @class AaveV3ProtocolPlugin
@@ -77,9 +88,9 @@ export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
   }
 
   /** @see BaseProtocolPlugin.validateLendingPoolId */
-  protected _validatePositionId(
+  protected _validateLendingPositionId(
     candidate: IPositionIdData,
-  ): asserts candidate is IAaveV3PositionIdData {
+  ): asserts candidate is IAaveV3LendingPositionIdData {
     if (!isAaveV3PositionId(candidate)) {
       throw new Error(`Invalid AaveV3 position ID: ${JSON.stringify(candidate)}`)
     }
@@ -130,7 +141,7 @@ export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
   /** POSITIONS */
 
   /** @see BaseProtocolPlugin.getPosition */
-  async getPosition(positionId: IPositionId): Promise<IPosition> {
+  async getLendingPosition(positionId: ILendingPositionId): Promise<ILendingPosition> {
     throw new Error(`Not implemented ${positionId}`)
   }
 
@@ -139,7 +150,7 @@ export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
   /** @see BaseProtocolPlugin.getImportPositionTransaction */
   async getImportPositionTransaction(params: {
     user: IUser
-    externalPosition: IExternalPosition
+    externalPosition: IExternalLendingPosition
     positionsManager: IPositionsManager
   }): Promise<Maybe<TransactionInfo>> {
     throw new Error(`Not implemented ${params}`)

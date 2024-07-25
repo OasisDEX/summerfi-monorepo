@@ -1,10 +1,10 @@
-import { LendingPoolInfo } from '@summerfi/sdk-common/protocols'
+import { LendingPoolInfo } from '@summerfi/sdk-common/lending-protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
-import { SparkLendingPoolId } from './SparkLendingPoolId'
 import {
   ISparkLendingPoolInfo,
   ISparkLendingPoolInfoData,
 } from '../interfaces/ISparkLendingPoolInfo'
+import { SparkLendingPoolId } from './SparkLendingPoolId'
 
 /**
  * @class SparkLendingPoolInfo

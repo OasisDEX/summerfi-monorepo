@@ -2,27 +2,26 @@ import {
   Address,
   ChainFamilyMap,
   ChainInfo,
-  Position,
-  PositionId,
+  PoolType,
   PositionType,
+  ProtocolName,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
-import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
-import { SetupBuilderReturnType, setupBuilderParams } from '../../utils/SetupBuilderParams'
-import { DepositBorrowActionBuilder } from '../../../src/plugins/common/builders/DepositBorrowActionBuilder'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
+import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
-import { ILKType } from '../../../src/plugins/maker/enums/ILKType'
 import {
   MakerLendingPool,
   MakerLendingPoolId,
-  MakerPosition,
-  MakerPositionId,
+  MakerLendingPosition,
+  MakerLendingPositionId,
   MakerProtocol,
   OpenPositionActionBuilder,
 } from '../../../src'
+import { ILKType } from '../../../src/plugins/maker/enums/ILKType'
+import { SetupBuilderReturnType, setupBuilderParams } from '../../utils/SetupBuilderParams'
 
 describe('Deposit Borrow Action Builder', () => {
   let builderParams: SetupBuilderReturnType
@@ -75,9 +74,14 @@ describe('Deposit Borrow Action Builder', () => {
     debtToken: DAI,
   })
 
-  const position = MakerPosition.createFrom({
-    type: PositionType.Multiply,
-    id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '123' }),
+  const position = MakerLendingPosition.createFrom({
+    type: PositionType.Lending,
+    subtype: LendingPositionType.Multiply,
+    id: MakerLendingPositionId.createFrom({
+      type: PositionType.Lending,
+      id: 'someposition',
+      vaultId: '123',
+    }),
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
     pool: pool,

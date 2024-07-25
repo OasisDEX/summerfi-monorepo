@@ -1,6 +1,6 @@
 import { SerializationService } from '../../services/SerializationService'
-import { SDKErrorType } from '../enums/SDKErrorType'
 import { ISDKError, ISDKErrorData } from '../interfaces'
+import { SDKErrorType } from '../types/SDKErrorType'
 
 /**
  * @class SDKError

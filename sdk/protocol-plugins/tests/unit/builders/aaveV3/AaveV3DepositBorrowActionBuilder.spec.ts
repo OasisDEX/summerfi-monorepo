@@ -2,29 +2,32 @@ import {
   Address,
   ChainFamilyMap,
   ChainInfo,
+  PoolType,
   PositionType,
+  ProtocolName,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
 import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
-import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
 import {
+  AaveV3DepositBorrowActionBuilder,
+  AaveV3LendingPool,
+  AaveV3LendingPoolId,
+  AaveV3LendingPosition,
+  AaveV3LendingPositionId,
+  AaveV3Protocol,
   EmodeType,
   ILKType,
   MakerLendingPool,
   MakerLendingPoolId,
-  MakerPosition,
-  MakerPositionId,
+  MakerLendingPosition,
+  MakerLendingPositionId,
   MakerProtocol,
-  AaveV3DepositBorrowActionBuilder,
-  AaveV3LendingPool,
-  AaveV3LendingPoolId,
-  AaveV3Position,
-  AaveV3Protocol,
 } from '../../../../src'
+import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
 
 describe('AaveV3 Deposit Borrow Action Builder', () => {
   let builderParams: SetupBuilderReturnType
@@ -77,17 +80,26 @@ describe('AaveV3 Deposit Borrow Action Builder', () => {
     type: PoolType.Lending,
   })
 
-  const position = AaveV3Position.createFrom({
-    type: PositionType.Multiply,
-    id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '123' }),
+  const position = AaveV3LendingPosition.createFrom({
+    type: PositionType.Lending,
+    subtype: LendingPositionType.Multiply,
+    id: AaveV3LendingPositionId.createFrom({
+      type: PositionType.Lending,
+      id: 'someposition',
+    }),
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
     pool: pool,
   })
 
-  const wrongPosition = MakerPosition.createFrom({
-    type: PositionType.Multiply,
-    id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '123' }),
+  const wrongPosition = MakerLendingPosition.createFrom({
+    type: PositionType.Lending,
+    subtype: LendingPositionType.Multiply,
+    id: MakerLendingPositionId.createFrom({
+      id: 'someposition',
+      type: PositionType.Lending,
+      vaultId: '123',
+    }),
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
     pool: MakerLendingPool.createFrom({

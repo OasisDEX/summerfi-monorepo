@@ -1,24 +1,26 @@
 import {
+  ILKType,
+  IMakerLendingPool,
+  IMakerLendingPoolIdData,
+  IMakerLendingPosition,
+  IMakerProtocolData,
+  MakerLendingPool,
+  MakerLendingPosition,
+  MakerLendingPositionId,
+} from '@summerfi/protocol-plugins/plugins/maker'
+import {
   Address,
   ChainFamilyMap,
   ChainInfo,
-  Position,
+  PoolType,
+  PositionType,
+  ProtocolName,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
-import {
-  ILKType,
-  IMakerLendingPool,
-  IMakerLendingPoolData,
-  IMakerLendingPoolIdData,
-  IMakerProtocolData,
-  MakerLendingPool,
-  MakerPositionId,
-} from '@summerfi/protocol-plugins/plugins/maker'
-import { PositionType } from '@summerfi/sdk-common/common'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
 
-export function getMakerPosition(): Position {
+export function getMakerPosition(): IMakerLendingPosition {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
 
   const WETH = Token.createFrom({
@@ -66,13 +68,18 @@ export function getMakerPosition(): Position {
     collateralToken: WETH,
   })
 
-  const position = {
-    type: PositionType.Multiply,
-    id: MakerPositionId.createFrom({ id: 'makerPosition', vaultId: '34' }),
+  const position = MakerLendingPosition.createFrom({
+    type: PositionType.Lending,
+    subtype: LendingPositionType.Multiply,
+    id: MakerLendingPositionId.createFrom({
+      type: PositionType.Lending,
+      id: 'makerPosition',
+      vaultId: '34',
+    }),
     debtAmount,
     collateralAmount,
     pool,
-  } as unknown as Position
+  })
 
   return position
 }

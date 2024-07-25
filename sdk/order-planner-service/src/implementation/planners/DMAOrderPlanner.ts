@@ -1,7 +1,7 @@
 import { IAddressBookManager } from '@summerfi/address-book-common'
 import {
+  BuildOrderParams,
   IOrderPlanner,
-  OrderPlannerParams,
   encodeStrategy,
   generateStrategyName,
 } from '@summerfi/order-planner-common'
@@ -13,15 +13,16 @@ import {
   IStepBuilderContext,
   StepBuilderContext,
 } from '@summerfi/protocol-plugins-common'
-import { IUser } from '@summerfi/sdk-common'
-import { Maybe } from '@summerfi/sdk-common/common'
+import { IUser, SDKError } from '@summerfi/sdk-common'
+import { Maybe, SDKErrorType } from '@summerfi/sdk-common/common'
 import { Order, TransactionInfo, type IPositionsManager } from '@summerfi/sdk-common/orders'
+import { SimulationSteps, SimulationType, steps } from '@summerfi/sdk-common/simulation'
 import {
-  ISimulation,
-  SimulationSteps,
-  SimulationType,
-  steps,
-} from '@summerfi/sdk-common/simulation'
+  IImportSimulation,
+  IRefinanceSimulation,
+  isImportSimulation,
+  isRefinanceSimulation,
+} from '@summerfi/sdk-common/simulation/interfaces'
 
 /**
  * @name DMAOrderPlanner
@@ -36,7 +37,7 @@ export class DMAOrderPlanner implements IOrderPlanner {
   /** PUBLIC */
 
   /** @see IOrderPlanner.buildOrder */
-  async buildOrder(params: OrderPlannerParams): Promise<Maybe<Order>> {
+  async buildOrder(params: BuildOrderParams): Promise<Maybe<Order>> {
     const {
       user,
       positionsManager,
@@ -46,6 +47,22 @@ export class DMAOrderPlanner implements IOrderPlanner {
       swapManager,
       protocolsRegistry,
     } = params
+
+    if (!isRefinanceSimulation(simulation) && !isImportSimulation(simulation)) {
+      throw SDKError.createFrom({
+        type: SDKErrorType.OrderPlannerError,
+        reason: 'Invalid simulation type',
+        message: 'Simulation type must be Refinance or ImportPosition',
+      })
+    }
+
+    if (!positionsManager) {
+      throw SDKError.createFrom({
+        type: SDKErrorType.OrderPlannerError,
+        reason: 'Missing positions manager',
+        message: 'Positions Manager is required to build an order for DMA',
+      })
+    }
 
     const context: IStepBuilderContext = new StepBuilderContext()
 
@@ -88,7 +105,7 @@ export class DMAOrderPlanner implements IOrderPlanner {
   }
 
   /** @see IOrderPlanner.getAcceptedSimulations */
-  async getAcceptedSimulations(): Promise<SimulationType[]> {
+  getAcceptedSimulations(): SimulationType[] {
     return [SimulationType.Refinance, SimulationType.ImportPosition]
   }
 
@@ -109,7 +126,7 @@ export class DMAOrderPlanner implements IOrderPlanner {
 
   private async _generateOrder(params: {
     user: IUser
-    simulation: ISimulation<SimulationType>
+    simulation: IRefinanceSimulation | IImportSimulation
     preRequisiteTransactions: TransactionInfo[]
     simulationCalls: ActionCall[]
     positionsManager: IPositionsManager

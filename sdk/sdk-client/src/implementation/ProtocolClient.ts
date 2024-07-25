@@ -1,8 +1,8 @@
-import { ChainInfo, Maybe } from '@summerfi/sdk-common/common'
-import { ILendingPool, ILendingPoolIdData, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { ChainInfo, Maybe, ProtocolName } from '@summerfi/sdk-common/common'
+
+import { ILendingPool, ILendingPoolIdData, ILendingPoolInfo, Protocol } from '@summerfi/sdk-common'
 import { IProtocolClient } from '../interfaces/IProtocolClient'
 import { RPCMainClientType } from '../rpc/SDKMainClient'
-import { ILendingPoolInfo, Protocol } from '@summerfi/sdk-common'
 
 export class ProtocolClient extends Protocol implements IProtocolClient {
   public readonly name: ProtocolName

@@ -1,9 +1,9 @@
-import { SerializationService } from '@summerfi/sdk-common/services'
-import { ISparkLendingPoolId, ISparkLendingPoolIdData } from '../interfaces/ISparkLendingPoolId'
-import { EmodeType } from '../../common'
-import { SparkProtocol } from './SparkProtocol'
 import { IPrintable, IToken, Token } from '@summerfi/sdk-common/common'
-import { LendingPoolId } from '@summerfi/sdk-common/protocols'
+import { LendingPoolId } from '@summerfi/sdk-common/lending-protocols'
+import { SerializationService } from '@summerfi/sdk-common/services'
+import { EmodeType } from '../../common'
+import { ISparkLendingPoolId, ISparkLendingPoolIdData } from '../interfaces/ISparkLendingPoolId'
+import { SparkProtocol } from './SparkProtocol'
 
 /**
  * @class SparkLendingPoolId

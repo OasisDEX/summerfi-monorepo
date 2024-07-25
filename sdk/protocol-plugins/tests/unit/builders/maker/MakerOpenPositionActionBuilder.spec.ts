@@ -3,29 +3,31 @@ import {
   ChainFamilyMap,
   ChainInfo,
   Percentage,
+  PoolType,
   PositionType,
+  ProtocolName,
   RiskRatio,
   RiskRatioType,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
-import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
-import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
+import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
 import {
   ILKType,
-  MakerPositionId,
   MakerLendingPool,
   MakerLendingPoolId,
+  MakerLendingPosition,
+  MakerLendingPositionId,
   MakerOpenPositionActionBuilder,
-  MakerPosition,
   MakerProtocol,
   MorphoLendingPool,
   MorphoLendingPoolId,
   MorphoProtocol,
 } from '../../../../src'
+import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
 
 describe('Maker Open Position Action Builder', () => {
   let builderParams: SetupBuilderReturnType
@@ -78,9 +80,14 @@ describe('Maker Open Position Action Builder', () => {
     type: PoolType.Lending,
   })
 
-  const position = MakerPosition.createFrom({
-    type: PositionType.Multiply,
-    id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '123' }),
+  const position = MakerLendingPosition.createFrom({
+    type: PositionType.Lending,
+    subtype: LendingPositionType.Multiply,
+    id: MakerLendingPositionId.createFrom({
+      type: PositionType.Lending,
+      id: 'someposition',
+      vaultId: '123',
+    }),
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
     pool: pool,

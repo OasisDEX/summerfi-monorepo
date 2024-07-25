@@ -1,7 +1,8 @@
-import { ILendingPool, LendingPoolDataSchema } from '@summerfi/sdk-common/protocols'
-import { AaveV3LendingPoolIdDataSchema, IAaveV3LendingPoolId } from './IAaveV3LendingPoolId'
+import { PoolType } from '@summerfi/sdk-common'
 import { IToken } from '@summerfi/sdk-common/common'
+import { ILendingPool, LendingPoolDataSchema } from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
+import { AaveV3LendingPoolIdDataSchema, IAaveV3LendingPoolId } from './IAaveV3LendingPoolId'
 
 /**
  * @interface IAaveV3LendingPool
@@ -12,6 +13,7 @@ export interface IAaveV3LendingPool extends ILendingPool, IAaveV3LendingPoolData
   readonly id: IAaveV3LendingPoolId
 
   // Re-declaring the properties with the correct types
+  readonly type: PoolType.Lending
   readonly collateralToken: IToken
   readonly debtToken: IToken
 }

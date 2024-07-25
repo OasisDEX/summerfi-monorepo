@@ -1,8 +1,8 @@
-import { ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common/protocols'
+import { IToken, TokenDataSchema } from '@summerfi/sdk-common'
+import { ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common/lending-protocols'
+import { z } from 'zod'
 import { EmodeType, EmodeTypeSchema } from '../../common/enums/EmodeType'
 import { AaveV3ProtocolDataSchema, IAaveV3Protocol } from './IAaveV3Protocol'
-import { z } from 'zod'
-import { IToken, TokenDataSchema } from '@summerfi/sdk-common'
 
 /**
  * @interface IAaveV3LendingPoolId

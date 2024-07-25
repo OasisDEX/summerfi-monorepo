@@ -1,9 +1,9 @@
+import { HexData } from '@summerfi/sdk-common'
+import { IPrintable } from '@summerfi/sdk-common/common'
+import { LendingPoolId } from '@summerfi/sdk-common/lending-protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
 import { IMorphoLendingPoolId, IMorphoLendingPoolIdData } from '../interfaces/IMorphoLendingPoolId'
 import { MorphoProtocol } from './MorphoProtocol'
-import { IPrintable } from '@summerfi/sdk-common/common'
-import { LendingPoolId } from '@summerfi/sdk-common/protocols'
-import { HexData } from '@summerfi/sdk-common'
 
 /**
  * @class MorphoLendingPoolId

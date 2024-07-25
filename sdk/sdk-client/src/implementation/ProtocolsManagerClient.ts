@@ -1,5 +1,4 @@
-import type { ChainInfo, Maybe } from '@summerfi/sdk-common/common'
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
+import type { ChainInfo, Maybe, ProtocolName } from '@summerfi/sdk-common/common'
 import { IProtocolsManagerClient } from '../interfaces/IProtocolsManagerClient'
 import { IRPCClient } from '../interfaces/IRPCClient'
 import { RPCMainClientType } from '../rpc/SDKMainClient'

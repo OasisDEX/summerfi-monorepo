@@ -3,29 +3,31 @@ import {
   ChainFamilyMap,
   ChainInfo,
   Percentage,
+  PoolType,
   PositionType,
+  ProtocolName,
   RiskRatio,
   RiskRatioType,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
 import {
   ILKType,
-  MorphoPositionId,
-  MorphoPosition,
-  MorphoLendingPool,
-  MorphoLendingPoolId,
-  MorphoProtocol,
   MakerLendingPool,
   MakerLendingPoolId,
   MakerProtocol,
+  MorphoLendingPool,
+  MorphoLendingPoolId,
+  MorphoLendingPosition,
+  MorphoLendingPositionId,
   MorphoOpenPositionActionBuilder,
+  MorphoProtocol,
 } from '../../../../src'
+import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
 
 describe('Morpho Open Position Action Builder', () => {
   let builderParams: SetupBuilderReturnType
@@ -82,9 +84,10 @@ describe('Morpho Open Position Action Builder', () => {
     type: PoolType.Lending,
   })
 
-  const position = MorphoPosition.createFrom({
-    type: PositionType.Multiply,
-    id: MorphoPositionId.createFrom({ id: 'someposition' }),
+  const position = MorphoLendingPosition.createFrom({
+    type: PositionType.Lending,
+    subtype: LendingPositionType.Multiply,
+    id: MorphoLendingPositionId.createFrom({ type: PositionType.Lending, id: 'someposition' }),
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
     pool: pool,

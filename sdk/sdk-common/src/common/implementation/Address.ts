@@ -1,7 +1,7 @@
-import { IAddress, IAddressData } from '../interfaces/IAddress'
 import { SerializationService } from '../../services/SerializationService'
 import { AddressValue } from '../aliases/AddressValue'
-import { AddressType } from '../enums/AddressType'
+import { IAddress, IAddressData } from '../interfaces/IAddress'
+import { AddressType } from '../types/AddressType'
 
 /**
  * @class Address

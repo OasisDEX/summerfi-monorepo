@@ -1,5 +1,4 @@
-import { IRefinanceParameters } from '@summerfi/sdk-common/orders/interfaces/refinance'
-import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { IRefinanceParameters, IRefinanceSimulation } from '@summerfi/sdk-common'
 
 /**
  * Interface for the Refinance Simulation Manager
@@ -20,5 +19,5 @@ export interface IRefinanceSimulationManager {
    */
   simulateRefinancePosition(
     refinanceParameters: IRefinanceParameters,
-  ): Promise<ISimulation<SimulationType.Refinance>>
+  ): Promise<IRefinanceSimulation>
 }

@@ -1,6 +1,6 @@
-import { Protocol, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { IMorphoProtocol, IMorphoProtocolData } from '../interfaces/IMorphoProtocol'
+import { Protocol, ProtocolName } from '@summerfi/sdk-common/common'
 import { SerializationService } from '@summerfi/sdk-common/services'
+import { IMorphoProtocol, IMorphoProtocolData } from '../interfaces/IMorphoProtocol'
 
 /**
  * @class MorphoProtocol

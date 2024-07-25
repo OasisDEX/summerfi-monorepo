@@ -1,5 +1,5 @@
+import { IImportSimulation } from '@summerfi/sdk-common'
 import { IImportPositionParameters } from '@summerfi/sdk-common/orders'
-import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { IRPCClient } from '../../interfaces/IRPCClient'
 import { IImportingSimulationManager } from '../../interfaces/simulations/IImportingSimulationManager'
 import { RPCMainClientType } from '../../rpc/SDKMainClient'
@@ -13,7 +13,7 @@ export class ImportingSimulationManager extends IRPCClient implements IImporting
   /** @see IImportingSimulationManager.simulateImportPosition */
   public async simulateImportPosition(
     params: IImportPositionParameters,
-  ): Promise<ISimulation<SimulationType.ImportPosition>> {
+  ): Promise<IImportSimulation> {
     return this.rpcClient.simulation.import.query(params)
   }
 }
