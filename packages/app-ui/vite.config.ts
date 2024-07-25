@@ -12,8 +12,6 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 import dts from 'vite-plugin-dts'
 // preserves directives like "use client" in the output
 import preserveDirectives from 'rollup-preserve-directives'
-// compresses svgs (around 40-50% reduction with no build time increase)
-import svgo from 'vite-plugin-svgo'
 
 const logger = createLogger()
 const loggerInfo = logger.info
@@ -60,13 +58,6 @@ export default defineConfig(({ mode }) => {
         strictOutput: true,
         copyDtsFiles: true,
       }),
-      notDev
-        ? svgo({
-            multipass: true,
-            datauri: 'base64',
-            floatPrecision: 2,
-          })
-        : undefined,
     ],
     css: {
       preprocessorOptions: {
@@ -97,18 +88,19 @@ export default defineConfig(({ mode }) => {
       },
       rollupOptions: {
         external: [
-          'react',
-          'react/jsx-runtime',
-          'next',
-          'clsx',
+          '@loadable/component',
+          '@summerfi/app-icons',
+          '@tabler/icons-react',
           'bignumber.js',
           'boring-avatars',
-          'next/link',
-          'next/image',
+          'clsx',
           'lodash',
+          'next',
+          'next/image',
+          'next/link',
+          'react',
+          'react/jsx-runtime',
           'usehooks-ts',
-          '@loadable/component',
-          '@tabler/icons-react',
         ],
         input: Object.fromEntries(
           glob

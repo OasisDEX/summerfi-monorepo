@@ -1,11 +1,11 @@
 'use client'
 
 import { type FC, useState } from 'react'
+import * as iconProxies from '@summerfi/app-icons'
 import { type IconNamesList, type TokenSymbolsList } from '@summerfi/app-types'
 import Image from 'next/image'
 
 import { getTokenGuarded } from '@/tokens/helpers'
-import * as iconProxies from '@/tokens/icons/iconsProxy'
 
 export interface IconPropsBase {
   variant?: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'

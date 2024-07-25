@@ -40,14 +40,15 @@
   },
   "peerDependencies": {
     "@loadable/component": "^5.16.4",
+    "@summerfi/app-icons": "workspace:*",
     "@tabler/icons-react": "^3.11.0",
     "bignumber.js": "^9.1.2",
     "boring-avatars": "1.10.2",
     "clsx": "^2.1.1",
     "lodash": "^4.17.21",
     "next": "^14.2.5",
-    "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react": "^18.3.1",
     "usehooks-ts": "^3.1.0"
   },
   "publishConfig": {
@@ -59,7 +60,6 @@
     "rollup-preserve-directives": "^1.1.1",
     "sanitize.css": "13.0.0",
     "typed-scss-modules": "^8.0.1",
-    "vite-plugin-svgo": "^1.4.0",
     "vite-tsconfig-paths": "^4.3.2"
   }
 }
