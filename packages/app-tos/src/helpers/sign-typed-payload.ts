@@ -15,7 +15,7 @@ export const signTypedPayload = (
   challenge: string,
   signMessage: TOSSignMessage,
   account: string,
-): Promise<string> => {
+): ReturnType<TOSSignMessage> => {
   const data = getDataToSignFromChallenge(challenge)
 
   return signMessage(data, account)

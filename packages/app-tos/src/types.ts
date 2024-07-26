@@ -54,7 +54,7 @@ export type TOSState =
   | TOSFinishedStep
   | TOSRetryStep
 
-export type TOSSignMessage = (data: string, account: string) => Promise<string>
+export type TOSSignMessage = (data: string, account: string) => Promise<string | undefined>
 
 export type TOSInput = {
   signMessage: TOSSignMessage

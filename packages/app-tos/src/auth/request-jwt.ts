@@ -98,6 +98,10 @@ export async function requestJWT({
 
   const signature = await signTypedPayload(challenge, signMessage, addressForSignature)
 
+  if (!signature) {
+    throw new Error('Signing process declined or failed, try again or contact with support')
+  }
+
   return await requestSignin({
     challenge,
     signature,
