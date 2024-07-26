@@ -1,5 +1,5 @@
 import { SerializationService } from '../../services/SerializationService'
-import { ISDKError, ISDKErrorData } from '../interfaces'
+import { ISDKError, ISDKErrorParameters } from '../interfaces'
 import { SDKErrorType } from '../types/SDKErrorType'
 
 /**
@@ -7,17 +7,19 @@ import { SDKErrorType } from '../types/SDKErrorType'
  * @see ISDKError
  */
 export class SDKError extends Error implements ISDKError {
+  readonly _signature_0 = 'ISDKError'
+
   readonly type: SDKErrorType
   readonly reason: string
   readonly message: string
 
   /** FACTORY */
-  static createFrom(params: ISDKErrorData): ISDKError {
+  static createFrom(params: ISDKErrorParameters): ISDKError {
     return new SDKError(params)
   }
 
   /** CONSTRUCTOR */
-  protected constructor(params: ISDKErrorData) {
+  protected constructor(params: ISDKErrorParameters) {
     super(params.message)
 
     this.type = params.type

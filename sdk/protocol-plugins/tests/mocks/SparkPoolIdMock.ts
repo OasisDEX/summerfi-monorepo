@@ -1,4 +1,4 @@
-import { ChainFamilyMap, ProtocolName } from '@summerfi/sdk-common/common'
+import { ChainFamilyMap } from '@summerfi/sdk-common/common'
 import { TokensManagerMock } from '@summerfi/testing-utils'
 import { ISparkLendingPoolId, SparkLendingPoolId, SparkProtocol } from '../../src'
 import { EmodeType } from '../../src/plugins/common'
@@ -14,7 +14,6 @@ export async function getSparkPoolIdMock(): Promise<ISparkLendingPoolId> {
 
   return SparkLendingPoolId.createFrom({
     protocol: SparkProtocol.createFrom({
-      name: ProtocolName.Spark,
       chainInfo,
     }),
     collateralToken: DAI,

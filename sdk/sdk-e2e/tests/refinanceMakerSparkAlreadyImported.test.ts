@@ -11,7 +11,7 @@ import {
 
 import { Deployments } from '@summerfi/core-contracts'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
-import { ProtocolClient, makeSDK, type Chain } from '@summerfi/sdk-client'
+import { IProtocolClient, makeSDK, type Chain } from '@summerfi/sdk-client'
 import { CommonTokenSymbols, ProtocolName } from '@summerfi/sdk-common/common/enums'
 import { Order, PositionsManager, RefinanceParameters } from '@summerfi/sdk-common/orders'
 import {
@@ -160,7 +160,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     })
 
     // Target protocol
-    const spark: Maybe<ProtocolClient> = await chain.protocols.getProtocol({
+    const spark: Maybe<IProtocolClient> = await chain.protocols.getProtocol({
       name: ProtocolName.Spark,
     })
     assert(spark, 'Spark not found')

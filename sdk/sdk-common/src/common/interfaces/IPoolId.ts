@@ -1,5 +1,6 @@
 import { z } from 'zod'
-import { IProtocol, ProtocolDataSchema } from './IProtocol'
+import { PoolType } from '../types'
+import { IProtocol, isProtocol } from './IProtocol'
 
 /**
  * @name IPoolId
@@ -9,6 +10,10 @@ import { IProtocol, ProtocolDataSchema } from './IProtocol'
  * to uniquely identify a pool
  */
 export interface IPoolId extends IPoolIdData {
+  /** Signature to differentiate from similar interfaces */
+  readonly _signature_0: 'IPoolId'
+  /** Pool type */
+  readonly type: PoolType
   /** Protocol where the pool is */
   readonly protocol: IProtocol
 }
@@ -17,13 +22,19 @@ export interface IPoolId extends IPoolIdData {
  * @description Zod schema for IPoolId
  */
 export const PoolIdDataSchema = z.object({
-  protocol: ProtocolDataSchema,
+  type: z.nativeEnum(PoolType),
+  protocol: z.custom<IProtocol>((val) => isProtocol(val)),
 })
 
 /**
  * Type for the data part of the IPoolId interface
  */
 export type IPoolIdData = Readonly<z.infer<typeof PoolIdDataSchema>>
+
+/**
+ * Type for the parameters of the IPoolId interface
+ */
+export type IPoolIdParameters = Omit<IPoolIdData, ''>
 
 /**
  * @description Type guard for IPoolId

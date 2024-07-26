@@ -1,18 +1,21 @@
 import { IPrintable } from '../../common/interfaces/IPrintable'
 import { SerializationService } from '../../services'
-import { IPoolId, IPoolIdData } from '../interfaces/IPoolId'
-import { Protocol } from './Protocol'
+import { IPoolId, IPoolIdParameters } from '../interfaces/IPoolId'
+import { IProtocol } from '../interfaces/IProtocol'
+import { PoolType } from '../types/PoolType'
 
 /**
  * @class PoolId
  * @see IPoolIdData
  */
 export abstract class PoolId implements IPoolId, IPrintable {
-  abstract protocol: Protocol
+  readonly _signature_0 = 'IPoolId'
+  readonly type: PoolType
+  abstract protocol: IProtocol
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  protected constructor(params: IPoolIdData) {
-    // Empty on purpose
+  protected constructor(params: IPoolIdParameters) {
+    this.type = params.type
   }
 
   toString(): string {

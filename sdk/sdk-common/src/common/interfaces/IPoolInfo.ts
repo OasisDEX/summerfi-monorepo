@@ -1,6 +1,6 @@
-import { IPoolId, PoolIdDataSchema } from './IPoolId'
-import { PoolType } from '../types/PoolType'
 import { z } from 'zod'
+import { PoolType } from '../types/PoolType'
+import { IPoolId, PoolIdDataSchema } from './IPoolId'
 
 /**
  * @name IPool
@@ -9,6 +9,8 @@ import { z } from 'zod'
  * It is meant to be specialized for each type of pool, like a lending pool, a staking pool, etc...
  */
 export interface IPoolInfo extends IPoolInfoData {
+  /** Signature to differentiate from similar interfaces */
+  readonly _signature_0: 'IPoolInfo'
   /** Type of the pool */
   readonly type: PoolType
   /** Unique identifier for the pool, to be specialized for each protocol */
@@ -27,6 +29,11 @@ export const PoolInfoDataSchema = z.object({
  * Type for the data part of the IPoolInfo interface
  */
 export type IPoolInfoData = Readonly<z.infer<typeof PoolInfoDataSchema>>
+
+/**
+ * Type for the parameters of the IPoolInfo interface
+ */
+export type IPoolInfoParameters = Omit<IPoolInfoData, ''>
 
 /**
  * @description Type guard for IPoolInfo

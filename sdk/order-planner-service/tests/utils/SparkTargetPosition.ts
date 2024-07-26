@@ -1,25 +1,17 @@
 import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 import {
   ISparkLendingPool,
-  ISparkLendingPoolData,
-  ISparkLendingPoolIdData,
-  ISparkProtocolData,
+  ISparkLendingPosition,
   SparkLendingPool,
-  SparkPositionId,
+  SparkLendingPoolId,
+  SparkLendingPosition,
+  SparkLendingPositionId,
+  SparkProtocol,
 } from '@summerfi/protocol-plugins/plugins/spark'
-import {
-  Address,
-  ChainFamilyMap,
-  ChainInfo,
-  Position,
-  PositionId,
-  PositionType,
-  Token,
-  TokenAmount,
-} from '@summerfi/sdk-common/common'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { Address, ChainFamilyMap, ChainInfo, Token, TokenAmount } from '@summerfi/sdk-common/common'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
 
-export function getSparkPosition(): Position {
+export function getSparkPosition(): ISparkLendingPosition {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
 
   const WETH = Token.createFrom({
@@ -48,32 +40,30 @@ export function getSparkPosition(): Position {
     amount: '700.0',
   })
 
-  const protocol: ISparkProtocolData = {
-    name: ProtocolName.Spark,
+  const protocol = SparkProtocol.createFrom({
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
-  }
+  })
 
-  const poolId: ISparkLendingPoolIdData = {
+  const poolId = SparkLendingPoolId.createFrom({
     protocol: protocol,
     collateralToken: WETH,
     debtToken: DAI,
     emodeType: EmodeType.None,
-  }
+  })
 
   const pool: ISparkLendingPool = SparkLendingPool.createFrom({
-    type: PoolType.Lending,
     id: poolId,
     debtToken: DAI,
     collateralToken: WETH,
   })
 
-  const position = {
-    type: PositionType.Multiply,
-    id: SparkPositionId.createFrom({ id: 'sparkPosition' }),
+  const position = SparkLendingPosition.createFrom({
+    subtype: LendingPositionType.Multiply,
+    id: SparkLendingPositionId.createFrom({ id: 'sparkPosition' }),
     debtAmount,
     collateralAmount,
     pool,
-  } as unknown as Position
+  })
 
   return position
 }

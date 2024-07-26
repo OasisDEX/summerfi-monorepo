@@ -1,4 +1,4 @@
-import { ChainFamilyMap, ProtocolName } from '@summerfi/sdk-common'
+import { ChainFamilyMap } from '@summerfi/sdk-common'
 import { TokensManagerMock } from '@summerfi/testing-utils'
 import { AaveV3LendingPoolId, AaveV3Protocol } from '../../src'
 import { IAaveV3LendingPoolId } from '../../src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId'
@@ -20,7 +20,6 @@ export async function getAaveV3PoolIdMock(): Promise<IAaveV3LendingPoolId> {
 
   return AaveV3LendingPoolId.createFrom({
     protocol: AaveV3Protocol.createFrom({
-      name: ProtocolName.AaveV3,
       chainInfo,
     }),
     debtToken: DAI,

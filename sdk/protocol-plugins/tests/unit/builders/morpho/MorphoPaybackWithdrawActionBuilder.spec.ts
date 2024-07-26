@@ -1,11 +1,9 @@
-import { ProtocolName, RiskRatio, RiskRatioType } from '@summerfi/sdk-common'
+import { RiskRatio, RiskRatioType } from '@summerfi/sdk-common'
 import {
   Address,
   ChainFamilyMap,
   ChainInfo,
   Percentage,
-  PoolType,
-  PositionType,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
@@ -23,6 +21,7 @@ import {
   MorphoLendingPool,
   MorphoLendingPoolId,
   MorphoLendingPosition,
+  MorphoLendingPositionId,
   MorphoProtocol,
 } from '../../../../src'
 import { MorphoPaybackWithdrawActionBuilder } from '../../../../src/plugins/morphoblue/builders/MorphoPaybackWithdrawActionBuilder'
@@ -61,7 +60,6 @@ describe('Morpho Payback Withdraw Action Builder', () => {
   })
 
   const protocol = MorphoProtocol.createFrom({
-    name: ProtocolName.MorphoBlue,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 
@@ -80,16 +78,12 @@ describe('Morpho Payback Withdraw Action Builder', () => {
       value: Percentage.createFrom({ value: 0.5 }),
       type: RiskRatioType.LTV,
     }),
-    type: PoolType.Lending,
   })
 
   const position = MorphoLendingPosition.createFrom({
-    type: PositionType.Lending,
     subtype: LendingPositionType.Multiply,
-    id: MakerLendingPositionId.createFrom({
-      type: PositionType.Lending,
+    id: MorphoLendingPositionId.createFrom({
       id: 'someposition',
-      vaultId: '123',
     }),
     debtAmount: withdrawAmount,
     collateralAmount: paybackAmount,
@@ -97,10 +91,8 @@ describe('Morpho Payback Withdraw Action Builder', () => {
   })
 
   const wrongPosition = MakerLendingPosition.createFrom({
-    type: PositionType.Lending,
     subtype: LendingPositionType.Multiply,
     id: MakerLendingPositionId.createFrom({
-      type: PositionType.Lending,
       id: 'someposition',
       vaultId: '123',
     }),
@@ -113,12 +105,10 @@ describe('Morpho Payback Withdraw Action Builder', () => {
         collateralToken: WETH,
         debtToken: DAI,
         protocol: MakerProtocol.createFrom({
-          name: ProtocolName.Maker,
           chainInfo: ChainFamilyMap.Ethereum.Mainnet,
         }),
         ilkType: ILKType.ETH_A,
       }),
-      type: PoolType.Lending,
     }),
   })
 

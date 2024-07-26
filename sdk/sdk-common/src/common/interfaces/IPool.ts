@@ -1,6 +1,7 @@
-import { IPoolId, PoolIdDataSchema } from './IPoolId'
-import { PoolType } from '../types/PoolType'
 import { z } from 'zod'
+import { PoolType } from '../types/PoolType'
+import { IPoolId, isPoolId } from './IPoolId'
+import { IPrintable } from './IPrintable'
 
 /**
  * @name IPool
@@ -9,7 +10,9 @@ import { z } from 'zod'
  *
  * It is meant to be specialized for each type of pool
  */
-export interface IPool extends IPoolData {
+export interface IPool extends IPrintable, IPoolData {
+  /** Signature to differentiate from similar interfaces */
+  readonly _signature_0: 'IPool'
   /** Type of the pool */
   readonly type: PoolType
   /** Unique identifier for the pool, to be specialized for each protocol */
@@ -21,13 +24,18 @@ export interface IPool extends IPoolData {
  */
 export const PoolDataSchema = z.object({
   type: z.nativeEnum(PoolType),
-  id: PoolIdDataSchema,
+  id: z.custom<IPoolId>((val) => isPoolId(val)),
 })
 
 /**
  * Type for the data part of the IPool interface
  */
 export type IPoolData = Readonly<z.infer<typeof PoolDataSchema>>
+
+/**
+ * Type for the parameters of the IPool interface
+ */
+export type IPoolParameters = Omit<IPoolData, ''>
 
 /**
  * @description Type guard for IPool

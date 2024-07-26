@@ -1,14 +1,16 @@
-import { IPercentage, PercentageDataSchema } from '../../common/interfaces/IPercentage'
-import { IPrice, PriceDataSchema } from '../../common/interfaces/IPrice'
-import { IRiskRatio, RiskRatioDataSchema } from '../../common/interfaces/IRiskRatio'
-import { IToken, TokenDataSchema } from '../../common/interfaces/IToken'
-import { ITokenAmount, TokenAmountDataSchema } from '../../common/interfaces/ITokenAmount'
 import { z } from 'zod'
+import { IPercentage, isPercentage } from '../../common/interfaces/IPercentage'
+import { IPrice, isPrice } from '../../common/interfaces/IPrice'
+import { IRiskRatio, isRiskRatio } from '../../common/interfaces/IRiskRatio'
+import { IToken, isToken } from '../../common/interfaces/IToken'
+import { ITokenAmount, isTokenAmount } from '../../common/interfaces/ITokenAmount'
 /**
  * @interface ICollateralInfo
  * @description Contains extended information about a collateral token of a lending pool
  */
 export interface ICollateralInfo extends ICollateralInfoData {
+  /** Signature to differentiate from similar interfaces */
+  readonly _signature_0: 'ICollateralInfo'
   /** The token that represents the collateral */
   readonly token: IToken
   /** The price of the token in the protocol's default denomination */
@@ -29,19 +31,24 @@ export interface ICollateralInfo extends ICollateralInfoData {
  * @description Zod schema for ICollateralInfo
  */
 export const CollateralInfoDataSchema = z.object({
-  token: TokenDataSchema,
-  price: PriceDataSchema,
-  priceUSD: PriceDataSchema,
-  liquidationThreshold: RiskRatioDataSchema,
-  maxSupply: TokenAmountDataSchema,
-  tokensLocked: TokenAmountDataSchema,
-  liquidationPenalty: PercentageDataSchema,
+  token: z.custom<IToken>((val) => isToken(val)),
+  price: z.custom<IPrice>((val) => isPrice(val)),
+  priceUSD: z.custom<IPrice>((val) => isPrice(val)),
+  liquidationThreshold: z.custom<IRiskRatio>((val) => isRiskRatio(val)),
+  maxSupply: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  tokensLocked: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  liquidationPenalty: z.custom<IPercentage>((val) => isPercentage(val)),
 })
 
 /**
  * Type for the data part of the ICollateralInfo interface
  */
 export type ICollateralInfoData = Readonly<z.infer<typeof CollateralInfoDataSchema>>
+
+/**
+ * Type for the parameters of the ICollateralInfo interface
+ */
+export type ICollateralInfoParameters = Omit<ICollateralInfoData, ''>
 
 /**
  * @description Type guard for ICollateralInfo

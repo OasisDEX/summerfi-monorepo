@@ -2,7 +2,7 @@ import { LendingPositionId } from '@summerfi/sdk-common/lending-protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
 import {
   IMorphoLendingPositionId,
-  IMorphoLendingPositionIdData,
+  IMorphoLendingPositionIdParameters,
 } from '../interfaces/IMorphoLendingPositionId'
 
 /**
@@ -10,13 +10,15 @@ import {
  * @see IMorphoLendingPositionId
  */
 export class MorphoLendingPositionId extends LendingPositionId implements IMorphoLendingPositionId {
+  readonly _signature_2 = 'IMorphoLendingPositionId'
+
   /** Factory method */
-  static createFrom(params: IMorphoLendingPositionIdData): MorphoLendingPositionId {
+  static createFrom(params: IMorphoLendingPositionIdParameters): MorphoLendingPositionId {
     return new MorphoLendingPositionId(params)
   }
 
   /** Sealed constructor */
-  private constructor(params: IMorphoLendingPositionIdData) {
+  private constructor(params: IMorphoLendingPositionIdParameters) {
     super(params)
   }
 }

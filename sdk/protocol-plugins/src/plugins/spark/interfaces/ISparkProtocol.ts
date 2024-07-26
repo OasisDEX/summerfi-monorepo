@@ -12,10 +12,11 @@ import { z } from 'zod'
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
 export interface ISparkProtocol extends ISparkProtocolData, IProtocol {
-  /** Spark protocol name */
-  readonly name: ProtocolName.Spark
+  /** Interface signature used to differentiate it from similar interfaces */
+  readonly _signature_1: 'ISparkProtocol'
 
   // Re-declaring the properties with the right types
+  readonly name: ProtocolName
   readonly chainInfo: IChainInfo
 }
 
@@ -24,13 +25,18 @@ export interface ISparkProtocol extends ISparkProtocolData, IProtocol {
  */
 export const SparkProtocolDataSchema = z.object({
   ...ProtocolDataSchema.shape,
-  name: z.literal(ProtocolName.Spark),
+  name: z.custom<ProtocolName>((val) => val === ProtocolName.Spark),
 })
 
 /**
  * Type for the data part of ISparkProtocol
  */
 export type ISparkProtocolData = Readonly<z.infer<typeof SparkProtocolDataSchema>>
+
+/**
+ * Type for the parameters of the ISparkProtocol interface
+ */
+export type ISparkProtocolParameters = Omit<ISparkProtocolData, 'name'>
 
 /**
  * @description Type guard for ISparkProtocol

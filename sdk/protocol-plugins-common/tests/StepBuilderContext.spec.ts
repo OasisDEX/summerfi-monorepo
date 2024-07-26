@@ -9,6 +9,7 @@ import {
   Address,
   ChainFamilyMap,
   ChainInfo,
+  IProtocol,
   PositionType,
   Token,
   TokenAmount,
@@ -58,9 +59,10 @@ describe('Step Builder Context', () => {
   const protocol = {
     name: ProtocolName.Maker as const,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
-  }
+  } as unknown as IProtocol
 
   const poolId: IPoolIdData = {
+    type: PoolType.Lending,
     protocol: protocol,
   }
 

@@ -1,18 +1,18 @@
 import { z } from 'zod'
-import { IPosition } from '../../common/interfaces/IPosition'
-import { ITokenAmount, TokenAmountDataSchema } from '../../common/interfaces/ITokenAmount'
+import { IPosition, PositionDataSchema } from '../../common/interfaces/IPosition'
+import { ITokenAmount, isTokenAmount } from '../../common/interfaces/ITokenAmount'
 import { PositionType } from '../../common/types/PositionType'
 import { LendingPositionType, LendingPositionTypeSchema } from '../types'
-import { ILendingPool, LendingPoolDataSchema } from './ILendingPool'
-import { ILendingPositionId, LendingPositionIdDataSchema } from './ILendingPositionId'
+import { ILendingPool, isLendingPool } from './ILendingPool'
+import { ILendingPositionId, isLendingPositionId } from './ILendingPositionId'
 
 /**
  * @name ILendingPosition
  * @description Represents a position in a Lending protocol
  */
 export interface ILendingPosition extends IPosition {
-  /** Type of the position */
-  readonly type: PositionType.Lending
+  /** Signature to differentiate from similar interfaces */
+  readonly _signature_1: 'ILendingPosition'
   /** Subtype of the position in the Summer.fi system */
   readonly subtype: LendingPositionType
   /** Unique identifier for the position inside the Summer.fi system */
@@ -29,18 +29,24 @@ export interface ILendingPosition extends IPosition {
  * @description Zod schema for ILendingPosition
  */
 export const LendingPositionDataSchema = z.object({
-  type: z.literal(PositionType.Lending),
+  ...PositionDataSchema.shape,
+  type: z.custom<PositionType>((val) => val === PositionType.Lending),
   subtype: LendingPositionTypeSchema,
-  id: LendingPositionIdDataSchema,
-  debtAmount: TokenAmountDataSchema,
-  collateralAmount: TokenAmountDataSchema,
-  pool: LendingPoolDataSchema,
+  id: z.custom<ILendingPositionId>((val) => isLendingPositionId(val)),
+  debtAmount: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  collateralAmount: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  pool: z.custom<ILendingPool>((val) => isLendingPool(val)),
 })
 
 /**
  * Type for the data part of the ILendingPosition interface
  */
 export type ILendingPositionData = Readonly<z.infer<typeof LendingPositionDataSchema>>
+
+/**
+ * Type for the parameters of the ILendingPosition interface
+ */
+export type ILendingPositionParameters = Omit<ILendingPositionData, 'type'>
 
 /**
  * @description Type guard for ILendingPosition

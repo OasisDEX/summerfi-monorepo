@@ -1,12 +1,13 @@
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import {
+  ILKType,
+  MakerLendingPool,
+  MakerLendingPoolId,
+  MakerProtocol,
+} from '@summerfi/protocol-plugins/plugins/maker'
+import { isMakerLendingPoolId } from '@summerfi/protocol-plugins/plugins/maker/interfaces/IMakerLendingPoolId'
+import { Address, ChainFamilyMap, PoolType, ProtocolName, Token } from '@summerfi/sdk-common'
 import { SDKManager } from '../../src/implementation/SDKManager'
 import { RPCMainClientType } from '../../src/rpc/SDKMainClient'
-import { ILKType, MakerLendingPool } from '@summerfi/protocol-plugins/plugins/maker'
-import {
-  IMakerLendingPoolIdData,
-  isMakerLendingPoolId,
-} from '@summerfi/protocol-plugins/plugins/maker/interfaces/IMakerLendingPoolId'
-import { AddressType } from '@summerfi/sdk-common'
 
 export default async function getLendingPoolTest() {
   type GetLendingPoolType = RPCMainClientType['protocols']['getLendingPool']['query']
@@ -54,33 +55,30 @@ export default async function getLendingPoolTest() {
     fail('Protocol not found')
   }
 
-  const makerPoolId: IMakerLendingPoolIdData = {
-    protocol: {
-      name: ProtocolName.Maker,
+  const makerPoolId = MakerLendingPoolId.createFrom({
+    protocol: MakerProtocol.createFrom({
       chainInfo: chain.chainInfo,
-    },
-    collateralToken: {
-      address: {
-        type: AddressType.Ethereum,
+    }),
+    collateralToken: Token.createFrom({
+      address: Address.createFromEthereum({
         value: '0x6b175474e89094c44da98b954eedeac495271d0f',
-      },
-      chainInfo: { chainId: 1, name: 'Ethereum' },
+      }),
+      chainInfo: ChainFamilyMap.Ethereum.Mainnet,
       name: 'USD Coin',
       symbol: 'USDC',
       decimals: 6,
-    },
-    debtToken: {
-      address: {
-        type: AddressType.Ethereum,
+    }),
+    debtToken: Token.createFrom({
+      address: Address.createFromEthereum({
         value: '0x6b175474e89094c44da98b954eedeac495271d0f',
-      },
-      chainInfo: { chainId: 1, name: 'Ethereum' },
+      }),
+      chainInfo: ChainFamilyMap.Ethereum.Mainnet,
       name: 'USD Coin',
       symbol: 'USDC',
       decimals: 6,
-    },
+    }),
     ilkType: ILKType.ETH_A,
-  }
+  })
 
   const pool = await protocol.getLendingPool({ poolId: makerPoolId })
 

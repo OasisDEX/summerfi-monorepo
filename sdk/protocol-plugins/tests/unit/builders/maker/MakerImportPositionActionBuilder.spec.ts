@@ -1,11 +1,9 @@
+import { ExternalLendingPosition, ExternalLendingPositionId } from '@summerfi/sdk-common'
 import {
   Address,
   ChainFamilyMap,
   ChainInfo,
   Percentage,
-  PoolType,
-  PositionType,
-  ProtocolName,
   RiskRatio,
   RiskRatioType,
   Token,
@@ -27,6 +25,7 @@ import {
   MorphoLendingPool,
   MorphoLendingPoolId,
   MorphoLendingPosition,
+  MorphoLendingPositionId,
   MorphoProtocol,
 } from '../../../../src'
 import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
@@ -68,7 +67,6 @@ describe('Maker Import Position Action Builder', () => {
   })
 
   const protocol = MakerProtocol.createFrom({
-    name: ProtocolName.Maker,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 
@@ -83,15 +81,12 @@ describe('Maker Import Position Action Builder', () => {
     collateralToken: WETH,
     debtToken: DAI,
     id: poolId,
-    type: PoolType.Lending,
   })
 
   const position = MakerLendingPosition.createFrom({
-    type: PositionType.Lending,
     subtype: LendingPositionType.Multiply,
     id: MakerLendingPositionId.createFrom({
       id: 'someposition',
-      type: PositionType.Lending,
       vaultId: '123',
     }),
     debtAmount: borrowAmount,
@@ -100,12 +95,9 @@ describe('Maker Import Position Action Builder', () => {
   })
 
   const wrongPosition = MorphoLendingPosition.createFrom({
-    type: PositionType.Lending,
     subtype: LendingPositionType.Multiply,
-    id: MakerLendingPositionId.createFrom({
+    id: MorphoLendingPositionId.createFrom({
       id: 'someposition',
-      type: PositionType.Lending,
-      vaultId: '123',
     }),
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
@@ -115,7 +107,6 @@ describe('Maker Import Position Action Builder', () => {
       id: MorphoLendingPoolId.createFrom({
         marketId: '0x1234',
         protocol: MorphoProtocol.createFrom({
-          name: ProtocolName.MorphoBlue,
           chainInfo: ChainFamilyMap.Ethereum.Mainnet,
         }),
       }),
@@ -125,7 +116,6 @@ describe('Maker Import Position Action Builder', () => {
         value: Percentage.createFrom({ value: 0.5 }),
         type: RiskRatioType.LTV,
       }),
-      type: PoolType.Lending,
     }),
   })
 
@@ -133,15 +123,15 @@ describe('Maker Import Position Action Builder', () => {
     type: SimulationSteps.Import,
     name: 'ImportPosition',
     inputs: {
-      externalPosition: {
+      externalPosition: ExternalLendingPosition.createFrom({
         ...position,
-        id: {
-          type: PositionType.Lending,
-          id: 'someposition',
+        id: ExternalLendingPositionId.createFrom({
+          ...position.id,
+          protocolId: position.id,
           externalType: ExternalLendingPositionType.WALLET,
           address: externalPositionOwner,
-        },
-      },
+        }),
+      }),
     },
     outputs: undefined,
   }
@@ -158,15 +148,15 @@ describe('Maker Import Position Action Builder', () => {
           ...derivedStep,
           inputs: {
             ...derivedStep.inputs,
-            externalPosition: {
+            externalPosition: ExternalLendingPosition.createFrom({
               ...wrongPosition,
-              id: {
-                type: PositionType.Lending,
+              id: ExternalLendingPositionId.createFrom({
+                ...wrongPosition.id,
+                protocolId: wrongPosition.id,
                 externalType: ExternalLendingPositionType.WALLET,
-                id: 'someposition',
                 address: externalPositionOwner,
-              },
-            },
+              }),
+            }),
           },
         },
         protocolsRegistry: builderParams.emptyProtocolsRegistry,

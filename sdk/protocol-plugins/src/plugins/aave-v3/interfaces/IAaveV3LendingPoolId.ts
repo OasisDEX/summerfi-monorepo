@@ -1,8 +1,8 @@
-import { IToken, TokenDataSchema } from '@summerfi/sdk-common'
+import { IToken, PoolType, isToken } from '@summerfi/sdk-common'
 import { ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
 import { EmodeType, EmodeTypeSchema } from '../../common/enums/EmodeType'
-import { AaveV3ProtocolDataSchema, IAaveV3Protocol } from './IAaveV3Protocol'
+import { IAaveV3Protocol, isAaveV3Protocol } from './IAaveV3Protocol'
 
 /**
  * @interface IAaveV3LendingPoolId
@@ -12,6 +12,8 @@ import { AaveV3ProtocolDataSchema, IAaveV3Protocol } from './IAaveV3Protocol'
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
 export interface IAaveV3LendingPoolId extends ILendingPoolId, IAaveV3LendingPoolIdData {
+  /** Interface signature used to differentiate it from similar interfaces */
+  readonly _signature_2: 'IAaveV3LendingPoolId'
   /** Aave v3 protocol */
   readonly protocol: IAaveV3Protocol
   /** The pool's efficiency mode */
@@ -20,6 +22,9 @@ export interface IAaveV3LendingPoolId extends ILendingPoolId, IAaveV3LendingPool
   readonly collateralToken: IToken
   /** The token used to borrow funds */
   readonly debtToken: IToken
+
+  // Re-declaring the properties with the correct types
+  readonly type: PoolType
 }
 
 /**
@@ -27,16 +32,21 @@ export interface IAaveV3LendingPoolId extends ILendingPoolId, IAaveV3LendingPool
  */
 export const AaveV3LendingPoolIdDataSchema = z.object({
   ...LendingPoolIdDataSchema.shape,
-  protocol: AaveV3ProtocolDataSchema,
+  protocol: z.custom<IAaveV3Protocol>((val) => isAaveV3Protocol(val)),
   emodeType: EmodeTypeSchema,
-  collateralToken: TokenDataSchema,
-  debtToken: TokenDataSchema,
+  collateralToken: z.custom<IToken>((val) => isToken(val)),
+  debtToken: z.custom<IToken>((val) => isToken(val)),
 })
 
 /**
  * Type for the data part of IAaveV3LendingPoolId
  */
 export type IAaveV3LendingPoolIdData = Readonly<z.infer<typeof AaveV3LendingPoolIdDataSchema>>
+
+/**
+ * Type for the parameters of the IAaveV3LendingPoolId interface
+ */
+export type IAaveV3LendingPoolIdParameters = Omit<IAaveV3LendingPoolIdData, 'type'>
 
 /**
  * @description Type guard for IAaveV3LendingPoolId

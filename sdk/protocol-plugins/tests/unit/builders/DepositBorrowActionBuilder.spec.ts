@@ -1,13 +1,4 @@
-import {
-  Address,
-  ChainFamilyMap,
-  ChainInfo,
-  PoolType,
-  PositionType,
-  ProtocolName,
-  Token,
-  TokenAmount,
-} from '@summerfi/sdk-common/common'
+import { Address, ChainFamilyMap, ChainInfo, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
 import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
 import { getErrorMessage } from '@summerfi/testing-utils'
@@ -56,7 +47,6 @@ describe('Deposit Borrow Action Builder', () => {
   })
 
   const protocol = MakerProtocol.createFrom({
-    name: ProtocolName.Maker,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 
@@ -68,17 +58,14 @@ describe('Deposit Borrow Action Builder', () => {
   })
 
   const pool = MakerLendingPool.createFrom({
-    type: PoolType.Lending,
     id: poolId,
     collateralToken: WETH,
     debtToken: DAI,
   })
 
   const position = MakerLendingPosition.createFrom({
-    type: PositionType.Lending,
     subtype: LendingPositionType.Multiply,
     id: MakerLendingPositionId.createFrom({
-      type: PositionType.Lending,
       id: 'someposition',
       vaultId: '123',
     }),

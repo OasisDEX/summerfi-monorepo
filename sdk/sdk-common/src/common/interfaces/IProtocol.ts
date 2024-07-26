@@ -9,6 +9,8 @@ import { ProtocolName } from '../enums/ProtocolName'
  * This interface is used to add all the methods that the interface supports
  */
 export interface IProtocol extends IProtocolData {
+  /** Signature used to differentiate it from similar interfaces */
+  readonly _signature_0: 'IProtocol'
   /** The name of the protocol */
   readonly name: ProtocolName
   /** The chain information */
@@ -36,6 +38,11 @@ export const ProtocolDataSchema = z.object({
  * Type for the data part of the IProtocol interface
  */
 export type IProtocolData = Readonly<z.infer<typeof ProtocolDataSchema>>
+
+/**
+ * Type for the parameters of the IPrice interface
+ */
+export type IProtocolParameters = Omit<IProtocolData, ''>
 
 /**
  * @description Type guard for IProtocol

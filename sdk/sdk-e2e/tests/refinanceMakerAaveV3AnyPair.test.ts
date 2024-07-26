@@ -7,14 +7,13 @@ import {
   type Maybe,
 } from '@summerfi/sdk-common/common'
 
-import { ProtocolClient, makeSDK, type Chain } from '@summerfi/sdk-client'
+import { IProtocolClient, makeSDK, type Chain } from '@summerfi/sdk-client'
 import {
-  ExternalPositionType,
+  ExternalLendingPositionType,
   Order,
   PositionsManager,
   RefinanceParameters,
 } from '@summerfi/sdk-common/orders'
-import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
 import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 
 import {
@@ -26,12 +25,19 @@ import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 import {
   ILKType,
   MakerLendingPoolId,
-  MakerPosition,
-  MakerPositionId,
+  MakerLendingPosition,
+  MakerLendingPositionId,
   isMakerLendingPool,
   isMakerProtocol,
 } from '@summerfi/protocol-plugins/plugins/maker'
-import { AddressValue, CommonTokenSymbols, IToken, Token } from '@summerfi/sdk-common'
+import {
+  AddressValue,
+  CommonTokenSymbols,
+  IToken,
+  LendingPositionType,
+  ProtocolName,
+  Token,
+} from '@summerfi/sdk-common'
 import { TransactionUtils } from '@summerfi/testing-utils'
 import assert from 'assert'
 import { Hex } from 'viem'
@@ -142,9 +148,14 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
     }
 
     // Source position
-    const makerPosition: MakerPosition = MakerPosition.createFrom({
-      type: PositionType.Multiply,
-      id: MakerPositionId.createFrom({ id: config.makerVaultId, vaultId: config.makerVaultId }),
+    const makerPosition: MakerLendingPosition = MakerLendingPosition.createFrom({
+      type: PositionType.Lending,
+      subtype: LendingPositionType.Multiply,
+      id: MakerLendingPositionId.createFrom({
+        type: PositionType.Lending,
+        id: config.makerVaultId,
+        vaultId: config.makerVaultId,
+      }),
       debtAmount: TokenAmount.createFrom({
         token: sourceDebtToken,
         amount: config.source.debtAmount,
@@ -157,7 +168,7 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
     })
 
     // Target protocol
-    const aaveV3: Maybe<ProtocolClient> = await chain.protocols.getProtocol({
+    const aaveV3: Maybe<IProtocolClient> = await chain.protocols.getProtocol({
       name: ProtocolName.AaveV3,
     })
     assert(aaveV3, 'AaveV3 not found')
@@ -200,7 +211,7 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
             address: Address.createFromEthereum({
               value: '0x517775d01FA1D41c8906848e88831b6dA49AB8E7',
             }),
-            type: ExternalPositionType.DS_PROXY,
+            type: ExternalLendingPositionType.DS_PROXY,
           },
           position: makerPosition,
         },

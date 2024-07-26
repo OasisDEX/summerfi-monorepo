@@ -1,8 +1,8 @@
 import { z } from 'zod'
 import { IPool, PoolDataSchema } from '../../common/interfaces/IPool'
-import { IToken, TokenDataSchema } from '../../common/interfaces/IToken'
+import { IToken, isToken } from '../../common/interfaces/IToken'
 import { PoolType } from '../../common/types/PoolType'
-import { ILendingPoolId, LendingPoolIdDataSchema } from './ILendingPoolId'
+import { ILendingPoolId, isLendingPoolId } from './ILendingPoolId'
 
 /**
  * @name ILendingPool
@@ -15,14 +15,17 @@ import { ILendingPoolId, LendingPoolIdDataSchema } from './ILendingPoolId'
  * level through the PoolId
  */
 export interface ILendingPool extends IPool, ILendingPoolData {
-  /** Type of the pool, in this case Lending */
-  readonly type: PoolType.Lending
+  /** Signature to differentiate from similar interfaces */
+  readonly _signature_1: 'ILendingPool'
   /** Pool ID of the lending pool */
   readonly id: ILendingPoolId
   /** Collateral token used to collateralized the pool */
   readonly collateralToken: IToken
   /** Debt token, which can be borrowed from the pool */
   readonly debtToken: IToken
+
+  // Re-declaring the properties with the correct types
+  readonly type: PoolType
 }
 
 /**
@@ -30,16 +33,21 @@ export interface ILendingPool extends IPool, ILendingPoolData {
  */
 export const LendingPoolDataSchema = z.object({
   ...PoolDataSchema.shape,
-  type: z.literal(PoolType.Lending),
-  id: LendingPoolIdDataSchema,
-  collateralToken: TokenDataSchema,
-  debtToken: TokenDataSchema,
+  type: z.custom<PoolType>((val) => val === PoolType.Lending),
+  id: z.custom<ILendingPoolId>((val) => isLendingPoolId(val)),
+  collateralToken: z.custom<IToken>((val) => isToken(val)),
+  debtToken: z.custom<IToken>((val) => isToken(val)),
 })
 
 /**
  * Type for the data part of the ILendingPool interface
  */
 export type ILendingPoolData = Readonly<z.infer<typeof LendingPoolDataSchema>>
+
+/**
+ * Type for the parameters of the ILendingPool interface
+ */
+export type ILendingPoolParameters = Omit<ILendingPoolData, 'type'>
 
 /**
  * @description Type guard for ILendingPool

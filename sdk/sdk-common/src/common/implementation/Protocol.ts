@@ -2,17 +2,19 @@ import { ChainInfo } from '../../common/implementation/ChainInfo'
 import { IPrintable } from '../../common/interfaces/IPrintable'
 import { SerializationService } from '../../services'
 import { ProtocolName } from '../enums/ProtocolName'
-import { IProtocol, IProtocolData } from '../interfaces/IProtocol'
+import { IProtocol, IProtocolParameters } from '../interfaces/IProtocol'
 
 /**
  * @class Protocol
  * @see IProtocolData
  */
 export abstract class Protocol implements IProtocol, IPrintable {
+  readonly _signature_0 = 'IProtocol'
+
   readonly name: ProtocolName
   readonly chainInfo: ChainInfo
 
-  protected constructor(params: IProtocolData) {
+  protected constructor(params: IProtocolParameters) {
     this.name = params.name
     this.chainInfo = ChainInfo.createFrom(params.chainInfo)
   }

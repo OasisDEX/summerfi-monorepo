@@ -6,7 +6,6 @@ import {
   IChainInfo,
   IPositionIdData,
   Maybe,
-  PoolType,
   ProtocolName,
   valuesOfChainFamilyMap,
 } from '@summerfi/sdk-common/common'
@@ -33,7 +32,7 @@ import {
 } from '../interfaces/IAaveV3LendingPoolId'
 import {
   IAaveV3LendingPositionIdData,
-  isAaveV3PositionId,
+  isAaveV3LendingPositionId,
 } from '../interfaces/IAaveV3LendingPositionId'
 import { AaveV3LendingPool } from './AaveV3LendingPool'
 import { AaveV3LendingPoolInfo } from './AaveV3LendingPoolInfo'
@@ -91,7 +90,7 @@ export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
   protected _validateLendingPositionId(
     candidate: IPositionIdData,
   ): asserts candidate is IAaveV3LendingPositionIdData {
-    if (!isAaveV3PositionId(candidate)) {
+    if (!isAaveV3LendingPositionId(candidate)) {
       throw new Error(`Invalid AaveV3 position ID: ${JSON.stringify(candidate)}`)
     }
   }
@@ -101,7 +100,6 @@ export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
   /** @see BaseProtocolPlugin._getLendingPoolImpl */
   async _getLendingPoolImpl(aaveV3PoolId: IAaveV3LendingPoolId): Promise<AaveV3LendingPool> {
     return AaveV3LendingPool.createFrom({
-      type: PoolType.Lending,
       id: aaveV3PoolId,
       collateralToken: aaveV3PoolId.collateralToken,
       debtToken: aaveV3PoolId.debtToken,
@@ -131,7 +129,6 @@ export class AaveV3ProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
     }
 
     return AaveV3LendingPoolInfo.createFrom({
-      type: PoolType.Lending,
       id: aaveV3PoolId,
       collateral: collateralInfo,
       debt: debtInfo,

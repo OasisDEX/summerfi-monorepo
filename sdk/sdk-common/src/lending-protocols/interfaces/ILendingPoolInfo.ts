@@ -1,9 +1,9 @@
 import { z } from 'zod'
 import { IPoolInfo, PoolInfoDataSchema } from '../../common/interfaces/IPoolInfo'
 import { PoolType } from '../../common/types/PoolType'
-import { CollateralInfoDataSchema, ICollateralInfo } from './ICollateralInfo'
-import { DebtInfoDataSchema, IDebtInfo } from './IDebtInfo'
-import { ILendingPoolId, LendingPoolIdDataSchema } from './ILendingPoolId'
+import { ICollateralInfo, isCollateralInfo } from './ICollateralInfo'
+import { IDebtInfo, isDebtInfo } from './IDebtInfo'
+import { ILendingPoolId, isLendingPoolId } from './ILendingPoolId'
 
 /**
  * @name ILendingPoolInfo
@@ -18,14 +18,17 @@ import { ILendingPoolId, LendingPoolIdDataSchema } from './ILendingPoolId'
  *
  */
 export interface ILendingPoolInfo extends IPoolInfo, ILendingPoolInfoData {
-  /** Type of the pool, in this case Lending */
-  readonly type: PoolType.Lending
+  /** Signature to differentiate from similar interfaces */
+  readonly _signature_1: 'ILendingPoolInfo'
   /** Pool ID of the lending pool */
   readonly id: ILendingPoolId
   /** The collateral information of the pool */
   readonly collateral: ICollateralInfo
   /** The debt information of the pool */
   readonly debt: IDebtInfo
+
+  // Re-declaring the properties with the correct types
+  readonly type: PoolType
 }
 
 /**
@@ -33,16 +36,21 @@ export interface ILendingPoolInfo extends IPoolInfo, ILendingPoolInfoData {
  */
 export const LendingPoolInfoDataSchema = z.object({
   ...PoolInfoDataSchema.shape,
-  type: z.literal(PoolType.Lending),
-  id: LendingPoolIdDataSchema,
-  collateral: CollateralInfoDataSchema,
-  debt: DebtInfoDataSchema,
+  type: z.custom<PoolType>((val) => val === PoolType.Lending),
+  id: z.custom<ILendingPoolId>((val) => isLendingPoolId(val)),
+  collateral: z.custom<ICollateralInfo>((val) => isCollateralInfo(val)),
+  debt: z.custom<IDebtInfo>((val) => isDebtInfo(val)),
 })
 
 /**
  * Type for the data part of the ILendingPoolInfo interface
  */
 export type ILendingPoolInfoData = Readonly<z.infer<typeof LendingPoolInfoDataSchema>>
+
+/**
+ * Type for the parameters of the ILendingPoolInfo interface
+ */
+export type ILendingPoolInfoParameters = Omit<ILendingPoolInfoData, 'type'>
 
 /**
  * @description Type guard for ILendingPoolInfo

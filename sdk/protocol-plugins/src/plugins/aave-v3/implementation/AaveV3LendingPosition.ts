@@ -1,31 +1,33 @@
 import { LendingPosition } from '@summerfi/sdk-common/lending-protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
+import { IAaveV3LendingPool } from '../interfaces/IAaveV3LendingPool'
 import {
   IAaveV3LendingPosition,
-  IAaveV3LendingPositionData,
+  IAaveV3LendingPositionParameters,
 } from '../interfaces/IAaveV3LendingPosition'
-import { AaveV3LendingPool } from './AaveV3LendingPool'
-import { AaveV3LendingPositionId } from './AaveV3LendingPositionId'
+import { IAaveV3LendingPositionId } from '../interfaces/IAaveV3LendingPositionId'
 
 /**
  * @class AaveV3Position
  * @see IAaveV3LendingPosition
  */
 export class AaveV3LendingPosition extends LendingPosition implements IAaveV3LendingPosition {
-  readonly pool: AaveV3LendingPool
-  readonly id: AaveV3LendingPositionId
+  readonly _signature_2 = 'IAaveV3LendingPosition'
+
+  readonly pool: IAaveV3LendingPool
+  readonly id: IAaveV3LendingPositionId
 
   /** Factory method */
-  static createFrom(params: IAaveV3LendingPositionData): AaveV3LendingPosition {
+  static createFrom(params: IAaveV3LendingPositionParameters): AaveV3LendingPosition {
     return new AaveV3LendingPosition(params)
   }
 
   /** Sealed constructor */
-  private constructor(params: IAaveV3LendingPositionData) {
+  private constructor(params: IAaveV3LendingPositionParameters) {
     super(params)
 
-    this.pool = AaveV3LendingPool.createFrom(params.pool)
-    this.id = AaveV3LendingPositionId.createFrom(params.id)
+    this.pool = params.pool
+    this.id = params.id
   }
 }
 

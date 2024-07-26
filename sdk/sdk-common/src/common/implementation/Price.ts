@@ -1,15 +1,17 @@
-import {
-  type IPrice,
-  type IPriceData,
-  PriceMulReturnType,
-  PriceMulParamType,
-  isPrice,
-} from '../interfaces/IPrice'
 import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
-import { Token } from './Token'
 import { Denomination } from '../aliases/Denomination'
+import { IPercentage, isPercentage } from '../interfaces'
 import { isFiatCurrencyAmount } from '../interfaces/IFiatCurrencyAmount'
+import {
+  IPriceParameters,
+  PriceMulParamType,
+  PriceMulReturnType,
+  isPrice,
+  type IPrice,
+} from '../interfaces/IPrice'
+import { isToken, isTokenData } from '../interfaces/IToken'
+import { ITokenAmount, isTokenAmount, isTokenAmountData } from '../interfaces/ITokenAmount'
 import {
   dividePriceByPercentage,
   dividePriceByPrice,
@@ -19,16 +21,16 @@ import {
   multiplyTokenAmountByPrice,
 } from '../utils/PriceUtils'
 import { FiatCurrencyAmount } from './FiatCurrencyAmount'
+import { Token } from './Token'
 import { TokenAmount } from './TokenAmount'
-import { isToken, isTokenData } from '../interfaces/IToken'
-import { ITokenAmount, isTokenAmount, isTokenAmountData } from '../interfaces/ITokenAmount'
-import { IPercentage, isPercentage } from '../interfaces'
 
 /**
  * @class Price
  * @see IPrice
  */
 export class Price implements IPrice {
+  readonly _signature_0 = 'IPrice'
+
   readonly value: string
   readonly base: Denomination
   readonly quote: Denomination
@@ -39,7 +41,7 @@ export class Price implements IPrice {
   private readonly _quoteSymbol: string
 
   /** FACTORY */
-  static createFrom(params: IPriceData): IPrice {
+  static createFrom(params: IPriceParameters): IPrice {
     return new Price(params)
   }
 
@@ -66,7 +68,7 @@ export class Price implements IPrice {
   /** CONSTRUCTOR */
 
   /** Sealed constructor */
-  private constructor(params: IPriceData) {
+  private constructor(params: IPriceParameters) {
     this.value = params.value
 
     if (isTokenData(params.base)) {

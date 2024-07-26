@@ -2,7 +2,6 @@ import {
   Address,
   ChainFamilyMap,
   Percentage,
-  ProtocolName,
   RiskRatio,
   RiskRatioType,
   Token,
@@ -16,7 +15,6 @@ import {
 
 export const morphoPoolIdMock: IMorphoLendingPoolId = MorphoLendingPoolId.createFrom({
   protocol: MorphoProtocol.createFrom({
-    name: ProtocolName.MorphoBlue,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   }),
   marketId: '0xc54d7acf14de29e0e5527cabd7a576506870346a78a11a6762e2cca66322ec41',

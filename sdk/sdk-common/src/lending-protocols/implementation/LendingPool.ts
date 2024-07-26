@@ -3,7 +3,7 @@ import { Token } from '../../common/implementation/Token'
 import { IPrintable } from '../../common/interfaces/IPrintable'
 import { PoolType } from '../../common/types/PoolType'
 import { SerializationService } from '../../services'
-import { ILendingPool, ILendingPoolData } from '../interfaces/ILendingPool'
+import { ILendingPool, ILendingPoolParameters } from '../interfaces/ILendingPool'
 import { LendingPoolId } from './LendingPoolId'
 
 /**
@@ -14,13 +14,17 @@ import { LendingPoolId } from './LendingPoolId'
  * customizing the PoolId
  */
 export abstract class LendingPool extends Pool implements ILendingPool, IPrintable {
-  readonly type = PoolType.Lending
+  readonly _signature_1 = 'ILendingPool'
+
   abstract readonly id: LendingPoolId
   readonly collateralToken: Token
   readonly debtToken: Token
 
-  protected constructor(params: ILendingPoolData) {
-    super(params)
+  protected constructor(params: ILendingPoolParameters) {
+    super({
+      ...params,
+      type: PoolType.Lending,
+    })
 
     this.collateralToken = Token.createFrom(params.collateralToken)
     this.debtToken = Token.createFrom(params.debtToken)

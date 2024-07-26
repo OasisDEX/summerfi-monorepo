@@ -6,8 +6,8 @@ import {
 } from '@summerfi/protocol-plugins/plugins/morphoblue'
 import {
   SparkLendingPoolId,
-  SparkPosition,
-  SparkPositionId,
+  SparkLendingPosition,
+  SparkLendingPositionId,
   isSparkLendingPool,
   isSparkProtocol,
 } from '@summerfi/protocol-plugins/plugins/spark'
@@ -17,14 +17,15 @@ import {
   AddressValue,
   ChainFamilyMap,
   CommonTokenSymbols,
-  ISimulation,
+  IRefinanceSimulation,
   Percentage,
   PositionType,
-  SimulationType,
   TokenAmount,
+  isLendingPool,
 } from '@summerfi/sdk-common'
+import { ProtocolName } from '@summerfi/sdk-common/common'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
 import { PositionsManager, RefinanceParameters } from '@summerfi/sdk-common/orders'
-import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
 import { TransactionUtils } from '@summerfi/testing-utils'
 
 import assert from 'assert'
@@ -116,9 +117,11 @@ describe.skip('Refinance Morpho Spark | SDK', () => {
     }
 
     // Source position
-    const sourcePosition = SparkPosition.createFrom({
-      type: PositionType.Multiply,
-      id: SparkPositionId.createFrom({
+    const sourcePosition = SparkLendingPosition.createFrom({
+      type: PositionType.Lending,
+      subtype: LendingPositionType.Multiply,
+      id: SparkLendingPositionId.createFrom({
+        type: PositionType.Lending,
         id: 'SparkPosition',
       }),
       debtAmount: TokenAmount.createFrom({
@@ -167,7 +170,7 @@ describe.skip('Refinance Morpho Spark | SDK', () => {
       slippage: Percentage.createFrom({ value: 0.2 }),
     })
 
-    const refinanceSimulation: ISimulation<SimulationType.Refinance> =
+    const refinanceSimulation: IRefinanceSimulation =
       await sdk.simulator.refinance.simulateRefinancePosition(refinanceParameters)
 
     expect(refinanceSimulation).toBeDefined()

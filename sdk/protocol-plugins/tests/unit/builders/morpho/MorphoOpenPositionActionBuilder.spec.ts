@@ -3,9 +3,6 @@ import {
   ChainFamilyMap,
   ChainInfo,
   Percentage,
-  PoolType,
-  PositionType,
-  ProtocolName,
   RiskRatio,
   RiskRatioType,
   Token,
@@ -62,7 +59,6 @@ describe('Morpho Open Position Action Builder', () => {
   })
 
   const protocol = MorphoProtocol.createFrom({
-    name: ProtocolName.MorphoBlue,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 
@@ -81,13 +77,11 @@ describe('Morpho Open Position Action Builder', () => {
       value: Percentage.createFrom({ value: 0.5 }),
       type: RiskRatioType.LTV,
     }),
-    type: PoolType.Lending,
   })
 
   const position = MorphoLendingPosition.createFrom({
-    type: PositionType.Lending,
     subtype: LendingPositionType.Multiply,
-    id: MorphoLendingPositionId.createFrom({ type: PositionType.Lending, id: 'someposition' }),
+    id: MorphoLendingPositionId.createFrom({ id: 'someposition' }),
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
     pool: pool,
@@ -100,12 +94,10 @@ describe('Morpho Open Position Action Builder', () => {
       collateralToken: WETH,
       debtToken: DAI,
       protocol: MakerProtocol.createFrom({
-        name: ProtocolName.Maker,
         chainInfo: ChainFamilyMap.Ethereum.Mainnet,
       }),
       ilkType: ILKType.ETH_A,
     }),
-    type: PoolType.Lending,
   })
 
   const derivedStep: steps.OpenPosition = {

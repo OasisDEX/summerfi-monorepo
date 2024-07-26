@@ -1,12 +1,15 @@
 import { z } from 'zod'
-import { AddressDataSchema, IAddress } from './IAddress'
+import { IAddress, isAddress } from './IAddress'
 import { ChainInfoDataSchema, IChainInfo } from './IChainInfo'
+import { IPrintable } from './IPrintable'
 
 /**
  * @interface IEarnProtocolFleet
  * @description Interface for the Earn Protocol fleets
  */
-export interface IEarnProtocolFleet {
+export interface IEarnProtocolFleet extends IPrintable, IEarnProtocolFleetData {
+  /** Signature to differentiate from similar interfaces */
+  readonly _signature_0: 'IEarnProtocolFleet'
   /** Chain where the Fleet entrypoint contract is deployed */
   readonly chainInfo: IChainInfo
   /** Address of the Fleet entrypoint contract (FleetCommander) */
@@ -18,13 +21,18 @@ export interface IEarnProtocolFleet {
  */
 export const EarnProtocolFleetDataSchema = z.object({
   chainInfo: ChainInfoDataSchema,
-  address: AddressDataSchema,
+  address: z.custom<IAddress>((val) => isAddress(val)),
 })
 
 /**
  * Type for the data part of the IEarnProtocolFleet interface
  */
 export type IEarnProtocolFleetData = Readonly<z.infer<typeof EarnProtocolFleetDataSchema>>
+
+/**
+ * Type for the parameters of the IEarnProtocolFleet interface
+ */
+export type IEarnProtocolFleetParameters = Omit<IEarnProtocolFleetData, ''>
 
 /**
  * @description Type guard for IEarnProtocolFleet

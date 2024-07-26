@@ -1,7 +1,7 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { ILendingPositionId, PositionType } from '@summerfi/sdk-common'
 import { ChainFamilyMap, ChainInfo, ProtocolName } from '@summerfi/sdk-common/common'
 import assert from 'assert'
+import { MorphoLendingPositionId } from '../../../src'
 import { MorphoProtocolPlugin } from '../../../src/plugins/morphoblue/implementation/MorphoProtocolPlugin'
 import {
   IMorphoLendingPoolIdData,
@@ -105,10 +105,9 @@ describe('Protocol Plugin | Unit | Morpho', () => {
   })
 
   it('should throw a "Not implemented" error when calling getPosition', async () => {
-    const positionId: ILendingPositionId = {
-      type: PositionType.Lending,
+    const positionId = MorphoLendingPositionId.createFrom({
       id: 'mockPositionId',
-    }
+    })
     await expect(morphoProtocolPlugin.getLendingPosition(positionId)).rejects.toThrow(
       'Not implemented',
     )

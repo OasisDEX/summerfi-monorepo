@@ -13,28 +13,36 @@ import { z } from 'zod'
  *
  */
 export interface IAaveV3LendingPositionId extends ILendingPositionId, IAaveV3LendingPositionIdData {
+  /** Signature used to differentiate it from similar interfaces */
+  readonly _signature_2: 'IAaveV3LendingPositionId'
+
   // Re-declaring the properties with the correct types
-  readonly type: PositionType.Lending
+  readonly type: PositionType
 }
 
 /**
- * @description Zod schema for IAaveV3PositionId
+ * @description Zod schema for IAaveV3LendingPositionId
  */
 export const AaveV3PositionIdDataSchema = z.object({
   ...LendingPositionIdDataSchema.shape,
 })
 
 /**
- * Type for the data part of IAaveV3PositionId
+ * Type for the data part of IAaveV3LendingPositionId
  */
 export type IAaveV3LendingPositionIdData = Readonly<z.infer<typeof AaveV3PositionIdDataSchema>>
 
 /**
- * @description Type guard for IAaveV3PositionId
- * @param maybePositionId
- * @returns true if the object is an IAaveV3PositionId
+ * Type for the parameters of the IAaveV3PositionId interface
  */
-export function isAaveV3PositionId(
+export type IAaveV3LendingPositionIdParameters = Omit<IAaveV3LendingPositionIdData, 'type'>
+
+/**
+ * @description Type guard for IAaveV3LendingPositionId
+ * @param maybePositionId
+ * @returns true if the object is an IAaveV3LendingPositionId
+ */
+export function isAaveV3LendingPositionId(
   maybePositionId: unknown,
 ): maybePositionId is IAaveV3LendingPositionId {
   return AaveV3PositionIdDataSchema.safeParse(maybePositionId).success

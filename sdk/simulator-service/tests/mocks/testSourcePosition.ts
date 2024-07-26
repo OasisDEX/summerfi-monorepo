@@ -1,8 +1,6 @@
 import {
   Address,
   ChainInfo,
-  PoolType,
-  ProtocolName,
   RiskRatioType,
   Token,
   TokenAmount,
@@ -12,8 +10,18 @@ import {
 } from '@summerfi/sdk-common/common'
 
 import { EmodeType } from '@summerfi/protocol-plugins'
-import { ILKType, MakerLendingPool } from '@summerfi/protocol-plugins/plugins/maker'
-import { SparkLendingPool, SparkLendingPoolInfo } from '@summerfi/protocol-plugins/plugins/spark'
+import {
+  ILKType,
+  MakerLendingPool,
+  MakerLendingPoolId,
+  MakerProtocol,
+} from '@summerfi/protocol-plugins/plugins/maker'
+import {
+  SparkLendingPool,
+  SparkLendingPoolId,
+  SparkLendingPoolInfo,
+  SparkProtocol,
+} from '@summerfi/protocol-plugins/plugins/spark'
 import {
   CollateralInfo,
   DebtInfo,
@@ -22,8 +30,6 @@ import {
   Price,
   RiskRatio,
 } from '@summerfi/sdk-common'
-import { IMakerProtocolData } from 'node_modules/@summerfi/protocol-plugins/src/plugins/maker/interfaces/IMakerProtocol'
-import { ISparkProtocolData } from 'node_modules/@summerfi/protocol-plugins/src/plugins/spark/interfaces/ISparkProtocol'
 
 const testChain = ChainInfo.createFrom({ chainId: 1, name: 'test' })
 
@@ -59,24 +65,21 @@ export const otherTestDebt = Token.createFrom({
   symbol: 'DBT2',
 })
 
-export const testSourceProtocol: IMakerProtocolData = {
+export const testSourceProtocol = MakerProtocol.createFrom({
   chainInfo: testChain,
-  name: ProtocolName.Maker,
-}
+})
 
-export const testTargetProtocol: ISparkProtocolData = {
+export const testTargetProtocol = SparkProtocol.createFrom({
   chainInfo: testChain,
-  name: ProtocolName.Spark,
-}
+})
 
 const testSourceLendingPool = MakerLendingPool.createFrom({
-  type: PoolType.Lending,
-  id: {
+  id: MakerLendingPoolId.createFrom({
     protocol: testSourceProtocol,
     collateralToken: testCollateral,
     debtToken: testDebt,
     ilkType: ILKType.ETH_A,
-  },
+  }),
   debtToken: testDebt,
   collateralToken: testCollateral,
 })
@@ -90,37 +93,34 @@ export const testSourcePosition = borrowFromPosition(
 )
 
 export const testTargetLendingPool = SparkLendingPool.createFrom({
-  type: PoolType.Lending,
-  id: {
+  id: SparkLendingPoolId.createFrom({
     protocol: testTargetProtocol,
     collateralToken: testCollateral,
     debtToken: testDebt,
     emodeType: EmodeType.None,
-  },
+  }),
   collateralToken: testCollateral,
   debtToken: testDebt,
 })
 
 export const testTargetLendingPoolRequiredSwaps = SparkLendingPool.createFrom({
-  type: PoolType.Lending,
-  id: {
+  id: SparkLendingPoolId.createFrom({
     protocol: testTargetProtocol,
     collateralToken: otherTestCollateral,
     debtToken: otherTestDebt,
     emodeType: EmodeType.None,
-  },
+  }),
   collateralToken: otherTestCollateral,
   debtToken: otherTestDebt,
 })
 
 export const testTargetLendingPoolInfo = SparkLendingPoolInfo.createFrom({
-  type: PoolType.Lending,
-  id: {
+  id: SparkLendingPoolId.createFrom({
     protocol: testTargetProtocol,
     collateralToken: testCollateral,
     debtToken: testDebt,
     emodeType: EmodeType.None,
-  },
+  }),
   collateral: CollateralInfo.createFrom({
     price: Price.createFrom({
       value: '100',

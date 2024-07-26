@@ -1,28 +1,33 @@
 import { LendingPosition } from '@summerfi/sdk-common/lending-protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
+import { ISparkLendingPositionId } from '../interfaces'
+import { ISparkLendingPool } from '../interfaces/ISparkLendingPool'
 import {
   ISparkLendingPosition,
-  ISparkLendingPositionData,
+  ISparkLendingPositionParameters,
 } from '../interfaces/ISparkLendingPosition'
-import { SparkLendingPool } from './SparkLendingPool'
 
 /**
  * @class SparkPosition
  * @see ISparkLendingPosition
  */
 export class SparkLendingPosition extends LendingPosition implements ISparkLendingPosition {
-  readonly pool: SparkLendingPool
+  readonly _signature_2 = 'ISparkLendingPosition'
+
+  readonly id: ISparkLendingPositionId
+  readonly pool: ISparkLendingPool
 
   /** Factory method */
-  static createFrom(params: ISparkLendingPositionData): SparkLendingPosition {
+  static createFrom(params: ISparkLendingPositionParameters): SparkLendingPosition {
     return new SparkLendingPosition(params)
   }
 
   /** Sealed constructor */
-  private constructor(params: ISparkLendingPositionData) {
+  private constructor(params: ISparkLendingPositionParameters) {
     super(params)
 
-    this.pool = SparkLendingPool.createFrom(params.pool)
+    this.id = params.id
+    this.pool = params.pool
   }
 }
 

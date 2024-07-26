@@ -2,7 +2,11 @@ import { HexData } from '@summerfi/sdk-common'
 import { IPrintable } from '@summerfi/sdk-common/common'
 import { LendingPoolId } from '@summerfi/sdk-common/lending-protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
-import { IMorphoLendingPoolId, IMorphoLendingPoolIdData } from '../interfaces/IMorphoLendingPoolId'
+import {
+  IMorphoLendingPoolId,
+  IMorphoLendingPoolIdParameters,
+} from '../interfaces/IMorphoLendingPoolId'
+import { IMorphoProtocol } from '../interfaces/IMorphoProtocol'
 import { MorphoProtocol } from './MorphoProtocol'
 
 /**
@@ -10,16 +14,18 @@ import { MorphoProtocol } from './MorphoProtocol'
  * @see IMorphoLendingPoolIdData
  */
 export class MorphoLendingPoolId extends LendingPoolId implements IMorphoLendingPoolId, IPrintable {
-  readonly protocol: MorphoProtocol
+  readonly _signature_2 = 'IMorphoLendingPoolId'
+
+  readonly protocol: IMorphoProtocol
   readonly marketId: HexData
 
   /** Factory method */
-  static createFrom(params: IMorphoLendingPoolIdData): MorphoLendingPoolId {
+  static createFrom(params: IMorphoLendingPoolIdParameters): MorphoLendingPoolId {
     return new MorphoLendingPoolId(params)
   }
 
   /** Sealed constructor */
-  private constructor(params: IMorphoLendingPoolIdData) {
+  private constructor(params: IMorphoLendingPoolIdParameters) {
     super(params)
 
     this.protocol = MorphoProtocol.createFrom(params.protocol)

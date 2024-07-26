@@ -1,5 +1,5 @@
 import { SerializationService } from '../../services/SerializationService'
-import { IToken, ITokenData } from '../interfaces/IToken'
+import { IToken, ITokenParameters } from '../interfaces/IToken'
 import { Address } from './Address'
 import { ChainInfo } from './ChainInfo'
 
@@ -8,6 +8,8 @@ import { ChainInfo } from './ChainInfo'
  * @see IToken
  */
 export class Token implements IToken {
+  readonly _signature_0 = 'IToken'
+
   readonly chainInfo: ChainInfo
   readonly address: Address
   readonly symbol: string
@@ -15,12 +17,12 @@ export class Token implements IToken {
   readonly decimals: number
 
   /** Factory method */
-  static createFrom(params: ITokenData): Token {
+  static createFrom(params: ITokenParameters): Token {
     return new Token(params)
   }
 
   /** Sealed constructor */
-  private constructor(params: ITokenData) {
+  private constructor(params: ITokenParameters) {
     this.chainInfo = ChainInfo.createFrom(params.chainInfo)
     this.address = Address.createFromEthereum(params.address)
     this.symbol = params.symbol

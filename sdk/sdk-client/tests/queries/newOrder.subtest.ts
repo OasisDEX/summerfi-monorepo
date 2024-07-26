@@ -2,33 +2,37 @@ import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 import {
   ILKType,
   IMakerLendingPoolData,
-  MakerPositionId,
+  IMakerLendingPosition,
+  MakerLendingPosition,
+  MakerLendingPositionId,
 } from '@summerfi/protocol-plugins/plugins/maker'
 import { IMakerLendingPoolIdData } from '@summerfi/protocol-plugins/plugins/maker/interfaces/IMakerLendingPoolId'
 import { IMakerProtocolData } from '@summerfi/protocol-plugins/plugins/maker/interfaces/IMakerProtocol'
 import {
   ISparkLendingPoolData,
   ISparkLendingPoolIdData,
-  SparkPositionId,
+  SparkLendingPosition,
+  SparkLendingPositionId,
 } from '@summerfi/protocol-plugins/plugins/spark'
 import { ISparkProtocolData } from '@summerfi/protocol-plugins/plugins/spark/interfaces/ISparkProtocol'
-import { IPositionData } from '@summerfi/sdk-common'
+import { IRefinanceSimulation, RefinanceSimulation } from '@summerfi/sdk-common'
 import {
   Address,
   AddressType,
   ChainFamilyMap,
   ChainInfo,
   Maybe,
+  PoolType,
   PositionType,
+  ProtocolName,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
 import { IPositionsManager, Order } from '@summerfi/sdk-common/orders'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
+import { SimulationType } from '@summerfi/sdk-common/simulation'
 import { SDKManager } from '../../src/implementation/SDKManager'
 import { UserClient } from '../../src/implementation/UserClient'
-import { RPCMainClientType } from '../../src/rpc/SDKMainClient'
+import { LendingPositionType, RPCMainClientType } from '../../src/rpc/SDKMainClient'
 
 export default async function simulateNewOrder() {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -87,13 +91,18 @@ export default async function simulateNewOrder() {
     debtToken: makerPoolId.debtToken,
   }
 
-  const prevPosition: IPositionData = {
-    type: PositionType.Multiply,
-    id: MakerPositionId.createFrom({ id: '1234567890', vaultId: '34' }),
+  const prevPosition: IMakerLendingPosition = MakerLendingPosition.createFrom({
+    type: PositionType.Lending,
+    subtype: LendingPositionType.Multiply,
+    id: MakerLendingPositionId.createFrom({
+      type: PositionType.Lending,
+      id: '1234567890',
+      vaultId: '1234567890',
+    }),
     pool: pool,
     debtAmount: TokenAmount.createFrom({ token: DAI, amount: '56.78' }),
     collateralAmount: TokenAmount.createFrom({ token: WETH, amount: '105.98' }),
-  }
+  })
 
   const sparkProtocol: ISparkProtocolData = {
     name: ProtocolName.Spark,
@@ -132,19 +141,20 @@ export default async function simulateNewOrder() {
     debtToken: sparkPoolId.debtToken,
   }
 
-  const simulation: ISimulation<SimulationType.Refinance> = {
-    simulationType: SimulationType.Refinance,
+  const simulation: IRefinanceSimulation = RefinanceSimulation.createFrom({
+    type: SimulationType.Refinance,
     sourcePosition: prevPosition,
     swaps: [],
-    targetPosition: {
-      type: PositionType.Multiply,
-      id: SparkPositionId.createFrom({ id: '1234567890' }),
+    targetPosition: SparkLendingPosition.createFrom({
+      type: PositionType.Lending,
+      subtype: LendingPositionType.Multiply,
+      id: SparkLendingPositionId.createFrom({ type: PositionType.Lending, id: '1234567890' }),
       debtAmount: TokenAmount.createFrom({ token: DAI, amount: '56.78' }),
       collateralAmount: TokenAmount.createFrom({ token: WETH, amount: '105.98' }),
       pool: targetPool,
-    },
+    }),
     steps: [],
-  }
+  })
 
   const positionsManager: IPositionsManager = {
     address: Address.ZeroAddressEthereum,

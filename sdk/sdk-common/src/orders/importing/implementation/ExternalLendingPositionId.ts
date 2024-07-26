@@ -1,11 +1,11 @@
-import { Address } from '../../../common/implementation/Address'
 import { IAddress } from '../../../common/interfaces/IAddress'
 import { LendingPositionId } from '../../../lending-protocols/implementation/LendingPositionId'
+import { ILendingPositionId } from '../../../lending-protocols/interfaces/ILendingPositionId'
 import { SerializationService } from '../../../services/SerializationService'
 import { ExternalLendingPositionType } from '../enums/ExrternalLendingPositionType'
 import {
   IExternalLendingPositionId,
-  IExternalLendingPositionIdData,
+  IExternalLendingPositionIdParameters,
 } from '../interfaces/IExternalLendingPositionId'
 
 /**
@@ -16,20 +16,24 @@ export class ExternalLendingPositionId
   extends LendingPositionId
   implements IExternalLendingPositionId
 {
+  readonly _signature_2 = 'IExternalLendingPositionId'
+
   readonly externalType: ExternalLendingPositionType
   readonly address: IAddress
+  readonly protocolId: ILendingPositionId
 
   /** Factory method */
-  static createFrom(params: IExternalLendingPositionIdData): ExternalLendingPositionId {
+  static createFrom(params: IExternalLendingPositionIdParameters): ExternalLendingPositionId {
     return new ExternalLendingPositionId(params)
   }
 
   /** Sealed constructor */
-  private constructor(params: IExternalLendingPositionIdData) {
+  private constructor(params: IExternalLendingPositionIdParameters) {
     super(params)
 
     this.externalType = params.externalType
-    this.address = Address.createFrom(params.address)
+    this.address = params.address
+    this.protocolId = params.protocolId
   }
 
   toString(): string {

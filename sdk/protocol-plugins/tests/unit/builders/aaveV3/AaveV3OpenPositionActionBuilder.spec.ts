@@ -1,13 +1,4 @@
-import {
-  Address,
-  ChainFamilyMap,
-  ChainInfo,
-  PoolType,
-  PositionType,
-  ProtocolName,
-  Token,
-  TokenAmount,
-} from '@summerfi/sdk-common/common'
+import { Address, ChainFamilyMap, ChainInfo, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { getErrorMessage } from '@summerfi/testing-utils'
@@ -16,13 +7,13 @@ import {
   AaveV3LendingPool,
   AaveV3LendingPoolId,
   AaveV3LendingPosition,
+  AaveV3LendingPositionId,
   AaveV3OpenPositionActionBuilder,
   AaveV3Protocol,
   EmodeType,
   ILKType,
   MakerLendingPool,
   MakerLendingPoolId,
-  MakerLendingPositionId,
   MakerProtocol,
 } from '../../../../src'
 import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
@@ -60,7 +51,6 @@ describe('AaveV3 Open Position Action Builder', () => {
   })
 
   const protocol = AaveV3Protocol.createFrom({
-    name: ProtocolName.AaveV3,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 
@@ -75,16 +65,12 @@ describe('AaveV3 Open Position Action Builder', () => {
     collateralToken: WETH,
     debtToken: DAI,
     id: poolId,
-    type: PoolType.Lending,
   })
 
   const position = AaveV3LendingPosition.createFrom({
-    type: PositionType.Lending,
     subtype: LendingPositionType.Multiply,
-    id: MakerLendingPositionId.createFrom({
+    id: AaveV3LendingPositionId.createFrom({
       id: 'someposition',
-      type: PositionType.Lending,
-      vaultId: '123',
     }),
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
@@ -98,12 +84,10 @@ describe('AaveV3 Open Position Action Builder', () => {
       collateralToken: WETH,
       debtToken: DAI,
       protocol: MakerProtocol.createFrom({
-        name: ProtocolName.Maker,
         chainInfo: ChainFamilyMap.Ethereum.Mainnet,
       }),
       ilkType: ILKType.ETH_A,
     }),
-    type: PoolType.Lending,
   })
 
   const derivedStep: steps.OpenPosition = {

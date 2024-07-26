@@ -7,7 +7,7 @@ import { IPrice } from '../../common/interfaces/IPrice'
 import { IToken } from '../../common/interfaces/IToken'
 import { ITokenAmount } from '../../common/interfaces/ITokenAmount'
 import { SerializationService } from '../../services/SerializationService'
-import { IDebtInfo, IDebtInfoData } from '../interfaces/IDebtInfo'
+import { IDebtInfo, IDebtInfoParameters } from '../interfaces/IDebtInfo'
 
 /**
  * @class DebtInfo
@@ -16,6 +16,8 @@ import { IDebtInfo, IDebtInfoData } from '../interfaces/IDebtInfo'
  * For now this class can be re-used among all the protocols and there is no need for specialization
  */
 export class DebtInfo implements IDebtInfo {
+  readonly _signature_0 = 'IDebtInfo'
+
   readonly token: IToken
   readonly price: IPrice
   readonly priceUSD: IPrice
@@ -26,7 +28,13 @@ export class DebtInfo implements IDebtInfo {
   readonly dustLimit: ITokenAmount
   readonly originationFee: IPercentage
 
-  protected constructor(params: IDebtInfoData) {
+  /** FACTORY METHODS */
+  static createFrom(params: IDebtInfoParameters): DebtInfo {
+    return new DebtInfo(params)
+  }
+
+  /** CONSTRUCTOR */
+  protected constructor(params: IDebtInfoParameters) {
     this.token = Token.createFrom(params.token)
     this.price = Price.createFrom(params.price)
     this.priceUSD = Price.createFrom(params.priceUSD)
@@ -36,10 +44,6 @@ export class DebtInfo implements IDebtInfo {
     this.debtAvailable = TokenAmount.createFrom(params.debtAvailable)
     this.dustLimit = TokenAmount.createFrom(params.dustLimit)
     this.originationFee = Percentage.createFrom(params.originationFee)
-  }
-
-  static createFrom(params: IDebtInfoData): DebtInfo {
-    return new DebtInfo(params)
   }
 }
 

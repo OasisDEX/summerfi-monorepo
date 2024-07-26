@@ -1,8 +1,7 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { ILendingPositionId, PositionType } from '@summerfi/sdk-common'
 import { ChainFamilyMap, ChainInfo, ProtocolName } from '@summerfi/sdk-common/common'
 import assert from 'assert'
-import { MakerProtocolPlugin } from '../../../src/plugins/maker'
+import { MakerLendingPositionId, MakerProtocolPlugin } from '../../../src/plugins/maker'
 import {
   IMakerLendingPoolId,
   IMakerLendingPoolIdData,
@@ -110,10 +109,10 @@ describe('Maker Protocol Plugin', () => {
   })
 
   it('should throw a "Not implemented" error when calling getPosition', async () => {
-    const positionId: ILendingPositionId = {
-      type: PositionType.Lending,
+    const positionId = MakerLendingPositionId.createFrom({
       id: 'mockPositionId',
-    }
+      vaultId: '123',
+    })
     await expect(makerProtocolPlugin.getLendingPosition(positionId)).rejects.toThrow(
       'Not implemented',
     )

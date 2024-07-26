@@ -1,4 +1,4 @@
-import { IPosition } from '../../common/interfaces/IPosition'
+import { ILendingPosition } from '../../lending-protocols/interfaces/ILendingPosition'
 import { SerializationService } from '../../services/SerializationService'
 import { SimulatedSwapData } from '../../swap/implementation/SimulatedSwapData'
 import { SimulationType } from '../enums'
@@ -12,8 +12,8 @@ import { Simulation } from './Simulation'
  */
 export class RefinanceSimulation extends Simulation implements IRefinanceSimulation {
   readonly type: SimulationType.Refinance
-  readonly sourcePosition: IPosition
-  readonly targetPosition: IPosition
+  readonly sourcePosition: ILendingPosition
+  readonly targetPosition: ILendingPosition
   readonly swaps: SimulatedSwapData[]
   readonly steps: Steps[]
 

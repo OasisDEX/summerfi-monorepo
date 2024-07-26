@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { AddressDataSchema, IAddress } from './IAddress'
+import { IAddress, isAddress } from './IAddress'
 
 /**
  * @name IWallet
@@ -9,6 +9,8 @@ import { AddressDataSchema, IAddress } from './IAddress'
  * wallet type
  */
 export interface IWallet extends IWalletData {
+  /** Signature to differentiate from similar interfaces */
+  readonly _signature_0: 'IWallet'
   /** Address of the wallet, valid for the different chains */
   readonly address: IAddress
 
@@ -27,13 +29,18 @@ export interface IWallet extends IWalletData {
  * @description Zod schema for IWallet
  */
 export const WalletDataSchema = z.object({
-  address: AddressDataSchema,
+  address: z.custom<IAddress>((val) => isAddress(val)),
 })
 
 /**
  * Type for the data part of the IWallet interface
  */
 export type IWalletData = Readonly<z.infer<typeof WalletDataSchema>>
+
+/**
+ * Type for the parameters of the IWallet interface
+ */
+export type IWalletParameters = Omit<IWalletData, ''>
 
 /**
  * @description Type guard for IWallet

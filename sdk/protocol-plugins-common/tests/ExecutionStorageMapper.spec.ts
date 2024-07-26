@@ -11,7 +11,7 @@ import {
 import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
 import { ExecutionStorageMapper } from '../src/context/ExecutionStorageMapper'
 
-import { IPoolIdData, LendingPositionType } from '@summerfi/sdk-common'
+import { IPoolIdData, IProtocol, LendingPositionType } from '@summerfi/sdk-common'
 import { LendingPosition } from '@summerfi/sdk-common/lending-protocols'
 import { DerivedAction } from '@summerfi/testing-utils/mocks/actions/DerivedAction'
 
@@ -56,8 +56,8 @@ describe('Execution Storage Mapper', () => {
     protocol: {
       name: ProtocolName.Maker,
       chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
-    },
-  }
+    } as unknown as IProtocol,
+  } as unknown as IPoolIdData
 
   const pool = {
     type: PoolType.Lending,

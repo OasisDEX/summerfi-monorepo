@@ -12,8 +12,11 @@ import { z } from 'zod'
  * Currently empty as there are no specifics for this protocol
  */
 export interface IMorphoLendingPositionId extends ILendingPositionId, IMorphoLendingPositionIdData {
+  /** Signature used to differentiate it from similar interfaces */
+  readonly _signature_2: 'IMorphoLendingPositionId'
+
   // Re-declaring the properties with the correct types
-  readonly type: PositionType.Lending
+  readonly type: PositionType
 }
 
 /**
@@ -29,6 +32,11 @@ export const MorphoLendingPositionIdDataSchema = z.object({
 export type IMorphoLendingPositionIdData = Readonly<
   z.infer<typeof MorphoLendingPositionIdDataSchema>
 >
+
+/**
+ * Type for the parameters of the IMorphoLendingPositionId interface
+ */
+export type IMorphoLendingPositionIdParameters = Omit<IMorphoLendingPositionIdData, 'type'>
 
 /**
  * @description Type guard for IMorphoLendingPositionId

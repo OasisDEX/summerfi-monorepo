@@ -1,5 +1,8 @@
 import { z } from 'zod'
-import { IPosition, PositionDataSchema } from '../../common/interfaces/IPosition'
+import {
+  ILendingPosition,
+  isLendingPosition,
+} from '../../lending-protocols/interfaces/ILendingPosition'
 import { SimulatedSwapData } from '../../swap/implementation/SimulatedSwapData'
 import { SimulationType } from '../enums/SimulationType'
 import { ISimulation, SimulationSchema } from './ISimulation'
@@ -13,9 +16,9 @@ export interface IRefinanceSimulation extends ISimulation {
   /** Type of the simulation, in this case Refinance */
   readonly type: SimulationType.Refinance
   /** Original position that will be refinanced */
-  readonly sourcePosition: IPosition
+  readonly sourcePosition: ILendingPosition
   /** Simulated target position */
-  readonly targetPosition: IPosition
+  readonly targetPosition: ILendingPosition
   /** The details of any swaps required as part of the simulation */
   readonly swaps: SimulatedSwapData[]
   /** Steps needed to perform the refinance */
@@ -28,8 +31,8 @@ export interface IRefinanceSimulation extends ISimulation {
 export const RefinanceSimulationSchema = z.object({
   ...SimulationSchema.shape,
   type: z.literal(SimulationType.Refinance),
-  sourcePosition: PositionDataSchema,
-  targetPosition: PositionDataSchema,
+  sourcePosition: z.custom<ILendingPosition>((val) => isLendingPosition(val)),
+  targetPosition: z.custom<ILendingPosition>((val) => isLendingPosition(val)),
 })
 
 /**
@@ -45,5 +48,11 @@ export type IRefinanceSimulationData = Readonly<z.infer<typeof RefinanceSimulati
 export function isRefinanceSimulation(
   maybeRefinanceSimulationData: unknown,
 ): maybeRefinanceSimulationData is IRefinanceSimulation {
-  return RefinanceSimulationSchema.safeParse(maybeRefinanceSimulationData).success
+  console.log(maybeRefinanceSimulationData)
+  const success = RefinanceSimulationSchema.safeParse(maybeRefinanceSimulationData).success
+  console.log(success)
+  if (!success) {
+    RefinanceSimulationSchema.parse(maybeRefinanceSimulationData)
+  }
+  return success
 }

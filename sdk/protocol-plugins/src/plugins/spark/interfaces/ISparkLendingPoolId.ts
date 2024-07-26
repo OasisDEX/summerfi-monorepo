@@ -1,9 +1,9 @@
-import { TokenDataSchema } from '@summerfi/sdk-common'
+import { PoolType, isToken } from '@summerfi/sdk-common'
 import { IToken } from '@summerfi/sdk-common/common'
 import { ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
 import { EmodeType, EmodeTypeSchema } from '../../common/enums/EmodeType'
-import { ISparkProtocol, SparkProtocolDataSchema } from './ISparkProtocol'
+import { ISparkProtocol, isSparkProtocol } from './ISparkProtocol'
 
 /**
  * @interface ISparkLendingPoolId
@@ -13,6 +13,8 @@ import { ISparkProtocol, SparkProtocolDataSchema } from './ISparkProtocol'
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
 export interface ISparkLendingPoolId extends ISparkLendingPoolIdData, ILendingPoolId {
+  /** Signature used to differentiate it from similar interfaces */
+  readonly _signature_2: 'ISparkLendingPoolId'
   /** The protocol to which the pool belongs */
   readonly protocol: ISparkProtocol
   /** The efficiency mode of the pool */
@@ -21,6 +23,9 @@ export interface ISparkLendingPoolId extends ISparkLendingPoolIdData, ILendingPo
   readonly collateralToken: IToken
   /** The token used to borrow funds */
   readonly debtToken: IToken
+
+  // Re-declaring the properties with the correct types
+  readonly type: PoolType
 }
 
 /**
@@ -28,16 +33,21 @@ export interface ISparkLendingPoolId extends ISparkLendingPoolIdData, ILendingPo
  */
 export const SparkLendingPoolIdDataSchema = z.object({
   ...LendingPoolIdDataSchema.shape,
-  protocol: SparkProtocolDataSchema,
+  protocol: z.custom<ISparkProtocol>((val) => isSparkProtocol(val)),
   emodeType: EmodeTypeSchema,
-  collateralToken: TokenDataSchema,
-  debtToken: TokenDataSchema,
+  collateralToken: z.custom<IToken>((val) => isToken(val)),
+  debtToken: z.custom<IToken>((val) => isToken(val)),
 })
 
 /**
  * Type for the data part of ISparkLendingPoolId
  */
 export type ISparkLendingPoolIdData = Readonly<z.infer<typeof SparkLendingPoolIdDataSchema>>
+
+/**
+ * Type for the parameters of the ISparkLendingPoolId interface
+ */
+export type ISparkLendingPoolIdParameters = Omit<ISparkLendingPoolIdData, 'type'>
 
 /**
  * @description Type guard for ISparkLendingPoolId

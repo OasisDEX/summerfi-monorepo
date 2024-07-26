@@ -1,5 +1,5 @@
 import { Maybe, ProtocolName } from '@summerfi/sdk-common/common'
-import { ProtocolClient } from '../implementation/ProtocolClient'
+import { IProtocolClient } from './IProtocolClient'
 
 /**
  * @interface IProtocolsManagerClient
@@ -15,5 +15,5 @@ export interface IProtocolsManagerClient {
    *
    * @returns The protocol with the given name
    */
-  getProtocol(params: { name: ProtocolName }): Promise<Maybe<ProtocolClient>>
+  getProtocol(params: { name: ProtocolName }): Promise<Maybe<IProtocolClient>>
 }

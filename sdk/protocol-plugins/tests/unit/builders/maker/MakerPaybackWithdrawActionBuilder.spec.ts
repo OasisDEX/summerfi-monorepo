@@ -3,9 +3,6 @@ import {
   ChainFamilyMap,
   ChainInfo,
   Percentage,
-  PoolType,
-  PositionType,
-  ProtocolName,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
@@ -23,6 +20,7 @@ import {
   MorphoLendingPool,
   MorphoLendingPoolId,
   MorphoLendingPosition,
+  MorphoLendingPositionId,
   MorphoProtocol,
 } from '../../../../src'
 import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
@@ -63,7 +61,6 @@ describe('Maker Payback Withdraw Action Builder', () => {
   })
 
   const protocol = MakerProtocol.createFrom({
-    name: ProtocolName.Maker,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 
@@ -78,14 +75,11 @@ describe('Maker Payback Withdraw Action Builder', () => {
     collateralToken: WETH,
     debtToken: DAI,
     id: poolId,
-    type: PoolType.Lending,
   })
 
   const position = MakerLendingPosition.createFrom({
-    type: PositionType.Lending,
     subtype: LendingPositionType.Multiply,
     id: MakerLendingPositionId.createFrom({
-      type: PositionType.Lending,
       id: 'someposition',
       vaultId: '123',
     }),
@@ -95,12 +89,9 @@ describe('Maker Payback Withdraw Action Builder', () => {
   })
 
   const wrongPosition = MorphoLendingPosition.createFrom({
-    type: PositionType.Lending,
     subtype: LendingPositionType.Multiply,
-    id: MakerLendingPositionId.createFrom({
-      type: PositionType.Lending,
+    id: MorphoLendingPositionId.createFrom({
       id: 'someposition',
-      vaultId: '123',
     }),
     debtAmount: debtAmount,
     collateralAmount: collateralAmount,
@@ -110,7 +101,6 @@ describe('Maker Payback Withdraw Action Builder', () => {
       id: MorphoLendingPoolId.createFrom({
         marketId: '0x1234',
         protocol: MorphoProtocol.createFrom({
-          name: ProtocolName.MorphoBlue,
           chainInfo: ChainFamilyMap.Ethereum.Mainnet,
         }),
       }),
@@ -120,7 +110,6 @@ describe('Maker Payback Withdraw Action Builder', () => {
         value: Percentage.createFrom({ value: 0.5 }),
         type: RiskRatioType.LTV,
       }),
-      type: PoolType.Lending,
     }),
   })
 

@@ -2,10 +2,10 @@ import { PoolInfo } from '../../common/implementation/PoolInfo'
 import { IPrintable } from '../../common/interfaces/IPrintable'
 import { PoolType } from '../../common/types/PoolType'
 import { SerializationService } from '../../services'
-import { ILendingPoolInfo, ILendingPoolInfoData } from '../interfaces/ILendingPoolInfo'
-import { CollateralInfo } from './CollateralInfo'
-import { DebtInfo } from './DebtInfo'
-import { LendingPoolId } from './LendingPoolId'
+import { ICollateralInfo } from '../interfaces/ICollateralInfo'
+import { IDebtInfo } from '../interfaces/IDebtInfo'
+import { ILendingPoolId } from '../interfaces/ILendingPoolId'
+import { ILendingPoolInfo, ILendingPoolInfoParameters } from '../interfaces/ILendingPoolInfo'
 
 /**
  * LendingPoolInfo
@@ -15,16 +15,20 @@ import { LendingPoolId } from './LendingPoolId'
  * customizing the PoolId
  */
 export abstract class LendingPoolInfo extends PoolInfo implements ILendingPoolInfo, IPrintable {
-  readonly type = PoolType.Lending
-  abstract readonly id: LendingPoolId
-  readonly collateral: CollateralInfo
-  readonly debt: DebtInfo
+  readonly _signature_1 = 'ILendingPoolInfo'
 
-  protected constructor(params: ILendingPoolInfoData) {
-    super(params)
+  abstract readonly id: ILendingPoolId
+  readonly collateral: ICollateralInfo
+  readonly debt: IDebtInfo
 
-    this.collateral = CollateralInfo.createFrom(params.collateral)
-    this.debt = DebtInfo.createFrom(params.debt)
+  protected constructor(params: ILendingPoolInfoParameters) {
+    super({
+      ...params,
+      type: PoolType.Lending,
+    })
+
+    this.collateral = params.collateral
+    this.debt = params.debt
   }
 
   toString(): string {

@@ -1,31 +1,33 @@
 import { LendingPosition } from '@summerfi/sdk-common/lending-protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
+import { IMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
 import {
   IMorphoLendingPosition,
-  IMorphoLendingPositionData,
+  IMorphoLendingPositionParameters,
 } from '../interfaces/IMorphoLendingPosition'
-import { MorphoLendingPool } from './MorphoLendingPool'
-import { MorphoLendingPositionId } from './MorphoLendingPositionId'
+import { IMorphoLendingPositionId } from '../interfaces/IMorphoLendingPositionId'
 
 /**
  * @class MorphoLendingPosition
  * @see IMorphoLendingPosition
  */
 export class MorphoLendingPosition extends LendingPosition implements IMorphoLendingPosition {
-  readonly id: MorphoLendingPositionId
-  readonly pool: MorphoLendingPool
+  readonly _signature_2 = 'IMorphoLendingPosition'
+
+  readonly id: IMorphoLendingPositionId
+  readonly pool: IMorphoLendingPool
 
   /** Factory method */
-  static createFrom(params: IMorphoLendingPositionData): MorphoLendingPosition {
+  static createFrom(params: IMorphoLendingPositionParameters): MorphoLendingPosition {
     return new MorphoLendingPosition(params)
   }
 
   /** Sealed constructor */
-  private constructor(params: IMorphoLendingPositionData) {
+  private constructor(params: IMorphoLendingPositionParameters) {
     super(params)
 
-    this.id = MorphoLendingPositionId.createFrom(params.id)
-    this.pool = MorphoLendingPool.createFrom(params.pool)
+    this.id = params.id
+    this.pool = params.pool
   }
 }
 

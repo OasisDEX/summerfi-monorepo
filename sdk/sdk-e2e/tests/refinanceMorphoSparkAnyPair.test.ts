@@ -1,8 +1,8 @@
 import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 import {
   MorphoLendingPoolId,
-  MorphoPosition,
-  MorphoPositionId,
+  MorphoLendingPosition,
+  MorphoLendingPositionId,
   isMorphoLendingPool,
   isMorphoProtocol,
 } from '@summerfi/protocol-plugins/plugins/morphoblue'
@@ -11,22 +11,23 @@ import {
   isSparkLendingPoolId,
   isSparkProtocol,
 } from '@summerfi/protocol-plugins/plugins/spark'
-import { ProtocolClient, makeSDK, type Chain } from '@summerfi/sdk-client'
+import { IProtocolClient, makeSDK, type Chain } from '@summerfi/sdk-client'
 import {
   Address,
   AddressValue,
   ChainFamilyMap,
   CommonTokenSymbols,
-  ISimulation,
+  IRefinanceSimulation,
   IToken,
   Percentage,
   PositionType,
-  SimulationType,
+  ProtocolName,
   TokenAmount,
+  isLendingPool,
   type Maybe,
 } from '@summerfi/sdk-common'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
 import { Order, PositionsManager, RefinanceParameters } from '@summerfi/sdk-common/orders'
-import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
 import { TransactionUtils } from '@summerfi/testing-utils'
 
 import assert from 'assert'
@@ -111,9 +112,11 @@ describe.skip('Refinance Morpho Spark | SDK', () => {
     }
 
     // Source position
-    const morphoPosition = MorphoPosition.createFrom({
-      type: PositionType.Multiply,
-      id: MorphoPositionId.createFrom({
+    const morphoPosition = MorphoLendingPosition.createFrom({
+      type: PositionType.Lending,
+      subtype: LendingPositionType.Multiply,
+      id: MorphoLendingPositionId.createFrom({
+        type: PositionType.Lending,
         id: 'MorphoPosition',
       }),
       debtAmount: TokenAmount.createFrom({
@@ -128,7 +131,7 @@ describe.skip('Refinance Morpho Spark | SDK', () => {
     })
 
     // Target protocol
-    const spark: Maybe<ProtocolClient> = await chain.protocols.getProtocol({
+    const spark: Maybe<IProtocolClient> = await chain.protocols.getProtocol({
       name: ProtocolName.Spark,
     })
     assert(spark, 'Spark not found')
@@ -164,7 +167,7 @@ describe.skip('Refinance Morpho Spark | SDK', () => {
       slippage: Percentage.createFrom({ value: 0.2 }),
     })
 
-    const refinanceSimulation: ISimulation<SimulationType.Refinance> =
+    const refinanceSimulation: IRefinanceSimulation =
       await sdk.simulator.refinance.simulateRefinancePosition(refinanceParameters)
 
     expect(refinanceSimulation).toBeDefined()

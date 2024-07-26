@@ -5,8 +5,8 @@ import {
   LendingPositionType,
 } from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
-import { AaveV3LendingPoolDataSchema, IAaveV3LendingPool } from './IAaveV3LendingPool'
-import { IAaveV3LendingPositionId } from './IAaveV3LendingPositionId'
+import { IAaveV3LendingPool, isAaveV3LendingPool } from './IAaveV3LendingPool'
+import { IAaveV3LendingPositionId, isAaveV3LendingPositionId } from './IAaveV3LendingPositionId'
 
 /**
  * @interface IAaveV3Position
@@ -17,13 +17,15 @@ import { IAaveV3LendingPositionId } from './IAaveV3LendingPositionId'
  *
  */
 export interface IAaveV3LendingPosition extends ILendingPosition, IAaveV3LendingPositionData {
+  /** Signature used to differentiate it from similar interfaces */
+  readonly _signature_2: 'IAaveV3LendingPosition'
   /** The pool associated to this position */
   readonly pool: IAaveV3LendingPool
   /** The id of the position */
   readonly id: IAaveV3LendingPositionId
 
   // Re-declaring the properties with the correct types
-  readonly type: PositionType.Lending
+  readonly type: PositionType
   readonly subtype: LendingPositionType
   readonly debtAmount: ITokenAmount
   readonly collateralAmount: ITokenAmount
@@ -34,13 +36,19 @@ export interface IAaveV3LendingPosition extends ILendingPosition, IAaveV3Lending
  */
 export const AaveV3LendingPositionDataSchema = z.object({
   ...LendingPositionDataSchema.shape,
-  pool: AaveV3LendingPoolDataSchema,
+  pool: z.custom<IAaveV3LendingPool>((val) => isAaveV3LendingPool(val)),
+  id: z.custom<IAaveV3LendingPositionId>((val) => isAaveV3LendingPositionId(val)),
 })
 
 /**
  * Type for the data part of the IAaveV3Position interface
  */
 export type IAaveV3LendingPositionData = Readonly<z.infer<typeof AaveV3LendingPositionDataSchema>>
+
+/**
+ * Type for the parameters of the IAaveV3Position interface
+ */
+export type IAaveV3LendingPositionParameters = Omit<IAaveV3LendingPositionData, 'type'>
 
 /**
  * @description Type guard for IAaveV3Position

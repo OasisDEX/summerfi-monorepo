@@ -16,6 +16,8 @@ import { ICollateralInfo, ICollateralInfoData } from '../interfaces/ICollateralI
  * @see ICollateralInfo
  */
 export class CollateralInfo implements ICollateralInfo {
+  readonly _signature_0 = 'ICollateralInfo'
+
   readonly token: IToken
   readonly price: IPrice
   readonly priceUSD: IPrice
@@ -24,6 +26,13 @@ export class CollateralInfo implements ICollateralInfo {
   readonly tokensLocked: ITokenAmount
   readonly liquidationPenalty: IPercentage
 
+  /** FACTORY METHODS */
+
+  static createFrom(params: ICollateralInfoData): CollateralInfo {
+    return new CollateralInfo(params)
+  }
+
+  /** CONSTRUCTOR */
   protected constructor(params: ICollateralInfoData) {
     this.token = Token.createFrom(params.token)
     this.price = Price.createFrom(params.price)
@@ -32,10 +41,6 @@ export class CollateralInfo implements ICollateralInfo {
     this.maxSupply = TokenAmount.createFrom(params.maxSupply)
     this.tokensLocked = TokenAmount.createFrom(params.tokensLocked)
     this.liquidationPenalty = Percentage.createFrom(params.liquidationPenalty)
-  }
-
-  static createFrom(params: ICollateralInfoData): CollateralInfo {
-    return new CollateralInfo(params)
   }
 }
 

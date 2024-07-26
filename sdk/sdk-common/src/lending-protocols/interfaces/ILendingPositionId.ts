@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { IPositionId } from '../../common/interfaces/IPositionId'
+import { IPositionId, PositionIdDataSchema } from '../../common/interfaces/IPositionId'
 import { PositionType } from '../../common/types/PositionType'
 
 /**
@@ -7,22 +7,27 @@ import { PositionType } from '../../common/types/PositionType'
  * @description Represents a position ID for a lending position
  */
 export interface ILendingPositionId extends IPositionId {
-  /** Position Id type is lending */
-  type: PositionType.Lending
+  /** Signature to differentiate from similar interfaces */
+  readonly _signature_1: 'ILendingPositionId'
 }
 
 /**
  * @description Zod schema for ILendingPositionId
  */
 export const LendingPositionIdDataSchema = z.object({
-  type: z.literal(PositionType.Lending),
-  id: z.string(),
+  ...PositionIdDataSchema.shape,
+  type: z.custom<PositionType>((val) => val === PositionType.Lending),
 })
 
 /**
  * Type for the data part of the ILendingPositionId interface
  */
 export type ILendingPositionIdData = Readonly<z.infer<typeof LendingPositionIdDataSchema>>
+
+/**
+ * Type for the parameters of the ILendingPositionId interface
+ */
+export type ILendingPositionIdParameters = Omit<ILendingPositionIdData, 'type'>
 
 /**
  * @description Type guard for ILendingPositionId

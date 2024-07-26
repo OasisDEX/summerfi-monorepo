@@ -1,7 +1,7 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { ILendingPositionId, PositionType } from '@summerfi/sdk-common'
 import { ChainFamilyMap, ChainInfo, ProtocolName } from '@summerfi/sdk-common/common'
 import assert from 'assert'
+import { AaveV3LendingPositionId } from '../../../src'
 import { AaveV3ProtocolPlugin } from '../../../src/plugins/aave-v3/implementation/AAVEv3ProtocolPlugin'
 import {
   IAaveV3LendingPoolId,
@@ -114,10 +114,9 @@ describe('AAVEv3 Protocol Plugin', () => {
   })
 
   it('should throw a "Not implemented" error when calling getPosition', async () => {
-    const positionId: ILendingPositionId = {
-      type: PositionType.Lending,
+    const positionId = AaveV3LendingPositionId.createFrom({
       id: 'mockPositionId',
-    }
+    })
     await expect(aaveV3ProtocolPlugin.getLendingPosition(positionId)).rejects.toThrow(
       'Not implemented',
     )

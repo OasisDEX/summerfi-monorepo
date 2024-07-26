@@ -1,7 +1,6 @@
 import {
   ChainFamilyName,
   Maybe,
-  PoolType,
   ProtocolName,
   valuesOfChainFamilyMap,
 } from '@summerfi/sdk-common/common'
@@ -103,7 +102,6 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
     const marketParams = await this._getMarketParams(morphoLendingPoolId)
 
     return MorphoLendingPool.createFrom({
-      type: PoolType.Lending,
       id: morphoLendingPoolId,
       collateralToken: marketParams.collateralToken,
       debtToken: marketParams.debtToken,
@@ -134,7 +132,6 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
     })
 
     return MorphoLendingPoolInfo.createFrom({
-      type: PoolType.Lending,
       id: morphoLendingPoolId,
       collateral: collateralInfo,
       debt: debtInfo,

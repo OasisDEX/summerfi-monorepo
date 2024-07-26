@@ -5,7 +5,6 @@ import {
   CollateralInfo,
   DebtInfo,
   Percentage,
-  PoolType,
   Price,
   RiskRatio,
   RiskRatioType,
@@ -101,7 +100,6 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
   ): Promise<MakerLendingPool> {
     // TODO: validate pool ID collateral and debt against the ILK Type
     return MakerLendingPool.createFrom({
-      type: PoolType.Lending,
       id: makerLendingPoolId,
       collateralToken: makerLendingPoolId.collateralToken,
       debtToken: makerLendingPoolId.debtToken,
@@ -117,7 +115,6 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
     const debtInfo = await this._getDebtInfo(protocolData)
 
     return MakerLendingPoolInfo.createFrom({
-      type: PoolType.Lending,
       id: makerLendingPoolId,
       collateral: collateralInfo,
       debt: debtInfo,
@@ -143,7 +140,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
     if (!isMakerLendingPoolId(params.externalPosition.pool.id)) {
       throw new Error('Invalid Maker pool ID')
     }
-    if (!isMakerLendingPositionId(params.externalPosition.id)) {
+    if (!isMakerLendingPositionId(params.externalPosition.id.protocolId)) {
       throw new Error('Invalid Maker position ID')
     }
 
@@ -166,7 +163,7 @@ export class MakerProtocolPlugin extends BaseProtocolPlugin {
       cdpManagerAddress: cdpManagerAddress.value,
       makerProxyActionsAddress: dssProxyActionsAddress.value,
       allowAddress: params.positionsManager.address.value,
-      cdpId: params.externalPosition.id.vaultId,
+      cdpId: params.externalPosition.id.protocolId.vaultId,
     })
 
     return {

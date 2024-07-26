@@ -1,8 +1,8 @@
-import { IPercentage, PercentageDataSchema } from '../../common/interfaces/IPercentage'
-import { IPrice, PriceDataSchema } from '../../common/interfaces/IPrice'
-import { IToken, TokenDataSchema } from '../../common/interfaces/IToken'
-import { ITokenAmount, TokenAmountDataSchema } from '../../common/interfaces/ITokenAmount'
 import { z } from 'zod'
+import { IPercentage, isPercentage } from '../../common/interfaces/IPercentage'
+import { IPrice, isPrice } from '../../common/interfaces/IPrice'
+import { IToken, isToken } from '../../common/interfaces/IToken'
+import { ITokenAmount, isTokenAmount } from '../../common/interfaces/ITokenAmount'
 
 /**
  * @interface IDebtInfo
@@ -12,6 +12,8 @@ import { z } from 'zod'
  * lending pools
  */
 export interface IDebtInfo extends IDebtInfoData {
+  /** Signature to differentiate from similar interfaces */
+  readonly _signature_0: 'IDebtInfo'
   /** The token that represents the debt */
   readonly token: IToken
   /** The price of the token in the protocol's default denomination */
@@ -36,21 +38,26 @@ export interface IDebtInfo extends IDebtInfoData {
  * @description Zod schema for IDebtInfo
  */
 export const DebtInfoDataSchema = z.object({
-  token: TokenDataSchema,
-  price: PriceDataSchema,
-  priceUSD: PriceDataSchema,
-  interestRate: PercentageDataSchema,
-  totalBorrowed: TokenAmountDataSchema,
-  debtCeiling: TokenAmountDataSchema,
-  debtAvailable: TokenAmountDataSchema,
-  dustLimit: TokenAmountDataSchema,
-  originationFee: PercentageDataSchema,
+  token: z.custom<IToken>((val) => isToken(val)),
+  price: z.custom<IPrice>((val) => isToken(val)),
+  priceUSD: z.custom<IPrice>((val) => isPrice(val)),
+  interestRate: z.custom<IPercentage>((val) => isPercentage(val)),
+  totalBorrowed: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  debtCeiling: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  debtAvailable: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  dustLimit: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  originationFee: z.custom<IPercentage>((val) => isPercentage(val)),
 })
 
 /**
  * Type for the data part of the IDebtInfo interface
  */
 export type IDebtInfoData = Readonly<z.infer<typeof DebtInfoDataSchema>>
+
+/**
+ * Type for the parameters of the IDebtInfo interface
+ */
+export type IDebtInfoParameters = Omit<IDebtInfoData, '_signature_1'>
 
 /**
  * @description Type guard for IDebtInfo

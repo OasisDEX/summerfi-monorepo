@@ -1,20 +1,19 @@
 import { z } from 'zod'
 import { IPrintable } from '../../../common'
-import { LendingPoolDataSchema } from '../../../lending-protocols'
+import { ILendingPool } from '../../../lending-protocols'
 import {
   ILendingPosition,
   LendingPositionDataSchema,
 } from '../../../lending-protocols/interfaces/ILendingPosition'
-import {
-  ExternalLendingPositionIdDataSchema,
-  IExternalLendingPositionId,
-} from './IExternalLendingPositionId'
+import { IExternalLendingPositionId } from './IExternalLendingPositionId'
 
 /**
  * @interface IExternalLendingPosition
  * @description Lending position existing in another service
  */
 export interface IExternalLendingPosition extends ILendingPosition, IPrintable {
+  /** Signature used to differentiate it from similar interfaces */
+  readonly _signature_2: 'IExternalLendingPosition'
   /** External position ID */
   id: IExternalLendingPositionId
 }
@@ -24,8 +23,8 @@ export interface IExternalLendingPosition extends ILendingPosition, IPrintable {
  */
 export const ExternalLendingPositionDataSchema = z.object({
   ...LendingPositionDataSchema.shape,
-  id: ExternalLendingPositionIdDataSchema,
-  pool: LendingPoolDataSchema,
+  id: z.custom<IExternalLendingPositionId>(),
+  pool: z.custom<ILendingPool>(),
 })
 
 /**
@@ -34,6 +33,11 @@ export const ExternalLendingPositionDataSchema = z.object({
 export type IExternalLendingPositionData = Readonly<
   z.infer<typeof ExternalLendingPositionDataSchema>
 >
+
+/**
+ * Type for the parameters of the IExternalLendingPosition interface
+ */
+export type IExternalLendingPositionParameters = Omit<IExternalLendingPositionData, ''>
 
 /**
  * @description Type guard for IExternalLendingPosition

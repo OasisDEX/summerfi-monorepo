@@ -1,7 +1,8 @@
 import { ICollateralInfo, IDebtInfo } from '@summerfi/sdk-common'
+import { PoolType } from '@summerfi/sdk-common/common'
 import { ILendingPoolInfo, LendingPoolInfoDataSchema } from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
-import { ISparkLendingPoolId, SparkLendingPoolIdDataSchema } from './ISparkLendingPoolId'
+import { ISparkLendingPoolId, isSparkLendingPoolId } from './ISparkLendingPoolId'
 
 /**
  * @interface ISparkLendingPoolInfo
@@ -11,10 +12,13 @@ import { ISparkLendingPoolId, SparkLendingPoolIdDataSchema } from './ISparkLendi
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
 export interface ISparkLendingPoolInfo extends ILendingPoolInfo, ISparkLendingPoolInfoData {
+  /** Signature used to differentiate it from similar interfaces */
+  readonly _signature_2: 'ISparkLendingPoolInfo'
   /** The id of the lending pool */
   readonly id: ISparkLendingPoolId
 
   // Re-declaring the properties with the correct types
+  readonly type: PoolType
   readonly collateral: ICollateralInfo
   readonly debt: IDebtInfo
 }
@@ -24,13 +28,18 @@ export interface ISparkLendingPoolInfo extends ILendingPoolInfo, ISparkLendingPo
  */
 export const SparkLendingPoolInfoDataSchema = z.object({
   ...LendingPoolInfoDataSchema.shape,
-  id: SparkLendingPoolIdDataSchema,
+  id: z.custom<ISparkLendingPoolId>((val) => isSparkLendingPoolId(val)),
 })
 
 /**
  * Type for the data part of ISparkLendingPoolInfo
  */
 export type ISparkLendingPoolInfoData = Readonly<z.infer<typeof SparkLendingPoolInfoDataSchema>>
+
+/**
+ * Type for the parameters of the ISparkLendingPoolInfo interface
+ */
+export type ISparkLendingPoolInfoParameters = Omit<ISparkLendingPoolInfoData, 'type'>
 
 /**
  * @description Type guard for ISparkLendingPoolInfo

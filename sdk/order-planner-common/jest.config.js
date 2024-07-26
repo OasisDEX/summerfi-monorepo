@@ -6,12 +6,9 @@ module.exports = {
   ...sharedConfig(compilerOptions),
   collectCoverageFrom: [
     '<rootDir>/**/*.{ts,tsx}',
-    '!src/actions/Types.ts',
-    '!src/builders/Types.ts',
-    '!src/interfaces/Types.ts',
     '!src/**/index.ts',
-    /* OrderPlanner is tested through order-planner-service */
-    '!src/implementation/OrderPlanner.ts',
+    '!src/interfaces/*.{ts,tsx}',
+    '!src/types/*.{ts,tsx}',
   ],
   coveragePathIgnorePatterns: ['/tests/utils/'],
 }

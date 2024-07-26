@@ -14,20 +14,21 @@ import {
   IToken,
   Percentage,
   PositionType,
+  ProtocolName,
   SimulationType,
   TokenAmount,
   type Maybe,
 } from '@summerfi/sdk-common'
 import { Order, PositionsManager, RefinanceParameters } from '@summerfi/sdk-common/orders'
-import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
 
 import {
   AaveV3LendingPoolId,
-  AaveV3Position,
-  AaveV3PositionId,
+  AaveV3LendingPosition,
+  AaveV3LendingPositionId,
   isAaveV3LendingPool,
   isAaveV3Protocol,
 } from '@summerfi/protocol-plugins'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
 import { TransactionUtils } from '@summerfi/testing-utils'
 import assert from 'assert'
 import { Hex } from 'viem'
@@ -129,9 +130,10 @@ describe.skip('Refinance AaveV3 Spark | SDK', () => {
     }
 
     // Source position
-    const aaveV3Position = AaveV3Position.createFrom({
-      type: PositionType.Multiply,
-      id: AaveV3PositionId.createFrom({
+    const aaveV3Position = AaveV3LendingPosition.createFrom({
+      type: PositionType.Lending,
+      subtype: LendingPositionType.Multiply,
+      id: AaveV3LendingPositionId.createFrom({
         id: 'AaveV3Position',
       }),
       debtAmount: TokenAmount.createFrom({

@@ -2,7 +2,6 @@ import {
   ChainFamilyName,
   IPositionIdData,
   Maybe,
-  PoolType,
   ProtocolName,
   valuesOfChainFamilyMap,
 } from '@summerfi/sdk-common/common'
@@ -34,6 +33,7 @@ import {
   isSparkLendingPositionId,
 } from '../interfaces/ISparkLendingPositionId'
 import { sparkEmodeCategoryMap } from './EmodeCategoryMap'
+import { SparkLendingPoolId } from './SparkLendingPoolId'
 import { SparkLendingPoolInfo } from './SparkLendingPoolInfo'
 
 /**
@@ -93,8 +93,7 @@ export class SparkProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
   /** @see BaseProtocolPlugin._getLendingPoolImpl */
   protected async _getLendingPoolImpl(poolId: ISparkLendingPoolIdData): Promise<SparkLendingPool> {
     return SparkLendingPool.createFrom({
-      type: PoolType.Lending,
-      id: poolId,
+      id: SparkLendingPoolId.createFrom(poolId),
       collateralToken: poolId.collateralToken,
       debtToken: poolId.debtToken,
     })
@@ -123,7 +122,6 @@ export class SparkProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
     }
 
     return SparkLendingPoolInfo.createFrom({
-      type: PoolType.Lending,
       id: sparkPoolId,
       collateral: collateralInfo,
       debt: debtInfo,
