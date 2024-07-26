@@ -1,10 +1,10 @@
 import type { ChainInfo, IChainInfo } from '@summerfi/sdk-common/common'
+import { IArmadaManagerClient } from '../interfaces/IArmadaManagerClient'
 import { IChain } from '../interfaces/IChain'
-import { TokensManagerClient } from './TokensManagerClient'
-import { ProtocolsManagerClient } from './ProtocolsManagerClient'
-import { IEarnProtocolManagerClient } from '../interfaces/IEarnProtocolManagerClient'
 import { IProtocolsManagerClient } from '../interfaces/IProtocolsManagerClient'
 import { ITokensManagerClient } from '../interfaces/ITokensManagerClient'
+import { ProtocolsManagerClient } from './ProtocolsManagerClient'
+import { TokensManagerClient } from './TokensManagerClient'
 
 /**
  * @name Chain
@@ -14,18 +14,18 @@ export class Chain implements IChain {
   readonly chainInfo: IChainInfo
   readonly tokens: ITokensManagerClient
   readonly protocols: IProtocolsManagerClient
-  readonly earnProtocol: IEarnProtocolManagerClient
+  readonly armada: IArmadaManagerClient
 
   constructor(params: {
     chainInfo: ChainInfo
     tokensManager: TokensManagerClient
     protocolsManager: ProtocolsManagerClient
-    earnProtocolManager: IEarnProtocolManagerClient
+    armadaManager: IArmadaManagerClient
   }) {
     this.chainInfo = params.chainInfo
     this.tokens = params.tokensManager
     this.protocols = params.protocolsManager
-    this.earnProtocol = params.earnProtocolManager
+    this.armada = params.armadaManager
   }
 
   toString(): string {

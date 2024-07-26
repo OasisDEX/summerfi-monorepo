@@ -6,6 +6,6 @@ export enum AbiContractType {
   ERC20 = 'ERC20',
   /** Standard ERC4626 interface */
   ERC4626 = 'ERC4626',
-  /** Standard FleetCommander interface for the Summer Earn Protocol */
-  EarnProtocolFleetCommander = 'EarnProtocolFleetCommander',
+  /** Standard FleetCommander interface for the Summer Armada Protocol */
+  ArmadaFleetCommander = 'ArmadaFleetCommander',
 }

@@ -1,4 +1,3 @@
-export * from './IEarnProtocolSimulation'
 export * from './IImportSimulation'
 export * from './IRefinanceSimulation'
 export * from './ISimulation'

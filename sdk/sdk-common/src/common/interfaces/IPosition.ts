@@ -1,8 +1,6 @@
 import { z } from 'zod'
 import { PositionType } from '../types/PositionType'
-import { IPool, isPool } from './IPool'
 import { IPositionId, isPositionId } from './IPositionId'
-import { ITokenAmount, isTokenAmount } from './ITokenAmount'
 
 /**
  * @name IPosition
@@ -15,12 +13,6 @@ export interface IPosition extends IPositionData {
   readonly type: PositionType
   /** Unique identifier for the position inside the Summer.fi system */
   readonly id: IPositionId
-  /** Amount of debt borrowed from the pool */
-  readonly debtAmount: ITokenAmount
-  /** Amount of collateral deposited in the pool */
-  readonly collateralAmount: ITokenAmount
-  /** Pool where the position is */
-  readonly pool: IPool
 }
 
 /**
@@ -29,9 +21,6 @@ export interface IPosition extends IPositionData {
 export const PositionDataSchema = z.object({
   type: z.nativeEnum(PositionType),
   id: z.custom<IPositionId>((val) => isPositionId(val)),
-  debtAmount: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
-  collateralAmount: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
-  pool: z.custom<IPool>((val) => isPool(val)),
 })
 
 /**

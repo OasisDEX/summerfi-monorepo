@@ -1,8 +1,8 @@
 import { router } from './SDKTRPC'
-import { deposit } from './earn-protocol-handlers/deposit'
-import { withdraw } from './earn-protocol-handlers/withdraw'
+import { deposit } from './armada-protocol-handlers/deposit'
+import { withdraw } from './armada-protocol-handlers/withdraw'
 import { buildOrder } from './handlers/buildOrder'
-import { getEarnProtocolSimulation } from './handlers/getEarnProtocolSimulation'
+import { getArmadaSimulation } from './handlers/getArmadaSimulation'
 import { getImportSimulation } from './handlers/getImportSimulation'
 import { getLendingPool } from './handlers/getLendingPool'
 import { getLendingPoolInfo } from './handlers/getLendingPoolInfo'
@@ -31,7 +31,7 @@ export const sdkAppRouter = router({
   simulation: {
     refinance: getRefinanceSimulation,
     import: getImportSimulation,
-    earn: getEarnProtocolSimulation,
+    earn: getArmadaSimulation,
   },
   orders: {
     buildOrder: buildOrder,

@@ -38,8 +38,7 @@ export class AbiProvider implements IAbiProvider {
     return {
       [AbiContractType.ERC20]: erc20Abi,
       [AbiContractType.ERC4626]: erc4626Abi,
-      [AbiContractType.EarnProtocolFleetCommander]:
-        IFleetCommanderABIJSON as unknown as ContractAbi,
+      [AbiContractType.ArmadaFleetCommander]: IFleetCommanderABIJSON as unknown as ContractAbi,
     }
   }
 }

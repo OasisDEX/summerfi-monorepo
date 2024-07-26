@@ -17,6 +17,6 @@ export interface ISimulationManager {
   readonly automation: undefined
   /** Importing simulation: ingressing an external position into the Summer system */
   readonly importing: IImportingSimulationManager
-  /** Earn Protocol simulations */
+  /** Armada Protocol simulations */
   readonly earn: undefined
 }

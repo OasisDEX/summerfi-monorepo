@@ -7,7 +7,7 @@ export enum SDKErrorType {
   /** Swap service errors */
   SwapError = 'SwapError',
   /** Earn protocol service errors */
-  EarnProtocolError = 'EarnProtocolError',
+  ArmadaError = 'ArmadaError',
   /** Order Planner errors */
   OrderPlannerError = 'OrderPlannerError',
   /** Simulator errors */

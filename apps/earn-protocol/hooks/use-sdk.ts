@@ -1,6 +1,6 @@
-import { useMemo } from 'react'
 import { makeSDK } from '@summerfi/sdk-client'
 import { Address } from '@summerfi/sdk-common'
+import { useMemo } from 'react'
 
 import { sdkApiUrl } from '@/constants/sdk'
 
@@ -41,7 +41,7 @@ export const useSDK = () => {
         if (!chain) {
           throw new Error('Chain not found')
         }
-        const fleet = chain.earnProtocol.getFleet({
+        const fleet = chain.armada.getFleet({
           address: Address.createFromEthereum({ value: fleetAddress }),
         })
 

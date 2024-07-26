@@ -1454,6 +1454,65 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
+  sdk/armada-protocol-common:
+    dependencies:
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../sdk-common
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+
+  sdk/armada-protocol-service:
+    dependencies:
+      '@summerfi/allowance-manager-common':
+        specifier: workspace:^
+        version: link:../allowance-manager-common
+      '@summerfi/allowance-manager-service':
+        specifier: workspace:*
+        version: link:../allowance-manager-service
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../armada-protocol-common
+      '@summerfi/common':
+        specifier: workspace:*
+        version: link:../../packages/common
+      '@summerfi/configuration-provider-common':
+        specifier: workspace:*
+        version: link:../configuration-provider-common
+      '@summerfi/contracts-provider-common':
+        specifier: workspace:*
+        version: link:../contracts-provider-common
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../sdk-common
+      '@types/node-fetch':
+        specifier: ^2.6.11
+        version: 2.6.11
+      node-fetch:
+        specifier: ^2.7.0
+        version: 2.7.0
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/testing-utils':
+        specifier: workspace:*
+        version: link:../testing-utils
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+
   sdk/blockchain-client-common:
     dependencies:
       '@summerfi/sdk-common':
@@ -1609,65 +1668,6 @@ importers:
       '@summerfi/jest-config':
         specifier: workspace:*
         version: link:../../packages/jest-config
-      '@summerfi/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
-
-  sdk/earn-protocol-common:
-    dependencies:
-      '@summerfi/sdk-common':
-        specifier: workspace:*
-        version: link:../sdk-common
-    devDependencies:
-      '@summerfi/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@summerfi/jest-config':
-        specifier: workspace:*
-        version: link:../../packages/jest-config
-      '@summerfi/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
-
-  sdk/earn-protocol-service:
-    dependencies:
-      '@summerfi/allowance-manager-common':
-        specifier: workspace:^
-        version: link:../allowance-manager-common
-      '@summerfi/allowance-manager-service':
-        specifier: workspace:*
-        version: link:../allowance-manager-service
-      '@summerfi/common':
-        specifier: workspace:*
-        version: link:../../packages/common
-      '@summerfi/configuration-provider-common':
-        specifier: workspace:*
-        version: link:../configuration-provider-common
-      '@summerfi/contracts-provider-common':
-        specifier: workspace:*
-        version: link:../contracts-provider-common
-      '@summerfi/earn-protocol-common':
-        specifier: workspace:*
-        version: link:../earn-protocol-common
-      '@summerfi/sdk-common':
-        specifier: workspace:*
-        version: link:../sdk-common
-      '@types/node-fetch':
-        specifier: ^2.6.11
-        version: 2.6.11
-      node-fetch:
-        specifier: ^2.7.0
-        version: 2.7.0
-    devDependencies:
-      '@summerfi/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@summerfi/jest-config':
-        specifier: workspace:*
-        version: link:../../packages/jest-config
-      '@summerfi/testing-utils':
-        specifier: workspace:*
-        version: link:../testing-utils
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -2000,6 +2000,9 @@ importers:
 
   sdk/sdk-client:
     dependencies:
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../armada-protocol-common
       '@summerfi/protocol-plugins':
         specifier: workspace:*
         version: link:../protocol-plugins
@@ -2183,6 +2186,12 @@ importers:
       '@summerfi/allowance-manager-service':
         specifier: workspace:*
         version: link:../allowance-manager-service
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../armada-protocol-common
+      '@summerfi/armada-protocol-service':
+        specifier: workspace:*
+        version: link:../armada-protocol-service
       '@summerfi/blockchain-client-common':
         specifier: workspace:*
         version: link:../blockchain-client-common
@@ -2210,12 +2219,6 @@ importers:
       '@summerfi/deployment-utils':
         specifier: workspace:*
         version: link:../../packages/deployment-utils
-      '@summerfi/earn-protocol-common':
-        specifier: workspace:*
-        version: link:../earn-protocol-common
-      '@summerfi/earn-protocol-service':
-        specifier: workspace:*
-        version: link:../earn-protocol-service
       '@summerfi/oracle-common':
         specifier: workspace:*
         version: link:../oracle-common
@@ -2305,9 +2308,9 @@ importers:
 
   sdk/simulator-service:
     dependencies:
-      '@summerfi/earn-protocol-common':
+      '@summerfi/armada-protocol-common':
         specifier: workspace:*
-        version: link:../earn-protocol-common
+        version: link:../armada-protocol-common
       '@summerfi/oracle-common':
         specifier: workspace:*
         version: link:../oracle-common
@@ -22429,6 +22432,7 @@ packages:
 
   /ethereum-bloom-filters@1.1.0:
     resolution: {integrity: sha512-J1gDRkLpuGNvWYzWslBQR9cDV4nd4kfvVTE/Wy4Kkm4yb3EYRSlyi0eB/inTsSTTVyA0+HyzHgbr95Fn/Z1fSw==}
+    deprecated: do not use this package use package versions above as this can miss some topics
     dependencies:
       '@noble/hashes': 1.4.0
     dev: true

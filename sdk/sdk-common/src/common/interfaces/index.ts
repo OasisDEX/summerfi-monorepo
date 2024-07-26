@@ -1,6 +1,6 @@
 export * from './IAddress'
+export * from './IArmadaFleet'
 export * from './IChainInfo'
-export * from './IEarnProtocolFleet'
 export * from './IFiatCurrencyAmount'
 export * from './IPercentage'
 export * from './IPool'

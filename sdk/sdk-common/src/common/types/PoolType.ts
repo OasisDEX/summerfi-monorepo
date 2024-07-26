@@ -9,6 +9,8 @@ export enum PoolType {
   Supply = 'Supply',
   /** Lending pool, adding some collateral allows to borrow some debt */
   Lending = 'Lending',
+  /** Armada pool type, aggregated liquidity for yield */
+  Armada = 'Armada',
 }
 
 /**

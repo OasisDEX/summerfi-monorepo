@@ -9,7 +9,7 @@ export enum PositionType {
   Supply = 'Supply',
   /** Lending position, adding some collateral allows to borrow some debt */
   Lending = 'Lending',
-  /** Earn Protocol position, aggregated liquidity */
+  /** Armada Protocol position, aggregated liquidity */
   Earn = 'Earn',
 }
 

@@ -56,11 +56,5 @@ export type IRefinanceSimulationParameters = Omit<IRefinanceSimulationData, 'typ
 export function isRefinanceSimulation(
   maybeRefinanceSimulationData: unknown,
 ): maybeRefinanceSimulationData is IRefinanceSimulation {
-  console.log(maybeRefinanceSimulationData)
-  const success = RefinanceSimulationSchema.safeParse(maybeRefinanceSimulationData).success
-  console.log(success)
-  if (!success) {
-    RefinanceSimulationSchema.parse(maybeRefinanceSimulationData)
-  }
-  return success
+  return RefinanceSimulationSchema.safeParse(maybeRefinanceSimulationData).success
 }

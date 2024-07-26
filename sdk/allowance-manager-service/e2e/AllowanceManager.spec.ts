@@ -5,7 +5,7 @@ import { Address, ChainFamilyMap, ChainInfo, Token, TokenAmount } from '@summerf
 import { decodeAllowanceCalldata } from '@summerfi/testing-utils/utils/AllowanceDecoding'
 import { AllowanceManagerFactory, type AllowanceManager } from '../src'
 
-describe('Earn Protocol Service', () => {
+describe('Armada Protocol Service', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
 
   const fleetAddress = Address.createFromEthereum({

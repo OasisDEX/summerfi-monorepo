@@ -1,4 +1,4 @@
-// import { createEarnProtocolRPCClient } from '../rpc/SDKEarnProtocolClient'
+// import { createArmadaRPCClient } from '../rpc/SDKArmadaClient'
 import { createMainRPCClient } from '../rpc/SDKMainClient'
 import { SDKManager } from './SDKManager'
 
