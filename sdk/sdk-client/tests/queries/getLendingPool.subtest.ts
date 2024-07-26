@@ -49,11 +49,9 @@ export default async function getLendingPoolTest() {
     fail('Chain not found')
   }
 
-  const protocol = await chain.protocols.getProtocol({ name: ProtocolName.Maker })
-
-  if (!protocol) {
-    fail('Protocol not found')
-  }
+  const protocol = MakerProtocol.createFrom({
+    chainInfo: chain.chainInfo,
+  })
 
   const makerPoolId = MakerLendingPoolId.createFrom({
     protocol: MakerProtocol.createFrom({
@@ -80,7 +78,7 @@ export default async function getLendingPoolTest() {
     ilkType: ILKType.ETH_A,
   })
 
-  const pool = await protocol.getLendingPool({ poolId: makerPoolId })
+  const pool = await chain.protocols.getLendingPool({ poolId: makerPoolId })
 
   if (!pool) {
     fail('Pool not found')
@@ -89,5 +87,5 @@ export default async function getLendingPoolTest() {
   expect(pool.type).toBe(PoolType.Lending)
   expect(pool.id).toBe(makerPoolId)
   expect(pool.id.protocol.name).toBe(protocol.name)
-  expect(pool.id.protocol.chainInfo).toBe(protocol.chainInfo)
+  expect(pool.id.protocol.chainInfo).toEqual(protocol.chainInfo)
 }

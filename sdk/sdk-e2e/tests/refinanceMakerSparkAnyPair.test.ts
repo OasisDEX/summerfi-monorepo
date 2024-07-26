@@ -2,15 +2,15 @@ import {
   Address,
   ChainFamilyMap,
   Percentage,
-  PositionType,
   TokenAmount,
   type Maybe,
 } from '@summerfi/sdk-common/common'
 
-import { IProtocolClient, makeSDK, type Chain } from '@summerfi/sdk-client'
+import { makeSDK, type Chain } from '@summerfi/sdk-client'
 import {
   ExternalLendingPosition,
   ExternalLendingPositionType,
+  ImportPositionParameters,
   Order,
   PositionsManager,
   RefinanceParameters,
@@ -22,11 +22,13 @@ import {
   MakerLendingPoolId,
   MakerLendingPosition,
   MakerLendingPositionId,
+  MakerProtocol,
   isMakerLendingPool,
   isMakerProtocol,
 } from '@summerfi/protocol-plugins/plugins/maker'
 import {
   SparkLendingPoolId,
+  SparkProtocol,
   isSparkLendingPoolId,
   isSparkProtocol,
 } from '@summerfi/protocol-plugins/plugins/spark'
@@ -37,7 +39,6 @@ import {
   IImportSimulation,
   IRefinanceSimulation,
   IToken,
-  ProtocolName,
   isLendingPool,
 } from '@summerfi/sdk-common'
 import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
@@ -122,8 +123,9 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
     assert(targetCollateralToken, `${config.target.collateralTokenSymbol} not found`)
 
     // Source position
-    const maker = await chain.protocols.getProtocol({ name: ProtocolName.Maker })
-    assert(maker, 'Maker protocol not found')
+    const maker = MakerProtocol.createFrom({
+      chainInfo: chain.chainInfo,
+    })
 
     if (!isMakerProtocol(maker)) {
       assert(false, 'Maker protocol type is not lending')
@@ -136,7 +138,7 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
       ilkType: config.source.ilkType,
     })
 
-    const makerPool = await maker.getLendingPool({
+    const makerPool = await chain.protocols.getLendingPool({
       poolId: makerPoolId,
     })
     assert(makerPool, 'Maker pool not found')
@@ -147,10 +149,8 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
 
     // Source position
     const makerPosition: MakerLendingPosition = MakerLendingPosition.createFrom({
-      type: PositionType.Lending,
       subtype: LendingPositionType.Multiply,
       id: MakerLendingPositionId.createFrom({
-        type: PositionType.Lending,
         id: config.makerVaultId,
         vaultId: config.makerVaultId,
       }),
@@ -166,8 +166,8 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
     })
 
     // Target protocol
-    const spark: Maybe<IProtocolClient> = await chain.protocols.getProtocol({
-      name: ProtocolName.Spark,
+    const spark = SparkProtocol.createFrom({
+      chainInfo: chain.chainInfo,
     })
     assert(spark, 'Spark not found')
 
@@ -182,7 +182,7 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
       emodeType: config.target.emodeType,
     })
 
-    const sparkPool = await spark.getLendingPool({
+    const sparkPool = await chain.protocols.getLendingPool({
       poolId: targetPoolId,
     })
 
@@ -200,19 +200,21 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
     // IMPORT SIMULATION
     //
     const importSimulation: IImportSimulation =
-      await sdk.simulator.importing.simulateImportPosition({
-        externalPosition: ExternalLendingPosition.createFrom({
-          ...makerPosition,
-          id: ExternalLendingPositionId.createFrom({
-            type: PositionType.Lending,
-            externalType: ExternalLendingPositionType.DS_PROXY,
-            id: '0x517775d01FA1D41c8906848e88831b6dA49AB8E7',
-            address: Address.createFromEthereum({
-              value: '0x517775d01FA1D41c8906848e88831b6dA49AB8E7',
+      await sdk.simulator.importing.simulateImportPosition(
+        ImportPositionParameters.createFrom({
+          externalPosition: ExternalLendingPosition.createFrom({
+            ...makerPosition,
+            id: ExternalLendingPositionId.createFrom({
+              externalType: ExternalLendingPositionType.DS_PROXY,
+              id: '0x517775d01FA1D41c8906848e88831b6dA49AB8E7',
+              address: Address.createFromEthereum({
+                value: '0x517775d01FA1D41c8906848e88831b6dA49AB8E7',
+              }),
+              protocolId: makerPosition.id,
             }),
           }),
         }),
-      })
+      )
 
     //
     // REFINANCE SIMULATION

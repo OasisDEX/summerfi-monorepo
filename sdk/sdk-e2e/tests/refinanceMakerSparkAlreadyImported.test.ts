@@ -3,7 +3,6 @@ import {
   AddressValue,
   ChainFamilyMap,
   Percentage,
-  PositionType,
   Token,
   TokenAmount,
   type Maybe,
@@ -11,8 +10,8 @@ import {
 
 import { Deployments } from '@summerfi/core-contracts'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
-import { IProtocolClient, makeSDK, type Chain } from '@summerfi/sdk-client'
-import { CommonTokenSymbols, ProtocolName } from '@summerfi/sdk-common/common/enums'
+import { makeSDK, type Chain } from '@summerfi/sdk-client'
+import { CommonTokenSymbols } from '@summerfi/sdk-common/common/enums'
 import { Order, PositionsManager, RefinanceParameters } from '@summerfi/sdk-common/orders'
 import {
   TransactionUtils,
@@ -34,6 +33,7 @@ import {
   MakerLendingPosition,
   MakerLendingPositionId,
   MakerPaybackAction,
+  MakerProtocol,
   MakerWithdrawAction,
   isMakerLendingPool,
   isMakerLendingPosition,
@@ -44,6 +44,7 @@ import {
   SparkBorrowAction,
   SparkDepositAction,
   SparkLendingPoolId,
+  SparkProtocol,
   isSparkLendingPool,
   isSparkLendingPoolId,
   isSparkLendingPosition,
@@ -115,8 +116,9 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     })
     assert(DAI, 'DAI not found')
 
-    const maker = await chain.protocols.getProtocol({ name: ProtocolName.Maker })
-    assert(maker, 'Maker protocol not found')
+    const maker = MakerProtocol.createFrom({
+      chainInfo: ChainFamilyMap.Ethereum.Mainnet,
+    })
 
     if (!isMakerProtocol(maker)) {
       assert(false, 'Maker protocol type is not Maker')
@@ -129,7 +131,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
       debtToken: DAI,
     })
 
-    const makerPool = await maker.getLendingPool({
+    const makerPool = await chain.protocols.getLendingPool({
       poolId: makerPoolId,
     })
 
@@ -141,10 +143,8 @@ describe.skip('Refinance Maker Spark | SDK', () => {
 
     // Source position
     const makerPosition = MakerLendingPosition.createFrom({
-      type: PositionType.Lending,
       subtype: LendingPositionType.Multiply,
       id: MakerLendingPositionId.createFrom({
-        type: PositionType.Lending,
         id: '31646',
         vaultId: '31646',
       }),
@@ -160,10 +160,9 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     })
 
     // Target protocol
-    const spark: Maybe<IProtocolClient> = await chain.protocols.getProtocol({
-      name: ProtocolName.Spark,
+    const spark = SparkProtocol.createFrom({
+      chainInfo: ChainFamilyMap.Ethereum.Mainnet,
     })
-    assert(spark, 'Spark not found')
 
     if (!isSparkProtocol(spark)) {
       assert(false, 'Spark protocol type is not Spark')
@@ -176,7 +175,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
       emodeType: EmodeType.None,
     })
 
-    const sparkPool = await spark.getLendingPool({
+    const sparkPool = await chain.protocols.getLendingPool({
       poolId,
     })
 

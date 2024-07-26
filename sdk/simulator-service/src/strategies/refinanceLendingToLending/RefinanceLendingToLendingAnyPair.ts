@@ -7,7 +7,6 @@ import {
   IRefinanceSimulation,
   RefinanceSimulation,
   SimulationSteps,
-  SimulationType,
   TokenTransferTargetType,
   getValueFromReference,
 } from '@summerfi/sdk-common/simulation'
@@ -216,7 +215,6 @@ export async function refinanceLendingToLending(
   }
 
   return RefinanceSimulation.createFrom({
-    type: SimulationType.Refinance,
     sourcePosition: position,
     targetPosition: targetPosition,
     swaps: simulation.swaps,

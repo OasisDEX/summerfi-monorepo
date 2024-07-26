@@ -13,8 +13,6 @@ import { Steps } from './Steps'
  * @description Simulation result of a refinance operation
  */
 export interface IRefinanceSimulation extends ISimulation {
-  /** Type of the simulation, in this case Refinance */
-  readonly type: SimulationType.Refinance
   /** Original position that will be refinanced */
   readonly sourcePosition: ILendingPosition
   /** Simulated target position */
@@ -23,6 +21,9 @@ export interface IRefinanceSimulation extends ISimulation {
   readonly swaps: SimulatedSwapData[]
   /** Steps needed to perform the refinance */
   readonly steps: Steps[]
+
+  // Re-declaring the properties with the correct types
+  readonly type: SimulationType
 }
 
 /**
@@ -33,12 +34,19 @@ export const RefinanceSimulationSchema = z.object({
   type: z.literal(SimulationType.Refinance),
   sourcePosition: z.custom<ILendingPosition>((val) => isLendingPosition(val)),
   targetPosition: z.custom<ILendingPosition>((val) => isLendingPosition(val)),
+  swaps: z.array(z.custom<SimulatedSwapData>()),
+  steps: z.array(z.custom<Steps>()),
 })
 
 /**
  * Type for the data part of the IRefinanceSimulation interface
  */
 export type IRefinanceSimulationData = Readonly<z.infer<typeof RefinanceSimulationSchema>>
+
+/**
+ * Type for the parameters of the IRefinanceSimulation interface
+ */
+export type IRefinanceSimulationParameters = Omit<IRefinanceSimulationData, 'type'>
 
 /**
  * @description Type guard for IRefinanceSimulation

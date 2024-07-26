@@ -3,15 +3,17 @@ import {
   MorphoLendingPoolId,
   MorphoLendingPosition,
   MorphoLendingPositionId,
+  MorphoProtocol,
   isMorphoLendingPool,
   isMorphoProtocol,
 } from '@summerfi/protocol-plugins/plugins/morphoblue'
 import {
   SparkLendingPoolId,
+  SparkProtocol,
   isSparkLendingPoolId,
   isSparkProtocol,
 } from '@summerfi/protocol-plugins/plugins/spark'
-import { IProtocolClient, makeSDK, type Chain } from '@summerfi/sdk-client'
+import { makeSDK, type Chain } from '@summerfi/sdk-client'
 import {
   Address,
   AddressValue,
@@ -20,8 +22,6 @@ import {
   IRefinanceSimulation,
   IToken,
   Percentage,
-  PositionType,
-  ProtocolName,
   TokenAmount,
   isLendingPool,
   type Maybe,
@@ -90,8 +90,9 @@ describe.skip('Refinance Morpho Spark | SDK', () => {
     })
     assert(collateralToken, `${config.collateralTokenSymbol} not found`)
 
-    const morpho = await chain.protocols.getProtocol({ name: ProtocolName.MorphoBlue })
-    assert(morpho, 'Maker protocol not found')
+    const morpho = MorphoProtocol.createFrom({
+      chainInfo: chain.chainInfo,
+    })
 
     if (!isMorphoProtocol(morpho)) {
       assert(false, 'Maker protocol type is not lending')
@@ -102,7 +103,7 @@ describe.skip('Refinance Morpho Spark | SDK', () => {
       marketId: '0xB323495F7E4148BE5643A4EA4A8221EEF163E4BCCFDEDC2A6F4696BAACBC86CC',
     })
 
-    const morphoPool = await morpho.getLendingPool({
+    const morphoPool = await chain.protocols.getLendingPool({
       poolId: morphoPoolId,
     })
     assert(morphoPool, 'Maker pool not found')
@@ -113,10 +114,8 @@ describe.skip('Refinance Morpho Spark | SDK', () => {
 
     // Source position
     const morphoPosition = MorphoLendingPosition.createFrom({
-      type: PositionType.Lending,
       subtype: LendingPositionType.Multiply,
       id: MorphoLendingPositionId.createFrom({
-        type: PositionType.Lending,
         id: 'MorphoPosition',
       }),
       debtAmount: TokenAmount.createFrom({
@@ -131,10 +130,9 @@ describe.skip('Refinance Morpho Spark | SDK', () => {
     })
 
     // Target protocol
-    const spark: Maybe<IProtocolClient> = await chain.protocols.getProtocol({
-      name: ProtocolName.Spark,
+    const spark = SparkProtocol.createFrom({
+      chainInfo: chain.chainInfo,
     })
-    assert(spark, 'Spark not found')
 
     if (!isSparkProtocol(spark)) {
       assert(false, 'Protocol type is not Spark')
@@ -147,7 +145,7 @@ describe.skip('Refinance Morpho Spark | SDK', () => {
       emodeType: EmodeType.None,
     })
 
-    const sparkPool = await spark.getLendingPool({
+    const sparkPool = await chain.protocols.getLendingPool({
       poolId,
     })
 

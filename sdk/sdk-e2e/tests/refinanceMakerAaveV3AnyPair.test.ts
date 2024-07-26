@@ -2,22 +2,23 @@ import {
   Address,
   ChainFamilyMap,
   Percentage,
-  PositionType,
   TokenAmount,
   type Maybe,
 } from '@summerfi/sdk-common/common'
 
-import { IProtocolClient, makeSDK, type Chain } from '@summerfi/sdk-client'
+import { makeSDK, type Chain } from '@summerfi/sdk-client'
 import {
+  ExternalLendingPositionId,
   ExternalLendingPositionType,
+  ImportPositionParameters,
   Order,
   PositionsManager,
   RefinanceParameters,
 } from '@summerfi/sdk-common/orders'
-import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
 
 import {
   AaveV3LendingPoolId,
+  AaveV3Protocol,
   isAaveV3LendingPoolId,
   isAaveV3Protocol,
 } from '@summerfi/protocol-plugins'
@@ -27,17 +28,21 @@ import {
   MakerLendingPoolId,
   MakerLendingPosition,
   MakerLendingPositionId,
+  MakerProtocol,
   isMakerLendingPool,
   isMakerProtocol,
 } from '@summerfi/protocol-plugins/plugins/maker'
 import {
   AddressValue,
   CommonTokenSymbols,
+  ExternalLendingPosition,
+  IImportSimulation,
+  IRefinanceSimulation,
   IToken,
   LendingPositionType,
-  ProtocolName,
   Token,
 } from '@summerfi/sdk-common'
+import { isLendingPool } from '@summerfi/sdk-common/lending-protocols'
 import { TransactionUtils } from '@summerfi/testing-utils'
 import assert from 'assert'
 import { Hex } from 'viem'
@@ -124,8 +129,9 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
     })
 
     // Source position
-    const maker = await chain.protocols.getProtocol({ name: ProtocolName.Maker })
-    assert(maker, 'Maker protocol not found')
+    const maker = MakerProtocol.createFrom({
+      chainInfo: chain.chainInfo,
+    })
 
     if (!isMakerProtocol(maker)) {
       assert(false, 'Maker protocol type is not lending')
@@ -138,7 +144,7 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
       ilkType: config.source.ilkType,
     })
 
-    const makerPool = await maker.getLendingPool({
+    const makerPool = await chain.protocols.getLendingPool({
       poolId: makerPoolId,
     })
     assert(makerPool, 'Maker pool not found')
@@ -148,14 +154,14 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
     }
 
     // Source position
+    const makerPositionId = MakerLendingPositionId.createFrom({
+      id: config.makerVaultId,
+      vaultId: config.makerVaultId,
+    })
+
     const makerPosition: MakerLendingPosition = MakerLendingPosition.createFrom({
-      type: PositionType.Lending,
       subtype: LendingPositionType.Multiply,
-      id: MakerLendingPositionId.createFrom({
-        type: PositionType.Lending,
-        id: config.makerVaultId,
-        vaultId: config.makerVaultId,
-      }),
+      id: makerPositionId,
       debtAmount: TokenAmount.createFrom({
         token: sourceDebtToken,
         amount: config.source.debtAmount,
@@ -168,10 +174,9 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
     })
 
     // Target protocol
-    const aaveV3: Maybe<IProtocolClient> = await chain.protocols.getProtocol({
-      name: ProtocolName.AaveV3,
+    const aaveV3 = AaveV3Protocol.createFrom({
+      chainInfo: chain.chainInfo,
     })
-    assert(aaveV3, 'AaveV3 not found')
 
     if (!isAaveV3Protocol(aaveV3)) {
       assert(false, 'Protocol type is not AaveV3')
@@ -184,7 +189,7 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
       emodeType: config.target.emodeType,
     })
 
-    const targetPool = await aaveV3.getLendingPool({
+    const targetPool = await chain.protocols.getLendingPool({
       poolId: targetPoolId,
     })
 
@@ -198,24 +203,28 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
       assert(false, 'Spark pool type is not lending')
     }
 
-    const poolInfo = await aaveV3.getLendingPoolInfo({ poolId: targetPoolId })
+    const poolInfo = await chain.protocols.getLendingPoolInfo({ poolId: targetPoolId })
     console.log('Pool Info:', JSON.stringify(poolInfo, null, 2))
 
     //
     // IMPORT SIMULATION
     //
-    const importSimulation: ISimulation<SimulationType.ImportPosition> =
-      await sdk.simulator.importing.simulateImportPosition({
-        externalPosition: {
-          externalId: {
-            address: Address.createFromEthereum({
-              value: '0x517775d01FA1D41c8906848e88831b6dA49AB8E7',
+    const importSimulation: IImportSimulation =
+      await sdk.simulator.importing.simulateImportPosition(
+        ImportPositionParameters.createFrom({
+          externalPosition: ExternalLendingPosition.createFrom({
+            ...makerPosition,
+            id: ExternalLendingPositionId.createFrom({
+              id: 'test',
+              protocolId: makerPositionId,
+              address: Address.createFromEthereum({
+                value: '0x517775d01FA1D41c8906848e88831b6dA49AB8E7',
+              }),
+              externalType: ExternalLendingPositionType.DS_PROXY,
             }),
-            type: ExternalLendingPositionType.DS_PROXY,
-          },
-          position: makerPosition,
-        },
-      })
+          }),
+        }),
+      )
 
     //
     // REFINANCE SIMULATION
@@ -226,7 +235,7 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
       slippage: Percentage.createFrom({ value: 0.2 }),
     })
 
-    const refinanceSimulation: ISimulation<SimulationType.Refinance> =
+    const refinanceSimulation: IRefinanceSimulation =
       await sdk.simulator.refinance.simulateRefinancePosition(refinanceParameters)
 
     expect(refinanceSimulation).toBeDefined()

@@ -1,4 +1,3 @@
-import { SparkLendingPositionId } from '@summerfi/protocol-plugins'
 import {
   ILKType,
   MakerLendingPool,
@@ -7,46 +6,32 @@ import {
   MakerLendingPositionId,
   MakerProtocol,
 } from '@summerfi/protocol-plugins/plugins/maker'
-import { RefinanceParameters } from '@summerfi/sdk-common'
+import { RefinanceParameters, RefinanceSimulation } from '@summerfi/sdk-common'
 import {
   Address,
   ChainFamilyMap,
   ChainInfo,
   Percentage,
-  PoolType,
-  PositionType,
-  ProtocolName,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
 import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
 import { SimulationType } from '@summerfi/sdk-common/simulation'
-import { IRefinanceSimulation } from '@summerfi/sdk-common/simulation/interfaces'
 import { SDKManager } from '../../src/implementation/SDKManager'
 import { RPCMainClientType } from '../../src/rpc/SDKMainClient'
+import { getTargetPosition } from '../utils/getTargetPosition'
 
 export default async function simulateRefinanceTest() {
   type SimulateRefinanceType = RPCMainClientType['simulation']['refinance']['query']
   const simulateRefinance: SimulateRefinanceType = jest.fn(async (params) => {
-    return {
-      type: SimulationType.Refinance,
+    const targetPosition = getTargetPosition(params)
+
+    return RefinanceSimulation.createFrom({
       sourcePosition: params.sourcePosition,
-      targetPosition: {
-        type: params.sourcePosition.type,
-        id: SparkLendingPositionId.createFrom({ type: PositionType.Lending, id: '0987654321' }),
-        debtAmount: TokenAmount.createFrom({
-          amount: params.sourcePosition.debtAmount.amount,
-          token: params.targetPool.debtToken,
-        }),
-        collateralAmount: TokenAmount.createFrom({
-          amount: params.sourcePosition.collateralAmount.amount,
-          token: params.targetPool.collateralToken,
-        }),
-        pool: params.targetPool,
-      },
+      targetPosition: targetPosition,
       swaps: [],
       steps: [],
-    } as IRefinanceSimulation
+    })
   })
 
   const rpcClient = {
@@ -89,7 +74,6 @@ export default async function simulateRefinanceTest() {
   })
 
   const protocol = MakerProtocol.createFrom({
-    name: ProtocolName.Maker,
     chainInfo: chainInfo,
   })
 
@@ -101,27 +85,23 @@ export default async function simulateRefinanceTest() {
   })
 
   const pool = MakerLendingPool.createFrom({
-    type: PoolType.Lending,
     id: poolId,
     collateralToken: poolId.collateralToken,
     debtToken: poolId.debtToken,
   })
 
   const prevPosition = MakerLendingPosition.createFrom({
-    type: PositionType.Lending,
     subtype: LendingPositionType.Multiply,
     pool: pool,
     debtAmount: TokenAmount.createFrom({ token: DAI, amount: '56.78' }),
     collateralAmount: TokenAmount.createFrom({ token: WETH, amount: '105.98' }),
     id: MakerLendingPositionId.createFrom({
-      type: PositionType.Lending,
       id: '1234567890',
       vaultId: '34',
     }),
   })
 
   const targetPool = MakerLendingPool.createFrom({
-    type: PoolType.Lending,
     id: poolId,
     collateralToken: poolId.collateralToken,
     debtToken: poolId.debtToken,

@@ -1,5 +1,9 @@
-import { Maybe, ProtocolName } from '@summerfi/sdk-common/common'
-import { IProtocolClient } from './IProtocolClient'
+import { Maybe } from '@summerfi/sdk-common/common'
+import {
+  ILendingPool,
+  ILendingPoolIdData,
+  ILendingPoolInfo,
+} from '@summerfi/sdk-common/lending-protocols'
 
 /**
  * @interface IProtocolsManagerClient
@@ -8,12 +12,18 @@ import { IProtocolClient } from './IProtocolClient'
  */
 export interface IProtocolsManagerClient {
   /**
-   * @method getProtocol
-   * @description Retrieves a protocol by its name
-   *
-   * @param name The name of the protocol to retrieve
-   *
-   * @returns The protocol with the given name
+   * @method getLendingPool
+   * @description Get the lending pool from the protocol
+   * @param {ILendingPoolIdData} params The pool id data
+   * @returns {Promise<Maybe<ILendingPool>>} The lending pool
    */
-  getProtocol(params: { name: ProtocolName }): Promise<Maybe<IProtocolClient>>
+  getLendingPool(params: { poolId: ILendingPoolIdData }): Promise<Maybe<ILendingPool>>
+
+  /**
+   * @method getLendingPoolInfo
+   * @description Get the lending pool info from the protocol
+   * @param {ILendingPoolIdData} params The pool id data
+   * @returns {Promise<Maybe<ILendingPoolInfo>>} The lending pool info
+   */
+  getLendingPoolInfo(params: { poolId: ILendingPoolIdData }): Promise<Maybe<ILendingPoolInfo>>
 }
