@@ -37,8 +37,6 @@ export async function requestJWT({
   isGnosisSafe: boolean
   host?: string
 }): Promise<string | undefined> {
-  const addressForSignature = walletAddress
-
   const challenge = await requestChallenge({ walletAddress, isGnosisSafe, host })
 
   if (!challenge) {
@@ -96,7 +94,7 @@ export async function requestJWT({
     return token
   }
 
-  const signature = await signTypedPayload(challenge, signMessage, addressForSignature)
+  const signature = await signTypedPayload(challenge, signMessage)
 
   if (!signature) {
     throw new Error('Signing process declined or failed, try again or contact with support')

@@ -5,8 +5,7 @@ import type { TOSSignMessage } from '@/types'
  * Signs a typed payload based on a challenge string, a signing function, and an account address.
  *
  * @param challenge - The challenge string that needs to be signed
- * @param signMessage - A function that takes data and an account, and returns a signed message
- * @param account - The account address to sign the data with
+ * @param signMessage - A signer function that takes data, and returns a signed message
  *
  * @returns A promise that resolves to the signed message
  *
@@ -14,9 +13,8 @@ import type { TOSSignMessage } from '@/types'
 export const signTypedPayload = (
   challenge: string,
   signMessage: TOSSignMessage,
-  account: string,
 ): ReturnType<TOSSignMessage> => {
   const data = getDataToSignFromChallenge(challenge)
 
-  return signMessage(data, account)
+  return signMessage(data)
 }
