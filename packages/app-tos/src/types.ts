@@ -59,7 +59,7 @@ export type TOSSignMessage = (data: string, account: string) => Promise<string |
 export type TOSInput = {
   signMessage: TOSSignMessage
   chainId: number
-  walletAddress: string
+  walletAddress?: string
   version: string
   isGnosisSafe: boolean
   host?: string

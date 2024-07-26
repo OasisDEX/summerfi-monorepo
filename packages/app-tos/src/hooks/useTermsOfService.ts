@@ -37,7 +37,7 @@ export const useTermsOfService = ({
   })
 
   useEffect(() => {
-    const request = async () => {
+    const request = async (walletAddress: string) => {
       /**
          Initial step - fetch info about user acceptance from database.
          */
@@ -120,7 +120,11 @@ export const useTermsOfService = ({
       }
     }
 
-    void request()
+    if (!walletAddress) {
+      return
+    }
+
+    void request(walletAddress)
   }, [walletAddress, version, chainId, isGnosisSafe, host, signMessage])
 
   return tos
