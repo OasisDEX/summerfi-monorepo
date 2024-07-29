@@ -15,8 +15,8 @@
     "lint": "eslint *.ts*",
     "generate-module-types": "typed-scss-modules 'src/**/*.module.scss'",
     "generate-module-types-watch": "typed-scss-modules -w 'src/**/*.module.scss'",
-    "dev": "pnpm generate-module-types-watch & vite build -w true --mode=dev",
-    "build": "pnpm generate-module-types & vite build -w false --mode=prod",
+    "dev": "pnpm generate-module-types-watch & farm build -w true --mode=dev",
+    "build": "pnpm generate-module-types & farm build -w false --mode=prod",
     "clean": "rm -rf dist"
   },
   "devDependencies": {
@@ -47,16 +47,23 @@
     "clsx": "^2.1.1",
     "lodash": "^4.17.21",
     "next": "^14.2.5",
-    "react-dom": "^18.3.1",
     "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "usehooks-ts": "^3.1.0"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
+    "@farmfe/cli": "^1.0.3",
+    "@farmfe/core": "^1.3.11",
+    "@farmfe/js-plugin-dts": "^0.6.1",
+    "@farmfe/js-plugin-sass": "^2.9.0",
+    "@farmfe/plugin-react": "^1.2.0",
+    "@farmfe/plugin-sass": "^1.1.0",
     "@summerfi/serverless-shared": "workspace:*",
     "include-media": "2.0.0",
+    "react-refresh": "^0.14.2",
     "rollup-preserve-directives": "^1.1.1",
     "sanitize.css": "13.0.0",
     "typed-scss-modules": "^8.0.1",
