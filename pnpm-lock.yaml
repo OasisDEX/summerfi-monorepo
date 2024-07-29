@@ -1672,6 +1672,49 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
+  sdk/dma-simulator-service:
+    dependencies:
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../armada-protocol-common
+      '@summerfi/oracle-common':
+        specifier: workspace:*
+        version: link:../oracle-common
+      '@summerfi/protocol-manager-common':
+        specifier: workspace:*
+        version: link:../protocol-manager-common
+      '@summerfi/protocol-plugins':
+        specifier: workspace:*
+        version: link:../protocol-plugins
+      '@summerfi/protocol-plugins-common':
+        specifier: workspace:*
+        version: link:../protocol-plugins-common
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../sdk-common
+      '@summerfi/simulator-common':
+        specifier: workspace:*
+        version: link:../simulator-common
+      '@summerfi/swap-common':
+        specifier: workspace:*
+        version: link:../swap-common
+      '@types/node-fetch':
+        specifier: ^2.6.11
+        version: 2.6.11
+      node-fetch:
+        specifier: ^2.7.0
+        version: 2.7.0
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+
   sdk/oracle-common:
     dependencies:
       '@summerfi/sdk-common':
@@ -2219,6 +2262,9 @@ importers:
       '@summerfi/deployment-utils':
         specifier: workspace:*
         version: link:../../packages/deployment-utils
+      '@summerfi/dma-simulator-service':
+        specifier: workspace:^
+        version: link:../dma-simulator-service
       '@summerfi/oracle-common':
         specifier: workspace:*
         version: link:../oracle-common
@@ -2252,9 +2298,6 @@ importers:
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared
-      '@summerfi/simulator-service':
-        specifier: workspace:^
-        version: link:../simulator-service
       '@summerfi/swap-common':
         specifier: workspace:*
         version: link:../swap-common
@@ -2306,7 +2349,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
-  sdk/simulator-service:
+  sdk/simulator-common:
     dependencies:
       '@summerfi/armada-protocol-common':
         specifier: workspace:*
@@ -2555,6 +2598,9 @@ importers:
 
   sdk/tools/genStrategyDefinitions:
     dependencies:
+      '@summerfi/dma-simulator-service':
+        specifier: workspace:*
+        version: link:../../dma-simulator-service
       '@summerfi/order-planner-service':
         specifier: workspace:*
         version: link:../../order-planner-service
@@ -2567,9 +2613,6 @@ importers:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../../sdk-common
-      '@summerfi/simulator-service':
-        specifier: workspace:*
-        version: link:../../simulator-service
     devDependencies:
       '@morpho-labs/gnosis-tx-builder':
         specifier: ^2.0.0

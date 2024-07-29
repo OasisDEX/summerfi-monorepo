@@ -35,7 +35,7 @@
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/sdk-server-common": "workspace:*",
     "@summerfi/serverless-shared": "workspace:*",
-    "@summerfi/simulator-service": "workspace:^",
+    "@summerfi/dma-simulator-service": "workspace:^",
     "@summerfi/swap-common": "workspace:*",
     "@summerfi/swap-service": "workspace:*",
     "@summerfi/tokens-common": "workspace:*",

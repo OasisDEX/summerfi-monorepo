@@ -5,7 +5,7 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "@summerfi/simulator-service/*": ["node_modules/@summerfi/simulator-service/src/*"],
+      "@summerfi/dma-simulator-service/*": ["node_modules/@summerfi/dma-simulator-service/src/*"],
       "@summerfi/order-planner-service/*": ["node_modules/@summerfi/order-planner-service/src/*"],
       "@summerfi/protocol-plugins": ["node_modules/@summerfi/protocol-plugins/src/index.ts"],
       "@summerfi/protocol-plugins-common": [

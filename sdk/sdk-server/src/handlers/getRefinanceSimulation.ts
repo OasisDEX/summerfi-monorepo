@@ -1,6 +1,6 @@
+import { refinanceLendingToLending } from '@summerfi/dma-simulator-service/strategies'
 import { isRefinanceParameters } from '@summerfi/sdk-common/orders'
 import { IRefinanceSimulation } from '@summerfi/sdk-common/simulation'
-import { refinanceLendingToLending } from '@summerfi/simulator-service/strategies'
 import { z } from 'zod'
 import { publicProcedure } from '../SDKTRPC'
 

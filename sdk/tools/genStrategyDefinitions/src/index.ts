@@ -1,13 +1,13 @@
+import { refinanceLendingToLendingAnyPairStrategy } from '@summerfi/dma-simulator-service/strategies'
+import { AddressValue } from '@summerfi/sdk-common'
+import fs from 'fs'
+import yargs from 'yargs'
 import {
   generateDebugDefinitions,
   generateOperationDefinitions,
   generateSafeMultisendJSON,
   processStrategies,
 } from './Helpers'
-import yargs from 'yargs'
-import fs from 'fs'
-import { refinanceLendingToLendingAnyPairStrategy } from '@summerfi/simulator-service/strategies'
-import { AddressValue } from '@summerfi/sdk-common'
 
 async function main() {
   const args = await yargs(process.argv.slice(2))
