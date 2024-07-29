@@ -246,7 +246,7 @@ const SetForkModalContent = () => {
                     {network.label} <IconDeviceFloppy size={18} />
                   </Button>
                   <Button
-                    disabled={!forkCookies[network.id]}
+                    disabled={!forkCookies[network.id] || !mainWallet}
                     variant={forkCookies[network.id] ? 'primarySmall' : 'neutralSmall'}
                     style={{
                       minWidth: '30px',
@@ -277,6 +277,15 @@ const SetForkModalContent = () => {
           )
         })}
       </div>
+      {!mainWallet && (
+        <Text
+          as="p"
+          variant="p3semi"
+          style={{ marginTop: '20px', textAlign: 'center', color: 'red' }}
+        >
+          Connect your wallet to add forks to it.
+        </Text>
+      )}
       <Button
         variant="secondaryLarge"
         style={{ marginTop: '30px' }}
