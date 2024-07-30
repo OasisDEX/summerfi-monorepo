@@ -84,7 +84,10 @@ function getRpc(network: NetworkNames): string {
     return ''
   }
 
-  return `${window.location.origin}/api/rpcGateway?network=${network}&clientId=${clientId}`
+  // for local testing
+  const resolvedOrigin = window.location.origin.replace('3001', '3000')
+
+  return `${resolvedOrigin}/api/rpcGateway?network=${network}&clientId=${clientId}`
 }
 
 export const mainnetRpc = getRpc(NetworkNames.ethereumMainnet)

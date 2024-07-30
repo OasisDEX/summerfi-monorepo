@@ -1,0 +1,110 @@
+'use client'
+import SafeAppsSDK from '@safe-global/safe-apps-sdk'
+
+import { getGnosisSafeDetails } from '@/auth/gnosis/get-gnosis-safe-details'
+import { requestChallenge } from '@/auth/request-challenge'
+import { requestSignin } from '@/auth/request-signin'
+import { signTypedPayload } from '@/helpers/sign-typed-payload'
+import { type TOSSignMessage } from '@/types'
+
+/**
+ * Requests a JSON Web Token (JWT) by signing a challenge.
+ *
+ * @remarks
+ * This method first requests a challenge from the server. If the wallet is a Gnosis Safe, it retrieves Gnosis Safe details and
+ * polls for an off-chain signature to request a sign-in. Otherwise, it uses the provided signing function to sign the challenge
+ * and request a sign-in.
+ *
+ * @param signMessage - The function used to sign the challenge message.
+ * @param chainId - The chain ID of the blockchain network.
+ * @param walletAddress - The wallet address to be used for signing.
+ * @param isGnosisSafe - A boolean indicating if the wallet is a Gnosis Safe.
+ * @param host - Optional, to be used when API is not available under the same host (for example localhost development on different ports).
+ *
+ * @returns A promise that resolves to the JWT string or undefined if an error occurs.
+ * @throws Will throw an error if the challenge request fails or if signing with Gnosis Safe fails.
+ */
+export async function requestJWT({
+  signMessage,
+  chainId,
+  walletAddress,
+  isGnosisSafe,
+  host,
+}: {
+  signMessage: TOSSignMessage
+  chainId: number
+  walletAddress: string
+  isGnosisSafe: boolean
+  host?: string
+}): Promise<string | undefined> {
+  const challenge = await requestChallenge({ walletAddress, isGnosisSafe, host })
+
+  if (!challenge) {
+    throw new Error('Request challenge failed, try again or contact with support')
+  }
+
+  if (isGnosisSafe) {
+    const sdk = new SafeAppsSDK()
+
+    const { challenge: gnosisSafeChallenge, messageHash } = await getGnosisSafeDetails(
+      sdk,
+      chainId,
+      walletAddress,
+      challenge,
+    )
+
+    // start polling
+    const token = await new Promise<string | undefined>((resolve) => {
+      let returnValue = (val: string | undefined) => resolve(val) // CAUTION: this function is reassigned later
+      const interval = setInterval(async () => {
+        if (messageHash) {
+          try {
+            const offchainSignature = await sdk.safe.getOffChainSignature(messageHash)
+
+            if (offchainSignature === '') {
+              throw new Error('GnosisSafe: not ready')
+            }
+            const safeJwt = await requestSignin({
+              challenge: gnosisSafeChallenge,
+              signature: offchainSignature,
+              chainId,
+              isGnosisSafe,
+              host,
+            })
+
+            return returnValue(safeJwt)
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error('GnosisSafe: error occurred', error)
+          }
+        }
+      }, 5 * 1000)
+
+      // clear all scheduled callbacks
+      returnValue = (val: string | undefined) => {
+        clearInterval(interval)
+        resolve(val)
+      }
+    })
+
+    if (!token) {
+      throw new Error(`GnosisSafe: failed to sign`)
+    }
+
+    return token
+  }
+
+  const signature = await signTypedPayload(challenge, signMessage)
+
+  if (!signature) {
+    throw new Error('Signing process declined or failed, try again or contact with support')
+  }
+
+  return await requestSignin({
+    challenge,
+    signature,
+    chainId,
+    isGnosisSafe: false,
+    host,
+  })
+}
