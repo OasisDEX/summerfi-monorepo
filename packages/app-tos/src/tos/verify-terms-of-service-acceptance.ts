@@ -42,7 +42,7 @@ export const verifyTermsOfServiceAcceptance = async ({
     return { acceptance, updated, authorized }
   } catch (e) {
     // eslint-disable-next-line no-console
-    console.error('Terms of service verification request failed')
+    console.error('Terms of service verification request failed:', e)
 
     return undefined
   }

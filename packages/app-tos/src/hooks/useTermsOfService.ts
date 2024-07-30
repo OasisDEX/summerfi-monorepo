@@ -50,7 +50,10 @@ export const useTermsOfService = ({
       })
 
       if (!termsOfServiceAcceptance) {
-        forceDisconnect?.()
+        if (forceDisconnect) {
+          console.error('Terms of Service acceptance failed. Disconnecting user.')
+          forceDisconnect()
+        }
 
         return
       }

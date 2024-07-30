@@ -10,6 +10,12 @@ export interface RiskState extends RiskResponse {
   isLoading?: boolean
 }
 
+type UseRiskInput = {
+  chainId: number
+  walletAddress?: string
+  host?: string
+}
+
 /**
  * Custom hook to determine the risk status of a wallet address.
  *
@@ -29,15 +35,7 @@ export interface RiskState extends RiskResponse {
  * const { isRisky, isLoading, error } = useRisk({ chainId: 1, walletAddress: '0x123...', host: 'https://api.example.com' });
  */
 
-export const useRisk = ({
-  chainId,
-  walletAddress,
-  host,
-}: {
-  chainId: number
-  walletAddress?: string
-  host?: string
-}) => {
+export const useRisk = ({ chainId, walletAddress, host }: UseRiskInput) => {
   const [risk, setRisk] = useState<RiskState>({ isLoading: false })
 
   useEffect(() => {
@@ -54,9 +52,8 @@ export const useRisk = ({
 
         setRisk({ ...riskResponse, isLoading: false })
       } catch (error) {
-        setRisk({ isLoading: false })
-        console.error('Risk request failed. Please reload page or contact with support')
-        setRisk({ error: `${error}` })
+        console.error('Risk request failed. Please reload page or contact with support', error)
+        setRisk({ error: 'Failed to fetch risk status. Please try again later.', isLoading: false })
       }
     }
 
