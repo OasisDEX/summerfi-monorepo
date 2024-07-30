@@ -101,6 +101,7 @@ export default defineConfig(({ mode }) => {
           'react',
           'react/jsx-runtime',
           'usehooks-ts',
+          '@summerfi/serverless-shared',
         ],
         input: Object.fromEntries(
           glob

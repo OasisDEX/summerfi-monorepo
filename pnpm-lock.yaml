@@ -699,9 +699,6 @@ importers:
       rollup-preserve-directives:
         specifier: ^1.1.1
         version: 1.1.1(rollup@4.18.0)
-      usehooks-ts:
-        specifier: ^3.1.0
-        version: 3.1.0(react@18.3.1)
       vite-tsconfig-paths:
         specifier: ^4.3.2
         version: 4.3.2(typescript@5.4.5)(vite@5.3.5)

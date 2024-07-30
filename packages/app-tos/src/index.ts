@@ -1,4 +1,3 @@
 export { useTermsOfService } from '@/hooks/useTermsOfService'
 
-export type { TOSSignMessage, TOSState, TOSInput } from '@/types'
-export { TOSStatus } from '@/types'
+export type { TOSSignMessage, TOSInput } from '@/types'
