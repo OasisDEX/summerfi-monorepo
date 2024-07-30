@@ -109,6 +109,17 @@ query SummerPoints(
         protocol
         marketId
         netValue
+        activeTriggers: triggers(
+          where: {
+            or: [
+              { removedBlock: null, executedBlock: null }
+              { continuous: true, removedBlock: null }
+            ]
+          }
+        ) {
+          id
+          kind
+        }
         user {
           id
         }
