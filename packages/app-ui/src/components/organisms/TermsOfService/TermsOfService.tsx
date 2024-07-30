@@ -1,3 +1,4 @@
+'use client'
 import { type FC, useCallback, useState } from 'react'
 import { type TOSState } from '@summerfi/app-types'
 
