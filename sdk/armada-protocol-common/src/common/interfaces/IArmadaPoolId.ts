@@ -1,3 +1,4 @@
+import { IAddress } from '@summerfi/sdk-common'
 import { IPoolId, PoolIdDataSchema, PoolType } from '@summerfi/sdk-common/common'
 import { IUser, isUser } from '@summerfi/sdk-common/user'
 import { z } from 'zod'
@@ -10,8 +11,8 @@ import { IArmadaProtocol, isArmadaProtocol } from './IArmadaProtocol'
 export interface IArmadaPoolId extends IPoolId, IArmadaPoolIdData {
   /** Signature used to differentiate it from similar interfaces */
   readonly _signature_1: 'IArmadaPoolId'
-  /** User that opened the position, used to identify the position in a Fleet Commander */
-  readonly user: IUser
+  /** Address of the fleet commander that gives access to the pool */
+  readonly fleet: IAddress
 
   // Re-declaring the properties with the correct types
   readonly type: PoolType

@@ -12,7 +12,6 @@ export class SimulationManager implements ISimulationManager {
   public readonly refinance: RefinanceSimulationManager
   public readonly automation: undefined
   public readonly importing: ImportingSimulationManager
-  public readonly migration: undefined
   public readonly earn: undefined
 
   public constructor(params: { rpcClient: RPCMainClientType }) {

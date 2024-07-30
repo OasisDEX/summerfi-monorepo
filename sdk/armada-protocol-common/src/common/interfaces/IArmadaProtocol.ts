@@ -1,5 +1,4 @@
 import { IProtocol, PositionIdDataSchema } from '@summerfi/sdk-common/common'
-import { IUser, isUser } from '@summerfi/sdk-common/user'
 import { z } from 'zod'
 
 /**
@@ -16,7 +15,6 @@ export interface IArmadaProtocol extends IProtocol, IArmadaProtocolData {
  */
 export const ArmadaProtocolDataSchema = z.object({
   ...PositionIdDataSchema.shape,
-  user: z.custom<IUser>((val) => isUser(val)),
 })
 
 /**

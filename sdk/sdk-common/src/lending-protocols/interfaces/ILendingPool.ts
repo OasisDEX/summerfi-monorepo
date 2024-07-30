@@ -25,7 +25,7 @@ export interface ILendingPool extends IPool, ILendingPoolData {
   readonly debtToken: IToken
 
   // Re-declaring the properties with the correct types
-  readonly type: PoolType
+  readonly type: PoolType.Lending
 }
 
 /**

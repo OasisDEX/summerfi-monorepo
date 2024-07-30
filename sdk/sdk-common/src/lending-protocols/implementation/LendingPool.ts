@@ -19,6 +19,7 @@ export abstract class LendingPool extends Pool implements ILendingPool, IPrintab
   abstract readonly id: LendingPoolId
   readonly collateralToken: Token
   readonly debtToken: Token
+  readonly type = PoolType.Lending
 
   protected constructor(params: ILendingPoolParameters) {
     super({

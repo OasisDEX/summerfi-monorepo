@@ -20,7 +20,7 @@ export interface IArmadaParameters extends IArmadaParametersData {
 }
 
 /**
- * Zod schema for the refinance parameters
+ * Zod schema for the Armada parameters
  */
 export const ArmadaParametersDataSchema = z.object({
   user: z.custom<IUser>((val) => isUser(val)),

@@ -5,7 +5,7 @@ import { ArmadaManager } from './ArmadaManager'
 
 /**
  * @name ArmadaManagerFactory
- * @description This class is responsible for creating instances of the OracleManager
+ * @description This class is responsible for creating instances of the ArmadaManager
  */
 export class ArmadaManagerFactory {
   public static newArmadaManager(params: {
