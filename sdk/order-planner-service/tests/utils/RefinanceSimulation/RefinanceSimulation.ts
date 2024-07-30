@@ -3,7 +3,6 @@ import {
   FlashloanProvider,
   RefinanceSimulation,
   SimulationSteps,
-  SimulationType,
   TokenTransferTargetType,
   steps,
 } from '@summerfi/sdk-common/simulation'
@@ -15,7 +14,6 @@ export function getRefinanceSimulation(params: {
   const { sourcePosition, targetPosition } = params
 
   return RefinanceSimulation.createFrom({
-    type: SimulationType.Refinance,
     sourcePosition: sourcePosition,
     targetPosition: targetPosition,
     swaps: [],
