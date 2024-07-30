@@ -36,14 +36,14 @@ export class ArmadaManager implements IArmadaManager {
   }): Promise<TransactionInfo[]> {
     const transactions: TransactionInfo[] = []
 
-    // Allowance
-    const allowanceTransaction = await this._allowanceManager.getApproval({
+    // Approval
+    const approvalTransaction = await this._allowanceManager.getApproval({
       chainInfo: params.chainInfo,
       spender: params.fleetAddress,
       amount: params.amount,
     })
-    if (allowanceTransaction) {
-      transactions.push(...allowanceTransaction)
+    if (approvalTransaction) {
+      transactions.push(...approvalTransaction)
     }
 
     // Deposit
