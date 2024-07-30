@@ -1,11 +1,6 @@
+import { RefinanceSimulation } from '@summerfi/dma-simulator-service'
 import { ILendingPosition, IRefinanceSimulation } from '@summerfi/sdk-common'
-import {
-  FlashloanProvider,
-  RefinanceSimulation,
-  SimulationSteps,
-  TokenTransferTargetType,
-  steps,
-} from '@summerfi/sdk-common/simulation'
+import { FlashloanProvider } from '@summerfi/sdk-common/simulation'
 
 export function getRefinanceSimulation(params: {
   sourcePosition: ILendingPosition

@@ -11,4 +11,4 @@ export type StepOutputProcessor<
   StepsEnum extends SimulationStepsEnum,
   Steps extends Step<StepsEnum[keyof StepsEnum], unknown, unknown>,
   SingleStep extends Steps,
-> = (step: StepsWithoutOutputs<StepsEnum, Steps>) => Promise<SingleStep>
+> = (step: StepsWithoutOutputs<StepsEnum, SingleStep>) => Promise<SingleStep>

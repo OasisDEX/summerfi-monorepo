@@ -1,50 +1,50 @@
-import { SimulationSteps } from '@summerfi/sdk-common/simulation'
-import { makeStrategy } from '../../implementation/utils'
+import { makeStrategy } from '@summerfi/simulator-common/utils'
+import { DMASimulatorStepsTypes } from '../../enums/DMASimulatorStepsTypes'
 
 export const refinanceLendingToLendingAnyPairStrategy = makeStrategy([
   {
     name: 'Flashloan',
-    step: SimulationSteps.Flashloan,
+    step: DMASimulatorStepsTypes.Flashloan,
     optional: true,
   },
   {
     name: 'PaybackWithdrawFromSourcePosition',
-    step: SimulationSteps.PaybackWithdraw,
+    step: DMASimulatorStepsTypes.PaybackWithdraw,
     optional: false,
   },
   {
     name: 'SwapCollateralFromSourcePosition',
-    step: SimulationSteps.Swap,
+    step: DMASimulatorStepsTypes.Swap,
     optional: true,
   },
   {
     name: 'OpenTargetPosition',
-    step: SimulationSteps.OpenPosition,
+    step: DMASimulatorStepsTypes.OpenPosition,
     optional: false,
   },
   {
     name: 'DepositBorrowToTargetPosition',
-    step: SimulationSteps.DepositBorrow,
+    step: DMASimulatorStepsTypes.DepositBorrow,
     optional: false,
   },
   {
     name: 'SwapDebtFromTargetPosition',
-    step: SimulationSteps.Swap,
+    step: DMASimulatorStepsTypes.Swap,
     optional: true,
   },
   {
     name: 'RepayFlashloan',
-    step: SimulationSteps.RepayFlashloan,
+    step: DMASimulatorStepsTypes.RepayFlashloan,
     optional: true,
   },
   {
     name: 'ReturnFunds',
-    step: SimulationSteps.ReturnFunds,
+    step: DMASimulatorStepsTypes.ReturnFunds,
     optional: true,
   },
   {
     name: 'NewPositionEvent',
-    step: SimulationSteps.NewPositionEvent,
+    step: DMASimulatorStepsTypes.NewPositionEvent,
     optional: false,
   },
 ] as const)

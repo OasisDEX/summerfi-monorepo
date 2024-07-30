@@ -1,6 +1,6 @@
 import { ISimulationState } from '@summerfi/simulator-common/interfaces'
 import { DMASimulatorStepsTypes } from '../enums/DMASimulatorStepsTypes'
-import { DMASimulatorSteps } from '../implementation/steps/DMASimulationSteps'
+import { DMASimulatorSteps } from '../implementation/DMASimulatorSteps'
 import { BalancesRecord, PositionsRecord, SwapsArray } from '../types/Types'
 
 /**
@@ -11,4 +11,5 @@ export interface DMASimulationState
   swaps: SwapsArray
   balances: BalancesRecord
   positions: PositionsRecord
+  steps: DMASimulatorSteps[]
 }

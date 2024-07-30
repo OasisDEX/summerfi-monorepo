@@ -1,16 +1,31 @@
-import { IImportSimulation, ImportSimulation } from '@summerfi/sdk-common'
 import { IImportPositionParameters } from '@summerfi/sdk-common/orders'
-import { SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
-import { Simulator } from '../../implementation/processors'
+import { Simulator } from '@summerfi/simulator-common/'
+import { DMASimulatorStepsTypes } from '../../enums/DMASimulatorStepsTypes'
+import { DMAStateReducers, DMAStepOutputProcessors } from '../../implementation'
+import { DMASimulatorSteps } from '../../implementation/DMASimulatorSteps'
+import { ImportSimulation } from '../../implementation/simulations/ImportSimulation'
+import { DMASimulatorConfig } from '../../interfaces/DMASimulatorConfig'
+import { IImportSimulation } from '../../interfaces/IImportSimulation'
 import { importPositionStrategy } from './Strategy'
 
 export async function importPosition(args: IImportPositionParameters): Promise<IImportSimulation> {
-  const simulator = Simulator.create(importPositionStrategy)
+  const simulatorConfig: DMASimulatorConfig = {
+    schema: importPositionStrategy,
+    outputProcessors: DMAStepOutputProcessors,
+    stateReducers: DMAStateReducers,
+    state: {
+      swaps: [],
+      balances: {},
+      positions: {},
+      steps: [],
+    },
+  }
+  const simulator = Simulator.create(simulatorConfig)
 
   const simulation = await simulator
     .next(async () => ({
       name: 'Import',
-      type: SimulationSteps.Import,
+      type: DMASimulatorStepsTypes.Import,
       inputs: {
         externalPosition: args.externalPosition,
       },
@@ -18,9 +33,8 @@ export async function importPosition(args: IImportPositionParameters): Promise<I
     .run()
 
   return ImportSimulation.createFrom({
-    type: SimulationType.ImportPosition,
     sourcePosition: args.externalPosition,
     targetPosition: args.externalPosition,
-    steps: Object.values(simulation.steps),
+    steps: Object.values(simulation.steps) as DMASimulatorSteps[],
   })
 }

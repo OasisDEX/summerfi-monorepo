@@ -2,18 +2,18 @@ import { SDKError, SDKErrorType, isLendingPosition } from '@summerfi/sdk-common'
 import { CommonTokenSymbols, Percentage, TokenAmount } from '@summerfi/sdk-common/common'
 import { isLendingPool } from '@summerfi/sdk-common/lending-protocols'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
-import {
-  FlashloanProvider,
-  IRefinanceSimulation,
-  RefinanceSimulation,
-  SimulationSteps,
-  TokenTransferTargetType,
-  getValueFromReference,
-} from '@summerfi/sdk-common/simulation'
+import { FlashloanProvider } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '@summerfi/simulator-common'
-import { DMAStateReducers, DMAStepOutputProcessors } from '../../implementation/processors'
-import { estimateSwapFromAmount } from '../../implementation/utils/EstimateSwapFromAmount'
-import { getSwapStepData } from '../../implementation/utils/GetSwapStepData'
+import { getValueFromReference } from '@summerfi/simulator-common/utils'
+import { DMASimulatorStepsTypes } from '../../enums/DMASimulatorStepsTypes'
+import { DMAStateReducers } from '../../implementation/DMAStateReducers'
+import { DMAStepOutputProcessors } from '../../implementation/DMAStepOutputProcessors'
+import { RefinanceSimulation } from '../../implementation/simulations/RefinanceSimulation'
+import { DMASimulatorConfig } from '../../interfaces/DMASimulatorConfig'
+import { IRefinanceSimulation } from '../../interfaces/IRefinanceSimulation'
+import { TokenTransferTargetType } from '../../types/TokenTransferTargetType'
+import { estimateSwapFromAmount } from '../../utils/EstimateSwapFromAmount'
+import { getSwapStepData } from '../../utils/GetSwapStepData'
 import { type IRefinanceDependencies } from '../common/Types'
 import { refinanceLendingToLendingAnyPairStrategy } from './Strategy'
 
@@ -48,13 +48,21 @@ export async function refinanceLendingToLending(
     throw new Error('Target pool is not a lending pool')
   }
 
+  const simulatorConfig: DMASimulatorConfig = {
+    schema: refinanceLendingToLendingAnyPairStrategy,
+    outputProcessors: DMAStepOutputProcessors,
+    stateReducers: DMAStateReducers,
+    state: {
+      swaps: [],
+      balances: {},
+      positions: {},
+      steps: [],
+    },
+  }
+
   const FLASHLOAN_MARGIN = 1.001
   const flashloanAmount = position.debtAmount.multiply(FLASHLOAN_MARGIN)
-  const simulator = Simulator.create(
-    refinanceLendingToLendingAnyPairStrategy,
-    DMAStepOutputProcessors,
-    DMAStateReducers,
-  )
+  const simulator = Simulator.create(simulatorConfig)
 
   const isCollateralSwapSkipped = targetPool.collateralToken.equals(sourcePool.collateralToken)
   const isDebtAmountZero = position.debtAmount.toBaseUnit() === '0'
@@ -70,7 +78,7 @@ export async function refinanceLendingToLending(
     .next(
       async () => ({
         name: 'Flashloan',
-        type: SimulationSteps.Flashloan,
+        type: DMASimulatorStepsTypes.Flashloan,
         inputs: {
           amount: flashloanAmount,
           provider:
@@ -81,12 +89,12 @@ export async function refinanceLendingToLending(
       }),
       {
         skip: isDebtAmountZero,
-        type: SimulationSteps.Flashloan,
+        type: DMASimulatorStepsTypes.Flashloan,
       },
     )
     .next(async () => ({
       name: 'PaybackWithdrawFromSourcePosition',
-      type: SimulationSteps.PaybackWithdraw,
+      type: DMASimulatorStepsTypes.PaybackWithdraw,
       inputs: {
         paybackAmount: isDebtAmountZero ? position.debtAmount : maxDebtAmount,
         withdrawAmount: position.collateralAmount,
@@ -97,7 +105,7 @@ export async function refinanceLendingToLending(
     .next(
       async () => ({
         name: 'SwapCollateralFromSourcePosition',
-        type: SimulationSteps.Swap,
+        type: DMASimulatorStepsTypes.Swap,
         inputs: await getSwapStepData({
           chainInfo: position.pool.id.protocol.chainInfo,
           fromAmount: position.collateralAmount,
@@ -109,19 +117,19 @@ export async function refinanceLendingToLending(
       }),
       {
         skip: isCollateralSwapSkipped,
-        type: SimulationSteps.Swap,
+        type: DMASimulatorStepsTypes.Swap,
       },
     )
     .next(async () => ({
       name: 'OpenTargetPosition',
-      type: SimulationSteps.OpenPosition,
+      type: DMASimulatorStepsTypes.OpenPosition,
       inputs: {
         pool: targetPool,
       },
     }))
     .next(async (ctx) => ({
       name: 'DepositBorrowToTargetPosition',
-      type: SimulationSteps.DepositBorrow,
+      type: DMASimulatorStepsTypes.DepositBorrow,
       inputs: {
         depositAmount: isCollateralSwapSkipped
           ? position.collateralAmount
@@ -143,7 +151,7 @@ export async function refinanceLendingToLending(
     .next(
       async (ctx) => ({
         name: 'SwapDebtFromTargetPosition',
-        type: SimulationSteps.Swap,
+        type: DMASimulatorStepsTypes.Swap,
         inputs: await getSwapStepData({
           chainInfo: position.pool.id.protocol.chainInfo,
           fromAmount: getValueFromReference(
@@ -157,26 +165,26 @@ export async function refinanceLendingToLending(
       }),
       {
         skip: isDebtSwapSkipped,
-        type: SimulationSteps.Swap,
+        type: DMASimulatorStepsTypes.Swap,
       },
     )
     .next(
       async () => ({
         name: 'RepayFlashloan',
-        type: SimulationSteps.RepayFlashloan,
+        type: DMASimulatorStepsTypes.RepayFlashloan,
         inputs: {
           amount: flashloanAmount,
         },
       }),
       {
         skip: isDebtAmountZero,
-        type: SimulationSteps.RepayFlashloan,
+        type: DMASimulatorStepsTypes.RepayFlashloan,
       },
     )
     .next(
       async () => ({
         name: 'ReturnFunds',
-        type: SimulationSteps.ReturnFunds,
+        type: DMASimulatorStepsTypes.ReturnFunds,
         inputs: {
           /*
            * We swap back to the original position's debt in order to repay the flashloan.
@@ -187,7 +195,7 @@ export async function refinanceLendingToLending(
       }),
       {
         skip: isDebtSwapSkipped,
-        type: SimulationSteps.ReturnFunds,
+        type: DMASimulatorStepsTypes.ReturnFunds,
       },
     )
     .next(async (ctx) => {
@@ -200,7 +208,7 @@ export async function refinanceLendingToLending(
 
       return {
         name: 'NewPositionEvent',
-        type: SimulationSteps.NewPositionEvent,
+        type: DMASimulatorStepsTypes.NewPositionEvent,
         inputs: {
           position: targetPosition,
         },

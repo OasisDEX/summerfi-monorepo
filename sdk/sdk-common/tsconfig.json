@@ -9,7 +9,13 @@
     "src/**/*.ts",
     "tests/**/*.ts",
     "../armada-protocol-common/src/interfaces/IArmadaSimulation.ts",
-    "../armada-protocol-service/src/orders/interfaces/IArmadaParameters.ts"
+    "../armada-protocol-service/src/orders/interfaces/IArmadaParameters.ts",
+    "../dma-simulator-service/src/implementation/utils/PositionUtils.ts",
+    "../dma-simulator-service/src/interfaces/IImportSimulation.ts",
+    "../dma-simulator-service/src/interfaces/IRefinanceSimulation.ts",
+    "../dma-simulator-service/src/implementation/simulations/ImportSimulation.ts",
+    "../dma-simulator-service/src/implementation/simulations/RefinanceSimulation.ts",
+    "../dma-simulator-service/src/types/TokenTransferTargetType.ts"
   ],
   "exclude": ["node_modules"]
 }

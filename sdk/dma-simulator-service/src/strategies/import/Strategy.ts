@@ -1,10 +1,10 @@
-import { SimulationSteps } from '@summerfi/sdk-common/simulation'
-import { makeStrategy } from '../../implementation/utils'
+import { makeStrategy } from '@summerfi/simulator-common/utils'
+import { DMASimulatorStepsTypes } from '../../enums/DMASimulatorStepsTypes'
 
 export const importPositionStrategy = makeStrategy([
   {
     name: 'Import',
-    step: SimulationSteps.Import,
+    step: DMASimulatorStepsTypes.Import,
     optional: false,
   },
 ])

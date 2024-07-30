@@ -1828,6 +1828,9 @@ importers:
       '@summerfi/deployment-utils':
         specifier: workspace:*
         version: link:../../packages/deployment-utils
+      '@summerfi/dma-simulator-service':
+        specifier: workspace:*
+        version: link:../dma-simulator-service
       '@summerfi/order-planner-common':
         specifier: workspace:*
         version: link:../order-planner-common

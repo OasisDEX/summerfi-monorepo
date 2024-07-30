@@ -1,11 +1,12 @@
-import { Maybe, ProtocolName, SimulationSteps } from '@summerfi/sdk-common'
+import { Maybe, ProtocolName } from '@summerfi/sdk-common'
 import { assert } from 'console'
 import type { ISimulationState } from '../interfaces/ISimulationState'
-import type { Tail, Where } from '../interfaces/helperTypes'
+import type { Tail } from '../interfaces/helperTypes'
+import { SimulatorConfig } from '../types'
 import { GetReferencedValue } from '../types/GetReferencedValue'
 import { NextFunction } from '../types/NextFunction'
 import { Paths } from '../types/Paths'
-import { ProccessedStep } from '../types/ProcessedStep'
+import { ProcessedStep } from '../types/ProcessedStep'
 import { SimulationStepsEnum } from '../types/SimulationStepsEnum'
 import { SimulationStrategy } from '../types/SimulationStrategy'
 import { StateReducer } from '../types/StateReducer'
@@ -43,43 +44,36 @@ export class Simulator<
   >
 
   private constructor(
-    schema: Strategy,
-    originalSchema: SimulationStrategy<StepsEnum>,
-    outputProcessors: StepOutputProcessors<StepsEnum, Steps>,
-    stateReducers: StateReducers<StepsEnum, Steps, SimulationState>,
-    state: SimulationState,
-    nextArray: Readonly<
-      NextFunction<StepsEnum, Strategy, Steps, AddedSteps, SimulationState>[]
-    > = [],
+    params: SimulatorConfig<StepsEnum, Strategy, Steps, AddedSteps, SimulationState>,
   ) {
+    const { schema, originalSchema, outputProcessors, stateReducers, state, nextArray } = params
+
     this.schema = schema
-    this.originalSchema = originalSchema
+    this.originalSchema = originalSchema || schema
     this.stepOutputProcessors = outputProcessors
     this.stateReducers = stateReducers
     this.state = state
-    this.nextArray = nextArray
+    this.nextArray = nextArray || []
   }
 
   static create<
     StepsEnum extends SimulationStepsEnum,
     Strategy extends SimulationStrategy<StepsEnum>,
     Steps extends Step<StepsEnum[keyof StepsEnum], unknown, unknown>,
+    AddedSteps extends StepsAdded<StepsEnum, Steps> = StepsAdded<StepsEnum, Steps>,
     SimulationState extends ISimulationState<StepsEnum, Steps> = ISimulationState<StepsEnum, Steps>,
-  >(
-    schema: Strategy,
-    outputProcessors: StepOutputProcessors<StepsEnum, Steps>,
-    stateReducers: StateReducers<StepsEnum, Steps, SimulationState>,
-    state: SimulationState,
-  ) {
+  >(params: SimulatorConfig<StepsEnum, Strategy, Steps, AddedSteps, SimulationState>) {
+    const { schema, outputProcessors, stateReducers, state } = params
+
     // The second argument is the same as from the first schema we will subtract steps
     // with each next step added we also need to keep the original schema for future reference
-    return new Simulator<StepsEnum, Strategy, Steps, [], SimulationState>(
+    return new Simulator<StepsEnum, Strategy, Steps, [], SimulationState>({
       schema,
-      schema,
+      originalSchema: schema,
       outputProcessors,
       stateReducers,
       state,
-    )
+    })
   }
 
   private getReference = (path: Paths<StepsEnum, Steps, AddedSteps>) => {
@@ -137,7 +131,7 @@ export class Simulator<
     StepsEnum,
     Tail<Strategy>,
     Steps,
-    [...AddedSteps, ProccessedStep<StepsEnum, Steps, Strategy>],
+    [...AddedSteps, ProcessedStep<StepsEnum, Steps, Strategy>],
     SimulationState
   > {
     const schemaHead = head(this.schema)
@@ -160,18 +154,18 @@ export class Simulator<
         StepsEnum,
         Tail<Strategy>,
         Steps,
-        [...AddedSteps, ProccessedStep<StepsEnum, Steps, Strategy>],
+        [...AddedSteps, ProcessedStep<StepsEnum, Steps, Strategy>],
         SimulationState
-      >(
-        schemaTail,
-        this.originalSchema,
-        this.stepOutputProcessors,
-        this.stateReducers,
-        this.state,
+      >({
+        schema: schemaTail,
+        originalSchema: this.originalSchema,
+        outputProcessors: this.stepOutputProcessors,
+        stateReducers: this.stateReducers,
+        state: this.state,
         // TODO: We should not use any here
         /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-        skippedNext as any,
-      )
+        nextArray: skippedNext as any,
+      })
     }
 
     if (!schemaHead) {
@@ -184,25 +178,27 @@ export class Simulator<
       StepsEnum,
       Tail<Strategy>,
       Steps,
-      [...AddedSteps, ProccessedStep<StepsEnum, Steps, Strategy>],
+      [...AddedSteps, ProcessedStep<StepsEnum, Steps, Strategy>],
       SimulationState
-    >(
-      schemaTail,
-      this.originalSchema,
-      this.stepOutputProcessors,
-      this.stateReducers,
-      this.state,
+    >({
+      schema: schemaTail,
+      originalSchema: this.originalSchema,
+      outputProcessors: this.stepOutputProcessors,
+      stateReducers: this.stateReducers,
+      state: this.state,
       // TODO: We should not use any here
       /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-      nextArray as any,
-    )
+      nextArray: nextArray as any,
+    })
   }
 
-  private async _processStepOutput(step: StepsWithoutOutputs<StepsEnum, Steps>): Promise<Steps> {
+  private async _processStepOutput<SingleStep extends Steps>(
+    step: StepsWithoutOutputs<StepsEnum, SingleStep>,
+  ): Promise<Steps> {
     const processor = this.stepOutputProcessors[step.type] as unknown as StepOutputProcessor<
       StepsEnum,
       Steps,
-      Where<Steps, { type: StepsEnum }>
+      SingleStep
     >
 
     assert(
