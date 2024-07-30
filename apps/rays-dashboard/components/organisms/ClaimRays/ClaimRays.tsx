@@ -1,8 +1,11 @@
 'use client'
-import { useCallback, useMemo } from 'react'
-import { type RaysApiResponse } from '@summerfi/app-types'
-import { Button, Text } from '@summerfi/app-ui'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useRisk } from '@summerfi/app-risk'
+import { type TOSSignMessage, useTermsOfService } from '@summerfi/app-tos'
+import { type RaysApiResponse, TOSStatus } from '@summerfi/app-types'
+import { Button, Card, Modal, TermsOfService, Text } from '@summerfi/app-ui'
 import { useConnectWallet } from '@web3-onboard/react'
+import { BrowserProvider } from 'ethers'
 import { usePathname, useRouter } from 'next/navigation'
 
 import { ClaimRaysTitle } from '@/components/molecules/ClaimRaysTitle/ClaimRaysTitle'
@@ -76,8 +79,80 @@ export default ({ userAddress, userRays, pointsEarnedPerYear }: ClaimRaysPagePro
     return undefined
   }, [isViewingOwnWallet])
 
+  // create an ethers provider
+  let ethersProvider: BrowserProvider | undefined
+
+  if (wallet) {
+    ethersProvider = new BrowserProvider(wallet.provider)
+  }
+
+  ethersProvider?.getSigner()
+
+  const signMessage: TOSSignMessage = useCallback(
+    async (data: string) => {
+      const signer = await ethersProvider?.getSigner()
+
+      return await signer?.signMessage(data)
+    },
+    [wallet?.provider],
+  )
+
+  const [openModal, setOpenModal] = useState(false)
+
+  const walletAddress = wallet?.accounts[0].address
+
+  const risk = useRisk({ walletAddress, chainId: 1, host: 'http://localhost:3000' })
+
+  // eslint-disable-next-line no-console
+  console.log('risk', risk)
+
+  const tosState = useTermsOfService({
+    signMessage,
+    chainId: 1,
+    walletAddress,
+    isGnosisSafe: false,
+    version: 'version-26.06.2023',
+    host: 'http://localhost:3000',
+  })
+
+  // eslint-disable-next-line no-console
+  console.log('tosState', tosState)
+  useEffect(() => {
+    if (
+      [
+        TOSStatus.WAITING_FOR_SIGNATURE,
+        TOSStatus.WAITING_FOR_ACCEPTANCE,
+        TOSStatus.WAITING_FOR_ACCEPTANCE_UPDATED,
+      ].includes(tosState.status) &&
+      !openModal &&
+      walletAddress
+    ) {
+      setOpenModal(true)
+    }
+
+    if (tosState.status === TOSStatus.DONE) {
+      setOpenModal(false)
+    }
+  }, [tosState.status, openModal, walletAddress])
+
   return (
     <>
+      <Modal openModal={openModal} disableCloseOutside closeModal={() => null}>
+        <Card
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            maxWidth: '370px',
+          }}
+        >
+          <TermsOfService
+            documentLink="/"
+            disconnect={() => setOpenModal(false)}
+            tosState={tosState}
+          />
+        </Card>
+      </Modal>
       <ClaimRaysTitle
         userAddress={userAddress}
         userRays={userRays}

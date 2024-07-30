@@ -20,6 +20,7 @@ import { type TOSInput } from '@/types'
  * @param version - Terms of Service version
  * @param isGnosisSafe - boolean to determine whether user use safe multi-sig
  * @param host - Optional, to be used when API is not available under the same host (for example localhost development on different ports).
+ * @param forceDisconnect Optional, to be used to disconnect user when there is an issue with API to prevent him / her from using app without accepting TOS.
  *
  * @returns Returns state of Terms of Service flow
  *
@@ -31,6 +32,7 @@ export const useTermsOfService = ({
   version,
   isGnosisSafe,
   host,
+  forceDisconnect,
 }: TOSInput) => {
   const [tos, setTos] = useState<TOSState>({
     status: TOSStatus.INIT,
@@ -46,6 +48,12 @@ export const useTermsOfService = ({
         version,
         host,
       })
+
+      if (!termsOfServiceAcceptance) {
+        forceDisconnect?.()
+
+        return
+      }
 
       /**
          If acceptance exists & user is authorized & ToS was not updated, let user in.
@@ -70,7 +78,7 @@ export const useTermsOfService = ({
       /**
          If user is not authorized or ToS was updated, launch ToS signature process.
          */
-      if (!termsOfServiceAcceptance.authorized) {
+      if (!termsOfServiceAcceptance.authorized || termsOfServiceAcceptance.updated) {
         signatureStep({
           setTos,
           termsOfServiceAcceptance,
@@ -89,7 +97,7 @@ export const useTermsOfService = ({
     }
 
     void request(walletAddress)
-  }, [walletAddress, version, chainId, isGnosisSafe, host, signMessage])
+  }, [walletAddress, version, chainId, isGnosisSafe, host, signMessage, forceDisconnect])
 
   return tos
 }
