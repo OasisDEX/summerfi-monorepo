@@ -44,7 +44,7 @@ describe('Armada Protocol Service', () => {
   })
 
   it('should return approval transaction correctly', async () => {
-    const transactionInfo = await allowanceManager.getAllowance({
+    const transactionInfo = await allowanceManager.getApproval({
       chainInfo,
       spender: fleetAddress,
       amount: tokenAmount,

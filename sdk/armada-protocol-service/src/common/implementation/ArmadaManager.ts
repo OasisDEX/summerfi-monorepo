@@ -37,7 +37,7 @@ export class ArmadaManager implements IArmadaManager {
     const transactions: TransactionInfo[] = []
 
     // Allowance
-    const allowanceTransaction = await this._allowanceManager.getAllowance({
+    const allowanceTransaction = await this._allowanceManager.getApproval({
       chainInfo: params.chainInfo,
       spender: params.fleetAddress,
       amount: params.amount,

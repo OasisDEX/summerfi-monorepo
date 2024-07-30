@@ -21,7 +21,7 @@ export class AllowanceManager implements IAllowanceManager {
   }
 
   /** FUNCTIONS */
-  async getAllowance(params: {
+  async getApproval(params: {
     chainInfo: IChainInfo
     spender: IAddress
     amount: ITokenAmount

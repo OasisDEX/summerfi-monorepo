@@ -50,7 +50,7 @@ describe('Armada Protocol Service', () => {
     })
 
     const allowanceManager = {
-      getAllowance: jest.fn().mockReturnValue([]),
+      getApproval: jest.fn().mockReturnValue([]),
     } as unknown as IAllowanceManager
     armadaManager = ArmadaManagerFactory.newArmadaManager({
       configProvider,

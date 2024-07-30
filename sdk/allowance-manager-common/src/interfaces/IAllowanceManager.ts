@@ -6,7 +6,7 @@ import type { IAddress, IChainInfo, ITokenAmount, TransactionInfo } from '@summe
  */
 export interface IAllowanceManager {
   /**
-   * @name getAllowance
+   * @name getApproval
    * @description Get the transactions needed to set an allowance for a token
    *
    * @param chainInfo Chain in which the token is
@@ -15,7 +15,7 @@ export interface IAllowanceManager {
    *
    * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
    */
-  getAllowance(params: {
+  getApproval(params: {
     chainInfo: IChainInfo
     spender: IAddress
     amount: ITokenAmount
