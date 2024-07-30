@@ -1,6 +1,6 @@
+import { useMemo } from 'react'
 import { makeSDK } from '@summerfi/sdk-client'
 import { Address } from '@summerfi/sdk-common'
-import { useMemo } from 'react'
 
 import { sdkApiUrl } from '@/constants/sdk'
 
