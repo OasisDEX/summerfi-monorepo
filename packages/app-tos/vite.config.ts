@@ -47,7 +47,12 @@ export default defineConfig({
       formats: ['es'],
     },
     rollupOptions: {
-      external: ['react', '@safe-global/safe-apps-sdk', 'jsonwebtoken'],
+      external: [
+        'react',
+        '@safe-global/safe-apps-sdk',
+        'jsonwebtoken',
+        '@summerfi/serverless-shared',
+      ],
       input: Object.fromEntries(
         glob
           .sync('src/**/*.{ts,tsx}')

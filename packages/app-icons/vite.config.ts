@@ -43,7 +43,7 @@ export default defineConfig(({ mode }) => {
         formats: ['es'],
       },
       rollupOptions: {
-        external: ['@loadable/component'],
+        external: ['@loadable/component', '@summerfi/serverless-shared'],
         input: resolve(__dirname, 'src/index.ts'),
         output: {
           assetFileNames: 'assets/[name][extname]',
