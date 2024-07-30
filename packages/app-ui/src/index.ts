@@ -12,6 +12,7 @@ export { Modal } from './components/atoms/Modal/Modal'
 export { Pill } from './components/atoms/Pill/Pill'
 export { ProxyLinkComponent } from './components/atoms/ProxyLinkComponent/ProxyLinkComponent'
 export { RadioButton } from './components/atoms/RadioButton/RadioButton'
+export { CheckboxButton } from './components/atoms/CheckboxButton/CheckboxButton'
 export { Select } from './components/atoms/Select/Select'
 export { SkeletonLine } from './components/atoms/SkeletonLine/SkeletonLine'
 export { Text } from './components/atoms/Text/Text'
@@ -31,6 +32,7 @@ export { Tooltip } from './components/molecules/Tooltip/Tooltip'
 
 export { CountDownBanner } from './components/organisms/CountDownBanner/CountDownBanner'
 export { LaunchBanner } from './components/organisms/LaunchBanner/LaunchBanner'
+export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 
 export { Footer } from './components/layout/Footer/Footer'
 

@@ -1,9 +1,4 @@
-interface VerifyTermsOfServiceAcceptance {
-  acceptance: boolean
-  updated?: boolean
-  authorized?: boolean
-}
-
+import { type TOSVerifyAcceptance } from '@/types'
 /**
  * Verifies the acceptance of the terms of service for a given wallet address and version.
  *
@@ -31,8 +26,8 @@ export const verifyTermsOfServiceAcceptance = async ({
   walletAddress: string
   version: string
   host?: string
-}): Promise<VerifyTermsOfServiceAcceptance> => {
-  const { acceptance, updated, authorized }: VerifyTermsOfServiceAcceptance = await fetch(
+}): Promise<TOSVerifyAcceptance> => {
+  const { acceptance, updated, authorized }: TOSVerifyAcceptance = await fetch(
     `${host}/api/tos/${version}/${walletAddress}`,
     {
       method: 'GET',

@@ -1,4 +1,4 @@
-interface SaveTermsOfServiceAcceptance {
+interface TOSSaveAcceptance {
   docVersion?: string
 }
 
@@ -24,8 +24,8 @@ export const saveTermsOfServiceAcceptance = async ({
   walletAddress: string
   version: string
   host?: string
-}): Promise<SaveTermsOfServiceAcceptance> => {
-  const { docVersion }: SaveTermsOfServiceAcceptance = await fetch(`${host}/api/tos`, {
+}): Promise<TOSSaveAcceptance> => {
+  const { docVersion }: TOSSaveAcceptance = await fetch(`${host}/api/tos`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

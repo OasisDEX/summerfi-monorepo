@@ -1,11 +1,11 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { type TOSState, TOSStatus } from '@summerfi/app-types'
 
-import { requestJWT } from '@/auth/request-jwt'
-import { actionErrorWrapper } from '@/helpers/action-error-wrapper'
-import { saveTermsOfServiceAcceptance } from '@/tos/save-terms-of-service-acceptance'
+import { acceptanceStep } from '@/helpers/acceptance-step'
+import { signatureStep } from '@/helpers/signature-step'
 import { verifyTermsOfServiceAcceptance } from '@/tos/verify-terms-of-service-acceptance'
-import { type TOSInput, type TOSState, TOSStatus } from '@/types'
+import { type TOSInput } from '@/types'
 
 /**
  * Summer.fi Terms of Service hook
@@ -61,61 +61,25 @@ export const useTermsOfService = ({
       }
 
       /**
+       If acceptance doesn't exist & user is authorized, launch ToS acceptance process.
+       */
+      if (termsOfServiceAcceptance.authorized && !termsOfServiceAcceptance.acceptance) {
+        acceptanceStep({ setTos, termsOfServiceAcceptance, walletAddress, version, host })
+      }
+
+      /**
          If user is not authorized or ToS was updated, launch ToS signature process.
          */
-      if (!termsOfServiceAcceptance.authorized || termsOfServiceAcceptance.updated) {
-        setTos({
-          status: TOSStatus.WAITING_FOR_SIGNATURE,
-          action: actionErrorWrapper({
-            fn: async () => {
-              setTos({
-                status: TOSStatus.LOADING,
-                previousStatus: TOSStatus.WAITING_FOR_SIGNATURE,
-              })
-              const jwt = await requestJWT({
-                signMessage,
-                chainId,
-                walletAddress,
-                isGnosisSafe,
-                host,
-              })
-
-              if (jwt) {
-                const newStatus = termsOfServiceAcceptance.updated
-                  ? TOSStatus.WAITING_FOR_ACCEPTANCE_UPDATED
-                  : TOSStatus.WAITING_FOR_ACCEPTANCE
-
-                setTos({
-                  status: newStatus,
-                  /**
-                   ToS api calls to save / update signature
-                   */
-                  action: actionErrorWrapper({
-                    fn: async () => {
-                      setTos({ status: TOSStatus.LOADING, previousStatus: newStatus })
-                      const { docVersion } = await saveTermsOfServiceAcceptance({
-                        walletAddress,
-                        version,
-                        host,
-                      })
-
-                      if (docVersion) {
-                        setTos({
-                          status: TOSStatus.DONE,
-                        })
-                      }
-                    },
-                    setTos,
-                    actionStatus: newStatus,
-                  }),
-                })
-              } else {
-                throw Error('Failed to generate JWT, try again or contact with Support.')
-              }
-            },
-            setTos,
-            actionStatus: TOSStatus.WAITING_FOR_SIGNATURE,
-          }),
+      if (!termsOfServiceAcceptance.authorized) {
+        signatureStep({
+          setTos,
+          termsOfServiceAcceptance,
+          host,
+          version,
+          walletAddress,
+          isGnosisSafe,
+          chainId,
+          signMessage,
         })
       }
     }
