@@ -20,3 +20,4 @@ artifacts
 packages/**/src/generated
 packages/**/types/generated
 apps/**/types/generated/*
+apps/earn-protocol-dashboard/sst-env.d.ts
