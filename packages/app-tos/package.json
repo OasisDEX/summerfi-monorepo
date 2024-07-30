@@ -31,7 +31,8 @@
   "peerDependencies": {
     "react": "^18.3.1",
     "@safe-global/safe-apps-sdk": "^9.0.0",
-    "jsonwebtoken": "^9.0.0"
+    "jsonwebtoken": "^9.0.0",
+    "@summerfi/serverless-shared": "workspace:*"
   },
   "publishConfig": {
     "access": "public"
