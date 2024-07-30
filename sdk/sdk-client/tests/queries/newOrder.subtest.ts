@@ -24,10 +24,11 @@ import {
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
 import { IPositionsManager, Order } from '@summerfi/sdk-common/orders'
 import { SDKManager } from '../../src/implementation/SDKManager'
 import { UserClient } from '../../src/implementation/UserClient'
-import { LendingPositionType, RPCMainClientType } from '../../src/rpc/SDKMainClient'
+import { RPCMainClientType } from '../../src/rpc/SDKMainClient'
 
 export default async function simulateNewOrder() {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
