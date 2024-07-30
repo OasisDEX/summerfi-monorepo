@@ -5,10 +5,6 @@
     "outDir": "dist",
     "baseUrl": "."
   },
-  "include": [
-    "src/**/*.ts",
-    "tests/**/*.ts",
-    "../armada-protocol-service/src/simulator/implementation/armadaSimulator.ts"
-  ],
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
