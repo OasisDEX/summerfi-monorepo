@@ -1,7 +1,8 @@
 'use client'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useConnectWallet } from '@web3-onboard/react'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
+import { useRouter } from 'next/router'
 
 interface HomepageHandlerPageProps {
   userAddress: string
@@ -9,7 +10,7 @@ interface HomepageHandlerPageProps {
 
 export const HomepageHandler = ({ userAddress }: HomepageHandlerPageProps) => {
   const [{ wallet }] = useConnectWallet()
-  const { replace, refresh } = useRouter()
+  const { push } = useRouter()
   const currentPath = usePathname()
 
   const dynamicWalletAddress = useMemo(() => wallet?.accounts[0].address, [wallet?.accounts])
@@ -17,13 +18,13 @@ export const HomepageHandler = ({ userAddress }: HomepageHandlerPageProps) => {
   const goToWalletView = useCallback(
     (walletAddress: string) => {
       if (walletAddress) {
-        replace(`${currentPath}?userAddress=${walletAddress}`, {
-          scroll: true,
+        push({
+          pathname: currentPath,
+          query: { userAddress: walletAddress },
         })
-        refresh()
       }
     },
-    [currentPath, replace, refresh],
+    [currentPath, push],
   )
 
   useEffect(() => {
