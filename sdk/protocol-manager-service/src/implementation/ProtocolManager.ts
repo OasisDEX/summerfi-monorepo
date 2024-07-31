@@ -1,15 +1,21 @@
-import { IPosition } from '@summerfi/sdk-common/common'
 import { IProtocolManager } from '@summerfi/protocol-manager-common'
+import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
+import { IPositionId, Maybe, isPositionId } from '@summerfi/sdk-common'
 import {
   ILendingPool,
   ILendingPoolId,
   ILendingPoolInfo,
+  ILendingPosition,
+  ILendingPositionId,
   isLendingPoolId,
-} from '@summerfi/sdk-common/protocols'
-import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
-import { IPositionId, Maybe, isPositionId } from '@summerfi/sdk-common'
+} from '@summerfi/sdk-common/lending-protocols'
+import {
+  IExternalLendingPosition,
+  IPositionsManager,
+  TransactionInfo,
+} from '@summerfi/sdk-common/orders'
+
 import { IUser } from '@summerfi/sdk-common/user'
-import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 
 /**
  * @class ProtocolManager
@@ -59,8 +65,8 @@ export class ProtocolManager implements IProtocolManager {
     return plugin.getLendingPoolInfo(poolId)
   }
 
-  /** @see IProtocolManager.getPosition */
-  async getPosition(positionId: IPositionId): Promise<IPosition> {
+  /** @see IProtocolManager.getLendingPosition */
+  async getLendingPosition(positionId: ILendingPositionId): Promise<ILendingPosition> {
     this._validatePositionId(positionId)
 
     throw new Error('Not implemented')
@@ -70,7 +76,7 @@ export class ProtocolManager implements IProtocolManager {
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   async getImportPositionTransaction(params: {
     user: IUser
-    externalPosition: IExternalPosition
+    externalPosition: IExternalLendingPosition
     positionsManager: IPositionsManager
   }): Promise<Maybe<TransactionInfo>> {
     throw new Error('Not implemented')

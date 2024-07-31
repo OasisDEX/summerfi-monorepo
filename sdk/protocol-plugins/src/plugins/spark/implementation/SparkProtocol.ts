@@ -1,24 +1,25 @@
-import { Protocol, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { ISparkProtocol, ISparkProtocolData } from '../interfaces/ISparkProtocol'
+import { Protocol, ProtocolName } from '@summerfi/sdk-common/common'
 import { SerializationService } from '@summerfi/sdk-common/services'
+import { ISparkProtocol, ISparkProtocolParameters } from '../interfaces/ISparkProtocol'
 
 /**
  * @class SparkProtocol
  * @see ISparkProtocol
  */
 export class SparkProtocol extends Protocol implements ISparkProtocol {
-  readonly name: ProtocolName.Spark
+  readonly _signature_1 = 'ISparkProtocol'
 
   /** Factory method */
-  static createFrom(params: ISparkProtocolData): SparkProtocol {
+  static createFrom(params: ISparkProtocolParameters): SparkProtocol {
     return new SparkProtocol(params)
   }
 
   /** Sealed constructor */
-  private constructor(params: ISparkProtocolData) {
-    super(params)
-
-    this.name = params.name
+  private constructor(params: ISparkProtocolParameters) {
+    super({
+      ...params,
+      name: ProtocolName.Spark,
+    })
   }
 }
 

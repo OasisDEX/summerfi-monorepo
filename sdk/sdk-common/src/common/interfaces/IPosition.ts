@@ -1,24 +1,18 @@
-import { IPool, PoolDataSchema } from '../../protocols/interfaces/IPool'
-import { PositionType } from '../enums/PositionType'
-import { IPositionId, PositionIdDataSchema } from './IPositionId'
-import { ITokenAmount, TokenAmountDataSchema } from './ITokenAmount'
 import { z } from 'zod'
+import { PositionType } from '../types/PositionType'
+import { IPositionId, isPositionId } from './IPositionId'
 
 /**
  * @name IPosition
  * @description Represents a Summer position in a pool/protocol
  */
 export interface IPosition extends IPositionData {
+  /** Signature to differentiate from similar interfaces */
+  readonly _signature_0: 'IPosition'
   /** Type of the position in the Summer.fi system */
   readonly type: PositionType
   /** Unique identifier for the position inside the Summer.fi system */
   readonly id: IPositionId
-  /** Amount of debt borrowed from the pool */
-  readonly debtAmount: ITokenAmount
-  /** Amount of collateral deposited in the pool */
-  readonly collateralAmount: ITokenAmount
-  /** Pool where the position is */
-  readonly pool: IPool
 }
 
 /**
@@ -26,16 +20,18 @@ export interface IPosition extends IPositionData {
  */
 export const PositionDataSchema = z.object({
   type: z.nativeEnum(PositionType),
-  id: PositionIdDataSchema,
-  debtAmount: TokenAmountDataSchema,
-  collateralAmount: TokenAmountDataSchema,
-  pool: PoolDataSchema,
+  id: z.custom<IPositionId>((val) => isPositionId(val)),
 })
 
 /**
  * Type for the data part of the IPosition interface
  */
 export type IPositionData = Readonly<z.infer<typeof PositionDataSchema>>
+
+/**
+ * Type for the parameters of the IPosition interface
+ */
+export type IPositionParameters = Omit<IPositionData, ''>
 
 /**
  * @description Type guard for IPosition

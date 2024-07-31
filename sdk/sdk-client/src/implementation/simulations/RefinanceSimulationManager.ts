@@ -1,16 +1,19 @@
+import { IRefinanceSimulation } from '@summerfi/sdk-common'
 import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
-import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import { RPCClientType } from '../../rpc/SDKClient'
 import { IRPCClient } from '../../interfaces/IRPCClient'
+import { IRefinanceSimulationManager } from '../../interfaces/simulations/IRefinanceSimulationManager'
+import { RPCMainClientType } from '../../rpc/SDKMainClient'
 
-export class RefinanceSimulationManager extends IRPCClient {
-  constructor(params: { rpcClient: RPCClientType }) {
+/** @see IRefinanceSimulationManager */
+export class RefinanceSimulationManager extends IRPCClient implements IRefinanceSimulationManager {
+  constructor(params: { rpcClient: RPCMainClientType }) {
     super(params)
   }
 
+  /** @see IRefinanceSimulationManager.simulateRefinancePosition */
   public async simulateRefinancePosition(
     refinanceParameters: IRefinanceParameters,
-  ): Promise<ISimulation<SimulationType.Refinance>> {
+  ): Promise<IRefinanceSimulation> {
     return this.rpcClient.simulation.refinance.query(refinanceParameters)
   }
 }

@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { IProtocolManager, IProtocolManagerContext } from '@summerfi/protocol-manager-common'
+import { EmodeType, SparkLendingPoolId, SparkProtocol } from '@summerfi/protocol-plugins'
 import {
-  IProtocolPluginsRegistry,
   IProtocolPlugin,
   IProtocolPluginContext,
+  IProtocolPluginsRegistry,
 } from '@summerfi/protocol-plugins-common'
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import { AddressType, ChainInfo } from '@summerfi/sdk-common/common'
-import { createPublicClient, http, PublicClient } from 'viem'
-import { mainnet } from 'viem/chains'
-import { ProtocolManager } from '../src'
 import {
   ProtocolPluginConstructor,
   ProtocolPluginsRegistry,
 } from '@summerfi/protocol-plugins/implementation'
-import { EmodeType, ISparkLendingPoolIdData } from '@summerfi/protocol-plugins'
+import { Address } from '@summerfi/sdk-common'
+import { ChainFamilyMap, ChainInfo, ProtocolName, Token } from '@summerfi/sdk-common/common'
+import { PublicClient, createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
+import { ProtocolManager } from '../src'
 
 describe('Protocol Manager', () => {
   let ctx: IProtocolManagerContext
@@ -75,33 +75,30 @@ describe('Protocol Manager', () => {
     protocolManager = ProtocolManager.createWith({ pluginsRegistry })
 
     const chainId = 'supportedChain'
-    const poolId: ISparkLendingPoolIdData = {
-      protocol: {
-        name: ProtocolName.Spark,
+    const poolId = SparkLendingPoolId.createFrom({
+      protocol: SparkProtocol.createFrom({
         chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
-      },
-      collateralToken: {
-        address: {
-          type: AddressType.Ethereum,
+      }),
+      collateralToken: Token.createFrom({
+        address: Address.createFromEthereum({
           value: '0x6b175474e89094c44da98b954eedeac495271d0f',
-        },
-        chainInfo: { chainId: 1, name: 'Ethereum' },
+        }),
+        chainInfo: ChainFamilyMap.Ethereum.Mainnet,
         name: 'USD Coin',
         symbol: 'USDC',
         decimals: 6,
-      },
-      debtToken: {
-        address: {
-          type: AddressType.Ethereum,
+      }),
+      debtToken: Token.createFrom({
+        address: Address.createFromEthereum({
           value: '0x6b175474e89094c44da98b954eedeac495271d0f',
-        },
-        chainInfo: { chainId: 1, name: 'Ethereum' },
+        }),
+        chainInfo: ChainFamilyMap.Ethereum.Mainnet,
         name: 'USD Coin',
         symbol: 'USDC',
         decimals: 6,
-      },
+      }),
       emodeType: EmodeType.None,
-    }
+    })
 
     ctx.provider.getChainId = jest.fn().mockResolvedValue(chainId)
 
@@ -133,7 +130,7 @@ class MockPlugin implements IProtocolPlugin {
 
   getLendingPool = jest.fn()
   getLendingPoolInfo = jest.fn()
-  getPosition = jest.fn()
+  getLendingPosition = jest.fn()
   getImportPositionTransaction = jest.fn()
   // @ts-ignore
   isPoolId = jest.fn()

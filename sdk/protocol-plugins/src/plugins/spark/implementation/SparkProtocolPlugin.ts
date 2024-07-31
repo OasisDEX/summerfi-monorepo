@@ -1,32 +1,40 @@
 import {
-  Position,
   ChainFamilyName,
-  valuesOfChainFamilyMap,
-  Maybe,
   IPositionIdData,
+  Maybe,
+  ProtocolName,
+  valuesOfChainFamilyMap,
 } from '@summerfi/sdk-common/common'
-import { ILendingPoolIdData, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SparkLendingPool } from './SparkLendingPool'
 
 import { SparkContractNames } from '@summerfi/deployment-types'
 import { ActionBuildersMap, IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { SparkAbiMap, SparkAbiMapType } from '../abis/SparkAddressAbiMap'
+import { FiatCurrency, IChainInfo } from '@summerfi/sdk-common'
+import { ILendingPoolIdData, ILendingPosition } from '@summerfi/sdk-common/lending-protocols'
+import {
+  IExternalLendingPosition,
+  IPositionsManager,
+  TransactionInfo,
+} from '@summerfi/sdk-common/orders'
 import { IUser } from '@summerfi/sdk-common/user'
-import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
+import { IAaveV3LendingPositionIdData } from '../../aave-v3'
+import { AAVEv3LikeBaseProtocolPlugin } from '../../common/helpers/aaveV3Like/AAVEv3LikeBaseProtocolPlugin'
+import { ContractInfo } from '../../common/types/ContractInfo'
+import { ChainContractsProvider } from '../../utils/ChainContractProvider'
+import { SparkAbiMap, SparkAbiMapType } from '../abis/SparkAddressAbiMap'
+import { SparkStepBuilders } from '../builders/SparkStepBuilders'
 import {
   ISparkLendingPoolId,
   ISparkLendingPoolIdData,
   isSparkLendingPoolId,
 } from '../interfaces/ISparkLendingPoolId'
-import { SparkStepBuilders } from '../builders/SparkStepBuilders'
-import { ISparkPositionIdData, isSparkPositionId } from '../interfaces'
-import { IAaveV3PositionIdData } from '../../aave-v3'
-import { SparkLendingPoolInfo } from './SparkLendingPoolInfo'
+import {
+  ISparkLendingPositionIdData,
+  isSparkLendingPositionId,
+} from '../interfaces/ISparkLendingPositionId'
 import { sparkEmodeCategoryMap } from './EmodeCategoryMap'
-import { AAVEv3LikeBaseProtocolPlugin } from '../../common/helpers/aaveV3Like/AAVEv3LikeBaseProtocolPlugin'
-import { FiatCurrency, IChainInfo } from '@summerfi/sdk-common'
-import { ContractInfo } from '../../common/types/ContractInfo'
-import { ChainContractsProvider } from '../../utils/ChainContractProvider'
+import { SparkLendingPoolId } from './SparkLendingPoolId'
+import { SparkLendingPoolInfo } from './SparkLendingPoolInfo'
 
 /**
  * @class SparkProtocolPlugin
@@ -72,10 +80,10 @@ export class SparkProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
   }
 
   /** @see BaseProtocolPlugin._validatePositionId */
-  protected _validatePositionId(
+  protected _validateLendingPositionId(
     candidate: IPositionIdData,
-  ): asserts candidate is ISparkPositionIdData {
-    if (!isSparkPositionId(candidate)) {
+  ): asserts candidate is ISparkLendingPositionIdData {
+    if (!isSparkLendingPositionId(candidate)) {
       throw new Error(`Invalid Spark position ID: ${JSON.stringify(candidate)}`)
     }
   }
@@ -85,8 +93,7 @@ export class SparkProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
   /** @see BaseProtocolPlugin._getLendingPoolImpl */
   protected async _getLendingPoolImpl(poolId: ISparkLendingPoolIdData): Promise<SparkLendingPool> {
     return SparkLendingPool.createFrom({
-      type: PoolType.Lending,
-      id: poolId,
+      id: SparkLendingPoolId.createFrom(poolId),
       collateralToken: poolId.collateralToken,
       debtToken: poolId.debtToken,
     })
@@ -115,7 +122,6 @@ export class SparkProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
     }
 
     return SparkLendingPoolInfo.createFrom({
-      type: PoolType.Lending,
       id: sparkPoolId,
       collateral: collateralInfo,
       debt: debtInfo,
@@ -126,8 +132,8 @@ export class SparkProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
 
   /** @see BaseProtocolPlugin.getPosition */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getPosition(positionId: IAaveV3PositionIdData): Promise<Position> {
-    this._validatePositionId(positionId)
+  async getLendingPosition(positionId: IAaveV3LendingPositionIdData): Promise<ILendingPosition> {
+    this._validateLendingPositionId(positionId)
 
     throw new Error(`Not implemented ${positionId}`)
   }
@@ -137,7 +143,7 @@ export class SparkProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
   /** @see BaseProtocolPlugin.getImportPositionTransaction */
   async getImportPositionTransaction(params: {
     user: IUser
-    externalPosition: IExternalPosition
+    externalPosition: IExternalLendingPosition
     positionsManager: IPositionsManager
   }): Promise<Maybe<TransactionInfo>> {
     throw new Error(`Not implemented ${params}`)

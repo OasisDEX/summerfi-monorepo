@@ -1,8 +1,8 @@
-import { type IConfigurationProvider } from '@summerfi/configuration-provider'
-import { AddressBookManager } from './AddressBookManager'
 import { IAddressBookManager } from '@summerfi/address-book-common'
+import { type IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { Deployments } from '@summerfi/core-contracts'
 import { DeploymentIndex } from '@summerfi/deployment-utils'
+import { AddressBookManager } from './AddressBookManager'
 
 /**
  * @name AddressBookManagerFactory

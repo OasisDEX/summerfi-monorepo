@@ -1,14 +1,17 @@
-import { getPosition } from './handlers/getPosition'
-import { getLendingPool } from './handlers/getLendingPool'
-import { getRefinanceSimulation } from './handlers/getRefinanceSimulation'
+import { router } from './SDKTRPC'
+import { deposit } from './armada-protocol-handlers/deposit'
+import { withdraw } from './armada-protocol-handlers/withdraw'
 import { buildOrder } from './handlers/buildOrder'
+import { getArmadaSimulation } from './handlers/getArmadaSimulation'
+import { getImportSimulation } from './handlers/getImportSimulation'
+import { getLendingPool } from './handlers/getLendingPool'
+import { getLendingPoolInfo } from './handlers/getLendingPoolInfo'
+import { getPosition } from './handlers/getPosition'
+import { getRefinanceSimulation } from './handlers/getRefinanceSimulation'
 import { getSwapDataExactInput } from './handlers/getSwapData'
 import { getSwapQuoteExactInput } from './handlers/getSwapQuote'
-import { router } from './TRPC'
-import { getImportSimulation } from './handlers/getImportSimulation'
-import { getLendingPoolInfo } from './handlers/getLendingPoolInfo'
-import { getTokenByName } from './handlers/getTokenByName'
 import { getTokenByAddress } from './handlers/getTokenByAddress'
+import { getTokenByName } from './handlers/getTokenByName'
 import { getTokenBySymbol } from './handlers/getTokenBySymbol'
 
 /**
@@ -28,6 +31,7 @@ export const sdkAppRouter = router({
   simulation: {
     refinance: getRefinanceSimulation,
     import: getImportSimulation,
+    earn: getArmadaSimulation,
   },
   orders: {
     buildOrder: buildOrder,
@@ -35,6 +39,10 @@ export const sdkAppRouter = router({
   swaps: {
     getSwapDataExactInput: getSwapDataExactInput,
     getSwapQuoteExactInput: getSwapQuoteExactInput,
+  },
+  earn: {
+    deposit: deposit,
+    withdraw: withdraw,
   },
 })
 

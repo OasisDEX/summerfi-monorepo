@@ -1,10 +1,10 @@
 import { BigNumber } from 'bignumber.js'
-import { type IPercentage } from './IPercentage'
-import { IPrintable } from './IPrintable'
-import { type IToken, TokenDataSchema } from './IToken'
-import { type IPrice } from './IPrice'
-import { type IFiatCurrencyAmount } from './IFiatCurrencyAmount'
 import { z } from 'zod'
+import { type IFiatCurrencyAmount } from './IFiatCurrencyAmount'
+import { type IPercentage } from './IPercentage'
+import { type IPrice } from './IPrice'
+import { IPrintable } from './IPrintable'
+import { isToken, type IToken } from './IToken'
 
 /**
  * Return Type narrowing for multiply and divide methods, so the return type can be properly inferred
@@ -25,6 +25,8 @@ export type TokenAmountMulDivReturnType<T> = T extends IPrice
  * This interface is used to add all the methods that the interface supports
  */
 export interface ITokenAmount extends ITokenAmountData, IPrintable {
+  /** Signature to differentiate from similar interfaces */
+  readonly _signature_0: 'ITokenAmount'
   /** Token this amount refers to */
   readonly token: IToken
   /** Amount in floating point format without taking into account the token decimals */
@@ -97,7 +99,7 @@ export interface ITokenAmount extends ITokenAmountData, IPrintable {
  * @description Zod schema for ITokenAmount
  */
 export const TokenAmountDataSchema = z.object({
-  token: TokenDataSchema,
+  token: z.custom<IToken>((val) => isToken(val)),
   amount: z.string(),
 })
 
@@ -107,12 +109,26 @@ export const TokenAmountDataSchema = z.object({
 export type ITokenAmountData = Readonly<z.infer<typeof TokenAmountDataSchema>>
 
 /**
+ * Type for the parameters of the ITokenAmount interface
+ */
+export type ITokenAmountParameters = Omit<ITokenAmountData, ''>
+
+/**
  * @description Type guard for ITokenAmount
  * @param maybeTokenAmount
  * @returns true if the object is an ITokenAmount
  */
-export function isTokenAmount(maybeTokenAmount: unknown): maybeTokenAmount is ITokenAmount {
-  return TokenAmountDataSchema.safeParse(maybeTokenAmount).success
+export function isTokenAmount(
+  maybeTokenAmount: unknown,
+  returnedErrors?: string[],
+): maybeTokenAmount is ITokenAmount {
+  const zodReturn = TokenAmountDataSchema.safeParse(maybeTokenAmount)
+
+  if (!zodReturn.success && returnedErrors) {
+    returnedErrors.push(...zodReturn.error.errors.map((e) => e.message))
+  }
+
+  return zodReturn.success
 }
 
 /**

@@ -3,29 +3,28 @@ import {
   ChainFamilyMap,
   ChainInfo,
   Percentage,
-  PositionType,
   RiskRatio,
   RiskRatioType,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
 import {
   ILKType,
-  MorphoPositionId,
-  MorphoPosition,
-  MorphoLendingPool,
-  MorphoLendingPoolId,
-  MorphoProtocol,
   MakerLendingPool,
   MakerLendingPoolId,
   MakerProtocol,
+  MorphoLendingPool,
+  MorphoLendingPoolId,
+  MorphoLendingPosition,
+  MorphoLendingPositionId,
   MorphoOpenPositionActionBuilder,
+  MorphoProtocol,
 } from '../../../../src'
+import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
 
 describe('Morpho Open Position Action Builder', () => {
   let builderParams: SetupBuilderReturnType
@@ -60,7 +59,6 @@ describe('Morpho Open Position Action Builder', () => {
   })
 
   const protocol = MorphoProtocol.createFrom({
-    name: ProtocolName.MorphoBlue,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 
@@ -79,12 +77,11 @@ describe('Morpho Open Position Action Builder', () => {
       value: Percentage.createFrom({ value: 0.5 }),
       type: RiskRatioType.LTV,
     }),
-    type: PoolType.Lending,
   })
 
-  const position = MorphoPosition.createFrom({
-    type: PositionType.Multiply,
-    id: MorphoPositionId.createFrom({ id: 'someposition' }),
+  const position = MorphoLendingPosition.createFrom({
+    subtype: LendingPositionType.Multiply,
+    id: MorphoLendingPositionId.createFrom({ id: 'someposition' }),
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
     pool: pool,
@@ -97,12 +94,10 @@ describe('Morpho Open Position Action Builder', () => {
       collateralToken: WETH,
       debtToken: DAI,
       protocol: MakerProtocol.createFrom({
-        name: ProtocolName.Maker,
         chainInfo: ChainFamilyMap.Ethereum.Mainnet,
       }),
       ilkType: ILKType.ETH_A,
     }),
-    type: PoolType.Lending,
   })
 
   const derivedStep: steps.OpenPosition = {

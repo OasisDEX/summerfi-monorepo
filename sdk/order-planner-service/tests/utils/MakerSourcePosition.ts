@@ -1,24 +1,17 @@
 import {
-  Address,
-  ChainFamilyMap,
-  ChainInfo,
-  Position,
-  Token,
-  TokenAmount,
-} from '@summerfi/sdk-common/common'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
-import {
   ILKType,
   IMakerLendingPool,
-  IMakerLendingPoolData,
-  IMakerLendingPoolIdData,
-  IMakerProtocolData,
+  IMakerLendingPosition,
   MakerLendingPool,
-  MakerPositionId,
+  MakerLendingPoolId,
+  MakerLendingPosition,
+  MakerLendingPositionId,
+  MakerProtocol,
 } from '@summerfi/protocol-plugins/plugins/maker'
-import { PositionType } from '@summerfi/sdk-common/common'
+import { Address, ChainFamilyMap, ChainInfo, Token, TokenAmount } from '@summerfi/sdk-common/common'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
 
-export function getMakerPosition(): Position {
+export function getMakerPosition(): IMakerLendingPosition {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
 
   const WETH = Token.createFrom({
@@ -47,32 +40,33 @@ export function getMakerPosition(): Position {
     amount: '700.0',
   })
 
-  const protocol: IMakerProtocolData = {
-    name: ProtocolName.Maker,
+  const protocol = MakerProtocol.createFrom({
     chainInfo: chainInfo,
-  }
+  })
 
-  const poolId: IMakerLendingPoolIdData = {
+  const poolId = MakerLendingPoolId.createFrom({
     protocol: protocol,
     collateralToken: WETH,
     debtToken: DAI,
     ilkType: ILKType.ETH_A,
-  }
+  })
 
   const pool: IMakerLendingPool = MakerLendingPool.createFrom({
-    type: PoolType.Lending,
     id: poolId,
     debtToken: DAI,
     collateralToken: WETH,
   })
 
-  const position = {
-    type: PositionType.Multiply,
-    id: MakerPositionId.createFrom({ id: 'makerPosition', vaultId: '34' }),
+  const position = MakerLendingPosition.createFrom({
+    subtype: LendingPositionType.Multiply,
+    id: MakerLendingPositionId.createFrom({
+      id: 'makerPosition',
+      vaultId: '34',
+    }),
     debtAmount,
     collateralAmount,
     pool,
-  } as unknown as Position
+  })
 
   return position
 }

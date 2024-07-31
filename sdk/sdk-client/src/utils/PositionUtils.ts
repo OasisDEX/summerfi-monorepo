@@ -1,4 +1,5 @@
-import { IPercentage, ITokenAmount, Percentage, type Position } from '@summerfi/sdk-common/common'
+import { ILendingPosition } from '@summerfi/sdk-common'
+import { IPercentage, ITokenAmount, Percentage } from '@summerfi/sdk-common/common'
 import { BigNumber } from 'bignumber.js'
 
 // TODO: refactor BigNumbers to use the SDK's TokenAmount operations
@@ -37,7 +38,7 @@ export class PositionUtils {
     liquidationThreshold,
     debtPriceInUsd,
   }: {
-    position: Position
+    position: ILendingPosition
     liquidationThreshold: Percentage
     debtPriceInUsd: string
   }): string {

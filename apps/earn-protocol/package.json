@@ -1,5 +1,5 @@
 {
-  "name": "@summerfi/earn-protocol",
+  "name": "@summerfi/earn-protocol-webapp",
   "version": "0.0.1",
   "license": "Apache-2.0",
   "scripts": {
@@ -21,6 +21,8 @@
     "@summerfi/app-types": "workspace:*",
     "@summerfi/app-ui": "workspace:*",
     "@summerfi/rays-db": "workspace:*",
+    "@summerfi/sdk-client": "workspace:^",
+    "@summerfi/sdk-common": "workspace:^",
     "@summerfi/serverless-shared": "workspace:*",
     "@tabler/icons-react": "^3.11.0",
     "@tanstack/react-query": "^5.51.1",

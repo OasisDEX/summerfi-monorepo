@@ -1,36 +1,41 @@
 import {
+  Address,
+  ChainFamilyMap,
   Percentage,
   Token,
   TokenAmount,
-  Address,
   type Maybe,
-  ChainFamilyMap,
-  PositionType,
 } from '@summerfi/sdk-common/common'
 
-import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
-import { ProtocolClient, makeSDK, type Chain, type User } from '@summerfi/sdk-client'
-import { PositionsManager, IRefinanceParameters, Order } from '@summerfi/sdk-common/orders'
-import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import { TransactionUtils } from './utils/TransactionUtils'
+import { makeSDK, type Chain } from '@summerfi/sdk-client'
+import { Order, PositionsManager } from '@summerfi/sdk-common/orders'
 
-import { Hex } from 'viem'
-import assert from 'assert'
 import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
-import { AddressValue, CommonTokenSymbols } from '@summerfi/sdk-common'
+import {
+  ILKType,
+  MakerLendingPoolId,
+  MakerLendingPosition,
+  MakerLendingPositionId,
+  MakerProtocol,
+  isMakerLendingPool,
+  isMakerProtocol,
+} from '@summerfi/protocol-plugins/plugins/maker'
 import {
   SparkLendingPoolId,
+  SparkProtocol,
   isSparkLendingPoolId,
   isSparkProtocol,
 } from '@summerfi/protocol-plugins/plugins/spark'
 import {
-  ILKType,
-  MakerLendingPoolId,
-  MakerPosition,
-  MakerPositionId,
-  isMakerLendingPool,
-  isMakerProtocol,
-} from '@summerfi/protocol-plugins/plugins/maker'
+  AddressValue,
+  CommonTokenSymbols,
+  LendingPositionType,
+  RefinanceParameters,
+} from '@summerfi/sdk-common'
+import { isLendingPool } from '@summerfi/sdk-common/lending-protocols'
+import { TransactionUtils } from '@summerfi/testing-utils'
+import assert from 'assert'
+import { Hex } from 'viem'
 
 jest.setTimeout(300000)
 
@@ -61,7 +66,7 @@ describe.skip('Refinance All | SDK', () => {
     const walletAddress = Address.createFromEthereum({
       value: config.walletAddress as AddressValue,
     })
-    const user: User = await sdk.users.getUser({
+    const user = await sdk.users.getUser({
       chainInfo: chain.chainInfo,
       walletAddress: walletAddress,
     })
@@ -107,8 +112,9 @@ describe.skip('Refinance All | SDK', () => {
     })
     assert(SDAI, 'WSTETH not found')
 
-    const maker = await chain.protocols.getProtocol({ name: ProtocolName.Maker })
-    assert(maker, 'Maker protocol not found')
+    const maker = MakerProtocol.createFrom({
+      chainInfo: chain.chainInfo,
+    })
 
     if (!isMakerProtocol(maker)) {
       assert(false, 'Maker protocol type is not lending')
@@ -121,7 +127,7 @@ describe.skip('Refinance All | SDK', () => {
       ilkType: ILKType.ETH_C,
     })
 
-    const makerPool = await maker.getLendingPool({
+    const makerPool = await chain.protocols.getLendingPool({
       poolId: makerPoolId,
     })
     assert(makerPool, 'Maker pool not found')
@@ -131,9 +137,9 @@ describe.skip('Refinance All | SDK', () => {
     }
 
     // Source position
-    const makerPosition: MakerPosition = MakerPosition.createFrom({
-      type: PositionType.Multiply,
-      id: MakerPositionId.createFrom({ id: '31697', vaultId: '31697' }),
+    const makerPosition: MakerLendingPosition = MakerLendingPosition.createFrom({
+      subtype: LendingPositionType.Multiply,
+      id: MakerLendingPositionId.createFrom({ id: '31697', vaultId: '31697' }),
       debtAmount: TokenAmount.createFrom({
         token: DAI,
         amount: config.debtAmount,
@@ -146,10 +152,9 @@ describe.skip('Refinance All | SDK', () => {
     })
 
     // Target protocol
-    const spark: Maybe<ProtocolClient> = await chain.protocols.getProtocol({
-      name: ProtocolName.Spark,
+    const spark = SparkProtocol.createFrom({
+      chainInfo: chain.chainInfo,
     })
-    assert(spark, 'Spark not found')
 
     if (!isSparkProtocol(spark)) {
       assert(false, 'Protocol type is not Spark')
@@ -162,7 +167,7 @@ describe.skip('Refinance All | SDK', () => {
       emodeType: EmodeType.None,
     })
 
-    const sparkPool = await spark.getLendingPool({
+    const sparkPool = await chain.protocols.getLendingPool({
       poolId,
     })
 
@@ -176,12 +181,13 @@ describe.skip('Refinance All | SDK', () => {
       assert(false, 'Spark pool type is not lending')
     }
 
-    const refinanceSimulation: ISimulation<SimulationType.Refinance> =
-      await sdk.simulator.refinance.simulateRefinancePosition({
+    const refinanceSimulation = await sdk.simulator.refinance.simulateRefinancePosition(
+      RefinanceParameters.createFrom({
         sourcePosition: makerPosition,
         targetPool: sparkPool,
         slippage: Percentage.createFrom({ value: 0.2 }),
-      } as IRefinanceParameters)
+      }),
+    )
 
     expect(refinanceSimulation).toBeDefined()
 

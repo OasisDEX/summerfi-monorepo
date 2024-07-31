@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { publicProcedure } from '../TRPC'
+import { publicProcedure } from '../SDKTRPC'
 import { IPosition, Maybe, isPositionId } from '@summerfi/sdk-common'
 
 export const getPosition = publicProcedure

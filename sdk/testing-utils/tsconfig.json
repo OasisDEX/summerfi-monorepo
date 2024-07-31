@@ -5,6 +5,11 @@
     "outDir": "dist",
     "baseUrl": "."
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "scripts/**/*.ts"],
+  "include": [
+    "src/**/*.ts",
+    "tests/**/*.ts",
+    "scripts/**/*.ts",
+    "../tenderly-utils/src/TenderlyDevNet.ts"
+  ],
   "exclude": ["node_modules"]
 }

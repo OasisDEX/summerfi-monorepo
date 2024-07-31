@@ -1,6 +1,6 @@
-import { type IConfigurationProvider } from '@summerfi/configuration-provider'
-import { OneInchOracleProvider } from './oneinch/OneInchOracleProvider'
+import { type IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { OracleManager } from './OracleManager'
+import { OneInchOracleProvider } from './oneinch/OneInchOracleProvider'
 
 /**
  * @name OracleManagerFactory

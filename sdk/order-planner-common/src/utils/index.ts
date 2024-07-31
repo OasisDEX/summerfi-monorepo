@@ -1,1 +1,2 @@
-export { encodeStrategy } from './EncodeStrategy'
+export * from './EncodeStrategy'
+export * from './GenerateStrategyName'

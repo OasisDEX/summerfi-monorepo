@@ -1,14 +1,13 @@
-import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import { IAddressBookManager } from '@summerfi/address-book-common'
-import { IAddress, IChainInfo } from '@summerfi/sdk-common/common'
-import { getContractAddress } from '../plugins/utils/GetContractAddress'
 import {
   ActionBuilderParams,
   ActionBuilderUsedAction,
   FilterStep,
   IActionBuilder,
 } from '@summerfi/protocol-plugins-common'
+import { IAddress, IChainInfo, ProtocolName } from '@summerfi/sdk-common/common'
+import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
+import { getContractAddress } from '../plugins/utils/GetContractAddress'
 
 /**
  * Base class for all action builders

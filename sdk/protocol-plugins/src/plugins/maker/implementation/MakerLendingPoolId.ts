@@ -1,33 +1,38 @@
-import { LendingPoolId } from '@summerfi/sdk-common/protocols'
+import { IPrintable, IToken } from '@summerfi/sdk-common/common'
+import { LendingPoolId } from '@summerfi/sdk-common/lending-protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
-import { IMakerLendingPoolId, IMakerLendingPoolIdData } from '../interfaces/IMakerLendingPoolId'
 import { ILKType } from '../enums/ILKType'
+import {
+  IMakerLendingPoolId,
+  IMakerLendingPoolIdParameters,
+} from '../interfaces/IMakerLendingPoolId'
 import { MakerProtocol } from './MakerProtocol'
-import { IPrintable, IToken, Token } from '@summerfi/sdk-common/common'
 
 /**
  * @class MakerLendingPoolId
  * @see IMakerLendingPoolIdData
  */
 export class MakerLendingPoolId extends LendingPoolId implements IMakerLendingPoolId, IPrintable {
+  readonly _signature_2 = 'IMakerLendingPoolId'
+
   readonly protocol: MakerProtocol
   readonly ilkType: ILKType
   readonly collateralToken: IToken
   readonly debtToken: IToken
 
   /** Factory method */
-  public static createFrom(params: IMakerLendingPoolIdData): MakerLendingPoolId {
+  public static createFrom(params: IMakerLendingPoolIdParameters): MakerLendingPoolId {
     return new MakerLendingPoolId(params)
   }
 
   /** Sealed constructor */
-  private constructor(params: IMakerLendingPoolIdData) {
+  private constructor(params: IMakerLendingPoolIdParameters) {
     super(params)
 
-    this.protocol = MakerProtocol.createFrom(params.protocol)
+    this.protocol = params.protocol
     this.ilkType = params.ilkType
-    this.collateralToken = Token.createFrom(params.collateralToken)
-    this.debtToken = Token.createFrom(params.debtToken)
+    this.collateralToken = params.collateralToken
+    this.debtToken = params.debtToken
   }
 
   toString(): string {

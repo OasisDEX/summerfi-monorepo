@@ -1,11 +1,11 @@
 import { SerializationService } from '../../services/SerializationService'
+import { FiatCurrency } from '../enums/FiatCurrency'
 import {
   FiatCurrencyAmountMulDivParamType,
   FiatCurrencyAmountMulDivReturnType,
+  IFiatCurrencyAmountParameters,
   type IFiatCurrencyAmount,
-  type IFiatCurrencyAmountData,
 } from '../interfaces/IFiatCurrencyAmount'
-import { FiatCurrency } from '../enums/FiatCurrency'
 import { isPercentage } from '../interfaces/IPercentage'
 import { isPrice } from '../interfaces/IPrice'
 import {
@@ -18,18 +18,19 @@ import {
  * @see IFiatCurrencyAmount
  */
 export class FiatCurrencyAmount implements IFiatCurrencyAmount {
+  readonly _signature_0 = 'IFiatCurrencyAmount'
   readonly fiat: FiatCurrency
   readonly amount: string
 
-  /** CONSTRUCTOR */
-  private constructor(params: IFiatCurrencyAmountData) {
-    this.fiat = params.fiat
-    this.amount = params.amount
+  /** FACTORY */
+  static createFrom(params: IFiatCurrencyAmountParameters): IFiatCurrencyAmount {
+    return new FiatCurrencyAmount(params)
   }
 
-  /** FACTORY */
-  static createFrom(params: IFiatCurrencyAmountData): IFiatCurrencyAmount {
-    return new FiatCurrencyAmount(params)
+  /** CONSTRUCTOR */
+  private constructor(params: IFiatCurrencyAmountParameters) {
+    this.fiat = params.fiat
+    this.amount = params.amount
   }
 
   /** METHODS */

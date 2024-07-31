@@ -1,30 +1,24 @@
-import {
-  Address,
-  ChainFamilyMap,
-  ChainInfo,
-  PositionType,
-  Token,
-  TokenAmount,
-} from '@summerfi/sdk-common/common'
+import { Address, ChainFamilyMap, ChainInfo, Token, TokenAmount } from '@summerfi/sdk-common/common'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
 import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
-import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
 import {
+  AaveV3LendingPool,
+  AaveV3LendingPoolId,
+  AaveV3LendingPosition,
+  AaveV3LendingPositionId,
+  AaveV3PaybackWithdrawActionBuilder,
+  AaveV3Protocol,
   EmodeType,
   ILKType,
   MakerLendingPool,
   MakerLendingPoolId,
-  MakerPosition,
-  MakerPositionId,
+  MakerLendingPosition,
+  MakerLendingPositionId,
   MakerProtocol,
-  AaveV3LendingPool,
-  AaveV3LendingPoolId,
-  AaveV3Position,
-  AaveV3Protocol,
 } from '../../../../src'
-import { AaveV3PaybackWithdrawActionBuilder } from '../../../../src'
+import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
 
 describe('AaveV3 Payback Withdraw Action Builder', () => {
   let builderParams: SetupBuilderReturnType
@@ -59,7 +53,6 @@ describe('AaveV3 Payback Withdraw Action Builder', () => {
   })
 
   const protocol = AaveV3Protocol.createFrom({
-    name: ProtocolName.AaveV3,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 
@@ -74,20 +67,24 @@ describe('AaveV3 Payback Withdraw Action Builder', () => {
     collateralToken: WETH,
     debtToken: DAI,
     id: poolId,
-    type: PoolType.Lending,
   })
 
-  const position = AaveV3Position.createFrom({
-    type: PositionType.Multiply,
-    id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '123' }),
+  const position = AaveV3LendingPosition.createFrom({
+    subtype: LendingPositionType.Multiply,
+    id: AaveV3LendingPositionId.createFrom({
+      id: 'someposition',
+    }),
     debtAmount: withdrawAmount,
     collateralAmount: paybackAmount,
     pool: pool,
   })
 
-  const wrongPosition = MakerPosition.createFrom({
-    type: PositionType.Multiply,
-    id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '123' }),
+  const wrongPosition = MakerLendingPosition.createFrom({
+    subtype: LendingPositionType.Multiply,
+    id: MakerLendingPositionId.createFrom({
+      id: 'someposition',
+      vaultId: '123',
+    }),
     debtAmount: withdrawAmount,
     collateralAmount: paybackAmount,
     pool: MakerLendingPool.createFrom({
@@ -97,12 +94,10 @@ describe('AaveV3 Payback Withdraw Action Builder', () => {
         collateralToken: WETH,
         debtToken: DAI,
         protocol: MakerProtocol.createFrom({
-          name: ProtocolName.Maker,
           chainInfo: ChainFamilyMap.Ethereum.Mainnet,
         }),
         ilkType: ILKType.ETH_A,
       }),
-      type: PoolType.Lending,
     }),
   })
 

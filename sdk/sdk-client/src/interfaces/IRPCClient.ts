@@ -1,13 +1,13 @@
-import { RPCClientType } from '../rpc/SDKClient'
+import { RPCMainClientType } from '../rpc/SDKMainClient'
 
 export abstract class IRPCClient {
-  private readonly _rpcClient: RPCClientType
+  private readonly _rpcClient: RPCMainClientType
 
-  constructor(params: { rpcClient: RPCClientType }) {
+  constructor(params: { rpcClient: RPCMainClientType }) {
     this._rpcClient = params.rpcClient
   }
 
-  protected get rpcClient(): RPCClientType {
+  protected get rpcClient(): RPCMainClientType {
     return this._rpcClient
   }
 }

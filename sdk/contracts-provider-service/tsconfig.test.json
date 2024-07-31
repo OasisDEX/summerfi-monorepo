@@ -1,0 +1,21 @@
+{
+  "extends": "@summerfi/typescript-config/tsconfig.test.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
+      "@summerfi/blockchain-client-provider": [
+        "node_modules/@summerfi/blockchain-client-provider/src"
+      ],
+      "@summerfi/serverless-shared/*": ["../../packages/serverless-shared/src/*"],
+      "@summerfi/configuration-provider": ["node_modules/@summerfi/configuration-provider/src"],
+      "@summerfi/sdk-common": ["node_modules/@summerfi/sdk-common/src"],
+      "@summerfi/tenderly-utils": ["node_modules/@summerfi/tenderly-utils/src"],
+      "@summerfi/testing-utils/*": ["node_modules/@summerfi/testing-utils/src/*"],
+      "@summerfi/testing-utils": ["node_modules/@summerfi/testing-utils/src"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

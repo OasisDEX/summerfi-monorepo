@@ -1,7 +1,7 @@
-import { type IConfigurationProvider } from '@summerfi/configuration-provider'
+import { type IConfigurationProvider } from '@summerfi/configuration-provider-common'
+import { ITokensManager, ITokensProvider } from '@summerfi/tokens-common'
 import { TokensManager } from './TokensManager'
 import { StaticTokensProvider } from './static/StaticTokensProvider'
-import { ITokensManager, ITokensProvider } from '@summerfi/tokens-common'
 
 /**
  * @name TokensManagerFactory

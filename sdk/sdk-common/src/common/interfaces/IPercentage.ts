@@ -1,10 +1,13 @@
 import { z } from 'zod'
+import { IPrintable } from './IPrintable'
 
 /**
  * @name IPercentage
  * @description Percentage type that can be used for calculations with other types like TokenAmount or Price
  */
-export interface IPercentage extends IPercentageData {
+export interface IPercentage extends IPercentageData, IPrintable {
+  /** Signature to differentiate from similar interfaces */
+  readonly _signature_0: 'IPercentage'
   /** The percentage in floating point format */
   readonly value: number
 
@@ -71,6 +74,11 @@ export const PercentageDataSchema = z.object({
  * Type for the data part of the IPercentage interface
  */
 export type IPercentageData = Readonly<z.infer<typeof PercentageDataSchema>>
+
+/**
+ * Type for the parameters of the IPercentage interface
+ */
+export type IPercentageParameters = Omit<IPercentageData, ''>
 
 /**
  * @description Type guard for IPercentage

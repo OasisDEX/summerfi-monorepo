@@ -1,21 +1,20 @@
 import {
   Address,
-  AddressValue,
   ChainFamilyMap,
   ChainInfo,
-  Price,
   Percentage,
+  Price,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { SwapProviderType } from '@summerfi/sdk-common/swap'
 
-import { SetupBuilderReturnType, setupBuilderParams } from '../../utils/SetupBuilderParams'
-import { SwapActionBuilder } from '../../../src/plugins/common/builders'
-import { SwapAction } from '../../../src/plugins/common/actions/SwapAction'
 import { FiatCurrency } from '@summerfi/sdk-common'
 import { AddressBookManagerMock } from '@summerfi/testing-utils'
+import { SwapAction } from '../../../src/plugins/common/actions/SwapAction'
+import { SwapActionBuilder } from '../../../src/plugins/common/builders'
+import { SetupBuilderReturnType, setupBuilderParams } from '../../utils/SetupBuilderParams'
 
 describe('Swap Action Builder', () => {
   let builderParams: SetupBuilderReturnType

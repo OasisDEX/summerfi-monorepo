@@ -1,4 +1,4 @@
-import { publicProcedure } from '../TRPC'
+import { publicProcedure } from '../SDKTRPC'
 import { IToken, Maybe, isAddress, isChainInfo } from '@summerfi/sdk-common'
 import { z } from 'zod'
 

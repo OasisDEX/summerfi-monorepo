@@ -1,7 +1,9 @@
-import { createRPCClient } from '../rpc/SDKClient'
+// import { createArmadaRPCClient } from '../rpc/SDKArmadaClient'
+import { createMainRPCClient } from '../rpc/SDKMainClient'
 import { SDKManager } from './SDKManager'
 
 export function makeSDK(params: { apiURL: string }) {
-  const rpcClient = createRPCClient(params.apiURL)
+  const rpcClient = createMainRPCClient(params.apiURL)
+
   return new SDKManager({ rpcClient })
 }

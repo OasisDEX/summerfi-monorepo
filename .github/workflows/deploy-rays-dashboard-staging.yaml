@@ -46,6 +46,7 @@ jobs:
       CONTENTFUL_SPACE_ID: ${{ secrets.CONTENTFUL_SPACE_ID }}
       MIXPANEL_KEY: ${{ secrets.MIXPANEL_KEY }}
       NEXT_PUBLIC_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }}
+      SDK_API_URL: ${{ secrets.SDK_API_URL }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3

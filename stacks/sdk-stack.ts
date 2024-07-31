@@ -13,6 +13,6 @@ export function SdkAPI(stackContext: StackContext) {
   addSdkConfig(stackContext, api)
 
   stack.addOutputs({
-    RouterEndpoint: api.url,
+    SDKApiEndpoint: api.url + '/api/sdk',
   })
 }

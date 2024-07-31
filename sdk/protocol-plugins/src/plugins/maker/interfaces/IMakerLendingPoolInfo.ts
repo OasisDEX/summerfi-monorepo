@@ -1,11 +1,12 @@
+import { PoolType } from '@summerfi/sdk-common'
 import {
   ICollateralInfo,
   IDebtInfo,
   ILendingPoolInfo,
   LendingPoolInfoDataSchema,
-} from '@summerfi/sdk-common/protocols'
-import { IMakerLendingPoolId, MakerLendingPoolIdDataSchema } from './IMakerLendingPoolId'
+} from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
+import { IMakerLendingPoolId, isMakerLendingPoolId } from './IMakerLendingPoolId'
 
 /**
  * @interface IMakerLendingPoolInfo
@@ -15,10 +16,13 @@ import { z } from 'zod'
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
 export interface IMakerLendingPoolInfo extends ILendingPoolInfo, IMakerLendingPoolInfoData {
+  /** Signature used to differentiate it from similar interfaces */
+  readonly _signature_2: 'IMakerLendingPoolInfo'
   /** The pool's ID */
   readonly id: IMakerLendingPoolId
 
   // Re-declaring the properties with the correct types
+  readonly type: PoolType
   readonly collateral: ICollateralInfo
   readonly debt: IDebtInfo
 }
@@ -28,13 +32,18 @@ export interface IMakerLendingPoolInfo extends ILendingPoolInfo, IMakerLendingPo
  */
 export const MakerLendingPoolInfoDataSchema = z.object({
   ...LendingPoolInfoDataSchema.shape,
-  id: MakerLendingPoolIdDataSchema,
+  id: z.custom<IMakerLendingPoolId>((val) => isMakerLendingPoolId(val)),
 })
 
 /**
  * Type for the data part of IMakerLendingPool
  */
 export type IMakerLendingPoolInfoData = Readonly<z.infer<typeof MakerLendingPoolInfoDataSchema>>
+
+/**
+ * Type for the parameters of the IMakerLendingPool interface
+ */
+export type IMakerLendingPoolInfoParameters = Omit<IMakerLendingPoolInfoData, 'type'>
 
 /**
  * @description Type guard for IMakerLendingPoolInfo
