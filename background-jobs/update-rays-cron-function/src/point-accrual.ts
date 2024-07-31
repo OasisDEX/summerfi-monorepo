@@ -67,6 +67,7 @@ export class SummerPointsService {
   private START_POINTS_TIMESTAMP
 
   private ETH_TOKEN_BONANZA_END = 1722470399
+  private DOUBLE_SWAP_POINTS_END = 1725148799
 
   /**
    * Creates an instance of SummerPointsService.
@@ -169,15 +170,16 @@ export class SummerPointsService {
    */
   getSwapMultiplier(swaps: unknown[]): number {
     const swapCount = swaps.length
+    let multiplier = 1
+    const additionalMultiplier = Date.now() / 1000 < this.DOUBLE_SWAP_POINTS_END ? 2 : 1
     if (swapCount > 25) {
-      return 5
+      multiplier = 5
     } else if (swapCount > 10) {
-      return 2
+      multiplier = 2
     } else if (swapCount > 5) {
-      return 1.5
-    } else {
-      return 1
+      multiplier = 1.5
     }
+    return multiplier * additionalMultiplier
   }
 
   /**
