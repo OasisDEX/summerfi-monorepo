@@ -52,6 +52,7 @@ export const useRisk = ({ chainId, walletAddress, host }: UseRiskInput) => {
 
         setRisk({ ...riskResponse, isLoading: false })
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Risk request failed. Please reload page or contact with support', error)
         setRisk({ error: 'Failed to fetch risk status. Please try again later.', isLoading: false })
       }
