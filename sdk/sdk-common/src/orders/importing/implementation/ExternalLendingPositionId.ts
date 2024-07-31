@@ -6,7 +6,7 @@ import { ExternalLendingPositionType } from '../enums/ExrternalLendingPositionTy
 import {
   IExternalLendingPositionId,
   IExternalLendingPositionIdParameters,
-  __iexternallendingpositionid__,
+  __signature__,
 } from '../interfaces/IExternalLendingPositionId'
 
 /**
@@ -18,7 +18,7 @@ export class ExternalLendingPositionId
   implements IExternalLendingPositionId
 {
   /** SIGNATURE */
-  readonly [__iexternallendingpositionid__] = 'IExternalLendingPositionId'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly externalType: ExternalLendingPositionType

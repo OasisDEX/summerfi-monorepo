@@ -3,7 +3,7 @@ import { Wallet } from '../../common/implementation/Wallet'
 import { IChainInfo } from '../../common/interfaces/IChainInfo'
 import { IWallet } from '../../common/interfaces/IWallet'
 import { SerializationService } from '../../services/SerializationService'
-import { IUser, IUserData, __iuser__ } from '../interfaces/IUser'
+import { IUser, IUserData, __signature__ } from '../interfaces/IUser'
 
 /**
  * @name User
@@ -11,7 +11,7 @@ import { IUser, IUserData, __iuser__ } from '../interfaces/IUser'
  */
 export class User implements IUser {
   /** SIGNATURE */
-  readonly [__iuser__] = 'IUser'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   public readonly wallet: IWallet

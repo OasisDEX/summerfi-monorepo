@@ -3,7 +3,7 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 import {
   ISparkLendingPositionId,
   ISparkLendingPositionIdParameters,
-  __isparklendingpositionid__,
+  __signature__,
 } from '../interfaces/ISparkLendingPositionId'
 
 /**
@@ -11,7 +11,7 @@ import {
  * @see ISparkLendingPositionId
  */
 export class SparkLendingPositionId extends LendingPositionId implements ISparkLendingPositionId {
-  readonly [__isparklendingpositionid__] = 'ISparkLendingPositionId'
+  readonly [__signature__] = __signature__
 
   /** Factory method */
   static createFrom(params: ISparkLendingPositionIdParameters): SparkLendingPositionId {

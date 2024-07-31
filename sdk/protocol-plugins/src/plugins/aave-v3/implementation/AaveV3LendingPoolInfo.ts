@@ -4,7 +4,7 @@ import { IAaveV3LendingPoolId } from '../interfaces/IAaveV3LendingPoolId'
 import {
   IAaveV3LendingPoolInfo,
   IAaveV3LendingPoolInfoParameters,
-  __iaavev3lendingpoolinfo__,
+  __signature__,
 } from '../interfaces/IAaveV3LendingPoolInfo'
 
 /**
@@ -13,7 +13,7 @@ import {
  */
 export class AaveV3LendingPoolInfo extends LendingPoolInfo implements IAaveV3LendingPoolInfo {
   /** SIGNATURE */
-  readonly [__iaavev3lendingpoolinfo__] = 'IAaveV3LendingPoolInfo'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly id: IAaveV3LendingPoolId

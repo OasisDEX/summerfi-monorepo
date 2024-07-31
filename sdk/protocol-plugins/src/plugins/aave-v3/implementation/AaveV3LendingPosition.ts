@@ -4,7 +4,7 @@ import { IAaveV3LendingPool } from '../interfaces/IAaveV3LendingPool'
 import {
   IAaveV3LendingPosition,
   IAaveV3LendingPositionParameters,
-  __iaavev3lendingposition__,
+  __signature__,
 } from '../interfaces/IAaveV3LendingPosition'
 import { IAaveV3LendingPositionId } from '../interfaces/IAaveV3LendingPositionId'
 
@@ -14,7 +14,7 @@ import { IAaveV3LendingPositionId } from '../interfaces/IAaveV3LendingPositionId
  */
 export class AaveV3LendingPosition extends LendingPosition implements IAaveV3LendingPosition {
   /** SIGNATURE */
-  readonly [__iaavev3lendingposition__] = 'IAaveV3LendingPosition'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly pool: IAaveV3LendingPool

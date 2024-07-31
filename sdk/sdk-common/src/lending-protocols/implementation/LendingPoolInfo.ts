@@ -8,7 +8,7 @@ import { ILendingPoolId } from '../interfaces/ILendingPoolId'
 import {
   ILendingPoolInfo,
   ILendingPoolInfoParameters,
-  __ilendingpoolinfo__,
+  __signature__,
 } from '../interfaces/ILendingPoolInfo'
 
 /**
@@ -20,7 +20,7 @@ import {
  */
 export abstract class LendingPoolInfo extends PoolInfo implements ILendingPoolInfo, IPrintable {
   /** SIGNATURE */
-  readonly [__ilendingpoolinfo__] = 'ILendingPoolInfo'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   abstract readonly id: ILendingPoolId

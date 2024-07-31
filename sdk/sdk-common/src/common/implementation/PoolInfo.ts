@@ -1,7 +1,7 @@
 import { IPrintable } from '../../common/interfaces/IPrintable'
 import { SerializationService } from '../../services/SerializationService'
 import { IPoolId } from '../interfaces/IPoolId'
-import { IPoolInfo, IPoolInfoParameters, __ipoolinfo__ } from '../interfaces/IPoolInfo'
+import { IPoolInfo, IPoolInfoParameters, __signature__ } from '../interfaces/IPoolInfo'
 import { PoolType } from '../types/PoolType'
 
 /**
@@ -10,7 +10,7 @@ import { PoolType } from '../types/PoolType'
  */
 export abstract class PoolInfo implements IPoolInfo, IPrintable {
   /** SIGNATURE */
-  readonly [__ipoolinfo__] = 'IPoolInfo'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly type: PoolType

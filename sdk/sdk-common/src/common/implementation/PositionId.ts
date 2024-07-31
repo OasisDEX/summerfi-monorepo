@@ -1,5 +1,5 @@
 import { SerializationService } from '../../services/SerializationService'
-import { IPositionId, IPositionIdParameters, __ipositionid__ } from '../interfaces/IPositionId'
+import { IPositionId, IPositionIdParameters, __signature__ } from '../interfaces/IPositionId'
 import { PositionType } from '../types/PositionType'
 
 /**
@@ -8,7 +8,7 @@ import { PositionType } from '../types/PositionType'
  */
 export abstract class PositionId implements IPositionId {
   /** SIGNATURE */
-  readonly [__ipositionid__] = 'IPositionId'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly id: string

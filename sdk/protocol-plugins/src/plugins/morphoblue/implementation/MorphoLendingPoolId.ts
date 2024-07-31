@@ -5,7 +5,7 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 import {
   IMorphoLendingPoolId,
   IMorphoLendingPoolIdParameters,
-  __imorpholendingpoolid__,
+  __signature__,
 } from '../interfaces/IMorphoLendingPoolId'
 import { IMorphoProtocol } from '../interfaces/IMorphoProtocol'
 import { MorphoProtocol } from './MorphoProtocol'
@@ -15,7 +15,7 @@ import { MorphoProtocol } from './MorphoProtocol'
  * @see IMorphoLendingPoolIdData
  */
 export class MorphoLendingPoolId extends LendingPoolId implements IMorphoLendingPoolId, IPrintable {
-  readonly [__imorpholendingpoolid__] = 'IMorphoLendingPoolId'
+  readonly [__signature__] = __signature__
 
   readonly protocol: IMorphoProtocol
   readonly marketId: HexData

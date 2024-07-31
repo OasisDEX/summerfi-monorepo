@@ -1,6 +1,18 @@
-export * from './IImportSimulation'
-export * from './IRefinanceSimulation'
-export * from './ISimulation'
-export * from './SimulationStrategy'
+export { ImportSimulationSchema, isImportSimulation } from './IImportSimulation'
+export type {
+  IImportSimulation,
+  IImportSimulationData,
+  IImportSimulationParameters,
+} from './IImportSimulation'
+export { RefinanceSimulationSchema, isRefinanceSimulation } from './IRefinanceSimulation'
+export type {
+  IRefinanceSimulation,
+  IRefinanceSimulationData,
+  IRefinanceSimulationParameters,
+} from './IRefinanceSimulation'
+export { SimulationSchema, isSimulation } from './ISimulation'
+export type { ISimulation, ISimulationData } from './ISimulation'
+export type { SimulationStrategy, StrategyStep } from './SimulationStrategy'
 export * as steps from './Steps'
-export * from './ValueReference'
+export { getValueFromReference, isValueReference } from './ValueReference'
+export type { ReferenceableField, ValueReference } from './ValueReference'

@@ -4,7 +4,7 @@ import { IPrintable } from '../../common/interfaces/IPrintable'
 import { IToken } from '../../common/interfaces/IToken'
 import { PoolType } from '../../common/types/PoolType'
 import { SerializationService } from '../../services'
-import { ILendingPool, ILendingPoolParameters, __ilendingpool__ } from '../interfaces/ILendingPool'
+import { ILendingPool, ILendingPoolParameters, __signature__ } from '../interfaces/ILendingPool'
 import { ILendingPoolId } from '../interfaces/ILendingPoolId'
 
 /**
@@ -16,7 +16,7 @@ import { ILendingPoolId } from '../interfaces/ILendingPoolId'
  */
 export abstract class LendingPool extends Pool implements ILendingPool, IPrintable {
   /** SIGNATURE */
-  readonly [__ilendingpool__] = 'ILendingPool'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   abstract readonly id: ILendingPoolId

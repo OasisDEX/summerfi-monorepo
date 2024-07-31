@@ -3,7 +3,7 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 import {
   IMorphoLendingPositionId,
   IMorphoLendingPositionIdParameters,
-  __imorpholendingpositionid__,
+  __signature__,
 } from '../interfaces/IMorphoLendingPositionId'
 
 /**
@@ -11,7 +11,7 @@ import {
  * @see IMorphoLendingPositionId
  */
 export class MorphoLendingPositionId extends LendingPositionId implements IMorphoLendingPositionId {
-  readonly [__imorpholendingpositionid__] = 'IMorphoLendingPositionId'
+  readonly [__signature__] = __signature__
 
   /** Factory method */
   static createFrom(params: IMorphoLendingPositionIdParameters): MorphoLendingPositionId {

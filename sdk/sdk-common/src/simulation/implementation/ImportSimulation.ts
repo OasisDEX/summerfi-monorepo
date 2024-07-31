@@ -5,7 +5,7 @@ import { SimulationType } from '../enums'
 import {
   IImportSimulation,
   IImportSimulationParameters,
-  __iimportsimulation__,
+  __signature__,
 } from '../interfaces/IImportSimulation'
 import { Steps } from '../interfaces/Steps'
 import { Simulation } from './Simulation'
@@ -16,7 +16,7 @@ import { Simulation } from './Simulation'
  */
 export class ImportSimulation extends Simulation implements IImportSimulation {
   /** SIGNATURE */
-  readonly [__iimportsimulation__] = 'IImportSimulation'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly sourcePosition: IExternalLendingPosition

@@ -3,7 +3,7 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 import {
   IMakerProtocol,
   IMakerProtocolParameters,
-  __imakerprotocol__,
+  __signature__,
 } from '../interfaces/IMakerProtocol'
 
 /**
@@ -12,7 +12,7 @@ import {
  */
 export class MakerProtocol extends Protocol implements IMakerProtocol {
   /** SIGNATURE */
-  readonly [__imakerprotocol__] = 'IMakerProtocol'
+  readonly [__signature__] = __signature__
 
   /** FACTORY */
   static createFrom(params: IMakerProtocolParameters): MakerProtocol {

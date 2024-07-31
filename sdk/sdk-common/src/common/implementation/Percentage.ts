@@ -3,7 +3,7 @@ import { SerializationService } from '../../services/SerializationService'
 import {
   IPercentage,
   IPercentageParameters,
-  __ipercentage__,
+  __signature__,
   isPercentage,
 } from '../interfaces/IPercentage'
 
@@ -13,7 +13,7 @@ import {
  */
 export class Percentage implements IPercentage {
   /** SIGNATURE */
-  readonly [__ipercentage__] = 'IPercentage'
+  readonly [__signature__] = __signature__
 
   /** CONSTANTS */
 

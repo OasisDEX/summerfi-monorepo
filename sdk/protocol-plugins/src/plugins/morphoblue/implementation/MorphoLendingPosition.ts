@@ -4,7 +4,7 @@ import { IMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
 import {
   IMorphoLendingPosition,
   IMorphoLendingPositionParameters,
-  __imorpholendingposition__,
+  __signature__,
 } from '../interfaces/IMorphoLendingPosition'
 import { IMorphoLendingPositionId } from '../interfaces/IMorphoLendingPositionId'
 
@@ -13,7 +13,7 @@ import { IMorphoLendingPositionId } from '../interfaces/IMorphoLendingPositionId
  * @see IMorphoLendingPosition
  */
 export class MorphoLendingPosition extends LendingPosition implements IMorphoLendingPosition {
-  readonly [__imorpholendingposition__] = 'IMorphoLendingPosition'
+  readonly [__signature__] = __signature__
 
   readonly id: IMorphoLendingPositionId
   readonly pool: IMorphoLendingPool

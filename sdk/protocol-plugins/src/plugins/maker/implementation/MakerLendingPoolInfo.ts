@@ -1,10 +1,10 @@
 import { LendingPoolInfo } from '@summerfi/sdk-common/lending-protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
-import { __iaavev3lendingpoolinfo__ } from '../../aave-v3'
 import { IMakerLendingPoolId } from '../interfaces/IMakerLendingPoolId'
 import {
   IMakerLendingPoolInfoData,
   IMakerLendingPoolInfoParameters,
+  __signature__,
 } from '../interfaces/IMakerLendingPoolInfo'
 
 /**
@@ -13,7 +13,7 @@ import {
  */
 export class MakerLendingPoolInfo extends LendingPoolInfo implements IMakerLendingPoolInfoData {
   /** SIGNATURE */
-  readonly [__iaavev3lendingpoolinfo__] = 'IMakerLendingPoolInfo'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly id: IMakerLendingPoolId

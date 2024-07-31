@@ -1,11 +1,11 @@
-import { PoolType } from '../../common'
 import { PoolId } from '../../common/implementation/PoolId'
 import { IPrintable } from '../../common/interfaces/IPrintable'
+import { PoolType } from '../../common/types/PoolType'
 import { SerializationService } from '../../services'
 import {
   ILendingPoolId,
   ILendingPoolIdParameters,
-  __ilendingpoolid__,
+  __signature__,
 } from '../interfaces/ILendingPoolId'
 
 /**
@@ -14,7 +14,7 @@ import {
  */
 export abstract class LendingPoolId extends PoolId implements ILendingPoolId, IPrintable {
   /** SIGNATURE */
-  readonly [__ilendingpoolid__] = 'ILendingPoolId'
+  readonly [__signature__] = __signature__
 
   /** SEALED CONSTRUCTOR */
   protected constructor(params: ILendingPoolIdParameters) {

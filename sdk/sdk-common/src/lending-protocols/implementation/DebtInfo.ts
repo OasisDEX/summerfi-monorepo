@@ -7,7 +7,7 @@ import { IPrice } from '../../common/interfaces/IPrice'
 import { IToken } from '../../common/interfaces/IToken'
 import { ITokenAmount } from '../../common/interfaces/ITokenAmount'
 import { SerializationService } from '../../services/SerializationService'
-import { IDebtInfo, IDebtInfoParameters, __idebtinfo__ } from '../interfaces/IDebtInfo'
+import { IDebtInfo, IDebtInfoParameters, __signature__ } from '../interfaces/IDebtInfo'
 
 /**
  * @class DebtInfo
@@ -17,7 +17,7 @@ import { IDebtInfo, IDebtInfoParameters, __idebtinfo__ } from '../interfaces/IDe
  */
 export class DebtInfo implements IDebtInfo {
   /** SIGNATURE */
-  readonly [__idebtinfo__] = 'IDebtInfo'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly token: IToken

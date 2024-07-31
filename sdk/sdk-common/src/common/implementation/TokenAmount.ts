@@ -8,7 +8,7 @@ import {
   ITokenAmountParameters,
   TokenAmountMulDivParamType,
   TokenAmountMulDivReturnType,
-  __itokenamount__,
+  __signature__,
 } from '../interfaces/ITokenAmount'
 import {
   divideTokenAmountByPercentage,
@@ -22,7 +22,7 @@ import { Token } from './Token'
  */
 export class TokenAmount implements ITokenAmount {
   /** SIGNATURE */
-  readonly [__itokenamount__] = 'ITokenAmount'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly token: IToken

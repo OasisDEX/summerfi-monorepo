@@ -3,7 +3,7 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 import {
   IMakerLendingPool,
   IMakerLendingPoolParameters,
-  __imakerlendingpool__,
+  __signature__,
 } from '../interfaces/IMakerLendingPool'
 import { MakerLendingPoolId } from './MakerLendingPoolId'
 
@@ -13,7 +13,7 @@ import { MakerLendingPoolId } from './MakerLendingPoolId'
  */
 export class MakerLendingPool extends LendingPool implements IMakerLendingPool {
   /** SIGNATURE */
-  readonly [__imakerlendingpool__] = 'IMakerLendingPool'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly id: MakerLendingPoolId

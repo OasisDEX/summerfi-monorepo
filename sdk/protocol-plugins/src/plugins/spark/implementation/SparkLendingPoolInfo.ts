@@ -4,7 +4,7 @@ import { ISparkLendingPoolId } from '../interfaces/ISparkLendingPoolId'
 import {
   ISparkLendingPoolInfo,
   ISparkLendingPoolInfoParameters,
-  __isparklendingpoolinfo__,
+  __signature__,
 } from '../interfaces/ISparkLendingPoolInfo'
 
 /**
@@ -12,7 +12,7 @@ import {
  * @see ISparkLendingPoolInfo
  */
 export class SparkLendingPoolInfo extends LendingPoolInfo implements ISparkLendingPoolInfo {
-  readonly [__isparklendingpoolinfo__] = 'ISparkLendingPoolInfo'
+  readonly [__signature__] = __signature__
 
   readonly id: ISparkLendingPoolId
 

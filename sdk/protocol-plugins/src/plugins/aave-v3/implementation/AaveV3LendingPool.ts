@@ -3,7 +3,7 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 import {
   IAaveV3LendingPool,
   IAaveV3LendingPoolParameters,
-  __iaavev3lendingpool__,
+  __signature__,
 } from '../interfaces/IAaveV3LendingPool'
 import { AaveV3LendingPoolId } from './AaveV3LendingPoolId'
 
@@ -13,7 +13,7 @@ import { AaveV3LendingPoolId } from './AaveV3LendingPoolId'
  */
 export class AaveV3LendingPool extends LendingPool implements IAaveV3LendingPool {
   /** SIGNATURE */
-  readonly [__iaavev3lendingpool__] = 'IAaveV3LendingPool'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly id: AaveV3LendingPoolId

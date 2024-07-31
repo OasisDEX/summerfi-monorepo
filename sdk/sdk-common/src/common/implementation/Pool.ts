@@ -1,7 +1,7 @@
 import { IPrintable } from '../../common/interfaces/IPrintable'
 import { PoolType } from '../../common/types/PoolType'
 import { SerializationService } from '../../services/SerializationService'
-import { IPool, IPoolParameters, __ipool__ } from '../interfaces/IPool'
+import { IPool, IPoolParameters, __signature__ } from '../interfaces/IPool'
 import { IPoolId } from '../interfaces/IPoolId'
 
 /**
@@ -10,7 +10,7 @@ import { IPoolId } from '../interfaces/IPoolId'
  */
 export abstract class Pool implements IPool, IPrintable {
   /** SIGNATURE */
-  readonly [__ipool__] = 'IPool'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly type: PoolType

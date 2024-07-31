@@ -5,7 +5,7 @@ import { SerializationService } from '../../../services/SerializationService'
 import {
   IRefinanceParameters,
   IRefinanceParametersParameters,
-  __irefinanceparameters__,
+  __signature__,
 } from '../interfaces/IRefinanceParameters'
 
 /**
@@ -14,7 +14,7 @@ import {
  */
 export class RefinanceParameters implements IRefinanceParameters {
   /** SIGNATURE */
-  readonly [__irefinanceparameters__] = 'IRefinanceParameters'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly sourcePosition: ILendingPosition

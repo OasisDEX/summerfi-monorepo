@@ -3,7 +3,7 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 import {
   IMorphoProtocol,
   IMorphoProtocolParameters,
-  __imorphoprotocol__,
+  __signature__,
 } from '../interfaces/IMorphoProtocol'
 
 /**
@@ -11,7 +11,7 @@ import {
  * @see IMorphoProtocol
  */
 export class MorphoProtocol extends Protocol implements IMorphoProtocol {
-  readonly [__imorphoprotocol__] = 'IMorphoProtocol'
+  readonly [__signature__] = __signature__
 
   /** Factory method */
   static createFrom(params: IMorphoProtocolParameters): MorphoProtocol {

@@ -3,7 +3,7 @@ import { IPrintable } from '../../common/interfaces/IPrintable'
 import { SerializationService } from '../../services'
 import { ProtocolName } from '../enums/ProtocolName'
 import { IChainInfo } from '../interfaces/IChainInfo'
-import { IProtocol, IProtocolParameters, __iprotocol__ } from '../interfaces/IProtocol'
+import { IProtocol, IProtocolParameters, __signature__ } from '../interfaces/IProtocol'
 
 /**
  * @class Protocol
@@ -11,7 +11,7 @@ import { IProtocol, IProtocolParameters, __iprotocol__ } from '../interfaces/IPr
  */
 export abstract class Protocol implements IProtocol, IPrintable {
   /** SIGNATURE */
-  readonly [__iprotocol__] = 'IProtocol'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly name: ProtocolName

@@ -5,7 +5,7 @@ import { SimulationType } from '../enums'
 import {
   IRefinanceSimulation,
   IRefinanceSimulationParameters,
-  __irefinancesimulation__,
+  __signature__,
 } from '../interfaces/IRefinanceSimulation'
 import { Steps } from '../interfaces/Steps'
 import { Simulation } from './Simulation'
@@ -16,7 +16,7 @@ import { Simulation } from './Simulation'
  */
 export class RefinanceSimulation extends Simulation implements IRefinanceSimulation {
   /** SIGNATURE */
-  readonly [__irefinancesimulation__] = 'IRefinanceSimulation'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly sourcePosition: ILendingPosition

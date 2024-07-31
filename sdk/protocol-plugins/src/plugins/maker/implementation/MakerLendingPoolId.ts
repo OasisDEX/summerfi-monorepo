@@ -5,7 +5,7 @@ import { ILKType } from '../enums/ILKType'
 import {
   IMakerLendingPoolId,
   IMakerLendingPoolIdParameters,
-  __imakerlendingpoolid__,
+  __signature__,
 } from '../interfaces/IMakerLendingPoolId'
 import { MakerProtocol } from './MakerProtocol'
 
@@ -15,7 +15,7 @@ import { MakerProtocol } from './MakerProtocol'
  */
 export class MakerLendingPoolId extends LendingPoolId implements IMakerLendingPoolId, IPrintable {
   /** SIGNATURE */
-  readonly [__imakerlendingpoolid__] = 'IMakerLendingPoolId'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly protocol: MakerProtocol

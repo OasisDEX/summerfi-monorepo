@@ -3,7 +3,7 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 import {
   ISparkProtocol,
   ISparkProtocolParameters,
-  __isparkprotocol__,
+  __signature__,
 } from '../interfaces/ISparkProtocol'
 
 /**
@@ -11,7 +11,7 @@ import {
  * @see ISparkProtocol
  */
 export class SparkProtocol extends Protocol implements ISparkProtocol {
-  readonly [__isparkprotocol__] = 'ISparkProtocol'
+  readonly [__signature__] = __signature__
 
   /** Factory method */
   static createFrom(params: ISparkProtocolParameters): SparkProtocol {

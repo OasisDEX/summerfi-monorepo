@@ -1,6 +1,6 @@
 import { SerializationService } from '../../services/SerializationService'
 import { ChainId } from '../aliases/ChainId'
-import { IChainInfo, IChainInfoParameters, __ichaininfo__ } from '../interfaces/IChainInfo'
+import { IChainInfo, IChainInfoParameters, __signature__ } from '../interfaces/IChainInfo'
 
 /**
  * @name ChainInfo
@@ -8,7 +8,7 @@ import { IChainInfo, IChainInfoParameters, __ichaininfo__ } from '../interfaces/
  */
 export class ChainInfo implements IChainInfo {
   /** SIGNATURE */
-  readonly [__ichaininfo__] = 'IChainInfo'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly chainId: ChainId

@@ -1,7 +1,7 @@
 import { SerializationService } from '../../services/SerializationService'
 import { IAddress } from '../interfaces/IAddress'
 import { IChainInfo } from '../interfaces/IChainInfo'
-import { IToken, ITokenParameters, __itoken__ } from '../interfaces/IToken'
+import { IToken, ITokenParameters, __signature__ } from '../interfaces/IToken'
 import { Address } from './Address'
 import { ChainInfo } from './ChainInfo'
 
@@ -11,7 +11,7 @@ import { ChainInfo } from './ChainInfo'
  */
 export class Token implements IToken {
   /** SIGNATURE */
-  readonly [__itoken__] = 'IToken'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly chainInfo: IChainInfo

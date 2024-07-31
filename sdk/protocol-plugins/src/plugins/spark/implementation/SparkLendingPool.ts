@@ -3,7 +3,7 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 import {
   ISparkLendingPool,
   ISparkLendingPoolParameters,
-  __isparklendingpool__,
+  __signature__,
 } from '../interfaces/ISparkLendingPool'
 import { SparkLendingPoolId } from './SparkLendingPoolId'
 
@@ -12,7 +12,7 @@ import { SparkLendingPoolId } from './SparkLendingPoolId'
  * @see ISparkLendingPool
  */
 export class SparkLendingPool extends LendingPool implements ISparkLendingPool {
-  readonly [__isparklendingpool__] = 'ISparkLendingPool'
+  readonly [__signature__] = __signature__
 
   readonly id: SparkLendingPoolId
 

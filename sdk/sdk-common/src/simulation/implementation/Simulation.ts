@@ -1,6 +1,6 @@
 import { SerializationService } from '../../services/SerializationService'
 import { SimulationType } from '../enums'
-import { ISimulation, ISimulationData, __isimulation__ } from '../interfaces/ISimulation'
+import { ISimulation, ISimulationData, __signature__ } from '../interfaces/ISimulation'
 
 /**
  * @name Simulation
@@ -8,7 +8,7 @@ import { ISimulation, ISimulationData, __isimulation__ } from '../interfaces/ISi
  */
 export abstract class Simulation implements ISimulation {
   /** SIGNATURE */
-  readonly [__isimulation__] = 'ISimulation'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly type: SimulationType

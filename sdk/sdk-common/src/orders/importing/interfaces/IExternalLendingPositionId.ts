@@ -1,6 +1,8 @@
 import { z } from 'zod'
-import { IPrintable, PositionType } from '../../../common'
+
 import { IAddress } from '../../../common/interfaces/IAddress'
+import { IPrintable } from '../../../common/interfaces/IPrintable'
+import { PositionType } from '../../../common/types/PositionType'
 import {
   ILendingPositionId,
   LendingPositionIdDataSchema,

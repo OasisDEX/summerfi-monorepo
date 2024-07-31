@@ -4,7 +4,7 @@ import { IMakerLendingPool } from '../interfaces/IMakerLendingPool'
 import {
   IMakerLendingPosition,
   IMakerLendingPositionParameters,
-  __imakerlendingposition__,
+  __signature__,
 } from '../interfaces/IMakerLendingPosition'
 import { IMakerLendingPositionId } from '../interfaces/IMakerLendingPositionId'
 
@@ -14,7 +14,7 @@ import { IMakerLendingPositionId } from '../interfaces/IMakerLendingPositionId'
  */
 export class MakerLendingPosition extends LendingPosition implements IMakerLendingPosition {
   /** SIGNATURE */
-  readonly [__imakerlendingposition__] = 'IMakerLendingPosition'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly id: IMakerLendingPositionId

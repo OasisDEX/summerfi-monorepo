@@ -4,7 +4,7 @@ import { SerializationService } from '../../../services/SerializationService'
 import {
   IExternalLendingPosition,
   IExternalLendingPositionParameters,
-  __iexternallendingposition__,
+  __signature__,
 } from '../interfaces/IExternalLendingPosition'
 import { IExternalLendingPositionId } from '../interfaces/IExternalLendingPositionId'
 
@@ -14,7 +14,7 @@ import { IExternalLendingPositionId } from '../interfaces/IExternalLendingPositi
  */
 export class ExternalLendingPosition extends LendingPosition implements IExternalLendingPosition {
   /** SIGNATURE */
-  readonly [__iexternallendingposition__] = 'IExternalLendingPosition'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly id: IExternalLendingPositionId

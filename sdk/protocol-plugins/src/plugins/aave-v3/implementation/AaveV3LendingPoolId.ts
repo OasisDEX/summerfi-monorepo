@@ -6,17 +6,17 @@ import { EmodeType } from '../../common'
 import {
   IAaveV3LendingPoolId,
   IAaveV3LendingPoolIdParameters,
-  __iaavev3lendingpoolid__,
+  __signature__,
 } from '../interfaces/IAaveV3LendingPoolId'
 import { IAaveV3Protocol } from '../interfaces/IAaveV3Protocol'
 
 /**
  * @class AaveV3LendingPoolId
- * @see IAaveV3LendingPoolIdData
+ * @see IAaveV3LendingPoolId
  */
 export class AaveV3LendingPoolId extends LendingPoolId implements IAaveV3LendingPoolId, IPrintable {
   /** SIGNATURE */
-  readonly [__iaavev3lendingpoolid__] = 'IAaveV3LendingPoolId'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly protocol: IAaveV3Protocol

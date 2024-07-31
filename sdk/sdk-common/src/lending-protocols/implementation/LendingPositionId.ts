@@ -4,7 +4,7 @@ import { SerializationService } from '../../services/SerializationService'
 import {
   ILendingPositionIdData,
   ILendingPositionIdParameters,
-  __ilendingpositionid__,
+  __signature__,
 } from '../interfaces/ILendingPositionId'
 
 /**
@@ -13,7 +13,7 @@ import {
  */
 export abstract class LendingPositionId extends PositionId implements ILendingPositionIdData {
   /** SIGNATURE */
-  readonly [__ilendingpositionid__] = 'ILendingPositionId'
+  readonly [__signature__] = __signature__
 
   /** SEALED CONSTRUCTOR */
   protected constructor(params: ILendingPositionIdParameters) {

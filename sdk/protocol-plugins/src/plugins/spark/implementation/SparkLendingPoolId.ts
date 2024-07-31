@@ -5,7 +5,7 @@ import { EmodeType } from '../../common'
 import {
   ISparkLendingPoolId,
   ISparkLendingPoolIdParameters,
-  __isparklendingpoolid__,
+  __signature__,
 } from '../interfaces/ISparkLendingPoolId'
 import { ISparkProtocol } from '../interfaces/ISparkProtocol'
 
@@ -14,7 +14,7 @@ import { ISparkProtocol } from '../interfaces/ISparkProtocol'
  * @see ISparkLendingPoolIdData
  */
 export class SparkLendingPoolId extends LendingPoolId implements ISparkLendingPoolId, IPrintable {
-  readonly [__isparklendingpoolid__] = 'ISparkLendingPoolId'
+  readonly [__signature__] = __signature__
 
   readonly protocol: ISparkProtocol
   readonly emodeType: EmodeType

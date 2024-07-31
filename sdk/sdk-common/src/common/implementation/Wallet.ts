@@ -1,6 +1,6 @@
 import { SerializationService } from '../../services/SerializationService'
 import { IAddress } from '../interfaces/IAddress'
-import { IWallet, IWalletParameters, __iwallet__ } from '../interfaces/IWallet'
+import { IWallet, IWalletParameters, __signature__ } from '../interfaces/IWallet'
 
 /**
  * @interface Wallet
@@ -8,7 +8,7 @@ import { IWallet, IWalletParameters, __iwallet__ } from '../interfaces/IWallet'
  */
 export class Wallet implements IWallet {
   /** SIGNATURE */
-  readonly [__iwallet__] = 'IWallet'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly address: IAddress

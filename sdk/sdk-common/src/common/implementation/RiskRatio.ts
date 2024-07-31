@@ -4,7 +4,7 @@ import {
   IRiskRatio,
   IRiskRatioParameters,
   RiskRatioType,
-  __iriskratio__,
+  __signature__,
 } from '../interfaces/IRiskRatio'
 import { Percentage } from './Percentage'
 
@@ -14,7 +14,7 @@ import { Percentage } from './Percentage'
  */
 export class RiskRatio implements IRiskRatio {
   /** SIGNATURE */
-  readonly [__iriskratio__] = 'IRiskRatio'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly type: RiskRatioType

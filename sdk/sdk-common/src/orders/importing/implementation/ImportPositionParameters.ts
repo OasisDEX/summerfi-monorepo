@@ -3,7 +3,7 @@ import { IExternalLendingPosition } from '../interfaces'
 import {
   IImportPositionParameters,
   IImportPositionParametersParameters,
-  __iimportpositionparameters__,
+  __signature__,
 } from '../interfaces/IImportPositionParameters'
 import { ExternalLendingPosition } from './ExternalLendingPosition'
 
@@ -13,7 +13,7 @@ import { ExternalLendingPosition } from './ExternalLendingPosition'
  */
 export class ImportPositionParameters implements IImportPositionParameters {
   /** SIGNATURE */
-  readonly [__iimportpositionparameters__] = 'IImportPositionParameters'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly externalPosition: IExternalLendingPosition

@@ -6,7 +6,7 @@ import { ILendingPool } from '../interfaces/ILendingPool'
 import {
   ILendingPosition,
   ILendingPositionParameters,
-  __ilendingposition__,
+  __signature__,
 } from '../interfaces/ILendingPosition'
 import { ILendingPositionId } from '../interfaces/ILendingPositionId'
 import { LendingPositionType } from '../types/LendingPositionType'
@@ -17,7 +17,7 @@ import { LendingPositionType } from '../types/LendingPositionType'
  */
 export abstract class LendingPosition extends Position implements ILendingPosition {
   /** SIGNATURE */
-  readonly [__ilendingposition__] = 'ILendingPosition'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly subtype: LendingPositionType

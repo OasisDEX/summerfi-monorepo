@@ -1,6 +1,6 @@
 import { SerializationService } from '../../services/SerializationService'
 import { AddressValue } from '../aliases/AddressValue'
-import { IAddress, IAddressParameters, __iaddress__ } from '../interfaces/IAddress'
+import { IAddress, IAddressParameters, __signature__ } from '../interfaces/IAddress'
 import { AddressType } from '../types/AddressType'
 
 /**
@@ -9,7 +9,7 @@ import { AddressType } from '../types/AddressType'
  */
 export class Address implements IAddress {
   /** SIGNATURE */
-  readonly [__iaddress__] = 'IAddress'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly value: AddressValue

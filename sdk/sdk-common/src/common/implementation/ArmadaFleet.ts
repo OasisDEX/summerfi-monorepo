@@ -1,5 +1,5 @@
 import { IAddress } from '../interfaces/IAddress'
-import { IArmadaFleet, IArmadaFleetParameters, __iarmadafleet__ } from '../interfaces/IArmadaFleet'
+import { IArmadaFleet, IArmadaFleetParameters, __signature__ } from '../interfaces/IArmadaFleet'
 import { IChainInfo } from '../interfaces/IChainInfo'
 import { Address } from './Address'
 import { ChainInfo } from './ChainInfo'
@@ -10,7 +10,7 @@ import { ChainInfo } from './ChainInfo'
  */
 export class ArmadaFleet implements IArmadaFleet {
   /** SIGNATURE */
-  readonly [__iarmadafleet__] = 'IArmadaFleet'
+  readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
   readonly address: IAddress

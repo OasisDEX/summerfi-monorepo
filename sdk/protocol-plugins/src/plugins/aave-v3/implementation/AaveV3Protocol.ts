@@ -3,7 +3,7 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 import {
   IAaveV3Protocol,
   IAaveV3ProtocolParameters,
-  __iaavev3protocol__,
+  __signature__,
 } from '../interfaces/IAaveV3Protocol'
 
 /**
@@ -12,7 +12,7 @@ import {
  */
 export class AaveV3Protocol extends Protocol implements IAaveV3Protocol {
   /** SIGNATURE */
-  readonly [__iaavev3protocol__] = 'IAaveV3Protocol'
+  readonly [__signature__] = __signature__
 
   /** FACTORY */
   static createFrom(params: IAaveV3ProtocolParameters): AaveV3Protocol {
