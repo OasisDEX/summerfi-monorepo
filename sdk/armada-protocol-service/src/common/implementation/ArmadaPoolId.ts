@@ -3,10 +3,9 @@ import {
   IArmadaPoolIdParameters,
   IArmadaProtocol,
 } from '@summerfi/armada-protocol-common'
-import { PoolId } from '@summerfi/sdk-common'
+import { IAddress, PoolId } from '@summerfi/sdk-common'
 import { PoolType } from '@summerfi/sdk-common/common'
 import { SerializationService } from '@summerfi/sdk-common/services'
-import { IUser } from '@summerfi/sdk-common/user'
 
 /**
  * @class ArmadaPoolId
@@ -15,7 +14,7 @@ import { IUser } from '@summerfi/sdk-common/user'
 export class ArmadaPoolId extends PoolId implements IArmadaPoolId {
   readonly _signature_1 = 'IArmadaPoolId'
 
-  readonly user: IUser
+  readonly fleet: IAddress
   readonly protocol: IArmadaProtocol
 
   /** Factory method */
@@ -30,7 +29,7 @@ export class ArmadaPoolId extends PoolId implements IArmadaPoolId {
       type: PoolType.Armada,
     })
 
-    this.user = params.user
+    this.fleet = params.fleet
     this.protocol = params.protocol
   }
 }

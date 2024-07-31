@@ -1,6 +1,5 @@
-import { IAddress } from '@summerfi/sdk-common'
+import { IAddress, isAddress } from '@summerfi/sdk-common'
 import { IPoolId, PoolIdDataSchema, PoolType } from '@summerfi/sdk-common/common'
-import { IUser, isUser } from '@summerfi/sdk-common/user'
 import { z } from 'zod'
 import { IArmadaProtocol, isArmadaProtocol } from './IArmadaProtocol'
 
@@ -24,7 +23,7 @@ export interface IArmadaPoolId extends IPoolId, IArmadaPoolIdData {
  */
 export const ArmadaPoolIdDataSchema = z.object({
   ...PoolIdDataSchema.shape,
-  user: z.custom<IUser>((val) => isUser(val)),
+  fleet: z.custom<IAddress>((val) => isAddress(val)),
   protocol: z.custom<IArmadaProtocol>((val) => isArmadaProtocol(val)),
 })
 
