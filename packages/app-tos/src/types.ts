@@ -10,6 +10,7 @@ export type TOSInput = {
   version: string
   isGnosisSafe: boolean
   host?: string
+  forceDisconnect?: () => void
 }
 
 export interface TOSVerifyAcceptance {

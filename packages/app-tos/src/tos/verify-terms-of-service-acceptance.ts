@@ -26,17 +26,24 @@ export const verifyTermsOfServiceAcceptance = async ({
   walletAddress: string
   version: string
   host?: string
-}): Promise<TOSVerifyAcceptance> => {
-  const { acceptance, updated, authorized }: TOSVerifyAcceptance = await fetch(
-    `${host}/api/tos/${version}/${walletAddress}`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
+}): Promise<TOSVerifyAcceptance | undefined> => {
+  try {
+    const { acceptance, updated, authorized }: TOSVerifyAcceptance = await fetch(
+      `${host}/api/tos/${version}/${walletAddress}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
       },
-      credentials: 'include',
-    },
-  ).then((resp) => resp.json())
+    ).then((resp) => resp.json())
 
-  return { acceptance, updated, authorized }
+    return { acceptance, updated, authorized }
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error('Terms of service verification request failed:', e)
+
+    return undefined
+  }
 }
