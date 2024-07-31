@@ -5,7 +5,7 @@ import { z } from 'zod'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __imakerprotocol__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IMakerProtocol
@@ -16,7 +16,7 @@ export const __imakerprotocol__: unique symbol = Symbol()
  */
 export interface IMakerProtocol extends IProtocol, IMakerProtocolData {
   /** Interface signature used to differentiate it from similar interfaces */
-  readonly [__imakerprotocol__]: 'IMakerProtocol'
+  readonly [__signature__]: symbol
 
   // Re-declaring the properties with the correct types
   readonly name: ProtocolName

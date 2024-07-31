@@ -4,7 +4,7 @@ import { IPrintable } from './IPrintable'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __ipercentage__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @name IPercentage
@@ -12,7 +12,7 @@ export const __ipercentage__: unique symbol = Symbol()
  */
 export interface IPercentage extends IPercentageData, IPrintable {
   /** Signature to differentiate from similar interfaces */
-  readonly [__ipercentage__]: 'IPercentage'
+  readonly [__signature__]: symbol
   /** The percentage in floating point format */
   readonly value: number
 

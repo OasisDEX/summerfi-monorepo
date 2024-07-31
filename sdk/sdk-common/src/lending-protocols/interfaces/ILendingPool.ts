@@ -7,7 +7,7 @@ import { ILendingPoolId, isLendingPoolId } from './ILendingPoolId'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __ilendingpool__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @name ILendingPool
@@ -21,7 +21,7 @@ export const __ilendingpool__: unique symbol = Symbol()
  */
 export interface ILendingPool extends IPool, ILendingPoolData {
   /** Signature to differentiate from similar interfaces */
-  readonly [__ilendingpool__]: 'ILendingPool'
+  readonly [__signature__]: symbol
   /** Pool ID of the lending pool */
   readonly id: ILendingPoolId
   /** Collateral token used to collateralized the pool */

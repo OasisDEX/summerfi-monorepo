@@ -7,7 +7,7 @@ import { ISparkLendingPoolId, isSparkLendingPoolId } from './ISparkLendingPoolId
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __isparklendingpoolinfo__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface ISparkLendingPoolInfo
@@ -18,7 +18,7 @@ export const __isparklendingpoolinfo__: unique symbol = Symbol()
  */
 export interface ISparkLendingPoolInfo extends ILendingPoolInfo, ISparkLendingPoolInfoData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly [__isparklendingpoolinfo__]: 'ISparkLendingPoolInfo'
+  readonly [__signature__]: symbol
   /** The id of the lending pool */
   readonly id: ISparkLendingPoolId
 

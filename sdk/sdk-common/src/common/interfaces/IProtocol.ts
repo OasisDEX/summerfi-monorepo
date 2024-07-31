@@ -5,7 +5,7 @@ import { ProtocolName } from '../enums/ProtocolName'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __iprotocol__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IProtocol
@@ -15,7 +15,7 @@ export const __iprotocol__: unique symbol = Symbol()
  */
 export interface IProtocol extends IProtocolData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly [__iprotocol__]: 'IProtocol'
+  readonly [__signature__]: symbol
   /** The name of the protocol */
   readonly name: ProtocolName
   /** The chain information */

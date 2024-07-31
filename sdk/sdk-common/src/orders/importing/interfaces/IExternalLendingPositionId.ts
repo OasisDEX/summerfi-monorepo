@@ -13,7 +13,7 @@ import {
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __iexternallendingpositionid__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IExternalPositionId
@@ -24,7 +24,7 @@ export interface IExternalLendingPositionId
     ILendingPositionId,
     IPrintable {
   /** Signature used to differentiate it from similar interfaces */
-  readonly [__iexternallendingpositionid__]: 'IExternalLendingPositionId'
+  readonly [__signature__]: symbol
   /** Type of the position */
   readonly externalType: ExternalLendingPositionType
   /** Address of the owner of the position */

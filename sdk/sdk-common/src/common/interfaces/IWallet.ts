@@ -4,7 +4,7 @@ import { IAddress, isAddress } from './IAddress'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __iwallet__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @name IWallet
@@ -15,7 +15,7 @@ export const __iwallet__: unique symbol = Symbol()
  */
 export interface IWallet extends IWalletData {
   /** Signature to differentiate from similar interfaces */
-  readonly [__iwallet__]: 'IWallet'
+  readonly [__signature__]: symbol
   /** Address of the wallet, valid for the different chains */
   readonly address: IAddress
 

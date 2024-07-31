@@ -6,7 +6,7 @@ import { SwapErrorType } from '../enums/SwapErrorType'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __iswaperror__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @name ISwapError
@@ -14,7 +14,7 @@ export const __iswaperror__: unique symbol = Symbol()
  */
 export interface ISwapError extends ISDKError, ISwapErrorData {
   /** Signature to differentiate from similar interfaces */
-  readonly [__iswaperror__]: 'ISwapError'
+  readonly [__signature__]: symbol
   readonly type: SDKErrorType.SwapError
   /** Specific error for the swap service */
   readonly subtype: SwapErrorType

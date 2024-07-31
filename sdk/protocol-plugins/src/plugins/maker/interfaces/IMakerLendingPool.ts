@@ -7,7 +7,7 @@ import { IMakerLendingPoolId, isMakerLendingPoolId } from './IMakerLendingPoolId
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __imakerlendingpool__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IMakerLendingPool
@@ -15,7 +15,7 @@ export const __imakerlendingpool__: unique symbol = Symbol()
  */
 export interface IMakerLendingPool extends ILendingPool, IMakerLendingPoolData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly [__imakerlendingpool__]: 'IMakerLendingPool'
+  readonly [__signature__]: symbol
   /** The pool's ID */
   readonly id: IMakerLendingPoolId
 

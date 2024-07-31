@@ -4,7 +4,7 @@ import { PositionType, PositionTypeSchema } from '../types'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __ipositionid__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @name IPositionId
@@ -12,7 +12,7 @@ export const __ipositionid__: unique symbol = Symbol()
  */
 export interface IPositionId extends IPositionIdData {
   /** Signature to differentiate from similar interfaces */
-  readonly [__ipositionid__]: 'IPositionId'
+  readonly [__signature__]: symbol
   /* Unique identifier for the position inside the Summer.fi system */
   readonly id: string
   /** Type of the position */

@@ -14,7 +14,7 @@ import { IMorphoLendingPoolId, isMorphoLendingPoolId } from './IMorphoLendingPoo
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __imorpholendingpool__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IMorphoLendingPool
@@ -25,7 +25,7 @@ export const __imorpholendingpool__: unique symbol = Symbol()
  */
 export interface IMorphoLendingPool extends IMorphoLendingPoolData, ILendingPool {
   /** Signature used to differentiate it from similar interfaces */
-  readonly [__imorpholendingpool__]: 'IMorphoLendingPool'
+  readonly [__signature__]: symbol
   /** The id of the lending pool */
   readonly id: IMorphoLendingPoolId
   /** The oracle used in the Morpho market */

@@ -8,7 +8,7 @@ import { ITokenAmount, isTokenAmount } from '../../common/interfaces/ITokenAmoun
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __icollateralinfo__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface ICollateralInfo
@@ -16,7 +16,7 @@ export const __icollateralinfo__: unique symbol = Symbol()
  */
 export interface ICollateralInfo extends ICollateralInfoData {
   /** Signature to differentiate from similar interfaces */
-  readonly [__icollateralinfo__]: 'ICollateralInfo'
+  readonly [__signature__]: symbol
   /** The token that represents the collateral */
   readonly token: IToken
   /** The price of the token in the protocol's default denomination */

@@ -5,7 +5,7 @@ import { z } from 'zod'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __imorphoprotocol__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IMorphoProtocol
@@ -18,7 +18,7 @@ export const __imorphoprotocol__: unique symbol = Symbol()
  */
 export interface IMorphoProtocol extends IMorphoProtocolData, IProtocol {
   /** Interface signature used to differentiate it from similar interfaces */
-  readonly [__imorphoprotocol__]: 'IMorphoProtocol'
+  readonly [__signature__]: symbol
 
   // Re-declare the properties with the correct types
   readonly name: ProtocolName

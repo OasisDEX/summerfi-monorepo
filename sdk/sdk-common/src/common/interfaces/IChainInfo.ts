@@ -5,7 +5,7 @@ import { IPrintable } from './IPrintable'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __ichaininfo__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @name IChainInfo
@@ -13,7 +13,7 @@ export const __ichaininfo__: unique symbol = Symbol()
  */
 export interface IChainInfo extends IChainInfoData, IPrintable {
   /** Signature to differentiate from similar interfaces */
-  readonly [__ichaininfo__]: 'IChainInfo'
+  readonly [__signature__]: symbol
   /** The chain ID of the network */
   readonly chainId: ChainId
   /** The name of the network */

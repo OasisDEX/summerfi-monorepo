@@ -9,7 +9,7 @@ import { ILendingPositionId, isLendingPositionId } from './ILendingPositionId'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __ilendingposition__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @name ILendingPosition
@@ -17,7 +17,7 @@ export const __ilendingposition__: unique symbol = Symbol()
  */
 export interface ILendingPosition extends IPosition {
   /** Signature to differentiate from similar interfaces */
-  readonly [__ilendingposition__]: 'ILendingPosition'
+  readonly [__signature__]: symbol
   /** Subtype of the position in the Summer.fi system */
   readonly subtype: LendingPositionType
   /** Unique identifier for the position inside the Summer.fi system */

@@ -5,7 +5,7 @@ import { z } from 'zod'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __isparkprotocol__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface ISparkProtocol
@@ -18,7 +18,7 @@ export const __isparkprotocol__: unique symbol = Symbol()
  */
 export interface ISparkProtocol extends ISparkProtocolData, IProtocol {
   /** Interface signature used to differentiate it from similar interfaces */
-  readonly [__isparkprotocol__]: 'ISparkProtocol'
+  readonly [__signature__]: symbol
 
   // Re-declaring the properties with the right types
   readonly name: ProtocolName

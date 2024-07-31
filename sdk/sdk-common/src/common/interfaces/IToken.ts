@@ -6,7 +6,7 @@ import { IPrintable } from './IPrintable'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __itoken__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @name IToken
@@ -14,7 +14,7 @@ export const __itoken__: unique symbol = Symbol()
  */
 export interface IToken extends ITokenData, IPrintable {
   /** Signature to differentiate from similar interfaces */
-  readonly [__itoken__]: 'IToken'
+  readonly [__signature__]: symbol
   /** Chain where the token is deployed */
   readonly chainInfo: IChainInfo
   /** Token address */

@@ -9,7 +9,7 @@ import { MakerVaultId, MakerVaultIdSchema } from '../types/MakerVaultId'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __imakerlendingpositionid__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IMakerLendingPositionId
@@ -17,7 +17,7 @@ export const __imakerlendingpositionid__: unique symbol = Symbol()
  */
 export interface IMakerLendingPositionId extends ILendingPositionId, IMakerLendingPositionIdData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly [__imakerlendingpositionid__]: 'IMakerLendingPositionId'
+  readonly [__signature__]: symbol
   /** The vault ID that identifies the position on Maker */
   readonly vaultId: MakerVaultId
 

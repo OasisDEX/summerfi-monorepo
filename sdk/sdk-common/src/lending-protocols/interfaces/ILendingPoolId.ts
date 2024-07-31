@@ -6,7 +6,7 @@ import { PoolType } from '../../common/types/PoolType'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __ilendingpoolid__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @name ILendingPoolId
@@ -20,7 +20,7 @@ export const __ilendingpoolid__: unique symbol = Symbol()
  */
 export interface ILendingPoolId extends IPoolId, ILendingPoolIdData {
   /** Signature to differentiate it from other interfaces */
-  readonly [__ilendingpoolid__]: 'ILendingPoolId'
+  readonly [__signature__]: symbol
   // Re-declaring narrowed types
   readonly protocol: IProtocol
 

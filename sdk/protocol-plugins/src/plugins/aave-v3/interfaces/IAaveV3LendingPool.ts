@@ -7,7 +7,7 @@ import { IAaveV3LendingPoolId, isAaveV3LendingPoolId } from './IAaveV3LendingPoo
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __iaavev3lendingpool__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IAaveV3LendingPool
@@ -15,7 +15,7 @@ export const __iaavev3lendingpool__: unique symbol = Symbol()
  */
 export interface IAaveV3LendingPool extends ILendingPool, IAaveV3LendingPoolData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly [__iaavev3lendingpool__]: 'IAaveV3LendingPool'
+  readonly [__signature__]: symbol
   /** The lending pool's ID */
   readonly id: IAaveV3LendingPoolId
 

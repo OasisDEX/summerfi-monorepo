@@ -6,14 +6,14 @@ import { IWallet, WalletDataSchema } from '../../common/interfaces/IWallet'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __iuser__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * Represents a user of the system connected with a wallet on a particular chain
  */
 export interface IUser extends IUserData, IPrintable {
   /** Signature to differentiate from similar interfaces */
-  readonly [__iuser__]: 'IUser'
+  readonly [__signature__]: symbol
   /** The wallet of the user */
   readonly wallet: IWallet
   /** The chain the user is connected to */

@@ -14,7 +14,7 @@ import { Steps } from './Steps'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __iimportsimulation__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IImportSimulation
@@ -22,7 +22,7 @@ export const __iimportsimulation__: unique symbol = Symbol()
  */
 export interface IImportSimulation extends ISimulation {
   /** Signature used to differentiate it from similar interfaces */
-  readonly [__iimportsimulation__]: 'IImportSimulation'
+  readonly [__signature__]: symbol
   /** Original position that will be refinanced */
   readonly sourcePosition: IExternalLendingPosition
   /** Simulated target position */

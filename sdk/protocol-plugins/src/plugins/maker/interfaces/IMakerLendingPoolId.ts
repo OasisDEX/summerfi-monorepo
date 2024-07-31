@@ -8,7 +8,7 @@ import { IMakerProtocol, isMakerProtocol } from './IMakerProtocol'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __imakerlendingpoolid__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @name IMakerLendingPoolId
@@ -18,7 +18,7 @@ export const __imakerlendingpoolid__: unique symbol = Symbol()
  */
 export interface IMakerLendingPoolId extends ILendingPoolId, IMakerLendingPoolIdData {
   /** Signature to differentiate from similar interfaces */
-  readonly [__imakerlendingpoolid__]: 'IMakerLendingPoolId'
+  readonly [__signature__]: symbol
   /** The Maker protocol */
   readonly protocol: IMakerProtocol
   /** The ILK type of the pool */

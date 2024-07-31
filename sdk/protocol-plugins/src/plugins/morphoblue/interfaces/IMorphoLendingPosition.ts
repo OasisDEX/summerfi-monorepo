@@ -11,7 +11,7 @@ import { IMorphoLendingPositionId, isMorphoLendingPositionId } from './IMorphoLe
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __imorpholendingposition__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IMorphoLendingPosition
@@ -24,7 +24,7 @@ export const __imorpholendingposition__: unique symbol = Symbol()
  */
 export interface IMorphoLendingPosition extends ILendingPosition, IMorphoLendingPositionData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly [__imorpholendingposition__]: 'IMorphoLendingPosition'
+  readonly [__signature__]: symbol
   /** The position's ID */
   readonly id: IMorphoLendingPositionId
   /** The pool the position belongs to */

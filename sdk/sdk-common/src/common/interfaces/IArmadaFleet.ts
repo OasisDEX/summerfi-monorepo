@@ -6,7 +6,7 @@ import { IPrintable } from './IPrintable'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __iarmadafleet__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IArmadaFleet
@@ -14,7 +14,7 @@ export const __iarmadafleet__: unique symbol = Symbol()
  */
 export interface IArmadaFleet extends IPrintable, IArmadaFleetData {
   /** Signature to differentiate from similar interfaces */
-  readonly [__iarmadafleet__]: 'IArmadaFleet'
+  readonly [__signature__]: symbol
   /** Chain where the Fleet entrypoint contract is deployed */
   readonly chainInfo: IChainInfo
   /** Address of the Fleet entrypoint contract (FleetCommander) */

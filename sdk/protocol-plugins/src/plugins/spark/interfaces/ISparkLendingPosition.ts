@@ -11,7 +11,7 @@ import { ISparkLendingPositionId, isSparkLendingPositionId } from './ISparkLendi
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __isparklendingposition__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface ISparkPosition
@@ -24,7 +24,7 @@ export const __isparklendingposition__: unique symbol = Symbol()
  */
 export interface ISparkLendingPosition extends ILendingPosition, ISparkLendingPositionData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly [__isparklendingposition__]: 'ISparkLendingPosition'
+  readonly [__signature__]: symbol
   /** Specific ID of the position for Spark */
   readonly id: ISparkLendingPositionId
   /** Pool where the position is */

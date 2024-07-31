@@ -9,14 +9,14 @@ import {
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __irefinanceparameters__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * Parameters for a refinance simulation
  */
 export interface IRefinanceParameters extends IRefinanceParametersData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly [__irefinanceparameters__]: 'IRefinanceParameters'
+  readonly [__signature__]: symbol
   /** Existing position to be refinanced */
   readonly sourcePosition: ILendingPosition
   /** Target pool where the source position will be moved  */

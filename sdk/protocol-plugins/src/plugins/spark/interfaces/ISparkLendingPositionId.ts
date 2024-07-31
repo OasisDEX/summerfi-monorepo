@@ -8,7 +8,7 @@ import { z } from 'zod'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __isparklendingpositionid__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface ISparkPositionId
@@ -18,7 +18,7 @@ export const __isparklendingpositionid__: unique symbol = Symbol()
  */
 export interface ISparkLendingPositionId extends ILendingPositionId, ISparkLendingPositionIdData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly [__isparklendingpositionid__]: 'ISparkLendingPositionId'
+  readonly [__signature__]: symbol
   // Re-declaring the properties with the correct types
   readonly type: PositionType
 }

@@ -8,7 +8,7 @@ import { ISparkProtocol, isSparkProtocol } from './ISparkProtocol'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __isparklendingpoolid__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface ISparkLendingPoolId
@@ -19,7 +19,7 @@ export const __isparklendingpoolid__: unique symbol = Symbol()
  */
 export interface ISparkLendingPoolId extends ISparkLendingPoolIdData, ILendingPoolId {
   /** Signature used to differentiate it from similar interfaces */
-  readonly [__isparklendingpoolid__]: 'ISparkLendingPoolId'
+  readonly [__signature__]: symbol
   /** The protocol to which the pool belongs */
   readonly protocol: ISparkProtocol
   /** The efficiency mode of the pool */

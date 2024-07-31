@@ -9,7 +9,7 @@ import { isToken, type IToken } from './IToken'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __itokenamount__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * Return Type narrowing for multiply and divide methods, so the return type can be properly inferred
@@ -31,7 +31,7 @@ export type TokenAmountMulDivReturnType<T> = T extends IPrice
  */
 export interface ITokenAmount extends ITokenAmountData, IPrintable {
   /** Signature to differentiate from similar interfaces */
-  readonly [__itokenamount__]: 'ITokenAmount'
+  readonly [__signature__]: symbol
   /** Token this amount refers to */
   readonly token: IToken
   /** Amount in floating point format without taking into account the token decimals */

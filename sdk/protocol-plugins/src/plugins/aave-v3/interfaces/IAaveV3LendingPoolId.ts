@@ -7,7 +7,7 @@ import { IAaveV3Protocol, isAaveV3Protocol } from './IAaveV3Protocol'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __iaavev3lendingpoolid__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IAaveV3LendingPoolId
@@ -18,7 +18,7 @@ export const __iaavev3lendingpoolid__: unique symbol = Symbol()
  */
 export interface IAaveV3LendingPoolId extends ILendingPoolId, IAaveV3LendingPoolIdData {
   /** Interface signature used to differentiate it from similar interfaces */
-  readonly [__iaavev3lendingpoolid__]: 'IAaveV3LendingPoolId'
+  readonly [__signature__]: symbol
   /** Aave v3 protocol */
   readonly protocol: IAaveV3Protocol
   /** The pool's efficiency mode */

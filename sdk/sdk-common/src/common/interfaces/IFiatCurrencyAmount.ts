@@ -8,7 +8,7 @@ import { type ITokenAmount } from './ITokenAmount'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __ifiatcurrencyamount__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * Return Type narrowing for multiply and divide methods, so the return type can be properly inferred
@@ -32,7 +32,7 @@ export type FiatCurrencyAmountMulDivReturnType<T> = T extends IPrice
  */
 export interface IFiatCurrencyAmount extends IFiatCurrencyAmountData, IPrintable {
   /** Signature to differentiate from similar interfaces */
-  readonly [__ifiatcurrencyamount__]: 'IFiatCurrencyAmount'
+  readonly [__signature__]: symbol
   /** Fiat currency for the amount */
   readonly fiat: FiatCurrency
   /** The amount in floating point format */

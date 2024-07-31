@@ -4,7 +4,7 @@ import { SimulationType } from '../enums/SimulationType'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __isimulation__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface ISimulation
@@ -12,7 +12,7 @@ export const __isimulation__: unique symbol = Symbol()
  */
 export interface ISimulation {
   /** Signature used to differentiate it from similar interfaces */
-  readonly [__isimulation__]: 'ISimulation'
+  readonly [__signature__]: symbol
   /** The type of the simulation */
   readonly type: SimulationType
 }

@@ -7,7 +7,7 @@ import { ITokenAmount, isTokenAmount } from '../../common/interfaces/ITokenAmoun
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __idebtinfo__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IDebtInfo
@@ -18,7 +18,7 @@ export const __idebtinfo__: unique symbol = Symbol()
  */
 export interface IDebtInfo extends IDebtInfoData {
   /** Signature to differentiate from similar interfaces */
-  readonly [__idebtinfo__]: 'IDebtInfo'
+  readonly [__signature__]: symbol
   /** The token that represents the debt */
   readonly token: IToken
   /** The price of the token in the protocol's default denomination */

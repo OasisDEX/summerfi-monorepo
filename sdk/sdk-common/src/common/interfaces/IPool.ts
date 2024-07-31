@@ -6,7 +6,7 @@ import { IPrintable } from './IPrintable'
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
  */
-export const __ipool__: unique symbol = Symbol()
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @name IPool
@@ -17,7 +17,7 @@ export const __ipool__: unique symbol = Symbol()
  */
 export interface IPool extends IPrintable, IPoolData {
   /** Signature to differentiate from similar interfaces */
-  readonly [__ipool__]: 'IPool'
+  readonly [__signature__]: symbol
   /** Type of the pool */
   readonly type: PoolType
   /** Unique identifier for the pool, to be specialized for each protocol */
