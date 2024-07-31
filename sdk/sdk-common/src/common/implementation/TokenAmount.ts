@@ -1,39 +1,32 @@
 import { BigNumber } from 'bignumber.js'
-import { Token } from './Token'
 import { SerializationService } from '../../services/SerializationService'
+import { isPercentage } from '../interfaces/IPercentage'
+import { isPrice } from '../interfaces/IPrice'
 import {
   ITokenAmount,
-  ITokenAmountData,
+  ITokenAmountParameters,
   TokenAmountMulDivParamType,
   TokenAmountMulDivReturnType,
 } from '../interfaces/ITokenAmount'
-import { isPercentage } from '../interfaces/IPercentage'
 import {
   divideTokenAmountByPercentage,
   multiplyTokenAmountByPercentage,
 } from '../utils/PercentageUtils'
-import { isPrice } from '../interfaces/IPrice'
+import { Token } from './Token'
 
 /**
  * @class TokenAmount
  * @see ITokenAmount
  */
 export class TokenAmount implements ITokenAmount {
+  readonly _signature_0 = 'ITokenAmount'
+
   readonly token: Token
   readonly amount: string
 
   // This is protected because otherwise TypeScript is removing the type when transpiling and it causes errors.
   // Apparently using protected prevents this bug
   protected readonly _baseUnitFactor: BigNumber
-
-  /** CONSTRUCTOR  */
-
-  /** Sealed constructor */
-  private constructor(params: ITokenAmountData) {
-    this.token = Token.createFrom(params.token)
-    this.amount = params.amount
-    this._baseUnitFactor = new BigNumber(10).pow(new BigNumber(params.token.decimals))
-  }
 
   /** FACTORY */
 
@@ -44,7 +37,7 @@ export class TokenAmount implements ITokenAmount {
    *
    * `amount` is the amount in floating point format without taking into account the token decimals
    */
-  static createFrom(params: ITokenAmountData): ITokenAmount {
+  static createFrom(params: ITokenAmountParameters): ITokenAmount {
     return new TokenAmount(params)
   }
 
@@ -57,11 +50,20 @@ export class TokenAmount implements ITokenAmount {
    *
    * i.e.: amount in base unit (1eth = 1000000000000000000, 1btc = 100000000, etc...)
    */
-  static createFromBaseUnit(params: ITokenAmountData): ITokenAmount {
+  static createFromBaseUnit(params: ITokenAmountParameters): ITokenAmount {
     const amount = new BigNumber(params.amount)
       .div(new BigNumber(10).pow(new BigNumber(params.token.decimals)))
       .toString()
     return new TokenAmount({ token: params.token, amount: amount })
+  }
+
+  /** CONSTRUCTOR  */
+
+  /** Sealed constructor */
+  private constructor(params: ITokenAmountParameters) {
+    this.token = Token.createFrom(params.token)
+    this.amount = params.amount
+    this._baseUnitFactor = new BigNumber(10).pow(new BigNumber(params.token.decimals))
   }
 
   /** METHODS */

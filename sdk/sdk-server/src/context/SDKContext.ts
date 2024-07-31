@@ -3,17 +3,19 @@ import { IAbiProvider } from '@summerfi/abi-provider-common'
 import { AbiProviderFactory } from '@summerfi/abi-provider-service'
 import { IAddressBookManager } from '@summerfi/address-book-common'
 import { AddressBookManagerFactory } from '@summerfi/address-book-service'
-import type { IAllowanceManager } from '@summerfi/allowance-common'
-import { AllowanceManagerFactory } from '@summerfi/allowance-service'
+import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
+import { AllowanceManagerFactory } from '@summerfi/allowance-manager-service'
+import { IArmadaManager } from '@summerfi/armada-protocol-common'
+import { ArmadaManagerFactory } from '@summerfi/armada-protocol-service'
 import { BlockchainClientProvider } from '@summerfi/blockchain-client-provider'
-import { ConfigurationProvider, IConfigurationProvider } from '@summerfi/configuration-provider'
+import { ConfigurationProvider } from '@summerfi/configuration-provider'
+import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import { ContractsProviderFactory } from '@summerfi/contracts-provider-service'
-import type { IEarnProtocolManager } from '@summerfi/earn-protocol-common'
-import { EarnProtocolManagerFactory } from '@summerfi/earn-protocol-service'
 import { IOracleManager } from '@summerfi/oracle-common'
 import { OracleManagerFactory } from '@summerfi/oracle-service'
-import { IOrderPlannerService, OrderPlannerService } from '@summerfi/order-planner-service'
+import { IOrderPlannerService } from '@summerfi/order-planner-common'
+import { OrderPlannerService } from '@summerfi/order-planner-service'
 import { IProtocolManager } from '@summerfi/protocol-manager-common'
 import { ProtocolManager } from '@summerfi/protocol-manager-service'
 import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
@@ -40,7 +42,7 @@ export type SDKAppContext = {
   protocolManager: IProtocolManager
   orderPlannerService: IOrderPlannerService
   allowanceManager: IAllowanceManager
-  earnProtocolManager: IEarnProtocolManager
+  armadaManager: IArmadaManager
 }
 
 // context for each request
@@ -68,10 +70,12 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
   const protocolManager = ProtocolManager.createWith({ pluginsRegistry: protocolsRegistry })
   const allowanceManager = AllowanceManagerFactory.newAllowanceManager({
     configProvider,
+    contractsProvider,
   })
-  const earnProtocolManager = EarnProtocolManagerFactory.newEarnProtocolManager({
+  const armadaManager = ArmadaManagerFactory.newArmadaManager({
     configProvider,
     allowanceManager,
+    contractsProvider,
   })
 
   return {
@@ -87,6 +91,6 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
     protocolManager,
     orderPlannerService,
     allowanceManager,
-    earnProtocolManager,
+    armadaManager,
   }
 }

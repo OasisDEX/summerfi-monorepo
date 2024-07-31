@@ -1,10 +1,10 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { ChainFamilyMap, ChainInfo, IPositionId } from '@summerfi/sdk-common/common'
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
+import { ChainFamilyMap, ChainInfo, ProtocolName } from '@summerfi/sdk-common/common'
 import assert from 'assert'
 import {
   ISparkLendingPoolId,
   ISparkLendingPoolIdData,
+  SparkLendingPositionId,
   SparkProtocolPlugin,
   isSparkLendingPoolId,
 } from '../../../src/plugins/spark'
@@ -111,9 +111,11 @@ describe('Spark Protocol Plugin', () => {
   })
 
   it('should throw a "Not implemented" error when calling getPosition', async () => {
-    const positionId: IPositionId = {
+    const positionId = SparkLendingPositionId.createFrom({
       id: 'mockPositionId',
-    }
-    await expect(sparkProtocolPlugin.getPosition(positionId)).rejects.toThrow('Not implemented')
+    })
+    await expect(sparkProtocolPlugin.getLendingPosition(positionId)).rejects.toThrow(
+      'Not implemented',
+    )
   })
 })

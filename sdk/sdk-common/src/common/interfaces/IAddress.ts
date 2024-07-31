@@ -1,6 +1,8 @@
-import { AddressValue } from '../aliases/AddressValue'
-import { AddressType } from '../enums/AddressType'
+import { isHex } from 'viem'
 import { z } from 'zod'
+import { AddressValue } from '../aliases/AddressValue'
+import { AddressType } from '../types/AddressType'
+import { IPrintable } from './IPrintable'
 
 /**
  * @name IAddress
@@ -8,7 +10,9 @@ import { z } from 'zod'
  *
  * Currently only Ethereum type is supported
  */
-export interface IAddress extends IAddressData {
+export interface IAddress extends IAddressData, IPrintable {
+  /** Signature to differentiate from similar interfaces */
+  readonly _signature_0: 'IAddress'
   /** The address value in the format specified by type */
   readonly value: AddressValue
   /** The type of the address */
@@ -29,7 +33,7 @@ export interface IAddress extends IAddressData {
  * @description Zod schema for IAddress
  */
 export const AddressDataSchema = z.object({
-  value: z.custom<AddressValue>(),
+  value: z.custom<AddressValue>((val) => isHex(val)),
   type: z.nativeEnum(AddressType),
 })
 
@@ -37,6 +41,11 @@ export const AddressDataSchema = z.object({
  * Type for the data part of the IAddress interface
  */
 export type IAddressData = Readonly<z.infer<typeof AddressDataSchema>>
+
+/**
+ * Type for the parameters of the IAddress interface
+ */
+export type IAddressParameters = Omit<IAddressData, ''>
 
 /**
  * @description Type guard for IAddress

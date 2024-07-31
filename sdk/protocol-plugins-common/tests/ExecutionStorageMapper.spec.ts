@@ -1,16 +1,18 @@
-import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
-import { ExecutionStorageMapper } from '../src/context/ExecutionStorageMapper'
 import {
   Address,
   ChainFamilyMap,
   ChainInfo,
-  Position,
+  PoolType,
   PositionType,
+  ProtocolName,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
-import { IPoolIdData } from '@summerfi/sdk-common'
+import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
+import { ExecutionStorageMapper } from '../src/context/ExecutionStorageMapper'
+
+import { IPoolIdData, IProtocol, LendingPositionType } from '@summerfi/sdk-common'
+import { LendingPosition } from '@summerfi/sdk-common/lending-protocols'
 import { DerivedAction } from '@summerfi/testing-utils/mocks/actions/DerivedAction'
 
 describe('Execution Storage Mapper', () => {
@@ -54,8 +56,8 @@ describe('Execution Storage Mapper', () => {
     protocol: {
       name: ProtocolName.Maker,
       chainInfo: ChainInfo.createFrom({ chainId: 1, name: 'Ethereum' }),
-    },
-  }
+    } as unknown as IProtocol,
+  } as unknown as IPoolIdData
 
   const pool = {
     type: PoolType.Lending,
@@ -64,12 +66,13 @@ describe('Execution Storage Mapper', () => {
   }
 
   const position = {
-    type: PositionType.Multiply,
+    type: PositionType.Lending,
+    subtype: LendingPositionType.Multiply,
     positionId: { id: 'someposition' },
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
     pool: pool,
-  } as unknown as Position
+  } as unknown as LendingPosition
 
   it('should return undefined if mapping does not exist', () => {
     const executionStorageMapper = new ExecutionStorageMapper()

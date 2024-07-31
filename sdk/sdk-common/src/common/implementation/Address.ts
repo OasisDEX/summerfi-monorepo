@@ -1,13 +1,15 @@
-import { IAddress, IAddressData } from '../interfaces/IAddress'
 import { SerializationService } from '../../services/SerializationService'
 import { AddressValue } from '../aliases/AddressValue'
-import { AddressType } from '../enums/AddressType'
+import { IAddress, IAddressParameters } from '../interfaces/IAddress'
+import { AddressType } from '../types/AddressType'
 
 /**
  * @class Address
  * @see IAddressData
  */
 export class Address implements IAddress {
+  readonly _signature_0 = 'IAddress'
+
   public static ZeroAddressEthereum: Address = new Address({
     value: '0x0000000000000000000000000000000000000000',
     type: AddressType.Ethereum,
@@ -16,16 +18,9 @@ export class Address implements IAddress {
   readonly value: AddressValue
   readonly type: AddressType
 
-  private constructor(params: IAddressData) {
-    if (Address.isValid(params.value) === false) {
-      throw new Error('Address value is invalid')
-    }
+  /** FACTORY METHODS */
 
-    this.value = params.value
-    this.type = params.type
-  }
-
-  static createFrom(params: IAddressData): Address {
+  static createFrom(params: IAddressParameters): Address {
     return new Address(params)
   }
 
@@ -45,6 +40,17 @@ export class Address implements IAddress {
     return AddressType.Unknown
   }
 
+  /** CONSTRUCTOR */
+  private constructor(params: IAddressParameters) {
+    if (Address.isValid(params.value) === false) {
+      throw new Error('Address value is invalid')
+    }
+
+    this.value = params.value
+    this.type = params.type
+  }
+
+  /** PUBLIC METHODS */
   equals(address: Address): boolean {
     return this.value.toLowerCase() === address.value.toLowerCase() && this.type === address.type
   }

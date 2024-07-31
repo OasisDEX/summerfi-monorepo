@@ -1,4 +1,4 @@
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
+import { ProtocolName } from '@summerfi/sdk-common'
 import { ProtocolPluginsRecordType } from '../implementation/ProtocolPluginsRegistry'
 import { AaveV3ProtocolPlugin } from './aave-v3/implementation/AAVEv3ProtocolPlugin'
 import { MakerProtocolPlugin } from './maker/implementation/MakerProtocolPlugin'

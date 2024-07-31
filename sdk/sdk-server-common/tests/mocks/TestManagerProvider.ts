@@ -1,6 +1,6 @@
-import { IConfigurationProvider } from '@summerfi/configuration-provider'
-import { ManagerProviderBase } from '../../src'
+import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { ChainId } from '@summerfi/sdk-common'
+import { ManagerProviderBase } from '../../src'
 
 export enum TestProviderType {
   TestProvider = 'TestProvider',

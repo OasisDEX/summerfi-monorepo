@@ -1,5 +1,6 @@
-import { BlockchainClientProvider, IBlockchainClient } from '@summerfi/blockchain-client-provider'
-import { IConfigurationProvider } from '@summerfi/configuration-provider'
+import { IBlockchainClient } from '@summerfi/blockchain-client-common'
+import { BlockchainClientProvider } from '@summerfi/blockchain-client-provider'
+import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IChainInfo } from '@summerfi/sdk-common'
 
 export class BlockchainClientProviderMock extends BlockchainClientProvider {

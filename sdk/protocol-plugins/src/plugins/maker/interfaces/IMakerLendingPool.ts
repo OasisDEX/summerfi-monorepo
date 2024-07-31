@@ -1,17 +1,21 @@
-import { ILendingPool, LendingPoolDataSchema } from '@summerfi/sdk-common/protocols'
-import { IMakerLendingPoolId, MakerLendingPoolIdDataSchema } from './IMakerLendingPoolId'
-import { z } from 'zod'
+import { PoolType } from '@summerfi/sdk-common'
 import { IToken } from '@summerfi/sdk-common/common'
+import { ILendingPool, LendingPoolDataSchema } from '@summerfi/sdk-common/lending-protocols'
+import { z } from 'zod'
+import { IMakerLendingPoolId, isMakerLendingPoolId } from './IMakerLendingPoolId'
 
 /**
  * @interface IMakerLendingPool
  * @description Represents a lending pool in the Maker protocol
  */
 export interface IMakerLendingPool extends ILendingPool, IMakerLendingPoolData {
+  /** Signature used to differentiate it from similar interfaces */
+  readonly _signature_2: 'IMakerLendingPool'
   /** The pool's ID */
   readonly id: IMakerLendingPoolId
 
   // Re-declaring the properties with the correct types
+  readonly type: PoolType
   readonly collateralToken: IToken
   readonly debtToken: IToken
 }
@@ -21,13 +25,18 @@ export interface IMakerLendingPool extends ILendingPool, IMakerLendingPoolData {
  */
 export const MakerLendingPoolDataSchema = z.object({
   ...LendingPoolDataSchema.shape,
-  id: MakerLendingPoolIdDataSchema,
+  id: z.custom<IMakerLendingPoolId>((val) => isMakerLendingPoolId(val)),
 })
 
 /**
  * Type for the data part of IMakerLendingPool
  */
 export type IMakerLendingPoolData = Readonly<z.infer<typeof MakerLendingPoolDataSchema>>
+
+/**
+ * Type for the parameters of the IMakerLendingPool interface
+ */
+export type IMakerLendingPoolParameters = Omit<IMakerLendingPoolData, 'type'>
 
 /**
  * @description Type guard for IMakerLendingPool

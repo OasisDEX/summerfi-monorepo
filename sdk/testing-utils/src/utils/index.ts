@@ -1,5 +1,5 @@
 export * from './ActionDecoding'
-export * from './EarnProtocolDecoding'
+export * from './ArmadaDecoding'
 export * from './ErrorMessage'
 export * from './PositionsManagerDecoding'
 export * from './SendAndLogTransactions'

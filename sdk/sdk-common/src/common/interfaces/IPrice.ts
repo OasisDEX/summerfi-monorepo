@@ -1,10 +1,10 @@
 import { BigNumber } from 'bignumber.js'
+import { z } from 'zod'
 import { Denomination, DenominationDataSchema } from '../aliases/Denomination'
-import { IPrintable } from './IPrintable'
-import { type ITokenAmount } from './ITokenAmount'
 import { type IFiatCurrencyAmount } from './IFiatCurrencyAmount'
 import { type IPercentage } from './IPercentage'
-import { z } from 'zod'
+import { IPrintable } from './IPrintable'
+import { type ITokenAmount } from './ITokenAmount'
 
 /**
  * Return Type narrowing for multiply and divide methods, so the return type can be properly inferred
@@ -47,6 +47,8 @@ export type PriceMulReturnType<T> = T extends ITokenAmount
  * QUOTE/BASE
  */
 export interface IPrice extends IPriceData, IPrintable {
+  /** Signature to differentiate from similar interfaces */
+  readonly _signature_0: 'IPrice'
   /** The price value in floating point format without taking into account decimals */
   readonly value: string
   /** The token for the base of the price */
@@ -188,9 +190,14 @@ export const PriceDataSchema = z.object({
 })
 
 /**
- * Type definition for the Price data
+ * Type definition for the IPrice data
  */
 export type IPriceData = Readonly<z.infer<typeof PriceDataSchema>>
+
+/**
+ * Type for the parameters of the IPrice interface
+ */
+export type IPriceParameters = Omit<IPriceData, ''>
 
 /**
  * @description Type guard for isPrice

@@ -1,5 +1,5 @@
 import { SerializationService } from '../../services/SerializationService'
-import { IWallet, IWalletData } from '../interfaces/IWallet'
+import { IWallet, IWalletParameters } from '../interfaces/IWallet'
 import { Address } from './Address'
 
 /**
@@ -7,15 +7,17 @@ import { Address } from './Address'
  * @see IWalletData
  */
 export class Wallet implements IWallet {
+  readonly _signature_0 = 'IWallet'
+
   readonly address: Address
 
   /** Factory method */
-  static createFrom(params: IWalletData): Wallet {
+  static createFrom(params: IWalletParameters): Wallet {
     return new Wallet(params)
   }
 
   /** Sealed constructor */
-  private constructor(params: IWalletData) {
+  private constructor(params: IWalletParameters) {
     this.address = Address.createFrom(params.address)
   }
 

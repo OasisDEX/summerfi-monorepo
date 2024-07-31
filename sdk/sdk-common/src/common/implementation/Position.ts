@@ -1,27 +1,21 @@
-import { IPosition, IPositionData } from '../interfaces/IPosition'
 import { SerializationService } from '../../services/SerializationService'
-import { PositionId } from './PositionId'
-import { TokenAmount } from './TokenAmount'
-import { PositionType } from '../enums/PositionType'
-import { ITokenAmount } from '../interfaces/ITokenAmount'
-import { IPool } from '../../protocols/interfaces/IPool'
+import { IPosition, IPositionParameters } from '../interfaces/IPosition'
+import { IPositionId } from '../interfaces/IPositionId'
+import { PositionType } from '../types/PositionType'
 
 /**
  * @name Position
  * @see IPosition
  */
 export abstract class Position implements IPosition {
-  readonly type: PositionType
-  readonly id: PositionId
-  readonly debtAmount: ITokenAmount
-  readonly collateralAmount: ITokenAmount
-  abstract readonly pool: IPool
+  readonly _signature_0 = 'IPosition'
 
-  protected constructor(params: IPositionData) {
+  readonly type: PositionType
+  readonly id: IPositionId
+
+  protected constructor(params: IPositionParameters) {
     this.type = params.type
     this.id = params.id
-    this.debtAmount = TokenAmount.createFrom(params.debtAmount)
-    this.collateralAmount = TokenAmount.createFrom(params.collateralAmount)
   }
 }
 

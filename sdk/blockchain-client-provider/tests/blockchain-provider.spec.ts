@@ -1,7 +1,7 @@
-import { ConfigurationProvider } from '@summerfi/configuration-provider'
+import { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
+import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { ChainFamilyMap } from '@summerfi/sdk-common'
 import { BlockchainClientProvider } from '../src/implementation/BlockchainClientProvider'
-import { IBlockchainClientProvider } from '../src/interfaces/IBlockchainClientProvider'
 
 describe('Blockchain Provider', () => {
   let blockchainClientProvider: IBlockchainClientProvider
@@ -9,7 +9,7 @@ describe('Blockchain Provider', () => {
   beforeEach(() => {
     const configProvider = {
       getConfigurationItem: jest.fn().mockReturnValue('https://rpc-gateway-url.com'),
-    } as unknown as ConfigurationProvider
+    } as unknown as IConfigurationProvider
 
     blockchainClientProvider = new BlockchainClientProvider({ configProvider })
   })

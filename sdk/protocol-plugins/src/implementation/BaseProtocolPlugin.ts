@@ -7,19 +7,25 @@ import {
 } from '@summerfi/protocol-plugins-common'
 import {
   ChainInfo,
-  Maybe,
-  IPosition,
-  IPositionIdData,
   IAddress,
   IChainInfo,
-} from '@summerfi/sdk-common/common'
-import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
-import {
+  IPositionIdData,
+  Maybe,
   ProtocolName,
+} from '@summerfi/sdk-common/common'
+import {
+  IExternalLendingPosition,
+  IPositionsManager,
+  TransactionInfo,
+} from '@summerfi/sdk-common/orders'
+
+import {
   ILendingPool,
   ILendingPoolIdData,
   ILendingPoolInfo,
-} from '@summerfi/sdk-common/protocols'
+  ILendingPosition,
+  ILendingPositionIdData,
+} from '@summerfi/sdk-common/lending-protocols'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { IUser } from '@summerfi/sdk-common/user'
 import { getContractAddress } from '../plugins/utils/GetContractAddress'
@@ -87,7 +93,7 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
    * @param candidate The candidate to validate
    * @returns asserts that the candidate is a valid position ID for the specific protocol
    */
-  protected abstract _validatePositionId(
+  protected abstract _validateLendingPositionId(
     candidate: IPositionIdData,
   ): asserts candidate is IPositionIdData
 
@@ -133,15 +139,15 @@ export abstract class BaseProtocolPlugin implements IProtocolPlugin {
 
   /** POSITIONS */
 
-  /** @see IProtocolPlugin.getPosition */
-  abstract getPosition(positionId: IPositionIdData): Promise<IPosition>
+  /** @see IProtocolPlugin.getLendingPosition */
+  abstract getLendingPosition(positionId: ILendingPositionIdData): Promise<ILendingPosition>
 
   /** IMPORT POSITION */
 
   /** @see IProtocolPlugin.getImportPositionTransaction */
   abstract getImportPositionTransaction(params: {
     user: IUser
-    externalPosition: IExternalPosition
+    externalPosition: IExternalLendingPosition
     positionsManager: IPositionsManager
   }): Promise<Maybe<TransactionInfo>>
 

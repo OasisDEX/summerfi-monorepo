@@ -1,12 +1,12 @@
+import { IAddressBookManager } from '@summerfi/address-book-common'
+import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
+import { ConfigurationProvider } from '@summerfi/configuration-provider'
+import { IOracleManager } from '@summerfi/oracle-common'
 import { ProtocolPluginsRecord, ProtocolPluginsRegistry } from '@summerfi/protocol-plugins'
 import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
-import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import { ConfigurationProvider } from '@summerfi/configuration-provider'
-import { ITokensManager } from '@summerfi/tokens-common'
-import { IOracleManager } from '@summerfi/oracle-common'
-import { IAddressBookManager } from '@summerfi/address-book-common'
-import type { IBlockchainClientProvider } from '@summerfi/blockchain-client-provider'
 import { ChainFamilyMap } from '@summerfi/sdk-common'
+import { ISwapManager } from '@summerfi/swap-common/interfaces'
+import { ITokensManager } from '@summerfi/tokens-common'
 
 /**
  * Create the protocol plugins registry

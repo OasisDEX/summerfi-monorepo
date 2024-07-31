@@ -1,31 +1,31 @@
+import { RiskRatio, RiskRatioType } from '@summerfi/sdk-common'
 import {
   Address,
   ChainFamilyMap,
   ChainInfo,
   Percentage,
-  PositionType,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
 import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
-import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
 import {
   ILKType,
   MakerLendingPool,
   MakerLendingPoolId,
-  MakerPosition,
-  MakerPositionId,
+  MakerLendingPosition,
+  MakerLendingPositionId,
   MakerProtocol,
   MorphoLendingPool,
   MorphoLendingPoolId,
-  MorphoPosition,
+  MorphoLendingPosition,
+  MorphoLendingPositionId,
   MorphoProtocol,
 } from '../../../../src'
 import { MorphoPaybackWithdrawActionBuilder } from '../../../../src/plugins/morphoblue/builders/MorphoPaybackWithdrawActionBuilder'
-import { RiskRatio, RiskRatioType } from '@summerfi/sdk-common'
+import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
 
 describe('Morpho Payback Withdraw Action Builder', () => {
   let builderParams: SetupBuilderReturnType
@@ -60,7 +60,6 @@ describe('Morpho Payback Withdraw Action Builder', () => {
   })
 
   const protocol = MorphoProtocol.createFrom({
-    name: ProtocolName.MorphoBlue,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 
@@ -79,20 +78,24 @@ describe('Morpho Payback Withdraw Action Builder', () => {
       value: Percentage.createFrom({ value: 0.5 }),
       type: RiskRatioType.LTV,
     }),
-    type: PoolType.Lending,
   })
 
-  const position = MorphoPosition.createFrom({
-    type: PositionType.Multiply,
-    id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '123' }),
+  const position = MorphoLendingPosition.createFrom({
+    subtype: LendingPositionType.Multiply,
+    id: MorphoLendingPositionId.createFrom({
+      id: 'someposition',
+    }),
     debtAmount: withdrawAmount,
     collateralAmount: paybackAmount,
     pool: pool,
   })
 
-  const wrongPosition = MakerPosition.createFrom({
-    type: PositionType.Multiply,
-    id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '123' }),
+  const wrongPosition = MakerLendingPosition.createFrom({
+    subtype: LendingPositionType.Multiply,
+    id: MakerLendingPositionId.createFrom({
+      id: 'someposition',
+      vaultId: '123',
+    }),
     debtAmount: withdrawAmount,
     collateralAmount: paybackAmount,
     pool: MakerLendingPool.createFrom({
@@ -102,12 +105,10 @@ describe('Morpho Payback Withdraw Action Builder', () => {
         collateralToken: WETH,
         debtToken: DAI,
         protocol: MakerProtocol.createFrom({
-          name: ProtocolName.Maker,
           chainInfo: ChainFamilyMap.Ethereum.Mainnet,
         }),
         ilkType: ILKType.ETH_A,
       }),
-      type: PoolType.Lending,
     }),
   })
 

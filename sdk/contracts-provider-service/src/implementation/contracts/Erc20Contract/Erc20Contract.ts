@@ -1,4 +1,4 @@
-import { IBlockchainClient } from '@summerfi/blockchain-client-provider'
+import { IBlockchainClient } from '@summerfi/blockchain-client-common'
 import { IErc20Contract } from '@summerfi/contracts-provider-common'
 import {
   IAddress,
@@ -10,7 +10,7 @@ import {
   TokenAmount,
   TransactionInfo,
 } from '@summerfi/sdk-common'
-import { Abi, encodeFunctionData, erc20Abi } from 'viem'
+import { erc20Abi } from 'viem'
 import { ContractWrapper } from '../ContractWrapper'
 
 /**
@@ -89,21 +89,13 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
 
   /** WRITE METHODS */
 
+  /** @see IErc20Contract.approve */
   async approve(params: { spender: IAddress; amount: ITokenAmount }): Promise<TransactionInfo> {
-    const calldata = encodeFunctionData({
-      abi: this.getAbi() as Abi,
+    return this._createTransaction({
       functionName: 'approve',
       args: [params.spender.value, BigInt(params.amount.toBaseUnit())],
-    })
-
-    return {
       description: `Approve ${params.spender} to spend ${params.amount} of ${this.address}`,
-      transaction: {
-        calldata,
-        target: this.address,
-        value: '0',
-      },
-    }
+    })
   }
 
   /** PRIVATE */

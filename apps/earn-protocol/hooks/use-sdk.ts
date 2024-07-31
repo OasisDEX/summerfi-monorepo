@@ -41,7 +41,7 @@ export const useSDK = () => {
         if (!chain) {
           throw new Error('Chain not found')
         }
-        const fleet = chain.earnProtocol.getFleet({
+        const fleet = chain.armada.getFleet({
           address: Address.createFromEthereum({ value: fleetAddress }),
         })
 

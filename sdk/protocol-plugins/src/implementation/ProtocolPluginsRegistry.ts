@@ -1,10 +1,9 @@
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
 import {
   IProtocolPlugin,
   IProtocolPluginContext,
   IProtocolPluginsRegistry,
 } from '@summerfi/protocol-plugins-common'
-import { Maybe } from '@summerfi/sdk-common/common'
+import { Maybe, ProtocolName } from '@summerfi/sdk-common/common'
 
 /**
  * @typedef ProtocolPluginConstructor

@@ -1,4 +1,4 @@
-import { IBlockchainClient } from '@summerfi/blockchain-client-provider'
+import { IBlockchainClient } from '@summerfi/blockchain-client-common'
 import { IErc20Contract, IErc4626Contract } from '@summerfi/contracts-provider-common'
 import {
   Address,
@@ -11,7 +11,7 @@ import {
   TransactionInfo,
 } from '@summerfi/sdk-common'
 import assert from 'assert'
-import { Abi, encodeFunctionData, erc4626Abi } from 'viem'
+import { erc4626Abi } from 'viem'
 import { ContractWrapper } from '../ContractWrapper'
 import { Erc20Contract } from '../Erc20Contract/Erc20Contract'
 
@@ -96,43 +96,25 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
   /** WRITE METHODS */
 
   /** @see IErc4626Contract.deposit */
-  async deposit(params: { amount: ITokenAmount; receiver: IAddress }): Promise<TransactionInfo> {
-    const calldata = encodeFunctionData({
-      abi: this.getAbi() as Abi,
+  async deposit(params: { assets: ITokenAmount; receiver: IAddress }): Promise<TransactionInfo> {
+    return this._createTransaction({
       functionName: 'deposit',
-      args: [params.amount.toBaseUnit(), params.receiver.value],
+      args: [params.assets.toBaseUnit(), params.receiver.value],
+      description: `Deposit ${params.assets} on behalf of ${params.receiver} to vault ${this.address}`,
     })
-
-    return {
-      description: `Deposit ${params.amount} on vault ${this.address}`,
-      transaction: {
-        calldata,
-        target: this.address,
-        value: '0',
-      },
-    }
   }
 
   /** @see IErc4626Contract.withdraw */
   async withdraw(params: {
-    amount: ITokenAmount
+    assets: ITokenAmount
     receiver: IAddress
     owner: IAddress
   }): Promise<TransactionInfo> {
-    const calldata = encodeFunctionData({
-      abi: this.getAbi() as Abi,
+    return this._createTransaction({
       functionName: 'withdraw',
-      args: [params.amount.toBaseUnit(), params.receiver.value, params.owner.value],
+      args: [params.assets.toBaseUnit(), params.receiver.value, params.owner.value],
+      description: `Withdraw ${params.assets} from vault ${this.address} to address ${params.receiver} on behalf of ${params.owner}`,
     })
-
-    return {
-      description: `Withdraw ${params.amount} from vault ${this.address} to address ${params.receiver} on behalf of ${params.owner}`,
-      transaction: {
-        calldata,
-        target: this.address,
-        value: '0',
-      },
-    }
   }
 
   /** CONVERSION METHODS */

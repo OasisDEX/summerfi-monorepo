@@ -1,24 +1,25 @@
+import { SDKError, SDKErrorType, isLendingPosition } from '@summerfi/sdk-common'
+import { CommonTokenSymbols, Percentage, TokenAmount } from '@summerfi/sdk-common/common'
+import { isLendingPool } from '@summerfi/sdk-common/lending-protocols'
+import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
 import {
   FlashloanProvider,
-  ISimulation,
+  IRefinanceSimulation,
+  RefinanceSimulation,
   SimulationSteps,
-  SimulationType,
   TokenTransferTargetType,
   getValueFromReference,
 } from '@summerfi/sdk-common/simulation'
 import { Simulator } from '../../implementation/simulator-engine'
-import { TokenAmount, Percentage, CommonTokenSymbols } from '@summerfi/sdk-common/common'
-import { IRefinanceParameters } from '@summerfi/sdk-common/orders'
-import { isLendingPool } from '@summerfi/sdk-common/protocols'
-import { refinanceLendingToLendingAnyPairStrategy } from './Strategy'
-import { type IRefinanceDependencies } from '../common/Types'
-import { getSwapStepData } from '../../implementation/utils/GetSwapStepData'
 import { estimateSwapFromAmount } from '../../implementation/utils/EstimateSwapFromAmount'
+import { getSwapStepData } from '../../implementation/utils/GetSwapStepData'
+import { type IRefinanceDependencies } from '../common/Types'
+import { refinanceLendingToLendingAnyPairStrategy } from './Strategy'
 
 export async function refinanceLendingToLending(
   args: IRefinanceParameters,
   dependencies: IRefinanceDependencies,
-): Promise<ISimulation<SimulationType.Refinance>> {
+): Promise<IRefinanceSimulation> {
   // args validation
   if (!isLendingPool(args.sourcePosition.pool)) {
     throw new Error('Source pool is not a lending pool')
@@ -31,6 +32,13 @@ export async function refinanceLendingToLending(
   const sourcePool = args.sourcePosition.pool
   const targetPool = args.targetPool
 
+  if (!isLendingPosition(position)) {
+    throw SDKError.createFrom({
+      type: SDKErrorType.Simulator,
+      reason: 'Invalid position',
+      message: 'Source position is not a lending position',
+    })
+  }
   if (!isLendingPool(sourcePool)) {
     throw new Error('Source pool is not a lending pool')
   }
@@ -206,11 +214,10 @@ export async function refinanceLendingToLending(
     throw new Error('Target position not found')
   }
 
-  return {
-    simulationType: SimulationType.Refinance,
+  return RefinanceSimulation.createFrom({
     sourcePosition: position,
     targetPosition: targetPosition,
     swaps: simulation.swaps,
     steps: simulation.steps,
-  } satisfies ISimulation<SimulationType.Refinance>
+  })
 }

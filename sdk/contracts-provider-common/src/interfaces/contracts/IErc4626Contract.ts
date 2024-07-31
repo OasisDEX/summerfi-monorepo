@@ -27,25 +27,25 @@ export interface IErc4626Contract extends IContractWrapper {
    * @name deposit
    * @description Deposits the provided amount into the vault
    *
-   * @param amount The amount to deposit
+   * @param assets The amount to deposit
    * @param receiver The address to receive the funds
    *
    * @returns The transaction information for the given input data
    */
-  deposit(params: { amount: ITokenAmount; receiver: IAddress }): Promise<TransactionInfo>
+  deposit(params: { assets: ITokenAmount; receiver: IAddress }): Promise<TransactionInfo>
 
   /**
    * @name withdraw
    * @description Withdraws the provided amount from the vault
    *
-   * @param amount The amount to withdraw
+   * @param assets The amount to withdraw
    * @param receiver The address to receive the funds
    * @param owner The address of the owner
    *
    * @returns The transaction information for the given input data
    */
   withdraw(params: {
-    amount: ITokenAmount
+    assets: ITokenAmount
     receiver: IAddress
     owner: IAddress
   }): Promise<TransactionInfo>

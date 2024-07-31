@@ -1,12 +1,14 @@
-import { SDKErrorType } from '../enums/SDKErrorType'
-import { IPrintable } from './IPrintable'
 import { z } from 'zod'
+import { SDKErrorType } from '../types/SDKErrorType'
+import { IPrintable } from './IPrintable'
 
 /**
  * @name ISDKError
  * @description Represents a custom error of the SDK
  */
 export interface ISDKError extends ISDKErrorData, IPrintable {
+  /** Signature to differentiate from similar interfaces */
+  readonly _signature_0: 'ISDKError'
   /** Error type main category */
   readonly type: SDKErrorType
   /** Free form reason message, used to provide a short description of the problem */
@@ -28,6 +30,11 @@ export const SDKErrorDataSchema = z.object({
  * Type for the data part of the ISDKError interface
  */
 export type ISDKErrorData = Readonly<z.infer<typeof SDKErrorDataSchema>>
+
+/**
+ * Type for the parameters of the ISDKError interface
+ */
+export type ISDKErrorParameters = Omit<ISDKErrorData, ''>
 
 /**
  * @description Type guard for ISDKError

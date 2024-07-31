@@ -1,14 +1,6 @@
-import {
-  Address,
-  ChainFamilyMap,
-  ChainInfo,
-  PositionType,
-  Token,
-  TokenAmount,
-} from '@summerfi/sdk-common/common'
-import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
-import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { Address, ChainFamilyMap, ChainInfo, Token, TokenAmount } from '@summerfi/sdk-common/common'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
+import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
 import {
@@ -16,14 +8,15 @@ import {
   ILKType,
   MakerLendingPool,
   MakerLendingPoolId,
-  MakerPositionId,
   MakerProtocol,
   SparkLendingPool,
   SparkLendingPoolId,
+  SparkLendingPosition,
+  SparkLendingPositionId,
   SparkOpenPositionActionBuilder,
-  SparkPosition,
   SparkProtocol,
 } from '../../../../src'
+import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
 
 describe('Spark  Deposit Borrow Action Builder', () => {
   let builderParams: SetupBuilderReturnType
@@ -58,7 +51,6 @@ describe('Spark  Deposit Borrow Action Builder', () => {
   })
 
   const protocol = SparkProtocol.createFrom({
-    name: ProtocolName.Spark,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 
@@ -73,12 +65,13 @@ describe('Spark  Deposit Borrow Action Builder', () => {
     collateralToken: WETH,
     debtToken: DAI,
     id: poolId,
-    type: PoolType.Lending,
   })
 
-  const position = SparkPosition.createFrom({
-    type: PositionType.Multiply,
-    id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '123' }),
+  const position = SparkLendingPosition.createFrom({
+    subtype: LendingPositionType.Multiply,
+    id: SparkLendingPositionId.createFrom({
+      id: 'someposition',
+    }),
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
     pool: pool,
@@ -91,12 +84,10 @@ describe('Spark  Deposit Borrow Action Builder', () => {
       collateralToken: WETH,
       debtToken: DAI,
       protocol: MakerProtocol.createFrom({
-        name: ProtocolName.Maker,
         chainInfo: ChainFamilyMap.Ethereum.Mainnet,
       }),
       ilkType: ILKType.ETH_A,
     }),
-    type: PoolType.Lending,
   })
 
   const derivedStep: steps.OpenPosition = {

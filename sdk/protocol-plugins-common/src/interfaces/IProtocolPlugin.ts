@@ -1,15 +1,21 @@
-import { ChainInfo, IPosition, IPositionIdData, Maybe } from '@summerfi/sdk-common/common'
+import { ChainInfo, Maybe, ProtocolName } from '@summerfi/sdk-common/common'
+
 import {
-  ProtocolName,
   ILendingPool,
   ILendingPoolIdData,
   ILendingPoolInfo,
-} from '@summerfi/sdk-common/protocols'
-import { type IProtocolPluginContext } from './IProtocolPluginContext'
+  ILendingPosition,
+  ILendingPositionIdData,
+} from '@summerfi/sdk-common/lending-protocols'
+import {
+  IExternalLendingPosition,
+  IPositionsManager,
+  TransactionInfo,
+} from '@summerfi/sdk-common/orders'
 import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { IUser } from '@summerfi/sdk-common/user'
-import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
-import { IActionBuilder, ActionBuildersMap, FilterStep } from './IActionBuilder'
+import { ActionBuildersMap, FilterStep, IActionBuilder } from './IActionBuilder'
+import { type IProtocolPluginContext } from './IProtocolPluginContext'
 
 /**
  * @interface IProtocolPlugin
@@ -44,12 +50,12 @@ export interface IProtocolPlugin {
   /** POSITIONS */
 
   /**
-   * @name getPosition
-   * @description Gets the position for the given position ID
-   * @param positionId The position ID for the specific protocol
-   * @returns The position for the specific protocol
+   * @name getLendingPosition
+   * @description Gets the lending position for the given lending position ID
+   * @param positionId The lending position ID for the specific protocol
+   * @returns The lending position for the specific protocol
    */
-  getPosition(positionId: IPositionIdData): Promise<IPosition>
+  getLendingPosition(positionId: ILendingPositionIdData): Promise<ILendingPosition>
 
   /** ACTION BUILDERS */
 
@@ -76,7 +82,7 @@ export interface IProtocolPlugin {
    */
   getImportPositionTransaction(params: {
     user: IUser
-    externalPosition: IExternalPosition
+    externalPosition: IExternalLendingPosition
     positionsManager: IPositionsManager
   }): Promise<Maybe<TransactionInfo>>
 }

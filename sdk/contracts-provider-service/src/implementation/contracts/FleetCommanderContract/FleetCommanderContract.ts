@@ -1,5 +1,5 @@
 import { ContractAbi } from '@summerfi/abi-provider-common'
-import { IBlockchainClient } from '@summerfi/blockchain-client-provider'
+import { IBlockchainClient } from '@summerfi/blockchain-client-common'
 import {
   IArkConfiguration,
   IArkConfigurationSolidity,
@@ -7,7 +7,13 @@ import {
   IErc4626Contract,
   IFleetCommanderContract,
 } from '@summerfi/contracts-provider-common'
-import { IAddress, IChainInfo, Percentage } from '@summerfi/sdk-common'
+import {
+  IAddress,
+  IChainInfo,
+  ITokenAmount,
+  Percentage,
+  TransactionInfo,
+} from '@summerfi/sdk-common'
 import { ContractWrapper } from '../ContractWrapper'
 
 import FleetCommanderAbiJSON from '../../../../../../earn-protocol/abis/FleetCommander.sol/FleetCommander.json'
@@ -67,6 +73,7 @@ export class FleetCommanderContract<
 
   /** PUBLIC */
 
+  /** @see IFleetCommanderContract.arks */
   async arks(params: { address: IAddress }): Promise<IArkConfiguration> {
     const arkConfig = (await this.contract.read.arks([
       params.address.value,
@@ -77,6 +84,20 @@ export class FleetCommanderContract<
         value: arkConfig.maxAllocation,
       }),
     }
+  }
+
+  /** @see IFleetCommanderContract.deposit */
+  async deposit(params: { assets: ITokenAmount; receiver: IAddress }): Promise<TransactionInfo> {
+    return this.asErc4626().deposit(params)
+  }
+
+  /** @see IFleetCommanderContract.withdraw */
+  async withdraw(params: {
+    assets: ITokenAmount
+    receiver: IAddress
+    owner: IAddress
+  }): Promise<TransactionInfo> {
+    return this.asErc4626().withdraw(params)
   }
 
   /** @see IFleetCommanderContract.asErc20 */

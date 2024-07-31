@@ -6,8 +6,9 @@
     "paths": {
       "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
       "@summerfi/sdk-common": ["node_modules/@summerfi/sdk-common/src/index.ts"],
-      "@summerfi/configuration-provider": [
-        "node_modules/@summerfi/configuration-provider/src/index.ts"
+      "@summerfi/configuration-provider": ["../configuration-provider/src/index.ts"],
+      "@summerfi/configuration-provider-common": [
+        "node_modules/@summerfi/configuration-provider-common/src/index.ts"
       ],
       "@summerfi/testing-utils": ["node_modules/@summerfi/testing-utils/src/index.ts"],
       "@summerfi/testing-utils/*": ["node_modules/@summerfi/testing-utils/src/*"],

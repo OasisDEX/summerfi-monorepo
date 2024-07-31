@@ -1,5 +1,5 @@
-import { IBlockchainClientProvider } from '@summerfi/blockchain-client-provider'
-import { IConfigurationProvider } from '@summerfi/configuration-provider'
+import { IBlockchainClientProvider } from '@summerfi/blockchain-client-common'
+import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { ContractsProvider } from './ContractsProvider'
 
 /**

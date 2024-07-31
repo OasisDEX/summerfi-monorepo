@@ -1,7 +1,15 @@
-import { ILendingPoolId, IPositionId, Maybe } from '@summerfi/sdk-common'
-import { IPosition } from '@summerfi/sdk-common/common'
-import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
-import { ILendingPool, ILendingPoolInfo } from '@summerfi/sdk-common/protocols'
+import { ILendingPoolId, Maybe } from '@summerfi/sdk-common'
+import {
+  ILendingPool,
+  ILendingPoolInfo,
+  ILendingPosition,
+  ILendingPositionId,
+} from '@summerfi/sdk-common/lending-protocols'
+import {
+  IExternalLendingPosition,
+  IPositionsManager,
+  TransactionInfo,
+} from '@summerfi/sdk-common/orders'
 import { IUser } from '@summerfi/sdk-common/user'
 
 /**
@@ -30,12 +38,12 @@ export interface IProtocolManager {
   /** POSITIONS */
 
   /**
-   * @name getPosition
-   * @description Gets the position for the given position ID
-   * @param positionId The position ID for the specific protocol
-   * @returns The position for the specific protocol
+   * @name getLendingPosition
+   * @description Gets the lending position for the given lending position ID
+   * @param positionId The lending position ID for the specific protocol
+   * @returns The lending position for the specific protocol
    */
-  getPosition(positionId: IPositionId): Promise<IPosition>
+  getLendingPosition(positionId: ILendingPositionId): Promise<ILendingPosition>
 
   /** IMPORT POSITION */
 
@@ -47,7 +55,7 @@ export interface IProtocolManager {
    */
   getImportPositionTransaction(params: {
     user: IUser
-    externalPosition: IExternalPosition
+    externalPosition: IExternalLendingPosition
     positionsManager: IPositionsManager
   }): Promise<Maybe<TransactionInfo>>
 }

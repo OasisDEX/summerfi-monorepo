@@ -1,11 +1,12 @@
+import { PoolType } from '@summerfi/sdk-common'
 import {
   ICollateralInfo,
   IDebtInfo,
   ILendingPoolInfo,
   LendingPoolInfoDataSchema,
-} from '@summerfi/sdk-common/protocols'
+} from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
-import { AaveV3LendingPoolIdDataSchema, IAaveV3LendingPoolId } from './IAaveV3LendingPoolId'
+import { IAaveV3LendingPoolId, isAaveV3LendingPoolId } from './IAaveV3LendingPoolId'
 
 /**
  * @interface IAaveV3LendingPoolInfo
@@ -15,10 +16,13 @@ import { AaveV3LendingPoolIdDataSchema, IAaveV3LendingPoolId } from './IAaveV3Le
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
 export interface IAaveV3LendingPoolInfo extends ILendingPoolInfo, IAaveV3LendingPoolInfoData {
+  /** Signature used to differentiate it from similar interfaces */
+  readonly _signature_2: 'IAaveV3LendingPoolInfo'
   /** The lending pool's ID */
   readonly id: IAaveV3LendingPoolId
 
   // Re-declaring the properties with the correct types
+  readonly type: PoolType
   readonly collateral: ICollateralInfo
   readonly debt: IDebtInfo
 }
@@ -28,13 +32,18 @@ export interface IAaveV3LendingPoolInfo extends ILendingPoolInfo, IAaveV3Lending
  */
 export const AaveV3LendingPoolInfoDataSchema = z.object({
   ...LendingPoolInfoDataSchema.shape,
-  id: AaveV3LendingPoolIdDataSchema,
+  id: z.custom<IAaveV3LendingPoolId>((val) => isAaveV3LendingPoolId(val)),
 })
 
 /**
  * Type for the data part of IAaveV3LendingPool
  */
 export type IAaveV3LendingPoolInfoData = Readonly<z.infer<typeof AaveV3LendingPoolInfoDataSchema>>
+
+/**
+ * Type for the parameters of the IAaveV3LendingPool interface
+ */
+export type IAaveV3LendingPoolInfoParameters = Omit<IAaveV3LendingPoolInfoData, 'type'>
 
 /**
  * @description Type guard for IAaveV3LendingPoolInfo

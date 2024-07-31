@@ -19,7 +19,7 @@ const config = {
   }),
 }
 
-describe.skip('Earn Protocol Deposit', () => {
+describe.skip('Armada Protocol Deposit', () => {
   const chainInfo = ChainFamilyMap.Base.Mainnet
   let sdk: SDKManager
   let chain: Chain
@@ -60,7 +60,7 @@ describe.skip('Earn Protocol Deposit', () => {
     const token = USDC
     const amount = '1'
 
-    const fleet = chain.earnProtocol.getFleet({
+    const fleet = chain.armada.getFleet({
       address: config.fleetAddress,
     })
     assert(fleet, 'Fleet not found')
@@ -83,7 +83,7 @@ describe.skip('Earn Protocol Deposit', () => {
     const token = DAI
     const amount = '1'
 
-    const fleet = chain.earnProtocol.getFleet({
+    const fleet = chain.armada.getFleet({
       address: config.fleetAddress,
     })
     assert(fleet, 'Fleet not found')
@@ -106,7 +106,7 @@ describe.skip('Earn Protocol Deposit', () => {
     const token = USDC
     const amount = '1'
 
-    const fleet = chain.earnProtocol.getFleet({
+    const fleet = chain.armada.getFleet({
       address: config.fleetAddress,
     })
     assert(fleet, 'Fleet not found')

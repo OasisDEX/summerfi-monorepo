@@ -3,29 +3,28 @@ import {
   ChainFamilyMap,
   ChainInfo,
   Percentage,
-  PositionType,
   RiskRatio,
   RiskRatioType,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
-import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
-import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
+import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
 import {
   ILKType,
-  MakerPositionId,
   MakerLendingPool,
   MakerLendingPoolId,
+  MakerLendingPosition,
+  MakerLendingPositionId,
   MakerOpenPositionActionBuilder,
-  MakerPosition,
   MakerProtocol,
   MorphoLendingPool,
   MorphoLendingPoolId,
   MorphoProtocol,
 } from '../../../../src'
+import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
 
 describe('Maker Open Position Action Builder', () => {
   let builderParams: SetupBuilderReturnType
@@ -60,7 +59,6 @@ describe('Maker Open Position Action Builder', () => {
   })
 
   const protocol = MakerProtocol.createFrom({
-    name: ProtocolName.Maker,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 
@@ -75,12 +73,14 @@ describe('Maker Open Position Action Builder', () => {
     collateralToken: WETH,
     debtToken: DAI,
     id: poolId,
-    type: PoolType.Lending,
   })
 
-  const position = MakerPosition.createFrom({
-    type: PositionType.Multiply,
-    id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '123' }),
+  const position = MakerLendingPosition.createFrom({
+    subtype: LendingPositionType.Multiply,
+    id: MakerLendingPositionId.createFrom({
+      id: 'someposition',
+      vaultId: '123',
+    }),
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
     pool: pool,
@@ -92,7 +92,6 @@ describe('Maker Open Position Action Builder', () => {
     id: MorphoLendingPoolId.createFrom({
       marketId: '0x1234',
       protocol: MorphoProtocol.createFrom({
-        name: ProtocolName.MorphoBlue,
         chainInfo: ChainFamilyMap.Ethereum.Mainnet,
       }),
     }),
@@ -102,7 +101,6 @@ describe('Maker Open Position Action Builder', () => {
       value: Percentage.createFrom({ value: 0.5 }),
       type: RiskRatioType.LTV,
     }),
-    type: PoolType.Lending,
   })
 
   const derivedStep: steps.OpenPosition = {

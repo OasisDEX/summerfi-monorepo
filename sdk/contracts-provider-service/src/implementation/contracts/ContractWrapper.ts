@@ -1,8 +1,8 @@
 import { ContractAbi } from '@summerfi/abi-provider-common'
-import { IBlockchainClient } from '@summerfi/blockchain-client-provider'
+import { IBlockchainClient } from '@summerfi/blockchain-client-common'
 import { IContractWrapper } from '@summerfi/contracts-provider-common'
-import { IAddress, IChainInfo } from '@summerfi/sdk-common'
-import { GetContractReturnType, getContract } from 'viem'
+import { IAddress, IChainInfo, TransactionInfo } from '@summerfi/sdk-common'
+import { Abi, GetContractReturnType, encodeFunctionData, getContract } from 'viem'
 
 /**
  * @name ContractWrapper
@@ -54,6 +54,30 @@ export abstract class ContractWrapper<
 
   get contract(): GetContractReturnType<TAbi, TClient, TAddress['value']> {
     return this._contract
+  }
+
+  /** HELPERS */
+
+  protected async _createTransaction(params: {
+    functionName: string
+    args: unknown[]
+    description: string
+    value?: bigint
+  }): Promise<TransactionInfo> {
+    const calldata = encodeFunctionData({
+      abi: this.getAbi() as Abi,
+      functionName: params.functionName,
+      args: params.args,
+    })
+
+    return {
+      transaction: {
+        target: this.address,
+        calldata: calldata,
+        value: String(params.value ?? 0),
+      },
+      description: params.description,
+    }
   }
 
   /** VIRTUAL FUNCTIONS */

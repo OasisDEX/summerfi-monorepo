@@ -1,8 +1,9 @@
-import { Percentage, TokenAmount, type Position } from '@summerfi/sdk-common/common'
+import { Percentage, TokenAmount } from '@summerfi/sdk-common/common'
 
-import { PositionUtils } from '../src/utils/PositionUtils'
-import { WETH, DAI, WSTETH } from './TestUtils'
+import { LendingPosition } from '@summerfi/sdk-common/lending-protocols'
 import { BigNumber } from 'bignumber.js'
+import { PositionUtils } from '../src/utils/PositionUtils'
+import { DAI, WETH, WSTETH } from './TestUtils'
 
 describe('PositionUtils', () => {
   const daiPriceInUsd = '1'
@@ -75,7 +76,7 @@ describe('PositionUtils', () => {
         position: {
           collateralAmount: TokenAmount.createFrom({ amount: '2', token: WETH }),
           debtAmount: TokenAmount.createFrom({ amount: '1500', token: DAI }),
-        } as Position,
+        } as LendingPosition,
         liquidationThreshold,
         debtPriceInUsd: daiPriceInUsd,
       })
@@ -85,7 +86,7 @@ describe('PositionUtils', () => {
         position: {
           collateralAmount: TokenAmount.createFrom({ amount: '2', token: WETH }),
           debtAmount: TokenAmount.createFrom({ amount: '1600', token: DAI }),
-        } as Position,
+        } as LendingPosition,
         liquidationThreshold,
         debtPriceInUsd: daiPriceInUsd,
       })
@@ -95,7 +96,7 @@ describe('PositionUtils', () => {
         position: {
           collateralAmount: TokenAmount.createFrom({ amount: '2', token: WETH }),
           debtAmount: TokenAmount.createFrom({ amount: '1', token: DAI }),
-        } as Position,
+        } as LendingPosition,
         liquidationThreshold,
         debtPriceInUsd: daiPriceInUsd,
       })
@@ -105,7 +106,7 @@ describe('PositionUtils', () => {
         position: {
           collateralAmount: TokenAmount.createFrom({ amount: '4', token: WETH }),
           debtAmount: TokenAmount.createFrom({ amount: '1.6', token: WSTETH }),
-        } as Position,
+        } as LendingPosition,
         liquidationThreshold,
         debtPriceInUsd: daiPriceInUsd,
       })
@@ -121,7 +122,7 @@ describe('PositionUtils', () => {
         position: {
           collateralAmount: TokenAmount.createFrom({ amount: '2000', token: DAI }),
           debtAmount: TokenAmount.createFrom({ amount: '1.5', token: WETH }),
-        } as Position,
+        } as LendingPosition,
         liquidationThreshold,
         debtPriceInUsd: ethPriceInUsd,
       })
@@ -131,7 +132,7 @@ describe('PositionUtils', () => {
         position: {
           collateralAmount: TokenAmount.createFrom({ amount: '2000', token: DAI }),
           debtAmount: TokenAmount.createFrom({ amount: '1.6', token: WETH }),
-        } as Position,
+        } as LendingPosition,
         liquidationThreshold,
         debtPriceInUsd: ethPriceInUsd,
       })
@@ -141,7 +142,7 @@ describe('PositionUtils', () => {
         position: {
           collateralAmount: TokenAmount.createFrom({ amount: '2000', token: DAI }),
           debtAmount: TokenAmount.createFrom({ amount: '0.001', token: WETH }),
-        } as Position,
+        } as LendingPosition,
         liquidationThreshold,
         debtPriceInUsd: ethPriceInUsd,
       })
@@ -151,7 +152,7 @@ describe('PositionUtils', () => {
         position: {
           collateralAmount: TokenAmount.createFrom({ amount: '2', token: WSTETH }),
           debtAmount: TokenAmount.createFrom({ amount: '3.2', token: WETH }),
-        } as Position,
+        } as LendingPosition,
         liquidationThreshold,
         debtPriceInUsd: ethPriceInUsd,
       })
@@ -167,7 +168,7 @@ describe('PositionUtils', () => {
         position: {
           collateralAmount: TokenAmount.createFrom({ amount: '100', token: WETH }),
           debtAmount: TokenAmount.createFrom({ amount: '0', token: DAI }),
-        } as Position,
+        } as LendingPosition,
         liquidationThreshold,
         debtPriceInUsd: daiPriceInUsd,
       })
