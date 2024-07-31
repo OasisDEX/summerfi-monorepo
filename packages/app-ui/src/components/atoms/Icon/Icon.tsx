@@ -1,11 +1,11 @@
 'use client'
 
-import { type FC } from 'react'
+import { type FC, useState } from 'react'
+import * as iconProxies from '@summerfi/app-icons'
 import { type IconNamesList, type TokenSymbolsList } from '@summerfi/app-types'
+import Image from 'next/image'
 
 import { getTokenGuarded } from '@/tokens/helpers'
-
-import * as iconProxies from './iconsProxy'
 
 export interface IconPropsBase {
   variant?: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'
@@ -26,6 +26,42 @@ export interface IconPropsWithTokenName extends IconPropsBase {
   tokenName: TokenSymbolsList
 }
 
+const FallbackSvg = ({
+  focusable,
+  role,
+  finalSize,
+  proxyStyle,
+  errorLoading,
+}: {
+  focusable?: boolean
+  role?: 'presentation'
+  finalSize: number
+  proxyStyle?: React.CSSProperties
+  errorLoading?: boolean
+}) => (
+  <svg
+    viewBox="0 0 6.35 6.35"
+    color="inherit"
+    display="inline-block"
+    focusable={focusable}
+    role={role}
+    width={finalSize}
+    height={finalSize}
+  >
+    <circle
+      style={{
+        fill: errorLoading ? 'red' : '#9d9d9d',
+        fillOpacity: 0.350168,
+        strokeWidth: 0.340624,
+        ...proxyStyle,
+      }}
+      cx="3.175"
+      cy="3.175"
+      r="3.175"
+    />
+  </svg>
+)
+
 export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
   variant = 'l',
   role = 'presentation',
@@ -36,6 +72,7 @@ export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
   style,
   proxyStyle,
 }) => {
+  const [errorLoading, setErrorLoading] = useState(false)
   const finalSize =
     size ??
     {
@@ -56,39 +93,37 @@ export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
   return (
     <LazyIconComponent
       fallback={
-        <svg
-          viewBox="0 0 6.35 6.35"
-          color="inherit"
-          display="inline-block"
+        <FallbackSvg
           focusable={focusable}
           role={role}
-          width={finalSize}
-          height={finalSize}
-        >
-          <circle
-            style={{ fill: '#9d9d9d', fillOpacity: 0.350168, strokeWidth: 0.340624, ...proxyStyle }}
-            cx="3.175"
-            cy="3.175"
-            r="3.175"
-          />
-        </svg>
+          finalSize={finalSize}
+          proxyStyle={proxyStyle}
+        />
       }
     >
-      {({ default: iconData }) => (
-        <svg
-          viewBox={'viewBox' in iconData ? iconData.viewBox : '0 0 24 24'}
-          color="inherit"
-          display="inline-block"
-          focusable={focusable}
-          role={role}
-          width={finalSize}
-          height={finalSize}
-          style={style}
-        >
-          {iconName}
-          {iconData.path}
-        </svg>
-      )}
+      {({ default: iconData }: { default: string }) =>
+        iconData && !errorLoading ? (
+          <Image
+            src={iconData}
+            color="inherit"
+            alt={iconName}
+            role={role}
+            width={finalSize}
+            height={finalSize}
+            style={style}
+            unoptimized
+            onError={() => setErrorLoading(true)}
+          />
+        ) : (
+          <FallbackSvg
+            focusable={focusable}
+            role={role}
+            finalSize={finalSize}
+            errorLoading={errorLoading}
+            proxyStyle={{ ...proxyStyle, fill: 'red', fillOpacity: 1 }}
+          />
+        )
+      }
     </LazyIconComponent>
   )
 }

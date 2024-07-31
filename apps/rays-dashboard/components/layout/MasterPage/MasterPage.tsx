@@ -1,5 +1,5 @@
 import { type FC, type PropsWithChildren } from 'react'
-import { Footer, LaunchBanner } from '@summerfi/app-ui'
+import { Footer } from '@summerfi/app-ui'
 import Image from 'next/image'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
@@ -24,7 +24,6 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
 
   return (
     <>
-      <LaunchBanner />
       <WalletInit />
       <div className={masterPageStyles.mainContainer}>
         {

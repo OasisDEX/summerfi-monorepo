@@ -20,7 +20,7 @@ export const fetchMigrations = async ({
       `${process.env.FUNCTIONS_API_URL}/api/migrations?address=${address}`,
       {
         method: 'GET',
-        next: { revalidate: 0 }, // disabling cache as user values doesnt match the leaderboard position
+        next: { revalidate: 60, tags: [address] },
         headers: {
           'Content-Type': 'application/json',
         },

@@ -11,7 +11,7 @@ export const fetchRays = async (query: { [key: string]: string } | string) => {
     }
     const rays = (await fetch(`${process.env.FUNCTIONS_API_URL}/api/rays?${urlParams.toString()}`, {
       method: 'GET',
-      next: { revalidate: 0 }, // disabling cache as user values doesnt match the leaderboard position
+      next: { revalidate: 60, tags: [urlParams.toString()] },
       headers: {
         'Content-Type': 'application/json',
       },

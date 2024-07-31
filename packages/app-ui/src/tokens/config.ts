@@ -267,6 +267,11 @@ export const tokenConfigs: TokenConfig[] = [
     iconName: 'bal_circle',
   },
   {
+    symbol: 'BSDETH',
+    name: 'Based ETH',
+    iconName: 'bsdeth_circle_color',
+  },
+  {
     symbol: 'LDO',
     name: 'Lido DAO',
     iconName: 'ldo_circle',

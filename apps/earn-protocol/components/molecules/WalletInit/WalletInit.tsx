@@ -24,7 +24,7 @@ const getChains = () => {
   const resolvedNetworksList = isSSR() ? ssrNetworksList : networksList
 
   return resolvedNetworksList.map((network: NetworkConfig) => {
-    const forkCookie = safeParseJson(getCookies(forksCookieName))[network.id]
+    const forkCookie = safeParseJson(getCookies(forksCookieName))
     const localWalletRpcConfig = {
       // copied from the oazo-configuration
       // needs some base url before the config loads
@@ -34,13 +34,19 @@ const getChains = () => {
       42161: 'https://arb1.arbitrum.io/rpc', // Arbitrum
     }
 
-    if (forkCookie) {
+    if (forkCookie[network.id]) {
+      const forkUrlId =
+        forkCookie[network.id].split('-')[forkCookie[network.id].split('-').length - 1]
+
+      // eslint-disable-next-line no-console
+      console.log('Fork cookie set for', network.label, `(${forkUrlId})`)
+
       return {
         id: network.hexId,
-        label: network.label,
+        label: `${network.label} (${forkUrlId})`,
         token: network.token,
         color: network.color,
-        rpcUrl: forkCookie,
+        rpcUrl: forkCookie[network.id],
       }
     }
 

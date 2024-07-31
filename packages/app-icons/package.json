@@ -1,0 +1,39 @@
+{
+  "name": "@summerfi/app-icons",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/types/src/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "lint": "eslint *.ts*",
+    "dev": "vite build -w true --mode=dev",
+    "build": "vite build -w false --mode=prod",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "@summerfi/app-types": "workspace:*",
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "@types/loadable__component": "^5.13.9",
+    "eslint": "8.57.0",
+    "glob": "^10.3.12",
+    "jest": "29.7.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.3.5"
+  },
+  "peerDependencies": {
+    "@loadable/component": "^5.16.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "vite-plugin-dts": "4.0.0-beta.1",
+    "vite-plugin-svgo": "^1.4.0"
+  }
+}

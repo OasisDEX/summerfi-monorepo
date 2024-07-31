@@ -1,0 +1,44 @@
+{
+  "name": "@summerfi/app-tos",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/types/src/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "lint": "eslint *.ts*",
+    "dev": "pnpm vite build -w true",
+    "build": "pnpm  vite build -w false",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "@summerfi/app-types": "workspace:*",
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "@types/react": "^18.3.1",
+    "@types/jsonwebtoken": "^9.0.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite-plugin-node-polyfills": "^0.22.0",
+    "eslint": "8.57.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11",
+    "vite-plugin-dts": "^3.9.1",
+    "glob": "^10.3.12"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "@safe-global/safe-apps-sdk": "^9.0.0",
+    "jsonwebtoken": "^9.0.0",
+    "@summerfi/serverless-shared": "workspace:*"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "rollup-preserve-directives": "^1.1.1",
+    "vite-tsconfig-paths": "^4.3.2"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "earn-protocol-dashboard",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "REMOVE_THIS_TO_DEPLOY_dev": "dotenv -e ../../.env -e ../../.env.local -- sst bind next dev",
+    "REMOVE_THIS_TO_DEPLOY_build": "dotenv -e ../../.env -e ../../.env.local -- next build",
+    "REMOVE_THIS_TO_DEPLOY_start": "dotenv -e ../../.env -e ../../.env.local -- next start",
+    "REMOVE_THIS_TO_DEPLOY_deploy": "dotenv -e ../../.env -e ../../.env.local -- sst deploy --stage production --app summerfi-stack"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "framer-motion": "^11.3.19",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "recharts": "^2.1.9"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.40",
+    "tailwindcss": "^3.4.7"
+  }
+}
