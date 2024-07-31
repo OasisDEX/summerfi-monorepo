@@ -16,6 +16,7 @@ export interface IconPropsBase {
   tokenName?: TokenSymbolsList
   style?: React.CSSProperties
   proxyStyle?: React.CSSProperties
+  color?: string
 }
 
 export interface IconPropsWithIconName extends IconPropsBase {
@@ -71,6 +72,7 @@ export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
   size,
   style,
   proxyStyle,
+  color,
 }) => {
   const [errorLoading, setErrorLoading] = useState(false)
   const finalSize =
@@ -90,6 +92,8 @@ export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
 
   const LazyIconComponent = iconProxies[iconName]
 
+  const colorSet = color ?? style?.stroke
+
   return (
     <LazyIconComponent
       fallback={
@@ -104,7 +108,7 @@ export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
       {({ default: iconData }: { default: string }) =>
         iconData && !errorLoading ? (
           <Image
-            src={iconData}
+            src={colorSet ? iconData.replaceAll('currentColor', colorSet) : iconData}
             color="inherit"
             alt={iconName}
             role={role}
