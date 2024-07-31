@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { IPrintable } from '../../common'
-import { ChainInfoDataSchema, IChainInfo } from '../../common/interfaces/IChainInfo'
-import { IWallet, WalletDataSchema } from '../../common/interfaces/IWallet'
+import { IChainInfo, isChainInfo } from '../../common/interfaces/IChainInfo'
+import { IWallet, isWallet } from '../../common/interfaces/IWallet'
 
 /**
  * Unique signature for the interface so it can be differentiated from other similar interfaces
@@ -24,8 +24,8 @@ export interface IUser extends IUserData, IPrintable {
  * Zod schema for the data part of IUser
  */
 export const UserDataSchema = z.object({
-  wallet: WalletDataSchema,
-  chainInfo: ChainInfoDataSchema,
+  wallet: z.custom<IWallet>((val) => isWallet(val)),
+  chainInfo: z.custom<IChainInfo>((val) => isChainInfo(val)),
 })
 
 /**

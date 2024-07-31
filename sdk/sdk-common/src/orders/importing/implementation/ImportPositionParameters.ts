@@ -2,10 +2,15 @@ import { SerializationService } from '../../../services/SerializationService'
 import { IExternalLendingPosition } from '../interfaces'
 import {
   IImportPositionParameters,
-  IImportPositionParametersParameters,
+  IImportPositionParametersData,
   __signature__,
 } from '../interfaces/IImportPositionParameters'
 import { ExternalLendingPosition } from './ExternalLendingPosition'
+
+/**
+ * Type for the parameters of ImportPositionParameters
+ */
+export type ImportPositionParametersParameters = Omit<IImportPositionParametersData, ''>
 
 /**
  * @name ImportPositionParameters
@@ -19,12 +24,12 @@ export class ImportPositionParameters implements IImportPositionParameters {
   readonly externalPosition: IExternalLendingPosition
 
   /** FACTORY */
-  static createFrom(params: IImportPositionParametersParameters): ImportPositionParameters {
+  static createFrom(params: ImportPositionParametersParameters): ImportPositionParameters {
     return new ImportPositionParameters(params)
   }
 
   /** SEALED CONSTRUCTOR */
-  private constructor(params: IImportPositionParametersParameters) {
+  private constructor(params: ImportPositionParametersParameters) {
     this.externalPosition = ExternalLendingPosition.createFrom(params.externalPosition)
   }
 

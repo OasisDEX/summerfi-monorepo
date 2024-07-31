@@ -37,11 +37,6 @@ export const SDKErrorDataSchema = z.object({
 export type ISDKErrorData = Readonly<z.infer<typeof SDKErrorDataSchema>>
 
 /**
- * Type for the parameters of the ISDKError interface
- */
-export type ISDKErrorParameters = Omit<ISDKErrorData, ''>
-
-/**
  * @description Type guard for ISDKError
  * @param maybeErrorData
  * @returns true if the object is an ISDKError

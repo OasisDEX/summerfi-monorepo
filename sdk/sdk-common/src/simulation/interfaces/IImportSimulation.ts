@@ -29,6 +29,9 @@ export interface IImportSimulation extends ISimulation {
   readonly targetPosition: ILendingPosition
   /** Steps needed to perform the refinance */
   readonly steps: Steps[]
+
+  // Re-declaring the properties with the correct types
+  readonly type: SimulationType.ImportPosition
 }
 
 /**
@@ -36,21 +39,16 @@ export interface IImportSimulation extends ISimulation {
  */
 export const ImportSimulationSchema = z.object({
   ...SimulationSchema.shape,
-  type: z.literal(SimulationType.ImportPosition),
   sourcePosition: z.custom<IExternalLendingPosition>((val) => isExternalLendingPosition(val)),
   targetPosition: z.custom<ILendingPosition>((val) => isLendingPosition(val)),
   steps: z.array(z.custom<Steps>()),
+  type: z.literal(SimulationType.ImportPosition),
 })
 
 /**
  * Type for the data part of the IImportSimulation interface
  */
 export type IImportSimulationData = Readonly<z.infer<typeof ImportSimulationSchema>>
-
-/**
- * Type for the parameters of the IImportSimulation interface
- */
-export type IImportSimulationParameters = Omit<IImportSimulationData, 'type'>
 
 /**
  * @description Type guard for IRefinanceSimulation

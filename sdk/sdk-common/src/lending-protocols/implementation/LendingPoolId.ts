@@ -1,12 +1,13 @@
+import { PoolType } from '../../common'
 import { PoolId } from '../../common/implementation/PoolId'
 import { IPrintable } from '../../common/interfaces/IPrintable'
-import { PoolType } from '../../common/types/PoolType'
 import { SerializationService } from '../../services'
-import {
-  ILendingPoolId,
-  ILendingPoolIdParameters,
-  __signature__,
-} from '../interfaces/ILendingPoolId'
+import { ILendingPoolId, ILendingPoolIdData, __signature__ } from '../interfaces/ILendingPoolId'
+
+/**
+ * Type for the parameters of LendingPoolId
+ */
+export type LendingPoolIdParameters = Omit<ILendingPoolIdData, 'type'>
 
 /**
  * LendingPoolId
@@ -16,12 +17,12 @@ export abstract class LendingPoolId extends PoolId implements ILendingPoolId, IP
   /** SIGNATURE */
   readonly [__signature__] = __signature__
 
+  /** ATTRIBUTES */
+  readonly type = PoolType.Lending
+
   /** SEALED CONSTRUCTOR */
-  protected constructor(params: ILendingPoolIdParameters) {
-    super({
-      ...params,
-      type: PoolType.Lending,
-    })
+  protected constructor(params: LendingPoolIdParameters) {
+    super(params)
   }
 
   /** METHODS */

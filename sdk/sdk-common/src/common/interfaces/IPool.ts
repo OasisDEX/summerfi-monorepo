@@ -38,11 +38,6 @@ export const PoolDataSchema = z.object({
 export type IPoolData = Readonly<z.infer<typeof PoolDataSchema>>
 
 /**
- * Type for the parameters of the IPool interface
- */
-export type IPoolParameters = Omit<IPoolData, ''>
-
-/**
  * @description Type guard for IPool
  * @param maybePool
  * @returns true if the object is an IPool

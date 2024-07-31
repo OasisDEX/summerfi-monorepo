@@ -48,11 +48,6 @@ export const AddressDataSchema = z.object({
 export type IAddressData = Readonly<z.infer<typeof AddressDataSchema>>
 
 /**
- * Type for the parameters of the IAddress interface
- */
-export type IAddressParameters = Omit<IAddressData, ''>
-
-/**
  * @description Type guard for IAddress
  * @param maybeAddress
  * @returns true if the object is an IAddress

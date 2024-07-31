@@ -7,9 +7,14 @@ import { IDebtInfo } from '../interfaces/IDebtInfo'
 import { ILendingPoolId } from '../interfaces/ILendingPoolId'
 import {
   ILendingPoolInfo,
-  ILendingPoolInfoParameters,
+  ILendingPoolInfoData,
   __signature__,
 } from '../interfaces/ILendingPoolInfo'
+
+/**
+ * Type for the parameters of LendingPoolInfo
+ */
+export type LendingPoolInfoParameters = Omit<ILendingPoolInfoData, 'type'>
 
 /**
  * LendingPoolInfo
@@ -26,13 +31,11 @@ export abstract class LendingPoolInfo extends PoolInfo implements ILendingPoolIn
   abstract readonly id: ILendingPoolId
   readonly collateral: ICollateralInfo
   readonly debt: IDebtInfo
+  readonly type = PoolType.Lending
 
   /** SEALED CONSTRUCTOR */
-  protected constructor(params: ILendingPoolInfoParameters) {
-    super({
-      ...params,
-      type: PoolType.Lending,
-    })
+  protected constructor(params: LendingPoolInfoParameters) {
+    super(params)
 
     this.collateral = params.collateral
     this.debt = params.debt

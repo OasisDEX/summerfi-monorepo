@@ -5,7 +5,6 @@ export {
 export type {
   IExternalLendingPosition,
   IExternalLendingPositionData,
-  IExternalLendingPositionParameters,
 } from './IExternalLendingPosition'
 export {
   ExternalLendingPositionIdDataSchema,
@@ -14,7 +13,6 @@ export {
 export type {
   IExternalLendingPositionId,
   IExternalLendingPositionIdData,
-  IExternalLendingPositionIdParameters,
 } from './IExternalLendingPositionId'
 export {
   ImportPositionParametersDataSchema,
@@ -23,5 +21,4 @@ export {
 export type {
   IImportPositionParameters,
   IImportPositionParametersData,
-  IImportPositionParametersParameters,
 } from './IImportPositionParameters'

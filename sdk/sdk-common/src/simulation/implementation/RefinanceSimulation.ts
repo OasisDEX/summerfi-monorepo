@@ -1,14 +1,19 @@
 import { ILendingPosition } from '../../lending-protocols/interfaces/ILendingPosition'
 import { SerializationService } from '../../services/SerializationService'
 import { SimulatedSwapData } from '../../swap/implementation/SimulatedSwapData'
-import { SimulationType } from '../enums'
+import { SimulationType } from '../enums/SimulationType'
 import {
   IRefinanceSimulation,
-  IRefinanceSimulationParameters,
+  IRefinanceSimulationData,
   __signature__,
 } from '../interfaces/IRefinanceSimulation'
 import { Steps } from '../interfaces/Steps'
 import { Simulation } from './Simulation'
+
+/**
+ * Type for the parameters of RefinanceSimulation
+ */
+export type RefinanceSimulationParameters = Omit<IRefinanceSimulationData, 'type'>
 
 /**
  * @name RefinanceSimulation
@@ -23,18 +28,16 @@ export class RefinanceSimulation extends Simulation implements IRefinanceSimulat
   readonly targetPosition: ILendingPosition
   readonly swaps: SimulatedSwapData[]
   readonly steps: Steps[]
+  readonly type = SimulationType.Refinance
 
   /** FACTORY */
-  static createFrom(params: IRefinanceSimulationParameters): RefinanceSimulation {
+  static createFrom(params: RefinanceSimulationParameters): RefinanceSimulation {
     return new RefinanceSimulation(params)
   }
 
   /** SEALED CONSTRUCTOR */
-  private constructor(params: IRefinanceSimulationParameters) {
-    super({
-      ...params,
-      type: SimulationType.Refinance,
-    })
+  private constructor(params: RefinanceSimulationParameters) {
+    super(params)
 
     this.sourcePosition = params.sourcePosition
     this.targetPosition = params.targetPosition

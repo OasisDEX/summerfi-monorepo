@@ -43,11 +43,6 @@ export const WalletDataSchema = z.object({
 export type IWalletData = Readonly<z.infer<typeof WalletDataSchema>>
 
 /**
- * Type for the parameters of the IWallet interface
- */
-export type IWalletParameters = Omit<IWalletData, ''>
-
-/**
  * @description Type guard for IWallet
  * @param maybeWallet
  * @returns true if the object is an IWallet

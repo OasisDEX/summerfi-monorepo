@@ -30,7 +30,7 @@ export interface ILendingPool extends IPool, ILendingPoolData {
   readonly debtToken: IToken
 
   // Re-declaring the properties with the correct types
-  readonly type: PoolType
+  readonly type: PoolType.Lending
 }
 
 /**
@@ -48,11 +48,6 @@ export const LendingPoolDataSchema = z.object({
  * Type for the data part of the ILendingPool interface
  */
 export type ILendingPoolData = Readonly<z.infer<typeof LendingPoolDataSchema>>
-
-/**
- * Type for the parameters of the ILendingPool interface
- */
-export type ILendingPoolParameters = Omit<ILendingPoolData, 'type'>
 
 /**
  * @description Type guard for ILendingPool

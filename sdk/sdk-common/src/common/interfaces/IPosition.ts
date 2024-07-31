@@ -34,11 +34,6 @@ export const PositionDataSchema = z.object({
 export type IPositionData = Readonly<z.infer<typeof PositionDataSchema>>
 
 /**
- * Type for the parameters of the IPosition interface
- */
-export type IPositionParameters = Omit<IPositionData, ''>
-
-/**
  * @description Type guard for IPosition
  * @param maybePosition
  * @returns true if the object is an IPosition

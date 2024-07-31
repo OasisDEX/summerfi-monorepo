@@ -40,11 +40,6 @@ export const RefinanceParametersDataSchema = z.object({
 export type IRefinanceParametersData = Readonly<z.infer<typeof RefinanceParametersDataSchema>>
 
 /**
- * Type for the parameters of the refinance parameters
- */
-export type IRefinanceParametersParameters = Omit<IRefinanceParametersData, ''>
-
-/**
  * Type guard for the refinance parameters
  * @param maybeRefinanceParameters Parameters to check
  * @returns True if the parameters are valid

@@ -5,9 +5,14 @@ import { SerializationService } from '../../../services/SerializationService'
 import { ExternalLendingPositionType } from '../enums/ExrternalLendingPositionType'
 import {
   IExternalLendingPositionId,
-  IExternalLendingPositionIdParameters,
+  IExternalLendingPositionIdData,
   __signature__,
 } from '../interfaces/IExternalLendingPositionId'
+
+/**
+ * Type for the parameters of ExternalLendingPositionIdParameters
+ */
+export type ExternalLendingPositionIdParameters = Omit<IExternalLendingPositionIdData, 'type'>
 
 /**
  * @name ExternalLendingPositionId
@@ -26,12 +31,12 @@ export class ExternalLendingPositionId
   readonly protocolId: ILendingPositionId
 
   /** FACTORY */
-  static createFrom(params: IExternalLendingPositionIdParameters): ExternalLendingPositionId {
+  static createFrom(params: ExternalLendingPositionIdParameters): ExternalLendingPositionId {
     return new ExternalLendingPositionId(params)
   }
 
   /** SEALED CONSTRUCTOR */
-  private constructor(params: IExternalLendingPositionIdParameters) {
+  private constructor(params: ExternalLendingPositionIdParameters) {
     super(params)
 
     this.externalType = params.externalType

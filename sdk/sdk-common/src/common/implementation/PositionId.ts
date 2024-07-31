@@ -1,6 +1,11 @@
 import { SerializationService } from '../../services/SerializationService'
-import { IPositionId, IPositionIdParameters, __signature__ } from '../interfaces/IPositionId'
+import { IPositionId, IPositionIdData, __signature__ } from '../interfaces/IPositionId'
 import { PositionType } from '../types/PositionType'
+
+/**
+ * Type for the parameters of Position
+ */
+export type PositionIdParameters = Omit<IPositionIdData, 'type'>
 
 /**
  * @class PositionId
@@ -12,12 +17,11 @@ export abstract class PositionId implements IPositionId {
 
   /** ATTRIBUTES */
   readonly id: string
-  readonly type: PositionType
+  abstract readonly type: PositionType
 
   /** SEALED CONSTRUCTOR */
-  protected constructor(params: IPositionIdParameters) {
+  protected constructor(params: PositionIdParameters) {
     this.id = params.id
-    this.type = params.type
   }
 
   /** METHODS */

@@ -200,11 +200,6 @@ export const PriceDataSchema = z.object({
 export type IPriceData = Readonly<z.infer<typeof PriceDataSchema>>
 
 /**
- * Type for the parameters of the IPrice interface
- */
-export type IPriceParameters = Omit<IPriceData, ''>
-
-/**
  * @description Type guard for isPrice
  * @param maybePrice
  * @returns true if the object is an isPrice

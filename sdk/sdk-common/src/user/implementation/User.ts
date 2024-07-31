@@ -1,9 +1,12 @@
-import { ChainInfo } from '../../common/implementation/ChainInfo'
-import { Wallet } from '../../common/implementation/Wallet'
 import { IChainInfo } from '../../common/interfaces/IChainInfo'
 import { IWallet } from '../../common/interfaces/IWallet'
 import { SerializationService } from '../../services/SerializationService'
 import { IUser, IUserData, __signature__ } from '../interfaces/IUser'
+
+/**
+ * Type for the parameters of User
+ */
+export type UserParameters = Omit<IUserData, ''>
 
 /**
  * @name User
@@ -18,14 +21,14 @@ export class User implements IUser {
   public readonly chainInfo: IChainInfo
 
   /** FACTORY */
-  public createFrom(params: IUserData): User {
+  public createFrom(params: UserParameters): User {
     return new User(params)
   }
 
   /** SEALED CONSTRUCTOR */
-  protected constructor(params: IUserData) {
-    this.chainInfo = ChainInfo.createFrom(params.chainInfo)
-    this.wallet = Wallet.createFrom(params.wallet)
+  protected constructor(params: UserParameters) {
+    this.chainInfo = params.chainInfo
+    this.wallet = params.wallet
   }
 
   /** METHODS */

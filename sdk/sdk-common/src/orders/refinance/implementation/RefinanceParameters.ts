@@ -4,9 +4,14 @@ import { ILendingPosition } from '../../../lending-protocols/interfaces/ILending
 import { SerializationService } from '../../../services/SerializationService'
 import {
   IRefinanceParameters,
-  IRefinanceParametersParameters,
+  IRefinanceParametersData,
   __signature__,
 } from '../interfaces/IRefinanceParameters'
+
+/**
+ * Type for the parameters of RefinanceParameters
+ */
+export type RefinanceParametersParameters = Omit<IRefinanceParametersData, ''>
 
 /**
  * @name RefinanceParameters
@@ -22,12 +27,12 @@ export class RefinanceParameters implements IRefinanceParameters {
   readonly slippage: IPercentage
 
   /** FACTORY */
-  static createFrom(params: IRefinanceParametersParameters): RefinanceParameters {
+  static createFrom(params: RefinanceParametersParameters): RefinanceParameters {
     return new RefinanceParameters(params)
   }
 
   /** SEALED CONSTRUCTOR */
-  private constructor(params: IRefinanceParametersParameters) {
+  private constructor(params: RefinanceParametersParameters) {
     this.sourcePosition = params.sourcePosition
     this.targetPool = params.targetPool
     this.slippage = params.slippage

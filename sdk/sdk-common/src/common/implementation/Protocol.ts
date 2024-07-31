@@ -1,9 +1,13 @@
-import { ChainInfo } from '../../common/implementation/ChainInfo'
 import { IPrintable } from '../../common/interfaces/IPrintable'
 import { SerializationService } from '../../services'
 import { ProtocolName } from '../enums/ProtocolName'
 import { IChainInfo } from '../interfaces/IChainInfo'
-import { IProtocol, IProtocolParameters, __signature__ } from '../interfaces/IProtocol'
+import { IProtocol, IProtocolData, __signature__ } from '../interfaces/IProtocol'
+
+/**
+ * Type for the parameters of Price
+ */
+export type ProtocolParameters = Omit<IProtocolData, ''>
 
 /**
  * @class Protocol
@@ -18,9 +22,9 @@ export abstract class Protocol implements IProtocol, IPrintable {
   readonly chainInfo: IChainInfo
 
   /** SEALED CONSTRUCTOR */
-  protected constructor(params: IProtocolParameters) {
+  protected constructor(params: ProtocolParameters) {
     this.name = params.name
-    this.chainInfo = ChainInfo.createFrom(params.chainInfo)
+    this.chainInfo = params.chainInfo
   }
 
   /** METHODS */

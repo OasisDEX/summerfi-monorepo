@@ -91,11 +91,6 @@ export const FiatCurrencyAmountDataSchema = z.object({
 export type IFiatCurrencyAmountData = Readonly<z.infer<typeof FiatCurrencyAmountDataSchema>>
 
 /**
- * Type for the parameters of the IFiatCurrencyAmount interface
- */
-export type IFiatCurrencyAmountParameters = Omit<IFiatCurrencyAmountData, ''>
-
-/**
  * @description Type guard for IFiatCurrencyAmount
  * @param maybeTokenAmount
  * @returns true if the object is an ITokenAmount

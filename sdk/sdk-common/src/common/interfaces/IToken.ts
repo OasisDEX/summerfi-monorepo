@@ -54,11 +54,6 @@ export const TokenDataSchema = z.object({
 export type ITokenData = Readonly<z.infer<typeof TokenDataSchema>>
 
 /**
- * Type for the parameters of the IToken interface
- */
-export type ITokenParameters = Omit<ITokenData, ''>
-
-/**
  * @description Type guard for IToken
  * @param maybeTokenData
  * @returns true if the object is an IToken

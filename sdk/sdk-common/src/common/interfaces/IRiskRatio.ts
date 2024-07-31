@@ -56,11 +56,6 @@ export const RiskRatioDataSchema = z.object({
 export type IRiskRatioData = Readonly<z.infer<typeof RiskRatioDataSchema>>
 
 /**
- * Type for the parameters of the IRiskRatio interface
- */
-export type IRiskRatioParameters = Omit<IRiskRatioData, ''>
-
-/**
  * @description Type guard for IRiskRatio
  * @param maybeRiskRatio
  * @returns true if the object is an IRiskRatio

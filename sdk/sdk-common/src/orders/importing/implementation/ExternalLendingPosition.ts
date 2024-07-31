@@ -3,10 +3,15 @@ import { LendingPosition } from '../../../lending-protocols/implementation/Lendi
 import { SerializationService } from '../../../services/SerializationService'
 import {
   IExternalLendingPosition,
-  IExternalLendingPositionParameters,
+  IExternalLendingPositionData,
   __signature__,
 } from '../interfaces/IExternalLendingPosition'
 import { IExternalLendingPositionId } from '../interfaces/IExternalLendingPositionId'
+
+/**
+ * Type for the parameters of ExternalLendingPosition
+ */
+export type ExternalLendingPositionParameters = Omit<IExternalLendingPositionData, ''>
 
 /**
  * @name ExternalLendingPosition
@@ -21,12 +26,12 @@ export class ExternalLendingPosition extends LendingPosition implements IExterna
   readonly pool: ILendingPool
 
   /** FACTORY */
-  static createFrom(params: IExternalLendingPositionParameters): ExternalLendingPosition {
+  static createFrom(params: ExternalLendingPositionParameters): ExternalLendingPosition {
     return new ExternalLendingPosition(params)
   }
 
   /** SEALED CONSTRUCTOR */
-  private constructor(params: IExternalLendingPositionParameters) {
+  private constructor(params: ExternalLendingPositionParameters) {
     super(params)
 
     this.id = params.id

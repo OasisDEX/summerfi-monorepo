@@ -1,12 +1,12 @@
 import { SerializationService } from '../../services/SerializationService'
 import { IPercentage, isPercentageData } from '../interfaces/IPercentage'
-import {
-  IRiskRatio,
-  IRiskRatioParameters,
-  RiskRatioType,
-  __signature__,
-} from '../interfaces/IRiskRatio'
+import { IRiskRatio, IRiskRatioData, RiskRatioType, __signature__ } from '../interfaces/IRiskRatio'
 import { Percentage } from './Percentage'
+
+/**
+ * Type for the parameters of RiskRatio
+ */
+export type RiskRatioParameters = Omit<IRiskRatioData, ''>
 
 /**
  * @class RiskRatio
@@ -23,12 +23,12 @@ export class RiskRatio implements IRiskRatio {
   private readonly ltv: IPercentage
 
   /** FACTORY */
-  static createFrom(params: IRiskRatioParameters): RiskRatio {
+  static createFrom(params: RiskRatioParameters): RiskRatio {
     return new RiskRatio(params)
   }
 
   /** SEALED CONSTRUCTOR */
-  private constructor(params: IRiskRatioParameters) {
+  private constructor(params: RiskRatioParameters) {
     this.type = params.type
 
     if (isPercentageData(params.value)) {

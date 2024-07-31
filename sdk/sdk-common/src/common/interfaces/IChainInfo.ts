@@ -44,11 +44,6 @@ export const ChainInfoDataSchema = z.object({
 export type IChainInfoData = Readonly<z.infer<typeof ChainInfoDataSchema>>
 
 /**
- * Type for the parameters of the IChainInfo interface
- */
-export type IChainInfoParameters = Omit<IChainInfoData, ''>
-
-/**
  * @description Type guard for IChainInfo
  * @param maybeChainInfo
  * @returns true if the object is an IChainInfo

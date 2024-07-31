@@ -14,6 +14,9 @@ export const __signature__: unique symbol = Symbol()
 export interface ILendingPositionId extends IPositionId {
   /** Signature to differentiate from similar interfaces */
   readonly [__signature__]: symbol
+
+  // Re-declaring the properties with the correct types
+  readonly type: PositionType.Lending
 }
 
 /**
@@ -21,18 +24,13 @@ export interface ILendingPositionId extends IPositionId {
  */
 export const LendingPositionIdDataSchema = z.object({
   ...PositionIdDataSchema.shape,
-  type: z.custom<PositionType>((val) => val === PositionType.Lending),
+  type: z.literal(PositionType.Lending),
 })
 
 /**
  * Type for the data part of the ILendingPositionId interface
  */
 export type ILendingPositionIdData = Readonly<z.infer<typeof LendingPositionIdDataSchema>>
-
-/**
- * Type for the parameters of the ILendingPositionId interface
- */
-export type ILendingPositionIdParameters = Omit<ILendingPositionIdData, 'type'>
 
 /**
  * @description Type guard for ILendingPositionId

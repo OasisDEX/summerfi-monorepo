@@ -38,11 +38,6 @@ export type IExternalLendingPositionData = Readonly<
 >
 
 /**
- * Type for the parameters of the IExternalLendingPosition interface
- */
-export type IExternalLendingPositionParameters = Omit<IExternalLendingPositionData, ''>
-
-/**
  * @description Type guard for IExternalLendingPosition
  * @param maybeExternalLendingPosition
  * @returns true if the object is an IExternalLendingPosition

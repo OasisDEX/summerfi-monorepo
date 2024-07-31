@@ -81,11 +81,6 @@ export const PercentageDataSchema = z.object({
 export type IPercentageData = Readonly<z.infer<typeof PercentageDataSchema>>
 
 /**
- * Type for the parameters of the IPercentage interface
- */
-export type IPercentageParameters = Omit<IPercentageData, ''>
-
-/**
  * @description Type guard for IPercentage
  * @param maybePercentage
  * @returns true if the object is an IPercentage

@@ -1,8 +1,13 @@
 import { IPrintable } from '../../common/interfaces/IPrintable'
 import { SerializationService } from '../../services/SerializationService'
 import { IPoolId } from '../interfaces/IPoolId'
-import { IPoolInfo, IPoolInfoParameters, __signature__ } from '../interfaces/IPoolInfo'
+import { IPoolInfo, IPoolInfoData, __signature__ } from '../interfaces/IPoolInfo'
 import { PoolType } from '../types/PoolType'
+
+/**
+ * Type for the parameters of PoolInfo
+ */
+export type PoolInfoParameters = Omit<IPoolInfoData, 'type' | 'id'>
 
 /**
  * @class PoolInfo
@@ -13,12 +18,12 @@ export abstract class PoolInfo implements IPoolInfo, IPrintable {
   readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
-  readonly type: PoolType
+  abstract readonly type: PoolType
   abstract readonly id: IPoolId
 
   /** SEALED CONSTRUCTOR */
-  protected constructor(params: IPoolInfoParameters) {
-    this.type = params.type
+  protected constructor(_: PoolInfoParameters) {
+    // Empty on purpose
   }
 
   /** METHODS */

@@ -2,7 +2,6 @@ import { z } from 'zod'
 
 import { IAddress } from '../../../common/interfaces/IAddress'
 import { IPrintable } from '../../../common/interfaces/IPrintable'
-import { PositionType } from '../../../common/types/PositionType'
 import {
   ILendingPositionId,
   LendingPositionIdDataSchema,
@@ -33,9 +32,6 @@ export interface IExternalLendingPositionId
   readonly address: IAddress
   /** ID of the lending protocol */
   readonly protocolId: ILendingPositionId
-
-  // Re-declare the narrowed type
-  readonly type: PositionType
 }
 
 /**
@@ -54,11 +50,6 @@ export const ExternalLendingPositionIdDataSchema = z.object({
 export type IExternalLendingPositionIdData = Readonly<
   z.infer<typeof ExternalLendingPositionIdDataSchema>
 >
-
-/**
- * Type for the parameters of the IExternalPositionId interface
- */
-export type IExternalLendingPositionIdParameters = Omit<IExternalLendingPositionIdData, 'type'>
 
 /**
  * @description Type guard for IExternalPositionId

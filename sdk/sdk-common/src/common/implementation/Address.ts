@@ -1,7 +1,12 @@
 import { SerializationService } from '../../services/SerializationService'
 import { AddressValue } from '../aliases/AddressValue'
-import { IAddress, IAddressParameters, __signature__ } from '../interfaces/IAddress'
+import { IAddress, IAddressData, __signature__ } from '../interfaces/IAddress'
 import { AddressType } from '../types/AddressType'
+
+/**
+ * Type for the parameters of Address
+ */
+export type AddressParameters = Omit<IAddressData, ''>
 
 /**
  * @class Address
@@ -23,7 +28,7 @@ export class Address implements IAddress {
 
   /** FACTORY METHODS */
 
-  static createFrom(params: IAddressParameters): Address {
+  static createFrom(params: AddressParameters): Address {
     return new Address(params)
   }
 
@@ -44,7 +49,7 @@ export class Address implements IAddress {
   }
 
   /** CONSTRUCTOR */
-  private constructor(params: IAddressParameters) {
+  private constructor(params: AddressParameters) {
     if (Address.isValid(params.value) === false) {
       throw new Error('Address value is invalid')
     }

@@ -52,11 +52,6 @@ export const CollateralInfoDataSchema = z.object({
 export type ICollateralInfoData = Readonly<z.infer<typeof CollateralInfoDataSchema>>
 
 /**
- * Type for the parameters of the ICollateralInfo interface
- */
-export type ICollateralInfoParameters = Omit<ICollateralInfoData, ''>
-
-/**
  * @description Type guard for ICollateralInfo
  * @param maybeCollateralInfo
  * @returns true if the object is an ICollateralInfo

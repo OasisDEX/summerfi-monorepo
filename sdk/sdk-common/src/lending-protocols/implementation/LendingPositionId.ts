@@ -1,11 +1,12 @@
 import { PositionId } from '../../common/implementation/PositionId'
 import { PositionType } from '../../common/types/PositionType'
 import { SerializationService } from '../../services/SerializationService'
-import {
-  ILendingPositionIdData,
-  ILendingPositionIdParameters,
-  __signature__,
-} from '../interfaces/ILendingPositionId'
+import { ILendingPositionIdData, __signature__ } from '../interfaces/ILendingPositionId'
+
+/**
+ * Type for the parameters of LendingPositionId
+ */
+export type LendingPositionIdParameters = Omit<ILendingPositionIdData, 'type'>
 
 /**
  * @class LendingPositionId
@@ -15,12 +16,12 @@ export abstract class LendingPositionId extends PositionId implements ILendingPo
   /** SIGNATURE */
   readonly [__signature__] = __signature__
 
+  /** ATTRIBUTES */
+  readonly type = PositionType.Lending
+
   /** SEALED CONSTRUCTOR */
-  protected constructor(params: ILendingPositionIdParameters) {
-    super({
-      ...params,
-      type: PositionType.Lending,
-    })
+  protected constructor(params: LendingPositionIdParameters) {
+    super(params)
   }
 
   /** METHODS */

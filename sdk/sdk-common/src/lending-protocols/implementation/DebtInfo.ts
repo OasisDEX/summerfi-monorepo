@@ -7,7 +7,12 @@ import { IPrice } from '../../common/interfaces/IPrice'
 import { IToken } from '../../common/interfaces/IToken'
 import { ITokenAmount } from '../../common/interfaces/ITokenAmount'
 import { SerializationService } from '../../services/SerializationService'
-import { IDebtInfo, IDebtInfoParameters, __signature__ } from '../interfaces/IDebtInfo'
+import { IDebtInfo, IDebtInfoData, __signature__ } from '../interfaces/IDebtInfo'
+
+/**
+ * Type for the parameters of DebtInfo
+ */
+export type DebtInfoParameters = Omit<IDebtInfoData, ''>
 
 /**
  * @class DebtInfo
@@ -31,12 +36,12 @@ export class DebtInfo implements IDebtInfo {
   readonly originationFee: IPercentage
 
   /** FACTORY METHODS */
-  static createFrom(params: IDebtInfoParameters): DebtInfo {
+  static createFrom(params: DebtInfoParameters): DebtInfo {
     return new DebtInfo(params)
   }
 
   /** CONSTRUCTOR */
-  protected constructor(params: IDebtInfoParameters) {
+  protected constructor(params: DebtInfoParameters) {
     this.token = Token.createFrom(params.token)
     this.price = Price.createFrom(params.price)
     this.priceUSD = Price.createFrom(params.priceUSD)

@@ -32,11 +32,6 @@ export type IImportPositionParametersData = Readonly<
 >
 
 /**
- * Type for the parameters of the IImportPositionParameters interface
- */
-export type IImportPositionParametersParameters = Omit<IImportPositionParametersData, ''>
-
-/**
  * @description Type guard for IImportPositionParameters
  * @param maybeImportPositionParameters
  * @returns true if the object is an IImportPositionParameters

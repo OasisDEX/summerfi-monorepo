@@ -1,15 +1,7 @@
 export { ImportSimulationSchema, isImportSimulation } from './IImportSimulation'
-export type {
-  IImportSimulation,
-  IImportSimulationData,
-  IImportSimulationParameters,
-} from './IImportSimulation'
+export type { IImportSimulation, IImportSimulationData } from './IImportSimulation'
 export { RefinanceSimulationSchema, isRefinanceSimulation } from './IRefinanceSimulation'
-export type {
-  IRefinanceSimulation,
-  IRefinanceSimulationData,
-  IRefinanceSimulationParameters,
-} from './IRefinanceSimulation'
+export type { IRefinanceSimulation, IRefinanceSimulationData } from './IRefinanceSimulation'
 export { SimulationSchema, isSimulation } from './ISimulation'
 export type { ISimulation, ISimulationData } from './ISimulation'
 export type { SimulationStrategy, StrategyStep } from './SimulationStrategy'

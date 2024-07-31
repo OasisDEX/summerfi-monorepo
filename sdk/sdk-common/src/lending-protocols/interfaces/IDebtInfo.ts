@@ -60,11 +60,6 @@ export const DebtInfoDataSchema = z.object({
 export type IDebtInfoData = Readonly<z.infer<typeof DebtInfoDataSchema>>
 
 /**
- * Type for the parameters of the IDebtInfo interface
- */
-export type IDebtInfoParameters = Omit<IDebtInfoData, '_signature_1'>
-
-/**
  * @description Type guard for IDebtInfo
  * @param maybeDebtInfo
  * @returns true if the object is an IDebtInfo

@@ -28,6 +28,9 @@ export interface ILendingPosition extends IPosition {
   readonly collateralAmount: ITokenAmount
   /** Pool where the position is */
   readonly pool: ILendingPool
+
+  // Re-declaring the properties with the correct types
+  readonly type: PositionType.Lending
 }
 
 /**
@@ -35,23 +38,18 @@ export interface ILendingPosition extends IPosition {
  */
 export const LendingPositionDataSchema = z.object({
   ...PositionDataSchema.shape,
-  type: z.custom<PositionType>((val) => val === PositionType.Lending),
   subtype: LendingPositionTypeSchema,
   id: z.custom<ILendingPositionId>((val) => isLendingPositionId(val)),
   debtAmount: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   collateralAmount: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   pool: z.custom<ILendingPool>((val) => isLendingPool(val)),
+  type: z.literal(PositionType.Lending),
 })
 
 /**
  * Type for the data part of the ILendingPosition interface
  */
 export type ILendingPositionData = Readonly<z.infer<typeof LendingPositionDataSchema>>
-
-/**
- * Type for the parameters of the ILendingPosition interface
- */
-export type ILendingPositionParameters = Omit<ILendingPositionData, 'type'>
 
 /**
  * @description Type guard for ILendingPosition

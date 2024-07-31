@@ -4,8 +4,13 @@ import { IPrintable } from '../../common/interfaces/IPrintable'
 import { IToken } from '../../common/interfaces/IToken'
 import { PoolType } from '../../common/types/PoolType'
 import { SerializationService } from '../../services'
-import { ILendingPool, ILendingPoolParameters, __signature__ } from '../interfaces/ILendingPool'
+import { ILendingPool, ILendingPoolData, __signature__ } from '../interfaces/ILendingPool'
 import { ILendingPoolId } from '../interfaces/ILendingPoolId'
+
+/**
+ * Type for the parameters of LendingPool
+ */
+export type LendingPoolParameters = Omit<ILendingPoolData, 'type'>
 
 /**
  * LendingPool
@@ -25,11 +30,8 @@ export abstract class LendingPool extends Pool implements ILendingPool, IPrintab
   readonly type = PoolType.Lending
 
   /** SEALED CONSTRUCTOR */
-  protected constructor(params: ILendingPoolParameters) {
-    super({
-      ...params,
-      type: PoolType.Lending,
-    })
+  protected constructor(params: LendingPoolParameters) {
+    super(params)
 
     this.collateralToken = Token.createFrom(params.collateralToken)
     this.debtToken = Token.createFrom(params.debtToken)

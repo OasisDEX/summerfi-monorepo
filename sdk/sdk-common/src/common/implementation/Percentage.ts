@@ -2,10 +2,15 @@ import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
 import {
   IPercentage,
-  IPercentageParameters,
+  IPercentageData,
   __signature__,
   isPercentage,
 } from '../interfaces/IPercentage'
+
+/**
+ * Type for the parameters of Percentage
+ */
+export type PercentageParameters = Omit<IPercentageData, ''>
 
 /**
  * @class Percentage
@@ -32,7 +37,7 @@ export class Percentage implements IPercentage {
   readonly value: number
 
   /** FACTORY */
-  static createFrom(params: IPercentageParameters) {
+  static createFrom(params: PercentageParameters) {
     return new Percentage(params)
   }
 
@@ -52,7 +57,7 @@ export class Percentage implements IPercentage {
   /** CONSTRUCTOR */
 
   /** Sealed constructor */
-  private constructor(params: IPercentageParameters) {
+  private constructor(params: PercentageParameters) {
     this.value = params.value
   }
 

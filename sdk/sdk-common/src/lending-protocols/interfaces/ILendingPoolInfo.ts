@@ -33,7 +33,7 @@ export interface ILendingPoolInfo extends IPoolInfo, ILendingPoolInfoData {
   readonly debt: IDebtInfo
 
   // Re-declaring the properties with the correct types
-  readonly type: PoolType
+  readonly type: PoolType.Lending
 }
 
 /**
@@ -41,7 +41,7 @@ export interface ILendingPoolInfo extends IPoolInfo, ILendingPoolInfoData {
  */
 export const LendingPoolInfoDataSchema = z.object({
   ...PoolInfoDataSchema.shape,
-  type: z.custom<PoolType>((val) => val === PoolType.Lending),
+  type: z.literal(PoolType.Lending),
   id: z.custom<ILendingPoolId>((val) => isLendingPoolId(val)),
   collateral: z.custom<ICollateralInfo>((val) => isCollateralInfo(val)),
   debt: z.custom<IDebtInfo>((val) => isDebtInfo(val)),
@@ -51,11 +51,6 @@ export const LendingPoolInfoDataSchema = z.object({
  * Type for the data part of the ILendingPoolInfo interface
  */
 export type ILendingPoolInfoData = Readonly<z.infer<typeof LendingPoolInfoDataSchema>>
-
-/**
- * Type for the parameters of the ILendingPoolInfo interface
- */
-export type ILendingPoolInfoParameters = Omit<ILendingPoolInfoData, 'type'>
 
 /**
  * @description Type guard for ILendingPoolInfo

@@ -35,11 +35,6 @@ export const ArmadaFleetDataSchema = z.object({
 export type IArmadaFleetData = Readonly<z.infer<typeof ArmadaFleetDataSchema>>
 
 /**
- * Type for the parameters of the IArmadaFleet interface
- */
-export type IArmadaFleetParameters = Omit<IArmadaFleetData, ''>
-
-/**
  * @description Type guard for IArmadaFleet
  * @param maybeArmadaFleet
  * @returns true if the object is an IArmadaFleet

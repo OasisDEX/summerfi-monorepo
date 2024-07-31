@@ -25,7 +25,7 @@ export interface ILendingPoolId extends IPoolId, ILendingPoolIdData {
   readonly protocol: IProtocol
 
   // Re-declaring the properties with the correct types
-  readonly type: PoolType
+  readonly type: PoolType.Lending
 }
 
 /**
@@ -33,7 +33,7 @@ export interface ILendingPoolId extends IPoolId, ILendingPoolIdData {
  */
 export const LendingPoolIdDataSchema = z.object({
   ...PoolIdDataSchema.shape,
-  type: z.custom<PoolType>((val) => val === PoolType.Lending),
+  type: z.literal(PoolType.Lending),
   protocol: z.custom<IProtocol>((val) => isProtocol(val)),
 })
 
@@ -41,11 +41,6 @@ export const LendingPoolIdDataSchema = z.object({
  * Type for the data part of the ILendingPoolId interface
  */
 export type ILendingPoolIdData = Readonly<z.infer<typeof LendingPoolIdDataSchema>>
-
-/**
- * Type for the parameters of the ILendingPoolId interface
- */
-export type ILendingPoolIdParameters = Omit<ILendingPoolIdData, 'type'>
 
 /**
  * @description Type guard for ILendingPoolId

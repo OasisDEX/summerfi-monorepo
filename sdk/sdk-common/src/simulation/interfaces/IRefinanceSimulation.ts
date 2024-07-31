@@ -30,7 +30,7 @@ export interface IRefinanceSimulation extends ISimulation {
   readonly steps: Steps[]
 
   // Re-declaring the properties with the correct types
-  readonly type: SimulationType
+  readonly type: SimulationType.Refinance
 }
 
 /**
@@ -49,11 +49,6 @@ export const RefinanceSimulationSchema = z.object({
  * Type for the data part of the IRefinanceSimulation interface
  */
 export type IRefinanceSimulationData = Readonly<z.infer<typeof RefinanceSimulationSchema>>
-
-/**
- * Type for the parameters of the IRefinanceSimulation interface
- */
-export type IRefinanceSimulationParameters = Omit<IRefinanceSimulationData, 'type'>
 
 /**
  * @description Type guard for IRefinanceSimulation
