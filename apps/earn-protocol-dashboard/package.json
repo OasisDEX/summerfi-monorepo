@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "dev:local": "next dev",
     "REMOVE_THIS_TO_DEPLOY_dev": "dotenv -e ../../.env -e ../../.env.local -- sst bind next dev",
     "REMOVE_THIS_TO_DEPLOY_build": "dotenv -e ../../.env -e ../../.env.local -- next build",
     "REMOVE_THIS_TO_DEPLOY_start": "dotenv -e ../../.env -e ../../.env.local -- next start",

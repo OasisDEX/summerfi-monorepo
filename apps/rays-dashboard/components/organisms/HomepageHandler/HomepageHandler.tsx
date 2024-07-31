@@ -1,7 +1,8 @@
 'use client'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useConnectWallet } from '@web3-onboard/react'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
+import { useRouter } from 'next/router'
 
 interface HomepageHandlerPageProps {
   userAddress: string
@@ -17,7 +18,10 @@ export const HomepageHandler = ({ userAddress }: HomepageHandlerPageProps) => {
   const goToWalletView = useCallback(
     (walletAddress: string) => {
       if (walletAddress) {
-        push(`${currentPath}?userAddress=${walletAddress}`)
+        push({
+          pathname: currentPath,
+          query: { userAddress: walletAddress },
+        })
       }
     },
     [currentPath, push],
