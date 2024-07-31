@@ -1,30 +1,36 @@
 import { SerializationService } from '../../services/SerializationService'
-import { IWallet, IWalletParameters } from '../interfaces/IWallet'
-import { Address } from './Address'
+import { IAddress } from '../interfaces/IAddress'
+import { IWallet, IWalletParameters, __iwallet__ } from '../interfaces/IWallet'
 
 /**
  * @interface Wallet
  * @see IWalletData
  */
 export class Wallet implements IWallet {
-  readonly _signature_0 = 'IWallet'
+  /** SIGNATURE */
+  readonly [__iwallet__] = 'IWallet'
 
-  readonly address: Address
+  /** ATTRIBUTES */
+  readonly address: IAddress
 
-  /** Factory method */
+  /** FACTORY */
   static createFrom(params: IWalletParameters): Wallet {
     return new Wallet(params)
   }
 
-  /** Sealed constructor */
+  /** SEALED CONSTRUCTOR */
   private constructor(params: IWalletParameters) {
-    this.address = Address.createFrom(params.address)
+    this.address = params.address
   }
 
+  /** METHODS */
+
+  /** @see IWallet.equals */
   equals(wallet: Wallet): boolean {
     return this.address.equals(wallet.address)
   }
 
+  /** @see IPrintable.toString */
   toString(): string {
     return `Wallet: ${this.address.toString()}`
   }

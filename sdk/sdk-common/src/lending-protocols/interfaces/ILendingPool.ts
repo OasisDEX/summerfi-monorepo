@@ -5,6 +5,11 @@ import { PoolType } from '../../common/types/PoolType'
 import { ILendingPoolId, isLendingPoolId } from './ILendingPoolId'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __ilendingpool__: unique symbol = Symbol()
+
+/**
  * @name ILendingPool
  * @description Represents a lending pool for a single pair collateral/debt
  *
@@ -16,7 +21,7 @@ import { ILendingPoolId, isLendingPoolId } from './ILendingPoolId'
  */
 export interface ILendingPool extends IPool, ILendingPoolData {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_1: 'ILendingPool'
+  readonly [__ilendingpool__]: 'ILendingPool'
   /** Pool ID of the lending pool */
   readonly id: ILendingPoolId
   /** Collateral token used to collateralized the pool */

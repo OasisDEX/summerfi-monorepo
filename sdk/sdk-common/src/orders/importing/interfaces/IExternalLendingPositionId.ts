@@ -11,6 +11,11 @@ import {
 } from '../enums/ExrternalLendingPositionType'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __iexternallendingpositionid__: unique symbol = Symbol()
+
+/**
  * @interface IExternalPositionId
  * @description Identifier for an external position to the Summer system
  */
@@ -19,7 +24,7 @@ export interface IExternalLendingPositionId
     ILendingPositionId,
     IPrintable {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'IExternalLendingPositionId'
+  readonly [__iexternallendingpositionid__]: 'IExternalLendingPositionId'
   /** Type of the position */
   readonly externalType: ExternalLendingPositionType
   /** Address of the owner of the position */

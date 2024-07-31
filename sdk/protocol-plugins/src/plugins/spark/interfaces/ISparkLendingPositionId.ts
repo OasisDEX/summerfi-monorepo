@@ -6,6 +6,11 @@ import {
 import { z } from 'zod'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __isparklendingpositionid__: unique symbol = Symbol()
+
+/**
  * @interface ISparkPositionId
  * @description Represents the ID of a position in the Spark protocol
  *
@@ -13,7 +18,7 @@ import { z } from 'zod'
  */
 export interface ISparkLendingPositionId extends ILendingPositionId, ISparkLendingPositionIdData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'ISparkLendingPositionId'
+  readonly [__isparklendingpositionid__]: 'ISparkLendingPositionId'
   // Re-declaring the properties with the correct types
   readonly type: PositionType
 }

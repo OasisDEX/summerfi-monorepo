@@ -6,6 +6,11 @@ import { ILKType, ILKTypeSchema } from '../enums'
 import { IMakerProtocol, isMakerProtocol } from './IMakerProtocol'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __imakerlendingpoolid__: unique symbol = Symbol()
+
+/**
  * @name IMakerLendingPoolId
  * @description Represents a lending pool's ID for the Maker protocol
  *
@@ -13,7 +18,7 @@ import { IMakerProtocol, isMakerProtocol } from './IMakerProtocol'
  */
 export interface IMakerLendingPoolId extends ILendingPoolId, IMakerLendingPoolIdData {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_2: 'IMakerLendingPoolId'
+  readonly [__imakerlendingpoolid__]: 'IMakerLendingPoolId'
   /** The Maker protocol */
   readonly protocol: IMakerProtocol
   /** The ILK type of the pool */

@@ -7,7 +7,7 @@ import { IPrice } from '../../common/interfaces/IPrice'
 import { IToken } from '../../common/interfaces/IToken'
 import { ITokenAmount } from '../../common/interfaces/ITokenAmount'
 import { SerializationService } from '../../services/SerializationService'
-import { IDebtInfo, IDebtInfoParameters } from '../interfaces/IDebtInfo'
+import { IDebtInfo, IDebtInfoParameters, __idebtinfo__ } from '../interfaces/IDebtInfo'
 
 /**
  * @class DebtInfo
@@ -16,8 +16,10 @@ import { IDebtInfo, IDebtInfoParameters } from '../interfaces/IDebtInfo'
  * For now this class can be re-used among all the protocols and there is no need for specialization
  */
 export class DebtInfo implements IDebtInfo {
-  readonly _signature_0 = 'IDebtInfo'
+  /** SIGNATURE */
+  readonly [__idebtinfo__] = 'IDebtInfo'
 
+  /** ATTRIBUTES */
   readonly token: IToken
   readonly price: IPrice
   readonly priceUSD: IPrice

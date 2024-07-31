@@ -2,6 +2,11 @@ import { z } from 'zod'
 import { IAddress, isAddress } from './IAddress'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __iwallet__: unique symbol = Symbol()
+
+/**
  * @name IWallet
  * @description Interface for the implementors of the wallet
  *
@@ -10,7 +15,7 @@ import { IAddress, isAddress } from './IAddress'
  */
 export interface IWallet extends IWalletData {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'IWallet'
+  readonly [__iwallet__]: 'IWallet'
   /** Address of the wallet, valid for the different chains */
   readonly address: IAddress
 

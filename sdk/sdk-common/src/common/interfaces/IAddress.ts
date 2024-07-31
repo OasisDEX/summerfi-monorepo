@@ -5,6 +5,11 @@ import { AddressType } from '../types/AddressType'
 import { IPrintable } from './IPrintable'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __iaddress__: unique symbol = Symbol()
+
+/**
  * @name IAddress
  * @description Represents an address with a certain format, specified by the type
  *
@@ -12,7 +17,7 @@ import { IPrintable } from './IPrintable'
  */
 export interface IAddress extends IAddressData, IPrintable {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'IAddress'
+  readonly [__iaddress__]: 'IAddress'
   /** The address value in the format specified by type */
   readonly value: AddressValue
   /** The type of the address */

@@ -4,12 +4,17 @@ import { ChainInfoDataSchema, IChainInfo } from './IChainInfo'
 import { IPrintable } from './IPrintable'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __itoken__: unique symbol = Symbol()
+
+/**
  * @name IToken
  * @description Represents an token in a Chain, typically used to represent ERC-20 tokens
  */
 export interface IToken extends ITokenData, IPrintable {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'IToken'
+  readonly [__itoken__]: 'IToken'
   /** Chain where the token is deployed */
   readonly chainInfo: IChainInfo
   /** Token address */

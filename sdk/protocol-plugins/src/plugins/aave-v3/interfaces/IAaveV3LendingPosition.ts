@@ -9,6 +9,11 @@ import { IAaveV3LendingPool, isAaveV3LendingPool } from './IAaveV3LendingPool'
 import { IAaveV3LendingPositionId, isAaveV3LendingPositionId } from './IAaveV3LendingPositionId'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __iaavev3lendingposition__: unique symbol = Symbol()
+
+/**
  * @interface IAaveV3Position
  * @description Represents a lending position in the Aave V3 protocol
  *
@@ -18,7 +23,7 @@ import { IAaveV3LendingPositionId, isAaveV3LendingPositionId } from './IAaveV3Le
  */
 export interface IAaveV3LendingPosition extends ILendingPosition, IAaveV3LendingPositionData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'IAaveV3LendingPosition'
+  readonly [__iaavev3lendingposition__]: 'IAaveV3LendingPosition'
   /** The pool associated to this position */
   readonly pool: IAaveV3LendingPool
   /** The id of the position */

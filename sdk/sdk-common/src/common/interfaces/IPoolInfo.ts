@@ -3,6 +3,11 @@ import { PoolType } from '../types/PoolType'
 import { IPoolId, PoolIdDataSchema } from './IPoolId'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __ipoolinfo__: unique symbol = Symbol()
+
+/**
  * @name IPool
  * @description Represents the extended information of a pool. It should contain extra info that is common for any type of pool
  *
@@ -10,7 +15,7 @@ import { IPoolId, PoolIdDataSchema } from './IPoolId'
  */
 export interface IPoolInfo extends IPoolInfoData {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'IPoolInfo'
+  readonly [__ipoolinfo__]: 'IPoolInfo'
   /** Type of the pool */
   readonly type: PoolType
   /** Unique identifier for the pool, to be specialized for each protocol */

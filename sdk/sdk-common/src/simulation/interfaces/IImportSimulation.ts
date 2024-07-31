@@ -1,18 +1,28 @@
 import { z } from 'zod'
-import { PositionDataSchema } from '../../common/interfaces/IPosition'
-import { ILendingPosition } from '../../lending-protocols/interfaces/ILendingPosition'
-import { IExternalLendingPosition } from '../../orders/importing/interfaces/IExternalLendingPosition'
+import {
+  ILendingPosition,
+  isLendingPosition,
+} from '../../lending-protocols/interfaces/ILendingPosition'
+import {
+  IExternalLendingPosition,
+  isExternalLendingPosition,
+} from '../../orders/importing/interfaces/IExternalLendingPosition'
 import { SimulationType } from '../enums/SimulationType'
 import { ISimulation, SimulationSchema } from './ISimulation'
 import { Steps } from './Steps'
+
+/**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __iimportsimulation__: unique symbol = Symbol()
 
 /**
  * @interface IImportSimulation
  * @description Simulation result of an import operation
  */
 export interface IImportSimulation extends ISimulation {
-  /** Type of the simulation, in this case Import */
-  readonly type: SimulationType.ImportPosition
+  /** Signature used to differentiate it from similar interfaces */
+  readonly [__iimportsimulation__]: 'IImportSimulation'
   /** Original position that will be refinanced */
   readonly sourcePosition: IExternalLendingPosition
   /** Simulated target position */
@@ -27,14 +37,20 @@ export interface IImportSimulation extends ISimulation {
 export const ImportSimulationSchema = z.object({
   ...SimulationSchema.shape,
   type: z.literal(SimulationType.ImportPosition),
-  sourcePosition: PositionDataSchema,
-  targetPosition: PositionDataSchema,
+  sourcePosition: z.custom<IExternalLendingPosition>((val) => isExternalLendingPosition(val)),
+  targetPosition: z.custom<ILendingPosition>((val) => isLendingPosition(val)),
+  steps: z.array(z.custom<Steps>()),
 })
 
 /**
  * Type for the data part of the IImportSimulation interface
  */
 export type IImportSimulationData = Readonly<z.infer<typeof ImportSimulationSchema>>
+
+/**
+ * Type for the parameters of the IImportSimulation interface
+ */
+export type IImportSimulationParameters = Omit<IImportSimulationData, 'type'>
 
 /**
  * @description Type guard for IRefinanceSimulation

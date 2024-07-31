@@ -9,6 +9,11 @@ import { z } from 'zod'
 import { IAaveV3LendingPoolId, isAaveV3LendingPoolId } from './IAaveV3LendingPoolId'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __iaavev3lendingpoolinfo__: unique symbol = Symbol()
+
+/**
  * @interface IAaveV3LendingPoolInfo
  * @description Represents a lending pool info in the Aave V3 protocol
  *
@@ -17,7 +22,7 @@ import { IAaveV3LendingPoolId, isAaveV3LendingPoolId } from './IAaveV3LendingPoo
  */
 export interface IAaveV3LendingPoolInfo extends ILendingPoolInfo, IAaveV3LendingPoolInfoData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'IAaveV3LendingPoolInfo'
+  readonly [__iaavev3lendingpoolinfo__]: 'IAaveV3LendingPoolInfo'
   /** The lending pool's ID */
   readonly id: IAaveV3LendingPoolId
 

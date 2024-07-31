@@ -3,12 +3,17 @@ import { PositionType } from '../types/PositionType'
 import { IPositionId, isPositionId } from './IPositionId'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __iposition__: unique symbol = Symbol()
+
+/**
  * @name IPosition
  * @description Represents a Summer position in a pool/protocol
  */
 export interface IPosition extends IPositionData {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'IPosition'
+  readonly [__iposition__]: 'IPosition'
   /** Type of the position in the Summer.fi system */
   readonly type: PositionType
   /** Unique identifier for the position inside the Summer.fi system */

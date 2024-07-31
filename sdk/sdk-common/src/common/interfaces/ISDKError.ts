@@ -3,12 +3,17 @@ import { SDKErrorType } from '../types/SDKErrorType'
 import { IPrintable } from './IPrintable'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __isdkerror__: unique symbol = Symbol()
+
+/**
  * @name ISDKError
  * @description Represents a custom error of the SDK
  */
 export interface ISDKError extends ISDKErrorData, IPrintable {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'ISDKError'
+  readonly [__isdkerror__]: 'ISDKError'
   /** Error type main category */
   readonly type: SDKErrorType
   /** Free form reason message, used to provide a short description of the problem */

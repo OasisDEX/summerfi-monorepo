@@ -4,6 +4,11 @@ import { IProtocol, isProtocol } from '../../common/interfaces/IProtocol'
 import { PoolType } from '../../common/types/PoolType'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __ilendingpoolid__: unique symbol = Symbol()
+
+/**
  * @name ILendingPoolId
  * @description Identifies a generic lending pool. This will be specialized for each protocol
  *
@@ -15,7 +20,7 @@ import { PoolType } from '../../common/types/PoolType'
  */
 export interface ILendingPoolId extends IPoolId, ILendingPoolIdData {
   /** Signature to differentiate it from other interfaces */
-  readonly _signature_1: 'ILendingPoolId'
+  readonly [__ilendingpoolid__]: 'ILendingPoolId'
   // Re-declaring narrowed types
   readonly protocol: IProtocol
 

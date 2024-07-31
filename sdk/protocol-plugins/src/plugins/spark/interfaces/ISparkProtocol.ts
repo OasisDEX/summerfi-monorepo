@@ -3,6 +3,11 @@ import { ProtocolDataSchema, ProtocolName } from '@summerfi/sdk-common/common'
 import { z } from 'zod'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __isparkprotocol__: unique symbol = Symbol()
+
+/**
  * @interface ISparkProtocol
  * @description Identifier of the Spark protocol
  *
@@ -13,7 +18,7 @@ import { z } from 'zod'
  */
 export interface ISparkProtocol extends ISparkProtocolData, IProtocol {
   /** Interface signature used to differentiate it from similar interfaces */
-  readonly _signature_1: 'ISparkProtocol'
+  readonly [__isparkprotocol__]: 'ISparkProtocol'
 
   // Re-declaring the properties with the right types
   readonly name: ProtocolName

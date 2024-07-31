@@ -5,6 +5,11 @@ import { EmodeType, EmodeTypeSchema } from '../../common/enums/EmodeType'
 import { IAaveV3Protocol, isAaveV3Protocol } from './IAaveV3Protocol'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __iaavev3lendingpoolid__: unique symbol = Symbol()
+
+/**
  * @interface IAaveV3LendingPoolId
  * @description Identifier of a lending pool on the Aave v3 protocol
  *
@@ -13,7 +18,7 @@ import { IAaveV3Protocol, isAaveV3Protocol } from './IAaveV3Protocol'
  */
 export interface IAaveV3LendingPoolId extends ILendingPoolId, IAaveV3LendingPoolIdData {
   /** Interface signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'IAaveV3LendingPoolId'
+  readonly [__iaavev3lendingpoolid__]: 'IAaveV3LendingPoolId'
   /** Aave v3 protocol */
   readonly protocol: IAaveV3Protocol
   /** The pool's efficiency mode */

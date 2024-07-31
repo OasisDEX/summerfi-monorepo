@@ -7,6 +7,7 @@ import {
   IPriceParameters,
   PriceMulParamType,
   PriceMulReturnType,
+  __iprice__,
   isPrice,
   type IPrice,
 } from '../interfaces/IPrice'
@@ -29,8 +30,10 @@ import { TokenAmount } from './TokenAmount'
  * @see IPrice
  */
 export class Price implements IPrice {
-  readonly _signature_0 = 'IPrice'
+  /** SIGNATURE */
+  readonly [__iprice__] = 'IPrice'
 
+  /** ATTRIBUTES */
   readonly value: string
   readonly base: Denomination
   readonly quote: Denomination
@@ -41,6 +44,7 @@ export class Price implements IPrice {
   private readonly _quoteSymbol: string
 
   /** FACTORY */
+
   static createFrom(params: IPriceParameters): IPrice {
     return new Price(params)
   }

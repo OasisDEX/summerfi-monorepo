@@ -7,6 +7,11 @@ import { IPrintable } from './IPrintable'
 import { type ITokenAmount } from './ITokenAmount'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __iprice__: unique symbol = Symbol()
+
+/**
  * Return Type narrowing for multiply and divide methods, so the return type can be properly inferred
  *
  * This helps callers to know what to expect from the result of the operation
@@ -48,7 +53,7 @@ export type PriceMulReturnType<T> = T extends ITokenAmount
  */
 export interface IPrice extends IPriceData, IPrintable {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'IPrice'
+  readonly [__iprice__]: 'IPrice'
   /** The price value in floating point format without taking into account decimals */
   readonly value: string
   /** The token for the base of the price */

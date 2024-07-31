@@ -2,13 +2,17 @@ import { SDKError } from '../../common/implementation/SDKError'
 import { SDKErrorType } from '../../common/types/SDKErrorType'
 import { SerializationService } from '../../services/SerializationService'
 import { SwapErrorType } from '../enums/SwapErrorType'
-import { ISwapError, ISwapErrorData } from '../interfaces/ISwapError'
+import { ISwapError, ISwapErrorData, __iswaperror__ } from '../interfaces/ISwapError'
 
 /**
  * @class SwapError
  * @see ISwapError
  */
 export class SwapError extends SDKError implements ISwapError {
+  /** SIGNATURE */
+  readonly [__iswaperror__] = 'ISwapError'
+
+  /** ATTRIBUTES */
   readonly type: SDKErrorType.SwapError
   readonly subtype: SwapErrorType
   readonly apiQuery: string

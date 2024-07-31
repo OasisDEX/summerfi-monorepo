@@ -4,6 +4,7 @@ import { IMakerLendingPool } from '../interfaces/IMakerLendingPool'
 import {
   IMakerLendingPosition,
   IMakerLendingPositionParameters,
+  __imakerlendingposition__,
 } from '../interfaces/IMakerLendingPosition'
 import { IMakerLendingPositionId } from '../interfaces/IMakerLendingPositionId'
 
@@ -12,17 +13,19 @@ import { IMakerLendingPositionId } from '../interfaces/IMakerLendingPositionId'
  * @see IMakerLendingPosition
  */
 export class MakerLendingPosition extends LendingPosition implements IMakerLendingPosition {
-  readonly _signature_2 = 'IMakerLendingPosition'
+  /** SIGNATURE */
+  readonly [__imakerlendingposition__] = 'IMakerLendingPosition'
 
+  /** ATTRIBUTES */
   readonly id: IMakerLendingPositionId
   readonly pool: IMakerLendingPool
 
-  /** Factory method */
+  /** FACTORY */
   static createFrom(params: IMakerLendingPositionParameters): MakerLendingPosition {
     return new MakerLendingPosition(params)
   }
 
-  /** Sealed constructor */
+  /** SEALED CONSTRUCTOR */
   private constructor(params: IMakerLendingPositionParameters) {
     super(params)
 

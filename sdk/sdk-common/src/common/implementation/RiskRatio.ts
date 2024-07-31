@@ -1,6 +1,11 @@
 import { SerializationService } from '../../services/SerializationService'
 import { IPercentage, isPercentageData } from '../interfaces/IPercentage'
-import { IRiskRatio, IRiskRatioParameters, RiskRatioType } from '../interfaces/IRiskRatio'
+import {
+  IRiskRatio,
+  IRiskRatioParameters,
+  RiskRatioType,
+  __iriskratio__,
+} from '../interfaces/IRiskRatio'
 import { Percentage } from './Percentage'
 
 /**
@@ -8,19 +13,21 @@ import { Percentage } from './Percentage'
  * @see IRiskRatio
  */
 export class RiskRatio implements IRiskRatio {
-  readonly _signature_0 = 'IRiskRatio'
+  /** SIGNATURE */
+  readonly [__iriskratio__] = 'IRiskRatio'
 
+  /** ATTRIBUTES */
   readonly type: RiskRatioType
   readonly value: IPercentage | number
 
   private readonly ltv: IPercentage
 
-  /** Factory method */
+  /** FACTORY */
   static createFrom(params: IRiskRatioParameters): RiskRatio {
     return new RiskRatio(params)
   }
 
-  /** Sealed constructor */
+  /** SEALED CONSTRUCTOR */
   private constructor(params: IRiskRatioParameters) {
     this.type = params.type
 
@@ -53,6 +60,8 @@ export class RiskRatio implements IRiskRatio {
       }
     }
   }
+
+  /** METHODS */
 
   /** @see IRiskRatio.toCollateralizationRatio */
   toCollateralizationRatio(): IPercentage {

@@ -5,6 +5,7 @@ import { ILKType } from '../enums/ILKType'
 import {
   IMakerLendingPoolId,
   IMakerLendingPoolIdParameters,
+  __imakerlendingpoolid__,
 } from '../interfaces/IMakerLendingPoolId'
 import { MakerProtocol } from './MakerProtocol'
 
@@ -13,19 +14,21 @@ import { MakerProtocol } from './MakerProtocol'
  * @see IMakerLendingPoolIdData
  */
 export class MakerLendingPoolId extends LendingPoolId implements IMakerLendingPoolId, IPrintable {
-  readonly _signature_2 = 'IMakerLendingPoolId'
+  /** SIGNATURE */
+  readonly [__imakerlendingpoolid__] = 'IMakerLendingPoolId'
 
+  /** ATTRIBUTES */
   readonly protocol: MakerProtocol
   readonly ilkType: ILKType
   readonly collateralToken: IToken
   readonly debtToken: IToken
 
-  /** Factory method */
+  /** FACTORY */
   public static createFrom(params: IMakerLendingPoolIdParameters): MakerLendingPoolId {
     return new MakerLendingPoolId(params)
   }
 
-  /** Sealed constructor */
+  /** SEALED CONSTRUCTOR */
   private constructor(params: IMakerLendingPoolIdParameters) {
     super(params)
 
@@ -35,6 +38,9 @@ export class MakerLendingPoolId extends LendingPoolId implements IMakerLendingPo
     this.debtToken = params.debtToken
   }
 
+  /** METHODS */
+
+  /** @see IPrintable.toString */
   toString(): string {
     return `${LendingPoolId.toString()} [ilkType: ${this.ilkType}]`
   }

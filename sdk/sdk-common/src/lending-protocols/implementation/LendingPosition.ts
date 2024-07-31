@@ -3,7 +3,11 @@ import { ITokenAmount } from '../../common/interfaces/ITokenAmount'
 import { PositionType } from '../../common/types/PositionType'
 import { SerializationService } from '../../services/SerializationService'
 import { ILendingPool } from '../interfaces/ILendingPool'
-import { ILendingPosition, ILendingPositionParameters } from '../interfaces/ILendingPosition'
+import {
+  ILendingPosition,
+  ILendingPositionParameters,
+  __ilendingposition__,
+} from '../interfaces/ILendingPosition'
 import { ILendingPositionId } from '../interfaces/ILendingPositionId'
 import { LendingPositionType } from '../types/LendingPositionType'
 
@@ -12,14 +16,17 @@ import { LendingPositionType } from '../types/LendingPositionType'
  * @see ILendingPosition
  */
 export abstract class LendingPosition extends Position implements ILendingPosition {
-  readonly _signature_1 = 'ILendingPosition'
+  /** SIGNATURE */
+  readonly [__ilendingposition__] = 'ILendingPosition'
 
+  /** ATTRIBUTES */
   readonly subtype: LendingPositionType
   readonly id: ILendingPositionId
   readonly debtAmount: ITokenAmount
   readonly collateralAmount: ITokenAmount
   abstract readonly pool: ILendingPool
 
+  /** SEALED CONSTRUCTOR */
   protected constructor(params: ILendingPositionParameters) {
     super({
       ...params,

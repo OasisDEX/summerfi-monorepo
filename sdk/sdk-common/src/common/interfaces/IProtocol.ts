@@ -3,6 +3,11 @@ import { ChainInfoDataSchema, IChainInfo } from '../../common/interfaces/IChainI
 import { ProtocolName } from '../enums/ProtocolName'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __iprotocol__: unique symbol = Symbol()
+
+/**
  * @interface IProtocol
  * @description Information relative to a protocol
  *
@@ -10,7 +15,7 @@ import { ProtocolName } from '../enums/ProtocolName'
  */
 export interface IProtocol extends IProtocolData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_0: 'IProtocol'
+  readonly [__iprotocol__]: 'IProtocol'
   /** The name of the protocol */
   readonly name: ProtocolName
   /** The chain information */

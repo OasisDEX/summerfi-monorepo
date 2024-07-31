@@ -5,13 +5,19 @@ import {
 } from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
 import { MakerVaultId, MakerVaultIdSchema } from '../types/MakerVaultId'
+
+/**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __imakerlendingpositionid__: unique symbol = Symbol()
+
 /**
  * @interface IMakerLendingPositionId
  * @description Identifier of a Maker lending position
  */
 export interface IMakerLendingPositionId extends ILendingPositionId, IMakerLendingPositionIdData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'IMakerLendingPositionId'
+  readonly [__imakerlendingpositionid__]: 'IMakerLendingPositionId'
   /** The vault ID that identifies the position on Maker */
   readonly vaultId: MakerVaultId
 

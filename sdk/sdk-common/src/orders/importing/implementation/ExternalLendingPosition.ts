@@ -4,6 +4,7 @@ import { SerializationService } from '../../../services/SerializationService'
 import {
   IExternalLendingPosition,
   IExternalLendingPositionParameters,
+  __iexternallendingposition__,
 } from '../interfaces/IExternalLendingPosition'
 import { IExternalLendingPositionId } from '../interfaces/IExternalLendingPositionId'
 
@@ -12,17 +13,19 @@ import { IExternalLendingPositionId } from '../interfaces/IExternalLendingPositi
  * @see IExternalLendingPosition
  */
 export class ExternalLendingPosition extends LendingPosition implements IExternalLendingPosition {
-  readonly _signature_2 = 'IExternalLendingPosition'
+  /** SIGNATURE */
+  readonly [__iexternallendingposition__] = 'IExternalLendingPosition'
 
+  /** ATTRIBUTES */
   readonly id: IExternalLendingPositionId
   readonly pool: ILendingPool
 
-  /** Factory method */
+  /** FACTORY */
   static createFrom(params: IExternalLendingPositionParameters): ExternalLendingPosition {
     return new ExternalLendingPosition(params)
   }
 
-  /** Sealed constructor */
+  /** SEALED CONSTRUCTOR */
   private constructor(params: IExternalLendingPositionParameters) {
     super(params)
 
@@ -30,6 +33,9 @@ export class ExternalLendingPosition extends LendingPosition implements IExterna
     this.pool = params.pool
   }
 
+  /** METHODS */
+
+  /** @see IPrintable.toString */
   toString(): string {
     return `External lending position: id=${this.id}`
   }

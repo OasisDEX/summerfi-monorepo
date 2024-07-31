@@ -1,5 +1,5 @@
 import { IAddress } from '../interfaces/IAddress'
-import { IArmadaFleet, IArmadaFleetParameters } from '../interfaces/IArmadaFleet'
+import { IArmadaFleet, IArmadaFleetParameters, __iarmadafleet__ } from '../interfaces/IArmadaFleet'
 import { IChainInfo } from '../interfaces/IChainInfo'
 import { Address } from './Address'
 import { ChainInfo } from './ChainInfo'
@@ -9,16 +9,19 @@ import { ChainInfo } from './ChainInfo'
  * @see IArmadaFleet
  */
 export class ArmadaFleet implements IArmadaFleet {
-  readonly _signature_0 = 'IArmadaFleet'
-  public readonly address: IAddress
-  public readonly chainInfo: IChainInfo
+  /** SIGNATURE */
+  readonly [__iarmadafleet__] = 'IArmadaFleet'
 
-  /** Factory method */
+  /** ATTRIBUTES */
+  readonly address: IAddress
+  readonly chainInfo: IChainInfo
+
+  /** FACTORY METHODS */
   static createFrom(params: IArmadaFleetParameters): ArmadaFleet {
     return new ArmadaFleet(params)
   }
 
-  /** Sealed constructor */
+  /** SEALED CONSTRUCTOR */
   protected constructor(params: IArmadaFleetParameters) {
     this.address = Address.createFrom(params.address)
     this.chainInfo = ChainInfo.createFrom(params.chainInfo)

@@ -6,6 +6,11 @@ import { IPrintable } from './IPrintable'
 import { type ITokenAmount } from './ITokenAmount'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __ifiatcurrencyamount__: unique symbol = Symbol()
+
+/**
  * Return Type narrowing for multiply and divide methods, so the return type can be properly inferred
  *
  * This helps callers to know what to expect from the result of the operation
@@ -27,7 +32,7 @@ export type FiatCurrencyAmountMulDivReturnType<T> = T extends IPrice
  */
 export interface IFiatCurrencyAmount extends IFiatCurrencyAmountData, IPrintable {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'IFiatCurrencyAmount'
+  readonly [__ifiatcurrencyamount__]: 'IFiatCurrencyAmount'
   /** Fiat currency for the amount */
   readonly fiat: FiatCurrency
   /** The amount in floating point format */

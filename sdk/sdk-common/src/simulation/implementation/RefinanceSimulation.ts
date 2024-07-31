@@ -5,6 +5,7 @@ import { SimulationType } from '../enums'
 import {
   IRefinanceSimulation,
   IRefinanceSimulationParameters,
+  __irefinancesimulation__,
 } from '../interfaces/IRefinanceSimulation'
 import { Steps } from '../interfaces/Steps'
 import { Simulation } from './Simulation'
@@ -14,19 +15,21 @@ import { Simulation } from './Simulation'
  * @see IRefinanceSimulation
  */
 export class RefinanceSimulation extends Simulation implements IRefinanceSimulation {
-  readonly _signature_1 = 'IRefinanceSimulation'
+  /** SIGNATURE */
+  readonly [__irefinancesimulation__] = 'IRefinanceSimulation'
 
+  /** ATTRIBUTES */
   readonly sourcePosition: ILendingPosition
   readonly targetPosition: ILendingPosition
   readonly swaps: SimulatedSwapData[]
   readonly steps: Steps[]
 
-  /** Factory method */
+  /** FACTORY */
   static createFrom(params: IRefinanceSimulationParameters): RefinanceSimulation {
     return new RefinanceSimulation(params)
   }
 
-  /** Sealed constructor */
+  /** SEALED CONSTRUCTOR */
   private constructor(params: IRefinanceSimulationParameters) {
     super({
       ...params,

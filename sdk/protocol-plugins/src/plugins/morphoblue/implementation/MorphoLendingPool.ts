@@ -1,7 +1,11 @@
 import { IAddress, IRiskRatio } from '@summerfi/sdk-common/common'
 import { LendingPool } from '@summerfi/sdk-common/lending-protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
-import { IMorphoLendingPool, IMorphoLendingPoolParameters } from '../interfaces/IMorphoLendingPool'
+import {
+  IMorphoLendingPool,
+  IMorphoLendingPoolParameters,
+  __imorpholendingpool__,
+} from '../interfaces/IMorphoLendingPool'
 import { IMorphoLendingPoolId } from '../interfaces/IMorphoLendingPoolId'
 
 /**
@@ -9,7 +13,7 @@ import { IMorphoLendingPoolId } from '../interfaces/IMorphoLendingPoolId'
  * @see IMorphoLendingPool
  */
 export class MorphoLendingPool extends LendingPool implements IMorphoLendingPool {
-  readonly _signature_2 = 'IMorphoLendingPool'
+  readonly [__imorpholendingpool__] = 'IMorphoLendingPool'
 
   readonly id: IMorphoLendingPoolId
   readonly oracle: IAddress

@@ -4,6 +4,11 @@ import { z } from 'zod'
 import { ISparkLendingPoolId, isSparkLendingPoolId } from './ISparkLendingPoolId'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __isparklendingpool__: unique symbol = Symbol()
+
+/**
  * @interface ISparkLendingPool
  * @description Represents a lending pool in the Spark protocol
  *
@@ -14,7 +19,7 @@ import { ISparkLendingPoolId, isSparkLendingPoolId } from './ISparkLendingPoolId
  */
 export interface ISparkLendingPool extends ISparkLendingPoolData, ILendingPool {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'ISparkLendingPool'
+  readonly [__isparklendingpool__]: 'ISparkLendingPool'
   /** The id of the lending pool */
   readonly id: ISparkLendingPoolId
 

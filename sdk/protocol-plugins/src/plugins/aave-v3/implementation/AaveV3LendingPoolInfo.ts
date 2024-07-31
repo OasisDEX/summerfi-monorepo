@@ -4,6 +4,7 @@ import { IAaveV3LendingPoolId } from '../interfaces/IAaveV3LendingPoolId'
 import {
   IAaveV3LendingPoolInfo,
   IAaveV3LendingPoolInfoParameters,
+  __iaavev3lendingpoolinfo__,
 } from '../interfaces/IAaveV3LendingPoolInfo'
 
 /**
@@ -11,16 +12,18 @@ import {
  * @see IAaveV3LendingPoolInfo
  */
 export class AaveV3LendingPoolInfo extends LendingPoolInfo implements IAaveV3LendingPoolInfo {
-  readonly _signature_2 = 'IAaveV3LendingPoolInfo'
+  /** SIGNATURE */
+  readonly [__iaavev3lendingpoolinfo__] = 'IAaveV3LendingPoolInfo'
 
+  /** ATTRIBUTES */
   readonly id: IAaveV3LendingPoolId
 
-  /** Factory method */
+  /** FACTORY */
   public static createFrom(params: IAaveV3LendingPoolInfoParameters): AaveV3LendingPoolInfo {
     return new AaveV3LendingPoolInfo(params)
   }
 
-  /** Sealed constructor */
+  /** SEALED CONSTRUCTOR */
   private constructor(params: IAaveV3LendingPoolInfoParameters) {
     super(params)
 

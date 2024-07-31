@@ -9,6 +9,11 @@ import { IMorphoLendingPool, isMorphoLendingPool } from './IMorphoLendingPool'
 import { IMorphoLendingPositionId, isMorphoLendingPositionId } from './IMorphoLendingPositionId'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __imorpholendingposition__: unique symbol = Symbol()
+
+/**
  * @interface IMorphoLendingPosition
  * @description Represents a lending position in the Morpho protocol
  *
@@ -19,7 +24,7 @@ import { IMorphoLendingPositionId, isMorphoLendingPositionId } from './IMorphoLe
  */
 export interface IMorphoLendingPosition extends ILendingPosition, IMorphoLendingPositionData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'IMorphoLendingPosition'
+  readonly [__imorpholendingposition__]: 'IMorphoLendingPosition'
   /** The position's ID */
   readonly id: IMorphoLendingPositionId
   /** The pool the position belongs to */

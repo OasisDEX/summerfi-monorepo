@@ -3,6 +3,7 @@ import { IExternalLendingPosition } from '../interfaces'
 import {
   IImportPositionParameters,
   IImportPositionParametersParameters,
+  __iimportpositionparameters__,
 } from '../interfaces/IImportPositionParameters'
 import { ExternalLendingPosition } from './ExternalLendingPosition'
 
@@ -11,20 +12,25 @@ import { ExternalLendingPosition } from './ExternalLendingPosition'
  * @see IImportPositionParameters
  */
 export class ImportPositionParameters implements IImportPositionParameters {
-  readonly _signature_0 = 'IImportPositionParameters'
+  /** SIGNATURE */
+  readonly [__iimportpositionparameters__] = 'IImportPositionParameters'
 
+  /** ATTRIBUTES */
   readonly externalPosition: IExternalLendingPosition
 
-  /** Factory method */
+  /** FACTORY */
   static createFrom(params: IImportPositionParametersParameters): ImportPositionParameters {
     return new ImportPositionParameters(params)
   }
 
-  /** Sealed constructor */
+  /** SEALED CONSTRUCTOR */
   private constructor(params: IImportPositionParametersParameters) {
     this.externalPosition = ExternalLendingPosition.createFrom(params.externalPosition)
   }
 
+  /** METHODS */
+
+  /** @see IPrintable.toString */
   toString(): string {
     return `Import position parameters: ${this.externalPosition}`
   }

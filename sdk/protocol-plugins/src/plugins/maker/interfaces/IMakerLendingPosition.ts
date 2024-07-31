@@ -10,14 +10,19 @@ import { IMakerLendingPool, isMakerLendingPool } from './IMakerLendingPool'
 import { IMakerLendingPositionId, isMakerLendingPositionId } from './IMakerLendingPositionId'
 
 /**
- * @interface IMakerPosition
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __imakerlendingposition__: unique symbol = Symbol()
+
+/**
+ * @interface IMakerLendingPosition
  * @description Interface for the implementors of the position
  *
  * This interface is used to add all the methods that the interface supports
  */
 export interface IMakerLendingPosition extends ILendingPosition, IMakerLendingPositionData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'IMakerLendingPosition'
+  readonly [__imakerlendingposition__]: 'IMakerLendingPosition'
   /** ID for the maker position */
   readonly id: IMakerLendingPositionId
   /** Lending pool associated to this position */

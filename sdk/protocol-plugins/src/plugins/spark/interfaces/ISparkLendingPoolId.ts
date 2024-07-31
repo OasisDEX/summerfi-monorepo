@@ -6,6 +6,11 @@ import { EmodeType, EmodeTypeSchema } from '../../common/enums/EmodeType'
 import { ISparkProtocol, isSparkProtocol } from './ISparkProtocol'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __isparklendingpoolid__: unique symbol = Symbol()
+
+/**
  * @interface ISparkLendingPoolId
  * @description Identifier of a lending pool in the Spark protocol
  *
@@ -14,7 +19,7 @@ import { ISparkProtocol, isSparkProtocol } from './ISparkProtocol'
  */
 export interface ISparkLendingPoolId extends ISparkLendingPoolIdData, ILendingPoolId {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'ISparkLendingPoolId'
+  readonly [__isparklendingpoolid__]: 'ISparkLendingPoolId'
   /** The protocol to which the pool belongs */
   readonly protocol: ISparkProtocol
   /** The efficiency mode of the pool */

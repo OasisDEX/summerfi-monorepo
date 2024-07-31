@@ -1,22 +1,25 @@
 import { SerializationService } from '../../services/SerializationService'
 import { AddressValue } from '../aliases/AddressValue'
-import { IAddress, IAddressParameters } from '../interfaces/IAddress'
+import { IAddress, IAddressParameters, __iaddress__ } from '../interfaces/IAddress'
 import { AddressType } from '../types/AddressType'
 
 /**
  * @class Address
- * @see IAddressData
+ * @see IAddress
  */
 export class Address implements IAddress {
-  readonly _signature_0 = 'IAddress'
+  /** SIGNATURE */
+  readonly [__iaddress__] = 'IAddress'
 
+  /** ATTRIBUTES */
+  readonly value: AddressValue
+  readonly type: AddressType
+
+  /** CONSTANTS */
   public static ZeroAddressEthereum: Address = new Address({
     value: '0x0000000000000000000000000000000000000000',
     type: AddressType.Ethereum,
   })
-
-  readonly value: AddressValue
-  readonly type: AddressType
 
   /** FACTORY METHODS */
 

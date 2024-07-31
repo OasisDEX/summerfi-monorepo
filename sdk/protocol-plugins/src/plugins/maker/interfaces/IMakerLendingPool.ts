@@ -5,12 +5,17 @@ import { z } from 'zod'
 import { IMakerLendingPoolId, isMakerLendingPoolId } from './IMakerLendingPoolId'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __imakerlendingpool__: unique symbol = Symbol()
+
+/**
  * @interface IMakerLendingPool
  * @description Represents a lending pool in the Maker protocol
  */
 export interface IMakerLendingPool extends ILendingPool, IMakerLendingPoolData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'IMakerLendingPool'
+  readonly [__imakerlendingpool__]: 'IMakerLendingPool'
   /** The pool's ID */
   readonly id: IMakerLendingPoolId
 

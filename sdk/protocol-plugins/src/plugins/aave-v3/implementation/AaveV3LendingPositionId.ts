@@ -3,6 +3,7 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 import {
   IAaveV3LendingPositionId,
   IAaveV3LendingPositionIdParameters,
+  __iaavev3lendingpositionid__,
 } from '../interfaces/IAaveV3LendingPositionId'
 
 /**
@@ -10,14 +11,15 @@ import {
  * @see IAaveV3LendingPositionIdData
  */
 export class AaveV3LendingPositionId extends LendingPositionId implements IAaveV3LendingPositionId {
-  readonly _signature_2 = 'IAaveV3LendingPositionId'
+  /** SIGNATURE */
+  readonly [__iaavev3lendingpositionid__] = 'IAaveV3LendingPositionId'
 
-  /** Factory method */
+  /** FACTORY */
   static createFrom(params: IAaveV3LendingPositionIdParameters): AaveV3LendingPositionId {
     return new AaveV3LendingPositionId(params)
   }
 
-  /** Sealed constructor */
+  /** SEALED CONSTRUCTOR */
   private constructor(params: IAaveV3LendingPositionIdParameters) {
     super(params)
   }

@@ -3,6 +3,11 @@ import { IPercentage, PercentageDataSchema } from './IPercentage'
 import { IPrintable } from './IPrintable'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __iriskratio__: unique symbol = Symbol()
+
+/**
  * @name RiskRatioType
  * @description Enum for the different types of risk ratios supported
  */
@@ -21,7 +26,7 @@ export enum RiskRatioType {
  */
 export interface IRiskRatio extends IRiskRatioData, IPrintable {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'IRiskRatio'
+  readonly [__iriskratio__]: 'IRiskRatio'
   /** The type of the risk ratio */
   readonly type: RiskRatioType
   /** The risk ratio value, a percentage for LTV and Collateralization Ratio, a number for Multiple */

@@ -9,10 +9,17 @@ import { ISimulation, SimulationSchema } from './ISimulation'
 import { Steps } from './Steps'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __irefinancesimulation__: unique symbol = Symbol()
+
+/**
  * @interface IRefinanceSimulation
  * @description Simulation result of a refinance operation
  */
 export interface IRefinanceSimulation extends ISimulation {
+  /** Signature used to differentiate it from similar interfaces */
+  readonly [__irefinancesimulation__]: 'IRefinanceSimulation'
   /** Original position that will be refinanced */
   readonly sourcePosition: ILendingPosition
   /** Simulated target position */

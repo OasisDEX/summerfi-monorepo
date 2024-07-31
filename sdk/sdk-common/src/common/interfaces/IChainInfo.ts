@@ -3,12 +3,17 @@ import { ChainId, ChainIdSchema } from '../aliases/ChainId'
 import { IPrintable } from './IPrintable'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __ichaininfo__: unique symbol = Symbol()
+
+/**
  * @name IChainInfo
  * @description Information used to identify a blockchain network
  */
 export interface IChainInfo extends IChainInfoData, IPrintable {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'IChainInfo'
+  readonly [__ichaininfo__]: 'IChainInfo'
   /** The chain ID of the network */
   readonly chainId: ChainId
   /** The name of the network */

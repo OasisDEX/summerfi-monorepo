@@ -4,13 +4,19 @@ import { IPrice, isPrice } from '../../common/interfaces/IPrice'
 import { IRiskRatio, isRiskRatio } from '../../common/interfaces/IRiskRatio'
 import { IToken, isToken } from '../../common/interfaces/IToken'
 import { ITokenAmount, isTokenAmount } from '../../common/interfaces/ITokenAmount'
+
+/**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __icollateralinfo__: unique symbol = Symbol()
+
 /**
  * @interface ICollateralInfo
  * @description Contains extended information about a collateral token of a lending pool
  */
 export interface ICollateralInfo extends ICollateralInfoData {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'ICollateralInfo'
+  readonly [__icollateralinfo__]: 'ICollateralInfo'
   /** The token that represents the collateral */
   readonly token: IToken
   /** The price of the token in the protocol's default denomination */

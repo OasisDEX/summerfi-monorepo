@@ -3,6 +3,7 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 import {
   IMakerLendingPositionId,
   IMakerLendingPositionIdParameters,
+  __imakerlendingpositionid__,
 } from '../interfaces/IMakerLendingPositionId'
 import { MakerVaultId } from '../types/MakerVaultId'
 
@@ -11,16 +12,18 @@ import { MakerVaultId } from '../types/MakerVaultId'
  * @see IMakerLendingPositionIdData
  */
 export class MakerLendingPositionId extends LendingPositionId implements IMakerLendingPositionId {
-  readonly _signature_2 = 'IMakerLendingPositionId'
+  /** SIGNATURE */
+  readonly [__imakerlendingpositionid__] = 'IMakerLendingPositionId'
 
+  /** ATTRIBUTES */
   readonly vaultId: MakerVaultId
 
-  /** Factory method */
+  /** FACTORY */
   static createFrom(params: IMakerLendingPositionIdParameters): MakerLendingPositionId {
     return new MakerLendingPositionId(params)
   }
 
-  /** Sealed constructor */
+  /** SEALED CONSTRUCTOR */
   private constructor(params: IMakerLendingPositionIdParameters) {
     super(params)
 

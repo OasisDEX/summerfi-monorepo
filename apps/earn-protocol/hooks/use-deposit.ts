@@ -22,10 +22,7 @@ export const useDeposit = () => {
     const user = await getUserClient({ chainId, walletAddress })
 
     return fleet.deposit({
-      user: {
-        wallet: user.wallet,
-        chainInfo: user.chainInfo,
-      },
+      user,
       amount: TokenAmount.createFrom({
         amount: amountString,
         token,

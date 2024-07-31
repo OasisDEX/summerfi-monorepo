@@ -5,6 +5,11 @@ import { z } from 'zod'
 import { IMorphoProtocol, isMorphoProtocol } from './IMorphoProtocol'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __imorpholendingpoolid__: unique symbol = Symbol()
+
+/**
  * @interface IMorphoLendingPoolId
  * @description Identifier of a lending pool in the Morpho protocol
  *
@@ -13,7 +18,7 @@ import { IMorphoProtocol, isMorphoProtocol } from './IMorphoProtocol'
  */
 export interface IMorphoLendingPoolId extends IMorphoLendingPoolIdData, ILendingPoolId {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'IMorphoLendingPoolId'
+  readonly [__imorpholendingpoolid__]: 'IMorphoLendingPoolId'
   /** The protocol to which the pool belongs */
   readonly protocol: IMorphoProtocol
   /** The encoded market ID used to access the market parameters */

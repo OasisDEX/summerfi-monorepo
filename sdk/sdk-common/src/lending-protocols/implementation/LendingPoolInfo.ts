@@ -5,7 +5,11 @@ import { SerializationService } from '../../services'
 import { ICollateralInfo } from '../interfaces/ICollateralInfo'
 import { IDebtInfo } from '../interfaces/IDebtInfo'
 import { ILendingPoolId } from '../interfaces/ILendingPoolId'
-import { ILendingPoolInfo, ILendingPoolInfoParameters } from '../interfaces/ILendingPoolInfo'
+import {
+  ILendingPoolInfo,
+  ILendingPoolInfoParameters,
+  __ilendingpoolinfo__,
+} from '../interfaces/ILendingPoolInfo'
 
 /**
  * LendingPoolInfo
@@ -15,12 +19,15 @@ import { ILendingPoolInfo, ILendingPoolInfoParameters } from '../interfaces/ILen
  * customizing the PoolId
  */
 export abstract class LendingPoolInfo extends PoolInfo implements ILendingPoolInfo, IPrintable {
-  readonly _signature_1 = 'ILendingPoolInfo'
+  /** SIGNATURE */
+  readonly [__ilendingpoolinfo__] = 'ILendingPoolInfo'
 
+  /** ATTRIBUTES */
   abstract readonly id: ILendingPoolId
   readonly collateral: ICollateralInfo
   readonly debt: IDebtInfo
 
+  /** SEALED CONSTRUCTOR */
   protected constructor(params: ILendingPoolInfoParameters) {
     super({
       ...params,
@@ -31,6 +38,9 @@ export abstract class LendingPoolInfo extends PoolInfo implements ILendingPoolIn
     this.debt = params.debt
   }
 
+  /** METHODS */
+
+  /** @see IPrintable.toString */
   toString(): string {
     return `Lending Pool: ${this.id.toString()}`
   }

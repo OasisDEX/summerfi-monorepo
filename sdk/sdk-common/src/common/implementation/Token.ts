@@ -1,5 +1,7 @@
 import { SerializationService } from '../../services/SerializationService'
-import { IToken, ITokenParameters } from '../interfaces/IToken'
+import { IAddress } from '../interfaces/IAddress'
+import { IChainInfo } from '../interfaces/IChainInfo'
+import { IToken, ITokenParameters, __itoken__ } from '../interfaces/IToken'
 import { Address } from './Address'
 import { ChainInfo } from './ChainInfo'
 
@@ -8,20 +10,22 @@ import { ChainInfo } from './ChainInfo'
  * @see IToken
  */
 export class Token implements IToken {
-  readonly _signature_0 = 'IToken'
+  /** SIGNATURE */
+  readonly [__itoken__] = 'IToken'
 
-  readonly chainInfo: ChainInfo
-  readonly address: Address
+  /** ATTRIBUTES */
+  readonly chainInfo: IChainInfo
+  readonly address: IAddress
   readonly symbol: string
   readonly name: string
   readonly decimals: number
 
-  /** Factory method */
+  /** FACTORY */
   static createFrom(params: ITokenParameters): Token {
     return new Token(params)
   }
 
-  /** Sealed constructor */
+  /** SEALED CONSTRUCTOR */
   private constructor(params: ITokenParameters) {
     this.chainInfo = ChainInfo.createFrom(params.chainInfo)
     this.address = Address.createFromEthereum(params.address)
@@ -30,10 +34,14 @@ export class Token implements IToken {
     this.decimals = params.decimals
   }
 
+  /** METHODS */
+
+  /** @see IToken.equals */
   equals(token: Token): boolean {
     return this.chainInfo.equals(token.chainInfo) && this.address.equals(token.address)
   }
 
+  /** @see IPrintable.toString */
   toString(): string {
     return `${this.symbol} (${this.name})`
   }

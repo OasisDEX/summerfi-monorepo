@@ -6,6 +6,11 @@ import { IDebtInfo, isDebtInfo } from './IDebtInfo'
 import { ILendingPoolId, isLendingPoolId } from './ILendingPoolId'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __ilendingpoolinfo__: unique symbol = Symbol()
+
+/**
  * @name ILendingPoolInfo
  * @description Represents the extended information for a lending pool of a single pair collateral/debt
  *
@@ -19,7 +24,7 @@ import { ILendingPoolId, isLendingPoolId } from './ILendingPoolId'
  */
 export interface ILendingPoolInfo extends IPoolInfo, ILendingPoolInfoData {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_1: 'ILendingPoolInfo'
+  readonly [__ilendingpoolinfo__]: 'ILendingPoolInfo'
   /** Pool ID of the lending pool */
   readonly id: ILendingPoolId
   /** The collateral information of the pool */

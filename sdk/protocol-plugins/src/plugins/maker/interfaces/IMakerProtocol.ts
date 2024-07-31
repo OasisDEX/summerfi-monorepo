@@ -3,6 +3,11 @@ import { ProtocolDataSchema } from '@summerfi/sdk-common/common'
 import { z } from 'zod'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __imakerprotocol__: unique symbol = Symbol()
+
+/**
  * @interface IMakerProtocol
  * @description Identifier of the Maker protocol
  *
@@ -11,7 +16,7 @@ import { z } from 'zod'
  */
 export interface IMakerProtocol extends IProtocol, IMakerProtocolData {
   /** Interface signature used to differentiate it from similar interfaces */
-  readonly _signature_1: 'IMakerProtocol'
+  readonly [__imakerprotocol__]: 'IMakerProtocol'
 
   // Re-declaring the properties with the correct types
   readonly name: ProtocolName

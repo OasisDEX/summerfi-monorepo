@@ -1,6 +1,10 @@
 import { LendingPool } from '@summerfi/sdk-common/lending-protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
-import { IAaveV3LendingPool, IAaveV3LendingPoolParameters } from '../interfaces/IAaveV3LendingPool'
+import {
+  IAaveV3LendingPool,
+  IAaveV3LendingPoolParameters,
+  __iaavev3lendingpool__,
+} from '../interfaces/IAaveV3LendingPool'
 import { AaveV3LendingPoolId } from './AaveV3LendingPoolId'
 
 /**
@@ -8,16 +12,18 @@ import { AaveV3LendingPoolId } from './AaveV3LendingPoolId'
  * @see IAaveV3LendingPoolData
  */
 export class AaveV3LendingPool extends LendingPool implements IAaveV3LendingPool {
-  readonly _signature_2 = 'IAaveV3LendingPool'
+  /** SIGNATURE */
+  readonly [__iaavev3lendingpool__] = 'IAaveV3LendingPool'
 
+  /** ATTRIBUTES */
   readonly id: AaveV3LendingPoolId
 
-  /** Factory method */
+  /** FACTORY */
   public static createFrom(params: IAaveV3LendingPoolParameters): AaveV3LendingPool {
     return new AaveV3LendingPool(params)
   }
 
-  /** Sealed constructor */
+  /** SEALED CONSTRUCTOR */
   private constructor(params: IAaveV3LendingPoolParameters) {
     super(params)
 

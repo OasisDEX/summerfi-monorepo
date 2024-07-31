@@ -2,12 +2,17 @@ import { z } from 'zod'
 import { PositionType, PositionTypeSchema } from '../types'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __ipositionid__: unique symbol = Symbol()
+
+/**
  * @name IPositionId
  * @description Represents a unique identifier for a position in the Summer system
  */
 export interface IPositionId extends IPositionIdData {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'IPositionId'
+  readonly [__ipositionid__]: 'IPositionId'
   /* Unique identifier for the position inside the Summer.fi system */
   readonly id: string
   /** Type of the position */

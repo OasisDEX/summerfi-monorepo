@@ -4,6 +4,7 @@ import { IAaveV3LendingPool } from '../interfaces/IAaveV3LendingPool'
 import {
   IAaveV3LendingPosition,
   IAaveV3LendingPositionParameters,
+  __iaavev3lendingposition__,
 } from '../interfaces/IAaveV3LendingPosition'
 import { IAaveV3LendingPositionId } from '../interfaces/IAaveV3LendingPositionId'
 
@@ -12,17 +13,19 @@ import { IAaveV3LendingPositionId } from '../interfaces/IAaveV3LendingPositionId
  * @see IAaveV3LendingPosition
  */
 export class AaveV3LendingPosition extends LendingPosition implements IAaveV3LendingPosition {
-  readonly _signature_2 = 'IAaveV3LendingPosition'
+  /** SIGNATURE */
+  readonly [__iaavev3lendingposition__] = 'IAaveV3LendingPosition'
 
+  /** ATTRIBUTES */
   readonly pool: IAaveV3LendingPool
   readonly id: IAaveV3LendingPositionId
 
-  /** Factory method */
+  /** FACTORY */
   static createFrom(params: IAaveV3LendingPositionParameters): AaveV3LendingPosition {
     return new AaveV3LendingPosition(params)
   }
 
-  /** Sealed constructor */
+  /** SEALED CONSTRUCTOR */
   private constructor(params: IAaveV3LendingPositionParameters) {
     super(params)
 

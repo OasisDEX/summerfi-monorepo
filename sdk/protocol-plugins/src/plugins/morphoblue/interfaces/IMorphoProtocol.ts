@@ -3,6 +3,11 @@ import { ProtocolDataSchema, ProtocolName } from '@summerfi/sdk-common/common'
 import { z } from 'zod'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __imorphoprotocol__: unique symbol = Symbol()
+
+/**
  * @interface IMorphoProtocol
  * @description Identifier of the Morpho protocol
  *
@@ -13,7 +18,7 @@ import { z } from 'zod'
  */
 export interface IMorphoProtocol extends IMorphoProtocolData, IProtocol {
   /** Interface signature used to differentiate it from similar interfaces */
-  readonly _signature_1: 'IMorphoProtocol'
+  readonly [__imorphoprotocol__]: 'IMorphoProtocol'
 
   // Re-declare the properties with the correct types
   readonly name: ProtocolName

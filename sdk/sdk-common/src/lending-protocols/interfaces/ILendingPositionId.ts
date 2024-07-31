@@ -3,12 +3,17 @@ import { IPositionId, PositionIdDataSchema } from '../../common/interfaces/IPosi
 import { PositionType } from '../../common/types/PositionType'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __ilendingpositionid__: unique symbol = Symbol()
+
+/**
  * @name ILendingPositionId
  * @description Represents a position ID for a lending position
  */
 export interface ILendingPositionId extends IPositionId {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_1: 'ILendingPositionId'
+  readonly [__ilendingpositionid__]: 'ILendingPositionId'
 }
 
 /**

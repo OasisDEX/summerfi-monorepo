@@ -6,7 +6,12 @@ import {
 import { z } from 'zod'
 
 /**
- * @interface IAaveV3PositionId
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __iaavev3lendingpositionid__: unique symbol = Symbol()
+
+/**
+ * @interface IAaveV3LendingPositionId
  * @description ID for a position on Aave V3 protocols
  *
  * This interface is used to add all the methods that the interface supports
@@ -14,7 +19,7 @@ import { z } from 'zod'
  */
 export interface IAaveV3LendingPositionId extends ILendingPositionId, IAaveV3LendingPositionIdData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'IAaveV3LendingPositionId'
+  readonly [__iaavev3lendingpositionid__]: 'IAaveV3LendingPositionId'
 
   // Re-declaring the properties with the correct types
   readonly type: PositionType

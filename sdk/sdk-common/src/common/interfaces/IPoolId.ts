@@ -3,6 +3,11 @@ import { PoolType } from '../types'
 import { IProtocol, isProtocol } from './IProtocol'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __ipoolid__: unique symbol = Symbol()
+
+/**
  * @name IPoolId
  * @description Represents a pool's ID. This will be specialized for each protocol
  *
@@ -11,7 +16,7 @@ import { IProtocol, isProtocol } from './IProtocol'
  */
 export interface IPoolId extends IPoolIdData {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'IPoolId'
+  readonly [__ipoolid__]: 'IPoolId'
   /** Pool type */
   readonly type: PoolType
   /** Protocol where the pool is */

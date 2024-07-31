@@ -6,6 +6,7 @@ import { ExternalLendingPositionType } from '../enums/ExrternalLendingPositionTy
 import {
   IExternalLendingPositionId,
   IExternalLendingPositionIdParameters,
+  __iexternallendingpositionid__,
 } from '../interfaces/IExternalLendingPositionId'
 
 /**
@@ -16,18 +17,20 @@ export class ExternalLendingPositionId
   extends LendingPositionId
   implements IExternalLendingPositionId
 {
-  readonly _signature_2 = 'IExternalLendingPositionId'
+  /** SIGNATURE */
+  readonly [__iexternallendingpositionid__] = 'IExternalLendingPositionId'
 
+  /** ATTRIBUTES */
   readonly externalType: ExternalLendingPositionType
   readonly address: IAddress
   readonly protocolId: ILendingPositionId
 
-  /** Factory method */
+  /** FACTORY */
   static createFrom(params: IExternalLendingPositionIdParameters): ExternalLendingPositionId {
     return new ExternalLendingPositionId(params)
   }
 
-  /** Sealed constructor */
+  /** SEALED CONSTRUCTOR */
   private constructor(params: IExternalLendingPositionIdParameters) {
     super(params)
 
@@ -36,6 +39,9 @@ export class ExternalLendingPositionId
     this.protocolId = params.protocolId
   }
 
+  /** METHODS */
+
+  /** @see IPrintable.toString */
   toString(): string {
     return `External lending position ID: ${this.externalType} at ${this.address.toString()} (${super.toString()})`
   }

@@ -5,6 +5,7 @@ import { SerializationService } from '../../../services/SerializationService'
 import {
   IRefinanceParameters,
   IRefinanceParametersParameters,
+  __irefinanceparameters__,
 } from '../interfaces/IRefinanceParameters'
 
 /**
@@ -12,24 +13,29 @@ import {
  * @see IRefinanceParameters
  */
 export class RefinanceParameters implements IRefinanceParameters {
-  readonly _signature_0 = 'IRefinanceParameters'
+  /** SIGNATURE */
+  readonly [__irefinanceparameters__] = 'IRefinanceParameters'
 
+  /** ATTRIBUTES */
   readonly sourcePosition: ILendingPosition
   readonly targetPool: ILendingPool
   readonly slippage: IPercentage
 
-  /** Factory method */
+  /** FACTORY */
   static createFrom(params: IRefinanceParametersParameters): RefinanceParameters {
     return new RefinanceParameters(params)
   }
 
-  /** Sealed constructor */
+  /** SEALED CONSTRUCTOR */
   private constructor(params: IRefinanceParametersParameters) {
     this.sourcePosition = params.sourcePosition
     this.targetPool = params.targetPool
     this.slippage = params.slippage
   }
 
+  /** METHODS */
+
+  /** @see IPrintable.toString */
   toString(): string {
     return `Refinance Parameters (source: ${this.sourcePosition}, target: ${this.targetPool}, slippage: ${this.slippage})`
   }

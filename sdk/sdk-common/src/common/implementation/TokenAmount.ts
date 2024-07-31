@@ -2,11 +2,13 @@ import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
 import { isPercentage } from '../interfaces/IPercentage'
 import { isPrice } from '../interfaces/IPrice'
+import { IToken } from '../interfaces/IToken'
 import {
   ITokenAmount,
   ITokenAmountParameters,
   TokenAmountMulDivParamType,
   TokenAmountMulDivReturnType,
+  __itokenamount__,
 } from '../interfaces/ITokenAmount'
 import {
   divideTokenAmountByPercentage,
@@ -19,9 +21,11 @@ import { Token } from './Token'
  * @see ITokenAmount
  */
 export class TokenAmount implements ITokenAmount {
-  readonly _signature_0 = 'ITokenAmount'
+  /** SIGNATURE */
+  readonly [__itokenamount__] = 'ITokenAmount'
 
-  readonly token: Token
+  /** ATTRIBUTES */
+  readonly token: IToken
   readonly amount: string
 
   // This is protected because otherwise TypeScript is removing the type when transpiling and it causes errors.
@@ -30,13 +34,6 @@ export class TokenAmount implements ITokenAmount {
 
   /** FACTORY */
 
-  /**
-   * @name createFrom
-   * @param params Token amount data to create the instance
-   * @returns The resulting TokenAmount
-   *
-   * `amount` is the amount in floating point format without taking into account the token decimals
-   */
   static createFrom(params: ITokenAmountParameters): ITokenAmount {
     return new TokenAmount(params)
   }

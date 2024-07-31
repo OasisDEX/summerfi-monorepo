@@ -1,7 +1,7 @@
 import { IPrintable } from '../../common/interfaces/IPrintable'
 import { PoolType } from '../../common/types/PoolType'
 import { SerializationService } from '../../services/SerializationService'
-import { IPool, IPoolParameters } from '../interfaces/IPool'
+import { IPool, IPoolParameters, __ipool__ } from '../interfaces/IPool'
 import { IPoolId } from '../interfaces/IPoolId'
 
 /**
@@ -9,14 +9,21 @@ import { IPoolId } from '../interfaces/IPoolId'
  * @see IPool
  */
 export abstract class Pool implements IPool, IPrintable {
-  readonly _signature_0 = 'IPool'
+  /** SIGNATURE */
+  readonly [__ipool__] = 'IPool'
+
+  /** ATTRIBUTES */
   readonly type: PoolType
   abstract readonly id: IPoolId
 
+  /** SEALED CONSTRUCTOR */
   protected constructor(params: IPoolParameters) {
     this.type = params.type
   }
 
+  /** METHODS */
+
+  /** @see IPrintable.toString */
   toString(): string {
     return `Pool: ${this.type} (${this.id.toString()})`
   }

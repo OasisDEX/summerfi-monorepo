@@ -4,6 +4,7 @@ import { IMorphoLendingPoolId } from '../interfaces/IMorphoLendingPoolId'
 import {
   IMorphoLendingPoolInfo,
   IMorphoLendingPoolInfoParameters,
+  __imorpholendingpoolinfo__,
 } from '../interfaces/IMorphoLendingPoolInfo'
 
 /**
@@ -11,7 +12,7 @@ import {
  * @see IMorphoLendingPoolInfo
  */
 export class MorphoLendingPoolInfo extends LendingPoolInfo implements IMorphoLendingPoolInfo {
-  readonly _signature_2 = 'IMorphoLendingPoolInfo'
+  readonly [__imorpholendingpoolinfo__] = 'IMorphoLendingPoolInfo'
 
   readonly id: IMorphoLendingPoolId
 

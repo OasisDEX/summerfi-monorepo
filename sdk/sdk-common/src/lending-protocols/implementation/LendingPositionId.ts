@@ -4,15 +4,18 @@ import { SerializationService } from '../../services/SerializationService'
 import {
   ILendingPositionIdData,
   ILendingPositionIdParameters,
+  __ilendingpositionid__,
 } from '../interfaces/ILendingPositionId'
 
 /**
  * @class LendingPositionId
- * @see ILendingPositionIdData
+ * @see ILendingPositionId
  */
 export abstract class LendingPositionId extends PositionId implements ILendingPositionIdData {
-  readonly _signature_1 = 'ILendingPositionId'
+  /** SIGNATURE */
+  readonly [__ilendingpositionid__] = 'ILendingPositionId'
 
+  /** SEALED CONSTRUCTOR */
   protected constructor(params: ILendingPositionIdParameters) {
     super({
       ...params,
@@ -20,6 +23,9 @@ export abstract class LendingPositionId extends PositionId implements ILendingPo
     })
   }
 
+  /** METHODS */
+
+  /** @see IPrintable.toString */
   toString(): string {
     return `Lending Position ID: ${this.id} with type: ${this.type}`
   }

@@ -6,6 +6,11 @@ import {
 import { z } from 'zod'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __imorpholendingpositionid__: unique symbol = Symbol()
+
+/**
  * @interface IMorphoLendingPositionId
  * @description Represents the ID of a lending position in the Morpho protocol
  *
@@ -13,7 +18,7 @@ import { z } from 'zod'
  */
 export interface IMorphoLendingPositionId extends ILendingPositionId, IMorphoLendingPositionIdData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'IMorphoLendingPositionId'
+  readonly [__imorpholendingpositionid__]: 'IMorphoLendingPositionId'
 
   // Re-declaring the properties with the correct types
   readonly type: PositionType

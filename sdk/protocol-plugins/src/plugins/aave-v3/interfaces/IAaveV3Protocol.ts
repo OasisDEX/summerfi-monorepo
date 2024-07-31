@@ -3,6 +3,11 @@ import { IChainInfo, IProtocol, ProtocolDataSchema, ProtocolName } from '@summer
 import { z } from 'zod'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __iaavev3protocol__: unique symbol = Symbol()
+
+/**
  * @interface IAaveV3Protocol
  * @description Identifier of the Aave V3 protocol
  *
@@ -11,7 +16,7 @@ import { z } from 'zod'
  */
 export interface IAaveV3Protocol extends IProtocol, IAaveV3ProtocolData {
   /** Interface signature used to differentiate it from similar interfaces */
-  readonly _signature_1: 'IAaveV3Protocol'
+  readonly [__iaavev3protocol__]: 'IAaveV3Protocol'
 
   // Re-declaring the properties with the correct types
   readonly name: ProtocolName
@@ -44,3 +49,8 @@ export type IAaveV3ProtocolParameters = Omit<IAaveV3ProtocolData, 'name'>
 export function isAaveV3Protocol(maybeProtocol: unknown): maybeProtocol is IAaveV3ProtocolData {
   return AaveV3ProtocolDataSchema.safeParse(maybeProtocol).success
 }
+
+const a: IAaveV3Protocol = {} as IAaveV3Protocol
+const b: IProtocol = a
+
+console.log(b)

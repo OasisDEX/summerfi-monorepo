@@ -9,15 +9,21 @@ import { IRiskRatio } from '../../common/interfaces/IRiskRatio'
 import { IToken } from '../../common/interfaces/IToken'
 import { ITokenAmount } from '../../common/interfaces/ITokenAmount'
 import { SerializationService } from '../../services/SerializationService'
-import { ICollateralInfo, ICollateralInfoData } from '../interfaces/ICollateralInfo'
+import {
+  ICollateralInfo,
+  ICollateralInfoData,
+  __icollateralinfo__,
+} from '../interfaces/ICollateralInfo'
 
 /**
  * @class CollateralInfo
  * @see ICollateralInfo
  */
 export class CollateralInfo implements ICollateralInfo {
-  readonly _signature_0 = 'ICollateralInfo'
+  /** SIGNATURE */
+  readonly [__icollateralinfo__] = 'ICollateralInfo'
 
+  /** ATTRIBUTES */
   readonly token: IToken
   readonly price: IPrice
   readonly priceUSD: IPrice

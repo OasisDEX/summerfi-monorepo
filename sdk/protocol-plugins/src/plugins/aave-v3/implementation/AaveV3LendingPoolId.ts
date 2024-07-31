@@ -6,6 +6,7 @@ import { EmodeType } from '../../common'
 import {
   IAaveV3LendingPoolId,
   IAaveV3LendingPoolIdParameters,
+  __iaavev3lendingpoolid__,
 } from '../interfaces/IAaveV3LendingPoolId'
 import { IAaveV3Protocol } from '../interfaces/IAaveV3Protocol'
 
@@ -14,19 +15,21 @@ import { IAaveV3Protocol } from '../interfaces/IAaveV3Protocol'
  * @see IAaveV3LendingPoolIdData
  */
 export class AaveV3LendingPoolId extends LendingPoolId implements IAaveV3LendingPoolId, IPrintable {
-  readonly _signature_2 = 'IAaveV3LendingPoolId'
+  /** SIGNATURE */
+  readonly [__iaavev3lendingpoolid__] = 'IAaveV3LendingPoolId'
 
+  /** ATTRIBUTES */
   readonly protocol: IAaveV3Protocol
   readonly emodeType: EmodeType
   readonly collateralToken: IToken
   readonly debtToken: IToken
 
-  /** Factory method */
+  /** FACTORY */
   static createFrom(params: IAaveV3LendingPoolIdParameters): AaveV3LendingPoolId {
     return new AaveV3LendingPoolId(params)
   }
 
-  /** Sealed constructor */
+  /** SEALED CONSTRUCTOR */
   private constructor(params: IAaveV3LendingPoolIdParameters) {
     super(params)
 
@@ -36,6 +39,9 @@ export class AaveV3LendingPoolId extends LendingPoolId implements IAaveV3Lending
     this.debtToken = params.debtToken
   }
 
+  /** METHODS */
+
+  /** @see IPrintable.toString */
   toString(): string {
     return `${LendingPoolId.toString()} [emode: ${this.emodeType}]`
   }

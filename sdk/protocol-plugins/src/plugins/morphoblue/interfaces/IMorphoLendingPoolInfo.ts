@@ -5,6 +5,11 @@ import { isMakerLendingPoolId } from '../../maker'
 import { IMorphoLendingPoolId } from './IMorphoLendingPoolId'
 
 /**
+ * Unique signature for the interface so it can be differentiated from other similar interfaces
+ */
+export const __imorpholendingpoolinfo__: unique symbol = Symbol()
+
+/**
  * @interface IMorphoLendingPoolInfo
  * @description Represents a lending pool info in the Morpho protocol
  *
@@ -13,7 +18,7 @@ import { IMorphoLendingPoolId } from './IMorphoLendingPoolId'
  */
 export interface IMorphoLendingPoolInfo extends ILendingPoolInfo, IMorphoLendingPoolInfoData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'IMorphoLendingPoolInfo'
+  readonly [__imorpholendingpoolinfo__]: 'IMorphoLendingPoolInfo'
   /** The id of the lending pool */
   readonly id: IMorphoLendingPoolId
 
