@@ -4,12 +4,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "rootDir": "src",
-    "paths": {
-      "~src/*": ["./src/*"],
-      "@summerfi/common": ["node_modules/@summerfi/common/src/index.ts"],
-      "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
-      "@summerfi/blockchain-client-provider": ["../blockchain-client-provider/src/index.ts"]
-    }
+    "baseUrl": "."
   },
   "include": ["src/**/*.ts"]
 }

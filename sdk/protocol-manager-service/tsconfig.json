@@ -3,11 +3,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "@summerfi/protocol-plugins/*": ["node_modules/@summerfi/protocol-plugins/src/*"],
-      "@summerfi/deployment-utils": ["../../packages/deployment-utils/src/index.ts"]
-    }
+    "baseUrl": "."
   },
   "include": ["src/**/*.ts", "tests/**/*.ts"],
   "exclude": ["node_modules", "dist"]

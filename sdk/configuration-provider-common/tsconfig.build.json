@@ -3,9 +3,6 @@
   // include tests and use module paths in tests but build without tests
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "rootDir": "src",
-    "baseUrl": "."
-  },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+    "rootDir": "src"
+  }
 }

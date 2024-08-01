@@ -3,15 +3,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "@summerfi/testing-utils": ["node_modules/@summerfi/testing-utils/src/index.ts"],
-      "@summerfi/testing-utils/*": ["node_modules/@summerfi/testing-utils/src/*"],
-      "@summerfi/configuration-provider": ["../configuration-provider/src/index.ts"],
-      "@summerfi/allowance-manager-service": ["../allowance-manager-service/src/index.ts"],
-      "@summerfi/contracts-provider-service": ["../contracts-provider-service/src/index.ts"],
-      "@summerfi/blockchain-client-provider": ["../blockchain-client-provider/src/index.ts"]
-    }
+    "baseUrl": "."
   },
   "include": ["src/**/*.ts", "e2e/**/*.ts"],
   "exclude": ["node_modules"]
