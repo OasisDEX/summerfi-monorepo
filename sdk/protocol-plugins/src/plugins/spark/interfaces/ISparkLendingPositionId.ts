@@ -1,4 +1,3 @@
-import { PositionType } from '@summerfi/sdk-common/common'
 import {
   ILendingPositionId,
   LendingPositionIdDataSchema,
@@ -6,7 +5,7 @@ import {
 import { z } from 'zod'
 
 /**
- * Unique signature for the interface so it can be differentiated from other similar interfaces
+ * Unique signature to provide branded types to the interface
  */
 export const __signature__: unique symbol = Symbol()
 
@@ -19,8 +18,6 @@ export const __signature__: unique symbol = Symbol()
 export interface ISparkLendingPositionId extends ILendingPositionId, ISparkLendingPositionIdData {
   /** Signature used to differentiate it from similar interfaces */
   readonly [__signature__]: symbol
-  // Re-declaring the properties with the correct types
-  readonly type: PositionType
 }
 
 /**
@@ -34,11 +31,6 @@ export const SparkLendingPositionIdDataSchema = z.object({
  * Type for the data part of ISparkPositionId
  */
 export type ISparkLendingPositionIdData = Readonly<z.infer<typeof SparkLendingPositionIdDataSchema>>
-
-/**
- * Type for the parameters of ISparkPositionId
- */
-export type ISparkLendingPositionIdParameters = Omit<ISparkLendingPositionIdData, 'type'>
 
 /**
  * @description Type guard for ISparkPositionId

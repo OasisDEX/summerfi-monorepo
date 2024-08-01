@@ -1,9 +1,9 @@
-import { IChainInfo, IProtocol, ProtocolDataSchema, ProtocolName } from '@summerfi/sdk-common'
+import { IProtocol, ProtocolDataSchema, ProtocolName } from '@summerfi/sdk-common'
 
 import { z } from 'zod'
 
 /**
- * Unique signature for the interface so it can be differentiated from other similar interfaces
+ * Unique signature to provide branded types to the interface
  */
 export const __signature__: unique symbol = Symbol()
 
@@ -18,9 +18,8 @@ export interface IAaveV3Protocol extends IProtocol, IAaveV3ProtocolData {
   /** Interface signature used to differentiate it from similar interfaces */
   readonly [__signature__]: symbol
 
-  // Re-declaring the properties with the correct types
-  readonly name: ProtocolName
-  readonly chainInfo: IChainInfo
+  // Re-declaring the properties to narrow the types
+  readonly name: ProtocolName.AaveV3
 }
 
 /**
@@ -28,18 +27,13 @@ export interface IAaveV3Protocol extends IProtocol, IAaveV3ProtocolData {
  */
 export const AaveV3ProtocolDataSchema = z.object({
   ...ProtocolDataSchema.shape,
-  name: z.custom<ProtocolName>((val) => val === ProtocolName.AaveV3),
+  name: z.literal(ProtocolName.AaveV3),
 })
 
 /**
  * Type for the data part of IAaveV3Protocol
  */
 export type IAaveV3ProtocolData = Readonly<z.infer<typeof AaveV3ProtocolDataSchema>>
-
-/**
- * Type for the parameters of the IAaveV3Protocol interface
- */
-export type IAaveV3ProtocolParameters = Omit<IAaveV3ProtocolData, 'name'>
 
 /**
  * @description Type guard for IAaveV3Protocol
@@ -49,8 +43,3 @@ export type IAaveV3ProtocolParameters = Omit<IAaveV3ProtocolData, 'name'>
 export function isAaveV3Protocol(maybeProtocol: unknown): maybeProtocol is IAaveV3ProtocolData {
   return AaveV3ProtocolDataSchema.safeParse(maybeProtocol).success
 }
-
-const a: IAaveV3Protocol = {} as IAaveV3Protocol
-const b: IProtocol = a
-
-console.log(b)

@@ -2,12 +2,17 @@ import { z } from 'zod'
 import { ArmadaPositionDataSchema, IArmadaPosition } from '../../common/interfaces/IArmadaPosition'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * @interface IArmadaSimulatedPosition
  * @description Interface for an Armada Protocol simulated position, used in the simulator only
  */
 export interface IArmadaSimulatedPosition extends IArmadaPosition, IArmadaSimulatedPositionData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'IArmadaSimulatedPosition'
+  readonly [__signature__]: symbol
 }
 
 /**
@@ -23,11 +28,6 @@ export const ArmadaSimulatedPositionDataSchema = z.object({
 export type IArmadaSimulatedPositionData = Readonly<
   z.infer<typeof ArmadaSimulatedPositionDataSchema>
 >
-
-/**
- * Type for the parameters of the IArmadaSimulatedPosition interface
- */
-export type IArmadaSimulatedPositionParameters = Omit<IArmadaSimulatedPositionData, ''>
 
 /**
  * @description Type guard for IArmadaSimulatedPosition

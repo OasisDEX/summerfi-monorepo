@@ -6,7 +6,7 @@ import { IDebtInfo, isDebtInfo } from './IDebtInfo'
 import { ILendingPoolId, isLendingPoolId } from './ILendingPoolId'
 
 /**
- * Unique signature for the interface so it can be differentiated from other similar interfaces
+ * Unique signature to provide branded types to the interface
  */
 export const __signature__: unique symbol = Symbol()
 
@@ -32,7 +32,7 @@ export interface ILendingPoolInfo extends IPoolInfo, ILendingPoolInfoData {
   /** The debt information of the pool */
   readonly debt: IDebtInfo
 
-  // Re-declaring the properties with the correct types
+  // Re-declaring the properties to narrow the types
   readonly type: PoolType.Lending
 }
 

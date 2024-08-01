@@ -1,21 +1,27 @@
 import {
   IArmadaSimulatedPosition,
-  IArmadaSimulatedPositionParameters,
+  IArmadaSimulatedPositionData,
+  __iarmadasimulatedposition__,
 } from '@summerfi/armada-protocol-common'
 import { ArmadaPosition } from '../../common/implementation/ArmadaPosition'
+
+/**
+ * Type for the parameters of ArmadaSimulatedPosition
+ */
+export type ArmadaSimulatedPositionParameters = Omit<IArmadaSimulatedPositionData, ''>
 
 /**
  * @class ArmadaSimulatedPosition
  * @see IArmadaSimulatedPosition
  */
 export class ArmadaSimulatedPosition extends ArmadaPosition implements IArmadaSimulatedPosition {
-  readonly _signature_2 = 'IArmadaSimulatedPosition'
+  readonly [__iarmadasimulatedposition__] = __iarmadasimulatedposition__
 
-  static createFrom(params: IArmadaSimulatedPositionParameters): ArmadaSimulatedPosition {
+  static createFrom(params: ArmadaSimulatedPositionParameters): ArmadaSimulatedPosition {
     return new ArmadaSimulatedPosition(params)
   }
 
-  private constructor(params: IArmadaSimulatedPositionParameters) {
+  private constructor(params: ArmadaSimulatedPositionParameters) {
     super(params)
   }
 }

@@ -4,17 +4,22 @@ import { z } from 'zod'
 import { IArmadaProtocol, isArmadaProtocol } from './IArmadaProtocol'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * @interface IArmadaPoolId
  * @description Interface for an ID of an Armada Protocol pool (fleet)
  */
 export interface IArmadaPoolId extends IPoolId, IArmadaPoolIdData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_1: 'IArmadaPoolId'
+  readonly [__signature__]: symbol
   /** Address of the fleet commander that gives access to the pool */
   readonly fleet: IAddress
 
-  // Re-declaring the properties with the correct types
-  readonly type: PoolType
+  // Re-declaring the properties to narrow the types
+  readonly type: PoolType.Armada
   readonly protocol: IArmadaProtocol
 }
 
@@ -23,6 +28,7 @@ export interface IArmadaPoolId extends IPoolId, IArmadaPoolIdData {
  */
 export const ArmadaPoolIdDataSchema = z.object({
   ...PoolIdDataSchema.shape,
+  type: z.literal(PoolType.Armada),
   fleet: z.custom<IAddress>((val) => isAddress(val)),
   protocol: z.custom<IArmadaProtocol>((val) => isArmadaProtocol(val)),
 })
@@ -31,11 +37,6 @@ export const ArmadaPoolIdDataSchema = z.object({
  * Type for the data part of IArmadaPoolId
  */
 export type IArmadaPoolIdData = Readonly<z.infer<typeof ArmadaPoolIdDataSchema>>
-
-/**
- * Type for the parameters of the IArmadaPoolId interface
- */
-export type IArmadaPoolIdParameters = Omit<IArmadaPoolIdData, 'type'>
 
 /**
  * @description Type guard for IArmadaPoolId

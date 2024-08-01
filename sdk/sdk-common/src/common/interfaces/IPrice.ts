@@ -7,7 +7,7 @@ import { IPrintable } from './IPrintable'
 import { type ITokenAmount } from './ITokenAmount'
 
 /**
- * Unique signature for the interface so it can be differentiated from other similar interfaces
+ * Unique signature to provide branded types to the interface
  */
 export const __signature__: unique symbol = Symbol()
 

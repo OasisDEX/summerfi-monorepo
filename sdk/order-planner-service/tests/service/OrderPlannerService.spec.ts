@@ -19,15 +19,20 @@ import {
   SparkProtocolPlugin,
 } from '@summerfi/protocol-plugins/plugins/spark'
 import { IRefinanceSimulation } from '@summerfi/sdk-common'
-import { Address, ChainFamilyMap, ChainInfo, ProtocolName } from '@summerfi/sdk-common/common'
+import {
+  Address,
+  ChainFamilyMap,
+  ChainInfo,
+  ProtocolName,
+  Wallet,
+} from '@summerfi/sdk-common/common'
 import { IPositionsManager } from '@summerfi/sdk-common/orders'
 import { FlashloanProvider, SimulationType } from '@summerfi/sdk-common/simulation'
-import { IUser } from '@summerfi/sdk-common/user'
+import { IUser, User } from '@summerfi/sdk-common/user'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
 import {
   AddressBookManagerMock,
   SwapManagerMock,
-  UserMock,
   decodeActionCalldata,
   decodePositionsManagerCalldata,
   decodeStrategyExecutorCalldata,
@@ -49,10 +54,12 @@ describe('Order Planner Service', () => {
 
   SetupDeployments(chainInfo, addressBookManager)
 
-  const user: IUser = new UserMock({
+  const user: IUser = User.createFrom({
     chainInfo: chainInfo,
-    walletAddress: Address.createFromEthereum({
-      value: '0xbA2aE424d960c26247Dd6c32edC70B295c744C43',
+    wallet: Wallet.createFrom({
+      address: Address.createFromEthereum({
+        value: '0xbA2aE424d960c26247Dd6c32edC70B295c744C43',
+      }),
     }),
   })
   const positionsManager: IPositionsManager = {

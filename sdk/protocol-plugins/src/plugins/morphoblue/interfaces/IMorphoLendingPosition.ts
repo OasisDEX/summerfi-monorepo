@@ -1,4 +1,3 @@
-import { ITokenAmount, PositionType } from '@summerfi/sdk-common/common'
 import {
   ILendingPosition,
   LendingPositionDataSchema,
@@ -9,7 +8,7 @@ import { IMorphoLendingPool, isMorphoLendingPool } from './IMorphoLendingPool'
 import { IMorphoLendingPositionId, isMorphoLendingPositionId } from './IMorphoLendingPositionId'
 
 /**
- * Unique signature for the interface so it can be differentiated from other similar interfaces
+ * Unique signature to provide branded types to the interface
  */
 export const __signature__: unique symbol = Symbol()
 
@@ -30,11 +29,8 @@ export interface IMorphoLendingPosition extends ILendingPosition, IMorphoLending
   /** The pool the position belongs to */
   readonly pool: IMorphoLendingPool
 
-  // Re-declaring the properties with the correct types
-  readonly type: PositionType
+  // Re-declaring the properties to narrow the types
   readonly subtype: LendingPositionType
-  readonly debtAmount: ITokenAmount
-  readonly collateralAmount: ITokenAmount
 }
 
 /**
@@ -50,11 +46,6 @@ export const MorphoLendingPositionDataSchema = z.object({
  * Type for the data part of the IMorphoPosition interface
  */
 export type IMorphoLendingPositionData = Readonly<z.infer<typeof MorphoLendingPositionDataSchema>>
-
-/**
- * Type for the parameters of the IMorphoPosition interface
- */
-export type IMorphoLendingPositionParameters = Omit<IMorphoLendingPositionData, 'type'>
 
 /**
  * @description Type guard for IMorphoPosition

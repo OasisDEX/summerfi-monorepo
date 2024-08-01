@@ -1,5 +1,10 @@
-import { IProtocol, PositionIdDataSchema } from '@summerfi/sdk-common/common'
+import { IProtocol, ProtocolDataSchema, ProtocolName } from '@summerfi/sdk-common/common'
 import { z } from 'zod'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IArmadaProtocol
@@ -7,25 +12,24 @@ import { z } from 'zod'
  */
 export interface IArmadaProtocol extends IProtocol, IArmadaProtocolData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_1: 'IArmadaProtocol'
+  readonly [__signature__]: symbol
+
+  // Re-declaring the properties to narrow the types
+  readonly name: ProtocolName.Armada
 }
 
 /**
  * @description Zod schema for IArmadaProtocol
  */
 export const ArmadaProtocolDataSchema = z.object({
-  ...PositionIdDataSchema.shape,
+  ...ProtocolDataSchema.shape,
+  name: z.literal(ProtocolName.Armada),
 })
 
 /**
  * Type for the data part of IArmadaProtocol
  */
 export type IArmadaProtocolData = Readonly<z.infer<typeof ArmadaProtocolDataSchema>>
-
-/**
- * Type for the parameters of the IArmadaProtocol interface
- */
-export type IArmadaProtocolParameters = Omit<IArmadaProtocol, 'type'>
 
 /**
  * @description Type guard for IArmadaProtocol

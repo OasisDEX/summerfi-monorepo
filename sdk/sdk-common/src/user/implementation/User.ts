@@ -21,7 +21,7 @@ export class User implements IUser {
   public readonly chainInfo: IChainInfo
 
   /** FACTORY */
-  public createFrom(params: UserParameters): User {
+  public static createFrom(params: UserParameters): User {
     return new User(params)
   }
 

@@ -1,27 +1,11 @@
 export { MakerLendingPoolDataSchema, isMakerLendingPool } from './IMakerLendingPool'
-export type {
-  IMakerLendingPool,
-  IMakerLendingPoolData,
-  IMakerLendingPoolParameters,
-} from './IMakerLendingPool'
+export type { IMakerLendingPool, IMakerLendingPoolData } from './IMakerLendingPool'
 export { MakerLendingPoolIdDataSchema, isMakerLendingPoolId } from './IMakerLendingPoolId'
-export type {
-  IMakerLendingPoolId,
-  IMakerLendingPoolIdData,
-  IMakerLendingPoolIdParameters,
-} from './IMakerLendingPoolId'
+export type { IMakerLendingPoolId, IMakerLendingPoolIdData } from './IMakerLendingPoolId'
 export { MakerLendingPoolInfoDataSchema, isMakerLendingPoolInfo } from './IMakerLendingPoolInfo'
-export type {
-  IMakerLendingPoolInfo,
-  IMakerLendingPoolInfoData,
-  IMakerLendingPoolInfoParameters,
-} from './IMakerLendingPoolInfo'
+export type { IMakerLendingPoolInfo, IMakerLendingPoolInfoData } from './IMakerLendingPoolInfo'
 export { MakerLendingPositionDataSchema, isMakerLendingPosition } from './IMakerLendingPosition'
-export type {
-  IMakerLendingPosition,
-  IMakerLendingPositionData,
-  IMakerLendingPositionParameters,
-} from './IMakerLendingPosition'
+export type { IMakerLendingPosition, IMakerLendingPositionData } from './IMakerLendingPosition'
 export {
   MakerLendingPositionIdDataSchema,
   isMakerLendingPositionId,
@@ -29,7 +13,6 @@ export {
 export type {
   IMakerLendingPositionId,
   IMakerLendingPositionIdData,
-  IMakerLendingPositionIdParameters,
 } from './IMakerLendingPositionId'
 export { MakerProtocolDataSchema, isMakerProtocol } from './IMakerProtocol'
-export type { IMakerProtocol, IMakerProtocolData, IMakerProtocolParameters } from './IMakerProtocol'
+export type { IMakerProtocol, IMakerProtocolData } from './IMakerProtocol'

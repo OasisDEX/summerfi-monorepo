@@ -1,10 +1,11 @@
 import { Protocol, ProtocolName } from '@summerfi/sdk-common/common'
 import { SerializationService } from '@summerfi/sdk-common/services'
-import {
-  IAaveV3Protocol,
-  IAaveV3ProtocolParameters,
-  __signature__,
-} from '../interfaces/IAaveV3Protocol'
+import { IAaveV3Protocol, IAaveV3ProtocolData, __signature__ } from '../interfaces/IAaveV3Protocol'
+
+/**
+ * Type for the parameters of AaveV3Protocol
+ */
+export type AaveV3ProtocolParameters = Omit<IAaveV3ProtocolData, 'name'>
 
 /**
  * @class AaveV3Protocol
@@ -14,17 +15,17 @@ export class AaveV3Protocol extends Protocol implements IAaveV3Protocol {
   /** SIGNATURE */
   readonly [__signature__] = __signature__
 
+  /** ATTRIBUTES */
+  readonly name = ProtocolName.AaveV3
+
   /** FACTORY */
-  static createFrom(params: IAaveV3ProtocolParameters): AaveV3Protocol {
+  static createFrom(params: AaveV3ProtocolParameters): AaveV3Protocol {
     return new AaveV3Protocol(params)
   }
 
   /** SEALED CONSTRUCTOR */
-  private constructor(params: IAaveV3ProtocolParameters) {
-    super({
-      ...params,
-      name: ProtocolName.AaveV3,
-    })
+  private constructor(params: AaveV3ProtocolParameters) {
+    super(params)
   }
 }
 

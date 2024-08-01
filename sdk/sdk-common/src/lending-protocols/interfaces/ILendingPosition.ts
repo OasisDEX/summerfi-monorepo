@@ -2,12 +2,12 @@ import { z } from 'zod'
 import { IPosition, PositionDataSchema } from '../../common/interfaces/IPosition'
 import { ITokenAmount, isTokenAmount } from '../../common/interfaces/ITokenAmount'
 import { PositionType } from '../../common/types/PositionType'
-import { LendingPositionType, LendingPositionTypeSchema } from '../types'
+import { LendingPositionType } from '../types/LendingPositionType'
 import { ILendingPool, isLendingPool } from './ILendingPool'
 import { ILendingPositionId, isLendingPositionId } from './ILendingPositionId'
 
 /**
- * Unique signature for the interface so it can be differentiated from other similar interfaces
+ * Unique signature to provide branded types to the interface
  */
 export const __signature__: unique symbol = Symbol()
 
@@ -15,7 +15,7 @@ export const __signature__: unique symbol = Symbol()
  * @name ILendingPosition
  * @description Represents a position in a Lending protocol
  */
-export interface ILendingPosition extends IPosition {
+export interface ILendingPosition extends IPosition, ILendingPositionData {
   /** Signature to differentiate from similar interfaces */
   readonly [__signature__]: symbol
   /** Subtype of the position in the Summer.fi system */
@@ -29,7 +29,7 @@ export interface ILendingPosition extends IPosition {
   /** Pool where the position is */
   readonly pool: ILendingPool
 
-  // Re-declaring the properties with the correct types
+  // Re-declaring the properties to narrow the types
   readonly type: PositionType.Lending
 }
 
@@ -38,7 +38,7 @@ export interface ILendingPosition extends IPosition {
  */
 export const LendingPositionDataSchema = z.object({
   ...PositionDataSchema.shape,
-  subtype: LendingPositionTypeSchema,
+  subtype: z.nativeEnum(LendingPositionType),
   id: z.custom<ILendingPositionId>((val) => isLendingPositionId(val)),
   debtAmount: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   collateralAmount: z.custom<ITokenAmount>((val) => isTokenAmount(val)),

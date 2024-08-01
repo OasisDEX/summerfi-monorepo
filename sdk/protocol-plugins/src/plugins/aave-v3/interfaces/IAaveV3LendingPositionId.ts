@@ -1,4 +1,3 @@
-import { PositionType } from '@summerfi/sdk-common/common'
 import {
   ILendingPositionId,
   LendingPositionIdDataSchema,
@@ -6,7 +5,7 @@ import {
 import { z } from 'zod'
 
 /**
- * Unique signature for the interface so it can be differentiated from other similar interfaces
+ * Unique signature to provide branded types to the interface
  */
 export const __signature__: unique symbol = Symbol()
 
@@ -20,9 +19,6 @@ export const __signature__: unique symbol = Symbol()
 export interface IAaveV3LendingPositionId extends ILendingPositionId, IAaveV3LendingPositionIdData {
   /** Signature used to differentiate it from similar interfaces */
   readonly [__signature__]: symbol
-
-  // Re-declaring the properties with the correct types
-  readonly type: PositionType
 }
 
 /**
@@ -36,11 +32,6 @@ export const AaveV3PositionIdDataSchema = z.object({
  * Type for the data part of IAaveV3LendingPositionId
  */
 export type IAaveV3LendingPositionIdData = Readonly<z.infer<typeof AaveV3PositionIdDataSchema>>
-
-/**
- * Type for the parameters of the IAaveV3PositionId interface
- */
-export type IAaveV3LendingPositionIdParameters = Omit<IAaveV3LendingPositionIdData, 'type'>
 
 /**
  * @description Type guard for IAaveV3LendingPositionId

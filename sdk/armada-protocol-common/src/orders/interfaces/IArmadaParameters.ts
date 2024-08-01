@@ -4,11 +4,16 @@ import { IArmadaPosition, isArmadaPosition } from '../../common'
 import { ArmadaOperationType } from '../../types/ArmadaOperationType'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * Parameters for an Armada Protocol simulation
  */
 export interface IArmadaParameters extends IArmadaParametersData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_0: 'IArmadaParameters'
+  readonly [__signature__]: symbol
   /** User that triggered the simulation */
   readonly user: IUser
   /** Existing position to be updated, if it exists */
@@ -35,11 +40,6 @@ export const ArmadaParametersDataSchema = z.object({
  * Type for the data part of the IArmadaParameters interface
  */
 export type IArmadaParametersData = Readonly<z.infer<typeof ArmadaParametersDataSchema>>
-
-/**
- * Type for the parameters of the IArmadaParameters interface
- */
-export type IArmadaParametersParameters = Omit<IArmadaParametersData, ''>
 
 /**
  * Type guard for the Armada Protocol simulation parameters

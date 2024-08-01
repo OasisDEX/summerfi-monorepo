@@ -1,29 +1,31 @@
 import { Protocol, ProtocolName } from '@summerfi/sdk-common/common'
 import { SerializationService } from '@summerfi/sdk-common/services'
-import {
-  IMorphoProtocol,
-  IMorphoProtocolParameters,
-  __signature__,
-} from '../interfaces/IMorphoProtocol'
+import { IMorphoProtocol, IMorphoProtocolData, __signature__ } from '../interfaces/IMorphoProtocol'
+
+/**
+ * Type for the parameters MorphoProtocol
+ */
+export type MorphoProtocolParameters = Omit<IMorphoProtocolData, 'name'>
 
 /**
  * @class MorphoProtocol
  * @see IMorphoProtocol
  */
 export class MorphoProtocol extends Protocol implements IMorphoProtocol {
+  /** SIGNATURE */
   readonly [__signature__] = __signature__
 
-  /** Factory method */
-  static createFrom(params: IMorphoProtocolParameters): MorphoProtocol {
+  /** ATTRIBUTES */
+  readonly name = ProtocolName.MorphoBlue
+
+  /** FACTORY */
+  static createFrom(params: MorphoProtocolParameters): MorphoProtocol {
     return new MorphoProtocol(params)
   }
 
-  /** Sealed constructor */
-  private constructor(params: IMorphoProtocolParameters) {
-    super({
-      ...params,
-      name: ProtocolName.MorphoBlue,
-    })
+  /** SEALED CONSTRUCTOR */
+  private constructor(params: MorphoProtocolParameters) {
+    super(params)
   }
 }
 

@@ -13,8 +13,7 @@ export class ArmadaSimulator {
     // Empty constructor
   }
 
-  /* eslint-disable @typescript-eslint/no-unused-vars */
-  async simulate(params: {
+  async simulate(_: {
     args: IArmadaParameters
     armadaManager: IArmadaManager
   }): Promise<IArmadaSimulation> {

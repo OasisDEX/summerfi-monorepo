@@ -3,17 +3,22 @@ import { z } from 'zod'
 import { IArmadaPoolId, isArmadaPoolId } from './IArmadaPoolId'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * @interface IArmadaPool
  * @description Interface for an ID of an Armada Protocol pool (fleet)
  */
 export interface IArmadaPool extends IPool, IArmadaPoolData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_1: 'IArmadaPool'
+  readonly [__signature__]: symbol
   /** ID of the pool */
   readonly id: IArmadaPoolId
 
-  // Re-declaring the properties with the correct types
-  readonly type: PoolType
+  // Re-declaring the properties to narrow the types
+  readonly type: PoolType.Armada
 }
 
 /**
@@ -22,6 +27,7 @@ export interface IArmadaPool extends IPool, IArmadaPoolData {
 export const ArmadaPoolDataSchema = z.object({
   ...PoolDataSchema.shape,
   id: z.custom<IArmadaPoolId>((val) => isArmadaPoolId(val)),
+  type: z.literal(PoolType.Armada),
 })
 
 /**

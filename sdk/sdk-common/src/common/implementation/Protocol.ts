@@ -7,7 +7,7 @@ import { IProtocol, IProtocolData, __signature__ } from '../interfaces/IProtocol
 /**
  * Type for the parameters of Price
  */
-export type ProtocolParameters = Omit<IProtocolData, ''>
+export type ProtocolParameters = Omit<IProtocolData, 'name'>
 
 /**
  * @class Protocol
@@ -18,12 +18,11 @@ export abstract class Protocol implements IProtocol, IPrintable {
   readonly [__signature__] = __signature__
 
   /** ATTRIBUTES */
-  readonly name: ProtocolName
+  abstract readonly name: ProtocolName
   readonly chainInfo: IChainInfo
 
   /** SEALED CONSTRUCTOR */
   protected constructor(params: ProtocolParameters) {
-    this.name = params.name
     this.chainInfo = params.chainInfo
   }
 

@@ -4,7 +4,7 @@ import { IProtocol, isProtocol } from '../../common/interfaces/IProtocol'
 import { PoolType } from '../../common/types/PoolType'
 
 /**
- * Unique signature for the interface so it can be differentiated from other similar interfaces
+ * Unique signature to provide branded types to the interface
  */
 export const __signature__: unique symbol = Symbol()
 
@@ -24,7 +24,7 @@ export interface ILendingPoolId extends IPoolId, ILendingPoolIdData {
   // Re-declaring narrowed types
   readonly protocol: IProtocol
 
-  // Re-declaring the properties with the correct types
+  // Re-declaring the properties to narrow the types
   readonly type: PoolType.Lending
 }
 

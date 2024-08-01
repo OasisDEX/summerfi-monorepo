@@ -1,4 +1,4 @@
-import { PoolType, isToken } from '@summerfi/sdk-common'
+import { isToken } from '@summerfi/sdk-common'
 import { IToken } from '@summerfi/sdk-common/common'
 import { ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
@@ -6,7 +6,7 @@ import { EmodeType, EmodeTypeSchema } from '../../common/enums/EmodeType'
 import { ISparkProtocol, isSparkProtocol } from './ISparkProtocol'
 
 /**
- * Unique signature for the interface so it can be differentiated from other similar interfaces
+ * Unique signature to provide branded types to the interface
  */
 export const __signature__: unique symbol = Symbol()
 
@@ -28,9 +28,6 @@ export interface ISparkLendingPoolId extends ISparkLendingPoolIdData, ILendingPo
   readonly collateralToken: IToken
   /** The token used to borrow funds */
   readonly debtToken: IToken
-
-  // Re-declaring the properties with the correct types
-  readonly type: PoolType
 }
 
 /**
@@ -48,11 +45,6 @@ export const SparkLendingPoolIdDataSchema = z.object({
  * Type for the data part of ISparkLendingPoolId
  */
 export type ISparkLendingPoolIdData = Readonly<z.infer<typeof SparkLendingPoolIdDataSchema>>
-
-/**
- * Type for the parameters of the ISparkLendingPoolId interface
- */
-export type ISparkLendingPoolIdParameters = Omit<ISparkLendingPoolIdData, 'type'>
 
 /**
  * @description Type guard for ISparkLendingPoolId

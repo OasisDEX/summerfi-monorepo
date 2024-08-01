@@ -1,9 +1,9 @@
-import { IChainInfo, IProtocol } from '@summerfi/sdk-common'
+import { IProtocol } from '@summerfi/sdk-common'
 import { ProtocolDataSchema, ProtocolName } from '@summerfi/sdk-common/common'
 import { z } from 'zod'
 
 /**
- * Unique signature for the interface so it can be differentiated from other similar interfaces
+ * Unique signature to provide branded types to the interface
  */
 export const __signature__: unique symbol = Symbol()
 
@@ -21,8 +21,7 @@ export interface IMorphoProtocol extends IMorphoProtocolData, IProtocol {
   readonly [__signature__]: symbol
 
   // Re-declare the properties with the correct types
-  readonly name: ProtocolName
-  readonly chainInfo: IChainInfo
+  readonly name: ProtocolName.MorphoBlue
 }
 
 /**
@@ -30,18 +29,13 @@ export interface IMorphoProtocol extends IMorphoProtocolData, IProtocol {
  */
 export const MorphoProtocolDataSchema = z.object({
   ...ProtocolDataSchema.shape,
-  name: z.custom<ProtocolName>((val) => val === ProtocolName.MorphoBlue),
+  name: z.literal(ProtocolName.MorphoBlue),
 })
 
 /**
  * Type for the data part of the IMorphoProtocol interface
  */
 export type IMorphoProtocolData = Readonly<z.infer<typeof MorphoProtocolDataSchema>>
-
-/**
- * Type for the parameters of the IMorphoProtocol interface
- */
-export type IMorphoProtocolParameters = Omit<IMorphoProtocolData, 'name'>
 
 /**
  * @description Type guard for IMorphoProtocol

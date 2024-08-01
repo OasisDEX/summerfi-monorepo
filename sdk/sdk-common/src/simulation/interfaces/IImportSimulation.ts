@@ -12,7 +12,7 @@ import { ISimulation, SimulationSchema } from './ISimulation'
 import { Steps } from './Steps'
 
 /**
- * Unique signature for the interface so it can be differentiated from other similar interfaces
+ * Unique signature to provide branded types to the interface
  */
 export const __signature__: unique symbol = Symbol()
 
@@ -30,7 +30,7 @@ export interface IImportSimulation extends ISimulation {
   /** Steps needed to perform the refinance */
   readonly steps: Steps[]
 
-  // Re-declaring the properties with the correct types
+  // Re-declaring the properties to narrow the types
   readonly type: SimulationType.ImportPosition
 }
 

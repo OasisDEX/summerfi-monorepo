@@ -5,10 +5,15 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 import { EmodeType } from '../../common'
 import {
   IAaveV3LendingPoolId,
-  IAaveV3LendingPoolIdParameters,
+  IAaveV3LendingPoolIdData,
   __signature__,
 } from '../interfaces/IAaveV3LendingPoolId'
 import { IAaveV3Protocol } from '../interfaces/IAaveV3Protocol'
+
+/**
+ * Type for the parameters of AaveV3LendingPoolId
+ */
+export type AaveV3LendingPoolIdParameters = Omit<IAaveV3LendingPoolIdData, 'type'>
 
 /**
  * @class AaveV3LendingPoolId
@@ -25,12 +30,12 @@ export class AaveV3LendingPoolId extends LendingPoolId implements IAaveV3Lending
   readonly debtToken: IToken
 
   /** FACTORY */
-  static createFrom(params: IAaveV3LendingPoolIdParameters): AaveV3LendingPoolId {
+  static createFrom(params: AaveV3LendingPoolIdParameters): AaveV3LendingPoolId {
     return new AaveV3LendingPoolId(params)
   }
 
   /** SEALED CONSTRUCTOR */
-  private constructor(params: IAaveV3LendingPoolIdParameters) {
+  private constructor(params: AaveV3LendingPoolIdParameters) {
     super(params)
 
     this.protocol = params.protocol

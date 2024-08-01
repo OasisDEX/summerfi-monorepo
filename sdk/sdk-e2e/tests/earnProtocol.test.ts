@@ -66,7 +66,7 @@ describe.skip('Armada Protocol Deposit', () => {
     assert(fleet, 'Fleet not found')
 
     const transactions = await fleet.deposit({
-      user: getUserWorkaround(user),
+      user: user,
       amount: TokenAmount.createFrom({
         amount,
         token,
@@ -89,7 +89,7 @@ describe.skip('Armada Protocol Deposit', () => {
     assert(fleet, 'Fleet not found')
 
     const transactions = await fleet.deposit({
-      user: getUserWorkaround(user),
+      user: user,
       amount: TokenAmount.createFrom({
         amount,
         token,
@@ -112,7 +112,7 @@ describe.skip('Armada Protocol Deposit', () => {
     assert(fleet, 'Fleet not found')
 
     const transactions = await fleet.withdraw({
-      user: getUserWorkaround(user),
+      user: user,
       amount: TokenAmount.createFrom({
         amount,
         token,
@@ -122,11 +122,3 @@ describe.skip('Armada Protocol Deposit', () => {
     await sendAndLogTransactions({ chainInfo, transactions })
   })
 })
-
-function getUserWorkaround(user: UserClient) {
-  // workaround for User serialization to work
-  return {
-    wallet: user.wallet,
-    chainInfo: user.chainInfo,
-  }
-}

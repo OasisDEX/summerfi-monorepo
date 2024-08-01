@@ -1,3 +1,2 @@
-export * from './UserMock'
-export * from './managers'
 export * from './actions'
+export * from './managers'

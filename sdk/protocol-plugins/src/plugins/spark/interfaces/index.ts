@@ -1,27 +1,11 @@
 export { SparkLendingPoolDataSchema, isSparkLendingPool } from './ISparkLendingPool'
-export type {
-  ISparkLendingPool,
-  ISparkLendingPoolData,
-  ISparkLendingPoolParameters,
-} from './ISparkLendingPool'
+export type { ISparkLendingPool, ISparkLendingPoolData } from './ISparkLendingPool'
 export { SparkLendingPoolIdDataSchema, isSparkLendingPoolId } from './ISparkLendingPoolId'
-export type {
-  ISparkLendingPoolId,
-  ISparkLendingPoolIdData,
-  ISparkLendingPoolIdParameters,
-} from './ISparkLendingPoolId'
+export type { ISparkLendingPoolId, ISparkLendingPoolIdData } from './ISparkLendingPoolId'
 export { SparkLendingPoolInfoDataSchema, isSparkLendingPoolInfo } from './ISparkLendingPoolInfo'
-export type {
-  ISparkLendingPoolInfo,
-  ISparkLendingPoolInfoData,
-  ISparkLendingPoolInfoParameters,
-} from './ISparkLendingPoolInfo'
+export type { ISparkLendingPoolInfo, ISparkLendingPoolInfoData } from './ISparkLendingPoolInfo'
 export { SparkLendingPositionDataSchema, isSparkLendingPosition } from './ISparkLendingPosition'
-export type {
-  ISparkLendingPosition,
-  ISparkLendingPositionData,
-  ISparkLendingPositionParameters,
-} from './ISparkLendingPosition'
+export type { ISparkLendingPosition, ISparkLendingPositionData } from './ISparkLendingPosition'
 export {
   SparkLendingPositionIdDataSchema,
   isSparkLendingPositionId,
@@ -29,7 +13,6 @@ export {
 export type {
   ISparkLendingPositionId,
   ISparkLendingPositionIdData,
-  ISparkLendingPositionIdParameters,
 } from './ISparkLendingPositionId'
 export { SparkProtocolDataSchema, isSparkProtocol } from './ISparkProtocol'
-export type { ISparkProtocol, ISparkProtocolData, ISparkProtocolParameters } from './ISparkProtocol'
+export type { ISparkProtocol, ISparkProtocolData } from './ISparkProtocol'

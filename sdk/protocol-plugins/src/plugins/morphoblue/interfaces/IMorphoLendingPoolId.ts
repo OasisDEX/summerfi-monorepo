@@ -1,11 +1,11 @@
-import { HexData, PoolType } from '@summerfi/sdk-common'
+import { HexData } from '@summerfi/sdk-common'
 import { ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common/lending-protocols'
 import { isHex } from 'viem'
 import { z } from 'zod'
 import { IMorphoProtocol, isMorphoProtocol } from './IMorphoProtocol'
 
 /**
- * Unique signature for the interface so it can be differentiated from other similar interfaces
+ * Unique signature to provide branded types to the interface
  */
 export const __signature__: unique symbol = Symbol()
 
@@ -23,9 +23,6 @@ export interface IMorphoLendingPoolId extends IMorphoLendingPoolIdData, ILending
   readonly protocol: IMorphoProtocol
   /** The encoded market ID used to access the market parameters */
   readonly marketId: HexData
-
-  // Re-declaring the properties with the correct types
-  readonly type: PoolType
 }
 
 /**
@@ -41,11 +38,6 @@ export const MorphoLendingPoolIdDataSchema = z.object({
  * Type for the data part of the IMorphoLendingPoolId interface
  */
 export type IMorphoLendingPoolIdData = Readonly<z.infer<typeof MorphoLendingPoolIdDataSchema>>
-
-/**
- * Type for the parameters of the IMorphoLendingPoolId interface
- */
-export type IMorphoLendingPoolIdParameters = Omit<IMorphoLendingPoolIdData, 'type'>
 
 /**
  * @description Type guard for IMorphoLendingPoolId

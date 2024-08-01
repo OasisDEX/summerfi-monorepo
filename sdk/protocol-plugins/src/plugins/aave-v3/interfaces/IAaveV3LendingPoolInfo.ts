@@ -1,15 +1,9 @@
-import { PoolType } from '@summerfi/sdk-common'
-import {
-  ICollateralInfo,
-  IDebtInfo,
-  ILendingPoolInfo,
-  LendingPoolInfoDataSchema,
-} from '@summerfi/sdk-common/lending-protocols'
+import { ILendingPoolInfo, LendingPoolInfoDataSchema } from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
 import { IAaveV3LendingPoolId, isAaveV3LendingPoolId } from './IAaveV3LendingPoolId'
 
 /**
- * Unique signature for the interface so it can be differentiated from other similar interfaces
+ * Unique signature to provide branded types to the interface
  */
 export const __signature__: unique symbol = Symbol()
 
@@ -25,11 +19,6 @@ export interface IAaveV3LendingPoolInfo extends ILendingPoolInfo, IAaveV3Lending
   readonly [__signature__]: symbol
   /** The lending pool's ID */
   readonly id: IAaveV3LendingPoolId
-
-  // Re-declaring the properties with the correct types
-  readonly type: PoolType
-  readonly collateral: ICollateralInfo
-  readonly debt: IDebtInfo
 }
 
 /**
@@ -44,11 +33,6 @@ export const AaveV3LendingPoolInfoDataSchema = z.object({
  * Type for the data part of IAaveV3LendingPool
  */
 export type IAaveV3LendingPoolInfoData = Readonly<z.infer<typeof AaveV3LendingPoolInfoDataSchema>>
-
-/**
- * Type for the parameters of the IAaveV3LendingPool interface
- */
-export type IAaveV3LendingPoolInfoParameters = Omit<IAaveV3LendingPoolInfoData, 'type'>
 
 /**
  * @description Type guard for IAaveV3LendingPoolInfo

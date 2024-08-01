@@ -1,11 +1,12 @@
 import { LendingPoolInfo } from '@summerfi/sdk-common/lending-protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
 import { IMakerLendingPoolId } from '../interfaces/IMakerLendingPoolId'
-import {
-  IMakerLendingPoolInfoData,
-  IMakerLendingPoolInfoParameters,
-  __signature__,
-} from '../interfaces/IMakerLendingPoolInfo'
+import { IMakerLendingPoolInfoData, __signature__ } from '../interfaces/IMakerLendingPoolInfo'
+
+/**
+ * Type for the parameters of MakerLendingPool
+ */
+export type MakerLendingPoolInfoParameters = Omit<IMakerLendingPoolInfoData, 'type'>
 
 /**
  * @class MakerLendingPoolInfo
@@ -19,12 +20,12 @@ export class MakerLendingPoolInfo extends LendingPoolInfo implements IMakerLendi
   readonly id: IMakerLendingPoolId
 
   /** FACTORY */
-  static createFrom(params: IMakerLendingPoolInfoParameters): MakerLendingPoolInfo {
+  static createFrom(params: MakerLendingPoolInfoParameters): MakerLendingPoolInfo {
     return new MakerLendingPoolInfo(params)
   }
 
   /** SEALED CONSTRUCTOR */
-  private constructor(params: IMakerLendingPoolInfoParameters) {
+  private constructor(params: MakerLendingPoolInfoParameters) {
     super(params)
 
     this.id = params.id

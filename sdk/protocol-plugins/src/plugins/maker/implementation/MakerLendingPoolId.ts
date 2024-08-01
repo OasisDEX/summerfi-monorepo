@@ -4,10 +4,15 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 import { ILKType } from '../enums/ILKType'
 import {
   IMakerLendingPoolId,
-  IMakerLendingPoolIdParameters,
+  IMakerLendingPoolIdData,
   __signature__,
 } from '../interfaces/IMakerLendingPoolId'
 import { MakerProtocol } from './MakerProtocol'
+
+/**
+ * Type for the parameters of MakerLendingPoolId
+ */
+export type MakerLendingPoolIdParameters = Omit<IMakerLendingPoolIdData, 'type'>
 
 /**
  * @class MakerLendingPoolId
@@ -24,12 +29,12 @@ export class MakerLendingPoolId extends LendingPoolId implements IMakerLendingPo
   readonly debtToken: IToken
 
   /** FACTORY */
-  public static createFrom(params: IMakerLendingPoolIdParameters): MakerLendingPoolId {
+  public static createFrom(params: MakerLendingPoolIdParameters): MakerLendingPoolId {
     return new MakerLendingPoolId(params)
   }
 
   /** SEALED CONSTRUCTOR */
-  private constructor(params: IMakerLendingPoolIdParameters) {
+  private constructor(params: MakerLendingPoolIdParameters) {
     super(params)
 
     this.protocol = params.protocol

@@ -1,11 +1,10 @@
-import { ICollateralInfo, IDebtInfo, PoolType } from '@summerfi/sdk-common'
 import { ILendingPoolInfo, LendingPoolInfoDataSchema } from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
 import { isMakerLendingPoolId } from '../../maker'
 import { IMorphoLendingPoolId } from './IMorphoLendingPoolId'
 
 /**
- * Unique signature for the interface so it can be differentiated from other similar interfaces
+ * Unique signature to provide branded types to the interface
  */
 export const __signature__: unique symbol = Symbol()
 
@@ -21,11 +20,6 @@ export interface IMorphoLendingPoolInfo extends ILendingPoolInfo, IMorphoLending
   readonly [__signature__]: symbol
   /** The id of the lending pool */
   readonly id: IMorphoLendingPoolId
-
-  // Re-declaring the properties with the correct types
-  readonly type: PoolType
-  readonly collateral: ICollateralInfo
-  readonly debt: IDebtInfo
 }
 
 /**
@@ -40,11 +34,6 @@ export const MorphoLendingPoolInfoDataSchema = z.object({
  * Type for the data part of the IMorphoLendingPoolInfo interface
  */
 export type IMorphoLendingPoolInfoData = Readonly<z.infer<typeof MorphoLendingPoolInfoDataSchema>>
-
-/**
- * Type for the parameters of the IMorphoLendingPoolInfo interface
- */
-export type IMorphoLendingPoolInfoParameters = Omit<IMorphoLendingPoolInfoData, 'type'>
 
 /**
  * @description Type guard for IMorphoLendingPoolInfo

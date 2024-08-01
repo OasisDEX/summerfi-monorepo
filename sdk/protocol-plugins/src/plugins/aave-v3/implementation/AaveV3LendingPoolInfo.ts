@@ -3,9 +3,14 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 import { IAaveV3LendingPoolId } from '../interfaces/IAaveV3LendingPoolId'
 import {
   IAaveV3LendingPoolInfo,
-  IAaveV3LendingPoolInfoParameters,
+  IAaveV3LendingPoolInfoData,
   __signature__,
 } from '../interfaces/IAaveV3LendingPoolInfo'
+
+/**
+ * Type for the parameters of AaveV3LendingPool
+ */
+export type AaveV3LendingPoolInfoParameters = Omit<IAaveV3LendingPoolInfoData, 'type'>
 
 /**
  * @class AaveV3LendingPoolInfo
@@ -19,12 +24,12 @@ export class AaveV3LendingPoolInfo extends LendingPoolInfo implements IAaveV3Len
   readonly id: IAaveV3LendingPoolId
 
   /** FACTORY */
-  public static createFrom(params: IAaveV3LendingPoolInfoParameters): AaveV3LendingPoolInfo {
+  public static createFrom(params: AaveV3LendingPoolInfoParameters): AaveV3LendingPoolInfo {
     return new AaveV3LendingPoolInfo(params)
   }
 
   /** SEALED CONSTRUCTOR */
-  private constructor(params: IAaveV3LendingPoolInfoParameters) {
+  private constructor(params: AaveV3LendingPoolInfoParameters) {
     super(params)
 
     this.id = params.id
