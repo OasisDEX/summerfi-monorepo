@@ -8,8 +8,6 @@
   "include": [
     "src/**/*.ts",
     "tests/**/*.ts",
-    "../armada-protocol-common/src/interfaces/IArmadaSimulation.ts",
-    "../armada-protocol-service/src/orders/interfaces/IArmadaParameters.ts"
   ],
   "exclude": ["node_modules"]
 }
