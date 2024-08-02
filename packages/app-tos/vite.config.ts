@@ -49,6 +49,10 @@ export default defineConfig({
     rollupOptions: {
       external: [
         'react',
+        'next',
+        'zod',
+        'kysely',
+        'viem',
         '@safe-global/safe-apps-sdk',
         'jsonwebtoken',
         '@summerfi/serverless-shared',

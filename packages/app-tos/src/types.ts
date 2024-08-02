@@ -1,5 +1,6 @@
 import { type Dispatch, type SetStateAction } from 'react'
 import { type TOSState } from '@summerfi/app-types'
+import type { ColumnType } from 'kysely'
 
 export type TOSSignMessage = (data: string) => Promise<string | undefined>
 
@@ -20,3 +21,33 @@ export interface TOSVerifyAcceptance {
 }
 
 export type TosUpdate = Dispatch<SetStateAction<TOSState>>
+
+/**
+ * SERVER TYPES
+ */
+type Generated<T> =
+  T extends ColumnType<infer S, infer I, infer U>
+    ? ColumnType<S, I | undefined, U>
+    : ColumnType<T, T | undefined, T>
+
+export type Timestamp = ColumnType<Date, Date | string, Date | string>
+
+export interface TosApproval {
+  address: string
+  chainId: Generated<number>
+  docVersion: string
+  message: Generated<string>
+  signature: Generated<string>
+  signDate: Timestamp
+}
+
+export type TOSRequiredDB = {
+  tosApproval: TosApproval
+}
+
+export interface TOSRequestContext {
+  params: {
+    version: string
+    walletAddress: string
+  }
+}

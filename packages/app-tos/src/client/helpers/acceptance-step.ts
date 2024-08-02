@@ -1,6 +1,6 @@
 import { TOSStatus } from '@summerfi/app-types'
 
-import { actionErrorWrapper } from '@/helpers/action-error-wrapper'
+import { actionErrorWrapper } from '@/client/helpers/action-error-wrapper'
 import { saveTermsOfServiceAcceptance } from '@/tos/save-terms-of-service-acceptance'
 import { type TOSInput, type TosUpdate, type TOSVerifyAcceptance } from '@/types'
 

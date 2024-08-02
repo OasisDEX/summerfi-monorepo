@@ -1,4 +1,4 @@
-import { getDataToSignFromChallenge } from '@/helpers/get-data-to-sign-from-challenge'
+import { getDataToSignFromChallenge } from '@/client/helpers/get-data-to-sign-from-challenge'
 import type { TOSSignMessage } from '@/types'
 
 /**

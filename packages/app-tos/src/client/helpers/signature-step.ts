@@ -1,8 +1,8 @@
 import { TOSStatus } from '@summerfi/app-types'
 
-import { requestJWT } from '@/auth/request-jwt'
-import { acceptanceStep } from '@/helpers/acceptance-step'
-import { actionErrorWrapper } from '@/helpers/action-error-wrapper'
+import { requestJWT } from '@/client/auth/request-jwt'
+import { acceptanceStep } from '@/client/helpers/acceptance-step'
+import { actionErrorWrapper } from '@/client/helpers/action-error-wrapper'
 import { type TOSInput, type TosUpdate, type TOSVerifyAcceptance } from '@/types'
 
 /**

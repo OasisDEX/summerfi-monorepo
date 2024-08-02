@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react'
 import { type TOSState, TOSStatus } from '@summerfi/app-types'
 
-import { acceptanceStep } from '@/helpers/acceptance-step'
-import { signatureStep } from '@/helpers/signature-step'
+import { acceptanceStep } from '@/client/helpers/acceptance-step'
+import { signatureStep } from '@/client/helpers/signature-step'
 import { verifyTermsOfServiceAcceptance } from '@/tos/verify-terms-of-service-acceptance'
 import { type TOSInput } from '@/types'
 
@@ -51,6 +51,7 @@ export const useTermsOfService = ({
 
       if (!termsOfServiceAcceptance) {
         if (forceDisconnect) {
+          // eslint-disable-next-line no-console
           console.error('Terms of Service acceptance failed. Disconnecting user.')
           forceDisconnect()
         }

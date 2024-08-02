@@ -3,7 +3,7 @@ import type SafeAppsSDK from '@safe-global/safe-apps-sdk'
 import { type SignMessageResponse } from '@safe-global/safe-apps-sdk'
 import { decode } from 'jsonwebtoken'
 
-import { getDataToSignFromChallenge } from '@/helpers/get-data-to-sign-from-challenge'
+import { getDataToSignFromChallenge } from '@/client/helpers/get-data-to-sign-from-challenge'
 
 const LOCAL_STORAGE_GNOSIS_SAFE_PENDING = 'gnosis-safe-pending'
 
