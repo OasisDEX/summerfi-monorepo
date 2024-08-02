@@ -2,29 +2,40 @@ import { SerializationService } from '../../../services/SerializationService'
 import { IExternalLendingPosition } from '../interfaces'
 import {
   IImportPositionParameters,
-  IImportPositionParametersParameters,
+  IImportPositionParametersData,
+  __signature__,
 } from '../interfaces/IImportPositionParameters'
 import { ExternalLendingPosition } from './ExternalLendingPosition'
+
+/**
+ * Type for the parameters of ImportPositionParameters
+ */
+export type ImportPositionParametersParameters = Omit<IImportPositionParametersData, ''>
 
 /**
  * @name ImportPositionParameters
  * @see IImportPositionParameters
  */
 export class ImportPositionParameters implements IImportPositionParameters {
-  readonly _signature_0 = 'IImportPositionParameters'
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
 
+  /** ATTRIBUTES */
   readonly externalPosition: IExternalLendingPosition
 
-  /** Factory method */
-  static createFrom(params: IImportPositionParametersParameters): ImportPositionParameters {
+  /** FACTORY */
+  static createFrom(params: ImportPositionParametersParameters): ImportPositionParameters {
     return new ImportPositionParameters(params)
   }
 
-  /** Sealed constructor */
-  private constructor(params: IImportPositionParametersParameters) {
+  /** SEALED CONSTRUCTOR */
+  private constructor(params: ImportPositionParametersParameters) {
     this.externalPosition = ExternalLendingPosition.createFrom(params.externalPosition)
   }
 
+  /** METHODS */
+
+  /** @see IPrintable.toString */
   toString(): string {
     return `Import position parameters: ${this.externalPosition}`
   }

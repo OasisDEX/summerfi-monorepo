@@ -1,6 +1,11 @@
-import { IChainInfo, IProtocol, ProtocolDataSchema, ProtocolName } from '@summerfi/sdk-common'
+import { IProtocol, ProtocolDataSchema, ProtocolName } from '@summerfi/sdk-common'
 
 import { z } from 'zod'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IAaveV3Protocol
@@ -11,11 +16,10 @@ import { z } from 'zod'
  */
 export interface IAaveV3Protocol extends IProtocol, IAaveV3ProtocolData {
   /** Interface signature used to differentiate it from similar interfaces */
-  readonly _signature_1: 'IAaveV3Protocol'
+  readonly [__signature__]: symbol
 
-  // Re-declaring the properties with the correct types
-  readonly name: ProtocolName
-  readonly chainInfo: IChainInfo
+  // Re-declaring the properties to narrow the types
+  readonly name: ProtocolName.AaveV3
 }
 
 /**
@@ -23,18 +27,13 @@ export interface IAaveV3Protocol extends IProtocol, IAaveV3ProtocolData {
  */
 export const AaveV3ProtocolDataSchema = z.object({
   ...ProtocolDataSchema.shape,
-  name: z.custom<ProtocolName>((val) => val === ProtocolName.AaveV3),
+  name: z.literal(ProtocolName.AaveV3),
 })
 
 /**
  * Type for the data part of IAaveV3Protocol
  */
 export type IAaveV3ProtocolData = Readonly<z.infer<typeof AaveV3ProtocolDataSchema>>
-
-/**
- * Type for the parameters of the IAaveV3Protocol interface
- */
-export type IAaveV3ProtocolParameters = Omit<IAaveV3ProtocolData, 'name'>
 
 /**
  * @description Type guard for IAaveV3Protocol

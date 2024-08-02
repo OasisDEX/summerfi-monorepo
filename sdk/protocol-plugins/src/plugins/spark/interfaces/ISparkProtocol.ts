@@ -1,6 +1,11 @@
-import { IChainInfo, IProtocol } from '@summerfi/sdk-common'
+import { IProtocol } from '@summerfi/sdk-common'
 import { ProtocolDataSchema, ProtocolName } from '@summerfi/sdk-common/common'
 import { z } from 'zod'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface ISparkProtocol
@@ -13,11 +18,10 @@ import { z } from 'zod'
  */
 export interface ISparkProtocol extends ISparkProtocolData, IProtocol {
   /** Interface signature used to differentiate it from similar interfaces */
-  readonly _signature_1: 'ISparkProtocol'
+  readonly [__signature__]: symbol
 
   // Re-declaring the properties with the right types
-  readonly name: ProtocolName
-  readonly chainInfo: IChainInfo
+  readonly name: ProtocolName.Spark
 }
 
 /**
@@ -25,18 +29,13 @@ export interface ISparkProtocol extends ISparkProtocolData, IProtocol {
  */
 export const SparkProtocolDataSchema = z.object({
   ...ProtocolDataSchema.shape,
-  name: z.custom<ProtocolName>((val) => val === ProtocolName.Spark),
+  name: z.literal(ProtocolName.Spark),
 })
 
 /**
  * Type for the data part of ISparkProtocol
  */
 export type ISparkProtocolData = Readonly<z.infer<typeof SparkProtocolDataSchema>>
-
-/**
- * Type for the parameters of the ISparkProtocol interface
- */
-export type ISparkProtocolParameters = Omit<ISparkProtocolData, 'name'>
 
 /**
  * @description Type guard for ISparkProtocol

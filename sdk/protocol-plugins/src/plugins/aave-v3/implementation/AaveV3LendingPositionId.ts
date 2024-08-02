@@ -2,23 +2,30 @@ import { LendingPositionId } from '@summerfi/sdk-common/lending-protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
 import {
   IAaveV3LendingPositionId,
-  IAaveV3LendingPositionIdParameters,
+  IAaveV3LendingPositionIdData,
+  __signature__,
 } from '../interfaces/IAaveV3LendingPositionId'
+
+/**
+ * Type for the parameters of AaveV3PositionId
+ */
+export type AaveV3LendingPositionIdParameters = Omit<IAaveV3LendingPositionIdData, 'type'>
 
 /**
  * @class AaveV3PositionId
  * @see IAaveV3LendingPositionIdData
  */
 export class AaveV3LendingPositionId extends LendingPositionId implements IAaveV3LendingPositionId {
-  readonly _signature_2 = 'IAaveV3LendingPositionId'
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
 
-  /** Factory method */
-  static createFrom(params: IAaveV3LendingPositionIdParameters): AaveV3LendingPositionId {
+  /** FACTORY */
+  static createFrom(params: AaveV3LendingPositionIdParameters): AaveV3LendingPositionId {
     return new AaveV3LendingPositionId(params)
   }
 
-  /** Sealed constructor */
-  private constructor(params: IAaveV3LendingPositionIdParameters) {
+  /** SEALED CONSTRUCTOR */
+  private constructor(params: AaveV3LendingPositionIdParameters) {
     super(params)
   }
 }

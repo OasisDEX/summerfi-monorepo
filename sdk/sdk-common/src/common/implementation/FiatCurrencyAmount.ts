@@ -3,7 +3,8 @@ import { FiatCurrency } from '../enums/FiatCurrency'
 import {
   FiatCurrencyAmountMulDivParamType,
   FiatCurrencyAmountMulDivReturnType,
-  IFiatCurrencyAmountParameters,
+  IFiatCurrencyAmountData,
+  __signature__,
   type IFiatCurrencyAmount,
 } from '../interfaces/IFiatCurrencyAmount'
 import { isPercentage } from '../interfaces/IPercentage'
@@ -14,21 +15,28 @@ import {
 } from '../utils/PercentageUtils'
 
 /**
+ * Type for the parameters of FiatCurrencyAmount
+ */
+export type FiatCurrencyAmountParameters = Omit<IFiatCurrencyAmountData, ''>
+
+/**
  * @class FiatCurrencyAmount
  * @see IFiatCurrencyAmount
  */
 export class FiatCurrencyAmount implements IFiatCurrencyAmount {
-  readonly _signature_0 = 'IFiatCurrencyAmount'
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
+
   readonly fiat: FiatCurrency
   readonly amount: string
 
   /** FACTORY */
-  static createFrom(params: IFiatCurrencyAmountParameters): IFiatCurrencyAmount {
+  static createFrom(params: FiatCurrencyAmountParameters): IFiatCurrencyAmount {
     return new FiatCurrencyAmount(params)
   }
 
   /** CONSTRUCTOR */
-  private constructor(params: IFiatCurrencyAmountParameters) {
+  private constructor(params: FiatCurrencyAmountParameters) {
     this.fiat = params.fiat
     this.amount = params.amount
   }

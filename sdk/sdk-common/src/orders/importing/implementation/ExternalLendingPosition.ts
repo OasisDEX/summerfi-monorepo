@@ -3,33 +3,44 @@ import { LendingPosition } from '../../../lending-protocols/implementation/Lendi
 import { SerializationService } from '../../../services/SerializationService'
 import {
   IExternalLendingPosition,
-  IExternalLendingPositionParameters,
+  IExternalLendingPositionData,
+  __signature__,
 } from '../interfaces/IExternalLendingPosition'
 import { IExternalLendingPositionId } from '../interfaces/IExternalLendingPositionId'
+
+/**
+ * Type for the parameters of ExternalLendingPosition
+ */
+export type ExternalLendingPositionParameters = Omit<IExternalLendingPositionData, ''>
 
 /**
  * @name ExternalLendingPosition
  * @see IExternalLendingPosition
  */
 export class ExternalLendingPosition extends LendingPosition implements IExternalLendingPosition {
-  readonly _signature_2 = 'IExternalLendingPosition'
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
 
+  /** ATTRIBUTES */
   readonly id: IExternalLendingPositionId
   readonly pool: ILendingPool
 
-  /** Factory method */
-  static createFrom(params: IExternalLendingPositionParameters): ExternalLendingPosition {
+  /** FACTORY */
+  static createFrom(params: ExternalLendingPositionParameters): ExternalLendingPosition {
     return new ExternalLendingPosition(params)
   }
 
-  /** Sealed constructor */
-  private constructor(params: IExternalLendingPositionParameters) {
+  /** SEALED CONSTRUCTOR */
+  private constructor(params: ExternalLendingPositionParameters) {
     super(params)
 
     this.id = params.id
     this.pool = params.pool
   }
 
+  /** METHODS */
+
+  /** @see IPrintable.toString */
   toString(): string {
     return `External lending position: id=${this.id}`
   }

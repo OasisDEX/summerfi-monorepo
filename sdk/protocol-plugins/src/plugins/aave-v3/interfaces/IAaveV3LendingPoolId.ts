@@ -1,8 +1,13 @@
-import { IToken, PoolType, isToken } from '@summerfi/sdk-common'
+import { IToken, isToken } from '@summerfi/sdk-common'
 import { ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
 import { EmodeType, EmodeTypeSchema } from '../../common/enums/EmodeType'
 import { IAaveV3Protocol, isAaveV3Protocol } from './IAaveV3Protocol'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IAaveV3LendingPoolId
@@ -13,7 +18,7 @@ import { IAaveV3Protocol, isAaveV3Protocol } from './IAaveV3Protocol'
  */
 export interface IAaveV3LendingPoolId extends ILendingPoolId, IAaveV3LendingPoolIdData {
   /** Interface signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'IAaveV3LendingPoolId'
+  readonly [__signature__]: symbol
   /** Aave v3 protocol */
   readonly protocol: IAaveV3Protocol
   /** The pool's efficiency mode */
@@ -22,9 +27,6 @@ export interface IAaveV3LendingPoolId extends ILendingPoolId, IAaveV3LendingPool
   readonly collateralToken: IToken
   /** The token used to borrow funds */
   readonly debtToken: IToken
-
-  // Re-declaring the properties with the correct types
-  readonly type: PoolType
 }
 
 /**
@@ -42,11 +44,6 @@ export const AaveV3LendingPoolIdDataSchema = z.object({
  * Type for the data part of IAaveV3LendingPoolId
  */
 export type IAaveV3LendingPoolIdData = Readonly<z.infer<typeof AaveV3LendingPoolIdDataSchema>>
-
-/**
- * Type for the parameters of the IAaveV3LendingPoolId interface
- */
-export type IAaveV3LendingPoolIdParameters = Omit<IAaveV3LendingPoolIdData, 'type'>
 
 /**
  * @description Type guard for IAaveV3LendingPoolId

@@ -1,13 +1,26 @@
 import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
-import { IPercentage, IPercentageParameters, isPercentage } from '../interfaces/IPercentage'
+import {
+  IPercentage,
+  IPercentageData,
+  __signature__,
+  isPercentage,
+} from '../interfaces/IPercentage'
+
+/**
+ * Type for the parameters of Percentage
+ */
+export type PercentageParameters = Omit<IPercentageData, ''>
 
 /**
  * @class Percentage
  * @see IPercentage
  */
 export class Percentage implements IPercentage {
-  readonly _signature_0 = 'IPercentage'
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
+
+  /** CONSTANTS */
 
   /** The number of decimals used to represent the percentage in Solidity */
   public static PERCENTAGE_DECIMALS = 6
@@ -20,10 +33,11 @@ export class Percentage implements IPercentage {
     value: 100.0,
   })
 
+  /** ATTRIBUTES */
   readonly value: number
 
   /** FACTORY */
-  static createFrom(params: IPercentageParameters) {
+  static createFrom(params: PercentageParameters) {
     return new Percentage(params)
   }
 
@@ -43,7 +57,7 @@ export class Percentage implements IPercentage {
   /** CONSTRUCTOR */
 
   /** Sealed constructor */
-  private constructor(params: IPercentageParameters) {
+  private constructor(params: PercentageParameters) {
     this.value = params.value
   }
 

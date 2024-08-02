@@ -2,12 +2,17 @@ import { z } from 'zod'
 import { IExternalLendingPosition } from './IExternalLendingPosition'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * @interface IImportPositionParameters
  * @description Parameters used to import a position from another service
  */
 export interface IImportPositionParameters {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_0: 'IImportPositionParameters'
+  readonly [__signature__]: symbol
   /** External position to be imported */
   externalPosition: IExternalLendingPosition
 }
@@ -25,11 +30,6 @@ export const ImportPositionParametersDataSchema = z.object({
 export type IImportPositionParametersData = Readonly<
   z.infer<typeof ImportPositionParametersDataSchema>
 >
-
-/**
- * Type for the parameters of the IImportPositionParameters interface
- */
-export type IImportPositionParametersParameters = Omit<IImportPositionParametersData, ''>
 
 /**
  * @description Type guard for IImportPositionParameters

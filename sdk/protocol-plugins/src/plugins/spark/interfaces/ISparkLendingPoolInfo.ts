@@ -1,8 +1,11 @@
-import { ICollateralInfo, IDebtInfo } from '@summerfi/sdk-common'
-import { PoolType } from '@summerfi/sdk-common/common'
 import { ILendingPoolInfo, LendingPoolInfoDataSchema } from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
 import { ISparkLendingPoolId, isSparkLendingPoolId } from './ISparkLendingPoolId'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface ISparkLendingPoolInfo
@@ -13,14 +16,9 @@ import { ISparkLendingPoolId, isSparkLendingPoolId } from './ISparkLendingPoolId
  */
 export interface ISparkLendingPoolInfo extends ILendingPoolInfo, ISparkLendingPoolInfoData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'ISparkLendingPoolInfo'
+  readonly [__signature__]: symbol
   /** The id of the lending pool */
   readonly id: ISparkLendingPoolId
-
-  // Re-declaring the properties with the correct types
-  readonly type: PoolType
-  readonly collateral: ICollateralInfo
-  readonly debt: IDebtInfo
 }
 
 /**
@@ -35,11 +33,6 @@ export const SparkLendingPoolInfoDataSchema = z.object({
  * Type for the data part of ISparkLendingPoolInfo
  */
 export type ISparkLendingPoolInfoData = Readonly<z.infer<typeof SparkLendingPoolInfoDataSchema>>
-
-/**
- * Type for the parameters of the ISparkLendingPoolInfo interface
- */
-export type ISparkLendingPoolInfoParameters = Omit<ISparkLendingPoolInfoData, 'type'>
 
 /**
  * @description Type guard for ISparkLendingPoolInfo

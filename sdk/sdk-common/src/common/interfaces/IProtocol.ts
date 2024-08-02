@@ -1,6 +1,11 @@
 import { z } from 'zod'
-import { ChainInfoDataSchema, IChainInfo } from '../../common/interfaces/IChainInfo'
+import { IChainInfo, isChainInfo } from '../../common/interfaces/IChainInfo'
 import { ProtocolName } from '../enums/ProtocolName'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IProtocol
@@ -10,7 +15,7 @@ import { ProtocolName } from '../enums/ProtocolName'
  */
 export interface IProtocol extends IProtocolData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_0: 'IProtocol'
+  readonly [__signature__]: symbol
   /** The name of the protocol */
   readonly name: ProtocolName
   /** The chain information */
@@ -31,18 +36,13 @@ export interface IProtocol extends IProtocolData {
  */
 export const ProtocolDataSchema = z.object({
   name: z.nativeEnum(ProtocolName),
-  chainInfo: ChainInfoDataSchema,
+  chainInfo: z.custom<IChainInfo>((val) => isChainInfo(val)),
 })
 
 /**
  * Type for the data part of the IProtocol interface
  */
 export type IProtocolData = Readonly<z.infer<typeof ProtocolDataSchema>>
-
-/**
- * Type for the parameters of the IPrice interface
- */
-export type IProtocolParameters = Omit<IProtocolData, ''>
 
 /**
  * @description Type guard for IProtocol

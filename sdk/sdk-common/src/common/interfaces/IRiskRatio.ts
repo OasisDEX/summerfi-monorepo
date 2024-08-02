@@ -3,6 +3,11 @@ import { IPercentage, PercentageDataSchema } from './IPercentage'
 import { IPrintable } from './IPrintable'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * @name RiskRatioType
  * @description Enum for the different types of risk ratios supported
  */
@@ -21,7 +26,7 @@ export enum RiskRatioType {
  */
 export interface IRiskRatio extends IRiskRatioData, IPrintable {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'IRiskRatio'
+  readonly [__signature__]: symbol
   /** The type of the risk ratio */
   readonly type: RiskRatioType
   /** The risk ratio value, a percentage for LTV and Collateralization Ratio, a number for Multiple */
@@ -49,11 +54,6 @@ export const RiskRatioDataSchema = z.object({
  * Type for the data part of the IRiskRatio interface
  */
 export type IRiskRatioData = Readonly<z.infer<typeof RiskRatioDataSchema>>
-
-/**
- * Type for the parameters of the IRiskRatio interface
- */
-export type IRiskRatioParameters = Omit<IRiskRatioData, ''>
 
 /**
  * @description Type guard for IRiskRatio

@@ -9,10 +9,17 @@ import { ISimulation, SimulationSchema } from './ISimulation'
 import { Steps } from './Steps'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * @interface IRefinanceSimulation
  * @description Simulation result of a refinance operation
  */
 export interface IRefinanceSimulation extends ISimulation {
+  /** Signature used to differentiate it from similar interfaces */
+  readonly [__signature__]: symbol
   /** Original position that will be refinanced */
   readonly sourcePosition: ILendingPosition
   /** Simulated target position */
@@ -22,8 +29,8 @@ export interface IRefinanceSimulation extends ISimulation {
   /** Steps needed to perform the refinance */
   readonly steps: Steps[]
 
-  // Re-declaring the properties with the correct types
-  readonly type: SimulationType
+  // Re-declaring the properties to narrow the types
+  readonly type: SimulationType.Refinance
 }
 
 /**
@@ -42,11 +49,6 @@ export const RefinanceSimulationSchema = z.object({
  * Type for the data part of the IRefinanceSimulation interface
  */
 export type IRefinanceSimulationData = Readonly<z.infer<typeof RefinanceSimulationSchema>>
-
-/**
- * Type for the parameters of the IRefinanceSimulation interface
- */
-export type IRefinanceSimulationParameters = Omit<IRefinanceSimulationData, 'type'>
 
 /**
  * @description Type guard for IRefinanceSimulation

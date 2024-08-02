@@ -4,12 +4,17 @@ import { ChainInfoDataSchema, IChainInfo } from './IChainInfo'
 import { IPrintable } from './IPrintable'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * @interface IArmadaFleet
  * @description Interface for the Armada Protocol fleets
  */
 export interface IArmadaFleet extends IPrintable, IArmadaFleetData {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'IArmadaFleet'
+  readonly [__signature__]: symbol
   /** Chain where the Fleet entrypoint contract is deployed */
   readonly chainInfo: IChainInfo
   /** Address of the Fleet entrypoint contract (FleetCommander) */
@@ -28,11 +33,6 @@ export const ArmadaFleetDataSchema = z.object({
  * Type for the data part of the IArmadaFleet interface
  */
 export type IArmadaFleetData = Readonly<z.infer<typeof ArmadaFleetDataSchema>>
-
-/**
- * Type for the parameters of the IArmadaFleet interface
- */
-export type IArmadaFleetParameters = Omit<IArmadaFleetData, ''>
 
 /**
  * @description Type guard for IArmadaFleet

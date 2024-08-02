@@ -5,14 +5,14 @@
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./src/index.ts",
+      "import": "./src/index.js",
       "types": "./src/index.d.ts"
     }
   },
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "build": "tsc -b",
+    "build": "tsc -b -v tsconfig.build.json",
     "test": "jest --setupFiles dotenv/config --passWithNoTests",
     "testw": "jest --setupFiles dotenv/config --watch",
     "lint": "eslint .",

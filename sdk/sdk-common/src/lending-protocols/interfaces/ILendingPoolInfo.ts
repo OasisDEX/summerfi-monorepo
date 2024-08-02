@@ -6,6 +6,11 @@ import { IDebtInfo, isDebtInfo } from './IDebtInfo'
 import { ILendingPoolId, isLendingPoolId } from './ILendingPoolId'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * @name ILendingPoolInfo
  * @description Represents the extended information for a lending pool of a single pair collateral/debt
  *
@@ -19,7 +24,7 @@ import { ILendingPoolId, isLendingPoolId } from './ILendingPoolId'
  */
 export interface ILendingPoolInfo extends IPoolInfo, ILendingPoolInfoData {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_1: 'ILendingPoolInfo'
+  readonly [__signature__]: symbol
   /** Pool ID of the lending pool */
   readonly id: ILendingPoolId
   /** The collateral information of the pool */
@@ -27,8 +32,8 @@ export interface ILendingPoolInfo extends IPoolInfo, ILendingPoolInfoData {
   /** The debt information of the pool */
   readonly debt: IDebtInfo
 
-  // Re-declaring the properties with the correct types
-  readonly type: PoolType
+  // Re-declaring the properties to narrow the types
+  readonly type: PoolType.Lending
 }
 
 /**
@@ -36,7 +41,7 @@ export interface ILendingPoolInfo extends IPoolInfo, ILendingPoolInfoData {
  */
 export const LendingPoolInfoDataSchema = z.object({
   ...PoolInfoDataSchema.shape,
-  type: z.custom<PoolType>((val) => val === PoolType.Lending),
+  type: z.literal(PoolType.Lending),
   id: z.custom<ILendingPoolId>((val) => isLendingPoolId(val)),
   collateral: z.custom<ICollateralInfo>((val) => isCollateralInfo(val)),
   debt: z.custom<IDebtInfo>((val) => isDebtInfo(val)),
@@ -46,11 +51,6 @@ export const LendingPoolInfoDataSchema = z.object({
  * Type for the data part of the ILendingPoolInfo interface
  */
 export type ILendingPoolInfoData = Readonly<z.infer<typeof LendingPoolInfoDataSchema>>
-
-/**
- * Type for the parameters of the ILendingPoolInfo interface
- */
-export type ILendingPoolInfoParameters = Omit<ILendingPoolInfoData, 'type'>
 
 /**
  * @description Type guard for ILendingPoolInfo

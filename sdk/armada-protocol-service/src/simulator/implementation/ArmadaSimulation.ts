@@ -14,8 +14,8 @@ import { IUser } from '@summerfi/sdk-common/user'
 export type ArmadaSimulationParameters = Omit<IArmadaSimulationData, 'type'>
 
 /**
- * @name ArmadaSimulation
- * @see IArmadaSimulation
+ * @name RefinanceSimulation
+ * @see IRefinanceSimulation
  */
 export class ArmadaSimulation extends Simulation implements IArmadaSimulation {
   /** SIGNATURE */
@@ -24,15 +24,15 @@ export class ArmadaSimulation extends Simulation implements IArmadaSimulation {
   /** ATTRIBUTES */
   readonly type = SimulationType.Armada
   readonly user: IUser
-  readonly previousPosition?: IArmadaPosition
+  readonly previousPosition?: IArmadaPosition | undefined
   readonly newPosition: IArmadaPosition
 
-  /** Factory method */
+  /** FACTORY */
   static createFrom(params: ArmadaSimulationParameters): ArmadaSimulation {
     return new ArmadaSimulation(params)
   }
 
-  /** Sealed constructor */
+  /** SEALED CONSTRUCTOR */
   private constructor(params: ArmadaSimulationParameters) {
     super(params)
 

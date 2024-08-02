@@ -4,29 +4,37 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 import { EmodeType } from '../../common'
 import {
   ISparkLendingPoolId,
-  ISparkLendingPoolIdParameters,
+  ISparkLendingPoolIdData,
+  __signature__,
 } from '../interfaces/ISparkLendingPoolId'
 import { ISparkProtocol } from '../interfaces/ISparkProtocol'
+
+/**
+ * Type for the parameters of SparkLendingPoolId
+ */
+export type SparkLendingPoolIdParameters = Omit<ISparkLendingPoolIdData, 'type'>
 
 /**
  * @class SparkLendingPoolId
  * @see ISparkLendingPoolIdData
  */
 export class SparkLendingPoolId extends LendingPoolId implements ISparkLendingPoolId, IPrintable {
-  readonly _signature_2 = 'ISparkLendingPoolId'
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
 
+  /** ATTRIBUTES */
   readonly protocol: ISparkProtocol
   readonly emodeType: EmodeType
   readonly collateralToken: IToken
   readonly debtToken: IToken
 
-  /** Factory method */
-  static createFrom(params: ISparkLendingPoolIdParameters): SparkLendingPoolId {
+  /** FACTORY */
+  static createFrom(params: SparkLendingPoolIdParameters): SparkLendingPoolId {
     return new SparkLendingPoolId(params)
   }
 
-  /** Sealed constructor */
-  private constructor(params: ISparkLendingPoolIdParameters) {
+  /** SEALED CONSTRUCTOR */
+  private constructor(params: SparkLendingPoolIdParameters) {
     super(params)
 
     this.protocol = params.protocol

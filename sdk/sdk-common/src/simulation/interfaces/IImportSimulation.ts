@@ -1,24 +1,37 @@
 import { z } from 'zod'
-import { PositionDataSchema } from '../../common/interfaces/IPosition'
-import { ILendingPosition } from '../../lending-protocols/interfaces/ILendingPosition'
-import { IExternalLendingPosition } from '../../orders/importing/interfaces/IExternalLendingPosition'
+import {
+  ILendingPosition,
+  isLendingPosition,
+} from '../../lending-protocols/interfaces/ILendingPosition'
+import {
+  IExternalLendingPosition,
+  isExternalLendingPosition,
+} from '../../orders/importing/interfaces/IExternalLendingPosition'
 import { SimulationType } from '../enums/SimulationType'
 import { ISimulation, SimulationSchema } from './ISimulation'
 import { Steps } from './Steps'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IImportSimulation
  * @description Simulation result of an import operation
  */
 export interface IImportSimulation extends ISimulation {
-  /** Type of the simulation, in this case Import */
-  readonly type: SimulationType.ImportPosition
+  /** Signature used to differentiate it from similar interfaces */
+  readonly [__signature__]: symbol
   /** Original position that will be refinanced */
   readonly sourcePosition: IExternalLendingPosition
   /** Simulated target position */
   readonly targetPosition: ILendingPosition
   /** Steps needed to perform the refinance */
   readonly steps: Steps[]
+
+  // Re-declaring the properties to narrow the types
+  readonly type: SimulationType.ImportPosition
 }
 
 /**
@@ -26,9 +39,10 @@ export interface IImportSimulation extends ISimulation {
  */
 export const ImportSimulationSchema = z.object({
   ...SimulationSchema.shape,
+  sourcePosition: z.custom<IExternalLendingPosition>((val) => isExternalLendingPosition(val)),
+  targetPosition: z.custom<ILendingPosition>((val) => isLendingPosition(val)),
+  steps: z.array(z.custom<Steps>()),
   type: z.literal(SimulationType.ImportPosition),
-  sourcePosition: PositionDataSchema,
-  targetPosition: PositionDataSchema,
 })
 
 /**

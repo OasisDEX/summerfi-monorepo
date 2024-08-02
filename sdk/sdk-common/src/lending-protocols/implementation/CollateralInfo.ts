@@ -9,15 +9,22 @@ import { IRiskRatio } from '../../common/interfaces/IRiskRatio'
 import { IToken } from '../../common/interfaces/IToken'
 import { ITokenAmount } from '../../common/interfaces/ITokenAmount'
 import { SerializationService } from '../../services/SerializationService'
-import { ICollateralInfo, ICollateralInfoData } from '../interfaces/ICollateralInfo'
+import { ICollateralInfo, ICollateralInfoData, __signature__ } from '../interfaces/ICollateralInfo'
+
+/**
+ * Type for the parameters of CollateralInfo
+ */
+export type CollateralInfoParameters = Omit<ICollateralInfoData, ''>
 
 /**
  * @class CollateralInfo
  * @see ICollateralInfo
  */
 export class CollateralInfo implements ICollateralInfo {
-  readonly _signature_0 = 'ICollateralInfo'
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
 
+  /** ATTRIBUTES */
   readonly token: IToken
   readonly price: IPrice
   readonly priceUSD: IPrice
@@ -28,12 +35,12 @@ export class CollateralInfo implements ICollateralInfo {
 
   /** FACTORY METHODS */
 
-  static createFrom(params: ICollateralInfoData): CollateralInfo {
+  static createFrom(params: CollateralInfoParameters): CollateralInfo {
     return new CollateralInfo(params)
   }
 
   /** CONSTRUCTOR */
-  protected constructor(params: ICollateralInfoData) {
+  protected constructor(params: CollateralInfoParameters) {
     this.token = Token.createFrom(params.token)
     this.price = Price.createFrom(params.price)
     this.priceUSD = Price.createFrom(params.priceUSD)

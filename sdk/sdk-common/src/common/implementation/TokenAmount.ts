@@ -2,11 +2,13 @@ import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
 import { isPercentage } from '../interfaces/IPercentage'
 import { isPrice } from '../interfaces/IPrice'
+import { IToken } from '../interfaces/IToken'
 import {
   ITokenAmount,
-  ITokenAmountParameters,
+  ITokenAmountData,
   TokenAmountMulDivParamType,
   TokenAmountMulDivReturnType,
+  __signature__,
 } from '../interfaces/ITokenAmount'
 import {
   divideTokenAmountByPercentage,
@@ -15,13 +17,20 @@ import {
 import { Token } from './Token'
 
 /**
+ * Type for the parameters of TokenAmount
+ */
+export type TokenAmountParameters = Omit<ITokenAmountData, ''>
+
+/**
  * @class TokenAmount
  * @see ITokenAmount
  */
 export class TokenAmount implements ITokenAmount {
-  readonly _signature_0 = 'ITokenAmount'
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
 
-  readonly token: Token
+  /** ATTRIBUTES */
+  readonly token: IToken
   readonly amount: string
 
   // This is protected because otherwise TypeScript is removing the type when transpiling and it causes errors.
@@ -30,14 +39,7 @@ export class TokenAmount implements ITokenAmount {
 
   /** FACTORY */
 
-  /**
-   * @name createFrom
-   * @param params Token amount data to create the instance
-   * @returns The resulting TokenAmount
-   *
-   * `amount` is the amount in floating point format without taking into account the token decimals
-   */
-  static createFrom(params: ITokenAmountParameters): ITokenAmount {
+  static createFrom(params: TokenAmountParameters): ITokenAmount {
     return new TokenAmount(params)
   }
 
@@ -50,7 +52,7 @@ export class TokenAmount implements ITokenAmount {
    *
    * i.e.: amount in base unit (1eth = 1000000000000000000, 1btc = 100000000, etc...)
    */
-  static createFromBaseUnit(params: ITokenAmountParameters): ITokenAmount {
+  static createFromBaseUnit(params: TokenAmountParameters): ITokenAmount {
     const amount = new BigNumber(params.amount)
       .div(new BigNumber(10).pow(new BigNumber(params.token.decimals)))
       .toString()
@@ -60,7 +62,7 @@ export class TokenAmount implements ITokenAmount {
   /** CONSTRUCTOR  */
 
   /** Sealed constructor */
-  private constructor(params: ITokenAmountParameters) {
+  private constructor(params: TokenAmountParameters) {
     this.token = Token.createFrom(params.token)
     this.amount = params.amount
     this._baseUnitFactor = new BigNumber(10).pow(new BigNumber(params.token.decimals))

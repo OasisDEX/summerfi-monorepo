@@ -7,11 +7,16 @@ import {
 } from '../../../lending-protocols/interfaces/ILendingPosition'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * Parameters for a refinance simulation
  */
 export interface IRefinanceParameters extends IRefinanceParametersData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_0: 'IRefinanceParameters'
+  readonly [__signature__]: symbol
   /** Existing position to be refinanced */
   readonly sourcePosition: ILendingPosition
   /** Target pool where the source position will be moved  */
@@ -33,11 +38,6 @@ export const RefinanceParametersDataSchema = z.object({
  * Type for the data part of the refinance parameters
  */
 export type IRefinanceParametersData = Readonly<z.infer<typeof RefinanceParametersDataSchema>>
-
-/**
- * Type for the parameters of the refinance parameters
- */
-export type IRefinanceParametersParameters = Omit<IRefinanceParametersData, ''>
 
 /**
  * Type guard for the refinance parameters

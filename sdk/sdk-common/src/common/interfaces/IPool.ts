@@ -4,6 +4,11 @@ import { IPoolId, isPoolId } from './IPoolId'
 import { IPrintable } from './IPrintable'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * @name IPool
  * @description Represents a generic protocol pool. Contains information about the pool's ID,
  *              which is specific to each protocol, and the pool's type
@@ -12,7 +17,7 @@ import { IPrintable } from './IPrintable'
  */
 export interface IPool extends IPrintable, IPoolData {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'IPool'
+  readonly [__signature__]: symbol
   /** Type of the pool */
   readonly type: PoolType
   /** Unique identifier for the pool, to be specialized for each protocol */
@@ -31,11 +36,6 @@ export const PoolDataSchema = z.object({
  * Type for the data part of the IPool interface
  */
 export type IPoolData = Readonly<z.infer<typeof PoolDataSchema>>
-
-/**
- * Type for the parameters of the IPool interface
- */
-export type IPoolParameters = Omit<IPoolData, ''>
 
 /**
  * @description Type guard for IPool

@@ -4,12 +4,17 @@ import { ChainInfoDataSchema, IChainInfo } from './IChainInfo'
 import { IPrintable } from './IPrintable'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * @name IToken
  * @description Represents an token in a Chain, typically used to represent ERC-20 tokens
  */
 export interface IToken extends ITokenData, IPrintable {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'IToken'
+  readonly [__signature__]: symbol
   /** Chain where the token is deployed */
   readonly chainInfo: IChainInfo
   /** Token address */
@@ -47,11 +52,6 @@ export const TokenDataSchema = z.object({
  * Type for the data part of the IToken interface
  */
 export type ITokenData = Readonly<z.infer<typeof TokenDataSchema>>
-
-/**
- * Type for the parameters of the IToken interface
- */
-export type ITokenParameters = Omit<ITokenData, ''>
 
 /**
  * @description Type guard for IToken

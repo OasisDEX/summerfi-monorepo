@@ -1,23 +1,31 @@
 import { SerializationService } from '../../services/SerializationService'
 import { ChainId } from '../aliases/ChainId'
-import { IChainInfo, IChainInfoParameters } from '../interfaces/IChainInfo'
+import { IChainInfo, IChainInfoData, __signature__ } from '../interfaces/IChainInfo'
+
+/**
+ * Type for the parameters of ChainInfo
+ */
+export type ChainInfoParameters = Omit<IChainInfoData, ''>
 
 /**
  * @name ChainInfo
  * @see IChainInfo
  */
 export class ChainInfo implements IChainInfo {
-  readonly _signature_0 = 'IChainInfo'
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
+
+  /** ATTRIBUTES */
   readonly chainId: ChainId
   readonly name: string
 
-  /** Factory method */
-  static createFrom(params: IChainInfoParameters): ChainInfo {
+  /** FACTORY METHODS */
+  static createFrom(params: ChainInfoParameters): ChainInfo {
     return new ChainInfo(params)
   }
 
-  /** Sealed constructor */
-  private constructor(params: IChainInfoParameters) {
+  /** SEALED CONSTRUCTOR */
+  private constructor(params: ChainInfoParameters) {
     this.chainId = params.chainId
     this.name = params.name
   }

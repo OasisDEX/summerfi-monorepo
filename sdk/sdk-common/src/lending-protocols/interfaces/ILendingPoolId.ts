@@ -4,6 +4,11 @@ import { IProtocol, isProtocol } from '../../common/interfaces/IProtocol'
 import { PoolType } from '../../common/types/PoolType'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * @name ILendingPoolId
  * @description Identifies a generic lending pool. This will be specialized for each protocol
  *
@@ -15,12 +20,12 @@ import { PoolType } from '../../common/types/PoolType'
  */
 export interface ILendingPoolId extends IPoolId, ILendingPoolIdData {
   /** Signature to differentiate it from other interfaces */
-  readonly _signature_1: 'ILendingPoolId'
+  readonly [__signature__]: symbol
   // Re-declaring narrowed types
   readonly protocol: IProtocol
 
-  // Re-declaring the properties with the correct types
-  readonly type: PoolType
+  // Re-declaring the properties to narrow the types
+  readonly type: PoolType.Lending
 }
 
 /**
@@ -28,7 +33,7 @@ export interface ILendingPoolId extends IPoolId, ILendingPoolIdData {
  */
 export const LendingPoolIdDataSchema = z.object({
   ...PoolIdDataSchema.shape,
-  type: z.custom<PoolType>((val) => val === PoolType.Lending),
+  type: z.literal(PoolType.Lending),
   protocol: z.custom<IProtocol>((val) => isProtocol(val)),
 })
 
@@ -36,11 +41,6 @@ export const LendingPoolIdDataSchema = z.object({
  * Type for the data part of the ILendingPoolId interface
  */
 export type ILendingPoolIdData = Readonly<z.infer<typeof LendingPoolIdDataSchema>>
-
-/**
- * Type for the parameters of the ILendingPoolId interface
- */
-export type ILendingPoolIdParameters = Omit<ILendingPoolIdData, 'type'>
 
 /**
  * @description Type guard for ILendingPoolId

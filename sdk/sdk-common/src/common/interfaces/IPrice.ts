@@ -7,6 +7,11 @@ import { IPrintable } from './IPrintable'
 import { type ITokenAmount } from './ITokenAmount'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * Return Type narrowing for multiply and divide methods, so the return type can be properly inferred
  *
  * This helps callers to know what to expect from the result of the operation
@@ -48,7 +53,7 @@ export type PriceMulReturnType<T> = T extends ITokenAmount
  */
 export interface IPrice extends IPriceData, IPrintable {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'IPrice'
+  readonly [__signature__]: symbol
   /** The price value in floating point format without taking into account decimals */
   readonly value: string
   /** The token for the base of the price */
@@ -193,11 +198,6 @@ export const PriceDataSchema = z.object({
  * Type definition for the IPrice data
  */
 export type IPriceData = Readonly<z.infer<typeof PriceDataSchema>>
-
-/**
- * Type for the parameters of the IPrice interface
- */
-export type IPriceParameters = Omit<IPriceData, ''>
 
 /**
  * @description Type guard for isPrice

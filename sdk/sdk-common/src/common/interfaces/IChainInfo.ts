@@ -3,12 +3,17 @@ import { ChainId, ChainIdSchema } from '../aliases/ChainId'
 import { IPrintable } from './IPrintable'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * @name IChainInfo
  * @description Information used to identify a blockchain network
  */
 export interface IChainInfo extends IChainInfoData, IPrintable {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'IChainInfo'
+  readonly [__signature__]: symbol
   /** The chain ID of the network */
   readonly chainId: ChainId
   /** The name of the network */
@@ -37,11 +42,6 @@ export const ChainInfoDataSchema = z.object({
  * Type for the data part of the IChainInfo interface
  */
 export type IChainInfoData = Readonly<z.infer<typeof ChainInfoDataSchema>>
-
-/**
- * Type for the parameters of the IChainInfo interface
- */
-export type IChainInfoParameters = Omit<IChainInfoData, ''>
 
 /**
  * @description Type guard for IChainInfo

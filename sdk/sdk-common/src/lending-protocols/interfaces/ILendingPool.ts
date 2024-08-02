@@ -5,6 +5,11 @@ import { PoolType } from '../../common/types/PoolType'
 import { ILendingPoolId, isLendingPoolId } from './ILendingPoolId'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * @name ILendingPool
  * @description Represents a lending pool for a single pair collateral/debt
  *
@@ -16,7 +21,7 @@ import { ILendingPoolId, isLendingPoolId } from './ILendingPoolId'
  */
 export interface ILendingPool extends IPool, ILendingPoolData {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_1: 'ILendingPool'
+  readonly [__signature__]: symbol
   /** Pool ID of the lending pool */
   readonly id: ILendingPoolId
   /** Collateral token used to collateralized the pool */
@@ -24,8 +29,8 @@ export interface ILendingPool extends IPool, ILendingPoolData {
   /** Debt token, which can be borrowed from the pool */
   readonly debtToken: IToken
 
-  // Re-declaring the properties with the correct types
-  readonly type: PoolType
+  // Re-declaring the properties to narrow the types
+  readonly type: PoolType.Lending
 }
 
 /**
@@ -33,7 +38,7 @@ export interface ILendingPool extends IPool, ILendingPoolData {
  */
 export const LendingPoolDataSchema = z.object({
   ...PoolDataSchema.shape,
-  type: z.custom<PoolType>((val) => val === PoolType.Lending),
+  type: z.literal(PoolType.Lending),
   id: z.custom<ILendingPoolId>((val) => isLendingPoolId(val)),
   collateralToken: z.custom<IToken>((val) => isToken(val)),
   debtToken: z.custom<IToken>((val) => isToken(val)),
@@ -43,11 +48,6 @@ export const LendingPoolDataSchema = z.object({
  * Type for the data part of the ILendingPool interface
  */
 export type ILendingPoolData = Readonly<z.infer<typeof LendingPoolDataSchema>>
-
-/**
- * Type for the parameters of the ILendingPool interface
- */
-export type ILendingPoolParameters = Omit<ILendingPoolData, 'type'>
 
 /**
  * @description Type guard for ILendingPool

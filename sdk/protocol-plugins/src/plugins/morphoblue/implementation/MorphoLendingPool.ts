@@ -1,32 +1,45 @@
 import { IAddress, IRiskRatio } from '@summerfi/sdk-common/common'
 import { LendingPool } from '@summerfi/sdk-common/lending-protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
-import { IMorphoLendingPool, IMorphoLendingPoolParameters } from '../interfaces/IMorphoLendingPool'
+import {
+  IMorphoLendingPool,
+  IMorphoLendingPoolData,
+  __signature__,
+} from '../interfaces/IMorphoLendingPool'
 import { IMorphoLendingPoolId } from '../interfaces/IMorphoLendingPoolId'
+
+/**
+ * Type for the parameters of the IMorphoLendingPool interface
+ */
+export type MorphoLendingPoolParameters = Omit<IMorphoLendingPoolData, 'type'>
 
 /**
  * @class MorphoLendingPool
  * @see IMorphoLendingPool
  */
 export class MorphoLendingPool extends LendingPool implements IMorphoLendingPool {
-  readonly _signature_2 = 'IMorphoLendingPool'
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
 
+  /** ATTRIBUTES */
   readonly id: IMorphoLendingPoolId
   readonly oracle: IAddress
   readonly irm: IAddress
   readonly lltv: IRiskRatio
 
-  private constructor(params: IMorphoLendingPoolParameters) {
+  /** FACTORY */
+  public static createFrom(params: MorphoLendingPoolParameters): MorphoLendingPool {
+    return new MorphoLendingPool(params)
+  }
+
+  /** SEALED CONSTRUCTOR */
+  private constructor(params: MorphoLendingPoolParameters) {
     super(params)
 
     this.id = params.id
     this.oracle = params.oracle
     this.irm = params.irm
     this.lltv = params.lltv
-  }
-
-  public static createFrom(params: IMorphoLendingPoolParameters): MorphoLendingPool {
-    return new MorphoLendingPool(params)
   }
 }
 

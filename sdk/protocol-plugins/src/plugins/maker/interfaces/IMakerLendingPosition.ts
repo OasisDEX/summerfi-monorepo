@@ -1,5 +1,3 @@
-import { ITokenAmount } from '@summerfi/sdk-common'
-import { PositionType } from '@summerfi/sdk-common/common'
 import {
   ILendingPosition,
   LendingPositionDataSchema,
@@ -10,24 +8,26 @@ import { IMakerLendingPool, isMakerLendingPool } from './IMakerLendingPool'
 import { IMakerLendingPositionId, isMakerLendingPositionId } from './IMakerLendingPositionId'
 
 /**
- * @interface IMakerPosition
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
+ * @interface IMakerLendingPosition
  * @description Interface for the implementors of the position
  *
  * This interface is used to add all the methods that the interface supports
  */
 export interface IMakerLendingPosition extends ILendingPosition, IMakerLendingPositionData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'IMakerLendingPosition'
+  readonly [__signature__]: symbol
   /** ID for the maker position */
   readonly id: IMakerLendingPositionId
   /** Lending pool associated to this position */
   readonly pool: IMakerLendingPool
 
-  // Re-declaring the properties with the correct types
-  readonly type: PositionType
+  // Re-declaring the enum type to fix Zod inferrence issue with enums
   readonly subtype: LendingPositionType
-  readonly debtAmount: ITokenAmount
-  readonly collateralAmount: ITokenAmount
 }
 
 /**
@@ -38,11 +38,6 @@ export const MakerLendingPositionDataSchema = z.object({
   id: z.custom<IMakerLendingPositionId>((val) => isMakerLendingPositionId(val)),
   pool: z.custom<IMakerLendingPool>((val) => isMakerLendingPool(val)),
 })
-
-/**
- * Type for the parameters of the IMakerLendingPosition interface
- */
-export type IMakerLendingPositionParameters = Omit<IMakerLendingPositionData, 'type'>
 
 /**
  * Type for the data part of IMakerLendingPosition

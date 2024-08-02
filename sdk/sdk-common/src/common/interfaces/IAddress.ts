@@ -5,6 +5,11 @@ import { AddressType } from '../types/AddressType'
 import { IPrintable } from './IPrintable'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * @name IAddress
  * @description Represents an address with a certain format, specified by the type
  *
@@ -12,7 +17,7 @@ import { IPrintable } from './IPrintable'
  */
 export interface IAddress extends IAddressData, IPrintable {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'IAddress'
+  readonly [__signature__]: symbol
   /** The address value in the format specified by type */
   readonly value: AddressValue
   /** The type of the address */
@@ -41,11 +46,6 @@ export const AddressDataSchema = z.object({
  * Type for the data part of the IAddress interface
  */
 export type IAddressData = Readonly<z.infer<typeof AddressDataSchema>>
-
-/**
- * Type for the parameters of the IAddress interface
- */
-export type IAddressParameters = Omit<IAddressData, ''>
 
 /**
  * @description Type guard for IAddress

@@ -1,26 +1,34 @@
 import { SerializationService } from '../../services/SerializationService'
 import { AddressValue } from '../aliases/AddressValue'
-import { IAddress, IAddressParameters } from '../interfaces/IAddress'
+import { IAddress, IAddressData, __signature__ } from '../interfaces/IAddress'
 import { AddressType } from '../types/AddressType'
 
 /**
+ * Type for the parameters of Address
+ */
+export type AddressParameters = Omit<IAddressData, ''>
+
+/**
  * @class Address
- * @see IAddressData
+ * @see IAddress
  */
 export class Address implements IAddress {
-  readonly _signature_0 = 'IAddress'
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
 
+  /** ATTRIBUTES */
+  readonly value: AddressValue
+  readonly type: AddressType
+
+  /** CONSTANTS */
   public static ZeroAddressEthereum: Address = new Address({
     value: '0x0000000000000000000000000000000000000000',
     type: AddressType.Ethereum,
   })
 
-  readonly value: AddressValue
-  readonly type: AddressType
-
   /** FACTORY METHODS */
 
-  static createFrom(params: IAddressParameters): Address {
+  static createFrom(params: AddressParameters): Address {
     return new Address(params)
   }
 
@@ -41,7 +49,7 @@ export class Address implements IAddress {
   }
 
   /** CONSTRUCTOR */
-  private constructor(params: IAddressParameters) {
+  private constructor(params: AddressParameters) {
     if (Address.isValid(params.value) === false) {
       throw new Error('Address value is invalid')
     }

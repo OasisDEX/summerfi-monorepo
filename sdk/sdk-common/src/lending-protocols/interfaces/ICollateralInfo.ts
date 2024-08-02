@@ -4,13 +4,19 @@ import { IPrice, isPrice } from '../../common/interfaces/IPrice'
 import { IRiskRatio, isRiskRatio } from '../../common/interfaces/IRiskRatio'
 import { IToken, isToken } from '../../common/interfaces/IToken'
 import { ITokenAmount, isTokenAmount } from '../../common/interfaces/ITokenAmount'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
 /**
  * @interface ICollateralInfo
  * @description Contains extended information about a collateral token of a lending pool
  */
 export interface ICollateralInfo extends ICollateralInfoData {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'ICollateralInfo'
+  readonly [__signature__]: symbol
   /** The token that represents the collateral */
   readonly token: IToken
   /** The price of the token in the protocol's default denomination */
@@ -44,11 +50,6 @@ export const CollateralInfoDataSchema = z.object({
  * Type for the data part of the ICollateralInfo interface
  */
 export type ICollateralInfoData = Readonly<z.infer<typeof CollateralInfoDataSchema>>
-
-/**
- * Type for the parameters of the ICollateralInfo interface
- */
-export type ICollateralInfoParameters = Omit<ICollateralInfoData, ''>
 
 /**
  * @description Type guard for ICollateralInfo

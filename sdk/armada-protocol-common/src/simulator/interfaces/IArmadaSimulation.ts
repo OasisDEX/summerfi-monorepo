@@ -4,10 +4,17 @@ import { z } from 'zod'
 import { IArmadaPosition, isArmadaPosition } from '../../common/interfaces/IArmadaPosition'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * @interface IArmadaSimulation
  * @description Simulation result of an Armada Protocol operation
  */
 export interface IArmadaSimulation extends ISimulation {
+  /** Signature used to differentiate it from similar interfaces */
+  readonly [__signature__]: symbol
   /** User for which the simulation was performed */
   readonly user: IUser
   /** Already existing position, in case it existed */
@@ -15,8 +22,8 @@ export interface IArmadaSimulation extends ISimulation {
   /** New updated position */
   readonly newPosition: IArmadaPosition
 
-  // Re-declaring the properties with the correct types
-  readonly type: SimulationType
+  // Re-declaring the properties to narrow the types
+  readonly type: SimulationType.Armada
 }
 
 /**
@@ -29,17 +36,13 @@ export const ArmadaSimulationSchema = z.object({
     (val) => val === undefined || isArmadaPosition(val),
   ),
   newPosition: z.custom<IArmadaPosition>((val) => isArmadaPosition(val)),
+  type: z.literal(SimulationType.Armada),
 })
 
 /**
  * Type for the data part of the IArmadaSimulation interface
  */
 export type IArmadaSimulationData = Readonly<z.infer<typeof ArmadaSimulationSchema>>
-
-/**
- * Type for the parameters of the IArmadaSimulation interface
- */
-export type IArmadaSimulationParameters = Omit<IArmadaSimulationData, 'type'>
 
 /**
  * @description Type guard for IRefinanceSimulation

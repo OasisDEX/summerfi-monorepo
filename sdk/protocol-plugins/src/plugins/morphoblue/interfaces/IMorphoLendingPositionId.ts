@@ -1,9 +1,13 @@
-import { PositionType } from '@summerfi/sdk-common/common'
 import {
   ILendingPositionId,
   LendingPositionIdDataSchema,
 } from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IMorphoLendingPositionId
@@ -13,10 +17,7 @@ import { z } from 'zod'
  */
 export interface IMorphoLendingPositionId extends ILendingPositionId, IMorphoLendingPositionIdData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'IMorphoLendingPositionId'
-
-  // Re-declaring the properties with the correct types
-  readonly type: PositionType
+  readonly [__signature__]: symbol
 }
 
 /**
@@ -32,11 +33,6 @@ export const MorphoLendingPositionIdDataSchema = z.object({
 export type IMorphoLendingPositionIdData = Readonly<
   z.infer<typeof MorphoLendingPositionIdDataSchema>
 >
-
-/**
- * Type for the parameters of the IMorphoLendingPositionId interface
- */
-export type IMorphoLendingPositionIdParameters = Omit<IMorphoLendingPositionIdData, 'type'>
 
 /**
  * @description Type guard for IMorphoLendingPositionId

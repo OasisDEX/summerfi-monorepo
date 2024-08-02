@@ -6,6 +6,11 @@ import { IPrintable } from './IPrintable'
 import { type ITokenAmount } from './ITokenAmount'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * Return Type narrowing for multiply and divide methods, so the return type can be properly inferred
  *
  * This helps callers to know what to expect from the result of the operation
@@ -27,7 +32,7 @@ export type FiatCurrencyAmountMulDivReturnType<T> = T extends IPrice
  */
 export interface IFiatCurrencyAmount extends IFiatCurrencyAmountData, IPrintable {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'IFiatCurrencyAmount'
+  readonly [__signature__]: symbol
   /** Fiat currency for the amount */
   readonly fiat: FiatCurrency
   /** The amount in floating point format */
@@ -84,11 +89,6 @@ export const FiatCurrencyAmountDataSchema = z.object({
  * Type for the data part of the IFiatCurrencyAmount interface
  */
 export type IFiatCurrencyAmountData = Readonly<z.infer<typeof FiatCurrencyAmountDataSchema>>
-
-/**
- * Type for the parameters of the IFiatCurrencyAmount interface
- */
-export type IFiatCurrencyAmountParameters = Omit<IFiatCurrencyAmountData, ''>
 
 /**
  * @description Type guard for IFiatCurrencyAmount

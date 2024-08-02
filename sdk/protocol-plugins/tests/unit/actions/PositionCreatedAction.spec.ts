@@ -1,4 +1,4 @@
-import { Address, Token, TokenAmount } from '@summerfi/sdk-common/common'
+import { Address, ChainInfo, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
 import {
@@ -38,10 +38,10 @@ describe('PositionCreated Action', () => {
   })
 
   const protocol = SparkProtocol.createFrom({
-    chainInfo: {
+    chainInfo: ChainInfo.createFrom({
       name: 'Mainnet',
       chainId: 1,
-    },
+    }),
   })
 
   const position = SparkLendingPosition.createFrom({

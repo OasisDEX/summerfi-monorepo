@@ -1,17 +1,26 @@
 import { SerializationService } from '../../services/SerializationService'
 import { SimulationType } from '../enums'
-import { ISimulation, ISimulationData } from '../interfaces/ISimulation'
+import { ISimulation, ISimulationData, __signature__ } from '../interfaces/ISimulation'
+
+/**
+ * Type for the parameters of Simulation
+ */
+export type SimulationParams = Omit<ISimulationData, 'type'>
 
 /**
  * @name Simulation
  * @see ISimulation
  */
 export abstract class Simulation implements ISimulation {
-  readonly type: SimulationType
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
 
-  /** Sealed constructor */
-  protected constructor(params: ISimulationData) {
-    this.type = params.type
+  /** ATTRIBUTES */
+  abstract readonly type: SimulationType
+
+  /** SEALED CONSTRUCTOR */
+  protected constructor(_: SimulationParams) {
+    // Empty on purpose
   }
 }
 

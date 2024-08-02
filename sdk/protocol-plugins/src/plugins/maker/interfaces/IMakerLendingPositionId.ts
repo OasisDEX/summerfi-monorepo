@@ -1,22 +1,24 @@
-import { PositionType } from '@summerfi/sdk-common/common'
 import {
   ILendingPositionId,
   LendingPositionIdDataSchema,
 } from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
 import { MakerVaultId, MakerVaultIdSchema } from '../types/MakerVaultId'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
 /**
  * @interface IMakerLendingPositionId
  * @description Identifier of a Maker lending position
  */
 export interface IMakerLendingPositionId extends ILendingPositionId, IMakerLendingPositionIdData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'IMakerLendingPositionId'
+  readonly [__signature__]: symbol
   /** The vault ID that identifies the position on Maker */
   readonly vaultId: MakerVaultId
-
-  // Re-declaring the properties with the correct types
-  readonly type: PositionType
 }
 
 /**
@@ -31,11 +33,6 @@ export const MakerLendingPositionIdDataSchema = z.object({
  * Type for the data part of IMakerLendingPositionId
  */
 export type IMakerLendingPositionIdData = Readonly<z.infer<typeof MakerLendingPositionIdDataSchema>>
-
-/**
- * Type for the parameters of the IMakerLendingPositionId interface
- */
-export type IMakerLendingPositionIdParameters = Omit<IMakerLendingPositionIdData, 'type'>
 
 /**
  * @description Type guard for IMakerLendingPositionId

@@ -2,12 +2,19 @@ import { z } from 'zod'
 import { SimulationType } from '../enums/SimulationType'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * @interface ISimulation
  * @description Generic simulation interface, defines the simulation type for all simulations
  */
 export interface ISimulation {
+  /** Signature used to differentiate it from similar interfaces */
+  readonly [__signature__]: symbol
   /** The type of the simulation */
-  type: SimulationType
+  readonly type: SimulationType
 }
 
 /**

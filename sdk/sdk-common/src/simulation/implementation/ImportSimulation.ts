@@ -2,30 +2,42 @@ import { ILendingPosition } from '../../lending-protocols'
 import { IExternalLendingPosition } from '../../orders/importing/interfaces/IExternalLendingPosition'
 import { SerializationService } from '../../services/SerializationService'
 import { SimulationType } from '../enums'
-import { IImportSimulation } from '../interfaces/IImportSimulation'
+import {
+  IImportSimulation,
+  IImportSimulationData,
+  __signature__,
+} from '../interfaces/IImportSimulation'
 import { Steps } from '../interfaces/Steps'
 import { Simulation } from './Simulation'
+
+/**
+ * Type for the parameters of ImportSimulation
+ */
+export type ImportSimulationParameters = Omit<IImportSimulationData, 'type'>
 
 /**
  * @name ImportSimulation
  * @see IImportSimulation
  */
 export class ImportSimulation extends Simulation implements IImportSimulation {
-  readonly type: SimulationType.ImportPosition
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
+
+  /** ATTRIBUTES */
   readonly sourcePosition: IExternalLendingPosition
   readonly targetPosition: ILendingPosition
   readonly steps: Steps[]
+  readonly type = SimulationType.ImportPosition
 
-  /** Factory method */
-  static createFrom(params: IImportSimulation): ImportSimulation {
+  /** FACTORY */
+  static createFrom(params: ImportSimulationParameters): ImportSimulation {
     return new ImportSimulation(params)
   }
 
-  /** Sealed constructor */
-  private constructor(params: IImportSimulation) {
+  /** SEALED CONSTRUCTOR */
+  private constructor(params: ImportSimulationParameters) {
     super(params)
 
-    this.type = params.type
     this.sourcePosition = params.sourcePosition
     this.targetPosition = params.targetPosition
     this.steps = params.steps

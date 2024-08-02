@@ -4,9 +4,10 @@ import { Denomination } from '../aliases/Denomination'
 import { IPercentage, isPercentage } from '../interfaces'
 import { isFiatCurrencyAmount } from '../interfaces/IFiatCurrencyAmount'
 import {
-  IPriceParameters,
+  IPriceData,
   PriceMulParamType,
   PriceMulReturnType,
+  __signature__,
   isPrice,
   type IPrice,
 } from '../interfaces/IPrice'
@@ -25,12 +26,19 @@ import { Token } from './Token'
 import { TokenAmount } from './TokenAmount'
 
 /**
+ * Type for the parameters of Price
+ */
+export type PriceParameters = Omit<IPriceData, ''>
+
+/**
  * @class Price
  * @see IPrice
  */
 export class Price implements IPrice {
-  readonly _signature_0 = 'IPrice'
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
 
+  /** ATTRIBUTES */
   readonly value: string
   readonly base: Denomination
   readonly quote: Denomination
@@ -41,7 +49,8 @@ export class Price implements IPrice {
   private readonly _quoteSymbol: string
 
   /** FACTORY */
-  static createFrom(params: IPriceParameters): IPrice {
+
+  static createFrom(params: PriceParameters): IPrice {
     return new Price(params)
   }
 
@@ -68,7 +77,7 @@ export class Price implements IPrice {
   /** CONSTRUCTOR */
 
   /** Sealed constructor */
-  private constructor(params: IPriceParameters) {
+  private constructor(params: PriceParameters) {
     this.value = params.value
 
     if (isTokenData(params.base)) {

@@ -1,4 +1,3 @@
-import { ITokenAmount, PositionType } from '@summerfi/sdk-common/common'
 import {
   ILendingPosition,
   LendingPositionDataSchema,
@@ -9,7 +8,12 @@ import { IAaveV3LendingPool, isAaveV3LendingPool } from './IAaveV3LendingPool'
 import { IAaveV3LendingPositionId, isAaveV3LendingPositionId } from './IAaveV3LendingPositionId'
 
 /**
- * @interface IAaveV3Position
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
+ * @interface IAaveV3LendingPosition
  * @description Represents a lending position in the Aave V3 protocol
  *
  * Typescript forces the interface to re-declare any properties that have different BUT compatible types.
@@ -18,17 +22,14 @@ import { IAaveV3LendingPositionId, isAaveV3LendingPositionId } from './IAaveV3Le
  */
 export interface IAaveV3LendingPosition extends ILendingPosition, IAaveV3LendingPositionData {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'IAaveV3LendingPosition'
+  readonly [__signature__]: symbol
   /** The pool associated to this position */
   readonly pool: IAaveV3LendingPool
   /** The id of the position */
   readonly id: IAaveV3LendingPositionId
 
-  // Re-declaring the properties with the correct types
-  readonly type: PositionType
+  // Re-declaring the enum type to fix Zod inferrence issue with enums
   readonly subtype: LendingPositionType
-  readonly debtAmount: ITokenAmount
-  readonly collateralAmount: ITokenAmount
 }
 
 /**
@@ -44,11 +45,6 @@ export const AaveV3LendingPositionDataSchema = z.object({
  * Type for the data part of the IAaveV3Position interface
  */
 export type IAaveV3LendingPositionData = Readonly<z.infer<typeof AaveV3LendingPositionDataSchema>>
-
-/**
- * Type for the parameters of the IAaveV3Position interface
- */
-export type IAaveV3LendingPositionParameters = Omit<IAaveV3LendingPositionData, 'type'>
 
 /**
  * @description Type guard for IAaveV3Position

@@ -4,10 +4,17 @@ import { SDKErrorType } from '../../common/types/SDKErrorType'
 import { SwapErrorType } from '../enums/SwapErrorType'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * @name ISwapError
  * @description Represents a custom error of the SDK for the Swap service
  */
 export interface ISwapError extends ISDKError, ISwapErrorData {
+  /** Signature to differentiate from similar interfaces */
+  readonly [__signature__]: symbol
   readonly type: SDKErrorType.SwapError
   /** Specific error for the swap service */
   readonly subtype: SwapErrorType

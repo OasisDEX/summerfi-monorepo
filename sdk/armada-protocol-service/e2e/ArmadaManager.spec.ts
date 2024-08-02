@@ -2,8 +2,16 @@ import { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import { BlockchainClientProvider } from '@summerfi/blockchain-client-provider'
 import { ConfigurationProvider } from '@summerfi/configuration-provider'
 import { ContractsProvider } from '@summerfi/contracts-provider-service'
-import { Address, ChainFamilyMap, ChainInfo, IUser, Token, TokenAmount } from '@summerfi/sdk-common'
-import { UserMock } from '@summerfi/testing-utils/mocks/UserMock'
+import {
+  Address,
+  ChainFamilyMap,
+  ChainInfo,
+  IUser,
+  Token,
+  TokenAmount,
+  User,
+  Wallet,
+} from '@summerfi/sdk-common'
 import {
   decodeFleetDepositCalldata,
   decodeFleetWithdrawCalldata,
@@ -13,10 +21,12 @@ import { ArmadaManager, ArmadaManagerFactory } from '../src'
 describe('Armada Protocol Service', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Base.Mainnet
 
-  const user: IUser = new UserMock({
+  const user: IUser = User.createFrom({
     chainInfo: chainInfo,
-    walletAddress: Address.createFromEthereum({
-      value: '0xbA2aE424d960c26247Dd6c32edC70B295c744C43',
+    wallet: Wallet.createFrom({
+      address: Address.createFromEthereum({
+        value: '0xbA2aE424d960c26247Dd6c32edC70B295c744C43',
+      }),
     }),
   })
 

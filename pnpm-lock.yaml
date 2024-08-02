@@ -2774,8 +2774,6 @@ importers:
         specifier: ^17.7.2
         version: 17.7.2
 
-  sdk/tools/genStrategyDefinitions/bundle: {}
-
   stacks:
     devDependencies:
       '@summerfi/eslint-config':

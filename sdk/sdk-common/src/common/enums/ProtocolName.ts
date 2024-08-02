@@ -11,6 +11,7 @@ export enum ProtocolName {
   MorphoBlue = 'MorphoBlue',
   Maker = 'Maker',
   Ajna = 'Ajna_rc13',
+  Armada = 'Armada',
 }
 
 /**

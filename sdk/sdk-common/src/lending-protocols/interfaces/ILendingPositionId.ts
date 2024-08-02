@@ -3,12 +3,20 @@ import { IPositionId, PositionIdDataSchema } from '../../common/interfaces/IPosi
 import { PositionType } from '../../common/types/PositionType'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * @name ILendingPositionId
  * @description Represents a position ID for a lending position
  */
 export interface ILendingPositionId extends IPositionId {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_1: 'ILendingPositionId'
+  readonly [__signature__]: symbol
+
+  // Re-declaring the properties to narrow the types
+  readonly type: PositionType.Lending
 }
 
 /**
@@ -16,18 +24,13 @@ export interface ILendingPositionId extends IPositionId {
  */
 export const LendingPositionIdDataSchema = z.object({
   ...PositionIdDataSchema.shape,
-  type: z.custom<PositionType>((val) => val === PositionType.Lending),
+  type: z.literal(PositionType.Lending),
 })
 
 /**
  * Type for the data part of the ILendingPositionId interface
  */
 export type ILendingPositionIdData = Readonly<z.infer<typeof LendingPositionIdDataSchema>>
-
-/**
- * Type for the parameters of the ILendingPositionId interface
- */
-export type ILendingPositionIdParameters = Omit<ILendingPositionIdData, 'type'>
 
 /**
  * @description Type guard for ILendingPositionId

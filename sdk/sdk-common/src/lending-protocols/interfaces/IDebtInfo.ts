@@ -5,6 +5,11 @@ import { IToken, isToken } from '../../common/interfaces/IToken'
 import { ITokenAmount, isTokenAmount } from '../../common/interfaces/ITokenAmount'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * @interface IDebtInfo
  * @description Contains information about a debt token of a lending pool
  *
@@ -13,7 +18,7 @@ import { ITokenAmount, isTokenAmount } from '../../common/interfaces/ITokenAmoun
  */
 export interface IDebtInfo extends IDebtInfoData {
   /** Signature to differentiate from similar interfaces */
-  readonly _signature_0: 'IDebtInfo'
+  readonly [__signature__]: symbol
   /** The token that represents the debt */
   readonly token: IToken
   /** The price of the token in the protocol's default denomination */
@@ -53,11 +58,6 @@ export const DebtInfoDataSchema = z.object({
  * Type for the data part of the IDebtInfo interface
  */
 export type IDebtInfoData = Readonly<z.infer<typeof DebtInfoDataSchema>>
-
-/**
- * Type for the parameters of the IDebtInfo interface
- */
-export type IDebtInfoParameters = Omit<IDebtInfoData, '_signature_1'>
 
 /**
  * @description Type guard for IDebtInfo

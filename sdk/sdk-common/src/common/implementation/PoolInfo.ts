@@ -1,22 +1,34 @@
 import { IPrintable } from '../../common/interfaces/IPrintable'
 import { SerializationService } from '../../services/SerializationService'
-import { IPoolInfo, IPoolInfoParameters } from '../interfaces/IPoolInfo'
+import { IPoolId } from '../interfaces/IPoolId'
+import { IPoolInfo, IPoolInfoData, __signature__ } from '../interfaces/IPoolInfo'
 import { PoolType } from '../types/PoolType'
-import { PoolId } from './PoolId'
+
+/**
+ * Type for the parameters of PoolInfo
+ */
+export type PoolInfoParameters = Omit<IPoolInfoData, 'type' | 'id'>
 
 /**
  * @class PoolInfo
  * @see IPoolInfo
  */
 export abstract class PoolInfo implements IPoolInfo, IPrintable {
-  readonly _signature_0 = 'IPoolInfo'
-  readonly type: PoolType
-  abstract readonly id: PoolId
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
 
-  protected constructor(params: IPoolInfoParameters) {
-    this.type = params.type
+  /** ATTRIBUTES */
+  abstract readonly type: PoolType
+  abstract readonly id: IPoolId
+
+  /** SEALED CONSTRUCTOR */
+  protected constructor(_: PoolInfoParameters) {
+    // Empty on purpose
   }
 
+  /** METHODS */
+
+  /** @see IPrintable.toString */
   toString(): string {
     return `Pool Info: ${this.type} (${this.id.toString()})`
   }

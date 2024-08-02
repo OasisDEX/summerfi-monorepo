@@ -1,6 +1,7 @@
 import { z } from 'zod'
-import { IPrintable, PositionType } from '../../../common'
+
 import { IAddress } from '../../../common/interfaces/IAddress'
+import { IPrintable } from '../../../common/interfaces/IPrintable'
 import {
   ILendingPositionId,
   LendingPositionIdDataSchema,
@@ -11,6 +12,11 @@ import {
 } from '../enums/ExrternalLendingPositionType'
 
 /**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
+
+/**
  * @interface IExternalPositionId
  * @description Identifier for an external position to the Summer system
  */
@@ -19,16 +25,13 @@ export interface IExternalLendingPositionId
     ILendingPositionId,
     IPrintable {
   /** Signature used to differentiate it from similar interfaces */
-  readonly _signature_2: 'IExternalLendingPositionId'
+  readonly [__signature__]: symbol
   /** Type of the position */
   readonly externalType: ExternalLendingPositionType
   /** Address of the owner of the position */
   readonly address: IAddress
   /** ID of the lending protocol */
   readonly protocolId: ILendingPositionId
-
-  // Re-declare the narrowed type
-  readonly type: PositionType
 }
 
 /**
@@ -47,11 +50,6 @@ export const ExternalLendingPositionIdDataSchema = z.object({
 export type IExternalLendingPositionIdData = Readonly<
   z.infer<typeof ExternalLendingPositionIdDataSchema>
 >
-
-/**
- * Type for the parameters of the IExternalPositionId interface
- */
-export type IExternalLendingPositionIdParameters = Omit<IExternalLendingPositionIdData, 'type'>
 
 /**
  * @description Type guard for IExternalPositionId

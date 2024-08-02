@@ -1,25 +1,38 @@
 import { LendingPool } from '@summerfi/sdk-common/lending-protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
-import { ISparkLendingPool, ISparkLendingPoolParameters } from '../interfaces/ISparkLendingPool'
+import {
+  ISparkLendingPool,
+  ISparkLendingPoolData,
+  __signature__,
+} from '../interfaces/ISparkLendingPool'
 import { SparkLendingPoolId } from './SparkLendingPoolId'
+
+/**
+ * Type for the parameters of SparkLendingPool
+ */
+export type SparkLendingPoolParameters = Omit<ISparkLendingPoolData, 'type'>
 
 /**
  * @class SparkLendingPool
  * @see ISparkLendingPool
  */
 export class SparkLendingPool extends LendingPool implements ISparkLendingPool {
-  readonly _signature_2 = 'ISparkLendingPool'
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
 
+  /** ATTRIBUTES */
   readonly id: SparkLendingPoolId
 
-  private constructor(params: ISparkLendingPoolParameters) {
-    super(params)
-
-    this.id = SparkLendingPoolId.createFrom(params.id)
+  /** FACTORY */
+  public static createFrom(params: SparkLendingPoolParameters): SparkLendingPool {
+    return new SparkLendingPool(params)
   }
 
-  public static createFrom(params: ISparkLendingPoolParameters): SparkLendingPool {
-    return new SparkLendingPool(params)
+  /** SEALED CONSTRUCTOR */
+  private constructor(params: SparkLendingPoolParameters) {
+    super(params)
+
+    this.id = params.id
   }
 }
 
