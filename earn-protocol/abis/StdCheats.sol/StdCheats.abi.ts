@@ -1,0 +1,1 @@
+export const StdCheatsAbi = [] as const
