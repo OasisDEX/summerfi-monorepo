@@ -9,7 +9,7 @@ import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
 import { IUser } from '@summerfi/sdk-common/user'
 
 /**
- * Type for the parameters of RefinanceSimulation
+ * Type for the parameters of ArmadaSimulation
  */
 export type ArmadaSimulationParameters = Omit<IArmadaSimulationData, 'type'>
 

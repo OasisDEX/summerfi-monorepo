@@ -7,7 +7,7 @@ import { Protocol, ProtocolName } from '@summerfi/sdk-common/common'
 import { SerializationService } from '@summerfi/sdk-common/services'
 
 /**
- * Type for the parameters MorphoProtocol
+ * Type for the parameters of the ArmadaProtocol
  */
 export type ArmadaProtocolParameters = Omit<IArmadaProtocolData, 'name'>
 
