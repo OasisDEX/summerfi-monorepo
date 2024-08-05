@@ -162,6 +162,9 @@ importers:
       '@summerfi/app-icons':
         specifier: workspace:*
         version: link:../../packages/app-icons
+      '@summerfi/app-tos':
+        specifier: workspace:*
+        version: link:../../packages/app-tos
       '@summerfi/app-types':
         specifier: workspace:*
         version: link:../../packages/app-types
@@ -180,6 +183,9 @@ importers:
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared
+      '@summerfi/summer-protocol-db':
+        specifier: workspace:*
+        version: link:../../packages/summer-protocol-db
       '@tabler/icons-react':
         specifier: ^3.11.0
         version: 3.11.0(react@18.3.1)

@@ -16,7 +16,7 @@ let cacheExpirationTime: number | undefined
  * This function fetches the remote configuration data and caches it for a specified duration. If the cached configuration is still valid,
  * it returns the cached configuration instead of fetching it again. If the fetch operation fails, it throws an error.
  */
-export async function getRemoteConfigWithCache(cacheTime = 0): Promise<Partial<AppConfigType>> {
+async function getRemoteConfigWithCache(cacheTime = 0): Promise<Partial<AppConfigType>> {
   if (cachedConfig && cacheExpirationTime && Date.now() < cacheExpirationTime) {
     return cachedConfig
   }
@@ -33,7 +33,7 @@ export async function getRemoteConfigWithCache(cacheTime = 0): Promise<Partial<A
   return configResponse
 }
 
-export const configCacheTime = {
+const configCacheTime = {
   frontend: 60 * 2, // 2 minutes
   backend: 60 * 5, // 5 minutes
 }
@@ -45,7 +45,7 @@ export const configCacheTime = {
  * @param rpcBase - The RPC Base string.
  * @returns The RPC node URL or undefined if the network is not supported.
  */
-export function resolveRpcGatewayUrl(
+function resolveRpcGatewayUrl(
   network: NetworkNames,
   rpcConfig: AppConfigType['rpcConfig'],
   rpcBase: string,
@@ -74,7 +74,7 @@ export function resolveRpcGatewayUrl(
  * @returns The base URL for the RPC gateway.
  * @throws If the RPC Gateway URL is not defined.
  */
-export function getRpcGatewayBaseUrl() {
+function getRpcGatewayBaseUrl() {
   const rpcGatewayUrl = process.env.RPC_GATEWAY
 
   if (!rpcGatewayUrl) {
@@ -91,7 +91,7 @@ export function getRpcGatewayBaseUrl() {
  * @throws If the RPC config is not defined.
  * @returns The RPC gateway URL.
  */
-export async function getRpcGatewayUrl(networkName: NetworkNames) {
+async function getRpcGatewayUrl(networkName: NetworkNames) {
   const { rpcConfig } = await getRemoteConfigWithCache(1000 * configCacheTime.backend)
   const rpcBase = getRpcGatewayBaseUrl()
 
