@@ -96,6 +96,7 @@ export async function getRpcGatewayUrl(networkName: NetworkNames) {
   const rpcBase = getRpcGatewayBaseUrl()
 
   if (!rpcConfig) {
+    // eslint-disable-next-line no-console
     console.warn('RPC Config not defined')
 
     return undefined
