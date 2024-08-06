@@ -30,9 +30,6 @@ runs:
     - name: Build with pnpm
       shell: bash
       run: pnpm build:sdk
-      env:
-        CONFIG_URL: ${{ secrets.CONFIG_URL }}
-        CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
 
     - name: Publish package with pnpm
       shell: bash
