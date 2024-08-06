@@ -29,6 +29,10 @@ export const fetchRisk = async ({
     // eslint-disable-next-line no-console
     console.error('Risk request failed. Please reload page or contact with support', error)
 
+    if (error instanceof Error) {
+      return { error: `Failed to fetch risk status: ${error.message}. Please try again later.` }
+    }
+
     return { error: 'Failed to fetch risk status. Please try again later.' }
   }
 }

@@ -23,12 +23,19 @@ export const createRiskForAddress = async ({
   address: string
   isRisky: boolean
 }) => {
-  return await db
-    .insertInto('walletRisk')
-    .values({
-      address: address.toLowerCase(),
-      isRisky,
-      lastCheck: new Date(),
-    })
-    .execute()
+  try {
+    return await db
+      .insertInto('walletRisk')
+      .values({
+        address: address.toLowerCase(),
+        isRisky,
+        lastCheck: new Date(),
+      })
+      .execute()
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to insert risk entry:', error)
+
+    throw error
+  }
 }

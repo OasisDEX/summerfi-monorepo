@@ -20,7 +20,13 @@ async function getRemoteConfigWithCache(cacheTime = 0): Promise<Partial<AppConfi
   if (cachedConfig && cacheExpirationTime && Date.now() < cacheExpirationTime) {
     return cachedConfig
   }
-  const configResponse = await configFetcher()
+  let configResponse
+
+  try {
+    configResponse = await configFetcher()
+  } catch (e) {
+    throw new Error('Failed to fetch config data')
+  }
 
   if (!configResponse) {
     throw new Error('Error fetching config data')
@@ -78,8 +84,7 @@ function getRpcGatewayBaseUrl() {
   const rpcGatewayUrl = process.env.RPC_GATEWAY
 
   if (!rpcGatewayUrl) {
-    // eslint-disable-next-line no-console
-    console.warn('RPC Gateway URL is not defined')
+    throw new Error('RPC Gateway URL is not defined')
   }
 
   return `${rpcGatewayUrl}`
@@ -92,17 +97,18 @@ function getRpcGatewayBaseUrl() {
  * @returns The RPC gateway URL.
  */
 async function getRpcGatewayUrl(networkName: NetworkNames) {
-  const { rpcConfig } = await getRemoteConfigWithCache(1000 * configCacheTime.backend)
-  const rpcBase = getRpcGatewayBaseUrl()
+  try {
+    const { rpcConfig } = await getRemoteConfigWithCache(1000 * configCacheTime.backend)
+    const rpcBase = getRpcGatewayBaseUrl()
 
-  if (!rpcConfig) {
-    // eslint-disable-next-line no-console
-    console.warn('RPC Config not defined')
+    if (!rpcConfig) {
+      throw new Error('Failed to retrieve RPC config or base URL')
+    }
 
+    return resolveRpcGatewayUrl(networkName, rpcConfig, rpcBase)
+  } catch (e) {
     return undefined
   }
-
-  return resolveRpcGatewayUrl(networkName, rpcConfig, rpcBase)
 }
 
 /**

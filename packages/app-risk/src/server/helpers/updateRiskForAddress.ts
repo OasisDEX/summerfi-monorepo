@@ -12,6 +12,7 @@ import type { RiskRequiredDB } from '@/types'
  * @param address - The address to update the risk record for.
  * @param isRisky - The new risk status to be set.
  * @returns A promise that resolves to the result of the update operation.
+ * @throws Will throw an error if the database operation fails.
  */
 export const updateRiskForAddress = async ({
   db,
@@ -22,13 +23,15 @@ export const updateRiskForAddress = async ({
   address: string
   isRisky: boolean
 }) => {
+  const lowerCaseAddress = address.toLowerCase()
+
   return await db
     .updateTable('walletRisk')
     .set({
-      address: address.toLowerCase(),
+      address: lowerCaseAddress,
       isRisky,
       lastCheck: new Date(),
     })
-    .where('address', '=', address.toLowerCase())
+    .where('address', '=', lowerCaseAddress)
     .execute()
 }

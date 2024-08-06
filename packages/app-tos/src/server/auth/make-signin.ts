@@ -67,7 +67,7 @@ export async function makeSignIn({
       algorithms: ['HS512'],
     }) as JWTChallenge
   } catch (e) {
-    throw new Error('Challenge not correct')
+    return NextResponse.json({ error: 'Invalid challenge' }, { status: 400 })
   }
 
   const rpcUrl = getRpcGatewayEndpoint(rpcGateway, body.chainId, rpcConfig)
@@ -99,14 +99,14 @@ export async function makeSignIn({
   }
 
   if (isGnosisSafe || isArgentWallet) {
-    if (
-      !(await isValidSignature({
-        client,
-        address: challenge.address,
-        message,
-        signature: body.signature as Address,
-      }))
-    ) {
+    const isValid = await isValidSignature({
+      client,
+      address: challenge.address,
+      message,
+      signature: body.signature as Address,
+    })
+
+    if (!isValid) {
       throw new Error('Signature not correct - eip1271')
     }
   } else {
@@ -121,14 +121,14 @@ export async function makeSignIn({
       if (!isOwner) {
         // it might be a wallet connect + safe, no way to check
         // that during connect/sign so im checking that here
-        if (
-          !(await isValidSignature({
-            client,
-            address: challenge.address,
-            message,
-            signature: body.signature as Address,
-          }))
-        ) {
+        const isValid = await isValidSignature({
+          client,
+          address: challenge.address,
+          message,
+          signature: body.signature as Address,
+        })
+
+        if (!isValid) {
           throw new Error('Signature not correct - personal sign')
         }
       }

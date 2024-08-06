@@ -24,7 +24,7 @@ const AccountKitFeatures = () => {
     async (data: string) => {
       return await signer?.signMessage(data)
     },
-    [user?.address],
+    [signer],
   )
 
   const [openModal, setOpenModal] = useState(false)

@@ -55,7 +55,7 @@ export async function getTos<DB extends TOSRequiredDB>({
   const tos = await resolvedDB
     .selectFrom('tosApproval')
     .where(({ eb, and }) => and([eb('address', '=', walletAddress.toLowerCase())]))
-    .selectAll()
+    .select('docVersion')
     .execute()
 
   if (tos.length === 0) {

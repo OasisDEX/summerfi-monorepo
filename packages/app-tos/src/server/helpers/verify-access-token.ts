@@ -22,6 +22,9 @@ export function verifyAccessToken({
   try {
     return jwt.verify(token, jwtSecret) as JwtPayload
   } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to verify access token', error)
+
     return null
   }
 }
