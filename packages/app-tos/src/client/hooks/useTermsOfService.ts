@@ -4,7 +4,7 @@ import { type TOSState, TOSStatus } from '@summerfi/app-types'
 
 import { acceptanceStep } from '@/client/helpers/acceptance-step'
 import { signatureStep } from '@/client/helpers/signature-step'
-import { verifyTermsOfServiceAcceptance } from '@/tos/verify-terms-of-service-acceptance'
+import { verifyTermsOfServiceAcceptance } from '@/client/helpers/verify-terms-of-service-acceptance'
 import { type TOSInput } from '@/types'
 
 /**

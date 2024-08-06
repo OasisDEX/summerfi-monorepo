@@ -143,7 +143,7 @@ export async function makeSignIn({
   }
   const token = jwt.sign(userJwtPayload, jwtSecret, { algorithm: 'HS512' })
 
-  const response = NextResponse.json({ success: true }, { status: 200 })
+  const response = NextResponse.json({ jwt: token })
 
   const commonPayload: ResponseCookie = {
     name: `token-${challenge.address.toLowerCase()}`,

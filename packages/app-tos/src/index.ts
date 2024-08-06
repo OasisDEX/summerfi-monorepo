@@ -1,3 +1,6 @@
+/**
+ * Client
+ */
 export { useTermsOfService } from '@/client/hooks/useTermsOfService'
 
 export type { TOSSignMessage, TOSInput, TOSRequestContext } from '@/types'

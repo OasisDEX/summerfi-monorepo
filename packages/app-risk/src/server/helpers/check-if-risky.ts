@@ -1,0 +1,39 @@
+import { getTrmRisk } from '@/server/helpers/get-trm-risk'
+
+/**
+ * Check if an address is flagged using TRM risk assessment.
+ *
+ * @param address - The address to be checked for risk.
+ * @param apiKey - The API key for accessing the TRM risk assessment service.
+ * @returns A promise that resolves to a boolean indicating whether the address is risky.
+ *
+ * @remarks
+ * This function uses the TRM risk assessment service to check if a given address is associated with any risk indicators.
+ * If the address has risk indicators with a total volume greater than 0 USD, it is considered risky.
+ * The function logs the TRM response data for auditing purposes and handles any errors that may occur during the process.
+ * If an error occurs during the TRM check, it logs the error and rethrows it.
+ */
+export const checkIfRisky = async ({ address, apiKey }: { address: string; apiKey: string }) => {
+  try {
+    const trmData = await getTrmRisk({ address, apiKey })
+
+    try {
+      console.info(`TRM_LOG ${address} check, payload ${JSON.stringify(trmData)}`)
+    } catch (ex) {
+      console.error('TRM_LOG logging failed', ex)
+    }
+
+    if (!trmData.addressRiskIndicators.length) {
+      return false
+    }
+
+    return trmData.addressRiskIndicators
+      .map((indicator) => Number(indicator.totalVolumeUsd) > 0)
+      .includes(true)
+  } catch (ex) {
+    console.error(`TRM_LOG ${address} check failed`)
+    console.error(ex)
+
+    throw ex
+  }
+}
