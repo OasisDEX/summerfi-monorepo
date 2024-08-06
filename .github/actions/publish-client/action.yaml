@@ -23,6 +23,10 @@ runs:
       shell: bash
       run: pnpm i
 
+    - name: Prebuild with pnpm
+      shell: bash
+      run: pnpm prebuild
+
     - name: Build with pnpm
       shell: bash
       run: pnpm build:sdk
