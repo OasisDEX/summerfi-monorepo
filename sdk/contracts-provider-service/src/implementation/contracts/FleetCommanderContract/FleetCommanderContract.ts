@@ -1,14 +1,13 @@
 import { IBlockchainClient } from '@summerfi/blockchain-client-common'
 import {
-  IErc20Contract,
   IErc4626Contract,
-  IFleetCommanderContract,
+  IFleetCommanderContract
 } from '@summerfi/contracts-provider-common'
-import { IAddress, IChainInfo, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
+import { IAddress, IChainInfo } from '@summerfi/sdk-common'
 import { ContractWrapper } from '../ContractWrapper'
 
-import { FleetCommanderAbi } from '@summerfi/armada-protocol-abis'
 import { Erc4626Contract } from '../Erc4626Contract/Erc4626Contract'
+import { FleetCommanderAbi } from './FleetAcommanderAbi'
 
 /**
  * @name FleetCommanderContract
@@ -61,6 +60,13 @@ export class FleetCommanderContract<
   }
 
   /** PUBLIC */
+
+  async arks(): Promise<IAddress[]> {
+    const arksAddresses: IAddress[]
+    let arkIndex = 0
+    do {
+      const arkAddress = this.contract.read.arks()
+  }
 
   /** @see IFleetCommanderContract.deposit */
   async deposit(params: { assets: ITokenAmount; receiver: IAddress }): Promise<TransactionInfo> {

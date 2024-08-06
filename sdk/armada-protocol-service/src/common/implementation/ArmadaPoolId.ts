@@ -5,7 +5,7 @@ import {
   __iarmadapoolid__,
 } from '@summerfi/armada-protocol-common'
 import { IAddress, PoolId } from '@summerfi/sdk-common'
-import { PoolType } from '@summerfi/sdk-common/common'
+import { IChainInfo, PoolType } from '@summerfi/sdk-common/common'
 import { SerializationService } from '@summerfi/sdk-common/services'
 
 /**
@@ -23,7 +23,8 @@ export class ArmadaPoolId extends PoolId implements IArmadaPoolId {
 
   /** ATTRIBUTES */
   readonly type = PoolType.Armada
-  readonly fleet: IAddress
+  readonly chainInfo: IChainInfo
+  readonly fleetAddress: IAddress
   readonly protocol: IArmadaProtocol
 
   /** FACTORY */
@@ -35,7 +36,8 @@ export class ArmadaPoolId extends PoolId implements IArmadaPoolId {
   private constructor(params: ArmadaPoolIdParameters) {
     super(params)
 
-    this.fleet = params.fleet
+    this.chainInfo = params.chainInfo
+    this.fleetAddress = params.fleetAddress
     this.protocol = params.protocol
   }
 }

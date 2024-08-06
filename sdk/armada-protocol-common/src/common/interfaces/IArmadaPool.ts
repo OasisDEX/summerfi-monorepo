@@ -36,11 +36,6 @@ export const ArmadaPoolDataSchema = z.object({
 export type IArmadaPoolData = Readonly<z.infer<typeof ArmadaPoolDataSchema>>
 
 /**
- * Type for the parameters of the IArmadaPool interface
- */
-export type IArmadaPoolParameters = Omit<IArmadaPoolData, 'type'>
-
-/**
  * @description Type guard for IArmadaPool
  * @param maybeArmadaPool Object to be checked
  * @returns true if the object is a IArmadaPool

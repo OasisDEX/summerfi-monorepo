@@ -533,7 +533,7 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.12.7)
 
-  earn-protocol/abis:
+  armada-protocol/abis:
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -1514,7 +1514,7 @@ importers:
         version: link:../abi-provider-common
       '@summerfi/armada-protocol-abis':
         specifier: workspace:*
-        version: link:../../earn-protocol/abis
+        version: link:../../armada-protocol/abis
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
@@ -1832,7 +1832,7 @@ importers:
         version: link:../abi-provider-common
       '@summerfi/armada-protocol-abis':
         specifier: workspace:*
-        version: link:../../earn-protocol/abis
+        version: link:../../armada-protocol/abis
       '@summerfi/blockchain-client-common':
         specifier: workspace:*
         version: link:../blockchain-client-common

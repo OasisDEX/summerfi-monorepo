@@ -1,11 +1,16 @@
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
+import { ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
 
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
-import { IArmadaManager } from '@summerfi/armada-protocol-common'
+import {
+  IArmadaManager,
+  IArmadaPool,
+  IArmadaPoolId,
+  IArmadaPoolInfo,
+} from '@summerfi/armada-protocol-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
-import { IAddress, IChainInfo, ITokenAmount } from '@summerfi/sdk-common/common'
-import { TransactionInfo } from '@summerfi/sdk-common/orders'
-import { IUser } from '@summerfi/sdk-common/user'
+import { ArmadaPool } from './ArmadaPool'
+import { ArmadaPoolInfo } from './ArmadaPoolInfo'
 
 /**
  * @name ArmadaManager
@@ -27,12 +32,41 @@ export class ArmadaManager implements IArmadaManager {
     this._contractsProvider = params.contractsProvider
   }
 
-  /** FUNCTIONS */
+  /** POOLS */
+
+  /** @see IArmadaManager.getPool */
+  async getPool(params: { poolId: IArmadaPoolId }): Promise<IArmadaPool> {
+    // TODO: probably the Pool data type should contain all the pool info directly, and the ID
+    // TODO: is the one that gets passed around
+    return ArmadaPool.createFrom({
+      id: params.poolId,
+    })
+  }
+
+  /** @see IArmadaManager.getPoolInfo */
+  getPoolInfo(params: { poolId: IArmadaPoolId }): Promise<IArmadaPoolInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.poolId.chainInfo,
+      address: params.poolId.fleetAddress,
+    })
+
+    const fleetERC4626Contract = fleetContract.asErc4626()
+
+    const depositCap = await fleetERC4626Contract.
+    
+    return ArmadaPoolInfo.createFrom({
+      id: params.poolId,
+      depositCap: await fleetContract.depositCap(),
+      withdrawCap: await fleetContract.withdrawCap(),
+      maxWithdrawFromBuffer: await fleetContract.maxWithdrawFromBuffer(),
+    })
+  }
+
+  /** TRANSACTIONS */
 
   /** @see IArmadaManager.deposit */
-  async deposit(params: {
-    chainInfo: IChainInfo
-    fleetAddress: IAddress
+  async getDepositTX(params: {
+    poolId: IArmadaPoolId
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
@@ -40,8 +74,8 @@ export class ArmadaManager implements IArmadaManager {
 
     // Approval
     const approvalTransaction = await this._allowanceManager.getApproval({
-      chainInfo: params.chainInfo,
-      spender: params.fleetAddress,
+      chainInfo: params.poolId.chainInfo,
+      spender: params.poolId.fleetAddress,
       amount: params.amount,
     })
     if (approvalTransaction) {
@@ -50,8 +84,8 @@ export class ArmadaManager implements IArmadaManager {
 
     // Deposit
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.chainInfo,
-      address: params.fleetAddress,
+      chainInfo: params.poolId.chainInfo,
+      address: params.poolId.fleetAddress,
     })
 
     const fleetDepositTransaction = await fleetContract.deposit({
@@ -65,15 +99,14 @@ export class ArmadaManager implements IArmadaManager {
   }
 
   /** @see IArmadaManager.withdraw */
-  async withdraw(params: {
-    chainInfo: IChainInfo
-    fleetAddress: IAddress
+  async getWithdrawTX(params: {
+    poolId: IArmadaPoolId
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.chainInfo,
-      address: params.fleetAddress,
+      chainInfo: params.poolId.chainInfo,
+      address: params.poolId.fleetAddress,
     })
 
     const fleetWithdrawTransaction = await fleetContract.withdraw({

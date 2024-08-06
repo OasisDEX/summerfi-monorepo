@@ -9,4 +9,4 @@ packages:
   - 'external-api/**'
   - '!**/test/**'
   - '!**/.sst/**'
-  - 'earn-protocol/abis'
+  - 'armada-protocol/abis'

@@ -10,6 +10,12 @@ export type { IArmadaPoolId, IArmadaPoolIdData } from './IArmadaPoolId'
 export { ArmadaPoolInfoDataSchema, __signature__ as __iarmadapoolinfo__ } from './IArmadaPoolInfo'
 export type { IArmadaPoolInfo, IArmadaPoolInfoData } from './IArmadaPoolInfo'
 export {
+  ArmadaPoolInfoDataSchema,
+  __signature__ as __iarmadapoolinfo__,
+  isArmadaPoolInfo,
+} from './IArmadaPoolInfo'
+export type { IArmadaPoolInfo, IArmadaPoolInfoData } from './IArmadaPoolInfo'
+export {
   ArmadaPositionDataSchema,
   __signature__ as __iarmadaposition__,
   isArmadaPosition,

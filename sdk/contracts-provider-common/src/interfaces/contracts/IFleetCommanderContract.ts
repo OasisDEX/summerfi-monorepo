@@ -9,6 +9,41 @@ import { IErc4626Contract } from './IErc4626Contract'
  */
 export interface IFleetCommanderContract extends IContractWrapper {
   /** READ METHODS */
+
+  /**
+   * @name arks
+   * @description Returns the list of available arks
+   */
+  arks(): Promise<IAddress[]>
+
+  /**
+   * @name depositCap
+   * @description Returns the deposit cap of the fleet, this is the maximum amount of assets that
+   *              the fleet can manage, and therefore the maximum amount of assets that can be deposited
+   *              in total by all users
+   */
+  depositCap(): Promise<ITokenAmount>
+
+  /**
+   * @name maxDeposit
+   * @description Returns the maximum amount of assets that a user can deposit in the fleet at
+   *              the current moment
+   */
+  maxDeposit(params: { user: IAddress }): Promise<ITokenAmount>
+
+  /**
+   * @name maxWithdraw
+   * @description Returns the maximum amount of assets that a user can withdraw from the fleet at
+   *              the current moment
+   */
+  maxWithdraw(params: { user: IAddress }): Promise<ITokenAmount>
+
+  /**
+   * @name balanceOf
+   * @description Returns the total amount of shares owned by a user
+   */
+  balanceOf(params: { user: IAddress }): Promise<ITokenAmount>
+
   /** WRITE METHODS */
 
   /**

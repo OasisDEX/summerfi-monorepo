@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-const pathToAbiFolder = path.resolve(__dirname, '../earn-protocol/abis/src')
+const pathToAbiFolder = path.resolve(__dirname, '../armada-protocol/abis/src')
 // read all folders in the path with specific suffix name
 const folderNameList = fs.readdirSync(pathToAbiFolder).filter((path) => path.endsWith('.sol'))
 
