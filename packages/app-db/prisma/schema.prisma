@@ -351,3 +351,11 @@ enum AjnaRewardsPositionType {
 
   @@map("ajna_rewards_position_type")
 }
+
+model RaysDailyChallenge {
+  id             Int               @id @default(autoincrement())
+  address        String            @unique
+  claimed_dates  String[]
+
+  @@map("rays_daily_challenge")
+}
