@@ -7,10 +7,13 @@ import {
   IArmadaPool,
   IArmadaPoolId,
   IArmadaPoolInfo,
+  IArmadaPosition,
 } from '@summerfi/armada-protocol-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import { ArmadaPool } from './ArmadaPool'
 import { ArmadaPoolInfo } from './ArmadaPoolInfo'
+import { ArmadaPosition } from './ArmadaPosition'
+import { ArmadaPositionId } from './ArmadaPositionId'
 
 /**
  * @name ArmadaManager
@@ -44,27 +47,54 @@ export class ArmadaManager implements IArmadaManager {
   }
 
   /** @see IArmadaManager.getPoolInfo */
-  getPoolInfo(params: { poolId: IArmadaPoolId }): Promise<IArmadaPoolInfo> {
+  async getPoolInfo(params: { poolId: IArmadaPoolId }): Promise<IArmadaPoolInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.poolId.chainInfo,
       address: params.poolId.fleetAddress,
     })
 
     const fleetERC4626Contract = fleetContract.asErc4626()
+    const fleetERC20Contract = fleetERC4626Contract.asErc20()
 
-    const depositCap = await fleetERC4626Contract.
-    
+    const depositCap = await fleetContract.depositCap()
+    const totalDeposits = await fleetERC4626Contract.totalAssets()
+    const totalShares = await fleetERC20Contract.totalSupply()
+
     return ArmadaPoolInfo.createFrom({
       id: params.poolId,
-      depositCap: await fleetContract.depositCap(),
-      withdrawCap: await fleetContract.withdrawCap(),
-      maxWithdrawFromBuffer: await fleetContract.maxWithdrawFromBuffer(),
+      depositCap: depositCap,
+      totalDeposits: totalDeposits,
+      totalShares: totalShares,
+    })
+  }
+
+  /** POSITIONS */
+
+  /** @see IArmadaManager.getPosition */
+  async getPosition(params: { poolId: IArmadaPoolId; user: IUser }): Promise<IArmadaPosition> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.poolId.chainInfo,
+      address: params.poolId.fleetAddress,
+    })
+
+    const fleetERC4626Contract = fleetContract.asErc4626()
+    const fleetERC20Contract = fleetERC4626Contract.asErc20()
+
+    const userShares = await fleetERC20Contract.balanceOf({ address: params.user.wallet.address })
+    const userAssets = await fleetERC4626Contract.convertToAssets({ amount: userShares })
+
+    return ArmadaPosition.createFrom({
+      id: ArmadaPositionId.createFrom({
+        id: 'ArmadaPosition',
+        user: params.user,
+      }),
+      amount: userAssets,
     })
   }
 
   /** TRANSACTIONS */
 
-  /** @see IArmadaManager.deposit */
+  /** @see IArmadaManager.getDepositTX */
   async getDepositTX(params: {
     poolId: IArmadaPoolId
     user: IUser
@@ -98,7 +128,7 @@ export class ArmadaManager implements IArmadaManager {
     return transactions
   }
 
-  /** @see IArmadaManager.withdraw */
+  /** @see IArmadaManager.getWithdrawTX */
   async getWithdrawTX(params: {
     poolId: IArmadaPoolId
     user: IUser

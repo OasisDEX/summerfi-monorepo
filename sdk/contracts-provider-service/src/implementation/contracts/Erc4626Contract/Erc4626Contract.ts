@@ -93,6 +93,19 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
     })
   }
 
+  /** @see IErc4626Contract.convertToAssets */
+  async convertToAssets(params: { amount: ITokenAmount }): Promise<ITokenAmount> {
+    const token = await this.asset()
+    const assetsAmount = await this.contract.read.convertToAssets([
+      BigInt(params.amount.toBaseUnit()),
+    ])
+
+    return TokenAmount.createFromBaseUnit({
+      token,
+      amount: String(assetsAmount),
+    })
+  }
+
   /** WRITE METHODS */
 
   /** @see IErc4626Contract.deposit */

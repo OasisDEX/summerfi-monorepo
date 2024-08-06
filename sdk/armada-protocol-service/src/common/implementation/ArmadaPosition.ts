@@ -11,7 +11,7 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 /**
  * Type for the parameters of ArmadaPosition
  */
-export type ArmadaPositionParameters = Omit<IArmadaPositionData, ''>
+export type ArmadaPositionParameters = Omit<IArmadaPositionData, 'type'>
 
 /**
  * @class ArmadaPosition

@@ -24,8 +24,8 @@ export class ArmadaPoolInfo extends PoolInfo implements IArmadaPoolInfo {
   readonly type = PoolType.Armada
   readonly id: IArmadaPoolId
   readonly depositCap: ITokenAmount
-  readonly withdrawCap: ITokenAmount
-  readonly maxWithdrawFromBuffer: ITokenAmount
+  readonly totalDeposits: ITokenAmount
+  readonly totalShares: ITokenAmount
 
   /** FACTORY */
   static createFrom(params: ArmadaPoolInfoParameters): ArmadaPoolInfo {
@@ -38,8 +38,8 @@ export class ArmadaPoolInfo extends PoolInfo implements IArmadaPoolInfo {
 
     this.id = params.id
     this.depositCap = params.depositCap
-    this.withdrawCap = params.withdrawCap
-    this.maxWithdrawFromBuffer = params.maxWithdrawFromBuffer
+    this.totalDeposits = params.totalDeposits
+    this.totalShares = params.totalShares
   }
 }
 

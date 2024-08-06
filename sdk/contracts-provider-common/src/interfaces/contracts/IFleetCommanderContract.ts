@@ -38,12 +38,6 @@ export interface IFleetCommanderContract extends IContractWrapper {
    */
   maxWithdraw(params: { user: IAddress }): Promise<ITokenAmount>
 
-  /**
-   * @name balanceOf
-   * @description Returns the total amount of shares owned by a user
-   */
-  balanceOf(params: { user: IAddress }): Promise<ITokenAmount>
-
   /** WRITE METHODS */
 
   /**

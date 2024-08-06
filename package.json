@@ -34,7 +34,7 @@
     "format:fix": "prettier --write \"./**/*.{ts,tsx,js,jsx,json}\"",
     "coverage:total": "node scripts/coverage-report/GenerateCoverageReport.js",
     "install:armada": "git submodule update --init armada-protocol/contracts && cd armada-protocol/contracts && pnpm i",
-    "build:aramda": "cd armada-protocol/contracts && pnpm build && cp -r packages/core-contracts/out/*.sol ../abis/src && cd ../.. && tsx ./scripts/transform-json-to-viem-abi.ts && cd armada-protocol/abis && pnpm genindex && pnpm build"
+    "build:armada": "cd armada-protocol/contracts && pnpm build && cp -r packages/core-contracts/out/*.sol ../abis/src && cd ../.. && tsx ./scripts/transform-json-to-viem-abi.ts && cd armada-protocol/abis && pnpm genindex && pnpm build"
   },
   "devDependencies": {
     "@graphql-codegen/add": "^5.0.2",

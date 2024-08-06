@@ -24,10 +24,10 @@ export interface IArmadaPoolInfo extends IPoolInfo, IArmadaPoolInfoData {
   readonly id: IArmadaPoolId
   /** Maximum amount that can be deposited into the pool at this moment */
   readonly depositCap: ITokenAmount
-  /** Maximum amount that can be withdrawn from the pool at this moment for a forced withdraw operation */
-  readonly withdrawCap: ITokenAmount
-  /** Maximum amount that can be withdrawn from the pool's buffer at this moment, this is, without a force withdraw */
-  readonly maxWithdrawFromBuffer: ITokenAmount
+  /** Total amount of assets currently deposited in the pool */
+  readonly totalDeposits: ITokenAmount
+  /** Total amount of shares currently minted in the pool */
+  readonly totalShares: ITokenAmount
 
   // Re-declaring the properties to narrow the types
   readonly type: PoolType.Armada
@@ -40,8 +40,8 @@ export const ArmadaPoolInfoDataSchema = z.object({
   ...PoolInfoDataSchema.shape,
   id: z.custom<IArmadaPoolId>((val) => isArmadaPoolId(val)),
   depositCap: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
-  withdrawCap: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
-  maxWithdrawFromBuffer: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  totalDeposits: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  totalShares: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   type: z.literal(PoolType.Armada),
 })
 
