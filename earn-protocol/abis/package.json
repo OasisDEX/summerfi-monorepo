@@ -1,0 +1,30 @@
+{
+  "name": "@summerfi/armada-protocol-abis",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "types": "./src/index.d.ts"
+    },
+    "./*": {
+      "import": "./dist/*/index.js",
+      "types": "./dist/*/index.d.ts"
+    }
+  },
+  "scripts": {
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "e2e": "jest e2e/",
+    "testw": "jest --watch",
+    "build": "tsc -b tsconfig.build.json",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "genindex": "rm -f src/index.ts && for dir in ./src/*; do cti create ./$dir -b -w > /dev/null; done && cti ./src -b -w -e '.t.sol' -e 'build-info'"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*"
+  }
+}

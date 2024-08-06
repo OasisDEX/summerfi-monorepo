@@ -1,7 +1,7 @@
-import path from 'path'
 import fs from 'fs'
+import path from 'path'
 
-const pathToAbiFolder = path.resolve(__dirname, '../earn-protocol/abis')
+const pathToAbiFolder = path.resolve(__dirname, '../earn-protocol/abis/src')
 // read all folders in the path with specific suffix name
 const folderNameList = fs.readdirSync(pathToAbiFolder).filter((path) => path.endsWith('.sol'))
 
@@ -13,7 +13,7 @@ folderNameList.forEach((folderName) => {
   const fileNameList = fs.readdirSync(folderPath)
   // iterate over all files in the folder
   fileNameList.forEach((fileName) => {
-    if (fileName.endsWith('.abi.ts')) {
+    if (fileName.endsWith('.abi.ts') || fileName === 'index.ts') {
       return
     }
     // get the path to the json file
