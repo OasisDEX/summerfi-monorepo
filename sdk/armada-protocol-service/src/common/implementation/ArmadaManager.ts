@@ -1,9 +1,11 @@
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import { IAddress, IChainInfo, ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
 
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import { IArmadaManager } from '@summerfi/armada-protocol-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
+import { IAddress, IChainInfo, ITokenAmount } from '@summerfi/sdk-common/common'
+import { TransactionInfo } from '@summerfi/sdk-common/orders'
+import { IUser } from '@summerfi/sdk-common/user'
 
 /**
  * @name ArmadaManager

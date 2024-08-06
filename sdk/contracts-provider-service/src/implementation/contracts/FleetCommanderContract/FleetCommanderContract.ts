@@ -1,25 +1,14 @@
-import { ContractAbi } from '@summerfi/abi-provider-common'
 import { IBlockchainClient } from '@summerfi/blockchain-client-common'
 import {
-  IArkConfiguration,
-  IArkConfigurationSolidity,
   IErc20Contract,
   IErc4626Contract,
   IFleetCommanderContract,
 } from '@summerfi/contracts-provider-common'
-import {
-  IAddress,
-  IChainInfo,
-  ITokenAmount,
-  Percentage,
-  TransactionInfo,
-} from '@summerfi/sdk-common'
+import { IAddress, IChainInfo, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
 import { ContractWrapper } from '../ContractWrapper'
 
-import FleetCommanderAbiJSON from '../../../../../../earn-protocol/abis/FleetCommander.sol/FleetCommander.json'
+import { FleetCommanderAbi } from '@summerfi/armada-protocol-abis'
 import { Erc4626Contract } from '../Erc4626Contract/Erc4626Contract'
-
-const FleetCommanderAbi = FleetCommanderAbiJSON.abi as ContractAbi
 
 /**
  * @name FleetCommanderContract
@@ -72,19 +61,6 @@ export class FleetCommanderContract<
   }
 
   /** PUBLIC */
-
-  /** @see IFleetCommanderContract.arks */
-  async arks(params: { address: IAddress }): Promise<IArkConfiguration> {
-    const arkConfig = (await this.contract.read.arks([
-      params.address.value,
-    ])) as IArkConfigurationSolidity
-
-    return {
-      maxAllocation: Percentage.createFromSolidityValue({
-        value: arkConfig.maxAllocation,
-      }),
-    }
-  }
 
   /** @see IFleetCommanderContract.deposit */
   async deposit(params: { assets: ITokenAmount; receiver: IAddress }): Promise<TransactionInfo> {

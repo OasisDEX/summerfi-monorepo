@@ -1,5 +1,4 @@
 import { IAddress, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
-import { IArkConfiguration } from './IArkConfiguration'
 import { IContractWrapper } from './IContractWrapper'
 import { IErc20Contract } from './IErc20Contract'
 import { IErc4626Contract } from './IErc4626Contract'
@@ -10,13 +9,6 @@ import { IErc4626Contract } from './IErc4626Contract'
  */
 export interface IFleetCommanderContract extends IContractWrapper {
   /** READ METHODS */
-
-  /**
-   * @name arks
-   * @description Returns the configuration for one ark
-   */
-  arks(params: { address: IAddress }): Promise<IArkConfiguration>
-
   /** WRITE METHODS */
 
   /**
