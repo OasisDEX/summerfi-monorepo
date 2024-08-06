@@ -13,6 +13,9 @@ folderNameList.forEach((folderName) => {
   const fileNameList = fs.readdirSync(folderPath)
   // iterate over all files in the folder
   fileNameList.forEach((fileName) => {
+    if (fileName.endsWith('.abi.ts')) {
+      return
+    }
     // get the path to the json file
     const filePath = path.resolve(pathToAbiFolder, folderName, fileName)
     // read the file content as json
