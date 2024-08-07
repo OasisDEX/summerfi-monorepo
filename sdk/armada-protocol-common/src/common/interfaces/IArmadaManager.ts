@@ -5,6 +5,7 @@ import { IArmadaPool } from './IArmadaPool'
 import { IArmadaPoolId } from './IArmadaPoolId'
 import { IArmadaPoolInfo } from './IArmadaPoolInfo'
 import { IArmadaPosition } from './IArmadaPosition'
+import { IArmadaPositionId } from './IArmadaPositionId'
 
 /**
  * @name IArmadaManager
@@ -40,19 +41,18 @@ export interface IArmadaManager {
    * @name getPosition
    * @description Get the position of a user in the specified fleet
    *
-   * @param user Address of the user to get the position for
-   * @param poolId ID of the pool to retrieve
+   * @param positionId ID of the position to retrieve
    *
    * @returns IArmadaPosition The position of the user in the fleet
    *
    */
-  getPosition(params: { user: IUser; poolId: IArmadaPoolId }): Promise<IArmadaPosition>
+  getPosition(params: { positionId: IArmadaPositionId }): Promise<IArmadaPosition>
 
   /** TRANSACTIONS */
 
   /**
-   * @name getDepositTX
-   * @description Returns the transactions needed to deposit tokens in the Fleet
+   * @name getNewDepositTX
+   * @description Returns the transactions needed to deposit tokens in the Fleet for a new position
    *
    * @param poolId ID of the pool to deposit in
    * @param user Address of the user that is trying to deposit
@@ -60,9 +60,25 @@ export interface IArmadaManager {
    *
    * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
    */
-  getDepositTX(params: {
+  getNewDepositTX(params: {
     poolId: IArmadaPoolId
     user: IUser
+    amount: ITokenAmount
+  }): Promise<TransactionInfo[]>
+
+  /**
+   * @name getUpdateDepositTX
+   * @description Returns the transactions needed to deposit tokens in the Fleet for an existing position
+   *
+   * @param poolId ID of the pool to deposit in
+   * @param positionId ID of the position to be updated
+   * @param amount Token amount to be deposited
+   *
+   * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
+   */
+  getUpdateDepositTX(params: {
+    poolId: IArmadaPoolId
+    positionId: IArmadaPositionId
     amount: ITokenAmount
   }): Promise<TransactionInfo[]>
 

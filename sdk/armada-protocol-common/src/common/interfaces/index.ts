@@ -7,8 +7,6 @@ export {
   isArmadaPoolId,
 } from './IArmadaPoolId'
 export type { IArmadaPoolId, IArmadaPoolIdData } from './IArmadaPoolId'
-export { ArmadaPoolInfoDataSchema, __signature__ as __iarmadapoolinfo__ } from './IArmadaPoolInfo'
-export type { IArmadaPoolInfo, IArmadaPoolInfoData } from './IArmadaPoolInfo'
 export {
   ArmadaPoolInfoDataSchema,
   __signature__ as __iarmadapoolinfo__,

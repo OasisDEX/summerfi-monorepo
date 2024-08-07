@@ -5,6 +5,12 @@ import { makeSDK, type Chain, type SDKManager, type UserClient } from '@summerfi
 import { Address, ChainFamilyMap, TokenAmount } from '@summerfi/sdk-common'
 
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
+import { IArmadaProtocol } from '../../armada-protocol-common/src/common'
+import {
+  ArmadaPoolId,
+  ArmadaPositionId,
+  ArmadaProtocol,
+} from '../../armada-protocol-service/src/common'
 import { DAI, USDC } from './utils/TokenMockBase'
 
 jest.setTimeout(300000)
@@ -24,6 +30,7 @@ describe.skip('Armada Protocol Deposit', () => {
   let sdk: SDKManager
   let chain: Chain
   let user: UserClient
+  let protocol: IArmadaProtocol
 
   beforeAll(async () => {
     // SDK
@@ -54,18 +61,27 @@ describe.skip('Armada Protocol Deposit', () => {
     expect(user).toBeDefined()
     expect(user.wallet.address.value).toEqual(config.walletAddress)
     expect(user.chainInfo).toEqual(chain.chainInfo)
+
+    // Protocol
+    protocol = ArmadaProtocol.createFrom({ chainInfo })
   })
 
   it('should deposit 1 USDC', async () => {
     const token = USDC
     const amount = '1'
 
-    const fleet = chain.armada.getFleet({
-      address: config.fleetAddress,
+    const poolId = ArmadaPoolId.createFrom({
+      chainInfo,
+      fleetAddress: config.fleetAddress,
+      protocol,
+    })
+    const fleet = sdk.armada.getPool({
+      poolId,
     })
     assert(fleet, 'Fleet not found')
 
-    const transactions = await fleet.deposit({
+    const transactions = await sdk.armada.getNewDepositTX({
+      poolId,
       user: user,
       amount: TokenAmount.createFrom({
         amount,
@@ -83,13 +99,19 @@ describe.skip('Armada Protocol Deposit', () => {
     const token = DAI
     const amount = '1'
 
-    const fleet = chain.armada.getFleet({
-      address: config.fleetAddress,
+    const poolId = ArmadaPoolId.createFrom({
+      chainInfo,
+      fleetAddress: config.fleetAddress,
+      protocol,
+    })
+    const fleet = sdk.armada.getPool({
+      poolId,
     })
     assert(fleet, 'Fleet not found')
 
-    const transactions = await fleet.deposit({
-      user: user,
+    const transactions = await sdk.armada.getNewDepositTX({
+      poolId,
+      user,
       amount: TokenAmount.createFrom({
         amount,
         token,
@@ -106,13 +128,24 @@ describe.skip('Armada Protocol Deposit', () => {
     const token = USDC
     const amount = '1'
 
-    const fleet = chain.armada.getFleet({
-      address: config.fleetAddress,
+    const poolId = ArmadaPoolId.createFrom({
+      chainInfo,
+      fleetAddress: config.fleetAddress,
+      protocol,
+    })
+    const fleet = sdk.armada.getPool({
+      poolId,
     })
     assert(fleet, 'Fleet not found')
 
-    const transactions = await fleet.withdraw({
-      user: user,
+    const positionId = ArmadaPositionId.createFrom({
+      id: 'TestPosition',
+      user,
+    })
+
+    const transactions = await sdk.armada.getWithdrawTX({
+      poolId,
+      positionId,
       amount: TokenAmount.createFrom({
         amount,
         token,

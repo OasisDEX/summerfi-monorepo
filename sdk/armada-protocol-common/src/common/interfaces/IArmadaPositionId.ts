@@ -42,6 +42,13 @@ export type IArmadaPositionIdData = Readonly<z.infer<typeof ArmadaPositionIdData
  */
 export function isArmadaPositionId(
   maybeArmadaPositionId: unknown,
+  returnedErrors?: string[],
 ): maybeArmadaPositionId is IArmadaPositionId {
-  return ArmadaPositionIdDataSchema.safeParse(maybeArmadaPositionId).success
+  const zodReturn = ArmadaPositionIdDataSchema.safeParse(maybeArmadaPositionId)
+
+  if (!zodReturn.success && returnedErrors) {
+    returnedErrors.push(...zodReturn.error.errors.map((e) => e.message))
+  }
+
+  return zodReturn.success
 }

@@ -8,12 +8,12 @@ import {
   IArmadaPoolId,
   IArmadaPoolInfo,
   IArmadaPosition,
+  IArmadaPositionId,
 } from '@summerfi/armada-protocol-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import { ArmadaPool } from './ArmadaPool'
 import { ArmadaPoolInfo } from './ArmadaPoolInfo'
 import { ArmadaPosition } from './ArmadaPosition'
-import { ArmadaPositionId } from './ArmadaPositionId'
 
 /**
  * @name ArmadaManager
@@ -71,7 +71,10 @@ export class ArmadaManager implements IArmadaManager {
   /** POSITIONS */
 
   /** @see IArmadaManager.getPosition */
-  async getPosition(params: { poolId: IArmadaPoolId; user: IUser }): Promise<IArmadaPosition> {
+  async getPosition(params: {
+    poolId: IArmadaPoolId
+    positionId: IArmadaPositionId
+  }): Promise<IArmadaPosition> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.poolId.chainInfo,
       address: params.poolId.fleetAddress,
@@ -80,22 +83,76 @@ export class ArmadaManager implements IArmadaManager {
     const fleetERC4626Contract = fleetContract.asErc4626()
     const fleetERC20Contract = fleetERC4626Contract.asErc20()
 
-    const userShares = await fleetERC20Contract.balanceOf({ address: params.user.wallet.address })
+    const userShares = await fleetERC20Contract.balanceOf({
+      address: params.positionId.user.wallet.address,
+    })
     const userAssets = await fleetERC4626Contract.convertToAssets({ amount: userShares })
 
+    const pool = await this.getPool({ poolId: params.poolId })
+
     return ArmadaPosition.createFrom({
-      id: ArmadaPositionId.createFrom({
-        id: 'ArmadaPosition',
-        user: params.user,
-      }),
+      id: params.positionId,
+      pool: pool,
       amount: userAssets,
     })
   }
 
   /** TRANSACTIONS */
 
-  /** @see IArmadaManager.getDepositTX */
-  async getDepositTX(params: {
+  /** @see IArmadaManager.getNewDepositTX */
+  async getNewDepositTX(params: {
+    poolId: IArmadaPoolId
+    user: IUser
+    amount: ITokenAmount
+  }): Promise<TransactionInfo[]> {
+    return this._getDepositTX(params)
+  }
+
+  /** @see IArmadaManager.getUpdateDepositTX */
+  async getUpdateDepositTX(params: {
+    poolId: IArmadaPoolId
+    positionId: IArmadaPositionId
+    amount: ITokenAmount
+  }): Promise<TransactionInfo[]> {
+    return this._getDepositTX({
+      poolId: params.poolId,
+      user: params.positionId.user,
+      amount: params.amount,
+    })
+  }
+
+  /** @see IArmadaManager.getWithdrawTX */
+  async getWithdrawTX(params: {
+    poolId: IArmadaPoolId
+    user: IUser
+    amount: ITokenAmount
+  }): Promise<TransactionInfo[]> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.poolId.chainInfo,
+      address: params.poolId.fleetAddress,
+    })
+
+    const fleetWithdrawTransaction = await fleetContract.withdraw({
+      assets: params.amount,
+      receiver: params.user.wallet.address,
+      owner: params.user.wallet.address,
+    })
+
+    return [fleetWithdrawTransaction]
+  }
+
+  /** PRIVATE */
+
+  /**
+   * Internal utility method to generate a deposit TX
+   *
+   * @param poolId The pool for which the deposit is being made
+   * @param user The user making the deposit
+   * @param amount The amount being deposited
+   *
+   * @returns The transactions needed to deposit the tokens
+   */
+  async _getDepositTX(params: {
     poolId: IArmadaPoolId
     user: IUser
     amount: ITokenAmount
@@ -126,25 +183,5 @@ export class ArmadaManager implements IArmadaManager {
     transactions.push(fleetDepositTransaction)
 
     return transactions
-  }
-
-  /** @see IArmadaManager.getWithdrawTX */
-  async getWithdrawTX(params: {
-    poolId: IArmadaPoolId
-    user: IUser
-    amount: ITokenAmount
-  }): Promise<TransactionInfo[]> {
-    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
-      chainInfo: params.poolId.chainInfo,
-      address: params.poolId.fleetAddress,
-    })
-
-    const fleetWithdrawTransaction = await fleetContract.withdraw({
-      assets: params.amount,
-      receiver: params.user.wallet.address,
-      owner: params.user.wallet.address,
-    })
-
-    return [fleetWithdrawTransaction]
   }
 }

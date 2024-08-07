@@ -52,6 +52,15 @@ export type IArmadaPoolIdData = Readonly<z.infer<typeof ArmadaPoolIdDataSchema>>
  * @param maybeArmadaPoolId Object to be checked
  * @returns true if the object is a IMakerLendingPosition
  */
-export function isArmadaPoolId(maybeArmadaPoolId: unknown): maybeArmadaPoolId is IArmadaPoolId {
-  return ArmadaPoolIdDataSchema.safeParse(maybeArmadaPoolId).success
+export function isArmadaPoolId(
+  maybeArmadaPoolId: unknown,
+  returnedErrors?: string[],
+): maybeArmadaPoolId is IArmadaPoolId {
+  const zodReturn = ArmadaPoolIdDataSchema.safeParse(maybeArmadaPoolId)
+
+  if (!zodReturn.success && returnedErrors) {
+    returnedErrors.push(...zodReturn.error.errors.map((e) => e.message))
+  }
+
+  return zodReturn.success
 }

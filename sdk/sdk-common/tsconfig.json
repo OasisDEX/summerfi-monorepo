@@ -5,6 +5,11 @@
     "outDir": "dist",
     "baseUrl": "."
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "include": [
+    "src/**/*.ts",
+    "tests/**/*.ts",
+    "../armada-protocol-common/src/common/interfaces/IArmadaFleet.ts",
+    "../armada-protocol-service/src/common/implementation/ArmadaFleet.ts"
+  ],
   "exclude": ["node_modules"]
 }
