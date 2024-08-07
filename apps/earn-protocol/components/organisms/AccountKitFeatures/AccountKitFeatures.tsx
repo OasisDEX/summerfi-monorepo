@@ -19,7 +19,7 @@ const AccountKitFeatures = () => {
   const signer = useSigner()
   const user = useUser()
 
-  // Dummy TOS & TRM logic for now
+  // Dummy ToS & TRM logic for now
   const signMessage: TOSSignMessage = useCallback(
     async (data: string) => {
       return await signer?.signMessage(data)
