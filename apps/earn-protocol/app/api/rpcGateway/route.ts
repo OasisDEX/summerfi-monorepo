@@ -17,7 +17,7 @@ let cacheExpirationTime: number | undefined
  * it returns the cached configuration instead of fetching it again. If the fetch operation fails, it throws an error.
  */
 async function getRemoteConfigWithCache(cacheTime = 0): Promise<Partial<AppConfigType>> {
-  if (cachedConfig && cacheExpirationTime && Date.now() < cacheExpirationTime) {
+  if (cachedConfig && Date.now() < (cacheExpirationTime ?? 0)) {
     return cachedConfig
   }
   let configResponse
@@ -28,9 +28,6 @@ async function getRemoteConfigWithCache(cacheTime = 0): Promise<Partial<AppConfi
     throw new Error('Failed to fetch config data')
   }
 
-  if (!configResponse) {
-    throw new Error('Error fetching config data')
-  }
   // eslint-disable-next-line require-atomic-updates
   cachedConfig = configResponse
   // eslint-disable-next-line require-atomic-updates

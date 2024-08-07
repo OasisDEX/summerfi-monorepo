@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { getTrmRisk } from '@/server/helpers/get-trm-risk'
 
 /**
@@ -23,13 +24,7 @@ export const checkIfRisky = async ({ address, apiKey }: { address: string; apiKe
       console.error('TRM_LOG logging failed', ex)
     }
 
-    if (!trmData.addressRiskIndicators.length) {
-      return false
-    }
-
-    return trmData.addressRiskIndicators
-      .map((indicator) => Number(indicator.totalVolumeUsd) > 0)
-      .includes(true)
+    return trmData.addressRiskIndicators.some((indicator) => Number(indicator.totalVolumeUsd) > 0)
   } catch (ex) {
     console.error(`TRM_LOG ${address} check failed`)
     console.error(ex)
