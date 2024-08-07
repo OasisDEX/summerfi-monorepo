@@ -11,32 +11,38 @@ on:
         description: 'Branch name'
         required: true
         type: choice
+        default: 'dev'
         options:
-          - 'main'
           - 'dev'
+          - 'main'
       publish_option:
         description: 'Select package(s) to publish'
         required: true
         type: choice
+        default: 'all'
         options:
+          - 'all'
           - 'common'
           - 'client'
-          - 'all'
 
 jobs:
-  show-inputs:
+  print-inputs:
     runs-on: ubuntu-latest
     steps:
-    - name: Print inputs
-      run: |
-        echo "Checkout branch: ${{ github.event.inputs.branch }}"
-        echo "Publish packages: ${{ github.event.inputs.publish_option }}"
+      - name: Print inputs
+        run: |
+          echo "Checkout branch: ${{ github.event.inputs.branch }}"
+          echo "Publish packages: ${{ github.event.inputs.publish_option }}"
 
   publish-common:
     name: Publish Common Package
+    env:
+      CONFIG_URL: ${{ secrets.CONFIG_URL }}
+      CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
     runs-on: ubuntu-latest
     if: >-
-      ((github.event.inputs.publish_option == 'common') || (github.event.inputs.publish_option == 'all'))
+      ((github.event.inputs.publish_option == 'common') || (github.event.inputs.publish_option ==
+      'all'))
 
     steps:
       - name: Checkout all files
@@ -53,9 +59,13 @@ jobs:
 
   publish-client:
     name: Publish Client Package
+    env:
+      CONFIG_URL: ${{ secrets.CONFIG_URL }}
+      CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
     runs-on: ubuntu-latest
     if: >-
-      ((github.event.inputs.publish_option == 'client') || (github.event.inputs.publish_option == 'all'))
+      ((github.event.inputs.publish_option == 'client') || (github.event.inputs.publish_option ==
+      'all'))
 
     steps:
       - name: Checkout all files

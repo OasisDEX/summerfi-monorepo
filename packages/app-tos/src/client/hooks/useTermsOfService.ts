@@ -1,10 +1,10 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { type TOSState, TOSStatus } from '@summerfi/app-types'
 
-import { acceptanceStep } from '@/helpers/acceptance-step'
-import { signatureStep } from '@/helpers/signature-step'
-import { verifyTermsOfServiceAcceptance } from '@/tos/verify-terms-of-service-acceptance'
+import { acceptanceStep } from '@/client/helpers/acceptance-step'
+import { signatureStep } from '@/client/helpers/signature-step'
+import { verifyTermsOfServiceAcceptance } from '@/client/helpers/verify-terms-of-service-acceptance'
 import { type TOSInput } from '@/types'
 
 /**
@@ -14,7 +14,7 @@ import { type TOSInput } from '@/types'
  * This hooks assume that there is API running on the same host (if not, `host` parameter should be defined and CORS configured)
  * with proper handling of all endpoints that are being called (`/api/tos/*`, `/api/auth/signin`).
  *
- * @param signMessage - web3 sign handler required for on-chain signature, should be memoized on the client level
+ * @param signMessage - web3 sign handler required for on-chain signature
  * @param chainId - chain id, i.e. 1 (ethereum mainnet)
  * @param walletAddress - user wallet address
  * @param version - Terms of Service version
@@ -38,6 +38,8 @@ export const useTermsOfService = ({
     status: TOSStatus.INIT,
   })
 
+  const memoizedSignMessage = useMemo(() => signMessage, [walletAddress, chainId])
+
   useEffect(() => {
     const request = async (walletAddress: string) => {
       /**
@@ -51,6 +53,7 @@ export const useTermsOfService = ({
 
       if (!termsOfServiceAcceptance) {
         if (forceDisconnect) {
+          // eslint-disable-next-line no-console
           console.error('Terms of Service acceptance failed. Disconnecting user.')
           forceDisconnect()
         }
@@ -90,7 +93,7 @@ export const useTermsOfService = ({
           walletAddress,
           isGnosisSafe,
           chainId,
-          signMessage,
+          signMessage: memoizedSignMessage,
         })
       }
     }
@@ -100,7 +103,7 @@ export const useTermsOfService = ({
     }
 
     void request(walletAddress)
-  }, [walletAddress, version, chainId, isGnosisSafe, host, signMessage, forceDisconnect])
+  }, [walletAddress, version, chainId, isGnosisSafe, host, memoizedSignMessage, forceDisconnect])
 
   return tos
 }

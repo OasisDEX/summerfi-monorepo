@@ -1,10 +1,10 @@
 'use client'
 import SafeAppsSDK from '@safe-global/safe-apps-sdk'
 
-import { getGnosisSafeDetails } from '@/auth/gnosis/get-gnosis-safe-details'
-import { requestChallenge } from '@/auth/request-challenge'
-import { requestSignin } from '@/auth/request-signin'
-import { signTypedPayload } from '@/helpers/sign-typed-payload'
+import { getGnosisSafeDetails } from '@/client/auth/gnosis/get-gnosis-safe-details'
+import { requestChallenge } from '@/client/auth/request-challenge'
+import { requestSignin } from '@/client/auth/request-signin'
+import { signTypedPayload } from '@/client/helpers/sign-typed-payload'
 import { type TOSSignMessage } from '@/types'
 
 /**

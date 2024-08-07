@@ -1,19 +1,10 @@
 'use client'
 import { useEffect, useState } from 'react'
 
-interface RiskResponse {
-  isRisky?: boolean
-  error?: string
-}
+import { type RiskResponse, UseRiskInput } from '@/types'
 
 export interface RiskState extends RiskResponse {
   isLoading?: boolean
-}
-
-type UseRiskInput = {
-  chainId: number
-  walletAddress?: string
-  host?: string
 }
 
 /**
@@ -35,7 +26,7 @@ type UseRiskInput = {
  * const { isRisky, isLoading, error } = useRisk({ chainId: 1, walletAddress: '0x123...', host: 'https://api.example.com' });
  */
 
-export const useRisk = ({ chainId, walletAddress, host }: UseRiskInput) => {
+export const useRisk = ({ chainId, walletAddress, host = '' }: UseRiskInput) => {
   const [risk, setRisk] = useState<RiskState>({ isLoading: false })
 
   useEffect(() => {
