@@ -53,6 +53,7 @@ jobs:
       SDK_API_URL: ${{ secrets.SDK_API_URL }}
       EARN_PROTOCOL_JWT_SECRET: ${{ secrets.EARN_PROTOCOL_JWT_SECRET }}
       EARN_PROTOCOL_JWT_CHALLENGE_SECRET: ${{ secrets.EARN_PROTOCOL_JWT_CHALLENGE_SECRET }}
+      RPC_GATEWAY: ${{ secrets.RPC_GATEWAY }}
 
     steps:
       - name: Check out code
@@ -161,6 +162,7 @@ jobs:
                        --build-arg EARN_PROTOCOL_JWT_SECRET=${{ secrets.EARN_PROTOCOL_JWT_SECRET }} \
                        --build-arg EARN_PROTOCOL_JWT_CHALLENGE_SECRET=${{ secrets.EARN_PROTOCOL_JWT_CHALLENGE_SECRET }} \
                        --build-arg NEXT_PUBLIC_TRANSAK_ENVIRONMENT=${{ secrets.NEXT_PUBLIC_TRANSAK_ENVIRONMENT }} \
+                       --build-arg RPC_GATEWAY=${{ secrets.RPC_GATEWAY }} \
                        --cache-from type=registry,ref=189194422115.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/buildkit-test:cache \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$SHA_TAG \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$LATEST_TAG \
