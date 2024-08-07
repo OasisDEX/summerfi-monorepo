@@ -1,6 +1,6 @@
 'use client'
 import { useCallback, useEffect, useState } from 'react'
-import { useSigner, useUser } from '@alchemy/aa-alchemy/react'
+import { useLogout, useSigner, useUser } from '@alchemy/aa-alchemy/react'
 import { fetchRisk } from '@summerfi/app-risk'
 import { type TOSSignMessage, useTermsOfService } from '@summerfi/app-tos'
 import { TOSStatus } from '@summerfi/app-types'
@@ -18,6 +18,7 @@ import { TransakWidget } from '@/components/molecules/TransakWidget/TransakWidge
 const AccountKitFeatures = () => {
   const signer = useSigner()
   const user = useUser()
+  const { logout } = useLogout()
 
   // Dummy ToS & TRM logic for now
   const signMessage: TOSSignMessage = useCallback(
@@ -56,6 +57,10 @@ const AccountKitFeatures = () => {
       void fetchRisk({ chainId: 1, walletAddress })
       setOpenModal(false)
     }
+
+    if (!walletAddress) {
+      setOpenModal(false)
+    }
   }, [tosState.status, openModal, walletAddress])
 
   return (
@@ -71,7 +76,10 @@ const AccountKitFeatures = () => {
         >
           <TermsOfService
             documentLink="/"
-            disconnect={() => setOpenModal(false)}
+            disconnect={() => {
+              setOpenModal(false)
+              logout()
+            }}
             tosState={tosState}
           />
         </Card>
