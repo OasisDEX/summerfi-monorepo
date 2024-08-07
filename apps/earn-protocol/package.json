@@ -23,6 +23,7 @@
     "@summerfi/rays-db": "workspace:*",
     "@summerfi/sdk-client": "workspace:^",
     "@summerfi/sdk-common": "workspace:^",
+    "@summerfi/armada-protocol-service": "workspace:*",
     "@summerfi/serverless-shared": "workspace:*",
     "@tabler/icons-react": "^3.11.0",
     "@tanstack/react-query": "^5.51.1",

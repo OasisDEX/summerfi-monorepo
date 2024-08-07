@@ -5,11 +5,11 @@
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./src/index.js",
+      "import": "./src/index.ts",
       "types": "./src/index.d.ts"
     },
     "./*": {
-      "import": "./src/*/index.js",
+      "import": "./src/*/index.ts",
       "types": "./src/*/index.d.ts"
     }
   },

@@ -4,13 +4,9 @@ import { isAddress } from 'viem/utils'
 import { makeSDK, type Chain, type SDKManager, type UserClient } from '@summerfi/sdk-client'
 import { Address, ChainFamilyMap, TokenAmount } from '@summerfi/sdk-common'
 
+import { IArmadaProtocol } from '@summerfi/armada-protocol-common'
+import { ArmadaPoolId, ArmadaPositionId, ArmadaProtocol } from '@summerfi/armada-protocol-service'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import { IArmadaProtocol } from '../../armada-protocol-common/src/common'
-import {
-  ArmadaPoolId,
-  ArmadaPositionId,
-  ArmadaProtocol,
-} from '../../armada-protocol-service/src/common'
 import { DAI, USDC } from './utils/TokenMockBase'
 
 jest.setTimeout(300000)
