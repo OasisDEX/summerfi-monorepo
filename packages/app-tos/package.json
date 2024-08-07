@@ -30,6 +30,10 @@
   },
   "peerDependencies": {
     "react": "^18.3.1",
+    "next": "^14.2.5",
+    "zod": "^3.22.4",
+    "kysely": "^0.27.3",
+    "viem": "2.9.19",
     "@safe-global/safe-apps-sdk": "^9.0.0",
     "jsonwebtoken": "^9.0.0",
     "@summerfi/serverless-shared": "workspace:*"

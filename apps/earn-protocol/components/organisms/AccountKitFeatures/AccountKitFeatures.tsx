@@ -1,5 +1,10 @@
 'use client'
+import { useCallback, useEffect, useState } from 'react'
 import { useSigner, useUser } from '@alchemy/aa-alchemy/react'
+import { fetchRisk } from '@summerfi/app-risk'
+import { type TOSSignMessage, useTermsOfService } from '@summerfi/app-tos'
+import { TOSStatus } from '@summerfi/app-types'
+import { Card, Modal, TermsOfService } from '@summerfi/app-ui'
 
 import { AccountKitAddOwner } from '@/components/molecules/AccountKitAddOwner/AccountKitAddOwner'
 import { AccountKitClient } from '@/components/molecules/AccountKitClient/AccountKitClient'
@@ -14,8 +19,63 @@ const AccountKitFeatures = () => {
   const signer = useSigner()
   const user = useUser()
 
+  // Dummy TOS & TRM logic for now
+  const signMessage: TOSSignMessage = useCallback(
+    async (data: string) => {
+      return await signer?.signMessage(data)
+    },
+    [signer],
+  )
+
+  const [openModal, setOpenModal] = useState(false)
+
+  const walletAddress = user?.address
+
+  const tosState = useTermsOfService({
+    signMessage,
+    chainId: 1,
+    walletAddress,
+    isGnosisSafe: false,
+    version: 'version-26.06.2023',
+  })
+
+  useEffect(() => {
+    if (
+      [
+        TOSStatus.WAITING_FOR_SIGNATURE,
+        TOSStatus.WAITING_FOR_ACCEPTANCE,
+        TOSStatus.WAITING_FOR_ACCEPTANCE_UPDATED,
+      ].includes(tosState.status) &&
+      !openModal &&
+      walletAddress
+    ) {
+      setOpenModal(true)
+    }
+
+    if (tosState.status === TOSStatus.DONE && openModal) {
+      void fetchRisk({ chainId: 1, walletAddress })
+      setOpenModal(false)
+    }
+  }, [tosState.status, openModal, walletAddress])
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', rowGap: '24px' }}>
+      <Modal openModal={openModal} disableCloseOutside closeModal={() => null}>
+        <Card
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            maxWidth: '370px',
+          }}
+        >
+          <TermsOfService
+            documentLink="/"
+            disconnect={() => setOpenModal(false)}
+            tosState={tosState}
+          />
+        </Card>
+      </Modal>
       Account kit features
       <AccountKitLogin />
       {user && (

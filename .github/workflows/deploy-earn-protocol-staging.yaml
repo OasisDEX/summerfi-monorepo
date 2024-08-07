@@ -41,6 +41,7 @@ jobs:
       CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
       FUNCTIONS_API_URL: ${{ secrets.FUNCTIONS_API_URL }}
       BORROW_DB_READ_CONNECTION_STRING: ${{ secrets.BORROW_DB_READ_CONNECTION_STRING }}
+      EARN_PROTOCOL_DB_CONNECTION_STRING: ${{ secrets.EARN_PROTOCOL_DB_CONNECTION_STRING }}
       CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_ACCESS_TOKEN }}
       CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
       CONTENTFUL_SPACE_ID: ${{ secrets.CONTENTFUL_SPACE_ID }}
@@ -50,6 +51,8 @@ jobs:
       NEXT_PUBLIC_TRANSAK_API_KEY: ${{ secrets.NEXT_PUBLIC_TRANSAK_API_KEY }}
       NEXT_PUBLIC_TRANSAK_ENVIRONMENT: ${{ secrets.NEXT_PUBLIC_TRANSAK_ENVIRONMENT }}
       SDK_API_URL: ${{ secrets.SDK_API_URL }}
+      EARN_PROTOCOL_JWT_SECRET: ${{ secrets.EARN_PROTOCOL_JWT_SECRET }}
+      EARN_PROTOCOL_JWT_CHALLENGE_SECRET: ${{ secrets.EARN_PROTOCOL_JWT_CHALLENGE_SECRET }}
 
     steps:
       - name: Check out code
@@ -144,6 +147,7 @@ jobs:
           # be deployed to ECS.
           docker build -f apps/earn-protocol/docker/Dockerfile \
                        --build-arg BORROW_DB_READ_CONNECTION_STRING=${{ secrets.BORROW_DB_READ_CONNECTION_STRING }} \
+                       --build-arg EARN_PROTOCOL_DB_CONNECTION_STRING=${{ secrets.EARN_PROTOCOL_DB_CONNECTION_STRING }} \
                        --build-arg CONTENTFUL_SPACE_ID=${{ secrets.CONTENTFUL_SPACE_ID }} \
                        --build-arg CONTENTFUL_ACCESS_TOKEN=${{ secrets.CONTENTFUL_ACCESS_TOKEN }} \
                        --build-arg CONTENTFUL_PREVIEW_ACCESS_TOKEN=${{ secrets.CONTENTFUL_PREVIEW_ACCESS_TOKEN }} \
@@ -154,6 +158,8 @@ jobs:
                        --build-arg NEXT_PUBLIC_MIXPANEL_KEY=${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }} \
                        --build-arg ACCOUNT_KIT_API_KEY=${{ secrets.ACCOUNT_KIT_API_KEY }} \
                        --build-arg NEXT_PUBLIC_TRANSAK_API_KEY=${{ secrets.NEXT_PUBLIC_TRANSAK_API_KEY }} \
+                       --build-arg EARN_PROTOCOL_JWT_SECRET=${{ secrets.EARN_PROTOCOL_JWT_SECRET }} \
+                       --build-arg EARN_PROTOCOL_JWT_CHALLENGE_SECRET=${{ secrets.EARN_PROTOCOL_JWT_CHALLENGE_SECRET }} \
                        --build-arg NEXT_PUBLIC_TRANSAK_ENVIRONMENT=${{ secrets.NEXT_PUBLIC_TRANSAK_ENVIRONMENT }} \
                        --cache-from type=registry,ref=189194422115.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/buildkit-test:cache \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$SHA_TAG \
