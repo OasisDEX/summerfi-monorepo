@@ -47,7 +47,7 @@ export default defineConfig({
       formats: ['es'],
     },
     rollupOptions: {
-      external: ['react', 'next', 'zod', 'kysely'],
+      external: ['react', 'next', 'next/server', 'zod', 'kysely'],
       input: Object.fromEntries(
         glob
           .sync('src/**/*.{ts,tsx}')

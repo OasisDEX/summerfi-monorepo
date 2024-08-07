@@ -50,9 +50,11 @@ export default defineConfig({
       external: [
         'react',
         'next',
+        'next/server',
         'zod',
         'kysely',
         'viem',
+        'viem/chains',
         '@safe-global/safe-apps-sdk',
         'jsonwebtoken',
         '@summerfi/serverless-shared',
