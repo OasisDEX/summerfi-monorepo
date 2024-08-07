@@ -1,10 +1,9 @@
 import { type JWTChallenge } from '@summerfi/app-types'
+import { getRandomString } from '@summerfi/serverless-shared'
 import jwt from 'jsonwebtoken'
 import { type NextRequest, NextResponse } from 'next/server'
 import { type Address } from 'viem'
 import * as z from 'zod'
-
-import { getRandomString } from '@/server/helpers/get-random-string'
 
 const CHALLENGE_JWT_EXPIRATION = '5m' // 5 minutes should be more than enough to sign the challenge on a signer
 const GNOSIS_SAFE_CHALLENGE_JWT_EXPIRATION = '1d'
