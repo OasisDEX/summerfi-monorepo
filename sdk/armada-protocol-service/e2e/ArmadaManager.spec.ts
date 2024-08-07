@@ -16,7 +16,11 @@ import {
   decodeFleetDepositCalldata,
   decodeFleetWithdrawCalldata,
 } from '@summerfi/testing-utils/utils/ArmadaDecoding'
-import { ArmadaManager, ArmadaManagerFactory } from '../src'
+import { ArmadaPositionId } from '../src'
+import { ArmadaManager } from '../src/common/implementation/ArmadaManager'
+import { ArmadaManagerFactory } from '../src/common/implementation/ArmadaManagerFactory'
+import { ArmadaPoolId } from '../src/common/implementation/ArmadaPoolId'
+import { ArmadaProtocol } from '../src/common/implementation/ArmadaProtocol'
 
 describe('Armada Protocol Service', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Base.Mainnet
@@ -30,6 +34,7 @@ describe('Armada Protocol Service', () => {
     }),
   })
 
+  const protocol = ArmadaProtocol.createFrom({ chainInfo })
   const fleetAddress = Address.createFromEthereum({
     value: '0xa09E82322f351154a155f9e0f9e6ddbc8791C794', // FleetCommander on Base
   })
@@ -45,6 +50,17 @@ describe('Armada Protocol Service', () => {
   const tokenAmount = TokenAmount.createFrom({
     token: DAI,
     amount: '123.45',
+  })
+
+  const poolId = ArmadaPoolId.createFrom({
+    chainInfo,
+    fleetAddress,
+    protocol,
+  })
+
+  const positionId = ArmadaPositionId.createFrom({
+    id: 'Test',
+    user,
   })
 
   let armadaManager: ArmadaManager
@@ -69,10 +85,9 @@ describe('Armada Protocol Service', () => {
     })
   })
 
-  it('should return deposit transaction correctly', async () => {
-    const transactionInfo = await armadaManager.deposit({
-      chainInfo,
-      fleetAddress,
+  it('should return new deposit transaction correctly', async () => {
+    const transactionInfo = await armadaManager.getNewDepositTX({
+      poolId,
       user,
       amount: tokenAmount,
     })
@@ -90,10 +105,29 @@ describe('Armada Protocol Service', () => {
     expect(decodedCalldata.receiver).toBe(user.wallet.address.value)
   })
 
+  it('should return update deposit transaction correctly', async () => {
+    const transactionInfo = await armadaManager.getUpdateDepositTX({
+      poolId,
+      positionId,
+      amount: tokenAmount,
+    })
+
+    expect(transactionInfo.length).toBe(1)
+    expect(transactionInfo[0].transaction.target).toBe(fleetAddress)
+    expect(transactionInfo[0].transaction.value).toBe('0')
+
+    const decodedCalldata = decodeFleetDepositCalldata(transactionInfo[0].transaction.calldata)
+    if (!decodedCalldata) {
+      fail('Decoded calldata is undefined')
+    }
+
+    expect(decodedCalldata.assets.toString()).toBe(tokenAmount.toBaseUnit())
+    expect(decodedCalldata.receiver).toBe(user.wallet.address.value)
+  })
+
   it('should return withdraw transaction correctly', async () => {
-    const transactionInfo = await armadaManager.withdraw({
-      chainInfo,
-      fleetAddress,
+    const transactionInfo = await armadaManager.getWithdrawTX({
+      poolId,
       user,
       amount: tokenAmount,
     })

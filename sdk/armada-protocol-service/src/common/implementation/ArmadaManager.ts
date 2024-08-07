@@ -152,7 +152,7 @@ export class ArmadaManager implements IArmadaManager {
    *
    * @returns The transactions needed to deposit the tokens
    */
-  async _getDepositTX(params: {
+  private async _getDepositTX(params: {
     poolId: IArmadaPoolId
     user: IUser
     amount: ITokenAmount
