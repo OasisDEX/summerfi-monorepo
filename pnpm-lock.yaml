@@ -177,6 +177,9 @@ importers:
       '@summerfi/app-ui':
         specifier: workspace:*
         version: link:../../packages/app-ui
+      '@summerfi/app-utils':
+        specifier: workspace:*
+        version: link:../../packages/app-utils
       '@summerfi/rays-db':
         specifier: workspace:*
         version: link:../../packages/rays-db
@@ -377,6 +380,9 @@ importers:
       '@summerfi/app-ui':
         specifier: workspace:*
         version: link:../../packages/app-ui
+      '@summerfi/app-utils':
+        specifier: workspace:*
+        version: link:../../packages/app-utils
       '@summerfi/rays-db':
         specifier: workspace:*
         version: link:../../packages/rays-db
@@ -870,6 +876,9 @@ importers:
       '@summerfi/app-icons':
         specifier: workspace:*
         version: link:../app-icons
+      '@summerfi/app-utils':
+        specifier: workspace:*
+        version: link:../app-utils
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../serverless-shared
@@ -967,6 +976,40 @@ importers:
       vite-plugin-lib-inject-css:
         specifier: ^2.1.1
         version: 2.1.1(vite@5.3.5)
+
+  packages/app-utils:
+    dependencies:
+      bignumber.js:
+        specifier: ^9.1.2
+        version: 9.1.2
+      vite-tsconfig-paths:
+        specifier: ^4.3.2
+        version: 4.3.2(typescript@5.4.5)(vite@5.3.5)
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      eslint:
+        specifier: 8.57.0
+        version: 8.57.0
+      glob:
+        specifier: ^10.3.12
+        version: 10.4.1
+      typescript:
+        specifier: ^5.4.5
+        version: 5.4.5
+      vite:
+        specifier: ^5.2.11
+        version: 5.3.5(@types/node@20.12.7)(sass@1.77.8)
+      vite-plugin-dts:
+        specifier: ^3.9.1
+        version: 3.9.1(@types/node@20.12.7)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.5)
+      vite-plugin-node-polyfills:
+        specifier: ^0.22.0
+        version: 0.22.0(rollup@4.18.0)(vite@5.3.5)
 
   packages/automation-subgraph:
     dependencies:

@@ -1,7 +1,7 @@
 import { type FC } from 'react'
+import { timeUntil } from '@summerfi/app-utils'
 
 import { CountDownItem } from '@/components/molecules/CountDownItem/CountDownItem'
-import { timeUntil } from '@/helpers/time-until'
 
 import countdownStyles, {
   type ClassNames,

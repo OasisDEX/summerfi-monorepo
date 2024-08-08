@@ -41,8 +41,6 @@ export { NavigationMenuDropdownContentListItem } from './components/layout/Navig
 
 export { EXTERNAL_LINKS, INTERNAL_LINKS } from './helpers/application-links'
 
-export { formatAddress } from './helpers/format-address'
-
 // tokens
 export { tokenConfigs } from './tokens/config'
 export {

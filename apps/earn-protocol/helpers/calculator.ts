@@ -1,12 +1,4 @@
-import BigNumber from 'bignumber.js'
-
-export const HOUR = 60 * 60
-export const DAY = 24 * HOUR
-export const SECONDS_PER_YEAR = 365 * DAY
-
-export const HOUR_BI = new BigNumber(HOUR)
-export const DAY_BI = new BigNumber(DAY)
-export const SECONDS_PER_YEAR_BI = new BigNumber(SECONDS_PER_YEAR)
+import { SECONDS_PER_YEAR } from '@summerfi/app-utils'
 
 export const CALCULATOR_NET_VALUE_CAP = 10000000
 
