@@ -1,6 +1,4 @@
-import { type LeaderboardResponse, type RaysApiResponse } from '@summerfi/app-types'
 import { Button } from '@summerfi/app-ui'
-import { parseServerResponse } from '@summerfi/serverless-shared'
 import Link from 'next/link'
 
 import { TopClimbersWrapper } from '@/components/molecules/TopClimbers/TopClimbersWrapper'
@@ -26,16 +24,7 @@ export default async function LeaderboardPage({
     userAddress: string
   }
 }) {
-  const userRays = parseServerResponse<
-    | {
-        rays: RaysApiResponse
-        error?: undefined
-      }
-    | {
-        error: unknown
-        rays?: undefined
-      }
-  >(await fetchRays({ address: searchParams.userAddress }))
+  const userRays = await fetchRays({ address: searchParams.userAddress })
 
   const userLeaderboardStartingPage = String(
     userRays.rays?.positionInLeaderboard
@@ -45,16 +34,13 @@ export default async function LeaderboardPage({
       : 1,
   )
 
-  const userLeaderboardResponse = parseServerResponse<LeaderboardResponse>(
-    await fetchLeaderboard({
-      ...userLeaderboardDefaults,
-      page: userLeaderboardStartingPage,
-    }),
-  )
+  const userLeaderboardResponse = await fetchLeaderboard({
+    ...userLeaderboardDefaults,
+    page: userLeaderboardStartingPage,
+  })
 
   const topLeaderboardResponse =
-    userLeaderboardStartingPage !== '1' &&
-    parseServerResponse<LeaderboardResponse>(await fetchLeaderboard(leaderboardDefaults))
+    userLeaderboardStartingPage !== '1' && (await fetchLeaderboard(leaderboardDefaults))
 
   const userYearlyRays = userLeaderboardResponse.leaderboard.find(
     (user) => user.position === userRays.rays?.positionInLeaderboard,

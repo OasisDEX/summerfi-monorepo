@@ -1,6 +1,4 @@
-import { type LeaderboardResponse } from '@summerfi/app-types'
 import { Button } from '@summerfi/app-ui'
-import { parseServerResponse } from '@summerfi/serverless-shared'
 import Link from 'next/link'
 
 import { mapLeaderboardColumns } from '@/components/organisms/Leaderboard/columns'
@@ -19,12 +17,10 @@ export default async function LeaderboardPage({
     search?: string
   }
 }) {
-  const topLeaderboardResponse = parseServerResponse<LeaderboardResponse>(
-    await fetchLeaderboard({
-      ...wholeLeaderboardDefaults,
-      page: searchParams.page ?? wholeLeaderboardDefaults.page,
-    }),
-  )
+  const topLeaderboardResponse = await fetchLeaderboard({
+    ...wholeLeaderboardDefaults,
+    page: searchParams.page ?? wholeLeaderboardDefaults.page,
+  })
 
   const mappedLeaderBoard = mapLeaderboardColumns({
     leaderboardData: topLeaderboardResponse.leaderboard,
