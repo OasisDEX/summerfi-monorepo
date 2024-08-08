@@ -1,5 +1,6 @@
 import { type LeaderboardResponse, type RaysApiResponse } from '@summerfi/app-types'
 import { Button } from '@summerfi/app-ui'
+import { parseServerResponse } from '@summerfi/serverless-shared'
 import Link from 'next/link'
 
 import { TopClimbersWrapper } from '@/components/molecules/TopClimbers/TopClimbersWrapper'
@@ -15,7 +16,6 @@ import {
   leaderboardDefaults,
   userLeaderboardDefaults,
 } from '@/constants/leaderboard'
-import { parseServerResponse } from '@/helpers/parse-server-response'
 import { fetchLeaderboard } from '@/server-handlers/leaderboard'
 import { fetchRays } from '@/server-handlers/rays'
 

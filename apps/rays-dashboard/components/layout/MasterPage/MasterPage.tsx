@@ -1,12 +1,12 @@
 import { type FC, type PropsWithChildren } from 'react'
 import { Footer } from '@summerfi/app-ui'
+import { parseServerResponse } from '@summerfi/serverless-shared'
 import Image from 'next/image'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 import { WalletInit } from '@/components/molecules/WalletInit/WalletInit'
 import { AccountChangeHandler } from '@/components/organisms/AccountChangeHandler/AccountChangeHandler'
 import { basePath } from '@/helpers/base-path'
-import { parseServerResponse } from '@/helpers/parse-server-response'
 import systemConfigHandler, { type SystemConfig } from '@/server-handlers/system-config'
 
 import masterPageStyles from './MasterPage.module.scss'
