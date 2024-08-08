@@ -41,7 +41,7 @@ pnpm dev
 
 To initialize submodules use:
 
-`git submodule update earn-protocol/contracts`
+`git submodule update armada-protocol/contracts`
 
 ## Useful Links
 

@@ -1,0 +1,1 @@
+export const MathUtilsAbi = [] as const

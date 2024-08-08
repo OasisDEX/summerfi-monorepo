@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { PositionType } from '../types/PositionType'
+import { IPool, isPool } from './IPool'
 import { IPositionId, isPositionId } from './IPositionId'
 
 /**
@@ -18,6 +19,8 @@ export interface IPosition extends IPositionData {
   readonly type: PositionType
   /** Unique identifier for the position inside the Summer.fi system */
   readonly id: IPositionId
+  /** Pool where the position is opened */
+  readonly pool: IPool
 }
 
 /**
@@ -26,6 +29,7 @@ export interface IPosition extends IPositionData {
 export const PositionDataSchema = z.object({
   type: z.nativeEnum(PositionType),
   id: z.custom<IPositionId>((val) => isPositionId(val)),
+  pool: z.custom<IPool>((val) => isPool(val)),
 })
 
 /**

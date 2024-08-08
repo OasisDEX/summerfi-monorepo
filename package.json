@@ -33,8 +33,8 @@
     "format": "prettier --check \"./**/*.{ts,tsx,js,jsx,json}\"",
     "format:fix": "prettier --write \"./**/*.{ts,tsx,js,jsx,json}\"",
     "coverage:total": "node scripts/coverage-report/GenerateCoverageReport.js",
-    "iep": "git submodule update --init earn-protocol/contracts && cd earn-protocol/contracts && pnpm i",
-    "build:ep": "cd earn-protocol/contracts && pnpm build && cp -r packages/core-contracts/out/* ../abis && cd ../.. && tsx ./scripts/transform-json-to-viem-abi.ts"
+    "install:armada": "git submodule update --init armada-protocol/contracts && cd armada-protocol/contracts && pnpm i",
+    "build:armada": "cd armada-protocol/contracts && pnpm build && cp -r packages/core-contracts/out/*.sol ../abis/src && cd ../.. && tsx ./scripts/transform-json-to-viem-abi.ts && cd armada-protocol/abis && pnpm genindex && pnpm build"
   },
   "devDependencies": {
     "@graphql-codegen/add": "^5.0.2",
@@ -52,6 +52,7 @@
     "@types/node": "^20.12.7",
     "aws-cdk-lib": "2.132.1",
     "constructs": "10.3.0",
+    "create-ts-index": "^1.14.0",
     "dotenv": "^16.4.5",
     "dotenv-cli": "^7.4.2",
     "esbuild": "^0.20.2",

@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
+import { ArmadaPoolId, ArmadaPositionId, ArmadaProtocol } from '@summerfi/armada-protocol-service'
 import { makeSDK } from '@summerfi/sdk-client'
-import { Address } from '@summerfi/sdk-common'
+import { Address, TokenAmount, User, Wallet } from '@summerfi/sdk-common'
 
 import { sdkApiUrl } from '@/constants/sdk'
 
@@ -31,9 +32,19 @@ export const useSDK = () => {
     [sdk],
   )
 
-  const getFleetClient = useMemo(
+  const getNewDepositTX = useMemo(
     () =>
-      async ({ chainId, fleetAddress }: { chainId: number; fleetAddress: string }) => {
+      async ({
+        chainId,
+        fleetAddress,
+        walletAddress,
+        amount,
+      }: {
+        chainId: number
+        fleetAddress: string
+        walletAddress: string
+        amount: string
+      }) => {
         const chain = await sdk.chains.getChainById({
           chainId,
         })
@@ -41,15 +52,91 @@ export const useSDK = () => {
         if (!chain) {
           throw new Error('Chain not found')
         }
-        const fleet = chain.armada.getFleet({
-          address: Address.createFromEthereum({ value: fleetAddress }),
+        const { chainInfo } = chain
+
+        const poolId = ArmadaPoolId.createFrom({
+          chainInfo,
+          fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
+          protocol: ArmadaProtocol.createFrom({ chainInfo }),
         })
 
-        if (!fleet) {
-          throw new Error(`SDK: Fleet not found: ${fleetAddress}`)
-        }
+        const poolInfo = await sdk.armada.getPoolInfo({
+          poolId,
+        })
 
-        return fleet
+        const user = User.createFrom({
+          chainInfo,
+          wallet: Wallet.createFrom({
+            address: Address.createFromEthereum({ value: walletAddress }),
+          }),
+        })
+
+        const tokenAmount = TokenAmount.createFrom({
+          amount,
+          token: poolInfo.totalDeposits.token,
+        })
+
+        return sdk.armada.getNewDepositTX({
+          poolId,
+          user,
+          amount: tokenAmount,
+        })
+      },
+    [sdk],
+  )
+
+  const getWithdrawTX = useMemo(
+    () =>
+      async ({
+        chainId,
+        fleetAddress,
+        walletAddress,
+        amount,
+      }: {
+        chainId: number
+        fleetAddress: string
+        walletAddress: string
+        amount: string
+      }) => {
+        const chain = await sdk.chains.getChainById({
+          chainId,
+        })
+
+        if (!chain) {
+          throw new Error('Chain not found')
+        }
+        const { chainInfo } = chain
+
+        const poolId = ArmadaPoolId.createFrom({
+          chainInfo,
+          fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
+          protocol: ArmadaProtocol.createFrom({ chainInfo }),
+        })
+
+        const poolInfo = await sdk.armada.getPoolInfo({
+          poolId,
+        })
+
+        const user = User.createFrom({
+          chainInfo,
+          wallet: Wallet.createFrom({
+            address: Address.createFromEthereum({ value: walletAddress }),
+          }),
+        })
+
+        const tokenAmount = TokenAmount.createFrom({
+          amount,
+          token: poolInfo.totalDeposits.token,
+        })
+
+        return sdk.armada.getWithdrawTX({
+          poolId,
+          positionId: ArmadaPositionId.createFrom({
+            id: walletAddress,
+            user,
+          }),
+          amount: tokenAmount,
+        })
       },
     [sdk],
   )
@@ -79,7 +166,8 @@ export const useSDK = () => {
   )
 
   return {
-    getFleetClient,
+    getNewDepositTX,
+    getWithdrawTX,
     getTokenBySymbol,
     getUserClient,
   }

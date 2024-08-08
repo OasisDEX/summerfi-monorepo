@@ -1,4 +1,5 @@
 import { SerializationService } from '../../services/SerializationService'
+import { IPool } from '../interfaces'
 import { IPosition, IPositionData, __signature__ } from '../interfaces/IPosition'
 import { IPositionId } from '../interfaces/IPositionId'
 import { PositionType } from '../types/PositionType'
@@ -19,9 +20,12 @@ export abstract class Position implements IPosition {
   /** ATTRIBUTES */
   abstract readonly type: PositionType
   abstract readonly id: IPositionId
+  abstract readonly pool: IPool
 
   /** SEALED CONSTRUCTOR */
-  protected constructor(_: PositionParameters) {}
+  protected constructor(_: PositionParameters) {
+    // Empty on purpose
+  }
 }
 
 SerializationService.registerClass(Position)

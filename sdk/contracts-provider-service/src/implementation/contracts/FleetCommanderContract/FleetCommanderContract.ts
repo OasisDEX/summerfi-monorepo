@@ -1,25 +1,21 @@
-import { ContractAbi } from '@summerfi/abi-provider-common'
 import { IBlockchainClient } from '@summerfi/blockchain-client-common'
 import {
-  IArkConfiguration,
-  IArkConfigurationSolidity,
   IErc20Contract,
   IErc4626Contract,
   IFleetCommanderContract,
 } from '@summerfi/contracts-provider-common'
 import {
+  Address,
   IAddress,
   IChainInfo,
   ITokenAmount,
-  Percentage,
+  TokenAmount,
   TransactionInfo,
 } from '@summerfi/sdk-common'
 import { ContractWrapper } from '../ContractWrapper'
 
-import FleetCommanderAbiJSON from '../../../../../../earn-protocol/abis/FleetCommander.sol/FleetCommander.json'
+import { FleetCommanderAbi } from '@summerfi/armada-protocol-abis'
 import { Erc4626Contract } from '../Erc4626Contract/Erc4626Contract'
-
-const FleetCommanderAbi = FleetCommanderAbiJSON.abi as ContractAbi
 
 /**
  * @name FleetCommanderContract
@@ -71,20 +67,55 @@ export class FleetCommanderContract<
     this._erc4626Contract = params.erc4626Contract
   }
 
-  /** PUBLIC */
+  /** READ METHODS */
 
   /** @see IFleetCommanderContract.arks */
-  async arks(params: { address: IAddress }): Promise<IArkConfiguration> {
-    const arkConfig = (await this.contract.read.arks([
-      params.address.value,
-    ])) as IArkConfigurationSolidity
+  async arks(): Promise<IAddress[]> {
+    const arksAddresses: IAddress[] = []
+    let arkIndex = 0n
+    let isZeroAddress = false
 
-    return {
-      maxAllocation: Percentage.createFromSolidityValue({
-        value: arkConfig.maxAllocation,
-      }),
-    }
+    // TODO: manual loop for getting all arks, should be refactored
+    // TODO: when the new getArks method is implemented
+    do {
+      const arkAddressValue = await this.contract.read.arks([arkIndex++])
+      const arkAddress = Address.createFromEthereum({ value: arkAddressValue })
+
+      isZeroAddress = arkAddress.equals(Address.ZeroAddressEthereum)
+
+      if (!isZeroAddress) {
+        arksAddresses.push(arkAddress)
+      }
+    } while (!isZeroAddress)
+
+    return arksAddresses
   }
+
+  /** @see IFleetCommanderContract.depositCap */
+  async depositCap(): Promise<ITokenAmount> {
+    const token = await this._erc4626Contract.asset()
+    const depositCap = await this.contract.read.depositCap()
+
+    return TokenAmount.createFromBaseUnit({ token, amount: String(depositCap) })
+  }
+
+  /** @see IFleetCommanderContract.maxDeposit */
+  async maxDeposit(params: { user: IAddress }): Promise<ITokenAmount> {
+    const token = await this._erc4626Contract.asset()
+    const maxDeposit = await this.contract.read.maxDeposit([params.user.value])
+
+    return TokenAmount.createFromBaseUnit({ token, amount: String(maxDeposit) })
+  }
+
+  /** @see IFleetCommanderContract.maxWithdraw */
+  async maxWithdraw(params: { user: IAddress }): Promise<ITokenAmount> {
+    const token = await this._erc4626Contract.asset()
+    const maxWithdraw = await this.contract.read.maxWithdraw([params.user.value])
+
+    return TokenAmount.createFromBaseUnit({ token, amount: String(maxWithdraw) })
+  }
+
+  /** WRITE METHODS */
 
   /** @see IFleetCommanderContract.deposit */
   async deposit(params: { assets: ITokenAmount; receiver: IAddress }): Promise<TransactionInfo> {

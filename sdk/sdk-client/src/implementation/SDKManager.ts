@@ -1,5 +1,6 @@
 import { ISDKManager } from '../interfaces/ISDKManager'
 import { RPCMainClientType } from '../rpc/SDKMainClient'
+import { ArmadaManagerClient } from './ArmadaManagerClient'
 import { ChainsManagerClient } from './ChainsManager'
 import { PortfolioManager } from './PortfolioManager'
 import { UsersManager } from './UsersManager'
@@ -11,11 +12,13 @@ export class SDKManager implements ISDKManager {
   public readonly chains: ChainsManagerClient
   public readonly users: UsersManager
   public readonly portfolio: PortfolioManager
+  public readonly armada: ArmadaManagerClient
 
   public constructor(params: { rpcClient: RPCMainClientType }) {
     this.simulator = new SimulationManager(params)
     this.chains = new ChainsManagerClient(params)
     this.users = new UsersManager(params)
     this.portfolio = new PortfolioManager(params)
+    this.armada = new ArmadaManagerClient(params)
   }
 }

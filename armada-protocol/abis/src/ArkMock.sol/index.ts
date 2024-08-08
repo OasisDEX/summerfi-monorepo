@@ -1,0 +1,1 @@
+export * from './ArkMock.abi';

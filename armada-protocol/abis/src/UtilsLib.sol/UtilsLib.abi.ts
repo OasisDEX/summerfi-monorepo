@@ -1,0 +1,1 @@
+export const UtilsLibAbi = [] as const

@@ -113,7 +113,6 @@ const Form = () => {
       walletAddress,
       fleetAddress: usdcFleetAddress,
       amountString: amountValue.toString(),
-      token,
     })
   }
 
@@ -127,7 +126,6 @@ const Form = () => {
       walletAddress,
       fleetAddress: usdcFleetAddress,
       amountString: amountValue.toString(),
-      token,
     })
   }
 

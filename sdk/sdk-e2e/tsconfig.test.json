@@ -4,6 +4,12 @@
     "rootDir": ".",
     "baseUrl": ".",
     "paths": {
+      "@summerfi/armada-protocol-common": [
+        "node_modules/@summerfi/armada-protocol-common/src/index.ts"
+      ],
+      "@summerfi/armada-protocol-service": [
+        "node_modules/@summerfi/armada-protocol-service/src/index.ts"
+      ],
       "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
       "@summerfi/sdk-common": ["node_modules/@summerfi/sdk-common/src/index.ts"],
       "@summerfi/sdk-client": ["node_modules/@summerfi/sdk-client/src"],

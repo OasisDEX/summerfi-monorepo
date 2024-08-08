@@ -3,7 +3,6 @@ import { ChainInfo, IChainInfoData, Maybe } from '@summerfi/sdk-common/common'
 import { IChainsManagerClient } from '../interfaces/IChainsManager'
 import { IRPCClient } from '../interfaces/IRPCClient'
 import { RPCMainClientType } from '../rpc/SDKMainClient'
-import { ArmadaManagerClient } from './ArmadaManagerClient'
 import { Chain } from './Chain'
 import { ProtocolsManagerClient } from './ProtocolsManagerClient'
 import { TokensManagerClient } from './TokensManagerClient'
@@ -29,10 +28,6 @@ export class ChainsManagerClient extends IRPCClient implements IChainsManagerCli
       chainInfo: chainInfo,
       tokensManager: new TokensManagerClient({ rpcClient: this.rpcClient, chainInfo: chainInfo }),
       protocolsManager: new ProtocolsManagerClient({
-        rpcClient: this.rpcClient,
-        chainInfo: chainInfo,
-      }),
-      armadaManager: new ArmadaManagerClient({
         rpcClient: this.rpcClient,
         chainInfo: chainInfo,
       }),

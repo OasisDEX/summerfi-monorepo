@@ -1,4 +1,5 @@
 import {
+  IArmadaPool,
   IArmadaPosition,
   IArmadaPositionData,
   IArmadaPositionId,
@@ -11,7 +12,7 @@ import { SerializationService } from '@summerfi/sdk-common/services'
 /**
  * Type for the parameters of ArmadaPosition
  */
-export type ArmadaPositionParameters = Omit<IArmadaPositionData, ''>
+export type ArmadaPositionParameters = Omit<IArmadaPositionData, 'type'>
 
 /**
  * @class ArmadaPosition
@@ -24,6 +25,7 @@ export class ArmadaPosition extends Position implements IArmadaPosition {
   /** ATTRIBUTES */
   readonly type = PositionType.Armada
   readonly id: IArmadaPositionId
+  readonly pool: IArmadaPool
   readonly amount: ITokenAmount
 
   /** FACTORY */
@@ -36,6 +38,7 @@ export class ArmadaPosition extends Position implements IArmadaPosition {
     super(params)
 
     this.id = params.id
+    this.pool = params.pool
     this.amount = params.amount
   }
 }

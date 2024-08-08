@@ -1,5 +1,11 @@
 import { IAddress, isAddress } from '@summerfi/sdk-common'
-import { IPoolId, PoolIdDataSchema, PoolType } from '@summerfi/sdk-common/common'
+import {
+  IChainInfo,
+  IPoolId,
+  PoolIdDataSchema,
+  PoolType,
+  isChainInfo,
+} from '@summerfi/sdk-common/common'
 import { z } from 'zod'
 import { IArmadaProtocol, isArmadaProtocol } from './IArmadaProtocol'
 
@@ -15,8 +21,10 @@ export const __signature__: unique symbol = Symbol()
 export interface IArmadaPoolId extends IPoolId, IArmadaPoolIdData {
   /** Signature used to differentiate it from similar interfaces */
   readonly [__signature__]: symbol
+  /** Chain where the fleet is deployed */
+  readonly chainInfo: IChainInfo
   /** Address of the fleet commander that gives access to the pool */
-  readonly fleet: IAddress
+  readonly fleetAddress: IAddress
 
   // Re-declaring the properties to narrow the types
   readonly type: PoolType.Armada
@@ -29,7 +37,8 @@ export interface IArmadaPoolId extends IPoolId, IArmadaPoolIdData {
 export const ArmadaPoolIdDataSchema = z.object({
   ...PoolIdDataSchema.shape,
   type: z.literal(PoolType.Armada),
-  fleet: z.custom<IAddress>((val) => isAddress(val)),
+  chainInfo: z.custom<IChainInfo>((val) => isChainInfo(val)),
+  fleetAddress: z.custom<IAddress>((val) => isAddress(val)),
   protocol: z.custom<IArmadaProtocol>((val) => isArmadaProtocol(val)),
 })
 
@@ -43,6 +52,15 @@ export type IArmadaPoolIdData = Readonly<z.infer<typeof ArmadaPoolIdDataSchema>>
  * @param maybeArmadaPoolId Object to be checked
  * @returns true if the object is a IMakerLendingPosition
  */
-export function isArmadaPoolId(maybeArmadaPoolId: unknown): maybeArmadaPoolId is IArmadaPoolId {
-  return ArmadaPoolIdDataSchema.safeParse(maybeArmadaPoolId).success
+export function isArmadaPoolId(
+  maybeArmadaPoolId: unknown,
+  returnedErrors?: string[],
+): maybeArmadaPoolId is IArmadaPoolId {
+  const zodReturn = ArmadaPoolIdDataSchema.safeParse(maybeArmadaPoolId)
+
+  if (!zodReturn.success && returnedErrors) {
+    returnedErrors.push(...zodReturn.error.errors.map((e) => e.message))
+  }
+
+  return zodReturn.success
 }

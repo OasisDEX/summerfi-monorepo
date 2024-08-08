@@ -7,7 +7,7 @@ import {
 
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IOracleProvider } from '@summerfi/oracle-common'
-import { FiatCurrency, IToken, isTokenAmount } from '@summerfi/sdk-common'
+import { FiatCurrency, IAddress, IChainInfo, IToken, isTokenAmount } from '@summerfi/sdk-common'
 import {
   Address,
   ChainId,
@@ -16,7 +16,6 @@ import {
   isFiatCurrencyAmount,
   isToken,
   type AddressValue,
-  type ChainInfo,
 } from '@summerfi/sdk-common/common'
 import { OracleProviderType, SpotPriceInfo } from '@summerfi/sdk-common/oracle'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
@@ -170,8 +169,8 @@ export class OneInchOracleProvider
    * @returns The formatted spot price URL
    */
   private _formatOneInchSpotUrl(params: {
-    chainInfo: ChainInfo
-    tokenAddresses: Address[]
+    chainInfo: IChainInfo
+    tokenAddresses: IAddress[]
     quoteCurrency: FiatCurrency
   }): string {
     const chainId = params.chainInfo.chainId

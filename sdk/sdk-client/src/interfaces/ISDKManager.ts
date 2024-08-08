@@ -1,3 +1,4 @@
+import { IArmadaManagerClient } from './IArmadaManagerClient'
 import { IChainsManagerClient } from './IChainsManager'
 import { IPortfolioManager } from './IPortfolioManager'
 import { IUsersManager } from './IUsersManager'
@@ -17,4 +18,6 @@ export interface ISDKManager {
   readonly users: IUsersManager
   /** Portfolio Manager for retrieving information about a user's portfolio */
   readonly portfolio: IPortfolioManager
+  /** Armada Manager for interacting with the Armada protocol */
+  readonly armada: IArmadaManagerClient
 }
