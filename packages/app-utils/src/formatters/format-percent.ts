@@ -15,19 +15,20 @@ import type BigNumber from 'bignumber.js'
  * @param noPercentSign - Whether to omit the percent sign (default is `false`).
  * @returns The formatted percentage string.
  */
-export const formatPercent = ({
-  amount,
-  precision = 0,
-  plus = false,
-  roundMode,
-  noPercentSign = false,
-}: {
-  amount: BigNumber
-  precision?: number
-  plus?: boolean
-  roundMode?: BigNumber.RoundingMode
-  noPercentSign?: boolean
-}) => {
+export const formatPercent = (
+  amount: BigNumber,
+  {
+    precision = 0,
+    plus = false,
+    roundMode,
+    noPercentSign = false,
+  }: {
+    precision?: number
+    plus?: boolean
+    roundMode?: BigNumber.RoundingMode
+    noPercentSign?: boolean
+  } = {},
+) => {
   const sign = plus && amount.isGreaterThan(0) ? '+' : ''
 
   return `${sign}${amount.toFixed(precision, roundMode)}${noPercentSign ? '' : '%'}`

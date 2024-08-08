@@ -29,8 +29,7 @@ export const formatDecimalAsPercent = (
     noPercentSign?: boolean
   } = {},
 ) =>
-  formatPercent({
-    amount: amount.times(100),
+  formatPercent(amount.times(100), {
     precision,
     plus,
     roundMode,

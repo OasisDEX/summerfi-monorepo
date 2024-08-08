@@ -30,14 +30,14 @@ export const formatAsShorthandNumbers = (
   } = {},
 ): string => {
   if (amount.absoluteValue().gte(billion)) {
-    return formatShorthandNumber({ amount: amount.dividedBy(billion), suffix: 'B', precision })
+    return formatShorthandNumber(amount.dividedBy(billion), { suffix: 'B', precision })
   }
   if (amount.absoluteValue().gte(million)) {
-    return formatShorthandNumber({ amount: amount.dividedBy(million), suffix: 'M', precision })
+    return formatShorthandNumber(amount.dividedBy(million), { suffix: 'M', precision })
   }
   if (amount.absoluteValue().gte(thousand)) {
-    return formatShorthandNumber({ amount: amount.dividedBy(thousand), suffix: 'K', precision })
+    return formatShorthandNumber(amount.dividedBy(thousand), { suffix: 'K', precision })
   }
 
-  return formatShorthandNumber({ amount, suffix, precision })
+  return formatShorthandNumber(amount, { suffix, precision })
 }

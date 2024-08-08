@@ -19,7 +19,7 @@ export const formatCryptoBalance = (amount: BigNumber): string => {
   const absAmount = amount.absoluteValue()
 
   if (absAmount.eq(zero)) {
-    return formatAsShorthandNumbers({ amount, precision: 2 })
+    return formatAsShorthandNumbers(amount, { precision: 2 })
   }
 
   if (absAmount.lt(oneThousandth)) {
@@ -27,10 +27,10 @@ export const formatCryptoBalance = (amount: BigNumber): string => {
   }
 
   if (absAmount.lt(ten)) {
-    return formatAsShorthandNumbers({ amount, precision: 4 })
+    return formatAsShorthandNumbers(amount, { precision: 4 })
   }
 
   if (absAmount.lt(million)) return amount.toFormat(2, BigNumber.ROUND_DOWN)
 
-  return formatAsShorthandNumbers({ amount, precision: 2 })
+  return formatAsShorthandNumbers(amount, { precision: 2 })
 }

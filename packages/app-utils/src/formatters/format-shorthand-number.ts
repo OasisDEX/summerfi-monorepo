@@ -11,15 +11,16 @@ import BigNumber from 'bignumber.js'
  * @param precision - The number of decimal places to retain in the fractional part of the number. If not provided, the full precision is kept.
  * @returns The shorthand string representation of the number, with the specified precision and suffix.
  */
-export const formatShorthandNumber = ({
-  amount,
-  suffix = '',
-  precision,
-}: {
-  amount: BigNumber
-  suffix?: string
-  precision?: number
-}) => {
+export const formatShorthandNumber = (
+  amount: BigNumber,
+  {
+    suffix = '',
+    precision,
+  }: {
+    suffix?: string
+    precision?: number
+  } = {},
+) => {
   const sh = new BigNumber(
     amount
       .toString()
