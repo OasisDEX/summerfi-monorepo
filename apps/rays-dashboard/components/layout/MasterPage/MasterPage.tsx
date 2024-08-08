@@ -6,7 +6,7 @@ import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrap
 import { WalletInit } from '@/components/molecules/WalletInit/WalletInit'
 import { AccountChangeHandler } from '@/components/organisms/AccountChangeHandler/AccountChangeHandler'
 import { basePath } from '@/helpers/base-path'
-import systemConfigHandler, { type SystemConfig } from '@/server-handlers/system-config'
+import systemConfigHandler from '@/server-handlers/system-config'
 
 import masterPageStyles from './MasterPage.module.scss'
 
