@@ -22,6 +22,7 @@
     "@summerfi/app-risk": "workspace:*",
     "@summerfi/app-types": "workspace:*",
     "@summerfi/app-ui": "workspace:*",
+    "@summerfi/app-utils": "workspace:*",
     "@summerfi/rays-db": "workspace:*",
     "@summerfi/sdk-client": "workspace:^",
     "@summerfi/sdk-common": "workspace:^",

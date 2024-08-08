@@ -2,12 +2,12 @@
 
 import { useState } from 'react'
 import { Button, Divider, Input, RadioButtonGroup, Text } from '@summerfi/app-ui'
+import { formatAsShorthandNumbers } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
 import { AnimatedNumber } from '@/components/molecules/AnimatedNumber/AnimatedNumber'
 import { ModalButton, type ModalButtonProps } from '@/components/molecules/Modal/ModalButton'
 import { CALCULATOR_NET_VALUE_CAP, getCalculatorValues } from '@/helpers/calculator'
-import { formatAsShorthandNumbers } from '@/helpers/formatters'
 
 import calculatorModalStyles from './CalculatorModal.module.scss'
 
@@ -25,7 +25,7 @@ const CalculatorModalRaysValue = ({ value, label }: { value: number; label: stri
         }}
       >
         {value > 99999 ? (
-          <>{formatAsShorthandNumbers(new BigNumber(value), 1)}</>
+          <>{formatAsShorthandNumbers(new BigNumber(value), { precision: 1 })}</>
         ) : (
           <AnimatedNumber number={Number(value.toPrecision(2))} size={28} hasComma duration={400} />
         )}

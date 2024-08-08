@@ -5,11 +5,11 @@ import {
   type ProductHubItem,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
+import { zero } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash'
 
 import { networksByName } from '@/constants/networks-list-ssr'
-import { zero } from '@/helpers/formatters'
 import { getGenericPositionUrl } from '@/helpers/get-generic-position-url'
 import { lendingProtocolsByName } from '@/helpers/lending-protocols-configs'
 import { type tNavType } from '@/messages/types'

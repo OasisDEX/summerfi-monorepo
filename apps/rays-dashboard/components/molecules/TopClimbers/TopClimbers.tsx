@@ -4,6 +4,7 @@ import {
   MixpanelEventTypes,
 } from '@summerfi/app-types'
 import { Button, SkeletonLine, Text } from '@summerfi/app-ui'
+import { formatAddress, formatAsShorthandNumbers } from '@summerfi/app-utils'
 import { IconArrowRight, IconArrowUpRight, IconTrophyFilled } from '@tabler/icons-react'
 import { useConnectWallet } from '@web3-onboard/react'
 import BigNumber from 'bignumber.js'
@@ -15,7 +16,6 @@ import {
   TopClimbersTabs,
 } from '@/components/molecules/TopClimbers/TopClimbers.types'
 import { climbersCount } from '@/constants/leaderboard'
-import { formatAddress, formatAsShorthandNumbers } from '@/helpers/formatters'
 import { trackButtonClick, trackEvent } from '@/helpers/mixpanel'
 
 import topClimbersStyles from './TopClimbers.module.scss'
@@ -149,9 +149,13 @@ export const TopClimbers = ({
                 variant="p4"
                 className={`${topClimbersStyles.topClimbersListRankChangeInfo} ${topClimbersStyles.rankChangeInfo}`}
               >
-                {formatAsShorthandNumbers(new BigNumber(Number(entry.points22h)), 2)}{' '}
+                {formatAsShorthandNumbers(new BigNumber(Number(entry.points22h)), {
+                  precision: 2,
+                })}{' '}
                 <IconArrowRight size={10} style={{ marginBottom: '3px' }} />{' '}
-                {formatAsShorthandNumbers(new BigNumber(entry.totalPoints), 2)}
+                {formatAsShorthandNumbers(new BigNumber(entry.totalPoints), {
+                  precision: 2,
+                })}
               </Text>
             ) : (
               <Text
@@ -159,11 +163,11 @@ export const TopClimbers = ({
                 className={`${topClimbersStyles.topClimbersListRankChangeInfo} ${topClimbersStyles.rankChangeInfo}`}
               >
                 {Number(entry.rank22h) > 10000
-                  ? formatAsShorthandNumbers(new BigNumber(entry.rank22h), 0)
+                  ? formatAsShorthandNumbers(new BigNumber(entry.rank22h), { precision: 0 })
                   : entry.rank22h}
                 <IconArrowRight size={10} style={{ marginBottom: '3px' }} />{' '}
                 {Number(entry.rank) > 10000
-                  ? formatAsShorthandNumbers(new BigNumber(entry.rank), 0)
+                  ? formatAsShorthandNumbers(new BigNumber(entry.rank), { precision: 0 })
                   : entry.rank}
               </Text>
             )}
@@ -176,8 +180,8 @@ export const TopClimbers = ({
             )}
             <Text variant="p3semi" className={topClimbersStyles.topClimbersListRankChange}>
               {topClimbersTab === TopClimbersTabs.top_gainers_points
-                ? `+ ${formatAsShorthandNumbers(new BigNumber(Number(entry.totalPoints) - Number(entry.points22h)), 2)}`
-                : `${formatAsShorthandNumbers(new BigNumber(Number(entry.rank22h) - Number(entry.rank)), 0)}`}
+                ? `+ ${formatAsShorthandNumbers(new BigNumber(Number(entry.totalPoints) - Number(entry.points22h)), { precision: 2 })}`
+                : `${formatAsShorthandNumbers(new BigNumber(Number(entry.rank22h) - Number(entry.rank)), { precision: 0 })}`}
             </Text>
           </div>
         </div>

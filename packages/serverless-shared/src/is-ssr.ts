@@ -1,8 +1,11 @@
 /**
- * Determines if the current environment is Server-Side Rendering (SSR).
+ * Determines if the current environment is server-side rendering (SSR).
  *
- * This function checks whether the code is running in a server environment by verifying the existence and type of the `window` object in the global scope.
+ * This function checks if the code is running in a server-side environment by verifying
+ * the presence of the `global` object and checking if the `window` object is undefined.
+ * This is useful for distinguishing between client-side and server-side execution contexts.
  *
- * @returns `true` if the environment is SSR (i.e., no `window` object exists), otherwise `false`.
+ * @returns `true` if the code is running on the server side (i.e., `window` is not defined), otherwise `false`.
  */
-export const isSSR = () => 'window' in global && typeof global.window === 'undefined'
+export const isSSR = () =>
+  typeof global !== 'undefined' && 'window' in global && typeof global.window === 'undefined'
