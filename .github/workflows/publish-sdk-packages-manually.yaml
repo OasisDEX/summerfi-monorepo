@@ -35,17 +35,8 @@ jobs:
           echo "Branch: ${{ github.event.inputs.branch }}"
           echo "Publish Option: ${{ github.event.inputs.sdk_package }}"
 
-  checkout:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout all files
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.branch }}
-
   publish:
     runs-on: ubuntu-latest
-    needs: checkout
     strategy:
       matrix:
         sdk_package: [sdk-common, sdk-client, protocol-plugins]
@@ -53,6 +44,10 @@ jobs:
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
     steps:
+      - name: Checkout all files
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
       - name: Publish the SDK ${{ matrix.sdk_package }} package to npmjs
         if: |
           github.event.inputs.sdk_package == 'all' || 
