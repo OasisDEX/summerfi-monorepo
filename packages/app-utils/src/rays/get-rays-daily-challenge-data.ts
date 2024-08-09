@@ -1,9 +1,9 @@
 import dayjs from 'dayjs'
 
-export const dailyRaysAmount = 10
-export const bonusRaysAmount = 30
+const dailyRaysAmount = 10
+const bonusRaysAmount = 30
 
-export const getRaysDailyChallengeDateFormat = () => dayjs().format('YYYY-MM-DD')
+const getRaysDailyChallengeDateFormat = () => dayjs().format('YYYY-MM-DD')
 
 // this function is taken from oasis-borrow, if you make changes here you should also update it there
 export const getRaysDailyChallengeData = (claimedDates?: string[]) => {
