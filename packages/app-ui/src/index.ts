@@ -40,6 +40,7 @@ export { Navigation } from './components/layout/Navigation/Navigation'
 export { NavigationMenuDropdownContentListItem } from './components/layout/Navigation/NavigationMenuDropdownContentListItem'
 
 export { EXTERNAL_LINKS, INTERNAL_LINKS } from './helpers/application-links'
+export { useClientSideMount } from './helpers/use-client-side-mount'
 
 // tokens
 export { tokenConfigs } from './tokens/config'

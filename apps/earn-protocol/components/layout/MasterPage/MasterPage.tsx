@@ -1,5 +1,6 @@
 import { type FC, type PropsWithChildren } from 'react'
 import { Footer } from '@summerfi/app-ui'
+import { parseServerResponseToClient } from '@summerfi/app-utils'
 import Image from 'next/image'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
@@ -12,7 +13,7 @@ import masterPageStyles from './MasterPage.module.scss'
 interface MasterPageProps {}
 
 export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({ children }) => {
-  const systemConfig = await systemConfigHandler()
+  const systemConfig = parseServerResponseToClient(await systemConfigHandler())
 
   return (
     <>
