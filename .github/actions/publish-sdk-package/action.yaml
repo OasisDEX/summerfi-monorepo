@@ -1,0 +1,44 @@
+name: Publish SDK Package
+description: Publish the passed sdk package to NPM
+inputs:
+  npm_access_token:
+    description: 'The NPM access token'
+    required: true
+    default: ''
+  sdk_package:
+    description: 'The SDK package to publish'
+    required: true
+    default: ''
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        registry-url: 'https://registry.npmjs.org'
+
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v3
+      with:
+        version: 8
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm i
+
+    - name: Prebuild
+      shell: bash
+      run: pnpm prebuild
+
+    - name: Build
+      shell: bash
+      run: pnpm build:sdk
+
+    - name: Publish to NPM
+      shell: bash
+      run: pnpm publish:npm
+      working-directory: sdk/${{ inputs.sdk_package }}
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.npm_access_token }}
