@@ -1,0 +1,63 @@
+name: Publish SDK Packages Manually
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: false
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to publish from'
+        required: true
+        type: choice
+        default: 'dev'
+        options:
+          - 'dev'
+          - 'main'
+      sdk_package:
+        description: 'Select SDK package(s) to publish'
+        required: true
+        type: choice
+        default: 'all'
+        options:
+          - 'all'
+          - 'sdk-common'
+          - 'sdk-client'
+          - 'protocol-plugins'
+
+jobs:
+  print-inputs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print inputs
+        run: |
+          echo "Branch: ${{ github.event.inputs.branch }}"
+          echo "Publish Option: ${{ github.event.inputs.sdk_package }}"
+
+  checkout:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout all files
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: checkout
+    strategy:
+      matrix:
+        sdk_package: [sdk-common, sdk-client, protocol-plugins]
+    env:
+      CONFIG_URL: ${{ secrets.CONFIG_URL }}
+      CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
+    steps:
+      - name: Publish the SDK ${{ matrix.sdk_package }} package to npmjs
+        if: |
+          github.event.inputs.sdk_package == 'all' || 
+          github.event.inputs.sdk_package == matrix.sdk_package
+        uses: ./.github/actions/publish-sdk-package
+        with:
+          sdk_package: ${{ matrix.sdk_package }}
+          npm_access_token: ${{ secrets.NPM_ACCESS_TOKEN }}
