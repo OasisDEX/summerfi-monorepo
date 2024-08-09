@@ -14,7 +14,7 @@ export const isValidUrl = (urlString: string) => {
     return true
   } catch (e) {
     // eslint-disable-next-line no-console
-    console.error('URL is invalid')
+    console.error('URL is invalid', e)
 
     return false
   }
