@@ -2,7 +2,7 @@
 
 import { type Dispatch, type FormEvent, type SetStateAction, useState } from 'react'
 import { Button, Input, SkeletonLine, Text } from '@summerfi/app-ui'
-import { formatToHex } from '@summerfi/app-utils'
+import { formatToHex, isValidUrl } from '@summerfi/app-utils'
 import {
   IconDeviceFloppy,
   IconToolsKitchen2,
@@ -18,7 +18,6 @@ import { forksCookieName } from '@/constants/forks-cookie-name'
 import { getCookies } from '@/constants/get-cookies'
 import { networksByName } from '@/constants/networks-list'
 import { safeParseJson } from '@/constants/safe-parse-json'
-import { isValidUrl } from '@/helpers/is-valid-url'
 
 const setFork =
   ({

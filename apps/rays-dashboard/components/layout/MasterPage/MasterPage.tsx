@@ -1,5 +1,6 @@
 import { type FC, type PropsWithChildren } from 'react'
 import { Footer } from '@summerfi/app-ui'
+import { parseServerResponseToClient } from '@summerfi/app-utils'
 import Image from 'next/image'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
@@ -19,7 +20,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
   background = 'simple',
   children,
 }) => {
-  const systemConfig = await systemConfigHandler()
+  const systemConfig = parseServerResponseToClient(await systemConfigHandler())
 
   return (
     <>
