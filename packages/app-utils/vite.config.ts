@@ -12,13 +12,21 @@ import dts from 'vite-plugin-dts'
 export default defineConfig({
   plugins: [
     tsconfigPaths(),
-    dts({ outDir: 'dist/types', insertTypesEntry: true, strictOutput: true, copyDtsFiles: true }),
+    dts({
+      outDir: 'dist/types',
+      insertTypesEntry: true,
+      strictOutput: true,
+      copyDtsFiles: true,
+      rollupTypes: true,
+    }),
   ],
   build: {
     emptyOutDir: false,
     lib: {
-      // eslint-disable-next-line no-undef
-      entry: resolve(__dirname, 'src/index.ts'),
+      entry: {
+        index: resolve(__dirname, 'src/index.ts'),
+        rays: resolve(__dirname, 'src/rays/index.ts'),
+      },
       formats: ['es'],
     },
     rollupOptions: {
@@ -31,7 +39,7 @@ export default defineConfig({
             fileURLToPath(new URL(file, import.meta.url)),
           ]),
       ),
-      external: ['bignumber.js'],
+      external: ['bignumber.js', 'dayjs'],
       output: {
         assetFileNames: 'assets/[name][extname]',
         entryFileNames: '[name].js',

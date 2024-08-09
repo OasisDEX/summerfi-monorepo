@@ -2,10 +2,10 @@ import { useMemo } from 'react'
 import { type PortfolioMigrations } from '@summerfi/app-types'
 import { BlockLabel, ProtocolLabel, Text, Tooltip } from '@summerfi/app-ui'
 import { formatCryptoBalance } from '@summerfi/app-utils'
+import { getCalculatorValues } from '@summerfi/app-utils/rays'
 import BigNumber from 'bignumber.js'
 
 import { networksByChainId } from '@/constants/networks-list'
-import { getCalculatorValues } from '@/helpers/calculator'
 import { type LendingProtocolConfig } from '@/helpers/lending-protocols-configs'
 
 import migrateProductCardStyles from '@/components/molecules/MigrateProductCard/MigrateProductCard.module.scss'

@@ -3,11 +3,11 @@
 import { useState } from 'react'
 import { Button, Divider, Input, RadioButtonGroup, Text } from '@summerfi/app-ui'
 import { formatAsShorthandNumbers } from '@summerfi/app-utils'
+import { CALCULATOR_NET_VALUE_CAP, getCalculatorValues } from '@summerfi/app-utils/rays'
 import BigNumber from 'bignumber.js'
 
 import { AnimatedNumber } from '@/components/molecules/AnimatedNumber/AnimatedNumber'
 import { ModalButton, type ModalButtonProps } from '@/components/molecules/Modal/ModalButton'
-import { CALCULATOR_NET_VALUE_CAP, getCalculatorValues } from '@/helpers/calculator'
 
 import calculatorModalStyles from './CalculatorModal.module.scss'
 

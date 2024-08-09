@@ -1,4 +1,4 @@
-import { SECONDS_PER_YEAR } from '@summerfi/app-utils'
+import { SECONDS_PER_YEAR } from '@/times'
 
 export const CALCULATOR_NET_VALUE_CAP = 10000000
 

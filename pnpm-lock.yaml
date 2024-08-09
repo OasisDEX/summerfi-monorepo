@@ -249,6 +249,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      dayjs:
+        specifier: ^1.11.12
+        version: 1.11.12
       include-media:
         specifier: 2.0.0
         version: 2.0.0
@@ -988,10 +991,16 @@ importers:
       bignumber.js:
         specifier: ^9.1.2
         version: 9.1.2
+      dayjs:
+        specifier: ^1.11.12
+        version: 1.11.12
       vite-tsconfig-paths:
         specifier: ^4.3.2
         version: 4.3.2(typescript@5.4.5)(vite@5.3.5)
     devDependencies:
+      '@summerfi/app-types':
+        specifier: workspace:*
+        version: link:../app-types
       '@summerfi/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
