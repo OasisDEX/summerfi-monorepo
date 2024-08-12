@@ -1,13 +1,12 @@
 import { useEffect, useMemo } from 'react'
 import { LiFiWalletManagement, supportedWallets } from '@lifi/wallet-management'
 import { LiFiWidget } from '@lifi/widget'
-import { Button } from '@summerfi/app-ui'
+import { Button, useOnboarding } from '@summerfi/app-ui'
 import { IconX } from '@tabler/icons-react'
 import { useConnectWallet } from '@web3-onboard/react'
 
 import { BridgeSwapOnboarding } from '@/components/molecules/BridgeSwap/BridgeSwapOnboarding'
 import { swapWidgetConfig } from '@/constants/swap-widget-config'
-import { useOnboarding } from '@/helpers/use-onboarding'
 
 import bridgeSwapHandlerStyles from './BridgeSwapHandler.module.scss'
 
