@@ -2,17 +2,25 @@
 import { type AppConfigType, emptyConfig } from '@summerfi/app-types'
 import { merge } from 'lodash'
 
-import { configLSKey, configLSOverridesKey } from '@/constants/config'
-import { cleanObjectFromNull, cleanObjectToNull } from '@/helpers/clean-object'
+import { cleanObjectFromNull, cleanObjectToNull } from './clean-object'
 
 type AppConfigTypeKey = keyof AppConfigType
 
+export const configLSKey = 'ob-config'
+export const configLSOverridesKey = 'ob-config-overrides'
+
 /**
- * Updates config overrides in localStorage
- * @param config
+ * Updates the configuration overrides stored in localStorage.
+ *
+ * This function merges the provided configuration object with any existing overrides
+ * stored in localStorage. Before merging, it cleans the provided configuration by
+ * replacing all its properties' values with `null`, making it easier to override specific
+ * values. The result is then stored back in localStorage.
+ *
+ * @param config - The configuration object to be merged with existing overrides.
  * @returns void
  */
-export function updateConfigOverrides(config: AppConfigType): void {
+export const updateConfigOverrides = (config: AppConfigType): void => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!window?.localStorage) return
   let overrideConfigRaw = localStorage.getItem(configLSOverridesKey)
@@ -32,11 +40,16 @@ export function updateConfigOverrides(config: AppConfigType): void {
 }
 
 /**
- * Saves config to localStorage
- * @param config
+ * Saves the provided configuration to localStorage and updates the overrides.
+ *
+ * This function saves the given configuration object to localStorage under a specific key.
+ * After saving, it also triggers an update to the configuration overrides, merging the
+ * saved configuration with any existing overrides.
+ *
+ * @param config - The configuration object to be saved in localStorage.
  * @returns void
  */
-export function saveConfigToLocalStorage(config: AppConfigType) {
+export const saveConfigToLocalStorage = (config: AppConfigType) => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!window?.localStorage) return
   localStorage.setItem(configLSKey, JSON.stringify(config))
@@ -48,7 +61,7 @@ export function saveConfigToLocalStorage(config: AppConfigType) {
  * PLEASE NOTE THAT THIS IS NOT DYNAMIC, IT WILL NOT UPDATE WHEN CONFIG CHANGES (only after a refresh)
  * @returns AppConfigType or empty config
  */
-export function loadConfigFromLocalStorage() {
+export const loadConfigFromLocalStorage = () => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (typeof localStorage === 'undefined' || !localStorage || !window?.localStorage) {
     return emptyConfig
@@ -82,7 +95,7 @@ export function loadConfigFromLocalStorage() {
  * @param configKey
  * @returns AppConfigType[T] or empty config
  */
-export function getLocalAppConfig<T extends AppConfigTypeKey>(configKey: T): AppConfigType[T] {
+export const getLocalAppConfig = <T extends AppConfigTypeKey>(configKey: T): AppConfigType[T] => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (typeof localStorage === 'undefined' || !localStorage || !window?.localStorage) {
     return emptyConfig[configKey]

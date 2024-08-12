@@ -40,6 +40,7 @@ export { Navigation } from './components/layout/Navigation/Navigation'
 export { NavigationMenuDropdownContentListItem } from './components/layout/Navigation/NavigationMenuDropdownContentListItem'
 
 export { EXTERNAL_LINKS, INTERNAL_LINKS } from './helpers/application-links'
+export { getLocalAppConfig } from './helpers/config/access-config-context'
 
 export { useClientSideMount } from './hooks/use-client-side-mount'
 export { useLocalStorage, getStorageValue } from './hooks/use-local-storage'

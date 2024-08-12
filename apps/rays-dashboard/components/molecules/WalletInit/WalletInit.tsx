@@ -1,6 +1,7 @@
 'use client'
 
 import { type AppConfigType } from '@summerfi/app-types'
+import { getLocalAppConfig } from '@summerfi/app-ui'
 import { isSSR } from '@summerfi/serverless-shared'
 import coinbaseModule from '@web3-onboard/coinbase'
 import gnosisModule from '@web3-onboard/gnosis'
@@ -12,7 +13,6 @@ import walletConnectModule from '@web3-onboard/walletconnect'
 
 import { type NetworkConfig, networksList } from '@/constants/networks-list'
 import { networksList as ssrNetworksList } from '@/constants/networks-list-ssr'
-import { getLocalAppConfig } from '@/helpers/access-config-context'
 
 const { connectionMethods, walletRpc } = getLocalAppConfig('parameters')
 
