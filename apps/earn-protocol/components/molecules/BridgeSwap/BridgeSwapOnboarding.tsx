@@ -1,8 +1,6 @@
-import { Button, EXTERNAL_LINKS, Text } from '@summerfi/app-ui'
+import { Button, EXTERNAL_LINKS, Text, useOnboarding } from '@summerfi/app-ui'
 import Image from 'next/image'
 import Link from 'next/link'
-
-import { useOnboarding } from '@/helpers/use-onboarding'
 
 export const BridgeSwapOnboarding = () => {
   const [, setAsOnboarded] = useOnboarding('SwapWidget')

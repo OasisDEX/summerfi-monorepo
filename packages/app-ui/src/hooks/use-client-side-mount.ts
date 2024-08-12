@@ -13,9 +13,5 @@ export const useClientSideMount = (): boolean => {
     setIsMounted(true)
   }, [])
 
-  if (!isMounted) {
-    return false
-  }
-
-  return true
+  return isMounted
 }

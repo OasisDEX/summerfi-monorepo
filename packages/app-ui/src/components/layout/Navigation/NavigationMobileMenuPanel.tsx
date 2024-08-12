@@ -4,7 +4,7 @@ import { type NavigationMenuPanelType, type WithNavigationModules } from '@summe
 import { Button } from '@/components/atoms/Button/Button'
 import { NavigationMenuDropdownContentList } from '@/components/layout/Navigation/NavigationMenuDropdownContentList'
 import { ExpandableArrow } from '@/components/molecules/ExpandableArrow/ExpandableArrow'
-import { useToggle } from '@/helpers/use-toggle'
+import { useToggle } from '@/hooks/use-toggle'
 
 import navigationMenuMobileStyles from './NavigationMenuMobile.module.scss'
 
