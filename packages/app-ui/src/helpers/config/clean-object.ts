@@ -18,7 +18,7 @@ export const cleanObjectToNull = (object: any) => {
   if (object !== null) {
     switch (typeof newObject) {
       case 'object':
-        if (newObject instanceof Array) {
+        if (Array.isArray(newObject)) {
           const { length } = newObject
 
           for (let i = 0; i < length; i++) {
