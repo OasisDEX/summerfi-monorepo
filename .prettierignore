@@ -22,4 +22,3 @@ packages/**/src/generated
 packages/**/types/generated
 apps/**/types/generated/*
 earn-protocol/contracts/**/*
-apps/earn-protocol-dashboard/sst-env.d.ts
