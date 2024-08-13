@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { type AppConfigType } from '@summerfi/app-types'
 import { Newsletter, ProxyLinkComponent } from '@summerfi/app-ui'
 import { type NewsletterPropsType } from '@summerfi/app-ui/dist/types/src/components/organisms/Newsletter/Newsletter'
 import { EMAIL_REGEX } from '@summerfi/app-utils'
@@ -12,7 +13,7 @@ const errorMessagesList = {
   emailPending: 'Opt-in email already sent for this address - please check your inbox.',
 }
 
-export const NewsletterWrapper = () => {
+export const NewsletterWrapper = ({ config }: { config: Partial<AppConfigType> }) => {
   const [email, setEmail] = useState('')
   const [newsletterStatus, setNewsletterStatus] =
     useState<NewsletterPropsType['newsletter']['newsletterStatus']>('initial')
@@ -59,6 +60,7 @@ export const NewsletterWrapper = () => {
   return (
     <Newsletter
       newsletter={{
+        enabled: config.features?.Newsletter,
         buttonLabel: 'Subscribe →',
         description: 'Subscribe to the newsletter for updates',
         label: 'Email Address',

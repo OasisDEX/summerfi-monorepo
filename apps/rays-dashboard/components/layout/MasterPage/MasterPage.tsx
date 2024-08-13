@@ -47,7 +47,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
           <Footer
             logo={`${basePath}/img/branding/logo-dark.svg`}
             languageSwitcher={<div />}
-            newsletter={<NewsletterWrapper />}
+            newsletter={<NewsletterWrapper config={systemConfig.config} />}
           />
         </div>
       </div>

@@ -13,6 +13,7 @@ type NewsletterStatus = 'initial' | 'loading' | 'success' | 'error'
 
 export type NewsletterPropsType = {
   newsletter: {
+    enabled?: boolean
     buttonLabel: string
     description: string
     label: string
@@ -82,14 +83,18 @@ export const Newsletter = ({ newsletter }: NewsletterPropsType) => {
       </Text>
       <div className={newsletterStyles.newsletterInput}>
         <input
-          disabled={newsletter.newsletterStatus === 'loading'}
+          disabled={newsletter.newsletterStatus === 'loading' || !newsletter.enabled}
           className={newsletterStyles.input}
           value={newsletter.email}
           onChange={updateEmail}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           onKeyDown={handleEnter}
-          placeholder={newsletter.label}
+          placeholder={newsletter.enabled ? newsletter.label : 'Temporarily disabled'}
+          style={{
+            pointerEvents:
+              newsletter.newsletterStatus === 'loading' || !newsletter.enabled ? 'none' : 'auto',
+          }}
         />
         {newsletter.newsletterStatus === 'loading' ? (
           <LoadingSpinner size={22} />
@@ -97,7 +102,10 @@ export const Newsletter = ({ newsletter }: NewsletterPropsType) => {
           <Text
             variant="p3semi"
             className={newsletterStyles.newsletterButtonLabel}
-            onClick={handleSubmit}
+            onClick={newsletter.enabled ? handleSubmit : void 0}
+            style={{
+              pointerEvents: !newsletter.enabled ? 'none' : 'auto',
+            }}
           >
             {newsletter.buttonLabel}
           </Text>
