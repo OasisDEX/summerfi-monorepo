@@ -10,6 +10,7 @@ import {
 import { morphoPoolIdMock } from '../../mocks/MorphoPoolIdMock'
 import { createProtocolPluginContext } from '../../utils/CreateProtocolPluginContext'
 import { getErrorMessage } from '../../utils/ErrorMessage'
+import type { ILendingPositionId } from '@summerfi/sdk-common'
 
 describe('Protocol Plugin | Unit | Morpho', () => {
   let ctx: IProtocolPluginContext
@@ -108,6 +109,8 @@ describe('Protocol Plugin | Unit | Morpho', () => {
     const positionId = MorphoLendingPositionId.createFrom({
       id: 'mockPositionId',
     })
+    const a: ILendingPositionId = positionId
+
     await expect(morphoProtocolPlugin.getLendingPosition(positionId)).rejects.toThrow(
       'Not implemented',
     )

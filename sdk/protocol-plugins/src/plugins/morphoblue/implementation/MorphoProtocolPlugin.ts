@@ -58,7 +58,10 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
   static readonly MorphoBlueContractName = 'MorphoBlue'
 
   readonly protocolName: ProtocolName.MorphoBlue = ProtocolName.MorphoBlue
-  readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
+  readonly supportedChains = valuesOfChainFamilyMap([
+    ChainFamilyName.Ethereum,
+    ChainFamilyName.Base,
+  ])
   readonly stepBuilders: Partial<ActionBuildersMap> = MorphoStepBuilders
 
   initialize(params: { context: IProtocolPluginContext }) {
@@ -344,7 +347,7 @@ export class MorphoProtocolPlugin extends BaseProtocolPlugin {
 
     if (!debtToken) {
       throw new Error(
-        `Invalid debt token address: ${marketParameters[0]} for chain ${morphoLendingPoolId.protocol.chainInfo.name}`,
+        `Invalid debt token address: ${marketParameters[0]} for chain ${morphoLendingPoolId.protocol.chainInfo.chainId} ${morphoLendingPoolId.protocol.chainInfo.name}`,
       )
     }
 
