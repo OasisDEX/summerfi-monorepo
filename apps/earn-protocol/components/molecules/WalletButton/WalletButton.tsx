@@ -1,12 +1,11 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { Button, Divider, EXTERNAL_LINKS, INTERNAL_LINKS, Text, WithArrow } from '@summerfi/app-ui'
+import { formatAddress, formatCryptoBalance } from '@summerfi/app-utils'
 import { IconCopy, IconLogout, IconSettings } from '@tabler/icons-react'
 import { type WalletState } from '@web3-onboard/core'
 import { useConnectWallet } from '@web3-onboard/react'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
-
-import { formatAddress, formatCryptoBalance } from '@/helpers/formatters'
 
 import walletButtonStyles from './WalletButton.module.scss'
 
@@ -70,7 +69,7 @@ const WalletAccount = ({
       />
       <div className={walletButtonStyles.WalletAccountInfo}>
         <Text variant="p3semi" style={{ margin: '0 20px' }}>
-          {account.ens?.name ?? formatAddress(account.address, 6)}
+          {account.ens?.name ?? formatAddress(account.address, { first: 6 })}
         </Text>
         {account.balance && (
           <Text variant="p4" className={walletButtonStyles.BalanceData}>
@@ -144,7 +143,7 @@ export default () => {
           <>
             <WalletIcon wallet={wallet} />
             <Text variant="p3" style={{ fontWeight: 300, margin: '0 20px' }}>
-              {`${wallet.accounts[0].ens?.name ?? formatAddress(wallet.accounts[0].address, 6)}`}
+              {`${wallet.accounts[0].ens?.name ?? formatAddress(wallet.accounts[0].address, { first: 6 })}`}
             </Text>
             <IconSettings
               strokeWidth={2}

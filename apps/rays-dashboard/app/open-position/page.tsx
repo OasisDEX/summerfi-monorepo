@@ -7,13 +7,13 @@ import {
   Text,
   WithArrow,
 } from '@summerfi/app-ui'
+import { formatAsShorthandNumbers } from '@summerfi/app-utils'
 import { EligibilityCondition } from '@summerfi/serverless-shared'
 import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 
 import { PageViewHandler } from '@/components/organisms/PageViewHandler/PageViewHandler'
 import { ProductPicker } from '@/components/organisms/ProductPicker/ProductPicker'
-import { formatAsShorthandNumbers } from '@/helpers/formatters'
 import { fetchMigrations } from '@/server-handlers/migrate'
 import { fetchRays } from '@/server-handlers/rays'
 import systemConfigHandler from '@/server-handlers/system-config'
@@ -76,7 +76,9 @@ export default async function OpenPositionPage({ searchParams }: OpenPositionPag
           max={userRays.rays.allPossiblePoints}
           formatter={(value) => {
             if (value >= 10000) {
-              return formatAsShorthandNumbers(new BigNumber(value.toFixed(0)), 0)
+              return formatAsShorthandNumbers(new BigNumber(value.toFixed(0)), {
+                precision: 0,
+              })
             }
 
             return value ? value.toFixed(0) : '0'

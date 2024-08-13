@@ -40,8 +40,12 @@ export { Navigation } from './components/layout/Navigation/Navigation'
 export { NavigationMenuDropdownContentListItem } from './components/layout/Navigation/NavigationMenuDropdownContentListItem'
 
 export { EXTERNAL_LINKS, INTERNAL_LINKS } from './helpers/application-links'
+export { getLocalAppConfig } from './helpers/config/access-config-context'
 
-export { formatAddress } from './helpers/format-address'
+export { useClientSideMount } from './hooks/use-client-side-mount'
+export { useLocalStorage, getStorageValue } from './hooks/use-local-storage'
+export { useToggle } from './hooks/use-toggle'
+export { useOnboarding } from './hooks/use-onboarding'
 
 // tokens
 export { tokenConfigs } from './tokens/config'

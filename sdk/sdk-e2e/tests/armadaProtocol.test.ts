@@ -22,7 +22,7 @@ const config = {
 }
 
 describe.skip('Armada Protocol Deposit', () => {
-  const chainInfo = ChainFamilyMap.Base.Mainnet
+  const chainInfo = ChainFamilyMap.Base.Base
   let sdk: SDKManager
   let chain: Chain
   let user: UserClient

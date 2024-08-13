@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { type NavigationMenuPanelListItem, type ProductHubItem } from '@summerfi/app-types'
 import { INTERNAL_LINKS } from '@summerfi/app-ui'
+import { formatDecimalAsPercent } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
-import { formatDecimalAsPercent } from '@/helpers/formatters'
 import { type tNavType } from '@/messages/types'
 
 const zero = new BigNumber(0)

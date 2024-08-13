@@ -3,6 +3,7 @@
 import { type FC, useCallback, useEffect, useState } from 'react'
 import { type NavigationMenuPanelType } from '@summerfi/app-types'
 import { Navigation, RaysCountSmall } from '@summerfi/app-ui'
+import { formatCryptoBalance } from '@summerfi/app-utils'
 import { useConnectWallet } from '@web3-onboard/react'
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
@@ -14,7 +15,6 @@ import {
 import { BridgeSwapHandlerLoader } from '@/components/molecules/BridgeSwap/BridgeSwapLoader'
 import { BridgeSwapWrapper } from '@/components/molecules/BridgeSwap/BridgeSwapWrapper'
 import { WalletButtonFallback } from '@/components/molecules/WalletButton/WalletButtonFallback'
-import { formatCryptoBalance } from '@/helpers/formatters'
 
 const WalletButton = dynamic(() => import('@/components/molecules/WalletButton/WalletButton'), {
   ssr: false,
