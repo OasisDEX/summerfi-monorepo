@@ -20,7 +20,7 @@ export const NewsletterWrapper = ({ config }: { config: Partial<AppConfigType> }
   const [newsletterStatusLabel, setNewsletterStatusLabel] = useState('')
 
   const onSubmit = async (usersEmail: string) => {
-    if (!email || !EMAIL_REGEX.test(email)) {
+    if (!usersEmail.trim() || !EMAIL_REGEX.test(usersEmail.trim())) {
       setNewsletterStatus('error')
       setNewsletterStatusLabel('Please enter a valid email address')
 
