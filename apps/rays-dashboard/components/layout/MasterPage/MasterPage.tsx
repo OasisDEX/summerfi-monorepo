@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 import { WalletInit } from '@/components/molecules/WalletInit/WalletInit'
 import { AccountChangeHandler } from '@/components/organisms/AccountChangeHandler/AccountChangeHandler'
+import { NewsletterWrapper } from '@/components/organisms/NewsletterWrapper/NewsletterWrapper'
 import { basePath } from '@/helpers/base-path'
 import systemConfigHandler from '@/server-handlers/system-config'
 
@@ -46,12 +47,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
           <Footer
             logo={`${basePath}/img/branding/logo-dark.svg`}
             languageSwitcher={<div />}
-            newsletter={{
-              button: 'Subscribe →',
-              description: 'Subscribe to the newsletter for updates',
-              label: 'Temporarily disabled',
-              title: 'Stay up to date with Summer.fi',
-            }}
+            newsletter={<NewsletterWrapper />}
           />
         </div>
       </div>

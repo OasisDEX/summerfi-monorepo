@@ -14,15 +14,10 @@ import { EXTERNAL_LINKS, INTERNAL_LINKS } from '@/helpers/application-links'
 
 import footerStyles from '@/components/layout/Footer/Footer.module.scss'
 
-interface FooterProps {
+export interface FooterProps {
   logo: string
   languageSwitcher?: ReactNode
-  newsletter: {
-    title: string
-    description: string
-    label: string
-    button: string
-  }
+  newsletter: ReactNode
 }
 
 const linksList = [
@@ -151,20 +146,7 @@ export const Footer: FC<FooterProps> = ({ logo, newsletter, languageSwitcher }) 
           </ul>
         </div>
       ))}
-      <div>
-        <Text as="h3" variant="p1semi">
-          {newsletter.title}
-        </Text>
-        <Text as="p" variant="p2" className={footerStyles.newsletterDescription}>
-          {newsletter.description}
-        </Text>
-        <div className={footerStyles.newsletterFakeInput}>
-          <Text variant="p3" className={footerStyles.newsletterFakeLabel}>
-            {newsletter.label}
-          </Text>
-          <Text variant="p3semi">{newsletter.button}</Text>
-        </div>
-      </div>
+      {newsletter}
     </div>
   )
 }

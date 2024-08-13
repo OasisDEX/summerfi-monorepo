@@ -2,9 +2,6 @@ export type Styles = {
   container: string
   linksList: string
   logo: string
-  newsletterDescription: string
-  newsletterFakeInput: string
-  newsletterFakeLabel: string
   socialsList: string
 }
 
