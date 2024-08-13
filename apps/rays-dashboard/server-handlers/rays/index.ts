@@ -1,6 +1,6 @@
 import { type RaysApiResponse } from '@summerfi/app-types'
+import { getRaysDailyChallengeData } from '@summerfi/app-utils/rays'
 
-import { getRaysDailyChallengeData } from '@/helpers/get-rays-daily-challenge-data'
 import { prisma } from '@/helpers/prisma-client'
 
 export const fetchRays = async (query: { [key: string]: string } | string) => {

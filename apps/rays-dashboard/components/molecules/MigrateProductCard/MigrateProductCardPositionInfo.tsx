@@ -1,9 +1,8 @@
 import { type PortfolioMigrations, type TokenSymbolsList } from '@summerfi/app-types'
 import { Text, TokensGroup, Tooltip } from '@summerfi/app-ui'
+import { formatAsShorthandNumbers } from '@summerfi/app-utils'
 import { IconHelpCircle } from '@tabler/icons-react'
 import BigNumber from 'bignumber.js'
-
-import { formatAsShorthandNumbers } from '@/helpers/formatters'
 
 import migrateProductCardStyles from '@/components/molecules/MigrateProductCard/MigrateProductCard.module.scss'
 
@@ -14,7 +13,9 @@ const getMigrationTokenValue = (
 ) =>
   formatAsShorthandNumbers(
     new BigNumber(Number(asset.balance)).shiftedBy(Number(-asset.balanceDecimals)),
-    4,
+    {
+      precision: 4,
+    },
   )
 
 export const MigrateProductCardPositionInfo = ({

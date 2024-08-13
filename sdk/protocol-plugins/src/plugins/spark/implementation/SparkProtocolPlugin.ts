@@ -46,7 +46,10 @@ export class SparkProtocolPlugin extends AAVEv3LikeBaseProtocolPlugin<
   SparkAbiMapType
 > {
   readonly protocolName: ProtocolName.Spark = ProtocolName.Spark
-  readonly supportedChains = valuesOfChainFamilyMap([ChainFamilyName.Ethereum])
+  readonly supportedChains = valuesOfChainFamilyMap([
+    ChainFamilyName.Ethereum,
+    ChainFamilyName.Base,
+  ])
   readonly stepBuilders: Partial<ActionBuildersMap> = SparkStepBuilders
 
   initialize(params: { context: IProtocolPluginContext }) {

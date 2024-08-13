@@ -1,5 +1,5 @@
-import { type LeaderboardResponse } from '@summerfi/app-types'
 import { Button } from '@summerfi/app-ui'
+import { parseServerResponseToClient } from '@summerfi/app-utils'
 import Link from 'next/link'
 
 import { mapLeaderboardColumns } from '@/components/organisms/Leaderboard/columns'
@@ -7,7 +7,6 @@ import { Leaderboard } from '@/components/organisms/Leaderboard/Leaderboard'
 import { LeaderboardSearchBoxAndResults } from '@/components/organisms/Leaderboard/LeaderboardSearchBoxAndResults'
 import { PageViewHandler } from '@/components/organisms/PageViewHandler/PageViewHandler'
 import { wholeLeaderboardDefaults } from '@/constants/leaderboard'
-import { parseServerResponse } from '@/helpers/parse-server-response'
 import { fetchLeaderboard } from '@/server-handlers/leaderboard'
 
 export default async function LeaderboardPage({
@@ -19,7 +18,7 @@ export default async function LeaderboardPage({
     search?: string
   }
 }) {
-  const topLeaderboardResponse = parseServerResponse<LeaderboardResponse>(
+  const topLeaderboardResponse = parseServerResponseToClient(
     await fetchLeaderboard({
       ...wholeLeaderboardDefaults,
       page: searchParams.page ?? wholeLeaderboardDefaults.page,
