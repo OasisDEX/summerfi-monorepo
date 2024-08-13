@@ -109,7 +109,6 @@ describe('Protocol Plugin | Unit | Morpho', () => {
     const positionId = MorphoLendingPositionId.createFrom({
       id: 'mockPositionId',
     })
-    const a: ILendingPositionId = positionId
 
     await expect(morphoProtocolPlugin.getLendingPosition(positionId)).rejects.toThrow(
       'Not implemented',
