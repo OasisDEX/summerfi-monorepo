@@ -1,1 +1,2 @@
-export * from './ISubgraph'
+export * from './ISubgraphManager'
+export * from './ISubgraphProvider'

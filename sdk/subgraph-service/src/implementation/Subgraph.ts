@@ -1,7 +1,5 @@
-import {
-  ISubgraph,
-} from '@summerfi/subgraph-common'
-import { IConfigurationProvider } from '@summerfi/configuration-provider'
+import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
+import { ISubgraph } from '@summerfi/subgraph-common'
 
 /**
  * @name Subgraph
