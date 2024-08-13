@@ -27,6 +27,8 @@ export interface IArmadaPosition extends IPosition, IArmadaPositionData {
   readonly pool: IArmadaPool
   /** Amount deposited in the Fleet */
   readonly amount: ITokenAmount
+  /** Number of shares allocated to this position */
+  readonly shares: ITokenAmount
 
   // Re-declaring to narrow the type
   readonly type: PositionType.Armada
@@ -40,6 +42,7 @@ export const ArmadaPositionDataSchema = z.object({
   id: z.custom<IArmadaPositionId>((val) => isArmadaPositionId(val)),
   pool: z.custom<IArmadaPool>((val) => isArmadaPool(val)),
   amount: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  shares: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   type: z.literal(PositionType.Armada),
 })
 

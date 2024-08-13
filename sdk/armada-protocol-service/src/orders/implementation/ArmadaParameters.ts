@@ -2,7 +2,7 @@ import {
   ArmadaOperationType,
   IArmadaParameters,
   IArmadaParametersData,
-  IArmadaPosition,
+  IArmadaPoolId,
   __iarmadaparameters__,
 } from '@summerfi/armada-protocol-common'
 import { ITokenAmount } from '@summerfi/sdk-common/common'
@@ -24,7 +24,7 @@ export class ArmadaParameters implements IArmadaParameters {
 
   /** ATTRIBUTES */
   readonly user: IUser
-  readonly previousPosition?: IArmadaPosition
+  readonly poolId: IArmadaPoolId
   readonly operation: ArmadaOperationType
   readonly amount: ITokenAmount
 
@@ -36,13 +36,13 @@ export class ArmadaParameters implements IArmadaParameters {
   /** SEALED CONSTRUCTOR */
   private constructor(params: ArmadaParametersParameters) {
     this.user = params.user
-    this.previousPosition = params.previousPosition
+    this.poolId = params.poolId
     this.operation = params.operation
     this.amount = params.amount
   }
 
   toString(): string {
-    return `Armada Parameters [user: ${this.user}, previousPosition: ${this.previousPosition}, operation: ${this.operation}, amount: ${this.amount}]`
+    return `Armada Parameters [user: ${this.user}, poolId: ${this.poolId}, operation: ${this.operation}, amount: ${this.amount}]`
   }
 }
 

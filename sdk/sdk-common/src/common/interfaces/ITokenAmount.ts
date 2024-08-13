@@ -98,6 +98,46 @@ export interface ITokenAmount extends ITokenAmountData, IPrintable {
    * @returns true if the amount is zero or false otherwise
    */
   isZero(): boolean
+
+  /**
+   * @name isGreaterThan
+   * @description Checks if the amount is greater than the provided TokenAmount
+   * @param tokenAmount TokenAmount to compare
+   * @returns true if the amount is greater than the provided TokenAmount
+   */
+  isGreaterThan(tokenAmount: ITokenAmount): boolean
+
+  /**
+   * @name isLessThan
+   * @description Checks if the amount is less than the provided TokenAmount
+   * @param tokenAmount TokenAmount to compare
+   * @returns true if the amount is less than the provided TokenAmount
+   */
+  isLessThan(tokenAmount: ITokenAmount): boolean
+
+  /**
+   * @name isGreaterOrEqualThan
+   * @description Checks if the amount is greater or equal than the provided TokenAmount
+   * @param tokenAmount TokenAmount to compare
+   * @returns true if the amount is greater or equal than the provided TokenAmount
+   */
+  isGreaterOrEqualThan(tokenAmount: ITokenAmount): boolean
+
+  /**
+   * @name isLessOrEqualThan
+   * @description Checks if the amount is less or equal than the provided TokenAmount
+   * @param tokenAmount TokenAmount to compare
+   * @returns true if the amount is less or equal than the provided TokenAmount
+   */
+  isLessOrEqualThan(tokenAmount: ITokenAmount): boolean
+
+  /**
+   * @name isEqualTo
+   * @description Checks if the amount is equal to the provided TokenAmount
+   * @param tokenAmount TokenAmount to compare
+   * @returns true if the amount is equal to the provided TokenAmount
+   */
+  isEqualTo(tokenAmount: ITokenAmount): boolean
 }
 
 /**
