@@ -1,6 +1,6 @@
 import { Address, ChainFamilyMap, Token } from '@summerfi/sdk-common'
 
-const chainInfo = ChainFamilyMap.Base.Mainnet
+const chainInfo = ChainFamilyMap.Base.Base
 
 export const DAI = Token.createFrom({
   chainInfo,

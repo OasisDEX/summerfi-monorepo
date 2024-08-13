@@ -49,7 +49,7 @@ describe('Chain Families', () => {
       familyName: 'Base',
       chainInfo: ChainInfo.createFrom({
         chainId: 8453,
-        name: 'Mainnet',
+        name: 'Base',
       }),
     })
   })

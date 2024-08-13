@@ -1,3 +1,6 @@
+// Make sure the names are unique
+
+// TODO: rethink the family enums / hierachy if we need to separate them into separate familiites or independant list of chains
 export enum ChainFamilyName {
   Ethereum = 'Ethereum',
   Arbitrum = 'Arbitrum',
@@ -19,7 +22,7 @@ export enum OptimismChainNames {
 }
 
 export enum BaseChainNames {
-  Mainnet = 'Mainnet',
+  Mainnet = 'Base',
 }
 
 export type ChainNames =
