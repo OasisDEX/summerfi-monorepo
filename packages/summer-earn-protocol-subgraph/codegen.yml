@@ -1,6 +1,6 @@
 overwrite: true
-schema: "${SUBGRAPH_BASE}/summer-protocol-base"
-documents: "./src/**/*.graphql"
+schema: '${SUBGRAPH_BASE}/summer-protocol-base'
+documents: './src/**/*.graphql'
 generates:
   src/client.ts:
     plugins:
@@ -27,4 +27,5 @@ generates:
             Bytes: string
             MetaTagAttributes: Record<string, string>
             UploadId: string
-      - "typescript-graphql-request"
+            Timestamp: number
+      - 'typescript-graphql-request'
