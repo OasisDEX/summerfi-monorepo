@@ -33,7 +33,6 @@ export const handler = async (
   if (!RAYS_DB_CONNECTION_STRING) {
     throw new Error('RAYS_DB_CONNECTION_STRING is not set')
   }
-  console.log(RAYS_DB_CONNECTION_STRING)
   logger.addContext(context)
 
   const parsedResult = queryParamsSchema.safeParse(event.queryStringParameters || {})

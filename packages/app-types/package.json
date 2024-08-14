@@ -11,15 +11,17 @@
   "dependencies": {
     "@summerfi/app-db": "workspace:*",
     "@summerfi/rays-db": "workspace:*",
-    "@summerfi/serverless-shared": "workspace:*",
     "@types/react": "^18.3.1"
   },
   "devDependencies": {
-    "@tabler/icons-react": "^3.4.0",
+    "@tabler/icons-react": "^3.11.0",
     "@types/node-fetch": "^2.6.11",
     "@types/node": "^20.14.2",
     "@types/react": "^18.3.1",
     "json-to-ts": "^1.7.0",
     "node-fetch": "^2.7.0"
+  },
+  "peerDependencies": {
+    "@summerfi/serverless-shared": "workspace:*"
   }
 }

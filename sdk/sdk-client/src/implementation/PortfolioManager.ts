@@ -1,10 +1,10 @@
 import type { ChainInfo, Wallet, Position } from '@summerfi/sdk-common/common'
 import { IPortfolioManager } from '../interfaces/IPortfolioManager'
 import { IRPCClient } from '../interfaces/IRPCClient'
-import { RPCClientType } from '../rpc/SDKClient'
+import { RPCMainClientType } from '../rpc/SDKMainClient'
 
 export class PortfolioManager extends IRPCClient implements IPortfolioManager {
-  constructor(params: { rpcClient: RPCClientType }) {
+  constructor(params: { rpcClient: RPCMainClientType }) {
     super(params)
   }
 

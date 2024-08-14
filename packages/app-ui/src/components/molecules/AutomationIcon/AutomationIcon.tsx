@@ -1,6 +1,6 @@
 import { type FC, type ReactNode } from 'react'
 
-import { Icon } from '@/components/atoms/Icon/Icon'
+import { Icon, type IconPropsBase } from '@/components/atoms/Icon/Icon'
 import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 
 import automationIconStyles from '@/components/molecules/AutomationIcon/AutomationIcon.module.scss'
@@ -8,6 +8,7 @@ import automationIconStyles from '@/components/molecules/AutomationIcon/Automati
 interface AutomationIconProps {
   tooltip: ReactNode
   enabled?: boolean
+  variant?: IconPropsBase['variant']
   type:
     | 'autoBuy'
     | 'autoSell'
@@ -19,7 +20,7 @@ interface AutomationIconProps {
     | 'constantMultiple'
 }
 
-export const AutomationIcon: FC<AutomationIconProps> = ({ enabled, type, tooltip }) => {
+export const AutomationIcon: FC<AutomationIconProps> = ({ enabled, type, tooltip, variant }) => {
   return (
     <Tooltip tooltip={tooltip}>
       <div
@@ -29,7 +30,7 @@ export const AutomationIcon: FC<AutomationIconProps> = ({ enabled, type, tooltip
             : automationIconStyles.iconWrapperNotActive
         }
       >
-        <Icon iconName={type} variant="m" />
+        <Icon iconName={type} variant={variant ? variant : 'm'} />
       </div>
     </Tooltip>
   )

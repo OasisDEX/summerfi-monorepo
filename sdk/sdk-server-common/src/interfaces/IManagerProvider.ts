@@ -1,4 +1,4 @@
-import { IConfigurationProvider } from '@summerfi/configuration-provider'
+import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { ChainId } from '@summerfi/sdk-common/common'
 
 /**

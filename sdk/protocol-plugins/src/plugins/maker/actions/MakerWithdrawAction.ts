@@ -1,7 +1,7 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
-import { IPositionsManager } from '@summerfi/sdk-common/orders'
 import { IAddress, IPosition, ITokenAmount } from '@summerfi/sdk-common'
-import { isMakerPositionId } from '../interfaces'
+import { IPositionsManager } from '@summerfi/sdk-common/orders'
+import { isMakerLendingPositionId } from '../interfaces'
 
 export class MakerWithdrawAction extends BaseAction<typeof MakerWithdrawAction.Config> {
   public static readonly Config = {
@@ -21,7 +21,7 @@ export class MakerWithdrawAction extends BaseAction<typeof MakerWithdrawAction.C
     },
     paramsMapping?: InputSlotsMapping,
   ): ActionCall {
-    if (!isMakerPositionId(params.position.id)) {
+    if (!isMakerLendingPositionId(params.position.id)) {
       throw new Error('Pool ID is not a Maker one')
     }
 

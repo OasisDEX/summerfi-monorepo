@@ -9,7 +9,7 @@ interface HomepageHandlerPageProps {
 
 export const HomepageHandler = ({ userAddress }: HomepageHandlerPageProps) => {
   const [{ wallet }] = useConnectWallet()
-  const { push } = useRouter()
+  const { replace, refresh } = useRouter()
   const currentPath = usePathname()
 
   const dynamicWalletAddress = useMemo(() => wallet?.accounts[0].address, [wallet?.accounts])
@@ -17,10 +17,11 @@ export const HomepageHandler = ({ userAddress }: HomepageHandlerPageProps) => {
   const goToWalletView = useCallback(
     (walletAddress: string) => {
       if (walletAddress) {
-        push(`${currentPath}?userAddress=${walletAddress}`)
+        replace(`${currentPath}?userAddress=${walletAddress}`)
+        setTimeout(refresh, 100)
       }
     },
-    [currentPath, push],
+    [currentPath, replace, refresh],
   )
 
   useEffect(() => {

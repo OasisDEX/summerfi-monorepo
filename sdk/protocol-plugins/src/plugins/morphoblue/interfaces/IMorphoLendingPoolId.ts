@@ -1,7 +1,13 @@
-import { ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common/protocols'
-import { IMorphoProtocol, MorphoProtocolDataSchema } from './IMorphoProtocol'
 import { HexData } from '@summerfi/sdk-common'
+import { ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common/lending-protocols'
+import { isHex } from 'viem'
 import { z } from 'zod'
+import { IMorphoProtocol, isMorphoProtocol } from './IMorphoProtocol'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IMorphoLendingPoolId
@@ -11,6 +17,8 @@ import { z } from 'zod'
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
 export interface IMorphoLendingPoolId extends IMorphoLendingPoolIdData, ILendingPoolId {
+  /** Signature used to differentiate it from similar interfaces */
+  readonly [__signature__]: symbol
   /** The protocol to which the pool belongs */
   readonly protocol: IMorphoProtocol
   /** The encoded market ID used to access the market parameters */
@@ -22,8 +30,8 @@ export interface IMorphoLendingPoolId extends IMorphoLendingPoolIdData, ILending
  */
 export const MorphoLendingPoolIdDataSchema = z.object({
   ...LendingPoolIdDataSchema.shape,
-  protocol: MorphoProtocolDataSchema,
-  marketId: z.custom<HexData>(),
+  protocol: z.custom<IMorphoProtocol>((val) => isMorphoProtocol(val)),
+  marketId: z.custom<HexData>((val) => isHex(val)),
 })
 
 /**

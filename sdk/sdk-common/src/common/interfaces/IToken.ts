@@ -1,13 +1,20 @@
+import { z } from 'zod'
 import { AddressDataSchema, IAddress } from './IAddress'
 import { ChainInfoDataSchema, IChainInfo } from './IChainInfo'
 import { IPrintable } from './IPrintable'
-import { z } from 'zod'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @name IToken
  * @description Represents an token in a Chain, typically used to represent ERC-20 tokens
  */
 export interface IToken extends ITokenData, IPrintable {
+  /** Signature to differentiate from similar interfaces */
+  readonly [__signature__]: symbol
   /** Chain where the token is deployed */
   readonly chainInfo: IChainInfo
   /** Token address */

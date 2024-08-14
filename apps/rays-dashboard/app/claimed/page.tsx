@@ -1,4 +1,5 @@
-import { EXTERNAL_LINKS, formatAddress, Text } from '@summerfi/app-ui'
+import { EXTERNAL_LINKS, Text } from '@summerfi/app-ui'
+import { formatAddress } from '@summerfi/app-utils'
 import Image from 'next/image'
 import Link from 'next/link'
 

@@ -1,22 +1,18 @@
-import {
-  IContractProvider,
-  IProtocolPluginContext,
-  IProtocolPluginsRegistry,
-} from '@summerfi/protocol-plugins-common'
+import { IAddressBookManager } from '@summerfi/address-book-common'
+import { IOracleManager } from '@summerfi/oracle-common'
+import { IProtocolPluginContext, IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
+import { ProtocolName } from '@summerfi/sdk-common'
+import { ISwapManager } from '@summerfi/swap-common/interfaces'
+import { ITokensManager } from '@summerfi/tokens-common'
 import { PublicClient } from 'viem'
+import { ProtocolPluginsRegistry } from '../../src/implementation/ProtocolPluginsRegistry'
+import { MakerProtocolPlugin } from '../../src/plugins/maker/implementation/MakerProtocolPlugin'
+import { SparkProtocolPlugin } from '../../src/plugins/spark/implementation/SparkProtocolPlugin'
 import {
   EmptyProtocolPluginMock,
   NoCheckpointProtocolPluginMock,
   ProtocolPluginMock,
 } from './ProtocolPluginMock'
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import { ITokensManager } from '@summerfi/tokens-common'
-import { IOracleManager } from '@summerfi/oracle-common'
-import { ProtocolPluginsRegistry } from '../../src/implementation/ProtocolPluginsRegistry'
-import { MakerProtocolPlugin } from '../../src/plugins/maker/implementation/MakerProtocolPlugin'
-import { SparkProtocolPlugin } from '../../src/plugins/spark/implementation/SparkProtocolPlugin'
-import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import { IAddressBookManager } from '@summerfi/address-book-common'
 
 export function createProtocolPluginsRegistry(): IProtocolPluginsRegistry {
   const protocolPluginContext: IProtocolPluginContext = {

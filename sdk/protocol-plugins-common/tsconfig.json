@@ -3,10 +3,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "@summerfi/testing-utils/*": ["../testing-utils/src/*"]
-    }
+    "baseUrl": "."
   },
   "references": [
     {

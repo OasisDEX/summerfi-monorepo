@@ -1,0 +1,39 @@
+{
+  "name": "@summerfi/armada-protocol-service",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "types": "./src/index.d.ts"
+    }
+  },
+  "scripts": {
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "test": "jest tests/ --passWithNoTests",
+    "e2e": "jest e2e/",
+    "testw": "jest --watch",
+    "build": "tsc -b tsconfig.build.json",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@summerfi/allowance-manager-common": "workspace:^",
+    "@summerfi/allowance-manager-service": "workspace:*",
+    "@summerfi/common": "workspace:*",
+    "@summerfi/configuration-provider-common": "workspace:*",
+    "@summerfi/armada-protocol-common": "workspace:*",
+    "@summerfi/contracts-provider-common": "workspace:*",
+    "@summerfi/sdk-common": "workspace:*",
+    "@types/node-fetch": "^2.6.11",
+    "node-fetch": "^2.7.0"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/jest-config": "workspace:*",
+    "@summerfi/testing-utils": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*"
+  }
+}

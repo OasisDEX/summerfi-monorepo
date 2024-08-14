@@ -1,10 +1,10 @@
-import { ITokensManager } from '@summerfi/tokens-common'
 import { ChainInfo } from '@summerfi/sdk-common'
 import { Address, AddressType } from '@summerfi/sdk-common/common'
+import { ITokensManager } from '@summerfi/tokens-common'
 import assert from 'assert'
 
+import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { TokensManagerFactory } from '../src'
-import { IConfigurationProvider } from '@summerfi/configuration-provider'
 
 describe('TokensManagerFactory', () => {
   let tokensManager: ITokensManager

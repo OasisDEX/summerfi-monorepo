@@ -1,31 +1,45 @@
-import { LendingPool } from '@summerfi/sdk-common/protocols'
-import { IMorphoLendingPool, IMorphoLendingPoolData } from '../interfaces/IMorphoLendingPool'
+import { IAddress, IRiskRatio } from '@summerfi/sdk-common/common'
+import { LendingPool } from '@summerfi/sdk-common/lending-protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
-import { MorphoLendingPoolId } from './MorphoLendingPoolId'
-import { Address } from '@summerfi/sdk-common/common'
-import { RiskRatio } from '@summerfi/sdk-common'
+import {
+  IMorphoLendingPool,
+  IMorphoLendingPoolData,
+  __signature__,
+} from '../interfaces/IMorphoLendingPool'
+import { IMorphoLendingPoolId } from '../interfaces/IMorphoLendingPoolId'
+
+/**
+ * Type for the parameters of the IMorphoLendingPool interface
+ */
+export type MorphoLendingPoolParameters = Omit<IMorphoLendingPoolData, 'type'>
 
 /**
  * @class MorphoLendingPool
  * @see IMorphoLendingPool
  */
 export class MorphoLendingPool extends LendingPool implements IMorphoLendingPool {
-  readonly id: MorphoLendingPoolId
-  readonly oracle: Address
-  readonly irm: Address
-  readonly lltv: RiskRatio
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
 
-  private constructor(params: IMorphoLendingPoolData) {
-    super(params)
+  /** ATTRIBUTES */
+  readonly id: IMorphoLendingPoolId
+  readonly oracle: IAddress
+  readonly irm: IAddress
+  readonly lltv: IRiskRatio
 
-    this.id = MorphoLendingPoolId.createFrom(params.id)
-    this.oracle = Address.createFrom(params.oracle)
-    this.irm = Address.createFrom(params.irm)
-    this.lltv = RiskRatio.createFrom(params.lltv)
+  /** FACTORY */
+  public static createFrom(params: MorphoLendingPoolParameters): MorphoLendingPool {
+    return new MorphoLendingPool(params)
   }
 
-  public static createFrom(params: IMorphoLendingPoolData): MorphoLendingPool {
-    return new MorphoLendingPool(params)
+  /** SEALED CONSTRUCTOR */
+  private constructor(params: MorphoLendingPoolParameters) {
+    super(params)
+
+    this.id = params.id
+    this.oracle = params.oracle
+    this.irm = params.irm
+    this.lltv = params.lltv
   }
 }
 

@@ -50,7 +50,7 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
   }
 
   const sdkRouterFunction = new Function(stack, 'sdk-router-function', {
-    handler: 'summerfi-api/sdk-router-function/src/index.handler',
+    handler: 'sdk/sdk-router-function/src/index.handler',
     runtime: 'nodejs20.x',
     logFormat: 'JSON',
     timeout: 30,

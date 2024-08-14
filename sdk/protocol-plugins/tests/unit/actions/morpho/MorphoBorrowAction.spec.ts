@@ -1,3 +1,4 @@
+import { ChainFamilyMap, Percentage, RiskRatio, RiskRatioType } from '@summerfi/sdk-common'
 import { Address, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
 import {
@@ -6,14 +7,6 @@ import {
   MorphoLendingPoolId,
   MorphoProtocol,
 } from '../../../../src'
-import {
-  ChainFamilyMap,
-  Percentage,
-  ProtocolName,
-  RiskRatio,
-  RiskRatioType,
-} from '@summerfi/sdk-common'
-import { PoolType } from '@summerfi/sdk-common/protocols'
 import { MorphoLLTVPrecision } from '../../../../src/plugins/morphoblue/constants/MorphoConstants'
 
 describe('MorphoBorrowAction Action', () => {
@@ -39,7 +32,6 @@ describe('MorphoBorrowAction Action', () => {
   const tokenAmount = TokenAmount.createFrom({ token: DAI, amount: '578' })
 
   const morphoProtocol = MorphoProtocol.createFrom({
-    name: ProtocolName.MorphoBlue,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 
@@ -58,7 +50,6 @@ describe('MorphoBorrowAction Action', () => {
       value: Percentage.createFrom({ value: 0.5 }),
       type: RiskRatioType.LTV,
     }),
-    type: PoolType.Lending,
   })
 
   it('should return the versioned name', () => {

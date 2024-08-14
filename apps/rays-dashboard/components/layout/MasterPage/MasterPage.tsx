@@ -1,13 +1,13 @@
 import { type FC, type PropsWithChildren } from 'react'
-import { Footer, LaunchBanner } from '@summerfi/app-ui'
+import { Footer } from '@summerfi/app-ui'
+import { parseServerResponseToClient } from '@summerfi/app-utils'
 import Image from 'next/image'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 import { WalletInit } from '@/components/molecules/WalletInit/WalletInit'
 import { AccountChangeHandler } from '@/components/organisms/AccountChangeHandler/AccountChangeHandler'
 import { basePath } from '@/helpers/base-path'
-import { parseServerResponse } from '@/helpers/parse-server-response'
-import systemConfigHandler, { type SystemConfig } from '@/server-handlers/system-config'
+import systemConfigHandler from '@/server-handlers/system-config'
 
 import masterPageStyles from './MasterPage.module.scss'
 
@@ -20,11 +20,10 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({
   background = 'simple',
   children,
 }) => {
-  const systemConfig = parseServerResponse<SystemConfig>(await systemConfigHandler())
+  const systemConfig = parseServerResponseToClient(await systemConfigHandler())
 
   return (
     <>
-      <LaunchBanner />
       <WalletInit />
       <div className={masterPageStyles.mainContainer}>
         {

@@ -1,31 +1,47 @@
-import { SerializationService } from '@summerfi/sdk-common/services'
-import { IMorphoLendingPoolId, IMorphoLendingPoolIdData } from '../interfaces/IMorphoLendingPoolId'
-import { MorphoProtocol } from './MorphoProtocol'
-import { IPrintable } from '@summerfi/sdk-common/common'
-import { LendingPoolId } from '@summerfi/sdk-common/protocols'
 import { HexData } from '@summerfi/sdk-common'
+import { IPrintable } from '@summerfi/sdk-common/common'
+import { LendingPoolId } from '@summerfi/sdk-common/lending-protocols'
+import { SerializationService } from '@summerfi/sdk-common/services'
+import {
+  IMorphoLendingPoolId,
+  IMorphoLendingPoolIdData,
+  __signature__,
+} from '../interfaces/IMorphoLendingPoolId'
+import { IMorphoProtocol } from '../interfaces/IMorphoProtocol'
+
+/**
+ * Type for the parameters of MorphoLendingPoolId
+ */
+export type MorphoLendingPoolIdParameters = Omit<IMorphoLendingPoolIdData, 'type'>
 
 /**
  * @class MorphoLendingPoolId
  * @see IMorphoLendingPoolIdData
  */
 export class MorphoLendingPoolId extends LendingPoolId implements IMorphoLendingPoolId, IPrintable {
-  readonly protocol: MorphoProtocol
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
+
+  /** ATTRIBUTES */
+  readonly protocol: IMorphoProtocol
   readonly marketId: HexData
 
-  /** Factory method */
-  static createFrom(params: IMorphoLendingPoolIdData): MorphoLendingPoolId {
+  /** FACTORY */
+  static createFrom(params: MorphoLendingPoolIdParameters): MorphoLendingPoolId {
     return new MorphoLendingPoolId(params)
   }
 
-  /** Sealed constructor */
-  private constructor(params: IMorphoLendingPoolIdData) {
+  /** SEALED CONSTRUCTOR */
+  private constructor(params: MorphoLendingPoolIdParameters) {
     super(params)
 
-    this.protocol = MorphoProtocol.createFrom(params.protocol)
+    this.protocol = params.protocol
     this.marketId = params.marketId
   }
 
+  /** METHODS */
+
+  /** @see IPrintable.toString */
   toString(): string {
     return `${LendingPoolId.toString()} [marketId=${this.marketId}]`
   }

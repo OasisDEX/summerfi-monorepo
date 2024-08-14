@@ -1,16 +1,22 @@
-import { StepBuilderContext } from '../src/context'
+import {
+  IPoolIdData,
+  LendingPosition,
+  LendingPositionType,
+  PoolType,
+  ProtocolName,
+} from '@summerfi/sdk-common'
 import {
   Address,
+  ChainFamilyMap,
   ChainInfo,
-  Position,
+  IProtocol,
   PositionType,
   Token,
   TokenAmount,
 } from '@summerfi/sdk-common/common'
-import { IPoolIdData, PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
-import { ChainFamilyMap } from '@summerfi/sdk-common/common'
 import { DerivedAction } from '@summerfi/testing-utils/mocks/actions/DerivedAction'
+import { StepBuilderContext } from '../src/context'
 
 describe('Step Builder Context', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -53,9 +59,10 @@ describe('Step Builder Context', () => {
   const protocol = {
     name: ProtocolName.Maker as const,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
-  }
+  } as unknown as IProtocol
 
   const poolId: IPoolIdData = {
+    type: PoolType.Lending,
     protocol: protocol,
   }
 
@@ -66,12 +73,13 @@ describe('Step Builder Context', () => {
   }
 
   const position = {
-    type: PositionType.Multiply,
+    type: PositionType.Lending,
+    subtype: LendingPositionType.Multiply,
     positionId: { id: 'someposition' },
     debtAmount: borrowAmount,
     collateralAmount: depositAmount,
     pool: pool,
-  } as unknown as Position
+  } as unknown as LendingPosition
 
   it('should not allow adding calls without subcontext', () => {
     const stepBuilderContext = new StepBuilderContext()

@@ -1,24 +1,25 @@
-import { ISimulation, SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
-import { refinanceLendingToLending } from '../src/strategies'
+import { IRefinanceSimulation, RefinanceParameters } from '@summerfi/sdk-common'
 import { Percentage } from '@summerfi/sdk-common/common'
+import { SimulationSteps } from '@summerfi/sdk-common/simulation'
+import { refinanceLendingToLending } from '../src/strategies'
+import { mockRefinanceContext, mockRefinanceContextRequiredSwaps } from './mocks/contextMock'
 import {
   otherTestCollateral,
   otherTestDebt,
   testSourcePosition,
   testTargetLendingPoolRequiredSwaps,
 } from './mocks/testSourcePosition'
-import { mockRefinanceContext, mockRefinanceContextRequiredSwaps } from './mocks/contextMock'
 
 describe('Refinance', () => {
   describe('to the position with the different collateral and debt (with swaps)', () => {
-    let simulation: ISimulation<SimulationType.Refinance>
+    let simulation: IRefinanceSimulation
     beforeAll(async () => {
       simulation = await refinanceLendingToLending(
-        {
+        RefinanceParameters.createFrom({
           sourcePosition: testSourcePosition,
           targetPool: testTargetLendingPoolRequiredSwaps,
           slippage: Percentage.createFrom({ value: 1 }),
-        },
+        }),
         mockRefinanceContextRequiredSwaps,
       )
     })

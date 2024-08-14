@@ -1,5 +1,12 @@
-import { Button, Text } from '@summerfi/app-ui'
+import { useEffect, useMemo } from 'react'
+import { LiFiWalletManagement, supportedWallets } from '@lifi/wallet-management'
+import { LiFiWidget } from '@lifi/widget'
+import { Button, useOnboarding } from '@summerfi/app-ui'
 import { IconX } from '@tabler/icons-react'
+import { useConnectWallet } from '@web3-onboard/react'
+
+import { BridgeSwapOnboarding } from '@/components/molecules/BridgeSwap/BridgeSwapOnboarding'
+import { swapWidgetConfig } from '@/constants/swap-widget-config'
 
 import bridgeSwapHandlerStyles from './BridgeSwapHandler.module.scss'
 
@@ -8,15 +15,37 @@ type BridgeSwapHandlerProps = {
   setShowNavigationModule: (show: 'swap' | 'bridge' | undefined) => void
 }
 
-export default ({
-  showNavigationModule: _showNavigationModule,
-  setShowNavigationModule,
-}: BridgeSwapHandlerProps) => {
+export default ({ showNavigationModule, setShowNavigationModule }: BridgeSwapHandlerProps) => {
+  const [{ wallet }] = useConnectWallet()
+  const [isOnboarded] = useOnboarding('SwapWidget')
+  const walletManagement = useMemo(() => new LiFiWalletManagement(), [])
+
+  useEffect(() => {
+    async function autoConnectLiFi() {
+      if (!wallet || !isOnboarded) {
+        const activeWallets = supportedWallets.filter(
+          (supportedWallet) => wallet?.label === supportedWallet.name,
+        )
+
+        if (!activeWallets.length) {
+          return
+        }
+        await walletManagement.connect(activeWallets[0])
+      }
+    }
+    void autoConnectLiFi()
+  }, [isOnboarded, wallet, walletManagement])
+
   return (
     <>
-      <Text as="p" style={{ textAlign: 'center', marginTop: '128px' }}>
-        Disabled temporarily.
-      </Text>
+      {!isOnboarded ? (
+        <BridgeSwapOnboarding />
+      ) : (
+        <LiFiWidget
+          integrator={swapWidgetConfig.integrator}
+          config={{ ...swapWidgetConfig, subvariantOptions: showNavigationModule }}
+        />
+      )}
       <Button
         variant="unstyled"
         onClick={() => {

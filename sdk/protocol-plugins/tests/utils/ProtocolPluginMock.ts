@@ -1,5 +1,3 @@
-import { ChainFamilyMap, IPosition, IPositionId, Maybe } from '@summerfi/sdk-common/common'
-import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
 import {
   ActionBuilderParams,
   ActionBuilderUsedAction,
@@ -9,18 +7,20 @@ import {
   IProtocolPlugin,
   IProtocolPluginContext,
 } from '@summerfi/protocol-plugins-common'
+import { ChainFamilyMap, IPoolId, Maybe, ProtocolName } from '@summerfi/sdk-common/common'
+import { SimulationSteps, steps } from '@summerfi/sdk-common/simulation'
+
+import { TransactionInfo } from '@summerfi/sdk-common'
 import {
   ILendingPool,
   ILendingPoolId,
   ILendingPoolIdData,
   ILendingPoolInfo,
-  IPool,
-  IPoolId,
-  ProtocolName,
-} from '@summerfi/sdk-common/protocols'
-import { IExternalPosition, IPositionsManager } from '@summerfi/sdk-common/orders'
+  ILendingPosition,
+  ILendingPositionId,
+} from '@summerfi/sdk-common/lending-protocols'
+import { IExternalLendingPosition, IPositionsManager } from '@summerfi/sdk-common/orders'
 import { IUser } from '@summerfi/sdk-common/user'
-import { TransactionInfo } from '@summerfi/sdk-common'
 import { StepBuilderContextMock } from '@summerfi/testing-utils'
 import { BaseActionBuilder } from '../../src'
 
@@ -103,8 +103,8 @@ export class ProtocolPluginMock implements IProtocolPlugin {
     return undefined as unknown as ILendingPoolInfo
   }
 
-  async getPosition(positionId: IPositionId): Promise<IPosition> {
-    return undefined as unknown as IPosition
+  async getLendingPosition(positionId: ILendingPositionId): Promise<ILendingPosition> {
+    return undefined as unknown as ILendingPosition
   }
 
   getActionBuilder<
@@ -122,7 +122,7 @@ export class ProtocolPluginMock implements IProtocolPlugin {
 
   async getImportPositionTransaction(params: {
     user: IUser
-    externalPosition: IExternalPosition
+    externalPosition: IExternalLendingPosition
     positionsManager: IPositionsManager
   }): Promise<Maybe<TransactionInfo>> {
     return {} as unknown as TransactionInfo
@@ -153,8 +153,8 @@ export class EmptyProtocolPluginMock implements IProtocolPlugin {
     return undefined as unknown as ILendingPoolInfo
   }
 
-  async getPosition(positionId: IPositionId): Promise<IPosition> {
-    return undefined as unknown as IPosition
+  async getLendingPosition(positionId: ILendingPositionId): Promise<ILendingPosition> {
+    return undefined as unknown as ILendingPosition
   }
 
   getActionBuilder<
@@ -172,7 +172,7 @@ export class EmptyProtocolPluginMock implements IProtocolPlugin {
 
   async getImportPositionTransaction(params: {
     user: IUser
-    externalPosition: IExternalPosition
+    externalPosition: IExternalLendingPosition
     positionsManager: IPositionsManager
   }): Promise<Maybe<TransactionInfo>> {
     return undefined as unknown as TransactionInfo
@@ -208,8 +208,8 @@ export class NoCheckpointProtocolPluginMock implements IProtocolPlugin {
     return undefined as unknown as ILendingPoolInfo
   }
 
-  async getPosition(positionId: IPositionId): Promise<IPosition> {
-    return undefined as unknown as IPosition
+  async getLendingPosition(positionId: ILendingPositionId): Promise<ILendingPosition> {
+    return undefined as unknown as ILendingPosition
   }
 
   getActionBuilder<
@@ -227,7 +227,7 @@ export class NoCheckpointProtocolPluginMock implements IProtocolPlugin {
 
   async getImportPositionTransaction(params: {
     user: IUser
-    externalPosition: IExternalPosition
+    externalPosition: IExternalLendingPosition
     positionsManager: IPositionsManager
   }): Promise<Maybe<TransactionInfo>> {
     return undefined as unknown as TransactionInfo

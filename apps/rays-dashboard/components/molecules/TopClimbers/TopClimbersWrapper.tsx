@@ -28,7 +28,9 @@ export const TopClimbersWrapper = ({ topClimbers }: { topClimbers?: LeaderboardR
   )
   const [topClimbersOtherTabsData, setTopClimbersOtherTabsData] = useState<{
     [key in TopClimbersTabs]?: LeaderboardResponse
-  }>()
+  }>({
+    [TopClimbersTabs.top_gainers_rank]: topClimbers,
+  })
 
   const trackedTopClimbers = () => {
     trackEvent(MixpanelEventTypes.RaysTopClimbers, {
@@ -39,7 +41,7 @@ export const TopClimbersWrapper = ({ topClimbers }: { topClimbers?: LeaderboardR
   }
 
   const fetchNewTopClimbers = useCallback(() => {
-    if (!topClimbersOtherTabsData?.[topClimbersTab]) {
+    if (!topClimbersOtherTabsData[topClimbersTab]) {
       fetch(`${basePath}/api/leaderboard?sortMethod=${topClimbersTab}&limit=${climbersCount}`)
         .then((resp) => resp.json())
         .then((data) => {
@@ -57,7 +59,7 @@ export const TopClimbersWrapper = ({ topClimbers }: { topClimbers?: LeaderboardR
       return topClimbers
     }
 
-    return topClimbersOtherTabsData?.[topClimbersTab]
+    return topClimbersOtherTabsData[topClimbersTab]
   }, [topClimbers, topClimbersTab, topClimbersOtherTabsData])
 
   return (

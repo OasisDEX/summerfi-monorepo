@@ -1,6 +1,13 @@
-import { AddressValue } from '../aliases/AddressValue'
-import { AddressType } from '../enums/AddressType'
+import { isHex } from 'viem'
 import { z } from 'zod'
+import { AddressValue } from '../aliases/AddressValue'
+import { AddressType } from '../types/AddressType'
+import { IPrintable } from './IPrintable'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @name IAddress
@@ -8,7 +15,9 @@ import { z } from 'zod'
  *
  * Currently only Ethereum type is supported
  */
-export interface IAddress extends IAddressData {
+export interface IAddress extends IAddressData, IPrintable {
+  /** Signature to differentiate from similar interfaces */
+  readonly [__signature__]: symbol
   /** The address value in the format specified by type */
   readonly value: AddressValue
   /** The type of the address */
@@ -29,7 +38,7 @@ export interface IAddress extends IAddressData {
  * @description Zod schema for IAddress
  */
 export const AddressDataSchema = z.object({
-  value: z.custom<AddressValue>(),
+  value: z.custom<AddressValue>((val) => isHex(val)),
   type: z.nativeEnum(AddressType),
 })
 
@@ -43,6 +52,15 @@ export type IAddressData = Readonly<z.infer<typeof AddressDataSchema>>
  * @param maybeAddress
  * @returns true if the object is an IAddress
  */
-export function isAddress(maybeAddress: unknown): maybeAddress is IAddress {
-  return AddressDataSchema.safeParse(maybeAddress).success
+export function isAddress(
+  maybeAddress: unknown,
+  returnedErrors?: string[],
+): maybeAddress is IAddress {
+  const zodReturn = AddressDataSchema.safeParse(maybeAddress)
+
+  if (!zodReturn.success && returnedErrors) {
+    returnedErrors.push(...zodReturn.error.errors.map((e) => e.message))
+  }
+
+  return zodReturn.success
 }

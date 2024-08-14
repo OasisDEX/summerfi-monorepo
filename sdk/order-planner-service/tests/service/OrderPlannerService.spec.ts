@@ -1,45 +1,51 @@
+import { IContractsProvider } from '@summerfi/contracts-provider-common'
+import { IOracleManager } from '@summerfi/oracle-common'
+import { ActionCall, IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
+import { ProtocolPluginsRegistry } from '@summerfi/protocol-plugins/implementation'
 import {
   FlashloanAction,
-  SetApprovalAction,
   ReturnFundsAction,
+  SetApprovalAction,
 } from '@summerfi/protocol-plugins/plugins/common'
-import { FlashloanProvider, ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import { DeploymentIndex } from '@summerfi/deployment-utils'
-import { ISwapManager } from '@summerfi/swap-common/interfaces'
-import { Address, AddressValue, ChainFamilyMap, ChainInfo } from '@summerfi/sdk-common/common'
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import { AddressBookManagerMock, SwapManagerMock, UserMock } from '@summerfi/testing-utils'
-import { IPositionsManager } from '@summerfi/sdk-common/orders'
-import { SetupDeployments } from '../utils/SetupDeployments'
-import { getRefinanceSimulation } from '../utils/RefinanceSimulation/RefinanceSimulation'
-import { OrderPlannerService } from '../../src/implementation/OrderPlannerService'
-import {
-  decodeActionCalldata,
-  decodePositionsManagerCalldata,
-  decodeStrategyExecutorCalldata,
-  getErrorMessage,
-} from '@summerfi/testing-utils'
-import assert from 'assert'
-import { IUser } from '@summerfi/sdk-common/user'
-import { ActionCall, IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
-import { http, createPublicClient } from 'viem'
 import {
   MakerPaybackAction,
   MakerProtocolPlugin,
   MakerWithdrawAction,
-  isMakerPositionId,
+  isMakerLendingPositionId,
 } from '@summerfi/protocol-plugins/plugins/maker'
 import {
   SparkBorrowAction,
   SparkDepositAction,
   SparkProtocolPlugin,
 } from '@summerfi/protocol-plugins/plugins/spark'
-import { ProtocolPluginsRegistry } from '@summerfi/protocol-plugins/implementation'
-import { getMakerPosition } from '../utils/MakerSourcePosition'
-import { getSparkPosition } from '../utils/SparkTargetPosition'
-import { mainnet } from 'viem/chains'
+import { IRefinanceSimulation } from '@summerfi/sdk-common'
+import {
+  Address,
+  ChainFamilyMap,
+  ChainInfo,
+  ProtocolName,
+  Wallet,
+} from '@summerfi/sdk-common/common'
+import { IPositionsManager } from '@summerfi/sdk-common/orders'
+import { FlashloanProvider, SimulationType } from '@summerfi/sdk-common/simulation'
+import { IUser, User } from '@summerfi/sdk-common/user'
+import { ISwapManager } from '@summerfi/swap-common/interfaces'
+import {
+  AddressBookManagerMock,
+  SwapManagerMock,
+  decodeActionCalldata,
+  decodePositionsManagerCalldata,
+  decodeStrategyExecutorCalldata,
+} from '@summerfi/testing-utils'
 import { ITokensManager } from '@summerfi/tokens-common'
-import { IOracleManager } from '@summerfi/oracle-common'
+import assert from 'assert'
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
+import { OrderPlannerService } from '../../src/implementation/OrderPlannerService'
+import { getMakerPosition } from '../utils/MakerSourcePosition'
+import { getRefinanceSimulation } from '../utils/RefinanceSimulation/RefinanceSimulation'
+import { SetupDeployments } from '../utils/SetupDeployments'
+import { getSparkPosition } from '../utils/SparkTargetPosition'
 
 describe('Order Planner Service', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -48,10 +54,12 @@ describe('Order Planner Service', () => {
 
   SetupDeployments(chainInfo, addressBookManager)
 
-  const user: IUser = new UserMock({
+  const user: IUser = User.createFrom({
     chainInfo: chainInfo,
-    walletAddress: Address.createFromEthereum({
-      value: '0xbA2aE424d960c26247Dd6c32edC70B295c744C43',
+    wallet: Wallet.createFrom({
+      address: Address.createFromEthereum({
+        value: '0xbA2aE424d960c26247Dd6c32edC70B295c744C43',
+      }),
     }),
   })
   const positionsManager: IPositionsManager = {
@@ -89,9 +97,9 @@ describe('Order Planner Service', () => {
     const sourcePosition = getMakerPosition()
     const targetPosition = getSparkPosition()
 
-    const refinanceSimulation: ISimulation<SimulationType.Refinance> = getRefinanceSimulation({
+    const refinanceSimulation: IRefinanceSimulation = getRefinanceSimulation({
       sourcePosition,
-      targetPool: targetPosition,
+      targetPosition,
     })
 
     const order = await orderPlannerService.buildOrder({
@@ -101,6 +109,7 @@ describe('Order Planner Service', () => {
       swapManager,
       simulation: refinanceSimulation,
       addressBookManager,
+      contractsProvider: {} as unknown as IContractsProvider,
     })
 
     assert(order, 'Order is not defined')
@@ -163,7 +172,7 @@ describe('Order Planner Service', () => {
     })
 
     assert(makerPaybackAction, 'MakerPaybackAction is not defined')
-    assert(isMakerPositionId(sourcePosition.id), 'Source position ID is not a MakerPoolId')
+    assert(isMakerLendingPositionId(sourcePosition.id), 'Source position ID is not a MakerPoolId')
 
     expect(makerPaybackAction.args).toEqual([
       {

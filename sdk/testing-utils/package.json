@@ -3,8 +3,12 @@
   "version": "0.0.1",
   "exports": {
     ".": {
-      "import": "./src/index.ts",
+      "import": "./src/index.js",
       "types": "./src/index.d.ts"
+    },
+    "./*": {
+      "import": "./src/*/index.js",
+      "types": "./src/*/index.d.ts"
     }
   },
   "scripts": {
@@ -20,6 +24,7 @@
   "dependencies": {
     "@summerfi/address-book-common": "workspace:*",
     "@summerfi/configuration-provider": "workspace:*",
+    "@summerfi/configuration-provider-common": "workspace:*",
     "@summerfi/deployment-types": "workspace:*",
     "@summerfi/deployment-utils": "workspace:*",
     "@summerfi/oracle-common": "workspace:*",
@@ -28,6 +33,8 @@
     "@summerfi/sdk-server-common": "workspace:*",
     "@summerfi/swap-common": "workspace:*",
     "@summerfi/tokens-common": "workspace:*",
+    "@summerfi/blockchain-client-provider": "workspace:*",
+    "@summerfi/blockchain-client-common": "workspace:*",
     "@summerfi/tokens-service": "workspace:^"
   },
   "devDependencies": {

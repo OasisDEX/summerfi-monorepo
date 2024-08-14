@@ -1,19 +1,21 @@
-import { ILendingPool, LendingPoolDataSchema } from '@summerfi/sdk-common/protocols'
-import { AaveV3LendingPoolIdDataSchema, IAaveV3LendingPoolId } from './IAaveV3LendingPoolId'
-import { IToken } from '@summerfi/sdk-common/common'
+import { ILendingPool, LendingPoolDataSchema } from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
+import { IAaveV3LendingPoolId, isAaveV3LendingPoolId } from './IAaveV3LendingPoolId'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IAaveV3LendingPool
  * @description Represents a lending pool in the Aave V3 protocol
  */
 export interface IAaveV3LendingPool extends ILendingPool, IAaveV3LendingPoolData {
+  /** Signature used to differentiate it from similar interfaces */
+  readonly [__signature__]: symbol
   /** The lending pool's ID */
   readonly id: IAaveV3LendingPoolId
-
-  // Re-declaring the properties with the correct types
-  readonly collateralToken: IToken
-  readonly debtToken: IToken
 }
 
 /**
@@ -21,7 +23,7 @@ export interface IAaveV3LendingPool extends ILendingPool, IAaveV3LendingPoolData
  */
 export const AaveV3LendingPoolDataSchema = z.object({
   ...LendingPoolDataSchema.shape,
-  id: AaveV3LendingPoolIdDataSchema,
+  id: z.custom<IAaveV3LendingPoolId>((val) => isAaveV3LendingPoolId(val)),
 })
 
 /**

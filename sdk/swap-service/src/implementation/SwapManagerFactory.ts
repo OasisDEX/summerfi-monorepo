@@ -1,6 +1,6 @@
-import { type IConfigurationProvider } from '@summerfi/configuration-provider'
-import { OneInchSwapProvider } from './oneinch/OneInchSwapProvider'
+import { type IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { SwapManager } from './SwapManager'
+import { OneInchSwapProvider } from './oneinch/OneInchSwapProvider'
 
 /**
  * @class SwapManagerFactory

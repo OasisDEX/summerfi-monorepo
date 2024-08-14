@@ -1,16 +1,16 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { ChainFamilyMap, ChainInfo, IPositionId } from '@summerfi/sdk-common/common'
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import { getAaveV3PoolIdMock } from '../../mocks/AAVEv3PoolIdMock'
-import { createProtocolPluginContext } from '../../utils/CreateProtocolPluginContext'
-import { getErrorMessage } from '../../utils/ErrorMessage'
+import { ChainFamilyMap, ChainInfo, ProtocolName } from '@summerfi/sdk-common/common'
+import assert from 'assert'
+import { AaveV3LendingPositionId } from '../../../src'
+import { AaveV3ProtocolPlugin } from '../../../src/plugins/aave-v3/implementation/AAVEv3ProtocolPlugin'
 import {
   IAaveV3LendingPoolId,
   IAaveV3LendingPoolIdData,
   isAaveV3LendingPoolId,
 } from '../../../src/plugins/aave-v3/interfaces/IAaveV3LendingPoolId'
-import { AaveV3ProtocolPlugin } from '../../../src/plugins/aave-v3/implementation/AAVEv3ProtocolPlugin'
-import assert from 'assert'
+import { getAaveV3PoolIdMock } from '../../mocks/AAVEv3PoolIdMock'
+import { createProtocolPluginContext } from '../../utils/CreateProtocolPluginContext'
+import { getErrorMessage } from '../../utils/ErrorMessage'
 
 describe('AAVEv3 Protocol Plugin', () => {
   let ctx: IProtocolPluginContext
@@ -114,9 +114,11 @@ describe('AAVEv3 Protocol Plugin', () => {
   })
 
   it('should throw a "Not implemented" error when calling getPosition', async () => {
-    const positionId: IPositionId = {
+    const positionId = AaveV3LendingPositionId.createFrom({
       id: 'mockPositionId',
-    }
-    await expect(aaveV3ProtocolPlugin.getPosition(positionId)).rejects.toThrow('Not implemented')
+    })
+    await expect(aaveV3ProtocolPlugin.getLendingPosition(positionId)).rejects.toThrow(
+      'Not implemented',
+    )
   })
 })

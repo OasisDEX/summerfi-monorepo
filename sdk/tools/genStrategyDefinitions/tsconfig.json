@@ -3,16 +3,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "@summerfi/simulator-service/*": ["node_modules/@summerfi/simulator-service/src/*"],
-      "@summerfi/order-planner-service/*": ["node_modules/@summerfi/order-planner-service/src/*"],
-      "@summerfi/protocol-plugins": ["node_modules/@summerfi/protocol-plugins/src/index.ts"],
-      "@summerfi/protocol-plugins-common": [
-        "node_modules/@summerfi/protocol-plugins-common/src/index.ts"
-      ],
-      "@summerfi/sdk-common": ["node_modules/@summerfi/sdk-common/src/index.ts"]
-    }
+    "baseUrl": "."
   },
   "include": ["src/**/*.ts", "tests/**/*.ts"],
   "exclude": ["node_modules"]

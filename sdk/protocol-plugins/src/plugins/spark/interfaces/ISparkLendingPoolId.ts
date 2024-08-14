@@ -1,9 +1,14 @@
-import { ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common/protocols'
-import { EmodeType, EmodeTypeSchema } from '../../common/enums/EmodeType'
-import { ISparkProtocol, SparkProtocolDataSchema } from './ISparkProtocol'
+import { isToken } from '@summerfi/sdk-common'
 import { IToken } from '@summerfi/sdk-common/common'
-import { TokenDataSchema } from '@summerfi/sdk-common'
+import { ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
+import { EmodeType, EmodeTypeSchema } from '../../common/enums/EmodeType'
+import { ISparkProtocol, isSparkProtocol } from './ISparkProtocol'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface ISparkLendingPoolId
@@ -13,6 +18,8 @@ import { z } from 'zod'
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
 export interface ISparkLendingPoolId extends ISparkLendingPoolIdData, ILendingPoolId {
+  /** Signature used to differentiate it from similar interfaces */
+  readonly [__signature__]: symbol
   /** The protocol to which the pool belongs */
   readonly protocol: ISparkProtocol
   /** The efficiency mode of the pool */
@@ -28,10 +35,10 @@ export interface ISparkLendingPoolId extends ISparkLendingPoolIdData, ILendingPo
  */
 export const SparkLendingPoolIdDataSchema = z.object({
   ...LendingPoolIdDataSchema.shape,
-  protocol: SparkProtocolDataSchema,
+  protocol: z.custom<ISparkProtocol>((val) => isSparkProtocol(val)),
   emodeType: EmodeTypeSchema,
-  collateralToken: TokenDataSchema,
-  debtToken: TokenDataSchema,
+  collateralToken: z.custom<IToken>((val) => isToken(val)),
+  debtToken: z.custom<IToken>((val) => isToken(val)),
 })
 
 /**

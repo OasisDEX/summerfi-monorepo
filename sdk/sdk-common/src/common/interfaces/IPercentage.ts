@@ -1,10 +1,18 @@
 import { z } from 'zod'
+import { IPrintable } from './IPrintable'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @name IPercentage
  * @description Percentage type that can be used for calculations with other types like TokenAmount or Price
  */
-export interface IPercentage extends IPercentageData {
+export interface IPercentage extends IPercentageData, IPrintable {
+  /** Signature to differentiate from similar interfaces */
+  readonly [__signature__]: symbol
   /** The percentage in floating point format */
   readonly value: number
 

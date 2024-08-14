@@ -1,15 +1,18 @@
-import {
-  type IPrice,
-  type IPriceData,
-  PriceMulReturnType,
-  PriceMulParamType,
-  isPrice,
-} from '../interfaces/IPrice'
 import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
-import { Token } from './Token'
 import { Denomination } from '../aliases/Denomination'
+import { IPercentage, isPercentage } from '../interfaces'
 import { isFiatCurrencyAmount } from '../interfaces/IFiatCurrencyAmount'
+import {
+  IPriceData,
+  PriceMulParamType,
+  PriceMulReturnType,
+  __signature__,
+  isPrice,
+  type IPrice,
+} from '../interfaces/IPrice'
+import { isToken, isTokenData } from '../interfaces/IToken'
+import { ITokenAmount, isTokenAmount, isTokenAmountData } from '../interfaces/ITokenAmount'
 import {
   dividePriceByPercentage,
   dividePriceByPrice,
@@ -19,16 +22,23 @@ import {
   multiplyTokenAmountByPrice,
 } from '../utils/PriceUtils'
 import { FiatCurrencyAmount } from './FiatCurrencyAmount'
+import { Token } from './Token'
 import { TokenAmount } from './TokenAmount'
-import { isToken, isTokenData } from '../interfaces/IToken'
-import { ITokenAmount, isTokenAmount, isTokenAmountData } from '../interfaces/ITokenAmount'
-import { IPercentage, isPercentage } from '../interfaces'
+
+/**
+ * Type for the parameters of Price
+ */
+export type PriceParameters = Omit<IPriceData, ''>
 
 /**
  * @class Price
  * @see IPrice
  */
 export class Price implements IPrice {
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
+
+  /** ATTRIBUTES */
   readonly value: string
   readonly base: Denomination
   readonly quote: Denomination
@@ -39,7 +49,8 @@ export class Price implements IPrice {
   private readonly _quoteSymbol: string
 
   /** FACTORY */
-  static createFrom(params: IPriceData): IPrice {
+
+  static createFrom(params: PriceParameters): IPrice {
     return new Price(params)
   }
 
@@ -66,7 +77,7 @@ export class Price implements IPrice {
   /** CONSTRUCTOR */
 
   /** Sealed constructor */
-  private constructor(params: IPriceData) {
+  private constructor(params: PriceParameters) {
     this.value = params.value
 
     if (isTokenData(params.base)) {

@@ -1,8 +1,8 @@
-import { TestManagerProvider, TestProviderType } from './mocks/TestManagerProvider'
-import { TestManager } from './mocks/TestManagerWithProviders'
-import { IConfigurationProvider } from '@summerfi/configuration-provider'
+import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { ChainFamilyMap } from '@summerfi/sdk-common'
 import assert from 'assert'
+import { TestManagerProvider, TestProviderType } from './mocks/TestManagerProvider'
+import { TestManager } from './mocks/TestManagerWithProviders'
 
 describe('SDK Server Common | Unit | ManagerProviderBase', () => {
   let testManager: TestManager

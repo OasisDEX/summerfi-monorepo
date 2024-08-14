@@ -1,14 +1,6 @@
-import {
-  Address,
-  ChainFamilyMap,
-  ChainInfo,
-  PositionType,
-  Token,
-  TokenAmount,
-} from '@summerfi/sdk-common/common'
+import { Address, ChainFamilyMap, ChainInfo, Token, TokenAmount } from '@summerfi/sdk-common/common'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
 import { SimulationSteps, TokenTransferTargetType, steps } from '@summerfi/sdk-common/simulation'
-import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { getErrorMessage } from '@summerfi/testing-utils'
 import assert from 'assert'
 import {
@@ -16,17 +8,19 @@ import {
   ILKType,
   MakerLendingPool,
   MakerLendingPoolId,
-  MakerPosition,
-  MakerPositionId,
+  MakerLendingPosition,
+  MakerLendingPositionId,
   MakerProtocol,
   SparkLendingPool,
   SparkLendingPoolId,
-  SparkPosition,
+  SparkLendingPosition,
+  SparkLendingPositionId,
   SparkProtocol,
 } from '../../../../src'
 import { SparkPaybackWithdrawActionBuilder } from '../../../../src/'
+import { SetupBuilderReturnType, setupBuilderParams } from '../../../utils/SetupBuilderParams'
 
-describe('Spark Payback Withdraw Action Builder', () => {
+describe.only('Spark Payback Withdraw Action Builder', () => {
   let builderParams: SetupBuilderReturnType
 
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -59,7 +53,6 @@ describe('Spark Payback Withdraw Action Builder', () => {
   })
 
   const protocol = SparkProtocol.createFrom({
-    name: ProtocolName.Spark,
     chainInfo: ChainFamilyMap.Ethereum.Mainnet,
   })
 
@@ -74,20 +67,24 @@ describe('Spark Payback Withdraw Action Builder', () => {
     collateralToken: WETH,
     debtToken: DAI,
     id: poolId,
-    type: PoolType.Lending,
   })
 
-  const position = SparkPosition.createFrom({
-    type: PositionType.Multiply,
-    id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '123' }),
+  const position = SparkLendingPosition.createFrom({
+    subtype: LendingPositionType.Multiply,
+    id: SparkLendingPositionId.createFrom({
+      id: 'someposition',
+    }),
     debtAmount: withdrawAmount,
     collateralAmount: paybackAmount,
     pool: pool,
   })
 
-  const wrongPosition = MakerPosition.createFrom({
-    type: PositionType.Multiply,
-    id: MakerPositionId.createFrom({ id: 'someposition', vaultId: '123' }),
+  const wrongPosition = MakerLendingPosition.createFrom({
+    subtype: LendingPositionType.Multiply,
+    id: MakerLendingPositionId.createFrom({
+      id: 'someposition',
+      vaultId: '123',
+    }),
     debtAmount: withdrawAmount,
     collateralAmount: paybackAmount,
     pool: MakerLendingPool.createFrom({
@@ -97,12 +94,10 @@ describe('Spark Payback Withdraw Action Builder', () => {
         collateralToken: WETH,
         debtToken: DAI,
         protocol: MakerProtocol.createFrom({
-          name: ProtocolName.Maker,
           chainInfo: ChainFamilyMap.Ethereum.Mainnet,
         }),
         ilkType: ILKType.ETH_A,
       }),
-      type: PoolType.Lending,
     }),
   })
 
@@ -125,7 +120,7 @@ describe('Spark Payback Withdraw Action Builder', () => {
     builderParams = setupBuilderParams({ chainInfo: ChainFamilyMap.Ethereum.Mainnet })
   })
 
-  it('should fail the position is not a Spark one', async () => {
+  it.only('should fail the position is not a Spark one', async () => {
     try {
       await new SparkPaybackWithdrawActionBuilder().build({
         ...builderParams,

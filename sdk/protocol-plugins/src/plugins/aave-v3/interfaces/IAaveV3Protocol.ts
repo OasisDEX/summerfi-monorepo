@@ -1,11 +1,11 @@
-import {
-  ChainInfoDataSchema,
-  IChainInfo,
-  IProtocol,
-  ProtocolDataSchema,
-} from '@summerfi/sdk-common'
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
+import { IProtocol, ProtocolDataSchema, ProtocolName } from '@summerfi/sdk-common'
+
 import { z } from 'zod'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IAaveV3Protocol
@@ -15,11 +15,11 @@ import { z } from 'zod'
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
 export interface IAaveV3Protocol extends IProtocol, IAaveV3ProtocolData {
-  /** AaveV3 protocol name */
-  readonly name: ProtocolName.AaveV3
+  /** Interface signature used to differentiate it from similar interfaces */
+  readonly [__signature__]: symbol
 
-  // Re-declaring the properties with the correct types
-  readonly chainInfo: IChainInfo
+  // Re-declaring the properties to narrow the types
+  readonly name: ProtocolName.AaveV3
 }
 
 /**
@@ -28,7 +28,6 @@ export interface IAaveV3Protocol extends IProtocol, IAaveV3ProtocolData {
 export const AaveV3ProtocolDataSchema = z.object({
   ...ProtocolDataSchema.shape,
   name: z.literal(ProtocolName.AaveV3),
-  chainInfo: ChainInfoDataSchema,
 })
 
 /**
@@ -41,6 +40,6 @@ export type IAaveV3ProtocolData = Readonly<z.infer<typeof AaveV3ProtocolDataSche
  * @param maybeProtocol
  * @returns true if the object is an IAaveV3Protocol
  */
-export function isAaveV3Protocol(maybeProtocol: unknown): maybeProtocol is IAaveV3Protocol {
+export function isAaveV3Protocol(maybeProtocol: unknown): maybeProtocol is IAaveV3ProtocolData {
   return AaveV3ProtocolDataSchema.safeParse(maybeProtocol).success
 }

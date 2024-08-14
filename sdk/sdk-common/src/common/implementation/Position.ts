@@ -1,28 +1,27 @@
-import { IPosition, IPositionData } from '../interfaces/IPosition'
 import { SerializationService } from '../../services/SerializationService'
-import { PositionId } from './PositionId'
-import { TokenAmount } from './TokenAmount'
-import { PositionType } from '../enums/PositionType'
-import { ITokenAmount } from '../interfaces/ITokenAmount'
-import { IPool } from '../../protocols/interfaces/IPool'
+import { IPosition, IPositionData, __signature__ } from '../interfaces/IPosition'
+import { IPositionId } from '../interfaces/IPositionId'
+import { PositionType } from '../types/PositionType'
+
+/**
+ * Type for the parameters of Position
+ */
+export type PositionParameters = Omit<IPositionData, 'type' | 'id'>
 
 /**
  * @name Position
  * @see IPosition
  */
 export abstract class Position implements IPosition {
-  readonly type: PositionType
-  readonly id: PositionId
-  readonly debtAmount: ITokenAmount
-  readonly collateralAmount: ITokenAmount
-  abstract readonly pool: IPool
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
 
-  protected constructor(params: IPositionData) {
-    this.type = params.type
-    this.id = params.id
-    this.debtAmount = TokenAmount.createFrom(params.debtAmount)
-    this.collateralAmount = TokenAmount.createFrom(params.collateralAmount)
-  }
+  /** ATTRIBUTES */
+  abstract readonly type: PositionType
+  abstract readonly id: IPositionId
+
+  /** SEALED CONSTRUCTOR */
+  protected constructor(_: PositionParameters) {}
 }
 
 SerializationService.registerClass(Position)

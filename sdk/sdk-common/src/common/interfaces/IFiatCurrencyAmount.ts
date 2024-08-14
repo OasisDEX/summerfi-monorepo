@@ -1,9 +1,14 @@
+import { z } from 'zod'
 import { FiatCurrency, FiatCurrencySchema } from '../enums'
 import { type IPercentage } from './IPercentage'
-import { type ITokenAmount } from './ITokenAmount'
 import { type IPrice } from './IPrice'
 import { IPrintable } from './IPrintable'
-import { z } from 'zod'
+import { type ITokenAmount } from './ITokenAmount'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * Return Type narrowing for multiply and divide methods, so the return type can be properly inferred
@@ -26,6 +31,8 @@ export type FiatCurrencyAmountMulDivReturnType<T> = T extends IPrice
  * like Price or Percentage
  */
 export interface IFiatCurrencyAmount extends IFiatCurrencyAmountData, IPrintable {
+  /** Signature to differentiate from similar interfaces */
+  readonly [__signature__]: symbol
   /** Fiat currency for the amount */
   readonly fiat: FiatCurrency
   /** The amount in floating point format */

@@ -1,23 +1,29 @@
-import { Address, Percentage, Token, TokenAmount, Price, Maybe } from '@summerfi/sdk-common/common'
-import { ILendingPool } from '@summerfi/sdk-common/protocols'
+import {
+  Denomination,
+  FiatCurrency,
+  ILendingPoolInfo,
+  IToken,
+  OracleProviderType,
+  SpotPriceInfo,
+} from '@summerfi/sdk-common'
+import { Address, Maybe, Percentage, Price, Token, TokenAmount } from '@summerfi/sdk-common/common'
+import {
+  ILendingPool,
+  ILendingPosition,
+  ILendingPositionIdData,
+} from '@summerfi/sdk-common/lending-protocols'
+import {
+  IExternalLendingPosition,
+  IPositionsManager,
+  TransactionInfo,
+} from '@summerfi/sdk-common/orders'
+import { SwapProviderType } from '@summerfi/sdk-common/swap'
+import { IUser } from '@summerfi/sdk-common/user'
 import {
   testTargetLendingPool,
   testTargetLendingPoolInfo,
   testTargetLendingPoolRequiredSwaps,
 } from './testSourcePosition'
-import { SwapProviderType } from '@summerfi/sdk-common/swap'
-import {
-  Denomination,
-  FiatCurrency,
-  ILendingPoolInfo,
-  IPosition,
-  IPositionIdData,
-  IToken,
-  OracleProviderType,
-  SpotPriceInfo,
-} from '@summerfi/sdk-common'
-import { IUser } from '@summerfi/sdk-common/user'
-import { IExternalPosition, IPositionsManager, TransactionInfo } from '@summerfi/sdk-common/orders'
 
 async function getSwapDataExactInput(params: {
   fromAmount: TokenAmount
@@ -80,13 +86,13 @@ async function mockGetLendingPoolRequiresSwaps(poolId: unknown): Promise<ILendin
   return testTargetLendingPoolRequiredSwaps as ILendingPool
 }
 
-async function mockGetPosition(params: IPositionIdData): Promise<IPosition> {
-  return {} as IPosition
+async function mockGetPosition(params: ILendingPositionIdData): Promise<ILendingPosition> {
+  return {} as ILendingPosition
 }
 
 async function mockGetImportPositionTransaction(params: {
   user: IUser
-  externalPosition: IExternalPosition
+  externalPosition: IExternalLendingPosition
   positionsManager: IPositionsManager
 }): Promise<Maybe<TransactionInfo>> {
   return {} as Maybe<TransactionInfo>
@@ -115,7 +121,7 @@ export const mockRefinanceContextRequiredSwaps = {
   protocolManager: {
     getLendingPool: mockGetLendingPoolRequiresSwaps,
     getLendingPoolInfo: mockGetLendingPoolInfo,
-    getPosition: mockGetPosition,
+    getLendingPosition: mockGetPosition,
     getImportPositionTransaction: mockGetImportPositionTransaction,
   },
 }

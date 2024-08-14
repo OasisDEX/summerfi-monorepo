@@ -8,31 +8,13 @@ import {
   UsersData,
 } from '@summerfi/summer-events-subgraph'
 import { Logger } from '@aws-lambda-powertools/logger'
-export type PositionPointsItem = {
-  positionId: string
-  vaultId: number
-  user: string
-  protocol: string
-  marketId: string
-  positionCreated: number
-  points: {
-    openPositionsPoints: number
-    migrationPoints: number
-    swapPoints: number
-  }
-  netValue: number
-  multipliers: {
-    protocolBoostMultiplier: number
-    swapMultiplier: number
-    timeOpenMultiplier: number
-    automationProtectionMultiplier: number
-    lazyVaultMultiplier: number
-  }
-}
+
 export type PositionPoints = {
   positionId: string
   vaultId: number
   user: string
+  ens: string | null
+  activeTriggers: number
   protocol: string
   marketId: string
   positionCreated: number
@@ -42,6 +24,7 @@ export type PositionPoints = {
     swapPoints: number
   }
   netValue: number
+  pointsPerYear: number
   multipliers: {
     protocolBoostMultiplier: number
     swapMultiplier: number
@@ -82,6 +65,9 @@ export class SummerPointsService {
 
   private NET_VALUE_CAP = 10000000
   private START_POINTS_TIMESTAMP
+
+  private ETH_TOKEN_BONANZA_END = 1722470399
+  private DOUBLE_SWAP_POINTS_END = 1725148799
 
   /**
    * Creates an instance of SummerPointsService.
@@ -130,8 +116,8 @@ export class SummerPointsService {
       startTimestamp,
       endTimestamp,
     )
-    const userSummary = this.getUserSummary(Object.values(usersMap))
-    const positionsSummary = this.getPositionsSummary(Object.values(usersMap))
+    const userSummary = this.getUserSummary(points)
+    const positionsSummary = this.getPositionsSummary(points)
 
     return {
       points,
@@ -184,15 +170,16 @@ export class SummerPointsService {
    */
   getSwapMultiplier(swaps: unknown[]): number {
     const swapCount = swaps.length
+    let multiplier = 1
+    const additionalMultiplier = Date.now() / 1000 < this.DOUBLE_SWAP_POINTS_END ? 2 : 1
     if (swapCount > 25) {
-      return 5
+      multiplier = 5
     } else if (swapCount > 10) {
-      return 2
+      multiplier = 2
     } else if (swapCount > 5) {
-      return 1.5
-    } else {
-      return 1
+      multiplier = 1.5
     }
+    return multiplier * additionalMultiplier
   }
 
   /**
@@ -212,45 +199,40 @@ export class SummerPointsService {
    * @param usersData - The data of the users.
    * @returns The basis points earned by users.
    */
-  getUserSummary(usersData: UsersData): UserSummary[] {
-    const userSummary = usersData.map((user) => {
-      const activeTriggers = user.allPositions.reduce(
-        (sum, position) => sum + position.triggers.length,
-        0,
-      )
-      const activePositions = user.allPositions.length
-      const pointsEarnedPerYear = user.allPositions
-        .filter((position) => position.netValue > 0)
-        .reduce(
-          (sum, position) =>
-            sum + this.getPointsPerPeriodInSeconds(position.netValue, this.SECONDS_PER_YEAR),
-          0,
-        )
-      const ens = !user.ens || user.ens == '' ? null : user.ens
-      return {
-        user: user.id,
-        activeTriggers,
-        activePositions,
-        pointsEarnedPerYear,
-        ens,
+  getUserSummary(positionPoints: PositionPoints): UserSummary[] {
+    const userMap = new Map<string, UserSummary>()
+
+    for (const position of positionPoints) {
+      const { user, netValue, pointsPerYear } = position
+
+      if (!userMap.has(user)) {
+        userMap.set(user, {
+          user,
+          activeTriggers: 0, // We'll update this if we get trigger information
+          activePositions: 0,
+          pointsEarnedPerYear: 0,
+          ens: position.ens ? position.ens : null,
+        })
       }
-    })
-    return userSummary
+
+      const userSummary = userMap.get(user)!
+      userSummary.activePositions += netValue > 0 ? 1 : 0
+      userSummary.pointsEarnedPerYear += pointsPerYear
+      userSummary.activeTriggers += position.activeTriggers
+    }
+
+    return Array.from(userMap.values())
   }
 
-  getPositionsSummary(usersData: UsersData): PositionSummary[] {
-    // all positions from all users
-    const allPositions = usersData.flatMap((user) => user.allPositions)
-    return allPositions.map((position) => {
-      const activeTriggers = position.triggers.length
-      const pointsEarnedPerYear = this.getPointsPerPeriodInSeconds(
-        position.netValue,
-        this.SECONDS_PER_YEAR,
-      )
+  getPositionsSummary(positionPoints: PositionPoints): PositionSummary[] {
+    return positionPoints.map((position) => {
+      const { positionId, pointsPerYear } = position
+      const activeTriggers = position.activeTriggers
+
       return {
-        vaultId: position.id,
-        activeTriggers,
-        pointsEarnedPerYear,
+        vaultId: positionId,
+        activeTriggers: activeTriggers,
+        pointsEarnedPerYear: pointsPerYear,
       }
     })
   }
@@ -285,14 +267,22 @@ export class SummerPointsService {
         const migrationPoints = this.getMigrationPoints(position.migration)
         const swapPoints = swapMultiplier * this.getSwapPoints(position.recentSwaps)
 
+        const ethTokenMultiplier = this.ethTokenPositionMultiplier(position)
+
         const timeOpenMultiplier = this.getTimeOpenMultiplier(position, endTimestamp)
         const automationProtectionMultiplier = this.getAutomationProtectionMultiplier(position)
         const lazyVaultMultiplier = this.getLazyVaultMultiplier(position)
+
         const totalMultiplier =
           protocolBoostMultiplier *
           timeOpenMultiplier *
           automationProtectionMultiplier *
-          lazyVaultMultiplier
+          lazyVaultMultiplier *
+          ethTokenMultiplier
+
+        const pointsPerYear =
+          totalMultiplier *
+          this.getPointsPerPeriodInSeconds(position.netValue, this.SECONDS_PER_YEAR)
 
         return {
           vaultId: position.account.vaultId,
@@ -304,12 +294,15 @@ export class SummerPointsService {
               ? position.firstEvent[0].timestamp
               : this.START_POINTS_TIMESTAMP,
           user: user.id,
+          ens: user.ens ? user.ens : null,
+          activeTriggers: position.activeTriggers.length,
           points: {
             openPositionsPoints: totalMultiplier * openPositionsPoints,
             migrationPoints: migrationPoints,
             swapPoints: swapPoints,
           },
           netValue: position.netValue,
+          pointsPerYear,
           multipliers: {
             protocolBoostMultiplier,
             swapMultiplier,
@@ -376,12 +369,15 @@ export class SummerPointsService {
             ? swap.position!.firstEvent[0].timestamp
             : this.START_POINTS_TIMESTAMP,
         user: user.id,
+        ens: user.ens ? user.ens : null,
+        activeTriggers: swap.position!.activeTriggers.length,
         points: {
           openPositionsPoints: 0,
           migrationPoints: 0,
           swapPoints: swapPoints,
         },
         netValue: swap.position!.netValue,
+        pointsPerYear: 0,
         multipliers: {
           protocolBoostMultiplier,
           swapMultiplier,
@@ -441,6 +437,24 @@ export class SummerPointsService {
     }
 
     return migrationPoints
+  }
+
+  ethTokenPositionMultiplier(position: Position): number {
+    let multiplier = 1
+    if (Date.now() / 1000 > this.ETH_TOKEN_BONANZA_END) {
+      return multiplier
+    }
+    if (position.debtToken && position.debtToken.symbol.toLowerCase().includes('eth')) {
+      multiplier = 2
+    } else if (
+      position.collateralToken &&
+      position.collateralToken.symbol.toLowerCase().includes('eth')
+    ) {
+      multiplier = 2
+    } else if (position.supplyToken && position.supplyToken.symbol.toLowerCase().includes('weth')) {
+      multiplier = 2
+    }
+    return multiplier
   }
 
   /**

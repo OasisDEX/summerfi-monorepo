@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { Token, TokenAmount, Address, Percentage } from '@summerfi/sdk-common/common'
 import { SwapData } from '@summerfi/sdk-common/swap'
-import { publicProcedure } from '../TRPC'
+import { publicProcedure } from '../SDKTRPC'
 
 export const getSwapDataExactInput = publicProcedure
   .input(

@@ -1,11 +1,11 @@
-import {
-  ICollateralInfo,
-  IDebtInfo,
-  ILendingPoolInfo,
-  LendingPoolInfoDataSchema,
-} from '@summerfi/sdk-common/protocols'
+import { ILendingPoolInfo, LendingPoolInfoDataSchema } from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
-import { AaveV3LendingPoolIdDataSchema, IAaveV3LendingPoolId } from './IAaveV3LendingPoolId'
+import { IAaveV3LendingPoolId, isAaveV3LendingPoolId } from './IAaveV3LendingPoolId'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IAaveV3LendingPoolInfo
@@ -15,12 +15,10 @@ import { AaveV3LendingPoolIdDataSchema, IAaveV3LendingPoolId } from './IAaveV3Le
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
 export interface IAaveV3LendingPoolInfo extends ILendingPoolInfo, IAaveV3LendingPoolInfoData {
+  /** Signature used to differentiate it from similar interfaces */
+  readonly [__signature__]: symbol
   /** The lending pool's ID */
   readonly id: IAaveV3LendingPoolId
-
-  // Re-declaring the properties with the correct types
-  readonly collateral: ICollateralInfo
-  readonly debt: IDebtInfo
 }
 
 /**
@@ -28,7 +26,7 @@ export interface IAaveV3LendingPoolInfo extends ILendingPoolInfo, IAaveV3Lending
  */
 export const AaveV3LendingPoolInfoDataSchema = z.object({
   ...LendingPoolInfoDataSchema.shape,
-  id: AaveV3LendingPoolIdDataSchema,
+  id: z.custom<IAaveV3LendingPoolId>((val) => isAaveV3LendingPoolId(val)),
 })
 
 /**

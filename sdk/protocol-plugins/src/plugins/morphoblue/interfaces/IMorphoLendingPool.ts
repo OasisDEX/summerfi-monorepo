@@ -1,14 +1,13 @@
-import { LendingPoolDataSchema } from '@summerfi/sdk-common/protocols'
-import { IMorphoLendingPoolId, MorphoLendingPoolIdDataSchema } from './IMorphoLendingPoolId'
-import {
-  ILendingPool,
-  IRiskRatio,
-  IToken,
-  PoolType,
-  RiskRatioDataSchema,
-} from '@summerfi/sdk-common'
+import { ILendingPool, IRiskRatio, isAddress, isRiskRatio } from '@summerfi/sdk-common'
+import { IAddress } from '@summerfi/sdk-common/common'
+import { LendingPoolDataSchema } from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
-import { AddressDataSchema, IAddress } from '@summerfi/sdk-common/common'
+import { IMorphoLendingPoolId, isMorphoLendingPoolId } from './IMorphoLendingPoolId'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IMorphoLendingPool
@@ -18,6 +17,8 @@ import { AddressDataSchema, IAddress } from '@summerfi/sdk-common/common'
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
 export interface IMorphoLendingPool extends IMorphoLendingPoolData, ILendingPool {
+  /** Signature used to differentiate it from similar interfaces */
+  readonly [__signature__]: symbol
   /** The id of the lending pool */
   readonly id: IMorphoLendingPoolId
   /** The oracle used in the Morpho market */
@@ -26,11 +27,6 @@ export interface IMorphoLendingPool extends IMorphoLendingPoolData, ILendingPool
   readonly irm: IAddress
   /** The liquidation LTV for the Morpho market */
   readonly lltv: IRiskRatio
-
-  // Re-declaring the properties with the correct types
-  readonly type: PoolType.Lending
-  readonly collateralToken: IToken
-  readonly debtToken: IToken
 }
 
 /**
@@ -38,10 +34,10 @@ export interface IMorphoLendingPool extends IMorphoLendingPoolData, ILendingPool
  */
 export const MorphoLendingPoolDataSchema = z.object({
   ...LendingPoolDataSchema.shape,
-  id: MorphoLendingPoolIdDataSchema,
-  oracle: AddressDataSchema,
-  irm: AddressDataSchema,
-  lltv: RiskRatioDataSchema,
+  id: z.custom<IMorphoLendingPoolId>((val) => isMorphoLendingPoolId(val)),
+  oracle: z.custom<IAddress>((val) => isAddress(val)),
+  irm: z.custom<IAddress>((val) => isAddress(val)),
+  lltv: z.custom<IRiskRatio>((val) => isRiskRatio(val)),
 })
 
 /**

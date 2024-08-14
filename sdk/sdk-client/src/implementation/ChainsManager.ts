@@ -1,23 +1,25 @@
+import { getChainInfoByChainId } from '@summerfi/sdk-common'
 import { ChainInfo, IChainInfoData, Maybe } from '@summerfi/sdk-common/common'
 import { IChainsManagerClient } from '../interfaces/IChainsManager'
-import { Chain } from './Chain'
-import { TokensManagerClient } from './TokensManagerClient'
-import { ProtocolsManagerClient } from './ProtocolsManagerClient'
-import { RPCClientType } from '../rpc/SDKClient'
 import { IRPCClient } from '../interfaces/IRPCClient'
+import { RPCMainClientType } from '../rpc/SDKMainClient'
+import { ArmadaManagerClient } from './ArmadaManagerClient'
+import { Chain } from './Chain'
+import { ProtocolsManagerClient } from './ProtocolsManagerClient'
+import { TokensManagerClient } from './TokensManagerClient'
 
 /**
  * @name ChainsManagerClient
  * @description Implementation of the IChainsManager interface for the SDK Client
  */
 export class ChainsManagerClient extends IRPCClient implements IChainsManagerClient {
-  constructor(params: { rpcClient: RPCClientType }) {
+  constructor(params: { rpcClient: RPCMainClientType }) {
     super(params)
   }
 
   public async getSupportedChains(): Promise<ChainInfo[]> {
     // TODO: Implement
-    return [] as ChainInfo[]
+    throw new Error('Method not implemented.')
   }
 
   public async getChain(params: { chainInfo: IChainInfoData }): Promise<Maybe<Chain>> {
@@ -30,18 +32,24 @@ export class ChainsManagerClient extends IRPCClient implements IChainsManagerCli
         rpcClient: this.rpcClient,
         chainInfo: chainInfo,
       }),
+      armadaManager: new ArmadaManagerClient({
+        rpcClient: this.rpcClient,
+        chainInfo: chainInfo,
+      }),
     })
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async getChainByName(_params: { name: string }): Promise<Maybe<Chain>> {
+  public async getChainByName(params: { name: string }): Promise<Maybe<Chain>> {
     // TODO: Implement
-    return undefined
+    throw new Error('Method not implemented.')
   }
 
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  public async getChainById(_params: { chainId: number }): Promise<Maybe<Chain>> {
-    // TODO: Implement
-    return undefined
+  public async getChainById(params: { chainId: number }): Promise<Maybe<Chain>> {
+    const chainFamily = getChainInfoByChainId(params.chainId)
+    if (chainFamily == null) {
+      throw new Error('Unsupported chainId: ' + params.chainId)
+    }
+    return this.getChain({ chainInfo: chainFamily.chainInfo })
   }
 }

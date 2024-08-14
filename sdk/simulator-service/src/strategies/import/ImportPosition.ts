@@ -1,11 +1,10 @@
-import { ISimulation, SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
-import { Simulator } from '../../implementation/simulator-engine'
+import { IImportSimulation, ImportSimulation } from '@summerfi/sdk-common'
 import { IImportPositionParameters } from '@summerfi/sdk-common/orders'
+import { SimulationSteps } from '@summerfi/sdk-common/simulation'
+import { Simulator } from '../../implementation/simulator-engine'
 import { importPositionStrategy } from './Strategy'
 
-export async function importPosition(
-  args: IImportPositionParameters,
-): Promise<ISimulation<SimulationType.ImportPosition>> {
+export async function importPosition(args: IImportPositionParameters): Promise<IImportSimulation> {
   const simulator = Simulator.create(importPositionStrategy)
 
   const simulation = await simulator
@@ -18,11 +17,9 @@ export async function importPosition(
     }))
     .run()
 
-  return {
-    simulationType: SimulationType.ImportPosition,
-    sourcePosition: args.externalPosition.position,
-    targetPosition: args.externalPosition.position,
-    swaps: Object.values(simulation.swaps),
+  return ImportSimulation.createFrom({
+    sourcePosition: args.externalPosition,
+    targetPosition: args.externalPosition,
     steps: Object.values(simulation.steps),
-  } as ISimulation<SimulationType.ImportPosition>
+  })
 }

@@ -1,9 +1,15 @@
-import { Address, Token, TokenAmount, PositionType } from '@summerfi/sdk-common/common'
+import { Address, ChainInfo, Token, TokenAmount } from '@summerfi/sdk-common/common'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
+import {
+  EmodeType,
+  SparkLendingPool,
+  SparkLendingPoolId,
+  SparkLendingPosition,
+  SparkLendingPositionId,
+} from '../../../src'
 import { PositionCreatedAction } from '../../../src/plugins/common/actions/PositionCreatedAction'
-import { PoolType, ProtocolName } from '@summerfi/sdk-common/protocols'
 import { SparkProtocol } from '../../../src/plugins/spark/implementation/SparkProtocol'
-import { EmodeType, SparkLendingPool, SparkLendingPoolId, SparkPosition } from '../../../src'
 
 describe('PositionCreated Action', () => {
   const action = new PositionCreatedAction()
@@ -32,20 +38,18 @@ describe('PositionCreated Action', () => {
   })
 
   const protocol = SparkProtocol.createFrom({
-    name: ProtocolName.Spark,
-    chainInfo: {
+    chainInfo: ChainInfo.createFrom({
       name: 'Mainnet',
       chainId: 1,
-    },
+    }),
   })
 
-  const position = SparkPosition.createFrom({
-    type: PositionType.Multiply,
-    id: {
+  const position = SparkLendingPosition.createFrom({
+    subtype: LendingPositionType.Multiply,
+    id: SparkLendingPositionId.createFrom({
       id: '0x123',
-    },
+    }),
     pool: SparkLendingPool.createFrom({
-      type: PoolType.Lending,
       id: SparkLendingPoolId.createFrom({
         protocol: protocol,
         collateralToken: WETH,
@@ -88,7 +92,7 @@ describe('PositionCreated Action', () => {
     expect(actionDecodedArgs?.args).toEqual([
       {
         protocol: protocol.name,
-        positionType: position.type,
+        positionType: position.subtype,
         collateralToken: WETH.address.value,
         debtToken: DAI.address.value,
       },

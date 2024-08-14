@@ -1,7 +1,12 @@
-import { ILendingPoolInfo, LendingPoolInfoDataSchema } from '@summerfi/sdk-common/protocols'
-import { IMorphoLendingPoolId, MorphoLendingPoolIdDataSchema } from './IMorphoLendingPoolId'
+import { ILendingPoolInfo, LendingPoolInfoDataSchema } from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
-import { ICollateralInfo, IDebtInfo } from '@summerfi/sdk-common'
+import { isMakerLendingPoolId } from '../../maker'
+import { IMorphoLendingPoolId } from './IMorphoLendingPoolId'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IMorphoLendingPoolInfo
@@ -11,12 +16,10 @@ import { ICollateralInfo, IDebtInfo } from '@summerfi/sdk-common'
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
 export interface IMorphoLendingPoolInfo extends ILendingPoolInfo, IMorphoLendingPoolInfoData {
+  /** Signature used to differentiate it from similar interfaces */
+  readonly [__signature__]: symbol
   /** The id of the lending pool */
   readonly id: IMorphoLendingPoolId
-
-  // Re-declaring the properties with the correct types
-  readonly collateral: ICollateralInfo
-  readonly debt: IDebtInfo
 }
 
 /**
@@ -24,7 +27,7 @@ export interface IMorphoLendingPoolInfo extends ILendingPoolInfo, IMorphoLending
  */
 export const MorphoLendingPoolInfoDataSchema = z.object({
   ...LendingPoolInfoDataSchema.shape,
-  id: MorphoLendingPoolIdDataSchema,
+  id: z.custom<IMorphoLendingPoolId>((val) => isMakerLendingPoolId(val)),
 })
 
 /**

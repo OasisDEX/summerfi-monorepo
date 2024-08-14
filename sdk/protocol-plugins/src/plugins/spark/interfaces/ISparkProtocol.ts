@@ -1,6 +1,11 @@
-import { IChainInfo, IProtocol } from '@summerfi/sdk-common'
-import { ProtocolName, ProtocolDataSchema } from '@summerfi/sdk-common/protocols'
+import { IProtocol } from '@summerfi/sdk-common'
+import { ProtocolDataSchema, ProtocolName } from '@summerfi/sdk-common/common'
 import { z } from 'zod'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface ISparkProtocol
@@ -12,11 +17,11 @@ import { z } from 'zod'
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
 export interface ISparkProtocol extends ISparkProtocolData, IProtocol {
-  /** Spark protocol name */
-  readonly name: ProtocolName.Spark
+  /** Interface signature used to differentiate it from similar interfaces */
+  readonly [__signature__]: symbol
 
   // Re-declaring the properties with the right types
-  readonly chainInfo: IChainInfo
+  readonly name: ProtocolName.Spark
 }
 
 /**

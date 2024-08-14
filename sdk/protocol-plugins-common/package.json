@@ -24,6 +24,7 @@
     "@summerfi/oracle-common": "workspace:*",
     "@summerfi/tokens-common": "workspace:*",
     "@summerfi/address-book-common": "workspace:*",
+    "@summerfi/blockchain-client-common": "workspace:*",
     "abitype": "^1.0.2"
   },
   "devDependencies": {

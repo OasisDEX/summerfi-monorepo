@@ -1,22 +1,19 @@
-import { Deployment, DeploymentIndex } from '@summerfi/deployment-utils'
-import { IPositionsManager } from '@summerfi/sdk-common/orders'
-import { Address, ChainInfo } from '@summerfi/sdk-common/common'
-import { SetupDeployments } from './SetupDeployments'
-import { IUser } from '@summerfi/sdk-common/user'
+import { IAddressBookManager } from '@summerfi/address-book-common'
 import { ActionBuildersMap, IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
+import { Address, ChainInfo, Wallet } from '@summerfi/sdk-common/common'
+import { IPositionsManager } from '@summerfi/sdk-common/orders'
+import { IUser, User } from '@summerfi/sdk-common/user'
+import {
+  AddressBookManagerMock,
+  StepBuilderContextMock,
+  SwapManagerMock,
+} from '@summerfi/testing-utils'
 import {
   createEmptyBuildersProtocolPluginsRegistry,
   createEmptyProtocolPluginsRegistry,
   createNoCheckpointProtocolPluginsRegistry,
   createProtocolPluginsRegistry,
 } from './ProtocolsPluginRegistryMock'
-import {
-  AddressBookManagerMock,
-  StepBuilderContextMock,
-  SwapManagerMock,
-  UserMock,
-} from '@summerfi/testing-utils'
-import { IAddressBookManager } from '@summerfi/address-book-common'
 
 export type SetupBuilderReturnType = {
   context: StepBuilderContextMock
@@ -39,10 +36,12 @@ export function setupBuilderParams(params: { chainInfo: ChainInfo }): SetupBuild
 
   return {
     context: new StepBuilderContextMock(),
-    user: new UserMock({
+    user: User.createFrom({
       chainInfo: params.chainInfo,
-      walletAddress: Address.createFromEthereum({
-        value: '0xbA2aE424d960c26247Dd6c32edC70B295c744C43',
+      wallet: Wallet.createFrom({
+        address: Address.createFromEthereum({
+          value: '0xbA2aE424d960c26247Dd6c32edC70B295c744C43',
+        }),
       }),
     }),
     positionsManager: {

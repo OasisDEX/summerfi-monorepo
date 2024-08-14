@@ -1,11 +1,19 @@
-import { ChainId, ChainIdSchema } from '../aliases/ChainId'
 import { z } from 'zod'
+import { ChainId, ChainIdSchema } from '../aliases/ChainId'
+import { IPrintable } from './IPrintable'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @name IChainInfo
  * @description Information used to identify a blockchain network
  */
-export interface IChainInfo extends IChainInfoData {
+export interface IChainInfo extends IChainInfoData, IPrintable {
+  /** Signature to differentiate from similar interfaces */
+  readonly [__signature__]: symbol
   /** The chain ID of the network */
   readonly chainId: ChainId
   /** The name of the network */
@@ -40,6 +48,15 @@ export type IChainInfoData = Readonly<z.infer<typeof ChainInfoDataSchema>>
  * @param maybeChainInfo
  * @returns true if the object is an IChainInfo
  */
-export function isChainInfo(maybeChainInfo: unknown): maybeChainInfo is IChainInfo {
-  return ChainInfoDataSchema.safeParse(maybeChainInfo).success
+export function isChainInfo(
+  maybeChainInfo: unknown,
+  returnedErrors?: string[],
+): maybeChainInfo is IChainInfo {
+  const zodReturn = ChainInfoDataSchema.safeParse(maybeChainInfo)
+
+  if (!zodReturn.success && returnedErrors) {
+    returnedErrors.push(...zodReturn.error.errors.map((e) => e.message))
+  }
+
+  return zodReturn.success
 }

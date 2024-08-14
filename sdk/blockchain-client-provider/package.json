@@ -1,0 +1,34 @@
+{
+  "name": "@summerfi/blockchain-client-provider",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "types": "./src/index.d.ts"
+    }
+  },
+  "scripts": {
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "build": "tsc -b -v tsconfig.build.json",
+    "test": "jest --setupFiles dotenv/config",
+    "testw": "jest --setupFiles dotenv/config --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@summerfi/configuration-provider-common": "workspace:^",
+    "@summerfi/blockchain-client-common": "workspace:^",
+    "@summerfi/sdk-common": "workspace:*",
+    "@summerfi/serverless-shared": "workspace:^",
+    "@types/node-fetch": "^2.6.11",
+    "node-fetch": "^2.7.0"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/jest-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*"
+  }
+}

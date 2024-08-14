@@ -1,26 +1,38 @@
-import { LendingPoolInfo } from '@summerfi/sdk-common/protocols'
+import { LendingPoolInfo } from '@summerfi/sdk-common/lending-protocols'
 import { SerializationService } from '@summerfi/sdk-common/services'
-import { MorphoLendingPoolId } from './MorphoLendingPoolId'
+import { IMorphoLendingPoolId } from '../interfaces/IMorphoLendingPoolId'
 import {
   IMorphoLendingPoolInfo,
   IMorphoLendingPoolInfoData,
+  __signature__,
 } from '../interfaces/IMorphoLendingPoolInfo'
+
+/**
+ * Type for the parameters of MorphoLendingPoolInfo
+ */
+export type MorphoLendingPoolInfoParameters = Omit<IMorphoLendingPoolInfoData, 'type'>
 
 /**
  * @class MorphoLendingPoolInfo
  * @see IMorphoLendingPoolInfo
  */
 export class MorphoLendingPoolInfo extends LendingPoolInfo implements IMorphoLendingPoolInfo {
-  readonly id: MorphoLendingPoolId
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
 
-  private constructor(params: IMorphoLendingPoolInfoData) {
-    super(params)
+  /** ATTRIBUTES */
+  readonly id: IMorphoLendingPoolId
 
-    this.id = MorphoLendingPoolId.createFrom(params.id)
+  /** FACTORY */
+  public static createFrom(params: MorphoLendingPoolInfoParameters): MorphoLendingPoolInfo {
+    return new MorphoLendingPoolInfo(params)
   }
 
-  public static createFrom(params: IMorphoLendingPoolInfoData): MorphoLendingPoolInfo {
-    return new MorphoLendingPoolInfo(params)
+  /** SEALED CONSTRUCTOR */
+  private constructor(params: MorphoLendingPoolInfoParameters) {
+    super(params)
+
+    this.id = params.id
   }
 }
 

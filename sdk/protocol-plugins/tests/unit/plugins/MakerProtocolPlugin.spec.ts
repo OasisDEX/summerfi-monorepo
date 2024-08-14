@@ -1,16 +1,15 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { ChainFamilyMap, ChainInfo } from '@summerfi/sdk-common/common'
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
+import { ChainFamilyMap, ChainInfo, ProtocolName } from '@summerfi/sdk-common/common'
 import assert from 'assert'
-import { MakerProtocolPlugin } from '../../../src/plugins/maker'
-import { getMakerPoolIdMock } from '../../mocks/MakerPoolIdMock'
-import { createProtocolPluginContext } from '../../utils/CreateProtocolPluginContext'
-import { getErrorMessage } from '../../utils/ErrorMessage'
+import { MakerLendingPositionId, MakerProtocolPlugin } from '../../../src/plugins/maker'
 import {
   IMakerLendingPoolId,
   IMakerLendingPoolIdData,
   isMakerLendingPoolId,
 } from '../../../src/plugins/maker/interfaces/IMakerLendingPoolId'
+import { getMakerPoolIdMock } from '../../mocks/MakerPoolIdMock'
+import { createProtocolPluginContext } from '../../utils/CreateProtocolPluginContext'
+import { getErrorMessage } from '../../utils/ErrorMessage'
 
 describe('Maker Protocol Plugin', () => {
   let ctx: IProtocolPluginContext
@@ -110,9 +109,12 @@ describe('Maker Protocol Plugin', () => {
   })
 
   it('should throw a "Not implemented" error when calling getPosition', async () => {
-    const positionId = {
+    const positionId = MakerLendingPositionId.createFrom({
       id: 'mockPositionId',
-    }
-    await expect(makerProtocolPlugin.getPosition(positionId)).rejects.toThrow('Not implemented')
+      vaultId: '123',
+    })
+    await expect(makerProtocolPlugin.getLendingPosition(positionId)).rejects.toThrow(
+      'Not implemented',
+    )
   })
 })

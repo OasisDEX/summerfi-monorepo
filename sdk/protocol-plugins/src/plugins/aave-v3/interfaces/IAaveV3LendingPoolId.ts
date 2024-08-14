@@ -1,8 +1,13 @@
-import { ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common/protocols'
-import { EmodeType, EmodeTypeSchema } from '../../common/enums/EmodeType'
-import { AaveV3ProtocolDataSchema, IAaveV3Protocol } from './IAaveV3Protocol'
+import { IToken, isToken } from '@summerfi/sdk-common'
+import { ILendingPoolId, LendingPoolIdDataSchema } from '@summerfi/sdk-common/lending-protocols'
 import { z } from 'zod'
-import { IToken, TokenDataSchema } from '@summerfi/sdk-common'
+import { EmodeType, EmodeTypeSchema } from '../../common/enums/EmodeType'
+import { IAaveV3Protocol, isAaveV3Protocol } from './IAaveV3Protocol'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IAaveV3LendingPoolId
@@ -12,6 +17,8 @@ import { IToken, TokenDataSchema } from '@summerfi/sdk-common'
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
 export interface IAaveV3LendingPoolId extends ILendingPoolId, IAaveV3LendingPoolIdData {
+  /** Interface signature used to differentiate it from similar interfaces */
+  readonly [__signature__]: symbol
   /** Aave v3 protocol */
   readonly protocol: IAaveV3Protocol
   /** The pool's efficiency mode */
@@ -27,10 +34,10 @@ export interface IAaveV3LendingPoolId extends ILendingPoolId, IAaveV3LendingPool
  */
 export const AaveV3LendingPoolIdDataSchema = z.object({
   ...LendingPoolIdDataSchema.shape,
-  protocol: AaveV3ProtocolDataSchema,
+  protocol: z.custom<IAaveV3Protocol>((val) => isAaveV3Protocol(val)),
   emodeType: EmodeTypeSchema,
-  collateralToken: TokenDataSchema,
-  debtToken: TokenDataSchema,
+  collateralToken: z.custom<IToken>((val) => isToken(val)),
+  debtToken: z.custom<IToken>((val) => isToken(val)),
 })
 
 /**

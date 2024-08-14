@@ -100,7 +100,7 @@ export const CriteriaList = ({ userRays }: CriteriaListProps) => {
                     style={{ color: 'var(--color-primary-60' }}
                     tooltipWrapperStyles={{ minWidth: '300px' }}
                   >
-                    <Icon iconName="tooltip" size={17} />
+                    <Icon iconName="tooltip" size={17} color="gray" />
                   </Tooltip>
                 </div>
                 <Text

@@ -1,12 +1,22 @@
 import { z } from 'zod'
+import { PositionType, PositionTypeSchema } from '../types'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @name IPositionId
  * @description Represents a unique identifier for a position in the Summer system
  */
 export interface IPositionId extends IPositionIdData {
+  /** Signature to differentiate from similar interfaces */
+  readonly [__signature__]: symbol
   /* Unique identifier for the position inside the Summer.fi system */
   readonly id: string
+  /** Type of the position */
+  readonly type: PositionType
 }
 
 /**
@@ -14,10 +24,11 @@ export interface IPositionId extends IPositionIdData {
  */
 export const PositionIdDataSchema = z.object({
   id: z.string(),
+  type: PositionTypeSchema,
 })
 
 /**
- * Type for PositionData interface
+ * Type for IPositionData interface
  */
 export type IPositionIdData = Readonly<z.infer<typeof PositionIdDataSchema>>
 

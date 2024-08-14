@@ -11,6 +11,15 @@ query SummerPoints(
     allPositions: positions {
       id
       netValue
+      debtToken {
+        symbol
+      }
+      collateralToken {
+        symbol
+      }
+      supplyToken {
+        symbol
+      }
       triggers(
         where: {
           or: [
@@ -26,6 +35,15 @@ query SummerPoints(
       id
       protocol
       marketId
+      debtToken {
+        symbol
+      }
+      collateralToken {
+        symbol
+      }
+      supplyToken {
+        symbol
+      }
       account {
         id
         vaultId
@@ -91,6 +109,17 @@ query SummerPoints(
         protocol
         marketId
         netValue
+        activeTriggers: triggers(
+          where: {
+            or: [
+              { removedBlock: null, executedBlock: null }
+              { continuous: true, removedBlock: null }
+            ]
+          }
+        ) {
+          id
+          kind
+        }
         user {
           id
         }

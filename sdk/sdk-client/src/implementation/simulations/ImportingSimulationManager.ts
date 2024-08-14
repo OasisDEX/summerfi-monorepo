@@ -1,16 +1,19 @@
+import { IImportSimulation } from '@summerfi/sdk-common'
 import { IImportPositionParameters } from '@summerfi/sdk-common/orders'
-import { ISimulation, SimulationType } from '@summerfi/sdk-common/simulation'
-import { RPCClientType } from '../../rpc/SDKClient'
 import { IRPCClient } from '../../interfaces/IRPCClient'
+import { IImportingSimulationManager } from '../../interfaces/simulations/IImportingSimulationManager'
+import { RPCMainClientType } from '../../rpc/SDKMainClient'
 
-export class ImportingSimulationManager extends IRPCClient {
-  constructor(params: { rpcClient: RPCClientType }) {
+/** @see IImportingSimulationManager */
+export class ImportingSimulationManager extends IRPCClient implements IImportingSimulationManager {
+  constructor(params: { rpcClient: RPCMainClientType }) {
     super(params)
   }
 
+  /** @see IImportingSimulationManager.simulateImportPosition */
   public async simulateImportPosition(
     params: IImportPositionParameters,
-  ): Promise<ISimulation<SimulationType.ImportPosition>> {
+  ): Promise<IImportSimulation> {
     return this.rpcClient.simulation.import.query(params)
   }
 }

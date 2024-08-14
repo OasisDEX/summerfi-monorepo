@@ -1,36 +1,39 @@
-import { IAddress, IAddressData } from '../interfaces/IAddress'
 import { SerializationService } from '../../services/SerializationService'
 import { AddressValue } from '../aliases/AddressValue'
-import { AddressType } from '../enums/AddressType'
+import { IAddress, IAddressData, __signature__ } from '../interfaces/IAddress'
+import { AddressType } from '../types/AddressType'
+
+/**
+ * Type for the parameters of Address
+ */
+export type AddressParameters = Omit<IAddressData, ''>
 
 /**
  * @class Address
- * @see IAddressData
+ * @see IAddress
  */
 export class Address implements IAddress {
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
+
+  /** ATTRIBUTES */
+  readonly value: AddressValue
+  readonly type: AddressType
+
+  /** CONSTANTS */
   public static ZeroAddressEthereum: Address = new Address({
     value: '0x0000000000000000000000000000000000000000',
     type: AddressType.Ethereum,
   })
 
-  readonly value: AddressValue
-  readonly type: AddressType
+  /** FACTORY METHODS */
 
-  private constructor(params: IAddressData) {
-    if (Address.isValid(params.value) === false) {
-      throw new Error('Address value is invalid')
-    }
-
-    this.value = params.value
-    this.type = params.type
-  }
-
-  static createFrom(params: IAddressData): Address {
+  static createFrom(params: AddressParameters): Address {
     return new Address(params)
   }
 
-  static createFromEthereum(params: { value: AddressValue }): Address {
-    return new Address({ ...params, type: AddressType.Ethereum })
+  static createFromEthereum(params: { value: string }): Address {
+    return new Address({ value: params.value as AddressValue, type: AddressType.Ethereum })
   }
 
   static isValid(address: string): boolean {
@@ -45,6 +48,17 @@ export class Address implements IAddress {
     return AddressType.Unknown
   }
 
+  /** CONSTRUCTOR */
+  private constructor(params: AddressParameters) {
+    if (Address.isValid(params.value) === false) {
+      throw new Error('Address value is invalid')
+    }
+
+    this.value = params.value
+    this.type = params.type
+  }
+
+  /** PUBLIC METHODS */
   equals(address: Address): boolean {
     return this.value.toLowerCase() === address.value.toLowerCase() && this.type === address.type
   }

@@ -1,6 +1,11 @@
-import { IChainInfo, IProtocol } from '@summerfi/sdk-common'
-import { ProtocolName, ProtocolDataSchema } from '@summerfi/sdk-common/protocols'
+import { IProtocol, ProtocolName } from '@summerfi/sdk-common'
+import { ProtocolDataSchema } from '@summerfi/sdk-common/common'
 import { z } from 'zod'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IMakerProtocol
@@ -10,11 +15,11 @@ import { z } from 'zod'
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
 export interface IMakerProtocol extends IProtocol, IMakerProtocolData {
-  /** Maker protocol name */
-  readonly name: ProtocolName.Maker
+  /** Interface signature used to differentiate it from similar interfaces */
+  readonly [__signature__]: symbol
 
-  // Re-declaring the properties with the correct types
-  readonly chainInfo: IChainInfo
+  // Re-declaring the properties to narrow the types
+  readonly name: ProtocolName.Maker
 }
 
 /**

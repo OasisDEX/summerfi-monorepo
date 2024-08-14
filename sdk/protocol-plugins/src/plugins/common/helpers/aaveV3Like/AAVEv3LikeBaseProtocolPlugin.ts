@@ -1,8 +1,10 @@
+import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 import {
   CollateralInfo,
   DebtInfo,
   Denomination,
   FiatCurrency,
+  ICollateralInfo,
   Maybe,
   Percentage,
   Price,
@@ -10,19 +12,17 @@ import {
   RiskRatioType,
   TokenAmount,
 } from '@summerfi/sdk-common'
+import { IChainInfo, IToken } from '@summerfi/sdk-common/common'
+import { BigNumber } from 'bignumber.js'
 import { BaseProtocolPlugin } from '../../../../implementation/BaseProtocolPlugin'
+import { ChainContractsProvider, GenericAbiMap } from '../../../utils/ChainContractProvider'
+import { PRECISION_BI, UNCAPPED_SUPPLY } from '../../constants/AaveV3LikeConstants'
+import { AllowedProtocolNames } from './AAVEv3LikeBuilderTypes'
 import {
   AaveV3LikeProtocolDataBuilder,
   filterAssetsListByEMode,
   filterAssetsListByToken,
 } from './AAVEv3LikeProtocolDataBuilder'
-import { AllowedProtocolNames } from './AAVEv3LikeBuilderTypes'
-import { BigNumber } from 'bignumber.js'
-import { PRECISION_BI, UNCAPPED_SUPPLY } from '../../constants/AaveV3LikeConstants'
-import { IChainInfo, IToken } from '@summerfi/sdk-common/common'
-import { ICollateralInfo } from '@summerfi/sdk-common/protocols'
-import { ChainContractsProvider, GenericAbiMap } from '../../../utils/ChainContractProvider'
-import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
 
 type AssetsList<
   ContractNames extends string,

@@ -1,27 +1,63 @@
 import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
-import { IPercentage, IPercentageData, isPercentage } from '../interfaces/IPercentage'
+import {
+  IPercentage,
+  IPercentageData,
+  __signature__,
+  isPercentage,
+} from '../interfaces/IPercentage'
+
+/**
+ * Type for the parameters of Percentage
+ */
+export type PercentageParameters = Omit<IPercentageData, ''>
 
 /**
  * @class Percentage
  * @see IPercentage
  */
 export class Percentage implements IPercentage {
+  /** SIGNATURE */
+  readonly [__signature__] = __signature__
+
+  /** CONSTANTS */
+
+  /** The number of decimals used to represent the percentage in Solidity */
+  public static PERCENTAGE_DECIMALS = 6
+
+  /**The factor used to scale the percentage */
+  public static PERCENTAGE_FACTOR = 10 ** Percentage.PERCENTAGE_DECIMALS
+
+  /** The percentage of 100% with the given `PERCENTAGE_DECIMALS` */
   public static Percent100: Percentage = new Percentage({
     value: 100.0,
   })
 
+  /** ATTRIBUTES */
   readonly value: number
 
   /** FACTORY */
-  static createFrom(params: IPercentageData) {
+  static createFrom(params: PercentageParameters) {
     return new Percentage(params)
+  }
+
+  /**
+   * Creates a Percentage instance from a Solidity value with PERCENTAGE_DECIMALS decimals
+   * @param value The Solidity value
+   * @returns The Percentage instance
+   */
+  static createFromSolidityValue(params: { value: bigint }): Percentage {
+    const percentageValue = new BigNumber(params.value.toString())
+      .div(Percentage.PERCENTAGE_FACTOR)
+      .toNumber()
+
+    return Percentage.createFrom({ value: percentageValue })
   }
 
   /** CONSTRUCTOR */
 
   /** Sealed constructor */
-  private constructor(params: IPercentageData) {
+  private constructor(params: PercentageParameters) {
     this.value = params.value
   }
 

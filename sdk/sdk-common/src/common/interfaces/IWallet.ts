@@ -1,5 +1,10 @@
-import { AddressDataSchema, IAddress } from './IAddress'
 import { z } from 'zod'
+import { IAddress, isAddress } from './IAddress'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @name IWallet
@@ -9,15 +14,27 @@ import { z } from 'zod'
  * wallet type
  */
 export interface IWallet extends IWalletData {
+  /** Signature to differentiate from similar interfaces */
+  readonly [__signature__]: symbol
   /** Address of the wallet, valid for the different chains */
   readonly address: IAddress
+
+  /**
+   * @name equals
+   * @description Checks if two wallets are equal
+   * @param wallet The wallet to compare
+   * @returns true if the wallets are equal
+   *
+   * Equality is determined by the address
+   */
+  equals(token: IWallet): boolean
 }
 
 /**
  * @description Zod schema for IWallet
  */
 export const WalletDataSchema = z.object({
-  address: AddressDataSchema,
+  address: z.custom<IAddress>((val) => isAddress(val)),
 })
 
 /**

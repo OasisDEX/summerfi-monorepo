@@ -1,6 +1,11 @@
+import { z } from 'zod'
 import { IPercentage, PercentageDataSchema } from './IPercentage'
 import { IPrintable } from './IPrintable'
-import { z } from 'zod'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @name RiskRatioType
@@ -20,6 +25,8 @@ export enum RiskRatioType {
  * @description Interface for the implementors of the risk ratio
  */
 export interface IRiskRatio extends IRiskRatioData, IPrintable {
+  /** Signature to differentiate from similar interfaces */
+  readonly [__signature__]: symbol
   /** The type of the risk ratio */
   readonly type: RiskRatioType
   /** The risk ratio value, a percentage for LTV and Collateralization Ratio, a number for Multiple */

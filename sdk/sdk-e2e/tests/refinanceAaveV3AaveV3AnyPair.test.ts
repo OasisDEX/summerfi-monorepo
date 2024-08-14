@@ -1,31 +1,29 @@
-import { makeSDK, type Chain, type User } from '@summerfi/sdk-client'
-import { ProtocolName, isLendingPool } from '@summerfi/sdk-common/protocols'
-import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
-import {
-  AddressValue,
-  CommonTokenSymbols,
-  ISimulation,
-  Percentage,
-  TokenAmount,
-  Address,
-  type Maybe,
-  ChainFamilyMap,
-  PositionType,
-  IToken,
-  SimulationType,
-} from '@summerfi/sdk-common'
-import { PositionsManager, Order, RefinanceParameters } from '@summerfi/sdk-common/orders'
-import assert from 'assert'
-import { TransactionUtils } from './utils/TransactionUtils'
-import { Hex } from 'viem'
 import {
   AaveV3LendingPoolId,
-  AaveV3Position,
-  AaveV3PositionId,
+  AaveV3LendingPosition,
+  AaveV3LendingPositionId,
+  AaveV3Protocol,
   isAaveV3LendingPool,
   isAaveV3LendingPoolId,
   isAaveV3Protocol,
 } from '@summerfi/protocol-plugins'
+import { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
+import { makeSDK, type Chain } from '@summerfi/sdk-client'
+import {
+  Address,
+  AddressValue,
+  ChainFamilyMap,
+  CommonTokenSymbols,
+  IToken,
+  Percentage,
+  TokenAmount,
+  type Maybe,
+} from '@summerfi/sdk-common'
+import { LendingPositionType, isLendingPool } from '@summerfi/sdk-common/lending-protocols'
+import { Order, PositionsManager, RefinanceParameters } from '@summerfi/sdk-common/orders'
+import { TransactionUtils } from '@summerfi/testing-utils'
+import assert from 'assert'
+import { Hex } from 'viem'
 
 jest.setTimeout(300000)
 
@@ -66,7 +64,7 @@ describe.skip('Refinance AaveV3 -> AaveV3 | SDK', () => {
     const walletAddress = Address.createFromEthereum({
       value: config.walletAddress as AddressValue,
     })
-    const user: User = await sdk.users.getUser({
+    const user = await sdk.users.getUser({
       chainInfo: chain.chainInfo,
       walletAddress: walletAddress,
     })
@@ -102,8 +100,9 @@ describe.skip('Refinance AaveV3 -> AaveV3 | SDK', () => {
     })
     assert(targetCollateralToken, `${config.target.collateralTokenSymbol} not found`)
 
-    const aaveV3 = await chain.protocols.getProtocol({ name: ProtocolName.AaveV3 })
-    assert(aaveV3, 'AaveV3 protocol not found')
+    const aaveV3 = AaveV3Protocol.createFrom({
+      chainInfo: chain.chainInfo,
+    })
 
     if (!isAaveV3Protocol(aaveV3)) {
       assert(false, 'AaveV3 protocol type is not lending')
@@ -116,7 +115,7 @@ describe.skip('Refinance AaveV3 -> AaveV3 | SDK', () => {
       emodeType: config.source.emodeType,
     })
 
-    const aaveV3Pool = await aaveV3.getLendingPool({
+    const aaveV3Pool = await chain.protocols.getLendingPool({
       poolId: aaveV3PoolId,
     })
     assert(aaveV3Pool, 'AaveV3 pool not found')
@@ -126,9 +125,9 @@ describe.skip('Refinance AaveV3 -> AaveV3 | SDK', () => {
     }
 
     // Source position
-    const aaveV3Position = AaveV3Position.createFrom({
-      type: PositionType.Multiply,
-      id: AaveV3PositionId.createFrom({
+    const aaveV3Position = AaveV3LendingPosition.createFrom({
+      subtype: LendingPositionType.Multiply,
+      id: AaveV3LendingPositionId.createFrom({
         id: 'AaveV3Position',
       }),
       debtAmount: TokenAmount.createFrom({
@@ -150,7 +149,7 @@ describe.skip('Refinance AaveV3 -> AaveV3 | SDK', () => {
       emodeType: config.target.emodeType,
     })
 
-    const targetAaveV3Pool = await aaveV3.getLendingPool({
+    const targetAaveV3Pool = await chain.protocols.getLendingPool({
       poolId: targetAaveV3PoolId,
     })
 
@@ -164,7 +163,7 @@ describe.skip('Refinance AaveV3 -> AaveV3 | SDK', () => {
       assert(false, 'AaveV3 target pool type is not lending')
     }
 
-    const targetAaveV3PoolInfo = await aaveV3.getLendingPoolInfo({
+    const targetAaveV3PoolInfo = await chain.protocols.getLendingPoolInfo({
       poolId: targetAaveV3PoolId,
     })
 
@@ -176,7 +175,7 @@ describe.skip('Refinance AaveV3 -> AaveV3 | SDK', () => {
       slippage: Percentage.createFrom({ value: 0.2 }),
     })
 
-    const refinanceSimulation: ISimulation<SimulationType.Refinance> =
+    const refinanceSimulation =
       await sdk.simulator.refinance.simulateRefinancePosition(refinanceParameters)
 
     expect(refinanceSimulation).toBeDefined()

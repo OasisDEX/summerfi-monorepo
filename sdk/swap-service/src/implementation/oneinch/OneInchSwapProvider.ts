@@ -1,12 +1,27 @@
-import { ISwapProvider } from '@summerfi/swap-common/interfaces'
+import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import {
-  SwapProviderType,
-  SwapData,
-  SwapRoute,
+  Address,
+  IAddress,
+  IChainInfo,
+  IPercentage,
+  IToken,
+  ITokenAmount,
+  Percentage,
+  SDKErrorType,
+  TokenAmount,
+} from '@summerfi/sdk-common/common'
+import { ChainId, HexData } from '@summerfi/sdk-common/common/aliases'
+import {
   QuoteData,
+  SwapData,
   SwapError,
   SwapErrorType,
+  SwapProviderType,
+  SwapRoute,
 } from '@summerfi/sdk-common/swap'
+import { ManagerProviderBase } from '@summerfi/sdk-server-common'
+import { ISwapProvider } from '@summerfi/swap-common/interfaces'
+import fetch from 'node-fetch'
 import {
   OneInchAuthHeader,
   OneInchAuthHeaderKey,
@@ -15,21 +30,6 @@ import {
   OneInchSwapResponse,
   OneInchSwapRoute,
 } from './types'
-import { ChainId, HexData } from '@summerfi/sdk-common/common/aliases'
-import fetch from 'node-fetch'
-import {
-  TokenAmount,
-  Percentage,
-  Address,
-  ITokenAmount,
-  IToken,
-  IAddress,
-  IPercentage,
-  IChainInfo,
-  SDKErrorType,
-} from '@summerfi/sdk-common/common'
-import { ManagerProviderBase } from '@summerfi/sdk-server-common'
-import { IConfigurationProvider } from '@summerfi/configuration-provider'
 
 export class OneInchSwapProvider
   extends ManagerProviderBase<SwapProviderType>

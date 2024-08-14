@@ -1,29 +1,35 @@
 import {
+  Address,
+  ChainFamilyMap,
   Token,
   TokenAmount,
-  Address,
   type Maybe,
-  ChainFamilyMap,
-  PositionType,
 } from '@summerfi/sdk-common/common'
 
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import { makeSDK, type Chain, type User } from '@summerfi/sdk-client'
+import { makeSDK, type Chain } from '@summerfi/sdk-client'
 import { CommonTokenSymbols } from '@summerfi/sdk-common/common/enums'
-import { ExternalPositionType, IImportPositionParameters, Order } from '@summerfi/sdk-common/orders'
-import { ISimulation, SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
+import {
+  ExternalLendingPositionType,
+  ImportPositionParameters,
+  Order,
+} from '@summerfi/sdk-common/orders'
+import { SimulationSteps, SimulationType } from '@summerfi/sdk-common/simulation'
 
-import assert from 'assert'
 import {
   ILKType,
   MakerLendingPoolId,
-  MakerPosition,
-  MakerPositionId,
+  MakerLendingPosition,
+  MakerLendingPositionId,
+  MakerProtocol,
   isMakerLendingPool,
   isMakerProtocol,
 } from '@summerfi/protocol-plugins/plugins/maker'
+import { ExternalLendingPosition, ExternalLendingPositionId } from '@summerfi/sdk-common'
+import { LendingPositionType } from '@summerfi/sdk-common/lending-protocols'
+import { IImportSimulation, isImportSimulation } from '@summerfi/sdk-common/simulation/interfaces'
+import { TransactionUtils } from '@summerfi/testing-utils'
+import assert from 'assert'
 import { Hex } from 'viem'
-import { TransactionUtils } from './utils/TransactionUtils'
 
 jest.setTimeout(300000)
 
@@ -47,7 +53,7 @@ describe.skip('Import Maker Position | SDK', () => {
     const walletAddress = Address.createFromEthereum({
       value: '0xbEf4befb4F230F43905313077e3824d7386E09F8',
     })
-    const user: User = await sdk.users.getUser({
+    const user = await sdk.users.getUser({
       chainInfo: chain.chainInfo,
       walletAddress: walletAddress,
     })
@@ -66,8 +72,9 @@ describe.skip('Import Maker Position | SDK', () => {
     })
     assert(DAI, 'DAI not found')
 
-    const maker = await chain.protocols.getProtocol({ name: ProtocolName.Maker })
-    assert(maker, 'Maker protocol not found')
+    const maker = MakerProtocol.createFrom({
+      chainInfo: chain.chainInfo,
+    })
 
     if (!isMakerProtocol(maker)) {
       assert(false, 'Maker protocol type is not Maker')
@@ -80,7 +87,7 @@ describe.skip('Import Maker Position | SDK', () => {
       ilkType: ILKType.ETH_C,
     })
 
-    const makerPool = await maker.getLendingPool({
+    const makerPool = await chain.protocols.getLendingPool({
       poolId: makerPoolId,
     })
     assert(makerPool, 'Maker pool not found')
@@ -90,9 +97,14 @@ describe.skip('Import Maker Position | SDK', () => {
     }
 
     // Source position
-    const makerPosition = MakerPosition.createFrom({
-      type: PositionType.Multiply,
-      id: MakerPositionId.createFrom({ id: '31646', vaultId: '31646' }),
+    const makerPositionId = MakerLendingPositionId.createFrom({
+      id: '31646',
+      vaultId: '31646',
+    })
+
+    const makerPosition = MakerLendingPosition.createFrom({
+      subtype: LendingPositionType.Multiply,
+      id: makerPositionId,
       debtAmount: TokenAmount.createFromBaseUnit({
         token: DAI,
         amount: '3717915731044925295249',
@@ -104,22 +116,26 @@ describe.skip('Import Maker Position | SDK', () => {
       pool: makerPool,
     })
 
-    const importPositionSimulation: ISimulation<SimulationType.ImportPosition> =
-      await sdk.simulator.importing.simulateImportPosition({
-        externalPosition: {
-          position: makerPosition,
-          externalId: {
-            type: ExternalPositionType.DS_PROXY,
-            address: Address.createFromEthereum({
-              value: '0x6c7ed10997873b59c2b2d9449d9106fe1dd85784',
+    const importPositionSimulation: IImportSimulation =
+      await sdk.simulator.importing.simulateImportPosition(
+        ImportPositionParameters.createFrom({
+          externalPosition: ExternalLendingPosition.createFrom({
+            ...makerPosition,
+            id: ExternalLendingPositionId.createFrom({
+              id: 'test',
+              externalType: ExternalLendingPositionType.DS_PROXY,
+              address: Address.createFromEthereum({
+                value: '0x6c7ed10997873b59c2b2d9449d9106fe1dd85784',
+              }),
+              protocolId: makerPositionId,
             }),
-          },
-        },
-      } as IImportPositionParameters)
+          }),
+        }),
+      )
 
     expect(importPositionSimulation).toBeDefined()
 
-    expect(importPositionSimulation.simulationType).toEqual(SimulationType.ImportPosition)
+    expect(importPositionSimulation.type).toEqual(SimulationType.ImportPosition)
     assert(importPositionSimulation.sourcePosition, 'Source position not found')
     expect(importPositionSimulation.steps.length).toBe(1)
     expect(importPositionSimulation.steps[0].type).toBe(SimulationSteps.Import)
@@ -135,10 +151,8 @@ describe.skip('Import Maker Position | SDK', () => {
 
     assert(importPositionOrder, 'Order not found')
 
-    expect(importPositionOrder.simulation.simulationType).toEqual(
-      importPositionSimulation.simulationType,
-    )
-    assert(importPositionOrder.simulation.sourcePosition, 'Source position not found')
+    expect(importPositionOrder.simulation.type).toEqual(importPositionSimulation.type)
+    assert(isImportSimulation(importPositionOrder.simulation), 'Simulation is not Import')
 
     expect(importPositionOrder.simulation.sourcePosition.id).toEqual(
       importPositionSimulation.sourcePosition?.id,

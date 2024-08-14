@@ -15,6 +15,12 @@
 
 ## Commands
 
+### Install deps
+
+```shell
+pnpm i
+```
+
 ### Build
 
 To build all apps and packages, run the following command:
@@ -30,6 +36,12 @@ To develop all apps and packages, run the following command:
 ```shell
 pnpm dev
 ```
+
+## Submodules
+
+To initialize submodules use:
+
+`git submodule update earn-protocol/contracts`
 
 ## Useful Links
 

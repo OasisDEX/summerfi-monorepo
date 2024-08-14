@@ -6,7 +6,7 @@ export const config = createConfig({
   rpcUrl: `/api/rpc/chain/${chain.id}`,
   signerConnection: {
     // this is for Alchemy Signer requests
-    rpcUrl: '/api/rpc/',
+    rpcUrl: '/api/rpc',
   },
   chain,
   ssr: true,

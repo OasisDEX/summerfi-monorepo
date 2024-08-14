@@ -2,6 +2,7 @@
 
 import { type Dispatch, type FormEvent, type SetStateAction, useState } from 'react'
 import { Button, Input, SkeletonLine, Text } from '@summerfi/app-ui'
+import { formatToHex, isValidUrl } from '@summerfi/app-utils'
 import {
   IconDeviceFloppy,
   IconToolsKitchen2,
@@ -17,8 +18,6 @@ import { forksCookieName } from '@/constants/forks-cookie-name'
 import { getCookies } from '@/constants/get-cookies'
 import { networksByName } from '@/constants/networks-list'
 import { safeParseJson } from '@/constants/safe-parse-json'
-import { isValidUrl } from '@/helpers/is-valid-url'
-import { numberToHexId } from '@/helpers/number-to-hex-id'
 
 const setFork =
   ({
@@ -156,7 +155,7 @@ const SetForkModalContent = () => {
           method: 'wallet_addEthereumChain',
           params: [
             {
-              chainId: numberToHexId(changedChain.id),
+              chainId: formatToHex(changedChain.id),
               chainName: `${changedChain.name} (fork: ${forkUrlId})`,
               nativeCurrency: changedChain.nativeCurrency,
               rpcUrls: [forksList[forkId]],
@@ -246,7 +245,7 @@ const SetForkModalContent = () => {
                     {network.label} <IconDeviceFloppy size={18} />
                   </Button>
                   <Button
-                    disabled={!forkCookies[network.id]}
+                    disabled={!forkCookies[network.id] || !mainWallet}
                     variant={forkCookies[network.id] ? 'primarySmall' : 'neutralSmall'}
                     style={{
                       minWidth: '30px',
@@ -277,6 +276,15 @@ const SetForkModalContent = () => {
           )
         })}
       </div>
+      {!mainWallet && (
+        <Text
+          as="p"
+          variant="p3semi"
+          style={{ marginTop: '20px', textAlign: 'center', color: 'red' }}
+        >
+          Connect your wallet to add forks to it.
+        </Text>
+      )}
       <Button
         variant="secondaryLarge"
         style={{ marginTop: '30px' }}

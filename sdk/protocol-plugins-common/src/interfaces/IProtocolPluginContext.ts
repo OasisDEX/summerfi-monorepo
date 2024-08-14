@@ -1,8 +1,8 @@
-import { PublicClient } from 'viem'
+import { IAddressBookManager } from '@summerfi/address-book-common'
+import type { IBlockchainClient } from '@summerfi/blockchain-client-common'
+import { IOracleManager } from '@summerfi/oracle-common'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
 import { ITokensManager } from '@summerfi/tokens-common'
-import { IOracleManager } from '@summerfi/oracle-common'
-import { IAddressBookManager } from '@summerfi/address-book-common'
 
 /**
  * @name IProtocolPluginContext
@@ -11,7 +11,7 @@ import { IAddressBookManager } from '@summerfi/address-book-common'
  */
 export interface IProtocolPluginContext {
   /** The public client to interact with the blockchain */
-  provider: PublicClient
+  provider: IBlockchainClient
   /** The tokens manager to retrieve token information */
   tokensManager: ITokensManager
   /** The oracle service to fetch prices */

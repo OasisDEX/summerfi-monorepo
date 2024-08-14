@@ -1,15 +1,16 @@
 import { IProtocolPluginContext } from '@summerfi/protocol-plugins-common'
-import { ChainFamilyMap, ChainInfo, IPositionId } from '@summerfi/sdk-common/common'
-import { ProtocolName } from '@summerfi/sdk-common/protocols'
-import { createProtocolPluginContext } from '../../utils/CreateProtocolPluginContext'
-import { getErrorMessage } from '../../utils/ErrorMessage'
+import { ChainFamilyMap, ChainInfo, ProtocolName } from '@summerfi/sdk-common/common'
+import assert from 'assert'
+import { MorphoLendingPositionId } from '../../../src'
 import { MorphoProtocolPlugin } from '../../../src/plugins/morphoblue/implementation/MorphoProtocolPlugin'
 import {
   IMorphoLendingPoolIdData,
   isMorphoLendingPoolId,
 } from '../../../src/plugins/morphoblue/interfaces/IMorphoLendingPoolId'
-import assert from 'assert'
 import { morphoPoolIdMock } from '../../mocks/MorphoPoolIdMock'
+import { createProtocolPluginContext } from '../../utils/CreateProtocolPluginContext'
+import { getErrorMessage } from '../../utils/ErrorMessage'
+import type { ILendingPositionId } from '@summerfi/sdk-common'
 
 describe('Protocol Plugin | Unit | Morpho', () => {
   let ctx: IProtocolPluginContext
@@ -105,9 +106,12 @@ describe('Protocol Plugin | Unit | Morpho', () => {
   })
 
   it('should throw a "Not implemented" error when calling getPosition', async () => {
-    const positionId: IPositionId = {
+    const positionId = MorphoLendingPositionId.createFrom({
       id: 'mockPositionId',
-    }
-    await expect(morphoProtocolPlugin.getPosition(positionId)).rejects.toThrow('Not implemented')
+    })
+
+    await expect(morphoProtocolPlugin.getLendingPosition(positionId)).rejects.toThrow(
+      'Not implemented',
+    )
   })
 })

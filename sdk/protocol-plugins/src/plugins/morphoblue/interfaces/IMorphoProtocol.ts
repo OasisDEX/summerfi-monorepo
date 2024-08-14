@@ -1,6 +1,11 @@
-import { IChainInfo, IProtocol } from '@summerfi/sdk-common'
-import { ProtocolName, ProtocolDataSchema } from '@summerfi/sdk-common/protocols'
+import { IProtocol } from '@summerfi/sdk-common'
+import { ProtocolDataSchema, ProtocolName } from '@summerfi/sdk-common/common'
 import { z } from 'zod'
+
+/**
+ * Unique signature to provide branded types to the interface
+ */
+export const __signature__: unique symbol = Symbol()
 
 /**
  * @interface IMorphoProtocol
@@ -12,11 +17,11 @@ import { z } from 'zod'
  * This may be fixed eventually, there is a discussion on the topic here: https://github.com/microsoft/TypeScript/issues/16936
  */
 export interface IMorphoProtocol extends IMorphoProtocolData, IProtocol {
-  /** Morpho protocol name */
-  readonly name: ProtocolName.MorphoBlue
+  /** Interface signature used to differentiate it from similar interfaces */
+  readonly [__signature__]: symbol
 
   // Re-declare the properties with the correct types
-  readonly chainInfo: IChainInfo
+  readonly name: ProtocolName.MorphoBlue
 }
 
 /**
