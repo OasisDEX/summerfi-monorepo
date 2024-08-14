@@ -1,7 +1,6 @@
 {
   "name": "@summerfi/summer-earn-protocol-subgraph",
   "version": "1.0.0",
-  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -24,6 +23,7 @@
     "@graphql-codegen/typescript-operations": "^4.2.0",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
+    "@summerfi/jest-config": "workspace:*",
     "@types/node": "^20.12.7"
   },
   "dependencies": {
