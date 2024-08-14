@@ -1,1 +1,2 @@
-export const ArmadaName = 'armada'
+// placeholder
+export type ArmadaName = 'armada'

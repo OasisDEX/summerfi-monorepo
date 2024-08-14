@@ -5,7 +5,7 @@ import { z } from 'zod'
  */
 export enum SubgraphProviderType {
   /** Pre-built list of subgraphs */
-  EarnProtocol = 'EarnProtocol',
+  Armada = 'Armada',
 }
 
 /**
