@@ -2,7 +2,7 @@ overwrite: true
 schema: '${SUBGRAPH_BASE}/summer-protocol-base'
 documents: './src/**/*.graphql'
 generates:
-  src/client.ts:
+  src/generated/client.ts:
     plugins:
       - add:
           content:

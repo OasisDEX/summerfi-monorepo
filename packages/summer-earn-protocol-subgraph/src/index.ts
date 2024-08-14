@@ -1,4 +1,4 @@
-import { UserPositionsQuery, getSdk } from './client'
+import { UserPositionsQuery, getSdk } from './generated/client'
 import { GraphQLClient } from 'graphql-request'
 import { ChainId } from '@summerfi/serverless-shared'
 
@@ -19,8 +19,9 @@ const supportedChains = Object.keys(chainIdSubgraphMap).map((k) => parseInt(k))
 
 const getClient = (chainId: ChainId, baseUrl: string) => {
   if (!supportedChains.includes(chainId)) {
-    throw new Error(`ChainId ${chainId} not supported
-        Supported chains: ${supportedChains}`)
+    throw new Error(
+      `ChainId ${chainId} not supported. Supported chains: ${supportedChains.join(', ')}`,
+    )
   }
   const subgraph = chainIdSubgraphMap[chainId]
   if (!subgraph) {
