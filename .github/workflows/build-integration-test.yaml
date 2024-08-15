@@ -17,6 +17,7 @@ jobs:
       CONTENTFUL_SPACE_ID: ${{ secrets.CONTENTFUL_SPACE_ID }}
       MIXPANEL_KEY: ${{ secrets.MIXPANEL_KEY }}
       NEXT_PUBLIC_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }}
+      SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}    
     steps:
       - name: Check out code
         uses: actions/checkout@v3
