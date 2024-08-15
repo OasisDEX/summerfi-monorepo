@@ -2679,6 +2679,9 @@ importers:
       '@summerfi/subgraph-common':
         specifier: workspace:*
         version: link:../subgraph-common
+      '@summerfi/summer-earn-protocol-subgraph':
+        specifier: workspace:*
+        version: link:../../packages/summer-earn-protocol-subgraph
       '@types/node-fetch':
         specifier: ^2.6.11
         version: 2.6.11

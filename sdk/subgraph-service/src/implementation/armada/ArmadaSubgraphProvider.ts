@@ -8,7 +8,7 @@ import {
 } from '@summerfi/sdk-common'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import { ISubgraphProvider } from '@summerfi/subgraph-common'
-import { getUserPositions, getVaultDetails } from '@summerfi/summer-earn-protocol-subgraph'
+import { getUserPositions } from '@summerfi/summer-earn-protocol-subgraph'
 
 export interface SubgraphConfig {
   urlBase: string
@@ -26,7 +26,7 @@ export class ArmadaSubgraphProvider
   constructor(params: { configProvider: IConfigurationProvider }) {
     super({ ...params, type: SubgraphProviderType.Armada })
 
-    const baseChainId = ChainFamilyMap.Base.Mainnet.chainId
+    const baseChainId = ChainFamilyMap.Base.Base.chainId
     this._supportedChainIds = [baseChainId]
 
     this._subgraphConfig = {
@@ -47,11 +47,6 @@ export class ArmadaSubgraphProvider
       { userAddress: userAddress.value },
       this._getConfigForClient(chainInfo.chainId),
     )
-  }
-
-  // TODO: do we want to create a common type for vaultId?
-  getVaultDetails({ chainInfo, vaultId }: { chainInfo: ChainInfo; vaultId: string }) {
-    return getVaultDetails({ vaultId }, this._getConfigForClient(chainInfo.chainId))
   }
 
   /** PRIVATE */
