@@ -1,0 +1,9 @@
+query UserPositions($userAddress: String!) {
+  positions(where: { account: $userAddress }) {
+    id
+    inputTokenBalance
+    outputTokenBalance
+    outputTokenBalanceNormalized
+    outputTokenBalanceNormalizedInUSD
+  }
+}
