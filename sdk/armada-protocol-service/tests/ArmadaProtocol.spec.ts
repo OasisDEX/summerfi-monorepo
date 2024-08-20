@@ -2,7 +2,7 @@ import { ChainFamilyMap, ProtocolName } from '@summerfi/sdk-common'
 import { ArmadaProtocol } from '../src/common/implementation/ArmadaProtocol'
 
 describe('SDK Common | Armada | ArmadaProtocol', () => {
-  const chainInfo = ChainFamilyMap.Base.Mainnet
+  const chainInfo = ChainFamilyMap.Base.Base
 
   describe('#createFrom()', () => {
     it('should instantiate with right data', () => {

@@ -2,7 +2,7 @@ import { Address, ChainFamilyMap, User, Wallet } from '@summerfi/sdk-common'
 import { ArmadaPositionId } from '../src/common/implementation/ArmadaPositionId'
 
 describe('SDK Common | Armada | ArmadaPositionId', () => {
-  const chainInfo = ChainFamilyMap.Base.Mainnet
+  const chainInfo = ChainFamilyMap.Base.Base
   const userAddress = Address.createFromEthereum({
     value: '0xa09E82322f351154a155f9e0f9e6ddbc8791C794', // FleetCommander on Base
   })

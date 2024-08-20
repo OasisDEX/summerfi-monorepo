@@ -23,7 +23,7 @@ import { ArmadaPoolId } from '../src/common/implementation/ArmadaPoolId'
 import { ArmadaProtocol } from '../src/common/implementation/ArmadaProtocol'
 
 describe('Armada Protocol Service', () => {
-  const chainInfo: ChainInfo = ChainFamilyMap.Base.Mainnet
+  const chainInfo: ChainInfo = ChainFamilyMap.Base.Base
 
   const user: IUser = User.createFrom({
     chainInfo: chainInfo,
