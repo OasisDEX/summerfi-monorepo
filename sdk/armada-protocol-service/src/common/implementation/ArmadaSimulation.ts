@@ -24,7 +24,7 @@ export class ArmadaSimulation extends Simulation implements IArmadaSimulation {
   /** ATTRIBUTES */
   readonly type = SimulationType.Armada
   readonly user: IUser
-  readonly previousPosition?: IArmadaPosition
+  readonly previousPosition: IArmadaPosition
   readonly newPosition: IArmadaPosition
 
   /** Factory method */

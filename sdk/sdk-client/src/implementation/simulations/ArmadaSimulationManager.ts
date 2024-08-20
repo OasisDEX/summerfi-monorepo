@@ -12,6 +12,6 @@ export class ArmadaSimulationManager extends IRPCClient implements IArmadaSimula
 
   /** @see IArmadaSimulationManager.simulate */
   public async simulate(params: IArmadaParameters): Promise<IArmadaSimulation> {
-    return this.rpcClient.simulation.earn.query(params)
+    return this.rpcClient.simulation.armada.query(params)
   }
 }

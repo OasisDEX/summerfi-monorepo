@@ -84,6 +84,15 @@ export class TokenAmount implements ITokenAmount {
   subtract(tokenToSubstract: ITokenAmount): ITokenAmount {
     this._validateSameToken(tokenToSubstract)
 
+    // TODO: refinance simulation fails when enabling the following check, need to investigate further
+    // if (this.isLessThan(tokenToSubstract)) {
+    //   throw SDKError.createFrom({
+    //     type: SDKErrorType.Core,
+    //     reason: 'Invalid subtraction',
+    //     message: `Token amount is less than the amount to subtract: ${this.amount} < ${tokenToSubstract.amount}`,
+    //   })
+    // }
+
     return new TokenAmount({
       token: this.token,
       amount: this.toBN().minus(tokenToSubstract.toBN()).toString(),
@@ -142,6 +151,35 @@ export class TokenAmount implements ITokenAmount {
   /** @see ITokenAmount.isZero */
   isZero(): boolean {
     return this.toBN().isZero()
+  }
+
+  /** @see ITokenAmount.isGreaterThan */
+  isGreaterThan(tokenAmount: ITokenAmount): boolean {
+    this._validateSameToken(tokenAmount)
+
+    return this.toBN().isGreaterThan(tokenAmount.toBN())
+  }
+
+  /** @see ITokenAmount.isLessThan */
+  isLessThan(tokenAmount: ITokenAmount): boolean {
+    this._validateSameToken(tokenAmount)
+
+    return this.toBN().isLessThan(tokenAmount.toBN())
+  }
+
+  /** @see ITokenAmount.isGreaterOrEqualThan */
+  isGreaterOrEqualThan(tokenAmount: ITokenAmount): boolean {
+    return !this.isLessThan(tokenAmount)
+  }
+
+  /** @see ITokenAmount.isLessOrEqualThan */
+  isLessOrEqualThan(tokenAmount: ITokenAmount): boolean {
+    return !this.isGreaterThan(tokenAmount)
+  }
+
+  /** @see ITokenAmount.isEqualTo */
+  isEqualTo(tokenAmount: ITokenAmount): boolean {
+    return this.toBN().isEqualTo(tokenAmount.toBN())
   }
 
   /** PRIVATE */

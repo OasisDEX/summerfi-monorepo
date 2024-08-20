@@ -50,9 +50,24 @@ describe('SDK Common | Armada | ArmadaPosition', () => {
     decimals: 18,
   })
 
+  const share = Token.createFrom({
+    chainInfo,
+    address: Address.createFromEthereum({
+      value: '0xE41d2489571d322189246DaFA5ebDe1F4699F498',
+    }),
+    name: 'Armada USDC Pool',
+    symbol: 'ARM-USDC',
+    decimals: 18,
+  })
+
   const tokenAmount = TokenAmount.createFrom({
     token,
     amount: '123.45',
+  })
+
+  const sharesAmount = TokenAmount.createFrom({
+    token: share,
+    amount: '45.98',
   })
 
   describe('#createFrom()', () => {
@@ -60,6 +75,7 @@ describe('SDK Common | Armada | ArmadaPosition', () => {
       const position = ArmadaPosition.createFrom({
         id: positionId,
         amount: tokenAmount,
+        shares: sharesAmount,
         pool,
       })
 

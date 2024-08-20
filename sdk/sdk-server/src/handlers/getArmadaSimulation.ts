@@ -12,7 +12,7 @@ export const getArmadaSimulation = publicProcedure
     }
 
     return new ArmadaSimulator().simulate({
-      args: opts.input,
+      simulationParams: opts.input,
       armadaManager: opts.ctx.armadaManager,
     })
   })

@@ -94,6 +94,7 @@ export class ArmadaManager implements IArmadaManager {
       id: params.positionId,
       pool: pool,
       amount: userAssets,
+      shares: userShares,
     })
   }
 
@@ -139,6 +140,21 @@ export class ArmadaManager implements IArmadaManager {
     })
 
     return [fleetWithdrawTransaction]
+  }
+
+  /** @see IArmadaManager.convertToShares */
+  async convertToShares(params: {
+    poolId: IArmadaPoolId
+    amount: ITokenAmount
+  }): Promise<ITokenAmount> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.poolId.chainInfo,
+      address: params.poolId.fleetAddress,
+    })
+
+    const erc4626Contract = fleetContract.asErc4626()
+
+    return erc4626Contract.convertToShares({ amount: params.amount })
   }
 
   /** PRIVATE */

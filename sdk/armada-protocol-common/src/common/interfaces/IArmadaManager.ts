@@ -97,4 +97,15 @@ export interface IArmadaManager {
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]>
+
+  /**
+   * @name convertToShares
+   * @description Converts a token amount to shares in the Fleet
+   *
+   * @param poolId ID of the pool to convert the tokens to shares
+   * @param amount Token amount to be converted
+   *
+   * @returns ITokenAmount The amount of shares that the token amount represents
+   */
+  convertToShares(params: { poolId: IArmadaPoolId; amount: ITokenAmount }): Promise<ITokenAmount>
 }

@@ -35,7 +35,7 @@ export const sdkAppRouter = router({
   simulation: {
     refinance: getRefinanceSimulation,
     import: getImportSimulation,
-    earn: getArmadaSimulation,
+    armada: getArmadaSimulation,
   },
   orders: {
     buildOrder: buildOrder,
