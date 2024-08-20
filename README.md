@@ -43,6 +43,9 @@ To initialize submodules use:
 
 `git submodule update armada-protocol/contracts`
 
+If you want to restore submodules after folder is removed or something broke, delete the submodule
+folder and run following script: `./bin/restore-git-submodule`.
+
 ## Useful Links
 
 Learn more about the power of Turborepo:
