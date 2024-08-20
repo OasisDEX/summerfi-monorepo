@@ -6,7 +6,7 @@ import { ArmadaPositionId } from '../src/common/implementation/ArmadaPositionId'
 import { ArmadaProtocol } from '../src/common/implementation/ArmadaProtocol'
 
 describe('SDK Common | Armada | ArmadaPosition', () => {
-  const chainInfo = ChainFamilyMap.Base.Mainnet
+  const chainInfo = ChainFamilyMap.Base.Base
 
   const userAddress = Address.createFromEthereum({
     value: '0xa09E82322f351154a155f9e0f9e6ddbc8791C794', // FleetCommander on Base

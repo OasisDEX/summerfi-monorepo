@@ -4,7 +4,7 @@ import { ArmadaPoolId } from '../src/common/implementation/ArmadaPoolId'
 import { ArmadaProtocol } from '../src/common/implementation/ArmadaProtocol'
 
 describe('SDK Common | Armada | ArmadaPool', () => {
-  const chainInfo = ChainFamilyMap.Base.Mainnet
+  const chainInfo = ChainFamilyMap.Base.Base
   const protocol = ArmadaProtocol.createFrom({ chainInfo })
   const fleetAddress = Address.createFromEthereum({
     value: '0xa09E82322f351154a155f9e0f9e6ddbc8791C794', // FleetCommander on Base

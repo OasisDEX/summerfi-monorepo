@@ -3,7 +3,7 @@ import { ArmadaSimulation } from '../src/simulator/implementation/ArmadaSimulati
 import { ArmadaPositionMock } from './mocks/ArmadaPositionMock'
 
 describe('SDK Common | Armada | ArmadaSimulation', () => {
-  const chainInfo = ChainFamilyMap.Base.Mainnet
+  const chainInfo = ChainFamilyMap.Base.Base
 
   const userAddress = Address.createFromEthereum({
     value: '0xa09E82322f351154a155f9e0f9e6ddbc8791C794', // FleetCommander on Base
