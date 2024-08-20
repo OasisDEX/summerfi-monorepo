@@ -1,44 +1,99 @@
-import { IAddress, IChainInfo, ITokenAmount } from '@summerfi/sdk-common/common'
+import { ITokenAmount } from '@summerfi/sdk-common/common'
 import { TransactionInfo } from '@summerfi/sdk-common/orders'
 import { IUser } from '@summerfi/sdk-common/user'
+import { IArmadaPool } from './IArmadaPool'
+import { IArmadaPoolId } from './IArmadaPoolId'
+import { IArmadaPoolInfo } from './IArmadaPoolInfo'
+import { IArmadaPosition } from './IArmadaPosition'
+import { IArmadaPositionId } from './IArmadaPositionId'
 
 /**
  * @name IArmadaManager
  * @description Interface for the Armada Protocol Manager which handles generating transactions for a Fleet
  */
 export interface IArmadaManager {
+  /** POOLS */
+
   /**
-   * @name deposit
-   * @description Deposit tokens into the Fleet
+   * @name getPool
+   * @description Get the position of a user in the specified fleet
    *
-   * @param chainInfo Chain in which the fleet is
-   * @param fleetAddress Address of the entry point contract for the Fleet
+   * @param poolId ID of the pool to retrieve
+   *
+   * @returns IArmadaPool The pool with the specified ID
+   *
+   */
+  getPool(params: { poolId: IArmadaPoolId }): Promise<IArmadaPool>
+
+  /**
+   * @name getPoolInfo
+   * @description Get the extended position information for a position
+   *
+   * @param poolId ID of the pool to retrieve
+   *
+   * @returns IArmadaPoolInfo The extended information of the pool
+   */
+  getPoolInfo(params: { poolId: IArmadaPoolId }): Promise<IArmadaPoolInfo>
+
+  /** POSITIONS */
+
+  /**
+   * @name getPosition
+   * @description Get the position of a user in the specified fleet
+   *
+   * @param positionId ID of the position to retrieve
+   *
+   * @returns IArmadaPosition The position of the user in the fleet
+   *
+   */
+  getPosition(params: { positionId: IArmadaPositionId }): Promise<IArmadaPosition>
+
+  /** TRANSACTIONS */
+
+  /**
+   * @name getNewDepositTX
+   * @description Returns the transactions needed to deposit tokens in the Fleet for a new position
+   *
+   * @param poolId ID of the pool to deposit in
    * @param user Address of the user that is trying to deposit
    * @param amount Token amount to be deposited
    *
    * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
    */
-  deposit(params: {
-    chainInfo: IChainInfo
-    fleetAddress: IAddress
+  getNewDepositTX(params: {
+    poolId: IArmadaPoolId
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]>
 
   /**
-   * @name withdraw
-   * @description Withdraw tokens from the Fleet
+   * @name getUpdateDepositTX
+   * @description Returns the transactions needed to deposit tokens in the Fleet for an existing position
    *
-   * @param chainInfo Chain in which the fleet is
-   * @param fleetAddress Address of the entry point contract for the Fleet
+   * @param poolId ID of the pool to deposit in
+   * @param positionId ID of the position to be updated
+   * @param amount Token amount to be deposited
+   *
+   * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
+   */
+  getUpdateDepositTX(params: {
+    poolId: IArmadaPoolId
+    positionId: IArmadaPositionId
+    amount: ITokenAmount
+  }): Promise<TransactionInfo[]>
+
+  /**
+   * @name getWithdrawTX
+   * @description Returns the transactions needed to withdraw tokens from the Fleet
+   *
+   * @param poolId ID of the pool to withdraw from
    * @param user Address of the user that is trying to withdraw
    * @param amount Token amount to be withdrawn
    *
    * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
    */
-  withdraw(params: {
-    chainInfo: IChainInfo
-    fleetAddress: IAddress
+  getWithdrawTX(params: {
+    poolId: IArmadaPoolId
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]>

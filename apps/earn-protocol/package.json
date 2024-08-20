@@ -26,6 +26,7 @@
     "@summerfi/rays-db": "workspace:*",
     "@summerfi/sdk-client": "workspace:^",
     "@summerfi/sdk-common": "workspace:^",
+    "@summerfi/armada-protocol-service": "workspace:*",
     "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/summer-protocol-db": "workspace:*",
     "@tabler/icons-react": "^3.11.0",

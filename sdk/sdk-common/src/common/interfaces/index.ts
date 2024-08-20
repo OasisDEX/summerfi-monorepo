@@ -1,7 +1,5 @@
 export { AddressDataSchema, isAddress } from './IAddress'
 export type { IAddress, IAddressData } from './IAddress'
-export { ArmadaFleetDataSchema, isArmadaFleet } from './IArmadaFleet'
-export type { IArmadaFleet, IArmadaFleetData } from './IArmadaFleet'
 export { ChainInfoDataSchema, isChainInfo } from './IChainInfo'
 export type { IChainInfo, IChainInfoData } from './IChainInfo'
 export { FiatCurrencyAmountDataSchema, isFiatCurrencyAmount } from './IFiatCurrencyAmount'

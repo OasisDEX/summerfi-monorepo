@@ -1,5 +1,4 @@
 import { IAddress, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
-import { IArkConfiguration } from './IArkConfiguration'
 import { IContractWrapper } from './IContractWrapper'
 import { IErc20Contract } from './IErc20Contract'
 import { IErc4626Contract } from './IErc4626Contract'
@@ -13,9 +12,31 @@ export interface IFleetCommanderContract extends IContractWrapper {
 
   /**
    * @name arks
-   * @description Returns the configuration for one ark
+   * @description Returns the list of available arks
    */
-  arks(params: { address: IAddress }): Promise<IArkConfiguration>
+  arks(): Promise<IAddress[]>
+
+  /**
+   * @name depositCap
+   * @description Returns the deposit cap of the fleet, this is the maximum amount of assets that
+   *              the fleet can manage, and therefore the maximum amount of assets that can be deposited
+   *              in total by all users
+   */
+  depositCap(): Promise<ITokenAmount>
+
+  /**
+   * @name maxDeposit
+   * @description Returns the maximum amount of assets that a user can deposit in the fleet at
+   *              the current moment
+   */
+  maxDeposit(params: { user: IAddress }): Promise<ITokenAmount>
+
+  /**
+   * @name maxWithdraw
+   * @description Returns the maximum amount of assets that a user can withdraw from the fleet at
+   *              the current moment
+   */
+  maxWithdraw(params: { user: IAddress }): Promise<ITokenAmount>
 
   /** WRITE METHODS */
 

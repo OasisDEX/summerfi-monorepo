@@ -21,6 +21,12 @@ export interface IErc20Contract extends IContractWrapper {
   balanceOf(params: { address: IAddress }): Promise<ITokenAmount>
 
   /**
+   * @name totalSupply
+   * @description Returns the total supply of the token
+   */
+  totalSupply(): Promise<ITokenAmount>
+
+  /**
    * @name allowance
    * @description Returns the allowance of the owner to the spender
    */

@@ -1,6 +1,10 @@
 import { router } from './SDKTRPC'
-import { deposit } from './armada-protocol-handlers/deposit'
-import { withdraw } from './armada-protocol-handlers/withdraw'
+import { getNewDepositTX } from './armada-protocol-handlers/getNewDepositTX'
+import { getPool } from './armada-protocol-handlers/getPool'
+import { getPoolInfo } from './armada-protocol-handlers/getPoolInfo'
+import { getPosition as getArmadaPosition } from './armada-protocol-handlers/getPosition'
+import { getUpdateDepositTX } from './armada-protocol-handlers/getUpdateDepositTX'
+import { getWithdrawTX } from './armada-protocol-handlers/getWithdrawTX'
 import { buildOrder } from './handlers/buildOrder'
 import { getArmadaSimulation } from './handlers/getArmadaSimulation'
 import { getImportSimulation } from './handlers/getImportSimulation'
@@ -40,9 +44,13 @@ export const sdkAppRouter = router({
     getSwapDataExactInput: getSwapDataExactInput,
     getSwapQuoteExactInput: getSwapQuoteExactInput,
   },
-  earn: {
-    deposit: deposit,
-    withdraw: withdraw,
+  armada: {
+    getPool: getPool,
+    getPoolInfo: getPoolInfo,
+    getPosition: getArmadaPosition,
+    getNewDepositTX: getNewDepositTX,
+    getUpdateDepositTX: getUpdateDepositTX,
+    getWithdrawTX: getWithdrawTX,
   },
 })
 
