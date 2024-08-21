@@ -2066,6 +2066,9 @@ importers:
       '@summerfi/address-book-common':
         specifier: workspace:*
         version: link:../address-book-common
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../armada-protocol-common
       '@summerfi/contracts-provider-common':
         specifier: workspace:*
         version: link:../contracts-provider-common
@@ -2100,6 +2103,9 @@ importers:
       '@summerfi/address-book-common':
         specifier: workspace:*
         version: link:../address-book-common
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../armada-protocol-common
       '@summerfi/configuration-provider-common':
         specifier: workspace:*
         version: link:../configuration-provider-common
@@ -2115,6 +2121,9 @@ importers:
       '@summerfi/deployment-utils':
         specifier: workspace:*
         version: link:../../packages/deployment-utils
+      '@summerfi/oracle-common':
+        specifier: workspace:*
+        version: link:../oracle-common
       '@summerfi/order-planner-common':
         specifier: workspace:*
         version: link:../order-planner-common
@@ -2133,6 +2142,9 @@ importers:
       '@summerfi/testing-utils':
         specifier: workspace:*
         version: link:../testing-utils
+      '@summerfi/tokens-common':
+        specifier: workspace:*
+        version: link:../tokens-common
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*

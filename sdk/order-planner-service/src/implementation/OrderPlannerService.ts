@@ -36,6 +36,7 @@ export class OrderPlannerService implements IOrderPlannerService {
       user: params.user,
       positionsManager: params.positionsManager,
       simulation: params.simulation,
+      armadaManager: params.armadaManager,
       actionBuildersMap: ActionBuildersConfig,
       addressBookManager: params.addressBookManager,
       swapManager: params.swapManager,
