@@ -173,5 +173,4 @@ export const mapResponse = ({
         ...params,
       },
     },
-    rawTriggers: triggers.triggers,
   }) as GetTriggersResponse
