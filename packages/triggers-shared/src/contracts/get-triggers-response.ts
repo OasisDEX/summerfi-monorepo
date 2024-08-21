@@ -1,6 +1,22 @@
 import { ProtocolId } from '@summerfi/serverless-shared'
 import { Price, TokenBalance } from '../types'
 
+// maker legacy ids
+export const MakerStopLossToCollateralID = 1n as const
+export const MakerStopLossToDaiID = 2n as const
+export const MakerBasicBuyID = 3n as const
+export const MakerBasicSellID = 4n as const
+export const MakerAutoTakeProfitToCollateralID = 7n as const
+export const MakerAutoTakeProfitToDaiID = 8n as const
+
+// maker legacy ids that were supposed to happen but never did
+// export const MakerStopLossToCollateralV2ID = 101n as const
+// export const MakerStopLossToDaiV2ID = 102n as const
+// export const MakerBasicBuyV2ID = 103n as const
+// export const MakerBasicSellV2ID = 104n as const
+// export const MakerAutoTakeProfitToCollateralV2ID = 105n as const
+// export const MakerAutoTakeProfitToDaiV2ID = 106n as const
+
 export const AaveStopLossToCollateralV2ID = 111n as const
 export const AaveStopLossToDebtV2ID = 112n as const
 export const SparkStopLossToCollateralV2ID = 117n as const
@@ -42,6 +58,73 @@ export type Trigger = {
   dynamicParams?: unknown
 }
 
+export type MakerStopLossToCollateral = Trigger & {
+  triggerTypeName: 'MakerStopLossToCollateral'
+  triggerType: typeof MakerStopLossToCollateralID
+  decodedParams: {
+    cdpId: string
+    triggerType: string
+    collRatio: string
+  }
+}
+export type MakerStopLossToDai = Trigger & {
+  triggerTypeName: 'MakerStopLossToDai'
+  triggerType: typeof MakerStopLossToDaiID
+  decodedParams: {
+    cdpId: string
+    triggerType: string
+    collRatio: string
+  }
+}
+export type MakerBasicBuy = Trigger & {
+  triggerTypeName: 'MakerBasicBuy'
+  triggerType: typeof MakerBasicBuyID
+  decodedParams: {
+    cdpId: string
+    triggerType: string
+    execCollRatio: string
+    targetCollRatio: string
+    maxBuyPrice: string
+    continuous: boolean
+    deviation: string
+    maxBaseFeeInGwei: string
+  }
+}
+
+export type MakerBasicSell = Trigger & {
+  triggerTypeName: 'MakerBasicSell'
+  triggerType: typeof MakerBasicSellID
+  decodedParams: {
+    cdpId: string
+    triggerType: string
+    execCollRatio: string
+    targetCollRatio: string
+    minSellPrice: string
+    continuous: boolean
+    deviation: string
+    maxBaseFeeInGwei: string
+  }
+}
+export type MakerAutoTakeProfitToCollateral = Trigger & {
+  triggerTypeName: 'MakerAutoTakeProfitToCollateral'
+  triggerType: typeof MakerAutoTakeProfitToCollateralID
+  decodedParams: {
+    cdpId: string
+    triggerType: string
+    executionPrice: string
+    maxBaseFeeInGwei: string
+  }
+}
+export type MakerAutoTakeProfitToDai = Trigger & {
+  triggerTypeName: 'MakerAutoTakeProfitToDai'
+  triggerType: typeof MakerAutoTakeProfitToDaiID
+  decodedParams: {
+    cdpId: string
+    triggerType: string
+    executionPrice: string
+    maxBaseFeeInGwei: string
+  }
+}
 export type AaveStopLossToCollateral = Trigger & {
   triggerTypeName: 'AaveStopLossToCollateralV2'
   triggerType: typeof AaveStopLossToCollateralV2ID

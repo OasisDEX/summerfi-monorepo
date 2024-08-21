@@ -32,10 +32,21 @@ export const handler = async (
 
   logger.info(`Query params`, { params: event.queryStringParameters })
 
-  const parseResult = paramsSchema.safeParse(event.queryStringParameters)
+  const queryStringParams = {
+    // "dpm" is deprecated in favor of "account"
+    // because the "account" field in subgraph
+    // works both with DS and DPM proxy addresses
+    // *TLDR*: use "account" for the position address
+    account: event.queryStringParameters?.account || event.queryStringParameters?.dpm, // leaving this for backward compatibility
+    ...event.queryStringParameters,
+  }
+
+  console.log('event', event)
+
+  const parseResult = paramsSchema.safeParse(queryStringParams)
   if (!parseResult.success) {
     logger.warn('Incorrect query params', {
-      params: event.queryStringParameters,
+      params: queryStringParams,
       errors: parseResult.error.errors,
     })
     return ResponseBadRequest({
@@ -59,7 +70,7 @@ export const handler = async (
 
   logger.info(`Got ${triggers.triggers.length} triggers`, {
     triggers: triggers.triggers,
-    account: params.dpm,
+    account: params.account,
   })
 
   // simple triggers that can be mapped just from the list

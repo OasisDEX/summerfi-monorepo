@@ -8,7 +8,7 @@ import {
 } from '@summerfi/serverless-shared/validators'
 
 export const paramsSchema = z.object({
-  dpm: addressSchema,
+  account: addressSchema,
   poolId: optionalPoolIdSchema,
   chainId: chainIdSchema,
   rpc: urlOptionalSchema,

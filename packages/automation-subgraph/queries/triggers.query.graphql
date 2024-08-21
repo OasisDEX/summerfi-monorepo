@@ -1,6 +1,6 @@
-query Triggers($dpm: Bytes!) {
+query Triggers($account: Bytes!) {
   triggers(
-    where: { account: $dpm, removedBlock: null }
+    where: { account: $account, removedBlock: null }
     orderBy: addedTimestamp
     orderDirection: desc
   ) {

@@ -1,12 +1,12 @@
-import { z } from 'zod'
+import { TriggersQuery } from '@summerfi/automation-subgraph'
 import { ProtocolId } from '@summerfi/serverless-shared'
 import { GetTriggersResponse } from '@summerfi/triggers-shared/contracts'
-import { getSimpleTriggers } from './get-simple-triggers'
-import { getAdvancedTriggers } from './get-advanced-triggers'
+import { z } from 'zod'
 import { paramsSchema } from '../constants'
-import { hasAnyDefined } from './has-any-defined'
+import { getAdvancedTriggers } from './get-advanced-triggers'
 import { getCurrentTrigger } from './get-current-trigger'
-import { TriggersQuery } from '@summerfi/automation-subgraph'
+import { getSimpleTriggers } from './get-simple-triggers'
+import { hasAnyDefined } from './has-any-defined'
 
 export const mapResponse = ({
   simpleTriggers,
@@ -23,6 +23,14 @@ export const mapResponse = ({
     triggers: {
       ...simpleTriggers,
       ...advancedTriggers,
+      [ProtocolId.MAKER]: {
+        basicBuy: simpleTriggers.makerBasicBuy,
+        basicSell: simpleTriggers.makerBasicSell,
+        stopLossToCollateral: simpleTriggers.makerStopLossToCollateral,
+        stopLossToDebt: simpleTriggers.makerStopLossToDai,
+        autoTakeProfitToCollateral: simpleTriggers.makerAutoTakeProfitToCollateral,
+        autoTakeProfitToDebt: simpleTriggers.makerAutoTakeProfitToDai,
+      },
       [ProtocolId.AAVE3]: {
         basicBuy: simpleTriggers.aaveBasicBuy,
         basicSell: simpleTriggers.aaveBasicSell,
@@ -54,6 +62,18 @@ export const mapResponse = ({
       }),
     },
     flags: {
+      [ProtocolId.MAKER]: {
+        isStopLossEnabled: hasAnyDefined(
+          simpleTriggers.makerStopLossToCollateral,
+          simpleTriggers.makerStopLossToDai,
+        ),
+        isBasicBuyEnabled: hasAnyDefined(simpleTriggers.makerBasicBuy),
+        isBasicSellEnabled: hasAnyDefined(simpleTriggers.makerBasicSell),
+        isAutoTakeProfitEnabled: hasAnyDefined(
+          simpleTriggers.makerAutoTakeProfitToCollateral,
+          simpleTriggers.makerAutoTakeProfitToCollateral,
+        ),
+      },
       [ProtocolId.AAVE3]: {
         isStopLossEnabled: hasAnyDefined(
           simpleTriggers.aaveStopLossToCollateral,
@@ -88,6 +108,16 @@ export const mapResponse = ({
         },
       }),
       /* deprecated start */
+      isMakerStopLossEnabled: hasAnyDefined(
+        simpleTriggers.makerStopLossToCollateral,
+        simpleTriggers.makerStopLossToDai,
+      ),
+      isMakerBasicBuyEnabled: hasAnyDefined(simpleTriggers.makerBasicBuy),
+      isMakerBasicSellEnabled: hasAnyDefined(simpleTriggers.makerBasicSell),
+      isMakerAutoTakeProfitEnabled: hasAnyDefined(
+        simpleTriggers.makerAutoTakeProfitToCollateral,
+        simpleTriggers.makerAutoTakeProfitToCollateral,
+      ),
       isAaveStopLossEnabled: hasAnyDefined(
         simpleTriggers.aaveStopLossToCollateral,
         simpleTriggers.aaveStopLossToCollateralDMA,
@@ -112,6 +142,16 @@ export const mapResponse = ({
     },
     triggersCount: triggers.triggers.length,
     triggerGroup: {
+      makerStopLoss: hasAnyDefined(
+        simpleTriggers.makerStopLossToCollateral,
+        simpleTriggers.makerStopLossToDai,
+      ),
+      makerBasicBuy: hasAnyDefined(simpleTriggers.makerBasicBuy),
+      makerBasicSell: hasAnyDefined(simpleTriggers.makerBasicSell),
+      makerAutoTakeProfit: hasAnyDefined(
+        simpleTriggers.makerAutoTakeProfitToCollateral,
+        simpleTriggers.makerAutoTakeProfitToCollateral,
+      ),
       aaveBasicBuy: getCurrentTrigger(simpleTriggers.aaveBasicBuy),
       aaveBasicSell: getCurrentTrigger(simpleTriggers.aaveBasicSell),
       aavePartialTakeProfit: getCurrentTrigger(advancedTriggers.aavePartialTakeProfit),
@@ -133,4 +173,5 @@ export const mapResponse = ({
         ...params,
       },
     },
+    rawTriggers: triggers.triggers,
   }) as GetTriggersResponse
