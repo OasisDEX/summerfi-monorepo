@@ -92,7 +92,6 @@ export const getSimpleTriggers = ({
   const makerBasicBuy: MakerBasicBuy | undefined = triggers
     .filter((trigger) => trigger.triggerType == MakerBasicBuyID)
     .map((trigger) => {
-      console.log('trigger', trigger)
       return {
         triggerTypeName: 'MakerBasicBuy' as const,
         triggerType: MakerBasicBuyID,

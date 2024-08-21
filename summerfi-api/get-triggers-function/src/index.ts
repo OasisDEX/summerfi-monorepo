@@ -41,8 +41,6 @@ export const handler = async (
     ...event.queryStringParameters,
   }
 
-  console.log('event', event)
-
   const parseResult = paramsSchema.safeParse(queryStringParams)
   if (!parseResult.success) {
     logger.warn('Incorrect query params', {
