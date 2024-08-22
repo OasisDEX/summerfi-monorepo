@@ -13,6 +13,12 @@ query Triggers($account: Bytes!) {
     addedTimestamp
     decodedData
     decodedDataNames
+    cdp {
+      collateralToken {
+        address
+        symbol
+      }
+    }
     tokens {
       address
       symbol

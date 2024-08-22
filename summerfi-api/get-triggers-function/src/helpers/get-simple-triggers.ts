@@ -6,18 +6,6 @@ import {
   AaveStopLossToDebt,
   AaveStopLossToDebtDMA,
   AaveStopLossToDebtV2ID,
-  MakerStopLossToCollateralID,
-  MakerStopLossToDaiID,
-  MakerBasicBuyID,
-  MakerBasicSellID,
-  MakerAutoTakeProfitToCollateralID,
-  MakerAutoTakeProfitToDaiID,
-  MakerStopLossToCollateral,
-  MakerStopLossToDai,
-  MakerBasicBuy,
-  MakerBasicSell,
-  MakerAutoTakeProfitToCollateral,
-  MakerAutoTakeProfitToDai,
   DmaAaveBasicBuy,
   DmaAaveBasicBuyV2ID,
   DmaAaveBasicSell,
@@ -52,15 +40,12 @@ import { paramsSchema } from '../constants'
 import {
   getMorphoLambdaPriceConverted,
   mapBuySellCommonParams,
-  mapMakerAutoTakeProfitParams,
-  mapMakerBasicBuyParams,
-  mapMakerBasicSellParams,
-  mapMakerStopLossParams,
   mapStopLossParams,
   mapTriggerCommonParams,
   mapTriggersWithSamePoolId,
 } from '../helpers'
 import { getTokensFromTrigger } from '../helpers/get-tokens-from-trigger'
+import { filterTrigger } from './filter-trigger'
 
 export const getSimpleTriggers = ({
   triggers,
@@ -69,68 +54,8 @@ export const getSimpleTriggers = ({
   triggers: TriggersQuery['triggers']
   params: z.infer<typeof paramsSchema>
 }) => {
-  const makerStopLossToCollateral: MakerStopLossToCollateral | undefined = triggers
-    .filter((trigger) => trigger.triggerType == MakerStopLossToCollateralID)
-    .map((trigger) => {
-      return {
-        triggerTypeName: 'MakerStopLossToCollateral' as const,
-        triggerType: MakerStopLossToCollateralID,
-        ...mapTriggerCommonParams(trigger),
-        decodedParams: mapMakerStopLossParams(trigger),
-      }
-    })[0]
-  const makerStopLossToDai: MakerStopLossToDai | undefined = triggers
-    .filter((trigger) => trigger.triggerType == MakerStopLossToDaiID)
-    .map((trigger) => {
-      return {
-        triggerTypeName: 'MakerStopLossToDai' as const,
-        triggerType: MakerStopLossToDaiID,
-        ...mapTriggerCommonParams(trigger),
-        decodedParams: mapMakerStopLossParams(trigger),
-      }
-    })[0]
-  const makerBasicBuy: MakerBasicBuy | undefined = triggers
-    .filter((trigger) => trigger.triggerType == MakerBasicBuyID)
-    .map((trigger) => {
-      return {
-        triggerTypeName: 'MakerBasicBuy' as const,
-        triggerType: MakerBasicBuyID,
-        ...mapTriggerCommonParams(trigger),
-        decodedParams: mapMakerBasicBuyParams(trigger),
-      }
-    })[0]
-  const makerBasicSell: MakerBasicSell | undefined = triggers
-    .filter((trigger) => trigger.triggerType == MakerBasicSellID)
-    .map((trigger) => {
-      return {
-        triggerTypeName: 'MakerBasicSell' as const,
-        triggerType: MakerBasicSellID,
-        ...mapTriggerCommonParams(trigger),
-        decodedParams: mapMakerBasicSellParams(trigger),
-      }
-    })[0]
-  const makerAutoTakeProfitToCollateral: MakerAutoTakeProfitToCollateral | undefined = triggers
-    .filter((trigger) => trigger.triggerType == MakerAutoTakeProfitToCollateralID)
-    .map((trigger) => {
-      return {
-        triggerTypeName: 'MakerAutoTakeProfitToCollateral' as const,
-        triggerType: MakerAutoTakeProfitToCollateralID,
-        ...mapTriggerCommonParams(trigger),
-        decodedParams: mapMakerAutoTakeProfitParams(trigger),
-      }
-    })[0]
-  const makerAutoTakeProfitToDai: MakerAutoTakeProfitToDai | undefined = triggers
-    .filter((trigger) => trigger.triggerType == MakerAutoTakeProfitToDaiID)
-    .map((trigger) => {
-      return {
-        triggerTypeName: 'MakerAutoTakeProfitToDai' as const,
-        triggerType: MakerAutoTakeProfitToDaiID,
-        ...mapTriggerCommonParams(trigger),
-        decodedParams: mapMakerAutoTakeProfitParams(trigger),
-      }
-    })[0]
   const aaveStopLossToCollateral: AaveStopLossToCollateral | undefined = triggers
-    .filter((trigger) => trigger.triggerType == AaveStopLossToCollateralV2ID)
+    .filter(filterTrigger(AaveStopLossToCollateralV2ID))
     .map((trigger) => {
       return {
         triggerTypeName: 'AaveStopLossToCollateralV2' as const,
@@ -156,7 +81,7 @@ export const getSimpleTriggers = ({
     })[0]
 
   const aaveStopLossToDebt: AaveStopLossToDebt | undefined = triggers
-    .filter((trigger) => trigger.triggerType == AaveStopLossToDebtV2ID)
+    .filter(filterTrigger(AaveStopLossToDebtV2ID))
     .map((trigger) => {
       return {
         triggerTypeName: 'AaveStopLossToDebtV2' as const,
@@ -182,7 +107,7 @@ export const getSimpleTriggers = ({
     })[0]
 
   const sparkStopLossToCollateral: SparkStopLossToCollateral | undefined = triggers
-    .filter((trigger) => trigger.triggerType == SparkStopLossToCollateralV2ID)
+    .filter(filterTrigger(SparkStopLossToCollateralV2ID))
     .map((trigger) => {
       return {
         triggerTypeName: 'SparkStopLossToCollateralV2' as const,
@@ -208,7 +133,7 @@ export const getSimpleTriggers = ({
     })[0]
 
   const sparkStopLossToDebt: SparkStopLossToDebt | undefined = triggers
-    .filter((trigger) => trigger.triggerType == SparkStopLossToDebtV2ID)
+    .filter(filterTrigger(SparkStopLossToDebtV2ID))
     .map((trigger) => {
       return {
         triggerTypeName: 'SparkStopLossToDebtV2' as const,
@@ -234,7 +159,7 @@ export const getSimpleTriggers = ({
     })[0]
 
   const aaveBasicBuy: DmaAaveBasicBuy | undefined = triggers
-    .filter((trigger) => trigger.triggerType == DmaAaveBasicBuyV2ID)
+    .filter(filterTrigger(DmaAaveBasicBuyV2ID))
     .map((trigger) => {
       return {
         triggerTypeName: 'DmaAaveBasicBuyV2' as const,
@@ -248,7 +173,7 @@ export const getSimpleTriggers = ({
     })[0]
 
   const aaveBasicSell: DmaAaveBasicSell | undefined = triggers
-    .filter((trigger) => trigger.triggerType == DmaAaveBasicSellV2ID)
+    .filter(filterTrigger(DmaAaveBasicSellV2ID))
     .map((trigger) => {
       return {
         triggerTypeName: 'DmaAaveBasicSellV2' as const,
@@ -262,7 +187,7 @@ export const getSimpleTriggers = ({
     })[0]
 
   const sparkBasicBuy: DmaSparkBasicBuy | undefined = triggers
-    .filter((trigger) => trigger.triggerType == DmaSparkBasicBuyV2ID)
+    .filter(filterTrigger(DmaSparkBasicBuyV2ID))
     .map((trigger) => {
       return {
         triggerTypeName: 'DmaSparkBasicBuyV2' as const,
@@ -276,7 +201,7 @@ export const getSimpleTriggers = ({
     })[0]
 
   const sparkBasicSell: DmaSparkBasicSell | undefined = triggers
-    .filter((trigger) => trigger.triggerType == DmaSparkBasicSellV2ID)
+    .filter(filterTrigger(DmaSparkBasicSellV2ID))
     .map((trigger) => {
       return {
         triggerTypeName: 'DmaSparkBasicSellV2' as const,
@@ -290,7 +215,7 @@ export const getSimpleTriggers = ({
     })[0]
 
   const morphoBlueStopLoss: MorphoBlueStopLoss | undefined = triggers
-    .filter((trigger) => trigger.triggerType == MorphoBlueStopLossV2ID)
+    .filter(filterTrigger(MorphoBlueStopLossV2ID))
     .filter((trigger) => mapTriggersWithSamePoolId({ trigger, poolId: params.poolId }))
     .map((trigger) => {
       return {
@@ -302,7 +227,7 @@ export const getSimpleTriggers = ({
     })[0]
 
   const morphoBlueBasicBuy: MorphoBlueBasicBuy | undefined = triggers
-    .filter((trigger) => trigger.triggerType == MorphoBlueBasicBuyV2ID)
+    .filter(filterTrigger(MorphoBlueBasicBuyV2ID))
     .filter((trigger) => mapTriggersWithSamePoolId({ trigger, poolId: params.poolId }))
     .map((trigger) => {
       const { collateralToken, debtToken } = getTokensFromTrigger(trigger)
@@ -322,7 +247,7 @@ export const getSimpleTriggers = ({
       }
     })[0]
   const morphoBlueBasicSell: MorphoBlueBasicSell | undefined = triggers
-    .filter((trigger) => trigger.triggerType == MorphoBlueBasicSellV2ID)
+    .filter(filterTrigger(MorphoBlueBasicSellV2ID))
     .filter((trigger) => mapTriggersWithSamePoolId({ trigger, poolId: params.poolId }))
     .map((trigger) => {
       const { collateralToken, debtToken } = getTokensFromTrigger(trigger)
@@ -343,12 +268,6 @@ export const getSimpleTriggers = ({
     })[0]
 
   return {
-    makerStopLossToCollateral,
-    makerStopLossToDai,
-    makerBasicBuy,
-    makerBasicSell,
-    makerAutoTakeProfitToCollateral,
-    makerAutoTakeProfitToDai,
     aaveStopLossToCollateral,
     aaveStopLossToCollateralDMA,
     aaveStopLossToDebt,

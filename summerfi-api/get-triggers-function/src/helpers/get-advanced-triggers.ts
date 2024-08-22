@@ -6,7 +6,28 @@ import { createPublicClient, http, PublicClient, Chain as ViemChain } from 'viem
 import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
 import { z } from 'zod'
 import { paramsSchema } from '../constants'
-import { getCurrentTrigger } from '../helpers'
+import {
+  mapMakerDecodedAutoTakeProfitParams,
+  mapMakerDecodedBasicBuyParams,
+  mapMakerDecodedBasicSellParams,
+  mapMakerDecodedStopLossParams,
+  getCurrentTrigger,
+  mapTriggerCommonParams,
+} from '../helpers'
+import {
+  MakerStopLossToCollateralID,
+  MakerStopLossToDaiID,
+  MakerBasicBuyID,
+  MakerBasicSellID,
+  MakerAutoTakeProfitToCollateralID,
+  MakerAutoTakeProfitToDaiID,
+  MakerStopLossToCollateral,
+  MakerStopLossToDai,
+  MakerBasicBuy,
+  MakerBasicSell,
+  MakerAutoTakeProfitToCollateral,
+  MakerAutoTakeProfitToDai,
+} from '@summerfi/triggers-shared/contracts'
 import {
   getDmaAavePartialTakeProfit,
   getDmaAaveTrailingStopLoss,
@@ -17,6 +38,8 @@ import {
 import { getMorphoBluePartialTakeProfit } from '../trigger-parsers/dma-morphoblue-partial-take-profit'
 import { getSimpleTriggers } from './get-simple-triggers'
 import { logger } from './logger'
+import { filterTrigger } from './filter-trigger'
+import { getMakerPositionInfo } from './get-maker-position-info'
 
 const rpcConfig: IRpcConfig = {
   skipCache: false,
@@ -79,6 +102,90 @@ export const getAdvancedTriggers = async ({
     chainId: params.chainId,
     logger,
   })
+
+  const makerTriggers = triggers.triggers.filter((trigger) =>
+    (
+      [
+        MakerStopLossToCollateralID,
+        MakerStopLossToDaiID,
+        MakerBasicBuyID,
+        MakerBasicSellID,
+        MakerAutoTakeProfitToCollateralID,
+        MakerAutoTakeProfitToDaiID,
+      ] as bigint[]
+    ).includes(BigInt(trigger.triggerType)),
+  )
+
+  const hasMakerTriggers = makerTriggers.length > 0
+
+  const makerPositionInfo = hasMakerTriggers
+    ? await getMakerPositionInfo(publicClient, makerTriggers[0])
+    : undefined
+
+  const makerStopLossToCollateral: MakerStopLossToCollateral | undefined = triggers.triggers
+    .filter(filterTrigger(MakerStopLossToCollateralID))
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'MakerStopLossToCollateral' as const,
+        triggerType: MakerStopLossToCollateralID,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapMakerDecodedStopLossParams(trigger, makerPositionInfo),
+      }
+    })[0]
+
+  const makerStopLossToDai: MakerStopLossToDai | undefined = triggers.triggers
+    .filter(filterTrigger(MakerStopLossToDaiID))
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'MakerStopLossToDai' as const,
+        triggerType: MakerStopLossToDaiID,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapMakerDecodedStopLossParams(trigger, makerPositionInfo),
+      }
+    })[0]
+
+  const makerBasicBuy: MakerBasicBuy | undefined = triggers.triggers
+    .filter(filterTrigger(MakerBasicBuyID))
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'MakerBasicBuy' as const,
+        triggerType: MakerBasicBuyID,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapMakerDecodedBasicBuyParams(trigger, makerPositionInfo),
+      }
+    })[0]
+
+  const makerBasicSell: MakerBasicSell | undefined = triggers.triggers
+    .filter(filterTrigger(MakerBasicSellID))
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'MakerBasicSell' as const,
+        triggerType: MakerBasicSellID,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapMakerDecodedBasicSellParams(trigger, makerPositionInfo),
+      }
+    })[0]
+
+  const makerAutoTakeProfitToCollateral: MakerAutoTakeProfitToCollateral | undefined =
+    triggers.triggers.filter(filterTrigger(MakerAutoTakeProfitToCollateralID)).map((trigger) => {
+      return {
+        triggerTypeName: 'MakerAutoTakeProfitToCollateral' as const,
+        triggerType: MakerAutoTakeProfitToCollateralID,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapMakerDecodedAutoTakeProfitParams(trigger, makerPositionInfo),
+      }
+    })[0]
+
+  const makerAutoTakeProfitToDai: MakerAutoTakeProfitToDai | undefined = triggers.triggers
+    .filter(filterTrigger(MakerAutoTakeProfitToDaiID))
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'MakerAutoTakeProfitToDai' as const,
+        triggerType: MakerAutoTakeProfitToDaiID,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapMakerDecodedAutoTakeProfitParams(trigger, makerPositionInfo),
+      }
+    })[0]
 
   const [
     aaveTrailingStopLossDMA,
@@ -148,13 +255,19 @@ export const getAdvancedTriggers = async ({
   ])
 
   return {
-    aaveTrailingStopLossDMA,
-    sparkTrailingStopLossDMA,
-    morphoBlueTrailingStopLoss,
-    morphoBluePartialTakeProfit,
-    aaveStopLoss,
-    sparkStopLoss,
     aavePartialTakeProfit,
+    aaveStopLoss,
+    aaveTrailingStopLossDMA,
+    makerAutoTakeProfitToCollateral,
+    makerAutoTakeProfitToDai,
+    makerBasicBuy,
+    makerBasicSell,
+    makerStopLossToCollateral,
+    makerStopLossToDai,
+    morphoBluePartialTakeProfit,
+    morphoBlueTrailingStopLoss,
     sparkPartialTakeProfit,
+    sparkStopLoss,
+    sparkTrailingStopLossDMA,
   }
 }

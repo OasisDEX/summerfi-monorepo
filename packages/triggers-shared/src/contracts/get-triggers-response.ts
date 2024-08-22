@@ -63,8 +63,14 @@ export type MakerStopLossToCollateral = Trigger & {
   triggerType: typeof MakerStopLossToCollateralID
   decodedParams: {
     cdpId: string
-    triggerType: string
     collRatio: string
+    positionAddress: string
+    triggerType: string
+    maxCoverage: string
+    debtToken: string
+    collateralToken: string
+    executionLtv: string
+    ltv?: string
   }
 }
 export type MakerStopLossToDai = Trigger & {
@@ -72,8 +78,14 @@ export type MakerStopLossToDai = Trigger & {
   triggerType: typeof MakerStopLossToDaiID
   decodedParams: {
     cdpId: string
-    triggerType: string
     collRatio: string
+    positionAddress: string
+    triggerType: string
+    maxCoverage: string
+    debtToken: string
+    collateralToken: string
+    executionLtv: string
+    ltv?: string
   }
 }
 export type MakerBasicBuy = Trigger & {

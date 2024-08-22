@@ -24,12 +24,12 @@ export const mapResponse = ({
       ...simpleTriggers,
       ...advancedTriggers,
       [ProtocolId.MAKER]: {
-        basicBuy: simpleTriggers.makerBasicBuy,
-        basicSell: simpleTriggers.makerBasicSell,
-        stopLossToCollateral: simpleTriggers.makerStopLossToCollateral,
-        stopLossToDebt: simpleTriggers.makerStopLossToDai,
-        autoTakeProfitToCollateral: simpleTriggers.makerAutoTakeProfitToCollateral,
-        autoTakeProfitToDebt: simpleTriggers.makerAutoTakeProfitToDai,
+        basicBuy: advancedTriggers.makerBasicBuy,
+        basicSell: advancedTriggers.makerBasicSell,
+        stopLossToCollateral: advancedTriggers.makerStopLossToCollateral,
+        stopLossToDebt: advancedTriggers.makerStopLossToDai,
+        autoTakeProfitToCollateral: advancedTriggers.makerAutoTakeProfitToCollateral,
+        autoTakeProfitToDebt: advancedTriggers.makerAutoTakeProfitToDai,
       },
       [ProtocolId.AAVE3]: {
         basicBuy: simpleTriggers.aaveBasicBuy,
@@ -64,14 +64,14 @@ export const mapResponse = ({
     flags: {
       [ProtocolId.MAKER]: {
         isStopLossEnabled: hasAnyDefined(
-          simpleTriggers.makerStopLossToCollateral,
-          simpleTriggers.makerStopLossToDai,
+          advancedTriggers.makerStopLossToCollateral,
+          advancedTriggers.makerStopLossToDai,
         ),
-        isBasicBuyEnabled: hasAnyDefined(simpleTriggers.makerBasicBuy),
-        isBasicSellEnabled: hasAnyDefined(simpleTriggers.makerBasicSell),
+        isBasicBuyEnabled: hasAnyDefined(advancedTriggers.makerBasicBuy),
+        isBasicSellEnabled: hasAnyDefined(advancedTriggers.makerBasicSell),
         isAutoTakeProfitEnabled: hasAnyDefined(
-          simpleTriggers.makerAutoTakeProfitToCollateral,
-          simpleTriggers.makerAutoTakeProfitToCollateral,
+          advancedTriggers.makerAutoTakeProfitToCollateral,
+          advancedTriggers.makerAutoTakeProfitToCollateral,
         ),
       },
       [ProtocolId.AAVE3]: {
@@ -109,14 +109,14 @@ export const mapResponse = ({
       }),
       /* deprecated start */
       isMakerStopLossEnabled: hasAnyDefined(
-        simpleTriggers.makerStopLossToCollateral,
-        simpleTriggers.makerStopLossToDai,
+        advancedTriggers.makerStopLossToCollateral,
+        advancedTriggers.makerStopLossToDai,
       ),
-      isMakerBasicBuyEnabled: hasAnyDefined(simpleTriggers.makerBasicBuy),
-      isMakerBasicSellEnabled: hasAnyDefined(simpleTriggers.makerBasicSell),
+      isMakerBasicBuyEnabled: hasAnyDefined(advancedTriggers.makerBasicBuy),
+      isMakerBasicSellEnabled: hasAnyDefined(advancedTriggers.makerBasicSell),
       isMakerAutoTakeProfitEnabled: hasAnyDefined(
-        simpleTriggers.makerAutoTakeProfitToCollateral,
-        simpleTriggers.makerAutoTakeProfitToCollateral,
+        advancedTriggers.makerAutoTakeProfitToCollateral,
+        advancedTriggers.makerAutoTakeProfitToCollateral,
       ),
       isAaveStopLossEnabled: hasAnyDefined(
         simpleTriggers.aaveStopLossToCollateral,
@@ -143,14 +143,14 @@ export const mapResponse = ({
     triggersCount: triggers.triggers.length,
     triggerGroup: {
       makerStopLoss: hasAnyDefined(
-        simpleTriggers.makerStopLossToCollateral,
-        simpleTriggers.makerStopLossToDai,
+        advancedTriggers.makerStopLossToCollateral,
+        advancedTriggers.makerStopLossToDai,
       ),
-      makerBasicBuy: hasAnyDefined(simpleTriggers.makerBasicBuy),
-      makerBasicSell: hasAnyDefined(simpleTriggers.makerBasicSell),
+      makerBasicBuy: hasAnyDefined(advancedTriggers.makerBasicBuy),
+      makerBasicSell: hasAnyDefined(advancedTriggers.makerBasicSell),
       makerAutoTakeProfit: hasAnyDefined(
-        simpleTriggers.makerAutoTakeProfitToCollateral,
-        simpleTriggers.makerAutoTakeProfitToCollateral,
+        advancedTriggers.makerAutoTakeProfitToCollateral,
+        advancedTriggers.makerAutoTakeProfitToCollateral,
       ),
       aaveBasicBuy: getCurrentTrigger(simpleTriggers.aaveBasicBuy),
       aaveBasicSell: getCurrentTrigger(simpleTriggers.aaveBasicSell),

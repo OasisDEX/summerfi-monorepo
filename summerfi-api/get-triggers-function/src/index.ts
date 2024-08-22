@@ -72,7 +72,7 @@ export const handler = async (
   })
 
   // simple triggers that can be mapped just from the list
-  const simpleTriggers = getSimpleTriggers({ triggers: triggers.triggers, params })
+  const simpleTriggers = await getSimpleTriggers({ triggers: triggers.triggers, params })
   // advanced triggers that need simple triggers and some additional data/mapping
   const advancedTriggers = await getAdvancedTriggers({
     simpleTriggers,
