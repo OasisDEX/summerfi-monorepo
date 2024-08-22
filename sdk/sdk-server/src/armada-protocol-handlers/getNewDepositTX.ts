@@ -8,24 +8,24 @@ export const getNewDepositTX = publicProcedure.input(z.any()).query(async (opts)
 
   if (!isArmadaPoolId(opts.input.poolId, returnedErrors)) {
     throw SDKError.createFrom({
-      message: 'Invalid pool ID in getNewDepositTX request',
-      reason: returnedErrors.join('\n'),
+      reason: 'Invalid pool ID in getNewDepositTX request',
+      message: returnedErrors.join('\n'),
       type: SDKErrorType.ArmadaError,
     })
   }
 
   if (!isUser(opts.input.user, returnedErrors)) {
     throw SDKError.createFrom({
-      message: 'Invalid user in getNewDepositTX request',
-      reason: returnedErrors.join('\n'),
+      reason: 'Invalid user in getNewDepositTX request',
+      message: returnedErrors.join('\n'),
       type: SDKErrorType.ArmadaError,
     })
   }
 
   if (!isTokenAmount(opts.input.amount, returnedErrors)) {
     throw SDKError.createFrom({
-      message: 'Invalid token amount in getNewDepositTX request',
-      reason: returnedErrors.join('\n'),
+      reason: 'Invalid token amount in getNewDepositTX request',
+      message: returnedErrors.join('\n'),
       type: SDKErrorType.ArmadaError,
     })
   }

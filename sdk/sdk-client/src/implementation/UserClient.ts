@@ -48,15 +48,14 @@ export class UserClient extends User implements IUserClient {
     return {} as Position
   }
 
+  // TODO: the positions manager should only be passed when generating DMA orders, which
+  // TODO: breaks the flow for other simulations. Need to refactor this
   public async newOrder(params: {
-    positionsManager: IPositionsManager
     simulation: ISimulation
+    positionsManager?: IPositionsManager
   }): Promise<Maybe<Order>> {
     return await this.rpcClient.orders.buildOrder.mutate({
-      user: {
-        wallet: this.wallet,
-        chainInfo: this.chainInfo,
-      },
+      user: this,
       positionsManager: params.positionsManager,
       simulation: params.simulation,
     })
