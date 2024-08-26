@@ -13,5 +13,5 @@ export const curatedYieldPools: { [key: string]: string } = {
   WOETH: '423681e3-4787-40ce-ae43-e9f67c5269b3',
   BSDETH: 'ca775845-b68a-4084-8d8d-29c31970a643',
   RSETH: '33c732f6-a78d-41da-af5b-ccd9fa5e52d5',
-  SWBTC: 'a09a893e-c0dd-44a3-8ef6-79bc09d38f9e',
+  SWBTC: 'd84ee835-2356-433d-8c51-9b6cc68f26e6',
 }
