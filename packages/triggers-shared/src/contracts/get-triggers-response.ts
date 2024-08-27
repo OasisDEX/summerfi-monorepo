@@ -94,8 +94,8 @@ export type MakerBasicBuy = Trigger & {
   decodedParams: {
     cdpId: string
     triggerType: string
-    execCollRatio: string
-    targetCollRatio: string
+    executionLtv: string
+    targetLtv: string
     maxBuyPrice: string
     continuous: boolean
     deviation: string
@@ -109,8 +109,8 @@ export type MakerBasicSell = Trigger & {
   decodedParams: {
     cdpId: string
     triggerType: string
-    execCollRatio: string
-    targetCollRatio: string
+    executionLtv: string
+    targetLtv: string
     minSellPrice: string
     continuous: boolean
     deviation: string

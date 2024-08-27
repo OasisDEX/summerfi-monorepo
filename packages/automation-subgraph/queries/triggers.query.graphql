@@ -14,10 +14,17 @@ query Triggers($account: Bytes!) {
     decodedData
     decodedDataNames
     cdp {
+      id
       collateralToken {
         address
         symbol
+        decimals
       }
+      urn {
+        id
+      }
+      ilk
+      ilkName
     }
     tokens {
       address

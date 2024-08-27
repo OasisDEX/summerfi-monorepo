@@ -12,6 +12,7 @@ export const paramsSchema = z.object({
   poolId: optionalPoolIdSchema,
   chainId: chainIdSchema,
   rpc: urlOptionalSchema,
+  protocol: z.string().optional(),
   getDetails: z
     .boolean()
     .or(z.string().transform((s) => s === 'true'))

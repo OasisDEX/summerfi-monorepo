@@ -3326,6 +3326,9 @@ importers:
       '@aws-lambda-powertools/tracer':
         specifier: ^2.0.4
         version: 2.0.4
+      '@summerfi/abis':
+        specifier: workspace:*
+        version: link:../../packages/abis
       '@summerfi/automation-subgraph':
         specifier: workspace:*
         version: link:../../packages/automation-subgraph

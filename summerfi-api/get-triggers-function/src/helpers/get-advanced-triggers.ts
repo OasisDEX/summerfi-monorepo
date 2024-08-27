@@ -39,7 +39,6 @@ import { getMorphoBluePartialTakeProfit } from '../trigger-parsers/dma-morphoblu
 import { getSimpleTriggers } from './get-simple-triggers'
 import { logger } from './logger'
 import { filterTrigger } from './filter-trigger'
-import { getMakerPositionInfo } from './get-maker-position-info'
 
 const rpcConfig: IRpcConfig = {
   skipCache: false,
@@ -103,25 +102,6 @@ export const getAdvancedTriggers = async ({
     logger,
   })
 
-  const makerTriggers = triggers.triggers.filter((trigger) =>
-    (
-      [
-        MakerStopLossToCollateralID,
-        MakerStopLossToDaiID,
-        MakerBasicBuyID,
-        MakerBasicSellID,
-        MakerAutoTakeProfitToCollateralID,
-        MakerAutoTakeProfitToDaiID,
-      ] as bigint[]
-    ).includes(BigInt(trigger.triggerType)),
-  )
-
-  const hasMakerTriggers = makerTriggers.length > 0
-
-  const makerPositionInfo = hasMakerTriggers
-    ? await getMakerPositionInfo(publicClient, makerTriggers[0])
-    : undefined
-
   const makerStopLossToCollateral: MakerStopLossToCollateral | undefined = triggers.triggers
     .filter(filterTrigger(MakerStopLossToCollateralID))
     .map((trigger) => {
@@ -129,7 +109,7 @@ export const getAdvancedTriggers = async ({
         triggerTypeName: 'MakerStopLossToCollateral' as const,
         triggerType: MakerStopLossToCollateralID,
         ...mapTriggerCommonParams(trigger),
-        decodedParams: mapMakerDecodedStopLossParams(trigger, makerPositionInfo),
+        decodedParams: mapMakerDecodedStopLossParams(trigger),
       }
     })[0]
 
@@ -140,7 +120,7 @@ export const getAdvancedTriggers = async ({
         triggerTypeName: 'MakerStopLossToDai' as const,
         triggerType: MakerStopLossToDaiID,
         ...mapTriggerCommonParams(trigger),
-        decodedParams: mapMakerDecodedStopLossParams(trigger, makerPositionInfo),
+        decodedParams: mapMakerDecodedStopLossParams(trigger),
       }
     })[0]
 
@@ -151,7 +131,7 @@ export const getAdvancedTriggers = async ({
         triggerTypeName: 'MakerBasicBuy' as const,
         triggerType: MakerBasicBuyID,
         ...mapTriggerCommonParams(trigger),
-        decodedParams: mapMakerDecodedBasicBuyParams(trigger, makerPositionInfo),
+        decodedParams: mapMakerDecodedBasicBuyParams(trigger),
       }
     })[0]
 
@@ -162,7 +142,7 @@ export const getAdvancedTriggers = async ({
         triggerTypeName: 'MakerBasicSell' as const,
         triggerType: MakerBasicSellID,
         ...mapTriggerCommonParams(trigger),
-        decodedParams: mapMakerDecodedBasicSellParams(trigger, makerPositionInfo),
+        decodedParams: mapMakerDecodedBasicSellParams(trigger),
       }
     })[0]
 
@@ -172,7 +152,7 @@ export const getAdvancedTriggers = async ({
         triggerTypeName: 'MakerAutoTakeProfitToCollateral' as const,
         triggerType: MakerAutoTakeProfitToCollateralID,
         ...mapTriggerCommonParams(trigger),
-        decodedParams: mapMakerDecodedAutoTakeProfitParams(trigger, makerPositionInfo),
+        decodedParams: mapMakerDecodedAutoTakeProfitParams(trigger),
       }
     })[0]
 
@@ -183,7 +163,7 @@ export const getAdvancedTriggers = async ({
         triggerTypeName: 'MakerAutoTakeProfitToDai' as const,
         triggerType: MakerAutoTakeProfitToDaiID,
         ...mapTriggerCommonParams(trigger),
-        decodedParams: mapMakerDecodedAutoTakeProfitParams(trigger, makerPositionInfo),
+        decodedParams: mapMakerDecodedAutoTakeProfitParams(trigger),
       }
     })[0]
 

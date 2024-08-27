@@ -1,50 +1,76 @@
 import type { TriggersQuery } from '@summerfi/automation-subgraph'
 import { getTriggerPoolId } from './get-trigger-pool-id'
 import BigNumber from 'bignumber.js'
-import { getMakerPositionInfo } from './get-maker-position-info'
 
 export const mapTriggerCommonParams = (trigger: TriggersQuery['triggers'][number]) => ({
   triggerId: trigger.id,
   triggerData: trigger.triggerData,
 })
 
-const mapMakerTriggerCommonParams = ({
-  decodedData,
-  decodedDataNames,
-}: {
-  decodedData: readonly string[]
-  decodedDataNames: readonly string[]
-}) => ({
-  cdpId: decodedData[decodedDataNames.indexOf('cdpId')],
-  triggerType: decodedData[decodedDataNames.indexOf('triggerType')],
+const mapMakerTriggerCommonParams = (trigger: TriggersQuery['triggers'][number]) => ({
+  cdpId: trigger.decodedData[trigger.decodedDataNames.indexOf('cdpId')],
+  triggerType: trigger.decodedData[trigger.decodedDataNames.indexOf('triggerType')],
 })
 
 const mapMakerBuySellTriggerCommonParams = ({
   decodedData,
   decodedDataNames,
-}: {
-  decodedData: readonly string[]
-  decodedDataNames: readonly string[]
-}) => ({
-  ...mapMakerTriggerCommonParams({ decodedData, decodedDataNames }),
-  execCollRatio: decodedData[decodedDataNames.indexOf('execCollRatio')],
-  targetCollRatio: decodedData[decodedDataNames.indexOf('targetCollRatio')],
-  continuous: decodedData[decodedDataNames.indexOf('continuous')] === 'true',
-  deviation: decodedData[decodedDataNames.indexOf('deviation')],
-  maxBaseFeeInGwei: decodedData[decodedDataNames.indexOf('maxBaseFeeInGwei')],
-})
+  account,
+  triggerType,
+  cdp,
+  tokens,
+  ...rest
+}: TriggersQuery['triggers'][number]) => {
+  const execCollRatio = decodedData[decodedDataNames.indexOf('execCollRatio')]
+  const targetCollRatio = decodedData[decodedDataNames.indexOf('targetCollRatio')]
+  const collateralToken = cdp!.collateralToken.address
+  const debtToken = tokens.filter(
+    // tokens has a list of both used tokens, i could just use DAI always, but this is more robust
+    (token) => token.address.toLowerCase() !== collateralToken.toLowerCase(),
+  )[0].address
+  // executionLtv is minimum 4 digits with an implied decimal point in the middle
+  const executionLtv = BigNumber(BigNumber(10).pow(2)) // execCollRatio and targetCollRatio is in
+    //percentage with two right-padded zeroes (e.g. 32000 is 320%)
+    .div(BigNumber(execCollRatio).dividedBy(100).toString()) // down to 1.5
+    .times(BigNumber(10).pow(4))
+    .toFixed(0) // to 1500
+  const targetLtv = BigNumber(BigNumber(10).pow(2))
+    .div(BigNumber(targetCollRatio).dividedBy(100).toString()) // down to 1.5
+    .times(BigNumber(10).pow(4))
+    .toFixed(0) // to 1500
+  return {
+    ...mapMakerTriggerCommonParams({
+      decodedData,
+      decodedDataNames,
+      account,
+      triggerType,
+      cdp,
+      tokens,
+      ...rest,
+    }),
+    positionAddress: account as string,
+    triggerType: String(triggerType),
+    maxCoverage: '15000000000', // ??
+    executionLtv: executionLtv.padStart(4, '0'),
+    targetLtv: targetLtv.padStart(4, '0'),
+    debtToken,
+    collateralToken,
+    operationName: '',
+    deviation: decodedData[decodedDataNames.indexOf('deviation')],
+    maxBaseFeeInGwei: decodedData[decodedDataNames.indexOf('maxBaseFeeInGwei')],
+    continuous: decodedData[decodedDataNames.indexOf('continuous')] === 'true',
+  }
+}
 
-export const mapMakerDecodedStopLossParams = (
-  {
-    decodedData,
-    decodedDataNames,
-    account,
-    triggerType,
-    cdp,
-    tokens,
-  }: TriggersQuery['triggers'][number],
-  makerPositionInfo?: Awaited<ReturnType<typeof getMakerPositionInfo>>,
-) => {
+export const mapMakerDecodedStopLossParams = ({
+  decodedData,
+  decodedDataNames,
+  account,
+  triggerType,
+  cdp,
+  tokens,
+  ...rest
+}: TriggersQuery['triggers'][number]) => {
   const collateralizationRatio = decodedData[decodedDataNames.indexOf('collRatio')]
   const collateralToken = cdp!.collateralToken.address
   const debtToken = tokens.filter(
@@ -57,47 +83,61 @@ export const mapMakerDecodedStopLossParams = (
     .times(BigNumber(10).pow(2))
     .toFixed(0) // to 1500
   return {
-    ...mapMakerTriggerCommonParams({ decodedData, decodedDataNames }),
+    ...mapMakerTriggerCommonParams({
+      decodedData,
+      decodedDataNames,
+      account,
+      triggerType,
+      cdp,
+      tokens,
+      ...rest,
+    }),
     collRatio: collateralizationRatio,
     positionAddress: account as string,
     triggerType: String(triggerType),
     debtToken,
     collateralToken,
-    executionLtv,
+    executionLtv: executionLtv.padStart(4, '0'),
     // copied from oasis-borrow:
     // equals to 1500 USDC, this is the max amount user will pay for the trigger
     // to be executed, in practice it will be way lower than this
     maxCoverage: '15000000000', // ??
     operationName: '',
-    // ltv is added in the advanced triggers (its async)
-    // ltv: decodedData[decodedDataNames.indexOf('ltv')],
   }
 }
 
-export const mapMakerDecodedBasicBuyParams = (
-  { decodedData, decodedDataNames }: TriggersQuery['triggers'][number],
-  makerPositionInfo?: Awaited<ReturnType<typeof getMakerPositionInfo>>,
-) => ({
-  ...mapMakerBuySellTriggerCommonParams({ decodedData, decodedDataNames }),
-  maxBuyPrice: decodedData[decodedDataNames.indexOf('maxBuyPrice')],
+export const mapMakerDecodedBasicBuyParams = (trigger: TriggersQuery['triggers'][number]) => ({
+  ...mapMakerBuySellTriggerCommonParams(trigger),
+  maxBuyPrice: new BigNumber(trigger.decodedData[trigger.decodedDataNames.indexOf('maxBuyPrice')])
+    .div(new BigNumber(10).pow(10))
+    .toString(),
 })
 
-export const mapMakerDecodedBasicSellParams = (
-  { decodedData, decodedDataNames }: TriggersQuery['triggers'][number],
-  makerPositionInfo?: Awaited<ReturnType<typeof getMakerPositionInfo>>,
-) => ({
-  ...mapMakerBuySellTriggerCommonParams({ decodedData, decodedDataNames }),
-  minSellPrice: decodedData[decodedDataNames.indexOf('minSellPrice')],
+export const mapMakerDecodedBasicSellParams = (trigger: TriggersQuery['triggers'][number]) => ({
+  ...mapMakerBuySellTriggerCommonParams(trigger),
+  minSellPrice: new BigNumber(trigger.decodedData[trigger.decodedDataNames.indexOf('minSellPrice')])
+    .div(new BigNumber(10).pow(10))
+    .toString(),
 })
 
-export const mapMakerDecodedAutoTakeProfitParams = (
-  { decodedData, decodedDataNames }: TriggersQuery['triggers'][number],
-  makerPositionInfo?: Awaited<ReturnType<typeof getMakerPositionInfo>>,
-) => ({
-  ...mapMakerTriggerCommonParams({ decodedData, decodedDataNames }),
-  executionPrice: decodedData[decodedDataNames.indexOf('executionPrice')],
-  maxBaseFeeInGwei: decodedData[decodedDataNames.indexOf('maxBaseFeeInGwei')],
-})
+export const mapMakerDecodedAutoTakeProfitParams = (trigger: TriggersQuery['triggers'][number]) => {
+  const { decodedData, decodedDataNames } = trigger
+  // trigger:
+  // [
+  //   "cdpId",
+  //   "triggerType",
+  //   "executionPrice",
+  //   "maxBaseFeeInGwei"
+  return {
+    ...mapMakerTriggerCommonParams(trigger),
+    executionPrice: decodedData[decodedDataNames.indexOf('executionPrice')],
+    maxBaseFeeInGwei: decodedData[decodedDataNames.indexOf('maxBaseFeeInGwei')],
+    withdrawToDebt: decodedData[decodedDataNames.indexOf('withdrawToDebt')],
+    executionLtv: decodedData[decodedDataNames.indexOf('executionLtv')],
+    targetLtv: decodedData[decodedDataNames.indexOf('targetLtv')],
+    trigger,
+  }
+}
 
 export const mapStopLossParams = ({
   decodedData,
