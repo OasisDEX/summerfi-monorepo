@@ -1,5 +1,5 @@
 {
-  "name": "@summerfi/subgraph-common",
+  "name": "@summerfi/subgraph-manager-common",
   "version": "0.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -18,7 +18,8 @@
   },
   "dependencies": {
     "@summerfi/sdk-common": "workspace:*",
-    "@summerfi/sdk-server-common": "workspace:*"
+    "@summerfi/sdk-server-common": "workspace:*",
+    "@summerfi/armada-protocol-common": "workspace:*"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

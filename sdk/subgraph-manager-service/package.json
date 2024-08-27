@@ -1,5 +1,5 @@
 {
-  "name": "@summerfi/subgraph-service",
+  "name": "@summerfi/subgraph-manager-service",
   "version": "0.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,12 +19,14 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@summerfi/subgraph-common": "workspace:*",
+    "@summerfi/subgraph-manager-common": "workspace:*",
     "@summerfi/common": "workspace:*",
     "@summerfi/configuration-provider-common": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/sdk-server-common": "workspace:*",
     "@summerfi/summer-earn-protocol-subgraph": "workspace:*",
+    "@summerfi/armada-protocol-common": "workspace:*",
+    "@summerfi/armada-protocol-service": "workspace:*",
     "@types/node-fetch": "^2.6.11",
     "node-fetch": "^2.7.0"
   },

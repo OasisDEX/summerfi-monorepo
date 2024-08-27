@@ -1,2 +1,2 @@
 export * from './ArmadaSubgraphProvider'
-export type * from './types'
+export * from './ArmadaSubgraphManager'

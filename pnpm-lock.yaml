@@ -2643,8 +2643,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
-  sdk/subgraph-common:
+  sdk/subgraph-manager-common:
     dependencies:
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../armada-protocol-common
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -2662,8 +2665,14 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
-  sdk/subgraph-service:
+  sdk/subgraph-manager-service:
     dependencies:
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../armada-protocol-common
+      '@summerfi/armada-protocol-service':
+        specifier: workspace:*
+        version: link:../armada-protocol-service
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
@@ -2676,9 +2685,9 @@ importers:
       '@summerfi/sdk-server-common':
         specifier: workspace:*
         version: link:../sdk-server-common
-      '@summerfi/subgraph-common':
+      '@summerfi/subgraph-manager-common':
         specifier: workspace:*
-        version: link:../subgraph-common
+        version: link:../subgraph-manager-common
       '@summerfi/summer-earn-protocol-subgraph':
         specifier: workspace:*
         version: link:../../packages/summer-earn-protocol-subgraph
