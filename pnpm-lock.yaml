@@ -2701,6 +2701,74 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
+  sdk/subgraph-manager-common:
+    dependencies:
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../armada-protocol-common
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../sdk-common
+      '@summerfi/sdk-server-common':
+        specifier: workspace:*
+        version: link:../sdk-server-common
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+
+  sdk/subgraph-manager-service:
+    dependencies:
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../armada-protocol-common
+      '@summerfi/armada-protocol-service':
+        specifier: workspace:*
+        version: link:../armada-protocol-service
+      '@summerfi/common':
+        specifier: workspace:*
+        version: link:../../packages/common
+      '@summerfi/configuration-provider-common':
+        specifier: workspace:*
+        version: link:../configuration-provider-common
+      '@summerfi/sdk-common':
+        specifier: workspace:*
+        version: link:../sdk-common
+      '@summerfi/sdk-server-common':
+        specifier: workspace:*
+        version: link:../sdk-server-common
+      '@summerfi/subgraph-manager-common':
+        specifier: workspace:*
+        version: link:../subgraph-manager-common
+      '@summerfi/summer-earn-protocol-subgraph':
+        specifier: workspace:*
+        version: link:../../packages/summer-earn-protocol-subgraph
+      '@types/node-fetch':
+        specifier: ^2.6.11
+        version: 2.6.11
+      node-fetch:
+        specifier: ^2.7.0
+        version: 2.7.0
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/jest-config':
+        specifier: workspace:*
+        version: link:../../packages/jest-config
+      '@summerfi/testing-utils':
+        specifier: workspace:*
+        version: link:../testing-utils
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+
   sdk/subgraph-service:
     dependencies:
       '@summerfi/common':
@@ -2718,6 +2786,9 @@ importers:
       '@summerfi/subgraph-common':
         specifier: workspace:*
         version: link:../subgraph-common
+      '@summerfi/summer-earn-protocol-subgraph':
+        specifier: workspace:*
+        version: link:../../packages/summer-earn-protocol-subgraph
       '@types/node-fetch':
         specifier: ^2.6.11
         version: 2.6.11
