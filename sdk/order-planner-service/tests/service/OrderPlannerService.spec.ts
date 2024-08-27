@@ -37,6 +37,8 @@ import {
   decodePositionsManagerCalldata,
   decodeStrategyExecutorCalldata,
 } from '@summerfi/testing-utils'
+
+import { IArmadaManager } from '@summerfi/armada-protocol-common'
 import { ITokensManager } from '@summerfi/tokens-common'
 import assert from 'assert'
 import { createPublicClient, http } from 'viem'
@@ -110,6 +112,7 @@ describe('Order Planner Service', () => {
       simulation: refinanceSimulation,
       addressBookManager,
       contractsProvider: {} as unknown as IContractsProvider,
+      armadaManager: {} as unknown as IArmadaManager,
     })
 
     assert(order, 'Order is not defined')

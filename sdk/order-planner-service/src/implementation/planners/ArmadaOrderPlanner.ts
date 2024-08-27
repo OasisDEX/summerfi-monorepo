@@ -1,8 +1,10 @@
+import { isArmadaSimulation } from '@summerfi/armada-protocol-common'
 import { IOrderPlanner } from '@summerfi/order-planner-common/interfaces'
 import { BuildOrderParams } from '@summerfi/order-planner-common/types'
-import { Maybe } from '@summerfi/sdk-common/common'
+import { Maybe, SDKError, SDKErrorType } from '@summerfi/sdk-common/common'
 import { Order } from '@summerfi/sdk-common/orders'
 import { SimulationType } from '@summerfi/sdk-common/simulation'
+
 /**
  * @name ArmadaOrderPlanner
  * @description Order planner that generates transactions for the Armada Protocol based on the input simulation
@@ -15,17 +17,34 @@ export class ArmadaOrderPlanner implements IOrderPlanner {
   /** @see IOrderPlanner.buildOrder */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async buildOrder(params: BuildOrderParams): Promise<Maybe<Order>> {
-    // const {
-    //   simulation,
-    //   contractsProvider,
-    //   user,
-    //   positionsManager,
-    //   addressBookManager,
-    //   swapManager,
-    //   protocolsRegistry,
-    // } = params
+    const { simulation, armadaManager } = params
 
-    return {} as unknown as Maybe<Order>
+    if (!isArmadaSimulation(simulation)) {
+      throw SDKError.createFrom({
+        type: SDKErrorType.OrderPlannerError,
+        reason: `Simulation is not an Armada simulation`,
+        message: `Received simulation of type ${simulation.type} instead of Armada`,
+      })
+    }
+
+    const { previousPosition, newPosition, user } = simulation
+
+    const transactions = previousPosition.amount.isZero()
+      ? await armadaManager.getNewDepositTX({
+          amount: newPosition.amount,
+          poolId: newPosition.pool.id,
+          user,
+        })
+      : await armadaManager.getUpdateDepositTX({
+          amount: newPosition.amount,
+          poolId: newPosition.pool.id,
+          positionId: previousPosition.id,
+        })
+
+    return {
+      simulation,
+      transactions,
+    }
   }
 
   /** @see IOrderPlanner.getAcceptedSimulations */

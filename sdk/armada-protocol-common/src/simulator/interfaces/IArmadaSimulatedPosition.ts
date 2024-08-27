@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { IArmadaManager } from '../../common/interfaces/IArmadaManager'
 import { ArmadaPositionDataSchema, IArmadaPosition } from '../../common/interfaces/IArmadaPosition'
 
 /**
@@ -13,6 +14,8 @@ export const __signature__: unique symbol = Symbol()
 export interface IArmadaSimulatedPosition extends IArmadaPosition, IArmadaSimulatedPositionData {
   /** Signature used to differentiate it from similar interfaces */
   readonly [__signature__]: symbol
+  /** Armada Manager used to retrieve information for the simulation */
+  readonly armadaManager: IArmadaManager
 }
 
 /**
@@ -20,6 +23,7 @@ export interface IArmadaSimulatedPosition extends IArmadaPosition, IArmadaSimula
  */
 export const ArmadaSimulatedPositionDataSchema = z.object({
   ...ArmadaPositionDataSchema.shape,
+  armadaManager: z.custom<IArmadaManager>((val) => val !== undefined),
 })
 
 /**

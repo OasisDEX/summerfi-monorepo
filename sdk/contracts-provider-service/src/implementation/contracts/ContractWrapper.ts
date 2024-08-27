@@ -17,7 +17,7 @@ export abstract class ContractWrapper<
   private readonly _blockchainClient: TClient
   private readonly _chainInfo: IChainInfo
   private readonly _address: TAddress
-  private readonly _contract: GetContractReturnType<TAbi, TClient, TAddress['value']>
+  readonly _contract: GetContractReturnType<TAbi, TClient, TAddress['value']>
 
   /** CONSTRUCTOR */
   protected constructor(params: {

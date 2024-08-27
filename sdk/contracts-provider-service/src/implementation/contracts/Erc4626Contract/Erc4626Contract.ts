@@ -26,6 +26,7 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
 {
   private readonly _erc20Contract: IErc20Contract
   private _asset: Maybe<IToken>
+  private _share: Maybe<IToken>
 
   /** FACTORY METHOD */
 
@@ -48,7 +49,7 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
       erc20Contract,
     })
 
-    await instance._initializeUnderlyingAsset()
+    await instance._initializeAssetAndShare()
 
     return instance
   }
@@ -93,6 +94,32 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
     })
   }
 
+  /** @see IErc4626Contract.convertToAssets */
+  async convertToAssets(params: { amount: ITokenAmount }): Promise<ITokenAmount> {
+    const token = await this.asset()
+    const assetsAmount = await this.contract.read.convertToAssets([
+      BigInt(params.amount.toBaseUnit()),
+    ])
+
+    return TokenAmount.createFromBaseUnit({
+      token,
+      amount: String(assetsAmount),
+    })
+  }
+
+  /** @see IErc4626Contract.convertToShares */
+  async convertToShares(params: { amount: ITokenAmount }): Promise<ITokenAmount> {
+    const token = await this.asErc20().getToken()
+    const sharesAmount = await this.contract.read.convertToShares([
+      BigInt(params.amount.toBaseUnit()),
+    ])
+
+    return TokenAmount.createFromBaseUnit({
+      token,
+      amount: String(sharesAmount),
+    })
+  }
+
   /** WRITE METHODS */
 
   /** @see IErc4626Contract.deposit */
@@ -134,7 +161,7 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
   /**
    * Initializes the underlying asset of the contract to be used when returning the total assets of the vault
    */
-  private async _initializeUnderlyingAsset(): Promise<void> {
+  private async _initializeAssetAndShare(): Promise<void> {
     const assetAddress = await this.contract.read.asset()
 
     const assetErc20Contract = await Erc20Contract.create({

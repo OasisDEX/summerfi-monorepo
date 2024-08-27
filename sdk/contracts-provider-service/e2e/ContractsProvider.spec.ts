@@ -5,7 +5,7 @@ import { ConfigurationProviderMock } from '@summerfi/testing-utils/mocks/manager
 import { ContractsProviderFactory } from '../src'
 
 describe('Contracts Provider Service - ERC20 Contract', () => {
-  const chainInfo: ChainInfo = ChainFamilyMap.Base.Mainnet
+  const chainInfo: ChainInfo = ChainFamilyMap.Base.Base
 
   const erc20ContractAddress = Address.createFromEthereum({
     value: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', // USDC on Base

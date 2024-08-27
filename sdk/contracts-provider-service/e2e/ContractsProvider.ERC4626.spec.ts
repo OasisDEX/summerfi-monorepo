@@ -10,7 +10,7 @@ describe('Contracts Provider Service - ERC4626 Contract', () => {
   const configurationProvider = new ConfigurationProviderMock()
   const tenderly = new Tenderly({ configurationProvider })
 
-  const chainInfo: ChainInfo = ChainFamilyMap.Base.Mainnet
+  const chainInfo: ChainInfo = ChainFamilyMap.Base.Base
 
   const contractAddress = Address.createFromEthereum({
     value: '0xa09E82322f351154a155f9e0f9e6ddbc8791C794', // FleetCommander on Base

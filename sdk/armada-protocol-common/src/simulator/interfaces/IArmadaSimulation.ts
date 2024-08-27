@@ -17,8 +17,8 @@ export interface IArmadaSimulation extends ISimulation {
   readonly [__signature__]: symbol
   /** User for which the simulation was performed */
   readonly user: IUser
-  /** Already existing position, in case it existed */
-  readonly previousPosition?: IArmadaPosition
+  /** Previous position. If it didn't exist it is initialized to 0 */
+  readonly previousPosition: IArmadaPosition
   /** New updated position */
   readonly newPosition: IArmadaPosition
 
@@ -32,9 +32,7 @@ export interface IArmadaSimulation extends ISimulation {
 export const ArmadaSimulationSchema = z.object({
   ...SimulationSchema.shape,
   user: z.custom<IUser>((val) => isUser(val)),
-  previousPosition: z.custom<IArmadaPosition | undefined>(
-    (val) => val === undefined || isArmadaPosition(val),
-  ),
+  previousPosition: z.custom<IArmadaPosition>((val) => isArmadaPosition(val)),
   newPosition: z.custom<IArmadaPosition>((val) => isArmadaPosition(val)),
   type: z.literal(SimulationType.Armada),
 })

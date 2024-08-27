@@ -21,4 +21,5 @@ artifacts
 packages/**/src/generated
 packages/**/types/generated
 apps/**/types/generated/*
-earn-protocol/contracts/**/*
+armada-protocol/contracts/**/*
+apps/armada-protocol-dashboard/sst-env.d.ts

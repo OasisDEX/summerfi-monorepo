@@ -21,6 +21,26 @@ export interface IErc4626Contract extends IContractWrapper {
    */
   totalAssets(): Promise<ITokenAmount>
 
+  /**
+   * @name convertToAssets
+   * @description Converts the provided shares amount to assets
+   *
+   * @param amount The amount to convert
+   *
+   * @returns The amount converted to assets
+   */
+  convertToAssets(params: { amount: ITokenAmount }): Promise<ITokenAmount>
+
+  /**
+   * @name convertToShares
+   * @description Converts the provided underlying amount to shares
+   *
+   * @param amount The amount to convert
+   *
+   * @returns The amount converted to shares
+   */
+  convertToShares(params: { amount: ITokenAmount }): Promise<ITokenAmount>
+
   /** WRITE METHODS */
 
   /**

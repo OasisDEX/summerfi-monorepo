@@ -1,5 +1,4 @@
 import { IChainInfo } from '@summerfi/sdk-common/common'
-import { IArmadaManagerClient } from './IArmadaManagerClient'
 import { IProtocolsManagerClient } from './IProtocolsManagerClient'
 import { ITokensManagerClient } from './ITokensManagerClient'
 
@@ -14,6 +13,4 @@ export interface IChain {
   tokens: ITokensManagerClient
   /** The protocols manager client for the chain, allows to retrieve protocols on the chain */
   protocols: IProtocolsManagerClient
-  /** The Armada Protocol manager client for the chain */
-  armada?: IArmadaManagerClient
 }

@@ -5,6 +5,6 @@
     "outDir": "dist",
     "baseUrl": "."
   },
-  "include": ["tests/**/*.ts", "hardhat.config.ts"],
+  "include": ["tests/**/*.ts"],
   "exclude": ["node_modules"]
 }

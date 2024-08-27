@@ -84,6 +84,9 @@ importers:
       constructs:
         specifier: 10.3.0
         version: 10.3.0
+      create-ts-index:
+        specifier: ^1.14.0
+        version: 1.14.0
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -180,6 +183,9 @@ importers:
       '@summerfi/app-utils':
         specifier: workspace:*
         version: link:../../packages/app-utils
+      '@summerfi/armada-protocol-service':
+        specifier: workspace:*
+        version: link:../../sdk/armada-protocol-service
       '@summerfi/rays-db':
         specifier: workspace:*
         version: link:../../packages/rays-db
@@ -479,6 +485,15 @@ importers:
       node-fetch:
         specifier: ^2.7.0
         version: 2.7.0
+
+  armada-protocol/abis:
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
 
   background-jobs/update-rays-cron-function:
     dependencies:
@@ -1628,6 +1643,9 @@ importers:
       '@summerfi/abi-provider-common':
         specifier: workspace:*
         version: link:../abi-provider-common
+      '@summerfi/armada-protocol-abis':
+        specifier: workspace:*
+        version: link:../../armada-protocol/abis
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
@@ -1943,6 +1961,9 @@ importers:
       '@summerfi/abi-provider-common':
         specifier: workspace:*
         version: link:../abi-provider-common
+      '@summerfi/armada-protocol-abis':
+        specifier: workspace:*
+        version: link:../../armada-protocol/abis
       '@summerfi/blockchain-client-common':
         specifier: workspace:*
         version: link:../blockchain-client-common
@@ -2045,6 +2066,9 @@ importers:
       '@summerfi/address-book-common':
         specifier: workspace:*
         version: link:../address-book-common
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../armada-protocol-common
       '@summerfi/contracts-provider-common':
         specifier: workspace:*
         version: link:../contracts-provider-common
@@ -2079,6 +2103,9 @@ importers:
       '@summerfi/address-book-common':
         specifier: workspace:*
         version: link:../address-book-common
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../armada-protocol-common
       '@summerfi/configuration-provider-common':
         specifier: workspace:*
         version: link:../configuration-provider-common
@@ -2094,6 +2121,9 @@ importers:
       '@summerfi/deployment-utils':
         specifier: workspace:*
         version: link:../../packages/deployment-utils
+      '@summerfi/oracle-common':
+        specifier: workspace:*
+        version: link:../oracle-common
       '@summerfi/order-planner-common':
         specifier: workspace:*
         version: link:../order-planner-common
@@ -2112,6 +2142,9 @@ importers:
       '@summerfi/testing-utils':
         specifier: workspace:*
         version: link:../testing-utils
+      '@summerfi/tokens-common':
+        specifier: workspace:*
+        version: link:../tokens-common
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -2386,6 +2419,12 @@ importers:
 
   sdk/sdk-e2e:
     devDependencies:
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../armada-protocol-common
+      '@summerfi/armada-protocol-service':
+        specifier: workspace:*
+        version: link:../armada-protocol-service
       '@summerfi/core-contracts':
         specifier: workspace:*
         version: link:../../packages/core-contracts
@@ -2643,11 +2682,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
-  sdk/subgraph-manager-common:
+  sdk/subgraph-common:
     dependencies:
-      '@summerfi/armada-protocol-common':
-        specifier: workspace:*
-        version: link:../armada-protocol-common
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -2665,14 +2701,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
 
-  sdk/subgraph-manager-service:
+  sdk/subgraph-service:
     dependencies:
-      '@summerfi/armada-protocol-common':
-        specifier: workspace:*
-        version: link:../armada-protocol-common
-      '@summerfi/armada-protocol-service':
-        specifier: workspace:*
-        version: link:../armada-protocol-service
       '@summerfi/common':
         specifier: workspace:*
         version: link:../../packages/common
@@ -2685,12 +2715,9 @@ importers:
       '@summerfi/sdk-server-common':
         specifier: workspace:*
         version: link:../sdk-server-common
-      '@summerfi/subgraph-manager-common':
+      '@summerfi/subgraph-common':
         specifier: workspace:*
-        version: link:../subgraph-manager-common
-      '@summerfi/summer-earn-protocol-subgraph':
-        specifier: workspace:*
-        version: link:../../packages/summer-earn-protocol-subgraph
+        version: link:../subgraph-common
       '@types/node-fetch':
         specifier: ^2.6.11
         version: 2.6.11
@@ -21481,6 +21508,27 @@ packages:
   /create-require@1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
 
+  /create-ts-index@1.14.0:
+    resolution: {integrity: sha512-3VuFF5HeZvkbk9qa8IpSAETYLFxI1n0yiymY2ctr2txJgzYxJP68rw6p9nQ68KlGQLuUBUFfCcBGO/Dk5FdfUQ==}
+    hasBin: true
+    dependencies:
+      chalk: 4.1.2
+      dayjs: 1.11.12
+      debug: 4.3.4(supports-color@8.1.1)
+      deepmerge: 4.3.1
+      fast-glob: 3.3.2
+      fp-ts: 2.16.9
+      glob: 7.2.3
+      json5: 2.2.3
+      merge: 2.1.1
+      minimatch: 3.1.2
+      my-easy-fp: 0.9.0
+      tslib: 2.2.0
+      yargs: 17.7.2
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
   /cross-fetch@3.1.8:
     resolution: {integrity: sha512-cvA+JwZoU0Xq+h6WkMvAUqPEYy92Obet6UdKLfW60qn99ftItKjB5T+BkyWOFWe2pUyfQ+IJHmpOTznqk1M6Kg==}
     dependencies:
@@ -21682,7 +21730,6 @@ packages:
 
   /dayjs@1.11.12:
     resolution: {integrity: sha512-Rt2g+nTbLlDWZTwwrIXjy9MeiZmSDI375FvZs72ngxx8PDC6YXOeR3q5LAuPzjZQxhiWdRKac7RKV+YyQYfYIg==}
-    dev: false
 
   /de-indent@1.0.2:
     resolution: {integrity: sha512-e/1zu3xH5MQryN2zdVaF0OrdNLUbvWxzMbi+iNA6Bky7l1RoP8a2fIbRocyHclXt/arDrrR6lL3TqFD9pMQTsg==}
@@ -24350,6 +24397,10 @@ packages:
 
   /fp-ts@1.19.3:
     resolution: {integrity: sha512-H5KQDspykdHuztLTg+ajGN0Z2qUjcEf3Ybxc6hLt0k7/zPkn29XnKnxlBPyW2XIddWrGaJBzBl4VLYOtk39yZg==}
+    dev: true
+
+  /fp-ts@2.16.9:
+    resolution: {integrity: sha512-+I2+FnVB+tVaxcYyQkHUq7ZdKScaBlX53A41mxQtpIccsfyv8PzdzP7fzp2AY832T4aoK6UZ5WRX/ebGd8uZuQ==}
     dev: true
 
   /fraction.js@4.3.7:
@@ -27918,6 +27969,10 @@ packages:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
 
+  /merge@2.1.1:
+    resolution: {integrity: sha512-jz+Cfrg9GWOZbQAnDQ4hlVnQky+341Yk5ru8bZSe6sIDTCIg8n9i/u7hSQGSVOF3C7lH6mGtqjkiT9G4wFLL0w==}
+    dev: true
+
   /meros@1.3.0(@types/node@20.12.7):
     resolution: {integrity: sha512-2BNGOimxEz5hmjUG2FwoxCt5HN7BXdaWyFqEwxPTrJzVdABtrL4TiHTcsWSFAxPQ/tOnEaQEJh3qWq71QRMY+w==}
     engines: {node: '>=13'}
@@ -28587,6 +28642,15 @@ packages:
       rimraf: 2.4.5
     dev: false
     optional: true
+
+  /my-easy-fp@0.9.0:
+    resolution: {integrity: sha512-uqUYAMPNiRBIzmy6vust9I62HnKIdhHdalDS7kMfMoEv9BYVln0G7DCCZFdV/XiwZno6AFeHyQMSPFqgOntArQ==}
+    dependencies:
+      debug: 4.3.4(supports-color@8.1.1)
+      tslib: 2.2.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
 
   /mylas@2.1.13:
     resolution: {integrity: sha512-+MrqnJRtxdF+xngFfUUkIMQrUUL0KsxbADUkn23Z/4ibGg192Q+z+CQyiYwvWTsYjJygmMR8+w3ZDa98Zh6ESg==}

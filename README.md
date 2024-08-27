@@ -41,7 +41,7 @@ pnpm dev
 
 To initialize submodules use:
 
-`git submodule update earn-protocol/contracts`
+`git submodule update armada-protocol/contracts`
 
 If you want to restore submodules after folder is removed or something broke, delete the submodule
 folder and run following script: `./bin/restore-git-submodule`.

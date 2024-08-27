@@ -6,6 +6,7 @@ import {
   isTokenAmount,
 } from '@summerfi/sdk-common/common'
 import { z } from 'zod'
+import { IArmadaPool, isArmadaPool } from './IArmadaPool'
 import { IArmadaPositionId, isArmadaPositionId } from './IArmadaPositionId'
 
 /**
@@ -22,8 +23,12 @@ export interface IArmadaPosition extends IPosition, IArmadaPositionData {
   readonly [__signature__]: symbol
   /** ID of the position */
   readonly id: IArmadaPositionId
+  /** Pool where the position is opened */
+  readonly pool: IArmadaPool
   /** Amount deposited in the Fleet */
   readonly amount: ITokenAmount
+  /** Number of shares allocated to this position */
+  readonly shares: ITokenAmount
 
   // Re-declaring to narrow the type
   readonly type: PositionType.Armada
@@ -35,7 +40,9 @@ export interface IArmadaPosition extends IPosition, IArmadaPositionData {
 export const ArmadaPositionDataSchema = z.object({
   ...PositionDataSchema.shape,
   id: z.custom<IArmadaPositionId>((val) => isArmadaPositionId(val)),
+  pool: z.custom<IArmadaPool>((val) => isArmadaPool(val)),
   amount: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  shares: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   type: z.literal(PositionType.Armada),
 })
 
