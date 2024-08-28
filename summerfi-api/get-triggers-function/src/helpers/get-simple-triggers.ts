@@ -34,6 +34,18 @@ import {
   SparkStopLossToDebt,
   SparkStopLossToDebtDMA,
   SparkStopLossToDebtV2ID,
+  MakerStopLossToCollateralID,
+  MakerStopLossToDaiID,
+  MakerBasicBuyID,
+  MakerBasicSellID,
+  MakerAutoTakeProfitToCollateralID,
+  MakerAutoTakeProfitToDaiID,
+  MakerStopLossToCollateral,
+  MakerStopLossToDai,
+  MakerBasicBuy,
+  MakerBasicSell,
+  MakerAutoTakeProfitToCollateral,
+  MakerAutoTakeProfitToDai,
 } from '@summerfi/triggers-shared/contracts'
 import { z } from 'zod'
 import { paramsSchema } from '../constants'
@@ -43,6 +55,10 @@ import {
   mapStopLossParams,
   mapTriggerCommonParams,
   mapTriggersWithSamePoolId,
+  mapMakerDecodedAutoTakeProfitParams,
+  mapMakerDecodedBasicBuyParams,
+  mapMakerDecodedBasicSellParams,
+  mapMakerDecodedStopLossParams,
 } from '../helpers'
 import { getTokensFromTrigger } from '../helpers/get-tokens-from-trigger'
 import { filterTrigger } from './filter-trigger'
@@ -54,6 +70,72 @@ export const getSimpleTriggers = ({
   triggers: TriggersQuery['triggers']
   params: z.infer<typeof paramsSchema>
 }) => {
+  const makerStopLossToCollateral: MakerStopLossToCollateral | undefined = triggers
+    .filter(filterTrigger(MakerStopLossToCollateralID))
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'MakerStopLossToCollateral' as const,
+        triggerType: MakerStopLossToCollateralID,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapMakerDecodedStopLossParams(trigger),
+      }
+    })[0]
+
+  const makerStopLossToDai: MakerStopLossToDai | undefined = triggers
+    .filter(filterTrigger(MakerStopLossToDaiID))
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'MakerStopLossToDai' as const,
+        triggerType: MakerStopLossToDaiID,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapMakerDecodedStopLossParams(trigger),
+      }
+    })[0]
+
+  const makerBasicBuy: MakerBasicBuy | undefined = triggers
+    .filter(filterTrigger(MakerBasicBuyID))
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'MakerBasicBuy' as const,
+        triggerType: MakerBasicBuyID,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapMakerDecodedBasicBuyParams(trigger),
+      }
+    })[0]
+
+  const makerBasicSell: MakerBasicSell | undefined = triggers
+    .filter(filterTrigger(MakerBasicSellID))
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'MakerBasicSell' as const,
+        triggerType: MakerBasicSellID,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapMakerDecodedBasicSellParams(trigger),
+      }
+    })[0]
+
+  const makerAutoTakeProfitToCollateral: MakerAutoTakeProfitToCollateral | undefined = triggers
+    .filter(filterTrigger(MakerAutoTakeProfitToCollateralID))
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'MakerAutoTakeProfitToCollateral' as const,
+        triggerType: MakerAutoTakeProfitToCollateralID,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapMakerDecodedAutoTakeProfitParams(trigger),
+      }
+    })[0]
+
+  const makerAutoTakeProfitToDai: MakerAutoTakeProfitToDai | undefined = triggers
+    .filter(filterTrigger(MakerAutoTakeProfitToDaiID))
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'MakerAutoTakeProfitToDai' as const,
+        triggerType: MakerAutoTakeProfitToDaiID,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapMakerDecodedAutoTakeProfitParams(trigger),
+      }
+    })[0]
+
   const aaveStopLossToCollateral: AaveStopLossToCollateral | undefined = triggers
     .filter(filterTrigger(AaveStopLossToCollateralV2ID))
     .map((trigger) => {
@@ -283,5 +365,11 @@ export const getSimpleTriggers = ({
     morphoBlueStopLoss,
     morphoBlueBasicBuy,
     morphoBlueBasicSell,
+    makerStopLossToCollateral,
+    makerStopLossToDai,
+    makerBasicBuy,
+    makerBasicSell,
+    makerAutoTakeProfitToCollateral,
+    makerAutoTakeProfitToDai,
   }
 }

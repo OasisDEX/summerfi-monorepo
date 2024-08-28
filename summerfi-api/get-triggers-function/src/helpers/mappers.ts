@@ -1,6 +1,7 @@
 import type { TriggersQuery } from '@summerfi/automation-subgraph'
 import { getTriggerPoolId } from './get-trigger-pool-id'
 import BigNumber from 'bignumber.js'
+import { maxUnit256 } from '@summerfi/triggers-shared'
 
 export const mapTriggerCommonParams = (trigger: TriggersQuery['triggers'][number]) => ({
   triggerId: trigger.id,
@@ -106,18 +107,37 @@ export const mapMakerDecodedStopLossParams = ({
   }
 }
 
+const parseMaxBuyPrice = (maxBuyPrice: string) => {
+  const parsedMaxBuyPrice = new BigNumber(maxBuyPrice)
+  if (
+    parsedMaxBuyPrice.isNaN() ||
+    parsedMaxBuyPrice.isEqualTo(new BigNumber(maxUnit256.toString()))
+  ) {
+    return new BigNumber(maxUnit256.toString()).toString()
+  }
+  return parsedMaxBuyPrice.div(new BigNumber(10).pow(10)).toString()
+}
+
+const parseMinSellPrice = (minSellPrice: string) => {
+  const parsedMinSellPrice = new BigNumber(minSellPrice)
+  if (parsedMinSellPrice.isNaN() || parsedMinSellPrice.isEqualTo(0)) {
+    return new BigNumber(maxUnit256.toString()).toString()
+  }
+  return parsedMinSellPrice.div(new BigNumber(10).pow(10)).toString()
+}
+
 export const mapMakerDecodedBasicBuyParams = (trigger: TriggersQuery['triggers'][number]) => ({
   ...mapMakerBuySellTriggerCommonParams(trigger),
-  maxBuyPrice: new BigNumber(trigger.decodedData[trigger.decodedDataNames.indexOf('maxBuyPrice')])
-    .div(new BigNumber(10).pow(10))
-    .toString(),
+  maxBuyPrice: parseMaxBuyPrice(
+    trigger.decodedData[trigger.decodedDataNames.indexOf('maxBuyPrice')],
+  ),
 })
 
 export const mapMakerDecodedBasicSellParams = (trigger: TriggersQuery['triggers'][number]) => ({
   ...mapMakerBuySellTriggerCommonParams(trigger),
-  minSellPrice: new BigNumber(trigger.decodedData[trigger.decodedDataNames.indexOf('minSellPrice')])
-    .div(new BigNumber(10).pow(10))
-    .toString(),
+  minSellPrice: parseMinSellPrice(
+    trigger.decodedData[trigger.decodedDataNames.indexOf('minSellPrice')],
+  ),
 })
 
 export const mapMakerDecodedAutoTakeProfitParams = (trigger: TriggersQuery['triggers'][number]) => {
