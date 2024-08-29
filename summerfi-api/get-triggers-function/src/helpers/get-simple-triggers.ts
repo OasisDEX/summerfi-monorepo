@@ -42,6 +42,7 @@ import {
   MakerStopLossToDai,
   MakerBasicBuy,
   MakerBasicSell,
+  MakerConstantMultiple,
 } from '@summerfi/triggers-shared/contracts'
 import { z } from 'zod'
 import { paramsSchema } from '../constants'
@@ -57,6 +58,7 @@ import {
 } from '../helpers'
 import { getTokensFromTrigger } from '../helpers/get-tokens-from-trigger'
 import { filterTrigger } from './filter-trigger'
+import { getMakerConstantMultiple } from './get-maker-constant-multiple'
 
 export const getSimpleTriggers = ({
   triggers,
@@ -108,6 +110,15 @@ export const getSimpleTriggers = ({
         decodedParams: mapMakerDecodedBasicSellParams(trigger),
       }
     })[0]
+
+  const makerConstantMultiple: MakerConstantMultiple | undefined =
+    makerBasicBuy && makerBasicSell
+      ? getMakerConstantMultiple({
+          makerBasicBuy,
+          makerBasicSell,
+          trigger: triggers.filter(filterTrigger(MakerBasicSellID))[0],
+        })
+      : undefined
 
   const aaveStopLossToCollateral: AaveStopLossToCollateral | undefined = triggers
     .filter(filterTrigger(AaveStopLossToCollateralV2ID))
@@ -340,7 +351,11 @@ export const getSimpleTriggers = ({
     morphoBlueBasicSell,
     makerStopLossToCollateral,
     makerStopLossToDai,
-    makerBasicBuy,
-    makerBasicSell,
+    ...(makerConstantMultiple
+      ? { makerConstantMultiple }
+      : {
+          makerBasicBuy,
+          makerBasicSell,
+        }),
   }
 }

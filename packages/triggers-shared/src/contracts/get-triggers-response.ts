@@ -117,6 +117,24 @@ export type MakerBasicSell = Trigger & {
     maxBaseFeeInGwei: string
   }
 }
+
+export type MakerConstantMultiple = Trigger & {
+  triggerTypeName: 'MakerConstantMultiple'
+  triggerType: null
+  decodedParams: {
+    cdpId: string
+    basicBuyExecutionLtv: string
+    basicSellExecutionLtv: string
+    basicBuyTargetLtv: string
+    basicSellTargetLtv: string
+    minSellPrice: string
+    maxBuyPrice: string
+    continuous: boolean
+    deviation: string
+    maxBaseFeeInGwei: string
+  }
+}
+
 export type MakerAutoTakeProfitToCollateral = Trigger & {
   triggerTypeName: 'MakerAutoTakeProfitToCollateral'
   triggerType: typeof MakerAutoTakeProfitToCollateralID
