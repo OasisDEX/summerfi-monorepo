@@ -38,14 +38,10 @@ import {
   MakerStopLossToDaiID,
   MakerBasicBuyID,
   MakerBasicSellID,
-  MakerAutoTakeProfitToCollateralID,
-  MakerAutoTakeProfitToDaiID,
   MakerStopLossToCollateral,
   MakerStopLossToDai,
   MakerBasicBuy,
   MakerBasicSell,
-  MakerAutoTakeProfitToCollateral,
-  MakerAutoTakeProfitToDai,
 } from '@summerfi/triggers-shared/contracts'
 import { z } from 'zod'
 import { paramsSchema } from '../constants'
@@ -55,7 +51,6 @@ import {
   mapStopLossParams,
   mapTriggerCommonParams,
   mapTriggersWithSamePoolId,
-  mapMakerDecodedAutoTakeProfitParams,
   mapMakerDecodedBasicBuyParams,
   mapMakerDecodedBasicSellParams,
   mapMakerDecodedStopLossParams,
@@ -111,28 +106,6 @@ export const getSimpleTriggers = ({
         triggerType: MakerBasicSellID,
         ...mapTriggerCommonParams(trigger),
         decodedParams: mapMakerDecodedBasicSellParams(trigger),
-      }
-    })[0]
-
-  const makerAutoTakeProfitToCollateral: MakerAutoTakeProfitToCollateral | undefined = triggers
-    .filter(filterTrigger(MakerAutoTakeProfitToCollateralID))
-    .map((trigger) => {
-      return {
-        triggerTypeName: 'MakerAutoTakeProfitToCollateral' as const,
-        triggerType: MakerAutoTakeProfitToCollateralID,
-        ...mapTriggerCommonParams(trigger),
-        decodedParams: mapMakerDecodedAutoTakeProfitParams(trigger),
-      }
-    })[0]
-
-  const makerAutoTakeProfitToDai: MakerAutoTakeProfitToDai | undefined = triggers
-    .filter(filterTrigger(MakerAutoTakeProfitToDaiID))
-    .map((trigger) => {
-      return {
-        triggerTypeName: 'MakerAutoTakeProfitToDai' as const,
-        triggerType: MakerAutoTakeProfitToDaiID,
-        ...mapTriggerCommonParams(trigger),
-        decodedParams: mapMakerDecodedAutoTakeProfitParams(trigger),
       }
     })[0]
 
@@ -369,7 +342,5 @@ export const getSimpleTriggers = ({
     makerStopLossToDai,
     makerBasicBuy,
     makerBasicSell,
-    makerAutoTakeProfitToCollateral,
-    makerAutoTakeProfitToDai,
   }
 }

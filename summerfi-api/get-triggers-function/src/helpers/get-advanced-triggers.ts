@@ -2,11 +2,21 @@ import { TriggersQuery } from '@summerfi/automation-subgraph'
 import { getPricesSubgraphClient } from '@summerfi/prices-subgraph'
 import { ChainId, getRpcGatewayEndpoint, IRpcConfig } from '@summerfi/serverless-shared'
 import { getAddresses } from '@summerfi/triggers-shared'
+import {
+  MakerAutoTakeProfitToCollateralID,
+  MakerAutoTakeProfitToDaiID,
+  MakerAutoTakeProfitToCollateral,
+  MakerAutoTakeProfitToDai,
+} from '@summerfi/triggers-shared/contracts'
 import { createPublicClient, http, PublicClient, Chain as ViemChain } from 'viem'
 import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
 import { z } from 'zod'
 import { paramsSchema } from '../constants'
-import { getCurrentTrigger } from '../helpers'
+import {
+  getCurrentTrigger,
+  mapMakerDecodedAutoTakeProfitParams,
+  mapTriggerCommonParams,
+} from '../helpers'
 import {
   getDmaAavePartialTakeProfit,
   getDmaAaveTrailingStopLoss,
@@ -17,6 +27,8 @@ import {
 import { getMorphoBluePartialTakeProfit } from '../trigger-parsers/dma-morphoblue-partial-take-profit'
 import { getSimpleTriggers } from './get-simple-triggers'
 import { logger } from './logger'
+import { filterTrigger } from './filter-trigger'
+import { getMakerInfo } from './get-maker-info'
 
 const rpcConfig: IRpcConfig = {
   skipCache: false,
@@ -79,6 +91,43 @@ export const getAdvancedTriggers = async ({
     chainId: params.chainId,
     logger,
   })
+
+  const autoTakeProfitTriggers = triggers.triggers.filter(
+    (trigger) =>
+      BigInt(trigger.triggerType) === MakerAutoTakeProfitToCollateralID ||
+      BigInt(trigger.triggerType) === MakerAutoTakeProfitToDaiID,
+  )
+
+  const hasAutoTakeProfit = !!autoTakeProfitTriggers.length
+  console.log('hasAutoTakeProfit', hasAutoTakeProfit)
+
+  const makerPositionInfo = hasAutoTakeProfit
+    ? await getMakerInfo({
+        publicClient,
+        trigger: autoTakeProfitTriggers[0],
+      })
+    : undefined
+
+  const makerAutoTakeProfitToCollateral: MakerAutoTakeProfitToCollateral | undefined =
+    triggers.triggers.filter(filterTrigger(MakerAutoTakeProfitToCollateralID)).map((trigger) => {
+      return {
+        triggerTypeName: 'MakerAutoTakeProfitToCollateral' as const,
+        triggerType: MakerAutoTakeProfitToCollateralID,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapMakerDecodedAutoTakeProfitParams(trigger, makerPositionInfo),
+      }
+    })[0]
+
+  const makerAutoTakeProfitToDai: MakerAutoTakeProfitToDai | undefined = triggers.triggers
+    .filter(filterTrigger(MakerAutoTakeProfitToDaiID))
+    .map((trigger) => {
+      return {
+        triggerTypeName: 'MakerAutoTakeProfitToDai' as const,
+        triggerType: MakerAutoTakeProfitToDaiID,
+        ...mapTriggerCommonParams(trigger),
+        decodedParams: mapMakerDecodedAutoTakeProfitParams(trigger, makerPositionInfo),
+      }
+    })[0]
 
   const [
     aaveTrailingStopLossDMA,
@@ -156,5 +205,7 @@ export const getAdvancedTriggers = async ({
     sparkPartialTakeProfit,
     sparkStopLoss,
     sparkTrailingStopLossDMA,
+    makerAutoTakeProfitToCollateral,
+    makerAutoTakeProfitToDai,
   }
 }

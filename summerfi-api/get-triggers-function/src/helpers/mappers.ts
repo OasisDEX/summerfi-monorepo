@@ -2,6 +2,10 @@ import type { TriggersQuery } from '@summerfi/automation-subgraph'
 import { getTriggerPoolId } from './get-trigger-pool-id'
 import BigNumber from 'bignumber.js'
 import { maxUnit256 } from '@summerfi/triggers-shared'
+import { getMakerInfo } from './get-maker-info'
+
+const one = new BigNumber(1)
+const ten = new BigNumber(10)
 
 export const mapTriggerCommonParams = (trigger: TriggersQuery['triggers'][number]) => ({
   triggerId: trigger.id,
@@ -115,7 +119,7 @@ const parseMaxBuyPrice = (maxBuyPrice: string) => {
   ) {
     return new BigNumber(maxUnit256.toString()).toString()
   }
-  return parsedMaxBuyPrice.div(new BigNumber(10).pow(10)).toString()
+  return parsedMaxBuyPrice.div(ten.pow(10)).toString()
 }
 
 const parseMinSellPrice = (minSellPrice: string) => {
@@ -123,7 +127,7 @@ const parseMinSellPrice = (minSellPrice: string) => {
   if (parsedMinSellPrice.isNaN() || parsedMinSellPrice.isEqualTo(0)) {
     return new BigNumber(maxUnit256.toString()).toString()
   }
-  return parsedMinSellPrice.div(new BigNumber(10).pow(10)).toString()
+  return parsedMinSellPrice.div(ten.pow(10)).toString()
 }
 
 export const mapMakerDecodedBasicBuyParams = (trigger: TriggersQuery['triggers'][number]) => ({
@@ -140,22 +144,30 @@ export const mapMakerDecodedBasicSellParams = (trigger: TriggersQuery['triggers'
   ),
 })
 
-export const mapMakerDecodedAutoTakeProfitParams = (trigger: TriggersQuery['triggers'][number]) => {
-  const { decodedData, decodedDataNames } = trigger
-  // trigger:
-  // [
-  //   "cdpId",
-  //   "triggerType",
-  //   "executionPrice",
-  //   "maxBaseFeeInGwei"
+export const mapMakerDecodedAutoTakeProfitParams = (
+  trigger: TriggersQuery['triggers'][number],
+  makerPositionInfo?: Awaited<ReturnType<typeof getMakerInfo>>,
+) => {
+  const { decodedData, decodedDataNames, cdp } = trigger
+  const executionPriceParsed = new BigNumber(
+    decodedData[decodedDataNames.indexOf('executionPrice')],
+  ).div(ten.pow(Number(cdp!.collateralToken.decimals)))
   return {
     ...mapMakerTriggerCommonParams(trigger),
     executionPrice: decodedData[decodedDataNames.indexOf('executionPrice')],
     maxBaseFeeInGwei: decodedData[decodedDataNames.indexOf('maxBaseFeeInGwei')],
-    withdrawToDebt: decodedData[decodedDataNames.indexOf('withdrawToDebt')],
-    executionLtv: decodedData[decodedDataNames.indexOf('executionLtv')],
-    targetLtv: decodedData[decodedDataNames.indexOf('targetLtv')],
-    trigger,
+    currentLtv: one
+      .div(makerPositionInfo!.collateralInUSD.div(makerPositionInfo!.debtInUsd))
+      .times(ten.pow(4))
+      .toFixed(0),
+    executionLtv: one
+      .div(
+        makerPositionInfo!.collateralAmount
+          .times(executionPriceParsed)
+          .div(makerPositionInfo!.debtInUsd),
+      )
+      .times(ten.pow(4))
+      .toFixed(0),
   }
 }
 

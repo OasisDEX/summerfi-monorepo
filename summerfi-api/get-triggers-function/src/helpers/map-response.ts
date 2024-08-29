@@ -28,8 +28,8 @@ export const mapResponse = ({
         basicSell: simpleTriggers.makerBasicSell,
         stopLossToCollateral: simpleTriggers.makerStopLossToCollateral,
         stopLossToDebt: simpleTriggers.makerStopLossToDai,
-        autoTakeProfitToCollateral: simpleTriggers.makerAutoTakeProfitToCollateral,
-        autoTakeProfitToDebt: simpleTriggers.makerAutoTakeProfitToDai,
+        autoTakeProfitToCollateral: advancedTriggers.makerAutoTakeProfitToCollateral,
+        autoTakeProfitToDebt: advancedTriggers.makerAutoTakeProfitToDai,
       },
       [ProtocolId.AAVE3]: {
         basicBuy: simpleTriggers.aaveBasicBuy,
@@ -70,8 +70,8 @@ export const mapResponse = ({
         isBasicBuyEnabled: hasAnyDefined(simpleTriggers.makerBasicBuy),
         isBasicSellEnabled: hasAnyDefined(simpleTriggers.makerBasicSell),
         isAutoTakeProfitEnabled: hasAnyDefined(
-          simpleTriggers.makerAutoTakeProfitToCollateral,
-          simpleTriggers.makerAutoTakeProfitToCollateral,
+          advancedTriggers.makerAutoTakeProfitToCollateral,
+          advancedTriggers.makerAutoTakeProfitToCollateral,
         ),
       },
       [ProtocolId.AAVE3]: {
@@ -115,8 +115,8 @@ export const mapResponse = ({
       isMakerBasicBuyEnabled: hasAnyDefined(simpleTriggers.makerBasicBuy),
       isMakerBasicSellEnabled: hasAnyDefined(simpleTriggers.makerBasicSell),
       isMakerAutoTakeProfitEnabled: hasAnyDefined(
-        simpleTriggers.makerAutoTakeProfitToCollateral,
-        simpleTriggers.makerAutoTakeProfitToCollateral,
+        advancedTriggers.makerAutoTakeProfitToCollateral,
+        advancedTriggers.makerAutoTakeProfitToCollateral,
       ),
       isAaveStopLossEnabled: hasAnyDefined(
         simpleTriggers.aaveStopLossToCollateral,
@@ -149,8 +149,8 @@ export const mapResponse = ({
       makerBasicBuy: hasAnyDefined(simpleTriggers.makerBasicBuy),
       makerBasicSell: hasAnyDefined(simpleTriggers.makerBasicSell),
       makerAutoTakeProfit: hasAnyDefined(
-        simpleTriggers.makerAutoTakeProfitToCollateral,
-        simpleTriggers.makerAutoTakeProfitToCollateral,
+        advancedTriggers.makerAutoTakeProfitToCollateral,
+        advancedTriggers.makerAutoTakeProfitToCollateral,
       ),
       aaveBasicBuy: getCurrentTrigger(simpleTriggers.aaveBasicBuy),
       aaveBasicSell: getCurrentTrigger(simpleTriggers.aaveBasicSell),
