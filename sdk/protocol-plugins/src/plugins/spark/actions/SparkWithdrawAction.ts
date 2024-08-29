@@ -21,7 +21,7 @@ export class SparkWithdrawAction extends BaseAction<typeof SparkWithdrawAction.C
       arguments: [
         {
           asset: params.withdrawAmount.token.address.value,
-          amount: BigInt(params.withdrawAmount.toBaseUnit()),
+          amount: params.withdrawAmount.toSolidityValue(),
           to: params.withdrawTo.value,
         },
       ],

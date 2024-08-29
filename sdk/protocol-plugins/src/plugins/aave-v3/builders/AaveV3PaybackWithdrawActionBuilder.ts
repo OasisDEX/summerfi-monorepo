@@ -1,17 +1,17 @@
-import {
-  steps,
-  getValueFromReference,
-  TokenTransferTargetType,
-} from '@summerfi/sdk-common/simulation'
-import { IAddress } from '@summerfi/sdk-common/common'
 import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
-import { SetApprovalAction } from '../../common'
-import { AaveV3WithdrawAction } from '../actions/AaveV3WithdrawAction'
-import { AaveV3PaybackAction } from '../actions/AaveV3PaybackAction'
-import { getContractAddress } from '../../utils/GetContractAddress'
-import { isAaveV3LendingPool } from '../interfaces/IAaveV3LendingPool'
 import { Address } from '@summerfi/sdk-common'
+import { IAddress } from '@summerfi/sdk-common/common'
+import {
+  TokenTransferTargetType,
+  getValueFromReference,
+  steps,
+} from '@summerfi/sdk-common/simulation'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
+import { SetApprovalAction } from '../../common'
+import { getContractAddress } from '../../utils/GetContractAddress'
+import { AaveV3PaybackAction } from '../actions/AaveV3PaybackAction'
+import { AaveV3WithdrawAction } from '../actions/AaveV3WithdrawAction'
+import { isAaveV3LendingPool } from '../interfaces/IAaveV3LendingPool'
 
 export class AaveV3PaybackWithdrawActionBuilder extends BaseActionBuilder<steps.PaybackWithdrawStep> {
   readonly actions: ActionBuilderUsedAction[] = [
@@ -47,7 +47,7 @@ export class AaveV3PaybackWithdrawActionBuilder extends BaseActionBuilder<steps.
         paybackAmount: 'approvalAmount',
       },
       connectedOutputs: {},
-      skip: paybackAmount.toBN().isZero(),
+      skip: paybackAmount.isZero(),
     })
 
     context.addActionCall({
@@ -55,16 +55,16 @@ export class AaveV3PaybackWithdrawActionBuilder extends BaseActionBuilder<steps.
       action: new AaveV3PaybackAction(),
       arguments: {
         paybackAmount: getValueFromReference(step.inputs.paybackAmount),
-        paybackAll: getValueFromReference(step.inputs.paybackAmount)
-          .toBN()
-          .gt(step.inputs.position.debtAmount.toBN()),
+        paybackAll: getValueFromReference(step.inputs.paybackAmount).isGreaterThan(
+          step.inputs.position.debtAmount,
+        ),
         onBehalf: Address.ZeroAddressEthereum,
       },
       connectedInputs: {},
       connectedOutputs: {
         paybackAmount: 'paybackedAmount',
       },
-      skip: paybackAmount.toBN().isZero(),
+      skip: paybackAmount.isZero(),
     })
 
     const withdrawAmount = getValueFromReference(step.inputs.withdrawAmount)
@@ -80,7 +80,7 @@ export class AaveV3PaybackWithdrawActionBuilder extends BaseActionBuilder<steps.
       connectedOutputs: {
         withdrawAmount: 'withdrawnAmount',
       },
-      skip: withdrawAmount.toBN().isZero(),
+      skip: withdrawAmount.isZero(),
     })
   }
 

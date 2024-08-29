@@ -1,17 +1,17 @@
 import assert from 'assert'
 import {
+  Address,
+  ChainInfo,
+  FiatCurrency,
+  FiatCurrencyAmount,
   IToken,
   Price,
   Token,
-  Address,
-  ChainInfo,
-  isToken,
-  FiatCurrency,
-  isFiatCurrency,
   TokenAmount,
-  isTokenAmount,
-  FiatCurrencyAmount,
+  isFiatCurrency,
   isFiatCurrencyAmount,
+  isToken,
+  isTokenAmount,
 } from '../src'
 
 describe('SDK Common | Price', () => {
@@ -749,7 +749,7 @@ describe('SDK Common | Price', () => {
         quote: DAI,
       })
 
-      const result = price.toBN()
+      const result = price.toBigNumber()
 
       expect(result.toString()).toEqual('108.54')
     })

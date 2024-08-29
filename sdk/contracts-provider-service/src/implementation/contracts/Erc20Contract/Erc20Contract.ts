@@ -103,7 +103,7 @@ export class Erc20Contract<const TClient extends IBlockchainClient, TAddress ext
   async approve(params: { spender: IAddress; amount: ITokenAmount }): Promise<TransactionInfo> {
     return this._createTransaction({
       functionName: 'approve',
-      args: [params.spender.value, BigInt(params.amount.toBaseUnit())],
+      args: [params.spender.value, params.amount.toSolidityValue()],
       description: `Approve ${params.spender} to spend ${params.amount} of ${this.address}`,
     })
   }

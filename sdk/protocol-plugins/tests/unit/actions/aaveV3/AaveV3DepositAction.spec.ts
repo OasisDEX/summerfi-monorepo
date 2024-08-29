@@ -1,7 +1,7 @@
+import { ChainFamilyMap } from '@summerfi/sdk-common'
 import { Address, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
 import { AaveV3DepositAction } from '../../../../src'
-import { ChainFamilyMap } from '@summerfi/sdk-common'
 
 describe('AaveV3DepositAction Action', () => {
   const action = new AaveV3DepositAction()
@@ -42,7 +42,7 @@ describe('AaveV3DepositAction Action', () => {
     expect(actionDecodedArgs?.args).toEqual([
       {
         asset: tokenAmount.token.address.value,
-        amount: BigInt(tokenAmount.toBaseUnit()),
+        amount: tokenAmount.toSolidityValue(),
         sumAmounts: false,
         setAsCollateral: true,
       },

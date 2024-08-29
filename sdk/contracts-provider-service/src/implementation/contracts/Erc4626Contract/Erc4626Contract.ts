@@ -97,9 +97,7 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
   /** @see IErc4626Contract.convertToAssets */
   async convertToAssets(params: { amount: ITokenAmount }): Promise<ITokenAmount> {
     const token = await this.asset()
-    const assetsAmount = await this.contract.read.convertToAssets([
-      BigInt(params.amount.toBaseUnit()),
-    ])
+    const assetsAmount = await this.contract.read.convertToAssets([params.amount.toSolidityValue()])
 
     return TokenAmount.createFromBaseUnit({
       token,
@@ -110,9 +108,7 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
   /** @see IErc4626Contract.convertToShares */
   async convertToShares(params: { amount: ITokenAmount }): Promise<ITokenAmount> {
     const token = await this.asErc20().getToken()
-    const sharesAmount = await this.contract.read.convertToShares([
-      BigInt(params.amount.toBaseUnit()),
-    ])
+    const sharesAmount = await this.contract.read.convertToShares([params.amount.toSolidityValue()])
 
     return TokenAmount.createFromBaseUnit({
       token,
@@ -126,7 +122,7 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
   async deposit(params: { assets: ITokenAmount; receiver: IAddress }): Promise<TransactionInfo> {
     return this._createTransaction({
       functionName: 'deposit',
-      args: [params.assets.toBaseUnit(), params.receiver.value],
+      args: [params.assets.toSolidityValue(), params.receiver.value],
       description: `Deposit ${params.assets} on behalf of ${params.receiver} to vault ${this.address}`,
     })
   }
@@ -139,7 +135,7 @@ export class Erc4626Contract<const TClient extends IBlockchainClient, TAddress e
   }): Promise<TransactionInfo> {
     return this._createTransaction({
       functionName: 'withdraw',
-      args: [params.assets.toBaseUnit(), params.receiver.value, params.owner.value],
+      args: [params.assets.toSolidityValue(), params.receiver.value, params.owner.value],
       description: `Withdraw ${params.assets} from vault ${this.address} to address ${params.receiver} on behalf of ${params.owner}`,
     })
   }

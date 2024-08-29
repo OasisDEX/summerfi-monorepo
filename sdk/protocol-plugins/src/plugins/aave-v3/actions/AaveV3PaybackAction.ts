@@ -23,7 +23,7 @@ export class AaveV3PaybackAction extends BaseAction<typeof AaveV3PaybackAction.C
       arguments: [
         {
           asset: params.paybackAmount.token.address.value,
-          amount: BigInt(params.paybackAmount.toBaseUnit()),
+          amount: params.paybackAmount.toSolidityValue(),
           paybackAll: params.paybackAll,
           onBehalf: params.onBehalf.value,
         },

@@ -1,16 +1,16 @@
-import {
-  steps,
-  getValueFromReference,
-  TokenTransferTargetType,
-} from '@summerfi/sdk-common/simulation'
-import { IAddress } from '@summerfi/sdk-common/common'
 import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
-import { SetApprovalAction } from '../../common'
-import { SparkWithdrawAction } from '../actions/SparkWithdrawAction'
-import { SparkPaybackAction } from '../actions/SparkPaybackAction'
-import { getContractAddress } from '../../utils/GetContractAddress'
-import { isSparkLendingPool } from '../interfaces/ISparkLendingPool'
+import { IAddress } from '@summerfi/sdk-common/common'
+import {
+  TokenTransferTargetType,
+  getValueFromReference,
+  steps,
+} from '@summerfi/sdk-common/simulation'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
+import { SetApprovalAction } from '../../common'
+import { getContractAddress } from '../../utils/GetContractAddress'
+import { SparkPaybackAction } from '../actions/SparkPaybackAction'
+import { SparkWithdrawAction } from '../actions/SparkWithdrawAction'
+import { isSparkLendingPool } from '../interfaces/ISparkLendingPool'
 
 export class SparkPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.PaybackWithdrawStep> {
   readonly actions: ActionBuilderUsedAction[] = [
@@ -46,7 +46,7 @@ export class SparkPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.P
         paybackAmount: 'approvalAmount',
       },
       connectedOutputs: {},
-      skip: paybackAmount.toBN().isZero(),
+      skip: paybackAmount.isZero(),
     })
 
     context.addActionCall({
@@ -54,16 +54,16 @@ export class SparkPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.P
       action: new SparkPaybackAction(),
       arguments: {
         paybackAmount: getValueFromReference(step.inputs.paybackAmount),
-        paybackAll: getValueFromReference(step.inputs.paybackAmount)
-          .toBN()
-          .gt(step.inputs.position.debtAmount.toBN()),
+        paybackAll: getValueFromReference(step.inputs.paybackAmount).isGreaterThan(
+          step.inputs.position.debtAmount,
+        ),
         onBehalf: positionsManager.address,
       },
       connectedInputs: {},
       connectedOutputs: {
         paybackAmount: 'paybackedAmount',
       },
-      skip: paybackAmount.toBN().isZero(),
+      skip: paybackAmount.isZero(),
     })
 
     const withdrawAmount = getValueFromReference(step.inputs.withdrawAmount)
@@ -79,7 +79,7 @@ export class SparkPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.P
       connectedOutputs: {
         withdrawAmount: 'withdrawnAmount',
       },
-      skip: withdrawAmount.toBN().isZero(),
+      skip: withdrawAmount.isZero(),
     })
   }
 

@@ -276,7 +276,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     const FlashloanMargin = 1.001
     const flashloanAmount = sourcePosition.debtAmount.multiply(FlashloanMargin)
 
-    expect(flashloanParams.args[0].amount).toBe(BigInt(flashloanAmount.toBaseUnit()))
+    expect(flashloanParams.args[0].amount).toBe(flashloanAmount.toSolidityValue())
     expect(flashloanParams.args[0].asset).toBe(sourcePosition.debtAmount.token.address.value)
     expect(flashloanParams.args[0].isProxyFlashloan).toBe(true)
     expect(flashloanParams.args[0].isDPMProxy).toBe(true)
@@ -294,7 +294,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     const paybackAmount = TokenAmount.createFrom({
       amount: Number.MAX_SAFE_INTEGER.toString(),
       token: sourcePosition.debtAmount.token,
-    }).toBaseUnit()
+    }).toSolidityValue()
 
     assert(makerPaybackAction, 'Cannot decode Maker Payback action calldata')
     assert
@@ -317,7 +317,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
       deployment.dependencies.MCD_JOIN_ETH_C.address,
     )
     expect(makerWithdrawAction.args[0].amount).toBe(
-      BigInt(sourcePosition.collateralAmount.toBaseUnit()),
+      sourcePosition.collateralAmount.toSolidityValue(),
     )
 
     // Set Approval
@@ -335,9 +335,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
       sourcePosition.collateralAmount.token.address.value,
     )
     expect(setApprovalAction.args[0].delegate).toBe(sparkLendingPool.value)
-    expect(setApprovalAction.args[0].amount).toBe(
-      BigInt(sourcePosition.collateralAmount.toBaseUnit()),
-    )
+    expect(setApprovalAction.args[0].amount).toBe(sourcePosition.collateralAmount.toSolidityValue())
     expect(setApprovalAction.args[0].sumAmounts).toBe(false)
 
     // Decode Spark Deposit action
@@ -352,7 +350,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
       targetPosition.collateralAmount.token.address.value,
     )
     expect(sparkDepositAction.args[0].amount).toBe(
-      BigInt(sourcePosition.collateralAmount.toBaseUnit()),
+      sourcePosition.collateralAmount.toSolidityValue(),
     )
     expect(sparkDepositAction.args[0].sumAmounts).toBe(false)
     expect(sparkDepositAction.args[0].setAsCollateral).toBe(true)
@@ -366,7 +364,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     assert(sparkBorrowAction, 'Cannot decode Spark Borrow action calldata')
 
     expect(sparkBorrowAction.args[0].asset).toBe(targetPosition.debtAmount.token.address.value)
-    expect(sparkBorrowAction.args[0].amount).toBe(BigInt(targetPosition.debtAmount.toBaseUnit()))
+    expect(sparkBorrowAction.args[0].amount).toBe(targetPosition.debtAmount.toSolidityValue())
     expect(sparkBorrowAction.args[0].to).toBe(positionsManager.address.value)
 
     // Decode Send Token action
@@ -379,7 +377,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
 
     expect(sendTokenAction.args[0].asset).toBe(sourcePosition.debtAmount.token.address.value)
     expect(sendTokenAction.args[0].to).toBe(strategyExecutorAddress.value)
-    expect(sendTokenAction.args[0].amount).toBe(BigInt(flashloanAmount.toBaseUnit()))
+    expect(sendTokenAction.args[0].amount).toBe(flashloanAmount.toSolidityValue())
 
     // Decode Position Created event action
     const positionCreatedParams = decodeActionCalldata({

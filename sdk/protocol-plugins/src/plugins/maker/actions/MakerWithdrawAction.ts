@@ -31,7 +31,7 @@ export class MakerWithdrawAction extends BaseAction<typeof MakerWithdrawAction.C
           vaultId: BigInt(params.position.id.vaultId),
           userAddress: params.positionsManager.address.value,
           joinAddr: params.joinAddress.value,
-          amount: BigInt(params.amount.toBaseUnit()),
+          amount: params.amount.toSolidityValue(),
         },
       ],
       mapping: paramsMapping,

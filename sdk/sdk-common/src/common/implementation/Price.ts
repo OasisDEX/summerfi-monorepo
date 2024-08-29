@@ -38,6 +38,9 @@ export class Price implements IPrice {
   /** SIGNATURE */
   readonly [__signature__] = __signature__
 
+  /** CONSTANTS */
+  static readonly PRICE_DECIMALS = 18
+
   /** ATTRIBUTES */
   readonly value: string
   readonly base: Denomination
@@ -125,7 +128,7 @@ export class Price implements IPrice {
     this._validateSameDenominations(otherPrice)
 
     return Price.createFrom({
-      value: this.toBN().plus(otherPrice.toBN()).toString(),
+      value: this.toBigNumber().plus(otherPrice.toBigNumber()).toString(),
       base: this.base,
       quote: this.quote,
     })
@@ -136,7 +139,7 @@ export class Price implements IPrice {
     this._validateSameDenominations(otherPrice)
 
     return Price.createFrom({
-      value: this.toBN().minus(otherPrice.toBN()).toString(),
+      value: this.toBigNumber().minus(otherPrice.toBigNumber()).toString(),
       base: this.base,
       quote: this.quote,
     })
@@ -158,7 +161,7 @@ export class Price implements IPrice {
 
     if (!isTokenAmount(multiplier) && !isFiatCurrencyAmount(multiplier)) {
       return new Price({
-        value: this.toBN().times(multiplier).toString(),
+        value: this.toBigNumber().times(multiplier).toString(),
         base: this.base,
         quote: this.quote,
       }) as ReturnType
@@ -188,7 +191,7 @@ export class Price implements IPrice {
     }
 
     return new Price({
-      value: this.toBN().div(divider).toString(),
+      value: this.toBigNumber().div(divider).toString(),
       base: this.base,
       quote: this.quote,
     })
@@ -197,15 +200,50 @@ export class Price implements IPrice {
   /** @see IPrice.invert */
   invert(): IPrice {
     return Price.createFrom({
-      value: new BigNumber(1).div(this.toBN()).toString(),
+      value: new BigNumber(1).div(this.toBigNumber()).toString(),
       base: this.quote,
       quote: this.base,
     })
   }
 
-  /** @see IPrice.toBN */
-  toBN(): BigNumber {
-    return new BigNumber(this.value)
+  /** @see IPrice.isLessThan */
+  isLessThan(otherPrice: IPrice): boolean {
+    this._validateSameDenominations(otherPrice)
+
+    return this.toBigNumber().lt(otherPrice.toBigNumber())
+  }
+
+  /** @see IPrice.isLessThanOrEqual */
+  isLessThanOrEqual(otherPrice: IPrice): boolean {
+    this._validateSameDenominations(otherPrice)
+
+    return this.toBigNumber().lte(otherPrice.toBigNumber())
+  }
+
+  /** @see IPrice.isGreaterThan */
+  isGreaterThan(otherPrice: IPrice): boolean {
+    this._validateSameDenominations(otherPrice)
+
+    return this.toBigNumber().gt(otherPrice.toBigNumber())
+  }
+
+  /** @see IPrice.isGreaterThanOrEqual */
+  isGreaterThanOrEqual(otherPrice: IPrice): boolean {
+    this._validateSameDenominations(otherPrice)
+
+    return this.toBigNumber().gte(otherPrice.toBigNumber())
+  }
+
+  /** @see IPrice.isZero */
+  isZero(): boolean {
+    return this.toBigNumber().isZero()
+  }
+
+  /** @see IPrice.isEqual */
+  isEqual(otherPrice: IPrice): boolean {
+    this._validateSameDenominations(otherPrice)
+
+    return this.toBigNumber().eq(otherPrice.toBigNumber())
   }
 
   /** @see IPrice.toString */
@@ -213,44 +251,15 @@ export class Price implements IPrice {
     return `${this.value} ${this._quoteSymbol}/${this._baseSymbol}`
   }
 
-  /** @see IPrice.isLessThan */
-  isLessThan(otherPrice: IPrice): boolean {
-    this._validateSameDenominations(otherPrice)
-
-    return this.toBN().lt(otherPrice.toBN())
+  /** @see IValueConverter.toSolidityValue */
+  toSolidityValue(params: { decimals: number } = { decimals: Price.PRICE_DECIMALS }): bigint {
+    const factor = new BigNumber(10).pow(params.decimals)
+    return BigInt(new BigNumber(this.value).times(factor).toFixed(0))
   }
 
-  /** @see IPrice.isLessThanOrEqual */
-  isLessThanOrEqual(otherPrice: IPrice): boolean {
-    this._validateSameDenominations(otherPrice)
-
-    return this.toBN().lte(otherPrice.toBN())
-  }
-
-  /** @see IPrice.isGreaterThan */
-  isGreaterThan(otherPrice: IPrice): boolean {
-    this._validateSameDenominations(otherPrice)
-
-    return this.toBN().gt(otherPrice.toBN())
-  }
-
-  /** @see IPrice.isGreaterThanOrEqual */
-  isGreaterThanOrEqual(otherPrice: IPrice): boolean {
-    this._validateSameDenominations(otherPrice)
-
-    return this.toBN().gte(otherPrice.toBN())
-  }
-
-  /** @see IPrice.isZero */
-  isZero(): boolean {
-    return this.toBN().isZero()
-  }
-
-  /** @see IPrice.isEqual */
-  isEqual(otherPrice: IPrice): boolean {
-    this._validateSameDenominations(otherPrice)
-
-    return this.toBN().eq(otherPrice.toBN())
+  /** @see IValueConverter.toBigNumber */
+  toBigNumber(): BigNumber {
+    return new BigNumber(this.value)
   }
 
   /** PRIVATE */

@@ -1,7 +1,7 @@
+import { ChainFamilyMap } from '@summerfi/sdk-common'
 import { Address, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
 import { SparkBorrowAction } from '../../../../src'
-import { ChainFamilyMap } from '@summerfi/sdk-common'
 
 describe('SparkBorrowAction Action', () => {
   const action = new SparkBorrowAction()
@@ -45,7 +45,7 @@ describe('SparkBorrowAction Action', () => {
     expect(actionDecodedArgs?.args).toEqual([
       {
         asset: tokenAmount.token.address.value,
-        amount: BigInt(tokenAmount.toBaseUnit()),
+        amount: tokenAmount.toSolidityValue(),
         to: recipient.value,
       },
     ])

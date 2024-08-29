@@ -160,7 +160,7 @@ export class TenderlyFork {
     return this.rpcProvider.send('tenderly_setErc20Balance', [
       params.amount.token.address.value,
       params.walletAddress.value,
-      ethers.toQuantity(params.amount.toBaseUnit()),
+      ethers.toQuantity(params.amount.toSolidityValue()),
     ])
   }
 

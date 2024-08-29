@@ -1,3 +1,4 @@
+import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
 import { AddressValue } from '../aliases/AddressValue'
 import { IAddress, IAddressData, __signature__ } from '../interfaces/IAddress'
@@ -63,6 +64,17 @@ export class Address implements IAddress {
     return this.value.toLowerCase() === address.value.toLowerCase() && this.type === address.type
   }
 
+  /** @see IValueConverter.toBigNumber */
+  toSolidityValue(_: { decimals: number }): bigint {
+    return BigInt(this.value)
+  }
+
+  /** @see IValueConverter.toBigNumber */
+  toBigNumber(): BigNumber {
+    return new BigNumber(this.value)
+  }
+
+  /** @see IPrintable.toString */
   toString(): string {
     return `${this.value} (${this.type})`
   }

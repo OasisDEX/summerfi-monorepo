@@ -1,16 +1,16 @@
-import {
-  steps,
-  getValueFromReference,
-  TokenTransferTargetType,
-} from '@summerfi/sdk-common/simulation'
-import { IAddress } from '@summerfi/sdk-common/common'
 import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
-import { SetApprovalAction } from '../../common'
-import { AaveV3DepositAction } from '../actions/AaveV3DepositAction'
-import { AaveV3BorrowAction } from '../actions/AaveV3BorrowAction'
-import { getContractAddress } from '../../utils/GetContractAddress'
-import { isAaveV3LendingPool } from '../interfaces/IAaveV3LendingPool'
+import { IAddress } from '@summerfi/sdk-common/common'
+import {
+  TokenTransferTargetType,
+  getValueFromReference,
+  steps,
+} from '@summerfi/sdk-common/simulation'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
+import { SetApprovalAction } from '../../common'
+import { getContractAddress } from '../../utils/GetContractAddress'
+import { AaveV3BorrowAction } from '../actions/AaveV3BorrowAction'
+import { AaveV3DepositAction } from '../actions/AaveV3DepositAction'
+import { isAaveV3LendingPool } from '../interfaces/IAaveV3LendingPool'
 
 export class AaveV3DepositBorrowActionBuilder extends BaseActionBuilder<steps.DepositBorrowStep> {
   readonly actions: ActionBuilderUsedAction[] = [
@@ -74,7 +74,7 @@ export class AaveV3DepositBorrowActionBuilder extends BaseActionBuilder<steps.De
       connectedOutputs: {
         borrowAmount: 'borrowedAmount',
       },
-      skip: borrowAmount.toBN().isZero(),
+      skip: borrowAmount.isZero(),
     })
   }
 

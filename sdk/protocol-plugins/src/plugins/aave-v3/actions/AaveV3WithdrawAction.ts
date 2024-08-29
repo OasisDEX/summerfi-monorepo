@@ -21,7 +21,7 @@ export class AaveV3WithdrawAction extends BaseAction<typeof AaveV3WithdrawAction
       arguments: [
         {
           asset: params.withdrawAmount.token.address.value,
-          amount: BigInt(params.withdrawAmount.toBaseUnit()),
+          amount: params.withdrawAmount.toSolidityValue(),
           to: params.withdrawTo.value,
         },
       ],
