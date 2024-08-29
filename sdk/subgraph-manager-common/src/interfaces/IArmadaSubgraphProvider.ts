@@ -7,5 +7,5 @@ import { IManagerProvider } from '@summerfi/sdk-server-common'
  * @description interface for the Armada subgraph provider
  */
 export interface IArmadaSubgraphProvider extends IManagerProvider<SubgraphProviderType> {
-  getUserPositions(params: { chainInfo: IChainInfo; user: IUser }): IArmadaPosition[]
+  getUserPositions(params: { chainInfo: IChainInfo; user: IUser }): Promise<IArmadaPosition[]>
 }

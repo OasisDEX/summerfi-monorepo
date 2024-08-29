@@ -1,9 +1,22 @@
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import { ChainFamilyMap, ChainId, SubgraphProviderType, TokenAmount } from '@summerfi/sdk-common'
+import {
+  Address,
+  ChainFamilyMap,
+  ChainId,
+  SubgraphProviderType,
+  Token,
+  TokenAmount,
+} from '@summerfi/sdk-common'
 import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import { IArmadaSubgraphProvider } from '@summerfi/subgraph-manager-common'
-import { getUserPositions } from '@summerfi/summer-earn-protocol-subgraph'
-import { ArmadaPosition, ArmadaPositionId } from '@summerfi/armada-protocol-service'
+import {
+  ArmadaPool,
+  ArmadaPoolId,
+  ArmadaPosition,
+  ArmadaPositionId,
+  ArmadaProtocol,
+} from '@summerfi/armada-protocol-service'
+import { createGraptQLClient } from '../../utils/createGraphQLClient'
 
 export interface SubgraphConfig {
   urlBase: string
@@ -44,19 +57,51 @@ export class ArmadaSubgraphProvider
     chainInfo,
     user,
   }: Parameters<IArmadaSubgraphProvider['getUserPositions']>[0]) {
-    const userPositions = getUserPositions(
-      { userAddress: user.wallet.address.value },
-      this._getConfigForClient(chainInfo.chainId),
-    )
+    const userPositions = this._getClient(chainInfo.chainId).PositionsByAddress({
+      accountAddress: user.wallet.address.value,
+    })
     return userPositions.then((positions) => {
       console.log(`positions: `, positions)
       return positions.positions.map((position) => {
-        console.log(`position: `, position)
+        if (position.vault.outputToken == null) {
+          throw new Error('outputToken is null on position' + JSON.stringify(position.id))
+        }
+
         return ArmadaPosition.createFrom({
           id: ArmadaPositionId.createFrom({ id: position.id, user: user }),
+
+          pool: ArmadaPool.createFrom({
+            id: ArmadaPoolId.createFrom({
+              chainInfo,
+              fleetAddress: Address.createFromEthereum({
+                value: position.vault.id,
+              }),
+              protocol: ArmadaProtocol.createFrom({ chainInfo }),
+            }),
+          }),
           amount: TokenAmount.createFrom({
-            amount: position.inputTokenBalance,
-            token: position.inputToken,
+            amount: position.inputTokenBalance.toString(),
+            token: Token.createFrom({
+              chainInfo,
+              address: Address.createFromEthereum({
+                value: position.vault.inputToken.id,
+              }),
+              name: position.vault.inputToken.name,
+              symbol: position.vault.inputToken.symbol,
+              decimals: position.vault.inputToken.decimals,
+            }),
+          }),
+          shares: TokenAmount.createFrom({
+            amount: position.outputTokenBalance.toString(),
+            token: Token.createFrom({
+              chainInfo,
+              address: Address.createFromEthereum({
+                value: position.vault.outputToken.id,
+              }),
+              name: position.vault.outputToken.name,
+              symbol: position.vault.outputToken.symbol,
+              decimals: position.vault.outputToken.decimals,
+            }),
           }),
         })
       })
@@ -64,10 +109,7 @@ export class ArmadaSubgraphProvider
   }
 
   /** PRIVATE */
-  _getConfigForClient(chainId: ChainId) {
-    return {
-      urlBase: this._subgraphConfig.urlBase,
-      chainId,
-    }
+  _getClient(chainId: ChainId) {
+    return createGraptQLClient(chainId, this._subgraphConfig.urlBase)
   }
 }

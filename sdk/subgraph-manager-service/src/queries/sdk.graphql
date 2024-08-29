@@ -1,0 +1,28 @@
+query PositionsByAddress($accountAddress: String!) {
+  positions(where: { account: $accountAddress }) {
+    id
+    inputTokenBalance
+    outputTokenBalance
+    vault {
+      id
+      inputToken {
+        id
+        symbol
+        name
+        decimals
+      }
+      outputToken {
+        id
+        symbol
+        name
+        decimals
+      }
+      protocol {
+        id
+      }
+    }
+    account {
+      id
+    }
+  }
+}

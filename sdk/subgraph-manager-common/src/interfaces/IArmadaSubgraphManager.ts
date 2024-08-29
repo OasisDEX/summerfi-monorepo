@@ -9,5 +9,5 @@ import type { IArmadaPosition } from '@summerfi/armada-protocol-common'
  */
 export interface IArmadaSubgraphManager
   extends IManagerWithProviders<SubgraphProviderType, IArmadaSubgraphProvider> {
-  getUserPositions(params: { chainInfo: IChainInfo; user: IUser }): IArmadaPosition[]
+  getUserPositions(params: { chainInfo: IChainInfo; user: IUser }): Promise<IArmadaPosition[]>
 }
