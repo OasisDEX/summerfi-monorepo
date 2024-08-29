@@ -18,7 +18,7 @@ export class SparkBorrowAction extends BaseAction<typeof SparkBorrowAction.Confi
       arguments: [
         {
           asset: params.borrowAmount.token.address.value,
-          amount: BigInt(params.borrowAmount.toBaseUnit()),
+          amount: params.borrowAmount.toSolidityValue(),
           to: params.borrowTo.value,
         },
       ],

@@ -19,7 +19,7 @@ export class PullTokenAction extends BaseAction<typeof PullTokenAction.Config> {
         {
           asset: params.pullAmount.token.address.value,
           from: params.pullFrom.value,
-          amount: BigInt(params.pullAmount.toBaseUnit()),
+          amount: params.pullAmount.toSolidityValue(),
         },
       ],
       mapping: paramsMapping,

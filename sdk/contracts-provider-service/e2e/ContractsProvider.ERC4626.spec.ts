@@ -78,7 +78,7 @@ describe('Contracts Provider Service - ERC4626 Contract', () => {
     expect(totalAssets).toBeDefined()
 
     expect(totalAssets.token).toEqual(asset)
-    expect(totalAssets.toBaseUnit()).toEqual('1000000')
+    expect(totalAssets.toSolidityValue()).toEqual(1000000n)
   })
 
   it('should convert to ERC20', async () => {
@@ -96,7 +96,7 @@ describe('Contracts Provider Service - ERC4626 Contract', () => {
     })
 
     const transactionInfo = await erc4626Contract.deposit({
-      amount: amountToDeposit,
+      assets: amountToDeposit,
       receiver: receiverAddress,
     })
 

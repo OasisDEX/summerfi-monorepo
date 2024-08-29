@@ -1,3 +1,4 @@
+import { BigNumber } from 'bignumber.js'
 import { SerializationService } from '../../services/SerializationService'
 import { FiatCurrency } from '../enums/FiatCurrency'
 import {
@@ -99,6 +100,16 @@ export class FiatCurrencyAmount implements IFiatCurrencyAmount {
         }
 
     return new FiatCurrencyAmount(result) as ReturnType
+  }
+
+  /** @see IValueConverter.toBigNumber */
+  toSolidityValue(_: { decimals: number }): bigint {
+    return BigInt(this.amount)
+  }
+
+  /** @see IValueConverter.toBigNumber */
+  toBigNumber(): BigNumber {
+    return new BigNumber(this.amount)
   }
 
   /** @see IPrintable.toString */

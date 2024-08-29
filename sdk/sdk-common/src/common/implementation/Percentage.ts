@@ -101,10 +101,17 @@ export class Percentage implements IPercentage {
     return Percentage.createFrom({ value: 100 - this.value })
   }
 
-  /** @see IPercentage.toBaseUnit */
-  toBaseUnit(params: { decimals: number }): string {
+  /** @see IValueConverter.toSolidityValue */
+  toSolidityValue(
+    params: { decimals: number } = { decimals: Percentage.PERCENTAGE_DECIMALS },
+  ): bigint {
     const factor = new BigNumber(10).pow(params.decimals)
-    return new BigNumber(this.toProportion()).multipliedBy(factor).toFixed(0).toString()
+    return BigInt(new BigNumber(this.toProportion()).multipliedBy(factor).toFixed(0))
+  }
+
+  /** @see IValueConverter.toBigNumber */
+  toBigNumber(): BigNumber {
+    return new BigNumber(this.toProportion())
   }
 
   /** @see IPrintable.toString */

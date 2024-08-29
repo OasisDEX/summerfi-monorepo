@@ -1,7 +1,7 @@
+import { ChainFamilyMap } from '@summerfi/sdk-common'
 import { Address, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
 import { SparkWithdrawAction } from '../../../../src'
-import { ChainFamilyMap } from '@summerfi/sdk-common'
 
 describe('SparkWithdrawAction Action', () => {
   const action = new SparkWithdrawAction()
@@ -44,7 +44,7 @@ describe('SparkWithdrawAction Action', () => {
     expect(actionDecodedArgs).toBeDefined()
     expect(actionDecodedArgs?.args).toEqual([
       {
-        amount: BigInt(tokenAmount.toBaseUnit()),
+        amount: tokenAmount.toSolidityValue(),
         asset: tokenAmount.token.address.value,
         to: recipient.value,
       },

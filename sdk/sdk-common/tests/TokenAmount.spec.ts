@@ -304,25 +304,25 @@ describe('SDK Common | TokenAmount', () => {
     })
   })
 
-  describe('#toBN()', () => {
+  describe('#toBigNumber()', () => {
     it('should return the amount as a BigNumber', () => {
       const tokenAmount = TokenAmount.createFrom({
         token: USDC,
         amount: '108.54',
       })
 
-      expect(tokenAmount.toBN().toString()).toEqual('108.54')
+      expect(tokenAmount.toBigNumber().toString()).toEqual('108.54')
     })
   })
 
-  describe('#toBaseUnit()', () => {
-    it('should return the amount in base unit', () => {
+  describe('#toSolidityValue()', () => {
+    it('should return the amount as a Solidity value', () => {
       const tokenAmount = TokenAmount.createFrom({
         token: USDC,
         amount: '108.54',
       })
 
-      expect(tokenAmount.toBaseUnit()).toEqual('108540000')
+      expect(tokenAmount.toSolidityValue()).toEqual(108540000n)
     })
   })
 })

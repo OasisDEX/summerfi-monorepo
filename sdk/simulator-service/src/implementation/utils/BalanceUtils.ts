@@ -22,7 +22,7 @@ export function subtractBalance(amount: ITokenAmount, balance: BalancesRecord): 
     [amount.token.address.value]: balance[amount.token.address.value]
       ? balance[amount.token.address.value].subtract(amount)
       : TokenAmount.createFrom({
-          amount: amount.toBN().negated().toString(),
+          amount: amount.toBigNumber().negated().toString(),
           token: amount.token,
         }),
   }

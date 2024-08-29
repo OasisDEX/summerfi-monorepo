@@ -24,7 +24,7 @@ export class FlashloanAction extends BaseAction<typeof FlashloanAction.Config> {
     return this._encodeCall({
       arguments: [
         {
-          amount: BigInt(params.amount.toBaseUnit()),
+          amount: params.amount.toSolidityValue(),
           asset: params.amount.token.address.value,
           isProxyFlashloan: true,
           isDPMProxy: true,

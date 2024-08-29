@@ -133,9 +133,9 @@ describe('SDK Common | Percentage', () => {
         value: 20,
       })
 
-      const result = percentage.toBaseUnit({ decimals: 4 })
+      const result = percentage.toSolidityValue({ decimals: 4 })
 
-      expect(result).toEqual('2000')
+      expect(result).toEqual(2000n)
     })
   })
 

@@ -1,10 +1,10 @@
-import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
 import { Denomination, DenominationDataSchema } from '../aliases/Denomination'
 import { type IFiatCurrencyAmount } from './IFiatCurrencyAmount'
 import { type IPercentage } from './IPercentage'
 import { IPrintable } from './IPrintable'
 import { type ITokenAmount } from './ITokenAmount'
+import { IValueConverter } from './IValueConverter'
 
 /**
  * Unique signature to provide branded types to the interface
@@ -51,7 +51,7 @@ export type PriceMulReturnType<T> = T extends ITokenAmount
  *
  * QUOTE/BASE
  */
-export interface IPrice extends IPriceData, IPrintable {
+export interface IPrice extends IPriceData, IValueConverter, IPrintable {
   /** Signature to differentiate from similar interfaces */
   readonly [__signature__]: symbol
   /** The price value in floating point format without taking into account decimals */
@@ -135,12 +135,6 @@ export interface IPrice extends IPriceData, IPrintable {
    * @returns The inverted price
    */
   invert(): IPrice
-
-  /**
-   * @name toBN
-   * @description Converts the price to a BigNumber
-   */
-  toBN(): BigNumber
 
   /**
    * @name toString

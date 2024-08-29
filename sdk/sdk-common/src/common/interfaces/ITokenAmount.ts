@@ -1,10 +1,10 @@
-import { BigNumber } from 'bignumber.js'
 import { z } from 'zod'
 import { type IFiatCurrencyAmount } from './IFiatCurrencyAmount'
 import { type IPercentage } from './IPercentage'
 import { type IPrice } from './IPrice'
 import { IPrintable } from './IPrintable'
 import { isToken, type IToken } from './IToken'
+import { IValueConverter } from './IValueConverter'
 
 /**
  * Unique signature to provide branded types to the interface
@@ -29,7 +29,7 @@ export type TokenAmountMulDivReturnType<T> = T extends IPrice
  *
  * This interface is used to add all the methods that the interface supports
  */
-export interface ITokenAmount extends ITokenAmountData, IPrintable {
+export interface ITokenAmount extends ITokenAmountData, IValueConverter, IPrintable {
   /** Signature to differentiate from similar interfaces */
   readonly [__signature__]: symbol
   /** Token this amount refers to */
@@ -74,23 +74,6 @@ export interface ITokenAmount extends ITokenAmountData, IPrintable {
   >(
     divisor: InputParams,
   ): ReturnType
-
-  /**
-   * @name toBN
-   * @description Converts the amount to a BigNumber in floating point representation
-   * @returns The amount as a BigNumber
-   */
-  toBN(): BigNumber
-
-  /**
-   * @name toBaseUnit
-   * @description Converts the amount to a string in base unit
-   * @returns The amount as a string in base unit
-   *
-   * Base unit is the full integer amount in what is coloqually referred to as 'wei' units
-   * This is, it includes all the decimals of the token and can be passed to a solidity contract
-   */
-  toBaseUnit(): string
 
   /**
    * @name isZero

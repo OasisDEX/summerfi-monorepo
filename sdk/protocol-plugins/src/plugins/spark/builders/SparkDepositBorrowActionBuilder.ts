@@ -1,16 +1,16 @@
-import {
-  steps,
-  getValueFromReference,
-  TokenTransferTargetType,
-} from '@summerfi/sdk-common/simulation'
-import { SparkBorrowAction } from '../actions/SparkBorrowAction'
-import { SparkDepositAction } from '../actions/SparkDepositAction'
-import { IAddress } from '@summerfi/sdk-common/common'
 import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
+import { IAddress } from '@summerfi/sdk-common/common'
+import {
+  TokenTransferTargetType,
+  getValueFromReference,
+  steps,
+} from '@summerfi/sdk-common/simulation'
+import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 import { SetApprovalAction } from '../../common'
 import { getContractAddress } from '../../utils/GetContractAddress'
+import { SparkBorrowAction } from '../actions/SparkBorrowAction'
+import { SparkDepositAction } from '../actions/SparkDepositAction'
 import { isSparkLendingPool } from '../interfaces/ISparkLendingPool'
-import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
 export class SparkDepositBorrowActionBuilder extends BaseActionBuilder<steps.DepositBorrowStep> {
   readonly actions: ActionBuilderUsedAction[] = [
@@ -75,7 +75,7 @@ export class SparkDepositBorrowActionBuilder extends BaseActionBuilder<steps.Dep
       connectedOutputs: {
         borrowAmount: 'borrowedAmount',
       },
-      skip: borrowAmount.toBN().isZero(),
+      skip: borrowAmount.isZero(),
     })
   }
 

@@ -1,7 +1,7 @@
 import { ActionCall, BaseAction, InputSlotsMapping } from '@summerfi/protocol-plugins-common'
+import { IAddress } from '@summerfi/sdk-common'
 import { ITokenAmount } from '@summerfi/sdk-common/common'
 import { MorphoLLTVPrecision } from '../constants/MorphoConstants'
-import { IAddress } from '@summerfi/sdk-common'
 import { IMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
 import { MorphoMarketParametersAbi } from '../types/MorphoMarketParameters'
 
@@ -36,11 +36,9 @@ export class MorphoPaybackAction extends BaseAction<typeof MorphoPaybackAction.C
             collateralToken: morphoLendingPool.collateralToken.address.value,
             oracle: morphoLendingPool.oracle.value,
             irm: morphoLendingPool.irm.value,
-            lltv: BigInt(
-              morphoLendingPool.lltv.toLTV().toBaseUnit({ decimals: MorphoLLTVPrecision }),
-            ),
+            lltv: morphoLendingPool.lltv.toLTV().toSolidityValue({ decimals: MorphoLLTVPrecision }),
           },
-          amount: BigInt(amount.toBaseUnit()),
+          amount: amount.toSolidityValue(),
           onBehalf: onBehalf.value,
           paybackAll: paybackAll,
         },

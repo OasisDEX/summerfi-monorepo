@@ -1,9 +1,9 @@
-import { getValueFromReference, steps } from '@summerfi/sdk-common/simulation'
 import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
-import { isMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
-import { MorphoPaybackAction, MorphoWithdrawAction } from '../actions'
-import { SetApprovalAction } from '../../common'
+import { getValueFromReference, steps } from '@summerfi/sdk-common/simulation'
 import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
+import { SetApprovalAction } from '../../common'
+import { MorphoPaybackAction, MorphoWithdrawAction } from '../actions'
+import { isMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
 
 export class MorphoPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.PaybackWithdrawStep> {
   readonly actions: ActionBuilderUsedAction[] = [
@@ -39,7 +39,7 @@ export class MorphoPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.
         paybackAmount: 'approvalAmount',
       },
       connectedOutputs: {},
-      skip: paybackAmount.toBN().isZero(),
+      skip: paybackAmount.isZero(),
     })
 
     context.addActionCall({
@@ -49,7 +49,7 @@ export class MorphoPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.
         morphoLendingPool: step.inputs.position.pool,
         amount: getValueFromReference(step.inputs.paybackAmount),
         onBehalf: positionsManager.address,
-        paybackAll: paybackAmount.toBN().gte(step.inputs.position.debtAmount.toBN()),
+        paybackAll: paybackAmount.isGreaterOrEqualThan(step.inputs.position.debtAmount),
       },
       connectedInputs: {
         paybackAmount: 'amount',
@@ -57,7 +57,7 @@ export class MorphoPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.
       connectedOutputs: {
         paybackAmount: 'paybackedAmount',
       },
-      skip: paybackAmount.toBN().isZero(),
+      skip: paybackAmount.isZero(),
     })
 
     context.addActionCall({
