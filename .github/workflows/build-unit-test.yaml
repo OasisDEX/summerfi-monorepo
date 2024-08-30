@@ -2,7 +2,10 @@ name: CI
 on:
   pull_request:
     types: [opened, synchronize]
-
+  push:
+    branches:
+      - main
+      - dev
 jobs:
   build:
     name: Build and Unit Test
