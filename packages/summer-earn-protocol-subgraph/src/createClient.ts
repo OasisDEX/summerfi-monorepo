@@ -3,7 +3,7 @@ import { GraphQLClient } from 'graphql-request'
 import { ChainId } from '@summerfi/serverless-shared'
 import { supportedChains, subgraphNameByChainMap } from './utils'
 
-export const createClient = (chainId: ChainId, baseUrl: string) => {
+export const createClient = (chainId: ChainId, baseUrl: string): ReturnType<typeof getSdk> => {
   if (!supportedChains.includes(chainId)) {
     throw new Error(
       `Chain ID ${chainId} is not supported. Supported chains are: ${supportedChains.join(', ')}`,
