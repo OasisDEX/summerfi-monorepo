@@ -1,6 +1,6 @@
 import { Address, ChainFamilyMap, User, Wallet, getChainInfoByChainId } from '@summerfi/sdk-common'
-import { SubgraphManagerFactory, type ArmadaSubgraphManager } from '../src'
 import { ConfigurationProviderMock } from '@summerfi/testing-utils/mocks/managers/ConfigurationProviderMock'
+import { SubgraphManagerFactory, type ArmadaSubgraphManager } from '../src'
 
 describe('Subgraph Manager', () => {
   describe('Armada Subgraph Provider', () => {
@@ -27,10 +27,10 @@ describe('Subgraph Manager', () => {
         }),
       })
 
-      const userPositions = await armadaSubgraph.getUserPositions({ chainInfo, user })
+      const userPositions = await armadaSubgraph.getUserPositions({ user })
 
-      expect(userPositions).toHaveLength(1)
-      expect(userPositions[0].id.id).toEqual(
+      expect(userPositions.positions).toHaveLength(1)
+      expect(userPositions.positions[0].id).toEqual(
         '0xddc68f9de415ba2fe2fd84bc62be2d2cff1098da-0x75d4f7cb1b2481385e0878c639f6f6d66592d399',
       )
     })

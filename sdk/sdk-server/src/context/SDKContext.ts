@@ -19,10 +19,12 @@ import { OrderPlannerService } from '@summerfi/order-planner-service'
 import { IProtocolManager } from '@summerfi/protocol-manager-common'
 import { ProtocolManager } from '@summerfi/protocol-manager-service'
 import { IProtocolPluginsRegistry } from '@summerfi/protocol-plugins-common'
+import { SubgraphManagerFactory } from '@summerfi/subgraph-manager-service'
 import { ISwapManager } from '@summerfi/swap-common/interfaces'
 import { SwapManagerFactory } from '@summerfi/swap-service'
 import { ITokensManager } from '@summerfi/tokens-common'
 import { TokensManagerFactory } from '@summerfi/tokens-service'
+
 import { CreateAWSLambdaContextOptions } from '@trpc/server/adapters/aws-lambda'
 import type { APIGatewayProxyEventV2 } from 'aws-lambda'
 import { createProtocolsPluginsRegistry } from './CreateProtocolPluginsRegistry'
@@ -72,10 +74,12 @@ export const createSDKContext = (opts: SDKContextOptions): SDKAppContext => {
     configProvider,
     contractsProvider,
   })
+  const armadaSubgraphManager = SubgraphManagerFactory.newArmadaSubgraph({ configProvider })
   const armadaManager = ArmadaManagerFactory.newArmadaManager({
     configProvider,
     allowanceManager,
     contractsProvider,
+    subgraphManager: armadaSubgraphManager,
   })
 
   return {

@@ -22,8 +22,6 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
   }
 
   getUserPositions(params: Parameters<IArmadaSubgraphManager['getUserPositions']>[0]) {
-    const rawUserPositions = this._provider.getUserPositions(params)
-
-    return rawUserPositions
+    return this._provider.getUserPositions(params)
   }
 }

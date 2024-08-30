@@ -1,7 +1,7 @@
-import type { IChainInfo, IUser, SubgraphProviderType } from '@summerfi/sdk-common'
+import type { IUser, SubgraphProviderType } from '@summerfi/sdk-common'
 import { IManagerWithProviders } from '@summerfi/sdk-server-common'
+import type { PositionsByAddressQuery } from '../generated/client'
 import type { IArmadaSubgraphProvider } from './IArmadaSubgraphProvider'
-import type { IArmadaPosition } from '@summerfi/armada-protocol-common'
 
 /**
  * @name IArmadaSubgraphManager
@@ -9,5 +9,5 @@ import type { IArmadaPosition } from '@summerfi/armada-protocol-common'
  */
 export interface IArmadaSubgraphManager
   extends IManagerWithProviders<SubgraphProviderType, IArmadaSubgraphProvider> {
-  getUserPositions(params: { chainInfo: IChainInfo; user: IUser }): Promise<IArmadaPosition[]>
+  getUserPositions(params: { user: IUser }): Promise<PositionsByAddressQuery>
 }

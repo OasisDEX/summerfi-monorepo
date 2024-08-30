@@ -25,6 +25,8 @@
     "@summerfi/common": "workspace:*",
     "@summerfi/configuration-provider-common": "workspace:*",
     "@summerfi/armada-protocol-common": "workspace:*",
+    "@summerfi/subgraph-manager-common": "workspace:*",
+    "@summerfi/subgraph-manager-service": "workspace:*",
     "@summerfi/contracts-provider-common": "workspace:*",
     "@summerfi/sdk-common": "workspace:*",
     "@types/node-fetch": "^2.6.11",
@@ -33,6 +35,8 @@
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
+    "@summerfi/sdk-server-common": "workspace:*",
+    "@summerfi/summer-earn-protocol-subgraph": "workspace:*",
     "@summerfi/testing-utils": "workspace:*",
     "@summerfi/typescript-config": "workspace:*"
   }

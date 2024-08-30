@@ -20,6 +20,9 @@
       "@summerfi/testing-utils/*": ["node_modules/@summerfi/testing-utils/src/*"],
       "@summerfi/configuration-provider": [
         "node_modules/@summerfi/configuration-provider/src/index.ts"
+      ],
+      "@summerfi/subgraph-manager-common": [
+        "node_modules/@summerfi/subgraph-manager-common/src/index.ts"
       ]
     }
   },

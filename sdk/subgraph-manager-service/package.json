@@ -17,12 +17,9 @@
     "e2e": "jest e2e/",
     "build": "tsc -b tsconfig.build.json",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config"
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@summerfi/armada-protocol-common": "workspace:*",
-    "@summerfi/armada-protocol-service": "workspace:*",
     "@summerfi/common": "workspace:*",
     "@summerfi/configuration-provider": "workspace:*",
     "@summerfi/configuration-provider-common": "workspace:*",
@@ -36,11 +33,9 @@
     "node-fetch": "^2.7.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^5.0.2",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
     "@summerfi/testing-utils": "workspace:*",
-    "@summerfi/typescript-config": "workspace:*",
-    "typescript": "^5.5.4"
+    "@summerfi/typescript-config": "workspace:*"
   }
 }
