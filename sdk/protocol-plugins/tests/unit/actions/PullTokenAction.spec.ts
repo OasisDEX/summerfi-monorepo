@@ -47,7 +47,7 @@ describe('PullToken Action', () => {
       {
         asset: DAI.address.value,
         from: recipient.value,
-        amount: BigInt(tokenAmount.toBaseUnit()),
+        amount: tokenAmount.toSolidityValue(),
       },
     ])
     expect(actionDecodedArgs?.mapping).toEqual([1, 8, 5, 3])

@@ -23,7 +23,7 @@ export class SetApprovalAction extends BaseAction<typeof SetApprovalAction.Confi
         {
           asset: params.approvalAmount.token.address.value,
           delegate: params.delegate.value,
-          amount: BigInt(params.approvalAmount.toBaseUnit()),
+          amount: params.approvalAmount.toSolidityValue(),
           sumAmounts: params.sumAmounts,
         },
       ],

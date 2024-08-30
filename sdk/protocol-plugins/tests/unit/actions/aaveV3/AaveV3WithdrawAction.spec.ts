@@ -1,7 +1,7 @@
+import { ChainFamilyMap } from '@summerfi/sdk-common'
 import { Address, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
 import { AaveV3WithdrawAction } from '../../../../src'
-import { ChainFamilyMap } from '@summerfi/sdk-common'
 
 describe('AaveV3WithdrawAction Action', () => {
   const action = new AaveV3WithdrawAction()
@@ -44,7 +44,7 @@ describe('AaveV3WithdrawAction Action', () => {
     expect(actionDecodedArgs).toBeDefined()
     expect(actionDecodedArgs?.args).toEqual([
       {
-        amount: BigInt(tokenAmount.toBaseUnit()),
+        amount: tokenAmount.toSolidityValue(),
         asset: tokenAmount.token.address.value,
         to: recipient.value,
       },

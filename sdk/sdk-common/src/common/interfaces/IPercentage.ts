@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { IPrintable } from './IPrintable'
+import { IValueConverter } from './IValueConverter'
 
 /**
  * Unique signature to provide branded types to the interface
@@ -10,7 +11,7 @@ export const __signature__: unique symbol = Symbol()
  * @name IPercentage
  * @description Percentage type that can be used for calculations with other types like TokenAmount or Price
  */
-export interface IPercentage extends IPercentageData, IPrintable {
+export interface IPercentage extends IPercentageData, IValueConverter, IPrintable {
   /** Signature to differentiate from similar interfaces */
   readonly [__signature__]: symbol
   /** The percentage in floating point format */
@@ -59,13 +60,6 @@ export interface IPercentage extends IPercentageData, IPrintable {
    * The complement is the difference between 100% and the percentage
    */
   toComplement(): IPercentage
-
-  /**
-   * @name toBaseUnit
-   * @param decimals The number of decimals to use for the conversion
-   * @returns The percentage as a string in base unit
-   */
-  toBaseUnit(params: { decimals: number }): string
 }
 
 /**

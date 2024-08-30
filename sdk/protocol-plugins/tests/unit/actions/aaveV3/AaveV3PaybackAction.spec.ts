@@ -1,8 +1,7 @@
+import { ChainFamilyMap } from '@summerfi/sdk-common'
 import { Address, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
 import { AaveV3PaybackAction } from '../../../../src'
-import { ChainFamilyMap } from '@summerfi/sdk-common'
-import { on } from 'events'
 
 describe('AaveV3PaybackAction Action', () => {
   const action = new AaveV3PaybackAction()
@@ -47,7 +46,7 @@ describe('AaveV3PaybackAction Action', () => {
     expect(actionDecodedArgs?.args).toEqual([
       {
         asset: tokenAmount.token.address.value,
-        amount: BigInt(tokenAmount.toBaseUnit()),
+        amount: tokenAmount.toSolidityValue(),
         paybackAll: true,
         onBehalf: onBehalf.value,
       },

@@ -22,7 +22,7 @@ export class AaveV3DepositAction extends BaseAction<typeof AaveV3DepositAction.C
       arguments: [
         {
           asset: params.depositAmount.token.address.value,
-          amount: BigInt(params.depositAmount.toBaseUnit()),
+          amount: params.depositAmount.toSolidityValue(),
           sumAmounts: params.sumAmounts,
           setAsCollateral: params.setAsCollateral,
         },

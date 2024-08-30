@@ -75,15 +75,13 @@ describe('MorphoBorrowAction Action', () => {
     expect(actionDecodedArgs).toBeDefined()
     expect(actionDecodedArgs?.args).toEqual([
       {
-        amount: BigInt(tokenAmount.toBaseUnit()),
+        amount: tokenAmount.toSolidityValue(),
         marketParams: {
           loanToken: morphoLendingPool.debtToken.address.value,
           collateralToken: morphoLendingPool.collateralToken.address.value,
           oracle: morphoLendingPool.oracle.value,
           irm: morphoLendingPool.irm.value,
-          lltv: BigInt(
-            morphoLendingPool.lltv.toLTV().toBaseUnit({ decimals: MorphoLLTVPrecision }),
-          ),
+          lltv: morphoLendingPool.lltv.toLTV().toSolidityValue({ decimals: MorphoLLTVPrecision }),
         },
       },
     ])

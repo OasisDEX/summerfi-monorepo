@@ -52,7 +52,7 @@ export async function refinanceLendingToLending(
   const simulator = Simulator.create(refinanceLendingToLendingAnyPairStrategy)
 
   const isCollateralSwapSkipped = targetPool.collateralToken.equals(sourcePool.collateralToken)
-  const isDebtAmountZero = position.debtAmount.toBaseUnit() === '0'
+  const isDebtAmountZero = position.debtAmount.isZero()
   const isDebtTokenSame = targetPool.debtToken.equals(sourcePool.debtToken)
   const isDebtSwapSkipped = isDebtTokenSame || isDebtAmountZero
 

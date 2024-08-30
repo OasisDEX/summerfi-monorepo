@@ -205,7 +205,7 @@ export class OneInchSwapProvider
     const chainId = params.chainInfo.chainId
     const fromTokenAddress = params.fromTokenAmount.token.address.value.toLowerCase()
     const toTokenAddress = params.toToken.address.value.toLowerCase()
-    const fromAmount = params.fromTokenAmount.toBaseUnit()
+    const fromAmount = params.fromTokenAmount.toSolidityValue()
     const recipient = params.recipient.value.toLowerCase()
     const disableEstimate = params.disableEstimate ? params.disableEstimate : true
     const allowPartialFill = params.allowPartialFill ? params.allowPartialFill : false
@@ -232,7 +232,7 @@ export class OneInchSwapProvider
     const chainId = params.chainInfo.chainId
     const fromTokenAddress = params.fromTokenAmount.token.address.value.toLowerCase()
     const toTokenAddress = params.toToken.address.value.toLowerCase()
-    const fromAmount = params.fromTokenAmount.toBaseUnit()
+    const fromAmount = params.fromTokenAmount.toSolidityValue()
     const protocolsParam = this._allowedSwapProtocols.length
       ? this._allowedSwapProtocols.join(',')
       : ''

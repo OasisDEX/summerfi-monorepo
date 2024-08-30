@@ -4,6 +4,7 @@ import { type IPercentage } from './IPercentage'
 import { type IPrice } from './IPrice'
 import { IPrintable } from './IPrintable'
 import { type ITokenAmount } from './ITokenAmount'
+import { IValueConverter } from './IValueConverter'
 
 /**
  * Unique signature to provide branded types to the interface
@@ -30,7 +31,7 @@ export type FiatCurrencyAmountMulDivReturnType<T> = T extends IPrice
  * the number of decimals of the token. This data type can be used for calculations with other types
  * like Price or Percentage
  */
-export interface IFiatCurrencyAmount extends IFiatCurrencyAmountData, IPrintable {
+export interface IFiatCurrencyAmount extends IFiatCurrencyAmountData, IValueConverter, IPrintable {
   /** Signature to differentiate from similar interfaces */
   readonly [__signature__]: symbol
   /** Fiat currency for the amount */

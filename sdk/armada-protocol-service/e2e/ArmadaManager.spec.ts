@@ -101,7 +101,7 @@ describe('Armada Protocol Service', () => {
       fail('Decoded calldata is undefined')
     }
 
-    expect(decodedCalldata.assets.toString()).toBe(tokenAmount.toBaseUnit())
+    expect(decodedCalldata.assets.toString()).toBe(tokenAmount.toSolidityValue())
     expect(decodedCalldata.receiver).toBe(user.wallet.address.value)
   })
 
@@ -121,7 +121,7 @@ describe('Armada Protocol Service', () => {
       fail('Decoded calldata is undefined')
     }
 
-    expect(decodedCalldata.assets.toString()).toBe(tokenAmount.toBaseUnit())
+    expect(decodedCalldata.assets.toString()).toBe(tokenAmount.toSolidityValue())
     expect(decodedCalldata.receiver).toBe(user.wallet.address.value)
   })
 
@@ -141,7 +141,7 @@ describe('Armada Protocol Service', () => {
       fail('Decoded calldata is undefined')
     }
 
-    expect(decodedCalldata.assets.toString()).toBe(tokenAmount.toBaseUnit())
+    expect(decodedCalldata.assets.toString()).toBe(tokenAmount.toSolidityValue())
     expect(decodedCalldata.receiver).toBe(user.wallet.address.value)
     expect(decodedCalldata.owner).toBe(user.wallet.address.value)
   })

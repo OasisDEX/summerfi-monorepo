@@ -19,7 +19,7 @@ export class SendTokenAction extends BaseAction<typeof SendTokenAction.Config> {
         {
           asset: params.sendAmount.token.address.value,
           to: params.sendTo.value,
-          amount: BigInt(params.sendAmount.toBaseUnit()),
+          amount: params.sendAmount.toSolidityValue(),
         },
       ],
       mapping: paramsMapping,

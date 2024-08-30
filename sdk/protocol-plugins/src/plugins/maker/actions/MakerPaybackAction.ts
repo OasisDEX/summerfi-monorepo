@@ -30,7 +30,7 @@ export class MakerPaybackAction extends BaseAction<typeof MakerPaybackAction.Con
         {
           vaultId: BigInt(params.position.id.vaultId),
           userAddress: params.positionsManager.address.value,
-          amount: BigInt(params.amount.toBaseUnit()),
+          amount: params.amount.toSolidityValue(),
           paybackAll: params.paybackAll,
         },
       ],
