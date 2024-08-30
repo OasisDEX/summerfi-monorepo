@@ -16,7 +16,7 @@ import {
   ArmadaPositionId,
   ArmadaProtocol,
 } from '@summerfi/armada-protocol-service'
-import { createGraptQLClient } from '../../utils/createGraphQLClient'
+import { createGraphQLClient } from '../../utils/createGraphQLClient'
 
 export interface SubgraphConfig {
   urlBase: string
@@ -110,6 +110,6 @@ export class ArmadaSubgraphProvider
 
   /** PRIVATE */
   _getClient(chainId: ChainId) {
-    return createGraptQLClient(chainId, this._subgraphConfig.urlBase)
+    return createGraphQLClient(chainId, this._subgraphConfig.urlBase)
   }
 }

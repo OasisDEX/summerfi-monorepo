@@ -14,7 +14,7 @@ export async function getUserPositions(
   try {
     return await getUserPositionsInternal(client, params)
   } catch (e) {
-    console.error('Error fetching user positions', e)
+    console.error('Failed to fetch user positions:', e)
     throw e
   }
 }
