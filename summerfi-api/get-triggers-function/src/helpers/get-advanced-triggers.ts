@@ -99,7 +99,6 @@ export const getAdvancedTriggers = async ({
   )
 
   const hasAutoTakeProfit = !!autoTakeProfitTriggers.length
-  console.log('hasAutoTakeProfit', hasAutoTakeProfit)
 
   const makerPositionInfo = hasAutoTakeProfit
     ? await getMakerInfo({

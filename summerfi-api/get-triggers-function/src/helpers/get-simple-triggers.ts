@@ -351,11 +351,8 @@ export const getSimpleTriggers = ({
     morphoBlueBasicSell,
     makerStopLossToCollateral,
     makerStopLossToDai,
-    ...(makerConstantMultiple
-      ? { makerConstantMultiple }
-      : {
-          makerBasicBuy,
-          makerBasicSell,
-        }),
+    makerConstantMultiple,
+    makerBasicBuy: makerConstantMultiple ? undefined : makerBasicBuy,
+    makerBasicSell: makerConstantMultiple ? undefined : makerBasicSell,
   }
 }

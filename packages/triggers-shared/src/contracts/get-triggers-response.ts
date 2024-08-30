@@ -542,6 +542,15 @@ export type MorphoBlueStopLoss = Trigger & {
 
 export type GetTriggersResponse = {
   triggers: {
+    [ProtocolId.MAKER]: {
+      basicBuy?: MakerBasicBuy
+      basicSell?: MakerBasicSell
+      stopLossToCollateral?: MakerStopLossToCollateral
+      stopLossToDebt?: MakerStopLossToDai
+      autoTakeProfitToCollateral?: MakerAutoTakeProfitToCollateral
+      autoTakeProfitToDebt?: MakerAutoTakeProfitToDai
+      constantMultiple?: MakerConstantMultiple
+    }
     [ProtocolId.AAVE3]: {
       basicBuy?: DmaAaveBasicBuy
       basicSell?: DmaAaveBasicSell
@@ -603,6 +612,13 @@ export type GetTriggersResponse = {
     sparkPartialTakeProfit?: DmaSparkPartialTakeProfit
   }
   flags: {
+    [ProtocolId.MAKER]: {
+      isBasicBuyEnabled: boolean
+      isBasicSellEnabled: boolean
+      isStopLossEnabled: boolean
+      isAutoTakeProfitEnabled: boolean
+      isConstantMultipleEnabled: boolean
+    }
     [ProtocolId.AAVE3]: {
       isBasicBuyEnabled: boolean
       isBasicSellEnabled: boolean
@@ -654,6 +670,11 @@ export type GetTriggersResponse = {
     morphoBlueBasicSell?: Trigger
     morphoBluePartialTakeProfit?: Trigger
     morphoBlueStopLoss?: Trigger
+    makerStopLoss?: Trigger
+    makerBasicBuy?: Trigger
+    makerBasicSell?: Trigger
+    makerAutoTakeProfit?: Trigger
+    makerConstantMultiple?: Trigger
   }
   triggersCount: number
   additionalData?: Record<string, unknown>
