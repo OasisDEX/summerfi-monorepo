@@ -38,6 +38,17 @@ export interface IArmadaManager {
   /** POSITIONS */
 
   /**
+   * @name getUserPositions
+   * @description Get all of user positions in the fleet
+   *
+   * @param user target user
+   *
+   * @returns IArmadaPosition[] All user positions in the fleet
+   *
+   */
+  getUserPositions(params: { user: IUser }): Promise<IArmadaPosition[]>
+
+  /**
    * @name getPosition
    * @description Get the position of a user in the specified fleet
    *

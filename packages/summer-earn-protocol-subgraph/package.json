@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.d.ts"
+    }
+  },
   "scripts": {
     "prebuild": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config",
     "tsc": "tsc",

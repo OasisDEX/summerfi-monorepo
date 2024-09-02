@@ -1,6 +1,3 @@
-import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import { ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
-
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import {
   IArmadaManager,
@@ -10,10 +7,15 @@ import {
   IArmadaPosition,
   IArmadaPositionId,
 } from '@summerfi/armada-protocol-common'
+import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
+import { ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
+import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
+
 import { ArmadaPool } from './ArmadaPool'
 import { ArmadaPoolInfo } from './ArmadaPoolInfo'
 import { ArmadaPosition } from './ArmadaPosition'
+import { PositionExtensions } from './extensions/PositionExtensions'
 
 /**
  * @name ArmadaManager
@@ -23,16 +25,19 @@ export class ArmadaManager implements IArmadaManager {
   private _configProvider: IConfigurationProvider
   private _allowanceManager: IAllowanceManager
   private _contractsProvider: IContractsProvider
+  private _subgraphManager: IArmadaSubgraphManager
 
   /** CONSTRUCTOR */
   constructor(params: {
     configProvider: IConfigurationProvider
     allowanceManager: IAllowanceManager
     contractsProvider: IContractsProvider
+    subgraphManager: IArmadaSubgraphManager
   }) {
     this._configProvider = params.configProvider
     this._allowanceManager = params.allowanceManager
     this._contractsProvider = params.contractsProvider
+    this._subgraphManager = params.subgraphManager
   }
 
   /** POOLS */
@@ -69,6 +74,12 @@ export class ArmadaManager implements IArmadaManager {
   }
 
   /** POSITIONS */
+  async getUserPositions({ user }: { user: IUser }): Promise<IArmadaPosition[]> {
+    return PositionExtensions.parseUserPositionsQuery({
+      user,
+      query: await this._subgraphManager.getUserPositions({ user }),
+    })
+  }
 
   /** @see IArmadaManager.getPosition */
   async getPosition(params: {

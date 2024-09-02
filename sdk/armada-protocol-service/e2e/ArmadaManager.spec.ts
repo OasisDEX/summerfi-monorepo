@@ -7,11 +7,13 @@ import {
   ChainFamilyMap,
   ChainInfo,
   IUser,
+  PositionType,
   Token,
   TokenAmount,
   User,
   Wallet,
 } from '@summerfi/sdk-common'
+import { SubgraphManagerFactory } from '@summerfi/subgraph-manager-service'
 import {
   decodeFleetDepositCalldata,
   decodeFleetWithdrawCalldata,
@@ -74,6 +76,9 @@ describe('Armada Protocol Service', () => {
       configProvider,
       blockchainClientProvider,
     })
+    const subgraphManager = SubgraphManagerFactory.newArmadaSubgraph({
+      configProvider,
+    })
 
     const allowanceManager = {
       getApproval: jest.fn().mockReturnValue([]),
@@ -82,6 +87,7 @@ describe('Armada Protocol Service', () => {
       configProvider,
       allowanceManager,
       contractsProvider,
+      subgraphManager,
     })
   })
 
@@ -101,7 +107,7 @@ describe('Armada Protocol Service', () => {
       fail('Decoded calldata is undefined')
     }
 
-    expect(decodedCalldata.assets.toString()).toBe(tokenAmount.toSolidityValue())
+    expect(decodedCalldata.assets).toBe(tokenAmount.toSolidityValue())
     expect(decodedCalldata.receiver).toBe(user.wallet.address.value)
   })
 
@@ -121,7 +127,7 @@ describe('Armada Protocol Service', () => {
       fail('Decoded calldata is undefined')
     }
 
-    expect(decodedCalldata.assets.toString()).toBe(tokenAmount.toSolidityValue())
+    expect(decodedCalldata.assets).toBe(tokenAmount.toSolidityValue())
     expect(decodedCalldata.receiver).toBe(user.wallet.address.value)
   })
 
@@ -141,8 +147,60 @@ describe('Armada Protocol Service', () => {
       fail('Decoded calldata is undefined')
     }
 
-    expect(decodedCalldata.assets.toString()).toBe(tokenAmount.toSolidityValue())
+    expect(decodedCalldata.assets).toBe(tokenAmount.toSolidityValue())
     expect(decodedCalldata.receiver).toBe(user.wallet.address.value)
     expect(decodedCalldata.owner).toBe(user.wallet.address.value)
+  })
+
+  it('should return positions of a user with a correct data types', async () => {
+    const chainInfo: ChainInfo = ChainFamilyMap.Base.Base
+
+    const user: IUser = User.createFrom({
+      chainInfo: chainInfo,
+      wallet: Wallet.createFrom({
+        address: Address.createFromEthereum({
+          value: '0xddc68f9de415ba2fe2fd84bc62be2d2cff1098da',
+        }),
+      }),
+    })
+
+    const protocol = ArmadaProtocol.createFrom({ chainInfo })
+    const fleetAddress = Address.createFromEthereum({
+      value: '0x75d4f7cb1b2481385e0878c639f6f6d66592d399', // FleetCommander on Base
+    })
+
+    const USDC = Token.createFrom({
+      chainInfo,
+      address: Address.createFromEthereum({
+        value: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
+      }),
+      symbol: 'USDC',
+      name: 'USD Coin',
+      decimals: 6,
+    })
+
+    const tokenAmount = TokenAmount.createFrom({
+      token: USDC,
+      amount: '15000000',
+    })
+
+    const poolId = ArmadaPoolId.createFrom({
+      chainInfo,
+      fleetAddress,
+      protocol,
+    })
+
+    const positionId = ArmadaPositionId.createFrom({
+      id: '0xddc68f9de415ba2fe2fd84bc62be2d2cff1098da-0x75d4f7cb1b2481385e0878c639f6f6d66592d399',
+      user,
+    })
+
+    const positions = await armadaManager.getUserPositions({ user })
+    expect(positions.length).toBe(1)
+    expect(positions[0].id).toStrictEqual(positionId)
+    expect(positions[0].type).toBe(PositionType.Armada)
+    expect(positions[0].amount).toStrictEqual(tokenAmount)
+    expect(positions[0].pool.id).toStrictEqual(poolId)
+    expect(positions[0].shares).toBeDefined()
   })
 })

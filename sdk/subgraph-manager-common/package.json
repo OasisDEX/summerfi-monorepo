@@ -1,0 +1,32 @@
+{
+  "name": "@summerfi/subgraph-manager-common",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.d.ts"
+    }
+  },
+  "scripts": {
+    "tsc": "tsc",
+    "watch": "tsc -w",
+    "prebuild": "pnpm run generate",
+    "build": "tsc -b tsconfig.build.json",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config"
+  },
+  "dependencies": {
+    "@summerfi/sdk-common": "workspace:*",
+    "@summerfi/sdk-server-common": "workspace:*",
+    "@summerfi/armada-protocol-common": "workspace:*"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.2",
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/jest-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*"
+  }
+}
