@@ -1,5 +1,12 @@
 import type { IArmadaPosition } from '@summerfi/armada-protocol-common'
-import { TokenAmount, Token, type IUser, Address } from '@summerfi/sdk-common'
+import {
+  TokenAmount,
+  Token,
+  type IUser,
+  Address,
+  SDKError,
+  SDKErrorType,
+} from '@summerfi/sdk-common'
 import { ArmadaPool } from '../ArmadaPool'
 import { ArmadaPoolId } from '../ArmadaPoolId'
 import { ArmadaPosition } from '../ArmadaPosition'
@@ -7,6 +14,10 @@ import { ArmadaPositionId } from '../ArmadaPositionId'
 import { ArmadaProtocol } from '../ArmadaProtocol'
 import type { PositionsByAddressQuery } from '@summerfi/subgraph-manager-common'
 
+/**
+ * @name PositionExtensions
+ * @description Extensions for the position handling logic, like mappers and parsers
+ */
 export class PositionExtensions {
   static parseUserPositionsQuery = ({
     user,
@@ -18,7 +29,11 @@ export class PositionExtensions {
     const chainInfo = user.chainInfo
     return query.positions.map((position) => {
       if (position.vault.outputToken == null) {
-        throw new Error('outputToken is null on position' + JSON.stringify(position.id))
+        throw SDKError.createFrom({
+          message: 'outputToken is null on position' + JSON.stringify(position.id),
+          reason: 'probably a subgraph error',
+          type: SDKErrorType.ArmadaError,
+        })
       }
 
       return ArmadaPosition.createFrom({

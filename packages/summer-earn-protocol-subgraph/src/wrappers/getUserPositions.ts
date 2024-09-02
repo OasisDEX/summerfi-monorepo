@@ -19,7 +19,7 @@ export async function getUserPositions(
   }
 }
 
-export async function getUserPositionsInternal(
+async function getUserPositionsInternal(
   client: ReturnType<typeof getSdk>,
   params: GetUserPositionsParams,
 ): Promise<UserPositionsQuery> {

@@ -1,9 +1,11 @@
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import {
-  IArmadaSubgraphManager,
-  type IArmadaSubgraphProvider,
-} from '@summerfi/subgraph-manager-common'
-import { ArmadaSubgraphProvider } from './ArmadaSubgraphProvider'
+import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
+import { ChainFamilyMap, type ChainId } from '@summerfi/sdk-common'
+import { createGraphQLClient } from '../../utils/createGraphQLClient'
+
+export interface SubgraphConfig {
+  urlBase: string
+}
 
 /**
  * @name ArmadaSubgraphManager
@@ -11,17 +13,33 @@ import { ArmadaSubgraphProvider } from './ArmadaSubgraphProvider'
  */
 export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
   private _configProvider: IConfigurationProvider
-  private _provider: IArmadaSubgraphProvider
+  private readonly _subgraphConfig: SubgraphConfig
+  private readonly _supportedChainIds: ChainId[]
 
   /** CONSTRUCTOR */
   constructor(params: { configProvider: IConfigurationProvider }) {
     this._configProvider = params.configProvider
-    this._provider = new ArmadaSubgraphProvider({
-      configProvider: this._configProvider,
+
+    const baseChainId = ChainFamilyMap.Base.Base.chainId
+    this._supportedChainIds = [baseChainId]
+
+    const urlBase = params.configProvider.getConfigurationItem({ name: 'SUBGRAPH_BASE' })
+    if (!urlBase) {
+      throw new Error('Missing required configuration item: SUBGRAPH_BASE')
+    }
+    this._subgraphConfig = {
+      urlBase,
+    }
+  }
+
+  getUserPositions({ user }: Parameters<IArmadaSubgraphManager['getUserPositions']>[0]) {
+    return this._getClient(user.chainInfo.chainId).PositionsByAddress({
+      accountAddress: user.wallet.address.value,
     })
   }
 
-  getUserPositions(params: Parameters<IArmadaSubgraphManager['getUserPositions']>[0]) {
-    return this._provider.getUserPositions(params)
+  /** PRIVATE */
+  _getClient(chainId: ChainId) {
+    return createGraphQLClient(chainId, this._subgraphConfig.urlBase)
   }
 }
