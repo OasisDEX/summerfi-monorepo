@@ -74,6 +74,7 @@ export class ArmadaManager implements IArmadaManager {
   }
 
   /** POSITIONS */
+  /** @see IArmadaManager.getUserPositions */
   async getUserPositions({ user }: { user: IUser }): Promise<IArmadaPosition[]> {
     return PositionExtensions.parseUserPositionsQuery({
       user,

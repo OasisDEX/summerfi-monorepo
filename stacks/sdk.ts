@@ -4,6 +4,7 @@ import { config } from 'dotenv'
 config({ path: './sdk/.env' })
 
 const {
+  SDK_LOGGING_ENABLED = 'false',
   POWERTOOLS_LOG_LEVEL = 'INFO',
   ONE_INCH_API_KEY,
   ONE_INCH_API_VERSION,
@@ -13,8 +14,8 @@ const {
   ONE_INCH_API_SPOT_URL,
   ONE_INCH_API_SPOT_VERSION,
   ONE_INCH_API_SPOT_KEY,
-  SDK_LOGGING_ENABLED,
   RPC_GATEWAY,
+  SUBGRAPH_BASE,
 } = process.env
 
 export function addSdkConfig({ stack }: StackContext, api: Api) {
@@ -27,10 +28,11 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
     !ONE_INCH_API_SPOT_URL ||
     !ONE_INCH_API_SPOT_VERSION ||
     !ONE_INCH_API_SPOT_KEY ||
-    !RPC_GATEWAY
+    !RPC_GATEWAY ||
+    !SUBGRAPH_BASE
   ) {
     throw new Error(
-      'OneInch configuration env variables are missing: ' +
+      'Some SDK configuration env variables are missing: ' +
         JSON.stringify(
           Object.entries({
             ONE_INCH_API_KEY,
@@ -42,6 +44,7 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
             ONE_INCH_API_SPOT_VERSION,
             ONE_INCH_API_SPOT_KEY,
             RPC_GATEWAY,
+            SUBGRAPH_BASE,
           }),
           null,
           2,
@@ -55,6 +58,7 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
     logFormat: 'JSON',
     timeout: 30,
     environment: {
+      SDK_LOGGING_ENABLED,
       POWERTOOLS_LOG_LEVEL,
       ONE_INCH_API_KEY,
       ONE_INCH_API_VERSION,
@@ -65,7 +69,7 @@ export function addSdkConfig({ stack }: StackContext, api: Api) {
       ONE_INCH_API_SPOT_VERSION,
       ONE_INCH_API_SPOT_KEY,
       RPC_GATEWAY,
-      SDK_LOGGING_ENABLED: SDK_LOGGING_ENABLED!,
+      SUBGRAPH_BASE,
     },
   })
 

@@ -28,6 +28,7 @@
     "@graphql-codegen/cli": "^5.0.2",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
-    "@summerfi/typescript-config": "workspace:*"
+    "@summerfi/typescript-config": "workspace:*",
+    "graphql": "^16.8.1"
   }
 }

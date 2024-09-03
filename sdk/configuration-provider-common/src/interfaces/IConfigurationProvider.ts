@@ -1,4 +1,3 @@
-import { Maybe } from '@summerfi/sdk-common/common'
 import { ConfigItem } from '../types/ConfigItem'
 import { ConfigKey } from '../types/ConfigKey'
 
@@ -14,5 +13,5 @@ export interface IConfigurationProvider {
    * @param name The name of the configuration item to retrieve
    * @returns The value of the configuration item
    */
-  getConfigurationItem(params: { name: ConfigKey }): Maybe<ConfigItem>
+  getConfigurationItem(params: { name: ConfigKey }): ConfigItem
 }

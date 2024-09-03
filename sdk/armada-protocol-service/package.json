@@ -36,7 +36,6 @@
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
     "@summerfi/sdk-server-common": "workspace:*",
-    "@summerfi/summer-earn-protocol-subgraph": "workspace:*",
     "@summerfi/testing-utils": "workspace:*",
     "@summerfi/typescript-config": "workspace:*"
   }

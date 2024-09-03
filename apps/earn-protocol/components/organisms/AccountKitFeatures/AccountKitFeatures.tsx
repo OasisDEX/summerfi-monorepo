@@ -29,7 +29,7 @@ const AccountKitFeatures = () => {
   const signMessage: TOSSignMessage = useCallback(
     async (data: string) => {
       // Signer from MM
-      if (wallet.wagmiConnector != null) {
+      if (wallet?.wagmiConnector != null) {
         return await signMessageWagmi(wagmiConfig as WagmiConfig, {
           message: data,
           connector: wallet?.wagmiConnector,

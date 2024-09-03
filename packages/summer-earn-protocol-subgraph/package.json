@@ -34,7 +34,6 @@
   },
   "dependencies": {
     "@summerfi/serverless-shared": "workspace:*",
-    "graphql-request": "^6.1.0",
-    "graphql-tag": "^2.12.6"
+    "graphql-request": "^6.1.0"
   }
 }

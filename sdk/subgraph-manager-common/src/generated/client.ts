@@ -1,5 +1,7 @@
-// @ts-nocheck
 // This file was automatically generated and should not be edited.
+// @ts-nocheck
+/* eslint-disable */
+import type { DocumentNode } from "graphql/language/ast";
 import { GraphQLClient, RequestOptions } from 'graphql-request';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
@@ -6617,7 +6619,7 @@ export type PositionsByAddressQueryVariables = Exact<{
 }>;
 
 
-export type PositionsByAddressQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, inputTokenBalance: number, outputTokenBalance: number, vault: { __typename?: 'Vault', id: string, inputToken: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } | null, protocol: { __typename?: 'YieldAggregator', id: string } }, account: { __typename?: 'Account', id: string } }> };
+export type PositionsByAddressQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, inputTokenBalance: any, outputTokenBalance: any, vault: { __typename?: 'Vault', id: string, inputToken: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } | null, protocol: { __typename?: 'YieldAggregator', id: string } }, account: { __typename?: 'Account', id: string } }> };
 
 
 export const PositionsByAddressDocument = gql`

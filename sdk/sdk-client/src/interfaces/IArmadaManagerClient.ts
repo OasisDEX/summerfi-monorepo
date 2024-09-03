@@ -34,6 +34,17 @@ export interface IArmadaManagerClient {
   getPoolInfo(params: { poolId: IArmadaPoolId }): Promise<IArmadaPoolInfo>
 
   /**
+   * @name getUserPositions
+   * @description Get all of user positions in the fleet
+   *
+   * @param user target user
+   *
+   * @returns IArmadaPosition[] All user positions in the fleet
+   *
+   */
+  getUserPositions(params: { user: IUser }): Promise<IArmadaPosition[]>
+
+  /**
    * @method getPosition
    * @description Retrieves the position of a user in an Armada pool
    *
