@@ -1466,6 +1466,9 @@ importers:
       graphql-request:
         specifier: ^6.1.0
         version: 6.1.0(graphql@16.8.2)
+      graphql-tag:
+        specifier: ^2.12.6
+        version: 2.12.6(graphql@16.8.2)
     devDependencies:
       '@graphql-codegen/cli':
         specifier: ^5.0.2
@@ -2708,6 +2711,9 @@ importers:
       '@summerfi/sdk-server-common':
         specifier: workspace:*
         version: link:../sdk-server-common
+      graphql-tag:
+        specifier: ^2.12.6
+        version: 2.12.6(graphql@16.8.2)
     devDependencies:
       '@graphql-codegen/cli':
         specifier: ^5.0.2
@@ -25110,7 +25116,6 @@ packages:
     dependencies:
       graphql: 16.8.2
       tslib: 2.2.0
-    dev: true
 
   /graphql-ws@5.16.0(graphql@16.8.2):
     resolution: {integrity: sha512-Ju2RCU2dQMgSKtArPbEtsK5gNLnsQyTNIo/T7cZNp96niC1x0KdJNZV0TIoilceBPQwfb5itrGl8pkFeOUMl4A==}

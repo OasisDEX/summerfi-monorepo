@@ -28,12 +28,13 @@
     "@graphql-codegen/typescript-graphql-request": "^6.2.0",
     "@graphql-codegen/typescript-operations": "^4.2.0",
     "@summerfi/eslint-config": "workspace:*",
-    "@summerfi/typescript-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
     "@types/node": "^20.12.7"
   },
   "dependencies": {
+    "@summerfi/serverless-shared": "workspace:*",
     "graphql-request": "^6.1.0",
-    "@summerfi/serverless-shared": "workspace:*"
+    "graphql-tag": "^2.12.6"
   }
 }
