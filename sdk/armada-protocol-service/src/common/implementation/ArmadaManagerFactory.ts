@@ -1,6 +1,7 @@
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
+import type { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { ArmadaManager } from './ArmadaManager'
 
 /**
@@ -12,6 +13,7 @@ export class ArmadaManagerFactory {
     configProvider: IConfigurationProvider
     allowanceManager: IAllowanceManager
     contractsProvider: IContractsProvider
+    subgraphManager: IArmadaSubgraphManager
   }): ArmadaManager {
     return new ArmadaManager(params)
   }
