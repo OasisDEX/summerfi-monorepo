@@ -6,6 +6,7 @@ import { IArmadaPoolId } from './IArmadaPoolId'
 import { IArmadaPoolInfo } from './IArmadaPoolInfo'
 import { IArmadaPosition } from './IArmadaPosition'
 import { IArmadaPositionId } from './IArmadaPositionId'
+import { IRebalanceData } from './IRebalanceData'
 
 /**
  * @name IArmadaManager
@@ -59,7 +60,7 @@ export interface IArmadaManager {
    */
   getPosition(params: { positionId: IArmadaPositionId }): Promise<IArmadaPosition>
 
-  /** TRANSACTIONS */
+  /** USER TRANSACTIONS */
 
   /**
    * @name getNewDepositTX
@@ -108,6 +109,56 @@ export interface IArmadaManager {
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]>
+
+  /** KEEPERS TRANSACTIONS */
+
+  /**
+   * @name rebalance
+   * @description Rebalances the assets of the fleet
+   *
+   * @param rebalanceData Data of the rebalance
+   *
+   * @returns TransactionInfo The transaction information
+   */
+  rebalance(params: {
+    poolId: IArmadaPoolId
+    rebalanceData: IRebalanceData[]
+  }): Promise<TransactionInfo>
+
+  /**
+   * @name adjustBuffer
+   * @description Adjusts the buffer of the fleet
+   *
+   * @param rebalanceData Data of the rebalance
+   *
+   * @returns TransactionInfo The transaction information
+   */
+  adjustBuffer(params: {
+    poolId: IArmadaPoolId
+    rebalanceData: IRebalanceData[]
+  }): Promise<TransactionInfo>
+
+  /** GOVERNANCE TRANSACTIONS */
+
+  /**
+   * @name setFleetDepositCap
+   * @description Sets the deposit cap of the Fleet
+   *
+   * @param cap The new deposit cap
+   *
+   * @returns TransactionInfo The transaction information
+   */
+  setFleetDepositCap(params: { poolId: IArmadaPoolId; cap: ITokenAmount }): Promise<TransactionInfo>
+
+  /**
+   * @name setTipJar
+   * @description Updates the tip jar for the Fleet
+   *
+   * @returns TransactionInfo The transaction information
+   */
+  setTipJar(params: { poolId: IArmadaPoolId }): Promise<TransactionInfo>
+
+  /** UTILITY FUNCTIONS */
 
   /**
    * @name convertToShares

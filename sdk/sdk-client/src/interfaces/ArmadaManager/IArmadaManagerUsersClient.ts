@@ -8,11 +8,11 @@ import {
 import { ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
 
 /**
- * @interface IArmadaManagerClient
- * @description Interface of the FleetCommander manager for the SDK Client. Allows to instantiate
+ * @interface IArmadaManagerUsersClient
+ * @description Interface of the FleetCommander Users manager for the SDK Client. Allows to instantiate
  *              FleetCommanders to interact with them
  */
-export interface IArmadaManagerClient {
+export interface IArmadaManagerUsersClient {
   /**
    * @method getPool
    * @description Retrieves an Armada pool by its ID

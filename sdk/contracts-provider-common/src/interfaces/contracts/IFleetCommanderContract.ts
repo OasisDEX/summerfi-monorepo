@@ -1,3 +1,4 @@
+import { IRebalanceData } from '@summerfi/armada-protocol-common'
 import { IAddress, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
 import { IContractWrapper } from './IContractWrapper'
 import { IErc20Contract } from './IErc20Contract'
@@ -38,28 +39,80 @@ export interface IFleetCommanderContract extends IContractWrapper {
    */
   maxWithdraw(params: { user: IAddress }): Promise<ITokenAmount>
 
-  /** WRITE METHODS */
+  /** USER WRITE METHODS */
 
   /**
    * @name deposit
    * @description Deposits an amount of assets into the FleetCommander contract
+   *
    * @param assets The amount of assets to deposit
    * @param receiver The address of the receiver of the shares
+   *
+   * @returns The transaction information
    */
   deposit(params: { assets: ITokenAmount; receiver: IAddress }): Promise<TransactionInfo>
 
   /**
    * @name withdraw
    * @description Deposits an amount of assets into the FleetCommander contract
+   *
    * @param assets The amount of assets to deposit
    * @param receiver The address of the receiver of the shares
    * @param owner The address of the owner of the shares
+   *
+   * @returns The transaction information
    */
   withdraw(params: {
     assets: ITokenAmount
     receiver: IAddress
     owner: IAddress
   }): Promise<TransactionInfo>
+
+  /** KEEPERS WRITE METHODS */
+
+  /**
+   * @name rebalance
+   * @description Rebalances the assets of the fleet. Used by the keepers of the fleet
+   *              to move assets between arks
+   *
+   * @param rebalanceData The data for the rebalance
+   *
+   * @returns The transaction information
+   */
+  rebalance(params: { rebalanceData: IRebalanceData[] }): Promise<TransactionInfo>
+
+  /**
+   * @name adjustBuffer
+   * @description Adjusts the buffer of the fleet. Used by the keepers of the fleet
+   *              to move assets between the buffer ark and the main arks
+   *
+   * @param rebalanceData The data for the rebalance
+   *
+   * @returns The transaction information
+   */
+  adjustBuffer(params: { rebalanceData: IRebalanceData[] }): Promise<TransactionInfo>
+
+  /** GOVERNANCE WRITE METHODS */
+
+  /**
+   * @name setFleetDepositCap
+   * @description Sets the deposit cap of the fleet. Used by the governance
+   *
+   * @param cap The new deposit cap
+   *
+   * @returns The transaction information
+   */
+  setFleetDepositCap(params: { cap: ITokenAmount }): Promise<TransactionInfo>
+
+  /**
+   * @name setTipJar
+   * @description Sets the tip jar of the fleet. Used by the governance
+   *
+   * @returns The transaction information
+   */
+  setTipJar(): Promise<TransactionInfo>
+
+  /** CASTING METHODS */
 
   /**
    * @name asErc20

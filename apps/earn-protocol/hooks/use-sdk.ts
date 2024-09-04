@@ -60,7 +60,7 @@ export const useSDK = () => {
           protocol: ArmadaProtocol.createFrom({ chainInfo }),
         })
 
-        const poolInfo = await sdk.armada.getPoolInfo({
+        const poolInfo = await sdk.armada.users.getPoolInfo({
           poolId,
         })
 
@@ -76,7 +76,7 @@ export const useSDK = () => {
           token: poolInfo.totalDeposits.token,
         })
 
-        return sdk.armada.getNewDepositTX({
+        return sdk.armada.users.getNewDepositTX({
           poolId,
           user,
           amount: tokenAmount,
@@ -113,7 +113,7 @@ export const useSDK = () => {
           protocol: ArmadaProtocol.createFrom({ chainInfo }),
         })
 
-        const poolInfo = await sdk.armada.getPoolInfo({
+        const poolInfo = await sdk.armada.users.getPoolInfo({
           poolId,
         })
 
@@ -129,7 +129,7 @@ export const useSDK = () => {
           token: poolInfo.totalDeposits.token,
         })
 
-        return sdk.armada.getWithdrawTX({
+        return sdk.armada.users.getWithdrawTX({
           poolId,
           positionId: ArmadaPositionId.createFrom({
             id: walletAddress,

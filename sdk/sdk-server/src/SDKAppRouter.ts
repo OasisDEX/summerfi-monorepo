@@ -1,10 +1,14 @@
 import { router } from './SDKTRPC'
-import { getNewDepositTX } from './armada-protocol-handlers/getNewDepositTX'
-import { getPool } from './armada-protocol-handlers/getPool'
-import { getPoolInfo } from './armada-protocol-handlers/getPoolInfo'
-import { getPosition as getArmadaPosition } from './armada-protocol-handlers/getPosition'
-import { getUpdateDepositTX } from './armada-protocol-handlers/getUpdateDepositTX'
-import { getWithdrawTX } from './armada-protocol-handlers/getWithdrawTX'
+import { setFleetDepositCap } from './armada-protocol-handlers/governance/setFleetDepositCap'
+import { setTipJar } from './armada-protocol-handlers/governance/setTipJar'
+import { adjustBuffer } from './armada-protocol-handlers/keepers/adjustBuffer'
+import { rebalance } from './armada-protocol-handlers/keepers/rebalance'
+import { getNewDepositTX } from './armada-protocol-handlers/users/getNewDepositTX'
+import { getPool } from './armada-protocol-handlers/users/getPool'
+import { getPoolInfo } from './armada-protocol-handlers/users/getPoolInfo'
+import { getPosition as getArmadaPosition } from './armada-protocol-handlers/users/getPosition'
+import { getUpdateDepositTX } from './armada-protocol-handlers/users/getUpdateDepositTX'
+import { getWithdrawTX } from './armada-protocol-handlers/users/getWithdrawTX'
 import { buildOrder } from './handlers/buildOrder'
 import { getArmadaSimulation } from './handlers/getArmadaSimulation'
 import { getImportSimulation } from './handlers/getImportSimulation'
@@ -45,12 +49,22 @@ export const sdkAppRouter = router({
     getSwapQuoteExactInput: getSwapQuoteExactInput,
   },
   armada: {
-    getPool: getPool,
-    getPoolInfo: getPoolInfo,
-    getPosition: getArmadaPosition,
-    getNewDepositTX: getNewDepositTX,
-    getUpdateDepositTX: getUpdateDepositTX,
-    getWithdrawTX: getWithdrawTX,
+    users: {
+      getPool: getPool,
+      getPoolInfo: getPoolInfo,
+      getPosition: getArmadaPosition,
+      getNewDepositTX: getNewDepositTX,
+      getUpdateDepositTX: getUpdateDepositTX,
+      getWithdrawTX: getWithdrawTX,
+    },
+    keepers: {
+      rebalance: rebalance,
+      adjustBuffer: adjustBuffer,
+    },
+    governance: {
+      setFleetDepositCap: setFleetDepositCap,
+      setTipJar: setTipJar,
+    },
   },
 })
 

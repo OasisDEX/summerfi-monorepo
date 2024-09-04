@@ -1,5 +1,6 @@
 import { IBlockchainClient } from '@summerfi/blockchain-client-common'
 import {
+  FleetCommander,
   IErc20Contract,
   IErc4626Contract,
   IFleetCommanderContract,
@@ -9,12 +10,15 @@ import {
   IAddress,
   IChainInfo,
   ITokenAmount,
+  SDKError,
+  SDKErrorType,
   TokenAmount,
   TransactionInfo,
 } from '@summerfi/sdk-common'
 import { ContractWrapper } from '../ContractWrapper'
 
 import { FleetCommanderAbi } from '@summerfi/armada-protocol-abis'
+import { IRebalanceData } from '@summerfi/armada-protocol-common'
 import { Erc4626Contract } from '../Erc4626Contract/Erc4626Contract'
 
 /**
@@ -71,24 +75,9 @@ export class FleetCommanderContract<
 
   /** @see IFleetCommanderContract.arks */
   async arks(): Promise<IAddress[]> {
-    const arksAddresses: IAddress[] = []
-    let arkIndex = 0n
-    let isZeroAddress = false
+    const arks = await this.contract.read.getArks()
 
-    // TODO: manual loop for getting all arks, should be refactored
-    // TODO: when the new getArks method is implemented
-    do {
-      const arkAddressValue = await this.contract.read.arks([arkIndex++])
-      const arkAddress = Address.createFromEthereum({ value: arkAddressValue })
-
-      isZeroAddress = arkAddress.equals(Address.ZeroAddressEthereum)
-
-      if (!isZeroAddress) {
-        arksAddresses.push(arkAddress)
-      }
-    } while (!isZeroAddress)
-
-    return arksAddresses
+    return arks.map((ark) => Address.createFromEthereum({ value: ark }))
   }
 
   /** @see IFleetCommanderContract.depositCap */
@@ -115,7 +104,7 @@ export class FleetCommanderContract<
     return TokenAmount.createFromBaseUnit({ token, amount: String(maxWithdraw) })
   }
 
-  /** WRITE METHODS */
+  /** USERS WRITE METHODS */
 
   /** @see IFleetCommanderContract.deposit */
   async deposit(params: { assets: ITokenAmount; receiver: IAddress }): Promise<TransactionInfo> {
@@ -131,6 +120,64 @@ export class FleetCommanderContract<
     return this.asErc4626().withdraw(params)
   }
 
+  /** KEEPERS WRITE METHODS */
+
+  /** @see IFleetCommanderContract.rebalance */
+  async rebalance(params: { rebalanceData: IRebalanceData[] }): Promise<TransactionInfo> {
+    const rebalanceDataSolidity = this._convertRebalanceDataToSolidity({
+      rebalanceData: params.rebalanceData,
+    })
+    return this._createTransaction({
+      functionName: 'rebalance',
+      args: [rebalanceDataSolidity],
+      description: 'Rebalance the assets of the fleet',
+    })
+  }
+
+  /** @see IFleetCommanderContract.adjustBuffer */
+  async adjustBuffer(params: { rebalanceData: IRebalanceData[] }): Promise<TransactionInfo> {
+    const rebalanceDataSolidity = this._convertRebalanceDataToSolidity({
+      rebalanceData: params.rebalanceData,
+    })
+    return this._createTransaction({
+      functionName: 'adjustBuffer',
+      args: [rebalanceDataSolidity],
+      description: 'Adjust the buffer of the fleet',
+    })
+  }
+
+  /** GOVERNANCE WRITE METHODS */
+
+  /** @see IFleetCommanderContract.setFleetDepositCap */
+  async setFleetDepositCap(params: { cap: ITokenAmount }): Promise<TransactionInfo> {
+    const asset = await this._erc4626Contract.asset()
+
+    if (!params.cap.token.equals(asset)) {
+      throw SDKError.createFrom({
+        type: SDKErrorType.ArmadaError,
+        reason: 'Invalid token for deposit cap',
+        message: `The token ${params.cap.token} is invalid for the deposit cap, the fleet underlying token is ${asset}`,
+      })
+    }
+
+    return this._createTransaction({
+      functionName: 'setFleetDepositCap',
+      args: [params.cap.toSolidityValue()],
+      description: `Set the fleet deposit cap to ${params.cap}`,
+    })
+  }
+
+  /** @see IFleetCommanderContract.setTipJar */
+  async setTipJar(): Promise<TransactionInfo> {
+    return this._createTransaction({
+      functionName: 'setTipJar',
+      args: [],
+      description: 'Updates the tip jar of the fleet',
+    })
+  }
+
+  /** CASTING METHODS */
+
   /** @see IFleetCommanderContract.asErc20 */
   asErc20(): IErc20Contract {
     return this.asErc4626().asErc20()
@@ -144,5 +191,16 @@ export class FleetCommanderContract<
   /** @see IContractWrapper.getAbi */
   getAbi(): typeof FleetCommanderAbi {
     return FleetCommanderAbi
+  }
+
+  /** PRIVATE */
+  private _convertRebalanceDataToSolidity(params: {
+    rebalanceData: IRebalanceData[]
+  }): FleetCommander.RebalanceDataSolidity[] {
+    return params.rebalanceData.map((data) => ({
+      fromArk: data.fromArk.toSolidityValue(),
+      toArk: data.toArk.toSolidityValue(),
+      amount: data.amount.toSolidityValue(),
+    }))
   }
 }

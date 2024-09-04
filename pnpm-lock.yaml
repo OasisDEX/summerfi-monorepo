@@ -1951,6 +1951,9 @@ importers:
       '@summerfi/abi-provider-common':
         specifier: workspace:*
         version: link:../abi-provider-common
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../armada-protocol-common
       '@summerfi/blockchain-client-common':
         specifier: workspace:*
         version: link:../blockchain-client-common
@@ -1976,6 +1979,9 @@ importers:
       '@summerfi/armada-protocol-abis':
         specifier: workspace:*
         version: link:../../armada-protocol/abis
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../armada-protocol-common
       '@summerfi/blockchain-client-common':
         specifier: workspace:*
         version: link:../blockchain-client-common

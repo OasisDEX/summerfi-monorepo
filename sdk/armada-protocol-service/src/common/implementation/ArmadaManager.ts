@@ -6,12 +6,12 @@ import {
   IArmadaPoolInfo,
   IArmadaPosition,
   IArmadaPositionId,
+  IRebalanceData,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
 import { ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
-
 import { ArmadaPool } from './ArmadaPool'
 import { ArmadaPoolInfo } from './ArmadaPoolInfo'
 import { ArmadaPosition } from './ArmadaPosition'
@@ -109,7 +109,7 @@ export class ArmadaManager implements IArmadaManager {
     })
   }
 
-  /** TRANSACTIONS */
+  /** USER TRANSACTIONS */
 
   /** @see IArmadaManager.getNewDepositTX */
   async getNewDepositTX(params: {
@@ -166,6 +166,59 @@ export class ArmadaManager implements IArmadaManager {
     const erc4626Contract = fleetContract.asErc4626()
 
     return erc4626Contract.convertToShares({ amount: params.amount })
+  }
+
+  /** KEEPERS TRANSACTIONS */
+
+  /** @see IArmadaManager.rebalance */
+  async rebalance(params: {
+    poolId: IArmadaPoolId
+    rebalanceData: IRebalanceData[]
+  }): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.poolId.chainInfo,
+      address: params.poolId.fleetAddress,
+    })
+
+    return fleetContract.rebalance({ rebalanceData: params.rebalanceData })
+  }
+
+  /** @see IArmadaManager.adjustBuffer */
+  async adjustBuffer(params: {
+    poolId: IArmadaPoolId
+    rebalanceData: IRebalanceData[]
+  }): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.poolId.chainInfo,
+      address: params.poolId.fleetAddress,
+    })
+
+    return fleetContract.adjustBuffer({ rebalanceData: params.rebalanceData })
+  }
+
+  /** GOVERNANCE TRANSACTIONS */
+
+  /** @see IArmadaManager.setFleetDepositCap */
+  async setFleetDepositCap(params: {
+    poolId: IArmadaPoolId
+    cap: ITokenAmount
+  }): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.poolId.chainInfo,
+      address: params.poolId.fleetAddress,
+    })
+
+    return fleetContract.setFleetDepositCap({ cap: params.cap })
+  }
+
+  /** @see IArmadaManager.setTipJar */
+  async setTipJar(params: { poolId: IArmadaPoolId }): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.poolId.chainInfo,
+      address: params.poolId.fleetAddress,
+    })
+
+    return fleetContract.setTipJar()
   }
 
   /** PRIVATE */
