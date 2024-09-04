@@ -12,5 +12,22 @@ generates:
       - add:
           content: 'import type { DocumentNode } from "graphql/language/ast";'
       - typescript
-      - typescript-operations
+      - typescript-operations:
+          strictScalars: true
+          scalars:
+            BigDecimal: number
+            BigInt: number
+            Int8: number
+            BooleanType: boolean
+            CustomData: Record<string, unknown>
+            Date: string
+            DateTime: string
+            FloatType: number
+            IntType: number
+            ItemId: string
+            JsonField: unknown
+            Bytes: string
+            MetaTagAttributes: Record<string, string>
+            UploadId: string
+            Timestamp: number
       - typescript-graphql-request
