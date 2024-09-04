@@ -7,6 +7,7 @@ import { type Config as WagmiConfig, getBalance, sendTransaction } from '@web3-o
 import dynamic from 'next/dynamic'
 
 import { prepareTransaction } from '@/helpers/sdk/prepare-transaction'
+import type { FleetConfig } from '@/helpers/sdk/types'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useDepositTX } from '@/hooks/use-deposit'
 import { useWithdrawTX } from '@/hooks/use-withdraw'
@@ -16,15 +17,11 @@ enum Action {
   WITHDRAW = 'withdraw',
 }
 
-// TODO: Replace with the real dynamic values from the UI controls state
-const tokenSymbol = 'USDC'
-const usdcFleetAddress = '0x75d4f7cb1b2481385e0878c639f6f6d66592d399'
-
 const SetForkModal = dynamic(() => import('@/components/organisms/SetFork/SetForkModal'), {
   ssr: false,
 })
 
-const Form = () => {
+const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: { fleetConfig: FleetConfig }) => {
   const [action, setAction] = useState(Action.DEPOSIT)
   const [amountValue, setAmountValue] = useState<string>()
   const [transactionsHash, setTransactionsHash] = useState<string>()
@@ -103,7 +100,7 @@ const Form = () => {
     return deposit({
       chainId,
       walletAddress,
-      fleetAddress: usdcFleetAddress,
+      fleetAddress,
       amountString: amountValue.toString(),
     })
   }
@@ -116,7 +113,7 @@ const Form = () => {
     return withdraw({
       chainId,
       walletAddress,
-      fleetAddress: usdcFleetAddress,
+      fleetAddress,
       amountString: amountValue.toString(),
     })
   }
@@ -173,7 +170,7 @@ const Form = () => {
           paddingBottom: '15px',
           borderBottom: '1px solid rgb(240, 240, 240)',
         }}
-        title={usdcFleetAddress}
+        title={fleetAddress}
       >
         Manage your {tokenSymbol} Fleet
       </Text>
