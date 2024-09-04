@@ -59,7 +59,7 @@ export function isArmadaPoolId(
   const zodReturn = ArmadaPoolIdDataSchema.safeParse(maybeArmadaPoolId)
 
   if (!zodReturn.success && returnedErrors) {
-    returnedErrors.push(zodReturn.error.message), console.log('returnedErrors', returnedErrors)
+    returnedErrors.push(zodReturn.error.message)
   }
 
   return zodReturn.success
