@@ -11,6 +11,7 @@ export interface IArmadaManagerKeepersClient {
    * @name rebalance
    * @description Rebalances the assets of the fleet
    *
+   * @param poolId The pool id
    * @param rebalanceData Data of the rebalance
    *
    * @returns TransactionInfo The transaction information
@@ -24,6 +25,7 @@ export interface IArmadaManagerKeepersClient {
    * @name adjustBuffer
    * @description Adjusts the buffer of the fleet
    *
+   * @param poolId The pool id
    * @param rebalanceData Data of the rebalance
    *
    * @returns TransactionInfo The transaction information
