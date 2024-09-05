@@ -32,7 +32,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
 
   /** @see IArmadaManagerClient.getUserPositions */
   async getUserPositions(params: { user: IUser }): Promise<IArmadaPosition[]> {
-    return this.rpcClient.armada.getUserPositions.query(params)
+    return this.rpcClient.armada.users.getUserPositions.query(params)
   }
 
   /** @see IArmadaManagerClient.getPosition */
