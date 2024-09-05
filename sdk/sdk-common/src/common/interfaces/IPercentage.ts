@@ -79,8 +79,11 @@ export type IPercentageData = Readonly<z.infer<typeof PercentageDataSchema>>
  * @param maybePercentage
  * @returns true if the object is an IPercentage
  */
-export function isPercentage(maybePercentage: unknown): maybePercentage is IPercentage {
-  return isPercentageData(maybePercentage)
+export function isPercentage(
+  maybePercentage: unknown,
+  returnedErrors?: string[],
+): maybePercentage is IPercentage {
+  return isPercentageData(maybePercentage, returnedErrors)
 }
 
 /**
@@ -90,6 +93,13 @@ export function isPercentage(maybePercentage: unknown): maybePercentage is IPerc
  */
 export function isPercentageData(
   maybePercentageData: unknown,
+  returnedErrors?: string[],
 ): maybePercentageData is IPercentageData {
-  return PercentageDataSchema.safeParse(maybePercentageData).success
+  const zodReturn = PercentageDataSchema.safeParse(maybePercentageData)
+
+  if (!zodReturn.success && returnedErrors) {
+    returnedErrors.push(...zodReturn.error.errors.map((e) => e.message))
+  }
+
+  return zodReturn.success
 }

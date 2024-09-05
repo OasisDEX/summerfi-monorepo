@@ -30,7 +30,7 @@ export const getWithdrawTXHandler =
       protocol: ArmadaProtocol.createFrom({ chainInfo }),
     })
 
-    const poolInfo = await sdk.armada.getPoolInfo({
+    const poolInfo = await sdk.armada.users.getPoolInfo({
       poolId,
     })
 
@@ -46,7 +46,7 @@ export const getWithdrawTXHandler =
       token: poolInfo.totalDeposits.token,
     })
 
-    return sdk.armada.getWithdrawTX({
+    return sdk.armada.users.getWithdrawTX({
       poolId,
       positionId: ArmadaPositionId.createFrom({
         id: walletAddress,

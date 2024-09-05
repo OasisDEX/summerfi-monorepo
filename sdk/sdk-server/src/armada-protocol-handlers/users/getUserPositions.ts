@@ -1,7 +1,7 @@
-import { z } from 'zod'
-import { publicProcedure } from '../SDKTRPC'
-import { SDKError, SDKErrorType, isUser } from '@summerfi/sdk-common'
 import type { IArmadaPosition } from '@summerfi/armada-protocol-common'
+import { SDKError, SDKErrorType, isUser } from '@summerfi/sdk-common'
+import { z } from 'zod'
+import { publicProcedure } from '../../SDKTRPC'
 
 export const getUserPositions = publicProcedure
   .input(z.any())

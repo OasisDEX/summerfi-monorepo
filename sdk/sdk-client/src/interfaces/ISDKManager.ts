@@ -1,4 +1,4 @@
-import { IArmadaManagerClient } from './IArmadaManagerClient'
+import { IArmadaManagerClient } from './ArmadaManager/IArmadaManagerClient'
 import { IChainsManagerClient } from './IChainsManager'
 import { IPortfolioManager } from './IPortfolioManager'
 import { IUsersManager } from './IUsersManager'

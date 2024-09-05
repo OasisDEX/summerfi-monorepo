@@ -1,26 +1,26 @@
 import { isArmadaPoolId } from '@summerfi/armada-protocol-common'
 import { SDKError, SDKErrorType } from '@summerfi/sdk-common'
 import { z } from 'zod'
-import { publicProcedure } from '../SDKTRPC'
+import { publicProcedure } from '../../SDKTRPC'
 
-export const getPoolInfo = publicProcedure.input(z.any()).query(async (opts) => {
+export const emergencyShutdown = publicProcedure.input(z.any()).query(async (opts) => {
   const returnedErrors: string[] = []
 
   if (opts.input == null) {
     throw SDKError.createFrom({
-      message: 'Invalid getPoolInfo request',
-      reason: 'Missing input',
+      reason: 'Invalid emergency shutdown request',
+      message: 'Missing input',
       type: SDKErrorType.ArmadaError,
     })
   }
 
   if (!isArmadaPoolId(opts.input.poolId, returnedErrors)) {
     throw SDKError.createFrom({
-      message: 'Invalid ArmadaPool in getPoolInfo request: ' + returnedErrors.join(', '),
-      reason: 'Validation failed',
+      reason: 'Invalid pool id in emergency shutdown request',
+      message: returnedErrors.join('\n'),
       type: SDKErrorType.ArmadaError,
     })
   }
 
-  return opts.ctx.armadaManager.getPoolInfo(opts.input)
+  return opts.ctx.armadaManager.emergencyShutdown(opts.input)
 })

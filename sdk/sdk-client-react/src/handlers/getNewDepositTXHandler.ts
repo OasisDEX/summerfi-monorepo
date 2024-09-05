@@ -30,7 +30,7 @@ export const getNewDepositTXHandler =
       protocol: ArmadaProtocol.createFrom({ chainInfo }),
     })
 
-    const poolInfo = await sdk.armada.getPoolInfo({
+    const poolInfo = await sdk.armada.users.getPoolInfo({
       poolId,
     })
 
@@ -46,7 +46,7 @@ export const getNewDepositTXHandler =
       token: poolInfo.totalDeposits.token,
     })
 
-    return sdk.armada.getNewDepositTX({
+    return sdk.armada.users.getNewDepositTX({
       poolId,
       user,
       amount: tokenAmount,
