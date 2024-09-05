@@ -9,6 +9,7 @@ import {
   Address,
   IAddress,
   IChainInfo,
+  IPercentage,
   ITokenAmount,
   SDKError,
   SDKErrorType,
@@ -173,6 +174,156 @@ export class FleetCommanderContract<
       functionName: 'setTipJar',
       args: [],
       description: 'Updates the tip jar of the fleet',
+    })
+  }
+
+  /** @see IFleetCommanderContract.setTipRate */
+  setTipRate(params: { rate: IPercentage }): Promise<TransactionInfo> {
+    return this._createTransaction({
+      functionName: 'setTipRate',
+      args: [params.rate.toSolidityValue({ decimals: 18 })],
+      description: `Set the tip rate to ${params.rate}`,
+    })
+  }
+
+  /** @see IFleetCommanderContract.addArk */
+  addArk(params: { ark: IAddress }): Promise<TransactionInfo> {
+    return this._createTransaction({
+      functionName: 'addArk',
+      args: [params.ark.toSolidityValue()],
+      description: `Add the ark ${params.ark}`,
+    })
+  }
+
+  /** @see IFleetCommanderContract.addArks */
+  addArks(params: { arks: IAddress[] }): Promise<TransactionInfo> {
+    const arksSolidity = params.arks.map((ark) => ark.toSolidityValue())
+    return this._createTransaction({
+      functionName: 'addArks',
+      args: [arksSolidity],
+      description: `Add the arks ${params.arks}`,
+    })
+  }
+
+  /** @see IFleetCommanderContract.removeArk */
+  removeArk(params: { ark: IAddress }): Promise<TransactionInfo> {
+    return this._createTransaction({
+      functionName: 'removeArk',
+      args: [params.ark.toSolidityValue()],
+      description: `Remove the ark ${params.ark}`,
+    })
+  }
+
+  /** @see IFleetCommanderContract.setArkDepositCap */
+  async setArkDepositCap(params: { ark: IAddress; cap: ITokenAmount }): Promise<TransactionInfo> {
+    const asset = await this._erc4626Contract.asset()
+
+    if (!params.cap.token.equals(asset)) {
+      throw SDKError.createFrom({
+        type: SDKErrorType.ArmadaError,
+        reason: 'Invalid token for deposit cap',
+        message: `The token ${params.cap.token} is invalid for the deposit cap, the fleet underlying token is ${asset}`,
+      })
+    }
+
+    return this._createTransaction({
+      functionName: 'setArkDepositCap',
+      args: [params.ark.toSolidityValue(), params.cap.toSolidityValue()],
+      description: `Set the deposit cap of the ark ${params.ark} to ${params.cap}`,
+    })
+  }
+
+  /** @see IFleetCommanderContract.setArkMaxDeposit */
+  async setArkMaxRebalanceOutflow(params: {
+    ark: IAddress
+    maxRebalanceOutflow: ITokenAmount
+  }): Promise<TransactionInfo> {
+    const asset = await this._erc4626Contract.asset()
+
+    if (!params.maxRebalanceOutflow.token.equals(asset)) {
+      throw SDKError.createFrom({
+        type: SDKErrorType.ArmadaError,
+        reason: 'Invalid token for max rebalance outflow',
+        message: `The token ${params.maxRebalanceOutflow.token} is invalid for the max rebalance outflow, the fleet underlying token is ${asset}`,
+      })
+    }
+
+    return this._createTransaction({
+      functionName: 'setArkMaxRebalanceOutflow',
+      args: [params.ark.toSolidityValue(), params.maxRebalanceOutflow.toSolidityValue()],
+      description: `Set the max rebalance outflow of the ark ${params.ark} to ${params.maxRebalanceOutflow}`,
+    })
+  }
+
+  /** @see IFleetCommanderContract.setArkMaxRebalanceInflow */
+  async setArkMaxRebalanceInflow(params: {
+    ark: IAddress
+    maxRebalanceInflow: ITokenAmount
+  }): Promise<TransactionInfo> {
+    const asset = await this._erc4626Contract.asset()
+
+    if (!params.maxRebalanceInflow.token.equals(asset)) {
+      throw SDKError.createFrom({
+        type: SDKErrorType.ArmadaError,
+        reason: 'Invalid token for max rebalance inflow',
+        message: `The token ${params.maxRebalanceInflow.token} is invalid for the max rebalance inflow, the fleet underlying token is ${asset}`,
+      })
+    }
+
+    return this._createTransaction({
+      functionName: 'setArkMaxRebalanceInflow',
+      args: [params.ark.toSolidityValue(), params.maxRebalanceInflow.toSolidityValue()],
+      description: `Set the max rebalance inflow of the ark ${params.ark} to ${params.maxRebalanceInflow}`,
+    })
+  }
+
+  async setMinimumBufferBalance(params: {
+    minimumBufferBalance: ITokenAmount
+  }): Promise<TransactionInfo> {
+    const asset = await this._erc4626Contract.asset()
+
+    if (!params.minimumBufferBalance.token.equals(asset)) {
+      throw SDKError.createFrom({
+        type: SDKErrorType.ArmadaError,
+        reason: 'Invalid token for minimum buffer balance',
+        message: `The token ${params.minimumBufferBalance.token} is invalid for the minimum buffer balance, the fleet underlying token is ${asset}`,
+      })
+    }
+
+    return this._createTransaction({
+      functionName: 'setMinimumBufferBalance',
+      args: [params.minimumBufferBalance.toSolidityValue()],
+      description: `Set the minimum buffer balance of the fleet to ${params.minimumBufferBalance}`,
+    })
+  }
+
+  /** @see IFleetCommanderContract.updateRebalanceCooldown */
+  updateRebalanceCooldown(params: { cooldown: number }): Promise<TransactionInfo> {
+    return this._createTransaction({
+      functionName: 'updateRebalanceCooldown',
+      args: [params.cooldown],
+      description: `Update the rebalance cooldown to ${params.cooldown}`,
+    })
+  }
+
+  /** @see IFleetCommanderContract.forceRebalance */
+  forceRebalance(params: { rebalanceData: IRebalanceData[] }): Promise<TransactionInfo> {
+    const rebalanceDataSolidity = this._convertRebalanceDataToSolidity({
+      rebalanceData: params.rebalanceData,
+    })
+    return this._createTransaction({
+      functionName: 'forceRebalance',
+      args: [rebalanceDataSolidity],
+      description: 'Force a rebalance of the fleet',
+    })
+  }
+
+  /** @see IFleetCommanderContract.emergencyShutdown */
+  emergencyShutdown(): Promise<TransactionInfo> {
+    return this._createTransaction({
+      functionName: 'emergencyShutdown',
+      args: [],
+      description: 'Emergency shutdown of the fleet',
     })
   }
 

@@ -1,6 +1,17 @@
 import { router } from './SDKTRPC'
+import { addArk } from './armada-protocol-handlers/governance/addArk'
+import { addArks } from './armada-protocol-handlers/governance/addArks'
+import { emergencyShutdown } from './armada-protocol-handlers/governance/emergencyShutdown'
+import { forceRebalance } from './armada-protocol-handlers/governance/forceRebalance'
+import { removeArk } from './armada-protocol-handlers/governance/removeArk'
+import { setArkDepositCap } from './armada-protocol-handlers/governance/setArkDepositCap'
+import { setArkMaxRebalanceInflow } from './armada-protocol-handlers/governance/setArkMaxRebalanceInflow'
+import { setArkMaxRebalanceOutflow } from './armada-protocol-handlers/governance/setArkMaxRebalanceOutflow'
 import { setFleetDepositCap } from './armada-protocol-handlers/governance/setFleetDepositCap'
+import { setMinimumBufferBalance } from './armada-protocol-handlers/governance/setMinimumBufferBalance'
 import { setTipJar } from './armada-protocol-handlers/governance/setTipJar'
+import { setTipRate } from './armada-protocol-handlers/governance/setTipRate'
+import { updateRebalanceCooldown } from './armada-protocol-handlers/governance/updateRebalanceCooldown'
 import { adjustBuffer } from './armada-protocol-handlers/keepers/adjustBuffer'
 import { rebalance } from './armada-protocol-handlers/keepers/rebalance'
 import { getNewDepositTX } from './armada-protocol-handlers/users/getNewDepositTX'
@@ -64,6 +75,17 @@ export const sdkAppRouter = router({
     governance: {
       setFleetDepositCap: setFleetDepositCap,
       setTipJar: setTipJar,
+      setTipRate: setTipRate,
+      addArk: addArk,
+      addArks: addArks,
+      removeArk: removeArk,
+      setArkDepositCap: setArkDepositCap,
+      setArkMaxRebalanceInflow: setArkMaxRebalanceInflow,
+      setArkMaxRebalanceOutflow: setArkMaxRebalanceOutflow,
+      setMinimumBufferBalance: setMinimumBufferBalance,
+      forceRebalance: forceRebalance,
+      updateRebalanceCooldown: updateRebalanceCooldown,
+      emergencyShutdown: emergencyShutdown,
     },
   },
 })

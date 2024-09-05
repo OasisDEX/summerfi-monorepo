@@ -1,5 +1,5 @@
 import { IRebalanceData } from '@summerfi/armada-protocol-common'
-import { IAddress, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
+import { IAddress, IPercentage, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
 import { IContractWrapper } from './IContractWrapper'
 import { IErc20Contract } from './IErc20Contract'
 import { IErc4626Contract } from './IErc4626Contract'
@@ -111,6 +111,124 @@ export interface IFleetCommanderContract extends IContractWrapper {
    * @returns The transaction information
    */
   setTipJar(): Promise<TransactionInfo>
+
+  /**
+   * @name setTipRate
+   * @description Sets the tip rate of the fleet. Used by the governance
+   *
+   * @param rate The new tip rate
+   *
+   * @returns The transaction information
+   */
+  setTipRate(params: { rate: IPercentage }): Promise<TransactionInfo>
+
+  /**
+   * @name addArk
+   * @description Adds a new ark to the fleet. Used by the governance
+   *
+   * @param ark The address of the new ark
+   *
+   * @returns The transaction information
+   */
+  addArk(params: { ark: IAddress }): Promise<TransactionInfo>
+
+  /**
+   * @name addArks
+   * @description Adds a list of new arks to the fleet. Used by the governance
+   *
+   * @param arks The list of addresses of the new arks
+   *
+   * @returns The transaction information
+   */
+  addArks(params: { arks: IAddress[] }): Promise<TransactionInfo>
+
+  /**
+   * @name removeArk
+   * @description Removes an ark from the fleet. Used by the governance
+   *
+   * @param ark The address of the ark to remove
+   *
+   * @returns The transaction information
+   */
+  removeArk(params: { ark: IAddress }): Promise<TransactionInfo>
+
+  /**
+   * @name setArkDepositCap
+   * @description Sets the deposit cap of an ark. Used by the governance
+   *
+   * @param ark The address of the ark
+   * @param cap The new deposit cap
+   *
+   * @returns The transaction information
+   */
+  setArkDepositCap(params: { ark: IAddress; cap: ITokenAmount }): Promise<TransactionInfo>
+
+  /**
+   * @name setArkMaxRebalanceOutflow
+   * @description Sets the maximum rebalance outflow of an ark. Used by the governance
+   *
+   * @param ark The address of the ark
+   * @param maxRebalanceOutflow The new maximum rebalance outflow
+   *
+   * @returns The transaction information
+   */
+  setArkMaxRebalanceOutflow(params: {
+    ark: IAddress
+    maxRebalanceOutflow: ITokenAmount
+  }): Promise<TransactionInfo>
+
+  /**
+   * @name setArkMaxRebalanceInflow
+   * @description Sets the maximum rebalance inflow of an ark. Used by the governance
+   *
+   * @param ark The address of the ark
+   * @param maxRebalanceInflow The new maximum rebalance inflow
+   *
+   * @returns The transaction information
+   */
+  setArkMaxRebalanceInflow(params: {
+    ark: IAddress
+    maxRebalanceInflow: ITokenAmount
+  }): Promise<TransactionInfo>
+
+  /**
+   * @name setArkMinimumBufferBalance
+   * @description Sets the minimum buffer balance of an ark. Used by the governance
+   *
+   * @param ark The address of the ark
+   * @param minimumBufferBalance The new minimum buffer balance
+   *
+   * @returns The transaction information
+   */
+  setMinimumBufferBalance(params: { minimumBufferBalance: ITokenAmount }): Promise<TransactionInfo>
+
+  /**
+   * @name setRebalanceCooldown
+   * @description Sets the rebalance cooldown of the fleet. Used by the governance
+   *
+   * @param cooldown The new rebalance cooldown
+   *
+   * @returns The transaction information
+   */
+  updateRebalanceCooldown(params: { cooldown: number }): Promise<TransactionInfo>
+
+  /**
+   * @name forceRebalance
+   * @description Forces a rebalance of the fleet. Used by the governance
+   *
+   * @param rebalanceData The data for the rebalance
+   *
+   * @returns The transaction information
+   */
+  forceRebalance(params: { rebalanceData: IRebalanceData[] }): Promise<TransactionInfo>
+
+  /**
+   * @name emergencyShutdown
+   * @description Shuts down the fleet in case of an emergency. Used by the governance
+   *
+   * @returns The transaction information
+   */
+  emergencyShutdown(): Promise<TransactionInfo>
 
   /** CASTING METHODS */
 

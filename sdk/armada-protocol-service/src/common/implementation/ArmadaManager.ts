@@ -10,7 +10,7 @@ import {
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
-import { ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
+import { IAddress, IPercentage, ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { ArmadaPool } from './ArmadaPool'
 import { ArmadaPoolInfo } from './ArmadaPoolInfo'
@@ -219,6 +219,145 @@ export class ArmadaManager implements IArmadaManager {
     })
 
     return fleetContract.setTipJar()
+  }
+
+  /** @see IArmadaManager.setTipRate */
+  async setTipRate(params: { poolId: IArmadaPoolId; rate: IPercentage }): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.poolId.chainInfo,
+      address: params.poolId.fleetAddress,
+    })
+
+    return fleetContract.setTipRate({ rate: params.rate })
+  }
+
+  /** @see IArmadaManager.addArk */
+  async addArk(params: { poolId: IArmadaPoolId; ark: IAddress }): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.poolId.chainInfo,
+      address: params.poolId.fleetAddress,
+    })
+
+    return fleetContract.addArk({ ark: params.ark })
+  }
+
+  /** @see IArmadaManager.addArks */
+  async addArks(params: { poolId: IArmadaPoolId; arks: IAddress[] }): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.poolId.chainInfo,
+      address: params.poolId.fleetAddress,
+    })
+
+    return fleetContract.addArks({ arks: params.arks })
+  }
+
+  /** @see IArmadaManager.removeArk */
+  async removeArk(params: { poolId: IArmadaPoolId; ark: IAddress }): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.poolId.chainInfo,
+      address: params.poolId.fleetAddress,
+    })
+
+    return fleetContract.removeArk({ ark: params.ark })
+  }
+
+  /** @see IArmadaManager.setArkDepositCap */
+  async setArkDepositCap(params: {
+    poolId: IArmadaPoolId
+    ark: IAddress
+    cap: ITokenAmount
+  }): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.poolId.chainInfo,
+      address: params.poolId.fleetAddress,
+    })
+
+    return fleetContract.setArkDepositCap({ ark: params.ark, cap: params.cap })
+  }
+
+  /** @see IArmadaManager.setArkMaxRebalanceOutflow */
+  async setArkMaxRebalanceOutflow(params: {
+    poolId: IArmadaPoolId
+    ark: IAddress
+    maxRebalanceOutflow: ITokenAmount
+  }): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.poolId.chainInfo,
+      address: params.poolId.fleetAddress,
+    })
+
+    return fleetContract.setArkMaxRebalanceOutflow({
+      ark: params.ark,
+      maxRebalanceOutflow: params.maxRebalanceOutflow,
+    })
+  }
+
+  /** @see IArmadaManager.setArkMaxRebalanceInflow */
+  async setArkMaxRebalanceInflow(params: {
+    poolId: IArmadaPoolId
+    ark: IAddress
+    maxRebalanceInflow: ITokenAmount
+  }): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.poolId.chainInfo,
+      address: params.poolId.fleetAddress,
+    })
+
+    return fleetContract.setArkMaxRebalanceInflow({
+      ark: params.ark,
+      maxRebalanceInflow: params.maxRebalanceInflow,
+    })
+  }
+
+  /** @see IArmadaManager.setMinimumBufferBalance */
+  async setMinimumBufferBalance(params: {
+    poolId: IArmadaPoolId
+    minimumBufferBalance: ITokenAmount
+  }): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.poolId.chainInfo,
+      address: params.poolId.fleetAddress,
+    })
+
+    return fleetContract.setMinimumBufferBalance({
+      minimumBufferBalance: params.minimumBufferBalance,
+    })
+  }
+
+  /** @see IArmadaManager.updateRebalanceCooldown */
+  async updateRebalanceCooldown(params: {
+    poolId: IArmadaPoolId
+    cooldown: number
+  }): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.poolId.chainInfo,
+      address: params.poolId.fleetAddress,
+    })
+
+    return fleetContract.updateRebalanceCooldown({ cooldown: params.cooldown })
+  }
+
+  /** @see IArmadaManager.forceRebalance */
+  async forceRebalance(params: {
+    poolId: IArmadaPoolId
+    rebalanceData: IRebalanceData[]
+  }): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.poolId.chainInfo,
+      address: params.poolId.fleetAddress,
+    })
+
+    return fleetContract.forceRebalance({ rebalanceData: params.rebalanceData })
+  }
+
+  /** @see IArmadaManager.emergencyShutdown */
+  async emergencyShutdown(params: { poolId: IArmadaPoolId }): Promise<TransactionInfo> {
+    const fleetContract = await this._contractsProvider.getFleetCommanderContract({
+      chainInfo: params.poolId.chainInfo,
+      address: params.poolId.fleetAddress,
+    })
+
+    return fleetContract.emergencyShutdown()
   }
 
   /** PRIVATE */

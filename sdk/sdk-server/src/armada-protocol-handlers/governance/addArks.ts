@@ -1,14 +1,14 @@
-import { isArmadaPoolId, isRebalanceData } from '@summerfi/armada-protocol-common'
-import { SDKError, SDKErrorType } from '@summerfi/sdk-common'
+import { isArmadaPoolId } from '@summerfi/armada-protocol-common'
+import { SDKError, SDKErrorType, isAddress } from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 
-export const rebalance = publicProcedure.input(z.any()).query(async (opts) => {
+export const addArks = publicProcedure.input(z.any()).query(async (opts) => {
   const returnedErrors: string[] = []
 
   if (opts.input == null) {
     throw SDKError.createFrom({
-      reason: 'Invalid rebalance request',
+      reason: 'Invalid set add arks request',
       message: 'Missing input',
       type: SDKErrorType.ArmadaError,
     })
@@ -16,21 +16,21 @@ export const rebalance = publicProcedure.input(z.any()).query(async (opts) => {
 
   if (!isArmadaPoolId(opts.input.poolId, returnedErrors)) {
     throw SDKError.createFrom({
-      reason: 'Invalid pool id in rebalance request',
+      reason: 'Invalid pool id in add arks request',
       message: returnedErrors.join('\n'),
       type: SDKErrorType.ArmadaError,
     })
   }
 
-  for (const rebalanceData of opts.input.rebalanceData) {
-    if (!isRebalanceData(rebalanceData, returnedErrors)) {
+  for (const ark of opts.input.arks) {
+    if (!isAddress(ark, returnedErrors)) {
       throw SDKError.createFrom({
-        reason: 'Invalid reblance data in rebalance request',
+        reason: 'Invalid ark in add arks request',
         message: returnedErrors.join('\n'),
         type: SDKErrorType.ArmadaError,
       })
     }
   }
 
-  return opts.ctx.armadaManager.rebalance(opts.input)
+  return opts.ctx.armadaManager.addArks(opts.input)
 })

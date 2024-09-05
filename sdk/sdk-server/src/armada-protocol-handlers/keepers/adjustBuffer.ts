@@ -23,12 +23,14 @@ export const adjustBuffer = publicProcedure.input(z.any()).query(async (opts) =>
     })
   }
 
-  if (!isRebalanceData(opts.input.rebalanceData, returnedErrors)) {
-    throw SDKError.createFrom({
-      reason: 'Invalid reblance data in adjust buffer request',
-      message: returnedErrors.join('\n'),
-      type: SDKErrorType.ArmadaError,
-    })
+  for (const rebalanceData of opts.input.rebalanceData) {
+    if (!isRebalanceData(rebalanceData, returnedErrors)) {
+      throw SDKError.createFrom({
+        reason: 'Invalid reblance data in adjust buffer request',
+        message: returnedErrors.join('\n'),
+        type: SDKErrorType.ArmadaError,
+      })
+    }
   }
 
   return opts.ctx.armadaManager.adjustBuffer(opts.input)
