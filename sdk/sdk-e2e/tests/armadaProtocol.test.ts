@@ -71,12 +71,12 @@ describe.skip('Armada Protocol Deposit', () => {
       fleetAddress: config.fleetAddress,
       protocol,
     })
-    const fleet = sdk.armada.getPool({
+    const fleet = sdk.armada.users.getPool({
       poolId,
     })
     assert(fleet, 'Fleet not found')
 
-    const transactions = await sdk.armada.getNewDepositTX({
+    const transactions = await sdk.armada.users.getNewDepositTX({
       poolId,
       user: user,
       amount: TokenAmount.createFrom({
@@ -100,12 +100,12 @@ describe.skip('Armada Protocol Deposit', () => {
       fleetAddress: config.fleetAddress,
       protocol,
     })
-    const fleet = sdk.armada.getPool({
+    const fleet = sdk.armada.users.getPool({
       poolId,
     })
     assert(fleet, 'Fleet not found')
 
-    const transactions = await sdk.armada.getNewDepositTX({
+    const transactions = await sdk.armada.users.getNewDepositTX({
       poolId,
       user,
       amount: TokenAmount.createFrom({
@@ -129,7 +129,7 @@ describe.skip('Armada Protocol Deposit', () => {
       fleetAddress: config.fleetAddress,
       protocol,
     })
-    const fleet = sdk.armada.getPool({
+    const fleet = sdk.armada.users.getPool({
       poolId,
     })
     assert(fleet, 'Fleet not found')
@@ -139,7 +139,7 @@ describe.skip('Armada Protocol Deposit', () => {
       user,
     })
 
-    const transactions = await sdk.armada.getWithdrawTX({
+    const transactions = await sdk.armada.users.getWithdrawTX({
       poolId,
       positionId,
       amount: TokenAmount.createFrom({
