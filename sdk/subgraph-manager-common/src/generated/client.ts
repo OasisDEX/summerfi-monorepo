@@ -1,5 +1,7 @@
-// @ts-nocheck
 // This file was automatically generated and should not be edited.
+// @ts-nocheck
+/* eslint-disable */
+import type { DocumentNode } from "graphql/language/ast";
 import { GraphQLClient, RequestOptions } from 'graphql-request';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;

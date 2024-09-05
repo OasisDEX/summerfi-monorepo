@@ -24,9 +24,7 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     this._supportedChainIds = [baseChainId]
 
     const urlBase = params.configProvider.getConfigurationItem({ name: 'SUBGRAPH_BASE' })
-    if (!urlBase) {
-      throw new Error('Missing required configuration item: SUBGRAPH_BASE')
-    }
+
     this._subgraphConfig = {
       urlBase,
     }

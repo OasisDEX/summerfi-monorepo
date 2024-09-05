@@ -1,7 +1,7 @@
-import { useSDK } from '@/hooks/use-sdk'
+import { useAppSDK } from './use-app-sdk'
 
-export const useWithdraw = () => {
-  const { getWithdrawTX } = useSDK()
+export const useWithdrawTX = () => {
+  const { getWithdrawTX } = useAppSDK()
 
   return ({
     chainId,

@@ -27,10 +27,7 @@
       "@summerfi/subgraph-manager-service": [
         "node_modules/@summerfi/subgraph-manager-service/src/index.ts"
       ],
-      "@summerfi/sdk-server-common": ["node_modules/@summerfi/sdk-server-common/src/index.ts"],
-      "@summerfi/summer-earn-protocol-subgraph": [
-        "node_modules/@summerfi/summer-earn-protocol-subgraph/src/index.ts"
-      ]
+      "@summerfi/sdk-server-common": ["node_modules/@summerfi/sdk-server-common/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "tests/**/*.ts", "e2e/**/*.ts"],
