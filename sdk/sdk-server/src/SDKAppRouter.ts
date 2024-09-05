@@ -1,4 +1,5 @@
 import { router } from './SDKTRPC'
+
 import { addArk } from './armada-protocol-handlers/governance/addArk'
 import { addArks } from './armada-protocol-handlers/governance/addArks'
 import { emergencyShutdown } from './armada-protocol-handlers/governance/emergencyShutdown'
@@ -19,6 +20,7 @@ import { getPool } from './armada-protocol-handlers/users/getPool'
 import { getPoolInfo } from './armada-protocol-handlers/users/getPoolInfo'
 import { getPosition as getArmadaPosition } from './armada-protocol-handlers/users/getPosition'
 import { getUpdateDepositTX } from './armada-protocol-handlers/users/getUpdateDepositTX'
+import { getUserPositions } from './armada-protocol-handlers/users/getUserPositions'
 import { getWithdrawTX } from './armada-protocol-handlers/users/getWithdrawTX'
 import { buildOrder } from './handlers/buildOrder'
 import { getArmadaSimulation } from './handlers/getArmadaSimulation'
@@ -64,6 +66,7 @@ export const sdkAppRouter = router({
       getPool: getPool,
       getPoolInfo: getPoolInfo,
       getPosition: getArmadaPosition,
+      getUserPositions: getUserPositions,
       getNewDepositTX: getNewDepositTX,
       getUpdateDepositTX: getUpdateDepositTX,
       getWithdrawTX: getWithdrawTX,

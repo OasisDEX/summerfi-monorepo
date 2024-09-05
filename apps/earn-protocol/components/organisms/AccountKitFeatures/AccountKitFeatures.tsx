@@ -5,6 +5,8 @@ import { fetchRisk } from '@summerfi/app-risk'
 import { type TOSSignMessage, useTermsOfService } from '@summerfi/app-tos'
 import { TOSStatus } from '@summerfi/app-types'
 import { Card, Modal, TermsOfService } from '@summerfi/app-ui'
+import { useAppState, useConnectWallet } from '@web3-onboard/react'
+import { type Config as WagmiConfig, signMessage as signMessageWagmi } from '@web3-onboard/wagmi'
 
 import { AccountKitAddOwner } from '@/components/molecules/AccountKitAddOwner/AccountKitAddOwner'
 import { AccountKitClient } from '@/components/molecules/AccountKitClient/AccountKitClient'
@@ -18,14 +20,25 @@ import { TransakWidget } from '@/components/molecules/TransakWidget/TransakWidge
 const AccountKitFeatures = () => {
   const signer = useSigner()
   const user = useUser()
+  const { wagmiConfig } = useAppState()
+  const [{ wallet }] = useConnectWallet()
+
   const { logout } = useLogout()
 
   // Dummy ToS & TRM logic for now
   const signMessage: TOSSignMessage = useCallback(
     async (data: string) => {
-      return await signer?.signMessage(data)
+      // Signer from MM
+      if (wallet?.wagmiConnector != null) {
+        return await signMessageWagmi(wagmiConfig as WagmiConfig, {
+          message: data,
+          connector: wallet?.wagmiConnector,
+        })
+      }
+      // Signer from Account Kit
+      else return await signer?.signMessage(data)
     },
-    [signer],
+    [signer, wallet, wagmiConfig],
   )
 
   const [openModal, setOpenModal] = useState(false)

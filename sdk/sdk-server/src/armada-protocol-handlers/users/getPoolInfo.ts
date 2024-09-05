@@ -14,10 +14,10 @@ export const getPoolInfo = publicProcedure.input(z.any()).query(async (opts) => 
     })
   }
 
-  if (!isArmadaPoolId(opts.input.id, returnedErrors)) {
+  if (!isArmadaPoolId(opts.input.poolId, returnedErrors)) {
     throw SDKError.createFrom({
-      message: 'Invalid chain info in getPoolInfo request',
-      reason: returnedErrors.join('\n'),
+      message: 'Invalid ArmadaPool in getPoolInfo request: ' + returnedErrors.join(', '),
+      reason: 'Validation failed',
       type: SDKErrorType.ArmadaError,
     })
   }

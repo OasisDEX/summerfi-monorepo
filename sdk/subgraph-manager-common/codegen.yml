@@ -6,12 +6,14 @@ generates:
     plugins:
       - add:
           content:
-            - '// @ts-nocheck'
             - '// This file was automatically generated and should not be edited.'
+            - '// @ts-nocheck'
+            - '/* eslint-disable */'
+      - add:
+          content: 'import type { DocumentNode } from "graphql/language/ast";'
       - typescript
       - typescript-operations:
           strictScalars: true
-          immutableTypes: false
           scalars:
             BigDecimal: number
             BigInt: number
@@ -28,4 +30,4 @@ generates:
             MetaTagAttributes: Record<string, string>
             UploadId: string
             Timestamp: number
-      - 'typescript-graphql-request'
+      - typescript-graphql-request
