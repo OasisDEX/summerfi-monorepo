@@ -1,1 +1,1 @@
-export * from './use-sdk'
+export * from './useSDK'

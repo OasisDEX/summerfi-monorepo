@@ -2391,11 +2391,8 @@ importers:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
-      '@types/react':
-        specifier: ^18.3.1
-        version: 18.3.1
       react:
-        specifier: ^18.3.1
+        specifier: ^18.0.0
         version: 18.3.1
     devDependencies:
       '@summerfi/eslint-config':
@@ -2410,6 +2407,9 @@ importers:
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
+      '@types/react':
+        specifier: ^18.3.1
+        version: 18.3.1
 
   sdk/sdk-client/bundle:
     dependencies:
