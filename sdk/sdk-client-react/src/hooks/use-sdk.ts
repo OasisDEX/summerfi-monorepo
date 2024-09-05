@@ -6,7 +6,13 @@ import { getWithdrawTXHandler } from '../handlers/getWithdrawTXHandler'
 import { getNewDepositTXHandler } from '../handlers/getNewDepositTXHandler'
 import { getUserPositionsHandler } from '../handlers/getUserBalanceHandler'
 
-export const useSDK = ({ apiURL }: { apiURL: string }) => {
+type UseSdk = {
+  apiURL: string
+  walletAddress: string
+  chainId: number
+}
+
+export const useSDK = ({ apiURL, chainId, walletAddress }: UseSdk) => {
   const sdk = useMemo(() => makeSDK({ apiURL }), [apiURL])
 
   const getUserClient = useMemo(() => getUserClientHandler(sdk), [sdk])
