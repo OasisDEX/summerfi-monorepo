@@ -11,7 +11,7 @@ export const __signature__: unique symbol = Symbol()
 /**
  * Parameters for an Armada Protocol simulation
  */
-export interface IArmadaParameters extends IArmadaParametersData {
+export interface IArmadaUsersParameters extends IArmadaUsersParametersData {
   /** Signature used to differentiate it from similar interfaces */
   readonly [__signature__]: symbol
   /** User that triggered the simulation */
@@ -27,17 +27,17 @@ export interface IArmadaParameters extends IArmadaParametersData {
 /**
  * Zod schema for the Armada parameters
  */
-export const ArmadaParametersDataSchema = z.object({
-  user: z.custom<IUser>((val) => isUser(val)),
-  poolId: z.custom<IArmadaPoolId>((val) => isArmadaPoolId(val)),
+export const ArmadaUsersParametersDataSchema = z.object({
+  user: z.custom<IUser>(isUser),
+  poolId: z.custom<IArmadaPoolId>(isArmadaPoolId),
   operation: z.nativeEnum(ArmadaOperationType),
-  amount: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
+  amount: z.custom<ITokenAmount>(isTokenAmount),
 })
 
 /**
  * Type for the data part of the IArmadaParameters interface
  */
-export type IArmadaParametersData = Readonly<z.infer<typeof ArmadaParametersDataSchema>>
+export type IArmadaUsersParametersData = Readonly<z.infer<typeof ArmadaUsersParametersDataSchema>>
 
 /**
  * Type guard for the Armada Protocol simulation parameters
@@ -46,8 +46,8 @@ export type IArmadaParametersData = Readonly<z.infer<typeof ArmadaParametersData
  *
  * @returns True if the parameters are valid
  */
-export function isArmadaParameters(
+export function isArmadaUsersParameters(
   maybeArmadaParameters: unknown,
-): maybeArmadaParameters is IArmadaParameters {
-  return ArmadaParametersDataSchema.safeParse(maybeArmadaParameters).success
+): maybeArmadaParameters is IArmadaUsersParameters {
+  return ArmadaUsersParametersDataSchema.safeParse(maybeArmadaParameters).success
 }

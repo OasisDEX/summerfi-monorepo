@@ -1,19 +1,19 @@
 import {
   ArmadaOperationType,
   IArmadaManager,
-  IArmadaParameters,
-  IArmadaSimulation,
+  IArmadaUsersParameters,
+  IArmadaUsersSimulation,
 } from '@summerfi/armada-protocol-common'
 import { SDKError, SDKErrorType } from '@summerfi/sdk-common'
-import { ArmadaPositionId } from '../../common'
-import { ArmadaSimulatedPosition } from './ArmadaSimulatedPosition'
-import { ArmadaSimulation } from './ArmadaSimulation'
+import { ArmadaPositionId } from '../../../common'
+import { ArmadaSimulatedPosition } from '../common/ArmadaSimulatedPosition'
+import { ArmadaUsersSimulation } from './ArmadaUsersSimulation'
 
 /**
- * @class ArmadaSimulator
- * @description Simulator for the Armada protocol
+ * @class ArmadaUsersSimulator
+ * @description Simulator for the Armada protocol Users operations
  */
-export class ArmadaSimulator {
+export class ArmadaUsersSimulator {
   constructor() {
     // Empty constructor
   }
@@ -28,16 +28,16 @@ export class ArmadaSimulator {
    * @returns IArmadaSimulation The result of the simulation
    */
   async simulate(params: {
-    simulationParams: IArmadaParameters
+    simulationParams: IArmadaUsersParameters
     armadaManager: IArmadaManager
-  }): Promise<IArmadaSimulation> {
+  }): Promise<IArmadaUsersSimulation> {
     const { simulationParams, armadaManager } = params
 
     switch (simulationParams.operation) {
       case ArmadaOperationType.Deposit:
         return this._simulateDeposit({ simulationParams, armadaManager })
       case ArmadaOperationType.Withdraw:
-        return this.simulateWithdraw({ simulationParams, armadaManager })
+        return this._simulateWithdraw({ simulationParams, armadaManager })
       default:
         throw SDKError.createFrom({
           type: SDKErrorType.ArmadaError,
@@ -56,12 +56,12 @@ export class ArmadaSimulator {
    * @param simulationParams Parameters for the simulation
    * @param armadaManager Armada manager to access the Armada protocol
    *
-   * @returns IArmadaSimulation The result of the simulation
+   * @returns IArmadaUsersSimulation The result of the simulation
    */
   private async _simulateDeposit(params: {
-    simulationParams: IArmadaParameters
+    simulationParams: IArmadaUsersParameters
     armadaManager: IArmadaManager
-  }): Promise<IArmadaSimulation> {
+  }): Promise<IArmadaUsersSimulation> {
     const { simulationParams, armadaManager } = params
 
     const positionId = ArmadaPositionId.createFrom({
@@ -80,7 +80,7 @@ export class ArmadaSimulator {
 
     await simulatedPosition.deposit(simulationParams.amount)
 
-    return ArmadaSimulation.createFrom({
+    return ArmadaUsersSimulation.createFrom({
       user: simulationParams.user,
       previousPosition: prevPosition,
       newPosition: simulatedPosition,
@@ -94,12 +94,12 @@ export class ArmadaSimulator {
    * @param simulationParams Parameters for the simulation
    * @param armadaManager Armada manager to access the Armada protocol
    *
-   * @returns IArmadaSimulation The result of the simulation
+   * @returns IArmadaUsersSimulation The result of the simulation
    */
-  private async simulateWithdraw(params: {
-    simulationParams: IArmadaParameters
+  private async _simulateWithdraw(params: {
+    simulationParams: IArmadaUsersParameters
     armadaManager: IArmadaManager
-  }): Promise<IArmadaSimulation> {
+  }): Promise<IArmadaUsersSimulation> {
     const { simulationParams, armadaManager } = params
 
     const positionId = ArmadaPositionId.createFrom({
@@ -118,7 +118,7 @@ export class ArmadaSimulator {
 
     simulatedPosition.withdraw(simulationParams.amount)
 
-    return ArmadaSimulation.createFrom({
+    return ArmadaUsersSimulation.createFrom({
       user: simulationParams.user,
       previousPosition: prevPosition,
       newPosition: simulatedPosition,

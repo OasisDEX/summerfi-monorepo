@@ -1,4 +1,4 @@
-import { IArmadaPoolId, IRebalanceData } from '@summerfi/armada-protocol-common'
+import { IArmadaPoolId, IArmadaRebalanceData } from '@summerfi/armada-protocol-common'
 import { IAddress, IPercentage, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
 import { IArmadaManagerGovernanceClient } from '../../interfaces/ArmadaManager/IArmadaManagerGovernanceClient'
 import { IRPCClient } from '../../interfaces/IRPCClient'
@@ -92,7 +92,7 @@ export class ArmadaManagerGovernanceClient
   /** @see IArmadaManagerGovernanceClient.emergencyShutdown */
   forceRebalance(params: {
     poolId: IArmadaPoolId
-    rebalanceData: IRebalanceData[]
+    rebalanceData: IArmadaRebalanceData[]
   }): Promise<TransactionInfo> {
     return this.rpcClient.armada.governance.forceRebalance.query(params)
   }

@@ -1,17 +1,18 @@
 import { IRPCClient } from '../../interfaces/IRPCClient'
 
-import { IArmadaParameters, IArmadaSimulation } from '@summerfi/armada-protocol-common'
-import { IArmadaSimulationManager } from '../../interfaces/simulations/IArmadaSimulationManager'
 import { RPCMainClientType } from '../../rpc/SDKMainClient'
+import { ArmadaUsersSimulationManager } from './ArmadaUsersSimulationManager'
 
 /** @see IArmadaSimulationManager */
-export class ArmadaSimulationManager extends IRPCClient implements IArmadaSimulationManager {
+export class ArmadaSimulationManager extends IRPCClient {
+  readonly users: ArmadaUsersSimulationManager
+  readonly keepers: ArmadaUsersSimulationManager
+
+  /** CONSTRUCTOR */
   constructor(params: { rpcClient: RPCMainClientType }) {
     super(params)
-  }
 
-  /** @see IArmadaSimulationManager.simulate */
-  public async simulate(params: IArmadaParameters): Promise<IArmadaSimulation> {
-    return this.rpcClient.simulation.armada.query(params)
+    this.users = new ArmadaUsersSimulationManager(params)
+    this.keepers = new ArmadaUsersSimulationManager(params)
   }
 }

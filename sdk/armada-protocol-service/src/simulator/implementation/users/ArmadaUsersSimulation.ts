@@ -1,8 +1,8 @@
 import {
   IArmadaPosition,
-  IArmadaSimulation,
-  IArmadaSimulationData,
-  __iarmadasimulation__,
+  IArmadaUsersSimulation,
+  IArmadaUsersSimulationData,
+  __iarmadauserssimulation__,
 } from '@summerfi/armada-protocol-common'
 import { SerializationService } from '@summerfi/sdk-common/services'
 import { Simulation, SimulationType } from '@summerfi/sdk-common/simulation'
@@ -11,28 +11,28 @@ import { IUser } from '@summerfi/sdk-common/user'
 /**
  * Type for the parameters of ArmadaSimulation
  */
-export type ArmadaSimulationParameters = Omit<IArmadaSimulationData, 'type'>
+export type ArmadaSimulationParameters = Omit<IArmadaUsersSimulationData, 'type'>
 
 /**
- * @name ArmadaSimulation
- * @see IArmadaSimulation
+ * @name ArmadaUsersSimulation
+ * @see IArmadaUsersSimulation
  */
-export class ArmadaSimulation extends Simulation implements IArmadaSimulation {
+export class ArmadaUsersSimulation extends Simulation implements IArmadaUsersSimulation {
   /** SIGNATURE */
-  readonly [__iarmadasimulation__] = __iarmadasimulation__
+  readonly [__iarmadauserssimulation__] = __iarmadauserssimulation__
 
   /** ATTRIBUTES */
-  readonly type = SimulationType.Armada
+  readonly type = SimulationType.ArmadaUsers
   readonly user: IUser
   readonly previousPosition: IArmadaPosition
   readonly newPosition: IArmadaPosition
 
-  /** Factory method */
-  static createFrom(params: ArmadaSimulationParameters): ArmadaSimulation {
-    return new ArmadaSimulation(params)
+  /** FACTORY */
+  static createFrom(params: ArmadaSimulationParameters): ArmadaUsersSimulation {
+    return new ArmadaUsersSimulation(params)
   }
 
-  /** Sealed constructor */
+  /** SEALED CONSTRUCTOR */
   private constructor(params: ArmadaSimulationParameters) {
     super(params)
 
@@ -42,4 +42,4 @@ export class ArmadaSimulation extends Simulation implements IArmadaSimulation {
   }
 }
 
-SerializationService.registerClass(ArmadaSimulation)
+SerializationService.registerClass(ArmadaUsersSimulation)

@@ -19,7 +19,7 @@ import {
 import { ContractWrapper } from '../ContractWrapper'
 
 import { FleetCommanderAbi } from '@summerfi/armada-protocol-abis'
-import { IRebalanceData } from '@summerfi/armada-protocol-common'
+import { IArmadaRebalanceData } from '@summerfi/armada-protocol-common'
 import { Erc4626Contract } from '../Erc4626Contract/Erc4626Contract'
 
 /**
@@ -124,7 +124,7 @@ export class FleetCommanderContract<
   /** KEEPERS WRITE METHODS */
 
   /** @see IFleetCommanderContract.rebalance */
-  async rebalance(params: { rebalanceData: IRebalanceData[] }): Promise<TransactionInfo> {
+  async rebalance(params: { rebalanceData: IArmadaRebalanceData[] }): Promise<TransactionInfo> {
     const rebalanceDataSolidity = this._convertRebalanceDataToSolidity({
       rebalanceData: params.rebalanceData,
     })
@@ -136,7 +136,7 @@ export class FleetCommanderContract<
   }
 
   /** @see IFleetCommanderContract.adjustBuffer */
-  async adjustBuffer(params: { rebalanceData: IRebalanceData[] }): Promise<TransactionInfo> {
+  async adjustBuffer(params: { rebalanceData: IArmadaRebalanceData[] }): Promise<TransactionInfo> {
     const rebalanceDataSolidity = this._convertRebalanceDataToSolidity({
       rebalanceData: params.rebalanceData,
     })
@@ -307,7 +307,7 @@ export class FleetCommanderContract<
   }
 
   /** @see IFleetCommanderContract.forceRebalance */
-  forceRebalance(params: { rebalanceData: IRebalanceData[] }): Promise<TransactionInfo> {
+  forceRebalance(params: { rebalanceData: IArmadaRebalanceData[] }): Promise<TransactionInfo> {
     const rebalanceDataSolidity = this._convertRebalanceDataToSolidity({
       rebalanceData: params.rebalanceData,
     })
@@ -346,7 +346,7 @@ export class FleetCommanderContract<
 
   /** PRIVATE */
   private _convertRebalanceDataToSolidity(params: {
-    rebalanceData: IRebalanceData[]
+    rebalanceData: IArmadaRebalanceData[]
   }): FleetCommander.RebalanceDataSolidity[] {
     return params.rebalanceData.map((data) => ({
       fromArk: data.fromArk.toSolidityValue(),

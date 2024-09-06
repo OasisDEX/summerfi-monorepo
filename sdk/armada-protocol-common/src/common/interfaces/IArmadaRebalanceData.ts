@@ -12,10 +12,10 @@ import { z } from 'zod'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @name IRebalanceData
+ * @name IArmadaRebalanceData
  * @description Data structure for rebalancing assets, used by Keepers of a fleet
  */
-export interface IRebalanceData {
+export interface IArmadaRebalanceData {
   /** Signature to differentiate from similar interfaces */
   readonly [__signature__]: symbol
   /** Ark where the tokens are taken from */
@@ -27,29 +27,29 @@ export interface IRebalanceData {
 }
 
 /**
- * @description Zod schema for IRebalanceData
+ * @description Zod schema for IArmadaRebalanceData
  */
-export const RebalanceDataSchema = z.object({
+export const ArmadaRebalanceDataSchema = z.object({
   fromArk: AddressDataSchema,
   toArk: AddressDataSchema,
   amount: TokenAmountDataSchema,
 })
 
 /**
- * Type definition for the RebalanceData data
+ * Type definition for the ArmadaRebalanceData data
  */
-export type IRebalanceDataData = Readonly<z.infer<typeof RebalanceDataSchema>>
+export type IArmadaRebalanceDataData = Readonly<z.infer<typeof ArmadaRebalanceDataSchema>>
 
 /**
- * @description Type guard for IRebalanceData
+ * @description Type guard for IArmadaRebalanceData
  * @param maybeRebalanceData
- * @returns true if the object is an IRebalanceData
+ * @returns true if the object is an IArmadaRebalanceData
  */
-export function isRebalanceData(
+export function isArmadaRebalanceData(
   maybeRebalanceData: unknown,
   returnedErrors?: string[],
-): maybeRebalanceData is IRebalanceData {
-  const zodReturn = RebalanceDataSchema.safeParse(maybeRebalanceData)
+): maybeRebalanceData is IArmadaRebalanceData {
+  const zodReturn = ArmadaRebalanceDataSchema.safeParse(maybeRebalanceData)
 
   if (!zodReturn.success && returnedErrors) {
     returnedErrors.push(...zodReturn.error.errors.map((e) => e.message))

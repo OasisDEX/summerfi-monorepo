@@ -1,4 +1,4 @@
-import { isArmadaPoolId, isRebalanceData } from '@summerfi/armada-protocol-common'
+import { isArmadaPoolId, isArmadaRebalanceData } from '@summerfi/armada-protocol-common'
 import { SDKError, SDKErrorType } from '@summerfi/sdk-common'
 
 import { z } from 'zod'
@@ -24,7 +24,7 @@ export const adjustBuffer = publicProcedure.input(z.any()).query(async (opts) =>
   }
 
   for (const rebalanceData of opts.input.rebalanceData) {
-    if (!isRebalanceData(rebalanceData, returnedErrors)) {
+    if (!isArmadaRebalanceData(rebalanceData, returnedErrors)) {
       throw SDKError.createFrom({
         reason: 'Invalid reblance data in adjust buffer request',
         message: returnedErrors.join('\n'),

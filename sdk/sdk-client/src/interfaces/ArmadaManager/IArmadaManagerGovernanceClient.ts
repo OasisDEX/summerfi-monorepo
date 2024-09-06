@@ -1,4 +1,4 @@
-import { IArmadaPoolId, IRebalanceData } from '@summerfi/armada-protocol-common'
+import { IArmadaPoolId, IArmadaRebalanceData } from '@summerfi/armada-protocol-common'
 import { IAddress, IPercentage, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
 
 /**
@@ -160,7 +160,7 @@ export interface IArmadaManagerGovernanceClient {
    */
   forceRebalance(params: {
     poolId: IArmadaPoolId
-    rebalanceData: IRebalanceData[]
+    rebalanceData: IArmadaRebalanceData[]
   }): Promise<TransactionInfo>
 
   /**

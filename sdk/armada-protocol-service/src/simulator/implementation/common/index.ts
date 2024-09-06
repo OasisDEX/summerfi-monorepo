@@ -1,0 +1,1 @@
+export { ArmadaSimulatedPosition } from './ArmadaSimulatedPosition'

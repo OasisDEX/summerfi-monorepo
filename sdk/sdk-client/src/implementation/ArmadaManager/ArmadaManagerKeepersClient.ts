@@ -1,4 +1,4 @@
-import { IArmadaPoolId, IRebalanceData } from '@summerfi/armada-protocol-common'
+import { IArmadaPoolId, IArmadaRebalanceData } from '@summerfi/armada-protocol-common'
 import { TransactionInfo } from '@summerfi/sdk-common'
 import { IArmadaManagerKeepersClient } from '../../interfaces/ArmadaManager/IArmadaManagerKeepersClient'
 import { IRPCClient } from '../../interfaces/IRPCClient'
@@ -16,7 +16,7 @@ export class ArmadaManagerKeepersClient extends IRPCClient implements IArmadaMan
   /** @see IArmadaManagerKeepersClient.rebalance */
   async rebalance(params: {
     poolId: IArmadaPoolId
-    rebalanceData: IRebalanceData
+    rebalanceData: IArmadaRebalanceData
   }): Promise<TransactionInfo> {
     return this.rpcClient.armada.keepers.rebalance.query(params)
   }
@@ -24,7 +24,7 @@ export class ArmadaManagerKeepersClient extends IRPCClient implements IArmadaMan
   /** @see IArmadaManagerKeepersClient.adjustBuffer */
   async adjustBuffer(params: {
     poolId: IArmadaPoolId
-    rebalanceData: IRebalanceData
+    rebalanceData: IArmadaRebalanceData
   }): Promise<TransactionInfo> {
     return this.rpcClient.armada.keepers.adjustBuffer.query(params)
   }
