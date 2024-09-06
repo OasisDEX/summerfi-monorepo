@@ -5,7 +5,7 @@ import {
   IArmadaPosition,
   IArmadaPositionId,
 } from '@summerfi/armada-protocol-common'
-import { ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
+import { ITokenAmount, IUser, TransactionInfo, type IAddress } from '@summerfi/sdk-common'
 
 /**
  * @interface IArmadaManagerUsersClient
@@ -43,6 +43,17 @@ export interface IArmadaManagerUsersClient {
    *
    */
   getUserPositions(params: { user: IUser }): Promise<IArmadaPosition[]>
+
+  /**
+   * @method getUserPosition
+   * @description Retrieves the position of a user in an Armada pool
+   *
+   * @param user Target user
+   * @param fleetAddress Address of the fleet
+   *
+   * @returns The position of the user in the corresponding Armada pool
+   */
+  getUserPosition(params: { user: IUser; fleetAddress: IAddress }): Promise<IArmadaPosition>
 
   /**
    * @method getPosition

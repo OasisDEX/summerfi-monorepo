@@ -6614,17 +6614,55 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny'
 }
 
-export type PositionsByAddressQueryVariables = Exact<{
+export type GetUserPositionsQueryVariables = Exact<{
   accountAddress: Scalars['String']['input'];
 }>;
 
 
-export type PositionsByAddressQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, inputTokenBalance: number, outputTokenBalance: number, vault: { __typename?: 'Vault', id: string, inputToken: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } | null, protocol: { __typename?: 'YieldAggregator', id: string } }, account: { __typename?: 'Account', id: string } }> };
+export type GetUserPositionsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, inputTokenBalance: number, outputTokenBalance: number, vault: { __typename?: 'Vault', id: string, inputToken: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } | null, protocol: { __typename?: 'YieldAggregator', id: string } }, account: { __typename?: 'Account', id: string } }> };
+
+export type GetUserPositionQueryVariables = Exact<{
+  accountAddress: Scalars['String']['input'];
+  vaultId: Scalars['String']['input'];
+}>;
 
 
-export const PositionsByAddressDocument = gql`
-    query PositionsByAddress($accountAddress: String!) {
+export type GetUserPositionQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', id: string, inputTokenBalance: number, outputTokenBalance: number, vault: { __typename?: 'Vault', id: string, inputToken: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number }, outputToken?: { __typename?: 'Token', id: string, symbol: string, name: string, decimals: number } | null, protocol: { __typename?: 'YieldAggregator', id: string } }, account: { __typename?: 'Account', id: string } }> };
+
+
+export const GetUserPositionsDocument = gql`
+    query GetUserPositions($accountAddress: String!) {
   positions(where: {account: $accountAddress}) {
+    id
+    inputTokenBalance
+    outputTokenBalance
+    vault {
+      id
+      inputToken {
+        id
+        symbol
+        name
+        decimals
+      }
+      outputToken {
+        id
+        symbol
+        name
+        decimals
+      }
+      protocol {
+        id
+      }
+    }
+    account {
+      id
+    }
+  }
+}
+    `;
+export const GetUserPositionDocument = gql`
+    query GetUserPosition($accountAddress: String!, $vaultId: String!) {
+  positions(where: {account: $accountAddress, vault: $vaultId}) {
     id
     inputTokenBalance
     outputTokenBalance
@@ -6660,8 +6698,11 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    PositionsByAddress(variables: PositionsByAddressQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<PositionsByAddressQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<PositionsByAddressQuery>(PositionsByAddressDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'PositionsByAddress', 'query', variables);
+    GetUserPositions(variables: GetUserPositionsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUserPositionsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetUserPositionsQuery>(GetUserPositionsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUserPositions', 'query', variables);
+    },
+    GetUserPosition(variables: GetUserPositionQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUserPositionQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetUserPositionQuery>(GetUserPositionDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUserPosition', 'query', variables);
     }
   };
 }

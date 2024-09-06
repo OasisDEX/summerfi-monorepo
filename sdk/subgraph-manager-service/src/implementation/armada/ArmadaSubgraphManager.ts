@@ -31,8 +31,18 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
   }
 
   getUserPositions({ user }: Parameters<IArmadaSubgraphManager['getUserPositions']>[0]) {
-    return this._getClient(user.chainInfo.chainId).PositionsByAddress({
+    return this._getClient(user.chainInfo.chainId).GetUserPositions({
       accountAddress: user.wallet.address.value,
+    })
+  }
+
+  getUserPosition({
+    user,
+    fleetAddress,
+  }: Parameters<IArmadaSubgraphManager['getUserPosition']>[0]) {
+    return this._getClient(user.chainInfo.chainId).GetUserPosition({
+      accountAddress: user.wallet.address.value,
+      vaultId: fleetAddress.value as string,
     })
   }
 

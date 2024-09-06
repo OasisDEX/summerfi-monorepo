@@ -21,6 +21,7 @@ import { getPoolInfo } from './armada-protocol-handlers/users/getPoolInfo'
 import { getPosition as getArmadaPosition } from './armada-protocol-handlers/users/getPosition'
 import { getUpdateDepositTX } from './armada-protocol-handlers/users/getUpdateDepositTX'
 import { getUserPositions } from './armada-protocol-handlers/users/getUserPositions'
+import { getUserPosition } from './armada-protocol-handlers/users/getUserPosition'
 import { getWithdrawTX } from './armada-protocol-handlers/users/getWithdrawTX'
 import { buildOrder } from './handlers/buildOrder'
 import { getArmadaSimulation } from './handlers/getArmadaSimulation'
@@ -67,6 +68,7 @@ export const sdkAppRouter = router({
       getPoolInfo: getPoolInfo,
       getPosition: getArmadaPosition,
       getUserPositions: getUserPositions,
+      getUserPosition: getUserPosition,
       getNewDepositTX: getNewDepositTX,
       getUpdateDepositTX: getUpdateDepositTX,
       getWithdrawTX: getWithdrawTX,

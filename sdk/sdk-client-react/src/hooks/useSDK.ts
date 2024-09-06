@@ -3,7 +3,8 @@ import { Address, getChainInfoByChainId } from '@summerfi/sdk-common'
 import { useMemo } from 'react'
 import { getNewDepositTXHandler } from '../handlers/getNewDepositTXHandler'
 import { getTokenBySymbolHandler } from '../handlers/getTokenBySymbolHandler'
-import { getUserPositionsHandler } from '../handlers/getUserBalanceHandler'
+import { getUserPositionsHandler } from '../handlers/getUserPositionsHandler'
+import { getUserPositionHandler } from '../handlers/getUserPositionHandler'
 import { getWithdrawTXHandler } from '../handlers/getWithdrawTXHandler'
 
 import { useSDKContext } from '../components/SDKContext'
@@ -37,6 +38,7 @@ export const useSDK = (params: UseSdk) => {
   // ARMADA HANDLERS
   const getWithdrawTX = useMemo(() => getWithdrawTXHandler(sdk, chainInfo), [sdk, chainInfo])
   const getDepositTX = useMemo(() => getNewDepositTXHandler(sdk, chainInfo), [sdk, chainInfo])
+  const getUserPosition = useMemo(() => getUserPositionHandler(sdk), [sdk])
   const getUserPositions = useMemo(() => getUserPositionsHandler(sdk), [sdk])
 
   return {
@@ -46,5 +48,6 @@ export const useSDK = (params: UseSdk) => {
     getDepositTX,
     getWithdrawTX,
     getUserPositions,
+    getUserPosition,
   }
 }

@@ -6,7 +6,7 @@ import {
   IArmadaPositionId,
 } from '@summerfi/armada-protocol-common'
 
-import { ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
+import { ITokenAmount, IUser, TransactionInfo, type IAddress } from '@summerfi/sdk-common'
 import { IArmadaManagerUsersClient } from '../../interfaces/ArmadaManager/IArmadaManagerUsersClient'
 import { IRPCClient } from '../../interfaces/IRPCClient'
 import { RPCMainClientType } from '../../rpc/SDKMainClient'
@@ -33,6 +33,11 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   /** @see IArmadaManagerClient.getUserPositions */
   async getUserPositions(params: { user: IUser }): Promise<IArmadaPosition[]> {
     return this.rpcClient.armada.users.getUserPositions.query(params)
+  }
+
+  /** @see IArmadaManagerClient.getUserPositions */
+  async getUserPosition(params: { user: IUser; fleetAddress: IAddress }): Promise<IArmadaPosition> {
+    return this.rpcClient.armada.users.getUserPosition.query(params)
   }
 
   /** @see IArmadaManagerClient.getPosition */
