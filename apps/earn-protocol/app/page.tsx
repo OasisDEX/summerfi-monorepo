@@ -1,5 +1,7 @@
+import { SDKContextProvider } from '@summerfi/sdk-client-react'
 import dynamic from 'next/dynamic'
 
+import { sdkApiUrl } from '@/constants/sdk'
 import type { FleetConfig } from '@/helpers/sdk/types'
 
 const AccountKitFeatures = dynamic(
@@ -26,7 +28,9 @@ export default function HomePage() {
         <div style={{ flex: 1 }}>
           <AccountKitFeatures />
         </div>
-        <Form fleetConfig={fleetConfig} />
+        <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
+          <Form fleetConfig={fleetConfig} />
+        </SDKContextProvider>
       </div>
     </div>
   )
