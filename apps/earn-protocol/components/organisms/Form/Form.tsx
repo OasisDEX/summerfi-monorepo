@@ -1,12 +1,13 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { Button, Card, Input, Text } from '@summerfi/app-ui'
-import type { IArmadaPosition } from '@summerfi/sdk-client-react'
+import { type IArmadaPosition, SDKContextProvider } from '@summerfi/sdk-client-react'
 import type { Token, TransactionInfo } from '@summerfi/sdk-common'
 import { useAppState, useConnectWallet } from '@web3-onboard/react'
 import { type Config as WagmiConfig, getBalance, sendTransaction } from '@web3-onboard/wagmi'
 import dynamic from 'next/dynamic'
 
+import { sdkApiUrl } from '@/constants/sdk'
 import { prepareTransaction } from '@/helpers/sdk/prepare-transaction'
 import type { FleetConfig } from '@/helpers/sdk/types'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -37,14 +38,8 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: { fleetConfig: Fle
   const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
   const [{ wallet }] = useConnectWallet()
   const { wagmiConfig } = useAppState()
-  const {
-    getTokenBySymbol,
-    getUserPosition,
-    getUser,
-    getChainInfo,
-    getWalletAddress,
-    getFleetAddress,
-  } = useAppSDK()
+  const { getTokenBySymbol, getUserPosition, getUser, getWalletAddress, getFleetAddress } =
+    useAppSDK()
   const deposit = useDepositTX()
   const withdraw = useWithdrawTX()
 
@@ -93,7 +88,6 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: { fleetConfig: Fle
         const position = await getUserPosition({
           fleetAddress: getFleetAddress(fleetAddress),
           user: await getUser({
-            chainInfo: getChainInfo(),
             walletAddress: getWalletAddress(),
           }),
         })
@@ -171,78 +165,80 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: { fleetConfig: Fle
   }
 
   return (
-    <Card style={{ width: '468px', flexDirection: 'column', alignItems: 'center' }}>
-      <Text
-        as="p"
-        variant="p1semi"
-        style={{
-          textAlign: 'left',
-          width: '100%',
-          marginBottom: '24px',
-          paddingBottom: '15px',
-          borderBottom: '1px solid rgb(240, 240, 240)',
-        }}
-        title={fleetAddress}
-      >
-        Manage your {tokenSymbol} Fleet
-      </Text>
-      <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-        <Button
-          variant={action === Action.DEPOSIT ? 'primarySmall' : 'secondarySmall'}
-          onClick={() => setAction(Action.DEPOSIT)}
+    <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
+      <Card style={{ width: '468px', flexDirection: 'column', alignItems: 'center' }}>
+        <Text
+          as="p"
+          variant="p1semi"
+          style={{
+            textAlign: 'left',
+            width: '100%',
+            marginBottom: '24px',
+            paddingBottom: '15px',
+            borderBottom: '1px solid rgb(240, 240, 240)',
+          }}
+          title={fleetAddress}
         >
-          Deposit
-        </Button>
-        <Button
-          variant={action === Action.WITHDRAW ? 'primarySmall' : 'secondarySmall'}
-          onClick={() => setAction(Action.WITHDRAW)}
-        >
-          Withdraw
-        </Button>
-      </div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          width: '100%',
-          marginBottom: '16px',
-        }}
-      >
-        <Text as="p" variant="p3semi">
-          {action === Action.DEPOSIT ? 'Deposit' : 'Withdraw'}
+          Manage your {tokenSymbol} Fleet
         </Text>
-        {balance != null && (
-          <Text
-            as="p"
-            variant="p3semi"
-            style={{ cursor: 'pointer' }}
-            onClick={() => setAmountValue(balance.toString())}
+        <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
+          <Button
+            variant={action === Action.DEPOSIT ? 'primarySmall' : 'secondarySmall'}
+            onClick={() => setAction(Action.DEPOSIT)}
           >
-            {balanceLabel} Balance: {Number(balance).toFixed(3)} {tokenSymbol}
+            Deposit
+          </Button>
+          <Button
+            variant={action === Action.WITHDRAW ? 'primarySmall' : 'secondarySmall'}
+            onClick={() => setAction(Action.WITHDRAW)}
+          >
+            Withdraw
+          </Button>
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            width: '100%',
+            marginBottom: '16px',
+          }}
+        >
+          <Text as="p" variant="p3semi">
+            {action === Action.DEPOSIT ? 'Deposit' : 'Withdraw'}
           </Text>
-        )}
-      </div>
+          {balance != null && (
+            <Text
+              as="p"
+              variant="p3semi"
+              style={{ cursor: 'pointer' }}
+              onClick={() => setAmountValue(balance.toString())}
+            >
+              {balanceLabel} Balance: {Number(balance).toFixed(3)} {tokenSymbol}
+            </Text>
+          )}
+        </div>
 
-      <Input
-        type="number"
-        value={amountValue}
-        wrapperStyles={{ width: '100%', marginBottom: '24px' }}
-        style={{ width: '100%' }}
-        onChange={handleChange}
-      />
-      <Button
-        variant="primaryLarge"
-        onClick={handleConfirm}
-        style={{ width: '100%' }}
-        disabled={confirmDisabled}
-      >
-        Confirm
-      </Button>
-      {transactionsHash && <Text as="p">Transactions sent: {transactionsHash}</Text>}
-      {transactionError && <Text as="p">Transaction error: {transactionError}</Text>}
+        <Input
+          type="number"
+          value={amountValue}
+          wrapperStyles={{ width: '100%', marginBottom: '24px' }}
+          style={{ width: '100%' }}
+          onChange={handleChange}
+        />
+        <Button
+          variant="primaryLarge"
+          onClick={handleConfirm}
+          style={{ width: '100%' }}
+          disabled={confirmDisabled}
+        >
+          Confirm
+        </Button>
+        {transactionsHash && <Text as="p">Transactions sent: {transactionsHash}</Text>}
+        {transactionError && <Text as="p">Transaction error: {transactionError}</Text>}
 
-      <SetForkModal />
-    </Card>
+        <SetForkModal />
+      </Card>
+    </SDKContextProvider>
   )
 }
 

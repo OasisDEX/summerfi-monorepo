@@ -23,7 +23,7 @@ export const useSDK = (params: UseSdk) => {
   const { chainId, walletAddress: walletAddressString } = params
   const walletAddress = useMemo(
     () =>
-      !walletAddressString ? null : Address.createFromEthereum({ value: walletAddressString }),
+      !walletAddressString ? undefined : Address.createFromEthereum({ value: walletAddressString }),
     [walletAddressString],
   )
   const getWalletAddress = useMemo(
@@ -41,18 +41,22 @@ export const useSDK = (params: UseSdk) => {
     [],
   )
 
+  const chainInfo = useMemo(
+    () => (chainId == null ? undefined : getChainInfoByChainId(chainId)),
+    [chainId],
+  )
   const getChainInfo = useMemo(
     () => () => {
-      if (!chainId) {
+      if (!chainInfo) {
         throw new Error('ChainId is not defined')
       }
-      return getChainInfoByChainId(chainId)
+      return chainInfo
     },
     [chainId],
   )
 
   // USER HANDLERS
-  const getUser = useMemo(() => getUserHandler(sdk), [sdk])
+  const getUser = useMemo(() => getUserHandler(sdk, chainInfo), [sdk, chainInfo])
 
   // CHAIN HANDLERS
   const getChain = useMemo(() => getChainHandler(sdk), [sdk, chainId])

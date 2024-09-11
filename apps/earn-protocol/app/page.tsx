@@ -1,7 +1,5 @@
-import { SDKContextProvider } from '@summerfi/sdk-client-react'
 import dynamic from 'next/dynamic'
 
-import { sdkApiUrl } from '@/constants/sdk'
 import type { FleetConfig } from '@/helpers/sdk/types'
 
 const AccountKitFeatures = dynamic(
@@ -15,7 +13,7 @@ const Form = dynamic(() => import('@/components/organisms/Form/Form'), {
   ssr: false,
 })
 
-// TODO: Replace with the real dynamic values from the UI state later
+// TODO: Replace with the control elements on the UI later
 const fleetConfig: FleetConfig = {
   tokenSymbol: 'USDC',
   fleetAddress: '0x75d4f7cb1b2481385e0878c639f6f6d66592d399',
@@ -28,9 +26,7 @@ export default function HomePage() {
         <div style={{ flex: 1 }}>
           <AccountKitFeatures />
         </div>
-        <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
-          <Form fleetConfig={fleetConfig} />
-        </SDKContextProvider>
+        <Form fleetConfig={fleetConfig} />
       </div>
     </div>
   )
