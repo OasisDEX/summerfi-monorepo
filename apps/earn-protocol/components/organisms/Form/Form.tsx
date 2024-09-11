@@ -1,13 +1,12 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { Button, Card, Input, Text } from '@summerfi/app-ui'
-import { type IArmadaPosition, SDKContextProvider } from '@summerfi/sdk-client-react'
+import { type IArmadaPosition } from '@summerfi/sdk-client-react'
 import type { Token, TransactionInfo } from '@summerfi/sdk-common'
 import { useAppState, useConnectWallet } from '@web3-onboard/react'
 import { type Config as WagmiConfig, getBalance, sendTransaction } from '@web3-onboard/wagmi'
 import dynamic from 'next/dynamic'
 
-import { sdkApiUrl } from '@/constants/sdk'
 import { prepareTransaction } from '@/helpers/sdk/prepare-transaction'
 import type { FleetConfig } from '@/helpers/sdk/types'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -23,7 +22,9 @@ const SetForkModal = dynamic(() => import('@/components/organisms/SetFork/SetFor
   ssr: false,
 })
 
-const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: { fleetConfig: FleetConfig }) => {
+export type FormProps = { fleetConfig: FleetConfig }
+
+const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: FormProps) => {
   const [action, setAction] = useState(Action.DEPOSIT)
   const [amountValue, setAmountValue] = useState<string>()
   const [transactionsHash, setTransactionsHash] = useState<string>()
@@ -165,80 +166,78 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: { fleetConfig: Fle
   }
 
   return (
-    <SDKContextProvider value={{ apiURL: sdkApiUrl }}>
-      <Card style={{ width: '468px', flexDirection: 'column', alignItems: 'center' }}>
-        <Text
-          as="p"
-          variant="p1semi"
-          style={{
-            textAlign: 'left',
-            width: '100%',
-            marginBottom: '24px',
-            paddingBottom: '15px',
-            borderBottom: '1px solid rgb(240, 240, 240)',
-          }}
-          title={fleetAddress}
-        >
-          Manage your {tokenSymbol} Fleet
-        </Text>
-        <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-          <Button
-            variant={action === Action.DEPOSIT ? 'primarySmall' : 'secondarySmall'}
-            onClick={() => setAction(Action.DEPOSIT)}
-          >
-            Deposit
-          </Button>
-          <Button
-            variant={action === Action.WITHDRAW ? 'primarySmall' : 'secondarySmall'}
-            onClick={() => setAction(Action.WITHDRAW)}
-          >
-            Withdraw
-          </Button>
-        </div>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            width: '100%',
-            marginBottom: '16px',
-          }}
-        >
-          <Text as="p" variant="p3semi">
-            {action === Action.DEPOSIT ? 'Deposit' : 'Withdraw'}
-          </Text>
-          {balance != null && (
-            <Text
-              as="p"
-              variant="p3semi"
-              style={{ cursor: 'pointer' }}
-              onClick={() => setAmountValue(balance.toString())}
-            >
-              {balanceLabel} Balance: {Number(balance).toFixed(3)} {tokenSymbol}
-            </Text>
-          )}
-        </div>
-
-        <Input
-          type="number"
-          value={amountValue}
-          wrapperStyles={{ width: '100%', marginBottom: '24px' }}
-          style={{ width: '100%' }}
-          onChange={handleChange}
-        />
+    <Card style={{ width: '468px', flexDirection: 'column', alignItems: 'center' }}>
+      <Text
+        as="p"
+        variant="p1semi"
+        style={{
+          textAlign: 'left',
+          width: '100%',
+          marginBottom: '24px',
+          paddingBottom: '15px',
+          borderBottom: '1px solid rgb(240, 240, 240)',
+        }}
+        title={fleetAddress}
+      >
+        Manage your {tokenSymbol} Fleet
+      </Text>
+      <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
         <Button
-          variant="primaryLarge"
-          onClick={handleConfirm}
-          style={{ width: '100%' }}
-          disabled={confirmDisabled}
+          variant={action === Action.DEPOSIT ? 'primarySmall' : 'secondarySmall'}
+          onClick={() => setAction(Action.DEPOSIT)}
         >
-          Confirm
+          Deposit
         </Button>
-        {transactionsHash && <Text as="p">Transactions sent: {transactionsHash}</Text>}
-        {transactionError && <Text as="p">Transaction error: {transactionError}</Text>}
+        <Button
+          variant={action === Action.WITHDRAW ? 'primarySmall' : 'secondarySmall'}
+          onClick={() => setAction(Action.WITHDRAW)}
+        >
+          Withdraw
+        </Button>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          width: '100%',
+          marginBottom: '16px',
+        }}
+      >
+        <Text as="p" variant="p3semi">
+          {action === Action.DEPOSIT ? 'Deposit' : 'Withdraw'}
+        </Text>
+        {balance != null && (
+          <Text
+            as="p"
+            variant="p3semi"
+            style={{ cursor: 'pointer' }}
+            onClick={() => setAmountValue(balance.toString())}
+          >
+            {balanceLabel} Balance: {Number(balance).toFixed(3)} {tokenSymbol}
+          </Text>
+        )}
+      </div>
 
-        <SetForkModal />
-      </Card>
-    </SDKContextProvider>
+      <Input
+        type="number"
+        value={amountValue}
+        wrapperStyles={{ width: '100%', marginBottom: '24px' }}
+        style={{ width: '100%' }}
+        onChange={handleChange}
+      />
+      <Button
+        variant="primaryLarge"
+        onClick={handleConfirm}
+        style={{ width: '100%' }}
+        disabled={confirmDisabled}
+      >
+        Confirm
+      </Button>
+      {transactionsHash && <Text as="p">Transactions sent: {transactionsHash}</Text>}
+      {transactionError && <Text as="p">Transaction error: {transactionError}</Text>}
+
+      <SetForkModal />
+    </Card>
   )
 }
 

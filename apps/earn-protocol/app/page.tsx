@@ -9,7 +9,7 @@ const AccountKitFeatures = dynamic(
   },
 )
 
-const Form = dynamic(() => import('@/components/organisms/Form/Form'), {
+const FormContainer = dynamic(() => import('@/components/organisms/Form/FormContainer'), {
   ssr: false,
 })
 
@@ -26,7 +26,7 @@ export default function HomePage() {
         <div style={{ flex: 1 }}>
           <AccountKitFeatures />
         </div>
-        <Form fleetConfig={fleetConfig} />
+        <FormContainer fleetConfig={fleetConfig} />
       </div>
     </div>
   )
