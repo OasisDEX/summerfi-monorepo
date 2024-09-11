@@ -1,23 +1,13 @@
 import { useAppSDK } from './use-app-sdk'
 
 export const useDepositTX = () => {
-  const { getDepositTX } = useAppSDK()
+  const { getDepositTX, getChainInfo, getWalletAddress, getFleetAddress } = useAppSDK()
 
-  return ({
-    chainId,
-    walletAddress,
-    fleetAddress,
-    amountString,
-  }: {
-    chainId: number
-    walletAddress: string
-    fleetAddress: string
-    amountString: string
-  }) => {
+  return ({ fleetAddress, amountString }: { fleetAddress: string; amountString: string }) => {
     return getDepositTX({
-      chainId,
-      fleetAddress,
-      walletAddress,
+      chainInfo: getChainInfo(),
+      walletAddress: getWalletAddress(),
+      fleetAddress: getFleetAddress(fleetAddress),
       amount: amountString,
     })
   }

@@ -114,8 +114,6 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: { fleetConfig: Fle
     }
 
     return deposit({
-      chainId,
-      walletAddress,
       fleetAddress,
       amountString: amountValue.toString(),
     })
@@ -127,8 +125,6 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: { fleetConfig: Fle
     }
 
     return withdraw({
-      chainId,
-      walletAddress,
       fleetAddress,
       amountString: amountValue.toString(),
     })
