@@ -1,7 +1,8 @@
 import { GraphQLClient } from 'graphql-request'
-import { supportedChains, subgraphNameByChainMap } from '@summerfi/summer-earn-protocol-subgraph'
 import { ChainId } from '@summerfi/serverless-shared'
-import { getSdk } from '@summerfi/subgraph-manager-common'
+import { supportedChains } from './supportedChains'
+import { subgraphNameByChainMap } from './subgraphNameByChainMap'
+import { getSdk } from '../generated/client'
 
 export const createGraphQLClient = (chainId: ChainId, baseUrl: string) => {
   if (!supportedChains.includes(chainId)) {

@@ -13,9 +13,6 @@
       "@summerfi/armada-protocol-common": [
         "node_modules/@summerfi/armada-protocol-common/src/index.ts"
       ],
-      "@summerfi/summer-earn-protocol-subgraph": [
-        "node_modules/@summerfi/summer-earn-protocol-subgraph/src/index.ts"
-      ],
       "@summerfi/serverless-shared": ["node_modules/@summerfi/serverless-shared/src/index.ts"],
       "@summerfi/testing-utils/*": ["node_modules/@summerfi/testing-utils/src/*"],
       "@summerfi/configuration-provider": [

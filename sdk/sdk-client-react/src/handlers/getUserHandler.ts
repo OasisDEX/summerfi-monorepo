@@ -7,12 +7,9 @@ export const getUserHandler =
     if (!chainInfo) {
       throw new Error('ChainId is not defined')
     }
-    const chain = await sdk.users.getUser({
+    const user = await sdk.users.getUser({
       chainInfo,
       walletAddress,
     })
-    if (!chain) {
-      throw new Error('Chain not found')
-    }
-    return chain
+    return user
   }

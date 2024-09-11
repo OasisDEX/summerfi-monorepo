@@ -1,7 +1,6 @@
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
+import { IArmadaSubgraphManager, createGraphQLClient } from '@summerfi/subgraph-manager-common'
 import { ChainFamilyMap, type ChainId } from '@summerfi/sdk-common'
-import { createGraphQLClient } from '../../utils/createGraphQLClient'
 
 export interface SubgraphConfig {
   urlBase: string
@@ -47,7 +46,7 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
   }
 
   /** PRIVATE */
-  _getClient(chainId: ChainId) {
+  _getClient(chainId: ChainId): ReturnType<typeof createGraphQLClient> {
     return createGraphQLClient(chainId, this._subgraphConfig.urlBase)
   }
 }
