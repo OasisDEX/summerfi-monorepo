@@ -145,7 +145,7 @@ export type MakerAutoTakeProfitToCollateral = Trigger & {
     maxBaseFeeInGwei: string
   }
 }
-export type MakerAutoTakeProfitToDai = Trigger & {
+export type MakerAutoTakeProfitToDebt = Trigger & {
   triggerTypeName: 'MakerAutoTakeProfitToDai'
   triggerType: typeof MakerAutoTakeProfitToDaiID
   decodedParams: {
@@ -548,7 +548,7 @@ export type GetTriggersResponse = {
       stopLossToCollateral?: MakerStopLossToCollateral
       stopLossToDebt?: MakerStopLossToDai
       autoTakeProfitToCollateral?: MakerAutoTakeProfitToCollateral
-      autoTakeProfitToDebt?: MakerAutoTakeProfitToDai
+      autoTakeProfitToDebt?: MakerAutoTakeProfitToDebt
       constantMultiple?: MakerConstantMultiple
     }
     [ProtocolId.AAVE3]: {
