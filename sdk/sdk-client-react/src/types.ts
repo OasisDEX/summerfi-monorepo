@@ -1,5 +1,5 @@
 export enum QueryStatus {
-  Peending = 'pending',
+  Pending = 'pending',
   Error = 'error',
   Success = 'success',
 }
