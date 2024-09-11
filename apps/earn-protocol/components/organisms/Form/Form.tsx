@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { Button, Card, Input, Text } from '@summerfi/app-ui'
+import type { IArmadaPosition } from '@summerfi/sdk-client-react'
 import type { Token, TransactionInfo } from '@summerfi/sdk-common'
 import { useAppState, useConnectWallet } from '@web3-onboard/react'
 import { type Config as WagmiConfig, getBalance, sendTransaction } from '@web3-onboard/wagmi'
@@ -28,15 +29,22 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: { fleetConfig: Fle
   const [transactionError, setTransactionError] = useState<string>()
   const [token, setToken] = useState<Token>()
   const [tokenBalance, setTokenBalance] = useState<number>()
-  const [depositBalance, setDepositBalance] = useState<number>()
+  const [userPosition, setUserPosition] = useState<IArmadaPosition>()
 
-  const balance = action === Action.DEPOSIT ? tokenBalance : depositBalance
+  const balance = action === Action.DEPOSIT ? tokenBalance : userPosition?.amount.amount
   const balanceLabel = action === Action.DEPOSIT ? 'Wallet' : 'Fleet'
 
   const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
   const [{ wallet }] = useConnectWallet()
   const { wagmiConfig } = useAppState()
-  const { getTokenBySymbol } = useAppSDK()
+  const {
+    getTokenBySymbol,
+    getUserPosition,
+    getUser,
+    getChainInfo,
+    getWalletAddress,
+    getFleetAddress,
+  } = useAppSDK()
   const deposit = useDepositTX()
   const withdraw = useWithdrawTX()
 
@@ -62,11 +70,11 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: { fleetConfig: Fle
       }
     }
     fetchToken()
-  }, [chainId, getTokenBySymbol])
+  }, [chainId, tokenSymbol, getTokenBySymbol])
 
   useEffect(() => {
     async function fetchTokenBalance() {
-      if (chainId && walletAddress && token) {
+      if (chainId && walletAddress && token != null) {
         const { value, decimals } = await getBalance(wagmiConfig as WagmiConfig, {
           chainId,
           address: walletAddress,
@@ -82,11 +90,19 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: { fleetConfig: Fle
   useEffect(() => {
     async function fetchDepositBalance() {
       if (chainId && walletAddress && token) {
-        setDepositBalance(0)
+        const position = await getUserPosition({
+          fleetAddress: getFleetAddress(fleetAddress),
+          user: await getUser({
+            chainInfo: getChainInfo(),
+            walletAddress: getWalletAddress(),
+          }),
+        })
+
+        setUserPosition(position)
       }
     }
     fetchDepositBalance()
-  }, [chainId, walletAddress, token?.symbol, token, wagmiConfig])
+  }, [chainId, walletAddress, token?.symbol, token, fleetAddress])
 
   const handleChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     setAmountValue(ev.target.value)

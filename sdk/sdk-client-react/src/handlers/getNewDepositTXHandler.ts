@@ -3,15 +3,17 @@ import { type ISDKManager } from '@summerfi/sdk-client'
 import { Address, TokenAmount, User, Wallet, type IChainInfo } from '@summerfi/sdk-common'
 
 export const getNewDepositTXHandler =
-  (sdk: ISDKManager, chainInfo: IChainInfo) =>
+  (sdk: ISDKManager) =>
   async ({
     fleetAddress,
     walletAddress,
     amount,
+    chainInfo,
   }: {
     fleetAddress: string
     walletAddress: string
     amount: string
+    chainInfo: IChainInfo
   }) => {
     const poolId = ArmadaPoolId.createFrom({
       chainInfo,

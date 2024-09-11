@@ -12,36 +12,62 @@ import { getUserHandler } from '../handlers/getUserHandler'
 import { getChainHandler } from '../handlers/getChainHandler'
 
 type UseSdk = {
-  walletAddress: string
-  chainId: number
+  walletAddress?: string
+  chainId?: number
 }
 
 export const useSDK = (params: UseSdk) => {
   const { apiURL } = useSDKContext()
   const sdk = useMemo(() => makeSDK({ apiURL }), [apiURL])
 
-  const { chainId } = params
-  const chainInfo = useMemo(() => getChainInfoByChainId(chainId), [chainId])
-
+  const { chainId, walletAddress: walletAddressString } = params
   const walletAddress = useMemo(
-    () => Address.createFromEthereum({ value: params.walletAddress }),
-    [params.walletAddress],
+    () =>
+      !walletAddressString ? null : Address.createFromEthereum({ value: walletAddressString }),
+    [walletAddressString],
+  )
+  const getWalletAddress = useMemo(
+    () => () => {
+      if (!walletAddress) {
+        throw new Error('Wallet address is not defined')
+      }
+      return walletAddress
+    },
+    [walletAddress],
+  )
+
+  const getFleetAddress = useMemo(
+    () => (fleetAddressString: string) => Address.createFromEthereum({ value: fleetAddressString }),
+    [],
+  )
+
+  const getChainInfo = useMemo(
+    () => () => {
+      if (!chainId) {
+        throw new Error('ChainId is not defined')
+      }
+      return getChainInfoByChainId(chainId)
+    },
+    [chainId],
   )
 
   // USER HANDLERS
-  const getUser = useMemo(() => getUserHandler(sdk), [sdk, chainInfo, walletAddress])
+  const getUser = useMemo(() => getUserHandler(sdk), [sdk])
 
   // CHAIN HANDLERS
   const getChain = useMemo(() => getChainHandler(sdk), [sdk, chainId])
   const getTokenBySymbol = useMemo(() => getTokenBySymbolHandler(getChain), [getChain])
 
   // ARMADA HANDLERS
-  const getWithdrawTX = useMemo(() => getWithdrawTXHandler(sdk, chainInfo), [sdk, chainInfo])
-  const getDepositTX = useMemo(() => getNewDepositTXHandler(sdk, chainInfo), [sdk, chainInfo])
+  const getWithdrawTX = useMemo(() => getWithdrawTXHandler(sdk), [sdk])
+  const getDepositTX = useMemo(() => getNewDepositTXHandler(sdk), [sdk])
   const getUserPosition = useMemo(() => getUserPositionHandler(sdk), [sdk])
   const getUserPositions = useMemo(() => getUserPositionsHandler(sdk), [sdk])
 
   return {
+    getWalletAddress,
+    getFleetAddress,
+    getChainInfo,
     getChain,
     getUser,
     getTokenBySymbol,

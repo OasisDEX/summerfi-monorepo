@@ -2379,6 +2379,9 @@ importers:
 
   sdk/sdk-client-react:
     dependencies:
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../armada-protocol-common
       '@summerfi/armada-protocol-service':
         specifier: workspace:*
         version: link:../armada-protocol-service

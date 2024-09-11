@@ -1,4 +1,5 @@
 export * from '@summerfi/sdk-common'
+export * from '@summerfi/armada-protocol-common'
 export * from './components'
 export * from './hooks'
 export * from './types'
