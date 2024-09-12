@@ -18,7 +18,7 @@ export interface IArmadaManagerKeepersClient {
    */
   rebalance(params: {
     poolId: IArmadaPoolId
-    rebalanceData: IRebalanceData
+    rebalanceData: IRebalanceData[]
   }): Promise<TransactionInfo>
 
   /**
@@ -32,6 +32,6 @@ export interface IArmadaManagerKeepersClient {
    */
   adjustBuffer(params: {
     poolId: IArmadaPoolId
-    rebalanceData: IRebalanceData
+    rebalanceData: IRebalanceData[]
   }): Promise<TransactionInfo>
 }
