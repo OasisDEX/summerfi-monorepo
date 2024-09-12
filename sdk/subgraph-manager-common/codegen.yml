@@ -17,7 +17,7 @@ generates:
           scalars:
             BigDecimal: string
             BigInt: bigint
-            Int8: bigint
+            Int8: number
             BooleanType: boolean
             CustomData: Record<string, unknown>
             Date: string

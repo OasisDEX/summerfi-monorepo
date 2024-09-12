@@ -57,7 +57,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
-    return this.rpcClient.armada.users.getNewDepositTX.query(params)
+    return this.rpcClient.armada.users.getDepositTX.query(params)
   }
 
   /** @see IArmadaManagerClient.getUpdateDepositTX */
@@ -72,7 +72,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   /** @see IArmadaManagerClient.getWithdrawTX */
   async getWithdrawTX(params: {
     poolId: IArmadaPoolId
-    positionId: IArmadaPositionId
+    user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
     return this.rpcClient.armada.users.getWithdrawTX.query(params)

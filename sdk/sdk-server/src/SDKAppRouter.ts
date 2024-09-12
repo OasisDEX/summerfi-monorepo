@@ -15,7 +15,7 @@ import { setTipRate } from './armada-protocol-handlers/governance/setTipRate'
 import { updateRebalanceCooldown } from './armada-protocol-handlers/governance/updateRebalanceCooldown'
 import { adjustBuffer } from './armada-protocol-handlers/keepers/adjustBuffer'
 import { rebalance } from './armada-protocol-handlers/keepers/rebalance'
-import { getNewDepositTX } from './armada-protocol-handlers/users/getNewDepositTX'
+import { getDepositTX } from './armada-protocol-handlers/users/getDepositTX'
 import { getPool } from './armada-protocol-handlers/users/getPool'
 import { getPoolInfo } from './armada-protocol-handlers/users/getPoolInfo'
 import { getPosition as getArmadaPosition } from './armada-protocol-handlers/users/getPosition'
@@ -69,7 +69,7 @@ export const sdkAppRouter = router({
       getPosition: getArmadaPosition,
       getUserPositions: getUserPositions,
       getUserPosition: getUserPosition,
-      getNewDepositTX: getNewDepositTX,
+      getDepositTX: getDepositTX,
       getUpdateDepositTX: getUpdateDepositTX,
       getWithdrawTX: getWithdrawTX,
     },

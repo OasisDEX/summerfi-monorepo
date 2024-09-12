@@ -46,10 +46,7 @@ export const getWithdrawTXHandler =
 
     return sdk.armada.users.getWithdrawTX({
       poolId,
-      positionId: ArmadaPositionId.createFrom({
-        id: walletAddress.value,
-        user,
-      }),
+      user,
       amount: tokenAmount,
     })
   }

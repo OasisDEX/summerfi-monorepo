@@ -109,7 +109,7 @@ export interface IArmadaManagerUsersClient {
    */
   getWithdrawTX(params: {
     poolId: IArmadaPoolId
-    positionId: IArmadaPositionId
+    user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]>
 }
