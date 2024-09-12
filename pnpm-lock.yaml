@@ -2745,6 +2745,9 @@ importers:
       '@summerfi/serverless-shared':
         specifier: workspace:^
         version: link:../../packages/serverless-shared
+      bignumber.js:
+        specifier: ^9.1.2
+        version: 9.1.2
       graphql-request:
         specifier: ^6.1.0
         version: 6.1.0(graphql@16.8.2)

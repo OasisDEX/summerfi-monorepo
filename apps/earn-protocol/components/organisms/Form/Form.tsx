@@ -38,8 +38,7 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: FormProps) => {
   const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
   const [{ wallet }] = useConnectWallet()
   const { wagmiConfig } = useAppState()
-  const { getTokenBySymbol, getUserPosition, getUser, getWalletAddress, getFleetAddress } =
-    useAppSDK()
+  const { getTokenBySymbol, getUserPosition, getCurrentUser } = useAppSDK()
   const deposit = useDepositTX()
   const withdraw = useWithdrawTX()
 
@@ -84,19 +83,15 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: FormProps) => {
 
   useEffect(() => {
     async function fetchDepositBalance() {
-      if (chainId && walletAddress && token) {
-        const position = await getUserPosition({
-          fleetAddress: getFleetAddress(fleetAddress),
-          user: await getUser({
-            walletAddress: getWalletAddress(),
-          }),
-        })
+      const position = await getUserPosition({
+        fleetAddress,
+        user: getCurrentUser(),
+      })
 
-        setUserPosition(position)
-      }
+      setUserPosition(position)
     }
     fetchDepositBalance()
-  }, [chainId, walletAddress, token?.symbol, token, fleetAddress])
+  }, [fleetAddress, getCurrentUser, getUserPosition])
 
   const handleChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     setAmountValue(ev.target.value)

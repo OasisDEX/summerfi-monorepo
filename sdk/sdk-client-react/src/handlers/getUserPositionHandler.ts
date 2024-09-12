@@ -1,12 +1,12 @@
 import type { ISDKManager } from '@summerfi/sdk-client'
-import type { IAddress, IUser } from '@summerfi/sdk-common'
+import { Address, type IUser } from '@summerfi/sdk-common'
 
 export const getUserPositionHandler =
   (sdk: ISDKManager) =>
-  async ({ user, fleetAddress }: { user: IUser; fleetAddress: IAddress }) => {
+  async ({ user, fleetAddress }: { user: IUser; fleetAddress: string }) => {
     const position = await sdk.armada.users.getUserPosition({
       user,
-      fleetAddress,
+      fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
     })
     return position
   }

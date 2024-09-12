@@ -13,6 +13,7 @@ import { ArmadaPoolId } from '../ArmadaPoolId'
 import { ArmadaPosition } from '../ArmadaPosition'
 import { ArmadaPositionId } from '../ArmadaPositionId'
 import { ArmadaProtocol } from '../ArmadaProtocol'
+import { BigNumber } from 'bignumber.js'
 
 export const mapGraphDataToArmadaPosition =
   ({ user, chainInfo }: { user: IUser; chainInfo: IChainInfo }) =>
@@ -38,7 +39,9 @@ export const mapGraphDataToArmadaPosition =
         }),
       }),
       amount: TokenAmount.createFrom({
-        amount: position.inputTokenBalance.toString(),
+        amount: BigNumber(position.inputTokenBalance.toString())
+          .div(10 ** position.vault.outputToken.decimals)
+          .toString(),
         token: Token.createFrom({
           chainInfo,
           address: Address.createFromEthereum({

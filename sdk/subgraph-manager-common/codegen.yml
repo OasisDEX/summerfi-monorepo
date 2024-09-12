@@ -15,9 +15,9 @@ generates:
       - typescript-operations:
           strictScalars: true
           scalars:
-            BigDecimal: number
-            BigInt: number
-            Int8: number
+            BigDecimal: string
+            BigInt: bigint
+            Int8: bigint
             BooleanType: boolean
             CustomData: Record<string, unknown>
             Date: string

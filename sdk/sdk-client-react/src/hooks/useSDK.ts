@@ -1,15 +1,16 @@
 import { makeSDK } from '@summerfi/sdk-client'
-import { Address, getChainInfoByChainId } from '@summerfi/sdk-common'
 import { useMemo } from 'react'
-import { getNewDepositTXHandler } from '../handlers/getNewDepositTXHandler'
+import { getDepositTXHandler } from '../handlers/getDepositTXHandler'
 import { getTokenBySymbolHandler } from '../handlers/getTokenBySymbolHandler'
 import { getUserPositionsHandler } from '../handlers/getUserPositionsHandler'
 import { getUserPositionHandler } from '../handlers/getUserPositionHandler'
 import { getWithdrawTXHandler } from '../handlers/getWithdrawTXHandler'
 
 import { useSDKContext } from '../components/SDKContext'
-import { getUserHandler } from '../handlers/getUserHandler'
 import { getChainHandler } from '../handlers/getChainHandler'
+import { getWalletAddressHandler } from '../factories/getWalletAddressHandler'
+import { getCurrentUserHandler } from '../handlers/getCurrentUserHandler'
+import { getChainInfoHandler } from '../handlers/getChainInfoHandler'
 
 type UseSdk = {
   walletAddress?: string
@@ -21,42 +22,19 @@ export const useSDK = (params: UseSdk) => {
   const sdk = useMemo(() => makeSDK({ apiURL }), [apiURL])
 
   const { chainId, walletAddress: walletAddressString } = params
-  const walletAddress = useMemo(
-    () =>
-      !walletAddressString ? undefined : Address.createFromEthereum({ value: walletAddressString }),
+
+  const getChainInfo = useMemo(() => getChainInfoHandler(chainId), [chainId])
+
+  const getWalletAddress = useMemo(
+    () => getWalletAddressHandler(walletAddressString),
     [walletAddressString],
   )
-  const getWalletAddress = useMemo(
-    () => () => {
-      if (!walletAddress) {
-        throw new Error('Wallet address is not defined')
-      }
-      return walletAddress
-    },
-    [walletAddress],
-  )
 
-  const getFleetAddress = useMemo(
-    () => (fleetAddressString: string) => Address.createFromEthereum({ value: fleetAddressString }),
-    [],
+  // State getters
+  const getCurrentUser = useMemo(
+    () => getCurrentUserHandler(getChainInfo, getWalletAddress),
+    [getCurrentUserHandler, getChainInfo, getWalletAddress],
   )
-
-  const chainInfo = useMemo(
-    () => (chainId == null ? undefined : getChainInfoByChainId(chainId)),
-    [chainId],
-  )
-  const getChainInfo = useMemo(
-    () => () => {
-      if (!chainInfo) {
-        throw new Error('ChainId is not defined')
-      }
-      return chainInfo
-    },
-    [chainId],
-  )
-
-  // USER HANDLERS
-  const getUser = useMemo(() => getUserHandler(sdk, chainInfo), [sdk, chainInfo])
 
   // CHAIN HANDLERS
   const getChain = useMemo(() => getChainHandler(sdk), [sdk, chainId])
@@ -64,16 +42,15 @@ export const useSDK = (params: UseSdk) => {
 
   // ARMADA HANDLERS
   const getWithdrawTX = useMemo(() => getWithdrawTXHandler(sdk), [sdk])
-  const getDepositTX = useMemo(() => getNewDepositTXHandler(sdk), [sdk])
+  const getDepositTX = useMemo(() => getDepositTXHandler(sdk), [sdk])
   const getUserPosition = useMemo(() => getUserPositionHandler(sdk), [sdk])
   const getUserPositions = useMemo(() => getUserPositionsHandler(sdk), [sdk])
 
   return {
+    getCurrentUser,
     getWalletAddress,
-    getFleetAddress,
     getChainInfo,
     getChain,
-    getUser,
     getTokenBySymbol,
     getDepositTX,
     getWithdrawTX,

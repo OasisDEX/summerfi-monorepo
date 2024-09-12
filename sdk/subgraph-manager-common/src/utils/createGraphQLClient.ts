@@ -4,7 +4,10 @@ import { supportedChains } from './supportedChains'
 import { subgraphNameByChainMap } from './subgraphNameByChainMap'
 import { getSdk } from '../generated/client'
 
-export const createGraphQLClient = (chainId: ChainId, baseUrl: string) => {
+export const createGraphQLClient = (
+  chainId: ChainId,
+  baseUrl: string,
+): ReturnType<typeof getSdk> => {
   if (!supportedChains.includes(chainId)) {
     throw new Error(
       `Chain ID ${chainId} is not supported. Supported chains are: ${supportedChains.join(', ')}`,
