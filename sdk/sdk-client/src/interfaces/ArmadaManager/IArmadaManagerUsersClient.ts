@@ -102,7 +102,7 @@ export interface IArmadaManagerUsersClient {
    * @description Returns the transactions needed to withdraw tokens from the Fleet
    *
    * @param poolId ID of the pool to withdraw from
-   * @param positionId ID of the position to withdraw from
+   * @param user user that is trying to withdraw
    * @param amount Token amount to be withdrawn
    *
    * @returns The transactions needed to withdraw the tokens
