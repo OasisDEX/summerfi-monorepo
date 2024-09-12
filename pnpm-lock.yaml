@@ -183,18 +183,12 @@ importers:
       '@summerfi/app-utils':
         specifier: workspace:*
         version: link:../../packages/app-utils
-      '@summerfi/armada-protocol-service':
-        specifier: workspace:*
-        version: link:../../sdk/armada-protocol-service
       '@summerfi/rays-db':
         specifier: workspace:*
         version: link:../../packages/rays-db
       '@summerfi/sdk-client-react':
         specifier: workspace:^
         version: link:../../sdk/sdk-client-react
-      '@summerfi/sdk-common':
-        specifier: workspace:^
-        version: link:../../sdk/sdk-common
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared
@@ -2358,8 +2352,8 @@ importers:
         specifier: workspace:*
         version: link:../sdk-server
       '@trpc/client':
-        specifier: 11.0.0-next-beta.264
-        version: 11.0.0-next-beta.264(@trpc/server@11.0.0-next-beta.264)
+        specifier: 11.0.0-rc.502
+        version: 11.0.0-rc.502(@trpc/server@11.0.0-rc.502)
       superjson:
         specifier: ^1.13.3
         version: 1.13.3
@@ -2379,6 +2373,9 @@ importers:
 
   sdk/sdk-client-react:
     dependencies:
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../armada-protocol-common
       '@summerfi/armada-protocol-service':
         specifier: workspace:*
         version: link:../armada-protocol-service
@@ -2391,11 +2388,8 @@ importers:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
-      '@types/react':
-        specifier: ^18.3.1
-        version: 18.3.1
       react:
-        specifier: ^18.3.1
+        specifier: ^18.0.0
         version: 18.3.1
     devDependencies:
       '@summerfi/eslint-config':
@@ -2410,6 +2404,9 @@ importers:
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
+      '@types/react':
+        specifier: ^18.3.1
+        version: 18.3.1
 
   sdk/sdk-client/bundle:
     dependencies:
@@ -2526,8 +2523,8 @@ importers:
         specifier: workspace:*
         version: link:../sdk-server
       '@trpc/server':
-        specifier: 11.0.0-next-beta.264
-        version: 11.0.0-next-beta.264
+        specifier: 11.0.0-rc.502
+        version: 11.0.0-rc.502
       superjson:
         specifier: ^1.13.3
         version: 1.13.3
@@ -2656,8 +2653,8 @@ importers:
         specifier: workspace:*
         version: link:../tokens-service
       '@trpc/server':
-        specifier: 11.0.0-next-beta.264
-        version: 11.0.0-next-beta.264
+        specifier: 11.0.0-rc.502
+        version: 11.0.0-rc.502
       superjson:
         specifier: ^1.13.3
         version: 1.13.3
@@ -2745,6 +2742,15 @@ importers:
       '@summerfi/sdk-server-common':
         specifier: workspace:*
         version: link:../sdk-server-common
+      '@summerfi/serverless-shared':
+        specifier: workspace:^
+        version: link:../../packages/serverless-shared
+      bignumber.js:
+        specifier: ^9.1.2
+        version: 9.1.2
+      graphql-request:
+        specifier: ^6.1.0
+        version: 6.1.0(graphql@16.8.2)
       graphql-tag:
         specifier: ^2.12.6
         version: 2.12.6(graphql@16.8.2)
@@ -2782,21 +2788,12 @@ importers:
       '@summerfi/sdk-server-common':
         specifier: workspace:*
         version: link:../sdk-server-common
-      '@summerfi/serverless-shared':
-        specifier: workspace:^
-        version: link:../../packages/serverless-shared
       '@summerfi/subgraph-manager-common':
         specifier: workspace:*
         version: link:../subgraph-manager-common
-      '@summerfi/summer-earn-protocol-subgraph':
-        specifier: workspace:*
-        version: link:../../packages/summer-earn-protocol-subgraph
       '@types/node-fetch':
         specifier: ^2.6.11
         version: 2.6.11
-      graphql-request:
-        specifier: ^6.1.0
-        version: 6.1.0(graphql@16.8.2)
       node-fetch:
         specifier: ^2.7.0
         version: 2.7.0
@@ -16509,8 +16506,20 @@ packages:
       '@trpc/server': 11.0.0-next-beta.264
     dev: false
 
+  /@trpc/client@11.0.0-rc.502(@trpc/server@11.0.0-rc.502):
+    resolution: {integrity: sha512-ysFQ3wHnjzLcAqeuwx9/B/YV+2XN/kmfAdTUG+O/SUAdP2wAwo6XbhOxlHw0HWS5pDCsTfJkxDr1nMVkuFM07Q==}
+    peerDependencies:
+      '@trpc/server': 11.0.0-rc.502+2a8c56027
+    dependencies:
+      '@trpc/server': 11.0.0-rc.502
+    dev: false
+
   /@trpc/server@11.0.0-next-beta.264:
     resolution: {integrity: sha512-h6RJX+C+VgFQusxGVtw3n1PZPLt27ZG70U8cPR5pwmsnE2E3vREijOgEo5MRKoiUhVrjbw8e6gnGVeKzl7uZXg==}
+    dev: false
+
+  /@trpc/server@11.0.0-rc.502:
+    resolution: {integrity: sha512-n6B8Q/UqF+hFXyCTXq9AWSn6EkXBbVo/Bs7/QzZxe5KD5CdnBomC7A1y6Qr+i0eiOWwTHJZQ0az+gJetb2fdxw==}
     dev: false
 
   /@trpc/server@9.16.0:

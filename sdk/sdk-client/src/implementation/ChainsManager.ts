@@ -1,4 +1,4 @@
-import { getChainInfoByChainId } from '@summerfi/sdk-common'
+import { getChainFamilyInfoByChainId } from '@summerfi/sdk-common'
 import { ChainInfo, IChainInfoData, Maybe } from '@summerfi/sdk-common/common'
 import { IChainsManagerClient } from '../interfaces/IChainsManager'
 import { IRPCClient } from '../interfaces/IRPCClient'
@@ -41,7 +41,7 @@ export class ChainsManagerClient extends IRPCClient implements IChainsManagerCli
   }
 
   public async getChainById(params: { chainId: number }): Promise<Maybe<Chain>> {
-    const chainFamily = getChainInfoByChainId(params.chainId)
+    const chainFamily = getChainFamilyInfoByChainId(params.chainId)
     if (chainFamily == null) {
       throw new Error('Unsupported chainId: ' + params.chainId)
     }

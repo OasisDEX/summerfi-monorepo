@@ -9,11 +9,11 @@ const AccountKitFeatures = dynamic(
   },
 )
 
-const Form = dynamic(() => import('@/components/organisms/Form/Form'), {
+const FormContainer = dynamic(() => import('@/components/organisms/Form/FormContainer'), {
   ssr: false,
 })
 
-// TODO: Replace with the real dynamic values from the UI state later
+// TODO: Replace with the control elements on the UI later
 const fleetConfig: FleetConfig = {
   tokenSymbol: 'USDC',
   fleetAddress: '0x75d4f7cb1b2481385e0878c639f6f6d66592d399',
@@ -26,7 +26,7 @@ export default function HomePage() {
         <div style={{ flex: 1 }}>
           <AccountKitFeatures />
         </div>
-        <Form fleetConfig={fleetConfig} />
+        <FormContainer fleetConfig={fleetConfig} />
       </div>
     </div>
   )

@@ -5,7 +5,7 @@ import {
   IArmadaPosition,
   IArmadaPositionId,
 } from '@summerfi/armada-protocol-common'
-import { ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
+import { ITokenAmount, IUser, TransactionInfo, type IAddress } from '@summerfi/sdk-common'
 
 /**
  * @interface IArmadaManagerUsersClient
@@ -43,6 +43,17 @@ export interface IArmadaManagerUsersClient {
    *
    */
   getUserPositions(params: { user: IUser }): Promise<IArmadaPosition[]>
+
+  /**
+   * @method getUserPosition
+   * @description Retrieves the position of a user in an Armada pool
+   *
+   * @param user Target user
+   * @param fleetAddress Address of the fleet
+   *
+   * @returns The position of the user in the corresponding Armada pool
+   */
+  getUserPosition(params: { user: IUser; fleetAddress: IAddress }): Promise<IArmadaPosition>
 
   /**
    * @method getPosition
@@ -91,14 +102,14 @@ export interface IArmadaManagerUsersClient {
    * @description Returns the transactions needed to withdraw tokens from the Fleet
    *
    * @param poolId ID of the pool to withdraw from
-   * @param positionId ID of the position to withdraw from
+   * @param user user that is trying to withdraw
    * @param amount Token amount to be withdrawn
    *
    * @returns The transactions needed to withdraw the tokens
    */
   getWithdrawTX(params: {
     poolId: IArmadaPoolId
-    positionId: IArmadaPositionId
+    user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]>
 }

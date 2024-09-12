@@ -1,4 +1,4 @@
-import type { TransactionInfo } from '@summerfi/sdk-common'
+import type { TransactionInfo } from '@summerfi/sdk-client-react'
 
 export const prepareTransaction = (transaction: TransactionInfo) => {
   return {

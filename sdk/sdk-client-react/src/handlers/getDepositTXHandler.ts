@@ -1,29 +1,27 @@
 import { ArmadaPoolId, ArmadaProtocol } from '@summerfi/armada-protocol-service'
 import { type ISDKManager } from '@summerfi/sdk-client'
-import { Address, TokenAmount, User, Wallet } from '@summerfi/sdk-common'
+import {
+  Address,
+  TokenAmount,
+  User,
+  Wallet,
+  type IAddress,
+  type IChainInfo,
+} from '@summerfi/sdk-common'
 
-export const getNewDepositTXHandler =
+export const getDepositTXHandler =
   (sdk: ISDKManager) =>
   async ({
-    chainId,
     fleetAddress,
     walletAddress,
     amount,
+    chainInfo,
   }: {
-    chainId: number
     fleetAddress: string
-    walletAddress: string
+    walletAddress: IAddress
     amount: string
+    chainInfo: IChainInfo
   }) => {
-    const chain = await sdk.chains.getChainById({
-      chainId,
-    })
-
-    if (!chain) {
-      throw new Error('Chain not found')
-    }
-    const { chainInfo } = chain
-
     const poolId = ArmadaPoolId.createFrom({
       chainInfo,
       fleetAddress: Address.createFromEthereum({ value: fleetAddress }),
@@ -37,7 +35,7 @@ export const getNewDepositTXHandler =
     const user = User.createFrom({
       chainInfo,
       wallet: Wallet.createFrom({
-        address: Address.createFromEthereum({ value: walletAddress }),
+        address: walletAddress,
       }),
     })
 

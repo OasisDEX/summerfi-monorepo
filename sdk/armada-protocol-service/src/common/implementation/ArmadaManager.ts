@@ -15,7 +15,8 @@ import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { ArmadaPool } from './ArmadaPool'
 import { ArmadaPoolInfo } from './ArmadaPoolInfo'
 import { ArmadaPosition } from './ArmadaPosition'
-import { PositionExtensions } from './extensions/PositionExtensions'
+import { parseGetUserPositionsQuery } from './extensions/parseGetUserPositionsQuery'
+import { parseGetUserPositionQuery } from './extensions/parseGetUserPositionQuery'
 
 /**
  * @name ArmadaManager
@@ -76,9 +77,23 @@ export class ArmadaManager implements IArmadaManager {
   /** POSITIONS */
   /** @see IArmadaManager.getUserPositions */
   async getUserPositions({ user }: { user: IUser }): Promise<IArmadaPosition[]> {
-    return PositionExtensions.parseUserPositionsQuery({
+    return parseGetUserPositionsQuery({
       user,
       query: await this._subgraphManager.getUserPositions({ user }),
+    })
+  }
+
+  /** @see IArmadaManager.getUserPosition */
+  async getUserPosition({
+    user,
+    fleetAddress,
+  }: {
+    user: IUser
+    fleetAddress: IAddress
+  }): Promise<IArmadaPosition> {
+    return parseGetUserPositionQuery({
+      user,
+      query: await this._subgraphManager.getUserPosition({ user, fleetAddress }),
     })
   }
 

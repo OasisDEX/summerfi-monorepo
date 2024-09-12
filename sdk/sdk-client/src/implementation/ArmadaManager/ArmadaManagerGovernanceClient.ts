@@ -52,6 +52,7 @@ export class ArmadaManagerGovernanceClient
   /** @see IArmadaManagerGovernanceClient.setArkDepositCap */
   async setArkDepositCap(params: {
     poolId: IArmadaPoolId
+    ark: IAddress
     cap: ITokenAmount
   }): Promise<TransactionInfo> {
     return this.rpcClient.armada.governance.setArkDepositCap.query(params)
@@ -60,6 +61,7 @@ export class ArmadaManagerGovernanceClient
   /** @see IArmadaManagerGovernanceClient.setArkMaxRebalanceOutflow */
   async setArkMaxRebalanceOutflow(params: {
     poolId: IArmadaPoolId
+    ark: IAddress
     maxRebalanceOutflow: ITokenAmount
   }): Promise<TransactionInfo> {
     return this.rpcClient.armada.governance.setArkMaxRebalanceOutflow.query(params)
@@ -68,6 +70,7 @@ export class ArmadaManagerGovernanceClient
   /** @see IArmadaManagerGovernanceClient.setArkMaxRebalanceInflow */
   async setArkMaxRebalanceInflow(params: {
     poolId: IArmadaPoolId
+    ark: IAddress
     maxRebalanceInflow: ITokenAmount
   }): Promise<TransactionInfo> {
     return this.rpcClient.armada.governance.setArkMaxRebalanceInflow.query(params)
