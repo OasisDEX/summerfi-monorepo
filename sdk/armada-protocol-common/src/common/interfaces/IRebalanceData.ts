@@ -45,15 +45,8 @@ export type IRebalanceDataData = Readonly<z.infer<typeof RebalanceDataSchema>>
  * @param maybeRebalanceData
  * @returns true if the object is an IRebalanceData
  */
-export function isRebalanceData(
-  maybeRebalanceData: unknown,
-  returnedErrors?: string[],
-): maybeRebalanceData is IRebalanceData {
+export function isRebalanceData(maybeRebalanceData: unknown): maybeRebalanceData is IRebalanceData {
   const zodReturn = RebalanceDataSchema.safeParse(maybeRebalanceData)
-
-  if (!zodReturn.success && returnedErrors) {
-    returnedErrors.push(...zodReturn.error.errors.map((e) => e.message))
-  }
 
   return zodReturn.success
 }
