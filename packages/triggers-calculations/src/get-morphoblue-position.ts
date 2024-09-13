@@ -3,7 +3,7 @@ import { Address, ChainId, PoolId } from '@summerfi/serverless-shared'
 import { PublicClient } from 'viem'
 import { chainlinkPairOracleAbi, erc20Abi, morphoBlueAbi } from '@summerfi/abis'
 import { Logger } from '@aws-lambda-powertools/logger'
-import { calculateLtv, normalizeAmount } from './helpers'
+import { calculateLtv, isStablecoin, normalizeAmount } from './helpers'
 import { getPricesSubgraphClient, UsdcAndTokenPrice } from '@summerfi/prices-subgraph'
 import { BigNumber } from 'bignumber.js'
 
@@ -252,7 +252,7 @@ export async function getMorphoBluePosition(
   })
 
   return {
-    hasStablecoinDebt: false,
+    hasStablecoinDebt: isStablecoin(debtPrice),
     ltv,
     collateral: collateralResult,
     debt: debtResult,
