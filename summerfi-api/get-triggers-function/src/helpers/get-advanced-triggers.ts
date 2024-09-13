@@ -6,7 +6,7 @@ import {
   MakerAutoTakeProfitToCollateralID,
   MakerAutoTakeProfitToDaiID,
   MakerAutoTakeProfitToCollateral,
-  MakerAutoTakeProfitToDai,
+  MakerAutoTakeProfitToDebt,
 } from '@summerfi/triggers-shared/contracts'
 import { createPublicClient, http, PublicClient, Chain as ViemChain } from 'viem'
 import { arbitrum, base, mainnet, optimism, sepolia } from 'viem/chains'
@@ -117,7 +117,7 @@ export const getAdvancedTriggers = async ({
       }
     })[0]
 
-  const makerAutoTakeProfitToDai: MakerAutoTakeProfitToDai | undefined = triggers.triggers
+  const makerAutoTakeProfitToDai: MakerAutoTakeProfitToDebt | undefined = triggers.triggers
     .filter(filterTrigger(MakerAutoTakeProfitToDaiID))
     .map((trigger) => {
       return {
