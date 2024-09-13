@@ -127,10 +127,10 @@ export const getMakerInfo = async ({
     ],
   })
   if (vaultInfoResponse.status !== 'success') {
-    throw new Error("Couldn't get vault info")
+    throw new Error(`Failed to get vault info: ${JSON.stringify(vaultInfoResponse.error)}`)
   }
   if (assetPriceResponse.status !== 'success') {
-    throw new Error("Couldn't get vault asset price")
+    throw new Error(`Failed to get vault asset price: ${JSON.stringify(assetPriceResponse.error)}`)
   }
   const collateralDecimals = trigger.tokens.find((token) => token.symbol !== 'DAI')!.decimals
   const debtDecimals = trigger.tokens.find((token) => token.symbol === 'DAI')!.decimals
