@@ -10,6 +10,7 @@ const ten = new BigNumber(10)
 export const mapTriggerCommonParams = (trigger: TriggersQuery['triggers'][number]) => ({
   triggerId: trigger.id,
   triggerData: trigger.triggerData,
+  triggerGroupId: trigger.triggerGroupId?.toString(),
 })
 
 const mapMakerTriggerCommonParams = (trigger: TriggersQuery['triggers'][number]) => ({
@@ -152,22 +153,27 @@ export const mapMakerDecodedAutoTakeProfitParams = (
   const executionPriceParsed = new BigNumber(
     decodedData[decodedDataNames.indexOf('executionPrice')],
   ).div(ten.pow(Number(cdp!.collateralToken.decimals)))
+  const hasDebt = !makerPositionInfo!.debtInUsd.isZero()
   return {
     ...mapMakerTriggerCommonParams(trigger),
     executionPrice: decodedData[decodedDataNames.indexOf('executionPrice')],
     maxBaseFeeInGwei: decodedData[decodedDataNames.indexOf('maxBaseFeeInGwei')],
-    currentLtv: one
-      .div(makerPositionInfo!.collateralInUSD.div(makerPositionInfo!.debtInUsd))
-      .times(ten.pow(4))
-      .toFixed(0),
-    executionLtv: one
-      .div(
-        makerPositionInfo!.collateralAmount
-          .times(executionPriceParsed)
-          .div(makerPositionInfo!.debtInUsd),
-      )
-      .times(ten.pow(4))
-      .toFixed(0),
+    currentLtv: hasDebt
+      ? one
+          .div(makerPositionInfo!.collateralInUSD.div(makerPositionInfo!.debtInUsd))
+          .times(ten.pow(4))
+          .toFixed(0)
+      : '0',
+    executionLtv: hasDebt
+      ? one
+          .div(
+            makerPositionInfo!.collateralAmount
+              .times(executionPriceParsed)
+              .div(makerPositionInfo!.debtInUsd),
+          )
+          .times(ten.pow(4))
+          .toFixed(0)
+      : '0',
   }
 }
 

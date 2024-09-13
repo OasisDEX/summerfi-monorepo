@@ -91,6 +91,7 @@ export type MakerStopLossToDai = Trigger & {
 export type MakerBasicBuy = Trigger & {
   triggerTypeName: 'MakerBasicBuy'
   triggerType: typeof MakerBasicBuyID
+  triggerGroupId?: string
   decodedParams: {
     cdpId: string
     triggerType: string
@@ -106,6 +107,7 @@ export type MakerBasicBuy = Trigger & {
 export type MakerBasicSell = Trigger & {
   triggerTypeName: 'MakerBasicSell'
   triggerType: typeof MakerBasicSellID
+  triggerGroupId?: string
   decodedParams: {
     cdpId: string
     triggerType: string
@@ -138,6 +140,7 @@ export type MakerConstantMultiple = Trigger & {
 export type MakerAutoTakeProfitToCollateral = Trigger & {
   triggerTypeName: 'MakerAutoTakeProfitToCollateral'
   triggerType: typeof MakerAutoTakeProfitToCollateralID
+  triggerGroupId?: string
   decodedParams: {
     cdpId: string
     triggerType: string
@@ -148,6 +151,7 @@ export type MakerAutoTakeProfitToCollateral = Trigger & {
 export type MakerAutoTakeProfitToDebt = Trigger & {
   triggerTypeName: 'MakerAutoTakeProfitToDai'
   triggerType: typeof MakerAutoTakeProfitToDaiID
+  triggerGroupId?: string
   decodedParams: {
     cdpId: string
     triggerType: string

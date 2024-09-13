@@ -112,7 +112,7 @@ export const getSimpleTriggers = ({
     })[0]
 
   const makerConstantMultiple: MakerConstantMultiple | undefined =
-    makerBasicBuy && makerBasicSell
+    makerBasicBuy?.triggerGroupId && makerBasicSell?.triggerGroupId
       ? getMakerConstantMultiple({
           makerBasicBuy,
           makerBasicSell,

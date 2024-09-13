@@ -13,10 +13,11 @@ export const getMakerConstantMultiple = ({
   makerBasicBuy: MakerBasicBuy
   makerBasicSell: MakerBasicSell
   trigger: TriggersQuery['triggers'][0]
-}) => {
-  return {
+}) =>
+  ({
     triggerTypeName: 'MakerConstantMultiple',
     triggerType: null,
+    triggerGroupId: trigger.triggerGroupId,
     decodedParams: {
       cdpId: trigger.cdp!.id,
       basicBuyExecutionLtv: makerBasicBuy.decodedParams.executionLtv,
@@ -29,5 +30,4 @@ export const getMakerConstantMultiple = ({
       deviation: makerBasicBuy.decodedParams.deviation,
       maxBaseFeeInGwei: makerBasicBuy.decodedParams.maxBaseFeeInGwei,
     },
-  } as MakerConstantMultiple
-}
+  }) as MakerConstantMultiple
