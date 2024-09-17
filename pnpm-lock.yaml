@@ -672,10 +672,10 @@ importers:
         version: 5.16.4(react@18.3.1)
       vite-plugin-dts:
         specifier: 4.0.0-beta.1
-        version: 4.0.0-beta.1(@types/node@20.12.7)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.5)
+        version: 4.0.0-beta.1(@types/node@20.12.7)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.6)
       vite-plugin-svgo:
         specifier: ^1.4.0
-        version: 1.4.0(typescript@5.4.5)(vite@5.3.5)
+        version: 1.4.0(typescript@5.4.5)(vite@5.3.6)
     devDependencies:
       '@summerfi/app-types':
         specifier: workspace:*
@@ -702,8 +702,8 @@ importers:
         specifier: ^5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.5
-        version: 5.3.5(@types/node@20.12.7)(sass@1.77.8)
+        specifier: ^5.3.6
+        version: 5.3.6(@types/node@20.12.7)(sass@1.77.8)
 
   packages/app-risk:
     dependencies:
@@ -721,7 +721,7 @@ importers:
         version: 1.1.1(rollup@4.18.0)
       vite-tsconfig-paths:
         specifier: ^4.3.2
-        version: 4.3.2(typescript@5.4.5)(vite@5.3.5)
+        version: 4.3.2(typescript@5.4.5)(vite@5.3.6)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -737,7 +737,7 @@ importers:
         version: 18.3.1
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.3.1(vite@5.3.5)
+        version: 4.3.1(vite@5.3.6)
       eslint:
         specifier: 8.57.0
         version: 8.57.0
@@ -748,11 +748,11 @@ importers:
         specifier: ^5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.2.11
-        version: 5.3.5(@types/node@20.12.7)(sass@1.77.8)
+        specifier: ^5.3.6
+        version: 5.3.6(@types/node@20.12.7)(sass@1.77.8)
       vite-plugin-dts:
         specifier: ^3.9.1
-        version: 3.9.1(@types/node@20.12.7)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.5)
+        version: 3.9.1(@types/node@20.12.7)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.6)
 
   packages/app-tos:
     dependencies:
@@ -782,7 +782,7 @@ importers:
         version: 2.9.19(typescript@5.4.5)(zod@3.22.4)
       vite-tsconfig-paths:
         specifier: ^4.3.2
-        version: 4.3.2(typescript@5.4.5)(vite@5.3.5)
+        version: 4.3.2(typescript@5.4.5)(vite@5.3.6)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -804,7 +804,7 @@ importers:
         version: 18.3.1
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.3.1(vite@5.3.5)
+        version: 4.3.1(vite@5.3.6)
       eslint:
         specifier: 8.57.0
         version: 8.57.0
@@ -815,14 +815,14 @@ importers:
         specifier: ^5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.2.11
-        version: 5.3.5(@types/node@20.12.7)(sass@1.77.8)
+        specifier: ^5.3.6
+        version: 5.3.6(@types/node@20.12.7)(sass@1.77.8)
       vite-plugin-dts:
         specifier: ^3.9.1
-        version: 3.9.1(@types/node@20.12.7)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.5)
+        version: 3.9.1(@types/node@20.12.7)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.6)
       vite-plugin-node-polyfills:
         specifier: ^0.22.0
-        version: 0.22.0(rollup@4.18.0)(vite@5.3.5)
+        version: 0.22.0(rollup@4.18.0)(vite@5.3.6)
 
   packages/app-types:
     dependencies:
@@ -910,7 +910,7 @@ importers:
         version: 3.1.0(react@18.3.1)
       vite-tsconfig-paths:
         specifier: ^4.3.2
-        version: 4.3.2(typescript@5.4.5)(vite@5.3.5)
+        version: 4.3.2(typescript@5.4.5)(vite@5.3.6)
     devDependencies:
       '@summerfi/app-types':
         specifier: workspace:*
@@ -938,7 +938,7 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react-swc':
         specifier: ^3.7.0
-        version: 3.7.0(vite@5.3.5)
+        version: 3.7.0(vite@5.3.6)
       eslint:
         specifier: 8.57.0
         version: 8.57.0
@@ -955,14 +955,14 @@ importers:
         specifier: ^5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.3.5
-        version: 5.3.5(@types/node@20.12.7)(sass@1.77.8)
+        specifier: ^5.3.6
+        version: 5.3.6(@types/node@20.12.7)(sass@1.77.8)
       vite-plugin-dts:
         specifier: 4.0.0-beta.1
-        version: 4.0.0-beta.1(@types/node@20.12.7)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.5)
+        version: 4.0.0-beta.1(@types/node@20.12.7)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.6)
       vite-plugin-lib-inject-css:
         specifier: ^2.1.1
-        version: 2.1.1(vite@5.3.5)
+        version: 2.1.1(vite@5.3.6)
 
   packages/app-utils:
     dependencies:
@@ -974,7 +974,7 @@ importers:
         version: 1.11.12
       vite-tsconfig-paths:
         specifier: ^4.3.2
-        version: 4.3.2(typescript@5.4.5)(vite@5.3.5)
+        version: 4.3.2(typescript@5.4.5)(vite@5.3.6)
     devDependencies:
       '@summerfi/app-types':
         specifier: workspace:*
@@ -995,14 +995,14 @@ importers:
         specifier: ^5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.2.11
-        version: 5.3.5(@types/node@20.12.7)(sass@1.77.8)
+        specifier: ^5.3.6
+        version: 5.3.6(@types/node@20.12.7)(sass@1.77.8)
       vite-plugin-dts:
         specifier: ^3.9.1
-        version: 3.9.1(@types/node@20.12.7)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.5)
+        version: 3.9.1(@types/node@20.12.7)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.6)
       vite-plugin-node-polyfills:
         specifier: ^0.22.0
-        version: 0.22.0(rollup@4.18.0)(vite@5.3.5)
+        version: 0.22.0(rollup@4.18.0)(vite@5.3.6)
 
   packages/automation-subgraph:
     dependencies:
@@ -17383,18 +17383,18 @@ packages:
       - supports-color
     dev: true
 
-  /@vitejs/plugin-react-swc@3.7.0(vite@5.3.5):
+  /@vitejs/plugin-react-swc@3.7.0(vite@5.3.6):
     resolution: {integrity: sha512-yrknSb3Dci6svCd/qhHqhFPDSw0QtjumcqdKMoNNzmOl5lMXTTiqzjWtG4Qask2HdvvzaNgSunbQGet8/GrKdA==}
     peerDependencies:
       vite: ^4 || ^5
     dependencies:
       '@swc/core': 1.7.0
-      vite: 5.3.5(@types/node@20.12.7)(sass@1.77.8)
+      vite: 5.3.6(@types/node@20.12.7)(sass@1.77.8)
     transitivePeerDependencies:
       - '@swc/helpers'
     dev: true
 
-  /@vitejs/plugin-react@4.3.1(vite@5.3.5):
+  /@vitejs/plugin-react@4.3.1(vite@5.3.6):
     resolution: {integrity: sha512-m/V2syj5CuVnaxcUJOQRel/Wr31FFXRFlnOoq1TVtkCxsY5veGMTEmpWHndrhB2U8ScHtCQB1e+4hWYExQc6Lg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -17405,7 +17405,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.24.7(@babel/core@7.24.7)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 5.3.5(@types/node@20.12.7)(sass@1.77.8)
+      vite: 5.3.6(@types/node@20.12.7)(sass@1.77.8)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -34303,7 +34303,7 @@ packages:
       - zod
     dev: false
 
-  /vite-plugin-dts@3.9.1(@types/node@20.12.7)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.5):
+  /vite-plugin-dts@3.9.1(@types/node@20.12.7)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.6):
     resolution: {integrity: sha512-rVp2KM9Ue22NGWB8dNtWEr+KekN3rIgz1tWD050QnRGlriUCmaDwa7qA5zDEjbXg5lAXhYMSBJtx3q3hQIJZSg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -34320,7 +34320,7 @@ packages:
       kolorist: 1.8.0
       magic-string: 0.30.10
       typescript: 5.4.5
-      vite: 5.3.5(@types/node@20.12.7)(sass@1.77.8)
+      vite: 5.3.6(@types/node@20.12.7)(sass@1.77.8)
       vue-tsc: 1.8.27(typescript@5.4.5)
     transitivePeerDependencies:
       - '@types/node'
@@ -34328,7 +34328,7 @@ packages:
       - supports-color
     dev: true
 
-  /vite-plugin-dts@4.0.0-beta.1(@types/node@20.12.7)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.5):
+  /vite-plugin-dts@4.0.0-beta.1(@types/node@20.12.7)(rollup@4.18.0)(typescript@5.4.5)(vite@5.3.6):
     resolution: {integrity: sha512-4ILGS8ClSYiNMtSRo4YxJ+JeC2P4uZgo9cQ7Yav+CLSxcoWBffjJ6B1QKcn5BhniXJQkb1j6Bi0MCj5C5+i4Sg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -34348,14 +34348,14 @@ packages:
       local-pkg: 0.5.0
       magic-string: 0.30.10
       typescript: 5.4.5
-      vite: 5.3.5(@types/node@20.12.7)(sass@1.77.8)
+      vite: 5.3.6(@types/node@20.12.7)(sass@1.77.8)
       vue-tsc: 2.0.19(typescript@5.4.5)
     transitivePeerDependencies:
       - '@types/node'
       - rollup
       - supports-color
 
-  /vite-plugin-lib-inject-css@2.1.1(vite@5.3.5):
+  /vite-plugin-lib-inject-css@2.1.1(vite@5.3.6):
     resolution: {integrity: sha512-RIMeVnqBK/8I0E9nnQWzws6pdj5ilRMPJSnXYb6nWxNR4EmDPnksnb/ACoR5Fy7QfzULqS4gtQMrjwnNCC9zoA==}
     peerDependencies:
       vite: '*'
@@ -34363,22 +34363,22 @@ packages:
       '@ast-grep/napi': 0.22.6
       magic-string: 0.30.10
       picocolors: 1.0.1
-      vite: 5.3.5(@types/node@20.12.7)(sass@1.77.8)
+      vite: 5.3.6(@types/node@20.12.7)(sass@1.77.8)
     dev: true
 
-  /vite-plugin-node-polyfills@0.22.0(rollup@4.18.0)(vite@5.3.5):
+  /vite-plugin-node-polyfills@0.22.0(rollup@4.18.0)(vite@5.3.6):
     resolution: {integrity: sha512-F+G3LjiGbG8QpbH9bZ//GSBr9i1InSTkaulfUHFa9jkLqVGORFBoqc2A/Yu5Mmh1kNAbiAeKeK+6aaQUf3x0JA==}
     peerDependencies:
       vite: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0
     dependencies:
       '@rollup/plugin-inject': 5.0.5(rollup@4.18.0)
       node-stdlib-browser: 1.2.0
-      vite: 5.3.5(@types/node@20.12.7)(sass@1.77.8)
+      vite: 5.3.6(@types/node@20.12.7)(sass@1.77.8)
     transitivePeerDependencies:
       - rollup
     dev: true
 
-  /vite-plugin-svgo@1.4.0(typescript@5.4.5)(vite@5.3.5):
+  /vite-plugin-svgo@1.4.0(typescript@5.4.5)(vite@5.3.6):
     resolution: {integrity: sha512-ZBXydVOVkpLftdYG55DIcgUZDNgEu41RAwjzrqdtZkMzpxvDD8s5pQkxTLy4nj9wD6AWtevNRvA2SdSJLFe6Iw==}
     peerDependencies:
       typescript: '>=4.9.4'
@@ -34386,10 +34386,10 @@ packages:
     dependencies:
       svgo: 3.0.4
       typescript: 5.4.5
-      vite: 5.3.5(@types/node@20.12.7)(sass@1.77.8)
+      vite: 5.3.6(@types/node@20.12.7)(sass@1.77.8)
     dev: false
 
-  /vite-tsconfig-paths@4.3.2(typescript@5.4.5)(vite@5.3.5):
+  /vite-tsconfig-paths@4.3.2(typescript@5.4.5)(vite@5.3.6):
     resolution: {integrity: sha512-0Vd/a6po6Q+86rPlntHye7F31zA2URZMbH8M3saAZ/xR9QoGN/L21bxEGfXdWmFdNkqPpRdxFT7nmNe12e9/uA==}
     peerDependencies:
       vite: '*'
@@ -34400,14 +34400,14 @@ packages:
       debug: 4.3.4(supports-color@8.1.1)
       globrex: 0.1.2
       tsconfck: 3.0.3(typescript@5.4.5)
-      vite: 5.3.5(@types/node@20.12.7)(sass@1.77.8)
+      vite: 5.3.6(@types/node@20.12.7)(sass@1.77.8)
     transitivePeerDependencies:
       - supports-color
       - typescript
     dev: false
 
-  /vite@5.3.5(@types/node@20.12.7)(sass@1.77.8):
-    resolution: {integrity: sha512-MdjglKR6AQXQb9JGiS7Rc2wC6uMjcm7Go/NHNO63EwiJXfuk9PgqiP/n5IDJCziMkfw9n4Ubp7lttNwz+8ZVKA==}
+  /vite@5.3.6(@types/node@20.12.7)(sass@1.77.8):
+    resolution: {integrity: sha512-es78AlrylO8mTVBygC0gTC0FENv0C6T496vvd33ydbjF/mIi9q3XQ9A3NWo5qLGFKywvz10J26813OkLvcQleA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:

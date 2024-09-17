@@ -24,7 +24,7 @@
     "vite-plugin-node-polyfills": "^0.22.0",
     "eslint": "8.57.0",
     "typescript": "^5.4.5",
-    "vite": "^5.2.11",
+    "vite": "^5.3.6",
     "vite-plugin-dts": "^3.9.1",
     "glob": "^10.3.12"
   },
