@@ -43,6 +43,11 @@
           background-image: var(--gradient-protocol-spark);
         }
     }
+    &sky {
+        &::after {
+          background-image: var(--gradient-protocol-sky);
+        }
+    }
 }
 
 .navigationMenuDropdownContentListItemTitle {
