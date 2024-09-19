@@ -39,7 +39,9 @@ export function ResponseOk<T extends DefaultSuccessResponse<unknown>>(
  * @param body
  * @returns APIGatewayProxyResultV2
  */
-export function ResponseOkSimple<T extends Record<string, unknown>>({
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function ResponseOkSimple<T extends Record<string, any>>({
   body,
 }: {
   body: T

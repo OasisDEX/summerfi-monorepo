@@ -1,5 +1,5 @@
 {
-  "name": "@summerfi/portfolio-assets-function",
+  "name": "@summerfi/fee-manager-function",
   "version": "1.0.0",
   "scripts": {
     "test": "jest --passWithNoTests",

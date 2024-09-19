@@ -1,5 +1,27 @@
 query GetPosition($id: ID!) {
   position(id: $id) {
-    id
+    events(orderBy: blockNumber, orderDirection: desc) {
+      kind
+      blockNumber
+      collateralToken {
+        address
+        symbol
+        decimals
+      }
+      collateralBefore
+      collateralAfter
+      debtToken {
+        address
+        symbol
+        decimals
+      }
+      debtBefore
+      debtAfter
+      depositTransfers {
+        amount
+        priceInUSD
+        amountUSD
+      }
+    }
   }
 }
