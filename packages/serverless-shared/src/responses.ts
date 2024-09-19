@@ -1,5 +1,5 @@
 import type { APIGatewayProxyResultV2 } from 'aws-lambda'
-import type { DefaultErrorResponse } from './helper-types'
+import type { DefaultErrorResponse, DefaultSuccessResponse } from './helper-types'
 import { serialize } from './serialize'
 
 export function createOkBody(obj: Record<string, unknown>): string | undefined {
@@ -18,8 +18,28 @@ export function createHeaders(): Record<string, string | number | boolean> {
   }
 }
 
-// eslint-disable-next-line
-export function ResponseOk<T extends Record<string, any>>({
+/**
+ * Standardized 200 response with data, code and message fields providing extra context for handling on the client
+ * @param body
+ * @returns APIGatewayProxyResultV2
+ */
+export function ResponseOk<T extends DefaultSuccessResponse<unknown>>(
+  body: T,
+): APIGatewayProxyResultV2 {
+  return {
+    statusCode: 200,
+    headers: createHeaders(),
+    body: createOkBody(body),
+  }
+}
+
+/**
+ * Simple ok response with just data, good for POCs, don't use in production
+ * @deprecated use ResponseOkStandardized
+ * @param body
+ * @returns APIGatewayProxyResultV2
+ */
+export function ResponseOkSimple<T extends Record<string, unknown>>({
   body,
 }: {
   body: T

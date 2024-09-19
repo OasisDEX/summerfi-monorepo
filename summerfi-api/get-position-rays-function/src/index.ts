@@ -1,5 +1,5 @@
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'aws-lambda'
-import { ResponseBadRequest, ResponseOk } from '@summerfi/serverless-shared/responses'
+import { ResponseBadRequest, ResponseOkSimple } from '@summerfi/serverless-shared/responses'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { getRaysDB } from '@summerfi/rays-db'
 import { addressSchema } from '@summerfi/serverless-shared'
@@ -74,7 +74,7 @@ export const handler = async (
     ])
     .execute()
 
-  return ResponseOk({
+  return ResponseOkSimple({
     body: {
       address,
       positionsPoints: groupBy(positionsPoints, (element) => element.externalId),

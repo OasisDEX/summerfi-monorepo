@@ -5,7 +5,7 @@ import { getDefaultErrorMessage } from '@summerfi/serverless-shared/helpers'
 import {
   ResponseBadRequest,
   ResponseInternalServerError,
-  ResponseOk,
+  ResponseOkSimple,
 } from '@summerfi/serverless-shared/responses'
 import {
   DebankComplexProtocol,
@@ -81,7 +81,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       summerPercentageChange: 0,
       allAssetsUsdValue,
     }
-    return ResponseOk<PortfolioOverviewResponse>({ body })
+    return ResponseOkSimple<PortfolioOverviewResponse>({ body })
   } catch (error) {
     console.error(error)
     return ResponseInternalServerError()

@@ -2,7 +2,7 @@ import { z } from 'zod'
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda'
 
 import { getDefaultErrorMessage } from '@summerfi/serverless-shared/helpers'
-import { ResponseBadRequest, ResponseOk } from '@summerfi/serverless-shared/responses'
+import { ResponseBadRequest, ResponseOkSimple } from '@summerfi/serverless-shared/responses'
 import { DebankToken } from '@summerfi/serverless-shared/debank-types'
 import {
   NetworkNames,
@@ -88,7 +88,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     assets: preparedTokenData,
   }
 
-  return ResponseOk({ body: walletAssetsResponse })
+  return ResponseOkSimple({ body: walletAssetsResponse })
 }
 
 export default handler

@@ -1,0 +1,5 @@
+query GetPosition($id: ID!) {
+  position(id: $id) {
+    id
+  }
+}

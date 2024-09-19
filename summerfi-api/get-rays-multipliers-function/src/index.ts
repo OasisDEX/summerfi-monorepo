@@ -1,5 +1,5 @@
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'aws-lambda'
-import { ResponseBadRequest, ResponseOk } from '@summerfi/serverless-shared/responses'
+import { ResponseBadRequest, ResponseOkSimple } from '@summerfi/serverless-shared/responses'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { getRaysDB } from '@summerfi/rays-db'
 import { addressSchema } from '@summerfi/serverless-shared'
@@ -62,7 +62,7 @@ export const handler = async (
     .execute()
 
   if (userAddressId.length === 0) {
-    return ResponseOk({
+    return ResponseOkSimple({
       body: {
         address,
         userMultipliers: [],
@@ -85,7 +85,7 @@ export const handler = async (
     .select(['userAddress.address', 'position.externalId', 'multiplier.value', 'multiplier.type'])
     .execute()
 
-  return ResponseOk({
+  return ResponseOkSimple({
     body: {
       address,
       userMultipliers: positionsMultiplier.filter((item) => item.address),

@@ -3,7 +3,7 @@ import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'a
 import {
   ResponseBadRequest,
   ResponseInternalServerError,
-  ResponseOk,
+  ResponseOkSimple,
 } from '@summerfi/serverless-shared/responses'
 import {
   addressSchema,
@@ -175,7 +175,7 @@ export const handler = async (
 
   const result = await client.allocations({ metaMorphoAddresses: [params.address] })
   if (result.length === 0) {
-    return ResponseOk({ body: emptyResponse(params.address) })
+    return ResponseOkSimple({ body: emptyResponse(params.address) })
   }
 
   // we can assume that the array should have only one element because we are querying only one address
@@ -183,7 +183,7 @@ export const handler = async (
   const metaMorphoVault = result[0].vault
   if (metaMorphoVault.address !== params.address) {
     logger.error('Vault address does not match the requested address', { metaMorphoVault, params })
-    return ResponseOk({ body: emptyResponse(params.address) })
+    return ResponseOkSimple({ body: emptyResponse(params.address) })
   }
   const markets = allocations.map(
     (a): Pick<MorphoMarket, 'marketId'> => ({
@@ -303,7 +303,7 @@ export const handler = async (
     rewardsByToken,
   }
 
-  return ResponseOk({ body: response })
+  return ResponseOkSimple({ body: response })
 }
 
 export default handler

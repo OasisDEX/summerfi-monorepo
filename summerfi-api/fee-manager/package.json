@@ -1,0 +1,23 @@
+{
+  "name": "@summerfi/portfolio-assets-function",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "jest --passWithNoTests",
+    "build": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config"
+  },
+  "devDependencies": {
+    "@summerfi/eslint-config": "workspace:*",
+    "@summerfi/typescript-config": "workspace:*",
+    "@types/node": "^20.12.7",
+    "eslint": "^8.57.0"
+  },
+  "dependencies": {
+    "@summerfi/serverless-shared": "workspace:*",
+    "graphql-request": "^6.1.0",
+    "node-fetch": "^3.3.2",
+    "zod": "^3.22.4"
+  }
+}

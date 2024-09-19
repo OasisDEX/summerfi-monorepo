@@ -1,5 +1,5 @@
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'aws-lambda'
-import { ResponseBadRequest, ResponseOk } from '@summerfi/serverless-shared/responses'
+import { ResponseBadRequest, ResponseOkSimple } from '@summerfi/serverless-shared/responses'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { getRaysDB } from '@summerfi/rays-db'
 import { numberSchema } from '@summerfi/serverless-shared'
@@ -89,7 +89,7 @@ export const handler = async (
     .offset(offset)
     .execute()
 
-  return ResponseOk({
+  return ResponseOkSimple({
     body: {
       leaderboard,
     },

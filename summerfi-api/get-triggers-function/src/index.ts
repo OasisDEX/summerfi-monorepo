@@ -3,7 +3,7 @@ import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'a
 import {
   ResponseBadRequest,
   ResponseInternalServerError,
-  ResponseOk,
+  ResponseOkSimple,
 } from '@summerfi/serverless-shared/responses'
 import {
   addressSchema,
@@ -582,7 +582,7 @@ export const handler = async (
     },
   }
 
-  return ResponseOk({ body: response })
+  return ResponseOkSimple({ body: response })
 }
 
 export default handler

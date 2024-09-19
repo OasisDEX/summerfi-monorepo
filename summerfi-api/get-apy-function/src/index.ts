@@ -2,7 +2,7 @@ import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'a
 import {
   ResponseBadRequest,
   ResponseInternalServerError,
-  ResponseOk,
+  ResponseOkSimple,
 } from '@summerfi/serverless-shared/responses'
 import { Logger } from '@aws-lambda-powertools/logger'
 
@@ -123,7 +123,7 @@ export const handler = async (
     },
   }
 
-  return ResponseOk({ body: result })
+  return ResponseOkSimple({ body: result })
 }
 
 export default handler
