@@ -11,6 +11,7 @@ export type Styles = {
   navigationMenuDropdownContentListItemTitleGradientajna: string
   navigationMenuDropdownContentListItemTitleGradientmaker: string
   navigationMenuDropdownContentListItemTitleGradientmorphoblue: string
+  navigationMenuDropdownContentListItemTitleGradientsky: string
   navigationMenuDropdownContentListItemTitleGradientsparkv3: string
   navigationMenuDropdownContentListItemWrapper: string
   starTransition: string
