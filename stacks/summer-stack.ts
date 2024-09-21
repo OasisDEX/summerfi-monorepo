@@ -8,7 +8,7 @@ import { attachVPC } from './vpc'
 import { SummerStackContext } from './summer-stack-context'
 import { addRaysConfig } from './rays'
 import { addRedis } from './redis'
-import { addFeeManager } from './fee-manager'
+import { addFeeManagerConfig } from './fee-manager'
 
 export function API(stackContext: StackContext) {
   const { stack } = stackContext

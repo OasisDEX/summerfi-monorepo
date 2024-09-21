@@ -1,0 +1,30 @@
+import { OPERATION_NAMES } from '@oasisdex/dma-library'
+
+export const AUM_FEE_RATE = 0.0002 // 0.02%
+
+export const supportedOpenEvents = [
+  OPERATION_NAMES.aave.v2.OPEN_POSITION,
+  OPERATION_NAMES.aave.v2.OPEN_DEPOSIT_BORROW,
+  OPERATION_NAMES.aave.v3.OPEN_POSITION,
+  OPERATION_NAMES.aave.v3.OPEN_DEPOSIT_BORROW,
+  OPERATION_NAMES.spark.OPEN_POSITION,
+  OPERATION_NAMES.spark.OPEN_DEPOSIT_BORROW,
+]
+
+export const supportedCloseEvents = [
+  OPERATION_NAMES.aave.v2.CLOSE_POSITION,
+  OPERATION_NAMES.aave.v3.CLOSE_POSITION,
+  OPERATION_NAMES.spark.CLOSE_POSITION,
+]
+
+export const supportedDeriskEvents = [
+  OPERATION_NAMES.aave.v2.DECREASE_POSITION,
+  OPERATION_NAMES.aave.v3.ADJUST_RISK_DOWN,
+  OPERATION_NAMES.spark.ADJUST_RISK_DOWN,
+]
+
+export const supportedWithdrawEvents = [
+  OPERATION_NAMES.aave.v2.PAYBACK_WITHDRAW,
+  OPERATION_NAMES.aave.v3.PAYBACK_WITHDRAW,
+  OPERATION_NAMES.spark.PAYBACK_WITHDRAW,
+]

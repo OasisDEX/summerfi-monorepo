@@ -3,25 +3,27 @@ query GetPosition($id: ID!) {
     events(orderBy: blockNumber, orderDirection: desc) {
       kind
       blockNumber
+      timestamp
       collateralToken {
         address
         symbol
         decimals
       }
-      collateralBefore
-      collateralAfter
       debtToken {
         address
         symbol
         decimals
       }
+      swapToToken
+      swapToAmount
+      swapFromToken
+      swapFromAmount
+      collateralBefore
+      collateralAfter
+      collateralDelta
       debtBefore
       debtAfter
-      depositTransfers {
-        amount
-        priceInUSD
-        amountUSD
-      }
+      debtDelta
     }
   }
 }

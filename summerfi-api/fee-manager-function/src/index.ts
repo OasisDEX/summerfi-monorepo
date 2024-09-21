@@ -6,6 +6,7 @@ import { ResponseBadRequest, ResponseOk } from '@summerfi/serverless-shared/resp
 
 import { ChainId, chainIdSchema } from '@summerfi/serverless-shared'
 import { createGraphQLClient } from './createGraphQLClient'
+import { calculateFee } from './calculateFee'
 
 const paramsSchema = z.object({
   chainId: chainIdSchema,
@@ -14,11 +15,11 @@ const paramsSchema = z.object({
 
 export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
   //set envs
-  const { DEBANK_API_KEY: subgraphBase = process.env.SUBGRAPH_BASE } =
+  const { SUBGRAPH_BASE: subgraphBase = process.env.SUBGRAPH_BASE } =
     (event.stageVariables as Record<string, string>) || {}
 
   if (!subgraphBase) {
-    throw new Error('Missing env vars')
+    throw new Error('Missing env vars in the running env')
   }
 
   // params
@@ -42,21 +43,31 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     .GetPosition({
       id: positionId,
     })
+    .then((result) => {
+      return result.position
+    })
     .catch((error) => {
       console.error(error)
       throw new Error('Failed to fetch from subgraph')
     })
 
-  // use position to calculate fee
-  position.position?.id
-  const fee: string = '0'
+  if (!position) {
+    return ResponseBadRequest(`Position with id (${positionId}) not found`)
+  }
 
-  return ResponseOk({
-    message: 'Success',
-    data: {
-      fee,
-    },
-  })
+  try {
+    const fee = calculateFee(position)
+
+    return ResponseOk({
+      message: 'Success',
+      data: {
+        fee,
+      },
+    })
+  } catch (error) {
+    console.error(error)
+    return ResponseBadRequest(error ?? 'Unhandled server error')
+  }
 }
 
 export default handler
