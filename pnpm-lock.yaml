@@ -3088,7 +3088,7 @@ importers:
         specifier: ^4.8.2
         version: 4.9.3
 
-  summerfi-api/fee-manager:
+  summerfi-api/fee-manager-function:
     dependencies:
       '@oasisdex/dma-library':
         specifier: 0.6.65
