@@ -3,7 +3,7 @@ export type DefaultErrorResponse = {
   message: string
 }
 
-export type DefaultSuccessResponse<T> = {
+export type DefaultOkResponse<T> = {
   errorCode?: number
   message: string
   data: T

@@ -1,5 +1,5 @@
 import type { APIGatewayProxyResultV2 } from 'aws-lambda'
-import type { DefaultErrorResponse, DefaultSuccessResponse } from './helper-types'
+import type { DefaultErrorResponse, DefaultOkResponse } from './helper-types'
 import { serialize } from './serialize'
 
 export function createOkBody(obj: Record<string, unknown>): string | undefined {
@@ -23,9 +23,7 @@ export function createHeaders(): Record<string, string | number | boolean> {
  * @param body
  * @returns APIGatewayProxyResultV2
  */
-export function ResponseOk<T extends DefaultSuccessResponse<unknown>>(
-  body: T,
-): APIGatewayProxyResultV2 {
+export function ResponseOk<T extends DefaultOkResponse<unknown>>(body: T): APIGatewayProxyResultV2 {
   return {
     statusCode: 200,
     headers: createHeaders(),
