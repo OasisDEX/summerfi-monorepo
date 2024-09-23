@@ -6,6 +6,8 @@ import { isOpenEvent } from './isOpenEvent'
 import { isDeriskEvent } from './isDeriskEvent'
 import { isWithdrawEvent } from './isWithdrawEvent'
 
+type Event = NonNullable<GetPositionQuery['position']>['events'][0]
+
 export const calculateFee = (position: GetPositionQuery['position'], toTimestamp?: number) => {
   const endTimestamp = toTimestamp ?? Date.now()
 
@@ -64,7 +66,7 @@ export const calculateFee = (position: GetPositionQuery['position'], toTimestamp
   return totalFee.toString()
 }
 
-const getEventSwapAmount = (event: any) => {
+const getEventSwapAmount = (event: Event) => {
   let swapAmount: string = '0'
   if (event.swapToToken === event.collateralToken && event.swapToAmount) {
     swapAmount = event.swapToAmount
