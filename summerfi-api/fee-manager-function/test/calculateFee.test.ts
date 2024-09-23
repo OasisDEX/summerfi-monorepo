@@ -21,7 +21,7 @@ describe('calculateFee', () => {
           swapToAmount: '1000',
           swapFromToken: 'wETH',
           swapFromAmount: '1',
-          collateralToken: 'stETH',
+          debtToken: 'stETH',
         },
       ],
     } as unknown as GetPositionQuery['position']
@@ -41,7 +41,7 @@ describe('calculateFee', () => {
           swapToAmount: '1000',
           swapFromToken: 'wETH',
           swapFromAmount: '1',
-          collateralToken: 'stETH',
+          debtToken: 'stETH',
         },
         {
           kind: supportedCloseEvents[0],
@@ -50,7 +50,7 @@ describe('calculateFee', () => {
           swapToAmount: '1000',
           swapFromToken: 'wETH',
           swapFromAmount: '1',
-          collateralToken: 'stETH',
+          debtToken: 'stETH',
         },
       ],
     } as unknown as GetPositionQuery['position']
@@ -70,7 +70,7 @@ describe('calculateFee', () => {
           swapToAmount: '0',
           swapFromToken: 'wETH',
           swapFromAmount: '0',
-          collateralToken: 'USDC',
+          debtToken: 'USDC',
         },
       ],
     } as unknown as GetPositionQuery['position']
@@ -88,7 +88,7 @@ describe('calculateFee', () => {
           swapToAmount: '900000',
           swapFromToken: 'wETH',
           swapFromAmount: '1',
-          collateralToken: 'USDC',
+          debtToken: 'USDC',
         },
       ],
     } as unknown as GetPositionQuery['position']
@@ -107,7 +107,7 @@ describe('calculateFee', () => {
           swapToAmount: '90',
           swapFromToken: 'wETH',
           swapFromAmount: '1',
-          collateralToken: 'USDC',
+          debtToken: 'USDC',
         },
         {
           kind: 'DEPOSIT',
@@ -116,7 +116,7 @@ describe('calculateFee', () => {
           swapToAmount: 900000 - 90,
           swapFromToken: 'wETH',
           swapFromAmount: '1',
-          collateralToken: 'USDC',
+          debtToken: 'USDC',
         },
       ],
     } as unknown as GetPositionQuery['position']
@@ -136,7 +136,7 @@ describe('calculateFee', () => {
           swapToAmount: '90',
           swapFromToken: 'wETH',
           swapFromAmount: '1',
-          collateralToken: 'USDC',
+          debtToken: 'USDC',
         },
         {
           kind: 'DEPOSIT',
@@ -145,7 +145,7 @@ describe('calculateFee', () => {
           swapToAmount: 900000 - 90,
           swapFromToken: 'wETH',
           swapFromAmount: '1',
-          collateralToken: 'USDC',
+          debtToken: 'USDC',
         },
         {
           kind: supportedWithdrawEvents[0],
@@ -154,7 +154,7 @@ describe('calculateFee', () => {
           swapToAmount: '450000',
           swapFromToken: 'wETH',
           swapFromAmount: '1',
-          collateralToken: 'USDC',
+          debtToken: 'USDC',
         },
       ],
     } as unknown as GetPositionQuery['position']
@@ -174,7 +174,7 @@ describe('calculateFee', () => {
           swapToAmount: '90',
           swapFromToken: 'wETH',
           swapFromAmount: '1',
-          collateralToken: 'USDC',
+          debtToken: 'USDC',
         },
         {
           kind: 'DEPOSIT',
@@ -183,7 +183,7 @@ describe('calculateFee', () => {
           swapToAmount: '900000',
           swapFromToken: 'wETH',
           swapFromAmount: '1',
-          collateralToken: 'USDC',
+          debtToken: 'USDC',
         },
         {
           kind: supportedWithdrawEvents[0],
@@ -192,7 +192,7 @@ describe('calculateFee', () => {
           swapToAmount: '450000',
           swapFromToken: 'wETH',
           swapFromAmount: '1',
-          collateralToken: 'USDC',
+          debtToken: 'USDC',
         },
         {
           kind: supportedCloseEvents[0],
@@ -201,7 +201,7 @@ describe('calculateFee', () => {
           swapToAmount: '450000',
           swapFromToken: 'wETH',
           swapFromAmount: '1',
-          collateralToken: 'USDC',
+          debtToken: 'USDC',
         },
         {
           kind: 'DEPOSIT',
@@ -210,7 +210,7 @@ describe('calculateFee', () => {
           swapToAmount: '90000',
           swapFromToken: 'wETH',
           swapFromAmount: '1',
-          collateralToken: 'USDC',
+          debtToken: 'USDC',
         },
       ],
     } as unknown as GetPositionQuery['position']
@@ -230,7 +230,7 @@ describe('calculateFee', () => {
           swapToAmount: '90',
           swapFromToken: 'wETH',
           swapFromAmount: '1',
-          collateralToken: 'USDC',
+          debtToken: 'USDC',
         },
         {
           kind: 'DEPOSIT',
@@ -239,7 +239,7 @@ describe('calculateFee', () => {
           swapToAmount: '900000',
           swapFromToken: 'wETH',
           swapFromAmount: '1',
-          collateralToken: 'USDC',
+          debtToken: 'USDC',
         },
         {
           kind: supportedWithdrawEvents[0],
@@ -248,7 +248,7 @@ describe('calculateFee', () => {
           swapToAmount: '450000',
           swapFromToken: 'wETH',
           swapFromAmount: '1',
-          collateralToken: 'USDC',
+          debtToken: 'USDC',
         },
         {
           kind: supportedCloseEvents[0],
@@ -257,7 +257,7 @@ describe('calculateFee', () => {
           swapToAmount: '450000',
           swapFromToken: 'wETH',
           swapFromAmount: '1',
-          collateralToken: 'USDC',
+          debtToken: 'USDC',
         },
         {
           kind: 'DEPOSIT',
@@ -266,7 +266,7 @@ describe('calculateFee', () => {
           swapToAmount: '90000',
           swapFromToken: 'wETH',
           swapFromAmount: '1',
-          collateralToken: 'USDC',
+          debtToken: 'USDC',
         },
         {
           kind: supportedDeriskEvents[0],
@@ -275,7 +275,7 @@ describe('calculateFee', () => {
           swapToAmount: '25000',
           swapFromToken: 'wETH',
           swapFromAmount: '1',
-          collateralToken: 'USDC',
+          debtToken: 'USDC',
         },
       ],
     } as unknown as GetPositionQuery['position']

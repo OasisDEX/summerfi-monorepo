@@ -2,7 +2,12 @@ import { z } from 'zod'
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda'
 
 import { getDefaultErrorMessage } from '@summerfi/serverless-shared/helpers'
-import { ResponseBadRequest, ResponseOk } from '@summerfi/serverless-shared/responses'
+import {
+  ResponseBadRequest,
+  ResponseInternalServerError,
+  ResponseNotFound,
+  ResponseOk,
+} from '@summerfi/serverless-shared/responses'
 
 import { ChainId, chainIdSchema } from '@summerfi/serverless-shared'
 import { createGraphQLClient } from './createGraphQLClient'
@@ -26,7 +31,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
   let chainId: ChainId
   let positionId: string
 
-  // validate inputs
+  // validate request params
   try {
     const parsedParams = paramsSchema.parse(event.queryStringParameters)
     chainId = parsedParams.chainId
@@ -37,25 +42,22 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     return ResponseBadRequest(message)
   }
 
-  const subgraphClient = createGraphQLClient(chainId, subgraphBase)
-
-  const position = await subgraphClient
-    .GetPosition({
-      id: positionId,
-    })
-    .then((result) => {
-      return result.position
-    })
-    .catch((error) => {
-      console.error(error)
-      throw new Error('Failed to fetch from subgraph')
-    })
-
-  if (!position) {
-    return ResponseBadRequest(`Position with id (${positionId}) not found`)
-  }
-
+  // handler logic
   try {
+    const subgraphClient = createGraphQLClient(chainId, subgraphBase)
+
+    const position = await subgraphClient
+      .GetPosition({
+        id: positionId,
+      })
+      .then((result) => {
+        return result.position
+      })
+
+    if (!position) {
+      return ResponseNotFound(`Position with id (${positionId}) not found`)
+    }
+
     const fee = calculateFee(position)
 
     return ResponseOk({
@@ -66,7 +68,7 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
     })
   } catch (error) {
     console.error(error)
-    return ResponseBadRequest(error ?? 'Unhandled server error')
+    return ResponseInternalServerError()
   }
 }
 

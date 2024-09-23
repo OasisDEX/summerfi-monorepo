@@ -68,9 +68,9 @@ export const calculateFee = (position: GetPositionQuery['position'], toTimestamp
 
 const getEventSwapAmount = (event: Event) => {
   let swapAmount: string = '0'
-  if (event.swapToToken === event.collateralToken && event.swapToAmount) {
+  if (event.swapToToken === event.debtToken && event.swapToAmount) {
     swapAmount = event.swapToAmount
-  } else if (event.swapFromToken === event.collateralToken && event.swapFromAmount) {
+  } else if (event.swapFromToken === event.debtToken && event.swapFromAmount) {
     swapAmount = event.swapFromAmount
   }
   return swapAmount

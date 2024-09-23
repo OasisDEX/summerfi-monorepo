@@ -2,7 +2,7 @@
   "name": "@summerfi/fee-manager-function",
   "version": "1.0.0",
   "scripts": {
-    "test": "jest --passWithNoTests",
+    "test": "jest",
     "build": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

@@ -1,4 +1,5 @@
 export type DefaultErrorResponse = {
+  errorCode?: number
   message: string
 }
 

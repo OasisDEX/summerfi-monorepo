@@ -61,10 +61,11 @@ export function ResponseBadRequest(message: string | object): APIGatewayProxyRes
   }
 }
 
-export function ResponseNotFound(): APIGatewayProxyResultV2 {
+export function ResponseNotFound(message: string = 'Resource not found'): APIGatewayProxyResultV2 {
   return {
     statusCode: 404,
     headers: createHeaders(),
+    body: typeof message === 'object' ? serialize(message) : createErrorBody(message),
   }
 }
 
