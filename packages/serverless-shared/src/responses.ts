@@ -35,7 +35,7 @@ export function ResponseOk<T extends DefaultSuccessResponse<unknown>>(
 
 /**
  * Simple ok response with just data, good for POCs, don't use in production
- * @deprecated use ResponseOkStandardized
+ * @deprecated better to use ResponseOk with standardized response format
  * @param body
  * @returns APIGatewayProxyResultV2
  */
