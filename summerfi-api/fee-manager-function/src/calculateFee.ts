@@ -1,14 +1,12 @@
 import { AUM_FEE_RATE } from './constants'
 import BigNumber from 'bignumber.js'
-import type { GetPositionQuery } from './generated/client'
 import { isCloseEvent } from './isCloseEvent'
 import { isOpenEvent } from './isOpenEvent'
 import { isDeriskEvent } from './isDeriskEvent'
 import { isWithdrawEvent } from './isWithdrawEvent'
+import type { OasisEvent, OasisPosition } from './types'
 
-type Event = NonNullable<GetPositionQuery['position']>['events'][0]
-
-export const calculateFee = (position: GetPositionQuery['position'], toTimestamp?: number) => {
+export const calculateFee = (position: OasisPosition, toTimestamp?: number) => {
   const endTimestamp = toTimestamp ?? Date.now()
 
   // find open event
@@ -66,7 +64,7 @@ export const calculateFee = (position: GetPositionQuery['position'], toTimestamp
   return totalFee.toString()
 }
 
-const getEventSwapAmount = (event: Event) => {
+const getEventSwapAmount = (event: OasisEvent) => {
   let swapAmount: string = '0'
   if (event.swapToToken === event.debtToken && event.swapToAmount) {
     swapAmount = event.swapToAmount

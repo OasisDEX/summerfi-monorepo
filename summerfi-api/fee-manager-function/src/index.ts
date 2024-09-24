@@ -9,12 +9,18 @@ import {
   ResponseOk,
 } from '@summerfi/serverless-shared/responses'
 
-import { ChainId, chainIdSchema } from '@summerfi/serverless-shared'
+import {
+  ChainId,
+  chainIdSchema,
+  protocolIdSchema,
+  type ProtocolId,
+} from '@summerfi/serverless-shared'
 import { createGraphQLClient } from './createGraphQLClient'
 import { calculateFee } from './calculateFee'
 
 const paramsSchema = z.object({
   chainId: chainIdSchema,
+  protocolId: protocolIdSchema,
   positionId: z.string(),
 })
 
@@ -29,12 +35,14 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
 
   // params
   let chainId: ChainId
+  let protocolId: ProtocolId
   let positionId: string
 
   // validate request params
   try {
     const parsedParams = paramsSchema.parse(event.queryStringParameters)
     chainId = parsedParams.chainId
+    protocolId = parsedParams.protocolId
     positionId = parsedParams.positionId
   } catch (error) {
     console.log(error)
@@ -44,15 +52,9 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
 
   // handler logic
   try {
-    const subgraphClient = createGraphQLClient(chainId, subgraphBase)
+    const subgraphClient = createGraphQLClient(chainId, protocolId, subgraphBase)
 
-    const position = await subgraphClient
-      .GetPosition({
-        id: positionId,
-      })
-      .then((result) => {
-        return result.position
-      })
+    const position = await subgraphClient.GetPosition(positionId)
 
     if (!position) {
       return ResponseNotFound(`Position with id (${positionId}) not found`)

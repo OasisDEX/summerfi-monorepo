@@ -1,6 +1,6 @@
 query GetPosition($id: ID!) {
-  position(id: $id) {
-    events(orderBy: blockNumber, orderDirection: desc) {
+  earnPosition(id: $id) {
+    oasisEvents(first: 10000, orderBy: blockNumber, orderDirection: desc) {
       kind
       blockNumber
       timestamp

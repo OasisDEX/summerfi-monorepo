@@ -6,7 +6,7 @@
     "build": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config"
+    "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config --config codegen_aave_like.yml && DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config --config codegen_ajna_v2.yml"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",

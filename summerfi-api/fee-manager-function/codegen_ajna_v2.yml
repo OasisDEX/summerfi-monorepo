@@ -1,8 +1,8 @@
 overwrite: true
-schema: '${SUBGRAPH_BASE}/summer-oasis-history'
-documents: './src/**/*.graphql'
+schema: '${SUBGRAPH_BASE}/summer-ajna-v2'
+documents: './src/queries/ajna-v2.graphql'
 generates:
-  src/generated/client.ts:
+  src/generated/client-ajna-v2.ts:
     plugins:
       - add:
           content:
