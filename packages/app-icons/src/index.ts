@@ -199,7 +199,7 @@ export const close_colorful = lazy.lib(() => import('./icons/close_colorful.svg'
 export const close_squared = lazy.lib(() => import('./icons/close_squared.svg'))
 export const radio_button = lazy.lib(() => import('./icons/radio_button.svg'))
 export const radio_button_checked = lazy.lib(() => import('./icons/radio_button_checked.svg'))
-export const rseth = lazy.lib(() => import('./icons/rseth.svg.svg'))
+export const rseth = lazy.lib(() => import('./icons/rseth.svg'))
 export const rsweth = lazy.lib(() => import('./icons/rsweth.svg'))
 export const swbtc = lazy.lib(() => import('./icons/swbtc.svg'))
 export const lbtc = lazy.lib(() => import('./icons/lbtc.svg'))
