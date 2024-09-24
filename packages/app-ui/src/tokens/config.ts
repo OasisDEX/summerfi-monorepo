@@ -537,6 +537,52 @@ export const tokenConfigs: TokenConfig[] = [
     iconName: 'uni_circle_color',
   },
   {
+    symbol: 'USDS',
+    name: 'USDS Stablecoin',
+    iconName: 'usds',
+  },
+  {
+    symbol: 'SUSDS',
+    name: 'Savings USDS',
+    iconName: 'susds',
+  },
+  {
+    symbol: 'SKY',
+    name: 'SKY Governance Token',
+    iconName: 'sky',
+  },
+  {
+    symbol: 'RSWETH',
+    name: 'rswETH',
+    iconName: 'rsweth',
+  },
+  {
+    symbol: 'RSETH',
+    name: 'rsETH',
+    iconName: 'rseth',
+  },
+  {
+    symbol: 'LBTC',
+    name: 'Lombard Staked Bitcoin',
+    iconName: 'lbtc',
+  },
+  {
+    symbol: 'SWBTC',
+    name: 'swBTC',
+    iconName: 'swbtc',
+  },
+  {
+    symbol: 'SYRUPUSDC',
+    name: 'Syrup USDC',
+    iconName: 'syrupusdc',
+  },
+  {
+    symbol: 'WOETH',
+    name: 'Wrapped OETH',
+    iconName: 'woeth',
+  },
+  // NOT SUPPORTED ICONS
+  {
     symbol: 'UNIV2WBTCETH',
     name: 'UNIV2WBTCETH',
     iconName: 'not_supported_icon',
