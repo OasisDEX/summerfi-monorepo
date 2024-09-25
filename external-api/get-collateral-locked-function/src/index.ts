@@ -3,7 +3,7 @@ import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'a
 import {
   ResponseBadRequest,
   ResponseInternalServerError,
-  ResponseOk,
+  ResponseOkSimple,
 } from '@summerfi/serverless-shared/responses'
 import { chainIdSchema } from '@summerfi/serverless-shared/validators'
 
@@ -233,7 +233,7 @@ export const handler = async (
     TVL: tvl,
   }
 
-  return ResponseOk({
+  return ResponseOkSimple({
     body: response,
   })
 }

@@ -2,7 +2,7 @@ import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'a
 import {
   ResponseBadRequest,
   ResponseInternalServerError,
-  ResponseOk,
+  ResponseOkSimple,
 } from '@summerfi/serverless-shared/responses'
 import {
   getBodySchema,
@@ -138,7 +138,7 @@ export const handler = async (
       trigger: triggerBody,
     })
 
-    return ResponseOk({
+    return ResponseOkSimple({
       body: {
         simulation,
         transaction,
