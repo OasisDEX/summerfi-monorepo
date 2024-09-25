@@ -43,6 +43,8 @@ jobs:
     env:
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
+      SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
+
     steps:
       - name: Checkout all files
         uses: actions/checkout@v4
