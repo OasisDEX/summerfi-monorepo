@@ -5,7 +5,7 @@ import {
   supportedOpenEvents,
   supportedWithdrawEvents,
 } from '../src/constants'
-import type { GetPositionQuery } from '../src/generated/client'
+import type { OasisPosition } from '../src/types'
 
 const startTimestamp = 1620000000000
 const dayInMilis = 1 * 24 * 60 * 60 * 1000
@@ -24,7 +24,7 @@ describe('calculateFee', () => {
           debtToken: 'stETH',
         },
       ],
-    } as unknown as GetPositionQuery['position']
+    } as unknown as OasisPosition
 
     expect(() => calculateFee(position)).toThrow(
       'Position is missing open event, not possible to calculate fee',
@@ -53,7 +53,7 @@ describe('calculateFee', () => {
           debtToken: 'stETH',
         },
       ],
-    } as unknown as GetPositionQuery['position']
+    } as unknown as OasisPosition
 
     expect(() => calculateFee(position)).toThrow(
       'Position is closed, not possible to calculate fee',
@@ -73,7 +73,7 @@ describe('calculateFee', () => {
           debtToken: 'USDC',
         },
       ],
-    } as unknown as GetPositionQuery['position']
+    } as unknown as OasisPosition
 
     const fee = calculateFee(position, startTimestamp + dayInMilis * 100)
     expect(fee).toBe('0')
@@ -91,7 +91,7 @@ describe('calculateFee', () => {
           debtToken: 'USDC',
         },
       ],
-    } as unknown as GetPositionQuery['position']
+    } as unknown as OasisPosition
 
     const fee = calculateFee(position, startTimestamp + dayInMilis * 100)
     expect(fee).toBe('49.31506849315068')
@@ -119,7 +119,7 @@ describe('calculateFee', () => {
           debtToken: 'USDC',
         },
       ],
-    } as unknown as GetPositionQuery['position']
+    } as unknown as OasisPosition
 
     const closeTimestamp = startTimestamp + dayInMilis * 110
     const fee = calculateFee(position, closeTimestamp)
@@ -157,7 +157,7 @@ describe('calculateFee', () => {
           debtToken: 'USDC',
         },
       ],
-    } as unknown as GetPositionQuery['position']
+    } as unknown as OasisPosition
 
     const closeTimestamp = startTimestamp + dayInMilis * 310
     const fee = calculateFee(position, closeTimestamp)
@@ -213,7 +213,7 @@ describe('calculateFee', () => {
           debtToken: 'USDC',
         },
       ],
-    } as unknown as GetPositionQuery['position']
+    } as unknown as OasisPosition
 
     const closeTimestamp = startTimestamp + dayInMilis * 715
     const fee = calculateFee(position, closeTimestamp)
@@ -278,7 +278,7 @@ describe('calculateFee', () => {
           debtToken: 'USDC',
         },
       ],
-    } as unknown as GetPositionQuery['position']
+    } as unknown as OasisPosition
 
     const closeTimestamp = startTimestamp + dayInMilis * 750
     const fee = calculateFee(position, closeTimestamp)

@@ -1,0 +1,11 @@
+sources:
+  - name: aave-like
+    handler:
+      graphql:
+        sources:
+          - endpoint: ${SUBGRAPH_BASE}/summer-oasis-history
+  - name: ajna-v2
+    handler:
+      graphql:
+        sources:
+          - endpoint: ${SUBGRAPH_BASE}/summer-ajna-v2

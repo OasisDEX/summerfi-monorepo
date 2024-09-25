@@ -6,7 +6,8 @@
     "build": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config --config codegen_aave_like.yml && DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config --config codegen_ajna_v2.yml"
+    "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config --config codegen_aave_like.yml && DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config --config codegen_ajna_v2.yml",
+    "build-client": "graphclient build"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
@@ -15,6 +16,7 @@
     "eslint": "^8.57.0"
   },
   "dependencies": {
+    "@graphprotocol/client-cli": "^3.0.7",
     "@oasisdex/dma-library": "0.6.65",
     "@summerfi/serverless-shared": "workspace:*",
     "graphql-request": "^6.1.0",
