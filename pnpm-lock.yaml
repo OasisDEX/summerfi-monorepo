@@ -2901,8 +2901,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
       axios:
-        specifier: ^1.6.8
-        version: 1.7.2
+        specifier: ^1.7.7
+        version: 1.7.7
       ethers:
         specifier: ^6.11.1
         version: 6.13.2
@@ -19373,7 +19373,7 @@ packages:
       '@ethersproject/units': 5.7.0
       '@ethersproject/wallet': 5.7.0
       '@ethersproject/web': 5.7.1
-      axios: 1.7.2
+      axios: 1.7.7
       sturdy-websocket: 0.2.1
       websocket: 1.0.35
     transitivePeerDependencies:
@@ -19853,7 +19853,7 @@ packages:
     dependencies:
       '@aws-sdk/util-utf8-browser': 3.259.0
       '@httptoolkit/websocket-stream': 6.0.1
-      axios: 1.7.2
+      axios: 1.7.7
       buffer: 6.0.3
       crypto-js: 4.2.0
       mqtt: 4.3.8
@@ -19913,8 +19913,8 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /axios@1.7.2:
-    resolution: {integrity: sha512-2A8QhOMrbomlDuiLeK9XibIBzuHeRcqqNOHp0Cyp5EoJ1IFDh+XZH3A6BkXtv0K4gFGCI0Y4BM7B1wOEi0Rmgw==}
+  /axios@1.7.7:
+    resolution: {integrity: sha512-S4kL7XrjgBmvdGut0sN3yJxqYzrDOnivkBiN0OFs6hLiUam3UPvswUo0kqGyhqUZGEOytHyumEdXsAkgCOUf3Q==}
     dependencies:
       follow-redirects: 1.15.6(debug@4.3.4)
       form-data: 4.0.0
@@ -23509,7 +23509,7 @@ packages:
         optional: true
     dependencies:
       '@solidity-parser/parser': 0.14.5
-      axios: 1.7.2
+      axios: 1.7.7
       cli-table3: 0.5.1
       colors: 1.4.0
       ethereum-cryptography: 1.2.0
