@@ -674,8 +674,8 @@ importers:
         specifier: ^4.2.2
         version: 4.2.2(@types/node@20.12.7)(rollup@4.22.4)(typescript@5.4.5)(vite@5.4.8)
       vite-plugin-svgo:
-        specifier: ^1.4.0
-        version: 1.4.0(typescript@5.4.5)(vite@5.4.8)
+        specifier: ^1.5.1
+        version: 1.5.1(typescript@5.4.5)(vite@5.4.8)
     devDependencies:
       '@summerfi/app-types':
         specifier: workspace:*
@@ -5659,7 +5659,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/highlight': 7.24.7
-      picocolors: 1.0.1
+      picocolors: 1.1.0
 
   /@babel/compat-data@7.24.4:
     resolution: {integrity: sha512-vg8Gih2MLK+kOkHJp4gBEIkyaIi00jgWot2D9QOmmfLC8jINSOzmCLta6Bvz/JSBCqnegV0L80jhxkol5GWNfQ==}
@@ -6138,7 +6138,7 @@ packages:
       '@babel/helper-validator-identifier': 7.24.5
       chalk: 2.4.2
       js-tokens: 4.0.0
-      picocolors: 1.0.1
+      picocolors: 1.1.0
     dev: true
 
   /@babel/highlight@7.24.7:
@@ -6148,7 +6148,7 @@ packages:
       '@babel/helper-validator-identifier': 7.24.7
       chalk: 2.4.2
       js-tokens: 4.0.0
-      picocolors: 1.0.1
+      picocolors: 1.1.0
 
   /@babel/parser@7.24.4:
     resolution: {integrity: sha512-zTvEBcghmeBma9QIGunWevvBAp4/Qu9Bdq+2k0Ot4fVMD6v3dsC9WOcRSKk7tRRyBM/53yKMJko9xOatGQAwSg==}
@@ -21639,7 +21639,7 @@ packages:
     engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0, npm: '>=7.0.0'}
     dependencies:
       mdn-data: 2.0.28
-      source-map-js: 1.2.0
+      source-map-js: 1.2.1
     dev: false
 
   /css-tree@2.3.1:
@@ -21647,7 +21647,7 @@ packages:
     engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0}
     dependencies:
       mdn-data: 2.0.30
-      source-map-js: 1.2.0
+      source-map-js: 1.2.1
     dev: false
 
   /css-what@6.1.0:
@@ -32712,8 +32712,8 @@ packages:
     engines: {node: '>= 8'}
     dev: false
 
-  /svgo@3.0.4:
-    resolution: {integrity: sha512-T+Xul3JwuJ6VGXKo/p2ndqx1ibxNKnLTvRc1ZTWKCfyKS/GgNjRZcYsK84fxTsy/izr91g/Rwx6fGnVgaFSI5g==}
+  /svgo@3.3.2:
+    resolution: {integrity: sha512-OoohrmuUlBs8B8o6MB2Aevn+pRIH9zDALSR+6hhqVfa6fRwG/Qw9VUMSMW9VNg2CFc/MTIfabtdOVl9ODIJjpw==}
     engines: {node: '>=14.0.0'}
     hasBin: true
     dependencies:
@@ -32723,7 +32723,7 @@ packages:
       css-tree: 2.3.1
       css-what: 6.1.0
       csso: 5.0.5
-      picocolors: 1.0.1
+      picocolors: 1.1.0
     dev: false
 
   /swap-case@1.1.2:
@@ -33786,7 +33786,7 @@ packages:
     dependencies:
       browserslist: 4.23.1
       escalade: 3.1.2
-      picocolors: 1.0.1
+      picocolors: 1.1.0
 
   /update-check@1.5.4:
     resolution: {integrity: sha512-5YHsflzHP4t1G+8WGPlvKbJEbAJGCgw+Em+dGR1KmBUbr1J36SJBqlHLjR7oob7sco5hWHGQVcr9B2poIVDDTQ==}
@@ -34240,13 +34240,13 @@ packages:
       - rollup
     dev: true
 
-  /vite-plugin-svgo@1.4.0(typescript@5.4.5)(vite@5.4.8):
-    resolution: {integrity: sha512-ZBXydVOVkpLftdYG55DIcgUZDNgEu41RAwjzrqdtZkMzpxvDD8s5pQkxTLy4nj9wD6AWtevNRvA2SdSJLFe6Iw==}
+  /vite-plugin-svgo@1.5.1(typescript@5.4.5)(vite@5.4.8):
+    resolution: {integrity: sha512-1fC9WuZ+oIn2PHrp2xWhkC10d1mjpYXD2/Rq5hCZMku2O+nmWtbB+9Tu14BbzQju7j4aehozLVwJVEloylqrjA==}
     peerDependencies:
       typescript: '>=4.9.4'
       vite: '>=4.0.2'
     dependencies:
-      svgo: 3.0.4
+      svgo: 3.3.2
       typescript: 5.4.5
       vite: 5.4.8(@types/node@20.12.7)(sass@1.77.8)
     dev: false
