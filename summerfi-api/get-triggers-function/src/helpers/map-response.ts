@@ -30,7 +30,6 @@ export const mapResponse = ({
         stopLossToDebt: simpleTriggers.makerStopLossToDai,
         autoTakeProfitToCollateral: advancedTriggers.makerAutoTakeProfitToCollateral,
         autoTakeProfitToDebt: advancedTriggers.makerAutoTakeProfitToDai,
-        constantMultiple: simpleTriggers.makerConstantMultiple,
       },
       [ProtocolId.AAVE3]: {
         basicBuy: simpleTriggers.aaveBasicBuy,
@@ -74,7 +73,6 @@ export const mapResponse = ({
           advancedTriggers.makerAutoTakeProfitToCollateral,
           advancedTriggers.makerAutoTakeProfitToCollateral,
         ),
-        isConstantMultipleEnabled: hasAnyDefined(simpleTriggers.makerConstantMultiple),
       },
       [ProtocolId.AAVE3]: {
         isStopLossEnabled: hasAnyDefined(
@@ -120,7 +118,6 @@ export const mapResponse = ({
         advancedTriggers.makerAutoTakeProfitToCollateral,
         advancedTriggers.makerAutoTakeProfitToCollateral,
       ),
-      isMakerConstantMultipleEnabled: hasAnyDefined(simpleTriggers.makerConstantMultiple),
       isAaveStopLossEnabled: hasAnyDefined(
         simpleTriggers.aaveStopLossToCollateral,
         simpleTriggers.aaveStopLossToCollateralDMA,
@@ -155,7 +152,6 @@ export const mapResponse = ({
         advancedTriggers.makerAutoTakeProfitToCollateral,
         advancedTriggers.makerAutoTakeProfitToCollateral,
       ),
-      makerConstantMultiple: getCurrentTrigger(simpleTriggers.makerConstantMultiple),
       aaveBasicBuy: getCurrentTrigger(simpleTriggers.aaveBasicBuy),
       aaveBasicSell: getCurrentTrigger(simpleTriggers.aaveBasicSell),
       aavePartialTakeProfit: getCurrentTrigger(advancedTriggers.aavePartialTakeProfit),

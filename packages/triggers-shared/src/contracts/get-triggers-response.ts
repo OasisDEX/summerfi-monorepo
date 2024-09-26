@@ -120,23 +120,6 @@ export type MakerBasicSell = Trigger & {
   }
 }
 
-export type MakerConstantMultiple = Trigger & {
-  triggerTypeName: 'MakerConstantMultiple'
-  triggerType: null
-  decodedParams: {
-    cdpId: string
-    basicBuyExecutionLtv: string
-    basicSellExecutionLtv: string
-    basicBuyTargetLtv: string
-    basicSellTargetLtv: string
-    minSellPrice: string
-    maxBuyPrice: string
-    continuous: boolean
-    deviation: string
-    maxBaseFeeInGwei: string
-  }
-}
-
 export type MakerAutoTakeProfitToCollateral = Trigger & {
   triggerTypeName: 'MakerAutoTakeProfitToCollateral'
   triggerType: typeof MakerAutoTakeProfitToCollateralID
@@ -553,7 +536,6 @@ export type GetTriggersResponse = {
       stopLossToDebt?: MakerStopLossToDai
       autoTakeProfitToCollateral?: MakerAutoTakeProfitToCollateral
       autoTakeProfitToDebt?: MakerAutoTakeProfitToDebt
-      constantMultiple?: MakerConstantMultiple
     }
     [ProtocolId.AAVE3]: {
       basicBuy?: DmaAaveBasicBuy
@@ -621,7 +603,6 @@ export type GetTriggersResponse = {
       isBasicSellEnabled: boolean
       isStopLossEnabled: boolean
       isAutoTakeProfitEnabled: boolean
-      isConstantMultipleEnabled: boolean
     }
     [ProtocolId.AAVE3]: {
       isBasicBuyEnabled: boolean
@@ -678,7 +659,6 @@ export type GetTriggersResponse = {
     makerBasicBuy?: Trigger
     makerBasicSell?: Trigger
     makerAutoTakeProfit?: Trigger
-    makerConstantMultiple?: Trigger
   }
   triggersCount: number
   additionalData?: Record<string, unknown>
