@@ -1,7 +1,7 @@
+import { ChainFamilyMap } from '@summerfi/sdk-common'
 import { Address, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
 import { SparkPaybackAction } from '../../../../src'
-import { ChainFamilyMap } from '@summerfi/sdk-common'
 
 describe('SparkPaybackAction Action', () => {
   const action = new SparkPaybackAction()
@@ -46,7 +46,7 @@ describe('SparkPaybackAction Action', () => {
     expect(actionDecodedArgs?.args).toEqual([
       {
         asset: tokenAmount.token.address.value,
-        amount: BigInt(tokenAmount.toBaseUnit()),
+        amount: tokenAmount.toSolidityValue(),
         paybackAll: true,
         onBehalf: onBehalf.value,
       },

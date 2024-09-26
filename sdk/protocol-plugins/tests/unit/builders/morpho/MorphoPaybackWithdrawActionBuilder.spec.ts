@@ -85,8 +85,8 @@ describe('Morpho Payback Withdraw Action Builder', () => {
     id: MorphoLendingPositionId.createFrom({
       id: 'someposition',
     }),
-    debtAmount: withdrawAmount,
-    collateralAmount: paybackAmount,
+    debtAmount: paybackAmount,
+    collateralAmount: withdrawAmount,
     pool: pool,
   })
 
@@ -96,8 +96,8 @@ describe('Morpho Payback Withdraw Action Builder', () => {
       id: 'someposition',
       vaultId: '123',
     }),
-    debtAmount: withdrawAmount,
-    collateralAmount: paybackAmount,
+    debtAmount: paybackAmount,
+    collateralAmount: withdrawAmount,
     pool: MakerLendingPool.createFrom({
       collateralToken: WETH,
       debtToken: DAI,
@@ -178,7 +178,7 @@ describe('Morpho Payback Withdraw Action Builder', () => {
         inputs: {
           ...derivedStep.inputs,
           paybackAmount: TokenAmount.createFrom({
-            token: DAI,
+            token: WETH,
             amount: '0',
           }),
         },

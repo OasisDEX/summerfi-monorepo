@@ -1,4 +1,5 @@
 import { ConfigurationProvider } from '@summerfi/configuration-provider'
+import { SDKError, SDKErrorType, isTokenAmount } from '@summerfi/sdk-common'
 import {
   Address,
   ChainFamilyMap,
@@ -17,9 +18,8 @@ import {
   SwapProviderType,
   isSwapError,
 } from '@summerfi/sdk-common/swap'
-import { SwapManagerFactory } from '../src/implementation/SwapManagerFactory'
-import { SDKError, SDKErrorType, isTokenAmount } from '@summerfi/sdk-common'
 import assert from 'assert'
+import { SwapManagerFactory } from '../src/implementation/SwapManagerFactory'
 
 describe('OneInch | SwapManager | Integration', () => {
   const chainInfo: ChainInfo = ChainFamilyMap.Ethereum.Mainnet
@@ -90,8 +90,8 @@ describe('OneInch | SwapManager | Integration', () => {
     expect(swapData).toBeDefined()
     expect(swapData.provider).toEqual(SwapProviderType.OneInch)
     expect(swapData.fromTokenAmount).toEqual(fromAmount)
-    expect(BigInt(swapData.toTokenAmount.toBaseUnit())).toBeGreaterThanOrEqual(
-      BigInt(minimumOutputAmount.toBaseUnit()),
+    expect(swapData.toTokenAmount.toSolidityValue()).toBeGreaterThanOrEqual(
+      minimumOutputAmount.toSolidityValue(),
     )
     expect(swapData.calldata).toBeDefined()
     expect(swapData.targetContract).toBeDefined()
@@ -115,8 +115,8 @@ describe('OneInch | SwapManager | Integration', () => {
     expect(quoteData).toBeDefined()
     expect(quoteData.provider).toEqual(SwapProviderType.OneInch)
     expect(quoteData.fromTokenAmount).toEqual(fromAmount)
-    expect(BigInt(quoteData.toTokenAmount.toBaseUnit())).toBeGreaterThanOrEqual(
-      BigInt(minimumOutputAmount.toBaseUnit()),
+    expect(quoteData.toTokenAmount.toSolidityValue()).toBeGreaterThanOrEqual(
+      minimumOutputAmount.toSolidityValue(),
     )
   })
 

@@ -2,7 +2,10 @@ name: CI
 on:
   pull_request:
     types: [opened, synchronize]
-
+  push:
+    branches:
+      - main
+      - dev
 jobs:
   build:
     name: Build and Unit Test
@@ -101,3 +104,8 @@ jobs:
 
       - name: Coverage
         run: pnpm coverage:total
+
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}            

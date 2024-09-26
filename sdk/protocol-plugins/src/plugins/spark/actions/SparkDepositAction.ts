@@ -22,7 +22,7 @@ export class SparkDepositAction extends BaseAction<typeof SparkDepositAction.Con
       arguments: [
         {
           asset: params.depositAmount.token.address.value,
-          amount: BigInt(params.depositAmount.toBaseUnit()),
+          amount: params.depositAmount.toSolidityValue(),
           sumAmounts: params.sumAmounts,
           setAsCollateral: params.setAsCollateral,
         },

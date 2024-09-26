@@ -68,6 +68,8 @@ export class SummerPointsService {
 
   private ETH_TOKEN_BONANZA_END = 1722470399
   private DOUBLE_SWAP_POINTS_END = 1725148799
+  private SPARK_MULTIPLIER_START = 1725148800
+  private SPARK_MULTIPLIER_END = 1726444800
 
   /**
    * Creates an instance of SummerPointsService.
@@ -268,6 +270,7 @@ export class SummerPointsService {
         const swapPoints = swapMultiplier * this.getSwapPoints(position.recentSwaps)
 
         const ethTokenMultiplier = this.ethTokenPositionMultiplier(position)
+        const sparkMultiplier = this.sparkMultiplier(position)
 
         const timeOpenMultiplier = this.getTimeOpenMultiplier(position, endTimestamp)
         const automationProtectionMultiplier = this.getAutomationProtectionMultiplier(position)
@@ -278,7 +281,8 @@ export class SummerPointsService {
           timeOpenMultiplier *
           automationProtectionMultiplier *
           lazyVaultMultiplier *
-          ethTokenMultiplier
+          ethTokenMultiplier *
+          sparkMultiplier
 
         const pointsPerYear =
           totalMultiplier *
@@ -457,6 +461,19 @@ export class SummerPointsService {
     return multiplier
   }
 
+  sparkMultiplier(position: Position): number {
+    let multiplier = 1
+    if (position.protocol == 'spark') {
+      if (Date.now() / 1000 > this.SPARK_MULTIPLIER_END) {
+        return multiplier
+      }
+      if (Date.now() / 1000 > this.SPARK_MULTIPLIER_START) {
+        multiplier = 2
+      }
+    }
+
+    return multiplier
+  }
   /**
    * Calculates the total swap points for the given array of recent swaps.
    *

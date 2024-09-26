@@ -23,7 +23,7 @@ export class SparkPaybackAction extends BaseAction<typeof SparkPaybackAction.Con
       arguments: [
         {
           asset: params.paybackAmount.token.address.value,
-          amount: BigInt(params.paybackAmount.toBaseUnit()),
+          amount: params.paybackAmount.toSolidityValue(),
           paybackAll: params.paybackAll,
           onBehalf: params.onBehalf.value,
         },

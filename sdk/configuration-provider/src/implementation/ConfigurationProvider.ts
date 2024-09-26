@@ -3,7 +3,6 @@ import {
   ConfigKey,
   IConfigurationProvider,
 } from '@summerfi/configuration-provider-common'
-import { Maybe } from '@summerfi/sdk-common/common'
 import TurboConfig from '../../../../turbo.json'
 
 /** @see IConfigurationProvider */
@@ -14,10 +13,11 @@ export class ConfigurationProvider implements IConfigurationProvider {
     this._loadConfigKeys(TurboConfig.globalEnv)
   }
 
-  public getConfigurationItem<ReturnType = ConfigItem>(params: {
-    name: ConfigKey
-  }): Maybe<ReturnType> {
-    return this._config[params.name] as Maybe<ReturnType>
+  public getConfigurationItem<ReturnType = ConfigItem>(params: { name: ConfigKey }): ReturnType {
+    if (!this._config[params.name]) {
+      throw new Error(`Missing env variable: ${params.name}. Please add it to stack configuration.`)
+    }
+    return this._config[params.name] as ReturnType
   }
 
   private _loadConfigKeys(configKeys: ConfigKey[]) {

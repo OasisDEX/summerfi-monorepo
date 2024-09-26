@@ -5,7 +5,7 @@ import { makeSDK, type Chain, type SDKManager, type UserClient } from '@summerfi
 import { Address, ChainFamilyMap, TokenAmount } from '@summerfi/sdk-common'
 
 import { IArmadaProtocol } from '@summerfi/armada-protocol-common'
-import { ArmadaPoolId, ArmadaPositionId, ArmadaProtocol } from '@summerfi/armada-protocol-service'
+import { ArmadaPoolId, ArmadaProtocol } from '@summerfi/armada-protocol-service'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
 import { DAI, USDC } from './utils/TokenMockBase'
 
@@ -71,12 +71,12 @@ describe.skip('Armada Protocol Deposit', () => {
       fleetAddress: config.fleetAddress,
       protocol,
     })
-    const fleet = sdk.armada.getPool({
+    const fleet = sdk.armada.users.getPool({
       poolId,
     })
     assert(fleet, 'Fleet not found')
 
-    const transactions = await sdk.armada.getNewDepositTX({
+    const transactions = await sdk.armada.users.getNewDepositTX({
       poolId,
       user: user,
       amount: TokenAmount.createFrom({
@@ -100,12 +100,12 @@ describe.skip('Armada Protocol Deposit', () => {
       fleetAddress: config.fleetAddress,
       protocol,
     })
-    const fleet = sdk.armada.getPool({
+    const fleet = sdk.armada.users.getPool({
       poolId,
     })
     assert(fleet, 'Fleet not found')
 
-    const transactions = await sdk.armada.getNewDepositTX({
+    const transactions = await sdk.armada.users.getNewDepositTX({
       poolId,
       user,
       amount: TokenAmount.createFrom({
@@ -129,19 +129,14 @@ describe.skip('Armada Protocol Deposit', () => {
       fleetAddress: config.fleetAddress,
       protocol,
     })
-    const fleet = sdk.armada.getPool({
+    const fleet = sdk.armada.users.getPool({
       poolId,
     })
     assert(fleet, 'Fleet not found')
 
-    const positionId = ArmadaPositionId.createFrom({
-      id: 'TestPosition',
-      user,
-    })
-
-    const transactions = await sdk.armada.getWithdrawTX({
+    const transactions = await sdk.armada.users.getWithdrawTX({
       poolId,
-      positionId,
+      user,
       amount: TokenAmount.createFrom({
         amount,
         token,

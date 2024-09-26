@@ -37,6 +37,8 @@ import {
   decodePositionsManagerCalldata,
   decodeStrategyExecutorCalldata,
 } from '@summerfi/testing-utils'
+
+import { IArmadaManager } from '@summerfi/armada-protocol-common'
 import { ITokensManager } from '@summerfi/tokens-common'
 import assert from 'assert'
 import { createPublicClient, http } from 'viem'
@@ -110,6 +112,7 @@ describe('Order Planner Service', () => {
       simulation: refinanceSimulation,
       addressBookManager,
       contractsProvider: {} as unknown as IContractsProvider,
+      armadaManager: {} as unknown as IArmadaManager,
     })
 
     assert(order, 'Order is not defined')
@@ -152,7 +155,9 @@ describe('Order Planner Service', () => {
 
     assert(flashloanCall, 'FlashloanCall is not defined')
     expect(flashloanCall.args.length).toBe(1)
-    expect(flashloanCall.args[0].amount).toEqual(BigInt(sourcePosition.debtAmount.toBaseUnit()))
+    expect(flashloanCall.args[0].amount).toEqual(
+      BigInt(sourcePosition.debtAmount.toSolidityValue()),
+    )
     expect(flashloanCall.args[0].asset).toEqual(sourcePosition.debtAmount.token.address.value)
     expect(flashloanCall.args[0].isProxyFlashloan).toBe(true)
     expect(flashloanCall.args[0].isDPMProxy).toBe(true)
@@ -178,7 +183,7 @@ describe('Order Planner Service', () => {
       {
         vaultId: BigInt(sourcePosition.id.vaultId),
         userAddress: positionsManager.address.value,
-        amount: BigInt(sourcePosition.debtAmount.toBaseUnit()),
+        amount: sourcePosition.debtAmount.toSolidityValue(),
         paybackAll: true,
       },
     ])
@@ -201,7 +206,7 @@ describe('Order Planner Service', () => {
         vaultId: BigInt(sourcePosition.id.vaultId),
         userAddress: positionsManager.address.value,
         joinAddr: mcdJoinEthAAddress.value,
-        amount: BigInt(sourcePosition.collateralAmount.toBaseUnit()),
+        amount: sourcePosition.collateralAmount.toSolidityValue(),
       },
     ])
     expect(makerWithdrawAction.mapping).toEqual([0, 0, 0, 0])
@@ -221,7 +226,7 @@ describe('Order Planner Service', () => {
     expect(setApprovalAction.args).toEqual([
       {
         asset: sourcePosition.collateralAmount.token.address.value,
-        amount: BigInt(sourcePosition.collateralAmount.toBaseUnit()),
+        amount: sourcePosition.collateralAmount.toSolidityValue(),
         delegate: sparkLendingPoolAddress?.value,
         sumAmounts: false,
       },
@@ -236,7 +241,7 @@ describe('Order Planner Service', () => {
     expect(sparkDepositAction.args).toEqual([
       {
         asset: targetPosition.collateralAmount.token.address.value,
-        amount: BigInt(targetPosition.collateralAmount.toBaseUnit()),
+        amount: targetPosition.collateralAmount.toSolidityValue(),
         sumAmounts: false,
         setAsCollateral: true,
       },
@@ -252,7 +257,7 @@ describe('Order Planner Service', () => {
     expect(sparkBorrowAction.args).toEqual([
       {
         asset: targetPosition.debtAmount.token.address.value,
-        amount: BigInt(targetPosition.debtAmount.toBaseUnit()),
+        amount: targetPosition.debtAmount.toSolidityValue(),
         to: strategyExecutorAddress.value,
       },
     ])

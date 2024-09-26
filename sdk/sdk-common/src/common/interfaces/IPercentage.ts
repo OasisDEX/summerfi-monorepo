@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { IPrintable } from './IPrintable'
+import { IValueConverter } from './IValueConverter'
 
 /**
  * Unique signature to provide branded types to the interface
@@ -10,7 +11,7 @@ export const __signature__: unique symbol = Symbol()
  * @name IPercentage
  * @description Percentage type that can be used for calculations with other types like TokenAmount or Price
  */
-export interface IPercentage extends IPercentageData, IPrintable {
+export interface IPercentage extends IPercentageData, IValueConverter, IPrintable {
   /** Signature to differentiate from similar interfaces */
   readonly [__signature__]: symbol
   /** The percentage in floating point format */
@@ -59,13 +60,6 @@ export interface IPercentage extends IPercentageData, IPrintable {
    * The complement is the difference between 100% and the percentage
    */
   toComplement(): IPercentage
-
-  /**
-   * @name toBaseUnit
-   * @param decimals The number of decimals to use for the conversion
-   * @returns The percentage as a string in base unit
-   */
-  toBaseUnit(params: { decimals: number }): string
 }
 
 /**
@@ -85,8 +79,11 @@ export type IPercentageData = Readonly<z.infer<typeof PercentageDataSchema>>
  * @param maybePercentage
  * @returns true if the object is an IPercentage
  */
-export function isPercentage(maybePercentage: unknown): maybePercentage is IPercentage {
-  return isPercentageData(maybePercentage)
+export function isPercentage(
+  maybePercentage: unknown,
+  returnedErrors?: string[],
+): maybePercentage is IPercentage {
+  return isPercentageData(maybePercentage, returnedErrors)
 }
 
 /**
@@ -96,6 +93,13 @@ export function isPercentage(maybePercentage: unknown): maybePercentage is IPerc
  */
 export function isPercentageData(
   maybePercentageData: unknown,
+  returnedErrors?: string[],
 ): maybePercentageData is IPercentageData {
-  return PercentageDataSchema.safeParse(maybePercentageData).success
+  const zodReturn = PercentageDataSchema.safeParse(maybePercentageData)
+
+  if (!zodReturn.success && returnedErrors) {
+    returnedErrors.push(...zodReturn.error.errors.map((e) => e.message))
+  }
+
+  return zodReturn.success
 }

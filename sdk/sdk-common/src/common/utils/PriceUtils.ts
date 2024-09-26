@@ -1,14 +1,14 @@
 import { BigNumber } from 'bignumber.js'
 import { Denomination } from '../aliases/Denomination'
-import { type IToken, isToken } from '../interfaces/IToken'
-import { IPriceData, type IPrice } from '../interfaces/IPrice'
-import { type ITokenAmount, type ITokenAmountData } from '../interfaces/ITokenAmount'
+import { FiatCurrency, isFiatCurrency } from '../enums/FiatCurrency'
+import { IPercentage } from '../interfaces'
 import {
   type IFiatCurrencyAmount,
   type IFiatCurrencyAmountData,
 } from '../interfaces/IFiatCurrencyAmount'
-import { FiatCurrency, isFiatCurrency } from '../enums/FiatCurrency'
-import { IPercentage } from '../interfaces'
+import { IPriceData, type IPrice } from '../interfaces/IPrice'
+import { isToken, type IToken } from '../interfaces/IToken'
+import { type ITokenAmount, type ITokenAmountData } from '../interfaces/ITokenAmount'
 
 /**
  * Multiply a token amount by a price
@@ -80,13 +80,13 @@ export function multiplyPriceByPrice(price: IPrice, multiplier: IPrice): IPriceD
 
   if (_hasBaseSameToOtherQuote(price, multiplier)) {
     return {
-      value: price.toBN().times(multiplier.toBN()).toString(),
+      value: price.toBigNumber().times(multiplier.toBigNumber()).toString(),
       base: price.base,
       quote: multiplier.quote,
     }
   } else if (_hasQuoteSameToOtherBase(price, multiplier)) {
     return {
-      value: price.toBN().times(multiplier.toBN()).toString(),
+      value: price.toBigNumber().times(multiplier.toBigNumber()).toString(),
       base: multiplier.base,
       quote: price.quote,
     }
@@ -110,14 +110,14 @@ export function dividePriceByPrice(price: IPrice, otherPrice: IPrice): IPriceDat
 
   if (price.hasSameBase(otherPrice)) {
     return {
-      value: price.toBN().div(otherPrice.toBN()).toString(),
+      value: price.toBigNumber().div(otherPrice.toBigNumber()).toString(),
       base: otherPrice.quote,
       quote: price.quote,
     }
   } else {
     // Same quote
     return {
-      value: price.toBN().div(otherPrice.toBN()).toString(),
+      value: price.toBigNumber().div(otherPrice.toBigNumber()).toString(),
       base: price.base,
       quote: otherPrice.base,
     }
@@ -132,7 +132,7 @@ export function dividePriceByPrice(price: IPrice, otherPrice: IPrice): IPriceDat
  */
 export function multiplyPriceByPercentage(price: IPrice, percentage: IPercentage): IPriceData {
   return {
-    value: price.toBN().times(percentage.toProportion()).toString(),
+    value: price.toBigNumber().times(percentage.toProportion()).toString(),
     base: price.base,
     quote: price.quote,
   }
@@ -146,7 +146,7 @@ export function multiplyPriceByPercentage(price: IPrice, percentage: IPercentage
  */
 export function dividePriceByPercentage(price: IPrice, percentage: IPercentage): IPriceData {
   return {
-    value: price.toBN().dividedBy(percentage.toProportion()).toString(),
+    value: price.toBigNumber().dividedBy(percentage.toProportion()).toString(),
     base: price.base,
     quote: price.quote,
   }

@@ -75,7 +75,7 @@ describe('Contracts Provider Service - ERC20 Contract', () => {
 
     const userBalance = await erc20Contract.balanceOf({ address: userAddress })
     expect(userBalance).toBeDefined()
-    expect(userBalance.toBaseUnit()).toEqual('123000000')
+    expect(userBalance.toSolidityValue()).toEqual(123000000n)
     expect(userBalance.token).toEqual(token)
 
     const userAllowance = await erc20Contract.allowance({

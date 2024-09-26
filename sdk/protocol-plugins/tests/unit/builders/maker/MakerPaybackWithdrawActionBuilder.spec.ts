@@ -178,7 +178,7 @@ describe('Maker Payback Withdraw Action Builder', () => {
         inputs: {
           ...derivedStep.inputs,
           paybackAmount: TokenAmount.createFrom({
-            token: DAI,
+            token: WETH,
             amount: '0',
           }),
         },

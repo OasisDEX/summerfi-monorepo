@@ -1,0 +1,19 @@
+{
+  "extends": "@summerfi/typescript-config/tsconfig.test.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
+      "@summerfi/sdk-common": ["node_modules/@summerfi/sdk-common/src/index.ts"],
+      "@summerfi/sdk-server/*": ["node_modules/@summerfi/sdk-server/src/*"],
+      "@summerfi/protocol-plugins/*": ["../protocol-plugins/src/*"],
+      "@summerfi/protocol-plugins": ["../protocol-plugins/src/index.ts"],
+      "@summerfi/protocol-plugins-common": ["../protocol-plugins-common/src/index.ts"],
+      "@summerfi/testing-utils": ["node_modules/@summerfi/testing-utils/src"],
+      "@summerfi/abis": ["../../packages/abis/src"]
+    }
+  },
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "exclude": ["node_modules"]
+}

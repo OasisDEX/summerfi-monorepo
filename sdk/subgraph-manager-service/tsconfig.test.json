@@ -1,0 +1,28 @@
+{
+  "extends": "@summerfi/typescript-config/tsconfig.test.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "@summerfi/sdk-common/*": ["node_modules/@summerfi/sdk-common/src/*"],
+      "@summerfi/sdk-common": ["node_modules/@summerfi/sdk-common/src/index.ts"],
+      "@summerfi/sdk-server-common": ["node_modules/@summerfi/sdk-server-common/src/index.ts"],
+      "@summerfi/armada-protocol-service": [
+        "node_modules/@summerfi/armada-protocol-service/src/index.ts"
+      ],
+      "@summerfi/armada-protocol-common": [
+        "node_modules/@summerfi/armada-protocol-common/src/index.ts"
+      ],
+      "@summerfi/serverless-shared": ["node_modules/@summerfi/serverless-shared/src/index.ts"],
+      "@summerfi/testing-utils/*": ["node_modules/@summerfi/testing-utils/src/*"],
+      "@summerfi/configuration-provider": [
+        "node_modules/@summerfi/configuration-provider/src/index.ts"
+      ],
+      "@summerfi/subgraph-manager-common": [
+        "node_modules/@summerfi/subgraph-manager-common/src/index.ts"
+      ]
+    }
+  },
+  "include": ["src/**/*.ts", "tests/**/*.ts", "e2e/**/*.ts"],
+  "exclude": ["node_modules"]
+}

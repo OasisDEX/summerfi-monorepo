@@ -82,7 +82,7 @@ export type ChainFamilyInfoById = Record<ChainId, ChainFamilyInfo>
  * @type Record<ChainId, ChainInfo>
  * @description Utility function to merge all chain families into a single map
  */
-function createChainIdToChainInfoMap(): ChainFamilyInfoById {
+function createChainIdToChainFamilyInfoMap(): ChainFamilyInfoById {
   return Object.entries(ChainFamilyMap).reduce((acc, [familyName, family]) => {
     Object.entries(family).reduce((acc, [, chainInfo]) => {
       acc[chainInfo.chainId] = {
@@ -95,10 +95,23 @@ function createChainIdToChainInfoMap(): ChainFamilyInfoById {
   }, {} as ChainFamilyInfoById)
 }
 
-const chainIdToChainInfoMap = createChainIdToChainInfoMap()
+const chainIdToChainFamilyInfoMap = createChainIdToChainFamilyInfoMap()
 
-export function getChainInfoByChainId(chainId: ChainId): ChainFamilyInfo | undefined {
-  return chainIdToChainInfoMap[chainId]
+export function getChainFamilyInfoByChainId(chainId: ChainId): ChainFamilyInfo {
+  const maybe = chainIdToChainFamilyInfoMap[chainId]
+  if (!maybe) {
+    throw new Error(`Chain with id ${chainId} not supported`)
+  }
+  return maybe
+}
+
+export function getChainInfoByChainId(chainId: ChainId): ChainInfo {
+  const chainFamilyInfo = getChainFamilyInfoByChainId(chainId)
+  const maybeChainInfo = chainFamilyInfo?.chainInfo
+  if (!maybeChainInfo) {
+    throw new Error(`Chain with id ${chainId} not supported`)
+  }
+  return maybeChainInfo
 }
 
 export function valuesOfChainFamilyMap(families: ChainFamilyName[]): ChainInfo[] {

@@ -1,14 +1,14 @@
+import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import {
-  steps,
-  getValueFromReference,
   TokenTransferTargetType,
+  getValueFromReference,
+  steps,
 } from '@summerfi/sdk-common/simulation'
+import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
+import { SendTokenAction, SetApprovalAction } from '../../common'
 import { MorphoBorrowAction } from '../actions/MorphoBorrowAction'
 import { MorphoDepositAction } from '../actions/MorphoDepositAction'
-import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
-import { SendTokenAction, SetApprovalAction } from '../../common'
 import { isMorphoLendingPool } from '../interfaces/IMorphoLendingPool'
-import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 
 export class MorphoDepositBorrowActionBuilder extends BaseActionBuilder<steps.DepositBorrowStep> {
   readonly actions: ActionBuilderUsedAction[] = [
@@ -74,7 +74,7 @@ export class MorphoDepositBorrowActionBuilder extends BaseActionBuilder<steps.De
       connectedOutputs: {
         borrowAmount: 'borrowedAmount',
       },
-      skip: borrowAmount.toBN().isZero(),
+      skip: borrowAmount.isZero(),
     })
 
     const isBorrowTargetPositionsManager =
@@ -97,7 +97,7 @@ export class MorphoDepositBorrowActionBuilder extends BaseActionBuilder<steps.De
         borrowAmount: 'amount',
       },
       connectedOutputs: {},
-      skip: borrowAmount.toBN().isZero() || isBorrowTargetPositionsManager,
+      skip: borrowAmount.isZero() || isBorrowTargetPositionsManager,
     })
   }
 }

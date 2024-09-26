@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { AddressValue } from '../aliases/AddressValue'
 import { AddressType } from '../types/AddressType'
 import { IPrintable } from './IPrintable'
+import { IValueConverter } from './IValueConverter'
 
 /**
  * Unique signature to provide branded types to the interface
@@ -15,7 +16,7 @@ export const __signature__: unique symbol = Symbol()
  *
  * Currently only Ethereum type is supported
  */
-export interface IAddress extends IAddressData, IPrintable {
+export interface IAddress extends IAddressData, IValueConverter, IPrintable {
   /** Signature to differentiate from similar interfaces */
   readonly [__signature__]: symbol
   /** The address value in the format specified by type */

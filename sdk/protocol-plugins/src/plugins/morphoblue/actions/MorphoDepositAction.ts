@@ -34,11 +34,9 @@ export class MorphoDepositAction extends BaseAction<typeof MorphoDepositAction.C
             collateralToken: morphoLendingPool.collateralToken.address.value,
             oracle: morphoLendingPool.oracle.value,
             irm: morphoLendingPool.irm.value,
-            lltv: BigInt(
-              morphoLendingPool.lltv.toLTV().toBaseUnit({ decimals: MorphoLLTVPrecision }),
-            ),
+            lltv: morphoLendingPool.lltv.toLTV().toSolidityValue({ decimals: MorphoLLTVPrecision }),
           },
-          amount: BigInt(amount.toBaseUnit()),
+          amount: amount.toSolidityValue(),
           sumAmounts: sumAmounts,
         },
       ],

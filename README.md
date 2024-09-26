@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/OasisDEX/summerfi-monorepo/graph/badge.svg?token=QL882Y3C8G)](https://codecov.io/gh/OasisDEX/summerfi-monorepo)
+
 # Summerfi monorepo
 
 ## Structure

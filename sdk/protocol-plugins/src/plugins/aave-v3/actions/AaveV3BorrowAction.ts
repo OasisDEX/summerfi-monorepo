@@ -18,7 +18,7 @@ export class AaveV3BorrowAction extends BaseAction<typeof AaveV3BorrowAction.Con
       arguments: [
         {
           asset: params.borrowAmount.token.address.value,
-          amount: BigInt(params.borrowAmount.toBaseUnit()),
+          amount: params.borrowAmount.toSolidityValue(),
           to: params.borrowTo.value,
         },
       ],

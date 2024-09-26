@@ -4,6 +4,10 @@
     "rootDir": "src",
     "baseUrl": ".",
     "paths": {
+      "@summerfi/armada-protocol-common/*": ["node_modules/@summerfi/armada-protocol-common/src/*"],
+      "@summerfi/armada-protocol-common": [
+        "node_modules/@summerfi/armada-protocol-common/src/index.ts"
+      ],
       "@summerfi/order-planner-common/*": ["node_modules/@summerfi/order-planner-common/src/*"],
       "@summerfi/order-planner-common": [
         "node_modules/@summerfi/order-planner-common/src/index.ts"

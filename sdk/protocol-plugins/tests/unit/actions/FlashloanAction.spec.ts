@@ -1,7 +1,7 @@
-import { FlashloanAction } from '../../../src/plugins/common/actions/FlashloanAction'
 import { Address, Token, TokenAmount } from '@summerfi/sdk-common/common'
 import { FlashloanProvider } from '@summerfi/sdk-common/simulation'
 import { decodeActionCalldata, getTargetHash } from '@summerfi/testing-utils'
+import { FlashloanAction } from '../../../src/plugins/common/actions/FlashloanAction'
 
 describe('Flashloan Action', () => {
   const action = new FlashloanAction()
@@ -56,7 +56,7 @@ describe('Flashloan Action', () => {
     expect(actionDecodedArgs).toBeDefined()
     expect(actionDecodedArgs?.args).toEqual([
       {
-        amount: BigInt(tokenAmount.toBaseUnit()),
+        amount: tokenAmount.toSolidityValue(),
         asset: DAI.address.value,
         isProxyFlashloan: true,
         isDPMProxy: true,

@@ -30,7 +30,7 @@ runs:
 
     - name: Prebuild
       shell: bash
-      run: pnpm prebuild
+      run: pnpm prebuild:sdk
 
     - name: Build
       shell: bash

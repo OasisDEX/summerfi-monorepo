@@ -76,7 +76,7 @@ export class TokenAmount implements ITokenAmount {
 
     return new TokenAmount({
       token: this.token,
-      amount: this.toBN().plus(tokenToAdd.toBN()).toString(),
+      amount: this.toBigNumber().plus(tokenToAdd.toBigNumber()).toString(),
     })
   }
 
@@ -95,7 +95,7 @@ export class TokenAmount implements ITokenAmount {
 
     return new TokenAmount({
       token: this.token,
-      amount: this.toBN().minus(tokenToSubstract.toBN()).toString(),
+      amount: this.toBigNumber().minus(tokenToSubstract.toBigNumber()).toString(),
     })
   }
 
@@ -112,7 +112,7 @@ export class TokenAmount implements ITokenAmount {
       ? multiplyTokenAmountByPercentage(this, multiplier)
       : {
           token: this.token,
-          amount: this.toBN().times(multiplier).toString(),
+          amount: this.toBigNumber().times(multiplier).toString(),
         }
 
     return new TokenAmount(result) as ReturnType
@@ -129,42 +129,28 @@ export class TokenAmount implements ITokenAmount {
 
     const result = isPercentage(divisor)
       ? divideTokenAmountByPercentage(this, divisor)
-      : { token: this.token, amount: this.toBN().div(divisor).toString() }
+      : { token: this.token, amount: this.toBigNumber().div(divisor).toString() }
 
     return new TokenAmount(result) as ReturnType
   }
 
-  /** @see IPrintable.toString */
-  toString(): string {
-    return `${this.amount} ${this.token.symbol}`
-  }
-
-  toBaseUnit(): string {
-    return new BigNumber(this.amount).times(this._baseUnitFactor).toFixed(0)
-  }
-
-  /** @see ITokenAmount.toBN */
-  toBN(): BigNumber {
-    return new BigNumber(this.amount)
-  }
-
   /** @see ITokenAmount.isZero */
   isZero(): boolean {
-    return this.toBN().isZero()
+    return this.toBigNumber().isZero()
   }
 
   /** @see ITokenAmount.isGreaterThan */
   isGreaterThan(tokenAmount: ITokenAmount): boolean {
     this._validateSameToken(tokenAmount)
 
-    return this.toBN().isGreaterThan(tokenAmount.toBN())
+    return this.toBigNumber().isGreaterThan(tokenAmount.toBigNumber())
   }
 
   /** @see ITokenAmount.isLessThan */
   isLessThan(tokenAmount: ITokenAmount): boolean {
     this._validateSameToken(tokenAmount)
 
-    return this.toBN().isLessThan(tokenAmount.toBN())
+    return this.toBigNumber().isLessThan(tokenAmount.toBigNumber())
   }
 
   /** @see ITokenAmount.isGreaterOrEqualThan */
@@ -179,10 +165,36 @@ export class TokenAmount implements ITokenAmount {
 
   /** @see ITokenAmount.isEqualTo */
   isEqualTo(tokenAmount: ITokenAmount): boolean {
-    return this.toBN().isEqualTo(tokenAmount.toBN())
+    return this.toBigNumber().isEqualTo(tokenAmount.toBigNumber())
+  }
+
+  /** @see IPrintable.toString */
+  toString(): string {
+    return `${this.amount} ${this.token.symbol}`
+  }
+
+  /** @see IValueConverter.toSolidityValue */
+  toSolidityValue(params: { decimals: number } = { decimals: 0 }): bigint {
+    const factor =
+      params.decimals === 0 ? this._baseUnitFactor : new BigNumber(10).pow(params.decimals)
+    return BigInt(new BigNumber(this.amount).times(factor).toFixed(0))
+  }
+
+  /** @see IValueConverter.toBigNumber */
+  toBigNumber(): BigNumber {
+    return new BigNumber(this.amount)
   }
 
   /** PRIVATE */
+
+  /**
+   * @name _validateSameToken
+   * @description Validates that the token of the provided TokenAmount is the same as the current token
+   *
+   * @param tokenAmount TokenAmount to validate against the instance
+   *
+   * @remarks Throws an error if the token symbols do not match
+   */
   private _validateSameToken(tokenAmount: ITokenAmount): void {
     // TODO: relaxed check by using only lowercase due to Portfolio and Product Hub not being
     // TODO: integrated in the SDK and using different symbols cases

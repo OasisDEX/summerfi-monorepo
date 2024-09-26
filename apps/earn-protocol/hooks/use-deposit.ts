@@ -1,23 +1,13 @@
-import { useSDK } from '@/hooks/use-sdk'
+import { useAppSDK } from './use-app-sdk'
 
-export const useDeposit = () => {
-  const { getNewDepositTX } = useSDK()
+export const useDepositTX = () => {
+  const { getDepositTX, getChainInfo, getWalletAddress } = useAppSDK()
 
-  return ({
-    chainId,
-    walletAddress,
-    fleetAddress,
-    amountString,
-  }: {
-    chainId: number
-    walletAddress: string
-    fleetAddress: string
-    amountString: string
-  }) => {
-    return getNewDepositTX({
-      chainId,
+  return ({ fleetAddress, amountString }: { fleetAddress: string; amountString: string }) => {
+    return getDepositTX({
+      chainInfo: getChainInfo(),
+      walletAddress: getWalletAddress(),
       fleetAddress,
-      walletAddress,
       amount: amountString,
     })
   }

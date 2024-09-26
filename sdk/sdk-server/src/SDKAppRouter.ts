@@ -1,10 +1,28 @@
 import { router } from './SDKTRPC'
-import { getNewDepositTX } from './armada-protocol-handlers/getNewDepositTX'
-import { getPool } from './armada-protocol-handlers/getPool'
-import { getPoolInfo } from './armada-protocol-handlers/getPoolInfo'
-import { getPosition as getArmadaPosition } from './armada-protocol-handlers/getPosition'
-import { getUpdateDepositTX } from './armada-protocol-handlers/getUpdateDepositTX'
-import { getWithdrawTX } from './armada-protocol-handlers/getWithdrawTX'
+
+import { addArk } from './armada-protocol-handlers/governance/addArk'
+import { addArks } from './armada-protocol-handlers/governance/addArks'
+import { emergencyShutdown } from './armada-protocol-handlers/governance/emergencyShutdown'
+import { forceRebalance } from './armada-protocol-handlers/governance/forceRebalance'
+import { removeArk } from './armada-protocol-handlers/governance/removeArk'
+import { setArkDepositCap } from './armada-protocol-handlers/governance/setArkDepositCap'
+import { setArkMaxRebalanceInflow } from './armada-protocol-handlers/governance/setArkMaxRebalanceInflow'
+import { setArkMaxRebalanceOutflow } from './armada-protocol-handlers/governance/setArkMaxRebalanceOutflow'
+import { setFleetDepositCap } from './armada-protocol-handlers/governance/setFleetDepositCap'
+import { setMinimumBufferBalance } from './armada-protocol-handlers/governance/setMinimumBufferBalance'
+import { setTipJar } from './armada-protocol-handlers/governance/setTipJar'
+import { setTipRate } from './armada-protocol-handlers/governance/setTipRate'
+import { updateRebalanceCooldown } from './armada-protocol-handlers/governance/updateRebalanceCooldown'
+import { adjustBuffer } from './armada-protocol-handlers/keepers/adjustBuffer'
+import { rebalance } from './armada-protocol-handlers/keepers/rebalance'
+import { getDepositTX } from './armada-protocol-handlers/users/getDepositTX'
+import { getPool } from './armada-protocol-handlers/users/getPool'
+import { getPoolInfo } from './armada-protocol-handlers/users/getPoolInfo'
+import { getPosition as getArmadaPosition } from './armada-protocol-handlers/users/getPosition'
+import { getUpdateDepositTX } from './armada-protocol-handlers/users/getUpdateDepositTX'
+import { getUserPositions } from './armada-protocol-handlers/users/getUserPositions'
+import { getUserPosition } from './armada-protocol-handlers/users/getUserPosition'
+import { getWithdrawTX } from './armada-protocol-handlers/users/getWithdrawTX'
 import { buildOrder } from './handlers/buildOrder'
 import { getArmadaSimulation } from './handlers/getArmadaSimulation'
 import { getImportSimulation } from './handlers/getImportSimulation'
@@ -45,12 +63,35 @@ export const sdkAppRouter = router({
     getSwapQuoteExactInput: getSwapQuoteExactInput,
   },
   armada: {
-    getPool: getPool,
-    getPoolInfo: getPoolInfo,
-    getPosition: getArmadaPosition,
-    getNewDepositTX: getNewDepositTX,
-    getUpdateDepositTX: getUpdateDepositTX,
-    getWithdrawTX: getWithdrawTX,
+    users: {
+      getPool: getPool,
+      getPoolInfo: getPoolInfo,
+      getPosition: getArmadaPosition,
+      getUserPositions: getUserPositions,
+      getUserPosition: getUserPosition,
+      getDepositTX: getDepositTX,
+      getUpdateDepositTX: getUpdateDepositTX,
+      getWithdrawTX: getWithdrawTX,
+    },
+    keepers: {
+      rebalance: rebalance,
+      adjustBuffer: adjustBuffer,
+    },
+    governance: {
+      setFleetDepositCap: setFleetDepositCap,
+      setTipJar: setTipJar,
+      setTipRate: setTipRate,
+      addArk: addArk,
+      addArks: addArks,
+      removeArk: removeArk,
+      setArkDepositCap: setArkDepositCap,
+      setArkMaxRebalanceInflow: setArkMaxRebalanceInflow,
+      setArkMaxRebalanceOutflow: setArkMaxRebalanceOutflow,
+      setMinimumBufferBalance: setMinimumBufferBalance,
+      forceRebalance: forceRebalance,
+      updateRebalanceCooldown: updateRebalanceCooldown,
+      emergencyShutdown: emergencyShutdown,
+    },
   },
 })
 

@@ -1,6 +1,6 @@
 import { ISDKManager } from '../interfaces/ISDKManager'
 import { RPCMainClientType } from '../rpc/SDKMainClient'
-import { ArmadaManagerClient } from './ArmadaManagerClient'
+import { ArmadaManagerClient } from './ArmadaManager/ArmadaManagerClient'
 import { ChainsManagerClient } from './ChainsManager'
 import { PortfolioManager } from './PortfolioManager'
 import { UsersManager } from './UsersManager'

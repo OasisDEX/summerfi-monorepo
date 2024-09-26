@@ -1,5 +1,6 @@
 export * from './numbers'
 export * from './times'
+export * from './regex'
 
 export * from './formatters/format-address'
 export * from './formatters/format-as-shorthand-numbers'

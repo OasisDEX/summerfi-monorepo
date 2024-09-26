@@ -49,7 +49,7 @@ describe('SetApproval Action', () => {
       {
         asset: DAI.address.value,
         delegate: delegate.value,
-        amount: BigInt(tokenAmount.toBaseUnit()),
+        amount: tokenAmount.toSolidityValue(),
         sumAmounts: true,
       },
     ])

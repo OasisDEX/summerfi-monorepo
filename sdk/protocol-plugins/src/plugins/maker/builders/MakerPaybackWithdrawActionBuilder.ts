@@ -1,10 +1,10 @@
+import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
 import { getValueFromReference, steps } from '@summerfi/sdk-common/simulation'
+import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
 import { MakerPaybackAction } from '../actions/MakerPaybackAction'
 import { MakerWithdrawAction } from '../actions/MakerWithdrawAction'
-import { ActionBuilderParams, ActionBuilderUsedAction } from '@summerfi/protocol-plugins-common'
-import { MakerIlkToJoinMap } from '../types/MakerIlkToJoinMap'
 import { isMakerLendingPoolId } from '../interfaces/IMakerLendingPoolId'
-import { BaseActionBuilder } from '../../../implementation/BaseActionBuilder'
+import { MakerIlkToJoinMap } from '../types/MakerIlkToJoinMap'
 
 export class MakerPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.PaybackWithdrawStep> {
   readonly actions: ActionBuilderUsedAction[] = [
@@ -37,13 +37,13 @@ export class MakerPaybackWithdrawActionBuilder extends BaseActionBuilder<steps.P
         position: step.inputs.position,
         positionsManager: positionsManager,
         amount: getValueFromReference(step.inputs.paybackAmount),
-        paybackAll: paybackAmount.toBN().gte(step.inputs.position.debtAmount.toBN()),
+        paybackAll: paybackAmount.isGreaterOrEqualThan(step.inputs.position.debtAmount),
       },
       connectedInputs: {},
       connectedOutputs: {
         paybackAmount: 'amountPaidBack',
       },
-      skip: paybackAmount.toBN().isZero(),
+      skip: paybackAmount.isZero(),
     })
 
     context.addActionCall({

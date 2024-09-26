@@ -46,7 +46,7 @@ export function mapFeaturedMultiplyProduct(
       ],
       url: getGenericPositionUrl({
         ...item,
-        product: [OmniProductType.Earn],
+        product: [OmniProductType.Multiply],
       }),
     }
   })

@@ -609,5 +609,41 @@ export const StaticTokensData: TokenListData = {
       decimals: 18,
       logoURI: '',
     },
+    // LBTC
+    {
+      chainId: 1,
+      symbol: 'LBTC',
+      name: 'Lombard Staked BTC',
+      address: '0x8236a87084f8b84306f72007f36f2618a5634494',
+      decimals: 8,
+      logoURI: '',
+    },
+    // SWBTC
+    {
+      chainId: 1,
+      symbol: 'SWBTC',
+      name: 'Swell Restaked BTC',
+      address: '0x8db2350d78abc13f5673a411d4700bcf87864dde',
+      decimals: 8,
+      logoURI: '',
+    },
+    // rswETH
+    {
+      chainId: 1,
+      symbol: 'rswETH',
+      name: 'Restaked Swell ETH',
+      address: '0xfae103dc9cf190ed75350761e95403b7b8afa6c0',
+      decimals: 18,
+      logoURI: '',
+    },
+    // WOETH
+    {
+      chainId: 1,
+      symbol: 'WOETH',
+      name: 'Wrapped OETH',
+      address: '0xdcee70654261af21c44c093c300ed3bb97b78192',
+      decimals: 18,
+      logoURI: '',
+    },
   ],
 }

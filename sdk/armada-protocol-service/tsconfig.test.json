@@ -19,9 +19,17 @@
         "node_modules/@summerfi/allowance-manager-service/src/index.ts"
       ],
       "@summerfi/blockchain-client-provider": ["../blockchain-client-provider/src/index.ts"],
-      "@summerfi/serverless-shared/*": ["../../packages/serverless-shared/src/*"]
+      "@summerfi/serverless-shared/*": ["../../packages/serverless-shared/src/*"],
+      "@summerfi/serverless-shared": ["../../packages/serverless-shared/src/index.ts"],
+      "@summerfi/subgraph-manager-common": [
+        "node_modules/@summerfi/subgraph-manager-common/src/index.ts"
+      ],
+      "@summerfi/subgraph-manager-service": [
+        "node_modules/@summerfi/subgraph-manager-service/src/index.ts"
+      ],
+      "@summerfi/sdk-server-common": ["node_modules/@summerfi/sdk-server-common/src/index.ts"]
     }
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "e2e/**/*.ts"],
   "exclude": ["node_modules"]
 }

@@ -28,9 +28,9 @@ export class SwapAction extends BaseAction<typeof SwapAction.Config> {
         {
           fromAsset: params.fromAmount.token.address.value,
           toAsset: params.toMinimumAmount.token.address.value,
-          amount: BigInt(params.fromAmount.toBaseUnit()),
-          receiveAtLeast: BigInt(params.toMinimumAmount.toBaseUnit()),
-          fee: BigInt(params.fee.toBaseUnit({ decimals: 2 })),
+          amount: params.fromAmount.toSolidityValue(),
+          receiveAtLeast: params.toMinimumAmount.toSolidityValue(),
+          fee: params.fee.toSolidityValue({ decimals: 2 }),
           withData: params.withData,
           collectFeeFromToken: params.collectFeeInFromToken,
         },

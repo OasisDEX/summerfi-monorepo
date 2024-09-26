@@ -1,33 +1,28 @@
-import { isPositionsManager } from '@summerfi/sdk-common'
-import { Maybe } from '@summerfi/sdk-common/common'
+import { Maybe, SDKError, SDKErrorType } from '@summerfi/sdk-common/common'
 import type { Order } from '@summerfi/sdk-common/orders'
-import type { ISimulation } from '@summerfi/sdk-common/simulation'
-import { isUser } from '@summerfi/sdk-common/user'
+
+import { isBuildOrderInputs } from '@summerfi/order-planner-common/'
 import { z } from 'zod'
 import { publicProcedure } from '../SDKTRPC'
 
 export const buildOrder = publicProcedure
-  .input(
-    z.object({
-      user: z.any(),
-      positionsManager: z.any(),
-      simulation: z.custom<ISimulation>((simulation) => simulation !== undefined),
-    }),
-  )
+  .input(z.any())
   .mutation(async (opts): Promise<Maybe<Order>> => {
-    if (!isUser(opts.input.user)) {
-      throw new Error('Invalid user')
-    }
-    if (!isPositionsManager(opts.input.positionsManager)) {
-      throw new Error('Invalid positions manager')
-    }
+    const returnedErrors: string[] = []
 
-    // TODO: validate Simulation with a type guard instead of a Zod schema
+    if (!isBuildOrderInputs(opts.input, returnedErrors)) {
+      throw SDKError.createFrom({
+        type: SDKErrorType.OrderPlannerError,
+        reason: 'Invalid inputs received for build order',
+        message: returnedErrors.join('\n'),
+      })
+    }
 
     return opts.ctx.orderPlannerService.buildOrder({
       user: opts.input.user,
       positionsManager: opts.input.positionsManager,
       simulation: opts.input.simulation,
+      armadaManager: opts.ctx.armadaManager,
       swapManager: opts.ctx.swapManager,
       addressBookManager: opts.ctx.addressBookManager,
       protocolsRegistry: opts.ctx.protocolsRegistry,
