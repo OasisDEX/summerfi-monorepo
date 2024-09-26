@@ -7,6 +7,7 @@ export {
   isAaveV3LendingPoolId,
   type IAaveV3LendingPoolId,
   AaveV3Protocol,
+  type IAaveV3Protocol,
 } from '@summerfi/protocol-plugins/plugins/aave-v3'
 export { EmodeType } from '@summerfi/protocol-plugins/plugins/common'
 export {
@@ -18,6 +19,8 @@ export {
   isMakerLendingPoolId,
   type IMakerLendingPoolId,
   MakerProtocol,
+  type IMakerProtocol,
+  type ILKType,
 } from '@summerfi/protocol-plugins/plugins/maker'
 export {
   MorphoLendingPoolId,
@@ -26,6 +29,7 @@ export {
   isMorphoLendingPoolId,
   type IMorphoLendingPoolId,
   MorphoProtocol,
+  type IMorphoProtocol,
 } from '@summerfi/protocol-plugins/plugins/morphoblue'
 export {
   SparkLendingPoolId,
@@ -34,4 +38,5 @@ export {
   isSparkLendingPoolId,
   type ISparkLendingPoolId,
   SparkProtocol,
+  type ISparkProtocol,
 } from '@summerfi/protocol-plugins/plugins/spark'
