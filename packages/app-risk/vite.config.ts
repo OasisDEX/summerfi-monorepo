@@ -1,4 +1,4 @@
-import react from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react-swc'
 import { glob } from 'glob'
 import { fileURLToPath } from 'node:url'
 import { extname, relative, resolve } from 'path'
