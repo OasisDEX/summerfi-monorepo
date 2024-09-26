@@ -55,7 +55,7 @@ export class UserClient extends User implements IUserClient {
     positionsManager?: IPositionsManager
   }): Promise<Maybe<Order>> {
     return await this.rpcClient.orders.buildOrder.mutate({
-      user: this,
+      user: User.createFrom({ wallet: this.wallet, chainInfo: this.chainInfo }),
       positionsManager: params.positionsManager,
       simulation: params.simulation,
     })
