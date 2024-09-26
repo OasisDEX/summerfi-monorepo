@@ -1,6 +1,22 @@
 import { ProtocolId } from '@summerfi/serverless-shared'
 import { Price, TokenBalance } from '../types'
 
+// maker legacy ids
+export const MakerStopLossToCollateralID = 1n as const
+export const MakerStopLossToDaiID = 2n as const
+export const MakerBasicBuyID = 3n as const
+export const MakerBasicSellID = 4n as const
+export const MakerAutoTakeProfitToCollateralID = 7n as const
+export const MakerAutoTakeProfitToDaiID = 8n as const
+
+// maker legacy ids that were supposed to happen but never did
+// export const MakerStopLossToCollateralV2ID = 101n as const
+// export const MakerStopLossToDaiV2ID = 102n as const
+// export const MakerBasicBuyV2ID = 103n as const
+// export const MakerBasicSellV2ID = 104n as const
+// export const MakerAutoTakeProfitToCollateralV2ID = 105n as const
+// export const MakerAutoTakeProfitToDaiV2ID = 106n as const
+
 export const AaveStopLossToCollateralV2ID = 111n as const
 export const AaveStopLossToDebtV2ID = 112n as const
 export const SparkStopLossToCollateralV2ID = 117n as const
@@ -42,6 +58,90 @@ export type Trigger = {
   dynamicParams?: unknown
 }
 
+export type MakerStopLossToCollateral = Trigger & {
+  triggerTypeName: 'MakerStopLossToCollateral'
+  triggerType: typeof MakerStopLossToCollateralID
+  decodedParams: {
+    cdpId: string
+    collRatio: string
+    positionAddress: string
+    triggerType: string
+    maxCoverage: string
+    debtToken: string
+    collateralToken: string
+    executionLtv: string
+    ltv?: string
+  }
+}
+export type MakerStopLossToDai = Trigger & {
+  triggerTypeName: 'MakerStopLossToDai'
+  triggerType: typeof MakerStopLossToDaiID
+  decodedParams: {
+    cdpId: string
+    collRatio: string
+    positionAddress: string
+    triggerType: string
+    maxCoverage: string
+    debtToken: string
+    collateralToken: string
+    executionLtv: string
+    ltv?: string
+  }
+}
+export type MakerBasicBuy = Trigger & {
+  triggerTypeName: 'MakerBasicBuy'
+  triggerType: typeof MakerBasicBuyID
+  triggerGroupId?: string
+  decodedParams: {
+    cdpId: string
+    triggerType: string
+    executionLtv: string
+    targetLtv: string
+    maxBuyPrice: string
+    continuous: boolean
+    deviation: string
+    maxBaseFeeInGwei: string
+  }
+}
+
+export type MakerBasicSell = Trigger & {
+  triggerTypeName: 'MakerBasicSell'
+  triggerType: typeof MakerBasicSellID
+  triggerGroupId?: string
+  decodedParams: {
+    cdpId: string
+    triggerType: string
+    executionLtv: string
+    targetLtv: string
+    minSellPrice: string
+    continuous: boolean
+    deviation: string
+    maxBaseFeeInGwei: string
+  }
+}
+
+export type MakerAutoTakeProfitToCollateral = Trigger & {
+  triggerTypeName: 'MakerAutoTakeProfitToCollateral'
+  triggerType: typeof MakerAutoTakeProfitToCollateralID
+  triggerGroupId?: string
+  decodedParams: {
+    cdpId: string
+    triggerType: string
+    executionPrice: string
+    maxBaseFeeInGwei: string
+  }
+}
+export type MakerAutoTakeProfitToDebt = Trigger & {
+  triggerTypeName: 'MakerAutoTakeProfitToDai'
+  triggerType: typeof MakerAutoTakeProfitToDaiID
+  triggerGroupId?: string
+  decodedParams: {
+    cdpId: string
+    triggerType: string
+    executionPrice: string
+    maxBaseFeeInGwei: string
+  }
+}
 export type AaveStopLossToCollateral = Trigger & {
   triggerTypeName: 'AaveStopLossToCollateralV2'
   triggerType: typeof AaveStopLossToCollateralV2ID
@@ -429,6 +529,14 @@ export type MorphoBlueStopLoss = Trigger & {
 
 export type GetTriggersResponse = {
   triggers: {
+    [ProtocolId.MAKER]: {
+      basicBuy?: MakerBasicBuy
+      basicSell?: MakerBasicSell
+      stopLossToCollateral?: MakerStopLossToCollateral
+      stopLossToDebt?: MakerStopLossToDai
+      autoTakeProfitToCollateral?: MakerAutoTakeProfitToCollateral
+      autoTakeProfitToDebt?: MakerAutoTakeProfitToDebt
+    }
     [ProtocolId.AAVE3]: {
       basicBuy?: DmaAaveBasicBuy
       basicSell?: DmaAaveBasicSell
@@ -490,6 +598,12 @@ export type GetTriggersResponse = {
     sparkPartialTakeProfit?: DmaSparkPartialTakeProfit
   }
   flags: {
+    [ProtocolId.MAKER]: {
+      isBasicBuyEnabled: boolean
+      isBasicSellEnabled: boolean
+      isStopLossEnabled: boolean
+      isAutoTakeProfitEnabled: boolean
+    }
     [ProtocolId.AAVE3]: {
       isBasicBuyEnabled: boolean
       isBasicSellEnabled: boolean
@@ -541,6 +655,10 @@ export type GetTriggersResponse = {
     morphoBlueBasicSell?: Trigger
     morphoBluePartialTakeProfit?: Trigger
     morphoBlueStopLoss?: Trigger
+    makerStopLoss?: Trigger
+    makerBasicBuy?: Trigger
+    makerBasicSell?: Trigger
+    makerAutoTakeProfit?: Trigger
   }
   triggersCount: number
   additionalData?: Record<string, unknown>

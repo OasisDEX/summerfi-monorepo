@@ -1,6 +1,6 @@
-query Triggers($dpm: Bytes!) {
+query Triggers($account: Bytes!) {
   triggers(
-    where: { account: $dpm, removedBlock: null }
+    where: { account: $account, removedBlock: null }
     orderBy: addedTimestamp
     orderDirection: desc
   ) {
@@ -12,7 +12,21 @@ query Triggers($dpm: Bytes!) {
     triggerType
     addedTimestamp
     decodedData
+    triggerGroupId
     decodedDataNames
+    cdp {
+      id
+      collateralToken {
+        address
+        symbol
+        decimals
+      }
+      urn {
+        id
+      }
+      ilk
+      ilkName
+    }
     tokens {
       address
       symbol
