@@ -14,6 +14,7 @@ import { Token } from '../src/common/implementation/Token'
 describe('SDK Common | TokenAmount', () => {
   let USDC: IToken
   let DAI: IToken
+  let WBTC: IToken
 
   beforeAll(() => {
     USDC = Token.createFrom({
@@ -41,7 +42,21 @@ describe('SDK Common | TokenAmount', () => {
       symbol: 'DAI',
       name: 'Dai Stablecoin',
     })
+
+    WBTC = Token.createFrom({
+      address: Address.createFromEthereum({
+        value: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+      }),
+      chainInfo: ChainInfo.createFrom({
+        chainId: 1,
+        name: 'Ethereum',
+      }),
+      decimals: 8,
+      symbol: 'WBTC',
+      name: 'Wrapped Bitcoin',
+    })
   })
+
   describe('#createFrom()', () => {
     it('should instantiate with right data', () => {
       const tokenAmount = TokenAmount.createFrom({
@@ -324,5 +339,14 @@ describe('SDK Common | TokenAmount', () => {
 
       expect(tokenAmount.toBaseUnit()).toEqual('108540000')
     })
+  })
+
+  it('#toBaseUnit() should round down ', () => {
+    const tokenAmount = TokenAmount.createFrom({
+      token: WBTC,
+      amount: '10.85566728586456713',
+    })
+
+    expect(tokenAmount.toBaseUnit()).toEqual('1085566728')
   })
 })

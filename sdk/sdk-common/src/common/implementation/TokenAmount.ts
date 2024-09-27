@@ -127,7 +127,7 @@ export class TokenAmount implements ITokenAmount {
   }
 
   toBaseUnit(): string {
-    return new BigNumber(this.amount).times(this._baseUnitFactor).toFixed(0)
+    return new BigNumber(this.amount).times(this._baseUnitFactor).toFixed(0, BigNumber.ROUND_DOWN)
   }
 
   /** @see ITokenAmount.toBN */
