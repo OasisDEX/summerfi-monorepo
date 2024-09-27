@@ -10,7 +10,6 @@ const ten = new BigNumber(10)
 export const mapTriggerCommonParams = (trigger: TriggersQuery['triggers'][number]) => ({
   triggerId: trigger.id,
   triggerData: trigger.triggerData,
-  triggerGroupId: trigger.triggerGroupId?.toString(),
 })
 
 const mapMakerTriggerCommonParams = (trigger: TriggersQuery['triggers'][number]) => ({

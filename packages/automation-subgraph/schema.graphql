@@ -361,7 +361,6 @@ type Trigger {
     where: Token_filter
   ): [Token!]!
   triggerData: Bytes!
-  triggerGroupId: BigInt
   triggerType: BigInt!
   version: BigInt!
 }

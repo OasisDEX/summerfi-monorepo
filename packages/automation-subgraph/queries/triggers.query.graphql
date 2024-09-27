@@ -12,7 +12,6 @@ query Triggers($account: Bytes!) {
     triggerType
     addedTimestamp
     decodedData
-    triggerGroupId
     decodedDataNames
     cdp {
       id
