@@ -629,5 +629,23 @@ export const StaticTokensData: TokenListData = {
       decimals: 18,
       logoURI: '',
     },
+    // tBTC
+    {
+      chainId: 1,
+      symbol: 'tBTC',
+      name: 'tBTC',
+      address: '0x18084fbA666a33d37592fA2633fD49a74DD93a88',
+      decimals: 18,
+      logoURI: '',
+    },
+    // cbBTC
+    {
+      chainId: 1,
+      symbol: 'cbBTC',
+      name: 'Coinbase Wrapped BTC',
+      address: '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf',
+      decimals: 8,
+      logoURI: '',
+    },
   ],
 }

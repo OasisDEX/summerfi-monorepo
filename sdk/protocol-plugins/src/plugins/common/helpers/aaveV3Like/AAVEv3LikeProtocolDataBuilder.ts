@@ -118,7 +118,7 @@ export class AaveV3LikeProtocolDataBuilder<
         })
         if (!token) {
           console.error(
-            `Protocol token not found in SDK token list for address ${reservesToken.tokenAddress} while processing AaveLike protocol data`,
+            `Protocol token not found in SDK token list for address ${reservesToken.tokenAddress} while processing AaveLike protocol data for Mainnet`,
           )
         }
         return token
