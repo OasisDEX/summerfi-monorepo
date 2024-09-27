@@ -104,16 +104,15 @@ export const sstConfig: SSTConfig = {
     }
 
     if (_input.stage === 'staging' || _input.stage === 'production') {
-      if (_input.stage === 'staging') {
-        if (currentBranch !== 'dev' && !currentBranch.startsWith('hotfix/')) {
-          throw new Error('You can only deploy to staging from dev branch')
-        }
-      }
-
-      if (_input.stage === 'production') {
-        if (currentBranch !== 'main') {
-          throw new Error('You can only deploy to production from main branch')
-        }
+      if (
+        currentBranch !== 'main' &&
+        currentBranch !== 'dev' &&
+        !currentBranch.startsWith('hotfix/')
+      ) {
+        throw new Error(
+          `You can only deploy to ${_input.stage} from the main, dev, or a hotfix, but current branch is ` +
+            currentBranch,
+        )
       }
 
       if (commitsToFetch === null) {
