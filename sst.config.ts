@@ -105,7 +105,7 @@ export const sstConfig: SSTConfig = {
 
     if (_input.stage === 'staging' || _input.stage === 'production') {
       if (_input.stage === 'staging') {
-        if (currentBranch !== 'dev') {
+        if (currentBranch !== 'dev' && !currentBranch.startsWith('hotfix/')) {
           throw new Error('You can only deploy to staging from dev branch')
         }
       }
