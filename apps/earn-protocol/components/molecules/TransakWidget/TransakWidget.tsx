@@ -1,25 +1,20 @@
-import { useChain, useSmartAccountClient, useUser } from '@alchemy/aa-alchemy/react'
+import { useChain, useUser } from '@account-kit/react'
 import { Button } from '@summerfi/app-ui'
 
-import { accountType } from '@/providers/AlchemyAccountsProvider/config'
 import { getTransakConfig } from '@/transak/config'
 
 export const TransakWidget = () => {
-  // eventually account-kit client, or EOA
-  const { client } = useSmartAccountClient({
-    type: accountType,
-  })
   const { chain } = useChain()
   const user = useUser()
 
-  if (!client) {
+  if (!user) {
     return null
   }
 
   const handleOpen = () => {
     const transak = getTransakConfig({
       config: {
-        walletAddress: client.account.address,
+        walletAddress: user.address,
         network: chain.name.toLowerCase(),
         email: user?.email,
       },

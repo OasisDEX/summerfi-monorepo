@@ -1,18 +1,15 @@
 'use client'
 import { type FC, type PropsWithChildren } from 'react'
-import {
-  AlchemyAccountProvider,
-  type AlchemyAccountsProviderProps,
-} from '@alchemy/aa-alchemy/react'
+import { type AlchemyClientState } from '@account-kit/core'
+import { AlchemyAccountProvider } from '@account-kit/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-
-import { config } from './config'
+import { config } from 'account-kit/config'
 
 const queryClient = new QueryClient()
 
 export const AlchemyAccountsProvider: FC<
   PropsWithChildren<{
-    initialState?: AlchemyAccountsProviderProps['initialState']
+    initialState?: AlchemyClientState
   }>
 > = ({ initialState, children }) => (
   <QueryClientProvider client={queryClient}>
