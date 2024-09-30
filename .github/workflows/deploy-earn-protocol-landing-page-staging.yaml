@@ -1,4 +1,4 @@
-name: Deploy Earn Protocol App Staging
+name: Deploy Earn Protocol Landing Page App Staging
 on:
   workflow_dispatch:
   push:
