@@ -329,6 +329,109 @@ importers:
         specifier: ^2.7.0
         version: 2.7.0
 
+  apps/earn-protocol-landing-page:
+    dependencies:
+      '@loadable/component':
+        specifier: ^5.16.4
+        version: 5.16.4(react@18.3.1)
+      '@prisma/nextjs-monorepo-workaround-plugin':
+        specifier: ^5.15.1
+        version: 5.15.1
+      '@summerfi/app-db':
+        specifier: workspace:*
+        version: link:../../packages/app-db
+      '@summerfi/app-icons':
+        specifier: workspace:*
+        version: link:../../packages/app-icons
+      '@summerfi/app-types':
+        specifier: workspace:*
+        version: link:../../packages/app-types
+      '@summerfi/app-ui':
+        specifier: workspace:*
+        version: link:../../packages/app-ui
+      '@summerfi/app-utils':
+        specifier: workspace:*
+        version: link:../../packages/app-utils
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../../packages/serverless-shared
+      '@tabler/icons-react':
+        specifier: ^3.11.0
+        version: 3.11.0(react@18.3.1)
+      browser-detect:
+        specifier: ^0.2.28
+        version: 0.2.28
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      dayjs:
+        specifier: ^1.11.12
+        version: 1.11.12
+      include-media:
+        specifier: 2.0.0
+        version: 2.0.0
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
+      mixpanel:
+        specifier: ^0.18.0
+        version: 0.18.0
+      mixpanel-browser:
+        specifier: ^2.53.0
+        version: 2.53.0
+      next:
+        specifier: ^14.2.13
+        version: 14.2.13(@babel/core@7.24.7)(react-dom@18.3.1)(react@18.3.1)(sass@1.77.8)
+      next-intl:
+        specifier: ^3.17.2
+        version: 3.17.2(next@14.2.13)(react@18.3.1)
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+      usehooks-ts:
+        specifier: ^3.1.0
+        version: 3.1.0(react@18.3.1)
+    devDependencies:
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@types/jsonwebtoken':
+        specifier: ^9.0.0
+        version: 9.0.6
+      '@types/loadable__component':
+        specifier: ^5.13.9
+        version: 5.13.9
+      '@types/lodash':
+        specifier: ^4.14.109
+        version: 4.17.1
+      '@types/mixpanel-browser':
+        specifier: ^2.49.0
+        version: 2.49.0
+      '@types/node':
+        specifier: ^20.14.2
+        version: 20.14.2
+      '@types/node-fetch':
+        specifier: ^2.6.11
+        version: 2.6.11
+      '@types/react':
+        specifier: ^18.3.1
+        version: 18.3.1
+      '@types/react-dom':
+        specifier: ^18.3.0
+        version: 18.3.0
+      json-to-ts:
+        specifier: ^1.7.0
+        version: 1.7.0
+      node-fetch:
+        specifier: ^2.7.0
+        version: 2.7.0
+
   apps/rays-dashboard:
     dependencies:
       '@lifi/wallet-management':
@@ -11136,7 +11239,7 @@ packages:
       graphql: 16.8.2
       graphql-request: 6.1.0(graphql@16.8.2)
       http-proxy-agent: 7.0.2
-      https-proxy-agent: 7.0.4
+      https-proxy-agent: 7.0.5
       jose: 5.2.4
       js-yaml: 4.1.0
       json-stable-stringify: 1.1.1
@@ -21973,8 +22076,8 @@ packages:
     engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
     dependencies:
       is-url: 1.2.4
-      postcss: 8.4.40
-      postcss-values-parser: 6.0.2(postcss@8.4.40)
+      postcss: 8.4.47
+      postcss-values-parser: 6.0.2(postcss@8.4.47)
     dev: true
 
   /detective-sass@5.0.3:
@@ -25365,16 +25468,6 @@ packages:
       debug: 4.3.4(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
-
-  /https-proxy-agent@7.0.4:
-    resolution: {integrity: sha512-wlwpilI7YdjSkWaQ/7omYBMTliDcmCN8OLihO6I9B86g06lMyAoqgoDpV0XqoaPOKj+0DIdAvnsWfyAAhmimcg==}
-    engines: {node: '>= 14'}
-    dependencies:
-      agent-base: 7.1.1
-      debug: 4.3.4(supports-color@8.1.1)
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
 
   /https-proxy-agent@7.0.5:
     resolution: {integrity: sha512-1e4Wqeblerz+tMKPIq2EMGiiWW1dIjZOksyHWSUm1rmuvw/how9hBHZ38lAGj5ID4Ik6EdkOw7NmWPy6LAwalw==}
@@ -29905,7 +29998,7 @@ packages:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
     dev: false
 
-  /postcss-values-parser@6.0.2(postcss@8.4.40):
+  /postcss-values-parser@6.0.2(postcss@8.4.47):
     resolution: {integrity: sha512-YLJpK0N1brcNJrs9WatuJFtHaV9q5aAOj+S4DI5S7jgHlRfm0PIbDCAFRYMQD5SHq7Fy6xsDhyutgS0QOAs0qw==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -29913,7 +30006,7 @@ packages:
     dependencies:
       color-name: 1.1.4
       is-url-superb: 4.0.0
-      postcss: 8.4.40
+      postcss: 8.4.47
       quote-unquote: 1.0.0
     dev: true
 
@@ -29922,8 +30015,8 @@ packages:
     engines: {node: ^10 || ^12 || >=14}
     dependencies:
       nanoid: 3.3.7
-      picocolors: 1.0.1
-      source-map-js: 1.2.0
+      picocolors: 1.1.0
+      source-map-js: 1.2.1
     dev: false
 
   /postcss@8.4.40:
@@ -29933,6 +30026,7 @@ packages:
       nanoid: 3.3.7
       picocolors: 1.0.1
       source-map-js: 1.2.0
+    dev: false
 
   /postcss@8.4.47:
     resolution: {integrity: sha512-56rxCq7G/XfB4EkXq9Egn5GCqugWvDFjafDOThIdMBsI15iqPqR5r15TfSr1YPYeEI19YeaXMCbY6u88Y76GLQ==}
@@ -30186,7 +30280,7 @@ packages:
       agent-base: 7.1.1
       debug: 4.3.4(supports-color@8.1.1)
       http-proxy-agent: 7.0.2
-      https-proxy-agent: 7.0.4
+      https-proxy-agent: 7.0.5
       lru-cache: 7.18.3
       pac-proxy-agent: 7.0.2
       proxy-from-env: 1.1.0
