@@ -1,6 +1,10 @@
 import { type AlchemyAccountsUIConfig, cookieStorage, createConfig } from '@account-kit/react'
 import { base } from '@alchemy/aa-core'
 
+import { NetworkIds } from '@/constants/networks-list'
+
+type SupportedNetworkIds = NetworkIds.MAINNET | NetworkIds.BASEMAINNET
+
 const uiConfig: AlchemyAccountsUIConfig = {
   illustrationStyle: 'outline',
   auth: {
@@ -18,19 +22,31 @@ const uiConfig: AlchemyAccountsUIConfig = {
   },
 }
 
-export const chain = base
-export const config = createConfig(
-  {
-    rpcUrl: `/api/rpc/chain/${chain.id}`,
-    signerConnection: {
-      // this is for Alchemy Signer requests
-      rpcUrl: '/api/rpc',
+export const defaultChain = base
+
+export const getAccountKitConfig = ({
+  forkRpcUrl,
+  chainId,
+}: {
+  forkRpcUrl?: string
+  chainId?: SupportedNetworkIds
+}) => {
+  return createConfig(
+    {
+      rpcUrl: forkRpcUrl ?? `/api/rpc/chain/${chainId ?? defaultChain.id}`,
+      signerConnection: {
+        // this is for Alchemy Signer requests
+        rpcUrl: '/api/rpc',
+      },
+      chain: {
+        [NetworkIds.MAINNET]: defaultChain,
+        [NetworkIds.BASEMAINNET]: base,
+      }[chainId ?? (defaultChain.id as SupportedNetworkIds)],
+      ssr: true,
+      storage: cookieStorage,
     },
-    chain,
-    ssr: true,
-    storage: cookieStorage,
-  },
-  uiConfig,
-)
+    uiConfig,
+  )
+}
 
 export const accountType = 'MultiOwnerModularAccount'

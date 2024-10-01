@@ -5,9 +5,13 @@ import { headers } from 'next/headers'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 
-import { config } from '@/account-kit/config'
+import { getAccountKitConfig } from '@/account-kit/config'
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
+import { accountKitCookieStateName } from '@/constants/account-kit-cookie-state-name'
+import { forksCookieName } from '@/constants/forks-cookie-name'
+import { safeParseJson } from '@/constants/safe-parse-json'
 import { fontFtPolar, fontInter } from '@/helpers/fonts'
+import { getServerSideCookies } from '@/helpers/get-server-side-cookies'
 import { AlchemyAccountsProvider } from '@/providers/AlchemyAccountsProvider/AlchemyAccountsProvider'
 
 export const metadata: Metadata = {
@@ -17,10 +21,20 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale()
-
   const messages = await getMessages()
 
-  const accountKitInitialState = cookieToInitialState(config, headers().get('cookie') ?? undefined)
+  const cookie = headers().get('cookie')
+
+  const forks = safeParseJson(getServerSideCookies(forksCookieName, cookie))
+  const accountKitState = safeParseJson(getServerSideCookies(accountKitCookieStateName, cookie))
+
+  const chainId: number | undefined = accountKitState.state?.chainId
+  const forkRpcUrl: string | undefined = chainId ? forks[chainId] : undefined
+
+  const accountKitInitialState = cookieToInitialState(
+    getAccountKitConfig({ forkRpcUrl, chainId }),
+    headers().get('cookie') ?? undefined,
+  )
 
   return (
     <html lang={locale}>
@@ -29,7 +43,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body className={`${fontFtPolar.variable} ${fontInter.variable}`}>
         <NextIntlClientProvider messages={messages}>
-          <AlchemyAccountsProvider initialState={accountKitInitialState}>
+          <AlchemyAccountsProvider
+            initialState={accountKitInitialState}
+            forkRpcUrl={forkRpcUrl}
+            chainId={chainId}
+          >
             <MasterPage>{children}</MasterPage>
           </AlchemyAccountsProvider>
         </NextIntlClientProvider>

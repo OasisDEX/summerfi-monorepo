@@ -1,17 +1,15 @@
 'use client'
 
 import { type Dispatch, type FormEvent, type SetStateAction, useState } from 'react'
+import { useUser } from '@account-kit/react'
 import { Button, Input, SkeletonLine, Text } from '@summerfi/app-ui'
-import { formatToHex, isValidUrl } from '@summerfi/app-utils'
+import { isValidUrl } from '@summerfi/app-utils'
 import {
   IconDeviceFloppy,
   IconToolsKitchen2,
   IconToolsKitchen2Off,
-  IconWallet,
   IconX,
 } from '@tabler/icons-react'
-import { useAppState, useWallets } from '@web3-onboard/react'
-import { type Config } from '@web3-onboard/wagmi'
 
 import { ModalButton, type ModalButtonProps } from '@/components/molecules/Modal/ModalButton'
 import { forksCookieName } from '@/constants/forks-cookie-name'
@@ -137,41 +135,44 @@ const SetForkModalButton = (props: ModalButtonProps) => {
 const SetForkModalContent = () => {
   const [updating, setUpdating] = useState<number[]>([])
   const [resetting, setResetting] = useState(false)
-  const { wagmiConfig }: { wagmiConfig: Config } = useAppState()
-  const [mainWallet] = useWallets()
+  // const { wagmiConfig }: { wagmiConfig: Config } = useAppState()
+  // const [mainWallet] = useWallets()
+  const user = useUser()
 
   const networksListKeys = Object.keys(networksByName).filter(
     (networkKey) => !networksByName[networkKey].testnet,
   )
 
-  const addForkToWallet = (forkId: number) => async () => {
-    const forksList = safeParseJson(getCookies(forksCookieName))
-    const changedChain = wagmiConfig.chains.find((chain) => chain.id === Number(forkId))
-    const forkUrlId = forksList[forkId].split('-')[forksList[forkId].split('-').length - 1]
+  // Hard to tell right now whether it will be supported in AA
 
-    if (changedChain) {
-      await mainWallet.provider
-        .request({
-          method: 'wallet_addEthereumChain',
-          params: [
-            {
-              chainId: formatToHex(changedChain.id),
-              chainName: `${changedChain.name} (fork: ${forkUrlId})`,
-              nativeCurrency: changedChain.nativeCurrency,
-              rpcUrls: [forksList[forkId]],
-            },
-          ],
-        })
-        .then((resp) => {
-          // eslint-disable-next-line no-console
-          console.log(`Added fork for ${changedChain.name}`, resp)
-        })
-        .catch((error) => {
-          // eslint-disable-next-line no-console
-          console.error('Error adding fork to wallet', error)
-        })
-    }
-  }
+  // const addForkToWallet = (forkId: number) => async () => {
+  //   const forksList = safeParseJson(getCookies(forksCookieName))
+  //   const changedChain = wagmiConfig.chains.find((chain) => chain.id === Number(forkId))
+  //   const forkUrlId = forksList[forkId].split('-')[forksList[forkId].split('-').length - 1]
+  //
+  //   if (changedChain) {
+  //     await mainWallet.provider
+  //       .request({
+  //         method: 'wallet_addEthereumChain',
+  //         params: [
+  //           {
+  //             chainId: formatToHex(changedChain.id),
+  //             chainName: `${changedChain.name} (fork: ${forkUrlId})`,
+  //             nativeCurrency: changedChain.nativeCurrency,
+  //             rpcUrls: [forksList[forkId]],
+  //           },
+  //         ],
+  //       })
+  //       .then((resp) => {
+  //         // eslint-disable-next-line no-console
+  //         console.log(`Added fork for ${changedChain.name}`, resp)
+  //       })
+  //       .catch((error) => {
+  //         // eslint-disable-next-line no-console
+  //         console.error('Error adding fork to wallet', error)
+  //       })
+  //   }
+  // }
 
   if (resetting) {
     return (
@@ -244,19 +245,19 @@ const SetForkModalContent = () => {
                   >
                     {network.label} <IconDeviceFloppy size={18} />
                   </Button>
-                  <Button
-                    disabled={!forkCookies[network.id] || !mainWallet}
-                    variant={forkCookies[network.id] ? 'primarySmall' : 'neutralSmall'}
-                    style={{
-                      minWidth: '30px',
-                      width: '50px',
-                      padding: '5px',
-                      marginLeft: '10px',
-                    }}
-                    onClick={addForkToWallet(network.id)}
-                  >
-                    <IconWallet size={18} />
-                  </Button>
+                  {/* <Button*/}
+                  {/*  disabled={!forkCookies[network.id] || !mainWallet}*/}
+                  {/*  variant={forkCookies[network.id] ? 'primarySmall' : 'neutralSmall'}*/}
+                  {/*  style={{*/}
+                  {/*    minWidth: '30px',*/}
+                  {/*    width: '50px',*/}
+                  {/*    padding: '5px',*/}
+                  {/*    marginLeft: '10px',*/}
+                  {/*  }}*/}
+                  {/*  onClick={addForkToWallet(network.id)}*/}
+                  {/* >*/}
+                  {/*  <IconWallet size={18} />*/}
+                  {/* </Button>*/}
                   <Button
                     disabled={!forkCookies[network.id]}
                     variant={forkCookies[network.id] ? 'primarySmall' : 'neutralSmall'}
@@ -276,7 +277,7 @@ const SetForkModalContent = () => {
           )
         })}
       </div>
-      {!mainWallet && (
+      {!user && (
         <Text
           as="p"
           variant="p3semi"
@@ -291,6 +292,13 @@ const SetForkModalContent = () => {
         onClick={resetFork({ networkKey: '', setResetting })}
       >
         Reset all forks
+      </Button>
+      <Button
+        variant="secondaryLarge"
+        style={{ marginTop: '30px' }}
+        onClick={() => window.location.reload()}
+      >
+        Refresh page to load forks
       </Button>
     </div>
   )
