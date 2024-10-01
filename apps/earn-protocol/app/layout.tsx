@@ -33,7 +33,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   const accountKitInitialState = cookieToInitialState(
     getAccountKitConfig({ forkRpcUrl, chainId }),
-    headers().get('cookie') ?? undefined,
+    cookie ?? undefined,
   )
 
   return (
