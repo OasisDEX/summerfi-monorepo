@@ -40,6 +40,7 @@ jobs:
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       MIXPANEL_KEY: ${{ secrets.MIXPANEL_KEY }}
       NEXT_PUBLIC_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }}
+      SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
 
     steps:
       - name: Check out code
