@@ -1,7 +1,7 @@
 'use client'
 import { useCallback, useEffect, useState } from 'react'
-import { Card, Modal, TermsOfService } from '@summerfi/app-earn-ui'
 import { useAlchemyAccountContext, useLogout, useSigner, useUser } from '@account-kit/react'
+import { Card, Modal, TermsOfService } from '@summerfi/app-earn-ui'
 import { fetchRisk } from '@summerfi/app-risk'
 import { type TOSSignMessage, useTermsOfService } from '@summerfi/app-tos'
 import { TOSStatus } from '@summerfi/app-types'

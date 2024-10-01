@@ -8,7 +8,7 @@ import masterPageStyles from './MasterPage.module.scss'
 
 interface MasterPageProps {}
 
-export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({ children }) => {
+export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({ children }) => {
   return (
     <>
       <WalletInit />
