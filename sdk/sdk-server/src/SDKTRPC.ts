@@ -12,7 +12,7 @@ export const createCallerFactory = t.createCallerFactory
 
 export const publicProcedure = t.procedure.use(async (opts) => {
   const { getRawInput, path, type } = opts
-  if (process.env.SDK_LOGGING_ENABLED) {
+  if (process.env.SDK_LOGGING_ENABLED === 'true') {
     console.log('- path => ', path)
     console.log('- type => ', type)
     console.log('- rawInput => ', await getRawInput())
