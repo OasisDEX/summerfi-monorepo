@@ -1,4 +1,4 @@
-import { Button, Text } from '@summerfi/app-ui'
+import { Button, Text } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
 export default () => {

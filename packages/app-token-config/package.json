@@ -1,0 +1,13 @@
+{
+  "name": "@summerfi/app-token-config",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./index.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@summerfi/app-types": "workspace:*"
+  }
+}

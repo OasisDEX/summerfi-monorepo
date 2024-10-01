@@ -177,6 +177,9 @@ importers:
       '@summerfi/app-db':
         specifier: workspace:*
         version: link:../../packages/app-db
+      '@summerfi/app-earn-ui':
+        specifier: workspace:*
+        version: link:../../packages/app-earn-ui
       '@summerfi/app-icons':
         specifier: workspace:*
         version: link:../../packages/app-icons
@@ -189,9 +192,6 @@ importers:
       '@summerfi/app-types':
         specifier: workspace:*
         version: link:../../packages/app-types
-      '@summerfi/app-ui':
-        specifier: workspace:*
-        version: link:../../packages/app-ui
       '@summerfi/app-utils':
         specifier: workspace:*
         version: link:../../packages/app-utils
@@ -358,15 +358,15 @@ importers:
       '@summerfi/app-db':
         specifier: workspace:*
         version: link:../../packages/app-db
+      '@summerfi/app-earn-ui':
+        specifier: workspace:*
+        version: link:../../packages/app-earn-ui
       '@summerfi/app-icons':
         specifier: workspace:*
         version: link:../../packages/app-icons
       '@summerfi/app-types':
         specifier: workspace:*
         version: link:../../packages/app-types
-      '@summerfi/app-ui':
-        specifier: workspace:*
-        version: link:../../packages/app-ui
       '@summerfi/app-utils':
         specifier: workspace:*
         version: link:../../packages/app-utils
@@ -786,6 +786,118 @@ importers:
         specifier: latest
         version: 5.13.0
 
+  packages/app-earn-ui:
+    dependencies:
+      '@loadable/component':
+        specifier: ^5.16.4
+        version: 5.16.4(react@18.3.1)
+      '@summerfi/app-icons':
+        specifier: workspace:*
+        version: link:../app-icons
+      '@summerfi/app-utils':
+        specifier: workspace:*
+        version: link:../app-utils
+      '@summerfi/serverless-shared':
+        specifier: workspace:*
+        version: link:../serverless-shared
+      '@tabler/icons-react':
+        specifier: ^3.11.0
+        version: 3.11.0(react@18.3.1)
+      bignumber.js:
+        specifier: ^9.1.2
+        version: 9.1.2
+      boring-avatars:
+        specifier: 1.10.2
+        version: 1.10.2
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      include-media:
+        specifier: 2.0.0
+        version: 2.0.0
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
+      next:
+        specifier: ^14.2.13
+        version: 14.2.13(@babel/core@7.24.7)(react-dom@18.3.1)(react@18.3.1)(sass@1.77.8)
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+      rollup-preserve-directives:
+        specifier: ^1.1.1
+        version: 1.1.1(rollup@4.22.4)
+      sanitize.css:
+        specifier: 13.0.0
+        version: 13.0.0
+      typed-scss-modules:
+        specifier: ^8.0.1
+        version: 8.0.1(sass@1.77.8)
+      usehooks-ts:
+        specifier: ^3.1.0
+        version: 3.1.0(react@18.3.1)
+      vite-tsconfig-paths:
+        specifier: ^4.3.2
+        version: 4.3.2(typescript@5.6.2)(vite@5.4.8)
+    devDependencies:
+      '@summerfi/app-token-config':
+        specifier: workspace:*
+        version: link:../app-token-config
+      '@summerfi/app-types':
+        specifier: workspace:*
+        version: link:../app-types
+      '@summerfi/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@summerfi/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/loadable__component':
+        specifier: ^5.13.9
+        version: 5.13.9
+      '@types/lodash':
+        specifier: ^4.14.109
+        version: 4.17.1
+      '@types/node':
+        specifier: 20.12.7
+        version: 20.12.7
+      '@types/react':
+        specifier: ^18.3.1
+        version: 18.3.1
+      '@types/react-dom':
+        specifier: ^18.3.0
+        version: 18.3.0
+      '@vitejs/plugin-react-swc':
+        specifier: ^3.7.0
+        version: 3.7.0(vite@5.4.8)
+      eslint:
+        specifier: 8.57.0
+        version: 8.57.0
+      glob:
+        specifier: ^11.0.0
+        version: 11.0.0
+      jest:
+        specifier: 29.7.0
+        version: 29.7.0(@types/node@20.12.7)
+      sass:
+        specifier: ^1.77.8
+        version: 1.77.8
+      typescript:
+        specifier: ^5.6.2
+        version: 5.6.2
+      vite:
+        specifier: ^5.4.8
+        version: 5.4.8(@types/node@20.12.7)(sass@1.77.8)
+      vite-plugin-dts:
+        specifier: ^4.2.2
+        version: 4.2.2(@types/node@20.12.7)(rollup@4.22.4)(typescript@5.6.2)(vite@5.4.8)
+      vite-plugin-lib-inject-css:
+        specifier: ^2.1.1
+        version: 2.1.1(vite@5.4.8)
+
   packages/app-icons:
     dependencies:
       '@loadable/component':
@@ -874,6 +986,12 @@ importers:
       vite-plugin-dts:
         specifier: ^4.2.2
         version: 4.2.2(@types/node@20.12.7)(rollup@4.22.4)(typescript@5.6.2)(vite@5.4.8)
+
+  packages/app-token-config:
+    dependencies:
+      '@summerfi/app-types':
+        specifier: workspace:*
+        version: link:../app-types
 
   packages/app-tos:
     dependencies:
@@ -1033,6 +1151,9 @@ importers:
         specifier: ^4.3.2
         version: 4.3.2(typescript@5.6.2)(vite@5.4.8)
     devDependencies:
+      '@summerfi/app-token-config':
+        specifier: workspace:*
+        version: link:../app-token-config
       '@summerfi/app-types':
         specifier: workspace:*
         version: link:../app-types
@@ -1093,6 +1214,12 @@ importers:
       dayjs:
         specifier: ^1.11.12
         version: 1.11.12
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
+      rollup-preserve-directives:
+        specifier: ^1.1.1
+        version: 1.1.1(rollup@4.22.4)
       vite-tsconfig-paths:
         specifier: ^4.3.2
         version: 4.3.2(typescript@5.6.2)(vite@5.4.8)
@@ -1106,6 +1233,9 @@ importers:
       '@summerfi/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      '@types/lodash':
+        specifier: ^4.14.109
+        version: 4.17.1
       eslint:
         specifier: 8.57.0
         version: 8.57.0
@@ -14751,7 +14881,7 @@ packages:
         optional: true
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@3.29.4)
-      magic-string: 0.30.10
+      magic-string: 0.30.11
       rollup: 3.29.4
     dev: false
 
@@ -31933,7 +32063,7 @@ packages:
     dependencies:
       chokidar: 3.6.0
       immutable: 4.3.5
-      source-map-js: 1.2.0
+      source-map-js: 1.2.1
 
   /sax@1.2.1:
     resolution: {integrity: sha512-8I2a3LovHTOpm7NV5yOyO8IHqgVsfK4+UuySrXU8YXkSRX7k6hCV9b3HrkKCr3nMpgj+0bmocaJJWpvp1oc7ZA==}
@@ -32454,10 +32584,6 @@ packages:
       semver: 7.6.2
       sort-object-keys: 1.1.3
     dev: true
-
-  /source-map-js@1.2.0:
-    resolution: {integrity: sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==}
-    engines: {node: '>=0.10.0'}
 
   /source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
@@ -34579,8 +34705,8 @@ packages:
       vite: '*'
     dependencies:
       '@ast-grep/napi': 0.22.6
-      magic-string: 0.30.10
-      picocolors: 1.0.1
+      magic-string: 0.30.11
+      picocolors: 1.1.0
       vite: 5.4.8(@types/node@20.12.7)(sass@1.77.8)
     dev: true
 

@@ -14,7 +14,7 @@
     "@summerfi/app-db": "workspace:*",
     "@summerfi/app-icons": "workspace:*",
     "@summerfi/app-types": "workspace:*",
-    "@summerfi/app-ui": "workspace:*",
+    "@summerfi/app-earn-ui": "workspace:*",
     "@summerfi/app-utils": "workspace:*",
     "@summerfi/serverless-shared": "workspace:*",
     "@tabler/icons-react": "^3.11.0",

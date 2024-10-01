@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useChain, useSendUserOperation, useSmartAccountClient, useUser } from '@account-kit/react'
-import { Button, Card, Input, Text } from '@summerfi/app-ui'
+import { Button, Card, Input, Text } from '@summerfi/app-earn-ui'
 import type { IArmadaPosition, Token, TransactionInfo } from '@summerfi/sdk-client-react'
 import { type WagmiConfig } from '@web3-onboard/core'
 import { useAppState } from '@web3-onboard/react'

@@ -20,6 +20,7 @@
     "clean": "rm -rf dist"
   },
   "devDependencies": {
+    "@summerfi/app-token-config": "workspace:*",
     "@summerfi/app-types": "workspace:*",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",

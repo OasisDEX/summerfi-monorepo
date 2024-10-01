@@ -1,5 +1,5 @@
 import { useChain, useUser } from '@account-kit/react'
-import { Button } from '@summerfi/app-ui'
+import { Button } from '@summerfi/app-earn-ui'
 
 import { getTransakConfig } from '@/transak/config'
 
@@ -16,7 +16,7 @@ export const TransakWidget = () => {
       config: {
         walletAddress: user.address,
         network: chain.name.toLowerCase(),
-        email: user?.email,
+        email: user.email,
       },
     })
 

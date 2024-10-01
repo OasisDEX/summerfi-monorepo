@@ -26,6 +26,7 @@
     "clean": "rm -rf dist"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.109",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
     "@summerfi/app-types": "workspace:*",
@@ -41,9 +42,11 @@
   },
   "peerDependencies": {
     "bignumber.js": "^9.1.2",
-    "dayjs": "^1.11.12"
+    "dayjs": "^1.11.12",
+    "lodash": "^4.17.21"
   },
   "dependencies": {
+    "rollup-preserve-directives": "^1.1.1",
     "vite-tsconfig-paths": "^4.3.2"
   }
 }
