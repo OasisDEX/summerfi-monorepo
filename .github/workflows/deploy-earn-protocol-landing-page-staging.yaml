@@ -39,6 +39,7 @@ jobs:
       SERVICE_NAME: summer-fi-earn-protocol-landing-page-staging
       CLUSTER_NAME: summer-fi-earn-protocol-landing-page-staging
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
+      CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
       MIXPANEL_KEY: ${{ secrets.MIXPANEL_KEY }}
       NEXT_PUBLIC_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }}
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
