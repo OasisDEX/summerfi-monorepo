@@ -1,7 +1,7 @@
 'use client'
 import { useCallback, useEffect, useState } from 'react'
-import { useLogout, useSigner, useUser } from '@account-kit/react'
 import { Card, Modal, TermsOfService } from '@summerfi/app-earn-ui'
+import { useAlchemyAccountContext, useLogout, useSigner, useUser } from '@account-kit/react'
 import { fetchRisk } from '@summerfi/app-risk'
 import { type TOSSignMessage, useTermsOfService } from '@summerfi/app-tos'
 import { TOSStatus } from '@summerfi/app-types'
@@ -12,7 +12,7 @@ import { TransakWidget } from '@/components/molecules/TransakWidget/TransakWidge
 const AccountKitFeatures = () => {
   const signer = useSigner()
   const user = useUser()
-
+  const { ui: accountKitUiState } = useAlchemyAccountContext()
   const { logout } = useLogout()
 
   // Dummy ToS & TRM logic for now
@@ -45,7 +45,8 @@ const AccountKitFeatures = () => {
         TOSStatus.WAITING_FOR_ACCEPTANCE_UPDATED,
       ].includes(tosState.status) &&
       !openModal &&
-      walletAddress
+      walletAddress &&
+      !accountKitUiState?.isModalOpen
     ) {
       setOpenModal(true)
     }
@@ -58,7 +59,7 @@ const AccountKitFeatures = () => {
     if (!walletAddress) {
       setOpenModal(false)
     }
-  }, [tosState.status, openModal, walletAddress])
+  }, [tosState.status, openModal, walletAddress, accountKitUiState])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', rowGap: '24px' }}>
