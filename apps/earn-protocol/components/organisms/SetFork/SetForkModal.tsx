@@ -2,7 +2,7 @@
 
 import { type Dispatch, type FormEvent, type SetStateAction, useState } from 'react'
 import { useUser } from '@account-kit/react'
-import { Button, Input, SkeletonLine, Text } from '@summerfi/app-ui'
+import { Button, Input, SkeletonLine, Text } from '@summerfi/app-earn-ui'
 import { isValidUrl } from '@summerfi/app-utils'
 import {
   IconDeviceFloppy,

@@ -1,7 +1,7 @@
 'use client'
 
 import { type AppConfigType } from '@summerfi/app-types'
-import { getLocalAppConfig } from '@summerfi/app-ui'
+import { getLocalAppConfig } from '@summerfi/app-utils'
 import { isSSR } from '@summerfi/serverless-shared'
 import coinbaseModule from '@web3-onboard/coinbase'
 import gnosisModule from '@web3-onboard/gnosis'

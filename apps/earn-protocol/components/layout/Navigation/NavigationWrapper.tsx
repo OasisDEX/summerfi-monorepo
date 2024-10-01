@@ -2,7 +2,7 @@
 
 import { type FC } from 'react'
 import { useAuthModal, useLogout, useSignerStatus, useUser } from '@account-kit/react'
-import { Button, Navigation } from '@summerfi/app-ui'
+import { Button, Navigation } from '@summerfi/app-earn-ui'
 import { usePathname } from 'next/navigation'
 
 export const NavigationWrapper: FC = () => {
