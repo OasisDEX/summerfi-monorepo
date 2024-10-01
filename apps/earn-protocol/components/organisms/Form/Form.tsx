@@ -1,11 +1,14 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { useChain, useSendUserOperation, useSmartAccountClient, useUser } from '@account-kit/react'
 import { Button, Card, Input, Text } from '@summerfi/app-ui'
 import type { IArmadaPosition, Token, TransactionInfo } from '@summerfi/sdk-client-react'
-import { useAppState, useConnectWallet } from '@web3-onboard/react'
-import { type Config as WagmiConfig, getBalance, sendTransaction } from '@web3-onboard/wagmi'
+import { type WagmiConfig } from '@web3-onboard/core'
+import { useAppState } from '@web3-onboard/react'
+import { getBalance } from '@web3-onboard/wagmi'
 import dynamic from 'next/dynamic'
 
+import { accountType } from '@/account-kit/config'
 import { prepareTransaction } from '@/helpers/sdk/prepare-transaction'
 import type { FleetConfig } from '@/helpers/sdk/types'
 import { useAppSDK } from '@/hooks/use-app-sdk'
@@ -26,7 +29,7 @@ export type FormProps = { fleetConfig: FleetConfig }
 const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: FormProps) => {
   const [action, setAction] = useState(Action.DEPOSIT)
   const [amountValue, setAmountValue] = useState<string>()
-  const [transactionsHash, setTransactionsHash] = useState<string>()
+  const [transactionsHash, setTransactionsHash] = useState<string[]>([])
   const [transactionError, setTransactionError] = useState<string>()
   const [token, setToken] = useState<Token>()
   const [tokenBalance, setTokenBalance] = useState<number>()
@@ -36,22 +39,40 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: FormProps) => {
   const balanceLabel = action === Action.DEPOSIT ? 'Wallet' : 'Fleet'
 
   const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
-  const [{ wallet }] = useConnectWallet()
-  const { wagmiConfig } = useAppState()
+  const user = useUser()
+  const chain = useChain()
+
+  const { client } = useSmartAccountClient({
+    type: accountType,
+  })
+  const { sendUserOperation } = useSendUserOperation({
+    client,
+    onSuccess: ({ hash }) => {
+      // eslint-disable-next-line no-console
+      console.log('hash', hash)
+      setTransactionsHash((prev) => [...prev, hash])
+    },
+    onError: (error) => {
+      // eslint-disable-next-line no-console
+      console.log('txError', error)
+      setTransactionError(error.message.toString())
+    },
+  })
+
   const { getTokenBySymbol, getUserPosition, getCurrentUser } = useAppSDK()
   const deposit = useDepositTX()
   const withdraw = useWithdrawTX()
 
   const confirmDisabled = !amountValue || isPendingTransaction
-  const chainId = wallet?.chains[0].id ? Number(wallet.chains[0].id) : undefined
-  const walletAddress = wallet?.accounts[0].address
+  const chainId = chain.chain.id
+  const walletAddress = user?.address
+  const { wagmiConfig } = useAppState()
 
   async function sendSDKTransaction(transaction: TransactionInfo) {
-    return await sendTransaction(wagmiConfig as WagmiConfig, {
-      connector: wallet?.wagmiConnector,
-      ...prepareTransaction(transaction),
-    }).then((res) => {
-      return res
+    return sendUserOperation({
+      uo: {
+        ...prepareTransaction(transaction),
+      },
     })
   }
 
@@ -79,7 +100,7 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: FormProps) => {
       }
     }
     fetchTokenBalance()
-  }, [chainId, walletAddress, token?.symbol, token, wagmiConfig])
+  }, [chainId, walletAddress, token?.symbol, token])
 
   useEffect(() => {
     async function fetchDepositBalance() {
@@ -137,18 +158,12 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: FormProps) => {
 
     if (transactions) {
       try {
-        const transactionHashes: string[] = []
-
-        setTransactionsHash(undefined)
         setTransactionError(undefined)
         setIsPendingTransaction(true)
 
         for (const [_, transaction] of transactions.entries()) {
-          const txHash = await sendSDKTransaction(transaction)
-
-          transactionHashes.push(txHash)
+          await sendSDKTransaction(transaction)
         }
-        setTransactionsHash(transactionHashes.join(', '))
       } catch (error) {
         setTransactionError('An error occurred while sending the transaction (check the console)')
         setIsPendingTransaction(false)
@@ -227,7 +242,7 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: FormProps) => {
       >
         Confirm
       </Button>
-      {transactionsHash && <Text as="p">Transactions sent: {transactionsHash}</Text>}
+      {!!transactionsHash.length && <Text as="p">Transactions sent: {transactionsHash}</Text>}
       {transactionError && <Text as="p">Transaction error: {transactionError}</Text>}
 
       <SetForkModal />

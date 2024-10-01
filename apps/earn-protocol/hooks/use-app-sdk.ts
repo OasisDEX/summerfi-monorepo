@@ -1,11 +1,11 @@
+import { useChain, useUser } from '@account-kit/react'
 import { useSDK } from '@summerfi/sdk-client-react'
-import { useConnectWallet } from '@web3-onboard/react'
 
 export const useAppSDK = () => {
-  const [{ wallet }] = useConnectWallet()
-
-  const chainId = wallet?.chains[0].id ? Number(wallet.chains[0].id) : undefined
-  const walletAddress = wallet?.accounts[0].address
+  const user = useUser()
+  const chain = useChain()
+  const chainId = chain.chain.id
+  const walletAddress = user?.address
 
   return useSDK({ chainId, walletAddress })
 }
