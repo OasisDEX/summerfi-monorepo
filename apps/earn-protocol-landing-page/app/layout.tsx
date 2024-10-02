@@ -20,7 +20,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <head>
         <GlobalStyles />
       </head>
-      <body className={`${fontFtPolar.variable} ${fontInter.variable}`}>
+      <body
+        className={`${fontFtPolar.variable} ${fontInter.variable}`}
+        style={{ backgroundColor: '#1B1B1B' }}
+      >
         <NextIntlClientProvider messages={messages}>
           <MasterPage>{children}</MasterPage>
         </NextIntlClientProvider>
