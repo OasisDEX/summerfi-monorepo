@@ -36,7 +36,7 @@ jobs:
     env:
       AWS_REGION: us-east-1
       ENVIRONMENT_TAG: staging
-      SERVICE_NAME: summer-fi-earn-protocol-landing-page-staging
+      SERVICE_NAME: earn-protocol-lp-2
       CLUSTER_NAME: summer-fi-earn-protocol-landing-page-staging
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
