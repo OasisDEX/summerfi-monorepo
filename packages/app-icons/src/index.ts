@@ -192,6 +192,7 @@ export const autoTakeProfit = lazy.lib(() => import('./icons/takeProfit.svg'))
 export const constantMultiple = lazy.lib(() => import('./icons/takeProfit.svg')) // doesn't matter, no longer supported
 export const rays = lazy.lib(() => import('./icons/rays.svg'))
 export const chevron_down = lazy.lib(() => import('./icons/chevron_down.svg'))
+export const chevron_up = lazy.lib(() => import('./icons/chevron_up.svg'))
 export const search_icon = lazy.lib(() => import('./icons/search_icon.svg'))
 export const tooltip = lazy.lib(() => import('./icons/tooltip.svg'))
 export const checkmark_colorful = lazy.lib(() => import('./icons/checkmark_colorful.svg'))

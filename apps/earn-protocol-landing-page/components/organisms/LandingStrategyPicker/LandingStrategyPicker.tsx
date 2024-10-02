@@ -1,12 +1,55 @@
 'use client'
 import React, { type ChangeEvent, useState } from 'react'
-import { Button, Card, Icon, Input, Pill, Text, Tooltip } from '@summerfi/app-earn-ui'
+import { Button, Card, Dropdown, Icon, Input, Pill, Text, Tooltip } from '@summerfi/app-earn-ui'
+import { type TokenSymbolsList } from '@summerfi/app-types'
+
+const options: {
+  label: string
+  value: string
+  tokenSymbol: TokenSymbolsList
+}[] = [
+  { label: 'DAI', value: 'DAI', tokenSymbol: 'DAI' },
+  { label: 'USDC', value: 'USDC', tokenSymbol: 'USDC' },
+  { label: 'USDT', value: 'USDT', tokenSymbol: 'USDT' },
+]
+
+const inputFormatConfig = {
+  minimumFractionDigits: 0, // Minimum number of fraction digits
+  maximumFractionDigits: 6, // Maximum number of fraction digits
+}
+
+function isValidNumber(input: string) {
+  if (input === '') return true
+  const regex = /^[0-9.]+$/
+
+  return regex.test(input)
+}
 
 export const LandingStrategyPicker = () => {
-  const [value, setValue] = useState('10000')
+  const [value, setValue] = useState(
+    new Intl.NumberFormat('en-US', inputFormatConfig).format('10000'),
+  )
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value)
+    if (!isValidNumber(e.target.value.replaceAll(',', ''))) {
+      return
+    }
+
+    const [int, dec] = e.target.value.split('.')
+    const withDot = e.target.value.includes('.')
+
+    setValue(
+      withDot && !dec
+        ? `${new Intl.NumberFormat('en-US', inputFormatConfig).format(Number(int.replaceAll(',', '')))}.`
+        : new Intl.NumberFormat('en-US', inputFormatConfig).format(
+            Number(`${int.replaceAll(',', '')}${withDot ? `.${dec}` || '' : ''}`),
+          ),
+    )
+    // setValue(e.target.value)
+
+    // new Intl.NumberFormat('en-US', { maximumSignificantDigits: 3 }).format(
+    //   Number(e.target.value),
+    // )
   }
 
   return (
@@ -162,17 +205,20 @@ export const LandingStrategyPicker = () => {
           <div
             style={{
               position: 'relative',
-              marginTop: '32px',
+              marginTop: '24px',
               width: '100%',
               marginBottom: 'var(--space-l)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: '16px',
             }}
           >
+            <Dropdown options={options} />
             <Input placeholder="0" value={value} onChange={handleChange} />
           </div>
-
           <Card
             style={{
-              // width: '515px',
               flexDirection: 'column',
               alignItems: 'center',
               position: 'relative',
