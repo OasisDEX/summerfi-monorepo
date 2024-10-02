@@ -1,7 +1,8 @@
 export type Styles = {
-  card: string
-  cardDark: string
-  cardSmallPaddings: string
+  cardPrimary: string
+  cardPrimarySmallPaddings: string
+  cardSecondary: string
+  cardSecondarySmallPaddings: string
 }
 
 export type ClassNames = keyof Styles

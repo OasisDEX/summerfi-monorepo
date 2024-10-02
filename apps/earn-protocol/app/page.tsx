@@ -1,33 +1,9 @@
-import dynamic from 'next/dynamic'
-
-import type { FleetConfig } from '@/helpers/sdk/types'
-
-const AccountKitFeatures = dynamic(
-  () => import('@/components/organisms/AccountKitFeatures/AccountKitFeatures'),
-  {
-    ssr: false,
-  },
-)
-
-const FormContainer = dynamic(() => import('@/components/organisms/Form/FormContainer'), {
-  ssr: false,
-})
-
-// TODO: Replace with the control elements on the UI later
-const fleetConfig: FleetConfig = {
-  tokenSymbol: 'USDC',
-  fleetAddress: '0x75d4f7cb1b2481385e0878c639f6f6d66592d399',
-}
+import { LandingStrategyPicker } from '@/components/organisms/LandingStrategyPicker/LandingStrategyPicker'
 
 export default function HomePage() {
   return (
     <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'center' }}>
-      <div style={{ display: 'flex', gap: '24px', alignItems: 'center', width: '100%' }}>
-        <div style={{ flex: 1 }}>
-          <AccountKitFeatures />
-        </div>
-        <FormContainer fleetConfig={fleetConfig} />
-      </div>
+      <LandingStrategyPicker />
     </div>
   )
 }

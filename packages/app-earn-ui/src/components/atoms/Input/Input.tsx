@@ -1,4 +1,4 @@
-import {
+import React, {
   type CSSProperties,
   type DetailedHTMLProps,
   type FC,
@@ -8,6 +8,7 @@ import { type IconNamesList } from '@summerfi/app-types'
 
 import { getAtomClassList } from '@/components/atoms/getAtomClassList'
 import { Icon } from '@/components/atoms/Icon/Icon'
+import { Text } from '@/components/atoms/Text/Text'
 
 import inputStyles, { type ClassNames } from '@/components/atoms/Input/Input.module.scss'
 
@@ -42,6 +43,15 @@ export const Input: FC<
         ].join(' ')}
         {...rest}
       />
+      {!!rest.value && (
+        <Text
+          as="p"
+          variant="p3"
+          style={{ position: 'absolute', color: '#9B9B9B', right: 0, bottom: 0 }}
+        >
+          ${rest.value}
+        </Text>
+      )}
     </div>
   )
 }

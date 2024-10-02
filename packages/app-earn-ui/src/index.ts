@@ -5,14 +5,18 @@ export { Button } from './components/atoms/Button/Button'
 export { Text } from './components/atoms/Text/Text'
 export { Card } from './components/atoms/Card/Card'
 export { Modal } from './components/atoms/Modal/Modal'
+export { Icon } from './components/atoms/Icon/Icon'
 export { CheckboxButton } from './components/atoms/CheckboxButton/CheckboxButton'
 export { Input } from './components/atoms/Input/Input'
 export { SkeletonLine } from './components/atoms/SkeletonLine/SkeletonLine'
+export { Pill } from './components/atoms/Pill/Pill'
 
 export { Footer } from './components/layout/Footer/Footer'
 
 export { Navigation } from './components/layout/Navigation/Navigation'
 export { NavigationMenuDropdownContentListItem } from './components/layout/Navigation/NavigationMenuDropdownContentListItem'
+
+export { Tooltip } from './components/molecules/Tooltip/Tooltip'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 

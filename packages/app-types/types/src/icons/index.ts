@@ -199,6 +199,7 @@ export type IconNamesList =
   | 'radio_button'
   | 'radio_button_checked'
   | 'checkmark'
+  | 'cog'
 
 export type TokenSymbolsList =
   | 'USDP'
