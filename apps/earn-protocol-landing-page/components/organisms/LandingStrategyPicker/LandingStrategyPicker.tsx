@@ -42,14 +42,11 @@ export const LandingStrategyPicker = () => {
       withDot && !dec
         ? `${new Intl.NumberFormat('en-US', inputFormatConfig).format(Number(int.replaceAll(',', '')))}.`
         : new Intl.NumberFormat('en-US', inputFormatConfig).format(
-            Number(`${int.replaceAll(',', '')}${withDot ? `.${dec}` || '' : ''}`),
+            Number(
+              `${int.replaceAll(',', '')}${withDot ? `.${dec.replaceAll(',', '')}` || '' : ''}`,
+            ),
           ),
     )
-    // setValue(e.target.value)
-
-    // new Intl.NumberFormat('en-US', { maximumSignificantDigits: 3 }).format(
-    //   Number(e.target.value),
-    // )
   }
 
   return (
