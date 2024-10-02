@@ -2,6 +2,7 @@
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .iconWrapper {
@@ -12,12 +13,12 @@
 }
 
 .default {
-  border: var(--border-1);
-  padding: var(--space-m);
-  border-radius: var(--radius-32);
-  font-weight: 600;
-  font-size: 14px;
+  padding-bottom: var(--space-m);
+  font-weight: 500;
+  font-size: 32px;
   width: 100%;
+  color: var(--color-neutral-10);
+  text-align: right;
 
   &:hover {
     border-color: var(--color-neutral-70);

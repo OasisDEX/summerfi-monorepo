@@ -12,7 +12,7 @@ interface CardProps {
 export const Card: FC<CardProps & DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>> = ({
   children,
   className,
-  variant = 'card',
+  variant = 'cardPrimary',
   style,
 }) => {
   return (

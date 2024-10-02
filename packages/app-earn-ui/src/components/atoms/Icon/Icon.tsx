@@ -105,10 +105,16 @@ export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
         />
       }
     >
-      {({ default: iconData }: { default: string }) =>
-        iconData && !errorLoading ? (
+      {({ default: iconData }: { default: string }) => {
+        const [prefix, svgBase64] = iconData.split(',')
+
+        return iconData && !errorLoading ? (
           <Image
-            src={colorSet ? iconData.replaceAll('currentColor', colorSet) : iconData}
+            src={
+              colorSet
+                ? `${prefix},${btoa(atob(svgBase64).replaceAll('currentColor', colorSet))}`
+                : iconData
+            }
             color="inherit"
             alt={iconName}
             role={role}
@@ -127,7 +133,7 @@ export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
             proxyStyle={{ ...proxyStyle, fill: 'red', fillOpacity: 1 }}
           />
         )
-      }
+      }}
     </LazyIconComponent>
   )
 }

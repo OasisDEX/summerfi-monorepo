@@ -1,23 +1,28 @@
-.card,
-.cardDark,
-.cardSmallPaddings {
+.cardPrimary,
+.cardSecondary,
+.cardPrimarySmallPaddings,
+.cardSecondarySmallPaddings {
   display: flex;
   width: 100%;
-  border: var(--border-1);
-  border-radius: var(--radius-12);
-  background-color: var(--color-neutral-10);
+  border-radius: var(--radius-24);
 }
 
-.card,
-.cardDark {
+.cardPrimary,
+.cardSecondary {
   padding: var(--space-l);
 }
 
-.cardDark {
-  border: unset;
-  background-color: var(--color-neutral-30);
+.cardPrimary,
+.cardPrimarySmallPaddings {
+  background-color: #232323;
 }
 
-.cardSmallPaddings {
+.cardSecondary,
+.cardSecondarySmallPaddings {
+  background-color: #2b2b2b;
+}
+
+.cardPrimarySmallPaddings,
+.cardSecondarySmallPaddings {
   padding: var(--space-s);
 }

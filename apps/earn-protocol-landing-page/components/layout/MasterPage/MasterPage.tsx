@@ -1,6 +1,5 @@
 import { type FC, type PropsWithChildren } from 'react'
 import { parseServerResponseToClient } from '@summerfi/app-utils'
-import Image from 'next/image'
 
 import systemConfigHandler from '@/server-handlers/system-config'
 
@@ -13,14 +12,6 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({ child
 
   return (
     <div className={masterPageStyles.mainContainer}>
-      <Image
-        src="/img/backgrounds/bg-simple.svg"
-        className={masterPageStyles.backgroundSimple}
-        width={0}
-        height={0}
-        style={{ height: 'auto', width: '100%' }}
-        alt=""
-      />
       Navigation :)
       <div className={masterPageStyles.appContainer}>
         {children}
