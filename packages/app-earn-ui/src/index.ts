@@ -14,9 +14,9 @@ export { Pill } from './components/atoms/Pill/Pill'
 export { Footer } from './components/layout/Footer/Footer'
 
 export { Navigation } from './components/layout/Navigation/Navigation'
-export { NavigationMenuDropdownContentListItem } from './components/layout/Navigation/NavigationMenuDropdownContentListItem'
 
 export { Tooltip } from './components/molecules/Tooltip/Tooltip'
+export { Dropdown } from './components/molecules/Dropdown/Dropdown'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 

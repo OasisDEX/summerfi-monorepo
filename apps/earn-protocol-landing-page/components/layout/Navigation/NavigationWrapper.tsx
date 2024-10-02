@@ -1,17 +1,11 @@
 'use client'
 
 import { type FC } from 'react'
-import { useAuthModal, useLogout, useSignerStatus, useUser } from '@account-kit/react'
 import { Button, Navigation } from '@summerfi/app-earn-ui'
 import { usePathname } from 'next/navigation'
 
 export const NavigationWrapper: FC = () => {
   const currentPath = usePathname()
-
-  const user = useUser()
-  const { openAuthModal } = useAuthModal()
-  const signerStatus = useSignerStatus()
-  const { logout } = useLogout()
 
   return (
     <Navigation
@@ -24,15 +18,6 @@ export const NavigationWrapper: FC = () => {
           id: 'earn',
           link: `/earn`,
         },
-        ...(user?.address
-          ? [
-              {
-                label: 'Portfolio',
-                id: 'portfolio',
-                link: `/portfolio/${user.address}`,
-              },
-            ]
-          : []),
         {
           label: 'Explore',
           id: 'explore',
@@ -45,12 +30,8 @@ export const NavigationWrapper: FC = () => {
         },
       ]}
       walletConnectionComponent={
-        <Button
-          variant="secondarySmall"
-          onClick={user ? () => logout() : openAuthModal}
-          disabled={signerStatus.isInitializing}
-        >
-          {signerStatus.isInitializing ? 'Loading...' : user ? 'Log out' : 'Login'}
+        <Button variant="secondarySmall" onClick={() => {}}>
+          Action!
         </Button>
       }
       onLogoClick={() => {

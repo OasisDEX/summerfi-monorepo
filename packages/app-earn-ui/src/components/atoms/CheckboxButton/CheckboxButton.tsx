@@ -26,7 +26,7 @@ export const CheckboxButton = ({
       <div
         className={checkboxButtonStyles.checkmarkWrapper}
         style={{
-          backgroundColor: checked ? 'var(--color-success-10)' : 'var(--color-neutral-10)',
+          backgroundColor: checked ? 'var(--color-success-10)' : 'var(--color-text-primary)',
         }}
       >
         {checked ? <Icon iconName="checkmark" size={18} /> : null}

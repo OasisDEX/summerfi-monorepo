@@ -13,12 +13,14 @@
 }
 
 .default {
-  padding-bottom: var(--space-m);
+  padding: unset;
+  padding-bottom: var(--general-space-16);
   font-weight: 500;
-  font-size: 32px;
+  font-size: 28px;
   width: 100%;
-  color: var(--color-neutral-10);
+  color: var(--color-text-primary);
   text-align: right;
+  border: unset;
 
   &:hover {
     border-color: var(--color-neutral-70);

@@ -25,7 +25,7 @@ body {
   font-weight: 400;
   line-height: 1.5;
 
-  color: var(--color-primary-100);
+  color: var(--color-text-primary);
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizelegibility;
 }
@@ -47,7 +47,7 @@ ul {
 }
 
 a {
-  color: var(--color-interactive-100);
+  color: var(--color-text-primary);
   transition: color 200ms;
   text-decoration: none;
 }

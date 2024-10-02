@@ -4,7 +4,7 @@ import { Button } from '@/components/atoms/Button/Button'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { LoadingSpinner } from '@/components/molecules/Loader/Loader'
 
-import navigationActionStyles from '@/components/layout/Navigation/NavigationActions.module.scss'
+import navigationActionsStyles from '@/components/layout/Navigation/NavigationActions.module.scss'
 
 interface NavigationActionsProps {
   walletConnectionComponent?: React.ReactNode
@@ -20,31 +20,31 @@ export const NavigationActions = ({
   return (
     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', columnGap: '8px' }}>
       {raysCountComponent}
-      <div className={navigationActionStyles.mobileMenuButton}>
+      <div className={navigationActionsStyles.mobileMenuButton}>
         <Button
           variant="secondarySmall"
-          className={clsx(navigationActionStyles.buttonWhite, navigationActionStyles.buttonShadow)}
+          className={clsx(navigationActionsStyles.buttonWhite)}
           onClick={toggleMobileMenu}
           style={{ padding: '10px', width: '40px', height: '40px' }}
         >
           <Icon iconName="menu" size={20} />
         </Button>
       </div>
-      <div className={navigationActionStyles.buttonMockWrapper}>
+      <div className={navigationActionsStyles.buttonMockWrapper}>
         {walletConnectionComponent ?? (
           <Button
             variant="secondarySmall"
             className={clsx(
-              navigationActionStyles.walletButtonMock,
-              navigationActionStyles.buttonWhite,
+              navigationActionsStyles.walletButtonMock,
+              navigationActionsStyles.buttonWhite,
             )}
           >
             <LoadingSpinner
               size={24}
               color="var(--color-interactive-50)"
               style={{
-                marginRight: 'var(--space-xxl)',
-                marginLeft: 'var(--space-xxl)',
+                marginRight: 'var(--general-space-64)',
+                marginLeft: 'var(--general-space-64)',
               }}
             />
           </Button>

@@ -8,13 +8,13 @@ export const LoadingSpinner = ({
   className,
   size = DEFAULT_SIZE,
   fast = false,
-  color = 'var(--color-primary-100)',
+  color = 'var(--color-text-primary)',
   style,
 }: {
   className?: string
   size?: number
   fast?: boolean
-  /** @default var(--color-primary-100) */
+  /** @default var(--color-text-primary) */
   color?: string
   style?: React.CSSProperties
 }) => (

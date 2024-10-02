@@ -48,6 +48,9 @@ const FallbackSvg = ({
     role={role}
     width={finalSize}
     height={finalSize}
+    style={{
+      ...proxyStyle,
+    }}
   >
     <circle
       style={{
@@ -112,7 +115,11 @@ export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
           <Image
             src={
               colorSet
-                ? `${prefix},${btoa(atob(svgBase64).replaceAll('currentColor', colorSet))}`
+                ? `${prefix},${
+                    prefix !== 'data:image/svg+xml'
+                      ? btoa(atob(svgBase64).replaceAll('currentColor', colorSet))
+                      : svgBase64.replaceAll('currentColor', colorSet)
+                  }`
                 : iconData
             }
             color="inherit"

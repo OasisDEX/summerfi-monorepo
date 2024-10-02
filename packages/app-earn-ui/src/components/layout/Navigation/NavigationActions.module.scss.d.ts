@@ -1,6 +1,5 @@
 export type Styles = {
   buttonMockWrapper: string
-  buttonShadow: string
   buttonWhite: string
   mobileMenuButton: string
   walletButtonMock: string

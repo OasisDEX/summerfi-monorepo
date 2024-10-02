@@ -1,5 +1,5 @@
 .wrapper {
-  padding: var(--space-m);
+  padding: var(--general-space-16);
 }
 
 .container {
@@ -10,7 +10,7 @@
   justify-items: flex-end;
   z-index: 3;
   max-width: 1408px;
-  margin: var(--space-l) auto var(--space-xxl);
+  margin: var(--general-space-24) auto var(--general-space-64);
   @include media('>s') {
     grid-template-columns: auto auto;
   }
@@ -18,7 +18,7 @@
     grid-template-columns: auto auto auto;
   }
   @include media('>xl') {
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: auto 1fr auto;
   }
 }
 

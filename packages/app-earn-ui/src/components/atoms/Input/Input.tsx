@@ -43,7 +43,7 @@ export const Input: FC<
         ].join(' ')}
         {...rest}
       />
-      {!!rest.value && (
+      {rest.value !== '0' && (
         <Text
           as="p"
           variant="p3"
