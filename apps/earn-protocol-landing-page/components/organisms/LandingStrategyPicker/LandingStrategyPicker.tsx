@@ -20,7 +20,7 @@ const inputFormatConfig = {
 
 function isValidNumber(input: string) {
   if (input === '') return true
-  const regex = /^[0-9.]+$/
+  const regex = /^[\p{N}.]+$/u
 
   return regex.test(input)
 }
