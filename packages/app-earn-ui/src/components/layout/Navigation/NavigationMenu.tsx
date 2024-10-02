@@ -1,78 +1,57 @@
 'use client'
 
-import { useState } from 'react'
-import {
-  type NavigationMenuPanelLinkType,
-  type NavigationMenuPanelType,
-  type WithNavigationModules,
-} from '@summerfi/app-types'
+import clsx from 'clsx'
+import Link from 'next/link'
 
-import { NavigationMenuDropdown } from '@/components/layout/Navigation/NavigationMenuDropdown'
-import { NavigationMenuLink } from '@/components/layout/Navigation/NavigationMenuLink'
-import { NavigationMenuPanel } from '@/components/layout/Navigation/NavigationMenuPanel'
+import { Icon } from '@/components/atoms/Icon/Icon'
+import { type EarnNavigationProps } from '@/components/layout/Navigation/Navigation'
 
 import navigationMenuStyles from '@/components/layout/Navigation/NavigationMenu.module.scss'
 
-interface NavigationMenuProps extends WithNavigationModules {
-  currentPath: string
-  links?: NavigationMenuPanelLinkType[]
-  panels?: NavigationMenuPanelType[]
+type NavigationMenuType = {
+  links: EarnNavigationProps['links']
+  currentPath?: string
 }
 
-export const NavigationMenu = ({
-  links,
-  panels,
-  currentPath,
-  navigationModules,
-}: NavigationMenuProps) => {
-  const [isPanelOpen, setIsPanelOpen] = useState<boolean>(false)
-  const [isPanelSwitched, setIsPanelSwitched] = useState<boolean>(false)
-  const [currentPanel, setCurrentPanel] = useState<string>(panels?.[0].label ?? '')
-  const [arrowPosition, setArrowPosition] = useState<number>(0)
-
-  function closeDropdown() {
-    setIsPanelSwitched(false)
-    setIsPanelOpen(false)
-  }
-
+export const NavigationMenu = ({ links, currentPath }: NavigationMenuType) => {
   return (
-    <div className={navigationMenuStyles.navigationMenu} onMouseLeave={() => closeDropdown()}>
-      {((links && links.length > 0) ?? (panels && panels.length > 0)) && (
-        <ul className={navigationMenuStyles.navigationMenuList}>
-          {panels?.map((panel) => (
-            <NavigationMenuPanel
-              key={`panel-${panel.label}`}
-              currentPanel={currentPanel}
-              isPanelOpen={isPanelOpen}
-              {...panel}
-              onMouseEnter={(center) => {
-                setIsPanelSwitched(isPanelOpen)
-                setIsPanelOpen(true)
-                setCurrentPanel(panel.label)
-                setArrowPosition(center)
-              }}
-            />
-          ))}
-          {links?.map((link) => (
-            <NavigationMenuLink
-              key={`link-${link.label}`}
-              {...link}
-              currentPath={currentPath}
-              onMouseEnter={() => closeDropdown()}
-            />
-          ))}
-        </ul>
-      )}
-      {panels && panels.length > 0 && (
-        <NavigationMenuDropdown
-          arrowPosition={arrowPosition}
-          currentPanel={currentPanel}
-          isPanelOpen={isPanelOpen}
-          isPanelSwitched={isPanelSwitched}
-          panels={panels}
-          navigationModules={navigationModules}
-        />
-      )}
+    <div className={navigationMenuStyles.navigationMenu}>
+      <ul className={navigationMenuStyles.navigationMenuLinks}>
+        {links?.map((link) => (
+          <li key={`MenuLinkLabel-${link.id}`}>
+            {link.dropdownContent ? (
+              <span
+                className={clsx({
+                  [navigationMenuStyles.active]: link.link === currentPath,
+                })}
+              >
+                {link.label}{' '}
+                <Icon
+                  style={{ marginLeft: '6px', display: 'inline' }}
+                  proxyStyle={{ marginLeft: '6px', display: 'inline' }}
+                  color="white"
+                  iconName="chevron_down"
+                  size={13}
+                />
+              </span>
+            ) : (
+              <Link
+                href={link.link ?? '/'}
+                className={clsx({
+                  [navigationMenuStyles.active]: link.link === currentPath,
+                })}
+              >
+                {link.label}
+              </Link>
+            )}
+            {link.dropdownContent && (
+              <div className={navigationMenuStyles.dropdownContentWrapper}>
+                <div className={navigationMenuStyles.dropdownContent}>{link.dropdownContent}</div>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }

@@ -1,13 +1,9 @@
 export type Styles = {
+  active: string
+  dropdownContent: string
+  dropdownContentWrapper: string
   navigationMenu: string
-  navigationMenuLink: string
-  navigationMenuLinkElement: string
-  navigationMenuLinkElementActive: string
-  navigationMenuLinkElementOnClick: string
-  navigationMenuList: string
-  navigationMenuPanel: string
-  navigationMenuPanelLabel: string
-  navigationMenuPanelLabelActive: string
+  navigationMenuLinks: string
 }
 
 export type ClassNames = keyof Styles

@@ -54,7 +54,7 @@ export const TOSWaitingForAcceptance: FC<TOSWaiting4AcceptanceProps> = ({
     <div
       className={tosWaitingForAcceptanceStyles.flexColumnWrapper}
       style={{
-        rowGap: 'var(--space-m)',
+        rowGap: 'var(--general-space-16)',
       }}
     >
       <Text as="h4" variant="h4" style={{ textAlign: 'center' }}>
@@ -63,14 +63,14 @@ export const TOSWaitingForAcceptance: FC<TOSWaiting4AcceptanceProps> = ({
       <div
         className={tosWaitingForAcceptanceStyles.flexColumnWrapper}
         style={{
-          rowGap: 'var(--space-l)',
+          rowGap: 'var(--general-space-24)',
         }}
       >
         <Text
           style={{
             fontSize: '14px',
             textAlign: 'center',
-            color: 'var(--color-primary-100)',
+            color: 'var(--color-text-primary)',
           }}
         >
           {updated ? texts.tosAcceptMessageUpdated : texts.tosAcceptMessage}
@@ -91,7 +91,7 @@ export const TOSWaitingForAcceptance: FC<TOSWaiting4AcceptanceProps> = ({
                 flex: 1,
                 fontWeight: '400',
                 fontSize: '14px',
-                color: 'var(--color-primary-100)',
+                color: 'var(--color-text-primary)',
               }}
             >
               {texts.tosRead}

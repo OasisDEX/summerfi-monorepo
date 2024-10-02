@@ -1,9 +1,9 @@
 .container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  column-gap: var(--space-xl);
-  row-gap: var(--space-xl);
-  padding: var(--space-xxl) 0;
+  column-gap: var(--general-space-32);
+  row-gap: var(--general-space-32);
+  padding: var(--general-space-64) 0;
   a {
     color: var(--color-text-primary);
     &:hover {
@@ -27,13 +27,13 @@
 
 .socialsList {
   display: flex;
-  column-gap: var(--space-s);
-  margin-top: var(--space-l);
+  column-gap: var(--general-space-12);
+  margin-top: var(--general-space-24);
 }
 
 .linksList {
   display: flex;
   flex-direction: column;
-  row-gap: var(--space-m);
-  margin-top: var(--space-m);
+  row-gap: var(--general-space-16);
+  margin-top: var(--general-space-16);
 }

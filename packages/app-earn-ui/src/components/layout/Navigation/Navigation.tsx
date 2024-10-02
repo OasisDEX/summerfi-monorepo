@@ -1,11 +1,7 @@
 'use client'
 
 import { type FC, type ReactNode, useState } from 'react'
-import {
-  type NavigationMenuPanelLinkType,
-  type NavigationMenuPanelType,
-  type WithNavigationModules,
-} from '@summerfi/app-types'
+import { type NavigationMenuPanelLinkType } from '@summerfi/app-types'
 import { useMediaQuery } from 'usehooks-ts'
 
 import { NavigationActions } from '@/components/layout/Navigation/NavigationActions'
@@ -15,27 +11,29 @@ import { NavigationMenuMobile } from '@/components/layout/Navigation/NavigationM
 
 import navigationStyles from '@/components/layout/Navigation/Navigation.module.scss'
 
-interface NavigationProps extends WithNavigationModules {
+export interface EarnNavigationProps {
   currentPath: string
   logo: string
   logoSmall: string
-  links?: NavigationMenuPanelLinkType[]
-  panels?: NavigationMenuPanelType[]
+  links?: (Omit<NavigationMenuPanelLinkType, 'link' | 'onClick'> & {
+    id: string
+    dropdownContent?: ReactNode
+    link?: string
+    onClick?: () => void
+  })[]
   walletConnectionComponent?: ReactNode
   raysCountComponent?: ReactNode
   onLogoClick?: () => void
   additionalModule?: ReactNode
 }
 
-export const Navigation: FC<NavigationProps> = ({
+export const Navigation: FC<EarnNavigationProps> = ({
   logo,
   logoSmall,
   links,
-  panels,
   currentPath,
   raysCountComponent,
   walletConnectionComponent,
-  navigationModules,
   onLogoClick,
   additionalModule,
 }) => {
@@ -51,21 +49,9 @@ export const Navigation: FC<NavigationProps> = ({
       <header className={navigationStyles.container}>
         <NavigationBranding logo={logo} logoSmall={logoSmall} onLogoClick={onLogoClick} />
         {isViewBelowL ? (
-          <NavigationMenuMobile
-            menuOpened={mobileMenuOpened}
-            toggleMobileMenu={toggleMobileMenu}
-            links={links}
-            panels={panels}
-            logo={logoSmall}
-            navigationModules={navigationModules}
-          />
+          <NavigationMenuMobile />
         ) : (
-          <NavigationMenu
-            links={links}
-            panels={panels}
-            currentPath={currentPath}
-            navigationModules={navigationModules}
-          />
+          <NavigationMenu links={links} currentPath={currentPath} />
         )}
         <NavigationActions
           raysCountComponent={raysCountComponent}
