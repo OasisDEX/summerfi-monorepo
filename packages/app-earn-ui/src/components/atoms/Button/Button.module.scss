@@ -46,7 +46,7 @@
   }
   &:disabled {
     background-color: var(--color-primary-30);
-    color: var(--color-neutral-20);
+    color: var(--color-text-secondary);
     cursor: not-allowed;
   }
 }
@@ -71,7 +71,7 @@
 .neutralSmall {
   color: var(--color-text-primary);
   background-color: var(--color-text-primary);
-  border-color: var(--color-neutral-20);
+  border-color: var(--color-text-secondary);
   &:enabled:hover {
     border-color: var(--color-neutral-70);
   }
@@ -98,7 +98,6 @@
   > span {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-image: var(--gradient-summer-fi-dark);
   }
 
   @include media('>s') {
