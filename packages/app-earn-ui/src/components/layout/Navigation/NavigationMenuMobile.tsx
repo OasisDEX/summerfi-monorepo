@@ -1,3 +1,3 @@
 export const NavigationMenuMobile = () => {
-  return <div>NavigationMenuMobile</div>
+  return <div>Mobile menu is not ready :)</div>
 }
