@@ -40,11 +40,21 @@ export function useTooltip() {
 interface TooltipWrapperProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode
   isOpen: boolean
+  showAbove: boolean
 }
 
-const TooltipWrapper: FC<TooltipWrapperProps> = ({ children, isOpen, style }) => {
+const TooltipWrapper: FC<TooltipWrapperProps> = ({ children, isOpen, style, showAbove }) => {
   return (
-    <div className={isOpen ? tooltipStyles.tooltipOpen : tooltipStyles.tooltip} style={style}>
+    <div
+      className={
+        isOpen
+          ? showAbove
+            ? tooltipStyles.tooltipOpenAbove
+            : tooltipStyles.tooltipOpen
+          : tooltipStyles.tooltip
+      }
+      style={style}
+    >
       <Card variant="cardSecondarySmallPaddings">{children}</Card>
     </div>
   )
@@ -54,6 +64,7 @@ interface StatefulTooltipProps extends HTMLAttributes<HTMLDivElement> {
   tooltip: ReactNode
   children: ReactNode
   tooltipWrapperStyles?: HTMLAttributes<HTMLDivElement>['style']
+  showAbove?: boolean
 }
 
 export const Tooltip: FC<StatefulTooltipProps> = ({
@@ -61,6 +72,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   children,
   style,
   tooltipWrapperStyles,
+  showAbove = false,
 }) => {
   const { tooltipOpen, setTooltipOpen } = useTooltip()
 
@@ -85,7 +97,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
       style={style}
     >
       {children}
-      <TooltipWrapper isOpen={tooltipOpen} style={tooltipWrapperStyles}>
+      <TooltipWrapper isOpen={tooltipOpen} style={tooltipWrapperStyles} showAbove={showAbove}>
         {tooltip}
       </TooltipWrapper>
     </div>

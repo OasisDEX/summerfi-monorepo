@@ -192,6 +192,8 @@ export type IconNamesList =
   | 'rays'
   | 'chevron_down'
   | 'chevron_up'
+  | 'chevron_left'
+  | 'chevron_right'
   | 'search_icon'
   | 'tooltip'
   | 'checkmark_colorful'
@@ -201,6 +203,8 @@ export type IconNamesList =
   | 'radio_button_checked'
   | 'checkmark'
   | 'cog'
+  | 'user'
+  | 'rebalancing'
 
 export type TokenSymbolsList =
   | 'USDP'

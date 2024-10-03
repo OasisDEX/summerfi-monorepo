@@ -10,24 +10,17 @@ button.buttonWhite {
   width: auto;
 }
 
-.buttonMockWrapper {
-  @include media('<=s') {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-    background-color: rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(5px);
-    padding: var(--general-space-16);
-    display: flex;
-    justify-content: center;
-  }
-}
-
 .mobileMenuButton {
   display: none;
   @include media('<=l') {
     display: block;
+  }
+}
+
+.summerProButton {
+  color: var(--color-text-secondary);
+  margin-right: var(--general-space-24);
+  &:hover {
+    color: var(--color-text-primary);
   }
 }

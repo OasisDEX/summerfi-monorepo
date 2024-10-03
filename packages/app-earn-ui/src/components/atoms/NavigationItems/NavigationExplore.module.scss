@@ -1,0 +1,31 @@
+.navigationExploreWrapper {
+  display: flex;
+  flex-direction: column;
+  .navigationExploreItem {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: var(--general-space-12);
+    padding: var(--general-space-12);
+    border-radius: var(--general-radius-16);
+    background-color: transparent;
+    transition: background-color 0.2s;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+    .navigationExploreIconWrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: var(--general-space-32);
+      height: var(--general-space-32);
+      background-color: var(--color-surface-subtler);
+      border-radius: var(--radius-circle);
+      margin-right: var(--general-space-12);
+      img {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  }
+}
+

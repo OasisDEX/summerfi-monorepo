@@ -17,19 +17,22 @@
     margin: 0 var(--general-space-32);
     img {
       opacity: 0.5;
+      transform: rotate3d(1, 0, 0, 0deg);
+      transition: opacity 0.2s, transform 0.2s;
     }
 
     span.active, a.active {
-      color: var(--color-text-text-primary);
+      color: var(--color-text-primary);
       img {
         opacity: 1;
       }
     }
     &:hover {
       span, a {
-        color: var(--color-text-text-primary);
+        color: var(--color-text-primary);
         img {
           opacity: 1;
+          transform: rotate3d(1, 0, 0, 180deg);
         }
       }
 
@@ -52,15 +55,18 @@
   li>.dropdownContentWrapper {
     pointer-events: none;
     position: absolute;
+    width: max-content;
+    left: -50px;
     opacity: 0;
     transition: top 0.2s, opacity 0.2s;
     top: 0;
     padding-top: var(--general-space-32);
 
     .dropdownContent {
-      padding: var(--general-space-24);
+      padding: var(--general-space-24) var(--general-space-20) var(--general-space-8);
       border-radius: var(--general-radius-16);
       background-color: var(--color-surface-light);
+      box-shadow: var(--shadow-depth-1);
     }
   }
 }

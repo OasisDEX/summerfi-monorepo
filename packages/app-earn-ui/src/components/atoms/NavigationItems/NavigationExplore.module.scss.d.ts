@@ -1,8 +1,7 @@
 export type Styles = {
-  tooltip: string
-  tooltipOpen: string
-  tooltipOpenAbove: string
-  tooltipWrapper: string
+  navigationExploreIconWrapper: string
+  navigationExploreItem: string
+  navigationExploreWrapper: string
 }
 
 export type ClassNames = keyof Styles

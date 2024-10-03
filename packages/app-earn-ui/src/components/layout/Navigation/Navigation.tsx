@@ -22,7 +22,6 @@ export interface EarnNavigationProps {
     onClick?: () => void
   })[]
   walletConnectionComponent?: ReactNode
-  raysCountComponent?: ReactNode
   onLogoClick?: () => void
   additionalModule?: ReactNode
 }
@@ -32,7 +31,6 @@ export const Navigation: FC<EarnNavigationProps> = ({
   logoSmall,
   links,
   currentPath,
-  raysCountComponent,
   walletConnectionComponent,
   onLogoClick,
   additionalModule,
@@ -54,7 +52,6 @@ export const Navigation: FC<EarnNavigationProps> = ({
           <NavigationMenu links={links} currentPath={currentPath} />
         )}
         <NavigationActions
-          raysCountComponent={raysCountComponent}
           walletConnectionComponent={walletConnectionComponent}
           toggleMobileMenu={toggleMobileMenu}
         />

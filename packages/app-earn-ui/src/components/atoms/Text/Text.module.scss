@@ -97,7 +97,6 @@
   position: absolute;
 }
 
-
 .p1colorful,
 .p2colorful,
 .p3colorful,
@@ -111,7 +110,7 @@
 .h3colorful,
 .h4colorful,
 .h5colorful {
-  background-image: var(--color-background-interactive);
+  background-image: var(--gradient-earn-protocol-dark);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   width: fit-content;

@@ -12,5 +12,6 @@ export * from './formatters/format-to-hex'
 
 export * from './helpers/time-until'
 export * from './helpers/is-valid-url'
+export * from './helpers/map-numeric-input'
 export * from './helpers/parse-server-response-to-client'
 export * from './helpers/config/access-config-context'
