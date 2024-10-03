@@ -10,6 +10,7 @@ export { CheckboxButton } from './components/atoms/CheckboxButton/CheckboxButton
 export { Input } from './components/atoms/Input/Input'
 export { SkeletonLine } from './components/atoms/SkeletonLine/SkeletonLine'
 export { Pill } from './components/atoms/Pill/Pill'
+export { NavigationExplore } from './components/atoms/NavigationItems/NavigationExplore'
 
 export { Footer } from './components/layout/Footer/Footer'
 
