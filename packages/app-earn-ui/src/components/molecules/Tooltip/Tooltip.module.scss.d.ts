@@ -1,6 +1,7 @@
 export type Styles = {
   tooltip: string
   tooltipOpen: string
+  tooltipOpenAbove: string
   tooltipWrapper: string
 }
 

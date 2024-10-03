@@ -5,7 +5,8 @@
 }
 
 .tooltip,
-.tooltipOpen {
+.tooltipOpen,
+.tooltipOpenAbove {
   background-color: unset;
   position: absolute;
   transition:
@@ -32,4 +33,13 @@
   opacity: 1;
   pointer-events: auto;
   transform: translateY(30px);
+}
+
+.tooltipOpenAbove {
+  display: block;
+  z-index: 2;
+  opacity: 1;
+  pointer-events: auto;
+  top: 0;
+  transform: translateY(-100%) translateY(-10px);
 }

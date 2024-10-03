@@ -1,0 +1,61 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 515px;
+  gap: 5px;
+}
+
+.strategyCard,
+.depositCard {
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.strategyCardHeaderWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: var(--general-space-24);
+}
+
+.strategyCardAssetsWrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: 100%;
+}
+
+.depositCardHeaderWrapper {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  margin-bottom: var(--general-space-24);
+}
+
+.depositCardHeaderSpacer {
+  position: absolute;
+  border-bottom: 1px solid var(--earn-protocol-neutral-100);
+  height: 1px;
+  width: 100%;
+  top: 80px;
+}
+
+.depositCard {
+  margin-bottom: var(--general-space-32);
+}
+
+.bannerWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--general-space-32);
+}
+
+.footerWrapper {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}

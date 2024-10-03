@@ -26,7 +26,7 @@
   height: 48px;
   min-width: 320px;
   font-size: 16px;
-  border-radius: var(--radius-radius-circle);
+  border-radius: var(--radius-circle);
 }
 
 .primarySmall,
@@ -40,29 +40,29 @@
 .primaryLarge,
 .primarySmall {
   color: var(--color-text-primary);
-  background-color: var(--color-text-primary);
+  background-color: var(--color-background-primary);
   &:enabled:hover {
-    background-color: var(--color-text-primary);
+    color: var(--color-text-primary-hover);
+    background-color: var(--color-background-primary-hover);
   }
   &:disabled {
-    background-color: var(--color-primary-30);
-    color: var(--color-text-secondary);
+    background-color: var(--color-background-primary-disabled);
+    color: var(--color-text-primary-disabled);
     cursor: not-allowed;
   }
 }
 
 .secondaryLarge,
 .secondarySmall {
-  color: var(--color-text-primary);
-  background-color: var(--color-text-secondary);
+  color: var(--color-text-secondary);
+  background-color: var(--color-background-secondary);
   &:enabled:hover {
-    background-color: var(--color-secondary-100);
-  }
-  &:enabled:active {
-    border-color: var(--color-interactive-100);
+    color: var(--color-text-secondary-hover);
+    background-color: var(--color-background-secondary-hover);
   }
   &:disabled {
-    color: var(--color-text-primary);
+    background-color: var(--color-background-secondary-disabled);
+    color: var(--color-text-secondary-disabled);
     cursor: not-allowed;
   }
 }
@@ -87,7 +87,7 @@
 .colorful {
   font-size: 12px;
   width: 100%;
-  border-radius: var(--radius-8);
+  border-radius: var(--general-radius-8);
   background: linear-gradient(
     270.13deg,
     rgba(0, 125, 163, 0.05) 0.02%,

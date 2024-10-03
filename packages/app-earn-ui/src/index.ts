@@ -18,6 +18,7 @@ export { Navigation } from './components/layout/Navigation/Navigation'
 
 export { Tooltip } from './components/molecules/Tooltip/Tooltip'
 export { Dropdown } from './components/molecules/Dropdown/Dropdown'
+export { Carousel } from './components/molecules/Carousel/Carousel'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 

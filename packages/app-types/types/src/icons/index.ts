@@ -192,6 +192,8 @@ export type IconNamesList =
   | 'rays'
   | 'chevron_down'
   | 'chevron_up'
+  | 'chevron_left'
+  | 'chevron_right'
   | 'search_icon'
   | 'tooltip'
   | 'checkmark_colorful'

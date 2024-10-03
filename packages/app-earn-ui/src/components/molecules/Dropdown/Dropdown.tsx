@@ -1,29 +1,23 @@
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react'
-import { type IconNamesList, type TokenSymbolsList } from '@summerfi/app-types'
+import { type DropdownOption } from '@summerfi/app-types'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 
 import dropdownStyles from '@/components/molecules/Dropdown/Dropdown.module.scss'
 
-type Option = {
-  label: string
-  value: string
-  iconName?: IconNamesList
-  tokenSymbol?: TokenSymbolsList
-}
-
 export interface DropdownProps {
-  options: Option[]
+  options: DropdownOption[]
+  dropdownValue: DropdownOption
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({ options }) => {
-  const [selectedOption, setSelectedOption] = useState<Option>(options[0])
+export const Dropdown: React.FC<DropdownProps> = ({ options, dropdownValue }) => {
+  const [selectedOption, setSelectedOption] = useState<DropdownOption>(dropdownValue)
   const [isOpen, setIsOpen] = useState(false) // To manage dropdown open/close state
   const dropdownRef = useRef<HTMLDivElement | null>(null) // Reference for the dropdown
 
-  const handleSelectOption = (option: Option) => {
+  const handleSelectOption = (option: DropdownOption) => {
     setSelectedOption(option)
     setIsOpen(false) // Close dropdown after selection
   }
@@ -51,8 +45,8 @@ export const Dropdown: React.FC<DropdownProps> = ({ options }) => {
   return (
     <div className={dropdownStyles.dropdown} ref={dropdownRef}>
       <div className={dropdownStyles.dropdownSelected} onClick={toggleDropdown}>
-        {selectedOption.tokenSymbol && <Icon tokenName={selectedOption.tokenSymbol} />}
-        {selectedOption.iconName && <Icon iconName={selectedOption.iconName} />}
+        {'tokenSymbol' in selectedOption && <Icon tokenName={selectedOption.tokenSymbol} />}
+        {'iconName' in selectedOption && <Icon iconName={selectedOption.iconName} />}
         {/* <img src={selectedOption.icon} alt={selectedOption.label} className={dropdownStyles.dropdownIcon} />*/}
         <span>{selectedOption.label}</span>
         <Icon iconName={isOpen ? 'chevron_up' : 'chevron_down'} size={11} color="#777576" />
@@ -68,8 +62,8 @@ export const Dropdown: React.FC<DropdownProps> = ({ options }) => {
             className={`${dropdownStyles.dropdownOption} ${option.value === selectedOption.value ? dropdownStyles.selected : ''}`}
             onClick={() => handleSelectOption(option)}
           >
-            {option.tokenSymbol && <Icon tokenName={option.tokenSymbol} />}
-            {option.iconName && <Icon iconName={option.iconName} />}
+            {'tokenSymbol' in option && <Icon tokenName={option.tokenSymbol} />}
+            {'iconName' in option && <Icon iconName={option.iconName} />}
             <span>{option.label}</span>
           </div>
         ))}
