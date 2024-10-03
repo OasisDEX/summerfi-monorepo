@@ -16,6 +16,7 @@ export const LandingPageStrategyPicker = ({
   bestFor,
   options,
 }: {
+  id: string
   apy: string
   symbol: TokenSymbolsList
   risk: Risk

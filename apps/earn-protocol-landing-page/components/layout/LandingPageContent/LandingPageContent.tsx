@@ -14,6 +14,7 @@ const options: DropdownOption[] = [
 ]
 
 const content: {
+  id: string
   apy: string
   symbol: TokenSymbolsList
   risk: Risk
@@ -22,6 +23,7 @@ const content: {
   options: DropdownOption[]
 }[] = [
   {
+    id: '1',
     apy: '9.3',
     symbol: 'USDC',
     risk: 'high',
@@ -30,6 +32,7 @@ const content: {
     options,
   },
   {
+    id: '2',
     apy: '6.3',
     symbol: 'DAI',
     risk: 'medium',
@@ -38,6 +41,7 @@ const content: {
     options,
   },
   {
+    id: '3',
     apy: '7.3',
     symbol: 'USDT',
     risk: 'low',
@@ -68,7 +72,7 @@ export const LandingPageContent = () => {
       </div>
       <Carousel
         components={content.map((item) => (
-          <LandingPageStrategyPicker {...item} />
+          <LandingPageStrategyPicker {...item} key={item.id} />
         ))}
         contentHeight={596}
         contentWidth={515}
