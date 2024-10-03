@@ -47,9 +47,12 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, dropdownValue }) =>
       <div className={dropdownStyles.dropdownSelected} onClick={toggleDropdown}>
         {'tokenSymbol' in selectedOption && <Icon tokenName={selectedOption.tokenSymbol} />}
         {'iconName' in selectedOption && <Icon iconName={selectedOption.iconName} />}
-        {/* <img src={selectedOption.icon} alt={selectedOption.label} className={dropdownStyles.dropdownIcon} />*/}
         <span>{selectedOption.label}</span>
-        <Icon iconName={isOpen ? 'chevron_up' : 'chevron_down'} size={11} color="#777576" />
+        <Icon
+          iconName={isOpen ? 'chevron_up' : 'chevron_down'}
+          size={11}
+          color="rgba(119, 117, 118, 1)"
+        />
       </div>
 
       <div
