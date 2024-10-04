@@ -1,7 +1,7 @@
 'use client'
 import React, { type ChangeEvent, useEffect, useState } from 'react'
 import { useChain, useSendUserOperation, useSmartAccountClient, useUser } from '@account-kit/react'
-import { Sidebar } from '@summerfi/app-earn-ui'
+import { Icon, Sidebar, Text } from '@summerfi/app-earn-ui'
 import { type DropdownOption } from '@summerfi/app-types'
 import { mapNumericInput } from '@summerfi/app-utils'
 import type { IArmadaPosition, Token, TransactionInfo } from '@summerfi/sdk-client-react'
@@ -22,6 +22,27 @@ const options: DropdownOption[] = [
   { label: 'USDC', value: 'USDC', tokenSymbol: 'USDC' },
   { label: 'USDT', value: 'USDT', tokenSymbol: 'USDT' },
 ]
+
+const tooltip = {
+  title: 'Key details about your assets',
+  list: [
+    'No minimum required',
+    'Earning paid in same currency as currency deposited',
+    'Deposit any asset from your wallet into a strategy',
+    'Assets will be automatically converted to the base token used in that strategy.',
+    <>
+      <Text as="span" variant="p3semi" style={{ color: 'var(--color-text-primary)' }}>
+        No single point of failure.
+      </Text>{' '}
+      No single point can cause system failure, ensuring security and reliability.
+    </>,
+  ],
+  style: {
+    maxWidth: '504px',
+    width: '504px',
+    left: '-150px',
+  },
+}
 
 enum Action {
   DEPOSIT = 'deposit',
@@ -195,8 +216,34 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: FormProps) => {
       disabled: confirmDisabled,
     },
     footnote: {
-      title: 'Key details about your assets',
-      tooltip: 'Lorem ipsum',
+      title: tooltip.title,
+      tooltip: (
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <Text as="p" variant="p2semi" style={{ marginBottom: 'var(--spacing-space-medium)' }}>
+            {tooltip.title}
+          </Text>
+          <ul>
+            {tooltip.list.map((item, idx) => (
+              <li
+                key={idx}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'flex-start',
+                  alignItems: 'center',
+                  gap: 'var(--spacing-space-small)',
+                  marginBottom: 'var(--spacing-space-small)',
+                }}
+              >
+                <Icon iconName="checkmark" size={14} color="rgba(255, 73, 164, 1)" />
+                <Text as="p" variant="p3" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+                  {item}
+                </Text>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ),
+      tooltipStyle: tooltip.style,
     },
   }
 

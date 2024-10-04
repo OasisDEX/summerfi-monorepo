@@ -1,4 +1,4 @@
-import React, { type ChangeEventHandler, type FC } from 'react'
+import React, { type ChangeEventHandler, type CSSProperties, type FC, type ReactNode } from 'react'
 import { type DropdownOption } from '@summerfi/app-types'
 
 import { Button } from '@/components/atoms/Button/Button'
@@ -29,7 +29,9 @@ interface SidebarProps {
   }
   footnote?: {
     title: string
-    tooltip: string
+    tooltip: ReactNode
+    tooltipStyle?: CSSProperties
+    showAbove?: boolean
   }
 }
 
@@ -76,12 +78,23 @@ export const Sidebar: FC<SidebarProps> = ({
       </Button>
       {footnote && (
         <div className={classNames.sidebarFootnoteWrapper}>
-          <Tooltip tooltip={footnote.tooltip} showAbove>
+          <Tooltip
+            tooltip={footnote.tooltip}
+            showAbove={footnote.showAbove}
+            tooltipWrapperStyles={footnote.tooltipStyle}
+          >
             <Icon iconName="question_o" variant="xs" color="rgba(255, 73, 164, 1)" />
+            <Text
+              as="p"
+              variant="p4"
+              style={{
+                color: 'var(--earn-protocol-primary-100)',
+                marginLeft: 'var(--spacing-space-2x-small)',
+              }}
+            >
+              {footnote.title}
+            </Text>
           </Tooltip>
-          <Text as="p" variant="p4" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-            {footnote.title}
-          </Text>
         </div>
       )}
     </Card>

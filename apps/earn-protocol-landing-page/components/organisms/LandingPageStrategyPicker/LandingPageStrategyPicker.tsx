@@ -48,6 +48,7 @@ export const LandingPageStrategyPicker = ({
     footnote: {
       title: 'Key details about your assets',
       tooltip: 'Lorem ipsum',
+      showAbove: true,
     },
   }
 
