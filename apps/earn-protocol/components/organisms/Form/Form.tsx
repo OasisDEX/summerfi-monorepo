@@ -1,5 +1,5 @@
 'use client'
-import React, { type ChangeEvent, useEffect, useState } from 'react'
+import { type ChangeEvent, useEffect, useState } from 'react'
 import { useChain, useSendUserOperation, useSmartAccountClient, useUser } from '@account-kit/react'
 import { Icon, Sidebar, Text } from '@summerfi/app-earn-ui'
 import { type DropdownOption } from '@summerfi/app-types'
@@ -54,11 +54,20 @@ export type FormProps = { fleetConfig: FleetConfig }
 const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: FormProps) => {
   const [action, setAction] = useState(Action.DEPOSIT)
   const [amountValue, setAmountValue] = useState<string>()
-  const [, setTransactionsHash] = useState<string[]>([])
-  const [, setTransactionError] = useState<string>()
+  const [transactionHash, setTransactionHash] = useState<string[]>([])
+  const [transactionError, setTransactionError] = useState<string>()
   const [token, setToken] = useState<Token>()
-  const [, setTokenBalance] = useState<number>()
-  const [, setUserPosition] = useState<IArmadaPosition>()
+  const [tokenBalance, setTokenBalance] = useState<number>()
+  const [userPosition, setUserPosition] = useState<IArmadaPosition>()
+
+  const _fixUnused = {
+    // quick fix to avoid eslint warning
+    transactionHash,
+    transactionError,
+    tokenBalance,
+    userPosition,
+    setAction,
+  }
 
   // const balance = action === Action.DEPOSIT ? tokenBalance : userPosition?.amount.amount
   // const balanceLabel = action === Action.DEPOSIT ? 'Wallet' : 'Fleet'
@@ -75,7 +84,7 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: FormProps) => {
     onSuccess: ({ hash }) => {
       // eslint-disable-next-line no-console
       console.log('hash', hash)
-      setTransactionsHash((prev) => [...prev, hash])
+      setTransactionHash((prev) => [...prev, hash])
     },
     onError: (error) => {
       // eslint-disable-next-line no-console

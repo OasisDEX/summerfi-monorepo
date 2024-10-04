@@ -1,5 +1,4 @@
 'use client'
-import React from 'react'
 import { Carousel, Text } from '@summerfi/app-earn-ui'
 import { type DropdownOption, type Risk, type TokenSymbolsList } from '@summerfi/app-types'
 

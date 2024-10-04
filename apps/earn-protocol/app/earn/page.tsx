@@ -1,4 +1,3 @@
-import React from 'react'
 import { DataBlock, SimpleGrid, StrategyGrid } from '@summerfi/app-earn-ui'
 
 import FormContainer from '@/components/organisms/Form/FormContainer'
