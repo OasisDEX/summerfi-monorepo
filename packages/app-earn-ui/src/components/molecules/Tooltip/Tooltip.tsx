@@ -55,7 +55,7 @@ const TooltipWrapper: FC<TooltipWrapperProps> = ({ children, isOpen, style, show
       }
       style={style}
     >
-      <Card variant="cardSecondarySmallPaddings">{children}</Card>
+      <Card variant="cardSecondary">{children}</Card>
     </div>
   )
 }

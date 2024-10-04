@@ -1,0 +1,35 @@
+.sidebarWrapper {
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin-bottom: var(--general-space-32);
+}
+
+.sidebarHeaderWrapper {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  margin-bottom: var(--general-space-24);
+}
+
+.sidebarHeaderSpacer {
+  position: absolute;
+  border-bottom: 1px solid var(--earn-protocol-neutral-100);
+  height: 1px;
+  width: 100%;
+  top: 80px;
+}
+
+.sidebarBannerWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--general-space-32);
+  flex-wrap: wrap;
+}
+
+.sidebarFootnoteWrapper {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}

@@ -1,0 +1,9 @@
+.box {
+  display: flex;
+  background-color: var(--color-surface-subtle);
+  border-radius: var(--radius-roundish);
+  padding: var(--general-space-24);
+  &.light {
+    background-color: var(--color-surface-subtler);
+  }
+}

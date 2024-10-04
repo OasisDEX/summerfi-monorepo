@@ -1,0 +1,10 @@
+.titleWithSelectWrapper {
+  display: flex;
+  flex-direction: column;
+  .titleLine {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

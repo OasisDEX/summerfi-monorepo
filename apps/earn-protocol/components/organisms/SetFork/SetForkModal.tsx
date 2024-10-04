@@ -126,7 +126,7 @@ const resetFork =
 
 const SetForkModalButton = (props: ModalButtonProps) => {
   return (
-    <Button variant="primarySmall" {...props} style={{ marginTop: '30px' }}>
+    <Button variant="primarySmall" {...props}>
       Set fork
     </Button>
   )

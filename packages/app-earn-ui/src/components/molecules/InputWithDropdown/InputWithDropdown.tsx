@@ -1,14 +1,16 @@
-import React, { type FC } from 'react'
-import { Dropdown, Input } from '@summerfi/app-earn-ui'
+import React, { type ChangeEventHandler, type FC } from 'react'
 import { type DropdownOption } from '@summerfi/app-types'
 
-import classNames from '@/components/molecues/InputWithDropdown/InputWithDropdown.module.scss'
+import { Input } from '@/components/atoms/Input/Input'
+import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
+
+import classNames from '@/components/molecules/InputWithDropdown/InputWithDropdown.module.scss'
 
 interface InputWithDropdownProps {
   options: DropdownOption[]
   dropdownValue: DropdownOption
   value: string
-  handleChange: any
+  handleChange: ChangeEventHandler<HTMLInputElement>
 }
 
 export const InputWithDropdown: FC<InputWithDropdownProps> = ({
