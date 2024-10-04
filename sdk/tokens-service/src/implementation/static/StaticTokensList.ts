@@ -647,5 +647,23 @@ export const StaticTokensData: TokenListData = {
       decimals: 8,
       logoURI: '',
     },
+    // USDS
+    {
+      chainId: 1,
+      symbol: 'USDS',
+      name: 'USD Sky',
+      address: '0xdC035D45d973E3EC169d2276DDab16f1e407384F',
+      decimals: 18,
+      logoURI: '',
+    },
+    // rsETH
+    {
+      chainId: 1,
+      symbol: 'rsETH',
+      name: 'Kelp DAO Restaked ETH',
+      address: '0xa1290d69c65a6fe4df752f95823fae25cb99e5a7',
+      decimals: 18,
+      logoURI: '',
+    },
   ],
 }
