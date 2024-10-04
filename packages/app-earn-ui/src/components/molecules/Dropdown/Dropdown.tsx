@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { type DropdownOption } from '@summerfi/app-types'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
