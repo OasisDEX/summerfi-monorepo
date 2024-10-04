@@ -22,7 +22,9 @@ export { StrategyGrid } from './components/layout/StrategyGrid/StrategyGrid'
 export { Tooltip } from './components/molecules/Tooltip/Tooltip'
 export { Dropdown } from './components/molecules/Dropdown/Dropdown'
 export { Carousel } from './components/molecules/Carousel/Carousel'
+export { InputWithDropdown } from './components/molecules/InputWithDropdown/InputWithDropdown'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
+export { Sidebar } from './components/organisms/Sidebar/Sidebar'
 
 export { useToggle } from './hooks/use-toggle'
