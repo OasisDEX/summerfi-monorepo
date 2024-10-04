@@ -10,15 +10,20 @@ import dropdownStyles from '@/components/molecules/Dropdown/Dropdown.module.scss
 export interface DropdownProps {
   options: DropdownOption[]
   dropdownValue: DropdownOption
+  onChange?: (option: DropdownOption) => void
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({ options, dropdownValue }) => {
+export const Dropdown: React.FC<DropdownProps> = ({ options, dropdownValue, onChange }) => {
   const [selectedOption, setSelectedOption] = useState<DropdownOption>(dropdownValue)
   const [isOpen, setIsOpen] = useState(false) // To manage dropdown open/close state
   const dropdownRef = useRef<HTMLDivElement | null>(null) // Reference for the dropdown
 
   const handleSelectOption = (option: DropdownOption) => {
-    setSelectedOption(option)
+    if (onChange) {
+      onChange(option)
+    } else {
+      setSelectedOption(option)
+    }
     setIsOpen(false) // Close dropdown after selection
   }
 
