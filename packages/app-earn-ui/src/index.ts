@@ -1,6 +1,7 @@
 // please do not export * from this file, unless its just types
 export { GlobalStyles } from './GlobalStyles'
 
+export { Box } from './components/atoms/Box/Box'
 export { Button } from './components/atoms/Button/Button'
 export { Text } from './components/atoms/Text/Text'
 export { Card } from './components/atoms/Card/Card'
@@ -16,6 +17,7 @@ export { SupportBox } from './components/atoms/NavigationItems/SupportBox'
 export { Footer } from './components/layout/Footer/Footer'
 
 export { Navigation } from './components/layout/Navigation/Navigation'
+export { StrategyGrid } from './components/layout/StrategyGrid/StrategyGrid'
 
 export { Tooltip } from './components/molecules/Tooltip/Tooltip'
 export { Dropdown } from './components/molecules/Dropdown/Dropdown'

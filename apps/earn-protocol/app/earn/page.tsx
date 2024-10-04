@@ -1,8 +1,25 @@
+import { StrategyGrid } from '@summerfi/app-earn-ui'
+
 const EarnPage = () => {
   return (
-    <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'center' }}>
-      Earn page :) Earn page :) Earn page :) Earn page :) Earn page :) Earn page :) Earn page :)
-    </div>
+    <StrategyGrid
+      topContent={<p>Top Content</p>}
+      leftContent={
+        <div>
+          <p>Left Content</p>
+          <p>Left Content</p>
+          <p>Left Content</p>
+          <p>Left Content</p>
+          <p>Left Content</p>
+          <p>Left Content</p>
+          <p>Left Content</p>
+          <p>Left Content</p>
+          <p>Left Content</p>
+          <p>Left Content</p>
+        </div>
+      }
+      rightContent={<p>Right Content</p>}
+    />
   )
 }
 

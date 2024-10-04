@@ -1,0 +1,12 @@
+.strategyGridWrapper {
+  display: grid;
+  grid-gap: 15px;
+  grid-template-columns: 2fr 1fr;
+  margin-top: 20px;
+  > div {
+    height: min-content;
+  }
+  .fullWidthBlock {
+    grid-column: 1 / 3;
+  }
+}
