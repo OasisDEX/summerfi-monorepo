@@ -318,6 +318,7 @@ export type TokenSymbolsList =
   | 'SWBTC'
   | 'SYRUPUSDC'
   | 'WOETH'
+  | 'WSUPEROETHB'
   // deprecated ones
   | 'UNIV2WBTCETH'
   | 'UNIV2LINKETH'
