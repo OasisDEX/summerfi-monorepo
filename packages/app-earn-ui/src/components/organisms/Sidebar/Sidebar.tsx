@@ -1,12 +1,10 @@
-import React, { type ChangeEventHandler, type CSSProperties, type FC, type ReactNode } from 'react'
+import React, { type ChangeEventHandler, type FC, type ReactNode } from 'react'
 import { type DropdownOption } from '@summerfi/app-types'
 
 import { Button } from '@/components/atoms/Button/Button'
 import { Card } from '@/components/atoms/Card/Card'
-import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'
 import { InputWithDropdown } from '@/components/molecules/InputWithDropdown/InputWithDropdown'
-import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 
 import classNames from '@/components/organisms/Sidebar/Sidebar.module.scss'
 
@@ -27,12 +25,7 @@ interface SidebarProps {
     action: () => void
     disabled: boolean
   }
-  footnote?: {
-    title: string
-    tooltip: ReactNode
-    tooltipStyle?: CSSProperties
-    showAbove?: boolean
-  }
+  footnote?: ReactNode
 }
 
 export const Sidebar: FC<SidebarProps> = ({
@@ -76,27 +69,7 @@ export const Sidebar: FC<SidebarProps> = ({
       >
         {primaryButton.label}
       </Button>
-      {footnote && (
-        <div className={classNames.sidebarFootnoteWrapper}>
-          <Tooltip
-            tooltip={footnote.tooltip}
-            showAbove={footnote.showAbove}
-            tooltipWrapperStyles={footnote.tooltipStyle}
-          >
-            <Icon iconName="question_o" variant="xs" color="rgba(255, 73, 164, 1)" />
-            <Text
-              as="p"
-              variant="p4"
-              style={{
-                color: 'var(--earn-protocol-primary-100)',
-                marginLeft: 'var(--spacing-space-2x-small)',
-              }}
-            >
-              {footnote.title}
-            </Text>
-          </Tooltip>
-        </div>
-      )}
+      {footnote && <div className={classNames.sidebarFootnoteWrapper}>{footnote}</div>}
     </Card>
   )
 }

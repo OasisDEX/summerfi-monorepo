@@ -1,5 +1,5 @@
 import React, { type ChangeEvent, useState } from 'react'
-import { Card, Pill, Sidebar, Text } from '@summerfi/app-earn-ui'
+import { Card, Pill, Sidebar, SidebarFootnote, sidebarFootnote, Text } from '@summerfi/app-earn-ui'
 import { type DropdownOption, type Risk, type TokenSymbolsList } from '@summerfi/app-types'
 import { mapNumericInput } from '@summerfi/app-utils'
 
@@ -45,11 +45,13 @@ export const LandingPageStrategyPicker = ({
       action: () => null,
       disabled: false,
     },
-    footnote: {
-      title: 'Key details about your assets',
-      tooltip: 'Lorem ipsum',
-      showAbove: true,
-    },
+    footnote: (
+      <SidebarFootnote
+        title={sidebarFootnote.title}
+        list={sidebarFootnote.list}
+        tooltip={{ style: sidebarFootnote.tooltip.style, showAbove: true }}
+      />
+    ),
   }
 
   return (
