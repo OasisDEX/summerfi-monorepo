@@ -9,6 +9,9 @@ type DataBlockProps = {
   title: string
   titleTooltip?: string
   size?: 'small' | 'large'
+  titleSize?: 'small' | 'large'
+  subValueSize?: 'small' | 'large'
+  valueSize?: 'small' | 'large'
   value: string
   subValue?: string
   subValueType?: 'positive' | 'negative' | 'neutral'
@@ -18,26 +21,29 @@ type DataBlockProps = {
 export const DataBlock = ({
   title,
   titleTooltip,
+  titleSize,
   size = 'small',
   value,
+  valueSize,
   centered,
   subValue,
   subValueType,
+  subValueSize,
 }: DataBlockProps) => {
   const titleVariant = {
     small: 'p3semi' as const,
     large: 'p1semi' as const,
-  }[!subValue ? 'small' : size]
+  }[!subValue ? 'small' : titleSize ?? size]
 
   const valueVariant = {
     small: 'p1semi' as const,
     large: 'h4' as const,
-  }[size]
+  }[valueSize ?? size]
 
   const subValueVariant = {
     small: 'p2semi' as const,
     large: 'h5' as const,
-  }[size]
+  }[subValueSize ?? size]
 
   return (
     <div

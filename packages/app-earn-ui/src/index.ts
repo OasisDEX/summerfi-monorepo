@@ -20,6 +20,7 @@ export { Footer } from './components/layout/Footer/Footer'
 
 export { Navigation } from './components/layout/Navigation/Navigation'
 export { StrategyGrid } from './components/layout/StrategyGrid/StrategyGrid'
+export { StrategyGridDetails } from './components/layout/StrategyGridDetails/StrategyGridDetails'
 
 export { Tooltip } from './components/molecules/Tooltip/Tooltip'
 export { Dropdown } from './components/molecules/Dropdown/Dropdown'

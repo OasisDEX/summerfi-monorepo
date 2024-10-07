@@ -5,6 +5,7 @@ import { Card } from '@/components/atoms/Card/Card'
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Pill } from '@/components/atoms/Pill/Pill'
 import { Text } from '@/components/atoms/Text/Text'
+import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
 import { StrategyTitleWithRisk } from '@/components/molecules/StrategyTitleWithRisk/StrategyTitleWithRisk'
 
 import strategyCardStyles from './StrategyCard.module.scss'
@@ -31,11 +32,7 @@ export const StrategyCard = ({
   secondary = false,
 }: StrategyCardProps) => {
   return (
-    <div
-      className={clsx(strategyCardStyles.wrapper, {
-        [strategyCardStyles.withOnClick]: !!onClick,
-      })}
-    >
+    <div className={clsx(strategyCardStyles.wrapper, strategyCardStyles.withOnClick)}>
       <Card
         className={strategyCardStyles.strategyCard}
         variant={secondary ? 'cardSecondary' : 'cardPrimary'}
@@ -44,14 +41,7 @@ export const StrategyCard = ({
         <div className={strategyCardStyles.strategyCardHeaderWrapper}>
           <StrategyTitleWithRisk symbol={symbol} risk={risk} />
           <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-            {!!tokenBonus || !!apy ? (
-              <Pill>
-                {tokenBonus ? <Icon iconName="stars" size={24} color="white" /> : null}
-                {apy ? `APY ${apy}%` : ''}
-                {tokenBonus && apy ? <>&nbsp;+&nbsp;</> : ''}
-                {tokenBonus ? `${tokenBonus} SUMR` : ''}
-              </Pill>
-            ) : null}
+            <BonusLabel tokenBonus={tokenBonus} apy={apy} />
           </Text>
         </div>
         <div className={strategyCardStyles.strategyCardAssetsWrapper}>
