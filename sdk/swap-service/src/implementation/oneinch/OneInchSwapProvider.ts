@@ -84,7 +84,8 @@ export class OneInchSwapProvider
     })
 
     if (!(response.status === 200 && response.statusText === 'OK')) {
-      throw new Error(`Error performing 1inch swap data request ${swapUrl}: ${await response.body}`)
+      const json = JSON.stringify(await response.json())
+      throw new Error(`Error performing 1inch swap data request ${swapUrl}: ${json}`)
     }
 
     const responseData = (await response.json()) as OneInchSwapResponse
@@ -121,9 +122,8 @@ export class OneInchSwapProvider
     })
 
     if (!(response.status === 200 && response.statusText === 'OK')) {
-      throw new Error(
-        `Error [${response.statusText}] performing 1inch swap quote request ${swapUrl}`,
-      )
+      const json = JSON.stringify(await response.json())
+      throw new Error(`Error performing 1inch swap quote request ${swapUrl}: ${json}`)
     }
 
     const responseData = (await response.json()) as OneInchQuoteResponse
