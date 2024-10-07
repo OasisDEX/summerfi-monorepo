@@ -14,6 +14,7 @@ export { Pill } from './components/atoms/Pill/Pill'
 export { NavigationExplore } from './components/atoms/NavigationItems/NavigationExplore'
 export { SupportBox } from './components/atoms/NavigationItems/SupportBox'
 export { List } from './components/atoms/List/List'
+export { WithArrow } from './components/atoms/WithArrow/WithArrow'
 
 export { Footer } from './components/layout/Footer/Footer'
 
@@ -33,6 +34,7 @@ export { StrategyTitleWithRisk } from './components/molecules/StrategyTitleWithR
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar } from './components/organisms/Sidebar/Sidebar'
+export { Table } from './components/organisms/Table/Table'
 
 export { useToggle } from './hooks/use-toggle'
 

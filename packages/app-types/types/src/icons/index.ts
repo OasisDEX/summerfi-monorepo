@@ -206,6 +206,8 @@ export type IconNamesList =
   | 'user'
   | 'rebalancing'
   | 'stars'
+  | 'arrow_increase'
+  | 'arrow_decrease'
 
 export type TokenSymbolsList =
   | 'USDP'
