@@ -1,4 +1,5 @@
-import { DataBlock, SimpleGrid, StrategyGrid } from '@summerfi/app-earn-ui'
+import { Card, DataBlock, SimpleGrid, StrategyCard, StrategyGrid } from '@summerfi/app-earn-ui'
+import { type Risk, type TokenSymbolsList } from '@summerfi/app-types'
 
 import FormContainer from '@/components/organisms/Form/FormContainer'
 import {
@@ -6,6 +7,12 @@ import {
   type RebalancingActivityRawData,
 } from '@/components/organisms/RebalancingActivity/RebalancingActivity'
 import type { FleetConfig } from '@/helpers/sdk/types'
+
+type EarnStrategyPageProps = {
+  params: {
+    strategy: string
+  }
+}
 
 const fleetConfig: FleetConfig = {
   tokenSymbol: 'USDC',
@@ -47,7 +54,9 @@ const rebalancingActivityData: RebalancingActivityRawData[] = [
   },
 ]
 
-const StrategyPage = () => {
+const EarnStrategyPage = ({ params }: EarnStrategyPageProps) => {
+  const [_id, token, _network, _apy, risk] = params.strategy.split('-')
+
   return (
     <StrategyGrid
       topContent={
@@ -72,10 +81,21 @@ const StrategyPage = () => {
           />
         </SimpleGrid>
       }
-      leftContent={<RebalancingActivity rawData={rebalancingActivityData} />}
+      leftContent={
+        <>
+          <StrategyCard
+            secondary
+            bestFor=""
+            risk={risk as Risk}
+            symbol={token as TokenSymbolsList}
+            totalAssets="0"
+          />
+          <RebalancingActivity rawData={rebalancingActivityData} />
+        </>
+      }
       rightContent={<FormContainer fleetConfig={fleetConfig} />}
     />
   )
 }
 
-export default StrategyPage
+export default EarnStrategyPage

@@ -1,4 +1,6 @@
 import { DataBlock, SimpleGrid, StrategyCard, StrategyGrid } from '@summerfi/app-earn-ui'
+import { NetworkNames, type Risk, type TokenSymbolsList } from '@summerfi/app-types'
+import Link from 'next/link'
 
 import FormContainer from '@/components/organisms/Form/FormContainer'
 import type { FleetConfig } from '@/helpers/sdk/types'
@@ -6,6 +8,43 @@ import type { FleetConfig } from '@/helpers/sdk/types'
 const fleetConfig: FleetConfig = {
   tokenSymbol: 'USDC',
   fleetAddress: '0x75d4f7cb1b2481385e0878c639f6f6d66592d399',
+}
+
+const strategiesList = [
+  {
+    id: '123',
+    symbol: 'USDT' as TokenSymbolsList,
+    network: NetworkNames.ethereumMainnet,
+    apy: '3.2',
+    tokenBonus: '1.1%',
+    bestFor: 'Higher yields',
+    risk: 'high' as Risk,
+    totalAssets: '800,130,321',
+  },
+  {
+    id: '234',
+    symbol: 'USDC' as TokenSymbolsList,
+    network: NetworkNames.ethereumMainnet,
+    apy: '7.2',
+    tokenBonus: '2.1%',
+    bestFor: 'Lending only exposure',
+    risk: 'low' as Risk,
+    totalAssets: '800,130,321',
+  },
+  {
+    id: '345',
+    symbol: 'ETH' as TokenSymbolsList,
+    network: NetworkNames.ethereumMainnet,
+    apy: '2.1',
+    tokenBonus: '2.1%',
+    bestFor: 'Higher yields',
+    risk: 'high' as Risk,
+    totalAssets: '800,130,321',
+  },
+]
+
+const getStrategyLink = (strategy: (typeof strategiesList)[number]) => {
+  return `/earn/${strategy.id}-${strategy.symbol}-${strategy.network}-${strategy.apy}-${strategy.risk}`
 }
 
 const EarnPage = () => {
@@ -33,40 +72,11 @@ const EarnPage = () => {
           />
         </SimpleGrid>
       }
-      leftContent={
-        <>
-          <StrategyCard
-            symbol="USDT"
-            apy="3.2"
-            tokenBonus="1.1%"
-            bestFor="Higher yields"
-            risk="high"
-            totalAssets="800,130,321"
-            onClick={() => null}
-            secondary
-          />
-          <StrategyCard
-            symbol="USDC"
-            apy="7.2"
-            tokenBonus="2.1%"
-            bestFor="Lending only exposure"
-            risk="low"
-            totalAssets="800,130,321"
-            onClick={() => null}
-            secondary
-          />
-          <StrategyCard
-            symbol="ETH"
-            apy="2.1"
-            tokenBonus="2.1%"
-            bestFor="Higher yields"
-            risk="high"
-            totalAssets="800,130,321"
-            onClick={() => null}
-            secondary
-          />
-        </>
-      }
+      leftContent={strategiesList.map((strategy) => (
+        <Link key={strategy.id} href={getStrategyLink(strategy)}>
+          <StrategyCard {...strategy} secondary />
+        </Link>
+      ))}
       rightContent={<FormContainer fleetConfig={fleetConfig} />}
     />
   )
