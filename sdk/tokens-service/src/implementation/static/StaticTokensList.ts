@@ -645,5 +645,41 @@ export const StaticTokensData: TokenListData = {
       decimals: 18,
       logoURI: '',
     },
+    // tBTC
+    {
+      chainId: 1,
+      symbol: 'tBTC',
+      name: 'tBTC',
+      address: '0x18084fbA666a33d37592fA2633fD49a74DD93a88',
+      decimals: 18,
+      logoURI: '',
+    },
+    // cbBTC
+    {
+      chainId: 1,
+      symbol: 'cbBTC',
+      name: 'Coinbase Wrapped BTC',
+      address: '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf',
+      decimals: 8,
+      logoURI: '',
+    },
+    // USDS
+    {
+      chainId: 1,
+      symbol: 'USDS',
+      name: 'USD Sky',
+      address: '0xdC035D45d973E3EC169d2276DDab16f1e407384F',
+      decimals: 18,
+      logoURI: '',
+    },
+    // rsETH
+    {
+      chainId: 1,
+      symbol: 'rsETH',
+      name: 'Kelp DAO Restaked ETH',
+      address: '0xa1290d69c65a6fe4df752f95823fae25cb99e5a7',
+      decimals: 18,
+      logoURI: '',
+    },
   ],
 }
