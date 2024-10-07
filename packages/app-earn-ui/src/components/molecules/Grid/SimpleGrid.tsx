@@ -11,7 +11,7 @@ export const SimpleGrid = ({
   style?: React.CSSProperties
   columns?: number
   rows?: number
-  gap?: number
+  gap?: number | string
 }) => {
   return (
     <div
@@ -21,7 +21,7 @@ export const SimpleGrid = ({
         display: 'grid',
         gridTemplateColumns: Array(columns).fill('1fr').join(' ').trim(),
         gridTemplateRows: Array(rows).fill('1fr').join(' ').trim(),
-        gap: `${gap}px`,
+        gap: typeof gap === 'string' ? gap : `${gap}px`,
         ...style,
       }}
     >

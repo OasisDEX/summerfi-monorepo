@@ -27,7 +27,7 @@ const content: {
     symbol: 'USDC',
     risk: 'high',
     totalAssets: '800,130,321',
-    bestFor: '800,130,321',
+    bestFor: '$800,130,321',
     options,
   },
   {
@@ -36,7 +36,7 @@ const content: {
     symbol: 'DAI',
     risk: 'medium',
     totalAssets: '800,130,321',
-    bestFor: '800,130,321',
+    bestFor: '$800,130,321',
     options,
   },
   {
@@ -45,7 +45,7 @@ const content: {
     symbol: 'USDT',
     risk: 'low',
     totalAssets: '800,130,321',
-    bestFor: '800,130,321',
+    bestFor: '$800,130,321',
     options,
   },
 ]

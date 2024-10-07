@@ -1,6 +1,7 @@
 'use client'
 
 import { type ReactNode } from 'react'
+import { type NetworkNames } from '@summerfi/app-types'
 import Link from 'next/link'
 
 import { Box } from '@/components/atoms/Box/Box'
@@ -14,10 +15,12 @@ export const StrategyGrid = ({
   topContent,
   leftContent,
   rightContent,
+  network,
 }: {
   topContent: ReactNode
   leftContent: ReactNode
   rightContent: ReactNode
+  network: NetworkNames
 }) => {
   return (
     <>
@@ -26,21 +29,16 @@ export const StrategyGrid = ({
           title="Earn"
           options={[
             {
-              iconName: 'usdc_circle_color',
+              iconName: 'ether_circle_color',
               label: 'Ethereum',
-              value: 'ethereum',
-            },
-            {
-              iconName: 'usdc_circle_color',
-              label: 'Base',
-              value: 'base',
+              value: network,
             },
           ]}
           onChangeNetwork={() => {}}
           selected={{
-            iconName: 'usdc_circle_color',
+            iconName: 'ether_circle_color',
             label: 'Ethereum',
-            value: 'ethereum',
+            value: network,
           }}
         />
         <Link href="/">
@@ -51,7 +49,7 @@ export const StrategyGrid = ({
       </div>
       <div className={strategyGridStyles.strategyGridPositionWrapper}>
         <Box className={strategyGridStyles.fullWidthBlock}>{topContent}</Box>
-        <Box>{leftContent}</Box>
+        <Box className={strategyGridStyles.leftBlock}>{leftContent}</Box>
         {rightContent}
       </div>
     </>

@@ -1,8 +1,8 @@
 export type Styles = {
-  fullWidthBlock: string
   leftBlock: string
-  strategyGridHeaderWrapper: string
-  strategyGridPositionWrapper: string
+  strategyGridDetailsBreadcrumbsWrapper: string
+  strategyGridDetailsPositionWrapper: string
+  strategyGridDetailsTopLeftWrapper: string
 }
 
 export type ClassNames = keyof Styles
