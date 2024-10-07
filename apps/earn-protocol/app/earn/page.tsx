@@ -1,5 +1,5 @@
 import { DataBlock, SimpleGrid, StrategyCard, StrategyGrid } from '@summerfi/app-earn-ui'
-import { NetworkNames, type Risk, type TokenSymbolsList } from '@summerfi/app-types'
+import { NetworkNames } from '@summerfi/app-types'
 import Link from 'next/link'
 
 import FormContainer from '@/components/organisms/Form/FormContainer'
