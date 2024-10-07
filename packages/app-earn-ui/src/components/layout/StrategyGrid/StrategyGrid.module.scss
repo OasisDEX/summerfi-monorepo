@@ -9,13 +9,17 @@
 
 .strategyGridPositionWrapper {
   display: grid;
-  grid-gap: 15px;
-  grid-template-columns: 2fr 1fr;
+  grid-gap: var(--general-space-16);
+  grid-template-columns: 1.7fr 1.2fr;
   margin-top: 20px;
   > div {
     height: min-content;
   }
   .fullWidthBlock {
     grid-column: 1 / 3;
+  }
+  .leftBlock {
+    display: grid;
+    grid-gap: var(--general-space-16);
   }
 }

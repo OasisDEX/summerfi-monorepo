@@ -51,7 +51,7 @@ export const StrategyGrid = ({
       </div>
       <div className={strategyGridStyles.strategyGridPositionWrapper}>
         <Box className={strategyGridStyles.fullWidthBlock}>{topContent}</Box>
-        <Box>{leftContent}</Box>
+        <Box className={strategyGridStyles.leftBlock}>{leftContent}</Box>
         {rightContent}
       </div>
     </>

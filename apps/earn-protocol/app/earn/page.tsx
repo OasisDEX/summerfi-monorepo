@@ -1,4 +1,4 @@
-import { DataBlock, SimpleGrid, StrategyGrid } from '@summerfi/app-earn-ui'
+import { DataBlock, SimpleGrid, StrategyCard, StrategyGrid } from '@summerfi/app-earn-ui'
 
 import FormContainer from '@/components/organisms/Form/FormContainer'
 import type { FleetConfig } from '@/helpers/sdk/types'
@@ -34,18 +34,38 @@ const EarnPage = () => {
         </SimpleGrid>
       }
       leftContent={
-        <div>
-          <p>Left Content</p>
-          <p>Left Content</p>
-          <p>Left Content</p>
-          <p>Left Content</p>
-          <p>Left Content</p>
-          <p>Left Content</p>
-          <p>Left Content</p>
-          <p>Left Content</p>
-          <p>Left Content</p>
-          <p>Left Content</p>
-        </div>
+        <>
+          <StrategyCard
+            symbol="USDT"
+            apy="3.2"
+            tokenBonus="1.1%"
+            bestFor="Higher yields"
+            risk="high"
+            totalAssets="800,130,321"
+            onClick={() => null}
+            secondary
+          />
+          <StrategyCard
+            symbol="USDC"
+            apy="7.2"
+            tokenBonus="2.1%"
+            bestFor="Lending only exposure"
+            risk="low"
+            totalAssets="800,130,321"
+            onClick={() => null}
+            secondary
+          />
+          <StrategyCard
+            symbol="ETH"
+            apy="2.1"
+            tokenBonus="2.1%"
+            bestFor="Higher yields"
+            risk="high"
+            totalAssets="800,130,321"
+            onClick={() => null}
+            secondary
+          />
+        </>
       }
       rightContent={<FormContainer fleetConfig={fleetConfig} />}
     />

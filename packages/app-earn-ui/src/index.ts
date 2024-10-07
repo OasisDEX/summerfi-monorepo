@@ -28,6 +28,8 @@ export { DataBlock } from './components/molecules/DataBlock/DataBlock'
 export { TitleWithIcon } from './components/molecules/TitleWithIcon/TitleWithIcon'
 export { SimpleGrid } from './components/molecules/Grid/SimpleGrid'
 export { SidebarFootnote } from './components/molecules/SidebarFootnote/SidebarFootnote'
+export { StrategyCard } from './components/molecules/StrategyCard/StrategyCard'
+export { StrategyTitleWithRisk } from './components/molecules/StrategyTitleWithRisk/StrategyTitleWithRisk'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar } from './components/organisms/Sidebar/Sidebar'

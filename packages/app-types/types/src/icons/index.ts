@@ -205,6 +205,7 @@ export type IconNamesList =
   | 'cog'
   | 'user'
   | 'rebalancing'
+  | 'stars'
 
 export type TokenSymbolsList =
   | 'USDP'

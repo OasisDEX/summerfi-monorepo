@@ -1,14 +1,17 @@
-import React, { type FC } from 'react'
-import { Icon, Text, Tooltip } from '@summerfi/app-earn-ui'
+import { type FC } from 'react'
 import { type Risk, type TokenSymbolsList } from '@summerfi/app-types'
 import { capitalize } from 'lodash'
 
-interface StrategyWithRiskProps {
+import { Icon } from '@/components/atoms/Icon/Icon'
+import { Text } from '@/components/atoms/Text/Text'
+import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
+
+interface StrategyTitleWithRiskProps {
   symbol: TokenSymbolsList
   risk: Risk
 }
 
-export const StrategyWithRisk: FC<StrategyWithRiskProps> = ({ symbol, risk }) => {
+export const StrategyTitleWithRisk: FC<StrategyTitleWithRiskProps> = ({ symbol, risk }) => {
   // used raw colors due to issues with Icon scss computed colors
   const color = {
     high: 'rgba(255, 87, 57, 1)', // var(--earn-protocol-critical-100)'
