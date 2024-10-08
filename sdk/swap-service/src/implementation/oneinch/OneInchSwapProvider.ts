@@ -289,7 +289,7 @@ export class OneInchSwapProvider
       !ONE_INCH_SWAP_CHAIN_IDS
     ) {
       console.error(
-        +JSON.stringify(
+        JSON.stringify(
           Object.entries({
             ONE_INCH_API_URL,
             ONE_INCH_API_KEY,

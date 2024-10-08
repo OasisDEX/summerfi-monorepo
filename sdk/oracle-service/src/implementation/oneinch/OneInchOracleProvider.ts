@@ -203,7 +203,7 @@ export class OneInchOracleProvider
 
     if (!ONE_INCH_API_SPOT_URL || !ONE_INCH_API_SPOT_KEY || !ONE_INCH_API_SPOT_VERSION) {
       console.error(
-        +JSON.stringify(
+        JSON.stringify(
           Object.entries({
             ONE_INCH_API_SPOT_URL,
             ONE_INCH_API_SPOT_KEY,
