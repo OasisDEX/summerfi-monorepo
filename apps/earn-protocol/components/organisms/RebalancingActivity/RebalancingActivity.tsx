@@ -1,6 +1,8 @@
 import { type FC, useMemo } from 'react'
-import { Card, DataBlock, Icon, Table, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Card, DataBlock, Icon, Table, TableCellText, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList } from '@summerfi/app-types'
+import { formatCryptoBalance, timeAgo } from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
 const columns = [
@@ -55,9 +57,7 @@ const rebalancingActivityMapper = (rawData: RebalancingActivityRawData[]) => {
               variant="xxs"
               color="rgba(119, 117, 118, 1)"
             />
-            <Text as="p" variant="p3" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-              {item.type === 'reduce' ? 'Reduce' : 'Increase'} Risk
-            </Text>
+            <TableCellText>{item.type === 'reduce' ? 'Reduce' : 'Increase'} Risk</TableCellText>
           </div>
         ),
         action: (
@@ -73,12 +73,14 @@ const rebalancingActivityMapper = (rawData: RebalancingActivityRawData[]) => {
             style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-2x-small)' }}
           >
             <Icon tokenName={item.amount.token} variant="s" />
-            <Text as="p" variant="p3" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-              {item.amount.value}
-            </Text>
+            <TableCellText>{formatCryptoBalance(new BigNumber(item.amount.value))}</TableCellText>
           </div>
         ),
-        timestamp: '3 hrs ago',
+        timestamp: (
+          <TableCellText>
+            {timeAgo({ from: new Date(), to: new Date(Number(item.timestamp)) })}
+          </TableCellText>
+        ),
         provider: (
           <Link href={item.provider.link}>
             <WithArrow as="p" variant="p3" style={{ color: 'var(--earn-protocol-primary-100)' }}>

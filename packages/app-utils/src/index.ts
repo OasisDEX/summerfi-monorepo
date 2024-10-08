@@ -9,6 +9,8 @@ export * from './formatters/format-decimals-as-percent'
 export * from './formatters/format-percent'
 export * from './formatters/format-shorthand-number'
 export * from './formatters/format-to-hex'
+export * from './formatters/format-fiat-balance'
+export * from './formatters/time-ago'
 
 export * from './helpers/time-until'
 export * from './helpers/is-valid-url'

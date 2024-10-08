@@ -5,6 +5,10 @@ import {
   RebalancingActivity,
   type RebalancingActivityRawData,
 } from '@/components/organisms/RebalancingActivity/RebalancingActivity'
+import {
+  UserActivity,
+  type UserActivityRawData,
+} from '@/components/organisms/UserActivity/UserActivity'
 import { type strategiesList } from '@/constants/dev-strategies-list'
 import type { FleetConfig } from '@/helpers/sdk/types'
 
@@ -46,10 +50,33 @@ const rebalancingActivityData: RebalancingActivityRawData[] = [
       token: 'USDT',
       value: '123123',
     },
-    timestamp: '12321321',
+    timestamp: '1727385013506',
     provider: {
       link: '/',
       label: 'Summer.fi',
+    },
+  },
+]
+
+const userActivityRawData: UserActivityRawData[] = [
+  {
+    balance: '120000',
+    amount: '123123',
+    numberOfDeposits: '13',
+    time: '1727385013506',
+    earningStreak: {
+      link: '/',
+      label: 'View',
+    },
+  },
+  {
+    balance: '1420000',
+    amount: '321321',
+    numberOfDeposits: '9',
+    time: '1727585013506',
+    earningStreak: {
+      link: '/',
+      label: 'View',
     },
   },
 ]
@@ -69,16 +96,35 @@ const EarnStrategyPage = ({ params }: EarnStrategyPageProps) => {
         } as (typeof strategiesList)[number]
       }
       leftContent={
-        <Expander
-          title={
-            <Text as="p" variant="p1semi">
-              Rebalancing activity
-            </Text>
-          }
-          defaultExpanded
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--spacing-space-x-large)',
+            width: '100%',
+          }}
         >
-          <RebalancingActivity rawData={rebalancingActivityData} />
-        </Expander>
+          <Expander
+            title={
+              <Text as="p" variant="p1semi">
+                Rebalancing activity
+              </Text>
+            }
+            defaultExpanded
+          >
+            <RebalancingActivity rawData={rebalancingActivityData} />
+          </Expander>
+          <Expander
+            title={
+              <Text as="p" variant="p1semi">
+                User activity
+              </Text>
+            }
+            defaultExpanded
+          >
+            <UserActivity rawData={userActivityRawData} />
+          </Expander>
+        </div>
       }
       rightContent={<FormContainer fleetConfig={fleetConfig} />}
     />

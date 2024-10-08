@@ -1,6 +1,5 @@
 .tableWrapper {
   width: 100%;
-  overflow-x: hidden;
 }
 
 .table {
@@ -15,7 +14,7 @@
 
   th,
   td {
-    padding: 12px;
+    padding: 12px 0;
     text-align: left;
     cursor: pointer;
   }

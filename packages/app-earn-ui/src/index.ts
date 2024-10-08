@@ -33,6 +33,7 @@ export { SimpleGrid } from './components/molecules/Grid/SimpleGrid'
 export { SidebarFootnote } from './components/molecules/SidebarFootnote/SidebarFootnote'
 export { StrategyCard } from './components/molecules/StrategyCard/StrategyCard'
 export { StrategyTitleWithRisk } from './components/molecules/StrategyTitleWithRisk/StrategyTitleWithRisk'
+export { TableCellText } from './components/molecules/TableCellText/TableCellText'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar } from './components/organisms/Sidebar/Sidebar'
