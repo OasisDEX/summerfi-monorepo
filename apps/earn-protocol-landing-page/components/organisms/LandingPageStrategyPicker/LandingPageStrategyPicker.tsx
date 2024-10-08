@@ -1,33 +1,34 @@
+'use client'
+
 import { type ChangeEvent, useState } from 'react'
 import { Sidebar, SidebarFootnote, sidebarFootnote, StrategyCard } from '@summerfi/app-earn-ui'
-import { type DropdownOption, type Risk, type TokenSymbolsList } from '@summerfi/app-types'
+import { type DropdownOption } from '@summerfi/app-types'
 import { mapNumericInput } from '@summerfi/app-utils'
+
+import { strategiesList } from '@/constants/dev-strategies-list'
 
 import classNames from '@/components/organisms/LandingPageStrategyPicker/LandingPageStrategyPicker.module.scss'
 
 export const LandingPageStrategyPicker = ({
-  apy,
-  symbol,
-  risk,
-  totalAssets,
-  bestFor,
-  options,
+  strategy,
 }: {
-  id: string
-  apy: string
-  symbol: TokenSymbolsList
-  risk: Risk
-  totalAssets: string
-  bestFor: string
-  options: DropdownOption[]
+  strategy: (typeof strategiesList)[number]
 }) => {
   const [value, setValue] = useState(mapNumericInput('10000'))
+
+  const options: DropdownOption[] = [
+    ...[...new Set(strategiesList.map(({ symbol }) => symbol))].map((symbol) => ({
+      tokenSymbol: symbol,
+      label: symbol,
+      value: symbol,
+    })),
+  ]
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(mapNumericInput(e.target.value))
   }
 
-  const dropdownValue = options.find((option) => option.value === symbol) || options[0]
+  const dropdownValue = options.find((option) => option.value === strategy.symbol) ?? options[0]
 
   const sidebarProps = {
     title: 'Deposit',
@@ -54,13 +55,7 @@ export const LandingPageStrategyPicker = ({
 
   return (
     <div className={classNames.wrapper}>
-      <StrategyCard
-        apy={apy}
-        bestFor={bestFor}
-        symbol={symbol}
-        risk={risk}
-        totalAssets={totalAssets}
-      />
+      <StrategyCard {...strategy} />
       <Sidebar {...sidebarProps} />
     </div>
   )
