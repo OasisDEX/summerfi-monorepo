@@ -99,7 +99,7 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({ rawData }) =
   const rows = useMemo(() => rebalancingActivityMapper(rawData), [rawData])
 
   return (
-    <Card variant="cardSecondary">
+    <Card variant="cardSecondary" style={{ marginTop: 'var(--spacing-space-medium)' }}>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <Text as="p" variant="p2semi" style={{ marginBottom: 'var(--spacing-space-large)' }}>
           Previous 30 days

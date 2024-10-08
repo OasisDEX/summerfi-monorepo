@@ -75,6 +75,7 @@ const EarnStrategyPage = ({ params }: EarnStrategyPageProps) => {
               Rebalancing activity
             </Text>
           }
+          defaultExpanded
         >
           <RebalancingActivity rawData={rebalancingActivityData} />
         </Expander>

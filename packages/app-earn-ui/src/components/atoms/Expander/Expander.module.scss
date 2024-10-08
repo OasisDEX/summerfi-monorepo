@@ -26,13 +26,10 @@
 
 .expanded {
   max-height: 1000px;
-  margin-top: var(--spacing-space-medium);
 }
 
 .collapsed {
   max-height: 0;
-  transition:
-    max-height 0.4s ease,
-    margin-top 0.4s ease;
+  transition: max-height 0.4s ease;
   margin-top: 0;
 }
