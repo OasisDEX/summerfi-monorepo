@@ -8,6 +8,7 @@ import makerIcon from 'public/img/protocol_icons/maker_icon.svg'
 import makerLogo from 'public/img/protocol_icons/maker_logo.svg'
 import morphoBlueIcon from 'public/img/protocol_icons/morpho_blue_icon.svg'
 import morphoBlueLogo from 'public/img/protocol_icons/morpho_blue_logo.svg'
+import skyIcon from 'public/img/protocol_icons/sky.svg'
 import sparkIcon from 'public/img/protocol_icons/spark_icon.svg'
 import sparkLogo from 'public/img/protocol_icons/spark_logo.svg'
 
@@ -69,6 +70,14 @@ const sparkConfig: LendingProtocolConfig = {
   logoScale: 1.2,
 }
 
+const skyConfig: LendingProtocolConfig = {
+  name: LendingProtocol.Sky,
+  label: LendingProtocolLabel.sky,
+  icon: skyIcon as string,
+  logo: skyIcon as string,
+  logoScale: 1.6,
+}
+
 const lendingProtocols = [
   aaveV2Config,
   aaveV3Config,
@@ -76,6 +85,7 @@ const lendingProtocols = [
   makerConfig,
   morphoBlueConfig,
   sparkConfig,
+  skyConfig,
 ]
 
 export const lendingProtocolsByName = keyBy(lendingProtocols, 'name')

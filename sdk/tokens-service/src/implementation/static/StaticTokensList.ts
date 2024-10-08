@@ -609,5 +609,77 @@ export const StaticTokensData: TokenListData = {
       decimals: 18,
       logoURI: '',
     },
+    // LBTC
+    {
+      chainId: 1,
+      symbol: 'LBTC',
+      name: 'Lombard Staked BTC',
+      address: '0x8236a87084f8b84306f72007f36f2618a5634494',
+      decimals: 8,
+      logoURI: '',
+    },
+    // SWBTC
+    {
+      chainId: 1,
+      symbol: 'SWBTC',
+      name: 'Swell Restaked BTC',
+      address: '0x8db2350d78abc13f5673a411d4700bcf87864dde',
+      decimals: 8,
+      logoURI: '',
+    },
+    // rswETH
+    {
+      chainId: 1,
+      symbol: 'rswETH',
+      name: 'Restaked Swell ETH',
+      address: '0xfae103dc9cf190ed75350761e95403b7b8afa6c0',
+      decimals: 18,
+      logoURI: '',
+    },
+    // WOETH
+    {
+      chainId: 1,
+      symbol: 'WOETH',
+      name: 'Wrapped OETH',
+      address: '0xdcee70654261af21c44c093c300ed3bb97b78192',
+      decimals: 18,
+      logoURI: '',
+    },
+    // tBTC
+    {
+      chainId: 1,
+      symbol: 'tBTC',
+      name: 'tBTC',
+      address: '0x18084fbA666a33d37592fA2633fD49a74DD93a88',
+      decimals: 18,
+      logoURI: '',
+    },
+    // cbBTC
+    {
+      chainId: 1,
+      symbol: 'cbBTC',
+      name: 'Coinbase Wrapped BTC',
+      address: '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf',
+      decimals: 8,
+      logoURI: '',
+    },
+    // USDS
+    {
+      chainId: 1,
+      symbol: 'USDS',
+      name: 'USD Sky',
+      address: '0xdC035D45d973E3EC169d2276DDab16f1e407384F',
+      decimals: 18,
+      logoURI: '',
+    },
+    // rsETH
+    {
+      chainId: 1,
+      symbol: 'rsETH',
+      name: 'Kelp DAO Restaked ETH',
+      address: '0xa1290d69c65a6fe4df752f95823fae25cb99e5a7',
+      decimals: 18,
+      logoURI: '',
+    },
   ],
 }

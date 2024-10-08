@@ -1,48 +1,38 @@
 import { type FC, type PropsWithChildren } from 'react'
-import { Footer } from '@summerfi/app-ui'
-import { parseServerResponseToClient } from '@summerfi/app-utils'
-import Image from 'next/image'
+import dynamic from 'next/dynamic'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 import { WalletInit } from '@/components/molecules/WalletInit/WalletInit'
-import { AccountChangeHandler } from '@/components/organisms/AccountChangeHandler/AccountChangeHandler'
-import systemConfigHandler from '@/server-handlers/system-config'
 
+import './global.css'
 import masterPageStyles from './MasterPage.module.scss'
 
 interface MasterPageProps {}
 
-export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = async ({ children }) => {
-  const systemConfig = parseServerResponseToClient(await systemConfigHandler())
+const SetForkModal = dynamic(() => import('@/components/organisms/SetFork/SetForkModal'), {
+  ssr: false,
+})
 
+export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({ children }) => {
   return (
     <>
       <WalletInit />
       <div className={masterPageStyles.mainContainer}>
-        <Image
-          src="/img/backgrounds/bg-simple.svg"
-          className={masterPageStyles.backgroundSimple}
-          width={0}
-          height={0}
-          style={{ height: 'auto', width: '100%' }}
-          alt=""
-        />
-        <NavigationWrapper panels={systemConfig.navigation} />
-        <div className={masterPageStyles.appContainer}>
-          {children}
-          <Footer
-            logo="img/branding/logo-dark.svg"
-            languageSwitcher={<div />}
-            newsletter={{
-              button: 'Subscribe →',
-              description: 'Subscribe to the newsletter for updates',
-              label: 'Temporarily disabled',
-              title: 'Stay up to date with Summer.fi',
-            }}
-          />
+        <NavigationWrapper />
+        <div className={masterPageStyles.appContainer}>{children}</div>
+        <div
+          style={{
+            display: 'flex',
+            marginTop: '32px',
+            marginBottom: '32px',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '20px',
+          }}
+        >
+          Footer <SetForkModal />
         </div>
       </div>
-      <AccountChangeHandler />
     </>
   )
 }

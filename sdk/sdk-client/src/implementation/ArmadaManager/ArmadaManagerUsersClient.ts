@@ -6,7 +6,7 @@ import {
   IArmadaPositionId,
 } from '@summerfi/armada-protocol-common'
 
-import { ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
+import { ITokenAmount, IUser, TransactionInfo, type IAddress } from '@summerfi/sdk-common'
 import { IArmadaManagerUsersClient } from '../../interfaces/ArmadaManager/IArmadaManagerUsersClient'
 import { IRPCClient } from '../../interfaces/IRPCClient'
 import { RPCMainClientType } from '../../rpc/SDKMainClient'
@@ -35,6 +35,14 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getUserPositions.query(params)
   }
 
+  /** @see IArmadaManagerClient.getUserPositions */
+  async getUserPosition(params: { user: IUser; fleetAddress: IAddress }): Promise<IArmadaPosition> {
+    return this.rpcClient.armada.users.getUserPosition.query({
+      user: params.user,
+      fleetAddress: params.fleetAddress,
+    })
+  }
+
   /** @see IArmadaManagerClient.getPosition */
   async getPosition(params: {
     poolId: IArmadaPoolId
@@ -49,7 +57,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
-    return this.rpcClient.armada.users.getNewDepositTX.query(params)
+    return this.rpcClient.armada.users.getDepositTX.query(params)
   }
 
   /** @see IArmadaManagerClient.getUpdateDepositTX */
@@ -64,7 +72,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   /** @see IArmadaManagerClient.getWithdrawTX */
   async getWithdrawTX(params: {
     poolId: IArmadaPoolId
-    positionId: IArmadaPositionId
+    user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
     return this.rpcClient.armada.users.getWithdrawTX.query(params)

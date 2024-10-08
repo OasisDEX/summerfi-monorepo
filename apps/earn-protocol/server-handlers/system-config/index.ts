@@ -1,21 +1,12 @@
-import {
-  lendingProtocolMap,
-  type NavigationResponse,
-  type ProductHubData,
-} from '@summerfi/app-types'
+import { lendingProtocolMap, type ProductHubData } from '@summerfi/app-types'
 import { ProtocolId } from '@summerfi/serverless-shared'
-import { getTranslations } from 'next-intl/server'
 
 import { configFetcher } from '@/server-handlers/system-config/calls/config'
-import { fetchContentfulGraphQL } from '@/server-handlers/system-config/calls/contentful'
-import { navigationQuery } from '@/server-handlers/system-config/calls/navigation-query'
 import { productHubFetcher } from '@/server-handlers/system-config/calls/product-hub'
 import { configRaysFetcher } from '@/server-handlers/system-config/calls/rays-config'
-import { parseNavigationResponse } from '@/server-handlers/system-config/parsers/parse-navigation-response'
 
 const systemConfigHandler = async () => {
   try {
-    const tNav = await getTranslations({ locale: 'en', namespace: 'nav' })
     const config = await configFetcher()
     const protocols = [
       ...(config.features?.AjnaSafetySwitch ? [] : [lendingProtocolMap[ProtocolId.AJNA]]),
@@ -26,20 +17,14 @@ const systemConfigHandler = async () => {
       lendingProtocolMap[ProtocolId.SPARK],
     ]
 
-    const [productHub, navigationResponse, configRays] = await Promise.all([
+    const [productHub, configRays] = await Promise.all([
       productHubFetcher(protocols),
-      fetchContentfulGraphQL<NavigationResponse>(navigationQuery),
       configRaysFetcher(),
     ])
-
-    const navigation = parseNavigationResponse({ navigationResponse, productHub, tNav })
-    // TODO figure out why unpublish of Use Cases in contentful causes error
-    const resolvedNavigation = navigation.filter((item) => item.label !== 'Use Cases')
 
     return {
       config,
       configRays,
-      navigation: resolvedNavigation,
       productHub: productHub as ProductHubData,
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

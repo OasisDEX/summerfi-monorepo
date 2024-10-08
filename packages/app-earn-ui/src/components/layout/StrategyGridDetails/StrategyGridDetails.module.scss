@@ -1,0 +1,30 @@
+.strategyGridDetailsBreadcrumbsWrapper {
+  display: flex;
+  flex-direction: column;
+  a {
+    margin-top: var(--general-space-12);
+    color: var(--earn-protocol-primary-100)
+  }
+}
+
+.strategyGridDetailsPositionWrapper {
+  display: grid;
+  grid-gap: var(--general-space-16);
+  grid-template-columns: 1.7fr 1.2fr;
+  margin-top: 20px;
+  > div {
+    height: min-content;
+  }
+  .leftBlock {
+    display: grid;
+    grid-gap: var(--general-space-16);
+  }
+}
+
+.strategyGridDetailsTopLeftWrapper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+  margin-bottom: var(--general-space-16);
+}

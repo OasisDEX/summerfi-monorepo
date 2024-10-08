@@ -3,7 +3,7 @@ import { Address, ChainId, PoolId } from '@summerfi/serverless-shared'
 import { PublicClient } from 'viem'
 import { chainlinkPairOracleAbi, erc20Abi, morphoBlueAbi } from '@summerfi/abis'
 import { Logger } from '@aws-lambda-powertools/logger'
-import { calculateLtv, normalizeAmount } from './helpers'
+import { calculateLtv, isStablecoin, normalizeAmount } from './helpers'
 import { getPricesSubgraphClient, UsdcAndTokenPrice } from '@summerfi/prices-subgraph'
 import { BigNumber } from 'bignumber.js'
 
@@ -21,6 +21,25 @@ export const MB_ORACLE_DECIMALS = 36
 
 const VIRTUAL_SHARES = TEN ** 6n
 const VIRTUAL_ASSETS = 1n
+
+async function safeSymbolCall(token: Address, publicClient: PublicClient): Promise<string> {
+  // MKR is not regular ERC20 and the symbol is in bytes32
+  // so we need to hardcode it
+  if (token.toLowerCase() === '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2') {
+    return 'MKR'
+  }
+  const symbol = await publicClient.multicall({
+    contracts: [
+      {
+        abi: erc20Abi,
+        address: token,
+        functionName: 'symbol',
+      },
+    ],
+    allowFailure: false,
+  })
+  return symbol[0]
+}
 
 function mulDivDown(x: bigint, y: bigint, d: bigint): bigint {
   return (x * y) / d
@@ -120,9 +139,7 @@ export async function getMorphoBluePosition(
     [, , totalBorrowAssets, totalBorrowShares],
     [, borrowShares, collateralAmount],
     collateralDecimals,
-    collateralSymbol,
     debtDecimals,
-    debtSymbol,
   ] = await publicClient.multicall({
     contracts: [
       {
@@ -150,22 +167,14 @@ export async function getMorphoBluePosition(
       },
       {
         abi: erc20Abi,
-        address: collateral,
-        functionName: 'symbol',
-      },
-      {
-        abi: erc20Abi,
         address: debt,
         functionName: 'decimals',
-      },
-      {
-        abi: erc20Abi,
-        address: debt,
-        functionName: 'symbol',
       },
     ],
     allowFailure: false,
   })
+  const collateralSymbol = await safeSymbolCall(collateral, publicClient)
+  const debtSymbol = await safeSymbolCall(debt, publicClient)
   const [oraclePrice] = await publicClient.multicall({
     contracts: [
       {
@@ -252,7 +261,7 @@ export async function getMorphoBluePosition(
   })
 
   return {
-    hasStablecoinDebt: false,
+    hasStablecoinDebt: isStablecoin(debtPrice),
     ltv,
     collateral: collateralResult,
     debt: debtResult,

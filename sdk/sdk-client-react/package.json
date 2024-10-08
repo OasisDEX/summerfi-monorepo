@@ -19,17 +19,20 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@summerfi/armada-protocol-common": "workspace:*",
     "@summerfi/armada-protocol-service": "workspace:*",
     "@summerfi/protocol-plugins": "workspace:*",
     "@summerfi/sdk-client": "workspace:*",
-    "@summerfi/sdk-common": "workspace:*",
-    "@types/react": "^18.3.1",
-    "react": "^18.3.1"
+    "@summerfi/sdk-common": "workspace:*"
   },
   "devDependencies": {
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
     "@summerfi/testing-utils": "workspace:*",
-    "@summerfi/typescript-config": "workspace:*"
+    "@summerfi/typescript-config": "workspace:*",
+    "@types/react": "^18.3.1"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
   }
 }

@@ -47,13 +47,8 @@ export type IArmadaRebalanceDataData = Readonly<z.infer<typeof ArmadaRebalanceDa
  */
 export function isArmadaRebalanceData(
   maybeRebalanceData: unknown,
-  returnedErrors?: string[],
 ): maybeRebalanceData is IArmadaRebalanceData {
   const zodReturn = ArmadaRebalanceDataSchema.safeParse(maybeRebalanceData)
-
-  if (!zodReturn.success && returnedErrors) {
-    returnedErrors.push(...zodReturn.error.errors.map((e) => e.message))
-  }
 
   return zodReturn.success
 }

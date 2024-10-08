@@ -1,0 +1,4 @@
+/* Needed only for Account-kit */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

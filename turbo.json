@@ -1,5 +1,5 @@
 {
-  "$schema": "https://turbo.build/schema.v1.json",
+  "$schema": "https://turbo.build/schema.v2.json",
   "globalDependencies": ["**/.env.*local"],
   "globalEnv": [
     "SUBGRAPH_BASE",
@@ -73,7 +73,7 @@
     "EARN_PROTOCOL_JWT_CHALLENGE_SECRET",
     "TRM_API_KEY"
   ],
-  "pipeline": {
+  "tasks": {
     "dev": {
       "cache": false,
       "persistent": true

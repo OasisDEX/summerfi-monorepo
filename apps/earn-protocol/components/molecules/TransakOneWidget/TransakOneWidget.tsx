@@ -1,20 +1,16 @@
-import { useChain, useSmartAccountClient, useUser } from '@alchemy/aa-alchemy/react'
-import { Button } from '@summerfi/app-ui'
+import { useChain, useUser } from '@account-kit/react'
+import { Button } from '@summerfi/app-earn-ui'
 
-import { accountType } from '@/providers/AlchemyAccountsProvider/config'
 import { getTransakConfig } from '@/transak/config'
 
 // Base network usdcFleet address
 const usdcFleetAddress = '0xa09e82322f351154a155f9e0f9e6ddbc8791c794'
 
 export const TransakOneWidget = () => {
-  const { client } = useSmartAccountClient({
-    type: accountType,
-  })
   const { chain } = useChain()
   const user = useUser()
 
-  if (!client) {
+  if (!user) {
     return null
   }
 
@@ -33,9 +29,9 @@ export const TransakOneWidget = () => {
     const transak = getTransakConfig({
       config: {
         isTransakOne: true,
-        walletAddress: client.account.address,
+        walletAddress: user.address,
         network: chain.name.toLowerCase(),
-        email: user?.email,
+        email: user.email,
         exchangeScreenTitle: 'Deposit Funds',
         estimatedGasLimit: 70000,
         /**

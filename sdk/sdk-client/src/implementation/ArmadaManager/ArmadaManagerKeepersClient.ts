@@ -16,7 +16,7 @@ export class ArmadaManagerKeepersClient extends IRPCClient implements IArmadaMan
   /** @see IArmadaManagerKeepersClient.rebalance */
   async rebalance(params: {
     poolId: IArmadaPoolId
-    rebalanceData: IArmadaRebalanceData
+    rebalanceData: IArmadaRebalanceData[]
   }): Promise<TransactionInfo> {
     return this.rpcClient.armada.keepers.rebalance.query(params)
   }
@@ -24,7 +24,7 @@ export class ArmadaManagerKeepersClient extends IRPCClient implements IArmadaMan
   /** @see IArmadaManagerKeepersClient.adjustBuffer */
   async adjustBuffer(params: {
     poolId: IArmadaPoolId
-    rebalanceData: IArmadaRebalanceData
+    rebalanceData: IArmadaRebalanceData[]
   }): Promise<TransactionInfo> {
     return this.rpcClient.armada.keepers.adjustBuffer.query(params)
   }

@@ -1,0 +1,37 @@
+.wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.iconWrapper {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translate(0, -55%);
+}
+
+.default {
+  padding: unset;
+  padding-bottom: var(--general-space-16);
+  font-weight: 500;
+  font-size: 28px;
+  width: 100%;
+  color: var(--color-text-primary);
+  text-align: right;
+  border: unset;
+
+  &:hover {
+    border-color: var(--color-neutral-70);
+  }
+
+  &::placeholder {
+    color: var(--color-primary-30);
+    opacity: 1;
+  }
+}
+
+.withIconOffset {
+  padding-left: 40px;
+}

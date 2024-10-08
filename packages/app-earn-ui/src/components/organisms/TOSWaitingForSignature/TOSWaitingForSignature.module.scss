@@ -1,0 +1,11 @@
+.tosWaitingForSignatureWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: var(--general-space-16);
+}
+
+.tosWaitingForSignatureMessage {
+  text-align: center;
+  color: var(--color-text-primary);
+}

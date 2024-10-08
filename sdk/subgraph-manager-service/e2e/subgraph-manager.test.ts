@@ -13,7 +13,7 @@ describe('Subgraph Manager', () => {
     })
 
     it('should get user positions using armada provider', async () => {
-      const chainInfo = getChainInfoByChainId(ChainFamilyMap.Base.Base.chainId)?.chainInfo
+      const chainInfo = getChainInfoByChainId(ChainFamilyMap.Base.Base.chainId)
       if (!chainInfo) {
         throw new Error('ChainInfo not found')
       }

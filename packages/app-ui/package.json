@@ -20,6 +20,7 @@
     "clean": "rm -rf dist"
   },
   "devDependencies": {
+    "@summerfi/app-token-config": "workspace:*",
     "@summerfi/app-types": "workspace:*",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
@@ -30,12 +31,12 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react-swc": "^3.7.0",
     "eslint": "8.57.0",
-    "glob": "^10.3.12",
+    "glob": "^11.0.0",
     "jest": "29.7.0",
     "sass": "^1.77.8",
-    "typescript": "^5.4.5",
-    "vite": "^5.3.5",
-    "vite-plugin-dts": "4.0.0-beta.1",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.8",
+    "vite-plugin-dts": "^4.2.2",
     "vite-plugin-lib-inject-css": "^2.1.1"
   },
   "peerDependencies": {
@@ -46,7 +47,7 @@
     "boring-avatars": "1.10.2",
     "clsx": "^2.1.1",
     "lodash": "^4.17.21",
-    "next": "^14.2.5",
+    "next": "^14.2.13",
     "react-dom": "^18.3.1",
     "react": "^18.3.1",
     "usehooks-ts": "^3.1.0"

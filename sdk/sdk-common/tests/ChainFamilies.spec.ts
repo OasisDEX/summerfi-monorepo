@@ -1,9 +1,9 @@
 import { ChainInfo } from '../src'
-import { getChainInfoByChainId } from '../src/common/implementation/ChainFamilies'
+import { getChainFamilyInfoByChainId } from '../src/common/implementation/ChainFamilies'
 
 describe('Chain Families', () => {
   it('should retrieve chain info by Id', () => {
-    const ethereumMainnet = getChainInfoByChainId(1)
+    const ethereumMainnet = getChainFamilyInfoByChainId(1)
 
     expect(ethereumMainnet).toEqual({
       familyName: 'Ethereum',
@@ -13,7 +13,7 @@ describe('Chain Families', () => {
       }),
     })
 
-    const ethereumGoerli = getChainInfoByChainId(5)
+    const ethereumGoerli = getChainFamilyInfoByChainId(5)
 
     expect(ethereumGoerli).toEqual({
       familyName: 'Ethereum',
@@ -23,7 +23,7 @@ describe('Chain Families', () => {
       }),
     })
 
-    const arbitrumOne = getChainInfoByChainId(42161)
+    const arbitrumOne = getChainFamilyInfoByChainId(42161)
 
     expect(arbitrumOne).toEqual({
       familyName: 'Arbitrum',
@@ -33,7 +33,7 @@ describe('Chain Families', () => {
       }),
     })
 
-    const optimism = getChainInfoByChainId(10)
+    const optimism = getChainFamilyInfoByChainId(10)
 
     expect(optimism).toEqual({
       familyName: 'Optimism',
@@ -43,7 +43,7 @@ describe('Chain Families', () => {
       }),
     })
 
-    const baseMainnet = getChainInfoByChainId(8453)
+    const baseMainnet = getChainFamilyInfoByChainId(8453)
 
     expect(baseMainnet).toEqual({
       familyName: 'Base',

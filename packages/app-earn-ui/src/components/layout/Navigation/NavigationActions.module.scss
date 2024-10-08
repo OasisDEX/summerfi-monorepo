@@ -1,0 +1,26 @@
+button.buttonWhite {
+  background-color: var(--color-text-primary);
+}
+
+.walletButtonMock {
+  min-height: auto;
+  line-height: 22px;
+  height: 40px;
+  min-width: 40px;
+  width: auto;
+}
+
+.mobileMenuButton {
+  display: none;
+  @include media('<=l') {
+    display: block;
+  }
+}
+
+.summerProButton {
+  color: var(--color-text-secondary);
+  margin-right: var(--general-space-24);
+  &:hover {
+    color: var(--color-text-primary);
+  }
+}
