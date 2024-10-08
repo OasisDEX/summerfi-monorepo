@@ -15,8 +15,4 @@
 .tokensGroupListItem {
   display: flex;
   position: relative;
-  margin-right: -16px;
-  &:last-child {
-    margin-right: 0;
-  }
 }

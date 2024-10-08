@@ -28,17 +28,19 @@ export const SidebarFootnote: FC<SidebarFootnoteProps> = ({ title, list, tooltip
       tooltipWrapperStyles={tooltip.style}
       showAbove={tooltip.showAbove}
     >
-      <Icon iconName="question_o" variant="xs" color="rgba(255, 73, 164, 1)" />
-      <Text
-        as="p"
-        variant="p4"
-        style={{
-          color: 'var(--earn-protocol-primary-100)',
-          marginLeft: 'var(--spacing-space-2x-small)',
-        }}
-      >
-        {title}
-      </Text>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Icon iconName="question_o" variant="xs" color="rgba(255, 73, 164, 1)" />
+        <Text
+          as="p"
+          variant="p4"
+          style={{
+            color: 'var(--earn-protocol-primary-100)',
+            marginLeft: 'var(--spacing-space-2x-small)',
+          }}
+        >
+          {title}
+        </Text>
+      </div>
     </Tooltip>
   )
 }

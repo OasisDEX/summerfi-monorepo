@@ -34,6 +34,7 @@ export { SidebarFootnote } from './components/molecules/SidebarFootnote/SidebarF
 export { StrategyCard } from './components/molecules/StrategyCard/StrategyCard'
 export { StrategyTitleWithRisk } from './components/molecules/StrategyTitleWithRisk/StrategyTitleWithRisk'
 export { TableCellText } from './components/molecules/TableCellText/TableCellText'
+export { TokensGroup } from './components/molecules/TokensGroup/TokensGroup'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar } from './components/organisms/Sidebar/Sidebar'
