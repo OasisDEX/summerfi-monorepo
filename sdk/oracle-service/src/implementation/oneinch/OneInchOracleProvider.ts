@@ -202,18 +202,18 @@ export class OneInchOracleProvider
     })
 
     if (!ONE_INCH_API_SPOT_URL || !ONE_INCH_API_SPOT_KEY || !ONE_INCH_API_SPOT_VERSION) {
-      throw new Error(
-        'OneInch configuration is missing: ' +
-          JSON.stringify(
-            Object.entries({
-              ONE_INCH_API_SPOT_URL,
-              ONE_INCH_API_SPOT_KEY,
-              ONE_INCH_API_SPOT_VERSION,
-            }),
-            null,
-            2,
-          ),
+      console.error(
+        JSON.stringify(
+          Object.entries({
+            ONE_INCH_API_SPOT_URL,
+            ONE_INCH_API_SPOT_KEY,
+            ONE_INCH_API_SPOT_VERSION,
+          }),
+          null,
+          2,
+        ),
       )
+      throw new Error('OneInch configuration is missing, check logs for more information')
     }
 
     return {
