@@ -361,7 +361,8 @@ export class AaveV3LikeProtocolDataBuilder<
           // const emodeCategoryForAsset = emodeCategoryPerAsset[index]
           const assetWithEmode = {
             ...asset,
-            emode: 0,
+            emode: 0, // hardcoded for now as we need to figure out
+            // how the new aave emode should work now
           }
           nextReservesList.push(assetWithEmode)
         }
