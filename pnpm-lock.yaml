@@ -3449,8 +3449,8 @@ importers:
         specifier: ^2.0.4
         version: 2.0.4
       '@oasisdex/addresses':
-        specifier: ^0.1.83
-        version: 0.1.83
+        specifier: ^0.1.84
+        version: 0.1.84
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared
@@ -13629,8 +13629,8 @@ packages:
     resolution: {integrity: sha512-TT4F7NY0Q5r12HLgnBf1VeP6ybXbi4e3jgipi608QgEONJ/+bbWDm+itHvMjqbgUyE4TusEPPzqYyAjzc2Tv3Q==}
     dev: false
 
-  /@oasisdex/addresses@0.1.83:
-    resolution: {integrity: sha512-smJo/1xD7vS4dRvH5+BMl6LOuEOdz7shpkSpNWI/M5eOC2KUGovx6tT3AfGapZrfCYvtSuOpnbqwf+Tc6nNVhQ==}
+  /@oasisdex/addresses@0.1.84:
+    resolution: {integrity: sha512-qaY7sXUsq4n9i7otCbfmb44Et1rNn9dAe+WSXgyjFost9ZLa/oZC27ojBEoF4QnZDr7Dcje0scHc+6yoJzkYeg==}
     dev: false
 
   /@oasisdex/automation@1.6.5-morpho.6:
