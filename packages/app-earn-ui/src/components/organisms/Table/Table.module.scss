@@ -1,6 +1,6 @@
 .tableWrapper {
   width: 100%;
-  overflow-x: auto;
+  overflow-x: hidden;
 }
 
 .table {
@@ -58,18 +58,21 @@
     tbody {
       display: block;
       width: 100%;
+
+      tr {
+        border-bottom: 1px solid var(--earn-protocol-neutral-70);
+      }
     }
 
     tr {
       display: block;
       margin-bottom: 10px;
-      border: 1px solid #ddd;
     }
 
     td {
       display: block;
       padding: 8px;
-      text-align: right;
+      text-align: left;
       position: relative;
 
       &:before {

@@ -73,7 +73,6 @@ export const LandingPageContent = () => {
         components={content.map((item) => (
           <LandingPageStrategyPicker {...item} key={item.id} />
         ))}
-        contentHeight={596}
         contentWidth={515}
       />
     </div>

@@ -1,4 +1,4 @@
-import { StrategyGridDetails } from '@summerfi/app-earn-ui'
+import { Expander, StrategyGridDetails, Text } from '@summerfi/app-earn-ui'
 
 import FormContainer from '@/components/organisms/Form/FormContainer'
 import {
@@ -68,7 +68,17 @@ const EarnStrategyPage = ({ params }: EarnStrategyPageProps) => {
           risk,
         } as (typeof strategiesList)[number]
       }
-      leftContent={<RebalancingActivity rawData={rebalancingActivityData} />}
+      leftContent={
+        <Expander
+          title={
+            <Text as="p" variant="p1semi">
+              Rebalancing activity
+            </Text>
+          }
+        >
+          <RebalancingActivity rawData={rebalancingActivityData} />
+        </Expander>
+      }
       rightContent={<FormContainer fleetConfig={fleetConfig} />}
     />
   )

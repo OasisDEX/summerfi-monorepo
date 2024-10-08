@@ -15,6 +15,7 @@ export { NavigationExplore } from './components/atoms/NavigationItems/Navigation
 export { SupportBox } from './components/atoms/NavigationItems/SupportBox'
 export { List } from './components/atoms/List/List'
 export { WithArrow } from './components/atoms/WithArrow/WithArrow'
+export { Expander } from './components/atoms/Expander/Expander'
 
 export { Footer } from './components/layout/Footer/Footer'
 

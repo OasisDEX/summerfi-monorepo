@@ -1,4 +1,4 @@
-import React, { type ChangeEventHandler, type FC, type ReactNode } from 'react'
+import { type ChangeEventHandler, type FC, type ReactNode } from 'react'
 import { type DropdownOption } from '@summerfi/app-types'
 
 import { Button } from '@/components/atoms/Button/Button'

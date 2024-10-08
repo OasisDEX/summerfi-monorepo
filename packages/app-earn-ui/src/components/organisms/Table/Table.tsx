@@ -1,5 +1,5 @@
 'use client'
-import React, { Fragment, type ReactNode, useState } from 'react'
+import { Fragment, type ReactNode, useState } from 'react'
 
 import styles from './Table.module.scss'
 
