@@ -1,4 +1,5 @@
 export type Styles = {
+  selected: string
   strategyCard: string
   strategyCardAssetsWrapper: string
   strategyCardHeaderWrapper: string

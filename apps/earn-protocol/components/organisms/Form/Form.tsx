@@ -1,7 +1,7 @@
 'use client'
 import { type ChangeEvent, useEffect, useState } from 'react'
 import { useChain, useSendUserOperation, useSmartAccountClient, useUser } from '@account-kit/react'
-import { Sidebar, SidebarFootnote, sidebarFootnote } from '@summerfi/app-earn-ui'
+import { Box, Sidebar, SidebarFootnote, sidebarFootnote, Text } from '@summerfi/app-earn-ui'
 import { type DropdownOption } from '@summerfi/app-types'
 import { mapNumericInput } from '@summerfi/app-utils'
 import type { IArmadaPosition, Token, TransactionInfo } from '@summerfi/sdk-client-react'
@@ -11,26 +11,32 @@ import { getBalance } from '@web3-onboard/wagmi'
 import { capitalize } from 'lodash'
 
 import { accountType } from '@/account-kit/config'
+import { strategiesList } from '@/constants/dev-strategies-list'
 import { prepareTransaction } from '@/helpers/sdk/prepare-transaction'
 import type { FleetConfig } from '@/helpers/sdk/types'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 import { useDepositTX } from '@/hooks/use-deposit'
 import { useWithdrawTX } from '@/hooks/use-withdraw'
 
-const options: DropdownOption[] = [
-  { label: 'DAI', value: 'DAI', tokenSymbol: 'DAI' },
-  { label: 'USDC', value: 'USDC', tokenSymbol: 'USDC' },
-  { label: 'USDT', value: 'USDT', tokenSymbol: 'USDT' },
-]
-
 enum Action {
   DEPOSIT = 'deposit',
   WITHDRAW = 'withdraw',
 }
 
-export type FormProps = { fleetConfig: FleetConfig }
+export type FormProps = {
+  fleetConfig: FleetConfig
+  selectedStrategyData?: (typeof strategiesList)[number]
+}
 
-const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: FormProps) => {
+const options: DropdownOption[] = [
+  ...[...new Set(strategiesList.map((strategy) => strategy.symbol))].map((symbol) => ({
+    tokenSymbol: symbol,
+    label: symbol,
+    value: symbol,
+  })),
+]
+
+const Form = ({ fleetConfig: { tokenSymbol, fleetAddress }, selectedStrategyData }: FormProps) => {
   const [action, setAction] = useState(Action.DEPOSIT)
   const [amountValue, setAmountValue] = useState<string>()
   const [transactionHash, setTransactionHash] = useState<string[]>([])
@@ -81,7 +87,7 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: FormProps) => {
   const walletAddress = user?.address
   const { wagmiConfig } = useAppState()
 
-  async function sendSDKTransaction(transaction: TransactionInfo) {
+  function sendSDKTransaction(transaction: TransactionInfo) {
     return sendUserOperation({
       uo: {
         ...prepareTransaction(transaction),
@@ -113,7 +119,7 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: FormProps) => {
       }
     }
     fetchTokenBalance()
-  }, [chainId, walletAddress, token?.symbol, token])
+  }, [chainId, walletAddress, token?.symbol, token, wagmiConfig])
 
   useEffect(() => {
     async function fetchDepositBalance() {
@@ -187,7 +193,8 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: FormProps) => {
     }
   }
 
-  const dropdownValue = options.find((option) => option.value === 'USDC') || options[0]
+  const dropdownValue =
+    options.find((option) => option.value === selectedStrategyData?.symbol) ?? options[0]
 
   const sidebarProps = {
     title: capitalize(action),
@@ -196,7 +203,7 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: FormProps) => {
     handleInputChange: handleChange,
     banner: {
       title: 'Estimated earnings after 1 year',
-      value: '67,353 USDC',
+      value: `67,353 ${selectedStrategyData?.symbol}`,
     },
     primaryButton: {
       label: 'Get Started',
@@ -212,7 +219,28 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress } }: FormProps) => {
     ),
   }
 
-  return <Sidebar {...sidebarProps} />
+  return (
+    <div>
+      <Sidebar {...sidebarProps} />
+      {selectedStrategyData && (
+        <Box
+          style={{
+            marginTop: 'var(--general-space-16)',
+            minWidth: '100%',
+            flexDirection: 'column',
+          }}
+          light
+        >
+          <Text variant="p4semi" style={{ textAlign: 'center' }}>
+            DEBUG - Loaded Strategy Data
+          </Text>
+          <pre style={{ padding: '10px', margin: 0, fontSize: '12px' }}>
+            {JSON.stringify(selectedStrategyData, null, 2)}
+          </pre>
+        </Box>
+      )}
+    </div>
+  )
 }
 
 export default Form

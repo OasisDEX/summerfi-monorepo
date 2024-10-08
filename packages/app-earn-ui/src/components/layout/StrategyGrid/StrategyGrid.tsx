@@ -1,7 +1,7 @@
 'use client'
 
 import { type ReactNode } from 'react'
-import { type NetworkNames } from '@summerfi/app-types'
+import { type DropdownOption } from '@summerfi/app-types'
 import Link from 'next/link'
 
 import { Box } from '@/components/atoms/Box/Box'
@@ -11,35 +11,31 @@ import { TitleWithSelect } from '@/components/molecules/TitleWithSelect/TitleWit
 
 import strategyGridStyles from './StrategyGrid.module.scss'
 
+type StrategyGridProps = {
+  topContent: ReactNode
+  leftContent: ReactNode
+  rightContent: ReactNode
+  networksList: DropdownOption[]
+  onChangeNetwork: (selected: DropdownOption) => void
+  selectedNetwork?: DropdownOption
+}
+
 export const StrategyGrid = ({
   topContent,
   leftContent,
   rightContent,
-  network,
-}: {
-  topContent: ReactNode
-  leftContent: ReactNode
-  rightContent: ReactNode
-  network: NetworkNames
-}) => {
+  networksList,
+  selectedNetwork,
+  onChangeNetwork,
+}: StrategyGridProps) => {
   return (
     <>
       <div className={strategyGridStyles.strategyGridHeaderWrapper}>
         <TitleWithSelect
           title="Earn"
-          options={[
-            {
-              iconName: 'ether_circle_color',
-              label: 'Ethereum',
-              value: network,
-            },
-          ]}
-          onChangeNetwork={() => {}}
-          selected={{
-            iconName: 'ether_circle_color',
-            label: 'Ethereum',
-            value: network,
-          }}
+          options={networksList}
+          onChangeNetwork={onChangeNetwork}
+          selected={selectedNetwork}
         />
         <Link href="/">
           <Text as="p" variant="p3semi">

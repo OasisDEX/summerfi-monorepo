@@ -2,7 +2,7 @@ import { NetworkNames, type Risk, type TokenSymbolsList } from '@summerfi/app-ty
 
 export const strategiesList = [
   {
-    id: '123',
+    id: 'USDT-ethereum-high',
     symbol: 'USDT' as TokenSymbolsList,
     network: NetworkNames.ethereumMainnet,
     apy: '3.2',
@@ -12,7 +12,7 @@ export const strategiesList = [
     totalAssets: '800,130,321',
   },
   {
-    id: '234',
+    id: 'USDC-ethereum-low',
     symbol: 'USDC' as TokenSymbolsList,
     network: NetworkNames.ethereumMainnet,
     apy: '7.2',
@@ -22,13 +22,43 @@ export const strategiesList = [
     totalAssets: '800,130,321',
   },
   {
-    id: '345',
+    id: 'ETH-ethereum-high',
     symbol: 'ETH' as TokenSymbolsList,
     network: NetworkNames.ethereumMainnet,
     apy: '2.1',
     tokenBonus: '2.1%',
     bestFor: 'Higher yields',
     risk: 'high' as Risk,
+    totalAssets: '800,130,321',
+  },
+  {
+    id: 'ETH-base-high',
+    symbol: 'ETH' as TokenSymbolsList,
+    network: NetworkNames.baseMainnet,
+    apy: '2.1',
+    tokenBonus: '2.1%',
+    bestFor: 'Lending only exposure',
+    risk: 'high' as Risk,
+    totalAssets: '800,130,321',
+  },
+  {
+    id: 'DAI-base-medium',
+    symbol: 'DAI' as TokenSymbolsList,
+    network: NetworkNames.baseMainnet,
+    apy: '2.1',
+    tokenBonus: '2.1%',
+    bestFor: 'Higher yields',
+    risk: 'medium' as Risk,
+    totalAssets: '800,130,321',
+  },
+  {
+    id: 'AAVE-base-low',
+    symbol: 'AAVE' as TokenSymbolsList,
+    network: NetworkNames.baseMainnet,
+    apy: '2.1',
+    tokenBonus: '2.1%',
+    bestFor: 'Lending only exposure',
+    risk: 'low' as Risk,
     totalAssets: '800,130,321',
   },
 ]

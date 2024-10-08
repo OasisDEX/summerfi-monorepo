@@ -6,10 +6,6 @@ import {
   type RebalancingActivityRawData,
 } from '@/components/organisms/RebalancingActivity/RebalancingActivity'
 import {
-  StrategyExposure,
-  type StrategyExposureRawData,
-} from '@/components/organisms/StrategyExposure/StrategyExposure'
-import {
   UserActivity,
   type UserActivityRawData,
 } from '@/components/organisms/UserActivity/UserActivity'
@@ -27,54 +23,7 @@ const fleetConfig: FleetConfig = {
   fleetAddress: '0x75d4f7cb1b2481385e0878c639f6f6d66592d399',
 }
 
-const strategyExposureRawData: StrategyExposureRawData[] = [
-  {
-    strategy: {
-      label: 'MKR Blended',
-      primaryToken: 'USDC',
-      secondaryToken: 'DAI',
-    },
-    allocation: '0.32',
-    currentApy: '0.103',
-    liquidity: '43000000',
-    type: 'Fixed yield',
-  },
-  {
-    strategy: {
-      label: 'MKR Blended',
-      primaryToken: 'USDC',
-      secondaryToken: 'DAI',
-    },
-    allocation: '0.32',
-    currentApy: '0.103',
-    liquidity: '43000000',
-    type: 'Isolated landing',
-  },
-  {
-    strategy: {
-      label: 'MKR Blended',
-      primaryToken: 'USDC',
-      secondaryToken: 'DAI',
-    },
-    allocation: '0.32',
-    currentApy: '0.103',
-    liquidity: '43000000',
-    type: 'Lending',
-  },
-  {
-    strategy: {
-      label: 'MKR Blended',
-      primaryToken: 'USDC',
-      secondaryToken: 'DAI',
-    },
-    allocation: '0.32',
-    currentApy: '0.103',
-    liquidity: '43000000',
-    type: 'Basic Trading',
-  },
-]
-
-const rebalancingActivityRawData: RebalancingActivityRawData[] = [
+const rebalancingActivityData: RebalancingActivityRawData[] = [
   {
     type: 'reduce',
     action: {
@@ -133,6 +82,7 @@ const userActivityRawData: UserActivityRawData[] = [
 ]
 
 const EarnStrategyPage = ({ params }: EarnStrategyPageProps) => {
+  // open/manage view (connected or viewing another)
   const [id, symbol, network, apy, risk] = params.strategy.split('-')
 
   return (
@@ -158,22 +108,12 @@ const EarnStrategyPage = ({ params }: EarnStrategyPageProps) => {
           <Expander
             title={
               <Text as="p" variant="p1semi">
-                Strategy exposure
-              </Text>
-            }
-            defaultExpanded
-          >
-            <StrategyExposure rawData={strategyExposureRawData} />
-          </Expander>
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
                 Rebalancing activity
               </Text>
             }
             defaultExpanded
           >
-            <RebalancingActivity rawData={rebalancingActivityRawData} />
+            <RebalancingActivity rawData={rebalancingActivityData} />
           </Expander>
           <Expander
             title={
