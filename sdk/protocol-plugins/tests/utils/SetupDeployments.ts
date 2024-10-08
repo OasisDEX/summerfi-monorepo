@@ -74,7 +74,7 @@ export function SetupDeployments(
   addressBookManager.setAddressByName({
     chainInfo,
     name: 'PoolDataProvider',
-    address: '0xE7d490885A68f00d9886508DF281D67263ed5758',
+    address: '0x41393e5e337606dc3821075Af65AeE84D7688CBD',
   })
 
   addressBookManager.setAddressByName({
