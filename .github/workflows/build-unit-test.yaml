@@ -51,6 +51,8 @@ jobs:
           ONE_INCH_API_SPOT_VERSION: ${{ secrets.ONE_INCH_API_SPOT_VERSION }}
           ONE_INCH_API_SPOT_URL: ${{ secrets.ONE_INCH_API_SPOT_URL }}
           ONE_INCH_ALLOWED_SWAP_PROTOCOLS: ${{ secrets.ONE_INCH_ALLOWED_SWAP_PROTOCOLS }}
+          ONE_INCH_EXCLUDED_SWAP_PROTOCOLS_WBTC:
+            ${{ secrets.ONE_INCH_EXCLUDED_SWAP_PROTOCOLS_WBTC }}
           ONE_INCH_SWAP_CHAIN_IDS: ${{ secrets.ONE_INCH_SWAP_CHAIN_IDS }}
           MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
       - name: Lint

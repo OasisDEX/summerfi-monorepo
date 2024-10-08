@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - dev
-  workflow_dispatch:    
+  workflow_dispatch:
 permissions:
   id-token: write # This is required for requesting the JWT
   contents: read # This is required for actions/checkout
@@ -18,6 +18,7 @@ jobs:
       ONE_INCH_API_VERSION: ${{ secrets.ONE_INCH_API_VERSION }}
       ONE_INCH_API_URL: ${{ secrets.ONE_INCH_API_URL }}
       ONE_INCH_ALLOWED_SWAP_PROTOCOLS: ${{ secrets.ONE_INCH_ALLOWED_SWAP_PROTOCOLS }}
+      ONE_INCH_EXCLUDED_SWAP_PROTOCOLS_WBTC: ${{ secrets.ONE_INCH_EXCLUDED_SWAP_PROTOCOLS_WBTC }}
       ONE_INCH_SWAP_CHAIN_IDS: ${{ secrets.ONE_INCH_SWAP_CHAIN_IDS }}
       ONE_INCH_API_SPOT_URL: ${{ secrets.ONE_INCH_API_SPOT_URL }}
       ONE_INCH_API_SPOT_VERSION: ${{ secrets.ONE_INCH_API_SPOT_VERSION }}

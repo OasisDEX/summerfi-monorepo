@@ -1,5 +1,20 @@
+import { IConfigurationProvider } from '@summerfi/configuration-provider'
+import type { Token } from '@summerfi/sdk-common'
+import {
+  Address,
+  IAddress,
+  IChainInfo,
+  IPercentage,
+  IToken,
+  ITokenAmount,
+  Percentage,
+  TokenAmount,
+} from '@summerfi/sdk-common/common'
+import { ChainId, HexData } from '@summerfi/sdk-common/common/aliases'
+import { QuoteData, SwapData, SwapProviderType, SwapRoute } from '@summerfi/sdk-common/swap'
+import { ManagerProviderBase } from '@summerfi/sdk-server-common'
 import { ISwapProvider } from '@summerfi/swap-common/interfaces'
-import { SwapProviderType, SwapData, SwapRoute, QuoteData } from '@summerfi/sdk-common/swap'
+import fetch from 'node-fetch'
 import {
   OneInchAuthHeader,
   OneInchAuthHeaderKey,
@@ -8,20 +23,6 @@ import {
   OneInchSwapResponse,
   OneInchSwapRoute,
 } from './types'
-import { ChainId, HexData } from '@summerfi/sdk-common/common/aliases'
-import fetch from 'node-fetch'
-import {
-  TokenAmount,
-  Percentage,
-  Address,
-  ITokenAmount,
-  IToken,
-  IAddress,
-  IPercentage,
-  IChainInfo,
-} from '@summerfi/sdk-common/common'
-import { ManagerProviderBase } from '@summerfi/sdk-server-common'
-import { IConfigurationProvider } from '@summerfi/configuration-provider'
 
 export class OneInchSwapProvider
   extends ManagerProviderBase<SwapProviderType>
@@ -43,6 +44,7 @@ export class OneInchSwapProvider
   private readonly _version: string
 
   private readonly _allowedSwapProtocols: string[]
+  private readonly _excludeProtocolsWBTC: string[]
   private readonly _supportedChainIds: ChainId[]
 
   /** CONSTRUCTOR */
@@ -57,6 +59,7 @@ export class OneInchSwapProvider
     this._version = config.version
 
     this._allowedSwapProtocols = config.allowedSwapProtocols
+    this._excludeProtocolsWBTC = config.excludeProtocolsWBTC
     this._supportedChainIds = chainIds
   }
 
@@ -183,9 +186,7 @@ export class OneInchSwapProvider
     const recipient = params.recipient.value.toLowerCase()
     const disableEstimate = params.disableEstimate ? params.disableEstimate : true
     const allowPartialFill = params.allowPartialFill ? params.allowPartialFill : false
-    const protocolsParam = this._allowedSwapProtocols.length
-      ? this._allowedSwapProtocols.join(',')
-      : ''
+    const protocolsParam = this.getAllowedSwapProtocols(params.fromTokenAmount.token).join(',')
 
     return `${this._apiUrl}/swap/${this._version}/${chainId}/swap?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&fromAddress=${recipient}&slippage=${params.slippage.value}&protocols=${protocolsParam}&disableEstimate=${disableEstimate}&allowPartialFill=${allowPartialFill}`
   }
@@ -207,9 +208,7 @@ export class OneInchSwapProvider
     const fromTokenAddress = params.fromTokenAmount.token.address.value.toLowerCase()
     const toTokenAddress = params.toToken.address.value.toLowerCase()
     const fromAmount = params.fromTokenAmount.toBaseUnit()
-    const protocolsParam = this._allowedSwapProtocols.length
-      ? this._allowedSwapProtocols.join(',')
-      : ''
+    const protocolsParam = this.getAllowedSwapProtocols(params.fromTokenAmount.token).join(',')
 
     return `${this._apiUrl}/swap/${this._version}/${chainId}/quote?fromTokenAddress=${fromTokenAddress}&toTokenAddress=${toTokenAddress}&amount=${fromAmount}&protocols=${protocolsParam}`
   }
@@ -251,6 +250,9 @@ export class OneInchSwapProvider
     const ONE_INCH_ALLOWED_SWAP_PROTOCOLS = this.configProvider.getConfigurationItem({
       name: 'ONE_INCH_ALLOWED_SWAP_PROTOCOLS',
     })
+    const ONE_INCH_EXCLUDED_SWAP_PROTOCOLS_WBTC = this.configProvider.getConfigurationItem({
+      name: 'ONE_INCH_EXCLUDED_SWAP_PROTOCOLS_WBTC',
+    })
     const ONE_INCH_SWAP_CHAIN_IDS = this.configProvider.getConfigurationItem({
       name: 'ONE_INCH_SWAP_CHAIN_IDS',
     })
@@ -260,9 +262,10 @@ export class OneInchSwapProvider
       !ONE_INCH_API_KEY ||
       !ONE_INCH_API_VERSION ||
       !ONE_INCH_ALLOWED_SWAP_PROTOCOLS ||
+      !ONE_INCH_EXCLUDED_SWAP_PROTOCOLS_WBTC ||
       !ONE_INCH_SWAP_CHAIN_IDS
     ) {
-      throw new Error(
+      console.error(
         'OneInch configuration is missing: ' +
           JSON.stringify(
             Object.entries({
@@ -270,12 +273,14 @@ export class OneInchSwapProvider
               ONE_INCH_API_KEY,
               ONE_INCH_API_VERSION,
               ONE_INCH_ALLOWED_SWAP_PROTOCOLS,
+              ONE_INCH_EXCLUDED_SWAP_PROTOCOLS_WBTC,
               ONE_INCH_SWAP_CHAIN_IDS,
             }),
             null,
             2,
           ),
       )
+      throw new Error('OneInch configuration error, check logs')
     }
 
     return {
@@ -284,8 +289,26 @@ export class OneInchSwapProvider
         apiKey: ONE_INCH_API_KEY,
         version: ONE_INCH_API_VERSION,
         allowedSwapProtocols: ONE_INCH_ALLOWED_SWAP_PROTOCOLS.split(','),
+        excludeProtocolsWBTC: ONE_INCH_EXCLUDED_SWAP_PROTOCOLS_WBTC.split(','),
       },
       chainIds: ONE_INCH_SWAP_CHAIN_IDS.split(',').map((id: string) => parseInt(id)),
+    }
+  }
+
+  /**
+   * Gets the allowed swap protocols for the token
+   * @param fromToken The token to get the allowed swap protocols for
+   *
+   * @returns The allowed swap protocols
+   */
+  private getAllowedSwapProtocols(fromToken: Token): string[] {
+    switch (fromToken.symbol) {
+      case 'WBTC':
+        return this._allowedSwapProtocols.filter(
+          (protocol) => !this._excludeProtocolsWBTC.includes(protocol),
+        )
+      default:
+        return this._allowedSwapProtocols
     }
   }
 }
