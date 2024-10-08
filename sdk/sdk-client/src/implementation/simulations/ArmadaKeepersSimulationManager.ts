@@ -9,7 +9,7 @@ import { RPCMainClientType } from '../../rpc/SDKMainClient'
 /**
  * Simulation manager client for the Keepers of the Armada protocol
  */
-export class ArmadaSimulationManager extends IRPCClient {
+export class ArmadaKeepersSimulationManager extends IRPCClient {
   /** CONSTRUCTOR */
   constructor(params: { rpcClient: RPCMainClientType }) {
     super(params)
