@@ -83,7 +83,12 @@ const rebalancingActivityMapper = (rawData: RebalancingActivityRawData[]) => {
         ),
         provider: (
           <Link href={item.provider.link}>
-            <WithArrow as="p" variant="p3" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+            <WithArrow
+              as="p"
+              variant="p3"
+              style={{ color: 'var(--earn-protocol-primary-100)' }}
+              reserveSpace
+            >
               {item.provider.label}
             </WithArrow>
           </Link>
@@ -131,7 +136,7 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({ rawData }) =
           a threshold of risk.
         </Text>
         <Table rows={rows} columns={columns} />
-        <Link href="/" style={{ marginTop: 'var(--spacing-space-large)' }}>
+        <Link href="/" style={{ marginTop: 'var(--spacing-space-large)', width: 'fit-content' }}>
           <WithArrow as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             View all rebalances
           </WithArrow>

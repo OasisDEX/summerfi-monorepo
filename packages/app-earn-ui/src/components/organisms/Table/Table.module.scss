@@ -6,23 +6,31 @@
   width: 100%;
   border-collapse: collapse;
 
-  thead {
-    color: var(--earn-protocol-secondary-40);
-    font-size: 12px;
-    font-weight: 600;
-  }
-
   th,
   td {
     padding: 12px 0;
-    text-align: left;
     cursor: pointer;
   }
 
   th {
     position: relative;
+  }
 
-    &:hover {
+  thead {
+    color: var(--earn-protocol-secondary-40);
+    font-size: 12px;
+    font-weight: 600;
+
+    tr {
+      th > * {
+        text-align: right;
+        justify-content: flex-end;
+      }
+
+      th:first-child > * {
+        text-align: left;
+        justify-content: flex-start;
+      }
     }
   }
 
@@ -32,6 +40,16 @@
       font-size: 14px;
       font-weight: 600;
       color: var(--earn-protocol-secondary-100);
+    }
+
+    td > * {
+      text-align: right;
+      justify-content: flex-end;
+    }
+
+    td:first-child > * {
+      text-align: left;
+      justify-content: flex-start;
     }
   }
 

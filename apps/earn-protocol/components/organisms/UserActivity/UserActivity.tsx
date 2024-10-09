@@ -58,7 +58,12 @@ const userActivityMapper = (rawData: UserActivityRawData[]) => {
         ),
         earningStreak: (
           <Link href={item.earningStreak.link}>
-            <WithArrow as="p" variant="p3" style={{ color: 'var(--earn-protocol-primary-100)' }}>
+            <WithArrow
+              as="p"
+              variant="p3"
+              style={{ color: 'var(--earn-protocol-primary-100)' }}
+              reserveSpace
+            >
               {item.earningStreak.label}
             </WithArrow>
           </Link>
@@ -119,7 +124,7 @@ export const UserActivity: FC<UserActivityProps> = ({ rawData }) => {
           </Button>
         </div>
         <Table rows={rows} columns={columns} />
-        <Link href="/" style={{ marginTop: 'var(--spacing-space-large)' }}>
+        <Link href="/" style={{ marginTop: 'var(--spacing-space-large)', width: 'fit-content' }}>
           <WithArrow as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             View all depositors
           </WithArrow>
