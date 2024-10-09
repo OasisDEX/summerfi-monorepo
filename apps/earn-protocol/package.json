@@ -20,6 +20,7 @@
     "@loadable/component": "^5.16.4",
     "@summerfi/app-db": "workspace:*",
     "@summerfi/app-earn-ui": "workspace:*",
+    "@summerfi/app-icons": "workspace:*",
     "@summerfi/app-risk": "workspace:*",
     "@summerfi/app-tos": "workspace:*",
     "@summerfi/app-types": "workspace:*",

@@ -171,6 +171,9 @@ importers:
       '@summerfi/app-earn-ui':
         specifier: workspace:*
         version: link:../../packages/app-earn-ui
+      '@summerfi/app-icons':
+        specifier: workspace:*
+        version: link:../../packages/app-icons
       '@summerfi/app-risk':
         specifier: workspace:*
         version: link:../../packages/app-risk
@@ -343,6 +346,9 @@ importers:
       '@summerfi/app-earn-ui':
         specifier: workspace:*
         version: link:../../packages/app-earn-ui
+      '@summerfi/app-icons':
+        specifier: workspace:*
+        version: link:../../packages/app-icons
       '@summerfi/app-types':
         specifier: workspace:*
         version: link:../../packages/app-types
