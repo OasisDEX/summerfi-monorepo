@@ -1839,8 +1839,8 @@ importers:
   packages/triggers-shared:
     dependencies:
       '@oasisdex/addresses':
-        specifier: 0.1.21-automation
-        version: 0.1.21-automation
+        specifier: 0.1.22-automation
+        version: 0.1.22-automation
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../serverless-shared
@@ -13625,8 +13625,8 @@ packages:
       semver: 7.6.2
     dev: false
 
-  /@oasisdex/addresses@0.1.21-automation:
-    resolution: {integrity: sha512-04/JGbw5mmVXvIKzqVuNgc64hL7x2mAqc6jCbesUpeCQPqJwI/a2TtU9WIp85j0C0PdZ5qZWcSPXaFXKGeClwQ==}
+  /@oasisdex/addresses@0.1.22-automation:
+    resolution: {integrity: sha512-WvADssWVjKQZVyowVIpfGfESdjow7pCV3Vy1iFhHZsihfwvWqhzk+PEmB34EyFfgeRn+ta7oHptlzBMP1vyA/g==}
     dev: false
 
   /@oasisdex/addresses@0.1.84:
