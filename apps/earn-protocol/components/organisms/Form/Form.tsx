@@ -8,7 +8,7 @@ import type { IArmadaPosition, Token, TransactionInfo } from '@summerfi/sdk-clie
 import { type WagmiConfig } from '@web3-onboard/core'
 import { useAppState } from '@web3-onboard/react'
 import { getBalance } from '@web3-onboard/wagmi'
-import { capitalize } from 'lodash'
+import { capitalize } from 'lodash-es'
 
 import { accountType } from '@/account-kit/config'
 import { strategiesList } from '@/constants/dev-strategies-list'

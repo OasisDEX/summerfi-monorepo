@@ -1,6 +1,6 @@
 'use client'
 import { type AppConfigType, emptyConfig } from '@summerfi/app-types'
-import { merge } from 'lodash'
+import { merge } from 'lodash-es'
 
 import { cleanObjectFromNull, cleanObjectToNull } from './clean-object'
 

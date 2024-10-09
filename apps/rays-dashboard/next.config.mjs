@@ -12,6 +12,7 @@ const nextConfig = {
     if (isServer) {
       config.plugins = [...config.plugins, new PrismaPlugin()]
     }
+    config.externals.push('pino-pretty', 'encoding')
 
     return config
   },

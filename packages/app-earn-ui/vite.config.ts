@@ -94,7 +94,7 @@ export default defineConfig(({ mode }) => {
           'bignumber.js',
           'boring-avatars',
           'clsx',
-          'lodash',
+          'lodash-es',
           'next',
           'next/image',
           'next/link',

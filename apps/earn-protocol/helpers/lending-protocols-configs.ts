@@ -1,4 +1,4 @@
-import { keyBy } from 'lodash'
+import { keyBy } from 'lodash-es'
 import aaveIcon from 'public/img/protocol_icons/aave_icon.svg'
 import aaveV2Logo from 'public/img/protocol_icons/aave_v2_logo.svg'
 import aaveV3Logo from 'public/img/protocol_icons/aave_v3_logo.svg'
@@ -88,4 +88,7 @@ const lendingProtocols = [
   skyConfig,
 ]
 
-export const lendingProtocolsByName = keyBy(lendingProtocols, 'name')
+export const lendingProtocolsByName: { [key: string]: LendingProtocolConfig } = keyBy(
+  lendingProtocols,
+  'name',
+)

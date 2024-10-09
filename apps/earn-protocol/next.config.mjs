@@ -1,4 +1,3 @@
-import { PrismaPlugin } from '@prisma/nextjs-monorepo-workaround-plugin'
 import createNextIntlPlugin from 'next-intl/plugin'
 
 const withNextIntl = createNextIntlPlugin()
@@ -7,14 +6,11 @@ const withNextIntl = createNextIntlPlugin()
 const nextConfig = {
   output: 'standalone',
   reactStrictMode: false,
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      config.plugins = [...config.plugins, new PrismaPlugin()]
-    }
+  webpack: (config) => {
+    config.externals.push('pino-pretty', 'encoding')
 
     return config
   },
-  transpilePackages: ['@lifi/widget', '@lifi/wallet-management'],
   sassOptions: {
     prependData: `
         @import './node_modules/include-media/dist/_include-media.scss';

@@ -1,4 +1,4 @@
-import { keyBy } from 'lodash'
+import { keyBy } from 'lodash-es'
 
 export const Erc4626PseudoProtocol = 'erc-4626'
 
@@ -12,5 +12,11 @@ export const erc4626Vaults = [
   { id: 'flagship-USDC', name: 'Flagship USDC' },
 ]
 
-export const erc4626VaultsById = keyBy(erc4626Vaults, 'id')
-export const erc4626VaultsByName = keyBy(erc4626Vaults, 'name')
+export const erc4626VaultsById: { [key: string]: { id: string; name: string } } = keyBy(
+  erc4626Vaults,
+  'id',
+)
+export const erc4626VaultsByName: { [key: string]: { id: string; name: string } } = keyBy(
+  erc4626Vaults,
+  'name',
+)
