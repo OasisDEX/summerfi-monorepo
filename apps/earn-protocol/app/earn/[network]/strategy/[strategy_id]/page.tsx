@@ -1,6 +1,9 @@
+'use client'
+
 import { useMemo } from 'react'
 import { Expander, StrategyGridDetails, Text } from '@summerfi/app-earn-ui'
 
+import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
 import FormContainer from '@/components/organisms/Form/FormContainer'
 import {
   RebalancingActivity,
@@ -151,6 +154,18 @@ const EarnStrategyPage = ({ params }: EarnStrategyPageProps) => {
             width: '100%',
           }}
         >
+          <Expander
+            title={
+              <Text as="p" variant="p1semi">
+                Chart i guess
+              </Text>
+            }
+            defaultExpanded
+          >
+            <div style={{ height: '400px' }}>
+              <MockedLineChart />
+            </div>
+          </Expander>
           <Expander
             title={
               <Text as="p" variant="p1semi">
