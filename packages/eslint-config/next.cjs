@@ -37,12 +37,13 @@ module.exports = {
   overrides: [{ files: ['*.js?(x)', '*.ts?(x)'] }],
   plugins: [
     '@typescript-eslint',
-    'deprecation',
     'no-relative-import-paths',
     'prettier',
     'react-hooks',
     'react',
     'simple-import-sort',
+    'unused-imports',
+    'import',
   ],
   extends: [
     'eslint:recommended',
@@ -213,10 +214,18 @@ module.exports = {
     ],
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/consistent-indexed-object-style': ['error', 'index-signature'],
-    '@typescript-eslint/no-unused-vars': [
+    'no-magic-numbers': 'off',
+    'no-unused-vars': 'off',
+    'unused-imports/no-unused-imports-ts': [
       'error',
       { vars: 'all', varsIgnorePattern: '^_', args: 'after-used', argsIgnorePattern: '^_' },
     ],
+    'unused-imports/no-unused-vars': [
+      'error',
+      { vars: 'all', varsIgnorePattern: '^_', args: 'after-used', argsIgnorePattern: '^_' },
+    ],
+    '@typescript-eslint/no-unused-vars': 'off',
+    '@next/next/no-html-link-for-pages': 'off',
     '@typescript-eslint/no-duplicate-enum-values': 'error',
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/no-explicit-any': 'warn',
@@ -269,10 +278,6 @@ module.exports = {
     //* eslint-plugin-no-relative-import-paths */
 
     'no-relative-import-paths/no-relative-import-paths': ['error', { allowSameFolder: true }],
-
-    //* eslint-plugin-deprecation */
-
-    'deprecation/deprecation': 'warn',
 
     //* plugin:simple-import-sort */
     'simple-import-sort/imports': [

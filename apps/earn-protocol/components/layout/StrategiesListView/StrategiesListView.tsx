@@ -1,23 +1,22 @@
 'use client'
 
 import { useMemo } from 'react'
-import { DataBlock, SimpleGrid, StrategyCard, StrategyGrid } from '@summerfi/app-earn-ui'
+import {
+  DataBlock,
+  SimpleGrid,
+  StrategyCard,
+  StrategyGrid,
+  StrategySimulationForm,
+} from '@summerfi/app-earn-ui'
 import { type DropdownOption, type IconNamesList, type NetworkNames } from '@summerfi/app-types'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
-import FormContainer from '@/components/organisms/Form/FormContainer'
 import { strategiesList } from '@/constants/dev-strategies-list'
-import { type FleetConfig } from '@/helpers/sdk/types'
 
 type StrategiesListViewProps = {
   selectedNetwork?: NetworkNames | 'all-networks'
   selectedStrategy?: string
-}
-
-const fleetConfig: FleetConfig = {
-  tokenSymbol: 'USDC',
-  fleetAddress: '0x75d4f7cb1b2481385e0878c639f6f6d66592d399',
 }
 
 const allNetworksOption = {
@@ -103,13 +102,20 @@ export const StrategiesListView = ({
           />
         </SimpleGrid>
       }
-      leftContent={networkFilteredStrategies.map((strategy) => (
+      leftContent={networkFilteredStrategies.map((strategy, strategyIndex) => (
         <Link key={strategy.id} href={getStrategyLink(strategy, selectedNetwork)}>
-          <StrategyCard {...strategy} secondary selected={selectedStrategy === strategy.id} />
+          <StrategyCard
+            {...strategy}
+            secondary
+            withHover
+            selected={
+              selectedStrategy === strategy.id || (!selectedStrategy && strategyIndex === 0)
+            }
+          />
         </Link>
       ))}
       rightContent={
-        <FormContainer selectedStrategyData={selectedStrategyData} fleetConfig={fleetConfig} />
+        <StrategySimulationForm strategyData={selectedStrategyData ?? strategiesList[0]} />
       }
     />
   )

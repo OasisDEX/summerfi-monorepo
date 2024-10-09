@@ -39,6 +39,7 @@ export { TokensGroup } from './components/molecules/TokensGroup/TokensGroup'
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar } from './components/organisms/Sidebar/Sidebar'
 export { Table } from './components/organisms/Table/Table'
+export { StrategySimulationForm } from './components/organisms/StrategySimulationForm/StrategySimulationForm'
 
 export { useToggle } from './hooks/use-toggle'
 

@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { Expander, StrategyGridDetails, Text } from '@summerfi/app-earn-ui'
 
 import FormContainer from '@/components/organisms/Form/FormContainer'
@@ -13,12 +14,12 @@ import {
   UserActivity,
   type UserActivityRawData,
 } from '@/components/organisms/UserActivity/UserActivity'
-import { type strategiesList } from '@/constants/dev-strategies-list'
+import { strategiesList } from '@/constants/dev-strategies-list'
 import type { FleetConfig } from '@/helpers/sdk/types'
 
 type EarnStrategyPageProps = {
   params: {
-    strategy: string
+    strategy_id: string
   }
 }
 
@@ -134,19 +135,13 @@ const userActivityRawData: UserActivityRawData[] = [
 
 const EarnStrategyPage = ({ params }: EarnStrategyPageProps) => {
   // open/manage view (not connected)
-  const [id, symbol, network, apy, risk] = params.strategy.split('-')
+  const selectedStrategyData = useMemo(() => {
+    return strategiesList.find((strategy) => strategy.id === params.strategy_id)
+  }, [params])
 
   return (
     <StrategyGridDetails
-      strategy={
-        {
-          id,
-          symbol,
-          network,
-          apy,
-          risk,
-        } as (typeof strategiesList)[number]
-      }
+      strategy={selectedStrategyData as (typeof strategiesList)[number]}
       leftContent={
         <div
           style={{
@@ -188,7 +183,9 @@ const EarnStrategyPage = ({ params }: EarnStrategyPageProps) => {
           </Expander>
         </div>
       }
-      rightContent={<FormContainer fleetConfig={fleetConfig} />}
+      rightContent={
+        <FormContainer fleetConfig={fleetConfig} selectedStrategyData={selectedStrategyData} />
+      }
     />
   )
 }

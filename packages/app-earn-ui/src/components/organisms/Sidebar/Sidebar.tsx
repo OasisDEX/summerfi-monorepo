@@ -1,5 +1,6 @@
 import { type ChangeEventHandler, type FC, type ReactNode } from 'react'
 import { type DropdownOption } from '@summerfi/app-types'
+import Link from 'next/link'
 
 import { Button } from '@/components/atoms/Button/Button'
 import { Card } from '@/components/atoms/Card/Card'
@@ -20,11 +21,19 @@ interface SidebarProps {
     title: string
     value: string
   }
-  primaryButton: {
-    label: string
-    action: () => void
-    disabled: boolean
-  }
+  primaryButton:
+    | {
+        label: string
+        action: () => void
+        url?: string
+        disabled: boolean
+      }
+    | {
+        label: string
+        action?: () => void
+        url: string
+        disabled: boolean
+      }
   footnote?: ReactNode
 }
 
@@ -62,13 +71,25 @@ export const Sidebar: FC<SidebarProps> = ({
           </Text>
         </Card>
       )}
-      <Button
-        variant="primaryLarge"
-        style={{ marginBottom: 'var(--general-space-20)', width: '100%' }}
-        onClick={primaryButton.action}
-      >
-        {primaryButton.label}
-      </Button>
+      {primaryButton.action && (
+        <Button
+          variant="primaryLarge"
+          style={{ marginBottom: 'var(--general-space-20)', width: '100%' }}
+          onClick={primaryButton.action}
+        >
+          {primaryButton.label}
+        </Button>
+      )}
+      {primaryButton.url && (
+        <Link href={primaryButton.url}>
+          <Button
+            variant="primaryLarge"
+            style={{ marginBottom: 'var(--general-space-20)', width: '100%' }}
+          >
+            {primaryButton.label}
+          </Button>
+        </Link>
+      )}
       {footnote && <div className={classNames.sidebarFootnoteWrapper}>{footnote}</div>}
     </Card>
   )

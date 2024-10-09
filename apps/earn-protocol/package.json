@@ -6,7 +6,8 @@
     "dev": "dotenv -e ../../.env -e ../../.env.local -- next dev -p 3002 --turbo",
     "build": "dotenv -e ../../.env -e ../../.env.local -- next build",
     "start": "next start -p 3002",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint-timing": "TIMING=1 eslint ."
   },
   "dependencies": {
     "@account-kit/core": "^4.0.0-beta.0",

@@ -12,6 +12,7 @@ type StrategyCardProps = EarnProtocolStrategy & {
   onClick?: () => void
   secondary?: boolean
   selected?: boolean
+  withHover?: boolean
 }
 
 export const StrategyCard = ({
@@ -21,21 +22,20 @@ export const StrategyCard = ({
   tokenBonus,
   apy,
   totalAssets,
-  onClick,
+  withHover,
   secondary = false,
   selected = false,
 }: StrategyCardProps) => {
   return (
     <div
       className={clsx(strategyCardStyles.wrapper, {
-        [strategyCardStyles.withOnClick]: !selected,
+        [strategyCardStyles.withHover]: !selected && withHover,
         [strategyCardStyles.selected]: selected,
       })}
     >
       <Card
         className={strategyCardStyles.strategyCard}
         variant={secondary ? 'cardSecondary' : 'cardPrimary'}
-        onClick={onClick}
       >
         <div className={strategyCardStyles.strategyCardHeaderWrapper}>
           <StrategyTitleWithRisk symbol={symbol} risk={risk} />

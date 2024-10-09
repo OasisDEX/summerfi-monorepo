@@ -1,7 +1,8 @@
 'use client'
 
 import { type ReactNode } from 'react'
-import { type NetworkNames, type Risk, type TokenSymbolsList } from '@summerfi/app-types'
+import { type EarnProtocolStrategy } from '@summerfi/app-types'
+import Link from 'next/link'
 
 import { Box } from '@/components/atoms/Box/Box'
 import { Text } from '@/components/atoms/Text/Text'
@@ -17,13 +18,7 @@ export const StrategyGridDetails = ({
   leftContent,
   rightContent,
 }: {
-  strategy: {
-    id: string
-    symbol: TokenSymbolsList
-    network: NetworkNames
-    apy: string
-    risk: Risk
-  }
+  strategy: EarnProtocolStrategy
   leftContent: ReactNode
   rightContent: ReactNode
 }) => {
@@ -31,11 +26,13 @@ export const StrategyGridDetails = ({
     <>
       <div className={strategyGridDetailsStyles.strategyGridDetailsBreadcrumbsWrapper}>
         <div style={{ display: 'inline-block' }}>
-          <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
-            Earn / &nbsp;
-          </Text>
+          <Link href="/earn">
+            <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
+              Earn / &nbsp;
+            </Text>
+          </Link>
           <Text as="span" variant="p3" color="white">
-            Strategy #{strategy.id} with {strategy.symbol} on {strategy.network}
+            {strategy.id}
           </Text>
         </div>
       </div>

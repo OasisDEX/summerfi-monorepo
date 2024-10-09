@@ -198,7 +198,7 @@ const Form = ({ fleetConfig: { tokenSymbol, fleetAddress }, selectedStrategyData
 
   const sidebarProps = {
     title: capitalize(action),
-    inputValue: amountValue || '',
+    inputValue: amountValue ?? '',
     dropdown: { value: dropdownValue, options },
     handleInputChange: handleChange,
     banner: {

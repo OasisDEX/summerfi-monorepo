@@ -3,7 +3,7 @@ export type Styles = {
   strategyCard: string
   strategyCardAssetsWrapper: string
   strategyCardHeaderWrapper: string
-  withOnClick: string
+  withHover: string
   wrapper: string
 }
 
