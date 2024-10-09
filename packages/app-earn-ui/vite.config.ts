@@ -99,6 +99,7 @@ export default defineConfig(({ mode }) => {
           'next/image',
           'next/link',
           'react',
+          'react-dom',
           'react/jsx-runtime',
           'usehooks-ts',
           '@summerfi/serverless-shared',
