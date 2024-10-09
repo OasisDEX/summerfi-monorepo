@@ -1,24 +1,18 @@
-import { type Risk, type TokenSymbolsList } from '@summerfi/app-types'
+import { type EarnProtocolStrategy } from '@summerfi/app-types'
 import clsx from 'clsx'
 
 import { Card } from '@/components/atoms/Card/Card'
-import { Icon } from '@/components/atoms/Icon/Icon'
-import { Pill } from '@/components/atoms/Pill/Pill'
 import { Text } from '@/components/atoms/Text/Text'
 import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
 import { StrategyTitleWithRisk } from '@/components/molecules/StrategyTitleWithRisk/StrategyTitleWithRisk'
 
 import strategyCardStyles from './StrategyCard.module.scss'
 
-type StrategyCardProps = {
-  symbol: TokenSymbolsList
-  risk: Risk
-  totalAssets: string
-  bestFor: string
-  tokenBonus?: string
-  apy?: string
+type StrategyCardProps = EarnProtocolStrategy & {
   onClick?: () => void
   secondary?: boolean
+  selected?: boolean
+  withHover?: boolean
 }
 
 export const StrategyCard = ({
@@ -28,15 +22,20 @@ export const StrategyCard = ({
   tokenBonus,
   apy,
   totalAssets,
-  onClick,
+  withHover,
   secondary = false,
+  selected = false,
 }: StrategyCardProps) => {
   return (
-    <div className={clsx(strategyCardStyles.wrapper, strategyCardStyles.withOnClick)}>
+    <div
+      className={clsx(strategyCardStyles.wrapper, {
+        [strategyCardStyles.withHover]: !selected && withHover,
+        [strategyCardStyles.selected]: selected,
+      })}
+    >
       <Card
         className={strategyCardStyles.strategyCard}
         variant={secondary ? 'cardSecondary' : 'cardPrimary'}
-        onClick={onClick}
       >
         <div className={strategyCardStyles.strategyCardHeaderWrapper}>
           <StrategyTitleWithRisk symbol={symbol} risk={risk} />

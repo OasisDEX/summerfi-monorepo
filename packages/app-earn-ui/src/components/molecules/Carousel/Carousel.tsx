@@ -1,29 +1,28 @@
 'use client'
 
-import React, { useRef, useState } from 'react'
+import { type FC, type ReactNode, useState } from 'react'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 
 import styles from './Carousel.module.scss'
 
 type CarouselProps = {
-  components: React.ReactNode[]
-  contentHeight: number
+  components: ReactNode[]
   contentWidth: number
 }
 
-export const Carousel: React.FC<CarouselProps> = ({ components, contentHeight, contentWidth }) => {
+export const Carousel: FC<CarouselProps> = ({ components, contentWidth }) => {
   const [activeIndex, setActiveIndex] = useState(0)
   const [animating, setAnimating] = useState(false)
-
-  const ref = useRef()
 
   const handleNext = () => {
     if (animating) return // Prevent multiple clicks during animation
     setAnimating(true)
 
     setActiveIndex((prevIndex) => (prevIndex + 1) % components.length)
-    setAnimating(false)
+    setTimeout(() => {
+      setAnimating(false)
+    }, 800)
   }
 
   const handlePrevious = () => {
@@ -31,7 +30,9 @@ export const Carousel: React.FC<CarouselProps> = ({ components, contentHeight, c
     setAnimating(true)
 
     setActiveIndex((prevIndex) => (prevIndex - 1 + components.length) % components.length)
-    setAnimating(false)
+    setTimeout(() => {
+      setAnimating(false)
+    }, 800)
   }
 
   return (

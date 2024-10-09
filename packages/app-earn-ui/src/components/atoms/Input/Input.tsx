@@ -1,4 +1,4 @@
-import React, {
+import {
   type CSSProperties,
   type DetailedHTMLProps,
   type FC,

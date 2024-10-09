@@ -13,6 +13,7 @@ export function WithArrow({
   as,
   enabled = true,
   className,
+  reserveSpace,
 }: React.PropsWithChildren<{
   gap?: string | number
   style?: React.CSSProperties
@@ -20,6 +21,7 @@ export function WithArrow({
   as?: TextAllowedHtmlTags
   enabled?: boolean
   className?: string
+  reserveSpace?: boolean
 }>) {
   return (
     <Text
@@ -30,9 +32,22 @@ export function WithArrow({
     >
       <span style={{ marginRight: gap }}>{children}</span>
       {enabled && (
-        <span className="arrow" style={{ position: 'absolute' }}>
-          →
-        </span>
+        <>
+          {reserveSpace && (
+            <span className="arrow" style={{ color: 'transparent' }}>
+              →
+            </span>
+          )}
+          <span
+            className="arrow"
+            style={{
+              position: 'absolute',
+              ...(reserveSpace && { right: 0 }),
+            }}
+          >
+            →
+          </span>
+        </>
       )}
     </Text>
   )

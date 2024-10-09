@@ -1,4 +1,4 @@
-import { keyBy } from 'lodash'
+import { keyBy } from 'lodash-es'
 
 import {
   type NetworkConfig,
@@ -119,4 +119,4 @@ export const L2Networks = [
 ]
 
 export const networksList = [...mainnetNetworks, ...L2Networks]
-export const networksByName = keyBy(networksList, 'name')
+export const networksByName: { [key: string]: NetworkConfig } = keyBy(networksList, 'name')

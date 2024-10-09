@@ -54,6 +54,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <MasterPage>{children}</MasterPage>
           </AlchemyAccountsProvider>
         </NextIntlClientProvider>
+        <div id="portal" style={{ position: 'absolute' }} />
       </body>
     </html>
   )

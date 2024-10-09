@@ -15,6 +15,7 @@ export { NavigationExplore } from './components/atoms/NavigationItems/Navigation
 export { SupportBox } from './components/atoms/NavigationItems/SupportBox'
 export { List } from './components/atoms/List/List'
 export { WithArrow } from './components/atoms/WithArrow/WithArrow'
+export { Expander } from './components/atoms/Expander/Expander'
 
 export { Footer } from './components/layout/Footer/Footer'
 
@@ -32,10 +33,13 @@ export { SimpleGrid } from './components/molecules/Grid/SimpleGrid'
 export { SidebarFootnote } from './components/molecules/SidebarFootnote/SidebarFootnote'
 export { StrategyCard } from './components/molecules/StrategyCard/StrategyCard'
 export { StrategyTitleWithRisk } from './components/molecules/StrategyTitleWithRisk/StrategyTitleWithRisk'
+export { TableCellText } from './components/molecules/TableCellText/TableCellText'
+export { TokensGroup } from './components/molecules/TokensGroup/TokensGroup'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar } from './components/organisms/Sidebar/Sidebar'
 export { Table } from './components/organisms/Table/Table'
+export { StrategySimulationForm } from './components/organisms/StrategySimulationForm/StrategySimulationForm'
 
 export { useToggle } from './hooks/use-toggle'
 

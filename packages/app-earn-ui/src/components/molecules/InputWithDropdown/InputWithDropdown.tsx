@@ -1,4 +1,4 @@
-import React, { type ChangeEventHandler, type FC } from 'react'
+import { type ChangeEventHandler, type FC } from 'react'
 import { type DropdownOption } from '@summerfi/app-types'
 
 import { Input } from '@/components/atoms/Input/Input'

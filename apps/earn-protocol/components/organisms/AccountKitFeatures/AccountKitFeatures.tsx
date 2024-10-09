@@ -21,6 +21,8 @@ const AccountKitFeatures = () => {
       if (signer) {
         return await signer.signMessage(data)
       }
+
+      return undefined
     },
     [signer],
   )

@@ -1,6 +1,6 @@
 import { type FC } from 'react'
 import { type Risk, type TokenSymbolsList } from '@summerfi/app-types'
-import { capitalize } from 'lodash'
+import { capitalize } from 'lodash-es'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 import { Text } from '@/components/atoms/Text/Text'

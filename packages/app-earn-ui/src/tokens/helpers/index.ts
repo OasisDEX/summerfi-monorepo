@@ -1,9 +1,9 @@
 import { tokenConfigs } from '@summerfi/app-token-config'
 import { type TokenConfig } from '@summerfi/app-types'
-import { keyBy } from 'lodash'
+import { keyBy } from 'lodash-es'
 
 export const tokens: TokenConfig[] = [...tokenConfigs]
-export const tokensBySymbol = keyBy(tokens, 'symbol')
+export const tokensBySymbol: { [key: string]: TokenConfig } = keyBy(tokens, 'symbol')
 
 export const getTokenDisplayName = (token: string): string => {
   if (token.toLowerCase() === '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2') {

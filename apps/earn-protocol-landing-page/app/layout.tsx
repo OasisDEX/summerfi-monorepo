@@ -27,6 +27,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <NextIntlClientProvider messages={messages}>
           <MasterPage>{children}</MasterPage>
         </NextIntlClientProvider>
+        <div id="portal" style={{ position: 'absolute' }} />
       </body>
     </html>
   )
