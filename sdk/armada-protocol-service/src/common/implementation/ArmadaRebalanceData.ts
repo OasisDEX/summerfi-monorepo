@@ -1,5 +1,5 @@
 import { IArmadaRebalanceData, __iarmadarebalancedata__ } from '@summerfi/armada-protocol-common'
-import { IAddress, ITokenAmount } from '@summerfi/sdk-common'
+import { HexData, IAddress, ITokenAmount } from '@summerfi/sdk-common'
 
 /**
  * Type for the parameters of TokenAmount
@@ -18,6 +18,8 @@ export class ArmadaRebalanceData implements IArmadaRebalanceData {
   readonly fromArk: IAddress
   readonly toArk: IAddress
   readonly amount: ITokenAmount
+  readonly boardData: HexData
+  readonly disembarkData: HexData
 
   /** FACTORY */
 
@@ -31,5 +33,7 @@ export class ArmadaRebalanceData implements IArmadaRebalanceData {
     this.fromArk = params.fromArk
     this.toArk = params.toArk
     this.amount = params.amount
+    this.boardData = params.boardData
+    this.disembarkData = params.disembarkData
   }
 }

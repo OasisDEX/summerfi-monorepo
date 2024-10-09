@@ -1,9 +1,11 @@
 import {
   AddressDataSchema,
+  HexData,
   IAddress,
   ITokenAmount,
   TokenAmountDataSchema,
 } from '@summerfi/sdk-common/common'
+import { isHex } from 'viem'
 import { z } from 'zod'
 
 /**
@@ -24,6 +26,10 @@ export interface IArmadaRebalanceData {
   readonly toArk: IAddress
   /** Amount of tokens to be moved */
   readonly amount: ITokenAmount
+  /** Data to be passed to the `board` function of the `toArk` */
+  readonly boardData: HexData
+  /** Data to be passed to the `disembark` function of the `fromArk` */
+  readonly disembarkData: HexData
 }
 
 /**
@@ -33,6 +39,8 @@ export const ArmadaRebalanceDataSchema = z.object({
   fromArk: AddressDataSchema,
   toArk: AddressDataSchema,
   amount: TokenAmountDataSchema,
+  boardData: z.custom<HexData>((val) => isHex(val)),
+  disembarkData: z.custom<HexData>((val) => isHex(val)),
 })
 
 /**
