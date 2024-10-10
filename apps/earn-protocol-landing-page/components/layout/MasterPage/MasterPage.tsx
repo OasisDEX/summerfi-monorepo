@@ -1,4 +1,5 @@
 import { type FC, type PropsWithChildren } from 'react'
+import { MainBackground } from '@summerfi/app-earn-ui'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
 
@@ -14,6 +15,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({ children })
         {children}
         <div style={{ marginTop: '100px', textAlign: 'center' }}>Footer (:</div>
       </div>
+      <MainBackground />
     </div>
   )
 }
