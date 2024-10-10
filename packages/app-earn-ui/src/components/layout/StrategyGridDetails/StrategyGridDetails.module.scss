@@ -12,12 +12,18 @@
   grid-gap: var(--general-space-16);
   grid-template-columns: 1fr max(446px);
   margin-top: 20px;
-  > div {
-    height: min-content;
-  }
   .leftBlock {
     display: grid;
     grid-gap: var(--general-space-16);
+  }
+
+  .rightBlockWrapper {
+    height: 100%;
+
+    .rightBlock {
+      position: sticky;
+      top: 0;
+    }
   }
 }
 
