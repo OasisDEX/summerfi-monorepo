@@ -13,6 +13,7 @@ type StrategyCardProps = EarnProtocolStrategy & {
   secondary?: boolean
   selected?: boolean
   withHover?: boolean
+  staggerIndex?: number
 }
 
 export const StrategyCard = ({
