@@ -19,7 +19,7 @@ export default () => {
           marginBottom: 'var(--space-xxl)',
         }}
       >
-        Sorry, page not found.
+        Sorry, page not found :(
       </Text>
       <Link href="/">
         <Button variant="primaryLarge">Go back to the homepage</Button>
