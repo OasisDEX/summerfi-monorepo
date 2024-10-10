@@ -1,37 +1,10 @@
 import { type FC, useMemo } from 'react'
-import { Card, DataBlock, Icon, Table, TableCellText, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Card, DataBlock, Table, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList } from '@summerfi/app-types'
-import { formatCryptoBalance, timeAgo } from '@summerfi/app-utils'
-import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
-const columns = [
-  {
-    title: 'Purpose',
-    key: 'purpose',
-    sortable: false,
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    sortable: false,
-  },
-  {
-    title: 'Amount',
-    key: 'amount',
-    sortable: false,
-  },
-  {
-    title: 'Timestamp',
-    key: 'timestamp',
-    sortable: false,
-  },
-  {
-    title: 'Provider',
-    key: 'provider',
-    sortable: false,
-  },
-]
+import { rebalancingActivityColumns } from '@/components/organisms/RebalancingActivity/columns'
+import { rebalancingActivityMapper } from '@/components/organisms/RebalancingActivity/mapper'
 
 export interface RebalancingActivityRawData {
   type: string
@@ -42,60 +15,6 @@ export interface RebalancingActivityRawData {
     link: string
     label: string
   }
-}
-
-const rebalancingActivityMapper = (rawData: RebalancingActivityRawData[]) => {
-  return rawData.map((item) => {
-    return {
-      content: {
-        purpose: (
-          <div
-            style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-x-small)' }}
-          >
-            <Icon
-              iconName={item.type === 'reduce' ? 'arrow_decrease' : 'arrow_increase'}
-              variant="xxs"
-              color="rgba(119, 117, 118, 1)"
-            />
-            <TableCellText>{item.type === 'reduce' ? 'Reduce' : 'Increase'} Risk</TableCellText>
-          </div>
-        ),
-        action: (
-          <div
-            style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-2x-small)' }}
-          >
-            <Icon tokenName={item.action.from} variant="s" /> {item.action.from} →
-            <Icon tokenName={item.action.to} variant="s" /> {item.action.to}
-          </div>
-        ),
-        amount: (
-          <div
-            style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-2x-small)' }}
-          >
-            <Icon tokenName={item.amount.token} variant="s" />
-            <TableCellText>{formatCryptoBalance(new BigNumber(item.amount.value))}</TableCellText>
-          </div>
-        ),
-        timestamp: (
-          <TableCellText>
-            {timeAgo({ from: new Date(), to: new Date(Number(item.timestamp)) })}
-          </TableCellText>
-        ),
-        provider: (
-          <Link href={item.provider.link}>
-            <WithArrow
-              as="p"
-              variant="p3"
-              style={{ color: 'var(--earn-protocol-primary-100)' }}
-              reserveSpace
-            >
-              {item.provider.label}
-            </WithArrow>
-          </Link>
-        ),
-      },
-    }
-  })
 }
 
 interface RebalancingActivityProps {
@@ -135,7 +54,7 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({ rawData }) =
           for reallocating assets from lower performing strategies to higher performing ones, within
           a threshold of risk.
         </Text>
-        <Table rows={rows} columns={columns} />
+        <Table rows={rows} columns={rebalancingActivityColumns} />
         <Link href="/" style={{ marginTop: 'var(--spacing-space-large)', width: 'fit-content' }}>
           <WithArrow as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             View all rebalances

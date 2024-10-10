@@ -1,37 +1,10 @@
 'use client'
 import { type FC, useMemo, useState } from 'react'
-import { Button, Card, Table, TableCellText, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { formatCryptoBalance, formatFiatBalance, timeAgo } from '@summerfi/app-utils'
-import BigNumber from 'bignumber.js'
+import { Button, Card, Table, Text, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
-const columns = [
-  {
-    title: 'Position Balance',
-    key: 'balance',
-    sortable: false,
-  },
-  {
-    title: 'Amout',
-    key: 'amount',
-    sortable: false,
-  },
-  {
-    title: '# of Deposits',
-    key: 'numberOfDeposits',
-    sortable: false,
-  },
-  {
-    title: 'Time',
-    key: 'time',
-    sortable: false,
-  },
-  {
-    title: 'Earning streak',
-    key: 'earningStreak',
-    sortable: false,
-  },
-]
+import { userActivityColumns } from '@/components/organisms/UserActivity/columns'
+import { userActivityMapper } from '@/components/organisms/UserActivity/mapper'
 
 export interface UserActivityRawData {
   balance: string
@@ -42,35 +15,6 @@ export interface UserActivityRawData {
     link: string
     label: string
   }
-}
-
-const userActivityMapper = (rawData: UserActivityRawData[]) => {
-  return rawData.map((item) => {
-    return {
-      content: {
-        balance: <TableCellText>{formatCryptoBalance(new BigNumber(item.balance))}</TableCellText>,
-        amount: <TableCellText>${formatFiatBalance(new BigNumber(item.amount))}</TableCellText>,
-        numberOfDeposits: <TableCellText>{item.numberOfDeposits}</TableCellText>,
-        time: (
-          <TableCellText>
-            {timeAgo({ from: new Date(), to: new Date(Number(item.time)) })}
-          </TableCellText>
-        ),
-        earningStreak: (
-          <Link href={item.earningStreak.link}>
-            <WithArrow
-              as="p"
-              variant="p3"
-              style={{ color: 'var(--earn-protocol-primary-100)' }}
-              reserveSpace
-            >
-              {item.earningStreak.label}
-            </WithArrow>
-          </Link>
-        ),
-      },
-    }
-  })
 }
 
 interface UserActivityProps {
@@ -123,7 +67,7 @@ export const UserActivity: FC<UserActivityProps> = ({ rawData }) => {
             </Text>
           </Button>
         </div>
-        <Table rows={rows} columns={columns} />
+        <Table rows={rows} columns={userActivityColumns} />
         <Link href="/" style={{ marginTop: 'var(--spacing-space-large)', width: 'fit-content' }}>
           <WithArrow as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             View all depositors
