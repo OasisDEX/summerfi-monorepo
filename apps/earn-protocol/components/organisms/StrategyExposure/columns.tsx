@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { Icon, Text, Tooltip } from '@summerfi/app-earn-ui'
+import { TableHeadWithTooltip, Text } from '@summerfi/app-earn-ui'
 
 const strategyTypeTooltipContent = [
   { title: 'Isolated Lending', description: 'Text for what isolated lending is' },
@@ -31,8 +31,9 @@ export const strategyExposureColumns = [
   },
   {
     title: (
-      <Tooltip
-        tooltipWrapperStyles={{ minWidth: '261px' }}
+      <TableHeadWithTooltip
+        minWidth="261px"
+        title="Type"
         tooltip={
           <div style={{ display: 'flex', flexDirection: 'column', width: 'fit-content' }}>
             {strategyTypeTooltipContent.map((item, idx) => (
@@ -64,13 +65,7 @@ export const strategyExposureColumns = [
             ))}
           </div>
         }
-      >
-        <div
-          style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-2x-small)' }}
-        >
-          Type <Icon iconName="question_o" color="rgba(119, 117, 118, 1)" variant="xs" />
-        </div>
-      </Tooltip>
+      />
     ),
     key: 'type',
     sortable: false,

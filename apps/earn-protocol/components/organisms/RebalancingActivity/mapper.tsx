@@ -1,4 +1,4 @@
-import { Icon, TableCellText, WithArrow } from '@summerfi/app-earn-ui'
+import { Icon, TableCellText, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, timeAgo } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
@@ -25,7 +25,8 @@ export const rebalancingActivityMapper = (rawData: RebalancingActivityRawData[])
           <div
             style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-2x-small)' }}
           >
-            <Icon tokenName={item.action.from} variant="s" /> {item.action.from} →
+            <Icon tokenName={item.action.from} variant="s" /> {item.action.from}
+            <Text style={{ color: 'var(--earn-protocol-secondary-40)', fontSize: '14px' }}>→</Text>
             <Icon tokenName={item.action.to} variant="s" /> {item.action.to}
           </div>
         ),

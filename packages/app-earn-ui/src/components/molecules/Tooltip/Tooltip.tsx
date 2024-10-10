@@ -3,6 +3,7 @@
 import {
   type FC,
   type HTMLAttributes,
+  isValidElement,
   type ReactNode,
   useCallback,
   useEffect,
@@ -64,12 +65,18 @@ const TooltipWrapper: FC<TooltipWrapperProps> = ({ children, isOpen, style, show
   )
 }
 
-interface StatefulTooltipProps extends HTMLAttributes<HTMLDivElement> {
+type ChildrenCallback = (tooltipOpen: boolean) => ReactNode
+
+interface StatefulTooltipProps {
   tooltip: ReactNode
-  children: ReactNode
+  children: ReactNode | ChildrenCallback
   tooltipWrapperStyles?: HTMLAttributes<HTMLDivElement>['style']
+  style?: HTMLAttributes<HTMLDivElement>['style']
   showAbove?: boolean
 }
+
+const childrenTypeGuard = (children: ReactNode | ChildrenCallback): children is ReactNode =>
+  isValidElement(children)
 
 export const Tooltip: FC<StatefulTooltipProps> = ({
   tooltip,
@@ -112,7 +119,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   const handleClick = useCallback(() => tooltip && setTooltipOpen(true), [])
 
   if (!portalElement) {
-    return children
+    return childrenTypeGuard(children) ? children : children(tooltipOpen)
   }
 
   const portal = createPortal(
@@ -131,7 +138,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
       className={tooltipStyles.tooltipWrapper}
       style={style}
     >
-      {children}
+      {childrenTypeGuard(children) ? children : children(tooltipOpen)}
       {portal}
     </div>
   )
