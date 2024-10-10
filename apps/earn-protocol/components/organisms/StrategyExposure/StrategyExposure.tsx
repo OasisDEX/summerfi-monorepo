@@ -1,84 +1,66 @@
-import { type FC, Fragment, useMemo } from 'react'
-import { Card, Icon, Table, TableCellText, Text, TokensGroup, Tooltip } from '@summerfi/app-earn-ui'
+'use client'
+
+import { type Dispatch, type FC, type SetStateAction, useMemo, useState } from 'react'
+import { Button, Card, Table, Text } from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList } from '@summerfi/app-types'
-import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
-import BigNumber from 'bignumber.js'
+import { capitalize } from 'lodash-es'
 
-const strategyTypeTooltipContent = [
-  { title: 'Isolated Lending', description: 'Text for what isolated lending is' },
-  { title: 'Basic Trading', description: 'Text for what isolated lending is' },
-  { title: 'Fixed Yield', description: 'Text for what isolated lending is' },
-  { title: 'Lending', description: 'Text for what isolated lending is' },
-]
+import { strategyExposureColumns } from '@/components/organisms/StrategyExposure/columns'
+import { strategyExposureMapper } from '@/components/organisms/StrategyExposure/mapper'
 
-const columns = [
-  {
-    title: 'Strategy',
-    key: 'strategy',
-    sortable: false,
-  },
-  {
-    title: '% Allocation',
-    key: 'allocation',
-    sortable: false,
-  },
-  {
-    title: 'Current APY',
-    key: 'currentApy',
-    sortable: false,
-  },
-  {
-    title: 'Liquidity',
-    key: 'liquidity',
-    sortable: false,
-  },
-  {
-    title: (
-      <Tooltip
-        tooltipWrapperStyles={{ minWidth: '261px' }}
-        tooltip={
-          <div style={{ display: 'flex', flexDirection: 'column', width: 'fit-content' }}>
-            {strategyTypeTooltipContent.map((item, idx) => (
-              <Fragment key={item.title}>
-                <Text
-                  as="p"
-                  variant="p3semi"
-                  style={{
-                    color: 'var(--earn-protocol-secondary-100)',
-                    marginBottom: 'var(--spacing-space-2x-small)',
-                  }}
-                >
-                  {item.title}
-                </Text>
-                <Text
-                  as="p"
-                  variant="p3"
-                  style={{
-                    color: 'var(--earn-protocol-secondary-60)',
-                    marginBottom:
-                      strategyTypeTooltipContent.length - 1 === idx
-                        ? '0'
-                        : 'var(--spacing-space-large)',
-                  }}
-                >
-                  {item.description}
-                </Text>
-              </Fragment>
-            ))}
-          </div>
-        }
-      >
-        <div
-          style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-2x-small)' }}
+enum StrategyExposureFilterType {
+  ALL = 'ALL',
+  ALLOCATED = 'ALLOCATED',
+  UNALLOCATED = 'UNALLOCATED',
+}
+
+interface StrategyExposureTypePickerProps {
+  currentType: StrategyExposureFilterType
+  setExposureType: Dispatch<SetStateAction<StrategyExposureFilterType>>
+}
+
+const StrategyExposureTypePicker: FC<StrategyExposureTypePickerProps> = ({
+  currentType,
+  setExposureType,
+}) => {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        gap: 'var(--spacing-space-small)',
+        justifyContent: 'flex-start',
+        width: '100%',
+        marginBottom: 'var(--spacing-space-small)',
+      }}
+    >
+      {[
+        StrategyExposureFilterType.ALL,
+        StrategyExposureFilterType.ALLOCATED,
+        StrategyExposureFilterType.UNALLOCATED,
+      ].map((itemType) => (
+        <Button
+          key={itemType}
+          variant={itemType === currentType ? 'primarySmall' : 'unstyled'}
+          style={{ height: '31px', padding: '0px 16px' }}
+          onClick={() => setExposureType(itemType)}
         >
-          Type <Icon iconName="question_o" color="rgba(119, 117, 118, 1)" variant="xs" />
-        </div>
-      </Tooltip>
-    ),
-    key: 'type',
-    sortable: false,
-  },
-]
+          <Text
+            as="span"
+            variant="p4semi"
+            style={{
+              color:
+                itemType === currentType
+                  ? 'var(--earn-protocol-secondary-100)'
+                  : 'var(--earn-protocol-secondary-60)',
+            }}
+          >
+            {capitalize(itemType.toLowerCase())}
+          </Text>
+        </Button>
+      ))}
+    </div>
+  )
+}
 
 export interface StrategyExposureRawData {
   strategy: {
@@ -92,42 +74,16 @@ export interface StrategyExposureRawData {
   type: string
 }
 
-const strategyExposureMapper = (rawData: StrategyExposureRawData[]) => {
-  return rawData.map((item) => {
-    return {
-      content: {
-        strategy: (
-          <div
-            style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-x-small)' }}
-          >
-            <TokensGroup
-              tokens={[item.strategy.primaryToken, item.strategy.secondaryToken]}
-              variant="s"
-            />
-            <TableCellText>{item.strategy.label}</TableCellText>
-          </div>
-        ),
-        allocation: (
-          <TableCellText>{formatDecimalAsPercent(new BigNumber(item.allocation))}</TableCellText>
-        ),
-        currentApy: (
-          <TableCellText>{formatDecimalAsPercent(new BigNumber(item.currentApy))}</TableCellText>
-        ),
-        liquidity: (
-          <TableCellText>{formatCryptoBalance(new BigNumber(item.liquidity))}</TableCellText>
-        ),
-        type: <TableCellText>{item.type}</TableCellText>,
-      },
-    }
-  })
-}
-
 interface StrategyExposureProps {
   rawData: StrategyExposureRawData[]
 }
 
 export const StrategyExposure: FC<StrategyExposureProps> = ({ rawData }) => {
   const rows = useMemo(() => strategyExposureMapper(rawData), [rawData])
+
+  const [exposureType, setExposureType] = useState<StrategyExposureFilterType>(
+    StrategyExposureFilterType.ALL,
+  )
 
   return (
     <Card variant="cardSecondary" style={{ marginTop: 'var(--spacing-space-medium)' }}>
@@ -144,19 +100,8 @@ export const StrategyExposure: FC<StrategyExposureProps> = ({ rawData }) => {
           process. Vetted for security, performance and trustworthy teams.
         </Text>
 
-        <Table rows={rows} columns={columns} />
-        {rows.length > 5 && (
-          <Text
-            as="p"
-            variant="p4semi"
-            style={{
-              color: 'var(--earn-protocol-primary-100)',
-              marginTop: 'var(--spacing-space-large)',
-            }}
-          >
-            View more
-          </Text>
-        )}
+        <StrategyExposureTypePicker currentType={exposureType} setExposureType={setExposureType} />
+        <Table rows={rows} columns={strategyExposureColumns} />
       </div>
     </Card>
   )

@@ -14,6 +14,7 @@
   border-radius: var(--radius-12);
   max-width: 400px;
   opacity: 0;
+  z-index: 3;
   pointer-events: none;
   transition:
     opacity 0.3s ease,
@@ -25,14 +26,14 @@
 }
 
 .tooltipOpen {
-  z-index: 2;
+  z-index: 3;
   opacity: 1;
   pointer-events: auto;
   transform: translateY(21px);
 }
 
 .tooltipOpenAbove {
-  z-index: 2;
+  z-index: 3;
   opacity: 1;
   pointer-events: auto;
   top: 0;

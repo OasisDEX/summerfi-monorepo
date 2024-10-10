@@ -89,7 +89,9 @@ export const StrategyGridDetails = ({
           </SimpleGrid>
           <Box className={strategyGridDetailsStyles.leftBlock}>{leftContent}</Box>
         </div>
-        {rightContent}
+        <div className={strategyGridDetailsStyles.rightBlockWrapper}>
+          <div className={strategyGridDetailsStyles.rightBlock}>{rightContent}</div>
+        </div>
       </div>
     </>
   )

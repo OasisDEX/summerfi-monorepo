@@ -1,6 +1,8 @@
 'use client'
 import { Fragment, type ReactNode, useState } from 'react'
 
+import { Icon } from '@/components/atoms/Icon/Icon'
+
 import styles from './Table.module.scss'
 
 interface Column<K> {
@@ -19,6 +21,7 @@ export function Table<K extends string>({
 }: {
   rows: {
     content: Row<K>
+    details?: ReactNode
   }[]
   columns: Column<K>[]
 }) {
@@ -83,21 +86,35 @@ export function Table<K extends string>({
             <Fragment key={rowIndex}>
               <tr onClick={() => setExpandedRow(expandedRow === rowIndex ? null : rowIndex)}>
                 {Object.values(row.content).map((item, idx) => (
-                  <td key={idx}>{item as ReactNode}</td>
+                  <td key={idx}>
+                    {idx === 0 && row.details ? (
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 'var(--spacing-space-x-small)',
+                        }}
+                      >
+                        {item as ReactNode}{' '}
+                        {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
+                        {idx === 0 ? (
+                          <Icon
+                            iconName={expandedRow === rowIndex ? 'chevron_up' : 'chevron_down'}
+                            variant="xxs"
+                            color="rgba(119, 117, 118, 1)"
+                          />
+                        ) : null}
+                      </div>
+                    ) : (
+                      <>{item as ReactNode}</>
+                    )}
+                  </td>
                 ))}
               </tr>
-              {expandedRow === rowIndex && (
+              {expandedRow === rowIndex && row.details && (
                 <tr className={styles.expandedRow}>
                   <td colSpan={columns.length}>
-                    {/* Expandable row content here */}
-                    <div className={styles.details}>
-                      <p>
-                        <strong>Dummy Details:</strong>
-                      </p>
-                      <p>- dummy</p>
-                      <p>- details</p>
-                      <p>- bro</p>
-                    </div>
+                    <div className={styles.details}>{row.details}</div>
                   </td>
                 </tr>
               )}
