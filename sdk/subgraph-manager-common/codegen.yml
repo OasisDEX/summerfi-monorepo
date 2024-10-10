@@ -11,7 +11,24 @@ generates:
             - '/* eslint-disable */'
       - add:
           content: 'import type { DocumentNode } from "graphql/language/ast";'
-      - typescript
+      - typescript:
+          strictScalars: true
+          scalars:
+            BigDecimal: string
+            BigInt: bigint
+            Int8: number
+            BooleanType: boolean
+            CustomData: Record<string, unknown>
+            Date: string
+            DateTime: string
+            FloatType: number
+            IntType: number
+            ItemId: string
+            JsonField: unknown
+            Bytes: string
+            MetaTagAttributes: Record<string, string>
+            UploadId: string
+            Timestamp: number
       - typescript-operations:
           strictScalars: true
           scalars:
