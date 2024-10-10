@@ -4,7 +4,7 @@ import { type TokenSymbolsList } from '@summerfi/app-types'
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
-const strategyToopTooltipContent = [
+const strategyTypeTooltipContent = [
   { title: 'Isolated Lending', description: 'Text for what isolated lending is' },
   { title: 'Basic Trading', description: 'Text for what isolated lending is' },
   { title: 'Fixed Yield', description: 'Text for what isolated lending is' },
@@ -38,7 +38,7 @@ const columns = [
         tooltipWrapperStyles={{ minWidth: '261px' }}
         tooltip={
           <div style={{ display: 'flex', flexDirection: 'column', width: 'fit-content' }}>
-            {strategyToopTooltipContent.map((item) => (
+            {strategyTypeTooltipContent.map((item, idx) => (
               <Fragment key={item.title}>
                 <Text
                   as="p"
@@ -55,7 +55,10 @@ const columns = [
                   variant="p3"
                   style={{
                     color: 'var(--earn-protocol-secondary-60)',
-                    marginBottom: 'var(--spacing-space-large)',
+                    marginBottom:
+                      strategyTypeTooltipContent.length - 1 === idx
+                        ? '0'
+                        : 'var(--spacing-space-large)',
                   }}
                 >
                   {item.description}

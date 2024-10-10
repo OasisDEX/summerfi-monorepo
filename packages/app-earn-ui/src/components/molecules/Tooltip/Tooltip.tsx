@@ -57,7 +57,9 @@ const TooltipWrapper: FC<TooltipWrapperProps> = ({ children, isOpen, style, show
       }
       style={style}
     >
-      <Card variant="cardSecondary">{children}</Card>
+      <Card variant="cardSecondary" style={{ backgroundColor: 'var(--earn-protocol-neutral-80)' }}>
+        {children}
+      </Card>
     </div>
   )
 }
