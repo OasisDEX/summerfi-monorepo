@@ -19,6 +19,7 @@ export function Table<K extends string>({
 }: {
   rows: {
     content: Row<K>
+    details?: ReactNode
   }[]
   columns: Column<K>[]
 }) {
@@ -89,7 +90,6 @@ export function Table<K extends string>({
               {expandedRow === rowIndex && (
                 <tr className={styles.expandedRow}>
                   <td colSpan={columns.length}>
-                    {/* Expandable row content here */}
                     <div className={styles.details}>
                       <p>
                         <strong>Dummy Details:</strong>

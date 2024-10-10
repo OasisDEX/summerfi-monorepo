@@ -30,6 +30,7 @@ export const strategyExposureMapper = (rawData: StrategyExposureRawData[]) => {
         ),
         type: <TableCellText>{item.type}</TableCellText>,
       },
+      details: 'Test details injected',
     }
   })
 }
