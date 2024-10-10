@@ -24,7 +24,7 @@
 
     .rightBlock {
       position: sticky;
-      top: 0;
+      top: var(--general-space-16);
     }
   }
 }
