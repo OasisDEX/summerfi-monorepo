@@ -1,6 +1,7 @@
-import { TableCellText, TokensGroup } from '@summerfi/app-earn-ui'
+import { TableCellText, Text, TokensGroup, WithArrow } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
+import Link from 'next/link'
 
 import { type StrategyExposureRawData } from '@/components/organisms/StrategyExposure/StrategyExposure'
 
@@ -30,7 +31,32 @@ export const strategyExposureMapper = (rawData: StrategyExposureRawData[]) => {
         ),
         type: <TableCellText>{item.type}</TableCellText>,
       },
-      details: 'Test details injected',
+      details: (
+        <div
+          style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-space-medium)' }}
+        >
+          <Text as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-secondary-60)' }}>
+            Why this strategy?
+          </Text>
+          <Text
+            as="p"
+            variant="p3"
+            style={{ color: 'var(--earn-protocol-secondary-100)', fontWeight: '500' }}
+          >
+            MetaMorpho Gauntlet MKR Blended was chosen for it’s performance track record, risk
+            approach and asset exposure.
+          </Text>
+          <Link href="/">
+            <WithArrow
+              as="p"
+              variant="p4semi"
+              style={{ color: 'var(--earn-protocol-primary-100)' }}
+            >
+              Learn more
+            </WithArrow>
+          </Link>
+        </div>
+      ),
     }
   })
 }
