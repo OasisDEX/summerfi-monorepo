@@ -89,7 +89,6 @@ export const StrategiesListView = ({
         // then we can "redirect" to the selected strategy page with the network
         // if not we just go to the network page and clear the selected strategy (if not available in the new view)
         if (selectedStrategyData && selectedStrategyData.network !== selected.value) {
-          console.log('cleaning strategy')
           setLocalStrategyId(undefined)
         }
         softRouterPush(
