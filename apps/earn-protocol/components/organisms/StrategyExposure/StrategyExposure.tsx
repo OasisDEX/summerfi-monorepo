@@ -1,3 +1,5 @@
+'use client'
+
 import { type Dispatch, type FC, type SetStateAction, useMemo, useState } from 'react'
 import { Button, Card, Table, Text } from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList } from '@summerfi/app-types'
