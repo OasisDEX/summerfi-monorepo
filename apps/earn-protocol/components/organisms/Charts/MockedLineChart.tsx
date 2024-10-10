@@ -145,7 +145,6 @@ export const MockedLineChart = () => {
               padding: '20px 30px',
               border: 'none',
             }}
-            allowEscapeViewBox={{ x: false, y: true }}
           />
           {dataNamesParsed.map((dataName, dataIndex) =>
             dataName === 'Summer USDS Strategy' ? (
