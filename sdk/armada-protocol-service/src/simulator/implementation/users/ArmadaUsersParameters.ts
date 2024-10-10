@@ -1,9 +1,9 @@
 import {
   ArmadaOperationType,
-  IArmadaParameters,
-  IArmadaParametersData,
   IArmadaPoolId,
-  __iarmadaparameters__,
+  IArmadaUsersParameters,
+  IArmadaUsersParametersData,
+  __iarmadausersparameters__,
 } from '@summerfi/armada-protocol-common'
 import { ITokenAmount } from '@summerfi/sdk-common/common'
 import { SerializationService } from '@summerfi/sdk-common/services'
@@ -12,15 +12,15 @@ import { IUser } from '@summerfi/sdk-common/user'
 /**
  * Type for the parameters of ArmadaParameters
  */
-export type ArmadaParametersParameters = Omit<IArmadaParametersData, ''>
+export type ArmadaParametersParameters = Omit<IArmadaUsersParametersData, ''>
 
 /**
- * @name ArmadaParameters
- * @see IArmadaParameters
+ * @name ArmadaUsersParameters
+ * @see IArmadaUsersParameters
  */
-export class ArmadaParameters implements IArmadaParameters {
+export class ArmadaUsersParameters implements IArmadaUsersParameters {
   /** SIGNATURE */
-  readonly [__iarmadaparameters__] = __iarmadaparameters__
+  readonly [__iarmadausersparameters__] = __iarmadausersparameters__
 
   /** ATTRIBUTES */
   readonly user: IUser
@@ -29,8 +29,8 @@ export class ArmadaParameters implements IArmadaParameters {
   readonly amount: ITokenAmount
 
   /** FACTORY */
-  static createFrom(params: ArmadaParametersParameters): ArmadaParameters {
-    return new ArmadaParameters(params)
+  static createFrom(params: ArmadaParametersParameters): ArmadaUsersParameters {
+    return new ArmadaUsersParameters(params)
   }
 
   /** SEALED CONSTRUCTOR */
@@ -46,4 +46,4 @@ export class ArmadaParameters implements IArmadaParameters {
   }
 }
 
-SerializationService.registerClass(ArmadaParameters)
+SerializationService.registerClass(ArmadaUsersParameters)

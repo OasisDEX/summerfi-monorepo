@@ -1,5 +1,5 @@
 import { Address, ChainFamilyMap, User, Wallet } from '@summerfi/sdk-common'
-import { ArmadaSimulation } from '../src/simulator/implementation/ArmadaSimulation'
+import { ArmadaUsersSimulation } from '../src/simulator/implementation/users/ArmadaUsersSimulation'
 import { ArmadaPositionMock } from './mocks/ArmadaPositionMock'
 
 describe('SDK Common | Armada | ArmadaSimulation', () => {
@@ -18,7 +18,7 @@ describe('SDK Common | Armada | ArmadaSimulation', () => {
 
   describe('#createFrom()', () => {
     it('should instantiate with right data', () => {
-      const simulation = ArmadaSimulation.createFrom({
+      const simulation = ArmadaUsersSimulation.createFrom({
         user,
         previousPosition: ArmadaPositionMock,
         newPosition: ArmadaPositionMock,

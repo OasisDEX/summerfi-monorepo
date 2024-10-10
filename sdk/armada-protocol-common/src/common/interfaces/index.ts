@@ -32,7 +32,7 @@ export {
 } from './IArmadaProtocol'
 export type { IArmadaProtocol, IArmadaProtocolData } from './IArmadaProtocol'
 export {
-  __signature__ as __irebalancedata__,
-  isRebalanceData,
-  type IRebalanceData,
-} from './IRebalanceData'
+  __signature__ as __iarmadarebalancedata__,
+  isArmadaRebalanceData,
+  type IArmadaRebalanceData,
+} from './IArmadaRebalanceData'
