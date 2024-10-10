@@ -12,7 +12,7 @@ const EarnNetworkSelectedStrategyPage = ({
 }) => {
   // particular strategy loaded
   return (
-    <StrategiesListView selectedNetwork={params.network} selectedStrategy={params.strategy_id} />
+    <StrategiesListView selectedNetwork={params.network} selectedStrategyId={params.strategy_id} />
   )
 }
 

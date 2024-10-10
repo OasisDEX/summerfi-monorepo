@@ -9,13 +9,14 @@ import { StrategyTitleWithRisk } from '@/components/molecules/StrategyTitleWithR
 import strategyCardStyles from './StrategyCard.module.scss'
 
 type StrategyCardProps = EarnProtocolStrategy & {
-  onClick?: () => void
+  onClick?: (id: string) => void
   secondary?: boolean
   selected?: boolean
   withHover?: boolean
 }
 
 export const StrategyCard = ({
+  id,
   symbol,
   risk,
   bestFor,
@@ -25,13 +26,21 @@ export const StrategyCard = ({
   withHover,
   secondary = false,
   selected = false,
+  onClick,
 }: StrategyCardProps) => {
+  const handleStrategyClick = () => {
+    if (onClick) {
+      onClick(id)
+    }
+  }
+
   return (
     <div
       className={clsx(strategyCardStyles.wrapper, {
         [strategyCardStyles.withHover]: !selected && withHover,
         [strategyCardStyles.selected]: selected,
       })}
+      onClick={handleStrategyClick}
     >
       <Card
         className={strategyCardStyles.strategyCard}

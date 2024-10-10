@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import {
   DataBlock,
   SimpleGrid,
@@ -9,14 +9,12 @@ import {
   StrategySimulationForm,
 } from '@summerfi/app-earn-ui'
 import { type DropdownOption, type IconNamesList, type NetworkNames } from '@summerfi/app-types'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 
 import { strategiesList } from '@/constants/dev-strategies-list'
 
 type StrategiesListViewProps = {
   selectedNetwork?: NetworkNames | 'all-networks'
-  selectedStrategy?: string
+  selectedStrategyId?: string
 }
 
 const allNetworksOption = {
@@ -25,54 +23,87 @@ const allNetworksOption = {
   value: 'all-networks',
 }
 
-const getStrategyLink = (
-  strategy: (typeof strategiesList)[number],
-  selectedNetwork?: StrategiesListViewProps['selectedNetwork'],
-) => {
-  return `/earn/${selectedNetwork ?? 'all-networks'}/${strategy.id}`
+const softRouterPush = (url: string) => {
+  window.history.pushState(null, '', url)
 }
 
 export const StrategiesListView = ({
   selectedNetwork,
-  selectedStrategy,
+  selectedStrategyId,
 }: StrategiesListViewProps) => {
-  const { replace } = useRouter()
-  const networkFilteredStrategies = useMemo(() => {
-    return selectedNetwork && selectedNetwork !== 'all-networks'
-      ? strategiesList.filter((strategy) => strategy.network === selectedNetwork)
-      : strategiesList
-  }, [selectedNetwork])
-  const selectedNetworkOption = useMemo(() => {
-    return selectedNetwork
-      ? {
-          iconName: 'ether_circle_color' as IconNamesList,
-          label: selectedNetwork,
-          value: selectedNetwork,
-        }
-      : allNetworksOption
-  }, [selectedNetwork])
-  const strategiesNetworksList = useMemo(() => {
-    return [
+  const [localStrategyNetwork, setLocalStrategyNetwork] =
+    useState<StrategiesListViewProps['selectedNetwork']>(selectedNetwork)
+
+  const [localStrategyId, setLocalStrategyId] = useState<string | undefined>(selectedStrategyId)
+
+  const networkFilteredStrategies = useMemo(
+    () =>
+      localStrategyNetwork && localStrategyNetwork !== 'all-networks'
+        ? strategiesList.filter((strategy) => strategy.network === localStrategyNetwork)
+        : strategiesList,
+    [localStrategyNetwork],
+  )
+
+  const selectedNetworkOption = useMemo(
+    () =>
+      localStrategyNetwork
+        ? {
+            iconName: 'ether_circle_color' as IconNamesList,
+            label: localStrategyNetwork,
+            value: localStrategyNetwork,
+          }
+        : allNetworksOption,
+    [localStrategyNetwork],
+  )
+  const strategiesNetworksList = useMemo(
+    () => [
       ...[...new Set(strategiesList.map(({ network }) => network))].map((network) => ({
         iconName: 'ether_circle_color' as IconNamesList,
         label: network,
         value: network,
       })),
       allNetworksOption,
-    ]
-  }, [])
+    ],
+    [],
+  )
 
-  const selectedStrategyData = useMemo(() => {
-    return strategiesList.find((strategy) => strategy.id === selectedStrategy)
-  }, [selectedStrategy])
+  const selectedStrategyData = useMemo(
+    () => strategiesList.find((strategy) => strategy.id === localStrategyId),
+    [localStrategyId],
+  )
 
   const handleChangeNetwork = (selected: DropdownOption) => {
-    if (selected.value === 'all-networks') {
-      replace('/earn')
+    setLocalStrategyNetwork(selected.value as StrategiesListViewProps['selectedNetwork'])
+    switch (selected.value) {
+      case 'all-networks':
+        // if its all networks we must check if the selected strategy is from the same network
+        // then we can "redirect" to the selected strategy page with the network
+        softRouterPush(
+          selectedStrategyData ? `/earn/all-networks/${selectedStrategyData.id}` : '/earn',
+        )
 
-      return
+        break
+
+      default:
+        // if its a specific network we must check if the selected strategy is from the same network
+        // then we can "redirect" to the selected strategy page with the network
+        // if not we just go to the network page and clear the selected strategy (if not available in the new view)
+        if (selectedStrategyData && selectedStrategyData.network !== selected.value) {
+          setLocalStrategyId(undefined)
+        }
+        softRouterPush(
+          selectedStrategyData && selectedStrategyData.network === selected.value
+            ? `/earn/${selected.value}/${selectedStrategyData.id}`
+            : `/earn/${selected.value}`,
+        )
+
+        break
     }
-    replace(`/earn/${selected.value}`)
+  }
+
+  const handleChangeStrategy = (strategyId: string) => {
+    setLocalStrategyId(strategyId)
+    softRouterPush(`/earn/${localStrategyNetwork ?? 'all-networks'}/${strategyId}`)
   }
 
   return (
@@ -103,16 +134,14 @@ export const StrategiesListView = ({
         </SimpleGrid>
       }
       leftContent={networkFilteredStrategies.map((strategy, strategyIndex) => (
-        <Link key={strategy.id} href={getStrategyLink(strategy, selectedNetwork)}>
-          <StrategyCard
-            {...strategy}
-            secondary
-            withHover
-            selected={
-              selectedStrategy === strategy.id || (!selectedStrategy && strategyIndex === 0)
-            }
-          />
-        </Link>
+        <StrategyCard
+          key={strategy.id}
+          {...strategy}
+          secondary
+          withHover
+          selected={localStrategyId === strategy.id || (!localStrategyId && strategyIndex === 0)}
+          onClick={handleChangeStrategy}
+        />
       ))}
       rightContent={
         <StrategySimulationForm strategyData={selectedStrategyData ?? strategiesList[0]} />

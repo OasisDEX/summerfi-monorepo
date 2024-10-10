@@ -18,12 +18,19 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, dropdownValue, onCh
   const [isOpen, setIsOpen] = useState(false) // To manage dropdown open/close state
   const dropdownRef = useRef<HTMLDivElement | null>(null) // Reference for the dropdown
 
+  useEffect(() => {
+    if (!onChange) {
+      // if theres no onChange prop, set the selected option to
+      // the dropdownValue as controlled component behavior
+      setSelectedOption(dropdownValue)
+    }
+  }, [onChange, dropdownValue])
+
   const handleSelectOption = (option: DropdownOption) => {
     if (onChange) {
       onChange(option)
-    } else {
-      setSelectedOption(option)
     }
+    setSelectedOption(option)
     setIsOpen(false) // Close dropdown after selection
   }
 
@@ -32,8 +39,8 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, dropdownValue, onCh
   }
 
   // Close dropdown when clicking outside
-  const handleClickOutside = (event: MouseEvent) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+  const handleClickOutside = (ev: MouseEvent) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(ev.target as Node)) {
       setIsOpen(false)
     }
   }

@@ -20,16 +20,19 @@ const getStrategyUrl = (selectedStrategy: StrategySimulationFormProps['strategyD
 
 export const StrategySimulationForm = ({ strategyData }: StrategySimulationFormProps) => {
   const [inputValue, setInputValue] = useState<string>('1000')
+
   const handleInputChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     if (ev.target.value) {
       setInputValue(mapNumericInput(ev.target.value))
     }
   }
+
   const estimatedEarnings = useMemo(() => {
     if (!strategyData?.apy) return 0
 
     return Number(inputValue.replaceAll(',', '')) * Number(strategyData.apy)
   }, [strategyData, inputValue])
+
   const dropdownLockedValue = useMemo(() => {
     return {
       tokenSymbol: strategyData?.symbol,
