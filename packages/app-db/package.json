@@ -9,9 +9,9 @@
     "db:push": "dotenv -e ../../.env -e ../../.env.local -- prisma db push --skip-generate"
   },
   "dependencies": {
-    "@prisma/client": "latest"
+    "@prisma/client": "^5.13.0"
   },
   "devDependencies": {
-    "prisma": "latest"
+    "prisma": "^5.13.0"
   }
 }
