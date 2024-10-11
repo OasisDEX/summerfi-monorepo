@@ -18,6 +18,8 @@ export { List } from './components/atoms/List/List'
 export { WithArrow } from './components/atoms/WithArrow/WithArrow'
 export { Expander } from './components/atoms/Expander/Expander'
 export { TableRowAccent } from './components/atoms/TableRowAccent/TableRowAccent'
+export { ToggleButton } from './components/atoms/ToggleButton/ToggleButton'
+export { Timeframes } from './components/atoms/Timeframes/Timeframes'
 
 export { Footer } from './components/layout/Footer/Footer'
 

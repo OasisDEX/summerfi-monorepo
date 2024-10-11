@@ -1,0 +1,27 @@
+import { SimpleGrid, ToggleButton } from '@summerfi/app-earn-ui'
+import { Timeframes } from '@summerfi/app-earn-ui/src'
+import { type TimeframesType } from '@summerfi/app-types'
+
+type ChartHeaderProps = {
+  compare: boolean
+  setCompare: (value: boolean) => void
+  timeframe: TimeframesType
+  setTimeframe: (timeframe: string) => void
+}
+
+export const ChartHeader = ({ compare, timeframe, setCompare, setTimeframe }: ChartHeaderProps) => {
+  return (
+    <SimpleGrid columns={2} rows={1}>
+      <ToggleButton
+        title="Compare to others"
+        checked={compare}
+        onChange={() => setCompare(!compare)}
+      />
+      <Timeframes
+        timeframes={['90d', '6m', '1y', '3y']}
+        activeTimeframe={timeframe}
+        setActiveTimeframe={setTimeframe}
+      />
+    </SimpleGrid>
+  )
+}

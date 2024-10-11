@@ -157,14 +157,12 @@ const EarnStrategyPage = ({ params }: EarnStrategyPageProps) => {
           <Expander
             title={
               <Text as="p" variant="p1semi">
-                Chart i guess
+                Historical yield
               </Text>
             }
             defaultExpanded
           >
-            <div style={{ height: '400px' }}>
-              <MockedLineChart />
-            </div>
+            <MockedLineChart />
           </Expander>
           <Expander
             title={

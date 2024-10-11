@@ -50,7 +50,14 @@ export const NavigationWrapper: FC = () => {
                 {
                   url: '/rebalancing-activity',
                   id: 'rebalancing-activity',
-                  title: 'Rebalancing activity',
+                  title: 'Rebalancing Activity',
+                  description: 'Text for rebalancing activity',
+                  icon: 'rebalancing',
+                },
+                {
+                  url: '/yield-trend',
+                  id: 'yield-trend',
+                  title: 'Yield Trend',
                   description: 'Text for rebalancing activity',
                   icon: 'rebalancing',
                 },
