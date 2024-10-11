@@ -12,12 +12,12 @@ export const rebalancingActivityColumns = [
   {
     title: 'Amount',
     key: 'amount',
-    sortable: false,
+    sortable: true,
   },
   {
     title: 'Timestamp',
     key: 'timestamp',
-    sortable: false,
+    sortable: true,
   },
   {
     title: 'Provider',

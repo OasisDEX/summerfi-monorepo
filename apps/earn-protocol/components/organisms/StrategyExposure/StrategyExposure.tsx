@@ -101,7 +101,12 @@ export const StrategyExposure: FC<StrategyExposureProps> = ({ rawData }) => {
         </Text>
 
         <StrategyExposureTypePicker currentType={exposureType} setExposureType={setExposureType} />
-        <Table rows={rows} columns={strategyExposureColumns} />
+        <Table
+          rows={rows}
+          columns={strategyExposureColumns}
+          // eslint-disable-next-line no-console
+          handleSort={(item) => console.log(item)}
+        />
       </div>
     </Card>
   )

@@ -17,17 +17,17 @@ export const strategyExposureColumns = [
   {
     title: '% Allocation',
     key: 'allocation',
-    sortable: false,
+    sortable: true,
   },
   {
     title: 'Current APY',
     key: 'currentApy',
-    sortable: false,
+    sortable: true,
   },
   {
     title: 'Liquidity',
     key: 'liquidity',
-    sortable: false,
+    sortable: true,
   },
   {
     title: (

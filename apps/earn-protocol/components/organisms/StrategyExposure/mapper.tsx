@@ -1,4 +1,4 @@
-import { TableCellText, Text, TokensGroup, WithArrow } from '@summerfi/app-earn-ui'
+import { TableCellText, TableRowAccent, Text, TokensGroup, WithArrow } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
@@ -13,6 +13,7 @@ export const strategyExposureMapper = (rawData: StrategyExposureRawData[]) => {
           <div
             style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-x-small)' }}
           >
+            <TableRowAccent backgroundColor="var(--earn-protocol-accent-1-100)" />
             <TokensGroup
               tokens={[item.strategy.primaryToken, item.strategy.secondaryToken]}
               variant="s"

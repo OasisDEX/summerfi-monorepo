@@ -2,22 +2,22 @@ export const userActivityColumns = [
   {
     title: 'Position Balance',
     key: 'balance',
-    sortable: false,
+    sortable: true,
   },
   {
     title: 'Amount',
     key: 'amount',
-    sortable: false,
+    sortable: true,
   },
   {
     title: '# of Deposits',
     key: 'numberOfDeposits',
-    sortable: false,
+    sortable: true,
   },
   {
     title: 'Time',
     key: 'time',
-    sortable: false,
+    sortable: true,
   },
   {
     title: 'Earning streak',

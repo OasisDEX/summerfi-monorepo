@@ -1,5 +1,6 @@
 'use client'
 import { Fragment, type ReactNode, useState } from 'react'
+import { TableSortDirection, type TableSortedColumn } from '@summerfi/app-types'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 
@@ -15,44 +16,40 @@ type Row<K extends string> = {
   [key in K]: ReactNode
 }
 
-export function Table<K extends string>({
-  rows,
-  columns,
-}: {
+interface TableProps<K extends string> {
   rows: {
     content: Row<K>
     details?: ReactNode
   }[]
   columns: Column<K>[]
-}) {
-  // const [sortConfig, setSortConfig] = useState<{ key: K; direction: string } | null>(null)
+  handleSort?: (config: TableSortedColumn<K>) => void
+}
+
+export function Table<K extends string>({ rows, columns, handleSort }: TableProps<K>) {
+  const [sortConfig, setSortConfig] = useState<TableSortedColumn<K> | null>(null)
   const [expandedRow, setExpandedRow] = useState<number | null>(null)
 
   // Handle sorting by column
-  const handleSort = (_: K) => {
-    // let direction = 'ascending'
-    //
-    // if (sortConfig && sortConfig.key === column && sortConfig.direction === 'ascending') {
-    //   direction = 'descending'
-    // }
-    // setSortConfig({ key: column, direction })
-  }
+  const handleColumnSorting = (column: K, isSortable?: boolean) => {
+    if (!isSortable) {
+      return
+    }
 
-  // Sort the data based on the sortConfig
-  // const sortedData = useMemo(() => {
-  //   if (!sortConfig) return data.rows
-  //
-  //   return [...data.rows].sort((a, b) => {
-  //     if (a[sortConfig.key] < b[sortConfig.key]) {
-  //       return sortConfig.direction === 'ascending' ? -1 : 1
-  //     }
-  //     if (a[sortConfig.key] > b[sortConfig.key]) {
-  //       return sortConfig.direction === 'ascending' ? 1 : -1
-  //     }
-  //
-  //     return 0
-  //   })
-  // }, [data, sortConfig])
+    let direction = TableSortDirection.ASC
+
+    if (
+      sortConfig &&
+      sortConfig.key === column &&
+      sortConfig.direction === TableSortDirection.ASC
+    ) {
+      direction = TableSortDirection.DESC
+    }
+
+    const update = { key: column, direction }
+
+    setSortConfig(update)
+    handleSort?.(update)
+  }
 
   return (
     <div className={styles.tableWrapper}>
@@ -60,22 +57,35 @@ export function Table<K extends string>({
         <thead>
           <tr>
             {columns.map((column) => (
-              <th key={column.key} onClick={() => handleSort(column.key)}>
+              <th key={column.key}>
                 <div
                   style={{
                     display: 'flex',
-                    alignItems: 'center',
-                    gap: 'var(--spacing-space-x-small)',
                   }}
                 >
-                  {column.title}
-                  {/* {sortConfig?.key === column.key ? (*/}
-                  {/*  sortConfig.direction === 'ascending' ? (*/}
-                  {/*    <Icon iconName="chevron_up" size={10} color="rgba(119, 117, 118, 1)" />*/}
-                  {/*  ) : (*/}
-                  {/*    <Icon iconName="chevron_down" size={10} color="rgba(119, 117, 118, 1)" />*/}
-                  {/*  )*/}
-                  {/* ) : null}*/}
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 'var(--spacing-space-x-small)',
+                      width: 'fit-content',
+                      cursor: column.sortable ? 'pointer' : 'default',
+                    }}
+                    onClick={() => handleColumnSorting(column.key, column.sortable)}
+                  >
+                    {column.title}
+                    {sortConfig?.key === column.key && column.sortable ? (
+                      <Icon
+                        iconName={
+                          sortConfig.direction === TableSortDirection.ASC
+                            ? 'chevron_up'
+                            : 'chevron_down'
+                        }
+                        size={10}
+                        color="rgba(119, 117, 118, 1)"
+                      />
+                    ) : null}
+                  </div>
                 </div>
               </th>
             ))}
@@ -84,7 +94,10 @@ export function Table<K extends string>({
         <tbody>
           {rows.map((row, rowIndex) => (
             <Fragment key={rowIndex}>
-              <tr onClick={() => setExpandedRow(expandedRow === rowIndex ? null : rowIndex)}>
+              <tr
+                onClick={() => setExpandedRow(expandedRow === rowIndex ? null : rowIndex)}
+                style={{ cursor: row.details ? 'pointer' : 'default' }}
+              >
                 {Object.values(row.content).map((item, idx) => (
                   <td key={idx}>
                     {idx === 0 && row.details ? (
