@@ -1,4 +1,4 @@
-.strategyGridDetailsBreadcrumbsWrapper {
+.strategyGridPreviewBreadcrumbsWrapper {
   display: flex;
   flex-direction: column;
   a {
@@ -7,7 +7,7 @@
   }
 }
 
-.strategyGridDetailsPositionWrapper {
+.strategyGridPreviewPositionWrapper {
   display: grid;
   grid-gap: var(--general-space-16);
   grid-template-columns: 1fr max(446px);
@@ -27,7 +27,7 @@
   }
 }
 
-.strategyGridDetailsTopLeftWrapper {
+.strategyGridPreviewTopLeftWrapper {
   display: flex;
   flex-direction: row;
   width: 100%;

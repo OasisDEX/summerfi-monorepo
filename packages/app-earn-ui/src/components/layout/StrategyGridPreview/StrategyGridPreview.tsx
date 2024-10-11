@@ -11,9 +11,9 @@ import { DataBlock } from '@/components/molecules/DataBlock/DataBlock'
 import { SimpleGrid } from '@/components/molecules/Grid/SimpleGrid'
 import { StrategyTitleWithRisk } from '@/components/molecules/StrategyTitleWithRisk/StrategyTitleWithRisk'
 
-import strategyGridDetailsStyles from './StrategyGridDetails.module.scss'
+import strategyGridPreviewStyles from './StrategyGridPreview.module.scss'
 
-export const StrategyGridDetails = ({
+export const StrategyGridPreview = ({
   strategy,
   leftContent,
   rightContent,
@@ -24,7 +24,7 @@ export const StrategyGridDetails = ({
 }) => {
   return (
     <>
-      <div className={strategyGridDetailsStyles.strategyGridDetailsBreadcrumbsWrapper}>
+      <div className={strategyGridPreviewStyles.strategyGridPreviewBreadcrumbsWrapper}>
         <div style={{ display: 'inline-block' }}>
           <Link href="/earn">
             <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
@@ -36,9 +36,9 @@ export const StrategyGridDetails = ({
           </Text>
         </div>
       </div>
-      <div className={strategyGridDetailsStyles.strategyGridDetailsPositionWrapper}>
+      <div className={strategyGridPreviewStyles.strategyGridPreviewPositionWrapper}>
         <div>
-          <div className={strategyGridDetailsStyles.strategyGridDetailsTopLeftWrapper}>
+          <div className={strategyGridPreviewStyles.strategyGridPreviewTopLeftWrapper}>
             <StrategyTitleWithRisk symbol={strategy.symbol} risk={strategy.risk} />
             <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
               <BonusLabel rays="1,111" />
@@ -87,10 +87,10 @@ export const StrategyGridDetails = ({
               />
             </Box>
           </SimpleGrid>
-          <Box className={strategyGridDetailsStyles.leftBlock}>{leftContent}</Box>
+          <Box className={strategyGridPreviewStyles.leftBlock}>{leftContent}</Box>
         </div>
-        <div className={strategyGridDetailsStyles.rightBlockWrapper}>
-          <div className={strategyGridDetailsStyles.rightBlock}>{rightContent}</div>
+        <div className={strategyGridPreviewStyles.rightBlockWrapper}>
+          <div className={strategyGridPreviewStyles.rightBlock}>{rightContent}</div>
         </div>
       </div>
     </>

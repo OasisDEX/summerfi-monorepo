@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo } from 'react'
-import { Expander, StrategyGridDetails, Text } from '@summerfi/app-earn-ui'
+import { Expander, StrategyGridPreview, Text } from '@summerfi/app-earn-ui'
 
 import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
 import FormContainer from '@/components/organisms/Form/FormContainer'
@@ -143,7 +143,7 @@ const EarnStrategyPage = ({ params }: EarnStrategyPageProps) => {
   }, [params])
 
   return (
-    <StrategyGridDetails
+    <StrategyGridPreview
       strategy={selectedStrategyData as (typeof strategiesList)[number]}
       leftContent={
         <div

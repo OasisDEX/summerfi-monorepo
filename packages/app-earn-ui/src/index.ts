@@ -23,7 +23,7 @@ export { Footer } from './components/layout/Footer/Footer'
 
 export { Navigation } from './components/layout/Navigation/Navigation'
 export { StrategyGrid } from './components/layout/StrategyGrid/StrategyGrid'
-export { StrategyGridDetails } from './components/layout/StrategyGridDetails/StrategyGridDetails'
+export { StrategyGridPreview } from './components/layout/StrategyGridPreview/StrategyGridPreview'
 export { MainBackground } from './components/layout/BackgroundComponents/MainBackground'
 
 export { Tooltip } from './components/molecules/Tooltip/Tooltip'
