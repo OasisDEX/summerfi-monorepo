@@ -172,7 +172,7 @@ export default async function simulateNewOrder() {
 
   expect(sdkManager).toBeDefined()
 
-  user = await sdkManager.users.getUser({
+  user = await sdkManager.users.getUserClient({
     chainInfo: chainInfo,
     walletAddress: Address.createFromEthereum({
       value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',

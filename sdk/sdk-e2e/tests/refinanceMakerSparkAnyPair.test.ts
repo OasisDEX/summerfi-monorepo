@@ -86,7 +86,7 @@ describe.skip('Refinance Maker -> Spark | SDK', () => {
     const walletAddress = Address.createFromEthereum({
       value: config.walletAddress as AddressValue,
     })
-    const user = await sdk.users.getUser({
+    const user = await sdk.users.getUserClient({
       chainInfo: chain.chainInfo,
       walletAddress: walletAddress,
     })

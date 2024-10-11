@@ -761,11 +761,11 @@ importers:
   packages/app-db:
     dependencies:
       '@prisma/client':
-        specifier: latest
+        specifier: ^5.13.0
         version: 5.13.0(prisma@5.13.0)
     devDependencies:
       prisma:
-        specifier: latest
+        specifier: ^5.13.0
         version: 5.13.0
 
   packages/app-earn-ui:
@@ -2991,12 +2991,6 @@ importers:
       '@graphql-codegen/cli':
         specifier: ^5.0.2
         version: 5.0.2(@types/node@20.12.7)(graphql@16.8.2)(typescript@5.6.2)
-      '@graphql-codegen/import-types-preset':
-        specifier: ^3.0.0
-        version: 3.0.0(graphql@16.8.2)
-      '@graphql-codegen/near-operation-file-preset':
-        specifier: ^3.0.0
-        version: 3.0.0(graphql@16.8.2)
       '@summerfi/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
@@ -10743,16 +10737,6 @@ packages:
       tslib: 2.2.0
     dev: false
 
-  /@graphql-codegen/add@3.2.3(graphql@16.8.2):
-    resolution: {integrity: sha512-sQOnWpMko4JLeykwyjFTxnhqjd/3NOG2OyMuvK76Wnnwh8DRrNf2VEs2kmSvLl7MndMlOj7Kh5U154dVcvhmKQ==}
-    peerDependencies:
-      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
-    dependencies:
-      '@graphql-codegen/plugin-helpers': 3.1.2(graphql@16.8.2)
-      graphql: 16.8.2
-      tslib: 2.2.0
-    dev: true
-
   /@graphql-codegen/add@5.0.2(graphql@16.8.2):
     resolution: {integrity: sha512-ouBkSvMFUhda5VoKumo/ZvsZM9P5ZTyDsI8LW18VxSNWOjrTeLXBWHG8Gfaai0HwhflPtCYVABbriEcOmrRShQ==}
     peerDependencies:
@@ -10923,40 +10907,6 @@ packages:
       '@graphql-tools/utils': 10.1.3(graphql@16.8.2)
       auto-bind: 4.0.0
       graphql: 16.8.2
-      tslib: 2.2.0
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
-    dev: true
-
-  /@graphql-codegen/import-types-preset@3.0.0(graphql@16.8.2):
-    resolution: {integrity: sha512-8Gl3cg+YCi0xLB5J71QQkqXvrdJVOTitJy+0YupconZwrd9cRWhN3k+SimtMKpzTVBNN96v1R8yvFLdfVF+iZA==}
-    engines: {node: '>= 16.0.0'}
-    peerDependencies:
-      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
-    dependencies:
-      '@graphql-codegen/add': 3.2.3(graphql@16.8.2)
-      '@graphql-codegen/plugin-helpers': 3.1.2(graphql@16.8.2)
-      '@graphql-codegen/visitor-plugin-common': 2.13.1(graphql@16.8.2)
-      graphql: 16.8.2
-      tslib: 2.2.0
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
-    dev: true
-
-  /@graphql-codegen/near-operation-file-preset@3.0.0(graphql@16.8.2):
-    resolution: {integrity: sha512-HRPaa7OsIAHQBFeGiTUVdjFcxzgvAs7uxSqcLEJgDpCr9cffpwnlgWP3gK79KnTiHsRkyb55U1K4YyrL00g1Cw==}
-    engines: {node: '>= 16.0.0'}
-    peerDependencies:
-      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
-    dependencies:
-      '@graphql-codegen/add': 3.2.3(graphql@16.8.2)
-      '@graphql-codegen/plugin-helpers': 3.1.2(graphql@16.8.2)
-      '@graphql-codegen/visitor-plugin-common': 2.13.1(graphql@16.8.2)
-      '@graphql-tools/utils': 10.3.2(graphql@16.8.2)
-      graphql: 16.8.2
-      parse-filepath: 1.0.2
       tslib: 2.2.0
     transitivePeerDependencies:
       - encoding

@@ -53,7 +53,7 @@ describe.skip('Import Maker Position | SDK', () => {
     const walletAddress = Address.createFromEthereum({
       value: '0xbEf4befb4F230F43905313077e3824d7386E09F8',
     })
-    const user = await sdk.users.getUser({
+    const user = await sdk.users.getUserClient({
       chainInfo: chain.chainInfo,
       walletAddress: walletAddress,
     })

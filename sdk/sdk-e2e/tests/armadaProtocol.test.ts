@@ -1,8 +1,15 @@
 import assert from 'assert'
 import { isAddress } from 'viem/utils'
 
-import { makeSDK, type Chain, type SDKManager, type UserClient } from '@summerfi/sdk-client'
-import { Address, ChainFamilyMap, TokenAmount } from '@summerfi/sdk-common'
+import { makeSDK, type IChain, type SDKManager } from '@summerfi/sdk-client'
+import {
+  Address,
+  ChainFamilyMap,
+  TokenAmount,
+  User,
+  Wallet,
+  type IUser,
+} from '@summerfi/sdk-common'
 
 import { IArmadaProtocol } from '@summerfi/armada-protocol-common'
 import { ArmadaPoolId, ArmadaProtocol } from '@summerfi/armada-protocol-service'
@@ -12,29 +19,28 @@ import { DAI, USDC } from './utils/TokenMockBase'
 jest.setTimeout(300000)
 
 /** TEST CONFIG */
-const config = {
-  SDKApiUrl: process.env.E2E_SDK_API_URL,
-  walletAddress: process.env.E2E_USER_ADDRESS,
-  privateKey: process.env.DEPLOYER_PRIVATE_KEY,
-  fleetAddress: Address.createFromEthereum({
-    value: '0xa09e82322f351154a155f9e0f9e6ddbc8791c794',
-  }),
-}
+const SDKApiUrl = process.env.E2E_SDK_API_URL,
+  walletAddress = process.env.E2E_USER_ADDRESS,
+  privateKey = process.env.DEPLOYER_PRIVATE_KEY,
+  fleetAddress = Address.createFromEthereum({
+    value: '0xd555F7D124a58617f49894b623b97Bf295674f14',
+  })
 
-describe.skip('Armada Protocol Deposit', () => {
+describe('Armada Protocol Deposit', () => {
   const chainInfo = ChainFamilyMap.Base.Base
   let sdk: SDKManager
-  let chain: Chain
-  let user: UserClient
+  let chain: IChain
+  let user: IUser
   let protocol: IArmadaProtocol
+
+  if (!SDKApiUrl) {
+    throw new Error('Invalid E2E_SDK_API_URL')
+  }
 
   beforeAll(async () => {
     // SDK
-    if (!config.SDKApiUrl) {
-      throw new Error('Invalid E2E_SDK_API_URL')
-    }
     sdk = makeSDK({
-      apiURL: config.SDKApiUrl,
+      apiURL: SDKApiUrl,
     })
 
     // Chain
@@ -45,18 +51,17 @@ describe.skip('Armada Protocol Deposit', () => {
     expect(maybeChain.chainInfo.chainId).toEqual(chainInfo.chainId)
     chain = maybeChain
 
-    if (!isAddress(config.walletAddress!)) {
+    if (!isAddress(walletAddress!)) {
       throw new Error('Invalid E2E_USER_ADDRESS')
     }
 
     // User
-    user = await sdk.users.getUser({
-      chainInfo: chain.chainInfo,
-      walletAddress: Address.createFromEthereum({ value: config.walletAddress }),
+    user = User.createFrom({
+      wallet: Wallet.createFrom({
+        address: Address.createFromEthereum({ value: walletAddress }),
+      }),
+      chainInfo,
     })
-    expect(user).toBeDefined()
-    expect(user.wallet.address.value).toEqual(config.walletAddress)
-    expect(user.chainInfo).toEqual(chain.chainInfo)
 
     // Protocol
     protocol = ArmadaProtocol.createFrom({ chainInfo })
@@ -68,7 +73,7 @@ describe.skip('Armada Protocol Deposit', () => {
 
     const poolId = ArmadaPoolId.createFrom({
       chainInfo,
-      fleetAddress: config.fleetAddress,
+      fleetAddress: fleetAddress,
       protocol,
     })
     const fleet = sdk.armada.users.getPool({
@@ -78,7 +83,7 @@ describe.skip('Armada Protocol Deposit', () => {
 
     const transactions = await sdk.armada.users.getNewDepositTX({
       poolId,
-      user: user,
+      user,
       amount: TokenAmount.createFrom({
         amount,
         token,
@@ -97,7 +102,7 @@ describe.skip('Armada Protocol Deposit', () => {
 
     const poolId = ArmadaPoolId.createFrom({
       chainInfo,
-      fleetAddress: config.fleetAddress,
+      fleetAddress: fleetAddress,
       protocol,
     })
     const fleet = sdk.armada.users.getPool({
@@ -122,11 +127,11 @@ describe.skip('Armada Protocol Deposit', () => {
 
   it('should withdraw 1 USDC', async () => {
     const token = USDC
-    const amount = '1'
+    const amount = '0.99'
 
     const poolId = ArmadaPoolId.createFrom({
       chainInfo,
-      fleetAddress: config.fleetAddress,
+      fleetAddress: fleetAddress,
       protocol,
     })
     const fleet = sdk.armada.users.getPool({
