@@ -46,7 +46,7 @@ const testConfig = [
   },
 ]
 
-describe('Armada Protocol Deposit', () => {
+describe('Armada Protocol Integration', () => {
   if (!SDKApiUrl) {
     throw new Error('Missing E2E_SDK_API_URL')
   }

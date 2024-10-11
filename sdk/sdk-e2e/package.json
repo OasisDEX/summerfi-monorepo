@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "test": "jest --silent=false ",
+    "test:integration": "jest --silent=false --testPathPattern=integration",
     "testw": "jest --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
