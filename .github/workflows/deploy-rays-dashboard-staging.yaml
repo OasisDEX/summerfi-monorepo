@@ -48,19 +48,15 @@ jobs:
       NEXT_PUBLIC_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }}
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
       SDK_API_URL: ${{ secrets.SDK_API_URL }}
+
     steps:
       - name: Check out code
         uses: actions/checkout@v3
         with:
           fetch-depth: 2
 
-      - name: Cache turbo build setup
-        uses: actions/cache@v3
-        with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-
+      - name: Set up turbo cache
+        uses: rharkor/caching-for-turbo@v1.5
 
       - uses: pnpm/action-setup@v2.0.1
         with:

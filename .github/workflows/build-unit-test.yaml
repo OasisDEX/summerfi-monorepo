@@ -20,20 +20,15 @@ jobs:
       CONTENTFUL_SPACE_ID: ${{ secrets.CONTENTFUL_SPACE_ID }}
       MIXPANEL_KEY: ${{ secrets.MIXPANEL_KEY }}
       NEXT_PUBLIC_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }}
-      SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}    
+      SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
         with:
           fetch-depth: 2
 
-      - name: Cache turbo build setup
-        uses: actions/cache@v3
-        with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-
+      - name: Set up turbo cache
+        uses: rharkor/caching-for-turbo@v1.5
 
       - uses: pnpm/action-setup@v2.0.1
         with:
@@ -78,11 +73,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Prebuild
-        run: pnpm prebuild
-
-      - name: Build
-        run: pnpm build
+        # there was build and prebuild step here, but it was removed
+        # because test/lint/format tasks are dependent on the build step
 
       - name: Test
         run: pnpm test
@@ -108,4 +100,4 @@ jobs:
       - name: Upload results to Codecov
         uses: codecov/codecov-action@v4
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}            
+          token: ${{ secrets.CODECOV_TOKEN }}
