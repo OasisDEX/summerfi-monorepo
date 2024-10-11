@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
-import { Card, StrategyGridDetails } from '@summerfi/app-earn-ui'
+import { StrategyGridDetails } from '@summerfi/app-earn-ui'
 import { type NetworkNames } from '@summerfi/app-types'
 
+import { StrategyDetailsView } from '@/components/layout/StrategyDetailsView/StrategyDetailsView'
 import { strategiesList } from '@/constants/dev-strategies-list'
 
 type StrategyDetailsPageProps = {
@@ -18,10 +19,7 @@ const StrategyDetailsPage = ({ params }: StrategyDetailsPageProps) => {
 
   return (
     <StrategyGridDetails strategy={selectedStrategyData as (typeof strategiesList)[number]}>
-      <Card variant="cardPrimary">How it all works</Card>
-      <Card variant="cardPrimary">Advanced yield</Card>
-      <Card variant="cardPrimary">Security</Card>
-      <Card variant="cardPrimary">Faq</Card>
+      <StrategyDetailsView />
     </StrategyGridDetails>
   )
 }
