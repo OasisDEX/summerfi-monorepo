@@ -1,9 +1,8 @@
 'use client'
 
 import { type Dispatch, type FC, type SetStateAction, useMemo, useState } from 'react'
-import { Button, Card, Table, Text } from '@summerfi/app-earn-ui'
+import { Card, InlineButtons, Table, Text } from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList } from '@summerfi/app-types'
-import { capitalize } from 'lodash-es'
 
 import { strategyExposureColumns } from '@/components/organisms/StrategyExposure/columns'
 import { strategyExposureMapper } from '@/components/organisms/StrategyExposure/mapper'
@@ -13,6 +12,21 @@ enum StrategyExposureFilterType {
   ALLOCATED = 'ALLOCATED',
   UNALLOCATED = 'UNALLOCATED',
 }
+
+const options = [
+  {
+    title: 'All',
+    key: StrategyExposureFilterType.ALL,
+  },
+  {
+    title: 'Allocated',
+    key: StrategyExposureFilterType.ALLOCATED,
+  },
+  {
+    title: 'Unallocated',
+    key: StrategyExposureFilterType.UNALLOCATED,
+  },
+]
 
 interface StrategyExposureTypePickerProps {
   currentType: StrategyExposureFilterType
@@ -24,41 +38,13 @@ const StrategyExposureTypePicker: FC<StrategyExposureTypePickerProps> = ({
   setExposureType,
 }) => {
   return (
-    <div
-      style={{
-        display: 'flex',
-        gap: 'var(--spacing-space-small)',
-        justifyContent: 'flex-start',
-        width: '100%',
-        marginBottom: 'var(--spacing-space-small)',
-      }}
-    >
-      {[
-        StrategyExposureFilterType.ALL,
-        StrategyExposureFilterType.ALLOCATED,
-        StrategyExposureFilterType.UNALLOCATED,
-      ].map((itemType) => (
-        <Button
-          key={itemType}
-          variant={itemType === currentType ? 'primarySmall' : 'unstyled'}
-          style={{ height: '31px', padding: '0px 16px' }}
-          onClick={() => setExposureType(itemType)}
-        >
-          <Text
-            as="span"
-            variant="p4semi"
-            style={{
-              color:
-                itemType === currentType
-                  ? 'var(--earn-protocol-secondary-100)'
-                  : 'var(--earn-protocol-secondary-60)',
-            }}
-          >
-            {capitalize(itemType.toLowerCase())}
-          </Text>
-        </Button>
-      ))}
-    </div>
+    <InlineButtons
+      options={options}
+      currentOption={options.find((item) => item.key === currentType) ?? options[0]}
+      handleOption={(option) => setExposureType(option.key)}
+      style={{ marginBottom: 'var(--spacing-space-small)' }}
+      variant="p4semi"
+    />
   )
 }
 

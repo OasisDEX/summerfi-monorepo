@@ -1,4 +1,4 @@
-import { Expander, StrategyGridDetails, Text } from '@summerfi/app-earn-ui'
+import { Expander, StrategyGridPreview, Text } from '@summerfi/app-earn-ui'
 
 import FormContainer from '@/components/organisms/Form/FormContainer'
 import {
@@ -137,7 +137,7 @@ const EarnStrategyPage = ({ params }: EarnStrategyPageProps) => {
   const [id, symbol, network, apy, risk] = params.strategy.split('-')
 
   return (
-    <StrategyGridDetails
+    <StrategyGridPreview
       strategy={
         {
           id,

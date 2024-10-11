@@ -4,23 +4,19 @@ import { type ReactNode } from 'react'
 import { type EarnProtocolStrategy } from '@summerfi/app-types'
 import Link from 'next/link'
 
-import { Box } from '@/components/atoms/Box/Box'
+import { Button } from '@/components/atoms/Button/Button'
 import { Text } from '@/components/atoms/Text/Text'
-import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
-import { DataBlock } from '@/components/molecules/DataBlock/DataBlock'
-import { SimpleGrid } from '@/components/molecules/Grid/SimpleGrid'
+import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
 import { StrategyTitleWithRisk } from '@/components/molecules/StrategyTitleWithRisk/StrategyTitleWithRisk'
 
 import strategyGridDetailsStyles from './StrategyGridDetails.module.scss'
 
 export const StrategyGridDetails = ({
   strategy,
-  leftContent,
-  rightContent,
+  children,
 }: {
   strategy: EarnProtocolStrategy
-  leftContent: ReactNode
-  rightContent: ReactNode
+  children: ReactNode
 }) => {
   return (
     <>
@@ -28,69 +24,33 @@ export const StrategyGridDetails = ({
         <div style={{ display: 'inline-block' }}>
           <Link href="/earn">
             <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
-              Earn / &nbsp;
+              Earn /
+            </Text>
+          </Link>
+          <Link href={`/earn/${strategy.network}/strategy/${strategy.id}`}>
+            <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
+              {' '}
+              {strategy.id}{' '}
             </Text>
           </Link>
           <Text as="span" variant="p3" color="white">
-            {strategy.id}
+            / Details
           </Text>
         </div>
       </div>
-      <div className={strategyGridDetailsStyles.strategyGridDetailsPositionWrapper}>
-        <div>
-          <div className={strategyGridDetailsStyles.strategyGridDetailsTopLeftWrapper}>
-            <StrategyTitleWithRisk symbol={strategy.symbol} risk={strategy.risk} />
-            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-              <BonusLabel rays="1,111" />
-            </Text>
-          </div>
-          <SimpleGrid
-            columns={2}
-            rows={2}
-            gap="var(--general-space-16)"
-            style={{ marginBottom: 'var(--general-space-16)' }}
-          >
-            <Box>
-              <DataBlock
-                size="large"
-                titleSize="small"
-                title="30d APY"
-                value={`${strategy.apy}%`}
-                subValue="+2.1% Median DeFi Yield"
-                subValueType="positive"
-                subValueSize="small"
-              />
-            </Box>
-            <Box>
-              <DataBlock
-                size="large"
-                titleSize="small"
-                title="Current APY"
-                value={`${strategy.apy}%`}
-                subValue="+1.7% Median DeFi Yield"
-                subValueType="positive"
-                subValueSize="small"
-              />
-            </Box>
-            <Box
-              style={{
-                gridColumn: '1/3',
-              }}
-            >
-              <DataBlock
-                size="large"
-                titleSize="small"
-                title="Assets in strategy"
-                value="$232m"
-                subValue={`231,232,321.01 ${strategy.symbol}`}
-                subValueSize="small"
-              />
-            </Box>
-          </SimpleGrid>
-          <Box className={strategyGridDetailsStyles.leftBlock}>{leftContent}</Box>
+      <div className={strategyGridDetailsStyles.strategyGridDetailsWrapper}>
+        <div className={strategyGridDetailsStyles.strategyGridDetailsHeaderWrapper}>
+          <StrategyTitleWithRisk symbol={strategy.symbol} risk={strategy.risk} />
+          <Button variant="primarySmall" style={{ height: '48px', paddingRight: '40px' }}>
+            <Link href="/">
+              <WithArrow as="span" variant="p2semi">
+                Deposit
+              </WithArrow>
+            </Link>
+          </Button>
         </div>
-        <div className={strategyGridDetailsStyles.rightBlockWrapper}>
-          <div className={strategyGridDetailsStyles.rightBlock}>{rightContent}</div>
+        <div className={strategyGridDetailsStyles.strategyGridDetailsContentWrapper}>
+          {children}
         </div>
       </div>
     </>

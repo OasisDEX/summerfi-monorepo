@@ -7,30 +7,24 @@
   }
 }
 
-.strategyGridDetailsPositionWrapper {
-  display: grid;
-  grid-gap: var(--general-space-16);
-  grid-template-columns: 1fr max(446px);
-  margin-top: 20px;
-  .leftBlock {
-    display: grid;
-    grid-gap: var(--general-space-16);
-  }
-
-  .rightBlockWrapper {
-    height: 100%;
-
-    .rightBlock {
-      position: sticky;
-      top: var(--general-space-16);
-    }
-  }
+.strategyGridDetailsWrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  margin-top: var(--general-space-24);
 }
 
-.strategyGridDetailsTopLeftWrapper {
+.strategyGridDetailsHeaderWrapper {
   display: flex;
   flex-direction: row;
   width: 100%;
   justify-content: space-between;
-  margin-bottom: var(--general-space-16);
+}
+
+.strategyGridDetailsContentWrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  margin-top: var(--general-space-24);
+  gap: var(--general-space-20);
 }

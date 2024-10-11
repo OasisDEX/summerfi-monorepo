@@ -18,11 +18,14 @@ export { List } from './components/atoms/List/List'
 export { WithArrow } from './components/atoms/WithArrow/WithArrow'
 export { Expander } from './components/atoms/Expander/Expander'
 export { TableRowAccent } from './components/atoms/TableRowAccent/TableRowAccent'
+export { ToggleButton } from './components/atoms/ToggleButton/ToggleButton'
+export { Timeframes } from './components/atoms/Timeframes/Timeframes'
 
 export { Footer } from './components/layout/Footer/Footer'
 
 export { Navigation } from './components/layout/Navigation/Navigation'
 export { StrategyGrid } from './components/layout/StrategyGrid/StrategyGrid'
+export { StrategyGridPreview } from './components/layout/StrategyGridPreview/StrategyGridPreview'
 export { StrategyGridDetails } from './components/layout/StrategyGridDetails/StrategyGridDetails'
 export { MainBackground } from './components/layout/BackgroundComponents/MainBackground'
 
@@ -39,6 +42,8 @@ export { StrategyTitleWithRisk } from './components/molecules/StrategyTitleWithR
 export { TableCellText } from './components/molecules/TableCellText/TableCellText'
 export { TableHeadWithTooltip } from './components/molecules/TableHeadWithTooltip/TableHeadWithTooltip'
 export { TokensGroup } from './components/molecules/TokensGroup/TokensGroup'
+export { InlineButtons } from './components/molecules/InlineButtons/InlineButtons'
+export { SkeletonImage } from './components/molecules/SkeletonImage/SkeletonImage'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar } from './components/organisms/Sidebar/Sidebar'
