@@ -144,15 +144,15 @@ export default async function simulateNewOrder() {
     address: Address.ZeroAddressEthereum,
   }
 
-  let user: UserClient | undefined = undefined
+  let userClient: UserClient | undefined = undefined
 
   type BuildOrderType = RPCMainClientType['orders']['buildOrder']['mutate']
   const buildOrder: BuildOrderType = jest.fn(async (params) => {
     expect(params).toBeDefined()
     expect(params.positionsManager).toBeDefined()
     expect(params.user).toBeDefined()
-    expect(params.user.chainInfo).toBe(user?.chainInfo)
-    expect(params.user.wallet).toBe(user?.wallet)
+    expect(params.user.chainInfo).toBe(userClient?.user.chainInfo)
+    expect(params.user.wallet).toBe(userClient?.user.wallet)
 
     expect(params.simulation).toBeDefined()
     expect(params.simulation).toBe(simulation)
@@ -172,14 +172,14 @@ export default async function simulateNewOrder() {
 
   expect(sdkManager).toBeDefined()
 
-  user = await sdkManager.users.getUserClient({
+  userClient = await sdkManager.users.getUserClient({
     chainInfo: chainInfo,
     walletAddress: Address.createFromEthereum({
       value: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
     }),
   })
 
-  const order: Maybe<Order> = await user.newOrder({ simulation, positionsManager })
+  const order: Maybe<Order> = await userClient.newOrder({ simulation, positionsManager })
 
   if (!order) {
     fail('Order not generated')
