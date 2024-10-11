@@ -1,5 +1,4 @@
-import { SimpleGrid, ToggleButton } from '@summerfi/app-earn-ui'
-import { Timeframes } from '@summerfi/app-earn-ui/src'
+import { SimpleGrid, Timeframes, ToggleButton } from '@summerfi/app-earn-ui'
 import { type TimeframesType } from '@summerfi/app-types'
 
 type ChartHeaderProps = {
