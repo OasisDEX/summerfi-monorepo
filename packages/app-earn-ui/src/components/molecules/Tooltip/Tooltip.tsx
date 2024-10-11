@@ -3,12 +3,15 @@
 import {
   type FC,
   type HTMLAttributes,
+  isValidElement,
   type ReactNode,
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
+import { createPortal } from 'react-dom'
 
 import { Card } from '@/components/atoms/Card/Card'
 import { isTouchDevice } from '@/helpers/is-touch-device'
@@ -55,17 +58,25 @@ const TooltipWrapper: FC<TooltipWrapperProps> = ({ children, isOpen, style, show
       }
       style={style}
     >
-      <Card variant="cardSecondary">{children}</Card>
+      <Card variant="cardSecondary" style={{ backgroundColor: 'var(--earn-protocol-neutral-80)' }}>
+        {children}
+      </Card>
     </div>
   )
 }
 
-interface StatefulTooltipProps extends HTMLAttributes<HTMLDivElement> {
+type ChildrenCallback = (tooltipOpen: boolean) => ReactNode
+
+interface StatefulTooltipProps {
   tooltip: ReactNode
-  children: ReactNode
+  children: ReactNode | ChildrenCallback
   tooltipWrapperStyles?: HTMLAttributes<HTMLDivElement>['style']
+  style?: HTMLAttributes<HTMLDivElement>['style']
   showAbove?: boolean
 }
+
+const childrenTypeGuard = (children: ReactNode | ChildrenCallback): children is ReactNode =>
+  isValidElement(children)
 
 export const Tooltip: FC<StatefulTooltipProps> = ({
   tooltip,
@@ -75,6 +86,25 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   showAbove = false,
 }) => {
   const { tooltipOpen, setTooltipOpen } = useTooltip()
+  const [portalElement, setPortalElement] = useState<HTMLElement | null>()
+  const tooltipRef = useRef<HTMLDivElement | null>(null)
+
+  const tooltipRefRect = tooltipRef.current?.getBoundingClientRect()
+
+  useEffect(() => {
+    const element = document.getElementById('portal')
+
+    if (element) {
+      setPortalElement(element)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (portalElement && tooltipRefRect && tooltipOpen) {
+      portalElement.style.setProperty('top', `${tooltipRefRect.y + window.scrollY}px`)
+      portalElement.style.setProperty('left', `${tooltipRefRect.x}px`)
+    }
+  }, [tooltipRefRect, portalElement, tooltipOpen])
 
   const handleMouseEnter = useMemo(
     () => (!isTouchDevice ? () => setTooltipOpen(true) : undefined),
@@ -88,18 +118,28 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
 
   const handleClick = useCallback(() => tooltip && setTooltipOpen(true), [])
 
+  if (!portalElement) {
+    return childrenTypeGuard(children) ? children : children(tooltipOpen)
+  }
+
+  const portal = createPortal(
+    <TooltipWrapper isOpen={tooltipOpen} style={tooltipWrapperStyles} showAbove={showAbove}>
+      {tooltip}
+    </TooltipWrapper>,
+    portalElement,
+  )
+
   return (
     <div
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
+      ref={tooltipRef}
       className={tooltipStyles.tooltipWrapper}
       style={style}
     >
-      {children}
-      <TooltipWrapper isOpen={tooltipOpen} style={tooltipWrapperStyles} showAbove={showAbove}>
-        {tooltip}
-      </TooltipWrapper>
+      {childrenTypeGuard(children) ? children : children(tooltipOpen)}
+      {portal}
     </div>
   )
 }

@@ -43,6 +43,8 @@
   --earn-protocol-warning-50: rgba(138, 97, 15, 1);
   --earn-protocol-warning-10: rgba(50, 42, 25, 1);
 
+  --earn-protocol-accent-1-100: rgba(34, 82, 255, 1);
+
   --color-background-primary: var(--earn-protocol-primary-100);
   --color-background-primary-hover: var(--earn-protocol-primary-70);
   --color-background-primary-disabled: var(--earn-protocol-primary-40);
@@ -101,5 +103,7 @@
   // to be refactored probably
   --gradient-earn-protocol-dark: linear-gradient(90deg, #ff49a4 0.78%, #b049ff 99.57%);
 
-  --shadow-depth-1: 0px 0px 8px 0px #0000001A;
+  --shadow-depth-1: 0px 0px 8px 0px #0000001a;
+  --shadow-depth-2: 0px 0px 8px 8px #00000026;
+  --shadow-depth-3: 0px 4px 8px 0px #00000033;
 }

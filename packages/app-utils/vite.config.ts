@@ -63,7 +63,7 @@ export default defineConfig({
       external: [
         'bignumber.js',
         'dayjs',
-        'lodash',
+        'lodash-es',
         '@summerfi/serverless-shared',
         '@summerfi/app-types',
       ],

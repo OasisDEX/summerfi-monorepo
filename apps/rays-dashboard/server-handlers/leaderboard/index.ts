@@ -20,7 +20,7 @@ export const fetchLeaderboard = async (
           'Content-Type': 'application/json',
         },
       },
-    ).then((resp) => resp.json())) as LeaderboardResponse
+    ).then((resp) => resp.json())) as Partial<LeaderboardResponse>
 
     return {
       leaderboard: response.leaderboard ?? [],

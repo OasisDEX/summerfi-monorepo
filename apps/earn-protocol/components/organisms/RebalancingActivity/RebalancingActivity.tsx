@@ -1,35 +1,10 @@
 import { type FC, useMemo } from 'react'
-import { Card, DataBlock, Icon, Table, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Card, DataBlock, Table, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type TokenSymbolsList } from '@summerfi/app-types'
 import Link from 'next/link'
 
-const columns = [
-  {
-    title: 'Purpose',
-    key: 'purpose',
-    sortable: false,
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    sortable: false,
-  },
-  {
-    title: 'Amount',
-    key: 'amount',
-    sortable: false,
-  },
-  {
-    title: 'Timestamp',
-    key: 'timestamp',
-    sortable: false,
-  },
-  {
-    title: 'Provider',
-    key: 'provider',
-    sortable: false,
-  },
-]
+import { rebalancingActivityColumns } from '@/components/organisms/RebalancingActivity/columns'
+import { rebalancingActivityMapper } from '@/components/organisms/RebalancingActivity/mapper'
 
 export interface RebalancingActivityRawData {
   type: string
@@ -42,55 +17,6 @@ export interface RebalancingActivityRawData {
   }
 }
 
-const rebalancingActivityMapper = (rawData: RebalancingActivityRawData[]) => {
-  return rawData.map((item) => {
-    return {
-      content: {
-        purpose: (
-          <div
-            style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-x-small)' }}
-          >
-            <Icon
-              iconName={item.type === 'reduce' ? 'arrow_decrease' : 'arrow_increase'}
-              variant="xxs"
-              color="rgba(119, 117, 118, 1)"
-            />
-            <Text as="p" variant="p3" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-              {item.type === 'reduce' ? 'Reduce' : 'Increase'} Risk
-            </Text>
-          </div>
-        ),
-        action: (
-          <div
-            style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-2x-small)' }}
-          >
-            <Icon tokenName={item.action.from} variant="s" /> {item.action.from} →
-            <Icon tokenName={item.action.to} variant="s" /> {item.action.to}
-          </div>
-        ),
-        amount: (
-          <div
-            style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-2x-small)' }}
-          >
-            <Icon tokenName={item.amount.token} variant="s" />
-            <Text as="p" variant="p3" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-              {item.amount.value}
-            </Text>
-          </div>
-        ),
-        timestamp: '3 hrs ago',
-        provider: (
-          <Link href={item.provider.link}>
-            <WithArrow as="p" variant="p3" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-              {item.provider.label}
-            </WithArrow>
-          </Link>
-        ),
-      },
-    }
-  })
-}
-
 interface RebalancingActivityProps {
   rawData: RebalancingActivityRawData[]
 }
@@ -99,7 +25,7 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({ rawData }) =
   const rows = useMemo(() => rebalancingActivityMapper(rawData), [rawData])
 
   return (
-    <Card variant="cardSecondary">
+    <Card variant="cardSecondary" style={{ marginTop: 'var(--spacing-space-medium)' }}>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <Text as="p" variant="p2semi" style={{ marginBottom: 'var(--spacing-space-large)' }}>
           Previous 30 days
@@ -128,8 +54,8 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({ rawData }) =
           for reallocating assets from lower performing strategies to higher performing ones, within
           a threshold of risk.
         </Text>
-        <Table rows={rows} columns={columns} />
-        <Link href="/" style={{ marginTop: 'var(--spacing-space-large)' }}>
+        <Table rows={rows} columns={rebalancingActivityColumns} />
+        <Link href="/" style={{ marginTop: 'var(--spacing-space-large)', width: 'fit-content' }}>
           <WithArrow as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             View all rebalances
           </WithArrow>

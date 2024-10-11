@@ -1,6 +1,8 @@
 export type Styles = {
   fullWidthBlock: string
   leftBlock: string
+  rightBlock: string
+  rightBlockWrapper: string
   strategyGridHeaderWrapper: string
   strategyGridPositionWrapper: string
 }

@@ -1,4 +1,4 @@
-import { keyBy } from 'lodash'
+import { keyBy } from 'lodash-es'
 
 import { clientId } from '@/helpers/client-id'
 import arbitrumMainnetBadge from '@/public/img/network_icons/arbitrum_badge_mainnet.svg'
@@ -209,6 +209,6 @@ export const L2Networks = [
 ]
 
 export const networksList = [...mainnetNetworks, ...L2Networks]
-export const networksByName = keyBy(networksList, 'name')
-export const networksByHexId = keyBy(networksList, 'hexId')
-export const networksByChainId = keyBy(networksList, 'id')
+export const networksByName: { [key: string]: NetworkConfig } = keyBy(networksList, 'name')
+export const networksByHexId: { [key: string]: NetworkConfig } = keyBy(networksList, 'hexId')
+export const networksByChainId: { [key: string]: NetworkConfig } = keyBy(networksList, 'id')

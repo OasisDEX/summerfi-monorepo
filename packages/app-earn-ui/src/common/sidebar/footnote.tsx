@@ -19,7 +19,7 @@ export const sidebarFootnote = {
     style: {
       maxWidth: '504px',
       width: '504px',
-      left: '-150px',
+      left: '-159px',
     },
   },
 }
