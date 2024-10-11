@@ -43,6 +43,7 @@ const StrategyExposureTypePicker: FC<StrategyExposureTypePickerProps> = ({
       currentOption={options.find((item) => item.key === currentType) ?? options[0]}
       handleOption={(option) => setExposureType(option.key)}
       style={{ marginBottom: 'var(--spacing-space-small)' }}
+      variant="p4semi"
     />
   )
 }

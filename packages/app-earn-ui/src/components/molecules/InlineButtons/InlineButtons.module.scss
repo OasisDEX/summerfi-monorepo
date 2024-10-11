@@ -2,5 +2,6 @@
   display: flex;
   gap: var(--spacing-space-small);
   justify-content: flex-start;
+  flex-wrap: wrap;
   width: 100%;
 }

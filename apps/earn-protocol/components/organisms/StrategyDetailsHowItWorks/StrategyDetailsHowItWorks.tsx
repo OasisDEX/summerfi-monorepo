@@ -38,8 +38,9 @@ export const StrategyDetailsHowItWorks = () => {
   const [currentOption, setCurrentOption] = useState<InlineButtonOption<string>>(options[0])
 
   return (
-    <Card variant="cardPrimary" id="how-it-works">
+    <Card variant="cardPrimary">
       <div
+        id="how-it-works"
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -57,6 +58,7 @@ export const StrategyDetailsHowItWorks = () => {
           style={{
             marginBottom: 'var(--spacing-space-large)',
           }}
+          variant="p4semi"
         />
         <SkeletonImage
           src="/img/rebalancing/rebalancing-morpho.png"
