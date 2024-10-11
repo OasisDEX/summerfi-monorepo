@@ -23,7 +23,7 @@ export interface IChainsManagerClient {
    *
    * @returns The chain for the given chain info
    */
-  getChain(params: { chainInfo: ChainInfo }): Promise<Maybe<Chain>>
+  getChain(params: { chainInfo: ChainInfo }): Promise<Chain>
 
   /**
    * @method getChainByName

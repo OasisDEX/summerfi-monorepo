@@ -20,16 +20,18 @@ export class TokensManager
   /** PUBLIC METHODS */
 
   /** @see ITokensManager.getTokenBySymbol */
-  async getTokenBySymbol(params: {
-    chainInfo: IChainInfo
-    symbol: string
-  }): Promise<Maybe<IToken>> {
+  async getTokenBySymbol(params: { chainInfo: IChainInfo; symbol: string }): Promise<IToken> {
     const provider = this._getBestProvider({ chainInfo: params.chainInfo })
     if (!provider) {
-      return undefined
+      throw new Error(`No provider found for chain: ${params.chainInfo.name}`)
     }
 
-    return provider.getTokenBySymbol(params)
+    const token = await provider.getTokenBySymbol(params)
+    if (!token) {
+      throw new Error(`Token not found for symbol: ${params.symbol}`)
+    }
+
+    return token
   }
 
   /** @see ITokensManager.getTokenByAddress */

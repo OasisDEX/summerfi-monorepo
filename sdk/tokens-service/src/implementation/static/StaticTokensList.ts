@@ -1,3 +1,4 @@
+import { ChainFamilyMap } from '@summerfi/sdk-common'
 import { TokenListData } from './TokensListData'
 
 export const StaticTokensData: TokenListData = {
@@ -581,6 +582,24 @@ export const StaticTokensData: TokenListData = {
       symbol: 'USDC',
       name: 'USDCoin',
       address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+      decimals: 6,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
+    },
+    {
+      chainId: ChainFamilyMap.Arbitrum.ArbitrumOne.chainId,
+      symbol: 'USDC',
+      name: 'USDCoin',
+      address: '0xaf88d065e77c8cc2239327c5edb3a432268e5831',
+      decimals: 6,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
+    },
+    {
+      chainId: ChainFamilyMap.Arbitrum.ArbitrumOne.chainId,
+      symbol: 'USDC.e',
+      name: 'Bridged USDCoin',
+      address: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
       decimals: 6,
       logoURI:
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',

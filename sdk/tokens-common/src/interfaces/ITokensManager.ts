@@ -18,7 +18,7 @@ export interface ITokensManager extends IManagerWithProviders<TokensProviderType
    *
    * @returns The token with the given symbol
    */
-  getTokenBySymbol(params: { chainInfo: IChainInfo; symbol: string }): Promise<Maybe<IToken>>
+  getTokenBySymbol(params: { chainInfo: IChainInfo; symbol: string }): Promise<IToken>
 
   /**
    * @method getTokenByAddress
