@@ -1,5 +1,5 @@
 export type Styles = {
-  underware: string
+  underwear: string
 }
 
 export type ClassNames = keyof Styles
