@@ -50,7 +50,7 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Cache turbo build setup (alternative)
+      - name: Set up turbo cache
         uses: rharkor/caching-for-turbo@v1.5
 
       - uses: pnpm/action-setup@v2.0.1
