@@ -22,38 +22,18 @@ export class TokensManager
   /** @see ITokensManager.getTokenBySymbol */
   async getTokenBySymbol(params: { chainInfo: IChainInfo; symbol: string }): Promise<IToken> {
     const provider = this._getBestProvider({ chainInfo: params.chainInfo })
-    if (!provider) {
-      throw new Error(`No provider found for chain: ${params.chainInfo.name}`)
-    }
-
-    const token = await provider.getTokenBySymbol(params)
-    if (!token) {
-      throw new Error(`Token not found for symbol: ${params.symbol}`)
-    }
-
-    return token
+    return provider.getTokenBySymbol(params)
   }
 
   /** @see ITokensManager.getTokenByAddress */
-  async getTokenByAddress(params: {
-    chainInfo: IChainInfo
-    address: IAddress
-  }): Promise<Maybe<IToken>> {
+  async getTokenByAddress(params: { chainInfo: IChainInfo; address: IAddress }): Promise<IToken> {
     const provider = this._getBestProvider({ chainInfo: params.chainInfo })
-    if (!provider) {
-      return undefined
-    }
-
     return provider.getTokenByAddress(params)
   }
 
   /** @see ITokensManager.getTokenByName */
-  async getTokenByName(params: { chainInfo: IChainInfo; name: string }): Promise<Maybe<IToken>> {
+  async getTokenByName(params: { chainInfo: IChainInfo; name: string }): Promise<IToken> {
     const provider = this._getBestProvider({ chainInfo: params.chainInfo })
-    if (!provider) {
-      return undefined
-    }
-
     return provider.getTokenByName(params)
   }
 }

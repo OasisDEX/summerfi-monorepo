@@ -1,5 +1,5 @@
 import { ChainId } from '@summerfi/sdk-common'
-import { IAddress, IChainInfo, IToken, Maybe } from '@summerfi/sdk-common/common'
+import { IAddress, IChainInfo, IToken } from '@summerfi/sdk-common/common'
 import { TokensProviderType } from '@summerfi/sdk-common/tokens'
 import { IManagerProvider } from '@summerfi/sdk-server-common'
 
@@ -30,7 +30,7 @@ export interface ITokensProvider extends IManagerProvider<TokensProviderType> {
    *
    * @returns The token with the given symbol
    */
-  getTokenBySymbol(params: { chainInfo: IChainInfo; symbol: string }): Promise<Maybe<IToken>>
+  getTokenBySymbol(params: { chainInfo: IChainInfo; symbol: string }): Promise<IToken>
 
   /**
    * @method getTokenByAddress
@@ -41,7 +41,7 @@ export interface ITokensProvider extends IManagerProvider<TokensProviderType> {
    *
    * @returns The token with the given address
    */
-  getTokenByAddress(params: { chainInfo: IChainInfo; address: IAddress }): Promise<Maybe<IToken>>
+  getTokenByAddress(params: { chainInfo: IChainInfo; address: IAddress }): Promise<IToken>
 
   /**
    * @method getTokenByName
@@ -52,5 +52,5 @@ export interface ITokensProvider extends IManagerProvider<TokensProviderType> {
    *
    * @returns The token with the given name
    */
-  getTokenByName(params: { chainInfo: IChainInfo; name: string }): Promise<Maybe<IToken>>
+  getTokenByName(params: { chainInfo: IChainInfo; name: string }): Promise<IToken>
 }
