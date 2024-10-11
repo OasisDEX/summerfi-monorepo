@@ -53,13 +53,13 @@ describe.skip('Import Maker Position | SDK', () => {
     const walletAddress = Address.createFromEthereum({
       value: '0xbEf4befb4F230F43905313077e3824d7386E09F8',
     })
-    const user = await sdk.users.getUserClient({
+    const userClient = await sdk.users.getUserClient({
       chainInfo: chain.chainInfo,
       walletAddress: walletAddress,
     })
-    expect(user).toBeDefined()
-    expect(user.wallet.address).toEqual(walletAddress)
-    expect(user.chainInfo).toEqual(chain.chainInfo)
+    expect(userClient).toBeDefined()
+    expect(userClient.user.wallet.address).toEqual(walletAddress)
+    expect(userClient.user.chainInfo).toEqual(chain.chainInfo)
 
     // Tokens
     const WETH: Maybe<Token> = await chain.tokens.getTokenBySymbol({
@@ -140,7 +140,7 @@ describe.skip('Import Maker Position | SDK', () => {
     expect(importPositionSimulation.steps.length).toBe(1)
     expect(importPositionSimulation.steps[0].type).toBe(SimulationSteps.Import)
 
-    const importPositionOrder: Maybe<Order> = await user.newOrder({
+    const importPositionOrder: Maybe<Order> = await userClient.newOrder({
       positionsManager: {
         address: Address.createFromEthereum({
           value: '0x551Eb8395093fDE4B9eeF017C93593a3C7a75138',
