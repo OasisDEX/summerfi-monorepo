@@ -1,7 +1,8 @@
 'use client'
 
 import { useMemo } from 'react'
-import { Expander, StrategyGridPreview, Text } from '@summerfi/app-earn-ui'
+import { Expander, StrategyGridPreview, Text, WithArrow } from '@summerfi/app-earn-ui'
+import Link from 'next/link'
 
 import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
 import FormContainer from '@/components/organisms/Form/FormContainer'
@@ -136,6 +137,29 @@ const userActivityRawData: UserActivityRawData[] = [
   },
 ]
 
+const detailsLinks = [
+  {
+    label: 'How it all works',
+    id: 'how-it-works',
+  },
+  {
+    label: 'Advanced yield data',
+    id: 'advanced-yield-data',
+  },
+  {
+    label: 'Yield sources',
+    id: 'yield-sources',
+  },
+  {
+    label: 'Security',
+    id: 'security',
+  },
+  {
+    label: 'FAQ',
+    id: 'faq',
+  },
+]
+
 const EarnStrategyPage = ({ params }: EarnStrategyPageProps) => {
   // open/manage view (not connected)
   const selectedStrategyData = useMemo(() => {
@@ -154,6 +178,51 @@ const EarnStrategyPage = ({ params }: EarnStrategyPageProps) => {
             width: '100%',
           }}
         >
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'var(--spacing-space-medium)',
+            }}
+          >
+            <Text variant="h5">About the strategy</Text>
+            <Text
+              variant="p2"
+              style={{
+                color: 'var(--color-text-secondary)',
+              }}
+            >
+              The Summer Earn Protocol is a permissionless passive lending product, which sets out
+              to offer effortless and secure optimised yield, while diversifying risk.
+            </Text>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
+              {detailsLinks.map(({ label, id }) => (
+                <Link
+                  key={label}
+                  href={`/earn/${selectedStrategyData?.network}/strategy/${selectedStrategyData?.id}/details#${id}`}
+                >
+                  <Text
+                    as="p"
+                    variant="p3semi"
+                    style={{
+                      color: 'var(--color-text-link)',
+                      textDecoration: 'none',
+                      cursor: 'pointer',
+                      paddingRight: 'var(--spacing-space-medium)',
+                    }}
+                  >
+                    <WithArrow>{label}</WithArrow>
+                  </Text>
+                </Link>
+              ))}
+            </div>
+          </div>
           <Expander
             title={
               <Text as="p" variant="p1semi">

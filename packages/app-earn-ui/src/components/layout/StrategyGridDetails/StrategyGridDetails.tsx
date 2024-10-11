@@ -24,7 +24,13 @@ export const StrategyGridDetails = ({
         <div style={{ display: 'inline-block' }}>
           <Link href="/earn">
             <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
-              Earn / {strategy.id}{' '}
+              Earn /
+            </Text>
+          </Link>
+          <Link href={`/earn/${strategy.network}/strategy/${strategy.id}`}>
+            <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
+              {' '}
+              {strategy.id}{' '}
             </Text>
           </Link>
           <Text as="span" variant="p3" color="white">

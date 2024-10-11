@@ -38,7 +38,7 @@ export const StrategyDetailsHowItWorks = () => {
   const [currentOption, setCurrentOption] = useState<InlineButtonOption<string>>(options[0])
 
   return (
-    <Card variant="cardPrimary">
+    <Card variant="cardPrimary" id="how-it-works">
       <div
         style={{
           display: 'flex',
