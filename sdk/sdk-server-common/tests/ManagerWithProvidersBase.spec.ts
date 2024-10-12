@@ -58,11 +58,11 @@ describe('SDK Server Common | Unit | ManagerProviderBase', () => {
     expect(providerOptimism.type).toBe(TestProviderType.OtherTestProvider)
   })
 
-  it('should return undefined when no provider is found for the given chain', () => {
-    const provider = testManager.getBestProvider({
-      chainInfo: ChainFamilyMap.Arbitrum.ArbitrumOne,
-    })
-
-    expect(provider).toBeUndefined()
+  it('should throw when no provider is found for the given chain', () => {
+    expect(() =>
+      testManager.getBestProvider({
+        chainInfo: ChainFamilyMap.Arbitrum.ArbitrumOne,
+      }),
+    ).toThrow('No provider found for chain: ArbitrumOne')
   })
 })

@@ -41,11 +41,12 @@ export class ManagerWithProvidersBase<
     chainInfo: IChainInfo
     forceUseProvider?: ProviderType
   }): ManagerProvider {
-    if (params.forceUseProvider) {
+    if (params.forceUseProvider !== undefined) {
       const provider = this._providersByType.get(params.forceUseProvider)
-      if (provider) {
-        return provider
+      if (!provider) {
+        throw new Error(`Forced provider not found: ${params.forceUseProvider}`)
       }
+      return provider
     }
 
     const providers = this._providersByChainId.get(params.chainInfo.chainId) || []
