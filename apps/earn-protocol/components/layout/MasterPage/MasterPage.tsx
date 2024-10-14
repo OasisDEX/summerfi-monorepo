@@ -3,6 +3,7 @@ import { MainBackground } from '@summerfi/app-earn-ui'
 import dynamic from 'next/dynamic'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
+import { TransakWidget } from '@/components/molecules/TransakWidget/TransakWidget'
 import { WalletInit } from '@/components/molecules/WalletInit/WalletInit'
 
 import './global.css'
@@ -31,7 +32,7 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({ children })
             gap: '20px',
           }}
         >
-          Footer <SetForkModal />
+          Footer <SetForkModal /> <TransakWidget />
         </div>
         <MainBackground />
       </div>
