@@ -1827,8 +1827,8 @@ importers:
         specifier: ^2.0.4
         version: 2.0.4
       '@oasisdex/addresses':
-        specifier: ^0.1.60
-        version: 0.1.60
+        specifier: ^0.1.84
+        version: 0.1.84
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared
@@ -7547,8 +7547,8 @@ packages:
     resolution: {integrity: sha512-TT4F7NY0Q5r12HLgnBf1VeP6ybXbi4e3jgipi608QgEONJ/+bbWDm+itHvMjqbgUyE4TusEPPzqYyAjzc2Tv3Q==}
     dev: false
 
-  /@oasisdex/addresses@0.1.60:
-    resolution: {integrity: sha512-UAmNodCG3ld4LK5w7sgtoA0ml4lMFfSE7Zp1vswW7/3823IZFmvEO6wy0Pd/vPnJjjKDYaLJdhsRRYGYHwYGSg==}
+  /@oasisdex/addresses@0.1.84:
+    resolution: {integrity: sha512-qaY7sXUsq4n9i7otCbfmb44Et1rNn9dAe+WSXgyjFost9ZLa/oZC27ojBEoF4QnZDr7Dcje0scHc+6yoJzkYeg==}
     dev: false
 
   /@oasisdex/automation@1.6.5-morpho.6:
@@ -11898,6 +11898,7 @@ packages:
 
   /ethereum-bloom-filters@1.1.0:
     resolution: {integrity: sha512-J1gDRkLpuGNvWYzWslBQR9cDV4nd4kfvVTE/Wy4Kkm4yb3EYRSlyi0eB/inTsSTTVyA0+HyzHgbr95Fn/Z1fSw==}
+    deprecated: do not use this package use package versions above as this can miss some topics
     dependencies:
       '@noble/hashes': 1.4.0
     dev: true
