@@ -1,8 +1,9 @@
 'use client'
 import { type FC, useMemo, useState } from 'react'
-import { Card, InlineButtons, SkeletonImage, Table, Text } from '@summerfi/app-earn-ui'
+import { Card, InlineButtons, Table, Text } from '@summerfi/app-earn-ui'
 import { type InlineButtonOption } from '@summerfi/app-types'
 
+import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
 import { individualYieldsColumns } from '@/components/organisms/StrategyDetailsYields/columns'
 import {
   individualYieldsMapper,
@@ -151,17 +152,7 @@ export const StrategyDetailsYields: FC<StrategyDetailsYieldsProps> = ({ rawData 
           asButtons
           variant="p4semi"
         />
-        <SkeletonImage
-          src="/img/rebalancing/rebalancing-morpho.png"
-          alt="rebalancing-morpho"
-          sizes="100vw"
-          style={{
-            width: '100%',
-            height: 'auto',
-          }}
-          width={1200}
-          height={463}
-        />
+        <MockedLineChart />
         <Text
           as="p"
           variant="p2semi"
