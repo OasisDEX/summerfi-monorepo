@@ -45,8 +45,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <NextIntlClientProvider messages={messages}>
           <AlchemyAccountsProvider
             initialState={accountKitInitialState}
-            forkRpcUrl={forkRpcUrl}
             chainId={chainId}
+            forkRpcUrl={forkRpcUrl}
           >
             <MasterPage>{children}</MasterPage>
           </AlchemyAccountsProvider>
