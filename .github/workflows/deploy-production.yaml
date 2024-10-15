@@ -8,10 +8,30 @@ permissions:
   id-token: write # This is required for requesting the JWT
   contents: read # This is required for actions/checkout
 jobs:
+  changes:
+    name: Check for Deploy Production changes
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' }}
+    permissions:
+      pull-requests: read
+    outputs:
+      deploy-sst: ${{ steps.filter.outputs.deploy-sst }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            deploy-sst:
+              - 'packages/**'
+              - 'external-api/**'
+              - 'summerfi-api/**'
   deploy:
     name: Build & Deploy production using SST
     environment: production
     runs-on: ubuntu-latest
+    needs: changes
+    if: ${{ needs.changes.outputs.deploy-sst == 'true' }}
     env:
       ONE_INCH_API_KEY: ${{ secrets.ONE_INCH_API_KEY }}
       ONE_INCH_API_VERSION: ${{ secrets.ONE_INCH_API_VERSION }}
@@ -43,21 +63,8 @@ jobs:
       CONTENTFUL_SPACE_ID: ${{ secrets.CONTENTFUL_SPACE_ID }}
 
     steps:
-      - name: Git clone the repository
-        uses: actions/checkout@v3
-
-      - name: Set up turbo cache
-        uses: rharkor/caching-for-turbo@v1.5
-
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 8.14.1
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          cache: 'pnpm'
+      - name: Setup workflow
+        uses: ./.github/parts/setup
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4

@@ -36,21 +36,8 @@ jobs:
       RAYS_DB_READ_CONNECTION_STRING: ${{ secrets.RAYS_DB_READ_CONNECTION_STRING }}
       BORROW_DB_READ_CONNECTION_STRING: ${{ secrets.BORROW_DB_READ_CONNECTION_STRING }}
     steps:
-      - name: Git clone the repository
-        uses: actions/checkout@v3
-
-      - name: Set up turbo cache
-        uses: rharkor/caching-for-turbo@v1.5
-
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 8.14.1
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          cache: 'pnpm'
+      - name: Setup workflow
+        uses: ./.github/parts/setup
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4

@@ -1,0 +1,10 @@
+name: Rays Dashboard App Cache
+runs:
+  - name: Setup Rays Dashboard App Next.js Cache
+    uses: actions/cache@v4
+    with:
+      path: ${{ github.workspace }}/apps/rays-dashboard/.next/cache
+      key:
+        ${{ runner.os }}-rays-dashboard-app-${{ hashFiles('pnpm-lock.yaml') }}-${{
+        hashFiles('apps/rays-dashboard/**/*.ts', 'apps/rays-dashboard/**/*.tsx') }}
+      restore-keys: ${{ runner.os }}-rays-dashboard-app-${{ hashFiles('pnpm-lock.yaml') }}

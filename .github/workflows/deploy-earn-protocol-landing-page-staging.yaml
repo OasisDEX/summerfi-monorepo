@@ -7,7 +7,7 @@ on:
 
 jobs:
   changes:
-    name: Check for earn protocol changes
+    name: Check for Earn Protocol LP changes
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' }}
     permissions:
@@ -45,23 +45,11 @@ jobs:
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 2
+      - name: Setup workflow
+        uses: ./.github/parts/setup
 
-      - name: Set up turbo cache
-        uses: rharkor/caching-for-turbo@v1.5
-
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 8.14.1
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          cache: 'pnpm'
+      - name: Setup Earn Protocol LP App Cache
+        uses: ./.github/app-cache/earn-protocol-landing-page
 
       - name: Extract commit hash
         id: vars

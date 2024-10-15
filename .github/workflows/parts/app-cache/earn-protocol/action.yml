@@ -1,0 +1,10 @@
+name: Earn Protocol App Cache
+runs:
+  - name: Setup Earn Protocol App Next.js Cache
+    uses: actions/cache@v4
+    with:
+      path: ${{ github.workspace }}/apps/earn-protocol/.next/cache
+      key:
+        ${{ runner.os }}-earn-protocol-app-${{ hashFiles('pnpm-lock.yaml') }}-${{
+        hashFiles('apps/earn-protocol/**/*.ts', 'apps/earn-protocol/**/*.tsx') }}
+      restore-keys: ${{ runner.os }}-earn-protocol-app-${{ hashFiles('pnpm-lock.yaml') }}

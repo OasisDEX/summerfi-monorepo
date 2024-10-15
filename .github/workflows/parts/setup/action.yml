@@ -1,0 +1,20 @@
+name: Setup workflow
+description: Setup workflow
+runs:
+  - name: Check out code
+    uses: actions/checkout@v3
+    with:
+      fetch-depth: 2
+
+  - name: Set up turbo cache
+    uses: rharkor/caching-for-turbo@v1.5
+
+  - uses: pnpm/action-setup@v2.0.1
+    with:
+      version: 8.14.1
+
+  - name: Setup Node.js environment
+    uses: actions/setup-node@v3
+    with:
+      node-version: 20
+      cache: 'pnpm'
