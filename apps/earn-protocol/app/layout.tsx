@@ -10,7 +10,7 @@ import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
 import { accountKitCookieStateName } from '@/constants/account-kit-cookie-state-name'
 import { forksCookieName } from '@/constants/forks-cookie-name'
 import { safeParseJson } from '@/constants/safe-parse-json'
-import { fontFtPolar, fontInter } from '@/helpers/fonts'
+import { fontInter } from '@/helpers/fonts'
 import { getServerSideCookies } from '@/helpers/get-server-side-cookies'
 import { AlchemyAccountsProvider } from '@/providers/AlchemyAccountsProvider/AlchemyAccountsProvider'
 
@@ -41,10 +41,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <head>
         <GlobalStyles />
       </head>
-      <body
-        className={`${fontFtPolar.variable} ${fontInter.variable}`}
-        style={{ backgroundColor: '#1B1B1B' }}
-      >
+      <body className={` ${fontInter.variable}`} style={{ backgroundColor: '#1B1B1B' }}>
         <NextIntlClientProvider messages={messages}>
           <AlchemyAccountsProvider
             initialState={accountKitInitialState}
