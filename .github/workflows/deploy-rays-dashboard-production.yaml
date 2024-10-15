@@ -48,7 +48,7 @@ jobs:
           key:
             ${{ runner.os }}-rays-dashboard-app-${{ hashFiles('pnpm-lock.yaml') }}-${{
             hashFiles('apps/rays-dashboard/**/*.ts', 'apps/rays-dashboard/**/*.tsx') }}
-          restore-keys: ${{ runner.os }}-rays-dashboard-app-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-rays-dashboard-app-${{ hashFiles('pnpm-lock.yaml') }}-
 
       - name: Establish VPN connection
         run: |

@@ -83,7 +83,7 @@ jobs:
           key:
             ${{ runner.os }}-earn-protocol-app-${{ hashFiles('pnpm-lock.yaml') }}-${{
             hashFiles('apps/earn-protocol/**/*.ts', 'apps/earn-protocol/**/*.tsx') }}
-          restore-keys: ${{ runner.os }}-earn-protocol-app-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-earn-protocol-app-${{ hashFiles('pnpm-lock.yaml') }}-
 
       - name: Establish VPN connection
         run: |

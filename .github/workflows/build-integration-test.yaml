@@ -49,7 +49,7 @@ jobs:
           key:
             ${{ runner.os }}-earn-protocol-app-${{ hashFiles('pnpm-lock.yaml') }}-${{
             hashFiles('apps/earn-protocol/**/*.ts', 'apps/earn-protocol/**/*.tsx') }}
-          restore-keys: ${{ runner.os }}-earn-protocol-app-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-earn-protocol-app-${{ hashFiles('pnpm-lock.yaml') }}-
 
       - name: Setup Earn Protocol LP App Next.js Cache
         uses: actions/cache@v4
@@ -60,7 +60,7 @@ jobs:
             hashFiles('apps/earn-protocol-landing-page/**/*.ts',
             'apps/earn-protocol-landing-page/**/*.tsx') }}
           restore-keys:
-            ${{ runner.os }}-earn-protocol-landing-page-app-${{ hashFiles('pnpm-lock.yaml') }}
+            ${{ runner.os }}-earn-protocol-landing-page-app-${{ hashFiles('pnpm-lock.yaml') }}-
 
       - name: Setup Rays Dashboard App Next.js Cache
         uses: actions/cache@v4
@@ -69,7 +69,7 @@ jobs:
           key:
             ${{ runner.os }}-rays-dashboard-app-${{ hashFiles('pnpm-lock.yaml') }}-${{
             hashFiles('apps/rays-dashboard/**/*.ts', 'apps/rays-dashboard/**/*.tsx') }}
-          restore-keys: ${{ runner.os }}-rays-dashboard-app-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-rays-dashboard-app-${{ hashFiles('pnpm-lock.yaml') }}-
 
       - name: Establish VPN connection
         run: |

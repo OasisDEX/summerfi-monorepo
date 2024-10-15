@@ -72,7 +72,7 @@ jobs:
             hashFiles('apps/earn-protocol-landing-page/**/*.ts',
             'apps/earn-protocol-landing-page/**/*.tsx') }}
           restore-keys:
-            ${{ runner.os }}-earn-protocol-landing-page-app-${{ hashFiles('pnpm-lock.yaml') }}
+            ${{ runner.os }}-earn-protocol-landing-page-app-${{ hashFiles('pnpm-lock.yaml') }}-
 
       - name: Extract commit hash
         id: vars
