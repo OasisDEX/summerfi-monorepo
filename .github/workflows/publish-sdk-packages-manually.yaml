@@ -54,7 +54,7 @@ jobs:
         if: |
           github.event.inputs.sdk_package == 'all' || 
           github.event.inputs.sdk_package == matrix.sdk_package
-        uses: ./.github/actions/publish-sdk-package
+        uses: ./.github/workflows/actions/publish-sdk-package
         with:
           sdk_package: ${{ matrix.sdk_package }}
           npm_access_token: ${{ secrets.NPM_ACCESS_TOKEN }}

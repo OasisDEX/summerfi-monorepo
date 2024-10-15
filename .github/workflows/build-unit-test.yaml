@@ -22,25 +22,20 @@ jobs:
       NEXT_PUBLIC_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }}
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 2
-
       - name: Setup workflow
-        uses: ./.github/parts/setup
+        uses: ./.github/workflows/parts/setup
 
       - name: Setup VPN
-        uses: ./.github/parts/vpn
+        uses: ./.github/workflows/parts/vpn
 
       - name: Setup Apps Cache (1/3)
-        uses: ./.github/app-cache/earn-protocol
+        uses: ./.github/workflows/app-cache/earn-protocol
 
       - name: Setup Apps Cache (2/3)
-        uses: ./.github/app-cache/earn-protocol-landing-page
+        uses: ./.github/workflows/app-cache/earn-protocol-landing-page
 
       - name: Setup Apps Cache (3/3)
-        uses: ./.github/app-cache/rays-dashboard
+        uses: ./.github/workflows/app-cache/rays-dashboard
 
       - name: Install dependencies
         run: pnpm install

@@ -45,16 +45,11 @@ jobs:
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 2
-
       - name: Setup workflow
-        uses: ./.github/parts/setup
+        uses: ./.github/workflows/parts/setup
 
       - name: Setup Earn Protocol LP App Cache
-        uses: ./.github/app-cache/earn-protocol-landing-page
+        uses: ./.github/workflows/app-cache/earn-protocol-landing-page
 
       - name: Extract commit hash
         id: vars

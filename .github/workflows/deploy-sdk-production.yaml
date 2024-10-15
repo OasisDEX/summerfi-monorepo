@@ -36,13 +36,8 @@ jobs:
       RAYS_DB_READ_CONNECTION_STRING: ${{ secrets.RAYS_DB_READ_CONNECTION_STRING }}
       BORROW_DB_READ_CONNECTION_STRING: ${{ secrets.BORROW_DB_READ_CONNECTION_STRING }}
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 2
-
       - name: Setup workflow
-        uses: ./.github/parts/setup
+        uses: ./.github/workflows/parts/setup
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4

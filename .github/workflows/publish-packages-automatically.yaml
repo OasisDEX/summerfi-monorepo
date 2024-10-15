@@ -52,7 +52,7 @@ jobs:
 
       - name: Publish the package to npmjs
         id: build_image
-        uses: ./.github/actions/publish-common
+        uses: ./.github/workflows/actions/publish-common
         with:
           npm_access_token: ${{ secrets.NPM_ACCESS_TOKEN }}
 
@@ -69,6 +69,6 @@ jobs:
 
       - name: Publish the package to npmjs
         id: build_image
-        uses: ./.github/actions/publish-client
+        uses: ./.github/workflows/actions/publish-client
         with:
           npm_access_token: ${{ secrets.NPM_ACCESS_TOKEN }}

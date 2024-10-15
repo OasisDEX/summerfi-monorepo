@@ -58,19 +58,14 @@ jobs:
       TRM_API_KEY: ${{ secrets.TRM_API_KEY }}
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 2
-
       - name: Setup workflow
-        uses: ./.github/parts/setup
+        uses: ./.github/workflows/parts/setup
 
       - name: Setup Earn Protocol App Cache
-        uses: ./.github/app-cache/earn-protocol
+        uses: ./.github/workflows/app-cache/earn-protocol
 
       - name: Setup VPN
-        uses: ./.github/parts/vpn
+        uses: ./.github/workflows/parts/vpn
 
       - name: Extract commit hash
         id: vars
