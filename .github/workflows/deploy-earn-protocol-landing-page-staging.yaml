@@ -63,6 +63,17 @@ jobs:
           node-version: 20
           cache: 'pnpm'
 
+      - name: Setup Earn Protocol LP App Next.js Cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/apps/earn-protocol-landing-page/.next/cache
+          key:
+            ${{ runner.os }}-earn-protocol-landing-page-app-${{ hashFiles('pnpm-lock.yaml') }}-${{
+            hashFiles('apps/earn-protocol-landing-page/**/*.ts',
+            'apps/earn-protocol-landing-page/**/*.tsx') }}
+          restore-keys:
+            ${{ runner.os }}-earn-protocol-landing-page-app-${{ hashFiles('pnpm-lock.yaml') }}-
+
       - name: Extract commit hash
         id: vars
         shell: bash

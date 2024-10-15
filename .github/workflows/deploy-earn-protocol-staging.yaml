@@ -24,7 +24,7 @@ jobs:
               - 'apps/earn-protocol/**'
               - 'packages/app-db/**'
               - 'packages/app-types/**'
-              - 'packages/app-ui/**'
+              - 'packages/app-earn-ui/**'
               - 'packages/app-icons/**'
   build-earn-protocol:
     name: Build and deploy Earn Protocol App
@@ -75,6 +75,15 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
+
+      - name: Setup Earn Protocol App Next.js Cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/apps/earn-protocol/.next/cache
+          key:
+            ${{ runner.os }}-earn-protocol-app-${{ hashFiles('pnpm-lock.yaml') }}-${{
+            hashFiles('apps/earn-protocol/**/*.ts', 'apps/earn-protocol/**/*.tsx') }}
+          restore-keys: ${{ runner.os }}-earn-protocol-app-${{ hashFiles('pnpm-lock.yaml') }}-
 
       - name: Establish VPN connection
         run: |

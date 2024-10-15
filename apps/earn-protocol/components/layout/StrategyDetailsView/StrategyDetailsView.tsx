@@ -1,7 +1,8 @@
 'use client'
-import { Card } from '@summerfi/app-earn-ui'
 
+import { StrategyDetailsFaq } from '@/components/organisms/StrategyDetailsFaq/StrategyDetailsFaq'
 import { StrategyDetailsHowItWorks } from '@/components/organisms/StrategyDetailsHowItWorks/StrategyDetailsHowItWorks'
+import { StrategyDetailsSecurity } from '@/components/organisms/StrategyDetailsSecurity/StrategyDetailsSecurity'
 import { type IndividualYieldsRawData } from '@/components/organisms/StrategyDetailsYields/mapper'
 import { StrategyDetailsYields } from '@/components/organisms/StrategyDetailsYields/StrategyDetailsYields'
 
@@ -68,21 +69,8 @@ export const StrategyDetailsView = () => {
     <>
       <StrategyDetailsHowItWorks />
       <StrategyDetailsYields rawData={yieldsRawData} />
-      <div id="yield-sources">
-        <Card variant="cardPrimary">
-          <div style={{ margin: '500px' }}>Yield Sources</div>
-        </Card>
-      </div>
-      <div id="security">
-        <Card variant="cardPrimary">
-          <div style={{ margin: '500px' }}>Security</div>
-        </Card>
-      </div>
-      <div id="faq">
-        <Card variant="cardPrimary">
-          <div style={{ margin: '500px' }}>Faq</div>
-        </Card>
-      </div>
+      <StrategyDetailsSecurity />
+      <StrategyDetailsFaq />
     </>
   )
 }

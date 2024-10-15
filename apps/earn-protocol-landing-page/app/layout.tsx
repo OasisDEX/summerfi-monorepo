@@ -4,7 +4,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
 
 import { MasterPage } from '@/components/layout/MasterPage/MasterPage'
-import { fontFtPolar, fontInter } from '@/helpers/fonts'
+import { fontInter } from '@/helpers/fonts'
 
 export const metadata: Metadata = {
   title: 'Summer.fi Earn Protocol Landing Page ⛱️',
@@ -20,10 +20,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <head>
         <GlobalStyles />
       </head>
-      <body
-        className={`${fontFtPolar.variable} ${fontInter.variable}`}
-        style={{ backgroundColor: '#1B1B1B' }}
-      >
+      <body className={` ${fontInter.variable}`} style={{ backgroundColor: '#1B1B1B' }}>
         <NextIntlClientProvider messages={messages}>
           <MasterPage>{children}</MasterPage>
         </NextIntlClientProvider>

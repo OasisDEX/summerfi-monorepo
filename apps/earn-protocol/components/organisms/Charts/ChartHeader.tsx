@@ -12,8 +12,8 @@ export const ChartHeader = ({ compare, timeframe, setCompare, setTimeframe }: Ch
   return (
     <SimpleGrid columns={2} rows={1}>
       <ToggleButton
-        title="Compare to others"
         checked={compare}
+        title="Compare to others"
         onChange={() => setCompare(!compare)}
       />
       <Timeframes

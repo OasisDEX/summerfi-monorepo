@@ -1,21 +1,5 @@
 import localFont from 'next/font/local'
 
-export const fontFtPolar = localFont({
-  src: [
-    {
-      path: '../public/fonts/ft-polar-bold.woff2',
-      weight: '700',
-    },
-    {
-      path: '../public/fonts/ft-polar-regular.woff2',
-      weight: '400',
-    },
-  ],
-  display: 'block',
-  variable: '--font-ft-polar',
-  preload: true,
-})
-
 export const fontInter = localFont({
   src: [
     {
