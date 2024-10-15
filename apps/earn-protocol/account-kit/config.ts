@@ -1,5 +1,5 @@
+import { alchemy, base } from '@account-kit/infra'
 import { type AlchemyAccountsUIConfig, cookieStorage, createConfig } from '@account-kit/react'
-import { base } from '@alchemy/aa-core'
 
 import { NetworkIds } from '@/constants/networks-list'
 
@@ -9,9 +9,13 @@ const uiConfig: AlchemyAccountsUIConfig = {
   illustrationStyle: 'outline',
   auth: {
     sections: [
-      [{ type: 'email' as const }],
+      [{ type: 'email' }],
       [
-        { type: 'passkey' as const },
+        { type: 'passkey' },
+        { type: 'social', authProviderId: 'google', mode: 'popup' },
+        { type: 'social', authProviderId: 'facebook', mode: 'popup' },
+      ],
+      [
         {
           type: 'external_wallets',
           walletConnect: { projectId: '832580820193ff6bae62a15dc0feff03' },
@@ -33,7 +37,7 @@ export const getAccountKitConfig = ({
 }) => {
   return createConfig(
     {
-      rpcUrl: forkRpcUrl ?? `/api/rpc/chain/${chainId ?? defaultChain.id}`,
+      transport: alchemy({ rpcUrl: forkRpcUrl ?? `/api/rpc/chain/${chainId ?? defaultChain.id}` }),
       signerConnection: {
         // this is for Alchemy Signer requests
         rpcUrl: '/api/rpc',
