@@ -24,6 +24,11 @@ jobs:
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
 
     steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
       - name: Setup workflow
         uses: ./.github/workflows/parts/setup
 
