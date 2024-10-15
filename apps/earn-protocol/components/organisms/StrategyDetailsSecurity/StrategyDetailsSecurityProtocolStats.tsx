@@ -28,7 +28,7 @@ const securityDropdownOptions: DropdownOption[] = [
 
 export const StrategyDetailsSecurityProtocolStats = () => {
   // eslint-disable-next-line react/hook-use-state
-  const [, setDropdownOption] = useState<DropdownOption>(securityDropdownOptions[0])
+  const [dropdownOption, setDropdownOption] = useState<DropdownOption>(securityDropdownOptions[0])
 
   return (
     <Card variant="cardSecondary">
@@ -56,7 +56,7 @@ export const StrategyDetailsSecurityProtocolStats = () => {
         </Text>
 
         <Text as="p" variant="p2semi" style={{ marginBottom: 'var(--spacing-space-x-small)' }}>
-          Why we choose AAVE v3
+          Why we choose {dropdownOption.label}
         </Text>
         <Text
           as="p"
@@ -66,13 +66,13 @@ export const StrategyDetailsSecurityProtocolStats = () => {
             marginBottom: 'var(--spacing-space-x-small)',
           }}
         >
-          Aave v3 offers efficient capital utilization, advanced risk management features,
-          cross-chain functionality, and deep liquidity, making it ideal for secure, scalable
-          integration.
+          {dropdownOption.label} offers efficient capital utilization, advanced risk management
+          features, cross-chain functionality, and deep liquidity, making it ideal for secure,
+          scalable integration.
         </Text>
         <Link href="/">
           <WithArrow as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
-            View AAVE v3
+            View {dropdownOption.label}
           </WithArrow>
         </Link>
       </div>
