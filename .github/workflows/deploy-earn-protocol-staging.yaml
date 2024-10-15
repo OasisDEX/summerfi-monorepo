@@ -58,6 +58,11 @@ jobs:
       TRM_API_KEY: ${{ secrets.TRM_API_KEY }}
 
     steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
       - name: Setup workflow
         uses: ./.github/parts/setup
 
