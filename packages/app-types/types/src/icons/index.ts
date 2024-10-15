@@ -208,6 +208,12 @@ export type IconNamesList =
   | 'stars'
   | 'arrow_increase'
   | 'arrow_decrease'
+  | 'chain_security'
+  | 'bug'
+  | 'quant_stamp'
+  | 'trail_of_bits'
+  | 'person'
+  | 'discord'
 
 export type TokenSymbolsList =
   | 'USDP'
