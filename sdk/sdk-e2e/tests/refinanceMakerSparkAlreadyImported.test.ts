@@ -90,13 +90,13 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     const walletAddress = Address.createFromEthereum({
       value: '0xbEf4befb4F230F43905313077e3824d7386E09F8',
     })
-    const user = await sdk.users.getUser({
+    const userClient = await sdk.users.getUserClient({
       chainInfo: chain.chainInfo,
       walletAddress: walletAddress,
     })
-    expect(user).toBeDefined()
-    expect(user.wallet.address).toEqual(walletAddress)
-    expect(user.chainInfo).toEqual(chain.chainInfo)
+    expect(userClient).toBeDefined()
+    expect(userClient.user.wallet.address).toEqual(walletAddress)
+    expect(userClient.user.chainInfo).toEqual(chain.chainInfo)
 
     // Positions Manager
     const positionsManager = PositionsManager.createFrom({
@@ -204,7 +204,7 @@ describe.skip('Refinance Maker Spark | SDK', () => {
     expect(refinanceSimulation.targetPosition.pool.id).toEqual(sparkPool.id)
     expect(refinanceSimulation.steps.length).toBe(5)
 
-    const refinanceOrder: Maybe<Order> = await user.newOrder({
+    const refinanceOrder: Maybe<Order> = await userClient.newOrder({
       positionsManager: {
         address: Address.createFromEthereum({
           value: '0x551Eb8395093fDE4B9eeF017C93593a3C7a75138',

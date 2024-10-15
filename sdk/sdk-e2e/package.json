@@ -2,7 +2,8 @@
   "name": "@summerfi/sdk-e2e",
   "version": "0.0.1",
   "scripts": {
-    "test": "DOTENV_CONFIG_PATH='../.env' jest --silent=false ",
+    "test": "jest --silent=false ",
+    "test:integration": "jest --silent=false --testPathPattern=e2e",
     "testw": "jest --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"

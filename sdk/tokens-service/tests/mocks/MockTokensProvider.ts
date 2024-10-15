@@ -6,7 +6,6 @@ import {
   IAddress,
   IChainInfo,
   IToken,
-  Maybe,
   TokensProviderType,
 } from '@summerfi/sdk-common'
 import { Token } from '@summerfi/sdk-common/common'
@@ -30,10 +29,7 @@ export class MockTokensProvider
     return [1, 4, 6]
   }
 
-  async getTokenBySymbol(params: {
-    chainInfo: IChainInfo
-    symbol: string
-  }): Promise<Maybe<IToken>> {
+  async getTokenBySymbol(params: { chainInfo: IChainInfo; symbol: string }): Promise<IToken> {
     return Token.createFrom({
       name: 'MockToken',
       symbol: params.symbol,
@@ -46,10 +42,7 @@ export class MockTokensProvider
     })
   }
 
-  async getTokenByAddress(params: {
-    chainInfo: IChainInfo
-    address: IAddress
-  }): Promise<Maybe<IToken>> {
+  async getTokenByAddress(params: { chainInfo: IChainInfo; address: IAddress }): Promise<IToken> {
     return Token.createFrom({
       name: 'MockToken',
       symbol: 'MOCK',
@@ -59,7 +52,7 @@ export class MockTokensProvider
     })
   }
 
-  async getTokenByName(params: { chainInfo: IChainInfo; name: string }): Promise<Maybe<IToken>> {
+  async getTokenByName(params: { chainInfo: IChainInfo; name: string }): Promise<IToken> {
     return Token.createFrom({
       name: params.name,
       symbol: 'MOCK',

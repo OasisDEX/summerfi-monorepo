@@ -11,7 +11,9 @@ import { IUser } from '@summerfi/sdk-common/user'
  * @dev This interface must be used to get positions for a user that will be used to create orders. To retrieve
  *      positions for portfolio please @see PortfolioManager
  */
-export interface IUserClient extends IUser {
+export interface IUserClient {
+  user: IUser
+
   /**
    * @method getPositionsByProtocol
    * @description Retrieves the list of positions of the user for a given protocol

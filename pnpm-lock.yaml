@@ -761,11 +761,11 @@ importers:
   packages/app-db:
     dependencies:
       '@prisma/client':
-        specifier: latest
+        specifier: ^5.13.0
         version: 5.13.0(prisma@5.13.0)
     devDependencies:
       prisma:
-        specifier: latest
+        specifier: ^5.13.0
         version: 5.13.0
 
   packages/app-earn-ui:
