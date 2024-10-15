@@ -51,5 +51,6 @@ export { Table } from './components/organisms/Table/Table'
 export { StrategySimulationForm } from './components/organisms/StrategySimulationForm/StrategySimulationForm'
 
 export { useToggle } from './hooks/use-toggle'
+export { useHash } from './hooks/use-hash'
 
 export { sidebarFootnote } from './common/sidebar/footnote'

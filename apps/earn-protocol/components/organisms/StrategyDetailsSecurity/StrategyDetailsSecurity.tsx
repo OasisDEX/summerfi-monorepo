@@ -1,33 +1,9 @@
-import { Card, DataBlock, Dropdown, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { type DropdownOption } from '@summerfi/app-types'
-import Link from 'next/link'
+import { Card, DataBlock, Text } from '@summerfi/app-earn-ui'
 
 import { StrategyDetailsSecurityAuditsExpander } from '@/components/organisms/StrategyDetailsSecurity/StrategyDetailsSecurityAuditsExpander'
 import { StrategyDetailsSecurityMoneyExpander } from '@/components/organisms/StrategyDetailsSecurity/StrategyDetailsSecurityMoneyExpander'
+import { StrategyDetailsSecurityProtocolStats } from '@/components/organisms/StrategyDetailsSecurity/StrategyDetailsSecurityProtocolStats'
 import { StrategyDetailsSecuritySupportExpander } from '@/components/organisms/StrategyDetailsSecurity/StrategyDetailsSecuritySupportExpander'
-
-const securityDropdownOptions: DropdownOption[] = [
-  {
-    label: 'Aave V2',
-    value: 'aavev2',
-    iconName: 'aave_circle_color',
-  },
-  {
-    label: 'Aave V3',
-    value: 'aavev3',
-    iconName: 'aave_circle_color',
-  },
-  {
-    label: 'Spark',
-    value: 'spark',
-    iconName: 'spark_circle_color',
-  },
-  {
-    label: 'Sky',
-    value: 'sky',
-    iconName: 'sky',
-  },
-]
 
 export const StrategyDetailsSecurity = () => {
   return (
@@ -79,63 +55,7 @@ export const StrategyDetailsSecurity = () => {
               <DataBlock title="Time Operating" size="small" value="6 years" />
             </div>
           </Card>
-          <Card variant="cardSecondary">
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Text
-                  as="p"
-                  variant="p1semi"
-                  style={{ marginBottom: 'var(--spacing-space-small)' }}
-                >
-                  Curate Protocol Stats
-                </Text>
-                <Dropdown
-                  options={securityDropdownOptions}
-                  dropdownValue={securityDropdownOptions[0]}
-                />
-              </div>
-              <Text
-                as="p"
-                variant="p3"
-                style={{
-                  marginBottom: 'var(--spacing-space-large)',
-                  color: 'var(--earn-protocol-secondary-60)',
-                }}
-              >
-                The Summer Earn protocol only selects the highest quality DeFi protocols to
-                integrate into our strategies.
-              </Text>
-
-              <Text
-                as="p"
-                variant="p2semi"
-                style={{ marginBottom: 'var(--spacing-space-x-small)' }}
-              >
-                Why we choose AAVE v3
-              </Text>
-              <Text
-                as="p"
-                variant="p3"
-                style={{
-                  color: 'var(--earn-protocol-secondary-60)',
-                  marginBottom: 'var(--spacing-space-x-small)',
-                }}
-              >
-                Aave v3 offers efficient capital utilization, advanced risk management features,
-                cross-chain functionality, and deep liquidity, making it ideal for secure, scalable
-                integration.
-              </Text>
-              <Link href="/">
-                <WithArrow
-                  as="p"
-                  variant="p3semi"
-                  style={{ color: 'var(--earn-protocol-primary-100)' }}
-                >
-                  View AAVE v3
-                </WithArrow>
-              </Link>
-            </div>
-          </Card>
+          <StrategyDetailsSecurityProtocolStats />
           <StrategyDetailsSecurityMoneyExpander />
           <StrategyDetailsSecurityAuditsExpander />
           <StrategyDetailsSecuritySupportExpander />

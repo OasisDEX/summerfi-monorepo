@@ -1,6 +1,6 @@
 'use client'
-import { type FC, useMemo, useState } from 'react'
-import { Card, InlineButtons, Table, Text } from '@summerfi/app-earn-ui'
+import { type FC, useEffect, useMemo, useState } from 'react'
+import { Card, InlineButtons, Table, Text, useHash } from '@summerfi/app-earn-ui'
 import { type InlineButtonOption } from '@summerfi/app-types'
 
 import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
@@ -10,14 +10,19 @@ import {
   type IndividualYieldsRawData,
 } from '@/components/organisms/StrategyDetailsYields/mapper'
 
+enum YieldOption {
+  ADVANCED_YIELD = 'advanced-yield',
+  YIELD_SOURCES = 'yield-sources',
+}
+
 const yieldOptions: InlineButtonOption<string>[] = [
   {
     title: 'Advanced yield',
-    key: 'advanced-yield',
+    key: YieldOption.ADVANCED_YIELD,
   },
   {
     title: 'Yield source',
-    key: 'yield-source',
+    key: YieldOption.YIELD_SOURCES,
   },
 ]
 
@@ -98,6 +103,8 @@ interface StrategyDetailsYieldsProps {
 }
 
 export const StrategyDetailsYields: FC<StrategyDetailsYieldsProps> = ({ rawData }) => {
+  const hash = useHash<YieldOption>()
+
   const [currentOption, setCurrentOption] = useState<InlineButtonOption<string>>(options[0])
   const [currentYieldOption, setCurrentYieldOption] = useState<InlineButtonOption<string>>(
     yieldOptions[0],
@@ -107,10 +114,15 @@ export const StrategyDetailsYields: FC<StrategyDetailsYieldsProps> = ({ rawData 
   )
   const rows = useMemo(() => individualYieldsMapper(rawData), [rawData])
 
+  useEffect(() => {
+    setCurrentYieldOption(yieldOptions.find((item) => item.key === hash) ?? yieldOptions[0])
+  }, [hash])
+
   return (
     <Card variant="cardPrimary">
+      <div id="advanced-yield-data" />
+      <div id="yield-sources" />
       <div
-        id="advanced-yield-data"
         style={{
           display: 'flex',
           flexDirection: 'column',
