@@ -63,6 +63,8 @@ export const StrategyDetailsSecuritySupportExpander = () => {
             display: 'flex',
             justifyContent: 'space-between',
             marginTop: 'var(--spacing-space-large)',
+            flexWrap: 'wrap',
+            gap: 'var(--spacing-space-large)',
           }}
         >
           {items.map((item) => (

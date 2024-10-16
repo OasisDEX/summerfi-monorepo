@@ -6,116 +6,33 @@ import { type InlineButtonOption } from '@summerfi/app-types'
 import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
 import { individualYieldsColumns } from '@/components/organisms/StrategyDetailsYields/columns'
 import {
-  individualYieldsMapper,
-  type IndividualYieldsRawData,
-} from '@/components/organisms/StrategyDetailsYields/mapper'
+  historicalYieldOptions,
+  individualYieldOptions,
+  strategyDetailsYieldOptions,
+  type YieldOption,
+  yieldsRawData,
+} from '@/components/organisms/StrategyDetailsYields/config'
+import { individualYieldsMapper } from '@/components/organisms/StrategyDetailsYields/mapper'
 
-enum YieldOption {
-  ADVANCED_YIELD = 'advanced-yield',
-  YIELD_SOURCES = 'yield-sources',
-}
-
-const yieldOptions: InlineButtonOption<string>[] = [
-  {
-    title: 'Advanced yield',
-    key: YieldOption.ADVANCED_YIELD,
-  },
-  {
-    title: 'Yield source',
-    key: YieldOption.YIELD_SOURCES,
-  },
-]
-
-const options: InlineButtonOption<string>[] = [
-  {
-    title: 'All',
-    key: 'all',
-  },
-  {
-    title: 'Summer.fi',
-    key: 'summerfi',
-  },
-  {
-    title: 'Pendle',
-    key: 'pendle',
-  },
-  {
-    title: 'AAVE v3',
-    key: 'aavev3',
-  },
-  {
-    title: 'MetaMorpho',
-    key: 'metamorpho',
-  },
-  {
-    title: 'Uni V3',
-    key: 'univ3',
-  },
-  {
-    title: 'DeFi Median',
-    key: 'defimedian',
-  },
-  {
-    title: 'Strategy A',
-    key: 'strategya',
-  },
-  {
-    title: 'Strategy B',
-    key: 'strategyb',
-  },
-  {
-    title: 'Strategy C',
-    key: 'strategyc',
-  },
-  {
-    title: 'Strategy D',
-    key: 'strategyd',
-  },
-  {
-    title: 'Strategy E',
-    key: 'strategye',
-  },
-]
-
-enum StrategyExposureFilterType {
-  ALL = 'ALL',
-  ALLOCATED = 'ALLOCATED',
-  UNALLOCATED = 'UNALLOCATED',
-}
-
-const individualYieldOptions = [
-  {
-    title: 'All',
-    key: StrategyExposureFilterType.ALL,
-  },
-  {
-    title: 'Allocated',
-    key: StrategyExposureFilterType.ALLOCATED,
-  },
-  {
-    title: 'Unallocated',
-    key: StrategyExposureFilterType.UNALLOCATED,
-  },
-]
-
-interface StrategyDetailsYieldsProps {
-  rawData: IndividualYieldsRawData[]
-}
-
-export const StrategyDetailsYields: FC<StrategyDetailsYieldsProps> = ({ rawData }) => {
+export const StrategyDetailsYields: FC = () => {
   const hash = useHash<YieldOption>()
 
-  const [currentOption, setCurrentOption] = useState<InlineButtonOption<string>>(options[0])
+  const [currentOption, setCurrentOption] = useState<InlineButtonOption<string>>(
+    historicalYieldOptions[0],
+  )
   const [currentYieldOption, setCurrentYieldOption] = useState<InlineButtonOption<string>>(
-    yieldOptions[0],
+    strategyDetailsYieldOptions[0],
   )
   const [individualYieldOption, setIndividualYieldOption] = useState<InlineButtonOption<string>>(
     individualYieldOptions[0],
   )
-  const rows = useMemo(() => individualYieldsMapper(rawData), [rawData])
+  const rows = useMemo(() => individualYieldsMapper(yieldsRawData), [])
 
   useEffect(() => {
-    setCurrentYieldOption(yieldOptions.find((item) => item.key === hash) ?? yieldOptions[0])
+    setCurrentYieldOption(
+      strategyDetailsYieldOptions.find((item) => item.key === hash) ??
+        strategyDetailsYieldOptions[0],
+    )
   }, [hash])
 
   return (
@@ -131,7 +48,7 @@ export const StrategyDetailsYields: FC<StrategyDetailsYieldsProps> = ({ rawData 
         }}
       >
         <InlineButtons
-          options={yieldOptions}
+          options={strategyDetailsYieldOptions}
           currentOption={currentYieldOption}
           handleOption={(option) => setCurrentYieldOption(option)}
           style={{
@@ -155,7 +72,7 @@ export const StrategyDetailsYields: FC<StrategyDetailsYieldsProps> = ({ rawData 
           Historical Yields
         </Text>
         <InlineButtons
-          options={options}
+          options={historicalYieldOptions}
           currentOption={currentOption}
           handleOption={(option) => setCurrentOption(option)}
           style={{

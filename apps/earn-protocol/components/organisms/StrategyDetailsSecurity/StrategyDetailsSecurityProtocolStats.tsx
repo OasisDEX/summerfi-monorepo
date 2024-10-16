@@ -27,7 +27,6 @@ const securityDropdownOptions: DropdownOption[] = [
 ]
 
 export const StrategyDetailsSecurityProtocolStats = () => {
-  // eslint-disable-next-line react/hook-use-state
   const [dropdownOption, setDropdownOption] = useState<DropdownOption>(securityDropdownOptions[0])
 
   return (

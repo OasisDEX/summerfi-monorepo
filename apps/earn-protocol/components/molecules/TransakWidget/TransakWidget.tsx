@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useChain, useUser } from '@account-kit/react'
 import { Button } from '@summerfi/app-earn-ui'
 
@@ -44,8 +44,14 @@ export const TransakWidget = () => {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const isSKDInit = useRef(false)
 
-  const [email, setEmail] = useState<string>(user?.email ?? '')
+  const [email, setEmail] = useState<string>('')
   const [fiatAmount, setFiatAmount] = useState<string>('')
+
+  useEffect(() => {
+    if (user?.email) {
+      setEmail(user.email)
+    }
+  }, [user?.email])
 
   if (!user) {
     return null

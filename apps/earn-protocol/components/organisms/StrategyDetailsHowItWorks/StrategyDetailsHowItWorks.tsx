@@ -5,40 +5,17 @@ import { type InlineButtonOption } from '@summerfi/app-types'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import {
+  strategyDetailsHowItWorksLinks,
+  strategyDetailsHowItWorksOptions,
+} from '@/components/organisms/StrategyDetailsHowItWorks/config'
+
 import rebalancingMorpho from 'public/img/rebalancing/rebalancing-morpho.png'
 
-const options: InlineButtonOption<string>[] = [
-  {
-    title: 'Flow of funds',
-    key: 'flow-of-funds',
-  },
-  {
-    title: 'Rebalance mechanism',
-    key: 'rebalance-mechanism',
-  },
-  {
-    title: 'Governance',
-    key: 'governance',
-  },
-]
-
-const links = [
-  {
-    label: 'White Paper',
-    href: '/',
-  },
-  {
-    label: 'Lite Paper',
-    href: '/',
-  },
-  {
-    label: 'Video',
-    href: '/',
-  },
-]
-
 export const StrategyDetailsHowItWorks = () => {
-  const [currentOption, setCurrentOption] = useState<InlineButtonOption<string>>(options[0])
+  const [currentOption, setCurrentOption] = useState<InlineButtonOption<string>>(
+    strategyDetailsHowItWorksOptions[0],
+  )
 
   return (
     <Card variant="cardPrimary">
@@ -55,7 +32,7 @@ export const StrategyDetailsHowItWorks = () => {
           How it all works
         </Text>
         <InlineButtons
-          options={options}
+          options={strategyDetailsHowItWorksOptions}
           currentOption={currentOption}
           handleOption={(option) => setCurrentOption(option)}
           style={{
@@ -88,7 +65,7 @@ export const StrategyDetailsHowItWorks = () => {
           offer effortless and secure optimised yield, while diversifying risk.
         </Text>
         <div style={{ display: 'flex', gap: '45px' }}>
-          {links.map((link) => (
+          {strategyDetailsHowItWorksLinks.map((link) => (
             <Link href={link.href} key={link.label}>
               <WithArrow
                 as="p"

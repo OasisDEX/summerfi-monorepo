@@ -1,7 +1,7 @@
 import { Card, Expander, Icon, Text, Tooltip, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
-const verifableSmartContractCodeLinks = [
+const verifiableSmartContractCodeLinks = [
   { title: 'Summer.fi Protocol Source code', link: '/' },
   { title: 'Summer.fi Rebalancer Smart Contract', link: '/' },
   { title: 'Ethena sUSDe Smart Contract ', link: '/' },
@@ -71,7 +71,7 @@ export const StrategyDetailsSecurityMoneyExpander = () => {
             width: 'fit-content',
           }}
         >
-          {verifableSmartContractCodeLinks.map((item) => (
+          {verifiableSmartContractCodeLinks.map((item) => (
             <Link href={item.link} key={item.title}>
               <WithArrow
                 as="p"
