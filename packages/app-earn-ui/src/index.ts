@@ -43,7 +43,6 @@ export { TableCellText } from './components/molecules/TableCellText/TableCellTex
 export { TableHeadWithTooltip } from './components/molecules/TableHeadWithTooltip/TableHeadWithTooltip'
 export { TokensGroup } from './components/molecules/TokensGroup/TokensGroup'
 export { InlineButtons } from './components/molecules/InlineButtons/InlineButtons'
-export { SkeletonImage } from './components/molecules/SkeletonImage/SkeletonImage'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar } from './components/organisms/Sidebar/Sidebar'

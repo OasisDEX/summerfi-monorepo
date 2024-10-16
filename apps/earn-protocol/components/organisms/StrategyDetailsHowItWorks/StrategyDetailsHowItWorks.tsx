@@ -1,8 +1,11 @@
 'use client'
 import { useState } from 'react'
-import { Card, InlineButtons, SkeletonImage, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Card, InlineButtons, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { type InlineButtonOption } from '@summerfi/app-types'
+import Image from 'next/image'
 import Link from 'next/link'
+
+import rebalancingMorpho from 'public/img/rebalancing/rebalancing-morpho.png'
 
 const options: InlineButtonOption<string>[] = [
   {
@@ -60,17 +63,19 @@ export const StrategyDetailsHowItWorks = () => {
           }}
           variant="p4semi"
         />
-        <SkeletonImage
-          src="/img/rebalancing/rebalancing-morpho.png"
-          alt="rebalancing-morpho"
-          sizes="100vw"
-          style={{
-            width: '100%',
-            height: 'auto',
-          }}
-          width={1200}
-          height={463}
-        />
+        <div style={{ borderRadius: '15px', overflow: 'hidden', width: '100%', height: '100%' }}>
+          <Image
+            src={rebalancingMorpho}
+            alt="rebalancing-morpho"
+            sizes="100vw"
+            style={{
+              width: '100%',
+              height: 'auto',
+            }}
+            width={1200}
+            placeholder="blur"
+          />
+        </div>
         <Text
           as="p"
           variant="p2"
@@ -84,7 +89,7 @@ export const StrategyDetailsHowItWorks = () => {
         </Text>
         <div style={{ display: 'flex', gap: '45px' }}>
           {links.map((link) => (
-            <Link href={link.href} key={link.href}>
+            <Link href={link.href} key={link.label}>
               <WithArrow
                 as="p"
                 variant="p3semi"
