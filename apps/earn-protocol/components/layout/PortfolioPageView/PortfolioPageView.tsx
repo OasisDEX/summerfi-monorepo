@@ -1,7 +1,15 @@
 'use client'
 
 import { type FC } from 'react'
-import { Button, DataBlock, Icon, Text } from '@summerfi/app-earn-ui'
+import { Button, DataBlock, Icon, TabBar, Text } from '@summerfi/app-earn-ui'
+import { formatAddress } from '@summerfi/app-utils'
+
+const tabs = [
+  { label: 'Overview', content: <div>Overview content here</div> },
+  { label: 'Wallet', content: <div>Wallet content here</div> },
+  { label: 'Rebalance Activity', content: <div>Rebalance content here</div> },
+  { label: 'Rewards', content: <div>Rewards content here</div> },
+]
 
 interface PortfolioPageViewProps {
   walletAddress: string
@@ -40,21 +48,35 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({ walletAddress })
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           alignItems: 'center',
-          marginTop: 'var(--spacing-space-x-large)',
+          marginTop: 'var(--general-space-40)',
+          marginBottom: 'var(--general-space-40)',
         }}
       >
         <div style={{ display: 'flex', gap: 'var(--spacing-space-x-small)', alignItems: 'center' }}>
           <Icon iconName="question_o" color="rgba(255, 73, 164, 1)" />
           <Text as="p" variant="p1semi">
-            {walletAddress}
+            {formatAddress(walletAddress, { first: 6 })}
           </Text>
-          <Icon iconName="question_o" color="rgba(255, 73, 164, 1)" />
+          <Icon iconName="edit" color="rgba(255, 73, 164, 1)" variant="s" />
         </div>
         <div style={{ display: 'flex', gap: 'var(--spacing-space-large)', alignItems: 'center' }}>
-          <DataBlock title="Total $SUMR" value="313" valueSize="large" />
-          <DataBlock title="Total Wallet Value" value="$2.3m" valueSize="large" />
+          <DataBlock
+            title="Total $SUMR"
+            value="313"
+            titleSize="large"
+            valueSize="large"
+            valueStyle={{ textAlign: 'right' }}
+          />
+          <DataBlock
+            title="Total Wallet Value"
+            value="$2.3m"
+            titleSize="large"
+            valueSize="large"
+            valueStyle={{ textAlign: 'right' }}
+          />
         </div>
       </div>
+      <TabBar tabs={tabs} />
     </div>
   )
 }

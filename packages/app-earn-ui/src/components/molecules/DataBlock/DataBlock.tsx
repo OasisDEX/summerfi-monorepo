@@ -1,3 +1,4 @@
+import { type CSSProperties } from 'react'
 import clsx from 'clsx'
 
 import { Text } from '@/components/atoms/Text/Text'
@@ -12,10 +13,12 @@ type DataBlockProps = {
   titleSize?: 'small' | 'large'
   subValueSize?: 'small' | 'large'
   valueSize?: 'small' | 'large'
+  valueStyle?: CSSProperties
   value: string
   subValue?: string
   subValueType?: 'positive' | 'negative' | 'neutral'
   centered?: boolean
+  subValueStyle?: CSSProperties
 }
 
 export const DataBlock = ({
@@ -25,15 +28,17 @@ export const DataBlock = ({
   size = 'small',
   value,
   valueSize,
+  valueStyle,
   centered,
   subValue,
   subValueType,
   subValueSize,
+  subValueStyle,
 }: DataBlockProps) => {
   const titleVariant = {
     small: 'p3semi' as const,
     large: 'p1semi' as const,
-  }[!subValue ? 'small' : titleSize ?? size]
+  }[titleSize ?? size]
 
   const valueVariant = {
     small: 'p1semi' as const,
@@ -58,7 +63,9 @@ export const DataBlock = ({
         tooltip={titleTooltip}
         color="rgb(119, 117, 118)"
       />
-      <Text variant={valueVariant}>{value}</Text>
+      <Text variant={valueVariant} style={valueStyle}>
+        {value}
+      </Text>
       {subValue && (
         <Text
           variant={subValueVariant}
@@ -68,6 +75,7 @@ export const DataBlock = ({
               negative: 'var(--color-background-warning-bold)',
               neutral: 'var(--color-text-secondary)',
             }[subValueType ?? 'neutral'],
+            ...subValueStyle,
           }}
         >
           {subValue}

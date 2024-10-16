@@ -1,0 +1,88 @@
+.tabBar {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+}
+
+.tabHeaders {
+  display: flex;
+  border-bottom: 3px solid #444; /* Grey underline spanning the entire container */
+  overflow-x: auto;
+  scrollbar-width: none; /* Hide scrollbar on Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar on IE/Edge */
+
+  /* Hide scrollbar on Webkit browsers (Safari, Chrome) */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.tabButton {
+  padding: 10px 20px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #ccc;
+  transition: color 0.3s ease;
+  white-space: nowrap; /* Prevent text wrapping for tabs */
+  flex-shrink: 0; /* Ensure buttons don't shrink when content is wide */
+  position: relative;
+
+  &:hover {
+    color: #fff;
+  }
+
+  &:focus {
+    outline: none; /* Remove default focus outline */
+  }
+}
+
+.active {
+  color: #fff;
+  position: relative;
+}
+
+.underline {
+  position: absolute;
+  top: 44px; /* Same level as grey border */
+  height: 3px;
+  background-color: #ff0080; /* Pink underline */
+  z-index: 1; /* Pink border should appear on top */
+  transition:
+    left 0.3s ease,
+    width 0.3s ease; /* Smooth animation */
+}
+
+.tabContent {
+  padding: 20px;
+  color: #fff;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .tabButton {
+    padding: 15px 10px;
+    font-size: 14px; /* Smaller font size for mobile */
+  }
+
+  .tabContent {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tabButton {
+    padding: 12px 8px;
+    font-size: 12px; /* Further reduce font size for very small screens */
+  }
+
+  .tabContent {
+    padding: 10px;
+  }
+
+  .underline {
+    top: 48px; /* Same level as grey border */
+  }
+}
