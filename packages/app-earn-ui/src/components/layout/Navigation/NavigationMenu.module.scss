@@ -4,6 +4,10 @@
   padding-left: var(--general-space-32);
   justify-content: center;
   width: 100%;
+
+  @include media("<=l") {
+    display: none;
+  }
 }
 
 .navigationMenuLinks {
@@ -15,21 +19,28 @@
     position: relative;
     cursor: pointer;
     margin: 0 var(--general-space-32);
+
     img {
       opacity: 0.5;
       transform: rotate3d(1, 0, 0, 0deg);
       transition: opacity 0.2s, transform 0.2s;
     }
 
-    span.active, a.active {
+    span.active,
+    a.active {
       color: var(--color-text-primary);
+
       img {
         opacity: 1;
       }
     }
+
     &:hover {
-      span, a {
+
+      span,
+      a {
         color: var(--color-text-primary);
+
         img {
           opacity: 1;
           transform: rotate3d(1, 0, 0, 180deg);
@@ -44,7 +55,8 @@
     }
   }
 
-  li>span, li>a {
+  li>span,
+  li>a {
     font-size: 16px;
     font-weight: 600;
     line-height: var(--general-space-24);
