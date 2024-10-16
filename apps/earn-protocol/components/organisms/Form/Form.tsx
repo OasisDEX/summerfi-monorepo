@@ -1,6 +1,6 @@
 'use client'
 import { type ChangeEvent, useState } from 'react'
-import { Box, Sidebar, SidebarFootnote, sidebarFootnote, Text } from '@summerfi/app-earn-ui'
+import { Sidebar, SidebarFootnote, sidebarFootnote } from '@summerfi/app-earn-ui'
 import { type DropdownOption } from '@summerfi/app-types'
 import { mapNumericInput } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'

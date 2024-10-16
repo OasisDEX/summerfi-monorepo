@@ -42,15 +42,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <GlobalStyles />
       </head>
       <body className={` ${fontInter.variable}`} style={{ backgroundColor: '#1B1B1B' }}>
-        <NextIntlClientProvider messages={messages}>
-          <AlchemyAccountsProvider
-            initialState={accountKitInitialState}
-            chainId={chainId}
-            forkRpcUrl={forkRpcUrl}
-          >
+        <AlchemyAccountsProvider
+          initialState={accountKitInitialState}
+          chainId={chainId}
+          forkRpcUrl={forkRpcUrl}
+        >
+          <NextIntlClientProvider messages={messages}>
             <MasterPage>{children}</MasterPage>
-          </AlchemyAccountsProvider>
-        </NextIntlClientProvider>
+          </NextIntlClientProvider>
+        </AlchemyAccountsProvider>
         <div id="portal" style={{ position: 'absolute' }} />
       </body>
     </html>
