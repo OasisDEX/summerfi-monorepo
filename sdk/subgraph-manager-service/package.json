@@ -15,7 +15,7 @@
     "test": "jest tests/ --coverage=true --passWithNoTests",
     "testw": "jest --watch",
     "e2e": "jest e2e/",
-    "build": "tsc -b --preserveWatchOutput -p tsconfig.build.json",
+    "build": "tsc -b --preserveWatchOutput tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

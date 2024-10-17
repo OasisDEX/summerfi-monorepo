@@ -13,7 +13,7 @@
     "test": "jest tests/ --passWithNoTests",
     "e2e": "jest e2e/",
     "testw": "jest --watch",
-    "build": "tsc -b --preserveWatchOutput -p tsconfig.build.json",
+    "build": "tsc -b --preserveWatchOutput tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
