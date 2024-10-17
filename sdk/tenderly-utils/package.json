@@ -18,7 +18,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "build": "tsc --preserveWatchOutput -v tsconfig.build.json",
-    "dev": "tsc --preserveWatchOutput tsconfig.build.json  -w"
+    "dev": "tsc --preserveWatchOutput -p tsconfig.build.json  -w"
   },
   "dependencies": {
     "@summerfi/sdk-common": "workspace:*",

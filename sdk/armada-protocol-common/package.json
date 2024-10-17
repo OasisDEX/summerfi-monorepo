@@ -10,7 +10,7 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "build": "tsc --preserveWatchOutput tsconfig.build.json",
+    "build": "tsc --preserveWatchOutput -p tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
