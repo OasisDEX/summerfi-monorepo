@@ -36,6 +36,7 @@
     "sass": "^1.77.8",
     "typescript": "^5.6.2",
     "vite": "^5.4.9",
+    "vite-plugin-dts": "^4.2.2",
     "vite-plugin-lib-inject-css": "^2.1.1"
   },
   "peerDependencies": {
