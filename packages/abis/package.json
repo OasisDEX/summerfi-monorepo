@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "test": "jest --passWithNoTests",
-    "build": "tsc --preserveWatchOutput -v",
-    "dev": "tsc --preserveWatchOutput -w",
+    "build": "tsc -b --preserveWatchOutput -v",
+    "dev": "tsc -b --preserveWatchOutput -w",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

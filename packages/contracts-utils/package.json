@@ -5,8 +5,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "tsc": "tsc",
-    "build": "tsc --preserveWatchOutput -v",
-    "dev": "tsc --preserveWatchOutput -w",
+    "build": "tsc -b --preserveWatchOutput -v",
+    "dev": "tsc -b --preserveWatchOutput -w",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

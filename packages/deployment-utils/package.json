@@ -10,8 +10,8 @@
     }
   },
   "scripts": {
-    "build": "tsc --preserveWatchOutput -p tsconfig.json",
-    "dev": "tsc --preserveWatchOutput -p tsconfig.json -w",
+    "build": "tsc -b --preserveWatchOutput -p tsconfig.json",
+    "dev": "tsc -b --preserveWatchOutput -p tsconfig.json -w",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

@@ -14,7 +14,7 @@
     "watch": "tsc -w",
     "test": "jest --setupFiles dotenv/config --coverage=true",
     "testw": "jest --watch",
-    "build": "tsc --preserveWatchOutput -v tsconfig.build.json",
+    "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "bundle:npm": "rm -rf bundle/dist bundle/tsconfig.build.tsbuildinfo && esbuild src/index.ts --platform=neutral --target=es2020 --conditions= --main-fields=main --bundle --sourcemap --outfile=bundle/dist/index.js --keep-names --external:crypto --external:tls --external:https --external:net --external:http --external:stream --external:zlib --external:assert --external:superjson --external:zod --external:bignumber.js --external:\"@trpc/client\" --external:abitype --external:viem && tsc --emitDeclarationOnly --outDir bundle/dist -p tsconfig.build.json",

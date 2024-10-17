@@ -12,7 +12,7 @@
     "watch": "tsc -w",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "tsc --preserveWatchOutput -v tsconfig.build.json",
+    "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
     "bundle": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap"
   },
   "dependencies": {

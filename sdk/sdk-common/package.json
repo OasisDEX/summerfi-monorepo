@@ -18,7 +18,7 @@
     "watch": "tsc -w",
     "test": "jest --coverage=true",
     "testw": "jest --watch",
-    "build": "tsc --preserveWatchOutput -v tsconfig.build.json",
+    "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "check-circular": "madge --circular --extensions ts ./src",

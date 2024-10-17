@@ -17,8 +17,8 @@
     "e2e": "jest e2e/",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "tsc --preserveWatchOutput -v tsconfig.build.json",
-    "dev": "tsc --preserveWatchOutput -p tsconfig.build.json  -w"
+    "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
+    "dev": "tsc -b --preserveWatchOutput -p tsconfig.build.json  -w"
   },
   "dependencies": {
     "@summerfi/sdk-common": "workspace:*",

@@ -14,7 +14,7 @@
     "watch": "tsc -w",
     "test": "jest --setupFiles dotenv/config --coverage=false",
     "testw": "jest --watch",
-    "build": "tsc --preserveWatchOutput -v tsconfig.build.json",
+    "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
