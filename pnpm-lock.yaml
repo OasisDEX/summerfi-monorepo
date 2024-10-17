@@ -1202,6 +1202,9 @@ importers:
       vite:
         specifier: ^5.4.9
         version: 5.4.9(@types/node@20.12.7)(sass@1.77.8)
+      vite-plugin-dts:
+        specifier: ^4.2.2
+        version: 4.2.4(@types/node@20.12.7)(rollup@4.22.4)(typescript@5.6.2)(vite@5.4.9)
       vite-plugin-lib-inject-css:
         specifier: ^2.1.1
         version: 2.1.1(vite@5.4.9)
@@ -1248,6 +1251,9 @@ importers:
       vite:
         specifier: ^5.4.9
         version: 5.4.9(@types/node@20.12.7)(sass@1.77.8)
+      vite-plugin-dts:
+        specifier: ^4.2.2
+        version: 4.2.4(@types/node@20.12.7)(rollup@4.22.4)(typescript@5.6.2)(vite@5.4.9)
       vite-plugin-node-polyfills:
         specifier: ^0.22.0
         version: 0.22.0(rollup@4.22.4)(vite@5.4.9)
@@ -29510,7 +29516,7 @@ packages:
     dependencies:
       '@babel/core': 7.24.7
       '@babel/generator': 7.24.7
-      '@babel/parser': 7.24.7
+      '@babel/parser': 7.25.8
       '@babel/types': 7.24.7
       metro: 0.80.9
       metro-babel-transformer: 0.80.9
