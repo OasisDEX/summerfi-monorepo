@@ -12,7 +12,7 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "build": "tsc -b -v",
+    "build": "tsc --preserveWatchOutput -v",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

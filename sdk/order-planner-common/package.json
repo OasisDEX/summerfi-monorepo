@@ -18,7 +18,7 @@
     "testw": "jest --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "tsc -b tsconfig.build.json"
+    "build": "tsc --preserveWatchOutput tsconfig.build.json"
   },
   "dependencies": {
     "@summerfi/armada-protocol-common": "workspace:*",

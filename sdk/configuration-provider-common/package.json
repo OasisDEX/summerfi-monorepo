@@ -12,7 +12,7 @@
   "scripts": {
     "tsc": "tsc",
     "watch": "tsc -w",
-    "build": "tsc -b -v tsconfig.build.json",
+    "build": "tsc --preserveWatchOutput -v tsconfig.build.json",
     "test": "jest --setupFiles dotenv/config --passWithNoTests",
     "testw": "jest --setupFiles dotenv/config --watch",
     "lint": "eslint .",

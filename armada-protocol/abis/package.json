@@ -18,7 +18,7 @@
     "watch": "tsc -w",
     "e2e": "jest e2e/",
     "testw": "jest --watch",
-    "build": "tsc -b tsconfig.build.json",
+    "build": "tsc --preserveWatchOutput tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "genindex": "rm -f src/index.ts && for dir in ./src/*; do cti create ./$dir -b -w > /dev/null; done && cti ./src -b -w -e '.t.sol' -e 'build-info' -e 'MockERC721.sol'"

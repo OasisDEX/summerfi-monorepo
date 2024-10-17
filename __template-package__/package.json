@@ -17,7 +17,7 @@
     "e2e": "jest e2e/",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "tsc -b -v tsconfig.build.json",
+    "build": "tsc --preserveWatchOutput -v tsconfig.build.json",
     "bundle": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap"
   },
   "dependencies": {

@@ -13,7 +13,7 @@
     "tsc": "tsc",
     "watch": "tsc -w",
     "prebuild": "pnpm run generate",
-    "build": "tsc -b tsconfig.build.json",
+    "build": "tsc --preserveWatchOutput tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "generate": "DOTENV_CONFIG_PATH=../../.env graphql-codegen -r dotenv/config"

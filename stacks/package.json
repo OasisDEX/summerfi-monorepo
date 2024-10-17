@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "Wrapper for the STT stacks",
   "scripts": {
-    "build": "tsc -b -v",
-    "dev": "tsc -b -w",
+    "build": "tsc --preserveWatchOutput -v",
+    "dev": "tsc --preserveWatchOutput -w",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
