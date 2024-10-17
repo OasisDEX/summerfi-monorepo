@@ -35,8 +35,9 @@ export default defineConfig(({ mode }) => {
         : undefined,
     ],
     customLogger: !notDev ? logger : undefined,
+    clearScreen: false,
     build: {
-      emptyOutDir: notDev, // in dev mode we cant just clear the dist folder
+      emptyOutDir: false,
       lib: {
         // eslint-disable-next-line no-undef
         entry: resolve(__dirname, 'src/index.ts'),

@@ -6,8 +6,8 @@
     "tsc": "tsc",
     "watch": "tsc -w",
     "test": "jest --passWithNoTests",
-    "build": "tsc -b",
-    "dev": "tsc -b -w",
+    "build": "tsc -b --preserveWatchOutput",
+    "dev": "tsc -b --preserveWatchOutput -w",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

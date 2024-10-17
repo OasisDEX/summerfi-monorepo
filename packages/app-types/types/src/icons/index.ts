@@ -214,6 +214,7 @@ export type IconNamesList =
   | 'trail_of_bits'
   | 'person'
   | 'discord'
+  | 'edit'
 
 export type TokenSymbolsList =
   | 'USDP'

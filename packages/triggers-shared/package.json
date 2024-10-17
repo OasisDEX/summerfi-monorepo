@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "test": "jest --passWithNoTests",
-    "build": "tsc -b -v",
-    "dev": "tsc -b -w",
+    "build": "tsc -b --preserveWatchOutput -v",
+    "dev": "tsc -b --preserveWatchOutput -w",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

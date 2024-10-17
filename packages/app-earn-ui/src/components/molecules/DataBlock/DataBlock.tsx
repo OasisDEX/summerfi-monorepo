@@ -1,3 +1,4 @@
+import { type CSSProperties, type ReactNode } from 'react'
 import clsx from 'clsx'
 
 import { Text } from '@/components/atoms/Text/Text'
@@ -10,30 +11,36 @@ type DataBlockProps = {
   titleTooltip?: string
   size?: 'small' | 'large'
   titleSize?: 'small' | 'large'
+  titleStyle?: CSSProperties
   subValueSize?: 'small' | 'large'
   valueSize?: 'small' | 'large'
+  valueStyle?: CSSProperties
   value: string
-  subValue?: string
+  subValue?: ReactNode
   subValueType?: 'positive' | 'negative' | 'neutral'
   centered?: boolean
+  subValueStyle?: CSSProperties
 }
 
 export const DataBlock = ({
   title,
   titleTooltip,
   titleSize,
+  titleStyle,
   size = 'small',
   value,
   valueSize,
+  valueStyle,
   centered,
   subValue,
   subValueType,
   subValueSize,
+  subValueStyle,
 }: DataBlockProps) => {
   const titleVariant = {
     small: 'p3semi' as const,
     large: 'p1semi' as const,
-  }[!subValue ? 'small' : titleSize ?? size]
+  }[titleSize ?? size]
 
   const valueVariant = {
     small: 'p1semi' as const,
@@ -57,8 +64,11 @@ export const DataBlock = ({
         iconName={titleTooltip ? 'question_o' : undefined}
         tooltip={titleTooltip}
         color="rgb(119, 117, 118)"
+        titleStyle={titleStyle}
       />
-      <Text variant={valueVariant}>{value}</Text>
+      <Text variant={valueVariant} style={valueStyle}>
+        {value}
+      </Text>
       {subValue && (
         <Text
           variant={subValueVariant}
@@ -68,6 +78,7 @@ export const DataBlock = ({
               negative: 'var(--color-background-warning-bold)',
               neutral: 'var(--color-text-secondary)',
             }[subValueType ?? 'neutral'],
+            ...subValueStyle,
           }}
         >
           {subValue}

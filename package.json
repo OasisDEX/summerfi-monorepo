@@ -32,7 +32,6 @@
     "sst:deploy:sdk:prod": "sst deploy --stage production --app sdk",
     "remove": "sst remove",
     "console": "sst console",
-    "graph": "pnpm dlx nx graph",
     "format": "prettier --check \"./**/*.{ts,tsx,js,jsx,json}\"",
     "format:fix": "prettier --write \"./**/*.{ts,tsx,js,jsx,json}\"",
     "coverage:total": "node scripts/coverage-report/GenerateCoverageReport.js",

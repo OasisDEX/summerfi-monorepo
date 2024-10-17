@@ -1,6 +1,6 @@
 'use client'
 import { type ChangeEvent, useState } from 'react'
-import { Box, Sidebar, SidebarFootnote, sidebarFootnote, Text } from '@summerfi/app-earn-ui'
+import { Sidebar, SidebarFootnote, sidebarFootnote } from '@summerfi/app-earn-ui'
 import { type DropdownOption } from '@summerfi/app-types'
 import { mapNumericInput } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
@@ -73,23 +73,6 @@ const Form = ({ fleetConfig: _fleetConfig, selectedStrategyData }: FormProps) =>
   return (
     <div>
       <Sidebar {...sidebarProps} />
-      {selectedStrategyData && (
-        <Box
-          style={{
-            marginTop: 'var(--general-space-16)',
-            minWidth: '100%',
-            flexDirection: 'column',
-          }}
-          light
-        >
-          <Text variant="p4semi" style={{ textAlign: 'center' }}>
-            DEBUG - Loaded Strategy Data
-          </Text>
-          <pre style={{ padding: '10px', margin: 0, fontSize: '12px' }}>
-            {JSON.stringify(selectedStrategyData, null, 2)}
-          </pre>
-        </Box>
-      )}
     </div>
   )
 }

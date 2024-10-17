@@ -1,7 +1,6 @@
 import { createElement, type FC, forwardRef } from 'react'
 
-import { getAtomClassList } from '@/components/atoms/getAtomClassList'
-import { type AtomProps } from '@/components/atoms/types'
+import { type AtomProps, getAtomClassList } from '@/components/atoms/getAtomClassList'
 
 import buttonStyles, { type ClassNames } from '@/components/atoms/Button/Button.module.scss'
 

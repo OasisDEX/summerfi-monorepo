@@ -48,10 +48,10 @@ export const TransakWidget = () => {
   const [fiatAmount, setFiatAmount] = useState<string>('')
 
   useEffect(() => {
-    if (user?.email) {
+    if (user?.email && email === '') {
       setEmail(user.email)
     }
-  }, [user?.email])
+  }, [user?.email, email])
 
   if (!user) {
     return null

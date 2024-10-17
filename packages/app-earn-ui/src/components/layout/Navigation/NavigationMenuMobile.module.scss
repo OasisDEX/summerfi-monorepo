@@ -1,0 +1,6 @@
+.menuMobileWrapper {
+
+  @include media(">l") {
+    display: none;
+  }
+}
