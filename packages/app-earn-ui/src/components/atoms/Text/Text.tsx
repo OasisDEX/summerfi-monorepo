@@ -1,7 +1,6 @@
 import { createElement, forwardRef } from 'react'
 
-import { getAtomClassList } from '@/components/atoms/getAtomClassList'
-import { type AtomProps } from '@/components/atoms/types'
+import { type AtomProps, getAtomClassList } from '@/components/atoms/getAtomClassList'
 
 import textStyles, { type ClassNames } from '@/components/atoms/Text/Text.module.scss'
 
