@@ -44,6 +44,7 @@ export { TableHeadWithTooltip } from './components/molecules/TableHeadWithToolti
 export { TokensGroup } from './components/molecules/TokensGroup/TokensGroup'
 export { InlineButtons } from './components/molecules/InlineButtons/InlineButtons'
 export { TabBar } from './components/molecules/TabBar/TabBar'
+export { SlideCarousel } from './components/molecules/SlideCarousel/SlideCarousel'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar } from './components/organisms/Sidebar/Sidebar'

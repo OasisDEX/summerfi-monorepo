@@ -98,6 +98,8 @@ export default defineConfig(({ mode }) => {
           '@summerfi/serverless-shared',
           '@summerfi/app-token-config',
           '@summerfi/app-types',
+          'embla-carousel-react',
+          'embla-carousel',
         ],
         input: Object.fromEntries(
           glob
