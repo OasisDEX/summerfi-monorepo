@@ -11,6 +11,26 @@ import Link from 'next/link'
 
 import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
 import { strategiesList } from '@/constants/dev-strategies-list'
+import { NewsAndUpdates } from '@/features/news-and-updates/NewsAndUpdates/NewsAndUpdates'
+
+const dummyNewsAndUpdatesItems = [
+  {
+    title: 'SUMR Market Cap hits 10b',
+    timestamp: 1729236816769,
+  },
+  {
+    title: 'SUMR Market Cap hits 10b',
+    timestamp: 1729236816769,
+  },
+  {
+    title: 'SUMR Market Cap hits 10b',
+    timestamp: 1729236816769,
+  },
+  {
+    title: 'SUMR Market Cap hits 10b',
+    timestamp: 1729236816769,
+  },
+]
 
 const dataBlocks = [
   {
@@ -89,6 +109,7 @@ export const PortfolioOverview = () => {
             />
           </div>
         </Card>
+        <NewsAndUpdates items={dummyNewsAndUpdatesItems} />
       </div>
     </div>
   )

@@ -1,0 +1,23 @@
+import { type FC } from 'react'
+import { Card, Text } from '@summerfi/app-earn-ui'
+
+import { NewsAndUpdatesList } from '@/features/news-and-updates/NewsAndUpdatesList/NewsAndUpdatesList'
+
+import classNames from './NewsAndUpdates.module.scss'
+
+interface NewsAndUpdatesProps {
+  items: { title: string; timestamp: number }[]
+}
+
+export const NewsAndUpdates: FC<NewsAndUpdatesProps> = ({ items }) => {
+  return (
+    <Card className={classNames.wrapper}>
+      <Text as="h5" variant="h5" className={classNames.header}>
+        News & Updates
+      </Text>
+      <Card variant="cardSecondary" className={classNames.wrapper}>
+        <NewsAndUpdatesList items={items} />
+      </Card>
+    </Card>
+  )
+}
