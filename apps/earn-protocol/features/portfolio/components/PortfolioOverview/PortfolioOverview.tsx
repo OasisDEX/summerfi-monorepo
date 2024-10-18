@@ -1,18 +1,10 @@
-import {
-  Card,
-  DataBlock,
-  Icon,
-  SlideCarousel,
-  StrategyCard,
-  Text,
-  WithArrow,
-} from '@summerfi/app-earn-ui'
+import { Card, DataBlock, Text, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
 import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
-import { strategiesList } from '@/constants/dev-strategies-list'
 import { CryptoUtilities } from '@/features/crypto-utilities/components/CryptoUtilities/CryptoUtilities'
 import { NewsAndUpdates } from '@/features/news-and-updates/components/NewsAndUpdates/NewsAndUpdates'
+import { PortfolioStrategiesCarousel } from '@/features/portfolio/components/PortfolioStrategiesCarousel/PortfolioStrategiesCarousel'
 
 const dummyNewsAndUpdatesItems = [
   {
@@ -88,31 +80,7 @@ export const PortfolioOverview = () => {
             Positions
           </Text>
           <MockedLineChart />
-          <div style={{ width: '100%', marginTop: 'var(--general-space-24)' }}>
-            <SlideCarousel
-              slides={strategiesList.map((strategy) => (
-                <StrategyCard
-                  key={strategy.id}
-                  {...strategy}
-                  secondary
-                  withHover
-                  // eslint-disable-next-line no-console
-                  onClick={(item) => console.log('strategy clicked', item)}
-                />
-              ))}
-              options={{ slidesToScroll: 'auto' }}
-              title={
-                <div
-                  style={{ display: 'flex', gap: 'var(--general-space-8)', alignItems: 'center' }}
-                >
-                  <Icon iconName="stars" variant="s" color="rgba(255, 251, 253, 1)" />
-                  <Text as="p" variant="p3semi">
-                    You might like
-                  </Text>
-                </div>
-              }
-            />
-          </div>
+          <PortfolioStrategiesCarousel style={{ marginTop: 'var(--general-space-24)' }} />
         </Card>
         <NewsAndUpdates items={dummyNewsAndUpdatesItems} />
         <CryptoUtilities />

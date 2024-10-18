@@ -1,7 +1,8 @@
 export type Styles = {
-  navigationExploreIconWrapper: string
-  navigationExploreItem: string
-  navigationExploreWrapper: string
+  icon: string
+  pill: string
+  pillContainer: string
+  selected: string
 }
 
 export type ClassNames = keyof Styles

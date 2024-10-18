@@ -1,11 +1,9 @@
 export type Styles = {
-  active: string
   activeLink: string
-  closeIcon: string
-  linksList: string
-  menuMobileOverflow: string
-  menuMobileWrapper: string
-  topBar: string
+  inactiveLink: string
+  navigationItemsIconWrapper: string
+  navigationItemsItem: string
+  navigationItemsWrapper: string
 }
 
 export type ClassNames = keyof Styles

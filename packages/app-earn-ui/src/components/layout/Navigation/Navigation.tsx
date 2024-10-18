@@ -1,10 +1,11 @@
 'use client'
 
-import { type FC, type ReactNode, useState } from 'react'
+import { type FC, type ReactNode, useEffect, useState } from 'react'
 import { type NavigationMenuPanelLinkType } from '@summerfi/app-types'
 
 import { NavigationActions } from '@/components/layout/Navigation/NavigationActions'
 import { NavigationBranding } from '@/components/layout/Navigation/NavigationBranding'
+import { type NavigationItemsProps } from '@/components/layout/Navigation/NavigationItems'
 import { NavigationMenu } from '@/components/layout/Navigation/NavigationMenu'
 import { NavigationMenuMobile } from '@/components/layout/Navigation/NavigationMenuMobile'
 
@@ -16,13 +17,14 @@ export interface EarnNavigationProps {
   logoSmall: string
   links?: (Omit<NavigationMenuPanelLinkType, 'link' | 'onClick'> & {
     id: string
+    itemsList?: NavigationItemsProps['items']
     dropdownContent?: ReactNode
     link?: string
     onClick?: () => void
   })[]
   walletConnectionComponent?: ReactNode
+  signupComponent?: ReactNode
   onLogoClick?: () => void
-  additionalModule?: ReactNode
 }
 
 export const Navigation: FC<EarnNavigationProps> = ({
@@ -32,26 +34,49 @@ export const Navigation: FC<EarnNavigationProps> = ({
   currentPath,
   walletConnectionComponent,
   onLogoClick,
-  additionalModule,
+  signupComponent,
 }) => {
+  const [tempCurrentPath, setTempCurrentPath] = useState(currentPath)
   const [mobileMenuOpened, setMobileMenuOpened] = useState(false)
 
   const toggleMobileMenu = () => {
+    const nextValue = !mobileMenuOpened
+
+    if (nextValue) {
+      // mobile menu
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
+    }
     setMobileMenuOpened(!mobileMenuOpened)
   }
+
+  useEffect(() => {
+    if (tempCurrentPath !== currentPath) {
+      setTempCurrentPath(currentPath)
+      setMobileMenuOpened(false)
+      document.body.style.overflow = 'auto'
+    }
+  }, [currentPath, tempCurrentPath])
 
   return (
     <div className={navigationStyles.wrapper}>
       <header className={navigationStyles.container}>
         <NavigationBranding logo={logo} logoSmall={logoSmall} onLogoClick={onLogoClick} />
-        <NavigationMenuMobile links={links} currentPath={currentPath} />
         <NavigationMenu links={links} currentPath={currentPath} />
         <NavigationActions
           walletConnectionComponent={walletConnectionComponent}
           toggleMobileMenu={toggleMobileMenu}
+          signUpComponent={signupComponent}
         />
-        {additionalModule}
       </header>
+      <NavigationMenuMobile
+        logo={logo}
+        links={links}
+        currentPath={currentPath}
+        mobileMenuOpened={mobileMenuOpened}
+        toggleMobileMenu={toggleMobileMenu}
+      />
     </div>
   )
 }
