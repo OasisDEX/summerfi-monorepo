@@ -11,12 +11,15 @@
   z-index: 3;
   max-width: 1408px;
   margin: var(--general-space-24) auto var(--general-space-64);
+
   @include media('>s') {
     grid-template-columns: auto auto;
   }
+
   @include media('>l') {
     grid-template-columns: auto auto auto;
   }
+
   @include media('>xl') {
     grid-template-columns: auto 1fr auto;
   }
@@ -27,18 +30,23 @@
   width: 100%;
   max-width: 200px;
   margin-right: auto;
+
   img {
     height: 22px;
     display: none;
   }
+
   .logo {
     width: 129px;
+
     @include media('>s') {
       display: inline;
     }
   }
+
   .logoSmall {
     width: 25px;
+
     @include media('<=s') {
       display: inline;
     }

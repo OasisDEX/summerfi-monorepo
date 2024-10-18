@@ -198,6 +198,7 @@ export type IconNamesList =
   | 'tooltip'
   | 'checkmark_colorful'
   | 'close_colorful'
+  | 'close'
   | 'close_squared'
   | 'radio_button'
   | 'radio_button_checked'

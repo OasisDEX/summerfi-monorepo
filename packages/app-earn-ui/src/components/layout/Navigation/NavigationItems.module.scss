@@ -1,7 +1,12 @@
-.navigationExploreWrapper {
+.navigationItemsWrapper {
   display: flex;
   flex-direction: column;
-  .navigationExploreItem {
+
+  @include media("<=l") {
+    width: 100%;
+  }
+
+  .navigationItemsItem {
     display: flex;
     flex-direction: row;
     margin-bottom: var(--general-space-12);
@@ -9,10 +14,16 @@
     border-radius: var(--general-radius-16);
     background-color: transparent;
     transition: background-color 0.2s;
+
+    @include media("<=l") {
+      width: 100%;
+    }
+
     &:hover {
       background-color: var(--color-surface-subtler);
     }
-    .navigationExploreIconWrapper {
+
+    .navigationItemsIconWrapper {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -21,6 +32,7 @@
       background-color: var(--color-surface-subtler);
       border-radius: var(--radius-circle);
       margin-right: var(--general-space-12);
+
       img {
         opacity: 1;
         transform: none;
@@ -29,3 +41,10 @@
   }
 }
 
+.activeLink {
+  color: var(--earn-protocol-primary-100);
+}
+
+.inactiveLink {
+  color: var(--earn-protocol-secondary-100),
+}

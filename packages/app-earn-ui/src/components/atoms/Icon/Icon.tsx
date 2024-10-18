@@ -17,6 +17,7 @@ export interface IconPropsBase {
   style?: React.CSSProperties
   proxyStyle?: React.CSSProperties
   color?: string
+  className?: string
 }
 
 export interface IconPropsWithIconName extends IconPropsBase {
@@ -33,12 +34,14 @@ const FallbackSvg = ({
   finalSize,
   proxyStyle,
   errorLoading,
+  className,
 }: {
   focusable?: boolean
   role?: 'presentation'
   finalSize: number
   proxyStyle?: React.CSSProperties
   errorLoading?: boolean
+  className?: string
 }) => (
   <svg
     viewBox="0 0 6.35 6.35"
@@ -51,6 +54,7 @@ const FallbackSvg = ({
     style={{
       ...proxyStyle,
     }}
+    className={className}
   >
     <circle
       style={{
@@ -76,6 +80,7 @@ export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
   style,
   proxyStyle,
   color,
+  className,
 }) => {
   const [errorLoading, setErrorLoading] = useState(false)
   const finalSize =
@@ -130,6 +135,7 @@ export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
             style={style}
             unoptimized
             onError={() => setErrorLoading(true)}
+            className={className}
           />
         ) : (
           <FallbackSvg
@@ -138,6 +144,7 @@ export const Icon: FC<IconPropsWithIconName | IconPropsWithTokenName> = ({
             finalSize={finalSize}
             errorLoading={errorLoading}
             proxyStyle={{ ...proxyStyle, fill: 'red', fillOpacity: 1 }}
+            className={className}
           />
         )
       }}
