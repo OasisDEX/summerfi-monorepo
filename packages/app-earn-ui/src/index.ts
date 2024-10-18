@@ -50,6 +50,7 @@ export {
   type LinkCardWithIcon,
   type LinkCardWithIconName,
 } from './components/molecules/LinkCard/LinkCard'
+export { PillSelector } from './components/molecules/PillSelector/PillSelector'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar } from './components/organisms/Sidebar/Sidebar'

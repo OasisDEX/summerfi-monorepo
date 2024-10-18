@@ -217,6 +217,7 @@ export type IconNamesList =
   | 'edit'
   | 'send'
   | 'arrow_forward'
+  | 'base'
 
 export type TokenSymbolsList =
   | 'USDP'
