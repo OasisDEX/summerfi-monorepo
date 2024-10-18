@@ -1,13 +1,6 @@
-import { Card, Expander, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { type IconNamesList } from '@summerfi/app-types'
-import Link from 'next/link'
+import { Card, Expander, LinkCard, type LinkCardWithIconName, Text } from '@summerfi/app-earn-ui'
 
-const auditCards: {
-  title: string
-  description: string
-  link: { href: string; label: string }
-  iconName: IconNamesList
-}[] = [
+const auditCards: LinkCardWithIconName[] = [
   {
     title: 'Trail of bits',
     description: '0 critical bugs',
@@ -59,61 +52,15 @@ export const StrategyDetailsSecurityAuditsExpander = () => {
           style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-space-x-small)' }}
         >
           {auditCards.map((item) => (
-            <Card
-              variant="cardSecondarySmallPaddings"
+            <LinkCard
               key={item.title}
+              title={item.title}
+              description={item.description}
+              link={item.link}
+              iconName={item.iconName}
+              variant="cardSecondarySmallPaddings"
               style={{ background: 'var(--earn-protocol-neutral-80)' }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  width: '100%',
-                  alignItems: 'center',
-                }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    gap: 'var(--spacing-space-medium)',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Icon iconName={item.iconName} variant="m" />
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: 'var(--spacing-space-2x-small)',
-                    }}
-                  >
-                    <Text as="p" variant="p2">
-                      {item.title}
-                    </Text>
-                    <Text
-                      as="p"
-                      variant="p3"
-                      style={{ color: 'var(--earn-protocol-secondary-60)' }}
-                    >
-                      {item.description}
-                    </Text>
-                  </div>
-                </div>
-                <Link
-                  href={item.link.href}
-                  style={{ marginRight: 'var(--spacing-space-medium-large)' }}
-                >
-                  <WithArrow
-                    as="p"
-                    variant="p3semi"
-                    style={{ color: 'var(--earn-protocol-primary-100)' }}
-                  >
-                    {item.link.label}
-                  </WithArrow>
-                </Link>
-              </div>
-            </Card>
+            />
           ))}
         </div>
       </Expander>

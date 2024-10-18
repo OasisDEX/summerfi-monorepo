@@ -215,6 +215,8 @@ export type IconNamesList =
   | 'person'
   | 'discord'
   | 'edit'
+  | 'send'
+  | 'arrow_forward'
 
 export type TokenSymbolsList =
   | 'USDP'

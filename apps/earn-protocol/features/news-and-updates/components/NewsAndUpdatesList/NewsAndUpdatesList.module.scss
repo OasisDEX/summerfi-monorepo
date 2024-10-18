@@ -11,11 +11,13 @@
     height: 6px;
     border-radius: 50%;
     background-color: var(--earn-protocol-primary-40);
+    transition: background-color ease-out 0.2s;
   }
 
   &:hover {
     .dot {
       background-color: var(--earn-protocol-primary-100);
+      transition: background-color ease-out 0.2s;
     }
   }
 

@@ -1,12 +1,12 @@
 import { type FC } from 'react'
 import { Card, Text } from '@summerfi/app-earn-ui'
 
-import { NewsAndUpdatesList } from '@/features/news-and-updates/NewsAndUpdatesList/NewsAndUpdatesList'
+import { NewsAndUpdatesList } from '@/features/news-and-updates/components/NewsAndUpdatesList/NewsAndUpdatesList'
 
 import classNames from './NewsAndUpdates.module.scss'
 
 interface NewsAndUpdatesProps {
-  items: { title: string; timestamp: number }[]
+  items: { title: string; timestamp: number; link: string }[]
 }
 
 export const NewsAndUpdates: FC<NewsAndUpdatesProps> = ({ items }) => {

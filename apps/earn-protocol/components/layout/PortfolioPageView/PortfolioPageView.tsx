@@ -3,8 +3,8 @@
 import { type FC } from 'react'
 import { TabBar } from '@summerfi/app-earn-ui'
 
-import { PortfolioHeader } from '@/features/portfolio/PortfolioHeader/PortfolioHeader'
-import { PortfolioOverview } from '@/features/portfolio/PortfolioOverview/PortfolioOverview'
+import { PortfolioHeader } from '@/features/portfolio/components/PortfolioHeader/PortfolioHeader'
+import { PortfolioOverview } from '@/features/portfolio/components/PortfolioOverview/PortfolioOverview'
 
 const tabs = [
   { label: 'Overview', content: <PortfolioOverview /> },

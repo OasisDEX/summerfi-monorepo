@@ -11,24 +11,29 @@ import Link from 'next/link'
 
 import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
 import { strategiesList } from '@/constants/dev-strategies-list'
-import { NewsAndUpdates } from '@/features/news-and-updates/NewsAndUpdates/NewsAndUpdates'
+import { NewsAndUpdates } from '@/features/news-and-updates/components/NewsAndUpdates/NewsAndUpdates'
+import { CryptoUtilities } from '@/features/crypto-utilities/components/CryptoUtilities/CryptoUtilities'
 
 const dummyNewsAndUpdatesItems = [
   {
     title: 'SUMR Market Cap hits 10b',
-    timestamp: 1729236816769,
+    timestamp: 1729236816761,
+    link: './',
   },
   {
     title: 'SUMR Market Cap hits 10b',
-    timestamp: 1729236816769,
+    timestamp: 1729236816762,
+    link: './',
   },
   {
     title: 'SUMR Market Cap hits 10b',
-    timestamp: 1729236816769,
+    timestamp: 1729236816763,
+    link: './',
   },
   {
     title: 'SUMR Market Cap hits 10b',
-    timestamp: 1729236816769,
+    timestamp: 1729236816764,
+    link: './',
   },
 ]
 
@@ -47,7 +52,7 @@ const dataBlocks = [
     title: 'Available to Migrate',
     value: '$1002,322,32',
     subValue: (
-      <Link href="/">
+      <Link href="/apps/earn-protocol/public">
         <WithArrow as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
           Migrate
         </WithArrow>
@@ -110,6 +115,7 @@ export const PortfolioOverview = () => {
           </div>
         </Card>
         <NewsAndUpdates items={dummyNewsAndUpdatesItems} />
+        <CryptoUtilities />
       </div>
     </div>
   )

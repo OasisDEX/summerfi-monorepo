@@ -9,6 +9,8 @@ interface CardProps {
   variant?: ClassNames
 }
 
+export type CardVariant = ClassNames
+
 export const Card: FC<CardProps & DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>> = ({
   children,
   className,
