@@ -1,4 +1,4 @@
-import { isArmadaSimulation } from '@summerfi/armada-protocol-common'
+import { isArmadaUsersSimulation } from '@summerfi/armada-protocol-common'
 import { IOrderPlanner } from '@summerfi/order-planner-common/interfaces'
 import { BuildOrderParams } from '@summerfi/order-planner-common/types'
 import { Maybe, SDKError, SDKErrorType } from '@summerfi/sdk-common/common'
@@ -6,12 +6,12 @@ import { Order } from '@summerfi/sdk-common/orders'
 import { SimulationType } from '@summerfi/sdk-common/simulation'
 
 /**
- * @name ArmadaOrderPlanner
- * @description Order planner that generates transactions for the Armada Protocol based on the input simulation
+ * @name ArmadaUsersOrderPlanner
+ * @description Order planner that generates transactions for the Users of the Armada Protocol based on the input simulation
  *
  * @see IOrderPlanner
  */
-export class ArmadaOrderPlanner implements IOrderPlanner {
+export class ArmadaUsersOrderPlanner implements IOrderPlanner {
   /** PUBLIC */
 
   /** @see IOrderPlanner.buildOrder */
@@ -19,10 +19,10 @@ export class ArmadaOrderPlanner implements IOrderPlanner {
   async buildOrder(params: BuildOrderParams): Promise<Maybe<Order>> {
     const { simulation, armadaManager } = params
 
-    if (!isArmadaSimulation(simulation)) {
+    if (!isArmadaUsersSimulation(simulation)) {
       throw SDKError.createFrom({
         type: SDKErrorType.OrderPlannerError,
-        reason: `Simulation is not an Armada simulation`,
+        reason: `Simulation is not an Armada users simulation`,
         message: `Received simulation of type ${simulation.type} instead of Armada`,
       })
     }
@@ -49,6 +49,6 @@ export class ArmadaOrderPlanner implements IOrderPlanner {
 
   /** @see IOrderPlanner.getAcceptedSimulations */
   getAcceptedSimulations(): SimulationType[] {
-    return [SimulationType.Armada]
+    return [SimulationType.ArmadaUsers]
   }
 }

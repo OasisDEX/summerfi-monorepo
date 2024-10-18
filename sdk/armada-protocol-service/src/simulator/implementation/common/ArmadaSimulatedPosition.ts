@@ -5,7 +5,7 @@ import {
   __iarmadasimulatedposition__,
 } from '@summerfi/armada-protocol-common'
 import { ITokenAmount } from '@summerfi/sdk-common'
-import { ArmadaPosition } from '../../common/implementation/ArmadaPosition'
+import { ArmadaPosition } from '../../../common/implementation/ArmadaPosition'
 
 /**
  * Type for the parameters of ArmadaSimulatedPosition

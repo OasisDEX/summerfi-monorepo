@@ -1,4 +1,4 @@
-import { IRebalanceData } from '@summerfi/armada-protocol-common'
+import { IArmadaRebalanceData } from '@summerfi/armada-protocol-common'
 import { IAddress, IPercentage, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
 import { IContractWrapper } from './IContractWrapper'
 import { IErc20Contract } from './IErc20Contract'
@@ -79,7 +79,7 @@ export interface IFleetCommanderContract extends IContractWrapper {
    *
    * @returns The transaction information
    */
-  rebalance(params: { rebalanceData: IRebalanceData[] }): Promise<TransactionInfo>
+  rebalance(params: { rebalanceData: IArmadaRebalanceData[] }): Promise<TransactionInfo>
 
   /**
    * @name adjustBuffer
@@ -90,7 +90,7 @@ export interface IFleetCommanderContract extends IContractWrapper {
    *
    * @returns The transaction information
    */
-  adjustBuffer(params: { rebalanceData: IRebalanceData[] }): Promise<TransactionInfo>
+  adjustBuffer(params: { rebalanceData: IArmadaRebalanceData[] }): Promise<TransactionInfo>
 
   /** GOVERNANCE WRITE METHODS */
 
@@ -220,7 +220,7 @@ export interface IFleetCommanderContract extends IContractWrapper {
    *
    * @returns The transaction information
    */
-  forceRebalance(params: { rebalanceData: IRebalanceData[] }): Promise<TransactionInfo>
+  forceRebalance(params: { rebalanceData: IArmadaRebalanceData[] }): Promise<TransactionInfo>
 
   /**
    * @name emergencyShutdown

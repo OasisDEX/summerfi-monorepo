@@ -6,7 +6,7 @@ import { IArmadaPoolId } from './IArmadaPoolId'
 import { IArmadaPoolInfo } from './IArmadaPoolInfo'
 import { IArmadaPosition } from './IArmadaPosition'
 import { IArmadaPositionId } from './IArmadaPositionId'
-import { IRebalanceData } from './IRebalanceData'
+import { IArmadaRebalanceData } from './IArmadaRebalanceData'
 
 /**
  * @name IArmadaManager
@@ -132,7 +132,7 @@ export interface IArmadaManager {
    */
   rebalance(params: {
     poolId: IArmadaPoolId
-    rebalanceData: IRebalanceData[]
+    rebalanceData: IArmadaRebalanceData[]
   }): Promise<TransactionInfo>
 
   /**
@@ -145,7 +145,7 @@ export interface IArmadaManager {
    */
   adjustBuffer(params: {
     poolId: IArmadaPoolId
-    rebalanceData: IRebalanceData[]
+    rebalanceData: IArmadaRebalanceData[]
   }): Promise<TransactionInfo>
 
   /** GOVERNANCE TRANSACTIONS */
@@ -300,7 +300,7 @@ export interface IArmadaManager {
    */
   forceRebalance(params: {
     poolId: IArmadaPoolId
-    rebalanceData: IRebalanceData[]
+    rebalanceData: IArmadaRebalanceData[]
   }): Promise<TransactionInfo>
 
   /**
