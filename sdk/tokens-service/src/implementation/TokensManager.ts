@@ -20,38 +20,20 @@ export class TokensManager
   /** PUBLIC METHODS */
 
   /** @see ITokensManager.getTokenBySymbol */
-  async getTokenBySymbol(params: {
-    chainInfo: IChainInfo
-    symbol: string
-  }): Promise<Maybe<IToken>> {
+  async getTokenBySymbol(params: { chainInfo: IChainInfo; symbol: string }): Promise<IToken> {
     const provider = this._getBestProvider({ chainInfo: params.chainInfo })
-    if (!provider) {
-      return undefined
-    }
-
     return provider.getTokenBySymbol(params)
   }
 
   /** @see ITokensManager.getTokenByAddress */
-  async getTokenByAddress(params: {
-    chainInfo: IChainInfo
-    address: IAddress
-  }): Promise<Maybe<IToken>> {
+  async getTokenByAddress(params: { chainInfo: IChainInfo; address: IAddress }): Promise<IToken> {
     const provider = this._getBestProvider({ chainInfo: params.chainInfo })
-    if (!provider) {
-      return undefined
-    }
-
     return provider.getTokenByAddress(params)
   }
 
   /** @see ITokensManager.getTokenByName */
-  async getTokenByName(params: { chainInfo: IChainInfo; name: string }): Promise<Maybe<IToken>> {
+  async getTokenByName(params: { chainInfo: IChainInfo; name: string }): Promise<IToken> {
     const provider = this._getBestProvider({ chainInfo: params.chainInfo })
-    if (!provider) {
-      return undefined
-    }
-
     return provider.getTokenByName(params)
   }
 }

@@ -21,7 +21,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   }
 
   /** @see IArmadaManagerClient.getPool */
-  async getPool(params: { poolId: IArmadaPoolId }): Promise<IArmadaPool> {
+  public async getPool(params: { poolId: IArmadaPoolId }): Promise<IArmadaPool> {
     return this.rpcClient.armada.users.getPool.query(params)
   }
 

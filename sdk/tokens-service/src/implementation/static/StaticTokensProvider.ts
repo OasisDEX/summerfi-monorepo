@@ -55,57 +55,51 @@ export class StaticTokensProvider
   }
 
   /** @see ITokensProvider.getTokenBySymbol */
-  async getTokenBySymbol(params: {
-    chainInfo: IChainInfo
-    symbol: string
-  }): Promise<Maybe<IToken>> {
+  async getTokenBySymbol(params: { chainInfo: IChainInfo; symbol: string }): Promise<IToken> {
     const { chainInfo } = params
 
     const tokenMap = this._getTokenMap(params.chainInfo)
     if (!tokenMap) {
-      return undefined
+      throw new Error(`No token map found for chain: ${chainInfo}`)
     }
 
     const tokenData = tokenMap.getBySymbol(params.symbol)
     if (!tokenData) {
-      return undefined
+      throw new Error(`No token data found for symbol: ${params.symbol}`)
     }
 
     return this._createToken({ chainInfo, tokenData })
   }
 
   /** @see ITokensProvider.getTokenByAddress */
-  async getTokenByAddress(params: {
-    chainInfo: IChainInfo
-    address: IAddress
-  }): Promise<Maybe<IToken>> {
+  async getTokenByAddress(params: { chainInfo: IChainInfo; address: IAddress }): Promise<IToken> {
     const { chainInfo } = params
 
     const tokenMap = this._getTokenMap(params.chainInfo)
     if (!tokenMap) {
-      return undefined
+      throw new Error(`No token map found for chain: ${chainInfo}`)
     }
 
     const tokenData = tokenMap.getByAddress(params.address.value)
     if (!tokenData) {
-      return undefined
+      throw new Error(`No token data found for address: ${params.address.value}`)
     }
 
     return this._createToken({ chainInfo, tokenData })
   }
 
   /** @see ITokensProvider.getTokenByName */
-  async getTokenByName(params: { chainInfo: IChainInfo; name: string }): Promise<Maybe<IToken>> {
+  async getTokenByName(params: { chainInfo: IChainInfo; name: string }): Promise<IToken> {
     const { chainInfo } = params
 
     const tokenMap = this._getTokenMap(params.chainInfo)
     if (!tokenMap) {
-      return undefined
+      throw new Error(`No token map found for chain: ${chainInfo}`)
     }
 
     const tokenData = tokenMap.getByName(params.name)
     if (!tokenData) {
-      return undefined
+      throw new Error(`No token data found for name: ${params.name}`)
     }
 
     return this._createToken({ chainInfo, tokenData })

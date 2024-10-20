@@ -24,7 +24,7 @@ interface SubgraphClientConfig {
 }
 
 export interface GetTriggersParams {
-  dpm: string
+  account: string
   poolId?: string
 }
 
@@ -41,10 +41,10 @@ export type GetOneTrigger = (params: GetOneTriggerParams) => Promise<OneTrigger 
 async function getTriggers(params: GetTriggersParams, config: SubgraphClientConfig) {
   const url = getEndpoint(config.chainId, config.urlBase)
   const triggers = await request(url, TriggersDocument, {
-    dpm: params.dpm,
+    account: params.account,
   })
 
-  config.logger?.debug('Received triggers for account', { account: params.dpm, triggers })
+  config.logger?.debug('Received triggers for account', { account: params.account, triggers })
 
   return triggers
 }

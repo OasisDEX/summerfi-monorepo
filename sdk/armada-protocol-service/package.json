@@ -1,8 +1,6 @@
 {
   "name": "@summerfi/armada-protocol-service",
   "version": "0.0.1",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./src/index.ts",
@@ -15,7 +13,7 @@
     "test": "jest tests/ --passWithNoTests",
     "e2e": "jest e2e/",
     "testw": "jest --watch",
-    "build": "tsc -b tsconfig.build.json",
+    "build": "tsc -b --preserveWatchOutput tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

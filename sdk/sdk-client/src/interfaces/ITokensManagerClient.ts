@@ -16,7 +16,7 @@ export interface ITokensManagerClient {
    *
    * @returns The token with the given symbol
    */
-  getTokenBySymbol(params: { symbol: string }): Promise<Maybe<Token>>
+  getTokenBySymbol(params: { symbol: string }): Promise<Token>
 
   /**
    * @method getTokenByAddress

@@ -7,7 +7,7 @@ import {
 } from '@summerfi/app-types'
 import { zero } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
-import { capitalize } from 'lodash'
+import { capitalize } from 'lodash-es'
 
 import { networksByName } from '@/constants/networks-list-ssr'
 import { getGenericPositionUrl } from '@/helpers/get-generic-position-url'
@@ -46,7 +46,7 @@ export function mapFeaturedMultiplyProduct(
       ],
       url: getGenericPositionUrl({
         ...item,
-        product: [OmniProductType.Earn],
+        product: [OmniProductType.Multiply],
       }),
     }
   })

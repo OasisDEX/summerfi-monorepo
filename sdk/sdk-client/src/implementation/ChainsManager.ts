@@ -21,7 +21,7 @@ export class ChainsManagerClient extends IRPCClient implements IChainsManagerCli
     throw new Error('Method not implemented.')
   }
 
-  public async getChain(params: { chainInfo: IChainInfoData }): Promise<Maybe<Chain>> {
+  public async getChain(params: { chainInfo: IChainInfoData }): Promise<Chain> {
     const chainInfo = ChainInfo.createFrom(params.chainInfo)
 
     return new Chain({

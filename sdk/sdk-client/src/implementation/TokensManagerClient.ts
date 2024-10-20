@@ -17,7 +17,7 @@ export class TokensManagerClient extends IRPCClient implements ITokensManagerCli
   }
 
   /** @see ITokensManagerClient.getTokenBySymbol */
-  public async getTokenBySymbol(params: { symbol: TokenSymbol }): Promise<Maybe<IToken>> {
+  public async getTokenBySymbol(params: { symbol: TokenSymbol }): Promise<IToken> {
     return this.rpcClient.tokens.getTokenBySymbol.query({
       chainInfo: this._chainInfo,
       symbol: params.symbol,

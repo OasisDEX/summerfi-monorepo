@@ -22,28 +22,31 @@
   "scripts": {
     "lint": "eslint *.ts*",
     "dev": "pnpm vite build -w true",
-    "build": "pnpm  vite build -w false",
+    "build": "pnpm vite build -w false",
     "clean": "rm -rf dist"
   },
   "devDependencies": {
+    "@types/lodash-es": "^4.17.1",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
     "@summerfi/app-types": "workspace:*",
     "vite-plugin-node-polyfills": "^0.22.0",
     "eslint": "8.57.0",
-    "typescript": "^5.4.5",
-    "vite": "^5.2.11",
-    "vite-plugin-dts": "^3.9.1",
-    "glob": "^10.3.12"
+    "typescript": "^5.6.2",
+    "vite": "^5.4.9",
+    "vite-plugin-dts": "^4.2.2",
+    "glob": "^11.0.0"
   },
   "publishConfig": {
     "access": "public"
   },
   "peerDependencies": {
     "bignumber.js": "^9.1.2",
-    "dayjs": "^1.11.12"
+    "dayjs": "^1.11.12",
+    "lodash-es": "^4.17.1"
   },
   "dependencies": {
+    "rollup-preserve-directives": "^1.1.1",
     "vite-tsconfig-paths": "^4.3.2"
   }
 }

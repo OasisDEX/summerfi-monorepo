@@ -1,0 +1,28 @@
+.cardPrimary,
+.cardSecondary,
+.cardPrimarySmallPaddings,
+.cardSecondarySmallPaddings {
+  display: flex;
+  width: 100%;
+  border-radius: var(--radius-roundish);
+}
+
+.cardPrimary,
+.cardSecondary {
+  padding: var(--general-space-24);
+}
+
+.cardPrimary,
+.cardPrimarySmallPaddings {
+  background-color: #232323;
+}
+
+.cardSecondary,
+.cardSecondarySmallPaddings {
+  background-color: var(--earn-protocol-neutral-85);
+}
+
+.cardPrimarySmallPaddings,
+.cardSecondarySmallPaddings {
+  padding: var(--general-space-12);
+}

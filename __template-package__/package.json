@@ -17,7 +17,7 @@
     "e2e": "jest e2e/",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "tsc -b -v tsconfig.build.json",
+    "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
     "bundle": "esbuild src/index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js --sourcemap"
   },
   "dependencies": {
@@ -31,6 +31,6 @@
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
-    "typescript": "^5.4.5"
+    "typescript": "^5.6.2"
   }
 }

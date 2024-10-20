@@ -6,8 +6,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest --passWithNoTests",
-    "build": "tsc -b -v",
-    "dev": "tsc -b -w",
+    "build": "tsc -b --preserveWatchOutput -v",
+    "dev": "tsc -b --preserveWatchOutput -w",
     "prebuild": "pnpm run generate-ts-types",
     "generate-ts-types": "graphql-codegen --config graphql.config.yml",
     "lint": "eslint .",

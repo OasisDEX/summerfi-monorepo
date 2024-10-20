@@ -27,27 +27,27 @@ export class TokensMap {
    * @param tokenData The token data to add
    */
   add(params: { tokenData: TokenData }) {
-    if (this._tokensBySymbol.has(params.tokenData.symbol)) {
+    if (this._tokensBySymbol.has(params.tokenData.symbol.toLowerCase())) {
       throw new Error(
         `Token with symbol ${params.tokenData.symbol} already exists for chain ID ${this.chainId}`,
       )
     }
 
-    if (this._tokensByAddress.has(params.tokenData.address)) {
+    if (this._tokensByAddress.has(params.tokenData.address.toLowerCase())) {
       throw new Error(
         `Token with address ${params.tokenData.address} already exists for chain ID ${this.chainId}`,
       )
     }
 
-    if (this._tokensByName.has(params.tokenData.name)) {
+    if (this._tokensByName.has(params.tokenData.name.toLowerCase())) {
       throw new Error(
         `Token with name ${params.tokenData.name} already exists for chain ID ${this.chainId}`,
       )
     }
 
-    this._tokensBySymbol.set(params.tokenData.symbol, params.tokenData)
-    this._tokensByAddress.set(params.tokenData.address, params.tokenData)
-    this._tokensByName.set(params.tokenData.name, params.tokenData)
+    this._tokensBySymbol.set(params.tokenData.symbol.toLowerCase(), params.tokenData)
+    this._tokensByAddress.set(params.tokenData.address.toLowerCase(), params.tokenData)
+    this._tokensByName.set(params.tokenData.name.toLowerCase(), params.tokenData)
   }
 
   /**
@@ -56,7 +56,7 @@ export class TokensMap {
    * @returns The token data for the given symbol or undefined if it does not exist
    */
   getBySymbol(symbol: string): Maybe<TokenData> {
-    return this._tokensBySymbol.get(symbol)
+    return this._tokensBySymbol.get(symbol.toLowerCase())
   }
 
   /**
@@ -66,7 +66,7 @@ export class TokensMap {
    * @returns The token data for the given address or undefined if it does not exist
    */
   getByAddress(address: AddressValue): Maybe<TokenData> {
-    return this._tokensByAddress.get(address)
+    return this._tokensByAddress.get(address.toLowerCase())
   }
 
   /**
@@ -76,6 +76,6 @@ export class TokensMap {
    * @returns The token data for the given name or undefined if it does not exist
    */
   getByName(name: string): Maybe<TokenData> {
-    return this._tokensByName.get(name)
+    return this._tokensByName.get(name.toLowerCase())
   }
 }

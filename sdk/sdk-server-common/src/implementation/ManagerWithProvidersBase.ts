@@ -40,17 +40,18 @@ export class ManagerWithProvidersBase<
   protected _getBestProvider(params: {
     chainInfo: IChainInfo
     forceUseProvider?: ProviderType
-  }): Maybe<ManagerProvider> {
-    if (params.forceUseProvider) {
+  }): ManagerProvider {
+    if (params.forceUseProvider !== undefined) {
       const provider = this._providersByType.get(params.forceUseProvider)
-      if (provider) {
-        return provider
+      if (!provider) {
+        throw new Error(`Forced provider not found: ${params.forceUseProvider}`)
       }
+      return provider
     }
 
     const providers = this._providersByChainId.get(params.chainInfo.chainId) || []
     if (providers.length === 0) {
-      return undefined
+      throw new Error(`No provider found for chain: ${params.chainInfo.name}`)
     }
 
     // For now, we just return the first provider. In the future, we can implement a logic to

@@ -7,7 +7,7 @@
     "test": "jest --passWithNoTests",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "tsc -b -v"
+    "build": "tsc -b --preserveWatchOutput -v"
   },
   "dependencies": {
     "@aws-lambda-powertools/logger": "^2.0.4",

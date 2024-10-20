@@ -1,3 +1,4 @@
+import { ChainFamilyMap } from '@summerfi/sdk-common'
 import { TokenListData } from './TokensListData'
 
 export const StaticTokensData: TokenListData = {
@@ -343,14 +344,6 @@ export const StaticTokensData: TokenListData = {
       logoURI: 'https://tokens.1inch.io/0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0.png',
     },
     {
-      address: '0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0',
-      chainId: 1,
-      name: 'Wrapped Staked ETH',
-      symbol: 'WSTETH',
-      decimals: 18,
-      logoURI: 'https://tokens.1inch.io/0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0.png',
-    },
-    {
       address: '0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D',
       chainId: 1,
       name: 'renBTC',
@@ -577,14 +570,6 @@ export const StaticTokensData: TokenListData = {
       logoURI: 'https://tokens.1inch.io/0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0.png',
     },
     {
-      address: '0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452',
-      chainId: 8453,
-      name: 'Wrapped Staked ETH',
-      symbol: 'WSTETH',
-      decimals: 18,
-      logoURI: 'https://tokens.1inch.io/0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0.png',
-    },
-    {
       name: 'Rocket ETH',
       address: '0xB6fe221Fe9EeF5aBa221c348bA20A1Bf5e73624c',
       symbol: 'rETH',
@@ -602,10 +587,100 @@ export const StaticTokensData: TokenListData = {
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
     },
     {
+      chainId: ChainFamilyMap.Arbitrum.ArbitrumOne.chainId,
+      symbol: 'USDC',
+      name: 'USDCoin',
+      address: '0xaf88d065e77c8cc2239327c5edb3a432268e5831',
+      decimals: 6,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
+    },
+    {
+      chainId: ChainFamilyMap.Arbitrum.ArbitrumOne.chainId,
+      symbol: 'USDC.e',
+      name: 'Bridged USDCoin',
+      address: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
+      decimals: 6,
+      logoURI:
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
+    },
+    {
       chainId: 8453,
       symbol: 'BSDETH',
       name: 'Based ETH',
       address: '0xCb327b99fF831bF8223cCEd12B1338FF3aA322Ff',
+      decimals: 18,
+      logoURI: '',
+    },
+    // LBTC
+    {
+      chainId: 1,
+      symbol: 'LBTC',
+      name: 'Lombard Staked BTC',
+      address: '0x8236a87084f8b84306f72007f36f2618a5634494',
+      decimals: 8,
+      logoURI: '',
+    },
+    // SWBTC
+    {
+      chainId: 1,
+      symbol: 'SWBTC',
+      name: 'Swell Restaked BTC',
+      address: '0x8db2350d78abc13f5673a411d4700bcf87864dde',
+      decimals: 8,
+      logoURI: '',
+    },
+    // rswETH
+    {
+      chainId: 1,
+      symbol: 'rswETH',
+      name: 'Restaked Swell ETH',
+      address: '0xfae103dc9cf190ed75350761e95403b7b8afa6c0',
+      decimals: 18,
+      logoURI: '',
+    },
+    // WOETH
+    {
+      chainId: 1,
+      symbol: 'WOETH',
+      name: 'Wrapped OETH',
+      address: '0xdcee70654261af21c44c093c300ed3bb97b78192',
+      decimals: 18,
+      logoURI: '',
+    },
+    // tBTC
+    {
+      chainId: 1,
+      symbol: 'tBTC',
+      name: 'tBTC',
+      address: '0x18084fbA666a33d37592fA2633fD49a74DD93a88',
+      decimals: 18,
+      logoURI: '',
+    },
+    // cbBTC
+    {
+      chainId: 1,
+      symbol: 'cbBTC',
+      name: 'Coinbase Wrapped BTC',
+      address: '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf',
+      decimals: 8,
+      logoURI: '',
+    },
+    // USDS
+    {
+      chainId: 1,
+      symbol: 'USDS',
+      name: 'USD Sky',
+      address: '0xdC035D45d973E3EC169d2276DDab16f1e407384F',
+      decimals: 18,
+      logoURI: '',
+    },
+    // rsETH
+    {
+      chainId: 1,
+      symbol: 'rsETH',
+      name: 'Kelp DAO Restaked ETH',
+      address: '0xa1290d69c65a6fe4df752f95823fae25cb99e5a7',
       decimals: 18,
       logoURI: '',
     },

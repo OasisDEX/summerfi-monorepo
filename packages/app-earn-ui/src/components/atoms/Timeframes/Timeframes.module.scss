@@ -1,0 +1,9 @@
+.timeframesWrapper {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+
+  button {
+    margin-left: var(--general-space-32);
+  }
+}

@@ -71,7 +71,6 @@ export class TransactionUtils {
 
   async sendTransaction(params: {
     transaction: Transaction
-    walletPrivateKey?: Hex
     waitForConfirmation?: boolean
   }): Promise<Hash> {
     const transactionHash = await this._sendTransaction(params)
@@ -85,7 +84,6 @@ export class TransactionUtils {
 
   async sendTransactionWithReceipt(params: {
     transaction: Transaction
-    walletPrivateKey?: Hex
   }): Promise<TransactionReceipt> {
     const transactionHash = await this._sendTransaction(params)
 

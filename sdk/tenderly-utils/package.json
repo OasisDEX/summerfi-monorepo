@@ -17,22 +17,22 @@
     "e2e": "jest e2e/",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "tsc -b -v tsconfig.build.json",
-    "dev": "tsc -b tsconfig.build.json  -w"
+    "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
+    "dev": "tsc -b --preserveWatchOutput tsconfig.build.json  -w"
   },
   "dependencies": {
     "@summerfi/sdk-common": "workspace:*",
     "@summerfi/configuration-provider-common": "workspace:*",
     "@summerfi/testing-utils": "workspace:*",
     "@inquirer/prompts": "^4.3.3",
-    "typescript": "^5.4.5"
+    "typescript": "^5.6.2"
   },
   "devDependencies": {
     "@ethersproject/providers": "^5.7.2",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/jest-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
-    "axios": "^1.6.8",
+    "axios": "^1.7.7",
     "ethers": "^6.11.1"
   }
 }

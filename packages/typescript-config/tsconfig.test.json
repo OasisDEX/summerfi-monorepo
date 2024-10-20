@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
+    "preserveWatchOutput": true,
     "noEmit": true,
     "types": ["node", "jest", "jest-extended"],
     "rootDir": ".",

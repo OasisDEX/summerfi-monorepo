@@ -76,8 +76,9 @@ export default defineConfig(({ mode }) => {
       },
     },
     customLogger: !notDev ? logger : undefined,
+    clearScreen: false,
     build: {
-      emptyOutDir: notDev, // in dev mode we cant just clear the dist folder
+      emptyOutDir: false,
       cssCodeSplit: true,
       sourcemap: false,
       cssMinify: notDev,
@@ -94,7 +95,7 @@ export default defineConfig(({ mode }) => {
           'bignumber.js',
           'boring-avatars',
           'clsx',
-          'lodash',
+          'lodash-es',
           'next',
           'next/image',
           'next/link',

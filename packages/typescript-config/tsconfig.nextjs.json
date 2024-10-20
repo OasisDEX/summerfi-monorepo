@@ -3,10 +3,12 @@
   "display": "Next.js",
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
+    "preserveWatchOutput": true,
     "plugins": [{ "name": "next" }],
     "incremental": true,
     "allowJs": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "types": ["node", "jest", "jest-extended"]
   },
   "include": ["src", "next-env.d.ts"],
   "exclude": ["node_modules"]

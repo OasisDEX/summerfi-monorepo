@@ -5,8 +5,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest --passWithNoTests",
-    "build": "tsc -b -v tsconfig.build.json",
-    "dev": "tsc -b -w tsconfig.build.json",
+    "build": "tsc -b --preserveWatchOutput -v tsconfig.build.json",
+    "dev": "tsc -b --preserveWatchOutput -w tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "codegen": "kysely-codegen --camel-case --out-file ./src/database-types.ts"

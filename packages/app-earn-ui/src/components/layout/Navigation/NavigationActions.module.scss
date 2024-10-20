@@ -1,0 +1,40 @@
+.navigationActionsWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: var(--general-space-8);
+
+  @include media("<=l") {
+    display: none;
+  }
+}
+
+.walletButtonMock {
+  min-height: auto;
+  line-height: 22px;
+  height: 40px;
+  min-width: 40px;
+  width: auto;
+}
+
+.mobileMenuButton {
+  display: none;
+
+  button {
+    background-color: transparent;
+    border: 1px solid var(--color-surface-lighter);
+  }
+
+  @include media('<=l') {
+    display: block;
+  }
+}
+
+.summerProButton {
+  color: var(--color-text-secondary);
+  margin-right: var(--general-space-24);
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+}

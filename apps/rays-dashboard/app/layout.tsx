@@ -13,7 +13,6 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale()
-
   const messages = await getMessages()
 
   return (

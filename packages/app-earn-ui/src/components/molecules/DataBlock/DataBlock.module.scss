@@ -1,0 +1,7 @@
+.dataBlockWrapper {
+  display: flex;
+  flex-direction: column;
+  &.centered {
+    align-items: center;
+  }
+}

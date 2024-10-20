@@ -288,20 +288,20 @@ export class OneInchSwapProvider
       !ONE_INCH_ALLOWED_SWAP_PROTOCOLS ||
       !ONE_INCH_SWAP_CHAIN_IDS
     ) {
-      throw new Error(
-        'OneInch configuration is missing: ' +
-          JSON.stringify(
-            Object.entries({
-              ONE_INCH_API_URL,
-              ONE_INCH_API_KEY,
-              ONE_INCH_API_VERSION,
-              ONE_INCH_ALLOWED_SWAP_PROTOCOLS,
-              ONE_INCH_SWAP_CHAIN_IDS,
-            }),
-            null,
-            2,
-          ),
+      console.error(
+        JSON.stringify(
+          Object.entries({
+            ONE_INCH_API_URL,
+            ONE_INCH_API_KEY,
+            ONE_INCH_API_VERSION,
+            ONE_INCH_ALLOWED_SWAP_PROTOCOLS,
+            ONE_INCH_SWAP_CHAIN_IDS,
+          }),
+          null,
+          2,
+        ),
       )
+      throw new Error('OneInch configuration is missing, check logs for more information')
     }
 
     return {

@@ -1,4 +1,4 @@
-import { User } from '@summerfi/sdk-common'
+import { User, type IUser } from '@summerfi/sdk-common'
 import {
   IChainInfo,
   IProtocol,
@@ -11,13 +11,14 @@ import { IPositionsManager, Order } from '@summerfi/sdk-common/orders'
 import { ISimulation } from '@summerfi/sdk-common/simulation'
 import { IUserClient } from '../interfaces/IUserClient'
 import { RPCMainClientType } from '../rpc/SDKMainClient'
+import { IRPCClient } from '../interfaces/IRPCClient'
 
 /**
  * @class UserClient
  * @see IUserClient
  */
-export class UserClient extends User implements IUserClient {
-  private rpcClient: RPCMainClientType
+export class UserClient extends IRPCClient implements IUserClient {
+  user: IUser
 
   /** Constructor */
   public constructor(params: {
@@ -25,9 +26,9 @@ export class UserClient extends User implements IUserClient {
     chainInfo: IChainInfo
     wallet: IWallet
   }) {
-    super(params)
+    super({ rpcClient: params.rpcClient })
 
-    this.rpcClient = params.rpcClient
+    this.user = User.createFrom({ wallet: params.wallet, chainInfo: params.chainInfo })
   }
 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
@@ -55,7 +56,7 @@ export class UserClient extends User implements IUserClient {
     positionsManager?: IPositionsManager
   }): Promise<Maybe<Order>> {
     return await this.rpcClient.orders.buildOrder.mutate({
-      user: this,
+      user: this.user,
       positionsManager: params.positionsManager,
       simulation: params.simulation,
     })

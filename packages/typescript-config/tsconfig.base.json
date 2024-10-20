@@ -1,6 +1,7 @@
 {
   "extends": "@tsconfig/node20/tsconfig.json",
   "compilerOptions": {
+    "preserveWatchOutput": true,
     "lib": ["es2022"],
     "target": "es2022",
     "module": "ES2022",

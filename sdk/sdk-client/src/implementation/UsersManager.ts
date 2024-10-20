@@ -10,7 +10,7 @@ export class UsersManager extends IRPCClient implements IUsersManager {
     super(params)
   }
 
-  public async getUser(params: {
+  public async getUserClient(params: {
     chainInfo: ChainInfo
     walletAddress: Address
   }): Promise<UserClient> {
