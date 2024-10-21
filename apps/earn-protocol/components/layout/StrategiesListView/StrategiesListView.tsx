@@ -11,6 +11,7 @@ import {
 import { type DropdownRawOption, type IconNamesList, type NetworkNames } from '@summerfi/app-types'
 
 import { strategiesList } from '@/constants/dev-strategies-list'
+import { networkIconByNetworkName } from '@/constants/networkIcons'
 
 type StrategiesListViewProps = {
   selectedNetwork?: NetworkNames | 'all-networks'
@@ -48,7 +49,10 @@ export const StrategiesListView = ({
     () =>
       localStrategyNetwork
         ? {
-            iconName: 'ether_circle_color' as IconNamesList,
+            iconName:
+              localStrategyNetwork !== 'all-networks'
+                ? networkIconByNetworkName[localStrategyNetwork]
+                : 'network_ethereum',
             label: localStrategyNetwork,
             value: localStrategyNetwork,
           }
@@ -58,7 +62,7 @@ export const StrategiesListView = ({
   const strategiesNetworksList = useMemo(
     () => [
       ...[...new Set(strategiesList.map(({ network }) => network))].map((network) => ({
-        iconName: 'ether_circle_color' as IconNamesList,
+        iconName: networkIconByNetworkName[network],
         label: network,
         value: network,
       })),
