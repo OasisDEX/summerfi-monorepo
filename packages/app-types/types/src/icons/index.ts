@@ -219,6 +219,10 @@ export type IconNamesList =
   | 'send'
   | 'arrow_forward'
   | 'base'
+  | 'network_ethereum'
+  | 'network_arbitrum'
+  | 'network_optimism'
+  | 'network_base'
 
 export type TokenSymbolsList =
   | 'USDP'

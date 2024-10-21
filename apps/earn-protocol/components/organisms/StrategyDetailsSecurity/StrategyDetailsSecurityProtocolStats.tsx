@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Card, Dropdown, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Card, Text, TokensDropdown, WithArrow } from '@summerfi/app-earn-ui'
 import { type DropdownOption } from '@summerfi/app-types'
 import Link from 'next/link'
 
@@ -36,7 +36,7 @@ export const StrategyDetailsSecurityProtocolStats = () => {
           <Text as="p" variant="p1semi" style={{ marginBottom: 'var(--spacing-space-small)' }}>
             Curate Protocol Stats
           </Text>
-          <Dropdown
+          <TokensDropdown
             options={securityDropdownOptions}
             dropdownValue={securityDropdownOptions[0]}
             onChange={(option) => setDropdownOption(option)}

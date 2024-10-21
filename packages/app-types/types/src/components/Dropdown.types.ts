@@ -1,4 +1,5 @@
 import type { IconNamesList, TokenSymbolsList } from '../icons'
+import { ReactNode } from 'react'
 
 export type DropdownOption =
   | {
@@ -11,3 +12,8 @@ export type DropdownOption =
       value: string
       iconName: IconNamesList
     }
+
+export type DropdownRawOption = {
+  value: string
+  content: ReactNode
+}

@@ -61,4 +61,14 @@ export const strategiesList = [
     risk: 'low' as Risk,
     totalAssets: '800,130,321',
   },
+  {
+    id: 'AAVE-base-medium',
+    symbol: 'AAVE' as TokenSymbolsList,
+    network: NetworkNames.optimismMainnet,
+    apy: '2.1',
+    tokenBonus: '2.1%',
+    bestFor: 'Lending only exposure',
+    risk: 'low' as Risk,
+    totalAssets: '800,130,321',
+  },
 ]

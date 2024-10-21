@@ -1,32 +1,40 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { type DropdownOption } from '@summerfi/app-types'
+import { type FC, type ReactNode, useEffect, useRef, useState } from 'react'
+import { type DropdownRawOption } from '@summerfi/app-types'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 
 import dropdownStyles from '@/components/molecules/Dropdown/Dropdown.module.scss'
 
 export interface DropdownProps {
-  options: DropdownOption[]
-  dropdownValue: DropdownOption
-  onChange?: (option: DropdownOption) => void
+  options: DropdownRawOption[]
+  dropdownValue: DropdownRawOption
+  onChange?: (option: DropdownRawOption) => void
+  children: ReactNode
+  asPill?: boolean
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({ options, dropdownValue, onChange }) => {
-  const [selectedOption, setSelectedOption] = useState<DropdownOption>(dropdownValue)
+export const Dropdown: FC<DropdownProps> = ({
+  options,
+  dropdownValue,
+  onChange,
+  children,
+  asPill,
+}) => {
+  const [selectedOption, setSelectedOption] = useState<DropdownRawOption>(dropdownValue)
   const [isOpen, setIsOpen] = useState(false) // To manage dropdown open/close state
   const dropdownRef = useRef<HTMLDivElement | null>(null) // Reference for the dropdown
 
   useEffect(() => {
     if (!onChange) {
-      // if theres no onChange prop, set the selected option to
+      // if there is no onChange prop, set the selected option to
       // the dropdownValue as controlled component behavior
       setSelectedOption(dropdownValue)
     }
   }, [onChange, dropdownValue])
 
-  const handleSelectOption = (option: DropdownOption) => {
+  const handleSelectOption = (option: DropdownRawOption) => {
     if (onChange) {
       onChange(option)
     }
@@ -56,10 +64,20 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, dropdownValue, onCh
 
   return (
     <div className={dropdownStyles.dropdown} ref={dropdownRef}>
-      <div className={dropdownStyles.dropdownSelected} onClick={toggleDropdown}>
-        {'tokenSymbol' in selectedOption && <Icon tokenName={selectedOption.tokenSymbol} />}
-        {'iconName' in selectedOption && <Icon iconName={selectedOption.iconName} />}
-        <span>{selectedOption.label}</span>
+      <div
+        className={dropdownStyles.dropdownSelected}
+        onClick={toggleDropdown}
+        style={
+          asPill
+            ? {
+                padding: '5px 8px 5px 5px',
+                backgroundColor: 'var(--earn-protocol-neutral-80)',
+                borderRadius: 'var(--general-radius-24)',
+              }
+            : {}
+        }
+      >
+        {children}
         <Icon
           iconName={isOpen ? 'chevron_up' : 'chevron_down'}
           size={11}
@@ -77,9 +95,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, dropdownValue, onCh
             className={`${dropdownStyles.dropdownOption} ${option.value === selectedOption.value ? dropdownStyles.selected : ''}`}
             onClick={() => handleSelectOption(option)}
           >
-            {'tokenSymbol' in option && <Icon tokenName={option.tokenSymbol} />}
-            {'iconName' in option && <Icon iconName={option.iconName} />}
-            <span>{option.label}</span>
+            {option.content}
           </div>
         ))}
       </div>

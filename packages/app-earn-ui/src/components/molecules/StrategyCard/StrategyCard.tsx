@@ -19,6 +19,7 @@ type StrategyCardProps = EarnProtocolStrategy & {
 export const StrategyCard = ({
   id,
   symbol,
+  network,
   risk,
   bestFor,
   tokenBonus,
@@ -48,7 +49,7 @@ export const StrategyCard = ({
         variant={secondary ? 'cardSecondary' : 'cardPrimary'}
       >
         <div className={strategyCardStyles.strategyCardHeaderWrapper}>
-          <StrategyTitleWithRisk symbol={symbol} risk={risk} />
+          <StrategyTitleWithRisk symbol={symbol} risk={risk} networkName={network} />
           <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
             <BonusLabel tokenBonus={tokenBonus} apy={apy} />
           </Text>

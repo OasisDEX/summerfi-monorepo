@@ -1,7 +1,7 @@
 'use client'
 
 import { type ReactNode } from 'react'
-import { type DropdownOption } from '@summerfi/app-types'
+import { type DropdownOption, type DropdownRawOption } from '@summerfi/app-types'
 import Link from 'next/link'
 
 import { Box } from '@/components/atoms/Box/Box'
@@ -16,7 +16,7 @@ type StrategyGridProps = {
   leftContent: ReactNode
   rightContent: ReactNode
   networksList: DropdownOption[]
-  onChangeNetwork: (selected: DropdownOption) => void
+  onChangeNetwork: (selected: DropdownRawOption) => void
   selectedNetwork?: DropdownOption
 }
 

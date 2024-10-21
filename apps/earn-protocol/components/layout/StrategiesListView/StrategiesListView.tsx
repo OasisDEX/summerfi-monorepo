@@ -8,7 +8,7 @@ import {
   StrategyGrid,
   StrategySimulationForm,
 } from '@summerfi/app-earn-ui'
-import { type DropdownOption, type IconNamesList, type NetworkNames } from '@summerfi/app-types'
+import { type DropdownRawOption, type IconNamesList, type NetworkNames } from '@summerfi/app-types'
 
 import { strategiesList } from '@/constants/dev-strategies-list'
 
@@ -72,7 +72,7 @@ export const StrategiesListView = ({
     [localStrategyId],
   )
 
-  const handleChangeNetwork = (selected: DropdownOption) => {
+  const handleChangeNetwork = (selected: DropdownRawOption) => {
     setLocalStrategyNetwork(selected.value as StrategiesListViewProps['selectedNetwork'])
     switch (selected.value) {
       case 'all-networks':
