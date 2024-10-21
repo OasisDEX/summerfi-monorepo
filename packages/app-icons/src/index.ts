@@ -234,3 +234,4 @@ export const network_ethereum = lazy.lib(() => import('./icons/network_ethereum.
 export const network_arbitrum = lazy.lib(() => import('./icons/network_arbitrum.svg'))
 export const network_optimism = lazy.lib(() => import('./icons/network_optimism.svg'))
 export const network_base = lazy.lib(() => import('./icons/network_base.svg'))
+export const withdraw = lazy.lib(() => import('./icons/withdraw.svg'))

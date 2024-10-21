@@ -223,6 +223,7 @@ export type IconNamesList =
   | 'network_arbitrum'
   | 'network_optimism'
   | 'network_base'
+  | 'withdraw'
 
 export type TokenSymbolsList =
   | 'USDP'
