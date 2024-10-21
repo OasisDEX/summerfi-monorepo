@@ -1,3 +1,4 @@
+import { Fragment } from 'react/jsx-runtime'
 import clsx from 'clsx'
 import Link from 'next/link'
 
@@ -45,7 +46,7 @@ export const NavigationMenuMobile = ({
           {links?.map((link) =>
             link.link ? (
               <Link
-                key={link.id}
+                key={`Mobile_${link.id}`}
                 href={link.link}
                 className={clsx({
                   [navigationMenuMobileStyles.activeLink]: currentPath === link.link,
@@ -56,15 +57,15 @@ export const NavigationMenuMobile = ({
                 </Text>
               </Link>
             ) : (
-              <>
-                <Text key={link.id} as="p" variant="h5">
+              <Fragment key={`Mobile_${link.id}`}>
+                <Text as="p" variant="h5">
                   {link.label}
                 </Text>
                 {link.itemsList && (
                   <NavigationItems currentPath={currentPath} items={link.itemsList} />
                 )}
                 {link.dropdownContent}
-              </>
+              </Fragment>
             ),
           )}
         </div>

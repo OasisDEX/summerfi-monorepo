@@ -23,7 +23,7 @@ export const NavigationItems = ({ items, currentPath }: NavigationItemsProps) =>
   return (
     <div className={navigationItemsStyles.navigationItemsWrapper}>
       {items.map((item) => (
-        <Link href={item.url} key={item.id}>
+        <Link href={item.url} key={`NavItems_${item.id}`}>
           <div className={navigationItemsStyles.navigationItemsItem}>
             <div className={navigationItemsStyles.navigationItemsIconWrapper}>
               <Icon iconName={item.icon} size={item.iconSize ?? 24} />
