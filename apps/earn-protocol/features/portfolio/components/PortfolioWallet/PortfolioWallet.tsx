@@ -8,9 +8,7 @@ export const PortfolioWallet = () => {
   return (
     <div className={classNames.wrapper}>
       <PortfolioAssets />
-      <PortfolioStrategiesCarousel
-        style={{ marginBottom: 'var(--general-space-24)', marginTop: 'var(--general-space-24)' }}
-      />
+      <PortfolioStrategiesCarousel className={classNames.strategyCarousel} />
       <CryptoUtilities />
     </div>
   )
