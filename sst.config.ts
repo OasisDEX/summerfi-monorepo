@@ -146,8 +146,8 @@ export const sstConfig: SSTConfig = {
     if (stage.startsWith('dev-')) {
       const isDockerRunning = await checkIfDockerIsRunning()
       if (!isDockerRunning) {
-        echo`${chalk.bgYellow('Docker is not running. ')}`
-        echo`${chalk.bgYellow('Docker is required for some resources to work properly.')}`
+        echo`${chalk.yellow('Docker is not running. ')}`
+        echo`${chalk.yellow('Docker is required for some resources to work properly.')}`
       } else {
         echo`${chalk.green('Docker is running. ')}`
         const isDockerComposeRunning = await checkIfDockerComposeIsRunning()

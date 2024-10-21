@@ -1,0 +1,31 @@
+query GetFleets {
+  vaults {
+    name
+    arks {
+      id
+      inputToken {
+        name
+        symbol
+        decimals
+      }
+      fees {
+        id
+        feePercentage
+        feeType
+      }
+      createdTimestamp
+    }
+    inputToken {
+      name
+      symbol
+      decimals
+    }
+    outputToken {
+      name
+      symbol
+      decimals
+    }
+    calculatedApr
+    createdTimestamp
+  }
+}
