@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 import { type EarnProtocolStrategy, NetworkNames } from '@summerfi/app-types'
 import { capitalize } from 'lodash-es'
+import Link from 'next/link'
 
 import { Icon } from '@/components/atoms/Icon/Icon.tsx'
 import { Text } from '@/components/atoms/Text/Text.tsx'
@@ -20,16 +21,18 @@ const networkNameIconMap = {
 }
 
 export const StrategyTitleDropdownContent: FC<StrategyDropdownContentProps> = ({ strategy }) => (
-  <div className={classNames.wrapper}>
-    <div className={classNames.iconWithSymbolWrapper}>
-      <Icon tokenName={strategy.symbol} variant="m" />
-      <div className={classNames.networkIconWrapper}>{networkNameIconMap[strategy.network]}</div>
-      <Text as="p" variant="p1semi">
-        {strategy.symbol}
+  <Link href={`/earn/${strategy.network}/strategy/${strategy.id}`}>
+    <div className={classNames.wrapper}>
+      <div className={classNames.iconWithSymbolWrapper}>
+        <Icon tokenName={strategy.symbol} variant="m" />
+        <div className={classNames.networkIconWrapper}>{networkNameIconMap[strategy.network]}</div>
+        <Text as="p" variant="p1semi">
+          {strategy.symbol}
+        </Text>
+      </div>
+      <Text as="p" variant="p4semi" style={{ color: riskColors[strategy.risk] }}>
+        {capitalize(strategy.risk)} risk
       </Text>
     </div>
-    <Text as="p" variant="p4semi" style={{ color: riskColors[strategy.risk] }}>
-      {capitalize(strategy.risk)} risk
-    </Text>
-  </div>
+  </Link>
 )
