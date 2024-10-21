@@ -20,6 +20,7 @@ export const Box = ({
       })}
       style={style}
     >
+      dupa
       {children}
     </div>
   )

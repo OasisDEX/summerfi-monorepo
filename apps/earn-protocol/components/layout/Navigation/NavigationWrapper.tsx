@@ -1,17 +1,23 @@
 'use client'
 
 import { type FC } from 'react'
-import { useAuthModal, useLogout, useSignerStatus, useUser } from '@account-kit/react'
-import { Button, Navigation, SupportBox } from '@summerfi/app-earn-ui'
+import { useUser } from '@account-kit/react'
+import { Button, Navigation, SkeletonLine, SupportBox } from '@summerfi/app-earn-ui'
+import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
+
+const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabel'), {
+  loading: () => (
+    <Button variant="secondarySmall">
+      <SkeletonLine width={100} height={10} style={{ opacity: 0.2 }} />
+    </Button>
+  ),
+})
 
 export const NavigationWrapper: FC = () => {
   const currentPath = usePathname()
 
   const user = useUser()
-  const { openAuthModal } = useAuthModal()
-  const signerStatus = useSignerStatus()
-  const { logout } = useLogout()
 
   return (
     <Navigation
@@ -67,15 +73,7 @@ export const NavigationWrapper: FC = () => {
           dropdownContent: <SupportBox />,
         },
       ]}
-      walletConnectionComponent={
-        signerStatus.isInitializing ? (
-          <Button variant="secondarySmall">Loading..</Button>
-        ) : (
-          <Button variant="secondarySmall" onClick={user ? () => logout() : openAuthModal}>
-            {user ? 'Log out' : 'Log in'}
-          </Button>
-        )
-      }
+      walletConnectionComponent={<WalletLabel />}
       onLogoClick={() => {
         // because router will use base path...
         window.location.href = '/'

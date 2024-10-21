@@ -23,6 +23,7 @@ interface SkeletonProps {
   height?: string | number
   radius?: string
   width?: string | number
+  style?: React.CSSProperties
 }
 
 const skeletonColorTheme: SkeletonColorThemes = {
@@ -39,9 +40,10 @@ export const SkeletonLine = ({
   circle = false,
   color = 'default',
   doughnut,
-  radius = 'var(--radius-50)',
+  radius = 'var(--general-radius-50)',
   width = '100%',
   height = 3,
+  style,
 }: Omit<SkeletonProps, 'cols' | 'count' | 'gap'>) => {
   const theme = skeletonColorTheme[color]
 
@@ -53,9 +55,10 @@ export const SkeletonLine = ({
         display: 'block',
         width,
         height,
-        borderRadius: circle || doughnut ? 'var(--radius-50)' : radius,
+        borderRadius: circle || doughnut ? 'var(--general-radius-50)' : radius,
         backgroundColor: theme[0],
         overflow: 'hidden',
+        ...style,
       }}
     >
       {doughnut && (
