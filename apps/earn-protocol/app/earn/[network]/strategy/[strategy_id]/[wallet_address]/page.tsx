@@ -13,7 +13,7 @@ import {
   UserActivity,
   type UserActivityRawData,
 } from '@/components/organisms/UserActivity/UserActivity'
-import { type strategiesList } from '@/constants/dev-strategies-list'
+import { strategiesList } from '@/constants/dev-strategies-list'
 import type { FleetConfig } from '@/helpers/sdk/types'
 
 type EarnStrategyPageProps = {
@@ -147,6 +147,7 @@ const EarnStrategyPage = ({ params }: EarnStrategyPageProps) => {
           risk,
         } as (typeof strategiesList)[number]
       }
+      strategies={strategiesList}
       leftContent={
         <div
           style={{

@@ -2,6 +2,8 @@ import { type FC } from 'react'
 import { Button, DataBlock, Icon, Text } from '@summerfi/app-earn-ui'
 import { formatAddress } from '@summerfi/app-utils'
 
+import { LoadableAvatar } from '@/components/atoms/LoadableAvatar'
+
 interface PortfolioHeaderProps {
   walletAddress: string
 }
@@ -44,7 +46,12 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({ walletAddress }) => 
         }}
       >
         <div style={{ display: 'flex', gap: 'var(--spacing-space-x-small)', alignItems: 'center' }}>
-          <Icon iconName="question_o" color="rgba(255, 73, 164, 1)" />
+          <LoadableAvatar
+            size={48}
+            name={btoa(walletAddress)}
+            variant="pixel"
+            colors={['#B90061', '#EC58A2', '#F8A4CE', '#FFFFFF']}
+          />
           <Text as="p" variant="p1semi">
             {formatAddress(walletAddress, { first: 6 })}
           </Text>

@@ -1,0 +1,19 @@
+.wrapper {
+  min-width: 272px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.iconWithSymbolWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--general-space-8);
+  position: relative;
+}
+
+.networkIconWrapper {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+}

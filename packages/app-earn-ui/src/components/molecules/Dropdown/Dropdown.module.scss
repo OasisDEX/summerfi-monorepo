@@ -1,15 +1,11 @@
 .dropdown {
   position: relative;
   display: inline-block;
-  font-family: Arial, sans-serif;
 
   &Selected {
     display: flex;
     align-items: center;
-    background-color: #333333;
     color: #fff;
-    padding: 5px 8px 5px 5px;
-    border-radius: 24px;
     cursor: pointer;
     font-size: 14px;
     justify-content: space-between;

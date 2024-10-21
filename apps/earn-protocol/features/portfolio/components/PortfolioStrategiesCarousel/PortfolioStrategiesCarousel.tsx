@@ -5,11 +5,15 @@ import { strategiesList } from '@/constants/dev-strategies-list'
 
 interface PortfolioStrategiesCarouselProps {
   style?: CSSProperties
+  className?: string
 }
 
-export const PortfolioStrategiesCarousel: FC<PortfolioStrategiesCarouselProps> = ({ style }) => {
+export const PortfolioStrategiesCarousel: FC<PortfolioStrategiesCarouselProps> = ({
+  style,
+  className,
+}) => {
   return (
-    <div style={{ width: '100%', ...style }}>
+    <div style={{ width: '100%', ...style }} className={className}>
       <SlideCarousel
         slides={strategiesList.map((strategy) => (
           <StrategyCard

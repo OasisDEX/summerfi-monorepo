@@ -40,7 +40,11 @@ export const StrategyGridDetails = ({
       </div>
       <div className={strategyGridDetailsStyles.strategyGridDetailsWrapper}>
         <div className={strategyGridDetailsStyles.strategyGridDetailsHeaderWrapper}>
-          <StrategyTitleWithRisk symbol={strategy.symbol} risk={strategy.risk} />
+          <StrategyTitleWithRisk
+            symbol={strategy.symbol}
+            risk={strategy.risk}
+            networkName={strategy.network}
+          />
           <Button variant="primarySmall" style={{ height: '48px', paddingRight: '40px' }}>
             <Link href="/">
               <WithArrow as="span" variant="p2semi">

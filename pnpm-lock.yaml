@@ -142,17 +142,17 @@ importers:
   apps/earn-protocol:
     dependencies:
       '@account-kit/core':
-        specifier: ^4.0.0
-        version: 4.0.0(@babel/core@7.24.7)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(immer@9.0.21)(react@18.3.1)(typescript@5.6.2)(viem@2.9.19)(wagmi@2.10.9)
+        specifier: ^4.0.1
+        version: 4.0.1(@babel/core@7.24.7)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(immer@9.0.21)(react@18.3.1)(typescript@5.6.2)(viem@2.9.19)(wagmi@2.10.9)
       '@account-kit/infra':
-        specifier: ^4.0.0
-        version: 4.0.0(typescript@5.6.2)(viem@2.9.19)
+        specifier: ^4.0.1
+        version: 4.0.1(typescript@5.6.2)(viem@2.9.19)
       '@account-kit/react':
-        specifier: ^4.0.0
-        version: 4.0.0(@babel/core@7.24.7)(@babel/preset-env@7.24.7)(@tanstack/react-query@5.51.1)(@types/react@18.3.1)(@wagmi/core@2.13.8)(immer@9.0.21)(react-dom@18.3.1)(react-native@0.74.3)(react@18.3.1)(rollup@3.29.4)(tailwindcss@3.4.13)(typescript@5.6.2)(viem@2.9.19)(wagmi@2.10.9)
+        specifier: ^4.0.1
+        version: 4.0.1(@babel/core@7.24.7)(@babel/preset-env@7.24.7)(@tanstack/react-query@5.51.1)(@types/react@18.3.1)(@wagmi/core@2.13.8)(immer@9.0.21)(react-dom@18.3.1)(react-native@0.74.3)(react@18.3.1)(rollup@3.29.4)(tailwindcss@3.4.13)(typescript@5.6.2)(viem@2.9.19)(wagmi@2.10.9)
       '@account-kit/signer':
-        specifier: ^4.0.0
-        version: 4.0.0(@babel/core@7.24.7)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(react@18.3.1)(typescript@5.6.2)(viem@2.9.19)
+        specifier: ^4.0.1
+        version: 4.0.1(@babel/core@7.24.7)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(react@18.3.1)(typescript@5.6.2)(viem@2.9.19)
       '@alchemy/aa-accounts':
         specifier: 3.19.0
         version: 3.19.0(typescript@5.6.2)(viem@2.9.19)
@@ -3902,8 +3902,8 @@ importers:
 
 packages:
 
-  /@aa-sdk/core@4.0.0(typescript@5.6.2)(viem@2.9.19):
-    resolution: {integrity: sha512-7O9IRxo6eSaraLkVfQ3N7Nb5rexjWOCYgEVcwELAl5gaGRW5DMvDp96gTSjb/s8UnpY9+IvTeuI980jasSjF+A==}
+  /@aa-sdk/core@4.0.1(typescript@5.6.2)(viem@2.9.19):
+    resolution: {integrity: sha512-SKesStNn5axZzcZcZe/A2Rk++MSeGZTVD4My7DFztIHdSZVFlIkvWL5Dsx5D3DdxgcFwEw7hvxVOHrUrjmtoDg==}
     peerDependencies:
       viem: ^2.20.0
     dependencies:
@@ -3920,16 +3920,16 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /@account-kit/core@4.0.0(@babel/core@7.24.7)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(immer@9.0.21)(react@18.3.1)(typescript@5.6.2)(viem@2.9.19)(wagmi@2.10.9):
-    resolution: {integrity: sha512-WIvQeGUzBQgBWS/wp7HmVBVTisoanFcp8VQEkigETeDtQyHH6nx/6EFaH+WoW/uRgR7D4MNekWWrqVyNuqJ+hw==}
+  /@account-kit/core@4.0.1(@babel/core@7.24.7)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(immer@9.0.21)(react@18.3.1)(typescript@5.6.2)(viem@2.9.19)(wagmi@2.10.9):
+    resolution: {integrity: sha512-rXDZvPXKu+ctzG2B8vVaTkRAvIVf2xdkpdxhcK7LWe6Cx8Bke07J82N2/cNjYgC709nl+ZV3+oEY1yQTn/snlg==}
     peerDependencies:
       viem: ^2.20.0
       wagmi: ^2.12.7
     dependencies:
-      '@account-kit/infra': 4.0.0(typescript@5.6.2)(viem@2.9.19)
-      '@account-kit/logging': 4.0.0
-      '@account-kit/signer': 4.0.0(@babel/core@7.24.7)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(react@18.3.1)(typescript@5.6.2)(viem@2.9.19)
-      '@account-kit/smart-contracts': 4.0.0(typescript@5.6.2)(viem@2.9.19)
+      '@account-kit/infra': 4.0.1(typescript@5.6.2)(viem@2.9.19)
+      '@account-kit/logging': 4.0.1
+      '@account-kit/signer': 4.0.1(@babel/core@7.24.7)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(react@18.3.1)(typescript@5.6.2)(viem@2.9.19)
+      '@account-kit/smart-contracts': 4.0.1(typescript@5.6.2)(viem@2.9.19)
       js-cookie: 3.0.5
       viem: 2.9.19(typescript@5.6.2)(zod@3.22.4)
       wagmi: 2.10.9(@tanstack/react-query@5.51.1)(@types/react@18.3.1)(immer@9.0.21)(react-dom@18.3.1)(react-native@0.74.3)(react@18.3.1)(rollup@3.29.4)(typescript@5.6.2)(viem@2.9.19)(zod@3.22.4)
@@ -3952,13 +3952,13 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@account-kit/infra@4.0.0(typescript@5.6.2)(viem@2.9.19):
-    resolution: {integrity: sha512-Nzaa6OjABbDD4l+ZRg4OvXlQ5VhuYbdz9N9WBF3abutnana38yf/1EBxOXqJOaSCKZCw9D3TDaxxF4EIMA3cRg==}
+  /@account-kit/infra@4.0.1(typescript@5.6.2)(viem@2.9.19):
+    resolution: {integrity: sha512-Xc2115Ck0AZG/lpUfxZ2Z3eBLoD7L8C4GmV4JB4l4FtkRTp7VhE4BI1VkOofyBsM9A3uZu+AIM64S3lLCgnWYg==}
     peerDependencies:
       viem: ^2.20.0
     dependencies:
-      '@aa-sdk/core': 4.0.0(typescript@5.6.2)(viem@2.9.19)
-      '@account-kit/logging': 4.0.0
+      '@aa-sdk/core': 4.0.1(typescript@5.6.2)(viem@2.9.19)
+      '@account-kit/logging': 4.0.1
       eventemitter3: 5.0.1
       viem: 2.9.19(typescript@5.6.2)(zod@3.22.4)
       zod: 3.22.4
@@ -3973,8 +3973,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@account-kit/logging@4.0.0:
-    resolution: {integrity: sha512-wFW2q3MMMVOMuGrl9iT01ESrohkC2Y+sDnjLDBFZUpxGP8VVDYA15+IhMjw5uolHHnPnCWbWUoJVjSg0AIAEnQ==}
+  /@account-kit/logging@4.0.1:
+    resolution: {integrity: sha512-6xqQmVtrkFv6+buCLLX2M0FY6pIdUUhByl3mfvNnHiLKejs8Paiqjpl5q8WIqGx2zqetydsHCUahsztr7AgMrQ==}
     dependencies:
       '@segment/analytics-next': 1.75.0
       uuidv4: 6.2.13
@@ -3982,8 +3982,8 @@ packages:
       - encoding
     dev: false
 
-  /@account-kit/react@4.0.0(@babel/core@7.24.7)(@babel/preset-env@7.24.7)(@tanstack/react-query@5.51.1)(@types/react@18.3.1)(@wagmi/core@2.13.8)(immer@9.0.21)(react-dom@18.3.1)(react-native@0.74.3)(react@18.3.1)(rollup@3.29.4)(tailwindcss@3.4.13)(typescript@5.6.2)(viem@2.9.19)(wagmi@2.10.9):
-    resolution: {integrity: sha512-5KhTtglzhhT892oSeN1GjskcitBqoN9IJmMpqLVbkOD5CEDQz2wuISCUwBm8xbHNzfXil92FmBzwGNmjCXbTww==}
+  /@account-kit/react@4.0.1(@babel/core@7.24.7)(@babel/preset-env@7.24.7)(@tanstack/react-query@5.51.1)(@types/react@18.3.1)(@wagmi/core@2.13.8)(immer@9.0.21)(react-dom@18.3.1)(react-native@0.74.3)(react@18.3.1)(rollup@3.29.4)(tailwindcss@3.4.13)(typescript@5.6.2)(viem@2.9.19)(wagmi@2.10.9):
+    resolution: {integrity: sha512-JoWMN7UKPr4gjz7zEe9tOp9k+WH4bh9qpX+I0NdhetK0bhDoWQZuBXWH4OoV9jpraipIGh7VPqiXHr6KkhTX4w==}
     peerDependencies:
       '@tanstack/react-query': ^5.28.9
       react: ^18.2.0
@@ -3992,9 +3992,9 @@ packages:
       viem: ^2.20.0
       wagmi: ^2.12.7
     dependencies:
-      '@account-kit/core': 4.0.0(@babel/core@7.24.7)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(immer@9.0.21)(react@18.3.1)(typescript@5.6.2)(viem@2.9.19)(wagmi@2.10.9)
-      '@account-kit/infra': 4.0.0(typescript@5.6.2)(viem@2.9.19)
-      '@account-kit/logging': 4.0.0
+      '@account-kit/core': 4.0.1(@babel/core@7.24.7)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(immer@9.0.21)(react@18.3.1)(typescript@5.6.2)(viem@2.9.19)(wagmi@2.10.9)
+      '@account-kit/infra': 4.0.1(typescript@5.6.2)(viem@2.9.19)
+      '@account-kit/logging': 4.0.1
       '@tanstack/react-form': 0.33.0(react-dom@18.3.1)(react@18.3.1)(typescript@5.6.2)
       '@tanstack/react-query': 5.51.1(react@18.3.1)
       '@tanstack/zod-form-adapter': 0.33.0(zod@3.22.4)
@@ -4041,13 +4041,13 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@account-kit/signer@4.0.0(@babel/core@7.24.7)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(react@18.3.1)(typescript@5.6.2)(viem@2.9.19):
-    resolution: {integrity: sha512-Hs3WbIwlFKT8+td3/emBtQRHTLuv7GhACYn0ezWQ/mHSKLf+p1+St1YpCEvpsGUOmFjC1HGF3tRixbKvVNU0kA==}
+  /@account-kit/signer@4.0.1(@babel/core@7.24.7)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(react@18.3.1)(typescript@5.6.2)(viem@2.9.19):
+    resolution: {integrity: sha512-MUnmIaLuAxV8ekLIauG7T/N2qQ+hOQQsHABHk/U3zWPDQM9iKOpFvXXxizXdIcejZWHeiXttzCMgZ92kaKCkFA==}
     peerDependencies:
       viem: ^2.20.0
     dependencies:
-      '@aa-sdk/core': 4.0.0(typescript@5.6.2)(viem@2.9.19)
-      '@account-kit/logging': 4.0.0
+      '@aa-sdk/core': 4.0.1(typescript@5.6.2)(viem@2.9.19)
+      '@account-kit/logging': 4.0.1
       '@turnkey/http': 2.10.0
       '@turnkey/iframe-stamper': 1.2.0
       '@turnkey/viem': 0.4.22(@babel/core@7.24.7)(@babel/preset-env@7.24.7)(@types/react@18.3.1)(react@18.3.1)(viem@2.9.19)
@@ -4067,13 +4067,13 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@account-kit/smart-contracts@4.0.0(typescript@5.6.2)(viem@2.9.19):
-    resolution: {integrity: sha512-+WCIlZDo0CwikHsbhm8ikTiZBR+hqpSDo5eVW0WBNznkDQ+x2MGpoHZlRJ9UnEyZwV0q79RMQELhz70cl3DXdA==}
+  /@account-kit/smart-contracts@4.0.1(typescript@5.6.2)(viem@2.9.19):
+    resolution: {integrity: sha512-9Hct+eFKoBccdii7sFwkfwM2I+23wg1200+O7Ah3oP4vwkW1s+ygRTGh6Z11uzwqkeOuVfoftVKfGOT0rVPL0A==}
     peerDependencies:
       viem: ^2.20.0
     dependencies:
-      '@aa-sdk/core': 4.0.0(typescript@5.6.2)(viem@2.9.19)
-      '@account-kit/infra': 4.0.0(typescript@5.6.2)(viem@2.9.19)
+      '@aa-sdk/core': 4.0.1(typescript@5.6.2)(viem@2.9.19)
+      '@account-kit/infra': 4.0.1(typescript@5.6.2)(viem@2.9.19)
       viem: 2.9.19(typescript@5.6.2)(zod@3.22.4)
     transitivePeerDependencies:
       - bufferutil
@@ -35530,6 +35530,7 @@ packages:
 
   /uuidv4@6.2.13:
     resolution: {integrity: sha512-AXyzMjazYB3ovL3q051VLH06Ixj//Knx7QnUSi1T//Ie3io6CpsPu9nVMOx5MoLWh6xV0B9J0hIaxungxXUbPQ==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     dependencies:
       '@types/uuid': 8.3.4
       uuid: 8.3.2

@@ -2,6 +2,7 @@
 
 import { type FC } from 'react'
 import { Button, Navigation, SupportBox } from '@summerfi/app-earn-ui'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 export const NavigationWrapper: FC = () => {
@@ -54,9 +55,11 @@ export const NavigationWrapper: FC = () => {
       ]}
       signupComponent={<Button variant="primarySmall">Sign up</Button>}
       walletConnectionComponent={
-        <Button variant="secondarySmall" onClick={() => {}}>
-          Action!
-        </Button>
+        <Link href="/earn">
+          <Button variant="secondarySmall" onClick={() => {}}>
+            Launch app
+          </Button>
+        </Link>
       }
       onLogoClick={() => {
         // because router will use base path...
