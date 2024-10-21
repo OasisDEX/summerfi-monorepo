@@ -11,19 +11,19 @@ const networks = [
   },
   {
     value: 'mainnet',
-    icon: <Icon iconName="ether_circle_color" variant="m" />,
+    icon: <Icon iconName="network_ethereum" variant="m" />,
   },
   {
     value: 'base',
-    icon: <Icon iconName="base" variant="s" />,
+    icon: <Icon iconName="network_base" variant="m" />,
   },
   {
     value: 'optimism',
-    icon: <Icon iconName="op_circle" variant="m" />,
+    icon: <Icon iconName="network_optimism" variant="m" />,
   },
   {
     value: 'arbitrum',
-    icon: <Icon iconName="arb_circle" variant="m" />,
+    icon: <Icon iconName="network_arbitrum" variant="m" />,
   },
 ]
 
