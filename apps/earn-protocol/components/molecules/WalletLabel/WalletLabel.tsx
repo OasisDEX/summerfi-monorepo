@@ -29,7 +29,7 @@ export default function WalletLabel() {
         variant="secondarySmall"
         onClick={handleLogout}
         style={{
-          padding: '0 var(--general-space-8) 0 var(--general-space-4)',
+          padding: '0 var(--general-space-12) 0 var(--general-space-4)',
         }}
       >
         <LoadableAvatar
@@ -38,7 +38,7 @@ export default function WalletLabel() {
           variant="pixel"
           colors={['#B90061', '#EC58A2', '#F8A4CE', '#FFFFFF']}
         />
-        <Text variant="p3semi" style={{ color: 'white' }}>
+        <Text variant="p3semi" style={{ color: 'white', paddingLeft: 'var(--general-space-8)' }}>
           {formatAddress(user.address, { first: 6 })}
         </Text>
       </Button>
