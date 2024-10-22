@@ -4,6 +4,8 @@ import { formatAddress } from '@summerfi/app-utils'
 
 import { LoadableAvatar } from '@/components/atoms/LoadableAvatar'
 
+import classNames from './PortfolioHeader.module.scss'
+
 interface PortfolioHeaderProps {
   walletAddress: string
 }
@@ -11,14 +13,7 @@ interface PortfolioHeaderProps {
 export const PortfolioHeader: FC<PortfolioHeaderProps> = ({ walletAddress }) => {
   return (
     <>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-        }}
-      >
+      <div className={classNames.firstRowWrapper}>
         <Text as="h2" variant="h2">
           Portfolio
         </Text>
@@ -35,16 +30,7 @@ export const PortfolioHeader: FC<PortfolioHeaderProps> = ({ walletAddress }) => 
           </Button>
         </div>
       </div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          marginTop: 'var(--general-space-40)',
-          marginBottom: 'var(--general-space-40)',
-        }}
-      >
+      <div className={classNames.secondRowWrapper}>
         <div style={{ display: 'flex', gap: 'var(--spacing-space-x-small)', alignItems: 'center' }}>
           <LoadableAvatar
             size={48}

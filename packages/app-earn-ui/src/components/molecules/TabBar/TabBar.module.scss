@@ -69,6 +69,10 @@
   .tabContent {
     padding: 15px;
   }
+
+  .underline {
+    top: 54px; /* Same level as grey border */
+  }
 }
 
 @media (max-width: 480px) {
