@@ -33,5 +33,6 @@ export function addEarnProtocolConfig({ stack, api }: StackContext & { api: Api 
   api.addRoutes(stack, {
     'GET /api/earn/portfolio/{address}': getEarnProtocolPortfolioFunction,
     'GET /api/earn/fleets': getEarnProtocolFleetsFunction,
+    'GET /api/earn/fleets/{chainId}/{fleetId}': getEarnProtocolFleetsFunction,
   })
 }

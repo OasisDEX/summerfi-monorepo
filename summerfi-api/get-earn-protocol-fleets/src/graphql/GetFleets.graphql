@@ -1,6 +1,15 @@
 query GetFleets {
   vaults {
+    id
     name
+    rewardTokens {
+      id
+      token {
+        symbol
+        decimals
+      }
+    }
+    rewardTokenEmissionsUSD
     arks {
       id
       inputToken {
@@ -14,6 +23,7 @@ query GetFleets {
         feeType
       }
       createdTimestamp
+      lastUpdateTimestamp
     }
     inputToken {
       name
@@ -25,7 +35,14 @@ query GetFleets {
       symbol
       decimals
     }
+    outputTokenPriceUSD
+    depositLimit
     calculatedApr
     createdTimestamp
+    totalValueLockedUSD
+    cumulativeTotalRevenueUSD
+    cumulativeSupplySideRevenueUSD
+    cumulativeProtocolSideRevenueUSD
+    lastUpdateTimestamp
   }
 }

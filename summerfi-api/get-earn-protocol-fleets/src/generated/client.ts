@@ -6618,16 +6618,93 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny'
 }
 
+export type GetFleetDetailsQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetFleetDetailsQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', id: string, rebalances: Array<{ __typename?: 'Rebalance', amount: bigint, timestamp: bigint, vault: { __typename?: 'Vault', id: string, name?: string | null, protocol: { __typename?: 'YieldAggregator', id: string, name: string, network: Network, type: ProtocolType } }, from: { __typename?: 'Ark', id: string, name?: string | null, inputToken: { __typename?: 'Token', symbol: string, decimals: number } }, to: { __typename?: 'Ark', id: string, name?: string | null, inputToken: { __typename?: 'Token', symbol: string, decimals: number } }, asset: { __typename?: 'Token', name: string, symbol: string } }>, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, depositLimit: bigint, cumulativeDeposits: bigint, cumulativeEarnings: bigint, cumulativeWithdrawals: bigint, dailySnapshots: Array<{ __typename?: 'ArkDailySnapshot', id: string, apr: string, totalValueLockedUSD: string, inputTokenBalance: bigint }>, hourlySnapshots: Array<{ __typename?: 'ArkHourlySnapshot', id: string, calculatedApr: string, totalValueLockedUSD: string, inputTokenBalance: bigint }> }> } | null };
+
 export type GetFleetsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetFleetsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', name?: string | null, calculatedApr: string, createdTimestamp: bigint, arks: Array<{ __typename?: 'Ark', id: string, createdTimestamp: bigint, inputToken: { __typename?: 'Token', name: string, symbol: string, decimals: number }, fees: Array<{ __typename?: 'VaultFee', id: string, feePercentage?: string | null, feeType: VaultFeeType }> }>, inputToken: { __typename?: 'Token', name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', name: string, symbol: string, decimals: number } | null }> };
+export type GetFleetsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsUSD?: Array<string> | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, calculatedApr: string, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, rewardTokens?: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', symbol: string, decimals: number } }> | null, arks: Array<{ __typename?: 'Ark', id: string, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', name: string, symbol: string, decimals: number }, fees: Array<{ __typename?: 'VaultFee', id: string, feePercentage?: string | null, feeType: VaultFeeType }> }>, inputToken: { __typename?: 'Token', name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', name: string, symbol: string, decimals: number } | null }> };
 
 
+export const GetFleetDetailsDocument = gql`
+    query GetFleetDetails($id: ID!) {
+  vault(id: $id) {
+    id
+    rebalances {
+      amount
+      vault {
+        id
+        name
+        protocol {
+          id
+          name
+          network
+          type
+        }
+      }
+      from {
+        id
+        name
+        inputToken {
+          symbol
+          decimals
+        }
+      }
+      to {
+        id
+        name
+        inputToken {
+          symbol
+          decimals
+        }
+      }
+      asset {
+        name
+        symbol
+      }
+      timestamp
+    }
+    arks {
+      id
+      name
+      depositLimit
+      cumulativeDeposits
+      cumulativeEarnings
+      cumulativeWithdrawals
+      dailySnapshots(first: 10) {
+        id
+        apr
+        totalValueLockedUSD
+        inputTokenBalance
+      }
+      hourlySnapshots(first: 10) {
+        id
+        calculatedApr
+        totalValueLockedUSD
+        inputTokenBalance
+      }
+    }
+  }
+}
+    `;
 export const GetFleetsDocument = gql`
     query GetFleets {
   vaults {
+    id
     name
+    rewardTokens {
+      id
+      token {
+        symbol
+        decimals
+      }
+    }
+    rewardTokenEmissionsUSD
     arks {
       id
       inputToken {
@@ -6641,6 +6718,7 @@ export const GetFleetsDocument = gql`
         feeType
       }
       createdTimestamp
+      lastUpdateTimestamp
     }
     inputToken {
       name
@@ -6652,8 +6730,15 @@ export const GetFleetsDocument = gql`
       symbol
       decimals
     }
+    outputTokenPriceUSD
+    depositLimit
     calculatedApr
     createdTimestamp
+    totalValueLockedUSD
+    cumulativeTotalRevenueUSD
+    cumulativeSupplySideRevenueUSD
+    cumulativeProtocolSideRevenueUSD
+    lastUpdateTimestamp
   }
 }
     `;
@@ -6665,6 +6750,9 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    GetFleetDetails(variables: GetFleetDetailsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetFleetDetailsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetFleetDetailsQuery>(GetFleetDetailsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetFleetDetails', 'query', variables);
+    },
     GetFleets(variables?: GetFleetsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetFleetsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetFleetsQuery>(GetFleetsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetFleets', 'query', variables);
     }

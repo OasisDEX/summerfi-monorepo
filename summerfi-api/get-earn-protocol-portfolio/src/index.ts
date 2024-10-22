@@ -31,12 +31,12 @@ export const handler = async (
     return ResponseInternalServerError('SDK_API_URL is not set')
   }
 
-  logger.info(`Query params`, { params: event.pathParameters })
+  logger.info(`Path params`, { params: event.pathParameters })
 
   const pathParamsResult = pathParamsSchema.safeParse(event.pathParameters)
   if (!pathParamsResult.success) {
-    logger.warn('Incorrect query params', {
-      params: event.queryStringParameters,
+    logger.warn('Incorrect path params', {
+      params: event.pathParameters,
       errors: pathParamsResult.error.errors,
     })
     return ResponseBadRequest({
