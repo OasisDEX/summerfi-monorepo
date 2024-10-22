@@ -36,7 +36,10 @@ export const StrategyTitle: FC<StrategyTitleProps> = ({
       <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
         <Icon tokenName={symbol} variant="xxl" />
         {(networkId ?? networkName) && (
-          <div style={{ position: 'absolute', top: '-3px', left: '-3px' }}>
+          <div
+            style={{ position: 'absolute', top: '-3px', left: '-3px' }}
+            data-testid="strategy-network"
+          >
             {networkId && networkIdIconMap[networkId]}
             {networkName && networkNameIconMap[networkName]}
           </div>
@@ -44,7 +47,12 @@ export const StrategyTitle: FC<StrategyTitleProps> = ({
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <Text as="h4" variant="h4" style={{ color: 'white', fontSize: '24px', lineHeight: '30px' }}>
+        <Text
+          as="h4"
+          variant="h4"
+          style={{ color: 'white', fontSize: '24px', lineHeight: '30px' }}
+          data-testid="strategy-token"
+        >
           {symbol}
         </Text>
         {value && <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>{value}</div>}
