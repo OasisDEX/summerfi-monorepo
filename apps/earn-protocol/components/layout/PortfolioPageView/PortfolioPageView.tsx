@@ -6,13 +6,14 @@ import { TabBar } from '@summerfi/app-earn-ui'
 import { PortfolioHeader } from '@/features/portfolio/components/PortfolioHeader/PortfolioHeader'
 import { PortfolioOverview } from '@/features/portfolio/components/PortfolioOverview/PortfolioOverview'
 import { PortfolioRebalanceActivity } from '@/features/portfolio/components/PortfolioRebalanceActivity/PortfolioRebalanceActivity'
+import { PortfolioRewards } from '@/features/portfolio/components/PortfolioRewards/PortfolioRewards'
 import { PortfolioWallet } from '@/features/portfolio/components/PortfolioWallet/PortfolioWallet'
 
 const tabs = [
   { label: 'Overview', content: <PortfolioOverview /> },
   { label: 'Wallet', content: <PortfolioWallet /> },
   { label: 'Rebalance Activity', content: <PortfolioRebalanceActivity /> },
-  { label: 'Rewards', content: <div>Rewards content here</div> },
+  { label: 'Rewards', content: <PortfolioRewards /> },
 ]
 
 interface PortfolioPageViewProps {
