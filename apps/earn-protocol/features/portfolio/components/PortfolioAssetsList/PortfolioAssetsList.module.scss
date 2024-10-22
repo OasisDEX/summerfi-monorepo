@@ -10,13 +10,16 @@
   flex-direction: column;
   overflow: hidden;
   width: 100%;
-  gap: var(--general-space-16);
+  gap: var(--general-space-8);
   max-height: 360px;
   transition: max-height ease-in-out 1s;
 
   &Expanded {
-    max-height: 3000px; // to be adjusted
+    max-height: 935px; // to be adjusted
     transition: max-height ease-in-out 1s;
+    overflow-y: scroll;
+    scrollbar-color: grey transparent;
+    scrollbar-width: thin;
   }
 }
 
