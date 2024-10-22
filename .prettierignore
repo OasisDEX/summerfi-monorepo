@@ -20,6 +20,8 @@ artifacts
 
 packages/**/src/generated
 sdk/**/src/generated
+summerfi-api/**/src/generated
+sdk/**/src/generated
 packages/**/types/generated
 apps/**/types/generated/*
 armada-protocol/contracts/**/*
