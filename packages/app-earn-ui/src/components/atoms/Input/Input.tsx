@@ -22,6 +22,7 @@ export const Input: FC<
     }
     CustomIcon?: FC
     wrapperStyles?: CSSProperties
+    secondaryValue?: string
   }
 > = ({ variant = 'default', className, CustomIcon, icon, wrapperStyles, ...rest }) => {
   return (
@@ -43,13 +44,18 @@ export const Input: FC<
         ].join(' ')}
         {...rest}
       />
-      {rest.value !== '0' && rest.value !== '' && (
+      {rest.secondaryValue !== '0' && rest.secondaryValue !== '' && (
         <Text
           as="p"
-          variant="p3"
-          style={{ position: 'absolute', color: '#9B9B9B', right: 0, bottom: 0 }}
+          variant="p3semi"
+          style={{
+            position: 'absolute',
+            right: 0,
+            bottom: '-5px',
+            color: 'var(--earn-protocol-secondary-60)',
+          }}
         >
-          ${rest.value}
+          {rest.secondaryValue}
         </Text>
       )}
     </div>

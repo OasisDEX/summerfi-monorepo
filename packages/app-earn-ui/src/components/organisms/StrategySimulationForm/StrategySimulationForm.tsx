@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from 'react'
 import { type DropdownOption, type EarnProtocolStrategy } from '@summerfi/app-types'
-import { mapNumericInput } from '@summerfi/app-utils'
+import { formatCryptoBalance, mapNumericInput } from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
 
 import { sidebarFootnote } from '@/common/sidebar/footnote'
 import { SidebarFootnote } from '@/components/molecules/SidebarFootnote/SidebarFootnote'
@@ -41,12 +42,21 @@ export const StrategySimulationForm = ({ strategyData }: StrategySimulationFormP
     } as DropdownOption
   }, [strategyData])
 
+  const balance = new BigNumber(123123)
+  const token = strategyData?.symbol
+
   return (
     <Sidebar
       {...{
         title: 'Deposit',
         inputValue,
         dropdown: { value: dropdownLockedValue, options: [dropdownLockedValue] },
+        inputHeading: {
+          label: 'Balance',
+          value: `${formatCryptoBalance(balance)} ${token}`,
+          // eslint-disable-next-line no-console
+          action: () => console.log('clicked'),
+        },
         handleInputChange,
         banner: {
           title: 'Estimated earnings after 1 year',

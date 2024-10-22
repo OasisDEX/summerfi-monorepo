@@ -1,0 +1,13 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  margin-bottom: var(--general-space-16);
+}
+
+.description {
+  margin-bottom: var(--general-space-16);
+  color: var(--earn-protocol-secondary-60);
+}

@@ -13,6 +13,11 @@ interface SidebarProps {
   title: string
   inputValue: string
   handleInputChange: ChangeEventHandler<HTMLInputElement>
+  inputHeading?: {
+    label: ReactNode
+    value: ReactNode
+    action: () => void
+  }
   dropdown: {
     options: DropdownOption[]
     value: DropdownOption
@@ -41,6 +46,7 @@ export const Sidebar: FC<SidebarProps> = ({
   title,
   inputValue,
   handleInputChange,
+  inputHeading,
   dropdown,
   banner,
   primaryButton,
@@ -57,9 +63,11 @@ export const Sidebar: FC<SidebarProps> = ({
       <div className={classNames.sidebarHeaderSpacer} />
       <InputWithDropdown
         value={inputValue}
+        secondaryValue={`$${inputValue}`}
         handleChange={handleInputChange}
         options={dropdown.options}
         dropdownValue={dropdown.value}
+        heading={inputHeading}
       />
       {banner && (
         <Card className={classNames.sidebarBannerWrapper} variant="cardSecondary">
