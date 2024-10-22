@@ -215,7 +215,7 @@ export const StaticTokensData: TokenListData = {
       logoURI: '',
     },
     {
-      name: 'Staked USDs',
+      name: 'Savings USDs',
       address: '0xa3931d71877C0E7a3148CB7Eb4463524FEc27fbD',
       symbol: 'sUSDs',
       decimals: 18,
