@@ -2,7 +2,7 @@ import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'a
 import {
   ResponseBadRequest,
   ResponseInternalServerError,
-  ResponseOk,
+  ResponseOkSimple,
 } from '@summerfi/serverless-shared/responses'
 import { getAutomationSubgraphClient } from '@summerfi/automation-subgraph'
 import { getSimpleTriggers } from './helpers/get-simple-triggers'
@@ -91,7 +91,7 @@ export const handler = async (
     params,
   })
 
-  return ResponseOk({ body: response })
+  return ResponseOkSimple({ body: response })
 }
 
 export default handler

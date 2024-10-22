@@ -4,7 +4,7 @@ import { getDefaultErrorMessage } from '@summerfi/serverless-shared/helpers'
 import {
   ResponseBadRequest,
   ResponseInternalServerError,
-  ResponseOk,
+  ResponseOkSimple,
 } from '@summerfi/serverless-shared/responses'
 import { addressSchema } from '@summerfi/serverless-shared/validators'
 import {
@@ -100,7 +100,7 @@ export const handler = async (
       (migration) => migration.positionAddressType === 'EOA',
     )
 
-    return ResponseOk<PortfolioMigrationsResponse>({
+    return ResponseOkSimple<PortfolioMigrationsResponse>({
       body: { migrations: legacyMigration, migrationsV2: eligibleMigrations },
     })
   } catch (error) {
