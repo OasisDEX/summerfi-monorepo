@@ -215,6 +215,14 @@ export const StaticTokensData: TokenListData = {
       logoURI: '',
     },
     {
+      name: 'Savings USDs',
+      address: '0xa3931d71877C0E7a3148CB7Eb4463524FEc27fbD',
+      symbol: 'sUSDs',
+      decimals: 18,
+      chainId: 1,
+      logoURI: '',
+    },
+    {
       name: 'USDA',
       address: '0x0000206329b97DB379d5E1Bf586BbDB969C63274',
       symbol: 'USDA',
