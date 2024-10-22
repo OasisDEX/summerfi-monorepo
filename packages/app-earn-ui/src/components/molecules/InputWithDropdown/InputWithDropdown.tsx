@@ -1,8 +1,9 @@
-import { type ChangeEventHandler, type FC } from 'react'
+import { type ChangeEventHandler, type FC, type ReactNode } from 'react'
 import { type DropdownOption } from '@summerfi/app-types'
 
 import { Icon } from '@/components/atoms/Icon/Icon.tsx'
 import { Input } from '@/components/atoms/Input/Input'
+import { Text } from '@/components/atoms/Text/Text.tsx'
 import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
 
 import classNames from '@/components/molecules/InputWithDropdown/InputWithDropdown.module.scss'
@@ -23,28 +24,56 @@ interface InputWithDropdownProps {
   options: DropdownOption[]
   dropdownValue: DropdownOption
   value: string
+  secondaryValue?: string
   handleChange: ChangeEventHandler<HTMLInputElement>
+  heading?: {
+    label: ReactNode
+    value: ReactNode
+    action: () => void
+  }
 }
 
 export const InputWithDropdown: FC<InputWithDropdownProps> = ({
   options,
   dropdownValue,
   value,
+  secondaryValue,
   handleChange,
+  heading,
 }) => {
   return (
     <div className={classNames.wrapper}>
-      <Dropdown
-        options={options.map((item) => ({
-          value: item.value,
-          content: <Content option={item} />,
-        }))}
-        dropdownValue={{ value: dropdownValue.value, content: <Content option={dropdownValue} /> }}
-        asPill
-      >
-        <Content option={dropdownValue} />
-      </Dropdown>
-      <Input placeholder="0" value={value} onChange={handleChange} />
+      {heading && (
+        <div className={classNames.headingWrapper}>
+          <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
+            {heading.label}
+          </Text>
+          <Text as="p" variant="p3semi" className={classNames.headingWrapperAction}>
+            {heading.value}
+          </Text>
+        </div>
+      )}
+      <div className={classNames.inputWrapper}>
+        <Dropdown
+          options={options.map((item) => ({
+            value: item.value,
+            content: <Content option={item} />,
+          }))}
+          dropdownValue={{
+            value: dropdownValue.value,
+            content: <Content option={dropdownValue} />,
+          }}
+          asPill
+        >
+          <Content option={dropdownValue} />
+        </Dropdown>
+        <Input
+          placeholder="0"
+          value={value}
+          onChange={handleChange}
+          secondaryValue={secondaryValue}
+        />
+      </div>
     </div>
   )
 }
