@@ -12,7 +12,6 @@
     "resolveJsonModule": true,
     "isolatedModules": false,
     "emitDeclarationOnly": true,
-    "incremental": true,
     "jsx": "react-jsx",
     "strictNullChecks": true,
     "declaration": true,

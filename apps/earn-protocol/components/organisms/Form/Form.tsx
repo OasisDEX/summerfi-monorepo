@@ -2,7 +2,8 @@
 import { type ChangeEvent, useState } from 'react'
 import { Sidebar, SidebarFootnote, sidebarFootnote } from '@summerfi/app-earn-ui'
 import { type DropdownOption } from '@summerfi/app-types'
-import { mapNumericInput } from '@summerfi/app-utils'
+import { formatCryptoBalance, mapNumericInput } from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 
 import { strategiesList } from '@/constants/dev-strategies-list'
@@ -47,9 +48,18 @@ const Form = ({ fleetConfig: _fleetConfig, selectedStrategyData }: FormProps) =>
   const dropdownValue =
     options.find((option) => option.value === selectedStrategyData?.symbol) ?? options[0]
 
+  const balance = new BigNumber(123123)
+  const token = dropdownValue.label
+
   const sidebarProps = {
     title: capitalize(action),
     inputValue: amountValue ?? '',
+    inputHeading: {
+      label: 'Balance',
+      value: `${formatCryptoBalance(balance)} ${token}`,
+      // eslint-disable-next-line no-console
+      action: () => console.log('clicked'),
+    },
     dropdown: { value: dropdownValue, options },
     handleInputChange: handleChange,
     banner: {

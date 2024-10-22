@@ -11,14 +11,25 @@ interface GenericTokenIconProps {
   variant?: ClassNames
   className?: string
   symbol: string
+  customSize?: number
 }
 
 const scaleFactor = 0.8125
 
-export const GenericTokenIcon: FC<GenericTokenIconProps> = ({ variant = 'smallIcon', symbol }) => {
+export const GenericTokenIcon: FC<GenericTokenIconProps> = ({
+  variant = 'smallIcon',
+  symbol,
+  customSize,
+}) => {
   const size = variant === 'smallIcon' ? 30 : 44
 
-  const innerSize = size * scaleFactor
+  const innerSize = customSize ?? size * scaleFactor
+
+  const customSizeStyle = {
+    width: `${customSize}px`,
+    height: `${customSize}px`,
+    lineHeight: `${customSize}px`,
+  }
 
   const AvatarLoadingState = loadable(() => import('boring-avatars'), {
     cacheKey: () => symbol,
@@ -35,14 +46,16 @@ export const GenericTokenIcon: FC<GenericTokenIconProps> = ({ variant = 'smallIc
   })
 
   return (
-    <div className={genericTokenIconStyles[variant]}>
+    <div className={genericTokenIconStyles[variant]} style={customSize ? customSizeStyle : {}}>
       <AvatarLoadingState
         size={innerSize}
         name={btoa(symbol)}
         variant="marble"
         colors={['#6FD9FF', '#F2FCFF', '#FFE7D8', '#FBB677']}
       />
-      <div className={genericTokenIconStyles.unknownIcon}>?</div>
+      <div className={genericTokenIconStyles.unknownIcon} style={customSize ? customSizeStyle : {}}>
+        ?
+      </div>
     </div>
   )
 }

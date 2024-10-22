@@ -1,62 +1,13 @@
 'use client'
-import { type CSSProperties, useState } from 'react'
-import { Card, DataBlock, Icon, StrategyTitleWithRisk, Text } from '@summerfi/app-earn-ui'
-import { type TokenSymbolsList } from '@summerfi/app-types'
-import { formatCryptoBalance, formatFiatBalance } from '@summerfi/app-utils'
+import { type CSSProperties, type FC, useState } from 'react'
+import { Card, DataBlock, Icon, StrategyTitle, Text } from '@summerfi/app-earn-ui'
+import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
-import classNames from './PortfolioAssetsList.module.scss'
+import { valueColorResolver } from '@/helpers/value-color-resolver'
+import { type PortfolioWalletAsset } from '@/server-handlers/portfolio/portfolio-wallet-assets-handler'
 
-const assets: {
-  token: TokenSymbolsList
-  price24h: string
-  change: string
-  usdValue: string
-  balance: string
-}[] = [
-  {
-    token: 'USDC',
-    price24h: '5',
-    change: '0.001',
-    usdValue: '100000',
-    balance: '100000',
-  },
-  {
-    token: 'USDT',
-    price24h: '5',
-    change: '0.001',
-    usdValue: '10000',
-    balance: '10000',
-  },
-  {
-    token: 'DAI',
-    price24h: '5',
-    change: '0.001',
-    usdValue: '1000',
-    balance: '1000',
-  },
-  {
-    token: 'ETH',
-    price24h: '5',
-    change: '0.001',
-    usdValue: '1000',
-    balance: '1000',
-  },
-  {
-    token: 'WBTC',
-    price24h: '5',
-    change: '0.001',
-    usdValue: '1000',
-    balance: '1000',
-  },
-  {
-    token: 'WSTETH',
-    price24h: '5',
-    change: '0.001',
-    usdValue: '1000',
-    balance: '1000',
-  },
-]
+import classNames from './PortfolioAssetsList.module.scss'
 
 const dataBlocksStyles: {
   valueStyle: CSSProperties
@@ -66,7 +17,36 @@ const dataBlocksStyles: {
   titleStyle: { textAlign: 'right', width: '100%' },
 }
 
-export const PortfolioAssetsList = () => {
+interface AssetPriceChangeTrendProps {
+  change: number | undefined
+}
+
+const AssetPriceChangeTrend: FC<AssetPriceChangeTrendProps> = ({ change }) => {
+  const resolvedChange = new BigNumber(change ?? 0)
+
+  const color = valueColorResolver(resolvedChange)
+
+  return (
+    <>
+      <Text as="p" variant="p3" style={{ color }}>
+        {formatDecimalAsPercent(resolvedChange)}
+      </Text>
+      {!resolvedChange.isZero() && (
+        <Icon
+          iconName={resolvedChange.gt(0) ? 'arrow_increase' : 'arrow_decrease'}
+          variant="xxs"
+          color={color}
+        />
+      )}
+    </>
+  )
+}
+
+interface PortfolioAssetsListProps {
+  walletAssets: PortfolioWalletAsset[]
+}
+
+export const PortfolioAssetsList: FC<PortfolioAssetsListProps> = ({ walletAssets }) => {
   const [isSeeAll, setIsSeeAll] = useState(false)
 
   return (
@@ -74,41 +54,56 @@ export const PortfolioAssetsList = () => {
       <div
         className={`${classNames.assetsWrapper} ${isSeeAll ? classNames.assetsWrapperExpanded : ''}`}
       >
-        {assets.slice(0, isSeeAll ? assets.length : 3).map((item) => (
-          <Card key={item.token} variant="cardSecondary" className={classNames.assetWrapper}>
+        {walletAssets.slice(0, isSeeAll ? walletAssets.length : 3).map((item) => (
+          <Card
+            key={item.symbol + item.network + item.balance}
+            variant="cardSecondary"
+            className={classNames.assetWrapper}
+          >
             <div className={classNames.tokenBlockWrapper}>
-              <StrategyTitleWithRisk symbol={item.token} risk="low" />
+              <StrategyTitle
+                symbol={item.symbol}
+                networkName={item.network}
+                value={<AssetPriceChangeTrend change={item.price24hChange} />}
+              />
             </div>
             <div className={classNames.dataBlockWrapper}>
               <DataBlock
                 title="Price (24h)"
-                value={`$${formatFiatBalance(new BigNumber(item.price24h))}`}
+                value={`$${formatFiatBalance(new BigNumber(item.priceUSD))}`}
                 {...dataBlocksStyles}
               />
               <DataBlock
                 title="USD Value"
-                value={`$${formatFiatBalance(new BigNumber(item.usdValue))}`}
+                value={`$${formatFiatBalance(new BigNumber(item.balanceUSD))}`}
                 {...dataBlocksStyles}
               />
               <DataBlock
                 title="Token Balance"
-                value={`${formatCryptoBalance(new BigNumber(item.usdValue))} ${item.token}`}
+                value={`${formatCryptoBalance(new BigNumber(item.balance))} ${item.symbol}`}
                 {...dataBlocksStyles}
               />
             </div>
           </Card>
         ))}
       </div>
-      <div onClick={() => setIsSeeAll((prev) => !prev)} className={classNames.linkWrapper}>
-        <Text as="p" variant="p3semi">
-          {isSeeAll ? 'Hide' : 'See'} all assets
+      {walletAssets.length === 0 && (
+        <Text as="p" variant="p1">
+          No assets available to display
         </Text>
-        <Icon
-          iconName={isSeeAll ? 'chevron_up' : 'chevron_down'}
-          variant="xs"
-          color="rgba(255, 73, 164, 1)"
-        />
-      </div>
+      )}
+      {walletAssets.length > 3 && (
+        <div onClick={() => setIsSeeAll((prev) => !prev)} className={classNames.linkWrapper}>
+          <Text as="p" variant="p3semi">
+            {isSeeAll ? 'Hide' : 'See'} all assets
+          </Text>
+          <Icon
+            iconName={isSeeAll ? 'chevron_up' : 'chevron_down'}
+            variant="xs"
+            color="rgba(255, 73, 164, 1)"
+          />
+        </div>
+      )}
     </div>
   )
 }

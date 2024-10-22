@@ -43,6 +43,7 @@ jobs:
       MIXPANEL_KEY: ${{ secrets.MIXPANEL_KEY }}
       NEXT_PUBLIC_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }}
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
+      NEXT_TELEMETRY_DISABLED: ${{ secrets.NEXT_TELEMETRY_DISABLED }}
 
     steps:
       - name: Check out code
@@ -115,6 +116,7 @@ jobs:
                        --build-arg CONFIG_URL=${{ secrets.CONFIG_URL }} \
                        --build-arg MIXPANEL_KEY=${{ secrets.MIXPANEL_KEY }} \
                        --build-arg NEXT_PUBLIC_MIXPANEL_KEY=${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }} \
+                       --build-arg NEXT_TELEMETRY_DISABLED=${{ secrets.NEXT_TELEMETRY_DISABLED }} \
                        --cache-from type=registry,ref=189194422115.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/buildkit-test:cache \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$SHA_TAG \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$LATEST_TAG \

@@ -22,6 +22,7 @@ jobs:
       MIXPANEL_KEY: ${{ secrets.MIXPANEL_KEY }}
       NEXT_PUBLIC_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }}
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
+      NEXT_TELEMETRY_DISABLED: ${{ secrets.NEXT_TELEMETRY_DISABLED }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -127,6 +128,7 @@ jobs:
                        --build-arg FUNCTIONS_API_URL=${{ secrets.FUNCTIONS_API_URL }} \
                        --build-arg MIXPANEL_KEY=${{ secrets.MIXPANEL_KEY }} \
                        --build-arg NEXT_PUBLIC_MIXPANEL_KEY=${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }} \
+                       --build-arg NEXT_TELEMETRY_DISABLED=${{ secrets.NEXT_TELEMETRY_DISABLED }} \
                        --cache-from=$ECR_REGISTRY/$ECR_REPO_NAME:$LATEST_TAG \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$SHA_TAG \
                        -t $ECR_REGISTRY/$ECR_REPO_NAME:$LATEST_TAG \

@@ -13,12 +13,12 @@
   ],
   "scripts": {
     "lint": "eslint *.ts*",
-    "resolve-tspaths-watch": "tsc-watch --onSuccess 'resolve-tspaths'",
+    "resolve-tspaths-watch": "tsc-watch --onSuccess 'pnpm resolve-tspaths'",
     "generate-component-types": "tsc",
     "generate-component-types-watch": "tsc -w",
     "generate-module-types": "typed-scss-modules 'src/**/*.module.scss' & typed-scss-modules --outputFolder 'dist/types' 'src/**/*.module.scss'",
     "generate-module-types-watch": "typed-scss-modules -w 'src/**/*.module.scss' & typed-scss-modules --outputFolder 'dist/types' -w 'src/**/*.module.scss'",
-    "build": "pnpm vite build -w false --mode=prod && pnpm generate-module-types && pnpm generate-component-types && resolve-tspaths",
+    "build": "pnpm vite build -w false --mode=prod && pnpm generate-module-types && pnpm generate-component-types && pnpm resolve-tspaths",
     "vite-dev": "pnpm vite build -w true --mode=dev",
     "dev": "concurrently \"pnpm:vite-dev\" \"pnpm:generate-module-types-watch\" \"pnpm:generate-component-types-watch\" \"pnpm:resolve-tspaths-watch\""
   },

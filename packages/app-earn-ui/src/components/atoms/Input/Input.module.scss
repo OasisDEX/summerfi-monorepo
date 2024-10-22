@@ -21,6 +21,7 @@
   color: var(--color-text-primary);
   text-align: right;
   border: unset;
+  outline: none;
 
   &:hover {
     border-color: var(--color-neutral-70);

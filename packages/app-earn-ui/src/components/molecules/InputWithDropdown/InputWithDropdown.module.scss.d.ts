@@ -1,4 +1,7 @@
 export type Styles = {
+  headingWrapper: string
+  headingWrapperAction: string
+  inputWrapper: string
   wrapper: string
 }
 

@@ -169,6 +169,7 @@ const EarnStrategyPage = ({ params }: EarnStrategyPageProps) => {
   return (
     <StrategyGridPreview
       strategy={selectedStrategyData as (typeof strategiesList)[number]}
+      strategies={strategiesList}
       leftContent={
         <div
           style={{

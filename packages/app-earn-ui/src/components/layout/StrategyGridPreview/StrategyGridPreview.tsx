@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode } from 'react'
+import { type FC, type ReactNode } from 'react'
 import { type EarnProtocolStrategy } from '@summerfi/app-types'
 import Link from 'next/link'
 
@@ -8,19 +8,25 @@ import { Box } from '@/components/atoms/Box/Box'
 import { Text } from '@/components/atoms/Text/Text'
 import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
 import { DataBlock } from '@/components/molecules/DataBlock/DataBlock'
+import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
 import { SimpleGrid } from '@/components/molecules/Grid/SimpleGrid'
+import { StrategyTitleDropdownContent } from '@/components/molecules/StrategyTitleDropdownContent/StrategyTitleDropdownContent.tsx'
 import { StrategyTitleWithRisk } from '@/components/molecules/StrategyTitleWithRisk/StrategyTitleWithRisk'
 
 import strategyGridPreviewStyles from './StrategyGridPreview.module.scss'
 
-export const StrategyGridPreview = ({
-  strategy,
-  leftContent,
-  rightContent,
-}: {
+interface StrategyGridPreviewProps {
   strategy: EarnProtocolStrategy
+  strategies: EarnProtocolStrategy[]
   leftContent: ReactNode
   rightContent: ReactNode
+}
+
+export const StrategyGridPreview: FC<StrategyGridPreviewProps> = ({
+  strategy,
+  strategies,
+  leftContent,
+  rightContent,
 }) => {
   return (
     <>
@@ -39,7 +45,22 @@ export const StrategyGridPreview = ({
       <div className={strategyGridPreviewStyles.strategyGridPreviewPositionWrapper}>
         <div>
           <div className={strategyGridPreviewStyles.strategyGridPreviewTopLeftWrapper}>
-            <StrategyTitleWithRisk symbol={strategy.symbol} risk={strategy.risk} />
+            <Dropdown
+              options={strategies.map((item) => ({
+                value: item.id,
+                content: <StrategyTitleDropdownContent strategy={item} />,
+              }))}
+              dropdownValue={{
+                value: strategy.id,
+                content: <StrategyTitleDropdownContent strategy={strategy} />,
+              }}
+            >
+              <StrategyTitleWithRisk
+                symbol={strategy.symbol}
+                risk={strategy.risk}
+                networkName={strategy.network}
+              />
+            </Dropdown>
             <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
               <BonusLabel rays="1,111" />
             </Text>
