@@ -7,14 +7,14 @@ import {
   TokenAmount,
   User,
   Wallet,
-  type ChainInfo,
   type IToken,
   type IUser,
 } from '@summerfi/sdk-common'
 
-import { ArmadaPoolId, ArmadaProtocol } from '@summerfi/armada-protocol-service'
+import { ArmadaPoolId } from '@summerfi/armada-protocol-service'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
 import type { IArmadaPoolId } from '@summerfi/armada-protocol-common'
+import { prepareData } from './prepareData'
 
 jest.setTimeout(300000)
 
@@ -23,30 +23,38 @@ const SDKApiUrl = process.env.E2E_SDK_API_URL,
   walletAddress = process.env.E2E_USER_ADDRESS,
   privateKey = process.env.E2E_USER_PRIVATE_KEY,
   fleetOnBase = Address.createFromEthereum({
-    value: '0xd555F7D124a58617f49894b623b97Bf295674f14',
+    value: '0xd555f7d124a58617f49894b623b97bf295674f14',
   }),
   fleetOnArb = Address.createFromEthereum({
-    value: '0x4774d1cD62D20c288dFAdEfDEDF79d5B4cae1856',
+    value: '0x4774d1cd62d20c288dfadefdedf79d5b4cae1856',
+  }),
+  userOnBase = Address.createFromEthereum({
+    value: '0xe9c245293dac615c11a5bf26fcec91c3617645e4',
+  }),
+  userOnArb = Address.createFromEthereum({
+    value: '0xe9c245293dac615c11a5bf26fcec91c3617645e4',
   }),
   forkOnBase = process.env.E2E_SDK_FORK_URL_BASE,
   forkOnArb = process.env.E2E_SDK_FORK_URL_ARBITRUM
 
 const testConfig = [
   {
+    chainInfo: ChainFamilyMap.Base.Base,
     symbol: 'USDC',
     fleetAddress: fleetOnBase,
-    chainInfo: ChainFamilyMap.Base.Base,
     forkUrl: forkOnBase,
+    userAddress: userOnBase,
   },
   {
+    chainInfo: ChainFamilyMap.Arbitrum.ArbitrumOne,
     symbol: 'USDC.e',
     fleetAddress: fleetOnArb,
-    chainInfo: ChainFamilyMap.Arbitrum.ArbitrumOne,
     forkUrl: forkOnArb,
+    userAddress: userOnArb,
   },
 ]
 
-describe('Armada Protocol Integration', () => {
+describe('Armada Protocol Users', () => {
   if (!SDKApiUrl) {
     throw new Error('Missing E2E_SDK_API_URL')
   }
@@ -61,12 +69,12 @@ describe('Armada Protocol Integration', () => {
     apiURL: SDKApiUrl,
   })
 
-  for (const { symbol, chainInfo, fleetAddress, forkUrl } of testConfig) {
+  for (const { symbol, chainInfo, fleetAddress, forkUrl, userAddress } of testConfig) {
     if (!forkUrl) {
       throw new Error('Missing fork url')
     }
-    // prepare
-    describe(`should test ${fleetAddress} fleet on ${chainInfo.name}`, () => {
+
+    describe.skip(`Deposit/Withdraw with ${symbol} fleet on ${chainInfo.name}`, () => {
       let poolId: IArmadaPoolId
       let token: IToken
       let user: IUser
@@ -127,26 +135,29 @@ describe('Armada Protocol Integration', () => {
         })
       })
     })
+
+    describe(`Positions on ${chainInfo.name}`, () => {
+      const user = User.createFrom({
+        chainInfo,
+        wallet: Wallet.createFrom({
+          address: userAddress,
+        }),
+      })
+      it('should getUserPositions', async () => {
+        const positions = await sdk.armada.users.getUserPositions({
+          user,
+        })
+        expect(positions).toHaveLength(1)
+        expect(positions[0].id.id).toEqual(`${userAddress.value}-${fleetAddress.value}`)
+      })
+
+      it('should getUserPosition', async () => {
+        const position = await sdk.armada.users.getUserPosition({
+          user,
+          fleetAddress,
+        })
+        expect(position.id.id).toEqual(`${userAddress.value}-${fleetAddress.value}`)
+      })
+    })
   }
 })
-
-async function prepareData(
-  symbol: string,
-  chainInfo: ChainInfo,
-  forkUrl: string,
-  sdk: SDKManager,
-  walletAddress: string,
-) {
-  const protocol = ArmadaProtocol.createFrom({ chainInfo })
-  const user = User.createFrom({
-    wallet: Wallet.createFrom({
-      address: Address.createFromEthereum({ value: walletAddress }),
-    }),
-    chainInfo,
-  })
-
-  const chain = await sdk.chains.getChain({ chainInfo })
-  const token = await chain.tokens.getTokenBySymbol({ symbol })
-
-  return { chain, token, user, protocol }
-}

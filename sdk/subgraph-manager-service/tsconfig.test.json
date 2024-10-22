@@ -13,7 +13,7 @@
       "@summerfi/armada-protocol-common": [
         "node_modules/@summerfi/armada-protocol-common/src/index.ts"
       ],
-      "@summerfi/serverless-shared": ["node_modules/@summerfi/serverless-shared/src/index.ts"],
+      "@summerfi/serverless-shared": ["../../packages/serverless-shared/src/index.ts"],
       "@summerfi/testing-utils/*": ["node_modules/@summerfi/testing-utils/src/*"],
       "@summerfi/configuration-provider": [
         "node_modules/@summerfi/configuration-provider/src/index.ts"

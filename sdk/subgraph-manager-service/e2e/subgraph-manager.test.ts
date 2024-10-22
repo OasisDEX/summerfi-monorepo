@@ -13,12 +13,12 @@ describe('Subgraph Manager', () => {
     })
 
     it('should get user positions using armada provider', async () => {
-      const chainInfo = getChainInfoByChainId(ChainFamilyMap.Base.Base.chainId)
+      const chainInfo = getChainInfoByChainId(ChainFamilyMap.Arbitrum.ArbitrumOne.chainId)
       if (!chainInfo) {
         throw new Error('ChainInfo not found')
       }
       const userAddress = Address.createFromEthereum({
-        value: '0xddc68f9de415ba2fe2fd84bc62be2d2cff1098da',
+        value: '0xe9c245293dac615c11a5bf26fcec91c3617645e4',
       })
       const user = User.createFrom({
         chainInfo,
@@ -31,7 +31,7 @@ describe('Subgraph Manager', () => {
 
       expect(userPositions.positions).toHaveLength(1)
       expect(userPositions.positions[0].id).toEqual(
-        '0xddc68f9de415ba2fe2fd84bc62be2d2cff1098da-0x75d4f7cb1b2481385e0878c639f6f6d66592d399',
+        '0xe9c245293dac615c11a5bf26fcec91c3617645e4-0x4774d1cd62d20c288dfadefdedf79d5b4cae1856',
       )
     })
   })
