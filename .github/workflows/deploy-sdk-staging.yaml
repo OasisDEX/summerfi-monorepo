@@ -38,6 +38,15 @@ jobs:
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
     steps:
+      - name: Send start notification to Discord
+        uses: Ilshidur/action-discord@0.3.2
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
+        with:
+          args:
+            'SDK deployment started on staging ...\n (from ${{ github.ref }} by
+            ${{github.triggering_actor }}).'
+
       - name: Git clone the repository
         uses: actions/checkout@v3
 
@@ -73,6 +82,16 @@ jobs:
       - name: Deploy app
         run: |
           pnpm run sst:deploy:sdk:staging
+
+      - name: Send success notification to Discord
+        uses: Ilshidur/action-discord@0.3.2
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
+        with:
+          args:
+            'SDK deployed successfully on staging 🎉\n (from ${{ github.ref }} by
+            ${{github.triggering_actor }}).'
+
       - name: Trigger e2e tests in e2e-tests repository
         env:
           E2E_TESTS_PAT: ${{ secrets.E2E_TESTS_PAT }}
