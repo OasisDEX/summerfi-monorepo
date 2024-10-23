@@ -1,5 +1,4 @@
 import { type FC, type PropsWithChildren } from 'react'
-import { MainBackground } from '@summerfi/app-earn-ui'
 import dynamic from 'next/dynamic'
 
 import { NavigationWrapper } from '@/components/layout/Navigation/NavigationWrapper'
@@ -34,7 +33,6 @@ export const MasterPage: FC<PropsWithChildren<MasterPageProps>> = ({ children })
         >
           Footer <SetForkModal /> <TransakWidget />
         </div>
-        <MainBackground />
       </div>
     </>
   )

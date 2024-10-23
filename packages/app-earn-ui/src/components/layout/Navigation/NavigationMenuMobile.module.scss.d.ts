@@ -5,6 +5,7 @@ export type Styles = {
   linksList: string
   menuMobileOverflow: string
   menuMobileWrapper: string
+  overflowActive: string
   topBar: string
 }
 
