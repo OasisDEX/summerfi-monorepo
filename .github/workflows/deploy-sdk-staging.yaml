@@ -43,13 +43,14 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
           DISCORD_EMBEDS:
-            '[{"title":"Link to run:
+            '[{"title":"Link to GitHub Action:
             ${{github.run_id}}","url":"https://github.com/${{github.repository}}/actions/runs/${{github.run_id
             }}"}]'
         with:
           args:
-            'SDK deployment started on staging 🚀 (from branch `${{ github.ref_name }}` by
-            [${{github.triggering_actor }}](https://github.com/${{github.triggering_actor }}).'
+            'SDK deployment `${{github.run_id}}` started on staging 🚀 (from branch `${{
+            github.ref_name }}` by [${{github.triggering_actor
+            }}](https://github.com/${{github.triggering_actor }}).'
 
       - name: Git clone the repository
         uses: actions/checkout@v3
@@ -92,9 +93,7 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
         with:
-          args:
-            'SDK deployed successfully on staging 🎉\n (from ${{ github.ref }} by
-            ${{github.triggering_actor }}).'
+          args: 'SDK deployment `${{github.run_id}}` finished successfully on staging 🎉\n '
 
       - name: Trigger e2e tests in e2e-tests repository
         env:
