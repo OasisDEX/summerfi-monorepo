@@ -85,7 +85,6 @@ export default defineConfig(({ mode }) => {
           '@summerfi/app-icons',
           '@tabler/icons-react',
           'bignumber.js',
-          'boring-avatars',
           'clsx',
           'lodash-es',
           'next',
