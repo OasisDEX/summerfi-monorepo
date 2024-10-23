@@ -53,4 +53,18 @@ export const getAccountKitConfig = ({
   )
 }
 
+export const staticConfig = createConfig(
+  {
+    transport: alchemy({ rpcUrl: `/api/rpc/chain/${defaultChain.id}` }),
+    signerConnection: {
+      // this is for Alchemy Signer requests
+      rpcUrl: '/api/rpc',
+    },
+    chain: defaultChain,
+    ssr: true,
+    storage: cookieStorage,
+  },
+  uiConfig,
+)
+
 export const accountType = 'MultiOwnerModularAccount'

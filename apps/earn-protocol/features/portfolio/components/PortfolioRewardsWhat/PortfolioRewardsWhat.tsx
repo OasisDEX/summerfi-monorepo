@@ -1,5 +1,7 @@
-import { Card, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { Card, Table, Text, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
+
+import { sumrRewardsColumns } from '@/features/portfolio/components/PortfolioRewardsWhat/columns'
 
 import classNames from './PortfolioRewardsWhat.module.scss'
 
@@ -18,6 +20,7 @@ export const PortfolioRewardsWhat = () => {
           Learn more
         </WithArrow>
       </Link>
+      <Table rows={[]} columns={sumrRewardsColumns} />
     </Card>
   )
 }
