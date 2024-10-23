@@ -28,7 +28,11 @@ const checkRemoteBranchExists = async (branchName: string) => {
 
 const checkForUncommittedOrUntrackedChanges = async () => {
   const { stdout: status } = await $`git status --porcelain`
-  return status.trim().split('\n').filter(Boolean).length
+  const statusList = status.trim().split('\n').filter(Boolean)
+  return {
+    list: statusList,
+    count: statusList.length,
+  }
 }
 
 const runInstallAndChecks = async () => {
@@ -126,9 +130,9 @@ export const sstConfig: SSTConfig = {
 
       const changes = await checkForUncommittedOrUntrackedChanges()
 
-      if (changes > 0) {
+      if (changes.count > 0) {
         throw new Error(
-          `Cannot deploy with uncommitted or untracked changes. Current status: ${changes} changes`,
+          `Cannot deploy with uncommitted or untracked changes. Current changes: ${changes.list.join(', ')}`,
         )
       }
     }
