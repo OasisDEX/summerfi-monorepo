@@ -9,5 +9,5 @@ require('dotenv').config({
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   ...sharedConfig(compilerOptions),
-  roots: ['<rootDir>/src', '<rootDir>/tests', '<rootDir>/e2e'],
+  roots: ['<rootDir>/src', '<rootDir>/tests'],
 }
