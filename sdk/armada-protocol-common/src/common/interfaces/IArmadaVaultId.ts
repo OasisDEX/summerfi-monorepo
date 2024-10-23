@@ -15,10 +15,10 @@ import { IArmadaProtocol, isArmadaProtocol } from './IArmadaProtocol'
 export const __signature__: unique symbol = Symbol()
 
 /**
- * @interface IArmadaPoolId
+ * @interface IArmadaVaultId
  * @description Interface for an ID of an Armada Protocol pool (fleet)
  */
-export interface IArmadaPoolId extends IPoolId, IArmadaPoolIdData {
+export interface IArmadaVaultId extends IPoolId, IArmadaVaultIdData {
   /** Signature used to differentiate it from similar interfaces */
   readonly [__signature__]: symbol
   /** Chain where the fleet is deployed */
@@ -32,9 +32,9 @@ export interface IArmadaPoolId extends IPoolId, IArmadaPoolIdData {
 }
 
 /**
- * @description Zod schema for IArmadaPoolId
+ * @description Zod schema for IArmadaVaultId
  */
-export const ArmadaPoolIdDataSchema = z.object({
+export const ArmadaVaultIdDataSchema = z.object({
   ...PoolIdDataSchema.shape,
   type: z.literal(PoolType.Armada),
   chainInfo: z.custom<IChainInfo>((val) => isChainInfo(val)),
@@ -43,20 +43,20 @@ export const ArmadaPoolIdDataSchema = z.object({
 })
 
 /**
- * Type for the data part of IArmadaPoolId
+ * Type for the data part of IArmadaVaultId
  */
-export type IArmadaPoolIdData = Readonly<z.infer<typeof ArmadaPoolIdDataSchema>>
+export type IArmadaVaultIdData = Readonly<z.infer<typeof ArmadaVaultIdDataSchema>>
 
 /**
- * @description Type guard for IArmadaPoolId
- * @param maybeArmadaPoolId Object to be checked
+ * @description Type guard for IArmadaVaultId
+ * @param maybeArmadaVaultId Object to be checked
  * @returns true if the object is a IMakerLendingPosition
  */
-export function isArmadaPoolId(
-  maybeArmadaPoolId: unknown,
+export function isArmadaVaultId(
+  maybeArmadaVaultId: unknown,
   returnedErrors?: string[],
-): maybeArmadaPoolId is IArmadaPoolId {
-  const zodReturn = ArmadaPoolIdDataSchema.safeParse(maybeArmadaPoolId)
+): maybeArmadaVaultId is IArmadaVaultId {
+  const zodReturn = ArmadaVaultIdDataSchema.safeParse(maybeArmadaVaultId)
 
   if (!zodReturn.success && returnedErrors) {
     returnedErrors.push(zodReturn.error.message)

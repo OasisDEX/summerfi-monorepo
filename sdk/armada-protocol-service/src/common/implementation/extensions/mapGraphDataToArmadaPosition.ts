@@ -9,10 +9,9 @@ import {
 } from '@summerfi/sdk-common'
 import type { GetUserPositionQuery } from '@summerfi/subgraph-manager-common'
 import { ArmadaPool } from '../ArmadaPool'
-import { ArmadaPoolId } from '../ArmadaPoolId'
+import { ArmadaVaultId } from '../ArmadaVaultId'
 import { ArmadaPosition } from '../ArmadaPosition'
 import { ArmadaPositionId } from '../ArmadaPositionId'
-import { ArmadaProtocol } from '../ArmadaProtocol'
 import { BigNumber } from 'bignumber.js'
 
 export const mapGraphDataToArmadaPosition =
@@ -30,12 +29,11 @@ export const mapGraphDataToArmadaPosition =
       id: ArmadaPositionId.createFrom({ id: position.id, user: user }),
 
       pool: ArmadaPool.createFrom({
-        id: ArmadaPoolId.createFrom({
+        id: ArmadaVaultId.createFrom({
           chainInfo,
           fleetAddress: Address.createFromEthereum({
             value: position.vault.id,
           }),
-          protocol: ArmadaProtocol.createFrom({ chainInfo }),
         }),
       }),
       amount: TokenAmount.createFrom({

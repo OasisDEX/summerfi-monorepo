@@ -1,6 +1,6 @@
 import { ITokenAmount, IUser, isTokenAmount, isUser } from '@summerfi/sdk-common'
 import { z } from 'zod'
-import { IArmadaPoolId, isArmadaPoolId } from '../../common/interfaces/IArmadaPoolId'
+import { IArmadaVaultId, isArmadaVaultId } from '../../common/interfaces/IArmadaVaultId'
 import { ArmadaOperationType } from '../../types/ArmadaOperationType'
 
 /**
@@ -17,7 +17,7 @@ export interface IArmadaParameters extends IArmadaParametersData {
   /** User that triggered the simulation */
   readonly user: IUser
   /** ID of the pool where the operation is taking place */
-  readonly poolId: IArmadaPoolId
+  readonly poolId: IArmadaVaultId
   /** Type of operation */
   readonly operation: ArmadaOperationType
   /** Amount to be deposited/withdrawn */
@@ -29,7 +29,7 @@ export interface IArmadaParameters extends IArmadaParametersData {
  */
 export const ArmadaParametersDataSchema = z.object({
   user: z.custom<IUser>((val) => isUser(val)),
-  poolId: z.custom<IArmadaPoolId>((val) => isArmadaPoolId(val)),
+  poolId: z.custom<IArmadaVaultId>((val) => isArmadaVaultId(val)),
   operation: z.nativeEnum(ArmadaOperationType),
   amount: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
 })

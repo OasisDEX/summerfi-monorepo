@@ -2,7 +2,6 @@ import { IArmadaManagerClient } from '../../interfaces/ArmadaManager/IArmadaMana
 import { IArmadaManagerGovernanceClient } from '../../interfaces/ArmadaManager/IArmadaManagerGovernanceClient'
 import { IArmadaManagerKeepersClient } from '../../interfaces/ArmadaManager/IArmadaManagerKeepersClient'
 import { IArmadaManagerUsersClient } from '../../interfaces/ArmadaManager/IArmadaManagerUsersClient'
-import { IRPCClient } from '../../interfaces/IRPCClient'
 import { RPCMainClientType } from '../../rpc/SDKMainClient'
 import { ArmadaManagerGovernanceClient } from './ArmadaManagerGovernanceClient'
 import { ArmadaManagerKeepersClient } from './ArmadaManagerKeepersClient'

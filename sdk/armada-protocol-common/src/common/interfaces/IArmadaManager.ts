@@ -1,12 +1,12 @@
-import { IAddress, IPercentage, ITokenAmount } from '@summerfi/sdk-common/common'
+import { IAddress, IPercentage, ITokenAmount, type ChainInfo } from '@summerfi/sdk-common/common'
 import { TransactionInfo } from '@summerfi/sdk-common/orders'
 import { IUser } from '@summerfi/sdk-common/user'
-import { IArmadaPool } from './IArmadaPool'
-import { IArmadaPoolId } from './IArmadaPoolId'
+import { IArmadaVaultId } from './IArmadaVaultId'
 import { IArmadaPoolInfo } from './IArmadaPoolInfo'
 import { IArmadaPosition } from './IArmadaPosition'
 import { IArmadaPositionId } from './IArmadaPositionId'
 import { IRebalanceData } from './IRebalanceData'
+import type { GetVaultQuery, GetVaultsQuery } from '@summerfi/subgraph-manager-common'
 
 /**
  * @name IArmadaManager
@@ -16,15 +16,24 @@ export interface IArmadaManager {
   /** POOLS */
 
   /**
-   * @name getPool
-   * @description Get the position of a user in the specified fleet
+   * @name getVaultsRaw
+   * @description Get all vaults in the protocol
+   *
+   * @param chainInfo Chain information
+   *
+   * @returns GetVaultsQuery
+   */
+  getVaultsRaw(params: { chainInfo: ChainInfo }): Promise<GetVaultsQuery>
+
+  /**
+   * @name getVaultRaw
+   * @description Get the specific vault in the protocol
    *
    * @param poolId ID of the pool to retrieve
    *
-   * @returns IArmadaPool The pool with the specified ID
-   *
+   * @returns GetVaultQuery
    */
-  getPool(params: { poolId: IArmadaPoolId }): Promise<IArmadaPool>
+  getVaultRaw(params: { poolId: IArmadaVaultId }): Promise<GetVaultQuery>
 
   /**
    * @name getPoolInfo
@@ -34,7 +43,7 @@ export interface IArmadaManager {
    *
    * @returns IArmadaPoolInfo The extended information of the pool
    */
-  getPoolInfo(params: { poolId: IArmadaPoolId }): Promise<IArmadaPoolInfo>
+  getPoolInfo(params: { poolId: IArmadaVaultId }): Promise<IArmadaPoolInfo>
 
   /** POSITIONS */
 
@@ -83,7 +92,7 @@ export interface IArmadaManager {
    * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
    */
   getNewDepositTX(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]>
@@ -99,7 +108,7 @@ export interface IArmadaManager {
    * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
    */
   getUpdateDepositTX(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     positionId: IArmadaPositionId
     amount: ITokenAmount
   }): Promise<TransactionInfo[]>
@@ -115,7 +124,7 @@ export interface IArmadaManager {
    * @returns TransactionInfo[] An array of transactions that must be executed for the operation to succeed
    */
   getWithdrawTX(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]>
@@ -131,7 +140,7 @@ export interface IArmadaManager {
    * @returns TransactionInfo The transaction information
    */
   rebalance(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     rebalanceData: IRebalanceData[]
   }): Promise<TransactionInfo>
 
@@ -144,7 +153,7 @@ export interface IArmadaManager {
    * @returns TransactionInfo The transaction information
    */
   adjustBuffer(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     rebalanceData: IRebalanceData[]
   }): Promise<TransactionInfo>
 
@@ -158,7 +167,10 @@ export interface IArmadaManager {
    *
    * @returns TransactionInfo The transaction information
    */
-  setFleetDepositCap(params: { poolId: IArmadaPoolId; cap: ITokenAmount }): Promise<TransactionInfo>
+  setFleetDepositCap(params: {
+    poolId: IArmadaVaultId
+    cap: ITokenAmount
+  }): Promise<TransactionInfo>
 
   /**
    * @name setTipJar
@@ -166,7 +178,7 @@ export interface IArmadaManager {
    *
    * @returns TransactionInfo The transaction information
    */
-  setTipJar(params: { poolId: IArmadaPoolId }): Promise<TransactionInfo>
+  setTipJar(params: { poolId: IArmadaVaultId }): Promise<TransactionInfo>
 
   /**
    * @name setTipRate
@@ -177,7 +189,7 @@ export interface IArmadaManager {
    *
    * @returns The transaction information
    */
-  setTipRate(params: { poolId: IArmadaPoolId; rate: IPercentage }): Promise<TransactionInfo>
+  setTipRate(params: { poolId: IArmadaVaultId; rate: IPercentage }): Promise<TransactionInfo>
 
   /**
    * @name addArk
@@ -188,7 +200,7 @@ export interface IArmadaManager {
    *
    * @returns The transaction information
    */
-  addArk(params: { poolId: IArmadaPoolId; ark: IAddress }): Promise<TransactionInfo>
+  addArk(params: { poolId: IArmadaVaultId; ark: IAddress }): Promise<TransactionInfo>
 
   /**
    * @name addArks
@@ -199,7 +211,7 @@ export interface IArmadaManager {
    *
    * @returns The transaction information
    */
-  addArks(params: { poolId: IArmadaPoolId; arks: IAddress[] }): Promise<TransactionInfo>
+  addArks(params: { poolId: IArmadaVaultId; arks: IAddress[] }): Promise<TransactionInfo>
 
   /**
    * @name removeArk
@@ -210,7 +222,7 @@ export interface IArmadaManager {
    *
    * @returns The transaction information
    */
-  removeArk(params: { poolId: IArmadaPoolId; ark: IAddress }): Promise<TransactionInfo>
+  removeArk(params: { poolId: IArmadaVaultId; ark: IAddress }): Promise<TransactionInfo>
 
   /**
    * @name setArkDepositCap
@@ -223,7 +235,7 @@ export interface IArmadaManager {
    * @returns The transaction information
    */
   setArkDepositCap(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     ark: IAddress
     cap: ITokenAmount
   }): Promise<TransactionInfo>
@@ -239,7 +251,7 @@ export interface IArmadaManager {
    * @returns The transaction information
    */
   setArkMaxRebalanceOutflow(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     ark: IAddress
     maxRebalanceOutflow: ITokenAmount
   }): Promise<TransactionInfo>
@@ -255,7 +267,7 @@ export interface IArmadaManager {
    * @returns The transaction information
    */
   setArkMaxRebalanceInflow(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     ark: IAddress
     maxRebalanceInflow: ITokenAmount
   }): Promise<TransactionInfo>
@@ -271,7 +283,7 @@ export interface IArmadaManager {
    * @returns The transaction information
    */
   setMinimumBufferBalance(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     minimumBufferBalance: ITokenAmount
   }): Promise<TransactionInfo>
 
@@ -285,7 +297,7 @@ export interface IArmadaManager {
    * @returns The transaction information
    */
   updateRebalanceCooldown(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     cooldown: number
   }): Promise<TransactionInfo>
 
@@ -299,7 +311,7 @@ export interface IArmadaManager {
    * @returns The transaction information
    */
   forceRebalance(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     rebalanceData: IRebalanceData[]
   }): Promise<TransactionInfo>
 
@@ -311,7 +323,7 @@ export interface IArmadaManager {
    *
    * @returns The transaction information
    */
-  emergencyShutdown(params: { poolId: IArmadaPoolId }): Promise<TransactionInfo>
+  emergencyShutdown(params: { poolId: IArmadaVaultId }): Promise<TransactionInfo>
 
   /** UTILITY FUNCTIONS */
 
@@ -324,5 +336,5 @@ export interface IArmadaManager {
    *
    * @returns ITokenAmount The amount of shares that the token amount represents
    */
-  convertToShares(params: { poolId: IArmadaPoolId; amount: ITokenAmount }): Promise<ITokenAmount>
+  convertToShares(params: { poolId: IArmadaVaultId; amount: ITokenAmount }): Promise<ITokenAmount>
 }

@@ -1,4 +1,4 @@
-import { IArmadaPoolId, IRebalanceData } from '@summerfi/armada-protocol-common'
+import { IArmadaVaultId, IRebalanceData } from '@summerfi/armada-protocol-common'
 import { IAddress, IPercentage, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
 
 /**
@@ -16,7 +16,10 @@ export interface IArmadaManagerGovernanceClient {
    *
    * @returns TransactionInfo The transaction information
    */
-  setFleetDepositCap(params: { poolId: IArmadaPoolId; cap: ITokenAmount }): Promise<TransactionInfo>
+  setFleetDepositCap(params: {
+    poolId: IArmadaVaultId
+    cap: ITokenAmount
+  }): Promise<TransactionInfo>
 
   /**
    * @name setTipJar
@@ -26,7 +29,7 @@ export interface IArmadaManagerGovernanceClient {
    *
    * @returns TransactionInfo The transaction information
    */
-  setTipJar(params: { poolId: IArmadaPoolId }): Promise<TransactionInfo>
+  setTipJar(params: { poolId: IArmadaVaultId }): Promise<TransactionInfo>
 
   /**
    * @name setTipRate
@@ -37,7 +40,7 @@ export interface IArmadaManagerGovernanceClient {
    *
    * @returns The transaction information
    */
-  setTipRate(params: { poolId: IArmadaPoolId; rate: IPercentage }): Promise<TransactionInfo>
+  setTipRate(params: { poolId: IArmadaVaultId; rate: IPercentage }): Promise<TransactionInfo>
 
   /**
    * @name addArk
@@ -48,7 +51,7 @@ export interface IArmadaManagerGovernanceClient {
    *
    * @returns The transaction information
    */
-  addArk(params: { poolId: IArmadaPoolId; ark: IAddress }): Promise<TransactionInfo>
+  addArk(params: { poolId: IArmadaVaultId; ark: IAddress }): Promise<TransactionInfo>
 
   /**
    * @name addArks
@@ -59,7 +62,7 @@ export interface IArmadaManagerGovernanceClient {
    *
    * @returns The transaction information
    */
-  addArks(params: { poolId: IArmadaPoolId; arks: IAddress[] }): Promise<TransactionInfo>
+  addArks(params: { poolId: IArmadaVaultId; arks: IAddress[] }): Promise<TransactionInfo>
 
   /**
    * @name removeArk
@@ -70,7 +73,7 @@ export interface IArmadaManagerGovernanceClient {
    *
    * @returns The transaction information
    */
-  removeArk(params: { poolId: IArmadaPoolId; ark: IAddress }): Promise<TransactionInfo>
+  removeArk(params: { poolId: IArmadaVaultId; ark: IAddress }): Promise<TransactionInfo>
 
   /**
    * @name setArkDepositCap
@@ -83,7 +86,7 @@ export interface IArmadaManagerGovernanceClient {
    * @returns The transaction information
    */
   setArkDepositCap(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     ark: IAddress
     cap: ITokenAmount
   }): Promise<TransactionInfo>
@@ -99,7 +102,7 @@ export interface IArmadaManagerGovernanceClient {
    * @returns The transaction information
    */
   setArkMaxRebalanceOutflow(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     ark: IAddress
     maxRebalanceOutflow: ITokenAmount
   }): Promise<TransactionInfo>
@@ -115,7 +118,7 @@ export interface IArmadaManagerGovernanceClient {
    * @returns The transaction information
    */
   setArkMaxRebalanceInflow(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     ark: IAddress
     maxRebalanceInflow: ITokenAmount
   }): Promise<TransactionInfo>
@@ -131,7 +134,7 @@ export interface IArmadaManagerGovernanceClient {
    * @returns The transaction information
    */
   setMinimumBufferBalance(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     minimumBufferBalance: ITokenAmount
   }): Promise<TransactionInfo>
 
@@ -145,7 +148,7 @@ export interface IArmadaManagerGovernanceClient {
    * @returns The transaction information
    */
   updateRebalanceCooldown(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     cooldown: number
   }): Promise<TransactionInfo>
 
@@ -159,7 +162,7 @@ export interface IArmadaManagerGovernanceClient {
    * @returns The transaction information
    */
   forceRebalance(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     rebalanceData: IRebalanceData[]
   }): Promise<TransactionInfo>
 
@@ -171,5 +174,5 @@ export interface IArmadaManagerGovernanceClient {
    *
    * @returns The transaction information
    */
-  emergencyShutdown(params: { poolId: IArmadaPoolId }): Promise<TransactionInfo>
+  emergencyShutdown(params: { poolId: IArmadaVaultId }): Promise<TransactionInfo>
 }
