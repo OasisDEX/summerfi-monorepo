@@ -29,10 +29,6 @@ const portfolioRewardsRawData: PortfolioRewardsRawData[] = [
   },
 ]
 
-export const portfolioRewardsHandler = async (
-  _walletAddress: string,
-): Promise<PortfolioRewardsRawData[]> => {
-  return await new Promise((resolve) => {
-    resolve(portfolioRewardsRawData)
-  })
+export const portfolioRewardsHandler = (_walletAddress: string): PortfolioRewardsRawData[] => {
+  return portfolioRewardsRawData
 }

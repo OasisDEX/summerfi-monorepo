@@ -12,7 +12,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   const walletAddress = params.wallet_address
 
   const walletData = await portfolioWalletAssetsHandler(walletAddress)
-  const rewardsData = await portfolioRewardsHandler(walletAddress)
+  const rewardsData = portfolioRewardsHandler(walletAddress)
 
   return (
     <PortfolioPageView
