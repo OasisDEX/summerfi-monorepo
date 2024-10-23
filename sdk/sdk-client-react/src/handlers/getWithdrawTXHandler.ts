@@ -28,7 +28,7 @@ export const getWithdrawTXHandler =
       protocol: ArmadaProtocol.createFrom({ chainInfo }),
     })
 
-    const poolInfo = await sdk.armada.users.getPoolInfo({
+    const poolInfo = await sdk.armada.users.getVaultInfo({
       poolId,
     })
 

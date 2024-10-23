@@ -1,12 +1,12 @@
-import { IAddress, IPercentage, ITokenAmount } from '@summerfi/sdk-common/common'
+import { IAddress, IPercentage, ITokenAmount, type ChainInfo } from '@summerfi/sdk-common/common'
 import { TransactionInfo } from '@summerfi/sdk-common/orders'
 import { IUser } from '@summerfi/sdk-common/user'
-import { IArmadaPool } from './IArmadaPool'
 import { IArmadaPoolId } from './IArmadaPoolId'
 import { IArmadaPoolInfo } from './IArmadaPoolInfo'
 import { IArmadaPosition } from './IArmadaPosition'
 import { IArmadaPositionId } from './IArmadaPositionId'
 import { IRebalanceData } from './IRebalanceData'
+import type { GetVaultQuery, GetVaultsQuery } from '@summerfi/subgraph-manager-common'
 
 /**
  * @name IArmadaManager
@@ -14,6 +14,8 @@ import { IRebalanceData } from './IRebalanceData'
  */
 export interface IArmadaManager {
   /** POOLS */
+
+  getPools(params: { chainInfo: ChainInfo }): Promise<GetVaultsQuery>
 
   /**
    * @name getPool
@@ -24,7 +26,7 @@ export interface IArmadaManager {
    * @returns IArmadaPool The pool with the specified ID
    *
    */
-  getPool(params: { poolId: IArmadaPoolId }): Promise<IArmadaPool>
+  getPool(params: { poolId: IArmadaPoolId }): Promise<GetVaultQuery>
 
   /**
    * @name getPoolInfo

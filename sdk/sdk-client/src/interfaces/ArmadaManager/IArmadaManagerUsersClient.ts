@@ -1,11 +1,18 @@
 import {
-  IArmadaPool,
   IArmadaPoolId,
   IArmadaPoolInfo,
   IArmadaPosition,
   IArmadaPositionId,
+  type GetVaultQuery,
+  type GetVaultsQuery,
 } from '@summerfi/armada-protocol-common'
-import { ITokenAmount, IUser, TransactionInfo, type IAddress } from '@summerfi/sdk-common'
+import {
+  ITokenAmount,
+  IUser,
+  TransactionInfo,
+  type ChainInfo,
+  type IAddress,
+} from '@summerfi/sdk-common'
 
 /**
  * @interface IArmadaManagerUsersClient
@@ -14,14 +21,24 @@ import { ITokenAmount, IUser, TransactionInfo, type IAddress } from '@summerfi/s
  */
 export interface IArmadaManagerUsersClient {
   /**
-   * @method getPool
+   * @method getVaultsRaw
+   * @description Retrieves all Armada pools
+   *
+   * @param chainInfo Chain information
+   *
+   * @returns All Armada pools
+   */
+  getVaultsRaw(params: { chainInfo: ChainInfo }): Promise<GetVaultsQuery>
+
+  /**
+   * @method getVaultRaw
    * @description Retrieves an Armada pool by its ID
    *
    * @param poolId ID of the pool to retrieve
    *
    * @returns The corresponding Armada pool
    */
-  getPool(params: { poolId: IArmadaPoolId }): Promise<IArmadaPool>
+  getVaultRaw(params: { poolId: IArmadaPoolId }): Promise<GetVaultQuery>
 
   /**
    * @method getPoolInfo
@@ -31,7 +48,7 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns The information of the corresponding Armada pool
    */
-  getPoolInfo(params: { poolId: IArmadaPoolId }): Promise<IArmadaPoolInfo>
+  getVaultInfo(params: { poolId: IArmadaPoolId }): Promise<IArmadaPoolInfo>
 
   /**
    * @name getUserPositions

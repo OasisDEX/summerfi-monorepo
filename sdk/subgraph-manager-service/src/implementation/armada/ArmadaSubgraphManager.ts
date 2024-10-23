@@ -1,6 +1,6 @@
 import type { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IArmadaSubgraphManager, createGraphQLClient } from '@summerfi/subgraph-manager-common'
-import { ChainFamilyMap, type ChainId } from '@summerfi/sdk-common'
+import { type ChainId } from '@summerfi/sdk-common'
 
 export interface SubgraphConfig {
   urlBase: string
@@ -13,20 +13,25 @@ export interface SubgraphConfig {
 export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
   private _configProvider: IConfigurationProvider
   private readonly _subgraphConfig: SubgraphConfig
-  private readonly _supportedChainIds: ChainId[]
 
   /** CONSTRUCTOR */
   constructor(params: { configProvider: IConfigurationProvider }) {
     this._configProvider = params.configProvider
-
-    const baseChainId = ChainFamilyMap.Base.Base.chainId
-    this._supportedChainIds = [baseChainId]
-
     const urlBase = params.configProvider.getConfigurationItem({ name: 'SUBGRAPH_BASE' })
 
     this._subgraphConfig = {
       urlBase,
     }
+  }
+
+  getVaults({ chainId }: Parameters<IArmadaSubgraphManager['getVaults']>[0]) {
+    return this._getClient(chainId).GetVaults()
+  }
+
+  getVault({ chainId, vaultId }: Parameters<IArmadaSubgraphManager['getVault']>[0]) {
+    return this._getClient(chainId).GetVault({
+      id: vaultId,
+    })
   }
 
   getUserPositions({ user }: Parameters<IArmadaSubgraphManager['getUserPositions']>[0]) {

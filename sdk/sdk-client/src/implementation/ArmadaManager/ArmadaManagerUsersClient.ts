@@ -20,22 +20,27 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     super(params)
   }
 
-  /** @see IArmadaManagerClient.getPool */
-  public async getPool(params: { poolId: IArmadaPoolId }): Promise<IArmadaPool> {
+  /** @see IArmadaManagerUsersClient.getVaults */
+  async getVaultsRaw(params: Parameters<IArmadaManagerUsersClient['getVaults']>[0]) {
+    return this.rpcClient.armada.users.getPools.query(params)
+  }
+
+  /** @see IArmadaManagerUsersClient.getPool */
+  async getVaultRaw(params: { poolId: IArmadaPoolId }) {
     return this.rpcClient.armada.users.getPool.query(params)
   }
 
-  /** @see IArmadaManagerClient.getPoolInfo */
-  async getPoolInfo(params: { poolId: IArmadaPoolId }): Promise<IArmadaPoolInfo> {
+  /** @see IArmadaManagerUsersClient.getPoolInfo */
+  async getVaultInfo(params: { poolId: IArmadaPoolId }): Promise<IArmadaPoolInfo> {
     return this.rpcClient.armada.users.getPoolInfo.query(params)
   }
 
-  /** @see IArmadaManagerClient.getUserPositions */
+  /** @see IArmadaManagerUsersClient.getUserPositions */
   async getUserPositions(params: { user: IUser }): Promise<IArmadaPosition[]> {
     return this.rpcClient.armada.users.getUserPositions.query(params)
   }
 
-  /** @see IArmadaManagerClient.getUserPositions */
+  /** @see IArmadaManagerUsersClient.getUserPositions */
   async getUserPosition(params: { user: IUser; fleetAddress: IAddress }): Promise<IArmadaPosition> {
     return this.rpcClient.armada.users.getUserPosition.query({
       user: params.user,
@@ -43,7 +48,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     })
   }
 
-  /** @see IArmadaManagerClient.getPosition */
+  /** @see IArmadaManagerUsersClient.getPosition */
   async getPosition(params: {
     poolId: IArmadaPoolId
     positionId: IArmadaPositionId
@@ -51,7 +56,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getPosition.query(params)
   }
 
-  /** @see IArmadaManagerClient.getNewDepositTX */
+  /** @see IArmadaManagerUsersClient.getNewDepositTX */
   async getNewDepositTX(params: {
     poolId: IArmadaPoolId
     user: IUser
@@ -60,7 +65,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getDepositTX.query(params)
   }
 
-  /** @see IArmadaManagerClient.getUpdateDepositTX */
+  /** @see IArmadaManagerUsersClient.getUpdateDepositTX */
   async getUpdateDepositTX(params: {
     poolId: IArmadaPoolId
     positionId: IArmadaPositionId
@@ -69,7 +74,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getUpdateDepositTX.query(params)
   }
 
-  /** @see IArmadaManagerClient.getWithdrawTX */
+  /** @see IArmadaManagerUsersClient.getWithdrawTX */
   async getWithdrawTX(params: {
     poolId: IArmadaPoolId
     user: IUser

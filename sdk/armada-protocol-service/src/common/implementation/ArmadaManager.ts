@@ -1,7 +1,6 @@
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import {
   IArmadaManager,
-  IArmadaPool,
   IArmadaPoolId,
   IArmadaPoolInfo,
   IArmadaPosition,
@@ -43,12 +42,16 @@ export class ArmadaManager implements IArmadaManager {
 
   /** POOLS */
 
+  /** @see IArmadaManager.getPools */
+  async getPools(params: Parameters<IArmadaManager['getPools']>[0]) {
+    return this._subgraphManager.getVaults({ chainId: params.chainInfo.chainId })
+  }
+
   /** @see IArmadaManager.getPool */
-  async getPool(params: { poolId: IArmadaPoolId }): Promise<IArmadaPool> {
-    // TODO: probably the Pool data type should contain all the pool info directly, and the ID
-    // TODO: is the one that gets passed around
-    return ArmadaPool.createFrom({
-      id: params.poolId,
+  async getPool(params: Parameters<IArmadaManager['getPool']>[0]) {
+    return this._subgraphManager.getVault({
+      chainId: params.poolId.chainInfo.chainId,
+      vaultId: params.poolId.fleetAddress.value,
     })
   }
 
@@ -115,7 +118,9 @@ export class ArmadaManager implements IArmadaManager {
     })
     const userAssets = await fleetERC4626Contract.convertToAssets({ amount: userShares })
 
-    const pool = await this.getPool({ poolId: params.poolId })
+    const pool = ArmadaPool.createFrom({
+      id: params.poolId,
+    })
 
     return ArmadaPosition.createFrom({
       id: params.positionId,

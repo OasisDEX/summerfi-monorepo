@@ -1,0 +1,107 @@
+query GetVaults {
+  vaults {
+    id
+    name
+    rewardTokens {
+      id
+      token {
+        symbol
+        decimals
+      }
+    }
+    rewardTokenEmissionsUSD
+    arks {
+      id
+      inputToken {
+        name
+        symbol
+        decimals
+      }
+      fees {
+        id
+        feePercentage
+        feeType
+      }
+      createdTimestamp
+      lastUpdateTimestamp
+    }
+    inputToken {
+      name
+      symbol
+      decimals
+    }
+    outputToken {
+      name
+      symbol
+      decimals
+    }
+    outputTokenPriceUSD
+    depositLimit
+    calculatedApr
+    createdTimestamp
+    totalValueLockedUSD
+    cumulativeTotalRevenueUSD
+    cumulativeSupplySideRevenueUSD
+    cumulativeProtocolSideRevenueUSD
+    lastUpdateTimestamp
+  }
+}
+query GetVault($id: ID!) {
+  vault(id: $id) {
+    id
+    rebalances {
+      amount
+      vault {
+        id
+        name
+        protocol {
+          id
+          name
+          network
+          type
+        }
+      }
+      from {
+        id
+        name
+        inputToken {
+          symbol
+          decimals
+        }
+      }
+      to {
+        id
+        name
+        inputToken {
+          symbol
+          decimals
+        }
+      }
+      asset {
+        name
+        symbol
+      }
+      timestamp
+    }
+    arks {
+      id
+      name
+      depositLimit
+      cumulativeDeposits
+      cumulativeEarnings
+      cumulativeWithdrawals
+      dailySnapshots(first: 10) {
+        id
+        apr
+        totalValueLockedUSD
+        inputTokenBalance
+      }
+      hourlySnapshots(first: 10) {
+        id
+        calculatedApr
+        totalValueLockedUSD
+        inputTokenBalance
+      }
+    }
+  }
+}
