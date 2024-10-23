@@ -42,7 +42,7 @@ jobs:
         uses: Ilshidur/action-discord@0.3.2
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
-          DISCORD_EMBEDS: '{"embeds":[{"title":"Google it!","url":"https://google.com/"}]}'
+          DISCORD_EMBEDS: '[{"title":"Google it!","url":"https://google.com/"}]'
         with:
           args:
             'SDK deployment started on staging 🚀 (from branch `${{ github.ref_name }}` by
