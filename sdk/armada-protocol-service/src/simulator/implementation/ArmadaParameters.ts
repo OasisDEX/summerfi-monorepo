@@ -2,7 +2,7 @@ import {
   ArmadaOperationType,
   IArmadaParameters,
   IArmadaParametersData,
-  IArmadaPoolId,
+  IArmadaVaultId,
   __iarmadaparameters__,
 } from '@summerfi/armada-protocol-common'
 import { ITokenAmount } from '@summerfi/sdk-common/common'
@@ -24,7 +24,7 @@ export class ArmadaParameters implements IArmadaParameters {
 
   /** ATTRIBUTES */
   readonly user: IUser
-  readonly poolId: IArmadaPoolId
+  readonly poolId: IArmadaVaultId
   readonly operation: ArmadaOperationType
   readonly amount: ITokenAmount
 

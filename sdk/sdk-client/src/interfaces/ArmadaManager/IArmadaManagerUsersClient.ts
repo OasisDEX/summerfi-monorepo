@@ -1,11 +1,18 @@
 import {
-  IArmadaPool,
-  IArmadaPoolId,
+  IArmadaVaultId,
   IArmadaPoolInfo,
   IArmadaPosition,
   IArmadaPositionId,
+  type GetVaultQuery,
+  type GetVaultsQuery,
 } from '@summerfi/armada-protocol-common'
-import { ITokenAmount, IUser, TransactionInfo, type IAddress } from '@summerfi/sdk-common'
+import {
+  ITokenAmount,
+  IUser,
+  TransactionInfo,
+  type ChainInfo,
+  type IAddress,
+} from '@summerfi/sdk-common'
 
 /**
  * @interface IArmadaManagerUsersClient
@@ -14,14 +21,24 @@ import { ITokenAmount, IUser, TransactionInfo, type IAddress } from '@summerfi/s
  */
 export interface IArmadaManagerUsersClient {
   /**
-   * @method getPool
-   * @description Retrieves an Armada pool by its ID
+   * @method getVaultsRaw
+   * @description Retrieves all protocol vaults
    *
-   * @param poolId ID of the pool to retrieve
+   * @param chainInfo Chain information
    *
-   * @returns The corresponding Armada pool
+   * @returns All Armada vaults
    */
-  getPool(params: { poolId: IArmadaPoolId }): Promise<IArmadaPool>
+  getVaultsRaw(params: { chainInfo: ChainInfo }): Promise<GetVaultsQuery>
+
+  /**
+   * @method getVaultRaw
+   * @description Retrieves a specific protocol vault
+   *
+   * @param poolId ID of the vault
+   *
+   * @returns The corresponding Armada vault
+   */
+  getVaultRaw(params: { poolId: IArmadaVaultId }): Promise<GetVaultQuery>
 
   /**
    * @method getPoolInfo
@@ -31,7 +48,7 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns The information of the corresponding Armada pool
    */
-  getPoolInfo(params: { poolId: IArmadaPoolId }): Promise<IArmadaPoolInfo>
+  getPoolInfo(params: { poolId: IArmadaVaultId }): Promise<IArmadaPoolInfo>
 
   /**
    * @name getUserPositions
@@ -76,7 +93,7 @@ export interface IArmadaManagerUsersClient {
    * @returns The transactions needed to deposit the tokens
    */
   getNewDepositTX(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]>
@@ -92,7 +109,7 @@ export interface IArmadaManagerUsersClient {
    * @returns The transactions needed to deposit the tokens
    */
   getUpdateDepositTX(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     positionId: IArmadaPositionId
     amount: ITokenAmount
   }): Promise<TransactionInfo[]>
@@ -108,7 +125,7 @@ export interface IArmadaManagerUsersClient {
    * @returns The transactions needed to withdraw the tokens
    */
   getWithdrawTX(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]>

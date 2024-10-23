@@ -1,7 +1,7 @@
 import {
   IArmadaPool,
   IArmadaPoolData,
-  IArmadaPoolId,
+  IArmadaVaultId,
   __iarmadapool__,
 } from '@summerfi/armada-protocol-common'
 import { Pool, PoolType } from '@summerfi/sdk-common/common'
@@ -22,7 +22,7 @@ export class ArmadaPool extends Pool implements IArmadaPool {
 
   /** ATTRIBUTES */
   readonly type = PoolType.Armada
-  readonly id: IArmadaPoolId
+  readonly id: IArmadaVaultId
 
   /** FACTORY */
   static createFrom(params: ArmadaPoolParameters): ArmadaPool {

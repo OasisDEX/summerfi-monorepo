@@ -1,11 +1,43 @@
-import type { IAddress, IUser } from '@summerfi/sdk-common'
-import type { GetUserPositionQuery, GetUserPositionsQuery } from '../generated/client'
+import type { ChainId, IAddress, IUser } from '@summerfi/sdk-common'
+import type {
+  GetUserPositionQuery,
+  GetUserPositionsQuery,
+  GetVaultQuery,
+  GetVaultsQuery,
+} from '../generated/client'
 
 /**
  * @name IArmadaSubgraphManager
  * @description interface for the Armada subgraph manager which will be distinct from the DPM subgraph manager
  */
 export interface IArmadaSubgraphManager {
+  /**
+   * @name getVaults
+   * @description get all the vaults
+   
+  * @param chainId target chain
+   *
+   * @returns GetVaultsQuery
+   *
+   * @throws Error
+   *
+   */
+  getVaults(params: { chainId: ChainId }): Promise<GetVaultsQuery>
+
+  /**
+   * @name getVault
+   * @description get a specific vault
+   *
+   * @param chainId target chain
+   * @param vaultId target pool
+   *
+   * @returns GetVaultQuery
+   *
+   * @throws Error
+   *
+   */
+  getVault(params: { chainId: ChainId; vaultId: string }): Promise<GetVaultQuery>
+
   /**
    * @name getUserPositions
    * @description get the positions of a user

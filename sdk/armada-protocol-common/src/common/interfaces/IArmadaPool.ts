@@ -1,6 +1,6 @@
 import { IPool, PoolDataSchema, PoolType } from '@summerfi/sdk-common/common'
 import { z } from 'zod'
-import { IArmadaPoolId, isArmadaPoolId } from './IArmadaPoolId'
+import { IArmadaVaultId, isArmadaVaultId } from './IArmadaVaultId'
 
 /**
  * Unique signature to provide branded types to the interface
@@ -15,7 +15,7 @@ export interface IArmadaPool extends IPool, IArmadaPoolData {
   /** Signature used to differentiate it from similar interfaces */
   readonly [__signature__]: symbol
   /** ID of the pool */
-  readonly id: IArmadaPoolId
+  readonly id: IArmadaVaultId
 
   // Re-declaring the properties to narrow the types
   readonly type: PoolType.Armada
@@ -26,7 +26,7 @@ export interface IArmadaPool extends IPool, IArmadaPoolData {
  */
 export const ArmadaPoolDataSchema = z.object({
   ...PoolDataSchema.shape,
-  id: z.custom<IArmadaPoolId>((val) => isArmadaPoolId(val)),
+  id: z.custom<IArmadaVaultId>((val) => isArmadaVaultId(val)),
   type: z.literal(PoolType.Armada),
 })
 

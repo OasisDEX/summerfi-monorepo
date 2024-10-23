@@ -1,8 +1,7 @@
 import type { IAllowanceManager } from '@summerfi/allowance-manager-common'
 import {
   IArmadaManager,
-  IArmadaPool,
-  IArmadaPoolId,
+  IArmadaVaultId,
   IArmadaPoolInfo,
   IArmadaPosition,
   IArmadaPositionId,
@@ -43,17 +42,21 @@ export class ArmadaManager implements IArmadaManager {
 
   /** POOLS */
 
-  /** @see IArmadaManager.getPool */
-  async getPool(params: { poolId: IArmadaPoolId }): Promise<IArmadaPool> {
-    // TODO: probably the Pool data type should contain all the pool info directly, and the ID
-    // TODO: is the one that gets passed around
-    return ArmadaPool.createFrom({
-      id: params.poolId,
+  /** @see IArmadaManager.getVaultsRaw */
+  async getVaultsRaw(params: Parameters<IArmadaManager['getVaultsRaw']>[0]) {
+    return this._subgraphManager.getVaults({ chainId: params.chainInfo.chainId })
+  }
+
+  /** @see IArmadaManager.getVaultRaw */
+  async getVaultRaw(params: Parameters<IArmadaManager['getVaultRaw']>[0]) {
+    return this._subgraphManager.getVault({
+      chainId: params.poolId.chainInfo.chainId,
+      vaultId: params.poolId.fleetAddress.value,
     })
   }
 
   /** @see IArmadaManager.getPoolInfo */
-  async getPoolInfo(params: { poolId: IArmadaPoolId }): Promise<IArmadaPoolInfo> {
+  async getPoolInfo(params: { poolId: IArmadaVaultId }): Promise<IArmadaPoolInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.poolId.chainInfo,
       address: params.poolId.fleetAddress,
@@ -99,7 +102,7 @@ export class ArmadaManager implements IArmadaManager {
 
   /** @see IArmadaManager.getPosition */
   async getPosition(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     positionId: IArmadaPositionId
   }): Promise<IArmadaPosition> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
@@ -115,7 +118,9 @@ export class ArmadaManager implements IArmadaManager {
     })
     const userAssets = await fleetERC4626Contract.convertToAssets({ amount: userShares })
 
-    const pool = await this.getPool({ poolId: params.poolId })
+    const pool = ArmadaPool.createFrom({
+      id: params.poolId,
+    })
 
     return ArmadaPosition.createFrom({
       id: params.positionId,
@@ -129,7 +134,7 @@ export class ArmadaManager implements IArmadaManager {
 
   /** @see IArmadaManager.getNewDepositTX */
   async getNewDepositTX(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
@@ -138,7 +143,7 @@ export class ArmadaManager implements IArmadaManager {
 
   /** @see IArmadaManager.getUpdateDepositTX */
   async getUpdateDepositTX(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     positionId: IArmadaPositionId
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
@@ -151,7 +156,7 @@ export class ArmadaManager implements IArmadaManager {
 
   /** @see IArmadaManager.getWithdrawTX */
   async getWithdrawTX(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
@@ -171,7 +176,7 @@ export class ArmadaManager implements IArmadaManager {
 
   /** @see IArmadaManager.convertToShares */
   async convertToShares(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     amount: ITokenAmount
   }): Promise<ITokenAmount> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
@@ -188,7 +193,7 @@ export class ArmadaManager implements IArmadaManager {
 
   /** @see IArmadaManager.rebalance */
   async rebalance(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     rebalanceData: IRebalanceData[]
   }): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
@@ -201,7 +206,7 @@ export class ArmadaManager implements IArmadaManager {
 
   /** @see IArmadaManager.adjustBuffer */
   async adjustBuffer(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     rebalanceData: IRebalanceData[]
   }): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
@@ -216,7 +221,7 @@ export class ArmadaManager implements IArmadaManager {
 
   /** @see IArmadaManager.setFleetDepositCap */
   async setFleetDepositCap(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     cap: ITokenAmount
   }): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
@@ -228,7 +233,7 @@ export class ArmadaManager implements IArmadaManager {
   }
 
   /** @see IArmadaManager.setTipJar */
-  async setTipJar(params: { poolId: IArmadaPoolId }): Promise<TransactionInfo> {
+  async setTipJar(params: { poolId: IArmadaVaultId }): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.poolId.chainInfo,
       address: params.poolId.fleetAddress,
@@ -238,7 +243,10 @@ export class ArmadaManager implements IArmadaManager {
   }
 
   /** @see IArmadaManager.setTipRate */
-  async setTipRate(params: { poolId: IArmadaPoolId; rate: IPercentage }): Promise<TransactionInfo> {
+  async setTipRate(params: {
+    poolId: IArmadaVaultId
+    rate: IPercentage
+  }): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.poolId.chainInfo,
       address: params.poolId.fleetAddress,
@@ -248,7 +256,7 @@ export class ArmadaManager implements IArmadaManager {
   }
 
   /** @see IArmadaManager.addArk */
-  async addArk(params: { poolId: IArmadaPoolId; ark: IAddress }): Promise<TransactionInfo> {
+  async addArk(params: { poolId: IArmadaVaultId; ark: IAddress }): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.poolId.chainInfo,
       address: params.poolId.fleetAddress,
@@ -258,7 +266,7 @@ export class ArmadaManager implements IArmadaManager {
   }
 
   /** @see IArmadaManager.addArks */
-  async addArks(params: { poolId: IArmadaPoolId; arks: IAddress[] }): Promise<TransactionInfo> {
+  async addArks(params: { poolId: IArmadaVaultId; arks: IAddress[] }): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.poolId.chainInfo,
       address: params.poolId.fleetAddress,
@@ -268,7 +276,7 @@ export class ArmadaManager implements IArmadaManager {
   }
 
   /** @see IArmadaManager.removeArk */
-  async removeArk(params: { poolId: IArmadaPoolId; ark: IAddress }): Promise<TransactionInfo> {
+  async removeArk(params: { poolId: IArmadaVaultId; ark: IAddress }): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.poolId.chainInfo,
       address: params.poolId.fleetAddress,
@@ -279,7 +287,7 @@ export class ArmadaManager implements IArmadaManager {
 
   /** @see IArmadaManager.setArkDepositCap */
   async setArkDepositCap(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     ark: IAddress
     cap: ITokenAmount
   }): Promise<TransactionInfo> {
@@ -293,7 +301,7 @@ export class ArmadaManager implements IArmadaManager {
 
   /** @see IArmadaManager.setArkMaxRebalanceOutflow */
   async setArkMaxRebalanceOutflow(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     ark: IAddress
     maxRebalanceOutflow: ITokenAmount
   }): Promise<TransactionInfo> {
@@ -310,7 +318,7 @@ export class ArmadaManager implements IArmadaManager {
 
   /** @see IArmadaManager.setArkMaxRebalanceInflow */
   async setArkMaxRebalanceInflow(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     ark: IAddress
     maxRebalanceInflow: ITokenAmount
   }): Promise<TransactionInfo> {
@@ -327,7 +335,7 @@ export class ArmadaManager implements IArmadaManager {
 
   /** @see IArmadaManager.setMinimumBufferBalance */
   async setMinimumBufferBalance(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     minimumBufferBalance: ITokenAmount
   }): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
@@ -342,7 +350,7 @@ export class ArmadaManager implements IArmadaManager {
 
   /** @see IArmadaManager.updateRebalanceCooldown */
   async updateRebalanceCooldown(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     cooldown: number
   }): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
@@ -355,7 +363,7 @@ export class ArmadaManager implements IArmadaManager {
 
   /** @see IArmadaManager.forceRebalance */
   async forceRebalance(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     rebalanceData: IRebalanceData[]
   }): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
@@ -367,7 +375,7 @@ export class ArmadaManager implements IArmadaManager {
   }
 
   /** @see IArmadaManager.emergencyShutdown */
-  async emergencyShutdown(params: { poolId: IArmadaPoolId }): Promise<TransactionInfo> {
+  async emergencyShutdown(params: { poolId: IArmadaVaultId }): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.poolId.chainInfo,
       address: params.poolId.fleetAddress,
@@ -388,7 +396,7 @@ export class ArmadaManager implements IArmadaManager {
    * @returns The transactions needed to deposit the tokens
    */
   private async _getDepositTX(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {

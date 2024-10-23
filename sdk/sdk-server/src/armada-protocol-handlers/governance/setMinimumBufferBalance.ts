@@ -1,4 +1,4 @@
-import { isArmadaPoolId, type IArmadaPoolId } from '@summerfi/armada-protocol-common'
+import { isArmadaVaultId, type IArmadaVaultId } from '@summerfi/armada-protocol-common'
 import { ITokenAmount, isTokenAmount } from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
@@ -6,7 +6,7 @@ import { publicProcedure } from '../../SDKTRPC'
 export const setMinimumBufferBalance = publicProcedure
   .input(
     z.object({
-      poolId: z.custom<IArmadaPoolId>(isArmadaPoolId),
+      poolId: z.custom<IArmadaVaultId>(isArmadaVaultId),
       minimumBufferBalance: z.custom<ITokenAmount>(isTokenAmount),
     }),
   )
