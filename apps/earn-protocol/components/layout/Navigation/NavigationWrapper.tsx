@@ -35,7 +35,7 @@ export const NavigationWrapper: FC = () => {
               {
                 label: 'Portfolio',
                 id: 'portfolio',
-                link: `/portfolio/${user.address}`,
+                link: `/earn/portfolio/${user.address}`,
               },
             ]
           : []),

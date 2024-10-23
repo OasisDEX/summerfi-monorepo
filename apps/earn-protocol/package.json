@@ -26,6 +26,7 @@
     "@summerfi/app-types": "workspace:*",
     "@summerfi/app-utils": "workspace:*",
     "@summerfi/rays-db": "workspace:*",
+    "@summerfi/sdk-client": "workspace:^",
     "@summerfi/sdk-client-react": "workspace:^",
     "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/summer-protocol-db": "workspace:*",

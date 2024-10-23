@@ -37,9 +37,9 @@ export const StrategyGrid = ({
           onChangeNetwork={onChangeNetwork}
           selected={selectedNetwork}
         />
-        <Link href="/">
-          <Text as="p" variant="p3semi">
-            <WithArrow>What is Earn protocol</WithArrow>
+        <Link href="/" style={{ display: 'block', width: 'min-content', whiteSpace: 'pre' }}>
+          <Text as="p" variant="p3semi" style={{ display: 'inline' }}>
+            <WithArrow style={{ display: 'inline' }}>What is Earn protocol</WithArrow>
           </Text>
         </Link>
       </div>

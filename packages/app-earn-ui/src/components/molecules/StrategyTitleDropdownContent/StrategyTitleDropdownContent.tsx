@@ -21,7 +21,7 @@ const networkNameIconMap = {
 }
 
 export const StrategyTitleDropdownContent: FC<StrategyDropdownContentProps> = ({ strategy }) => (
-  <Link href={`/earn/${strategy.network}/preview/${strategy.id}`}>
+  <Link href={`/earn/${strategy.network}/position/${strategy.id}`}>
     <div className={classNames.wrapper}>
       <div className={classNames.iconWithSymbolWrapper}>
         <Icon tokenName={strategy.symbol} variant="m" />

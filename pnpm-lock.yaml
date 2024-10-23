@@ -189,6 +189,9 @@ importers:
       '@summerfi/rays-db':
         specifier: workspace:*
         version: link:../../packages/rays-db
+      '@summerfi/sdk-client':
+        specifier: workspace:^
+        version: link:../../sdk/sdk-client
       '@summerfi/sdk-client-react':
         specifier: workspace:^
         version: link:../../sdk/sdk-client-react
@@ -355,6 +358,9 @@ importers:
       '@summerfi/app-utils':
         specifier: workspace:*
         version: link:../../packages/app-utils
+      '@summerfi/sdk-client':
+        specifier: workspace:^
+        version: link:../../sdk/sdk-client
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../../packages/serverless-shared

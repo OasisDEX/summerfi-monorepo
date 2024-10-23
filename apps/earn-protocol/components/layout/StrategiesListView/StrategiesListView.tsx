@@ -28,14 +28,9 @@ const softRouterPush = (url: string) => {
   window.history.pushState(null, '', url)
 }
 
-export const StrategiesListView = ({
-  selectedNetwork,
-  selectedStrategyId,
-}: StrategiesListViewProps) => {
+export const StrategiesListView = ({ selectedNetwork }: StrategiesListViewProps) => {
   const [localStrategyNetwork, setLocalStrategyNetwork] =
     useState<StrategiesListViewProps['selectedNetwork']>(selectedNetwork)
-
-  const [localStrategyId, setLocalStrategyId] = useState<string | undefined>(selectedStrategyId)
 
   const networkFilteredStrategies = useMemo(
     () =>
@@ -44,6 +39,8 @@ export const StrategiesListView = ({
         : strategiesList,
     [localStrategyNetwork],
   )
+
+  const [strategyId, setStrategyId] = useState<string | undefined>(networkFilteredStrategies[0].id)
 
   const selectedNetworkOption = useMemo(
     () =>
@@ -72,42 +69,30 @@ export const StrategiesListView = ({
   )
 
   const selectedStrategyData = useMemo(
-    () => strategiesList.find((strategy) => strategy.id === localStrategyId),
-    [localStrategyId],
+    () => strategiesList.find((strategy) => strategy.id === strategyId),
+    [strategyId],
   )
 
   const handleChangeNetwork = (selected: DropdownRawOption) => {
     setLocalStrategyNetwork(selected.value as StrategiesListViewProps['selectedNetwork'])
     switch (selected.value) {
       case 'all-networks':
-        // if its all networks we must check if the selected strategy is from the same network
-        // then we can "redirect" to the selected strategy page with the network
-        softRouterPush(
-          selectedStrategyData ? `/earn/all-networks/${selectedStrategyData.id}` : '/earn',
-        )
+        softRouterPush('/earn')
 
         break
 
       default:
-        // if its a specific network we must check if the selected strategy is from the same network
-        // then we can "redirect" to the selected strategy page with the network
-        // if not we just go to the network page and clear the selected strategy (if not available in the new view)
         if (selectedStrategyData && selectedStrategyData.network !== selected.value) {
-          setLocalStrategyId(undefined)
+          setStrategyId(undefined)
         }
-        softRouterPush(
-          selectedStrategyData && selectedStrategyData.network === selected.value
-            ? `/earn/${selected.value}/${selectedStrategyData.id}`
-            : `/earn/${selected.value}`,
-        )
+        softRouterPush(`/earn/${selected.value}`)
 
         break
     }
   }
 
-  const handleChangeStrategy = (strategyId: string) => {
-    setLocalStrategyId(strategyId)
-    softRouterPush(`/earn/${localStrategyNetwork ?? 'all-networks'}/${strategyId}`)
+  const handleChangeStrategy = (nextStrategyId: string) => {
+    setStrategyId(nextStrategyId)
   }
 
   return (
@@ -143,7 +128,7 @@ export const StrategiesListView = ({
           {...strategy}
           secondary
           withHover
-          selected={localStrategyId === strategy.id || (!localStrategyId && strategyIndex === 0)}
+          selected={strategyId === strategy.id || (!strategyId && strategyIndex === 0)}
           onClick={handleChangeStrategy}
         />
       ))}

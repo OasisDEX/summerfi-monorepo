@@ -160,8 +160,7 @@ const detailsLinks = [
   },
 ]
 
-const EarnStrategyPreviewPage = ({ params }: EarnStrategyPreviewPageProps) => {
-  // open/manage view (not connected)
+const EarnStrategyOpenManagePage = ({ params }: EarnStrategyPreviewPageProps) => {
   const selectedStrategyData = useMemo(() => {
     return strategiesList.find((strategy) => strategy.id === params.strategy_id)
   }, [params])
@@ -273,4 +272,4 @@ const EarnStrategyPreviewPage = ({ params }: EarnStrategyPreviewPageProps) => {
   )
 }
 
-export default EarnStrategyPreviewPage
+export default EarnStrategyOpenManagePage

@@ -4,7 +4,7 @@ import { StrategiesListView } from '@/components/layout/StrategiesListView/Strat
 
 type EarnNetworkStrategiesPageProps = {
   params: {
-    network: NetworkNames | 'all-networks'
+    network: NetworkNames
   }
 }
 

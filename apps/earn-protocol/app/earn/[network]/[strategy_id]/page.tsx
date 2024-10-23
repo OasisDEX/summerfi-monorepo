@@ -1,8 +1,7 @@
 import { type NetworkNames } from '@summerfi/app-types'
+import { redirect } from 'next/navigation'
 
-import { StrategiesListView } from '@/components/layout/StrategiesListView/StrategiesListView'
-
-const EarnNetworkSelectedStrategyPage = ({
+const RedirectToStrategyDetails = ({
   params,
 }: {
   params: {
@@ -10,10 +9,10 @@ const EarnNetworkSelectedStrategyPage = ({
     strategy_id: string
   }
 }) => {
-  // particular strategy loaded
-  return (
-    <StrategiesListView selectedNetwork={params.network} selectedStrategyId={params.strategy_id} />
-  )
+  const { network, strategy_id: strategyId } = params
+
+  // redirect to strategy position page
+  redirect(`/earn/${network}/position/${strategyId}`)
 }
 
-export default EarnNetworkSelectedStrategyPage
+export default RedirectToStrategyDetails

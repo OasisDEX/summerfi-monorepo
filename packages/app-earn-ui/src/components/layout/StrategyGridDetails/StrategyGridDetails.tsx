@@ -27,7 +27,7 @@ export const StrategyGridDetails = ({
               Earn /
             </Text>
           </Link>
-          <Link href={`/earn/${strategy.network}/preview/${strategy.id}`}>
+          <Link href={`/earn/${strategy.network}/position/${strategy.id}`}>
             <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
               {' '}
               {strategy.id}{' '}

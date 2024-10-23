@@ -7,7 +7,7 @@ import { strategiesList } from '@/constants/dev-strategies-list'
 
 type EarnStrategyDetailsPageProps = {
   params: {
-    network: NetworkNames | 'all-networks'
+    network: NetworkNames
     strategy_id: string
   }
 }
