@@ -1,5 +1,5 @@
 import {
-  IArmadaPoolId,
+  IArmadaVaultId,
   IArmadaPoolInfo,
   IArmadaPosition,
   IArmadaPositionId,
@@ -38,7 +38,7 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns The corresponding Armada vault
    */
-  getVaultRaw(params: { poolId: IArmadaPoolId }): Promise<GetVaultQuery>
+  getVaultRaw(params: { poolId: IArmadaVaultId }): Promise<GetVaultQuery>
 
   /**
    * @method getPoolInfo
@@ -48,7 +48,7 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns The information of the corresponding Armada pool
    */
-  getPoolInfo(params: { poolId: IArmadaPoolId }): Promise<IArmadaPoolInfo>
+  getPoolInfo(params: { poolId: IArmadaVaultId }): Promise<IArmadaPoolInfo>
 
   /**
    * @name getUserPositions
@@ -93,7 +93,7 @@ export interface IArmadaManagerUsersClient {
    * @returns The transactions needed to deposit the tokens
    */
   getNewDepositTX(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]>
@@ -109,7 +109,7 @@ export interface IArmadaManagerUsersClient {
    * @returns The transactions needed to deposit the tokens
    */
   getUpdateDepositTX(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     positionId: IArmadaPositionId
     amount: ITokenAmount
   }): Promise<TransactionInfo[]>
@@ -125,7 +125,7 @@ export interface IArmadaManagerUsersClient {
    * @returns The transactions needed to withdraw the tokens
    */
   getWithdrawTX(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]>

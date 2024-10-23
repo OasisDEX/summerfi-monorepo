@@ -6,7 +6,7 @@ import {
   isTokenAmount,
 } from '@summerfi/sdk-common/common'
 import { z } from 'zod'
-import { IArmadaPoolId, isArmadaPoolId } from './IArmadaPoolId'
+import { IArmadaVaultId, isArmadaVaultId } from './IArmadaVaultId'
 
 /**
  * Unique signature to provide branded types to the interface
@@ -21,7 +21,7 @@ export interface IArmadaPoolInfo extends IPoolInfo, IArmadaPoolInfoData {
   /** Signature used to differentiate it from similar interfaces */
   readonly [__signature__]: symbol
   /** ID of the pool */
-  readonly id: IArmadaPoolId
+  readonly id: IArmadaVaultId
   /** Maximum amount that can be deposited into the pool at this moment */
   readonly depositCap: ITokenAmount
   /** Total amount of assets currently deposited in the pool */
@@ -38,7 +38,7 @@ export interface IArmadaPoolInfo extends IPoolInfo, IArmadaPoolInfoData {
  */
 export const ArmadaPoolInfoDataSchema = z.object({
   ...PoolInfoDataSchema.shape,
-  id: z.custom<IArmadaPoolId>((val) => isArmadaPoolId(val)),
+  id: z.custom<IArmadaVaultId>((val) => isArmadaVaultId(val)),
   depositCap: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   totalDeposits: z.custom<ITokenAmount>((val) => isTokenAmount(val)),
   totalShares: z.custom<ITokenAmount>((val) => isTokenAmount(val)),

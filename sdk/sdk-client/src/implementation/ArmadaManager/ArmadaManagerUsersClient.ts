@@ -1,5 +1,5 @@
 import {
-  IArmadaPoolId,
+  IArmadaVaultId,
   IArmadaPoolInfo,
   IArmadaPosition,
   IArmadaPositionId,
@@ -30,7 +30,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
   }
 
   /** @see IArmadaManagerUsersClient.getPoolInfo */
-  async getPoolInfo(params: { poolId: IArmadaPoolId }): Promise<IArmadaPoolInfo> {
+  async getPoolInfo(params: { poolId: IArmadaVaultId }): Promise<IArmadaPoolInfo> {
     return this.rpcClient.armada.users.getPoolInfo.query(params)
   }
 
@@ -49,7 +49,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
 
   /** @see IArmadaManagerUsersClient.getPosition */
   async getPosition(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     positionId: IArmadaPositionId
   }): Promise<IArmadaPosition> {
     return this.rpcClient.armada.users.getPosition.query(params)
@@ -57,7 +57,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
 
   /** @see IArmadaManagerUsersClient.getNewDepositTX */
   async getNewDepositTX(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
@@ -66,7 +66,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
 
   /** @see IArmadaManagerUsersClient.getUpdateDepositTX */
   async getUpdateDepositTX(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     positionId: IArmadaPositionId
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {
@@ -75,7 +75,7 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
 
   /** @see IArmadaManagerUsersClient.getWithdrawTX */
   async getWithdrawTX(params: {
-    poolId: IArmadaPoolId
+    poolId: IArmadaVaultId
     user: IUser
     amount: ITokenAmount
   }): Promise<TransactionInfo[]> {

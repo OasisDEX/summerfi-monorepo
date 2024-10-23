@@ -1,4 +1,4 @@
-import { IArmadaPoolId, isArmadaPoolId } from '@summerfi/armada-protocol-common'
+import { IArmadaVaultId, isArmadaVaultId } from '@summerfi/armada-protocol-common'
 import { ITokenAmount, isTokenAmount } from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
@@ -6,7 +6,7 @@ import { publicProcedure } from '../../SDKTRPC'
 export const setFleetDepositCap = publicProcedure
   .input(
     z.object({
-      poolId: z.custom<IArmadaPoolId>(isArmadaPoolId),
+      poolId: z.custom<IArmadaVaultId>(isArmadaVaultId),
       cap: z.custom<ITokenAmount>(isTokenAmount),
     }),
   )

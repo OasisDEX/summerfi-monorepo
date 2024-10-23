@@ -1,4 +1,4 @@
-import { isArmadaPoolId, type IArmadaPoolId } from '@summerfi/armada-protocol-common'
+import { isArmadaVaultId, type IArmadaVaultId } from '@summerfi/armada-protocol-common'
 import { isAddress, type IAddress } from '@summerfi/sdk-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
@@ -6,7 +6,7 @@ import { publicProcedure } from '../../SDKTRPC'
 export const addArks = publicProcedure
   .input(
     z.object({
-      poolId: z.custom<IArmadaPoolId>(isArmadaPoolId),
+      poolId: z.custom<IArmadaVaultId>(isArmadaVaultId),
       arks: z.array(z.custom<IAddress>(isAddress)),
     }),
   )

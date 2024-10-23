@@ -2,11 +2,11 @@ export type { IArmadaManager } from './IArmadaManager'
 export { ArmadaPoolDataSchema, __signature__ as __iarmadapool__, isArmadaPool } from './IArmadaPool'
 export type { IArmadaPool, IArmadaPoolData } from './IArmadaPool'
 export {
-  ArmadaPoolIdDataSchema,
+  ArmadaVaultIdDataSchema,
   __signature__ as __iarmadapoolid__,
-  isArmadaPoolId,
-} from './IArmadaPoolId'
-export type { IArmadaPoolId, IArmadaPoolIdData } from './IArmadaPoolId'
+  isArmadaVaultId,
+} from './IArmadaVaultId'
+export type { IArmadaVaultId, IArmadaVaultIdData } from './IArmadaVaultId'
 export {
   ArmadaPoolInfoDataSchema,
   __signature__ as __iarmadapoolinfo__,

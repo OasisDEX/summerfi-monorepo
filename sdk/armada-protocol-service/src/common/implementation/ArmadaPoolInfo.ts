@@ -1,5 +1,5 @@
 import {
-  IArmadaPoolId,
+  IArmadaVaultId,
   IArmadaPoolInfo,
   IArmadaPoolInfoData,
   __iarmadapoolinfo__,
@@ -22,7 +22,7 @@ export class ArmadaPoolInfo extends PoolInfo implements IArmadaPoolInfo {
 
   /** ATTRIBUTES */
   readonly type = PoolType.Armada
-  readonly id: IArmadaPoolId
+  readonly id: IArmadaVaultId
   readonly depositCap: ITokenAmount
   readonly totalDeposits: ITokenAmount
   readonly totalShares: ITokenAmount

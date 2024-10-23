@@ -21,7 +21,7 @@ import {
 import { ArmadaPositionId } from '../src'
 import { ArmadaManager } from '../src/common/implementation/ArmadaManager'
 import { ArmadaManagerFactory } from '../src/common/implementation/ArmadaManagerFactory'
-import { ArmadaPoolId } from '../src/common/implementation/ArmadaPoolId'
+import { ArmadaVaultId } from '../src/common/implementation/ArmadaVaultId'
 import { ArmadaProtocol } from '../src/common/implementation/ArmadaProtocol'
 
 describe('Armada Protocol Service', () => {
@@ -54,7 +54,7 @@ describe('Armada Protocol Service', () => {
     amount: '123.45',
   })
 
-  const poolId = ArmadaPoolId.createFrom({
+  const poolId = ArmadaVaultId.createFrom({
     chainInfo,
     fleetAddress,
     protocol,
@@ -184,7 +184,7 @@ describe('Armada Protocol Service', () => {
       amount: '15000000',
     })
 
-    const poolId = ArmadaPoolId.createFrom({
+    const poolId = ArmadaVaultId.createFrom({
       chainInfo,
       fleetAddress,
       protocol,

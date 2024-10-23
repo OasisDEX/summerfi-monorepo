@@ -1,9 +1,8 @@
 import { Address, ChainFamilyMap, Token, TokenAmount, User, Wallet } from '@summerfi/sdk-common'
 import { ArmadaPool } from '../src/common/implementation/ArmadaPool'
-import { ArmadaPoolId } from '../src/common/implementation/ArmadaPoolId'
+import { ArmadaVaultId } from '../src/common/implementation/ArmadaVaultId'
 import { ArmadaPosition } from '../src/common/implementation/ArmadaPosition'
 import { ArmadaPositionId } from '../src/common/implementation/ArmadaPositionId'
-import { ArmadaProtocol } from '../src/common/implementation/ArmadaProtocol'
 
 describe('SDK Common | Armada | ArmadaPosition', () => {
   const chainInfo = ChainFamilyMap.Base.Base
@@ -19,16 +18,13 @@ describe('SDK Common | Armada | ArmadaPosition', () => {
     }),
   })
 
-  const protocol = ArmadaProtocol.createFrom({ chainInfo })
-
   const fleetAddress = Address.createFromEthereum({
     value: '0xa09E82322f351154a155f9e0f9e6ddbc8791C794', // FleetCommander on Base
   })
 
-  const poolId = ArmadaPoolId.createFrom({
+  const poolId = ArmadaVaultId.createFrom({
     chainInfo,
     fleetAddress,
-    protocol,
   })
 
   const pool = ArmadaPool.createFrom({

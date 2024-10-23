@@ -1,23 +1,24 @@
 import {
-  IArmadaPoolId,
-  IArmadaPoolIdData,
+  IArmadaVaultId,
+  IArmadaVaultIdData,
   IArmadaProtocol,
   __iarmadapoolid__,
 } from '@summerfi/armada-protocol-common'
 import { IAddress, PoolId } from '@summerfi/sdk-common'
 import { IChainInfo, PoolType } from '@summerfi/sdk-common/common'
 import { SerializationService } from '@summerfi/sdk-common/services'
+import { ArmadaProtocol } from './ArmadaProtocol'
 
 /**
- * Type for the parameters of ArmadaPoolId
+ * Type for the parameters of ArmadaVaultId
  */
-export type ArmadaPoolIdParameters = Omit<IArmadaPoolIdData, 'type'>
+export type ArmadaVaultIdParameters = Omit<IArmadaVaultIdData, 'type' | 'protocol'>
 
 /**
- * @class ArmadaPoolId
- * @see IArmadaPoolId
+ * @class ArmadaVaultId
+ * @see IArmadaVaultId
  */
-export class ArmadaPoolId extends PoolId implements IArmadaPoolId {
+export class ArmadaVaultId extends PoolId implements IArmadaVaultId {
   /** SIGNATURE */
   readonly [__iarmadapoolid__] = __iarmadapoolid__
 
@@ -28,18 +29,18 @@ export class ArmadaPoolId extends PoolId implements IArmadaPoolId {
   readonly protocol: IArmadaProtocol
 
   /** FACTORY */
-  static createFrom(params: ArmadaPoolIdParameters): ArmadaPoolId {
-    return new ArmadaPoolId(params)
+  static createFrom(params: ArmadaVaultIdParameters): ArmadaVaultId {
+    return new ArmadaVaultId(params)
   }
 
   /** SEALED CONSTRUCTOR */
-  private constructor(params: ArmadaPoolIdParameters) {
+  private constructor(params: ArmadaVaultIdParameters) {
     super(params)
 
     this.chainInfo = params.chainInfo
     this.fleetAddress = params.fleetAddress
-    this.protocol = params.protocol
+    this.protocol = ArmadaProtocol.createFrom({ chainInfo: params.chainInfo })
   }
 }
 
-SerializationService.registerClass(ArmadaPoolId)
+SerializationService.registerClass(ArmadaVaultId)

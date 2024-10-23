@@ -11,9 +11,9 @@ import {
   type IUser,
 } from '@summerfi/sdk-common'
 
-import { ArmadaPoolId } from '@summerfi/armada-protocol-service'
+import { ArmadaVaultId } from '@summerfi/armada-protocol-service'
 import { sendAndLogTransactions } from '@summerfi/testing-utils'
-import type { IArmadaPoolId } from '@summerfi/armada-protocol-common'
+import type { IArmadaVaultId } from '@summerfi/armada-protocol-common'
 import { prepareData } from './prepareData'
 
 jest.setTimeout(300000)
@@ -75,16 +75,15 @@ describe('Armada Protocol Users', () => {
     }
 
     describe(`Deposit/Withdraw with ${symbol} fleet on ${chainInfo.name}`, () => {
-      let poolId: IArmadaPoolId
+      let poolId: IArmadaVaultId
       let token: IToken
       let user: IUser
 
       beforeEach(async () => {
-        const data = await prepareData(symbol, chainInfo, forkUrl, sdk, walletAddress)
-        poolId = ArmadaPoolId.createFrom({
+        const data = await prepareData(symbol, chainInfo, sdk, walletAddress)
+        poolId = ArmadaVaultId.createFrom({
           chainInfo,
           fleetAddress,
-          protocol: data.protocol,
         })
         token = data.token
         user = data.user
@@ -157,6 +156,26 @@ describe('Armada Protocol Users', () => {
           fleetAddress,
         })
         expect(position.id.id).toEqual(`${userAddress.value}-${fleetAddress.value}`)
+      })
+    })
+
+    describe.only(`Vaults on ${chainInfo.name}`, () => {
+      it('should getVaults', async () => {
+        const raw = await sdk.armada.users.getVaultsRaw({
+          chainInfo,
+        })
+        expect(raw.vaults).toHaveLength(1)
+        expect(raw.vaults[0]?.id).toEqual(`${fleetAddress.value}`)
+      })
+
+      it('should getVault', async () => {
+        const raw = await sdk.armada.users.getVaultRaw({
+          poolId: ArmadaVaultId.createFrom({
+            chainInfo,
+            fleetAddress,
+          }),
+        })
+        expect(raw.vault?.id).toEqual(`${fleetAddress.value}`)
       })
     })
   }
