@@ -6,7 +6,7 @@ import {
   IArmadaPoolInfo,
   IArmadaPosition,
   IArmadaPositionId,
-  IRebalanceData,
+  IArmadaRebalanceData,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
 import { IContractsProvider } from '@summerfi/contracts-provider-common'
@@ -189,7 +189,7 @@ export class ArmadaManager implements IArmadaManager {
   /** @see IArmadaManager.rebalance */
   async rebalance(params: {
     poolId: IArmadaPoolId
-    rebalanceData: IRebalanceData[]
+    rebalanceData: IArmadaRebalanceData[]
   }): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.poolId.chainInfo,
@@ -202,7 +202,7 @@ export class ArmadaManager implements IArmadaManager {
   /** @see IArmadaManager.adjustBuffer */
   async adjustBuffer(params: {
     poolId: IArmadaPoolId
-    rebalanceData: IRebalanceData[]
+    rebalanceData: IArmadaRebalanceData[]
   }): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.poolId.chainInfo,
@@ -356,7 +356,7 @@ export class ArmadaManager implements IArmadaManager {
   /** @see IArmadaManager.forceRebalance */
   async forceRebalance(params: {
     poolId: IArmadaPoolId
-    rebalanceData: IRebalanceData[]
+    rebalanceData: IArmadaRebalanceData[]
   }): Promise<TransactionInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({
       chainInfo: params.poolId.chainInfo,

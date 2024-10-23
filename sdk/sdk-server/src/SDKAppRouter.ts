@@ -14,17 +14,18 @@ import { setTipJar } from './armada-protocol-handlers/governance/setTipJar'
 import { setTipRate } from './armada-protocol-handlers/governance/setTipRate'
 import { updateRebalanceCooldown } from './armada-protocol-handlers/governance/updateRebalanceCooldown'
 import { adjustBuffer } from './armada-protocol-handlers/keepers/adjustBuffer'
+import { getArmadaKeepersSimulation } from './armada-protocol-handlers/keepers/getArmadaKeepersSimulation'
 import { rebalance } from './armada-protocol-handlers/keepers/rebalance'
+import { getArmadaUsersSimulation } from './armada-protocol-handlers/users/getArmadaUsersSimulation'
 import { getDepositTX } from './armada-protocol-handlers/users/getDepositTX'
 import { getPool } from './armada-protocol-handlers/users/getPool'
 import { getPoolInfo } from './armada-protocol-handlers/users/getPoolInfo'
 import { getPosition as getArmadaPosition } from './armada-protocol-handlers/users/getPosition'
 import { getUpdateDepositTX } from './armada-protocol-handlers/users/getUpdateDepositTX'
-import { getUserPositions } from './armada-protocol-handlers/users/getUserPositions'
 import { getUserPosition } from './armada-protocol-handlers/users/getUserPosition'
+import { getUserPositions } from './armada-protocol-handlers/users/getUserPositions'
 import { getWithdrawTX } from './armada-protocol-handlers/users/getWithdrawTX'
 import { buildOrder } from './handlers/buildOrder'
-import { getArmadaSimulation } from './handlers/getArmadaSimulation'
 import { getImportSimulation } from './handlers/getImportSimulation'
 import { getLendingPool } from './handlers/getLendingPool'
 import { getLendingPoolInfo } from './handlers/getLendingPoolInfo'
@@ -53,7 +54,10 @@ export const sdkAppRouter = router({
   simulation: {
     refinance: getRefinanceSimulation,
     import: getImportSimulation,
-    armada: getArmadaSimulation,
+    armada: {
+      users: getArmadaUsersSimulation,
+      keepers: getArmadaKeepersSimulation,
+    },
   },
   orders: {
     buildOrder: buildOrder,

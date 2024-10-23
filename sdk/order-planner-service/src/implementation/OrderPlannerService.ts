@@ -10,7 +10,9 @@ import { Order } from '@summerfi/sdk-common/orders'
 import { SimulationType } from '@summerfi/sdk-common/simulation'
 import { assert } from 'console'
 import { ActionBuildersConfig } from '../config/Config'
-import { ArmadaOrderPlanner, DMAOrderPlanner } from './planners'
+import { ArmadaKeepersOrderPlanner } from './planners/ArmadaKeepersOrderPlanner'
+import { ArmadaUsersOrderPlanner } from './planners/ArmadaUsersOrderPlanner'
+import { DMAOrderPlanner } from './planners/DMAOrderPlanner'
 
 /** @see IOrderPlannerService */
 export class OrderPlannerService implements IOrderPlannerService {
@@ -19,7 +21,8 @@ export class OrderPlannerService implements IOrderPlannerService {
 
   constructor() {
     this._registerOrderPlanner(DMAOrderPlanner)
-    this._registerOrderPlanner(ArmadaOrderPlanner)
+    this._registerOrderPlanner(ArmadaUsersOrderPlanner)
+    this._registerOrderPlanner(ArmadaKeepersOrderPlanner)
   }
 
   async buildOrder(params: Omit<BuildOrderParams, 'actionBuildersMap'>): Promise<Maybe<Order>> {

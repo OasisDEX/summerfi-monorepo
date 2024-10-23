@@ -7,5 +7,7 @@ export enum SimulationType {
   /** Refinance an existing position into another protocol */
   Refinance = 'Refinance',
   /** Depositing or withdrawing from the Armada Protocol */
-  Armada = 'Armada',
+  ArmadaUsers = 'ArmadaUsers',
+  /** Rebalancing on the Armada Protocol */
+  ArmadaKeepers = 'ArmadaKeepers',
 }
