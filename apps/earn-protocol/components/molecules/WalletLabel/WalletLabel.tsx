@@ -1,8 +1,6 @@
 import { useAuthModal, useLogout, useSignerStatus, useUser } from '@account-kit/react'
-import { Button, SkeletonLine, Text } from '@summerfi/app-earn-ui'
+import { Button, LoadableAvatar, SkeletonLine, Text } from '@summerfi/app-earn-ui'
 import { formatAddress } from '@summerfi/app-utils'
-
-import { LoadableAvatar } from '@/components/atoms/LoadableAvatar'
 
 export default function WalletLabel() {
   const user = useUser()

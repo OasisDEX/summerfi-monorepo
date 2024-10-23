@@ -1,8 +1,6 @@
 import { type FC } from 'react'
-import { Button, DataBlock, Icon, Text } from '@summerfi/app-earn-ui'
+import { Button, DataBlock, Icon, LoadableAvatar, Text } from '@summerfi/app-earn-ui'
 import { formatAddress } from '@summerfi/app-utils'
-
-import { LoadableAvatar } from '@/components/atoms/LoadableAvatar'
 
 import classNames from './PortfolioHeader.module.scss'
 
