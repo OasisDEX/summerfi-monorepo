@@ -44,7 +44,7 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
         with:
           args:
-            'SDK deployment ([${{github.run_id }}](github.com/${{
+            'SDK deployment ([${{github.run_id }}](https://github.com/${{
             github.repository}}/actions/runs/${{ github.run_id }})) started on staging 🚀 (from
             branch `${{ github.ref_name }}` by [${{github.triggering_actor
             }}](https://github.com/${{github.triggering_actor }})).'
