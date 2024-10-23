@@ -2034,6 +2034,9 @@ importers:
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
+      '@summerfi/subgraph-manager-common':
+        specifier: workspace:*
+        version: link:../subgraph-manager-common
     devDependencies:
       '@summerfi/eslint-config':
         specifier: workspace:*
@@ -2987,9 +2990,6 @@ importers:
 
   sdk/subgraph-manager-common:
     dependencies:
-      '@summerfi/armada-protocol-common':
-        specifier: workspace:*
-        version: link:../armada-protocol-common
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
