@@ -27,6 +27,12 @@ const options: DropdownOption[] = [
   })),
 ]
 
+const getStrategyUrl = (selectedStrategy?: (typeof strategiesList)[number]) => {
+  if (!selectedStrategy) return ''
+
+  return `/earn/${selectedStrategy.network}/open/${selectedStrategy.id}`
+}
+
 const Form = ({ fleetConfig: _fleetConfig, selectedStrategyData }: FormProps) => {
   const [action, setAction] = useState(Action.DEPOSIT)
   const [amountValue, setAmountValue] = useState<string>()
@@ -39,10 +45,6 @@ const Form = ({ fleetConfig: _fleetConfig, selectedStrategyData }: FormProps) =>
 
   const handleChange = (ev: ChangeEvent<HTMLInputElement>) => {
     setAmountValue(mapNumericInput(ev.target.value))
-  }
-
-  const handleConfirm = async () => {
-    return await Promise.resolve(null)
   }
 
   const dropdownValue =
@@ -68,7 +70,7 @@ const Form = ({ fleetConfig: _fleetConfig, selectedStrategyData }: FormProps) =>
     },
     primaryButton: {
       label: 'Get Started',
-      action: handleConfirm,
+      url: getStrategyUrl(selectedStrategyData),
       disabled: confirmDisabled,
     },
     footnote: (

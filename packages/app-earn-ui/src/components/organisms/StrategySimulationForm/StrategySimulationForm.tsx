@@ -16,7 +16,7 @@ export type StrategySimulationFormProps = {
 const getStrategyUrl = (selectedStrategy: StrategySimulationFormProps['strategyData']) => {
   if (!selectedStrategy) return ''
 
-  return `/earn/${selectedStrategy.network}/strategy/${selectedStrategy.id}`
+  return `/earn/${selectedStrategy.network}/preview/${selectedStrategy.id}`
 }
 
 export const StrategySimulationForm = ({ strategyData }: StrategySimulationFormProps) => {

@@ -5,14 +5,14 @@ import { type NetworkNames } from '@summerfi/app-types'
 import { StrategyDetailsView } from '@/components/layout/StrategyDetailsView/StrategyDetailsView'
 import { strategiesList } from '@/constants/dev-strategies-list'
 
-type StrategyDetailsPageProps = {
+type EarnStrategyDetailsPageProps = {
   params: {
     network: NetworkNames | 'all-networks'
     strategy_id: string
   }
 }
 
-const StrategyDetailsPage = ({ params }: StrategyDetailsPageProps) => {
+const EarnStrategyDetailsPage = ({ params }: EarnStrategyDetailsPageProps) => {
   const selectedStrategyData = useMemo(() => {
     return strategiesList.find((strategy) => strategy.id === params.strategy_id)
   }, [params])
@@ -24,4 +24,4 @@ const StrategyDetailsPage = ({ params }: StrategyDetailsPageProps) => {
   )
 }
 
-export default StrategyDetailsPage
+export default EarnStrategyDetailsPage
