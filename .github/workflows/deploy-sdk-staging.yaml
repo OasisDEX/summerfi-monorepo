@@ -93,7 +93,7 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
         with:
-          args: 'SDK deployment `${{github.run_id}}` finished successfully on staging 🎉\n '
+          args: 'SDK deployment `${{github.run_id}}` finished successfully on staging 🎉'
 
       - name: Trigger e2e tests in e2e-tests repository
         env:

@@ -92,4 +92,4 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
         with:
-          args: 'SDK deployment `${{github.run_id}}` finished successfully on production 🎉\n '
+          args: 'SDK deployment `${{github.run_id}}` finished successfully on production 🎉'
