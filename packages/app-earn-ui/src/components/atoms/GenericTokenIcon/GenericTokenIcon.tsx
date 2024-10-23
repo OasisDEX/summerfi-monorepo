@@ -16,6 +16,20 @@ interface GenericTokenIconProps {
 
 const scaleFactor = 0.8125
 
+const AvatarLoadingState = loadable(() => import('boring-avatars'), {
+  cacheKey: (props) => props.name,
+  fallback: (
+    <svg viewBox="0 0 6.35 6.35" color="inherit" display="inline-block" width={24} height={24}>
+      <circle
+        style={{ fill: '#9d9d9d', fillOpacity: 0.350168, strokeWidth: 0.340624 }}
+        cx="3.175"
+        cy="3.175"
+        r="3.175"
+      />
+    </svg>
+  ),
+})
+
 export const GenericTokenIcon: FC<GenericTokenIconProps> = ({
   variant = 'smallIcon',
   symbol,
@@ -31,27 +45,13 @@ export const GenericTokenIcon: FC<GenericTokenIconProps> = ({
     lineHeight: `${customSize}px`,
   }
 
-  const AvatarLoadingState = loadable(() => import('boring-avatars'), {
-    cacheKey: () => symbol,
-    fallback: (
-      <svg viewBox="0 0 6.35 6.35" color="inherit" display="inline-block" width={24} height={24}>
-        <circle
-          style={{ fill: '#9d9d9d', fillOpacity: 0.350168, strokeWidth: 0.340624 }}
-          cx="3.175"
-          cy="3.175"
-          r="3.175"
-        />
-      </svg>
-    ),
-  })
-
   return (
     <div className={genericTokenIconStyles[variant]} style={customSize ? customSizeStyle : {}}>
       <AvatarLoadingState
         size={innerSize}
         name={btoa(symbol)}
         variant="marble"
-        colors={['#6FD9FF', '#F2FCFF', '#FFE7D8', '#FBB677']}
+        colors={['#6FD9FF', '#FBB677']}
       />
       <div className={genericTokenIconStyles.unknownIcon} style={customSize ? customSizeStyle : {}}>
         ?
