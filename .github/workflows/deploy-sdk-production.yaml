@@ -38,6 +38,20 @@ jobs:
       CONFIG_URL: ${{ secrets.CONFIG_URL }}
       CONFIG_URL_RAYS: ${{ secrets.CONFIG_URL_RAYS }}
     steps:
+      - name: Send start notification to Discord
+        uses: Ilshidur/action-discord@0.3.2
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
+          DISCORD_EMBEDS:
+            '[{"title":"Link to GitHub Action:
+            ${{github.run_id}}","url":"https://github.com/${{github.repository}}/actions/runs/${{github.run_id
+            }}"}]'
+        with:
+          args:
+            'SDK deployment `${{github.run_id}}` started on production 🚀 (from branch `${{
+            github.ref_name }}` by [${{github.triggering_actor
+            }}](https://github.com/${{github.triggering_actor }})).'
+
       - name: Git clone the repository
         uses: actions/checkout@v3
 
@@ -72,3 +86,26 @@ jobs:
       - name: Deploy app
         run: |
           pnpm run sst:deploy:sdk:prod
+
+      - name: Send success notification to Discord
+        uses: Ilshidur/action-discord@0.3.2
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
+        with:
+          args: 'SDK deployment `${{github.run_id}}` finished successfully on production 🎉'
+
+      - name: Send failure notification to Discord
+        if: failure()
+        uses: Ilshidur/action-discord@0.3.2
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
+        with:
+          args: 'SDK deployment `${{github.run_id}}` failed on staging ❌'
+
+      - name: Send cancellation notification to Discord
+        if: cancelled()
+        uses: Ilshidur/action-discord@0.3.2
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
+        with:
+          args: 'SDK deployment `${{github.run_id}}` was cancelled 🚫'
