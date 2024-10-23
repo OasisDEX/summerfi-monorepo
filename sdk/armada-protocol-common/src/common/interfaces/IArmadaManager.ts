@@ -16,7 +16,7 @@ export interface IArmadaManager {
   /** POOLS */
 
   /**
-   * @name getVaults
+   * @name getVaultsRaw
    * @description Get all vaults in the protocol
    *
    * @param chainInfo Chain information
@@ -26,8 +26,8 @@ export interface IArmadaManager {
   getVaultsRaw(params: { chainInfo: ChainInfo }): Promise<GetVaultsQuery>
 
   /**
-   * @name getVault
-   * @description Get the specific vault
+   * @name getVaultRaw
+   * @description Get the specific vault in the protocol
    *
    * @param poolId ID of the pool to retrieve
    *
