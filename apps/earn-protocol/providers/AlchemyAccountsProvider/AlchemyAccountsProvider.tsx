@@ -1,6 +1,6 @@
 'use client'
-import { type FC, type PropsWithChildren } from 'react'
-import { type AlchemyClientState } from '@account-kit/core'
+import { type FC, type PropsWithChildren, useEffect } from 'react'
+import { type AlchemyClientState, hydrate } from '@account-kit/core'
 import { AlchemyAccountProvider } from '@account-kit/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { staticConfig } from 'account-kit/config'
@@ -12,6 +12,14 @@ export const AlchemyAccountsProvider: FC<
     initialState?: AlchemyClientState
   }>
 > = ({ initialState, children }) => {
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const { onMount } = hydrate(staticConfig, initialState)
+
+      void onMount()
+    }
+  }, [initialState])
+
   return (
     <QueryClientProvider client={queryClient}>
       <AlchemyAccountProvider
