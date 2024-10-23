@@ -45,8 +45,7 @@ jobs:
         with:
           args:
             'SDK deployment started on staging 🚀 (from branch `${{ github.ref_name }}` by
-            [${{github.triggering_actor }}](https://github.com/piotrwitek${{github.triggering_actor
-            }})).'
+            [${{github.triggering_actor }}](https://github.com/${{github.triggering_actor }})).'
 
       - name: Git clone the repository
         uses: actions/checkout@v3
