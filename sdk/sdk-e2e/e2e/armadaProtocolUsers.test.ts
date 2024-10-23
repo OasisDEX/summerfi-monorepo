@@ -159,7 +159,7 @@ describe('Armada Protocol Users', () => {
       })
     })
 
-    describe.only(`Vaults on ${chainInfo.name}`, () => {
+    describe(`Vaults on ${chainInfo.name}`, () => {
       it('should getVaults', async () => {
         const raw = await sdk.armada.users.getVaultsRaw({
           chainInfo,
