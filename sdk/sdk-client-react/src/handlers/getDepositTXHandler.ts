@@ -28,7 +28,7 @@ export const getDepositTXHandler =
       protocol: ArmadaProtocol.createFrom({ chainInfo }),
     })
 
-    const poolInfo = await sdk.armada.users.getVaultInfo({
+    const poolInfo = await sdk.armada.users.getPoolInfo({
       poolId,
     })
 

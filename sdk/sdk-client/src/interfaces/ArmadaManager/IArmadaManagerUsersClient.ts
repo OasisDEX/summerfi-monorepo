@@ -22,21 +22,21 @@ import {
 export interface IArmadaManagerUsersClient {
   /**
    * @method getVaultsRaw
-   * @description Retrieves all Armada pools
+   * @description Retrieves all protocol vaults
    *
    * @param chainInfo Chain information
    *
-   * @returns All Armada pools
+   * @returns All Armada vaults
    */
   getVaultsRaw(params: { chainInfo: ChainInfo }): Promise<GetVaultsQuery>
 
   /**
    * @method getVaultRaw
-   * @description Retrieves an Armada pool by its ID
+   * @description Retrieves a specific protocol vault
    *
-   * @param poolId ID of the pool to retrieve
+   * @param poolId ID of the vault
    *
-   * @returns The corresponding Armada pool
+   * @returns The corresponding Armada vault
    */
   getVaultRaw(params: { poolId: IArmadaPoolId }): Promise<GetVaultQuery>
 
@@ -48,7 +48,7 @@ export interface IArmadaManagerUsersClient {
    *
    * @returns The information of the corresponding Armada pool
    */
-  getVaultInfo(params: { poolId: IArmadaPoolId }): Promise<IArmadaPoolInfo>
+  getPoolInfo(params: { poolId: IArmadaPoolId }): Promise<IArmadaPoolInfo>
 
   /**
    * @name getUserPositions

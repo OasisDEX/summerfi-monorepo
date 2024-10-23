@@ -74,7 +74,7 @@ describe('Armada Protocol Users', () => {
       throw new Error('Missing fork url')
     }
 
-    describe.skip(`Deposit/Withdraw with ${symbol} fleet on ${chainInfo.name}`, () => {
+    describe(`Deposit/Withdraw with ${symbol} fleet on ${chainInfo.name}`, () => {
       let poolId: IArmadaPoolId
       let token: IToken
       let user: IUser

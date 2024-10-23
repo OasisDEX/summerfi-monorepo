@@ -42,13 +42,13 @@ export class ArmadaManager implements IArmadaManager {
 
   /** POOLS */
 
-  /** @see IArmadaManager.getPools */
-  async getPools(params: Parameters<IArmadaManager['getPools']>[0]) {
+  /** @see IArmadaManager.getVaults */
+  async getVaults(params: Parameters<IArmadaManager['getVaults']>[0]) {
     return this._subgraphManager.getVaults({ chainId: params.chainInfo.chainId })
   }
 
-  /** @see IArmadaManager.getPool */
-  async getPool(params: Parameters<IArmadaManager['getPool']>[0]) {
+  /** @see IArmadaManager.getVault */
+  async getVault(params: Parameters<IArmadaManager['getVault']>[0]) {
     return this._subgraphManager.getVault({
       chainId: params.poolId.chainInfo.chainId,
       vaultId: params.poolId.fleetAddress.value,

@@ -1,4 +1,4 @@
-import { ArmadaPoolId, ArmadaPositionId, ArmadaProtocol } from '@summerfi/armada-protocol-service'
+import { ArmadaPoolId, ArmadaProtocol } from '@summerfi/armada-protocol-service'
 import { type ISDKManager } from '@summerfi/sdk-client'
 import {
   Address,
@@ -28,7 +28,7 @@ export const getWithdrawTXHandler =
       protocol: ArmadaProtocol.createFrom({ chainInfo }),
     })
 
-    const poolInfo = await sdk.armada.users.getVaultInfo({
+    const poolInfo = await sdk.armada.users.getPoolInfo({
       poolId,
     })
 

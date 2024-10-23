@@ -16,8 +16,8 @@ import { updateRebalanceCooldown } from './armada-protocol-handlers/governance/u
 import { adjustBuffer } from './armada-protocol-handlers/keepers/adjustBuffer'
 import { rebalance } from './armada-protocol-handlers/keepers/rebalance'
 import { getDepositTX } from './armada-protocol-handlers/users/getDepositTX'
-import { getPools } from './armada-protocol-handlers/users/getPools'
-import { getPool } from './armada-protocol-handlers/users/getPool'
+import { getVaults } from './armada-protocol-handlers/users/getVaults'
+import { getVault } from './armada-protocol-handlers/users/getVault'
 import { getPoolInfo } from './armada-protocol-handlers/users/getPoolInfo'
 import { getPosition as getArmadaPosition } from './armada-protocol-handlers/users/getPosition'
 import { getUpdateDepositTX } from './armada-protocol-handlers/users/getUpdateDepositTX'
@@ -65,8 +65,8 @@ export const sdkAppRouter = router({
   },
   armada: {
     users: {
-      getPools: getPools,
-      getPool: getPool,
+      getVaults: getVaults,
+      getVault: getVault,
       getPoolInfo: getPoolInfo,
       getPosition: getArmadaPosition,
       getUserPositions: getUserPositions,

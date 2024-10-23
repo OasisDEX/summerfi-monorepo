@@ -11,12 +11,10 @@ export interface SubgraphConfig {
  * @implements IArmadaSubgraphManager
  */
 export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
-  private _configProvider: IConfigurationProvider
   private readonly _subgraphConfig: SubgraphConfig
 
   /** CONSTRUCTOR */
   constructor(params: { configProvider: IConfigurationProvider }) {
-    this._configProvider = params.configProvider
     const urlBase = params.configProvider.getConfigurationItem({ name: 'SUBGRAPH_BASE' })
 
     this._subgraphConfig = {

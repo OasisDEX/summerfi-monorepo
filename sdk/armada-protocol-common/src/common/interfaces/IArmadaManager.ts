@@ -15,18 +15,25 @@ import type { GetVaultQuery, GetVaultsQuery } from '@summerfi/subgraph-manager-c
 export interface IArmadaManager {
   /** POOLS */
 
-  getPools(params: { chainInfo: ChainInfo }): Promise<GetVaultsQuery>
+  /**
+   * @name getVaults
+   * @description Get all vaults in the protocol
+   *
+   * @param chainInfo Chain information
+   *
+   * @returns GetVaultsQuery
+   */
+  getVaults(params: { chainInfo: ChainInfo }): Promise<GetVaultsQuery>
 
   /**
-   * @name getPool
-   * @description Get the position of a user in the specified fleet
+   * @name getVault
+   * @description Get the specific vault
    *
    * @param poolId ID of the pool to retrieve
    *
-   * @returns IArmadaPool The pool with the specified ID
-   *
+   * @returns GetVaultQuery
    */
-  getPool(params: { poolId: IArmadaPoolId }): Promise<GetVaultQuery>
+  getVault(params: { poolId: IArmadaPoolId }): Promise<GetVaultQuery>
 
   /**
    * @name getPoolInfo

@@ -1,5 +1,4 @@
 import {
-  IArmadaPool,
   IArmadaPoolId,
   IArmadaPoolInfo,
   IArmadaPosition,
@@ -20,18 +19,18 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     super(params)
   }
 
-  /** @see IArmadaManagerUsersClient.getVaults */
-  async getVaultsRaw(params: Parameters<IArmadaManagerUsersClient['getVaults']>[0]) {
-    return this.rpcClient.armada.users.getPools.query(params)
+  /** @see IArmadaManagerUsersClient.getVaultsRaw */
+  async getVaultsRaw(params: Parameters<IArmadaManagerUsersClient['getVaultsRaw']>[0]) {
+    return this.rpcClient.armada.users.getVaults.query(params)
   }
 
-  /** @see IArmadaManagerUsersClient.getPool */
-  async getVaultRaw(params: { poolId: IArmadaPoolId }) {
-    return this.rpcClient.armada.users.getPool.query(params)
+  /** @see IArmadaManagerUsersClient.getVaultRaw */
+  async getVaultRaw(params: Parameters<IArmadaManagerUsersClient['getVaultRaw']>[0]) {
+    return this.rpcClient.armada.users.getVault.query(params)
   }
 
   /** @see IArmadaManagerUsersClient.getPoolInfo */
-  async getVaultInfo(params: { poolId: IArmadaPoolId }): Promise<IArmadaPoolInfo> {
+  async getPoolInfo(params: { poolId: IArmadaPoolId }): Promise<IArmadaPoolInfo> {
     return this.rpcClient.armada.users.getPoolInfo.query(params)
   }
 
