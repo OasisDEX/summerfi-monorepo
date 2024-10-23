@@ -1,0 +1,48 @@
+query GetFleets {
+  vaults {
+    id
+    name
+    rewardTokens {
+      id
+      token {
+        symbol
+        decimals
+      }
+    }
+    rewardTokenEmissionsUSD
+    arks {
+      id
+      inputToken {
+        name
+        symbol
+        decimals
+      }
+      fees {
+        id
+        feePercentage
+        feeType
+      }
+      createdTimestamp
+      lastUpdateTimestamp
+    }
+    inputToken {
+      name
+      symbol
+      decimals
+    }
+    outputToken {
+      name
+      symbol
+      decimals
+    }
+    outputTokenPriceUSD
+    depositLimit
+    calculatedApr
+    createdTimestamp
+    totalValueLockedUSD
+    cumulativeTotalRevenueUSD
+    cumulativeSupplySideRevenueUSD
+    cumulativeProtocolSideRevenueUSD
+    lastUpdateTimestamp
+  }
+}

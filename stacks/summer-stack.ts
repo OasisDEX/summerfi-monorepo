@@ -8,6 +8,7 @@ import { attachVPC } from './vpc'
 import { SummerStackContext } from './summer-stack-context'
 import { addRaysConfig } from './rays'
 import { addRedis } from './redis'
+import { addEarnProtocolConfig } from './earn-protocol'
 
 export function API(stackContext: StackContext) {
   const { stack } = stackContext
@@ -45,6 +46,9 @@ export function API(stackContext: StackContext) {
   addMorpho(summerContext)
   addApyConfig(summerContext)
   addRaysConfig(summerContext)
+
+  // earn protocol lambdas
+  addEarnProtocolConfig(summerContext)
 
   stack.addOutputs({
     ApiEndpoint: api.url,
