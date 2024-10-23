@@ -44,8 +44,8 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_SDK_DEPLOY }}
         with:
           args:
-            'SDK deployment started on staging ...\n (from ${{ github.ref }} by
-            ${{github.triggering_actor }}).'
+            'SDK deployment started on staging 🚀 (from branch `${{ github.ref_name }}` by
+            __${{github.triggering_actor }}__).'
 
       - name: Git clone the repository
         uses: actions/checkout@v3
