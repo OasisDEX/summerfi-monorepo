@@ -23,7 +23,7 @@ export interface IArmadaManager {
    *
    * @returns GetVaultsQuery
    */
-  getVaults(params: { chainInfo: ChainInfo }): Promise<GetVaultsQuery>
+  getVaultsRaw(params: { chainInfo: ChainInfo }): Promise<GetVaultsQuery>
 
   /**
    * @name getVault
@@ -33,7 +33,7 @@ export interface IArmadaManager {
    *
    * @returns GetVaultQuery
    */
-  getVault(params: { poolId: IArmadaPoolId }): Promise<GetVaultQuery>
+  getVaultRaw(params: { poolId: IArmadaPoolId }): Promise<GetVaultQuery>
 
   /**
    * @name getPoolInfo

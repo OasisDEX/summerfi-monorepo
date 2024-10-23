@@ -21,12 +21,12 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
 
   /** @see IArmadaManagerUsersClient.getVaultsRaw */
   async getVaultsRaw(params: Parameters<IArmadaManagerUsersClient['getVaultsRaw']>[0]) {
-    return this.rpcClient.armada.users.getVaults.query(params)
+    return this.rpcClient.armada.users.getVaultsRaw.query(params)
   }
 
   /** @see IArmadaManagerUsersClient.getVaultRaw */
   async getVaultRaw(params: Parameters<IArmadaManagerUsersClient['getVaultRaw']>[0]) {
-    return this.rpcClient.armada.users.getVault.query(params)
+    return this.rpcClient.armada.users.getVaultRaw.query(params)
   }
 
   /** @see IArmadaManagerUsersClient.getPoolInfo */
