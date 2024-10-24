@@ -1,4 +1,5 @@
-import { Card, Icon, Text } from '@summerfi/app-earn-ui'
+import { useState } from 'react'
+import { Icon, Text } from '@summerfi/app-earn-ui'
 import { type IconNamesList, type TokenSymbolsList } from '@summerfi/app-types'
 import { formatDecimalAsPercent, timeAgo } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -65,14 +66,30 @@ const dummyList: {
 ]
 
 export const PortfolioRebalanceActivityList = () => {
+  // timestamp should be unique, so can be used as id
+  const [hoveredItemTimestamp, setHoveredItemTimestamp] = useState<number>()
+
   return (
-    <Card variant="cardSecondary" className={classNames.wrapper}>
+    <div className={classNames.wrapper}>
       {dummyList.map((item) => (
-        <Link href={item.link} key={item.title + item.token + item.change + item.timestamp}>
+        <Link
+          href={item.link}
+          key={item.title + item.token + item.change + item.timestamp}
+          onMouseEnter={() => setHoveredItemTimestamp(item.timestamp)}
+          onMouseLeave={() => setHoveredItemTimestamp(undefined)}
+        >
           <div className={classNames.contentWrapper}>
             <div className={classNames.leftContentWrapper}>
               <div className={classNames.iconWrapper}>
-                <Icon iconName={item.icon} variant="s" />
+                <Icon
+                  iconName={item.icon}
+                  variant="s"
+                  color={
+                    hoveredItemTimestamp === item.timestamp
+                      ? 'rgba(210, 210, 210, 1)'
+                      : 'rgba(119, 117, 118, 1)'
+                  }
+                />
               </div>
               <div className={classNames.leftContent}>
                 <Text as="p" variant="p2semi">
@@ -96,6 +113,6 @@ export const PortfolioRebalanceActivityList = () => {
           </div>
         </Link>
       ))}
-    </Card>
+    </div>
   )
 }

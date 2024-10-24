@@ -9,6 +9,7 @@ import {
   StrategySimulationForm,
 } from '@summerfi/app-earn-ui'
 import { type DropdownRawOption, type IconNamesList, type NetworkNames } from '@summerfi/app-types'
+import { capitalize } from 'lodash-es'
 
 import { strategiesList } from '@/constants/dev-strategies-list'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
@@ -50,7 +51,7 @@ export const StrategiesListView = ({ selectedNetwork }: StrategiesListViewProps)
               localStrategyNetwork !== 'all-networks'
                 ? networkIconByNetworkName[localStrategyNetwork]
                 : 'network_ethereum',
-            label: localStrategyNetwork,
+            label: capitalize(localStrategyNetwork),
             value: localStrategyNetwork,
           }
         : allNetworksOption,
@@ -60,7 +61,7 @@ export const StrategiesListView = ({ selectedNetwork }: StrategiesListViewProps)
     () => [
       ...[...new Set(strategiesList.map(({ network }) => network))].map((network) => ({
         iconName: networkIconByNetworkName[network],
-        label: network,
+        label: capitalize(network),
         value: network,
       })),
       allNetworksOption,
