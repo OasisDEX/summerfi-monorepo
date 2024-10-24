@@ -30,7 +30,7 @@ import { getVaultsList } from '@/server-handlers/sdk/getVaultsList'
 type EarnStrategyOpenManagePageProps = {
   params: {
     vaultId: string
-    network: string
+    network: SDKNetwork
   }
 }
 
@@ -177,6 +177,14 @@ const EarnStrategyOpenManagePage = async ({ params }: EarnStrategyOpenManagePage
     }),
     getVaultsList(),
   ])
+
+  if (!selectedVault) {
+    return (
+      <Text>
+        No strategy found with the id {params.vaultId} on the network {params.network}
+      </Text>
+    )
+  }
 
   return (
     <StrategyGridPreview

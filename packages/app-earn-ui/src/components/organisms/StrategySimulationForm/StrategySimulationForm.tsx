@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { type DropdownOption, type SDKVaultType } from '@summerfi/app-types'
+import { type DropdownOption, type SDKVaultishType } from '@summerfi/app-types'
 import { formatCryptoBalance, mapNumericInput } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
@@ -11,7 +11,7 @@ import { Sidebar } from '@/components/organisms/Sidebar/Sidebar'
 import { getStrategyUrl } from '@/helpers/get-strategy-url'
 
 export type StrategySimulationFormProps = {
-  strategyData?: SDKVaultType
+  strategyData: SDKVaultishType
 }
 
 export const StrategySimulationForm = ({ strategyData }: StrategySimulationFormProps) => {

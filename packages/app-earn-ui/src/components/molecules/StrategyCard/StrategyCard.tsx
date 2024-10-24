@@ -1,4 +1,4 @@
-import { type SDKVaultType } from '@summerfi/app-types'
+import { type SDKVaultishType } from '@summerfi/app-types'
 import clsx from 'clsx'
 
 import { Card } from '@/components/atoms/Card/Card'
@@ -8,7 +8,7 @@ import { StrategyTitleWithRisk } from '@/components/molecules/StrategyTitleWithR
 
 import strategyCardStyles from './StrategyCard.module.scss'
 
-type StrategyCardProps = SDKVaultType & {
+type StrategyCardProps = SDKVaultishType & {
   onClick?: (id: string) => void
   secondary?: boolean
   selected?: boolean

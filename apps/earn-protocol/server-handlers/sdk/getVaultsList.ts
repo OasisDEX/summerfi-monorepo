@@ -15,9 +15,9 @@ export const getVaultsList = async () => {
   )
 
   // flatten the list
-  const vaultsFlatList = vaultsListByNetwork.reduce(
+  const vaultsFlatList = vaultsListByNetwork.reduce<(typeof vaultsListByNetwork)[number]['vaults']>(
     (acc, { vaults }) => [...acc, ...vaults],
-    [] as (typeof vaultsListByNetwork)[number]['vaults'],
+    [],
   )
 
   return vaultsFlatList

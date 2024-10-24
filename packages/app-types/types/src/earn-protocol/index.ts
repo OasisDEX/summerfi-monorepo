@@ -3,4 +3,5 @@ import { Network, GetVaultsQuery, GetVaultQuery } from '@summerfi/subgraph-manag
 export { Network as SDKNetwork }
 
 export type SDKVaultsListType = GetVaultsQuery['vaults']
-export type SDKVaultType = GetVaultQuery['vault']
+export type SDKVaultType = Exclude<GetVaultQuery['vault'], null | undefined>
+export type SDKVaultishType = SDKVaultType | SDKVaultsListType[number]

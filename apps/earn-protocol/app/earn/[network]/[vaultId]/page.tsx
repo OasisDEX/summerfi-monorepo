@@ -1,11 +1,11 @@
-import { type NetworkNames } from '@summerfi/app-types'
+import { type SDKNetwork } from '@summerfi/app-types'
 import { redirect } from 'next/navigation'
 
 const RedirectToStrategyDetails = ({
   params,
 }: {
   params: {
-    network: NetworkNames
+    network: SDKNetwork
     vaultId: string
   }
 }) => {

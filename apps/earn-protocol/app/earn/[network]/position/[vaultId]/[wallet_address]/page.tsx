@@ -13,7 +13,7 @@ const EarnStrategyViewWalletPage = ({ params }: EarnStrategyPreviewPageProps) =>
       variant="h2"
       style={{ textAlign: 'center', width: '100%', display: 'block', marginBottom: '100px' }}
     >
-      This is viewing {params.wallet_address} position
+      This is viewing {params.vaultId}/{params.wallet_address} position
     </Text>
   )
 }
