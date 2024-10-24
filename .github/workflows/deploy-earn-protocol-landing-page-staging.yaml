@@ -44,6 +44,7 @@ jobs:
       NEXT_PUBLIC_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }}
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
       NEXT_TELEMETRY_DISABLED: ${{ secrets.NEXT_TELEMETRY_DISABLED }}
+      SDK_API_URL: ${{ secrets.SDK_API_URL }}
 
     steps:
       - name: Check out code
