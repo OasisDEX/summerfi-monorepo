@@ -8,6 +8,7 @@ import {
   strategyDetailsYieldOptions,
   YieldOption,
 } from '@/features/strategy-details/components/StrategyDetailsYields/config'
+import { StrategyDetailsYieldSources } from '@/features/strategy-details/components/StrategyDetailsYieldSources/StrategyDetailsYieldSources'
 
 export const StrategyDetailsYields: FC = () => {
   const hash = useHash<YieldOption>()
@@ -57,6 +58,7 @@ export const StrategyDetailsYields: FC = () => {
           offer effortless and secure optimised yield, while diversifying risk.
         </Text>
         {currentYieldOption.key === YieldOption.ADVANCED_YIELD && <StrategyDetailsAdvancedYield />}
+        {currentYieldOption.key === YieldOption.YIELD_SOURCES && <StrategyDetailsYieldSources />}
       </div>
     </Card>
   )
