@@ -1,5 +1,8 @@
 query GetVaults {
   vaults {
+    protocol {
+      network
+    }
     id
     name
     rewardTokens {
@@ -49,6 +52,9 @@ query GetVaults {
 query GetVault($id: ID!) {
   vault(id: $id) {
     id
+    protocol {
+      network
+    }
     rebalances {
       amount
       vault {
