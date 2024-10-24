@@ -1,7 +1,7 @@
 import { type CSSProperties, type FC } from 'react'
 import { Icon, SlideCarousel, StrategyCard, Text } from '@summerfi/app-earn-ui'
 
-import { getVaultsList } from '@/server-handlers/sdk/getVaultsList'
+import { getVaultsList } from '@/app/server-handlers/sdk/getVaultsList'
 
 interface PortfolioStrategiesCarouselProps {
   style?: CSSProperties

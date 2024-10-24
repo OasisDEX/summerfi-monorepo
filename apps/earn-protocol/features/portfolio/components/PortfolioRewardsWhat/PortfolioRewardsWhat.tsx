@@ -2,9 +2,9 @@ import { type FC, useMemo } from 'react'
 import { Card, Table, Text, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
+import type { PortfolioRewardsRawData } from '@/app/server-handlers/portfolio/portfolio-rewards-handler'
 import { sumrRewardsColumns } from '@/features/portfolio/components/PortfolioRewardsWhat/columns'
 import { portfolioRewardsMapper } from '@/features/portfolio/components/PortfolioRewardsWhat/mapper'
-import type { PortfolioRewardsRawData } from '@/server-handlers/portfolio/portfolio-rewards-handler'
 
 import classNames from './PortfolioRewardsWhat.module.scss'
 

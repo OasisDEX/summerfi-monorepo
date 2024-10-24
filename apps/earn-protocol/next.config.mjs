@@ -11,6 +11,9 @@ const nextConfig = {
 
     return config
   },
+  experimental: {
+    serverComponentsExternalPackages: ['@summerfi/sdk-client', '@summerfi/sdk-common'],
+  },
   sassOptions: {
     prependData: `
         @import './node_modules/include-media/dist/_include-media.scss';

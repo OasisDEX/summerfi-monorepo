@@ -1,5 +1,7 @@
+import { getVaultsList } from '@/app/server-handlers/sdk/getVaultsList'
 import { StrategiesListView } from '@/components/layout/StrategiesListView/StrategiesListView'
-import { getVaultsList } from '@/server-handlers/sdk/getVaultsList'
+
+export const dynamic = 'force-dynamic'
 
 const EarnAllStrategiesPage = async () => {
   const strategiesList = await getVaultsList()

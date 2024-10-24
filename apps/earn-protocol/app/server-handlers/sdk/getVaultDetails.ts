@@ -2,15 +2,15 @@ import { type SDKVaultType } from '@summerfi/app-types'
 import { ArmadaVaultId } from '@summerfi/armada-protocol-service'
 import { Address, type ChainId, getChainInfoByChainId } from '@summerfi/sdk-common'
 
-import { backendSDK } from '@/helpers/sdk/sdk-backend-client'
+import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 
-export const getVaultDetails = async ({
+export async function getVaultDetails({
   chainId,
   vaultAddress,
 }: {
   chainId: ChainId
   vaultAddress: string
-}) => {
+}) {
   try {
     const chainInfo = getChainInfoByChainId(chainId)
 

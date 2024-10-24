@@ -3,13 +3,13 @@
 import { type FC } from 'react'
 import { TabBar } from '@summerfi/app-earn-ui'
 
+import { type PortfolioRewardsRawData } from '@/app/server-handlers/portfolio/portfolio-rewards-handler'
+import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { PortfolioHeader } from '@/features/portfolio/components/PortfolioHeader/PortfolioHeader'
 import { PortfolioOverview } from '@/features/portfolio/components/PortfolioOverview/PortfolioOverview'
 import { PortfolioRebalanceActivity } from '@/features/portfolio/components/PortfolioRebalanceActivity/PortfolioRebalanceActivity'
 import { PortfolioRewards } from '@/features/portfolio/components/PortfolioRewards/PortfolioRewards'
 import { PortfolioWallet } from '@/features/portfolio/components/PortfolioWallet/PortfolioWallet'
-import { type PortfolioRewardsRawData } from '@/server-handlers/portfolio/portfolio-rewards-handler'
-import { type PortfolioAssetsResponse } from '@/server-handlers/portfolio/portfolio-wallet-assets-handler'
 
 interface PortfolioPageViewProps {
   walletAddress: string

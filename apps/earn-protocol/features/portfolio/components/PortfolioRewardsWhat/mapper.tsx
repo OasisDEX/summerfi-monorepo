@@ -2,7 +2,7 @@ import { Icon, TableCellText } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
-import { type PortfolioRewardsRawData } from '@/server-handlers/portfolio/portfolio-rewards-handler'
+import { type PortfolioRewardsRawData } from '@/app/server-handlers/portfolio/portfolio-rewards-handler'
 
 export const portfolioRewardsMapper = (rawData: PortfolioRewardsRawData[]) => {
   return rawData.map((item) => {

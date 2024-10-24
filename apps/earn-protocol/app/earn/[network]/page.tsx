@@ -1,7 +1,9 @@
 import { type SDKNetwork } from '@summerfi/app-types'
 
+import { getVaultsList } from '@/app/server-handlers/sdk/getVaultsList'
 import { StrategiesListView } from '@/components/layout/StrategiesListView/StrategiesListView'
-import { getVaultsList } from '@/server-handlers/sdk/getVaultsList'
+
+export const dynamic = 'force-dynamic'
 
 type EarnNetworkStrategiesPageProps = {
   params: {

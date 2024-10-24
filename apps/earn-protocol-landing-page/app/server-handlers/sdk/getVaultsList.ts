@@ -1,9 +1,9 @@
+import { sdkSupportedNetworks } from '@summerfi/app-types'
 import { getChainInfoByChainId } from '@summerfi/sdk-common'
 
-import { backendSDK } from '@/helpers/sdk-backend-client'
-import { sdkSupportedNetworks } from '@/server-handlers/sdk/constants/sdk-supported-networks'
+import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
 
-export const getVaultsList = async () => {
+export async function getVaultsList() {
   const vaultsListByNetwork = await Promise.all(
     sdkSupportedNetworks.map((networkId) => {
       const chainInfo = getChainInfoByChainId(networkId)

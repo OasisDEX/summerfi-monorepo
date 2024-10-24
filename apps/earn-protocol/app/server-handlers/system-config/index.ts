@@ -1,4 +1,4 @@
-import { configFetcher } from '@/server-handlers/system-config/calls/config'
+import { configFetcher } from '@/app/server-handlers/system-config/calls/config'
 
 const systemConfigHandler = async () => {
   try {

@@ -1,6 +1,6 @@
+import { portfolioRewardsHandler } from '@/app/server-handlers/portfolio/portfolio-rewards-handler'
+import { portfolioWalletAssetsHandler } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { PortfolioPageView } from '@/components/layout/PortfolioPageView/PortfolioPageView'
-import { portfolioRewardsHandler } from '@/server-handlers/portfolio/portfolio-rewards-handler'
-import { portfolioWalletAssetsHandler } from '@/server-handlers/portfolio/portfolio-wallet-assets-handler'
 
 type PortfolioPageProps = {
   params: {

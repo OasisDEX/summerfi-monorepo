@@ -9,6 +9,8 @@ import {
 import { type SDKNetwork } from '@summerfi/app-types'
 import Link from 'next/link'
 
+import { getVaultDetails } from '@/app/server-handlers/sdk/getVaultDetails'
+import { getVaultsList } from '@/app/server-handlers/sdk/getVaultsList'
 import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
 import FormContainer from '@/components/organisms/Form/FormContainer'
 import {
@@ -24,8 +26,8 @@ import {
   type UserActivityRawData,
 } from '@/components/organisms/UserActivity/UserActivity'
 import type { FleetConfig } from '@/helpers/sdk/types'
-import { getVaultDetails } from '@/server-handlers/sdk/getVaultDetails'
-import { getVaultsList } from '@/server-handlers/sdk/getVaultsList'
+
+export const dynamic = 'force-dynamic'
 
 type EarnStrategyOpenManagePageProps = {
   params: {
