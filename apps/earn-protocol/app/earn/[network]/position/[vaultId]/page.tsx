@@ -27,8 +27,6 @@ import {
 } from '@/components/organisms/UserActivity/UserActivity'
 import type { FleetConfig } from '@/helpers/sdk/types'
 
-export const dynamic = 'force-dynamic'
-
 type EarnStrategyOpenManagePageProps = {
   params: {
     vaultId: string
@@ -168,6 +166,8 @@ const detailsLinks = [
     id: 'faq',
   },
 ]
+
+export const revalidate = 60
 
 const EarnStrategyOpenManagePage = async ({ params }: EarnStrategyOpenManagePageProps) => {
   const networkId = subgraphNetworkToId(params.network as SDKNetwork)

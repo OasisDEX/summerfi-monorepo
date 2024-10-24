@@ -1,7 +1,7 @@
 import { getVaultsList } from '@/app/server-handlers/sdk/getVaultsList'
 import { LandingPageContent } from '@/components/layout/LandingPageContent/LandingPageContent'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 export default async function HomePage() {
   const strategiesList = await getVaultsList()

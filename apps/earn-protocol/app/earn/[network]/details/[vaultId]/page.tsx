@@ -11,7 +11,7 @@ type EarnStrategyDetailsPageProps = {
   }
 }
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 const EarnStrategyDetailsPage = async ({ params }: EarnStrategyDetailsPageProps) => {
   const networkId = subgraphNetworkToId(params.network)
