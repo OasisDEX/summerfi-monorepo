@@ -12,7 +12,7 @@ const RedirectToStrategyDetails = ({
   const { network, vaultId: strategyId } = params
 
   // redirect to strategy position page
-  redirect(`/earn/${network}/position/${strategyId}`)
+  redirect(`/earn/${network.toLowerCase()}/position/${strategyId}`)
 }
 
 export default RedirectToStrategyDetails

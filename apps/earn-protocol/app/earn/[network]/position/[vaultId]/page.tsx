@@ -1,4 +1,12 @@
-import { Expander, StrategyGridPreview, Text, WithArrow } from '@summerfi/app-earn-ui'
+import {
+  Expander,
+  getStrategyUrl,
+  StrategyGridPreview,
+  subgraphNetworkToId,
+  Text,
+  WithArrow,
+} from '@summerfi/app-earn-ui'
+import { type SDKNetwork } from '@summerfi/app-types'
 import Link from 'next/link'
 
 import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
@@ -15,7 +23,6 @@ import {
   UserActivity,
   type UserActivityRawData,
 } from '@/components/organisms/UserActivity/UserActivity'
-import { networksByName } from '@/constants/networks-list'
 import type { FleetConfig } from '@/helpers/sdk/types'
 import { getVaultDetails } from '@/server-handlers/sdk/getVaultDetails'
 import { getVaultsList } from '@/server-handlers/sdk/getVaultsList'
@@ -161,7 +168,8 @@ const detailsLinks = [
 ]
 
 const EarnStrategyOpenManagePage = async ({ params }: EarnStrategyOpenManagePageProps) => {
-  const networkId = networksByName[params.network].id
+  const networkId = subgraphNetworkToId(params.network as SDKNetwork)
+
   const [selectedVault, strategiesList] = await Promise.all([
     getVaultDetails({
       vaultAddress: params.vaultId,
@@ -207,11 +215,8 @@ const EarnStrategyOpenManagePage = async ({ params }: EarnStrategyOpenManagePage
                 justifyContent: 'space-between',
               }}
             >
-              {detailsLinks.map(({ label, id }) => (
-                <Link
-                  key={label}
-                  href={`/earn/${selectedVault.protocol.network}/details/${selectedVault.id}#${id}`}
-                >
+              {detailsLinks.map(({ label }) => (
+                <Link key={label} href={getStrategyUrl(selectedVault)}>
                   <Text
                     as="p"
                     variant="p3semi"

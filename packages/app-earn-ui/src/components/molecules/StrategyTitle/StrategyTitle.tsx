@@ -2,7 +2,7 @@ import { type FC, type ReactNode } from 'react'
 import {
   NetworkIds,
   NetworkNames,
-  type SDKVaultsListType,
+  type SDKVaultType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
 
@@ -26,7 +26,7 @@ const networkNameIconMap = {
 }
 
 interface StrategyTitleProps {
-  symbol: SDKVaultsListType[number]['inputToken']['symbol']
+  symbol: SDKVaultType['inputToken']['symbol']
   networkId?: NetworkIds
   networkName?: NetworkNames
   value?: ReactNode

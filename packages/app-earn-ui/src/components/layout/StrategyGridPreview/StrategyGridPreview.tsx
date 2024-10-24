@@ -1,7 +1,7 @@
 'use client'
 
 import { type FC, type ReactNode } from 'react'
-import { type SDKVaultsListType } from '@summerfi/app-types'
+import { type SDKVaultsListType, type SDKVaultType } from '@summerfi/app-types'
 import Link from 'next/link'
 
 import { Box } from '@/components/atoms/Box/Box'
@@ -16,7 +16,7 @@ import { StrategyTitleWithRisk } from '@/components/molecules/StrategyTitleWithR
 import strategyGridPreviewStyles from './StrategyGridPreview.module.scss'
 
 interface StrategyGridPreviewProps {
-  strategy: SDKVaultsListType[number]
+  strategy: SDKVaultType
   strategies: SDKVaultsListType
   leftContent: ReactNode
   rightContent: ReactNode

@@ -1,13 +1,14 @@
 'use client'
 
 import { type ReactNode } from 'react'
-import { type SDKVaultsListType } from '@summerfi/app-types'
+import { type SDKVaultType } from '@summerfi/app-types'
 import Link from 'next/link'
 
 import { Button } from '@/components/atoms/Button/Button'
 import { Text } from '@/components/atoms/Text/Text'
 import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
 import { StrategyTitleWithRisk } from '@/components/molecules/StrategyTitleWithRisk/StrategyTitleWithRisk'
+import { getStrategyUrl } from '@/helpers/get-strategy-url'
 
 import strategyGridDetailsStyles from './StrategyGridDetails.module.scss'
 
@@ -15,7 +16,7 @@ export const StrategyGridDetails = ({
   strategy,
   children,
 }: {
-  strategy: SDKVaultsListType[number]
+  strategy: SDKVaultType
   children: ReactNode
 }) => {
   return (
@@ -27,7 +28,7 @@ export const StrategyGridDetails = ({
               Earn /
             </Text>
           </Link>
-          <Link href={`/earn/${strategy.protocol.network}/position/${strategy.id}`}>
+          <Link href={getStrategyUrl(strategy)}>
             <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
               {' '}
               {strategy.id}{' '}

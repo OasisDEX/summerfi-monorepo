@@ -1,9 +1,10 @@
 'use client'
 import { type ChangeEvent, useState } from 'react'
-import { Sidebar, SidebarFootnote, sidebarFootnote } from '@summerfi/app-earn-ui'
+import { getStrategyUrl, Sidebar, SidebarFootnote, sidebarFootnote } from '@summerfi/app-earn-ui'
 import {
   type DropdownOption,
   type SDKVaultsListType,
+  type SDKVaultType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
 import { formatCryptoBalance, mapNumericInput } from '@summerfi/app-utils'
@@ -19,14 +20,8 @@ enum Action {
 
 export type FormProps = {
   fleetConfig: FleetConfig
-  selectedStrategyData?: SDKVaultsListType[number]
+  selectedStrategyData?: SDKVaultType
   strategiesList: SDKVaultsListType
-}
-
-const getStrategyUrl = (selectedStrategy?: SDKVaultsListType[number]) => {
-  if (!selectedStrategy) return ''
-
-  return `/earn/${selectedStrategy.protocol.network}/open/${selectedStrategy.id}`
 }
 
 const Form = ({ fleetConfig: _fleetConfig, selectedStrategyData, strategiesList }: FormProps) => {

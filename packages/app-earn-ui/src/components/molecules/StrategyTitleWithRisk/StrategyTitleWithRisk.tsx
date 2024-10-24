@@ -3,7 +3,7 @@ import {
   type NetworkIds,
   type NetworkNames,
   type Risk,
-  type SDKVaultsListType,
+  type SDKVaultType,
 } from '@summerfi/app-types'
 import { capitalize } from 'lodash-es'
 
@@ -14,9 +14,9 @@ import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { riskColors } from '@/helpers/risk-colors.ts'
 
 interface StrategyTitleWithRiskProps {
-  symbol: SDKVaultsListType[number]['inputToken']['symbol']
+  symbol: SDKVaultType['inputToken']['symbol']
   networkId?: NetworkIds
-  networkName?: SDKVaultsListType[number]['protocol']['network']
+  networkName?: SDKVaultType['protocol']['network']
   risk: Risk
 }
 

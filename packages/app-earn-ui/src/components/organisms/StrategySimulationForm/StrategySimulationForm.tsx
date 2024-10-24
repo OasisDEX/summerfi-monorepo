@@ -1,22 +1,17 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { type DropdownOption, type SDKVaultsListType } from '@summerfi/app-types'
+import { type DropdownOption, type SDKVaultType } from '@summerfi/app-types'
 import { formatCryptoBalance, mapNumericInput } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
 import { sidebarFootnote } from '@/common/sidebar/footnote'
 import { SidebarFootnote } from '@/components/molecules/SidebarFootnote/SidebarFootnote'
 import { Sidebar } from '@/components/organisms/Sidebar/Sidebar'
+import { getStrategyUrl } from '@/helpers/get-strategy-url'
 
 export type StrategySimulationFormProps = {
-  strategyData?: SDKVaultsListType[number]
-}
-
-const getStrategyUrl = (selectedStrategy: StrategySimulationFormProps['strategyData']) => {
-  if (!selectedStrategy) return ''
-
-  return `/earn/${selectedStrategy.protocol.network}/position/${selectedStrategy.id}`
+  strategyData?: SDKVaultType
 }
 
 export const StrategySimulationForm = ({ strategyData }: StrategySimulationFormProps) => {

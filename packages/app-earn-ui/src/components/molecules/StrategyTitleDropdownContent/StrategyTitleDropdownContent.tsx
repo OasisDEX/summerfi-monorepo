@@ -1,16 +1,17 @@
 import type { FC } from 'react'
-import { SDKNetwork, type SDKVaultsListType, type TokenSymbolsList } from '@summerfi/app-types'
+import { SDKNetwork, type SDKVaultType, type TokenSymbolsList } from '@summerfi/app-types'
 import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
 import { Icon } from '@/components/atoms/Icon/Icon.tsx'
 import { Text } from '@/components/atoms/Text/Text.tsx'
+import { getStrategyUrl } from '@/helpers/get-strategy-url'
 import { riskColors } from '@/helpers/risk-colors.ts'
 
 import classNames from './StrategyTitleDropdownContent.module.scss'
 
 interface StrategyDropdownContentProps {
-  strategy: SDKVaultsListType[number]
+  strategy: SDKVaultType
 }
 
 const networkNameIconMap = {
@@ -19,7 +20,7 @@ const networkNameIconMap = {
 }
 
 export const StrategyTitleDropdownContent: FC<StrategyDropdownContentProps> = ({ strategy }) => (
-  <Link href={`/earn/${strategy.protocol.network}/position/${strategy.id}`}>
+  <Link href={getStrategyUrl(strategy)}>
     <div className={classNames.wrapper}>
       <div className={classNames.iconWithSymbolWrapper}>
         <Icon tokenName={strategy.inputToken.symbol as TokenSymbolsList} variant="m" />
