@@ -1,4 +1,4 @@
-import { type EarnProtocolStrategy } from '@summerfi/app-types'
+import { type SDKVaultsListType } from '@summerfi/app-types'
 import clsx from 'clsx'
 
 import { Card } from '@/components/atoms/Card/Card'
@@ -8,7 +8,7 @@ import { StrategyTitleWithRisk } from '@/components/molecules/StrategyTitleWithR
 
 import strategyCardStyles from './StrategyCard.module.scss'
 
-type StrategyCardProps = EarnProtocolStrategy & {
+type StrategyCardProps = SDKVaultsListType[number] & {
   onClick?: (id: string) => void
   secondary?: boolean
   selected?: boolean
@@ -18,13 +18,9 @@ type StrategyCardProps = EarnProtocolStrategy & {
 
 export const StrategyCard = ({
   id,
-  symbol,
-  network,
-  risk,
-  bestFor,
-  tokenBonus,
-  apy,
-  totalAssets,
+  protocol,
+  inputToken,
+  totalValueLockedUSD,
   withHover,
   secondary = false,
   selected = false,
@@ -49,9 +45,13 @@ export const StrategyCard = ({
         variant={secondary ? 'cardSecondary' : 'cardPrimary'}
       >
         <div className={strategyCardStyles.strategyCardHeaderWrapper}>
-          <StrategyTitleWithRisk symbol={symbol} risk={risk} networkName={network} />
+          <StrategyTitleWithRisk
+            symbol={inputToken.symbol}
+            risk="low"
+            networkName={protocol.network}
+          />
           <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-            <BonusLabel tokenBonus={tokenBonus} apy={apy} />
+            <BonusLabel tokenBonus="some" apy="thing" />
           </Text>
         </div>
         <div className={strategyCardStyles.strategyCardAssetsWrapper}>
@@ -59,13 +59,15 @@ export const StrategyCard = ({
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
               Total assets
             </Text>
-            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>${totalAssets}</Text>
+            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+              ${totalValueLockedUSD}
+            </Text>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
               Best for
             </Text>
-            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>{bestFor}</Text>
+            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>bestFor</Text>
           </div>
         </div>
       </Card>

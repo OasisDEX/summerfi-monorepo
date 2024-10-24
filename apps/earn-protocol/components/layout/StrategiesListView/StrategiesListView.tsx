@@ -8,15 +8,19 @@ import {
   StrategyGrid,
   StrategySimulationForm,
 } from '@summerfi/app-earn-ui'
-import { type DropdownRawOption, type IconNamesList, type NetworkNames } from '@summerfi/app-types'
+import {
+  type DropdownRawOption,
+  type IconNamesList,
+  type SDKNetwork,
+  type SDKVaultsListType,
+} from '@summerfi/app-types'
 import { capitalize } from 'lodash-es'
 
-import { strategiesList } from '@/constants/dev-strategies-list'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 
 type StrategiesListViewProps = {
-  selectedNetwork?: NetworkNames | 'all-networks'
-  selectedStrategyId?: string
+  strategiesList: SDKVaultsListType
+  selectedNetwork?: SDKNetwork | 'all-networks'
 }
 
 const allNetworksOption = {
@@ -29,16 +33,19 @@ const softRouterPush = (url: string) => {
   window.history.pushState(null, '', url)
 }
 
-export const StrategiesListView = ({ selectedNetwork }: StrategiesListViewProps) => {
+export const StrategiesListView = ({
+  selectedNetwork,
+  strategiesList,
+}: StrategiesListViewProps) => {
   const [localStrategyNetwork, setLocalStrategyNetwork] =
     useState<StrategiesListViewProps['selectedNetwork']>(selectedNetwork)
 
   const networkFilteredStrategies = useMemo(
     () =>
       localStrategyNetwork && localStrategyNetwork !== 'all-networks'
-        ? strategiesList.filter((strategy) => strategy.network === localStrategyNetwork)
+        ? strategiesList.filter((strategy) => strategy.protocol.network === localStrategyNetwork)
         : strategiesList,
-    [localStrategyNetwork],
+    [localStrategyNetwork, strategiesList],
   )
 
   const [strategyId, setStrategyId] = useState<string | undefined>(networkFilteredStrategies[0].id)
@@ -49,7 +56,7 @@ export const StrategiesListView = ({ selectedNetwork }: StrategiesListViewProps)
         ? {
             iconName:
               localStrategyNetwork !== 'all-networks'
-                ? networkIconByNetworkName[localStrategyNetwork]
+                ? (networkIconByNetworkName[localStrategyNetwork] as IconNamesList)
                 : 'network_ethereum',
             label: capitalize(localStrategyNetwork),
             value: localStrategyNetwork,
@@ -59,19 +66,19 @@ export const StrategiesListView = ({ selectedNetwork }: StrategiesListViewProps)
   )
   const strategiesNetworksList = useMemo(
     () => [
-      ...[...new Set(strategiesList.map(({ network }) => network))].map((network) => ({
-        iconName: networkIconByNetworkName[network],
-        label: capitalize(network),
+      ...[...new Set(strategiesList.map(({ protocol }) => protocol.network))].map((network) => ({
+        iconName: networkIconByNetworkName[network] as IconNamesList,
+        label: network,
         value: network,
       })),
       allNetworksOption,
     ],
-    [],
+    [strategiesList],
   )
 
   const selectedStrategyData = useMemo(
     () => strategiesList.find((strategy) => strategy.id === strategyId),
-    [strategyId],
+    [strategiesList, strategyId],
   )
 
   const handleChangeNetwork = (selected: DropdownRawOption) => {
@@ -83,7 +90,7 @@ export const StrategiesListView = ({ selectedNetwork }: StrategiesListViewProps)
         break
 
       default:
-        if (selectedStrategyData && selectedStrategyData.network !== selected.value) {
+        if (selectedStrategyData && selectedStrategyData.protocol.network !== selected.value) {
           setStrategyId(undefined)
         }
         softRouterPush(`/earn/${selected.value}`)

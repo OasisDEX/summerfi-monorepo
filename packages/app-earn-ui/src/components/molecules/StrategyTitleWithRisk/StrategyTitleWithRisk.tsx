@@ -3,7 +3,7 @@ import {
   type NetworkIds,
   type NetworkNames,
   type Risk,
-  type TokenSymbolsList,
+  type SDKVaultsListType,
 } from '@summerfi/app-types'
 import { capitalize } from 'lodash-es'
 
@@ -14,9 +14,9 @@ import { Tooltip } from '@/components/molecules/Tooltip/Tooltip'
 import { riskColors } from '@/helpers/risk-colors.ts'
 
 interface StrategyTitleWithRiskProps {
-  symbol: TokenSymbolsList
+  symbol: SDKVaultsListType[number]['inputToken']['symbol']
   networkId?: NetworkIds
-  networkName?: NetworkNames
+  networkName?: SDKVaultsListType[number]['protocol']['network']
   risk: Risk
 }
 
@@ -32,7 +32,8 @@ export const StrategyTitleWithRisk: FC<StrategyTitleWithRiskProps> = ({
     <StrategyTitle
       symbol={symbol}
       networkId={networkId}
-      networkName={networkName}
+      /* networkName should work 99% of the time, because SDKVault returns very similar results for that */
+      networkName={networkName as unknown as NetworkNames}
       value={
         <>
           <Text as="p" variant="p3" style={{ color }}>

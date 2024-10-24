@@ -1,7 +1,7 @@
 'use client'
 
 import { type ReactNode } from 'react'
-import { type EarnProtocolStrategy } from '@summerfi/app-types'
+import { type SDKVaultsListType } from '@summerfi/app-types'
 import Link from 'next/link'
 
 import { Button } from '@/components/atoms/Button/Button'
@@ -15,7 +15,7 @@ export const StrategyGridDetails = ({
   strategy,
   children,
 }: {
-  strategy: EarnProtocolStrategy
+  strategy: SDKVaultsListType[number]
   children: ReactNode
 }) => {
   return (
@@ -27,7 +27,7 @@ export const StrategyGridDetails = ({
               Earn /
             </Text>
           </Link>
-          <Link href={`/earn/${strategy.network}/position/${strategy.id}`}>
+          <Link href={`/earn/${strategy.protocol.network}/position/${strategy.id}`}>
             <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
               {' '}
               {strategy.id}{' '}
@@ -41,9 +41,9 @@ export const StrategyGridDetails = ({
       <div className={strategyGridDetailsStyles.strategyGridDetailsWrapper}>
         <div className={strategyGridDetailsStyles.strategyGridDetailsHeaderWrapper}>
           <StrategyTitleWithRisk
-            symbol={strategy.symbol}
-            risk={strategy.risk}
-            networkName={strategy.network}
+            symbol={strategy.inputToken.symbol}
+            risk="low"
+            networkName={strategy.protocol.network}
           />
           <Button variant="primarySmall" style={{ height: '48px', paddingRight: '40px' }}>
             <Link href="/">

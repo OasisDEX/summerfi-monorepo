@@ -1,6 +1,3 @@
-'use client'
-
-import { useMemo } from 'react'
 import { Expander, StrategyGridPreview, Text, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
@@ -18,12 +15,15 @@ import {
   UserActivity,
   type UserActivityRawData,
 } from '@/components/organisms/UserActivity/UserActivity'
-import { strategiesList } from '@/constants/dev-strategies-list'
+import { networksByName } from '@/constants/networks-list'
 import type { FleetConfig } from '@/helpers/sdk/types'
+import { getVaultDetails } from '@/server-handlers/sdk/getVaultDetails'
+import { getVaultsList } from '@/server-handlers/sdk/getVaultsList'
 
-type EarnStrategyPreviewPageProps = {
+type EarnStrategyOpenManagePageProps = {
   params: {
-    strategy_id: string
+    vaultId: string
+    network: string
   }
 }
 
@@ -160,14 +160,19 @@ const detailsLinks = [
   },
 ]
 
-const EarnStrategyOpenManagePage = ({ params }: EarnStrategyPreviewPageProps) => {
-  const selectedStrategyData = useMemo(() => {
-    return strategiesList.find((strategy) => strategy.id === params.strategy_id)
-  }, [params])
+const EarnStrategyOpenManagePage = async ({ params }: EarnStrategyOpenManagePageProps) => {
+  const networkId = networksByName[params.network].id
+  const [selectedVault, strategiesList] = await Promise.all([
+    getVaultDetails({
+      vaultAddress: params.vaultId,
+      chainId: networkId,
+    }),
+    getVaultsList(),
+  ])
 
   return (
     <StrategyGridPreview
-      strategy={selectedStrategyData as (typeof strategiesList)[number]}
+      strategy={selectedVault}
       strategies={strategiesList}
       leftContent={
         <div
@@ -205,7 +210,7 @@ const EarnStrategyOpenManagePage = ({ params }: EarnStrategyPreviewPageProps) =>
               {detailsLinks.map(({ label, id }) => (
                 <Link
                   key={label}
-                  href={`/earn/${selectedStrategyData?.network}/details/${selectedStrategyData?.id}#${id}`}
+                  href={`/earn/${selectedVault.protocol.network}/details/${selectedVault.id}#${id}`}
                 >
                   <Text
                     as="p"
@@ -266,7 +271,11 @@ const EarnStrategyOpenManagePage = ({ params }: EarnStrategyPreviewPageProps) =>
         </div>
       }
       rightContent={
-        <FormContainer fleetConfig={fleetConfig} selectedStrategyData={selectedStrategyData} />
+        <FormContainer
+          fleetConfig={fleetConfig}
+          selectedStrategyData={selectedVault}
+          strategiesList={strategiesList}
+        />
       }
     />
   )

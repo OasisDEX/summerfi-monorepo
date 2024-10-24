@@ -1,7 +1,7 @@
 'use client'
 
 import { type FC, type ReactNode } from 'react'
-import { type EarnProtocolStrategy } from '@summerfi/app-types'
+import { type SDKVaultsListType } from '@summerfi/app-types'
 import Link from 'next/link'
 
 import { Box } from '@/components/atoms/Box/Box'
@@ -16,8 +16,8 @@ import { StrategyTitleWithRisk } from '@/components/molecules/StrategyTitleWithR
 import strategyGridPreviewStyles from './StrategyGridPreview.module.scss'
 
 interface StrategyGridPreviewProps {
-  strategy: EarnProtocolStrategy
-  strategies: EarnProtocolStrategy[]
+  strategy: SDKVaultsListType[number]
+  strategies: SDKVaultsListType
   leftContent: ReactNode
   rightContent: ReactNode
 }
@@ -56,9 +56,9 @@ export const StrategyGridPreview: FC<StrategyGridPreviewProps> = ({
               }}
             >
               <StrategyTitleWithRisk
-                symbol={strategy.symbol}
-                risk={strategy.risk}
-                networkName={strategy.network}
+                symbol={strategy.inputToken.symbol}
+                risk="low"
+                networkName={strategy.protocol.network}
               />
             </Dropdown>
             <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
@@ -76,7 +76,7 @@ export const StrategyGridPreview: FC<StrategyGridPreviewProps> = ({
                 size="large"
                 titleSize="small"
                 title="30d APY"
-                value={`${strategy.apy}%`}
+                value={`${strategy.calculatedApr}%`}
                 subValue="+2.1% Median DeFi Yield"
                 subValueType="positive"
                 subValueSize="small"
@@ -87,7 +87,7 @@ export const StrategyGridPreview: FC<StrategyGridPreviewProps> = ({
                 size="large"
                 titleSize="small"
                 title="Current APY"
-                value={`${strategy.apy}%`}
+                value={`${strategy.calculatedApr}%`}
                 subValue="+1.7% Median DeFi Yield"
                 subValueType="positive"
                 subValueSize="small"
@@ -103,7 +103,7 @@ export const StrategyGridPreview: FC<StrategyGridPreviewProps> = ({
                 titleSize="small"
                 title="Assets in strategy"
                 value="$232m"
-                subValue={`231,232,321.01 ${strategy.symbol}`}
+                subValue={`231,232,321.01 ${strategy.inputToken.symbol}`}
                 subValueSize="small"
               />
             </Box>

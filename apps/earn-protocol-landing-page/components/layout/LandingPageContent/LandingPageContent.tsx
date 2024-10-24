@@ -1,11 +1,11 @@
 import { Carousel, Text } from '@summerfi/app-earn-ui'
+import { type SDKVaultsListType } from '@summerfi/app-types'
 
 import { LandingPageStrategyPicker } from '@/components/organisms/LandingPageStrategyPicker/LandingPageStrategyPicker'
-import { strategiesList } from '@/constants/dev-strategies-list'
 
 import classNames from '@/components/layout/LandingPageContent/LandingPageContent.module.scss'
 
-export const LandingPageContent = () => {
+export const LandingPageContent = ({ strategiesList }: { strategiesList: SDKVaultsListType }) => {
   return (
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <div className={classNames.pageHeader}>

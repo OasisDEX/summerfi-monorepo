@@ -16,6 +16,7 @@
     "@summerfi/app-types": "workspace:*",
     "@summerfi/app-utils": "workspace:*",
     "@summerfi/serverless-shared": "workspace:*",
+    "@summerfi/sdk-common": "workspace:*",
     "@summerfi/sdk-client": "workspace:^",
     "@tabler/icons-react": "^3.19.0",
     "browser-detect": "^0.2.28",

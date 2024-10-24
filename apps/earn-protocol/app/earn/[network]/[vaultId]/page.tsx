@@ -6,10 +6,10 @@ const RedirectToStrategyDetails = ({
 }: {
   params: {
     network: NetworkNames
-    strategy_id: string
+    vaultId: string
   }
 }) => {
-  const { network, strategy_id: strategyId } = params
+  const { network, vaultId: strategyId } = params
 
   // redirect to strategy position page
   redirect(`/earn/${network}/position/${strategyId}`)

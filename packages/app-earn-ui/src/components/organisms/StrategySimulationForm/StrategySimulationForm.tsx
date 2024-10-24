@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { type DropdownOption, type EarnProtocolStrategy } from '@summerfi/app-types'
+import { type DropdownOption, type SDKVaultsListType } from '@summerfi/app-types'
 import { formatCryptoBalance, mapNumericInput } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
@@ -10,13 +10,13 @@ import { SidebarFootnote } from '@/components/molecules/SidebarFootnote/SidebarF
 import { Sidebar } from '@/components/organisms/Sidebar/Sidebar'
 
 export type StrategySimulationFormProps = {
-  strategyData?: EarnProtocolStrategy
+  strategyData?: SDKVaultsListType[number]
 }
 
 const getStrategyUrl = (selectedStrategy: StrategySimulationFormProps['strategyData']) => {
   if (!selectedStrategy) return ''
 
-  return `/earn/${selectedStrategy.network}/position/${selectedStrategy.id}`
+  return `/earn/${selectedStrategy.protocol.network}/position/${selectedStrategy.id}`
 }
 
 export const StrategySimulationForm = ({ strategyData }: StrategySimulationFormProps) => {
@@ -29,21 +29,21 @@ export const StrategySimulationForm = ({ strategyData }: StrategySimulationFormP
   }
 
   const estimatedEarnings = useMemo(() => {
-    if (!strategyData?.apy) return 0
+    if (!strategyData?.calculatedApr) return 0
 
-    return Number(inputValue.replaceAll(',', '')) * Number(strategyData.apy)
+    return Number(inputValue.replaceAll(',', '')) * Number(strategyData?.calculatedApr)
   }, [strategyData, inputValue])
 
   const dropdownLockedValue = useMemo(() => {
     return {
-      tokenSymbol: strategyData?.symbol,
-      label: strategyData?.symbol,
-      value: strategyData?.symbol,
+      tokenSymbol: strategyData?.inputToken.symbol,
+      label: strategyData?.inputToken.symbol,
+      value: strategyData?.inputToken.symbol,
     } as DropdownOption
   }, [strategyData])
 
   const balance = new BigNumber(123123)
-  const token = strategyData?.symbol
+  const token = strategyData?.inputToken.symbol
 
   return (
     <Sidebar
@@ -60,7 +60,7 @@ export const StrategySimulationForm = ({ strategyData }: StrategySimulationFormP
         handleInputChange,
         banner: {
           title: 'Estimated earnings after 1 year',
-          value: `${estimatedEarnings} ${strategyData?.symbol}`,
+          value: `${estimatedEarnings} ${strategyData?.inputToken.symbol}`,
         },
         primaryButton: {
           label: 'Get Started',
