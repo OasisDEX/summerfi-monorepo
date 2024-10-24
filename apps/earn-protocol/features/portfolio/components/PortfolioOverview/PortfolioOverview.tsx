@@ -1,4 +1,5 @@
 import { Card, DataBlock, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { type SDKVaultsListType } from '@summerfi/app-types'
 import Link from 'next/link'
 
 import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
@@ -53,7 +54,7 @@ const dataBlocks = [
   },
 ]
 
-export const PortfolioOverview = () => {
+export const PortfolioOverview = ({ strategiesList }: { strategiesList: SDKVaultsListType }) => {
   return (
     <div>
       <div
@@ -80,7 +81,10 @@ export const PortfolioOverview = () => {
             Positions
           </Text>
           <MockedLineChart />
-          <PortfolioStrategiesCarousel style={{ marginTop: 'var(--general-space-24)' }} />
+          <PortfolioStrategiesCarousel
+            strategiesList={strategiesList}
+            style={{ marginTop: 'var(--general-space-24)' }}
+          />
         </Card>
         <NewsAndUpdates items={dummyNewsAndUpdatesItems} />
         <CryptoUtilities />
