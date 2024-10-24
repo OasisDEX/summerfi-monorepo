@@ -22,6 +22,7 @@ jobs:
       MIXPANEL_KEY: ${{ secrets.MIXPANEL_KEY }}
       NEXT_PUBLIC_MIXPANEL_KEY: ${{ secrets.NEXT_PUBLIC_MIXPANEL_KEY }}
       SUBGRAPH_BASE: ${{ secrets.SUBGRAPH_BASE }}
+      SDK_API_URL: ${{ secrets.SDK_API_URL }}
 
     steps:
       - name: Check out code
@@ -119,7 +120,6 @@ jobs:
           ONE_INCH_ALLOWED_SWAP_PROTOCOLS: ${{ secrets.ONE_INCH_ALLOWED_SWAP_PROTOCOLS }}
           ONE_INCH_SWAP_CHAIN_IDS: ${{ secrets.ONE_INCH_SWAP_CHAIN_IDS }}
           MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
-          SDK_API_URL: ${{ secrets.SDK_API_URL }}
 
       - name: Coverage
         run: pnpm coverage:total
