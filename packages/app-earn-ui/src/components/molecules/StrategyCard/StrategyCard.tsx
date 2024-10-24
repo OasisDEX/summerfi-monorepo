@@ -1,4 +1,6 @@
 import { type SDKVaultishType } from '@summerfi/app-types'
+import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 
 import { Card } from '@/components/atoms/Card/Card'
@@ -25,12 +27,16 @@ export const StrategyCard = ({
   secondary = false,
   selected = false,
   onClick,
+  calculatedApr,
 }: StrategyCardProps) => {
   const handleStrategyClick = () => {
     if (onClick) {
       onClick(id)
     }
   }
+
+  const parsedApr = formatDecimalAsPercent(new BigNumber(calculatedApr).div(100))
+  const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(totalValueLockedUSD))
 
   return (
     <div
@@ -47,11 +53,13 @@ export const StrategyCard = ({
         <div className={strategyCardStyles.strategyCardHeaderWrapper}>
           <StrategyTitleWithRisk
             symbol={inputToken.symbol}
+            // TODO: fill data
             risk="low"
             networkName={protocol.network}
           />
           <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-            <BonusLabel tokenBonus="some" apy="thing" />
+            {/** TODO: fill data */}
+            <BonusLabel tokenBonus="some" apy={parsedApr} />
           </Text>
         </div>
         <div className={strategyCardStyles.strategyCardAssetsWrapper}>
@@ -60,14 +68,16 @@ export const StrategyCard = ({
               Total assets
             </Text>
             <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-              ${totalValueLockedUSD}
+              ${parsedTotalValueLockedUSD}
             </Text>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
               Best for
             </Text>
-            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>bestFor</Text>
+            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+              {/** TODO: fill data */} bestFor
+            </Text>
           </div>
         </div>
       </Card>

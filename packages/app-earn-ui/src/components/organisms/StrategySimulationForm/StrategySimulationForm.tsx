@@ -26,7 +26,11 @@ export const StrategySimulationForm = ({ strategyData }: StrategySimulationFormP
   const estimatedEarnings = useMemo(() => {
     if (!strategyData?.calculatedApr) return 0
 
-    return Number(inputValue.replaceAll(',', '')) * Number(strategyData?.calculatedApr)
+    return formatCryptoBalance(
+      new BigNumber(
+        Number(inputValue.replaceAll(',', '')) * (Number(strategyData?.calculatedApr) / 100),
+      ),
+    )
   }, [strategyData, inputValue])
 
   const dropdownLockedValue = useMemo(() => {

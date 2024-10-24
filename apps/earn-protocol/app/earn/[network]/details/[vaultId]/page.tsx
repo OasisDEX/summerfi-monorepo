@@ -1,23 +1,26 @@
-import { StrategyGridDetails } from '@summerfi/app-earn-ui'
-import { type NetworkNames } from '@summerfi/app-types'
+import { StrategyGridDetails, subgraphNetworkToId } from '@summerfi/app-earn-ui'
+import { type SDKNetwork } from '@summerfi/app-types'
 
 import { StrategyDetailsView } from '@/components/layout/StrategyDetailsView/StrategyDetailsView'
-import { getVaultsList } from '@/server-handlers/sdk/getVaultsList'
+import { getVaultDetails } from '@/server-handlers/sdk/getVaultDetails'
 
 type EarnStrategyDetailsPageProps = {
   params: {
-    network: NetworkNames
+    network: SDKNetwork
     vaultId: string
   }
 }
 
 const EarnStrategyDetailsPage = async ({ params }: EarnStrategyDetailsPageProps) => {
-  const strategiesList = await getVaultsList()
+  const networkId = subgraphNetworkToId(params.network)
 
-  const selectedStrategyData = strategiesList.find((strategy) => strategy.id === params.vaultId)
+  const selectedVault = await getVaultDetails({
+    vaultAddress: params.vaultId,
+    chainId: networkId,
+  })
 
   return (
-    <StrategyGridDetails strategy={selectedStrategyData as (typeof strategiesList)[number]}>
+    <StrategyGridDetails strategy={selectedVault}>
       <StrategyDetailsView />
     </StrategyGridDetails>
   )

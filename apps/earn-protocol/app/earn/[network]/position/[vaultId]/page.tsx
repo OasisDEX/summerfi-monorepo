@@ -1,6 +1,6 @@
 import {
   Expander,
-  getStrategyUrl,
+  getStrategyDetailsUrl,
   StrategyGridPreview,
   subgraphNetworkToId,
   Text,
@@ -223,8 +223,8 @@ const EarnStrategyOpenManagePage = async ({ params }: EarnStrategyOpenManagePage
                 justifyContent: 'space-between',
               }}
             >
-              {detailsLinks.map(({ label }) => (
-                <Link key={label} href={getStrategyUrl(selectedVault)}>
+              {detailsLinks.map(({ label, id }) => (
+                <Link key={label} href={`${getStrategyDetailsUrl(selectedVault)}#${id}`}>
                   <Text
                     as="p"
                     variant="p3semi"

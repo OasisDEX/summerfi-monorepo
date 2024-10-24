@@ -2,6 +2,8 @@
 
 import { type FC, type ReactNode } from 'react'
 import { type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-types'
+import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
 import { Box } from '@/components/atoms/Box/Box'
@@ -28,6 +30,9 @@ export const StrategyGridPreview: FC<StrategyGridPreviewProps> = ({
   leftContent,
   rightContent,
 }) => {
+  const parsedApr = formatDecimalAsPercent(new BigNumber(strategy.calculatedApr).div(100))
+  const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(strategy.totalValueLockedUSD))
+
   return (
     <>
       <div className={strategyGridPreviewStyles.strategyGridPreviewBreadcrumbsWrapper}>
@@ -57,6 +62,7 @@ export const StrategyGridPreview: FC<StrategyGridPreviewProps> = ({
             >
               <StrategyTitleWithRisk
                 symbol={strategy.inputToken.symbol}
+                // TODO: fill data
                 risk="low"
                 networkName={strategy.protocol.network}
               />
@@ -76,7 +82,7 @@ export const StrategyGridPreview: FC<StrategyGridPreviewProps> = ({
                 size="large"
                 titleSize="small"
                 title="30d APY"
-                value={`${strategy.calculatedApr}%`}
+                value={parsedApr}
                 subValue="+2.1% Median DeFi Yield"
                 subValueType="positive"
                 subValueSize="small"
@@ -87,7 +93,7 @@ export const StrategyGridPreview: FC<StrategyGridPreviewProps> = ({
                 size="large"
                 titleSize="small"
                 title="Current APY"
-                value={`${strategy.calculatedApr}%`}
+                value="value"
                 subValue="+1.7% Median DeFi Yield"
                 subValueType="positive"
                 subValueSize="small"
@@ -102,7 +108,8 @@ export const StrategyGridPreview: FC<StrategyGridPreviewProps> = ({
                 size="large"
                 titleSize="small"
                 title="Assets in strategy"
-                value="$232m"
+                value={parsedTotalValueLockedUSD}
+                // TODO: fill data
                 subValue={`231,232,321.01 ${strategy.inputToken.symbol}`}
                 subValueSize="small"
               />

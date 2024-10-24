@@ -64,5 +64,5 @@ export { useToggle } from './hooks/use-toggle'
 export { useHash } from './hooks/use-hash'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
-export { getStrategyUrl } from './helpers/get-strategy-url'
+export { getStrategyUrl, getStrategyDetailsUrl } from './helpers/get-strategy-url'
 export { subgraphNetworkToId } from './helpers/subgraph-network-to-id'

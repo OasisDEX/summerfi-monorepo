@@ -1,3 +1,4 @@
+import { type SDKVaultType } from '@summerfi/app-types'
 import { ArmadaVaultId } from '@summerfi/armada-protocol-service'
 import { Address, type ChainId, getChainInfoByChainId } from '@summerfi/sdk-common'
 
@@ -24,7 +25,7 @@ export const getVaultDetails = async ({
       poolId,
     })
 
-    return vault
+    return vault as SDKVaultType
   } catch (error) {
     throw new Error(`Failed to get vault details: ${error}`)
   }

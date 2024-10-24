@@ -14,6 +14,7 @@ import {
   type SDKNetwork,
   type SDKVaultsListType,
 } from '@summerfi/app-types'
+import { formatCryptoBalance, zero } from '@summerfi/app-utils'
 import { capitalize } from 'lodash-es'
 
 import { networkIconByNetworkName } from '@/constants/networkIcons'
@@ -103,6 +104,12 @@ export const StrategiesListView = ({
     setStrategyId(nextStrategyId)
   }
 
+  const formattedTotalAssets = useMemo(() => {
+    return formatCryptoBalance(
+      strategiesList.reduce((acc, strategy) => acc.plus(strategy.totalValueLockedUSD), zero),
+    )
+  }, [strategiesList])
+
   return (
     <StrategyGrid
       networksList={strategiesNetworksList}
@@ -110,18 +117,21 @@ export const StrategiesListView = ({
       onChangeNetwork={handleChangeNetwork}
       topContent={
         <SimpleGrid columns={3} style={{ justifyItems: 'stretch' }} gap={170}>
+          {/** TODO: fill data */}
           <DataBlock
             title="Total Assets"
             titleTooltip="Tooltip about assets or something"
             size="large"
-            value="$800,130,321"
+            value={`$${formattedTotalAssets}`}
           />
+          {/** TODO: fill data */}
           <DataBlock
             title="Total Assets"
             titleTooltip="Tooltip about assets or something"
             size="large"
             value="14.3b"
           />
+          {/** TODO: fill data */}
           <DataBlock
             title="Total Assets"
             titleTooltip="Tooltip about assets or something"

@@ -20,7 +20,7 @@ enum Action {
 
 export type FormProps = {
   fleetConfig: FleetConfig
-  selectedStrategyData?: SDKVaultType
+  selectedStrategyData: SDKVaultType
   strategiesList: SDKVaultsListType
 }
 
@@ -65,6 +65,7 @@ const Form = ({ fleetConfig: _fleetConfig, selectedStrategyData, strategiesList 
     handleInputChange: handleChange,
     banner: {
       title: 'Estimated earnings after 1 year',
+      // TODO: fill data
       value: `67,353 ${selectedStrategyData?.inputToken.symbol}`,
     },
     primaryButton: {
