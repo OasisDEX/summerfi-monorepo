@@ -29,4 +29,4 @@ export class MakerProtocol extends Protocol implements IMakerProtocol {
   }
 }
 
-SerializationService.registerClass(MakerProtocol)
+SerializationService.registerClass(MakerProtocol, { identifier: 'MakerProtocol' })

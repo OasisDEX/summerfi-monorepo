@@ -34,4 +34,4 @@ export abstract class Pool implements IPool, IPrintable {
   }
 }
 
-SerializationService.registerClass(Pool)
+SerializationService.registerClass(Pool, { identifier: 'Pool' })

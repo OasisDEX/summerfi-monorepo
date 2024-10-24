@@ -88,4 +88,4 @@ export class RiskRatio implements IRiskRatio {
   }
 }
 
-SerializationService.registerClass(RiskRatio)
+SerializationService.registerClass(RiskRatio, { identifier: 'RiskRatio' })

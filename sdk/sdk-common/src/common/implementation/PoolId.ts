@@ -34,4 +34,4 @@ export abstract class PoolId implements IPoolId, IPrintable {
   }
 }
 
-SerializationService.registerClass(PoolId)
+SerializationService.registerClass(PoolId, { identifier: 'PoolId' })

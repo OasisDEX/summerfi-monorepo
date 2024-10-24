@@ -297,4 +297,4 @@ export class Price implements IPrice {
   }
 }
 
-SerializationService.registerClass(Price)
+SerializationService.registerClass(Price, { identifier: 'Price' })

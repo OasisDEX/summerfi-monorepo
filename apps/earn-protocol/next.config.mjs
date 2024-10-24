@@ -6,14 +6,6 @@ const withNextIntl = createNextIntlPlugin()
 const nextConfig = {
   output: 'standalone',
   reactStrictMode: false,
-  webpack: (config) => {
-    config.externals.push('pino-pretty', 'encoding')
-
-    return config
-  },
-  experimental: {
-    serverComponentsExternalPackages: ['@summerfi/sdk-client', '@summerfi/sdk-common'],
-  },
   sassOptions: {
     prependData: `
         @import './node_modules/include-media/dist/_include-media.scss';

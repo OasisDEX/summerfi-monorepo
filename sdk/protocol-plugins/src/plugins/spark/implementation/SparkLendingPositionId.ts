@@ -30,4 +30,4 @@ export class SparkLendingPositionId extends LendingPositionId implements ISparkL
   }
 }
 
-SerializationService.registerClass(SparkLendingPositionId)
+SerializationService.registerClass(SparkLendingPositionId, { identifier: 'SparkLendingPositionId' })

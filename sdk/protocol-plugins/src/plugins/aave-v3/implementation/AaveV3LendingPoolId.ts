@@ -52,4 +52,4 @@ export class AaveV3LendingPoolId extends LendingPoolId implements IAaveV3Lending
   }
 }
 
-SerializationService.registerClass(AaveV3LendingPoolId)
+SerializationService.registerClass(AaveV3LendingPoolId, { identifier: 'AaveV3LendingPoolId' })

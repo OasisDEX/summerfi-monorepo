@@ -43,4 +43,4 @@ export class ArmadaVaultId extends PoolId implements IArmadaVaultId {
   }
 }
 
-SerializationService.registerClass(ArmadaVaultId)
+SerializationService.registerClass(ArmadaVaultId, { identifier: 'ArmadaVaultId' })

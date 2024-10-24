@@ -52,4 +52,6 @@ export class ExternalLendingPositionId
   }
 }
 
-SerializationService.registerClass(ExternalLendingPositionId)
+SerializationService.registerClass(ExternalLendingPositionId, {
+  identifier: 'ExternalLendingPositionId',
+})

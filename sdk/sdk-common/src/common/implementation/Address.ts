@@ -80,4 +80,4 @@ export class Address implements IAddress {
   }
 }
 
-SerializationService.registerClass(Address)
+SerializationService.registerClass(Address, { identifier: 'Address' })

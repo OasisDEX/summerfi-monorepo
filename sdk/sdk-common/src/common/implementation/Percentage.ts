@@ -120,4 +120,4 @@ export class Percentage implements IPercentage {
   }
 }
 
-SerializationService.registerClass(Percentage)
+SerializationService.registerClass(Percentage, { identifier: 'Percentage' })

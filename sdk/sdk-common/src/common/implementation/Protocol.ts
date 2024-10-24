@@ -39,4 +39,4 @@ export abstract class Protocol implements IProtocol, IPrintable {
   }
 }
 
-SerializationService.registerClass(Protocol)
+SerializationService.registerClass(Protocol, { identifier: 'Protocol' })

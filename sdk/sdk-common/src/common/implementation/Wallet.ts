@@ -41,4 +41,4 @@ export class Wallet implements IWallet {
   }
 }
 
-SerializationService.registerClass(Wallet)
+SerializationService.registerClass(Wallet, { identifier: 'Wallet' })

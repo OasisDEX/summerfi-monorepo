@@ -28,4 +28,4 @@ export abstract class Position implements IPosition {
   }
 }
 
-SerializationService.registerClass(Position)
+SerializationService.registerClass(Position, { identifier: 'Position' })

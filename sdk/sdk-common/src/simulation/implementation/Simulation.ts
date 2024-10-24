@@ -24,4 +24,4 @@ export abstract class Simulation implements ISimulation {
   }
 }
 
-SerializationService.registerClass(Simulation)
+SerializationService.registerClass(Simulation, { identifier: 'Simulation' })

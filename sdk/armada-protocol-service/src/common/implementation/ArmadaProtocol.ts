@@ -33,4 +33,4 @@ export class ArmadaProtocol extends Protocol implements IArmadaProtocol {
   }
 }
 
-SerializationService.registerClass(ArmadaProtocol)
+SerializationService.registerClass(ArmadaProtocol, { identifier: 'ArmadaProtocol' })

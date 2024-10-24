@@ -51,4 +51,4 @@ export class CollateralInfo implements ICollateralInfo {
   }
 }
 
-SerializationService.registerClass(CollateralInfo)
+SerializationService.registerClass(CollateralInfo, { identifier: 'CollateralInfo' })

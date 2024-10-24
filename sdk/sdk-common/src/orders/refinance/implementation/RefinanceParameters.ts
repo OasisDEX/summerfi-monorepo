@@ -46,4 +46,4 @@ export class RefinanceParameters implements IRefinanceParameters {
   }
 }
 
-SerializationService.registerClass(RefinanceParameters)
+SerializationService.registerClass(RefinanceParameters, { identifier: 'RefinanceParameters' })

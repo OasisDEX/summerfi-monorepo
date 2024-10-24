@@ -49,4 +49,4 @@ export abstract class LendingPoolInfo extends PoolInfo implements ILendingPoolIn
   }
 }
 
-SerializationService.registerClass(LendingPoolInfo)
+SerializationService.registerClass(LendingPoolInfo, { identifier: 'LendingPoolInfo' })

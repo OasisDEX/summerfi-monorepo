@@ -32,4 +32,4 @@ export class MakerLendingPoolInfo extends LendingPoolInfo implements IMakerLendi
   }
 }
 
-SerializationService.registerClass(MakerLendingPoolInfo)
+SerializationService.registerClass(MakerLendingPoolInfo, { identifier: 'MakerLendingPoolInfo' })

@@ -46,4 +46,6 @@ export class ExternalLendingPosition extends LendingPosition implements IExterna
   }
 }
 
-SerializationService.registerClass(ExternalLendingPosition)
+SerializationService.registerClass(ExternalLendingPosition, {
+  identifier: 'ExternalLendingPosition',
+})

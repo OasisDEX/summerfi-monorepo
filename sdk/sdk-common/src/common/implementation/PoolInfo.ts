@@ -34,4 +34,4 @@ export abstract class PoolInfo implements IPoolInfo, IPrintable {
   }
 }
 
-SerializationService.registerClass(PoolInfo)
+SerializationService.registerClass(PoolInfo, { identifier: 'PoolInfo' })

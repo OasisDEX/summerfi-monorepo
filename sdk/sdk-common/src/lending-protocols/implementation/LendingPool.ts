@@ -45,4 +45,4 @@ export abstract class LendingPool extends Pool implements ILendingPool, IPrintab
   }
 }
 
-SerializationService.registerClass(LendingPool)
+SerializationService.registerClass(LendingPool, { identifier: 'LendingPool' })

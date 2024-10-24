@@ -41,4 +41,6 @@ export class ImportPositionParameters implements IImportPositionParameters {
   }
 }
 
-SerializationService.registerClass(ImportPositionParameters)
+SerializationService.registerClass(ImportPositionParameters, {
+  identifier: 'ImportPositionParameters',
+})

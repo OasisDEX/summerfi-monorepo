@@ -43,4 +43,4 @@ export class MorphoLendingPool extends LendingPool implements IMorphoLendingPool
   }
 }
 
-SerializationService.registerClass(MorphoLendingPool)
+SerializationService.registerClass(MorphoLendingPool, { identifier: 'MorphoLendingPool' })

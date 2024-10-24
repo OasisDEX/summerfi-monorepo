@@ -39,4 +39,4 @@ export class ChainInfo implements IChainInfo {
   }
 }
 
-SerializationService.registerClass(ChainInfo)
+SerializationService.registerClass(ChainInfo, { identifier: 'ChainInfo' })

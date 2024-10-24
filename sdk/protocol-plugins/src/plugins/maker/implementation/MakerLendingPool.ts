@@ -36,4 +36,4 @@ export class MakerLendingPool extends LendingPool implements IMakerLendingPool {
   }
 }
 
-SerializationService.registerClass(MakerLendingPool)
+SerializationService.registerClass(MakerLendingPool, { identifier: 'MakerLendingPool' })

@@ -39,4 +39,4 @@ export class SwapError extends SDKError implements ISwapError {
   }
 }
 
-SerializationService.registerClass(SwapError)
+SerializationService.registerClass(SwapError, { identifier: 'SwapError' })

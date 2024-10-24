@@ -206,4 +206,4 @@ export class TokenAmount implements ITokenAmount {
   }
 }
 
-SerializationService.registerClass(TokenAmount)
+SerializationService.registerClass(TokenAmount, { identifier: 'TokenAmount' })

@@ -30,4 +30,6 @@ export class AaveV3LendingPositionId extends LendingPositionId implements IAaveV
   }
 }
 
-SerializationService.registerClass(AaveV3LendingPositionId)
+SerializationService.registerClass(AaveV3LendingPositionId, {
+  identifier: 'AaveV3LendingPositionId',
+})

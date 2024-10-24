@@ -36,4 +36,4 @@ export class AaveV3LendingPool extends LendingPool implements IAaveV3LendingPool
   }
 }
 
-SerializationService.registerClass(AaveV3LendingPool)
+SerializationService.registerClass(AaveV3LendingPool, { identifier: 'AaveV3LendingPool' })

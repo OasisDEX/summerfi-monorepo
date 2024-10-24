@@ -36,4 +36,4 @@ export class SparkLendingPool extends LendingPool implements ISparkLendingPool {
   }
 }
 
-SerializationService.registerClass(SparkLendingPool)
+SerializationService.registerClass(SparkLendingPool, { identifier: 'SparkLendingPool' })

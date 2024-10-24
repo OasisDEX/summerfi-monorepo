@@ -43,4 +43,4 @@ export abstract class LendingPosition extends Position implements ILendingPositi
   }
 }
 
-SerializationService.registerClass(LendingPosition)
+SerializationService.registerClass(LendingPosition, { identifier: 'LendingPosition' })

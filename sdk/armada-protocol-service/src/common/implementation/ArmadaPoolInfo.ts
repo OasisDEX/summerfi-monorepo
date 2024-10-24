@@ -43,4 +43,4 @@ export class ArmadaPoolInfo extends PoolInfo implements IArmadaPoolInfo {
   }
 }
 
-SerializationService.registerClass(ArmadaPoolInfo)
+SerializationService.registerClass(ArmadaPoolInfo, { identifier: 'ArmadaPoolInfo' })

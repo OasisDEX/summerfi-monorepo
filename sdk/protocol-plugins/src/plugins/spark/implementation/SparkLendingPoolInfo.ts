@@ -36,4 +36,4 @@ export class SparkLendingPoolInfo extends LendingPoolInfo implements ISparkLendi
   }
 }
 
-SerializationService.registerClass(SparkLendingPoolInfo)
+SerializationService.registerClass(SparkLendingPoolInfo, { identifier: 'SparkLendingPoolInfo' })

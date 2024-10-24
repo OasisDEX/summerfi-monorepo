@@ -48,4 +48,4 @@ export class SparkLendingPoolId extends LendingPoolId implements ISparkLendingPo
   }
 }
 
-SerializationService.registerClass(SparkLendingPoolId)
+SerializationService.registerClass(SparkLendingPoolId, { identifier: 'SparkLendingPoolId' })

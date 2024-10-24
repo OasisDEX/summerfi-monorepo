@@ -29,4 +29,4 @@ export class SparkProtocol extends Protocol implements ISparkProtocol {
   }
 }
 
-SerializationService.registerClass(SparkProtocol)
+SerializationService.registerClass(SparkProtocol, { identifier: 'SparkProtocol' })

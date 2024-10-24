@@ -42,4 +42,4 @@ export class ArmadaSimulation extends Simulation implements IArmadaSimulation {
   }
 }
 
-SerializationService.registerClass(ArmadaSimulation)
+SerializationService.registerClass(ArmadaSimulation, { identifier: 'ArmadaSimulation' })

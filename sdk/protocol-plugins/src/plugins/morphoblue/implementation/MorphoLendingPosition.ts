@@ -39,4 +39,4 @@ export class MorphoLendingPosition extends LendingPosition implements IMorphoLen
   }
 }
 
-SerializationService.registerClass(MorphoLendingPosition)
+SerializationService.registerClass(MorphoLendingPosition, { identifier: 'MorphoLendingPosition' })

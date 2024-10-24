@@ -36,4 +36,4 @@ export class MakerLendingPositionId extends LendingPositionId implements IMakerL
   }
 }
 
-SerializationService.registerClass(MakerLendingPositionId)
+SerializationService.registerClass(MakerLendingPositionId, { identifier: 'MakerLendingPositionId' })

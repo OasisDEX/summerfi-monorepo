@@ -29,4 +29,4 @@ export class AaveV3Protocol extends Protocol implements IAaveV3Protocol {
   }
 }
 
-SerializationService.registerClass(AaveV3Protocol)
+SerializationService.registerClass(AaveV3Protocol, { identifier: 'AaveV3Protocol' })

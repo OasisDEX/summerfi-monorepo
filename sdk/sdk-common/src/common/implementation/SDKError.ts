@@ -36,4 +36,4 @@ export class SDKError extends Error implements ISDKError {
   }
 }
 
-SerializationService.registerClass(SDKError)
+SerializationService.registerClass(SDKError, { identifier: 'SDKError' })

@@ -134,4 +134,4 @@ export class FiatCurrencyAmount implements IFiatCurrencyAmount {
   }
 }
 
-SerializationService.registerClass(FiatCurrencyAmount)
+SerializationService.registerClass(FiatCurrencyAmount, { identifier: 'FiatCurrencyAmount' })

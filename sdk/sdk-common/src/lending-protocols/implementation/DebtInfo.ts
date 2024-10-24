@@ -54,4 +54,4 @@ export class DebtInfo implements IDebtInfo {
   }
 }
 
-SerializationService.registerClass(DebtInfo)
+SerializationService.registerClass(DebtInfo, { identifier: 'DebtInfo' })

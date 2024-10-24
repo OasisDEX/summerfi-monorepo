@@ -44,4 +44,4 @@ export class User implements IUser {
   }
 }
 
-SerializationService.registerClass(User)
+SerializationService.registerClass(User, { identifier: 'User' })

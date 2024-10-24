@@ -46,4 +46,4 @@ export class RefinanceSimulation extends Simulation implements IRefinanceSimulat
   }
 }
 
-SerializationService.registerClass(RefinanceSimulation)
+SerializationService.registerClass(RefinanceSimulation, { identifier: 'RefinanceSimulation' })

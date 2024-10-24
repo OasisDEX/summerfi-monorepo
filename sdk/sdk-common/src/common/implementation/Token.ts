@@ -52,4 +52,4 @@ export class Token implements IToken {
   }
 }
 
-SerializationService.registerClass(Token)
+SerializationService.registerClass(Token, { identifier: 'Token' })

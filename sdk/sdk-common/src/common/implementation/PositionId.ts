@@ -32,4 +32,4 @@ export abstract class PositionId implements IPositionId {
   }
 }
 
-SerializationService.registerClass(PositionId)
+SerializationService.registerClass(PositionId, { identifier: 'PositionId' })

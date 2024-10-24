@@ -29,4 +29,4 @@ export class MorphoProtocol extends Protocol implements IMorphoProtocol {
   }
 }
 
-SerializationService.registerClass(MorphoProtocol)
+SerializationService.registerClass(MorphoProtocol, { identifier: 'MorphoProtocol' })

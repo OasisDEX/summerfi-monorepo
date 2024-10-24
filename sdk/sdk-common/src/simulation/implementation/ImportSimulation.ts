@@ -44,4 +44,4 @@ export class ImportSimulation extends Simulation implements IImportSimulation {
   }
 }
 
-SerializationService.registerClass(ImportSimulation)
+SerializationService.registerClass(ImportSimulation, { identifier: 'ImportSimulation' })

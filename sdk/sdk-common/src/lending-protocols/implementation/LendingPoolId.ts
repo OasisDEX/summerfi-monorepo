@@ -33,4 +33,4 @@ export abstract class LendingPoolId extends PoolId implements ILendingPoolId, IP
   }
 }
 
-SerializationService.registerClass(LendingPoolId)
+SerializationService.registerClass(LendingPoolId, { identifier: 'LendingPoolId' })

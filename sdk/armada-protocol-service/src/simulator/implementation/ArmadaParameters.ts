@@ -46,4 +46,4 @@ export class ArmadaParameters implements IArmadaParameters {
   }
 }
 
-SerializationService.registerClass(ArmadaParameters)
+SerializationService.registerClass(ArmadaParameters, { identifier: 'ArmadaParameters' })

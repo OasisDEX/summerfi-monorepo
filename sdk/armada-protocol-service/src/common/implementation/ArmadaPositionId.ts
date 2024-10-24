@@ -36,4 +36,4 @@ export class ArmadaPositionId extends PositionId implements IArmadaPositionId {
   }
 }
 
-SerializationService.registerClass(ArmadaPositionId)
+SerializationService.registerClass(ArmadaPositionId, { identifier: 'ArmadaPositionId' })

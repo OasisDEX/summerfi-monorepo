@@ -45,4 +45,4 @@ export class ArmadaPosition extends Position implements IArmadaPosition {
   }
 }
 
-SerializationService.registerClass(ArmadaPosition)
+SerializationService.registerClass(ArmadaPosition, { identifier: 'ArmadaPosition' })
