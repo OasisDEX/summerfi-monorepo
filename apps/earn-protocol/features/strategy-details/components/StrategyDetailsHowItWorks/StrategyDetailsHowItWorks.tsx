@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { Card, InlineButtons, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { type InlineButtonOption } from '../../../../../../packages/app-types'
+import { type InlineButtonOption } from '@summerfi/app-types'
 import Image from 'next/image'
 import Link from 'next/link'
 

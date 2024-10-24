@@ -1,5 +1,5 @@
 import { Card, Expander, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { type IconNamesList } from '../../../../../../packages/app-types'
+import { type IconNamesList } from '@summerfi/app-types'
 import Link from 'next/link'
 
 const items: {

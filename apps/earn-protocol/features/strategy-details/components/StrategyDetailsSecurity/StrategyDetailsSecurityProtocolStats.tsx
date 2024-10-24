@@ -1,6 +1,6 @@
 import { type FC, useState } from 'react'
 import { Card, Dropdown, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { type DropdownOption, type DropdownRawOption } from '../../../../../../packages/app-types'
+import { type DropdownOption, type DropdownRawOption } from '@summerfi/app-types'
 import Link from 'next/link'
 
 const securityDropdownOptions: DropdownOption[] = [

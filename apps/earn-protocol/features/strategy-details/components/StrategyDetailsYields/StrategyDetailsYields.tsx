@@ -1,7 +1,7 @@
 'use client'
 import { type FC, useEffect, useMemo, useState } from 'react'
 import { Card, InlineButtons, Table, Text, useHash } from '@summerfi/app-earn-ui'
-import { type InlineButtonOption } from '../../../../../../packages/app-types'
+import { type InlineButtonOption } from '@summerfi/app-types'
 
 import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
 import { individualYieldsColumns } from '@/features/strategy-details/components/StrategyDetailsYields/columns'
