@@ -4,9 +4,9 @@ import { NetworkNames } from '@summerfi/app-types'
 import { formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
+import { type PortfolioAssetsResponse } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { PortfolioAssetsList } from '@/features/portfolio/components/PortfolioAssetsList/PortfolioAssetsList'
 import { valueColorResolver } from '@/helpers/value-color-resolver'
-import { type PortfolioAssetsResponse } from '@/server-handlers/portfolio/portfolio-wallet-assets-handler'
 
 import classNames from './PotfolioAssets.module.scss'
 

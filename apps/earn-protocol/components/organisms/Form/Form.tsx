@@ -1,12 +1,16 @@
 'use client'
 import { type ChangeEvent, useState } from 'react'
-import { Sidebar, SidebarFootnote, sidebarFootnote } from '@summerfi/app-earn-ui'
-import { type DropdownOption } from '@summerfi/app-types'
+import { getStrategyUrl, Sidebar, SidebarFootnote, sidebarFootnote } from '@summerfi/app-earn-ui'
+import {
+  type DropdownOption,
+  type SDKVaultsListType,
+  type SDKVaultType,
+  type TokenSymbolsList,
+} from '@summerfi/app-types'
 import { formatCryptoBalance, mapNumericInput } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 
-import { strategiesList } from '@/constants/dev-strategies-list'
 import type { FleetConfig } from '@/helpers/sdk/types'
 
 enum Action {
@@ -16,18 +20,19 @@ enum Action {
 
 export type FormProps = {
   fleetConfig: FleetConfig
-  selectedStrategyData?: (typeof strategiesList)[number]
+  selectedStrategyData: SDKVaultType
+  strategiesList: SDKVaultsListType
 }
 
-const options: DropdownOption[] = [
-  ...[...new Set(strategiesList.map((strategy) => strategy.symbol))].map((symbol) => ({
-    tokenSymbol: symbol,
-    label: symbol,
-    value: symbol,
-  })),
-]
+const Form = ({ fleetConfig: _fleetConfig, selectedStrategyData, strategiesList }: FormProps) => {
+  const options: DropdownOption[] = [
+    ...[...new Set(strategiesList.map((strategy) => strategy.inputToken.symbol))].map((symbol) => ({
+      tokenSymbol: symbol as TokenSymbolsList,
+      label: symbol,
+      value: symbol,
+    })),
+  ]
 
-const Form = ({ fleetConfig: _fleetConfig, selectedStrategyData }: FormProps) => {
   const [action, setAction] = useState(Action.DEPOSIT)
   const [amountValue, setAmountValue] = useState<string>()
 
@@ -41,12 +46,8 @@ const Form = ({ fleetConfig: _fleetConfig, selectedStrategyData }: FormProps) =>
     setAmountValue(mapNumericInput(ev.target.value))
   }
 
-  const handleConfirm = async () => {
-    return await Promise.resolve(null)
-  }
-
   const dropdownValue =
-    options.find((option) => option.value === selectedStrategyData?.symbol) ?? options[0]
+    options.find((option) => option.value === selectedStrategyData?.inputToken.symbol) ?? options[0]
 
   const balance = new BigNumber(123123)
   const token = dropdownValue.label
@@ -64,11 +65,12 @@ const Form = ({ fleetConfig: _fleetConfig, selectedStrategyData }: FormProps) =>
     handleInputChange: handleChange,
     banner: {
       title: 'Estimated earnings after 1 year',
-      value: `67,353 ${selectedStrategyData?.symbol}`,
+      // TODO: fill data
+      value: `67,353 ${selectedStrategyData?.inputToken.symbol}`,
     },
     primaryButton: {
       label: 'Get Started',
-      action: handleConfirm,
+      url: getStrategyUrl(selectedStrategyData),
       disabled: confirmDisabled,
     },
     footnote: (

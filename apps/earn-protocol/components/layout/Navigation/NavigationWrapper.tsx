@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 
 const WalletLabel = dynamic(() => import('../../molecules/WalletLabel/WalletLabel'), {
+  ssr: false,
   loading: () => (
     <Button variant="secondarySmall">
       <SkeletonLine width={100} height={10} style={{ opacity: 0.2 }} />
@@ -35,7 +36,7 @@ export const NavigationWrapper: FC = () => {
               {
                 label: 'Portfolio',
                 id: 'portfolio',
-                link: `/portfolio/${user.address}`,
+                link: `/earn/portfolio/${user.address}`,
               },
             ]
           : []),

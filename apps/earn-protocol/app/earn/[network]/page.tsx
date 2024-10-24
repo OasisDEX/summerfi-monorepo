@@ -1,16 +1,20 @@
-import { type NetworkNames } from '@summerfi/app-types'
+import { type SDKNetwork } from '@summerfi/app-types'
 
+import { getVaultsList } from '@/app/server-handlers/sdk/getVaultsList'
 import { StrategiesListView } from '@/components/layout/StrategiesListView/StrategiesListView'
+
+export const dynamic = 'force-dynamic'
 
 type EarnNetworkStrategiesPageProps = {
   params: {
-    network: NetworkNames | 'all-networks'
+    network: SDKNetwork | 'all-networks'
   }
 }
 
-const EarnNetworkStrategiesPage = ({ params }: EarnNetworkStrategiesPageProps) => {
-  // list of strategies (for a network)
-  return <StrategiesListView selectedNetwork={params.network} />
+const EarnNetworkStrategiesPage = async ({ params }: EarnNetworkStrategiesPageProps) => {
+  const strategiesList = await getVaultsList()
+
+  return <StrategiesListView strategiesList={strategiesList} selectedNetwork={params.network} />
 }
 
 export default EarnNetworkStrategiesPage

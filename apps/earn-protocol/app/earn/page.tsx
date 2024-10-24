@@ -1,8 +1,12 @@
+import { getVaultsList } from '@/app/server-handlers/sdk/getVaultsList'
 import { StrategiesListView } from '@/components/layout/StrategiesListView/StrategiesListView'
 
-const EarnAllStrategiesPage = () => {
-  // list of strategies (no network selected)
-  return <StrategiesListView />
+export const dynamic = 'force-dynamic'
+
+const EarnAllStrategiesPage = async () => {
+  const strategiesList = await getVaultsList()
+
+  return <StrategiesListView strategiesList={strategiesList} />
 }
 
 export default EarnAllStrategiesPage

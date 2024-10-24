@@ -1,7 +1,7 @@
 import { type AppConfigType, NetworkNames } from '@summerfi/app-types'
 import { type NextRequest, NextResponse } from 'next/server'
 
-import { configFetcher } from '@/server-handlers/system-config/calls/config'
+import { configFetcher } from '@/app/server-handlers/system-config/calls/config'
 
 let cachedConfig: Partial<AppConfigType> | undefined
 let cacheExpirationTime: number | undefined

@@ -1,13 +1,14 @@
 'use client'
 
 import { type ReactNode } from 'react'
-import { type EarnProtocolStrategy } from '@summerfi/app-types'
+import { type SDKVaultType } from '@summerfi/app-types'
 import Link from 'next/link'
 
 import { Button } from '@/components/atoms/Button/Button'
 import { Text } from '@/components/atoms/Text/Text'
 import { WithArrow } from '@/components/atoms/WithArrow/WithArrow'
 import { StrategyTitleWithRisk } from '@/components/molecules/StrategyTitleWithRisk/StrategyTitleWithRisk'
+import { getStrategyUrl } from '@/helpers/get-strategy-url'
 
 import strategyGridDetailsStyles from './StrategyGridDetails.module.scss'
 
@@ -15,7 +16,7 @@ export const StrategyGridDetails = ({
   strategy,
   children,
 }: {
-  strategy: EarnProtocolStrategy
+  strategy: SDKVaultType
   children: ReactNode
 }) => {
   return (
@@ -27,7 +28,7 @@ export const StrategyGridDetails = ({
               Earn /
             </Text>
           </Link>
-          <Link href={`/earn/${strategy.network}/strategy/${strategy.id}`}>
+          <Link href={getStrategyUrl(strategy)}>
             <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
               {' '}
               {strategy.id}{' '}
@@ -41,9 +42,9 @@ export const StrategyGridDetails = ({
       <div className={strategyGridDetailsStyles.strategyGridDetailsWrapper}>
         <div className={strategyGridDetailsStyles.strategyGridDetailsHeaderWrapper}>
           <StrategyTitleWithRisk
-            symbol={strategy.symbol}
-            risk={strategy.risk}
-            networkName={strategy.network}
+            symbol={strategy.inputToken.symbol}
+            risk="low"
+            networkName={strategy.protocol.network}
           />
           <Button variant="primarySmall" style={{ height: '48px', paddingRight: '40px' }}>
             <Link href="/">

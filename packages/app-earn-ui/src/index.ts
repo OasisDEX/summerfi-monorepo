@@ -53,6 +53,7 @@ export {
   type LinkCardWithIconName,
 } from './components/molecules/LinkCard/LinkCard'
 export { PillSelector } from './components/molecules/PillSelector/PillSelector'
+export { BonusLabel } from './components/molecules/BonusLabel/BonusLabel'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar } from './components/organisms/Sidebar/Sidebar'
@@ -63,3 +64,5 @@ export { useToggle } from './hooks/use-toggle'
 export { useHash } from './hooks/use-hash'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
+export { getStrategyUrl, getStrategyDetailsUrl } from './helpers/get-strategy-url'
+export { subgraphNetworkToId } from './helpers/subgraph-network-to-id'

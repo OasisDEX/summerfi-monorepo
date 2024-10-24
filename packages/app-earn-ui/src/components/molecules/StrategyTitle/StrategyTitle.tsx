@@ -1,5 +1,10 @@
 import { type FC, type ReactNode } from 'react'
-import { NetworkIds, NetworkNames, type TokenSymbolsList } from '@summerfi/app-types'
+import {
+  NetworkIds,
+  NetworkNames,
+  type SDKVaultType,
+  type TokenSymbolsList,
+} from '@summerfi/app-types'
 
 import { GenericTokenIcon } from '@/components/atoms/GenericTokenIcon/GenericTokenIcon.tsx'
 import { Icon } from '@/components/atoms/Icon/Icon'
@@ -21,7 +26,7 @@ const networkNameIconMap = {
 }
 
 interface StrategyTitleProps {
-  symbol: TokenSymbolsList
+  symbol: SDKVaultType['inputToken']['symbol']
   networkId?: NetworkIds
   networkName?: NetworkNames
   value?: ReactNode
@@ -39,7 +44,8 @@ export const StrategyTitle: FC<StrategyTitleProps> = ({
     <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
       <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
         {isIconDefined ? (
-          <Icon tokenName={symbol} variant="xxl" />
+          /* if any icon breaks, this is probably because of TokenSymbolsList vs whatever comes from the subgraph */
+          <Icon tokenName={symbol as TokenSymbolsList} variant="xxl" />
         ) : (
           <GenericTokenIcon symbol={symbol} customSize={32} />
         )}

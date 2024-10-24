@@ -8,14 +8,20 @@ import {
   StrategyGrid,
   StrategySimulationForm,
 } from '@summerfi/app-earn-ui'
-import { type DropdownRawOption, type IconNamesList, type NetworkNames } from '@summerfi/app-types'
+import {
+  type DropdownRawOption,
+  type IconNamesList,
+  type SDKNetwork,
+  type SDKVaultsListType,
+} from '@summerfi/app-types'
+import { formatCryptoBalance, zero } from '@summerfi/app-utils'
+import { capitalize } from 'lodash-es'
 
-import { strategiesList } from '@/constants/dev-strategies-list'
 import { networkIconByNetworkName } from '@/constants/networkIcons'
 
 type StrategiesListViewProps = {
-  selectedNetwork?: NetworkNames | 'all-networks'
-  selectedStrategyId?: string
+  strategiesList: SDKVaultsListType
+  selectedNetwork?: SDKNetwork | 'all-networks'
 }
 
 const allNetworksOption = {
@@ -30,20 +36,20 @@ const softRouterPush = (url: string) => {
 
 export const StrategiesListView = ({
   selectedNetwork,
-  selectedStrategyId,
+  strategiesList,
 }: StrategiesListViewProps) => {
   const [localStrategyNetwork, setLocalStrategyNetwork] =
     useState<StrategiesListViewProps['selectedNetwork']>(selectedNetwork)
 
-  const [localStrategyId, setLocalStrategyId] = useState<string | undefined>(selectedStrategyId)
-
   const networkFilteredStrategies = useMemo(
     () =>
       localStrategyNetwork && localStrategyNetwork !== 'all-networks'
-        ? strategiesList.filter((strategy) => strategy.network === localStrategyNetwork)
+        ? strategiesList.filter((strategy) => strategy.protocol.network === localStrategyNetwork)
         : strategiesList,
-    [localStrategyNetwork],
+    [localStrategyNetwork, strategiesList],
   )
+
+  const [strategyId, setStrategyId] = useState<string | undefined>(networkFilteredStrategies[0].id)
 
   const selectedNetworkOption = useMemo(
     () =>
@@ -51,9 +57,9 @@ export const StrategiesListView = ({
         ? {
             iconName:
               localStrategyNetwork !== 'all-networks'
-                ? networkIconByNetworkName[localStrategyNetwork]
+                ? (networkIconByNetworkName[localStrategyNetwork] as IconNamesList)
                 : 'network_ethereum',
-            label: localStrategyNetwork,
+            label: capitalize(localStrategyNetwork),
             value: localStrategyNetwork,
           }
         : allNetworksOption,
@@ -61,54 +67,48 @@ export const StrategiesListView = ({
   )
   const strategiesNetworksList = useMemo(
     () => [
-      ...[...new Set(strategiesList.map(({ network }) => network))].map((network) => ({
-        iconName: networkIconByNetworkName[network],
+      ...[...new Set(strategiesList.map(({ protocol }) => protocol.network))].map((network) => ({
+        iconName: networkIconByNetworkName[network] as IconNamesList,
         label: network,
         value: network,
       })),
       allNetworksOption,
     ],
-    [],
+    [strategiesList],
   )
 
   const selectedStrategyData = useMemo(
-    () => strategiesList.find((strategy) => strategy.id === localStrategyId),
-    [localStrategyId],
+    () => strategiesList.find((strategy) => strategy.id === strategyId),
+    [strategiesList, strategyId],
   )
 
   const handleChangeNetwork = (selected: DropdownRawOption) => {
     setLocalStrategyNetwork(selected.value as StrategiesListViewProps['selectedNetwork'])
     switch (selected.value) {
       case 'all-networks':
-        // if its all networks we must check if the selected strategy is from the same network
-        // then we can "redirect" to the selected strategy page with the network
-        softRouterPush(
-          selectedStrategyData ? `/earn/all-networks/${selectedStrategyData.id}` : '/earn',
-        )
+        softRouterPush('/earn')
 
         break
 
       default:
-        // if its a specific network we must check if the selected strategy is from the same network
-        // then we can "redirect" to the selected strategy page with the network
-        // if not we just go to the network page and clear the selected strategy (if not available in the new view)
-        if (selectedStrategyData && selectedStrategyData.network !== selected.value) {
-          setLocalStrategyId(undefined)
+        if (selectedStrategyData && selectedStrategyData.protocol.network !== selected.value) {
+          setStrategyId(undefined)
         }
-        softRouterPush(
-          selectedStrategyData && selectedStrategyData.network === selected.value
-            ? `/earn/${selected.value}/${selectedStrategyData.id}`
-            : `/earn/${selected.value}`,
-        )
+        softRouterPush(`/earn/${selected.value}`)
 
         break
     }
   }
 
-  const handleChangeStrategy = (strategyId: string) => {
-    setLocalStrategyId(strategyId)
-    softRouterPush(`/earn/${localStrategyNetwork ?? 'all-networks'}/${strategyId}`)
+  const handleChangeStrategy = (nextStrategyId: string) => {
+    setStrategyId(nextStrategyId)
   }
+
+  const formattedTotalAssets = useMemo(() => {
+    return formatCryptoBalance(
+      strategiesList.reduce((acc, strategy) => acc.plus(strategy.totalValueLockedUSD), zero),
+    )
+  }, [strategiesList])
 
   return (
     <StrategyGrid
@@ -117,18 +117,21 @@ export const StrategiesListView = ({
       onChangeNetwork={handleChangeNetwork}
       topContent={
         <SimpleGrid columns={3} style={{ justifyItems: 'stretch' }} gap={170}>
+          {/** TODO: fill data */}
           <DataBlock
             title="Total Assets"
             titleTooltip="Tooltip about assets or something"
             size="large"
-            value="$800,130,321"
+            value={`$${formattedTotalAssets}`}
           />
+          {/** TODO: fill data */}
           <DataBlock
             title="Total Assets"
             titleTooltip="Tooltip about assets or something"
             size="large"
             value="14.3b"
           />
+          {/** TODO: fill data */}
           <DataBlock
             title="Total Assets"
             titleTooltip="Tooltip about assets or something"
@@ -143,7 +146,7 @@ export const StrategiesListView = ({
           {...strategy}
           secondary
           withHover
-          selected={localStrategyId === strategy.id || (!localStrategyId && strategyIndex === 0)}
+          selected={strategyId === strategy.id || (!strategyId && strategyIndex === 0)}
           onClick={handleChangeStrategy}
         />
       ))}

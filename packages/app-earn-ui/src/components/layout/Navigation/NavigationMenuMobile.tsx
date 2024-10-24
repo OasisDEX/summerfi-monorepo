@@ -28,7 +28,7 @@ export const NavigationMenuMobile = ({
   return (
     <div
       className={clsx(navigationMenuMobileStyles.menuMobileOverflow, {
-        [navigationMenuMobileStyles.active]: mobileMenuOpened,
+        [navigationMenuMobileStyles.overflowActive]: mobileMenuOpened,
       })}
     >
       <div

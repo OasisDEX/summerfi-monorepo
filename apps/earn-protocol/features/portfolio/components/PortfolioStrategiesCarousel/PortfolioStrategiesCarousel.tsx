@@ -1,17 +1,19 @@
 import { type CSSProperties, type FC } from 'react'
 import { Icon, SlideCarousel, StrategyCard, Text } from '@summerfi/app-earn-ui'
 
-import { strategiesList } from '@/constants/dev-strategies-list'
+import { getVaultsList } from '@/app/server-handlers/sdk/getVaultsList'
 
 interface PortfolioStrategiesCarouselProps {
   style?: CSSProperties
   className?: string
 }
 
-export const PortfolioStrategiesCarousel: FC<PortfolioStrategiesCarouselProps> = ({
+export const PortfolioStrategiesCarousel: FC<PortfolioStrategiesCarouselProps> = async ({
   style,
   className,
 }) => {
+  const strategiesList = await getVaultsList()
+
   return (
     <div style={{ width: '100%', ...style }} className={className}>
       <SlideCarousel

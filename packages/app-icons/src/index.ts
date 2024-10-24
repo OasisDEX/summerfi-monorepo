@@ -235,3 +235,37 @@ export const network_arbitrum = lazy.lib(() => import('./icons/network_arbitrum.
 export const network_optimism = lazy.lib(() => import('./icons/network_optimism.svg'))
 export const network_base = lazy.lib(() => import('./icons/network_base.svg'))
 export const withdraw = lazy.lib(() => import('./icons/withdraw.svg'))
+
+export const summer_illustration_check = lazy.lib(
+  () => import('./icons/summer_illustration_check.svg'),
+)
+export const summer_illustration_email = lazy.lib(
+  () => import('./icons/summer_illustration_email.svg'),
+)
+export const summer_illustration_failed = lazy.lib(
+  () => import('./icons/summer_illustration_failed.svg'),
+)
+export const summer_illustration_gas_fee = lazy.lib(
+  () => import('./icons/summer_illustration_gas_fee.svg'),
+)
+export const summer_illustration_identity = lazy.lib(
+  () => import('./icons/summer_illustration_identity.svg'),
+)
+export const summer_illustration_logo = lazy.lib(
+  () => import('./icons/summer_illustration_logo.svg'),
+)
+export const summer_illustration_passkey = lazy.lib(
+  () => import('./icons/summer_illustration_passkey.svg'),
+)
+export const summer_illustration_shield = lazy.lib(
+  () => import('./icons/summer_illustration_shield.svg'),
+)
+export const summer_illustration_switch = lazy.lib(
+  () => import('./icons/summer_illustration_switch.svg'),
+)
+export const summer_illustration_transak_logo = lazy.lib(
+  () => import('./icons/summer_illustration_transak_logo.svg'),
+)
+export const summer_illustration_verification = lazy.lib(
+  () => import('./icons/summer_illustration_verification.svg'),
+)

@@ -1,7 +1,9 @@
 'use client'
 
 import { type FC, type ReactNode } from 'react'
-import { type EarnProtocolStrategy } from '@summerfi/app-types'
+import { type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-types'
+import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
 import { Box } from '@/components/atoms/Box/Box'
@@ -16,8 +18,8 @@ import { StrategyTitleWithRisk } from '@/components/molecules/StrategyTitleWithR
 import strategyGridPreviewStyles from './StrategyGridPreview.module.scss'
 
 interface StrategyGridPreviewProps {
-  strategy: EarnProtocolStrategy
-  strategies: EarnProtocolStrategy[]
+  strategy: SDKVaultishType
+  strategies: SDKVaultsListType
   leftContent: ReactNode
   rightContent: ReactNode
 }
@@ -28,6 +30,9 @@ export const StrategyGridPreview: FC<StrategyGridPreviewProps> = ({
   leftContent,
   rightContent,
 }) => {
+  const parsedApr = formatDecimalAsPercent(new BigNumber(strategy.calculatedApr).div(100))
+  const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(strategy.totalValueLockedUSD))
+
   return (
     <>
       <div className={strategyGridPreviewStyles.strategyGridPreviewBreadcrumbsWrapper}>
@@ -56,9 +61,10 @@ export const StrategyGridPreview: FC<StrategyGridPreviewProps> = ({
               }}
             >
               <StrategyTitleWithRisk
-                symbol={strategy.symbol}
-                risk={strategy.risk}
-                networkName={strategy.network}
+                symbol={strategy.inputToken.symbol}
+                // TODO: fill data
+                risk="low"
+                networkName={strategy.protocol.network}
               />
             </Dropdown>
             <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
@@ -76,7 +82,7 @@ export const StrategyGridPreview: FC<StrategyGridPreviewProps> = ({
                 size="large"
                 titleSize="small"
                 title="30d APY"
-                value={`${strategy.apy}%`}
+                value={parsedApr}
                 subValue="+2.1% Median DeFi Yield"
                 subValueType="positive"
                 subValueSize="small"
@@ -87,7 +93,7 @@ export const StrategyGridPreview: FC<StrategyGridPreviewProps> = ({
                 size="large"
                 titleSize="small"
                 title="Current APY"
-                value={`${strategy.apy}%`}
+                value="value"
                 subValue="+1.7% Median DeFi Yield"
                 subValueType="positive"
                 subValueSize="small"
@@ -102,8 +108,9 @@ export const StrategyGridPreview: FC<StrategyGridPreviewProps> = ({
                 size="large"
                 titleSize="small"
                 title="Assets in strategy"
-                value="$232m"
-                subValue={`231,232,321.01 ${strategy.symbol}`}
+                value={parsedTotalValueLockedUSD}
+                // TODO: fill data
+                subValue={`231,232,321.01 ${strategy.inputToken.symbol}`}
                 subValueSize="small"
               />
             </Box>

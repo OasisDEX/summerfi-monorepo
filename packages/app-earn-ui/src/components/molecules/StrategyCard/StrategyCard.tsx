@@ -1,4 +1,6 @@
-import { type EarnProtocolStrategy } from '@summerfi/app-types'
+import { type SDKVaultishType } from '@summerfi/app-types'
+import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
 import clsx from 'clsx'
 
 import { Card } from '@/components/atoms/Card/Card'
@@ -8,7 +10,7 @@ import { StrategyTitleWithRisk } from '@/components/molecules/StrategyTitleWithR
 
 import strategyCardStyles from './StrategyCard.module.scss'
 
-type StrategyCardProps = EarnProtocolStrategy & {
+type StrategyCardProps = SDKVaultishType & {
   onClick?: (id: string) => void
   secondary?: boolean
   selected?: boolean
@@ -18,23 +20,23 @@ type StrategyCardProps = EarnProtocolStrategy & {
 
 export const StrategyCard = ({
   id,
-  symbol,
-  network,
-  risk,
-  bestFor,
-  tokenBonus,
-  apy,
-  totalAssets,
+  protocol,
+  inputToken,
+  totalValueLockedUSD,
   withHover,
   secondary = false,
   selected = false,
   onClick,
+  calculatedApr,
 }: StrategyCardProps) => {
   const handleStrategyClick = () => {
     if (onClick) {
       onClick(id)
     }
   }
+
+  const parsedApr = formatDecimalAsPercent(new BigNumber(calculatedApr).div(100))
+  const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(totalValueLockedUSD))
 
   return (
     <div
@@ -49,9 +51,15 @@ export const StrategyCard = ({
         variant={secondary ? 'cardSecondary' : 'cardPrimary'}
       >
         <div className={strategyCardStyles.strategyCardHeaderWrapper}>
-          <StrategyTitleWithRisk symbol={symbol} risk={risk} networkName={network} />
+          <StrategyTitleWithRisk
+            symbol={inputToken.symbol}
+            // TODO: fill data
+            risk="low"
+            networkName={protocol.network}
+          />
           <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-            <BonusLabel tokenBonus={tokenBonus} apy={apy} />
+            {/** TODO: fill data */}
+            <BonusLabel tokenBonus="some" apy={parsedApr} />
           </Text>
         </div>
         <div className={strategyCardStyles.strategyCardAssetsWrapper}>
@@ -59,13 +67,17 @@ export const StrategyCard = ({
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
               Total assets
             </Text>
-            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>${totalAssets}</Text>
+            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+              ${parsedTotalValueLockedUSD}
+            </Text>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
               Best for
             </Text>
-            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>{bestFor}</Text>
+            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+              {/** TODO: fill data */} bestFor
+            </Text>
           </div>
         </div>
       </Card>

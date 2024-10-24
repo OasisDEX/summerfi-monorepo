@@ -1,24 +1,32 @@
 'use client'
-import { type FC, type PropsWithChildren, useMemo } from 'react'
-import { type AlchemyClientState } from '@account-kit/core'
+import { type FC, type PropsWithChildren, useEffect } from 'react'
+import { type AlchemyClientState, hydrate } from '@account-kit/core'
 import { AlchemyAccountProvider } from '@account-kit/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { getAccountKitConfig } from 'account-kit/config'
+import { staticConfig } from 'account-kit/config'
 
 const queryClient = new QueryClient()
 
 export const AlchemyAccountsProvider: FC<
   PropsWithChildren<{
     initialState?: AlchemyClientState
-    forkRpcUrl?: string
-    chainId?: number
   }>
-> = ({ initialState, forkRpcUrl, chainId, children }) => {
-  const config = useMemo(() => getAccountKitConfig({ forkRpcUrl, chainId }), [chainId, forkRpcUrl])
+> = ({ initialState, children }) => {
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const { onMount } = hydrate(staticConfig, initialState)
+
+      void onMount()
+    }
+  }, [initialState])
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AlchemyAccountProvider config={config} queryClient={queryClient} initialState={initialState}>
+      <AlchemyAccountProvider
+        config={staticConfig}
+        queryClient={queryClient}
+        initialState={initialState}
+      >
         {children}
       </AlchemyAccountProvider>
     </QueryClientProvider>

@@ -24,7 +24,15 @@ export const Input: FC<
     wrapperStyles?: CSSProperties
     secondaryValue?: string
   }
-> = ({ variant = 'default', className, CustomIcon, icon, wrapperStyles, ...rest }) => {
+> = ({
+  variant = 'default',
+  className,
+  CustomIcon,
+  icon,
+  wrapperStyles,
+  secondaryValue,
+  ...rest
+}) => {
   return (
     <div className={inputStyles.wrapper} style={wrapperStyles}>
       {icon && (
@@ -44,7 +52,7 @@ export const Input: FC<
         ].join(' ')}
         {...rest}
       />
-      {rest.secondaryValue !== '0' && rest.secondaryValue !== '' && (
+      {secondaryValue !== '0' && secondaryValue !== '' && (
         <Text
           as="p"
           variant="p3semi"
@@ -55,7 +63,7 @@ export const Input: FC<
             color: 'var(--earn-protocol-secondary-60)',
           }}
         >
-          {rest.secondaryValue}
+          {secondaryValue}
         </Text>
       )}
     </div>

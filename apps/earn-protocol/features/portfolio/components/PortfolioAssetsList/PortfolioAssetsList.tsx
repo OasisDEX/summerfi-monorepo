@@ -4,8 +4,8 @@ import { Card, DataBlock, Icon, StrategyTitle, Text } from '@summerfi/app-earn-u
 import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
+import { type PortfolioWalletAsset } from '@/app/server-handlers/portfolio/portfolio-wallet-assets-handler'
 import { valueColorResolver } from '@/helpers/value-color-resolver'
-import { type PortfolioWalletAsset } from '@/server-handlers/portfolio/portfolio-wallet-assets-handler'
 
 import classNames from './PortfolioAssetsList.module.scss'
 
