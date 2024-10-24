@@ -51,10 +51,19 @@ query GetVaults {
 }
 query GetVault($id: ID!) {
   vault(id: $id) {
-    id
     protocol {
       network
     }
+    id
+    name
+    rewardTokens {
+      id
+      token {
+        symbol
+        decimals
+      }
+    }
+    rewardTokenEmissionsUSD
     rebalances {
       amount
       vault {
@@ -96,6 +105,11 @@ query GetVault($id: ID!) {
       cumulativeDeposits
       cumulativeEarnings
       cumulativeWithdrawals
+      inputToken {
+        name
+        symbol
+        decimals
+      }
       dailySnapshots(first: 10) {
         id
         apr
@@ -108,6 +122,32 @@ query GetVault($id: ID!) {
         totalValueLockedUSD
         inputTokenBalance
       }
+      fees {
+        id
+        feePercentage
+        feeType
+      }
+      createdTimestamp
+      lastUpdateTimestamp
     }
+    inputToken {
+      name
+      symbol
+      decimals
+    }
+    outputToken {
+      name
+      symbol
+      decimals
+    }
+    outputTokenPriceUSD
+    depositLimit
+    calculatedApr
+    createdTimestamp
+    totalValueLockedUSD
+    cumulativeTotalRevenueUSD
+    cumulativeSupplySideRevenueUSD
+    cumulativeProtocolSideRevenueUSD
+    lastUpdateTimestamp
   }
 }
