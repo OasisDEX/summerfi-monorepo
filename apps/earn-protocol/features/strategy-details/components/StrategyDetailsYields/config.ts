@@ -1,6 +1,6 @@
-import { type InlineButtonOption } from '@summerfi/app-types'
+import { type InlineButtonOption } from '../../../../../../packages/app-types'
 
-import type { IndividualYieldsRawData } from '@/components/organisms/StrategyDetailsYields/mapper'
+import type { IndividualYieldsRawData } from '@/features/strategy-details/components/StrategyDetailsYields/mapper'
 
 // dummy data for now
 export const yieldsRawData: IndividualYieldsRawData[] = [

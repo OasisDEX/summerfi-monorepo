@@ -1,6 +1,6 @@
 import { type FC, useState } from 'react'
 import { Card, Dropdown, Icon, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { type DropdownOption, type DropdownRawOption } from '@summerfi/app-types'
+import { type DropdownOption, type DropdownRawOption } from '../../../../../../packages/app-types'
 import Link from 'next/link'
 
 const securityDropdownOptions: DropdownOption[] = [
@@ -99,7 +99,7 @@ export const StrategyDetailsSecurityProtocolStats = () => {
           features, cross-chain functionality, and deep liquidity, making it ideal for secure,
           scalable integration.
         </Text>
-        <Link href="/">
+        <Link href="/apps/earn-protocol/public">
           <WithArrow as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             View {resolvedOption.label}
           </WithArrow>

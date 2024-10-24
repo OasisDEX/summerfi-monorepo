@@ -1,4 +1,4 @@
-import { type InlineButtonOption } from '@summerfi/app-types'
+import { type InlineButtonOption } from '../../../../../../packages/app-types/types'
 
 export const strategyDetailsHowItWorksOptions: InlineButtonOption<string>[] = [
   {

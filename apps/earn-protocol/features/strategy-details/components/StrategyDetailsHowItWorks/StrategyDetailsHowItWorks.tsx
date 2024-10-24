@@ -1,16 +1,16 @@
 'use client'
 import { useState } from 'react'
 import { Card, InlineButtons, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { type InlineButtonOption } from '@summerfi/app-types'
+import { type InlineButtonOption } from '../../../../../../packages/app-types'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import {
   strategyDetailsHowItWorksLinks,
   strategyDetailsHowItWorksOptions,
-} from '@/components/organisms/StrategyDetailsHowItWorks/config'
+} from '@/features/strategy-details/components/StrategyDetailsHowItWorks/config'
 
-import rebalancingMorpho from 'public/img/rebalancing/rebalancing-morpho.png'
+import rebalancingMorpho from '@/public/img/rebalancing/rebalancing-morpho.png'
 
 export const StrategyDetailsHowItWorks = () => {
   const [currentOption, setCurrentOption] = useState<InlineButtonOption<string>>(
