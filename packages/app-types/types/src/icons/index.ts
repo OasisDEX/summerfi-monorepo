@@ -224,6 +224,17 @@ export type IconNamesList =
   | 'network_optimism'
   | 'network_base'
   | 'withdraw'
+  | 'summer_illustration_check'
+  | 'summer_illustration_email'
+  | 'summer_illustration_failed'
+  | 'summer_illustration_gas_fee'
+  | 'summer_illustration_identity'
+  | 'summer_illustration_logo'
+  | 'summer_illustration_passkey'
+  | 'summer_illustration_shield'
+  | 'summer_illustration_switch'
+  | 'summer_illustration_transak_logo'
+  | 'summer_illustration_verification'
 
 export type TokenSymbolsList =
   | 'USDP'
