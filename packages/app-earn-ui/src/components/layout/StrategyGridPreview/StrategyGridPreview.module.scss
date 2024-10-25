@@ -1,11 +1,12 @@
 .strategyGridPreviewBreadcrumbsWrapper {
   display: flex;
   flex-direction: column;
+  padding: 0 var(--general-space-16);
+
   a {
     margin-top: var(--general-space-12);
     color: var(--earn-protocol-primary-100);
   }
-  padding: 0 var(--general-space-16);
 }
 
 .strategyGridPreviewPositionWrapper {
