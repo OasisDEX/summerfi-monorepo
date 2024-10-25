@@ -12,32 +12,9 @@ type EarnNetworkStrategiesPageProps = {
 export const revalidate = 60
 
 const EarnNetworkStrategiesPage = async ({ params }: EarnNetworkStrategiesPageProps) => {
-  const { vaults, callDataTimestamp } = await getVaultsList()
+  const { vaults } = await getVaultsList()
 
-  return (
-    <>
-      <StrategiesListView strategiesList={vaults} selectedNetwork={params.network} />
-      <pre
-        style={{
-          backgroundColor: 'rgba(30,30,30,0.5)',
-          backdropFilter: 'blur(30px)',
-          color: 'rgba(180,180,180,1)',
-          padding: '16px',
-          borderRadius: '8px',
-          overflow: 'auto',
-          width: '100%',
-          whiteSpace: 'pre-wrap',
-          marginTop: '20px',
-        }}
-      >
-        {JSON.stringify(
-          { dataTimestamp: callDataTimestamp, secondsAgo: (Date.now() - callDataTimestamp) / 1000 },
-          null,
-          2,
-        )}
-      </pre>
-    </>
-  )
+  return <StrategiesListView strategiesList={vaults} selectedNetwork={params.network} />
 }
 
 export default EarnNetworkStrategiesPage
