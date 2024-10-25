@@ -1,6 +1,13 @@
 'use client'
 import { type CSSProperties, type FC, useState } from 'react'
-import { Card, DataBlock, Icon, StrategyTitle, Text } from '@summerfi/app-earn-ui'
+import {
+  Card,
+  DataBlock,
+  Icon,
+  networkNameToSDKNetwork,
+  StrategyTitle,
+  Text,
+} from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
@@ -63,24 +70,24 @@ export const PortfolioAssetsList: FC<PortfolioAssetsListProps> = ({ walletAssets
             <div className={classNames.tokenBlockWrapper}>
               <StrategyTitle
                 symbol={item.symbol}
-                networkName={item.network}
+                networkName={networkNameToSDKNetwork(item.network)}
                 value={<AssetPriceChangeTrend change={item.price24hChange} />}
               />
             </div>
             <div className={classNames.dataBlockWrapper}>
               <DataBlock
                 title="Price (24h)"
-                value={`$${formatFiatBalance(new BigNumber(item.priceUSD))}`}
+                value={`$${formatFiatBalance(item.priceUSD)}`}
                 {...dataBlocksStyles}
               />
               <DataBlock
                 title="USD Value"
-                value={`$${formatFiatBalance(new BigNumber(item.balanceUSD))}`}
+                value={`$${formatFiatBalance(item.balanceUSD)}`}
                 {...dataBlocksStyles}
               />
               <DataBlock
                 title="Token Balance"
-                value={`${formatCryptoBalance(new BigNumber(item.balance))} ${item.symbol}`}
+                value={`${formatCryptoBalance(item.balance)} ${item.symbol}`}
                 {...dataBlocksStyles}
               />
             </div>

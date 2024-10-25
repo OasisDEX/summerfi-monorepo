@@ -4,6 +4,7 @@ export type Styles = {
   tabButton: string
   tabContent: string
   tabHeaders: string
+  tabHeaderWrapper: string
   underline: string
 }
 

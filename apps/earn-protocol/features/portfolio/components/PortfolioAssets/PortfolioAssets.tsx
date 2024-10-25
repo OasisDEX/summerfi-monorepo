@@ -65,8 +65,8 @@ export const PortfolioAssets: FC<PortfolioAssetsProps> = ({ walletData }) => {
       <div className={classNames.headerWrapper}>
         <DataBlock
           title="Total Assets"
-          value={`$${formatFiatBalance(new BigNumber(walletData.totalAssetsUsdValue))}`}
-          subValue={`${formatDecimalAsPercent(new BigNumber(totalAssetsAmountChange), { plus: true })} Past week`}
+          value={`$${formatFiatBalance(walletData.totalAssetsUsdValue)}`}
+          subValue={`${formatDecimalAsPercent(totalAssetsAmountChange, { plus: true })} Past week`}
           titleSize="large"
           valueSize="large"
           subValueSize="small"

@@ -2,20 +2,56 @@
 .smallXPaddings,
 .smallLeftPadding,
 .smallRightPadding {
-  display: inline-flex;
   align-items: center;
-  column-gap: var(--general-space-8);
   height: 38px;
   border-radius: var(--radius-roundish);
-  backdrop-filter: var(--color-neutral-20);
   vertical-align: bottom;
   position: relative;
   padding-left: var(--general-space-12);
   padding-right: var(--general-space-12);
-  position: relative;
-  background: linear-gradient(90deg, rgba(255, 73, 164, 0.5) 0%, rgba(176, 73, 255, 0.5) 93%);
   font-size: 14px;
   font-weight: 500;
+}
+
+.childrenWrapper {
+  display: inline-flex;
+  align-items: center;
+  column-gap: var(--general-space-8);
+  z-index: 1;
+  height: 100%;
+  position: relative;
+}
+
+.background1 {
+  background: linear-gradient(90deg, rgba(255, 73, 164, 0.5) 0%, rgba(176, 73, 255, 0.5) 93%);
+  opacity: 1;
+  border-radius: var(--radius-roundish);
+}
+
+.background2 {
+  background: linear-gradient(90deg, #ff49a4 0%, #b049ff 93%);
+  opacity: 0;
+  border-radius: var(--radius-roundish);
+}
+
+/* On hover, change opacity to make the second gradient appear */
+.default:hover .background1 {
+  opacity: 0;
+}
+
+.default:hover .background2 {
+  opacity: 1;
+}
+
+.background1,
+.background2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.2s ease;
+  z-index: 0;
 }
 
 .smallXPaddings {

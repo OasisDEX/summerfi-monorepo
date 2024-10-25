@@ -1,6 +1,6 @@
 'use client'
-import { type FC, useMemo, useState } from 'react'
-import { Button, Card, Table, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { type FC, useMemo } from 'react'
+import { Card, TabBar, Table, WithArrow } from '@summerfi/app-earn-ui'
 import Link from 'next/link'
 
 import { userActivityColumns } from '@/components/organisms/UserActivity/columns'
@@ -27,48 +27,25 @@ enum UserActivityType {
 }
 
 export const UserActivity: FC<UserActivityProps> = ({ rawData }) => {
-  // to be used for backend queries
-  const [userActivityType, setUserActivityType] = useState(UserActivityType.LATEST_ACTIVITY)
-
   const rows = useMemo(() => userActivityMapper(rawData), [rawData])
+  const tabs = [
+    {
+      id: UserActivityType.TOP_DEPOSITORS,
+      label: 'Top depositors',
+      content: <Table rows={rows} columns={userActivityColumns} />,
+    },
+    {
+      id: UserActivityType.LATEST_ACTIVITY,
+      label: 'Latest activity',
+      content: <Table rows={rows} columns={userActivityColumns} />,
+    },
+  ]
 
   return (
     <Card variant="cardSecondary" style={{ marginTop: 'var(--spacing-space-medium)' }}>
       <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-        <div style={{ display: 'flex', gap: 'var(--spacing-space-medium)' }}>
-          <Button
-            variant="unstyled"
-            onClick={() => setUserActivityType(UserActivityType.TOP_DEPOSITORS)}
-          >
-            <Text
-              as="p"
-              variant="p2semi"
-              style={{
-                marginBottom: 'var(--spacing-space-large)',
-                color: `var(${userActivityType === UserActivityType.TOP_DEPOSITORS ? '--earn-protocol-secondary-100' : '--earn-protocol-secondary-40'})`,
-              }}
-            >
-              Top depositors
-            </Text>
-          </Button>
-          <Button
-            variant="unstyled"
-            onClick={() => setUserActivityType(UserActivityType.LATEST_ACTIVITY)}
-          >
-            <Text
-              as="p"
-              variant="p2semi"
-              style={{
-                marginBottom: 'var(--spacing-space-large)',
-                color: `var(${userActivityType === UserActivityType.LATEST_ACTIVITY ? '--earn-protocol-secondary-100' : '--earn-protocol-secondary-40'})`,
-              }}
-            >
-              Latest activity
-            </Text>
-          </Button>
-        </div>
-        <Table rows={rows} columns={userActivityColumns} />
-        <Link href="/" style={{ marginTop: 'var(--spacing-space-large)', width: 'fit-content' }}>
+        <TabBar tabs={tabs} textVariant="p3semi" />
+        <Link href="/" style={{ width: 'fit-content' }}>
           <WithArrow as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             View all depositors
           </WithArrow>

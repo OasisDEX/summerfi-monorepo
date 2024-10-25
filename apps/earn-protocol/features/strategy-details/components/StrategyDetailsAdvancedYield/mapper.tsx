@@ -1,6 +1,5 @@
 import { TableCellText, TableRowAccent } from '@summerfi/app-earn-ui'
 import { formatDecimalAsPercent } from '@summerfi/app-utils'
-import BigNumber from 'bignumber.js'
 
 export interface IndividualYieldsRawData {
   strategy: string
@@ -26,24 +25,16 @@ export const individualYieldsMapper = (rawData: IndividualYieldsRawData[]) => {
             <TableCellText>{item.strategy}</TableCellText>
           </div>
         ),
-        currentApy: (
-          <TableCellText>{formatDecimalAsPercent(new BigNumber(item.currentApy))}</TableCellText>
-        ),
-        avgApyPer30d: (
-          <TableCellText>{formatDecimalAsPercent(new BigNumber(item.avgApyPer30d))}</TableCellText>
-        ),
-        avgApyPer1y: (
-          <TableCellText>{formatDecimalAsPercent(new BigNumber(item.avgApyPer1y))}</TableCellText>
-        ),
+        currentApy: <TableCellText>{formatDecimalAsPercent(item.currentApy)}</TableCellText>,
+        avgApyPer30d: <TableCellText>{formatDecimalAsPercent(item.avgApyPer30d)}</TableCellText>,
+        avgApyPer1y: <TableCellText>{formatDecimalAsPercent(item.avgApyPer1y)}</TableCellText>,
         allTimeMedianApy: (
-          <TableCellText>
-            {formatDecimalAsPercent(new BigNumber(item.allTimeMedianApy))}
-          </TableCellText>
+          <TableCellText>{formatDecimalAsPercent(item.allTimeMedianApy)}</TableCellText>
         ),
         yieldLowHigh: (
           <TableCellText>
-            {formatDecimalAsPercent(new BigNumber(item.yieldLowHigh.low))} /{' '}
-            {formatDecimalAsPercent(new BigNumber(item.yieldLowHigh.high))}
+            {formatDecimalAsPercent(item.yieldLowHigh.low)} /{' '}
+            {formatDecimalAsPercent(item.yieldLowHigh.high)}
           </TableCellText>
         ),
       },

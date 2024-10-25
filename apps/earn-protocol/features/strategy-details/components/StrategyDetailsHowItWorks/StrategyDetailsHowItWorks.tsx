@@ -64,7 +64,7 @@ export const StrategyDetailsHowItWorks = () => {
           The Summer Earn Protocol is a permissionless passive lending product, which sets out to
           offer effortless and secure optimised yield, while diversifying risk.
         </Text>
-        <div style={{ display: 'flex', gap: '45px' }}>
+        <div style={{ display: 'flex', gap: '45px', flexWrap: 'wrap' }}>
           {strategyDetailsHowItWorksLinks.map((link) => (
             <Link href={link.href} key={link.label}>
               <WithArrow

@@ -1,6 +1,13 @@
 'use client'
 import { type ChangeEvent, useState } from 'react'
-import { getStrategyUrl, Sidebar, SidebarFootnote, sidebarFootnote } from '@summerfi/app-earn-ui'
+import {
+  getStrategyUrl,
+  InputWithDropdown,
+  ProjectedEarnings,
+  Sidebar,
+  SidebarFootnote,
+  sidebarFootnote,
+} from '@summerfi/app-earn-ui'
 import {
   type DropdownOption,
   type SDKVaultsListType,
@@ -24,7 +31,11 @@ export type FormProps = {
   strategiesList: SDKVaultsListType
 }
 
-const Form = ({ fleetConfig: _fleetConfig, selectedStrategyData, strategiesList }: FormProps) => {
+export const Form = ({
+  fleetConfig: _fleetConfig,
+  selectedStrategyData,
+  strategiesList,
+}: FormProps) => {
   const options: DropdownOption[] = [
     ...[...new Set(strategiesList.map((strategy) => strategy.inputToken.symbol))].map((symbol) => ({
       tokenSymbol: symbol as TokenSymbolsList,
@@ -47,27 +58,37 @@ const Form = ({ fleetConfig: _fleetConfig, selectedStrategyData, strategiesList 
   }
 
   const dropdownValue =
-    options.find((option) => option.value === selectedStrategyData?.inputToken.symbol) ?? options[0]
+    options.find((option) => option.value === selectedStrategyData.inputToken.symbol) ?? options[0]
 
   const balance = new BigNumber(123123)
   const token = dropdownValue.label
 
+  const inputValue = amountValue ?? ''
+
   const sidebarProps = {
     title: capitalize(action),
-    inputValue: amountValue ?? '',
-    inputHeading: {
-      label: 'Balance',
-      value: `${formatCryptoBalance(balance)} ${token}`,
-      // eslint-disable-next-line no-console
-      action: () => console.log('clicked'),
-    },
-    dropdown: { value: dropdownValue, options },
-    handleInputChange: handleChange,
-    banner: {
-      title: 'Estimated earnings after 1 year',
-      // TODO: fill data
-      value: `67,353 ${selectedStrategyData?.inputToken.symbol}`,
-    },
+    content: (
+      <>
+        <InputWithDropdown
+          value={inputValue}
+          secondaryValue={`$${inputValue}`}
+          handleChange={handleChange}
+          options={options}
+          dropdownValue={dropdownValue}
+          heading={{
+            label: 'Balance',
+            value: `${formatCryptoBalance(balance)} ${token}`,
+            // eslint-disable-next-line no-console
+            action: () => console.log('clicked'),
+          }}
+        />
+        <ProjectedEarnings
+          earnings="1353"
+          symbol={selectedStrategyData.inputToken.symbol as TokenSymbolsList}
+        />
+      </>
+    ),
+
     primaryButton: {
       label: 'Get Started',
       url: getStrategyUrl(selectedStrategyData),
@@ -88,5 +109,3 @@ const Form = ({ fleetConfig: _fleetConfig, selectedStrategyData, strategiesList 
     </div>
   )
 }
-
-export default Form

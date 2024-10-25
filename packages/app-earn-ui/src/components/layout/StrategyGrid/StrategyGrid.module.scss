@@ -10,10 +10,14 @@
 
 .strategyGridPositionWrapper {
   display: grid;
-  grid-gap: var(--general-space-16);
-  grid-template-columns: 1.7fr 1.2fr;
+  grid-template-columns: 1fr;
   margin-top: 20px;
   align-items: start;
+
+  @media screen and (min-width: 900px) {
+    grid-template-columns: 1fr max(446px);
+    grid-gap: var(--general-space-16);
+  }
 
   .fullWidthBlock {
     grid-column: 1 / 3;

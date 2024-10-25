@@ -26,13 +26,26 @@ export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   strategiesList,
 }) => {
   const tabs = [
-    { label: 'Overview', content: <PortfolioOverview strategiesList={strategiesList} /> },
     {
+      id: 'overview',
+      label: 'Overview',
+      content: <PortfolioOverview strategiesList={strategiesList} />,
+    },
+    {
+      id: 'wallet',
       label: 'Wallet',
       content: <PortfolioWallet walletData={walletData} strategiesList={strategiesList} />,
     },
-    { label: 'Rebalance Activity', content: <PortfolioRebalanceActivity /> },
-    { label: 'Rewards', content: <PortfolioRewards rewardsData={rewardsData} /> },
+    {
+      id: 'rebalance-activity',
+      label: 'Rebalance Activity',
+      content: <PortfolioRebalanceActivity />,
+    },
+    {
+      id: 'rewards',
+      label: 'Rewards',
+      content: <PortfolioRewards rewardsData={rewardsData} />,
+    },
   ]
 
   return (

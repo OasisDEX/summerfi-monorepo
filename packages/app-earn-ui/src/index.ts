@@ -54,6 +54,7 @@ export {
 } from './components/molecules/LinkCard/LinkCard'
 export { PillSelector } from './components/molecules/PillSelector/PillSelector'
 export { BonusLabel } from './components/molecules/BonusLabel/BonusLabel'
+export { ProjectedEarnings } from './components/molecules/ProjectedEarnings/ProjectedEarnings'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar } from './components/organisms/Sidebar/Sidebar'
@@ -65,4 +66,4 @@ export { useHash } from './hooks/use-hash'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
 export { getStrategyUrl, getStrategyDetailsUrl } from './helpers/get-strategy-url'
-export { subgraphNetworkToId } from './helpers/subgraph-network-to-id'
+export { networkNameToSDKNetwork, subgraphNetworkToId } from './helpers/network-helpers'

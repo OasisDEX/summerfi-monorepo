@@ -1,6 +1,5 @@
 import { Icon, TableCellText } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance } from '@summerfi/app-utils'
-import BigNumber from 'bignumber.js'
 
 import { type PortfolioRewardsRawData } from '@/app/server-handlers/portfolio/portfolio-rewards-handler'
 
@@ -16,12 +15,8 @@ export const portfolioRewardsMapper = (rawData: PortfolioRewardsRawData[]) => {
             </div>
           </TableCellText>
         ),
-        sumrEarned: (
-          <TableCellText>{formatCryptoBalance(new BigNumber(item.sumrEarned))} SUMR</TableCellText>
-        ),
-        sumrPerDay: (
-          <TableCellText>{formatCryptoBalance(new BigNumber(item.sumrPerDay))} SUMR</TableCellText>
-        ),
+        sumrEarned: <TableCellText>{formatCryptoBalance(item.sumrEarned)} SUMR</TableCellText>,
+        sumrPerDay: <TableCellText>{formatCryptoBalance(item.sumrPerDay)} SUMR</TableCellText>,
       },
     }
   })

@@ -1,11 +1,17 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { type DropdownOption, type SDKVaultishType } from '@summerfi/app-types'
+import {
+  type DropdownOption,
+  type SDKVaultishType,
+  type TokenSymbolsList,
+} from '@summerfi/app-types'
 import { formatCryptoBalance, mapNumericInput } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
 import { sidebarFootnote } from '@/common/sidebar/footnote'
+import { InputWithDropdown } from '@/components/molecules/InputWithDropdown/InputWithDropdown.tsx'
+import { ProjectedEarnings } from '@/components/molecules/ProjectedEarnings/ProjectedEarnings.tsx'
 import { SidebarFootnote } from '@/components/molecules/SidebarFootnote/SidebarFootnote'
 import { Sidebar } from '@/components/organisms/Sidebar/Sidebar'
 import { getStrategyUrl } from '@/helpers/get-strategy-url'
@@ -24,43 +30,51 @@ export const StrategySimulationForm = ({ strategyData }: StrategySimulationFormP
   }
 
   const estimatedEarnings = useMemo(() => {
-    if (!strategyData?.calculatedApr) return 0
+    if (!strategyData.calculatedApr) return 0
 
     return formatCryptoBalance(
       new BigNumber(
-        Number(inputValue.replaceAll(',', '')) * (Number(strategyData?.calculatedApr) / 100),
+        Number(inputValue.replaceAll(',', '')) * (Number(strategyData.calculatedApr) / 100),
       ),
     )
   }, [strategyData, inputValue])
 
   const dropdownLockedValue = useMemo(() => {
     return {
-      tokenSymbol: strategyData?.inputToken.symbol,
-      label: strategyData?.inputToken.symbol,
-      value: strategyData?.inputToken.symbol,
+      tokenSymbol: strategyData.inputToken.symbol,
+      label: strategyData.inputToken.symbol,
+      value: strategyData.inputToken.symbol,
     } as DropdownOption
   }, [strategyData])
 
   const balance = new BigNumber(123123)
-  const token = strategyData?.inputToken.symbol
+  const token = strategyData.inputToken.symbol
 
   return (
     <Sidebar
       {...{
         title: 'Deposit',
-        inputValue,
-        dropdown: { value: dropdownLockedValue, options: [dropdownLockedValue] },
-        inputHeading: {
-          label: 'Balance',
-          value: `${formatCryptoBalance(balance)} ${token}`,
-          // eslint-disable-next-line no-console
-          action: () => console.log('clicked'),
-        },
-        handleInputChange,
-        banner: {
-          title: 'Estimated earnings after 1 year',
-          value: `${estimatedEarnings} ${strategyData?.inputToken.symbol}`,
-        },
+        content: (
+          <>
+            <InputWithDropdown
+              value={inputValue}
+              secondaryValue={`$${inputValue}`}
+              handleChange={handleInputChange}
+              options={[dropdownLockedValue]}
+              dropdownValue={dropdownLockedValue}
+              heading={{
+                label: 'Balance',
+                value: `${formatCryptoBalance(balance)} ${token}`,
+                // eslint-disable-next-line no-console
+                action: () => console.log('clicked'),
+              }}
+            />
+            <ProjectedEarnings
+              earnings={estimatedEarnings}
+              symbol={strategyData.inputToken.symbol as TokenSymbolsList}
+            />
+          </>
+        ),
         primaryButton: {
           label: 'Get Started',
           url: getStrategyUrl(strategyData),

@@ -5,9 +5,21 @@ import { CryptoUtilitiesBasics } from '@/features/crypto-utilities/components/Cr
 import classNames from './CryptoUtilities.module.scss'
 
 const tabs = [
-  { label: 'Basics', content: <CryptoUtilitiesBasics /> },
-  { label: 'Automations', content: <div>Automations</div> },
-  { label: 'Advanced', content: <div>Advanced</div> },
+  {
+    id: 'basics',
+    label: 'Basics',
+    content: <CryptoUtilitiesBasics />,
+  },
+  {
+    id: 'automations',
+    label: 'Automations',
+    content: <div>Automations</div>,
+  },
+  {
+    id: 'advanced',
+    label: 'Advanced',
+    content: <div>Advanced</div>,
+  },
 ]
 
 export const CryptoUtilities = () => {

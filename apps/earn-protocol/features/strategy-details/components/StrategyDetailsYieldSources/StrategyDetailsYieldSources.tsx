@@ -1,7 +1,6 @@
 import { type FC, useMemo } from 'react'
 import { Card, Table, Text } from '@summerfi/app-earn-ui'
 import { formatDecimalAsPercent } from '@summerfi/app-utils'
-import BigNumber from 'bignumber.js'
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip, type TooltipProps } from 'recharts'
 
 import { yieldSourcesColumns } from '@/features/strategy-details/components/StrategyDetailsYieldSources/columns'
@@ -27,7 +26,7 @@ const LegendItem: FC<LegendItemProps> = ({ label, backgroundColor, value }) => {
         {label}
       </Text>
       <Text as="p" variant="p3semi">
-        {formatDecimalAsPercent(new BigNumber(value))}
+        {formatDecimalAsPercent(value)}
       </Text>
     </div>
   )
@@ -62,19 +61,28 @@ export const StrategyDetailsYieldSources = () => {
       <div className={classNames.chartSection}>
         <div className={classNames.chartWrapper}>
           <ResponsiveContainer width="100%" height="100%">
-            <PieChart width={390} height={390}>
-              <Pie dataKey="value" data={data} cx="50%" cy="50%" innerRadius={97} outerRadius={195}>
-                {data.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={entry.fill}
-                    stroke="unset"
-                    style={{ outline: 'none', cursor: 'pointer' }}
-                  />
-                ))}
-              </Pie>
-              <Tooltip content={<CustomTooltip />} />
-            </PieChart>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <PieChart width={390} height={390}>
+                <Pie
+                  dataKey="value"
+                  data={data}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={97}
+                  outerRadius={195}
+                >
+                  {data.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={entry.fill}
+                      stroke="unset"
+                      style={{ outline: 'none', cursor: 'pointer' }}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip content={<CustomTooltip />} />
+              </PieChart>
+            </div>
           </ResponsiveContainer>
         </div>
         <div className={classNames.chartLegendWrapper}>

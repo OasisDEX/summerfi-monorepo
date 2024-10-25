@@ -5,13 +5,20 @@
     margin-top: var(--general-space-12);
     color: var(--earn-protocol-primary-100);
   }
+  padding: 0 var(--general-space-16);
 }
 
 .strategyGridPreviewPositionWrapper {
   display: grid;
-  grid-gap: var(--general-space-16);
-  grid-template-columns: 1fr max(446px);
+  grid-template-columns: 1fr;
   margin-top: 20px;
+  padding: 0 var(--general-space-16);
+
+  @media screen and (min-width: 900px) {
+    grid-template-columns: 1fr max(446px);
+    grid-gap: var(--general-space-16);
+  }
+
   .leftBlock {
     display: grid;
     grid-gap: var(--general-space-16);

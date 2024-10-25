@@ -16,6 +16,7 @@ import { createPortal } from 'react-dom'
 import { Card } from '@/components/atoms/Card/Card'
 import { isTouchDevice } from '@/helpers/is-touch-device'
 
+import { type ClassNames as CardVariants } from '@/components/atoms/Card/Card.module.scss'
 import tooltipStyles from '@/components/molecules/Tooltip/Tooltip.module.scss'
 
 export function useTooltip() {
@@ -44,9 +45,16 @@ interface TooltipWrapperProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode
   isOpen: boolean
   showAbove: boolean
+  cardVariant?: CardVariants
 }
 
-const TooltipWrapper: FC<TooltipWrapperProps> = ({ children, isOpen, style, showAbove }) => {
+const TooltipWrapper: FC<TooltipWrapperProps> = ({
+  children,
+  isOpen,
+  style,
+  showAbove,
+  cardVariant = 'cardSecondary',
+}) => {
   return (
     <div
       className={
@@ -58,7 +66,7 @@ const TooltipWrapper: FC<TooltipWrapperProps> = ({ children, isOpen, style, show
       }
       style={style}
     >
-      <Card variant="cardSecondary" style={{ backgroundColor: 'var(--earn-protocol-neutral-80)' }}>
+      <Card variant={cardVariant} style={{ backgroundColor: 'var(--earn-protocol-neutral-80)' }}>
         {children}
       </Card>
     </div>
@@ -71,6 +79,7 @@ interface StatefulTooltipProps {
   tooltip: ReactNode
   children: ReactNode | ChildrenCallback
   tooltipWrapperStyles?: HTMLAttributes<HTMLDivElement>['style']
+  tooltipCardVariant?: CardVariants
   style?: HTMLAttributes<HTMLDivElement>['style']
   showAbove?: boolean
 }
@@ -83,6 +92,7 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   children,
   style,
   tooltipWrapperStyles,
+  tooltipCardVariant,
   showAbove = false,
 }) => {
   const { tooltipOpen, setTooltipOpen } = useTooltip()
@@ -123,7 +133,12 @@ export const Tooltip: FC<StatefulTooltipProps> = ({
   }
 
   const portal = createPortal(
-    <TooltipWrapper isOpen={tooltipOpen} style={tooltipWrapperStyles} showAbove={showAbove}>
+    <TooltipWrapper
+      isOpen={tooltipOpen}
+      style={tooltipWrapperStyles}
+      showAbove={showAbove}
+      cardVariant={tooltipCardVariant}
+    >
       {tooltip}
     </TooltipWrapper>,
     portalElement,

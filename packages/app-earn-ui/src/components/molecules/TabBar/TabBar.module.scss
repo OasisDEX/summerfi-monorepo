@@ -2,7 +2,13 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+}
+
+// class specifically to wrap tabHeaders, fit to its height and provide
+// reference to position underline element
+.tabHeaderWrapper {
   position: relative;
+  height: fit-content;
 }
 
 .tabHeaders {
@@ -24,14 +30,14 @@
   background: none;
   border: none;
   font-size: 16px;
-  color: #ccc;
+  color: var(--earn-protocol-secondary-40);
   transition: color 0.3s ease;
   white-space: nowrap; /* Prevent text wrapping for tabs */
   flex-shrink: 0; /* Ensure buttons don't shrink when content is wide */
   position: relative;
 
   &:hover {
-    color: #fff;
+    color: var(--earn-protocol-secondary-100);
   }
 
   &:focus {
@@ -40,13 +46,13 @@
 }
 
 .active {
-  color: #fff;
+  color: var(--earn-protocol-secondary-100);
   position: relative;
 }
 
 .underline {
   position: absolute;
-  top: 44px; /* Same level as grey border */
+  bottom: 0; /* Same level as grey border */
   height: 3px;
   background-color: #ff0080; /* Pink underline */
   z-index: 1; /* Pink border should appear on top */
@@ -69,10 +75,6 @@
   .tabContent {
     padding: 15px;
   }
-
-  .underline {
-    top: 54px; /* Same level as grey border */
-  }
 }
 
 @media (max-width: 480px) {
@@ -83,9 +85,5 @@
 
   .tabContent {
     padding: 10px;
-  }
-
-  .underline {
-    top: 48px; /* Same level as grey border */
   }
 }

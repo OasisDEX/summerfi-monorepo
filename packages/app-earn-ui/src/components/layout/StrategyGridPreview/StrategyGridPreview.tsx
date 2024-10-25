@@ -14,6 +14,7 @@ import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
 import { SimpleGrid } from '@/components/molecules/Grid/SimpleGrid'
 import { StrategyTitleDropdownContent } from '@/components/molecules/StrategyTitleDropdownContent/StrategyTitleDropdownContent.tsx'
 import { StrategyTitleWithRisk } from '@/components/molecules/StrategyTitleWithRisk/StrategyTitleWithRisk'
+import { getStrategyUrl } from '@/helpers/get-strategy-url.ts'
 
 import strategyGridPreviewStyles from './StrategyGridPreview.module.scss'
 
@@ -53,11 +54,18 @@ export const StrategyGridPreview: FC<StrategyGridPreviewProps> = ({
             <Dropdown
               options={strategies.map((item) => ({
                 value: item.id,
-                content: <StrategyTitleDropdownContent strategy={item} />,
+                content: (
+                  <StrategyTitleDropdownContent strategy={item} link={getStrategyUrl(strategy)} />
+                ),
               }))}
               dropdownValue={{
                 value: strategy.id,
-                content: <StrategyTitleDropdownContent strategy={strategy} />,
+                content: (
+                  <StrategyTitleDropdownContent
+                    strategy={strategy}
+                    link={getStrategyUrl(strategy)}
+                  />
+                ),
               }}
             >
               <StrategyTitleWithRisk

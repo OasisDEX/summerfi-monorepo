@@ -1,7 +1,7 @@
 import { type FC, type ReactNode } from 'react'
 import {
   NetworkIds,
-  NetworkNames,
+  SDKNetwork,
   type SDKVaultType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
@@ -19,16 +19,16 @@ const networkIdIconMap = {
 }
 
 const networkNameIconMap = {
-  [NetworkNames.ethereumMainnet]: <Icon iconName="network_ethereum" size={16} />,
-  [NetworkNames.baseMainnet]: <Icon iconName="network_base" size={16} />,
-  [NetworkNames.arbitrumMainnet]: <Icon iconName="network_arbitrum" size={16} />,
-  [NetworkNames.optimismMainnet]: <Icon iconName="network_optimism" size={16} />,
+  [SDKNetwork.Mainnet]: <Icon iconName="network_ethereum" size={16} />,
+  [SDKNetwork.Base]: <Icon iconName="network_base" size={16} />,
+  [SDKNetwork.ArbitrumOne]: <Icon iconName="network_arbitrum" size={16} />,
+  [SDKNetwork.Optimism]: <Icon iconName="network_optimism" size={16} />,
 }
 
 interface StrategyTitleProps {
   symbol: SDKVaultType['inputToken']['symbol']
   networkId?: NetworkIds
-  networkName?: NetworkNames
+  networkName?: SDKNetwork
   value?: ReactNode
 }
 

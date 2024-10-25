@@ -1,4 +1,7 @@
 export type Styles = {
+  background1: string
+  background2: string
+  childrenWrapper: string
   default: string
   smallLeftPadding: string
   smallRightPadding: string
