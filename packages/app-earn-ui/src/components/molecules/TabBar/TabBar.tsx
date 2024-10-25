@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useRef, useState } from 'react'
+import { type FC, type ReactNode, useEffect, useRef, useState } from 'react'
 
 import { Text } from '@/components/atoms/Text/Text'
 
@@ -9,7 +9,7 @@ import { type ClassNames as TextClassNames } from '@/components/atoms/Text/Text.
 interface Tab {
   id: string
   label: string
-  content: React.ReactNode
+  content: ReactNode
 }
 
 interface TabBarProps {
@@ -17,7 +17,7 @@ interface TabBarProps {
   textVariant?: TextClassNames
 }
 
-export const TabBar: React.FC<TabBarProps> = ({ tabs, textVariant = 'p2semi' }) => {
+export const TabBar: FC<TabBarProps> = ({ tabs, textVariant = 'p2semi' }) => {
   const [activeIndex, setActiveIndex] = useState(0)
   const [underlineStyle, setUnderlineStyle] = useState<{ left: number; width: number }>({
     left: 0,
@@ -48,16 +48,7 @@ export const TabBar: React.FC<TabBarProps> = ({ tabs, textVariant = 'p2semi' }) 
               className={`${styles.tabButton} ${activeIndex === index ? styles.active : ''}`}
               onClick={() => setActiveIndex(index)}
             >
-              <Text
-                as="p"
-                variant={textVariant}
-                style={{
-                  color:
-                    activeIndex === index
-                      ? 'var(--earn-protocol-secondary-100)'
-                      : 'var(--earn-protocol-secondary-60)',
-                }}
-              >
+              <Text as="p" variant={textVariant}>
                 {tab.label}
               </Text>
             </button>
