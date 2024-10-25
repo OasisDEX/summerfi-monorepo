@@ -223,7 +223,9 @@ const EarnStrategyOpenManagePage = async ({ params }: EarnStrategyOpenManagePage
                 style={{
                   display: 'flex',
                   flexDirection: 'row',
-                  justifyContent: 'space-between',
+                  justifyContent: 'flex-start',
+                  flexWrap: 'wrap',
+                  gap: 'var(--general-space-24)',
                 }}
               >
                 {detailsLinks.map(({ label, id }) => (
