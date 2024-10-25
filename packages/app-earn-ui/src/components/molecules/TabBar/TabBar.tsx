@@ -4,17 +4,20 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Text } from '@/components/atoms/Text/Text'
 
 import styles from './TabBar.module.scss'
+import { type ClassNames as TextClassNames } from '@/components/atoms/Text/Text.module.scss'
 
 interface Tab {
+  id: string
   label: string
   content: React.ReactNode
 }
 
 interface TabBarProps {
   tabs: Tab[]
+  textVariant?: TextClassNames
 }
 
-export const TabBar: React.FC<TabBarProps> = ({ tabs }) => {
+export const TabBar: React.FC<TabBarProps> = ({ tabs, textVariant = 'p2semi' }) => {
   const [activeIndex, setActiveIndex] = useState(0)
   const [underlineStyle, setUnderlineStyle] = useState<{ left: number; width: number }>({
     left: 0,
@@ -36,33 +39,35 @@ export const TabBar: React.FC<TabBarProps> = ({ tabs }) => {
 
   return (
     <div className={styles.tabBar}>
-      <div className={styles.tabHeaders}>
-        {tabs.map((tab, index) => (
-          <button
-            key={index}
-            ref={(el) => (tabRefs.current[index] = el)}
-            className={`${styles.tabButton} ${activeIndex === index ? styles.active : ''}`}
-            onClick={() => setActiveIndex(index)}
-          >
-            <Text
-              as="p"
-              variant="p2semi"
-              style={{
-                color:
-                  activeIndex === index
-                    ? 'var(--earn-protocol-secondary-100)'
-                    : 'var(--earn-protocol-secondary-60)',
-              }}
+      <div style={{ position: 'relative', height: 'fit-content' }}>
+        <div className={styles.tabHeaders}>
+          {tabs.map((tab, index) => (
+            <button
+              key={index}
+              ref={(el) => (tabRefs.current[index] = el)}
+              className={`${styles.tabButton} ${activeIndex === index ? styles.active : ''}`}
+              onClick={() => setActiveIndex(index)}
             >
-              {tab.label}
-            </Text>
-          </button>
-        ))}
+              <Text
+                as="p"
+                variant={textVariant}
+                style={{
+                  color:
+                    activeIndex === index
+                      ? 'var(--earn-protocol-secondary-100)'
+                      : 'var(--earn-protocol-secondary-60)',
+                }}
+              >
+                {tab.label}
+              </Text>
+            </button>
+          ))}
+        </div>
+        <div
+          className={styles.underline}
+          style={{ left: `${underlineStyle.left}px`, width: `${underlineStyle.width}px` }}
+        />
       </div>
-      <div
-        className={styles.underline}
-        style={{ left: `${underlineStyle.left}px`, width: `${underlineStyle.width}px` }}
-      />
       <div className={styles.tabContent}>{tabs[activeIndex].content}</div>
     </div>
   )

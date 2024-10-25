@@ -2,7 +2,13 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+}
+
+// class specifically to wrap tabHeaders, fit to its height and provide
+// reference to position underline element
+.tabHeaderWrapper {
   position: relative;
+  height: fit-content;
 }
 
 .tabHeaders {
@@ -46,7 +52,7 @@
 
 .underline {
   position: absolute;
-  top: 44px; /* Same level as grey border */
+  bottom: 0; /* Same level as grey border */
   height: 3px;
   background-color: #ff0080; /* Pink underline */
   z-index: 1; /* Pink border should appear on top */
@@ -69,10 +75,6 @@
   .tabContent {
     padding: 15px;
   }
-
-  .underline {
-    top: 54px; /* Same level as grey border */
-  }
 }
 
 @media (max-width: 480px) {
@@ -83,9 +85,5 @@
 
   .tabContent {
     padding: 10px;
-  }
-
-  .underline {
-    top: 48px; /* Same level as grey border */
   }
 }
