@@ -62,19 +62,28 @@ export const StrategyDetailsYieldSources = () => {
       <div className={classNames.chartSection}>
         <div className={classNames.chartWrapper}>
           <ResponsiveContainer width="100%" height="100%">
-            <PieChart width={390} height={390}>
-              <Pie dataKey="value" data={data} cx="50%" cy="50%" innerRadius={97} outerRadius={195}>
-                {data.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={entry.fill}
-                    stroke="unset"
-                    style={{ outline: 'none', cursor: 'pointer' }}
-                  />
-                ))}
-              </Pie>
-              <Tooltip content={<CustomTooltip />} />
-            </PieChart>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <PieChart width={390} height={390}>
+                <Pie
+                  dataKey="value"
+                  data={data}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={97}
+                  outerRadius={195}
+                >
+                  {data.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={entry.fill}
+                      stroke="unset"
+                      style={{ outline: 'none', cursor: 'pointer' }}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip content={<CustomTooltip />} />
+              </PieChart>
+            </div>
           </ResponsiveContainer>
         </div>
         <div className={classNames.chartLegendWrapper}>
