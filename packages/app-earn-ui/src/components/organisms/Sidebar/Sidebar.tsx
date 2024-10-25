@@ -1,31 +1,15 @@
-import { type ChangeEventHandler, type FC, type ReactNode } from 'react'
-import { type DropdownOption } from '@summerfi/app-types'
+import { type FC, type ReactNode } from 'react'
 import Link from 'next/link'
 
 import { Button } from '@/components/atoms/Button/Button'
 import { Card } from '@/components/atoms/Card/Card'
 import { Text } from '@/components/atoms/Text/Text'
-import { InputWithDropdown } from '@/components/molecules/InputWithDropdown/InputWithDropdown'
 
 import classNames from '@/components/organisms/Sidebar/Sidebar.module.scss'
 
 interface SidebarProps {
   title: string
-  inputValue: string
-  handleInputChange: ChangeEventHandler<HTMLInputElement>
-  inputHeading?: {
-    label: ReactNode
-    value: ReactNode
-    action: () => void
-  }
-  dropdown: {
-    options: DropdownOption[]
-    value: DropdownOption
-  }
-  banner?: {
-    title: string
-    value: string
-  }
+  content: ReactNode
   primaryButton:
     | {
         label: string
@@ -42,16 +26,7 @@ interface SidebarProps {
   footnote?: ReactNode
 }
 
-export const Sidebar: FC<SidebarProps> = ({
-  title,
-  inputValue,
-  handleInputChange,
-  inputHeading,
-  dropdown,
-  banner,
-  primaryButton,
-  footnote,
-}) => {
+export const Sidebar: FC<SidebarProps> = ({ title, content, primaryButton, footnote }) => {
   return (
     <Card className={classNames.sidebarWrapper} variant="cardPrimary">
       <div className={classNames.sidebarHeaderWrapper}>
@@ -61,24 +36,8 @@ export const Sidebar: FC<SidebarProps> = ({
       </div>
 
       <div className={classNames.sidebarHeaderSpacer} />
-      <InputWithDropdown
-        value={inputValue}
-        secondaryValue={`$${inputValue}`}
-        handleChange={handleInputChange}
-        options={dropdown.options}
-        dropdownValue={dropdown.value}
-        heading={inputHeading}
-      />
-      {banner && (
-        <Card className={classNames.sidebarBannerWrapper} variant="cardSecondary">
-          <Text as="p" variant="p3semi" style={{ color: 'var(--earn-protocol-secondary-40)' }}>
-            {banner.title}
-          </Text>
-          <Text as="p" variant="p1semiColorful">
-            {banner.value}
-          </Text>
-        </Card>
-      )}
+      {content}
+
       {primaryButton.action && (
         <Button
           variant="primaryLarge"
