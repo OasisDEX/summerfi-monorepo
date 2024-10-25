@@ -34,7 +34,11 @@ export const UserActivity: FC<UserActivityProps> = ({ rawData }) => {
       label: 'Top depositors',
       content: <Table rows={rows} columns={userActivityColumns} />,
     },
-    { id: UserActivityType.LATEST_ACTIVITY, label: 'Latest activity', content: <></> },
+    {
+      id: UserActivityType.LATEST_ACTIVITY,
+      label: 'Latest activity',
+      content: <Table rows={rows} columns={userActivityColumns} />,
+    },
   ]
 
   return (
