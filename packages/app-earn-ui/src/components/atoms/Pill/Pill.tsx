@@ -8,5 +8,9 @@ interface PillProps {
 }
 
 export const Pill: FC<PillProps> = ({ children, variant = 'default' }) => (
-  <div className={pillStyles[variant]}>{children}</div>
+  <div className={pillStyles[variant]}>
+    <div className={pillStyles.background1} />
+    <div className={pillStyles.background2} />
+    <div className={pillStyles.childrenWrapper}>{children}</div>
+  </div>
 )
