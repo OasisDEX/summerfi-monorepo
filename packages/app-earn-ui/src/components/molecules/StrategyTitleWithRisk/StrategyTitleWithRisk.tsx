@@ -1,10 +1,5 @@
 import { type FC } from 'react'
-import {
-  type NetworkIds,
-  type NetworkNames,
-  type Risk,
-  type SDKVaultType,
-} from '@summerfi/app-types'
+import { type NetworkIds, type Risk, type SDKNetwork, type SDKVaultType } from '@summerfi/app-types'
 import { capitalize } from 'lodash-es'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
@@ -16,7 +11,7 @@ import { riskColors } from '@/helpers/risk-colors.ts'
 interface StrategyTitleWithRiskProps {
   symbol: SDKVaultType['inputToken']['symbol']
   networkId?: NetworkIds
-  networkName?: SDKVaultType['protocol']['network']
+  networkName?: SDKNetwork
   risk: Risk
 }
 
@@ -33,7 +28,7 @@ export const StrategyTitleWithRisk: FC<StrategyTitleWithRiskProps> = ({
       symbol={symbol}
       networkId={networkId}
       /* networkName should work 99% of the time, because SDKVault returns very similar results for that */
-      networkName={networkName as unknown as NetworkNames}
+      networkName={networkName}
       value={
         <>
           <Text as="p" variant="p3" style={{ color }}>
