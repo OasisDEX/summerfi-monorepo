@@ -1,6 +1,13 @@
 'use client'
 import { type CSSProperties, type FC, useState } from 'react'
-import { Card, DataBlock, Icon, StrategyTitle, Text } from '@summerfi/app-earn-ui'
+import {
+  Card,
+  DataBlock,
+  Icon,
+  networkNameToSDKNetwork,
+  StrategyTitle,
+  Text,
+} from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 
@@ -63,7 +70,7 @@ export const PortfolioAssetsList: FC<PortfolioAssetsListProps> = ({ walletAssets
             <div className={classNames.tokenBlockWrapper}>
               <StrategyTitle
                 symbol={item.symbol}
-                networkName={item.network}
+                networkName={networkNameToSDKNetwork(item.network)}
                 value={<AssetPriceChangeTrend change={item.price24hChange} />}
               />
             </div>

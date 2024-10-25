@@ -65,4 +65,4 @@ export { useHash } from './hooks/use-hash'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
 export { getStrategyUrl, getStrategyDetailsUrl } from './helpers/get-strategy-url'
-export { subgraphNetworkToId } from './helpers/subgraph-network-to-id'
+export { networkNameToSDKNetwork, subgraphNetworkToId } from './helpers/network-helpers'
