@@ -172,7 +172,7 @@ export const revalidate = 60
 const EarnStrategyOpenManagePage = async ({ params }: EarnStrategyOpenManagePageProps) => {
   const networkId = subgraphNetworkToId(params.network as SDKNetwork)
 
-  const [selectedVault, strategiesList] = await Promise.all([
+  const [selectedVault, { vaults, callDataTimestamp }] = await Promise.all([
     getVaultDetails({
       vaultAddress: params.vaultId,
       chainId: networkId,
@@ -189,110 +189,132 @@ const EarnStrategyOpenManagePage = async ({ params }: EarnStrategyOpenManagePage
   }
 
   return (
-    <StrategyGridPreview
-      strategy={selectedVault}
-      strategies={strategiesList}
-      leftContent={
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 'var(--spacing-space-x-large)',
-            width: '100%',
-          }}
-        >
+    <>
+      <StrategyGridPreview
+        strategy={selectedVault}
+        strategies={vaults}
+        leftContent={
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: 'var(--spacing-space-medium)',
+              gap: 'var(--spacing-space-x-large)',
+              width: '100%',
             }}
           >
-            <Text variant="h5">About the strategy</Text>
-            <Text
-              variant="p2"
-              style={{
-                color: 'var(--color-text-secondary)',
-              }}
-            >
-              The Summer Earn Protocol is a permissionless passive lending product, which sets out
-              to offer effortless and secure optimised yield, while diversifying risk.
-            </Text>
             <div
               style={{
                 display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
+                flexDirection: 'column',
+                gap: 'var(--spacing-space-medium)',
               }}
             >
-              {detailsLinks.map(({ label, id }) => (
-                <Link key={label} href={`${getStrategyDetailsUrl(selectedVault)}#${id}`}>
-                  <Text
-                    as="p"
-                    variant="p3semi"
-                    style={{
-                      color: 'var(--color-text-link)',
-                      textDecoration: 'none',
-                      cursor: 'pointer',
-                      paddingRight: 'var(--spacing-space-medium)',
-                    }}
-                  >
-                    <WithArrow>{label}</WithArrow>
-                  </Text>
-                </Link>
-              ))}
+              <Text variant="h5">About the strategy</Text>
+              <Text
+                variant="p2"
+                style={{
+                  color: 'var(--color-text-secondary)',
+                }}
+              >
+                The Summer Earn Protocol is a permissionless passive lending product, which sets out
+                to offer effortless and secure optimised yield, while diversifying risk.
+              </Text>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}
+              >
+                {detailsLinks.map(({ label, id }) => (
+                  <Link key={label} href={`${getStrategyDetailsUrl(selectedVault)}#${id}`}>
+                    <Text
+                      as="p"
+                      variant="p3semi"
+                      style={{
+                        color: 'var(--color-text-link)',
+                        textDecoration: 'none',
+                        cursor: 'pointer',
+                        paddingRight: 'var(--spacing-space-medium)',
+                      }}
+                    >
+                      <WithArrow>{label}</WithArrow>
+                    </Text>
+                  </Link>
+                ))}
+              </div>
             </div>
+            <Expander
+              title={
+                <Text as="p" variant="p1semi">
+                  Historical yield
+                </Text>
+              }
+              defaultExpanded
+            >
+              <MockedLineChart />
+            </Expander>
+            <Expander
+              title={
+                <Text as="p" variant="p1semi">
+                  Strategy exposure
+                </Text>
+              }
+              defaultExpanded
+            >
+              <StrategyExposure rawData={strategyExposureRawData} />
+            </Expander>
+            <Expander
+              title={
+                <Text as="p" variant="p1semi">
+                  Rebalancing activity
+                </Text>
+              }
+              defaultExpanded
+            >
+              <RebalancingActivity rawData={rebalancingActivityRawData} />
+            </Expander>
+            <Expander
+              title={
+                <Text as="p" variant="p1semi">
+                  User activity
+                </Text>
+              }
+              defaultExpanded
+            >
+              <UserActivity rawData={userActivityRawData} />
+            </Expander>
           </div>
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
-                Historical yield
-              </Text>
-            }
-            defaultExpanded
-          >
-            <MockedLineChart />
-          </Expander>
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
-                Strategy exposure
-              </Text>
-            }
-            defaultExpanded
-          >
-            <StrategyExposure rawData={strategyExposureRawData} />
-          </Expander>
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
-                Rebalancing activity
-              </Text>
-            }
-            defaultExpanded
-          >
-            <RebalancingActivity rawData={rebalancingActivityRawData} />
-          </Expander>
-          <Expander
-            title={
-              <Text as="p" variant="p1semi">
-                User activity
-              </Text>
-            }
-            defaultExpanded
-          >
-            <UserActivity rawData={userActivityRawData} />
-          </Expander>
-        </div>
-      }
-      rightContent={
-        <FormContainer
-          fleetConfig={fleetConfig}
-          selectedStrategyData={selectedVault}
-          strategiesList={strategiesList}
-        />
-      }
-    />
+        }
+        rightContent={
+          <FormContainer
+            fleetConfig={fleetConfig}
+            selectedStrategyData={selectedVault}
+            strategiesList={vaults}
+          />
+        }
+      />
+
+      <pre
+        style={{
+          backgroundColor: 'rgba(30,30,30,0.5)',
+          backdropFilter: 'blur(30px)',
+          color: 'rgba(180,180,180,1)',
+          padding: '16px',
+          borderRadius: '8px',
+          overflow: 'auto',
+          width: '100%',
+          whiteSpace: 'pre-wrap',
+          marginTop: '20px',
+        }}
+      >
+        {JSON.stringify(
+          { dataTimestamp: callDataTimestamp, secondsAgo: (Date.now() - callDataTimestamp) / 1000 },
+          null,
+          2,
+        )}
+      </pre>
+    </>
   )
 }
 

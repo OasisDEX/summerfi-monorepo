@@ -20,5 +20,8 @@ export async function getVaultsList() {
     [],
   )
 
-  return vaultsFlatList
+  return {
+    vaults: vaultsFlatList,
+    callDataTimestamp: Date.now(),
+  }
 }

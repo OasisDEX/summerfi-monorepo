@@ -12,17 +12,40 @@ type PortfolioPageProps = {
 const PortfolioPage = async ({ params }: PortfolioPageProps) => {
   const walletAddress = params.wallet_address
 
-  const walletData = await portfolioWalletAssetsHandler(walletAddress)
+  const [walletData, { vaults, callDataTimestamp }] = await Promise.all([
+    portfolioWalletAssetsHandler(walletAddress),
+    await getVaultsList(),
+  ])
   const rewardsData = portfolioRewardsHandler(walletAddress)
-  const strategiesList = await getVaultsList()
 
   return (
-    <PortfolioPageView
-      walletAddress={walletAddress}
-      walletData={walletData}
-      rewardsData={rewardsData}
-      strategiesList={strategiesList}
-    />
+    <>
+      <PortfolioPageView
+        walletAddress={walletAddress}
+        walletData={walletData}
+        rewardsData={rewardsData}
+        strategiesList={vaults}
+      />
+      <pre
+        style={{
+          backgroundColor: 'rgba(30,30,30,0.5)',
+          backdropFilter: 'blur(30px)',
+          color: 'rgba(180,180,180,1)',
+          padding: '16px',
+          borderRadius: '8px',
+          overflow: 'auto',
+          width: '100%',
+          whiteSpace: 'pre-wrap',
+          marginTop: '20px',
+        }}
+      >
+        {JSON.stringify(
+          { dataTimestamp: callDataTimestamp, secondsAgo: (Date.now() - callDataTimestamp) / 1000 },
+          null,
+          2,
+        )}
+      </pre>
+    </>
   )
 }
 
