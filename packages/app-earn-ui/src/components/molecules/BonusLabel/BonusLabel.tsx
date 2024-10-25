@@ -23,7 +23,7 @@ export const BonusLabel = ({
         ut. Diam curabitur fusce eleifend eu.
       </Text>
     }
-    tooltipWrapperStyles={{ minWidth: '240px', top: '30px' }}
+    tooltipWrapperStyles={{ minWidth: '240px', top: '30px', right: '-124px' }}
     tooltipCardVariant="cardSecondarySmallPaddings"
   >
     <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
