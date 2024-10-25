@@ -70,17 +70,17 @@ export const PortfolioAssetsList: FC<PortfolioAssetsListProps> = ({ walletAssets
             <div className={classNames.dataBlockWrapper}>
               <DataBlock
                 title="Price (24h)"
-                value={`$${formatFiatBalance(new BigNumber(item.priceUSD))}`}
+                value={`$${formatFiatBalance(item.priceUSD)}`}
                 {...dataBlocksStyles}
               />
               <DataBlock
                 title="USD Value"
-                value={`$${formatFiatBalance(new BigNumber(item.balanceUSD))}`}
+                value={`$${formatFiatBalance(item.balanceUSD)}`}
                 {...dataBlocksStyles}
               />
               <DataBlock
                 title="Token Balance"
-                value={`${formatCryptoBalance(new BigNumber(item.balance))} ${item.symbol}`}
+                value={`${formatCryptoBalance(item.balance)} ${item.symbol}`}
                 {...dataBlocksStyles}
               />
             </div>

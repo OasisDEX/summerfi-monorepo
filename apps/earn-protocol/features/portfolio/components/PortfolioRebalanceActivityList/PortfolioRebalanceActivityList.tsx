@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Icon, Text } from '@summerfi/app-earn-ui'
 import { type IconNamesList, type TokenSymbolsList } from '@summerfi/app-types'
 import { formatDecimalAsPercent, timeAgo } from '@summerfi/app-utils'
-import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
 import classNames from './PortfolioRebalanceActivityList.module.scss'
@@ -102,7 +101,7 @@ export const PortfolioRebalanceActivityList = () => {
                     variant="p3semi"
                     style={{ color: 'var(--earn-protocol-secondary-60)' }}
                   >
-                    {formatDecimalAsPercent(new BigNumber(item.change))}
+                    {formatDecimalAsPercent(item.change)}
                   </Text>
                 </div>
               </div>

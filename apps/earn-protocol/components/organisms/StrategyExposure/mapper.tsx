@@ -1,6 +1,5 @@
 import { TableCellText, TableRowAccent, Text, TokensGroup, WithArrow } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
-import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
 import { type StrategyExposureRawData } from '@/components/organisms/StrategyExposure/StrategyExposure'
@@ -21,15 +20,9 @@ export const strategyExposureMapper = (rawData: StrategyExposureRawData[]) => {
             <TableCellText>{item.strategy.label}</TableCellText>
           </div>
         ),
-        allocation: (
-          <TableCellText>{formatDecimalAsPercent(new BigNumber(item.allocation))}</TableCellText>
-        ),
-        currentApy: (
-          <TableCellText>{formatDecimalAsPercent(new BigNumber(item.currentApy))}</TableCellText>
-        ),
-        liquidity: (
-          <TableCellText>{formatCryptoBalance(new BigNumber(item.liquidity))}</TableCellText>
-        ),
+        allocation: <TableCellText>{formatDecimalAsPercent(item.allocation)}</TableCellText>,
+        currentApy: <TableCellText>{formatDecimalAsPercent(item.currentApy)}</TableCellText>,
+        liquidity: <TableCellText>{formatCryptoBalance(item.liquidity)}</TableCellText>,
         type: <TableCellText>{item.type}</TableCellText>,
       },
       details: (

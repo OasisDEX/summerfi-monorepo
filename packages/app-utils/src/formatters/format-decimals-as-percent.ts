@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js'
 
 import { formatPercent } from '@/formatters/format-percent'
+import { formatToBigNumber } from '@/formatters/format-to-big-number'
 
 /**
  * Converts a decimal `BigNumber` to a percentage string.
@@ -16,7 +17,7 @@ import { formatPercent } from '@/formatters/format-percent'
  * @returns The formatted percentage string.
  */
 export const formatDecimalAsPercent = (
-  amount: BigNumber,
+  amount: BigNumber | string | number,
   {
     precision = 2,
     plus = false,
@@ -28,10 +29,13 @@ export const formatDecimalAsPercent = (
     roundMode?: BigNumber.RoundingMode
     noPercentSign?: boolean
   } = {},
-) =>
-  formatPercent(amount.times(100), {
+) => {
+  const resolvedAmount = formatToBigNumber(amount)
+
+  return formatPercent(resolvedAmount.times(100), {
     precision,
     plus,
     roundMode,
     noPercentSign,
   })
+}

@@ -1,5 +1,7 @@
 import type BigNumber from 'bignumber.js'
 
+import { formatToBigNumber } from '@/formatters/format-to-big-number'
+
 /**
  * Formats a `BigNumber` as a percentage string.
  *
@@ -8,7 +10,7 @@ import type BigNumber from 'bignumber.js'
  * - Allows customization of rounding mode via `roundMode`.
  * - Optionally omits the percent sign (%) if `noPercentSign` is set to `true`.
  *
- * @param amount - The `BigNumber` representing the percentage amount.
+ * @param amount - The `BigNumber` or `string` or `number` representing the percentage amount.
  * @param precision - The number of decimal places to include (default is 0).
  * @param plus - Whether to include a plus sign for positive percentages (default is `false`).
  * @param roundMode - The rounding mode to use (optional).
@@ -16,7 +18,7 @@ import type BigNumber from 'bignumber.js'
  * @returns The formatted percentage string.
  */
 export const formatPercent = (
-  amount: BigNumber,
+  amount: BigNumber | string | number,
   {
     precision = 0,
     plus = false,
@@ -29,7 +31,9 @@ export const formatPercent = (
     noPercentSign?: boolean
   } = {},
 ) => {
-  const sign = plus && amount.isGreaterThan(0) ? '+' : ''
+  const resolvedAmount = formatToBigNumber(amount)
 
-  return `${sign}${amount.toFixed(precision, roundMode)}${noPercentSign ? '' : '%'}`
+  const sign = plus && resolvedAmount.isGreaterThan(0) ? '+' : ''
+
+  return `${sign}${resolvedAmount.toFixed(precision, roundMode)}${noPercentSign ? '' : '%'}`
 }

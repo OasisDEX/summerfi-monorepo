@@ -1,7 +1,6 @@
 import { type FC, useMemo } from 'react'
 import { Card, Table, Text } from '@summerfi/app-earn-ui'
 import { formatDecimalAsPercent } from '@summerfi/app-utils'
-import BigNumber from 'bignumber.js'
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip, type TooltipProps } from 'recharts'
 
 import { yieldSourcesColumns } from '@/features/strategy-details/components/StrategyDetailsYieldSources/columns'
@@ -27,7 +26,7 @@ const LegendItem: FC<LegendItemProps> = ({ label, backgroundColor, value }) => {
         {label}
       </Text>
       <Text as="p" variant="p3semi">
-        {formatDecimalAsPercent(new BigNumber(value))}
+        {formatDecimalAsPercent(value)}
       </Text>
     </div>
   )

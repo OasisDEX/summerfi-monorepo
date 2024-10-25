@@ -1,6 +1,5 @@
 import { TableCellText, WithArrow } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatFiatBalance, timeAgo } from '@summerfi/app-utils'
-import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
 import { type UserActivityRawData } from '@/components/organisms/UserActivity/UserActivity'
@@ -9,8 +8,8 @@ export const userActivityMapper = (rawData: UserActivityRawData[]) => {
   return rawData.map((item) => {
     return {
       content: {
-        balance: <TableCellText>{formatCryptoBalance(new BigNumber(item.balance))}</TableCellText>,
-        amount: <TableCellText>${formatFiatBalance(new BigNumber(item.amount))}</TableCellText>,
+        balance: <TableCellText>{formatCryptoBalance(item.balance)}</TableCellText>,
+        amount: <TableCellText>${formatFiatBalance(item.amount)}</TableCellText>,
         numberOfDeposits: <TableCellText>{item.numberOfDeposits}</TableCellText>,
         time: (
           <TableCellText>

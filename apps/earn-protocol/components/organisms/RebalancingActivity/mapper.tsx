@@ -1,6 +1,5 @@
 import { Icon, TableCellText, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, timeAgo } from '@summerfi/app-utils'
-import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
 import { type RebalancingActivityRawData } from '@/components/organisms/RebalancingActivity/RebalancingActivity'
@@ -35,7 +34,7 @@ export const rebalancingActivityMapper = (rawData: RebalancingActivityRawData[])
             style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-2x-small)' }}
           >
             <Icon tokenName={item.amount.token} variant="s" />
-            <TableCellText>{formatCryptoBalance(new BigNumber(item.amount.value))}</TableCellText>
+            <TableCellText>{formatCryptoBalance(item.amount.value)}</TableCellText>
           </div>
         ),
         timestamp: (
