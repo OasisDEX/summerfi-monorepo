@@ -4,7 +4,8 @@ import { defineConfig, createLogger } from 'vite'
 // generates typescript declaration files (just the js/ts, scss is done in package.json)
 import dts from 'vite-plugin-dts'
 // compresses svgs (around 40-50% reduction with no build time increase)
-import svgo from 'vite-plugin-svgo'
+import react from '@vitejs/plugin-react'
+import svgr from 'vite-plugin-svgr'
 
 const logger = createLogger()
 const loggerInfo = logger.info
@@ -19,6 +20,26 @@ export default defineConfig(({ mode }) => {
   const notDev = mode !== 'dev'
   return {
     plugins: [
+      react(),
+      svgr({
+        svgrOptions: {
+          plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx'],
+          svgoConfig: {
+            floatPrecision: 2,
+            plugins: [
+              {
+                name: 'preset-default',
+                params: {
+                  overrides: {
+                    removeViewBox: false,
+                    cleanupIds: false,
+                  },
+                },
+              },
+            ],
+          },
+        },
+      }),
       dts({
         include: 'src/**/*',
         outDir: 'dist/types',
@@ -26,13 +47,6 @@ export default defineConfig(({ mode }) => {
         strictOutput: true,
         copyDtsFiles: true,
       }),
-      notDev
-        ? svgo({
-            multipass: true,
-            datauri: 'base64',
-            floatPrecision: 2,
-          })
-        : undefined,
     ],
     customLogger: !notDev ? logger : undefined,
     clearScreen: false,
@@ -44,7 +58,7 @@ export default defineConfig(({ mode }) => {
         formats: ['es'],
       },
       rollupOptions: {
-        external: ['@loadable/component', '@summerfi/serverless-shared'],
+        external: ['react', 'react/jsx-runtime'],
         input: resolve(__dirname, 'src/index.ts'),
         output: {
           assetFileNames: 'assets/[name][extname]',

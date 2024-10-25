@@ -1,3 +1,5 @@
+'use client'
+
 import { type SDKVaultishType } from '@summerfi/app-types'
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'

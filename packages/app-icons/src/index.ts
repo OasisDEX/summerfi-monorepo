@@ -1,271 +1,276 @@
+/// <reference types="vite-plugin-svgr/client" />
+/* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable camelcase */
-import { lazy } from '@loadable/component'
 
-export const aave_cbETH_usdc = lazy.lib(() => import('./icons/aave_cbETH_usdc.svg'))
-export const aave_circle_color = lazy.lib(() => import('./icons/aave_circle_color.svg'))
-export const aave_eth_usdc = lazy.lib(() => import('./icons/aave_eth_usdc.svg'))
-export const aave_steth_eth = lazy.lib(() => import('./icons/aave_steth_eth.svg'))
-export const aave_steth_usdc = lazy.lib(() => import('./icons/aave_steth_usdc.svg'))
-export const aave_wbtc_usdc = lazy.lib(() => import('./icons/aave_wbtc_usdc.svg'))
-export const aero = lazy.lib(() => import('./icons/aero.svg'))
-export const ajna_circle_color = lazy.lib(() => import('./icons/ajna_circle_color.svg'))
-export const apxeth_circle_color = lazy.lib(() => import('./icons/apxeth_circle_color.svg'))
-export const arb = lazy.lib(() => import('./icons/arb.svg'))
-export const arb_circle = lazy.lib(() => import('./icons/arb_circle.svg'))
-export const augur = lazy.lib(() => import('./icons/augur.svg'))
-export const augur_circle_color = lazy.lib(() => import('./icons/augur_circle_color.svg'))
-export const augur_color = lazy.lib(() => import('./icons/augur_color.svg'))
-export const bal = lazy.lib(() => import('./icons/bal.svg'))
-export const bal_circle = lazy.lib(() => import('./icons/bal_circle.svg'))
-export const bal_circle_color = lazy.lib(() => import('./icons/bal_circle_color.svg'))
-export const bat = lazy.lib(() => import('./icons/bat.svg'))
-export const bat_circle_color = lazy.lib(() => import('./icons/bat_circle_color.svg'))
-export const bat_color = lazy.lib(() => import('./icons/bat_color.svg'))
-export const bridge = lazy.lib(() => import('./icons/bridge.svg'))
-export const btc_circle_color = lazy.lib(() => import('./icons/btc_circle_color.svg'))
-export const btc_circle_mono = lazy.lib(() => import('./icons/btc_circle_mono.svg'))
-export const cbeth_circle_color = lazy.lib(() => import('./icons/cbeth_circle_color.svg'))
-export const cbeth_eth = lazy.lib(() => import('./icons/cbeth_eth.svg'))
-export const cbeth_usdc = lazy.lib(() => import('./icons/cbeth_usdc.svg'))
-export const chai = lazy.lib(() => import('./icons/chai.svg'))
-export const chai_circle_color = lazy.lib(() => import('./icons/chai_circle_color.svg'))
-export const chai_color = lazy.lib(() => import('./icons/chai_color.svg'))
-export const chainlink = lazy.lib(() => import('./icons/chainlink.svg'))
-export const chainlink_circle_color = lazy.lib(() => import('./icons/chainlink_circle_color.svg'))
-export const chainlink_color = lazy.lib(() => import('./icons/chainlink_color.svg'))
-export const compound = lazy.lib(() => import('./icons/compound.svg'))
-export const compound_circle_color = lazy.lib(() => import('./icons/compound_circle_color.svg'))
-export const compound_color = lazy.lib(() => import('./icons/compound_color.svg'))
-export const crv = lazy.lib(() => import('./icons/crv.svg'))
-export const crv_circle = lazy.lib(() => import('./icons/crv_circle.svg'))
-export const cseth = lazy.lib(() => import('./icons/cseth.svg'))
-export const dai = lazy.lib(() => import('./icons/dai.svg'))
-export const dai_circle_color = lazy.lib(() => import('./icons/dai_circle_color.svg'))
-export const dai_color = lazy.lib(() => import('./icons/dai_color.svg'))
-export const degen = lazy.lib(() => import('./icons/degen.svg'))
-export const not_supported_icon = lazy.lib(() => import('./icons/not_supported_icon.svg'))
-export const deth = lazy.lib(() => import('./icons/deth.svg'))
-export const digix_circle_color = lazy.lib(() => import('./icons/digix_circle_color.svg'))
-export const ena = lazy.lib(() => import('./icons/ena.svg'))
-export const eth_circle_color = lazy.lib(() => import('./icons/eth_circle_color.svg'))
-export const eth_circle_mono = lazy.lib(() => import('./icons/eth_circle_mono.svg'))
-export const eth_usdc = lazy.lib(() => import('./icons/eth_usdc.svg'))
-export const ether = lazy.lib(() => import('./icons/ether.svg'))
-export const ether_circle_color = lazy.lib(() => import('./icons/ether_circle_color.svg'))
-export const ether_color = lazy.lib(() => import('./icons/ether_color.svg'))
-export const euro_circle_color = lazy.lib(() => import('./icons/euro_circle_color.svg'))
-export const exchange = lazy.lib(() => import('./icons/exchange.svg'))
-export const ezeth = lazy.lib(() => import('./icons/ezeth.svg'))
-export const frax_circle_color = lazy.lib(() => import('./icons/frax_circle_color.svg'))
-export const gemini = lazy.lib(() => import('./icons/gemini.svg'))
-export const gemini_circle_color = lazy.lib(() => import('./icons/gemini_circle_color.svg'))
-export const gemini_color = lazy.lib(() => import('./icons/gemini_color.svg'))
-export const gno_circle_color = lazy.lib(() => import('./icons/gno_circle_color.svg'))
-export const gho_circle_color = lazy.lib(() => import('./icons/gho_circle_color.svg'))
-export const golem_circle_color = lazy.lib(() => import('./icons/golem_circle_color.svg'))
-export const guniv3_dai_usdc1_circles_color = lazy.lib(
-  () => import('./icons/guniv3_dai_usdc1_circles_color.svg'),
-)
-export const gusd_circle_color = lazy.lib(() => import('./icons/gusd_circle_color.svg'))
-export const gusd_circle_mono = lazy.lib(() => import('./icons/gusd_circle_mono.svg'))
-export const knc_circle_color = lazy.lib(() => import('./icons/knc_circle_color.svg'))
-export const kyber = lazy.lib(() => import('./icons/kyber.svg'))
-export const kyber_circle_color = lazy.lib(() => import('./icons/kyber_circle_color.svg'))
-export const kyber_color = lazy.lib(() => import('./icons/kyber_color.svg'))
-export const latamex = lazy.lib(() => import('./icons/latamex.svg'))
-export const ldo = lazy.lib(() => import('./icons/ldo.svg'))
-export const ldo_circle = lazy.lib(() => import('./icons/ldo_circle.svg'))
-export const link = lazy.lib(() => import('./icons/link.svg'))
-export const link_circle_color = lazy.lib(() => import('./icons/link_circle_color.svg'))
-export const link_circle_mono = lazy.lib(() => import('./icons/link_circle_mono.svg'))
-export const lrc = lazy.lib(() => import('./icons/lrc.svg'))
-export const lrc_circle_color = lazy.lib(() => import('./icons/lrc_circle_color.svg'))
-export const lrc_color = lazy.lib(() => import('./icons/lrc_color.svg'))
-export const lusd_circle_color = lazy.lib(() => import('./icons/lusd_circle_color.svg'))
-export const maker = lazy.lib(() => import('./icons/maker.svg'))
-export const maker_circle_color = lazy.lib(() => import('./icons/maker_circle_color.svg'))
-export const maker_color = lazy.lib(() => import('./icons/maker_color.svg'))
-export const mana = lazy.lib(() => import('./icons/mana.svg'))
-export const mana_circle_color = lazy.lib(() => import('./icons/mana_circle_color.svg'))
-export const mana_circle_mono = lazy.lib(() => import('./icons/mana_circle_mono.svg'))
-export const mana_color = lazy.lib(() => import('./icons/mana_color.svg'))
-export const matic_circle_color = lazy.lib(() => import('./icons/matic_circle_color.svg'))
-export const matic_circle_mono = lazy.lib(() => import('./icons/matic_circle_mono.svg'))
-export const menu = lazy.lib(() => import('./icons/menu.svg'))
-export const meveth = lazy.lib(() => import('./icons/meveth.svg'))
-export const mkr_circle_color = lazy.lib(() => import('./icons/mkr_circle_color.svg'))
-export const moonpay = lazy.lib(() => import('./icons/moonpay.svg'))
-export const morpho_circle_color = lazy.lib(() => import('./icons/morpho_circle_color.svg'))
-export const mpeth = lazy.lib(() => import('./icons/mpeth.svg'))
-export const omisego = lazy.lib(() => import('./icons/omisego.svg'))
-export const omisego_circle_color = lazy.lib(() => import('./icons/omisego_circle_color.svg'))
-export const omisego_color = lazy.lib(() => import('./icons/omisego_color.svg'))
-export const op = lazy.lib(() => import('./icons/op.svg'))
-export const op_circle = lazy.lib(() => import('./icons/op_circle.svg'))
-export const open_in_new_tab = lazy.lib(() => import('./icons/open_in_new_tab.svg'))
-export const oseth_circle_color = lazy.lib(() => import('./icons/oseth_circle_color.svg'))
-export const pax = lazy.lib(() => import('./icons/pax.svg'))
-export const pax_circle_color = lazy.lib(() => import('./icons/pax_circle_color.svg'))
-export const pax_color = lazy.lib(() => import('./icons/pax_color.svg'))
-export const prime = lazy.lib(() => import('./icons/prime.svg'))
-export const pyusd = lazy.lib(() => import('./icons/pyusd.svg'))
-export const question = lazy.lib(() => import('./icons/question.svg'))
-export const question_mark = lazy.lib(() => import('./icons/question_mark.svg'))
-export const question_o = lazy.lib(() => import('./icons/question_o.svg'))
-export const rbn_circle_color = lazy.lib(() => import('./icons/rbn_circle_color.svg'))
-export const renbtc_circle_color = lazy.lib(() => import('./icons/renbtc_circle_color.svg'))
-export const reth_circle_color = lazy.lib(() => import('./icons/reth_circle_color.svg'))
-export const reth_eth = lazy.lib(() => import('./icons/reth_eth.svg'))
-export const reth_usdc = lazy.lib(() => import('./icons/reth_usdc.svg'))
-export const rpl = lazy.lib(() => import('./icons/rpl.svg'))
-export const rpl_circle = lazy.lib(() => import('./icons/rpl_circle.svg'))
-export const safe = lazy.lib(() => import('./icons/safe.svg'))
-export const sai = lazy.lib(() => import('./icons/sai.svg'))
-export const sai_circle_color = lazy.lib(() => import('./icons/sai_circle_color.svg'))
-export const sai_color = lazy.lib(() => import('./icons/sai_color.svg'))
-export const sdai_circle_color = lazy.lib(() => import('./icons/sdai_circle_color.svg'))
-export const snx = lazy.lib(() => import('./icons/snx.svg'))
-export const spark_circle_color = lazy.lib(() => import('./icons/spark_circle_color.svg'))
-export const steth_circle_color = lazy.lib(() => import('./icons/steth_circle_color.svg'))
-export const steth_eth = lazy.lib(() => import('./icons/steth_eth.svg'))
-export const steth_usdc = lazy.lib(() => import('./icons/steth_usdc.svg'))
-export const styeth_circle_color = lazy.lib(() => import('./icons/styeth_circle_color.svg'))
-export const susd = lazy.lib(() => import('./icons/susd.svg'))
-export const susd_circle = lazy.lib(() => import('./icons/susd_circle.svg'))
-export const susde = lazy.lib(() => import('./icons/susde.svg'))
-export const tbtc_circle_color = lazy.lib(() => import('./icons/tbtc_circle_color.svg'))
-export const tusd = lazy.lib(() => import('./icons/tusd.svg'))
-export const tusd_circle_color = lazy.lib(() => import('./icons/tusd_circle_color.svg'))
-export const tusd_color = lazy.lib(() => import('./icons/tusd_color.svg'))
-export const uni_circle_color = lazy.lib(() => import('./icons/uni_circle_color.svg'))
-export const uni_circle_mono = lazy.lib(() => import('./icons/uni_circle_mono.svg'))
-export const uni_lp_circle_color = lazy.lib(() => import('./icons/uni_lp_circle_color.svg'))
-export const uni_lp_circle_mono = lazy.lib(() => import('./icons/uni_lp_circle_mono.svg'))
-export const unieth = lazy.lib(() => import('./icons/unieth.svg'))
-export const univ2_dai_usdc_circles_color = lazy.lib(
-  () => import('./icons/univ2_dai_usdc_circles_color.svg'),
-)
-export const univ2_dai_usdt_circles_color = lazy.lib(
-  () => import('./icons/univ2_dai_usdt_circles_color.svg'),
-)
-export const univ2_eth_usdt_circles_color = lazy.lib(
-  () => import('./icons/univ2_eth_usdt_circles_color.svg'),
-)
-export const univ2_usdc_eth_circles_color = lazy.lib(
-  () => import('./icons/univ2_usdc_eth_circles_color.svg'),
-)
-export const usd_circle_color = lazy.lib(() => import('./icons/usd_circle_color.svg'))
-export const usda = lazy.lib(() => import('./icons/usda.svg'))
-export const usdc = lazy.lib(() => import('./icons/usdc.svg'))
-export const usdc_circle_color = lazy.lib(() => import('./icons/usdc_circle_color.svg'))
-export const usde = lazy.lib(() => import('./icons/usde.svg'))
-export const usdp_circle_color = lazy.lib(() => import('./icons/usdp_circle_color.svg'))
-export const usdt = lazy.lib(() => import('./icons/usdt.svg'))
-export const usdt_circle_color = lazy.lib(() => import('./icons/usdt_circle_color.svg'))
-export const usdt_color = lazy.lib(() => import('./icons/usdt_color.svg'))
-export const wbtc = lazy.lib(() => import('./icons/wbtc.svg'))
-export const wbtc_circle_color = lazy.lib(() => import('./icons/wbtc_circle_color.svg'))
-export const wbtc_color = lazy.lib(() => import('./icons/wbtc_color.svg'))
-export const wbtc_usdc = lazy.lib(() => import('./icons/wbtc_usdc.svg'))
-export const weeth_circle_color = lazy.lib(() => import('./icons/weeth_circle_color.svg'))
-export const weth_circle_color = lazy.lib(() => import('./icons/weth_circle_color.svg'))
-export const wld_circle_color = lazy.lib(() => import('./icons/wld_circle_color.svg'))
-export const wsteth_circle_color = lazy.lib(() => import('./icons/wsteth_circle_color.svg'))
-export const wyre = lazy.lib(() => import('./icons/wyre.svg'))
-export const xeth = lazy.lib(() => import('./icons/xeth.svg'))
-export const yen_circle_color = lazy.lib(() => import('./icons/yen_circle_color.svg'))
-export const yfi_circle_color = lazy.lib(() => import('./icons/yfi_circle_color.svg'))
-export const yfi_circle_mono = lazy.lib(() => import('./icons/yfi_circle_mono.svg'))
-export const yieldbtc_circle_color = lazy.lib(() => import('./icons/yieldbtc_circle_color.svg'))
-export const yieldeth_circle_color = lazy.lib(() => import('./icons/yieldeth_circle_color.svg'))
-export const zerox = lazy.lib(() => import('./icons/zerox.svg'))
-export const zerox_circle_color = lazy.lib(() => import('./icons/zerox_circle_color.svg'))
-export const zerox_color = lazy.lib(() => import('./icons/zerox_color.svg'))
-export const bsdeth_circle_color = lazy.lib(() => import('./icons/bsdeth_circle_color.svg'))
-export const autoBuy = lazy.lib(() => import('./icons/autoBuy.svg'))
-export const autoSell = lazy.lib(() => import('./icons/autoSell.svg'))
-export const stopLoss = lazy.lib(() => import('./icons/stopLoss.svg'))
-export const trailingStopLoss = lazy.lib(() => import('./icons/stopLoss.svg'))
-export const takeProfit = lazy.lib(() => import('./icons/takeProfit.svg'))
-export const partialTakeProfit = lazy.lib(() => import('./icons/takeProfit.svg'))
-export const autoTakeProfit = lazy.lib(() => import('./icons/takeProfit.svg'))
-export const constantMultiple = lazy.lib(() => import('./icons/takeProfit.svg')) // doesn't matter, no longer supported
-export const rays = lazy.lib(() => import('./icons/rays.svg'))
-export const chevron_down = lazy.lib(() => import('./icons/chevron_down.svg'))
-export const chevron_up = lazy.lib(() => import('./icons/chevron_up.svg'))
-export const chevron_left = lazy.lib(() => import('./icons/chevron_left.svg'))
-export const chevron_right = lazy.lib(() => import('./icons/chevron_right.svg'))
-export const search_icon = lazy.lib(() => import('./icons/search_icon.svg'))
-export const tooltip = lazy.lib(() => import('./icons/tooltip.svg'))
-export const checkmark_colorful = lazy.lib(() => import('./icons/checkmark_colorful.svg'))
-export const checkmark = lazy.lib(() => import('./icons/checkmark.svg'))
-export const close = lazy.lib(() => import('./icons/close.svg'))
-export const close_colorful = lazy.lib(() => import('./icons/close_colorful.svg'))
-export const close_squared = lazy.lib(() => import('./icons/close_squared.svg'))
-export const radio_button = lazy.lib(() => import('./icons/radio_button.svg'))
-export const radio_button_checked = lazy.lib(() => import('./icons/radio_button_checked.svg'))
-export const rseth = lazy.lib(() => import('./icons/rseth.svg'))
-export const rsweth = lazy.lib(() => import('./icons/rsweth.svg'))
-export const swbtc = lazy.lib(() => import('./icons/swbtc.svg'))
-export const lbtc = lazy.lib(() => import('./icons/lbtc.svg'))
-export const syrupusdc = lazy.lib(() => import('./icons/syrupusdc.svg'))
-export const woeth = lazy.lib(() => import('./icons/woeth.svg'))
-export const sky = lazy.lib(() => import('./icons/sky.svg'))
-export const usds = lazy.lib(() => import('./icons/usds.svg'))
-export const susds = lazy.lib(() => import('./icons/susds.svg'))
-export const cog = lazy.lib(() => import('./icons/cog.svg'))
-export const user = lazy.lib(() => import('./icons/user.svg'))
-export const rebalancing = lazy.lib(() => import('./icons/rebalancing.svg'))
-export const wsuperoethb = lazy.lib(() => import('./icons/wsuperoethb.svg'))
-export const arrow_decrease = lazy.lib(() => import('./icons/arrow_decrease.svg'))
-export const arrow_increase = lazy.lib(() => import('./icons/arrow_increase.svg'))
-export const stars = lazy.lib(() => import('./icons/stars.svg'))
-export const chain_security = lazy.lib(() => import('./icons/chain_security.svg'))
-export const bug = lazy.lib(() => import('./icons/bug.svg'))
-export const quant_stamp = lazy.lib(() => import('./icons/quant_stamp.svg'))
-export const trail_of_bits = lazy.lib(() => import('./icons/trail_of_bits.svg'))
-export const person = lazy.lib(() => import('./icons/person.svg'))
-export const discord = lazy.lib(() => import('./icons/discord.svg'))
-export const edit = lazy.lib(() => import('./icons/edit.svg'))
-export const send = lazy.lib(() => import('./icons/send.svg'))
-export const arrow_forward = lazy.lib(() => import('./icons/arrow_forward.svg'))
-export const base = lazy.lib(() => import('./icons/base.svg'))
-export const network_ethereum = lazy.lib(() => import('./icons/network_ethereum.svg'))
-export const network_arbitrum = lazy.lib(() => import('./icons/network_arbitrum.svg'))
-export const network_optimism = lazy.lib(() => import('./icons/network_optimism.svg'))
-export const network_base = lazy.lib(() => import('./icons/network_base.svg'))
-export const withdraw = lazy.lib(() => import('./icons/withdraw.svg'))
+import { lazy } from 'react'
 
-export const summer_illustration_check = lazy.lib(
-  () => import('./icons/summer_illustration_check.svg'),
-)
-export const summer_illustration_email = lazy.lib(
-  () => import('./icons/summer_illustration_email.svg'),
-)
-export const summer_illustration_failed = lazy.lib(
-  () => import('./icons/summer_illustration_failed.svg'),
-)
-export const summer_illustration_gas_fee = lazy.lib(
-  () => import('./icons/summer_illustration_gas_fee.svg'),
-)
-export const summer_illustration_identity = lazy.lib(
-  () => import('./icons/summer_illustration_identity.svg'),
-)
-export const summer_illustration_logo = lazy.lib(
-  () => import('./icons/summer_illustration_logo.svg'),
-)
-export const summer_illustration_passkey = lazy.lib(
-  () => import('./icons/summer_illustration_passkey.svg'),
-)
-export const summer_illustration_shield = lazy.lib(
-  () => import('./icons/summer_illustration_shield.svg'),
-)
-export const summer_illustration_switch = lazy.lib(
-  () => import('./icons/summer_illustration_switch.svg'),
-)
-export const summer_illustration_transak_logo = lazy.lib(
-  () => import('./icons/summer_illustration_transak_logo.svg'),
-)
-export const summer_illustration_verification = lazy.lib(
-  () => import('./icons/summer_illustration_verification.svg'),
-)
+const customLazy = (importFn: () => Promise<typeof import('*.svg?react')>) =>
+  lazy(async () => ({ default: (await importFn()).default }))
+
+export const icons = {
+  aave_cbETH_usdc: customLazy(() => import('./icons/aave_cbETH_usdc.svg?react')),
+  aave_circle_color: customLazy(() => import('./icons/aave_circle_color.svg?react')),
+  aave_eth_usdc: customLazy(() => import('./icons/aave_eth_usdc.svg?react')),
+  aave_steth_eth: customLazy(() => import('./icons/aave_steth_eth.svg?react')),
+  aave_steth_usdc: customLazy(() => import('./icons/aave_steth_usdc.svg?react')),
+  aave_wbtc_usdc: customLazy(() => import('./icons/aave_wbtc_usdc.svg?react')),
+  aero: customLazy(() => import('./icons/aero.svg?react')),
+  ajna_circle_color: customLazy(() => import('./icons/ajna_circle_color.svg?react')),
+  apxeth_circle_color: customLazy(() => import('./icons/apxeth_circle_color.svg?react')),
+  arb: customLazy(() => import('./icons/arb.svg?react')),
+  arb_circle: customLazy(() => import('./icons/arb_circle.svg?react')),
+  augur: customLazy(() => import('./icons/augur.svg?react')),
+  augur_circle_color: customLazy(() => import('./icons/augur_circle_color.svg?react')),
+  augur_color: customLazy(() => import('./icons/augur_color.svg?react')),
+  bal: customLazy(() => import('./icons/bal.svg?react')),
+  bal_circle: customLazy(() => import('./icons/bal_circle.svg?react')),
+  bal_circle_color: customLazy(() => import('./icons/bal_circle_color.svg?react')),
+  bat: customLazy(() => import('./icons/bat.svg?react')),
+  bat_circle_color: customLazy(() => import('./icons/bat_circle_color.svg?react')),
+  bat_color: customLazy(() => import('./icons/bat_color.svg?react')),
+  bridge: customLazy(() => import('./icons/bridge.svg?react')),
+  btc_circle_color: customLazy(() => import('./icons/btc_circle_color.svg?react')),
+  btc_circle_mono: customLazy(() => import('./icons/btc_circle_mono.svg?react')),
+  cbeth_circle_color: customLazy(() => import('./icons/cbeth_circle_color.svg?react')),
+  cbeth_eth: customLazy(() => import('./icons/cbeth_eth.svg?react')),
+  cbeth_usdc: customLazy(() => import('./icons/cbeth_usdc.svg?react')),
+  chai: customLazy(() => import('./icons/chai.svg?react')),
+  chai_circle_color: customLazy(() => import('./icons/chai_circle_color.svg?react')),
+  chai_color: customLazy(() => import('./icons/chai_color.svg?react')),
+  chainlink: customLazy(() => import('./icons/chainlink.svg?react')),
+  chainlink_circle_color: customLazy(() => import('./icons/chainlink_circle_color.svg?react')),
+  chainlink_color: customLazy(() => import('./icons/chainlink_color.svg?react')),
+  compound: customLazy(() => import('./icons/compound.svg?react')),
+  compound_circle_color: customLazy(() => import('./icons/compound_circle_color.svg?react')),
+  compound_color: customLazy(() => import('./icons/compound_color.svg?react')),
+  crv: customLazy(() => import('./icons/crv.svg?react')),
+  crv_circle: customLazy(() => import('./icons/crv_circle.svg?react')),
+  cseth: customLazy(() => import('./icons/cseth.svg?react')),
+  dai: customLazy(() => import('./icons/dai.svg?react')),
+  dai_circle_color: customLazy(() => import('./icons/dai_circle_color.svg?react')),
+  dai_color: customLazy(() => import('./icons/dai_color.svg?react')),
+  degen: customLazy(() => import('./icons/degen.svg?react')),
+  not_supported_icon: customLazy(() => import('./icons/not_supported_icon.svg?react')),
+  deth: customLazy(() => import('./icons/deth.svg?react')),
+  digix_circle_color: customLazy(() => import('./icons/digix_circle_color.svg?react')),
+  ena: customLazy(() => import('./icons/ena.svg?react')),
+  eth_circle_color: customLazy(() => import('./icons/eth_circle_color.svg?react')),
+  eth_circle_mono: customLazy(() => import('./icons/eth_circle_mono.svg?react')),
+  eth_usdc: customLazy(() => import('./icons/eth_usdc.svg?react')),
+  ether: customLazy(() => import('./icons/ether.svg?react')),
+  ether_circle_color: customLazy(() => import('./icons/ether_circle_color.svg?react')),
+  ether_color: customLazy(() => import('./icons/ether_color.svg?react')),
+  euro_circle_color: customLazy(() => import('./icons/euro_circle_color.svg?react')),
+  exchange: customLazy(() => import('./icons/exchange.svg?react')),
+  ezeth: customLazy(() => import('./icons/ezeth.svg?react')),
+  frax_circle_color: customLazy(() => import('./icons/frax_circle_color.svg?react')),
+  gemini: customLazy(() => import('./icons/gemini.svg?react')),
+  gemini_circle_color: customLazy(() => import('./icons/gemini_circle_color.svg?react')),
+  gemini_color: customLazy(() => import('./icons/gemini_color.svg?react')),
+  gno_circle_color: customLazy(() => import('./icons/gno_circle_color.svg?react')),
+  gho_circle_color: customLazy(() => import('./icons/gho_circle_color.svg?react')),
+  golem_circle_color: customLazy(() => import('./icons/golem_circle_color.svg?react')),
+  guniv3_dai_usdc1_circles_color: customLazy(
+    () => import('./icons/guniv3_dai_usdc1_circles_color.svg?react'),
+  ),
+  gusd_circle_color: customLazy(() => import('./icons/gusd_circle_color.svg?react')),
+  gusd_circle_mono: customLazy(() => import('./icons/gusd_circle_mono.svg?react')),
+  knc_circle_color: customLazy(() => import('./icons/knc_circle_color.svg?react')),
+  kyber: customLazy(() => import('./icons/kyber.svg?react')),
+  kyber_circle_color: customLazy(() => import('./icons/kyber_circle_color.svg?react')),
+  kyber_color: customLazy(() => import('./icons/kyber_color.svg?react')),
+  latamex: customLazy(() => import('./icons/latamex.svg?react')),
+  ldo: customLazy(() => import('./icons/ldo.svg?react')),
+  ldo_circle: customLazy(() => import('./icons/ldo_circle.svg?react')),
+  link: customLazy(() => import('./icons/link.svg?react')),
+  link_circle_color: customLazy(() => import('./icons/link_circle_color.svg?react')),
+  link_circle_mono: customLazy(() => import('./icons/link_circle_mono.svg?react')),
+  lrc: customLazy(() => import('./icons/lrc.svg?react')),
+  lrc_circle_color: customLazy(() => import('./icons/lrc_circle_color.svg?react')),
+  lrc_color: customLazy(() => import('./icons/lrc_color.svg?react')),
+  lusd_circle_color: customLazy(() => import('./icons/lusd_circle_color.svg?react')),
+  maker: customLazy(() => import('./icons/maker.svg?react')),
+  maker_circle_color: customLazy(() => import('./icons/maker_circle_color.svg?react')),
+  maker_color: customLazy(() => import('./icons/maker_color.svg?react')),
+  mana: customLazy(() => import('./icons/mana.svg?react')),
+  mana_circle_color: customLazy(() => import('./icons/mana_circle_color.svg?react')),
+  mana_circle_mono: customLazy(() => import('./icons/mana_circle_mono.svg?react')),
+  mana_color: customLazy(() => import('./icons/mana_color.svg?react')),
+  matic_circle_color: customLazy(() => import('./icons/matic_circle_color.svg?react')),
+  matic_circle_mono: customLazy(() => import('./icons/matic_circle_mono.svg?react')),
+  menu: customLazy(() => import('./icons/menu.svg?react')),
+  meveth: customLazy(() => import('./icons/meveth.svg?react')),
+  mkr_circle_color: customLazy(() => import('./icons/mkr_circle_color.svg?react')),
+  moonpay: customLazy(() => import('./icons/moonpay.svg?react')),
+  morpho_circle_color: customLazy(() => import('./icons/morpho_circle_color.svg?react')),
+  mpeth: customLazy(() => import('./icons/mpeth.svg?react')),
+  omisego: customLazy(() => import('./icons/omisego.svg?react')),
+  omisego_circle_color: customLazy(() => import('./icons/omisego_circle_color.svg?react')),
+  omisego_color: customLazy(() => import('./icons/omisego_color.svg?react')),
+  op: customLazy(() => import('./icons/op.svg?react')),
+  op_circle: customLazy(() => import('./icons/op_circle.svg?react')),
+  open_in_new_tab: customLazy(() => import('./icons/open_in_new_tab.svg?react')),
+  oseth_circle_color: customLazy(() => import('./icons/oseth_circle_color.svg?react')),
+  pax: customLazy(() => import('./icons/pax.svg?react')),
+  pax_circle_color: customLazy(() => import('./icons/pax_circle_color.svg?react')),
+  pax_color: customLazy(() => import('./icons/pax_color.svg?react')),
+  prime: customLazy(() => import('./icons/prime.svg?react')),
+  pyusd: customLazy(() => import('./icons/pyusd.svg?react')),
+  question: customLazy(() => import('./icons/question.svg?react')),
+  question_mark: customLazy(() => import('./icons/question_mark.svg?react')),
+  question_o: customLazy(() => import('./icons/question_o.svg?react')),
+  rbn_circle_color: customLazy(() => import('./icons/rbn_circle_color.svg?react')),
+  renbtc_circle_color: customLazy(() => import('./icons/renbtc_circle_color.svg?react')),
+  reth_circle_color: customLazy(() => import('./icons/reth_circle_color.svg?react')),
+  reth_eth: customLazy(() => import('./icons/reth_eth.svg?react')),
+  reth_usdc: customLazy(() => import('./icons/reth_usdc.svg?react')),
+  rpl: customLazy(() => import('./icons/rpl.svg?react')),
+  rpl_circle: customLazy(() => import('./icons/rpl_circle.svg?react')),
+  safe: customLazy(() => import('./icons/safe.svg?react')),
+  sai: customLazy(() => import('./icons/sai.svg?react')),
+  sai_circle_color: customLazy(() => import('./icons/sai_circle_color.svg?react')),
+  sai_color: customLazy(() => import('./icons/sai_color.svg?react')),
+  sdai_circle_color: customLazy(() => import('./icons/sdai_circle_color.svg?react')),
+  snx: customLazy(() => import('./icons/snx.svg?react')),
+  spark_circle_color: customLazy(() => import('./icons/spark_circle_color.svg?react')),
+  steth_circle_color: customLazy(() => import('./icons/steth_circle_color.svg?react')),
+  steth_eth: customLazy(() => import('./icons/steth_eth.svg?react')),
+  steth_usdc: customLazy(() => import('./icons/steth_usdc.svg?react')),
+  styeth_circle_color: customLazy(() => import('./icons/styeth_circle_color.svg?react')),
+  susd: customLazy(() => import('./icons/susd.svg?react')),
+  susd_circle: customLazy(() => import('./icons/susd_circle.svg?react')),
+  susde: customLazy(() => import('./icons/susde.svg?react')),
+  tbtc_circle_color: customLazy(() => import('./icons/tbtc_circle_color.svg?react')),
+  tusd: customLazy(() => import('./icons/tusd.svg?react')),
+  tusd_circle_color: customLazy(() => import('./icons/tusd_circle_color.svg?react')),
+  tusd_color: customLazy(() => import('./icons/tusd_color.svg?react')),
+  uni_circle_color: customLazy(() => import('./icons/uni_circle_color.svg?react')),
+  uni_circle_mono: customLazy(() => import('./icons/uni_circle_mono.svg?react')),
+  uni_lp_circle_color: customLazy(() => import('./icons/uni_lp_circle_color.svg?react')),
+  uni_lp_circle_mono: customLazy(() => import('./icons/uni_lp_circle_mono.svg?react')),
+  unieth: customLazy(() => import('./icons/unieth.svg?react')),
+  univ2_dai_usdc_circles_color: customLazy(
+    () => import('./icons/univ2_dai_usdc_circles_color.svg?react'),
+  ),
+  univ2_dai_usdt_circles_color: customLazy(
+    () => import('./icons/univ2_dai_usdt_circles_color.svg?react'),
+  ),
+  univ2_eth_usdt_circles_color: customLazy(
+    () => import('./icons/univ2_eth_usdt_circles_color.svg?react'),
+  ),
+  univ2_usdc_eth_circles_color: customLazy(
+    () => import('./icons/univ2_usdc_eth_circles_color.svg?react'),
+  ),
+  usd_circle_color: customLazy(() => import('./icons/usd_circle_color.svg?react')),
+  usda: customLazy(() => import('./icons/usda.svg?react')),
+  usdc: customLazy(() => import('./icons/usdc.svg?react')),
+  usdc_circle_color: customLazy(() => import('./icons/usdc_circle_color.svg?react')),
+  usde: customLazy(() => import('./icons/usde.svg?react')),
+  usdp_circle_color: customLazy(() => import('./icons/usdp_circle_color.svg?react')),
+  usdt: customLazy(() => import('./icons/usdt.svg?react')),
+  usdt_circle_color: customLazy(() => import('./icons/usdt_circle_color.svg?react')),
+  usdt_color: customLazy(() => import('./icons/usdt_color.svg?react')),
+  wbtc: customLazy(() => import('./icons/wbtc.svg?react')),
+  wbtc_circle_color: customLazy(() => import('./icons/wbtc_circle_color.svg?react')),
+  wbtc_color: customLazy(() => import('./icons/wbtc_color.svg?react')),
+  wbtc_usdc: customLazy(() => import('./icons/wbtc_usdc.svg?react')),
+  weeth_circle_color: customLazy(() => import('./icons/weeth_circle_color.svg?react')),
+  weth_circle_color: customLazy(() => import('./icons/weth_circle_color.svg?react')),
+  wld_circle_color: customLazy(() => import('./icons/wld_circle_color.svg?react')),
+  wsteth_circle_color: customLazy(() => import('./icons/wsteth_circle_color.svg?react')),
+  wyre: customLazy(() => import('./icons/wyre.svg?react')),
+  xeth: customLazy(() => import('./icons/xeth.svg?react')),
+  yen_circle_color: customLazy(() => import('./icons/yen_circle_color.svg?react')),
+  yfi_circle_color: customLazy(() => import('./icons/yfi_circle_color.svg?react')),
+  yfi_circle_mono: customLazy(() => import('./icons/yfi_circle_mono.svg?react')),
+  yieldbtc_circle_color: customLazy(() => import('./icons/yieldbtc_circle_color.svg?react')),
+  yieldeth_circle_color: customLazy(() => import('./icons/yieldeth_circle_color.svg?react')),
+  zerox: customLazy(() => import('./icons/zerox.svg?react')),
+  zerox_circle_color: customLazy(() => import('./icons/zerox_circle_color.svg?react')),
+  zerox_color: customLazy(() => import('./icons/zerox_color.svg?react')),
+  bsdeth_circle_color: customLazy(() => import('./icons/bsdeth_circle_color.svg?react')),
+  autoBuy: customLazy(() => import('./icons/autoBuy.svg?react')),
+  autoSell: customLazy(() => import('./icons/autoSell.svg?react')),
+  stopLoss: customLazy(() => import('./icons/stopLoss.svg?react')),
+  trailingStopLoss: customLazy(() => import('./icons/stopLoss.svg?react')),
+  takeProfit: customLazy(() => import('./icons/takeProfit.svg?react')),
+  partialTakeProfit: customLazy(() => import('./icons/takeProfit.svg?react')),
+  autoTakeProfit: customLazy(() => import('./icons/takeProfit.svg?react')),
+  constantMultiple: customLazy(() => import('./icons/takeProfit.svg?react')),
+  rays: customLazy(() => import('./icons/rays.svg?react')),
+  chevron_down: customLazy(() => import('./icons/chevron_down.svg?react')),
+  chevron_up: customLazy(() => import('./icons/chevron_up.svg?react')),
+  chevron_left: customLazy(() => import('./icons/chevron_left.svg?react')),
+  chevron_right: customLazy(() => import('./icons/chevron_right.svg?react')),
+  search_icon: customLazy(() => import('./icons/search_icon.svg?react')),
+  tooltip: customLazy(() => import('./icons/tooltip.svg?react')),
+  checkmark_colorful: customLazy(() => import('./icons/checkmark_colorful.svg?react')),
+  checkmark: customLazy(() => import('./icons/checkmark.svg?react')),
+  close: customLazy(() => import('./icons/close.svg?react')),
+  close_colorful: customLazy(() => import('./icons/close_colorful.svg?react')),
+  close_squared: customLazy(() => import('./icons/close_squared.svg?react')),
+  radio_button: customLazy(() => import('./icons/radio_button.svg?react')),
+  radio_button_checked: customLazy(() => import('./icons/radio_button_checked.svg?react')),
+  rseth: customLazy(() => import('./icons/rseth.svg?react')),
+  rsweth: customLazy(() => import('./icons/rsweth.svg?react')),
+  swbtc: customLazy(() => import('./icons/swbtc.svg?react')),
+  lbtc: customLazy(() => import('./icons/lbtc.svg?react')),
+  syrupusdc: customLazy(() => import('./icons/syrupusdc.svg?react')),
+  woeth: customLazy(() => import('./icons/woeth.svg?react')),
+  sky: customLazy(() => import('./icons/sky.svg?react')),
+  usds: customLazy(() => import('./icons/usds.svg?react')),
+  susds: customLazy(() => import('./icons/susds.svg?react')),
+  cog: customLazy(() => import('./icons/cog.svg?react')),
+  user: customLazy(() => import('./icons/user.svg?react')),
+  rebalancing: customLazy(() => import('./icons/rebalancing.svg?react')),
+  wsuperoethb: customLazy(() => import('./icons/wsuperoethb.svg?react')),
+  arrow_decrease: customLazy(() => import('./icons/arrow_decrease.svg?react')),
+  arrow_increase: customLazy(() => import('./icons/arrow_increase.svg?react')),
+  stars: customLazy(() => import('./icons/stars.svg?react')),
+  chain_security: customLazy(() => import('./icons/chain_security.svg?react')),
+  bug: customLazy(() => import('./icons/bug.svg?react')),
+  quant_stamp: customLazy(() => import('./icons/quant_stamp.svg?react')),
+  trail_of_bits: customLazy(() => import('./icons/trail_of_bits.svg?react')),
+  person: customLazy(() => import('./icons/person.svg?react')),
+  discord: customLazy(() => import('./icons/discord.svg?react')),
+  edit: customLazy(() => import('./icons/edit.svg?react')),
+  send: customLazy(() => import('./icons/send.svg?react')),
+  arrow_forward: customLazy(() => import('./icons/arrow_forward.svg?react')),
+  base: customLazy(() => import('./icons/base.svg?react')),
+  network_ethereum: customLazy(() => import('./icons/network_ethereum.svg?react')),
+  network_arbitrum: customLazy(() => import('./icons/network_arbitrum.svg?react')),
+  network_optimism: customLazy(() => import('./icons/network_optimism.svg?react')),
+  network_base: customLazy(() => import('./icons/network_base.svg?react')),
+  withdraw: customLazy(() => import('./icons/withdraw.svg?react')),
+  summer_illustration_check: customLazy(
+    () => import('./icons/summer_illustration_check.svg?react'),
+  ),
+  summer_illustration_email: customLazy(
+    () => import('./icons/summer_illustration_email.svg?react'),
+  ),
+  summer_illustration_failed: customLazy(
+    () => import('./icons/summer_illustration_failed.svg?react'),
+  ),
+  summer_illustration_gas_fee: customLazy(
+    () => import('./icons/summer_illustration_gas_fee.svg?react'),
+  ),
+  summer_illustration_identity: customLazy(
+    () => import('./icons/summer_illustration_identity.svg?react'),
+  ),
+  summer_illustration_logo: customLazy(() => import('./icons/summer_illustration_logo.svg?react')),
+  summer_illustration_passkey: customLazy(
+    () => import('./icons/summer_illustration_passkey.svg?react'),
+  ),
+  summer_illustration_shield: customLazy(
+    () => import('./icons/summer_illustration_shield.svg?react'),
+  ),
+  summer_illustration_switch: customLazy(
+    () => import('./icons/summer_illustration_switch.svg?react'),
+  ),
+  summer_illustration_transak_logo: customLazy(
+    () => import('./icons/summer_illustration_transak_logo.svg?react'),
+  ),
+  summer_illustration_verification: customLazy(
+    () => import('./icons/summer_illustration_verification.svg?react'),
+  ),
+}

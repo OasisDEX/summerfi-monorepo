@@ -78,7 +78,6 @@ export const CriteriaList = ({ userRays }: CriteriaListProps) => {
                   >
                     <Icon
                       iconName="checkmark_colorful"
-                      proxyStyle={{ fill: 'var(--gradient-summer-fi-dark)' }}
                       size={item.done ? 20 : 15}
                       style={item.done ? { opacity: 1 } : { opacity: 0.3 }}
                     />
