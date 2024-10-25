@@ -170,7 +170,7 @@ const detailsLinks = [
 export const revalidate = 60
 
 const EarnStrategyOpenManagePage = async ({ params }: EarnStrategyOpenManagePageProps) => {
-  const networkId = subgraphNetworkToId(params.network as SDKNetwork)
+  const networkId = subgraphNetworkToId(params.network)
 
   const [selectedVault, strategiesList] = await Promise.all([
     getVaultDetails({

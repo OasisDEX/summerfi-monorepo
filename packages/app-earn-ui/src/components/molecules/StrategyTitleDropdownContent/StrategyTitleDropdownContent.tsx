@@ -5,13 +5,13 @@ import Link from 'next/link'
 
 import { Icon } from '@/components/atoms/Icon/Icon.tsx'
 import { Text } from '@/components/atoms/Text/Text.tsx'
-import { getStrategyUrl } from '@/helpers/get-strategy-url'
 import { riskColors } from '@/helpers/risk-colors.ts'
 
 import classNames from './StrategyTitleDropdownContent.module.scss'
 
 interface StrategyDropdownContentProps {
   strategy: SDKVaultsListType[number]
+  link: string
 }
 
 const networkNameIconMap = {
@@ -19,8 +19,11 @@ const networkNameIconMap = {
   [SDKNetwork.Base]: <Icon iconName="network_base" size={10} />,
 }
 
-export const StrategyTitleDropdownContent: FC<StrategyDropdownContentProps> = ({ strategy }) => (
-  <Link href={getStrategyUrl(strategy)}>
+export const StrategyTitleDropdownContent: FC<StrategyDropdownContentProps> = ({
+  strategy,
+  link,
+}) => (
+  <Link href={link}>
     <div className={classNames.wrapper}>
       <div className={classNames.iconWithSymbolWrapper}>
         <Icon tokenName={strategy.inputToken.symbol as TokenSymbolsList} variant="m" />
