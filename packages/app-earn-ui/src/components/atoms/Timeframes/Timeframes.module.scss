@@ -5,5 +5,9 @@
 
   button {
     margin-left: var(--general-space-32);
+
+    &:first-child {
+      margin-left: 0;
+    }
   }
 }
