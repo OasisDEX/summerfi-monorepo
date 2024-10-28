@@ -1,5 +1,3 @@
-'use client'
-
 import { StrategyCard, StrategySimulationForm } from '@summerfi/app-earn-ui'
 import { type SDKVaultishType } from '@summerfi/app-types'
 
