@@ -22,12 +22,30 @@ interface TableProps<K extends string> {
     details?: ReactNode
   }[]
   columns: Column<K>[]
+  hiddenColumns?: K[]
   handleSort?: (config: TableSortedColumn<K>) => void
+  customRow?: {
+    idx: number
+    content: ReactNode
+  }
 }
 
-export function Table<K extends string>({ rows, columns, handleSort }: TableProps<K>) {
+export function Table<K extends string>({
+  rows,
+  columns,
+  hiddenColumns,
+  handleSort,
+  customRow,
+}: TableProps<K>) {
   const [sortConfig, setSortConfig] = useState<TableSortedColumn<K> | null>(null)
   const [expandedRow, setExpandedRow] = useState<number | null>(null)
+
+  // remove columns from row data
+  if (hiddenColumns?.length) {
+    hiddenColumns.forEach((column) => {
+      rows.forEach((row) => delete row.content[column])
+    })
+  }
 
   // Handle sorting by column
   const handleColumnSorting = (column: K, isSortable?: boolean) => {
@@ -56,39 +74,41 @@ export function Table<K extends string>({ rows, columns, handleSort }: TableProp
       <table className={styles.table}>
         <thead>
           <tr>
-            {columns.map((column) => (
-              <th key={column.key}>
-                <div
-                  style={{
-                    display: 'flex',
-                  }}
-                >
+            {columns
+              .filter((column) => !hiddenColumns?.includes(column.key))
+              .map((column) => (
+                <th key={column.key}>
                   <div
                     style={{
                       display: 'flex',
-                      alignItems: 'center',
-                      gap: 'var(--spacing-space-x-small)',
-                      width: 'fit-content',
-                      cursor: column.sortable ? 'pointer' : 'default',
                     }}
-                    onClick={() => handleColumnSorting(column.key, column.sortable)}
                   >
-                    {column.title}
-                    {sortConfig?.key === column.key && column.sortable ? (
-                      <Icon
-                        iconName={
-                          sortConfig.direction === TableSortDirection.ASC
-                            ? 'chevron_up'
-                            : 'chevron_down'
-                        }
-                        size={10}
-                        color="rgba(119, 117, 118, 1)"
-                      />
-                    ) : null}
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 'var(--spacing-space-x-small)',
+                        width: 'fit-content',
+                        cursor: column.sortable ? 'pointer' : 'default',
+                      }}
+                      onClick={() => handleColumnSorting(column.key, column.sortable)}
+                    >
+                      {column.title}
+                      {sortConfig?.key === column.key && column.sortable ? (
+                        <Icon
+                          iconName={
+                            sortConfig.direction === TableSortDirection.ASC
+                              ? 'chevron_up'
+                              : 'chevron_down'
+                          }
+                          size={10}
+                          color="rgba(119, 117, 118, 1)"
+                        />
+                      ) : null}
+                    </div>
                   </div>
-                </div>
-              </th>
-            ))}
+                </th>
+              ))}
           </tr>
         </thead>
         <tbody>
@@ -129,6 +149,11 @@ export function Table<K extends string>({ rows, columns, handleSort }: TableProp
                   <td colSpan={columns.length}>
                     <div className={styles.details}>{row.details}</div>
                   </td>
+                </tr>
+              )}
+              {customRow?.idx === rowIndex && (
+                <tr className={styles.customRow}>
+                  <td colSpan={columns.length}>{customRow.content}</td>
                 </tr>
               )}
             </Fragment>

@@ -60,6 +60,14 @@
       font-size: 14px;
     }
   }
+
+  .customRow {
+    height: fit-content;
+
+    > td {
+      padding: unset;
+    }
+  }
 }
 
 /* Mobile styles */

@@ -13,10 +13,7 @@ import { getVaultDetails } from '@/app/server-handlers/sdk/getVaultDetails'
 import { getVaultsList } from '@/app/server-handlers/sdk/getVaultsList'
 import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
 import FormContainer from '@/components/organisms/Form/FormContainer'
-import {
-  RebalancingActivity,
-  type RebalancingActivityRawData,
-} from '@/components/organisms/RebalancingActivity/RebalancingActivity'
+import { RebalancingActivity } from '@/components/organisms/RebalancingActivity/RebalancingActivity'
 import {
   StrategyExposure,
   type StrategyExposureRawData,
@@ -25,6 +22,7 @@ import {
   UserActivity,
   type UserActivityRawData,
 } from '@/components/organisms/UserActivity/UserActivity'
+import { rebalancingActivityRawData } from '@/features/rebalance-activity/table/dummyData'
 import type { FleetConfig } from '@/helpers/sdk/types'
 
 type EarnStrategyOpenManagePageProps = {
@@ -83,41 +81,6 @@ const strategyExposureRawData: StrategyExposureRawData[] = [
     currentApy: '0.103',
     liquidity: '43000000',
     type: 'Basic Trading',
-  },
-]
-
-const rebalancingActivityRawData: RebalancingActivityRawData[] = [
-  {
-    type: 'reduce',
-    action: {
-      from: 'USDC',
-      to: 'DAI',
-    },
-    amount: {
-      token: 'USDC',
-      value: '123123',
-    },
-    timestamp: '12321321',
-    provider: {
-      link: '/',
-      label: 'Summer.fi',
-    },
-  },
-  {
-    type: 'increase',
-    action: {
-      from: 'USDT',
-      to: 'USDC',
-    },
-    amount: {
-      token: 'USDT',
-      value: '123123',
-    },
-    timestamp: '1727385013506',
-    provider: {
-      link: '/',
-      label: 'Summer.fi',
-    },
   },
 ]
 

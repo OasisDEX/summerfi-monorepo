@@ -15,6 +15,11 @@ export const rebalancingActivityColumns = [
     sortable: true,
   },
   {
+    title: 'Strategy',
+    key: 'strategy',
+    sortable: false,
+  },
+  {
     title: 'Timestamp',
     key: 'timestamp',
     sortable: true,

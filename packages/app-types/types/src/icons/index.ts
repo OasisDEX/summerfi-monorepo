@@ -235,6 +235,8 @@ export type IconNamesList =
   | 'summer_illustration_switch'
   | 'summer_illustration_transak_logo'
   | 'summer_illustration_verification'
+  | 'social_link'
+  | 'social_x'
 
 export type TokenSymbolsList =
   | 'USDP'

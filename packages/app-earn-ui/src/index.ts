@@ -46,7 +46,10 @@ export { TableHeadWithTooltip } from './components/molecules/TableHeadWithToolti
 export { TokensGroup } from './components/molecules/TokensGroup/TokensGroup'
 export { InlineButtons } from './components/molecules/InlineButtons/InlineButtons'
 export { TabBar } from './components/molecules/TabBar/TabBar'
-export { SlideCarousel } from './components/molecules/SlideCarousel/SlideCarousel'
+export {
+  SlideCarousel,
+  SlideCarouselButtonPosition,
+} from './components/molecules/SlideCarousel/SlideCarousel'
 export {
   LinkCard,
   type LinkCardWithIcon,
@@ -55,6 +58,8 @@ export {
 export { PillSelector } from './components/molecules/PillSelector/PillSelector'
 export { BonusLabel } from './components/molecules/BonusLabel/BonusLabel'
 export { ProjectedEarnings } from './components/molecules/ProjectedEarnings/ProjectedEarnings'
+export { HeadingWithCards } from './components/molecules/HeadingWithCards/HeadingWithCards'
+export { TableCarousel } from './components/molecules/TableCarousel/TableCarousel'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar } from './components/organisms/Sidebar/Sidebar'
