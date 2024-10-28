@@ -1,3 +1,5 @@
+'use client'
+
 import OGAnimateHeight from 'react-animate-height'
 import clsx from 'clsx'
 

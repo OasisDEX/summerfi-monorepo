@@ -11,7 +11,7 @@ export const rebalancingActivityRawData: RebalancingActivityRawData[] = [
       token: 'USDC',
       value: '123123',
     },
-    strategy: 'USDC Ethereum Lower Risk',
+    vault: 'USDC Ethereum Lower Risk',
     timestamp: '12321321',
     provider: {
       link: '/',
@@ -28,7 +28,7 @@ export const rebalancingActivityRawData: RebalancingActivityRawData[] = [
       token: 'USDT',
       value: '123123',
     },
-    strategy: 'USDC Ethereum Lower Risk',
+    vault: 'USDC Ethereum Lower Risk',
     timestamp: '1727385013506',
     provider: {
       link: '/',
@@ -45,7 +45,7 @@ export const rebalancingActivityRawData: RebalancingActivityRawData[] = [
       token: 'DAI',
       value: '123123',
     },
-    strategy: 'USDC Ethereum Lower Risk',
+    vault: 'USDC Ethereum Lower Risk',
     timestamp: '1727385013506',
     provider: {
       link: '/',

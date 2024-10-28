@@ -37,7 +37,7 @@ export const rebalancingActivityMapper = (rawData: RebalancingActivityRawData[])
             <TableCellText>{formatCryptoBalance(item.amount.value)}</TableCellText>
           </div>
         ),
-        strategy: <TableCellText>{item.strategy}</TableCellText>,
+        strategy: <TableCellText>{item.vault}</TableCellText>,
         timestamp: (
           <TableCellText>
             {timeAgo({ from: new Date(), to: new Date(Number(item.timestamp)) })}
