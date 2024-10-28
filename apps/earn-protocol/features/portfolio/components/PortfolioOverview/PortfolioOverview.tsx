@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
 import { CryptoUtilities } from '@/features/crypto-utilities/components/CryptoUtilities/CryptoUtilities'
 import { NewsAndUpdates } from '@/features/news-and-updates/components/NewsAndUpdates/NewsAndUpdates'
-import { PortfolioStrategiesCarousel } from '@/features/portfolio/components/PortfolioStrategiesCarousel/PortfolioStrategiesCarousel'
+import { PortfolioVaultsCarousel } from '@/features/portfolio/components/PortfolioVaultsCarousel/PortfolioVaultsCarousel'
 
 const dummyNewsAndUpdatesItems = [
   {
@@ -54,7 +54,7 @@ const dataBlocks = [
   },
 ]
 
-export const PortfolioOverview = ({ strategiesList }: { strategiesList: SDKVaultsListType }) => {
+export const PortfolioOverview = ({ vaultsList }: { vaultsList: SDKVaultsListType }) => {
   return (
     <div>
       <div
@@ -81,8 +81,8 @@ export const PortfolioOverview = ({ strategiesList }: { strategiesList: SDKVault
             Positions
           </Text>
           <MockedLineChart />
-          <PortfolioStrategiesCarousel
-            strategiesList={strategiesList}
+          <PortfolioVaultsCarousel
+            vaultsList={vaultsList}
             style={{ marginTop: 'var(--general-space-24)' }}
           />
         </Card>

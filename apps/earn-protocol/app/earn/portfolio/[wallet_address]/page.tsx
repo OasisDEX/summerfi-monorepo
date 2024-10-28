@@ -23,7 +23,7 @@ const PortfolioPage = async ({ params }: PortfolioPageProps) => {
       walletAddress={walletAddress}
       walletData={walletData}
       rewardsData={rewardsData}
-      strategiesList={vaults}
+      vaultsList={vaults}
     />
   )
 }

@@ -1,13 +1,13 @@
 import { Text } from '@summerfi/app-earn-ui'
 
-type EarnStrategyPreviewPageProps = {
+type EarnVaultPreviewPageProps = {
   params: {
     vaultId: string
     wallet_address: string
   }
 }
 
-const EarnStrategyViewWalletPage = ({ params }: EarnStrategyPreviewPageProps) => {
+const EarnVaultViewWalletPage = ({ params }: EarnVaultPreviewPageProps) => {
   return (
     <Text
       variant="h2"
@@ -18,4 +18,4 @@ const EarnStrategyViewWalletPage = ({ params }: EarnStrategyPreviewPageProps) =>
   )
 }
 
-export default EarnStrategyViewWalletPage
+export default EarnVaultViewWalletPage
