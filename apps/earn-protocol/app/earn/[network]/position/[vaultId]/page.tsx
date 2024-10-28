@@ -18,11 +18,11 @@ import {
   UserActivity,
   type UserActivityRawData,
 } from '@/components/organisms/UserActivity/UserActivity'
-import { rebalancingActivityRawData } from '@/features/rebalance-activity/table/dummyData'
 import {
   VaultExposure,
   type VaultExposureRawData,
 } from '@/components/organisms/VaultExposure/VaultExposure'
+import { rebalancingActivityRawData } from '@/features/rebalance-activity/table/dummyData'
 import type { FleetConfig } from '@/helpers/sdk/types'
 
 type EarnVaultOpenManagePageProps = {
