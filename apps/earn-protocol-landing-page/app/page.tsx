@@ -8,7 +8,7 @@ export default async function HomePage() {
 
   return (
     <div style={{ display: 'flex', gap: '8px', flexDirection: 'column', alignItems: 'center' }}>
-      <LandingPageContent strategiesList={vaults} />
+      <LandingPageContent vaultsList={vaults} />
     </div>
   )
 }

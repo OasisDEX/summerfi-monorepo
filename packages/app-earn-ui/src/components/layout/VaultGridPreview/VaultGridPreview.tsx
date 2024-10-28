@@ -1,0 +1,127 @@
+'use client'
+
+import { type FC, type ReactNode } from 'react'
+import { type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-types'
+import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
+import Link from 'next/link'
+
+import { Box } from '@/components/atoms/Box/Box'
+import { Text } from '@/components/atoms/Text/Text'
+import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
+import { DataBlock } from '@/components/molecules/DataBlock/DataBlock'
+import { Dropdown } from '@/components/molecules/Dropdown/Dropdown'
+import { SimpleGrid } from '@/components/molecules/Grid/SimpleGrid'
+import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDropdownContent/VaultTitleDropdownContent.tsx'
+import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
+import { getVaultUrl } from '@/helpers/get-vault-url.ts'
+
+import vaultGridPreviewStyles from './VaultGridPreview.module.scss'
+
+interface VaultGridPreviewProps {
+  vault: SDKVaultishType
+  vaults: SDKVaultsListType
+  leftContent: ReactNode
+  rightContent: ReactNode
+}
+
+export const VaultGridPreview: FC<VaultGridPreviewProps> = ({
+  vault,
+  vaults,
+  leftContent,
+  rightContent,
+}) => {
+  const parsedApr = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
+  const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(vault.totalValueLockedUSD))
+
+  return (
+    <>
+      <div className={vaultGridPreviewStyles.vaultGridPreviewBreadcrumbsWrapper}>
+        <div style={{ display: 'inline-block' }}>
+          <Link href="/earn">
+            <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
+              Earn / &nbsp;
+            </Text>
+          </Link>
+          <Text as="span" variant="p3" color="white">
+            {vault.id}
+          </Text>
+        </div>
+      </div>
+      <div className={vaultGridPreviewStyles.vaultGridPreviewPositionWrapper}>
+        <div>
+          <div className={vaultGridPreviewStyles.vaultGridPreviewTopLeftWrapper}>
+            <Dropdown
+              options={vaults.map((item) => ({
+                value: item.id,
+                content: <VaultTitleDropdownContent vault={item} link={getVaultUrl(vault)} />,
+              }))}
+              dropdownValue={{
+                value: vault.id,
+                content: <VaultTitleDropdownContent vault={vault} link={getVaultUrl(vault)} />,
+              }}
+            >
+              <VaultTitleWithRisk
+                symbol={vault.inputToken.symbol}
+                // TODO: fill data
+                risk="low"
+                networkName={vault.protocol.network}
+              />
+            </Dropdown>
+            <Text style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+              <BonusLabel rays="1,111" />
+            </Text>
+          </div>
+          <SimpleGrid
+            columns={2}
+            rows={2}
+            gap="var(--general-space-16)"
+            style={{ marginBottom: 'var(--general-space-16)' }}
+          >
+            <Box>
+              <DataBlock
+                size="large"
+                titleSize="small"
+                title="30d APY"
+                value={parsedApr}
+                subValue="+2.1% Median DeFi Yield"
+                subValueType="positive"
+                subValueSize="small"
+              />
+            </Box>
+            <Box>
+              <DataBlock
+                size="large"
+                titleSize="small"
+                title="Current APY"
+                value="value"
+                subValue="+1.7% Median DeFi Yield"
+                subValueType="positive"
+                subValueSize="small"
+              />
+            </Box>
+            <Box
+              style={{
+                gridColumn: '1/3',
+              }}
+            >
+              <DataBlock
+                size="large"
+                titleSize="small"
+                title="Assets in vault"
+                value={parsedTotalValueLockedUSD}
+                // TODO: fill data
+                subValue={`231,232,321.01 ${vault.inputToken.symbol}`}
+                subValueSize="small"
+              />
+            </Box>
+          </SimpleGrid>
+          <Box className={vaultGridPreviewStyles.leftBlock}>{leftContent}</Box>
+        </div>
+        <div className={vaultGridPreviewStyles.rightBlockWrapper}>
+          <div className={vaultGridPreviewStyles.rightBlock}>{rightContent}</div>
+        </div>
+      </div>
+    </>
+  )
+}

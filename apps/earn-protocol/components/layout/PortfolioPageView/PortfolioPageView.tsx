@@ -16,25 +16,25 @@ interface PortfolioPageViewProps {
   walletAddress: string
   walletData: PortfolioAssetsResponse
   rewardsData: PortfolioRewardsRawData[]
-  strategiesList: SDKVaultsListType
+  vaultsList: SDKVaultsListType
 }
 
 export const PortfolioPageView: FC<PortfolioPageViewProps> = ({
   walletAddress,
   walletData,
   rewardsData,
-  strategiesList,
+  vaultsList,
 }) => {
   const tabs = [
     {
       id: 'overview',
       label: 'Overview',
-      content: <PortfolioOverview strategiesList={strategiesList} />,
+      content: <PortfolioOverview vaultsList={vaultsList} />,
     },
     {
       id: 'wallet',
       label: 'Wallet',
-      content: <PortfolioWallet walletData={walletData} strategiesList={strategiesList} />,
+      content: <PortfolioWallet walletData={walletData} vaultsList={vaultsList} />,
     },
     {
       id: 'rebalance-activity',

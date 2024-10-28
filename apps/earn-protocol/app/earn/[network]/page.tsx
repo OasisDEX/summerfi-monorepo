@@ -1,9 +1,9 @@
 import { type SDKNetwork } from '@summerfi/app-types'
 
 import { getVaultsList } from '@/app/server-handlers/sdk/getVaultsList'
-import { StrategiesListView } from '@/components/layout/StrategiesListView/StrategiesListView'
+import { VaultsListView } from '@/components/layout/VaultsListView/VaultsListView'
 
-type EarnNetworkStrategiesPageProps = {
+type EarnNetworkVaultsPageProps = {
   params: {
     network: SDKNetwork | 'all-networks'
   }
@@ -11,10 +11,10 @@ type EarnNetworkStrategiesPageProps = {
 
 export const revalidate = 60
 
-const EarnNetworkStrategiesPage = async ({ params }: EarnNetworkStrategiesPageProps) => {
+const EarnNetworkVaultsPage = async ({ params }: EarnNetworkVaultsPageProps) => {
   const { vaults } = await getVaultsList()
 
-  return <StrategiesListView strategiesList={vaults} selectedNetwork={params.network} />
+  return <VaultsListView vaultsList={vaults} selectedNetwork={params.network} />
 }
 
-export default EarnNetworkStrategiesPage
+export default EarnNetworkVaultsPage

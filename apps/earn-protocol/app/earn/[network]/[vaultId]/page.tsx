@@ -1,7 +1,7 @@
 import { type SDKNetwork } from '@summerfi/app-types'
 import { redirect } from 'next/navigation'
 
-const RedirectToStrategyDetails = ({
+const RedirectToVaultDetails = ({
   params,
 }: {
   params: {
@@ -9,10 +9,10 @@ const RedirectToStrategyDetails = ({
     vaultId: string
   }
 }) => {
-  const { network, vaultId: strategyId } = params
+  const { network, vaultId } = params
 
-  // redirect to strategy position page
-  redirect(`/earn/${network.toLowerCase()}/position/${strategyId}`)
+  // redirect to vault position page
+  redirect(`/earn/${network.toLowerCase()}/position/${vaultId}`)
 }
 
-export default RedirectToStrategyDetails
+export default RedirectToVaultDetails

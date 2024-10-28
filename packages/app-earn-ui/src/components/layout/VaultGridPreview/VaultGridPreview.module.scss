@@ -1,0 +1,44 @@
+.vaultGridPreviewBreadcrumbsWrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--general-space-16);
+
+  a {
+    margin-top: var(--general-space-12);
+    color: var(--earn-protocol-primary-100);
+  }
+}
+
+.vaultGridPreviewPositionWrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-top: 20px;
+  padding: 0 var(--general-space-16);
+
+  @media screen and (min-width: 900px) {
+    grid-template-columns: 1fr max(446px);
+    grid-gap: var(--general-space-16);
+  }
+
+  .leftBlock {
+    display: grid;
+    grid-gap: var(--general-space-16);
+  }
+
+  .rightBlockWrapper {
+    height: 100%;
+
+    .rightBlock {
+      position: sticky;
+      top: var(--general-space-16);
+    }
+  }
+}
+
+.vaultGridPreviewTopLeftWrapper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+  margin-bottom: var(--general-space-16);
+}

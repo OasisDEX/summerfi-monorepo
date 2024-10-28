@@ -1,11 +1,11 @@
 import { Carousel, Text } from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 
-import { LandingPageStrategyPicker } from '@/components/organisms/LandingPageStrategyPicker/LandingPageStrategyPicker'
+import { LandingPageVaultPicker } from '@/components/organisms/LandingPageVaultPicker/LandingPageVaultPicker'
 
 import classNames from '@/components/layout/LandingPageContent/LandingPageContent.module.scss'
 
-export const LandingPageContent = ({ strategiesList }: { strategiesList: SDKVaultsListType }) => {
+export const LandingPageContent = ({ vaultsList }: { vaultsList: SDKVaultsListType }) => {
   return (
     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <div className={classNames.pageHeader}>
@@ -25,8 +25,8 @@ export const LandingPageContent = ({ strategiesList }: { strategiesList: SDKVaul
         </Text>
       </div>
       <Carousel
-        components={strategiesList.map((strategy) => (
-          <LandingPageStrategyPicker strategy={strategy} key={strategy.id} />
+        components={vaultsList.map((vault) => (
+          <LandingPageVaultPicker vault={vault} key={vault.id} />
         ))}
         contentWidth={515}
       />

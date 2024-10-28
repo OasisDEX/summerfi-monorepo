@@ -1,12 +1,12 @@
 import { getVaultsList } from '@/app/server-handlers/sdk/getVaultsList'
-import { StrategiesListView } from '@/components/layout/StrategiesListView/StrategiesListView'
+import { VaultsListView } from '@/components/layout/VaultsListView/VaultsListView'
 
 export const revalidate = 60
 
-const EarnAllStrategiesPage = async () => {
+const EarnAllVaultsPage = async () => {
   const { vaults } = await getVaultsList()
 
-  return <StrategiesListView strategiesList={vaults} />
+  return <VaultsListView vaultsList={vaults} />
 }
 
-export default EarnAllStrategiesPage
+export default EarnAllVaultsPage

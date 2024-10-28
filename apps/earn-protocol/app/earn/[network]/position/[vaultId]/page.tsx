@@ -1,9 +1,9 @@
 import {
   Expander,
-  getStrategyDetailsUrl,
-  StrategyGridPreview,
+  getVaultDetailsUrl,
   subgraphNetworkToId,
   Text,
+  VaultGridPreview,
   WithArrow,
 } from '@summerfi/app-earn-ui'
 import { type SDKNetwork } from '@summerfi/app-types'
@@ -18,16 +18,16 @@ import {
   type RebalancingActivityRawData,
 } from '@/components/organisms/RebalancingActivity/RebalancingActivity'
 import {
-  StrategyExposure,
-  type StrategyExposureRawData,
-} from '@/components/organisms/StrategyExposure/StrategyExposure'
-import {
   UserActivity,
   type UserActivityRawData,
 } from '@/components/organisms/UserActivity/UserActivity'
+import {
+  VaultExposure,
+  type VaultExposureRawData,
+} from '@/components/organisms/VaultExposure/VaultExposure'
 import type { FleetConfig } from '@/helpers/sdk/types'
 
-type EarnStrategyOpenManagePageProps = {
+type EarnVaultOpenManagePageProps = {
   params: {
     vaultId: string
     network: SDKNetwork
@@ -39,9 +39,9 @@ const fleetConfig: FleetConfig = {
   fleetAddress: '0x75d4f7cb1b2481385e0878c639f6f6d66592d399',
 }
 
-const strategyExposureRawData: StrategyExposureRawData[] = [
+const vaultExposureRawData: VaultExposureRawData[] = [
   {
-    strategy: {
+    vault: {
       label: 'MKR Blended',
       primaryToken: 'USDC',
       secondaryToken: 'DAI',
@@ -52,7 +52,7 @@ const strategyExposureRawData: StrategyExposureRawData[] = [
     type: 'Fixed yield',
   },
   {
-    strategy: {
+    vault: {
       label: 'MKR Blended',
       primaryToken: 'USDC',
       secondaryToken: 'DAI',
@@ -63,7 +63,7 @@ const strategyExposureRawData: StrategyExposureRawData[] = [
     type: 'Isolated landing',
   },
   {
-    strategy: {
+    vault: {
       label: 'MKR Blended',
       primaryToken: 'USDC',
       secondaryToken: 'DAI',
@@ -74,7 +74,7 @@ const strategyExposureRawData: StrategyExposureRawData[] = [
     type: 'Lending',
   },
   {
-    strategy: {
+    vault: {
       label: 'MKR Blended',
       primaryToken: 'USDC',
       secondaryToken: 'DAI',
@@ -169,7 +169,7 @@ const detailsLinks = [
 
 export const revalidate = 60
 
-const EarnStrategyOpenManagePage = async ({ params }: EarnStrategyOpenManagePageProps) => {
+const EarnVaultOpenManagePage = async ({ params }: EarnVaultOpenManagePageProps) => {
   const networkId = subgraphNetworkToId(params.network)
 
   const [selectedVault, { vaults }] = await Promise.all([
@@ -183,15 +183,15 @@ const EarnStrategyOpenManagePage = async ({ params }: EarnStrategyOpenManagePage
   if (!selectedVault) {
     return (
       <Text>
-        No strategy found with the id {params.vaultId} on the network {params.network}
+        No vault found with the id {params.vaultId} on the network {params.network}
       </Text>
     )
   }
 
   return (
-    <StrategyGridPreview
-      strategy={selectedVault}
-      strategies={vaults}
+    <VaultGridPreview
+      vault={selectedVault}
+      vaults={vaults}
       leftContent={
         <div
           style={{
@@ -208,7 +208,7 @@ const EarnStrategyOpenManagePage = async ({ params }: EarnStrategyOpenManagePage
               gap: 'var(--spacing-space-medium)',
             }}
           >
-            <Text variant="h5">About the strategy</Text>
+            <Text variant="h5">About the vault</Text>
             <Text
               variant="p2"
               style={{
@@ -228,7 +228,7 @@ const EarnStrategyOpenManagePage = async ({ params }: EarnStrategyOpenManagePage
               }}
             >
               {detailsLinks.map(({ label, id }) => (
-                <Link key={label} href={`${getStrategyDetailsUrl(selectedVault)}#${id}`}>
+                <Link key={label} href={`${getVaultDetailsUrl(selectedVault)}#${id}`}>
                   <Text
                     as="p"
                     variant="p3semi"
@@ -258,12 +258,12 @@ const EarnStrategyOpenManagePage = async ({ params }: EarnStrategyOpenManagePage
           <Expander
             title={
               <Text as="p" variant="p1semi">
-                Strategy exposure
+                Vault exposure
               </Text>
             }
             defaultExpanded
           >
-            <StrategyExposure rawData={strategyExposureRawData} />
+            <VaultExposure rawData={vaultExposureRawData} />
           </Expander>
           <Expander
             title={
@@ -290,12 +290,12 @@ const EarnStrategyOpenManagePage = async ({ params }: EarnStrategyOpenManagePage
       rightContent={
         <FormContainer
           fleetConfig={fleetConfig}
-          selectedStrategyData={selectedVault}
-          strategiesList={vaults}
+          selectedVaultData={selectedVault}
+          vaultsList={vaults}
         />
       }
     />
   )
 }
 
-export default EarnStrategyOpenManagePage
+export default EarnVaultOpenManagePage

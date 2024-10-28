@@ -1,7 +1,7 @@
 'use client'
 import { type ChangeEvent, useState } from 'react'
 import {
-  getStrategyUrl,
+  getVaultUrl,
   InputWithDropdown,
   ProjectedEarnings,
   Sidebar,
@@ -27,17 +27,13 @@ enum Action {
 
 export type FormProps = {
   fleetConfig: FleetConfig
-  selectedStrategyData: SDKVaultType
-  strategiesList: SDKVaultsListType
+  selectedVaultData: SDKVaultType
+  vaultsList: SDKVaultsListType
 }
 
-export const Form = ({
-  fleetConfig: _fleetConfig,
-  selectedStrategyData,
-  strategiesList,
-}: FormProps) => {
+export const Form = ({ fleetConfig: _fleetConfig, selectedVaultData, vaultsList }: FormProps) => {
   const options: DropdownOption[] = [
-    ...[...new Set(strategiesList.map((strategy) => strategy.inputToken.symbol))].map((symbol) => ({
+    ...[...new Set(vaultsList.map((vault) => vault.inputToken.symbol))].map((symbol) => ({
       tokenSymbol: symbol as TokenSymbolsList,
       label: symbol,
       value: symbol,
@@ -58,7 +54,7 @@ export const Form = ({
   }
 
   const dropdownValue =
-    options.find((option) => option.value === selectedStrategyData.inputToken.symbol) ?? options[0]
+    options.find((option) => option.value === selectedVaultData.inputToken.symbol) ?? options[0]
 
   const balance = new BigNumber(123123)
   const token = dropdownValue.label
@@ -84,14 +80,14 @@ export const Form = ({
         />
         <ProjectedEarnings
           earnings="1353"
-          symbol={selectedStrategyData.inputToken.symbol as TokenSymbolsList}
+          symbol={selectedVaultData.inputToken.symbol as TokenSymbolsList}
         />
       </>
     ),
 
     primaryButton: {
       label: 'Get Started',
-      url: getStrategyUrl(selectedStrategyData),
+      url: getVaultUrl(selectedVaultData),
       disabled: confirmDisabled,
     },
     footnote: (

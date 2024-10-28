@@ -5,8 +5,8 @@ import {
   DataBlock,
   Icon,
   networkNameToSDKNetwork,
-  StrategyTitle,
   Text,
+  VaultTitle,
 } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, formatDecimalAsPercent, formatFiatBalance } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
@@ -68,7 +68,7 @@ export const PortfolioAssetsList: FC<PortfolioAssetsListProps> = ({ walletAssets
             className={classNames.assetWrapper}
           >
             <div className={classNames.tokenBlockWrapper}>
-              <StrategyTitle
+              <VaultTitle
                 symbol={item.symbol}
                 networkName={networkNameToSDKNetwork(item.network)}
                 value={<AssetPriceChangeTrend change={item.price24hChange} />}
