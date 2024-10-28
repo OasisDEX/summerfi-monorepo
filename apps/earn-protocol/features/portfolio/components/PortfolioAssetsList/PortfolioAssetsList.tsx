@@ -1,6 +1,7 @@
 'use client'
 import { type CSSProperties, type FC, useState } from 'react'
 import {
+  AnimateHeight,
   Card,
   DataBlock,
   Icon,
@@ -53,46 +54,54 @@ interface PortfolioAssetsListProps {
   walletAssets: PortfolioWalletAsset[]
 }
 
+const mapAssetCardItem = (item: PortfolioWalletAsset) => (
+  <Card
+    key={item.symbol + item.network + item.balance}
+    variant="cardSecondary"
+    className={classNames.assetWrapper}
+  >
+    <div className={classNames.tokenBlockWrapper}>
+      <VaultTitle
+        symbol={item.symbol}
+        networkName={networkNameToSDKNetwork(item.network)}
+        value={<AssetPriceChangeTrend change={item.price24hChange} />}
+      />
+    </div>
+    <div className={classNames.dataBlockWrapper}>
+      <DataBlock
+        title="Price (24h)"
+        value={`$${formatFiatBalance(item.priceUSD)}`}
+        {...dataBlocksStyles}
+      />
+      <DataBlock
+        title="USD Value"
+        value={`$${formatFiatBalance(item.balanceUSD)}`}
+        {...dataBlocksStyles}
+      />
+      <DataBlock
+        title="Token Balance"
+        value={`${formatCryptoBalance(item.balance)} ${item.symbol}`}
+        {...dataBlocksStyles}
+      />
+    </div>
+  </Card>
+)
+
 export const PortfolioAssetsList: FC<PortfolioAssetsListProps> = ({ walletAssets }) => {
   const [isSeeAll, setIsSeeAll] = useState(false)
 
   return (
     <div className={classNames.wrapper}>
-      <div
-        className={`${classNames.assetsWrapper} ${isSeeAll ? classNames.assetsWrapperExpanded : ''}`}
-      >
-        {walletAssets.slice(0, isSeeAll ? walletAssets.length : 3).map((item) => (
-          <Card
-            key={item.symbol + item.network + item.balance}
-            variant="cardSecondary"
-            className={classNames.assetWrapper}
-          >
-            <div className={classNames.tokenBlockWrapper}>
-              <VaultTitle
-                symbol={item.symbol}
-                networkName={networkNameToSDKNetwork(item.network)}
-                value={<AssetPriceChangeTrend change={item.price24hChange} />}
-              />
-            </div>
-            <div className={classNames.dataBlockWrapper}>
-              <DataBlock
-                title="Price (24h)"
-                value={`$${formatFiatBalance(item.priceUSD)}`}
-                {...dataBlocksStyles}
-              />
-              <DataBlock
-                title="USD Value"
-                value={`$${formatFiatBalance(item.balanceUSD)}`}
-                {...dataBlocksStyles}
-              />
-              <DataBlock
-                title="Token Balance"
-                value={`${formatCryptoBalance(item.balance)} ${item.symbol}`}
-                {...dataBlocksStyles}
-              />
-            </div>
-          </Card>
-        ))}
+      <div className={classNames.assetsWrapper}>
+        {walletAssets.slice(0, 3).map(mapAssetCardItem)}
+        <AnimateHeight
+          id="portfolio-all-assets"
+          show={isSeeAll}
+          fade={false}
+          className={classNames.assetsWrapperAnimatedHeight}
+        >
+          {walletAssets.slice(3).map(mapAssetCardItem)}
+        </AnimateHeight>
       </div>
       {walletAssets.length === 0 && (
         <Text as="p" variant="p1">

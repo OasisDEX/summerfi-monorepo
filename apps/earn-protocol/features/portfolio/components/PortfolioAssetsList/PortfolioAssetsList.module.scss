@@ -8,18 +8,21 @@
 .assetsWrapper {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: scroll;
   width: 100%;
   gap: var(--general-space-8);
-  max-height: 360px;
-  transition: max-height ease-in-out 1s;
+  max-height: 935px; // to be adjusted
+  scrollbar-color: grey transparent;
+  scrollbar-width: thin;
+}
 
-  &Expanded {
-    max-height: 935px; // to be adjusted
-    transition: max-height ease-in-out 1s;
-    overflow-y: scroll;
-    scrollbar-color: grey transparent;
-    scrollbar-width: thin;
+.assetsWrapperAnimatedHeight {
+  >div {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    width: 100%;
+    gap: var(--general-space-8);
   }
 }
 
@@ -55,7 +58,7 @@
   cursor: pointer;
   margin-top: var(--general-space-16);
 
-  > p {
+  >p {
     color: var(--earn-protocol-primary-100);
   }
 }
