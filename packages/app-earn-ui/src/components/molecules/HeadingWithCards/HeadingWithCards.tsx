@@ -32,7 +32,7 @@ export const HeadingWithCards: FC<HeadingWithSocialAndCardsProps> = ({
           {title}
         </Text>
         <div className={classNames.headingIcons}>
-          <CopyToClipboard textToCopy={social.linkToShare}>
+          <CopyToClipboard textToCopy={social.linkToCopy}>
             <Icon iconName="social_link" variant="xl" />
           </CopyToClipboard>
           <Link

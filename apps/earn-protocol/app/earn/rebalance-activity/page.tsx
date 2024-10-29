@@ -1,13 +1,16 @@
+import { getRebalances } from '@/app/server-handlers/sdk/getRebalances'
 import { getVaultsList } from '@/app/server-handlers/sdk/getVaultsList'
 import { RebalanceActivityView } from '@/features/rebalance-activity/components/RebalanceActivityView/RebalanceActivityView'
-import { rebalancingActivityRawData } from '@/features/rebalance-activity/table/dummyData'
 
 export const revalidate = 60
 
 const RebalanceActivityPage = async () => {
-  const { vaults } = await getVaultsList()
+  const [{ vaults }, { rebalances }] = await Promise.all([
+    await getVaultsList(),
+    await getRebalances(),
+  ])
 
-  return <RebalanceActivityView rawData={rebalancingActivityRawData} vaultsList={vaults} />
+  return <RebalanceActivityView vaultsList={vaults} rebalancesList={rebalances} />
 }
 
 export default RebalanceActivityPage

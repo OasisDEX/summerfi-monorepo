@@ -11,7 +11,8 @@ interface RebalancingActivityProps {
 }
 
 export const RebalancingActivity: FC<RebalancingActivityProps> = ({ rawData }) => {
-  const rows = useMemo(() => rebalancingActivityMapper(rawData), [rawData])
+  // todo to be handled per vault id
+  const rows = useMemo(() => rebalancingActivityMapper([]), [rawData])
 
   return (
     <Card variant="cardSecondary" style={{ marginTop: 'var(--spacing-space-medium)' }}>

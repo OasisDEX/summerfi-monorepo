@@ -46,12 +46,14 @@ function GenericMultiselectIcon({
   label,
   image,
   token,
+  isSelectContainer,
 }: {
   icon?: IconNamesList
   networkIcon?: IconNamesList
   image?: string
   label: string
   token?: TokenSymbolsList
+  isSelectContainer?: boolean
 }) {
   return (
     <div
@@ -64,15 +66,31 @@ function GenericMultiselectIcon({
       }}
     >
       {token && networkIcon && (
-        <div style={{ position: 'relative', width: 'fit-content', height: 'fit-content' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            position: 'relative',
+            width: 'fit-content',
+            height: 'fit-content',
+          }}
+        >
           <div style={{ position: 'absolute', top: '-3px', left: '-1px', zIndex: 1 }}>
             <Icon iconName={networkIcon} size={12} />
           </div>
-          <Icon tokenName={token} size={32} />
+          <Icon tokenName={token} size={isSelectContainer ? 28 : 32} />
         </div>
       )}
-      {token && !networkIcon && <TokensGroup tokens={[token]} forceSize={32} />}
-      {icon && <Icon size={32} iconName={icon} style={{ verticalAlign: 'bottom' }} />}
+      {token && !networkIcon && (
+        <TokensGroup tokens={[token]} forceSize={isSelectContainer ? 28 : 32} />
+      )}
+      {icon && (
+        <Icon
+          size={isSelectContainer ? 28 : 32}
+          iconName={icon}
+          style={{ verticalAlign: 'bottom' }}
+        />
+      )}
       {image && (
         <Image
           src={image}
@@ -222,9 +240,11 @@ export function GenericMultiselect({
             {selected && (selected.icon ?? selected.image ?? selected.token) && (
               <GenericMultiselectIcon
                 icon={selected.icon}
+                networkIcon={selected.networkIcon}
                 image={selected.image}
                 label={selected.label}
                 token={selected.token}
+                isSelectContainer
               />
             )}
             {selected.label}

@@ -6,13 +6,13 @@ import BigNumber from 'bignumber.js'
  * This function truncates the fractional part of the `BigNumber` to the specified precision, and appends a suffix if provided.
  * The resulting number is returned as a string.
  *
- * @param amount - The `BigNumber` or `string` or `number` to be converted.
+ * @param amount - The `BigNumber` or `string` or `number` or `bigint` to be converted.
  * @param suffix - An optional string to append to the result. Defaults to an empty string.
  * @param precision - The number of decimal places to retain in the fractional part of the number. If not provided, the full precision is kept.
  * @returns The shorthand string representation of the number, with the specified precision and suffix.
  */
 export const formatShorthandNumber = (
-  amount: BigNumber | string | number,
+  amount: BigNumber | string | number | bigint,
   {
     suffix = '',
     precision,

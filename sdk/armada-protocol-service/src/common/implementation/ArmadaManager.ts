@@ -55,6 +55,11 @@ export class ArmadaManager implements IArmadaManager {
     })
   }
 
+  /** @see IArmadaManager.getVaultsRaw */
+  async getRebalancesRaw(params: Parameters<IArmadaManager['getRebalancesRaw']>[0]) {
+    return this._subgraphManager.getRebalances({ chainId: params.chainInfo.chainId })
+  }
+
   /** @see IArmadaManager.getPoolInfo */
   async getPoolInfo(params: { poolId: IArmadaVaultId }): Promise<IArmadaPoolInfo> {
     const fleetContract = await this._contractsProvider.getFleetCommanderContract({

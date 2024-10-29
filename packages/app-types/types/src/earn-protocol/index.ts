@@ -1,4 +1,9 @@
-import { Network, GetVaultsQuery, GetVaultQuery } from '@summerfi/subgraph-manager-common'
+import {
+  Network,
+  GetVaultsQuery,
+  GetVaultQuery,
+  GetRebalancesQuery,
+} from '@summerfi/subgraph-manager-common'
 import { ChainId } from '@summerfi/serverless-shared'
 
 export { Network as SDKNetwork }
@@ -6,6 +11,7 @@ export { ChainId as SDKChainId }
 
 export type SDKVaultsListType = GetVaultsQuery['vaults']
 export type SDKVaultType = Exclude<GetVaultQuery['vault'], null | undefined>
+export type SDKRebalancesType = GetRebalancesQuery['rebalances']
 
 // -ish because it can be a detailed vault or a vault from list (less details), use with that in mind
 export type SDKVaultishType = SDKVaultType | SDKVaultsListType[number]

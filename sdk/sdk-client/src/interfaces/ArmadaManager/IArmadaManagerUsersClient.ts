@@ -5,6 +5,7 @@ import {
   IArmadaPositionId,
   type GetVaultQuery,
   type GetVaultsQuery,
+  type GetRebalancesQuery,
 } from '@summerfi/armada-protocol-common'
 import {
   ITokenAmount,
@@ -39,6 +40,16 @@ export interface IArmadaManagerUsersClient {
    * @returns The corresponding Armada vault
    */
   getVaultRaw(params: { poolId: IArmadaVaultId }): Promise<GetVaultQuery>
+
+  /**
+   * @name getRebalancesRaw
+   * @description Get all rebalances per given chain
+   *
+   * @param chainInfo Chain information
+   *
+   * @returns GerRebalancesQuery
+   */
+  getRebalancesRaw(params: { chainInfo: ChainInfo }): Promise<GetRebalancesQuery>
 
   /**
    * @method getPoolInfo

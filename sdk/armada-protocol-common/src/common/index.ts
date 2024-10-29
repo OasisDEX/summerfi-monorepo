@@ -1,2 +1,6 @@
 export * from './interfaces'
-export type { GetVaultsQuery, GetVaultQuery } from '@summerfi/subgraph-manager-common'
+export type {
+  GetVaultsQuery,
+  GetVaultQuery,
+  GetRebalancesQuery,
+} from '@summerfi/subgraph-manager-common'

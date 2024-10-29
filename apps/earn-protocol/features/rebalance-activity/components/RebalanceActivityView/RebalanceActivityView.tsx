@@ -1,15 +1,20 @@
 'use client'
 
-import { type FC, useMemo } from 'react'
+import { type FC, useMemo, useState } from 'react'
 import {
   GenericMultiselect,
   getTwitterShareUrl,
   HeadingWithCards,
   Table,
   TableCarousel,
+  useCurrentUrl,
 } from '@summerfi/app-earn-ui'
-import { type SDKVaultsListType } from '@summerfi/app-types'
+import { type SDKRebalancesType, type SDKVaultsListType } from '@summerfi/app-types'
+import { formatFiatBalance, formatShorthandNumber } from '@summerfi/app-utils'
 
+import { rebalanceFilterProtocols } from '@/features/rebalance-activity/filters/filter-protocols'
+import { rebalanceFilterStrategies } from '@/features/rebalance-activity/filters/filter-strategies'
+import { rebalanceFilterTokens } from '@/features/rebalance-activity/filters/filter-tokens'
 import {
   mapProtocolsToMultiselectOptions,
   mapStrategiesToMultiselectOptions,
@@ -17,7 +22,6 @@ import {
 } from '@/features/rebalance-activity/filters/mappers'
 import { rebalancingActivityColumns } from '@/features/rebalance-activity/table/columns'
 import { rebalancingActivityMapper } from '@/features/rebalance-activity/table/mapper'
-import { type RebalancingActivityRawData } from '@/features/rebalance-activity/table/types'
 
 import classNames from './RebalanceActivityView.module.scss'
 
@@ -51,49 +55,66 @@ const carouselData = [
   },
 ]
 
-const cards = [
-  {
-    title: 'Rebalance actions',
-    value: '3,213',
-    description:
-      'Justo enim sollicitudin suspendisse lectus tellus tortor magna. Velit id nulla tempor arcu quis condimentum parturient.',
-  },
-  {
-    title: 'User saved time',
-    value: '2,184 hours',
-    description:
-      'Justo enim sollicitudin suspendisse lectus tellus tortor magna. Velit id nulla tempor arcu quis condimentum parturient.',
-  },
-  {
-    title: 'Gas cost savings',
-    value: '1.23m',
-    description:
-      'Justo enim sollicitudin suspendisse lectus tellus tortor magna. Velit id nulla tempor arcu quis condimentum parturient.',
-  },
-]
-
 interface RebalanceActivityViewProps {
-  rawData: RebalancingActivityRawData[]
   vaultsList: SDKVaultsListType
+  rebalancesList: SDKRebalancesType
 }
 
-export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({ rawData, vaultsList }) => {
-  const rows = useMemo(() => rebalancingActivityMapper(rawData), [rawData])
+export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
+  vaultsList,
+  rebalancesList,
+}) => {
+  const [strategyFilter, setStrategyFilter] = useState<string[]>([])
+  const [tokenFilter, setTokenFilter] = useState<string[]>([])
+  const [protocolFilter, setProtocolFilter] = useState<string[]>([])
 
+  const currentUrl = useCurrentUrl()
   const strategiesMultiselectOptions = mapStrategiesToMultiselectOptions(vaultsList)
   const tokensMultiselectOptions = mapTokensToMultiselectOptions(vaultsList)
   const protocolsMultiselectOptions = mapProtocolsToMultiselectOptions(vaultsList)
+
+  const resolvedList = rebalancesList
+    .filter((rebalance) => rebalanceFilterProtocols({ protocolFilter, rebalance }))
+    .filter((rebalance) => rebalanceFilterStrategies({ strategyFilter, rebalance }))
+    .filter((rebalance) => rebalanceFilterTokens({ tokenFilter, rebalance }))
+
+  const rows = useMemo(() => rebalancingActivityMapper(resolvedList), [resolvedList])
+
+  // used 3 min as average rebalance action
+  const savedTimeInHours = (rows.length * 3) / 60
+
+  // used 0.5$ per each rebalance action
+  const savedGasCost = rows.length * 0.5
 
   return (
     <div className={classNames.wrapper}>
       <HeadingWithCards
         title="Lazy Summer Global Rebalance Activity"
         description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia bibendum nulla sed consectetur. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Nullam quis risus eget."
-        cards={cards}
+        cards={[
+          {
+            title: 'Rebalance actions',
+            value: formatShorthandNumber(rows.length, { precision: 0 }),
+            description:
+              'Justo enim sollicitudin suspendisse lectus tellus tortor magna. Velit id nulla tempor arcu quis condimentum parturient.',
+          },
+          {
+            title: 'User saved time',
+            value: `${formatShorthandNumber(savedTimeInHours, { precision: 1 })} hours`,
+            description:
+              'Justo enim sollicitudin suspendisse lectus tellus tortor magna. Velit id nulla tempor arcu quis condimentum parturient.',
+          },
+          {
+            title: 'Gas cost savings',
+            value: `$${formatFiatBalance(savedGasCost)}`,
+            description:
+              'Justo enim sollicitudin suspendisse lectus tellus tortor magna. Velit id nulla tempor arcu quis condimentum parturient.',
+          },
+        ]}
         social={{
-          linkToCopy: window.location.href,
+          linkToCopy: currentUrl,
           linkToShare: getTwitterShareUrl({
-            url: window.location.href,
+            url: currentUrl,
             text: 'Check out Lazy Summer Global Rebalance Activity!',
           }),
         }}
@@ -102,24 +123,24 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({ rawData,
         <GenericMultiselect
           options={strategiesMultiselectOptions}
           label="Strategies"
-          onChange={() => null}
+          onChange={(strategies) => setStrategyFilter(strategies)}
         />
         <GenericMultiselect
           options={tokensMultiselectOptions}
           label="Tokens"
-          onChange={() => null}
+          onChange={(tokens) => setTokenFilter(tokens)}
         />
         <GenericMultiselect
           options={protocolsMultiselectOptions}
           label="Protocols"
-          onChange={() => null}
+          onChange={(filters) => setProtocolFilter(filters)}
         />
       </div>
       <Table
         rows={rows}
         columns={rebalancingActivityColumns}
         customRow={{
-          idx: 1,
+          idx: 3,
           content: <TableCarousel carouselData={carouselData} />,
         }}
       />

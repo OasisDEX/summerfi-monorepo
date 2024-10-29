@@ -1,0 +1,29 @@
+query GetRebalances {
+  rebalances(orderBy: timestamp, orderDirection: desc) {
+    id
+    amount
+    amountUSD
+    asset {
+      symbol
+      decimals
+    }
+    from {
+      name
+    }
+    to {
+      name
+    }
+    protocol {
+      name
+      network
+    }
+    timestamp
+    vault {
+      id
+      name
+      inputToken {
+        symbol
+      }
+    }
+  }
+}

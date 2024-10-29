@@ -1,61 +1,85 @@
 import { Icon, TableCellText, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { type SDKRebalancesType, type TokenSymbolsList } from '@summerfi/app-types'
 import { formatCryptoBalance, timeAgo } from '@summerfi/app-utils'
+import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
-import { type RebalancingActivityRawData } from '@/features/rebalance-activity/table/types'
+export const rebalancingActivityMapper = (rawData: SDKRebalancesType) => {
+  return rawData
+    .sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
+    .map((item) => {
+      const asset = item.asset.symbol as TokenSymbolsList
+      // NOT YET AVAILABLE IN SUBGRAPH
+      // const typeIcon = item.type === 'reduce' ? 'arrow_decrease' : 'arrow_increase'
+      // const typeLabel = item.type === 'reduce' ? 'Reduce' : 'Increase'
 
-export const rebalancingActivityMapper = (rawData: RebalancingActivityRawData[]) => {
-  return rawData.map((item) => {
-    return {
-      content: {
-        purpose: (
-          <div
-            style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-x-small)' }}
-          >
-            <Icon
-              iconName={item.type === 'reduce' ? 'arrow_decrease' : 'arrow_increase'}
-              variant="xxs"
-              color="rgba(119, 117, 118, 1)"
-            />
-            <TableCellText>{item.type === 'reduce' ? 'Reduce' : 'Increase'} Risk</TableCellText>
-          </div>
-        ),
-        action: (
-          <div
-            style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-2x-small)' }}
-          >
-            <Icon tokenName={item.action.from} variant="s" /> {item.action.from}
-            <Text style={{ color: 'var(--earn-protocol-secondary-40)', fontSize: '14px' }}>→</Text>
-            <Icon tokenName={item.action.to} variant="s" /> {item.action.to}
-          </div>
-        ),
-        amount: (
-          <div
-            style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-2x-small)' }}
-          >
-            <Icon tokenName={item.amount.token} variant="s" />
-            <TableCellText>{formatCryptoBalance(item.amount.value)}</TableCellText>
-          </div>
-        ),
-        strategy: <TableCellText>{item.vault}</TableCellText>,
-        timestamp: (
-          <TableCellText>
-            {timeAgo({ from: new Date(), to: new Date(Number(item.timestamp)) })}
-          </TableCellText>
-        ),
-        provider: (
-          <Link href={item.provider.link}>
-            <WithArrow
-              as="p"
-              variant="p3"
-              style={{ color: 'var(--earn-protocol-primary-100)' }}
-              reserveSpace
+      const typeIcon = 'arrow_decrease'
+      const typeLabel = `Reduce`
+
+      // dummy mapping for now
+      const providerLink =
+        {
+          'Summer Earn Protocol': '/',
+        }[item.protocol.name] ?? '/'
+
+      const amount = new BigNumber(item.amount.toString()).shiftedBy(-item.asset.decimals)
+
+      return {
+        content: {
+          purpose: (
+            <div
+              style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-x-small)' }}
             >
-              {item.provider.label}
-            </WithArrow>
-          </Link>
-        ),
-      },
-    }
-  })
+              <Icon iconName={typeIcon} variant="xxs" color="rgba(119, 117, 118, 1)" />
+              <TableCellText>{typeLabel} Risk</TableCellText>
+            </div>
+          ),
+          action: (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--spacing-space-2x-small)',
+              }}
+            >
+              <Icon tokenName={asset} variant="s" /> {asset}
+              <Text style={{ color: 'var(--earn-protocol-secondary-40)', fontSize: '14px' }}>
+                →
+              </Text>
+              <Icon tokenName={asset} variant="s" /> {asset}
+            </div>
+          ),
+          amount: (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--spacing-space-2x-small)',
+              }}
+            >
+              <Icon tokenName={asset} variant="s" />
+              <TableCellText>{formatCryptoBalance(amount)}</TableCellText>
+            </div>
+          ),
+          strategy: <TableCellText>{item.vault.name}</TableCellText>,
+          timestamp: (
+            <TableCellText>
+              {timeAgo({ from: new Date(), to: new Date(Number(item.timestamp) * 1000) })}
+            </TableCellText>
+          ),
+          provider: (
+            <Link href={providerLink}>
+              <WithArrow
+                as="p"
+                variant="p3"
+                style={{ color: 'var(--earn-protocol-primary-100)' }}
+                reserveSpace
+              >
+                {item.protocol.name}
+              </WithArrow>
+            </Link>
+          ),
+        },
+      }
+    })
 }

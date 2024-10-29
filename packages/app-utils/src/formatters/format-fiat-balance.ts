@@ -10,7 +10,7 @@ import { million, one, zero } from '@/numbers'
  * This function takes a `BigNumber` representing a fiat balance and formats it based on its value.
  * It uses shorthand notation for large numbers (e.g., millions) and adjusts precision for smaller values.
  *
- * @param amount - The fiat balance as a `BigNumber` or `string` or `number` to format.
+ * @param amount - The fiat balance as a `BigNumber` or `string` or `number` or `bigint` to format.
  * @returns A formatted string representation of the balance with appropriate precision:
  * - Returns shorthand notation for values above a million.
  * - Displays two decimal places for values between 1 and 999,999.
@@ -25,7 +25,7 @@ import { million, one, zero } from '@/numbers'
  * // Formatting values less than 1
  * formatFiatBalance(new BigNumber('0.0005')) // "0.0005"
  */
-export const formatFiatBalance = (amount: BigNumber | string | number): string => {
+export const formatFiatBalance = (amount: BigNumber | string | number | bigint): string => {
   const resolvedAmount = formatToBigNumber(amount)
 
   const absAmount = resolvedAmount.absoluteValue()

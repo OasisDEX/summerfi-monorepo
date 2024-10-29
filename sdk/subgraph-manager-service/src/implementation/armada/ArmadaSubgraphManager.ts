@@ -32,6 +32,10 @@ export class ArmadaSubgraphManager implements IArmadaSubgraphManager {
     })
   }
 
+  getRebalances({ chainId }: Parameters<IArmadaSubgraphManager['getRebalances']>[0]) {
+    return this._getClient(chainId).GetRebalances()
+  }
+
   getUserPositions({ user }: Parameters<IArmadaSubgraphManager['getUserPositions']>[0]) {
     return this._getClient(user.chainInfo.chainId).GetUserPositions({
       accountAddress: user.wallet.address.value,

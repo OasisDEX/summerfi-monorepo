@@ -6,7 +6,11 @@ import { IArmadaPoolInfo } from './IArmadaPoolInfo'
 import { IArmadaPosition } from './IArmadaPosition'
 import { IArmadaPositionId } from './IArmadaPositionId'
 import { IRebalanceData } from './IRebalanceData'
-import type { GetVaultQuery, GetVaultsQuery } from '@summerfi/subgraph-manager-common'
+import type {
+  GetVaultQuery,
+  GetVaultsQuery,
+  GetRebalancesQuery,
+} from '@summerfi/subgraph-manager-common'
 
 /**
  * @name IArmadaManager
@@ -34,6 +38,16 @@ export interface IArmadaManager {
    * @returns GetVaultQuery
    */
   getVaultRaw(params: { poolId: IArmadaVaultId }): Promise<GetVaultQuery>
+
+  /**
+   * @name getRebalancesRaw
+   * @description Get all rebalances per given chain
+   *
+   * @param chainInfo Chain information
+   *
+   * @returns GerRebalancesQuery
+   */
+  getRebalancesRaw(params: { chainInfo: ChainInfo }): Promise<GetRebalancesQuery>
 
   /**
    * @name getPoolInfo

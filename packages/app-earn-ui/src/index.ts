@@ -75,6 +75,7 @@ export { VaultSimulationForm } from './components/organisms/VaultSimulationForm/
 export { useToggle } from './hooks/use-toggle'
 export { useHash } from './hooks/use-hash'
 export { useOutsideElementClickHandler } from './hooks/use-outside-element-click-handler'
+export { useCurrentUrl } from './hooks/use-current-url'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
 export { getVaultUrl, getVaultDetailsUrl } from './helpers/get-vault-url'

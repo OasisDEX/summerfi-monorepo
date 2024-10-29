@@ -15,13 +15,13 @@ import { billion, million, thousand } from '@/numbers'
  * It automatically adjusts the number by dividing it with the appropriate unit (billion, million, or a thousand) and appends the corresponding suffix.
  * If the number is less than a thousand, it returns the number as is, with any specified suffix.
  *
- * @param amount - The `BigNumber` or `string` or `number` to be formatted.
+ * @param amount - The `BigNumber` or `string` or `number` or `bigint` to be formatted.
  * @param suffix - An optional string to append to the result. Defaults to an empty string.
  * @param precision - The number of decimal places to retain in the fractional part of the number. If not provided, the full precision is kept.
  * @returns The shorthand string representation of the number.
  */
 export const formatAsShorthandNumbers = (
-  amount: BigNumber | string | number,
+  amount: BigNumber | string | number | bigint,
   {
     suffix = '',
     precision,

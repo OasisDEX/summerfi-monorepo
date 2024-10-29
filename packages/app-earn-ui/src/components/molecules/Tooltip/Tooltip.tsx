@@ -1,5 +1,6 @@
 'use client'
 
+'use client'
 import {
   type FC,
   type HTMLAttributes,

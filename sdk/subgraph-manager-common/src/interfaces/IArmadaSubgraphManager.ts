@@ -1,9 +1,10 @@
-import type { ChainId, IAddress, IUser } from '@summerfi/sdk-common'
+import type { ChainId, ChainInfo, IAddress, IUser } from '@summerfi/sdk-common'
 import type {
   GetUserPositionQuery,
   GetUserPositionsQuery,
   GetVaultQuery,
   GetVaultsQuery,
+  GetRebalancesQuery,
 } from '../generated/client'
 
 /**
@@ -37,6 +38,16 @@ export interface IArmadaSubgraphManager {
    *
    */
   getVault(params: { chainId: ChainId; vaultId: string }): Promise<GetVaultQuery>
+
+  /**
+   * @name getRebalances
+   * @description Get all rebalances per given chain
+   *
+   * @param chainInfo Chain information
+   *
+   * @returns GerRebalancesQuery
+   */
+  getRebalances(params: { chainId: ChainId }): Promise<GetRebalancesQuery>
 
   /**
    * @name getUserPositions
