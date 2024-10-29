@@ -81,12 +81,25 @@ export class FleetCommanderContract<
     return arks.map((ark) => Address.createFromEthereum({ value: ark }))
   }
 
-  /** @see IFleetCommanderContract.depositCap */
-  async depositCap(): Promise<ITokenAmount> {
+  /** @see IFleetCommanderContract.config */
+  async config(): Promise<{
+    bufferArk: IAddress
+    minimumBufferBalance: ITokenAmount
+    depositCap: ITokenAmount
+    maxRebalanceOperations: string
+  }> {
+    const [bufferArkAddress, minimumBufferBalance, depositCap, maxRebalanceOperations] =
+      await this.contract.read.config()
     const token = await this._erc4626Contract.asset()
-    const depositCap = await this.contract.read.depositCap()
-
-    return TokenAmount.createFromBaseUnit({ token, amount: String(depositCap) })
+    return {
+      bufferArk: Address.createFromEthereum({ value: bufferArkAddress }),
+      minimumBufferBalance: TokenAmount.createFromBaseUnit({
+        token,
+        amount: String(minimumBufferBalance),
+      }),
+      depositCap: TokenAmount.createFromBaseUnit({ token, amount: String(depositCap) }),
+      maxRebalanceOperations: String(maxRebalanceOperations),
+    }
   }
 
   /** @see IFleetCommanderContract.maxDeposit */
