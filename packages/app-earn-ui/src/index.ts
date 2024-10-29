@@ -78,5 +78,9 @@ export { useOutsideElementClickHandler } from './hooks/use-outside-element-click
 
 export { sidebarFootnote } from './common/sidebar/footnote'
 export { getVaultUrl, getVaultDetailsUrl } from './helpers/get-vault-url'
-export { networkNameToSDKNetwork, subgraphNetworkToId } from './helpers/network-helpers'
 export { getTwitterShareUrl } from './helpers/get-twitter-share-url'
+export {
+  networkNameToSDKNetwork,
+  subgraphNetworkToId,
+  subgraphNetworkToSDKId,
+} from './helpers/network-helpers'

@@ -1,4 +1,10 @@
-import { NetworkIds, NetworkNames, SDKNetwork } from '@summerfi/app-types'
+import {
+  NetworkIds,
+  NetworkNames,
+  SDKChainId,
+  SDKNetwork,
+  type SDKSupportedNetworkType,
+} from '@summerfi/app-types'
 
 export const networkNameToSDKNetwork = (network: NetworkNames) => {
   return {
@@ -12,4 +18,11 @@ export const subgraphNetworkToId = (network: SDKNetwork) => {
     [SDKNetwork.ArbitrumOne.toLowerCase()]: NetworkIds.ARBITRUMMAINNET,
     [SDKNetwork.Base.toLowerCase()]: NetworkIds.BASEMAINNET,
   }[network.toLowerCase()]
+}
+
+export const subgraphNetworkToSDKId = (network: SDKNetwork) => {
+  return {
+    [SDKNetwork.ArbitrumOne.toLowerCase()]: SDKChainId.ARBITRUM,
+    [SDKNetwork.Base.toLowerCase()]: SDKChainId.BASE,
+  }[network.toLowerCase()] as SDKSupportedNetworkType
 }

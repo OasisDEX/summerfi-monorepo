@@ -5,5 +5,5 @@ if (!process.env.SDK_API_URL) {
 }
 
 export const backendSDK = makeSDK({
-  apiURL: process.env.SDK_API_URL,
+  apiURL: `${process.env.SDK_API_URL}/api/sdk`,
 })

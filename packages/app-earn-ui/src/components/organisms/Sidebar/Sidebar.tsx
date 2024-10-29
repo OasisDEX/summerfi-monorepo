@@ -4,29 +4,26 @@ import Link from 'next/link'
 import { Button } from '@/components/atoms/Button/Button'
 import { Card } from '@/components/atoms/Card/Card'
 import { Text } from '@/components/atoms/Text/Text'
+import { LoadingSpinner } from '@/components/molecules/Loader/Loader'
 
 import classNames from '@/components/organisms/Sidebar/Sidebar.module.scss'
 
 interface SidebarProps {
   title: string
   content: ReactNode
-  primaryButton:
-    | {
-        label: string
-        action: () => void
-        url?: string
-        disabled: boolean
-      }
-    | {
-        label: string
-        action?: () => void
-        url: string
-        disabled: boolean
-      }
+  primaryButton: {
+    label: string
+    action?: () => void
+    url?: string
+    disabled?: boolean
+    loading?: boolean
+  } & ({ action: () => void; url?: never } | { action?: never; url: string })
   footnote?: ReactNode
 }
 
 export const Sidebar: FC<SidebarProps> = ({ title, content, primaryButton, footnote }) => {
+  const labelElement = primaryButton.loading ? <LoadingSpinner size={28} /> : primaryButton.label
+
   return (
     <Card className={classNames.sidebarWrapper} variant="cardPrimary">
       <div className={classNames.sidebarHeaderWrapper}>
@@ -43,8 +40,9 @@ export const Sidebar: FC<SidebarProps> = ({ title, content, primaryButton, footn
           variant="primaryLarge"
           style={{ marginBottom: 'var(--general-space-20)', width: '100%' }}
           onClick={primaryButton.action}
+          disabled={primaryButton.disabled}
         >
-          {primaryButton.label}
+          {labelElement}
         </Button>
       )}
       {primaryButton.url && (
@@ -52,8 +50,9 @@ export const Sidebar: FC<SidebarProps> = ({ title, content, primaryButton, footn
           <Button
             variant="primaryLarge"
             style={{ marginBottom: 'var(--general-space-20)', width: '100%' }}
+            disabled={primaryButton.disabled}
           >
-            {primaryButton.label}
+            {labelElement}
           </Button>
         </Link>
       )}
