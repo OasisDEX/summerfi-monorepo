@@ -61,6 +61,11 @@ export { BonusLabel } from './components/molecules/BonusLabel/BonusLabel'
 export { ProjectedEarnings } from './components/molecules/ProjectedEarnings/ProjectedEarnings'
 export { HeadingWithCards } from './components/molecules/HeadingWithCards/HeadingWithCards'
 export { TableCarousel } from './components/molecules/TableCarousel/TableCarousel'
+export {
+  GenericMultiselect,
+  type GenericMultiselectOption,
+} from './components/molecules/GenericMultiselect/GenericMultiselect'
+export { CopyToClipboard } from './components/molecules/CopyToClipboard/CopyToClipboard'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
 export { Sidebar } from './components/organisms/Sidebar/Sidebar'
@@ -69,7 +74,9 @@ export { VaultSimulationForm } from './components/organisms/VaultSimulationForm/
 
 export { useToggle } from './hooks/use-toggle'
 export { useHash } from './hooks/use-hash'
+export { useOutsideElementClickHandler } from './hooks/use-outside-element-click-handler'
 
 export { sidebarFootnote } from './common/sidebar/footnote'
 export { getVaultUrl, getVaultDetailsUrl } from './helpers/get-vault-url'
 export { networkNameToSDKNetwork, subgraphNetworkToId } from './helpers/network-helpers'
+export { getTwitterShareUrl } from './helpers/get-twitter-share-url'

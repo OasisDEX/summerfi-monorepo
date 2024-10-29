@@ -1,10 +1,12 @@
 'use client'
 import { type FC } from 'react'
+import Link from 'next/link'
 
-import { Button } from '@/components/atoms/Button/Button.tsx'
 import { Card } from '@/components/atoms/Card/Card.tsx'
 import { Icon } from '@/components/atoms/Icon/Icon.tsx'
 import { Text } from '@/components/atoms/Text/Text.tsx'
+import { CopyToClipboard } from '@/components/molecules/CopyToClipboard/CopyToClipboard.tsx'
+import { getTwitterShareUrl } from '@/helpers/get-twitter-share-url.ts'
 
 import classNames from './HeadingWithCards.module.scss'
 
@@ -26,12 +28,19 @@ export const HeadingWithCards: FC<HeadingWithSocialAndCardsProps> = ({
           {title}
         </Text>
         <div className={classNames.headingIcons}>
-          <Button variant="unstyled" onClick={() => null}>
+          <CopyToClipboard textToCopy={window.location.href}>
             <Icon iconName="social_link" variant="xl" />
-          </Button>
-          <Button variant="unstyled" onClick={() => null}>
+          </CopyToClipboard>
+          <Link
+            href={getTwitterShareUrl({
+              url: window.location.href,
+              text: 'Check out Lazy Summer Global Rebalance Activity!',
+            })}
+            style={{ display: 'flex', alignItems: 'center' }}
+            target="_blank"
+          >
             <Icon iconName="social_x" variant="xl" />
-          </Button>
+          </Link>
         </div>
       </div>
       <Text as="p" variant="p2" className={classNames.description}>

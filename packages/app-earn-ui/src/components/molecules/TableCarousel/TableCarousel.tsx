@@ -54,6 +54,7 @@ export const TableCarousel: FC<TableCarouselProps> = ({ carouselData }) => {
         options={{ slidesToScroll: 'auto' }}
         buttonPosition={SlideCarouselButtonPosition.ON_SIDES}
         slidesPerPage={1}
+        withDots
       />
     </div>
   )

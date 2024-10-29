@@ -44,3 +44,4 @@ export {
   loadConfigFromLocalStorage,
   getLocalAppConfig,
 } from './helpers/config/access-config-context'
+export { toggleArrayItem } from './helpers/toggle-array-item'

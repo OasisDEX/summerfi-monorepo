@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@summerfi/app-types": "workspace:*",
+    "@summerfi/app-utils": "workspace:*",
     "@summerfi/app-token-config": "workspace:*",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
