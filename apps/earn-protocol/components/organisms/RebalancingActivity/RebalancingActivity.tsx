@@ -12,7 +12,7 @@ interface RebalancingActivityProps {
 
 export const RebalancingActivity: FC<RebalancingActivityProps> = ({ rawData }) => {
   // todo to be handled per vault id
-  const rows = useMemo(() => rebalancingActivityMapper([]), [rawData])
+  const rows = useMemo(() => rebalancingActivityMapper([]), [rawData]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Card variant="cardSecondary" style={{ marginTop: 'var(--spacing-space-medium)' }}>
