@@ -1,4 +1,5 @@
 export type Styles = {
+  sidebarErrorWrapper: string
   sidebarFootnoteWrapper: string
   sidebarHeaderSpacer: string
   sidebarHeaderWrapper: string

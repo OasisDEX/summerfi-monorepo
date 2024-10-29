@@ -24,3 +24,14 @@
   gap: 5px;
   align-items: center;
 }
+
+.sidebarErrorWrapper {
+  width: 100%;
+  padding: var(--general-space-12);
+  border-radius: var(--general-radius-8);
+  margin-bottom: var(--general-space-12);
+  background: var(--earn-protocol-critical-10);
+  color: var(--earn-protocol-critical-100);
+  text-align: center;
+  display: inline-block;
+}

@@ -1,12 +1,14 @@
 import { type FC, type ReactNode } from 'react'
 import Link from 'next/link'
 
+import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
+import { Box } from '@/components/atoms/Box/Box'
 import { Button } from '@/components/atoms/Button/Button'
 import { Card } from '@/components/atoms/Card/Card'
 import { Text } from '@/components/atoms/Text/Text'
 import { LoadingSpinner } from '@/components/molecules/Loader/Loader'
 
-import classNames from '@/components/organisms/Sidebar/Sidebar.module.scss'
+import sidebarClassNames from '@/components/organisms/Sidebar/Sidebar.module.scss'
 
 interface SidebarProps {
   title: string
@@ -19,20 +21,21 @@ interface SidebarProps {
     loading?: boolean
   } & ({ action: () => void; url?: never } | { action?: never; url: string })
   footnote?: ReactNode
+  error?: string | ReactNode
 }
 
-export const Sidebar: FC<SidebarProps> = ({ title, content, primaryButton, footnote }) => {
+export const Sidebar: FC<SidebarProps> = ({ title, content, primaryButton, footnote, error }) => {
   const labelElement = primaryButton.loading ? <LoadingSpinner size={28} /> : primaryButton.label
 
   return (
-    <Card className={classNames.sidebarWrapper} variant="cardPrimary">
-      <div className={classNames.sidebarHeaderWrapper}>
+    <Card className={sidebarClassNames.sidebarWrapper} variant="cardPrimary">
+      <div className={sidebarClassNames.sidebarHeaderWrapper}>
         <Text as="h5" variant="h5" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
           {title}
         </Text>
       </div>
 
-      <div className={classNames.sidebarHeaderSpacer} />
+      <div className={sidebarClassNames.sidebarHeaderSpacer} />
       {content}
 
       {primaryButton.action && (
@@ -56,7 +59,18 @@ export const Sidebar: FC<SidebarProps> = ({ title, content, primaryButton, footn
           </Button>
         </Link>
       )}
-      {footnote && <div className={classNames.sidebarFootnoteWrapper}>{footnote}</div>}
+      <div
+        style={{
+          width: '100%',
+        }}
+      >
+        <AnimateHeight show={!!error} id="sidebar-error">
+          <Box className={sidebarClassNames.sidebarErrorWrapper}>
+            {typeof error === 'string' ? <Text variant="p4">{error}</Text> : error}
+          </Box>
+        </AnimateHeight>
+      </div>
+      {footnote && <div className={sidebarClassNames.sidebarFootnoteWrapper}>{footnote}</div>}
     </Card>
   )
 }

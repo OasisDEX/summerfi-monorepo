@@ -25,7 +25,7 @@ export async function getVaultDetails({
       poolId,
     })
 
-    return vault as SDKVaultType
+    return vault as SDKVaultType | undefined
   } catch (error) {
     throw new Error(`Failed to get vault details: ${error}`)
   }
