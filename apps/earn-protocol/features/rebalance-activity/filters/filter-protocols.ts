@@ -1,6 +1,7 @@
 import { type SDKRebalancesType } from '@summerfi/app-types'
 
 export const rebalanceFilterProtocols = (
+  // eslint-disable-next-line no-empty-pattern
   {
     // protocolFilter,
     // rebalance,
