@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { Card } from '@summerfi/app-earn-ui'
+import { type CardVariant } from '@summerfi/app-earn-ui/dist/types/src/components/atoms/Card/Card'
 import { type TimeframesType } from '@summerfi/app-types'
 import { memoize, random } from 'lodash-es'
 
@@ -88,7 +89,11 @@ const data = memoize(
   (timeframe) => timeframe,
 )
 
-export const MockedLineChart = () => {
+export const MockedLineChart = ({
+  cardVariant = 'cardSecondary',
+}: {
+  cardVariant?: CardVariant
+}) => {
   const [compare, setCompare] = useState(true)
   const [timeframe, setTimeframe] = useState<TimeframesType>('3y')
 
@@ -97,7 +102,7 @@ export const MockedLineChart = () => {
 
   return (
     <Card
-      variant="cardSecondary"
+      variant={cardVariant}
       style={{ marginTop: 'var(--spacing-space-medium)', flexDirection: 'column' }}
     >
       <ChartHeader

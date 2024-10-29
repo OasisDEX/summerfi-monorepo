@@ -1,21 +1,10 @@
 import { type FC, useMemo } from 'react'
 import { Card, DataBlock, Table, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { type TokenSymbolsList } from '@summerfi/app-types'
 import Link from 'next/link'
 
-import { rebalancingActivityColumns } from '@/components/organisms/RebalancingActivity/columns'
-import { rebalancingActivityMapper } from '@/components/organisms/RebalancingActivity/mapper'
-
-export interface RebalancingActivityRawData {
-  type: string
-  action: { from: TokenSymbolsList; to: TokenSymbolsList }
-  amount: { token: TokenSymbolsList; value: string }
-  timestamp: string
-  provider: {
-    link: string
-    label: string
-  }
-}
+import { rebalancingActivityColumns } from '@/features/rebalance-activity/table/columns'
+import { rebalancingActivityMapper } from '@/features/rebalance-activity/table/mapper'
+import { type RebalancingActivityRawData } from '@/features/rebalance-activity/table/types'
 
 interface RebalancingActivityProps {
   rawData: RebalancingActivityRawData[]
@@ -54,7 +43,7 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({ rawData }) =
           for reallocating assets from lower performing strategies to higher performing ones, within
           a threshold of risk.
         </Text>
-        <Table rows={rows} columns={rebalancingActivityColumns} />
+        <Table rows={rows} columns={rebalancingActivityColumns} hiddenColumns={['strategy']} />
         <Link href="/" style={{ marginTop: 'var(--spacing-space-large)', width: 'fit-content' }}>
           <WithArrow as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             View all rebalances

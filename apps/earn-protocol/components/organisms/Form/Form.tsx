@@ -10,8 +10,8 @@ import {
 } from '@summerfi/app-earn-ui'
 import {
   type DropdownOption,
+  type SDKVaultishType,
   type SDKVaultsListType,
-  type SDKVaultType,
   type TokenSymbolsList,
 } from '@summerfi/app-types'
 import { formatCryptoBalance, mapNumericInput } from '@summerfi/app-utils'
@@ -27,11 +27,11 @@ enum Action {
 
 export type FormProps = {
   fleetConfig: FleetConfig
-  selectedVaultData: SDKVaultType
+  vaultData: SDKVaultishType
   vaultsList: SDKVaultsListType
 }
 
-export const Form = ({ fleetConfig: _fleetConfig, selectedVaultData, vaultsList }: FormProps) => {
+export const Form = ({ fleetConfig: _fleetConfig, vaultData, vaultsList }: FormProps) => {
   const options: DropdownOption[] = [
     ...[...new Set(vaultsList.map((vault) => vault.inputToken.symbol))].map((symbol) => ({
       tokenSymbol: symbol as TokenSymbolsList,
@@ -54,7 +54,7 @@ export const Form = ({ fleetConfig: _fleetConfig, selectedVaultData, vaultsList 
   }
 
   const dropdownValue =
-    options.find((option) => option.value === selectedVaultData.inputToken.symbol) ?? options[0]
+    options.find((option) => option.value === vaultData.inputToken.symbol) ?? options[0]
 
   const balance = new BigNumber(123123)
   const token = dropdownValue.label
@@ -80,14 +80,14 @@ export const Form = ({ fleetConfig: _fleetConfig, selectedVaultData, vaultsList 
         />
         <ProjectedEarnings
           earnings="1353"
-          symbol={selectedVaultData.inputToken.symbol as TokenSymbolsList}
+          symbol={vaultData.inputToken.symbol as TokenSymbolsList}
         />
       </>
     ),
 
     primaryButton: {
       label: 'Get Started',
-      url: getVaultUrl(selectedVaultData),
+      url: getVaultUrl(vaultData),
       disabled: confirmDisabled,
     },
     footnote: (

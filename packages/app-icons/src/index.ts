@@ -273,4 +273,6 @@ export const icons = {
   summer_illustration_verification: customLazy(
     () => import('./icons/summer_illustration_verification.svg?react'),
   ),
+  social_link: customLazy(() => import('./icons/social_link.svg?react')),
+  social_x: customLazy(() => import('./icons/social_x.svg?react')),
 }

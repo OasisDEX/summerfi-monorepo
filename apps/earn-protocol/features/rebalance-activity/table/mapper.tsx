@@ -2,7 +2,7 @@ import { Icon, TableCellText, Text, WithArrow } from '@summerfi/app-earn-ui'
 import { formatCryptoBalance, timeAgo } from '@summerfi/app-utils'
 import Link from 'next/link'
 
-import { type RebalancingActivityRawData } from '@/components/organisms/RebalancingActivity/RebalancingActivity'
+import { type RebalancingActivityRawData } from '@/features/rebalance-activity/table/types'
 
 export const rebalancingActivityMapper = (rawData: RebalancingActivityRawData[]) => {
   return rawData.map((item) => {
@@ -37,6 +37,7 @@ export const rebalancingActivityMapper = (rawData: RebalancingActivityRawData[])
             <TableCellText>{formatCryptoBalance(item.amount.value)}</TableCellText>
           </div>
         ),
+        strategy: <TableCellText>{item.vault}</TableCellText>,
         timestamp: (
           <TableCellText>
             {timeAgo({ from: new Date(), to: new Date(Number(item.timestamp)) })}

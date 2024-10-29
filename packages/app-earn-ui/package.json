@@ -63,9 +63,10 @@
     "access": "public"
   },
   "dependencies": {
-    "@summerfi/serverless-shared": "workspace:*",
     "@summerfi/app-utils": "workspace:*",
+    "@summerfi/serverless-shared": "workspace:*",
     "include-media": "2.0.0",
+    "react-animate-height": "^3.2.3",
     "rollup-preserve-directives": "^1.1.1",
     "sanitize.css": "13.0.0",
     "typed-scss-modules": "^8.0.1",

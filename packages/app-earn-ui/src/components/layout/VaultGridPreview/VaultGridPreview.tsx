@@ -1,11 +1,12 @@
 'use client'
 
-import { type FC, type ReactNode } from 'react'
+import { type FC, type ReactNode, useEffect, useState } from 'react'
 import { type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-types'
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
+import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
 import { Box } from '@/components/atoms/Box/Box'
 import { Text } from '@/components/atoms/Text/Text'
 import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
@@ -21,18 +22,38 @@ import vaultGridPreviewStyles from './VaultGridPreview.module.scss'
 interface VaultGridPreviewProps {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
-  leftContent: ReactNode
-  rightContent: ReactNode
+  displayGraph?: boolean
+  simulationGraph: ReactNode
+  detailsContent: ReactNode
+  sidebarContent: ReactNode
 }
 
 export const VaultGridPreview: FC<VaultGridPreviewProps> = ({
   vault,
   vaults,
-  leftContent,
-  rightContent,
+  displayGraph,
+  simulationGraph,
+  detailsContent,
+  sidebarContent,
 }) => {
+  const [displayGraphStaggered, setDisplayGraphStaggered] = useState(displayGraph)
   const parsedApr = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
   const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(vault.totalValueLockedUSD))
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDisplayGraphStaggered(false)
+    }, 1000)
+
+    if (displayGraph) {
+      clearInterval(timer)
+      setDisplayGraphStaggered(true)
+    }
+
+    return () => {
+      clearInterval(timer)
+    }
+  }, [displayGraph])
 
   return (
     <>
@@ -72,6 +93,9 @@ export const VaultGridPreview: FC<VaultGridPreviewProps> = ({
               <BonusLabel rays="1,111" />
             </Text>
           </div>
+          <AnimateHeight id="simulation-graph" scale show={displayGraphStaggered}>
+            {simulationGraph}
+          </AnimateHeight>
           <SimpleGrid
             columns={2}
             rows={2}
@@ -116,10 +140,10 @@ export const VaultGridPreview: FC<VaultGridPreviewProps> = ({
               />
             </Box>
           </SimpleGrid>
-          <Box className={vaultGridPreviewStyles.leftBlock}>{leftContent}</Box>
+          <Box className={vaultGridPreviewStyles.leftBlock}>{detailsContent}</Box>
         </div>
         <div className={vaultGridPreviewStyles.rightBlockWrapper}>
-          <div className={vaultGridPreviewStyles.rightBlock}>{rightContent}</div>
+          <div className={vaultGridPreviewStyles.rightBlock}>{sidebarContent}</div>
         </div>
       </div>
     </>

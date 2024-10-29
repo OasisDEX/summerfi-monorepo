@@ -1,9 +1,7 @@
 export type Styles = {
-  customRow: string
-  details: string
-  expandedRow: string
-  table: string
-  tableWrapper: string
+  animateScaleOff: string
+  animateScaleOn: string
+  scale: string
 }
 
 export type ClassNames = keyof Styles
