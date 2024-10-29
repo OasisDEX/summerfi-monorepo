@@ -15,6 +15,7 @@ query GetVaults {
     rewardTokenEmissionsUSD
     arks {
       id
+      name
       inputToken {
         name
         symbol

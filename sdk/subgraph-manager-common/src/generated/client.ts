@@ -6636,7 +6636,7 @@ export type GetUserPositionQuery = { __typename?: 'Query', positions: Array<{ __
 export type GetVaultsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsUSD?: Array<string> | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, calculatedApr: string, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens?: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', symbol: string, decimals: number } }> | null, arks: Array<{ __typename?: 'Ark', id: string, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', name: string, symbol: string, decimals: number }, fees: Array<{ __typename?: 'VaultFee', id: string, feePercentage?: string | null, feeType: VaultFeeType }> }>, inputToken: { __typename?: 'Token', name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', name: string, symbol: string, decimals: number } | null }> };
+export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsUSD?: Array<string> | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, calculatedApr: string, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens?: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', symbol: string, decimals: number } }> | null, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', name: string, symbol: string, decimals: number }, fees: Array<{ __typename?: 'VaultFee', id: string, feePercentage?: string | null, feeType: VaultFeeType }> }>, inputToken: { __typename?: 'Token', name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', name: string, symbol: string, decimals: number } | null }> };
 
 export type GetVaultQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -6724,6 +6724,7 @@ export const GetVaultsDocument = gql`
     rewardTokenEmissionsUSD
     arks {
       id
+      name
       inputToken {
         name
         symbol
