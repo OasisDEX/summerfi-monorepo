@@ -6,7 +6,6 @@ import { Card } from '@/components/atoms/Card/Card.tsx'
 import { Icon } from '@/components/atoms/Icon/Icon.tsx'
 import { Text } from '@/components/atoms/Text/Text.tsx'
 import { CopyToClipboard } from '@/components/molecules/CopyToClipboard/CopyToClipboard.tsx'
-import { getTwitterShareUrl } from '@/helpers/get-twitter-share-url.ts'
 
 import classNames from './HeadingWithCards.module.scss'
 
@@ -14,12 +13,17 @@ interface HeadingWithSocialAndCardsProps {
   title: string
   description: string
   cards: { title: string; value: string; description: string }[]
+  social: {
+    linkToCopy: string
+    linkToShare: string
+  }
 }
 
 export const HeadingWithCards: FC<HeadingWithSocialAndCardsProps> = ({
   title,
   description,
   cards,
+  social,
 }) => {
   return (
     <div className={classNames.wrapper}>
@@ -28,14 +32,11 @@ export const HeadingWithCards: FC<HeadingWithSocialAndCardsProps> = ({
           {title}
         </Text>
         <div className={classNames.headingIcons}>
-          <CopyToClipboard textToCopy={window.location.href}>
+          <CopyToClipboard textToCopy={social.linkToShare}>
             <Icon iconName="social_link" variant="xl" />
           </CopyToClipboard>
           <Link
-            href={getTwitterShareUrl({
-              url: window.location.href,
-              text: 'Check out Lazy Summer Global Rebalance Activity!',
-            })}
+            href={social.linkToShare}
             style={{ display: 'flex', alignItems: 'center' }}
             target="_blank"
           >

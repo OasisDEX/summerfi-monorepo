@@ -1,7 +1,13 @@
 'use client'
 
 import { type FC, useMemo } from 'react'
-import { GenericMultiselect, HeadingWithCards, Table, TableCarousel } from '@summerfi/app-earn-ui'
+import {
+  GenericMultiselect,
+  getTwitterShareUrl,
+  HeadingWithCards,
+  Table,
+  TableCarousel,
+} from '@summerfi/app-earn-ui'
 import { type SDKVaultsListType } from '@summerfi/app-types'
 
 import {
@@ -74,8 +80,6 @@ interface RebalanceActivityViewProps {
 export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({ rawData, vaultsList }) => {
   const rows = useMemo(() => rebalancingActivityMapper(rawData), [rawData])
 
-  console.log('vaultsList', vaultsList)
-
   const strategiesMultiselectOptions = mapStrategiesToMultiselectOptions(vaultsList)
   const tokensMultiselectOptions = mapTokensToMultiselectOptions(vaultsList)
   const protocolsMultiselectOptions = mapProtocolsToMultiselectOptions(vaultsList)
@@ -86,6 +90,13 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({ rawData,
         title="Lazy Summer Global Rebalance Activity"
         description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia bibendum nulla sed consectetur. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Nullam quis risus eget."
         cards={cards}
+        social={{
+          linkToCopy: window.location.href,
+          linkToShare: getTwitterShareUrl({
+            url: window.location.href,
+            text: 'Check out Lazy Summer Global Rebalance Activity!',
+          }),
+        }}
       />
       <div className={classNames.filtersWrapper}>
         <GenericMultiselect
