@@ -1,18 +1,22 @@
 import { type FC, useMemo } from 'react'
 import { Card, DataBlock, Table, Text, WithArrow } from '@summerfi/app-earn-ui'
+import { type SDKRebalancesType } from '@summerfi/app-types'
 import Link from 'next/link'
 
 import { rebalancingActivityColumns } from '@/features/rebalance-activity/table/columns'
 import { rebalancingActivityMapper } from '@/features/rebalance-activity/table/mapper'
-import { type RebalancingActivityRawData } from '@/features/rebalance-activity/table/types'
 
 interface RebalancingActivityProps {
-  rawData: RebalancingActivityRawData[]
+  rebalancesList: SDKRebalancesType
 }
 
-export const RebalancingActivity: FC<RebalancingActivityProps> = ({ rawData }) => {
-  // todo to be handled per vault id
-  const rows = useMemo(() => rebalancingActivityMapper([]), [rawData]) // eslint-disable-line react-hooks/exhaustive-deps
+const rowsToDisplay = 4
+
+export const RebalancingActivity: FC<RebalancingActivityProps> = ({ rebalancesList }) => {
+  const rows = useMemo(
+    () => rebalancingActivityMapper(rebalancesList.slice(0, rowsToDisplay)),
+    [rebalancesList],
+  ) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Card variant="cardSecondary" style={{ marginTop: 'var(--spacing-space-medium)' }}>
@@ -45,7 +49,10 @@ export const RebalancingActivity: FC<RebalancingActivityProps> = ({ rawData }) =
           a threshold of risk.
         </Text>
         <Table rows={rows} columns={rebalancingActivityColumns} hiddenColumns={['strategy']} />
-        <Link href="/" style={{ marginTop: 'var(--spacing-space-large)', width: 'fit-content' }}>
+        <Link
+          href="/earn/rebalance-activity"
+          style={{ marginTop: 'var(--spacing-space-large)', width: 'fit-content' }}
+        >
           <WithArrow as="p" variant="p4semi" style={{ color: 'var(--earn-protocol-primary-100)' }}>
             View all rebalances
           </WithArrow>

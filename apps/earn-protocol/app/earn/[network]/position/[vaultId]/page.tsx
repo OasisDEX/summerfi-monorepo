@@ -1,6 +1,7 @@
 import { Text } from '@summerfi/app-earn-ui'
 import { type SDKNetwork } from '@summerfi/app-types'
 
+import { getRebalances } from '@/app/server-handlers/sdk/getRebalances'
 import { getVaultDetails } from '@/app/server-handlers/sdk/getVaultDetails'
 import { getVaultsList } from '@/app/server-handlers/sdk/getVaultsList'
 import { VaultOpenView } from '@/components/layout/VaultOpenView/VaultOpenView'
@@ -15,12 +16,13 @@ type EarnVaultOpenManagePageProps = {
 export const revalidate = 60
 
 const EarnVaultOpenManagePage = async ({ params }: EarnVaultOpenManagePageProps) => {
-  const [vault, { vaults }] = await Promise.all([
+  const [vault, { vaults }, { rebalances }] = await Promise.all([
     getVaultDetails({
       vaultAddress: params.vaultId,
       network: params.network,
     }),
     getVaultsList(),
+    getRebalances(),
   ])
 
   if (!vault) {
@@ -31,7 +33,7 @@ const EarnVaultOpenManagePage = async ({ params }: EarnVaultOpenManagePageProps)
     )
   }
 
-  return <VaultOpenView vault={vault} vaults={vaults} />
+  return <VaultOpenView vault={vault} vaults={vaults} rebalances={rebalances} />
 }
 
 export default EarnVaultOpenManagePage

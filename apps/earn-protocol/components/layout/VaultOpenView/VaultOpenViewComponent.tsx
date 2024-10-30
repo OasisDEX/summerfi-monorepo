@@ -11,6 +11,7 @@ import {
 } from '@summerfi/app-earn-ui'
 import {
   type DropdownOption,
+  type SDKRebalancesType,
   type SDKVaultishType,
   type SDKVaultsListType,
   type TokenSymbolsList,
@@ -31,7 +32,6 @@ import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
 import { RebalancingActivity } from '@/components/organisms/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/components/organisms/UserActivity/UserActivity'
 import { VaultExposure } from '@/components/organisms/VaultExposure/VaultExposure'
-import { rebalancingActivityRawData } from '@/features/rebalance-activity/table/dummyData'
 import { useTransaction } from '@/hooks/use-transaction'
 
 import vaultOpenViewStyles from './VaultOpenView.module.scss'
@@ -44,9 +44,11 @@ enum Action {
 export const VaultOpenViewComponent = ({
   vault,
   vaults,
+  rebalancesList,
 }: {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
+  rebalancesList: SDKRebalancesType
 }) => {
   const {
     amountDisplayValue,
@@ -161,7 +163,7 @@ export const VaultOpenViewComponent = ({
             }
             defaultExpanded
           >
-            <RebalancingActivity rawData={rebalancingActivityRawData} />
+            <RebalancingActivity rebalancesList={rebalancesList} />
           </Expander>
           <Expander
             title={
