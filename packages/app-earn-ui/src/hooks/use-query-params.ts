@@ -1,6 +1,11 @@
 'use client'
 import { useEffect, useState } from 'react'
 
+const parseSearchParams = (searchParams: URLSearchParams) =>
+  Object.fromEntries(
+    Object.entries(Object.fromEntries(searchParams)).map(([key, value]) => [key, value.split(',')]),
+  )
+
 /**
  * A custom React hook for managing query parameters in the URL.
  * It allows you to read, update, and synchronize query parameters with the URL.
@@ -20,10 +25,10 @@ import { useEffect, useState } from 'react'
  */
 
 export const useQueryParams = () => {
-  const [queryParams, setQueryParams] = useState(() => {
+  const [queryParams, setQueryParams] = useState<{ [key: string]: string[] }>(() => {
     if (typeof window === 'undefined') return {}
 
-    return Object.fromEntries(new URLSearchParams(window.location.search))
+    return parseSearchParams(new URLSearchParams(window.location.search))
   })
 
   const updateQueryParams = (
@@ -48,13 +53,13 @@ export const useQueryParams = () => {
 
     // Update URL without reloading
     window.history.pushState({}, '', `${url.pathname}?${searchParams.toString()}`)
-    setQueryParams(Object.fromEntries(searchParams)) // Update local state
+    setQueryParams(parseSearchParams(searchParams)) // Update local state
   }
 
   // Sync the state with URL changes
   useEffect(() => {
     const handlePopState = () => {
-      setQueryParams(Object.fromEntries(new URLSearchParams(window.location.search)))
+      setQueryParams(parseSearchParams(new URLSearchParams(window.location.search)))
     }
 
     window.addEventListener('popstate', handlePopState)
