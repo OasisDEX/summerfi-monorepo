@@ -75,7 +75,7 @@ export const VaultGridPreview: FC<VaultGridPreviewProps> = ({
             <Dropdown
               options={vaults.map((item) => ({
                 value: item.id,
-                content: <VaultTitleDropdownContent vault={item} link={getVaultUrl(vault)} />,
+                content: <VaultTitleDropdownContent vault={item} link={getVaultUrl(item)} />,
               }))}
               dropdownValue={{
                 value: vault.id,

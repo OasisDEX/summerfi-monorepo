@@ -1,17 +1,19 @@
-import { type SDKVaultType } from '@summerfi/app-types'
+import { type SDKNetwork, type SDKVaultType } from '@summerfi/app-types'
 import { ArmadaVaultId } from '@summerfi/armada-protocol-service'
-import { Address, type ChainId, getChainInfoByChainId } from '@summerfi/sdk-common'
+import { Address, getChainInfoByChainId } from '@summerfi/sdk-common'
 
 import { backendSDK } from '@/app/server-handlers/sdk/sdk-backend-client'
+import { subgraphNetworkToId } from '@/helpers/network-helpers'
 
 export async function getVaultDetails({
-  chainId,
+  network,
   vaultAddress,
 }: {
-  chainId: ChainId
+  network: SDKNetwork
   vaultAddress: string
 }) {
   try {
+    const chainId = subgraphNetworkToId(network)
     const chainInfo = getChainInfoByChainId(chainId)
 
     const fleetAddress = Address.createFromEthereum({

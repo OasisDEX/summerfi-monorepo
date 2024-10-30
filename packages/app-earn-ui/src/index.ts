@@ -81,8 +81,4 @@ export { useQueryParams } from './hooks/use-query-params'
 export { sidebarFootnote } from './common/sidebar/footnote'
 export { getVaultUrl, getVaultDetailsUrl } from './helpers/get-vault-url'
 export { getTwitterShareUrl } from './helpers/get-twitter-share-url'
-export {
-  networkNameToSDKNetwork,
-  subgraphNetworkToId,
-  subgraphNetworkToSDKId,
-} from './helpers/network-helpers'
+export { getScannerUrl } from './helpers/get-scanner-url'

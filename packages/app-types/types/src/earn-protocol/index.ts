@@ -5,6 +5,7 @@ import {
   GetRebalancesQuery,
 } from '@summerfi/subgraph-manager-common'
 import { ChainId } from '@summerfi/serverless-shared'
+import { type TransactionInfo } from '@summerfi/sdk-common'
 
 export { Network as SDKNetwork }
 export { ChainId as SDKChainId }
@@ -22,4 +23,18 @@ export type SDKSupportedNetworkType = ChainId.ARBITRUM | ChainId.BASE
 export enum SDKSupportedNetworkIdsEnum {
   ARBITRUM = ChainId.ARBITRUM,
   BASE = ChainId.BASE,
+}
+
+export type EarnTransactionViewStates =
+  | 'idle'
+  | 'loadingTx'
+  | 'txPrepared'
+  | 'txInProgress'
+  | 'txError'
+  | 'txSuccess'
+
+export type EarnTransactionTypes = 'approve' | 'deposit'
+
+export type TransactionInfoLabeled = TransactionInfo & {
+  label: EarnTransactionTypes
 }

@@ -1,12 +1,13 @@
 import { type SDKVaultsListType, type SDKVaultType } from '@summerfi/app-types'
 
-export const getVaultUrl = (selectedVault?: SDKVaultType | SDKVaultsListType[number]) => {
-  if (!selectedVault) return ''
+export const getVaultUrl = (vault?: SDKVaultType | SDKVaultsListType[number]) => {
+  if (!vault) return ''
 
-  return `/earn/${selectedVault.protocol.network.toLowerCase()}/position/${selectedVault.id}`
+  return `/earn/${vault.protocol.network.toLowerCase()}/position/${vault.id}`
 }
-export const getVaultDetailsUrl = (selectedVault?: SDKVaultType | SDKVaultsListType[number]) => {
-  if (!selectedVault) return ''
 
-  return `/earn/${selectedVault.protocol.network.toLowerCase()}/details/${selectedVault.id}`
+export const getVaultDetailsUrl = (vault?: SDKVaultType | SDKVaultsListType[number]) => {
+  if (!vault) return ''
+
+  return `/earn/${vault.protocol.network.toLowerCase()}/details/${vault.id}`
 }
