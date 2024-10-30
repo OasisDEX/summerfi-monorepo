@@ -2,8 +2,8 @@ import { type FC } from 'react'
 import { parseQueryStringServerSide } from '@summerfi/app-utils'
 import { type ReadonlyURLSearchParams } from 'next/navigation'
 
-import { getRebalances } from '@/app/server-handlers/sdk/getRebalances'
-import { getVaultsList } from '@/app/server-handlers/sdk/getVaultsList'
+import { getRebalances } from '@/app/server-handlers/sdk/get-rebalances'
+import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { RebalanceActivityView } from '@/features/rebalance-activity/components/RebalanceActivityView/RebalanceActivityView'
 
 export const revalidate = 60

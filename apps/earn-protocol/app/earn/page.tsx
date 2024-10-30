@@ -1,4 +1,4 @@
-import { getVaultsList } from '@/app/server-handlers/sdk/getVaultsList'
+import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { VaultsListView } from '@/components/layout/VaultsListView/VaultsListView'
 
 export const revalidate = 60

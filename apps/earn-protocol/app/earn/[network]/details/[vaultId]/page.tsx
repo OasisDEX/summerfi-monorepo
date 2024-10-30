@@ -1,8 +1,8 @@
 import { Text, VaultGridDetails } from '@summerfi/app-earn-ui'
 import { type SDKNetwork } from '@summerfi/app-types'
 
-import { getVaultDetails } from '@/app/server-handlers/sdk/getVaultDetails'
-import { getVaultsList } from '@/app/server-handlers/sdk/getVaultsList'
+import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
+import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
 import { VaultDetailsView } from '@/components/layout/VaultDetailsView/VaultDetailsView'
 
 type EarnVaultDetailsPageProps = {
