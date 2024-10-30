@@ -1,6 +1,6 @@
 'use client'
 import { Fragment, type ReactNode, useState } from 'react'
-import { TableSortDirection, type TableSortedColumn } from '@summerfi/app-types'
+import { SortDirection } from '@summerfi/app-utils'
 
 import { Icon } from '@/components/atoms/Icon/Icon'
 
@@ -14,6 +14,11 @@ interface Column<K> {
 
 type Row<K extends string> = {
   [key in K]: ReactNode
+}
+
+export interface TableSortedColumn<K> {
+  key: K
+  direction: SortDirection
 }
 
 interface TableProps<K extends string> {
@@ -53,14 +58,10 @@ export function Table<K extends string>({
       return
     }
 
-    let direction = TableSortDirection.ASC
+    let direction = SortDirection.ASC
 
-    if (
-      sortConfig &&
-      sortConfig.key === column &&
-      sortConfig.direction === TableSortDirection.ASC
-    ) {
-      direction = TableSortDirection.DESC
+    if (sortConfig && sortConfig.key === column && sortConfig.direction === SortDirection.ASC) {
+      direction = SortDirection.DESC
     }
 
     const update = { key: column, direction }
@@ -97,7 +98,7 @@ export function Table<K extends string>({
                       {sortConfig?.key === column.key && column.sortable ? (
                         <Icon
                           iconName={
-                            sortConfig.direction === TableSortDirection.ASC
+                            sortConfig.direction === SortDirection.ASC
                               ? 'chevron_up'
                               : 'chevron_down'
                           }

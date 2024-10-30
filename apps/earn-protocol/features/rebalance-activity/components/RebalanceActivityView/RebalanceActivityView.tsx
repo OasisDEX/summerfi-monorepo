@@ -7,20 +7,16 @@ import {
   HeadingWithCards,
   Table,
   TableCarousel,
+  type TableSortedColumn,
   useCurrentUrl,
+  useQueryParams,
 } from '@summerfi/app-earn-ui'
 import { type SDKRebalancesType, type SDKVaultsListType } from '@summerfi/app-types'
 import { formatFiatBalance, formatShorthandNumber } from '@summerfi/app-utils'
 
-import { rebalanceFilterProtocols } from '@/features/rebalance-activity/filters/filter-protocols'
-import { rebalanceFilterStrategies } from '@/features/rebalance-activity/filters/filter-strategies'
-import { rebalanceFilterTokens } from '@/features/rebalance-activity/filters/filter-tokens'
-import {
-  mapProtocolsToMultiselectOptions,
-  mapStrategiesToMultiselectOptions,
-  mapTokensToMultiselectOptions,
-} from '@/features/rebalance-activity/filters/mappers'
 import { rebalancingActivityColumns } from '@/features/rebalance-activity/table/columns'
+import { rebalanceActivityFilter } from '@/features/rebalance-activity/table/filters/filters'
+import { mapMultiselectOptions } from '@/features/rebalance-activity/table/filters/mappers'
 import { rebalancingActivityMapper } from '@/features/rebalance-activity/table/mapper'
 
 import classNames from './RebalanceActivityView.module.scss'
@@ -58,27 +54,35 @@ const carouselData = [
 interface RebalanceActivityViewProps {
   vaultsList: SDKVaultsListType
   rebalancesList: SDKRebalancesType
+  searchParams?: { [key: string]: string[] }
 }
 
 export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
   vaultsList,
   rebalancesList,
+  searchParams,
 }) => {
-  const [strategyFilter, setStrategyFilter] = useState<string[]>([])
-  const [tokenFilter, setTokenFilter] = useState<string[]>([])
-  const [protocolFilter, setProtocolFilter] = useState<string[]>([])
-
+  const { setQueryParams } = useQueryParams()
+  const [strategyFilter, setStrategyFilter] = useState<string[]>(searchParams?.strategies ?? [])
+  const [tokenFilter, setTokenFilter] = useState<string[]>(searchParams?.tokens ?? [])
+  const [protocolFilter, setProtocolFilter] = useState<string[]>(searchParams?.protocols ?? [])
+  const [sortConfig, setSortConfig] = useState<TableSortedColumn<string>>()
   const currentUrl = useCurrentUrl()
-  const strategiesMultiselectOptions = mapStrategiesToMultiselectOptions(vaultsList)
-  const tokensMultiselectOptions = mapTokensToMultiselectOptions(vaultsList)
-  const protocolsMultiselectOptions = mapProtocolsToMultiselectOptions(vaultsList)
 
-  const resolvedList = rebalancesList
-    .filter((rebalance) => rebalanceFilterProtocols({ protocolFilter, rebalance }))
-    .filter((rebalance) => rebalanceFilterStrategies({ strategyFilter, rebalance }))
-    .filter((rebalance) => rebalanceFilterTokens({ tokenFilter, rebalance }))
+  const { strategiesOptions, tokensOptions, protocolsOptions } = useMemo(
+    () => mapMultiselectOptions(vaultsList),
+    [vaultsList],
+  )
 
-  const rows = useMemo(() => rebalancingActivityMapper(resolvedList), [resolvedList])
+  const filteredList = useMemo(
+    () => rebalanceActivityFilter({ rebalancesList, strategyFilter, tokenFilter, protocolFilter }),
+    [rebalancesList, strategyFilter, tokenFilter, protocolFilter],
+  )
+
+  const rows = useMemo(
+    () => rebalancingActivityMapper(filteredList, sortConfig),
+    [filteredList, sortConfig],
+  )
 
   // used 3 min as average rebalance action
   const savedTimeInHours = (rows.length * 3) / 60
@@ -121,19 +125,31 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
       />
       <div className={classNames.filtersWrapper}>
         <GenericMultiselect
-          options={strategiesMultiselectOptions}
+          options={strategiesOptions}
           label="Strategies"
-          onChange={(strategies) => setStrategyFilter(strategies)}
+          onChange={(strategies) => {
+            setQueryParams({ strategies })
+            setStrategyFilter(strategies)
+          }}
+          initialValues={strategyFilter}
         />
         <GenericMultiselect
-          options={tokensMultiselectOptions}
+          options={tokensOptions}
           label="Tokens"
-          onChange={(tokens) => setTokenFilter(tokens)}
+          onChange={(tokens) => {
+            setQueryParams({ tokens })
+            setTokenFilter(tokens)
+          }}
+          initialValues={tokenFilter}
         />
         <GenericMultiselect
-          options={protocolsMultiselectOptions}
+          options={protocolsOptions}
           label="Protocols"
-          onChange={(filters) => setProtocolFilter(filters)}
+          onChange={(protocols) => {
+            setQueryParams({ protocols })
+            setProtocolFilter(protocols)
+          }}
+          initialValues={protocolFilter}
         />
       </div>
       <Table
@@ -143,6 +159,7 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
           idx: 3,
           content: <TableCarousel carouselData={carouselData} />,
         }}
+        handleSort={(_sortConfig) => setSortConfig(_sortConfig)}
       />
     </div>
   )

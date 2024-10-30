@@ -19,7 +19,7 @@ const protocolIconList: { [key: string]: IconNamesList } = {
   Morpho: 'morpho_circle_color',
 }
 
-export const mapStrategiesToMultiselectOptions = (
+const mapStrategiesToMultiselectOptions = (
   vaultsList: SDKVaultsListType,
 ): GenericMultiselectOption[] =>
   vaultsList.map((vault) => ({
@@ -29,7 +29,7 @@ export const mapStrategiesToMultiselectOptions = (
     value: vault.id,
   }))
 
-export const mapTokensToMultiselectOptions = (
+const mapTokensToMultiselectOptions = (
   vaultsList: SDKVaultsListType,
 ): GenericMultiselectOption[] => {
   const uniqueTokenSymbolList = [
@@ -43,7 +43,7 @@ export const mapTokensToMultiselectOptions = (
   }))
 }
 
-export const mapProtocolsToMultiselectOptions = (
+const mapProtocolsToMultiselectOptions = (
   vaultsList: SDKVaultsListType,
 ): GenericMultiselectOption[] => {
   const uniqueProtocolsList = [
@@ -55,4 +55,12 @@ export const mapProtocolsToMultiselectOptions = (
     icon: protocolIconList[symbol] ?? 'not_supported_icon',
     value: symbol,
   }))
+}
+
+export const mapMultiselectOptions = (vaultsList: SDKVaultsListType) => {
+  return {
+    strategiesOptions: mapStrategiesToMultiselectOptions(vaultsList),
+    tokensOptions: mapTokensToMultiselectOptions(vaultsList),
+    protocolsOptions: mapProtocolsToMultiselectOptions(vaultsList),
+  }
 }

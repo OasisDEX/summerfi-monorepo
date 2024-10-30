@@ -78,6 +78,8 @@ export default defineConfig(({ mode }) => {
           'lodash-es',
           '@summerfi/serverless-shared',
           '@summerfi/app-types',
+          'next',
+          'next/navigation',
         ],
         output: {
           assetFileNames: 'assets/[name][extname]',
