@@ -18,12 +18,15 @@ export interface IFleetCommanderContract extends IContractWrapper {
   arks(): Promise<IAddress[]>
 
   /**
-   * @name depositCap
-   * @description Returns the deposit cap of the fleet, this is the maximum amount of assets that
-   *              the fleet can manage, and therefore the maximum amount of assets that can be deposited
-   *              in total by all users
+   * @name config
+   * @description Returns the configuration of the fleet
    */
-  depositCap(): Promise<ITokenAmount>
+  config(): Promise<{
+    bufferArk: IAddress
+    minimumBufferBalance: ITokenAmount
+    depositCap: ITokenAmount
+    maxRebalanceOperations: string
+  }>
 
   /**
    * @name maxDeposit

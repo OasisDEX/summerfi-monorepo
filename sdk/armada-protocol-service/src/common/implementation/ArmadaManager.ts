@@ -70,7 +70,7 @@ export class ArmadaManager implements IArmadaManager {
     const fleetERC4626Contract = fleetContract.asErc4626()
     const fleetERC20Contract = fleetERC4626Contract.asErc20()
 
-    const depositCap = await fleetContract.depositCap()
+    const { depositCap } = await fleetContract.config()
     const totalDeposits = await fleetERC4626Contract.totalAssets()
     const totalShares = await fleetERC20Contract.totalSupply()
 
