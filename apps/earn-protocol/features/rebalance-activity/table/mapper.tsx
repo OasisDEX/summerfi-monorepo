@@ -6,10 +6,11 @@ import Link from 'next/link'
 
 import { rebalanceActivitySorter } from '@/features/rebalance-activity/table/sorter'
 
-const arkNameMap: { [key: string]: string } = {
+export const arkNameMap: { [key: string]: string } = {
   BufferArk: 'Buffer',
   AaveV3: 'Aave V3',
   CompoundV3: 'Compound V3',
+  PendlePt: 'Pendle',
 }
 
 export const rebalancingActivityMapper = (
@@ -39,7 +40,7 @@ export const rebalancingActivityMapper = (
     const actionToRawName = item.to.name?.split('-')[0] ?? 'n/a'
 
     const actionFromLabel = arkNameMap[actionFromRawName] ?? actionFromRawName
-    const actionToLabel = arkNameMap[actionToRawName] ?? actionFromRawName
+    const actionToLabel = arkNameMap[actionToRawName] ?? actionToRawName
 
     return {
       content: {

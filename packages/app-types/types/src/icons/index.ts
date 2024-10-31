@@ -237,6 +237,7 @@ export type IconNamesList =
   | 'summer_illustration_verification'
   | 'social_link'
   | 'social_x'
+  | 'pendle'
 
 export type TokenSymbolsList =
   | 'USDP'

@@ -6,9 +6,10 @@ import {
 } from '@summerfi/app-types'
 
 import { networkIconByNetworkName } from '@/constants/networkIcons'
+import { arkNameMap } from '@/features/rebalance-activity/table/mapper'
 
 // it's handled like that for now until we will have protocol as property in subgraph
-const notSupportedProtocolsForNow = ['ERC4626', 'BufferArk', 'PendlePt']
+const notSupportedProtocolsForNow = ['ERC4626', 'BufferArk']
 
 const protocolIconList: { [key: string]: IconNamesList } = {
   AaveV3: 'aave_circle_color',
@@ -17,6 +18,7 @@ const protocolIconList: { [key: string]: IconNamesList } = {
   Spark: 'spark_circle_color',
   Sky: 'sky',
   Morpho: 'morpho_circle_color',
+  PendlePt: 'pendle',
 }
 
 const mapStrategiesToMultiselectOptions = (
@@ -50,10 +52,10 @@ const mapProtocolsToMultiselectOptions = (
     ...new Set(vaultsList.flatMap((vault) => vault.arks.map((ark) => ark.name?.split('-')[0]))),
   ].filter((item) => item && !notSupportedProtocolsForNow.includes(item)) as string[]
 
-  return uniqueProtocolsList.map((symbol) => ({
-    label: symbol,
-    icon: protocolIconList[symbol] ?? 'not_supported_icon',
-    value: symbol,
+  return uniqueProtocolsList.map((protocol) => ({
+    label: arkNameMap[protocol],
+    icon: protocolIconList[protocol] ?? 'not_supported_icon',
+    value: protocol,
   }))
 }
 

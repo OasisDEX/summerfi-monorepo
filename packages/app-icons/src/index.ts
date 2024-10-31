@@ -275,4 +275,5 @@ export const icons = {
   ),
   social_link: customLazy(() => import('./icons/social_link.svg?react')),
   social_x: customLazy(() => import('./icons/social_x.svg?react')),
+  pendle: customLazy(() => import('./icons/pendle.svg?react')),
 }

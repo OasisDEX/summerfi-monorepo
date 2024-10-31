@@ -1,15 +1,15 @@
 import type { SDKGlobalRebalancesType, SDKGlobalRebalanceType } from '@summerfi/app-types'
 
-const rebalanceFilterProtocols = (
-  // eslint-disable-next-line no-empty-pattern
-  {
-    // protocolFilter,
-    // rebalance,
-  }: {
-    protocolFilter: string[]
-    rebalance: SDKGlobalRebalanceType
-  },
-) => true
+const rebalanceFilterProtocols = ({
+  protocolFilter,
+  rebalance,
+}: {
+  protocolFilter: string[]
+  rebalance: SDKGlobalRebalanceType
+}) =>
+  !protocolFilter.length ||
+  protocolFilter.includes(rebalance.from.name?.split('-')[0] ?? '') ||
+  protocolFilter.includes(rebalance.to.name?.split('-')[0] ?? '')
 
 const rebalanceFilterStrategies = ({
   strategyFilter,
