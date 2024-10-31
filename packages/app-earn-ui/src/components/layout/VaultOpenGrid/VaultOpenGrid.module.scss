@@ -1,4 +1,4 @@
-.vaultGridPreviewBreadcrumbsWrapper {
+.vaultOpenGridBreadcrumbsWrapper {
   display: flex;
   flex-direction: column;
   padding: 0 var(--general-space-16);
@@ -9,7 +9,7 @@
   }
 }
 
-.vaultGridPreviewPositionWrapper {
+.vaultOpenGridPositionWrapper {
   display: grid;
   grid-template-columns: 1fr;
   margin-top: 20px;
@@ -35,7 +35,7 @@
   }
 }
 
-.vaultGridPreviewTopLeftWrapper {
+.vaultOpenGridTopLeftWrapper {
   display: flex;
   flex-direction: row;
   width: 100%;

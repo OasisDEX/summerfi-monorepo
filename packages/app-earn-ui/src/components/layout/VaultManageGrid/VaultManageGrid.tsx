@@ -1,12 +1,12 @@
 'use client'
 
-import { type FC, type ReactNode, useEffect, useState } from 'react'
+import { type FC, type ReactNode } from 'react'
 import { type SDKVaultishType, type SDKVaultsListType } from '@summerfi/app-types'
 import { formatCryptoBalance, formatDecimalAsPercent } from '@summerfi/app-utils'
+import { type IArmadaPosition } from '@summerfi/armada-protocol-common'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
-import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
 import { Box } from '@/components/atoms/Box/Box'
 import { Text } from '@/components/atoms/Text/Text'
 import { BonusLabel } from '@/components/molecules/BonusLabel/BonusLabel'
@@ -17,61 +17,57 @@ import { VaultTitleDropdownContent } from '@/components/molecules/VaultTitleDrop
 import { VaultTitleWithRisk } from '@/components/molecules/VaultTitleWithRisk/VaultTitleWithRisk'
 import { getVaultUrl } from '@/helpers/get-vault-url.ts'
 
-import vaultGridPreviewStyles from './VaultGridPreview.module.scss'
+import vaultManageGridStyles from './VaultManageGrid.module.scss'
 
-interface VaultGridPreviewProps {
+interface VaultManageGridProps {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
-  displayGraph?: boolean
-  simulationGraph: ReactNode
+  position: IArmadaPosition
   detailsContent: ReactNode
   sidebarContent: ReactNode
+  connectedWalletAddress?: string
+  viewWalletAddress: string
 }
 
-export const VaultGridPreview: FC<VaultGridPreviewProps> = ({
+export const VaultManageGrid: FC<VaultManageGridProps> = ({
   vault,
   vaults,
-  displayGraph,
-  simulationGraph,
   detailsContent,
   sidebarContent,
+  position,
+  connectedWalletAddress,
+  viewWalletAddress,
 }) => {
-  const [displayGraphStaggered, setDisplayGraphStaggered] = useState(displayGraph)
   const parsedApr = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
-  const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(vault.totalValueLockedUSD))
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDisplayGraphStaggered(false)
-    }, 1000)
-
-    if (displayGraph) {
-      clearInterval(timer)
-      setDisplayGraphStaggered(true)
-    }
-
-    return () => {
-      clearInterval(timer)
-    }
-  }, [displayGraph])
 
   return (
     <>
-      <div className={vaultGridPreviewStyles.vaultGridPreviewBreadcrumbsWrapper}>
+      <div className={vaultManageGridStyles.vaultManageGridBreadcrumbsWrapper}>
         <div style={{ display: 'inline-block' }}>
           <Link href="/earn">
             <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
-              Earn / &nbsp;
+              Earn
             </Text>
           </Link>
+          <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
+            &nbsp;/&nbsp;
+          </Text>
+          <Link href={getVaultUrl(vault)} style={{ color: 'white' }}>
+            <Text as="span" variant="p3">
+              {vault.id}
+            </Text>
+          </Link>
+          <Text as="span" variant="p3" style={{ color: 'var(--color-text-primary-disabled)' }}>
+            &nbsp;/&nbsp;
+          </Text>
           <Text as="span" variant="p3" color="white">
-            {vault.id}
+            {viewWalletAddress === connectedWalletAddress ? 'Your' : viewWalletAddress} Position
           </Text>
         </div>
       </div>
-      <div className={vaultGridPreviewStyles.vaultGridPreviewPositionWrapper}>
+      <div className={vaultManageGridStyles.vaultManageGridPositionWrapper}>
         <div>
-          <div className={vaultGridPreviewStyles.vaultGridPreviewTopLeftWrapper}>
+          <div className={vaultManageGridStyles.vaultManageGridTopLeftWrapper}>
             <Dropdown
               options={vaults.map((item) => ({
                 value: item.id,
@@ -93,12 +89,9 @@ export const VaultGridPreview: FC<VaultGridPreviewProps> = ({
               <BonusLabel rays="1,111" />
             </Text>
           </div>
-          <AnimateHeight id="simulation-graph" scale show={displayGraphStaggered}>
-            {simulationGraph}
-          </AnimateHeight>
           <SimpleGrid
-            columns={2}
-            rows={2}
+            columns={3}
+            rows={1}
             gap="var(--general-space-16)"
             style={{ marginBottom: 'var(--general-space-16)' }}
           >
@@ -106,10 +99,12 @@ export const VaultGridPreview: FC<VaultGridPreviewProps> = ({
               <DataBlock
                 size="large"
                 titleSize="small"
-                title="30d APY"
-                value={parsedApr}
-                subValue="+2.1% Median DeFi Yield"
-                subValueType="positive"
+                title="Earned"
+                // TODO: fill data
+                value="value"
+                // TODO: fill data
+                subValue="subvalue"
+                subValueType="neutral"
                 subValueSize="small"
               />
             </Box>
@@ -117,33 +112,31 @@ export const VaultGridPreview: FC<VaultGridPreviewProps> = ({
               <DataBlock
                 size="large"
                 titleSize="small"
-                title="Current APY"
-                value="value"
-                subValue="+1.7% Median DeFi Yield"
-                subValueType="positive"
+                title="Net Contribution"
+                value={`$${formatCryptoBalance(position.amount.amount)}`}
+                // TODO: fill data
+                subValue="deposits number"
                 subValueSize="small"
               />
             </Box>
-            <Box
-              style={{
-                gridColumn: '1/3',
-              }}
-            >
+            <Box>
               <DataBlock
                 size="large"
                 titleSize="small"
-                title="Assets in vault"
-                value={parsedTotalValueLockedUSD}
+                title="30d APY"
                 // TODO: fill data
-                subValue={`231,232,321.01 ${vault.inputToken.symbol}`}
+                value="value"
+                // TODO: confirm data
+                subValue={`Current APY: ${parsedApr}`}
+                subValueType="neutral"
                 subValueSize="small"
               />
             </Box>
           </SimpleGrid>
-          <Box className={vaultGridPreviewStyles.leftBlock}>{detailsContent}</Box>
+          <Box className={vaultManageGridStyles.leftBlock}>{detailsContent}</Box>
         </div>
-        <div className={vaultGridPreviewStyles.rightBlockWrapper}>
-          <div className={vaultGridPreviewStyles.rightBlock}>{sidebarContent}</div>
+        <div className={vaultManageGridStyles.rightBlockWrapper}>
+          <div className={vaultManageGridStyles.rightBlock}>{sidebarContent}</div>
         </div>
       </div>
     </>

@@ -864,6 +864,9 @@ importers:
       '@summerfi/app-types':
         specifier: workspace:*
         version: link:../app-types
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../../sdk/armada-protocol-common
       '@summerfi/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config

@@ -7,7 +7,7 @@ import {
   SidebarFootnote,
   sidebarFootnote,
   Text,
-  VaultOpenGrid,
+  VaultManageGrid,
 } from '@summerfi/app-earn-ui'
 import {
   type DropdownOption,
@@ -16,38 +16,35 @@ import {
   type TokenSymbolsList,
 } from '@summerfi/app-types'
 import { formatCryptoBalance } from '@summerfi/app-utils'
+import { type IArmadaPosition } from '@summerfi/sdk-client-react'
 import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
 
-import {
-  detailsLinks,
-  userActivityRawData,
-  vaultExposureRawData,
-} from '@/components/layout/VaultOpenView/mocks'
-import { VaultOpenHeaderBlock } from '@/components/layout/VaultOpenView/VaultOpenHeaderBlock'
-import { VaultSimulationGraph } from '@/components/layout/VaultOpenView/VaultSimulationGraph'
+import { userActivityRawData, vaultExposureRawData } from '@/components/layout/VaultOpenView/mocks'
 import { TransactionHashPill } from '@/components/molecules/TransactionHashPill/TransactionHashPill'
 import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
 import { RebalancingActivity } from '@/components/organisms/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/components/organisms/UserActivity/UserActivity'
 import { VaultExposure } from '@/components/organisms/VaultExposure/VaultExposure'
-import { usePosition } from '@/hooks/use-position'
-import { useRedirectToPosition } from '@/hooks/use-redirect-to-position'
 import { useTransaction } from '@/hooks/use-transaction'
 
-import vaultOpenViewStyles from './VaultOpenView.module.scss'
+import vaultManageViewStyles from './VaultManageView.module.scss'
 
 enum Action {
   DEPOSIT = 'deposit',
   WITHDRAW = 'withdraw',
 }
 
-export const VaultOpenViewComponent = ({
+export const VaultManageViewComponent = ({
   vault,
   vaults,
+  position,
+  viewWalletAddress,
 }: {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
+  position: IArmadaPosition
+  viewWalletAddress: string
 }) => {
   const {
     amountDisplayValue,
@@ -58,14 +55,8 @@ export const VaultOpenViewComponent = ({
     removeTxHash,
     vaultChainId,
     reset,
+    user,
   } = useTransaction({ vault })
-
-  const position = usePosition({
-    chainId: vaultChainId,
-    vaultId: vault.id,
-  })
-
-  useRedirectToPosition({ vault, position })
 
   const options: DropdownOption[] = [
     ...[...new Set(vaults.map(({ inputToken }) => inputToken.symbol))].map((symbol) => ({
@@ -79,7 +70,6 @@ export const VaultOpenViewComponent = ({
     options.find((option) => option.value === vault.inputToken.symbol) ?? options[0]
 
   const balance = new BigNumber(123123)
-  const displayGraph = !!amount && amount.gt(0)
 
   const sidebarProps = {
     title: capitalize(Action.DEPOSIT),
@@ -136,18 +126,18 @@ export const VaultOpenViewComponent = ({
   const rebalancesList = `rebalances` in vault ? vault.rebalances : []
 
   return (
-    <VaultOpenGrid
+    <VaultManageGrid
       vault={vault}
       vaults={vaults}
-      displayGraph={displayGraph}
-      simulationGraph={<VaultSimulationGraph vault={vault} amount={amount} />}
+      position={position}
+      viewWalletAddress={viewWalletAddress}
+      connectedWalletAddress={user?.address}
       detailsContent={
-        <div className={vaultOpenViewStyles.leftContentWrapper}>
-          <VaultOpenHeaderBlock detailsLinks={detailsLinks} vault={vault} />
+        <div className={vaultManageViewStyles.leftContentWrapper}>
           <Expander
             title={
               <Text as="p" variant="p1semi">
-                Historical yield
+                Performance
               </Text>
             }
             defaultExpanded

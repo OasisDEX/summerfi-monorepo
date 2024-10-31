@@ -23,9 +23,10 @@
     "dev": "concurrently \"pnpm:vite-dev\" \"pnpm:generate-module-types-watch\" \"pnpm:generate-component-types-watch\" \"pnpm:resolve-tspaths-watch\""
   },
   "devDependencies": {
+    "@summerfi/app-token-config": "workspace:*",
     "@summerfi/app-types": "workspace:*",
     "@summerfi/app-utils": "workspace:*",
-    "@summerfi/app-token-config": "workspace:*",
+    "@summerfi/armada-protocol-common": "workspace:*",
     "@summerfi/eslint-config": "workspace:*",
     "@summerfi/typescript-config": "workspace:*",
     "@types/loadable__component": "^5.13.9",

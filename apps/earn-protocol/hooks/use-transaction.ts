@@ -254,5 +254,6 @@ export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
     removeTxHash,
     vaultChainId,
     reset,
+    user,
   }
 }
