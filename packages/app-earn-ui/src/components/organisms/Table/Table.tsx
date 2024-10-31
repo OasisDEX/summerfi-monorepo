@@ -94,6 +94,10 @@ export function Table<K extends string>({
                         ...(sortConfig?.key === column.key && {
                           color: 'var(--earn-protocol-secondary-100)',
                         }),
+                        // overwrite hoover if not sortable
+                        ...(!column.sortable && {
+                          color: 'var(--earn-protocol-secondary-40)',
+                        }),
                       }}
                       onClick={() => handleColumnSorting(column.key, column.sortable)}
                     >
