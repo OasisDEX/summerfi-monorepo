@@ -47,9 +47,9 @@ export const rebalancingActivityMapper = (
               gap: 'var(--spacing-space-2x-small)',
             }}
           >
-            <Icon tokenName={asset} variant="s" /> {asset}
+            <TableCellText>{item.from.name?.split('-')[0]}</TableCellText>
             <Text style={{ color: 'var(--earn-protocol-secondary-40)', fontSize: '14px' }}>→</Text>
-            <Icon tokenName={asset} variant="s" /> {asset}
+            <TableCellText>{item.to.name?.split('-')[0]}</TableCellText>
           </div>
         ),
         amount: (
