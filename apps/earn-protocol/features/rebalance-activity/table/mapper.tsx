@@ -18,6 +18,10 @@ export const arkNameMap: { [key: string]: string } = {
   PendlePt: 'Pendle',
 }
 
+const providerMap = {
+  'Summer Earn Protocol': 'Summer.fi',
+}
+
 const purposeMapper = (item: SDKGlobalRebalanceType): { label: string; icon?: IconNamesList } => {
   const actionFromRawName = item.from.name?.split('-')[0] ?? 'n/a'
   const actionToRawName = item.to.name?.split('-')[0] ?? 'n/a'
@@ -75,6 +79,8 @@ export const rebalancingActivityMapper = (
 
     const purpose = purposeMapper(item)
 
+    const providerLabel = providerMap[item.protocol.name] ?? 'n/a'
+
     return {
       content: {
         purpose: (
@@ -130,7 +136,7 @@ export const rebalancingActivityMapper = (
               style={{ color: 'var(--earn-protocol-primary-100)' }}
               reserveSpace
             >
-              {item.protocol.name}
+              {providerLabel}
             </WithArrow>
           </Link>
         ),
