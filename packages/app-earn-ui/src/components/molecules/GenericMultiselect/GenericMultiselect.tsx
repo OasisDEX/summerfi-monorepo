@@ -285,9 +285,9 @@ export function GenericMultiselect({
       <div
         className={classNames.mainWrapper}
         style={{
-          borderColor: isOpen
-            ? 'var(--earn-protocol-neutral-60)'
-            : 'var(--earn-protocol-neutral-80)',
+          ...(isOpen && {
+            borderColor: 'var(--earn-protocol-neutral-60)',
+          }),
         }}
         onClick={() => {
           setIsOpen((_isOpen) => {

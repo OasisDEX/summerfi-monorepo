@@ -14,10 +14,19 @@
     display: flex;
     gap: 10px;
 
-    button {
+    button,
+    a {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
+      transition: background-color 0.2s ease-in-out;
+      border-radius: var(--general-radius-50);
+
+      &:hover {
+        background-color: rgba(141, 51, 96, 0.15);
+      }
     }
   }
 }

@@ -91,6 +91,9 @@ export function Table<K extends string>({
                         gap: 'var(--spacing-space-x-small)',
                         width: 'fit-content',
                         cursor: column.sortable ? 'pointer' : 'default',
+                        ...(sortConfig?.key === column.key && {
+                          color: 'var(--earn-protocol-secondary-100)',
+                        }),
                       }}
                       onClick={() => handleColumnSorting(column.key, column.sortable)}
                     >

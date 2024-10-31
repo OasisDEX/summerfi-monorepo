@@ -10,6 +10,11 @@
   background-color: var(--earn-protocol-neutral-85);
   cursor: pointer;
   transition: border-color 200ms;
+  border-color: var(--earn-protocol-neutral-80);
+
+  &:hover {
+    border-color: var(--earn-protocol-neutral-60);
+  }
 }
 
 .searchInput {
