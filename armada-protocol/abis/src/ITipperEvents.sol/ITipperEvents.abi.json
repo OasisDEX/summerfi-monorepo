@@ -1,0 +1,41 @@
+[
+  {
+    "type": "event",
+    "name": "TipAccrued",
+    "inputs": [
+      {
+        "name": "tipAmount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "TipJarUpdated",
+    "inputs": [
+      {
+        "name": "newTipJar",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "TipRateUpdated",
+    "inputs": [
+      {
+        "name": "newTipRate",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "Percentage"
+      }
+    ],
+    "anonymous": false
+  }
+]

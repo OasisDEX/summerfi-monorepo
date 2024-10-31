@@ -31,8 +31,3 @@ export {
   isArmadaProtocol,
 } from './IArmadaProtocol'
 export type { IArmadaProtocol, IArmadaProtocolData } from './IArmadaProtocol'
-export {
-  __signature__ as __irebalancedata__,
-  isRebalanceData,
-  type IRebalanceData,
-} from './IRebalanceData'

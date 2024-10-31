@@ -1,0 +1,202 @@
+[
+  {
+    "type": "error",
+    "name": "FleetCommanderArkDepositCapZero",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderArkNotActive",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderCantUseMaxUintMovingFromBuffer",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderCantUseRebalanceOnBufferArk",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderEffectiveDepositCapExceeded",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "effectiveDepositCap",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderExceedsMaxInflow",
+    "inputs": [
+      {
+        "name": "fromArk",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "maxRebalanceInflow",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderExceedsMaxOutflow",
+    "inputs": [
+      {
+        "name": "fromArk",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "maxRebalanceOutflow",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderInsufficientBuffer",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderInvalidBufferAdjustment",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderInvalidSourceArk",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderMovedMoreThanAvailable",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderNoExcessFunds",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderNoFundsMoved",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderRebalanceAmountZero",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderRebalanceNoOperations",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderRebalanceTooManyOperations",
+    "inputs": [
+      {
+        "name": "operationsCount",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderTransfersDisabled",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderUnauthorizedRedemption",
+    "inputs": [
+      {
+        "name": "caller",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "owner",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "FleetCommanderUnauthorizedWithdrawal",
+    "inputs": [
+      {
+        "name": "caller",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "owner",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "WithdrawalAmountExceedsMaxBufferLimit",
+    "inputs": []
+  }
+]

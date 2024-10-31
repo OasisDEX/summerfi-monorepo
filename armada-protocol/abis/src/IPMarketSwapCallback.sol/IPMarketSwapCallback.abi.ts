@@ -1,0 +1,1 @@
+export const IPMarketSwapCallbackAbi = [{"type":"function","name":"swapCallback","inputs":[{"name":"ptToAccount","type":"int256","internalType":"int256"},{"name":"syToAccount","type":"int256","internalType":"int256"},{"name":"data","type":"bytes","internalType":"bytes"}],"outputs":[],"stateMutability":"nonpayable"}] as const

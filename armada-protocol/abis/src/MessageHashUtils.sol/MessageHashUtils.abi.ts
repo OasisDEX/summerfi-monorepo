@@ -1,0 +1,1 @@
+export const MessageHashUtilsAbi = [] as const

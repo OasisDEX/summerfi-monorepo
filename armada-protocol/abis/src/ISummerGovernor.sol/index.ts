@@ -1,0 +1,1 @@
+export * from './ISummerGovernor.abi';

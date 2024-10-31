@@ -1,8 +1,8 @@
-import { IRebalanceData } from '@summerfi/armada-protocol-common'
 import { IAddress, IPercentage, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
 import { IContractWrapper } from './IContractWrapper'
 import { IErc20Contract } from './IErc20Contract'
 import { IErc4626Contract } from './IErc4626Contract'
+import type { IFleetConfig, IRebalanceData } from '../types'
 
 /**
  * @name IFleetCommanderContract
@@ -18,12 +18,10 @@ export interface IFleetCommanderContract extends IContractWrapper {
   arks(): Promise<IAddress[]>
 
   /**
-   * @name depositCap
-   * @description Returns the deposit cap of the fleet, this is the maximum amount of assets that
-   *              the fleet can manage, and therefore the maximum amount of assets that can be deposited
-   *              in total by all users
+   * @name config
+   * @description Returns the configuration of the fleet
    */
-  depositCap(): Promise<ITokenAmount>
+  config(): Promise<IFleetConfig>
 
   /**
    * @name maxDeposit

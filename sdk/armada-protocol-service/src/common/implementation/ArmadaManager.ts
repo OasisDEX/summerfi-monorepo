@@ -5,10 +5,9 @@ import {
   IArmadaPoolInfo,
   IArmadaPosition,
   IArmadaPositionId,
-  IRebalanceData,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import { IContractsProvider } from '@summerfi/contracts-provider-common'
+import { IContractsProvider, type IRebalanceData } from '@summerfi/contracts-provider-common'
 import { IAddress, IPercentage, ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { ArmadaPool } from './ArmadaPool'
@@ -65,7 +64,7 @@ export class ArmadaManager implements IArmadaManager {
     const fleetERC4626Contract = fleetContract.asErc4626()
     const fleetERC20Contract = fleetERC4626Contract.asErc20()
 
-    const depositCap = await fleetContract.depositCap()
+    const { depositCap } = await fleetContract.config()
     const totalDeposits = await fleetERC4626Contract.totalAssets()
     const totalShares = await fleetERC20Contract.totalSupply()
 

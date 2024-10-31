@@ -1,0 +1,1 @@
+export const ITipperErrorsAbi = [{"type":"error","name":"InvalidFleetCommanderAddress","inputs":[]},{"type":"error","name":"InvalidTipJarAddress","inputs":[]},{"type":"error","name":"TipRateCannotExceedOneHundredPercent","inputs":[]}] as const

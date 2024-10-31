@@ -1,1 +1,1 @@
-export const IArkAccessManagedAbi = [{"type":"function","name":"grantCommanderRole","inputs":[{"name":"account","type":"address","internalType":"address"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"revokeCommanderRole","inputs":[{"name":"account","type":"address","internalType":"address"}],"outputs":[],"stateMutability":"nonpayable"}] as const
+export const IArkAccessManagedAbi = [] as const

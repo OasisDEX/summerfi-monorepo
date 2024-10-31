@@ -1,0 +1,1 @@
+export const StringsAbi = [{"type":"error","name":"StringsInsufficientHexLength","inputs":[{"name":"value","type":"uint256","internalType":"uint256"},{"name":"length","type":"uint256","internalType":"uint256"}]}] as const
