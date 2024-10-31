@@ -23,6 +23,7 @@ export const userActivityMapper = (rawData: UserActivityRawData[]) => {
               variant="p3"
               style={{ color: 'var(--earn-protocol-primary-100)' }}
               reserveSpace
+              withStatic
             >
               {item.earningStreak.label}
             </WithArrow>

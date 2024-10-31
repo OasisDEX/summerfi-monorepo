@@ -1,5 +1,7 @@
+import { type CSSProperties, type PropsWithChildren } from 'react'
 import clsx from 'clsx'
 
+import { Icon } from '@/components/atoms/Icon/Icon.tsx'
 import { Text, type TextAllowedHtmlTags } from '@/components/atoms/Text/Text'
 
 import { type ClassNames as TextClassNames } from '@/components/atoms/Text/Text.module.scss'
@@ -11,44 +13,51 @@ export function WithArrow({
   variant = 'p3',
   style,
   as,
-  enabled = true,
   className,
   reserveSpace,
-}: React.PropsWithChildren<{
+  withAnimated = true,
+  withStatic = false,
+}: PropsWithChildren<{
   gap?: string | number
-  style?: React.CSSProperties
+  style?: CSSProperties
   variant?: TextClassNames
   as?: TextAllowedHtmlTags
-  enabled?: boolean
   className?: string
   reserveSpace?: boolean
+  withAnimated?: boolean
+  withStatic?: boolean
 }>) {
   return (
-    <Text
-      variant={variant}
-      className={clsx(withArrowStyles.withArrow, className)}
-      style={style}
-      {...(as ? { as } : { as: 'span' })}
-    >
-      <span style={{ marginRight: gap }}>{children}</span>
-      {enabled && (
-        <>
-          {reserveSpace && (
-            <span className="arrow" style={{ color: 'transparent' }}>
+    <span style={{ display: 'flex', alignItems: 'center' }}>
+      <Text
+        variant={variant}
+        className={clsx(withArrowStyles.withArrow, className)}
+        style={style}
+        {...(as ? { as } : { as: 'span' })}
+      >
+        <span style={{ marginRight: gap }}>{children}</span>
+        {withAnimated && !withStatic && (
+          <>
+            {reserveSpace && (
+              <span className="arrow" style={{ color: 'transparent' }}>
+                →
+              </span>
+            )}
+            <span
+              className="arrow"
+              style={{
+                position: 'absolute',
+                ...(reserveSpace && { right: 0 }),
+              }}
+            >
               →
             </span>
-          )}
-          <span
-            className="arrow"
-            style={{
-              position: 'absolute',
-              ...(reserveSpace && { right: 0 }),
-            }}
-          >
-            →
-          </span>
-        </>
+          </>
+        )}
+      </Text>
+      {withStatic && (
+        <Icon iconName="arrow_increase" color="var(--earn-protocol-primary-100)" variant="xs" />
       )}
-    </Text>
+    </span>
   )
 }

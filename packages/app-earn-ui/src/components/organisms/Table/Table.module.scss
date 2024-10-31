@@ -48,8 +48,13 @@
     }
 
     td > * {
+      display: flex;
       text-align: right;
       justify-content: flex-end;
+
+      span {
+        text-align: right;
+      }
     }
 
     td:first-child > * {

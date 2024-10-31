@@ -50,9 +50,8 @@ export const HeadingWithCards: FC<HeadingWithSocialAndCardsProps> = ({
       </Text>
       <div className={classNames.cardsWrapper}>
         {cards.map((card) => (
-          <Card key="dasdasdassa" className={classNames.card}>
+          <Card key={card.title} className={classNames.card}>
             <DataBlock
-              key={card.title}
               title={card.title}
               titleSize="medium"
               value={card.value}

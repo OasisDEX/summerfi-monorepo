@@ -30,7 +30,7 @@ interface RebalanceActivityViewProps {
   searchParams?: { [key: string]: string[] }
 }
 
-const initialRows = 6
+const initialRows = 10
 
 export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
   vaultsList,

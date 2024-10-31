@@ -134,7 +134,7 @@ export const rebalancingActivityMapper = (
               as="p"
               variant="p3"
               style={{ color: 'var(--earn-protocol-primary-100)' }}
-              reserveSpace
+              withStatic
             >
               {providerLabel}
             </WithArrow>
