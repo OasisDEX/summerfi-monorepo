@@ -156,9 +156,9 @@ function GenericMultiselectItem({
           className={classNames.checkboxWrapper}
           style={{
             borderColor: isSelected
-              ? 'var(--earn-protocol-success-50)'
+              ? 'var(--earn-protocol-success-100)'
               : 'var(--earn-protocol-neutral-70)',
-            backgroundColor: isSelected ? 'rgba(231, 252, 250, 0.07)' : 'unset',
+            backgroundColor: isSelected ? 'var(--earn-protocol-success-10)' : 'unset',
           }}
         >
           <Icon
@@ -168,7 +168,7 @@ function GenericMultiselectItem({
               opacity: isSelected ? 1 : 0,
             }}
             iconName="checkmark"
-            color="var(--earn-protocol-success-50)"
+            color="var(--earn-protocol-success-100)"
           />
         </div>
       )}

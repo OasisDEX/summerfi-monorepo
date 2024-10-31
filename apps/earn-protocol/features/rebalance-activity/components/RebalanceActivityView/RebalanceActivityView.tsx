@@ -5,29 +5,28 @@ import {
   GenericMultiselect,
   getTwitterShareUrl,
   HeadingWithCards,
-  Table,
   TableCarousel,
-  type TableSortedColumn,
   useCurrentUrl,
   useQueryParams,
 } from '@summerfi/app-earn-ui'
-import { type SDKRebalancesType, type SDKVaultsListType } from '@summerfi/app-types'
+import { type SDKGlobalRebalancesType, type SDKVaultsListType } from '@summerfi/app-types'
 
+import { RebalanceActivityTable } from '@/features/rebalance-activity/components/RebalanceActivityTable/RebalanceActivityTable'
 import {
   getRebalanceActivityHeadingCards,
   rebalanceActivityHeading,
 } from '@/features/rebalance-activity/components/RebalanceActivityView/cards'
 import { rebalanceActivityTableCarouselData } from '@/features/rebalance-activity/components/RebalanceActivityView/carousel'
-import { rebalancingActivityColumns } from '@/features/rebalance-activity/table/columns'
+import { getRebalanceSavedGasCost } from '@/features/rebalance-activity/helpers/get-saved-gas-cost'
+import { getRebalanceSavedTimeInHours } from '@/features/rebalance-activity/helpers/get-saved-time-in-hours'
 import { rebalanceActivityFilter } from '@/features/rebalance-activity/table/filters/filters'
 import { mapMultiselectOptions } from '@/features/rebalance-activity/table/filters/mappers'
-import { rebalancingActivityMapper } from '@/features/rebalance-activity/table/mapper'
 
 import classNames from './RebalanceActivityView.module.scss'
 
 interface RebalanceActivityViewProps {
   vaultsList: SDKVaultsListType
-  rebalancesList: SDKRebalancesType
+  rebalancesList: SDKGlobalRebalancesType
   searchParams?: { [key: string]: string[] }
 }
 
@@ -42,7 +41,6 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
   const [strategyFilter, setStrategyFilter] = useState<string[]>(searchParams?.strategies ?? [])
   const [tokenFilter, setTokenFilter] = useState<string[]>(searchParams?.tokens ?? [])
   const [protocolFilter, setProtocolFilter] = useState<string[]>(searchParams?.protocols ?? [])
-  const [sortConfig, setSortConfig] = useState<TableSortedColumn<string>>()
   const currentUrl = useCurrentUrl()
 
   const [current, setCurrent] = useState(initialRows)
@@ -73,11 +71,6 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
         protocolFilter,
       }),
     [currentlyLoadedList, strategyFilter, tokenFilter, protocolFilter],
-  )
-
-  const rows = useMemo(
-    () => rebalancingActivityMapper(filteredList, sortConfig),
-    [filteredList, sortConfig],
   )
 
   const genericMultiSelectFilters = [
@@ -111,12 +104,8 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
   ]
 
   const totalItems = rebalancesList.length
-
-  // used 3 min as average rebalance action
-  const savedTimeInHours = useMemo(() => (totalItems * 3) / 60, [totalItems])
-
-  // used 0.5$ per each rebalance action
-  const savedGasCost = useMemo(() => totalItems * 0.5, [totalItems])
+  const savedTimeInHours = useMemo(() => getRebalanceSavedTimeInHours(totalItems), [totalItems])
+  const savedGasCost = useMemo(() => getRebalanceSavedGasCost(totalItems), [totalItems])
 
   const cards = useMemo(
     () => getRebalanceActivityHeadingCards({ totalItems, savedGasCost, savedTimeInHours }),
@@ -149,14 +138,12 @@ export const RebalanceActivityView: FC<RebalanceActivityViewProps> = ({
         ))}
       </div>
       <InfiniteScroll loadMore={handleMoreItems} hasMore={totalItems > currentlyLoadedList.length}>
-        <Table
-          rows={rows}
-          columns={rebalancingActivityColumns}
+        <RebalanceActivityTable
+          rebalancesList={filteredList}
           customRow={{
             idx: 3,
             content: <TableCarousel carouselData={rebalanceActivityTableCarouselData} />,
           }}
-          handleSort={(_sortConfig) => setSortConfig(_sortConfig)}
         />
       </InfiniteScroll>
     </div>

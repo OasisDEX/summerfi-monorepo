@@ -1,13 +1,19 @@
 import { Icon, TableCellText, type TableSortedColumn, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { type SDKRebalancesType, type TokenSymbolsList } from '@summerfi/app-types'
+import { type SDKGlobalRebalancesType, type TokenSymbolsList } from '@summerfi/app-types'
 import { formatCryptoBalance, timeAgo } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
 
 import { rebalanceActivitySorter } from '@/features/rebalance-activity/table/sorter'
 
+const arkNameMap: { [key: string]: string } = {
+  BufferArk: 'Buffer',
+  AaveV3: 'Aave V3',
+  CompoundV3: 'Compound V3',
+}
+
 export const rebalancingActivityMapper = (
-  rawData: SDKRebalancesType,
+  rawData: SDKGlobalRebalancesType,
   sortConfig?: TableSortedColumn<string>,
 ) => {
   const sorted = rebalanceActivitySorter({ data: rawData, sortConfig })
@@ -29,6 +35,12 @@ export const rebalancingActivityMapper = (
 
     const amount = new BigNumber(item.amount.toString()).shiftedBy(-item.asset.decimals)
 
+    const actionFromRawName = item.from.name?.split('-')[0] ?? 'n/a'
+    const actionToRawName = item.to.name?.split('-')[0] ?? 'n/a'
+
+    const actionFromLabel = arkNameMap[actionFromRawName] ?? actionFromRawName
+    const actionToLabel = arkNameMap[actionToRawName] ?? actionFromRawName
+
     return {
       content: {
         purpose: (
@@ -47,9 +59,9 @@ export const rebalancingActivityMapper = (
               gap: 'var(--spacing-space-2x-small)',
             }}
           >
-            <TableCellText>{item.from.name?.split('-')[0]}</TableCellText>
+            <TableCellText>{actionFromLabel}</TableCellText>
             <Text style={{ color: 'var(--earn-protocol-secondary-40)', fontSize: '14px' }}>→</Text>
-            <TableCellText>{item.to.name?.split('-')[0]}</TableCellText>
+            <TableCellText>{actionToLabel}</TableCellText>
           </div>
         ),
         amount: (

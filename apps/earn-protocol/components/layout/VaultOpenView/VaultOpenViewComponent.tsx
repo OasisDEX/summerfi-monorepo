@@ -11,7 +11,6 @@ import {
 } from '@summerfi/app-earn-ui'
 import {
   type DropdownOption,
-  type SDKRebalancesType,
   type SDKVaultishType,
   type SDKVaultsListType,
   type TokenSymbolsList,
@@ -44,11 +43,9 @@ enum Action {
 export const VaultOpenViewComponent = ({
   vault,
   vaults,
-  rebalancesList,
 }: {
   vault: SDKVaultishType
   vaults: SDKVaultsListType
-  rebalancesList: SDKRebalancesType
 }) => {
   const {
     amountDisplayValue,
@@ -126,6 +123,9 @@ export const VaultOpenViewComponent = ({
     error: sidebar.error,
   }
 
+  // needed due to type duality
+  const rebalancesList = `rebalances` in vault ? vault.rebalances : []
+
   return (
     <VaultGridPreview
       vault={vault}
@@ -163,7 +163,7 @@ export const VaultOpenViewComponent = ({
             }
             defaultExpanded
           >
-            <RebalancingActivity rebalancesList={rebalancesList} />
+            <RebalancingActivity rebalancesList={rebalancesList} vaultId={vault.id} />
           </Expander>
           <Expander
             title={

@@ -65,39 +65,32 @@ query GetVault($id: ID!) {
       }
     }
     rewardTokenEmissionsUSD
-    rebalances {
+    rebalances(orderBy: timestamp, orderDirection: desc) {
+      id
       amount
+      amountUSD
+      asset {
+        symbol
+        decimals
+      }
+      from {
+        name
+      }
+      to {
+        name
+      }
+      protocol {
+        name
+        network
+      }
+      timestamp
       vault {
         id
         name
-        protocol {
-          id
-          name
-          network
-          type
-        }
-      }
-      from {
-        id
-        name
         inputToken {
           symbol
-          decimals
         }
       }
-      to {
-        id
-        name
-        inputToken {
-          symbol
-          decimals
-        }
-      }
-      asset {
-        name
-        symbol
-      }
-      timestamp
     }
     arks {
       id
