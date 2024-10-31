@@ -110,7 +110,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 value={parsedApr}
                 subValue="+2.1% Median DeFi Yield"
                 subValueType="positive"
-                subValueSize="small"
+                subValueSize="medium"
               />
             </Box>
             <Box>
@@ -121,7 +121,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 value="value"
                 subValue="+1.7% Median DeFi Yield"
                 subValueType="positive"
-                subValueSize="small"
+                subValueSize="medium"
               />
             </Box>
             <Box
@@ -136,7 +136,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 value={parsedTotalValueLockedUSD}
                 // TODO: fill data
                 subValue={`231,232,321.01 ${vault.inputToken.symbol}`}
-                subValueSize="small"
+                subValueSize="medium"
               />
             </Box>
           </SimpleGrid>

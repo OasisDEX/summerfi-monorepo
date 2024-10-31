@@ -105,7 +105,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 // TODO: fill data
                 subValue="subvalue"
                 subValueType="neutral"
-                subValueSize="small"
+                subValueSize="medium"
               />
             </Box>
             <Box>
@@ -116,7 +116,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 value={`$${formatCryptoBalance(position.amount.amount)}`}
                 // TODO: fill data
                 subValue="deposits number"
-                subValueSize="small"
+                subValueSize="medium"
               />
             </Box>
             <Box>
@@ -129,7 +129,7 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 // TODO: confirm data
                 subValue={`Current APY: ${parsedApr}`}
                 subValueType="neutral"
-                subValueSize="small"
+                subValueSize="medium"
               />
             </Box>
           </SimpleGrid>

@@ -69,7 +69,7 @@ export const PortfolioAssets: FC<PortfolioAssetsProps> = ({ walletData }) => {
           subValue={`${formatDecimalAsPercent(totalAssetsAmountChange, { plus: true })} Past week`}
           titleSize="large"
           valueSize="large"
-          subValueSize="small"
+          subValueSize="medium"
           subValueStyle={{ color: valueColorResolver(new BigNumber(totalAssetsAmountChange)) }}
         />
         <PillSelector

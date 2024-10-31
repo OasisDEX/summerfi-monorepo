@@ -6,6 +6,7 @@ import { Card } from '@/components/atoms/Card/Card.tsx'
 import { Icon } from '@/components/atoms/Icon/Icon.tsx'
 import { Text } from '@/components/atoms/Text/Text.tsx'
 import { CopyToClipboard } from '@/components/molecules/CopyToClipboard/CopyToClipboard.tsx'
+import { DataBlock } from '@/components/molecules/DataBlock/DataBlock.tsx'
 
 import classNames from './HeadingWithCards.module.scss'
 
@@ -49,16 +50,16 @@ export const HeadingWithCards: FC<HeadingWithSocialAndCardsProps> = ({
       </Text>
       <div className={classNames.cardsWrapper}>
         {cards.map((card) => (
-          <Card key={card.title} className={classNames.card}>
-            <Text as="p" variant="p2semi" className={classNames.cardTitle}>
-              {card.title}
-            </Text>
-            <Text as="h4" variant="h4colorful">
-              {card.value}
-            </Text>
-            <Text as="p" variant="p4semi" className={classNames.cardDescription}>
-              {card.description}
-            </Text>
+          <Card key="dasdasdassa" className={classNames.card}>
+            <DataBlock
+              key={card.title}
+              title={card.title}
+              titleSize="medium"
+              value={card.value}
+              valueSize="largeColorful"
+              subValue={card.description}
+              subValueSize="small"
+            />
           </Card>
         ))}
       </div>
