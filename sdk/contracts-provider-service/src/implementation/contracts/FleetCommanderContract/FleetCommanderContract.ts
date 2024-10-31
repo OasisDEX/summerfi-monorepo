@@ -1,9 +1,11 @@
 import { IBlockchainClient } from '@summerfi/blockchain-client-common'
 import {
-  FleetCommander,
+  FleetCommanderTypes,
   IErc20Contract,
   IErc4626Contract,
   IFleetCommanderContract,
+  type IFleetConfig,
+  type IRebalanceData,
 } from '@summerfi/contracts-provider-common'
 import {
   Address,
@@ -19,7 +21,6 @@ import {
 import { ContractWrapper } from '../ContractWrapper'
 
 import { FleetCommanderAbi } from '@summerfi/armada-protocol-abis'
-import { IRebalanceData } from '@summerfi/armada-protocol-common'
 import { Erc4626Contract } from '../Erc4626Contract/Erc4626Contract'
 
 /**
@@ -82,14 +83,14 @@ export class FleetCommanderContract<
   }
 
   /** @see IFleetCommanderContract.config */
-  async config(): Promise<{
-    bufferArk: IAddress
-    minimumBufferBalance: ITokenAmount
-    depositCap: ITokenAmount
-    maxRebalanceOperations: string
-  }> {
-    const [bufferArkAddress, minimumBufferBalance, depositCap, maxRebalanceOperations] =
-      await this.contract.read.config()
+  async config(): Promise<IFleetConfig> {
+    const [
+      bufferArkAddress,
+      minimumBufferBalance,
+      depositCap,
+      maxRebalanceOperations,
+      stakingRewardsManagerAddress,
+    ] = await this.contract.read.config()
     const token = await this._erc4626Contract.asset()
     return {
       bufferArk: Address.createFromEthereum({ value: bufferArkAddress }),
@@ -99,6 +100,9 @@ export class FleetCommanderContract<
       }),
       depositCap: TokenAmount.createFromBaseUnit({ token, amount: String(depositCap) }),
       maxRebalanceOperations: String(maxRebalanceOperations),
+      stakingRewardsManager: Address.createFromEthereum({
+        value: stakingRewardsManagerAddress,
+      }),
     }
   }
 
@@ -360,7 +364,7 @@ export class FleetCommanderContract<
   /** PRIVATE */
   private _convertRebalanceDataToSolidity(params: {
     rebalanceData: IRebalanceData[]
-  }): FleetCommander.RebalanceDataSolidity[] {
+  }): FleetCommanderTypes.RebalanceDataSolidity[] {
     return params.rebalanceData.map((data) => ({
       fromArk: data.fromArk.toSolidityValue(),
       toArk: data.toArk.toSolidityValue(),

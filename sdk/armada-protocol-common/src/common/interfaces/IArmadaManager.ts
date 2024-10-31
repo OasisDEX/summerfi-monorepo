@@ -5,12 +5,8 @@ import { IArmadaVaultId } from './IArmadaVaultId'
 import { IArmadaPoolInfo } from './IArmadaPoolInfo'
 import { IArmadaPosition } from './IArmadaPosition'
 import { IArmadaPositionId } from './IArmadaPositionId'
-import { IRebalanceData } from './IRebalanceData'
-import type {
-  GetVaultQuery,
-  GetVaultsQuery,
-  GetGlobalRebalancesQuery,
-} from '@summerfi/subgraph-manager-common'
+import type { GetVaultQuery, GetVaultsQuery } from '@summerfi/subgraph-manager-common'
+import type { IRebalanceData } from '@summerfi/contracts-provider-common'
 
 /**
  * @name IArmadaManager

@@ -1,0 +1,1 @@
+export const MarketMathCoreAbi = [] as const

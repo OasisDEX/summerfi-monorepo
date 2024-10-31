@@ -1,0 +1,521 @@
+[
+  {
+    "type": "function",
+    "name": "board",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "rewardToken",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "data",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "buyTokens",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "rewardToken",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "paymentAmount",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "finalizeAuction",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "rewardToken",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "getAuctionInfo",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "rewardToken",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "tuple",
+        "internalType": "struct DutchAuctionLibrary.Auction",
+        "components": [
+          {
+            "name": "config",
+            "type": "tuple",
+            "internalType": "struct DutchAuctionLibrary.AuctionConfig",
+            "components": [
+              {
+                "name": "auctionToken",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "paymentToken",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "startTime",
+                "type": "uint40",
+                "internalType": "uint40"
+              },
+              {
+                "name": "endTime",
+                "type": "uint40",
+                "internalType": "uint40"
+              },
+              {
+                "name": "auctionTokenDecimals",
+                "type": "uint8",
+                "internalType": "uint8"
+              },
+              {
+                "name": "paymentTokenDecimals",
+                "type": "uint8",
+                "internalType": "uint8"
+              },
+              {
+                "name": "auctionKicker",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "unsoldTokensRecipient",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "id",
+                "type": "uint40",
+                "internalType": "uint40"
+              },
+              {
+                "name": "decayType",
+                "type": "uint8",
+                "internalType": "enum DecayFunctions.DecayType"
+              },
+              {
+                "name": "startPrice",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "endPrice",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "totalTokens",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "kickerRewardAmount",
+                "type": "uint256",
+                "internalType": "uint256"
+              }
+            ]
+          },
+          {
+            "name": "state",
+            "type": "tuple",
+            "internalType": "struct DutchAuctionLibrary.AuctionState",
+            "components": [
+              {
+                "name": "remainingTokens",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "isFinalized",
+                "type": "bool",
+                "internalType": "bool"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getCurrentPrice",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "rewardToken",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getObtainedTokens",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "rewardToken",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "harvest",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "rewardData",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "harvestAndStartAuction",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "paymentToken",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "rewardData",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "startAuction",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "rewardToken",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "paymentToken",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "sweep",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "tokens",
+        "type": "address[]",
+        "internalType": "address[]"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "sweptTokens",
+        "type": "address[]",
+        "internalType": "address[]"
+      },
+      {
+        "name": "sweptAmounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "sweepAndStartAuction",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "tokens",
+        "type": "address[]",
+        "internalType": "address[]"
+      },
+      {
+        "name": "paymentToken",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "updateAuctionDefaultParameters",
+    "inputs": [
+      {
+        "name": "newConfig",
+        "type": "tuple",
+        "internalType": "struct AuctionDefaultParameters",
+        "components": [
+          {
+            "name": "duration",
+            "type": "uint40",
+            "internalType": "uint40"
+          },
+          {
+            "name": "startPrice",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "endPrice",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "kickerRewardPercentage",
+            "type": "uint256",
+            "internalType": "Percentage"
+          },
+          {
+            "name": "decayType",
+            "type": "uint8",
+            "internalType": "enum DecayFunctions.DecayType"
+          }
+        ]
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "event",
+    "name": "ArkHarvested",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "rewardTokens",
+        "type": "address[]",
+        "indexed": true,
+        "internalType": "address[]"
+      },
+      {
+        "name": "rewardAmounts",
+        "type": "uint256[]",
+        "indexed": true,
+        "internalType": "uint256[]"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "ArkRewardTokenAuctionStarted",
+    "inputs": [
+      {
+        "name": "auctionId",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "ark",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      },
+      {
+        "name": "rewardToken",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RewardBoarded",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "fromRewardToken",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "toFleetToken",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "amountReboarded",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "RaftArkDoesntRequireKeeperData",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "RaftArkRequiresKeeperData",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "RaftAuctionAlreadyRunning",
+    "inputs": [
+      {
+        "name": "ark",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "rewardToken",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  }
+]

@@ -1,0 +1,59 @@
+[
+  {
+    "type": "function",
+    "name": "limitRouterCallback",
+    "inputs": [
+      {
+        "name": "actualMaking",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "actualTaking",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "totalFee",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "data",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "swapCallback",
+    "inputs": [
+      {
+        "name": "ptToAccount",
+        "type": "int256",
+        "internalType": "int256"
+      },
+      {
+        "name": "syToAccount",
+        "type": "int256",
+        "internalType": "int256"
+      },
+      {
+        "name": "data",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  }
+]

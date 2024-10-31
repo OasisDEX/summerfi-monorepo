@@ -1,0 +1,1 @@
+export const IBuyAndBurnErrorsAbi = [{"type":"error","name":"BuyAndBurnAuctionAlreadyRunning","inputs":[{"name":"tokenToAuction","type":"address","internalType":"address"}]}] as const

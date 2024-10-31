@@ -2085,6 +2085,9 @@ importers:
 
   sdk/armada-protocol-common:
     dependencies:
+      '@summerfi/contracts-provider-common':
+        specifier: workspace:*
+        version: link:../contracts-provider-common
       '@summerfi/sdk-common':
         specifier: workspace:*
         version: link:../sdk-common
@@ -2253,9 +2256,6 @@ importers:
       '@summerfi/abi-provider-common':
         specifier: workspace:*
         version: link:../abi-provider-common
-      '@summerfi/armada-protocol-common':
-        specifier: workspace:*
-        version: link:../armada-protocol-common
       '@summerfi/blockchain-client-common':
         specifier: workspace:*
         version: link:../blockchain-client-common

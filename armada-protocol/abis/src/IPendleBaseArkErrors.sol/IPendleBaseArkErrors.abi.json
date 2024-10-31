@@ -1,0 +1,54 @@
+[
+  {
+    "type": "error",
+    "name": "InvalidAssetForSY",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidNextMarket",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MarketExpired",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "OracleDurationTooLow",
+    "inputs": [
+      {
+        "name": "providedDuration",
+        "type": "uint32",
+        "internalType": "uint32"
+      },
+      {
+        "name": "minimumDuration",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "OracleNotReady",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "SlippagePercentageTooHigh",
+    "inputs": [
+      {
+        "name": "providedSlippage",
+        "type": "uint256",
+        "internalType": "Percentage"
+      },
+      {
+        "name": "maxSlippage",
+        "type": "uint256",
+        "internalType": "Percentage"
+      }
+    ]
+  }
+]

@@ -1,0 +1,93 @@
+[
+  {
+    "type": "event",
+    "name": "DepositCapUpdated",
+    "inputs": [
+      {
+        "name": "newCap",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "FleetCommanderRegistered",
+    "inputs": [
+      {
+        "name": "commander",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "FleetCommanderUnregistered",
+    "inputs": [
+      {
+        "name": "commander",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "MaxDepositPercentageOfTVLUpdated",
+    "inputs": [
+      {
+        "name": "newMaxDepositPercentageOfTVL",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "Percentage"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "MaxRebalanceInflowUpdated",
+    "inputs": [
+      {
+        "name": "newMaxInflow",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "MaxRebalanceOutflowUpdated",
+    "inputs": [
+      {
+        "name": "newMaxOutflow",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RaftUpdated",
+    "inputs": [
+      {
+        "name": "newRaft",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  }
+]

@@ -1,11 +1,7 @@
-import {
-  isArmadaVaultId,
-  isRebalanceData,
-  type IArmadaVaultId,
-  type IRebalanceData,
-} from '@summerfi/armada-protocol-common'
+import { isArmadaVaultId, type IArmadaVaultId } from '@summerfi/armada-protocol-common'
 import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
+import { isRebalanceData, type IRebalanceData } from '@summerfi/contracts-provider-common'
 
 export const rebalance = publicProcedure
   .input(

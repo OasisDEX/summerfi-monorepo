@@ -1,0 +1,9 @@
+[
+  {
+    "type": "function",
+    "name": "testSkipper",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  }
+]

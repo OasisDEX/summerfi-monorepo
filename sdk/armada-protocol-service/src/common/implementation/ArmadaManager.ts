@@ -5,10 +5,9 @@ import {
   IArmadaPoolInfo,
   IArmadaPosition,
   IArmadaPositionId,
-  IRebalanceData,
 } from '@summerfi/armada-protocol-common'
 import { IConfigurationProvider } from '@summerfi/configuration-provider-common'
-import { IContractsProvider } from '@summerfi/contracts-provider-common'
+import { IContractsProvider, type IRebalanceData } from '@summerfi/contracts-provider-common'
 import { IAddress, IPercentage, ITokenAmount, IUser, TransactionInfo } from '@summerfi/sdk-common'
 import { IArmadaSubgraphManager } from '@summerfi/subgraph-manager-common'
 import { ArmadaPool } from './ArmadaPool'

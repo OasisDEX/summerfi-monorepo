@@ -1,8 +1,8 @@
-import { IRebalanceData } from '@summerfi/armada-protocol-common'
 import { IAddress, IPercentage, ITokenAmount, TransactionInfo } from '@summerfi/sdk-common'
 import { IContractWrapper } from './IContractWrapper'
 import { IErc20Contract } from './IErc20Contract'
 import { IErc4626Contract } from './IErc4626Contract'
+import type { IFleetConfig, IRebalanceData } from '../types'
 
 /**
  * @name IFleetCommanderContract
@@ -21,12 +21,7 @@ export interface IFleetCommanderContract extends IContractWrapper {
    * @name config
    * @description Returns the configuration of the fleet
    */
-  config(): Promise<{
-    bufferArk: IAddress
-    minimumBufferBalance: ITokenAmount
-    depositCap: ITokenAmount
-    maxRebalanceOperations: string
-  }>
+  config(): Promise<IFleetConfig>
 
   /**
    * @name maxDeposit

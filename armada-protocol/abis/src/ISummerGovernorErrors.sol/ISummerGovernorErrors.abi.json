@@ -1,0 +1,119 @@
+[
+  {
+    "type": "error",
+    "name": "SummerGovernorInvalidChain",
+    "inputs": [
+      {
+        "name": "chainId",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "proposalChainId",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "SummerGovernorInvalidProposalThreshold",
+    "inputs": [
+      {
+        "name": "proposalThreshold",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "minThreshold",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "maxThreshold",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "SummerGovernorInvalidSender",
+    "inputs": [
+      {
+        "name": "originSender",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "SummerGovernorInvalidTrustedRemote",
+    "inputs": [
+      {
+        "name": "trustedRemote",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "SummerGovernorInvalidWhitelistGuardian",
+    "inputs": [
+      {
+        "name": "whitelistGuardian",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "SummerGovernorProposerBelowThresholdAndNotWhitelisted",
+    "inputs": [
+      {
+        "name": "proposer",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "votes",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "threshold",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "SummerGovernorUnauthorizedCancellation",
+    "inputs": [
+      {
+        "name": "caller",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "proposer",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "votes",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "threshold",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  }
+]

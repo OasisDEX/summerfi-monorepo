@@ -18,7 +18,6 @@
   },
   "dependencies": {
     "@summerfi/sdk-common": "workspace:*",
-    "@summerfi/armada-protocol-common": "workspace:*",
     "@summerfi/blockchain-client-common": "workspace:*",
     "@summerfi/abi-provider-common": "workspace:*"
   },
