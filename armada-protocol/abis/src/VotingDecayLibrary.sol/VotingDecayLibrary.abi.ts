@@ -1,0 +1,1 @@
+export const VotingDecayLibraryAbi = [{"type":"function","name":"WAD","inputs":[],"outputs":[{"name":"","type":"uint256","internalType":"uint256"}],"stateMutability":"view"},{"type":"error","name":"InvalidDecayType","inputs":[]}] as const

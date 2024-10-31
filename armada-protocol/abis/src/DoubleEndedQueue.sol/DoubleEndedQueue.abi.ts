@@ -1,0 +1,1 @@
+export const DoubleEndedQueueAbi = [] as const

@@ -1,0 +1,75 @@
+[
+  {
+    "type": "error",
+    "name": "AuctionAlreadyFinalized",
+    "inputs": [
+      {
+        "name": "auctionId",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "AuctionNotActive",
+    "inputs": [
+      {
+        "name": "auctionId",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "AuctionNotEnded",
+    "inputs": [
+      {
+        "name": "auctionId",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "AuctionNotFound",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InsufficientTokensAvailable",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidAuctionToken",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidDuration",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidKickerRewardPercentage",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidPaymentToken",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidPrices",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidTokenAmount",
+    "inputs": []
+  }
+]

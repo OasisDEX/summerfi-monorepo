@@ -1,1 +1,1 @@
-export const DecayFunctionsAbi = [] as const
+export const DecayFunctionsAbi = [{"type":"error","name":"InvalidDecayType","inputs":[]}] as const

@@ -6648,7 +6648,7 @@ export type GetVaultQuery = { __typename?: 'Query', vault?: { __typename?: 'Vaul
 
 export const GetUserPositionsDocument = gql`
     query GetUserPositions($accountAddress: String!) {
-  positions(where: {account: $accountAddress}) {
+  positions(where: {account_contains_nocase: $accountAddress}) {
     id
     inputTokenBalance
     outputTokenBalance
@@ -6678,7 +6678,7 @@ export const GetUserPositionsDocument = gql`
     `;
 export const GetUserPositionDocument = gql`
     query GetUserPosition($accountAddress: String!, $vaultId: String!) {
-  positions(where: {account: $accountAddress, vault: $vaultId}) {
+  positions(where: {account_contains_nocase: $accountAddress, vault: $vaultId}) {
     id
     inputTokenBalance
     outputTokenBalance

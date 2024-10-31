@@ -1,0 +1,37 @@
+[
+  {
+    "type": "error",
+    "name": "AddressZero",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "ConfigurationManagerAlreadyInitialized",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "HarborCommandNotSet",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "RaftNotSet",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "TipJarNotSet",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "TreasuryNotSet",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "ZeroAddress",
+    "inputs": []
+  }
+]

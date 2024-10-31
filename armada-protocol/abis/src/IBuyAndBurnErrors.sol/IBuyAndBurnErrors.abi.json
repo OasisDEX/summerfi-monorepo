@@ -1,0 +1,13 @@
+[
+  {
+    "type": "error",
+    "name": "BuyAndBurnAuctionAlreadyRunning",
+    "inputs": [
+      {
+        "name": "tokenToAuction",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  }
+]

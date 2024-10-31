@@ -1,0 +1,1 @@
+export const TimeAbi = [] as const
