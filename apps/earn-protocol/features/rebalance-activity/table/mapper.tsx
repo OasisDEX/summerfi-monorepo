@@ -18,7 +18,7 @@ export const arkNameMap: { [key: string]: string } = {
   PendlePt: 'Pendle',
 }
 
-const providerMap = {
+const providerMap: { [key: string]: string } = {
   'Summer Earn Protocol': 'Summer.fi',
 }
 
