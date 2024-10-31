@@ -1,12 +1,12 @@
 import { type TableSortedColumn } from '@summerfi/app-earn-ui'
-import { type SDKRebalancesType } from '@summerfi/app-types'
+import { type SDKGlobalRebalancesType } from '@summerfi/app-types'
 import { simpleSort, SortDirection } from '@summerfi/app-utils'
 
 export const rebalanceActivitySorter = ({
   data,
   sortConfig,
 }: {
-  data: SDKRebalancesType
+  data: SDKGlobalRebalancesType
   sortConfig?: TableSortedColumn<string>
 }) => {
   switch (sortConfig?.key) {

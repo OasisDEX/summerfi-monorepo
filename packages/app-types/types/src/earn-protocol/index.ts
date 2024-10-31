@@ -2,7 +2,7 @@ import {
   Network,
   GetVaultsQuery,
   GetVaultQuery,
-  GetRebalancesQuery,
+  GetGlobalRebalancesQuery,
 } from '@summerfi/subgraph-manager-common'
 import { ChainId } from '@summerfi/serverless-shared'
 import { type TransactionInfo } from '@summerfi/sdk-common'
@@ -12,7 +12,8 @@ export { ChainId as SDKChainId }
 
 export type SDKVaultsListType = GetVaultsQuery['vaults']
 export type SDKVaultType = Exclude<GetVaultQuery['vault'], null | undefined>
-export type SDKRebalancesType = GetRebalancesQuery['rebalances']
+export type SDKGlobalRebalancesType = GetGlobalRebalancesQuery['rebalances']
+export type SDKGlobalRebalanceType = SDKGlobalRebalancesType[0]
 
 // -ish because it can be a detailed vault or a vault from list (less details), use with that in mind
 export type SDKVaultishType = SDKVaultType | SDKVaultsListType[number]

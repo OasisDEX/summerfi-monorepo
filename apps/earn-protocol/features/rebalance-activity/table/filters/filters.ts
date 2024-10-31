@@ -1,4 +1,4 @@
-import type { SDKRebalancesType } from '@summerfi/app-types'
+import type { SDKGlobalRebalancesType, SDKGlobalRebalanceType } from '@summerfi/app-types'
 
 const rebalanceFilterProtocols = (
   // eslint-disable-next-line no-empty-pattern
@@ -7,7 +7,7 @@ const rebalanceFilterProtocols = (
     // rebalance,
   }: {
     protocolFilter: string[]
-    rebalance: SDKRebalancesType[0]
+    rebalance: SDKGlobalRebalanceType
   },
 ) => true
 
@@ -16,7 +16,7 @@ const rebalanceFilterStrategies = ({
   rebalance,
 }: {
   strategyFilter: string[]
-  rebalance: SDKRebalancesType[0]
+  rebalance: SDKGlobalRebalanceType
 }) => !strategyFilter.length || strategyFilter.includes(rebalance.vault.id)
 
 const rebalanceFilterTokens = ({
@@ -24,7 +24,7 @@ const rebalanceFilterTokens = ({
   rebalance,
 }: {
   tokenFilter: string[]
-  rebalance: SDKRebalancesType[0]
+  rebalance: SDKGlobalRebalanceType
 }) => !tokenFilter.length || tokenFilter.includes(rebalance.vault.inputToken.symbol)
 
 export const rebalanceActivityFilter = ({
@@ -33,7 +33,7 @@ export const rebalanceActivityFilter = ({
   strategyFilter,
   tokenFilter,
 }: {
-  rebalancesList: SDKRebalancesType
+  rebalancesList: SDKGlobalRebalancesType
   protocolFilter: string[]
   strategyFilter: string[]
   tokenFilter: string[]

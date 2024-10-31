@@ -1,7 +1,7 @@
 import { Text } from '@summerfi/app-earn-ui'
 import { type SDKNetwork } from '@summerfi/app-types'
 
-import { getRebalances } from '@/app/server-handlers/sdk/get-rebalances'
+import { getGlobalRebalances } from '@/app/server-handlers/sdk/get-global-rebalances'
 import { getUserPosition } from '@/app/server-handlers/sdk/get-user-position'
 import { getVaultDetails } from '@/app/server-handlers/sdk/get-vault-details'
 import { getVaultsList } from '@/app/server-handlers/sdk/get-vaults-list'
@@ -23,7 +23,7 @@ const EarnVaultOpenManagePage = async ({ params }: EarnVaultOpenManagePageProps)
       network: params.network,
     }),
     getVaultsList(),
-    getRebalances(),
+    getGlobalRebalances(),
     getUserPosition(),
   ])
 

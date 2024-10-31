@@ -9,7 +9,7 @@ import { IRebalanceData } from './IRebalanceData'
 import type {
   GetVaultQuery,
   GetVaultsQuery,
-  GetRebalancesQuery,
+  GetGlobalRebalancesQuery,
 } from '@summerfi/subgraph-manager-common'
 
 /**
@@ -40,14 +40,14 @@ export interface IArmadaManager {
   getVaultRaw(params: { poolId: IArmadaVaultId }): Promise<GetVaultQuery>
 
   /**
-   * @name getRebalancesRaw
+   * @name getGlobalRebalancesRaw
    * @description Get all rebalances per given chain
    *
    * @param chainInfo Chain information
    *
    * @returns GerRebalancesQuery
    */
-  getRebalancesRaw(params: { chainInfo: ChainInfo }): Promise<GetRebalancesQuery>
+  getGlobalRebalancesRaw(params: { chainInfo: ChainInfo }): Promise<GetGlobalRebalancesQuery>
 
   /**
    * @name getPoolInfo

@@ -2,12 +2,12 @@ import { z } from 'zod'
 import { publicProcedure } from '../../SDKTRPC'
 import { ChainInfo, isChainInfo } from '@summerfi/sdk-common'
 
-export const getRebalancesRaw = publicProcedure
+export const getGlobalRebalancesRaw = publicProcedure
   .input(
     z.object({
       chainInfo: z.custom<ChainInfo>(isChainInfo),
     }),
   )
   .query(async (opts) => {
-    return opts.ctx.armadaManager.getRebalancesRaw(opts.input)
+    return opts.ctx.armadaManager.getGlobalRebalancesRaw(opts.input)
   })

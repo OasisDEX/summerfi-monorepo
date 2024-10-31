@@ -1,4 +1,4 @@
-query GetRebalances {
+query GetGlobalRebalances {
   rebalances(orderBy: timestamp, orderDirection: desc) {
     id
     amount
