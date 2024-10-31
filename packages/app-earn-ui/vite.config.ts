@@ -83,6 +83,7 @@ export default defineConfig(({ mode }) => {
         external: [
           '@loadable/component',
           '@summerfi/app-icons',
+          '@summerfi/armada-protocol-common',
           '@tabler/icons-react',
           'bignumber.js',
           'clsx',

@@ -803,6 +803,9 @@ importers:
       '@summerfi/app-utils':
         specifier: workspace:*
         version: link:../app-utils
+      '@summerfi/armada-protocol-common':
+        specifier: workspace:*
+        version: link:../../sdk/armada-protocol-common
       '@summerfi/serverless-shared':
         specifier: workspace:*
         version: link:../serverless-shared
@@ -864,9 +867,6 @@ importers:
       '@summerfi/app-types':
         specifier: workspace:*
         version: link:../app-types
-      '@summerfi/armada-protocol-common':
-        specifier: workspace:*
-        version: link:../../sdk/armada-protocol-common
       '@summerfi/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
