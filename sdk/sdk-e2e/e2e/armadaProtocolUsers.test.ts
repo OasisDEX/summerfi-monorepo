@@ -135,27 +135,33 @@ describe('Armada Protocol Users', () => {
       })
     })
 
-    describe(`Positions on ${chainInfo.name}`, () => {
+    describe(`Positions on ${chainInfo.name} for user ${userAddress.value}`, () => {
       const user = User.createFrom({
         chainInfo,
         wallet: Wallet.createFrom({
           address: userAddress,
         }),
       })
-      it('should getUserPositions', async () => {
-        const positions = await sdk.armada.users.getUserPositions({
-          user,
+
+      describe(`getUserPositions`, () => {
+        it(`should get first position with id: ${userAddress.value}-${fleetAddress.value}`, async () => {
+          const positions = await sdk.armada.users.getUserPositions({
+            user,
+          })
+          positions[0].id
+          expect(positions).toHaveLength(1)
+          expect(positions[0].id.id).toEqual(`${userAddress.value}-${fleetAddress.value}`)
         })
-        expect(positions).toHaveLength(1)
-        expect(positions[0].id.id).toEqual(`${userAddress.value}-${fleetAddress.value}`)
       })
 
-      it('should getUserPosition', async () => {
-        const position = await sdk.armada.users.getUserPosition({
-          user,
-          fleetAddress,
+      describe(`getUserPosition`, () => {
+        it(`should get user position with id: ${userAddress.value}-${fleetAddress.value}`, async () => {
+          const position = await sdk.armada.users.getUserPosition({
+            user,
+            fleetAddress,
+          })
+          expect(position.id.id).toEqual(`${userAddress.value}-${fleetAddress.value}`)
         })
-        expect(position.id.id).toEqual(`${userAddress.value}-${fleetAddress.value}`)
       })
     })
 
