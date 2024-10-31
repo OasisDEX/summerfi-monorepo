@@ -1,4 +1,5 @@
 import { type FC, type ReactNode } from 'react'
+import { capitalize } from 'lodash-es'
 import Link from 'next/link'
 
 import { AnimateHeight } from '@/components/atoms/AnimateHeight/AnimateHeight'
@@ -10,8 +11,10 @@ import { LoadingSpinner } from '@/components/molecules/Loader/Loader'
 
 import sidebarClassNames from '@/components/organisms/Sidebar/Sidebar.module.scss'
 
-interface SidebarProps {
+export interface SidebarProps {
   title: string
+  titleTabs?: string[]
+  onTitleTabChange?: (tab: string) => void
   content: ReactNode
   primaryButton: {
     label: string
@@ -24,15 +27,44 @@ interface SidebarProps {
   error?: string | ReactNode
 }
 
-export const Sidebar: FC<SidebarProps> = ({ title, content, primaryButton, footnote, error }) => {
+export const Sidebar: FC<SidebarProps> = ({
+  title,
+  titleTabs,
+  content,
+  primaryButton,
+  footnote,
+  error,
+  onTitleTabChange,
+}) => {
   const labelElement = primaryButton.loading ? <LoadingSpinner size={28} /> : primaryButton.label
 
   return (
     <Card className={sidebarClassNames.sidebarWrapper} variant="cardPrimary">
       <div className={sidebarClassNames.sidebarHeaderWrapper}>
-        <Text as="h5" variant="h5" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
-          {title}
-        </Text>
+        {titleTabs && titleTabs.length > 0 ? (
+          titleTabs.map((tab) => (
+            <Text
+              onClick={() => onTitleTabChange?.(tab)}
+              key={`TitleTab_${tab}`}
+              as="h5"
+              variant="h5"
+              style={{
+                marginRight: 'var(--general-space-20)',
+                cursor: onTitleTabChange ? 'pointer' : 'default',
+                color:
+                  title === capitalize(tab)
+                    ? 'var(--earn-protocol-secondary-100)'
+                    : 'var(--color-text-primary-disabled)',
+              }}
+            >
+              {capitalize(tab)}
+            </Text>
+          ))
+        ) : (
+          <Text as="h5" variant="h5" style={{ color: 'var(--earn-protocol-secondary-100)' }}>
+            {title}
+          </Text>
+        )}
       </div>
 
       <div className={sidebarClassNames.sidebarHeaderSpacer} />

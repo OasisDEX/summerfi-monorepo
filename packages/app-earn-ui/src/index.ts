@@ -69,7 +69,7 @@ export {
 export { CopyToClipboard } from './components/molecules/CopyToClipboard/CopyToClipboard'
 
 export { TermsOfService } from './components/organisms/TermsOfService/TermsOfService'
-export { Sidebar } from './components/organisms/Sidebar/Sidebar'
+export { Sidebar, type SidebarProps } from './components/organisms/Sidebar/Sidebar'
 export { Table, type TableSortedColumn } from './components/organisms/Table/Table'
 export { VaultSimulationForm } from './components/organisms/VaultSimulationForm/VaultSimulationForm'
 

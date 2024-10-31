@@ -6,6 +6,7 @@ import {
   Sidebar,
   SidebarFootnote,
   sidebarFootnote,
+  type SidebarProps,
   Text,
   VaultManageGrid,
 } from '@summerfi/app-earn-ui'
@@ -26,14 +27,10 @@ import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
 import { RebalancingActivity } from '@/components/organisms/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/components/organisms/UserActivity/UserActivity'
 import { VaultExposure } from '@/components/organisms/VaultExposure/VaultExposure'
+import { TransactionAction } from '@/constants/transaction-actions'
 import { useTransaction } from '@/hooks/use-transaction'
 
 import vaultManageViewStyles from './VaultManageView.module.scss'
-
-enum Action {
-  DEPOSIT = 'deposit',
-  WITHDRAW = 'withdraw',
-}
 
 export const VaultManageViewComponent = ({
   vault,
@@ -56,6 +53,8 @@ export const VaultManageViewComponent = ({
     vaultChainId,
     reset,
     user,
+    setTransactionType,
+    transactionType,
   } = useTransaction({ vault })
 
   const options: DropdownOption[] = [
@@ -71,8 +70,12 @@ export const VaultManageViewComponent = ({
 
   const balance = new BigNumber(123123)
 
-  const sidebarProps = {
-    title: capitalize(Action.DEPOSIT),
+  const sidebarProps: SidebarProps = {
+    title: capitalize(transactionType),
+    titleTabs: [TransactionAction.DEPOSIT, TransactionAction.WITHDRAW],
+    onTitleTabChange: (action) => {
+      setTransactionType(action as TransactionAction)
+    },
     content: (
       <>
         <InputWithDropdown

@@ -1,6 +1,6 @@
 'use client'
 
-import { type ChangeEvent, useCallback, useMemo, useState } from 'react'
+import { type ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { useAuthModal, useChain, useUser } from '@account-kit/react'
 import {
   type EarnTransactionTypes,
@@ -12,9 +12,11 @@ import { mapNumericInput } from '@summerfi/app-utils'
 import { Address, ChainInfo, type TransactionInfo } from '@summerfi/sdk-client-react'
 import BigNumber from 'bignumber.js'
 import { capitalize } from 'lodash-es'
-import { createWalletClient, custom } from 'viem'
+import { useRouter } from 'next/navigation'
+import { createPublicClient, createWalletClient, custom } from 'viem'
 
 import { SDKChainIdToAAChainMap } from '@/account-kit/config'
+import { TransactionAction } from '@/constants/transaction-actions'
 import { subgraphNetworkToSDKId } from '@/helpers/network-helpers'
 import { useAppSDK } from '@/hooks/use-app-sdk'
 
@@ -27,13 +29,17 @@ const labelTransactions = (transactions: TransactionInfo[]) => {
 }
 
 export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
+  const [transactionType, setTransactionType] = useState<TransactionAction>(
+    TransactionAction.DEPOSIT,
+  )
+  const { refresh: refreshView } = useRouter()
   const [txHashes, setTxHashes] = useState<{ type: EarnTransactionTypes; hash: string }[]>([])
   const [txSteps, setTxSteps] = useState<number>()
   const [txStatus, setTxStatus] = useState<EarnTransactionViewStates>('idle')
   const [transactions, setTransactions] = useState<TransactionInfoLabeled[]>()
   const [amount, setAmount] = useState<BigNumber>()
   const [error, setError] = useState<string>()
-  const { getDepositTX } = useAppSDK()
+  const { getDepositTX, getWithdrawTX } = useAppSDK()
   const user = useUser()
   const { openAuthModal, isOpen: isAuthModalOpen } = useAuthModal()
   const { chain: connectedChain, setChain, isSettingChain } = useChain()
@@ -68,6 +74,7 @@ export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
   }, [amount])
 
   const transactionClient = useMemo(() => {
+    // used for the tx itself
     if (user) {
       // todo: handle other wallets, this is just working with metamask
       if (user.type === 'eoa') {
@@ -83,6 +90,26 @@ export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
 
     return null
   }, [user, connectedChain])
+
+  const publicClient = useMemo(
+    // used for the tx receipt
+    () => {
+      if (user) {
+        // todo: handle other wallets, this is just working with metamask
+        if (user.type === 'eoa') {
+          const externalProvider = window.ethereum
+
+          return createPublicClient({
+            chain: connectedChain,
+            transport: custom(externalProvider),
+          })
+        }
+      }
+
+      return null
+    },
+    [connectedChain, user],
+  )
 
   const userChainId = transactionClient?.chain.id
   const vaultChainId = subgraphNetworkToSDKId(vault.protocol.network)
@@ -100,8 +127,8 @@ export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
   const executeNextTransaction = useCallback(async () => {
     setTxStatus('txInProgress')
 
-    if (!transactionClient) {
-      throw new Error('Error executing the transaction')
+    if (!transactionClient || !publicClient) {
+      throw new Error('Error executing the transaction, no public or transaction client')
     }
 
     if (!nextTransaction) {
@@ -111,6 +138,11 @@ export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
       const transactionHash = await transactionClient.sendTransaction({
         to: nextTransaction.transaction.target.value,
         data: nextTransaction.transaction.calldata,
+      })
+
+      await publicClient.waitForTransactionReceipt({
+        hash: transactionHash,
+        confirmations: 5,
       })
 
       setTxHashes((prev) => [
@@ -129,23 +161,47 @@ export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
         setError('Error executing the transaction')
       }
     }
-  }, [nextTransaction, transactionClient, transactions])
+  }, [nextTransaction, transactionClient, publicClient, transactions])
 
-  const getDepositTransactions = useCallback(async () => {
+  const getTransactionsList = useCallback(async () => {
     if (amount && user) {
       setTxStatus('loadingTx')
       try {
-        const transactionsList = await getDepositTX({
-          walletAddress: Address.createFromEthereum({
-            value: user.address,
-          }),
-          amount: amount.toString(),
-          fleetAddress: vault.id,
-          chainInfo: ChainInfo.createFrom({
-            name: vault.protocol.network,
-            chainId: vaultChainId,
-          }),
-        })
+        let transactionsList: TransactionInfo[] = []
+
+        switch (transactionType) {
+          case TransactionAction.DEPOSIT:
+            transactionsList = await getDepositTX({
+              walletAddress: Address.createFromEthereum({
+                value: user.address,
+              }),
+              amount: amount.toString(),
+              fleetAddress: vault.id,
+              chainInfo: ChainInfo.createFrom({
+                name: vault.protocol.network,
+                chainId: vaultChainId,
+              }),
+            })
+
+            break
+          case TransactionAction.WITHDRAW:
+            transactionsList = await getWithdrawTX({
+              walletAddress: Address.createFromEthereum({
+                value: user.address,
+              }),
+              amount: amount.toString(),
+              fleetAddress: vault.id,
+              chainInfo: ChainInfo.createFrom({
+                name: vault.protocol.network,
+                chainId: vaultChainId,
+              }),
+            })
+
+            break
+
+          default:
+            throw new Error('Invalid transaction type')
+        }
 
         if (transactionsList.length === 0) {
           throw new Error('Error getting the transactions list')
@@ -161,7 +217,16 @@ export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
         }
       }
     }
-  }, [amount, vaultChainId, getDepositTX, user, vault.id, vault.protocol.network])
+  }, [
+    amount,
+    user,
+    transactionType,
+    getDepositTX,
+    vault.id,
+    vault.protocol.network,
+    vaultChainId,
+    getWithdrawTX,
+  ])
 
   const primaryButton = useMemo(() => {
     // missing data
@@ -222,17 +287,18 @@ export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
     }
 
     return {
-      label: 'Prepare deposit',
-      action: getDepositTransactions,
+      label: `Prepare ${transactionType}`,
+      action: getTransactionsList,
     }
   }, [
     user,
     isProperChainSelected,
     isSettingChain,
     amount,
+    transactionType,
     txStatus,
     nextTransaction?.label,
-    getDepositTransactions,
+    getTransactionsList,
     openAuthModal,
     isAuthModalOpen,
     vaultChainId,
@@ -241,6 +307,14 @@ export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
     txSteps,
     executeNextTransaction,
   ])
+
+  // refresh data when all transactions are executed and are successful
+  useEffect(() => {
+    if (txStatus === 'txSuccess' && transactions?.length === 0) {
+      refreshView()
+      reset()
+    }
+  }, [refreshView, transactions?.length, txStatus])
 
   return {
     amountDisplayValue,
@@ -255,5 +329,7 @@ export const useTransaction = ({ vault }: { vault: SDKVaultishType }) => {
     vaultChainId,
     reset,
     user,
+    setTransactionType,
+    transactionType,
   }
 }

@@ -31,16 +31,12 @@ import { MockedLineChart } from '@/components/organisms/Charts/MockedLineChart'
 import { RebalancingActivity } from '@/components/organisms/RebalancingActivity/RebalancingActivity'
 import { UserActivity } from '@/components/organisms/UserActivity/UserActivity'
 import { VaultExposure } from '@/components/organisms/VaultExposure/VaultExposure'
+import { TransactionAction } from '@/constants/transaction-actions'
 import { usePosition } from '@/hooks/use-position'
 import { useRedirectToPosition } from '@/hooks/use-redirect-to-position'
 import { useTransaction } from '@/hooks/use-transaction'
 
 import vaultOpenViewStyles from './VaultOpenView.module.scss'
-
-enum Action {
-  DEPOSIT = 'deposit',
-  WITHDRAW = 'withdraw',
-}
 
 export const VaultOpenViewComponent = ({
   vault,
@@ -82,7 +78,7 @@ export const VaultOpenViewComponent = ({
   const displayGraph = !!amount && amount.gt(0)
 
   const sidebarProps = {
-    title: capitalize(Action.DEPOSIT),
+    title: capitalize(TransactionAction.DEPOSIT),
     content: (
       <>
         <InputWithDropdown
