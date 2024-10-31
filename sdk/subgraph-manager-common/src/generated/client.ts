@@ -398,7 +398,8 @@ export enum ArkDailySnapshot_OrderBy {
   ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
   ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
   ProtocolId = 'protocol__id',
-  ProtocolLastUpdateTimestamp = 'protocol__lastUpdateTimestamp',
+  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
   ProtocolMethodologyVersion = 'protocol__methodologyVersion',
   ProtocolName = 'protocol__name',
   ProtocolNetwork = 'protocol__network',
@@ -412,6 +413,11 @@ export enum ArkDailySnapshot_OrderBy {
   Timestamp = 'timestamp',
   TotalValueLockedUsd = 'totalValueLockedUSD',
   Vault = 'vault',
+  VaultApr7d = 'vault__apr7d',
+  VaultApr30d = 'vault__apr30d',
+  VaultApr90d = 'vault__apr90d',
+  VaultApr180d = 'vault__apr180d',
+  VaultApr365d = 'vault__apr365d',
   VaultCalculatedApr = 'vault__calculatedApr',
   VaultCreatedBlockNumber = 'vault__createdBlockNumber',
   VaultCreatedTimestamp = 'vault__createdTimestamp',
@@ -598,7 +604,8 @@ export enum ArkHourlySnapshot_OrderBy {
   ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
   ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
   ProtocolId = 'protocol__id',
-  ProtocolLastUpdateTimestamp = 'protocol__lastUpdateTimestamp',
+  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
   ProtocolMethodologyVersion = 'protocol__methodologyVersion',
   ProtocolName = 'protocol__name',
   ProtocolNetwork = 'protocol__network',
@@ -612,6 +619,11 @@ export enum ArkHourlySnapshot_OrderBy {
   Timestamp = 'timestamp',
   TotalValueLockedUsd = 'totalValueLockedUSD',
   Vault = 'vault',
+  VaultApr7d = 'vault__apr7d',
+  VaultApr30d = 'vault__apr30d',
+  VaultApr90d = 'vault__apr90d',
+  VaultApr180d = 'vault__apr180d',
+  VaultApr365d = 'vault__apr365d',
   VaultCalculatedApr = 'vault__calculatedApr',
   VaultCreatedBlockNumber = 'vault__createdBlockNumber',
   VaultCreatedTimestamp = 'vault__createdTimestamp',
@@ -880,6 +892,11 @@ export enum Ark_OrderBy {
   RewardTokens = 'rewardTokens',
   TotalValueLockedUsd = 'totalValueLockedUSD',
   Vault = 'vault',
+  VaultApr7d = 'vault__apr7d',
+  VaultApr30d = 'vault__apr30d',
+  VaultApr90d = 'vault__apr90d',
+  VaultApr180d = 'vault__apr180d',
+  VaultApr365d = 'vault__apr365d',
   VaultCalculatedApr = 'vault__calculatedApr',
   VaultCreatedBlockNumber = 'vault__createdBlockNumber',
   VaultCreatedTimestamp = 'vault__createdTimestamp',
@@ -1174,7 +1191,8 @@ export enum Board_OrderBy {
   ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
   ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
   ProtocolId = 'protocol__id',
-  ProtocolLastUpdateTimestamp = 'protocol__lastUpdateTimestamp',
+  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
   ProtocolMethodologyVersion = 'protocol__methodologyVersion',
   ProtocolName = 'protocol__name',
   ProtocolNetwork = 'protocol__network',
@@ -1188,6 +1206,11 @@ export enum Board_OrderBy {
   Timestamp = 'timestamp',
   To = 'to',
   Vault = 'vault',
+  VaultApr7d = 'vault__apr7d',
+  VaultApr30d = 'vault__apr30d',
+  VaultApr90d = 'vault__apr90d',
+  VaultApr180d = 'vault__apr180d',
+  VaultApr365d = 'vault__apr365d',
   VaultCalculatedApr = 'vault__calculatedApr',
   VaultCreatedBlockNumber = 'vault__createdBlockNumber',
   VaultCreatedTimestamp = 'vault__createdTimestamp',
@@ -1434,7 +1457,8 @@ export enum Deposit_OrderBy {
   ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
   ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
   ProtocolId = 'protocol__id',
-  ProtocolLastUpdateTimestamp = 'protocol__lastUpdateTimestamp',
+  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
   ProtocolMethodologyVersion = 'protocol__methodologyVersion',
   ProtocolName = 'protocol__name',
   ProtocolNetwork = 'protocol__network',
@@ -1448,6 +1472,11 @@ export enum Deposit_OrderBy {
   Timestamp = 'timestamp',
   To = 'to',
   Vault = 'vault',
+  VaultApr7d = 'vault__apr7d',
+  VaultApr30d = 'vault__apr30d',
+  VaultApr90d = 'vault__apr90d',
+  VaultApr180d = 'vault__apr180d',
+  VaultApr365d = 'vault__apr365d',
   VaultCalculatedApr = 'vault__calculatedApr',
   VaultCreatedBlockNumber = 'vault__createdBlockNumber',
   VaultCreatedTimestamp = 'vault__createdTimestamp',
@@ -1732,7 +1761,8 @@ export enum Disembark_OrderBy {
   ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
   ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
   ProtocolId = 'protocol__id',
-  ProtocolLastUpdateTimestamp = 'protocol__lastUpdateTimestamp',
+  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
   ProtocolMethodologyVersion = 'protocol__methodologyVersion',
   ProtocolName = 'protocol__name',
   ProtocolNetwork = 'protocol__network',
@@ -1746,6 +1776,11 @@ export enum Disembark_OrderBy {
   Timestamp = 'timestamp',
   To = 'to',
   Vault = 'vault',
+  VaultApr7d = 'vault__apr7d',
+  VaultApr30d = 'vault__apr30d',
+  VaultApr90d = 'vault__apr90d',
+  VaultApr180d = 'vault__apr180d',
+  VaultApr365d = 'vault__apr365d',
   VaultCalculatedApr = 'vault__calculatedApr',
   VaultCreatedBlockNumber = 'vault__createdBlockNumber',
   VaultCreatedTimestamp = 'vault__createdTimestamp',
@@ -1925,7 +1960,8 @@ export enum Event_OrderBy {
   ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
   ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
   ProtocolId = 'protocol__id',
-  ProtocolLastUpdateTimestamp = 'protocol__lastUpdateTimestamp',
+  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
   ProtocolMethodologyVersion = 'protocol__methodologyVersion',
   ProtocolName = 'protocol__name',
   ProtocolNetwork = 'protocol__network',
@@ -2100,7 +2136,8 @@ export enum FinancialsDailySnapshot_OrderBy {
   ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
   ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
   ProtocolId = 'protocol__id',
-  ProtocolLastUpdateTimestamp = 'protocol__lastUpdateTimestamp',
+  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
   ProtocolMethodologyVersion = 'protocol__methodologyVersion',
   ProtocolName = 'protocol__name',
   ProtocolNetwork = 'protocol__network',
@@ -2284,6 +2321,11 @@ export enum Position_OrderBy {
   OutputTokenBalanceNormalized = 'outputTokenBalanceNormalized',
   OutputTokenBalanceNormalizedInUsd = 'outputTokenBalanceNormalizedInUSD',
   Vault = 'vault',
+  VaultApr7d = 'vault__apr7d',
+  VaultApr30d = 'vault__apr30d',
+  VaultApr90d = 'vault__apr90d',
+  VaultApr180d = 'vault__apr180d',
+  VaultApr365d = 'vault__apr365d',
   VaultCalculatedApr = 'vault__calculatedApr',
   VaultCreatedBlockNumber = 'vault__createdBlockNumber',
   VaultCreatedTimestamp = 'vault__createdTimestamp',
@@ -2311,6 +2353,8 @@ export type PostActionArkSnapshot = {
   ark: Ark;
   /**  Block number of this snapshot  */
   blockNumber: Scalars['BigInt']['output'];
+  /**  Deposit limit of the ark  */
+  depositLimit: Scalars['BigInt']['output'];
   /**  { Smart contract address of the vault }-{ # of hours since Unix epoch time }  */
   id: Scalars['ID']['output'];
   /**  Amount of input token in the pool  */
@@ -2366,6 +2410,14 @@ export type PostActionArkSnapshot_Filter = {
   blockNumber_lte?: InputMaybe<Scalars['BigInt']['input']>;
   blockNumber_not?: InputMaybe<Scalars['BigInt']['input']>;
   blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  depositLimit?: InputMaybe<Scalars['BigInt']['input']>;
+  depositLimit_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  depositLimit_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  depositLimit_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  depositLimit_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  depositLimit_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  depositLimit_not?: InputMaybe<Scalars['BigInt']['input']>;
+  depositLimit_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   id?: InputMaybe<Scalars['ID']['input']>;
   id_gt?: InputMaybe<Scalars['ID']['input']>;
   id_gte?: InputMaybe<Scalars['ID']['input']>;
@@ -2462,6 +2514,7 @@ export enum PostActionArkSnapshot_OrderBy {
   ArkName = 'ark__name',
   ArkTotalValueLockedUsd = 'ark__totalValueLockedUSD',
   BlockNumber = 'blockNumber',
+  DepositLimit = 'depositLimit',
   Id = 'id',
   InputTokenBalance = 'inputTokenBalance',
   Protocol = 'protocol',
@@ -2470,7 +2523,8 @@ export enum PostActionArkSnapshot_OrderBy {
   ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
   ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
   ProtocolId = 'protocol__id',
-  ProtocolLastUpdateTimestamp = 'protocol__lastUpdateTimestamp',
+  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
   ProtocolMethodologyVersion = 'protocol__methodologyVersion',
   ProtocolName = 'protocol__name',
   ProtocolNetwork = 'protocol__network',
@@ -2484,6 +2538,11 @@ export enum PostActionArkSnapshot_OrderBy {
   Timestamp = 'timestamp',
   TotalValueLockedUsd = 'totalValueLockedUSD',
   Vault = 'vault',
+  VaultApr7d = 'vault__apr7d',
+  VaultApr30d = 'vault__apr30d',
+  VaultApr90d = 'vault__apr90d',
+  VaultApr180d = 'vault__apr180d',
+  VaultApr365d = 'vault__apr365d',
   VaultCalculatedApr = 'vault__calculatedApr',
   VaultCreatedBlockNumber = 'vault__createdBlockNumber',
   VaultCreatedTimestamp = 'vault__createdTimestamp',
@@ -2664,7 +2723,8 @@ export enum PostActionVaultSnapshot_OrderBy {
   ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
   ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
   ProtocolId = 'protocol__id',
-  ProtocolLastUpdateTimestamp = 'protocol__lastUpdateTimestamp',
+  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
   ProtocolMethodologyVersion = 'protocol__methodologyVersion',
   ProtocolName = 'protocol__name',
   ProtocolNetwork = 'protocol__network',
@@ -2678,6 +2738,11 @@ export enum PostActionVaultSnapshot_OrderBy {
   Timestamp = 'timestamp',
   TotalValueLockedUsd = 'totalValueLockedUSD',
   Vault = 'vault',
+  VaultApr7d = 'vault__apr7d',
+  VaultApr30d = 'vault__apr30d',
+  VaultApr90d = 'vault__apr90d',
+  VaultApr180d = 'vault__apr180d',
+  VaultApr365d = 'vault__apr365d',
   VaultCalculatedApr = 'vault__calculatedApr',
   VaultCreatedBlockNumber = 'vault__createdBlockNumber',
   VaultCreatedTimestamp = 'vault__createdTimestamp',
@@ -3517,6 +3582,8 @@ export type Rebalance = {
   blockNumber: Scalars['BigInt']['output'];
   /**  Ark that we reblance from  */
   from: Ark;
+  /**  Post action snapshot of the from ark  */
+  fromPostAction: PostActionArkSnapshot;
   /**  Transaction hash of the transaction that emitted this event  */
   hash: Scalars['String']['output'];
   /**  { Transaction hash }-{ Log index }  */
@@ -3529,6 +3596,8 @@ export type Rebalance = {
   timestamp: Scalars['BigInt']['output'];
   /**  Ark that we reblance to  */
   to: Ark;
+  /**  Post action snapshot of the to ark  */
+  toPostAction: PostActionArkSnapshot;
   /**  The vault involving this transaction  */
   vault: Vault;
 };
@@ -3583,6 +3652,27 @@ export type Rebalance_Filter = {
   blockNumber_not?: InputMaybe<Scalars['BigInt']['input']>;
   blockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   from?: InputMaybe<Scalars['String']['input']>;
+  fromPostAction?: InputMaybe<Scalars['String']['input']>;
+  fromPostAction_?: InputMaybe<PostActionArkSnapshot_Filter>;
+  fromPostAction_contains?: InputMaybe<Scalars['String']['input']>;
+  fromPostAction_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  fromPostAction_ends_with?: InputMaybe<Scalars['String']['input']>;
+  fromPostAction_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  fromPostAction_gt?: InputMaybe<Scalars['String']['input']>;
+  fromPostAction_gte?: InputMaybe<Scalars['String']['input']>;
+  fromPostAction_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  fromPostAction_lt?: InputMaybe<Scalars['String']['input']>;
+  fromPostAction_lte?: InputMaybe<Scalars['String']['input']>;
+  fromPostAction_not?: InputMaybe<Scalars['String']['input']>;
+  fromPostAction_not_contains?: InputMaybe<Scalars['String']['input']>;
+  fromPostAction_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  fromPostAction_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  fromPostAction_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  fromPostAction_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  fromPostAction_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  fromPostAction_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  fromPostAction_starts_with?: InputMaybe<Scalars['String']['input']>;
+  fromPostAction_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   from_?: InputMaybe<Ark_Filter>;
   from_contains?: InputMaybe<Scalars['String']['input']>;
   from_contains_nocase?: InputMaybe<Scalars['String']['input']>;
@@ -3670,6 +3760,27 @@ export type Rebalance_Filter = {
   timestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
   timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   to?: InputMaybe<Scalars['String']['input']>;
+  toPostAction?: InputMaybe<Scalars['String']['input']>;
+  toPostAction_?: InputMaybe<PostActionArkSnapshot_Filter>;
+  toPostAction_contains?: InputMaybe<Scalars['String']['input']>;
+  toPostAction_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  toPostAction_ends_with?: InputMaybe<Scalars['String']['input']>;
+  toPostAction_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  toPostAction_gt?: InputMaybe<Scalars['String']['input']>;
+  toPostAction_gte?: InputMaybe<Scalars['String']['input']>;
+  toPostAction_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  toPostAction_lt?: InputMaybe<Scalars['String']['input']>;
+  toPostAction_lte?: InputMaybe<Scalars['String']['input']>;
+  toPostAction_not?: InputMaybe<Scalars['String']['input']>;
+  toPostAction_not_contains?: InputMaybe<Scalars['String']['input']>;
+  toPostAction_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  toPostAction_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  toPostAction_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  toPostAction_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  toPostAction_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  toPostAction_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  toPostAction_starts_with?: InputMaybe<Scalars['String']['input']>;
+  toPostAction_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   to_?: InputMaybe<Ark_Filter>;
   to_contains?: InputMaybe<Scalars['String']['input']>;
   to_contains_nocase?: InputMaybe<Scalars['String']['input']>;
@@ -3725,6 +3836,14 @@ export enum Rebalance_OrderBy {
   AssetSymbol = 'asset__symbol',
   BlockNumber = 'blockNumber',
   From = 'from',
+  FromPostAction = 'fromPostAction',
+  FromPostActionApr = 'fromPostAction__apr',
+  FromPostActionBlockNumber = 'fromPostAction__blockNumber',
+  FromPostActionDepositLimit = 'fromPostAction__depositLimit',
+  FromPostActionId = 'fromPostAction__id',
+  FromPostActionInputTokenBalance = 'fromPostAction__inputTokenBalance',
+  FromPostActionTimestamp = 'fromPostAction__timestamp',
+  FromPostActionTotalValueLockedUsd = 'fromPostAction__totalValueLockedUSD',
   FromCalculatedApr = 'from__calculatedApr',
   FromCreatedBlockNumber = 'from__createdBlockNumber',
   FromCreatedTimestamp = 'from__createdTimestamp',
@@ -3749,7 +3868,8 @@ export enum Rebalance_OrderBy {
   ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
   ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
   ProtocolId = 'protocol__id',
-  ProtocolLastUpdateTimestamp = 'protocol__lastUpdateTimestamp',
+  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
   ProtocolMethodologyVersion = 'protocol__methodologyVersion',
   ProtocolName = 'protocol__name',
   ProtocolNetwork = 'protocol__network',
@@ -3762,6 +3882,14 @@ export enum Rebalance_OrderBy {
   ProtocolType = 'protocol__type',
   Timestamp = 'timestamp',
   To = 'to',
+  ToPostAction = 'toPostAction',
+  ToPostActionApr = 'toPostAction__apr',
+  ToPostActionBlockNumber = 'toPostAction__blockNumber',
+  ToPostActionDepositLimit = 'toPostAction__depositLimit',
+  ToPostActionId = 'toPostAction__id',
+  ToPostActionInputTokenBalance = 'toPostAction__inputTokenBalance',
+  ToPostActionTimestamp = 'toPostAction__timestamp',
+  ToPostActionTotalValueLockedUsd = 'toPostAction__totalValueLockedUSD',
   ToCalculatedApr = 'to__calculatedApr',
   ToCreatedBlockNumber = 'to__createdBlockNumber',
   ToCreatedTimestamp = 'to__createdTimestamp',
@@ -3778,6 +3906,11 @@ export enum Rebalance_OrderBy {
   ToName = 'to__name',
   ToTotalValueLockedUsd = 'to__totalValueLockedUSD',
   Vault = 'vault',
+  VaultApr7d = 'vault__apr7d',
+  VaultApr30d = 'vault__apr30d',
+  VaultApr90d = 'vault__apr90d',
+  VaultApr180d = 'vault__apr180d',
+  VaultApr365d = 'vault__apr365d',
   VaultCalculatedApr = 'vault__calculatedApr',
   VaultCreatedBlockNumber = 'vault__createdBlockNumber',
   VaultCreatedTimestamp = 'vault__createdTimestamp',
@@ -4736,7 +4869,8 @@ export enum UsageMetricsDailySnapshot_OrderBy {
   ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
   ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
   ProtocolId = 'protocol__id',
-  ProtocolLastUpdateTimestamp = 'protocol__lastUpdateTimestamp',
+  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
   ProtocolMethodologyVersion = 'protocol__methodologyVersion',
   ProtocolName = 'protocol__name',
   ProtocolNetwork = 'protocol__network',
@@ -4879,7 +5013,8 @@ export enum UsageMetricsHourlySnapshot_OrderBy {
   ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
   ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
   ProtocolId = 'protocol__id',
-  ProtocolLastUpdateTimestamp = 'protocol__lastUpdateTimestamp',
+  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
   ProtocolMethodologyVersion = 'protocol__methodologyVersion',
   ProtocolName = 'protocol__name',
   ProtocolNetwork = 'protocol__network',
@@ -4896,6 +5031,12 @@ export enum UsageMetricsHourlySnapshot_OrderBy {
 export type Vault = {
   __typename?: 'Vault';
   actionSnapshots: Array<PostActionVaultSnapshot>;
+  apr7d: Scalars['BigDecimal']['output'];
+  apr30d: Scalars['BigDecimal']['output'];
+  apr90d: Scalars['BigDecimal']['output'];
+  apr180d: Scalars['BigDecimal']['output'];
+  apr365d: Scalars['BigDecimal']['output'];
+  aprValues: Array<Scalars['BigDecimal']['output']>;
   arks: Array<Ark>;
   arksArray: Array<Ark>;
   /**  APR based on revenue between last two snapshots  */
@@ -5299,7 +5440,8 @@ export enum VaultDailySnapshot_OrderBy {
   ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
   ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
   ProtocolId = 'protocol__id',
-  ProtocolLastUpdateTimestamp = 'protocol__lastUpdateTimestamp',
+  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
   ProtocolMethodologyVersion = 'protocol__methodologyVersion',
   ProtocolName = 'protocol__name',
   ProtocolNetwork = 'protocol__network',
@@ -5316,6 +5458,11 @@ export enum VaultDailySnapshot_OrderBy {
   Timestamp = 'timestamp',
   TotalValueLockedUsd = 'totalValueLockedUSD',
   Vault = 'vault',
+  VaultApr7d = 'vault__apr7d',
+  VaultApr30d = 'vault__apr30d',
+  VaultApr90d = 'vault__apr90d',
+  VaultApr180d = 'vault__apr180d',
+  VaultApr365d = 'vault__apr365d',
   VaultCalculatedApr = 'vault__calculatedApr',
   VaultCreatedBlockNumber = 'vault__createdBlockNumber',
   VaultCreatedTimestamp = 'vault__createdTimestamp',
@@ -5642,7 +5789,8 @@ export enum VaultHourlySnapshot_OrderBy {
   ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
   ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
   ProtocolId = 'protocol__id',
-  ProtocolLastUpdateTimestamp = 'protocol__lastUpdateTimestamp',
+  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
   ProtocolMethodologyVersion = 'protocol__methodologyVersion',
   ProtocolName = 'protocol__name',
   ProtocolNetwork = 'protocol__network',
@@ -5659,6 +5807,11 @@ export enum VaultHourlySnapshot_OrderBy {
   Timestamp = 'timestamp',
   TotalValueLockedUsd = 'totalValueLockedUSD',
   Vault = 'vault',
+  VaultApr7d = 'vault__apr7d',
+  VaultApr30d = 'vault__apr30d',
+  VaultApr90d = 'vault__apr90d',
+  VaultApr180d = 'vault__apr180d',
+  VaultApr365d = 'vault__apr365d',
   VaultCalculatedApr = 'vault__calculatedApr',
   VaultCreatedBlockNumber = 'vault__createdBlockNumber',
   VaultCreatedTimestamp = 'vault__createdTimestamp',
@@ -5683,6 +5836,52 @@ export type Vault_Filter = {
   _change_block?: InputMaybe<BlockChangedFilter>;
   actionSnapshots_?: InputMaybe<PostActionVaultSnapshot_Filter>;
   and?: InputMaybe<Array<InputMaybe<Vault_Filter>>>;
+  apr7d?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr7d_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr7d_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr7d_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  apr7d_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr7d_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr7d_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr7d_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  apr30d?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr30d_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr30d_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr30d_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  apr30d_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr30d_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr30d_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr30d_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  apr90d?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr90d_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr90d_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr90d_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  apr90d_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr90d_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr90d_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr90d_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  apr180d?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr180d_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr180d_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr180d_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  apr180d_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr180d_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr180d_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr180d_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  apr365d?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr365d_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr365d_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr365d_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  apr365d_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr365d_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr365d_not?: InputMaybe<Scalars['BigDecimal']['input']>;
+  apr365d_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  aprValues?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  aprValues_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  aprValues_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  aprValues_not?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  aprValues_not_contains?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  aprValues_not_contains_nocase?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   arksArray?: InputMaybe<Array<Scalars['String']['input']>>;
   arksArray_?: InputMaybe<Ark_Filter>;
   arksArray_contains?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -5950,6 +6149,12 @@ export type Vault_Filter = {
 
 export enum Vault_OrderBy {
   ActionSnapshots = 'actionSnapshots',
+  Apr7d = 'apr7d',
+  Apr30d = 'apr30d',
+  Apr90d = 'apr90d',
+  Apr180d = 'apr180d',
+  Apr365d = 'apr365d',
+  AprValues = 'aprValues',
   Arks = 'arks',
   ArksArray = 'arksArray',
   CalculatedApr = 'calculatedApr',
@@ -5990,7 +6195,8 @@ export enum Vault_OrderBy {
   ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
   ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
   ProtocolId = 'protocol__id',
-  ProtocolLastUpdateTimestamp = 'protocol__lastUpdateTimestamp',
+  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
   ProtocolMethodologyVersion = 'protocol__methodologyVersion',
   ProtocolName = 'protocol__name',
   ProtocolNetwork = 'protocol__network',
@@ -6238,7 +6444,8 @@ export enum Withdraw_OrderBy {
   ProtocolCumulativeTotalRevenueUsd = 'protocol__cumulativeTotalRevenueUSD',
   ProtocolCumulativeUniqueUsers = 'protocol__cumulativeUniqueUsers',
   ProtocolId = 'protocol__id',
-  ProtocolLastUpdateTimestamp = 'protocol__lastUpdateTimestamp',
+  ProtocolLastDailyUpdateTimestamp = 'protocol__lastDailyUpdateTimestamp',
+  ProtocolLastHourlyUpdateTimestamp = 'protocol__lastHourlyUpdateTimestamp',
   ProtocolMethodologyVersion = 'protocol__methodologyVersion',
   ProtocolName = 'protocol__name',
   ProtocolNetwork = 'protocol__network',
@@ -6252,6 +6459,11 @@ export enum Withdraw_OrderBy {
   Timestamp = 'timestamp',
   To = 'to',
   Vault = 'vault',
+  VaultApr7d = 'vault__apr7d',
+  VaultApr30d = 'vault__apr30d',
+  VaultApr90d = 'vault__apr90d',
+  VaultApr180d = 'vault__apr180d',
+  VaultApr365d = 'vault__apr365d',
   VaultCalculatedApr = 'vault__calculatedApr',
   VaultCreatedBlockNumber = 'vault__createdBlockNumber',
   VaultCreatedTimestamp = 'vault__createdTimestamp',
@@ -6289,7 +6501,8 @@ export type YieldAggregator = Protocol & {
   hourlyUsageMetrics: Array<UsageMetricsHourlySnapshot>;
   /**  Smart contract address of the protocol's main contract (Factory, Registry, etc)  */
   id: Scalars['ID']['output'];
-  lastUpdateTimestamp?: Maybe<Scalars['BigInt']['output']>;
+  lastDailyUpdateTimestamp?: Maybe<Scalars['BigInt']['output']>;
+  lastHourlyUpdateTimestamp?: Maybe<Scalars['BigInt']['output']>;
   /**  Version of the methodology used to compute metrics, loosely based on SemVer format (e.g. 1.0.0)  */
   methodologyVersion: Scalars['String']['output'];
   /**  Name of the protocol, including version. e.g. Yearn v3  */
@@ -6407,14 +6620,22 @@ export type YieldAggregator_Filter = {
   id_lte?: InputMaybe<Scalars['ID']['input']>;
   id_not?: InputMaybe<Scalars['ID']['input']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
-  lastUpdateTimestamp?: InputMaybe<Scalars['BigInt']['input']>;
-  lastUpdateTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  lastUpdateTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  lastUpdateTimestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  lastUpdateTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  lastUpdateTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  lastUpdateTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
-  lastUpdateTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lastDailyUpdateTimestamp?: InputMaybe<Scalars['BigInt']['input']>;
+  lastDailyUpdateTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastDailyUpdateTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastDailyUpdateTimestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lastDailyUpdateTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastDailyUpdateTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastDailyUpdateTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
+  lastDailyUpdateTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lastHourlyUpdateTimestamp?: InputMaybe<Scalars['BigInt']['input']>;
+  lastHourlyUpdateTimestamp_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastHourlyUpdateTimestamp_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastHourlyUpdateTimestamp_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lastHourlyUpdateTimestamp_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastHourlyUpdateTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastHourlyUpdateTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
+  lastHourlyUpdateTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   methodologyVersion?: InputMaybe<Scalars['String']['input']>;
   methodologyVersion_contains?: InputMaybe<Scalars['String']['input']>;
   methodologyVersion_contains_nocase?: InputMaybe<Scalars['String']['input']>;
@@ -6567,7 +6788,8 @@ export enum YieldAggregator_OrderBy {
   FinancialMetrics = 'financialMetrics',
   HourlyUsageMetrics = 'hourlyUsageMetrics',
   Id = 'id',
-  LastUpdateTimestamp = 'lastUpdateTimestamp',
+  LastDailyUpdateTimestamp = 'lastDailyUpdateTimestamp',
+  LastHourlyUpdateTimestamp = 'lastHourlyUpdateTimestamp',
   MethodologyVersion = 'methodologyVersion',
   Name = 'name',
   Network = 'network',
@@ -6621,7 +6843,7 @@ export enum _SubgraphErrorPolicy_ {
 export type GetGlobalRebalancesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetGlobalRebalancesQuery = { __typename?: 'Query', rebalances: Array<{ __typename?: 'Rebalance', id: string, amount: bigint, amountUSD: string, timestamp: bigint, asset: { __typename?: 'Token', symbol: string, decimals: number }, from: { __typename?: 'Ark', name?: string | null }, to: { __typename?: 'Ark', name?: string | null }, protocol: { __typename?: 'YieldAggregator', name: string, network: Network }, vault: { __typename?: 'Vault', id: string, name?: string | null, inputToken: { __typename?: 'Token', symbol: string } } }> };
+export type GetGlobalRebalancesQuery = { __typename?: 'Query', rebalances: Array<{ __typename?: 'Rebalance', id: string, amount: bigint, amountUSD: string, timestamp: bigint, asset: { __typename?: 'Token', symbol: string, decimals: number }, from: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, to: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, toPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, fromPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, protocol: { __typename?: 'YieldAggregator', name: string, network: Network }, vault: { __typename?: 'Vault', id: string, name?: string | null, inputToken: { __typename?: 'Token', symbol: string } } }> };
 
 export type GetUserPositionsQueryVariables = Exact<{
   accountAddress: Scalars['String']['input'];
@@ -6648,7 +6870,7 @@ export type GetVaultQueryVariables = Exact<{
 }>;
 
 
-export type GetVaultQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsUSD?: Array<string> | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, calculatedApr: string, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens?: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', symbol: string, decimals: number } }> | null, rebalances: Array<{ __typename?: 'Rebalance', id: string, amount: bigint, amountUSD: string, timestamp: bigint, asset: { __typename?: 'Token', symbol: string, decimals: number }, from: { __typename?: 'Ark', name?: string | null }, to: { __typename?: 'Ark', name?: string | null }, protocol: { __typename?: 'YieldAggregator', name: string, network: Network }, vault: { __typename?: 'Vault', id: string, name?: string | null, inputToken: { __typename?: 'Token', symbol: string } } }>, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, depositLimit: bigint, cumulativeDeposits: bigint, cumulativeEarnings: bigint, cumulativeWithdrawals: bigint, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', name: string, symbol: string, decimals: number }, dailySnapshots: Array<{ __typename?: 'ArkDailySnapshot', id: string, apr: string, totalValueLockedUSD: string, inputTokenBalance: bigint }>, hourlySnapshots: Array<{ __typename?: 'ArkHourlySnapshot', id: string, calculatedApr: string, totalValueLockedUSD: string, inputTokenBalance: bigint }>, fees: Array<{ __typename?: 'VaultFee', id: string, feePercentage?: string | null, feeType: VaultFeeType }> }>, inputToken: { __typename?: 'Token', name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', name: string, symbol: string, decimals: number } | null } | null };
+export type GetVaultQuery = { __typename?: 'Query', vault?: { __typename?: 'Vault', id: string, name?: string | null, rewardTokenEmissionsUSD?: Array<string> | null, outputTokenPriceUSD?: string | null, depositLimit: bigint, calculatedApr: string, createdTimestamp: bigint, totalValueLockedUSD: string, cumulativeTotalRevenueUSD: string, cumulativeSupplySideRevenueUSD: string, cumulativeProtocolSideRevenueUSD: string, lastUpdateTimestamp: bigint, protocol: { __typename?: 'YieldAggregator', network: Network }, rewardTokens?: Array<{ __typename?: 'RewardToken', id: string, token: { __typename?: 'Token', symbol: string, decimals: number } }> | null, rebalances: Array<{ __typename?: 'Rebalance', id: string, amount: bigint, amountUSD: string, timestamp: bigint, asset: { __typename?: 'Token', symbol: string, decimals: number }, from: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, to: { __typename?: 'Ark', name?: string | null, depositLimit: bigint, calculatedApr: string, totalValueLockedUSD: string }, toPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, fromPostAction: { __typename?: 'PostActionArkSnapshot', totalValueLockedUSD: string, depositLimit: bigint }, protocol: { __typename?: 'YieldAggregator', name: string, network: Network }, vault: { __typename?: 'Vault', id: string, name?: string | null, inputToken: { __typename?: 'Token', symbol: string } } }>, arks: Array<{ __typename?: 'Ark', id: string, name?: string | null, depositLimit: bigint, cumulativeDeposits: bigint, cumulativeEarnings: bigint, cumulativeWithdrawals: bigint, createdTimestamp: bigint, lastUpdateTimestamp: bigint, inputToken: { __typename?: 'Token', name: string, symbol: string, decimals: number }, dailySnapshots: Array<{ __typename?: 'ArkDailySnapshot', id: string, apr: string, totalValueLockedUSD: string, inputTokenBalance: bigint }>, hourlySnapshots: Array<{ __typename?: 'ArkHourlySnapshot', id: string, calculatedApr: string, totalValueLockedUSD: string, inputTokenBalance: bigint }>, fees: Array<{ __typename?: 'VaultFee', id: string, feePercentage?: string | null, feeType: VaultFeeType }> }>, inputToken: { __typename?: 'Token', name: string, symbol: string, decimals: number }, outputToken?: { __typename?: 'Token', name: string, symbol: string, decimals: number } | null } | null };
 
 
 export const GetGlobalRebalancesDocument = gql`
@@ -6663,9 +6885,23 @@ export const GetGlobalRebalancesDocument = gql`
     }
     from {
       name
+      depositLimit
+      calculatedApr
+      totalValueLockedUSD
     }
     to {
       name
+      depositLimit
+      calculatedApr
+      totalValueLockedUSD
+    }
+    toPostAction {
+      totalValueLockedUSD
+      depositLimit
+    }
+    fromPostAction {
+      totalValueLockedUSD
+      depositLimit
     }
     protocol {
       name
@@ -6822,9 +7058,23 @@ export const GetVaultDocument = gql`
       }
       from {
         name
+        depositLimit
+        calculatedApr
+        totalValueLockedUSD
       }
       to {
         name
+        depositLimit
+        calculatedApr
+        totalValueLockedUSD
+      }
+      toPostAction {
+        totalValueLockedUSD
+        depositLimit
+      }
+      fromPostAction {
+        totalValueLockedUSD
+        depositLimit
       }
       protocol {
         name

@@ -1,5 +1,10 @@
 import { Icon, TableCellText, type TableSortedColumn, Text, WithArrow } from '@summerfi/app-earn-ui'
-import { type SDKGlobalRebalancesType, type TokenSymbolsList } from '@summerfi/app-types'
+import {
+  type IconNamesList,
+  type SDKGlobalRebalancesType,
+  type SDKGlobalRebalanceType,
+  type TokenSymbolsList,
+} from '@summerfi/app-types'
 import { formatCryptoBalance, timeAgo } from '@summerfi/app-utils'
 import BigNumber from 'bignumber.js'
 import Link from 'next/link'
@@ -13,6 +18,38 @@ export const arkNameMap: { [key: string]: string } = {
   PendlePt: 'Pendle',
 }
 
+const purposeMapper = (item: SDKGlobalRebalanceType): { label: string; icon?: IconNamesList } => {
+  const actionFromRawName = item.from.name?.split('-')[0] ?? 'n/a'
+  const actionToRawName = item.to.name?.split('-')[0] ?? 'n/a'
+
+  const isFromBuffer = actionFromRawName === 'BufferArk'
+  const isToBuffer = actionToRawName === 'BufferArk'
+
+  if (!isFromBuffer && !isToBuffer && Number(item.from.depositLimit) !== 0) {
+    return Number(item.fromPostAction.totalValueLockedUSD) + Number(item.amountUSD) <
+      Number(item.fromPostAction.depositLimit)
+      ? { label: 'Rate Enhancement', icon: 'arrow_increase' }
+      : { label: 'Risk Reduction', icon: 'arrow_decrease' }
+  }
+
+  if (!isFromBuffer && !isToBuffer && Number(item.fromPostAction.depositLimit) === 0) {
+    return { label: 'Risk Reduction', icon: 'arrow_decrease' }
+  }
+
+  if (isFromBuffer) {
+    return { label: 'Funds Deployed', icon: 'deposit' }
+  }
+
+  if (isToBuffer) {
+    return { label: 'Funds Withdrawn', icon: 'withdraw' }
+  }
+
+  // eslint-disable-next-line no-console
+  console.error('Unknown rebalance purpose, fallback to n/a')
+
+  return { label: 'n/a' }
+}
+
 export const rebalancingActivityMapper = (
   rawData: SDKGlobalRebalancesType,
   sortConfig?: TableSortedColumn<string>,
@@ -21,12 +58,6 @@ export const rebalancingActivityMapper = (
 
   return sorted.map((item) => {
     const asset = item.asset.symbol as TokenSymbolsList
-    // NOT YET AVAILABLE IN SUBGRAPH
-    // const typeIcon = item.type === 'reduce' ? 'arrow_decrease' : 'arrow_increase'
-    // const typeLabel = item.type === 'reduce' ? 'Reduce' : 'Increase'
-
-    const typeIcon = 'arrow_decrease'
-    const typeLabel = `Reduce`
 
     // dummy mapping for now
     const providerLink =
@@ -42,14 +73,22 @@ export const rebalancingActivityMapper = (
     const actionFromLabel = arkNameMap[actionFromRawName] ?? actionFromRawName
     const actionToLabel = arkNameMap[actionToRawName] ?? actionToRawName
 
+    const purpose = purposeMapper(item)
+
     return {
       content: {
         purpose: (
           <div
             style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-space-x-small)' }}
           >
-            <Icon iconName={typeIcon} variant="xxs" color="rgba(119, 117, 118, 1)" />
-            <TableCellText>{typeLabel} Risk</TableCellText>
+            {purpose.icon && (
+              <Icon
+                iconName={purpose.icon}
+                variant="xs"
+                color="var(--earn-protocol-secondary-40)"
+              />
+            )}
+            <TableCellText>{purpose.label}</TableCellText>
           </div>
         ),
         action: (

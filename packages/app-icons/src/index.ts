@@ -242,6 +242,7 @@ export const icons = {
   network_optimism: customLazy(() => import('./icons/network_optimism.svg?react')),
   network_base: customLazy(() => import('./icons/network_base.svg?react')),
   withdraw: customLazy(() => import('./icons/withdraw.svg?react')),
+  deposit: customLazy(() => import('./icons/deposit.svg?react')),
   summer_illustration_check: customLazy(
     () => import('./icons/summer_illustration_check.svg?react'),
   ),

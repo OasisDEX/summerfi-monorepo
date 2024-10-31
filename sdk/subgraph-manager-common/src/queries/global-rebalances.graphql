@@ -9,9 +9,23 @@ query GetGlobalRebalances {
     }
     from {
       name
+      depositLimit
+      calculatedApr
+      totalValueLockedUSD
     }
     to {
       name
+      depositLimit
+      calculatedApr
+      totalValueLockedUSD
+    }
+    toPostAction {
+      totalValueLockedUSD
+      depositLimit
+    }
+    fromPostAction {
+      totalValueLockedUSD
+      depositLimit
     }
     protocol {
       name

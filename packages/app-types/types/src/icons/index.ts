@@ -224,6 +224,7 @@ export type IconNamesList =
   | 'network_optimism'
   | 'network_base'
   | 'withdraw'
+  | 'deposit'
   | 'summer_illustration_check'
   | 'summer_illustration_email'
   | 'summer_illustration_failed'
