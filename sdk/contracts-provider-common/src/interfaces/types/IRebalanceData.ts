@@ -7,17 +7,11 @@ import {
 import { z } from 'zod'
 
 /**
- * Unique signature to provide branded types to the interface
- */
-export const __signature__: unique symbol = Symbol()
-
-/**
  * @name IRebalanceData
  * @description Data structure for rebalancing assets, used by Keepers of a fleet
  */
 export interface IRebalanceData {
   /** Signature to differentiate from similar interfaces */
-  readonly [__signature__]: symbol
   /** Ark where the tokens are taken from */
   readonly fromArk: IAddress
   /** Ark where the tokens are moved to */
