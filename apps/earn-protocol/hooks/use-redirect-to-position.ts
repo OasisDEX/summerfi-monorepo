@@ -19,6 +19,12 @@ export const useRedirectToPosition = ({
 
   useEffect(() => {
     if (!position || !user) return
-    replace(getVaultPositionUrl(vault, user.address))
+    replace(
+      getVaultPositionUrl({
+        network: vault.protocol.network,
+        vaultId: vault.id,
+        walletAddress: user.address,
+      }),
+    )
   }, [position, replace, user, vault])
 }

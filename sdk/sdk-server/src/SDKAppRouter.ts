@@ -37,6 +37,7 @@ import { getTokenByAddress } from './handlers/getTokenByAddress'
 import { getTokenByName } from './handlers/getTokenByName'
 import { getTokenBySymbol } from './handlers/getTokenBySymbol'
 import { getGlobalRebalancesRaw } from './armada-protocol-handlers/users/getGlobalRebalancesRaw'
+import { getUsersActivityRaw } from './armada-protocol-handlers/users/getUsersActivityRaw'
 
 /**
  * Server
@@ -69,6 +70,7 @@ export const sdkAppRouter = router({
       getVaultsRaw: getVaultsRaw,
       getVaultRaw: getVaultRaw,
       getGlobalRebalancesRaw: getGlobalRebalancesRaw,
+      getUsersActivityRaw: getUsersActivityRaw,
       getPoolInfo: getPoolInfo,
       getPosition: getArmadaPosition,
       getUserPositions: getUserPositions,
