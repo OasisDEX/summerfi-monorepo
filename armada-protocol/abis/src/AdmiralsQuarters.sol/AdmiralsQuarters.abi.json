@@ -515,11 +515,6 @@
   },
   {
     "type": "error",
-    "name": "TokenMismatch",
-    "inputs": []
-  },
-  {
-    "type": "error",
     "name": "UnsupportedSwapFunction",
     "inputs": []
   },

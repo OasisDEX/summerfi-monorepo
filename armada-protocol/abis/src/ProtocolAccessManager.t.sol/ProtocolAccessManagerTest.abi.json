@@ -156,19 +156,6 @@
   },
   {
     "type": "function",
-    "name": "guardian",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "keeper",
     "inputs": [],
     "outputs": [
@@ -310,6 +297,13 @@
   },
   {
     "type": "function",
+    "name": "test_GrantAdminRole",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "test_GrantCommanderRole",
     "inputs": [],
     "outputs": [],
@@ -352,6 +346,13 @@
   },
   {
     "type": "function",
+    "name": "test_OnlyAdminModifier",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "test_OnlyGovernorModifier",
     "inputs": [],
     "outputs": [],
@@ -360,6 +361,13 @@
   {
     "type": "function",
     "name": "test_OnlyGovernorModifier_Fail",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "test_RevokeAdminRole",
     "inputs": [],
     "outputs": [],
     "stateMutability": "nonpayable"

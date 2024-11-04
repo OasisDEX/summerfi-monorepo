@@ -56,11 +56,6 @@
         "name": "requiresKeeperData",
         "type": "bool",
         "internalType": "bool"
-      },
-      {
-        "name": "maxDepositPercentageOfTVL",
-        "type": "uint256",
-        "internalType": "Percentage"
       }
     ],
     "stateMutability": "view"
@@ -164,11 +159,6 @@
             "name": "requiresKeeperData",
             "type": "bool",
             "internalType": "bool"
-          },
-          {
-            "name": "maxDepositPercentageOfTVL",
-            "type": "uint256",
-            "internalType": "Percentage"
           }
         ]
       }
@@ -184,19 +174,6 @@
         "name": "",
         "type": "address",
         "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "maxDepositPercentageOfTVL",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "Percentage"
       }
     ],
     "stateMutability": "view"
@@ -281,19 +258,6 @@
         "name": "newDepositCap",
         "type": "uint256",
         "internalType": "uint256"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setMaxDepositPercentageOfTVL",
-    "inputs": [
-      {
-        "name": "newMaxDepositPercentageOfTVL",
-        "type": "uint256",
-        "internalType": "Percentage"
       }
     ],
     "outputs": [],
@@ -406,19 +370,6 @@
         "type": "address",
         "indexed": false,
         "internalType": "address"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "MaxDepositPercentageOfTVLUpdated",
-    "inputs": [
-      {
-        "name": "newMaxDepositPercentageOfTVL",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "Percentage"
       }
     ],
     "anonymous": false

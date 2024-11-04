@@ -1248,6 +1248,8 @@ export type Deposit = Event & {
   id: Scalars['ID']['output'];
   /**  Event log index. For transactions that don't emit event, create arbitrary index starting from 0  */
   logIndex: Scalars['Int']['output'];
+  /**  Position that this deposit belongs to  */
+  position: Position;
   /**  The protocol this transaction belongs to  */
   protocol: YieldAggregator;
   /**  Timestamp of this event  */
@@ -1364,6 +1366,27 @@ export type Deposit_Filter = {
   logIndex_not?: InputMaybe<Scalars['Int']['input']>;
   logIndex_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
   or?: InputMaybe<Array<InputMaybe<Deposit_Filter>>>;
+  position?: InputMaybe<Scalars['String']['input']>;
+  position_?: InputMaybe<Position_Filter>;
+  position_contains?: InputMaybe<Scalars['String']['input']>;
+  position_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_ends_with?: InputMaybe<Scalars['String']['input']>;
+  position_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_gt?: InputMaybe<Scalars['String']['input']>;
+  position_gte?: InputMaybe<Scalars['String']['input']>;
+  position_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  position_lt?: InputMaybe<Scalars['String']['input']>;
+  position_lte?: InputMaybe<Scalars['String']['input']>;
+  position_not?: InputMaybe<Scalars['String']['input']>;
+  position_not_contains?: InputMaybe<Scalars['String']['input']>;
+  position_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  position_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  position_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  position_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_starts_with?: InputMaybe<Scalars['String']['input']>;
+  position_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   protocol?: InputMaybe<Scalars['String']['input']>;
   protocol_?: InputMaybe<YieldAggregator_Filter>;
   protocol_contains?: InputMaybe<Scalars['String']['input']>;
@@ -1451,6 +1474,14 @@ export enum Deposit_OrderBy {
   Hash = 'hash',
   Id = 'id',
   LogIndex = 'logIndex',
+  Position = 'position',
+  PositionCreatedBlockNumber = 'position__createdBlockNumber',
+  PositionCreatedTimestamp = 'position__createdTimestamp',
+  PositionId = 'position__id',
+  PositionInputTokenBalance = 'position__inputTokenBalance',
+  PositionOutputTokenBalance = 'position__outputTokenBalance',
+  PositionOutputTokenBalanceNormalized = 'position__outputTokenBalanceNormalized',
+  PositionOutputTokenBalanceNormalizedInUsd = 'position__outputTokenBalanceNormalizedInUSD',
   Protocol = 'protocol',
   ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
   ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
@@ -2191,6 +2222,7 @@ export type Position = {
   createdBlockNumber: Scalars['BigInt']['output'];
   /**  Creation timestamp  */
   createdTimestamp: Scalars['BigInt']['output'];
+  deposits: Array<Deposit>;
   /**  Unique identifier for the position  */
   id: Scalars['ID']['output'];
   /**  Balance of the input token for the position  */
@@ -2203,6 +2235,25 @@ export type Position = {
   outputTokenBalanceNormalizedInUSD: Scalars['BigDecimal']['output'];
   /**  Vault where the position is held  */
   vault: Vault;
+  withdrawals: Array<Withdraw>;
+};
+
+
+export type PositionDepositsArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Deposit_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<Deposit_Filter>;
+};
+
+
+export type PositionWithdrawalsArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Withdraw_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<Withdraw_Filter>;
 };
 
 export type Position_Filter = {
@@ -2246,6 +2297,7 @@ export type Position_Filter = {
   createdTimestamp_lte?: InputMaybe<Scalars['BigInt']['input']>;
   createdTimestamp_not?: InputMaybe<Scalars['BigInt']['input']>;
   createdTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  deposits_?: InputMaybe<Deposit_Filter>;
   id?: InputMaybe<Scalars['ID']['input']>;
   id_gt?: InputMaybe<Scalars['ID']['input']>;
   id_gte?: InputMaybe<Scalars['ID']['input']>;
@@ -2308,6 +2360,7 @@ export type Position_Filter = {
   vault_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   vault_starts_with?: InputMaybe<Scalars['String']['input']>;
   vault_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  withdrawals_?: InputMaybe<Withdraw_Filter>;
 };
 
 export enum Position_OrderBy {
@@ -2315,6 +2368,7 @@ export enum Position_OrderBy {
   AccountId = 'account__id',
   CreatedBlockNumber = 'createdBlockNumber',
   CreatedTimestamp = 'createdTimestamp',
+  Deposits = 'deposits',
   Id = 'id',
   InputTokenBalance = 'inputTokenBalance',
   OutputTokenBalance = 'outputTokenBalance',
@@ -2342,7 +2396,8 @@ export enum Position_OrderBy {
   VaultPricePerShare = 'vault__pricePerShare',
   VaultStakedOutputTokenAmount = 'vault__stakedOutputTokenAmount',
   VaultSymbol = 'vault__symbol',
-  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD'
+  VaultTotalValueLockedUsd = 'vault__totalValueLockedUSD',
+  Withdrawals = 'withdrawals'
 }
 
 export type PostActionArkSnapshot = {
@@ -6235,6 +6290,8 @@ export type Withdraw = Event & {
   id: Scalars['ID']['output'];
   /**  Event log index. For transactions that don't emit event, create arbitrary index starting from 0  */
   logIndex: Scalars['Int']['output'];
+  /**  Position that this withdraw belongs to  */
+  position: Position;
   /**  The protocol this transaction belongs to  */
   protocol: YieldAggregator;
   /**  Timestamp of this event  */
@@ -6351,6 +6408,27 @@ export type Withdraw_Filter = {
   logIndex_not?: InputMaybe<Scalars['Int']['input']>;
   logIndex_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
   or?: InputMaybe<Array<InputMaybe<Withdraw_Filter>>>;
+  position?: InputMaybe<Scalars['String']['input']>;
+  position_?: InputMaybe<Position_Filter>;
+  position_contains?: InputMaybe<Scalars['String']['input']>;
+  position_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_ends_with?: InputMaybe<Scalars['String']['input']>;
+  position_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_gt?: InputMaybe<Scalars['String']['input']>;
+  position_gte?: InputMaybe<Scalars['String']['input']>;
+  position_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  position_lt?: InputMaybe<Scalars['String']['input']>;
+  position_lte?: InputMaybe<Scalars['String']['input']>;
+  position_not?: InputMaybe<Scalars['String']['input']>;
+  position_not_contains?: InputMaybe<Scalars['String']['input']>;
+  position_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  position_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  position_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  position_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  position_starts_with?: InputMaybe<Scalars['String']['input']>;
+  position_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   protocol?: InputMaybe<Scalars['String']['input']>;
   protocol_?: InputMaybe<YieldAggregator_Filter>;
   protocol_contains?: InputMaybe<Scalars['String']['input']>;
@@ -6438,6 +6516,14 @@ export enum Withdraw_OrderBy {
   Hash = 'hash',
   Id = 'id',
   LogIndex = 'logIndex',
+  Position = 'position',
+  PositionCreatedBlockNumber = 'position__createdBlockNumber',
+  PositionCreatedTimestamp = 'position__createdTimestamp',
+  PositionId = 'position__id',
+  PositionInputTokenBalance = 'position__inputTokenBalance',
+  PositionOutputTokenBalance = 'position__outputTokenBalance',
+  PositionOutputTokenBalanceNormalized = 'position__outputTokenBalanceNormalized',
+  PositionOutputTokenBalanceNormalizedInUsd = 'position__outputTokenBalanceNormalizedInUSD',
   Protocol = 'protocol',
   ProtocolCumulativeProtocolSideRevenueUsd = 'protocol__cumulativeProtocolSideRevenueUSD',
   ProtocolCumulativeSupplySideRevenueUsd = 'protocol__cumulativeSupplySideRevenueUSD',
