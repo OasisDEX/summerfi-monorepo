@@ -25,6 +25,19 @@
   },
   {
     "type": "function",
+    "name": "grantAdminRole",
+    "inputs": [
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "grantCommanderRole",
     "inputs": [
       {
@@ -69,7 +82,7 @@
     "name": "grantCuratorRole",
     "inputs": [
       {
-        "name": "fleetCommanderAddress",
+        "name": "fleetAddress",
         "type": "address",
         "internalType": "address"
       },
@@ -113,7 +126,7 @@
     "name": "grantKeeperRole",
     "inputs": [
       {
-        "name": "fleetCommanderAddress",
+        "name": "fleetAddress",
         "type": "address",
         "internalType": "address"
       },
@@ -129,6 +142,19 @@
   {
     "type": "function",
     "name": "grantSuperKeeperRole",
+    "inputs": [
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "revokeAdminRole",
     "inputs": [
       {
         "name": "account",
@@ -185,7 +211,7 @@
     "name": "revokeCuratorRole",
     "inputs": [
       {
-        "name": "fleetCommanderAddress",
+        "name": "fleetAddress",
         "type": "address",
         "internalType": "address"
       },
@@ -229,7 +255,7 @@
     "name": "revokeKeeperRole",
     "inputs": [
       {
-        "name": "fleetCommanderAddress",
+        "name": "fleetAddress",
         "type": "address",
         "internalType": "address"
       },

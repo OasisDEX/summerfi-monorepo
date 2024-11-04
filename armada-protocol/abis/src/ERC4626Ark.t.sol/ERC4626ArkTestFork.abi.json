@@ -350,19 +350,6 @@
   },
   {
     "type": "function",
-    "name": "guardian",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "harborCommand",
     "inputs": [],
     "outputs": [
@@ -431,11 +418,6 @@
         "name": "requiresKeeperData",
         "type": "bool",
         "internalType": "bool"
-      },
-      {
-        "name": "maxDepositPercentageOfTVL",
-        "type": "uint256",
-        "internalType": "Percentage"
       }
     ],
     "stateMutability": "view"

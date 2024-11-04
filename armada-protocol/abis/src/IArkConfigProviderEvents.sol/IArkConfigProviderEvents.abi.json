@@ -40,19 +40,6 @@
   },
   {
     "type": "event",
-    "name": "MaxDepositPercentageOfTVLUpdated",
-    "inputs": [
-      {
-        "name": "newMaxDepositPercentageOfTVL",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "Percentage"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
     "name": "MaxRebalanceInflowUpdated",
     "inputs": [
       {

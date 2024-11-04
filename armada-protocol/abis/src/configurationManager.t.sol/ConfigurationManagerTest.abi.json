@@ -130,19 +130,6 @@
   },
   {
     "type": "function",
-    "name": "guardian",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "initialHarborCommand",
     "inputs": [],
     "outputs": [

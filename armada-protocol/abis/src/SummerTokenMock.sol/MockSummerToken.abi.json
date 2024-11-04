@@ -17,19 +17,6 @@
   },
   {
     "type": "function",
-    "name": "DOMAIN_SEPARATOR",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "stateMutability": "pure"
-  },
-  {
-    "type": "function",
     "name": "allowance",
     "inputs": [
       {
@@ -148,11 +135,11 @@
       {
         "name": "",
         "type": "uint8",
-        "internalType": "enum ISummerVestingWallet.VestingType"
+        "internalType": "enum SummerVestingWallet.VestingType"
       }
     ],
     "outputs": [],
-    "stateMutability": "pure"
+    "stateMutability": "nonpayable"
   },
   {
     "type": "function",
@@ -200,68 +187,6 @@
   },
   {
     "type": "function",
-    "name": "nonces",
-    "inputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "pure"
-  },
-  {
-    "type": "function",
-    "name": "permit",
-    "inputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "",
-        "type": "uint8",
-        "internalType": "uint8"
-      },
-      {
-        "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "pure"
-  },
-  {
-    "type": "function",
     "name": "symbol",
     "inputs": [],
     "outputs": [
@@ -272,13 +197,6 @@
       }
     ],
     "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "testSkipper",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "pure"
   },
   {
     "type": "function",
@@ -347,25 +265,6 @@
     "stateMutability": "nonpayable"
   },
   {
-    "type": "function",
-    "name": "vestingWallets",
-    "inputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "pure"
-  },
-  {
     "type": "event",
     "name": "Approval",
     "inputs": [
@@ -411,43 +310,6 @@
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "VestingWalletCreated",
-    "inputs": [
-      {
-        "name": "beneficiary",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "vestingWallet",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "timeBasedAmount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "goalAmounts",
-        "type": "uint256[]",
-        "indexed": false,
-        "internalType": "uint256[]"
-      },
-      {
-        "name": "vestingType",
-        "type": "uint8",
-        "indexed": false,
-        "internalType": "enum ISummerVestingWallet.VestingType"
       }
     ],
     "anonymous": false

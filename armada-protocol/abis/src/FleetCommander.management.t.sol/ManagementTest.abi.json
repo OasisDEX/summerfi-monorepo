@@ -494,19 +494,6 @@
   },
   {
     "type": "function",
-    "name": "guardian",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "harborCommand",
     "inputs": [],
     "outputs": [
@@ -592,19 +579,6 @@
         "name": "",
         "type": "address",
         "internalType": "contract RestictedWithdrawalArkMock"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "mockGovernor",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "contract MockSummerGovernor"
       }
     ],
     "stateMutability": "view"
@@ -700,25 +674,6 @@
   },
   {
     "type": "function",
-    "name": "rewardTokens",
-    "inputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "contract ERC20Mock"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "setUp",
     "inputs": [],
     "outputs": [],
@@ -747,19 +702,6 @@
       }
     ],
     "stateMutability": "pure"
-  },
-  {
-    "type": "function",
-    "name": "stakingRewardsManager",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "contract IFleetStakingRewardsManager"
-      }
-    ],
-    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -1003,20 +945,6 @@
   },
   {
     "type": "function",
-    "name": "test_SetArkMaxDepositPercentageOfTVL",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "test_SetArkMaxDepositPercentageOfTVLInvalidArk_ShouldFail",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "test_SetArkMoveMaxRebalanceOutflow",
     "inputs": [],
     "outputs": [],
@@ -1250,19 +1178,6 @@
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "MaxDepositPercentageOfTVLUpdated",
-    "inputs": [
-      {
-        "name": "newMaxDepositPercentageOfTVL",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "Percentage"
       }
     ],
     "anonymous": false
