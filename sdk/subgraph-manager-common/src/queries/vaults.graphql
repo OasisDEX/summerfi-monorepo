@@ -41,13 +41,19 @@ query GetVaults {
     }
     outputTokenPriceUSD
     depositLimit
-    calculatedApr
     createdTimestamp
     totalValueLockedUSD
     cumulativeTotalRevenueUSD
     cumulativeSupplySideRevenueUSD
     cumulativeProtocolSideRevenueUSD
     lastUpdateTimestamp
+    apr7d
+    apr30d
+    apr90d
+    apr180d
+    apr365d
+    calculatedApr
+    aprValues
   }
 }
 query GetVault($id: ID!) {
@@ -150,12 +156,18 @@ query GetVault($id: ID!) {
     }
     outputTokenPriceUSD
     depositLimit
-    calculatedApr
     createdTimestamp
     totalValueLockedUSD
     cumulativeTotalRevenueUSD
     cumulativeSupplySideRevenueUSD
     cumulativeProtocolSideRevenueUSD
     lastUpdateTimestamp
+    apr7d
+    apr30d
+    apr90d
+    apr180d
+    apr365d
+    calculatedApr
+    aprValues
   }
 }

@@ -38,7 +38,8 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
   connectedWalletAddress,
   viewWalletAddress,
 }) => {
-  const parsedApr = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
+  const apr30d = formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
+  const aprCurrent = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
 
   return (
     <>
@@ -124,10 +125,8 @@ export const VaultManageGrid: FC<VaultManageGridProps> = ({
                 size="large"
                 titleSize="small"
                 title="30d APY"
-                // TODO: fill data
-                value="value"
-                // TODO: confirm data
-                subValue={`Current APY: ${parsedApr}`}
+                value={apr30d}
+                subValue={`Current APY: ${aprCurrent}`}
                 subValueType="neutral"
                 subValueSize="medium"
               />

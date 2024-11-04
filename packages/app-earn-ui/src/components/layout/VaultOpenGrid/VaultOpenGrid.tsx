@@ -37,8 +37,9 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
   sidebarContent,
 }) => {
   const [displayGraphStaggered, setDisplayGraphStaggered] = useState(displayGraph)
-  const parsedApr = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
-  const parsedTotalValueLockedUSD = formatCryptoBalance(new BigNumber(vault.totalValueLockedUSD))
+  const apr30d = formatDecimalAsPercent(new BigNumber(vault.apr30d).div(100))
+  const aprCurrent = formatDecimalAsPercent(new BigNumber(vault.calculatedApr).div(100))
+  const totalValueLockedUSDParsed = formatCryptoBalance(new BigNumber(vault.totalValueLockedUSD))
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -107,7 +108,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 size="large"
                 titleSize="small"
                 title="30d APY"
-                value={parsedApr}
+                value={apr30d}
                 subValue="+2.1% Median DeFi Yield"
                 subValueType="positive"
                 subValueSize="medium"
@@ -118,7 +119,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 size="large"
                 titleSize="small"
                 title="Current APY"
-                value="value"
+                value={aprCurrent}
                 subValue="+1.7% Median DeFi Yield"
                 subValueType="positive"
                 subValueSize="medium"
@@ -133,7 +134,7 @@ export const VaultOpenGrid: FC<VaultOpenGridProps> = ({
                 size="large"
                 titleSize="small"
                 title="Assets in vault"
-                value={parsedTotalValueLockedUSD}
+                value={totalValueLockedUSDParsed}
                 // TODO: fill data
                 subValue={`231,232,321.01 ${vault.inputToken.symbol}`}
                 subValueSize="medium"

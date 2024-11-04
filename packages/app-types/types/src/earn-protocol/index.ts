@@ -3,6 +3,7 @@ import {
   GetVaultsQuery,
   GetVaultQuery,
   GetGlobalRebalancesQuery,
+  GetUsersActivityQuery,
 } from '@summerfi/subgraph-manager-common'
 import { ChainId } from '@summerfi/serverless-shared'
 import { type TransactionInfo } from '@summerfi/sdk-common'
@@ -14,6 +15,8 @@ export type SDKVaultsListType = GetVaultsQuery['vaults']
 export type SDKVaultType = Exclude<GetVaultQuery['vault'], null | undefined>
 export type SDKGlobalRebalancesType = GetGlobalRebalancesQuery['rebalances']
 export type SDKGlobalRebalanceType = SDKGlobalRebalancesType[0]
+export type SDKUsersActivityType = GetUsersActivityQuery['positions']
+export type SDKUserActivityType = SDKUsersActivityType[0]
 
 // -ish because it can be a detailed vault or a vault from list (less details), use with that in mind
 export type SDKVaultishType = SDKVaultType | SDKVaultsListType[number]
@@ -38,4 +41,9 @@ export type EarnTransactionTypes = 'approve' | 'deposit'
 
 export type TransactionInfoLabeled = TransactionInfo & {
   label: EarnTransactionTypes
+}
+
+export enum UserActivityType {
+  DEPOSIT = 'DEPOSIT',
+  WITHDRAW = 'WITHDRAW',
 }

@@ -1,0 +1,17 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--general-space-16);
+
+  @media screen and (min-width: 768px) {
+    padding: unset;
+  }
+}
+
+.filtersWrapper {
+  display: flex;
+  justify-content: flex-start;
+  gap: var(--general-space-16);
+  flex-wrap: wrap;
+  margin-bottom: var(--general-space-24);
+}

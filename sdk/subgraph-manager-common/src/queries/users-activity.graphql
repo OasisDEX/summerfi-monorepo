@@ -1,0 +1,27 @@
+query GetUsersActivity {
+  positions {
+    account {
+      id
+    }
+    inputTokenBalance
+    deposits {
+      timestamp
+      amount
+    }
+    withdrawals {
+      timestamp
+      amount
+    }
+    vault {
+      id
+      name
+      inputToken {
+        symbol
+        decimals
+      }
+      protocol {
+        network
+      }
+    }
+  }
+}

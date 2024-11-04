@@ -114,25 +114,27 @@ export const VaultsListView = ({ selectedNetwork, vaultsList }: VaultsListViewPr
       onChangeNetwork={handleChangeNetwork}
       topContent={
         <SimpleGrid columns={3} style={{ justifyItems: 'stretch' }} gap={170}>
-          {/** TODO: fill data */}
           <DataBlock
             title="Total Assets"
+            // TODO: fill data
             titleTooltip="Tooltip about assets or something"
             size="large"
             value={`$${formattedTotalAssets}`}
           />
-          {/** TODO: fill data */}
           <DataBlock
-            title="Total Assets"
-            titleTooltip="Tooltip about assets or something"
+            title="Total Liquidity"
+            // TODO: fill data
+            titleTooltip="Tooltip about liquidity or something"
             size="large"
+            // TODO: fill data
             value="14.3b"
           />
-          {/** TODO: fill data */}
           <DataBlock
-            title="Total Assets"
-            titleTooltip="Tooltip about assets or something"
+            title="Protocols Supported"
+            // TODO: fill data
+            titleTooltip="Tooltip about protocols or something"
             size="large"
+            // TODO: fill data
             value="6"
           />
         </SimpleGrid>

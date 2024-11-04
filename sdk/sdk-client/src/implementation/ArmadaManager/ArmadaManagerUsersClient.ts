@@ -36,6 +36,13 @@ export class ArmadaManagerUsersClient extends IRPCClient implements IArmadaManag
     return this.rpcClient.armada.users.getGlobalRebalancesRaw.query(params)
   }
 
+  /** @see IArmadaManagerUsersClient.getUsersActivityRaw */
+  async getUsersActivityRaw(
+    params: Parameters<IArmadaManagerUsersClient['getUsersActivityRaw']>[0],
+  ) {
+    return this.rpcClient.armada.users.getUsersActivityRaw.query(params)
+  }
+
   /** @see IArmadaManagerUsersClient.getPoolInfo */
   async getPoolInfo(params: { poolId: IArmadaVaultId }): Promise<IArmadaPoolInfo> {
     return this.rpcClient.armada.users.getPoolInfo.query(params)

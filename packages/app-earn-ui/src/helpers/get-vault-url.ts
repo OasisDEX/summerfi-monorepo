@@ -1,4 +1,4 @@
-import { type SDKVaultishType } from '@summerfi/app-types'
+import { type SDKNetwork, type SDKVaultishType } from '@summerfi/app-types'
 
 export const getVaultUrl = (vault?: SDKVaultishType) => {
   if (!vault) return ''
@@ -12,5 +12,12 @@ export const getVaultDetailsUrl = (vault?: SDKVaultishType) => {
   return `/earn/${vault.protocol.network.toLowerCase()}/details/${vault.id}`
 }
 
-export const getVaultPositionUrl = (vault: SDKVaultishType, walletAddress: string) =>
-  `/earn/${vault.protocol.network.toLowerCase()}/position/${vault.id}/${walletAddress}`
+export const getVaultPositionUrl = ({
+  network,
+  vaultId,
+  walletAddress,
+}: {
+  network: SDKNetwork
+  vaultId: string
+  walletAddress: string
+}) => `/earn/${network.toLowerCase()}/position/${vaultId}/${walletAddress}`
